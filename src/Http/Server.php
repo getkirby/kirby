@@ -34,7 +34,7 @@ class Server
     /**
      * Checks if the request is being served by the CLI
      *
-     * @return boolean
+     * @return bool
      */
     public static function cli(): bool
     {
@@ -66,10 +66,10 @@ class Server
      * // returns the whole server array
      * </code>
      *
-     * @param  mixed    $key     The key to look for. Pass false or null to
-     *                           return the entire server array.
-     * @param  mixed    $default Optional default value, which should be
-     *                           returned if no element has been found
+     * @param mixed $key The key to look for. Pass false or null to
+     *                   return the entire server array.
+     * @param mixed $default Optional default value, which should be
+     *                       returned if no element has been found
      * @return mixed
      */
     public static function get($key = null, $default = null)
@@ -86,8 +86,8 @@ class Server
     /**
      * Help to sanitize some _SERVER keys
      *
-     * @param  string $key
-     * @param  mixed $value
+     * @param string $key
+     * @param mixed $value
      * @return mixed
      */
     public static function sanitize(string $key, $value)
@@ -131,7 +131,7 @@ class Server
     /**
      * Checks for a https request
      *
-     * @return boolean
+     * @return bool
      */
     public static function https(): bool
     {

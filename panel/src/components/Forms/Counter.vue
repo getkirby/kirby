@@ -49,6 +49,8 @@ export default {
   font-weight: $font-weight-bold;
 }
 .k-counter[data-invalid] {
+  box-shadow: none;
+  border: 0;
   color: $color-negative;
 }
 .k-counter-rules {

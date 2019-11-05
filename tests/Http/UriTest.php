@@ -7,6 +7,8 @@ use PHPUnit\Framework\TestCase;
 class UriTest extends TestCase
 {
     protected $_SERVER = null;
+    protected $example1;
+    protected $example2;
 
     protected function setUp(): void
     {

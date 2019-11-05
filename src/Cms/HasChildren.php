@@ -157,7 +157,7 @@ trait HasChildren
     /**
      * Checks if the model has any children
      *
-     * @return boolean
+     * @return bool
      */
     public function hasChildren(): bool
     {
@@ -167,7 +167,7 @@ trait HasChildren
     /**
      * Checks if the model has any drafts
      *
-     * @return boolean
+     * @return bool
      */
     public function hasDrafts(): bool
     {
@@ -175,18 +175,20 @@ trait HasChildren
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasUnlistedChildren` instead
-     * @return boolean
+     * @deprecated 3.0.0 Use `Page::hasUnlistedChildren()` instead
+     * @return bool
      */
     public function hasInvisibleChildren(): bool
     {
+        deprecated('$page->hasInvisibleChildren() is deprecated, use $page->hasUnlistedChildren() instead. $page->hasInvisibleChildren() will be removed in Kirby 3.5.0.');
+
         return $this->hasUnlistedChildren();
     }
 
     /**
      * Checks if the page has any listed children
      *
-     * @return boolean
+     * @return bool
      */
     public function hasListedChildren(): bool
     {
@@ -196,7 +198,7 @@ trait HasChildren
     /**
      * Checks if the page has any unlisted children
      *
-     * @return boolean
+     * @return bool
      */
     public function hasUnlistedChildren(): bool
     {
@@ -204,11 +206,13 @@ trait HasChildren
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasListedChildren` instead
-     * @return boolean
+     * @deprecated 3.0.0 Use `Page::hasListedChildren()` instead
+     * @return bool
      */
     public function hasVisibleChildren(): bool
     {
+        deprecated('$page->hasVisibleChildren() is deprecated, use $page->hasListedChildren() instead. $page->hasVisibleChildren() will be removed in Kirby 3.5.0.');
+
         return $this->hasListedChildren();
     }
 

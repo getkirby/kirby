@@ -23,6 +23,7 @@
 
   "delete": "T\u00f6rl\u00e9s",
   "dimensions": "Méretek",
+  "disabled": "Disabled",
   "discard": "Visszavon\u00e1s",
   "download": "Letöltés",
   "duplicate": "Másolat",
@@ -137,6 +138,7 @@
   "error.section.notLoaded": "A(z) \"{name}\" szekció nem tölthető be",
   "error.section.type.invalid": "A szekció típusa (\"{type}\") nem megfelelő",
 
+  "error.site.changeTitle.empty": "A cím nem lehet üres",
   "error.site.changeTitle.permission":
     "Nincs jogosultságod megváltoztatni az honlap címét",
   "error.site.update.permission": "Nincs jogosultságod frissíteni a honlapot",
@@ -155,6 +157,8 @@
     "Az egyedüli adminisztrátor szerepkörét nem lehet megváltoztatni",
   "error.user.changeRole.permission":
     "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó szerepkörét",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Nincs jogosultságod létrehozni ezt a felhasználót",
   "error.user.delete": "A felhaszn\u00e1l\u00f3 nem t\u00f6r\u00f6lhet\u0151",
   "error.user.delete.lastAdmin": "Nem t\u00f6r\u00f6lheted az egyetlen adminisztr\u00e1tort",
@@ -219,6 +223,7 @@
   "error.validation.time": "Kérlek megfelelő időt adj meg",
   "error.validation.url": "Kérlek megfelelő URL-t adj meg",
 
+  "field.required": "The field is required",
   "field.files.empty": "Nincs fálj kiválasztva",
   "field.pages.empty": "Nincs oldal kiválasztva",
   "field.structure.delete.confirm": "Biztos t\u00f6r\u00f6lni szeretn\u00e9d ezt a bejegyz\u00e9st?",
@@ -291,6 +296,7 @@
   "loading": "Betöltés",
 
   "lock.unsaved": "Nem mentett változások",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Nem mentett <strong>{email}</strong> változások",
   "lock.file.isLocked": "A fájlt jelenleg {email} szerkeszti és nem módosítható.",
   "lock.page.isLocked": "Az oldalt jelenleg {email} szerkeszti és nem módosítható.",
@@ -364,6 +370,8 @@
   "pages.status.listed": "Publikálva",
   "pages.status.unlisted": "Nem listázott",
 
+  "pagination.page": "Oldal",
+
   "password": "Jelsz\u00f3",
   "pixel": "Pixel",
   "prev": "Előző",
@@ -384,6 +392,9 @@
 
   "save": "Ment\u00e9s",
   "search": "Keresés",
+
+  "section.required": "The section is required",
+
   "select": "Kiválasztás",
   "settings": "Beállítások",
   "size": "Méret",

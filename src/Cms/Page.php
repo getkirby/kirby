@@ -104,7 +104,7 @@ class Page extends ModelWithContent
     /**
      * The sorting number
      *
-     * @var integer|null
+     * @var int|null
      */
     protected $num;
 
@@ -253,14 +253,13 @@ class Page extends ModelWithContent
             $templates = [];
         }
 
-        // add the current template to the array
-        $templates[] = $currentTemplate;
+        // add the current template to the array if it's not already there
+        if (in_array($currentTemplate, $templates) === false) {
+            array_unshift($templates, $currentTemplate);
+        }
 
         // make sure every template is only included once
         $templates = array_unique($templates);
-
-        // sort the templates
-        asort($templates);
 
         foreach ($templates as $template) {
             try {
@@ -352,7 +351,7 @@ class Page extends ModelWithContent
      * Returns a number indicating how deep the page
      * is nested within the content folder
      *
-     * @return integer
+     * @return int
      */
     public function depth(): int
     {
@@ -408,11 +407,13 @@ class Page extends ModelWithContent
      * gets dragged onto a textarea
      *
      * @internal
-     * @param string $type (auto|kirbytext|markdown)
+     * @param string $type (null|auto|kirbytext|markdown)
      * @return string
      */
-    public function dragText(string $type = 'auto'): string
+    public function dragText(string $type = null): string
     {
+        $type = $type ?? 'auto';
+
         if ($type === 'auto') {
             $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
         }
@@ -456,7 +457,7 @@ class Page extends ModelWithContent
      * Checks if the intended template
      * for the page exists.
      *
-     * @return boolean
+     * @return bool
      */
     public function hasTemplate(): bool
     {
@@ -563,7 +564,7 @@ class Page extends ModelWithContent
      * Checks if the page is a direct or indirect ancestor of the given $page object
      *
      * @param Page $child
-     * @return boolean
+     * @return bool
      */
     public function isAncestorOf(Page $child): bool
     {
@@ -575,7 +576,7 @@ class Page extends ModelWithContent
      * pages cache. This will also check if one
      * of the ignore rules from the config kick in.
      *
-     * @return boolean
+     * @return bool
      */
     public function isCacheable(): bool
     {
@@ -628,12 +629,12 @@ class Page extends ModelWithContent
      * Checks if the page is a child of the given page
      *
      * @param \Kirby\Cms\Page|string $parent
-     * @return boolean
+     * @return bool
      */
     public function isChildOf($parent): bool
     {
-        if ($parent = $this->parent()) {
-            return $parent->is($parent);
+        if ($parentObj = $this->parent()) {
+            return $parentObj->is($parent);
         }
 
         return false;
@@ -643,7 +644,7 @@ class Page extends ModelWithContent
      * Checks if the page is a descendant of the given page
      *
      * @param \Kirby\Cms\Page|string $parent
-     * @return boolean
+     * @return bool
      */
     public function isDescendantOf($parent): bool
     {
@@ -661,7 +662,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the page is a descendant of the currently active page
      *
-     * @return boolean
+     * @return bool
      */
     public function isDescendantOfActive(): bool
     {
@@ -675,7 +676,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the current page is a draft
      *
-     * @return boolean
+     * @return bool
      */
     public function isDraft(): bool
     {
@@ -695,7 +696,7 @@ class Page extends ModelWithContent
     /**
      * Check if the page can be read by the current user
      *
-     * @return boolean
+     * @return bool
      */
     public function isReadable(): bool
     {
@@ -725,7 +726,7 @@ class Page extends ModelWithContent
      * home and error page to stop certain
      * actions. That's why there's a shortcut.
      *
-     * @return boolean
+     * @return bool
      */
     public function isHomeOrErrorPage(): bool
     {
@@ -733,18 +734,20 @@ class Page extends ModelWithContent
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::isUnlisted()` intead
+     * @deprecated 3.0.0 Use `Page::isUnlisted()` instead
      * @return bool
      */
     public function isInvisible(): bool
     {
+        deprecated('$page->isInvisible() is deprecated, use $page->isUnlisted() instead. $page->isInvisible() will be removed in Kirby 3.5.0.');
+
         return $this->isUnlisted();
     }
 
     /**
      * Checks if the page has a sorting number
      *
-     * @return boolean
+     * @return bool
      */
     public function isListed(): bool
     {
@@ -776,7 +779,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the page is sortable
      *
-     * @return boolean
+     * @return bool
      */
     public function isSortable(): bool
     {
@@ -786,7 +789,7 @@ class Page extends ModelWithContent
     /**
      * Checks if the page has no sorting number
      *
-     * @return boolean
+     * @return bool
      */
     public function isUnlisted(): bool
     {
@@ -794,11 +797,13 @@ class Page extends ModelWithContent
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::isListed()` intead
+     * @deprecated 3.0.0 Use `Page::isListed()` instead
      * @return bool
      */
     public function isVisible(): bool
     {
+        deprecated('$page->isVisible() is deprecated, use $page->isListed() instead. $page->isVisible() will be removed in Kirby 3.5.0.');
+
         return $this->isListed();
     }
 
@@ -808,7 +813,7 @@ class Page extends ModelWithContent
      *
      * @internal
      * @param string $token
-     * @return boolean
+     * @return bool
      */
     public function isVerified(string $token = null)
     {
@@ -884,7 +889,7 @@ class Page extends ModelWithContent
     /**
      * Returns the sorting number
      *
-     * @return integer|null
+     * @return int|null
      */
     public function num(): ?int
     {
@@ -1099,7 +1104,7 @@ class Page extends ModelWithContent
      *
      * @param array $data
      * @param string $contentType
-     * @param integer $code
+     * @param int $code
      * @return string
      */
     public function render(array $data = [], $contentType = 'html'): string
@@ -1241,7 +1246,7 @@ class Page extends ModelWithContent
     /**
      * Sets the draft flag
      *
-     * @param boolean $isDraft
+     * @param bool $isDraft
      * @return self
      */
     protected function setIsDraft(bool $isDraft = null)
@@ -1253,7 +1258,7 @@ class Page extends ModelWithContent
     /**
      * Sets the sorting number
      *
-     * @param integer $num
+     * @param int $num
      * @return self
      */
     protected function setNum(int $num = null)

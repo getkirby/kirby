@@ -2,7 +2,8 @@
 
 namespace Kirby\Toolkit;
 
-use Exception;
+use Kirby\Exception\ErrorPageException;
+use Kirby\Exception\Exception;
 
 /**
  * Basic pagination handling
@@ -15,38 +16,48 @@ use Exception;
  */
 class Pagination
 {
+    use Properties {
+        setProperties as protected baseSetProperties;
+    }
+
     /**
      * The current page
      *
-     * @var integer
+     * @var int
      */
     protected $page;
 
     /**
      * Total number of items
      *
-     * @var integer
+     * @var int
      */
-    protected $total;
+    protected $total = 0;
 
     /**
      * The number of items per page
      *
-     * @var integer
+     * @var int
      */
-    protected $limit;
+    protected $limit = 20;
+
+    /**
+     * Whether validation of the pagination page
+     * is enabled; will throw Exceptions if true
+     *
+     * @var bool
+     */
+    public static $validate = true;
 
     /**
      * Creates a new pagination object
      * with the given parameters
      *
-     * @param array $params
+     * @param array $props
      */
-    public function __construct(array $params = [])
+    public function __construct(array $props = [])
     {
-        $this->page($params['page'] ?? 1);
-        $this->limit($params['limit'] ?? 20);
-        $this->total($params['total'] ?? 0);
+        $this->setProperties($props);
     }
 
     /**
@@ -113,67 +124,48 @@ class Pagination
     }
 
     /**
-     * Getter and setter for the current page
+     * Getter for the current page
      *
-     * @param int|null $page
-     * @return int|\Kirby\Toolkit\Pagination
+     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->clone()
+     * @return int
      */
-    public function page(int $page = null)
+    public function page(int $page = null): int
     {
-        if ($page === null) {
-            if ($this->page > $this->pages()) {
-                $this->page = $this->lastPage();
-            }
-
-            if ($this->page < 1) {
-                $this->page = $this->firstPage();
-            }
-
-            return $this->page;
+        if ($page !== null) {
+            throw new Exception('$pagination->page() setter is no longer supported, use $pagination->clone()'); // @codeCoverageIgnore
         }
 
-        $this->page = $page;
-        return $this;
+        return $this->page;
     }
 
     /**
-     * Getter and setter for the total number of items
+     * Getter for the total number of items
      *
-     * @param int|null $total
-     * @return int|\Kirby\Toolkit\Pagination
+     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->clone()
+     * @return int
      */
-    public function total(int $total = null)
+    public function total(int $total = null): int
     {
-        if ($total === null) {
-            return $this->total;
+        if ($total !== null) {
+            throw new Exception('$pagination->total() setter is no longer supported, use $pagination->clone()'); // @codeCoverageIgnore
         }
 
-        if ($total < 0) {
-            throw new Exception('Invalid total number of items: ' . $total);
-        }
-
-        $this->total = $total;
-        return $this;
+        return $this->total;
     }
 
     /**
-     * Getter and setter for the number of items per page
+     * Getter for the number of items per page
      *
-     * @param int|null $limit
-     * @return int|\Kirby\Toolkit\Pagination
+     * @deprecated 3.3.0 Setter is no longer supported, use $pagination->clone()
+     * @return int
      */
-    public function limit(int $limit = null)
+    public function limit(int $limit = null): int
     {
-        if ($limit === null) {
-            return $this->limit;
+        if ($limit !== null) {
+            throw new Exception('$pagination->limit() setter is no longer supported, use $pagination->clone()'); // @codeCoverageIgnore
         }
 
-        if ($limit < 1) {
-            throw new Exception('Invalid pagination limit: ' . $limit);
-        }
-
-        $this->limit = $limit;
-        return $this;
+        return $this->limit;
     }
 
     /**
@@ -256,7 +248,7 @@ class Pagination
      * Checks if the given page exists
      *
      * @param int $page
-     * @return boolean
+     * @return bool
      */
     public function hasPage(int $page): bool
     {
@@ -274,7 +266,7 @@ class Pagination
     /**
      * Checks if there are any pages at all
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPages(): bool
     {
@@ -284,7 +276,7 @@ class Pagination
     /**
      * Checks if there's a previous page
      *
-     * @return boolean
+     * @return bool
      */
     public function hasPrevPage(): bool
     {
@@ -304,7 +296,7 @@ class Pagination
     /**
      * Checks if there's a next page
      *
-     * @return boolean
+     * @return bool
      */
     public function hasNextPage(): bool
     {
@@ -324,7 +316,7 @@ class Pagination
     /**
      * Checks if the current page is the first page
      *
-     * @return boolean
+     * @return bool
      */
     public function isFirstPage(): bool
     {
@@ -334,7 +326,7 @@ class Pagination
     /**
      * Checks if the current page is the last page
      *
-     * @return boolean
+     * @return bool
      */
     public function isLastPage(): bool
     {
@@ -395,6 +387,97 @@ class Pagination
     {
         $range = $this->range($range);
         return array_pop($range);
+    }
+
+    /**
+     * Sets the properties limit, total and page
+     * and validates that the properties match
+     *
+     * @param array $props Array with keys limit, total and/or page
+     * @return self
+     */
+    protected function setProperties(array $props)
+    {
+        $this->baseSetProperties($props);
+
+        // ensure that page is set to something, otherwise
+        // generate "default page" based on other params
+        if ($this->page === null) {
+            $this->page = $this->firstPage();
+        }
+
+        // allow a page value of 1 even if there are no pages;
+        // otherwise the exception will get thrown for this pretty common case
+        $min = $this->firstPage();
+        $max = $this->pages();
+        if ($this->page === 1 && $max === 0) {
+            $this->page = 0;
+        }
+
+        // validate page based on all params if validation is enabled,
+        // otherwise limit the page number to the bounds
+        if ($this->page < $min || $this->page > $max) {
+            if (static::$validate === true) {
+                throw new ErrorPageException('Pagination page ' . $this->page . ' does not exist, expected ' . $min . '-' . $max);
+            } else {
+                $this->page = max(min($this->page, $max), $min);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Sets the number of items per page
+     *
+     * @param int $limit
+     * @return self
+     */
+    protected function setLimit(int $limit = 20)
+    {
+        if ($limit < 1) {
+            throw new Exception('Invalid pagination limit: ' . $limit);
+        }
+
+        $this->limit = $limit;
+        return $this;
+    }
+
+    /**
+     * Sets the total number of items
+     *
+     * @param int $total
+     * @return self
+     */
+    protected function setTotal(int $total = 0)
+    {
+        if ($total < 0) {
+            throw new Exception('Invalid total number of items: ' . $total);
+        }
+
+        $this->total = $total;
+        return $this;
+    }
+
+    /**
+     * Sets the current page
+     *
+     * @param int|string|null $page Int or int in string form;
+     *                              automatically determined if null
+     * @return self
+     */
+    protected function setPage($page = null)
+    {
+        // if $page is null, it is set to a default in the setProperties() method
+        if ($page !== null) {
+            if (is_numeric($page) !== true || $page < 0) {
+                throw new Exception('Invalid page number: ' . $page);
+            }
+
+            $this->page = (int)$page;
+        }
+
+        return $this;
     }
 
     /**

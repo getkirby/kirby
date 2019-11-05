@@ -6,6 +6,8 @@ use Kirby\Toolkit\V;
 
 class VTest extends TestCase
 {
+    protected $app;
+
     public function setUp(): void
     {
         $this->app = new App([

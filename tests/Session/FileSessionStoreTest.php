@@ -75,7 +75,7 @@ class FileSessionStoreTest extends TestCase
         $id = $this->store->createId(1234567890);
 
         $this->assertStringMatchesFormat('%x', $id);
-        $this->assertEquals(20, strlen($id));
+        $this->assertSame(20, strlen($id));
         $this->assertFileExists($this->root . '/1234567890.' . $id . '.sess');
         $this->assertHandleExists('1234567890.' . $id);
         $this->assertLocked('1234567890.' . $id);
@@ -169,10 +169,10 @@ class FileSessionStoreTest extends TestCase
      */
     public function testGet()
     {
-        $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+        $this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
         $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
 
-        $this->assertEquals('', $this->store->get(8888888888, 'abcdefghijabcdefghij'));
+        $this->assertSame('', $this->store->get(8888888888, 'abcdefghijabcdefghij'));
     }
 
     /**
@@ -211,15 +211,15 @@ class FileSessionStoreTest extends TestCase
      */
     public function testSet()
     {
-        $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+        $this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
 
         $this->store->lock(1234567890, 'abcdefghijabcdefghij');
         $this->store->set(1234567890, 'abcdefghijabcdefghij', 'some other data');
 
         $this->assertLocked('1234567890.abcdefghijabcdefghij');
         $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
-        $this->assertEquals('some other data', F::read($this->root . '/1234567890.abcdefghijabcdefghij.sess'));
-        $this->assertEquals('some other data', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+        $this->assertSame('some other data', F::read($this->root . '/1234567890.abcdefghijabcdefghij.sess'));
+        $this->assertSame('some other data', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
     }
 
     /**
@@ -245,7 +245,7 @@ class FileSessionStoreTest extends TestCase
         $this->expectException('Kirby\Exception\LogicException');
         $this->expectExceptionCode('error.session.filestore.notLocked');
 
-        $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+        $this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
 
         $this->store->set(1234567890, 'abcdefghijabcdefghij', 'some other data');
     }
@@ -278,7 +278,7 @@ class FileSessionStoreTest extends TestCase
     public function testDestroyAlreadyDestroyed()
     {
         // make sure we get a handle
-        $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+        $this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
         $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
 
         // simulate that another thread deleted the file
@@ -299,7 +299,7 @@ class FileSessionStoreTest extends TestCase
         $this->expectExceptionCode('error.session.filestore.notFound');
 
         // make sure we get a handle
-        $this->assertEquals('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
+        $this->assertSame('1234567890', $this->store->get(1234567890, 'abcdefghijabcdefghij'));
         $this->store->lock(1234567890, 'abcdefghijabcdefghij');
         $this->assertHandleExists('1234567890.abcdefghijabcdefghij');
 
@@ -335,7 +335,7 @@ class FileSessionStoreTest extends TestCase
     /**
      * Asserts that the given session is currently locked
      *
-     * @param  string $name Combined name
+     * @param string $name Combined name
      * @return void
      */
     protected function assertLocked(string $name)
@@ -356,7 +356,7 @@ class FileSessionStoreTest extends TestCase
     /**
      * Asserts that the given session is currently not locked
      *
-     * @param  string $name Combined name
+     * @param string $name Combined name
      * @return void
      */
     protected function assertNotLocked(string $name)
@@ -377,7 +377,7 @@ class FileSessionStoreTest extends TestCase
     /**
      * Asserts that the given session currently has an open handle
      *
-     * @param  string $name Combined name
+     * @param string $name Combined name
      * @return void
      */
     protected function assertHandleExists(string $name)
@@ -389,7 +389,7 @@ class FileSessionStoreTest extends TestCase
     /**
      * Asserts that the given session currently has no open handle
      *
-     * @param  string $name Combined name
+     * @param string $name Combined name
      * @return void
      */
     protected function assertHandleNotExists(string $name)

@@ -78,7 +78,7 @@ class DataTest extends TestCase
             $encoded = Data::encode($data, $handler);
             $decoded = Data::decode($encoded, $handler);
 
-            $this->assertEquals($data, $decoded);
+            $this->assertSame($data, $decoded);
         }
     }
 
@@ -97,18 +97,18 @@ class DataTest extends TestCase
         // automatic type detection
         Data::write($file, $data);
         $this->assertFileExists($file);
-        $this->assertEquals(Json::encode($data), F::read($file));
+        $this->assertSame(Json::encode($data), F::read($file));
 
         $result = Data::read($file);
-        $this->assertEquals($data, $result);
+        $this->assertSame($data, $result);
 
         // custom type
         Data::write($file, $data, 'yml');
         $this->assertFileExists($file);
-        $this->assertEquals(Yaml::encode($data), F::read($file));
+        $this->assertSame(Yaml::encode($data), F::read($file));
 
         $result = Data::read($file, 'yml');
-        $this->assertEquals($data, $result);
+        $this->assertSame($data, $result);
     }
 
     /**

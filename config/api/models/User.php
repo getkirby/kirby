@@ -24,7 +24,7 @@ return [
             return $user->email();
         },
         'files' => function (User $user) {
-            return $user->files()->sortBy('sort', 'asc');
+            return $user->files()->sortBy('sort', 'asc', 'filename', 'asc');
         },
         'id' => function (User $user) {
             return $user->id();
@@ -39,7 +39,7 @@ return [
             return $user->next();
         },
         'options' => function (User $user) {
-            return $user->permissions()->toArray();
+            return $user->panelOptions();
         },
         'permissions' => function (User $user) {
             return $user->role()->permissions()->toArray();

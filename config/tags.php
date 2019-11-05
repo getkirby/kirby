@@ -98,7 +98,6 @@ return [
             'linkclass',
             'rel',
             'target',
-            'text',
             'title',
             'width'
         ],

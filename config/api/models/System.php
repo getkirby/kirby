@@ -98,7 +98,7 @@ return [
             'isInstalled',
             'isLocal',
             'kirbytext',
-            'languages' => 'compact',
+            'languages',
             'license',
             'multilang',
             'requirements',

@@ -8,6 +8,13 @@ use PHPUnit\Framework\TestCase;
 
 class PanelPluginsTest extends TestCase
 {
+    protected $app;
+    protected $fixtures;
+    protected $cssA;
+    protected $cssB;
+    protected $jsA;
+    protected $jsB;
+
     public function setUp(): void
     {
         $this->app = new App([

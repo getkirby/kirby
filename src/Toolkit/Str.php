@@ -169,9 +169,9 @@ class Str
     /**
      * Returns the rest of the string after the given character
      *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
      * @return string
      */
     public static function after(string $string, string $needle, bool $caseInsensitive = false): string
@@ -188,7 +188,7 @@ class Str
     /**
      * Convert a string to 7-bit ASCII.
      *
-     * @param  string  $string
+     * @param string $string
      * @return string
      */
     public static function ascii(string $string): string
@@ -211,9 +211,9 @@ class Str
     /**
      * Returns the beginning of a string before the given character
      *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
      * @return string
      */
     public static function before(string $string, string $needle, bool $caseInsensitive = false): string
@@ -243,9 +243,9 @@ class Str
     /**
      * Checks if a str contains another string
      *
-     * @param  string  $string
-     * @param  string  $needle
-     * @param  bool $caseInsensitive
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
      * @return bool
      */
     public static function contains(string $string = null, string $needle, bool $caseInsensitive = false): bool
@@ -279,7 +279,7 @@ class Str
     /**
      * Encode a string (used for email addresses)
      *
-     * @param  string  $string
+     * @param string $string
      * @return string
      */
     public static function encode(string $string): string
@@ -298,7 +298,7 @@ class Str
     /**
      * Tries to detect the string encoding
      *
-     * @param  string $string
+     * @param string $string
      * @return string
      */
     public static function encoding(string $string): string
@@ -309,9 +309,9 @@ class Str
     /**
      * Checks if a string ends with the passed needle
      *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
      * @return bool
      */
     public static function endsWith(string $string, string $needle, bool $caseInsensitive = false): bool
@@ -335,11 +335,11 @@ class Str
      * It removes all html tags first and then cuts the string
      * according to the specified number of chars.
      *
-     * @param  string  $string The string to be shortened
-     * @param  int     $chars The final number of characters the string should have
-     * @param  boolean $strip True: remove the HTML tags from the string first
-     * @param  string  $rep The element, which should be added if the string is too long. Ellipsis is the default.
-     * @return string  The shortened string
+     * @param string $string The string to be shortened
+     * @param int $chars The final number of characters the string should have
+     * @param bool $strip True: remove the HTML tags from the string first
+     * @param string $rep The element, which should be added if the string is too long. Ellipsis is the default.
+     * @return string The shortened string
      */
     public static function excerpt($string, $chars = 140, $strip = true, $rep = '…')
     {
@@ -381,9 +381,9 @@ class Str
     /**
      * Returns the rest of the string starting from the given character
      *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
      * @return string
      */
     public static function from(string $string, string $needle, bool $caseInsensitive = false): string
@@ -401,7 +401,7 @@ class Str
      * Checks if the given string is a URL
      *
      * @param string|null $string
-     * @return boolean
+     * @return bool
      */
     public static function isURL(string $string = null): bool
     {
@@ -411,7 +411,7 @@ class Str
     /**
      * Convert a string to kebab case.
      *
-     * @param  string  $value
+     * @param string $value
      * @return string
      */
     public static function kebab(string $value = null): string
@@ -422,7 +422,7 @@ class Str
     /**
      * A UTF-8 safe version of strlen()
      *
-     * @param  string  $string
+     * @param string $string
      * @return int
      */
     public static function length(string $string = null): int
@@ -433,7 +433,7 @@ class Str
     /**
      * A UTF-8 safe version of strtolower()
      *
-     * @param  string  $string
+     * @param string $string
      * @return string
      */
     public static function lower(string $string = null): string
@@ -457,8 +457,8 @@ class Str
     /**
      * Get a character pool with various possible combinations
      *
-     * @param  string|array $type
-     * @param  boolean $array
+     * @param string|array $type
+     * @param bool $array
      * @return string|array
      */
     public static function pool($type, bool $array = true)
@@ -498,9 +498,9 @@ class Str
      * Returns the position of a needle in a string
      * if it can be found
      *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
      * @return int|bool
      */
     public static function position(string $string = null, string $needle, bool $caseInsensitive = false)
@@ -565,15 +565,15 @@ class Str
      * Replaces all or some occurrences of the search string with the replacement string
      * Extension of the str_replace() function in PHP with an additional $limit parameter
      *
-     * @param  string|array $string  String being replaced on (haystack);
-     *                               can be an array of multiple subject strings
-     * @param  string|array $search  Value being searched for (needle)
-     * @param  string|array $replace Value to replace matches with
-     * @param  int|array    $limit   Maximum possible replacements for each search value;
-     *                               multiple limits for each search value are supported;
-     *                               defaults to no limit
-     * @return string|array          String with replaced values;
-     *                               if $string is an array, array of strings
+     * @param string|array $string String being replaced on (haystack);
+     *                             can be an array of multiple subject strings
+     * @param string|array $search Value being searched for (needle)
+     * @param string|array $replace Value to replace matches with
+     * @param int|array $limit Maximum possible replacements for each search value;
+     *                         multiple limits for each search value are supported;
+     *                         defaults to no limit
+     * @return string|array String with replaced values;
+     *                      if $string is an array, array of strings
      */
     public static function replace($string, $search, $replace, $limit = -1)
     {
@@ -622,13 +622,13 @@ class Str
      * Generates a replacement array out of dynamic input data
      * Used for Str::replace()
      *
-     * @param  string|array $search  Value being searched for (needle)
-     * @param  string|array $replace Value to replace matches with
-     * @param  int|array    $limit   Maximum possible replacements for each search value;
-     *                               multiple limits for each search value are supported;
-     *                               defaults to no limit
-     * @return array                 List of replacement arrays, each with a
-     *                               'search', 'replace' and 'limit' attribute
+     * @param string|array $search Value being searched for (needle)
+     * @param string|array $replace Value to replace matches with
+     * @param int|array $limit Maximum possible replacements for each search value;
+     *                         multiple limits for each search value are supported;
+     *                         defaults to no limit
+     * @return array List of replacement arrays, each with a
+     *               'search', 'replace' and 'limit' attribute
      */
     public static function replacements($search, $replace, $limit): array
     {
@@ -673,9 +673,9 @@ class Str
      * Takes a replacement array and processes the replacements
      * Used for Str::replace()
      *
-     * @param  string $string       String being replaced on (haystack)
-     * @param  array  $replacements Replacement array from Str::replacements()
-     * @return string               String with replaced values
+     * @param string $string String being replaced on (haystack)
+     * @param array $replacements Replacement array from Str::replacements()
+     * @return string String with replaced values
      */
     public static function replaceReplacements(string $string, array $replacements): string
     {
@@ -736,12 +736,12 @@ class Str
      *
      * </code>
      *
-     * @param  string  $string   The string to be shortened
-     * @param  int     $length   The final number of characters the
-     *                           string should have
-     * @param  string  $appendix The element, which should be added if the
-     *                           string is too long. Ellipsis is the default.
-     * @return string            The shortened string
+     * @param string $string The string to be shortened
+     * @param int $length The final number of characters the
+     *                    string should have
+     * @param string $appendix The element, which should be added if the
+     *                         string is too long. Ellipsis is the default.
+     * @return string The shortened string
      */
     public static function short(string $string = null, int $length = 0, string $appendix = '…'): ?string
     {
@@ -759,13 +759,14 @@ class Str
     /**
      * Convert a string to a safe version to be used in a URL
      *
-     * @param  string  $string     The unsafe string
-     * @param  string  $separator  To be used instead of space and
-     *                             other non-word characters.
-     * @param  string  $allowed    List of all allowed characters (regex)
-     * @return string              The safe string
+     * @param string $string The unsafe string
+     * @param string $separator To be used instead of space and
+     *                          other non-word characters.
+     * @param string $allowed List of all allowed characters (regex)
+     * @param int $maxlength The maximum length of the slug
+     * @return string The safe string
      */
-    public static function slug(string $string = null, string $separator = null, string $allowed = null): string
+    public static function slug(string $string = null, string $separator = null, string $allowed = null, int $maxlength = 128): string
     {
         $separator = $separator ?? static::$defaults['slug']['separator'];
         $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
@@ -789,14 +790,15 @@ class Str
         $string = preg_replace('!^[^a-z0-9]+!', '', $string);
         $string = preg_replace('![^a-z0-9]+$!', '', $string);
 
-        return $string;
+        // cut the string after the given maxlength
+        return static::short($string, $maxlength, false);
     }
 
     /**
      * Convert a string to snake case.
      *
-     * @param  string  $value
-     * @param  string  $delimiter
+     * @param string $value
+     * @param string $delimiter
      * @return string
      */
     public static function snake(string $value = null, string $delimiter = '_'): string
@@ -814,10 +816,10 @@ class Str
      * and it has a built-in way to skip values
      * which are too short.
      *
-     * @param  string  $string The string to split
-     * @param  string  $separator The string to split by
-     * @param  int     $length The min length of values.
-     * @return array   An array of found values
+     * @param string $string The string to split
+     * @param string $separator The string to split by
+     * @param int $length The min length of values.
+     * @return array An array of found values
      */
     public static function split($string, string $separator = ',', int $length = 1): array
     {
@@ -841,9 +843,9 @@ class Str
     /**
      * Checks if a string starts with the passed needle
      *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
      * @return bool
      */
     public static function startsWith(string $string = null, string $needle, bool $caseInsensitive = false): bool
@@ -858,9 +860,9 @@ class Str
     /**
      * A UTF-8 safe version of substr()
      *
-     * @param  string  $string
-     * @param  int     $start
-     * @param  int     $length
+     * @param string $string
+     * @param int $start
+     * @param int $length
      * @return string
      */
     public static function substr(string $string = null, int $start = 0, int $length = null): string
@@ -878,13 +880,13 @@ class Str
      *
      * </code>
      *
-     * @param  string  $string   The string with placeholders
-     * @param  array   $data     Associative array with placeholders as
-     *                           keys and replacements as values
-     * @param  string  $fallback A fallback if a token does not have any matches
-     * @param  string  $start    Placeholder start characters
-     * @param  string  $end      Placeholder end characters
-     * @return string            The filled-in string
+     * @param string $string The string with placeholders
+     * @param array $data Associative array with placeholders as
+     *                    keys and replacements as values
+     * @param string $fallback A fallback if a token does not have any matches
+     * @param string $start Placeholder start characters
+     * @param string $end Placeholder end characters
+     * @return string The filled-in string
      */
     public static function template(string $string = null, array $data = [], string $fallback = null, string $start = '{{', string $end = '}}'): string
     {
@@ -969,7 +971,7 @@ class Str
     /**
      * A UTF-8 safe version of ucfirst()
      *
-     * @param  string $string
+     * @param string $string
      * @return string
      */
     public static function ucfirst(string $string = null): string
@@ -980,7 +982,7 @@ class Str
     /**
      * A UTF-8 safe version of ucwords()
      *
-     * @param  string  $string
+     * @param string $string
      * @return string
      */
     public static function ucwords(string $string = null): string
@@ -998,8 +1000,8 @@ class Str
      *
      * </code>
      *
-     * @param  string  $string
-     * @return string  The html string
+     * @param string $string
+     * @return string The html string
      */
     public static function unhtml(string $string = null): string
     {
@@ -1009,9 +1011,9 @@ class Str
     /**
      * Returns the beginning of a string until the given character
      *
-     * @param  string   $string
-     * @param  string   $needle
-     * @param  bool     $caseInsensitive
+     * @param string $string
+     * @param string $needle
+     * @param bool $caseInsensitive
      * @return string
      */
     public static function until(string $string, string $needle, bool $caseInsensitive = false): string
@@ -1028,7 +1030,7 @@ class Str
     /**
      * A UTF-8 safe version of strotoupper()
      *
-     * @param  string  $string
+     * @param string $string
      * @return string
      */
     public static function upper(string $string = null): string

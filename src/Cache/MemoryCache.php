@@ -31,7 +31,7 @@ class MemoryCache extends Cache
      * @param string $key
      * @param mixed $value
      * @param int $minutes
-     * @return boolean
+     * @return bool
      */
     public function set(string $key, $value, int $minutes = 0): bool
     {
@@ -56,7 +56,7 @@ class MemoryCache extends Cache
      * whether the operation was successful
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function remove(string $key): bool
     {
@@ -72,7 +72,7 @@ class MemoryCache extends Cache
      * Flushes the entire cache and returns
      * whether the operation was successful
      *
-     * @return boolean
+     * @return bool
      */
     public function flush(): bool
     {

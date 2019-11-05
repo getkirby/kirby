@@ -82,7 +82,7 @@ trait FileActions
     /**
      * Changes the file's sorting number in the meta file
      *
-     * @param integer $sort
+     * @param int $sort
      * @return self
      */
     public function changeSort(int $sort)
@@ -256,6 +256,8 @@ trait FileActions
      */
     public function rename(string $name, bool $sanitize = true)
     {
+        deprecated('$file->rename() is deprecated, use $file->changeName() instead. $file->rename() will be removed in Kirby 3.5.0.');
+
         return $this->changeName($name, $sanitize);
     }
 

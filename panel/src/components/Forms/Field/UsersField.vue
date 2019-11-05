@@ -17,6 +17,7 @@
         :element="elements.list"
         :list="selected"
         :handle="true"
+        :data-invalid="isInvalid"
         @end="onInput"
       >
         <component
@@ -41,6 +42,7 @@
     </template>
     <k-empty
       v-else
+      :data-invalid="isInvalid"
       icon="users"
       @click="open"
     >
@@ -65,6 +67,7 @@ export default {
         endpoint: this.endpoints.field,
         max: this.max,
         multiple: this.multiple,
+        search: this.search,
         selected: this.selected.map(user => user.id)
       });
     }

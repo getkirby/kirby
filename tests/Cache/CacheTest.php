@@ -46,7 +46,7 @@ class CacheTest extends TestCase
     public function testConstruct()
     {
         $cache = new TestCache(['some' => 'options']);
-        $this->assertEquals(['some' => 'options'], $cache->options());
+        $this->assertSame(['some' => 'options'], $cache->options());
     }
 
     /**
@@ -58,12 +58,12 @@ class CacheTest extends TestCase
         $method->setAccessible(true);
 
         $cache = new TestCache();
-        $this->assertEquals('foo', $method->invoke($cache, 'foo'));
+        $this->assertSame('foo', $method->invoke($cache, 'foo'));
 
         $cache = new TestCache([
             'prefix' => 'test'
         ]);
-        $this->assertEquals('test/foo', $method->invoke($cache, 'foo'));
+        $this->assertSame('test/foo', $method->invoke($cache, 'foo'));
     }
 
     /**
@@ -74,25 +74,25 @@ class CacheTest extends TestCase
         $cache = new TestCache();
 
         $cache->set('foo', 'foo');
-        $this->assertEquals('foo', $cache->get('foo'));
+        $this->assertSame('foo', $cache->get('foo'));
 
         $cache->set('foo', ['this is' => 'an array']);
-        $this->assertEquals(['this is' => 'an array'], $cache->get('foo'));
+        $this->assertSame(['this is' => 'an array'], $cache->get('foo'));
 
         $cache->set('foo', 1234);
-        $this->assertEquals(1234, $cache->get('foo'));
+        $this->assertSame(1234, $cache->get('foo'));
 
         $cache->set('foo', null);
-        $this->assertEquals(null, $cache->get('foo', 'default'));
+        $this->assertSame(null, $cache->get('foo', 'default'));
 
-        $this->assertEquals('default', $cache->get('doesnotexist', 'default'));
+        $this->assertSame('default', $cache->get('doesnotexist', 'default'));
 
         $cache->set('notyetexpired', 'foo', 60, time());
-        $this->assertEquals('foo', $cache->get('notyetexpired'));
+        $this->assertSame('foo', $cache->get('notyetexpired'));
 
         $cache->set('expired', 'foo', 60, 0);
         $this->assertTrue(isset($cache->store['expired']));
-        $this->assertEquals('default', $cache->get('expired', 'default'));
+        $this->assertSame('default', $cache->get('expired', 'default'));
         $this->assertFalse(isset($cache->store['expired']));
     }
 
@@ -105,9 +105,9 @@ class CacheTest extends TestCase
         $method->setAccessible(true);
 
         $cache = new TestCache();
-        $this->assertEquals(0, $method->invoke($cache));
-        $this->assertEquals(0, $method->invoke($cache, 0));
-        $this->assertEquals(time() + 600, $method->invoke($cache, 10));
+        $this->assertSame(0, $method->invoke($cache));
+        $this->assertSame(0, $method->invoke($cache, 0));
+        $this->assertSame(time() + 600, $method->invoke($cache, 10));
     }
 
     /**
@@ -118,10 +118,10 @@ class CacheTest extends TestCase
         $cache = new TestCache();
 
         $cache->set('foo', 'foo', 12);
-        $this->assertEquals(time() + 720, $cache->expires('foo'));
+        $this->assertSame(time() + 720, $cache->expires('foo'));
 
         $cache->set('foo', 'foo');
-        $this->assertEquals(null, $cache->expires('foo'));
+        $this->assertSame(null, $cache->expires('foo'));
 
         $this->assertFalse($cache->expires('doesnotexist'));
     }
@@ -154,8 +154,8 @@ class CacheTest extends TestCase
         $cache = new TestCache();
 
         $cache->set('foo', 'foo', 60, 1234);
-        $this->assertEquals(1234, $cache->created('foo'));
-        $this->assertEquals(1234, $cache->modified('foo'));
+        $this->assertSame(1234, $cache->created('foo'));
+        $this->assertSame(1234, $cache->modified('foo'));
 
         $this->assertFalse($cache->created('doesnotexist'));
         $this->assertFalse($cache->modified('doesnotexist'));

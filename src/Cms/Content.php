@@ -69,7 +69,7 @@ class Content
      * Same as `self::data()` to improve
      * `var_dump` output
      *
-     * @see    self::data()
+     * @see self::data()
      * @return array
      */
     public function __debugInfo(): array
@@ -146,7 +146,7 @@ class Content
      * Returns either a single field object
      * or all registered fields
      *
-     * @param  string $key
+     * @param string $key
      * @return \Kirby\Cms\Field|array
      */
     public function get(string $key = null)
@@ -172,7 +172,7 @@ class Content
      * Checks if a content field is set
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function has(string $key): bool
     {
@@ -197,7 +197,7 @@ class Content
      * without the fields, specified by the
      * passed key(s)
      *
-     * @param  string ...$keys
+     * @param string ...$keys
      * @return self
      */
     public function not(...$keys)
@@ -238,8 +238,8 @@ class Content
     /**
      * Returns the raw data array
      *
-     * @see     self::data()
-     * @return  array
+     * @see self::data()
+     * @return array
      */
     public function toArray(): array
     {
@@ -250,8 +250,8 @@ class Content
      * Updates the content and returns
      * a cloned object
      *
-     * @param  array $content
-     * @param  bool $overwrite
+     * @param array $content
+     * @param bool $overwrite
      * @return self
      */
     public function update(array $content = null, bool $overwrite = false)

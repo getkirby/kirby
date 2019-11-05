@@ -25,8 +25,8 @@ trait HasMethods
      * passed arguments
      *
      * @internal
-     * @param  string $method
-     * @param  array  $args
+     * @param string $method
+     * @param array $args
      * @return mixed
      */
     public function callMethod(string $method, array $args = [])
@@ -39,7 +39,7 @@ trait HasMethods
      *
      * @internal
      * @param string $method
-     * @return boolean
+     * @return bool
      */
     public function hasMethod(string $method): bool
     {

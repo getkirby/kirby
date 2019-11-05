@@ -7,6 +7,8 @@ use Kirby\Toolkit\F;
 
 class AppComponentsTest extends TestCase
 {
+    protected $kirby;
+
     public function setUp(): void
     {
         $this->kirby = new App([
@@ -14,6 +16,19 @@ class AppComponentsTest extends TestCase
                 'index' => '/dev/null'
             ]
         ]);
+    }
+
+    public function testDump()
+    {
+        $kirby = $this->kirby->clone([
+            'components' => [
+                'dump' => function ($kirby, $variable) {
+                    return $variable;
+                }
+            ]
+        ]);
+
+        $this->assertEquals('test', dump('test'));
     }
 
     public function testMarkdown()
@@ -44,6 +59,88 @@ class AppComponentsTest extends TestCase
         $expected = '&#8220;Test&#8221;';
 
         $this->assertEquals($expected, $this->kirby->smartypants($text));
+    }
+
+    public function testSmartypantsDisabled()
+    {
+        $this->kirby = $this->kirby->clone([
+            'options' => [
+                'smartypants'   => false
+            ]
+        ]);
+
+        $text     = '"Test"';
+        $expected = '"Test"';
+
+        $this->assertSame($expected, $this->kirby->smartypants($text));
+    }
+
+    public function testSmartypantsMultiLang()
+    {
+        $this->kirby = $this->kirby->clone([
+            'options' => [
+                'languages'     => true,
+                'smartypants'   => true
+            ],
+            'languages' => [
+                [
+                    'code'          => 'en',
+                    'name'          => 'English',
+                    'default'       => true,
+                    'locale'        => 'en_US',
+                    'url'           => '/',
+                    'smartypants'   => [
+                        'doublequote.open'  => '<',
+                        'doublequote.close' => '>'
+                    ]
+                ],
+                [
+                    'code'          => 'de',
+                    'name'          => 'Deutsch',
+                    'locale'        => 'de_DE',
+                    'url'           => '/de',
+                    'smartypants'   => [
+                        'doublequote.open'  => '<<',
+                        'doublequote.close' => '>>'
+                    ]
+                ]
+            ]
+        ]);
+
+        $text     = '"Test"';
+        $expected = '<Test>';
+
+        $this->assertSame($expected, $this->kirby->smartypants($text));
+    }
+
+    public function testSmartypantsDefaultOptionsOnMultiLang()
+    {
+        $this->kirby = $this->kirby->clone([
+            'options' => [
+                'languages'     => true,
+                'smartypants'   => true
+            ],
+            'languages' => [
+                [
+                    'code'          => 'en',
+                    'name'          => 'English',
+                    'default'       => true,
+                    'locale'        => 'en_US',
+                    'url'           => '/'
+                ],
+                [
+                    'code'          => 'de',
+                    'name'          => 'Deutsch',
+                    'locale'        => 'de_DE',
+                    'url'           => '/de'
+                ]
+            ]
+        ]);
+
+        $text     = '"Test"';
+        $expected = '&#8220;Test&#8221;';
+
+        $this->assertSame($expected, $this->kirby->smartypants($text));
     }
 
     public function testSmartypantsCachedInstance()

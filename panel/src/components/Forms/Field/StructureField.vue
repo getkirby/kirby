@@ -44,13 +44,22 @@
     </template>
 
     <!-- Empty State -->
-    <k-empty v-else-if="items.length === 0" icon="list-bullet" @click="add">
+    <k-empty
+      v-else-if="items.length === 0"
+      :data-invalid="isInvalid"
+      icon="list-bullet"
+      @click="add"
+    >
       {{ empty || $t("field.structure.empty") }}
     </k-empty>
 
     <!-- Table -->
     <template v-else>
-      <table :data-sortable="isSortable" class="k-structure-table">
+      <table
+        :data-invalid="isInvalid"
+        :data-sortable="isSortable"
+        class="k-structure-table"
+      >
         <thead>
           <tr>
             <th class="k-structure-table-index">#</th>
@@ -99,6 +108,7 @@
                   :value="item[columnName]"
                   :column="column"
                   :field="fields[columnName]"
+                  @input="update(index, columnName, $event)"
                 />
                 <template v-else>
                   <p class="k-structure-table-text">
@@ -131,12 +141,8 @@
 <script>
 import Vue from "vue";
 import Field from "../Field.vue";
-import dayjs from "dayjs";
-import sorter from "@/helpers/sort.js";
-import clone from "@/helpers/clone.js";
 
 Array.prototype.sortBy = function(sortBy) {
-  const sort = sorter();
   const options = sortBy.split(" ");
   const field = options[0];
   const direction = options[1] || "asc";
@@ -146,9 +152,9 @@ Array.prototype.sortBy = function(sortBy) {
     const valueB = String(b[field]).toLowerCase();
 
     if (direction === "desc") {
-      return sort(valueB, valueA);
+      return this.$helper.sort(valueB, valueA);
     } else {
-      return sort(valueA, valueB);
+      return this.$helper.sort(valueA, valueB);
     }
   });
 };
@@ -219,6 +225,21 @@ export default {
       }
 
       return true;
+    },
+    isInvalid() {
+      if (this.disabled === true) {
+        return false;
+      }
+
+      if (this.min && this.items.length < this.min) {
+        return true;
+      }
+
+      if (this.max && this.items.length > this.max) {
+        return true;
+      }
+
+      return false;
     },
     isSortable() {
       if (this.sortBy) {
@@ -293,7 +314,7 @@ export default {
       Object.keys(this.fields).forEach(fieldName => {
         const field = this.fields[fieldName];
         if (field.default !== null) {
-          data[fieldName] = clone(field.default);
+          data[fieldName] = this.$helper.clone(field.default);
         } else {
           data[fieldName] = null;
         }
@@ -311,7 +332,7 @@ export default {
       this.$events.$off("keydown.esc", this.escape);
       this.$events.$off("keydown.cmd.s", this.submit);
 
-      this.$store.dispatch("form/enable");
+      this.$store.dispatch("content/enable");
     },
     columnIsEmpty(value) {
       if (value === undefined || value === null || value === "") {
@@ -340,7 +361,7 @@ export default {
     createForm(field) {
       this.$events.$on("keydown.esc", this.escape);
       this.$events.$on("keydown.cmd.s", this.submit);
-      this.$store.dispatch("form/disable");
+      this.$store.dispatch("content/disable");
 
       this.$nextTick(() => {
         if (this.$refs.form) {
@@ -354,7 +375,7 @@ export default {
           return value.email;
         }
         case "date": {
-          const date = dayjs(value);
+          const date = this.$library.dayjs(value);
           const format = field.time === true ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
           return date.isValid() ? date.format(format) : "";
         }
@@ -442,7 +463,7 @@ export default {
     },
     open(index, field) {
       this.currentIndex = index;
-      this.currentModel = clone(this.items[index]);
+      this.currentModel = this.$helper.clone(this.items[index]);
       this.createForm(field);
     },
     beforePaginate() {
@@ -551,6 +572,10 @@ export default {
       const b = Number(parts[1]);
 
       return parseFloat(100 / b * a, 2).toFixed(2) + "%";
+    },
+    update(index, column, value) {
+      this.items[index][column] = value;
+      this.onInput();
     }
   }
 };

@@ -17,10 +17,10 @@ class KirbyTagsTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('test', KirbyTags::parse('(test: foo)'));
-        $this->assertEquals('test', KirbyTags::parse('(Test: foo)'));
-        $this->assertEquals('test', KirbyTags::parse('(TEST: foo)'));
-        $this->assertEquals('test', KirbyTags::parse('(tEsT: foo)'));
+        $this->assertSame('test', KirbyTags::parse('(test: foo)'));
+        $this->assertSame('test', KirbyTags::parse('(Test: foo)'));
+        $this->assertSame('test', KirbyTags::parse('(TEST: foo)'));
+        $this->assertSame('test', KirbyTags::parse('(tEsT: foo)'));
     }
 
     public function testParseWithValue()
@@ -33,9 +33,9 @@ class KirbyTagsTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('foo', KirbyTags::parse('(test: foo)'));
-        $this->assertEquals('foo', KirbyTags::parse('(Test: foo)'));
-        $this->assertEquals('foo', KirbyTags::parse('(TEST: foo)'));
+        $this->assertSame('foo', KirbyTags::parse('(test: foo)'));
+        $this->assertSame('foo', KirbyTags::parse('(Test: foo)'));
+        $this->assertSame('foo', KirbyTags::parse('(TEST: foo)'));
     }
 
     public function testParseWithAttribute()
@@ -49,9 +49,9 @@ class KirbyTagsTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('foo|bar', KirbyTags::parse('(test: foo a: bar)'));
-        $this->assertEquals('foo|bar', KirbyTags::parse('(Test: foo A: bar)'));
-        $this->assertEquals('foo|bar', KirbyTags::parse('(TEST: foo a: bar)'));
+        $this->assertSame('foo|bar', KirbyTags::parse('(test: foo a: bar)'));
+        $this->assertSame('foo|bar', KirbyTags::parse('(Test: foo A: bar)'));
+        $this->assertSame('foo|bar', KirbyTags::parse('(TEST: foo a: bar)'));
     }
 
     public function testParseWithException()
@@ -64,6 +64,6 @@ class KirbyTagsTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('(test: foo)', KirbyTags::parse('(test: foo)'));
+        $this->assertSame('(test: foo)', KirbyTags::parse('(test: foo)'));
     }
 }

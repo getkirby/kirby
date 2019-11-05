@@ -4,7 +4,7 @@
 
     <header class="k-section-header">
       <k-headline>
-        {{ headline }} <abbr v-if="options.min" title="This section is required">*</abbr>
+        {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
       <k-button-group v-if="add">
         <k-button icon="upload" @click="upload">{{ $t("add") }}</k-button>
@@ -30,6 +30,7 @@
           :pagination="pagination"
           :sortable="options.sortable"
           :size="options.size"
+          :data-invalid="isInvalid" 
           @sort="sort"
           @paginate="paginate"
           @action="action"
@@ -37,6 +38,7 @@
         <template v-else>
           <k-empty
             :layout="options.layout"
+            :data-invalid="isInvalid" 
             icon="image"
             @click="if (add) upload()"
           >
@@ -56,7 +58,6 @@
       <k-file-rename-dialog ref="rename" @success="update" />
       <k-file-remove-dialog ref="remove" @success="update" />
       <k-upload ref="upload" @success="uploaded" @error="reload" />
-
     </template>
 
   </section>
@@ -75,7 +76,7 @@ export default {
       } else {
         return false;
       }
-    }
+    },
   },
   created() {
     this.load();
@@ -86,45 +87,40 @@ export default {
   },
   methods: {
     action(file, action) {
-      // check first if file is locked
-      const url = this.$api.files.url(file.parent, file.filename, "lock");
-      this.$api.get(url).then(response => {
 
-        // restrict actions if file is locked
-        if (response.locked && ["download", "edit"].includes(action) === false) {
-          this.$store.dispatch('notification/error', this.$t("lock.file.isLocked", { email: response.email }));
-          return;
-        }
+      switch (action) {
+        case "edit":
+          this.$router.push(file.link);
+          break;
+        case "download":
+          window.open(file.url);
+          break;
+        case "rename":
+          this.$refs.rename.open(file.parent, file.filename);
+          break;
+        case "replace":
+          this.$refs.upload.open({
+            url: config.api + "/" + this.$api.files.url(file.parent, file.filename),
+            accept: file.mime,
+            multiple: false
+          });
+          break;
+        case "remove":
+          if (this.data.length <= this.options.min) {
+            const number = this.options.min > 1 ? "plural" : "singular";
+            this.$store.dispatch("notification/error", {
+              message: this.$t("error.section.files.min." + number, {
+                section: this.options.headline || this.name,
+                min: this.options.min
+              })
+            });
+            break;
+          }
 
-        switch (action) {
-          case "edit":
-            this.$router.push(file.link);
-            break;
-          case "download":
-            window.open(file.url);
-            break;
-          case "rename":
-            this.$refs.rename.open(file.parent, file.filename);
-            break;
-          case "replace":
-            this.replace(file);
-            break;
-          case "remove":
-            if (this.data.length <= this.options.min) {
-              const number = this.options.min > 1 ? "plural" : "singular";
-              this.$store.dispatch("notification/error", {
-                message: this.$t("error.section.files.min." + number, {
-                  section: this.options.headline || this.name,
-                  min: this.options.min
-                })
-              });
-              break;
-            }
+          this.$refs.remove.open(file.parent, file.filename);
+          break;
+      }
 
-            this.$refs.remove.open(file.parent, file.filename);
-            break;
-        }
-      });
     },
     drop(files) {
       if (this.add === false) {

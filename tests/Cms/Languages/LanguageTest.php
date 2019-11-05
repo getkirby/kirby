@@ -338,4 +338,97 @@ class LanguageTest extends TestCase
 
         $this->assertEquals($fixtures . '/site/languages/de.php', $language->root());
     }
+
+    public function pathProvider()
+    {
+        return [
+            [null, 'en'],
+            ['/', ''],
+            ['/en', 'en'],
+            ['/en/', 'en'],
+            ['https://getkirby.com/en', 'en'],
+            ['https://getkirby.com/en/', 'en'],
+            ['https://getkirby.com/sub/sub', 'sub/sub'],
+            ['https://getkirby.com/sub/sub/', 'sub/sub'],
+        ];
+    }
+
+    /**
+     * @dataProvider pathProvider
+     */
+    public function testPath($input, $expected)
+    {
+        $language = new Language([
+            'code' => 'en',
+            'url'  => $input
+        ]);
+
+        $this->assertEquals($expected, $language->path());
+    }
+
+    public function patternProvider()
+    {
+        return [
+            [null, 'en/(:all?)'],
+            ['/', '(:all)'],
+            ['/en', 'en/(:all?)'],
+            ['/en/', 'en/(:all?)'],
+            ['https://getkirby.com', '(:all)'],
+            ['https://getkirby.com/', '(:all)'],
+            ['https://getkirby.com/en', 'en/(:all?)'],
+            ['https://getkirby.com/en/', 'en/(:all?)'],
+            ['https://getkirby.com/sub/sub', 'sub/sub/(:all?)'],
+            ['https://getkirby.com/sub/sub/', 'sub/sub/(:all?)'],
+        ];
+    }
+
+    /**
+     * @dataProvider patternProvider
+     */
+    public function testPattern($input, $expected)
+    {
+        $language = new Language([
+            'code' => 'en',
+            'url'  => $input
+        ]);
+
+        $this->assertEquals($expected, $language->pattern());
+    }
+
+    public function baseUrlProvider()
+    {
+        return [
+            ['https://getkirby.com', null, 'https://getkirby.com'],
+            ['https://getkirby.com', '/en', 'https://getkirby.com'],
+            ['https://getkirby.com', 'https://getkirby.de', 'https://getkirby.de'],
+            ['https://getkirby.com', 'https://getkirby.de/en', 'https://getkirby.de'],
+            ['http://localhost/example.com', null, 'http://localhost/example.com'],
+            ['http://localhost/example.com', '/en', 'http://localhost/example.com'],
+            ['http://localhost/example.com', 'http://getkirby.com', 'http://getkirby.com'],
+            ['http://localhost/example.com', 'http://getkirby.com/en', 'http://getkirby.com'],
+        ];
+    }
+
+    /**
+     * @dataProvider baseUrlProvider
+     */
+    public function testBaseUrl($kirbyUrl, $url, $expected)
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => $kirbyUrl
+            ]
+        ]);
+
+        // default
+        $language = new Language([
+            'code' => 'en',
+            'url'  => $url
+        ]);
+
+        $this->assertEquals($expected, $language->baseUrl());
+    }
 }

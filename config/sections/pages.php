@@ -20,7 +20,13 @@ return [
          * Optional array of templates that should only be allowed to add.
          */
         'create' => function ($add = null) {
-            return A::wrap($add);
+            return $add;
+        },
+        /**
+         * Enables/disables reverse sorting
+         */
+        'flip' => function (bool $flip = false) {
+            return $flip;
         },
         /**
          * Image options to control the source and look of page previews
@@ -122,6 +128,11 @@ return [
                 $pages = $pages->sortBy(...$pages::sortArgs($this->sortBy));
             }
 
+            // flip
+            if ($this->flip === true) {
+                $pages = $pages->flip();
+            }
+
             // pagination
             $pages = $pages->paginate([
                 'page'  => $this->page,
@@ -188,6 +199,10 @@ return [
             ];
         },
         'add' => function () {
+            if ($this->create === false) {
+                return false;
+            }
+
             if (in_array($this->status, ['draft', 'all']) === false) {
                 return false;
             }
@@ -222,13 +237,17 @@ return [
                 return false;
             }
 
+            if ($this->flip === true) {
+                return false;
+            }
+
             return true;
         }
     ],
     'methods' => [
         'blueprints' => function () {
             $blueprints = [];
-            $templates  = empty($this->create) === false ? $this->create : $this->templates;
+            $templates  = empty($this->create) === false ? A::wrap($this->create) : $this->templates;
 
             if (empty($templates) === true) {
                 $templates = $this->kirby()->blueprints();

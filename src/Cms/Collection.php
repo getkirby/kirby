@@ -38,8 +38,8 @@ class Collection extends BaseCollection
     /**
      * Magic getter function
      *
-     * @param  string $key
-     * @param  mixed  $arguments
+     * @param string $key
+     * @param mixed $arguments
      * @return mixed
      */
     public function __call(string $key, $arguments)
@@ -101,8 +101,8 @@ class Collection extends BaseCollection
     /**
      * Appends an element to the data array
      *
-     * @param  mixed $key Optional collection key, will be determined from the item if not given
-     * @param  mixed $item
+     * @param mixed $key Optional collection key, will be determined from the item if not given
+     * @param mixed $item
      * @return \Kirby\Cms\Collection
      */
     public function append(...$args)
@@ -165,7 +165,7 @@ class Collection extends BaseCollection
      * is in the collection
      *
      * @param string|object $id
-     * @return boolean
+     * @return bool
      */
     public function has($id): bool
     {
@@ -181,7 +181,7 @@ class Collection extends BaseCollection
      * The method will automatically detect objects
      * or ids and then search accordingly.
      *
-     * @param  string|object $object
+     * @param string|object $object
      * @return int
      */
     public function indexOf($object): int
@@ -196,7 +196,7 @@ class Collection extends BaseCollection
     /**
      * Returns a Collection without the given element(s)
      *
-     * @param  mixed ...$keys any number of keys, passed as individual arguments
+     * @param mixed ...$keys any number of keys, passed as individual arguments
      * @return \Kirby\Cms\Collection
      */
     public function not(...$keys)
@@ -216,7 +216,7 @@ class Collection extends BaseCollection
     /**
      * Add pagination and return a sliced set of data.
      *
-     * @param  mixed ...$arguments
+     * @param mixed ...$arguments
      * @return \Kirby\Cms\Collection
      */
     public function paginate(...$arguments)
@@ -240,9 +240,9 @@ class Collection extends BaseCollection
     /**
      * Prepends an element to the data array
      *
-     * @param  mixed $key Optional collection key, will be determined from the item if not given
-     * @param  mixed $item
-     * @return Kirby\Cms\Collection
+     * @param mixed $key Optional collection key, will be determined from the item if not given
+     * @param mixed $item
+     * @return \Kirby\Cms\Collection
      */
     public function prepend(...$args)
     {
@@ -321,7 +321,7 @@ class Collection extends BaseCollection
      * to an array. This can also take a callback
      * function to further modify the array result.
      *
-     * @param  Closure $map
+     * @param Closure $map
      * @return array
      */
     public function toArray(Closure $map = null): array

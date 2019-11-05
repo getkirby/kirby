@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 class RemoteTest extends TestCase
 {
+    protected $defaults;
+
     public function setUp(): void
     {
         $this->defaults = Remote::$defaults;

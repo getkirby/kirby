@@ -84,6 +84,10 @@ return [
             return $this->rows($this->value);
         },
         'fields' => function () {
+            if (empty($this->fields) === true) {
+                throw new Exception('Please provide some fields for the structure');
+            }
+
             return $this->form()->fields()->toArray();
         },
         'columns' => function () {

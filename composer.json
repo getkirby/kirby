@@ -1,7 +1,7 @@
 {
   "name": "getkirby/cms",
   "description": "The Kirby 3 core",
-  "version": "3.2.5",
+  "version": "3.3.0",
   "license": "proprietary",
   "keywords": ["kirby", "cms", "core"],
   "homepage": "https://getkirby.com",
@@ -40,7 +40,7 @@
     }
   },
   "scripts": {
-    "analyze": "phpstan analyse src",
+    "analyze": "phpstan analyse",
     "test": "phpunit --stderr --coverage-html=tests/coverage",
     "zip": "composer archive --format=zip --file=dist",
     "build": "./scripts/build",

@@ -23,6 +23,7 @@
 
   "delete": "Slett",
   "dimensions": "Dimensjoner",
+  "disabled": "Disabled",
   "discard": "Forkast",
   "download": "Download",
   "duplicate": "Duplicate",
@@ -137,6 +138,7 @@
   "error.section.notLoaded": "Seksjonen \"{name}\" kunne ikke lastes inn",
   "error.section.type.invalid": "Seksjonstypen \"{type}\" er ikke gyldig",
 
+  "error.site.changeTitle.empty": "Tittelen kan ikke være tom",
   "error.site.changeTitle.permission":
     "Du har ikke tillatelse til å endre tittel på siden",
   "error.site.update.permission": "Du har ikke tillatelse til å oppdatere denne siden",
@@ -155,6 +157,8 @@
     "Rollen for den siste administratoren kan ikke endres",
   "error.user.changeRole.permission":
     "Du har ikke tillatelse til å endre rollen for brukeren \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Du har ikke tilgang til å opprette denne brukeren",
   "error.user.delete": "Denne brukeren kunne ikke bli slettet",
   "error.user.delete.lastAdmin": "Siste administrator kan ikke slettes",
@@ -219,6 +223,7 @@
   "error.validation.time": "Vennligst angi et gyldig tidspunkt",
   "error.validation.url": "Vennligst skriv inn en gyldig URL",
 
+  "field.required": "The field is required",
   "field.files.empty": "Ingen filer har blitt valgt",
   "field.pages.empty": "Ingen side har blitt valgt",
   "field.structure.delete.confirm": "\u00d8nsker du virkelig \u00e5 slette denne oppf\u00f8ringen?",
@@ -291,6 +296,7 @@
   "loading": "Laster inn",
 
   "lock.unsaved": "Unsaved changes",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
   "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
   "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
@@ -364,6 +370,8 @@
   "pages.status.listed": "Publisert",
   "pages.status.unlisted": "Unotert",
 
+  "pagination.page": "Side",
+
   "password": "Passord",
   "pixel": "Piksel",
   "prev": "Forrige",
@@ -384,6 +392,9 @@
 
   "save": "Lagre",
   "search": "Søk",
+
+  "section.required": "The section is required",
+
   "select": "Velg",
   "settings": "Innstillinger",
   "size": "Størrelse",

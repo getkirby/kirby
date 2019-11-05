@@ -32,12 +32,12 @@ class Cookie
      *
      * </code>
      *
-     * @param  string  $key       The name of the cookie
-     * @param  string  $value     The cookie content
-     * @param  array   $options   Array of options:
-     *                            lifetime, path, domain, secure, httpOnly
-     * @return boolean            true: cookie was created,
-     *                            false: cookie creation failed
+     * @param string $key The name of the cookie
+     * @param string $value The cookie content
+     * @param array $options Array of options:
+     *                       lifetime, path, domain, secure, httpOnly
+     * @return bool true: cookie was created,
+     *              false: cookie creation failed
      */
     public static function set(string $key, string $value, array $options = []): bool
     {
@@ -61,7 +61,7 @@ class Cookie
     /**
      * Calculates the lifetime for a cookie
      *
-     * @param  int $minutes Number of minutes or timestamp
+     * @param int $minutes Number of minutes or timestamp
      * @return int
      */
     public static function lifetime(int $minutes): int
@@ -87,12 +87,12 @@ class Cookie
      *
      * </code>
      *
-     * @param  string  $key       The name of the cookie
-     * @param  string  $value     The cookie content
-     * @param  array   $options   Array of options:
-     *                            path, domain, secure, httpOnly
-     * @return boolean            true: cookie was created,
-     *                            false: cookie creation failed
+     * @param string $key The name of the cookie
+     * @param string $value The cookie content
+     * @param array $options Array of options:
+     *                       path, domain, secure, httpOnly
+     * @return bool true: cookie was created,
+     *              false: cookie creation failed
      */
     public static function forever(string $key, string $value, array $options = []): bool
     {
@@ -110,10 +110,10 @@ class Cookie
      *
      * </code>
      *
-     * @param  string|null  $key     The name of the cookie
-     * @param  string|null  $default The default value, which should be returned
-     *                               if the cookie has not been found
-     * @return mixed                 The found value
+     * @param string|null $key The name of the cookie
+     * @param string|null $default The default value, which should be returned
+     *                             if the cookie has not been found
+     * @return mixed The found value
      */
     public static function get(string $key = null, string $default = null)
     {
@@ -127,8 +127,8 @@ class Cookie
     /**
      * Checks if a cookie exists
      *
-     * @param  string  $key
-     * @return boolean
+     * @param string $key
+     * @return bool
      */
     public static function exists(string $key): bool
     {
@@ -139,7 +139,7 @@ class Cookie
      * Creates a HMAC for the cookie value
      * Used as a cookie signature to prevent easy tampering with cookie data
      *
-     * @param  string $value
+     * @param string $value
      * @return string
      */
     protected static function hmac(string $value): string
@@ -151,7 +151,7 @@ class Cookie
      * Parses the hashed value from a cookie
      * and tries to extract the value
      *
-     * @param  string $string
+     * @param string $string
      * @return mixed
      */
     protected static function parse(string $string)
@@ -190,9 +190,9 @@ class Cookie
      *
      * </code>
      *
-     * @param  string  $key The name of the cookie
-     * @return boolean      true: the cookie has been removed,
-     *                      false: the cookie could not be removed
+     * @param string $key The name of the cookie
+     * @return bool true: the cookie has been removed,
+     *              false: the cookie could not be removed
      */
     public static function remove(string $key): bool
     {

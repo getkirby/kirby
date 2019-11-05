@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 class InfoSectionTest extends TestCase
 {
+    protected $app;
+
     public function setUp(): void
     {
         App::destroy();

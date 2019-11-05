@@ -10,9 +10,9 @@
       name,
       placeholder,
       required,
-      step,
-      value
+      step
     }"
+    :value="number"
     class="k-number-input"
     type="number"
     v-on="listeners"
@@ -46,20 +46,26 @@ export default {
   },
   data() {
     return {
+      number: this.format(this.value),
       listeners: {
         ...this.$listeners,
-        input: (event) => this.onInput(event.target.value)
+        change: (event) => this.onChange(event.target.value),
+        input: (event) => this.onInput(event.target.value),
       }
     }
   },
   watch: {
-    value() {
-      this.onInvalid();
+    value(value) {
+      this.number = value;
+    },
+    number: {
+      immediate: true,
+      handler() {
+        this.onInvalid();
+      }
     }
   },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -69,6 +75,22 @@ export default {
     }
   },
   methods: {
+    decimals() {
+      if (Math.floor(this.step) === this.step) {
+        return 0;
+      }
+
+      return this.step.toString().split(".")[1].length || 0;
+    },
+    format(value) {
+      const decimals = this.decimals();
+
+      if (decimals) {
+        return parseFloat(value).toFixed(decimals);
+      }
+
+      return parseInt(value);
+    },
     focus() {
       this.$refs.input.focus();
     },
@@ -76,13 +98,12 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     onInput(value) {
-      // don't convert empty values or the beginning of
-      // a negative number to a Number
-      if (value !== null && value !== "" && value !== "-" && value !== "-0") {
-        value = Number(value);
-      }
-
-      this.$emit("input", value);
+      this.number = value;
+      this.$emit("input", this.number);
+    },
+    onChange(value) {
+      this.number = this.format(value);
+      this.$emit("input", this.number);
     },
     select() {
       this.$refs.input.select();

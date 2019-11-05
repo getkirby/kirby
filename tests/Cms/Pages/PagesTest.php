@@ -78,6 +78,36 @@ class PagesTest extends TestCase
         $this->assertEquals('a/aa', $pages->nth(2)->id());
     }
 
+    public function testAddNull()
+    {
+        $pages = new Pages();
+        $this->assertCount(0, $pages);
+
+        $pages->add(null);
+
+        $this->assertCount(0, $pages);
+    }
+
+    public function testAddFalse()
+    {
+        $pages = new Pages();
+        $this->assertCount(0, $pages);
+
+        $pages->add(false);
+
+        $this->assertCount(0, $pages);
+    }
+
+    public function testAddInvalidObject()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('You must pass a Page object to the Pages collection');
+
+        $site  = new Site();
+        $pages = new Pages();
+        $pages->add($site);
+    }
+
     public function testAudio()
     {
         $pages = Pages::factory([
@@ -400,6 +430,34 @@ class PagesTest extends TestCase
         ];
 
         $this->assertEquals($expected, $pages->index(true)->keys());
+    }
+
+    public function testNotTemplate()
+    {
+        $pages = Pages::factory([
+            [
+                'slug'     => 'a',
+                'template' => 'a'
+            ],
+            [
+                'slug'     => 'b',
+                'template' => 'b'
+            ],
+            [
+                'slug'     => 'c',
+                'template' => 'c'
+            ],
+            [
+                'slug'     => 'd',
+                'template' => 'a'
+            ],
+        ]);
+
+        $this->assertEquals(['a', 'b', 'c', 'd'], $pages->notTemplate(null)->pluck('slug'));
+        $this->assertEquals(['b', 'c'], $pages->notTemplate('a')->pluck('slug'));
+        $this->assertEquals(['c'], $pages->notTemplate(['a', 'b'])->pluck('slug'));
+        $this->assertEquals(['a', 'b', 'c', 'd'], $pages->notTemplate(['z'])->pluck('slug'));
+        $this->assertEquals([], $pages->notTemplate(['a', 'b', 'c'])->pluck('slug'));
     }
 
     public function testNums()

@@ -23,6 +23,7 @@
 
   "delete": "Pašalinti",
   "dimensions": "Išmatavimai",
+  "disabled": "Išjungta",
   "discard": "Atšaukti",
   "download": "Parsisiųsti",
   "duplicate": "Kopijuoti",
@@ -137,6 +138,7 @@
   "error.section.notLoaded": "Sekcija \"{name}\" negali būti užkrauta",
   "error.section.type.invalid": "Sekcijos tipas \"{type}\" yra neteisingas",
 
+  "error.site.changeTitle.empty": "Pavadinimas negali būti tuščias",
   "error.site.changeTitle.permission":
     "Neturite leidimo keisti svetainės pavadinimo",
   "error.site.update.permission": "Neturite leidimo atnaujinti svetainės",
@@ -155,6 +157,8 @@
     "Vienintelio administratoriaus rolės negalima pakeisti",
   "error.user.changeRole.permission":
     "Neturite leidimo pakeisti vartotojo \"{name}\" rolės",
+  "error.user.changeRole.toAdmin":
+    "Jūs neturite teisių suteikti administratoriaus rolę",
   "error.user.create.permission": "Neturite leidimo sukurti šį vartotoją",
   "error.user.delete": "Vartotojo \"{name}\" negalima pašalinti",
   "error.user.delete.lastAdmin": "Vienintelio administratoriaus negalima pašalinti",
@@ -219,7 +223,8 @@
   "error.validation.time": "Prašome įrašyti korektišką laiką",
   "error.validation.url": "Prašome įrašyti teisingą URL",
 
-  "field.files.empty": "Dar nėra failų",
+  "field.required": "Laukas privalomas",
+  "field.files.empty": "Pasirinkti",
   "field.pages.empty": "Dar nėra puslapių",
   "field.structure.delete.confirm": "Ar tikrai norite pašalinti šią eilutę?",
   "field.structure.empty": "Dar nėra įrašų",
@@ -229,7 +234,7 @@
     "Ar tikrai norite pašalinti <br><strong>{filename}</strong>?",
 
   "files": "Failai",
-  "files.empty": "Dar nėra failų",
+  "files.empty": "Įkelti",
 
   "hour": "Valanda",
   "insert": "Įterpti",
@@ -291,6 +296,7 @@
   "loading": "Kraunasi",
 
   "lock.unsaved": "Neišsaugoti pakeitimai",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Vartotojo <strong>{email}</strong> neišsaugoti pakeitimai",
   "lock.file.isLocked": "Šį failą dabar redaguoja kitas vartotojas {email}, tad jo negalima pekeisti.",
   "lock.page.isLocked": "Šį puslapį dabar redaguoja kitas vartotojas {email}, tad jo negalima pekeisti.",
@@ -364,6 +370,8 @@
   "pages.status.listed": "Paskelbti",
   "pages.status.unlisted": "Nerodomi",
 
+  "pagination.page": "Puslapis",
+
   "password": "Slaptažodis",
   "pixel": "Pikselis",
   "prev": "Ankstesnis",
@@ -384,6 +392,9 @@
 
   "save": "Išsaugoti",
   "search": "Ieškoti",
+
+  "section.required": "Sekcija privaloma",
+
   "select": "Pasirinkti",
   "settings": "Nustatymai",
   "size": "Dydis",
@@ -418,7 +429,7 @@
   "upload.error.default": "Nepavyko įkelti failo",
   "upload.error.extension": "Neįmanoma įkelti tokio tipo failo",
   "upload.error.formSize": "Įkeltas failas viršija MAX_FILE_SIZE nustatymą, kuris buvo nurodytas formoje",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniPostSize": "Įkeliamas failas viršija post_max_size nustatymą iš php.ini",
   "upload.error.iniSize": "Įkeltas failas viršija upload_max_filesize nustatymą faile php.ini",
   "upload.error.noFile": "Failas nebuvo įkeltas",
   "upload.error.noFiles": "Failai nebuvo įkelti",

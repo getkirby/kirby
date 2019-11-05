@@ -27,7 +27,7 @@ return [
         'pattern' => '(:all)/files',
         'method'  => 'GET',
         'action'  => function (string $path) {
-            return $this->parent($path)->files()->sortBy('sort', 'asc');
+            return $this->parent($path)->files()->sortBy('sort', 'asc', 'filename', 'asc');
         }
     ],
     [

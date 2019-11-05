@@ -23,6 +23,7 @@
 
   "delete": "\u0423\u0434\u0430\u043b\u0438\u0442\u044c",
   "dimensions": "Размеры",
+  "disabled": "Отключено",
   "discard": "\u0421\u0431\u0440\u043e\u0441",
   "download": "Скачать",
   "duplicate": "Дублировать",
@@ -137,6 +138,7 @@
   "error.section.notLoaded": "Секция \"{name}\" не может быть загружена",
   "error.section.type.invalid": "Тип секции {type} неверный",
 
+  "error.site.changeTitle.empty": "Название не может быть пустым",
   "error.site.changeTitle.permission":
     "У вас нет права поменять название сайта",
   "error.site.update.permission": "У вас нет права обновить сайт",
@@ -155,6 +157,8 @@
     "Роль единственного администратора нельзя поменять",
   "error.user.changeRole.permission":
     "У вас нет права поменять поль для пользователя \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "У вас нет прав предоставить роль администратора",
   "error.user.create.permission": "У вас нет права создать этого пользователя",
   "error.user.delete": "\u0410\u043a\u043a\u0430\u0443\u043d\u0442 \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0431\u044b\u0442\u044c \u0443\u0434\u0430\u043b\u0435\u043d",
   "error.user.delete.lastAdmin": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0435\u0434\u0438\u043d\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u0433\u043e \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440\u0430",
@@ -219,6 +223,7 @@
   "error.validation.time": "Пожалуйста, впишите правильную дату",
   "error.validation.url": "Пожалуйста, впишите правильный URL",
 
+  "field.required": "Поле обязательно",
   "field.files.empty": "Еще не выбраны файлы",
   "field.pages.empty": "Еще не выбраны страницы",
   "field.structure.delete.confirm": "Вы точно хотите удалить эту запись?",
@@ -291,6 +296,7 @@
   "loading": "Загрузка",
 
   "lock.unsaved": "Несохраненные изменения",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Несохраненные изменения пользователя <strong>{email}</strong>",
   "lock.file.isLocked": "В данный момент этот файл редактирует {email}, поэтому его нельзя изменить.",
   "lock.page.isLocked": "В данный момент эту страницу редактирует {email}, поэтому его нельзя изменить.",
@@ -364,6 +370,8 @@
   "pages.status.listed": "Опубликовано",
   "pages.status.unlisted": "Скрытая",
 
+  "pagination.page": "Страница",
+
   "password": "\u041f\u0430\u0440\u043e\u043b\u044c",
   "pixel": "Пиксель",
   "prev": "Предыдущий",
@@ -384,6 +392,9 @@
 
   "save": "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c",
   "search": "Поиск",
+
+  "section.required": "Секция обязательна",
+
   "select": "Выбрать",
   "settings": "Настройка",
   "size": "Размер",
@@ -418,7 +429,7 @@
   "upload.error.default": "Не получилось загрузить файл",
   "upload.error.extension": "Загрузка файла не удалась из за расширения",
   "upload.error.formSize": "Загруженный файл больше чем MAX_FILE_SIZE настройка в форме",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniPostSize": "Загружаемый файл больше чем post_max_size настройка в php.ini",
   "upload.error.iniSize": "Загруженный файл больше чем upload_max_filesize настройка в php.ini",
   "upload.error.noFile": "Файл не был загружен",
   "upload.error.noFiles": "Файлы не были загружены",

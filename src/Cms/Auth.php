@@ -165,7 +165,7 @@ class Auth
      * Check if logins are blocked for the current ip or email
      *
      * @param string $email
-     * @return boolean
+     * @return bool
      */
     public function isBlocked(string $email): bool
     {
@@ -195,7 +195,7 @@ class Auth
      *
      * @param string $email
      * @param string $password
-     * @param boolean $long
+     * @param bool $long
      * @return \Kirby\Cms\User
      *
      * @throws PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
@@ -243,7 +243,7 @@ class Auth
                 $message = 'Invalid email or password';
             }
 
-            throw new PermissionException($message, 403);
+            throw new PermissionException($message);
         }
 
         // validate the user
@@ -334,7 +334,7 @@ class Auth
     /**
      * Logout the current user
      *
-     * @return boolean
+     * @return bool
      */
     public function logout(): bool
     {
@@ -354,7 +354,7 @@ class Auth
      * Tracks a login
      *
      * @param string $email
-     * @return boolean
+     * @return bool
      */
     public function track(string $email): bool
     {

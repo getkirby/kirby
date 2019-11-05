@@ -143,16 +143,6 @@ class Request
     }
 
     /**
-     * Detects ajax requests
-     * @deprecated 3.1.0 No longer reliable, especially with the fetch api.
-     * @return boolean
-     */
-    public function ajax(): bool
-    {
-        return isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest';
-    }
-
-    /**
      * Returns the Auth object if authentication is set
      *
      * @return \Kirby\Http\Request\Auth\BasicAuth|\Kirby\Http\Request\Auth\BearerAuth|null
@@ -191,7 +181,7 @@ class Request
     /**
      * Checks if the request has been made from the command line
      *
-     * @return boolean
+     * @return bool
      */
     public function cli(): bool
     {
@@ -232,7 +222,7 @@ class Request
      * Fetches a single file array
      * from the Files object by key
      *
-     * @param  string $key
+     * @param string $key
      * @return array|null
      */
     public function file(string $key)
@@ -316,8 +306,8 @@ class Request
      * Checks if the given method name
      * matches the name of the request method.
      *
-     * @param  string  $method
-     * @return boolean
+     * @param string $method
+     * @return bool
      */
     public function is(string $method): bool
     {
@@ -363,7 +353,7 @@ class Request
     /**
      * Checks for a valid SSL connection
      *
-     * @return boolean
+     * @return bool
      */
     public function ssl(): bool
     {

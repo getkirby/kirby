@@ -44,12 +44,6 @@
 </template>
 
 <script>
-import padZero from "@/helpers/padZero.js";
-
-import dayjs from "dayjs";
-import customParseFormat from 'dayjs/plugin/customParseFormat'
-dayjs.extend(customParseFormat);
-
 export default {
   inheritAttrs: false,
   props: {
@@ -134,13 +128,13 @@ export default {
         return;
       }
 
-      const h = padZero(this.hour || 0);
-      const m = padZero(this.minute || 0);
+      const h = this.$helper.pad(this.hour || 0);
+      const m = this.$helper.pad(this.minute || 0);
       const a = String(this.meridiem || "AM").toUpperCase();
 
       const time   = this.notation === 24 ? `${h}:${m}:00` : `${h}:${m}:00 ${a}`;
       const format = this.notation === 24 ? `HH:mm:ss` : `hh:mm:ss A`
-      const date = dayjs("2000-01-01 " + time, "YYYY-MM-DD " + format);
+      const date = this.$library.dayjs("2000-01-01 " + time, "YYYY-MM-DD " + format);
 
       this.$emit("input", date.format("HH:mm"));
     },
@@ -153,7 +147,7 @@ export default {
       for (var x = start; x <= end; x += step) {
         options.push({
           value: x,
-          text: padZero(x)
+          text: this.$helper.pad(x)
         });
       }
 
@@ -169,7 +163,7 @@ export default {
     },
     toObject(time) {
 
-      const date = dayjs("2001-01-01 " + time + ":00", "YYYY-MM-DD HH:mm:ss");
+      const date = this.$library.dayjs("2001-01-01 " + time + ":00", "YYYY-MM-DD HH:mm:ss");
 
       if (!time || date.isValid() === false) {
         return {

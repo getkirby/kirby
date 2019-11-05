@@ -26,6 +26,7 @@
       slot="footer"
       ref="dropdown"
       @open="onOpen"
+      @close="onClose"
       @keydown.native.esc.stop="close"
     >
       <k-dropdown-item
@@ -50,9 +51,9 @@
             'selected': isSelected(option),
             'disabled': !addable
           }"
-          @click="select(option)"
-          @keydown.native.enter.prevent="select(option)"
-          @keydown.native.space.prevent="select(option)"
+          @click.prevent="select(option)"
+          @keydown.native.enter.prevent.stop="select(option)"
+          @keydown.native.space.prevent.stop="select(option)"
         >
           <span v-html="option.display" />
           <span class="k-multiselect-value" v-html="option.info" />
@@ -64,7 +65,6 @@
 </template>
 
 <script>
-import "@/helpers/regex.js";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
@@ -99,7 +99,8 @@ export default {
   data() {
     return {
       state: this.value,
-      q: null
+      q: null,
+      scrollTop: 0
     };
   },
   computed: {
@@ -167,7 +168,7 @@ export default {
   },
   methods: {
     add(option) {
-      if (this.addable) {
+      if (this.addable === true) {
         this.state.push(option);
         this.onInput();
       }
@@ -177,8 +178,7 @@ export default {
     },
     close() {
       this.$refs.dropdown.close();
-      this.q = null;
-      this.$el.focus();
+      this.onClose();
     },
     escape() {
       if (this.q) {
@@ -202,16 +202,28 @@ export default {
 
       switch (direction) {
         case "prev":
-          if (current && current.previousSibling) {
+          if (
+            current && 
+            current.previousSibling && 
+            current.previousSibling.focus
+          ) {
             current.previousSibling.focus();
           }
           break;
         case "next":
-          if (current && current.nextSibling) {
+          if (
+            current && 
+            current.nextSibling && 
+            current.nextSibling.focus
+          ) {
             current.nextSibling.focus();
           }
           break;
       }
+    },
+    onClose() {
+      this.q = null;
+      this.$parent.$el.focus();
     },
     onInput() {
       this.$emit("input", this.sorted);
@@ -221,9 +233,11 @@ export default {
     },
     onOpen() {
       this.$nextTick(() => {
-        if (this.$refs.search) {
+        if (this.$refs.search && this.$refs.search.focus) {
           this.$refs.search.focus();
         }
+        
+        this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop = this.scrollTop;
       });
     },
     remove(option) {
@@ -231,6 +245,8 @@ export default {
       this.onInput();
     },
     select(option) {
+      this.scrollTop = this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop;
+      
       option = { text: option.text, value: option.value };
 
       if (this.isSelected(option)) {

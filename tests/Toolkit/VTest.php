@@ -356,7 +356,7 @@ class VTest extends TestCase
         $this->expectException('Exception');
         $this->expectExceptionMessage('$value is an uncountable object');
 
-        V::size(new \StdClass(), 5);
+        V::size(new \stdClass(), 5);
     }
 
     public function testTime()
@@ -371,6 +371,8 @@ class VTest extends TestCase
         $this->assertTrue(V::url('http://www.getkirby.com'));
         $this->assertTrue(V::url('http://www.getkirby.com/docs/param:value/?foo=bar/#anchor'));
         $this->assertTrue(V::url('https://www.getkirby.de.vu'));
+        $this->assertTrue(V::url('https://getkirby.com:1234'));
+        $this->assertTrue(V::url('https://getkirby.com:1234/test'));
         $this->assertTrue(V::url('http://foo.com/blah_blah'));
         $this->assertTrue(V::url('http://foo.com/blah_blah/'));
         $this->assertTrue(V::url('http://foo.com/blah_blah_(wikipedia)'));
@@ -407,10 +409,17 @@ class VTest extends TestCase
         $this->assertTrue(V::url('http://1337.net'));
         $this->assertTrue(V::url('http://a.b-c.de'));
         $this->assertTrue(V::url('http://223.255.255.254'));
+        $this->assertTrue(V::url('http://localhost/test/'));
+        $this->assertTrue(V::url('http://localhost:8080/test'));
+        $this->assertTrue(V::url('http://127.0.0.1/kirby/'));
+        $this->assertTrue(V::url('http://127.0.0.1:8080/kirby'));
+        $this->assertTrue(V::url('https://127.0.0.1/kirby/panel/pages/blog+vvvv'));
+        $this->assertTrue(V::url('https://localhost/kirby/panel/pages/blog+vvvv'));
+
         // TODO: Find better regex to also cover the following
         // $this->assertTrue(V::url('http://special---offer.com/'));
-        // $this->assertTrue(V::url('http://localhost/test/'));
-        // $this->assertTrue(V::url('http://localhost:8080/test'));
+        // $this->assertTrue(V::url('http://10.1.1.1'));
+        // $this->assertTrue(V::url('http://10.1.1.254'));
 
         $this->assertFalse(V::url('foo'));
         $this->assertFalse(V::url('http://'));
@@ -450,8 +459,6 @@ class VTest extends TestCase
         $this->assertFalse(V::url('http://.www.foo.bar/'));
         $this->assertFalse(V::url('http://www.foo.bar./'));
         $this->assertFalse(V::url('http://.www.foo.bar./'));
-        $this->assertFalse(V::url('http://10.1.1.1'));
-        $this->assertFalse(V::url('http://10.1.1.254'));
     }
 
     public function inputProvider()

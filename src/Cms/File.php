@@ -231,12 +231,14 @@ class File extends ModelWithContent
      * gets dragged onto a textarea
      *
      * @internal
-     * @param string $type (auto|kirbytext|markdown)
+     * @param string $type (null|auto|kirbytext|markdown)
      * @param bool $absolute
      * @return string
      */
-    public function dragText($type = 'auto', bool $absolute = false): string
+    public function dragText(string $type = null, bool $absolute = false): string
     {
+        $type = $type ?? 'auto';
+
         if ($type === 'auto') {
             $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
         }
@@ -363,14 +365,16 @@ class File extends ModelWithContent
      */
     public function meta()
     {
+        deprecated('$file->meta() is deprecated, use $file->content() instead. $file->meta() will be removed in Kirby 3.5.0.');
+
         return $this->content();
     }
 
     /**
      * Get the file's last modification time.
      *
-     * @param  string $format
-     * @param  string|null $handler date or strftime
+     * @param string $format
+     * @param string|null $handler date or strftime
      * @return mixed
      */
     public function modified(string $format = null, string $handler = null)
@@ -392,7 +396,7 @@ class File extends ModelWithContent
      * Timestamp of the last modification
      * of the content file
      *
-     * @return integer
+     * @return int
      */
     protected function modifiedContent(): int
     {
@@ -403,7 +407,7 @@ class File extends ModelWithContent
      * Timestamp of the last modification
      * of the source file
      *
-     * @return integer
+     * @return int
      */
     protected function modifiedFile(): int
     {

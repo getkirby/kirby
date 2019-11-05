@@ -149,7 +149,7 @@ class Dir
      * Checks if the folder has any contents
      *
      * @param string $dir
-     * @return boolean
+     * @return bool
      */
     public static function isEmpty(string $dir): bool
     {
@@ -160,7 +160,7 @@ class Dir
      * Checks if the directory is readable
      *
      * @param string $dir
-     * @return boolean
+     * @return bool
      */
     public static function isReadable(string $dir): bool
     {
@@ -171,7 +171,7 @@ class Dir
      * Checks if the directory is writable
      *
      * @param string $dir
-     * @return boolean
+     * @return bool
      */
     public static function isWritable(string $dir): bool
     {
@@ -183,7 +183,7 @@ class Dir
      *
      * @param string $source
      * @param string $link
-     * @return boolean
+     * @return bool
      */
     public static function link(string $source, string $link): bool
     {
@@ -207,9 +207,9 @@ class Dir
     /**
      * Creates a new directory
      *
-     * @param   string  $dir The path for the new directory
-     * @param   boolean $recursive Create all parent directories, which don't exist
-     * @return  boolean True: the dir has been created, false: creating failed
+     * @param string $dir The path for the new directory
+     * @param bool $recursive Create all parent directories, which don't exist
+     * @return bool True: the dir has been created, false: creating failed
      */
     public static function make(string $dir, bool $recursive = true): bool
     {
@@ -240,10 +240,10 @@ class Dir
      * Recursively check when the dir and all
      * subfolders have been modified for the last time.
      *
-     * @param   string   $dir The path of the directory
-     * @param   string   $format
-     * @param   string   $handler
-     * @return  int
+     * @param string $dir The path of the directory
+     * @param string $format
+     * @param string $handler
+     * @return int
      */
     public static function modified(string $dir, string $format = null, string $handler = 'date')
     {
@@ -266,9 +266,9 @@ class Dir
     /**
      * Moves a directory to a new location
      *
-     * @param   string  $old The current path of the directory
-     * @param   string  $new The desired path where the dir should be moved to
-     * @return  boolean true: the directory has been moved, false: moving failed
+     * @param string $old The current path of the directory
+     * @param string $new The desired path where the dir should be moved to
+     * @return bool true: the directory has been moved, false: moving failed
      */
     public static function move(string $old, string $new): bool
     {
@@ -302,10 +302,10 @@ class Dir
      * Reads all files from a directory and returns them as an array.
      * It skips unwanted invisible stuff.
      *
-     * @param   string  $dir The path of directory
-     * @param   array   $ignore Optional array with filenames, which should be ignored
-     * @param   bool    $absolute If true, the full path for each item will be returned
-     * @return  array   An array of filenames
+     * @param string $dir The path of directory
+     * @param array $ignore Optional array with filenames, which should be ignored
+     * @param bool $absolute If true, the full path for each item will be returned
+     * @return array An array of filenames
      */
     public static function read(string $dir, array $ignore = null, bool $absolute = false): array
     {
@@ -334,7 +334,7 @@ class Dir
      * Removes a folder including all containing files and folders
      *
      * @param string $dir
-     * @return boolean
+     * @return bool
      */
     public static function remove(string $dir): bool
     {
@@ -370,8 +370,8 @@ class Dir
     /**
      * Gets the size of the directory and all subfolders and files
      *
-     * @param   string $dir The path of the directory
-     * @return  mixed
+     * @param string $dir The path of the directory
+     * @return mixed
      */
     public static function size(string $dir)
     {

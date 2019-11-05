@@ -9,6 +9,7 @@ use Kirby\Toolkit\I18n;
 class RouterTest extends TestCase
 {
     protected $app;
+    protected $fixtures;
 
     public function setUp(): void
     {
@@ -409,7 +410,8 @@ class RouterTest extends TestCase
                 ],
                 [
                     'code' => 'en',
-                ]
+                    'url'  => '/en'
+                ],
             ]
         ]);
 
@@ -428,6 +430,100 @@ class RouterTest extends TestCase
         $this->assertEquals('home', $page->id());
         $this->assertEquals('en', $app->language()->code());
         $this->assertEquals('en', I18n::locale());
+    }
+
+    public function multiDomainProvider()
+    {
+        return [
+            ['https://getkirby.fr', 'fr'],
+            ['https://getkirby.com', 'en'],
+        ];
+    }
+
+    /**
+     * @dataProvider multiDomainProvider
+     */
+    public function testMultiLangHomeWithDifferentDomains($domain, $language)
+    {
+        $app = $this->app->clone([
+            'urls' => [
+                'index' => $domain
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'home'
+                    ]
+                ]
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'fr',
+                    'default' => true,
+                    'url'     => 'https://getkirby.fr'
+                ],
+                [
+                    'code' => 'en',
+                    'url'  => 'https://getkirby.com'
+                ]
+            ]
+        ]);
+
+        // home
+        $page = $app->call('');
+
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertEquals('home', $page->id());
+        $this->assertEquals($language, $app->language()->code());
+        $this->assertEquals($language, I18n::locale());
+    }
+
+    /**
+     * @dataProvider multiDomainProvider
+     */
+    public function testMultiLangHomeWithDifferentDomainsAndPath($domain, $language)
+    {
+        $app = $this->app->clone([
+            'urls' => [
+                'index' => $domain
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'home'
+                    ]
+                ]
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code'    => 'fr',
+                    'default' => true,
+                    'url'     => 'https://getkirby.fr/subfolder'
+                ],
+                [
+                    'code' => 'en',
+                    'url'  => 'https://getkirby.com/subfolder'
+                ]
+            ]
+        ]);
+
+        // redirect
+        $redirect = $app->call('');
+        $this->assertInstanceOf(Responder::class, $redirect);
+
+        // home
+        $page = $app->call('subfolder');
+
+        $this->assertInstanceOf(Page::class, $page);
+        $this->assertEquals('home', $page->id());
+        $this->assertEquals($language, $app->language()->code());
+        $this->assertEquals($language, I18n::locale());
     }
 
     public function acceptedLanguageProvider()
@@ -471,6 +567,7 @@ class RouterTest extends TestCase
 
         // set the accepted visitor language
         $_SERVER['HTTP_ACCEPT_LANGUAGE'] = $accept;
+        $app = $app->clone();
 
         $response = $app->call('/');
 

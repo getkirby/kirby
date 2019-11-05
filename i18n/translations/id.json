@@ -23,6 +23,7 @@
 
   "delete": "Hapus",
   "dimensions": "Dimensi",
+  "disabled": "Dimatikan",
   "discard": "Buang",
   "download": "Unduh",
   "duplicate": "Duplikasi",
@@ -37,7 +38,7 @@
 
   "error.access.login": "Upaya masuk tidak valid",
   "error.access.panel": "Anda tidak diizinkan mengakses panel",
-  "error.access.view": "You are not allowed to access this part of the panel",
+  "error.access.view": "Anda tidak diizinkan mengakses bagian panel ini",
 
   "error.avatar.create.fail": "Gambar profil tidak dapat diunggah",
   "error.avatar.delete.fail": "Gambar profil tidak dapat dihapus",
@@ -52,7 +53,7 @@
 
   "error.field.converter.invalid": "Konverter \"{converter}\" tidak valid",
 
-  "error.file.changeName.empty": "The name must not be empty",
+  "error.file.changeName.empty": "Nama harus diisi",
   "error.file.changeName.permission":
     "Anda tidak diizinkan mengubah nama berkas \"{filename}\"",
   "error.file.duplicate": "Berkas dengan nama \"{filename}\" sudah ada",
@@ -65,7 +66,7 @@
   "error.file.mime.forbidden": "Media dengan tipe mime \"{mime}\" tidak diizinkan",
   "error.file.mime.missing":
     "Tipe media untuk \"{filename}\" tidak dapat dideteksi",
-  "error.file.name.missing": "Nama berkas tidak boleh kosong",
+  "error.file.name.missing": "Nama berkas harus diisi",
   "error.file.notFound": "Berkas \"{filename}\" tidak dapat ditemukan",
   "error.file.type.forbidden": "Anda tidak diizinkan mengunggah berkas dengan tipe {type}",
   "error.file.undefined": "Berkas tidak dapat ditemukan",
@@ -137,6 +138,7 @@
   "error.section.notLoaded": "Bagian \"{name}\" tidak dapat dimuat",
   "error.section.type.invalid": "Tipe bagian \"{type}\" tidak valid",
 
+  "error.site.changeTitle.empty": "Judul harus diisi",
   "error.site.changeTitle.permission":
     "Anda tidak diizinkan mengubah judul situs",
   "error.site.update.permission": "Anda tidak diizinkan memperbaharui situs",
@@ -155,6 +157,8 @@
     "Peran dari admin satu-satunya tidak dapat diubah",
   "error.user.changeRole.permission":
     "Anda tidak diizinkan mengubah peran dari pengguna \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "Anda tidak diizinkan mempromosikan seseorang menjadi admin",
   "error.user.create.permission": "Anda tidak diizinkan membuat pengguna ini",
   "error.user.delete": "Pengguna \"{nama}\" tidak dapat dihapus",
   "error.user.delete.lastAdmin": "Admin satu-satunya tidak dapat dihapus",
@@ -219,6 +223,7 @@
   "error.validation.time": "Masukkan waktu yang valid",
   "error.validation.url": "Masukkan URL yang valid",
 
+  "field.required": "Bidang ini wajib",
   "field.files.empty": "Belum ada berkas yang dipilih",
   "field.pages.empty": "Belum ada halaman yang dipilih",
   "field.structure.delete.confirm": "Anda yakin menghapus baris ini?",
@@ -291,6 +296,7 @@
   "loading": "Memuat",
 
   "lock.unsaved": "Perubahan belum tersimpan",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Perubahan belum tersimpan oleh <strong>{email}</strong>",
   "lock.file.isLocked": "Berkas sedang disunting oleh {email} dan tidak dapat diubah.",
   "lock.page.isLocked": "Halaman sedang disunting oleh {email} dan tidak dapat diubah.",
@@ -364,6 +370,8 @@
   "pages.status.listed": "Dipublikasikan",
   "pages.status.unlisted": "Tidak tercantum",
 
+  "pagination.page": "Halaman",
+
   "password": "Sandi",
   "pixel": "Piksel",
   "prev": "Sebelumnya",
@@ -384,6 +392,9 @@
 
   "save": "Simpan",
   "search": "Cari",
+
+  "section.required": "Bagian ini wajib",
+
   "select": "Pilih",
   "settings": "Pengaturan",
   "size": "Ukuran",
@@ -413,17 +424,17 @@
   "translation.name": "Bahasa Indonesia",
 
   "upload": "Unggah",
-  "upload.error.cantMove": "The uploaded file could not be moved",
-  "upload.error.cantWrite": "Failed to write file to disk",
-  "upload.error.default": "The file could not be uploaded",
-  "upload.error.extension": "File upload stopped by extension",
-  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
-  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-  "upload.error.noFile": "No file was uploaded",
-  "upload.error.noFiles": "No files were uploaded",
-  "upload.error.partial": "The uploaded file was only partially uploaded",
-  "upload.error.tmpDir": "Missing a temporary folder",
+  "upload.error.cantMove": "Berkas unggahan tidak dapat dipindahkan",
+  "upload.error.cantWrite": "Gagal menyimpan berkas",
+  "upload.error.default": "Berkas tidak dapat diunggah",
+  "upload.error.extension": "Unggahan berkas diblokir dengan ekstensi",
+  "upload.error.formSize": "Berkas unggahan mencapai acuan MAX_FILE_SIZE yang diatur di formulir",
+  "upload.error.iniPostSize": "Berkas unggahan mencapai acuan post_max_size di php.ini",
+  "upload.error.iniSize": "Berkas unggahan mencapai acuan upload_max_filesize di php.ini",
+  "upload.error.noFile": "Tidak ada berkas diunggah",
+  "upload.error.noFiles": "Tidak ada berkas diunggah",
+  "upload.error.partial": "Berkas unggahan hanya berhasil diunggah sebagian",
+  "upload.error.tmpDir": "Folder sementara tidak ada",
   "upload.errors": "Kesalahan",
   "upload.progress": "Mengunggah…",
 

@@ -23,7 +23,6 @@
 
 <script>
 import DialogMixin from "@/mixins/dialog.js";
-import slug from "@/helpers/slug.js";
 
 export default {
   mixins: [DialogMixin],
@@ -60,7 +59,7 @@ export default {
   },
   methods: {
     sluggify(input) {
-      this.slug = slug(input, [this.slugs, this.system.ascii]);
+      this.slug = this.$helper.slug(input, [this.slugs, this.system.ascii]);
 
       if (this.page.parents) {
         this.url = this.page.parents.map(p => p.slug).
@@ -98,10 +97,10 @@ export default {
         .then(page => {
 
           // move form changes
-          this.$store.dispatch("form/move", {
-            old: this.$store.getters["form/id"](this.page.id),
-            new: this.$store.getters["form/id"](page.id)
-          });
+          this.$store.dispatch("content/move", [
+            "pages/" + this.page.id, 
+            "pages/" + page.id
+          ]);
 
           const payload = {
             message: ":)",

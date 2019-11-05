@@ -50,7 +50,7 @@ class Data
     /**
      * Handler getter
      *
-     * @param  string  $type
+     * @param string $type
      * @return \Kirby\Data\Handler
      */
     public static function handler(string $type)
@@ -73,8 +73,8 @@ class Data
     /**
      * Decodes data with the specified handler
      *
-     * @param  string $data
-     * @param  string $type
+     * @param string $data
+     * @param string $type
      * @return array
      */
     public static function decode(string $data = null, string $type): array
@@ -85,8 +85,8 @@ class Data
     /**
      * Encodes data with the specified handler
      *
-     * @param  array  $data
-     * @param  string $type
+     * @param array $data
+     * @param string $type
      * @return string
      */
     public static function encode(array $data = null, string $type): string
@@ -99,8 +99,8 @@ class Data
      * the data handler is automatically chosen by
      * the extension if not specified
      *
-     * @param  string $file
-     * @param  string $type
+     * @param string $file
+     * @param string $type
      * @return array
      */
     public static function read(string $file, string $type = null): array
@@ -113,10 +113,10 @@ class Data
      * the data handler is automatically chosen by
      * the extension if not specified
      *
-     * @param  string  $file
-     * @param  array   $data
-     * @param  string  $type
-     * @return boolean
+     * @param string $file
+     * @param array $data
+     * @param string $type
+     * @return bool
      */
     public static function write(string $file = null, array $data = [], string $type = null): bool
     {

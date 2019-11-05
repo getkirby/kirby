@@ -22,11 +22,11 @@ class SessionStoreTest extends TestCase
 
         $id1 = $generateId->invoke(null);
         $this->assertStringMatchesFormat('%x', $id1);
-        $this->assertEquals(20, strlen($id1));
+        $this->assertSame(20, strlen($id1));
 
         $id2 = $generateId->invoke(null);
         $this->assertStringMatchesFormat('%x', $id2);
-        $this->assertEquals(20, strlen($id2));
-        $this->assertNotEquals($id1, $id2);
+        $this->assertSame(20, strlen($id2));
+        $this->assertNotSame($id1, $id2);
     }
 }

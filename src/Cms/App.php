@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
+use Kirby\Exception\ErrorPageException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Request;
@@ -56,6 +57,7 @@ class App
     protected $languages;
     protected $locks;
     protected $multilang;
+    protected $nonce;
     protected $options;
     protected $path;
     protected $request;
@@ -120,8 +122,14 @@ class App
         $this->extensionsFromOptions();
         $this->extensionsFromFolders();
 
+        // trigger hook for use in plugins
+        $this->trigger('system.loadPlugins:after');
+
         // handle those damn errors
         $this->handleErrors();
+
+        // execute a ready callback from the config
+        $this->optionsFromReadyCallback();
 
         // bake config
         Config::$data = $this->options;
@@ -475,7 +483,7 @@ class App
      *
      * @param string $path
      * @param mixed $parent
-     * @param boolean $drafts
+     * @param bool $drafts
      * @return \Kirby\Cms\File|null
      */
     public function file(string $path, $parent = null, bool $drafts = true)
@@ -586,7 +594,11 @@ class App
 
         // Pages
         if (is_a($input, 'Kirby\Cms\Page')) {
-            $html = $input->render();
+            try {
+                $html = $input->render();
+            } catch (ErrorPageException $e) {
+                return $this->io($e);
+            }
 
             if ($input->isErrorPage() === true) {
                 if ($response->code() === null) {
@@ -758,7 +770,7 @@ class App
     /**
      * Check for a multilang setup
      *
-     * @return boolean
+     * @return bool
      */
     public function multilang(): bool
     {
@@ -767,6 +779,17 @@ class App
         }
 
         return $this->multilang = $this->languages()->count() !== 0;
+    }
+
+    /**
+     * Returns the nonce, which is used
+     * in the panel for inline scripts
+     *
+     * @return string
+     */
+    public function nonce(): string
+    {
+        return $this->nonce = $this->nonce ?? base64_encode(random_bytes(20));
     }
 
     /**
@@ -792,17 +815,6 @@ class App
     }
 
     /**
-     * Inject options from Kirby instance props
-     *
-     * @param array $options
-     * @return array
-     */
-    protected function optionsFromProps(array $options = []): array
-    {
-        return $this->options = array_replace_recursive($this->options, $options);
-    }
-
-    /**
      * Load all options from files in site/config
      *
      * @return array
@@ -824,15 +836,48 @@ class App
     }
 
     /**
+     * Inject options from Kirby instance props
+     *
+     * @param array $options
+     * @return array
+     */
+    protected function optionsFromProps(array $options = []): array
+    {
+        return $this->options = array_replace_recursive($this->options, $options);
+    }
+
+    /**
+     * Merge last-minute options from ready callback
+     *
+     * @return array
+     */
+    protected function optionsFromReadyCallback(): array
+    {
+        if (isset($this->options['ready']) === true && is_callable($this->options['ready']) === true) {
+            // fetch last-minute options from the callback
+            $options = (array)$this->options['ready']($this);
+
+            // inject all last-minute options recursively
+            $this->options = array_replace_recursive($this->options, $options);
+        }
+
+        return $this->options;
+    }
+
+    /**
      * Returns any page from the content folder
      *
-     * @param string $id
+     * @param string $id|null
      * @param \Kirby\Cms\Page|\Kirby\Cms\Site|null $parent
      * @param bool $drafts
      * @return \Kirby\Cms\Page|null
      */
-    public function page(string $id, $parent = null, bool $drafts = true)
+    public function page(?string $id = null, $parent = null, bool $drafts = true)
     {
+        if ($id === null) {
+            return null;
+        }
+
         $parent = $parent ?? $this->site();
 
         if ($page = $parent->find($id)) {
@@ -1184,8 +1229,18 @@ class App
     {
         $options = $this->option('smartypants', []);
 
-        if ($options === true) {
+        if ($options === false) {
+            return $text;
+        } elseif (is_array($options) === false) {
             $options = [];
+        }
+
+        if ($this->multilang() === true) {
+            $languageSmartypants = $this->language()->smartypants() ?? [];
+
+            if (empty($languageSmartypants) === false) {
+                $options = array_merge($options, $languageSmartypants);
+            }
         }
 
         return $this->component('smartypants')($this, $text, $options);

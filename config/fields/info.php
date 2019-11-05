@@ -15,7 +15,8 @@ return [
         'text' => function () {
             if ($text = $this->text) {
                 $text = $this->model()->toString($text);
-                return kirbytext($text);
+                $text = $this->kirby()->kirbytext($text);
+                return $text;
             }
         }
     ],

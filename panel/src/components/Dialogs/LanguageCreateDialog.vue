@@ -19,7 +19,6 @@
 
 <script>
 import DialogMixin from "@/mixins/dialog.js";
-import slug from "@/helpers/slug.js";
 
 export default {
   mixins: [DialogMixin],
@@ -78,12 +77,12 @@ export default {
       this.onNameChanges(name);
     },
     "language.code"(code) {
-      this.language.code = slug(code, [this.system.ascii]);
+      this.language.code = this.$helper.slug(code, [this.system.ascii]);
     }
   },
   methods: {
     onNameChanges(name) {
-      this.language.code = slug(name, [this.language.rules, this.system.ascii]).substr(0, 2);
+      this.language.code = this.$helper.slug(name, [this.language.rules, this.system.ascii]).substr(0, 2);
     },
     open() {
       this.language = {

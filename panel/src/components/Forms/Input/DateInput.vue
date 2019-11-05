@@ -41,9 +41,6 @@
 </template>
 
 <script>
-import dayjs from "dayjs";
-import padZero from "@/helpers/padZero.js";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -57,7 +54,7 @@ export default {
   },
   data() {
     return {
-      date: dayjs(this.value),
+      date: this.$library.dayjs(this.value),
       minDate: this.calculate(this.min, "min"),
       maxDate: this.calculate(this.max, "max")
     };
@@ -87,7 +84,7 @@ export default {
   },
   watch: {
     value(value) {
-      this.date = dayjs(value);
+      this.date = this.$library.dayjs(value);
     }
   },
   methods: {
@@ -97,9 +94,9 @@ export default {
         max: {run: "add", take: "endOf" },
       }[what];
 
-      let date = value ? dayjs(value) : null;
+      let date = value ? this.$library.dayjs(value) : null;
       if (!date || date.isValid() === false) {
-        date = dayjs()[calc.run](10, 'year')[calc.take]("year");
+        date = this.$library.dayjs()[calc.run](10, 'year')[calc.take]("year");
       }
       return date;
     },
@@ -123,7 +120,7 @@ export default {
       for (var x = start; x <= end; x++) {
         options.push({
           value: x,
-          text: padZero(x)
+          text: this.$helper.pad(x)
         });
       }
 
@@ -155,12 +152,12 @@ export default {
       this.onInput();
     },
     setInvalid() {
-      this.date = dayjs("invalid");
+      this.date = this.$library.dayjs("invalid");
     },
     setInitialDate(key, value) {
-      const current = dayjs();
+      const current = this.$library.dayjs();
 
-      this.date = dayjs().set(key, parseInt(value));
+      this.date = this.$library.dayjs().set(key, parseInt(value));
 
       // if the inital day moved the month, let's move it back
       if (key === "date" && current.month() !== this.date.month()) {

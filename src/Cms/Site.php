@@ -273,7 +273,7 @@ class Site extends ModelWithContent
     /**
      * Checks if the site exists on disk
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -391,7 +391,7 @@ class Site extends ModelWithContent
      * prop, the home page will be returned if
      * it can be found. (see `Site::homePage()`)
      *
-     * @param  string $path
+     * @param string $path
      * @return \Kirby\Cms\Page|null
      */
     public function page(string $path = null)
@@ -645,8 +645,8 @@ class Site extends ModelWithContent
      * returns the current page
      *
      * @internal
-     * @param  string|\Kirby\Cms\Page $page
-     * @param  string|null $languageCode
+     * @param string|\Kirby\Cms\Page $page
+     * @param string|null $languageCode
      * @return \Kirby\Cms\Page
      */
     public function visit($page, string $languageCode = null)

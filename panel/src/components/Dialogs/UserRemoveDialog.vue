@@ -39,7 +39,7 @@ export default {
         .then(() => {
 
           // remove data from cache
-          this.$store.dispatch("form/remove", "users/" + this.user.id);
+          this.$store.dispatch("content/remove", "users/" + this.user.id);
 
           this.success({
             message: ":)",

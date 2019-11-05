@@ -8,7 +8,7 @@
     <slot name="header">
       <header class="k-field-header">
         <slot name="label">
-          <label :for="input" class="k-field-label">{{ labelText }} <abbr v-if="required" title="This field is required">*</abbr></label>
+          <label :for="input" class="k-field-label">{{ labelText }} <abbr v-if="required" :title="$t('field.required')">*</abbr></label>
         </slot>
         <slot name="options" />
         <slot name="counter">
@@ -99,8 +99,11 @@ export default {
 .k-field[data-disabled] {
   cursor: not-allowed;
 }
-.k-field[data-disabled] *:not(.k-text[data-theme=help]) {
+.k-field[data-disabled] * {
   pointer-events: none;
+}
+.k-field[data-disabled] .k-text[data-theme=help] * {
+  pointer-events: initial;
 }
 .k-field-counter {
   display: none;

@@ -2,7 +2,7 @@
 
 namespace Kirby\Cache;
 
-use APCUIterator;
+use APCuIterator;
 
 /**
  * APCu Cache Driver
@@ -19,7 +19,7 @@ class ApcuCache extends Cache
      * Determines if an item exists in the cache
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function exists(string $key): bool
     {
@@ -30,12 +30,12 @@ class ApcuCache extends Cache
      * Flushes the entire cache and returns
      * whether the operation was successful
      *
-     * @return boolean
+     * @return bool
      */
     public function flush(): bool
     {
         if (empty($this->options['prefix']) === false) {
-            return apcu_delete(new APCUIterator('!^' . preg_quote($this->options['prefix']) . '!'));
+            return apcu_delete(new APCuIterator('!^' . preg_quote($this->options['prefix']) . '!'));
         } else {
             return apcu_clear_cache();
         }
@@ -46,7 +46,7 @@ class ApcuCache extends Cache
      * whether the operation was successful
      *
      * @param string $key
-     * @return boolean
+     * @return bool
      */
     public function remove(string $key): bool
     {
@@ -77,7 +77,7 @@ class ApcuCache extends Cache
      * @param string $key
      * @param mixed $value
      * @param int $minutes
-     * @return boolean
+     * @return bool
      */
     public function set(string $key, $value, int $minutes = 0): bool
     {

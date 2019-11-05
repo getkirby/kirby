@@ -23,21 +23,22 @@
 
   "delete": "Verwijderen",
   "dimensions": "Dimensies",
+  "disabled": "Uitgeschakeld",
   "discard": "Annuleren",
   "download": "Download",
   "duplicate": "Dupliceren",
   "edit": "Wijzig",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "Geen bestanden om te selecteren",
+  "dialog.pages.empty": "Geen pagina's om te selecteren",
+  "dialog.users.empty": "Geen gebruikers om te selecteren",
 
   "email": "E-mailadres",
   "email.placeholder": "mail@voorbeeld.nl",
 
   "error.access.login": "Ongeldige login",
   "error.access.panel": "Je hebt geen toegang tot het Panel",
-  "error.access.view": "You are not allowed to access this part of the panel",
+  "error.access.view": "Je hebt geen toegangsrechten voor deze zone van het Panel",
 
   "error.avatar.create.fail": "De avatar kon niet worden geupload",
   "error.avatar.delete.fail": "De avatar kan niet worden verwijderd",
@@ -52,7 +53,7 @@
 
   "error.field.converter.invalid": "Ongeldige converter \"{converter}\"",
 
-  "error.file.changeName.empty": "The name must not be empty",
+  "error.file.changeName.empty": "De naam mag niet leeg zijn",
   "error.file.changeName.permission":
     "Je hebt geen rechten om de naam te wijzigen van \"{filename}\"",
   "error.file.duplicate": "Er bestaat al een bestand met de naam \"{filename}\"",
@@ -73,9 +74,9 @@
   "error.form.incomplete": "Verbeter alle fouten in het formulier",
   "error.form.notSaved": "Het formulier kon niet worden opgeslagen",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Vul een geldige code voor deze taal in",
+  "error.language.duplicate": "De taal bestaat al",
+  "error.language.name": "Vul een geldige naam voor deze taal in",
 
   "error.license.format": "Vul een gelidge licentie-key in",
   "error.license.email": "Gelieve een geldig emailadres in te voeren",
@@ -137,6 +138,7 @@
   "error.section.notLoaded": "De zone \"{name}\" kan niet worden geladen",
   "error.section.type.invalid": "Zone-type \"{type}\" is niet geldig",
 
+  "error.site.changeTitle.empty": "De titel mag niet leeg zijn",
   "error.site.changeTitle.permission":
     "Je hebt geen rechten om de titel van de site te wijzigen",
   "error.site.update.permission": "Je hebt geen rechten om de site te updaten",
@@ -155,6 +157,8 @@
     "De rol van de laatste beheerder kan niet worden gewijzigd",
   "error.user.changeRole.permission":
     "Je hebt geen rechten om de rol van gebruiker \"{name}\" te wijzigen",
+  "error.user.changeRole.toAdmin":
+    "Je hebt geen rechten om de rol van iemand te wijzigen naar admin",
   "error.user.create.permission": "Je hebt geen rechten om deze gebruiker aan te maken",
   "error.user.delete": "De gebruiker \"{name}\" kan niet worden verwijderd",
   "error.user.delete.lastAdmin": "Je kan de laatste admin niet verwijderen",
@@ -184,9 +188,9 @@
   "error.validation.contains":
     "Vul een waarde in die \"{needle}\" bevat",
   "error.validation.date": "Vul een geldige datum in",
-  "error.validation.date.after": "Please enter a date after {date}",
-  "error.validation.date.before": "Please enter a date before {date}",
-  "error.validation.date.between": "Please enter a date between {min} and {max}",
+  "error.validation.date.after": "Vul een datum in na {date}",
+  "error.validation.date.before": "Vul een datum in voor {date}",
+  "error.validation.date.between": "Vul een datum in tussen {min} en {max}",
   "error.validation.denied": "Weiger",
   "error.validation.different": "De invoer mag niet \"{other}\" zijn",
   "error.validation.email": "Gelieve een geldig emailadres in te voeren",
@@ -219,6 +223,7 @@
   "error.validation.time": "Vul een geldige tijd in",
   "error.validation.url": "Vul een geldige URL in",
 
+  "field.required": "Dit veld is verplicht",
   "field.files.empty": "Nog geen bestanden geselecteerd",
   "field.pages.empty": "Nog geen pagina's geselecteerd",
   "field.structure.delete.confirm": "Wil je deze entry verwijderen?",
@@ -290,7 +295,8 @@
 
   "loading": "Laden",
 
-  "lock.unsaved": "Unsaved changes",
+  "lock.unsaved": "Niet opgeslagen wijzigingen",
+  "lock.unsaved.empty": "Er zijn geen niet opgeslagen wijzigingen meer",
   "lock.isLocked": "Niet opgeslagen wijzigingen door <strong>{email}</strong>",
   "lock.file.isLocked": "Dit bestand wordt momenteel bewerkt door {email} en kan niet worden gewijzigd.",
   "lock.page.isLocked": "Deze pagina wordt momenteel bewerkt door {email} en kan niet worden gewijzigd.",
@@ -348,7 +354,7 @@
   "page.draft.create": "Maak concept",
   "page.duplicate.appendix": "Kopiëren",
   "page.duplicate.files": "Kopieer bestanden",
-  "page.duplicate.pages": "Copy pages",
+  "page.duplicate.pages": "Kopieer pagina's",
   "page.status": "Status",
   "page.status.draft": "Concept",
   "page.status.draft.description":
@@ -363,6 +369,8 @@
   "pages.status.draft": "Concepten",
   "pages.status.listed": "Gepubliceerd",
   "pages.status.unlisted": "Niet gepubliceerd",
+
+  "pagination.page": "Pagina",
 
   "password": "Wachtwoord",
   "pixel": "Pixel",
@@ -384,6 +392,9 @@
 
   "save": "Opslaan",
   "search": "Zoeken",
+
+  "section.required": "De sectie is verplicht",
+
   "select": "Selecteren",
   "settings": "Opties",
   "size": "Grootte",
@@ -413,17 +424,17 @@
   "translation.name": "Nederlands",
 
   "upload": "Upload",
-  "upload.error.cantMove": "The uploaded file could not be moved",
-  "upload.error.cantWrite": "Failed to write file to disk",
-  "upload.error.default": "The file could not be uploaded",
-  "upload.error.extension": "File upload stopped by extension",
-  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
-  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-  "upload.error.noFile": "No file was uploaded",
-  "upload.error.noFiles": "No files were uploaded",
-  "upload.error.partial": "The uploaded file was only partially uploaded",
-  "upload.error.tmpDir": "Missing a temporary folder",
+  "upload.error.cantMove": "Het geüploadde bestand kon niet worden verplaatst",
+  "upload.error.cantWrite": "Fout bij het schrijven van het bestand naar de schijf",
+  "upload.error.default": "Het bestand kan niet worden geüpload",
+  "upload.error.extension": "Kan bestand niet uploaden vanwege de extensie",
+  "upload.error.formSize": "Het geüploadde bestand is groter dan de MAX_FILE_SIZE die is aangegeven in het formulier",
+  "upload.error.iniPostSize": "Het geüploadde bestand is groter dan de post_max_size in php.ini",
+  "upload.error.iniSize": "Het geüploadde bestand is groter dan de upload_max_filesize in php.ini",
+  "upload.error.noFile": "Er is geen bestand geüpload",
+  "upload.error.noFiles": "Er zijn geen bestanden geüpload",
+  "upload.error.partial": "Het geüploadde bestand is slechts gedeeltelijk geüpload",
+  "upload.error.tmpDir": "Er mist een tijdelijke map",
   "upload.errors": "Foutmelding",
   "upload.progress": "Uploaden...",
 

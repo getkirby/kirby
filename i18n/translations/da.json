@@ -23,6 +23,7 @@
 
   "delete": "Slet",
   "dimensions": "Dimensioner",
+  "disabled": "Disabled",
   "discard": "Kass\u00e9r",
   "download": "Download",
   "duplicate": "Dupliker",
@@ -137,6 +138,7 @@
   "error.section.notLoaded": "Sektionen \"{section}\" kunne ikke indlæses",
   "error.section.type.invalid": "Sektionstypen \"{type}\" er ikke gyldig",
 
+  "error.site.changeTitle.empty": "Titlen kan ikke være tom",
   "error.site.changeTitle.permission":
     "Du har ikke tilladelse til at ændre titlen på sitet",
   "error.site.update.permission": "Du har ikke tilladelse til at opdatere sitet",
@@ -155,6 +157,8 @@
     "Rollen for den sidste admin kan ikke ændres",
   "error.user.changeRole.permission":
     "Du har ikke tilladelse til at ændre rollen for brugeren \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Du har ikke tilladelse til at oprette denne bruger",
   "error.user.delete": "Brugeren kunne ikke slettes",
   "error.user.delete.lastAdmin": "Du kan ikke slette den sidste admin",
@@ -219,6 +223,7 @@
   "error.validation.time": "Indtast venligst et gyldigt tidspunkt",
   "error.validation.url": "Indtast venligst en gyldig URL",
 
+  "field.required": "The field is required",
   "field.files.empty": "Ingen filer valgt endnu",
   "field.pages.empty": "Ingen sider valgt endnu",
   "field.structure.delete.confirm": "\u00d8nsker du virkelig at slette denne indtastning?",
@@ -291,6 +296,7 @@
   "loading": "Indlæser",
 
   "lock.unsaved": "Ugemte ændringer",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Ugemte ændringer af <strong>{email}</strong>",
   "lock.file.isLocked": "Filen redigeres på nuværende af {email} og kan derfor ikke ændres.",
   "lock.page.isLocked": "Siden redigeres på nuværende af {email} og kan derfor ikke ændres.",
@@ -364,6 +370,8 @@
   "pages.status.listed": "Udgivede",
   "pages.status.unlisted": "Ulistede",
 
+  "pagination.page": "Side",
+
   "password": "Adgangskode",
   "pixel": "Pixel",
   "prev": "Forrige",
@@ -384,6 +392,9 @@
 
   "save": "Gem",
   "search": "Søg",
+
+  "section.required": "The section is required",
+
   "select": "Vælg",
   "settings": "Indstillinger",
   "size": "Størrelse",
@@ -418,7 +429,7 @@
   "upload.error.default": "Filen kunne ikke uploades",
   "upload.error.extension": "Upload af filen blev stoppet af dens type",
   "upload.error.formSize": "Filen overskrider MAX_FILE_SIZE direktivet der er specificeret for formularen",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniPostSize": "FIlen overskrider post_max_size direktivet i php.ini",
   "upload.error.iniSize": "FIlen overskrider upload_max_filesize direktivet i php.ini",
   "upload.error.noFile": "Ingen fil blev uploadet",
   "upload.error.noFiles": "Ingen filer blev uploadet",

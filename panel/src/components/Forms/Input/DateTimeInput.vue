@@ -24,7 +24,6 @@
 
 <script>
 import DateInput from "./DateInput.vue";
-import dayjs from "dayjs";
 import { required } from "vuelidate/lib/validators";
 
 export default {
@@ -74,16 +73,16 @@ export default {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     parseDate(value) {
-      const dt = dayjs(value);
+      const dt = this.$library.dayjs(value);
       return dt.isValid() ? dt.format("YYYY-MM-DD") : null;
     },
     parseTime(value) {
-      const dt = dayjs(value);
+      const dt = this.$library.dayjs(value);
       return dt.isValid() ? dt.format("HH:mm") : null;
     },
     setDate(value) {
       if (value && !this.timeValue) {
-        this.timeValue = dayjs().format("HH:mm");
+        this.timeValue = this.$library.dayjs().format("HH:mm");
       }
 
       if (!value) {
@@ -97,7 +96,7 @@ export default {
     },
     setTime(value) {
       if (value && !this.dateValue) {
-        this.dateValue = dayjs().format("YYYY-MM-DD");
+        this.dateValue = this.$library.dayjs().format("YYYY-MM-DD");
       }
 
       if (!value) {

@@ -6,7 +6,7 @@ use SimpleXMLElement;
 
 /**
  * The `Mime` class provides method
- * for mime type detection or guessing
+ * for MIME type detection or guessing
  * from different criteria like
  * extensions etc.
  *
@@ -19,7 +19,7 @@ use SimpleXMLElement;
 class Mime
 {
     /**
-     * Extension to mime type map
+     * Extension to MIME type map
      *
      * @var array
      */
@@ -112,7 +112,7 @@ class Mime
     ];
 
     /**
-     * Fixes an invalid mime type guess for the given file
+     * Fixes an invalid MIME type guess for the given file
      *
      * @param string $file
      * @param string $mime
@@ -153,7 +153,7 @@ class Mime
     }
 
     /**
-     * Guesses a mime type by extension
+     * Guesses a MIME type by extension
      *
      * @param string $extension
      * @return string|null
@@ -165,7 +165,7 @@ class Mime
     }
 
     /**
-     * Returns the mime type of a file
+     * Returns the MIME type of a file
      *
      * @param string $file
      * @return string|false
@@ -183,7 +183,7 @@ class Mime
     }
 
     /**
-     * Returns the mime type of a file
+     * Returns the MIME type of a file
      *
      * @param string $file
      * @return string|false
@@ -198,7 +198,7 @@ class Mime
     }
 
     /**
-     * Tries to detect a valid SVG and returns the mime type accordingly
+     * Tries to detect a valid SVG and returns the MIME type accordingly
      *
      * @param string $file
      * @return string|false
@@ -219,18 +219,19 @@ class Mime
     }
 
     /**
-     * Undocumented function
+     * Tests if a given MIME type is matched by an `Accept` header
+     * pattern; returns true if the MIME type is contained at all
      *
      * @param string $mime
      * @param string $pattern
-     * @return boolean
+     * @return bool
      */
     public static function isAccepted(string $mime, string $pattern): bool
     {
         $accepted = Str::accepted($pattern);
 
         foreach ($accepted as $m) {
-            if (fnmatch($m['value'], $mime, FNM_PATHNAME) === true) {
+            if (static::matches($mime, $m['value']) === true) {
                 return true;
             }
         }
@@ -239,7 +240,20 @@ class Mime
     }
 
     /**
-     * Returns the extension for a given mime type
+     * Tests if a MIME wildcard pattern from an `Accept` header
+     * matches a given type
+     *
+     * @param string $test
+     * @param string $wildcard
+     * @return bool
+     */
+    public static function matches(string $test, string $wildcard): bool
+    {
+        return fnmatch($wildcard, $test, FNM_PATHNAME) === true;
+    }
+
+    /**
+     * Returns the extension for a given MIME type
      *
      * @param string|null $mime
      * @return string|false
@@ -260,7 +274,7 @@ class Mime
     }
 
     /**
-     * Returns all available extensions for a given mime type
+     * Returns all available extensions for a given MIME type
      *
      * @param string|null $mime
      * @return array
@@ -285,7 +299,7 @@ class Mime
     }
 
     /**
-     * Returns the mime type of a file
+     * Returns the MIME type of a file
      *
      * @param string $file
      * @param string $extension
@@ -314,7 +328,7 @@ class Mime
     }
 
     /**
-     * Returns all detectable mime types
+     * Returns all detectable MIME types
      *
      * @return array
      */

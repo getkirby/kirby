@@ -23,7 +23,7 @@ abstract class Handler
      *
      * Needs to throw an Exception if the file can't be parsed.
      *
-     * @param  string $string
+     * @param string $string
      * @return array
      */
     abstract public static function decode($string): array;
@@ -31,7 +31,7 @@ abstract class Handler
     /**
      * Converts an array to an encoded string
      *
-     * @param  mixed  $data
+     * @param mixed $data
      * @return string
      */
     abstract public static function encode($data): string;
@@ -39,7 +39,7 @@ abstract class Handler
     /**
      * Reads data from a file
      *
-     * @param  string $file
+     * @param string $file
      * @return array
      */
     public static function read(string $file): array
@@ -54,9 +54,9 @@ abstract class Handler
     /**
      * Writes data to a file
      *
-     * @param  string  $file
-     * @param  array   $data
-     * @return boolean
+     * @param string $file
+     * @param array $data
+     * @return bool
      */
     public static function write(string $file = null, array $data = []): bool
     {

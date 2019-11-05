@@ -74,7 +74,7 @@ class Template
     /**
      * Checks if the template exists
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -190,7 +190,7 @@ class Template
     /**
      * Checks if the template uses the default type
      *
-     * @return boolean
+     * @return bool
      */
     public function hasDefaultType(): bool
     {

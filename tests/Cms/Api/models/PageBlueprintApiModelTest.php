@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 class PageBlueprintApiModelTest extends TestCase
 {
+    protected $api;
+    protected $app;
+
     public function attr($object, $attr)
     {
         return $this->api->resolve($object)->select($attr)->toArray()[$attr];

@@ -6,6 +6,11 @@ use Kirby\Toolkit\Dir;
 
 class ApiTest extends TestCase
 {
+    protected $api;
+    protected $locale;
+    protected $app;
+    protected $fixtures;
+
     public function setUp(): void
     {
         $this->app = new App([
@@ -42,18 +47,113 @@ class ApiTest extends TestCase
                 'api' => [
                     'authentication' => function () {
                         return true;
-                    }
-                ]
+                    },
+                    'routes' => [
+                        [
+                            'pattern' => 'foo',
+                            'method'  => 'GET',
+                            'action'  => function () {
+                                return 'something';
+                            }
+                        ]
+                    ]
+                ],
+                'locale' => 'de_DE.UTF-8'
             ],
         ]);
 
         $this->app->impersonate('kirby');
         $this->api = $this->app->api();
+
+        $this->locale = setlocale(LC_ALL, 0);
     }
 
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+        setlocale(LC_ALL, $this->locale);
+    }
+
+    public function testCallLocaleSingleLang1()
+    {
+        setlocale(LC_ALL, 'C');
+        $this->assertSame('C', setlocale(LC_ALL, 0));
+
+        $this->assertSame('something', $this->api->call('foo'));
+        $this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
+    }
+
+    public function testCallLocaleSingleLang2()
+    {
+        setlocale(LC_ALL, 'C');
+        $this->assertSame('C', setlocale(LC_ALL, 0));
+
+        $_GET['language'] = 'en';
+
+        $this->assertSame('something', $this->api->call('foo'));
+        $this->assertSame('de_DE.UTF-8', setlocale(LC_ALL, 0));
+
+        $_GET = [];
+    }
+
+    public function testCallLocaleMultiLang1()
+    {
+        setlocale(LC_ALL, 'C');
+        $this->assertSame('C', setlocale(LC_ALL, 0));
+
+        $this->app = $this->app->clone([
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true,
+                    'locale'  => 'en_US.UTF-8',
+                    'url'     => '/',
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch',
+                    'locale'  => 'de_AT.UTF-8',
+                    'url'     => '/de',
+                ],
+            ]
+        ]);
+        $this->api = $this->app->api();
+
+        $this->assertSame('something', $this->api->call('foo'));
+        $this->assertSame('en_US.UTF-8', setlocale(LC_ALL, 0));
+    }
+
+    public function testCallLocaleMultiLang2()
+    {
+        setlocale(LC_ALL, 'C');
+        $this->assertSame('C', setlocale(LC_ALL, 0));
+
+        $this->app = $this->app->clone([
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true,
+                    'locale'  => 'en_US.UTF-8',
+                    'url'     => '/',
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch',
+                    'locale'  => 'de_AT.UTF-8',
+                    'url'     => '/de',
+                ],
+            ]
+        ]);
+        $this->api = $this->app->api();
+
+        $_GET['language'] = 'de';
+
+        $this->assertSame('something', $this->api->call('foo'));
+        $this->assertSame('de_AT.UTF-8', setlocale(LC_ALL, 0));
+
+        $_GET = [];
     }
 
     public function testLanguage()

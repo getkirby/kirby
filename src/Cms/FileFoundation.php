@@ -82,7 +82,7 @@ trait FileFoundation
     /**
      * Checks if the file exists on disk
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -102,7 +102,7 @@ trait FileFoundation
     /**
      * Converts the file to html
      *
-     * @param  array  $attr
+     * @param array $attr
      * @return string
      */
     public function html(array $attr = []): string
@@ -117,7 +117,7 @@ trait FileFoundation
     /**
      * Checks if the file is a resizable image
      *
-     * @return boolean
+     * @return bool
      */
     public function isResizable(): bool
     {
@@ -136,7 +136,7 @@ trait FileFoundation
      * Checks if a preview can be displayed for the file
      * in the panel or in the frontend
      *
-     * @return boolean
+     * @return bool
      */
     public function isViewable(): bool
     {
@@ -165,8 +165,8 @@ trait FileFoundation
     /**
      * Get the file's last modification time.
      *
-     * @param  string $format
-     * @param  string|null $handler date or strftime
+     * @param string $format
+     * @param string|null $handler date or strftime
      * @return mixed
      */
     public function modified(string $format = null, string $handler = null)

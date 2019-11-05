@@ -10,6 +10,7 @@ use Kirby\Toolkit\Dir;
 
 class HelpersTest extends TestCase
 {
+    protected $fixtures;
     protected $kirby;
 
     public function setUp(): void
@@ -152,6 +153,23 @@ class HelpersTest extends TestCase
         $expected .= '<link href="https://getkirby.com/assets/css/b.css" rel="stylesheet">';
 
         $this->assertEquals($expected, $result);
+    }
+
+    public function testDeprecated()
+    {
+        // with disabled debug mode
+        $this->assertFalse(deprecated('The xyz method is deprecated.'));
+
+        $this->kirby = $this->kirby->clone([
+            'options' => [
+                'debug' => true
+            ]
+        ]);
+
+        // with enabled debug mode
+        $this->expectException('Whoops\Exception\ErrorException');
+        $this->expectExceptionMessage('The xyz method is deprecated.');
+        deprecated('The xyz method is deprecated.');
     }
 
     public function testDumpHelperOnCli()
@@ -639,6 +657,15 @@ class HelpersTest extends TestCase
         $this->assertFalse(svg('somefile.svg'));
     }
 
+    public function testSvgWithFileObject()
+    {
+        $file = $this->createMock(File::class);
+        $file->method('__call')->willReturn('test');
+        $file->method('extension')->willReturn('svg');
+
+        $this->assertEquals('test', svg($file));
+    }
+
     public function testTwitter()
     {
         // simple
@@ -693,10 +720,44 @@ class HelpersTest extends TestCase
         $this->assertEquals($expected, $video);
     }
 
+    public function testYoutubeVideoWithOptions()
+    {
+        $video = video('https://www.youtube.com/watch?v=xB3s_f7PzYk', [
+            'youtube' => [
+                'controls' => 0
+            ]
+        ]);
+
+        $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';
+
+        $this->assertEquals($expected, $video);
+    }
+
+    public function testVimeoVideoWithOptions()
+    {
+        $video = video('https://vimeo.com/335292911', [
+            'vimeo' => [
+                'controls' => 0
+            ]
+        ]);
+
+        $expected = '<iframe allowfullscreen src="https://player.vimeo.com/video/335292911?controls=0"></iframe>';
+
+        $this->assertEquals($expected, $video);
+    }
+
     public function testVimeo()
     {
-        $video    = video('https://vimeo.com/335292911');
+        $video    = vimeo('https://vimeo.com/335292911');
         $expected = '<iframe allowfullscreen src="https://player.vimeo.com/video/335292911"></iframe>';
+
+        $this->assertEquals($expected, $video);
+    }
+
+    public function testVimeoWithOptions()
+    {
+        $video    = vimeo('https://vimeo.com/335292911', ['controls' => 0]);
+        $expected = '<iframe allowfullscreen src="https://player.vimeo.com/video/335292911?controls=0"></iframe>';
 
         $this->assertEquals($expected, $video);
     }
@@ -713,6 +774,14 @@ class HelpersTest extends TestCase
     {
         $video    = youtube('https://www.youtube.com/watch?v=xB3s_f7PzYk');
         $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk"></iframe>';
+
+        $this->assertEquals($expected, $video);
+    }
+
+    public function testYoutubeWithOptions()
+    {
+        $video    = youtube('https://www.youtube.com/watch?v=xB3s_f7PzYk', ['controls' => 0]);
+        $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';
 
         $this->assertEquals($expected, $video);
     }

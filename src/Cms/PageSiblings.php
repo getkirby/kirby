@@ -14,11 +14,13 @@ namespace Kirby\Cms;
 trait PageSiblings
 {
     /**
-     * @deprecated 3.0.0 Use `Page::hasNextUnlisted` instead
-     * @return boolean
+     * @deprecated 3.0.0 Use `Page::hasNextUnlisted()` instead
+     * @return bool
      */
     public function hasNextInvisible(): bool
     {
+        deprecated('$page->hasNextInvisible() is deprecated, use $page->hasNextUnlisted() instead. $page->hasNextInvisible() will be removed in Kirby 3.5.0.');
+
         return $this->hasNextUnlisted();
     }
 
@@ -45,20 +47,24 @@ trait PageSiblings
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasNextListed` instead
-     * @return boolean
+     * @deprecated 3.0.0 Use `Page::hasNextListed()` instead
+     * @return bool
      */
     public function hasNextVisible(): bool
     {
+        deprecated('$page->hasNextVisible() is deprecated, use $page->hasNextListed() instead. $page->hasNextVisible() will be removed in Kirby 3.5.0.');
+
         return $this->hasNextListed();
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasPrevUnlisted` instead
-     * @return boolean
+     * @deprecated 3.0.0 Use `Page::hasPrevUnlisted()` instead
+     * @return bool
      */
     public function hasPrevInvisible(): bool
     {
+        deprecated('$page->hasPrevInvisible() is deprecated, use $page->hasPrevUnlisted() instead. $page->hasPrevInvisible() will be removed in Kirby 3.5.0.');
+
         return $this->hasPrevUnlisted();
     }
 
@@ -85,11 +91,13 @@ trait PageSiblings
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::hasPrevListed instead`
-     * @return boolean
+     * @deprecated 3.0.0 Use `Page::hasPrevListed()` instead
+     * @return bool
      */
     public function hasPrevVisible(): bool
     {
+        deprecated('$page->hasPrevVisible() is deprecated, use $page->hasPrevListed() instead. $page->hasPrevVisible() will be removed in Kirby 3.5.0.');
+
         return $this->hasPrevListed();
     }
 
@@ -99,6 +107,8 @@ trait PageSiblings
      */
     public function nextInvisible()
     {
+        deprecated('$page->nextInvisible() is deprecated, use $page->nextUnlisted() instead. $page->nextInvisible() will be removed in Kirby 3.5.0.');
+
         return $this->nextUnlisted();
     }
 
@@ -123,11 +133,13 @@ trait PageSiblings
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::prevListed()` instead
+     * @deprecated 3.0.0 Use `Page::nextListed()` instead
      * @return self|null
      */
     public function nextVisible()
     {
+        deprecated('$page->nextVisible() is deprecated, use $page->nextListed() instead. $page->nextVisible() will be removed in Kirby 3.5.0.');
+
         return $this->nextListed();
     }
 
@@ -137,6 +149,8 @@ trait PageSiblings
      */
     public function prevInvisible()
     {
+        deprecated('$page->prevInvisible() is deprecated, use $page->prevUnlisted() instead. $page->prevInvisible() will be removed in Kirby 3.5.0.');
+
         return $this->prevUnlisted();
     }
 
@@ -166,6 +180,8 @@ trait PageSiblings
      */
     public function prevVisible()
     {
+        deprecated('$page->prevVisible() is deprecated, use $page->prevListed() instead. $page->prevVisible() will be removed in Kirby 3.5.0.');
+
         return $this->prevListed();
     }
 

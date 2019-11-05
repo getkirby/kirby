@@ -108,9 +108,9 @@ class F
     /**
      * Appends new content to an existing file
      *
-     * @param  string  $file The path for the file
-     * @param  mixed   $content Either a string or an array. Arrays will be converted to JSON.
-     * @return boolean
+     * @param string $file The path for the file
+     * @param mixed $content Either a string or an array. Arrays will be converted to JSON.
+     * @return bool
      */
     public static function append(string $file, $content): bool
     {
@@ -131,10 +131,10 @@ class F
     /**
      * Copy a file to a new location.
      *
-     * @param  string  $source
-     * @param  string  $target
-     * @param  boolean $force
-     * @return boolean
+     * @param string $source
+     * @param string $target
+     * @param bool $force
+     * @return bool
      */
     public static function copy(string $source, string $target, bool $force = false): bool
     {
@@ -162,7 +162,7 @@ class F
      *
      * </code>
      *
-     * @param  string  $file The path
+     * @param string $file The path
      * @return string
      */
     public static function dirname(string $file): string
@@ -175,7 +175,7 @@ class F
      *
      * @param string $file
      * @param string $in
-     * @return boolean
+     * @return bool
      */
     public static function exists(string $file, string $in = null): bool
     {
@@ -190,8 +190,8 @@ class F
     /**
      * Gets the extension of a file
      *
-     * @param  string  $file The filename or path
-     * @param  string  $extension Set an optional extension to overwrite the current one
+     * @param string $file The filename or path
+     * @param string $extension Set an optional extension to overwrite the current one
      * @return string
      */
     public static function extension(string $file = null, string $extension = null): string
@@ -258,7 +258,7 @@ class F
      *
      * </code>
      *
-     * @param  string  $name The path
+     * @param string $name The path
      * @return string
      */
     public static function filename(string $name): string
@@ -269,8 +269,8 @@ class F
     /**
      * Invalidate opcode cache for file.
      *
-     * @param  string $file The path of the file
-     * @return boolean
+     * @param string $file The path of the file
+     * @return bool
      */
     public static function invalidateOpcodeCache(string $file): bool
     {
@@ -286,7 +286,7 @@ class F
      *
      * @param string $file Full path to the file
      * @param string $value An extension or mime type
-     * @return boolean
+     * @return bool
      */
     public static function is(string $file, string $value): bool
     {
@@ -307,7 +307,7 @@ class F
      * Checks if the file is readable
      *
      * @param string $file
-     * @return boolean
+     * @return bool
      */
     public static function isReadable(string $file): bool
     {
@@ -318,7 +318,7 @@ class F
      * Checks if the file is writable
      *
      * @param string $file
-     * @return boolean
+     * @return bool
      */
     public static function isWritable(string $file): bool
     {
@@ -335,7 +335,7 @@ class F
      * @param string $source
      * @param string $link
      * @param string $method
-     * @return boolean
+     * @return bool
      */
     public static function link(string $source, string $link, string $method = 'link'): bool
     {
@@ -414,9 +414,9 @@ class F
     /**
      * Get the file's last modification time.
      *
-     * @param  string $file
-     * @param  string $format
-     * @param  string $handler date or strftime
+     * @param string $file
+     * @param string $format
+     * @param string $handler date or strftime
      * @return mixed
      */
     public static function modified(string $file, string $format = null, string $handler = 'date')
@@ -440,10 +440,10 @@ class F
     /**
      * Moves a file to a new location
      *
-     * @param  string  $oldRoot The current path for the file
-     * @param  string  $newRoot The path to the new location
-     * @param  boolean $force Force move if the target file exists
-     * @return boolean
+     * @param string $oldRoot The current path for the file
+     * @param string $newRoot The path to the new location
+     * @param bool $force Force move if the target file exists
+     * @return bool
      */
     public static function move(string $oldRoot, string $newRoot, bool $force = false): bool
     {
@@ -472,7 +472,7 @@ class F
     /**
      * Extracts the name from a file path or filename without extension
      *
-     * @param  string  $name The path or filename
+     * @param string $name The path or filename
      * @return string
      */
     public static function name(string $name): string
@@ -483,7 +483,7 @@ class F
     /**
      * Converts an integer size into a human readable format
      *
-     * @param  mixed $size The file size or a file path
+     * @param mixed $size The file size or a file path
      * @return string|int
      */
     public static function niceSize($size): string
@@ -508,7 +508,7 @@ class F
     /**
      * Reads the content of a file
      *
-     * @param  string $file The path for the file
+     * @param string $file The path for the file
      * @return string|false
      */
     public static function read(string $file)
@@ -520,9 +520,9 @@ class F
      * Changes the name of the file without
      * touching the extension
      *
-     * @param  string $file
-     * @param  string $newName
-     * @param  bool   $overwrite Force overwrite existing files
+     * @param string $file
+     * @param string $newName
+     * @param bool $overwrite Force overwrite existing files
      * @return string|false
      */
     public static function rename(string $file, string $newName, bool $overwrite = false)
@@ -610,8 +610,8 @@ class F
      *
      * </code>
      *
-     * @param  string  $file The path for the file
-     * @return boolean
+     * @param string $file The path for the file
+     * @return bool
      */
     public static function remove(string $file): bool
     {
@@ -642,7 +642,7 @@ class F
      *
      * </code>
      *
-     * @param  string $string The file name
+     * @param string $string The file name
      * @return string
      */
     public static function safeName(string $string): string
@@ -675,7 +675,7 @@ class F
     /**
      * Returns the size of a file.
      *
-     * @param  mixed  $file The path
+     * @param mixed $file The path
      * @return int
      */
     public static function size(string $file): int
@@ -728,7 +728,7 @@ class F
      *
      * @param string $file
      * @param string $to
-     * @return boolean
+     * @return bool
      */
     public static function unzip(string $file, string $to): bool
     {
@@ -765,10 +765,10 @@ class F
     /**
      * Creates a new file
      *
-     * @param  string  $file The path for the new file
-     * @param  mixed   $content Either a string, an object or an array. Arrays and objects will be serialized.
-     * @param  boolean $append true: append the content to an exisiting file if available. false: overwrite.
-     * @return boolean
+     * @param string $file The path for the new file
+     * @param mixed $content Either a string, an object or an array. Arrays and objects will be serialized.
+     * @param bool $append true: append the content to an exisiting file if available. false: overwrite.
+     * @return bool
      */
     public static function write(string $file, $content, bool $append = false): bool
     {

@@ -3,7 +3,7 @@
 
     <header class="k-section-header">
       <k-headline :link="options.link">
-        {{ headline }} <abbr v-if="options.min" title="This section is required">*</abbr>
+        {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
 
       <k-button-group v-if="add">
@@ -14,14 +14,15 @@
     <template v-if="error">
       <k-box theme="negative">
         <k-text size="small">
-          <strong>{{ $t("error.section.notLoaded", { name: name }) }}:</strong>
+          <strong>
+            {{ $t("error.section.notLoaded", { name: name }) }}:
+          </strong>
           {{ error }}
         </k-text>
       </k-box>
     </template>
 
     <template v-else>
-
       <k-collection
         v-if="data.length"
         :layout="options.layout"
@@ -30,6 +31,7 @@
         :pagination="pagination"
         :sortable="options.sortable"
         :size="options.size"
+        :data-invalid="isInvalid"
         @change="sort"
         @paginate="paginate"
         @action="action"
@@ -38,6 +40,7 @@
       <template v-else>
         <k-empty
           :layout="options.layout"
+          :data-invalid="isInvalid"
           icon="page"
           @click="create"
         >
@@ -60,7 +63,6 @@
       <k-page-status-dialog ref="status" @success="update" />
       <k-page-template-dialog ref="template" @success="update" />
       <k-page-remove-dialog ref="remove" @success="update" />
-
     </template>
 
   </section>
@@ -95,83 +97,73 @@ export default {
       }
     },
     action(page, action) {
-      // check first if page is locked
-      const url = this.$api.pages.url(page.id, "lock")
 
-      this.$api.get(url).then(response => {
-
-        // restrict actions if page is locked
-        if (response.locked && ["preview"].includes(action) === false) {
-          this.$store.dispatch('notification/error', this.$t("lock.page.isLocked", { email: response.email }));
-          return;
+      switch (action) {
+        case "duplicate": {
+          this.$refs.duplicate.open(page.id);
+          break;
         }
+        case "preview": {
+          let preview = window.open("", "_blank");
+          preview.document.write = "...";
 
-        switch (action) {
-          case "duplicate": {
-            this.$refs.duplicate.open(page.id);
-            break;
-          }
-          case "preview": {
-            let preview = window.open("", "_blank");
-            preview.document.write = "...";
+          this.$api.pages
+            .preview(page.id)
+            .then(url => {
+              preview.location.href = url;
+            })
+            .catch(error => {
+              this.$store.dispatch("notification/error", error);
+            });
 
-            this.$api.pages
-              .preview(page.id)
-              .then(url => {
-                preview.location.href = url;
+          break;
+        }
+        case "rename": {
+          this.$refs.rename.open(page.id);
+          break;
+        }
+        case "url": {
+          this.$refs.url.open(page.id);
+          break;
+        }
+        case "status": {
+          this.$refs.status.open(page.id);
+          break;
+        }
+        case "template": {
+          this.$refs.template.open(page.id);
+          break;
+        }
+        case "remove": {
+          if (this.data.length <= this.options.min) {
+            const number = this.options.min > 1 ? "plural" : "singular";
+            this.$store.dispatch("notification/error", {
+              message: this.$t("error.section.pages.min." + number, {
+                section: this.options.headline || this.name,
+                min: this.options.min
               })
-              .catch(error => {
-                this.$store.dispatch("notification/error", error);
-              });
+            });
+            break;
+          }
 
-            break;
-          }
-          case "rename": {
-            this.$refs.rename.open(page.id);
-            break;
-          }
-          case "url": {
-            this.$refs.url.open(page.id);
-            break;
-          }
-          case "status": {
-            this.$refs.status.open(page.id);
-            break;
-          }
-          case "template": {
-            this.$refs.template.open(page.id);
-            break;
-          }
-          case "remove": {
-            if (this.data.length <= this.options.min) {
-              const number = this.options.min > 1 ? "plural" : "singular";
-              this.$store.dispatch("notification/error", {
-                message: this.$t("error.section.pages.min." + number, {
-                  section: this.options.headline || this.name,
-                  min: this.options.min
-                })
-              });
-              break;
-            }
-
-            this.$refs.remove.open(page.id);
-            break;
-          }
-          default: {
-            throw new Error("Invalid action");
-          }
+          this.$refs.remove.open(page.id);
+          break;
         }
-      });
+        default: {
+          throw new Error("Invalid action");
+        }
+      }
 
     },
     items(data) {
       return data.map(page => {
+        const isEnabled = page.permissions.changeStatus !== false;
+
         page.flag = {
           class: "k-status-flag k-status-flag-" + page.status,
-          tooltip: this.$t("page.status"),
-          icon:
-            page.permissions.changeStatus === false ? "protected" : "circle",
-          disabled: page.permissions.changeStatus === false,
+          tooltip: isEnabled ? this.$t("page.status") : `${this.$t("page.status")} (${this.$t("disabled")})`,
+          icon: isEnabled ? "circle" : "protected",
+          disabled: !isEnabled,
           click: () => {
             this.action(page, "status");
           }

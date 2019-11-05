@@ -16,6 +16,7 @@
         :handle="true"
         :list="selected"
         :data-size="size"
+        :data-invalid="isInvalid"
         @end="onInput"
       >
         <component
@@ -41,6 +42,7 @@
     <k-empty
       v-else
       :layout="layout"
+      :data-invalid="isInvalid"
       icon="page"
       @click="open"
     >
@@ -65,6 +67,7 @@ export default {
         endpoint: this.endpoints.field,
         max: this.max,
         multiple: this.multiple,
+        search: this.search,
         selected: this.selected.map(page => page.id),
       });
     }

@@ -90,7 +90,7 @@ class Uri
     protected $scheme = 'http';
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $slash = false;
 
@@ -237,7 +237,7 @@ class Uri
 
     /**
      * @param array $props
-     * @param boolean $forwarded
+     * @param bool $forwarded
      * @return self
      */
     public static function current(array $props = [], bool $forwarded = false)
@@ -289,7 +289,7 @@ class Uri
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasFragment(): bool
     {
@@ -297,7 +297,7 @@ class Uri
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasPath(): bool
     {
@@ -305,7 +305,7 @@ class Uri
     }
 
     /**
-     * @return boolean
+     * @return bool
      */
     public function hasQuery(): bool
     {
@@ -373,7 +373,7 @@ class Uri
     }
 
     /**
-     * @param  string|null $fragment
+     * @param string|null $fragment
      * @return self
      */
     public function setFragment(string $fragment = null)
@@ -383,7 +383,7 @@ class Uri
     }
 
     /**
-     * @param  string $host
+     * @param string $host
      * @return self
      */
     public function setHost(string $host = null)
@@ -393,7 +393,7 @@ class Uri
     }
 
     /**
-     * @param  Kirby\Http\Params|string|array|null $params
+     * @param \Kirby\Http\Params|string|array|null $params
      * @return self
      */
     public function setParams($params = null)
@@ -403,7 +403,7 @@ class Uri
     }
 
     /**
-     * @param  string|null $password
+     * @param string|null $password
      * @return self
      */
     public function setPassword(string $password = null)
@@ -453,7 +453,7 @@ class Uri
     }
 
     /**
-     * @param  string $scheme
+     * @param string $scheme
      * @return self
      */
     public function setScheme(string $scheme = null)
@@ -480,7 +480,7 @@ class Uri
     }
 
     /**
-     * @param  string|null $username
+     * @param string|null $username
      * @return self
      */
     public function setUsername(string $username = null)

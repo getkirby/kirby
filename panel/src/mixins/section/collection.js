@@ -34,6 +34,17 @@ export default {
     help() {
       return this.options.help;
     },
+    isInvalid() {
+      if (this.options.min && this.data.length < this.options.min) {
+        return true;
+      }
+      
+      if (this.options.max && this.data.length > this.options.max) {
+        return true;
+      }
+      
+      return false;
+    },
     language() {
       return this.$store.state.languages.current;
     },

@@ -75,17 +75,20 @@ return [
                     $field = $this->field();
 
                     return $field->userpicker([
-                        'query' => $field->query(),
-                        'image' => $field->image(),
-                        'info'  => $field->info(),
-                        'text'  => $field->text()
+                        'image'  => $field->image(),
+                        'info'   => $field->info(),
+                        'limit'  => $field->limit(),
+                        'page'   => $this->requestQuery('page'),
+                        'query'  => $field->query(),
+                        'search' => $this->requestQuery('search'),
+                        'text'   => $field->text()
                     ]);
                 }
             ]
         ];
     },
     'save' => function ($value = null) {
-        return A::pluck($value, 'email');
+        return A::pluck($value, 'id');
     },
     'validations' => [
         'max',

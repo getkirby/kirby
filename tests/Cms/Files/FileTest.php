@@ -9,6 +9,14 @@ class FileTestModel extends File
 {
 }
 
+class FileTestForceLocked extends File
+{
+    public function isLocked(): bool
+    {
+        return true;
+    }
+}
+
 class FileTest extends TestCase
 {
     protected function defaults(): array
@@ -170,7 +178,7 @@ class FileTest extends TestCase
 
     public function testDefaultPage()
     {
-        return $this->assertNull($this->file()->page());
+        $this->assertNull($this->file()->page());
     }
 
     public function testUrl()
@@ -272,6 +280,56 @@ class FileTest extends TestCase
         ];
 
         $this->assertEquals($expected, $icon);
+    }
+
+    public function testPanelOptions()
+    {
+        $file = new File([
+            'filename' => 'test.jpg',
+        ]);
+
+        $file->kirby()->impersonate('kirby');
+
+        $expected = [
+            'changeName' => true,
+            'create'     => true,
+            'delete'     => true,
+            'replace'    => true,
+            'update'     => true,
+        ];
+
+        $this->assertEquals($expected, $file->panelOptions());
+    }
+
+    public function testPanelOptionsWithLockedFile()
+    {
+        $file = new FileTestForceLocked([
+            'filename' => 'test.jpg',
+        ]);
+
+        $file->kirby()->impersonate('kirby');
+
+        // without override
+        $expected = [
+            'changeName' => false,
+            'create'     => false,
+            'delete'     => false,
+            'replace'    => false,
+            'update'     => false,
+        ];
+
+        $this->assertEquals($expected, $file->panelOptions());
+
+        // with override
+        $expected = [
+            'changeName' => false,
+            'create'     => false,
+            'delete'     => true,
+            'replace'    => false,
+            'update'     => false,
+        ];
+
+        $this->assertEquals($expected, $file->panelOptions(['delete']));
     }
 
     public function testPanelUrl()

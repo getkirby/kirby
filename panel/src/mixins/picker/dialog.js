@@ -1,3 +1,5 @@
+import debounce from "@/helpers/debounce.js";
+
 export default {
   data() {
     return {
@@ -10,6 +12,13 @@ export default {
         multiple: true,
         parent: null,
         selected: [],
+        search: true
+      },
+      search: null,
+      pagination: {
+        limit: 20,
+        page: 1,
+        total: 0
       }
     }
   },
@@ -21,12 +30,25 @@ export default {
       return this.multiple === true ? "check" : "circle-filled";
     }
   },
+  watch: {
+    search: debounce(function () {
+      this.pagination.page = 0;
+      this.fetch();
+    }, 200),
+  },
   methods: {
     fetch() {
+      const params = {
+        page: this.pagination.page,
+        search: this.search,
+        ...this.fetchData || {}
+      };
+
       return this.$api
-        .get(this.options.endpoint, this.fetchData || {})
+        .get(this.options.endpoint, params)
         .then(response => {
-          this.models = response.data || response.pages || response;
+          this.models     = response.data;
+          this.pagination = response.pagination;
 
           if (this.onFetched) {
             this.onFetched(response);
@@ -37,16 +59,22 @@ export default {
           this.issue  = e.message;
         });
     },
-    open(files, options) {
+    open(models, options) {
+
+      // reset pagination
+      this.pagination.page = 0;
+
+      // reset the search
+      this.search = null;
 
       let fetch = true;
 
-      if (Array.isArray(files)) {
-        this.models = files;
+      if (Array.isArray(models)) {
+        this.models = models;
         fetch       = false;
       } else {
         this.models = [];
-        options     = files;
+        options     = models;
       }
 
       this.options = {
@@ -69,6 +97,11 @@ export default {
       } else {
         this.$refs.dialog.open();
       }
+    },
+    paginate(pagination) {
+      this.pagination.page  = pagination.page;
+      this.pagination.limit = pagination.limit;
+      this.fetch();
     },
     submit() {
       this.$emit("submit", Object.values(this.selected));

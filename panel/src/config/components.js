@@ -1,5 +1,8 @@
 import Vue from "vue";
 
+/* Style-only components */
+import "@/components/Misc/Invalid.vue";
+
 /* Dialogs */
 import Dialog from "@/components/Dialogs/Dialog.vue";
 import ErrorDialog from "@/components/Dialogs/ErrorDialog.vue";
@@ -119,6 +122,7 @@ import ToolbarLinkDialog from "@/components/Forms/Toolbar/LinkDialog.vue";
 import FilesFieldPreview from "@/components/Forms/Previews/FilesFieldPreview.vue";
 import EmailFieldPreview from "@/components/Forms/Previews/EmailFieldPreview.vue";
 import PagesFieldPreview from "@/components/Forms/Previews/PagesFieldPreview.vue";
+import ToggleFieldPreview from "@/components/Forms/Previews/ToggleFieldPreview.vue";
 import UrlFieldPreview from "@/components/Forms/Previews/UrlFieldPreview.vue";
 import UsersFieldPreview from "@/components/Forms/Previews/UsersFieldPreview.vue";
 
@@ -183,6 +187,7 @@ Vue.component("k-toolbar-link-dialog", ToolbarLinkDialog);
 Vue.component("k-email-field-preview", EmailFieldPreview);
 Vue.component("k-files-field-preview", FilesFieldPreview);
 Vue.component("k-pages-field-preview", PagesFieldPreview);
+Vue.component("k-toggle-field-preview", ToggleFieldPreview);
 Vue.component("k-url-field-preview", UrlFieldPreview);
 Vue.component("k-users-field-preview", UsersFieldPreview);
 
@@ -240,7 +245,10 @@ Vue.component("k-text", Text);
 
 /* Navigation */
 import Button from "@/components/Navigation/Button.vue";
+import ButtonDisabled from "@/components/Navigation/ButtonDisabled.vue";
 import ButtonGroup from "@/components/Navigation/ButtonGroup.vue";
+import ButtonLink from "@/components/Navigation/ButtonLink.vue";
+import ButtonNative from "@/components/Navigation/ButtonNative.vue";
 import Dropdown from "@/components/Navigation/Dropdown.vue";
 import DropdownContent from "@/components/Navigation/DropdownContent.vue";
 import DropdownItem from "@/components/Navigation/DropdownItem.vue";
@@ -253,7 +261,10 @@ import Tag from "@/components/Navigation/Tag.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
 
 Vue.component("k-button", Button);
+Vue.component("k-button-disabled", ButtonDisabled);
 Vue.component("k-button-group", ButtonGroup);
+Vue.component("k-button-link", ButtonLink);
+Vue.component("k-button-native", ButtonNative);
 Vue.component("k-dropdown", Dropdown);
 Vue.component("k-dropdown-content", DropdownContent);
 Vue.component("k-dropdown-item", DropdownItem);

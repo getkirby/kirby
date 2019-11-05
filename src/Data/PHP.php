@@ -19,8 +19,8 @@ class PHP extends Handler
     /**
      * Converts an array to PHP file content
      *
-     * @param  mixed  $data
-     * @param  string $indent For internal use only
+     * @param mixed $data
+     * @param string $indent For internal use only
      * @return string
      */
     public static function encode($data, $indent = ''): string
@@ -48,7 +48,7 @@ class PHP extends Handler
     /**
      * PHP arrays don't have to be decoded
      *
-     * @param  array $array
+     * @param array $array
      * @return array
      */
     public static function decode($array): array
@@ -59,7 +59,7 @@ class PHP extends Handler
     /**
      * Reads data from a file
      *
-     * @param  string $file
+     * @param string $file
      * @return array
      */
     public static function read(string $file): array
@@ -74,9 +74,9 @@ class PHP extends Handler
     /**
      * Creates a PHP file with the given data
      *
-     * @param  string  $file
-     * @param  array   $data
-     * @return boolean
+     * @param string $file
+     * @param array $data
+     * @return bool
      */
     public static function write(string $file = null, array $data = []): bool
     {

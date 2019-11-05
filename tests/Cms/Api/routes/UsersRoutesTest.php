@@ -6,6 +6,8 @@ use PHPUnit\Framework\TestCase;
 
 class UsersRoutesTest extends TestCase
 {
+    protected $app;
+
     public function setUp(): void
     {
         $this->app = new App([
@@ -14,9 +16,11 @@ class UsersRoutesTest extends TestCase
             ],
             'users' => [
                 [
+                    'name'  => 'Bastian',
                     'email' => 'admin@getkirby.com',
                 ],
                 [
+                    'name'  => 'Sonja',
                     'email' => 'editor@getkirby.com',
                 ]
             ]
@@ -71,6 +75,20 @@ class UsersRoutesTest extends TestCase
         $this->assertCount(1, $response['data']);
         $this->assertEquals('editor@getkirby.com', $response['data'][0]['email']);
     }
+    
+    public function testSearchName()
+    {
+        $app = $this->app;
+
+        $response = $app->api()->call('users/search', 'GET', [
+            'query' => [
+                'q' => 'Bastian'
+            ]
+        ]);
+
+        $this->assertCount(1, $response['data']);
+        $this->assertEquals('admin@getkirby.com', $response['data'][0]['email']);
+    }
 
     public function testFiles()
     {
@@ -79,6 +97,9 @@ class UsersRoutesTest extends TestCase
                 [
                     'email' => 'test@getkirby.com',
                     'files' => [
+                        [
+                            'filename' => 'c.jpg',
+                        ],
                         [
                             'filename' => 'a.jpg',
                         ],
@@ -94,8 +115,10 @@ class UsersRoutesTest extends TestCase
 
         $response = $app->api()->call('users/test@getkirby.com/files');
 
-        $this->assertEquals('a.jpg', $response['data'][0]['filename']);
-        $this->assertEquals('b.jpg', $response['data'][1]['filename']);
+        $this->assertCount(3, $response['data']);
+        $this->assertSame('a.jpg', $response['data'][0]['filename']);
+        $this->assertSame('b.jpg', $response['data'][1]['filename']);
+        $this->assertSame('c.jpg', $response['data'][2]['filename']);
     }
 
     public function testFilesSorted()

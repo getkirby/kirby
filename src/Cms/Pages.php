@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+
 /**
  * The `$pages` object refers to a
  * collection of pages. The pages in this
@@ -55,6 +57,10 @@ class Pages extends Collection
         // add a page object
         } elseif (is_a($object, 'Kirby\Cms\Page') === true) {
             $this->__set($object->id(), $object);
+
+        // give a useful error message on invalid input
+        } elseif (in_array($object, [null, false, true], true) !== true) {
+            throw new InvalidArgumentException('You must pass a Page object to the Pages collection');
         }
 
         return $this;
@@ -344,13 +350,15 @@ class Pages extends Collection
     }
 
     /**
-     * Deprecated alias for Pages::unlisted()
+     * @deprecated 3.0.0 Use `Pages::unlisted()` instead
      *
      * @return self
      */
     public function invisible()
     {
-        return $this->filterBy('isUnlisted', '==', true);
+        deprecated('$pages->invisible() is deprecated, use $pages->unlisted() instead. $pages->invisible() will be removed in Kirby 3.5.0.');
+
+        return $this->unlisted();
     }
 
     /**
@@ -429,6 +437,27 @@ class Pages extends Collection
     }
 
     /**
+     * Filter all pages by excluding the given template
+     *
+     * @param string|array $templates
+     * @return \Kirby\Cms\Pages
+     */
+    public function notTemplate($templates)
+    {
+        if (empty($templates) === true) {
+            return $this;
+        }
+
+        if (is_array($templates) === false) {
+            $templates = [$templates];
+        }
+
+        return $this->filter(function ($page) use ($templates) {
+            return !in_array($page->intendedTemplate()->name(), $templates);
+        });
+    }
+
+    /**
      * Returns an array with all page numbers
      *
      * @return array
@@ -480,12 +509,14 @@ class Pages extends Collection
     }
 
     /**
-     * Deprecated alias for Pages::listed()
+     * @deprecated 3.0.0 Use `Pages::listed()` instead
      *
      * @return \Kirby\Cms\Pages
      */
     public function visible()
     {
-        return $this->filterBy('isListed', '==', true);
+        deprecated('$pages->visible() is deprecated, use $pages->listed() instead. $pages->visible() will be removed in Kirby 3.5.0.');
+
+        return $this->listed();
     }
 }

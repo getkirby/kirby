@@ -44,11 +44,7 @@ export default {
         return this.reset();
       }
 
-      if (!$event.dataTransfer.types) {
-        return this.reset();
-      }
-
-      if ($event.dataTransfer.types.includes("Files") === false) {
+      if (this.$helper.isUploadEvent($event) === false) {
         return this.reset();
       }
 
@@ -59,21 +55,17 @@ export default {
       this.reset();
     },
     onEnter($event) {
-      if (this.disabled === false && $event.dataTransfer.types) {
-        if ($event.dataTransfer.types.includes("Files")) {
-          this.dragging = true;
-        }
+      if (this.disabled === false && this.$helper.isUploadEvent($event)) {
+        this.dragging = true;
       }
     },
     onLeave() {
       this.reset();
     },
     onOver($event) {
-      if (this.disabled === false && $event.dataTransfer.types) {
-        if ($event.dataTransfer.types.includes("Files")) {
-          $event.dataTransfer.dropEffect = "copy";
-          this.over = true;
-        }
+      if (this.disabled === false && this.$helper.isUploadEvent($event)) {
+        $event.dataTransfer.dropEffect = "copy";
+        this.over = true;
       }
     }
   }

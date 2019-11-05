@@ -27,7 +27,7 @@ class Dir extends \Kirby\Toolkit\Dir
      * @param string $dir
      * @param string $contentExtension
      * @param array $contentIgnore
-     * @param boolean $multilang
+     * @param bool $multilang
      * @return array
      */
     public static function inventory(string $dir, string $contentExtension = 'txt', array $contentIgnore = null, bool $multilang = false): array

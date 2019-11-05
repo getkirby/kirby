@@ -20,19 +20,21 @@
             class="k-pagination-selector"
             @open="$nextTick(() => $refs.page.focus())"
           >
-            <div>
-              <label for="k-pagination-input">{{ pageLabel }}</label>
-              <input
-                id="k-pagination-input"
-                ref="page"
-                :value="currentPage"
-                :min="1"
-                :max="pages"
-                type="number"
-                @keydown.stop
-                @keydown.enter="goTo($event.target.value)"
-              >
-              <k-button icon="angle-up" @click="goTo($refs.page.value)" />
+            <div class="k-pagination-settings">
+              <label for="k-pagination-page">
+                <span>{{ pageLabel }}:</span>
+                <select id="k-pagination-page" ref="page">
+                  <option
+                    v-for="p in pages"
+                    :key="p"
+                    :selected="page === p"
+                    :value="p"
+                  >
+                    {{ p }}
+                  </option>
+                </select>
+              </label>
+              <k-button icon="check" @click="goTo($refs.page.value)" />
             </div>
           </k-dropdown-content>
         </k-dropdown>
@@ -93,7 +95,9 @@ export default {
     },
     pageLabel: {
       type: String,
-      default: "Page"
+      default() {
+        return this.$t("pagination.page");
+      }
     },
     prevLabel: {
       type: String,
@@ -154,7 +158,7 @@ export default {
   },
   watch: {
     page(page) {
-      this.currentPage = page;
+      this.currentPage = parseInt(page);
     }
   },
   created() {
@@ -184,7 +188,7 @@ export default {
           }
 
           this.$emit("paginate", {
-            page: parseInt(this.currentPage),
+            page: this.currentPage,
             start: this.start,
             end: this.end,
             limit: this.limit,
@@ -240,8 +244,7 @@ export default {
   position: absolute;
   top: 100%;
   left: 50%;
-  width: 14rem;
-  margin-left: -7rem;
+  transform: translateX(-50%);
   background: $color-black;
 
   [dir="ltr"] & {
@@ -252,30 +255,23 @@ export default {
     direction: rtl;
   }
 }
-.k-pagination-selector > div {
-  font-size: $font-size-small;
+
+.k-pagination-settings {
   display: flex;
   align-items: center;
+  justify-content: space-between;
 }
-.k-pagination-selector .k-button {
-  padding: .75rem 1rem;
+.k-pagination-settings .k-button {
   line-height: 1;
 }
-.k-pagination-selector > div > label {
-  padding: .75rem 1rem;
+.k-pagination-settings label {
+  display: flex;
+  border-right: 1px solid rgba(#fff, .35);
+  align-items: center;
+  padding: .625rem 1rem;
+  font-size: $font-size-tiny;
 }
-.k-pagination-selector > div > input {
-  flex-grow: 1;
-  font: inherit;
-  border: 0;
-  padding: .75rem 1rem;
-  color: #fff;
-  background: none;
-  text-align: center;
-  border-left: 1px solid rgba(#fff, .2);
-  border-right: 1px solid rgba(#fff, .2);
-}
-.k-pagination-selector > div > input:focus {
-  outline: 0;
+.k-pagination-settings label span {
+  margin-right: .5rem;
 }
 </style>

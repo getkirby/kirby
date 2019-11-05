@@ -95,7 +95,7 @@ class Field
      *
      * @param object $parent
      * @param string $key
-     * @param mixed  $value
+     * @param mixed $value
      */
     public function __construct($parent = null, string $key, $value)
     {
@@ -130,7 +130,7 @@ class Field
     /**
      * Checks if the field exists in the content data array
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -140,7 +140,7 @@ class Field
     /**
      * Checks if the field content is empty
      *
-     * @return boolean
+     * @return bool
      */
     public function isEmpty(): bool
     {
@@ -150,7 +150,7 @@ class Field
     /**
      * Checks if the field content is not empty
      *
-     * @return boolean
+     * @return bool
      */
     public function isNotEmpty(): bool
     {
@@ -232,7 +232,7 @@ class Field
      * the modified field will be returned. Otherwise it
      * will return the field value.
      *
-     * @param  string|Closure  $value
+     * @param string|Closure $value
      * @return mixed
      */
     public function value($value = null)

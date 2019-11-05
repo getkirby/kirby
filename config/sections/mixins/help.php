@@ -14,7 +14,9 @@ return [
     'computed' => [
         'help' => function () {
             if ($this->help) {
-                return $this->model()->toString($this->help);
+                $help = $this->model()->toString($this->help);
+                $help = $this->kirby()->kirbytext($help);
+                return $help;
             }
         }
     ]

@@ -61,6 +61,11 @@ class Language extends Model
     /**
      * @var array|null
      */
+    protected $smartypants;
+
+    /**
+     * @var array|null
+     */
     protected $translations;
 
     /**
@@ -85,6 +90,7 @@ class Language extends Model
             'locale',
             'name',
             'slugs',
+            'smartypants',
             'translations',
             'url',
         ]);
@@ -112,6 +118,28 @@ class Language extends Model
     }
 
     /**
+     * Returns the base Url for the language
+     * without the path or other cruft
+     *
+     * @return string
+     */
+    public function baseUrl(): string
+    {
+        $kirbyUrl    = $this->kirby()->url();
+        $languageUrl = $this->url();
+
+        if (empty($this->url)) {
+            return $kirbyUrl;
+        }
+
+        if (Str::startsWith($languageUrl, $kirbyUrl) === true) {
+            return $kirbyUrl;
+        }
+
+        return Url::base($languageUrl) ?? $kirbyUrl;
+    }
+
+    /**
      * Returns the language code/id.
      * The language code is used in
      * text file names as appendix.
@@ -129,7 +157,7 @@ class Language extends Model
      *
      * @param string $from
      * @param string $to
-     * @return boolean
+     * @return bool
      */
     protected static function converter(string $from, string $to): bool
     {
@@ -201,7 +229,7 @@ class Language extends Model
      * all its translation files
      *
      * @internal
-     * @return boolean
+     * @return bool
      */
     public function delete(): bool
     {
@@ -270,7 +298,7 @@ class Language extends Model
     /**
      * Check if the language file exists
      *
-     * @return boolean
+     * @return bool
      */
     public function exists(): bool
     {
@@ -281,7 +309,7 @@ class Language extends Model
      * Checks if this is the default language
      * for the site.
      *
-     * @return boolean
+     * @return bool
      */
     public function isDefault(): bool
     {
@@ -326,17 +354,33 @@ class Language extends Model
     }
 
     /**
+     * Returns the URL path for the language
+     *
+     * @return string
+     */
+    public function path(): string
+    {
+        if ($this->url === null) {
+            return $this->code;
+        }
+
+        return Url::path($this->url());
+    }
+
+    /**
      * Returns the routing pattern for the language
      *
      * @return string
      */
     public function pattern(): string
     {
-        if (empty($this->url) === true) {
-            return $this->code;
+        $path = $this->path();
+
+        if (empty($path) === true) {
+            return '(:all)';
         }
 
-        return trim($this->url, '/');
+        return $path . '/(:all?)';
     }
 
     /**
@@ -430,7 +474,7 @@ class Language extends Model
     }
 
     /**
-     * @param boolean $default
+     * @param bool $default
      * @return self
      */
     protected function setDefault(bool $default = false)
@@ -489,6 +533,16 @@ class Language extends Model
     }
 
     /**
+     * @param array $smartypants
+     * @return self
+     */
+    protected function setSmartypants(array $smartypants = null)
+    {
+        $this->smartypants = $smartypants ?? [];
+        return $this;
+    }
+
+    /**
      * @param array $translations
      * @return self
      */
@@ -516,6 +570,16 @@ class Language extends Model
     public function slugs(): array
     {
         return $this->slugs;
+    }
+
+    /**
+     * Returns the custom SmartyPants options for this language
+     *
+     * @return array
+     */
+    public function smartypants(): array
+    {
+        return $this->smartypants;
     }
 
     /**
@@ -554,7 +618,13 @@ class Language extends Model
      */
     public function url(): string
     {
-        return Url::makeAbsolute($this->pattern(), $this->kirby()->url());
+        $url = $this->url;
+
+        if ($url === null) {
+            $url = '/' . $this->code;
+        }
+
+        return Url::makeAbsolute($url, $this->kirby()->url());
     }
 
     /**

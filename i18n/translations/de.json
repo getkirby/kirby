@@ -23,6 +23,7 @@
 
   "delete": "L\u00f6schen",
   "dimensions": "Maße",
+  "disabled": "Gesperrt",
   "discard": "Verwerfen",
   "download": "Download",
   "duplicate": "Duplizieren",
@@ -137,6 +138,7 @@
   "error.section.notLoaded": "Der Bereich \"{name}\" konnte nicht geladen werden",
   "error.section.type.invalid": "Der Bereichstyp \"{type}\" ist nicht gültig",
 
+  "error.site.changeTitle.empty": "Bitte gib einen Titel an",
   "error.site.changeTitle.permission":
     "Du kannst den Titel der Seite nicht ändern",
   "error.site.update.permission": "Du darfst die Seite nicht editieren",
@@ -155,6 +157,8 @@
     "Die Rolle des letzten Administrators kann nicht geändert werden",
   "error.user.changeRole.permission":
     "Du kannst die Rolle für den Benutzer \"{name}\" nicht ändern",
+  "error.user.changeRole.toAdmin":
+    "Du darfst die Admin Rolle nicht an andere Benutzer vergeben",
   "error.user.create.permission": "Du kannst diesen Benutzer nicht anlegen",
   "error.user.delete": "Der Benutzer \"{name}\" konnte nicht gelöscht werden",
   "error.user.delete.lastAdmin": "Du kannst den letzten Admin nicht l\u00f6schen",
@@ -219,6 +223,7 @@
   "error.validation.time": "Bitte gib eine gültige Uhrzeit ein",
   "error.validation.url": "Bitte gib eine gültige URL ein",
 
+  "field.required": "Das Feld ist Pflicht",
   "field.files.empty": "Keine Dateien ausgewählt",
   "field.pages.empty": "Keine Seiten ausgewählt",
   "field.structure.delete.confirm": "Willst du diesen Eintrag wirklich l\u00f6schen?",
@@ -291,6 +296,7 @@
   "loading": "Laden",
 
   "lock.unsaved": "Ungespeicherte Änderungen",
+  "lock.unsaved.empty": "Keine ungespeicherten Änderungen",
   "lock.isLocked": "Ungespeicherte Änderungen von <strong>{email}</strong>",
   "lock.file.isLocked": "Die Datei wird von {email} bearbeitet und kann nicht geändert werden.",
   "lock.page.isLocked": "Die Seite wird von {email} bearbeitet und kann nicht geändert werden.",
@@ -364,6 +370,8 @@
   "pages.status.listed": "Veröffentlicht",
   "pages.status.unlisted": "Ungelistet",
 
+  "pagination.page": "Seite",
+
   "password": "Passwort",
   "pixel": "Pixel",
   "prev": "Vorheriger Eintrag",
@@ -384,6 +392,9 @@
 
   "save": "Speichern",
   "search": "Suchen",
+
+  "section.required": "Der Bereich ist Pflicht",
+
   "select": "Auswählen",
   "settings": "Einstellungen",
   "size": "Größe",

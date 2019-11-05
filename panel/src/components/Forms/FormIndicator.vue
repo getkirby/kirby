@@ -1,5 +1,5 @@
 <template>
-  <k-dropdown v-if="storage.length > 0" class="k-form-indicator">
+  <k-dropdown v-if="hasChanges" class="k-form-indicator">
     <k-button class="k-topbar-button" @click="toggle">
       <k-icon type="edit" class="k-form-indicator-icon" />
     </k-button>
@@ -11,9 +11,9 @@
       <hr>
       <k-dropdown-item
         v-for="entry in entries"
-        :key="entry.link"
+        :key="entry.id"
         :icon="entry.icon"
-        :link="entry.link"
+        @click.native.stop="go(entry.target)"
       >
         {{ entry.label }}
       </k-dropdown-item>
@@ -26,84 +26,117 @@ export default {
   data() {
     return {
       isOpen: false,
-      entries: [],
-      storage: [],
+      entries: []
     }
   },
   computed: {
     store() {
-      return this.$store.state.form.models;
+      return this.$store.state.content.models;
+    },
+    models() {
+      const ids = Object.keys(this.store).filter(id => {
+        return this.store[id] ? true : false;
+      });
+
+      let models = ids.map(id => {
+        return {
+          id: id,
+          ...this.store[id]
+        };
+      });
+      return models.filter(model => Object.keys(model.changes).length > 0);
+    },
+    hasChanges() {
+      return this.models.length > 0;
     }
-  },
-  watch: {
-    store: {
-      handler() {
-        this.loadFromStorage();
-      },
-      deep: true
-    }
-  },
-  created() {
-    this.loadFromStorage();
   },
   methods: {
-    loadFromApi() {
-      let promises = this.storage.map(model => {
+    go(target) {
+      // if a target language is set and it is not the current language,
+      // switch to it before routing to target view
+      if (target.language) {
+        if (this.$store.state.languages.current.code !== target.language) {
+          const language = this.$store.state.languages.all.filter(l => l.code === target.language)[0];
+          this.$store.dispatch("languages/current", language);
+        }
+      }
+
+      this.$router.push(target.link);
+    },
+    load() {
+      // create an API request promise for each model with changes
+      const promises = this.models.map(model => {
         return this.$api.get(model.api, { view: "compact" }, null, true).then(response => {
-          if (model.id.startsWith("pages/")) {
-            return {
+
+          // populate entry depending on model type
+          let entry;
+
+          if (model.id.startsWith("pages/") === true) {
+            entry = {
               icon: "page",
               label: response.title,
-              link: this.$api.pages.link(response.id),
+              target: {
+                link: this.$api.pages.link(response.id)
+              }
             };
-          }
 
-          if (model.id.startsWith("files/")) {
-            return {
+          } else if (model.id.startsWith("files/") === true) {
+            entry = {
               icon: "image",
               label: response.filename,
-              link: response.link,
+              target: {
+                link: response.link
+              }
+            };
+
+          } else if (model.id.startsWith("users/") === true) {
+            entry = {
+              icon: "user",
+              label: response.email,
+              target: {
+                link: this.$api.users.link(response.id),
+              }
+            };
+          } else {
+            entry = {
+              icon: "home",
+              label: response.title,
+              target: {
+                link: "/site"
+              }
             };
           }
 
-          if (model.id.startsWith("users/")) {
-            return {
-              icon: "user",
-              label: response.email,
-              link: this.$api.users.link(response.id),
-            };
+          // add language indicator if in multilang
+          if (this.$store.state.languages.current) {
+            const language = model.id.split("/").pop();
+            entry.label = entry.label + " (" + language + ")";
+            entry.target.language = language;
           }
+
+          return entry;
+        }).catch(() => {
+          this.$store.dispatch("content/remove", model.id);
+          return null;
         });
       });
 
       return Promise.all(promises).then(entries => {
-        this.entries = entries;
-      });
-    },
-    loadFromStorage() {
-      // get all localStorage ids for form models
-      let ids = Object.keys(localStorage);
-          ids = ids.filter(key => key.startsWith("kirby$form$"));
+        this.entries = entries.filter(entry => {
+          return entry !== null;
+        });
 
-      // load the model from localStorage for each id
-      this.storage = ids.map(key => {
-        return {
-          ...JSON.parse(localStorage.getItem(key)),
-          id: key.split("kirby$form$")[1]
-        };
-      });
-
-      // filter models that do not have any changes
-      this.storage = this.storage.filter(data => {
-        return Object.keys(data.changes || {}).length > 0
+        if (this.entries.length === 0) {
+          this.$store.dispatch("notification/success", this.$t("lock.unsaved.empty"));
+        }
       });
     },
     toggle() {
-      this.isOpen = !this.isOpen;
-
-      if (this.isOpen === true) {
-        this.loadFromApi().then(() => {
-          this.$refs.list.toggle();
+      if (this.$refs.list.isOpen === false) {
+        this.load().then(() => {
+          if (this.$refs.list) {
+            this.$refs.list.toggle();
+          }
         });
       } else {
         this.$refs.list.toggle();

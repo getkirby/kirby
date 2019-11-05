@@ -60,12 +60,16 @@ export default {
           this.isInvalid = $invalid;
           this.$emit("invalid", $invalid, $v);
         }
-      },
-      inputProps: {
-        ...this.$props,
-        ...this.$attrs
       }
     };
+  },
+  computed: {
+    inputProps() {
+      return {
+        ...this.$props,
+        ...this.$attrs
+      };
+    }
   },
   methods: {
     blur(e) {
@@ -140,16 +144,6 @@ export default {
 
   &[data-disabled] {
     background: $color-background;
-  }
-
-  &[data-invalid] {
-    border: 1px solid $color-negative-outline;
-    box-shadow: $color-negative-outline 0 0 3px 2px;
-  }
-
-  &[data-invalid]:focus-within {
-    border: $field-input-invalid-focus-border;
-    box-shadow: $color-negative-outline 0 0 0 2px;
   }
 
   .k-input-icon {

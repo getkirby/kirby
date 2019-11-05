@@ -54,6 +54,13 @@ return [
         },
 
         /**
+         * Enable/disable the search field in the picker
+         */
+        'search' => function (bool $search = true) {
+            return $search;
+        },
+
+        /**
          * Main text for each item
          */
         'text' => function (string $text = null) {

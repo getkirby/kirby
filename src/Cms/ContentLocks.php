@@ -121,7 +121,7 @@ class ContentLocks
      * Returns the file handle to a `.lock` file
      *
      * @param string $file
-     * @param boolean $create Whether to create the file if it does not exist
+     * @param bool $create Whether to create the file if it does not exist
      * @return resource|null File handle
      */
     protected function handle(string $file, bool $create = false)
@@ -167,7 +167,7 @@ class ContentLocks
      *
      * @param \Kirby\Cms\ModelWithContent $model
      * @param array $data
-     * @return boolean
+     * @return bool
      */
     public function set(ModelWithContent $model, array $data): bool
     {

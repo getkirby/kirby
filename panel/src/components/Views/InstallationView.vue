@@ -101,12 +101,6 @@ export default {
     },
     fields() {
       return {
-        name: {
-          label: this.$t("name"),
-          type: "text",
-          icon: "user",
-          autofocus: true
-        },
         email: {
           label: this.$t("email"),
           type: "email",
@@ -142,7 +136,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("form/current", null);
+    this.$store.dispatch("content/current", null);
     this.check();
   },
   methods: {

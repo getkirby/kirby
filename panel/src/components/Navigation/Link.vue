@@ -23,7 +23,10 @@
 </template>
 
 <script>
+import tab from "@/mixins/tab.js";
+
 export default {
+  mixins: [tab],
   props: {
     disabled: Boolean,
     rel: String,
@@ -90,10 +93,13 @@ export default {
       }
 
       this.$emit("click", event);
-    },
-    focus() {
-      this.$refs.link.focus();
     }
   }
 };
 </script>
+
+<style lang="scss">
+.k-link {
+  @include highlight-tabbed;
+}
+</style>

@@ -37,8 +37,8 @@ class SessionData
     /**
      * Sets one or multiple session values by key
      *
-     * @param  string|array $key   The key to define or a key-value array with multiple values
-     * @param  mixed        $value The value for the passed key (only if one $key is passed)
+     * @param string|array $key The key to define or a key-value array with multiple values
+     * @param mixed $value The value for the passed key (only if one $key is passed)
      * @return void
      */
     public function set($key, $value = null)
@@ -61,9 +61,9 @@ class SessionData
     /**
      * Increments one or multiple session values by a specified amount
      *
-     * @param  string|array $key The key to increment or an array with multiple keys
-     * @param  integer      $by  Increment by which amount?
-     * @param  integer      $max Maximum amount (value is not incremented further)
+     * @param string|array $key The key to increment or an array with multiple keys
+     * @param int $by Increment by which amount?
+     * @param int $max Maximum amount (value is not incremented further)
      * @return void
      */
     public function increment($key, int $by = 1, $max = null)
@@ -115,9 +115,9 @@ class SessionData
     /**
      * Decrements one or multiple session values by a specified amount
      *
-     * @param  string|array $key The key to decrement or an array with multiple keys
-     * @param  integer      $by  Decrement by which amount?
-     * @param  integer      $min Minimum amount (value is not decremented further)
+     * @param string|array $key The key to decrement or an array with multiple keys
+     * @param int $by Decrement by which amount?
+     * @param int $min Minimum amount (value is not decremented further)
      * @return void
      */
     public function decrement($key, int $by = 1, $min = null)
@@ -169,8 +169,8 @@ class SessionData
     /**
      * Returns one or all session values by key
      *
-     * @param  string|null $key     The key to get or null for the entire data array
-     * @param  mixed       $default Optional default value to return if the key is not defined
+     * @param string|null $key The key to get or null for the entire data array
+     * @param mixed $default Optional default value to return if the key is not defined
      * @return mixed
      */
     public function get($key = null, $default = null)
@@ -190,8 +190,8 @@ class SessionData
     /**
      * Retrieves a value and removes it afterwards
      *
-     * @param  string $key     The key to get
-     * @param  mixed  $default Optional default value to return if the key is not defined
+     * @param string $key The key to get
+     * @param mixed $default Optional default value to return if the key is not defined
      * @return mixed
      */
     public function pull(string $key, $default = null)
@@ -208,7 +208,7 @@ class SessionData
     /**
      * Removes one or multiple session values by key
      *
-     * @param  string|array $key The key to remove or an array with multiple keys
+     * @param string|array $key The key to remove or an array with multiple keys
      * @return void
      */
     public function remove($key)
@@ -245,7 +245,7 @@ class SessionData
      * Reloads the data array with the current session data
      * Only used internally
      *
-     * @param  array $data Currently stored session data
+     * @param array $data Currently stored session data
      * @return void
      */
     public function reload(array $data)

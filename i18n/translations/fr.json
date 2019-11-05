@@ -23,6 +23,7 @@
 
   "delete": "Supprimer",
   "dimensions": "Dimensions",
+  "disabled": "Désactivé",
   "discard": "Supprimer",
   "download": "Télécharger",
   "duplicate": "Dupliquer",
@@ -137,6 +138,7 @@
   "error.section.notLoaded": "La section «&nbsp;{name}&nbsp;» n’a pu être chargée",
   "error.section.type.invalid": "Le type de section «&nbsp;{type}&nbsp;» est incorrect",
 
+  "error.site.changeTitle.empty": "Le titre ne peut être vide",
   "error.site.changeTitle.permission":
     "Vous n’êtes pas autorisé à modifier le titre du site",
   "error.site.update.permission": "Vous n’êtes pas autorisé à modifier le contenu global du site",
@@ -155,6 +157,8 @@
     "Le rôle du dernier administrateur ne peut être modifié",
   "error.user.changeRole.permission":
     "Vous n’êtes pas autorisé à changer le rôle de l’utilisateur « {name} »",
+  "error.user.changeRole.toAdmin":
+    "Vous n’êtes pas autorisé à attribuer le rôle d’administrateur aux utilisateurs",
   "error.user.create.permission": "Vous n’êtes pas autorisé à créer cet utilisateur",
   "error.user.delete": "L’utilisateur « {name} » ne peut être supprimé",
   "error.user.delete.lastAdmin": "Le dernier administrateur ne peut être supprimé",
@@ -219,6 +223,7 @@
   "error.validation.time": "Veuillez saisir une heure valide",
   "error.validation.url": "Veuillez saisir une URL valide",
 
+  "field.required": "Le champ est obligatoire",
   "field.files.empty": "Pas encore de fichier sélectionné",
   "field.pages.empty": "Pas encore de page sélectionnée",
   "field.structure.delete.confirm": "Voulez-vous vraiment supprimer cette ligne?",
@@ -291,6 +296,7 @@
   "loading": "Chargement",
 
   "lock.unsaved": "Modifications non enregistrées",
+  "lock.unsaved.empty": "Il n’y a plus de modifications non enregistrées",
   "lock.isLocked": "Modifications non enregistrées par <strong>{email}</strong>",
   "lock.file.isLocked": "Le fichier est actuellement édité par {email} et ne peut être modifié.",
   "lock.page.isLocked": "La page est actuellement éditée par {email} et ne peut être modifiée.",
@@ -364,6 +370,8 @@
   "pages.status.listed": "Publié",
   "pages.status.unlisted": "Non listé",
 
+  "pagination.page": "Page",
+
   "password": "Mot de passe",
   "pixel": "Pixel",
   "prev": "Précédent",
@@ -384,6 +392,9 @@
 
   "save": "Enregistrer",
   "search": "Rechercher",
+
+  "section.required": "Cette section est obligatoire",
+
   "select": "Sélectionner",
   "settings": "Paramètres",
   "size": "Poids",
@@ -418,8 +429,8 @@
   "upload.error.default": "Le fichier n’a pu être transféré",
   "upload.error.extension": "Le transfert de fichier a été stoppé par une extension",
   "upload.error.formSize": "Le fichier transféré excède la directive MAX_FILE_SIZE spécifiée dans le formulaire",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
-  "upload.error.iniSize": "Le fichier transféré excède la directive MAX_FILE_SIZE spécifiée dans php.ini",
+  "upload.error.iniPostSize": "Le fichier transféré excède la directive post_max_size spécifiée dans php.ini",
+  "upload.error.iniSize": "Le fichier transféré excède la directive upload_max_filesize spécifiée dans php.ini",
   "upload.error.noFile": "Aucun fichier n’a été transféré",
   "upload.error.noFiles": "Aucun fichier n’a été transféré",
   "upload.error.partial": "Le fichier n’a été que partiellement transféré",

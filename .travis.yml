@@ -1,5 +1,6 @@
 language: php
 os: linux
+dist: bionic
 sudo: false
 services:
   - memcached
@@ -8,38 +9,46 @@ php:
   - 7.1
   - 7.2
   - 7.3
+  - 7.4snapshot
+jobs:
+  allow_failures:
+  - php: 7.4snapshot
 
 before_install:
-  - echo yes | pecl install -f apcu
-  - phpenv config-add ./tests/php.ini
+  # set up PHP config
+  - phpenv config-rm xdebug.ini || true # code coverage is generated with PCOV
+  - phpenv config-add tests/php.ini
+
+  # ensure that the Composer config is valid
+  - composer validate
 
 install:
-  # Install composer packages, will also trigger dump-autoload
-  - composer self-update
-  - composer require phpunit/phpunit ^7
-  - composer require friendsofphp/php-cs-fixer
-  - composer install --no-interaction --ignore-platform-reqs
+  # install Composer packages, will also trigger dump-autoload
+  - composer require -n --ignore-platform-reqs "phwoolcon/ci-pecl-cacher" "phpunit/phpunit:^7" "pcov/clobber" "friendsofphp/php-cs-fixer" "php-coveralls/php-coveralls"
+  - composer install -n --ignore-platform-reqs --no-suggest
 
-  # Install coveralls.phar
-  - wget -c -nc --retry-connrefused --tries=0 https://github.com/php-coveralls/php-coveralls/releases/download/v2.1.0/php-coveralls.phar
-  - chmod +x php-coveralls.phar
-  - php php-coveralls.phar --version
+  # install and cache PHP extensions
+  - ./vendor/bin/ci-pecl-install memcached
+  - ./vendor/bin/ci-pecl-install pcov
 
 before_script:
   - mkdir -p build/logs
+  - ./vendor/bin/pcov clobber
   - ls -al
 
 script:
-  - composer validate
   - ./vendor/bin/phpunit --coverage-clover build/logs/clover.xml
-  - PHP_CS_FIXER_IGNORE_ENV=1 vendor/bin/php-cs-fixer fix --config .php_cs --verbose --diff --dry-run
+  - PHP_CS_FIXER_IGNORE_ENV=1 ./vendor/bin/php-cs-fixer fix --config .php_cs --verbose --diff --dry-run
 
 after_success:
-  - travis_retry php php-coveralls.phar -v
+  - travis_retry ./vendor/bin/php-coveralls -v
 
 cache:
   directories:
+    - vendor
+    - $HOME/.composer/cache
     - $HOME/.php-cs-fixer
+    - $HOME/pecl_cache
 
 matrix:
   fast_finish: true

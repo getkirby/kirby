@@ -23,6 +23,7 @@
 
   "delete": "Radera",
   "dimensions": "Dimensioner",
+  "disabled": "Inaktiverad",
   "discard": "Kassera",
   "download": "Ladda ner",
   "duplicate": "Duplicera",
@@ -37,7 +38,7 @@
 
   "error.access.login": "Ogiltig inloggning",
   "error.access.panel": "Du saknar behörighet att nå panelen",
-  "error.access.view": "You are not allowed to access this part of the panel",
+  "error.access.view": "Du saknar behörighet att nå denna del av panelen",
 
   "error.avatar.create.fail": "Profilbilden kunde inte laddas upp",
   "error.avatar.delete.fail": "Profilbilden kunde inte raderas",
@@ -52,7 +53,7 @@
 
   "error.field.converter.invalid": "Ogiltig omvandlare \"{converter}\"",
 
-  "error.file.changeName.empty": "The name must not be empty",
+  "error.file.changeName.empty": "Namnet får inte vara tomt",
   "error.file.changeName.permission":
     "Du har inte behörighet att ändra namnet på \"{filename}\"",
   "error.file.duplicate": "En fil med namnet \"{filename}\" existerar redan",
@@ -137,6 +138,7 @@
   "error.section.notLoaded": "Sektionen \"{name}\" kunde inte laddas",
   "error.section.type.invalid": "Sektionstypen \"{type}\" är inte giltig",
 
+  "error.site.changeTitle.empty": "Titeln får inte vara tom",
   "error.site.changeTitle.permission":
     "Du har inte behörighet att ändra titeln på webbplatsen",
   "error.site.update.permission": "Du har inte behörighet att uppdatera webbplatsen",
@@ -155,6 +157,8 @@
     "Rollen för den återstående adminanvändaren kan inte ändras",
   "error.user.changeRole.permission":
     "Du har inte behörighet att ändra rollen för användaren \"{name}\"",
+  "error.user.changeRole.toAdmin":
+    "Du har inte behörighet att ge någon en administratörsroll",
   "error.user.create.permission": "Du har inte behörighet att skapa denna användare",
   "error.user.delete": "Användaren kan inte raderas",
   "error.user.delete.lastAdmin": "Den återstående administratören kan inte raderas",
@@ -219,6 +223,7 @@
   "error.validation.time": "Ange en giltig tid",
   "error.validation.url": "Ange en giltig URL",
 
+  "field.required": "Fältet krävs",
   "field.files.empty": "Inga filer valda än",
   "field.pages.empty": "Inga sidor valda än",
   "field.structure.delete.confirm": "Vill du verkligen radera denna rad?",
@@ -291,6 +296,7 @@
   "loading": "Laddar",
 
   "lock.unsaved": "Osparade ändringar",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Osparade ändringar av <strong>{email}</strong>",
   "lock.file.isLocked": "Filen redigeras just nu av {email} och kan inte redigeras.",
   "lock.page.isLocked": "Sidan redigeras just nu av {email} och kan inte redigeras.",
@@ -364,6 +370,8 @@
   "pages.status.listed": "Publicerade",
   "pages.status.unlisted": "Olistade",
 
+  "pagination.page": "Sida",
+
   "password": "L\u00f6senord",
   "pixel": "Pixel",
   "prev": "Föregående",
@@ -384,6 +392,9 @@
 
   "save": "Spara",
   "search": "Sök",
+
+  "section.required": "Sektionen krävs",
+
   "select": "Välj",
   "settings": "Inställningar",
   "size": "Storlek",
@@ -413,17 +424,17 @@
   "translation.name": "Svenska",
 
   "upload": "Ladda upp",
-  "upload.error.cantMove": "The uploaded file could not be moved",
-  "upload.error.cantWrite": "Failed to write file to disk",
-  "upload.error.default": "The file could not be uploaded",
-  "upload.error.extension": "File upload stopped by extension",
-  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
-  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-  "upload.error.noFile": "No file was uploaded",
-  "upload.error.noFiles": "No files were uploaded",
-  "upload.error.partial": "The uploaded file was only partially uploaded",
-  "upload.error.tmpDir": "Missing a temporary folder",
+  "upload.error.cantMove": "Den överförda filen kunde inte flyttas",
+  "upload.error.cantWrite": "Det gick inte att skriva filen till hårddisken",
+  "upload.error.default": "Filen kunde inte laddas upp",
+  "upload.error.extension": "Filuppladdningen förhindrades på grund av filändelsen",
+  "upload.error.formSize": "Den överförda filen överskrider den maximala filstorlek som anges i formuläret (MAX_FILE_SIZE)",
+  "upload.error.iniPostSize": "Den överförda filen överskrider post_max_size-direktivet i php.ini",
+  "upload.error.iniSize": "Den överförda filen överskrider direktivet upload_max_filesize i php.ini",
+  "upload.error.noFile": "Ingen fil laddades upp",
+  "upload.error.noFiles": "Inga filer laddades upp",
+  "upload.error.partial": "Den överförda filen laddades bara delvis upp",
+  "upload.error.tmpDir": "Saknar en temporär mapp",
   "upload.errors": "Fel",
   "upload.progress": "Laddar upp...",
 

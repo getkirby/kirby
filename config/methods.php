@@ -28,7 +28,7 @@ return function (App $app) {
          * Converts the field value into a proper boolean and inverts it
          *
          * @param \Kirby\Cms\Field $field
-         * @return boolean
+         * @return bool
          */
         'isFalse' => function (Field $field): bool {
             return $field->toBool() === false;
@@ -38,7 +38,7 @@ return function (App $app) {
          * Converts the field value into a proper boolean
          *
          * @param \Kirby\Cms\Field $field
-         * @return boolean
+         * @return bool
          */
         'isTrue' => function (Field $field): bool {
             return $field->toBool() === true;
@@ -49,7 +49,7 @@ return function (App $app) {
          *
          * @param string $validator
          * @param mixed ...$arguments A list of optional validator arguments
-         * @return boolean
+         * @return bool
          */
         'isValid' => function (Field $field, string $validator, ...$arguments): bool {
             return V::$validator($field->value, ...$arguments);
@@ -193,7 +193,7 @@ return function (App $app) {
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\Page|null
          */
-        'toPage' => function (Field $field) use ($app) {
+        'toPage' => function (Field $field) {
             return $field->toPages()->first();
         },
 
@@ -254,7 +254,7 @@ return function (App $app) {
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\User|null
          */
-        'toUser' => function (Field $field) use ($app) {
+        'toUser' => function (Field $field) {
             return $field->toUsers()->first();
         },
 
@@ -305,7 +305,7 @@ return function (App $app) {
          *
          * @param \Kirby\Cms\Field $field
          * @param int $cahrs
-         * @param boolean $strip
+         * @param bool $strip
          * @param string $rep
          * @return \Kirby\Cms\Field
          */
@@ -322,6 +322,17 @@ return function (App $app) {
          */
         'html' => function (Field $field) {
             $field->value = htmlentities($field->value, ENT_COMPAT, 'utf-8');
+            return $field;
+        },
+
+        /**
+         * Converts all line breaks in the field content to `<br>` tags.
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
+         */
+        'nl2br' => function (Field $field) {
+            $field->value = nl2br($field->value, false);
             return $field;
         },
 
@@ -369,6 +380,23 @@ return function (App $app) {
                 'field'  => $field
             ]);
 
+            return $field;
+        },
+
+        /**
+         * Strips all block-level HTML elements from the field value,
+         * it can be safely placed inside of other inline elements
+         * without the risk of breaking the HTML structure.
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
+         */
+        'inline' => function (Field $field) {
+            // List of valid inline elements taken from: https://developer.mozilla.org/de/docs/Web/HTML/Inline_elemente
+            // Obsolete elements, script tags, image maps and form elements have
+            // been excluded for safety reasons and as they are most likely not
+            // needed in most cases.
+            $field->value = strip_tags($field->value, '<b><i><small><abbr><cite><code><dfn><em><kbd><strong><samp><var><a><bdo><br><img><q><span><sub><sup>');
             return $field;
         },
 
