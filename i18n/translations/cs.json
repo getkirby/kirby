@@ -23,7 +23,7 @@
 
   "delete": "Smazat",
   "dimensions": "Rozměry",
-  "disabled": "Disabled",
+  "disabled": "Zakázáno",
   "discard": "Zahodit",
   "download": "Stáhnout",
   "duplicate": "Duplikovat",
@@ -158,7 +158,7 @@
   "error.user.changeRole.permission":
     "Nemáte dovoleno změnit roli uživatele \"{name}\"",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "Nemáte dovoleno povýšit uživatele do role administrátora.",
   "error.user.create.permission": "Nemáte dovoleno vytvořit tohoto uživatele",
   "error.user.delete": "U\u017eivatel nemohl b\u00fdt smaz\u00e1n",
   "error.user.delete.lastAdmin": "Nem\u016f\u017eete smazat posledn\u00edho administr\u00e1tora",
