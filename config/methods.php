@@ -106,7 +106,7 @@ return function (App $app) {
                 return $time;
             }
 
-            return $app->option('date.handler', 'date')($format, $time);
+            return Str::convert($app->option('date.handler', 'date')($format, $time), 'utf-8');
         },
 
         /**
