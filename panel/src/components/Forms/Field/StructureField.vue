@@ -674,6 +674,10 @@ $structure-item-height: 38px;
       text-align: left;
     }
   }
+  .k-structure-table-column[data-align="right"] > .k-input {
+    flex-direction: column;
+    align-items: flex-end;
+  }
 
   /* column widths */
   .k-structure-table-column[data-width="1/2"] {
