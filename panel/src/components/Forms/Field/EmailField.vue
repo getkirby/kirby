@@ -46,7 +46,7 @@ export default {
       this.$refs.input.focus();
     },
     mailto() {
-      return this.value !== null && this.value.length > 0 ? 'mailto:' + this.value : null;
+      return this.value && this.value.length > 0 ? 'mailto:' + this.value : null;
     }
   }
 }
