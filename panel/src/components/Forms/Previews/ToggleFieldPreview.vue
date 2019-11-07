@@ -25,7 +25,18 @@ export default {
 
 <style lang="scss">
 .k-toggle-field-preview label {
-  padding: 0 .25rem 0 .75rem;
+  [dir="ltr"] & {
+    padding: 0 .25rem 0 .75rem;
+  }
+
+  [dir="rtl"] & {
+    padding: 0 .75rem 0 .25rem;
+  }
+
+  [data-align="right"] & {
+    padding: 0 .25rem 0 .75rem;
+  }
+
   display: flex;
   height: 38px;
   cursor: pointer;
@@ -33,6 +44,15 @@ export default {
   white-space: nowrap;
 }
 .k-toggle-field-preview .k-toggle-input-label {
-  padding-left: .5rem;
+  [dir="ltr"] & {
+    padding-left: .5rem;
+  }
+
+  [dir="rtl"] & {
+    padding-right: .5rem;
+  }
+}
+[data-align="right"] > .k-toggle-field-preview .k-toggle-input-label {
+  padding-right: .5rem;
 }
 </style>
