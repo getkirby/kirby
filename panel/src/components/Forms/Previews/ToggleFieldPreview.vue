@@ -54,7 +54,7 @@ export default {
   [dir="ltr"] & {
     padding: 0 .25rem 0 .75rem;
   }
-  
+
   [dir="rtl"] & {
     padding: 0 .75rem 0 .25rem;
   }
