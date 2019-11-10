@@ -67,7 +67,7 @@ class App
     protected $routes;
     protected $router;
     protected $server;
-    protected $session;
+    protected $sessionHandler;
     protected $site;
     protected $system;
     protected $urls;
@@ -1105,8 +1105,18 @@ class App
      */
     public function session(array $options = [])
     {
-        $this->session = $this->session ?? new AutoSession($this->root('sessions'), $this->options['session'] ?? []);
-        return $this->session->get($options);
+        return $this->sessionHandler()->get($options);
+    }
+
+    /**
+     * Returns the session handler
+     *
+     * @return \Kirby\Session\AutoSession
+     */
+    public function sessionHandler()
+    {
+        $this->sessionHandler = $this->sessionHandler ?? new AutoSession($this->root('sessions'), $this->option('session', []));
+        return $this->sessionHandler;
     }
 
     /**
