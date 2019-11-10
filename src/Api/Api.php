@@ -174,13 +174,11 @@ class Api
             // set PHP locales based on *user* language
             // so that e.g. strftime() gets formatted correctly
             if (is_a($user, 'Kirby\Cms\User') === true) {
-                $locale = $language = $user->language();
+                $language = $user->language();
 
-                // if it's not already a full locale, "fake" one
-                // and assume that the country equals the language
-                if (Str::contains($locale, '_') !== true) {
-                    $locale .= '_' . strtoupper($locale);
-                }
+                // get the locale from the translation
+                $translation = $user->kirby()->translation($language);
+                $locale = ($translation !== null)? $translation->locale() : $language;
 
                 // provide some variants as fallbacks to be
                 // compatible with as many systems as possible
