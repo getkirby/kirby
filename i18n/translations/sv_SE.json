@@ -422,6 +422,7 @@
   "translation.author": "Kirby-teamet, Ola Christensson",
   "translation.direction": "ltr",
   "translation.name": "Svenska",
+  "translation.locale": "sv_SE",
 
   "upload": "Ladda upp",
   "upload.error.cantMove": "Den överförda filen kunde inte flyttas",

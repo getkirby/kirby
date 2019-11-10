@@ -422,6 +422,7 @@
   "translation.author": "Turqueso",
   "translation.direction": "ltr",
   "translation.name": "Español",
+  "translation.locale": "es_ES",
 
   "upload": "Subir",
   "upload.error.cantMove": "The uploaded file could not be moved",

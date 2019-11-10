@@ -422,6 +422,7 @@
   "translation.author": "Kirby-tiimi",
   "translation.direction": "ltr",
   "translation.name": "Suomi",
+  "translation.locale": "fi_FI",
 
   "upload": "Lähetä",
   "upload.error.cantMove": "Lähetettyä tiedostoa ei voitu siirtää",

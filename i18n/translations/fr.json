@@ -422,6 +422,7 @@
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",
   "translation.name": "Français",
+  "translation.locale": "fr_FR",
 
   "upload": "Transférer",
   "upload.error.cantMove": "Le fichier transféré n’a pu être déplacé",
