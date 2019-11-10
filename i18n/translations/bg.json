@@ -422,6 +422,7 @@
   "translation.author": "Kirby екип",
   "translation.direction": "ltr",
   "translation.name": "Български",
+  "translation.locale": "bg_BG",
 
   "upload": "Прикачи",
   "upload.error.cantMove": "The uploaded file could not be moved",

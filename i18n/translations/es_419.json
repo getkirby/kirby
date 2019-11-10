@@ -422,6 +422,7 @@
   "translation.author": "Equipo Kirby",
   "translation.direction": "ltr",
   "translation.name": "Español (América Latina)",
+  "translation.locale": "es_419",
 
   "upload": "Subir",
   "upload.error.cantMove": "The uploaded file could not be moved",

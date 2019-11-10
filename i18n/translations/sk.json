@@ -422,6 +422,7 @@
   "translation.author": "Tím Kirby",
   "translation.direction": "ltr",
   "translation.name": "Slovensky",
+  "translation.locale": "sk_SK",
 
   "upload": "Nahrať",
   "upload.error.cantMove": "The uploaded file could not be moved",

@@ -422,6 +422,7 @@
   "translation.author": "Kirby Team, Roman Steiner, Manu Moreale",
   "translation.direction": "ltr",
   "translation.name": "Italiano",
+  "translation.locale": "it_IT",
 
   "upload": "Carica",
   "upload.error.cantMove": "The uploaded file could not be moved",

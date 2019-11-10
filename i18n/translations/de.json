@@ -422,6 +422,7 @@
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",
   "translation.name": "Deutsch",
+  "translation.locale": "de_DE",
 
   "upload": "Hochladen",
   "upload.error.cantMove": "Die Datei konnte nicht an ihren Zielort bewegt werden",

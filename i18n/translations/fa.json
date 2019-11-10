@@ -422,6 +422,7 @@
   "translation.author": "تیم کربی",
   "translation.direction": "rtl",
   "translation.name": "انگلیسی",
+  "translation.locale": "fa_IR",
 
   "upload": "بارگذاری",
   "upload.error.cantMove": "The uploaded file could not be moved",

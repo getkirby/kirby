@@ -422,6 +422,7 @@
   "translation.author": "Zespół Kirby",
   "translation.direction": "ltr",
   "translation.name": "Polski",
+  "translation.locale": "pl_PL",
 
   "upload": "Prześlij",
   "upload.error.cantMove": "The uploaded file could not be moved",
