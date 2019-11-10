@@ -241,6 +241,18 @@ class AutoSessionTest extends TestCase
     }
 
     /**
+     * @covers ::getManually
+     */
+    public function testGetManually()
+    {
+        $autoSession = new AutoSession($this->store);
+
+        $session = $autoSession->getManually('9999999999.valid.' . $this->store->validKey);
+        $this->assertSame('manual', $session->mode());
+        $this->assertSame('9999999999.valid.' . $this->store->validKey, $session->token());
+    }
+
+    /**
      * @covers ::collectGarbage
      */
     public function testCollectGarbage()
