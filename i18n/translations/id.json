@@ -296,7 +296,7 @@
   "loading": "Memuat",
 
   "lock.unsaved": "Perubahan belum tersimpan",
-  "lock.unsaved.empty": "There are no more unsaved changes",
+  "lock.unsaved.empty": "Tidak ada lagi perubahan belum tersimpan",
   "lock.isLocked": "Perubahan belum tersimpan oleh <strong>{email}</strong>",
   "lock.file.isLocked": "Berkas sedang disunting oleh {email} dan tidak dapat diubah.",
   "lock.page.isLocked": "Halaman sedang disunting oleh {email} dan tidak dapat diubah.",
@@ -422,6 +422,7 @@
   "translation.author": "Tim Kirby",
   "translation.direction": "ltr",
   "translation.name": "Bahasa Indonesia",
+  "translation.locale": "id_ID",
 
   "upload": "Unggah",
   "upload.error.cantMove": "Berkas unggahan tidak dapat dipindahkan",

@@ -422,6 +422,7 @@
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",
   "translation.name": "Dansk",
+  "translation.locale": "da_DK",
 
   "upload": "Upload",
   "upload.error.cantMove": "Den uploadede fil kunne ikke flyttes",

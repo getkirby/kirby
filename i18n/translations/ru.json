@@ -296,7 +296,7 @@
   "loading": "Загрузка",
 
   "lock.unsaved": "Несохраненные изменения",
-  "lock.unsaved.empty": "There are no more unsaved changes",
+  "lock.unsaved.empty": "Больше нет несохраненных изменений",
   "lock.isLocked": "Несохраненные изменения пользователя <strong>{email}</strong>",
   "lock.file.isLocked": "В данный момент этот файл редактирует {email}, поэтому его нельзя изменить.",
   "lock.page.isLocked": "В данный момент эту страницу редактирует {email}, поэтому его нельзя изменить.",
@@ -422,6 +422,7 @@
   "translation.author": "Команда Кирби",
   "translation.direction": "ltr",
   "translation.name": "Русский (Russian)",
+  "translation.locale": "ru_RU",
 
   "upload": "Закачать",
   "upload.error.cantMove": "Загруженный файл не может быть перемещен",

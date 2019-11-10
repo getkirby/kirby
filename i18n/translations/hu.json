@@ -422,6 +422,7 @@
   "translation.author": "A Kirby csapata",
   "translation.direction": "ltr",
   "translation.name": "Magyar",
+  "translation.locale": "hu_HU",
 
   "upload": "Feltöltés",
   "upload.error.cantMove": "The uploaded file could not be moved",
