@@ -183,10 +183,10 @@ class Api
                 // provide some variants as fallbacks to be
                 // compatible with as many systems as possible
                 $locales = [
-                    $locale,
                     $locale . '.UTF-8',
                     $locale . '.UTF8',
                     $locale . '.ISO8859-1',
+                    $locale,
                     $language,
                     setlocale(LC_ALL, 0) // fall back to the previously defined locale
                 ];
