@@ -64,6 +64,7 @@
   "error.file.mime.differs":
     "The uploaded file must be of the same mime type \"{mime}\"",
   "error.file.mime.forbidden": "The media type \"{mime}\" is not allowed",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "The media type for \"{filename}\" cannot be detected",
   "error.file.name.missing": "The filename must not be empty",
@@ -196,6 +197,13 @@
   "error.validation.email": "Please enter a valid email address",
   "error.validation.endswith": "The value must end with \"{end}\"",
   "error.validation.filename": "Please enter a valid filename",
+  "error.validation.image.maxsize": "The file is too large",
+  "error.validation.image.minsize": "The file is too small",
+  "error.validation.image.maxwidth": "The width of the image must not exceed {width} pixels",
+  "error.validation.image.minwidth": "The width of the image must be at least {width} pixels",
+  "error.validation.image.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.validation.image.minheight": "The height of the image must be at least {height} pixels",
+  "error.validation.image.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.validation.in": "Please enter one of the following: ({in})",
   "error.validation.integer": "Please enter a valid integer",
   "error.validation.ip": "Please enter a valid IP address",
