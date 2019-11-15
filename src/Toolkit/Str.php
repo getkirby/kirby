@@ -892,10 +892,21 @@ class Str
     {
         return preg_replace_callback('!' . $start . '(.*?)' . $end . '!', function ($match) use ($data, $fallback) {
             $query = trim($match[1]);
+
+            // if the placeholder contains a dot, it is a query
             if (strpos($query, '.') !== false) {
-                return (new Query($match[1], $data))->result() ?? $fallback;
+                $result = (new Query($match[1], $data))->result();
+            } else {
+                $result = $data[$query] ?? null;
             }
-            return $data[$query] ?? $fallback;
+
+            // if we don't have a result, use the fallback if given
+            if ($result === null && $fallback !== null) {
+                $result = $fallback;
+            }
+
+            // if we still don't have a result, keep the original placeholder
+            return $result ?? $match[0];
         }, $string);
     }
 
