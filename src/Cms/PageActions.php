@@ -522,7 +522,7 @@ trait PageActions
                     'kirby' => $app,
                     'page'  => $app->page($this->id()),
                     'site'  => $app->site(),
-                ]);
+                ], '');
 
                 return (int)$template;
         }
