@@ -198,9 +198,9 @@ class Auth
      * @param bool $long
      * @return \Kirby\Cms\User
      *
-     * @throws PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
-     * @throws NotFoundException If the email was invalid
-     * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
+     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
+     * @throws \Kirby\Exception\NotFoundException If the email was invalid
+     * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
      */
     public function login(string $email, string $password, bool $long = false)
     {
@@ -228,9 +228,9 @@ class Auth
      * @param string $password
      * @return \Kirby\Cms\User
      *
-     * @throws PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
-     * @throws NotFoundException If the email was invalid
-     * @throws InvalidArgumentException If the password is not valid (via `$user->login()`)
+     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
+     * @throws \Kirby\Exception\NotFoundException If the email was invalid
+     * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
      */
     public function validatePassword(string $email, string $password)
     {
@@ -415,7 +415,8 @@ class Auth
      *
      * @param \Kirby\Session\Session|array|null $session
      * @return \Kirby\Cms\User
-     * @throws
+     *
+     * @throws \Throwable If an authentication error occured
      */
     public function user($session = null)
     {

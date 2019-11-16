@@ -225,7 +225,7 @@ class Api
      * @param array|null $collection
      * @return \Kirby\Api\Collection
      *
-     * @throws NotFoundException If no collection for `$name` exists
+     * @throws \Kirby\Exception\NotFoundException If no collection for `$name` exists
      */
     public function collection(string $name, $collection = null)
     {
@@ -254,7 +254,7 @@ class Api
      * @param mixed ...$args
      * @return mixed
      *
-     * @throws NotFoundException If no data for `$key` exists
+     * @throws \Kirby\Exception\NotFoundException If no data for `$key` exists
      */
     public function data($key = null, ...$args)
     {
@@ -302,7 +302,7 @@ class Api
      * @param mixed $object
      * @return \Kirby\Api\Model
      *
-     * @throws NotFoundException If no model for `$name` exists
+     * @throws \Kirby\Exception\NotFoundException If no model for `$name` exists
      */
     public function model(string $name, $object = null)
     {
@@ -414,7 +414,7 @@ class Api
      * @param mixed $object
      * @return \Kirby\Api\Model|\Kirby\Api\Collection
      *
-     * @throws NotFoundException If `$object` cannot be resolved
+     * @throws \Kirby\Exception\NotFoundException If `$object` cannot be resolved
      */
     public function resolve($object)
     {
@@ -705,8 +705,8 @@ class Api
      * @param bool $single
      * @return array
      *
-     * @throws Exception If request has no files
-     * @throws Exception If there was an error with the upload
+     * @throws \Exception If request has no files
+     * @throws \Exception If there was an error with the upload
      */
     public function upload(Closure $callback, $single = false): array
     {
