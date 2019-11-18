@@ -422,6 +422,7 @@
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",
   "translation.name": "Norsk Bokm\u00e5l",
+  "translation.locale": "nb_NO",
 
   "upload": "Last opp",
   "upload.error.cantMove": "The uploaded file could not be moved",

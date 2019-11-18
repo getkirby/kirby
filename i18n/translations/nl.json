@@ -422,6 +422,7 @@
   "translation.author": "Het team van Kirby",
   "translation.direction": "ltr",
   "translation.name": "Nederlands",
+  "translation.locale": "nl_NL",
 
   "upload": "Upload",
   "upload.error.cantMove": "Het geüploadde bestand kon niet worden verplaatst",

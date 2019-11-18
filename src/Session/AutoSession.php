@@ -145,6 +145,17 @@ class AutoSession
     }
 
     /**
+     * Returns the specified Session object
+     *
+     * @param string $token Session token, either including or without the key
+     * @return \Kirby\Session\Session
+     */
+    public function getManually(string $token)
+    {
+        return $this->sessions->get($token, 'manual');
+    }
+
+    /**
      * Deletes all expired sessions
      *
      * If the `gcInterval` is configured, this is done automatically

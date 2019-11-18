@@ -422,6 +422,7 @@
   "translation.author": "Kirby Takımı",
   "translation.direction": "ltr",
   "translation.name": "T\u00fcrk\u00e7e",
+  "translation.locale": "tr_TR",
 
   "upload": "Yükle",
   "upload.error.cantMove": "Yüklenen dosya taşınamadı",

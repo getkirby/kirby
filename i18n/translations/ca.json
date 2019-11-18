@@ -422,6 +422,7 @@
   "translation.author": "Equip Kirby",
   "translation.direction": "ltr",
   "translation.name": "Catalan",
+  "translation.locale": "ca_ES",
 
   "upload": "Carregar",
   "upload.error.cantMove": "El fitxer carregat no s'ha pogut moure",

@@ -422,6 +422,7 @@
   "translation.author": "Kirby 팀",
   "translation.direction": "LTR",
   "translation.name": "한국어",
+  "translation.locale": "ko_KR",
 
   "upload": "업로드",
   "upload.error.cantMove": "업로드한 파일을 이동할 수 없습니다.",
