@@ -76,11 +76,13 @@ export default {
   },
   methods: {
     decimals() {
-      if (Math.floor(this.step) === this.step) {
+      const step = Number(this.step || 0);
+
+      if (Math.floor(step) === step) {
         return 0;
       }
 
-      return this.step.toString().split(".")[1].length || 0;
+      return step.toString().split(".")[1].length || 0;
     },
     format(value) {
       const decimals = this.decimals();
@@ -89,7 +91,11 @@ export default {
         return parseFloat(value).toFixed(decimals);
       }
 
-      return parseInt(value);
+      if (Number.isInteger(this.step)) {
+        return parseInt(value);
+      }
+
+      return parseFloat(value);
     },
     focus() {
       this.$refs.input.focus();
