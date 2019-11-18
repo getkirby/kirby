@@ -25,7 +25,7 @@ return [
         /**
          * Allowed incremental steps between numbers (i.e `0.5`)
          */
-        'step' => function ($step = 1) {
+        'step' => function ($step = null) {
             return $this->toNumber($step);
         },
         'value' => function ($value = null) {
