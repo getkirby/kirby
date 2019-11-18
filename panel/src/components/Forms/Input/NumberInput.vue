@@ -85,6 +85,10 @@ export default {
       return step.toString().split(".")[1].length || 0;
     },
     format(value) {
+      if (value === "") {
+        return "";
+      }
+
       const decimals = this.decimals();
 
       if (decimals) {
