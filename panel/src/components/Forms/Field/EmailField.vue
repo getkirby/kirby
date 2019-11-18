@@ -9,9 +9,9 @@
     >
       <k-button
         v-if="link"
-        v-bind:link="mailto()"
         slot="icon"
         :icon="icon"
+        :link="mailto"
         :tooltip="$t('open')"
         class="k-input-icon-button"
         tabindex="-1"
@@ -41,13 +41,15 @@ export default {
       default: "email"
     }
   },
+  computed: {
+    mailto() {
+      return this.value && this.value.length > 0 ? 'mailto:' + this.value : null;
+    }
+  },
   methods: {
     focus() {
       this.$refs.input.focus();
     },
-    mailto() {
-      return this.value && this.value.length > 0 ? 'mailto:' + this.value : null;
-    }
   }
 }
 </script>
