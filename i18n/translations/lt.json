@@ -61,13 +61,21 @@
     "Failo tipas (plėtinys) \"{extension}\" neleidžiamas",
   "error.file.extension.missing":
     "Failui \"{filename}\" trūksta tipo (plėtinio)",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Įkėliamas failas turi būti tokio pat mime tipo \"{mime}\"",
   "error.file.mime.forbidden": "Media tipas \"{mime}\" neleidžiamas",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Failui \"{filename}\" nepavyko atpažinti media (mime) tipo",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Failo pavadinimas negali būti tuščias",
   "error.file.notFound": "Failas \"{filename}\" nerastas",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Jūs neturite teisės įkelti {type} tipo failų",
   "error.file.undefined": "Failas nerastas",
 

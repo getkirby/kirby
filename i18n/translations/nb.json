@@ -61,13 +61,21 @@
     "Ugyldig filtype",
   "error.file.extension.missing":
     "Du kan ikke laste opp filer uten filtype",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Den opplastede filen må være av samme MIME-type \"{mime}\"",
   "error.file.mime.forbidden": "Mediatypen \"{mime}\" er ikke tillatt",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Mediatypen for \"{filename}\" kan ikke gjenkjennes",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Filnavnet kan ikke være tomt",
   "error.file.notFound": "Filen kunne ikke bli funnet",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Du har ikke lov til å laste opp filer av typen {type}",
   "error.file.undefined": "Filen kunne ikke bli funnet",
 
