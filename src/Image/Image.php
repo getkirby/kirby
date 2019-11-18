@@ -232,7 +232,7 @@ class Image extends File
                 $validator = $arguments[1];
 
                 if (V::$validator($this->$property(), $rule) === false) {
-                    throw new Exception(I18n::template('error.validation.image.' . $key, [
+                    throw new Exception(I18n::template('error.file.' . $key, [
                         $property => $rule
                     ]));
                 }
