@@ -5,6 +5,7 @@ namespace Kirby\Exception;
 /**
  * ErrorPageException
  * Thrown to trigger the CMS error page
+ * @since 3.3.0
  *
  * @package   Kirby Exception
  * @author    Lukas Bestle <lukas@getkirby.com>

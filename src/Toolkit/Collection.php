@@ -544,6 +544,7 @@ class Collection extends Iterator implements Countable
 
     /**
      * Returns a Collection with the intersection of the given elements
+     * @since 3.3.0
      *
      * @param \Kirby\Toolkit\Collection $other
      * @return \Kirby\Toolkit\Collection
@@ -555,6 +556,7 @@ class Collection extends Iterator implements Countable
 
     /**
      * Checks if there is an intersection between the given collection and this collection
+     * @since 3.3.0
      *
      * @param \Kirby\Toolkit\Collection $other
      * @return bool
@@ -1060,6 +1062,7 @@ class Collection extends Iterator implements Countable
      * is true. If the first parameter is false, the Closure will not be executed.
      * You may pass another Closure as the third parameter to the when method.
      * This Closure will execute if the first parameter evaluates as false
+     * @since 3.3.0
      *
      * @param mixed $condition
      * @param Closure $callback
