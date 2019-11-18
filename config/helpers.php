@@ -122,6 +122,7 @@ function css($url, $options = null): ?string
 
 /**
  * Triggers a deprecation warning if debug mode is active
+ * @since 3.3.0
  *
  * @param string $message
  * @return bool Whether the warning was triggered
