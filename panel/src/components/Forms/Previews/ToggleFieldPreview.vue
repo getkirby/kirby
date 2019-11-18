@@ -33,6 +33,42 @@ export default {
   white-space: nowrap;
 }
 .k-toggle-field-preview .k-toggle-input-label {
-  padding-left: .5rem;
+  [dir="ltr"] & {
+    padding-left: .5rem;
+  }
+
+  [dir="rtl"] & {
+    padding-right: .5rem;
+  }
+
+  [dir="ltr"] [data-align="right"] & {
+    padding-right: .5rem;
+  }
+
+  [dir="rtl"] [data-align="right"] & {
+    padding-left: .5rem;
+  }
+}
+
+.k-toggle-field-preview .k-toggle-input {
+  [dir="ltr"] & {
+    padding: 0 .25rem 0 .75rem;
+  }
+
+  [dir="rtl"] & {
+    padding: 0 .75rem 0 .25rem;
+  }
+
+  [data-align="right"] & {
+    flex-direction: row-reverse;
+  }
+
+  [dir="ltr"] [data-align="right"] & {
+    padding: 0 .75rem 0 .25rem;
+  }
+
+  [dir="rtl"] [data-align="right"] & {
+    padding: 0 .25rem 0 .75rem;
+  }
 }
 </style>

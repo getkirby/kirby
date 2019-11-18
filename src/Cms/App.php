@@ -784,6 +784,7 @@ class App
     /**
      * Returns the nonce, which is used
      * in the panel for inline scripts
+     * @since 3.3.0
      *
      * @return string
      */
