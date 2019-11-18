@@ -395,46 +395,40 @@ class LanguageTest extends TestCase
         $this->assertEquals($expected, $language->pattern());
     }
 
-    public function testBaseUrl()
+    public function baseUrlProvider()
+    {
+        return [
+            ['https://getkirby.com', null, 'https://getkirby.com'],
+            ['https://getkirby.com', '/en', 'https://getkirby.com'],
+            ['https://getkirby.com', 'https://getkirby.de', 'https://getkirby.de'],
+            ['https://getkirby.com', 'https://getkirby.de/en', 'https://getkirby.de'],
+            ['http://localhost/example.com', null, 'http://localhost/example.com'],
+            ['http://localhost/example.com', '/en', 'http://localhost/example.com'],
+            ['http://localhost/example.com', 'http://getkirby.com', 'http://getkirby.com'],
+            ['http://localhost/example.com', 'http://getkirby.com/en', 'http://getkirby.com'],
+        ];
+    }
+
+    /**
+     * @dataProvider baseUrlProvider
+     */
+    public function testBaseUrl($kirbyUrl, $url, $expected)
     {
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ],
             'urls' => [
-                'index' => 'https://getkirby.com'
+                'index' => $kirbyUrl
             ]
         ]);
 
         // default
         $language = new Language([
             'code' => 'en',
+            'url'  => $url
         ]);
 
-        $this->assertEquals('https://getkirby.com', $language->baseUrl());
-
-        // with path
-        $language = new Language([
-            'code' => 'en',
-            'url'  => '/en'
-        ]);
-
-        $this->assertEquals('https://getkirby.com', $language->baseUrl());
-
-        // different domain
-        $language = new Language([
-            'code' => 'en',
-            'url'  => 'https://getkirby.de'
-        ]);
-
-        $this->assertEquals('https://getkirby.de', $language->baseUrl());
-
-        // different domain with path
-        $language = new Language([
-            'code' => 'en',
-            'url'  => 'https://getkirby.de/en'
-        ]);
-
-        $this->assertEquals('https://getkirby.de', $language->baseUrl());
+        $this->assertEquals($expected, $language->baseUrl());
     }
 }

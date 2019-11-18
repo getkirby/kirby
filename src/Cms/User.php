@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Exception\PermissionException;
 use Kirby\Session\Session;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -408,7 +407,7 @@ class User extends ModelWithContent
      * @param \Kirby\Session\Session|array $session Session options or session object to set the user in
      * @return bool
      *
-     * @throws PermissionException If the password is not valid
+     * @throws \Kirby\Exception\PermissionException If the password is not valid
      */
     public function login(string $password, $session = null): bool
     {
@@ -877,9 +876,9 @@ class User extends ModelWithContent
      * @param string $password
      * @return bool
      *
-     * @throws NotFoundException If the user has no password
-     * @throws InvalidArgumentException If the entered password is not valid
-     * @throws InvalidArgumentException If the entered password does not match the user password
+     * @throws \Kirby\Exception\NotFoundException If the user has no password
+     * @throws \Kirby\Exception\InvalidArgumentException If the entered password is not valid
+     * @throws \Kirby\Exception\InvalidArgumentException If the entered password does not match the user password
      */
     public function validatePassword(string $password = null): bool
     {

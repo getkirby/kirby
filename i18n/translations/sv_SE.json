@@ -23,7 +23,7 @@
 
   "delete": "Radera",
   "dimensions": "Dimensioner",
-  "disabled": "Disabled",
+  "disabled": "Inaktiverad",
   "discard": "Kassera",
   "download": "Ladda ner",
   "duplicate": "Duplicera",
@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Sektionen \"{name}\" kunde inte laddas",
   "error.section.type.invalid": "Sektionstypen \"{type}\" är inte giltig",
 
+  "error.site.changeTitle.empty": "Titeln får inte vara tom",
   "error.site.changeTitle.permission":
     "Du har inte behörighet att ändra titeln på webbplatsen",
   "error.site.update.permission": "Du har inte behörighet att uppdatera webbplatsen",
@@ -157,7 +158,7 @@
   "error.user.changeRole.permission":
     "Du har inte behörighet att ändra rollen för användaren \"{name}\"",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "Du har inte behörighet att ge någon en administratörsroll",
   "error.user.create.permission": "Du har inte behörighet att skapa denna användare",
   "error.user.delete": "Användaren kan inte raderas",
   "error.user.delete.lastAdmin": "Den återstående administratören kan inte raderas",
@@ -222,7 +223,7 @@
   "error.validation.time": "Ange en giltig tid",
   "error.validation.url": "Ange en giltig URL",
 
-  "field.required": "The field is required",
+  "field.required": "Fältet krävs",
   "field.files.empty": "Inga filer valda än",
   "field.pages.empty": "Inga sidor valda än",
   "field.structure.delete.confirm": "Vill du verkligen radera denna rad?",
@@ -295,6 +296,7 @@
   "loading": "Laddar",
 
   "lock.unsaved": "Osparade ändringar",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Osparade ändringar av <strong>{email}</strong>",
   "lock.file.isLocked": "Filen redigeras just nu av {email} och kan inte redigeras.",
   "lock.page.isLocked": "Sidan redigeras just nu av {email} och kan inte redigeras.",
@@ -391,7 +393,7 @@
   "save": "Spara",
   "search": "Sök",
 
-  "section.required": "The section is required",
+  "section.required": "Sektionen krävs",
 
   "select": "Välj",
   "settings": "Inställningar",

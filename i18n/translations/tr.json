@@ -23,7 +23,7 @@
 
   "delete": "Sil",
   "dimensions": "Boyutlar",
-  "disabled": "Disabled",
+  "disabled": "Devredışı",
   "discard": "Vazge\u00e7",
   "download": "İndir",
   "duplicate": "Kopyala",
@@ -138,6 +138,7 @@
   "error.section.notLoaded": "\"{name}\" bölümü yüklenemedi",
   "error.section.type.invalid": "\"{type}\" tipi geçerli değil",
 
+  "error.site.changeTitle.empty": "Başlık boş bırakılamaz",
   "error.site.changeTitle.permission":
     "Sitenin başlığını değiştiremezsin",
   "error.site.update.permission": "Siteyi güncellemenize izin verilmiyor",
@@ -157,7 +158,7 @@
   "error.user.changeRole.permission":
     "\"{name}\" kullanıcısının rolünü değiştiremezsin",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "Birini yönetici rolüne tanıtmanıza izin verilmiyor",
   "error.user.create.permission": "Bu kullanıcıyı oluşturmanıza izin verilmiyor",
   "error.user.delete": "\"{name}\" kullanıcısı silinemedi",
   "error.user.delete.lastAdmin": "Son y\u00f6netici kullan\u0131c\u0131y\u0131 silemezsiniz",
@@ -222,7 +223,7 @@
   "error.validation.time": "Lütfen geçerli bir zaman girin",
   "error.validation.url": "Lütfen geçerli bir adres girin",
 
-  "field.required": "The field is required",
+  "field.required": "Alan gereklidir",
   "field.files.empty": "Henüz dosya seçilmedi",
   "field.pages.empty": "Henüz sayfa seçilmedi",
   "field.structure.delete.confirm": "Bu girdiyi silmek istedi\u011finizden emin misiniz?",
@@ -295,6 +296,7 @@
   "loading": "Yükleniyor",
 
   "lock.unsaved": "Kaydedilmemiş değişiklikler",
+  "lock.unsaved.empty": "Daha fazla kaydedilmemiş değişiklik yok",
   "lock.isLocked": "<strong>{email}</strong> tarafından kaydedilmemiş değişiklikler",
   "lock.file.isLocked": "Dosya şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
   "lock.page.isLocked": "Sayfa şu anda {email} tarafından düzenlenmektedir ve değiştirilemez.",
@@ -350,7 +352,7 @@
     "<strong>Bu sayfada alt sayfalar var</strong>. <br>Tüm alt sayfalar da silinecek.",
   "page.delete.confirm.title": "Onaylamak için sayfa başlığını girin",
   "page.draft.create": "Taslak oluştur",
-  "page.duplicate.appendix": "Kopyala",
+  "page.duplicate.appendix": "Kopya",
   "page.duplicate.files": "Dosyaları kopyala",
   "page.duplicate.pages": "Sayfaları kopyala",
   "page.status": "Durum",
@@ -391,7 +393,7 @@
   "save": "Kaydet",
   "search": "Arama",
 
-  "section.required": "The section is required",
+  "section.required": "Bölüm gereklidir",
 
   "select": "Seç",
   "settings": "Ayarlar",

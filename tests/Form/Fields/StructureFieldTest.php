@@ -10,13 +10,17 @@ class StructureFieldTest extends TestCase
     public function testDefaultProps()
     {
         $field = $this->field('structure', [
-            'fields' => []
+            'fields' => [
+                'text' => [
+                    'type' => 'text'
+                ]
+            ]
         ]);
 
         $this->assertEquals('structure', $field->type());
         $this->assertEquals('structure', $field->name());
         $this->assertEquals(null, $field->limit());
-        $this->assertEquals([], $field->fields());
+        $this->assertTrue(is_array($field->fields()));
         $this->assertEquals([], $field->value());
         $this->assertTrue($field->save());
     }
@@ -216,7 +220,11 @@ class StructureFieldTest extends TestCase
     public function testEmpty()
     {
         $field = $this->field('structure', [
-            'fields' => [],
+            'fields' => [
+                'text' => [
+                    'type' => 'text'
+                ]
+            ],
             'empty' => 'Test'
         ]);
 
@@ -226,7 +234,11 @@ class StructureFieldTest extends TestCase
     public function testTranslatedEmpty()
     {
         $field = $this->field('structure', [
-            'fields' => [],
+            'fields' => [
+                'text' => [
+                    'type' => 'text'
+                ]
+            ],
             'empty' => ['en' => 'Test', 'de' => 'Töst']
         ]);
 

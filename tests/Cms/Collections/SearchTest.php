@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Collection;
-
 class SearchTest extends TestCase
 {
     public function testCollection()

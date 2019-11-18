@@ -153,39 +153,51 @@ export default {
      */
 
     getLock() {
-      return this.$api.get(...this.api.lock).then(response => {
+      return this.$api
+        .get(...this.api.lock)
+        .then(response => {
 
-        // if content locking is not supported by model,
-        // set flag and stop listening
-        if (response.supported === false) {
-          this.supportsLocking = false;
-          this.$store.dispatch("heartbeat/remove", this.getLock);
-          return;
-        }
+          // if content locking is not supported by model,
+          // set flag and stop listening
+          if (response.supported === false) {
+            this.supportsLocking = false;
+            this.$store.dispatch("heartbeat/remove", this.getLock);
+            return;
+          }
 
-        // if content is locked, dispatch info to store
-        if (response.locked !== false) {
-          this.$store.dispatch("content/lock", response.locked);
-          return;
-        }
+          // if content is locked, dispatch info to store
+          if (response.locked !== false) {
+            this.$store.dispatch("content/lock", response.locked);
+            return;
+          }
 
-        // if content is not locked but store still holds a lock
-        // from another user, that lock has been lifted and thus
-        // the content needs to be reloaded to reflect changes
-        if (
-          this.isLocked &&
-          this.form.lock.user !== this.$store.state.user.current.id
-        ) {
-          this.$events.$emit("model.reload");
-        }
+          // if content is not locked but store still holds a lock
+          // from another user, that lock has been lifted and thus
+          // the content needs to be reloaded to reflect changes
+          if (
+            this.isLocked &&
+            this.form.lock.user !== this.$store.state.user.current.id
+          ) {
+            this.$events.$emit("model.reload");
+          }
 
-        this.$store.dispatch("content/lock", null);
-      });
+          this.$store.dispatch("content/lock", null);
+        })
+        .catch(() => {
+          // fail silently
+        });
     },
 
     setLock() {
       if (this.supportsLocking === true) {
-        this.$api.patch(...this.api.lock).catch(() => {
+        this.$api.patch(...this.api.lock).catch(error => {
+          // turns out: locking is not supported
+          if (error.key === "error.lock.notImplemented") {
+            this.supportsLocking = false;
+            this.$store.dispatch("heartbeat/remove", this.setLock);
+            return false;
+          }
+
           // If setting lock failed, a competing lock has been set between
           // API calls. In that case, discard changes, stop setting lock and
           // listen to concurrent lock
@@ -200,10 +212,15 @@ export default {
       if (this.supportsLocking === true) {
         this.$store.dispatch("heartbeat/remove", this.setLock);
 
-        this.$api.delete(...this.api.lock).then(() => {
-          this.$store.dispatch("content/lock", null);
-          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-        });
+        this.$api
+          .delete(...this.api.lock)
+          .then(() => {
+            this.$store.dispatch("content/lock", null);
+            this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
+          })
+          .catch(() => {
+            // fail silently
+          });
       }
     },
 
@@ -211,10 +228,15 @@ export default {
       if (this.supportsLocking === true) {
         this.$store.dispatch("heartbeat/remove", this.setLock);
 
-        this.$api.patch(...this.api.unlock).then(() => {
-          this.$store.dispatch("content/lock", null);
-          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-        });
+        this.$api
+          .patch(...this.api.unlock)
+          .then(() => {
+            this.$store.dispatch("content/lock", null);
+            this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
+          })
+          .catch(() => {
+            // fail silently
+          });
       }
     },
 
@@ -222,10 +244,15 @@ export default {
       if (this.supportsLocking === true) {
         this.$store.dispatch("heartbeat/remove", this.setLock);
 
-        this.$api.delete(...this.api.unlock).then(() => {
-          this.$store.dispatch("content/unlock", null);
-          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-        });
+        this.$api
+          .delete(...this.api.unlock)
+          .then(() => {
+            this.$store.dispatch("content/unlock", null);
+            this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
+          })
+          .catch(() => {
+            // fail silently
+          });
       }
     },
 
@@ -324,7 +351,7 @@ export default {
   justify-content: space-between;
   align-items: center;
 }
-.k-form-button {
+.k-form-button.k-button {
   font-weight: 500;
   white-space: nowrap;
   line-height: 1;

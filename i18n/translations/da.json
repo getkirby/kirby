@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Sektionen \"{section}\" kunne ikke indlæses",
   "error.section.type.invalid": "Sektionstypen \"{type}\" er ikke gyldig",
 
+  "error.site.changeTitle.empty": "Titlen kan ikke være tom",
   "error.site.changeTitle.permission":
     "Du har ikke tilladelse til at ændre titlen på sitet",
   "error.site.update.permission": "Du har ikke tilladelse til at opdatere sitet",
@@ -295,6 +296,7 @@
   "loading": "Indlæser",
 
   "lock.unsaved": "Ugemte ændringer",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Ugemte ændringer af <strong>{email}</strong>",
   "lock.file.isLocked": "Filen redigeres på nuværende af {email} og kan derfor ikke ændres.",
   "lock.page.isLocked": "Siden redigeres på nuværende af {email} og kan derfor ikke ændres.",

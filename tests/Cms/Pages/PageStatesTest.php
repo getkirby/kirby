@@ -20,16 +20,18 @@ class PageStatesTest extends TestCase
 
     public function family()
     {
-        return new Site([
-            'children' => [
-                [
-                    'slug'     => 'grandma',
-                    'children' => [
-                        [
-                            'slug'     => 'mother',
-                            'children' => [
-                                [
-                                    'slug' => 'child'
+        $app = new App([
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'grandma',
+                        'children' => [
+                            [
+                                'slug'     => 'mother',
+                                'children' => [
+                                    [
+                                        'slug' => 'child'
+                                    ]
                                 ]
                             ]
                         ]
@@ -37,6 +39,8 @@ class PageStatesTest extends TestCase
                 ]
             ]
         ]);
+
+        return $app->site();
     }
 
     public function testIs()
@@ -84,9 +88,13 @@ class PageStatesTest extends TestCase
         $mother  = $grandma->find('mother');
         $child   = $mother->find('child');
 
-        $this->assertFalse($grandma->isChildOf($mother));
         $this->assertTrue($mother->isChildOf($grandma));
         $this->assertTrue($child->isChildOf($mother));
+        $this->assertTrue($child->isChildOf($mother->id()));
+        $this->assertFalse($grandma->isChildOf($mother));
+        $this->assertFalse($child->isChildOf($grandma));
+        $this->assertFalse($child->isChildOf('gibberish'));
+        $this->assertFalse($child->isChildOf(null));
     }
 
     public function testIsDescendantOf()

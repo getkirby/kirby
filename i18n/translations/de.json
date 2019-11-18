@@ -138,6 +138,7 @@
   "error.section.notLoaded": "Der Bereich \"{name}\" konnte nicht geladen werden",
   "error.section.type.invalid": "Der Bereichstyp \"{type}\" ist nicht gültig",
 
+  "error.site.changeTitle.empty": "Bitte gib einen Titel an",
   "error.site.changeTitle.permission":
     "Du kannst den Titel der Seite nicht ändern",
   "error.site.update.permission": "Du darfst die Seite nicht editieren",
@@ -295,6 +296,7 @@
   "loading": "Laden",
 
   "lock.unsaved": "Ungespeicherte Änderungen",
+  "lock.unsaved.empty": "Keine ungespeicherten Änderungen",
   "lock.isLocked": "Ungespeicherte Änderungen von <strong>{email}</strong>",
   "lock.file.isLocked": "Die Datei wird von {email} bearbeitet und kann nicht geändert werden.",
   "lock.page.isLocked": "Die Seite wird von {email} bearbeitet und kann nicht geändert werden.",

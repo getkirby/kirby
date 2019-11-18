@@ -23,7 +23,7 @@
 
   "delete": "Eliminar",
   "dimensions": "Dimensions",
-  "disabled": "Disabled",
+  "disabled": "Desactivat",
   "discard": "Descartar",
   "download": "Descarregar",
   "duplicate": "Duplicar",
@@ -138,6 +138,7 @@
   "error.section.notLoaded": "No s'ha pogut carregar la secció \"{name}\"",
   "error.section.type.invalid": "La secció tipus \"{type}\" no és vàlida",
 
+  "error.site.changeTitle.empty": "El títol no pot estar buit",
   "error.site.changeTitle.permission":
     "No tens permís per canviar el títol del lloc web",
   "error.site.update.permission": "No tens permís per actualitzar el lloc web",
@@ -157,7 +158,7 @@
   "error.user.changeRole.permission":
     "No tens permís per canviar el rol de l'usuari \"{name}\"",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "No tens permís per promocionar algú al rol d’administrador",
   "error.user.create.permission": "No tens permís per crear aquest usuari",
   "error.user.delete": "L'usuari \"{name}\" no es pot eliminar",
   "error.user.delete.lastAdmin": "No es pot eliminar l'\u00faltim administrador",
@@ -222,7 +223,7 @@
   "error.validation.time": "Si us plau, introduïu una hora vàlida",
   "error.validation.url": "Si us plau, introduïu una URL vàlida",
 
-  "field.required": "The field is required",
+  "field.required": "El camp és obligatori",
   "field.files.empty": "Encara no hi ha cap fitxer seleccionat",
   "field.pages.empty": "Encara no s'ha seleccionat cap pàgina",
   "field.structure.delete.confirm": "Segur que voleu eliminar aquesta fila?",
@@ -295,6 +296,7 @@
   "loading": "Carregant",
 
   "lock.unsaved": "Canvis no guardats",
+  "lock.unsaved.empty": "Ja no hi ha canvis no guardats",
   "lock.isLocked": "Canvis no guardats per <strong>{email}</strong>",
   "lock.file.isLocked": "El fitxer està sent editat actualment per {email}  i no pot ser modificat.",
   "lock.page.isLocked": "La pàgina està sent editat actualment per {email} i no pot ser modificat.",
@@ -391,7 +393,7 @@
   "save": "Desar",
   "search": "Cercar",
 
-  "section.required": "The section is required",
+  "section.required": "La secció és obligatòria",
 
   "select": "Seleccionar",
   "settings": "Configuració",

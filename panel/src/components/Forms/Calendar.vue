@@ -195,7 +195,7 @@ export default {
       this.year = date.year();
     },
     selectToday() {
-      this.set(dayjs());
+      this.set(this.$library.dayjs());
       this.select(this.day);
     },
     select(day) {

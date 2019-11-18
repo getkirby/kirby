@@ -23,6 +23,7 @@ class LanguageRoutes
         $baseurl = $kirby->url();
 
         foreach ($kirby->languages() as $language) {
+
             // ignore languages with a different base url
             if ($language->baseurl() !== $baseurl) {
                 continue;
