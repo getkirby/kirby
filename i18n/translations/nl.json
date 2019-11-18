@@ -61,13 +61,21 @@
     "Bestandsextensie \"{extension}\" is niet toegestaan",
   "error.file.extension.missing":
     "Je kunt geen bestanden uploaden zonder bestandsextensie",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Het geüploade bestand moet van hetzelfde mime-type zijn: \"{mime}\"",
   "error.file.mime.forbidden": "Het type \"{mime}\" is niet toegestaan",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Het mediatype voor \"{filename}\" kan niet worden gedecteerd",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "De bestandsnaam mag niet leeg zijn",
   "error.file.notFound": "Het bestand kan niet worden gevonden",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Je hebt geen rechten om {type} bestanden up te loaden",
   "error.file.undefined": "Het bestand kan niet worden gevonden",
 
@@ -422,6 +430,7 @@
   "translation.author": "Het team van Kirby",
   "translation.direction": "ltr",
   "translation.name": "Nederlands",
+  "translation.locale": "nl_NL",
 
   "upload": "Upload",
   "upload.error.cantMove": "Het geüploadde bestand kon niet worden verplaatst",

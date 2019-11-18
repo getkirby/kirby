@@ -61,13 +61,21 @@
     "\u039c\u03b7 \u03b1\u03c0\u03bf\u03b4\u03b5\u03ba\u03c4\u03ae \u03b5\u03c0\u03ad\u03ba\u03c4\u03b1\u03c3\u03b7 \u03b1\u03c1\u03c7\u03b5\u03af\u03bf\u03c5",
   "error.file.extension.missing":
     "Λείπει η επέκταση για το \"{filename}\"",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Το αρχείο πρέπει να είναι του ίδιου τύπου mime \"{mime}\"",
   "error.file.mime.forbidden": "Ο τύπος μέσου \"{mime}\" δεν επιτρέπεται",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Δεν είναι δυνατό να εντοπιστεί ο τύπος μέσου για το \"{filename}\"",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Το όνομα αρχείου δεν μπορεί να είναι άδειο",
   "error.file.notFound": "Δεν είναι δυνατό να βρεθεί το αρχείο \"{filename}\"",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Δεν επιτρέπεται η μεταφόρτωση αρχείων {type}",
   "error.file.undefined": "Δεν ήταν δυνατή η εύρεση του αρχείου",
 
@@ -422,6 +430,7 @@
   "translation.author": "Ομάδα Kirby",
   "translation.direction": "ltr",
   "translation.name": "\u0395\u03bb\u03bb\u03b7\u03bd\u03b9\u03ba\u03ac",
+  "translation.locale": "el_GR",
 
   "upload": "Μεταφόρτωση",
   "upload.error.cantMove": "The uploaded file could not be moved",

@@ -61,13 +61,21 @@
     "Filändelsen \"{extension}\" är inte tillåten",
   "error.file.extension.missing":
     "Filen \"{filename}\" saknar filändelse",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Den uppladdade filen måste vara av samma mime-typ \"{mime}\"",
   "error.file.mime.forbidden": "Mediatypen \"{mime}\" är inte tillåten",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Mediatypen för \"{filename}\" kan inte detekteras",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Filnamnet får inte vara tomt",
   "error.file.notFound": "Filen  \"{filename}\" kan ej hittas",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Du har inte behörighet att ladda upp filer av typen {type}",
   "error.file.undefined": "Filen kan inte hittas",
 
@@ -422,6 +430,7 @@
   "translation.author": "Kirby-teamet, Ola Christensson",
   "translation.direction": "ltr",
   "translation.name": "Svenska",
+  "translation.locale": "sv_SE",
 
   "upload": "Ladda upp",
   "upload.error.cantMove": "Den överförda filen kunde inte flyttas",

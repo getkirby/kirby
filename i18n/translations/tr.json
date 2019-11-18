@@ -61,13 +61,21 @@
     "\"{extension}\" dosya uzantısına izin verilmiyor",
   "error.file.extension.missing":
     "\"{filename}\" dosyasının uzantısı yok",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Yüklenen dosya aynı dosya türü \"{mime}\" olmalıdır",
   "error.file.mime.forbidden": "\"{mime}\" medya türüne izin verilmiyor",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "\"{filename}\" için medya türü tespit edilemiyor",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Dosya adı boş bırakılamaz",
   "error.file.notFound": "\"{filename}\" dosyası bulunamadı",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "{type} dosya yükleme izni yok",
   "error.file.undefined": "Dosya bulunamad\u0131",
 
@@ -422,6 +430,7 @@
   "translation.author": "Kirby Takımı",
   "translation.direction": "ltr",
   "translation.name": "T\u00fcrk\u00e7e",
+  "translation.locale": "tr_TR",
 
   "upload": "Yükle",
   "upload.error.cantMove": "Yüklenen dosya taşınamadı",

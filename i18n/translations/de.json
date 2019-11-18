@@ -61,13 +61,21 @@
     "Verbotene Dateiendung \"{extension}\"",
   "error.file.extension.missing":
     "Du kannst keine Dateien ohne Dateiendung hochladen",
+  "error.file.maxheight": "Die Bildhöhe darf {height} Pixel nicht überschreiten",
+  "error.file.maxsize": "Die Datei ist zu groß",
+  "error.file.maxwidth": "Die Bildbreite darf {height} Pixel nicht überschreiten",
   "error.file.mime.differs":
     "Die Datei muss den Medientyp \"{mime}\" haben.",
   "error.file.mime.forbidden": "Der Medientyp \"{mime}\"  ist nicht erlaubt",
+  "error.file.mime.invalid": "Ungültiger Dateityp: {mime}",
   "error.file.mime.missing":
     "Der Medientyp für \"{filename}\" konnte nicht erkannt werden",
+  "error.file.minheight": "Die Bildhöhe muss mindestens {height} Pixel betragen",
+  "error.file.minsize": "Die Datei ist zu klein",
+  "error.file.minwidth": "Die Bildbreite muss mindestens {height} Pixel betragen",
   "error.file.name.missing": "Bitte gib einen Dateinamen an",
   "error.file.notFound": "Die Datei \"{filename}\" konnte nicht gefunden werden",
+  "error.file.orientation": "Das Bildformat ist ungültig. Erwartetes Format: \"{orientation}\"",
   "error.file.type.forbidden": "Du kannst keinen {type}-Dateien hochladen",
   "error.file.undefined": "Die Datei konnte nicht gefunden werden",
 
@@ -422,6 +430,7 @@
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",
   "translation.name": "Deutsch",
+  "translation.locale": "de_DE",
 
   "upload": "Hochladen",
   "upload.error.cantMove": "Die Datei konnte nicht an ihren Zielort bewegt werden",

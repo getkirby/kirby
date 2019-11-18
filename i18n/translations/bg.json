@@ -61,13 +61,21 @@
     "Файловото разширение \"{extension}\" не е позволено",
   "error.file.extension.missing":
     "Липсва файлово разширение за файла \"{filename}\"",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Каченият файл трябва да бъде от същия mime тип \"{mime}\"",
   "error.file.mime.forbidden": "The media type \"{mime}\" is not allowed",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "The media type for \"{filename}\" cannot be detected",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Името на файла е задължително",
   "error.file.notFound": "Файлът \"{filename}\" не може да бъде намерен",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Не е позволен ъплоуда на файлове от тип {type}",
   "error.file.undefined": "\u0424\u0430\u0439\u043b\u044a\u0442 \u043d\u0435 \u043c\u043e\u0436\u0435 \u0434\u0430 \u0431\u044a\u0434\u0435 \u043d\u0430\u043c\u0435\u0440\u0435\u043d",
 
@@ -422,6 +430,7 @@
   "translation.author": "Kirby екип",
   "translation.direction": "ltr",
   "translation.name": "Български",
+  "translation.locale": "bg_BG",
 
   "upload": "Прикачи",
   "upload.error.cantMove": "The uploaded file could not be moved",

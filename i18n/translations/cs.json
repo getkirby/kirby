@@ -61,13 +61,21 @@
     "Přípona souboru \"{extension}\" není povolena",
   "error.file.extension.missing":
     "Nem\u016f\u017eete nahr\u00e1t soubor bez p\u0159\u00edpony",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Nahraný soubor musí být stejného typu \"{mime}\"",
   "error.file.mime.forbidden": "Soubor typu \"{mime}\" není povolený",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Nelze rozeznat mime typ souboru \"{filename}\"",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Název souboru nesmí být prázdný",
   "error.file.notFound": "Soubor se nepoda\u0159ilo nal\u00e9zt",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Nemáte povoleno nahrávat soubory typu {type} ",
   "error.file.undefined": "Soubor se nepoda\u0159ilo nal\u00e9zt",
 
@@ -223,7 +231,7 @@
   "error.validation.time": "Zadejte prosím platný čas",
   "error.validation.url": "Zadejte prosím platnou adresu URL",
 
-  "field.required": "The field is required",
+  "field.required": "Pole musí být vyplněno.",
   "field.files.empty": "Nebyly zatím vybrány žádné soubory",
   "field.pages.empty": "Nebyly zatím vybrány žádné stránky",
   "field.structure.delete.confirm": "Opravdu chcete smazat tento z\u00e1znam?",
@@ -296,7 +304,7 @@
   "loading": "Načítám",
 
   "lock.unsaved": "Neuložené změny",
-  "lock.unsaved.empty": "There are no more unsaved changes",
+  "lock.unsaved.empty": "Nezbývají již žádné neuložené změny.",
   "lock.isLocked": "Neuložené změny provedené <strong>{email}</strong>",
   "lock.file.isLocked": "Soubor nelze změnit, právě jej upravuje {email}.",
   "lock.page.isLocked": "Stránku nelze změnit, právě jí upravuje {email} .",
@@ -393,7 +401,7 @@
   "save": "Ulo\u017eit",
   "search": "Hledat",
 
-  "section.required": "The section is required",
+  "section.required": "Sekce musí být vyplněna",
 
   "select": "Vybrat",
   "settings": "Nastavení",
@@ -422,19 +430,20 @@
   "translation.author": "Kirby tým",
   "translation.direction": "ltr",
   "translation.name": "\u010cesky",
+  "translation.locale": "cs_CZ",
 
   "upload": "Nahrát",
   "upload.error.cantMove": "Nahraný soubor nemohl být přesunut",
   "upload.error.cantWrite": "Zápis souboru na disk se nezdařil",
   "upload.error.default": "Soubor se nepodařilo nahrát",
-  "upload.error.extension": "File upload stopped by extension",
-  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
-  "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
-  "upload.error.noFile": "No file was uploaded",
-  "upload.error.noFiles": "No files were uploaded",
-  "upload.error.partial": "The uploaded file was only partially uploaded",
-  "upload.error.tmpDir": "Missing a temporary folder",
+  "upload.error.extension": "Nahrávání souboru přerušeno rozšířením.",
+  "upload.error.formSize": "Velikost nahrávaného souboru převyšuje omezení stanovené direktivou MAX_FILE_SIZE",
+  "upload.error.iniPostSize": "Velikost nahrávaného souboru převyšuje omezení stanovené direktivou post_max_size, která je nastavena v php.ini",
+  "upload.error.iniSize": "Velikost nahrávaného souboru převyšuje omezení stanovené direktivou upload_max_filesize, která je nastavena v php.ini ",
+  "upload.error.noFile": "Nebyl nahrán žádný soubor",
+  "upload.error.noFiles": "Nebyly nahrány žádné soubory",
+  "upload.error.partial": "Soubor byl nahrán pouze z části",
+  "upload.error.tmpDir": "Chybí dočasná složka",
   "upload.errors": "Chyba",
   "upload.progress": "Nahrávání...",
 

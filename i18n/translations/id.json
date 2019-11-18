@@ -61,13 +61,21 @@
     "Ekstensi \"{extension}\" tidak diizinkan",
   "error.file.extension.missing":
     "Berkas \"{filename}\" harus memiliki ekstensi",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Berkas yang diunggah harus memiliki tipe mime sama \"{mime}\"",
   "error.file.mime.forbidden": "Media dengan tipe mime \"{mime}\" tidak diizinkan",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Tipe media untuk \"{filename}\" tidak dapat dideteksi",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Nama berkas harus diisi",
   "error.file.notFound": "Berkas \"{filename}\" tidak dapat ditemukan",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Anda tidak diizinkan mengunggah berkas dengan tipe {type}",
   "error.file.undefined": "Berkas tidak dapat ditemukan",
 
@@ -296,7 +304,7 @@
   "loading": "Memuat",
 
   "lock.unsaved": "Perubahan belum tersimpan",
-  "lock.unsaved.empty": "There are no more unsaved changes",
+  "lock.unsaved.empty": "Tidak ada lagi perubahan belum tersimpan",
   "lock.isLocked": "Perubahan belum tersimpan oleh <strong>{email}</strong>",
   "lock.file.isLocked": "Berkas sedang disunting oleh {email} dan tidak dapat diubah.",
   "lock.page.isLocked": "Halaman sedang disunting oleh {email} dan tidak dapat diubah.",
@@ -422,6 +430,7 @@
   "translation.author": "Tim Kirby",
   "translation.direction": "ltr",
   "translation.name": "Bahasa Indonesia",
+  "translation.locale": "id_ID",
 
   "upload": "Unggah",
   "upload.error.cantMove": "Berkas unggahan tidak dapat dipindahkan",

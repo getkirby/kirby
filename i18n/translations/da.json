@@ -61,13 +61,21 @@
     "Uacceptabel fil-endelse",
   "error.file.extension.missing":
     "Du kan ikke uploade filer uden fil-endelse",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Den uploadede fil skal være af samme mime type \"{mime}\"",
   "error.file.mime.forbidden": "Media typen \"{mime}\" er ikke tilladt",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Media typen for \"{filename}\" kan ikke bestemmes",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Filnavn må ikke være tomt",
   "error.file.notFound": "Filen kunne ikke findes",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Du har ikke tilladelse til at uploade {type} filer",
   "error.file.undefined": "Filen kunne ikke findes",
 
@@ -422,6 +430,7 @@
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",
   "translation.name": "Dansk",
+  "translation.locale": "da_DK",
 
   "upload": "Upload",
   "upload.error.cantMove": "Den uploadede fil kunne ikke flyttes",
