@@ -15,6 +15,7 @@
     :value="number"
     class="k-number-input"
     type="number"
+    @keydown.cmd.s="clean"
     v-on="listeners"
   >
 </template>
@@ -47,10 +48,11 @@ export default {
   data() {
     return {
       number: this.format(this.value),
+      timeout: null,
       listeners: {
         ...this.$listeners,
-        change: (event) => this.onChange(event.target.value),
         input: (event) => this.onInput(event.target.value),
+        blur: this.onBlur,
       }
     }
   },
@@ -85,21 +87,35 @@ export default {
       return step.toString().split(".")[1].length || 0;
     },
     format(value) {
-      if (value === "") {
+      if (isNaN(value) || value === "") {
         return "";
       }
 
       const decimals = this.decimals();
 
       if (decimals) {
-        return parseFloat(value).toFixed(decimals);
+        value = parseFloat(value).toFixed(decimals);
+      } else if (Number.isInteger(this.step)) {
+        value = parseInt(value);
+      } else {
+        value = parseFloat(value);
       }
 
-      if (Number.isInteger(this.step)) {
-        return parseInt(value);
+      return value;
+    },
+    clean() {
+      this.number = this.format(this.number);
+    },
+    emit(value) {
+      value = parseFloat(value);
+
+      if (isNaN(value)) {
+        value = "";
       }
 
-      return parseFloat(value);
+      if (value !== this.value) {
+        this.$emit("input", value);
+      }
     },
     focus() {
       this.$refs.input.focus();
@@ -109,11 +125,11 @@ export default {
     },
     onInput(value) {
       this.number = value;
-      this.$emit("input", this.number);
+      this.emit(value);
     },
-    onChange(value) {
-      this.number = this.format(value);
-      this.$emit("input", this.number);
+    onBlur() {
+      this.clean();
+      this.emit(this.number);
     },
     select() {
       this.$refs.input.select();
