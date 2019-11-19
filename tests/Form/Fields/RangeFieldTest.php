@@ -14,7 +14,7 @@ class RangeFieldTest extends TestCase
         $this->assertEquals(null, $field->default());
         $this->assertEquals(0, $field->min());
         $this->assertEquals(100, $field->max());
-        $this->assertEquals(1, $field->step());
+        $this->assertEquals(null, $field->step());
         $this->assertTrue($field->tooltip());
         $this->assertTrue($field->save());
     }
