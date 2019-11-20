@@ -146,6 +146,7 @@ class AutoSession
 
     /**
      * Returns the specified Session object
+     * @since 3.3.1
      *
      * @param string $token Session token, either including or without the key
      * @return \Kirby\Session\Session
