@@ -27,6 +27,13 @@ class ImageTest extends TestCase
 
     public function testDataUri()
     {
+        $image = $this->_image('square.svg');
+        $plain = $image->read();
+        $this->assertEquals('data:image/svg+xml,' . $plain, $image->dataUri(false));
+    }
+
+    public function testDataUriBase64()
+    {
         $image  = $this->_image();
         $base64 = file_get_contents(static::FIXTURES . '/image/base64.txt');
         $this->assertEquals('data:image/jpeg;base64,' . $base64, $image->dataUri());
