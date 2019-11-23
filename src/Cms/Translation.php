@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Data\Data;
+use Kirby\Toolkit\Str;
 
 /**
  * Wrapper around Kirby's localization files,
@@ -147,6 +148,21 @@ class Translation
         } catch (Exception $e) {
             return new Translation($code, []);
         }
+    }
+
+    /**
+     * Returns the PHP locale of the translation
+     *
+     * @return string
+     */
+    public function locale(): string
+    {
+        $default = $this->code;
+        if (Str::contains($default, '_') !== true) {
+            $default .= '_' . strtoupper($this->code);
+        }
+
+        return $this->get('translation.locale', $default);
     }
 
     /**

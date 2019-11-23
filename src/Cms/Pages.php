@@ -438,6 +438,7 @@ class Pages extends Collection
 
     /**
      * Filter all pages by excluding the given template
+     * @since 3.3.0
      *
      * @param string|array $templates
      * @return \Kirby\Cms\Pages

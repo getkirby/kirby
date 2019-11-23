@@ -61,13 +61,21 @@
     "L'extensió de l'arxiu \"{extension}\" no està permesa",
   "error.file.extension.missing":
     "Falta l'extensió de l'arxiu \"{filename}\"",
+  "error.file.maxheight": "L'alçada de la imatge no ha de ser superior a {height} píxels",
+  "error.file.maxsize": "El fitxer és massa gran",
+  "error.file.maxwidth": "L'amplada de la imatge no ha de ser superior a {width} píxels",
   "error.file.mime.differs":
     "L'arxiu carregat ha ha de ser del mateix tipus de mime \"{mime}\"",
   "error.file.mime.forbidden": "El tipus de mitjà \"{mime}\" no està permès",
+  "error.file.mime.invalid": "Mime type no vàlid: {mime}",
   "error.file.mime.missing":
     "El tipus de suport per a \"{filename}\" no es pot detectar",
+  "error.file.minheight": "L'alçada de la imatge ha de ser com a mínim de {height} píxels",
+  "error.file.minsize": "El fitxer és massa petit",
+  "error.file.minwidth": "L'amplada de la imatge ha de ser com a mínim de {width} píxels",
   "error.file.name.missing": "El nom del fitxer no pot estar buit",
   "error.file.notFound": "L'arxiu \"{filename}\" no s'ha trobat",
+  "error.file.orientation": "L’orientació de la imatge ha de ser \"{orientation}\"",
   "error.file.type.forbidden": "No tens permís per penjar fitxers {type}",
   "error.file.undefined": "L'arxiu no s'ha trobat",
 
@@ -422,6 +430,7 @@
   "translation.author": "Equip Kirby",
   "translation.direction": "ltr",
   "translation.name": "Catalan",
+  "translation.locale": "ca_ES",
 
   "upload": "Carregar",
   "upload.error.cantMove": "El fitxer carregat no s'ha pogut moure",

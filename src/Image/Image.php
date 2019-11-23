@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Http\Response;
 use Kirby\Toolkit\File;
 use Kirby\Toolkit\Html;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Mime;
 use Kirby\Toolkit\V;
 
@@ -205,30 +206,35 @@ class Image extends File
     {
         if (($rules['mime'] ?? null) !== null) {
             if (Mime::isAccepted($this->mime(), $rules['mime']) !== true) {
-                throw new Exception(sprintf('Invalid mime type: %s', $this->mime()));
+                throw new Exception(I18n::template('error.file.mime.invalid', [
+                    'mime' => $this->mime()
+                ]));
             }
         }
 
         $rules = array_change_key_case($rules);
 
         $validations = [
-            'maxsize'     => ['size',   'max', 'The file is too large'],
-            'minsize'     => ['size',   'min', 'The file is too small'],
-            'maxwidth'    => ['width',  'max', 'The width of the image must not exceed %s pixels'],
-            'minwidth'    => ['width',  'min', 'The width of the image must be at least %s pixels'],
-            'maxheight'   => ['height', 'max', 'The height of the image must not exceed %s pixels'],
-            'minheight'   => ['height', 'min', 'The height of the image must be at least %s pixels'],
-            'orientation' => ['orientation', 'same', 'The orientation of the image must be "%s"']
+            'maxsize'     => ['size',   'max'],
+            'minsize'     => ['size',   'min'],
+            'maxwidth'    => ['width',  'max'],
+            'minwidth'    => ['width',  'min'],
+            'maxheight'   => ['height', 'max'],
+            'minheight'   => ['height', 'min'],
+            'orientation' => ['orientation', 'same']
         ];
 
         foreach ($validations as $key => $arguments) {
-            if (isset($rules[$key]) === true && $rules[$key] !== null) {
+            $rule = $rules[$key] ?? null;
+
+            if ($rule !== null) {
                 $property  = $arguments[0];
                 $validator = $arguments[1];
-                $message   = $arguments[2];
 
-                if (V::$validator($this->$property(), $rules[$key]) === false) {
-                    throw new Exception(sprintf($message, $rules[$key]));
+                if (V::$validator($this->$property(), $rule) === false) {
+                    throw new Exception(I18n::template('error.file.' . $key, [
+                        $property => $rule
+                    ]));
                 }
             }
         }

@@ -61,13 +61,21 @@
     "Prípona \"{extension}\" nie je povolená",
   "error.file.extension.missing":
     "Prípona pre \"{filename}\" chýba",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "MIME typ nahratého súboru msa musí zhodovať s \"{mime}\"",
   "error.file.mime.forbidden": "Typ média \"{mime}\" nie je povolený",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Typ média pre \"{filename}\" sa nepodarilo zistiť",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Názov súboru nemôže byť prázdny",
   "error.file.notFound": "Súbor \"{filename}\" sa nepodarilo nájsť",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Nemáte povolenie na nahrávanie súborov s typom {type}",
   "error.file.undefined": "Súbor nie je možné nájsť",
 
@@ -422,6 +430,7 @@
   "translation.author": "Tím Kirby",
   "translation.direction": "ltr",
   "translation.name": "Slovensky",
+  "translation.locale": "sk_SK",
 
   "upload": "Nahrať",
   "upload.error.cantMove": "The uploaded file could not be moved",

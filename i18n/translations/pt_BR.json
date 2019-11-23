@@ -61,13 +61,21 @@
     "Extensão \"{extension}\" não permitida",
   "error.file.extension.missing":
     "Extensão de \"{filename}\" em falta",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "O arquivo enviado precisa ser do tipo \"{mime}\"",
   "error.file.mime.forbidden": "Tipo de mídia \"{mime}\" não permitido",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Tipo de mídia de \"{filename}\" não detectado",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "O nome do arquivo não pode ficar em branco",
   "error.file.notFound": "Arquivo \"{filename}\" não encontrado",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Você não tem permissão para enviar arquivos {type}",
   "error.file.undefined": "Arquivo n\u00e3o encontrado",
 
@@ -422,6 +430,7 @@
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",
   "translation.name": "Português (Brasileiro)",
+  "translation.locale": "pt_BR",
 
   "upload": "Enviar",
   "upload.error.cantMove": "The uploaded file could not be moved",

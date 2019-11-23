@@ -13,13 +13,13 @@
   "date.select": "Pasirinkite datą",
 
   "day": "Diena",
-  "days.fri": "Penktadienis",
-  "days.mon": "Pirmadienis",
-  "days.sat": "Šeštadienis",
-  "days.sun": "Sekmadienis",
-  "days.thu": "Ketvirtadienis",
-  "days.tue": "Antradienis",
-  "days.wed": "Trečiadienis",
+  "days.fri": "Pen",
+  "days.mon": "Pir",
+  "days.sat": "Šeš",
+  "days.sun": "Sek",
+  "days.thu": "Ket",
+  "days.tue": "Ant",
+  "days.wed": "Tre",
 
   "delete": "Pašalinti",
   "dimensions": "Išmatavimai",
@@ -61,13 +61,21 @@
     "Failo tipas (plėtinys) \"{extension}\" neleidžiamas",
   "error.file.extension.missing":
     "Failui \"{filename}\" trūksta tipo (plėtinio)",
+  "error.file.maxheight": "Failo aukštis neturi viršyti {height} px",
+  "error.file.maxsize": "Failas per didelis",
+  "error.file.maxwidth": "Failo plotis neturi viršyti {width} px",
   "error.file.mime.differs":
     "Įkėliamas failas turi būti tokio pat mime tipo \"{mime}\"",
   "error.file.mime.forbidden": "Media tipas \"{mime}\" neleidžiamas",
+  "error.file.mime.invalid": "Neteisingas mime tipas: {mime}",
   "error.file.mime.missing":
     "Failui \"{filename}\" nepavyko atpažinti media (mime) tipo",
+  "error.file.minheight": "Failo aukštis turi būti bent {height} px",
+  "error.file.minsize": "Failas per mažas",
+  "error.file.minwidth": "Failo plotis turi būti bent {width} px",
   "error.file.name.missing": "Failo pavadinimas negali būti tuščias",
   "error.file.notFound": "Failas \"{filename}\" nerastas",
+  "error.file.orientation": "Failo orientacija turi būti \"{orientation}\"",
   "error.file.type.forbidden": "Jūs neturite teisės įkelti {type} tipo failų",
   "error.file.undefined": "Failas nerastas",
 
@@ -296,7 +304,7 @@
   "loading": "Kraunasi",
 
   "lock.unsaved": "Neišsaugoti pakeitimai",
-  "lock.unsaved.empty": "There are no more unsaved changes",
+  "lock.unsaved.empty": "Nebeliko neišsaugotų pakeitimų",
   "lock.isLocked": "Vartotojo <strong>{email}</strong> neišsaugoti pakeitimai",
   "lock.file.isLocked": "Šį failą dabar redaguoja kitas vartotojas {email}, tad jo negalima pekeisti.",
   "lock.page.isLocked": "Šį puslapį dabar redaguoja kitas vartotojas {email}, tad jo negalima pekeisti.",
@@ -422,6 +430,7 @@
   "translation.author": "Roman U",
   "translation.direction": "ltr",
   "translation.name": "Lietuvių",
+  "translation.locale": "lt_LT",
 
   "upload": "Įkelti",
   "upload.error.cantMove": "Įkeltas failas negali būti perkeltas",

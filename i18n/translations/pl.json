@@ -61,13 +61,21 @@
     "Rozszerzenie \"{extension}\" jest niedozwolone",
   "error.file.extension.missing":
     "Brak rozszerzenia pliku \"{filename}\"",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Przesłany plik musi być tego samego typu mime \"{mime}\"",
   "error.file.mime.forbidden": "Typ multimediów \"{mime}\" jest niedozwolony",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Nie można wykryć typu multimediów dla \"{filename}\"",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Nazwa pliku nie może być pusta",
   "error.file.notFound": "Nie można znaleźć pliku \"{filename}\"",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Nie możesz przesyłać plików {type}",
   "error.file.undefined": "Nie można znaleźć pliku",
 
@@ -422,6 +430,7 @@
   "translation.author": "Zespół Kirby",
   "translation.direction": "ltr",
   "translation.name": "Polski",
+  "translation.locale": "pl_PL",
 
   "upload": "Prześlij",
   "upload.error.cantMove": "The uploaded file could not be moved",

@@ -61,13 +61,21 @@
     "L’extension «&nbsp;{extension}&nbsp;» n’est pas autorisée",
   "error.file.extension.missing":
     "L’extension pour «&nbsp;{filename}&nbsp;» est manquante",
+  "error.file.maxheight": "La hauteur de l'image ne doit pas excéder {height} pixels",
+  "error.file.maxsize": "Le fichier est trop volumineux",
+  "error.file.maxwidth": "La largeur de l'image ne doit pas excéder {width} pixels",
   "error.file.mime.differs":
     "Le fichier transféré doit être du même type de média «&nbsp;{mime}&nbsp;»",
   "error.file.mime.forbidden": "Le type de média «&nbsp;{mime}&nbsp;» n’est pas autorisé",
+  "error.file.mime.invalid": "Type de média invalide : {mime}",
   "error.file.mime.missing":
     "Le type de média de «&nbsp;{filename}&nbsp;» n’a pu être détecté",
+  "error.file.minheight": "La hauteur de l'image doit être au moins {height} pixels",
+  "error.file.minsize": "Le fichier n'est pas assez volumineux",
+  "error.file.minwidth": "La largeur de l'image doit être au moins {width} pixels",
   "error.file.name.missing": "Veuillez entrer un titre",
   "error.file.notFound": "Le fichier «&nbsp;{filename}&nbsp;» n’a pu être trouvé",
+  "error.file.orientation": "L'orientation de l'image doit être \"{orientation}\"",
   "error.file.type.forbidden": "Vous n’êtes pas autorisé à transférer des fichiers {type}",
   "error.file.undefined": "Le fichier n’a pu être trouvé",
 
@@ -422,6 +430,7 @@
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",
   "translation.name": "Français",
+  "translation.locale": "fr_FR",
 
   "upload": "Transférer",
   "upload.error.cantMove": "Le fichier transféré n’a pu être déplacé",

@@ -61,13 +61,21 @@
     "Tiedostopääte \"{extension}\" ei ole sallittu",
   "error.file.extension.missing":
     "Tiedoston \"{filename}\" tiedostopääte puuttuu",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Lähetetyllä tiedostolla täytyy olla sama mime-tyyppi \"{mime}\"",
   "error.file.mime.forbidden": "Median tyyppi \"{mime}\" ei ole sallittu",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Tiedoston \"{filename}\" mediatyyppiä ei voida tunnistaa",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Tiedostonimi ei voi olla tyhjä",
   "error.file.notFound": "Tiedostoa \"{filename}\" ei löytynyt",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Sinulla ei ole oikeutta lähettää tiedostoja joiden tyyppi on {type}",
   "error.file.undefined": "Tiedostoa ei l\u00f6ytynyt",
 
@@ -422,6 +430,7 @@
   "translation.author": "Kirby-tiimi",
   "translation.direction": "ltr",
   "translation.name": "Suomi",
+  "translation.locale": "fi_FI",
 
   "upload": "Lähetä",
   "upload.error.cantMove": "Lähetettyä tiedostoa ei voitu siirtää",

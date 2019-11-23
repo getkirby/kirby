@@ -61,13 +61,21 @@
     "La extensión \"{extension}\" no está permitida",
   "error.file.extension.missing":
     "Falta la extensión para \"{filename}\"",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "El archivo cargado debe ser del mismo tipo mime \"{mime}\"",
   "error.file.mime.forbidden": "Los medios tipo \"{mime}\" no están permitidos",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "El tipo de medio para \"{filename}\" no pudo ser detectado",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "El nombre de archivo no debe estar vacío",
   "error.file.notFound": "El archivo \"{filename}\" no pudo ser encontrado",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "No está permitido subir archivos {type}",
   "error.file.undefined": "El archivo no pudo ser encontrado",
 
@@ -422,6 +430,7 @@
   "translation.author": "Turqueso",
   "translation.direction": "ltr",
   "translation.name": "Español",
+  "translation.locale": "es_ES",
 
   "upload": "Subir",
   "upload.error.cantMove": "The uploaded file could not be moved",

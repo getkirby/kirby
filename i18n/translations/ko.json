@@ -61,13 +61,21 @@
     "이 확장자({extension})는 업로드할 수 없습니다.",
   "error.file.extension.missing":
     "파일({filename})에 확장자가 없습니다.",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "기존 파일과 MIME 형식({mime})이 다릅니다.",
   "error.file.mime.forbidden": "이 MIME 형식({mime})은 업로드할 수 없습니다.",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "파일({filename})의 형식을 알 수 없습니다.",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "파일명을 입력하세요.",
   "error.file.notFound": "파일({filename})이 없습니다.",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "이 형식({type})의 파일을 업로드할 권한이 없습니다.",
   "error.file.undefined": "\ud30c\uc77c\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.",
 
@@ -422,6 +430,7 @@
   "translation.author": "Kirby 팀",
   "translation.direction": "LTR",
   "translation.name": "한국어",
+  "translation.locale": "ko_KR",
 
   "upload": "업로드",
   "upload.error.cantMove": "업로드한 파일을 이동할 수 없습니다.",

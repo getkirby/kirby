@@ -61,13 +61,21 @@
     "Расширение файла \"{extension}\" неразрешено",
   "error.file.extension.missing":
     "Файлу \"{filename}\" не хватает расширения",
+  "error.file.maxheight": "Высота картинки не должна превышать {height} px",
+  "error.file.maxsize": "Файл слишком большой",
+  "error.file.maxwidth": "Ширина картинки не должна превышать {width} px",
   "error.file.mime.differs":
     "Загруженный файл должен быть того же mime типа: \"{mime}\"",
   "error.file.mime.forbidden": "Тип медиа \"{mime}\" не допустим",
+  "error.file.mime.invalid": "Неверный тип mime: {mime}",
   "error.file.mime.missing":
     "Не удалось определить тип медиа для файла \"{filename}\"",
+  "error.file.minheight": "Высота файла должна быть хотя бы {height} px",
+  "error.file.minsize": "Файл слишком маленький",
+  "error.file.minwidth": "Ширина файла должна быть хотя бы {width} px",
   "error.file.name.missing": "Название файла не может быть пустым",
   "error.file.notFound": "\u0424\u0430\u0439\u043b \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
+  "error.file.orientation": "Ориентация картинки должна быть \"{orientation}\"",
   "error.file.type.forbidden": "У вас нет права загружать файлы {type}",
   "error.file.undefined": "\u0424\u0430\u0439\u043b \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
 
@@ -296,7 +304,7 @@
   "loading": "Загрузка",
 
   "lock.unsaved": "Несохраненные изменения",
-  "lock.unsaved.empty": "There are no more unsaved changes",
+  "lock.unsaved.empty": "Больше нет несохраненных изменений",
   "lock.isLocked": "Несохраненные изменения пользователя <strong>{email}</strong>",
   "lock.file.isLocked": "В данный момент этот файл редактирует {email}, поэтому его нельзя изменить.",
   "lock.page.isLocked": "В данный момент эту страницу редактирует {email}, поэтому его нельзя изменить.",
@@ -422,6 +430,7 @@
   "translation.author": "Команда Кирби",
   "translation.direction": "ltr",
   "translation.name": "Русский (Russian)",
+  "translation.locale": "ru_RU",
 
   "upload": "Закачать",
   "upload.error.cantMove": "Загруженный файл не может быть перемещен",

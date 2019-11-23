@@ -61,13 +61,21 @@
     "The extension \"{extension}\" is not allowed",
   "error.file.extension.missing":
     "The extensions for \"{filename}\" is missing",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "The uploaded file must be of the same mime type \"{mime}\"",
   "error.file.mime.forbidden": "The media type \"{mime}\" is not allowed",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "The media type for \"{filename}\" cannot be detected",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "The filename must not be empty",
   "error.file.notFound": "The file \"{filename}\" cannot be found",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "You are not allowed to upload {type} files",
   "error.file.undefined": "The file cannot be found",
 
@@ -422,6 +430,7 @@
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",
   "translation.name": "English",
+  "translation.locale": "en_US",
 
   "upload": "Upload",
   "upload.error.cantMove": "The uploaded file could not be moved",

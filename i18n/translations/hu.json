@@ -61,13 +61,21 @@
     "Tiltott kiterjeszt\u00e9s\u0171 f\u00e1jl",
   "error.file.extension.missing":
     "Kiterjeszt\u00e9s n\u00e9lk\u00fcli f\u00e1jl nem t\u00f6lthet\u0151 fel",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "A feltöltött fájlnak azonos \"{mime}\" típusúnak kell lennie",
   "error.file.mime.forbidden": "A \"{mime}\" típusú médiafájlok nem engedélyezettek",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "A \"{filename}\" fájl típusa nem állapítható meg",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "A fálj neve nem lehet üres",
   "error.file.notFound": "A \"{filename}\" fájl nem található",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Nem tölthetsz fel \"{type}\" típusú fájlokat",
   "error.file.undefined": "A f\u00e1jl nem tal\u00e1lhat\u00f3",
 
@@ -422,6 +430,7 @@
   "translation.author": "A Kirby csapata",
   "translation.direction": "ltr",
   "translation.name": "Magyar",
+  "translation.locale": "hu_HU",
 
   "upload": "Feltöltés",
   "upload.error.cantMove": "The uploaded file could not be moved",

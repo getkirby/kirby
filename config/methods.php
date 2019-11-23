@@ -327,6 +327,7 @@ return function (App $app) {
 
         /**
          * Converts all line breaks in the field content to `<br>` tags.
+         * @since 3.3.0
          *
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\Field
@@ -387,6 +388,7 @@ return function (App $app) {
          * Strips all block-level HTML elements from the field value,
          * it can be safely placed inside of other inline elements
          * without the risk of breaking the HTML structure.
+         * @since 3.3.0
          *
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\Field

@@ -130,13 +130,13 @@ export default {
 
       return this.options
         .filter(option => {
-          return option.text.match(regex) || option.value.match(regex);
+          return String(option.text).match(regex) || String(option.value).match(regex);
         })
         .map(option => {
           return {
             ...option,
-            display: option.text.replace(regex, "<b>$1</b>"),
-            info: option.value.replace(regex, "<b>$1</b>")
+            display: String(option.text).replace(regex, "<b>$1</b>"),
+            info: String(option.value).replace(regex, "<b>$1</b>")
           };
         });
     },
@@ -177,8 +177,9 @@ export default {
       this.close();
     },
     close() {
-      this.$refs.dropdown.close();
-      this.onClose();
+      if (this.$refs.dropdown.isOpen === true) {
+        this.$refs.dropdown.close();
+      }
     },
     escape() {
       if (this.q) {
@@ -203,8 +204,8 @@ export default {
       switch (direction) {
         case "prev":
           if (
-            current && 
-            current.previousSibling && 
+            current &&
+            current.previousSibling &&
             current.previousSibling.focus
           ) {
             current.previousSibling.focus();
@@ -212,8 +213,8 @@ export default {
           break;
         case "next":
           if (
-            current && 
-            current.nextSibling && 
+            current &&
+            current.nextSibling &&
             current.nextSibling.focus
           ) {
             current.nextSibling.focus();
@@ -222,8 +223,13 @@ export default {
       }
     },
     onClose() {
-      this.q = null;
-      this.$parent.$el.focus();
+      if (this.$refs.dropdown.isOpen === false) {
+        if (document.activeElement === this.$parent.$el) {
+          this.q = null;
+        }
+
+        this.$parent.$el.focus();
+      }
     },
     onInput() {
       this.$emit("input", this.sorted);
@@ -236,7 +242,7 @@ export default {
         if (this.$refs.search && this.$refs.search.focus) {
           this.$refs.search.focus();
         }
-        
+
         this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop = this.scrollTop;
       });
     },
@@ -246,7 +252,7 @@ export default {
     },
     select(option) {
       this.scrollTop = this.$refs.dropdown.$el.querySelector('.k-multiselect-options').scrollTop;
-      
+
       option = { text: option.text, value: option.value };
 
       if (this.isSelected(option)) {

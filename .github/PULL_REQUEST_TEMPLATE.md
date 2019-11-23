@@ -1,6 +1,6 @@
 ## Describe the PR
 
-A clear and concise description of the bug the PR fixes or the feature the PR introduces.
+<!-- A clear and concise description of the bug the PR fixes or the feature the PR introduces. -->
 
 ## Related issues
 
@@ -14,5 +14,5 @@ A clear and concise description of the bug the PR fixes or the feature the PR in
 
 - [ ] Added unit tests for fixed bug/feature
 - [ ] Passing all unit tests
-- [ ] Fixed code style issues with CS fixer and `composer fix`
-- [ ] Added in-code documentation (if neeed)
+- [ ] Fixed code style issues with CS fixer and `composer fix`
+- [ ] Added in-code documentation (if needed)
