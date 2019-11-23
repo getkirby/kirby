@@ -380,27 +380,89 @@ class PageSortTest extends TestCase
     public function testCreateCustomNum()
     {
         // valid
-        $page = new Page([
-            'slug' => 'test',
-            'blueprint' => [
-                'num' => '{{ page.year }}'
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
             ],
-            'content' => [
-                'year' => 2016
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'blueprint' => [
+                            'num' => '{{ page.year }}'
+                        ],
+                        'content' => [
+                            'year' => 2016
+                        ]
+                    ]
+                ]
             ]
         ]);
 
-        $this->assertEquals(2016, $page->createNum());
+        $this->assertEquals(2016, $app->page('test')->createNum());
 
         // invalid
-        $page = new Page([
-            'slug' => 'test',
-            'blueprint' => [
-                'num' => '{{ page.year }}'
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'blueprint' => [
+                            'num' => '{{ page.year }}'
+                        ]
+                    ]
+                ]
             ]
         ]);
 
-        $this->assertEquals(0, $page->createNum());
+        $this->assertEquals(0, $app->page('test')->createNum());
+
+        // multilang with default language fallback
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'blueprint' => [
+                            'num' => '{{ page.year }}'
+                        ],
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                                'content' => [
+                                    'year' => 2016
+                                ]
+                            ],
+                            [
+                                'code' => 'de',
+                                'content' => [
+                                    'year' => 1999
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertEquals(2016, $app->page('test')->createNum());
     }
 
     public function testPublish()
