@@ -22,16 +22,17 @@ class Remote
      * @var array
      */
     public static $defaults = [
-        'agent'    => null,
-        'body'     => true,
-        'data'     => [],
-        'encoding' => 'utf-8',
-        'file'     => null,
-        'headers'  => [],
-        'method'   => 'GET',
-        'progress' => null,
-        'test'     => false,
-        'timeout'  => 10,
+        'agent'     => null,
+        'basicAuth' => null,
+        'body'      => true,
+        'data'      => [],
+        'encoding'  => 'utf-8',
+        'file'      => null,
+        'headers'   => [],
+        'method'    => 'GET',
+        'progress'  => null,
+        'test'      => false,
+        'timeout'   => 10,
     ];
 
     /**
@@ -181,6 +182,11 @@ class Remote
             }
 
             $this->curlopt[CURLOPT_HTTPHEADER] = $headers;
+        }
+
+        // add HTTP Basic authentication
+        if (empty($this->options['basicAuth']) === false) {
+            $this->curlopt[CURLOPT_USERPWD] = $this->options['basicAuth'];
         }
 
         // add the user agent
