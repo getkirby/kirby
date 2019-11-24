@@ -170,7 +170,17 @@ class Remote
 
         // add all headers
         if (empty($this->options['headers']) === false) {
-            $this->curlopt[CURLOPT_HTTPHEADER] = $this->options['headers'];
+            // convert associative arrays to strings
+            $headers = [];
+            foreach ($this->options['headers'] as $key => $value) {
+                if (is_string($key) === true) {
+                    $headers[] = $key . ': ' . $value;
+                } else {
+                    $headers[] = $value;
+                }
+            }
+
+            $this->curlopt[CURLOPT_HTTPHEADER] = $headers;
         }
 
         // add the user agent
