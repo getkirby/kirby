@@ -81,7 +81,7 @@ class File
             return 'data:' . $this->mime() . ';base64,' . $this->base64();
         }
 
-        return 'data:' . $this->mime() . ',' . $this->read();
+        return 'data:' . $this->mime() . ',' . Escape::url($this->read());
     }
 
     /**
