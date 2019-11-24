@@ -22,6 +22,20 @@ class RemoteTest extends TestCase
         Remote::$defaults = $this->defaults;
     }
 
+    public function testOptionsHeaders()
+    {
+        $request = Remote::get('https://getkirby.com', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Accept-Charset: utf8'
+            ]
+        ]);
+        $this->assertSame([
+            'Accept: application/json',
+            'Accept-Charset: utf8'
+        ], $request->curlopt[CURLOPT_HTTPHEADER]);
+    }
+
     public function testContent()
     {
         $request = Remote::put('https://getkirby.com');
