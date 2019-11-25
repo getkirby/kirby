@@ -62,7 +62,7 @@ export default {
     },
     image: Object,
     info: String,
-    link: String,
+    link: [String, Function],
     options: [Array, Function],
     sortable: Boolean,
     target: String,
