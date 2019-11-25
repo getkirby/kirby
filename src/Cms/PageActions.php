@@ -51,7 +51,13 @@ trait PageActions
 
             // actually move the page on disk
             if ($oldPage->exists() === true) {
-                Dir::move($oldPage->root(), $newPage->root());
+                if (Dir::move($oldPage->root(), $newPage->root()) === true) {
+                    // Updates the root path of the old page with the root path
+                    // of the moved new page to use fly actions on old page in loop
+                    $oldPage->setRoot($newPage->root());
+                } else {
+                    throw new LogicException('The page directory cannot be moved');
+                }
             }
 
             // overwrite the child in the parent page
