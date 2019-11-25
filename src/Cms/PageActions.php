@@ -506,10 +506,14 @@ trait PageActions
 
                 return $num;
             default:
+                // get instance with default language
+                $app = $this->kirby()->clone();
+                $app->setCurrentLanguage();
+
                 $template = Str::template($mode, [
-                    'kirby' => $this->kirby(),
-                    'page'  => $this,
-                    'site'  => $this->site(),
+                    'kirby' => $app,
+                    'page'  => $app->page($this->id()),
+                    'site'  => $app->site(),
                 ]);
 
                 return (int)$template;

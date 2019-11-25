@@ -72,11 +72,16 @@ class File
     /**
      * Returns the file as data uri
      *
+     * @param bool $base64 Whether the data should be base64 encoded or not
      * @return string
      */
-    public function dataUri(): string
+    public function dataUri(bool $base64 = true): string
     {
-        return 'data:' . $this->mime() . ';base64,' . $this->base64();
+        if ($base64 === true) {
+            return 'data:' . $this->mime() . ';base64,' . $this->base64();
+        }
+
+        return 'data:' . $this->mime() . ',' . Escape::url($this->read());
     }
 
     /**
