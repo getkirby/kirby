@@ -115,6 +115,9 @@ export default {
               icon: { type: "globe", back: "black" },
               text: language.name,
               info: language.code,
+              link: () => {
+                this.$refs.update.open(language.code);
+              },
               options: [
                 {
                   icon: "edit",
