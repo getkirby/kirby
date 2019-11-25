@@ -586,6 +586,7 @@ export default {
 $structure-item-height: 38px;
 
 .k-structure-table {
+  position: relative;
   table-layout: fixed;
   width: 100%;
   background: #fff;
@@ -610,7 +611,14 @@ $structure-item-height: 38px;
   }
 
   th {
+    position: sticky;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
     font-weight: 400;
+    z-index: 1;
     color: $color-dark-grey;
     padding: 0 0.75rem;
     height: $structure-item-height;
