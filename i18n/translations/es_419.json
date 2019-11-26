@@ -23,22 +23,22 @@
 
   "delete": "Eliminar",
   "dimensions": "Dimensiones",
-  "disabled": "Disabled",
+  "disabled": "Desabilitado",
   "discard": "Descartar",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "Descargar",
+  "duplicate": "Duplicar",
   "edit": "Editar",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "No has seleccionado ningún archivo",
+  "dialog.pages.empty": "No has seleccionado ninguna página",
+  "dialog.users.empty": "No has seleccionado ningún usuario",
 
   "email": "Correo Electrónico",
   "email.placeholder": "correo@ejemplo.com",
 
   "error.access.login": "Ingreso inválido",
   "error.access.panel": "No tienes permitido acceder al panel.",
-  "error.access.view": "You are not allowed to access this part of the panel",
+  "error.access.view": "No tienes permiso para acceder a esta parte del panel",
 
   "error.avatar.create.fail": "No se pudo subir la foto de perfil.",
   "error.avatar.delete.fail": "No se pudo eliminar la foto de perfil.",
@@ -53,7 +53,7 @@
 
   "error.field.converter.invalid": "Convertidor inválido \"{converter}\"",
 
-  "error.file.changeName.empty": "The name must not be empty",
+  "error.file.changeName.empty": "El nombre no debe estar vacío",
   "error.file.changeName.permission":
     "No tienes permitido cambiar el nombre de \"{filename}\"",
   "error.file.duplicate": "Ya existe un archivo con el nombre \"{filename}\".",
@@ -61,34 +61,34 @@
     "La extensión \"{extension}\" no está permitida.",
   "error.file.extension.missing":
     "Falta la extensión para \"{filename}\".",
-  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
-  "error.file.maxsize": "The file is too large",
-  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
+  "error.file.maxheight": "La altura de la imagen no debe exceder {height} pixeles",
+  "error.file.maxsize": "El archivo es muy grande",
+  "error.file.maxwidth": "El ancho de la imagen no debe exceder {width} pixeles",
   "error.file.mime.differs":
     "El archivo cargado debe ser del mismo tipo mime \"{mime}\".",
   "error.file.mime.forbidden": "El tipo de medios \"{mime}\" no está permitido.",
-  "error.file.mime.invalid": "Invalid mime type: {mime}",
+  "error.file.mime.invalid": "Tipo invalido de mime: {mime}",
   "error.file.mime.missing":
     "No se puede detectar el tipo de medio para \"{filename}\".",
-  "error.file.minheight": "The height of the image must be at least {height} pixels",
-  "error.file.minsize": "The file is too small",
-  "error.file.minwidth": "The width of the image must be at least {width} pixels",
+  "error.file.minheight": "La altura de la imagen debe ser de al menos {height} pixeles",
+  "error.file.minsize": "El archivo es muy pequeño",
+  "error.file.minwidth": "El ancho de la imagen debe ser de al menos {width} pixeles",
   "error.file.name.missing": "El nombre del archivo no debe estar vacío.",
   "error.file.notFound": "El archivo \"{filename}\" no pudo ser encontrado.",
-  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+  "error.file.orientation": "La orientación de la imagen debe ser \"{orientation}\"",
   "error.file.type.forbidden": "No está permitido subir archivos {type}.",
   "error.file.undefined": "El archivo no se puede encontrar.",
 
   "error.form.incomplete": "Por favor, corrige todos los errores del formulario...",
   "error.form.notSaved": "No se pudo guardar el formulario.",
 
-  "error.language.code": "Please enter a valid code for the language",
-  "error.language.duplicate": "The language already exists",
-  "error.language.name": "Please enter a valid name for the language",
+  "error.language.code": "Por favor introduce un código válido para el lenguaje",
+  "error.language.duplicate": "El lenguaje ya existe",
+  "error.language.name": "Por favor introduce un nombre válido para el lenguaje",
 
-  "error.license.format": "Please enter a valid license key",
+  "error.license.format": "Por favor introduce una llave de licencia válida",
   "error.license.email": "Por favor ingresa un correo electrónico valido",
-  "error.license.verification": "The license could not be verified",
+  "error.license.verification": "La licencia no pude ser verificada",
 
   "error.page.changeSlug.permission":
     "No está permitido cambiar el apéndice de URL para \"{slug}\".",
@@ -115,7 +115,7 @@
     "Ya existe un borrador de página con el apéndice de URL \"{slug}\"",
   "error.page.duplicate":
     "Ya existe una página con el apéndice de URL \"{slug}\"",
-  "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
+  "error.page.duplicate.permission": "No tienes permitido duplicar \"{slug}\"",
   "error.page.notFound": "La página \"{slug}\" no se encuentra",
   "error.page.num.invalid":
     "Por favor, introduce un número de posición válido. Los números no deben ser negativos.",
@@ -130,18 +130,18 @@
   "error.section.files.max.singular":
     "No debes agregar más de un archivo a la sección \"{section}\"",
   "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
+    "La sección \"{section}\" requiere al menos {min} archivos",
   "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+    "La sección \"{section}\" requiere al menos un archivo",
 
   "error.section.pages.max.plural":
     "No debes agregar más de {max} páginas a la sección \"{section}\"",
   "error.section.pages.max.singular":
     "No debes agregar más de una página a la sección \"{section}\"",
   "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
+    "La sección \"{section}\" requiere al menos {min} páginas",
   "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+    "La sección \"{section}\" requiere al menos una página",
 
   "error.section.notLoaded": "La sección \"{name}\" no se pudo cargar",
   "error.section.type.invalid": "La sección \"{type}\" no es valida",
@@ -166,7 +166,7 @@
   "error.user.changeRole.permission":
     "No tienes permiso para cambiar el rol del usuario \"{name}\"",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "No tienes permitido promover a alguien al rol de admin",
   "error.user.create.permission": "No tienes permiso de crear este usuario",
   "error.user.delete": "El ususario no pudo ser eliminado",
   "error.user.delete.lastAdmin": "Usted no puede borrar el \u00faltimo administrador",
@@ -196,9 +196,9 @@
   "error.validation.contains":
     "Por favor ingrese valores que contengan \"{needle}\"",
   "error.validation.date": "Por favor ingresa una fecha válida",
-  "error.validation.date.after": "Please enter a date after {date}",
-  "error.validation.date.before": "Please enter a date before {date}",
-  "error.validation.date.between": "Please enter a date between {min} and {max}",
+  "error.validation.date.after": "Por favor introduce una fecha posterior a {date}",
+  "error.validation.date.before": "Por favor introduce una fecha anterior a {date}",
+  "error.validation.date.between": "Por favor introduce un número entre {min} y {max}",
   "error.validation.denied": "Por favor niegue",
   "error.validation.different": "EL valor no debe ser \"{other}\"",
   "error.validation.email": "Por favor ingresa un correo electrónico valido",
@@ -231,7 +231,7 @@
   "error.validation.time": "Por favor ingresa una hora válida",
   "error.validation.url": "Por favor ingresa un URL válido",
 
-  "field.required": "The field is required",
+  "field.required": "Este campo es requerido",
   "field.files.empty": "Aún no ha seleccionado ningún archivo",
   "field.pages.empty": "Aún no ha seleccionado ningúna pagina",
   "field.structure.delete.confirm": "\u00bfEn realidad desea borrar esta entrada?",
@@ -279,7 +279,7 @@
   "language.direction.ltr": "De Izquierda a derecha",
   "language.direction.rtl": "De derecha a izquierda",
   "language.locale": "Cadena de localización PHP",
-  "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
+  "language.locale.warning": "Estas utilizando un configuración local. Por favor modifícalo en el archivo del lenguaje en /site/languages",
   "language.name": "Nombre",
   "language.updated": "El idioma a sido actualizado",
 
@@ -303,13 +303,13 @@
 
   "loading": "Cargando",
 
-  "lock.unsaved": "Unsaved changes",
-  "lock.unsaved.empty": "There are no more unsaved changes",
-  "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
-  "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
-  "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
-  "lock.unlock": "Unlock",
-  "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
+  "lock.unsaved": "Cambios sin guardar",
+  "lock.unsaved.empty": "No hay más cambios sin guardar",
+  "lock.isLocked": "Cambios sin guardar por <strong>{email}</strong>",
+  "lock.file.isLocked": "El archivo está siendo actualmente editado por {email} y no puede ser cambiado.",
+  "lock.page.isLocked": "La página está siendo actualmente editada por {email} y no puede ser cambiada.",
+  "lock.unlock": "Desbloquear",
+  "lock.isUnlocked": "Tus cambios sin guardar han sido sobrescritos por otro usuario. Puedes descargar los cambios y fusionarlos manualmente.",
 
   "login": "Iniciar sesi\u00f3n",
   "login.remember": "Mantener mi sesión iniciada",
@@ -338,8 +338,8 @@
   "more": "Màs",
   "name": "Nombre",
   "next": "Siguiente",
-  "off": "off",
-  "on": "on",
+  "off": "Apagado",
+  "on": "Encendido",
   "open": "Abrir",
   "options": "Opciones",
 
@@ -361,8 +361,8 @@
   "page.delete.confirm.title": "Introduce el título de la página para confirmar",
   "page.draft.create": "Crear borrador",
   "page.duplicate.appendix": "Copiar",
-  "page.duplicate.files": "Copy files",
-  "page.duplicate.pages": "Copy pages",
+  "page.duplicate.files": "Copiar archivos",
+  "page.duplicate.pages": "Copiar páginas",
   "page.status": "Estado",
   "page.status.draft": "Borrador",
   "page.status.draft.description":
@@ -390,18 +390,18 @@
   "revert": "Revertir",
 
   "role": "Rol",
-  "role.admin.description": "The admin has all rights",
-  "role.admin.title": "Admin",
+  "role.admin.description": "El administrador tiene todos los derechos",
+  "role.admin.title": "Administrador",
   "role.all": "Todos",
   "role.empty": "No hay usuarios con este rol",
   "role.description.placeholder": "Sin descripción",
-  "role.nobody.description": "This is a fallback role without any permissions",
-  "role.nobody.title": "Nobody",
+  "role.nobody.description": "Este es un rol alternativo sin permisos",
+  "role.nobody.title": "Nadie",
 
   "save": "Guardar",
   "search": "Buscar",
 
-  "section.required": "The section is required",
+  "section.required": "Esta sección es requerida",
 
   "select": "Seleccionar",
   "settings": "Ajustes",
@@ -421,8 +421,8 @@
   "toolbar.button.heading.3": "Encabezado 3",
   "toolbar.button.italic": "Texto en It\u00e1licas",
   "toolbar.button.file": "Archivo",
-  "toolbar.button.file.select": "Select a file",
-  "toolbar.button.file.upload": "Upload a file",
+  "toolbar.button.file.select": "Selecciona un archivo",
+  "toolbar.button.file.upload": "Sube un archivo",
   "toolbar.button.link": "Enlace",
   "toolbar.button.ol": "Lista en orden",
   "toolbar.button.ul": "Lista de viñetas",
@@ -433,11 +433,11 @@
   "translation.locale": "es_419",
 
   "upload": "Subir",
-  "upload.error.cantMove": "The uploaded file could not be moved",
-  "upload.error.cantWrite": "Failed to write file to disk",
-  "upload.error.default": "The file could not be uploaded",
-  "upload.error.extension": "File upload stopped by extension",
-  "upload.error.formSize": "The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the form",
+  "upload.error.cantMove": "El archivo subido no puede ser movido",
+  "upload.error.cantWrite": "Error al escribir el archivo en el disco",
+  "upload.error.default": "El archivo no pudo ser subido",
+  "upload.error.extension": "Subida de archivo detenida por la extensión",
+  "upload.error.formSize": "El archivo subido excede la directiva MAX_FILE_SIZE que fue especificada en el formulario",
   "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
   "upload.error.iniSize": "The uploaded file exceeds the upload_max_filesize directive in php.ini",
   "upload.error.noFile": "No file was uploaded",
