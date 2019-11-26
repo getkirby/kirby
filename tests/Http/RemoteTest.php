@@ -22,71 +22,93 @@ class RemoteTest extends TestCase
         Remote::$defaults = $this->defaults;
     }
 
+    public function testOptionsHeaders()
+    {
+        $request = Remote::get('https://getkirby.com', [
+            'headers' => [
+                'Accept' => 'application/json',
+                'Accept-Charset: utf8'
+            ]
+        ]);
+        $this->assertSame([
+            'Accept: application/json',
+            'Accept-Charset: utf8'
+        ], $request->curlopt[CURLOPT_HTTPHEADER]);
+    }
+
+    public function testOptionsBasicAuth()
+    {
+        $request = Remote::get('https://getkirby.com', [
+            'basicAuth' => 'user:pw'
+        ]);
+        $this->assertSame('user:pw', $request->curlopt[CURLOPT_USERPWD]);
+    }
+
     public function testContent()
     {
         $request = Remote::put('https://getkirby.com');
-        $this->assertEquals(null, $request->content());
+        $this->assertSame(null, $request->content());
     }
 
     public function testCode()
     {
         $request = Remote::put('https://getkirby.com');
-        $this->assertEquals(null, $request->code());
+        $this->assertSame(null, $request->code());
     }
 
     public function testDelete()
     {
         $request = Remote::delete('https://getkirby.com');
-        $this->assertEquals('DELETE', $request->method());
+        $this->assertSame('DELETE', $request->method());
     }
 
     public function testGet()
     {
         $request = Remote::get('https://getkirby.com');
-        $this->assertEquals('GET', $request->method());
+        $this->assertSame('GET', $request->method());
     }
 
     public function testHead()
     {
         $request = Remote::head('https://getkirby.com');
-        $this->assertEquals('HEAD', $request->method());
+        $this->assertSame('HEAD', $request->method());
     }
 
     public function testHeaders()
     {
         $request = new Remote('https://getkirby.com');
-        $this->assertEquals([], $request->headers());
+        $this->assertSame([], $request->headers());
     }
 
     public function testInfo()
     {
         $request = new Remote('https://getkirby.com');
-        $this->assertEquals([], $request->info());
+        $this->assertSame([], $request->info());
     }
 
     public function testPatch()
     {
         $request = Remote::patch('https://getkirby.com');
-        $this->assertEquals('PATCH', $request->method());
+        $this->assertSame('PATCH', $request->method());
     }
 
     public function testPost()
     {
         $request = Remote::post('https://getkirby.com');
-        $this->assertEquals('POST', $request->method());
+        $this->assertSame('POST', $request->method());
     }
 
     public function testPut()
     {
         $request = Remote::put('https://getkirby.com');
-        $this->assertEquals('PUT', $request->method());
+        $this->assertSame('PUT', $request->method());
     }
 
     public function testRequest()
     {
         $request = new Remote($url = 'https://getkirby.com');
 
-        $this->assertEquals($url, $request->url());
-        $this->assertEquals('GET', $request->method());
+        $this->assertSame($url, $request->url());
+        $this->assertSame('GET', $request->method());
     }
 }

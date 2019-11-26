@@ -33,7 +33,7 @@ export default {
     tabindex: [String, Number],
     target: String,
     title: String,
-    to: String,
+    to: [String, Function],
   },
   data() {
     return {
@@ -46,9 +46,14 @@ export default {
   },
   computed: {
     href() {
+      if (typeof this.to === "function") {
+        return '';
+      }
+
       if (this.$route !== undefined && this.to[0] === '/' && !this.target) {
         return (this.$router.options.url || '') + this.to;
       }
+
       return this.to;
     }
   },
@@ -85,6 +90,11 @@ export default {
       if (this.disabled === true) {
         event.preventDefault();
         return false;
+      }
+
+      if (typeof this.to === "function") {
+        event.preventDefault();
+        this.to();
       }
 
       if (this.isRoutable(event)) {

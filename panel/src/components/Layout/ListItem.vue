@@ -66,7 +66,7 @@ export default {
     text: String,
     target: String,
     info: String,
-    link: String,
+    link: [String, Function],
     flag: Object,
     options: [Array, Function]
   },

@@ -1,1 +1,1 @@
-RegExp.escape = s => s.replace(new RegExp("[\\p{L}]|[-/\\\\^$*+?.()[\\]{}]", "gu"), '\\$&');
+RegExp.escape = s => s.replace(new RegExp("[-/\\\\^$*+?.()[\\]{}]", "gu"), '\\$&');

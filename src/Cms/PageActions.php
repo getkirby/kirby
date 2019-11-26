@@ -512,7 +512,7 @@ trait PageActions
 
                 return $num;
             default:
-                // get instance with default lanuage
+                // get instance with default language
                 $app = $this->kirby()->clone();
                 $app->setCurrentLanguage();
 
