@@ -143,6 +143,7 @@ import Vue from "vue";
 import Field from "../Field.vue";
 
 Array.prototype.sortBy = function(sortBy) {
+  const sort = Vue.prototype.$helper.sort();
   const options = sortBy.split(" ");
   const field = options[0];
   const direction = options[1] || "asc";
@@ -152,9 +153,9 @@ Array.prototype.sortBy = function(sortBy) {
     const valueB = String(b[field]).toLowerCase();
 
     if (direction === "desc") {
-      return this.$helper.sort(valueB, valueA);
+      return sort(valueB, valueA);
     } else {
-      return this.$helper.sort(valueA, valueB);
+      return sort(valueA, valueB);
     }
   });
 };
@@ -585,6 +586,7 @@ export default {
 $structure-item-height: 38px;
 
 .k-structure-table {
+  position: relative;
   table-layout: fixed;
   width: 100%;
   background: #fff;
@@ -609,7 +611,14 @@ $structure-item-height: 38px;
   }
 
   th {
+    position: sticky;
+    top: 0;
+    right: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
     font-weight: 400;
+    z-index: 1;
     color: $color-dark-grey;
     padding: 0 0.75rem;
     height: $structure-item-height;
@@ -673,6 +682,10 @@ $structure-item-height: 38px;
     [dir="rtl"] & {
       text-align: left;
     }
+  }
+  .k-structure-table-column[data-align="right"] > .k-input {
+    flex-direction: column;
+    align-items: flex-end;
   }
 
   /* column widths */

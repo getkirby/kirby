@@ -18,20 +18,6 @@ class ImageTest extends TestCase
         $this->assertEquals('http://getkirby.com/cat.jpg', $image->url());
     }
 
-    public function testBase64()
-    {
-        $image  = $this->_image();
-        $base64 = file_get_contents(static::FIXTURES . '/image/base64.txt');
-        $this->assertEquals($base64, $image->base64());
-    }
-
-    public function testDataUri()
-    {
-        $image  = $this->_image();
-        $base64 = file_get_contents(static::FIXTURES . '/image/base64.txt');
-        $this->assertEquals('data:image/jpeg;base64,' . $base64, $image->dataUri());
-    }
-
     public function testHeader()
     {
         $image  = $this->_image();

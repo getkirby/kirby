@@ -23,7 +23,7 @@
 
   "delete": "Hapus",
   "dimensions": "Dimensi",
-  "disabled": "Disabled",
+  "disabled": "Dimatikan",
   "discard": "Buang",
   "download": "Unduh",
   "duplicate": "Duplikasi",
@@ -61,13 +61,21 @@
     "Ekstensi \"{extension}\" tidak diizinkan",
   "error.file.extension.missing":
     "Berkas \"{filename}\" harus memiliki ekstensi",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "Berkas yang diunggah harus memiliki tipe mime sama \"{mime}\"",
   "error.file.mime.forbidden": "Media dengan tipe mime \"{mime}\" tidak diizinkan",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "Tipe media untuk \"{filename}\" tidak dapat dideteksi",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "Nama berkas harus diisi",
   "error.file.notFound": "Berkas \"{filename}\" tidak dapat ditemukan",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Anda tidak diizinkan mengunggah berkas dengan tipe {type}",
   "error.file.undefined": "Berkas tidak dapat ditemukan",
 
@@ -138,6 +146,7 @@
   "error.section.notLoaded": "Bagian \"{name}\" tidak dapat dimuat",
   "error.section.type.invalid": "Tipe bagian \"{type}\" tidak valid",
 
+  "error.site.changeTitle.empty": "Judul harus diisi",
   "error.site.changeTitle.permission":
     "Anda tidak diizinkan mengubah judul situs",
   "error.site.update.permission": "Anda tidak diizinkan memperbaharui situs",
@@ -157,7 +166,7 @@
   "error.user.changeRole.permission":
     "Anda tidak diizinkan mengubah peran dari pengguna \"{name}\"",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "Anda tidak diizinkan mempromosikan seseorang menjadi admin",
   "error.user.create.permission": "Anda tidak diizinkan membuat pengguna ini",
   "error.user.delete": "Pengguna \"{nama}\" tidak dapat dihapus",
   "error.user.delete.lastAdmin": "Admin satu-satunya tidak dapat dihapus",
@@ -222,7 +231,7 @@
   "error.validation.time": "Masukkan waktu yang valid",
   "error.validation.url": "Masukkan URL yang valid",
 
-  "field.required": "The field is required",
+  "field.required": "Bidang ini wajib",
   "field.files.empty": "Belum ada berkas yang dipilih",
   "field.pages.empty": "Belum ada halaman yang dipilih",
   "field.structure.delete.confirm": "Anda yakin menghapus baris ini?",
@@ -295,6 +304,7 @@
   "loading": "Memuat",
 
   "lock.unsaved": "Perubahan belum tersimpan",
+  "lock.unsaved.empty": "Tidak ada lagi perubahan belum tersimpan",
   "lock.isLocked": "Perubahan belum tersimpan oleh <strong>{email}</strong>",
   "lock.file.isLocked": "Berkas sedang disunting oleh {email} dan tidak dapat diubah.",
   "lock.page.isLocked": "Halaman sedang disunting oleh {email} dan tidak dapat diubah.",
@@ -391,7 +401,7 @@
   "save": "Simpan",
   "search": "Cari",
 
-  "section.required": "The section is required",
+  "section.required": "Bagian ini wajib",
 
   "select": "Pilih",
   "settings": "Pengaturan",
@@ -420,6 +430,7 @@
   "translation.author": "Tim Kirby",
   "translation.direction": "ltr",
   "translation.name": "Bahasa Indonesia",
+  "translation.locale": "id_ID",
 
   "upload": "Unggah",
   "upload.error.cantMove": "Berkas unggahan tidak dapat dipindahkan",

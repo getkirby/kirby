@@ -2,6 +2,13 @@ import Vue from "vue";
 import Api from "@/api/api.js";
 import clone from "@/helpers/clone.js";
 
+const keep = (id, data) => {
+  localStorage.setItem(
+    "kirby$content$" + id,
+    JSON.stringify(data)
+  );
+};
+
 export default {
   namespaced: true,
 
@@ -153,8 +160,10 @@ export default {
       localStorage.removeItem("kirby$content$" + id);
     },
     REVERT(state, id) {
-      Vue.set(state.models[id], "changes", {});
-      localStorage.removeItem("kirby$content$" + id);
+      if (state.models[id]) {
+        Vue.set(state.models[id], "changes", {});
+        localStorage.removeItem("kirby$content$" + id);
+      }
     },
     STATUS(state, enabled) {
       Vue.set(state.status, "enabled", enabled);
@@ -187,14 +196,11 @@ export default {
         Vue.set(state.models[id].changes, field, value);
       }
 
-      localStorage.setItem(
-        "kirby$content$" + id,
-        JSON.stringify({
-          api: state.models[id].api,
-          originals: state.models[id].originals,
-          changes: state.models[id].changes
-        })
-      );
+      keep(id, {
+        api: state.models[id].api,
+        originals: state.models[id].originals,
+        changes: state.models[id].changes
+      });
     }
   },
 
@@ -209,6 +215,42 @@ export default {
               const data = localStorage.getItem("kirby$content$" + id);
               context.commit("CREATE", [id, JSON.parse(data)]);
             });
+
+      // load old format
+      Object.keys(localStorage)
+        .filter(key => key.startsWith("kirby$form$"))
+        .map(key => key.split("kirby$form$")[1])
+        .forEach(id => {
+          const json = localStorage.getItem("kirby$form$" + id);
+          let   data = null;
+
+          try {
+            data = JSON.parse(json);
+          } catch (e) {
+            // fail silently
+          }
+
+          if (!data || !data.api) {
+            // remove invalid entry
+            localStorage.removeItem("kirby$form$" + id);
+            return false;
+          }
+
+          const model = {
+            api: data.api,
+            originals: data.originals,
+            changes: data.values
+          };
+
+          // add it to the state
+          context.commit("CREATE", [id, model]);
+
+          // keep it in localStorage
+          keep(id, model);
+
+          // remove the old entry
+          localStorage.removeItem("kirby$form$" + id);
+        });
     },
     create(context, model) {
       // attach the language to the id
@@ -226,14 +268,19 @@ export default {
       };
 
       // check if content was previously unlocked
-      Api.get(model.api + "/unlock").then(response => {
-        if (
-          response.supported === true &&
-          response.unlocked === true
-        ) {
-          context.commit("UNLOCK", context.state.models[model.id].changes);
-        }
-      });
+      Api
+        .get(model.api + "/unlock")
+        .then(response => {
+          if (
+            response.supported === true &&
+            response.unlocked === true
+          ) {
+            context.commit("UNLOCK", context.state.models[model.id].changes);
+          }
+        })
+        .catch(() => {
+          // fail silently
+        });
 
       context.commit("CREATE", [model.id, data]);
       context.dispatch("current", model.id);
@@ -257,6 +304,10 @@ export default {
     },
     remove(context, id) {
       context.commit("REMOVE", id);
+
+      if (context.getters.isCurrent(id)) {
+        context.commit("CURRENT", null);
+      }
     },
     revert(context, id) {
       id = id || context.state.current;

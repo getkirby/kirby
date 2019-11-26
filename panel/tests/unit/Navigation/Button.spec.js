@@ -1,8 +1,14 @@
 import { mount } from "@vue/test-utils";
 import Vue from "vue";
 import Button from "@/components/Navigation/Button.vue";
+import ButtonDisabled from "@/components/Navigation/ButtonDisabled.vue";
+import ButtonLink from "@/components/Navigation/ButtonLink.vue";
+import ButtonNative from "@/components/Navigation/ButtonNative.vue";
 import Icon from "@/components/Misc/Icon.vue";
 
+Vue.component("k-button-disabled", ButtonDisabled);
+Vue.component("k-button-link", ButtonLink);
+Vue.component("k-button-native", ButtonNative);
 Vue.component("k-icon", Icon);
 
 describe("Button.vue", () => {

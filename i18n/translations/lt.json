@@ -13,17 +13,17 @@
   "date.select": "Pasirinkite datą",
 
   "day": "Diena",
-  "days.fri": "Penktadienis",
-  "days.mon": "Pirmadienis",
-  "days.sat": "Šeštadienis",
-  "days.sun": "Sekmadienis",
-  "days.thu": "Ketvirtadienis",
-  "days.tue": "Antradienis",
-  "days.wed": "Trečiadienis",
+  "days.fri": "Pen",
+  "days.mon": "Pir",
+  "days.sat": "Šeš",
+  "days.sun": "Sek",
+  "days.thu": "Ket",
+  "days.tue": "Ant",
+  "days.wed": "Tre",
 
   "delete": "Pašalinti",
   "dimensions": "Išmatavimai",
-  "disabled": "Disabled",
+  "disabled": "Išjungta",
   "discard": "Atšaukti",
   "download": "Parsisiųsti",
   "duplicate": "Kopijuoti",
@@ -61,13 +61,21 @@
     "Failo tipas (plėtinys) \"{extension}\" neleidžiamas",
   "error.file.extension.missing":
     "Failui \"{filename}\" trūksta tipo (plėtinio)",
+  "error.file.maxheight": "Failo aukštis neturi viršyti {height} px",
+  "error.file.maxsize": "Failas per didelis",
+  "error.file.maxwidth": "Failo plotis neturi viršyti {width} px",
   "error.file.mime.differs":
     "Įkėliamas failas turi būti tokio pat mime tipo \"{mime}\"",
   "error.file.mime.forbidden": "Media tipas \"{mime}\" neleidžiamas",
+  "error.file.mime.invalid": "Neteisingas mime tipas: {mime}",
   "error.file.mime.missing":
     "Failui \"{filename}\" nepavyko atpažinti media (mime) tipo",
+  "error.file.minheight": "Failo aukštis turi būti bent {height} px",
+  "error.file.minsize": "Failas per mažas",
+  "error.file.minwidth": "Failo plotis turi būti bent {width} px",
   "error.file.name.missing": "Failo pavadinimas negali būti tuščias",
   "error.file.notFound": "Failas \"{filename}\" nerastas",
+  "error.file.orientation": "Failo orientacija turi būti \"{orientation}\"",
   "error.file.type.forbidden": "Jūs neturite teisės įkelti {type} tipo failų",
   "error.file.undefined": "Failas nerastas",
 
@@ -138,6 +146,7 @@
   "error.section.notLoaded": "Sekcija \"{name}\" negali būti užkrauta",
   "error.section.type.invalid": "Sekcijos tipas \"{type}\" yra neteisingas",
 
+  "error.site.changeTitle.empty": "Pavadinimas negali būti tuščias",
   "error.site.changeTitle.permission":
     "Neturite leidimo keisti svetainės pavadinimo",
   "error.site.update.permission": "Neturite leidimo atnaujinti svetainės",
@@ -157,7 +166,7 @@
   "error.user.changeRole.permission":
     "Neturite leidimo pakeisti vartotojo \"{name}\" rolės",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "Jūs neturite teisių suteikti administratoriaus rolę",
   "error.user.create.permission": "Neturite leidimo sukurti šį vartotoją",
   "error.user.delete": "Vartotojo \"{name}\" negalima pašalinti",
   "error.user.delete.lastAdmin": "Vienintelio administratoriaus negalima pašalinti",
@@ -222,8 +231,8 @@
   "error.validation.time": "Prašome įrašyti korektišką laiką",
   "error.validation.url": "Prašome įrašyti teisingą URL",
 
-  "field.required": "The field is required",
-  "field.files.empty": "Dar nėra failų",
+  "field.required": "Laukas privalomas",
+  "field.files.empty": "Pasirinkti",
   "field.pages.empty": "Dar nėra puslapių",
   "field.structure.delete.confirm": "Ar tikrai norite pašalinti šią eilutę?",
   "field.structure.empty": "Dar nėra įrašų",
@@ -233,7 +242,7 @@
     "Ar tikrai norite pašalinti <br><strong>{filename}</strong>?",
 
   "files": "Failai",
-  "files.empty": "Dar nėra failų",
+  "files.empty": "Įkelti",
 
   "hour": "Valanda",
   "insert": "Įterpti",
@@ -295,6 +304,7 @@
   "loading": "Kraunasi",
 
   "lock.unsaved": "Neišsaugoti pakeitimai",
+  "lock.unsaved.empty": "Nebeliko neišsaugotų pakeitimų",
   "lock.isLocked": "Vartotojo <strong>{email}</strong> neišsaugoti pakeitimai",
   "lock.file.isLocked": "Šį failą dabar redaguoja kitas vartotojas {email}, tad jo negalima pekeisti.",
   "lock.page.isLocked": "Šį puslapį dabar redaguoja kitas vartotojas {email}, tad jo negalima pekeisti.",
@@ -391,7 +401,7 @@
   "save": "Išsaugoti",
   "search": "Ieškoti",
 
-  "section.required": "The section is required",
+  "section.required": "Sekcija privaloma",
 
   "select": "Pasirinkti",
   "settings": "Nustatymai",
@@ -420,6 +430,7 @@
   "translation.author": "Roman U",
   "translation.direction": "ltr",
   "translation.name": "Lietuvių",
+  "translation.locale": "lt_LT",
 
   "upload": "Įkelti",
   "upload.error.cantMove": "Įkeltas failas negali būti perkeltas",
@@ -427,7 +438,7 @@
   "upload.error.default": "Nepavyko įkelti failo",
   "upload.error.extension": "Neįmanoma įkelti tokio tipo failo",
   "upload.error.formSize": "Įkeltas failas viršija MAX_FILE_SIZE nustatymą, kuris buvo nurodytas formoje",
-  "upload.error.iniPostSize": "The uploaded file exceeds the post_max_size directive in php.ini",
+  "upload.error.iniPostSize": "Įkeliamas failas viršija post_max_size nustatymą iš php.ini",
   "upload.error.iniSize": "Įkeltas failas viršija upload_max_filesize nustatymą faile php.ini",
   "upload.error.noFile": "Failas nebuvo įkeltas",
   "upload.error.noFiles": "Failai nebuvo įkelti",

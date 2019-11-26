@@ -205,6 +205,12 @@ class PageRules
 
     public static function create(Page $page): bool
     {
+        if (Str::length($page->slug()) < 1) {
+            throw new InvalidArgumentException([
+                'key' => 'page.slug.invalid',
+            ]);
+        }
+
         if ($page->exists() === true) {
             throw new DuplicateException([
                 'key'  => 'page.draft.duplicate',

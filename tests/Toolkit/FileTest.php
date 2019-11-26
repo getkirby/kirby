@@ -20,6 +20,27 @@ class FileTest extends TestCase
         return new File(static::FIXTURES . '/' . $filename);
     }
 
+    public function testBase64()
+    {
+        $file  = $this->_file('real.svg');
+        $base64 = file_get_contents(static::FIXTURES . '/real.svg.base64');
+        $this->assertSame($base64, $file->base64());
+    }
+
+    public function testDataUri()
+    {
+        $file = $this->_file('real.svg');
+        $base64 = file_get_contents(static::FIXTURES . '/real.svg.base64');
+        $this->assertSame('data:image/svg+xml;base64,' . $base64, $file->dataUri());
+    }
+
+    public function testDataUriRaw()
+    {
+        $file = $this->_file('real.svg');
+        $encoded = rawurlencode($file->read());
+        $this->assertSame('data:image/svg+xml,' . $encoded, $file->dataUri(false));
+    }
+
     public function testRoot()
     {
         $file = $this->_file();

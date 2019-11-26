@@ -23,7 +23,7 @@
 
   "delete": "Supprimer",
   "dimensions": "Dimensions",
-  "disabled": "Disabled",
+  "disabled": "Désactivé",
   "discard": "Supprimer",
   "download": "Télécharger",
   "duplicate": "Dupliquer",
@@ -61,13 +61,21 @@
     "L’extension «&nbsp;{extension}&nbsp;» n’est pas autorisée",
   "error.file.extension.missing":
     "L’extension pour «&nbsp;{filename}&nbsp;» est manquante",
+  "error.file.maxheight": "La hauteur de l'image ne doit pas excéder {height} pixels",
+  "error.file.maxsize": "Le fichier est trop volumineux",
+  "error.file.maxwidth": "La largeur de l'image ne doit pas excéder {width} pixels",
   "error.file.mime.differs":
     "Le fichier transféré doit être du même type de média «&nbsp;{mime}&nbsp;»",
   "error.file.mime.forbidden": "Le type de média «&nbsp;{mime}&nbsp;» n’est pas autorisé",
+  "error.file.mime.invalid": "Type de média invalide : {mime}",
   "error.file.mime.missing":
     "Le type de média de «&nbsp;{filename}&nbsp;» n’a pu être détecté",
+  "error.file.minheight": "La hauteur de l'image doit être au moins {height} pixels",
+  "error.file.minsize": "Le fichier n'est pas assez volumineux",
+  "error.file.minwidth": "La largeur de l'image doit être au moins {width} pixels",
   "error.file.name.missing": "Veuillez entrer un titre",
   "error.file.notFound": "Le fichier «&nbsp;{filename}&nbsp;» n’a pu être trouvé",
+  "error.file.orientation": "L'orientation de l'image doit être \"{orientation}\"",
   "error.file.type.forbidden": "Vous n’êtes pas autorisé à transférer des fichiers {type}",
   "error.file.undefined": "Le fichier n’a pu être trouvé",
 
@@ -138,6 +146,7 @@
   "error.section.notLoaded": "La section «&nbsp;{name}&nbsp;» n’a pu être chargée",
   "error.section.type.invalid": "Le type de section «&nbsp;{type}&nbsp;» est incorrect",
 
+  "error.site.changeTitle.empty": "Le titre ne peut être vide",
   "error.site.changeTitle.permission":
     "Vous n’êtes pas autorisé à modifier le titre du site",
   "error.site.update.permission": "Vous n’êtes pas autorisé à modifier le contenu global du site",
@@ -157,7 +166,7 @@
   "error.user.changeRole.permission":
     "Vous n’êtes pas autorisé à changer le rôle de l’utilisateur « {name} »",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "Vous n’êtes pas autorisé à attribuer le rôle d’administrateur aux utilisateurs",
   "error.user.create.permission": "Vous n’êtes pas autorisé à créer cet utilisateur",
   "error.user.delete": "L’utilisateur « {name} » ne peut être supprimé",
   "error.user.delete.lastAdmin": "Le dernier administrateur ne peut être supprimé",
@@ -295,6 +304,7 @@
   "loading": "Chargement",
 
   "lock.unsaved": "Modifications non enregistrées",
+  "lock.unsaved.empty": "Il n’y a plus de modifications non enregistrées",
   "lock.isLocked": "Modifications non enregistrées par <strong>{email}</strong>",
   "lock.file.isLocked": "Le fichier est actuellement édité par {email} et ne peut être modifié.",
   "lock.page.isLocked": "La page est actuellement éditée par {email} et ne peut être modifiée.",
@@ -391,7 +401,7 @@
   "save": "Enregistrer",
   "search": "Rechercher",
 
-  "section.required": "The section is required",
+  "section.required": "Cette section est obligatoire",
 
   "select": "Sélectionner",
   "settings": "Paramètres",
@@ -420,6 +430,7 @@
   "translation.author": "Kirby Team",
   "translation.direction": "ltr",
   "translation.name": "Français",
+  "translation.locale": "fr_FR",
 
   "upload": "Transférer",
   "upload.error.cantMove": "Le fichier transféré n’a pu être déplacé",

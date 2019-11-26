@@ -61,13 +61,21 @@
     "پسوند فایل «{extension}» غیرمجاز است",
   "error.file.extension.missing":
     "\u0634\u0645\u0627 \u0646\u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0641\u0627\u06cc\u0644\u200c\u0647\u0627\u06cc \u0628\u062f\u0648\u0646 \u067e\u0633\u0648\u0646\u062f \u0631\u0627 \u0622\u067e\u0644\u0648\u062f \u06a9\u0646\u06cc\u062f",
+  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
+  "error.file.maxsize": "The file is too large",
+  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
   "error.file.mime.differs":
     "فایل آپلود شده باید از همان نوع باشد «{mime}»",
   "error.file.mime.forbidden": "فرمت فایل «{mime}» غیرمجاز است",
+  "error.file.mime.invalid": "Invalid mime type: {mime}",
   "error.file.mime.missing":
     "فرمت فایل «{filename}» قابل شناسایی نیست",
+  "error.file.minheight": "The height of the image must be at least {height} pixels",
+  "error.file.minsize": "The file is too small",
+  "error.file.minwidth": "The width of the image must be at least {width} pixels",
   "error.file.name.missing": "نام فایل اجباری است",
   "error.file.notFound": "فایل «{filename}» پیدا نشد.",
+  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "شما اجازه بارگذاری فایلهای «{type}» را ندارید",
   "error.file.undefined": "\u0641\u0627\u06cc\u0644 \u0645\u0648\u0631\u062f \u0646\u0638\u0631 \u067e\u06cc\u062f\u0627 \u0646\u0634\u062f.",
 
@@ -138,6 +146,7 @@
   "error.section.notLoaded": "بخش «{name}» قابل بارکذاری نیست",
   "error.section.type.invalid": "نوع بخش «{type}» غیرمجاز است",
 
+  "error.site.changeTitle.empty": "عنوان اجباری است",
   "error.site.changeTitle.permission":
     "شما اجازه تغییر عنوان سایت را ندارید",
   "error.site.update.permission": "شما اجازه بروزرسانی سایت را ندارید",
@@ -295,6 +304,7 @@
   "loading": "بارگزاری",
 
   "lock.unsaved": "Unsaved changes",
+  "lock.unsaved.empty": "There are no more unsaved changes",
   "lock.isLocked": "Unsaved changes by <strong>{email}</strong>",
   "lock.file.isLocked": "The file is currently being edited by {email} and cannot be changed.",
   "lock.page.isLocked": "The page is currently being edited by {email} and cannot be changed.",
@@ -420,6 +430,7 @@
   "translation.author": "تیم کربی",
   "translation.direction": "rtl",
   "translation.name": "انگلیسی",
+  "translation.locale": "fa_IR",
 
   "upload": "بارگذاری",
   "upload.error.cantMove": "The uploaded file could not be moved",

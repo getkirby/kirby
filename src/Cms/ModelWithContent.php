@@ -405,6 +405,7 @@ abstract class ModelWithContent extends Model
      * Returns an array of all actions
      * that can be performed in the Panel
      * This also checks for the lock status
+     * @since 3.3.0
      *
      * @param array $unlock An array of options that will be force-unlocked
      * @return array

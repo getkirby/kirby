@@ -125,7 +125,18 @@ class Language extends Model
      */
     public function baseUrl(): string
     {
-        return Url::base($this->url()) ?? $this->kirby()->url();
+        $kirbyUrl    = $this->kirby()->url();
+        $languageUrl = $this->url();
+
+        if (empty($this->url)) {
+            return $kirbyUrl;
+        }
+
+        if (Str::startsWith($languageUrl, $kirbyUrl) === true) {
+            return $kirbyUrl;
+        }
+
+        return Url::base($languageUrl) ?? $kirbyUrl;
     }
 
     /**
@@ -607,11 +618,13 @@ class Language extends Model
      */
     public function url(): string
     {
-        if ($this->url === null) {
-            $this->url = '/' . $this->code;
+        $url = $this->url;
+
+        if ($url === null) {
+            $url = '/' . $this->code;
         }
 
-        return Url::makeAbsolute($this->url, $this->kirby()->url());
+        return Url::makeAbsolute($url, $this->kirby()->url());
     }
 
     /**

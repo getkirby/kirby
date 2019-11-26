@@ -3,11 +3,15 @@ import Vue from "vue";
 import PrevNext from "@/components/Navigation/PrevNext.vue";
 import Link from "@/components/Navigation/Link.vue";
 import Button from "@/components/Navigation/Button.vue";
+import ButtonDisabled from "@/components/Navigation/ButtonDisabled.vue";
+import ButtonLink from "@/components/Navigation/ButtonLink.vue";
 import ButtonGroup from "@/components/Navigation/ButtonGroup.vue";
 import Icon from "@/components/Misc/Icon.vue";
 
 Vue.component("k-link", Link);
 Vue.component("k-button", Button);
+Vue.component("k-button-disabled", ButtonDisabled);
+Vue.component("k-button-link", ButtonLink);
 Vue.component("k-button-group", ButtonGroup);
 Vue.component("k-icon", Icon);
 

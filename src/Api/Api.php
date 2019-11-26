@@ -174,21 +174,19 @@ class Api
             // set PHP locales based on *user* language
             // so that e.g. strftime() gets formatted correctly
             if (is_a($user, 'Kirby\Cms\User') === true) {
-                $locale = $language = $user->language();
+                $language = $user->language();
 
-                // if it's not already a full locale, "fake" one
-                // and assume that the country equals the language
-                if (Str::contains($locale, '_') !== true) {
-                    $locale .= '_' . strtoupper($locale);
-                }
+                // get the locale from the translation
+                $translation = $user->kirby()->translation($language);
+                $locale = ($translation !== null)? $translation->locale() : $language;
 
                 // provide some variants as fallbacks to be
                 // compatible with as many systems as possible
                 $locales = [
-                    $locale,
                     $locale . '.UTF-8',
                     $locale . '.UTF8',
                     $locale . '.ISO8859-1',
+                    $locale,
                     $language,
                     setlocale(LC_ALL, 0) // fall back to the previously defined locale
                 ];
@@ -225,7 +223,7 @@ class Api
      * @param array|null $collection
      * @return \Kirby\Api\Collection
      *
-     * @throws NotFoundException If no collection for `$name` exists
+     * @throws \Kirby\Exception\NotFoundException If no collection for `$name` exists
      */
     public function collection(string $name, $collection = null)
     {
@@ -254,7 +252,7 @@ class Api
      * @param mixed ...$args
      * @return mixed
      *
-     * @throws NotFoundException If no data for `$key` exists
+     * @throws \Kirby\Exception\NotFoundException If no data for `$key` exists
      */
     public function data($key = null, ...$args)
     {
@@ -302,7 +300,7 @@ class Api
      * @param mixed $object
      * @return \Kirby\Api\Model
      *
-     * @throws NotFoundException If no model for `$name` exists
+     * @throws \Kirby\Exception\NotFoundException If no model for `$name` exists
      */
     public function model(string $name, $object = null)
     {
@@ -414,7 +412,7 @@ class Api
      * @param mixed $object
      * @return \Kirby\Api\Model|\Kirby\Api\Collection
      *
-     * @throws NotFoundException If `$object` cannot be resolved
+     * @throws \Kirby\Exception\NotFoundException If `$object` cannot be resolved
      */
     public function resolve($object)
     {
@@ -705,8 +703,8 @@ class Api
      * @param bool $single
      * @return array
      *
-     * @throws Exception If request has no files
-     * @throws Exception If there was an error with the upload
+     * @throws \Exception If request has no files
+     * @throws \Exception If there was an error with the upload
      */
     public function upload(Closure $callback, $single = false): array
     {

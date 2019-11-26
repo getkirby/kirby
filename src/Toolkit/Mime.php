@@ -31,7 +31,7 @@ class Mime
         'avi'   => 'video/x-msvideo',
         'bmp'   => 'image/bmp',
         'css'   => 'text/css',
-        'csv'   => ['text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream'],
+        'csv'   => ['text/csv', 'text/x-comma-separated-values', 'text/comma-separated-values', 'application/octet-stream'],
         'doc'   => 'application/msword',
         'docx'  => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'dotx'  => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
@@ -242,6 +242,7 @@ class Mime
     /**
      * Tests if a MIME wildcard pattern from an `Accept` header
      * matches a given type
+     * @since 3.3.0
      *
      * @param string $test
      * @param string $wildcard

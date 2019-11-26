@@ -97,6 +97,14 @@ export default {
                 link: this.$api.users.link(response.id),
               }
             };
+          } else {
+            entry = {
+              icon: "home",
+              label: response.title,
+              target: {
+                link: "/site"
+              }
+            };
           }
 
           // add language indicator if in multilang
@@ -107,16 +115,29 @@ export default {
           }
 
           return entry;
+        }).catch(() => {
+          this.$store.dispatch("content/remove", model.id);
+          return null;
         });
       });
 
       return Promise.all(promises).then(entries => {
-        this.entries = entries;
+        this.entries = entries.filter(entry => {
+          return entry !== null;
+        });
+
+        if (this.entries.length === 0) {
+          this.$store.dispatch("notification/success", this.$t("lock.unsaved.empty"));
+        }
       });
     },
     toggle() {
       if (this.$refs.list.isOpen === false) {
-        this.load().then(() => this.$refs.list.toggle());
+        this.load().then(() => {
+          if (this.$refs.list) {
+            this.$refs.list.toggle();
+          }
+        });
       } else {
         this.$refs.list.toggle();
       }

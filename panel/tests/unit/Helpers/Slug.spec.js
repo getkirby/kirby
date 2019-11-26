@@ -40,6 +40,7 @@ describe("Slug Helper", () => {
   it("applies rules", () => {
     const rules = [
       {"å": "a"},
+      {"á": "a"},
       {"ö": "oe"},
       {"ß": "ss"},
       {"İ": "i"}
@@ -56,6 +57,14 @@ describe("Slug Helper", () => {
 
     const result = slug("1+1", rules);
     expect(result).toBe("1-plus-1");
+  });
+
+  it("handles asterisks", () => {
+    const resultA = slug("***");
+    expect(resultA).toBe("");
+
+    const resultB = slug("***a***b***");
+    expect(resultB).toBe("a-b");
   });
 
 });

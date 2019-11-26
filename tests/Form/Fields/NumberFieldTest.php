@@ -14,7 +14,7 @@ class NumberFieldTest extends TestCase
         $this->assertEquals(null, $field->default());
         $this->assertEquals(0, $field->min());
         $this->assertEquals(null, $field->max());
-        $this->assertEquals(1, $field->step());
+        $this->assertEquals(null, $field->step());
         $this->assertTrue($field->save());
     }
 
@@ -22,6 +22,7 @@ class NumberFieldTest extends TestCase
     {
         return [
             [null, null],
+            ['', null],
             [false, (float)0],
             [0, (float)0],
             ['0', (float)0],
@@ -50,7 +51,7 @@ class NumberFieldTest extends TestCase
         $this->assertEquals($expected, $field->default());
 
         if ($input === null) {
-            $this->assertEquals((float)1, $field->step());
+            $this->assertEquals(null, $field->step());
         } else {
             $this->assertEquals($expected, $field->step());
         }
