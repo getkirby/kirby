@@ -97,7 +97,7 @@ export default {
   },
   validations() {
     const match = (value) => {
-      return (!this.required && value.length === 0) || !this.$refs.input.validity.patternMismatch;
+      return (!this.required && value && value.length === 0) || !this.$refs.input.validity.patternMismatch;
     };
 
     return {
