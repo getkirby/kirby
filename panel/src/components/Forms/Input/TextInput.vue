@@ -97,7 +97,7 @@ export default {
   },
   validations() {
     const match = (value) => {
-      return (!this.required && value && value.length === 0) || !this.$refs.input.validity.patternMismatch;
+      return (!this.required && (value === null || (value !== null && value.length === 0))) || !this.$refs.input.validity.patternMismatch;
     };
 
     return {
@@ -107,7 +107,7 @@ export default {
         maxLength: this.maxlength ? maxLength(this.maxlength) : true,
         email: this.type === "email" ? email : true,
         url: this.type === "url" ? url : true,
-        pattern: this.pattern ? match: true,
+        pattern: this.pattern ? match : true,
       }
     };
   }
