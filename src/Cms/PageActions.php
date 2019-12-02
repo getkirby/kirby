@@ -716,7 +716,7 @@ trait PageActions
                 $sibling->changeNum($index);
             }
 
-            $parent->children = $siblings->sortBy('num', 'desc');
+            $parent->children = $siblings->sortBy('num', 'asc');
         }
 
         return true;
