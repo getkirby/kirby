@@ -136,18 +136,20 @@ function deprecated(string $message): bool
     return false;
 }
 
-/**
- * Simple object and variable dumper
- * to help with debugging.
- *
- * @param mixed $variable
- * @param bool $echo
- * @return string
- */
-function dump($variable, bool $echo = true): string
-{
-    $kirby = App::instance();
-    return $kirby->component('dump')($kirby, $variable, $echo);
+if (false === function_exists('dump')) {
+    /**
+     * Simple object and variable dumper
+     * to help with debugging.
+     *
+     * @param mixed $variable
+     * @param bool $echo
+     * @return string
+     */
+    function dump($variable, bool $echo = true): string
+    {
+        $kirby = App::instance();
+        return $kirby->component('dump')($kirby, $variable, $echo);
+    }
 }
 
 /**
