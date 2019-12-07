@@ -23,7 +23,7 @@ before_install:
 
 install:
   # install Composer packages, will also trigger dump-autoload
-  - composer require -n --ignore-platform-reqs "phwoolcon/ci-pecl-cacher" "phpunit/phpunit:^7" "pcov/clobber" "friendsofphp/php-cs-fixer" "php-coveralls/php-coveralls"
+  - composer require -n --ignore-platform-reqs "phwoolcon/ci-pecl-cacher" "phpunit/phpunit:^8" "friendsofphp/php-cs-fixer" "php-coveralls/php-coveralls"
   - composer install -n --ignore-platform-reqs --no-suggest
 
   # install and cache PHP extensions
@@ -32,7 +32,6 @@ install:
 
 before_script:
   - mkdir -p build/logs
-  - ./vendor/bin/pcov clobber
   - ls -al
 
 script:

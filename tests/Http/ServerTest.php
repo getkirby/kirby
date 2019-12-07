@@ -20,13 +20,13 @@ class ServerTest extends TestCase
 
     public function testGet()
     {
-        $this->assertInternalType('array', Server::get());
-        $this->assertInternalType('string', Server::get('SERVER_ADDR'));
+        $this->assertIsArray(Server::get());
+        $this->assertIsString(Server::get('SERVER_ADDR'));
     }
 
     public function testPort()
     {
-        $this->assertInternalType('int', Server::port());
+        $this->assertIsInt(Server::port());
         $this->assertEquals(0, Server::port());
 
         // SERVER_PORT

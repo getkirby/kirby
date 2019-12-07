@@ -21,7 +21,7 @@ class WillFail
  */
 class ExceptionTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         unset($_SERVER['DOCUMENT_ROOT']);
     }
