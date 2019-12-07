@@ -8,6 +8,8 @@ use PHPUnit\Framework\TestCase;
 
 class FieldTest extends TestCase
 {
+    protected $originalMixins;
+
     public function setUp(): void
     {
         new App([
@@ -16,14 +18,17 @@ class FieldTest extends TestCase
             ]
         ]);
 
-        Field::$types  = [];
-        Field::$mixins = [];
+        Field::$types = [];
+
+        // make a backup of the system mixins
+        $this->originalMixins = Field::$mixins;
     }
 
     public function tearDown(): void
     {
-        Field::$types  = [];
-        Field::$mixins = [];
+        Field::$types = [];
+
+        Field::$mixins = $this->originalMixins;
     }
 
     public function testWithoutModel()

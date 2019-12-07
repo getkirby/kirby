@@ -9,14 +9,12 @@ class FieldsTest extends TestCase
 {
     public function setUp(): void
     {
-        Field::$types  = [];
-        Field::$mixins = [];
+        Field::$types = [];
     }
 
     public function tearDown(): void
     {
-        Field::$types  = [];
-        Field::$mixins = [];
+        Field::$types = [];
     }
 
     public function testConstruct()
