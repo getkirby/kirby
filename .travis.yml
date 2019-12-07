@@ -8,10 +8,7 @@ services:
 php:
   - 7.2
   - 7.3
-  - 7.4snapshot
-jobs:
-  allow_failures:
-  - php: 7.4snapshot
+  - 7.4
 
 before_install:
   # set up PHP config
