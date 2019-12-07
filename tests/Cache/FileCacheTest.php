@@ -11,7 +11,7 @@ use ReflectionMethod;
  */
 class FileCacheTest extends TestCase
 {
-    public function tearDown()
+    public function tearDown(): void
     {
         Dir::remove(__DIR__ . '/fixtures/file');
     }

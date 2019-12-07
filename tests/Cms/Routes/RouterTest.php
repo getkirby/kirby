@@ -779,13 +779,13 @@ class RouterTest extends TestCase
 
         // call custom media route
         $route = $app->router()->find('thumbs/pages/a/b/1234-5678/test.jpg', 'GET');
-        $this->assertContains('thumbs/pages/(.*)', $route->pattern());
+        $this->assertStringContainsString('thumbs/pages/(.*)', $route->pattern());
 
         $route = $app->router()->find('thumbs/site/1234-5678/test.jpg', 'GET');
-        $this->assertContains('thumbs/site/([a-z', $route->pattern());
+        $this->assertStringContainsString('thumbs/site/([a-z', $route->pattern());
 
         $route = $app->router()->find('thumbs/users/test@getkirby.com/1234-5678/test.jpg', 'GET');
-        $this->assertContains('thumbs/users/([a-z', $route->pattern());
+        $this->assertStringContainsString('thumbs/users/([a-z', $route->pattern());
 
         // default media route should result in the fallback route
         $route = $app->router()->find('media/pages/a/b/1234-5678/test.jpg', 'GET');
