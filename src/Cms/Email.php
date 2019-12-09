@@ -6,7 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 
 /**
- * Wrapper around our PHPMailer package, which
+ * Wrapper around our Email package, which
  * handles all the magic connections between Kirby
  * and sending emails, like email templates, file
  * attachments, etc.
@@ -19,18 +19,34 @@ use Kirby\Exception\NotFoundException;
  */
 class Email
 {
+    /**
+     * Options configured through the `email` CMS option
+     *
+     * @var array
+     */
     protected $options;
-    protected $preset;
+
+    /**
+     * Props for the email object; will be passed to the
+     * Kirby\Email\Email class
+     *
+     * @var array
+     */
     protected $props;
 
-
+    /**
+     * Class constructor
+     *
+     * @param string|array $preset Preset name from the config or a simple props array
+     * @param array $props Props array to override the $preset
+     */
     public function __construct($preset = [], array $props = [])
     {
         $this->options = App::instance()->option('email');
 
-        // load presets from options
-        $this->preset = $this->preset($preset);
-        $this->props = array_merge($this->preset, $props);
+        // build a prop array based on preset and props
+        $preset = $this->preset($preset);
+        $this->props = array_merge($preset, $props);
 
         // add transport settings
         if (isset($this->props['transport']) === false) {
@@ -50,18 +66,21 @@ class Email
     }
 
     /**
-     * @param string|array $preset
+     * Grabs a preset from the options; supports fixed
+     * prop arrays in case a preset is not needed
+     *
+     * @param string|array $preset Preset name or simple prop array
      * @return array
      */
     protected function preset($preset): array
     {
         // only passed props, not preset name
-        if (is_string($preset) !== true) {
+        if (is_array($preset) === true) {
             return $preset;
         }
 
         // preset does not exist
-        if (isset($this->options['presets'][$preset]) === false) {
+        if (isset($this->options['presets'][$preset]) !== true) {
             throw new NotFoundException([
                 'key'  => 'email.preset.notFound',
                 'data' => ['name' => $preset]
@@ -71,6 +90,12 @@ class Email
         return $this->options['presets'][$preset];
     }
 
+    /**
+     * Renders the email template(s) and sets the body props
+     * to the result
+     *
+     * @return void
+     */
     protected function template(): void
     {
         if (isset($this->props['template']) === true) {
@@ -101,10 +126,10 @@ class Email
     }
 
     /**
-     * Undocumented function
+     * Returns an email template by name and type
      *
-     * @param string $name
-     * @param string|null $type
+     * @param string $name Template name
+     * @param string|null $type `html` or `text`
      * @return \Kirby\Cms\Template
      */
     protected function getTemplate(string $name, string $type = null)
@@ -112,6 +137,11 @@ class Email
         return App::instance()->template('emails/' . $name, $type, 'text');
     }
 
+    /**
+     * Returns the prop array
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->props;
