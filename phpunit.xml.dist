@@ -3,8 +3,6 @@
 <phpunit
     bootstrap="tests/bootstrap.php"
     colors="true"
-    stopOnError="true"
-    stopOnFailure="true"
     verbose="true"
     stderr="true">
 
