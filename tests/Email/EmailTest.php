@@ -12,24 +12,33 @@ class EmailTest extends TestCase
     public function testProperties()
     {
         $email = $this->_email([
-            'from' => $form = 'no-reply@supercompany.com',
+            'from' => $from = 'no-reply@supercompany.com',
+            'fromName' => $fromName = 'Super Company NoReply',
             'to' => $to = 'someone@gmail.com',
-            'replyTo' => $replyTo = 'no-reply@supercompany.com',
+            'replyTo' => $replyTo = 'reply@supercompany.com',
+            'replyToName' => $replyToName = 'Super Company Reply',
             'subject' => $subject = 'Thank you for your contact request',
             'body' => $body = 'We will never reply',
             'cc' => $cc = [
                 'marketing@supercompany.com',
-                'sales@supercompany.com'
+                'sales@supercompany.com' => 'Super Company Sales'
             ],
             'bcc' => $cc
         ]);
 
-        $this->assertEquals($form, $email->from());
-        $this->assertEquals([$to], $email->to());
+        $expectedCc = [
+            'marketing@supercompany.com' => null,
+            'sales@supercompany.com'     => 'Super Company Sales'
+        ];
+
+        $this->assertEquals($from, $email->from());
+        $this->assertEquals($fromName, $email->fromName());
+        $this->assertEquals([$to => null], $email->to());
         $this->assertEquals($replyTo, $email->replyTo());
+        $this->assertEquals($replyToName, $email->replyToName());
         $this->assertEquals($subject, $email->subject());
-        $this->assertEquals($cc, $email->cc());
-        $this->assertEquals($cc, $email->bcc());
+        $this->assertEquals($expectedCc, $email->cc());
+        $this->assertEquals($expectedCc, $email->bcc());
 
         $this->assertInstanceOf(Body::class, $email->body());
         $this->assertEquals($body, $email->body()->text());
