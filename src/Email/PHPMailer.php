@@ -21,22 +21,22 @@ class PHPMailer extends Email
         $mailer = new Mailer(true);
 
         // set sender's address
-        $mailer->setFrom($this->from());
+        $mailer->setFrom($this->from(), $this->fromName() ?? '');
 
         // optional reply-to address
         if ($replyTo = $this->replyTo()) {
-            $mailer->addReplyTo($replyTo);
+            $mailer->addReplyTo($replyTo, $this->replyToName() ?? '');
         }
 
         // add (multiple) recepient, CC & BCC addresses
-        foreach ($this->to() as $to) {
-            $mailer->addAddress($to);
+        foreach ($this->to() as $email => $name) {
+            $mailer->addAddress($email, $name ?? '');
         }
-        foreach ($this->cc() as $cc) {
-            $mailer->addCC($cc);
+        foreach ($this->cc() as $email => $name) {
+            $mailer->addCC($email, $name ?? '');
         }
-        foreach ($this->bcc() as $bcc) {
-            $mailer->addBCC($bcc);
+        foreach ($this->bcc() as $email => $name) {
+            $mailer->addBCC($email, $name ?? '');
         }
 
         $mailer->Subject = $this->subject();
