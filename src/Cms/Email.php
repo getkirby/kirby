@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 
 /**
@@ -22,14 +23,6 @@ class Email
     protected $preset;
     protected $props;
 
-    protected static $transform = [
-        'from'        => 'user',
-        'replyTo'     => 'user',
-        'to'          => 'user',
-        'cc'          => 'user',
-        'bcc'         => 'user',
-        'attachments' => 'file'
-    ];
 
     public function __construct($preset = [], array $props = [])
     {
@@ -45,9 +38,12 @@ class Email
         }
 
         // transform model objects to values
-        foreach (static::$transform as $prop => $model) {
-            $this->transformProp($prop, $model);
-        }
+        $this->transformUserSingle('from', 'fromName');
+        $this->transformUserSingle('replyTo', 'replyToName');
+        $this->transformUserMultiple('to');
+        $this->transformUserMultiple('cc');
+        $this->transformUserMultiple('bcc');
+        $this->transformFile('attachments');
 
         // load template for body text
         $this->template();
@@ -121,42 +117,102 @@ class Email
         return $this->props;
     }
 
-    protected function transformFile($file)
+    /**
+     * Transforms file object(s) to an array of file roots;
+     * supports simple strings, file objects or collections/arrays of either
+     *
+     * @param string $prop Prop to transform
+     * @return void
+     */
+    protected function transformFile(string $prop): void
     {
-        return $this->transformModel($file, 'Kirby\Cms\File', 'root');
+        $this->props[$prop] = $this->transformModel($prop, 'Kirby\Cms\File', 'root');
     }
 
-    protected function transformModel($value, $class, $content)
+    /**
+     * Transforms Kirby models to a simplified collection
+     *
+     * @param string $prop Prop to transform
+     * @param string $class Fully qualified class name of the supported model
+     * @param string $contentValue Model method that returns the array value
+     * @param string|null $contentKey Optional model method that returns the array key;
+     *                                returns a simple value-only array if not given
+     * @return array Simple key-value or just value array with the transformed prop data
+     */
+    protected function transformModel(string $prop, string $class, string $contentValue, string $contentKey = null): array
     {
-        // value is already a string
-        if (is_string($value) === true) {
-            return $value;
+        $value = $this->props[$prop] ?? [];
+
+        // ensure consistent input by making everything an iterable value
+        if (is_iterable($value) !== true) {
+            $value = [$value];
         }
 
-        // value is a model object, get value through content method
-        if (is_a($value, $class) === true) {
-            return $value->$content();
-        }
-
-        // value is an array or collection, call transform on each item
-        if (is_array($value) === true || is_a($value, 'Kirby\Cms\Collection') === true) {
-            $models = [];
-            foreach ($value as $model) {
-                $models[] = $this->transformModel($model, $class, $content);
+        $result = [];
+        foreach ($value as $key => $item) {
+            if (is_string($item) === true) {
+                // value is already a string
+                if ($contentKey !== null && is_string($key) === true) {
+                    $result[$key] = $item;
+                } else {
+                    $result[] = $item;
+                }
+            } elseif (is_a($item, $class) === true) {
+                // value is a model object, get value through content method(s)
+                if ($contentKey !== null) {
+                    $result[(string)$item->$contentKey()] = (string)$item->$contentValue();
+                } else {
+                    $result[] = (string)$item->$contentValue();
+                }
+            } else {
+                // invalid input
+                throw new InvalidArgumentException('Invalid input for prop "' . $prop . '", expected string or "' . $class . '" object or collection');
             }
-            return $models;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Transforms an user object to the email address and name;
+     * supports simple strings, user objects or collections/arrays of either
+     * (note: only the first item in a collection/array will be used)
+     *
+     * @param string $addressProp Prop with the email address
+     * @param string $nameProp Prop with the name corresponding to the $addressProp
+     * @return void
+     */
+    protected function transformUserSingle(string $addressProp, string $nameProp): void
+    {
+        $result = $this->transformModel($addressProp, 'Kirby\Cms\User', 'name', 'email');
+
+        $address = array_keys($result)[0] ?? null;
+        $name    = $result[$address] ?? null;
+
+        // if the array is non-associative, the value is the address
+        if (is_int($address) === true) {
+            $address = $name;
+            $name    = null;
+        }
+
+        // always use the address as we have transformed that prop above
+        $this->props[$addressProp] = $address;
+
+        // only use the name from the user if no custom name was set
+        if (isset($this->props[$nameProp]) === false || $this->props[$nameProp] === null) {
+            $this->props[$nameProp] = $name;
         }
     }
 
-    protected function transformProp(string $prop, string $model): void
+    /**
+     * Transforms user object(s) to the email address(es) and name(s);
+     * supports simple strings, user objects or collections/arrays of either
+     *
+     * @param string $prop Prop to transform
+     * @return void
+     */
+    protected function transformUserMultiple(string $prop): void
     {
-        if (isset($this->props[$prop]) === true) {
-            $this->props[$prop] = $this->{'transform' . ucfirst($model)}($this->props[$prop]);
-        }
-    }
-
-    protected function transformUser($user)
-    {
-        return $this->transformModel($user, 'Kirby\Cms\User', 'email');
+        $this->props[$prop] = $this->transformModel($prop, 'Kirby\Cms\User', 'name', 'email');
     }
 }

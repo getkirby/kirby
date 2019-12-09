@@ -10,11 +10,26 @@ class EmailTest extends TestCase
             'one' => 'eins',
             'two' => 'zwei',
         ];
+
+        $expected = [
+            'one'         => 'eins',
+            'two'         => 'zwei',
+            'transport'   => [],
+            'from'        => null,
+            'fromName'    => null,
+            'replyTo'     => null,
+            'replyToName' => null,
+            'to'          => [],
+            'cc'          => [],
+            'bcc'         => [],
+            'attachments' => []
+        ];
+
         $email = new Email($props);
-        $this->assertEquals($props + ['transport' => []], $email->toArray());
+        $this->assertEquals($expected, $email->toArray());
     }
 
-    public function testEmailPresets()
+    public function testPresets()
     {
         $app = new App([
             'options' => [
@@ -32,11 +47,11 @@ class EmailTest extends TestCase
             'to' => $to = 'nobody@web.de'
         ]);
 
-        $this->assertEquals($to, $email->toArray()['to']);
-        $this->assertEquals($cc, $email->toArray()['cc']);
+        $this->assertEquals([$to], $email->toArray()['to']);
+        $this->assertEquals([$cc], $email->toArray()['cc']);
     }
 
-    public function testEmailInvalidPreset()
+    public function testInvalidPreset()
     {
         $this->expectException('Kirby\Exception\NotFoundException');
         $this->expectExceptionCode('error.email.preset.notFound');
@@ -44,7 +59,7 @@ class EmailTest extends TestCase
         $email = new Email('not-a-preset', []);
     }
 
-    public function testEmailTemplate()
+    public function testTemplate()
     {
         $app = new App([
             'templates' => [
@@ -60,7 +75,7 @@ class EmailTest extends TestCase
         $this->assertEquals('Cheers, Alex!', $email->toArray()['body']);
     }
 
-    public function testEmailTemplateHtml()
+    public function testTemplateHtml()
     {
         $app = new App([
             'templates' => [
@@ -73,7 +88,7 @@ class EmailTest extends TestCase
         ], $email->toArray()['body']);
     }
 
-    public function testEmailTemplateHtmlText()
+    public function testTemplateHtmlText()
     {
         $app = new App([
             'templates' => [
@@ -88,7 +103,7 @@ class EmailTest extends TestCase
         ], $email->toArray()['body']);
     }
 
-    public function testEmailInvalidTemplate()
+    public function testInvalidTemplate()
     {
         $this->expectException('Kirby\Exception\NotFoundException');
         $this->expectExceptionMessage('The email template "subscription" cannot be found');
@@ -98,7 +113,34 @@ class EmailTest extends TestCase
         ]);
     }
 
-    public function testEmailWithObjects()
+    public function testTransformSimple()
+    {
+        $email = new Email([
+            'from'     => 'sales@company.com',
+            'fromName' => 'Company Sales',
+            'to'       => 'ceo@company.com',
+            'cc'       => [
+                'someone@gmail.com',
+                'another@gmail.com' => 'Another Gmail',
+            ],
+            'attachments' => [
+                '/amazing/absolute/path.txt'
+            ]
+        ]);
+
+        $this->assertEquals('sales@company.com', $email->toArray()['from']);
+        $this->assertEquals('Company Sales', $email->toArray()['fromName']);
+        $this->assertEquals(['ceo@company.com'], $email->toArray()['to']);
+        $this->assertEquals([
+            'someone@gmail.com',
+            'another@gmail.com' => 'Another Gmail'
+        ], $email->toArray()['cc']);
+        $this->assertEquals([
+            '/amazing/absolute/path.txt'
+        ], $email->toArray()['attachments']);
+    }
+
+    public function testTransformComplex()
     {
         $app = new App([
             'site' => new Site(),
@@ -107,8 +149,8 @@ class EmailTest extends TestCase
             ]
         ]);
 
-        $from = new User(['email' => 'sales@company.com']);
-        $to = new User(['email' => 'ceo@company.com']);
+        $from = new User(['email' => 'sales@company.com', 'name' => 'Company Sales']);
+        $to = new User(['email' => 'ceo@company.com', 'name' => 'Company CEO']);
 
         $file = new File([
             'filename' => 'report.pdf',
@@ -121,39 +163,48 @@ class EmailTest extends TestCase
 
         $email = new Email([
             'from' => $from,
+            'fromName' => 'Amazing Sales!',
+            'replyTo' => $from,
             'to' => [
                 $to,
-                'someone@gmail.com'
+                'someone@gmail.com',
+                'another@gmail.com' => 'Another Gmail'
             ],
             'attachments' => [
                 $file,
-                $image
+                $image,
+                '/amazing/absolute/path.txt'
             ]
         ]);
 
         $this->assertEquals('sales@company.com', $email->toArray()['from']);
+        $this->assertEquals('Amazing Sales!', $email->toArray()['fromName']);
+        $this->assertEquals('sales@company.com', $email->toArray()['replyTo']);
+        $this->assertEquals('Company Sales', $email->toArray()['replyToName']);
         $this->assertEquals([
-            'ceo@company.com',
-            'someone@gmail.com'
+            'ceo@company.com' => 'Company CEO',
+            'someone@gmail.com',
+            'another@gmail.com' => 'Another Gmail'
         ], $email->toArray()['to']);
         $this->assertEquals([
             '/content/report.pdf',
-            '/content/graph.png'
+            '/content/graph.png',
+            '/amazing/absolute/path.txt'
         ], $email->toArray()['attachments']);
     }
 
-    public function testEmailWithCollectionObject()
+    public function testTransformCollection()
     {
         $to = new Users([
-            new User(['email' => 'ceo@company.com']),
-            new User(['email' => 'marketing@company.com'])
+            new User(['email' => 'ceo@company.com', 'name' => 'Company CEO']),
+            new User(['email' => 'marketing@company.com', 'name' => 'Company Marketing'])
         ]);
 
         $email = new Email(['to' => $to]);
 
         $this->assertEquals([
-            'ceo@company.com',
-            'marketing@company.com'
+            'ceo@company.com' => 'Company CEO',
+            'marketing@company.com' => 'Company Marketing'
         ], $email->toArray()['to']);
     }
 
@@ -161,7 +212,7 @@ class EmailTest extends TestCase
      * @runInSeparateProcess
      * @preserveGlobalState disabled
      */
-    public function testEmailUserData()
+    public function testUserData()
     {
         $app = new App([
             'roots' => [
@@ -185,7 +236,7 @@ class EmailTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('ceo@company.com', $email->toArray()['to']);
+        $this->assertEquals(['ceo@company.com' => 'Mario'], $email->toArray()['to']);
         $this->assertEquals('Welcome, Mario!', trim($email->toArray()['body']));
     }
 }
