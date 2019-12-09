@@ -84,7 +84,7 @@ class HelpersTest extends TestCase
         // should generate token
         $session->remove('csrf');
         $token = csrf();
-        $this->assertInternalType('string', $token);
+        $this->assertIsString($token);
         $this->assertStringMatchesFormat('%x', $token);
         $this->assertEquals(64, strlen($token));
         $this->assertEquals($session->get('csrf'), $token);

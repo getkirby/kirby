@@ -94,7 +94,7 @@ trait UserActions
     {
         return $this->commit('changePassword', [$this, $password], function ($user, $password) {
             $user = $user->clone([
-                'password' => $password = $user->hashPassword($password)
+                'password' => $password = User::hashPassword($password)
             ]);
 
             $user->writePassword($password);
@@ -165,7 +165,7 @@ trait UserActions
         $data = $props;
 
         if (isset($props['password']) === true) {
-            $data['password'] = static::hashPassword($props['password']);
+            $data['password'] = User::hashPassword($props['password']);
         }
 
         $props['role'] = $props['model'] = strtolower($props['role'] ?? 'default');

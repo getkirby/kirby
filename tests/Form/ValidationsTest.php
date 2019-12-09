@@ -25,14 +25,11 @@ class ValidationsTest extends TestCase
                 ]
             ]
         ];
-
-        Field::$mixins = [];
     }
 
     public function tearDown(): void
     {
-        Field::$types  = [];
-        Field::$mixins = [];
+        Field::$types = [];
     }
 
     public function testBooleanValid()

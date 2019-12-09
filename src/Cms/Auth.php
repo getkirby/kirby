@@ -319,6 +319,9 @@ class Auth
         $log['by-ip']    = $log['by-ip'] ?? [];
         $log['by-email'] = $log['by-email'] ?? [];
 
+        // remove all elements on the top level with different keys (old structure)
+        $log = array_intersect_key($log, array_flip(['by-ip', 'by-email']));
+
         // remove entries that are no longer needed
         $originalLog = $log;
         $time = time() - $this->kirby->option('auth.timeout', 3600);
@@ -327,9 +330,6 @@ class Auth
                 return $entry['time'] > $time;
             });
         }
-
-        // remove all elements on the top level with different keys (old structure)
-        $log = array_intersect_key($log, array_flip(['by-ip', 'by-email']));
 
         // write new log to the file system if it changed
         if ($read === false || $log !== $originalLog) {
