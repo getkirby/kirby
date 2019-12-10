@@ -23,15 +23,15 @@
 
   "delete": "Borrar",
   "dimensions": "Dimensiones",
-  "disabled": "Disabled",
+  "disabled": "Desabilitado",
   "discard": "Descartar",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "Descargar",
+  "duplicate": "Duplicar",
   "edit": "Editar",
 
-  "dialog.files.empty": "No files to select",
-  "dialog.pages.empty": "No pages to select",
-  "dialog.users.empty": "No users to select",
+  "dialog.files.empty": "No se ha seleccionado ningún archivo",
+  "dialog.pages.empty": "No se ha seleccionado ninguna página",
+  "dialog.users.empty": "No se ha seleccionado ningún usuario",
 
   "email": "Correo electrónico",
   "email.placeholder": "correo@ejemplo.com",
