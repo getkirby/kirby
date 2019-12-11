@@ -369,7 +369,7 @@ class Database
             $this->statement->execute($bindings);
 
             $this->affected  = $this->statement->rowCount();
-            $this->lastId    = $this->connection->lastInsertId();
+            $this->lastId    = substr($query, 0, 7 ) == 'INSERT ' ? $this->connection->lastInsertId() : null;
             $this->lastError = null;
 
             // store the final sql to add it to the trace later
