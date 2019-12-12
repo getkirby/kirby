@@ -67,7 +67,7 @@ return [
     'methods' => [
         'toDate' => function ($value) {
             if ($timestamp = timestamp($value, $this->time['step'] ?? 5)) {
-                return date(DATE_W3C, $timestamp);
+                return date('Y-m-d H:i:s', $timestamp);
             }
 
             return null;
