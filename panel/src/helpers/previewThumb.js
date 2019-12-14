@@ -1,6 +1,6 @@
 
 export default function (image) {
-  if (!image) {
+  if (!image || image === "icon") {
     return false;
   }
 
