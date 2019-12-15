@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Http\Url as BaseUrl;
+use Kirby\Toolkit\Str;
 
 /**
  * The `Url` class extends the
@@ -76,8 +77,16 @@ class Url extends BaseUrl
         }
 
         // get a language url for the linked page, if the page can be found
-        if ($kirby->multilang() === true && $page = page($path)) {
-            $path = $page->url($language);
+        if ($kirby->multilang() === true) {
+            $parts = Str::split($path, '#');
+
+            if ($page = page($parts[0] ?? null)) {
+                $path = $page->url($language);
+
+                if (isset($parts[1]) === true) {
+                    $path .= '#' . $parts[1];
+                }
+            }
         }
 
         return $kirby->component('url')($kirby, $path, $options, function (string $path = null, $options = null) {
