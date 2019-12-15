@@ -295,7 +295,8 @@ class LanguageTest extends TestCase
             'locale'    => [LC_ALL => 'de_DE'],
             'name'      => 'Deutsch',
             'rules'     => $language->rules(),
-            'url'       => '/de'
+            'url'       => '/de',
+            'icon'      => ''
         ];
 
         $this->assertEquals($expected, $language->toArray());

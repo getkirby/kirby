@@ -461,9 +461,16 @@ class Language extends Model
             $existingData = [];
         }
 
-        $props = array_merge($this->toArray(), [
+        $props = [
+            'code'         => $this->code(),
+            'default'      => $this->isDefault(),
+            'direction'    => $this->direction(),
+            'icon'         => $this->icon(),
+            'locale'       => $this->locale(),
+            'name'         => $this->name(),
+            'translations' => $this->translations(),
             'url'          => $this->url,
-        ]);
+        ];
 
         $data = array_merge($existingData, $props);
 
