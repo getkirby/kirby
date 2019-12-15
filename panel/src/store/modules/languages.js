@@ -14,6 +14,7 @@ export default {
           code: language.code,
           default: language.default,
           direction: language.direction,
+          icon: language.icon,
           locale: language.locale,
           name: language.name,
           rules: language.rules,

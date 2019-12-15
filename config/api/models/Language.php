@@ -16,6 +16,9 @@ return [
         'direction' => function (Language $language) {
             return $language->direction();
         },
+        'icon' => function (Language $language) {
+            return $language->icon();
+        },
         'locale' => function (Language $language) {
             return $language->locale();
         },
@@ -35,6 +38,7 @@ return [
             'code',
             'default',
             'direction',
+            'icon',
             'locale',
             'name',
             'rules',

@@ -4,7 +4,7 @@
     :button="$t('language.create')"
     :notification="notification"
     theme="positive"
-    size="medium"
+    size="large"
     @submit="$refs.form.submit()"
   >
     <k-form
@@ -29,6 +29,7 @@ export default {
         name: "",
         code: "",
         direction: "ltr",
+        icon: "",
         locale: ""
       }
     };
@@ -41,6 +42,13 @@ export default {
           type: "text",
           required: true,
           icon: "title",
+          width: "2/3"
+        },
+        icon: {
+          label: this.$t("language.icon"),
+          type: "text",
+          icon: "smile",
+          width: "1/3"
         },
         code: {
           label: this.$t("language.code"),
@@ -48,7 +56,13 @@ export default {
           required: true,
           counter: false,
           icon: "globe",
-          width: "1/2"
+          width: "1/3"
+        },
+        locale: {
+          label: this.$t("language.locale"),
+          type: "text",
+          placeholder: "en_US",
+          width: "1/3"
         },
         direction: {
           label: this.$t("language.direction"),
@@ -59,12 +73,7 @@ export default {
             { value: "ltr", text: this.$t("language.direction.ltr") },
             { value: "rtl", text: this.$t("language.direction.rtl") }
           ],
-          width: "1/2"
-        },
-        locale: {
-          label: this.$t("language.locale"),
-          type: "text",
-          placeholder: "en_US"
+          width: "1/3"
         },
       };
     },
@@ -99,6 +108,7 @@ export default {
           name: this.language.name,
           code: this.language.code,
           direction: this.language.direction,
+          icon: this.language.icon,
           locale: this.language.locale
         })
         .then(() => {

@@ -278,6 +278,7 @@
   "language.direction": "Reading direction",
   "language.direction.ltr": "Left to right",
   "language.direction.rtl": "Right to left",
+  "language.icon": "Icon",
   "language.locale": "PHP locale string",
   "language.locale.warning": "You are using a custom locale set up. Please modify it in the language file in /site/languages",
   "language.name": "Name",

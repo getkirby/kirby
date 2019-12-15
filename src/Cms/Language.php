@@ -44,6 +44,11 @@ class Language extends Model
     protected $direction;
 
     /**
+     * @var string
+     */
+    protected $icon;
+
+    /**
      * @var array
      */
     protected $locale;
@@ -87,6 +92,7 @@ class Language extends Model
         $this->setOptionalProperties($props, [
             'default',
             'direction',
+            'icon',
             'locale',
             'name',
             'slugs',
@@ -317,6 +323,17 @@ class Language extends Model
     }
 
     /**
+     * Returns the icon
+     * for the language
+     *
+     * @return string
+     */
+    public function icon(): string
+    {
+        return $this->icon;
+    }
+
+    /**
      * The id is required for collections
      * to work properly. The code is used as id
      *
@@ -444,15 +461,9 @@ class Language extends Model
             $existingData = [];
         }
 
-        $props = [
-            'code'         => $this->code(),
-            'default'      => $this->isDefault(),
-            'direction'    => $this->direction(),
-            'locale'       => $this->locale(),
-            'name'         => $this->name(),
-            'translations' => $this->translations(),
+        $props = array_merge($this->toArray(), [
             'url'          => $this->url,
-        ];
+        ]);
 
         $data = array_merge($existingData, $props);
 
@@ -519,6 +530,16 @@ class Language extends Model
     protected function setName(string $name = null)
     {
         $this->name = trim($name ?? $this->code);
+        return $this;
+    }
+
+    /**
+     * @param string $icon
+     * @return self
+     */
+    protected function setIcon(string $icon = null)
+    {
+        $this->icon = trim($icon ?? $this->icon);
         return $this;
     }
 
@@ -596,6 +617,7 @@ class Language extends Model
             'direction' => $this->direction(),
             'locale'    => $this->locale(),
             'name'      => $this->name(),
+            'icon'      => $this->icon(),
             'rules'     => $this->rules(),
             'url'       => $this->url()
         ];

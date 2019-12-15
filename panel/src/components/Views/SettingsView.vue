@@ -112,7 +112,10 @@ export default {
             return {
               id: language.code,
               default: language.default,
-              icon: { type: "globe", back: "black" },
+              icon: {
+                type: language.icon || "globe",
+                back: "black",
+              },
               text: language.name,
               info: language.code,
               link: () => {

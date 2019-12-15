@@ -3,7 +3,7 @@
     ref="dialog"
     :button="$t('save')"
     :notification="notification"
-    size="medium"
+    size="large"
     @submit="$refs.form.submit()"
   >
     <k-form
@@ -63,6 +63,7 @@ export default {
         .patch("languages/" + this.language.code, {
           name: this.language.name,
           direction: this.language.direction,
+          icon: this.language.icon,
           locale: this.language.locale
         })
         .then(() => {
