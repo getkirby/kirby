@@ -251,6 +251,36 @@ class KirbyTagsTest extends TestCase
         $this->assertEquals('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
     }
 
+    public function testLinkWithHash()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ],
+            'languages' => [
+                'en' => [
+                    'code' => 'en'
+                ],
+                'de' => [
+                    'code' => 'de'
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'a']
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('<a href="https://getkirby.com/en/a">getkirby.com/en/a</a>', $app->kirbytags('(link: a)'));
+        $this->assertEquals('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
+        $this->assertEquals('<a href="https://getkirby.com/en/a#anchor">getkirby.com/en/a</a>', $app->kirbytags('(link: a#anchor lang: en)'));
+        $this->assertEquals('<a href="https://getkirby.com/de/a#anchor">getkirby.com/de/a</a>', $app->kirbytags('(link: a#anchor lang: de)'));
+    }
+
     public function testHooks()
     {
         $app = new App([
