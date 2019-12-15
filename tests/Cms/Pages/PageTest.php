@@ -848,7 +848,6 @@ class PageTest extends TestCase
 
         $icon = $page->panelIcon();
 
-        $this->assertTrue($icon['emoji']);
         $this->assertEquals($emoji, $icon['type']);
         $this->assertEquals('pattern', $icon['back']);
         $this->assertEquals(null, $icon['ratio']);

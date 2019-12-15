@@ -115,6 +115,7 @@ export default {
               icon: {
                 type: language.icon || "globe",
                 back: "black",
+                emoji: this.$helper.isEmoji(language.icon)
               },
               text: language.name,
               info: language.code,

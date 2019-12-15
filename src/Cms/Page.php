@@ -908,11 +908,6 @@ class Page extends ModelWithContent
     {
         if ($icon = $this->blueprint()->icon()) {
             $params['type'] = $icon;
-
-            // check for emojis
-            if (strlen($icon) !== Str::length($icon)) {
-                $params['emoji'] = true;
-            }
         }
 
         return parent::panelIcon($params);

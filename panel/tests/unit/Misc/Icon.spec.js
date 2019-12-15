@@ -17,7 +17,6 @@ describe("Icon.vue", () => {
   it("renders emoji", () => {
     const wrapper = mount(Icon, {
       propsData: {
-        emoji: true,
         type: "❤️"
       }
     });

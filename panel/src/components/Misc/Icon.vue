@@ -20,9 +20,13 @@ export default {
     alt: String,
     color: String,
     back: String,
-    emoji: Boolean,
     size: String,
     type: String
+  },
+  computed: {
+    emoji() {
+      return this.$helper.isEmoji(this.type);
+    }
   }
 };
 </script>

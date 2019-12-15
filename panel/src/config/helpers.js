@@ -4,6 +4,7 @@ import "@/helpers/regex.js";
 
 import clone from "@/helpers/clone.js";
 import debounce from "@/helpers/debounce.js";
+import emoji from "@/helpers/emoji.js";
 import pad from "@/helpers/pad.js";
 import ratio from "@/helpers/ratio.js";
 import slug from "@/helpers/slug.js";
@@ -14,6 +15,7 @@ import isUploadEvent from "@/helpers/isUploadEvent.js";
 
 Vue.prototype.$helper = {
   clone: clone,
+  isEmoji: emoji,
   isUploadEvent: isUploadEvent,
   debounce: debounce,
   pad: pad,
