@@ -2,13 +2,9 @@
 
 <phpunit
     bootstrap="tests/bootstrap.php"
-    convertErrorsToExceptions="true"
-    convertNoticesToExceptions="true"
-    convertWarningsToExceptions="true"
-    stopOnFailure="true"
-    stderr="true"
     colors="true"
-    verbose="true">
+    verbose="true"
+    stderr="true">
 
     <filter>
         <whitelist>

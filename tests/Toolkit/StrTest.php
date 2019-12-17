@@ -250,7 +250,7 @@ class StrTest extends TestCase
         $length = 200;
 
         $this->assertRegexp('/^[[:alnum:]]+$/', Str::random());
-        $this->assertInternalType('string', Str::random());
+        $this->assertIsString(Str::random());
         $this->assertEquals($length, strlen(Str::random($length)));
 
         $this->assertRegexp('/^[[:alpha:]]+$/', Str::random($length, 'alpha'));

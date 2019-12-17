@@ -15,7 +15,9 @@ use Kirby\Toolkit\Properties;
  */
 class FileVersion
 {
-    use FileFoundation;
+    use FileFoundation {
+        toArray as parentToArray;
+    }
     use Properties;
 
     protected $modifications;
@@ -89,7 +91,7 @@ class FileVersion
      */
     public function toArray(): array
     {
-        $array = array_merge(parent::toArray(), [
+        $array = array_merge($this->parentToArray(), [
             'modifications' => $this->modifications(),
         ]);
 

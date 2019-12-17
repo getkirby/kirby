@@ -107,7 +107,7 @@ class SessionTest extends TestCase
         // but setting a new value should
         $session->data()->set('someKey', 'someValue');
         $this->assertNotNull($session->token());
-        $this->assertInternalType('string', $session->token());
+        $this->assertIsString($session->token());
         $this->assertWriteMode(true, $session);
 
         $token = explode('.', $session->token());

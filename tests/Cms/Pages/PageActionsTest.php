@@ -195,37 +195,6 @@ class PageActionsTest extends TestCase
         $this->assertEquals($title, $modified->title());
     }
 
-    public function testDeleteDraft()
-    {
-        $page = Page::create([
-            'slug' => 'test'
-        ]);
-
-        $this->assertTrue($page->exists());
-        $this->assertTrue($page->parentModel()->drafts()->has($page));
-
-        $page->delete();
-
-        $this->assertFalse($page->exists());
-        $this->assertFalse($page->parentModel()->drafts()->has($page));
-    }
-
-    public function testDeletePage()
-    {
-        $page = Page::create([
-            'slug' => 'test',
-            'num'  => 1
-        ]);
-
-        $this->assertTrue($page->exists());
-        $this->assertTrue($page->parentModel()->children()->has($page));
-
-        $page->delete();
-
-        $this->assertFalse($page->exists());
-        $this->assertFalse($page->parentModel()->children()->has($page));
-    }
-
     public function testSave()
     {
         $page = new Page([
@@ -253,7 +222,7 @@ class PageActionsTest extends TestCase
         // assert that the page status didn't change with the update
         $this->assertEquals($oldStatus, $modified->status());
     }
-    
+
     public function testUpdateHooks()
     {
         $phpunit = $this;

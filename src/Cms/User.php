@@ -272,7 +272,8 @@ class User extends ModelWithContent
     }
 
     /**
-     * Hashes user password
+     * Hashes the user's password unless it is `null`,
+     * which will leave it as `null`
      *
      * @internal
      * @param string|null $password
@@ -281,11 +282,7 @@ class User extends ModelWithContent
     public static function hashPassword($password): ?string
     {
         if ($password !== null) {
-            $info = password_get_info($password);
-
-            if ($info['algo'] === 0) {
-                $password = password_hash($password, PASSWORD_DEFAULT);
-            }
+            $password = password_hash($password, PASSWORD_DEFAULT);
         }
 
         return $password;
@@ -773,7 +770,7 @@ class User extends ModelWithContent
     }
 
     /**
-     * Sets and hashes a new user password
+     * Sets the user's password hash
      *
      * @param string $password
      * @return self

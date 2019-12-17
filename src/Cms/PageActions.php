@@ -51,7 +51,13 @@ trait PageActions
 
             // actually move the page on disk
             if ($oldPage->exists() === true) {
-                Dir::move($oldPage->root(), $newPage->root());
+                if (Dir::move($oldPage->root(), $newPage->root()) === true) {
+                    // Updates the root path of the old page with the root path
+                    // of the moved new page to use fly actions on old page in loop
+                    $oldPage->setRoot($newPage->root());
+                } else {
+                    throw new LogicException('The page directory cannot be moved');
+                }
             }
 
             // overwrite the child in the parent page
@@ -506,10 +512,14 @@ trait PageActions
 
                 return $num;
             default:
+                // get instance with default language
+                $app = $this->kirby()->clone();
+                $app->setCurrentLanguage();
+
                 $template = Str::template($mode, [
-                    'kirby' => $this->kirby(),
-                    'page'  => $this,
-                    'site'  => $this->site(),
+                    'kirby' => $app,
+                    'page'  => $app->page($this->id()),
+                    'site'  => $app->site(),
                 ]);
 
                 return (int)$template;
@@ -706,7 +716,7 @@ trait PageActions
                 $sibling->changeNum($index);
             }
 
-            $parent->children = $siblings->sortBy('num', 'desc');
+            $parent->children = $siblings->sortBy('num', 'asc');
         }
 
         return true;

@@ -61,21 +61,21 @@
     "Filändelsen \"{extension}\" är inte tillåten",
   "error.file.extension.missing":
     "Filen \"{filename}\" saknar filändelse",
-  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
-  "error.file.maxsize": "The file is too large",
-  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
+  "error.file.maxheight": "Bildens höjd får inte överstiga {height} pixlar",
+  "error.file.maxsize": "Filen är för stor",
+  "error.file.maxwidth": "Bildens bredd får inte överstiga {width} pixlar",
   "error.file.mime.differs":
     "Den uppladdade filen måste vara av samma mime-typ \"{mime}\"",
   "error.file.mime.forbidden": "Mediatypen \"{mime}\" är inte tillåten",
-  "error.file.mime.invalid": "Invalid mime type: {mime}",
+  "error.file.mime.invalid": "Ogiltig mime-typ: {mime}",
   "error.file.mime.missing":
     "Mediatypen för \"{filename}\" kan inte detekteras",
-  "error.file.minheight": "The height of the image must be at least {height} pixels",
-  "error.file.minsize": "The file is too small",
-  "error.file.minwidth": "The width of the image must be at least {width} pixels",
+  "error.file.minheight": "Bildens höjd måste vara minst {height} pixlar",
+  "error.file.minsize": "Filen är för liten",
+  "error.file.minwidth": "Bildens bredd måste vara minst {width} pixlar",
   "error.file.name.missing": "Filnamnet får inte vara tomt",
   "error.file.notFound": "Filen  \"{filename}\" kan ej hittas",
-  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+  "error.file.orientation": "Bildens orientering måste vara \"{orientation}\"",
   "error.file.type.forbidden": "Du har inte behörighet att ladda upp filer av typen {type}",
   "error.file.undefined": "Filen kan inte hittas",
 
@@ -304,7 +304,7 @@
   "loading": "Laddar",
 
   "lock.unsaved": "Osparade ändringar",
-  "lock.unsaved.empty": "There are no more unsaved changes",
+  "lock.unsaved.empty": "Det finns inga fler osparade ändringar",
   "lock.isLocked": "Osparade ändringar av <strong>{email}</strong>",
   "lock.file.isLocked": "Filen redigeras just nu av {email} och kan inte redigeras.",
   "lock.page.isLocked": "Sidan redigeras just nu av {email} och kan inte redigeras.",

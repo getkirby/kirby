@@ -25,7 +25,9 @@ class Email
     protected $bcc;
     protected $cc;
     protected $from;
+    protected $fromName;
     protected $replyTo;
+    protected $replyToName;
     protected $isSent = false;
     protected $subject;
     protected $to;
@@ -75,6 +77,11 @@ class Email
         return $this->from;
     }
 
+    public function fromName(): ?string
+    {
+        return $this->fromName;
+    }
+
     public function isHtml()
     {
         return $this->body()->html() !== null;
@@ -90,6 +97,11 @@ class Email
         return $this->replyTo;
     }
 
+    public function replyToName(): ?string
+    {
+        return $this->replyToName;
+    }
+
     protected function resolveEmail($email = null, bool $multiple = true)
     {
         if ($email === null) {
@@ -97,16 +109,27 @@ class Email
         }
 
         if (is_array($email) === false) {
-            $email = [$email];
+            $email = [$email => null];
         }
 
-        foreach ($email as $address) {
+        $result = [];
+        foreach ($email as $address => $name) {
+            // convert simple email arrays to associative arrays
+            if (is_int($address) === true) {
+                // the value is the address, there is no name
+                $address = $name;
+                $result[$address] = null;
+            } else {
+                $result[$address] = $name;
+            }
+
+            // ensure that the address is valid
             if (V::email($address) === false) {
                 throw new Exception(sprintf('"%s" is not a valid email address', $address));
             }
         }
 
-        return $multiple === true ? $email : $email[0];
+        return $multiple === true ? $result : array_keys($result)[0];
     }
 
     public function send(): bool
@@ -148,9 +171,21 @@ class Email
         return $this;
     }
 
+    protected function setFromName(string $fromName = null)
+    {
+        $this->fromName = $fromName;
+        return $this;
+    }
+
     protected function setReplyTo(string $replyTo = null)
     {
         $this->replyTo = $this->resolveEmail($replyTo, false);
+        return $this;
+    }
+
+    protected function setReplyToName(string $replyToName = null)
+    {
+        $this->replyToName = $replyToName;
         return $this;
     }
 
