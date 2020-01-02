@@ -7,6 +7,7 @@ return [
     'files'       => __DIR__ . '/fields/files.php',
     'headline'    => __DIR__ . '/fields/headline.php',
     'hidden'      => __DIR__ . '/fields/hidden.php',
+    'interval'    => __DIR__ . '/fields/interval.php',
     'info'        => __DIR__ . '/fields/info.php',
     'line'        => __DIR__ . '/fields/line.php',
     'multiselect' => __DIR__ . '/fields/multiselect.php',
