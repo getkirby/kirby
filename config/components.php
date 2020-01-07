@@ -137,10 +137,10 @@ return [
     },
 
     /**
-     * Add your own template engine
+     * Add your own search engine
      *
      * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param \Kirby\Cms\Collection $collection
+     * @param \Kirby\Cms\Collection $collection Collection of searchable models
      * @param string $query
      * @param mixed $params
      * @return \Kirby\Cms\Collection|bool
