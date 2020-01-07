@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Dir;
-
 /**
  * Extension of the Collection class that
  * introduces `Roles::factory()` to convert an
