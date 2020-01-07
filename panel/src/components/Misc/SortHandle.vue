@@ -8,6 +8,9 @@
 
 <style lang="scss">
 .k-sort-handle {
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
   cursor: -webkit-grab;
   line-height: 0;
   color: $color-dark;
@@ -25,6 +28,8 @@
   width: 1rem;
 }
 .k-sort-handle:active {
+  cursor: grabbing;
+  cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
 </style>
