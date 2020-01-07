@@ -513,11 +513,12 @@ class File extends ModelWithContent
 
         if (empty($params['model']) === false) {
             $uuid = $this->parent() === $params['model'] ? $this->filename() : $this->id();
+            $absolute = $this->parent() !== $params['model'];
         }
 
         return [
             'filename' => $this->filename(),
-            'dragText' => $this->dragText(),
+            'dragText' => $this->dragText('auto', $absolute ?? false),
             'icon'     => $icon,
             'id'       => $this->id(),
             'image'    => $image,
