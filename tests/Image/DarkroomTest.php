@@ -111,4 +111,32 @@ class DarkroomTest extends TestCase
 
         $this->assertEquals(30, $options['quality']);
     }
+
+    public function testGrayscaleFixes()
+    {
+        $darkroom = new Darkroom();
+
+        // grayscale
+        $options = $darkroom->preprocess($this->file(), [
+            'grayscale' => true
+        ]);
+
+        $this->assertEquals(true, $options['grayscale']);
+
+        // greyscale
+        $options = $darkroom->preprocess($this->file(), [
+            'greyscale' => true
+        ]);
+
+        $this->assertEquals(true, $options['grayscale']);
+        $this->assertEquals(false, isset($options['greyscale']));
+
+        // bw
+        $options = $darkroom->preprocess($this->file(), [
+            'bw' => true
+        ]);
+
+        $this->assertEquals(true, $options['grayscale']);
+        $this->assertEquals(false, isset($options['bw']));
+    }
 }
