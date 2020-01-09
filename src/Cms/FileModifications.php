@@ -69,6 +69,26 @@ trait FileModifications
     }
 
     /**
+     * Alias for File::bw()
+     *
+     * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
+     */
+    public function grayscale()
+    {
+        return $this->thumb(['grayscale' => true]);
+    }
+
+    /**
+     * Alias for File::bw()
+     *
+     * @return \Kirby\Cms\FileVersion|\Kirby\Cms\File
+     */
+    public function greyscale()
+    {
+        return $this->thumb(['grayscale' => true]);
+    }
+
+    /**
      * Sets the JPEG compression quality
      *
      * @param int $quality
