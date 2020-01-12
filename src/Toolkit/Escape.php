@@ -2,7 +2,7 @@
 
 namespace Kirby\Toolkit;
 
-use Zend\Escaper\Escaper;
+use Laminas\Escaper\Escaper;
 
 /**
  * The `Escape` class provides methods
@@ -12,8 +12,8 @@ use Zend\Escaper\Escaper;
  * attribute values like width, name,
  * value, etc.
  *
- * Wrapper for the Zend Escaper
- * @link https://github.com/zendframework/zend-escaper
+ * Wrapper for the Laminas Escaper
+ * @link https://github.com/laminas/laminas-escaper
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
