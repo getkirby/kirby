@@ -90,6 +90,7 @@ return [
                 'pattern' => 'files',
                 'action' => function () {
                     $params = array_merge($this->field()->files(), [
+                        'page'   => $this->requestQuery('page'),
                         'search' => $this->requestQuery('search')
                     ]);
 
