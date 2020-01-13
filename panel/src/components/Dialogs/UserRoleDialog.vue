@@ -50,8 +50,6 @@ export default {
           this.$api.users.roles(id).then(roles => {
             this.roles = roles;
 
-            console.log(roles);
-
             // don't let non-admins promote anyone to admin
             if (this.$user.role.name !== "admin") {
               this.roles = this.roles.filter(role => {
