@@ -47,8 +47,10 @@ export default {
 
       this.$api.users.get(id)
         .then(user => {
-          this.$api.roles.options({ canBe: "changed" }).then(roles => {
+          this.$api.users.roles(id).then(roles => {
             this.roles = roles;
+
+            console.log(roles);
 
             // don't let non-admins promote anyone to admin
             if (this.$user.role.name !== "admin") {
