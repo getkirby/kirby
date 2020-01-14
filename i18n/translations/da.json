@@ -23,7 +23,7 @@
 
   "delete": "Slet",
   "dimensions": "Dimensioner",
-  "disabled": "Disabled",
+  "disabled": "Deaktiveret",
   "discard": "Kass\u00e9r",
   "download": "Download",
   "duplicate": "Dupliker",
@@ -61,21 +61,21 @@
     "Uacceptabel fil-endelse",
   "error.file.extension.missing":
     "Du kan ikke uploade filer uden fil-endelse",
-  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
-  "error.file.maxsize": "The file is too large",
-  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
+  "error.file.maxheight": "Højden på billedet af billedet må ikke være større end {height} pixels",
+  "error.file.maxsize": "Filen er for stor",
+  "error.file.maxwidth": "Bredden af billedet må ikke være større end {width} pixels",
   "error.file.mime.differs":
     "Den uploadede fil skal være af samme mime type \"{mime}\"",
   "error.file.mime.forbidden": "Media typen \"{mime}\" er ikke tilladt",
-  "error.file.mime.invalid": "Invalid mime type: {mime}",
+  "error.file.mime.invalid": "Ugyldig mime type: {mime}",
   "error.file.mime.missing":
     "Media typen for \"{filename}\" kan ikke bestemmes",
-  "error.file.minheight": "The height of the image must be at least {height} pixels",
-  "error.file.minsize": "The file is too small",
-  "error.file.minwidth": "The width of the image must be at least {width} pixels",
+  "error.file.minheight": "Højden af billedet skal mindst være {height} pixels",
+  "error.file.minsize": "Filen er for lille",
+  "error.file.minwidth": "Bredden af billedet skal mindst være {width} pixels",
   "error.file.name.missing": "Filnavn må ikke være tomt",
   "error.file.notFound": "Filen kunne ikke findes",
-  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+  "error.file.orientation": "Formatet på billedet skal være \"{orientation}\"",
   "error.file.type.forbidden": "Du har ikke tilladelse til at uploade {type} filer",
   "error.file.undefined": "Filen kunne ikke findes",
 
@@ -166,7 +166,7 @@
   "error.user.changeRole.permission":
     "Du har ikke tilladelse til at ændre rollen for brugeren \"{name}\"",
   "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+    "Du har ikke tilladelse til at tildele nogen admin rollen",
   "error.user.create.permission": "Du har ikke tilladelse til at oprette denne bruger",
   "error.user.delete": "Brugeren kunne ikke slettes",
   "error.user.delete.lastAdmin": "Du kan ikke slette den sidste admin",
@@ -231,7 +231,7 @@
   "error.validation.time": "Indtast venligst et gyldigt tidspunkt",
   "error.validation.url": "Indtast venligst en gyldig URL",
 
-  "field.required": "The field is required",
+  "field.required": "Feltet er påkrævet",
   "field.files.empty": "Ingen filer valgt endnu",
   "field.pages.empty": "Ingen sider valgt endnu",
   "field.structure.delete.confirm": "\u00d8nsker du virkelig at slette denne indtastning?",
@@ -304,7 +304,7 @@
   "loading": "Indlæser",
 
   "lock.unsaved": "Ugemte ændringer",
-  "lock.unsaved.empty": "There are no more unsaved changes",
+  "lock.unsaved.empty": "Der er ikke flere ændringer der ikke er gamt",
   "lock.isLocked": "Ugemte ændringer af <strong>{email}</strong>",
   "lock.file.isLocked": "Filen redigeres på nuværende af {email} og kan derfor ikke ændres.",
   "lock.page.isLocked": "Siden redigeres på nuværende af {email} og kan derfor ikke ændres.",
@@ -401,7 +401,7 @@
   "save": "Gem",
   "search": "Søg",
 
-  "section.required": "The section is required",
+  "section.required": "Sektionen er påkrævet",
 
   "select": "Vælg",
   "settings": "Indstillinger",
