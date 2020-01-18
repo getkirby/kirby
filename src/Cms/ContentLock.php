@@ -41,6 +41,24 @@ class ContentLock
     }
 
     /**
+     * Clear lock
+     *
+     * @return bool
+     */
+    public function clear(): bool
+    {
+        // if no lock exists, skip
+        if (isset($this->data['lock']) === false) {
+            return true;
+        }
+
+        // remove lock
+        unset($this->data['lock']);
+
+        return $this->kirby()->locks()->set($this->model, $this->data);
+    }
+
+    /**
      * Sets lock with the current user
      *
      * @return bool
@@ -74,19 +92,20 @@ class ContentLock
     {
         $data = $this->data['lock'] ?? [];
 
-        if (
-            empty($data) === false &&
-            $data['user'] !== $this->user()->id() &&
-            $user = $this->kirby()->user($data['user'])
-        ) {
-            $time = (int)($data['time']);
+        if (empty($data) === false && $data['user'] !== $this->user()->id()) {
+            if ($user = $this->kirby()->user($data['user'])) {
+                $time = (int)($data['time']);
 
-            return [
-                'user'       => $user->id(),
-                'email'      => $user->email(),
-                'time'       => $time,
-                'unlockable' => ($time + 60) <= time()
-            ];
+                return [
+                    'user'       => $user->id(),
+                    'email'      => $user->email(),
+                    'time'       => $time,
+                    'unlockable' => ($time + 60) <= time()
+                ];
+            }
+
+            // clear lock if user not found
+            $this->clear();
         }
 
         return false;
