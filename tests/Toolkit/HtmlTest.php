@@ -160,14 +160,6 @@ class HtmlTest extends TestCase
     }
 
     /**
-     * @covers ::decode
-     */
-    public function testDecode()
-    {
-        $this->assertSame('some über crazy stuff', Html::decode('some &uuml;ber <em>crazy</em> stuff'));
-    }
-
-    /**
      * @covers ::email
      */
     public function testEmail()
@@ -419,9 +411,35 @@ class HtmlTest extends TestCase
         $expected = '<p class="test">test</p>';
         $this->assertSame($expected, $html);
 
+        $html = Html::tag('p', 'täst', ['class' => 'test']);
+        $expected = '<p class="test">t&auml;st</p>';
+        $this->assertSame($expected, $html);
+
         $html = Html::tag('p', ['<i>test</i>']);
         $expected = '<p><i>test</i></p>';
         $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers       ::value
+     * @dataProvider valueProvider
+     */
+    public function testValue($input, $expected)
+    {
+        $this->assertSame($expected, Html::value($input));
+    }
+
+    public function valueProvider()
+    {
+        return [
+            [true, 'true'],
+            [false, 'false'],
+            [1, '1'],
+            [null, null],
+            ['', null],
+            ['test', 'test'],
+            ['täst', 't&auml;st'],
+        ];
     }
 
     /**
