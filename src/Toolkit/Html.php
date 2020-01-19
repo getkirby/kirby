@@ -184,7 +184,7 @@ class Html
      * @param bool $keepTags If true, existing tags won't be escaped
      * @return string The HTML string
      */
-    public static function encode(string $string = '', bool $keepTags = false): string
+    public static function encode(string $string, bool $keepTags = false): string
     {
         if ($keepTags === true) {
             $list = static::entities();
