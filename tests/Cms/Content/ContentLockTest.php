@@ -40,28 +40,6 @@ class ContentLockTest extends TestCase
         Dir::remove($this->fixtures);
     }
 
-    public function testClearLock()
-    {
-        $app = $this->app;
-        $page = $app->page('test');
-
-        $app->impersonate('test@getkirby.com');
-        $page->lock()->create();
-        $oldData = $page->lock()->get();
-        $app->users()->remove($app->user()->id());
-
-        $app->impersonate('homer@simpson.com');
-        $page->lock()->get();
-        $page->lock()->create();
-        $newData = $page->lock()->get();
-
-        $this->assertTrue(empty($oldData));
-        $this->assertFalse(empty($newData));
-        $this->assertFalse($newData['unlockable']);
-        $this->assertEquals('homer@simpson.com', $newData['email']);
-        $this->assertArrayHasKey('time', $newData);
-    }
-
     public function testCreate()
     {
         $app = $this->app;
@@ -133,6 +111,29 @@ class ContentLockTest extends TestCase
         $this->assertFalse($data['unlockable']);
         $this->assertEquals('test@getkirby.com', $data['email']);
         $this->assertArrayHasKey('time', $data);
+    }
+
+    public function testGetUserMissing()
+    {
+        $app = $this->app;
+        $page = $app->page('test');
+
+        $app->impersonate('test@getkirby.com');
+        $page->lock()->create();
+        $this->assertFileExists($this->fixtures . '/content/test/.lock');
+
+        $app->impersonate('homer@simpson.com');
+        $data = $page->lock()->get();
+        $this->assertFileExists($this->fixtures . '/content/test/.lock');
+        $this->assertFalse(empty($data));
+        $this->assertFalse($data['unlockable']);
+        $this->assertEquals('test@getkirby.com', $data['email']);
+        $this->assertArrayHasKey('time', $data);
+
+        $app->users()->remove($app->user('test@getkirby.com'));
+        $data = $page->lock()->get();
+        $this->assertFileNotExists($this->fixtures . '/content/test/.lock');
+        $this->assertFalse($data);
     }
 
     public function testIsLocked()
