@@ -128,11 +128,11 @@ class Xml
      * @param array|string $props The source array or tag content (used internally)
      * @param string $name The name of the root element
      * @param bool $head Include the XML declaration head or not
-     * @param int $level The indendation level (used internally)
      * @param string $indent Indentation string, defaults to two spaces
+     * @param int $level The indendation level (used internally)
      * @return string The XML string
      */
-    public static function create($props, string $name = 'root', bool $head = true, int $level = 0, string $indent = '  '): string
+    public static function create($props, string $name = 'root', bool $head = true, string $indent = '  ', int $level = 0): string
     {
         if (is_array($props) === true) {
             if (A::isAssociative($props) === true) {
@@ -158,7 +158,7 @@ class Xml
                     $value = [];
                     foreach ($props as $childName => $childItem) {
                         // render the child, but don't include the indentation of the first line
-                        $value[] = trim(static::create($childItem, $childName, false, $level + 1, $indent));
+                        $value[] = trim(static::create($childItem, $childName, false, $indent, $level + 1));
                     }
                 }
 
@@ -168,7 +168,7 @@ class Xml
 
                 $result = [];
                 foreach ($props as $childItem) {
-                    $result[] = static::create($childItem, $name, false, $level, $indent);
+                    $result[] = static::create($childItem, $name, false, $indent, $level);
                 }
 
                 $result = implode(PHP_EOL, $result);

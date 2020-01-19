@@ -65,9 +65,9 @@ class XmlTest extends TestCase
         $this->assertSame('<name>Homer</name>', Xml::create('Homer', 'name', false));
         $this->assertSame('<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . '<name>Homer</name>', Xml::create('Homer', 'name', true));
 
-        $this->assertSame('  <name>Homer</name>', Xml::create('Homer', 'name', false, 1));
-        $this->assertSame('    <name>Homer</name>', Xml::create('Homer', 'name', false, 1, '    '));
-        $this->assertSame('    <name>Homer</name>', Xml::create('Homer', 'name', false, 2));
+        $this->assertSame('  <name>Homer</name>', Xml::create('Homer', 'name', false, '  ', 1));
+        $this->assertSame('    <name>Homer</name>', Xml::create('Homer', 'name', false, '    ', 1));
+        $this->assertSame('    <name>Homer</name>', Xml::create('Homer', 'name', false, '  ', 2));
 
         $data = [
             '@name' => 'contact',
@@ -132,7 +132,7 @@ class XmlTest extends TestCase
         ];
         $this->assertSame($data, Xml::parse(file_get_contents(__DIR__ . '/fixtures/xml/simpsons.xml')));
         $this->assertStringEqualsFile(__DIR__ . '/fixtures/xml/simpsons.xml', Xml::create($data, 'invalid'));
-        $this->assertStringEqualsFile(__DIR__ . '/fixtures/xml/simpsons_4spaces.xml', Xml::create($data, 'invalid', true, 0, '    '));
+        $this->assertStringEqualsFile(__DIR__ . '/fixtures/xml/simpsons_4spaces.xml', Xml::create($data, 'invalid', true, '    '));
 
         unset($data['@name']);
         $this->assertStringEqualsFile(__DIR__ . '/fixtures/xml/simpsons.xml', Xml::create($data, 'simpsons'));
