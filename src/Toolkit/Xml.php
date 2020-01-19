@@ -54,6 +54,61 @@ class Xml
     ];
 
     /**
+     * Generates a single attribute or a list of attributes
+     *
+     * @param string|array $name String: A single attribute with that name will be generated.
+     *                           Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
+     * @param mixed $value If used with a `$name` string, pass the value of the attribute here.
+     *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
+     * @return string|null The generated XML attributes string
+     */
+    public static function attr($name, $value = null): ?string
+    {
+        if (is_array($name) === true) {
+            if ($value !== false) {
+                ksort($name);
+            }
+
+            $attributes = [];
+            foreach ($name as $key => $val) {
+                $a = static::attr($key, $val);
+
+                if ($a) {
+                    $attributes[] = $a;
+                }
+            }
+
+            return implode(' ', $attributes);
+        }
+
+        if ($value === null || $value === '' || $value === []) {
+            return null;
+        }
+
+        if ($value === ' ') {
+            return strtolower($name) . '=""';
+        }
+
+        if (is_bool($value) === true) {
+            return $value === true ? strtolower($name) . '="' . strtolower($name) . '"' : null;
+        }
+
+        if (is_array($value) === true) {
+            if (isset($value['value'], $value['escape'])) {
+                $value = $value['escape'] === true ? static::encode($value['value']) : $value['value'];
+            } else {
+                $value = implode(' ', array_filter($value, function ($value) {
+                    return !empty($value) || is_numeric($value);
+                }));
+            }
+        } else {
+            $value = static::encode($value);
+        }
+
+        return strtolower($name) . '="' . $value . '"';
+    }
+
+    /**
      * Creates an XML string from an array
      *
      * @param string $props The source array

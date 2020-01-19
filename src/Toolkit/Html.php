@@ -74,17 +74,20 @@ class Html
     /**
      * Generates a single attribute or a list of attributes
      *
-     * @param string $name mixed string: a single attribute with that name will be generated. array: a list of attributes will be generated. Don't pass a second argument in that case.
-     * @param string $value if used for a single attribute, pass the content for the attribute here
-     * @return string the generated html
+     * @param string|array $name String: A single attribute with that name will be generated.
+     *                           Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
+     * @param mixed $value If used with a `$name` string, pass the value of the attribute here.
+     *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
+     * @return string|null The generated HTML attributes string
      */
-    public static function attr($name, $value = null): string
+    public static function attr($name, $value = null): ?string
     {
         if (is_array($name) === true) {
+            if ($value !== false) {
+                ksort($name);
+            }
+
             $attributes = [];
-
-            ksort($name);
-
             foreach ($name as $key => $val) {
                 $a = static::attr($key, $val);
 
@@ -96,31 +99,19 @@ class Html
             return implode(' ', $attributes);
         }
 
-        if ($value === null || $value === '' || $value === []) {
-            return false;
+        // HTML supports boolean attributes without values
+        if (is_array($name) === false && is_bool($value) === true) {
+            return $value === true ? strtolower($name) : null;
         }
 
-        if ($value === ' ') {
-            return strtolower($name) . '=""';
-        }
+        // all other cases can share the XML variant
+        $attr = Xml::attr($name, $value);
 
-        if (is_bool($value) === true) {
-            return $value === true ? strtolower($name) : '';
-        }
-
-        if (is_array($value) === true) {
-            if (isset($value['value'], $value['escape'])) {
-                $value = $value['escape'] === true ? htmlspecialchars($value['value'], ENT_QUOTES, 'UTF-8') : $value['value'];
-            } else {
-                $value = implode(' ', array_filter($value, function ($value) {
-                    return !empty($value) || is_numeric($value);
-                }));
-            }
-        } else {
-            $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-        }
-
-        return strtolower($name) . '="' . $value . '"';
+        // HTML supports named entities
+        $entities = Xml::entities();
+        $html = array_keys($entities);
+        $xml  = array_values($entities);
+        return str_replace($xml, $html, $attr);
     }
 
     /**
