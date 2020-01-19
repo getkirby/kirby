@@ -14,7 +14,7 @@ use Kirby\Http\Url;
  * @copyright Bastian Allgeier GmbH
  * @license   https://opensource.org/licenses/MIT
  */
-class Html
+class Html extends Xml
 {
     /**
      * An internal store for an HTML entities translation table
@@ -24,7 +24,8 @@ class Html
     public static $entities;
 
     /**
-     * Can be used to switch to trailing slashes if required
+     * Closing string for void tags;
+     * can be used to switch to trailing slashes if required
      *
      * ```php
      * Html::$void = ' />'
@@ -45,10 +46,10 @@ class Html
     public static function __callStatic(string $tag, array $arguments = []): string
     {
         if (static::isVoid($tag) === true) {
-            return Html::tag($tag, null, ...$arguments);
+            return static::tag($tag, null, ...$arguments);
         }
 
-        return Html::tag($tag, ...$arguments);
+        return static::tag($tag, ...$arguments);
     }
 
     /**
@@ -83,33 +84,16 @@ class Html
      */
     public static function attr($name, $value = null): ?string
     {
-        if (is_array($name) === true) {
-            if ($value !== false) {
-                ksort($name);
-            }
-
-            $attributes = [];
-            foreach ($name as $key => $val) {
-                $a = static::attr($key, $val);
-
-                if ($a) {
-                    $attributes[] = $a;
-                }
-            }
-
-            return implode(' ', $attributes);
-        }
-
         // HTML supports boolean attributes without values
         if (is_array($name) === false && is_bool($value) === true) {
             return $value === true ? strtolower($name) : null;
         }
 
         // all other cases can share the XML variant
-        $attr = Xml::attr($name, $value);
+        $attr = parent::attr($name, $value);
 
         // HTML supports named entities
-        $entities = Xml::entities();
+        $entities = parent::entities();
         $html = array_keys($entities);
         $xml  = array_values($entities);
         return str_replace($xml, $html, $attr);
@@ -124,22 +108,6 @@ class Html
     public static function breaks(string $string): string
     {
         return nl2br($string);
-    }
-
-    /**
-     * Removes all HTML tags and encoded chars from a string
-     *
-     * ```
-     * echo Html::decode('some &uuml;ber <em>crazy</em> stuff');
-     * // output: some über crazy stuff
-     * ```
-     *
-     * @param string $string
-     * @return string
-     */
-    public static function decode(string $string): string
-    {
-        return Xml::decode($string);
     }
 
     /**
@@ -206,7 +174,7 @@ class Html
      */
     public static function entities(): array
     {
-        return static::$entities = static::$entities ?? get_html_translation_table(HTML_ENTITIES);
+        return self::$entities = self::$entities ?? get_html_translation_table(HTML_ENTITIES);
     }
 
     /**
@@ -359,36 +327,24 @@ class Html
     }
 
     /**
-     * Generates an HTML tag with optional content and attributes
+     * Builds an HTML tag
      *
-     * @param string $name The name of the tag, i.e. `'a'`
-     * @param string|array|null $content The content if available; pass `null` to generate a self-closing tag,
-     *                                   pass an empty string to generate empty content
+     * @param string $name Tag name
+     * @param array|string|null $content Scalar value or array with multiple lines of content or `null` to
+     *                                   generate a self-closing tag; pass an empty string to generate empty content
      * @param array $attr An associative array with additional attributes for the tag
+     * @param string|null $indent Indentation string, defaults to two spaces or `null` for output on one line
+     * @param int $level Indentation level
      * @return string The generated HTML
      */
-    public static function tag(string $name, $content = '', array $attr = []): string
+    public static function tag(string $name, $content = '', array $attr = null, string $indent = null, int $level = 0): string
     {
-        $html = '<' . $name;
-        $attr = static::attr($attr);
-
-        if (empty($attr) === false) {
-            $html .= ' ' . $attr;
+        // force void elements to be self-closing
+        if (static::isVoid($name) === true) {
+            $content = null;
         }
 
-        if (static::isVoid($name) === true || $content === null) {
-            $html .= static::$void;
-        } else {
-            if (is_array($content) === true) {
-                $content = implode($content);
-            } else {
-                $content = static::encode($content, false);
-            }
-
-            $html .= '>' . $content . '</' . $name . '>';
-        }
-
-        return $html;
+        return parent::tag($name, $content, $attr, $indent, $level);
     }
 
     /**
@@ -408,6 +364,33 @@ class Html
         }
 
         return static::link('tel:' . $number, $text, $attr);
+    }
+
+    /**
+     * Properly encodes tag contents
+     *
+     * @param mixed $value
+     * @return string|null
+     */
+    public static function value($value): ?string
+    {
+        if ($value === true) {
+            return 'true';
+        }
+
+        if ($value === false) {
+            return 'false';
+        }
+
+        if (is_numeric($value) === true) {
+            return (string)$value;
+        }
+
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return static::encode($value, false);
     }
 
     /**

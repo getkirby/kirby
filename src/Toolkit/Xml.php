@@ -56,6 +56,13 @@ class Xml
     ];
 
     /**
+     * Closing string for void tags
+     *
+     * @var string
+     */
+    public static $void = ' />';
+
+    /**
      * Generates a single attribute or a list of attributes
      *
      * @param string|array $name String: A single attribute with that name will be generated.
@@ -155,7 +162,7 @@ class Xml
                     }
                 }
 
-                $result = static::tag($name, $value, $attributes, $level, $indent);
+                $result = static::tag($name, $value, $attributes, $indent, $level);
             } else {
                 // just children
 
@@ -169,7 +176,7 @@ class Xml
         } else {
             // scalar value
 
-            $result = static::tag($name, $props, null, $level, $indent);
+            $result = static::tag($name, $props, null, $indent, $level);
         }
 
         if ($head === true) {
@@ -180,7 +187,7 @@ class Xml
     }
 
     /**
-     * Removes all XML tags and encoded chars from a string
+     * Removes all HTML/XML tags and encoded chars from a string
      *
      * ```
      * echo Xml::decode('some &uuml;ber <em>crazy</em> stuff');
@@ -217,7 +224,7 @@ class Xml
             $string = Html::encode($string, false);
         }
 
-        $entities = static::entities();
+        $entities = self::entities();
         $html = array_keys($entities);
         $xml  = array_values($entities);
 
@@ -231,7 +238,7 @@ class Xml
      */
     public static function entities(): array
     {
-        return static::$entities;
+        return self::$entities;
     }
 
     /**
@@ -343,27 +350,32 @@ class Xml
      * Builds an XML tag
      *
      * @param string $name Tag name
-     * @param array|string $content Scalar value or array with multiple lines of content
+     * @param array|string|null $content Scalar value or array with multiple lines of content or `null` to
+     *                                   generate a self-closing tag; pass an empty string to generate empty content
      * @param array $attr An associative array with additional attributes for the tag
+     * @param string|null $indent Indentation string, defaults to two spaces or `null` for output on one line
      * @param int $level Indentation level
-     * @param string $indent Indentation string, defaults to two spaces
      * @return string The generated XML
      */
-    public static function tag(string $name, $content = null, array $attr = null, int $level = 0, string $indent = '  '): string
+    public static function tag(string $name, $content = '', array $attr = null, ?string $indent = null, int $level = 0): string
     {
         $attr       = static::attr($attr);
         $start      = '<' . $name . ($attr ? ' ' . $attr : '') . '>';
-        $startShort = '<' . $name . ($attr ? ' ' . $attr : '') . ' />';
+        $startShort = '<' . $name . ($attr ? ' ' . $attr : '') . static::$void;
         $end        = '</' . $name . '>';
-        $baseIndent = str_repeat($indent, $level);
+        $baseIndent = $indent ? str_repeat($indent, $level) : '';
 
         if (is_array($content) === true) {
-            $xml = $baseIndent . $start . PHP_EOL;
-            foreach ($content as $line) {
-                $xml .= $baseIndent . $indent . $line . PHP_EOL;
+            if (is_string($indent) === true) {
+                $xml = $baseIndent . $start . PHP_EOL;
+                foreach ($content as $line) {
+                    $xml .= $baseIndent . $indent . $line . PHP_EOL;
+                }
+                $xml .= $baseIndent . $end;
+            } else {
+                $xml = $start . implode($content) . $end;
             }
-            $xml .= $baseIndent . $end;
-        } elseif (empty($content) === true) {
+        } elseif ($content === null) {
             $xml = $baseIndent . $startShort;
         } else {
             $xml = $baseIndent . $start . static::value($content) . $end;
@@ -373,7 +385,7 @@ class Xml
     }
 
     /**
-     * Encodes the value as CDATA if necessary
+     * Properly encodes tag contents
      *
      * @param mixed $value
      * @return string|null

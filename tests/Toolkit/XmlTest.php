@@ -169,7 +169,7 @@ class XmlTest extends TestCase
         $tag = Xml::tag('name', 'content');
         $this->assertSame('<name>content</name>', $tag);
 
-        $tag = Xml::tag('name', 'content', null, 1);
+        $tag = Xml::tag('name', 'content', null, '  ', 1);
         $this->assertSame('  <name>content</name>', $tag);
 
         $tag = Xml::tag('name', 'content', ['foo' => 'bar']);
@@ -181,13 +181,13 @@ class XmlTest extends TestCase
         $tag = Xml::tag('name', 'Süper Önencœded ßtring', ['foo' => 'bar']);
         $this->assertSame('<name foo="bar"><![CDATA[Süper Önencœded ßtring]]></name>', $tag);
 
-        $tag = Xml::tag('name', 'content', ['foo' => 'bar'], 1);
+        $tag = Xml::tag('name', 'content', ['foo' => 'bar'], '  ', 1);
         $this->assertSame('  <name foo="bar">content</name>', $tag);
 
-        $tag = Xml::tag('name', 'content', ['foo' => 'bar'], 1, '    ');
+        $tag = Xml::tag('name', 'content', ['foo' => 'bar'], '    ', 1);
         $this->assertSame('    <name foo="bar">content</name>', $tag);
 
-        $tag = Xml::tag('name', ['Test', 'Test2'], ['foo' => 'bar'], 2, ' ');
+        $tag = Xml::tag('name', ['Test', 'Test2'], ['foo' => 'bar'], ' ', 2);
         $this->assertSame('  <name foo="bar">' . PHP_EOL . '   Test' . PHP_EOL . '   Test2' . PHP_EOL . '  </name>', $tag);
     }
 
