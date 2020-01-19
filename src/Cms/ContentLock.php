@@ -41,7 +41,7 @@ class ContentLock
     }
 
     /**
-     * Clear lock
+     * Clears the lock unconditionally
      *
      * @return bool
      */
