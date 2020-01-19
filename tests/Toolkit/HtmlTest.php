@@ -4,333 +4,430 @@ namespace Kirby\Toolkit;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass Kirby\Toolkit\Html
+ */
 class HtmlTest extends TestCase
 {
-    public function test__callStatic()
+    /**
+     * @covers ::__callStatic()
+     */
+    public function testCallStatic()
     {
-        $html = Html::div('test');
-        $expected = '<div>test</div>';
-
-        $this->assertEquals($expected, $html);
+        $this->assertSame('<div>test</div>', Html::div('test'));
+        $this->assertSame('<div class="test">test</div>', Html::div('test', ['class' => 'test']));
+        $this->assertSame('<hr class="test">', Html::hr(['class' => 'test']));
     }
 
-    public function test__callStaticWithAttributes()
-    {
-        $html = Html::div('test', ['class' => 'test']);
-        $expected = '<div class="test">test</div>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function test__callStaticWithVoidElement()
-    {
-        $html = Html::hr(['class' => 'test']);
-        $expected = '<hr class="test">';
-
-        $this->assertEquals($expected, $html);
-    }
-
+    /**
+     * @covers ::a
+     * @covers ::link
+     */
     public function testA()
     {
         $html = Html::a('https://getkirby.com');
         $expected = '<a href="https://getkirby.com">getkirby.com</a>';
-
-        $this->assertEquals($expected, $html);
+        $this->assertSame($expected, $html);
 
         $html = Html::a('mailto:mail@company.com');
-        $expected = '!\<a href="mailto\:.*?">.*?\</a>!';
-
+        $expected = '!^<a href="mailto:(.*?)">(.*?)</a>$!';
         $this->assertRegExp($expected, $html);
+        preg_match($expected, $html, $matches);
+        $this->assertSame('mail@company.com', Html::decode($matches[1]));
+        $this->assertSame('mail@company.com', Html::decode($matches[2]));
 
         $html = Html::a('tel:1234');
-        $expected = '<a href="tel:1234">tel:1234</a>';
-
-        $this->assertEquals($expected, $html);
+        $expected = '<a href="tel:1234">1234</a>';
+        $this->assertSame($expected, $html);
     }
 
+    /**
+     * @covers ::a
+     * @covers ::link
+     */
     public function testAWithText()
     {
         $html = Html::a('https://getkirby.com', 'Kirby');
         $expected = '<a href="https://getkirby.com">Kirby</a>';
+        $this->assertSame($expected, $html);
 
-        $this->assertEquals($expected, $html);
+        $html = Html::a('mailto:mail@company.com', 'Kirby');
+        $expected = '!^<a href="mailto:(.*?)">Kirby</a>$!';
+        $this->assertRegExp($expected, $html);
+        preg_match($expected, $html, $matches);
+        $this->assertSame('mail@company.com', Html::decode($matches[1]));
+
+        $html = Html::a('tel:1234', 'Kirby');
+        $expected = '<a href="tel:1234">Kirby</a>';
+        $this->assertSame($expected, $html);
     }
 
+    /**
+     * @covers ::a
+     * @covers ::link
+     */
     public function testAWithAttributes()
     {
         $html = Html::a('https://getkirby.com', 'Kirby', ['class' => 'test']);
         $expected = '<a class="test" href="https://getkirby.com">Kirby</a>';
+        $this->assertSame($expected, $html);
 
-        $this->assertEquals($expected, $html);
+        $html = Html::a('mailto:mail@company.com', 'Kirby', ['class' => 'test']);
+        $expected = '!^<a class="test" href="mailto:(.*?)">Kirby</a>$!';
+        $this->assertRegExp($expected, $html);
+        preg_match($expected, $html, $matches);
+        $this->assertSame('mail@company.com', Html::decode($matches[1]));
+
+        $html = Html::a('tel:1234', 'Kirby', ['class' => 'test']);
+        $expected = '<a class="test" href="tel:1234">Kirby</a>';
+        $this->assertSame($expected, $html);
     }
 
+    /**
+     * @covers ::a
+     * @covers ::link
+     */
     public function testAWithTarget()
     {
         $html = Html::a('https://getkirby.com', 'Kirby', ['target' => '_blank']);
         $expected = '<a href="https://getkirby.com" rel="noopener noreferrer" target="_blank">Kirby</a>';
-
-        $this->assertEquals($expected, $html);
+        $this->assertSame($expected, $html);
     }
 
+    /**
+     * @covers ::a
+     * @covers ::link
+     */
     public function testAWithTargetAndRel()
     {
         $html = Html::a('https://getkirby.com', 'Kirby', ['target' => '_blank', 'rel' => 'noopener']);
         $expected = '<a href="https://getkirby.com" rel="noopener" target="_blank">Kirby</a>';
-
-        $this->assertEquals($expected, $html);
+        $this->assertSame($expected, $html);
     }
 
-    public function testAttr()
+    /**
+     * @covers       ::attr
+     * @dataProvider attrProvider
+     */
+    public function testAttr($input, $value, $expected)
     {
-        $tests = [
-            [
-                'input'    => [],
-                'expected' => ''
-            ],
-            [
-                'input'    => ['a' => 'a', 'b' => 'b'],
-                'expected' => 'a="a" b="b"'
-            ],
-            [
-                'input'    => ['a' => 'a', 'b' => true],
-                'expected' => 'a="a" b'
-            ],
-            [
-                'input'    => ['a' => 'a', 'b' => ''],
-                'expected' => 'a="a"'
-            ],
-            [
-                'input'    => ['a' => 'a', 'b' => false],
-                'expected' => 'a="a"'
-            ],
-        ];
-
-        foreach ($tests as $test) {
-            $result = Html::attr($test['input']);
-            $this->assertEquals($test['expected'], $result);
-        }
+        $this->assertSame($expected, Html::attr($input, $value));
     }
 
-    public function testAttrSingleMode()
-    {
-        $result = Html::attr('a', 'a');
-        $this->assertEquals('a="a"', $result);
-
-        $result = Html::attr('a', null);
-        $this->assertEquals(null, $result);
-
-        $result = Html::attr('a', ['a', 'b']);
-        $this->assertEquals('a="a b"', $result);
-
-        $result = Html::attr('a', ['a', null]);
-        $this->assertEquals('a="a"', $result);
-    }
-
-    public function testBreaks()
-    {
-        $html = Html::breaks("line 1\nline 2");
-        $expected = "line 1<br />\nline 2";
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testDecode()
-    {
-        $html = Html::decode('some uber <em>crazy</em> stuff');
-        $expected = 'some uber crazy stuff';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testEmail()
-    {
-        $html = Html::email('mail@company.com');
-        $expected = '!\<a href=".*?">.*?\</a>!';
-
-        $this->assertRegExp($expected, $html);
-    }
-
-    public function testEmailWithArrayText()
-    {
-        $html = Html::email('mail@company.com', ['<b>Email</b>']);
-        $expected = '!\<a href=".*?"><b>Email</b></a>!';
-
-        $this->assertRegExp($expected, $html);
-    }
-
-    public function testEmailWithoutAddress()
-    {
-        $html = Html::email('');
-        $this->assertEquals('', $html);
-    }
-
-    public function testEmailWithText()
-    {
-        $html = Html::email('mail@company.com', 'Email');
-        $expected = '!\<a href=".*?">Email</a>!';
-
-        $this->assertRegExp($expected, $html);
-    }
-
-    public function testEmailWithAttributes()
-    {
-        $html = Html::email('mail@company.com', 'Email', ['class' => 'email']);
-        $expected = '!\<a class="email" href=".*?">Email</a>!';
-
-        $this->assertRegExp($expected, $html);
-    }
-
-    public function testEmailWithTarget()
-    {
-        $html = Html::email('mail@company.com', 'Email', ['target' => '_blank']);
-        $expected = '!\<a href=".*?" rel="noopener noreferrer" target="_blank">Email</a>!';
-
-        $this->assertRegExp($expected, $html);
-    }
-
-    public function testEncode()
-    {
-        $html = Html::encode('äöü');
-        $expected = '&auml;&ouml;&uuml;';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testEncodeWithHtml()
-    {
-        $html = Html::encode('ä<p>ö</p>', true);
-        $expected = '&auml;<p>&ouml;</p>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testFigure()
-    {
-        $html = Html::figure('test');
-        $expected = '<figure>test</figure>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testFigureWithAttributes()
-    {
-        $html = Html::figure('test', null, ['class' => 'figure']);
-        $expected = '<figure class="figure">test</figure>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testFigureWithCaption()
-    {
-        $html = Html::figure('test', 'yay');
-        $expected = '<figure>test<figcaption>yay</figcaption></figure>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testGist()
-    {
-        $html = Html::gist($url = 'https://gist.github.com/bastianallgeier/dfb2a889ae73c7c318ea300efd2df6ff');
-        $expected = '<script src="' . $url . '.js"></script>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testGistWithFile()
-    {
-        $html = Html::gist($url = 'https://gist.github.com/bastianallgeier/dfb2a889ae73c7c318ea300efd2df6ff', 'kirbycontent.txt');
-        $expected = '<script src="' . $url . '.js?file=kirbycontent.txt"></script>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testIframe()
-    {
-        $html = Html::iframe($url = 'https://getkirby.com');
-        $expected = '<iframe src="' . $url . '"></iframe>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testImg()
-    {
-        $html = Html::img($src = 'https://getkirby.com/image.jpg');
-        $expected = '<img alt="" src="' . $src . '">';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testRel()
-    {
-        $html = Html::rel('me');
-        $expected = 'me';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testRelWithTarget()
-    {
-        $html = Html::rel(null, '_blank');
-        $expected = 'noopener noreferrer';
-
-        $this->assertEquals($expected, $html);
-
-        $html = Html::rel('noopener', '_blank');
-        $expected = 'noopener';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testTel()
-    {
-        $html = Html::tel('1234');
-        $expected = '<a href="tel:1234">1234</a>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testTag()
-    {
-        $html = Html::tag('p', 'test');
-        $expected = '<p>test</p>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testTagWithAttributes()
-    {
-        $html = Html::tag('p', 'test', ['class' => 'test']);
-        $expected = '<p class="test">test</p>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function testTagWithArrayContent()
-    {
-        $html = Html::tag('p', ['<i>test</i>']);
-        $expected = '<p><i>test</i></p>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    public function videoProvider()
+    public function attrProvider()
     {
         return [
-
-            // youtube
-            ['http://www.youtube.com/watch?v=d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
-            ['http://www.youtube.com/embed/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
-            ['https://youtu.be/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
-            ['https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
-            ['https://www.youtube-nocookie.com/embed/d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
-
-            // vimeo
-            ['https://vimeo.com/239882943', 'https://player.vimeo.com/video/239882943'],
-            ['https://player.vimeo.com/video/239882943', 'https://player.vimeo.com/video/239882943'],
+            [[],                         null,  ''],
+            [['B' => 'b', 'A' => 'a'],   null,  'a="a" b="b"'],
+            [['B' => 'b', 'A' => 'a'],   true,  'a="a" b="b"'],
+            [['B' => 'b', 'A' => 'a'],   false, 'b="b" a="a"'],
+            [['a' => 'a', 'b' => true],  null,  'a="a" b'],
+            [['a' => 'a', 'b' => ' '],   null,  'a="a" b=""'],
+            [['a' => 'a', 'b' => ''],    null,  'a="a"'],
+            [['a' => 'a', 'b' => false], null,  'a="a"'],
+            [['a' => 'a', 'b' => null],  null,  'a="a"'],
+            [['a' => 'a', 'b' => []],    null,  'a="a"']
         ];
     }
 
     /**
+     * @covers ::attr
+     */
+    public function testAttrArrayValue()
+    {
+        $result = Html::attr('a', ['a', 'b']);
+        $this->assertSame('a="a b"', $result);
+
+        $result = Html::attr('a', ['a', 1]);
+        $this->assertSame('a="a 1"', $result);
+
+        $result = Html::attr('a', ['a', null]);
+        $this->assertSame('a="a"', $result);
+
+        $result = Html::attr('a', ['value' => '&', 'escape' => true]);
+        $this->assertSame('a="&amp;"', $result);
+
+        $result = Html::attr('a', ['value' => '&', 'escape' => false]);
+        $this->assertSame('a="&"', $result);
+    }
+
+    /**
+     * @covers ::breaks
+     */
+    public function testBreaks()
+    {
+        $this->assertSame("line 1<br />\nline 2", Html::breaks("line 1\nline 2"));
+    }
+
+    /**
+     * @covers ::decode
+     */
+    public function testDecode()
+    {
+        $this->assertSame('some über crazy stuff', Html::decode('some &uuml;ber <em>crazy</em> stuff'));
+    }
+
+    /**
+     * @covers ::email
+     */
+    public function testEmail()
+    {
+        $html = Html::email('mail@company.com?subject=Test');
+        $expected = '!^<a href="mailto:(.*?)">(.*?)</a>$!';
+        $this->assertRegExp($expected, $html);
+        preg_match($expected, $html, $matches);
+        $this->assertSame('mail@company.com?subject=Test', Html::decode($matches[1]));
+        $this->assertSame('mail@company.com', Html::decode($matches[2]));
+    }
+
+    /**
+     * @covers ::email
+     */
+    public function testEmailWithText()
+    {
+        $html = Html::email('mail@company.com', '<b>Email</b>');
+        $expected = '!^<a href="mailto:(.*?)">&lt;b&gt;Email&lt;/b&gt;</a>$!';
+        $this->assertRegExp($expected, $html);
+        preg_match($expected, $html, $matches);
+        $this->assertSame('mail@company.com', Html::decode($matches[1]));
+    }
+
+    /**
+     * @covers ::email
+     */
+    public function testEmailWithArrayText()
+    {
+        $html = Html::email('mail@company.com', ['<b>Email</b>']);
+        $expected = '!^<a href="mailto:(.*?)"><b>Email</b></a>$!';
+        $this->assertRegExp($expected, $html);
+        preg_match($expected, $html, $matches);
+        $this->assertSame('mail@company.com', Html::decode($matches[1]));
+    }
+
+    /**
+     * @covers ::email
+     */
+    public function testEmailWithoutAddress()
+    {
+        $html = Html::email('');
+        $this->assertSame('', $html);
+    }
+
+    /**
+     * @covers ::email
+     */
+    public function testEmailWithAttributes()
+    {
+        $html = Html::email('mail@company.com', 'Email', ['class' => 'email']);
+        $expected = '!^<a class="email" href="mailto:(.*?)">Email</a>$!';
+        $this->assertRegExp($expected, $html);
+        preg_match($expected, $html, $matches);
+        $this->assertSame('mail@company.com', Html::decode($matches[1]));
+    }
+
+    /**
+     * @covers ::email
+     */
+    public function testEmailWithTarget()
+    {
+        $html = Html::email('mail@company.com', 'Email', ['target' => '_blank']);
+        $expected = '!^<a href="mailto:(.*?)" rel="noopener noreferrer" target="_blank">Email</a>$!';
+        $this->assertRegExp($expected, $html);
+        preg_match($expected, $html, $matches);
+        $this->assertSame('mail@company.com', Html::decode($matches[1]));
+    }
+
+    /**
+     * @covers ::encode
+     */
+    public function testEncode()
+    {
+        $html = Html::encode('äöü');
+        $expected = '&auml;&ouml;&uuml;';
+        $this->assertSame($expected, $html);
+
+        $html = Html::encode('ä<p>ö</p>');
+        $expected = '&auml;&lt;p&gt;&ouml;&lt;/p&gt;';
+        $this->assertSame($expected, $html);
+
+        $html = Html::encode('ä<span title="Amazing &amp; great">ö</span>', true);
+        $expected = '&auml;<span title="Amazing &amp; great">&ouml;</span>';
+        $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers ::entities
+     */
+    public function testEntities()
+    {
+        Html::$entities = null;
+        $this->assertTrue(count(Html::entities()) > 0);
+
+        Html::$entities = [];
+        $this->assertSame([], Html::entities());
+
+        Html::$entities = ['t' => 'test'];
+        $this->assertSame(['t' => 'test'], Html::entities());
+
+        Html::$entities = null;
+    }
+
+    /**
+     * @covers ::figure
+     */
+    public function testFigure()
+    {
+        $html = Html::figure('test');
+        $expected = '<figure>test</figure>';
+        $this->assertSame($expected, $html);
+
+        $html = Html::figure('test', '', ['class' => 'figure']);
+        $expected = '<figure class="figure">test</figure>';
+        $this->assertSame($expected, $html);
+
+        $html = Html::figure('test', 'yay');
+        $expected = '<figure>test<figcaption>yay</figcaption></figure>';
+        $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers ::gist
+     */
+    public function testGist()
+    {
+        $html = Html::gist($url = 'https://gist.github.com/bastianallgeier/dfb2a889ae73c7c318ea300efd2df6ff');
+        $expected = '<script src="' . $url . '.js"></script>';
+        $this->assertSame($expected, $html);
+
+        $html = Html::gist($url = 'https://gist.github.com/bastianallgeier/dfb2a889ae73c7c318ea300efd2df6ff', 'kirbycontent.txt');
+        $expected = '<script src="' . $url . '.js?file=kirbycontent.txt"></script>';
+        $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers ::iframe
+     */
+    public function testIframe()
+    {
+        $html = Html::iframe($url = 'https://getkirby.com');
+        $expected = '<iframe src="' . $url . '"></iframe>';
+        $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers ::img
+     */
+    public function testImg()
+    {
+        $html = Html::img($src = 'https://getkirby.com/image.jpg');
+        $expected = '<img alt="" src="' . $src . '">';
+        $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers ::isVoid
+     */
+    public function testIsVoid()
+    {
+        $this->assertTrue(Html::isVoid('hr'));
+        $this->assertFalse(Html::isVoid(''));
+    }
+
+    /**
+     * @covers ::rel
+     */
+    public function testRel()
+    {
+        $html = Html::rel('me');
+        $expected = 'me';
+        $this->assertSame($expected, $html);
+
+        $html = Html::rel(null, '_blank');
+        $expected = 'noopener noreferrer';
+        $this->assertSame($expected, $html);
+
+        $html = Html::rel('noopener', '_blank');
+        $expected = 'noopener';
+        $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers ::tel
+     * @covers ::link
+     */
+    public function testTel()
+    {
+        $html = Html::tel('1234');
+        $expected = '<a href="tel:1234">1234</a>';
+        $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers ::tel
+     * @covers ::link
+     */
+    public function testTelWithText()
+    {
+        $html = Html::tel('1234', 'Tel');
+        $expected = '<a href="tel:1234">Tel</a>';
+        $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers ::tel
+     * @covers ::link
+     */
+    public function testTelWithArrayText()
+    {
+        $html = Html::tel('1234', ['<b>Tel</b>']);
+        $expected = '<a href="tel:1234"><b>Tel</b></a>';
+        $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers ::tag
+     */
+    public function testTag()
+    {
+        $html = Html::tag('p', 'test');
+        $expected = '<p>test</p>';
+        $this->assertSame($expected, $html);
+
+        $html = Html::tag('p', '');
+        $expected = '<p></p>';
+        $this->assertSame($expected, $html);
+
+        $html = Html::tag('p', null);
+        $expected = '<p>';
+        $this->assertSame($expected, $html);
+
+        $html = Html::tag('hr', '');
+        $expected = '<hr>';
+        $this->assertSame($expected, $html);
+
+        $html = Html::tag('hr', null);
+        $expected = '<hr>';
+        $this->assertSame($expected, $html);
+
+        Html::$void = ' />';
+        $html = Html::tag('hr', null);
+        $expected = '<hr />';
+        $this->assertSame($expected, $html);
+        Html::$void = '>';
+
+        $html = Html::tag('p', 'test', ['class' => 'test']);
+        $expected = '<p class="test">test</p>';
+        $this->assertSame($expected, $html);
+
+        $html = Html::tag('p', ['<i>test</i>']);
+        $expected = '<p><i>test</i></p>';
+        $this->assertSame($expected, $html);
+    }
+
+    /**
+     * @covers       ::video
+     * @covers       ::youtube
+     * @covers       ::vimeo
      * @dataProvider videoProvider
      */
     public function testVideo($url, $src)
@@ -338,55 +435,51 @@ class HtmlTest extends TestCase
         // plain
         $html = Html::video($url);
         $expected = '<iframe allowfullscreen src="' . $src . '"></iframe>';
-
-        $this->assertEquals($expected, $html);
+        $this->assertSame($expected, $html);
 
         // with attributes
-        $html = Html::video($url, null, ['class' => 'video']);
+        $html = Html::video($url, [], ['class' => 'video']);
         $expected = '<iframe allowfullscreen class="video" src="' . $src . '"></iframe>';
-
-        $this->assertEquals($expected, $html);
+        $this->assertSame($expected, $html);
 
         // with options
         $options = [
             'vimeo'   => ['foo' => 'bar'],
             'youtube' => ['foo' => 'bar']
         ];
-
         $html = Html::video($url, $options);
         $expected = '<iframe allowfullscreen src="' . $src . '?foo=bar"></iframe>';
+        $this->assertSame($expected, $html);
 
-        $this->assertEquals($expected, $html);
-    }
-
-    /**
-     * @dataProvider videoProvider
-     */
-    public function testVideoWithAttributes($url, $src)
-    {
-        // with attributes
-        $html = Html::video($url, null, ['class' => 'video']);
-        $expected = '<iframe allowfullscreen class="video" src="' . $src . '"></iframe>';
-
-        $this->assertEquals($expected, $html);
-    }
-
-    /**
-     * @dataProvider videoProvider
-     */
-    public function testVideoWithOptions($url, $src)
-    {
+        // with attributes and options
         $options = [
             'vimeo'   => ['foo' => 'bar'],
             'youtube' => ['foo' => 'bar']
         ];
-
-        $html = Html::video($url, $options);
-        $expected = '<iframe allowfullscreen src="' . $src . '?foo=bar"></iframe>';
-
-        $this->assertEquals($expected, $html);
+        $html = Html::video($url, $options, ['class' => 'video']);
+        $expected = '<iframe allowfullscreen class="video" src="' . $src . '?foo=bar"></iframe>';
+        $this->assertSame($expected, $html);
     }
 
+    public function videoProvider()
+    {
+        return [
+            // YouTube
+            ['http://www.youtube.com/watch?v=d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
+            ['http://www.youtube.com/embed/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
+            ['https://youtu.be/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
+            ['https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
+            ['https://www.youtube-nocookie.com/embed/d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
+
+            // Vimeo
+            ['https://vimeo.com/239882943', 'https://player.vimeo.com/video/239882943'],
+            ['https://player.vimeo.com/video/239882943', 'https://player.vimeo.com/video/239882943'],
+        ];
+    }
+
+    /**
+     * @covers ::video
+     */
     public function testVideoWithInvalidUrl()
     {
         $this->expectException('Exception');
@@ -395,14 +488,20 @@ class HtmlTest extends TestCase
         Html::video('https://somevideo.com');
     }
 
+    /**
+     * @covers ::youtube
+     */
     public function testVideoWithInvalidYoutubeUrl()
     {
         $this->expectException('Exception');
-        $this->expectExceptionMessage('Invalid Youtube source');
+        $this->expectExceptionMessage('Invalid YouTube source');
 
         Html::video('https://youtube.com/asldjhaskjdhakjs');
     }
 
+    /**
+     * @covers ::vimeo
+     */
     public function testVideoWithInvalidVimeoUrl()
     {
         $this->expectException('Exception');
