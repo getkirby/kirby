@@ -160,23 +160,20 @@ class Xml
     }
 
     /**
-     * Removes all xml entities from a string
-     * and convert them to html entities first
-     * and remove all html entities afterwards.
+     * Removes all XML tags and encoded chars from a string
      *
-     * <code>
-     *
-     * echo xml::decode('some <em>&#252;ber</em> crazy stuff');
-     * // output: some &uuml;ber crazy stuff
-     *
-     * </code>
+     * ```
+     * echo Xml::decode('some &uuml;ber <em>crazy</em> stuff');
+     * // output: some über crazy stuff
+     * ```
      *
      * @param string $string
      * @return string
      */
-    public static function decode(string $string = null): string
+    public static function decode(string $string): string
     {
-        return Html::decode($string);
+        $string = strip_tags($string);
+        return html_entity_decode($string, ENT_COMPAT, 'utf-8');
     }
 
     /**

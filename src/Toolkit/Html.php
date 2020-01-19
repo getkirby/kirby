@@ -126,22 +126,19 @@ class Html
     }
 
     /**
-     * Removes all html tags and encoded chars from a string
+     * Removes all HTML tags and encoded chars from a string
      *
-     * <code>
-     *
-     * echo html::decode('some uber <em>crazy</em> stuff');
-     * // output: some uber crazy stuff
-     *
-     * </code>
+     * ```
+     * echo Html::decode('some &uuml;ber <em>crazy</em> stuff');
+     * // output: some über crazy stuff
+     * ```
      *
      * @param string $string
-     * @return string The html string
+     * @return string
      */
-    public static function decode(string $string = null): string
+    public static function decode(string $string): string
     {
-        $string = strip_tags($string);
-        return html_entity_decode($string, ENT_COMPAT, 'utf-8');
+        return Xml::decode($string);
     }
 
     /**
