@@ -45,7 +45,7 @@ class ContentLock
      *
      * @return bool
      */
-    public function clear(): bool
+    protected function clearLock(): bool
     {
         // if no lock exists, skip
         if (isset($this->data['lock']) === false) {
@@ -105,7 +105,7 @@ class ContentLock
             }
 
             // clear lock if user not found
-            $this->clear();
+            $this->clearLock();
         }
 
         return false;
@@ -169,10 +169,7 @@ class ContentLock
             ]);
         }
 
-        // remove lock
-        unset($this->data['lock']);
-
-        return $this->kirby()->locks()->set($this->model, $this->data);
+        return $this->clearLock();
     }
 
     /**
@@ -212,10 +209,7 @@ class ContentLock
         $this->data['unlock']   = $this->data['unlock'] ?? [];
         $this->data['unlock'][] = $this->data['lock']['user'];
 
-        // remove lock
-        unset($this->data['lock']);
-
-        return $this->kirby()->locks()->set($this->model, $this->data);
+        return $this->clearLock();
     }
 
     /**

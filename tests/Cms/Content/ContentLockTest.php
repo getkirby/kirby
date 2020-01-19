@@ -17,8 +17,8 @@ class ContentLockTest extends TestCase
             ],
             'site' => [
                 'children' => [
-                    ['slug'  => 'test'],
-                    ['slug'  => 'foo']
+                    ['slug' => 'test'],
+                    ['slug' => 'foo']
                 ]
             ],
             'users' => [
@@ -38,6 +38,28 @@ class ContentLockTest extends TestCase
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+    }
+
+    public function testClearLock()
+    {
+        $app = $this->app;
+        $page = $app->page('test');
+
+        $app->impersonate('test@getkirby.com');
+        $page->lock()->create();
+        $oldData = $page->lock()->get();
+        $app->users()->remove($app->user()->id());
+
+        $app->impersonate('homer@simpson.com');
+        $page->lock()->get();
+        $page->lock()->create();
+        $newData = $page->lock()->get();
+
+        $this->assertTrue(empty($oldData));
+        $this->assertFalse(empty($newData));
+        $this->assertFalse($newData['unlockable']);
+        $this->assertEquals('homer@simpson.com', $newData['email']);
+        $this->assertArrayHasKey('time', $newData);
     }
 
     public function testCreate()
