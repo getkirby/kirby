@@ -559,55 +559,55 @@ class Query
     /**
      * Builds a count query
      *
-     * @return \Kirby\Database\Query
+     * @return int
      */
-    public function count()
+    public function count(): int
     {
-        return $this->aggregate('COUNT');
+        return (int)$this->aggregate('COUNT');
     }
 
     /**
      * Builds a max query
      *
      * @param string $column
-     * @return \Kirby\Database\Query
+     * @return float
      */
-    public function max(string $column)
+    public function max(string $column): float
     {
-        return $this->aggregate('MAX', $column);
+        return (float)$this->aggregate('MAX', $column);
     }
 
     /**
      * Builds a min query
      *
      * @param string $column
-     * @return \Kirby\Database\Query
+     * @return float
      */
-    public function min(string $column)
+    public function min(string $column): float
     {
-        return $this->aggregate('MIN', $column);
+        return (float)$this->aggregate('MIN', $column);
     }
 
     /**
      * Builds a sum query
      *
      * @param string $column
-     * @return \Kirby\Database\Query
+     * @return float
      */
-    public function sum(string $column)
+    public function sum(string $column): float
     {
-        return $this->aggregate('SUM', $column);
+        return (float)$this->aggregate('SUM', $column);
     }
 
     /**
      * Builds an average query
      *
      * @param string $column
-     * @return \Kirby\Database\Query
+     * @return float
      */
-    public function avg(string $column)
+    public function avg(string $column): float
     {
-        return $this->aggregate('AVG', $column);
+        return (float)$this->aggregate('AVG', $column);
     }
 
     /**
