@@ -200,20 +200,21 @@ class Blueprint
 
         $mixin = static::find($extends);
 
-        if ($mixin === null) {
-            $props = $props;
-        } elseif (is_array($mixin) === true) {
-            $props = A::merge($mixin, $props, A::MERGE_REPLACE);
-        } else {
-            try {
-                $props = A::merge(Data::read($mixin), $props, A::MERGE_REPLACE);
-            } catch (Exception $e) {
-                $props = $props;
+        if ($mixin !== null) {
+            if (is_array($mixin) === true) {
+                $props = A::merge($mixin, $props, A::MERGE_REPLACE);
+            } else {
+                try {
+                    $props = A::merge(Data::read($mixin), $props, A::MERGE_REPLACE);
+                } catch (Exception $e) {
+                    $props = $props;
+                }
             }
         }
 
         // remove the extends flag
         unset($props['extends']);
+
         return $props;
     }
 
@@ -268,16 +269,22 @@ class Blueprint
      * Find a blueprint by name
      *
      * @param string $name
-     * @return string|array
+     * @return array
      */
     public static function find(string $name)
     {
+        if (isset(static::$loaded[$name]) === true) {
+            return static::$loaded[$name];
+        }
+
         $kirby = App::instance();
         $root  = $kirby->root('blueprints');
         $file  = $root . '/' . $name . '.yml';
 
         if (F::exists($file, $root) === true) {
-            return $file;
+            $props = Data::read($file);
+
+            return static::$loaded[$name] = $props;
         }
 
         if ($blueprint = $kirby->extension('blueprints', $name)) {
@@ -320,13 +327,9 @@ class Blueprint
      */
     public static function load(string $name): array
     {
-        if (isset(static::$loaded[$name]) === true) {
-            return static::$loaded[$name];
-        }
+        $props = static::find($name);
 
-        $props     = static::find($name);
         $normalize = function ($props) use ($name) {
-
             // inject the filename as name if no name is set
             $props['name'] = $props['name'] ?? $name;
 
@@ -339,14 +342,7 @@ class Blueprint
             return $props;
         };
 
-        if (is_array($props) === true) {
-            return $normalize($props);
-        }
-
-        $file  = $props;
-        $props = Data::read($file);
-
-        return static::$loaded[$name] = $normalize($props);
+        return $normalize($props);
     }
 
     /**
