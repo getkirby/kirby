@@ -243,11 +243,11 @@ class Pages extends Collection
         $query      = $startAt;
 
         foreach ($path as $key) {
-            $query = ltrim($query . '/' . $key, '/');
-            $item  = $collection->get($query) ?? null;
-
-            if ($item === null && $multiLang === true) {
+            if ($multiLang === true) {
                 $item = $collection->findBy('slug', $key);
+            } else {
+                $query = ltrim($query . '/' . $key, '/');
+                $item  = $collection->get($query);
             }
 
             if ($item === null) {
