@@ -198,18 +198,11 @@ class Blueprint
             return $props;
         }
 
-        $mixin = static::find($extends);
-
-        if ($mixin !== null) {
-            if (is_array($mixin) === true) {
-                $props = A::merge($mixin, $props, A::MERGE_REPLACE);
-            } else {
-                try {
-                    $props = A::merge(Data::read($mixin), $props, A::MERGE_REPLACE);
-                } catch (Exception $e) {
-                    $props = $props;
-                }
-            }
+        try {
+            $mixin = static::find($extends);
+            $props = A::merge($mixin, $props, A::MERGE_REPLACE);
+        } catch (Exception $e) {
+            // keep the props unextended if the snippet wasn't found
         }
 
         // remove the extends flag
@@ -271,7 +264,7 @@ class Blueprint
      * @param string $name
      * @return array
      */
-    public static function find(string $name)
+    public static function find(string $name): array
     {
         if (isset(static::$loaded[$name]) === true) {
             return static::$loaded[$name];
@@ -281,16 +274,20 @@ class Blueprint
         $root  = $kirby->root('blueprints');
         $file  = $root . '/' . $name . '.yml';
 
-        if (F::exists($file, $root) === true) {
-            $props = Data::read($file);
-
-            return static::$loaded[$name] = $props;
+        // first try to find a site blueprint,
+        // then check in the plugin extensions
+        if (F::exists($file, $root) !== true) {
+            $file = $kirby->extension('blueprints', $name);
         }
 
-        if ($blueprint = $kirby->extension('blueprints', $name)) {
-            return $blueprint;
+        // now ensure that we always return the data array
+        if (is_string($file) === true && F::exists($file) === true) {
+            return static::$loaded[$name] = Data::read($file);
+        } elseif (is_array($file) === true) {
+            return static::$loaded[$name] = $file;
         }
 
+        // neither a valid file nor array data
         throw new NotFoundException([
             'key'  => 'blueprint.notFound',
             'data' => ['name' => $name]
