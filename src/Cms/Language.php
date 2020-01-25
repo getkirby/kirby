@@ -364,7 +364,7 @@ class Language extends Model
             return $this->code;
         }
 
-        return Url::path($this->url());
+        return Url::path($this->url);
     }
 
     /**
