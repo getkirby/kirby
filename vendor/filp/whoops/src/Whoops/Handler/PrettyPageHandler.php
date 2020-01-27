@@ -17,6 +17,17 @@ use Whoops\Util\TemplateHelper;
 
 class PrettyPageHandler extends Handler
 {
+    const EDITOR_SUBLIME = "sublime";
+    const EDITOR_TEXTMATE = "textmate";
+    const EDITOR_EMACS = "emacs";
+    const EDITOR_MACVIM = "macvim";
+    const EDITOR_PHPSTORM = "phpstorm";
+    const EDITOR_IDEA = "idea";
+    const EDITOR_VSCODE = "vscode";
+    const EDITOR_ATOM = "atom";
+    const EDITOR_ESPRESSO = "espresso";
+    const EDITOR_XDEBUG = "xdebug";
+
     /**
      * Search paths to be scanned for resources, in the reverse
      * order they're declared.
@@ -97,6 +108,7 @@ class PrettyPageHandler extends Handler
         "idea"     => "idea://open?file=%file&line=%line",
         "vscode"   => "vscode://file/%file:%line",
         "atom"     => "atom://core/open/file?filename=%file&line=%line",
+        "espresso" => "x-espresso://open?filepath=%file&lines=%line",
     ];
 
     /**
@@ -114,6 +126,9 @@ class PrettyPageHandler extends Handler
             $this->editors['xdebug'] = function ($file, $line) {
                 return str_replace(['%f', '%l'], [$file, $line], ini_get('xdebug.file_link_format'));
             };
+
+            // If xdebug is available, use it as default editor.
+            $this->setEditor('xdebug');
         }
 
         // Add the default, local resource search path:
@@ -126,10 +141,11 @@ class PrettyPageHandler extends Handler
 
         if (class_exists('Symfony\Component\VarDumper\Cloner\VarCloner')) {
             $cloner = new VarCloner();
-            // Only dump object internals if a custom caster exists.
+            // Only dump object internals if a custom caster exists for performance reasons
+            // https://github.com/filp/whoops/pull/404
             $cloner->addCasters(['*' => function ($obj, $a, $stub, $isNested, $filter = 0) {
                 $class = $stub->class;
-                $classes = [$class => $class] + class_parents($class) + class_implements($class);
+                $classes = [$class => $class] + class_parents($obj) + class_implements($obj);
 
                 foreach ($classes as $class) {
                     if (isset(AbstractCloner::$defaultCasters[$class])) {
@@ -391,7 +407,7 @@ class PrettyPageHandler extends Handler
      *       return "http://stackoverflow.com";
      *   });
      * @param string $identifier
-     * @param string $resolver
+     * @param string|callable $resolver
      */
     public function addEditor($identifier, $resolver)
     {
@@ -704,7 +720,7 @@ class PrettyPageHandler extends Handler
 
         $values = $superGlobal;
         foreach ($blacklisted as $key) {
-            if (isset($superGlobal[$key])) {
+            if (isset($superGlobal[$key]) && is_string($superGlobal[$key])) {
                 $values[$key] = str_repeat('*', strlen($superGlobal[$key]));
             }
         }
