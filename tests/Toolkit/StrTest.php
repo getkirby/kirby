@@ -159,7 +159,7 @@ class StrTest extends TestCase
 
     public function testExcerptWithUnicodeChars()
     {
-        $string   = 'Hellö Wörld text<br>with some html';
+        $string   = 'Hellö Wörld text<br>with söme htmäl';
         $expected = 'Hellö Wörld text …';
         $result   = Str::excerpt($string, 20);
 
