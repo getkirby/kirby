@@ -157,6 +157,15 @@ class StrTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testExcerptWithUnicodeChars()
+    {
+        $string   = 'Hellö Wörld text<br>with some html';
+        $expected = 'Hellö Wörld text …';
+        $result   = Str::excerpt($string, 20);
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function testFloat()
     {
         $this->assertEquals('0', Str::float(false));
