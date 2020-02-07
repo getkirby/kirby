@@ -375,8 +375,7 @@ class Str
     {
         // Convert exponential to decimal, 1e-8 as 0.00000001
         if (strpos(strtolower($value), 'e') !== false) {
-            $value = sprintf('%.16f', floatval($value));
-            $value = rtrim($value, '0');
+            $value = rtrim(sprintf('%.16f', floatval($value)), '0');
         }
 
         $value   = str_replace(',', '.', $value);

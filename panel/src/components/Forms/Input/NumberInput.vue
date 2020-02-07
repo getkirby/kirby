@@ -9,10 +9,10 @@
       min,
       name,
       placeholder,
-      required,
-      step
+      required
     }"
     :value="number"
+    :step="stepNumber"
     class="k-number-input"
     type="number"
     @keydown.cmd.s="clean"
@@ -48,6 +48,7 @@ export default {
   data() {
     return {
       number: this.format(this.value),
+      stepNumber: this.format(this.step),
       timeout: null,
       listeners: {
         ...this.$listeners,

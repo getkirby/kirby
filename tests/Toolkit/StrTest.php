@@ -180,6 +180,7 @@ class StrTest extends TestCase
         $this->assertEquals('1000.00', Str::float('1000,00'));
         $this->assertEquals('1000', Str::float('1000'));
         $this->assertEquals('1000000.00', Str::float('1000000.00'));
+        $this->assertEquals('0.00000001', Str::float(0.00000001));
     }
 
     public function testFrom()
