@@ -228,10 +228,21 @@ export default {
 
       switch (position) {
         case "prev":
+          if (!this.selected) return;
+
+          currIndex = this.index(this.selected);
+          nextIndex = currIndex - 1;
+
+          if (nextIndex < 0) return;
+          break;
+
         case "next":
           if (!this.selected) return;
+
           currIndex = this.index(this.selected);
-          nextIndex = position === "prev" ? currIndex - 1 : currIndex + 1;
+          nextIndex = currIndex + 1;
+
+          if (nextIndex >= this.tags.length) return;
           break;
 
         case "first":
@@ -275,22 +286,22 @@ export default {
     leaveInput(e) {
       if (
         e.target.selectionStart === 0 &&
-        e.target.selectionStart === e.target.selectionEnd
+        e.target.selectionStart === e.target.selectionEnd &&
+        this.tags.length !== 0
       ) {
-        this.navigate("last");
         this.$refs.autocomplete.close();
+        this.navigate("last");
         e.preventDefault();
-        e.target.blur();
       }
     },
     navigate(position) {
       var result = this.get(position);
       if (result) {
         result.ref.focus();
-        this.selected = result.tag;
+        this.selectTag(result.tag);
       } else if (position === "next") {
         this.$refs.input.focus();
-        this.selected = null;
+        this.selectTag(null);
       }
     },
     prepareTags(value) {
@@ -319,10 +330,12 @@ export default {
       this.onInput();
 
       if (prev) {
+        this.selectTag(prev.tag);
         prev.ref.focus();
       } else if (next) {
-        next.ref.focus();
+        this.selectTag(next.tag);
       } else {
+        this.selectTag(null);
         this.$refs.input.focus();
       }
     },

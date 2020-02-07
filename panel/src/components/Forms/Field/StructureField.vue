@@ -413,7 +413,7 @@ export default {
         return "…";
       }
 
-      return value;
+      return value.toString();
     },
     escape() {
       if (this.currentIndex === "new") {
