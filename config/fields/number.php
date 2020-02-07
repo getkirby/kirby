@@ -38,7 +38,7 @@ return [
                 return null;
             }
 
-            return Str::float($value);
+            return is_float($value) ? $value : (float)Str::float($value);
         }
     ],
     'validations' => [
