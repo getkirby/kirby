@@ -373,6 +373,12 @@ class Str
      */
     public static function float($value): string
     {
+        // Convert exponential to decimal, 1e-8 as 0.00000001
+        if (strpos(strtolower($value), 'e') !== false) {
+            $value = sprintf('%.16f', floatval($value));
+            $value = rtrim($value, '0');
+        }
+
         $value   = str_replace(',', '.', $value);
         $decimal = strlen(substr(strrchr($value, '.'), 1));
         return number_format((float)$value, $decimal, '.', false);

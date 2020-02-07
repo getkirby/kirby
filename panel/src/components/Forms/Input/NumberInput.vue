@@ -9,10 +9,10 @@
       min,
       name,
       placeholder,
-      required
+      required,
+      step
     }"
     :value="number"
-    :step="stepNumber"
     class="k-number-input"
     type="number"
     @keydown.cmd.s="clean"
@@ -48,7 +48,6 @@ export default {
   data() {
     return {
       number: this.format(this.value),
-      stepNumber: this.convertExponentialToDecimal(this.step),
       timeout: null,
       listeners: {
         ...this.$listeners,
@@ -59,7 +58,7 @@ export default {
   },
   watch: {
     value(value) {
-      this.number = this.convertExponentialToDecimal(value);
+      this.number = value;
     },
     number: {
       immediate: true,
@@ -85,29 +84,11 @@ export default {
         return 0;
       }
 
-      const stepNumber = this.convertExponentialToDecimal(step);
-
-      return stepNumber.toString().split(".")[1].length || 0;
-    },
-    convertExponentialToDecimal(value) {
-      if (value !== null) {
-        // sanity check - is it exponential number
-        const str = value.toString();
-
-        if (str.indexOf('e') !== -1) {
-          const pieces = str.split('-');
-
-          // Get last piece of number to ensure getting on negative numbers have two hype like "-1e-8"
-          const exponent = pieces[pieces.length-1];
-          const decimals = parseInt(exponent);
-
-          // Unfortunately I can not return 1e-8 as 0.00000001, because even if I call parseFloat() on it,
-          // it will still return the exponential representation. So we have to use .toFixed() method
-          return value.toFixed(decimals);
-        }
+      if (step.toString().indexOf('e') !== -1) {
+        return parseInt(step.toFixed(16).split(".")[1].split("").reverse().join("")).toString().length;
       }
 
-      return value;
+      return step.toString().split(".")[1].length || 0;
     },
     format(value) {
       if (isNaN(value) || value === "") {
