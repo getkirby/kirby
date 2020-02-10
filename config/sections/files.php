@@ -114,14 +114,16 @@ return [
 
                 $data[] = [
                     'dragText' => $file->dragText('auto', $dragTextAbsolute),
+                    'extension' => $file->extension(),
                     'filename' => $file->filename(),
                     'id'       => $file->id(),
-                    'text'     => $file->toString($this->text),
-                    'info'     => $file->toString($this->info ?? false),
                     'icon'     => $file->panelIcon($image),
                     'image'    => $image,
+                    'info'     => $file->toString($this->info ?? false),
                     'link'     => $file->panelUrl(true),
+                    'mime'     => $file->mime(),
                     'parent'   => $file->parent()->panelPath(),
+                    'text'     => $file->toString($this->text),
                     'url'      => $file->url(),
                 ];
             }

@@ -54,6 +54,10 @@ class SearchTest extends TestCase
             [
                 'slug'    => 'lisa',
                 'content' => ['firstname' => 'Lisa']
+            ],
+            [
+                'slug'    => 'snowball',
+                'content' => ['firstname' => 'Šnowball']
             ]
         ]);
 
@@ -65,5 +69,38 @@ class SearchTest extends TestCase
 
         $search = Search::collection($collection, 'm', ['minlength' => 1, 'fields' => ['FirstName']]);
         $this->assertCount(3, $search);
+    }
+
+    public function testIgnoreCaseI18n()
+    {
+        $collection = Pages::factory([
+            [
+                'slug'    => 'santa',
+                'content' => ['full' => 'Santa\'s Little Helper']
+            ],
+            [
+                'slug'    => 'snowball',
+                'content' => ['full' => 'Šnowball']
+            ],
+            [
+                'slug'    => 'garfield',
+                'content' => ['full' => 'Garfield']
+            ]
+        ]);
+
+        $search = Search::collection($collection, 's', ['minlength' => 1]);
+        $this->assertCount(2, $search);
+        $search = Search::collection($collection, 'S', ['minlength' => 1]);
+        $this->assertCount(2, $search);
+
+        $search = Search::collection($collection, 'š', ['minlength' => 1]);
+        $this->assertCount(1, $search);
+        $search = Search::collection($collection, 'Š', ['minlength' => 1]);
+        $this->assertCount(1, $search);
+
+        $search = Search::collection($collection, 'g', ['minlength' => 1]);
+        $this->assertCount(1, $search);
+        $search = Search::collection($collection, 'G', ['minlength' => 1]);
+        $this->assertCount(1, $search);
     }
 }
