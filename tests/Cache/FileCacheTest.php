@@ -18,6 +18,7 @@ class FileCacheTest extends TestCase
 
     /**
      * @covers ::__construct
+     * @covers ::root
      */
     public function testConstruct()
     {
@@ -25,11 +26,13 @@ class FileCacheTest extends TestCase
             'root' => $root = __DIR__ . '/fixtures/file'
         ]);
 
+        $this->assertSame($root, $cache->root());
         $this->assertDirectoryExists($root);
     }
 
     /**
      * @covers ::__construct
+     * @covers ::root
      */
     public function testConstructWithPrefix()
     {
@@ -38,6 +41,7 @@ class FileCacheTest extends TestCase
             'prefix' => 'test'
         ]);
 
+        $this->assertSame($root . '/test', $cache->root());
         $this->assertDirectoryExists($root . '/test');
     }
 

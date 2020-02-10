@@ -361,7 +361,7 @@ class Str
             return $string;
         }
 
-        return static::substr($string, 0, strrpos(static::substr($string, 0, $chars), ' ')) . ' ' . $rep;
+        return static::substr($string, 0, mb_strrpos(static::substr($string, 0, $chars), ' ')) . ' ' . $rep;
     }
 
     /**

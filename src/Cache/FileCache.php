@@ -18,6 +18,7 @@ class FileCache extends Cache
 {
     /**
      * Full root including prefix
+     *
      * @var string
      */
     protected $root;
@@ -47,6 +48,16 @@ class FileCache extends Cache
 
         // try to create the directory
         Dir::make($this->root, true);
+    }
+
+    /**
+     * Returns the full root including prefix
+     *
+     * @return string
+     */
+    public function root(): string
+    {
+        return $this->root;
     }
 
     /**
