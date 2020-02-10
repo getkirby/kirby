@@ -198,22 +198,16 @@ class Blueprint
             return $props;
         }
 
-        $mixin = static::find($extends);
-
-        if ($mixin === null) {
-            $props = $props;
-        } elseif (is_array($mixin) === true) {
+        try {
+            $mixin = static::find($extends);
             $props = A::merge($mixin, $props, A::MERGE_REPLACE);
-        } else {
-            try {
-                $props = A::merge(Data::read($mixin), $props, A::MERGE_REPLACE);
-            } catch (Exception $e) {
-                $props = $props;
-            }
+        } catch (Exception $e) {
+            // keep the props unextended if the snippet wasn't found
         }
 
         // remove the extends flag
         unset($props['extends']);
+
         return $props;
     }
 
@@ -268,22 +262,32 @@ class Blueprint
      * Find a blueprint by name
      *
      * @param string $name
-     * @return string|array
+     * @return array
      */
-    public static function find(string $name)
+    public static function find(string $name): array
     {
+        if (isset(static::$loaded[$name]) === true) {
+            return static::$loaded[$name];
+        }
+
         $kirby = App::instance();
         $root  = $kirby->root('blueprints');
         $file  = $root . '/' . $name . '.yml';
 
-        if (F::exists($file, $root) === true) {
-            return $file;
+        // first try to find a site blueprint,
+        // then check in the plugin extensions
+        if (F::exists($file, $root) !== true) {
+            $file = $kirby->extension('blueprints', $name);
         }
 
-        if ($blueprint = $kirby->extension('blueprints', $name)) {
-            return $blueprint;
+        // now ensure that we always return the data array
+        if (is_string($file) === true && F::exists($file) === true) {
+            return static::$loaded[$name] = Data::read($file);
+        } elseif (is_array($file) === true) {
+            return static::$loaded[$name] = $file;
         }
 
+        // neither a valid file nor array data
         throw new NotFoundException([
             'key'  => 'blueprint.notFound',
             'data' => ['name' => $name]
@@ -320,13 +324,9 @@ class Blueprint
      */
     public static function load(string $name): array
     {
-        if (isset(static::$loaded[$name]) === true) {
-            return static::$loaded[$name];
-        }
+        $props = static::find($name);
 
-        $props     = static::find($name);
         $normalize = function ($props) use ($name) {
-
             // inject the filename as name if no name is set
             $props['name'] = $props['name'] ?? $name;
 
@@ -339,14 +339,7 @@ class Blueprint
             return $props;
         };
 
-        if (is_array($props) === true) {
-            return $normalize($props);
-        }
-
-        $file  = $props;
-        $props = Data::read($file);
-
-        return static::$loaded[$name] = $normalize($props);
+        return $normalize($props);
     }
 
     /**
