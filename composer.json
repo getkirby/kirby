@@ -1,7 +1,7 @@
 {
   "name": "getkirby/cms",
   "description": "The Kirby 3 core",
-  "version": "3.3.2-rc.1",
+  "version": "3.3.3-rc.1",
   "license": "proprietary",
   "keywords": ["kirby", "cms", "core"],
   "homepage": "https://getkirby.com",
@@ -30,7 +30,7 @@
     "phpmailer/phpmailer": "6.0.7",
     "filp/whoops": "2.3.1",
     "true/punycode": "2.1.1",
-    "zendframework/zend-escaper": "2.6.0"
+    "laminas/laminas-escaper": "2.6.0"
   },
   "autoload": {
     "files": ["config/setup.php"],

@@ -101,7 +101,7 @@ export default {
         case "replace":
           this.$refs.upload.open({
             url: config.api + "/" + this.$api.files.url(file.parent, file.filename),
-            accept: file.mime,
+            accept: "." + file.extension + "," + file.mime,
             multiple: false
           });
           break;

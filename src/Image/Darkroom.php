@@ -65,6 +65,18 @@ class Darkroom
             $options['blur'] = 10;
         }
 
+        // normalize the greyscale option
+        if (isset($options['greyscale']) === true) {
+            $options['grayscale'] = $options['greyscale'];
+            unset($options['greyscale']);
+        }
+
+        // normalize the bw option
+        if (isset($options['bw']) === true) {
+            $options['grayscale'] = $options['bw'];
+            unset($options['bw']);
+        }
+
         if ($options['quality'] === null) {
             $options['quality'] = $this->settings['quality'];
         }

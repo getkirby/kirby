@@ -146,7 +146,7 @@ class FileRulesTest extends TestCase
         FileRules::replace($file, $upload);
     }
 
-    public function testReplaceInvalidMime()
+    public function testReplaceInvalidMimeExtension()
     {
         $permissions = $this->createMock(FilePermissions::class);
         $permissions->method('__call')->with('replace')->willReturn(true);
@@ -154,9 +154,12 @@ class FileRulesTest extends TestCase
         $file = $this->createMock(File::class);
         $file->method('permissions')->willReturn($permissions);
         $file->method('__call')->with('mime')->willReturn('image/jpeg');
+        $file->method('extension')->willReturn('jpg');
+
 
         $upload = $this->createMock(\Kirby\Image\Image::class);
         $upload->method('mime')->willReturn('image/png');
+        $upload->method('extension')->willReturn('png');
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('The uploaded file must be of the same mime type "image/jpeg"');
