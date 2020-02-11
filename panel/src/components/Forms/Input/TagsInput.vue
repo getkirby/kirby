@@ -98,9 +98,11 @@ export default {
       selected: null,
       newTag: null,
       tagOptions: this.options.map(tag => {
-        tag.icon = "tag";
+        if (this.icon && this.icon.length > 0) {
+          tag.icon = this.icon;
+        }
         return tag;
-      })
+      }, this)
     };
   },
   computed: {
