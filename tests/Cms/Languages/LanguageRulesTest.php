@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 class LanguageRulesTest extends TestCase
 {
-
     public function setUp(): void
     {
         new App([
@@ -77,5 +76,4 @@ class LanguageRulesTest extends TestCase
 
         LanguageRules::update($language);
     }
-
 }
