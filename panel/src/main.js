@@ -22,8 +22,9 @@ Vue.use(Vuelidate);
 import router from "./config/router.js";
 import store from "./store/store.js";
 
-new Vue({
-  router: router(Vue, store),
+
+ new Vue({
+  router,
   store,
   created() {
     window.panel.app = this;
