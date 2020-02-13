@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Closure;
+use NumberFormatter;
 
 /**
  * Localization class, roughly inspired by VueI18n
@@ -42,6 +43,13 @@ class I18n
      * @var string
      */
     public static $fallback = 'en';
+
+    /**
+     * Decimal number formatters by locale
+     *
+     * @var array
+     */
+    protected static $decimalNumberFormatters = [];
 
     /**
      * Returns the fallback code
@@ -190,6 +198,24 @@ class I18n
     }
 
     /**
+     * Returns (and creates) a decimal number formatter for a given locale
+     *
+     * @return \NumberFormatter|null
+     */
+    protected static function decimalNumberFormatter(string $locale): ?NumberFormatter
+    {
+        if (isset(static::$decimalNumberFormatters[$locale])) {
+            return static::$decimalNumberFormatters[$locale];
+        }
+
+        if (!extension_loaded('intl') || !class_exists('NumberFormatter')) {
+            return null;
+        }
+
+        return static::$decimalNumberFormatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+    }
+
+    /**
      * Translates amounts
      *
      * Translation definition options:
@@ -202,6 +228,7 @@ class I18n
      * @param string $key
      * @param int $count
      * @param string $locale
+     * @param bool $formatNumber
      * @return mixed
      */
     public static function translateCount(string $key, int $count, string $locale = null)
@@ -225,6 +252,13 @@ class I18n
                 $message = end($translation);
             }
         }
+
+        if (!$locale) {
+            $locale = static::locale();
+        }
+
+        $formatter = static::decimalNumberFormatter($locale);
+        $count = $formatter->format($count);
 
         return str_replace('{{ count }}', $count, $message);
     }

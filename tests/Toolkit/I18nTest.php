@@ -170,11 +170,16 @@ class I18nTest extends TestCase
         I18n::$translations = [
             'en' => [
                 'car' => ['No cars', 'One car', '{{ count }} cars']
+            ],
+            'de' => [
+                'car' => ['Keine Autos', 'Ein Auto', '{{ count }} Autos']
             ]
         ];
 
         $this->assertEquals('2 cars', I18n::translateCount('car', 2));
         $this->assertEquals('3 cars', I18n::translateCount('car', 3));
+        $this->assertEquals('1,234,567 cars', I18n::translateCount('car', 1234567));
+        $this->assertEquals('1.234.567 Autos', I18n::translateCount('car', 1234567, 'de'));
     }
 
     public function testTranslateCountWithMissingTranslation()
