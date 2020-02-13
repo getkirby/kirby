@@ -13,7 +13,6 @@ namespace Kirby\Cms;
  */
 trait PageSiblings
 {
-
     /**
      * Checks if there's a next listed
      * page in the siblings collection
