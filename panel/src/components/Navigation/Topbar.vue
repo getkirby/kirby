@@ -94,7 +94,7 @@
           <template v-if="notification">
             <k-button
               class="k-topbar-notification k-topbar-signals-button"
-              theme="positive"
+              :theme="notification.type"
               @click="$store.dispatch('notification/close')"
             >
               {{ notification.message }}
@@ -370,19 +370,10 @@ export default {
   font-weight: $font-weight-bold;
   line-height: 1;
   display: flex;
+  color: $color-light-grey;
 }
-.k-topbar .k-button[data-theme="positive"] {
+.k-topbar .k-button[data-theme="success"] {
   color: $color-positive-on-dark;
-}
-.k-topbar .k-button[data-theme="negative"] {
-  color: $color-negative-on-dark;
-}
-.k-topbar .k-button[data-theme="negative"] .k-button-text {
-  display: none;
-
-  @media screen and (min-width: $breakpoint-small) {
-    display: inline;
-  }
 }
 .k-topbar .k-button[data-theme] .k-button-text {
   opacity: 1;

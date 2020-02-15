@@ -31,14 +31,17 @@
           </li>
         </ul>
       </template>
+
       <template slot="footer">
         <template v-if="errors.length > 0">
           <k-button-group>
+            <k-button :disabled="true" />
             <k-button icon="check" @click="$refs.dialog.close()">
               {{ $t("confirm") }}
             </k-button>
           </k-button-group>
         </template>
+        <div v-else />
       </template>
     </k-dialog>
 
@@ -95,6 +98,7 @@ export default {
     },
     upload(files) {
       this.$refs.dialog.open();
+      this.$store.dispatch("isLoading", true);
 
       this.files = [...files];
       this.completed = {};
@@ -134,6 +138,7 @@ export default {
       if (Object.keys(this.completed).length == this.total) {
         // remove the selected file
         this.$refs.input.value = "";
+        this.$store.dispatch("isLoading", false);
 
         if (this.errors.length > 0) {
           this.$forceUpdate();
