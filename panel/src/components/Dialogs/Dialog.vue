@@ -207,7 +207,7 @@
   }
 }
 
-@media screen and (min-width: 30rem) {
+@media screen and (min-width: 40rem) {
   .k-dialog-box[data-size="large"] {
     width: 40rem;
   }
