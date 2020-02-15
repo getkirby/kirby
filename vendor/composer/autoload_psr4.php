@@ -9,6 +9,8 @@ return array(
     'Whoops\\' => array($vendorDir . '/filp/whoops/src/Whoops'),
     'TrueBV\\' => array($vendorDir . '/true/punycode/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
+    'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
+    'Symfony\\Component\\Yaml\\' => array($vendorDir . '/symfony/yaml'),
     'Psr\\Log\\' => array($vendorDir . '/psr/log/Psr/Log'),
     'PHPMailer\\PHPMailer\\' => array($vendorDir . '/phpmailer/phpmailer/src'),
     'Laminas\\ZendFrameworkBridge\\' => array($vendorDir . '/laminas/laminas-zendframework-bridge/src'),

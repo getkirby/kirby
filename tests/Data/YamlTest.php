@@ -35,6 +35,32 @@ class YamlTest extends TestCase
 
     /**
      * @covers ::encode
+     * @covers ::decode
+     */
+    public function testEncodeDecodeSpaces()
+    {
+        $array = [
+            'builder' => [
+                'blocks' => [
+                    ['content' => 'This is a
+    test to see,
+        if indentation can be preservered
+
+                    '],
+                    ['content' => '
+                    or not
+                    ']
+                ]
+            ]
+        ];
+
+        $data   = Yaml::encode($array);
+        $result = Yaml::decode($data);
+        $this->assertSame($array, $result);
+    }
+
+    /**
+     * @covers ::encode
      */
     public function testEncodeFloat()
     {

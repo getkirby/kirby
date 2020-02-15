@@ -2,8 +2,8 @@
 
 namespace Kirby\Data;
 
-use Exception;
-use Spyc;
+use Kirby\Toolkit\A;
+use Symfony\Component\Yaml\Yaml as Parser;
 
 /**
  * Simple Wrapper around Symfony's Yaml Component
@@ -30,8 +30,8 @@ class Yaml extends Handler
         // change to english numerics to avoid issues with floats
         setlocale(LC_NUMERIC, 'C');
 
-        // $data, $indent, $wordwrap, $no_opening_dashes
-        $yaml = Spyc::YAMLDump($data, false, false, true);
+        // $data, when to not inline, indentation
+        $yaml = Parser::dump($data, 2, 2, Parser::DUMP_MULTI_LINE_LITERAL_BLOCK);
 
         // restore the previous locale settings
         setlocale(LC_NUMERIC, $locale);
@@ -57,14 +57,11 @@ class Yaml extends Handler
 
         // remove BOM
         $yaml   = str_replace("\xEF\xBB\xBF", '', $yaml);
-        $result = Spyc::YAMLLoadString($yaml);
+        $result = Parser::parse($yaml);
 
-        if (is_array($result)) {
-            return $result;
-        } else {
-            // apparently Spyc always returns an array, even for invalid YAML syntax
-            // so this Exception should currently never be thrown
-            throw new Exception('YAML string is invalid'); // @codeCoverageIgnore
-        }
+        // ensure that single string is wrapped in array
+        $result = A::wrap($result);
+
+        return $result;
     }
 }
