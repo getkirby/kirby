@@ -350,16 +350,22 @@ class Language extends Model
      */
     protected function localeExport(): array
     {
-        $constants = [
-            LC_ALL      => 'LC_ALL',
-            LC_COLLATE  => 'LC_COLLATE',
-            LC_CTYPE    => 'LC_CTYPE',
-            LC_MONETARY => 'LC_MONETARY',
-            LC_NUMERIC  => 'LC_NUMERIC',
-            LC_TIME     => 'LC_TIME',
-            LC_MESSAGES => 'LC_MESSAGES'
+        // list of all possible constant names
+        $constantNames = [
+            'LC_ALL', 'LC_COLLATE', 'LC_CTYPE', 'LC_MONETARY',
+            'LC_NUMERIC', 'LC_TIME', 'LC_MESSAGES'
         ];
 
+        // build an associative array with the locales
+        // that are actually supported on this system
+        $constants = [];
+        foreach ($constantNames as $name) {
+            if (defined($name) === true) {
+                $constants[constant($name)] = $name;
+            }
+        }
+
+        // replace the keys in the locale data array with the locale names
         $return = [];
         foreach ($this->locale() as $key => $value) {
             if (isset($constants[$key]) === true) {
