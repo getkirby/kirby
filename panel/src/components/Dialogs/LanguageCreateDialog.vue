@@ -94,12 +94,16 @@ export default {
       this.$refs.dialog.open();
     },
     submit() {
+      if (this.language.locale) {
+        this.language.locale = this.language.locale.trim();
+      }
+
       this.$api
         .post("languages", {
           name: this.language.name,
           code: this.language.code,
           direction: this.language.direction,
-          locale: this.language.locale
+          locale: this.language.locale || this.language.code
         })
         .then(() => {
           this.$store.dispatch("languages/load");
