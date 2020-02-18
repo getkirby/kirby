@@ -56,7 +56,7 @@ class Search
         $collection  = clone $collection;
         $searchwords = preg_replace('/(\s)/u', ',', $query);
         $searchwords = Str::split($searchwords, ',', $options['minlength']);
-        $lowerQuery  = strtolower($query);
+        $lowerQuery  = mb_strtolower($query);
 
         if (empty($options['stopwords']) === false) {
             $searchwords = array_diff($searchwords, $options['stopwords']);
@@ -96,7 +96,7 @@ class Search
                 $score = $options['score'][$key] ?? 1;
                 $value = $data[$key] ?? (string)$item->$key();
 
-                $lowerValue = strtolower($value);
+                $lowerValue = mb_strtolower($value);
 
                 // check for exact matches
                 if ($lowerQuery == $lowerValue) {

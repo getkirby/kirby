@@ -111,7 +111,7 @@ class BlueprintFieldTest extends TestCase
     {
         $this->app = $this->app->clone([
             'blueprints' => [
-                'fields/test' => [
+                'fields/another-test' => [
                     'name'  => 'test',
                     'label' => 'Test',
                     'type'  => 'textarea',
@@ -125,7 +125,7 @@ class BlueprintFieldTest extends TestCase
 
 
         $props = Blueprint::fieldProps([
-            'extends' => 'fields/test',
+            'extends' => 'fields/another-test',
             'buttons' => [
                 'li'
             ]

@@ -169,6 +169,14 @@ export default {
     }
   },
   watch: {
+    "$route.name": {
+      handler(name) {
+        if (name === "Account") {
+          this.$store.dispatch("breadcrumb", []);
+        }
+      },
+      immediate: true
+    },
     language() {
       this.fetch();
     },
@@ -232,8 +240,6 @@ export default {
               "breadcrumb",
               this.$api.users.breadcrumb(user)
             );
-          } else {
-            this.$store.dispatch("breadcrumb", []);
           }
 
           this.$store.dispatch("title", this.user.name || this.user.email);

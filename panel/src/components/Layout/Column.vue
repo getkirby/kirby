@@ -1,13 +1,14 @@
 <template>
-  <div :data-width="width" class="k-column">
-    <slot />
+  <div :data-width="width" :data-sticky="sticky" class="k-column">
+    <div><slot /></div>
   </div>
 </template>
 
 <script>
 export default {
   props: {
-    width: String
+    width: String,
+    sticky: Boolean
   }
 };
 </script>
@@ -16,6 +17,11 @@ export default {
 .k-column {
   min-width: 0;
   grid-column-start: span 12;
+}
+
+.k-column[data-sticky] > div {
+  position: sticky;
+  top: 4vh;
 }
 
 @media screen and (min-width: $breakpoint-medium) {
