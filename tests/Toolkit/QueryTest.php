@@ -32,6 +32,19 @@ class QueryTest extends TestCase
         $this->assertEquals('homer', $query->result());
     }
 
+    public function testWithNumericKeys()
+    {
+        $query = new Query('user0.profiles1.twitter', [
+            'user0' => [
+                'profiles1' => [
+                    'twitter' => '@homer'
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('@homer', $query->result());
+    }
+
     public function test0LevelArrayQuery()
     {
         $query = new Query('user', [
