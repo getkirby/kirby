@@ -19,6 +19,29 @@ class LanguageRules
 {
     public static function create(Language $language): bool
     {
+        static::validLanguageCode($language);
+        static::validLanguageName($language);
+
+        if ($language->exists() === true) {
+            throw new DuplicateException([
+                'key'  => 'language.duplicate',
+                'data' => [
+                    'code' => $language->code()
+                ]
+            ]);
+        }
+
+        return true;
+    }
+
+    public static function update(Language $language)
+    {
+        static::validLanguageCode($language);
+        static::validLanguageName($language);
+    }
+
+    public static function validLanguageCode(Language $language): bool
+    {
         if (Str::length($language->code()) < 2) {
             throw new InvalidArgumentException([
                 'key'  => 'language.code',
@@ -29,21 +52,17 @@ class LanguageRules
             ]);
         }
 
+        return true;
+    }
+
+    public static function validLanguageName(Language $language): bool
+    {
         if (Str::length($language->name()) < 1) {
             throw new InvalidArgumentException([
                 'key'  => 'language.name',
                 'data' => [
                     'code' => $language->code(),
                     'name' => $language->name()
-                ]
-            ]);
-        }
-
-        if ($language->exists() === true) {
-            throw new DuplicateException([
-                'key'  => 'language.duplicate',
-                'data' => [
-                    'code' => $language->code()
                 ]
             ]);
         }

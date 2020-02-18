@@ -364,7 +364,7 @@ class Language extends Model
             return $this->code;
         }
 
-        return Url::path($this->url());
+        return Url::path($this->url);
     }
 
     /**
@@ -636,9 +636,17 @@ class Language extends Model
      */
     public function update(array $props = null)
     {
+        // don't change the language code
+        unset($props['code']);
+
+        // make sure the slug is nice and clean
         $props['slug'] = Str::slug($props['slug'] ?? null);
-        $kirby         = App::instance();
-        $updated       = $this->clone($props);
+
+        $kirby   = App::instance();
+        $updated = $this->clone($props);
+
+        // validate the updated language
+        LanguageRules::update($updated);
 
         // convert the current default to a non-default language
         if ($updated->isDefault() === true) {
