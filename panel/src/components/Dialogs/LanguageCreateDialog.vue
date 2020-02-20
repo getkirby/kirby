@@ -95,7 +95,7 @@ export default {
     },
     submit() {
       if (this.language.locale) {
-        this.language.locale = this.language.locale.trim();
+        this.language.locale = this.language.locale.trim() || null;
       }
 
       this.$api
@@ -103,7 +103,7 @@ export default {
           name: this.language.name,
           code: this.language.code,
           direction: this.language.direction,
-          locale: this.language.locale || this.language.code
+          locale: this.language.locale
         })
         .then(() => {
           this.$store.dispatch("languages/load");

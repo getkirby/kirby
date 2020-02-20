@@ -65,14 +65,14 @@ export default {
       }
 
       if (typeof this.language.locale === "string") {
-        this.language.locale = this.language.locale.trim();
+        this.language.locale = this.language.locale.trim() || null;
       }
 
       this.$api
         .patch("languages/" + this.language.code, {
           name: this.language.name,
           direction: this.language.direction,
-          locale: this.language.locale || this.language.code
+          locale: this.language.locale
         })
         .then(() => {
           this.$store.dispatch("languages/load");
