@@ -1134,13 +1134,13 @@ class Page extends ModelWithContent
                 $template = $this->representation($contentType);
             }
 
-            $kirby->data = $this->controller($data, $contentType);
-
             if ($template->exists() === false) {
                 throw new NotFoundException([
                     'key' => 'template.default.notFound'
                 ]);
             }
+
+            $kirby->data = $this->controller($data, $contentType);
 
             // render the page
             $html = $template->render($kirby->data);
@@ -1172,7 +1172,7 @@ class Page extends ModelWithContent
         $representation = $kirby->template($template->name(), $type);
 
         if ($representation->exists() === true) {
-            return $this->template = $representation;
+            return $representation;
         }
 
         throw new NotFoundException('The content representation cannot be found');
