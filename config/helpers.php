@@ -412,10 +412,10 @@ function kirbytag($type, string $value = null, array $attr = [], array $data = [
         $value    = current($kirbytag);
         $attr     = $kirbytag;
 
-        // check data attribute and remove from array if exists
-        if (isset($kirbytag['data']) === true) {
-            $data = $kirbytag['data'];
-            unset($kirbytag['data']);
+        // check data attribute and separate from attr data if exists
+        if (isset($attr['data']) === true) {
+            $data = $attr['data'];
+            unset($attr['data']);
         }
     }
 
