@@ -12,7 +12,6 @@ use Kirby\Http\Router;
 use Kirby\Http\Server;
 use Kirby\Http\Visitor;
 use Kirby\Session\AutoSession;
-use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;

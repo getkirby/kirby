@@ -401,15 +401,25 @@ function kirby()
  * @param string|array $type
  * @param string $value
  * @param array $attr
+ * @param array $data
  * @return string
  */
-function kirbytag($type, string $value = null, array $attr = []): string
+function kirbytag($type, string $value = null, array $attr = [], array $data = []): string
 {
     if (is_array($type) === true) {
-        return App::instance()->kirbytag(key($type), current($type), $type);
+        $kirbytag = $type;
+        $type     = key($kirbytag);
+        $value    = current($kirbytag);
+        $attr     = $kirbytag;
+
+        // check data attribute and remove from array if exists
+        if (isset($kirbytag['data']) === true) {
+            $data = $kirbytag['data'];
+            unset($kirbytag['data']);
+        }
     }
 
-    return App::instance()->kirbytag($type, $value, $attr);
+    return App::instance()->kirbytag($type, $value, $attr, $data);
 }
 
 /**
