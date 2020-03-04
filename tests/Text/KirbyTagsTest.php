@@ -66,4 +66,19 @@ class KirbyTagsTest extends TestCase
 
         $this->assertSame('(test: foo)', KirbyTags::parse('(test: foo)'));
     }
+
+    public function testParseWithBrackets()
+    {
+        KirbyTag::$types = [
+            'test' => [
+                'html' => function ($tag) {
+                    return $tag->value;
+                }
+            ]
+        ];
+
+        $this->assertSame('foo(bar)', KirbyTags::parse('(test: foo(bar))'));
+        $this->assertSame('foo(bar)', KirbyTags::parse('(Test: foo(bar))'));
+        $this->assertSame('foo(bar)', KirbyTags::parse('(TEST: foo(bar))'));
+    }
 }
