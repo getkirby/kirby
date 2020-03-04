@@ -22,7 +22,7 @@ class KirbyTags
 
     public static function parse(string $text = null, array $data = [], array $options = []): string
     {
-        return preg_replace_callback('!(?=[^\]])\([a-z0-9_-]+:.*?\)!is', function ($match) use ($data, $options) {
+        return preg_replace_callback('!(?=[^\]])(?=\([a-z0-9_-]+:)(\((?:[^()]+|(?1))*+\))!is', function ($match) use ($data, $options) {
             try {
                 return static::$tagClass::parse($match[0], $data, $options)->render();
             } catch (Exception $e) {
