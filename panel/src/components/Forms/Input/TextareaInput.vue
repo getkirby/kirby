@@ -174,7 +174,7 @@ export default {
     },
     onDrop($event) {
       // dropping files
-      if (this.$helper.isUploadEvent($event)) {
+      if (this.uploads && this.$helper.isUploadEvent($event)) {
         return this.$refs.fileUpload.drop($event.dataTransfer.files, {
           url: config.api + "/" + this.endpoints.field + "/upload",
           multiple: false
@@ -203,7 +203,6 @@ export default {
       this.over = false;
     },
     onOver($event) {
-
       // drag & drop for files
       if (this.uploads && this.$helper.isUploadEvent($event)) {
         $event.dataTransfer.dropEffect = "copy";
