@@ -224,4 +224,15 @@ class UserActionsTest extends TestCase
 
         $this->assertEquals($url, $user->website()->value());
     }
+
+    public function testUpdateWithAuthUser()
+    {
+        $user = $this->app->user('editor@domain.com');
+
+        $user->loginPasswordless();
+        $user->update([
+            'website' => $url = 'https://editor.com'
+        ]);
+        $this->assertEquals($url, $this->app->user()->website()->value());
+    }
 }
