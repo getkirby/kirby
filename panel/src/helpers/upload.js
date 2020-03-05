@@ -34,8 +34,8 @@ export default (file, params) => {
     options.progress(xhr, file, Math.ceil(percent));
   };
 
-  xhr.addEventListener("loadstart", progress);
-  xhr.addEventListener("progress", progress);
+  xhr.upload.addEventListener("loadstart", progress);
+  xhr.upload.addEventListener("progress", progress);
 
   xhr.addEventListener("load", event => {
     let json = null;
