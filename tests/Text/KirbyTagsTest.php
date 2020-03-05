@@ -44,7 +44,7 @@ class KirbyTagsTest extends TestCase
             'test' => [
                 'attr' => ['a'],
                 'html' => function ($tag) {
-                    return $tag->value . '|' . $tag->a ;
+                    return $tag->value . '|' . $tag->a;
                 }
             ]
         ];
@@ -76,7 +76,7 @@ class KirbyTagsTest extends TestCase
                     $value = $tag->value;
 
                     if (empty($tag->a) === false) {
-                        $value .=  ' - ' . $tag->a;
+                        $value .= ' - ' . $tag->a;
                     }
 
                     return $value;
