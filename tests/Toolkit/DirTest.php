@@ -67,6 +67,13 @@ class DirTest extends TestCase
         Dir::copy($src, $target);
     }
 
+    public function testExists()
+    {
+        $this->assertFalse(Dir::exists($this->tmp));
+        Dir::make($this->tmp);
+        $this->assertTrue(Dir::exists($this->tmp));
+    }
+
     public function testIndex()
     {
         Dir::make($dir = $this->tmp);
