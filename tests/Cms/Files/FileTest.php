@@ -231,14 +231,10 @@ class FileTest extends TestCase
 
         // create a file
         F::write($file = $index . '/test.js', 'test');
-
-        // write the content file a bit later
-        usleep(1000000);
+        touch($file, $modifiedFile = \time() + 2);
 
         F::write($content = $index . '/test.js.txt', 'test');
-
-        $modifiedFile    = F::modified($file);
-        $modifiedContent = F::modified($content);
+        touch($file, $modifiedContent = \time() + 5);
 
         $file = $app->file('test.js');
 
