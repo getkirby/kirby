@@ -1128,8 +1128,6 @@ class Page extends ModelWithContent
 
         // fetch the page regularly
         if ($html === null) {
-            $kirby->data = $this->controller($data, $contentType);
-
             if ($contentType === 'html') {
                 $template = $this->template();
             } else {
@@ -1141,6 +1139,8 @@ class Page extends ModelWithContent
                     'key' => 'template.default.notFound'
                 ]);
             }
+
+            $kirby->data = $this->controller($data, $contentType);
 
             // render the page
             $html = $template->render($kirby->data);
@@ -1168,7 +1168,7 @@ class Page extends ModelWithContent
     public function representation($type)
     {
         $kirby          = $this->kirby();
-        $template       = $this->intendedTemplate();
+        $template       = $this->template();
         $representation = $kirby->template($template->name(), $type);
 
         if ($representation->exists() === true) {
