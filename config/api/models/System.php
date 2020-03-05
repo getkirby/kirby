@@ -20,7 +20,7 @@ return [
                 return $language->code();
             }
 
-            if ($language = $this->kirby()->option('language.locale')) {
+            if ($language = $this->kirby()->option('language.code')) {
                 return $language;
             }
 

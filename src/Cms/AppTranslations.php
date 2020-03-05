@@ -51,7 +51,7 @@ trait AppTranslations
             if ($this->multilang() === true) {
                 return $this->defaultLanguage()->code();
             } else {
-                return $this->options['language']['locale'] ??
+                return $this->options['language']['code'] ??
                        $this->options['language'] ??
                        'en';
             }
@@ -70,7 +70,7 @@ trait AppTranslations
         // Set string language rules from
         // - language rules file
         // - config option
-        if ($locale = $this->options['language']['locale'] ?? $this->options['language'] ?? null) {
+        if ($locale = $this->options['language']['code'] ?? $this->options['language'] ?? null) {
             Str::$language = array_merge(
                 Language::loadRules($locale),
                 $this->options['language']['slugs'] ?? $this->options['slugs'] ?? []
