@@ -145,25 +145,19 @@ class SiteTest extends TestCase
 
         // create the english site
         F::write($file = $index . '/site.en.txt', 'test');
+        touch($file, $modified = \time() + 2);
 
-        $modified = filemtime($file);
-        $site     = $app->site();
-
-        $this->assertEquals($modified, $site->modified());
-
-        sleep(1);
+        $this->assertEquals($modified, $app->site()->modified());
 
         // create the german site
         F::write($file = $index . '/site.de.txt', 'test');
+        touch($file, $modified = \time() + 5);
 
         // change the language
         $app->setCurrentLanguage('de');
         $app->setCurrentTranslation('de');
 
-        $modified = filemtime($file);
-        $site     = $app->site();
-
-        $this->assertEquals($modified, $site->modified());
+        $this->assertEquals($modified, $app->site()->modified());
 
         Dir::remove($index);
     }
