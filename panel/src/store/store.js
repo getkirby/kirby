@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import Api from "@/api/api.js";
 
 // store modules
 import content from "./modules/content.js";
@@ -71,16 +72,17 @@ export default new Vuex.Store({
       context.commit("SET_SEARCH", search);
     },
     title(context, title) {
-      context.commit("SET_TITLE", title);
-      document.title = title || "";
+      Api.site.get(["title"]).then(site => {
+        context.commit("SET_TITLE", title);
+        context.dispatch("system/title", site.title);
+        document.title = title || "";
 
-      if (context.state.system.info.title) {
         if (title !== null) {
-          document.title += " | " + context.state.system.info.title;
+          document.title += " | " + site.title;
         } else {
-          document.title += context.state.system.info.title;
+          document.title += site.title;
         }
-      }
+      })
     },
     view(context, view) {
       context.commit("SET_VIEW", view);
