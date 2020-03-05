@@ -26,13 +26,23 @@ class PanelPluginsTest extends TestCase
 
     public function createPlugins()
     {
+        $time = \time() + 2;
+
         F::write($this->fixtures . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
+        touch($this->fixtures . '/site/plugins/a/index.php', $time);
         F::write($this->cssA = $this->fixtures . '/site/plugins/a/index.css', 'a');
-        F::write($this->jsA  = $this->fixtures . '/site/plugins/a/index.js', 'a');
+        touch($this->cssA, $time);
+        F::write($this->jsA = $this->fixtures . '/site/plugins/a/index.js', 'a');
+        touch($this->jsA, $time);
 
         F::write($this->fixtures . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
+        touch($this->fixtures . '/site/plugins/b/index.php', $time);
         F::write($this->cssB = $this->fixtures . '/site/plugins/b/index.css', 'b');
-        F::write($this->jsB  = $this->fixtures . '/site/plugins/b/index.js', 'b');
+        touch($this->cssB, $time);
+        F::write($this->jsB = $this->fixtures . '/site/plugins/b/index.js', 'b');
+        touch($this->jsB, $time);
+
+        return $time;
     }
 
     public function tearDown(): void
@@ -61,9 +71,7 @@ class PanelPluginsTest extends TestCase
 
     public function testModifiedWithFiles()
     {
-        $this->createPlugins();
-
-        $time = \time();
+        $time = $this->createPlugins();
 
         $plugins = new PanelPlugins();
         $this->assertEquals($time, $plugins->modified());

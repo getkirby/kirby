@@ -312,18 +312,32 @@ class DirTest extends TestCase
 
     public function testWasModifiedAfter()
     {
+        $time = time();
+
         Dir::make($this->tmp);
         Dir::make($this->tmp . '/sub');
-
-        F::write($this->tmp . '/sub/test.txt', 'test');
-
-        $time = time();
-        $this->assertFalse(Dir::wasModifiedAfter($this->tmp, $time));
-
-        sleep(1);
-
         F::write($this->tmp . '/sub/test.txt', 'foo');
 
+        // ensure that the modified times are consistent
+        // to make the test more reliable
+        touch($this->tmp, $time);
+        touch($this->tmp . '/sub', $time);
+        touch($this->tmp . '/sub/test.txt', $time);
+
+        $this->assertFalse(Dir::wasModifiedAfter($this->tmp, $time));
+
+        touch($this->tmp . '/sub/test.txt', $time + 1);
+
         $this->assertTrue(Dir::wasModifiedAfter($this->tmp, $time));
+
+        touch($this->tmp . '/sub', $time + 1);
+        touch($this->tmp . '/sub/test.txt', $time);
+
+        $this->assertTrue(Dir::wasModifiedAfter($this->tmp, $time));
+
+        // sanity check
+        touch($this->tmp . '/sub', $time);
+
+        $this->assertFalse(Dir::wasModifiedAfter($this->tmp, $time));
     }
 }

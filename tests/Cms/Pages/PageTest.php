@@ -758,25 +758,19 @@ class PageTest extends TestCase
 
         // create the english page
         F::write($file = $index . '/test/test.en.txt', 'test');
+        touch($file, $modified = \time() + 2);
 
-        $modified = filemtime($file);
-        $page     = $app->page('test');
-
-        $this->assertEquals($modified, $page->modified());
-
-        sleep(1);
+        $this->assertEquals($modified, $app->page('test')->modified());
 
         // create the german page
         F::write($file = $index . '/test/test.de.txt', 'test');
+        touch($file, $modified = \time() + 5);
 
         // change the language
         $app->setCurrentLanguage('de');
         $app->setCurrentTranslation('de');
 
-        $modified = filemtime($file);
-        $page     = $app->page('test');
-
-        $this->assertEquals($modified, $page->modified());
+        $this->assertEquals($modified, $app->page('test')->modified());
 
         Dir::remove($index);
     }
