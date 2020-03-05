@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Data;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 

@@ -12,7 +12,19 @@ return [
             return Str::$ascii;
         },
         'defaultLanguage' => function () {
-            return $this->kirby()->option('panel.language', 'en');
+            if ($language = $this->kirby()->option('panel.language')) {
+                return $language;
+            }
+
+            if ($language = $this->kirby()->defaultLanguage()) {
+                return $language->code();
+            }
+
+            if ($language = $this->kirby()->option('language.locale')) {
+                return $language;
+            }
+
+            return $this->kirby()->option('language', 'en');
         },
         'isOk' => function (System $system) {
             return $system->isOk();
