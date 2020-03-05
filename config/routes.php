@@ -5,8 +5,6 @@ use Kirby\Cms\Media;
 use Kirby\Cms\Panel;
 use Kirby\Cms\PanelPlugins;
 use Kirby\Cms\PluginAssets;
-use Kirby\Http\Response\Redirect;
-use Kirby\Http\Router\Route;
 use Kirby\Toolkit\Str;
 
 return function ($kirby) {

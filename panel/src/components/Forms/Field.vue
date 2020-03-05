@@ -100,6 +100,7 @@ export default {
 }
 .k-field[data-disabled] {
   cursor: not-allowed;
+  opacity: .4;
 }
 .k-field[data-disabled] * {
   pointer-events: none;

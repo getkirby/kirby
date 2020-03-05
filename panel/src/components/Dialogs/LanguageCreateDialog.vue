@@ -94,6 +94,10 @@ export default {
       this.$refs.dialog.open();
     },
     submit() {
+      if (this.language.locale) {
+        this.language.locale = this.language.locale.trim() || null;
+      }
+
       this.$api
         .post("languages", {
           name: this.language.name,

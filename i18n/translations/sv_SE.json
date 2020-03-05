@@ -34,7 +34,7 @@
   "dialog.users.empty": "Inga användare att välja",
 
   "email": "E-post",
-  "email.placeholder": "namn@exampel.se",
+  "email.placeholder": "namn@exempel.se",
 
   "error.access.login": "Ogiltig inloggning",
   "error.access.panel": "Du saknar behörighet att nå panelen",

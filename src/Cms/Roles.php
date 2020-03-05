@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Dir;
-
 /**
  * Extension of the Collection class that
  * introduces `Roles::factory()` to convert an
@@ -116,12 +114,14 @@ class Roles extends Collection
 
         // load roles from directory
         if ($root !== null) {
-            foreach (Dir::read($root) as $filename) {
+            foreach (glob($root . '/*.yml') as $file) {
+                $filename = basename($file);
+
                 if ($filename === 'default.yml') {
                     continue;
                 }
 
-                $role = Role::load($root . '/' . $filename, $inject);
+                $role = Role::load($file, $inject);
                 $roles->set($role->id(), $role);
             }
         }

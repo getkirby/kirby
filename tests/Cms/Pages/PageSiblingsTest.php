@@ -51,6 +51,15 @@ class PageSiblingsTest extends TestCase
         $this->assertFalse($children->last()->hasNext());
     }
 
+    public function testHasNextCustomCollection()
+    {
+        $children = $this->site()->children();
+        $page = $children->first();
+
+        $this->assertTrue($page->hasNext());
+        $this->assertFalse($page->hasNext($children->flip()));
+    }
+
     public function testHasNextListed()
     {
         $site = $this->site([
@@ -83,6 +92,15 @@ class PageSiblingsTest extends TestCase
 
         $this->assertTrue($collection->last()->hasPrev());
         $this->assertFalse($collection->first()->hasPrev());
+    }
+
+    public function testHasPrevCustomCollection()
+    {
+        $children = $this->site()->children();
+        $page = $children->last();
+
+        $this->assertTrue($page->hasPrev());
+        $this->assertFalse($page->hasPrev($children->flip()));
     }
 
     public function testHasPrevListed()
@@ -118,6 +136,15 @@ class PageSiblingsTest extends TestCase
         $this->assertEquals(0, $collection->first()->indexOf());
         $this->assertEquals(1, $collection->nth(1)->indexOf());
         $this->assertEquals(2, $collection->last()->indexOf());
+    }
+
+    public function testIndexOfCustomCollection()
+    {
+        $collection = $this->site()->children();
+        $page = $collection->first();
+
+        $this->assertEquals(0, $page->indexOf());
+        $this->assertEquals(2, $page->indexOf($collection->flip()));
     }
 
     public function testIsFirst()

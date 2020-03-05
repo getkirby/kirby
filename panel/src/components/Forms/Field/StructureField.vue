@@ -413,7 +413,7 @@ export default {
         return "…";
       }
 
-      return value;
+      return value.toString();
     },
     escape() {
       if (this.currentIndex === "new") {
@@ -761,6 +761,8 @@ $structure-item-height: 38px;
     box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
     outline: 2px solid $color-focus;
     margin-bottom: 2px;
+    cursor: grabbing;
+    cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
   }
 }

@@ -163,7 +163,7 @@ trait FileActions
         $props['model'] = strtolower($props['template'] ?? 'default');
 
         // create the basic file and a test upload object
-        $file = File::factory($props);
+        $file = static::factory($props);
         $upload = new Image($props['source']);
 
         // create a form for the file
