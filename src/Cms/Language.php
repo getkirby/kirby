@@ -328,6 +328,36 @@ class Language extends Model
     }
 
     /**
+     * Loads an i18n rule file for slugs based on provided
+     * full or partial locale code
+     *
+     * @param string $locale
+     *
+     * @return array
+     */
+    public static function loadRules(string $locale): array
+    {
+        // Make sure to only use the part before the format
+        if (Str::contains($locale, '.') === true) {
+            $locale = Str::before($locale, '.');
+        }
+
+        $root = kirby()->root('i18n:rules');
+        $file = $root . '/' . $locale . '.json';
+
+        // fallback to more general language code
+        if (F::exists($file) === false) {
+            $file = $root . '/' . Str::before($locale, '_') . '.json';
+        }
+
+        try {
+            return Data::read($file);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
      * Returns the PHP locale setting array
      *
      * @param int $category If passed, returns the locale for the specified category (e.g. LC_ALL) as string
@@ -453,19 +483,7 @@ class Language extends Model
     public function rules(): array
     {
         $code = $this->locale(LC_CTYPE);
-        $code = Str::contains($code, '.') ? Str::before($code, '.') : $code;
-        $file = $this->kirby()->root('i18n:rules') . '/' . $code . '.json';
-
-        if (F::exists($file) === false) {
-            $file = $this->kirby()->root('i18n:rules') . '/' . Str::before($code, '_') . '.json';
-        }
-
-        try {
-            $data = Data::read($file);
-        } catch (\Exception $e) {
-            $data = [];
-        }
-
+        $data = static::loadRules($code);
         return array_merge($data, $this->slugs());
     }
 

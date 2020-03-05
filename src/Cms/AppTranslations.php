@@ -35,7 +35,10 @@ trait AppTranslations
             }
 
             // inject translations from the current language
-            if ($this->multilang() === true && $language = $this->languages()->find($locale)) {
+            if (
+                $this->multilang() === true &&
+                $language = $this->languages()->find($locale)
+            ) {
                 $data = array_merge($data, $language->translations());
 
                 // Add language slug rules to Str class
@@ -50,7 +53,9 @@ trait AppTranslations
             if ($this->multilang() === true) {
                 return $this->defaultLanguage()->code();
             } else {
-                return 'en';
+                return $this->options['language']['locale'] ??
+                       $this->options['language'] ??
+                       'en';
             }
         };
 
@@ -64,18 +69,14 @@ trait AppTranslations
 
         I18n::$translations = [];
 
-        if (isset($this->options['slugs']) === true) {
-            $file = $this->root('i18n:rules') . '/' . $this->options['slugs'] . '.json';
-
-            if (F::exists($file) === true) {
-                try {
-                    $data = Data::read($file);
-                } catch (\Exception $e) {
-                    $data = [];
-                }
-
-                Str::$language = $data;
-            }
+        // Set string language rules from
+        // - language rules file
+        // - config option
+        if ($locale = $this->options['language']['locale'] ?? $this->options['language'] ?? null) {
+            Str::$language = array_merge(
+                Language::loadRules($locale),
+                $this->options['language']['slugs'] ?? $this->options['slugs'] ?? []
+            );
         }
     }
 
