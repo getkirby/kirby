@@ -121,6 +121,25 @@ class LanguageTest extends TestCase
         $this->assertEquals(null, $language->locale(LC_MONETARY));
     }
 
+    public function testLocaleArray3()
+    {
+        $language = new Language([
+            'code' => 'en',
+            'locale' => [
+                'LC_ALL'   => 'en_US',
+                'LC_CTYPE' => 'en_US.utf8'
+            ]
+        ]);
+
+        $this->assertEquals([
+            LC_ALL   => 'en_US',
+            LC_CTYPE => 'en_US.utf8'
+        ], $language->locale());
+        $this->assertEquals('en_US', $language->locale(LC_ALL));
+        $this->assertEquals('en_US.utf8', $language->locale(LC_CTYPE));
+        $this->assertEquals('en_US', $language->locale(LC_MONETARY));
+    }
+
     public function testLocaleInvalid()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
@@ -221,7 +240,7 @@ class LanguageTest extends TestCase
         $this->assertEquals('de', $data['code']);
         $this->assertEquals(false, $data['default']);
         $this->assertEquals('ltr', $data['direction']);
-        $this->assertEquals([LC_ALL => 'de'], $data['locale']);
+        $this->assertEquals(['LC_ALL' => 'de'], $data['locale']);
         $this->assertEquals('de', $data['name']);
         $this->assertEquals([], $data['translations']);
         $this->assertEquals(null, $data['url'] ?? null);
