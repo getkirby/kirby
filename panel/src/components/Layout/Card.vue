@@ -3,12 +3,12 @@
     <k-sort-handle v-if="sortable" />
 
     <component :is="wrapper" :to="link" :target="target">
-      <k-image
-        v-if="imageOptions"
-        v-bind="imageOptions"
-        class="k-card-image"
-      />
-      <span v-else :style="'padding-bottom:' + ratioPadding" class="k-card-icon">
+      <k-image v-if="imageOptions" v-bind="imageOptions" class="k-card-image" />
+      <span
+        v-else
+        :style="'padding-bottom:' + ratioPadding"
+        class="k-card-icon"
+      >
         <k-icon v-bind="icon" />
       </span>
       <figcaption class="k-card-content">
@@ -41,7 +41,6 @@
         />
       </slot>
     </nav>
-
   </figure>
 </template>
 
@@ -68,28 +67,25 @@ export default {
     target: String,
     text: String
   },
+  data() {
+    return {
+      width: null
+    };
+  },
   computed: {
-    wrapper() {
-      return this.link ? "k-link" : "div";
-    },
-    ratioPadding() {
-      return this.icon && this.icon.ratio
-        ? this.$helper.ratio(this.icon.ratio)
-        : this.$helper.ratio("3/2");
-    },
     imageOptions() {
       if (!this.image) {
         return false;
       }
 
-      let src    = null;
+      let src = null;
       let srcset = null;
 
       if (this.image.cards) {
-        src    = this.image.cards.url;
+        src = this.image.cards.url;
         srcset = this.image.cards.srcset;
       } else {
-        src    = this.image.url;
+        src = this.image.url;
         srcset = this.image.srcset;
       }
 
@@ -103,27 +99,31 @@ export default {
         back: this.image.back || "black",
         cover: this.image.cover,
         ratio: this.image.ratio || "3/2",
-        sizes: this.getSizes(this.column)
+        sizes: this.sizes
       };
+    },
+    ratioPadding() {
+      return this.icon && this.icon.ratio
+        ? this.$helper.ratio(this.icon.ratio)
+        : this.$helper.ratio("3/2");
+    },
+    sizes() {
+      return this.width + "px";
+    },
+    wrapper() {
+      return this.link ? "k-link" : "div";
     }
   },
+  mounted() {
+    this.measure();
+    window.addEventListener("resize", this.measure);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.measure);
+  },
   methods: {
-    getSizes(width) {
-      switch (width) {
-        case '1/2':
-        case '2/4':
-          return '(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 44em, 27em';
-        case '1/3':
-          return '(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 29.333em, 27em';
-        case '1/4':
-          return '(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 22em, 27em';
-        case '2/3':
-          return '(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 27em, 27em';
-        case '3/4':
-          return '(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 66em, 27em';
-        default:
-          return '(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 88em, 27em';
-      }
+    measure() {
+      this.width = this.$el.offsetWidth;
     }
   }
 };
