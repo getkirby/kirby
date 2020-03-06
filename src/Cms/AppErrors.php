@@ -50,6 +50,8 @@ trait AppErrors
             if ($this->option('whoops', true) === true) {
                 $handler = new PrettyPageHandler();
                 $handler->setPageTitle('Kirby CMS Debugger');
+                $handler->setResourcesPath(dirname(__DIR__, 2) . '/assets');
+                $handler->addCustomCss('whoops.css');
 
                 if ($editor = $this->option('editor')) {
                     $handler->setEditor($editor);
