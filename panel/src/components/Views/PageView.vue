@@ -3,7 +3,6 @@
     {{ issue.message }}
   </k-error-view>
   <k-view v-else :data-locked="isLocked" class="k-page-view">
-
     <k-header
       :tabs="tabs"
       :tab="tab"
@@ -19,8 +18,17 @@
           target="_blank"
           icon="open"
         >
-          {{ $t('open') }}
+          {{ $t("open") }}
         </k-button>
+        <k-button
+          v-if="permissions.preview && page.previewUrl && hasChanges"
+          :responsive="true"
+          @click="openPreview"
+          icon="preview"
+        >
+          {{ $t("preview") }}
+        </k-button>
+
         <k-button
           v-if="status"
           :class="['k-status-flag', 'k-status-flag-' + page.status]"
@@ -39,13 +47,16 @@
             icon="cog"
             @click="$refs.settings.toggle()"
           >
-            {{ $t('settings') }}
+            {{ $t("settings") }}
           </k-button>
-          <k-dropdown-content ref="settings" :options="options" @action="action" />
+          <k-dropdown-content
+            ref="settings"
+            :options="options"
+            @action="action"
+          />
         </k-dropdown>
 
         <k-languages-dropdown />
-
       </k-button-group>
 
       <k-prev-next
@@ -72,9 +83,7 @@
     <k-page-status-dialog ref="status" @success="update" />
     <k-page-template-dialog ref="template" @success="update" />
     <k-page-remove-dialog ref="remove" />
-
   </k-view>
-
 </template>
 
 <script>
@@ -98,7 +107,6 @@ export default {
         status: null
       },
       blueprint: null,
-      preview: true,
       permissions: {
         changeTitle: false,
         changeStatus: false
@@ -111,6 +119,12 @@ export default {
     };
   },
   computed: {
+    changes() {
+      return this.$store.getters["content/changes"]();
+    },
+    hasChanges() {
+      return Object.keys(this.changes).length > 0;
+    },
     language() {
       return this.$store.state.languages.current;
     },
@@ -204,7 +218,6 @@ export default {
             api: this.$api.pages.link(this.page.id),
             content: this.page.content
           });
-
         })
         .catch(error => {
           this.issue = error;
@@ -212,6 +225,21 @@ export default {
     },
     onTab(tab) {
       this.tab = tab;
+    },
+    openPreview() {
+      let form = document.createElement("form");
+      form.target = "_blank";
+      form.method = "POST";
+      form.action = this.page.previewUrl;
+
+      let input = document.createElement("input");
+      input.type = "hidden";
+      input.name = "preview";
+      input.value = JSON.stringify(this.changes);
+
+      form.appendChild(input);
+      document.body.appendChild(form);
+      form.submit();
     },
     update() {
       this.fetch();
