@@ -26,6 +26,13 @@ return [
         },
 
         /**
+         * Whether each item should be clickable
+         */
+        'link' => function (bool $link = true) {
+            return $link;
+        },
+
+        /**
          * The minimum number of required selected
          */
         'min' => function (int $min = null) {
