@@ -72,7 +72,17 @@ export default new Vuex.Store({
       context.commit("SET_SEARCH", search);
     },
     title(context, title) {
-      Api.site.get(["title"]).then(site => {
+      let site;
+
+      if (context.state.user.current) {
+        site = Api.site.get(["title"]);
+      } else {
+        site = new Promise(resolve => {
+          resolve(context.state.system.info);
+        });
+      }
+
+      site.then(site => {
         context.commit("SET_TITLE", title);
         context.dispatch("system/title", site.title);
         document.title = title || "";
@@ -82,7 +92,7 @@ export default new Vuex.Store({
         } else {
           document.title += site.title;
         }
-      })
+      });
     },
     view(context, view) {
       context.commit("SET_VIEW", view);
