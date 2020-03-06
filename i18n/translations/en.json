@@ -400,6 +400,7 @@
 
   "save": "Save",
   "search": "Search",
+  "search.min": "Enter {min} characters to search",
 
   "section.required": "The section is required",
 

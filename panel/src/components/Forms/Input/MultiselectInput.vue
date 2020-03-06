@@ -37,6 +37,7 @@
         <input
           ref="search"
           v-model="q"
+          :placeholder="this.minSearch ? this.$t('search.min', {min: this.minSearch}) : $t('search') + ' …'"
           @keydown.esc.stop="escape"
         >
       </k-dropdown-item>
@@ -70,10 +71,15 @@ import { required, minLength, maxLength } from "vuelidate/lib/validators";
 export default {
   inheritAttrs: false,
   props: {
-    disabled: Boolean,
     id: [Number, String],
+    disabled: Boolean,
+    display: Number,
     max: Number,
     min: Number,
+    minSearch: {
+      type: Number,
+      default: 0
+    },
     layout: String,
     options: {
       type: Array,
@@ -118,27 +124,32 @@ export default {
       };
     },
     filtered() {
-      if (this.q === null) {
-        return this.options.map(option => ({
-          ...option,
-          display: option.text,
-          info: option.value
-        }));
+      if (!this.q && this.minSearch === 0) {
+        return this.options
+            .slice(0, this.display || this.options.length)
+            .map(option => ({
+              ...option,
+              display: option.text,
+              info: option.value
+            }));
       }
 
-      const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
+      if (this.q && this.q.length >= this.minSearch) {
+        const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
 
-      return this.options
-        .filter(option => {
-          return String(option.text).match(regex) || String(option.value).match(regex);
-        })
-        .map(option => {
-          return {
-            ...option,
-            display: String(option.text).replace(regex, "<b>$1</b>"),
-            info: String(option.value).replace(regex, "<b>$1</b>")
-          };
-        });
+        return this.options
+            .filter(option => {
+              return String(option.text).match(regex) || String(option.value).match(regex);
+            })
+            .slice(0, this.display || this.options.length)
+            .map(option => {
+              return {
+                ...option,
+                display: String(option.text).replace(regex, "<b>$1</b>"),
+                info: String(option.value).replace(regex, "<b>$1</b>")
+              };
+            });
+      }
     },
     sorted() {
       if (this.sort === false) {

@@ -3,17 +3,27 @@
 return [
     'extends' => 'tags',
     'props' => [
-
         /**
          * Unset inherited props
          */
         'accept' => null,
-
+        /**
+         * Limit displayed items
+         */
+        'display' => function (int $display = null) {
+            return $display;
+        },
         /**
          * Custom icon to replace the arrow down.
          */
         'icon' => function (string $icon = null) {
             return $icon;
+        },
+        /**
+         * Set minimum number of characters to search
+         */
+        'minSearch' => function (int $minSearch = 0) {
+            return $minSearch;
         },
         /**
          * Enable/disable the search in the dropdown
