@@ -65,16 +65,16 @@
           :disabled="true"
           class="k-multiselect-option"
         >
-          {{ q && q.length >= (search.min || 0) ? $t("search.results.none") : !search.min ? $t("options.none") : "" }}
+          {{ emptyLabel }}
         </k-dropdown-item>
       </div>
 
       <k-button
         v-if="visible.length < filtered.length"
         class="k-multiselect-more"
-        @click.stop="page++"
+        @click.stop="limit = false"
       >
-        {{ $t("more") }}
+        {{ $t("search.all") }} ({{ filtered.length }})
       </k-button>
     </k-dropdown-content>
 
@@ -117,7 +117,7 @@ export default {
     return {
       state: this.value,
       q: null,
-      page: 1,
+      limit: true,
       scrollTop: 0
     };
   },
@@ -132,23 +132,22 @@ export default {
         delay: 1
       };
     },
-    visible() {
-      return this.filtered
-            .slice(0, (this.search.display || this.filtered.length) * this.page)
-            .map(option => ({
-              ...option,
-              display: option.text,
-              info: option.value
-            }));
-    },
-    filtered() {
-      let minSearch = this.search.min || 0;
-
-      if (this.search === false || (!this.q && minSearch === 0)) {
-        return this.options;
+    emptyLabel() {
+      if (this.q) {
+        return this.$t("search.results.none");
       }
 
-      if (this.q && this.q.length >= minSearch) {
+      return this.$t("options.none");
+    },
+    visible() {
+      if (this.limit) {
+        return this.filtered.slice(0, this.search.display || this.filtered.length);
+      }
+
+      return this.filtered;
+    },
+    filtered() {
+      if (this.q && this.q.length >= (this.search.min || 0)) {
         const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
 
         return this.options.filter(option => {
@@ -163,7 +162,11 @@ export default {
             });
       }
 
-      return [];
+      return this.options.map(option => ({
+              ...option,
+              display: option.text,
+              info: option.value
+            }));
     },
     sorted() {
       if (this.sort === false) {
@@ -207,6 +210,7 @@ export default {
     close() {
       if (this.$refs.dropdown.isOpen === true) {
         this.$refs.dropdown.close();
+        this.limit = true;
       }
     },
     escape() {
@@ -327,6 +331,7 @@ export default {
 
   > .k-button-text {
     flex: 1;
+    opacity: 1 !important;
   }
 
   input {

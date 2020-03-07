@@ -345,6 +345,7 @@
   "save": "Save",
   "search": "Search",
   "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
   "search.results.none": "No results",
 
   "section.required": "The section is required",
