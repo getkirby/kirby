@@ -17,7 +17,6 @@ return [
          * Enable/disable the search in the dropdown
          * Also limit displayed items (display: 20)
          * and set minimum number of characters to search (min: 3)
-         *
          */
         'search' => function ($search = true) {
             return $search;
