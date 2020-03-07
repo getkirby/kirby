@@ -37,20 +37,20 @@
         <input
           ref="search"
           v-model="q"
-          :placeholder="search.min !== 'undefined' ? $t('search.min', {min: search.min}) : $t('search') + ' …'"
+          :placeholder="search.min ? $t('search.min', { min: search.min }) : $t('search') + ' …'"
           @keydown.esc.stop="escape"
         >
       </k-dropdown-item>
 
       <div class="k-multiselect-options">
         <k-dropdown-item
-          v-for="option in filtered"
+          v-for="option in visible"
           :key="option.value"
           :icon="isSelected(option) ? 'check' : 'circle-outline'"
           :class="{
             'k-multiselect-option': true,
             'selected': isSelected(option),
-            'disabled': !addable
+            'disabled': !more
           }"
           @click.prevent="select(option)"
           @keydown.native.enter.prevent.stop="select(option)"
@@ -59,14 +59,23 @@
           <span v-html="option.display" />
           <span class="k-multiselect-value" v-html="option.info" />
         </k-dropdown-item>
+
+        <k-dropdown-item
+          v-if="filtered.length === 0"
+          :disabled="true"
+          class="k-multiselect-option"
+        >
+          {{ q ? $t("search.results.none") : $t("search.none") }}
+        </k-dropdown-item>
       </div>
 
-      <k-link
-          v-if="q && q.length >= (search.min || 0) && options.length > filtered.length"
-          @click.prevent="showMore()"
-          class="k-multiselect-more">
-        <span v-html="$t('more')"></span>
-      </k-link>
+      <k-button
+        v-if="visible.length < filtered.length"
+        class="k-multiselect-more"
+        @click.stop="page++"
+      >
+        {{ $t("more") }}
+      </k-button>
     </k-dropdown-content>
 
   </k-draggable>
@@ -108,13 +117,11 @@ export default {
     return {
       state: this.value,
       q: null,
+      page: 1,
       scrollTop: 0
     };
   },
   computed: {
-    addable() {
-      return !this.max || this.state.length < this.max;
-    },
     draggable() {
       return this.state.length > 1 && !this.sort;
     },
@@ -125,26 +132,23 @@ export default {
         delay: 1
       };
     },
-    filtered() {
-      if (!this.q && (this.search.min || 0) === 0) {
-        return this.options
-            .slice(0, this.search.display || this.options.length)
+    visible() {
+      return this.filtered
+            .slice(0, (this.search.display || this.filtered.length) * this.page)
             .map(option => ({
               ...option,
               display: option.text,
               info: option.value
             }));
-      }
-
+    },
+    filtered() {
       if (this.q && this.q.length >= (this.search.min || 0)) {
         const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
 
-        return this.options
-            .filter(option => {
-              return String(option.text).match(regex) || String(option.value).match(regex);
-            })
-            .slice(0, this.search.display || this.options.length)
-            .map(option => {
+        return this.options.filter(option => {
+              return String(option.text).match(regex) ||
+                     String(option.value).match(regex);
+            }).map(option => {
               return {
                 ...option,
                 display: String(option.text).replace(regex, "<b>$1</b>"),
@@ -153,7 +157,7 @@ export default {
             });
       }
 
-      return [];
+      return this.options;
     },
     sorted() {
       if (this.sort === false) {
@@ -164,7 +168,10 @@ export default {
 
       const index = x => this.options.findIndex(y => y.value === x.value);
       return items.sort((a, b) => index(a) - index(b));
-    }
+    },
+    more() {
+      return !this.max || this.state.length < this.max;
+    },
   },
   watch: {
     value(value) {
@@ -183,7 +190,7 @@ export default {
   },
   methods: {
     add(option) {
-      if (this.addable === true) {
+      if (this.more === true) {
         this.state.push(option);
         this.onInput();
       }
@@ -329,7 +336,7 @@ export default {
 
 .k-multiselect-options {
   position: relative;
-  max-height: 240px;
+  max-height: 275px;
   overflow-y: auto;
   padding: 0.5rem 0;
 }
@@ -369,10 +376,14 @@ export default {
 }
 
 .k-multiselect-more {
-  display: block;
-  padding: .5rem;
-  opacity: .75;
+  width: 100%;
+  padding: .75rem;
+  color: rgba($color-white, .8);
   text-align: center;
   border-top: 1px dashed rgba($color-white, 0.2);
+
+  &:hover {
+    color: $color-white;
+  }
 }
 </style>
