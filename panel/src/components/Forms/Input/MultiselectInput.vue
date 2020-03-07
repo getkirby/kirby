@@ -65,7 +65,7 @@
           :disabled="true"
           class="k-multiselect-option"
         >
-          {{ q ? $t("search.results.none") : $t("options.none") }}
+          {{ q && q.length >= (search.min || 0) ? $t("search.results.none") : !search.min ? $t("options.none") : "" }}
         </k-dropdown-item>
       </div>
 
@@ -142,7 +142,13 @@ export default {
             }));
     },
     filtered() {
-      if (this.q && this.q.length >= (this.search.min || 0)) {
+      let minSearch = this.search.min || 0;
+
+      if (this.search === false || (!this.q && minSearch === 0)) {
+        return this.options;
+      }
+
+      if (this.q && this.q.length >= minSearch) {
         const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
 
         return this.options.filter(option => {
@@ -157,7 +163,7 @@ export default {
             });
       }
 
-      return this.options;
+      return [];
     },
     sorted() {
       if (this.sort === false) {
