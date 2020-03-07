@@ -37,7 +37,7 @@
         <input
           ref="search"
           v-model="q"
-          :placeholder="this.search.min !== 'undefined' ? this.$t('search.min', {min: this.search.min}) : $t('search') + ' …'"
+          :placeholder="search.min !== 'undefined' ? $t('search.min', {min: search.min}) : $t('search') + ' …'"
           @keydown.esc.stop="escape"
         >
       </k-dropdown-item>
@@ -60,6 +60,13 @@
           <span class="k-multiselect-value" v-html="option.info" />
         </k-dropdown-item>
       </div>
+
+      <k-link
+          v-if="q && q.length >= (search.min || 0) && options.length > filtered.length"
+          @click.prevent="showMore()"
+          class="k-multiselect-more">
+        <span v-html="$t('more')"></span>
+      </k-link>
     </k-dropdown-content>
 
   </k-draggable>
@@ -145,6 +152,8 @@ export default {
               };
             });
       }
+
+      return [];
     },
     sorted() {
       if (this.sort === false) {
@@ -357,5 +366,13 @@ export default {
 .k-multiselect-input[data-layout="list"] .k-tag {
   width: 100%;
   margin-right: 0 !important;
+}
+
+.k-multiselect-more {
+  display: block;
+  padding: .5rem;
+  opacity: .75;
+  text-align: center;
+  border-top: 1px dashed rgba($color-white, 0.2);
 }
 </style>
