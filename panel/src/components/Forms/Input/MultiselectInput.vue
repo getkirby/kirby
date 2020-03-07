@@ -65,7 +65,7 @@
           :disabled="true"
           class="k-multiselect-option"
         >
-          {{ q ? $t("search.results.none") : $t("search.none") }}
+          {{ q ? $t("search.results.none") : $t("options.none") }}
         </k-dropdown-item>
       </div>
 
