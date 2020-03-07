@@ -36,7 +36,7 @@ export default {
 
 @media screen and (min-width: $breakpoint-small) {
   .k-cards[data-size="tiny"] {
-    grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
     /**
       Making sure card doesn't break layout if
       in a parent narrower than 12rem
@@ -46,7 +46,7 @@ export default {
       */
     grid-template-columns: repeat(
       auto-fill,
-      minmax(#{"min(12rem, 100%)"}, 1fr)
+      minmax(#{"min(10rem, 100%)"}, 1fr)
     );
   }
   .k-cards[data-size="small"] {
