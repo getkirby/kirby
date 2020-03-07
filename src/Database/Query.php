@@ -295,6 +295,10 @@ class Query
      */
     public function join(string $table, string $on, string $type = 'JOIN')
     {
+        if (strtolower($type) != 'join') {
+            $type .= ' join';
+        }
+        
         $join = [
             'table' => $table,
             'on'    => $on,
