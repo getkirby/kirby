@@ -694,24 +694,6 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Check if the page can be read by the current user
-     *
-     * @return bool
-     */
-    public function isReadable(): bool
-    {
-        static $readable = [];
-
-        $template = $this->intendedTemplate()->name();
-
-        if (isset($readable[$template]) === true) {
-            return $readable[$template];
-        }
-
-        return $readable[$template] = $this->permissions()->can('read');
-    }
-
-    /**
      * Checks if the page is the home page
      *
      * @return bool
@@ -774,6 +756,34 @@ class Page extends ModelWithContent
         }
 
         return false;
+    }
+
+    /**
+     * Checks if the page is not a draft.
+     *
+     * @return bool
+     */
+    public function isPublished(): bool
+    {
+        return $this->isDraft() === false;
+    }
+
+    /**
+     * Check if the page can be read by the current user
+     *
+     * @return bool
+     */
+    public function isReadable(): bool
+    {
+        static $readable = [];
+
+        $template = $this->intendedTemplate()->name();
+
+        if (isset($readable[$template]) === true) {
+            return $readable[$template];
+        }
+
+        return $readable[$template] = $this->permissions()->can('read');
     }
 
     /**

@@ -22,6 +22,7 @@ export default {
 .k-column[data-sticky] > div {
   position: sticky;
   top: 4vh;
+  z-index: 2;
 }
 
 @media screen and (min-width: $breakpoint-medium) {
