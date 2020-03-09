@@ -7,11 +7,11 @@
           <k-dropdown>
             <k-button
               ref="pickerToggle"
-              icon="add"
+              :icon="btnIcon"
               class="k-field-options-button"
               @click="$refs.picker.toggle()"
             >
-              {{ $t('add') }}
+              {{ btnLabel }}
             </k-button>
             <k-dropdown-content ref="picker" align="right">
               <k-dropdown-item icon="check" @click="open">{{ $t('select') }}</k-dropdown-item>
@@ -40,7 +40,7 @@
           :key="file.filename"
           :sortable="!disabled && selected.length > 1"
           :text="file.text"
-          :link="file.link"
+          :link="link ? file.link : null"
           :info="file.info"
           :image="file.image"
           :icon="file.icon"
@@ -62,7 +62,7 @@
       icon="image"
       @click="open"
     >
-      {{ empty || $t('field.files.empty') }}
+      {{ empty || $t("field.files.empty") }}
     </k-empty>
 
     <k-files-dialog ref="selector" @submit="select" />
@@ -78,7 +78,7 @@ import picker from "@/mixins/picker/field.js";
 export default {
   mixins: [picker],
   props: {
-    uploads: [Boolean, Object, Array],
+    uploads: [Boolean, Object, Array]
   },
   created() {
     this.$events.$on("file.delete", this.removeById);
