@@ -1,6 +1,7 @@
 <template>
   <span
     :id="id"
+    :aria-label="tooltip"
     :data-disabled="true"
     :data-responsive="responsive"
     :data-theme="theme"

@@ -1,6 +1,7 @@
 <template>
   <k-link
     :aria-current="current"
+    :aria-label="tooltip"
     :autofocus="autofocus"
     :id="id"
     :data-theme="theme"
@@ -25,7 +26,6 @@
 </template>
 
 <script>
-
 export default {
   inheritAttrs: false,
   props: {
@@ -40,7 +40,7 @@ export default {
     target: String,
     tabindex: String,
     theme: String,
-    tooltip: String,
+    tooltip: String
   }
 };
 </script>

@@ -18,11 +18,10 @@
     </component>
 
     <nav class="k-card-options">
-      <k-button
+      <k-status
         v-if="flag"
         v-bind="flag"
         class="k-card-options-button"
-        @click="flag.click"
       />
       <slot name="options">
         <k-button
@@ -246,6 +245,11 @@ export default {
 .k-card-options {
   position: absolute;
   bottom: 0;
+  height: 2.25rem;
+  padding: 0 0.5rem;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 
   [dir="ltr"] & {
     right: 0;
@@ -255,14 +259,16 @@ export default {
     left: 0;
   }
 }
-.k-card-options > .k-button {
+.k-card-options-button {
   position: relative;
-  float: left;
-  height: 2.25rem;
-  padding: 0 0.75rem;
+
+  padding: 0 0.5rem;
   line-height: 1;
 }
 .k-card-options-dropdown {
   top: 2.25rem;
+}
+.k-card-options .k-status {
+  top: -2px;
 }
 </style>

@@ -1,9 +1,9 @@
 <template>
   <section v-if="isLoading === false" class="k-pages-section">
-
     <header class="k-section-header">
       <k-headline :link="options.link">
-        {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
+        {{ headline }}
+        <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
 
       <k-button-group v-if="add">
@@ -44,7 +44,7 @@
           icon="page"
           @click="create"
         >
-          {{ options.empty || $t('pages.empty') }}
+          {{ options.empty || $t("pages.empty") }}
         </k-empty>
         <footer class="k-collection-footer">
           <k-text
@@ -64,9 +64,7 @@
       <k-page-template-dialog ref="template" @success="update" />
       <k-page-remove-dialog ref="remove" @success="update" />
     </template>
-
   </section>
-
 </template>
 
 <script>
@@ -97,7 +95,6 @@ export default {
       }
     },
     action(page, action) {
-
       switch (action) {
         case "duplicate": {
           this.$refs.duplicate.open(page.id);
@@ -153,21 +150,9 @@ export default {
           throw new Error("Invalid action");
         }
       }
-
     },
     items(data) {
       return data.map(page => {
-        const isEnabled = page.permissions.changeStatus !== false;
-
-        page.flag = {
-          class: "k-status-flag k-status-flag-" + page.status,
-          tooltip: isEnabled ? this.$t("page.status") : `${this.$t("page.status")} (${this.$t("disabled")})`,
-          icon: isEnabled ? "circle" : "protected",
-          disabled: !isEnabled,
-          click: () => {
-            this.action(page, "status");
-          }
-        };
 
         page.options = ready => {
           this.$api.pages
@@ -176,6 +161,13 @@ export default {
             .catch(error => {
               this.$store.dispatch("notification/error", error);
             });
+        };
+
+        page.flag = {
+          page: page,
+          action: () => {
+            this.action(page, "status");
+          }
         };
 
         page.sortable = page.permissions.sort && this.options.sortable;
