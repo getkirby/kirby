@@ -203,7 +203,7 @@ return [
 
             foreach ($keys as $key) {
                 $score = $options['score'][$key] ?? 1;
-                $value = $data[$key] ?? (string) $item->$key();
+                $value = $data[$key] ?? (string)$item->$key();
 
                 $lowerValue = mb_strtolower($value);
 
