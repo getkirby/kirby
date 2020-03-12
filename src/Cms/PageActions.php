@@ -356,7 +356,9 @@ trait PageActions
             'slug'    => $slug,
         ]);
 
-        $ignore = [];
+        $ignore = [
+            $this->kirby()->locks()->file($this)
+        ];
 
         // don't copy files
         if ($files === false) {
