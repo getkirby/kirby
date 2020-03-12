@@ -377,7 +377,7 @@ trait PageActions
         // remove all translated slugs
         if ($this->kirby()->multilang() === true) {
             foreach ($this->kirby()->languages() as $language) {
-                if ($language->isDefault() === false) {
+                if ($language->isDefault() === false && $copy->translation($language)->exists() === true) {
                     $copy = $copy->save(['slug' => null], $language->code());
                 }
             }
