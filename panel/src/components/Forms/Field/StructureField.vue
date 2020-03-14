@@ -175,6 +175,10 @@ export default {
       default: true
     },
     sortBy: String,
+    unshift: {
+      type: Boolean,
+      default: false
+    },
     value: {
       type: Array,
       default() {
@@ -519,7 +523,11 @@ export default {
         return this.validate(this.currentModel)
           .then(() => {
             if (this.currentIndex === "new") {
-              this.items.push(this.currentModel);
+              if (this.unshift === true) {
+                this.items.unshift(this.currentModel);
+              } else {
+                this.items.push(this.currentModel);
+              }
             } else {
               this.items[this.currentIndex] = this.currentModel;
             }
