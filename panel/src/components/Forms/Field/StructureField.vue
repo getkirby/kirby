@@ -118,7 +118,24 @@
               </template>
             </td>
             <td class="k-structure-table-option">
-              <k-button :tooltip="$t('remove')" icon="remove" @click="confirmRemove(index)" />
+              <template v-if="duplicate && more && currentIndex === null">
+                <k-dropdown class="k-structure-options">
+                  <k-button
+                      :key="index"
+                      ref="actionsToggle"
+                      icon="dots"
+                      class="k-structure-options-button"
+                      @click="$refs[index + '-actions'][0].toggle()"
+                  />
+                  <k-dropdown-content :ref="index + '-actions'" align="right">
+                    <k-dropdown-item icon="copy" @click="duplicateItem(index)">{{ $t('duplicate') }}</k-dropdown-item>
+                    <k-dropdown-item icon="remove" @click="confirmRemove(index)">{{ $t('remove') }}</k-dropdown-item>
+                  </k-dropdown-content>
+                </k-dropdown>
+              </template>
+              <template v-else>
+                <k-button :tooltip="$t('remove')" icon="remove" @click="confirmRemove(index)" />
+              </template>
             </td>
           </tr>
         </k-draggable>
@@ -165,6 +182,10 @@ export default {
   props: {
     ...Field.props,
     columns: Object,
+    duplicate: {
+      type: Boolean,
+      default: true
+    },
     empty: String,
     fields: Object,
     limit: Number,
@@ -358,6 +379,9 @@ export default {
       this.close();
       this.trash = index;
       this.$refs.remove.open();
+    },
+    duplicateItem(index) {
+      this.items.push(this.items[index]);
     },
     createForm(field) {
       this.$events.$on("keydown.esc", this.escape);
@@ -610,6 +634,10 @@ $structure-item-height: 38px;
     }
   }
 
+  td:last-child {
+    overflow: visible;
+  }
+
   th {
     position: sticky;
     top: 0;
@@ -747,6 +775,10 @@ $structure-item-height: 38px;
   .k-structure-table-option .k-button {
     width: $structure-item-height;
     height: $structure-item-height;
+  }
+  .k-structure-table-option .k-structure-options .k-dropdown-content .k-button {
+    width: auto;
+    height: auto;
   }
 
   .k-structure-table-text {
