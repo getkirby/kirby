@@ -82,6 +82,12 @@ return [
          */
         'sortBy' => function (string $sort = null) {
             return $sort;
+        },
+        /**
+         * Toggles adding the item always to top of items
+         */
+        'unshift' => function (bool $unshift = null) {
+            return $unshift;
         }
     ],
     'computed' => [
