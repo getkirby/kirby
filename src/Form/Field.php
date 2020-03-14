@@ -40,11 +40,18 @@ class Field extends Component
     /**
      * An array of all found errors
      *
-     * @var array
+     * @var array|null
      */
-    protected $errors = [];
+    protected $errors;
 
-    public function __construct(string $type, array $attrs = [])
+    /**
+     * All fields in the form that the field is in
+     *
+     * @var \Kirby\Form\Fields|null
+     */
+    protected $formFields;
+
+    public function __construct(string $type, array $attrs = [], ?Fields $formFields = null)
     {
         if (isset(static::$types[$type]) === false) {
             throw new InvalidArgumentException('The field type "' . $type . '" does not exist');
@@ -54,13 +61,13 @@ class Field extends Component
             throw new InvalidArgumentException('Field requires a model');
         }
 
+        $this->formFields = $formFields;
+
         // use the type as fallback for the name
         $attrs['name'] = $attrs['name'] ?? $type;
         $attrs['type'] = $type;
 
         parent::__construct($type, $attrs);
-
-        $this->validate();
     }
 
     /**
@@ -225,8 +232,17 @@ class Field extends Component
         ];
     }
 
+    public function formFields(): ?Fields
+    {
+        return $this->formFields;
+    }
+
     public function errors(): array
     {
+        if ($this->errors === null) {
+            $this->validate();
+        }
+
         return $this->errors;
     }
 
@@ -247,7 +263,52 @@ class Field extends Component
 
     public function isInvalid(): bool
     {
-        return empty($this->errors) === false;
+        return empty($this->errors()) === false;
+    }
+
+    /**
+     * Checks if a field is needs value
+     *
+     * Criteria
+     * - checks the field is saveable
+     * - checks the field is required and empty
+     * - checks matching with when option if defined
+     *
+     * @return bool
+     */
+    protected function isNeedsValue(): bool
+    {
+        if ($this->isRequired() === true && $this->save() === true && $this->isEmpty() === true) {
+            // check the data of the relevant fields if there is a when option
+            if (empty($this->when) === false && is_array($this->when) === true) {
+                $input = $this->attrs['input'] ?? [];
+
+                if (empty($input) === false) {
+                    foreach ($this->when as $field => $value) {
+                        $formFields = $this->formFields();
+
+                        // check form fields, otherwise use direct input data
+                        if ($formFields !== null) {
+                            $inputValue = $formFields->{$field}()->exists() ? $formFields->{$field}()->value() : '';
+                        } else {
+                            $inputValue = $input[$field] ?? '';
+                        }
+
+                        // if the input data doesn't have data for when fields
+                        // or one of conditions doesn't match
+                        // that means field is not required and can be saved
+                        // all when conditions must be met
+                        if ($inputValue !== $value) {
+                            return false;
+                        }
+                    }
+                }
+            }
+
+            return true;
+        }
+
+        return false;
     }
 
     public function isRequired(): bool
@@ -257,7 +318,7 @@ class Field extends Component
 
     public function isValid(): bool
     {
-        return empty($this->errors) === true;
+        return empty($this->errors()) === true;
     }
 
     /**
@@ -302,7 +363,7 @@ class Field extends Component
         $this->errors = [];
 
         // validate required values
-        if ($this->isRequired() === true && $this->save() === true && $this->isEmpty() === true) {
+        if ($this->isNeedsValue() === true) {
             $this->errors['required'] = I18n::translate('error.validation.required');
         }
 

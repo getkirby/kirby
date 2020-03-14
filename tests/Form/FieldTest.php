@@ -804,4 +804,114 @@ class FieldTest extends TestCase
 
         $this->assertEquals($expected, $field->errors());
     }
+
+    public function testWhen()
+    {
+        Field::$types = [
+            'foo' => [],
+            'bar' => [],
+            'baz' => [],
+        ];
+
+        $page = new Page(['slug' => 'test']);
+
+        // default
+        $field = new Field('foo', [
+            'model' => $page,
+        ]);
+
+        $this->assertEquals([], $field->errors());
+
+        // passed (simple)
+        // 'bar' is required if 'foo' value is 'a'
+        $field = new Field('bar', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'a'
+            ],
+            'input' => [
+                'foo' => 'not-a',
+                'bar' => '',
+                'baz' => ''
+            ]
+        ]);
+
+        $this->assertEquals([], $field->errors());
+
+        // passed (multiple condition without any match)
+        // 'baz' is required if 'foo' value is 'a' and 'bar' value is 'b'
+        $field = new Field('baz', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'a',
+                'bar' => 'b'
+            ],
+            'input' => [
+                'foo' => 'not-a',
+                'bar' => 'not-b',
+                'baz' => ''
+            ]
+        ]);
+
+        $this->assertEquals([], $field->errors());
+
+        // passed (multiple condition with single match)
+        // 'baz' is required if 'foo' value is 'a' and 'bar' value is 'b'
+        $field = new Field('baz', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'a',
+                'bar' => 'b'
+            ],
+            'input' => [
+                'foo' => 'a',
+                'bar' => 'not-b',
+                'baz' => ''
+            ]
+        ]);
+
+        $this->assertEquals([], $field->errors());
+
+        // failed (simple)
+        // 'bar' is required if 'foo' value is 'a'
+        $field = new Field('bar', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'a'
+            ],
+            'input' => [
+                'foo' => 'a',
+                'bar' => '',
+                'baz' => ''
+            ]
+        ]);
+
+        $expected = [
+            'required' => 'Please enter something',
+        ];
+
+        $this->assertEquals($expected, $field->errors());
+
+        // failed (multiple condition)
+        // 'baz' is required if 'foo' value is 'a' and 'bar' value is 'b'
+        $field = new Field('baz', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'a',
+                'bar' => 'b'
+            ],
+            'input' => [
+                'foo' => 'a',
+                'bar' => 'b',
+                'baz' => ''
+            ]
+        ]);
+
+        $this->assertEquals($expected, $field->errors());
+    }
 }

@@ -35,7 +35,7 @@ class Form
         $values = array_change_key_case($values);
         $input  = array_change_key_case($input);
 
-        unset($inject['fields'], $inject['values'], $inject['input']);
+        unset($inject['fields'], $inject['values']);
 
         $this->fields = new Fields();
         $this->values = [];
@@ -59,7 +59,7 @@ class Form
             }
 
             try {
-                $field = new Field($props['type'], $props);
+                $field = new Field($props['type'], $props, $this->fields);
             } catch (Throwable $e) {
                 $field = static::exceptionField($e, $props);
             }
