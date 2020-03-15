@@ -44,7 +44,7 @@
           <k-dropdown-content ref="settings" :options="options" @action="action" />
         </k-dropdown>
 
-        <k-languages-dropdown />
+        <k-languages-dropdown ref="languages" />
 
       </k-button-group>
 
@@ -149,9 +149,29 @@ export default {
   },
   created() {
     this.$events.$on("page.changeSlug", this.update);
+    this.$events.$on("keydown.cmd.alt.c", this.actionDuplicate);
+    this.$events.$on("keydown.cmd.alt.l", this.actionLanguage);
+    this.$events.$on("keydown.cmd.alt.n", this.actionNext);
+    this.$events.$on("keydown.cmd.alt.o", this.actionOpen);
+    this.$events.$on("keydown.cmd.alt.p", this.actionPrev);
+    this.$events.$on("keydown.cmd.alt.d", this.actionRemove);
+    this.$events.$on("keydown.cmd.alt.r", this.actionRename);
+    this.$events.$on("keydown.cmd.alt.x", this.actionStatus);
+    this.$events.$on("keydown.cmd.alt.t", this.actionTemplate);
+    this.$events.$on("keydown.cmd.alt.u", this.actionUrl);
   },
   destroyed() {
     this.$events.$off("page.changeSlug", this.update);
+    this.$events.$off("keydown.cmd.alt.c", this.actionDuplicate);
+    this.$events.$off("keydown.cmd.alt.l", this.actionLanguage);
+    this.$events.$off("keydown.cmd.alt.n", this.actionNext);
+    this.$events.$off("keydown.cmd.alt.o", this.actionOpen);
+    this.$events.$off("keydown.cmd.alt.p", this.actionPrev);
+    this.$events.$off("keydown.cmd.alt.d", this.actionRemove);
+    this.$events.$off("keydown.cmd.alt.r", this.actionRename);
+    this.$events.$off("keydown.cmd.alt.x", this.actionStatus);
+    this.$events.$off("keydown.cmd.alt.t", this.actionTemplate);
+    this.$events.$off("keydown.cmd.alt.u", this.actionUrl);
   },
   methods: {
     action(action) {
@@ -180,6 +200,67 @@ export default {
             this.$t("notification.notImplemented")
           );
           break;
+      }
+    },
+    actionDuplicate() {
+      if (this.permissions.create && !this.isLocked) {
+        return this.$refs.duplicate.open(this.page.id);
+      }
+    },
+    actionLanguage() {
+      if (this.$store.state.languages) {
+        let languages = this.$store.state.languages.all;
+
+        if (languages.length > 1) {
+          let currentLanguage = this.$store.state.languages.current;
+          let nextIndex = languages.findIndex(language => language.code === currentLanguage.code) + 1;
+
+          if (languages[nextIndex]) {
+            this.$refs.languages.change(languages[nextIndex]);
+          } else {
+            this.$refs.languages.change(languages[0]);
+          }
+        }
+      }
+    },
+    actionNext() {
+      if (this.page.id && this.next) {
+        this.$router.push(this.next.link);
+      }
+    },
+    actionOpen() {
+      if (this.permissions.preview && this.page.previewUrl) {
+        window.open(this.page.previewUrl, "_blank");
+      }
+    },
+    actionPrev() {
+      if (this.page.id && this.prev) {
+        this.$router.push(this.prev.link);
+      }
+    },
+    actionRemove() {
+      if (this.permissions.delete && !this.isLocked) {
+        this.$refs.remove.open(this.page.id);
+      }
+    },
+    actionRename() {
+      if (this.permissions.changeTitle && !this.isLocked) {
+        this.$refs.rename.open(this.page.id);
+      }
+    },
+    actionStatus() {
+      if (this.status && this.permissions.changeStatus && !this.isLocked) {
+        this.$refs.status.open(this.page.id);
+      }
+    },
+    actionTemplate() {
+      if (this.permissions.changeTemplate && !this.isLocked) {
+        this.$refs.template.open(this.page.id);
+      }
+    },
+    actionUrl() {
+      if (this.permissions.changeSlug && !this.isLocked) {
+        this.$refs.url.open(this.page.id);
       }
     },
     fetch() {
