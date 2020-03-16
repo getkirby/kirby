@@ -4,7 +4,11 @@ use Kirby\Data\Yaml;
 use Kirby\Toolkit\A;
 
 return [
-    'mixins' => ['min', 'pagepicker', 'picker'],
+    'mixins' => [
+        'min',
+        'pagepicker',
+        'picker'
+    ],
     'props' => [
         /**
          * Unset inherited props
@@ -62,23 +66,35 @@ return [
     ],
     'methods' => [
         'pageResponse' => function ($page) {
-            return $page->panelPickerData([
+            $response = $page->panelPickerData([
                 'image' => $this->image,
                 'info'  => $this->info,
                 'text'  => $this->text,
             ]);
+
+            if ($this->primaryKey !== null && empty($response[$this->primaryKey]) === true) {
+                $response[$this->primaryKey] = $page->content()->get($this->primaryKey)->value();
+            }
+
+            return $response;
         },
         'toPages' => function ($value = null) {
             $pages = [];
-            $kirby = kirby();
 
-            foreach (Yaml::decode($value) as $id) {
-                if (is_array($id) === true) {
-                    $id = $id['id'] ?? null;
-                }
+            foreach (Yaml::decode($value) as $data) {
+                $id = is_array($data) === true ? ($data['id'] ?? null) : $data;
 
-                if ($id !== null && ($page = $kirby->page($id))) {
-                    $pages[] = $this->pageResponse($page);
+                if (empty($id) === false) {
+                    if ($this->primaryKey === null || is_array($data) === true) {
+                        $page = $this->kirby()->page($id);
+                    } else {
+                        $parent = $this->parent() ?? $this->kirby()->site();
+                        $page = $parent->index(true)->findBy($this->primaryKey, $id);
+                    }
+
+                    if ($page) {
+                        $pages[] = $this->pageResponse($page);
+                    }
                 }
             }
 
@@ -108,7 +124,7 @@ return [
         ];
     },
     'save' => function ($value = null) {
-        return A::pluck($value, 'id');
+        return A::pluck($value, $this->primaryKey ?? 'id');
     },
     'validations' => [
         'max',

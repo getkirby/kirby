@@ -68,23 +68,36 @@ return [
     ],
     'methods' => [
         'fileResponse' => function ($file) {
-            return $file->panelPickerData([
+            $response = $file->panelPickerData([
                 'image' => $this->image,
                 'info'  => $this->info ?? false,
                 'model' => $this->model(),
                 'text'  => $this->text,
             ]);
+
+            if ($this->primaryKey !== null && empty($response[$this->primaryKey]) === true) {
+                $response[$this->primaryKey] = $file->content()->get($this->primaryKey)->value();
+            }
+
+            return $response;
         },
         'toFiles' => function ($value = null) {
             $files = [];
 
-            foreach (Yaml::decode($value) as $id) {
-                if (is_array($id) === true) {
-                    $id = $id['id'] ?? null;
-                }
+            foreach (Yaml::decode($value) as $data) {
+                $id = is_array($data) === true ? ($data['id'] ?? null) : $data;
 
-                if ($id !== null && ($file = $this->kirby()->file($id, $this->model()))) {
-                    $files[] = $this->fileResponse($file);
+                if (empty($id) === false) {
+                    if ($this->primaryKey === null || is_array($data) === true) {
+                        $file = $this->kirby()->file($id, $this->model());
+                    } else {
+                        $parent = $this->model() ?? $this->site();
+                        $file = $parent->files()->findBy($this->primaryKey, $id);
+                    }
+
+                    if ($file) {
+                        $files[] = $this->fileResponse($file);
+                    }
                 }
             }
 
@@ -129,7 +142,7 @@ return [
         ];
     },
     'save' => function ($value = null) {
-        return A::pluck($value, 'uuid');
+        return A::pluck($value, $this->primaryKey ?? 'uuid');
     },
     'validations' => [
         'max',

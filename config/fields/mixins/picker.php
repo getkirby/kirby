@@ -54,6 +54,13 @@ return [
         },
 
         /**
+         * Set primary key of collection
+         */
+        'primaryKey' => function ($primaryKey = null) {
+            return $primaryKey;
+        },
+
+        /**
          * Query for the items to be included in the picker
          */
         'query' => function (string $query = null) {
