@@ -5,6 +5,8 @@
     :data-loading="$store.state.isLoading"
     :data-topbar="inside"
     :data-dialog="$store.state.dialog"
+    :data-translation="translation"
+    :data-translation-default="defaultTranslation"
     class="k-panel"
   >
     <keep-alive>
@@ -57,6 +59,12 @@ export default {
       return !this.$route.meta.outside && this.$store.state.user.current
         ? true
         : false;
+    },
+    defaultTranslation() {
+      return this.$store.state.languages.current ? this.$store.state.languages.current === this.$store.state.languages.default : false;
+    },
+    translation() {
+      return this.$store.state.languages.current ? this.$store.state.languages.current.code : false;
     }
   },
   created() {

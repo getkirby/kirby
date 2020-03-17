@@ -64,6 +64,10 @@ export default {
         return;
       }
 
+      if (typeof this.language.locale === "string") {
+        this.language.locale = this.language.locale.trim() || null;
+      }
+
       this.$api
         .patch("languages/" + this.language.code, {
           name: this.language.name,
