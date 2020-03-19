@@ -41,6 +41,13 @@ return [
             return $size;
         },
 
+        /**
+         * Filters all files by template
+         */
+        'template' => function ($template = null) {
+            return $template;
+        },
+
         'value' => function ($value = null) {
             return $value;
         }
@@ -57,6 +64,13 @@ return [
             return $this->parentModel->apiUrl(true);
         },
         'query' => function () {
+            if (empty($this->template) === false) {
+                $templates      = is_array($this->template) === true ? $this->template : [$this->template];
+                $templatesQuery = json_encode($templates);
+
+                return $this->parentModel::CLASS_ALIAS . '.files.filterBy("template", "in", ' . $templatesQuery . ')';
+            }
+
             return $this->query ?? $this->parentModel::CLASS_ALIAS . '.files';
         },
         'default' => function () {

@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Form\Field;
 use PHPUnit\Framework\TestCase;
 
 class FilePickerTest extends TestCase
@@ -16,9 +17,22 @@ class FilePickerTest extends TestCase
             ],
             'site' => [
                 'files' => [
-                    ['filename' => 'a.jpg'],
-                    ['filename' => 'b.jpg'],
-                    ['filename' => 'c.jpg']
+                    [
+                        'filename' => 'a.jpg',
+                        'template' => 'image'
+                    ],
+                    [
+                        'filename' => 'b.jpg',
+                        'template' => 'image'
+                    ],
+                    [
+                        'filename' => 'c.jpg',
+                        'template' => 'cover'
+                    ],
+                    [
+                        'filename' => 'd.jpg',
+                        'template' => 'other'
+                    ]
                 ]
             ]
         ]);
@@ -30,7 +44,7 @@ class FilePickerTest extends TestCase
     {
         $picker = new FilePicker();
 
-        $this->assertCount(3, $picker->items());
+        $this->assertCount(4, $picker->items());
     }
 
     public function testQuery()
@@ -39,6 +53,37 @@ class FilePickerTest extends TestCase
             'query' => 'site.files.offset(1)'
         ]);
 
-        $this->assertCount(2, $picker->items());
+        $this->assertCount(3, $picker->items());
+    }
+
+    public function testTemplate()
+    {
+        $field = new Field('files', [
+            'model' => $this->app->site(),
+            'template' => 'cover'
+        ]);
+
+        $picker = new FilePicker([
+            'query' => $field->query()
+        ]);
+
+        $this->assertCount(1, $picker->items());
+    }
+
+    public function testTemplates()
+    {
+        $field = new Field('files', [
+            'model' => $this->app->site(),
+            'template' => [
+                'cover',
+                'image'
+            ]
+        ]);
+
+        $picker = new FilePicker([
+            'query' => $field->query()
+        ]);
+
+        $this->assertCount(3, $picker->items());
     }
 }
