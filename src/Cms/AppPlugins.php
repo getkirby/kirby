@@ -631,6 +631,7 @@ trait AppPlugins
             Section::$types['pages']           = include static::$root . '/config/sections/pages.php';
             Section::$types['files']           = include static::$root . '/config/sections/files.php';
             Section::$types['fields']          = include static::$root . '/config/sections/fields.php';
+            Section::$types['users']           = include static::$root . '/config/sections/users.php';
 
             static::$systemExtensions = [
                 'components'   => include static::$root . '/config/components.php',

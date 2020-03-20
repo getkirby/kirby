@@ -282,12 +282,14 @@ import InfoSection from "@/components/Sections/InfoSection.vue";
 import PagesSection from "@/components/Sections/PagesSection.vue";
 import FilesSection from "@/components/Sections/FilesSection.vue";
 import FieldsSection from "@/components/Sections/FieldsSection.vue";
+import UsersSection from "@/components/Sections/UsersSection.vue";
 
 Vue.component("k-sections", Sections);
 Vue.component("k-info-section", InfoSection);
 Vue.component("k-pages-section", PagesSection);
 Vue.component("k-files-section", FilesSection);
 Vue.component("k-fields-section", FieldsSection);
+Vue.component("k-users-section", UsersSection);
 
 /* Views */
 import BrowserView from "@/components/Views/BrowserView.vue";

@@ -143,6 +143,15 @@
   "error.section.pages.min.singular":
     "The \"{section}\" section requires at least one page",
 
+  "error.section.users.max.plural":
+  "You must not add more than {max} users to the \"{section}\" section",
+  "error.section.users.max.singular":
+  "You must not add more than one user to the \"{section}\" section",
+  "error.section.users.min.plural":
+  "The \"{section}\" section requires at least {min} users",
+  "error.section.users.min.singular":
+  "The \"{section}\" section requires at least one user",
+
   "error.section.notLoaded": "The section \"{name}\" could not be loaded",
   "error.section.type.invalid": "The section type \"{type}\" is not valid",
 
@@ -467,6 +476,7 @@
     "Do you really want to delete <br><strong>{email}</strong>?",
 
   "users": "Users",
+  "users.empty": "No users yet",
 
   "version": "Version",
 
