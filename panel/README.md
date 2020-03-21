@@ -2,13 +2,21 @@
 
 ## Installation
 
-Create a new `.env` file in the panel folder and add the following line:
+The Panel dev server is a proxy of another web server like Apache or Nginx that serves an actual Kirby project. Point the dev server to that project with an `.env` file similar to the `.env.example` one in this folder:
 
 ```
 VUE_APP_DEV_SERVER = http://kir.by
 ```
 
-Instead of http://kir.by point to the base URL where the Kirby installation is running on Apache or Nginx, etc.
+…where `kir.by` is the project domain. You can set up such a domain by editing your machine's `hosts` file and your web server's configuration.
+
+Make sure to add a dummy CSRF token in the `site/config/config.php` of your Kirby project:
+
+```php
+return [
+  'api.csrf' => 'dev'
+];
+```
 
 Afterwards install the panel dependencies…
 

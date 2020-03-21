@@ -118,6 +118,45 @@ class UserTest extends TestCase
         Dir::remove($index);
     }
 
+    public function testModifiedSpecifyingLanguage()
+    {
+        $app = new App([
+            'roots' => [
+                'index'    => $index = __DIR__ . '/fixtures/UserPropsTest/modified',
+                'accounts' => $index
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'name'    => 'English'
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        // create a user file
+        F::write($file = $index . '/test/index.php', '<?php return [];');
+
+        // create the english page
+        F::write($file = $index . '/test/user.en.txt', 'test');
+        touch($file, $modifiedEnContent = \time() + 2);
+
+        // create the german page
+        F::write($file = $index . '/test/user.de.txt', 'test');
+        touch($file, $modifiedDeContent = \time() + 5);
+
+        $user = $app->user('test');
+
+        $this->assertEquals($modifiedEnContent, $user->modified('U', null, 'en'));
+        $this->assertEquals($modifiedDeContent, $user->modified('U', null, 'de'));
+
+        Dir::remove($index);
+    }
+
     public function passwordProvider()
     {
         return [
