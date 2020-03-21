@@ -889,11 +889,16 @@ class Page extends ModelWithContent
      *
      * @param string $format
      * @param string|null $handler
+     * @param string|null $languageCode
      * @return int|string
      */
-    public function modified(string $format = null, string $handler = null)
+    public function modified(string $format = null, string $handler = null, string $languageCode = null)
     {
-        return F::modified($this->contentFile(), $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
+        return F::modified(
+            $this->contentFile($languageCode),
+            $format,
+            $handler ?? $this->kirby()->option('date.handler', 'date')
+        );
     }
 
     /**

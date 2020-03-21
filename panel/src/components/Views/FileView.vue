@@ -198,7 +198,7 @@ export default {
               config.api +
               "/" +
               this.$api.files.url(this.path, this.file.filename),
-            accept: this.file.mime
+            accept: "." + this.file.extension + "," + this.file.mime
           });
           break;
         case "remove":

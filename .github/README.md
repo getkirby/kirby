@@ -1,6 +1,10 @@
 # Kirby
 
-[![Build Status](https://travis-ci.com/getkirby/kirby.svg?branch=master)](https://travis-ci.com/getkirby/kirby)
+[![Release](https://flat.badgen.net/github/release/getkirby/kirby/stable)](https://github.com/getkirby/kirby/releases/latest)
+[![Build Status](https://flat.badgen.net/travis/getkirby/kirby)](https://travis-ci.com/getkirby/kirby)
+[![Coverage Status](https://flat.badgen.net/coveralls/c/github/getkirby/kirby)](https://coveralls.io/github/getkirby/kirby)
+[![Downloads](https://flat.badgen.net/packagist/dt/getkirby/cms)](https://github.com/getkirby/kirby/releases/latest)
+[![Twitter](https://flat.badgen.net/twitter/follow/getkirby)](https://twitter.com/getkirby)
 
 This is Kirby's core application folder. Get started with one of the following repositories instead:
 
