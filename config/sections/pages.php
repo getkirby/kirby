@@ -41,6 +41,12 @@ return [
             return $info;
         },
         /**
+         * Enables/disables redirecting after page create
+         */
+        'redirect' => function (bool $redirect = true) {
+            return $redirect;
+        },
+        /**
          * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: `tiny`, `small`, `medium`, `large`, `huge`
          */
         'size' => function (string $size = 'auto') {
@@ -287,6 +293,7 @@ return [
                 'link'     => $this->link,
                 'max'      => $this->max,
                 'min'      => $this->min,
+                'redirect' => $this->redirect,
                 'size'     => $this->size,
                 'sortable' => $this->sortable
             ],

@@ -56,7 +56,7 @@
         </footer>
       </template>
 
-      <k-page-create-dialog ref="create" />
+      <k-page-create-dialog ref="create" @success="update" :redirect="options.redirect" />
       <k-page-duplicate-dialog ref="duplicate" />
       <k-page-rename-dialog ref="rename" @success="update" />
       <k-page-url-dialog ref="url" @success="update" />

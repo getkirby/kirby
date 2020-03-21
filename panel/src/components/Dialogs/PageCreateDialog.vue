@@ -3,6 +3,7 @@
     ref="dialog"
     :button="$t('page.draft.create')"
     :notification="notification"
+    :data-redirect="redirect"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
@@ -23,6 +24,14 @@ import DialogMixin from "@/mixins/dialog.js";
 
 export default {
   mixins: [DialogMixin],
+  props: {
+    redirect: {
+      type: Boolean,
+      default() {
+        return true;
+      }
+    }
+  },
   data() {
     return {
       notification: null,
@@ -126,7 +135,7 @@ export default {
         .post(this.parent + "/children", data)
         .then(page => {
           this.success({
-            route: this.$api.pages.link(page.id),
+            route: this.redirect ? this.$api.pages.link(page.id) : null,
             message: ":)",
             event: "page.create"
           });
