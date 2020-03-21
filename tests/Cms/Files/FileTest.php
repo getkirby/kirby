@@ -265,14 +265,14 @@ class FileTest extends TestCase
         ]);
 
         // create a file
-        F::write($file = $index . '/test.js', 'test');
+        F::write($index . '/test.js', 'test');
 
         // create the english content
-        F::write($content = $index . '/test.js.en.txt', 'test');
+        F::write($file = $index . '/test.js.en.txt', 'test');
         touch($file, $modifiedEnContent = \time() + 2);
 
         // create the german content
-        F::write($content = $index . '/test.js.de.txt', 'test');
+        F::write($file = $index . '/test.js.de.txt', 'test');
         touch($file, $modifiedDeContent = \time() + 5);
 
         $file = $app->file('test.js');

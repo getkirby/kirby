@@ -149,8 +149,10 @@ class UserTest extends TestCase
         F::write($file = $index . '/test/user.de.txt', 'test');
         touch($file, $modifiedDeContent = \time() + 5);
 
-        $this->assertEquals($modifiedEnContent, $app->user('test')->modified('U', null, 'en'));
-        $this->assertEquals($modifiedDeContent, $app->user('test')->modified('U', null, 'de'));
+        $user = $app->user('test');
+
+        $this->assertEquals($modifiedEnContent, $user->modified('U', null, 'en'));
+        $this->assertEquals($modifiedDeContent, $user->modified('U', null, 'de'));
 
         Dir::remove($index);
     }
