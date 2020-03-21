@@ -277,8 +277,8 @@ class FileTest extends TestCase
 
         $file = $app->file('test.js');
 
-        $this->assertEquals($modifiedDeContent, $file->modified(null, null, 'en'));
-        $this->assertEquals($modifiedEnContent, $file->modified(null, null, 'de'));
+        $this->assertEquals($modifiedEnContent, $file->modified(null, null, 'en'));
+        $this->assertEquals($modifiedDeContent, $file->modified(null, null, 'de'));
 
         Dir::remove(dirname($index));
     }
