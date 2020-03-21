@@ -117,24 +117,27 @@
                 </template>
               </template>
             </td>
-            <td class="k-structure-table-option">
+            <td class="k-structure-table-options">
               <template v-if="duplicate && more && currentIndex === null">
-                <k-dropdown class="k-structure-options">
-                  <k-button
-                      :key="index"
-                      ref="actionsToggle"
-                      icon="dots"
-                      class="k-structure-options-button"
-                      @click="$refs[index + '-actions'][0].toggle()"
-                  />
-                  <k-dropdown-content :ref="index + '-actions'" align="right">
-                    <k-dropdown-item icon="copy" @click="duplicateItem(index)">{{ $t('duplicate') }}</k-dropdown-item>
-                    <k-dropdown-item icon="remove" @click="confirmRemove(index)">{{ $t('remove') }}</k-dropdown-item>
-                  </k-dropdown-content>
-                </k-dropdown>
+                <k-button
+                    :key="index"
+                    ref="actionsToggle"
+                    icon="dots"
+                    class="k-structure-table-options-button"
+                    @click="$refs[index + '-actions'][0].toggle()"
+                />
+                <k-dropdown-content :ref="index + '-actions'" align="right">
+                  <k-dropdown-item icon="copy" @click="duplicateItem(index)">{{ $t('duplicate') }}</k-dropdown-item>
+                  <k-dropdown-item icon="remove" @click="confirmRemove(index)">{{ $t('remove') }}</k-dropdown-item>
+                </k-dropdown-content>
               </template>
               <template v-else>
-                <k-button :tooltip="$t('remove')" icon="remove" @click="confirmRemove(index)" />
+                <k-button
+                  :tooltip="$t('remove')"
+                  class="k-structure-table-options-button"
+                  icon="remove"
+                  @click="confirmRemove(index)"
+                />
               </template>
             </td>
           </tr>
@@ -768,17 +771,15 @@ $structure-item-height: 38px;
     display: flex !important;
   }
 
-  .k-structure-table-option {
+  .k-structure-table-options {
+    position: relative;
     width: $structure-item-height;
     text-align: center;
-  }
-  .k-structure-table-option .k-button {
-    width: $structure-item-height;
     height: $structure-item-height;
   }
-  .k-structure-table-option .k-structure-options .k-dropdown-content .k-button {
-    width: auto;
-    height: auto;
+  .k-structure-table-options-button {
+    width: $structure-item-height;
+    height: $structure-item-height;
   }
 
   .k-structure-table-text {
