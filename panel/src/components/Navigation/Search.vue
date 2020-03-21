@@ -75,6 +75,11 @@ export default {
           icon: "page",
           endpoint: "site/search"
         },
+        files: {
+          label: this.$t("files"),
+          icon: "image",
+          endpoint: "files/search"
+        },
         users: {
           label: this.$t("users"),
           icon: "users",
@@ -119,6 +124,14 @@ export default {
       if (item) {
         this.navigate(item);
       }
+    },
+    map_files(item) {
+      return {
+        id: item.id,
+        title: item.filename,
+        link: item.link,
+        info: item.id
+      };
     },
     map_pages(item) {
       return {
