@@ -272,7 +272,7 @@ class FileTest extends TestCase
         touch($file, $modifiedEnContent = \time() + 2);
 
         // create the german content
-        F::write($content = $index . '/test.js.en.txt', 'test');
+        F::write($content = $index . '/test.js.de.txt', 'test');
         touch($file, $modifiedDeContent = \time() + 5);
 
         $file = $app->file('test.js');
