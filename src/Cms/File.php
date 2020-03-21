@@ -375,12 +375,13 @@ class File extends ModelWithContent
      *
      * @param string $format
      * @param string|null $handler date or strftime
+     * @param string|null $languageCode
      * @return mixed
      */
-    public function modified(string $format = null, string $handler = null)
+    public function modified(string $format = null, string $handler = null, string $languageCode = null)
     {
         $file     = $this->modifiedFile();
-        $content  = $this->modifiedContent();
+        $content  = $this->modifiedContent($languageCode);
         $modified = max($file, $content);
 
         if (is_null($format) === true) {
@@ -396,11 +397,12 @@ class File extends ModelWithContent
      * Timestamp of the last modification
      * of the content file
      *
+     * @param string|null $languageCode
      * @return int
      */
-    protected function modifiedContent(): int
+    protected function modifiedContent(string $languageCode = null): int
     {
-        return F::modified($this->contentFile());
+        return F::modified($this->contentFile($languageCode));
     }
 
     /**
