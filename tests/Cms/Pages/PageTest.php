@@ -803,8 +803,10 @@ class PageTest extends TestCase
         F::write($file = $index . '/test/test.de.txt', 'test');
         touch($file, $modifiedDeContent = \time() + 5);
 
-        $this->assertEquals($modifiedEnContent, $app->page('test')->modified(null, null, 'en'));
-        $this->assertEquals($modifiedDeContent, $app->page('test')->modified(null, null, 'de'));
+        $page = $app->page('test');
+
+        $this->assertEquals($modifiedEnContent, $page->modified(null, null, 'en'));
+        $this->assertEquals($modifiedDeContent, $page->modified(null, null, 'de'));
 
         Dir::remove($index);
     }
