@@ -48,6 +48,17 @@ return [
             return $template;
         },
 
+        /**
+         * If template options defined for filter, disable uploads
+         */
+        'uploads' => function () {
+            if (empty($this->template) === false) {
+                return false;
+            }
+
+            return $this->uploads;
+        },
+
         'value' => function ($value = null) {
             return $value;
         }
