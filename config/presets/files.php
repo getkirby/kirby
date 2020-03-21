@@ -7,6 +7,7 @@ return function (array $props) {
             'type'     => 'files',
             'layout'   => $props['layout'] ?? 'cards',
             'template' => $props['template'] ?? null,
+            'image'    => $props['image'] ?? null,
             'info'     => '{{ file.dimensions }}'
         ]
     ];
@@ -15,7 +16,8 @@ return function (array $props) {
     unset(
         $props['headline'],
         $props['layout'],
-        $props['template']
+        $props['template'],
+        $props['image']
     );
 
     return $props;

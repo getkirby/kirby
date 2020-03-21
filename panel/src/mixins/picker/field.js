@@ -6,6 +6,7 @@ export default {
     ...Field.props,
     empty: String,
     info: String,
+    link: Boolean,
     layout: String,
     max: Number,
     multiple: Boolean,
@@ -26,6 +27,20 @@ export default {
     };
   },
   computed: {
+    btnIcon() {
+      if (!this.multiple && this.selected.length > 0) {
+        return "refresh";
+      }
+
+      return "add";
+    },
+    btnLabel() {
+      if (!this.multiple && this.selected.length > 0) {
+        return this.$t("change");
+      }
+
+      return this.$t("add");
+    },
     elements() {
       const layouts = {
         cards: {
@@ -73,8 +88,7 @@ export default {
     }
   },
   methods: {
-    focus() {
-    },
+    focus() {},
     onInput() {
       this.$emit("input", this.selected);
     },

@@ -58,4 +58,8 @@ export default {
   color: $color-dark-grey;
   line-height: 1.25rem;
 }
+
+.k-dialog-body .k-text {
+  word-wrap: break-word;
+}
 </style>

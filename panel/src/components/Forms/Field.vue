@@ -1,6 +1,7 @@
 <template>
   <div
     :data-disabled="disabled"
+    :data-translate="translate"
     :class="'k-field k-field-name-' + name"
     @focusin="$emit('focus', $event)"
     @focusout="$emit('blur', $event)"
@@ -49,6 +50,7 @@ export default {
     label: String,
     name: [String, Number],
     required: Boolean,
+    translate: Boolean,
     type: String
   },
   computed: {
@@ -98,6 +100,7 @@ export default {
 }
 .k-field[data-disabled] {
   cursor: not-allowed;
+  opacity: .4;
 }
 .k-field[data-disabled] * {
   pointer-events: none;

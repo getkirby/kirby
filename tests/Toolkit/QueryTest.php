@@ -32,6 +32,32 @@ class QueryTest extends TestCase
         $this->assertEquals('homer', $query->result());
     }
 
+    public function testWithContainsNumericParts()
+    {
+        $query = new Query('user0.profiles1.twitter', [
+            'user0' => [
+                'profiles1' => [
+                    'twitter' => '@homer'
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('@homer', $query->result());
+    }
+
+    public function testWithStartsNumericParts()
+    {
+        $query = new Query('0user.1profiles.twitter', [
+            '0user' => [
+                '1profiles' => [
+                    'twitter' => '@homer'
+                ]
+            ]
+        ]);
+
+        $this->assertNull($query->result());
+    }
+
     public function test0LevelArrayQuery()
     {
         $query = new Query('user', [

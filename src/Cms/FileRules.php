@@ -85,7 +85,10 @@ class FileRules
         static::validMime($file, $upload->mime());
 
 
-        if ((string)$upload->mime() !== (string)$file->mime()) {
+        if (
+            (string)$upload->mime() !== (string)$file->mime() &&
+            (string)$upload->extension() !== (string)$file->extension()
+        ) {
             throw new InvalidArgumentException([
                 'key'  => 'file.mime.differs',
                 'data' => ['mime' => $file->mime()]
@@ -129,6 +132,13 @@ class FileRules
             throw new InvalidArgumentException([
                 'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'PHP']
+            ]);
+        }
+
+        if (Str::contains($extension, 'htm')) {
+            throw new InvalidArgumentException([
+                'key'  => 'file.type.forbidden',
+                'data' => ['type' => 'HTML']
             ]);
         }
 

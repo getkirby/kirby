@@ -137,6 +137,7 @@ export default {
 .k-header .k-headline {
   min-height: 1.25em;
   margin-bottom: .5rem;
+  word-wrap: break-word;
 }
 .k-header .k-header-buttons {
   margin-top: -.5rem;

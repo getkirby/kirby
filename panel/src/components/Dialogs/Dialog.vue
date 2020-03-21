@@ -40,7 +40,10 @@
         type: String,
         default: "check"
       },
-      size: String,
+      size: {
+        type: String,
+        default: "default"
+      },
       theme: String,
       visible: Boolean
     },
@@ -176,7 +179,7 @@
 .k-dialog-box {
   position: relative;
   background: $color-light;
-  width: 22rem;
+  width: 100%;
   box-shadow: $box-shadow;
   border-radius: $border-radius;
   line-height: 1;
@@ -186,16 +189,28 @@
   flex-direction: column;
 }
 
-.k-dialog-box[data-size="small"] {
-  width: 20rem;
+@media screen and (min-width: 20rem) {
+  .k-dialog-box[data-size="small"] {
+    width: 20rem;
+  }
 }
 
-.k-dialog-box[data-size="medium"] {
-  width: 30rem;
+@media screen and (min-width: 22rem) {
+  .k-dialog-box[data-size="default"] {
+    width: 22rem;
+  }
 }
 
-.k-dialog-box[data-size="large"] {
-  width: 40rem;
+@media screen and (min-width: 30rem) {
+  .k-dialog-box[data-size="medium"] {
+    width: 30rem;
+  }
+}
+
+@media screen and (min-width: 40rem) {
+  .k-dialog-box[data-size="large"] {
+    width: 40rem;
+  }
 }
 
 .k-dialog-notification {

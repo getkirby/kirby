@@ -278,6 +278,26 @@ trait UserActions
     }
 
     /**
+     * Updates the user data
+     *
+     * @param array $input
+     * @param string $language
+     * @param bool $validate
+     * @return self
+     */
+    public function update(array $input = null, string $language = null, bool $validate = false)
+    {
+        $user = parent::update($input, $language, $validate);
+
+        // set auth user data only if the current user is this user
+        if ($user->isLoggedIn() === true) {
+            $this->kirby()->auth()->setUser($user);
+        }
+
+        return $user;
+    }
+
+    /**
      * This always merges the existing credentials
      * with the given input.
      *

@@ -20,11 +20,13 @@ class DataTest extends TestCase
         $this->assertInstanceOf(Json::class, Data::handler('json'));
         $this->assertInstanceOf(PHP::class, Data::handler('php'));
         $this->assertInstanceOf(Txt::class, Data::handler('txt'));
+        $this->assertInstanceOf(Xml::class, Data::handler('xml'));
         $this->assertInstanceOf(Yaml::class, Data::handler('yaml'));
 
         // aliases
         $this->assertInstanceOf(Txt::class, Data::handler('md'));
         $this->assertInstanceOf(Txt::class, Data::handler('mdown'));
+        $this->assertInstanceOf(Xml::class, Data::handler('rss'));
         $this->assertInstanceOf(Yaml::class, Data::handler('yml'));
 
         // different case
@@ -72,7 +74,7 @@ class DataTest extends TestCase
             'email' => 'homer@simpson.com'
         ];
 
-        $handlers = ['json', 'yml', 'txt'];
+        $handlers = ['json', 'yml', 'xml', 'txt'];
 
         foreach ($handlers as $handler) {
             $encoded = Data::encode($data, $handler);

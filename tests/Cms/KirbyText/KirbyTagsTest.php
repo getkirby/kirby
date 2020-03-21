@@ -125,7 +125,7 @@ class KirbyTagsTest extends TestCase
 
         $expected = '<figure><a href="' . $doc->url() . '"><img alt="" src="' . $image->url() . '"></a></figure>';
 
-        $this->assertEquals($expected, $page->text()->kt());
+        $this->assertEquals($expected, $page->text()->kt()->value());
     }
 
     public function testFile()
@@ -156,7 +156,7 @@ class KirbyTagsTest extends TestCase
 
         $expected = '<p><a download href="' . $file->url() . '">a.jpg</a></p>';
 
-        $this->assertEquals($expected, $page->text()->kt());
+        $this->assertEquals($expected, $page->text()->kt()->value());
     }
 
     public function testFileWithDisabledDownloadOption()
@@ -187,7 +187,7 @@ class KirbyTagsTest extends TestCase
 
         $expected = '<p><a href="' . $file->url() . '">a.jpg</a></p>';
 
-        $this->assertEquals($expected, $page->text()->kt());
+        $this->assertEquals($expected, $page->text()->kt()->value());
     }
 
     public function testFileWithinFile()
@@ -220,7 +220,7 @@ class KirbyTagsTest extends TestCase
         $b = $kirby->file('a/b.jpg');
         $expected = '<p><a download href="' . $b->url() . '">b.jpg</a></p>';
 
-        $this->assertEquals($expected, (string)$a->caption()->kt());
+        $this->assertEquals($expected, $a->caption()->kt()->value());
     }
 
     public function testLinkWithLangAttribute()
@@ -249,6 +249,36 @@ class KirbyTagsTest extends TestCase
 
         $this->assertEquals('<a href="https://getkirby.com/en/a">getkirby.com/en/a</a>', $app->kirbytags('(link: a lang: en)'));
         $this->assertEquals('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
+    }
+
+    public function testLinkWithHash()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ],
+            'languages' => [
+                'en' => [
+                    'code' => 'en'
+                ],
+                'de' => [
+                    'code' => 'de'
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'a']
+                ]
+            ]
+        ]);
+
+        $this->assertEquals('<a href="https://getkirby.com/en/a">getkirby.com/en/a</a>', $app->kirbytags('(link: a)'));
+        $this->assertEquals('<a href="https://getkirby.com/de/a">getkirby.com/de/a</a>', $app->kirbytags('(link: a lang: de)'));
+        $this->assertEquals('<a href="https://getkirby.com/en/a#anchor">getkirby.com/en/a</a>', $app->kirbytags('(link: a#anchor lang: en)'));
+        $this->assertEquals('<a href="https://getkirby.com/de/a#anchor">getkirby.com/de/a</a>', $app->kirbytags('(link: a#anchor lang: de)'));
     }
 
     public function testHooks()
