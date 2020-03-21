@@ -37,7 +37,7 @@
         <component
           v-for="(file, index) in selected"
           :is="elements.item"
-          :key="file.filename"
+          :key="file.id"
           :sortable="!disabled && selected.length > 1"
           :text="file.text"
           :link="link ? file.link : null"

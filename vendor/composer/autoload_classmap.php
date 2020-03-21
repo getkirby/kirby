@@ -119,6 +119,7 @@ return array(
     'Kirby\\Data\\Json' => $baseDir . '/src/Data/Json.php',
     'Kirby\\Data\\PHP' => $baseDir . '/src/Data/PHP.php',
     'Kirby\\Data\\Txt' => $baseDir . '/src/Data/Txt.php',
+    'Kirby\\Data\\Xml' => $baseDir . '/src/Data/Xml.php',
     'Kirby\\Data\\Yaml' => $baseDir . '/src/Data/Yaml.php',
     'Kirby\\Database\\Database' => $baseDir . '/src/Database/Database.php',
     'Kirby\\Database\\Db' => $baseDir . '/src/Database/Db.php',
