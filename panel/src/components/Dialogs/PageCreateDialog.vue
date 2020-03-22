@@ -3,7 +3,6 @@
     ref="dialog"
     :button="$t('page.draft.create')"
     :notification="notification"
-    :data-redirect="redirect"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
@@ -27,9 +26,7 @@ export default {
   props: {
     redirect: {
       type: Boolean,
-      default() {
-        return true;
-      }
+      default: true
     }
   },
   data() {
