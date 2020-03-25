@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Throwable;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\ErrorPageException;
@@ -20,6 +19,7 @@ use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
+use Throwable;
 
 /**
  * The `$kirby` object is the app instance of
