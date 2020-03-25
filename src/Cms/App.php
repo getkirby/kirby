@@ -2,10 +2,12 @@
 
 namespace Kirby\Cms;
 
+use Throwable;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\ErrorPageException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Request;
 use Kirby\Http\Router;
@@ -1372,7 +1374,11 @@ class App
      */
     public static function version(): ?string
     {
-        return static::$version = static::$version ?? Data::read(static::$root . '/composer.json')['version'] ?? null;
+        try {
+            return static::$version = static::$version ?? Data::read(static::$root . '/composer.json')['version'] ?? null;
+        } catch (Throwable $e) {
+            throw new LogicException('The Kirby version cannot be detected. The composer.json is probably missing or not readable.');
+        }
     }
 
     /**
