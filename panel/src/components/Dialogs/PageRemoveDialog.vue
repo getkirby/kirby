@@ -1,8 +1,8 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('delete')"
     :size="hasSubpages ? 'medium' : 'small'"
+    :submit-button="$t('delete')"
     theme="negative"
     icon="trash"
     @submit="submit"

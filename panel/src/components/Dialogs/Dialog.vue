@@ -8,20 +8,30 @@
       <div class="k-dialog-body">
         <slot />
       </div>
-      <footer class="k-dialog-footer">
+      <footer class="k-dialog-footer" v-if="$slots['footer'] || cancelButton || submitButton">
         <slot name="footer">
           <k-button-group>
-            <k-button icon="cancel" class="k-dialog-button-cancel" @click="cancel">
-              {{ $t("cancel") }}
-            </k-button>
-            <k-button
-              :icon="icon"
-              :theme="theme"
-              class="k-dialog-button-submit"
-              @click="submit"
-            >
-              {{ button || $t("confirm") }}
-            </k-button>
+            <span>
+              <k-button
+                v-if="cancelButton"
+                icon="cancel"
+                class="k-dialog-button-cancel"
+                @click="cancel"
+              >
+                {{ cancelButtonLabel }}
+              </k-button>
+            </span>
+            <span>
+              <k-button
+                v-if="submitButton"
+                :icon="icon"
+                :theme="theme"
+                class="k-dialog-button-submit"
+                @click="submit"
+              >
+                {{ submitButtonLabel }}
+              </k-button>
+            </span>
           </k-button-group>
         </slot>
       </footer>
@@ -32,9 +42,9 @@
 <script>
   export default {
     props: {
-      button: {
-        type: String,
-        default: "Ok"
+      cancelButton: {
+        type: [String, Boolean],
+        default: true,
       },
       icon: {
         type: String,
@@ -63,6 +73,37 @@
     mounted() {
       if (this.isOpen === true) {
         this.$emit("open");
+      }
+    },
+    computed: {
+      cancelButtonLabel() {
+        if (this.cancelButton === false) {
+          return false;
+        }
+
+        if (this.cancelButton === true || this.cancelButton.length === 0) {
+          return this.$t("cancel");
+        }
+
+        return this.cancelButton;
+      },
+      submitButton() {
+        if (this.$attrs.button !== undefined) {
+          return this.$attrs.button;
+        }
+
+        if (this.$attrs["submit-button"] !== undefined) {
+          return this.$attrs["submit-button"];
+        }
+
+        return true;
+      },
+      submitButtonLabel() {
+        if (this.submitButton === true || this.submitButton.length === 0) {
+          return this.$t("confirm");
+        }
+
+        return this.submitButton;
       }
     },
     methods: {

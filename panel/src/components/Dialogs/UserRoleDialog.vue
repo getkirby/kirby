@@ -1,7 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('user.changeRole')"
+    :submit-button="$t('user.changeRole')"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"

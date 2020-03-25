@@ -1,8 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('duplicate')"
-    :notification="notification"
+    :submit-button="$t('duplicate')"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
@@ -24,7 +23,6 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
-      notification: null,
       page: {
         children: false,
         files: false,

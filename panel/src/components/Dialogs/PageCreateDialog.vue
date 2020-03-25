@@ -1,8 +1,8 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('page.draft.create')"
-    :notification="notification"
+    :submit-button="false"
+    :cancel-button="false"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
@@ -25,7 +25,6 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
-      notification: null,
       parent: null,
       section: null,
       templates: [],

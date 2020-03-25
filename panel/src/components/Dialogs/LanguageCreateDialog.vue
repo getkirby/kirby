@@ -1,8 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('language.create')"
-    :notification="notification"
+    :submit-button="$t('language.create')"
     theme="positive"
     size="medium"
     @submit="$refs.form.submit()"
@@ -24,7 +23,6 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
-      notification: null,
       language: {
         name: "",
         code: "",

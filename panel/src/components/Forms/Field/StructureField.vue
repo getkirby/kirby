@@ -147,7 +147,7 @@
       <k-dialog
         v-if="!disabled"
         ref="remove"
-        :button="$t('delete')"
+        :submit-button="$t('delete')"
         theme="negative"
         @submit="remove"
       >

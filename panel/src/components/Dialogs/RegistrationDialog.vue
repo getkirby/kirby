@@ -1,7 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('license.register')"
+    :submit-button="$t('license.register')"
     size="medium"
     @submit="submit"
   >

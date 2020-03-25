@@ -1,8 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('save')"
-    :notification="notification"
+    :submit-button="$t('save')"
     size="medium"
     @submit="$refs.form.submit()"
   >
@@ -58,7 +57,7 @@ export default {
           this.$store.dispatch('notification/error', error);
         });
     },
-    submit() { 
+    submit() {
       if (this.language.name.length === 0) {
         this.$refs.dialog.error(this.$t("error.language.name"));
         return;

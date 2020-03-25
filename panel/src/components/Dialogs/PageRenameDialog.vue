@@ -1,7 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('rename')"
+    :submit-button="$t('rename')"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"

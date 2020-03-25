@@ -1,7 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('rename')"
+    :submit-button="$t('rename')"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
@@ -85,7 +85,7 @@ export default {
 
           // move form changes
           this.$store.dispatch("content/move", [
-            "files/" + this.file.id, 
+            "files/" + this.file.id,
             "files/" + file.id
           ]);
 

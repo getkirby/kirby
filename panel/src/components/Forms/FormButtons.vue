@@ -65,7 +65,7 @@
 
     <k-dialog
       ref="revert"
-      :button="$t('revert')"
+      :submit-button="$t('revert')"
       icon="undo"
       theme="negative"
       @submit="onRevert"
