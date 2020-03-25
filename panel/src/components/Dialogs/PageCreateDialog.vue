@@ -1,8 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :submit-button="false"
-    :cancel-button="false"
+    :submit-button="$t('page.draft.create')"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
