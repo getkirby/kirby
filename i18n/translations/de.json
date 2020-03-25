@@ -31,7 +31,7 @@
 
   "dialog.files.empty": "Keine verfügbaren Dateien",
   "dialog.pages.empty": "Keine verfügbaren Seiten",
-  "dialog.users.empty": "Keine verfügbaren Benutzer",
+  "dialog.users.empty": "Keine verfügbaren Benutzer*innen",
 
   "email": "E-Mail",
   "email.placeholder": "mail@beispiel.de",
@@ -154,37 +154,37 @@
   "error.template.default.notFound": "Die \"Default\"-Vorlage existiert nicht",
 
   "error.user.changeEmail.permission":
-    "Du kannst die E-Mailadresse für den Benutzer \"{name}\" nicht ändern",
+    "Du kannst die E-Mailadresse für den*die Benutzer*in \"{name}\" nicht ändern",
   "error.user.changeLanguage.permission":
-    "Du kannst die Sprache für den Benutzer \"{name}\" nicht ändern",
+    "Du kannst die Sprache für den*die Benutzer*in \"{name}\" nicht ändern",
   "error.user.changeName.permission":
-    "Du kannst den Namen für den Benutzer \"{name}\" nicht ändern",
+    "Du kannst den Namen für den*die Benutzer*in \"{name}\" nicht ändern",
   "error.user.changePassword.permission":
-    "Du kannst das Passwort für den Benutzer \"{name}\" nicht ändern",
+    "Du kannst das Passwort für den*die Benutzer*in \"{name}\" nicht ändern",
   "error.user.changeRole.lastAdmin":
-    "Die Rolle des letzten Administrators kann nicht geändert werden",
+    "Die Rolle des*r letzten Administrator*in kann nicht geändert werden",
   "error.user.changeRole.permission":
-    "Du kannst die Rolle für den Benutzer \"{name}\" nicht ändern",
+    "Du kannst die Rolle für den*die Benutzer*in \"{name}\" nicht ändern",
   "error.user.changeRole.toAdmin":
-    "Du darfst die Admin Rolle nicht an andere Benutzer vergeben",
-  "error.user.create.permission": "Du kannst diesen Benutzer nicht anlegen",
-  "error.user.delete": "Der Benutzer \"{name}\" konnte nicht gelöscht werden",
-  "error.user.delete.lastAdmin": "Du kannst den letzten Admin nicht l\u00f6schen",
-  "error.user.delete.lastUser": "Der letzte Benutzer kann nicht gelöscht werden",
+    "Du darfst die Admin Rolle nicht an andere Benutzer*innen vergeben",
+  "error.user.create.permission": "Du kannst diese*n Benutzer*in nicht anlegen",
+  "error.user.delete": "Benutzer*in \"{name}\" konnte nicht gelöscht werden",
+  "error.user.delete.lastAdmin": "Du kannst den*die letzte*n Administrator*in nicht l\u00f6schen",
+  "error.user.delete.lastUser": "Der*die letzte Benutzer*in kann nicht gelöscht werden",
   "error.user.delete.permission":
-    "Du darfst den Benutzer \"{name}\" nicht löschen",
+    "Du darfst den*die Benutzer*in \"{name}\" nicht löschen",
   "error.user.duplicate":
-    "Ein Benutzer mit der E-Mailadresse \"{email}\" besteht bereits",
+    "Ein*e Benutzer*in mit der E-Mailadresse \"{email}\" besteht bereits",
   "error.user.email.invalid": "Bitte gib eine gültige E-Mailadresse an",
   "error.user.language.invalid": "Bitte gib eine gültige Sprache an",
-  "error.user.notFound": "Der Benutzer \"{name}\" wurde nicht gefunden",
+  "error.user.notFound": "Benutzer*in \"{name}\" wurde nicht gefunden",
   "error.user.password.invalid":
     "Bitte gib ein gültiges Passwort ein. Passwörter müssen mindestens 8 Zeichen lang sein.",
   "error.user.password.notSame": "Die Passwörter stimmen nicht überein",
-  "error.user.password.undefined": "Der Benutzer hat kein Passwort",
+  "error.user.password.undefined": "Der*die Benutzer*in hat kein Passwort",
   "error.user.role.invalid": "Bitte gib eine gültige Rolle an",
   "error.user.update.permission":
-    "Du darfst den den Benutzer \"{name}\" nicht editieren",
+    "Du darfst den*die Benutzer*in \"{name}\" nicht editieren",
 
   "error.validation.accepted": "Bitte bestätige",
   "error.validation.alpha": "Bitte gib nur Zeichen zwischen A und Z ein",
@@ -236,7 +236,7 @@
   "field.pages.empty": "Keine Seiten ausgewählt",
   "field.structure.delete.confirm": "Willst du diesen Eintrag wirklich l\u00f6schen?",
   "field.structure.empty": "Es bestehen keine Eintr\u00e4ge.",
-  "field.users.empty": "Keine Benutzer ausgewählt",
+  "field.users.empty": "Keine Benutzer*innen ausgewählt",
 
   "file.delete.confirm":
     "Willst du die Datei <strong>{filename}</strong> <br>wirklich löschen?",
@@ -309,7 +309,7 @@
   "lock.file.isLocked": "Die Datei wird von {email} bearbeitet und kann nicht geändert werden.",
   "lock.page.isLocked": "Die Seite wird von {email} bearbeitet und kann nicht geändert werden.",
   "lock.unlock": "Entsperren",
-  "lock.isUnlocked": "Deine ungespeicherten Änderungen wurden von einem anderen Benutzer überschrieben. Du kannst sie herunterladen, um sie manuell einzufügen. ",
+  "lock.isUnlocked": "Deine ungespeicherten Änderungen wurden von einem*r anderen Benutzer*in überschrieben. Du kannst sie herunterladen, um sie manuell einzufügen. ",
 
   "login": "Anmelden",
   "login.remember": "Angemeldet bleiben",
@@ -366,7 +366,7 @@
   "page.status": "Status",
   "page.status.draft": "Entwurf",
   "page.status.draft.description":
-    "Die Seite ist im Entwurfsmodus und ist nur für angemeldete Benutzer sichtbar",
+    "Die Seite ist im Entwurfsmodus und ist nur für angemeldete Benutzer*innen sichtbar",
   "page.status.listed": "Öffentlich",
   "page.status.listed.description": "Die Seite ist öffentlich für alle Besucher",
   "page.status.unlisted": "Ungelistet",
@@ -390,10 +390,10 @@
   "revert": "Verwerfen",
 
   "role": "Rolle",
-  "role.admin.description": "Administratoren haben alle Rechte",
-  "role.admin.title": "Administrator",
+  "role.admin.description": "Administrator*innen haben alle Rechte",
+  "role.admin.title": "Administrator*in",
   "role.all": "Alle",
-  "role.empty": "Keine Benutzer mit dieser Rolle",
+  "role.empty": "Keine Benutzer*innen mit dieser Rolle",
   "role.description.placeholder": "Keine Beschreibung",
   "role.nobody.description": "Dies ist die Platzhalterrolle ohne Rechte",
   "role.nobody.title": "Niemand",
@@ -450,23 +450,23 @@
   "url": "Url",
   "url.placeholder": "https://beispiel.de",
 
-  "user": "Benutzer",
+  "user": "Benutzer*in",
   "user.blueprint":
-    "Du kannst zusätzliche Felder und Bereiche für diese Benutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> anlegen",
+    "Du kannst zusätzliche Felder und Bereiche für diese Benutzer*innenrolle in <strong>/site/blueprints/users/{role}.yml</strong> anlegen",
   "user.changeEmail": "E-Mail ändern",
   "user.changeLanguage": "Sprache ändern",
-  "user.changeName": "Benutzer umbenennen",
+  "user.changeName": "Benutzer*in umbenennen",
   "user.changePassword": "Passwort ändern",
   "user.changePassword.new": "Neues Passwort",
   "user.changePassword.new.confirm": "Wiederhole das Passwort …",
   "user.changeRole": "Rolle ändern",
   "user.changeRole.select": "Neue Rolle auswählen",
-  "user.create": "Neuen Benutzer anlegen",
-  "user.delete": "Benutzer löschen",
+  "user.create": "Neue*n Benutzer*in anlegen",
+  "user.delete": "Benutzer*in löschen",
   "user.delete.confirm":
-    "Willst du den Benutzer <br><strong>{email}</strong> wirklich löschen?",
+    "Willst du den*die Benutzer*in <br><strong>{email}</strong> wirklich löschen?",
 
-  "users": "Benutzer",
+  "users": "Benutzer*innen",
 
   "version": "Version",
 
@@ -474,7 +474,7 @@
   "view.installation": "Installation",
   "view.settings": "Einstellungen",
   "view.site": "Seite",
-  "view.users": "Benutzer",
+  "view.users": "Benutzer*innen",
 
   "welcome": "Willkommen",
   "year": "Jahr"
