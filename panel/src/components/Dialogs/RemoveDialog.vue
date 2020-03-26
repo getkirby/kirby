@@ -11,15 +11,18 @@ export default {
   mixins: [DialogMixin],
   props: {
     icon: {
+      type: String,
       default: "trash"
     },
     submitButton: {
+      type: [String, Boolean],
       default() {
         return this.$t("delete");
       }
     },
     text: String,
     theme: {
+      type: String,
       default: "negative"
     },
   }

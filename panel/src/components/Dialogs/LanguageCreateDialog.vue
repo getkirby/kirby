@@ -83,7 +83,7 @@ export default {
 
       this.$refs.dialog.open();
     },
-    submit(values) {
+    submit() {
       if (this.language.locale) {
         this.language.locale = this.language.locale.trim() || null;
       }

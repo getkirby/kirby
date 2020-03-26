@@ -120,11 +120,11 @@
             <td class="k-structure-table-options">
               <template v-if="duplicate && more && currentIndex === null">
                 <k-button
-                    :key="index"
-                    ref="actionsToggle"
-                    icon="dots"
-                    class="k-structure-table-options-button"
-                    @click="$refs[index + '-actions'][0].toggle()"
+                  ref="actionsToggle"
+                  :key="index"
+                  icon="dots"
+                  class="k-structure-table-options-button"
+                  @click="$refs[index + '-actions'][0].toggle()"
                 />
                 <k-dropdown-content :ref="index + '-actions'" align="right">
                   <k-dropdown-item icon="copy" @click="duplicateItem(index)">{{ $t('duplicate') }}</k-dropdown-item>

@@ -8,7 +8,7 @@
       <div class="k-dialog-body">
         <slot />
       </div>
-      <footer class="k-dialog-footer" v-if="$slots['footer'] || cancelButton || submitButton">
+      <footer v-if="$slots['footer'] || cancelButton || submitButton" class="k-dialog-footer">
         <slot name="footer">
           <k-button-group>
             <span>
@@ -65,17 +65,6 @@
         scrollTop: 0
       };
     },
-    created() {
-      this.$events.$on("keydown.esc", this.close, false);
-    },
-    destroyed() {
-      this.$events.$off("keydown.esc", this.close, false);
-    },
-    mounted() {
-      if (this.isOpen === true) {
-        this.$emit("open");
-      }
-    },
     computed: {
       cancelButtonLabel() {
         if (this.cancelButton === false) {
@@ -106,6 +95,17 @@
         }
 
         return this.submitButton;
+      }
+    },
+    created() {
+      this.$events.$on("keydown.esc", this.close, false);
+    },
+    destroyed() {
+      this.$events.$off("keydown.esc", this.close, false);
+    },
+    mounted() {
+      if (this.isOpen === true) {
+        this.$emit("open");
       }
     },
     methods: {

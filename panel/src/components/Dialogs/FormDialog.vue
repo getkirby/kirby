@@ -1,5 +1,10 @@
 <template>
-  <k-dialog ref="dialog" v-bind="$props" v-on="$listeners" @submit="$refs.form.submit()">
+  <k-dialog
+    ref="dialog"
+    v-bind="$props"
+    v-on="$listeners"
+    @submit="$refs.form.submit()"
+  >
     <k-form
       ref="form"
       :fields="fields"
@@ -28,14 +33,17 @@ export default {
       default: true
     },
     size: {
+      type: String,
       default: "medium",
     },
     submitButton: {
+      type: [String, Boolean],
       default() {
         return this.$t('save');
       }
     },
     theme: {
+      type: String,
       default: "positive",
     },
     value: {
