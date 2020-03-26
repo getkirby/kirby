@@ -1,13 +1,9 @@
 <template>
-  <k-dialog
+  <k-remove-dialog
     ref="dialog"
-    :submit-button="$t('delete')"
-    theme="negative"
-    icon="trash"
+    :text="$t('language.delete.confirm', { name: language.name })"
     @submit="submit"
-  >
-    <k-text v-html="$t('language.delete.confirm', { name: language.name })" />
-  </k-dialog>
+  />
 </template>
 
 <script>
