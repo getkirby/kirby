@@ -23,7 +23,7 @@
             </span>
             <span>
               <k-button
-                v-if="submitButton"
+                v-if="submitButtonConfig"
                 :icon="icon"
                 :theme="theme"
                 class="k-dialog-button-submit"
@@ -54,6 +54,7 @@
         type: String,
         default: "default"
       },
+      submitButton: [String, Boolean],
       theme: String,
       visible: Boolean
     },
@@ -87,13 +88,14 @@
 
         return this.cancelButton;
       },
-      submitButton() {
-        if (this.$attrs.button !== undefined) {
-          return this.$attrs.button;
+      submitButtonConfig() {
+
+        if (this.$attrs["button"] !== undefined) {
+          return this.$attrs["button"];
         }
 
-        if (this.$attrs["submit-button"] !== undefined) {
-          return this.$attrs["submit-button"];
+        if (this.submitButton !== undefined) {
+          return this.submitButton;
         }
 
         return true;
