@@ -1,4 +1,17 @@
 export default {
+  props: {
+    cancelButton: {
+      type: [String, Boolean],
+      default: true,
+    },
+    icon: String,
+    submitButton: {
+      type: [String, Boolean],
+      default: true
+    },
+    size: String,
+    theme: String
+  },
   methods: {
     open() {
       this.$refs.dialog.open();
