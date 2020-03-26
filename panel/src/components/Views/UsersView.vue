@@ -141,7 +141,7 @@ export default {
                     this.$store.dispatch("notification/error", error);
                   });
               },
-              image: null
+              image: true
             };
 
             if (user.avatar) {
