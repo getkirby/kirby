@@ -62,7 +62,7 @@ export default {
         };
       }
     },
-    image: Object,
+    image: [Object, Boolean],
     info: String,
     link: [String, Function],
     options: [Array, Function],

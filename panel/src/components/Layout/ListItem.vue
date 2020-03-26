@@ -52,7 +52,7 @@ export default {
       type: String,
       default: "li"
     },
-    image: Object,
+    image: [Object, Boolean],
     icon: {
       type: Object,
       default() {
