@@ -117,8 +117,28 @@
                 </template>
               </template>
             </td>
-            <td class="k-structure-table-option">
-              <k-button :tooltip="$t('remove')" icon="remove" @click="confirmRemove(index)" />
+            <td class="k-structure-table-options">
+              <template v-if="duplicate && more && currentIndex === null">
+                <k-button
+                  ref="actionsToggle"
+                  :key="index"
+                  icon="dots"
+                  class="k-structure-table-options-button"
+                  @click="$refs[index + '-actions'][0].toggle()"
+                />
+                <k-dropdown-content :ref="index + '-actions'" align="right">
+                  <k-dropdown-item icon="copy" @click="duplicateItem(index)">{{ $t('duplicate') }}</k-dropdown-item>
+                  <k-dropdown-item icon="remove" @click="confirmRemove(index)">{{ $t('remove') }}</k-dropdown-item>
+                </k-dropdown-content>
+              </template>
+              <template v-else>
+                <k-button
+                  :tooltip="$t('remove')"
+                  class="k-structure-table-options-button"
+                  icon="remove"
+                  @click="confirmRemove(index)"
+                />
+              </template>
             </td>
           </tr>
         </k-draggable>
@@ -127,7 +147,7 @@
       <k-dialog
         v-if="!disabled"
         ref="remove"
-        :button="$t('delete')"
+        :submit-button="$t('delete')"
         theme="negative"
         @submit="remove"
       >
@@ -165,6 +185,10 @@ export default {
   props: {
     ...Field.props,
     columns: Object,
+    duplicate: {
+      type: Boolean,
+      default: true
+    },
     empty: String,
     fields: Object,
     limit: Number,
@@ -358,6 +382,9 @@ export default {
       this.close();
       this.trash = index;
       this.$refs.remove.open();
+    },
+    duplicateItem(index) {
+      this.items.push(this.items[index]);
     },
     createForm(field) {
       this.$events.$on("keydown.esc", this.escape);
@@ -610,6 +637,10 @@ $structure-item-height: 38px;
     }
   }
 
+  td:last-child {
+    overflow: visible;
+  }
+
   th {
     position: sticky;
     top: 0;
@@ -740,11 +771,13 @@ $structure-item-height: 38px;
     display: flex !important;
   }
 
-  .k-structure-table-option {
+  .k-structure-table-options {
+    position: relative;
     width: $structure-item-height;
     text-align: center;
+    height: $structure-item-height;
   }
-  .k-structure-table-option .k-button {
+  .k-structure-table-options-button {
     width: $structure-item-height;
     height: $structure-item-height;
   }

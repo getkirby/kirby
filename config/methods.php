@@ -475,7 +475,7 @@ return function (App $app) {
          * Splits the field content into an array
          *
          * @param \Kirby\Cms\Field $field
-         * @return \Kirby\cms\Field
+         * @return array
          */
         'split' => function (Field $field, $separator = ',') {
             return Str::split((string)$field->value, $separator);

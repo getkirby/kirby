@@ -135,6 +135,13 @@ class FileRules
             ]);
         }
 
+        if (Str::contains($extension, 'htm')) {
+            throw new InvalidArgumentException([
+                'key'  => 'file.type.forbidden',
+                'data' => ['type' => 'HTML']
+            ]);
+        }
+
         return true;
     }
 

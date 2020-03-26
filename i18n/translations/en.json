@@ -332,6 +332,7 @@
   "replace": "Replace",
   "retry": "Try again",
   "revert": "Revert",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "Role",
   "role.admin.description": "The admin has all rights",

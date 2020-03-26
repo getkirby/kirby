@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simpsons xmlns="https://example.com/simpsons" xmlns:simpson="https://example.com/simpson" xmlns:unused="https://example.com/unused">
+  <simpson type="father">
+    <name>Homer</name>
+  </simpson>
+  <simpson type="mother">
+    <name>Marge</name>
+    <simpson:contacts>
+      <simpson:contact simpson:type="husband">Homer</simpson:contact>
+    </simpson:contacts>
+  </simpson>
+</simpsons>
