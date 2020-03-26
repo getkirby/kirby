@@ -13,13 +13,16 @@ export default {
     theme: String
   },
   methods: {
-    open() {
-      this.$refs.dialog.open();
-      this.$emit("open");
-    },
     close() {
       this.$refs.dialog.close();
       this.$emit("close");
+    },
+    error(message) {
+      this.$refs.dialog.error(message);
+    },
+    open() {
+      this.$refs.dialog.open();
+      this.$emit("open");
     },
     success(payload) {
       this.$refs.dialog.close();

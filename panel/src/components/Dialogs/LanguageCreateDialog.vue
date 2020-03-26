@@ -1,19 +1,11 @@
 <template>
-  <k-dialog
+  <k-form-dialog
     ref="dialog"
+    v-model="language"
+    :fields="fields"
     :submit-button="$t('language.create')"
-    theme="positive"
-    size="medium"
-    @submit="$refs.form.submit()"
-  >
-    <k-form
-      ref="form"
-      :fields="fields"
-      :novalidate="true"
-      v-model="language"
-      @submit="submit"
-    />
-  </k-dialog>
+    @submit="submit"
+  />
 </template>
 
 <script>
@@ -91,7 +83,7 @@ export default {
 
       this.$refs.dialog.open();
     },
-    submit() {
+    submit(values) {
       if (this.language.locale) {
         this.language.locale = this.language.locale.trim() || null;
       }

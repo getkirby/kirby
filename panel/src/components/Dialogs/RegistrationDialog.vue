@@ -1,17 +1,11 @@
 <template>
-  <k-dialog
+  <k-form-dialog
     ref="dialog"
+    v-model="registration"
+    :fields="fields"
     :submit-button="$t('license.register')"
-    size="medium"
     @submit="submit"
-  >
-    <k-form
-      :fields="fields"
-      :novalidate="true"
-      v-model="registration"
-      @submit="submit"
-    />
-  </k-dialog>
+  />
 </template>
 
 <script>

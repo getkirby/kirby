@@ -1,20 +1,12 @@
 <template>
-  <k-dialog
+  <k-form-dialog
     ref="dialog"
+    v-model="page"
+    :fields="fields"
     :submit-button="$t('page.draft.create')"
-    size="medium"
-    theme="positive"
-    @submit="$refs.form.submit()"
+    @submit="submit"
     @close="reset"
-  >
-    <k-form
-      ref="form"
-      :fields="fields"
-      :novalidate="true"
-      v-model="page"
-      @submit="submit"
-    />
-  </k-dialog>
+  />
 </template>
 
 <script>

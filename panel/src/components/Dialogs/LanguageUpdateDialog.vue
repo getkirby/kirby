@@ -1,17 +1,11 @@
 <template>
-  <k-dialog
+  <k-form-dialog
     ref="dialog"
-    :submit-button="$t('save')"
+    v-model="language"
+    :fields="fields"
     size="medium"
-    @submit="$refs.form.submit()"
-  >
-    <k-form
-      ref="form"
-      :fields="fields"
-      v-model="language"
-      @submit="submit"
-    />
-  </k-dialog>
+    @submit="submit"
+  />
 </template>
 
 <script>

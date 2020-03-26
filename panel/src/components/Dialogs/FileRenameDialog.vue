@@ -1,19 +1,12 @@
 <template>
-  <k-dialog
+  <k-form-dialog
     ref="dialog"
+    v-model="file"
+    :fields="fields"
     :submit-button="$t('rename')"
-    size="medium"
-    theme="positive"
-    @submit="$refs.form.submit()"
-  >
-    <k-form
-      ref="form"
-      :fields="fields"
-      v-model="file"
-      @submit="submit"
-      @input="file.name = sluggify(file.name)"
-    />
-  </k-dialog>
+    @input="file.name = sluggify(file.name)"
+    @submit="submit"
+  />
 </template>
 
 <script>
