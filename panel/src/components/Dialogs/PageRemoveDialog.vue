@@ -1,10 +1,7 @@
 <template>
-  <k-dialog
+  <k-remove-dialog
     ref="dialog"
-    :button="$t('delete')"
     :size="hasSubpages ? 'medium' : 'small'"
-    theme="negative"
-    icon="trash"
     @submit="submit"
     @close="reset"
   >
@@ -23,7 +20,7 @@
     <template v-else>
       <k-text @keydown.enter="submit" v-html="$t('page.delete.confirm', { title: page.title })" />
     </template>
-  </k-dialog>
+  </k-remove-dialog>
 </template>
 
 <script>

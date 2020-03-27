@@ -587,48 +587,52 @@ EOT;
 
     public function testTemplate()
     {
+        // query with a string
         $string = 'From {{ b }} to {{ a }}';
         $this->assertEquals('From here to there', Str::template($string, ['a' => 'there', 'b' => 'here']));
-        $this->assertEquals('From  to ', Str::template($string, []));
+        $this->assertEquals('From {{ b }} to {{ a }}', Str::template($string, []));
+        $this->assertEquals('From here to {{ a }}', Str::template($string, ['b' => 'here']));
+        $this->assertEquals('From here to {{ a }}', Str::template($string, ['a' => null, 'b' => 'here']));
         $this->assertEquals('From - to -', Str::template($string, [], '-'));
-    }
+        $this->assertEquals('From  to ', Str::template($string, [], ''));
+        $this->assertEquals('From here to -', Str::template($string, ['b' => 'here'], '-'));
 
-    public function testTemplateWithString()
-    {
-        $template = Str::template('Hello {{ user }}', [
-            'user' => 'homer'
-        ]);
-
-        $this->assertEquals('Hello homer', $template);
-    }
-
-    public function testTemplateWithArray()
-    {
+        // query with an array
         $template = Str::template('Hello {{ user.username }}', [
             'user' => [
                 'username' => 'homer'
             ]
         ]);
-
         $this->assertEquals('Hello homer', $template);
-    }
 
-    public function testTemplateWithObject()
-    {
+        $template = Str::template('{{ user.greeting }} {{ user.username }}', [
+            'user' => [
+                'username' => 'homer'
+            ]
+        ]);
+        $this->assertEquals('{{ user.greeting }} homer', $template);
+
+        // query with an object
         $template = Str::template('Hello {{ user.username }}', [
             'user' => new QueryTestUser()
         ]);
-
         $this->assertEquals('Hello homer', $template);
-    }
 
-    public function testTemplateWithObjectMethod()
-    {
+        $template = Str::template('{{ user.greeting }} {{ user.username }}', [
+            'user' => new QueryTestUser()
+        ]);
+        $this->assertEquals('{{ user.greeting }} homer', $template);
+
+        // query with an object method
         $template = Str::template('{{ user.username }} says: {{ user.says("hi") }}', [
             'user' => new QueryTestUser()
         ]);
-
         $this->assertEquals('homer says: hi', $template);
+
+        $template = Str::template('{{ user.username }} says: {{ user.greeting("hi") }}', [
+            'user' => new QueryTestUser()
+        ]);
+        $this->assertEquals('homer says: {{ user.greeting("hi") }}', $template);
     }
 
     public function testToBytes()

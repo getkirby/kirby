@@ -43,7 +43,7 @@
   "error.avatar.create.fail": "Nebylo možné nahrát profilový obrázek",
   "error.avatar.delete.fail": "Nebylo mo\u017en\u00e9 smazat profilov\u00fd obr\u00e1zek",
   "error.avatar.dimensions.invalid":
-    "Výšku a šířka profilového obrázku by měla být pod 3000 pixelů",
+    "Šířka a výška obrázku musí být pod 3000 pixelů",
   "error.avatar.mime.forbidden":
     "Profilový obrázek musí být ve formátu JPEG nebo PNG",
 
@@ -61,21 +61,21 @@
     "Přípona souboru \"{extension}\" není povolena",
   "error.file.extension.missing":
     "Nem\u016f\u017eete nahr\u00e1t soubor bez p\u0159\u00edpony",
-  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
-  "error.file.maxsize": "The file is too large",
-  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
+  "error.file.maxheight": "Výška obrázku nesmí přesáhnout {height} pixelů",
+  "error.file.maxsize": "Soubor je příliš velký",
+  "error.file.maxwidth": "Šířka obrázku nesmí přesáhnout {width} pixelů",
   "error.file.mime.differs":
     "Nahraný soubor musí být stejného typu \"{mime}\"",
   "error.file.mime.forbidden": "Soubor typu \"{mime}\" není povolený",
-  "error.file.mime.invalid": "Invalid mime type: {mime}",
+  "error.file.mime.invalid": "Neplatný MIME typ: {mime}",
   "error.file.mime.missing":
     "Nelze rozeznat mime typ souboru \"{filename}\"",
-  "error.file.minheight": "The height of the image must be at least {height} pixels",
-  "error.file.minsize": "The file is too small",
-  "error.file.minwidth": "The width of the image must be at least {width} pixels",
+  "error.file.minheight": "Výška obrázku musí být alespoň {height} pixelů",
+  "error.file.minsize": "Soubor je příliš malý",
+  "error.file.minwidth": "Šířka obrázku musí být alespoň {width} pixelů",
   "error.file.name.missing": "Název souboru nesmí být prázdný",
   "error.file.notFound": "Soubor se nepoda\u0159ilo nal\u00e9zt",
-  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+  "error.file.orientation": "Orientace obrázku másí být \"{orientation}\"",
   "error.file.type.forbidden": "Nemáte povoleno nahrávat soubory typu {type} ",
   "error.file.undefined": "Soubor se nepoda\u0159ilo nal\u00e9zt",
 

@@ -9,6 +9,7 @@ window.panel.plugins = {
   routes: [],
   use: [],
   views: {},
+  thirdParty: {}
 };
 
 window.panel.plugin = function (plugin, parts) {
@@ -52,6 +53,17 @@ window.panel.plugin = function (plugin, parts) {
     window.panel.plugins.login = parts.login;
   }
 
+  // Register thirdParty plugin types
+  Object.keys(parts).forEach(type => {
+    if (!window.panel.plugins[type]) {
+      resolve(parts, type, function(name, options) {
+        if (!window.panel.plugins.thirdParty[type]) {
+          window.panel.plugins.thirdParty[type] = {};
+        }
+        window.panel.plugins.thirdParty[type][name] = options;
+      });
+    }
+  });
 };
 
 function resolve(object, type, callback) {

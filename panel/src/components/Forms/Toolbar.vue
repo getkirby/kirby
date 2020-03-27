@@ -208,7 +208,7 @@ export default {
         link: {
           label: this.$t("toolbar.button.link"),
           icon: "url",
-          shortcut: "l",
+          shortcut: "k",
           command: "dialog",
           args: "link"
         },

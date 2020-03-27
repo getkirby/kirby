@@ -62,6 +62,7 @@ trait AppPlugins
         'snippets' => [],
         'tags' => [],
         'templates' => [],
+        'thirdParty' => [],
         'translations' => [],
         'userMethods' => [],
         'userModels' => [],
@@ -97,7 +98,12 @@ trait AppPlugins
         foreach ($this->extensions as $type => $registered) {
             if (isset($extensions[$type]) === true) {
                 $this->{'extend' . $type}($extensions[$type], $plugin);
+                unset($extensions[$type]);
             }
+        }
+
+        foreach ($extensions as $type => $definition) {
+            $this->extendThirdParty($type, $definition);
         }
 
         return $this->extensions;
@@ -424,6 +430,20 @@ trait AppPlugins
     protected function extendTranslations(array $translations): array
     {
         return $this->extensions['translations'] = array_replace_recursive($this->extensions['translations'], $translations);
+    }
+
+    /**
+     * Add third party extensions to the registry
+     * so they can be used as plugins for plugins
+     * for example.
+     *
+     * @param string $type
+     * @param array $extensions
+     * @return array
+     */
+    protected function extendThirdParty(string $type, array $extensions): array
+    {
+        return $this->extensions['thirdParty'][$type] = array_replace_recursive(($this->extensions['thirdParty'][$type] ?? []), $extensions);
     }
 
     /**

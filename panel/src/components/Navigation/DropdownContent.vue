@@ -89,6 +89,7 @@ export default {
     },
     navigate(e) {
 
+      /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
       switch (e.code) {
         case "Escape":
         case "ArrowLeft":
@@ -139,16 +140,16 @@ export default {
           }
 
           break;
-        case "Tab":   
+        case "Tab":
           while (true) {
             this.current++;
-          
+
             if (this.current > this.$children.length - 1) {
               this.close();
               this.$emit("leave", e.code);
               break;
             }
-          
+
             if (
               this.$children[this.current] &&
               this.$children[this.current].disabled === false
@@ -156,7 +157,7 @@ export default {
               break;
             }
           }
-          
+
           break;
       }
     }

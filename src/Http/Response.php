@@ -169,7 +169,7 @@ class Response
             'type'    => 'application/force-download',
             'headers' => [
                 'Pragma'                    => 'public',
-                'Expires'                   => '0',
+                'Cache-Control'             => 'no-cache, no-store, must-revalidate',
                 'Last-Modified'             => gmdate('D, d M Y H:i:s', $modified) . ' GMT',
                 'Content-Disposition'       => 'attachment; filename="' . $filename . '"',
                 'Content-Transfer-Encoding' => 'binary',

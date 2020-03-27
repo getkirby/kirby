@@ -173,6 +173,22 @@ class PageStatesTest extends TestCase
         $this->assertFalse($page->isDraft());
     }
 
+    public function testIsPublished()
+    {
+        $page = new Page([
+            'slug'    => 'test',
+            'isDraft' => true
+        ]);
+
+        $this->assertFalse($page->isPublished());
+
+        $page = new Page([
+            'slug'    => 'test',
+        ]);
+
+        $this->assertTrue($page->isPublished());
+    }
+
     public function testIsActive()
     {
         $app = new App([
