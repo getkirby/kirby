@@ -431,7 +431,7 @@ return function (App $app) {
          * @param string|null $expect
          * @return mixed
          */
-		'query' => function (Field $field, string $expect = null) use ($app) {
+        'query' => function (Field $field, string $expect = null) use ($app) {
             if ($parent = $field->parent()) {
                 return $parent->query($field->value, $expect);
             }
@@ -441,7 +441,7 @@ return function (App $app) {
                 'site'  => $app->site(),
                 'page'  => $app->page()
             ]);
-		},
+        },
 
         /**
          * It parses any queries found in the field value.
@@ -450,7 +450,7 @@ return function (App $app) {
          * @param array $data
          * @return \Kirby\Cms\Field
          */
-		'replace' => function (Field $field, array $data = []) use ($app) {
+        'replace' => function (Field $field, array $data = []) use ($app) {
             if ($parent = $field->parent()) {
                 $field->value = $field->parent()->toString($field->value, $data);
             } else {
@@ -462,7 +462,7 @@ return function (App $app) {
             }
 
             return $field;
-		},
+        },
 
         /**
          * Cuts the string after the given length and
