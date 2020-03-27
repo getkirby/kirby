@@ -880,4 +880,24 @@ class AppPluginsTest extends TestCase
         // hook should have been called only once after the firs initialization
         $this->assertEquals(1, $executed);
     }
+
+    public function testThirdPartyExtensions()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'tags' => [
+                'test' => $testTag = function () {
+                },
+            ],
+            'blocks' => [
+                'test' => $testBlock = function () {
+                }
+            ]
+        ]);
+
+        $this->assertSame($testTag, $kirby->extensions('tags')['test']);
+        $this->assertSame($testBlock, $kirby->extensions('thirdParty')['blocks']['test']);
+    }
 }

@@ -758,25 +758,55 @@ class PageTest extends TestCase
 
         // create the english page
         F::write($file = $index . '/test/test.en.txt', 'test');
+        touch($file, $modified = \time() + 2);
 
-        $modified = filemtime($file);
-        $page     = $app->page('test');
-
-        $this->assertEquals($modified, $page->modified());
-
-        sleep(1);
+        $this->assertEquals($modified, $app->page('test')->modified());
 
         // create the german page
         F::write($file = $index . '/test/test.de.txt', 'test');
+        touch($file, $modified = \time() + 5);
 
         // change the language
         $app->setCurrentLanguage('de');
         $app->setCurrentTranslation('de');
 
-        $modified = filemtime($file);
-        $page     = $app->page('test');
+        $this->assertEquals($modified, $app->page('test')->modified());
 
-        $this->assertEquals($modified, $page->modified());
+        Dir::remove($index);
+    }
+
+    public function testModifiedSpecifyingLanguage()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/PageTest/modified',
+                'content' => $index
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'name'    => 'English'
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        // create the english page
+        F::write($file = $index . '/test/test.en.txt', 'test');
+        touch($file, $modifiedEnContent = \time() + 2);
+
+        // create the german page
+        F::write($file = $index . '/test/test.de.txt', 'test');
+        touch($file, $modifiedDeContent = \time() + 5);
+
+        $page = $app->page('test');
+
+        $this->assertEquals($modifiedEnContent, $page->modified(null, null, 'en'));
+        $this->assertEquals($modifiedDeContent, $page->modified(null, null, 'de'));
 
         Dir::remove($index);
     }

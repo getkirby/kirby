@@ -17,14 +17,16 @@ export default {
 
 <style lang="scss">
 .k-box {
+  word-wrap: break-word;
+  font-size: $font-size-small;
+}
+.k-box:not([data-theme="none"]) {
   background: lighten($color-light-grey, 25%);
   border-radius: $border-radius;
   padding: 0.375rem 0.75rem;
   line-height: 1.25rem;
   border-left: 2px solid $color-light-grey;
   padding: 0.5rem 1.5rem;
-  word-wrap: break-word;
-  font-size: $font-size-small;
 }
 .k-box[data-theme="code"] {
   background: $color-dark;

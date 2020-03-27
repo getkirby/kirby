@@ -361,7 +361,7 @@ class Str
             return $string;
         }
 
-        return static::substr($string, 0, strrpos(static::substr($string, 0, $chars), ' ')) . ' ' . $rep;
+        return static::substr($string, 0, mb_strrpos(static::substr($string, 0, $chars), ' ')) . ' ' . $rep;
     }
 
     /**
@@ -373,6 +373,11 @@ class Str
      */
     public static function float($value): string
     {
+        // Convert exponential to decimal, 1e-8 as 0.00000001
+        if (strpos(strtolower($value), 'e') !== false) {
+            $value = rtrim(sprintf('%.16f', (float)$value), '0');
+        }
+
         $value   = str_replace(',', '.', $value);
         $decimal = strlen(substr(strrchr($value, '.'), 1));
         return number_format((float)$value, $decimal, '.', false);

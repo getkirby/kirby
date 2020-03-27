@@ -157,6 +157,15 @@ class StrTest extends TestCase
         $this->assertEquals($expected, $result);
     }
 
+    public function testExcerptWithUnicodeChars()
+    {
+        $string   = 'Hellö Wörld text<br>with söme htmäl';
+        $expected = 'Hellö Wörld text …';
+        $result   = Str::excerpt($string, 20);
+
+        $this->assertEquals($expected, $result);
+    }
+
     public function testFloat()
     {
         $this->assertEquals('0', Str::float(false));
@@ -180,6 +189,7 @@ class StrTest extends TestCase
         $this->assertEquals('1000.00', Str::float('1000,00'));
         $this->assertEquals('1000', Str::float('1000'));
         $this->assertEquals('1000000.00', Str::float('1000000.00'));
+        $this->assertEquals('0.00000001', Str::float(0.00000001));
     }
 
     public function testFrom()

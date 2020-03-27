@@ -231,19 +231,54 @@ class FileTest extends TestCase
 
         // create a file
         F::write($file = $index . '/test.js', 'test');
-
-        // write the content file a bit later
-        usleep(1000000);
+        touch($file, $modifiedFile = \time() + 2);
 
         F::write($content = $index . '/test.js.txt', 'test');
-
-        $modifiedFile    = F::modified($file);
-        $modifiedContent = F::modified($content);
+        touch($file, $modifiedContent = \time() + 5);
 
         $file = $app->file('test.js');
 
         $this->assertNotEquals($modifiedFile, $file->modified());
         $this->assertEquals($modifiedContent, $file->modified());
+
+        Dir::remove(dirname($index));
+    }
+
+    public function testModifiedSpecifyingLanguage()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/FileTest/modified',
+                'content' => $index
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'name'    => 'English'
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        // create a file
+        F::write($index . '/test.js', 'test');
+
+        // create the english content
+        F::write($file = $index . '/test.js.en.txt', 'test');
+        touch($file, $modifiedEnContent = \time() + 2);
+
+        // create the german content
+        F::write($file = $index . '/test.js.de.txt', 'test');
+        touch($file, $modifiedDeContent = \time() + 5);
+
+        $file = $app->file('test.js');
+
+        $this->assertEquals($modifiedEnContent, $file->modified(null, null, 'en'));
+        $this->assertEquals($modifiedDeContent, $file->modified(null, null, 'de'));
 
         Dir::remove(dirname($index));
     }

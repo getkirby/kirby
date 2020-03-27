@@ -300,7 +300,7 @@ class Header
         $options = array_merge($defaults, $params);
 
         header('Pragma: public');
-        header('Expires: 0');
+        header('Cache-Control: no-cache, no-store, must-revalidate');
         header('Last-Modified: ' . gmdate('D, d M Y H:i:s', $options['modified']) . ' GMT');
         header('Content-Disposition: attachment; filename="' . $options['name'] . '"');
         header('Content-Transfer-Encoding: binary');

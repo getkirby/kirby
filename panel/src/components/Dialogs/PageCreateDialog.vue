@@ -1,21 +1,12 @@
 <template>
-  <k-dialog
+  <k-form-dialog
     ref="dialog"
-    :button="$t('page.draft.create')"
-    :notification="notification"
-    size="medium"
-    theme="positive"
-    @submit="$refs.form.submit()"
+    v-model="page"
+    :fields="fields"
+    :submit-button="$t('page.draft.create')"
+    @submit="submit"
     @close="reset"
-  >
-    <k-form
-      ref="form"
-      :fields="fields"
-      :novalidate="true"
-      v-model="page"
-      @submit="submit"
-    />
-  </k-dialog>
+  />
 </template>
 
 <script>
@@ -25,7 +16,6 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
-      notification: null,
       parent: null,
       section: null,
       templates: [],
@@ -110,8 +100,8 @@ export default {
       this.page.title = this.page.title.trim();
 
       if (this.page.title.length === 0) {
-        this.$refs.dialog.error('Please enter a title');
-        return false;
+        this.$refs.dialog.error(this.$t("error.page.changeTitle.empty"));
+        return;
       }
 
       const data = {

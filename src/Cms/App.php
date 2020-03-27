@@ -6,19 +6,20 @@ use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\ErrorPageException;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Request;
 use Kirby\Http\Router;
 use Kirby\Http\Server;
 use Kirby\Http\Visitor;
 use Kirby\Session\AutoSession;
-use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
+use Throwable;
 
 /**
  * The `$kirby` object is the app instance of
@@ -1373,7 +1374,11 @@ class App
      */
     public static function version(): ?string
     {
-        return static::$version = static::$version ?? Data::read(static::$root . '/composer.json')['version'] ?? null;
+        try {
+            return static::$version = static::$version ?? Data::read(static::$root . '/composer.json')['version'] ?? null;
+        } catch (Throwable $e) {
+            throw new LogicException('The Kirby version cannot be detected. The composer.json is probably missing or not readable.');
+        }
     }
 
     /**

@@ -1,6 +1,11 @@
 <template>
   <k-grid class="k-sections" gutter="large">
-    <k-column v-for="(column, columnIndex) in columns" :key="parent + '-column-' + columnIndex" :width="column.width">
+    <k-column 
+      v-for="(column, columnIndex) in columns" 
+      :key="parent + '-column-' + columnIndex" 
+      :width="column.width" 
+      :sticky="column.sticky"
+    >
       <template v-for="(section, sectionIndex) in column.sections" v-if="meetsCondition(section)">
         <component
           v-if="exists(section.type)"

@@ -15,7 +15,7 @@ namespace Kirby\Toolkit;
  */
 class Query
 {
-    const PARTS      = '!([a-zA-Z_]*(\(.*?\))?)\.|' . self::SKIP . '!';
+    const PARTS      = '!([a-zA-Z_][a-zA-Z0-9_]*(\(.*?\))?)\.|' . self::SKIP . '!';
     const METHOD     = '!\((.*)\)!';
     const PARAMETERS = '!,|' . self::SKIP . '!';
 

@@ -3,11 +3,11 @@
     <k-button-group slot="options" class="k-field-options">
       <k-button
         v-if="more && !disabled"
-        icon="add"
+        :icon="btnIcon"
         class="k-field-options-button"
         @click="open"
       >
-        {{ $t('select') }}
+        {{ btnLabel }}
       </k-button>
     </k-button-group>
     <template v-if="selected.length">
@@ -26,7 +26,7 @@
           :sortable="!disabled && selected.length > 1"
           :text="page.text"
           :info="page.info"
-          :link="page.link"
+          :link="link ? page.link : null"
           :icon="page.icon"
           :image="page.image"
         >
@@ -46,7 +46,7 @@
       icon="page"
       @click="open"
     >
-      {{ empty || $t('field.pages.empty') }}
+      {{ empty || $t("field.pages.empty") }}
     </k-empty>
     <k-pages-dialog ref="selector" @submit="select" />
   </k-field>
@@ -68,7 +68,7 @@ export default {
         max: this.max,
         multiple: this.multiple,
         search: this.search,
-        selected: this.selected.map(page => page.id),
+        selected: this.selected.map(page => page.id)
       });
     }
   }
