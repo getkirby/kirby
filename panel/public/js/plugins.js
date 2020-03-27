@@ -53,17 +53,13 @@ window.panel.plugin = function (plugin, parts) {
     window.panel.plugins.login = parts.login;
   }
 
-  // Register thirdParty plugin types
-  Object.keys(parts).forEach(type => {
-    if (!window.panel.plugins[type]) {
-      resolve(parts, type, function(name, options) {
-        if (!window.panel.plugins.thirdParty[type]) {
-          window.panel.plugins.thirdParty[type] = {};
-        }
-        window.panel.plugins.thirdParty[type][name] = options;
-      });
-    }
+  // Third-party plugins
+  resolve(parts, "thirdParty", function(name, options) {
+    window.panel.plugins["thirdParty"][name] = options;
   });
+
+
+  console.log(window.panel);
 };
 
 function resolve(object, type, callback) {

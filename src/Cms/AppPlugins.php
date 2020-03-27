@@ -98,12 +98,7 @@ trait AppPlugins
         foreach ($this->extensions as $type => $registered) {
             if (isset($extensions[$type]) === true) {
                 $this->{'extend' . $type}($extensions[$type], $plugin);
-                unset($extensions[$type]);
             }
-        }
-
-        foreach ($extensions as $type => $definition) {
-            $this->extendThirdParty($type, $definition);
         }
 
         return $this->extensions;
@@ -441,9 +436,9 @@ trait AppPlugins
      * @param array $extensions
      * @return array
      */
-    protected function extendThirdParty(string $type, array $extensions): array
+    protected function extendThirdParty(array $extensions): array
     {
-        return $this->extensions['thirdParty'][$type] = array_replace_recursive(($this->extensions['thirdParty'][$type] ?? []), $extensions);
+        return $this->extensions['thirdParty'] = array_replace_recursive($this->extensions['thirdParty'], $extensions);
     }
 
     /**

@@ -891,9 +891,11 @@ class AppPluginsTest extends TestCase
                 'test' => $testTag = function () {
                 },
             ],
-            'blocks' => [
-                'test' => $testBlock = function () {
-                }
+            'thirdParty' => [
+                'blocks' => [
+                    'test' => $testBlock = function () {
+                    }
+                ]
             ]
         ]);
 
