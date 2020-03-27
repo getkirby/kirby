@@ -845,15 +845,16 @@ class User extends ModelWithContent
      * String template builder
      *
      * @param string|null $template
+     * @param array|null $data
      * @return string
      */
-    public function toString(string $template = null): string
+    public function toString(string $template = null, array $data = []): string
     {
         if ($template === null) {
             $template = $this->email();
         }
 
-        return parent::toString($template);
+        return parent::toString($template, $data);
     }
 
     /**
