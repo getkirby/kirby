@@ -134,7 +134,7 @@ class StrTest extends TestCase
     {
         $string   = 'This is a long text<br>with some html';
         $expected = 'This is a long text with ...';
-        $result   = Str::excerpt($string, 27, true, '...');
+        $result   = Str::excerpt($string, 27, true, ' ...');
 
         $this->assertEquals($expected, $result);
     }
