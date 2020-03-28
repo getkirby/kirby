@@ -341,7 +341,7 @@ class Str
      * @param string $rep The element, which should be added if the string is too long. Ellipsis is the default.
      * @return string The shortened string
      */
-    public static function excerpt($string, $chars = 140, $strip = true, $rep = '…')
+    public static function excerpt($string, $chars = 140, $strip = true, $rep = ' …')
     {
         if ($strip === true) {
             $string = strip_tags(str_replace('<', ' <', $string));
@@ -361,7 +361,7 @@ class Str
             return $string;
         }
 
-        return static::substr($string, 0, mb_strrpos(static::substr($string, 0, $chars), ' ')) . ' ' . $rep;
+        return static::substr($string, 0, mb_strrpos(static::substr($string, 0, $chars), ' ')) . $rep;
     }
 
     /**
