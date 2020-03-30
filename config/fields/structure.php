@@ -63,6 +63,12 @@ return [
             return $min;
         },
         /**
+         * Toggles adding to the top or bottom of the list
+         */
+        'prepend' => function (bool $prepend = null) {
+            return $prepend;
+        },
+        /**
          * Toggles drag & drop sorting
          */
         'sortable' => function (bool $sortable = null) {
@@ -74,12 +80,6 @@ return [
          */
         'sortBy' => function (string $sort = null) {
             return $sort;
-        },
-        /**
-         * Toggles adding the item always to top of items
-         */
-        'unshift' => function (bool $unshift = null) {
-            return $unshift;
         }
     ],
     'computed' => [

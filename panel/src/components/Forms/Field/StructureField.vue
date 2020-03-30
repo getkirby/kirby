@@ -170,15 +170,15 @@ export default {
     limit: Number,
     max: Number,
     min: Number,
+    prepend: {
+      type: Boolean,
+      default: false
+    },
     sortable: {
       type: Boolean,
       default: true
     },
     sortBy: String,
-    unshift: {
-      type: Boolean,
-      default: false
-    },
     value: {
       type: Array,
       default() {
@@ -523,7 +523,7 @@ export default {
         return this.validate(this.currentModel)
           .then(() => {
             if (this.currentIndex === "new") {
-              if (this.unshift === true) {
+              if (this.prepend === true) {
                 this.items.unshift(this.currentModel);
               } else {
                 this.items.push(this.currentModel);
