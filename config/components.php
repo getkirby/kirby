@@ -8,6 +8,8 @@ use Kirby\Cms\FileVersion;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
 use Kirby\Http\Server;
+use Kirby\Http\Uri;
+use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
 use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
@@ -327,8 +329,46 @@ return [
      * @param Closure $originalHandler Callback function to the original URL handler with `$path` and `$options` as parameters
      * @return string
      */
-    'url' => function (App $kirby, string $path = null, $options = [], Closure $originalHandler): string {
-        return $originalHandler($path, $options);
+    'url' => function (App $kirby, string $path = null, $options = []): string {
+        $language = null;
+
+        // get language from simple string option
+        if (is_string($options) === true) {
+            $language = $options;
+            $options  = null;
+        }
+
+        // get language from array
+        if (is_array($options) === true && isset($options['language']) === true) {
+            $language = $options['language'];
+            unset($options['language']);
+        }
+
+        // get a language url for the linked page, if the page can be found
+        if ($kirby->multilang() === true) {
+            $parts = Str::split($path, '#');
+
+            if ($page = page($parts[0] ?? null)) {
+                $path = $page->url($language);
+
+                if (isset($parts[1]) === true) {
+                    $path .= '#' . $parts[1];
+                }
+            }
+        }
+
+        // keep relative urls
+        if (substr($path, 0, 2) === './' || substr($path, 0, 3) === '../') {
+            return $path;
+        }
+
+        $url = Url::makeAbsolute($path, $kirby->url());
+
+        if ($options === null) {
+            return $url;
+        }
+
+        return (new Uri($url, $options))->toString();
     },
 
 ];
