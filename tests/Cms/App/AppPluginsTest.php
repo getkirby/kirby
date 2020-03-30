@@ -902,4 +902,24 @@ class AppPluginsTest extends TestCase
         $this->assertSame($testTag, $kirby->extensions('tags')['test']);
         $this->assertSame($testBlock, $kirby->extensions('thirdParty')['blocks']['test']);
     }
+
+    public function testNativeComponents()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ],
+            'components' => [
+                'url' => function ($kirby, $path) {
+                    return 'https://rewritten.getkirby.com/' . $path;
+                },
+            ]
+        ]);
+
+        $this->assertEquals('https://rewritten.getkirby.com/test', $kirby->component('url')($kirby, 'test'));
+        $this->assertEquals('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
+    }
 }

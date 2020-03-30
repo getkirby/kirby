@@ -31,6 +31,13 @@ trait AppPlugins
     protected static $plugins = [];
 
     /**
+     * Cache for system extensions
+     *
+     * @var array
+     */
+    protected static $systemExtensions = null;
+
+    /**
      * The extension registry
      *
      * @var array
@@ -69,13 +76,6 @@ trait AppPlugins
         'usersMethods' => [],
         'validators' => []
     ];
-
-    /**
-     * Cache for system extensions
-     *
-     * @var array
-     */
-    protected static $systemExtensions = null;
 
     /**
      * Flag when plugins have been loaded
@@ -669,6 +669,18 @@ trait AppPlugins
         $this->extendFields(static::$systemExtensions['fields']);
         $this->extendFieldMethods((static::$systemExtensions['fieldMethods'])($this));
         $this->extendTags(static::$systemExtensions['tags']);
+    }
+
+    /**
+     * Returns the native implementation
+     * of a core component
+     *
+     * @param string $component
+     * @return \Closure | false
+     */
+    public function nativeComponent(string $component)
+    {
+        return static::$systemExtensions['components'][$component] ?? false;
     }
 
     /**
