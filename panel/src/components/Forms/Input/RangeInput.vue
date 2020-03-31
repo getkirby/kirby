@@ -76,10 +76,10 @@ export default {
       return this.min < 0 ? 0 : this.min;
     },
     label() {
-      return this.required || this.value !== null ? this.format(this.position) : "–";
+      return this.required || (this.value || this.value === 0) ? this.format(this.position) : "–";
     },
     position() {
-      return this.value !== null ? this.value : this.default || this.baseline;
+      return (this.value || this.value === 0) ? this.value : this.default || this.baseline;
     }
   },
   watch: {
