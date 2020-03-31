@@ -73,13 +73,13 @@ export default {
     baseline() {
       // If the minimum is below 0, the baseline should be placed at 0.
       // Otherwise place the baseline at the minimum
-      return this.min < 0 ? 0 : this.min;  
+      return this.min < 0 ? 0 : this.min;
     },
     label() {
-      return this.required || this.value ? this.format(this.position) : "–";
+      return this.required || this.value !== null ? this.format(this.position) : "–";
     },
     position() {
-      return this.value || this.default || this.baseline;
+      return this.value !== null ? this.value : this.default || this.baseline;
     }
   },
   watch: {
