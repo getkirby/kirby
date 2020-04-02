@@ -12,7 +12,9 @@
       <template v-if="dropdown">
         <k-dropdown>
           <k-button :disabled="!hasPages" class="k-pagination-details" @click="$refs.dropdown.toggle()">
-            <template v-if="total > 1">{{ detailsText }}</template>{{ total }}
+            <template v-if="total > 1">
+              {{ detailsText }}
+            </template>{{ total }}
           </k-button>
 
           <k-dropdown-content

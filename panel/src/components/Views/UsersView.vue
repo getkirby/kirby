@@ -6,7 +6,9 @@
     <k-header>
       {{ $t('view.users') }}
       <k-button-group slot="left">
-        <k-button :disabled="$permissions.users.create === false" icon="add" @click="$refs.create.open()">{{ $t('user.create') }}</k-button>
+        <k-button :disabled="$permissions.users.create === false" icon="add" @click="$refs.create.open()">
+          {{ $t('user.create') }}
+        </k-button>
       </k-button-group>
       <k-button-group slot="right">
         <k-dropdown>
@@ -40,7 +42,9 @@
       />
     </template>
     <template v-else-if="total === 0">
-      <k-empty icon="users">{{ $t("role.empty") }}</k-empty>
+      <k-empty icon="users">
+        {{ $t("role.empty") }}
+      </k-empty>
     </template>
 
     <k-user-create-dialog ref="create" @success="fetch" />
@@ -50,9 +54,7 @@
     <k-user-remove-dialog ref="remove" @success="fetch" />
     <k-user-rename-dialog ref="rename" @success="fetch" />
     <k-user-role-dialog ref="role" @success="fetch" />
-
   </k-view>
-
 </template>
 
 <script>

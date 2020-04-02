@@ -9,14 +9,14 @@
       >
         <k-error-boundary>
           <component
-            v-if="hasFieldType(field.type)"
             :is="'k-' + field.type + '-field'"
-            :name="fieldName"
+            v-if="hasFieldType(field.type)"
             :ref="fieldName"
+            v-model="value[fieldName]"
+            :name="fieldName"
             :novalidate="novalidate"
             :disabled="disabled || field.disabled"
             v-bind="field"
-            v-model="value[fieldName]"
             @input="$emit('input', value, field, fieldName)"
             @focus="$emit('focus', $event, field, fieldName)"
             @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"

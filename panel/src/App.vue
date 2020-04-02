@@ -29,8 +29,12 @@
   <div v-else class="k-panel">
     <main class="k-panel-view">
       <k-error-view>
-        <p v-if="debug">{{ $store.state.system.info.error }}</p>
-        <p v-else>The panel cannot connect to the API</p>
+        <p v-if="debug">
+          {{ $store.state.system.info.error }}
+        </p>
+        <p v-else>
+          The panel cannot connect to the API
+        </p>
       </k-error-view>
     </main>
   </div>

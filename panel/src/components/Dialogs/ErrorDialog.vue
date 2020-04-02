@@ -10,7 +10,9 @@
     <k-text>{{ notification.message }}</k-text>
     <dl v-if="notification.details && Object.keys(notification.details).length" class="k-error-details">
       <template v-for="(detail, index) in notification.details">
-        <dt :key="'detail-label-' + index">{{ detail.label }}</dt>
+        <dt :key="'detail-label-' + index">
+          {{ detail.label }}
+        </dt>
         <dd :key="'detail-message-' + index">
           <template v-if="typeof detail.message === 'object'">
             <ul>
@@ -31,7 +33,6 @@
         {{ $t("confirm") }}
       </k-button>
     </k-button-group>
-
   </k-dialog>
 </template>
 

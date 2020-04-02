@@ -8,9 +8,9 @@
     >
       <template v-for="(section, sectionIndex) in column.sections" v-if="meetsCondition(section)">
         <component
+          :is="'k-' + section.type + '-section'"
           v-if="exists(section.type)"
           :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex + '-' + blueprint"
-          :is="'k-' + section.type + '-section'"
           :name="section.name"
           :parent="parent"
           :blueprint="blueprint"

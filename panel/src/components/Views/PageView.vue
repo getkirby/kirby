@@ -3,7 +3,6 @@
     {{ issue.message }}
   </k-error-view>
   <k-view v-else :data-locked="isLocked" class="k-page-view">
-
     <k-header
       :tabs="tabs"
       :tab="tab"
@@ -45,7 +44,6 @@
         </k-dropdown>
 
         <k-languages-dropdown />
-
       </k-button-group>
 
       <k-prev-next
@@ -72,9 +70,7 @@
     <k-page-status-dialog ref="status" @success="update" />
     <k-page-template-dialog ref="template" @success="update" />
     <k-page-remove-dialog ref="remove" />
-
   </k-view>
-
 </template>
 
 <script>

@@ -33,16 +33,6 @@ module.exports = {
 
     return custom;
   },
-  chainWebpack: config => {
-    config.when(process.env.NODE_ENV === "production", plugin => {
-      plugin
-        .plugin("extract-css")
-        .tap(([options, ...args]) => [
-          Object.assign({}, options, { filename: "css/[name].css" }),
-          ...args
-        ]);
-    });
-  },
   devServer: {
     proxy: {
       "/api": {

@@ -6,8 +6,8 @@
     class="k-password-field"
   >
     <k-input
-      ref="input"
       :id="_uid"
+      ref="input"
       v-bind="$props"
       theme="field"
       v-on="$listeners"

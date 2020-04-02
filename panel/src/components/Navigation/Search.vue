@@ -3,7 +3,9 @@
     <div class="k-search-box" @click.stop>
       <div class="k-search-input">
         <k-dropdown class="k-search-types">
-          <k-button :icon="type.icon" @click="$refs.types.toggle()">{{ type.label }}:</k-button>
+          <k-button :icon="type.icon" @click="$refs.types.toggle()">
+            {{ type.label }}:
+          </k-button>
           <k-dropdown-content ref="types">
             <k-dropdown-item
               v-for="(type, typeIndex) in types"

@@ -1,13 +1,13 @@
 <template>
-
   <section v-if="isLoading === false" class="k-files-section">
-
     <header class="k-section-header">
       <k-headline>
         {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
       <k-button-group v-if="add">
-        <k-button icon="upload" @click="upload">{{ $t("add") }}</k-button>
+        <k-button icon="upload" @click="upload">
+          {{ $t("add") }}
+        </k-button>
       </k-button-group>
     </header>
 
@@ -59,7 +59,6 @@
       <k-file-remove-dialog ref="remove" @success="update" />
       <k-upload ref="upload" @success="uploaded" @error="reload" />
     </template>
-
   </section>
 </template>
 

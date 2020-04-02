@@ -1,13 +1,15 @@
 <template>
   <form class="k-login-form" @submit.prevent="login">
-    <h1 class="k-offscreen">{{ $t('login') }}</h1>
+    <h1 class="k-offscreen">
+      {{ $t('login') }}
+    </h1>
 
     <div v-if="issue" class="k-login-alert" @click="issue = null">
       <span>{{ issue }}</span>
       <k-icon type="alert" />
     </div>
 
-    <k-fieldset :novalidate="true" :fields="fields" v-model="user" />
+    <k-fieldset v-model="user" :novalidate="true" :fields="fields" />
 
     <div class="k-login-buttons">
       <span class="k-login-checkbox">
@@ -22,7 +24,9 @@
         icon="check"
         type="submit"
       >
-        {{ $t("login") }} <template v-if="isLoading">…</template>
+        {{ $t("login") }} <template v-if="isLoading">
+          …
+        </template>
       </k-button>
     </div>
   </form>

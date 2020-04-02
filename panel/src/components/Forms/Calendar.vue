@@ -4,16 +4,16 @@
       <k-button icon="angle-left" @click="prev" />
       <span class="k-calendar-selects">
         <k-select-input
+          v-model.number="month"
           :options="months"
           :disabled="disabled"
           :required="true"
-          v-model.number="month"
         />
         <k-select-input
+          v-model.number="year"
           :options="years"
           :disabled="disabled"
           :required="true"
-          v-model.number="year"
         />
       </span>
       <k-button icon="angle-right" @click="next" />
@@ -21,7 +21,9 @@
     <table class="k-calendar-table">
       <thead>
         <tr>
-          <th v-for="day in weekdays" :key="'weekday_' + day">{{ day }}</th>
+          <th v-for="day in weekdays" :key="'weekday_' + day">
+            {{ day }}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -33,14 +35,18 @@
             :aria-selected="isCurrent(day) ? 'date' : false"
             class="k-calendar-day"
           >
-            <k-button v-if="day" @click="select(day)">{{ day }}</k-button>
+            <k-button v-if="day" @click="select(day)">
+              {{ day }}
+            </k-button>
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <td class="k-calendar-today" colspan="7">
-            <k-button @click="selectToday">{{ $t("today") }}</k-button>
+            <k-button @click="selectToday">
+              {{ $t("today") }}
+            </k-button>
           </td>
         </tr>
       </tfoot>

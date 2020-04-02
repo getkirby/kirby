@@ -44,8 +44,8 @@
       >
         <k-dropdown-item
           v-for="(tab, tabIndex) in invisibleTabs"
-          :link="'#' + tab.name"
           :key="'more-' + tabIndex"
+          :link="'#' + tab.name"
           :current="currentTab && currentTab.name === tab.name"
           :icon="tab.icon"
           :tooltip="tab.label"
@@ -53,11 +53,8 @@
           {{ tab.label }}
         </k-dropdown-item>
       </k-dropdown-content>
-
     </div>
-
   </header>
-
 </template>
 
 <script>

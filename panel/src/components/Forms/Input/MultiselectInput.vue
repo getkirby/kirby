@@ -60,7 +60,6 @@
         </k-dropdown-item>
       </div>
     </k-dropdown-content>
-
   </k-draggable>
 </template>
 

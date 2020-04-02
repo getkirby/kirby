@@ -3,7 +3,6 @@
     {{ issue.message }}
   </k-error-view>
   <div v-else-if="ready" :data-locked="isLocked" class="k-user-view">
-
     <div class="k-user-profile">
       <k-view>
         <template v-if="avatar">
@@ -38,15 +37,20 @@
         </template>
 
         <k-button-group>
-          <k-button :disabled="!permissions.changeEmail || isLocked" icon="email" @click="action('email')">{{ $t("email") }}: {{ user.email }}</k-button>
-          <k-button :disabled="!permissions.changeRole || isLocked" icon="bolt" @click="action('role')">{{ $t("role") }}: {{ user.role.title }}</k-button>
-          <k-button :disabled="!permissions.changeLanguage || isLocked" icon="globe" @click="action('language')">{{ $t("language") }}: {{ user.language }}</k-button>
+          <k-button :disabled="!permissions.changeEmail || isLocked" icon="email" @click="action('email')">
+            {{ $t("email") }}: {{ user.email }}
+          </k-button>
+          <k-button :disabled="!permissions.changeRole || isLocked" icon="bolt" @click="action('role')">
+            {{ $t("role") }}: {{ user.role.title }}
+          </k-button>
+          <k-button :disabled="!permissions.changeLanguage || isLocked" icon="globe" @click="action('language')">
+            {{ $t("language") }}: {{ user.language }}
+          </k-button>
         </k-button-group>
       </k-view>
     </div>
 
     <k-view>
-
       <k-header
         :editable="permissions.changeName && !isLocked"
         :tabs="tabs"
@@ -54,7 +58,9 @@
         @edit="action('rename')"
       >
         <span v-if="!user.name || user.name.length === 0" class="k-user-name-placeholder">{{ $t("name") }} …</span>
-        <template v-else>{{ user.name }}</template>
+        <template v-else>
+          {{ user.name }}
+        </template>
         <k-button-group slot="left">
           <k-dropdown>
             <k-button :disabled="isLocked" icon="cog" @click="$refs.settings.toggle()">
@@ -101,7 +107,6 @@
       />
     </k-view>
   </div>
-
 </template>
 
 <script>

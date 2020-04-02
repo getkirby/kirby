@@ -1,8 +1,8 @@
 <template>
   <k-field :input="_uid" v-bind="$props" class="k-date-field">
     <k-input
-      ref="input"
       :id="_uid"
+      ref="input"
       :type="inputType"
       :value="date"
       v-bind="$props"
@@ -26,7 +26,6 @@
           </k-dropdown-content>
         </k-dropdown>
       </template>
-
     </k-input>
   </k-field>
 </template>

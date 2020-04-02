@@ -16,8 +16,8 @@
               <li
                 v-for="(view, viewName) in views"
                 v-if="view.menu"
-                :aria-current="$store.state.view === viewName"
                 :key="'menu-item-' + viewName"
+                :aria-current="$store.state.view === viewName"
               >
                 <k-dropdown-item
                   :disabled="$permissions.access[viewName] === false"
