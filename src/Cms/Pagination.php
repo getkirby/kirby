@@ -23,7 +23,7 @@ use Kirby\Toolkit\Pagination as BasePagination;
 class Pagination extends BasePagination
 {
     /**
-     * Pagination method (param or query)
+     * Pagination method (param, query, none)
      *
      * @var string
      */
@@ -82,7 +82,7 @@ class Pagination extends BasePagination
 
         if ($params['method'] === 'query') {
             $params['page'] = $params['page'] ?? $params['url']->query()->get($params['variable']);
-        } else {
+        } elseif ($params['method'] === 'param') {
             $params['page'] = $params['page'] ?? $params['url']->params()->get($params['variable']);
         }
 
@@ -153,8 +153,10 @@ class Pagination extends BasePagination
 
         if ($this->method === 'query') {
             $url->query->$variable = $pageValue;
-        } else {
+        } elseif ($this->method === 'param') {
             $url->params->$variable = $pageValue;
+        } else {
+            return null;
         }
 
         return $url->toString();
