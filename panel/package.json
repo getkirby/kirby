@@ -4,13 +4,15 @@
   "scripts": {
     "serve": "vue-cli-service serve --open",
     "build": "vue-cli-service build && mv dist/js/chunk*.js dist/js/vendor.js && rm dist/index.html && mv dist/css/app*.css dist/css/app.css",
-    "buildene": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
+    "buildene": "vue-cli-service build",
     "dev": "vue-cli-service serve --open",
     "pre-commit": "pretty-quick --staged",
     "sandbox": "vue serve ./src/ui/main.js",
+    "storybook:build": "vue-cli-service storybook:build -c config/storybook",
+    "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
     "test:e2e:record": "vue-cli-service test:e2e --headless --record --key 6e3e7aae-66e8-4d69-8e62-0210742b8415",
     "test:unit:watch": "vue-cli-service test:unit --watch",
     "testkit:reset": "./scripts/reset-testkit"
@@ -27,6 +29,11 @@
     "vuex-i18n": "^1.13.1"
   },
   "devDependencies": {
+    "@storybook/addon-actions": ">=5.3.0",
+    "@storybook/addon-knobs": ">=5.3.0",
+    "@storybook/addon-links": ">=5.3.0",
+    "@storybook/addon-notes": ">=5.3.0",
+    "@storybook/vue": ">=5.3.0",
     "@vue/cli-plugin-babel": "^4.2.3",
     "@vue/cli-plugin-e2e-cypress": "~4.2.3",
     "@vue/cli-plugin-eslint": "~4.2.3",
@@ -44,6 +51,7 @@
     "prettier": "^1.19.1",
     "pretty-quick": "^1.11.1",
     "sass-loader": "^7.3.1",
+    "vue-cli-plugin-storybook": "~1.2.2",
     "vue-template-compiler": "^2.6.11"
   },
   "babel": {
