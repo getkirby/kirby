@@ -59,18 +59,18 @@ export default {
     }
   },
   methods: {
-    create() {
-      this.$api.users
-        .create(this.user)
-        .then(() => {
-          this.success({
-            message: ":)",
-            event: "user.create"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+    async create() {
+      try {
+        await this.$api.users.create(this.user);
+
+        this.success({
+          message: ":)",
+          event: "user.create"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     },
     emptyForm() {
       return {
@@ -81,10 +81,10 @@ export default {
         role: this.$user.role.name
       };
     },
-    open() {
-      // load and filter roles
-      const roles = this.$api.roles.options({ canBe: "created" }).then(roles => {
-        this.roles = roles;
+    async open() {
+      try {
+        // load and filter roles
+        this.roles = await this.$model.roles.options({ canBe: "created" });
 
         // don't let non-admins create admins
         if (this.$user.role.name !== "admin") {
@@ -92,21 +92,15 @@ export default {
             return role.value !== "admin";
           });
         }
-      }).catch(error => {
-        this.$store.dispatch('notification/error', error);
-      });
 
-      // load all translations
-      const translations = this.$api.translations.options().then(languages => {
-        this.languages = languages;
-      }).catch (error => {
-        this.$store.dispatch('notification/error', error);
-      });
+        // load all translations
+        this.languages = await this.$model.translations.options();
 
-      // open dialog when all API requests finished
-      Promise.all([roles, translations]).then(() => {
         this.$refs.dialog.open();
-      });
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
     reset() {
       this.user = this.emptyForm();

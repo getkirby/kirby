@@ -11,6 +11,7 @@ import "./config/components.js";
 import "./config/api.js";
 import "./config/errors.js";
 import "./config/helpers.js";
+import "./config/models.js";
 import "./config/i18n.js";
 import "./config/libraries.js";
 import "./config/plugins.js";

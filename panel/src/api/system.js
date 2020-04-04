@@ -1,15 +1,14 @@
 import api from "./api.js";
 
 export default {
-  info(options) {
+  async info(options) {
     return api.get("system", options);
   },
-  install(user) {
-    return api.post("system/install", user).then(auth => {
-      return auth.user;
-    });
+  async install(user) {
+    let auth = await api.post("system/install", user);
+    return auth.user;
   },
-  register(info) {
+  async register(info) {
     return api.post("system/register", info);
   }
 };

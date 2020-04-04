@@ -75,31 +75,6 @@ export default {
     this.fetch();
   },
   methods: {
-    fetch() {
-      this.$api.site
-        .get({ view: "panel" })
-        .then(site => {
-          this.site = site;
-          this.tabs = site.blueprint.tabs;
-          this.permissions = site.options;
-          this.options = ready => {
-            this.$api.site.options().then(options => {
-              ready(options);
-            });
-          };
-          this.$store.dispatch("breadcrumb", []);
-          this.$store.dispatch("title", null);
-          this.$store.dispatch("content/create", {
-            id: "site",
-            api: "site",
-            content: site.content
-          });
-
-        })
-        .catch(error => {
-          this.issue = error;
-        });
-    },
     action(action) {
       switch (action) {
         case "languages":
@@ -114,6 +89,29 @@ export default {
             this.$t("notification.notImplemented")
           );
           break;
+      }
+    },
+    async fetch() {
+      try {
+        this.site = await this.$api.site.get({ view: "panel" });
+        this.tabs = this.site.blueprint.tabs;
+        this.permissions = this.site.options;
+
+        this.options = async ready => {
+          let options = await this.$model.site.options();
+          ready(options);
+        };
+
+        this.$store.dispatch("breadcrumb", []);
+        this.$store.dispatch("title", null);
+        this.$store.dispatch("content/create", {
+          id: "site",
+          api: "site",
+          content: this.site.content
+        });
+
+      } catch (error) {
+        this.issue = error;
       }
     }
   }

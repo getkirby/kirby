@@ -58,51 +58,51 @@ export default {
         check: null
       };
     },
-    open(id) {
-      this.$api.pages.get(id, {select: "id, title, hasChildren, hasDrafts, parent"})
-        .then(page => {
-          this.page = page;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch("notification/error", error);
+    async open(id) {
+      try {
+        this.page = await this.$api.pages.get(id, {
+          select: "id, title, hasChildren, hasDrafts, parent"
         });
-    },
-    submit() {
+        this.$refs.dialog.open();
 
+      } catch (error) {
+        this.$store.dispatch("notification/error", error);
+      }
+    },
+    async submit() {
       if (this.hasSubpages && this.model.check !== this.page.title) {
         this.$refs.dialog.error(this.$t("error.page.delete.confirm"));
         return;
       }
 
-      this.$api.pages
-        .delete(this.page.id, { force: true })
-        .then(() => {
-          // remove data from cache
-          this.$store.dispatch("content/remove", "pages/" + this.page.id);
+      try {
+        await this.$api.pages.delete(this.page.id, { force: true });
 
-          const payload = {
-            message: ":)",
-            event: "page.delete"
-          };
+        // remove data from content store
+        await this.$store.dispatch("content/remove", "pages/" + this.page.id);
 
-          // if in PageView, redirect
-          if (
-            this.$route.params.path &&
-            this.page.id === this.$route.params.path.replace(/\+/g, "/")
-          ) {
-            if (this.page.parent) {
-              payload.route = this.$api.pages.link(this.page.parent.id);
-            } else {
-              payload.route = "/pages";
-            }
+        const payload = {
+          message: ":)",
+          event: "page.delete"
+        };
+
+        // if in PageView, redirect
+        if (
+          this.$route.params.path &&
+          this.page.id === this.$route.params.path.replace(/\+/g, "/")
+        ) {
+          if (this.page.parent) {
+            payload.route = this.$model.pages.link(this.page.parent.id);
+          } else {
+            payload.route = "/pages";
           }
+        }
 
-          this.success(payload);
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
-        });
+        this.success(payload);
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     },
     reset() {
       this.model = this.emptyForm();

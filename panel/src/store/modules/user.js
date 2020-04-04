@@ -41,22 +41,19 @@ export default {
         language: language,
       });
     },
-    load(context) {
-      return Api.auth.user().then(user => {
-        context.commit("SET_CURRENT", user);
-        return user;
-      });
+    async load(context) {
+      const user = await Api.auth.user();
+      context.commit("SET_CURRENT", user);
+      return user;
     },
-    login(context, credentials) {
-      return Api.auth.login(credentials).then(user => {
-        context.commit("SET_CURRENT", user);
-        context.dispatch("translation/activate", user.language, { root: true });
-        router.push(context.state.path || "/");
-        return user;
-      });
+    async login(context, credentials) {
+      const user = await Api.auth.login(credentials)
+      context.commit("SET_CURRENT", user);
+      context.dispatch("translation/activate", user.language, { root: true });
+      router.push(context.state.path || "/");
+      return user;
     },
-    logout(context, force) {
-
+    async logout(context, force) {
       context.commit("SET_CURRENT", null);
 
       if (force) {
@@ -64,14 +61,12 @@ export default {
         return;
       }
 
-      Api.auth
-        .logout()
-        .then(() => {
-          router.push("/login");
-        })
-        .catch(() => {
-          router.push("/login");
-        });
+      try {
+        await Api.auth.logout();
+        router.push("/login");
+      } catch (error) {
+        router.push("/login");
+      }
     },
     name(context, name) {
       context.commit("SET_CURRENT", {

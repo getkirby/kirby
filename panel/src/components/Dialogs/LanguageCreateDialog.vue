@@ -72,7 +72,10 @@ export default {
   },
   methods: {
     onNameChanges(name) {
-      this.language.code = this.$helper.slug(name, [this.language.rules, this.system.ascii]).substr(0, 2);
+      this.language.code = this.$helper.slug(
+        name,
+        [this.language.rules, this.system.ascii]
+      ).substr(0, 2);
     },
     open() {
       this.language = {
@@ -83,28 +86,29 @@ export default {
 
       this.$refs.dialog.open();
     },
-    submit() {
+    async submit() {
       if (this.language.locale) {
         this.language.locale = this.language.locale.trim() || null;
       }
 
-      this.$api
-        .post("languages", {
+      try {
+        await this.$api.post("languages", {
           name: this.language.name,
           code: this.language.code,
           direction: this.language.direction,
           locale: this.language.locale
-        })
-        .then(() => {
-          this.$store.dispatch("languages/load");
-          this.success({
-            message: ":)",
-            event: "language.create"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
         });
+
+        await this.$store.dispatch("languages/load");
+
+        this.success({
+          message: ":)",
+          event: "language.create"
+        });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

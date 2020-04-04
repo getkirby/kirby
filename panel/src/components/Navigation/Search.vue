@@ -139,7 +139,7 @@ export default {
       return {
         id: item.id,
         title: item.title,
-        link: this.$api.pages.link(item.id),
+        link: this.$model.pages.link(item.id),
         info: item.id
       };
     },
@@ -147,7 +147,7 @@ export default {
       return {
         id: item.id,
         title: item.name,
-        link: this.$api.users.link(item.id),
+        link: this.$model.users.link(item.id),
         info: item.email
       };
     },
@@ -155,14 +155,19 @@ export default {
       this.$router.push(item.link);
       this.close();
     },
-    search(query) {
-      this.$api.get(this.type.endpoint, { q: query, limit: config.search.limit }).then(response => {
+    async search(query) {
+      try {
+        const response = await this.$api.get(this.type.endpoint, {
+          q: query,
+          limit: config.search.limit
+        });
         this.items = response.data.map(this['map_' + this.currentType]);
         this.selected = -1;
-      }).catch(() => {
+
+      } catch (error) {
         this.items = [];
         this.selected = -1;
-      });
+      }
     },
     tab() {
       const item = this.items[this.selected];

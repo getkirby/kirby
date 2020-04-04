@@ -26,7 +26,7 @@
           :sortable="!disabled && selected.length > 1"
           :text="user.text"
           :info="user.info"
-          :link="link ? $api.users.link(user.id) : null"
+          :link="link ? $model.users.link(user.id) : null"
           :image="user.image"
           :icon="user.icon"
         >
@@ -39,10 +39,10 @@
         </component>
       </k-draggable>
     </template>
-    <k-empty 
-      v-else 
-      :data-invalid="isInvalid" 
-      icon="users" 
+    <k-empty
+      v-else
+      :data-invalid="isInvalid"
+      icon="users"
       @click="open"
     >
       {{ empty || $t("field.users.empty") }}

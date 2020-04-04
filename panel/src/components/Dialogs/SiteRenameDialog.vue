@@ -5,17 +5,16 @@ import PageRename from "./PageRenameDialog.vue";
 export default {
   extends: PageRename,
   methods: {
-    open() {
-      this.$api.site.get({ select: ["title"] })
-        .then(site => {
-          this.page = site;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+    async open() {
+      try {
+        this.page = await this.$api.site.get({ select: ["title"] });
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
+    async submit() {
       // prevent empty title with just spaces
       this.page.title = this.page.title.trim();
 
@@ -24,18 +23,18 @@ export default {
         return;
       }
 
-      this.$api.site
-        .title(this.page.title)
-        .then(() => {
-          this.$store.dispatch("system/title", this.page.title);
-          this.success({
-            message: ":)",
-            event: "site.changeTitle"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+      try {
+        await this.$api.site.title(this.page.title);
+        this.$store.dispatch("system/title", this.page.title);
+
+        this.success({
+          message: ":)",
+          event: "site.changeTitle"
         });
+
+      } catch (error) {
+          this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

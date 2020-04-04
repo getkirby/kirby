@@ -37,29 +37,28 @@ export default {
     }, 200),
   },
   methods: {
-    fetch() {
+    async fetch() {
       const params = {
         page: this.pagination.page,
         search: this.search,
         ...this.fetchData || {}
       };
 
-      return this.$api
-        .get(this.options.endpoint, params)
-        .then(response => {
-          this.models     = response.data;
-          this.pagination = response.pagination;
+      try {
+        const response = await this.$api.get(this.options.endpoint, params);
+        this.models     = response.data;
+        this.pagination = response.pagination;
 
-          if (this.onFetched) {
-            this.onFetched(response);
-          }
-        })
-        .catch(e => {
-          this.models = [];
-          this.issue  = e.message;
-        });
+        if (this.onFetched) {
+          this.onFetched(response);
+        }
+
+      } catch (error) {
+        this.models = [];
+        this.issue  = error.message;
+      }
     },
-    open(models, options) {
+    async open(models, options) {
 
       // reset pagination
       this.pagination.page = 0;
@@ -91,12 +90,10 @@ export default {
       });
 
       if (fetch) {
-        this.fetch().then(() => {
-          this.$refs.dialog.open();
-        });
-      } else {
-        this.$refs.dialog.open();
+        await this.fetch();
       }
+
+      this.$refs.dialog.open();
     },
     paginate(pagination) {
       this.pagination.page  = pagination.page;

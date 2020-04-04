@@ -42,18 +42,18 @@ export default {
     }
   },
   methods: {
-    submit() {
-      this.$api.system
-        .register(this.registration)
-        .then(() => {
-          this.$store.dispatch("system/register", this.registration.license);
-          this.success({
-            message: this.$t("license.register.success")
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+    async submit() {
+      try {
+        await this.$api.system.register(this.registration);
+        await this.$store.dispatch("system/register", this.registration.license);
+
+        this.success({
+          message: this.$t("license.register.success")
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

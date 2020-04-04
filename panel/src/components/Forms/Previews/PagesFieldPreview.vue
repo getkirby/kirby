@@ -2,7 +2,7 @@
   <ul v-if="value" class="k-pages-field-preview">
     <li v-for="page in value" :key="page.id">
       <figure>
-        <k-link :title="page.id" :to="$api.pages.link(page.id)" @click.native.stop>
+        <k-link :title="page.id" :to="$model.pages.link(page.id)" @click.native.stop>
           <k-icon type="page" back="pattern" class="k-pages-field-preview-image" />
           <figcaption>
             {{ page.text }}

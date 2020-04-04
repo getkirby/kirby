@@ -153,7 +153,7 @@ export default {
     next() {
       if (this.user.next) {
         return {
-          link: this.$api.users.link(this.user.next.id),
+          link: this.$model.users.link(this.user.next.id),
           tooltip: this.user.next.name
         };
       }
@@ -161,7 +161,7 @@ export default {
     prev() {
       if (this.user.prev) {
         return {
-          link: this.$api.users.link(this.user.prev.id),
+          link: this.$model.users.link(this.user.prev.id),
           tooltip: this.user.prev.name
         };
       }
@@ -220,47 +220,45 @@ export default {
           this.$store.dispatch("notification/error", "Not yet implemented");
       }
     },
-    fetch() {
-      this.$api.users
-        .get(this.id, { view: "panel" })
-        .then(user => {
-          this.user = user;
-          this.tabs = user.blueprint.tabs;
-          this.ready = true;
-          this.permissions = user.options;
-          this.options = ready => {
-            this.$api.users.options(this.user.id).then(options => {
-              ready(options);
-            });
-          };
+    async fetch() {
+      try {
+        this.user = await this.$api.users.get(this.id, { view: "panel" });
+        this.tabs = this.user.blueprint.tabs;
+        this.ready = true;
+        this.permissions = this.user.options;
 
-          if (user.avatar) {
-            this.avatar = user.avatar.url;
-          } else {
-            this.avatar = null;
-          }
+        this.options = async ready => {
+          let options = await this.$model.users.options(this.user.id);
+          ready(options);
+        };
 
-          if (this.$route.name === "User") {
-            this.$store.dispatch(
-              "breadcrumb",
-              this.$api.users.breadcrumb(user)
-            );
-          }
+        if (this.user.avatar) {
+          this.avatar = this.user.avatar.url;
+        } else {
+          this.avatar = null;
+        }
 
-          this.$store.dispatch("title", this.user.name || this.user.email);
-          this.$store.dispatch("content/create", {
-            id: "users/" + user.id,
-            api: this.$api.users.link(user.id),
-            content: user.content
-          });
-        })
-        .catch(error => {
-          this.issue = error;
+        if (this.$route.name === "User") {
+          this.$store.dispatch(
+            "breadcrumb",
+            this.$model.users.breadcrumb(this.user)
+          );
+        }
+
+        this.$store.dispatch("title", this.user.name || this.user.email);
+        this.$store.dispatch("content/create", {
+          id: "users/" + this.user.id,
+          api: this.$model.users.link(this.user.id),
+          content: this.user.content
         });
+
+      } catch (error) {
+        this.issue = error;
+      }
     },
     uploadedAvatar() {
-      this.$store.dispatch("notification/success", ":)");
       this.fetch();
+      this.$store.dispatch("notification/success", ":)");
     }
   }
 };

@@ -95,8 +95,7 @@ export default {
         );
       }
     },
-    action(page, action) {
-
+    async action(page, action) {
       switch (action) {
         case "duplicate": {
           this.$refs.duplicate.open(page.id);
@@ -106,15 +105,12 @@ export default {
           let preview = window.open("", "_blank");
           preview.document.write = "...";
 
-          this.$api.pages
-            .preview(page.id)
-            .then(url => {
-              preview.location.href = url;
-            })
-            .catch(error => {
-              this.$store.dispatch("notification/error", error);
-            });
-
+          try {
+            const url = await this.$api.pages.preview(page.id);
+            preview.location.href = url;
+          } catch (error) {
+            this.$store.dispatch("notification/error", error);
+          }
           break;
         }
         case "rename": {
@@ -168,13 +164,14 @@ export default {
           }
         };
 
-        page.options = ready => {
-          this.$api.pages
-            .options(page.id, "list")
-            .then(options => ready(options))
-            .catch(error => {
-              this.$store.dispatch("notification/error", error);
-            });
+        page.options = async ready => {
+          try {
+            const options = await this.$model.pages.options(page.id, "list");
+            ready(options);
+
+          } catch (error) {
+            this.$store.dispatch("notification/error", error);
+          }
         };
 
         page.sortable = page.permissions.sort && this.options.sortable;
@@ -183,7 +180,7 @@ export default {
         return page;
       });
     },
-    sort(event) {
+    async sort(event) {
       let type = null;
 
       if (event.added) {
@@ -198,23 +195,22 @@ export default {
         const element = event[type].element;
         const position = event[type].newIndex + 1 + this.pagination.offset;
 
-        this.$api.pages
-          .status(element.id, "listed", position)
-          .then(() => {
-            this.$store.dispatch("notification/success", ":)");
-          })
-          .catch(response => {
-            this.$store.dispatch("notification/error", {
-              message: response.message,
-              details: response.details
-            });
+        try {
+          await this.$api.pages.status(element.id, "listed", position);
+          this.$store.dispatch("notification/success", ":)");
 
-            this.reload();
+        } catch (error) {
+          this.$store.dispatch("notification/error", {
+            message: error.message,
+            details: error.details
           });
+
+          this.reload();
+        }
       }
     },
-    update() {
-      this.reload();
+    async update() {
+      await this.reload();
       this.$events.$emit("model.update");
     }
   }

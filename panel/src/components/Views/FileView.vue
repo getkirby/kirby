@@ -44,7 +44,7 @@
         v-if="file.id"
         ref="tabs"
         :key="tabsKey"
-        :parent="$api.files.url(path, file.filename)"
+        :parent="$model.files.url(path, file.filename)"
         :tabs="tabs"
         :blueprint="file.blueprint.name"
         @tab="tab = $event"
@@ -104,13 +104,24 @@ export default {
     };
   },
   computed: {
-    uploadApi() {
-      return config.api + "/" + this.path + "/files/" + this.filename;
+    language() {
+      return this.$store.state.languages.current;
+    },
+    next() {
+      if (this.file.next) {
+        return {
+          link: this.$model.files.link(
+            this.path,
+            this.file.next.filename
+          ),
+          tooltip: this.file.next.filename
+        };
+      }
     },
     prev() {
       if (this.file.prev) {
         return {
-          link: this.$api.files.link(
+          link: this.$model.files.link(
             this.path,
             this.file.prev.filename
           ),
@@ -121,20 +132,9 @@ export default {
     tabsKey() {
       return "file-" + this.file.id + "-tabs";
     },
-    language() {
-      return this.$store.state.languages.current;
+    uploadApi() {
+      return config.api + "/" + this.path + "/files/" + this.filename;
     },
-    next() {
-      if (this.file.next) {
-        return {
-          link: this.$api.files.link(
-            this.path,
-            this.file.next.filename
-          ),
-          tooltip: this.file.next.filename
-        };
-      }
-    }
   },
   watch: {
     language() {
@@ -145,39 +145,6 @@ export default {
     }
   },
   methods: {
-    fetch() {
-      this.$api.files
-        .get(this.path, this.filename, { view: "panel" })
-        .then(file => {
-          this.file = file;
-          this.file.next = file.nextWithTemplate;
-          this.file.prev = file.prevWithTemplate;
-          this.file.url = file.url;
-          this.name = file.name;
-          this.tabs = file.blueprint.tabs;
-          this.permissions = file.options;
-          this.options = ready => {
-            this.$api.files
-              .options(this.path, this.file.filename)
-              .then(options => {
-                ready(options);
-              });
-          };
-
-          this.$store.dispatch("breadcrumb", this.$api.files.breadcrumb(this.file, this.$route.name));
-          this.$store.dispatch("title", this.filename);
-          this.$store.dispatch("content/create", {
-            id: "files/" + file.id,
-            api: this.$api.files.link(this.path, this.filename),
-            content: file.content
-          });
-
-        })
-        .catch(error => {
-          window.console.error(error);
-          this.issue = error;
-        });
-    },
     action(action) {
       switch (action) {
         case "download":
@@ -191,7 +158,7 @@ export default {
             url:
               config.api +
               "/" +
-              this.$api.files.url(this.path, this.file.filename),
+              this.$model.files.url(this.path, this.file.filename),
             accept: "." + this.file.extension + "," + this.file.mime
           });
           break;
@@ -207,12 +174,48 @@ export default {
         this.$router.push('/site');
       }
     },
-    renamed(file) {
-      this.$router.push(this.$api.files.link(this.path, file.filename));
+    async fetch() {
+      try {
+        this.file = await this.$api.files.get( this.path, this.filename, {
+          view: "panel"
+        });
+
+        this.file.next   = this.file.nextWithTemplate;
+        this.file.prev   = this.file.prevWithTemplate;
+        this.name        = this.file.name;
+        this.tabs        = this.file.blueprint.tabs;
+        this.permissions = this.file.options;
+
+        this.options = async ready => {
+          let options = await this.$model.files.options(
+            this.path,
+            this.file.filename
+          );
+          ready(options);
+        };
+
+        this.$store.dispatch(
+          "breadcrumb",
+          this.$model.files.breadcrumb(this.file, this.$route.name)
+        );
+        this.$store.dispatch("title", this.filename);
+        this.$store.dispatch("content/create", {
+          id: "files/" + this.file.id,
+          api: this.$model.files.link(this.path, this.filename),
+          content: this.file.content
+        });
+      } catch (error) {
+        this.issue = error;
+      }
     },
-    uploaded() {
-      this.fetch();
+    renamed(file) {
+      const path = this.$model.files.link(this.path, file.filename);
+      this.$router.push(path);
+    },
+    async uploaded() {
       this.$store.dispatch("notification/success", ":)");
+      await this.fetch();
+      this.$events.$emit("file.uploaded", this.file);
     }
   }
 };

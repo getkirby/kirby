@@ -30,7 +30,7 @@
           :pagination="pagination"
           :sortable="options.sortable"
           :size="options.size"
-          :data-invalid="isInvalid" 
+          :data-invalid="isInvalid"
           @sort="sort"
           @paginate="paginate"
           @action="action"
@@ -38,7 +38,7 @@
         <template v-else>
           <k-empty
             :layout="options.layout"
-            :data-invalid="isInvalid" 
+            :data-invalid="isInvalid"
             icon="image"
             @click="if (add) upload()"
           >
@@ -99,7 +99,7 @@ export default {
           break;
         case "replace":
           this.$refs.upload.open({
-            url: config.api + "/" + this.$api.files.url(file.parent, file.filename),
+            url: config.api + "/" + this.$model.files.url(file.parent, file.filename),
             accept: "." + file.extension + "," + file.mime,
             multiple: false
           });
@@ -133,13 +133,18 @@ export default {
     },
     items(data) {
       return data.map(file => {
-        file.options = ready => {
-          this.$api.files
-            .options(file.parent, file.filename, "list")
-            .then(options => ready(options))
-            .catch(error => {
-              this.$store.dispatch("notification/error", error);
-            });
+        file.options = async ready => {
+          try {
+            const options = await this.$model.files.options(
+              file.parent,
+              file.filename,
+              "list"
+            );
+            ready(options);
+
+          } catch (error) {
+            this.$store.dispatch("notification/error", error);
+          }
         };
 
         file.sortable = this.options.sortable;
@@ -150,12 +155,12 @@ export default {
     },
     replace(file) {
       this.$refs.upload.open({
-        url: config.api + "/" + this.$api.files.url(file.parent, file.filename),
+        url: config.api + "/" + this.$model.files.url(file.parent, file.filename),
         accept: file.mime,
         multiple: false
       });
     },
-    sort(items) {
+    async sort(items) {
       if (this.options.sortable === false) {
         return false;
       }
@@ -164,18 +169,17 @@ export default {
         return item.id;
       });
 
-      this.$api
-        .patch(this.parent + "/files/sort", {
+      try {
+        await this.$api.patch(this.parent + "/files/sort", {
           files: items,
           index: this.pagination.offset
-        })
-        .then(() => {
-          this.$store.dispatch("notification/success", ":)");
-        })
-        .catch(response => {
-          this.reload();
-          this.$store.dispatch("notification/error", response.message);
         });
+        this.$store.dispatch("notification/success", ":)");
+
+      } catch (error) {
+        this.reload();
+        this.$store.dispatch("notification/error", error.message);
+      }
     },
     update() {
       this.$events.$emit("model.update");

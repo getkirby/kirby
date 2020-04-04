@@ -19,36 +19,36 @@ export default {
     };
   },
   methods: {
-    open(id) {
-      this.$api.users.get(id)
-        .then(user => {
-          this.user = user;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+    async open(id) {
+      try {
+        this.user = this.$api.users.get(id);
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
-      this.$api.users
-        .delete(this.user.id)
-        .then(() => {
+    async submit() {
+      try {
+        await this.$api.users.delete(this.user.id);
 
-          // remove data from cache
-          this.$store.dispatch("content/remove", "users/" + this.user.id);
+        // remove data from cache
+        await this.$store.dispatch("content/remove", "users/" + this.user.id);
 
-          this.success({
-            message: ":)",
-            event: "user.delete"
-          });
+        const payload = {
+          message: ":)",
+          event: "user.delete"
+        };
 
-          if (this.$route.name === "User") {
-            this.$router.push("/users");
-          }
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
-        });
+        if (this.$route.name === "User") {
+          payload.route = "/users";
+        }
+
+        this.success(payload);
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

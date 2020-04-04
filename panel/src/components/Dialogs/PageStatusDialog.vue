@@ -93,70 +93,64 @@ export default {
 
       return options;
     },
-    open(id) {
-      this.$api.pages
-        .get(id, {
+    async open(id) {
+      try {
+        const page = await this.$api.pages.get(id, {
           select: ["id", "status", "num", "errors", "blueprint"]
-        })
-        .then(page => {
-          if (page.blueprint.options.changeStatus === false) {
-            return this.$store.dispatch("notification/error", {
-              message: this.$t("error.page.changeStatus.permission")
-            });
-          }
-
-          if (page.status === "draft" && Object.keys(page.errors).length > 0) {
-            return this.$store.dispatch("notification/error", {
-              message: this.$t("error.page.changeStatus.incomplete"),
-              details: page.errors
-            });
-          }
-
-          if (page.blueprint.num === "default") {
-            this.$api.pages
-              .get(id, { select: ["siblings"] })
-              .then(response => {
-                this.setup({
-                  ...page,
-                  siblings: response.siblings
-                });
-              })
-              .catch(error => {
-                this.$store.dispatch('notification/error', error);
-              });
-          } else {
-            this.setup({
-              ...page,
-              siblings: []
-            });
-          }
-
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
         });
 
-    },
-    setup(page) {
-      this.page          = page;
-      this.form.position = page.num || (page.siblings.length + 1);
-      this.form.status   = page.status;
-      this.states        = page.blueprint.status;
-
-      this.$refs.dialog.open();
-    },
-    submit() {
-      this.$api.pages
-        .status(this.page.id, this.form.status, this.form.position || 1)
-        .then(() => {
-          this.success({
-            message: ":)",
-            event: "page.changeStatus"
+        if (page.blueprint.options.changeStatus === false) {
+          return this.$store.dispatch("notification/error", {
+            message: this.$t("error.page.changeStatus.permission")
           });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+        }
+
+        if (
+          page.status === "draft" &&
+          Object.keys(page.errors).length > 0
+        ) {
+          return this.$store.dispatch("notification/error", {
+            message: this.$t("error.page.changeStatus.incomplete"),
+            details: page.errors
+          });
+        }
+
+        this.page = page;
+        this.page.siblings = [];
+
+        if (this.page.blueprint.num === "default") {
+          const response = await this.$api.pages.get(id, {
+            select: ["siblings"]
+          });
+          this.page.siblings = response.siblings;
+        }
+
+        this.form.position = this.page.num || (this.page.siblings.length + 1);
+        this.form.status   = this.page.status;
+        this.states        = this.page.blueprint.status;
+
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
+    },
+    async submit() {
+      try {
+        await this.$api.pages.status(
+          this.page.id,
+          this.form.status,
+          this.form.position || 1
+        );
+
+        this.success({
+          message: ":)",
+          event: "page.changeStatus"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

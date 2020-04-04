@@ -35,47 +35,43 @@ export default {
     }
   },
   methods: {
-    open(id) {
-      this.id = id;
+    async open(id) {
+      try {
+        this.id = id;
+        this.user = await this.$api.users.get(id);
+        this.roles = await this.$model.roles.options({ canBe: "changed" });
 
-      this.$api.users.get(id)
-        .then(user => {
-          this.$api.roles.options({ canBe: "changed" }).then(roles => {
-            this.roles = roles;
-
-            // don't let non-admins promote anyone to admin
-            if (this.$user.role.name !== "admin") {
-              this.roles = this.roles.filter(role => {
-                return role.value !== "admin";
-              });
-            }
-
-            this.user = user;
-            this.user.role = this.user.role.name;
-            this.$refs.dialog.open();
+        // don't let non-admins promote anyone to admin
+        if (this.$user.role.name !== "admin") {
+          this.roles = this.roles.filter(role => {
+            return role.value !== "admin";
           });
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+        }
+
+        this.user.role = this.user.role.name;
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
-      this.$api.users
-        .changeRole(this.user.id, this.user.role)
-        .then(() => {
-          // If current panel user, update store
-          if (this.$user.id === this.user.id) {
-            this.$store.dispatch("user/load");
-          }
+    async submit() {
+      try {
+        await this.$api.users.changeRole(this.user.id, this.user.role);
 
-          this.success({
-            message: ":)",
-            event: "user.changeRole"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+        // if current panel user, update store
+        if (this.$user.id === this.user.id) {
+          await this.$store.dispatch("user/load");
+        }
+
+        this.success({
+          message: ":)",
+          event: "user.changeRole"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

@@ -70,32 +70,31 @@ export default {
         template: null
       };
     },
-    open(parent, blueprintApi, section) {
+    async open(parent, blueprintApi, section) {
       this.parent  = parent;
       this.section = section;
 
-      this.$api
-        .get(blueprintApi, {section: section})
-        .then(response => {
-          this.templates = response.map(blueprint => {
-            return {
-              value: blueprint.name,
-              text: blueprint.title
-            };
-          });
+      try {
+        const response = await this.$api.get(blueprintApi, {section: section});
 
-          if (this.templates[0]) {
-            this.page.template = this.templates[0].value;
-          }
-
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch("notification/error", error);
+        this.templates = response.map(blueprint => {
+          return {
+            value: blueprint.name,
+            text: blueprint.title
+          };
         });
 
+        if (this.templates[0]) {
+          this.page.template = this.templates[0].value;
+        }
+
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch("notification/error", error);
+      }
     },
-    submit() {
+    async submit() {
       // prevent empty title with just spaces
       this.page.title = this.page.title.trim();
 
@@ -104,26 +103,25 @@ export default {
         return;
       }
 
-      const data = {
-        template: this.page.template,
-        slug: this.page.slug,
-        content: {
-          title: this.page.title
-        }
-      };
+      // create page
+      try {
+        const page = await this.$api.post(this.parent + "/children", {
+          template: this.page.template,
+          slug: this.page.slug,
+          content: {
+            title: this.page.title
+          }
+        });
 
-      this.$api
-        .post(this.parent + "/children", data)
-        .then(page => {
-          this.success({
-            route: this.$api.pages.link(page.id),
+        this.success({
+            route: this.$model.pages.link(page.id),
             message: ":)",
             event: "page.create"
           });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
-        });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     },
     reset() {
       this.page = this.emptyForm();

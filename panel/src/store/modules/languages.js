@@ -60,10 +60,9 @@ export default {
       context.dispatch("current", defaultLanguage || languages[0] || null);
 
     },
-    load(context) {
-      return Api.get("languages").then(response => {
-        context.dispatch("install", response.data);
-      });
+    async load(context) {
+      const response = await Api.get("languages");
+      context.dispatch("install", response.data);
     }
   }
 };

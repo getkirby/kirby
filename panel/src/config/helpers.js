@@ -4,18 +4,18 @@ import "@/helpers/regex.js";
 
 import clone from "@/helpers/clone.js";
 import debounce from "@/helpers/debounce.js";
+import isUploadEvent from "@/helpers/isUploadEvent.js";
 import pad from "@/helpers/pad.js";
 import ratio from "@/helpers/ratio.js";
 import slug from "@/helpers/slug.js";
 import sort from "@/helpers/sort.js";
 import string from "@/helpers/string.js";
 import upload from "@/helpers/upload.js";
-import isUploadEvent from "@/helpers/isUploadEvent.js";
 
 Vue.prototype.$helper = {
   clone: clone,
-  isUploadEvent: isUploadEvent,
   debounce: debounce,
+  isUploadEvent: isUploadEvent,
   pad: pad,
   ratio: ratio,
   slug: slug,
