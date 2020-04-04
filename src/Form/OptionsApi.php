@@ -4,6 +4,8 @@ namespace Kirby\Form;
 
 use Kirby\Cms\Nest;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Http\Remote;
+use Kirby\Http\Url;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Str;
@@ -56,13 +58,19 @@ class OptionsApi
             return $this->options;
         }
 
-        $content = @file_get_contents($this->url());
+        if (Url::isAbsolute($this->url()) === true) {
+            // URL, request via cURL
+            $data = Remote::get($this->url())->json();
+        } else {
+            // probably a local file
+            $content = @file_get_contents($this->url());
 
-        if (empty($content) === true) {
-            return [];
+            if (empty($content) === true) {
+                return [];
+            }
+
+            $data = json_decode($content, true);
         }
-
-        $data = json_decode($content, true);
 
         if (is_array($data) === false) {
             throw new InvalidArgumentException('Invalid options format');
