@@ -3,6 +3,7 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\Nest;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Remote;
 use Kirby\Http\Url;
@@ -62,8 +63,19 @@ class OptionsApi
             // URL, request via cURL
             $data = Remote::get($this->url())->json();
         } else {
-            // probably a local file
+            // local file, get contents locally
+
+            // ensure the file exists before trying to load it as the
+            // file_get_contents() warnings need to be suppressed
+            if (is_file($this->url()) !== true) {
+                throw new Exception('Local file ' . $this->url() . ' was not found');
+            }
+
             $content = @file_get_contents($this->url());
+
+            if (is_string($content) !== true) {
+                throw new Exception('Unexpected read error'); // @codeCoverageIgnore
+            }
 
             if (empty($content) === true) {
                 return [];
