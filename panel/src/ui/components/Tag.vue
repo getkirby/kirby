@@ -6,7 +6,11 @@
     @keydown.delete.prevent="remove"
   >
     <span class="k-tag-text"><slot /></span>
-    <span v-if="removable" class="k-tag-toggle" @click="remove">&times;</span>
+    <span
+      v-if="removable"
+      class="k-tag-toggle"
+      @click="remove"
+    >&times;</span>
   </span>
 </template>
 

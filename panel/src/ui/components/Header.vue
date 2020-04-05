@@ -1,21 +1,45 @@
 <template>
-  <header :data-editable="editable" class="k-header">
-    <k-headline tag="h1" size="huge">
-      <span v-if="editable && $listeners.edit" class="k-headline-editable" @click="$emit('edit')">
+  <header
+    :data-editable="editable"
+    class="k-header"
+  >
+    <k-headline
+      tag="h1"
+      size="huge"
+    >
+      <span
+        v-if="editable && $listeners.edit"
+        class="k-headline-editable"
+        @click="$emit('edit')"
+      >
         <!-- @slot Use the default slot to inject the headline -->
         <slot />
         <k-icon type="edit" />
       </span>
       <slot v-else />
     </k-headline>
-    <k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
+    <k-bar
+      v-if="$slots.left || $slots.right"
+      class="k-header-buttons"
+    >
       <!-- @slot The left slot is normaly used to inject option buttons with a button group -->
-      <slot slot="left" name="left" class="k-header-left" />
+      <slot
+        slot="left"
+        name="left"
+        class="k-header-left"
+      />
       <!-- @slot The right slot is perfect for PrevNext navigation or additional options -->
-      <slot slot="right" name="right" class="k-header-right" />
+      <slot
+        slot="right"
+        name="right"
+        class="k-header-right"
+      />
     </k-bar>
 
-    <div v-if="tabs && tabs.length > 1" class="k-header-tabs">
+    <div
+      v-if="tabs && tabs.length > 1"
+      class="k-header-tabs"
+    >
       <nav>
         <k-button
           v-for="(tab, tabIndex) in visibleTabs"

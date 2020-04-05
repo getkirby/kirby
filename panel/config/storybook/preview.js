@@ -5,16 +5,6 @@ import Ui from "@/ui/index.js";
 
 Vue.use(Ui);
 
-/** Store mockup */
-Vue.prototype.$store = {
-  dispatch() {
-
-  },
-  commit() {
-
-  }
-};
-
 import "@/ui/css/index.scss";
 import "@/ui/index.js";
 

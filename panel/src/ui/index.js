@@ -22,6 +22,7 @@ import Grid from "./components/Grid.vue";
 import Headline from "./components/Headline.vue";
 import Header from "./components/Header.vue";
 import Icon from "./components/Icon.vue";
+import Icons from "./components/Icons.vue";
 import Image from "./components/Image.vue";
 import Link from "./components/Link.vue";
 import Pagination from "./components/Pagination.vue";
@@ -37,9 +38,24 @@ export default {
     Vue.use(events);
     Vue.use(helpers);
 
-    Vue.prototype.$t = function(string) {
-      return string;
-    };
+    /** Fake translations */
+    if (!Vue.prototype.$t) {
+      Vue.prototype.$t = function(string) {
+        return string;
+      };
+    }
+
+    /** Store mockup */
+    if (!Vue.prototype.$store) {
+      Vue.prototype.$store = {
+        dispatch() {
+
+        },
+        commit() {
+
+        }
+      };
+    }
 
     /** Components */
     Vue.component("k-bar", Bar);
@@ -61,6 +77,7 @@ export default {
     Vue.component("k-headline", Headline);
     Vue.component("k-header", Header);
     Vue.component("k-icon", Icon);
+    Vue.component("k-icons", Icons);
     Vue.component("k-image", Image);
     Vue.component("k-link", Link);
     Vue.component("k-pagination", Pagination);

@@ -1,6 +1,13 @@
 <template>
-  <div :data-layout="layout" class="k-empty" v-on="$listeners">
-    <k-icon v-if="icon" :type="icon" />
+  <div
+    :data-layout="layout"
+    class="k-empty"
+    v-on="$listeners"
+  >
+    <k-icon
+      v-if="icon"
+      :type="icon"
+    />
     <p><slot /></p>
   </div>
 </template>

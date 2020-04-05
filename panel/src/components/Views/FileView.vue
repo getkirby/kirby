@@ -2,10 +2,16 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <div v-else class="k-file-view">
+  <div
+    v-else
+    class="k-file-view"
+  >
     <k-file-preview :file="file" />
 
-    <k-view :data-locked="isLocked" class="k-file-content">
+    <k-view
+      :data-locked="isLocked"
+      class="k-file-content"
+    >
       <k-header
         :editable="permissions.changeName && !isLocked"
         :tabs="tabs"
@@ -15,7 +21,11 @@
         {{ file.filename }}
 
         <k-button-group slot="left">
-          <k-button :responsive="true" icon="open" @click="action('download')">
+          <k-button
+            :responsive="true"
+            icon="open"
+            @click="action('download')"
+          >
             {{ $t("open") }}
           </k-button>
           <k-dropdown>
@@ -27,7 +37,11 @@
             >
               {{ $t('settings') }}
             </k-button>
-            <k-dropdown-content ref="settings" :options="options" @action="action" />
+            <k-dropdown-content
+              ref="settings"
+              :options="options"
+              @action="action"
+            />
           </k-dropdown>
           <k-languages-dropdown />
         </k-button-group>
@@ -50,8 +64,14 @@
         @tab="tab = $event"
       />
 
-      <k-file-rename-dialog ref="rename" @success="renamed" />
-      <k-file-remove-dialog ref="remove" @success="deleted" />
+      <k-file-rename-dialog
+        ref="rename"
+        @success="renamed"
+      />
+      <k-file-remove-dialog
+        ref="remove"
+        @success="deleted"
+      />
       <k-upload
         ref="upload"
         :url="uploadApi"
@@ -117,6 +137,8 @@ export default {
           tooltip: this.file.prev.filename
         };
       }
+
+      return null;
     },
     tabsKey() {
       return "file-" + this.file.id + "-tabs";
@@ -134,6 +156,8 @@ export default {
           tooltip: this.file.next.filename
         };
       }
+
+      return null;
     }
   },
   watch: {

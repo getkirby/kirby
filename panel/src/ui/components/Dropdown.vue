@@ -1,5 +1,8 @@
 <template>
-  <span class="k-dropdown" @click.stop>
+  <span
+    class="k-dropdown"
+    @click.stop
+  >
     <slot />
   </span>
 </template>

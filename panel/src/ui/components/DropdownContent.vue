@@ -1,8 +1,15 @@
 <template>
-  <div v-if="isOpen" :data-align="align" class="k-dropdown-content">
+  <div
+    v-if="isOpen"
+    :data-align="align"
+    class="k-dropdown-content"
+  >
     <slot>
       <template v-for="(option, index) in items">
-        <hr v-if="option === '-'" :key="_uid + '-item-' + index">
+        <hr
+          v-if="option === '-'"
+          :key="_uid + '-item-' + index"
+        >
         <k-dropdown-item
           v-else
           :ref="_uid + '-item-' + index"

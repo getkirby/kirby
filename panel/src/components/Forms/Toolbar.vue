@@ -5,7 +5,10 @@
         <template v-for="(button, buttonIndex) in layout">
           <!-- divider -->
           <template v-if="button.divider">
-            <span :key="buttonIndex" class="k-toolbar-divider" />
+            <span
+              :key="buttonIndex"
+              class="k-toolbar-divider"
+            />
           </template>
 
           <!-- dropdown -->

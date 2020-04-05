@@ -20,7 +20,10 @@
             :style="{ color: file.panelIcon.color }"
             class="k-file-preview-icon"
           />
-          <span v-else class="k-file-preview-placeholder" />
+          <span
+            v-else
+            class="k-file-preview-placeholder"
+          />
         </k-link>
       </div>
       <div class="k-file-preview-details">
@@ -36,7 +39,11 @@
           <li>
             <h3>{{ $t("url") }}</h3>
             <p>
-              <k-link :to="file.url" tabindex="-1" target="_blank">
+              <k-link
+                :to="file.url"
+                tabindex="-1"
+                target="_blank"
+              >
                 /{{ file.id }}
               </k-link>
             </p>
