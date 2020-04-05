@@ -1,4 +1,3 @@
-
 export default function (image, type = "list", column = "1/1") {
   if (!image || image === "icon") {
     return false;

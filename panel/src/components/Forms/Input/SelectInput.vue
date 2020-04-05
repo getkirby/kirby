@@ -68,7 +68,7 @@ export default {
         ...this.$listeners,
         click: (event) => this.onClick(event),
         change: (event) => this.onInput(event.target.value),
-        input: () => {}
+        input: (event) => {}
       }
     };
   },

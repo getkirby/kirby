@@ -24,10 +24,7 @@
 
 export default {
   props: {
-    limit: {
-      type: Number,
-      default: 10
-    },
+    limit: 10,
     skip: {
       type: Array,
       default() {

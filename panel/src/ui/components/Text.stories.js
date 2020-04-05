@@ -1,8 +1,10 @@
+import Text from "./Text.vue";
 import { withKnobs, text, select } from '@storybook/addon-knobs';
 
 export default {
-  title: "Text",
-  decorators: [withKnobs]
+  title: "Text / Text",
+  decorators: [withKnobs],
+  component: Text
 };
 
 export const configurator = () => ({

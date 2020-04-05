@@ -15,10 +15,6 @@
 <script>
 export default {
   props: {
-    label: {
-      type: String,
-      default: "Drop to upload"
-    },
     disabled: {
       type: Boolean,
       default: false

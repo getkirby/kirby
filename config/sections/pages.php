@@ -17,11 +17,10 @@ return [
     ],
     'props' => [
         /**
-         * Optional array of templates that should only be allowed to add
-         * or `false` to completely disable page creation
+         * Optional array of templates that should only be allowed to add.
          */
-        'create' => function ($create = null) {
-            return $create;
+        'create' => function ($add = null) {
+            return $add;
         },
         /**
          * Enables/disables reverse sorting
