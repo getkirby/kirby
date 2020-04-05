@@ -9,7 +9,7 @@ class UncreatablePage extends Page
 {
     public static function create(array $props)
     {
-        return null;
+        return 'the model was used';
     }
 }
 
@@ -38,6 +38,8 @@ class PageCreateTest extends TestCase
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+
+        Page::$models = [];
     }
 
     public function testCreateDraft()
@@ -164,7 +166,7 @@ class PageCreateTest extends TestCase
             'template' => 'uncreatable-page'
         ]);
 
-        $this->assertNull($child);
+        $this->assertSame('the model was used', $child);
         $this->assertTrue($mother->drafts()->isEmpty());
     }
 
