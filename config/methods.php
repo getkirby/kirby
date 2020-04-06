@@ -309,7 +309,7 @@ return function (App $app) {
          * @param string $rep
          * @return \Kirby\Cms\Field
          */
-        'excerpt' => function (Field $field, int $chars = 0, bool $strip = true, string $rep = '…') {
+        'excerpt' => function (Field $field, int $chars = 0, bool $strip = true, string $rep = ' …') {
             $field->value = Str::excerpt($field->kirbytext()->value(), $chars, $strip, $rep);
             return $field;
         },
