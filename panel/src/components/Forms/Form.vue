@@ -19,7 +19,11 @@
       />
     </slot>
     <slot name="footer" />
-    <input ref="submitter" class="k-form-submitter" type="submit">
+    <input
+      ref="submitter"
+      class="k-form-submitter"
+      type="submit"
+    >
   </form>
 </template>
 

@@ -6,7 +6,10 @@
     class="k-headline"
     v-on="$listeners"
   >
-    <k-link v-if="link" :to="link">
+    <k-link
+      v-if="link"
+      :to="link"
+    >
       <slot />
     </k-link>
     <slot v-else />

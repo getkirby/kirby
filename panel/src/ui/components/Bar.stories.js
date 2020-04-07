@@ -1,5 +1,12 @@
+import Bar from "./Bar.vue";
+
 export default {
-  title: "Bar"
+  title: "Layout / Bar",
+  component: Bar,
+  parameters: {
+    notes:
+      "The k-bar can be used to create all sorts of toolbars with the option to have three different slots for buttons or other elements: left, center and right."
+  }
 };
 
 export const leftSlot = () => ({

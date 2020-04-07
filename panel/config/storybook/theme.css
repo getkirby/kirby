@@ -1,0 +1,17 @@
+
+.sidebar-svg-icon {
+  color: #4271ae !important;
+}
+
+[id*="-"] .sidebar-svg-icon {
+  color: #cca000 !important;
+}
+
+[id*="--"] .sidebar-svg-icon {
+  color: #ccc !important;
+}
+
+.sbdocs-preview {
+  background-color: #efefef !important;
+  border-radius: 0 !important;
+}

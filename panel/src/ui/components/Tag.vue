@@ -1,13 +1,16 @@
 <template>
   <span
     ref="button"
-    :data-size="size"
     class="k-tag"
     tabindex="0"
     @keydown.delete.prevent="remove"
   >
     <span class="k-tag-text"><slot /></span>
-    <span v-if="removable" class="k-tag-toggle" @click="remove">&times;</span>
+    <span
+      v-if="removable"
+      class="k-tag-toggle"
+      @click="remove"
+    >&times;</span>
   </span>
 </template>
 
@@ -15,7 +18,6 @@
 export default {
   props: {
     removable: Boolean,
-    size: String
   },
   methods: {
     remove() {
@@ -39,10 +41,11 @@ export default {
   background-color: $color-dark;
   color: $color-light;
   border-radius: $border-radius;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: space-between;
   user-select: none;
+  height: 1.5rem;
 }
 .k-tag:focus {
   outline: 0;

@@ -1,5 +1,8 @@
 <template>
-  <label :data-disabled="disabled" class="k-toggle-input">
+  <label
+    :data-disabled="disabled"
+    class="k-toggle-input"
+  >
     <input
       :id="id"
       ref="input"
@@ -9,7 +12,10 @@
       type="checkbox"
       @change="onInput($event.target.checked)"
     >
-    <span class="k-toggle-input-label" v-html="label" />
+    <span
+      class="k-toggle-input-label"
+      v-html="label"
+    />
   </label>
 </template>
 

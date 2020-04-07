@@ -1,5 +1,9 @@
 <template>
-  <span :data-disabled="disabled" :data-empty="selected === ''" class="k-select-input">
+  <span
+    :data-disabled="disabled"
+    :data-empty="selected === ''"
+    class="k-select-input"
+  >
     <select
       :id="id"
       ref="input"
@@ -68,7 +72,7 @@ export default {
         ...this.$listeners,
         click: (event) => this.onClick(event),
         change: (event) => this.onInput(event.target.value),
-        input: (event) => {}
+        input: () => {}
       }
     };
   },
