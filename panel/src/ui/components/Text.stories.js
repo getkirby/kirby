@@ -2,7 +2,7 @@ import Text from "./Text.vue";
 import { withKnobs, text, select } from '@storybook/addon-knobs';
 
 export default {
-  title: "Text / Text",
+  title: "Typography / Text",
   decorators: [withKnobs],
   component: Text
 };

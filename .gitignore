@@ -39,3 +39,4 @@
 /vendor/**/test/*
 /vendor/**/tests/*
 /vendor/**/php4/*
+/panel/.env

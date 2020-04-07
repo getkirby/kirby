@@ -1,22 +1,35 @@
 /** Plugins */
 import events from "./plugins/events.js";
 import helpers from "./plugins/helpers.js";
+import libraries from "./plugins/libraries.js";
 
 /** Components */
+import Autocomplete from "./components/Autocomplete.vue";
 import Bar from "./components/Bar.vue";
 import Box from "./components/Box.vue";
+import Breadcrumb from "./components/Breadcrumb.vue";
 import Button from "./components/Button.vue";
 import ButtonDisabled from "./components/ButtonDisabled.vue";
 import ButtonGroup from "./components/ButtonGroup.vue";
 import ButtonLink from "./components/ButtonLink.vue";
 import ButtonNative from "./components/ButtonNative.vue";
+import Calendar from "./components/Calendar.vue";
+import CardItem from "./components/CardItem.vue";
+import CardItems from "./components/CardItems.vue";
+import CheckboxInput from "./components/CheckboxInput.vue";
+import CheckboxesInput from "./components/CheckboxesInput.vue";
 import Column from "./components/Column.vue";
+import Counter from "./components/Counter.vue";
+import DateInput from "./components/DateInput.vue";
+import DateTimeInput from "./components/DateTimeInput.vue";
 import Dialog from "./components/Dialog.vue";
 import Draggable from "./components/Draggable.vue";
 import Dropdown from "./components/Dropdown.vue";
 import DropdownContent from "./components/DropdownContent.vue";
 import DropdownItem from "./components/DropdownItem.vue";
 import Dropzone from "./components/Dropzone.vue";
+import ErrorBoundary from "./components/ErrorBoundary.vue";
+import EmailInput from "./components/EmailInput.vue";
 import Empty from "./components/Empty.vue";
 import Grid from "./components/Grid.vue";
 import Headline from "./components/Headline.vue";
@@ -25,47 +38,56 @@ import Icon from "./components/Icon.vue";
 import Icons from "./components/Icons.vue";
 import Image from "./components/Image.vue";
 import Link from "./components/Link.vue";
+import ListItem from "./components/ListItem.vue";
+import ListItems from "./components/ListItems.vue";
+import MultiselectInput from "./components/MultiselectInput.vue";
+import NumberInput from "./components/NumberInput.vue";
 import Pagination from "./components/Pagination.vue";
+import PasswordInput from "./components/PasswordInput.vue";
 import PrevNext from "./components/PrevNext.vue";
 import Progress from "./components/Progress.vue";
+import RadioInput from "./components/RadioInput.vue";
+import RangeInput from "./components/RangeInput.vue";
+import SelectInput from "./components/SelectInput.vue";
 import SortHandle from "./components/SortHandle.vue";
+import Tabs from "./components/Tabs.vue";
 import Tag from "./components/Tag.vue";
+import TagsInput from "./components/TagsInput.vue";
+import TimeInput from "./components/TimeInput.vue";
+import TelInput from "./components/TelInput.vue";
 import Text from "./components/Text.vue";
+import TextInput from "./components/TextInput.vue";
+import ToggleInput from "./components/ToggleInput.vue";
+import Upload from "./components/Upload.vue";
+import UrlInput from "./components/UrlInput.vue";
+import View from "./components/View.vue";
 
 export default {
   install(Vue) {
     /** Plugins */
     Vue.use(events);
+    Vue.use(libraries);
     Vue.use(helpers);
 
-    /** Fake translations */
-    if (!Vue.prototype.$t) {
-      Vue.prototype.$t = function(string) {
-        return string;
-      };
-    }
-
-    /** Store mockup */
-    if (!Vue.prototype.$store) {
-      Vue.prototype.$store = {
-        dispatch() {
-
-        },
-        commit() {
-
-        }
-      };
-    }
-
     /** Components */
+    Vue.component("k-autocomplete", Autocomplete);
     Vue.component("k-bar", Bar);
     Vue.component("k-box", Box);
+    Vue.component("k-breadcrumb", Breadcrumb);
     Vue.component("k-button", Button);
     Vue.component("k-button-disabled", ButtonDisabled);
     Vue.component("k-button-group", ButtonGroup);
     Vue.component("k-button-link", ButtonLink);
     Vue.component("k-button-native", ButtonNative);
+    Vue.component("k-calendar", Calendar);
+    Vue.component("k-card-item", CardItem);
+    Vue.component("k-card-items", CardItems);
+    Vue.component("k-checkbox-input", CheckboxInput);
+    Vue.component("k-checkboxes-input", CheckboxesInput);
     Vue.component("k-column", Column);
+    Vue.component("k-counter", Counter);
+    Vue.component("k-date-input", DateInput);
+    Vue.component("k-datetime-input", DateTimeInput);
     Vue.component("k-dialog", Dialog);
     Vue.component("k-draggable", Draggable);
     Vue.component("k-dropdown", Dropdown);
@@ -73,6 +95,8 @@ export default {
     Vue.component("k-dropdown-item", DropdownItem);
     Vue.component("k-dropzone", Dropzone);
     Vue.component("k-empty", Empty);
+    Vue.component("k-email-input", EmailInput);
+    Vue.component("k-error-boundary", ErrorBoundary);
     Vue.component("k-grid", Grid);
     Vue.component("k-headline", Headline);
     Vue.component("k-header", Header);
@@ -80,11 +104,28 @@ export default {
     Vue.component("k-icons", Icons);
     Vue.component("k-image", Image);
     Vue.component("k-link", Link);
+    Vue.component("k-list-item", ListItem);
+    Vue.component("k-list-items", ListItems);
+    Vue.component("k-multiselect-input", MultiselectInput);
+    Vue.component("k-number-input", NumberInput);
     Vue.component("k-pagination", Pagination);
+    Vue.component("k-password-input", PasswordInput);
     Vue.component("k-prev-next", PrevNext);
     Vue.component("k-progress", Progress);
+    Vue.component("k-radio-input", RadioInput);
+    Vue.component("k-range-input", RangeInput);
+    Vue.component("k-select-input", SelectInput);
     Vue.component("k-sort-handle", SortHandle);
+    Vue.component("k-tabs", Tabs);
     Vue.component("k-tag", Tag);
+    Vue.component("k-tags-input", TagsInput);
+    Vue.component("k-tel-input", TelInput);
     Vue.component("k-text", Text);
+    Vue.component("k-text-input", TextInput);
+    Vue.component("k-time-input", TimeInput);
+    Vue.component("k-toggle-input", ToggleInput);
+    Vue.component("k-upload", Upload);
+    Vue.component("k-url-input", UrlInput);
+    Vue.component("k-view", View);
   }
 };

@@ -36,8 +36,6 @@
 </template>
 
 <script>
-import { required, minValue, maxValue } from "vuelidate/lib/validators";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -82,23 +80,16 @@ export default {
     baseline() {
       // If the minimum is below 0, the baseline should be placed at 0.
       // Otherwise place the baseline at the minimum
-      return this.min < 0 ? 0 : this.min;  
+      return this.min < 0 ? 0 : this.min;
     },
     label() {
-      return this.required || this.value ? this.format(this.position) : "–";
+      return this.required || this.value || this.value === 0 ? this.format(this.position) : "–";
     },
     position() {
       return this.value || this.default || this.baseline;
     }
   },
-  watch: {
-    position() {
-      this.onInvalid();
-    }
-  },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -115,21 +106,9 @@ export default {
         minimumFractionDigits: digits
       }).format(value);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     onInput(value) {
       this.$emit("input", value);
     },
-  },
-  validations() {
-    return {
-      position: {
-        required: this.required ? required : true,
-        min: this.min ? minValue(this.min) : true,
-        max: this.max ? maxValue(this.max) : true
-      }
-    };
   }
 }
 </script>

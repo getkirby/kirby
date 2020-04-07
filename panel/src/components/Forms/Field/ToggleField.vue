@@ -17,7 +17,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import ToggleInput from "../Input/ToggleInput.vue";
+import ToggleInput from "@/ui/components/ToggleInput.vue";
 
 export default {
   inheritAttrs: false,

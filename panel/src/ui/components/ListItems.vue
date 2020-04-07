@@ -1,5 +1,5 @@
 <template>
-  <ul class="k-list">
+  <ul class="k-list-items">
     <slot>
       <k-list-item
         v-for="(item, index) in items"
@@ -20,7 +20,7 @@ export default {
 </script>
 
 <style lang="scss">
-.k-list .k-list-item:not(:last-child) {
+.k-list-items .k-list-item:not(:last-child) {
   margin-bottom: 2px;
 }
 </style>

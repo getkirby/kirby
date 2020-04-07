@@ -15,3 +15,8 @@
   background-color: #efefef !important;
   border-radius: 0 !important;
 }
+
+.sbdocs-wrapper {
+  min-height: 100vh;
+  background: #fff;
+}

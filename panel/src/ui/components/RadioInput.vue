@@ -34,8 +34,6 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -52,14 +50,7 @@ export default {
     required: Boolean,
     value: [String, Number, Boolean]
   },
-  watch: {
-    value() {
-      this.onInvalid();
-    }
-  },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -71,24 +62,23 @@ export default {
     onInput(value) {
       this.$emit("input", value);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     select() {
       this.focus();
     }
   },
-  validations() {
-    return {
-      value: {
-        required: this.required ? required : true
-      }
-    };
-  }
 }
 </script>
 
 <style lang="scss">
+.k-radio-input {
+  display: grid;
+  grid-template-columns: 1fr;
+}
+@media screen and (min-width: $breakpoint-medium) {
+  .k-radio-input {
+    grid-template-columns: repeat(var(--columns), 1fr);
+  }
+}
 .k-radio-input li {
   position: relative;
   line-height: 1.5rem;

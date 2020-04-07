@@ -16,7 +16,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import RadioInput from "../Input/RadioInput.vue";
+import RadioInput from "@/ui/components/RadioInput.vue";
 
 export default {
   inheritAttrs: false,

@@ -22,7 +22,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import TextInput from "../Input/TextInput.vue";
+import TextInput from "@/ui/components/TextInput.vue";
 
 export default {
   inheritAttrs: false,

@@ -20,7 +20,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import MultiselectInput from "../Input/MultiselectInput.vue";
+import MultiselectInput from "@/ui/components/MultiselectInput.vue";
 
 export default {
   inheritAttrs: false,

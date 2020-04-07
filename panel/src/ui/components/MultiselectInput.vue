@@ -67,8 +67,6 @@
 </template>
 
 <script>
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -156,11 +154,9 @@ export default {
   watch: {
     value(value) {
       this.state = value;
-      this.onInvalid();
     }
   },
   mounted() {
-    this.onInvalid();
     this.$events.$on("click", this.close);
     this.$events.$on("keydown.cmd.s", this.close);
   },
@@ -236,9 +232,6 @@ export default {
     onInput() {
       this.$emit("input", this.sorted);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     onOpen() {
       this.$nextTick(() => {
         if (this.$refs.search && this.$refs.search.focus) {
@@ -263,15 +256,6 @@ export default {
         this.add(option);
       }
     }
-  },
-  validations() {
-    return {
-      state: {
-        required: this.required ? required : true,
-        minLength: this.min ? minLength(this.min) : true,
-        maxLength: this.max ? maxLength(this.max) : true
-      }
-    };
   }
 };
 </script>

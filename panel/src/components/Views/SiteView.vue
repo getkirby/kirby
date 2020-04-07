@@ -28,7 +28,7 @@
       </k-button-group>
     </k-header>
 
-    <k-tabs
+    <k-tabs-view
       v-if="site.url"
       ref="tabs"
       :tabs="tabs"

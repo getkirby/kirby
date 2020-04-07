@@ -18,7 +18,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import PasswordInput from "../Input/PasswordInput.vue";
+import PasswordInput from "@/ui/components/PasswordInput.vue";
 
 export default {
   inheritAttrs: false,

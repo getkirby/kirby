@@ -18,7 +18,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import TagsInput from "../Input/TagsInput.vue";
+import TagsInput from "@/ui/components/TagsInput.vue";
 
 export default {
   inheritAttrs: false,

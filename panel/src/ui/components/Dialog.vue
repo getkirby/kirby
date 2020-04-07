@@ -21,7 +21,9 @@
         />
       </div>
       <div class="k-dialog-body">
-        <slot />
+        <slot>
+          <k-text v-html="text" />
+        </slot>
       </div>
       <footer
         v-if="$slots['footer'] || cancelButton || submitButton"
@@ -73,6 +75,7 @@
         default: "default"
       },
       submitButton: [String, Boolean],
+      text: String,
       theme: String,
       visible: Boolean
     },

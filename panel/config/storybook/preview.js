@@ -2,7 +2,9 @@ import { addDecorator, addParameters } from '@storybook/vue';
 import Icons from "@/ui/components/Icons.vue";
 import Vue from "vue";
 import Ui from "@/ui/index.js";
+import UiMocks from "@/ui/plugins/mocks.js";
 
+Vue.use(UiMocks);
 Vue.use(Ui);
 
 import "@/ui/css/index.scss";

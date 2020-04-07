@@ -11,7 +11,6 @@ Vue.config.devtools = true;
 import "./config/components.js";
 import "./config/api.js";
 import "./config/errors.js";
-import "./config/libraries.js";
 import "./config/plugins.js";
 
 import store from "./store/store.js";

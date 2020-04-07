@@ -20,8 +20,6 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -49,14 +47,7 @@ export default {
       return this.text;
     }
   },
-  watch: {
-    value() {
-      this.onInvalid();
-    }
-  },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -73,18 +64,8 @@ export default {
     onInput(checked) {
       this.$emit("input", checked);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     select() {
       this.$refs.input.focus();
-    }
-  },
-  validations() {
-    return {
-      value: {
-        required: this.required ? required : true,
-      }
     }
   }
 }
@@ -126,7 +107,7 @@ $toggle-height: 16px;
     box-shadow: inset 0 0 0 2px $color-background, inset $toggle-height*-1 0px 0px 2px $color-background;
     background-color: $color-border;
   }
-  
+
   &[disabled]:checked {
     box-shadow: inset 0 0 0 2px $color-background, inset $toggle-height 0px 0px 2px $color-background;
   }
@@ -144,5 +125,6 @@ $toggle-height: 16px;
 .k-toggle-input-label {
   cursor: pointer;
   flex-grow: 1;
+  padding-left: .75rem;
 }
 </style>

@@ -54,7 +54,7 @@
         />
       </k-header>
 
-      <k-tabs
+      <k-tabs-view
         v-if="file.id"
         ref="tabs"
         :key="tabsKey"

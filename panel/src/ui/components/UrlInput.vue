@@ -9,6 +9,12 @@ export default {
       type: String,
       default: "url"
     },
+    placeholder: {
+      type: String,
+      default() {
+        return this.$t("url.placeholder");
+      }
+    },
     type: {
       type: String,
       default: "url"

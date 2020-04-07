@@ -24,7 +24,6 @@
 
 <script>
 import DateInput from "./DateInput.vue";
-import { required } from "vuelidate/lib/validators";
 
 export default {
   inheritAttrs: false,
@@ -49,11 +48,7 @@ export default {
     value(value) {
       this.dateValue = this.parseDate(value);
       this.timeValue = this.parseTime(value);
-      this.onInvalid();
     }
-  },
-  mounted() {
-    this.onInvalid();
   },
   methods: {
     focus() {
@@ -68,9 +63,6 @@ export default {
       let value = this.dateValue + "T" + this.timeValue + ":00";
 
       this.$emit("input", value);
-    },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     parseDate(value) {
       const dt = this.$library.dayjs(value);
@@ -111,16 +103,8 @@ export default {
     setTimeOptions() {
       return this.time === true ? {} : this.time;
     }
-  },
-  validations() {
-    return {
-      value: {
-        required: this.required ? required : true
-      }
-    };
   }
 }
-
 </script>
 
 <style lang="scss">

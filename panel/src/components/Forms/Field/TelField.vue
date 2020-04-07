@@ -17,7 +17,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import TelInput from "../Input/TelInput.vue";
+import TelInput from "@/ui/components/TelInput.vue";
 
 export default {
   inheritAttrs: false,

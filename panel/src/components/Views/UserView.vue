@@ -116,7 +116,7 @@
         />
       </k-header>
 
-      <k-tabs
+      <k-tabs-view
         v-if="user && tabs.length"
         ref="tabs"
         :key="tabsKey"

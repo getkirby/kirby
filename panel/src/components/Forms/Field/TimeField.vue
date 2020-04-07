@@ -17,7 +17,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import TimeInput from "../Input/TimeInput.vue";
+import TimeInput from "@/ui/components/TimeInput.vue";
 
 export default {
   inheritAttrs: false,

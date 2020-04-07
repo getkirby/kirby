@@ -1,8 +1,5 @@
 import Vue from "vue";
 
-/* Style-only components */
-import "@/components/Misc/Invalid.vue";
-
 /* Dialogs */
 import ErrorDialog from "@/components/Dialogs/ErrorDialog.vue";
 import FileRemoveDialog from "@/components/Dialogs/FileRemoveDialog.vue";
@@ -61,36 +58,15 @@ Vue.component("k-user-role-dialog", UserRoleDialog);
 Vue.component("k-users-dialog", UsersDialog);
 
 /* Form */
-import Autocomplete from "@/components/Forms/Autocomplete.vue";
-import Calendar from "@/components/Forms/Calendar.vue";
-import Counter from "@/components/Forms/Counter.vue";
 import Form from "@/components/Forms/Form.vue";
 import FormButtons from "@/components/Forms/FormButtons.vue";
 import FormIndicator from "@/components/Forms/FormIndicator.vue";
 import Field from "@/components/Forms/Field.vue";
 import Fieldset from "@/components/Forms/Fieldset.vue";
 import Input from "@/components/Forms/Input.vue";
-import Upload from "@/components/Forms/Upload.vue";
 
 /** Form Inputs */
-import CheckboxInput from "@/components/Forms/Input/CheckboxInput.vue";
-import CheckboxesInput from "@/components/Forms/Input/CheckboxesInput.vue";
-import DateInput from "@/components/Forms/Input/DateInput.vue";
-import DateTimeInput from "@/components/Forms/Input/DateTimeInput.vue";
-import EmailInput from "@/components/Forms/Input/EmailInput.vue";
-import MultiselectInput from "@/components/Forms/Input/MultiselectInput.vue";
-import NumberInput from "@/components/Forms/Input/NumberInput.vue";
-import PasswordInput from "@/components/Forms/Input/PasswordInput.vue";
-import RadioInput from "@/components/Forms/Input/RadioInput.vue";
-import RangeInput from "@/components/Forms/Input/RangeInput.vue";
-import SelectInput from "@/components/Forms/Input/SelectInput.vue";
-import TagsInput from "@/components/Forms/Input/TagsInput.vue";
-import TelInput from "@/components/Forms/Input/TelInput.vue";
-import TextInput from "@/components/Forms/Input/TextInput.vue";
 import TextareaInput from "@/components/Forms/Input/TextareaInput.vue";
-import TimeInput from "@/components/Forms/Input/TimeInput.vue";
-import ToggleInput from "@/components/Forms/Input/ToggleInput.vue";
-import UrlInput from "@/components/Forms/Input/UrlInput.vue";
 
 /** Form Fields */
 import CheckboxesField from "@/components/Forms/Field/CheckboxesField.vue";
@@ -130,35 +106,14 @@ import ToggleFieldPreview from "@/components/Forms/Previews/ToggleFieldPreview.v
 import UrlFieldPreview from "@/components/Forms/Previews/UrlFieldPreview.vue";
 import UsersFieldPreview from "@/components/Forms/Previews/UsersFieldPreview.vue";
 
-Vue.component("k-calendar", Calendar);
-Vue.component("k-counter", Counter);
-Vue.component("k-autocomplete", Autocomplete);
 Vue.component("k-form", Form);
 Vue.component("k-form-buttons", FormButtons);
 Vue.component("k-form-indicator", FormIndicator);
 Vue.component("k-field", Field);
 Vue.component("k-fieldset", Fieldset);
 Vue.component("k-input", Input);
-Vue.component("k-upload", Upload);
 
-Vue.component("k-checkbox-input", CheckboxInput);
-Vue.component("k-checkboxes-input", CheckboxesInput);
-Vue.component("k-date-input", DateInput);
-Vue.component("k-datetime-input", DateTimeInput);
-Vue.component("k-email-input", EmailInput);
-Vue.component("k-multiselect-input", MultiselectInput);
-Vue.component("k-number-input", NumberInput);
-Vue.component("k-password-input", PasswordInput);
-Vue.component("k-radio-input", RadioInput);
-Vue.component("k-range-input", RangeInput);
-Vue.component("k-select-input", SelectInput);
-Vue.component("k-tags-input", TagsInput);
-Vue.component("k-tel-input", TelInput);
-Vue.component("k-text-input", TextInput);
 Vue.component("k-textarea-input", TextareaInput);
-Vue.component("k-time-input", TimeInput);
-Vue.component("k-toggle-input", ToggleInput);
-Vue.component("k-url-input", UrlInput);
 
 Vue.component("k-checkboxes-field", CheckboxesField);
 Vue.component("k-date-field", DateField);
@@ -196,28 +151,13 @@ Vue.component("k-url-field-preview", UrlFieldPreview);
 Vue.component("k-users-field-preview", UsersFieldPreview);
 
 /* Layout */
-import Card from "@/components/Layout/Card.vue";
-import Cards from "@/components/Layout/Cards.vue";
 import Collection from "@/components/Layout/Collection.vue";
 import FilePreview from "@/components/Layout/FilePreview.vue";
-import List from "@/components/Layout/List.vue";
-import ListItem from "@/components/Layout/ListItem.vue";
-import Tabs from "@/components/Layout/Tabs.vue";
-import View from "@/components/Layout/View.vue";
+import TabsView from "@/components/Layout/Tabs.vue";
 
-Vue.component("k-card", Card);
-Vue.component("k-cards", Cards);
 Vue.component("k-collection", Collection);
 Vue.component("k-file-preview", FilePreview);
-Vue.component("k-list", List);
-Vue.component("k-list-item", ListItem);
-Vue.component("k-tabs", Tabs);
-Vue.component("k-view", View);
-
-/* Misc */
-import ErrorBoundary from "@/components/Misc/ErrorBoundary.vue";
-
-Vue.component("k-error-boundary", ErrorBoundary);
+Vue.component("k-tabs-view", TabsView);
 
 /* Navigation */
 import Languages from "@/components/Navigation/Languages.vue";

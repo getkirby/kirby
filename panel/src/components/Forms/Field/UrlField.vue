@@ -28,7 +28,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import UrlInput from "../Input/UrlInput.vue";
+import UrlInput from "@/ui/components/UrlInput.vue";
 
 export default {
   inheritAttrs: false,

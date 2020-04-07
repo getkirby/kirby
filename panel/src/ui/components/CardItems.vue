@@ -1,10 +1,10 @@
 <template>
-  <div class="k-cards">
+  <div class="k-card-items">
     <slot>
-      <k-card
-        v-for="(card, index) in cards"
+      <k-card-item
+        v-for="(item, index) in items"
         :key="index"
-        v-bind="card"
+        v-bind="item"
         v-on="$listeners"
       />
     </slot>
@@ -14,13 +14,13 @@
 <script>
 export default {
   props: {
-    cards: Array
+    items: Array
   }
 };
 </script>
 
 <style lang="scss">
-.k-cards {
+.k-card-items {
   display: grid;
   grid-gap: 1.5rem;
   grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
@@ -35,7 +35,7 @@ export default {
 }
 
 @media screen and (min-width: $breakpoint-small) {
-  .k-cards[data-size="tiny"] {
+  .k-card-items[data-size="tiny"] {
     grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
     /**
       Making sure card doesn't break layout if
@@ -49,7 +49,7 @@ export default {
       minmax(#{"min(10rem, 100%)"}, 1fr)
     );
   }
-  .k-cards[data-size="small"] {
+  .k-card-items[data-size="small"] {
     grid-template-columns: repeat(auto-fill, minmax(16rem, 1fr));
     /**
       Making sure card doesn't break layout if
@@ -63,7 +63,7 @@ export default {
       minmax(#{"min(16rem, 100%)"}, 1fr)
     );
   }
-  .k-cards[data-size="medium"] {
+  .k-card-items[data-size="medium"] {
     grid-template-columns: repeat(auto-fill, minmax(24rem, 1fr));
     /**
       Making sure card doesn't break layout if
@@ -77,14 +77,14 @@ export default {
       minmax(#{"min(24rem, 100%)"}, 1fr)
     );
   }
-  .k-cards[data-size="large"],
-  .k-cards[data-size="huge"] {
+  .k-card-items[data-size="large"],
+  .k-card-items[data-size="huge"] {
     grid-template-columns: 1fr;
   }
 }
 
 @media screen and (min-width: $breakpoint-medium) {
-  .k-cards[data-size="large"] {
+  .k-card-items[data-size="large"] {
     grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
     /**
       Making sure card doesn't break layout if

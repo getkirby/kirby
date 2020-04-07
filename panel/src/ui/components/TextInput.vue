@@ -21,14 +21,6 @@
 </template>
 
 <script>
-import {
-  required,
-  minLength,
-  maxLength,
-  email,
-  url
-} from "vuelidate/lib/validators";
-
 export default {
   inheritAttrs: false,
   class: "k-text-input",
@@ -37,8 +29,14 @@ export default {
       type: [Boolean, String],
       default: "off"
     },
-    autofocus: Boolean,
-    disabled: Boolean,
+    autofocus: {
+      type: Boolean,
+      default: false
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     id: [Number, String],
     maxlength: Number,
     minlength: Number,
@@ -46,7 +44,10 @@ export default {
     pattern: String,
     placeholder: String,
     preselect: Boolean,
-    required: Boolean,
+    required: {
+      type: Boolean,
+      default: false,
+    },
     spellcheck: {
       type: [Boolean, String],
       default: "off"
@@ -65,14 +66,7 @@ export default {
       }
     };
   },
-  watch: {
-    value() {
-      this.onInvalid();
-    }
-  },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -88,28 +82,9 @@ export default {
     onInput(value) {
       this.$emit("input", value);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     select() {
       this.$refs.input.select();
     }
-  },
-  validations() {
-    const match = (value) => {
-      return (!this.required && !value) || !this.$refs.input.validity.patternMismatch;
-    };
-
-    return {
-      value: {
-        required: this.required ? required : true,
-        minLength: this.minlength ? minLength(this.minlength) : true,
-        maxLength: this.maxlength ? maxLength(this.maxlength) : true,
-        email: this.type === "email" ? email : true,
-        url: this.type === "url" ? url : true,
-        pattern: this.pattern ? match : true,
-      }
-    };
   }
 };
 </script>

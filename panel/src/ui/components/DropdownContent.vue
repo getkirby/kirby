@@ -2,6 +2,7 @@
   <div
     v-if="isOpen"
     :data-align="align"
+    :data-theme="theme"
     class="k-dropdown-content"
   >
     <slot>
@@ -29,8 +30,15 @@ let OpenDropdown = null;
 
 export default {
   props: {
+    align: {
+      type: String,
+      default: "left"
+    },
     options: [Array, Function],
-    align: String
+    theme: {
+      type: String,
+      default: "dark"
+    }
   },
   data() {
     return {
@@ -228,5 +236,10 @@ export default {
     background: currentColor;
     opacity: 0.2;
   }
+}
+
+.k-dropdown-content[data-theme="light"] {
+  background: $color-white;
+  color: $color-black;
 }
 </style>

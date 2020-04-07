@@ -62,7 +62,7 @@
       />
     </k-header>
 
-    <k-tabs
+    <k-tabs-view
       v-if="page.id"
       ref="tabs"
       :key="tabsKey"

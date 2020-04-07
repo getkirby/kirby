@@ -17,7 +17,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import CheckboxesInput from "../Input/CheckboxesInput.vue";
+import CheckboxesInput from "@/ui/components/CheckboxesInput.vue";
 
 export default {
   inheritAttrs: false,

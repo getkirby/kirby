@@ -2,7 +2,7 @@ import Headline from "./Headline.vue";
 import { withKnobs, text, select } from '@storybook/addon-knobs';
 
 export default {
-  title: "Text / Headline",
+  title: "Typography / Headline",
   decorators: [withKnobs],
   component: Headline
 };

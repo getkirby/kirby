@@ -3,6 +3,8 @@ import theme from "./theme.js";
 
 addons.setConfig({
   theme: theme,
+  showPanel: true,
+  panelPosition: "right",
   previewTabs: {
     canvas: null,
     'storybook/docs/panel': 'MDX'

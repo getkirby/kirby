@@ -100,11 +100,11 @@ export default {
     elements() {
       const layouts = {
         cards: {
-          list: "k-cards",
-          item: "k-card"
+          list: "k-card-items",
+          item: "k-card-item"
         },
         list: {
-          list: "k-list",
+          list: "k-list-items",
           item: "k-list-item"
         }
       };

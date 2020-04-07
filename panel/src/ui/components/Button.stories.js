@@ -1,75 +1,59 @@
 import Button from "./Button.vue";
 import { action } from "@storybook/addon-actions";
-import { withKnobs, text, boolean, select } from '@storybook/addon-knobs';
 
 export default {
   title: "Navigation / Button",
-  decorators: [withKnobs],
   component: Button
 };
 
-
-export const configurator = () => ({
-  template: '<k-button v-bind="$props">{{ text }}</k-button>',
-  props: {
-    disabled: {
-      default: boolean('disabled', false)
-    },
-    icon: {
-      default: text('icon', 'edit')
-    },
-    link: {
-      default: text('link', null)
-    },
-    target: {
-      default: text('target', null)
-    },
-    theme: {
-      default: select('theme', ["none", "positive", "negative"])
-    },
-    text: {
-      default: text('text', 'Edit')
-    }
-  },
-});
-
 export const textOnly = () => ({
-  template: '<k-button @click="action">Text Button</k-button>',
   methods: {
     action: action('clicked')
-  }
+  },
+  template: '<k-button @click="action">Text Button</k-button>',
 });
 
 export const textAndIcon = () => ({
+  ...textOnly(),
   template: '<k-button icon="edit" @click="action">Icon & Text</k-button>',
-  methods: {
-    action: action('clicked')
-  }
 });
 
 export const iconOnly = () => ({
+  ...textOnly(),
   template: '<k-button icon="edit" />',
-  methods: {
-    action: action('clicked')
-  }
+});
+
+export const link = () => ({
+  ...textOnly(),
+  template: '<k-button icon="url" @click="action" link="https://getkirby.com">Link</k-button>'
+});
+
+export const positive = () => ({
+  ...textOnly(),
+  template:
+    '<k-button icon="check" theme="positive" @click="action">Nice one!</k-button>'
+});
+
+export const negative = () => ({
+  ...textOnly(),
+  template:
+    '<k-button icon="trash" theme="negative" @click="action">Uh oh!</k-button>'
 });
 
 export const disabled = () => ({
+  ...textOnly(),
   template: '<k-button :disabled="true" icon="trash" @click="action">Disabled button</k-button>',
-  methods: {
-    action: action('clicked')
-  }
 });
 
 export const group = () => ({
+  methods: {
+    edit: action('edit'),
+    remove: action('remove')
+  },
   template: `
     <k-button-group>
       <k-button icon="edit" @click="edit">Edit</k-button>
       <k-button icon="trash" @click="remove">Remove</k-button>
     </k-button-group>
   `,
-  methods: {
-    edit: action('edit'),
-    remove: action('remove')
-  }
 });

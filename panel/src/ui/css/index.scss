@@ -189,3 +189,19 @@ b {
   width: 0;
   height: 0;
 }
+
+[data-invalid] {
+  border: 1px solid $color-negative-outline;
+  box-shadow: $color-negative-outline 0 0 3px 2px;
+}
+
+[data-invalid]:focus-within {
+  border: $field-input-invalid-focus-border !important;
+  box-shadow: $color-negative-outline 0 0 0 2px !important;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

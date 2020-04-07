@@ -28,7 +28,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import EmailInput from "../Input/EmailInput.vue";
+import EmailInput from "@/ui/components/EmailInput.vue";
 
 export default {
   inheritAttrs: false,

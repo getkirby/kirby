@@ -17,7 +17,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import NumberInput from "../Input/NumberInput.vue";
+import NumberInput from "@/ui/components/NumberInput.vue";
 
 export default {
   inheritAttrs: false,

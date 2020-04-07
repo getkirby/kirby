@@ -37,8 +37,6 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -100,12 +98,9 @@ export default {
   watch: {
     value(value) {
       this.selected = value;
-      this.onInvalid();
     }
   },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -117,9 +112,6 @@ export default {
     onClick(event) {
       event.stopPropagation();
       this.$emit("click", event);
-    },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     onInput(value) {
       this.selected = value;
@@ -137,13 +129,6 @@ export default {
       });
       return text;
     }
-  },
-  validations() {
-    return {
-      selected: {
-        required: this.required ? required : true,
-      }
-    };
   }
 }
 </script>

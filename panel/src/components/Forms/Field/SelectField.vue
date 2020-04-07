@@ -17,7 +17,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import SelectInput from "../Input/SelectInput.vue";
+import SelectInput from "@/ui/components/SelectInput.vue";
 
 export default {
   inheritAttrs: false,

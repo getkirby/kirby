@@ -17,7 +17,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import RangeInput from "../Input/RangeInput.vue";
+import RangeInput from "@/ui/components/RangeInput.vue";
 
 export default {
   inheritAttrs: false,

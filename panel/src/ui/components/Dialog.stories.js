@@ -3,32 +3,12 @@ import { action } from "@storybook/addon-actions";
 import { withKnobs, text, select } from '@storybook/addon-knobs';
 
 export default {
-  title: "Interaction / Dialog",
+  title: "Dialog / Dialog",
   decorators: [withKnobs],
   component: Dialog
 };
 
-export const configurator = () => ({
-  props: {
-    cancelButton: {
-      default: text('cancelButton', 'Cancel')
-    },
-    icon: {
-      default: text('icon', 'check')
-    },
-    size: {
-      default: select('size', ['small', 'default', 'medium', 'large'], 'default')
-    },
-    submitButton: {
-      default: text('submitButton', 'Ok')
-    },
-    text: {
-      default: text('text', 'This is a nice dialog')
-    },
-    theme: {
-      default: select('theme', ['', 'positive', 'negative'], '')
-    },
-  },
+export const regular = () => ({
   methods: {
     cancel: action("cancel"),
     close: action("close"),
@@ -41,14 +21,13 @@ export const configurator = () => ({
 
       <k-dialog
         ref="dialog"
-        v-bind="$props"
+        text="This is a nice dialog"
         @cancel="cancel"
         @close="close"
         @open="open"
         @submit="submit"
-      >
-        {{ text }}
-      </k-dialog>
+      />
     </div>
   `,
 });
+

@@ -33,7 +33,7 @@ export default {
         this.error.message || this.error
       );
     } else {
-      return this.$slots.default[0];
+      return this.$slots.default;
     }
   }
 };

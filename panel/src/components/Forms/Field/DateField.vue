@@ -40,7 +40,7 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
-import DateTimeInput from "../Input/DateTimeInput.vue";
+import DateTimeInput from "@/ui/components/DateTimeInput.vue";
 
 export default {
   inheritAttrs: false,
