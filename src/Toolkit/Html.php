@@ -461,10 +461,24 @@ class Html extends Xml
     {
         // default YouTube embed domain
         $domain = 'youtube.com';
+        $uri    = 'embed/';
         $id     = null;
 
         $schemes = [
-            // http://www.youtube.com/embed/d9NF2edxy-M
+            // https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
+            [
+                'pattern' => 'youtube.com\/embed\/videoseries\?list=([a-zA-Z0-9_-]+)',
+                'uri'     => 'embed/videoseries?list='
+            ],
+
+            // https://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
+            [
+                'pattern' => 'youtube-nocookie.com\/embed\/videoseries\?list=([a-zA-Z0-9_-]+)',
+                'domain'  => 'www.youtube-nocookie.com',
+                'uri'     => 'embed/videoseries?list='
+            ],
+
+            // https://www.youtube.com/embed/d9NF2edxy-M
             ['pattern' => 'youtube.com\/embed\/([a-zA-Z0-9_-]+)'],
 
             // https://www.youtube-nocookie.com/embed/d9NF2edxy-M
@@ -479,16 +493,30 @@ class Html extends Xml
                 'domain'  => 'www.youtube-nocookie.com'
             ],
 
-            // http://www.youtube.com/watch?v=d9NF2edxy-M
+            // https://www.youtube-nocookie.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
+            [
+                'pattern' => 'youtube-nocookie.com\/playlist\?list=([a-zA-Z0-9_-]+)',
+                'domain'  => 'www.youtube-nocookie.com',
+                'uri'     => 'embed/videoseries?list='
+            ],
+
+            // https://www.youtube.com/watch?v=d9NF2edxy-M
             ['pattern' => 'v=([a-zA-Z0-9_-]+)'],
 
-            // http://youtu.be/d9NF2edxy-M
+            // https://www.youtube.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
+            [
+                'pattern' => 'youtube.com\/playlist\?list=([a-zA-Z0-9_-]+)',
+                'uri'     => 'embed/videoseries?list='
+            ],
+
+            // https://youtu.be/d9NF2edxy-M
             ['pattern' => 'youtu.be\/([a-zA-Z0-9_-]+)']
         ];
 
         foreach ($schemes as $schema) {
             if (preg_match('!' . $schema['pattern'] . '!i', $url, $array) === 1) {
                 $domain = $schema['domain'] ?? $domain;
+                $uri    = $schema['uri'] ?? $uri;
                 $id     = $array[1];
                 break;
             }
@@ -501,12 +529,12 @@ class Html extends Xml
 
         // build the options query
         if (empty($options) === false) {
-            $query = '?' . http_build_query($options);
+            $query = (Str::contains($uri, '?') === true ? '&' : '?') . http_build_query($options);
         } else {
             $query = '';
         }
 
-        $url = 'https://' . $domain . '/embed/' . $id . $query;
+        $url = 'https://' . $domain . '/' . $uri . $id . $query;
 
         return static::iframe($url, array_merge(['allowfullscreen' => true], $attr));
     }
