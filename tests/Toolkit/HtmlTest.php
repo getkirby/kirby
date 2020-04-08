@@ -466,7 +466,8 @@ class HtmlTest extends TestCase
             'youtube' => ['foo' => 'bar']
         ];
         $html = Html::video($url, $options);
-        $expected = '<iframe allowfullscreen src="' . $src . '?foo=bar"></iframe>';
+        $char = Str::contains($url, 'list') === true ? '&amp;' : '?';
+        $expected = '<iframe allowfullscreen src="' . $src . $char . 'foo=bar"></iframe>';
         $this->assertSame($expected, $html);
 
         // with attributes and options
@@ -475,7 +476,7 @@ class HtmlTest extends TestCase
             'youtube' => ['foo' => 'bar']
         ];
         $html = Html::video($url, $options, ['class' => 'video']);
-        $expected = '<iframe allowfullscreen class="video" src="' . $src . '?foo=bar"></iframe>';
+        $expected = '<iframe allowfullscreen class="video" src="' . $src . $char . 'foo=bar"></iframe>';
         $this->assertSame($expected, $html);
     }
 
@@ -483,11 +484,15 @@ class HtmlTest extends TestCase
     {
         return [
             // YouTube
-            ['http://www.youtube.com/watch?v=d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
+            ['https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys', 'https://youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'],
+            ['http://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys', 'https://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'],
             ['http://www.youtube.com/embed/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
-            ['https://youtu.be/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
-            ['https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
             ['https://www.youtube-nocookie.com/embed/d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
+            ['https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
+            ['https://www.youtube-nocookie.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys', 'https://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'],
+            ['http://www.youtube.com/watch?v=d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
+            ['https://www.youtube.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys', 'https://youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'],
+            ['https://youtu.be/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
 
             // Vimeo
             ['https://vimeo.com/239882943', 'https://player.vimeo.com/video/239882943'],
