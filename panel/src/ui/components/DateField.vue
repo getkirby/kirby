@@ -7,9 +7,9 @@
     <k-input
       :id="_uid"
       ref="input"
-      :type="inputType"
       :value="date"
       v-bind="$props"
+      :type="inputType"
       theme="field"
       v-on="listeners"
     >
@@ -40,14 +40,14 @@
 <script>
 import Field from "./Field.vue";
 import Input from "./Input.vue";
-import DateTimeInput from "./DateTimeInput.vue";
+import DatetimeInput from "./DatetimeInput.vue";
 
 export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
     ...Input.props,
-    ...DateTimeInput.props,
+    ...DatetimeInput.props,
     icon: {
       type: String,
       default: "calendar"

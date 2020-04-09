@@ -1,9 +1,9 @@
-import DateTimeInput from "./DateTimeInput.vue";
+import DatetimeInput from "./DatetimeInput.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / DateTime Input",
-  component: DateTimeInput
+  title: "Form / Input / Datetime Input",
+  component: DatetimeInput
 };
 
 export const regular = () => ({
