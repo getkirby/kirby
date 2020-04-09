@@ -22,15 +22,16 @@ export const regular = () => ({
   },
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-select-input
         v-model="value"
         :options="options"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `,
 });
@@ -39,16 +40,17 @@ export const placeholder = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-select-input
         v-model="value"
         :options="options"
+        class="mb-6"
         placeholder="Please select something …"
         @input="input"
       />
 
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });
@@ -57,17 +59,18 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-select-input
         v-model="value"
         :autofocus="true"
         :options="options"
+        class="mb-6"
         placeholder="Please select something …"
         @input="input"
       />
 
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });

@@ -1,26 +1,36 @@
-import EmailInput from "./EmailInput.vue";
+import TagsField from "./TagsField.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Email Input",
-  component: EmailInput
+  title: "Form / Field / Tags Field",
+  component: TagsField
 };
 
 export const regular = () => ({
   data() {
     return {
-      value: ""
+      value: "",
     };
+  },
+  computed: {
+    options() {
+      return [
+        { value: "a", text: "A" },
+        { value: "b", text: "B" },
+        { value: "c", text: "C" }
+      ];
+    }
   },
   methods: {
     input: action("input")
   },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-tags-field
         v-model="value"
-        class="mb-6"
+        :options="options"
+        class="mb-8"
+        label="Tags"
         @input="input"
       />
 
@@ -30,74 +40,60 @@ export const regular = () => ({
   `,
 });
 
-export const placeholder = () => ({
+export const max = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-tags-field
         v-model="value"
-        class="mb-6"
-        placeholder="Your email …"
+        :max="3"
+        :options="options"
+        class="mb-8"
+        label="Tags"
         @input="input"
       />
 
       <k-headline class="mb-3">Value</k-headline>
       <k-code-block :code="value" />
     </div>
-  `
-});
-
-export const noPlaceholder = () => ({
-  ...regular(),
-  template: `
-    <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
-        v-model="value"
-        class="mb-6"
-        placeholder=""
-        @input="input"
-      />
-
-      <k-headline class="mb-3">Value</k-headline>
-      <k-code-block :code="value" />
-    </div>
-  `
+  `,
 });
 
 export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-tags-field
         v-model="value"
         :autofocus="true"
-        class="mb-6"
+        :options="options"
+        class="mb-8"
+        label="Tags"
         @input="input"
       />
 
       <k-headline class="mb-3">Value</k-headline>
       <k-code-block :code="value" />
     </div>
-  `
+  `,
 });
 
 export const disabled = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-tags-field
         v-model="value"
         :disabled="true"
-        class="mb-6"
+        :options="options"
+        class="mb-8"
+        label="Tags"
         @input="input"
       />
 
       <k-headline class="mb-3">Value</k-headline>
       <k-code-block :code="value" />
     </div>
-  `
+  `,
 });
+

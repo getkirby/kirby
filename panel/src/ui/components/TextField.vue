@@ -3,8 +3,12 @@
     :input="_uid"
     :counter="counterOptions"
     v-bind="$props"
-    class="k-password-field"
+    class="k-text-field"
   >
+    <slot
+      slot="options"
+      name="options"
+    />
     <k-input
       :id="_uid"
       ref="input"
@@ -16,27 +20,19 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import PasswordInput from "@/ui/components/PasswordInput.vue";
+import Field from "./Field.vue";
+import Input from "./Input.vue";
+import TextInput from "./TextInput.vue";
 
 export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
     ...Input.props,
-    ...PasswordInput.props,
+    ...TextInput.props,
     counter: {
       type: Boolean,
       default: true
-    },
-    minlength: {
-      type: Number,
-      default: 8
-    },
-    icon: {
-      type: String,
-      default: "key"
     }
   },
   computed: {
@@ -58,3 +54,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.k-field-counter {
+  display: none;
+}
+.k-text-field:focus-within .k-field-counter {
+  display: block;
+}
+</style>

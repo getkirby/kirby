@@ -17,16 +17,16 @@ export const regular = () => ({
   },
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-toggle-input
         v-model="value"
+        class="mb-6"
         text="This is a toggle"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `,
 });
@@ -35,15 +35,16 @@ export const toggleText = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-toggle-input
         v-model="value"
+        class="mb-6"
         :text="['No', 'Yes']"
+        @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });
@@ -52,33 +53,52 @@ export const autofocus   = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-toggle-input
         v-model="value"
+        class="mb-6"
         :autofocus="true"
-        text="This is a toggle"
+        :text="['No', 'Yes']"
+        @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });
 
 export const disabled = () => ({
   template: `
-    <k-toggle-input
-      v-model="value"
-      :disabled="true"
-      text="This is a toggle"
-    />
+    <div>
+      <k-headline class="mb-3">Input</k-headline>
+      <k-toggle-input
+        v-model="value"
+        class="mb-6"
+        :disabled="true"
+        :text="['No', 'Yes']"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
   `
 });
 
 export const noText = () => ({
   ...regular(),
   template: `
-    <k-toggle-input v-model="value" />
+    <div>
+      <k-headline class="mb-3">Input</k-headline>
+      <k-toggle-input
+        v-model="value"
+        class="mb-6"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
   `
 });

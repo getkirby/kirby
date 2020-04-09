@@ -1,5 +1,5 @@
 <template>
-  <pre class="k-code-block"><code v-html="code" /></pre>
+  <pre class="k-code-block"><code v-html="code || ' '" /></pre>
 </template>
 
 <script>
@@ -21,7 +21,7 @@ export default {
 .k-code-block code {
   color: $color-white;
   font-family: $font-family-mono;
-  font-size: .875rem;
+  font-size: .75rem;
   line-height: 1.5em;
   border-radius: $border-radius;
 }

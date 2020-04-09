@@ -16,18 +16,53 @@ export const regular = () => ({
     input: action("input")
   },
   template: `
-    <k-docs-input :value="value">
+    <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-date-input
         v-model="value"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
-    </k-docs-input>
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
   `,
 });
 
+export const autofocus = () => ({
+  ...regular(),
+  template: `
+    <div>
+      <k-headline class="mb-3">Input</k-headline>
+      <k-date-input
+        v-model="value"
+        :autofocus="true"
+        class="mb-6"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `,
+});
+
+export const disabled = () => ({
+  ...regular(),
+  template: `
+    <div>
+      <k-headline class="mb-3">Input</k-headline>
+      <k-date-input
+        v-model="value"
+        :disabled="true"
+        class="mb-6"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `,
+});
 

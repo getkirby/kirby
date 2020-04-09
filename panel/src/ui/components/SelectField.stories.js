@@ -1,15 +1,20 @@
-import TelInput from "./TelInput.vue";
+import SelectField from "./SelectField.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Tel Input",
-  component: TelInput
+  title: "Form / Field / Select Field",
+  component: SelectField
 };
 
 export const regular = () => ({
   data() {
     return {
-      value: ""
+      value: "b",
+      options: [
+        { value: "a", text: "A" },
+        { value: "b", text: "B" },
+        { value: "c", text: "C" }
+      ]
     };
   },
   methods: {
@@ -17,10 +22,11 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-tel-input
+      <k-select-field
         v-model="value"
-        class="mb-6"
+        :options="options"
+        class="mb-8"
+        label="Select"
         @input="input"
       />
 
@@ -34,11 +40,12 @@ export const placeholder = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-tel-input
+      <k-select-field
         v-model="value"
-        class="mb-6"
-        placeholder="+49 1234 5678"
+        :options="options"
+        class="mb-8"
+        label="Select"
+        placeholder="Please select something …"
         @input="input"
       />
 
@@ -52,11 +59,13 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-tel-input
+      <k-select-field
         v-model="value"
         :autofocus="true"
-        class="mb-6"
+        :options="options"
+        class="mb-8"
+        label="Select"
+        placeholder="Please select something …"
         @input="input"
       />
 
@@ -66,20 +75,3 @@ export const autofocus = () => ({
   `
 });
 
-export const disabled = () => ({
-  ...regular(),
-  template: `
-    <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-tel-input
-        v-model="value"
-        :disabled="true"
-        class="mb-6"
-        @input="input"
-      />
-
-      <k-headline class="mb-3">Value</k-headline>
-      <k-code-block :code="value" />
-    </div>
-  `
-});

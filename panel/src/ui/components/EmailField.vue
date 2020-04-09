@@ -2,20 +2,21 @@
   <k-field
     :input="_uid"
     v-bind="$props"
-    class="k-url-field"
+    class="k-email-field"
   >
     <k-input
       :id="_uid"
       ref="input"
       v-bind="$props"
       theme="field"
+      type="email"
       v-on="$listeners"
     >
       <k-button
         v-if="link"
         slot="icon"
         :icon="icon"
-        :link="value"
+        :link="mailto"
         :tooltip="$t('open')"
         class="k-input-icon-button"
         tabindex="-1"
@@ -26,29 +27,34 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import UrlInput from "@/ui/components/UrlInput.vue";
+import Field from "./Field.vue";
+import Input from "./Input.vue";
+import EmailInput from "./EmailInput.vue";
 
 export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
     ...Input.props,
-    ...UrlInput.props,
+    ...EmailInput.props,
     link: {
       type: Boolean,
       default: true
     },
     icon: {
       type: String,
-      default: "url"
+      default: "email"
+    }
+  },
+  computed: {
+    mailto() {
+      return this.value && this.value.length > 0 ? 'mailto:' + this.value : null;
     }
   },
   methods: {
     focus() {
       this.$refs.input.focus();
-    }
+    },
   }
 }
 </script>

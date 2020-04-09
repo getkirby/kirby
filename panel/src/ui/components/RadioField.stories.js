@@ -1,9 +1,8 @@
-import TagsInput from "./TagsInput.vue";
-import { action } from "@storybook/addon-actions";
+import RadioField from "./RadioField.vue";
 
 export default {
-  title: "Form / Input / Tags Input",
-  component: TagsInput
+  title: "Form / Field / Radio Field",
+  component: RadioField
 };
 
 export const regular = () => ({
@@ -21,36 +20,13 @@ export const regular = () => ({
       ];
     }
   },
-  methods: {
-    input: action("input")
-  },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-tags-input
+      <k-radio-field
         v-model="value"
         :options="options"
-        class="mb-6"
-        @input="input"
-      />
-
-      <k-headline class="mb-3">Value</k-headline>
-      <k-code-block :code="value" />
-    </div>
-  `,
-});
-
-export const max = () => ({
-  ...regular(),
-  template: `
-    <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-tags-input
-        v-model="value"
-        :max="3"
-        :options="options"
-        class="mb-6"
-        @input="input"
+        class="mb-8"
+        label="Radio"
       />
 
       <k-headline class="mb-3">Value</k-headline>
@@ -63,13 +39,12 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-tags-input
+      <k-radio-field
         v-model="value"
         :autofocus="true"
         :options="options"
-        class="mb-6"
-        @input="input"
+        class="mb-8"
+        label="Radio"
       />
 
       <k-headline class="mb-3">Value</k-headline>
@@ -82,18 +57,35 @@ export const disabled = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-tags-input
+      <k-radio-field
         v-model="value"
         :disabled="true"
         :options="options"
-        class="mb-6"
-        @input="input"
+        class="mb-8"
+        label="Radio"
       />
 
       <k-headline class="mb-3">Value</k-headline>
       <k-code-block :code="value" />
     </div>
-  `,
+  `
+});
+
+export const columns = () => ({
+  ...regular(),
+  template: `
+    <div>
+      <k-radio-field
+        v-model="value"
+        :columns="3"
+        :options="options"
+        class="mb-8"
+        label="Radio"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `
 });
 

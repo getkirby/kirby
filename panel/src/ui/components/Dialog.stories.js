@@ -3,7 +3,7 @@ import { action } from "@storybook/addon-actions";
 import { withKnobs, text, select } from '@storybook/addon-knobs';
 
 export default {
-  title: "Dialog / Dialog",
+  title: "Dialog / Base Dialog",
   decorators: [withKnobs],
   component: Dialog
 };

@@ -38,9 +38,9 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import DateTimeInput from "@/ui/components/DateTimeInput.vue";
+import Field from "./Field.vue";
+import Input from "./Input.vue";
+import DateTimeInput from "./DateTimeInput.vue";
 
 export default {
   inheritAttrs: false,

@@ -18,7 +18,6 @@
             v-bind="field"
             @input="$emit('input', value, field, fieldName)"
             @focus="$emit('focus', $event, field, fieldName)"
-            @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"
             @submit="$emit('submit', $event, field, fieldName)"
           />
           <k-box
@@ -26,7 +25,7 @@
             theme="negative"
           >
             <k-text size="small">
-              The field type <strong>"{{ fieldName }}"</strong> does not exist
+              The field type <strong>"{{ field.type }}"</strong> does not exist
             </k-text>
           </k-box>
         </k-error-boundary>
@@ -58,11 +57,6 @@ export default {
         return {};
       }
     }
-  },
-  data() {
-    return {
-      errors: {}
-    };
   },
   computed: {
     visibleFields() {
@@ -119,13 +113,6 @@ export default {
 
       return result;
 
-    },
-    onInvalid($invalid, $v, field, fieldName) {
-      this.errors[fieldName] = $v;
-      this.$emit("invalid", this.errors);
-    },
-    hasErrors() {
-      return Object.keys(this.errors).length;
     }
   }
 };

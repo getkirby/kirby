@@ -1,9 +1,9 @@
-import EmailInput from "./EmailInput.vue";
+import EmailField from "./EmailField.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Email Input",
-  component: EmailInput
+  title: "Form / Field / Email Field",
+  component: EmailField
 };
 
 export const regular = () => ({
@@ -17,10 +17,10 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-email-field
         v-model="value"
-        class="mb-6"
+        label="Email"
+        class="mb-8"
         @input="input"
       />
 
@@ -34,10 +34,10 @@ export const placeholder = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-email-field
         v-model="value"
-        class="mb-6"
+        label="Email"
+        class="mb-8"
         placeholder="Your email …"
         @input="input"
       />
@@ -52,10 +52,10 @@ export const noPlaceholder = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-email-field
         v-model="value"
-        class="mb-6"
+        label="Email"
+        class="mb-8"
         placeholder=""
         @input="input"
       />
@@ -70,11 +70,11 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-email-field
         v-model="value"
+        label="Email"
         :autofocus="true"
-        class="mb-6"
+        class="mb-8"
         @input="input"
       />
 
@@ -88,11 +88,11 @@ export const disabled = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-email-field
         v-model="value"
+        label="Email"
         :disabled="true"
-        class="mb-6"
+        class="mb-8"
         @input="input"
       />
 

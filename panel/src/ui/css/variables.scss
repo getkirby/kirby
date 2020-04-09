@@ -146,3 +146,18 @@ $width-menu: 12.5rem;
  * Pattern Background
  */
 $pattern: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXR0ZXJuIGlkPSJhIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4yKSIgZD0iTTAgMGgxMHYxMEgwem0xMCAxMGgxMHYxMEgxMHoiLz48L3BhdHRlcm4+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==";
+
+/**
+ * Spacing
+ */
+$spacing: (
+  1: .25rem,
+  2: .5rem,
+  3: .75rem,
+  4: 1rem,
+  5: 1.25rem,
+  6: 1.5rem,
+  8: 3rem,
+  10: 4.5rem,
+  12: 6rem
+);

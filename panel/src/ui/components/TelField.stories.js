@@ -1,9 +1,9 @@
-import EmailInput from "./EmailInput.vue";
+import TelField from "./TelField.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Email Input",
-  component: EmailInput
+  title: "Form / Field / Tel Field",
+  component: TelField
 };
 
 export const regular = () => ({
@@ -17,10 +17,10 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-tel-field
         v-model="value"
-        class="mb-6"
+        label="Phone"
+        class="mb-8"
         @input="input"
       />
 
@@ -34,29 +34,11 @@ export const placeholder = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-tel-field
         v-model="value"
-        class="mb-6"
-        placeholder="Your email …"
-        @input="input"
-      />
-
-      <k-headline class="mb-3">Value</k-headline>
-      <k-code-block :code="value" />
-    </div>
-  `
-});
-
-export const noPlaceholder = () => ({
-  ...regular(),
-  template: `
-    <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
-        v-model="value"
-        class="mb-6"
-        placeholder=""
+        label="Phone"
+        class="mb-8"
+        placeholder="+49 1234 5678"
         @input="input"
       />
 
@@ -70,11 +52,11 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-tel-field
         v-model="value"
         :autofocus="true"
-        class="mb-6"
+        label="Phone"
+        class="mb-8"
         @input="input"
       />
 
@@ -88,11 +70,30 @@ export const disabled = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-tel-field
         v-model="value"
         :disabled="true"
-        class="mb-6"
+        label="Phone"
+        class="mb-8"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `
+});
+
+export const beforeAndAfter = () => ({
+  ...regular(),
+  template: `
+    <div>
+      <k-tel-field
+        v-model="value"
+        label="Phone"
+        before="+49"
+        after="-0"
+        class="mb-8"
         @input="input"
       />
 

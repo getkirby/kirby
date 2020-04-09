@@ -17,15 +17,15 @@ export const regular = () => ({
   },
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-text-input
         v-model="value"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `,
 });
@@ -34,16 +34,16 @@ export const withPlaceholder = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-text-input
         v-model="value"
+        class="mb-6"
         placeholder="Type something …"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });
@@ -52,17 +52,16 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-text-input
         v-model="value"
         :autofocus="true"
-        placeholder="Type something …"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });

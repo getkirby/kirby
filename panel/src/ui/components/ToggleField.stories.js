@@ -1,15 +1,15 @@
-import EmailInput from "./EmailInput.vue";
+import ToggleField from "./ToggleField.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Email Input",
-  component: EmailInput
+  title: "Form / Field / Toggle Field",
+  component: ToggleField
 };
 
 export const regular = () => ({
   data() {
     return {
-      value: ""
+      value: false
     };
   },
   methods: {
@@ -17,10 +17,11 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-toggle-field
         v-model="value"
-        class="mb-6"
+        class="mb-8"
+        label="Toggle"
+        text="This is a toggle"
         @input="input"
       />
 
@@ -30,15 +31,15 @@ export const regular = () => ({
   `,
 });
 
-export const placeholder = () => ({
+export const toggleText = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-toggle-field
         v-model="value"
-        class="mb-6"
-        placeholder="Your email …"
+        class="mb-8"
+        label="Toggle"
+        :text="['No', 'Yes']"
         @input="input"
       />
 
@@ -48,33 +49,16 @@ export const placeholder = () => ({
   `
 });
 
-export const noPlaceholder = () => ({
+export const autofocus   = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-toggle-field
         v-model="value"
-        class="mb-6"
-        placeholder=""
-        @input="input"
-      />
-
-      <k-headline class="mb-3">Value</k-headline>
-      <k-code-block :code="value" />
-    </div>
-  `
-});
-
-export const autofocus = () => ({
-  ...regular(),
-  template: `
-    <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
-        v-model="value"
+        class="mb-8"
+        label="Toggle"
         :autofocus="true"
-        class="mb-6"
+        :text="['No', 'Yes']"
         @input="input"
       />
 
@@ -85,14 +69,31 @@ export const autofocus = () => ({
 });
 
 export const disabled = () => ({
+  template: `
+    <div>
+      <k-toggle-field
+        v-model="value"
+        class="mb-8"
+        label="Toggle"
+        :disabled="true"
+        :text="['No', 'Yes']"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `
+});
+
+export const noText = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-toggle-field
         v-model="value"
-        :disabled="true"
-        class="mb-6"
+        class="mb-8"
+        label="Toggle"
         @input="input"
       />
 

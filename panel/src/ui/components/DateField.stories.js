@@ -1,15 +1,15 @@
-import EmailInput from "./EmailInput.vue";
+import DateField from "./DateField.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Email Input",
-  component: EmailInput
+  title: "Form / Field / Date Field",
+  component: DateField
 };
 
 export const regular = () => ({
   data() {
     return {
-      value: ""
+      value: "",
     };
   },
   methods: {
@@ -17,10 +17,10 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-date-field
         v-model="value"
-        class="mb-6"
+        class="mb-8"
+        label="Date"
         @input="input"
       />
 
@@ -30,74 +30,87 @@ export const regular = () => ({
   `,
 });
 
-export const placeholder = () => ({
+export const amPm = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-date-field
         v-model="value"
-        class="mb-6"
-        placeholder="Your email …"
+        :time="{ notation: 12 }"
+        class="mb-8"
+        label="Date"
         @input="input"
       />
 
       <k-headline class="mb-3">Value</k-headline>
       <k-code-block :code="value" />
     </div>
-  `
+  `,
 });
 
-export const noPlaceholder = () => ({
-  ...regular(),
+export const noTime = () => ({
+  data() {
+    return {
+      value: "",
+    };
+  },
+  methods: {
+    input: action("input")
+  },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-date-field
         v-model="value"
-        class="mb-6"
-        placeholder=""
+        :time="false"
+        class="mb-8"
+        label="Date"
         @input="input"
       />
 
       <k-headline class="mb-3">Value</k-headline>
       <k-code-block :code="value" />
     </div>
-  `
+  `,
 });
 
 export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-date-field
         v-model="value"
         :autofocus="true"
-        class="mb-6"
+        class="mb-8"
+        label="Date"
         @input="input"
       />
 
       <k-headline class="mb-3">Value</k-headline>
       <k-code-block :code="value" />
     </div>
-  `
+  `,
 });
 
 export const disabled = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-date-field
         v-model="value"
         :disabled="true"
-        class="mb-6"
+        class="mb-8"
+        label="Date"
         @input="input"
       />
 
       <k-headline class="mb-3">Value</k-headline>
       <k-code-block :code="value" />
     </div>
-  `
+  `,
 });
+
+
+
+
+
+

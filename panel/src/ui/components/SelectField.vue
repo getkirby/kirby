@@ -2,32 +2,33 @@
   <k-field
     :input="_uid"
     v-bind="$props"
-    class="k-tel-field"
+    class="k-select-field"
   >
     <k-input
       :id="_uid"
       ref="input"
       v-bind="$props"
       theme="field"
+      type="select"
       v-on="$listeners"
     />
   </k-field>
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import TelInput from "@/ui/components/TelInput.vue";
+import Field from "./Field.vue";
+import Input from "./Input.vue";
+import SelectInput from "./SelectInput.vue";
 
 export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
     ...Input.props,
-    ...TelInput.props,
+    ...SelectInput.props,
     icon: {
       type: String,
-      default: "phone"
+      default: "angle-down"
     }
   },
   methods: {

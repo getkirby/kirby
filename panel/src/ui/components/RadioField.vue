@@ -1,30 +1,30 @@
 <template>
   <k-field
-    :input="_uid"
     v-bind="$props"
-    class="k-range-field"
+    class="k-radio-field"
   >
     <k-input
       :id="_uid"
       ref="input"
       v-bind="$props"
       theme="field"
+      type="radio"
       v-on="$listeners"
     />
   </k-field>
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import RangeInput from "@/ui/components/RangeInput.vue";
+import Field from "./Field.vue";
+import Input from "./Input.vue";
+import RadioInput from "./RadioInput.vue";
 
 export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
     ...Input.props,
-    ...RangeInput.props
+    ...RadioInput.props
   },
   methods: {
     focus() {

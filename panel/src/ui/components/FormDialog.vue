@@ -2,21 +2,21 @@
   <k-dialog
     ref="dialog"
     v-bind="$props"
-    v-on="$listeners"
+    v-on="listeners"
   >
     <k-form
       ref="form"
       v-model="value"
       :fields="fields"
       :novalidate="novalidate"
-      @input="$emit('input', $event)"
-      @submit="$emit('submit', $event)"
+      @input="onInput"
+      @submit="onSubmit"
     />
   </k-dialog>
 </template>
 
 <script>
-import DialogMixin from "@/mixins/dialog.js";
+import DialogMixin from "@/ui/mixins/dialog.js";
 
 export default {
   mixins: [DialogMixin],
@@ -50,6 +50,22 @@ export default {
       default() {
         return {};
       }
+    }
+  },
+  data() {
+    return {
+      listeners: {
+        ...this.$listeners,
+        submit: this.onSubmit
+      }
+    }
+  },
+  methods: {
+    onInput(input) {
+      this.$emit("input", this.value);
+    },
+    onSubmit(event) {
+      this.$emit("submit", this.value);
     }
   }
 }

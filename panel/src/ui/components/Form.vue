@@ -51,7 +51,6 @@ export default {
   },
   data() {
     return {
-      errors: {},
       listeners: {
         ...this.$listeners,
         submit: this.onSubmit

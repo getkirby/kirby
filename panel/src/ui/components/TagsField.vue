@@ -1,30 +1,32 @@
 <template>
   <k-field
+    :input="_uid"
     :counter="counterOptions"
     v-bind="$props"
-    class="k-checkboxes-field"
+    class="k-tags-field"
   >
     <k-input
       :id="_uid"
       ref="input"
       v-bind="$props"
       theme="field"
+      type="tags"
       v-on="$listeners"
     />
   </k-field>
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import CheckboxesInput from "@/ui/components/CheckboxesInput.vue";
+import Field from "./Field.vue";
+import Input from "./Input.vue";
+import TagsInput from "./TagsInput.vue";
 
 export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
     ...Input.props,
-    ...CheckboxesInput.props,
+    ...TagsInput.props,
     counter: {
       type: Boolean,
       default: true
@@ -35,10 +37,11 @@ export default {
       if (this.value === null || this.disabled || this.counter === false) {
         return false;
       }
+
       return {
         count: this.value && Array.isArray(this.value) ? this.value.length : 0,
         min: this.min,
-        max: this.max
+        max: this.max,
       };
     }
   },
@@ -49,3 +52,4 @@ export default {
   }
 }
 </script>
+

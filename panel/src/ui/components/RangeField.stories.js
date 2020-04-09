@@ -1,15 +1,15 @@
-import EmailInput from "./EmailInput.vue";
+import RangeField from "./RangeField.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Email Input",
-  component: EmailInput
+  title: "Form / Field / Range Field",
+  component: RangeField
 };
 
 export const regular = () => ({
   data() {
     return {
-      value: ""
+      value: 0,
     };
   },
   methods: {
@@ -17,10 +17,10 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-range-field
         v-model="value"
-        class="mb-6"
+        class="mb-8"
+        label="Range"
         @input="input"
       />
 
@@ -30,15 +30,15 @@ export const regular = () => ({
   `,
 });
 
-export const placeholder = () => ({
+export const step = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-range-field
         v-model="value"
-        class="mb-6"
-        placeholder="Your email …"
+        :step="10"
+        class="mb-8"
+        label="Range"
         @input="input"
       />
 
@@ -48,15 +48,39 @@ export const placeholder = () => ({
   `
 });
 
-export const noPlaceholder = () => ({
+export const minMax = () => ({
+  ...regular(),
+  data() {
+    return {
+      value: 25
+    };
+  },
+  template: `
+    <div>
+      <k-range-field
+        v-model="value"
+        :min="10"
+        :max="50"
+        class="mb-8"
+        label="Range"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `
+});
+
+export const tooltip = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-range-field
         v-model="value"
-        class="mb-6"
-        placeholder=""
+        :tooltip="{ before: '€', after: ' / per month' }"
+        class="mb-8"
+        label="Range"
         @input="input"
       />
 
@@ -70,11 +94,11 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-range-field
         v-model="value"
         :autofocus="true"
-        class="mb-6"
+        class="mb-8"
+        label="Range"
         @input="input"
       />
 
@@ -88,11 +112,11 @@ export const disabled = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-range-field
         v-model="value"
         :disabled="true"
-        class="mb-6"
+        class="mb-8"
+        label="Range"
         @input="input"
       />
 

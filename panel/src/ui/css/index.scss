@@ -208,7 +208,7 @@ b {
 
 /** Utilities **/
 .bg-white {
-  background: $color-black;
+  background: $color-white;
 }
 .bg-black {
   background: $color-black;
@@ -221,33 +221,50 @@ b {
   color: $color-black;
 }
 
-.mb-0 {
-  margin-bottom: 0;
+/* Margins */
+@each $index, $size in $spacing {
+  .m-#{$index},
+  .my-#{$index},
+  .mt-#{$index} {
+    margin-top: $size;
+  }
+  .m-#{$index},
+  .mx-#{$index},
+  .mr-#{$index} {
+    margin-right: $size;
+  }
+  .m-#{$index},
+  .my-#{$index},
+  .mb-#{$index} {
+    margin-bottom: $size;
+  }
+  .m-#{$index},
+  .mx-#{$index},
+  .ml-#{$index} {
+    margin-left: $size;
+  }
 }
-.mb-1 {
-  margin-bottom: .25rem;
-}
-.mb-2 {
-  margin-bottom: .5rem;
-}
-.mb-3 {
-  margin-bottom: .75rem;
-}
-.mb-4 {
-  margin-bottom: 1rem;
-}
-.mb-5 {
-  margin-bottom: 1.25rem;
-}
-.mb-6 {
-  margin-bottom: 1.5rem;
-}
-.mb-8 {
-  margin-bottom: 3rem;
-}
-.mb-10 {
-  margin-bottom: 4.5rem;
-}
-.mb-12 {
-  margin-bottom: 6rem;
+
+/* Paddings */
+@each $index, $size in $spacing {
+  .p-#{$index},
+  .py-#{$index},
+  .pt-#{$index} {
+    padding-top: $size;
+  }
+  .p-#{$index},
+  .px-#{$index},
+  .pr-#{$index} {
+    padding-right: $size;
+  }
+  .p-#{$index},
+  .py-#{$index},
+  .pb-#{$index} {
+    padding-bottom: $size;
+  }
+  .p-#{$index},
+  .px-#{$index},
+  .pl-#{$index} {
+    padding-left: $size;
+  }
 }

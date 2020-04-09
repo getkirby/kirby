@@ -17,15 +17,15 @@ export const regular = () => ({
   },
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-range-input
         v-model="value"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `,
 });
@@ -34,16 +34,16 @@ export const step = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-range-input
         v-model="value"
         :step="10"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });
@@ -57,17 +57,17 @@ export const minMax = () => ({
   },
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-range-input
         v-model="value"
         :min="10"
         :max="50"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });
@@ -76,16 +76,16 @@ export const tooltip = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-range-input
         v-model="value"
         :tooltip="{ before: '€', after: ' / per month' }"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });
@@ -94,16 +94,16 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-range-input
         v-model="value"
         :autofocus="true"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });
@@ -112,16 +112,16 @@ export const disabled = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-range-input
         v-model="value"
         :disabled="true"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });

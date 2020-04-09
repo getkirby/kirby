@@ -1,15 +1,15 @@
-import EmailInput from "./EmailInput.vue";
+import NumberField from "./NumberField.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Email Input",
-  component: EmailInput
+  title: "Form / Field / Number Field",
+  component: NumberField
 };
 
 export const regular = () => ({
   data() {
     return {
-      value: ""
+      value: null
     };
   },
   methods: {
@@ -17,10 +17,10 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-number-field
         v-model="value"
-        class="mb-6"
+        class="mb-8"
+        label="Number"
         @input="input"
       />
 
@@ -34,29 +34,11 @@ export const placeholder = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-number-field
         v-model="value"
-        class="mb-6"
-        placeholder="Your email …"
-        @input="input"
-      />
-
-      <k-headline class="mb-3">Value</k-headline>
-      <k-code-block :code="value" />
-    </div>
-  `
-});
-
-export const noPlaceholder = () => ({
-  ...regular(),
-  template: `
-    <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
-        v-model="value"
-        class="mb-6"
-        placeholder=""
+        class="mb-8"
+        label="Number"
+        placeholder="Enter a number …"
         @input="input"
       />
 
@@ -70,11 +52,48 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-number-field
         v-model="value"
         :autofocus="true"
-        class="mb-6"
+        class="mb-8"
+        label="Number"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `
+});
+
+export const minMax = () => ({
+  ...regular(),
+  template: `
+    <div>
+      <k-number-field
+        v-model="value"
+        :min="5"
+        :max="10"
+        class="mb-8"
+        label="Number"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `
+});
+
+export const step = () => ({
+  ...regular(),
+  template: `
+    <div>
+      <k-number-field
+        v-model="value"
+        :step="0.1"
+        class="mb-8"
+        label="Number"
         @input="input"
       />
 
@@ -88,11 +107,11 @@ export const disabled = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-email-input
+      <k-number-field
         v-model="value"
         :disabled="true"
-        class="mb-6"
+        class="mb-8"
+        label="Number"
         @input="input"
       />
 
@@ -101,3 +120,4 @@ export const disabled = () => ({
     </div>
   `
 });
+
