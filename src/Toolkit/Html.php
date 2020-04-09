@@ -460,9 +460,10 @@ class Html extends Xml
     public static function youtube(string $url, array $options = [], array $attr = []): string
     {
         // default YouTube embed domain
-        $domain = 'youtube.com';
-        $uri    = 'embed/';
-        $id     = null;
+        $domain     = 'youtube.com';
+        $uri        = 'embed/';
+        $id         = null;
+        $urlOptions = [];
 
         $schemes = [
             // https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
@@ -479,17 +480,20 @@ class Html extends Xml
             ],
 
             // https://www.youtube.com/embed/d9NF2edxy-M
-            ['pattern' => 'youtube.com\/embed\/([a-zA-Z0-9_-]+)'],
+            // https://www.youtube.com/embed/d9NF2edxy-M?start=10
+            ['pattern' => 'youtube.com\/embed\/([a-zA-Z0-9_-]+)(?:\?(.+))?'],
 
             // https://www.youtube-nocookie.com/embed/d9NF2edxy-M
+            // https://www.youtube-nocookie.com/embed/d9NF2edxy-M?start=10
             [
-                'pattern' => 'youtube-nocookie.com\/embed\/([a-zA-Z0-9_-]+)',
+                'pattern' => 'youtube-nocookie.com\/embed\/([a-zA-Z0-9_-]+)(?:\?(.+))?',
                 'domain'  => 'www.youtube-nocookie.com'
             ],
 
             // https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M
+            // https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M&t=10
             [
-                'pattern' => 'youtube-nocookie.com\/watch\?v=([a-zA-Z0-9_-]+)',
+                'pattern' => 'youtube-nocookie.com\/watch\?v=([a-zA-Z0-9_-]+)(?:&(.+))?',
                 'domain'  => 'www.youtube-nocookie.com'
             ],
 
@@ -501,7 +505,8 @@ class Html extends Xml
             ],
 
             // https://www.youtube.com/watch?v=d9NF2edxy-M
-            ['pattern' => 'v=([a-zA-Z0-9_-]+)'],
+            // https://www.youtube.com/watch?v=d9NF2edxy-M&t=10
+            ['pattern' => 'youtube.com\/watch\?v=([a-zA-Z0-9_-]+)(?:&(.+))?'],
 
             // https://www.youtube.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
             [
@@ -510,7 +515,8 @@ class Html extends Xml
             ],
 
             // https://youtu.be/d9NF2edxy-M
-            ['pattern' => 'youtu.be\/([a-zA-Z0-9_-]+)']
+            // https://youtu.be/d9NF2edxy-M?t=10
+            ['pattern' => 'youtu.be\/([a-zA-Z0-9_-]+)(?:\?(.+))?']
         ];
 
         foreach ($schemes as $schema) {
@@ -518,6 +524,15 @@ class Html extends Xml
                 $domain = $schema['domain'] ?? $domain;
                 $uri    = $schema['uri'] ?? $uri;
                 $id     = $array[1];
+                if (isset($array[2]) === true) {
+                    parse_str($array[2], $urlOptions);
+
+                    // convert video URL options to embed URL options
+                    if (isset($urlOptions['t']) === true) {
+                        $urlOptions['start'] = $urlOptions['t'];
+                        unset($urlOptions['t']);
+                    }
+                }
                 break;
             }
         }
@@ -528,8 +543,8 @@ class Html extends Xml
         }
 
         // build the options query
-        if (empty($options) === false) {
-            $query = (Str::contains($uri, '?') === true ? '&' : '?') . http_build_query($options);
+        if (empty($options) === false || empty($urlOptions) === false) {
+            $query = (Str::contains($uri, '?') === true ? '&' : '?') . http_build_query(array_merge($urlOptions, $options));
         } else {
             $query = '';
         }
