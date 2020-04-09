@@ -16,17 +16,12 @@ export const regular = () => ({
     input: action("input")
   },
   template: `
-    <div>
+    <k-docs-input :value="value">
       <k-datetime-input
         v-model="value"
         @input="input"
       />
-
-      <br>
-      <br>
-
-      Value: {{ value }}
-    </div>
+    </k-docs-input>
   `,
 });
 

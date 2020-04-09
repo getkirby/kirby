@@ -205,3 +205,49 @@ b {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+/** Utilities **/
+.bg-white {
+  background: $color-black;
+}
+.bg-black {
+  background: $color-black;
+}
+
+.text-white {
+  color: $color-white;
+}
+.text-black {
+  color: $color-black;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+.mb-1 {
+  margin-bottom: .25rem;
+}
+.mb-2 {
+  margin-bottom: .5rem;
+}
+.mb-3 {
+  margin-bottom: .75rem;
+}
+.mb-4 {
+  margin-bottom: 1rem;
+}
+.mb-5 {
+  margin-bottom: 1.25rem;
+}
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+.mb-8 {
+  margin-bottom: 3rem;
+}
+.mb-10 {
+  margin-bottom: 4.5rem;
+}
+.mb-12 {
+  margin-bottom: 6rem;
+}

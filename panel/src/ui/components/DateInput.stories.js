@@ -16,7 +16,7 @@ export const regular = () => ({
     input: action("input")
   },
   template: `
-    <div>
+    <k-docs-input :value="value">
       <k-date-input
         v-model="value"
         @input="input"
@@ -26,7 +26,7 @@ export const regular = () => ({
       <br>
 
       Value: {{ value }}
-    </div>
+    </k-docs-input>
   `,
 });
 

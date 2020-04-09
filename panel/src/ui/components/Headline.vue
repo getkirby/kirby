@@ -39,7 +39,7 @@ export default {
 .k-headline {
   font-size: $font-size-medium;
   font-weight: $font-weight-bold;
-  line-height: 1.5em;
+  line-height: 1.25em;
 }
 .k-headline[data-size="small"] {
   font-size: $font-size-small;
