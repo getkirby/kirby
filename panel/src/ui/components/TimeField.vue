@@ -9,15 +9,16 @@
       ref="input"
       v-bind="$props"
       theme="field"
+      type="time"
       v-on="$listeners"
     />
   </k-field>
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import TimeInput from "@/ui/components/TimeInput.vue";
+import Field from "./Field.vue";
+import Input from "./Input.vue";
+import TimeInput from "./TimeInput.vue";
 
 export default {
   inheritAttrs: false,

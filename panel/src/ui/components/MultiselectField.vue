@@ -12,15 +12,16 @@
       ref="input"
       v-bind="$props"
       theme="field"
+      type="multiselect"
       v-on="$listeners"
     />
   </k-field>
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import MultiselectInput from "@/ui/components/MultiselectInput.vue";
+import Field from "./Field.vue";
+import Input from "./Input.vue";
+import MultiselectInput from "./MultiselectInput.vue";
 
 export default {
   inheritAttrs: false,

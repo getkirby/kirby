@@ -1,9 +1,9 @@
-import TimeInput from "./TimeInput.vue";
+import TimeField from "./TimeField.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Time Input",
-  component: TimeInput
+  title: "Form / Field / Time Field",
+  component: TimeField
 };
 
 export const regular = () => ({
@@ -17,10 +17,10 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-time-input
+      <k-time-field
         v-model="value"
-        class="mb-6"
+        class="mb-8"
+        label="Time"
         @input="input"
       />
 
@@ -34,11 +34,11 @@ export const amPm = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-time-input
+      <k-time-field
         v-model="value"
         :notation="12"
-        class="mb-6"
+        class="mb-8"
+        label="Time"
         @input="input"
       />
 
@@ -52,11 +52,11 @@ export const step = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-time-input
+      <k-time-field
         v-model="value"
         :step="1"
-        class="mb-6"
+        class="mb-8"
+        label="Time"
         @input="input"
       />
 
@@ -70,11 +70,11 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-time-input
+      <k-time-field
         v-model="value"
         :autofocus="true"
-        class="mb-6"
+        class="mb-8"
+        label="Time"
         @input="input"
       />
 
@@ -88,11 +88,11 @@ export const disabled = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-time-input
+      <k-time-field
         v-model="value"
         :disabled="true"
-        class="mb-6"
+        class="mb-8"
+        label="Time"
         @input="input"
       />
 

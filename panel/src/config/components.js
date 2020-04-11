@@ -64,11 +64,9 @@ import TextareaInput from "@/components/Forms/Input/TextareaInput.vue";
 
 /** Form Fields */
 import FilesField from "@/components/Forms/Field/FilesField.vue";
-import MultiselectField from "@/components/Forms/Field/MultiselectField.vue";
 import PagesField from "@/components/Forms/Field/PagesField.vue";
 import StructureField from "@/components/Forms/Field/StructureField.vue";
 import TextareaField from "@/components/Forms/Field/TextareaField.vue";
-import TimeField from "@/components/Forms/Field/TimeField.vue";
 import UsersField from "@/components/Forms/Field/UsersField.vue";
 
 /* Form Toolbar */
@@ -87,11 +85,9 @@ Vue.component("k-form-indicator", FormIndicator);
 Vue.component("k-textarea-input", TextareaInput);
 
 Vue.component("k-files-field", FilesField);
-Vue.component("k-multiselect-field", MultiselectField);
 Vue.component("k-pages-field", PagesField);
 Vue.component("k-structure-field", StructureField);
 Vue.component("k-textarea-field", TextareaField);
-Vue.component("k-time-field", TimeField);
 Vue.component("k-users-field", UsersField);
 
 Vue.component("k-toolbar", Toolbar);

@@ -1,9 +1,9 @@
-import MultiselectInput from "./MultiselectInput.vue";
+import MultiselectField from "./MultiselectField.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Multiselect Input",
-  component: MultiselectInput
+  title: "Form / Field / Multiselect Field",
+  component: MultiselectField
 };
 
 export const regular = () => ({
@@ -26,11 +26,11 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-multiselect-input
+      <k-multiselect-field
         v-model="value"
         :options="options"
-        class="mb-6"
+        class="mb-8"
+        label="Multiselect"
         @input="input"
       />
 
@@ -43,12 +43,12 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-multiselect-input
+      <k-multiselect-field
         v-model="value"
         :autofocus="true"
         :options="options"
-        class="mb-6"
+        class="mb-8"
+        label="Multiselect"
         @input="input"
       />
 
@@ -62,12 +62,12 @@ export const disabled = () => ({
   ...regular(),
   template: `
     <div>
-      <k-headline class="mb-3">Input</k-headline>
-      <k-multiselect-input
+      <k-multiselect-field
         v-model="value"
         :disabled="true"
         :options="options"
-        class="mb-6"
+        class="mb-8"
+        label="Multiselect"
         @input="input"
       />
 
