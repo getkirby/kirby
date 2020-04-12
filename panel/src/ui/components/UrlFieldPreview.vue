@@ -32,7 +32,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .k-url-field-preview {
   padding: 0 .75rem;
 }
@@ -48,5 +47,4 @@ export default {
 .k-url-field-preview a:hover {
   color: $color-black;
 }
-
 </style>
