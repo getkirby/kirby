@@ -229,6 +229,86 @@ class ATest extends TestCase
         $this->assertEquals([], A::missing($this->_array(), ['cat']));
     }
 
+    public function testNest()
+    {
+        // simple example
+        $input = [
+            'a' => 'a value',
+            'b.c' => [
+                'd.e.f' => 'another value'
+            ]
+        ];
+        $expected = [
+            'a' => 'a value',
+            'b' => [
+                'c' => [
+                    'd' => [
+                        'e' => [
+                            'f' => 'another value'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $this->assertSame($expected, A::nest($input));
+
+        // recursive array replacement
+        $input = [
+            // replace strings with arrays within deep structures
+            'a' => 'this will be overwritten',
+            'a.b' => [
+                'c' => 'this as well',
+                'd' => 'and this',
+                'e' => 'but this will be preserved'
+            ],
+            'a.b.c' => 'a value',
+            'a.b.d.f' => 'another value',
+
+            // replace arrays with strings
+            'g.h' => [
+                'i' => 'this will be overwritten as well'
+            ],
+            'g' => 'and another value',
+
+            // replacements within two different trees
+            'j.k' => [
+                'l' => 'this will be replaced',
+                'm' => 'but this will not be'
+            ],
+            'j' => [
+                'k.l' => 'a nice replacement',
+                'n' => 'and this string is nice too'
+            ]
+        ];
+        $expected = [
+            'a' => [
+                'b' => [
+                    'c' => 'a value',
+                    'd' => [
+                        'f' => 'another value'
+                    ],
+                    'e' => 'but this will be preserved'
+                ]
+            ],
+            'g' => 'and another value',
+            'j' => [
+                'k' => [
+                    'l' => 'a nice replacement',
+                    'm' => 'but this will not be'
+                ],
+                'n' => 'and this string is nice too'
+            ]
+        ];
+        $this->assertSame($expected, A::nest($input));
+    }
+
+    public function testNestByKeys()
+    {
+        $this->assertSame('test', A::nestByKeys('test', []));
+        $this->assertSame(['a' => 'test'], A::nestByKeys('test', ['a']));
+        $this->assertSame(['a' => ['b' => 'test']], A::nestByKeys('test', ['a', 'b']));
+    }
+
     public function testSort()
     {
         $array = [
