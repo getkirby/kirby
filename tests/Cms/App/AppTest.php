@@ -201,13 +201,18 @@ class AppTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
-            'options' => $options = [
+            'options' => [
                 'a' => 'A',
-                'b' => 'B'
+                'b.c' => 'C'
             ]
         ]);
 
-        $this->assertEquals($options, $app->options());
+        $this->assertSame([
+            'a' => 'A',
+            'b' => [
+                'c' => 'C'
+            ]
+        ], $app->options());
     }
 
     public function testOptionsOnReady()
@@ -219,15 +224,22 @@ class AppTest extends TestCase
                 'index' => '/dev/null'
             ],
             'options' => [
-                'ready' => function ($kirby) {
+                'ready' => $ready = function ($kirby) {
                     return [
-                        'test' => $kirby->root('index')
+                        'test' => $kirby->root('index'),
+                        'another.test' => 'foo'
                     ];
                 }
             ]
         ]);
 
-        $this->assertEquals('/dev/null', $app->option('test'));
+        $this->assertSame([
+            'ready' => $ready,
+            'test' => '/dev/null',
+            'another' => [
+                'test' => 'foo'
+            ]
+        ], $app->options());
     }
 
     public function testRolesFromFixtures()

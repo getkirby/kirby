@@ -582,7 +582,9 @@ class AppPluginsTest extends TestCase
     {
         App::plugin('test/plugin', [
             'options' => [
-                'foo' => 'bar'
+                'foo' => 'bar',
+                'another-foo' => 'bar',
+                'dot' => 'line'
             ]
         ]);
 
@@ -592,11 +594,22 @@ class AppPluginsTest extends TestCase
                 'index' => '/dev/null'
             ],
             'options' => [
-                'test.plugin.foo' => 'another-bar'
+                'test.plugin.foo' => 'another-bar',
+                'test.plugin' => [
+                    'dot' => 'another-line'
+                ]
             ]
         ]);
 
-        $this->assertEquals('another-bar', $kirby->option('test.plugin.foo'));
+        $this->assertSame([
+            'test' => [
+                'plugin' => [
+                    'foo' => 'another-bar',
+                    'another-foo' => 'bar',
+                    'dot' => 'another-line'
+                ]
+            ]
+        ], $kirby->options());
     }
 
     public function testPluginOptionsWithNonAssociativeArray()
