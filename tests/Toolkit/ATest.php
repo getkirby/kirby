@@ -55,20 +55,27 @@ class ATest extends TestCase
             'grand.ma' => $grandma = [
                 'mother' => $mother = [
                     'child' => $child = 'a',
-                    'another.child' => $anotherChild = 'b',
-                ]
+                    'another.nested.child' => $anotherChild = 'b',
+                ],
+                'uncle.dot' => $uncle = 'uncle'
             ],
+            'grand.ma.mother' => $anotherMother = 'another mother'
         ];
 
         $this->assertEquals($grandma, A::get($data, 'grand.ma'));
-        $this->assertEquals($mother, A::get($data, 'grand.ma.mother'));
+        $this->assertEquals($uncle, A::get($data, 'grand.ma.uncle.dot'));
+        $this->assertEquals($anotherMother, A::get($data, 'grand.ma.mother'));
         $this->assertEquals($child, A::get($data, 'grand.ma.mother.child'));
-        $this->assertEquals($anotherChild, A::get($data, 'grand.ma.mother.another.child'));
+        $this->assertEquals($anotherChild, A::get($data, 'grand.ma.mother.another.nested.child'));
 
         // with default
         $this->assertEquals('default', A::get($data, 'grand', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.grandaunt', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.aunt', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.uncle.dot.cousin', 'default'));
         $this->assertEquals('default', A::get($data, 'grand.ma.mother.sister', 'default'));
         $this->assertEquals('default', A::get($data, 'grand.ma.mother.child.grandchild', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.mother.child.another.nested.sister', 'default'));
     }
 
     public function testGetWithNonexistingOptions()

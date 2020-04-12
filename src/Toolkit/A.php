@@ -81,29 +81,38 @@ class A
             return $array[$key];
         }
 
-        // support dot notation
+        // extract data from nested array structures using the dot notation
         if (strpos($key, '.') !== false) {
             $keys     = explode('.', $key);
             $firstKey = array_shift($keys);
 
+            // if the input array also uses dot notation, try to find a subset of the $keys
             if (isset($array[$firstKey]) === false) {
                 $currentKey = $firstKey;
 
                 while ($innerKey = array_shift($keys)) {
-                    $currentKey = $currentKey . '.' . $innerKey;
+                    $currentKey .= '.' . $innerKey;
 
-                    if (isset($array[$currentKey]) === true && is_array($array[$currentKey])) {
+                    // the element needs to exist and also needs to be an array; otherwise
+                    // we cannot find the remaining keys within it (invalid array structure)
+                    if (isset($array[$currentKey]) === true && is_array($array[$currentKey]) === true) {
+                        // $keys only holds the remaining keys that have not been shifted off yet
                         return static::get($array[$currentKey], implode('.', $keys), $default);
                     }
                 }
 
+                // searching through the full chain of keys wasn't successful
                 return $default;
             }
 
+            // if the input array uses a completely nested structure,
+            // recursively progress layer by layer
             if (is_array($array[$firstKey]) === true) {
                 return static::get($array[$firstKey], implode('.', $keys), $default);
             }
 
+            // the $firstKey element was found, but isn't an array, so we cannot
+            // find the remaining keys within it (invalid array structure)
             return $default;
         }
 
