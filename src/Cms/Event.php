@@ -179,18 +179,51 @@ class Event
     }
 
     /**
-     * Returns the wildcard event name without the action
-     * or `null` if the event name does not include an action
+     * Returns the full list of possible wildcard
+     * event names based on the current event name
      *
-     * @return string|null
+     * @return array
      */
-    public function nameWildcard(): ?string
+    public function nameWildcards(): array
     {
-        if ($this->action !== null && $this->action !== '*') {
-            return $this->type . '.*' . ($this->state !== null ? ':' . $this->state : '');
+        // if the event is already a wildcard event, no further variation is possible
+        if ($this->type === '*' || $this->action === '*' || $this->state === '*') {
+            return [];
         }
 
-        return null;
+        if ($this->action !== null && $this->state !== null) {
+            // full $type.$action:$state event
+
+            return [
+                $this->type . '.*:' . $this->state,
+                $this->type . '.' . $this->action . ':*',
+                $this->type . '.*:*',
+                '*.' . $this->action . ':' . $this->state,
+                '*.' . $this->action . ':*',
+                '*:' . $this->state,
+                '*'
+            ];
+        } elseif ($this->state !== null) {
+            // event without action: $type:$state
+
+            return [
+                $this->type . ':*',
+                '*:' . $this->state,
+                '*'
+            ];
+        } elseif ($this->action !== null) {
+            // event without state: $type.$action
+
+            return [
+                $this->type . '.*',
+                '*.' . $this->action,
+                '*'
+            ];
+        } else {
+            // event with a simple name
+
+            return ['*'];
+        }
     }
 
     /**

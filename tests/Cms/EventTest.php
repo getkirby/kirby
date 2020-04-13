@@ -119,29 +119,75 @@ class EventTest extends TestCase
     }
 
     /**
-     * @covers ::nameWildcard
+     * @covers ::nameWildcards
      */
-    public function testNameWildcard()
+    public function testNameWildcards()
     {
         // event with full name
         $event = new Event('page.create:after', []);
-        $this->assertSame('page.*:after', $event->nameWildcard());
+        $this->assertSame([
+            'page.*:after',
+            'page.create:*',
+            'page.*:*',
+            '*.create:after',
+            '*.create:*',
+            '*:after',
+            '*'
+        ], $event->nameWildcards());
 
         // event without action
         $event = new Event('route:before', []);
-        $this->assertNull($event->nameWildcard());
+        $this->assertSame([
+            'route:*',
+            '*:before',
+            '*'
+        ], $event->nameWildcards());
 
         // event without state
         $event = new Event('page.create', []);
-        $this->assertSame('page.*', $event->nameWildcard());
+        $this->assertSame([
+            'page.*',
+            '*.create',
+            '*'
+        ], $event->nameWildcards());
 
         // event with a simple name
         $event = new Event('testEvent', []);
-        $this->assertNull($event->nameWildcard());
+        $this->assertSame([
+            '*'
+        ], $event->nameWildcards());
 
-        // wildcard event
+        // type wildcard event
+        $event = new Event('*.create:after', []);
+        $this->assertSame([], $event->nameWildcards());
+
+        // action wildcard event
         $event = new Event('page.*:after', []);
-        $this->assertNull($event->nameWildcard());
+        $this->assertSame([], $event->nameWildcards());
+
+        // state wildcard event
+        $event = new Event('page.create:*', []);
+        $this->assertSame([], $event->nameWildcards());
+
+        // wildcard event without action 1
+        $event = new Event('*:after', []);
+        $this->assertSame([], $event->nameWildcards());
+
+        // wildcard event without action 2
+        $event = new Event('page:*', []);
+        $this->assertSame([], $event->nameWildcards());
+
+        // wildcard event without state 1
+        $event = new Event('*.create', []);
+        $this->assertSame([], $event->nameWildcards());
+
+        // wildcard event without state 2
+        $event = new Event('page.*', []);
+        $this->assertSame([], $event->nameWildcards());
+
+        // wildcard event with a simple name
+        $event = new Event('*', []);
+        $this->assertSame([], $event->nameWildcards());
     }
 
     /**
