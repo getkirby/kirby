@@ -243,7 +243,7 @@ trait PageActions
      */
     public function changeTemplate(string $template)
     {
-        if ($template === $this->template()->name()) {
+        if ($template === $this->intendedTemplate()->name()) {
             return $this;
         }
 
