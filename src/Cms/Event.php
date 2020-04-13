@@ -179,6 +179,21 @@ class Event
     }
 
     /**
+     * Returns the wildcard event name without the action
+     * or `null` if the event name does not include an action
+     *
+     * @return string|null
+     */
+    public function nameWildcard(): ?string
+    {
+        if ($this->action !== null && $this->action !== '*') {
+            return $this->type . '.*' . ($this->state !== null ? ':' . $this->state : '');
+        }
+
+        return null;
+    }
+
+    /**
      * Returns the state of the event (e.g. `after`)
      *
      * @return string|null

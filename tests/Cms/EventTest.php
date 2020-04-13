@@ -58,6 +58,14 @@ class EventTest extends TestCase
         $this->assertNull($event->action());
         $this->assertNull($event->state());
         $this->assertSame($args, $event->arguments());
+
+        // wildcard event
+        $event = new Event('page.*:after', $args);
+        $this->assertSame('page.*:after', $event->name());
+        $this->assertSame('page', $event->type());
+        $this->assertSame('*', $event->action());
+        $this->assertSame('after', $event->state());
+        $this->assertSame($args, $event->arguments());
     }
 
     /**
@@ -108,6 +116,32 @@ class EventTest extends TestCase
             return 'another value';
         });
         $this->assertSame('another value', $result);
+    }
+
+    /**
+     * @covers ::nameWildcard
+     */
+    public function testNameWildcard()
+    {
+        // event with full name
+        $event = new Event('page.create:after', []);
+        $this->assertSame('page.*:after', $event->nameWildcard());
+
+        // event without action
+        $event = new Event('route:before', []);
+        $this->assertNull($event->nameWildcard());
+
+        // event without state
+        $event = new Event('page.create', []);
+        $this->assertSame('page.*', $event->nameWildcard());
+
+        // event with a simple name
+        $event = new Event('testEvent', []);
+        $this->assertNull($event->nameWildcard());
+
+        // wildcard event
+        $event = new Event('page.*:after', []);
+        $this->assertNull($event->nameWildcard());
     }
 
     /**

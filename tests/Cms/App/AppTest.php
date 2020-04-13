@@ -101,6 +101,43 @@ class AppTest extends TestCase
         $this->assertSame(2, $app->apply('does-not-exist', ['value' => 2], 'value'));
     }
 
+    /**
+     * @covers ::apply
+     */
+    public function testApplyWildcard()
+    {
+        $self = $this;
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'hooks' => [
+                    'test.event:after' => [
+                        function ($value, $event) use ($self) {
+                            $self->assertSame('test.event:after', $event->name());
+
+                            return $value * 2 + 1;
+                        },
+                        function ($value) {
+                            return $value * 3 + 5;
+                        }
+                    ],
+                    'test.*:after' => [
+                        function ($value, $event) use ($self) {
+                            $self->assertSame('test.event:after', $event->name());
+
+                            return $value * 2 + 7;
+                        }
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertSame(47, $app->apply('test.event:after', ['value' => 2], 'value'));
+    }
+
     public function testDebugInfo()
     {
         $app = new App();
@@ -575,6 +612,47 @@ class AppTest extends TestCase
         $count = 0;
         $app->trigger('recursive2');
         $this->assertSame(10, $count);
+    }
+
+    /**
+     * @covers ::trigger
+     */
+    public function testTriggerWildcard()
+    {
+        $self  = $this;
+        $count = 0;
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'hooks' => [
+                    'test.event:after' => [
+                        function ($event) use ($self, &$count) {
+                            $self->assertSame('test.event:after', $event->name());
+
+                            $count = $count * 2 + 1;
+                        },
+                        function () use (&$count) {
+                            $count = $count * 3 + 5;
+                        }
+                    ],
+                    'test.*:after' => [
+                        function ($event) use ($self, &$count) {
+                            $self->assertSame('test.event:after', $event->name());
+
+                            $count = $count * 2 + 7;
+                        }
+                    ]
+                ]
+            ]
+        ]);
+
+        // hooks get called in the correct order
+        $count = 2;
+        $app->trigger('test.event:after');
+        $this->assertSame(47, $count);
     }
 
     public function testVersionHash()

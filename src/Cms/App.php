@@ -190,11 +190,12 @@ class App
      * @param string $name Full event name
      * @param array $args Associative array of named event arguments
      * @param string $modify Key in $args that is modified by the hooks
+     * @param \Kirby\Cms\Event|null $originalName Event object (internal use)
      * @return mixed Resulting value as modified by the hooks
      */
-    public function apply(string $name, array $args, string $modify)
+    public function apply(string $name, array $args, string $modify, ?Event $originalEvent = null)
     {
-        $event = new Event($name, $args);
+        $event = $originalEvent ?? new Event($name, $args);
 
         if ($functions = $this->extension('hooks', $name)) {
             foreach ($functions as $function) {
@@ -208,7 +209,12 @@ class App
             }
         }
 
-        return $event->argument($modify);
+        // apply wildcard hooks if available
+        if ($originalEvent === null && $nameWildcard = $event->nameWildcard()) {
+            return $this->apply($nameWildcard, $event->arguments(), $modify, $event);
+        } else {
+            return $event->argument($modify);
+        }
     }
 
     /**
@@ -1336,11 +1342,12 @@ class App
      * @internal
      * @param string $name Full event name
      * @param array $args Associative array of named event arguments
+     * @param \Kirby\Cms\Event|null $originalName Event object (internal use)
      * @return void
      */
-    public function trigger(string $name, array $args = [])
+    public function trigger(string $name, array $args = [], ?Event $originalEvent = null)
     {
-        $event = new Event($name, $args);
+        $event = $originalEvent ?? new Event($name, $args);
 
         if ($functions = $this->extension('hooks', $name)) {
             static $level = 0;
@@ -1364,6 +1371,11 @@ class App
             if ($level === 0) {
                 $triggered = [];
             }
+        }
+
+        // trigger wildcard hooks if available
+        if ($originalEvent === null && $nameWildcard = $event->nameWildcard()) {
+            $this->trigger($nameWildcard, $args, $event);
         }
     }
 
