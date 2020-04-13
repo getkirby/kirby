@@ -281,11 +281,11 @@ class App
         $router = $this->router();
 
         $router::$beforeEach = function ($route, $path, $method) {
-            $this->trigger('route:before', $route, $path, $method);
+            $this->trigger('route:before', compact('route', 'path', 'method'));
         };
 
         $router::$afterEach = function ($route, $path, $method, $result) {
-            return $this->apply('route:after', $route, $path, $method, $result);
+            return $this->apply('route:after', compact('route', 'path', 'method', 'result'), 'result');
         };
 
         return $router->call($path ?? $this->path(), $method ?? $this->request()->method());
@@ -655,7 +655,7 @@ class App
         $data['site']   = $data['site']   ?? $data['kirby']->site();
         $data['parent'] = $data['parent'] ?? $data['site']->page();
 
-        return KirbyTags::parse($text, $data, $this->options, $this->extensions['hooks']);
+        return KirbyTags::parse($text, $data, $this->options, $this);
     }
 
     /**
@@ -669,7 +669,7 @@ class App
      */
     public function kirbytext(string $text = null, array $data = [], bool $inline = false): string
     {
-        $text = $this->apply('kirbytext:before', $text);
+        $text = $this->apply('kirbytext:before', compact('text'), 'text');
         $text = $this->kirbytags($text, $data);
         $text = $this->markdown($text, $inline);
 
@@ -677,7 +677,7 @@ class App
             $text = $this->smartypants($text);
         }
 
-        $text = $this->apply('kirbytext:after', $text);
+        $text = $this->apply('kirbytext:after', compact('text'), 'text');
 
         return $text;
     }

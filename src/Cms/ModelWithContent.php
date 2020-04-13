@@ -692,7 +692,8 @@ abstract class ModelWithContent extends Model
             }
         }
 
-        return $this->commit('update', [$this, $form->data(), $form->strings(), $languageCode], function ($model, $values, $strings, $languageCode) {
+        $arguments = [static::CLASS_ALIAS => $this, 'values' => $form->data(), 'strings' => $form->strings(), 'languageCode' => $languageCode];
+        return $this->commit('update', $arguments, function ($model, $values, $strings, $languageCode) {
             // save updated values
             $model = $model->save($strings, $languageCode, true);
 
