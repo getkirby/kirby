@@ -210,11 +210,16 @@ class App
         }
 
         // apply wildcard hooks if available
-        if ($originalEvent === null && $nameWildcard = $event->nameWildcard()) {
-            return $this->apply($nameWildcard, $event->arguments(), $modify, $event);
-        } else {
-            return $event->argument($modify);
+        $nameWildcards = $event->nameWildcards();
+        if ($originalEvent === null && count($nameWildcards) > 0) {
+            foreach ($nameWildcards as $nameWildcard) {
+                // the $event object is passed by reference
+                // and will be modified down the chain
+                $this->apply($nameWildcard, $event->arguments(), $modify, $event);
+            }
         }
+
+        return $event->argument($modify);
     }
 
     /**
@@ -1348,8 +1353,11 @@ class App
         }
 
         // trigger wildcard hooks if available
-        if ($originalEvent === null && $nameWildcard = $event->nameWildcard()) {
-            $this->trigger($nameWildcard, $args, $event);
+        $nameWildcards = $event->nameWildcards();
+        if ($originalEvent === null && count($nameWildcards) > 0) {
+            foreach ($nameWildcards as $nameWildcard) {
+                $this->trigger($nameWildcard, $args, $event);
+            }
         }
     }
 

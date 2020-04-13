@@ -127,12 +127,19 @@ class AppTest extends TestCase
 
                             return $value * 2 + 7;
                         }
+                    ],
+                    'test.event:*' => [
+                        function ($value, $event) use ($self) {
+                            $self->assertSame('test.event:after', $event->name());
+
+                            return $value * 3 + 2;
+                        }
                     ]
                 ]
             ]
         ]);
 
-        $this->assertSame(47, $app->apply('test.event:after', ['value' => 2], 'value'));
+        $this->assertSame(143, $app->apply('test.event:after', ['value' => 2], 'value'));
     }
 
     public function testDebugInfo()
@@ -599,6 +606,13 @@ class AppTest extends TestCase
 
                             $count = $count * 2 + 7;
                         }
+                    ],
+                    'test.event:*' => [
+                        function ($event) use ($self, &$count) {
+                            $self->assertSame('test.event:after', $event->name());
+
+                            $count = $count * 3 + 2;
+                        }
                     ]
                 ]
             ]
@@ -607,7 +621,7 @@ class AppTest extends TestCase
         // hooks get called in the correct order
         $count = 2;
         $app->trigger('test.event:after');
-        $this->assertSame(47, $count);
+        $this->assertSame(143, $count);
     }
 
     public function testVersionHash()
