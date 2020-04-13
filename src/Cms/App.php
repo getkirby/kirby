@@ -184,37 +184,31 @@ class App
     }
 
     /**
-     * Applies a hook to the given value;
-     * the value that gets modified by the hooks
-     * is always the last argument
+     * Applies a hook to the given value
      *
      * @internal
-     * @param string $name Hook name
-     * @param mixed ...$args Arguments to pass to the hooks
+     * @param string $name Full event name
+     * @param array $args Associative array of named event arguments
+     * @param string $modify Key in $args that is modified by the hooks
      * @return mixed Resulting value as modified by the hooks
      */
-    public function apply(string $name, ...$args)
+    public function apply(string $name, array $args, string $modify)
     {
-        // split up args into "passive" args and the value
-        $value = array_pop($args);
+        $event = new Event($name, $args);
 
         if ($functions = $this->extension('hooks', $name)) {
             foreach ($functions as $function) {
-                // re-assemble args
-                $hookArgs   = $args;
-                $hookArgs[] = $value;
-
                 // bind the App object to the hook
-                $newValue = $function->call($this, ...$hookArgs);
+                $newValue = $event->call($this, $function);
 
                 // update value if one was returned
                 if ($newValue !== null) {
-                    $value = $newValue;
+                    $event->updateArgument($modify, $newValue);
                 }
             }
         }
 
-        return $value;
+        return $event->argument($modify);
     }
 
     /**
@@ -1314,12 +1308,14 @@ class App
      * Trigger a hook by name
      *
      * @internal
-     * @param string $name
-     * @param mixed ...$arguments
+     * @param string $name Full event name
+     * @param array $args Associative array of named event arguments
      * @return void
      */
-    public function trigger(string $name, ...$arguments)
+    public function trigger(string $name, array $args = [])
     {
+        $event = new Event($name, $args);
+
         if ($functions = $this->extension('hooks', $name)) {
             static $level = 0;
             static $triggered = [];
@@ -1334,7 +1330,7 @@ class App
                 $triggered[$name][] = $function;
 
                 // bind the App object to the hook
-                $function->call($this, ...$arguments);
+                $event->call($this, $function);
             }
 
             $level--;
