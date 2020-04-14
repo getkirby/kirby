@@ -9,7 +9,7 @@
           :title="crumb.text || crumb.label"
           :to="crumb.link"
           :aria-current="isLast(index) ? 'page' : false"
-          class="truncate"
+          class="k-breadcrumb-link"
         >
           {{ crumb.text || crumb.label }}
         </k-link>
@@ -45,11 +45,13 @@ export default {
   display: flex;
   align-items: center;
 }
-.k-breadcrumb a {
+.k-breadcrumb-link {
   display: block;
   font-size: $font-size-small;
-  padding: 0.75rem .5rem;
+  padding: .75rem .5rem;
   line-height: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .k-breadcrumb li {
   display: flex;
