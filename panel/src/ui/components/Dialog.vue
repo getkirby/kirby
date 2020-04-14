@@ -60,163 +60,167 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      cancelButton: {
-        type: [String, Boolean],
-        default: true,
-      },
-      icon: {
-        type: String,
-        default: "check"
-      },
-      size: {
-        type: String,
-        default: "default"
-      },
-      submitButton: [String, Boolean],
-      text: String,
-      theme: String,
-      visible: Boolean
+export default {
+  inheritAttrs: false,
+  props: {
+    cancelButton: {
+      type: [String, Boolean],
+      default: true,
     },
-    data() {
-      return {
-        notification: null,
-        isOpen: this.visible,
-        scrollTop: 0
-      };
+    icon: {
+      type: String,
+      default: "check"
     },
-    computed: {
-      cancelButtonLabel() {
-        if (this.cancelButton === false) {
-          return false;
-        }
+    size: {
+      type: String,
+      default: "default"
+    },
+    submitButton: {
+      type: [String, Boolean],
+      default: true
+    },
+    text: String,
+    theme: String,
+    visible: Boolean
+  },
+  data() {
+    return {
+      notification: null,
+      isOpen: this.visible,
+      scrollTop: 0
+    };
+  },
+  computed: {
+    cancelButtonLabel() {
+      if (this.cancelButton === false) {
+        return false;
+      }
 
-        if (this.cancelButton === true || this.cancelButton.length === 0) {
-          return this.$t("cancel");
-        }
+      if (this.cancelButton === true || this.cancelButton.length === 0) {
+        return this.$t("cancel");
+      }
 
-        return this.cancelButton;
-      },
-      submitButtonConfig() {
+      return this.cancelButton;
+    },
+    submitButtonConfig() {
 
-        if (this.$attrs["button"] !== undefined) {
-          return this.$attrs["button"];
-        }
+      if (this.$attrs["button"] !== undefined) {
+        return this.$attrs["button"];
+      }
 
-        if (this.submitButton !== undefined) {
-          return this.submitButton;
-        }
-
-        return true;
-      },
-      submitButtonLabel() {
-        if (this.submitButton === true || this.submitButton.length === 0) {
-          return this.$t("confirm");
-        }
-
+      if (this.submitButton !== undefined) {
         return this.submitButton;
       }
+
+      return true;
     },
-    created() {
-      this.$events.$on("keydown.esc", this.close, false);
-    },
-    destroyed() {
-      this.$events.$off("keydown.esc", this.close, false);
-    },
-    mounted() {
-      if (this.isOpen === true) {
-        this.$emit("open");
+    submitButtonLabel() {
+      if (this.submitButton === true || this.submitButton.length === 0) {
+        return this.$t("confirm");
       }
-    },
-    methods: {
-      storeScrollPosition() {
-        const view = document.querySelector(".k-panel-view");
 
-        if (view && view.scrollTop) {
-          this.scrollTop = view.scrollTop;
-        } else {
-          this.scrollTop = 0;
-        }
-      },
-      restoreScrollPosition() {
-        const view = document.querySelector(".k-panel-view");
-
-        if (view && view.scrollTop) {
-          view.scrollTop = this.scrollTop;
-        }
-      },
-      open() {
-        this.storeScrollPosition();
-        this.$store.dispatch("dialog", true);
-        this.notification = null;
-        this.isOpen = true;
-        this.$emit("open");
-        this.$events.$on("keydown.esc", this.close);
-
-        this.$nextTick(() => {
-          if (this.$el) {
-            // focus on the first useful element
-            this.focus();
-
-            // blur trap
-            document.body.addEventListener(
-              "focus",
-              e => {
-                if (this.$el.contains(e.target) === false) {
-                  this.focus();
-                }
-              },
-              true
-            );
-          }
-        });
-      },
-      close() {
-        this.notification = null;
-        this.isOpen = false;
-        this.$emit("close");
-        this.$events.$off("keydown.esc", this.close);
-        this.$store.dispatch("dialog", null);
-        this.restoreScrollPosition();
-      },
-      cancel() {
-        this.$emit("cancel");
-        this.close();
-      },
-      focus() {
-        if (this.$el && this.$el.querySelector) {
-          let autofocus = this.$el.querySelector(
-            "[autofocus], [data-autofocus], input, textarea, select, .k-dialog-button-submit"
-          );
-
-          if (!autofocus) {
-            autofocus = this.$el.querySelector(".k-dialog-button-cancel");
-          }
-
-          if (autofocus) {
-            autofocus.focus();
-            return;
-          }
-        }
-      },
-      error(message) {
-        this.notification = {
-          message: message,
-          type: "error"
-        };
-      },
-      submit() {
-        this.$emit("submit");
-      },
-      success(message) {
-        this.notification = {
-          message: message,
-          type: "success"
-        };
-      }
+      return this.submitButton;
     }
-  };
+  },
+  created() {
+    this.$events.$on("keydown.esc", this.close, false);
+  },
+  destroyed() {
+    this.$events.$off("keydown.esc", this.close, false);
+  },
+  mounted() {
+    if (this.isOpen === true) {
+      this.$emit("open");
+    }
+  },
+  methods: {
+    storeScrollPosition() {
+      const view = document.querySelector(".k-panel-view");
+
+      if (view && view.scrollTop) {
+        this.scrollTop = view.scrollTop;
+      } else {
+        this.scrollTop = 0;
+      }
+    },
+    restoreScrollPosition() {
+      const view = document.querySelector(".k-panel-view");
+
+      if (view && view.scrollTop) {
+        view.scrollTop = this.scrollTop;
+      }
+    },
+    open() {
+      this.storeScrollPosition();
+      this.$store.dispatch("dialog", true);
+      this.notification = null;
+      this.isOpen = true;
+      this.$emit("open");
+      this.$events.$on("keydown.esc", this.close);
+
+      this.$nextTick(() => {
+        if (this.$el) {
+          // focus on the first useful element
+          this.focus();
+
+          // blur trap
+          document.body.addEventListener(
+            "focus",
+            e => {
+              if (this.$el.contains(e.target) === false) {
+                this.focus();
+              }
+            },
+            true
+          );
+        }
+      });
+    },
+    close() {
+      this.notification = null;
+      this.isOpen = false;
+      this.$emit("close");
+      this.$events.$off("keydown.esc", this.close);
+      this.$store.dispatch("dialog", null);
+      this.restoreScrollPosition();
+    },
+    cancel() {
+      this.$emit("cancel");
+      this.close();
+    },
+    focus() {
+      if (this.$el && this.$el.querySelector) {
+        let autofocus = this.$el.querySelector(
+          "[autofocus], [data-autofocus], input, textarea, select, .k-dialog-button-submit"
+        );
+
+        if (!autofocus) {
+          autofocus = this.$el.querySelector(".k-dialog-button-cancel");
+        }
+
+        if (autofocus) {
+          autofocus.focus();
+          return;
+        }
+      }
+    },
+    error(message) {
+      this.notification = {
+        message: message,
+        type: "error"
+      };
+    },
+    submit() {
+      this.$emit("submit");
+    },
+    success(message) {
+      this.notification = {
+        message: message,
+        type: "success"
+      };
+    }
+  }
+};
 </script>
 
 <style lang="scss">
