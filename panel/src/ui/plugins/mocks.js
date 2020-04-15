@@ -1,9 +1,11 @@
+import en from "../i18n/en.js";
+
 export default {
   install(Vue) {
 
     /** Fake translations */
     Vue.prototype.$t = function(string) {
-      return "$t('" + string + "')";
+      return en[string] || "$t('" + string + "')";
     };
 
     /** Fake store */

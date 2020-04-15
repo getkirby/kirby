@@ -1,6 +1,6 @@
 <template>
   <k-button
-    :tooltip="tooltip || $t('tooltip.button.' + command)"
+    :tooltip="tooltip || $t('toolbar.button.' + command)"
     :icon="icon || command"
     :class="'k-toolbar-button-' + command"
     class="k-toolbar-button"
