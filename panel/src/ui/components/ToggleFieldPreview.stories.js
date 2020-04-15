@@ -3,7 +3,7 @@ import { withKnobs, object, boolean } from '@storybook/addon-knobs';
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Field / Preview / Toggle Field Preview",
+  title: "Form / Field Preview / Toggle Field Preview",
   decorators: [withKnobs],
   component: ToggleFieldPreview
 };

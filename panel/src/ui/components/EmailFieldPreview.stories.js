@@ -2,7 +2,7 @@ import EmailFieldPreview from "./EmailFieldPreview.vue";
 import { withKnobs, text, object } from '@storybook/addon-knobs';
 
 export default {
-  title: "Form / Field / Preview / Email Field Preview",
+  title: "Form / Field Preview / Email Field Preview",
   decorators: [withKnobs],
   component: EmailFieldPreview
 };
