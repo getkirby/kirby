@@ -39,19 +39,9 @@
           class="k-list-item-status"
           @click="flag.click"
         />
-        <k-button
-          v-if="options"
-          :tooltip="$t('options')"
-          icon="dots"
-          alt="Options"
-          class="k-list-item-toggle"
-          @click.stop="$refs.options.toggle()"
-        />
-        <k-dropdown-content
-          ref="options"
+        <k-options-dropdown
           :options="options"
-          align="right"
-          @action="$emit('action', $event)"
+          @option="$emit('action', $event)"
         />
       </slot>
     </nav>

@@ -43,19 +43,9 @@
         @click="flag.click"
       />
       <slot name="options">
-        <k-button
-          v-if="options"
-          :tooltip="$t('options')"
-          icon="dots"
-          class="k-card-options-button"
-          @click.stop="$refs.dropdown.toggle()"
-        />
-        <k-dropdown-content
-          ref="dropdown"
+        <k-options-dropdown
           :options="options"
-          class="k-card-options-dropdown"
-          align="right"
-          @action="$emit('action', $event)"
+          @option="$emit('action', $event)"
         />
       </slot>
     </nav>
@@ -233,8 +223,5 @@ export default {
   height: 2.25rem;
   padding: 0 0.75rem;
   line-height: 1;
-}
-.k-card-options-dropdown {
-  top: 2.25rem;
 }
 </style>

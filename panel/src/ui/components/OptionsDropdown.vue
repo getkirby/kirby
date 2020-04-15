@@ -1,17 +1,18 @@
 <template>
   <k-button
-    v-if="single"
+    v-if="single && options[0]"
     :icon="options[0].icon"
     :tooltip="options[0].text"
     class="k-options-dropdown-toggle"
     @click="$emit('option', options[0].click)"
   />
   <k-dropdown
-    v-else
+    v-else-if="options.length"
     class="k-options-dropdown"
   >
     <k-button
       :icon="icon"
+      :tooltip="$t('options')"
       class="k-options-dropdown-toggle"
       @click="$refs.options.toggle()"
     />
