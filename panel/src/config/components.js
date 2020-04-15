@@ -57,9 +57,6 @@ Vue.component("k-users-dialog", UsersDialog);
 import FormButtons from "@/components/Forms/FormButtons.vue";
 import FormIndicator from "@/components/Forms/FormIndicator.vue";
 
-/** Form Inputs */
-import TextareaInput from "@/components/Forms/Input/TextareaInput.vue";
-
 /** Form Fields */
 import FilesField from "@/components/Forms/Field/FilesField.vue";
 import PagesField from "@/components/Forms/Field/PagesField.vue";
@@ -79,8 +76,6 @@ import UsersFieldPreview from "@/components/Forms/Previews/UsersFieldPreview.vue
 
 Vue.component("k-form-buttons", FormButtons);
 Vue.component("k-form-indicator", FormIndicator);
-
-Vue.component("k-textarea-input", TextareaInput);
 
 Vue.component("k-files-field", FilesField);
 Vue.component("k-pages-field", PagesField);

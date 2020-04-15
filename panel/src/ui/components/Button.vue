@@ -80,6 +80,7 @@ button::-moz-focus-inner {
   position: relative;
   font-size: $font-size-small;
   transition: color 0.3s;
+  line-height: 1;
 
   &:focus,
   &:hover {

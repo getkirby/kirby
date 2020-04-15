@@ -16,7 +16,7 @@
           :ref="_uid + '-item-' + index"
           :key="_uid + '-item-' + index"
           v-bind="option"
-          @click="$emit('action', option.click)"
+          @click="onClick(option.click)"
         >
           {{ option.text }}
         </k-dropdown-item>
@@ -175,6 +175,11 @@ export default {
 
           break;
       }
+    },
+    onClick(option) {
+      // legacy
+      this.$emit('action', option);
+      this.$emit('option', option);
     }
   }
 };

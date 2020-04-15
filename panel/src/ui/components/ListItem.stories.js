@@ -1,7 +1,7 @@
 import ListItem from "./ListItem.vue";
 
 export default {
-  title: "Items / List Item",
+  title: "Data / List Item",
   component: ListItem
 };
 

@@ -8,6 +8,9 @@ export default {
 
     /** Fake store */
     Vue.prototype.$store = {
+      state: {
+
+      },
       dispatch() {
 
       },

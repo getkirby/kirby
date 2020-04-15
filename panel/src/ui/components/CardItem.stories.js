@@ -1,7 +1,7 @@
 import CardItem from "./CardItem.vue";
 
 export default {
-  title: "Items / Card Item",
+  title: "Data / Card Item",
   component: CardItem
 };
 

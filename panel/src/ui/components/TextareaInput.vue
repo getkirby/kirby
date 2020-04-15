@@ -9,8 +9,6 @@
         v-if="buttons && !disabled"
         ref="toolbar"
         :buttons="buttons"
-        :disabled="disabled"
-        :uploads="uploads"
         @mousedown.native.prevent
         @command="onCommand"
       />
@@ -30,7 +28,6 @@
         :data-font="font"
         :data-size="size"
         class="k-textarea-input-native"
-        @click="onClick"
         @focus="onFocus"
         @input="onInput"
         @keydown.meta.enter="onSubmit"
@@ -46,30 +43,20 @@
     <k-toolbar-email-dialog
       ref="emailDialog"
       @cancel="cancel"
-      @submit="insertEmail($event)"
+      @submit="insertEmail"
     />
+
     <k-toolbar-link-dialog
       ref="linkDialog"
       @cancel="cancel"
-      @submit="insert($event)"
+      @submit="insertLink"
     />
-    <k-files-dialog
-      ref="fileDialog"
-      @cancel="cancel"
-      @submit="insertFile($event)"
-    />
-    <k-upload
-      v-if="uploads"
-      ref="fileUpload"
-      @success="insertUpload"
-    />
+
+
   </div>
 </template>
 
 <script>
-import config from "@/config/config.js";
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -79,10 +66,13 @@ export default {
       default: true
     },
     disabled: Boolean,
-    endpoints: Object,
     font: String,
     id: [Number, String],
     name: [Number, String],
+    markup: {
+      type: String,
+      default: "kirbytext",
+    },
     maxlength: Number,
     minlength: Number,
     placeholder: String,
@@ -104,7 +94,6 @@ export default {
   },
   watch: {
     value() {
-      this.onInvalid();
       this.$nextTick(() => {
         this.resize();
       });
@@ -115,8 +104,6 @@ export default {
       this.$library.autosize(this.$refs.input);
     });
 
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -126,21 +113,26 @@ export default {
     }
   },
   methods: {
+    append(append) {
+      this.insert(this.selection() + " " + append);
+    },
+    bold() {
+      this.wrap("**");
+    },
     cancel() {
       this.$refs.input.focus();
     },
-    dialog(dialog) {
-      if (this.$refs[dialog + "Dialog"]) {
-        this.$refs[dialog + "Dialog"].open(this.$refs.input, this.selection());
-      } else {
-        throw "Invalid toolbar dialog";
-      }
+    code() {
+      this.wrap("`");
     },
-    email() {
-      this.$refs.emailDialog.open(this.$refs.input, this.selection());
+    email(email, text) {
+      this.$refs.emailDialog.open(email, text || this.selection());
     },
     focus() {
       this.$refs.input.focus();
+    },
+    heading(level) {
+      this.prepend("#".repeat(level));
     },
     insert(text) {
       const input = this.$refs.input;
@@ -164,30 +156,34 @@ export default {
 
       this.resize();
     },
-    insertFile(files) {
-      if (files && files.length > 0) {
-        this.insert(files.map(file => file.dragText).join("\n\n"));
-      }
+    insertEmail(email, text) {
+      this.insert(this.$helper[this.markup].email(email, text));
     },
-    insertUpload(files, response) {
-      this.insert(response.map(file => file.dragText).join("\n\n"));
-      this.$events.$emit("model.update");
+    insertLink(url, text) {
+      this.insert(this.$helper[this.markup].link(url, text));
     },
-    onClick() {
-      if (this.$refs.toolbar) {
-        this.$refs.toolbar.close();
-      }
+    italic() {
+      this.wrap("*");
     },
-    onCommand(command, callback) {
-      if (typeof this[command] !== "function") {
-        window.console.warn(command + " is not a valid command");
-        return;
-      }
+    link(url, text) {
+      this.$refs.linkDialog.open(url, text || this.selection());
+    },
+    list(type) {
 
-      if (typeof callback === "function") {
-        this[command](callback(this.$refs.input, this.selection()));
-      } else {
-        this[command](callback);
+      let html = [];
+      const selection = this.selection();
+
+      selection.split("\n").forEach((line, index) => {
+        let prepend = type === "ol" ? index + 1 + "." : "-";
+        html.push(prepend + " " + line);
+      });
+
+      this.insert(html.join("\n"));
+
+    },
+    onCommand(command, ...args) {
+      if (typeof this[command] === "function") {
+        this[command](...args);
       }
     },
     onDrop($event) {
@@ -197,6 +193,10 @@ export default {
           url: config.api + "/" + this.endpoints.field + "/upload",
           multiple: false
         });
+      }
+
+      if (!this.$store || !this.$store.state) {
+        return;
       }
 
       // dropping text
@@ -213,9 +213,6 @@ export default {
     onInput($event) {
       this.$emit("input", $event.target.value);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     onOut() {
       this.$refs.input.blur();
       this.over = false;
@@ -226,6 +223,10 @@ export default {
         $event.dataTransfer.dropEffect = "copy";
         this.focus();
         this.over = true;
+        return;
+      }
+
+      if (!this.$store || !this.$store.state) {
         return;
       }
 
@@ -245,7 +246,7 @@ export default {
         $event.key !== "Control" &&
         this.$refs.toolbar
       ) {
-        this.$refs.toolbar.shortcut($event.key, $event);
+        this.$refs.toolbar.shortcut($event.key);
       }
     },
     onSubmit($event) {
@@ -258,13 +259,7 @@ export default {
       this.$library.autosize.update(this.$refs.input);
     },
     select() {
-      this.$refs.select();
-    },
-    selectFile() {
-      this.$refs.fileDialog.open({
-        endpoint: this.endpoints.field + "/files",
-        multiple: false
-      });
+      this.$refs.input.select();
     },
     selection() {
       const area = this.$refs.input;
@@ -273,24 +268,9 @@ export default {
 
       return area.value.substring(start, end);
     },
-    uploadFile() {
-      this.$refs.fileUpload.open({
-        url: config.api + "/" + this.endpoints.field + "/upload",
-        multiple: false,
-      });
-    },
     wrap(text) {
       this.insert(text + this.selection() + text);
     }
-  },
-  validations() {
-    return {
-      value: {
-        required: this.required ? required : true,
-        minLength: this.minlength ? minLength(this.minlength) : true,
-        maxLength: this.maxlength ? maxLength(this.maxlength) : true
-      }
-    };
   }
 };
 </script>
@@ -299,6 +279,8 @@ export default {
 .k-textarea-input-wrapper {
   position: relative;
 }
+
+/** Native textarea **/
 .k-textarea-input-native {
   resize: none;
   border: 0;
@@ -334,8 +316,10 @@ export default {
   font-family: $font-family-mono;
 }
 
-.k-toolbar {
+/** Toolbar **/
+.k-textarea-input .k-toolbar {
   margin-bottom: 0.25rem;
+  border-bottom: 1px solid $color-background;
   color: #aaa;
 }
 .k-textarea-input:focus-within .k-toolbar {
@@ -347,5 +331,14 @@ export default {
   box-shadow: rgba(0, 0, 0, 0.05) 0 2px 5px;
   border-bottom: 1px solid rgba(#000, 0.1);
   color: #000;
+}
+
+/** Theming **/
+.k-textarea-input[data-theme="field"] {
+  background: #fff;
+}
+.k-textarea-input[data-theme="field"] .k-textarea-input-native {
+  padding: .25rem $field-input-padding;
+  line-height: 1.5rem;
 }
 </style>

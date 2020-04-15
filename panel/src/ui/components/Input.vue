@@ -404,14 +404,6 @@ export default {
     }
   }
 
-  /* Textarea */
-  &[data-type="textarea"] {
-    .k-textarea-input-native {
-      padding: .25rem $field-input-padding;
-      line-height: 1.5rem;
-    }
-  }
-
   /* Toggle */
   &[data-type="toggle"] {
     .k-input-before {

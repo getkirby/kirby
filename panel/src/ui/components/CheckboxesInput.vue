@@ -103,4 +103,5 @@ export default {
     grid-template-columns: repeat(var(--columns), 1fr);
   }
 }
+
 </style>
