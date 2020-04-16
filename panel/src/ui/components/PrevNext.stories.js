@@ -1,8 +1,10 @@
 import PrevNext from "./PrevNext.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Navigation / PrevNext",
-  component: PrevNext
+  component: PrevNext,
+  decorators: [Padding]
 };
 
 export const enabled = () => ({

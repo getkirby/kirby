@@ -1,8 +1,10 @@
 import ListItems from "./ListItems.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Data / List Items",
-  component: ListItems
+  component: ListItems,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

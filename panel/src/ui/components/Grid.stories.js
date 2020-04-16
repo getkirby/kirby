@@ -1,9 +1,10 @@
 import Grid from "./Grid.vue";
+import Padding from "../storybook/Padding.js";
 import { withKnobs, number, select } from '@storybook/addon-knobs';
 
 export default {
   title: "Layout / Grid",
-  decorators: [withKnobs],
+  decorators: [withKnobs, Padding],
   component: Grid
 };
 

@@ -1,9 +1,11 @@
 import ToggleField from "./ToggleField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Toggle Field",
-  component: ToggleField
+  component: ToggleField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

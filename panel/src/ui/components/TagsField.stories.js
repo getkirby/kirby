@@ -1,9 +1,11 @@
 import TagsField from "./TagsField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Tags Field",
-  component: TagsField
+  component: TagsField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

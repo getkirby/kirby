@@ -1,9 +1,11 @@
 import CheckboxesField from "./CheckboxesField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Checkboxes Field",
-  component: CheckboxesField
+  component: CheckboxesField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

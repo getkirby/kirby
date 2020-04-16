@@ -1,9 +1,11 @@
 import TextInput from "./TextInput.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Input / Text Input",
-  component: TextInput
+  component: TextInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

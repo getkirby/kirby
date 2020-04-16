@@ -1,9 +1,10 @@
 import EmailFieldPreview from "./EmailFieldPreview.vue";
+import Padding from "../storybook/Padding.js";
 import { withKnobs, text, object } from '@storybook/addon-knobs';
 
 export default {
   title: "Form / Field Preview / Email Field Preview",
-  decorators: [withKnobs],
+  decorators: [withKnobs, Padding],
   component: EmailFieldPreview
 };
 

@@ -1,8 +1,10 @@
 import HeadlineField from "./HeadlineField.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Form / Field / Headline Field",
-  component: HeadlineField
+  component: HeadlineField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

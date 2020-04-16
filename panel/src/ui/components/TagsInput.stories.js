@@ -1,9 +1,11 @@
 import TagsInput from "./TagsInput.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Input / Tags Input",
-  component: TagsInput
+  component: TagsInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

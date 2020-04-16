@@ -1,8 +1,10 @@
 import Icons from "./Icons.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Media / Icons",
-  component: Icons
+  component: Icons,
+  decorators: [Padding]
 };
 
 export const iconset = () => ({

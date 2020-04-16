@@ -1,9 +1,11 @@
 import Tag from "./Tag.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Navigation / Tag",
-  component: Tag
+  title: "Misc / Tag",
+  component: Tag,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

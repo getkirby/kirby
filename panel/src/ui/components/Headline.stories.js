@@ -1,24 +1,11 @@
 import Headline from "./Headline.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Typography / Headline",
-  component: Headline
+  component: Headline,
+  decorators: [Padding]
 };
-
-// props: {
-//   size: {
-//       default: select('size', ['small', 'regular', 'large', 'huge'], 'regular')
-//   },
-//   tag: {
-//       default: text('tag', 'h2')
-//   },
-//   text: {
-//       default: text('text', 'Headline')
-//   },
-//   theme: {
-//       default: select('theme', ['none', 'positive', 'negative'], 'none')
-//   },
-// }
 
 export const small = () => ({
   template: '<k-headline size="small">This is a headline</k-headline>',

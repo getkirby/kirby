@@ -1,9 +1,10 @@
 import CodeBlock from "./CodeBlock.vue";
+import Padding from "../storybook/Padding.js";
 import { withKnobs, text } from '@storybook/addon-knobs';
 
 export default {
   title: "Typography / Code Block",
-  decorators: [withKnobs],
+  decorators: [withKnobs, Padding],
   component: CodeBlock
 };
 

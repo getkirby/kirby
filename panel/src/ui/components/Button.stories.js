@@ -1,9 +1,11 @@
 import Button from "./Button.vue";
 import { action } from "@storybook/addon-actions";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Navigation / Button",
-  component: Button
+  component: Button,
+  decorators: [Padding]
 };
 
 export const textOnly = () => ({

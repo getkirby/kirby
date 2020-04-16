@@ -1,26 +1,33 @@
 import Empty from "./Empty.vue";
-import { withKnobs, text, select } from '@storybook/addon-knobs';
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Layout / Empty",
-  decorators: [withKnobs],
+  decorators: [Padding],
   component: Empty
 };
 
-export const configurator = () => ({
-  props: {
-    icon: {
-      default: text("icon", "page")
-    },
-    layout: {
-      default: select("layout", ["list", "cards"])
-    },
-    text: {
-      default: text("text", "This is an empty state")
-    }
-  },
+export const regular = () => ({
   template: `
-    <k-empty :icon="icon" :layout="layout">{{ text }}</k-empty>
+    <k-empty>
+      This is an empty state
+    </k-empty>
   `,
+});
+
+export const icon = () => ({
+  template: `
+    <k-empty icon="page">
+      This is an empty state
+    </k-empty>
+  `
+});
+
+export const cardLayout = () => ({
+  template: `
+    <k-empty icon="page" layout="cards">
+      This is an empty state
+    </k-empty>
+  `
 });
 

@@ -1,9 +1,11 @@
 import TextareaField from "./TextareaField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Textarea Field",
-  component: TextareaField
+  component: TextareaField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

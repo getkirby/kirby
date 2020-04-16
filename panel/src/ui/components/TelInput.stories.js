@@ -1,9 +1,11 @@
 import TelInput from "./TelInput.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Input / Tel Input",
-  component: TelInput
+  component: TelInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

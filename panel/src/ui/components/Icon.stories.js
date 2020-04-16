@@ -1,9 +1,10 @@
 import Icon from "./Icon.vue";
+import Padding from "../storybook/Padding.js";
 import { withKnobs, text, color, select } from '@storybook/addon-knobs';
 
 export default {
   title: "Media / Icon",
-  decorators: [withKnobs],
+  decorators: [withKnobs, Padding],
   component: Icon
 };
 

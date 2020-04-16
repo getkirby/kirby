@@ -2,7 +2,7 @@ import Breadcrumb from "./Breadcrumb.vue";
 
 export default {
   title: "Navigation / Breadcrumb",
-  component: Breadcrumb
+  component: Breadcrumb,
 };
 
 export const regular = () => ({

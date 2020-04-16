@@ -1,8 +1,10 @@
 import RadioInput from "./RadioInput.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Form / Input / Radio Input",
-  component: RadioInput
+  component: RadioInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

@@ -1,5 +1,9 @@
 <template>
-  <table class="k-table" :data-sortable="sortable">
+  <table
+    class="k-table"
+    :data-sortable="sortable"
+    v-on="$listeners"
+  >
     <thead>
       <tr>
         <th class="k-table-index-column">
@@ -34,7 +38,6 @@
 
     <k-draggable
       :list="rows"
-      :data-disabled="disabled"
       :options="dragOptions"
       :handle="true"
       element="tbody"
@@ -98,7 +101,7 @@ export default {
       default: 1
     },
     rows: Array,
-    options: [Object, Function],
+    options: [Array, Function],
     sortable: Boolean
   },
   computed: {

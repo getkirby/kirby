@@ -29,8 +29,9 @@ export const regular = () => ({
         class="mb-6"
       />
 
-      <k-input type="toggle" v-model="loading" text="Loading" />
-
+      <k-view class="px-6">
+        <k-input type="toggle" v-model="loading" text="Loading" />
+      </k-view>
     </div>
   `,
 });

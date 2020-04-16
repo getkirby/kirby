@@ -1,9 +1,11 @@
 import PasswordInput from "./PasswordInput.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Input / Password Input",
-  component: PasswordInput
+  component: PasswordInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

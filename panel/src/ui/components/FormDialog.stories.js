@@ -1,9 +1,11 @@
 import FormDialog from "./FormDialog.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Dialog / Form Dialog",
-  component: FormDialog
+  component: FormDialog,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

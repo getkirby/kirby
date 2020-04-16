@@ -280,7 +280,7 @@ export default {
 .k-multiselect-search {
   margin-top: 0 !important;
   color: $color-white;
-  background: $color-dark;
+  background: $color-black;
   border-bottom: 1px dashed rgba($color-white, 0.2);
 
   > .k-button-text {

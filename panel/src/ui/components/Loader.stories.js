@@ -1,8 +1,10 @@
 import Loader from "./Loader.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Interaction / Loader",
-  component: Loader
+  component: Loader,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

@@ -200,6 +200,7 @@ b {
   box-shadow: $color-negative-outline 0 0 0 2px !important;
 }
 
+/** Text **/
 .truncate {
   white-space: nowrap;
   overflow: hidden;
@@ -208,7 +209,20 @@ b {
 .underline {
   text-decoration: underline;
 }
+.text-white {
+  color: $color-white;
+}
+.text-black {
+  color: $color-black;
+}
 
+/** Display **/
+.block {
+  display: block;
+}
+.inline-block {
+  display: inline-block;
+}
 
 /** Flex **/
 .flex {
@@ -242,19 +256,23 @@ b {
   justify-content: space-between;
 }
 
-/** Utilities **/
-.bg-white {
-  background: $color-white;
-}
+/** Backgrounds **/
 .bg-black {
   background: $color-black;
 }
-
-.text-white {
-  color: $color-white;
+.bg-light {
+  background: $color-background;
 }
-.text-black {
-  color: $color-black;
+.bg-white {
+  background: $color-white;
+}
+.bg-pattern {
+  background: lighten($color-dark, 10%) url($pattern);
+}
+
+/* Border Radius */
+.rounded {
+  border-radius: $border-radius;
 }
 
 /* Margins */
@@ -303,4 +321,12 @@ b {
   .pl-#{$index} {
     padding-left: $size;
   }
+}
+
+
+.object-contain {
+  object-fit: contain;
+}
+.object-cover {
+  object-fit: cover;
 }

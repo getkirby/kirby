@@ -1,9 +1,11 @@
 import SelectField from "./SelectField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Select Field",
-  component: SelectField
+  component: SelectField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

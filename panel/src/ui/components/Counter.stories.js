@@ -1,4 +1,5 @@
 import Counter from "./Counter.vue";
+import Padding from "../storybook/Padding.js";
 import {
   withKnobs,
   number
@@ -6,7 +7,7 @@ import {
 
 export default {
   title: "Interaction / Counter",
-  decorators: [withKnobs],
+  decorators: [withKnobs, Padding],
   component: Counter
 };
 

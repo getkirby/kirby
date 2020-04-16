@@ -20,6 +20,7 @@
       ref="options"
       :align="align"
       :options="options"
+      :theme="theme"
       class="k-options-dropdown-content"
       @option="onOption"
     />
@@ -42,7 +43,11 @@ export default {
       default() {
         return []
       }
-    }
+    },
+    theme: {
+      type: String,
+      default: "dark",
+    },
   },
   computed: {
     single() {

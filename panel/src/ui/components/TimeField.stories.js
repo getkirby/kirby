@@ -1,9 +1,11 @@
 import TimeField from "./TimeField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Time Field",
-  component: TimeField
+  component: TimeField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

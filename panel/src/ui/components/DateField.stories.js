@@ -1,9 +1,11 @@
 import DateField from "./DateField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Date Field",
-  component: DateField
+  component: DateField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

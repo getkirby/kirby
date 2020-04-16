@@ -1,9 +1,11 @@
 import DatetimeInput from "./DatetimeInput.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Input / Datetime Input",
-  component: DatetimeInput
+  component: DatetimeInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

@@ -1,9 +1,10 @@
 import UrlFieldPreview from "./UrlFieldPreview.vue";
+import Padding from "../storybook/Padding.js";
 import { withKnobs, text, object } from '@storybook/addon-knobs';
 
 export default {
   title: "Form / Field Preview / URL Field Preview",
-  decorators: [withKnobs],
+  decorators: [withKnobs, Padding],
   component: UrlFieldPreview
 };
 

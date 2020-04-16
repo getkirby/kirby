@@ -1,27 +1,11 @@
 import Progress from "./Progress.vue";
-import {
-  withKnobs,
-  number
-} from '@storybook/addon-knobs';
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Interaction / Progress",
-  decorators: [withKnobs],
+  decorators: [Padding],
   component: Progress
 };
-
-export const configurator = () => ({
-  template: '<k-progress :value="value" />',
-  props: {
-    value: {
-      default: number('value', 0, {
-        range: true,
-        min: 0,
-        max: 100
-      }),
-    }
-  }
-});
 
 export const setValue = () => ({
   template: `

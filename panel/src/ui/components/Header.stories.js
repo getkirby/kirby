@@ -1,10 +1,11 @@
 import Header from "./Header.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 import { withKnobs, text } from '@storybook/addon-knobs';
 
 export default {
   title: "Layout / Header",
-  decorators: [withKnobs],
+  decorators: [withKnobs, Padding],
   component: Header,
 };
 

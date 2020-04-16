@@ -1,9 +1,11 @@
 import NumberField from "./NumberField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Number Field",
-  component: NumberField
+  component: NumberField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

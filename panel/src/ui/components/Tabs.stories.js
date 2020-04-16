@@ -1,8 +1,10 @@
 import Tabs from "./Tabs.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Navigation / Tabs",
-  component: Tabs
+  component: Tabs,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

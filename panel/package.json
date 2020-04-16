@@ -29,6 +29,7 @@
     "vuex-i18n": "^1.13.1"
   },
   "devDependencies": {
+    "@linusborg/vue-simple-portal": "^0.1.4",
     "@storybook/addon-a11y": "^5.3.18",
     "@storybook/addon-actions": ">=5.3.0",
     "@storybook/addon-docs": "^5.3.18",

@@ -1,9 +1,11 @@
 import Dialog from "./Dialog.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Dialog / Base Dialog",
-  component: Dialog
+  component: Dialog,
+  decorators: [Padding],
 };
 
 export const regular = () => ({
@@ -30,12 +32,7 @@ export const regular = () => ({
 });
 
 export const open = () => ({
-  methods: {
-    cancel: action("cancel"),
-    close: action("close"),
-    open: action("open"),
-    submit: action("submit")
-  },
+  ...regular(),
   template: `
     <div>
       <k-button icon="open" @click="$refs.dialog.open()">Open Dialog</k-button>
@@ -53,11 +50,10 @@ export const open = () => ({
   `,
 });
 
+
 export const errorNotification = () => ({
   methods: {
-    cancel: action("cancel"),
-    close: action("close"),
-    open: action("open"),
+    ...regular().methods,
     submit() {
       action("submit");
       this.$refs.dialog.error("Something went wrong");
@@ -80,9 +76,7 @@ export const errorNotification = () => ({
 
 export const successNotification = () => ({
   methods: {
-    cancel: action("cancel"),
-    close: action("close"),
-    open: action("open"),
+    ...regular().methods,
     submit() {
       action("submit");
       this.$refs.dialog.success("Yayayay!");

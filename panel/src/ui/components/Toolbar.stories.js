@@ -1,10 +1,12 @@
 import Vue from "vue";
 import Toolbar from "./Toolbar.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Foundation / Toolbar",
-  component: Toolbar
+  component: Toolbar,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

@@ -1,8 +1,10 @@
 import CardItem from "./CardItem.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Data / Card Item",
-  component: CardItem
+  component: CardItem,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

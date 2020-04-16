@@ -1,9 +1,11 @@
 import RangeInput from "./RangeInput.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Input / Range Input",
-  component: RangeInput
+  component: RangeInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

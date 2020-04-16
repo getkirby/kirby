@@ -1,8 +1,10 @@
 import Field from "./Field.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Form / Foundation / Field",
-  component: Field
+  component: Field,
+  decorators: [Padding]
 };
 
 export const regular = () => ({
@@ -36,4 +38,26 @@ export const required = () => ({
     </k-field>
   `
 });
+
+export const options = () => ({
+  template: `
+    <k-field
+      :input="_uid"
+      :required="true"
+      label="My field"
+    >
+      <template #options>
+        <k-button icon="edit">Edit</k-button>
+      </template>
+
+      <k-input
+        :id="_uid"
+        :required="true"
+        type="text"
+        theme="field"
+      />
+    </k-field>
+  `
+});
+
 

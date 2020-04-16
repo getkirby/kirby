@@ -1,8 +1,10 @@
 import Bar from "./Bar.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Layout / Bar",
-  component: Bar
+  component: Bar,
+  decorators: [Padding]
 };
 
 export const leftSlot = () => ({

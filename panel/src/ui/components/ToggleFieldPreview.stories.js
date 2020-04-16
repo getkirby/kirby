@@ -1,10 +1,11 @@
 import ToggleFieldPreview from "./ToggleFieldPreview.vue";
+import Padding from "../storybook/Padding.js";
 import { withKnobs, object, boolean } from '@storybook/addon-knobs';
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field Preview / Toggle Field Preview",
-  decorators: [withKnobs],
+  decorators: [withKnobs, Padding],
   component: ToggleFieldPreview
 };
 

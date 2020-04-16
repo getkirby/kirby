@@ -1,9 +1,11 @@
 import MultiselectField from "./MultiselectField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Multiselect Field",
-  component: MultiselectField
+  component: MultiselectField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

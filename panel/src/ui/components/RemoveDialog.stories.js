@@ -1,9 +1,11 @@
 import RemoveDialog from "./RemoveDialog.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Dialog / Remove Dialog",
-  component: RemoveDialog
+  component: RemoveDialog,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

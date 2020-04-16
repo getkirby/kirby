@@ -23,12 +23,12 @@ addDecorator(() => {
       "k-icons": Icons
     },
     template: `
-      <div dir="ltr" style="padding: 1.5rem">
+      <div :dir="$direction">
         <k-icons />
         <div>
           <story />
         </div>
       </div>
     `
-  }
+  };
 });

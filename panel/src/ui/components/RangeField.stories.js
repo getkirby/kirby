@@ -1,9 +1,11 @@
 import RangeField from "./RangeField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Range Field",
-  component: RangeField
+  component: RangeField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

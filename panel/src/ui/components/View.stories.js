@@ -7,7 +7,7 @@ export default {
 
 export const regular = () => ({
   template: `
-    <k-view>
+    <k-view class="py-6">
       View content
     </k-view>
   `,

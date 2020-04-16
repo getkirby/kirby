@@ -1,12 +1,13 @@
 import Dropdown from "./Dropdown.vue";
 import DropdownContent from "./DropdownContent.vue";
 import DropdownItem from "./DropdownItem.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 import { withKnobs } from '@storybook/addon-knobs';
 
 export default {
-  title: "Navigation / Dropdown",
-  decorators: [withKnobs],
+  title: "Dropdown / Base Dropdown",
+  decorators: [withKnobs, Padding],
   component: Dropdown,
   subcomponents: {
     DropdownContent,

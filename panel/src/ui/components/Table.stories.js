@@ -1,9 +1,11 @@
 import Table from "./Table.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Data / Table",
-  component: Table
+  component: Table,
+  decorators: [Padding]
 };
 
 export const regular = () => ({
@@ -243,7 +245,7 @@ export const headerSlot = () => ({
       @cell="cell"
       @header="header"
     >
-      <template #header="{ column, columnIndex, label }">
+      <template #header="{ label }">
         <span class="flex items-center justify-between">
           <span class="px-3">{{ label }}</span>
           <k-options-dropdown

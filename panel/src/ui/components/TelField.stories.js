@@ -1,9 +1,11 @@
 import TelField from "./TelField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Tel Field",
-  component: TelField
+  component: TelField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

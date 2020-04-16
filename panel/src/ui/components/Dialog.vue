@@ -1,62 +1,71 @@
 <template>
-  <div
-    v-if="isOpen"
-    class="k-dialog"
-    @click="cancel"
-  >
+  <portal v-if="isOpen">
     <div
+      :dir="$direction"
       :data-size="size"
-      class="k-dialog-box"
-      @click.stop
+      class="k-dialog"
+      @click="cancel"
     >
       <div
-        v-if="notification"
-        :data-theme="notification.type"
-        class="k-dialog-notification"
+        ref="box"
+        class="k-dialog-box"
+        @click.stop
       >
-        <p>{{ notification.message }}</p>
-        <k-button
-          icon="cancel"
-          @click="notification = null"
-        />
+        <div
+          v-if="notification"
+          :data-theme="notification.type"
+          class="k-dialog-notification"
+        >
+          <p>{{ notification.message }}</p>
+          <k-button
+            icon="cancel"
+            @click="notification = null"
+          />
+        </div>
+        <header
+          v-if="$slots['header']"
+          class="k-dialog-header"
+        >
+          <slot name="header" />
+        </header>
+        <div class="k-dialog-body">
+          <slot>
+            <k-text v-html="text" />
+          </slot>
+        </div>
+        <footer
+          v-if="$slots['footer'] || cancelButton || submitButton"
+          class="k-dialog-footer"
+        >
+          <slot name="footer">
+            <k-button-group>
+              <span>
+                <k-button
+                  v-if="cancelButton"
+                  icon="cancel"
+                  class="k-dialog-button-cancel"
+                  @click="cancel"
+                >
+                  {{ cancelButtonLabel }}
+                </k-button>
+              </span>
+              <span>
+                <k-button
+                  v-if="submitButtonConfig"
+                  :icon="icon"
+                  :theme="theme"
+                  class="k-dialog-button-submit"
+                  @click="submit"
+                >
+                  {{ submitButtonLabel }}
+                </k-button>
+              </span>
+            </k-button-group>
+          </slot>
+        </footer>
       </div>
-      <div class="k-dialog-body">
-        <slot>
-          <k-text v-html="text" />
-        </slot>
-      </div>
-      <footer
-        v-if="$slots['footer'] || cancelButton || submitButton"
-        class="k-dialog-footer"
-      >
-        <slot name="footer">
-          <k-button-group>
-            <span>
-              <k-button
-                v-if="cancelButton"
-                icon="cancel"
-                class="k-dialog-button-cancel"
-                @click="cancel"
-              >
-                {{ cancelButtonLabel }}
-              </k-button>
-            </span>
-            <span>
-              <k-button
-                v-if="submitButtonConfig"
-                :icon="icon"
-                :theme="theme"
-                class="k-dialog-button-submit"
-                @click="submit"
-              >
-                {{ submitButtonLabel }}
-              </k-button>
-            </span>
-          </k-button-group>
-        </slot>
-      </footer>
     </div>
-  </div>
+  </portal>
 </template>
 
 <script>
@@ -127,9 +136,10 @@ export default {
   },
   destroyed() {
     this.$events.$off("keydown.esc", this.close, false);
+    document.removeEventListener("focus", this.focustrap);
   },
   mounted() {
-    if (this.isOpen === true) {
+    if (this.visible === true) {
       this.$emit("open");
     }
   },
@@ -158,23 +168,15 @@ export default {
       this.$emit("open");
       this.$events.$on("keydown.esc", this.close);
 
-      this.$nextTick(() => {
-        if (this.$el) {
+      setTimeout(() => {
+        if (this.$refs.box) {
           // focus on the first useful element
           this.focus();
 
           // blur trap
-          document.body.addEventListener(
-            "focus",
-            e => {
-              if (this.$el.contains(e.target) === false) {
-                this.focus();
-              }
-            },
-            true
-          );
+          document.body.addEventListener("focus", this.focustrap, true);
         }
-      });
+      }, 0);
     },
     close() {
       this.notification = null;
@@ -189,19 +191,27 @@ export default {
       this.close();
     },
     focus() {
-      if (this.$el && this.$el.querySelector) {
-        let autofocus = this.$el.querySelector(
+
+      const box = this.$refs.box;
+
+      if (box && box.querySelector) {
+        let autofocus = box.querySelector(
           "[autofocus], [data-autofocus], input, textarea, select, .k-dialog-button-submit"
         );
 
         if (!autofocus) {
-          autofocus = this.$el.querySelector(".k-dialog-button-cancel");
+          autofocus = box.querySelector(".k-dialog-button-cancel");
         }
 
         if (autofocus) {
           autofocus.focus();
           return;
         }
+      }
+    },
+    focustrap(e) {
+      if (this.$refs.box && this.$refs.box.contains(e.target) === false) {
+        this.focus();
       }
     },
     error(message) {
@@ -255,28 +265,29 @@ export default {
   margin: 1.5rem;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
 @media screen and (min-width: 20rem) {
-  .k-dialog-box[data-size="small"] {
+  .k-dialog[data-size="small"] .k-dialog-box {
     width: 20rem;
   }
 }
 
 @media screen and (min-width: 22rem) {
-  .k-dialog-box[data-size="default"] {
+  .k-dialog[data-size="default"] .k-dialog-box {
     width: 22rem;
   }
 }
 
 @media screen and (min-width: 30rem) {
-  .k-dialog-box[data-size="medium"] {
+  .k-dialog[data-size="medium"] .k-dialog-box {
     width: 30rem;
   }
 }
 
 @media screen and (min-width: 40rem) {
-  .k-dialog-box[data-size="large"] {
+  .k-dialog[data-size="large"] .k-dialog-box {
     width: 40rem;
   }
 }
@@ -317,19 +328,30 @@ export default {
   padding: 1.5rem;
   overflow-y: auto;
   overflow-x: hidden;
+  flex-grow: 1;
 }
 
 .k-dialog-body .k-fieldset {
   padding-bottom: 0.5rem;
 }
 
+.k-dialog-header,
 .k-dialog-footer {
-  border-top: 1px solid $color-border;
   padding: 0;
-  border-bottom-left-radius: $border-radius;
-  border-bottom-right-radius: $border-radius;
   line-height: 1;
   flex-shrink: 0;
+}
+.k-dialog-header {
+  border-bottom: 1px solid lighten($color-border, 8%);
+  border-top-left-radius: $border-radius;
+  border-top-right-radius: $border-radius;
+  height: 2.5rem;
+}
+
+.k-dialog-footer {
+  border-top: 1px solid lighten($color-border, 8%);
+  border-bottom-left-radius: $border-radius;
+  border-bottom-right-radius: $border-radius;
 }
 
 .k-dialog-footer .k-button-group {

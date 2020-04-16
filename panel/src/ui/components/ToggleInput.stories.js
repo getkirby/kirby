@@ -1,9 +1,11 @@
 import ToggleInput from "./ToggleInput.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Input / Toggle Input",
-  component: ToggleInput
+  component: ToggleInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

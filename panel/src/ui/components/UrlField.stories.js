@@ -1,9 +1,11 @@
 import UrlField from "./UrlField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / URL Field",
-  component: UrlField
+  component: UrlField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

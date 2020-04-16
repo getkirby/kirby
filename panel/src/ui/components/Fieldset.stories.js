@@ -1,9 +1,11 @@
 import Fieldset from "./Fieldset.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Foundation / Fieldset",
-  component: Fieldset
+  component: Fieldset,
+  decorators: [Padding]
 };
 
 export const regular = () => ({
@@ -27,7 +29,7 @@ export const regular = () => ({
         },
         text: {
           label: "Text",
-          type: "text"
+          type: "textarea"
         }
       };
     }

@@ -1,9 +1,11 @@
 import Autocomplete from "./Autocomplete.vue";
 import { action } from "@storybook/addon-actions";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Interaction / Autcomplete",
-  component: Autocomplete
+  component: Autocomplete,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

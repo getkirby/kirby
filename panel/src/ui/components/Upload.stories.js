@@ -1,8 +1,10 @@
 import Upload from "./Upload.vue";
+import Padding from "../storybook/Padding.js";
 
 export default {
   title: "Interaction / Upload",
-  component: Upload
+  component: Upload,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

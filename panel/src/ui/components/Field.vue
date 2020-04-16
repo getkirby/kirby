@@ -76,7 +76,7 @@ export default {
   display: block;
   padding: 0 0 0.75rem;
   flex-grow: 1;
-  line-height: 1.25rem;
+  line-height: 1.25em;
 }
 .k-field-label abbr {
   text-decoration: none;

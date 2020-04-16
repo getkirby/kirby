@@ -1,9 +1,11 @@
 import CheckboxesInput from "./CheckboxesInput.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Input / Checkboxes Input",
-  component: CheckboxesInput
+  component: CheckboxesInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({
@@ -26,16 +28,16 @@ export const regular = () => ({
   },
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-checkboxes-input
         v-model="value"
         :options="options"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `,
 });
@@ -45,17 +47,17 @@ export const autofocus = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-checkboxes-input
         v-model="value"
         :autofocus="true"
         :options="options"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `,
 });
@@ -64,17 +66,17 @@ export const disabled = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-checkboxes-input
         v-model="value"
         :disabled="true"
         :options="options"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });
@@ -89,17 +91,17 @@ export const columns = () => ({
   },
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
       <k-checkboxes-input
         v-model="value"
-        :columns="columns"
+        :columns="3"
         :options="options"
+        class="mb-6"
         @input="input"
       />
 
-      <br>
-      <br>
-
-      Value: {{ value }}
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `
 });

@@ -1,15 +1,17 @@
 import PasswordField from "./PasswordField.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Field / Password Field",
-  component: PasswordField
+  component: PasswordField,
+  decorators: [Padding]
 };
 
 export const regular = () => ({
   data() {
     return {
-      value: ""
+      value: "top secret"
     };
   },
   methods: {

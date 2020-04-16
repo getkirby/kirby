@@ -1,9 +1,11 @@
 import SelectInput from "./SelectInput.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Input / Select Input",
-  component: SelectInput
+  component: SelectInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({

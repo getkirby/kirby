@@ -1,9 +1,11 @@
 import Draggable from "./Draggable.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Interaction / Draggable",
-  component: Draggable
+  component: Draggable,
+  decorators: [Padding]
 };
 
 export const simple = () => ({

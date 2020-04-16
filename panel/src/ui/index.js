@@ -1,3 +1,6 @@
+/** Portal */
+import VuePortal from "@linusborg/vue-simple-portal";
+
 /** Plugins */
 import events from "./plugins/events.js";
 import helpers from "./plugins/helpers.js";
@@ -5,6 +8,11 @@ import libraries from "./plugins/libraries.js";
 
 export default {
   install(Vue) {
+
+    Vue.prototype.$direction = "ltr";
+
+    /** Portal */
+    Vue.use(VuePortal);
 
     /** Plugins */
     Vue.use(events);

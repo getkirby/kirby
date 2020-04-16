@@ -1,9 +1,11 @@
 import TextareaInput from "./TextareaInput.vue";
+import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Form / Input / Textarea Input",
-  component: TextareaInput
+  component: TextareaInput,
+  decorators: [Padding]
 };
 
 export const regular = () => ({
