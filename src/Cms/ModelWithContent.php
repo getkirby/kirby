@@ -544,6 +544,7 @@ abstract class ModelWithContent extends Model
         }
 
         // get the content to store
+        $data         = array_change_key_case($data);
         $content      = $translation->update($data, $overwrite)->content();
         $kirby        = $this->kirby();
         $languageCode = $kirby->languageCode($languageCode);
@@ -552,7 +553,7 @@ abstract class ModelWithContent extends Model
         if ($languageCode !== $kirby->defaultLanguage()->code()) {
             foreach ($this->blueprint()->fields() as $field) {
                 if (($field['translate'] ?? true) === false) {
-                    $content[$field['name']] = null;
+                    $content[strtolower($field['name'])] = null;
                 }
             }
 
