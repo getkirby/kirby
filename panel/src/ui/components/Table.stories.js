@@ -265,3 +265,61 @@ export const headerSlot = () => ({
   `,
 });
 
+
+export const columnTypes = () => ({
+  data() {
+    return {
+      rows: [
+        {
+          name: "Paul",
+          email: "paul@getkirby.com",
+          url: "https://getkirby.com/paul"
+        },
+        {
+          name: "Ringo",
+          email: "ringo@getkirby.com",
+          url: "https://getkirby.com/ringo"
+        },
+        {
+          name: "George",
+          email: "george@getkirby.com",
+          url: "https://getkirby.com/george"
+        },
+        {
+          name: "John",
+          email: "john@getkirby.com",
+          url: "https://getkirby.com/john"
+        }
+      ]
+    };
+  },
+  methods: {
+    cell: action("cell"),
+    header: action("header")
+  },
+  computed: {
+    columns() {
+      return {
+        name: {
+          label: "String"
+        },
+        email: {
+          label: "Email",
+          type: "email"
+        },
+        url: {
+          label: "URL",
+          type: "url"
+        }
+      };
+    }
+  },
+  template: `
+    <k-table
+      :columns="columns"
+      :rows="rows"
+      @cell="cell"
+      @header="header"
+    />
+  `
+});

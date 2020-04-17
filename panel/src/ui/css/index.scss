@@ -330,3 +330,23 @@ b {
 .object-cover {
   object-fit: cover;
 }
+
+
+/** Shadows **/
+.shadow {
+  box-shadow: $box-shadow;
+}
+
+/** Text size **/
+.text-xs {
+  font-size: $font-size-tiny;
+}
+.text-sm {
+  font-size: $font-size-small;
+}
+.text-base {
+  font-size: $font-size-medium;
+}
+.text-lg {
+  font-size: $font-size-large;
+}

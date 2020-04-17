@@ -1,8 +1,9 @@
 <template>
-  <p class="k-url-field-preview">
+  <p class="k-table-cell-value">
     {{ column.before }}
     <k-link
       :to="link"
+      class="k-table-cell-link truncate underline"
       target="_blank"
       @click.native.stop
     >
@@ -32,19 +33,11 @@ export default {
 </script>
 
 <style lang="scss">
-.k-url-field-preview {
-  padding: 0 .75rem;
-}
-.k-url-field-preview a {
+.k-table-cell-link {
   color: $color-focus;
-  text-decoration: underline;
   transition: color .3s;
-  overflow: hidden;
-  white-space: nowrap;
-  max-width: 100%;
-  text-overflow: ellipsis;
 }
-.k-url-field-preview a:hover {
+.k-table-cell-link:hover {
   color: $color-black;
 }
 </style>

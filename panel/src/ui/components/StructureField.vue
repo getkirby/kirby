@@ -8,11 +8,11 @@
     <!-- Add button -->
     <template slot="options">
       <k-button
-        v-if="more && currentIndex === null"
+        v-if="more"
         :id="_uid"
-        ref="add"
+        ref="addButton"
         icon="add"
-        @click="addRow"
+        @click="openNewRowDialog"
       >
         {{ $t("add") }}
       </k-button>
@@ -20,33 +20,58 @@
 
     <!-- Table -->
     <k-table
+      v-if="rows.length"
       :columns="columns"
       :rows="rows"
-      :sortable="sortable"
+      :sortable="isSortable"
       :options="options"
-      @cell="editRow($event.row, $event.rowIndex)"
+      @cell="openEditRowDialog($event.row, $event.rowIndex)"
       @sort="onSort"
       @option="onOption"
     />
 
-    <!-- Dialogs -->
-    <k-remove-dialog
-      ref="removeDialog"
-      :text="$t('field.structure.delete.confirm')"
-      @submit="removeRow"
-    />
+    <!-- Empty state -->
+    <k-empty
+      v-else
+      icon="list-bullet"
+      @click="openNewRowDialog"
+    >
+      {{ empty }}
+    </k-empty>
 
+    <!-- New Row Dialog -->
     <k-drawer
-      ref="editDialog"
-      :title="label + ' / Edit row'"
-      :submit-button="false"
-      :cancel-button="false"
+      ref="newRowDialog"
+      :title="label + ' / Add'"
     >
       <k-form
-        :fields="editFields"
-        v-model="currentModel"
+        :fields="newRowFields"
+        v-model="newRowModel"
+        @cancel="closeNewRowDialog"
+        @submit="submitNewRow"
       />
     </k-drawer>
+
+    <!-- Edit Dialog -->
+    <k-drawer
+      ref="editRowDialog"
+      :title="label + ' / Edit'"
+    >
+      <k-form
+        :fields="editRowFields"
+        v-model="editRowModel"
+        @cancel="closeEditRowDialog"
+        @submit="submitEditRow"
+      />
+    </k-drawer>
+
+    <!-- Remove Row Dialog -->
+    <k-remove-dialog
+      ref="removeRowDialog"
+      :text="$t('field.structure.delete.confirm')"
+      @cancel="closeRemoveRowDialog"
+      @submit="submitRemoveRow"
+    />
 
   </k-field>
 </template>
@@ -63,7 +88,12 @@ export default {
       type: Boolean,
       default: true
     },
-    empty: String,
+    empty: {
+      type: String,
+      default() {
+        return this.$t("field.structure.empty");
+      }
+    },
     fields: Object,
     limit: Number,
     max: Number,
@@ -82,14 +112,17 @@ export default {
   },
   data() {
     return {
-      currentIndex: null,
-      currentModel: {},
-      rows: this.value,
-      trash: null
+      editRowIndex: null,
+      editRowModel: {},
+      newRowIndex: null,
+      newRowModel: {},
+      removeRowIndex: null,
+      removeRowModel: {},
+      rows: this.sanitize(this.value),
     };
   },
   computed: {
-    editFields() {
+    editRowFields() {
       return {
         platform: {
           label: "Platform",
@@ -116,7 +149,7 @@ export default {
         return false;
       }
 
-      if (this.items.length <= 1) {
+      if (this.rows.length <= 1) {
         return false;
       }
 
@@ -137,33 +170,49 @@ export default {
 
       return true;
     },
+    newRowFields() {
+      return this.editRowFields;
+    },
     options() {
       return [
-        { icon: "edit", text: this.$t("edit"), click: "editRow" },
+        { icon: "edit", text: this.$t("edit"), click: "openEditRowDialog" },
         { icon: "copy", text: this.$t("duplicate"), click: "duplicateRow" },
-        { icon: "trash", text: this.$t("delete"), click: "confirmRemoveRow" },
+        { icon: "trash", text: this.$t("delete"), click: "openRemoveRowDialog" },
       ];
     }
   },
+  watch: {
+    value(value) {
+      if (value != this.rows) {
+        this.rows = this.sanitize(value);
+      }
+    }
+  },
   methods: {
-    addRow() {
-
+    closeNewRowDialog() {
+      this.newRowIndex = null;
+      this.newRowModel = {};
+      this.$refs.newRowDialog.close();
     },
-    confirmRemoveRow(row, rowIndex) {
-      this.$refs.removeDialog.open();
-      this.trash = rowIndex;
+    closeEditRowDialog() {
+      this.editRowIndex = null;
+      this.editRowModel = {};
+      this.$refs.editRowDialog.close();
+    },
+    closeRemoveRowDialog() {
+      this.removeRowIndex = null;
+      this.removeRowModel = {};
+      this.$refs.removeRowDialog.close();
     },
     duplicateRow(row, rowIndex) {
-      this.rows.push(this.rows[rowIndex]);
+      this.rows.push(this.$helper.clone(this.rows[rowIndex]));
+      this.rows = this.sort(this.rows);
       this.onInput();
     },
-    editRow(row, rowIndex) {
-      this.currentIndex = rowIndex;
-      this.currentModel = row;
-
-      this.$refs.editDialog.open();
-    },
     focus() {
+      if (this.$refs.addButton && this.$refs.addButton.focus) {
+        this.$refs.addButton.focus();
+      }
     },
     onInput() {
       this.$emit("input", this.rows);
@@ -176,22 +225,27 @@ export default {
     onSort() {
       this.onInput();
     },
-    removeRow() {
-      if (this.trash === null) {
-        return false;
+    openEditRowDialog(row, rowIndex) {
+      this.editRowIndex = rowIndex;
+      this.editRowModel = this.$helper.clone(row);
+      this.$refs.editRowDialog.open();
+    },
+    openNewRowDialog() {
+      this.newRowIndex = 0;
+      this.newRowModel = {};
+      this.$refs.newRowDialog.open();
+    },
+    openRemoveRowDialog(row, rowIndex) {
+      this.removeRowIndex = rowIndex;
+      this.removeRowModel = row;
+      this.$refs.removeRowDialog.open();
+    },
+    sanitize(rows) {
+      if (Array.isArray(rows) === false) {
+        return [];
       }
 
-      this.rows.splice(this.trash, 1);
-      this.trash = null;
-      this.$refs.removeDialog.close();
-
-      this.onInput();
-
-      // if (this.paginatedItems.length === 0 && this.page > 1) {
-      //   this.page--;
-      // }
-
-      this.rows = this.sort(this.rows);
+      return this.sort(rows);
     },
     sort(rows) {
       if (!this.sortBy) {
@@ -199,6 +253,33 @@ export default {
       }
 
       return rows.sortBy(this.sortBy);
+    },
+    submitEditRow() {
+      this.$set(this.rows, this.editRowIndex, this.editRowModel);
+      this.rows = this.sort(this.rows);
+      this.onInput();
+      this.closeEditRowDialog();
+    },
+    submitNewRow() {
+      this.rows.push(this.newRowModel);
+      this.rows = this.sort(this.rows);
+      this.onInput();
+      this.closeNewRowDialog();
+    },
+    submitRemoveRow() {
+      if (this.removeRowIndex === null) {
+        return false;
+      }
+
+      this.rows.splice(this.removeRowIndex, 1);
+      this.onInput();
+      this.closeRemoveRowDialog();
+
+      // if (this.paginatedItems.length === 0 && this.page > 1) {
+      //   this.page--;
+      // }
+
+      this.rows = this.sort(this.rows);
     },
   }
 }

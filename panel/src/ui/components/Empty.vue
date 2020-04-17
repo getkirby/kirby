@@ -1,6 +1,8 @@
 <template>
-  <div
+  <component
+    :is="element"
     :data-layout="layout"
+    :type="element === 'button' ? 'button' : false"
     class="k-empty"
     v-on="$listeners"
   >
@@ -9,7 +11,7 @@
       :type="icon"
     />
     <p><slot /></p>
-  </div>
+  </component>
 </template>
 
 <script>
@@ -20,6 +22,11 @@ export default {
     layout: {
       type: String,
       default: "list"
+    }
+  },
+  computed: {
+    element() {
+      return this.$listeners["click"] ? "button" : "div";
     }
   }
 };
@@ -33,6 +40,12 @@ export default {
   border-radius: $border-radius;
   color: $color-dark-grey;
   border: 1px dashed $color-border;
+}
+button.k-empty {
+  width: 100%;
+}
+button.k-empty:focus {
+  outline: none;
 }
 .k-empty p {
   font-size: $font-size-small;

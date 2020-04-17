@@ -73,7 +73,13 @@
             rowIndex,
             value: row[columnIndex],
           }">
-            <p class="k-table-cell-value">
+            <component
+              v-if="$helper.isComponent('table-' + (column.type || 'string') + '-cell')"
+              :is="'k-table-' + column.type + '-cell'"
+              :column="column"
+              :value="row[columnIndex]"
+            />
+            <p v-else class="k-table-cell-value">
               {{ row[columnIndex] }}
             </p>
           </slot>

@@ -41,7 +41,7 @@
         />
         <k-options-dropdown
           :options="options"
-          @option="$emit('action', $event)"
+          @option="onOption"
         />
       </slot>
     </nav>
@@ -77,6 +77,12 @@ export default {
   computed: {
     imageOptions() {
       return this.$helper.previewThumb(this.image);
+    }
+  },
+  methods: {
+    onOption(event) {
+      this.$emit("action", event);
+      this.$emit("option", event);
     }
   }
 };

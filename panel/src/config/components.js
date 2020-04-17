@@ -17,7 +17,6 @@ import PageTemplateDialog from "@/components/Dialogs/PageTemplateDialog.vue";
 import PageUrlDialog from "@/components/Dialogs/PageUrlDialog.vue";
 import PagesDialog from "@/components/Dialogs/PagesDialog.vue";
 import SiteRenameDialog from "@/components/Dialogs/SiteRenameDialog.vue";
-import TextDialog from "@/components/Dialogs/TextDialog.vue";
 import UserCreateDialog from "@/components/Dialogs/UserCreateDialog.vue";
 import UserEmailDialog from "@/components/Dialogs/UserEmailDialog.vue";
 import UserLanguageDialog from "@/components/Dialogs/UserLanguageDialog.vue";
@@ -43,7 +42,6 @@ Vue.component("k-page-template-dialog", PageTemplateDialog);
 Vue.component("k-page-url-dialog", PageUrlDialog);
 Vue.component("k-pages-dialog", PagesDialog);
 Vue.component("k-site-rename-dialog", SiteRenameDialog);
-Vue.component("k-text-dialog", TextDialog);
 Vue.component("k-user-create-dialog", UserCreateDialog);
 Vue.component("k-user-email-dialog", UserEmailDialog);
 Vue.component("k-user-language-dialog", UserLanguageDialog);
@@ -60,36 +58,19 @@ import FormIndicator from "@/components/Forms/FormIndicator.vue";
 /** Form Fields */
 import FilesField from "@/components/Forms/Field/FilesField.vue";
 import PagesField from "@/components/Forms/Field/PagesField.vue";
-import StructureField from "@/components/Forms/Field/StructureField.vue";
-import TextareaField from "@/components/Forms/Field/TextareaField.vue";
 import UsersField from "@/components/Forms/Field/UsersField.vue";
 
 /* Form Toolbar */
 import Toolbar from "@/components/Forms/Toolbar.vue";
-import ToolbarEmailDialog from "@/components/Forms/Toolbar/EmailDialog.vue";
-import ToolbarLinkDialog from "@/components/Forms/Toolbar/LinkDialog.vue";
-
-/* Form Field Previews */
-import FilesFieldPreview from "@/components/Forms/Previews/FilesFieldPreview.vue";
-import PagesFieldPreview from "@/components/Forms/Previews/PagesFieldPreview.vue";
-import UsersFieldPreview from "@/components/Forms/Previews/UsersFieldPreview.vue";
 
 Vue.component("k-form-buttons", FormButtons);
 Vue.component("k-form-indicator", FormIndicator);
 
 Vue.component("k-files-field", FilesField);
 Vue.component("k-pages-field", PagesField);
-Vue.component("k-structure-field", StructureField);
-Vue.component("k-textarea-field", TextareaField);
 Vue.component("k-users-field", UsersField);
 
 Vue.component("k-toolbar", Toolbar);
-Vue.component("k-toolbar-email-dialog", ToolbarEmailDialog);
-Vue.component("k-toolbar-link-dialog", ToolbarLinkDialog);
-
-Vue.component("k-files-field-preview", FilesFieldPreview);
-Vue.component("k-pages-field-preview", PagesFieldPreview);
-Vue.component("k-users-field-preview", UsersFieldPreview);
 
 /* Layout */
 import Collection from "@/components/Layout/Collection.vue";

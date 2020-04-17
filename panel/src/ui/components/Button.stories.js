@@ -1,6 +1,6 @@
 import Button from "./Button.vue";
-import { action } from "@storybook/addon-actions";
 import Padding from "../storybook/Padding.js";
+import { action } from "@storybook/addon-actions";
 
 export default {
   title: "Navigation / Button",

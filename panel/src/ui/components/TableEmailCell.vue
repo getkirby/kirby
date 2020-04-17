@@ -1,8 +1,8 @@
 <script>
-import UrlFieldPreview from "./UrlFieldPreview.vue";
+import TableUrlCell from "./TableUrlCell.vue";
 
 export default {
-  extends: UrlFieldPreview,
+  extends: TableUrlCell,
   computed: {
     link() {
       return this.value && this.value.length > 0 ? 'mailto:' + this.value : null;
