@@ -22,7 +22,7 @@ export default create({
   textColor: "black",
   textInverseColor: "rgba(255,255,255,0.9)",
 
-  brandTitle: "Kirby UI",
+  brandTitle: "Kirby UI &<br/>Panel Internals",
   brandUrl: "https://getkirby.com",
   brandImage: false
 });
