@@ -20,3 +20,86 @@
   min-height: 100vh;
   background: #fff;
 }
+
+
+
+.sidebar-subheading {
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+  color: #000 !important;
+}
+
+
+
+code {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+  background: rgba(0, 0, 0, .07);
+  border-radius: 3px;
+  box-decoration-break: clone;
+  display: inline-block;
+  font-size: .875em !important;
+  line-height: inherit;
+  padding: .05em .5em;
+}
+
+
+
+.hljs {
+  background: #000 !important;
+}
+
+.hljs > code {
+  font-size: 1em !important;
+}
+
+.hljs,
+.hljs .subst {
+  color: #aaa !important;
+}
+
+.hljs .section {
+  color: #fff !important;
+}
+
+.hljs .comment,
+.hljs .quote,
+.hljs .meta {
+  color: #a9aaad !important;
+}
+
+.hljs .string,
+.hljs .symbol,
+.hljs .bullet,
+.hljs .regexp {
+  color: #ffcc33 !important;
+}
+
+.hljs .number,
+.hljs .addition {
+  color: #00cc66 !important;
+}
+
+.hljs .built_in,
+.hljs .builtin-name,
+.hljs .literal,
+.hljs .type,
+.hljs .template-variable,
+.hljs .attribute,
+.hljs .link {
+  color: #de935f !important;
+}
+
+.hljs .selector-tag,
+.hljs .name,
+.hljs .selector-id,
+.hljs .selector-class {
+  color: #6644aa !important;
+}
+
+.hljs .keyword,
+.hljs .title,
+.hljs .variable,
+.hljs .deletion,
+.hljs .template-tag {
+  color: #d16464 !important;
+}

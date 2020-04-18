@@ -29,6 +29,9 @@
     "vuex-i18n": "^1.13.1"
   },
   "devDependencies": {
+    "babel-loader": "^8.1.0",
+    "react": "^16.13.1",
+    "react-is": "^16.13.1",
     "@linusborg/vue-simple-portal": "^0.1.4",
     "@storybook/addon-a11y": "^5.3.18",
     "@storybook/addon-actions": ">=5.3.0",
@@ -60,7 +63,13 @@
   },
   "babel": {
     "presets": [
-      "@vue/app"
+      [
+        "@vue/app",
+        {
+          "jsx": false,
+          "useBuiltIns": false
+        }
+      ]
     ],
     "plugins": [
       "wildcard"

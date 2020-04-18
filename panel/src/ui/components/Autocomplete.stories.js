@@ -3,7 +3,7 @@ import { action } from "@storybook/addon-actions";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Interaction / Autcomplete",
+  title: "UI | Interaction / Autocomplete",
   component: Autocomplete,
   decorators: [Padding]
 };
@@ -49,4 +49,3 @@ export const regular = () => ({
     </k-autocomplete>
   `,
 });
-

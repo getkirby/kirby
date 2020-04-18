@@ -6,17 +6,29 @@
     class="k-aspect-ratio"
     v-on="$listeners"
   >
+    <!-- @slot Content that should be sized at the specified ratio -->
     <slot />
   </component>
 </template>
 
 <script>
+/**
+ * Use `<k-aspect-ratio>` to size content at specified
+ * dimensions (e.g. `"16/9"`).
+ */
+
 export default {
   props: {
+    /**
+     * HTML tag to be used as wrapping element
+     */
     element: {
       type: String,
       default: "span",
     },
+    /**
+     * Ratio fraction, e.g. "1/2", "3/2" etc.
+     */
     ratio: {
       type: String,
       default: "1/1"

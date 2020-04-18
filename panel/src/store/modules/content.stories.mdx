@@ -1,0 +1,88 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="$store | Content"
+/>
+
+# Content store
+
+## State
+
+```js
+this.$store.state.content.current
+```
+
+| Key | Description |
+|-|-|
+| `current` | ID of the current model (with translation suffix) |
+| `models` | Array of already loaded models |
+| `status` | Object with `enabled` (bool), `lock` and `unlock` (objects or `null`) |
+
+```js
+// example of store state
+{
+  current: "pages/notes+a-great-post/en",
+  models: {
+    "pages/notes+a-great-post/en": {
+      api: "…",
+      originals: {
+        categories: "long read, weekend, travel"
+      },
+      changes: {
+        categories: "long read, weekend, at home"
+      }
+    },
+    "users/hjk343n": {
+      api: "…",
+      originals: {
+        name: "Homer Simpson"
+      },
+      changes: {}
+    }
+  },
+  status: {
+    enabled: false,
+    lock: null,
+    unlock: null
+  }
+}
+
+```
+
+## Getters
+
+```js
+this.$store.getters["content/values"](id)
+```
+
+| Key | Parameters | Description |
+|-|-|-|
+| `exists` | `id` | Checks if a model exists in the store |
+| `hasChanges` | `id` (optional) | Checks if a model has unsaved changes |
+| `id` | `id` | Returns ID (current or provided) with correct language suffix |
+| `isCurrent` |  `id` | Checks if specified ID is the current model |
+| `model` |  `id` (optional) | Returns the full model object |
+| `originals` |  `id` (optional) | Returns all original values (as in content file) for a model |
+| `changes` |  `id` (optional) | Returns all unsaved changes for a model |
+| `values` | `id` (optional) | Returns all values for a model (originals updated with unsaved changes) |
+
+## Actions
+
+```js
+this.$store.dispatch("content/update", ["myField", "newValue"])
+```
+
+| Key | Parameters | Description |
+|-|-|-|
+| `create` | `model` | Create a store entry for a model |
+| `current` | `id` | Set the current model |
+| `disable ` |  | Disable content forms |
+| `enable ` |  | Enable content forms |
+| `init` |  | Initializes store with data from `localStorage` |
+| `lock` | `lock` | Set data for content lock |
+| `move` | `[oldId, newId]` | Move a store entry for a model |
+| `remove` | `id` | Remove a model from store |
+| `revert` | `id` (optional) | Discard unsaved changes for a model |
+|`save`  | `id` (optional) | Update content file for a model |
+| `unlock` | `unlock` | Set data for onlocked content lock |
+| `update` | `[field, value, id]` (id optional) | Update a field value for a model |

@@ -7,9 +7,11 @@ addons.setConfig({
   panelPosition: "bottom",
   previewTabs: {
     canvas: null,
-    'storybook/docs/panel': 'MDX'
+    "storybook/docs/panel": "MDX"
   },
 });
+
+import "./theme.css";
 
 setTimeout(function() {
   addons.elements.panel["storybookjs/knobs/panel"].title = "Props";
