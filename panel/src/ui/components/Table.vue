@@ -80,7 +80,7 @@
               :value="row[columnIndex]"
             />
             <p v-else class="k-table-cell-value">
-              {{ row[columnIndex] }}
+              {{ column.before }} {{ cellText(row[columnIndex], column.type, column) || "–" }} {{ column.after }}
             </p>
           </slot>
         </td>
@@ -120,6 +120,13 @@ export default {
     },
   },
   methods: {
+    cellText(value, type, column) {
+      if (typeof value === "object" && value !== null) {
+        return "…";
+      }
+
+      return value.toString();
+    },
     indexOf(index) {
       return this.index + index;
     },

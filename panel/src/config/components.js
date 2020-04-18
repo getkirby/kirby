@@ -60,17 +60,12 @@ import FilesField from "@/components/Forms/Field/FilesField.vue";
 import PagesField from "@/components/Forms/Field/PagesField.vue";
 import UsersField from "@/components/Forms/Field/UsersField.vue";
 
-/* Form Toolbar */
-import Toolbar from "@/components/Forms/Toolbar.vue";
-
 Vue.component("k-form-buttons", FormButtons);
 Vue.component("k-form-indicator", FormIndicator);
 
 Vue.component("k-files-field", FilesField);
 Vue.component("k-pages-field", PagesField);
 Vue.component("k-users-field", UsersField);
-
-Vue.component("k-toolbar", Toolbar);
 
 /* Layout */
 import Collection from "@/components/Layout/Collection.vue";

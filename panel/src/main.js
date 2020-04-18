@@ -1,8 +1,6 @@
 import App from "./App.vue";
-import Filters from "./config/filters.js";
 import Ui from "@/ui/index.js";
 import Vue from "vue";
-import Vuelidate from "vuelidate";
 import I18n from "vuex-i18n";
 
 Vue.config.productionTip = false;
@@ -17,8 +15,6 @@ import store from "./store/store.js";
 
 Vue.use(I18n.plugin, store);
 Vue.use(Ui);
-Vue.use(Filters);
-Vue.use(Vuelidate);
 
 import router from "./config/router.js";
 

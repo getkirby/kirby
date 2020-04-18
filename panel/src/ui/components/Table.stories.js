@@ -265,6 +265,33 @@ export const headerSlot = () => ({
   `,
 });
 
+export const beforeAndAfterColumn = () => ({
+  ...regular(),
+  computed: {
+    columns() {
+      return {
+        name: {
+          label: "Name",
+          before: "Beatle: "
+        },
+        email: {
+          label: "Email",
+          before: "mail: ",
+          after: "→"
+        }
+      };
+    }
+  },
+  template: `
+    <k-table
+      :columns="columns"
+      :rows="rows"
+      @cell="cell"
+      @header="header"
+    />
+  `,
+});
+
 
 export const columnTypes = () => ({
   data() {
