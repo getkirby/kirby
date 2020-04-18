@@ -1,0 +1,32 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Internals | $helper / string"
+/>
+
+# string
+### `this.$helper.string`
+
+Helper that offers three methods:
+
+## `camelToKebab`
+
+```js
+return this.$helper.string.camelToKebab("myString);
+// result: "my-string"
+```
+
+## `lcfirst`
+
+```js
+return this.$helper.string.lcfirst("Hello);
+// result: "hello"
+```
+
+
+## `ucfirst`
+
+```js
+return this.$helper.string.ucfirst("hello);
+// result: "Hello"
+```

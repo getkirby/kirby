@@ -16,6 +16,10 @@
   border-radius: 0 !important;
 }
 
+.docblock-source {
+  border-radius: 0 !important;
+}
+
 .sbdocs-wrapper {
   min-height: 100vh;
   background: #fff;
@@ -45,16 +49,12 @@ code {
 
 
 .hljs {
+  color: #fff !important;
   background: #000 !important;
 }
 
 .hljs > code {
   font-size: 1em !important;
-}
-
-.hljs,
-.hljs .subst {
-  color: #aaa !important;
 }
 
 .hljs .section {
@@ -65,9 +65,11 @@ code {
 .hljs .quote,
 .hljs .meta {
   color: #a9aaad !important;
+  font-style: normal !important;
 }
 
-.hljs .punctuation {
+.hljs .punctuation,
+.hljs .operator {
   color: #cacbd1 !important;
 }
 
@@ -77,17 +79,6 @@ code {
   color: #a7bd68 !important
 }
 
-.hljs .symbol,
-.hljs .bullet,
-.hljs .regexp {
-  color: #ffcc33 !important;
-}
-
-.hljs .number,
-.hljs .addition {
-  color: #00cc66 !important;
-}
-
 .hljs .built_in,
 .hljs .builtin-name,
 .hljs .literal,
@@ -95,22 +86,28 @@ code {
 .hljs .template-variable,
 .hljs .attribute,
 .hljs .link,
-.hljs .attr-name {
+.hljs .attr-name,
+.hljs .known-class-name,
+.hljs .class-name {
   color: #de935f !important;
 }
 
+.hljs .keyword,
 .hljs .selector-tag,
 .hljs .name,
 .hljs .selector-id,
 .hljs .selector-class {
-  color: #6644aa !important;
+  color: #b294bb !important;
 }
 
-.hljs .keyword,
 .hljs .title,
 .hljs .variable,
 .hljs .deletion,
 .hljs .template-tag, 
 .hljs .tag {
   color: #d16464 !important;
+}
+
+.hljs .function {
+  color: #7e9abf !important;
 }
