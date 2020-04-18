@@ -4,6 +4,7 @@
     class="k-box"
     v-on="$listeners"
   >
+    <!-- @slot Fill the box with custom content instead of text -->
     <slot>
       <k-text v-html="text" />
     </slot>
@@ -13,7 +14,13 @@
 <script>
 export default {
   props: {
+    /**
+     * `"positive"`|`"negative"`|`"info"`|`"none"`
+     */
     theme: String,
+    /**
+     * Text to display in the box
+     */
     text: String
   }
 };

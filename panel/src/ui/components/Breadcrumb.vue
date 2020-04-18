@@ -21,16 +21,22 @@
 <script>
 export default {
   props: {
-    label: {
-      type: String,
-      default: "Breadcrumb",
-    },
+    /**
+     * Array of link objects (with `link` and `text` or `label` items)
+     */
     links: {
       type: Array,
       default() {
         return [];
       }
-    }
+    },
+    /**
+     * ARIA label
+     */
+    label: {
+      type: String,
+      default: "Breadcrumb",
+    },
   },
   methods: {
     isLast(index) {

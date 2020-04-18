@@ -1,0 +1,99 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Box from "./Box.vue";
+
+<Meta
+  title="UI | Layout / Box"
+  component={Box}
+  decorators={[Padding]}
+/>
+
+# Bar
+### `<k-bar>`
+
+The box component is a multi-purpose box with text. You can use it as a foundation for empty state displays or anything else that needs to be displayed in a box.
+
+<Preview>
+  <Story name="Regular">
+    {{
+      template: `
+        <k-box>Box text</k-box>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={Box} />
+
+## Themes
+The element also comes with 3 pre-defined themes …
+
+### Positive
+<Preview>
+  <Story name="Positive">
+    {{
+      template: `
+        <k-box theme="positive">A nice box</k-box>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Negative
+<Preview>
+  <Story name="Negative">
+    {{
+      template: `
+        <k-box theme="negative">A warning box</k-box>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Info
+<Preview>
+  <Story name="Info">
+    {{
+      template: `
+        <k-box theme="info">A neutral info box</k-box>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Unstyled
+<Preview>
+  <Story name="Unstyled">
+    {{
+      template: `
+        <k-box theme="none">An unstyled box</k-box>
+      `
+    }}
+  </Story>
+</Preview>
+
+## Custom content
+The box can be filled with your own elements to overwrite the default text implementation
+
+```html
+<k-box>
+  <!-- custom html goes here -->
+</k-box>
+```
+
+## Events
+The box listens to any typical HTML event.
+
+<Preview>
+  <Story name="Events">
+    {{
+      template: `
+        <k-box text="This is a box" @click="$router.push('go/somewhere')" />
+      `
+    }}
+  </Story>
+</Preview>
+
+## CSS class
+
+`.k-box`

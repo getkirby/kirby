@@ -1,0 +1,113 @@
+import { Meta, Preview, Story } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Bar from "./Bar.vue";
+
+<Meta
+  title="UI | Layout / Bar"
+  component={Bar}
+  decorators={[Padding]}
+/>
+
+# Bar
+### `<k-bar>`
+
+Can be used to create all sorts of toolbars with the option to have three different slots for buttons or other elements: left, center and right.
+
+```html
+<k-bar>
+  <template slot="left">...</template>
+  <template slot="center">...</template>
+  <template slot="right">...</template>
+</k-bar>
+```
+
+All slots are optional.
+
+## Left slot
+<Preview>
+  <Story name="Left slot">
+    {{
+      template: `
+        <k-bar>
+          <template slot="left">
+            This is left
+          </template>
+        </k-bar>
+      `
+    }}
+  </Story>
+</Preview>
+
+## Center slot
+<Preview>
+  <Story name="Center slot">
+    {{
+      template: `
+        <k-bar>
+          <template slot="center">
+            This is in the center
+          </template>
+        </k-bar>
+      `
+    }}
+  </Story>
+</Preview>
+
+## Right slot
+<Preview>
+  <Story name="Right slot">
+    {{
+      template: `
+        <k-bar>
+          <template slot="right">
+            This is on the right
+          </template>
+        </k-bar>
+      `
+    }}
+  </Story>
+</Preview>
+
+## Left and Right
+<Preview>
+  <Story name="Left and Right">
+    {{
+      template: `
+        <k-bar>
+          <template slot="left">
+            This is left
+          </template>
+          <template slot="right">
+            This is right
+          </template>
+        </k-bar>
+      `
+    }}
+  </Story>
+</Preview>
+
+
+## All slots
+<Preview>
+  <Story name="All slots">
+    {{
+      template: `
+        <k-bar>
+          <template slot="left">
+            This is left
+          </template>
+          <template slot="center">
+            This is in the center
+          </template>
+          <template slot="right">
+            This is right
+          </template>
+        </k-bar>
+      `
+    }}
+  </Story>
+</Preview>
+
+## CSS class
+
+`.k-bar`

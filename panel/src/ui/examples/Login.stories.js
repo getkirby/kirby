@@ -1,6 +1,6 @@
 
 export default {
-  title: "Views / Login"
+  title: "UI | Views / Login"
 };
 
 export const regular = () => ({
