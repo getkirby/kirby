@@ -3,6 +3,7 @@
     :is="element"
     :data-ratio="ratio"
     :style="'padding-bottom:' + ratioPadding"
+    :class="back ? 'bg-' + back : false"
     class="k-aspect-ratio"
     v-on="$listeners"
   >
@@ -19,6 +20,10 @@
 
 export default {
   props: {
+    /**
+     * Background color (black, white, pattern)
+     */
+    back: String,
     /**
      * HTML tag to be used as wrapping element
      */

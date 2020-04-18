@@ -36,7 +36,6 @@ export default {
 
 <style lang="scss">
 .k-icon {
-  position: relative;
   line-height: 0;
   display: flex;
   align-items: center;

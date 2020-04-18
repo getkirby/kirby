@@ -216,6 +216,23 @@ b {
   color: $color-black;
 }
 
+/** Positioning **/
+.absolute {
+  position: absolute;
+}
+.relative {
+  position: relative;
+}
+.static {
+  position: static;
+}
+.sticky {
+  position: sticky;
+}
+.fixed {
+  position: fixed;
+}
+
 /** Display **/
 .block {
   display: block;
