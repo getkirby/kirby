@@ -1,0 +1,33 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Breadcrumb from "./Breadcrumb.vue";
+
+
+<Meta
+  title="UI | Navigation / Breadcrumb"
+  component={Breadcrumb}
+/>
+
+# Breadcrumb `<k-breadcrumb>`
+
+<Preview>
+  <Story name="Example">
+    {{
+      computed: {
+        links() {
+          return [
+            { link: "https://getkirby.com", text: "Home" },
+            { link: "https://getkirby.com/docs", text: "Docs" },
+            { link: "https://getkirby.com/docs/guide", text: "Guide" },
+            { link: "https://getkirby.com/docs/guide/blueprints", text: "Blueprints" }
+          ];
+        }
+      },
+      template: `
+        <k-breadcrumb :links="links" />
+      `,
+    }}
+  </Story>
+</Preview>
+
+
+<Props of={Breadcrumb} />

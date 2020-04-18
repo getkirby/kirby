@@ -1,0 +1,45 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Progress from "./Progress.vue";
+
+
+<Meta
+  title="UI | Interaction / Progress"
+  component={Progress}
+  decorators={[Padding]}
+/>
+
+# Progress `<k-progress>`
+
+<Preview>
+  <Story name="Example">
+    {{
+      template: `
+        <k-progress :value="85" />
+      `,
+    }}
+  </Story>
+</Preview>
+
+<Props of={Progress} />
+
+## Setting the value
+
+Instead of passing the current percentage via the `value` prop, you can also use the `set(value)` method:
+
+<Preview>
+  <Story name="Set value">
+    {{
+      template: `
+        <div>
+          <k-progress ref="progress" :value="50" />
+          <k-button-group>
+            <k-button @click="$refs.progress.set(0)">0%</k-button>
+            <k-button @click="$refs.progress.set(50)">50%</k-button>
+            <k-button @click="$refs.progress.set(100)">100%</k-button>
+          </k-button-group>
+        </div>
+      `,
+    }}
+  </Story>
+</Preview>

@@ -11,6 +11,9 @@
 <script>
 export default {
   props: {
+    /**
+     * Progress percentage (0-100)
+     */
     value: {
       type: Number,
       default: 0
