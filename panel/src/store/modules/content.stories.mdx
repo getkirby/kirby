@@ -1,16 +1,66 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta
-  title="$store | Content"
+  title="$store | content"
 />
 
-# Content store
+# `content` store
+
+The content store is home for all values from the model's content file as well as unsaved changes and meta information about things such as content locking. A model in this context can refer to a page, a file or a user.
+
+
+## Getters
+
+Ideally use the value from a getter as a computed prop in your component, e.g.:
+
+```js
+computed: {
+  storeValues() {
+    return this.$store.getters["content/values"]();
+  }
+}
+```
+
+| Key | Parameters | Returns | Description |
+|-|-|-|-|
+| `exists` | `id` | `bool` | Checks if a model exists in the store |
+| `hasChanges`| `id` (optional) | `bool`  | Checks if a model has unsaved changes |
+| `id` | `id` | `string` | Returns ID (current or provided) with correct language suffix |
+| `isCurrent` |  `id` | `bool` | Checks if specified ID is the current model |
+| `model` |  `id` (optional) | `object` | Returns the full model object |
+| `originals` |  `id` (optional) | `object` | Returns all original values (as in content file) for a model |
+| `changes` |  `id` (optional) | `object` | Returns all unsaved changes for a model |
+| `values` | `id` (optional) | `object` | Returns all values for a model (originals updated with unsaved changes) |
+
+#### Get the current page/file/user id
+```js
+this.$store.getters["content/id"]()
+```
+
+#### Get all values for the current model
+```js
+this.$store.getters["content/values"]()
+```
+
+#### Check if there are unsaved changes for the current model
+```js
+this.$store.getters["content/hasChanges"]()
+```
+
 
 ## State
 
+If the getters are not sufficient for retrevieng the desired information from the store, you might access the store's state direcly. This is best done in/as a computed prop:
+
 ```js
-this.$store.state.content.current
+computed: {
+  current() {
+    return this.$store.state.content.current;
+  }
+}
 ```
+
+The state consists of three main keys:
 
 | Key | Description |
 |-|-|
@@ -49,30 +99,23 @@ this.$store.state.content.current
 
 ```
 
-## Getters
+## Actions
+
+Altering the state is done via dispatching actions to the content store.
 
 ```js
-this.$store.getters["content/values"](id)
+this.$store.dispatch("content/ActionOfChoice", parameter)
 ```
 
-| Key | Parameters | Description |
-|-|-|-|
-| `exists` | `id` | Checks if a model exists in the store |
-| `hasChanges` | `id` (optional) | Checks if a model has unsaved changes |
-| `id` | `id` | Returns ID (current or provided) with correct language suffix |
-| `isCurrent` |  `id` | Checks if specified ID is the current model |
-| `model` |  `id` (optional) | Returns the full model object |
-| `originals` |  `id` (optional) | Returns all original values (as in content file) for a model |
-| `changes` |  `id` (optional) | Returns all unsaved changes for a model |
-| `values` | `id` (optional) | Returns all values for a model (originals updated with unsaved changes) |
-
-## Actions
+E.g. updating the value of a specific field for the current model:
 
 ```js
 this.$store.dispatch("content/update", ["myField", "newValue"])
 ```
 
-| Key | Parameters | Description |
+Use these action with cation as they can result in changes to your content files.
+
+| Name | Parameter | Description |
 |-|-|-|
 | `create` | `model` | Create a store entry for a model |
 | `current` | `id` | Set the current model |
@@ -80,7 +123,7 @@ this.$store.dispatch("content/update", ["myField", "newValue"])
 | `enable ` |  | Enable content forms |
 | `init` |  | Initializes store with data from `localStorage` |
 | `lock` | `lock` | Set data for content lock |
-| `move` | `[oldId, newId]` | Move a store entry for a model |
+| `move` | `[oldId, newId]` | Move the store entry for a model |
 | `remove` | `id` | Remove a model from store |
 | `revert` | `id` (optional) | Discard unsaved changes for a model |
 |`save`  | `id` (optional) | Update content file for a model |
