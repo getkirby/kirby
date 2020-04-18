@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Internals | $library"
+/>
+
+# Libraries
+
+The Panel bundles a few common libraries that also can be used in plugins.
+
+## How to access libraries
+
+The Panel exposes all shared libraries via `this.$library`:
+
+```js
+// example in the Vue component of a custom field
+
+panel.plugin("your/date-display-field", {
+  fields: {
+    "date-display": {
+      // …
+      computed: {
+        currentDate() {
+          return this.$library.dayjs().format("DD/MM/YYYY");
+        }
+      }
+      // …
+    }
+  }
+});
+```
+
+## Available libraries
+### `autosize`
+
+Automatically adjust textarea height.  
+[Documentation](http://www.jacklmoore.com/autosize/)
+
+```js
+mounted() {
+  this.$nextTick(() => {
+    this.$library.autosize(this.$refs.input);
+  });
+}
+```
+
+### `dayjs`
+
+Parse, validate, manipulate, and display dates and times.  
+[Documentation](https://day.js.org/)
+
+```js
+this.$library.dayjs()
+```
