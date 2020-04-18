@@ -1,5 +1,8 @@
 <template>
-  <nav :aria-label="label" class="k-breadcrumb">
+  <nav 
+    :aria-label="label" 
+    class="k-breadcrumb"
+  >
     <ol>
       <li
         v-for="(crumb, index) in links"

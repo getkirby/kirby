@@ -1,5 +1,6 @@
 <template>
   <div class="k-button-group">
+    <!-- @slot All the buttons -->
     <slot />
   </div>
 </template>

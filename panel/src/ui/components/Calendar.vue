@@ -76,11 +76,13 @@
 
 export default {
   props: {
+    /**
+     * ISO date string. I.e. 2012-12-12
+     */
     value: String,
     disabled: Boolean
   },
   data() {
-
     const current = this.value ? this.$library.dayjs(this.value) : this.$library.dayjs();
 
     return {
@@ -236,6 +238,10 @@ export default {
         this.current.minute()
       ));
 
+      /**
+       * The input event is fired when a date is selected. 
+       * The date is passed as ISO date string.
+       */
       this.$emit("input", date.toISOString());
     }
   }

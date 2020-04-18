@@ -1,0 +1,110 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import { action } from "@storybook/addon-actions";
+import Padding from "../storybook/Padding.js";
+import Button from "./Button.vue";
+
+<Meta
+  title="UI | Navigation / Button"
+  component={Button}
+  decorator={[Padding]}
+/>
+
+# Button
+### `<k-button>`
+
+<Preview>
+  <Story name="Only Text">
+    {{
+      methods: {
+        action: action('clicked')
+      },
+      template: '<k-button @click="action">Text Button</k-button>',
+    }}
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Text and Icon">
+    {{
+      methods: {
+        action: action('clicked')
+      },
+      template: '<k-button icon="edit" @click="action">Icon & Text</k-button>',
+    }}
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Only Icon">
+    {{
+      methods: {
+        action: action('clicked')
+      },
+      template: '<k-button icon="edit" @click="action" />',
+    }}
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Link">
+    {{
+      template: '<k-button icon="url" link="https://getkirby.com">Link</k-button>'
+    }}
+  </Story>
+</Preview>
+
+
+<Props of={Button} />
+
+
+## Themes
+
+<Preview>
+  <Story name="Positive">
+    {{
+      methods: {
+        action: action('clicked')
+      },
+      template: '<k-button icon="check" theme="positive" @click="action">Nice one!</k-button>'
+    }}
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Negative">
+    {{
+      methods: {
+        action: action('clicked')
+      },
+      template: '<k-button icon="trash" theme="negative" @click="action">Uh oh!</k-button>'
+    }}
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Disabled">
+    {{
+      methods: {
+        action: action('clicked')
+      },
+      template: '<k-button :disabled="true" icon="trash" @click="action">Disabled button</k-button>'
+    }}
+  </Story>
+</Preview>
+
+## Methods
+
+**`focus()`**  
+Focuses the button manually
+
+**`tab()`**  
+Activate the tab style of the button manually
+
+**`untab()`**  
+Deactivates the tab style of the button manually
+
+## Events
+You can bind any typical button event to this component.
+
+## CSS class
+`.k-button`

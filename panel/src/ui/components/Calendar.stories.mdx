@@ -1,0 +1,81 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Calendar from "./Calendar.vue";
+
+<Meta
+  title="UI | Interaction / Calendar"
+  component={Calendar}
+  decorators={[Padding]}
+/>
+
+# Calendar
+### `<k-calendar>`
+
+The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
+
+```html
+<k-calendar value="2012-12-12" @input="selectDate" />
+```
+### As dropdown
+<Preview>
+  <Story name="As dropdown">
+    {{
+      data() {
+        return {
+          date: ""
+        };
+      },
+      template: `
+        <div>
+          <k-dropdown class="inline-block mb-8">
+            <k-button
+              icon="calendar"
+              @click="$refs.calendar.open()"
+            >
+              Open calendar
+            </k-button>
+            <k-dropdown-content ref="calendar">
+              <k-calendar
+                v-model="date"
+                @input="$refs.calendar.close()"
+              />
+            </k-dropdown-content>
+          </k-dropdown>
+          <k-headline class="mb-3">Date</k-headline>
+          <k-code-block :code="date" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Inline
+<Preview>
+  <Story name="Inline">
+    {{
+      data() {
+        return {
+          date: ""
+        };
+      },
+      template: `
+        <div>
+          <k-headline class="mb-3">Calendar</k-headline>
+          <k-calendar
+            v-model="date"
+            class="mb-6"
+          />
+          <k-headline class="mb-3">Date</k-headline>
+          <k-code-block :code="date" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={Calendar} />
+
+
+## CSS class
+
+`.k-calendar`
