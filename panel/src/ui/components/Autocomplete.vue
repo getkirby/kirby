@@ -1,5 +1,6 @@
 <template>
   <k-dropdown class="k-autocomplete">
+    <!-- @slot Slot for the input element -->
     <slot />
     <k-dropdown-content
       ref="dropdown"
@@ -20,7 +21,6 @@
         {{ item.text }}
       </k-dropdown-item>
     </k-dropdown-content>
-    {{ query }}
   </k-dropdown>
 </template>
 
@@ -28,18 +28,36 @@
 
 export default {
   props: {
-    limit: {
-      type: Number,
-      default: 10,
-    },
-    skip: {
+    /**
+     * Options for the autocomplete dropdown must be passed as an array
+     * of objects. Each object can have as many items as you like,
+     * but a `text` item is required to match agains the query:
+     * ```
+     * [{ text: "this will be searched", id: "anything else is optional" }];
+     * ```
+     */
+    options: {
       type: Array,
       default() {
         return [];
       }
     },
-    options: Array,
-    query: String
+    /**
+     * Maximum number of entries in autocomplete dropdown
+     */
+    limit: {
+      type: Number,
+      default: 10,
+    },
+    /**
+     * You can pass an array of strings, which should be ignored in the search.
+     */
+    skip: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
   },
   data() {
     return {
@@ -50,10 +68,22 @@ export default {
   methods: {
     close() {
       this.$refs.dropdown.close();
+
+      /**
+       * Whenever the dropdown is being closed,
+       * the event is fired
+       */
+      this.$emit("close");
     },
-    onSelect(value) {
-      this.$refs.dropdown.close();
-      this.$emit("select", value);
+    onSelect(item) {
+      this.close();
+
+      /**
+       * The event is being triggered as soon as one of
+       * the options in the dropdown is being clicked or
+       * enter/tab is being hit. Passes the selected item.
+       */
+      this.$emit("select", item);
     },
     search(query) {
 
@@ -83,7 +113,12 @@ export default {
         })
         .slice(0, this.limit);
 
-      this.$emit("search", query, this.matches);
+      /**
+       * On every keystroke this event is fired,
+       * which can be used to react on searches.
+       * Passes object with `query` and `matches` keys.
+       */
+      this.$emit("search", { query:query, matches: this.matches });
       this.$refs.dropdown.open();
     }
   }

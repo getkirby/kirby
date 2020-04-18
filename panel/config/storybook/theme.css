@@ -23,8 +23,8 @@
 
 
 
-.sidebar-subheading {
-  text-transform: none !important;
+.sidebar-subheading,
+.docblock-propstable-body th {
   letter-spacing: 0 !important;
   color: #000 !important;
 }
@@ -67,7 +67,16 @@ code {
   color: #a9aaad !important;
 }
 
+.hljs .punctuation {
+  color: #cacbd1 !important;
+}
+
 .hljs .string,
+.hljs .attr-value,
+.hljs .attr-value.punctuation  {
+  color: #a7bd68 !important
+}
+
 .hljs .symbol,
 .hljs .bullet,
 .hljs .regexp {
@@ -85,7 +94,8 @@ code {
 .hljs .type,
 .hljs .template-variable,
 .hljs .attribute,
-.hljs .link {
+.hljs .link,
+.hljs .attr-name {
   color: #de935f !important;
 }
 
@@ -100,6 +110,7 @@ code {
 .hljs .title,
 .hljs .variable,
 .hljs .deletion,
-.hljs .template-tag {
+.hljs .template-tag, 
+.hljs .tag {
   color: #d16464 !important;
 }
