@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Navigation / Button",
+  title: "UI | Navigation / Button",
   component: Button,
   decorators: [Padding]
 };

@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Range Input",
+  title: "UI | Form / Input / Range Input",
   component: RangeInput,
   decorators: [Padding]
 };

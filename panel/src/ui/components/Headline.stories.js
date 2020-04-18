@@ -2,7 +2,7 @@ import Headline from "./Headline.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Typography / Headline",
+  title: "UI | Typography / Headline",
   component: Headline,
   decorators: [Padding]
 };

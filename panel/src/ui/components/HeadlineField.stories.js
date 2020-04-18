@@ -2,7 +2,7 @@ import HeadlineField from "./HeadlineField.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Form / Field / Headline Field",
+  title: "UI | Form / Field / Headline Field",
   component: HeadlineField,
   decorators: [Padding]
 };

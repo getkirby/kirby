@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { withKnobs, text, select, boolean, number } from '@storybook/addon-knobs';
 
 export default {
-  title: "Media / Image",
+  title: "UI | Media / Image",
   decorators: [withKnobs, Padding],
   component: Image
 };

@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Textarea Input",
+  title: "UI | Form / Input / Textarea Input",
   component: TextareaInput,
   decorators: [Padding]
 };

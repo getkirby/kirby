@@ -2,7 +2,7 @@ import Drawer from "./Drawer.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Dialog / Drawer",
+  title: "UI | Dialog / Drawer",
   component: Drawer,
 };
 

@@ -2,7 +2,7 @@ import Loader from "./Loader.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Interaction / Loader",
+  title: "UI | Interaction / Loader",
   component: Loader,
   decorators: [Padding]
 };

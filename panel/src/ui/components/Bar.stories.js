@@ -2,7 +2,7 @@ import Bar from "./Bar.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Layout / Bar",
+  title: "UI | Layout / Bar",
   component: Bar,
   decorators: [Padding]
 };

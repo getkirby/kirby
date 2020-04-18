@@ -2,7 +2,7 @@ import Pagination from "./Pagination.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Navigation / Pagination",
+  title: "UI | Navigation / Pagination",
   decorators: [Padding],
   component: Pagination
 };

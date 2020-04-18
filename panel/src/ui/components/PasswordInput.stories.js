@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Password Input",
+  title: "UI | Form / Input / Password Input",
   component: PasswordInput,
   decorators: [Padding]
 };

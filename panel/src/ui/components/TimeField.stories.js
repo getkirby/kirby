@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Field / Time Field",
+  title: "UI | Form / Field / Time Field",
   component: TimeField,
   decorators: [Padding]
 };

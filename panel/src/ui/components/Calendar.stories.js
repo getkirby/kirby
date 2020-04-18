@@ -2,7 +2,7 @@ import Calendar from "./Calendar.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Interaction / Calendar",
+  title: "UI | Interaction / Calendar",
   component: Calendar,
   decorators: [Padding]
 };

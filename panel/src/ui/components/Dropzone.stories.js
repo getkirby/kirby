@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Interaction / Dropzone",
+  title: "UI | Interaction / Dropzone",
   component: Dropzone,
   decorators: [Padding]
 };

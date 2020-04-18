@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { withKnobs, text } from '@storybook/addon-knobs';
 
 export default {
-  title: "Typography / Code Block",
+  title: "UI | Typography / Code Block",
   decorators: [withKnobs, Padding],
   component: CodeBlock
 };

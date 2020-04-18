@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Dialog / Form Dialog",
+  title: "UI | Dialog / Form Dialog",
   component: FormDialog,
   decorators: [Padding]
 };

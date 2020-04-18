@@ -2,7 +2,7 @@ import Upload from "./Upload.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Interaction / Upload",
+  title: "UI | Interaction / Upload",
   component: Upload,
   decorators: [Padding]
 };

@@ -1,7 +1,7 @@
 import View from "./View.vue";
 
 export default {
-  title: "Layout / View",
+  title: "UI | Layout / View",
   component: View
 };
 

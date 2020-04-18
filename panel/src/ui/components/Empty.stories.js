@@ -2,7 +2,7 @@ import Empty from "./Empty.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Layout / Empty",
+  title: "UI | Layout / Empty",
   decorators: [Padding],
   component: Empty
 };

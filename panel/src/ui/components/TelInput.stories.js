@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Tel Input",
+  title: "UI | Form / Input / Tel Input",
   component: TelInput,
   decorators: [Padding]
 };

@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Field / Range Field",
+  title: "UI | Form / Field / Range Field",
   component: RangeField,
   decorators: [Padding]
 };

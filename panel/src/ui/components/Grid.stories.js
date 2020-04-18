@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { withKnobs, number, select } from '@storybook/addon-knobs';
 
 export default {
-  title: "Layout / Grid",
+  title: "UI | Layout / Grid",
   decorators: [withKnobs, Padding],
   component: Grid
 };

@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Field / Tel Field",
+  title: "UI | Form / Field / Tel Field",
   component: TelField,
   decorators: [Padding]
 };

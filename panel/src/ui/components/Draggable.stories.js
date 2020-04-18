@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Interaction / Draggable",
+  title: "UI | Interaction / Draggable",
   component: Draggable,
   decorators: [Padding]
 };

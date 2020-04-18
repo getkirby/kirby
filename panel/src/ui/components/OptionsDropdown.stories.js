@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Dropdown / Options Dropdown",
+  title: "UI | Dropdown / Options Dropdown",
   decorators: [Padding],
   component: OptionsDropdown
 };

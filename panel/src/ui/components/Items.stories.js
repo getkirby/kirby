@@ -2,7 +2,7 @@ import Items from "./Items.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Data / Items",
+  title: "UI | Data / Items",
   component: Items,
   decorators: [Padding]
 };

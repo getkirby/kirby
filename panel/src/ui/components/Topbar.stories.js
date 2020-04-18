@@ -1,7 +1,7 @@
 import Topbar from "./Topbar.vue";
 
 export default {
-  title: "Navigation / Topbar",
+  title: "UI | Navigation / Topbar",
   component: Topbar
 };
 

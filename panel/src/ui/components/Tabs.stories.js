@@ -2,7 +2,7 @@ import Tabs from "./Tabs.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Navigation / Tabs",
+  title: "UI | Navigation / Tabs",
   component: Tabs,
   decorators: [Padding]
 };

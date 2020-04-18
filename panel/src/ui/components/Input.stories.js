@@ -2,7 +2,7 @@ import Input from "./Input.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Form / Foundation / Input",
+  title: "UI | Form / Foundation / Input",
   component: Input,
   decorators: [Padding]
 };

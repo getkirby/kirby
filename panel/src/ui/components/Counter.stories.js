@@ -6,7 +6,7 @@ import {
 } from '@storybook/addon-knobs';
 
 export default {
-  title: "Interaction / Counter",
+  title: "UI | Interaction / Counter",
   decorators: [withKnobs, Padding],
   component: Counter
 };

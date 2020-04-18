@@ -2,7 +2,7 @@ import RadioField from "./RadioField.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Form / Field / Radio Field",
+  title: "UI | Form / Field / Radio Field",
   component: RadioField,
   decorators: [Padding]
 };

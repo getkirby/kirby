@@ -2,7 +2,7 @@ import Icons from "./Icons.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Media / Icons",
+  title: "UI | Media / Icons",
   component: Icons,
   decorators: [Padding]
 };

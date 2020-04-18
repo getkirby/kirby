@@ -2,7 +2,7 @@ import PrevNext from "./PrevNext.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Navigation / PrevNext",
+  title: "UI | Navigation / PrevNext",
   component: PrevNext,
   decorators: [Padding]
 };

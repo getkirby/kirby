@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Field / Structure Field",
+  title: "UI | Form / Field / Structure Field",
   component: StructureField,
   decorators: [Padding]
 };

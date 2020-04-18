@@ -2,7 +2,7 @@ import Box from "./Box.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Layout / Box",
+  title: "UI | Layout / Box",
   decorators: [Padding],
   component: Box
 };

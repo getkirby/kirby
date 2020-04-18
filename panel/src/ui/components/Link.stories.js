@@ -2,7 +2,7 @@ import Link from "./Link.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Navigation / Link",
+  title: "UI | Navigation / Link",
   decorators: [Padding],
   component: Link
 };

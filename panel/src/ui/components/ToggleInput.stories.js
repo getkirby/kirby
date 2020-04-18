@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Toggle Input",
+  title: "UI | Form / Input / Toggle Input",
   component: ToggleInput,
   decorators: [Padding]
 };

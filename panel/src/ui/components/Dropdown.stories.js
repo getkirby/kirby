@@ -6,7 +6,7 @@ import { action } from "@storybook/addon-actions";
 import { withKnobs } from '@storybook/addon-knobs';
 
 export default {
-  title: "Dropdown / Base Dropdown",
+  title: "UI | Dropdown / Base Dropdown",
   decorators: [withKnobs, Padding],
   component: Dropdown,
   subcomponents: {

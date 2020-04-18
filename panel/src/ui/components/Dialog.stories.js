@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Dialog / Base Dialog",
+  title: "UI | Dialog / Base Dialog",
   component: Dialog,
   decorators: [Padding],
 };

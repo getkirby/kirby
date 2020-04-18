@@ -4,7 +4,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Foundation / Toolbar",
+  title: "UI | Form / Foundation / Toolbar",
   component: Toolbar,
   decorators: [Padding]
 };

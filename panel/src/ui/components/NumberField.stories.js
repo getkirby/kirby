@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Field / Number Field",
+  title: "UI | Form / Field / Number Field",
   component: NumberField,
   decorators: [Padding]
 };

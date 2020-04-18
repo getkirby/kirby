@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Data / Table",
+  title: "UI | Data / Table",
   component: Table,
   decorators: [Padding]
 };

@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Input / Checkbox Input",
+  title: "UI | Form / Input / Checkbox Input",
   component: CheckboxInput,
   decorators: [Padding],
 };

@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Misc / Tag",
+  title: "UI | Misc / Tag",
   component: Tag,
   decorators: [Padding]
 };

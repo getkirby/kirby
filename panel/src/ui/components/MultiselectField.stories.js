@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Form / Field / Multiselect Field",
+  title: "UI | Form / Field / Multiselect Field",
   component: MultiselectField,
   decorators: [Padding]
 };

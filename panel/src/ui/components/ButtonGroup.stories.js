@@ -2,7 +2,7 @@ import ButtonGroup from "./ButtonGroup.vue";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "Navigation / Button Group",
+  title: "UI | Navigation / Button Group",
   component: ButtonGroup,
 };
 

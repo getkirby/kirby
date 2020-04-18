@@ -2,7 +2,7 @@ import Field from "./Field.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "Form / Foundation / Field",
+  title: "UI | Form / Foundation / Field",
   component: Field,
   decorators: [Padding]
 };
