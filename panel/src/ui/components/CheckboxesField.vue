@@ -26,6 +26,9 @@ export default {
     ...Field.props,
     ...Input.props,
     ...CheckboxesInput.props,
+    /**
+     * Whether to show a counter for selected options
+     */
     counter: {
       type: Boolean,
       default: true

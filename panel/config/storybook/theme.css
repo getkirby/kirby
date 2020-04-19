@@ -1,4 +1,5 @@
 
+/* Sidebar */
 .sidebar-svg-icon {
   color: #4271ae !important;
 }
@@ -11,6 +12,11 @@
   color: #ccc !important;
 }
 
+/* Docs */
+.sbdocs {
+  font-family: var(--font-family-sans) !important;
+}
+
 .sbdocs-preview {
   background-color: #efefef !important;
   border-radius: 0 !important;
@@ -20,23 +26,15 @@
   border-radius: 0 !important;
 }
 
-.sbdocs-wrapper {
-  min-height: 100vh;
-  background: #fff;
-}
-
-
-
 .sidebar-subheading,
 .docblock-propstable-body th {
+  font-family: var(--font-family-sans) !important;
   letter-spacing: 0 !important;
   color: #000 !important;
 }
 
-
-
 code {
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+  font-family: var(--font-family-mono) !important;
   background: rgba(0, 0, 0, .07);
   border-radius: 3px;
   box-decoration-break: clone;
@@ -47,7 +45,7 @@ code {
 }
 
 
-
+/* Syntax highlighting */
 .hljs {
   color: #fff !important;
   background: #000 !important;
@@ -76,7 +74,7 @@ code {
 .hljs .string,
 .hljs .attr-value,
 .hljs .attr-value.punctuation  {
-  color: #a7bd68 !important
+  color: var(--color-positive-light) !important
 }
 
 .hljs .built_in,
@@ -89,7 +87,7 @@ code {
 .hljs .attr-name,
 .hljs .known-class-name,
 .hljs .class-name {
-  color: #de935f !important;
+  color: var(--color-notice-light) !important;
 }
 
 .hljs .keyword,
@@ -105,7 +103,7 @@ code {
 .hljs .deletion,
 .hljs .template-tag, 
 .hljs .tag {
-  color: #d16464 !important;
+  color: var(--color-negative-light) !important;
 }
 
 .hljs .function {

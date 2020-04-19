@@ -3,6 +3,7 @@
     :data-align="align"
     class="k-view"
   >
+    <!-- @slot View content -->
     <slot />
   </div>
 </template>
@@ -10,6 +11,9 @@
 <script>
 export default {
   props: {
+    /**
+     * Available values: `"center"`
+     */
     align: String
   }
 };

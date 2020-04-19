@@ -1,0 +1,106 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import { action } from "@storybook/addon-actions";
+import Padding from "../storybook/Padding.js";
+import Draggable from "./Draggable.vue";
+
+<Meta
+  title="UI | Interaction / Draggable"
+  component={Draggable}
+  decorators={[Padding]}
+/>
+
+# Draggable
+### `<k-draggable>`
+
+The Draggable component implements the [Vue.Draggable](https://github.com/SortableJS/Vue.Draggable) library which is a wrapper for the widespread [Sortable.js](https://github.com/RubaXa/Sortable) library.
+
+```html
+<k-draggable>
+  <li>Drag me.</li>
+  <li>Or me.</li>
+  <li>Drop it!</li>
+</k-draggable>
+```
+
+Please find all documentation regarding the possibilities over on the [Vue.Draggable documentation](https://github.com/SortableJS/Vue.Draggable). Whenever you read `draggable` there, think `k-draggable`.
+
+<Preview>
+  <Story name="Simple">
+    {{
+      data() {
+        return {
+          items: ['A', 'B', 'C', 'D']
+        }
+      },
+      computed: {
+        styles() {
+          return {
+            background: "white",
+            marginBottom: "2px",
+            padding: ".5rem",
+            cursor: "move"
+          };
+        }
+      },
+      methods: {
+        start: action("start"),
+        end: action("end")
+      },
+      template: `
+        <div>
+          <k-draggable element="ul" :list="items" @start="start" @end="end">
+            <li :style="styles" v-for="item in items">{{ item }}</li>
+          </k-draggable>
+          <br>
+          Result: {{ items }}
+        </div>
+      `,
+    }}
+  </Story>
+</Preview>
+
+#### With Sort Handle
+<Preview>
+  <Story name="With Sort Handle">
+    {{
+      data() {
+        return {
+          items: ["A", "B", "C", "D"]
+        };
+      },
+      computed: {
+        styles() {
+          return {
+            display: "flex",
+            alignItems: "center",
+            background: "white",
+            marginBottom: "2px",
+            padding: ".0625rem 0",
+          };
+        }
+      },
+      methods: {
+        start: action("start"),
+        end: action("end")
+      },
+      template: `
+        <div>
+          <k-draggable element="ul" :handle="true" :list="items" @start="start" @end="end">
+            <li :style="styles" v-for="item in items">
+              <k-sort-handle />
+              {{ item }}
+            </li>
+          </k-draggable>
+          <br>
+          Result: {{ items }}
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={Draggable} />
+
+## CSS class
+
+`.k-draggable`

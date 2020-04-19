@@ -23,9 +23,22 @@ export default {
     draggable: Draggable
   },
   props: {
+    /**
+     * HTML tag to use as wrapper
+     */
     element: String,
+    /**
+     * CSS class of optional sort handle element.
+     * If `true` the CSS selector `.k-sort-handle` will be used.
+     */
     handle: [String, Boolean],
+    /**
+     * Data that should be updated on interactions
+     */
     list: [Array, Object],
+    /**
+     * Callback function for when an element is moved
+     */
     move: Function,
     options: Object
   },

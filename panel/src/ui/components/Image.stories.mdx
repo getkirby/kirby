@@ -1,0 +1,174 @@
+import { Meta, Preview, Story } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Image from "./Image.vue";
+
+<Meta
+  title="UI | Media / Image"
+  component={Image}
+  decorators={[Padding]}
+/>
+
+# Image
+### `<k-image>`
+
+The Image component simplifies loading and sizing of images and their backgrounds.
+
+```html
+<k-image src="myimage.jpg" />
+```
+
+It can be used as a replacement for regular img tags, but has a bunch of additional options and built-in lazy-loading.
+
+<Preview>
+  <Story name="Simple">
+    {{
+      template: `
+        <k-image
+          ratio="16/9"
+          src="https://source.unsplash.com/user/erondu/1600x900"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={Image} />
+
+### Backgrounds `back`
+<Preview>
+  <Story name="Backgrounds">
+    {{
+      template: `
+        <k-grid gutter="large">
+          <k-column width="1/4">
+            <k-headline class="mb-3">black</k-headline>
+            <k-image
+              back="black"
+              ratio="1/1"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+          <k-column width="1/4">
+            <k-headline class="mb-3">white</k-headline>
+            <k-image
+              back="white"
+              ratio="1/1"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+          <k-column width="1/4">
+            <k-headline class="mb-3">pattern</k-headline>
+            <k-image
+              back="pattern"
+              ratio="1/1"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+          <k-column width="1/4">
+            <k-headline class="mb-3">none</k-headline>
+            <k-image
+              ratio="1/1"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+        </k-grid>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Ratios `ratio`
+<Preview>
+  <Story name="Ratios">
+    {{
+      template: `
+        <k-grid gutter="large">
+          <k-column width="1/4">
+            <k-headline class="mb-3">4/5</k-headline>
+            <k-image
+              back="pattern"
+              ratio="4/5"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+          <k-column width="1/4">
+            <k-headline class="mb-3">1/1</k-headline>
+            <k-image
+              back="pattern"
+              ratio="1/1"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+          <k-column width="1/4">
+            <k-headline class="mb-3">3/2</k-headline>
+            <k-image
+              back="pattern"
+              ratio="3/2"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+          <k-column width="1/4">
+            <k-headline class="mb-3">3/1</k-headline>
+            <k-image
+              ratio="3/1"
+              back="pattern"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+        </k-grid>
+      `
+    }}
+  </Story>
+</Preview>
+
+### `cover: true`
+<Preview>
+  <Story name="Cover">
+    {{
+      template: `
+        <k-grid gutter="large">
+          <k-column width="1/4">
+            <k-headline class="mb-3">4/5</k-headline>
+            <k-image
+              :cover="true"
+              back="pattern"
+              ratio="4/5"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+          <k-column width="1/4">
+            <k-headline class="mb-3">1/1</k-headline>
+            <k-image
+              :cover="true"
+              back="pattern"
+              ratio="1/1"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+          <k-column width="1/4">
+            <k-headline class="mb-3">3/2</k-headline>
+            <k-image
+              :cover="true"
+              back="pattern"
+              ratio="3/2"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+          <k-column width="1/4">
+            <k-headline class="mb-3">3/1</k-headline>
+            <k-image
+              :cover="true"
+              ratio="3/1"
+              back="pattern"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-column>
+        </k-grid>
+      `
+    }}
+  </Story>
+</Preview>
+
+## CSS class
+
+`.k-image`

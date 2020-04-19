@@ -22,9 +22,21 @@
 <script>
 export default {
   props: {
+    /**
+     * Current count number
+     */
     count: Number,
+    /**
+     * Lower limit (displayed in red if fallen short of)
+     */
     min: Number,
+    /**
+     * Upper limit (displayed in red if exceeded)
+     */
     max: Number,
+    /**
+     * If `true`, counter will also displayed in red if yount equals `0`
+     */
     required: {
       type: Boolean,
       default: false

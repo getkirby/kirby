@@ -1,0 +1,53 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import View from "./View.vue";
+
+<Meta
+  title="UI | Layout / View"
+  component={View}
+  decorators={[Padding]}
+/>
+
+# View
+### `<k-view>`
+
+The View component is a very basic wrapper, that makes sure to keep the right padding around your interface and also limits the max width. You should use it for full screen layouts only.
+
+```html
+<k-view>
+  <!-- your interface goes here -->
+</k-view>
+```
+
+View components should never be nested
+
+<Preview>
+  <Story name="Regular">
+    {{
+      template: `
+        <k-view>
+          View content
+        </k-view>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Centred
+<Preview>
+  <Story name="Centred">
+    {{
+      template: `
+        <k-view align="center">
+          View content
+        </k-view>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={View} />
+
+## CSS class
+
+`.k-view`
