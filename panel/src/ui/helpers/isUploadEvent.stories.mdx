@@ -1,0 +1,29 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Internals | $helper / isUploadEvent"
+/>
+
+# isUploadEvent
+### `this.$helper.isUploadEvent`
+
+Checks if a javascript event is really an upload event.
+
+#### Example
+
+```javascript
+<template>
+  <div @drop="onDrop" />
+</template>
+
+<script>
+export default {
+  methods: {
+    onDrop(event) {
+      if (this.$helper.isUploadEvent(event) === true) {
+        // …
+      }
+    }
+  }
+}
+```

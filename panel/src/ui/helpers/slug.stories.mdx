@@ -1,0 +1,54 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Internals | $helper / slug"
+/>
+
+# slug
+### `this.$helper.slug`
+
+Transform a string to a valid slug according to a specified ruleset.
+
+#### Parameters
+
+| Name  | Description
+| ----  | ---- |
+| `string` | String to be transformed |
+| `rules` | Array of transformation rulesets (objects themselves) |
+| `allowed` | String of allowed characters |
+
+#### Example
+
+```js
+return this.$helper.slug("Was für ein Spaß", [
+  {
+    "ü": "ue"
+  },
+  {
+    "ß": "sz"
+  }
+]);
+// result: "was-fuer-ein-spasz"
+```
+
+### Usage with `translation` store
+
+```js
+computed: {
+  asciiRules() {
+      return this.$store.state.system.info.ascii;
+  },
+  languageRules() {
+    if (this.$store.state.languages.current) {
+      return this.$store.state.languages.current.rules;
+    }
+
+    return this.system.slugs;
+  }
+},
+methods: {
+  getSlug(string) {
+    const slug = this.$helper.slug(string, [this.languageRules, this.asciiRules]);
+  }
+}
+```

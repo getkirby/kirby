@@ -17,6 +17,10 @@
   font-family: var(--font-family-sans) !important;
 }
 
+.sbdocs-wrapper {
+  min-height: 100vh;
+}
+
 .sbdocs-preview {
   background-color: #efefef !important;
   border-radius: 0 !important;
@@ -81,6 +85,8 @@ code {
 .hljs .builtin-name,
 .hljs .literal,
 .hljs .type,
+.hljs .number,
+.hljs .boolean,
 .hljs .template-variable,
 .hljs .attribute,
 .hljs .link,

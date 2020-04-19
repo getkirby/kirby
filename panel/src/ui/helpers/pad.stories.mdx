@@ -1,0 +1,25 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Internals | $helper / pad"
+/>
+
+# pad
+### `this.$helper.pad`
+
+Adds `0` to the left of the value.
+
+#### Parameters
+
+| Name  | Default | Description
+| ----  | ---- | ---- |
+| `value`  | - | Value to be padded |
+| `length` | `2` | Length of the returned string |
+
+#### Example
+
+```js
+let money = 9;
+return this.$helper.pad(money, 4);
+// result: "0009"
+```

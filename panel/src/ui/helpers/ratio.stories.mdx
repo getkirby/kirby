@@ -1,0 +1,23 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Internals | $helper / ratio"
+/>
+
+# ratio
+### `this.$helper.ratio`
+
+Receive a padding percentage for a specified image ratio.
+
+#### Parameters
+
+| Name  | Default | Description
+| ----  | ---- | ---- |
+| `ratio` | `3/2` | e.g. `1/2` |
+
+#### Example
+
+```js
+return this.$helper.ratio("1/2");
+// result: "50%"
+```

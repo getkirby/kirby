@@ -21,7 +21,8 @@
 export default {
   props: {
     /**
-     * Background color (black, white, pattern)
+     * Background color.  
+     * Available options: `"black"`, `"white"`, `"pattern"`
      */
     back: String,
     /**
@@ -32,7 +33,7 @@ export default {
       default: "span",
     },
     /**
-     * Ratio fraction, e.g. "1/2", "3/2" etc.
+     * Ratio fraction, e.g. `"1/2"`, `"3/2"` etc.
      */
     ratio: {
       type: String,
