@@ -1,0 +1,98 @@
+import { Meta, ColorPalette, ColorItem } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Design System | Colors"
+/>
+
+# Colors
+
+We use a distinctive set of colors for defining the look of the Panel. While there are no limitations to colors for your UI components, we recommend that you follow our design principles closely, keeping a smooth and consistent user experience across the whole Panel, including your own extensions. Use the greyscale palette as much as possible and saturated colors sparsely. Unless an element provides additional information or context through its color, it should not stick out.
+
+
+<ColorPalette>
+  <ColorItem
+    title="BW"
+    subtitle="Text"
+    colors={['#fff', '#000']}
+  />
+
+  <ColorItem
+    title="Background"
+    colors={['#efefef']}
+  />
+
+  <ColorItem
+    title="Grey"
+    colors={['#ddd', '#ccc', '#999', '#777', '#555']}
+  />
+
+  <ColorItem
+    title="Red"
+    subtitle="Negative"
+    colors={['#edc1c1', '#d16464', '#c82829']}
+  />
+
+  <ColorItem
+    title="Orange"
+    subtitle="Notice"
+    colors={['#f2d4bf', '#de935f', '#f4861f']}
+  />
+
+  <ColorItem
+    title="Yellow"
+    colors={['#f9e8c7', '#f0c674', '#cca000']}
+  />
+
+  <ColorItem
+    title="Green"
+    subtitle="Positive"
+    colors={['#dce5c2', '#a7bd68', '#5d800d']}
+  />
+
+  <ColorItem
+    title="Aqua"
+    colors={['#d0e5e2', '#8abeb7', '#398e93']}
+  />
+
+  <ColorItem
+    title="Blue"
+    subtitle="Focus"
+    colors={['#cbd7e5', '#7e9abf', '#4271ae']}
+  />
+
+  <ColorItem
+    title="Purple"
+    colors={['#e0d4e4', '#b294bb', '#9c48b9']}
+  />
+
+</ColorPalette>
+
+
+### CSS variables
+
+Since version 3.3.0, we use CSS variables for the most important parameters in the Panel. This is useful for all plugin developers, because you no longer need to find color values, font sizes or similar stuff in our stylesheets and hope that we won’t change them.
+
+```css
+/** Colors **/
+--color-backdrop
+--color-background
+--color-border
+--color-focus
+--color-focus-light
+--color-focus-outline
+--color-negative
+--color-negative-light
+--color-negative-outline
+--color-notice
+--color-notice-light
+--color-positive
+--color-positive-light
+--color-positive-outline
+--color-text
+--color-text-light
+
+/** Shadows **/
+--box-shadow-dropdown
+--box-shadow-item
+--box-shadow-focus
+```

@@ -96,6 +96,10 @@ code {
   color: var(--color-notice-light) !important;
 }
 
+.hljs .property {
+  color: #f0c674 !important;
+}
+
 .hljs .keyword,
 .hljs .selector-tag,
 .hljs .name,

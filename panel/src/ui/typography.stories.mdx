@@ -1,0 +1,79 @@
+import { Meta, Typeset } from '@storybook/addon-docs/blocks';
+
+<Meta
+  title="Design System | Typography"
+/>
+
+# Typography
+
+The Panel uses the system fonts available on your device for fast loading times and to provide good support for websites with non-latin text. It is highly recommended to use our system-font stacks, so your extension will work consistently across multiple languages.
+
+#### Sans-serif
+
+By default, all text throughout the Panel's UI uses a sans-serif font. As the font is automatically inherited by your components, you usually don’t have to apply it again. However, if your plugin uses iframes or third-party components that force you to override the font by hand, we recommend that you use the same font stack as we do:
+
+```css
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+```
+
+export const sizes = ['0.750rem', '0.875rem', '1.000rem', '1.250rem', '1.500rem', '1.750rem'];
+export const sans = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"';
+export const mono = '"SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace';
+
+#### `font-weight: 400`
+<Typeset 
+  fontSizes={sizes}
+  fontFamily={sans}
+  fontWeight={400}
+  sampleText='Well the way you pull the fuzzys from my sweater'
+/>
+
+#### `font-weight: 600`
+<Typeset 
+  fontSizes={sizes}
+  fontFamily={sans}
+  fontWeight={600}
+  sampleText='Well the way you pull the fuzzys from my sweater'
+/>
+
+#### Monospace
+
+If your component needs to use a monospaced font, we recommend using the font-stack listed below instead:
+
+```css
+font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+```
+
+#### `font-weight: 400`
+<Typeset 
+  fontSizes={sizes}
+  fontFamily={mono}
+  fontWeight={400}
+  sampleText='Well the way you pull the fuzzys from my sweater'
+/>
+
+#### `font-weight: 600`
+<Typeset 
+  fontSizes={sizes}
+  fontFamily={mono}
+  fontWeight={600}
+  sampleText='Well the way you pull the fuzzys from my sweater'
+/>
+
+### CSS variables
+
+Since version 3.3.0, we use CSS variables for the most important parameters in the Panel. This is useful for all plugin developers, because you no longer need to find color values, font sizes or similar stuff in our stylesheets and hope that we won’t change them.
+
+```css
+/** Font families **/
+--font-family-mono
+--font-family-sans
+
+/** Font sizes **/
+--font-size-tiny
+--font-size-small
+--font-size-medium
+--font-size-large
+--font-size-huge
+--font-size-monster
+```
