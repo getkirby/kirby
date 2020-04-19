@@ -3,26 +3,11 @@
     :data-layout="layout"
     class="k-collection"
   >
-    <k-draggable
-      :list="items"
-      :options="dragOptions"
-      :element="elements.list"
-      :data-size="size"
-      :handle="true"
-      @change="$emit('change', $event)"
-      @end="onEnd"
-    >
-      <component
-        :is="elements.item"
-        v-for="(item, index) in items"
-        :key="index"
-        :class="{'k-draggable-item': item.sortable}"
-        v-bind="item"
-        @action="$emit('action', item, $event)"
-        @dragstart="onDragStart($event, item.dragText)"
-      />
-    </k-draggable>
-
+    <k-items
+      :items="items"
+      :layout="layout"
+      :sortable="sortable"
+    />
     <footer
       v-if="hasFooter"
       class="k-collection-footer"
@@ -58,7 +43,6 @@ export default {
       type: String,
       default: "list"
     },
-    size: String,
     sortable: Boolean,
     pagination: {
       type: [Boolean, Object],
@@ -90,31 +74,6 @@ export default {
 
       return false;
     },
-    dragOptions() {
-      return {
-        sort: this.sortable,
-        disabled: this.sortable === false,
-        draggable: ".k-draggable-item"
-      };
-    },
-    elements() {
-      const layouts = {
-        cards: {
-          list: "k-card-items",
-          item: "k-card-item"
-        },
-        list: {
-          list: "k-list-items",
-          item: "k-list-item"
-        }
-      };
-
-      if (layouts[this.layout]) {
-        return layouts[this.layout];
-      }
-
-      return layouts["list"];
-    },
     paginationOptions() {
       const options =
         typeof this.pagination !== "object" ? {} : this.pagination;
@@ -126,26 +85,6 @@ export default {
         hide: false,
         ...options
       };
-    }
-  },
-  watch: {
-    $props() {
-      this.$forceUpdate();
-    }
-  },
-  over: null,
-  methods: {
-    onEnd() {
-      if (this.over) {
-        this.over.removeAttribute("data-over");
-      }
-      this.$emit("sort", this.items);
-    },
-    onDragStart($event, dragText) {
-      this.$store.dispatch("drag", {
-        type: "text",
-        data: dragText
-      });
     }
   }
 };

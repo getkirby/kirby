@@ -1,16 +1,16 @@
-import Items from "./Items.vue";
+import Collection from "./Collection.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "UI | Data / Items",
-  component: Items,
+  title: "UI | Data / Collection",
+  component: Collection,
   decorators: [Padding]
 };
 
 export const list = () => ({
   data() {
     return {
-      items: [...Array(20).keys()].map(item => {
+      items: [...Array(10).keys()].map(item => {
         return {
           title: "List item no. " + item,
           info: "List item info",
@@ -23,12 +23,17 @@ export const list = () => ({
             { icon: "trash", text: "Delete", click: "delete" }
           ]
         };
-      })
+      }),
+      pagination: {
+        total: 230,
+        limit: 10
+      }
     };
   },
   template: `
-    <k-items
+    <k-collection
       :items="items"
+      :pagination="pagination"
       :sortable="true"
     />
   `
@@ -37,8 +42,9 @@ export const list = () => ({
 export const cardlets = () => ({
   extends: list(),
   template: `
-    <k-items
+    <k-collection
       :items="items"
+      :pagination="pagination"
       :sortable="true"
       layout="cardlets"
     />
@@ -48,8 +54,9 @@ export const cardlets = () => ({
 export const cards = () => ({
   extends: list(),
   template: `
-    <k-items
+    <k-collection
       :items="items"
+      :pagination="pagination"
       :sortable="true"
       layout="cards"
     />
