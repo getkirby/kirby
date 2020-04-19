@@ -1,7 +1,7 @@
 import { Meta } from '@storybook/addon-docs/blocks';
 
 <Meta
-  title="Internals | $store / What is the store?"
+  title="Internals | $store / About $store"
 />
 
 # `$store` - shared data and state management
@@ -13,6 +13,44 @@ If you have not worked with Vuex before, you should first familiarize yourself w
 this.$store
 ```
 
-## Modules
-- content
-- user
+## Core modules
+- `content`
+- `heartbeat`
+- `languages`
+- `notification`
+- `system`
+- `translation`
+- `user`
+
+## Adding your own Vuex module
+
+Using the `created(app)` callback, you can register your own [Vuex module](https://vuex.vuejs.org/guide/modules.html) in your plguin's JavaScript definition:
+
+```js
+// Create your own Vuex module
+
+const yourModule = {
+  namespaced: true,
+  state: {
+    // …
+  },
+  getters: {
+    // …
+  },
+  mutations: {
+    // …
+  },
+  actions: {
+    // …
+};
+
+
+// Register it with the Panel app
+
+panel.plugin("your/plugin", {
+  created(app) {
+    app.$store.registerModule("yourModule", yourModule);
+  }
+});
+
+```
