@@ -99,11 +99,6 @@ body {
   overflow: hidden;
 }
 
-.k-topbar {
-  grid-area: topbar;
-  display: grid;
-  grid-template-columns: 12rem auto 12rem;
-}
 
 .k-topbar-left {
   border-right: 1px solid #222;

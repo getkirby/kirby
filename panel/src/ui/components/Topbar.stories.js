@@ -1,4 +1,5 @@
 import Topbar from "./Topbar.vue";
+import { action } from "@storybook/addon-actions";
 
 export default {
   title: "UI | Navigation / Topbar",
@@ -14,19 +15,41 @@ export const regular = () => ({
   computed: {
     breadcrumb() {
       return [
-        { link: "https://getkirby.com", text: "Home" },
-        { link: "https://getkirby.com/docs", text: "Docs" },
-        { link: "https://getkirby.com/docs/guide", text: "Guide" },
-        { link: "https://getkirby.com/docs/guide/blueprints", text: "Blueprints" }
+        {
+          icon: "page",
+          link: "site",
+          text: "Maegazine"
+        },
+        {
+          link: "pages/photography",
+          text: "Photography"
+        },
+        {
+          link: "pages/photography+trees",
+          text: "Trees"
+        },
       ];
     }
+  },
+  methods: {
+    onSearch: action("search")
   },
   template: `
     <div>
       <k-topbar
         :breadcrumb="breadcrumb"
         :loading="loading"
+        :menu="[
+          { link: 'site', icon: 'page', text: 'Site' },
+          { link: 'users', icon: 'users', text: 'Users' },
+          { link: 'settings', icon: 'settings', text: 'Settings' },
+          '-',
+          { link: 'account', icon: 'account', text: 'Your account' },
+          '-',
+          { link: 'logout', icon: 'logout', text: 'Logout' },
+        ]"
         class="mb-6"
+        @search="onSearch"
       />
 
       <k-view class="px-6">

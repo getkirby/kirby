@@ -1,6 +1,6 @@
 <template>
-  <nav 
-    :aria-label="label" 
+  <nav
+    :aria-label="label"
     class="k-breadcrumb"
   >
     <ol>
@@ -14,6 +14,11 @@
           :aria-current="isLast(index) ? 'page' : false"
           class="k-breadcrumb-link"
         >
+          <k-icon
+            v-if="crumb.icon"
+            :type="crumb.icon"
+            class="k-breadcrumb-icon"
+          />
           {{ crumb.text || crumb.label }}
         </k-link>
       </li>
@@ -55,12 +60,16 @@ export default {
   align-items: center;
 }
 .k-breadcrumb-link {
-  display: block;
+  display: flex;
   font-size: $font-size-small;
   padding: .75rem .5rem;
   line-height: 1;
   overflow: hidden;
   text-overflow: ellipsis;
+  align-items: center;
+}
+.k-breadcrumb-icon {
+  margin-right: .5rem;
 }
 .k-breadcrumb li {
   display: flex;

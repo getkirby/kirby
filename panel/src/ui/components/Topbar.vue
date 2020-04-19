@@ -2,6 +2,7 @@
   <div class="k-topbar">
     <k-view>
       <div class="k-topbar-wrapper">
+        <!-- Main Menu -->
         <k-dropdown class="k-topbar-menu">
           <k-button
             :tooltip="$t('menu')"
@@ -13,17 +14,21 @@
           </k-button>
           <k-dropdown-content
             ref="menu"
+            :options="menu"
             class="k-topbar-menu"
+            theme="light"
           >
           </k-dropdown-content>
         </k-dropdown>
 
+        <!-- Breadcrumb -->
         <k-breadcrumb
           v-if="breadcrumb"
           :links="breadcrumb"
           class="k-topbar-breadcrumb"
         />
 
+        <!-- Options -->
         <div class="k-topbar-options">
           <template v-if="loading">
             <k-loader class="k-topbar-loader" />
@@ -33,7 +38,7 @@
               :tooltip="$t('search')"
               class="k-topbar-button"
               icon="search"
-              @click="$store.dispatch('search', true)"
+              @click="onSearch"
             />
           </template>
         </div>
@@ -54,6 +59,17 @@ export default {
     loading: {
       type: Boolean,
       default: false
+    },
+    menu: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
+  },
+  methods: {
+    onSearch() {
+      this.$emit("search");
     }
   }
 }
