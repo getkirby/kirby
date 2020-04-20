@@ -39,6 +39,9 @@ export default {
         return [];
       }
     },
+    /**
+     * Available options: `"list"`, `"cardlets"`, `"cards"`
+     */
     layout: {
       type: String,
       default: "list"

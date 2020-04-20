@@ -100,6 +100,7 @@ export default {
       type: String,
       default: "list",
     },
+    label: String,
     link: {
       type: [Boolean, String, Function],
       default: false,

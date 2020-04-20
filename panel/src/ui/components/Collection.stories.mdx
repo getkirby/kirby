@@ -1,0 +1,141 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Collection from "./Collection.vue";
+
+<Meta
+  title="UI | Data / Collection"
+  component={Collection}
+  decorators={[Padding]}
+/>
+
+# Collection
+### `<k-collection>`
+
+
+```html
+<k-collection
+  :items="items"
+  :pagination="pagination"
+  :sortable="true"
+/>
+```
+
+<Props of={Collection} />
+
+### List
+<Preview>
+  <Story name="List">
+    {{
+      data() {
+        return {
+          items: [...Array(10).keys()].map(item => {
+            return {
+              title: "List item no. " + item,
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + item
+              },
+              options: [
+                { icon: "edit", text: "Edit", click: "edit" },
+                { icon: "trash", text: "Delete", click: "delete" }
+              ]
+            };
+          }),
+          pagination: {
+            total: 230,
+            limit: 10
+          }
+        };
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :pagination="pagination"
+          :sortable="true"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cardlets
+<Preview>
+  <Story name="Cardlets">
+    {{
+      data() {
+        return {
+          items: [...Array(10).keys()].map(item => {
+            return {
+              title: "List item no. " + item,
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + item
+              },
+              options: [
+                { icon: "edit", text: "Edit", click: "edit" },
+                { icon: "trash", text: "Delete", click: "delete" }
+              ]
+            };
+          }),
+          pagination: {
+            total: 230,
+            limit: 10
+          }
+        };
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :pagination="pagination"
+          :sortable="true"
+          layout="cardlets"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cards
+<Preview>
+  <Story name="Cards">
+    {{
+      data() {
+        return {
+          items: [...Array(10).keys()].map(item => {
+            return {
+              title: "List item no. " + item,
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + item
+              },
+              options: [
+                { icon: "edit", text: "Edit", click: "edit" },
+                { icon: "trash", text: "Delete", click: "delete" }
+              ]
+            };
+          }),
+          pagination: {
+            total: 230,
+            limit: 10
+          }
+        };
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :pagination="pagination"
+          :sortable="true"
+          layout="cards"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+
+## CSS class
+
+`.k-collection`
