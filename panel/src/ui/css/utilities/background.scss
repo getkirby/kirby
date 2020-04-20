@@ -1,0 +1,12 @@
+.bg-black {
+  background: $color-black;
+}
+.bg-light {
+  background: $color-gray-200;
+}
+.bg-white {
+  background: $color-white;
+}
+.bg-pattern {
+  background: lighten($color-dark, 10%) url($pattern);
+}

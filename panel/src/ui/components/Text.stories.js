@@ -1,10 +1,9 @@
 import Text from "./Text.vue";
 import Padding from "../storybook/Padding.js";
-import { withKnobs, text, select } from '@storybook/addon-knobs';
 
 export default {
   title: "UI | Typography / Text",
-  decorators: [withKnobs, Padding],
+  decorators: [Padding],
   component: Text
 };
 

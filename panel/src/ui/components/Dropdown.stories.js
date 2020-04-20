@@ -3,11 +3,10 @@ import DropdownContent from "./DropdownContent.vue";
 import DropdownItem from "./DropdownItem.vue";
 import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
-import { withKnobs } from '@storybook/addon-knobs';
 
 export default {
   title: "UI | Dropdown / Base Dropdown",
-  decorators: [withKnobs, Padding],
+  decorators: [Padding],
   component: Dropdown,
   subcomponents: {
     DropdownContent,

@@ -6,7 +6,7 @@
  * file is imported. Use only for mixins, variables and functions.
  */
 
-$layers: (
+$z-index: (
   loader: 1000,
   notification: 900,
   dropdown: 800,
@@ -20,7 +20,7 @@ $layers: (
 );
 
 @function z-index($key, $add: 0) {
-  @return map-get($layers, $key) + $add;
+  @return map-get($z-index, $key) + $add;
 }
 
 /**
@@ -28,42 +28,112 @@ $layers: (
  */
 $color-black: #000;
 $color-white: #fff;
-$color-dark: #16171a;
-$color-dark-grey: #777;
-$color-light: #efefef;
-$color-light-grey: #999;
-$color-background: $color-light;
-$color-positive: #5d800d;
+
+$color-gray-100: #f7f7f7;
+$color-gray-200: #efefef;
+$color-gray-300: #ddd;
+$color-gray-400: #ccc;
+$color-gray-500: #999;
+$color-gray-600: #777;
+$color-gray-700: #555;
+$color-gray-800: #333;
+$color-gray-900: #111;
+
+$color-red-200: #edc1c1;
+$color-red-400: #d16464;
+$color-red-600: #c82829;
+
+$color-orange-200: #f2d4bf;
+$color-orange-400: #de935f;
+$color-orange-600: #f4861f;
+
+$color-green-200: #dce5c2;
+$color-green-400: #a7bd68;
+$color-green-600: #5d800d;
+
+$color-aqua-200: #d0e5e2;
+$color-aqua-400: #8abeb7;
+$color-aqua-600: #398e93;
+
+$color-blue-200: #cbd7e5;
+$color-blue-400: #7e9abf;
+$color-blue-600: #4271ae;
+
+$color-purple-200: #e0d4e4;
+$color-purple-400: #b294bb;
+$color-purple-600: #9c48b9;
+
+/**
+ * Deprecated Colors
+ */
+$color-dark: $color-gray-800;
+$color-dark-grey: $color-gray-700;
+$color-light: $color-gray-200;
+$color-light-grey: $color-gray-500;
+$color-background: $color-gray-200;
+$color-positive: $color-green-600;
 $color-positive-border: $color-positive;
 $color-positive-outline: rgba($color-positive, 0.25);
-$color-positive-on-dark: #a7bd68;
-$color-focus: #4271ae;
+$color-positive-on-dark: $color-green-400;
+$color-focus: $color-blue-600;
 $color-focus-border: $color-focus;
 $color-focus-outline: rgba($color-focus, 0.25);
-$color-focus-on-dark: #81a2be;
-$color-notice: #f5871f;
-$color-notice-on-dark: #de935f;
-$color-negative: #c82829;
+$color-focus-on-dark: $color-blue-400;
+$color-notice: $color-orange-600;
+$color-notice-on-dark: $color-orange-400;
+$color-negative: $color-red-600;
 $color-negative-border: $color-negative;
 $color-negative-outline: rgba($color-negative, 0.25);
-$color-negative-on-dark: #d16464;
-$color-border: #ccc;
+$color-negative-on-dark: $color-red-400;
+$color-border: $color-gray-400;
 $color-backdrop: rgba($color-dark, 0.6);
 $color-inset: #ebebeb;
 
 /**
- * Typography
+ * Text sizes
  */
-$font-size-tiny: 0.75rem;
-$font-size-small: 0.875rem;
-$font-size-medium: 1rem;
-$font-size-large: 1.25rem;
-$font-size-huge: 1.5rem;
-$font-size-monster: 1.75rem;
+$text-xs: 0.75rem;
+$text-sm: 0.875rem;
+$text-base: 1rem;
+$text-lg: 1.125rem;
+$text-xl: 1.25rem;
+$text-2xl: 1.5rem;
+$text-3xl: 1.875rem;
+$text-4xl: 2.25rem;
+$text-5xl: 3rem;
+$text-6xl: 4rem;
 
-$font-family-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-$font-family-mono: "SFMono-Regular", Consolas, Liberation Mono, Menlo, Courier, monospace;
+/**
+ * Deprecated text sizes
+ */
+$font-size-tiny: $text-xs;
+$font-size-small: $text-sm;
+$font-size-medium: $text-base;
+$font-size-large: $text-xl;
+$font-size-huge: $text-2xl;
+$font-size-monster: $text-3xl;
 
+/**
+ * Font families
+ */
+$font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+$font-mono: "SFMono-Regular", Consolas, Liberation Mono, Menlo, Courier, monospace;
+
+/**
+ * Deprecated font families
+ */
+$font-family-sans: $font-sans;
+$font-family-mono: $font-mono;
+
+/**
+ * Font weights
+ */
+$font-normal: 400;
+$font-bold: 600;
+
+/**
+ * Deprecated font weights
+ */
 $font-weight-normal: 400;
 $font-weight-bold: 600;
 
@@ -98,16 +168,27 @@ $list-item-info-color: $color-dark-grey;
 $list-item-info-font-size: $font-size-tiny;
 
 /**
- * Misc
+ * Border radius
  */
-$border-radius: 1px;
+$rounded-sm: 0.125rem;
+$rounded: 0.25rem;
+
+/**
+ * Deprecated border radius
+ */
+$border-radius: $rounded-sm;
 
 /**
  * Shadows
  */
-$box-shadow: rgba($color-dark, 0.2) 0 2px 10px;
-$box-shadow-card: rgba($color-dark, 0.05) 0 2px 5px;
-$box-shadow-inset: rgba($color-dark, 0.025) 0 5px 5px inset;
+$shadow: 0 1px 3px 0 rgba($color-black, 0.1), 0 1px 2px 0 rgba($color-black, 0.06);
+$shadow-md: 0 4px 6px -1px rgba($color-black, 0.1), 0 2px 4px -1px rgba($color-black, 0.06);
+
+/**
+ * Deprecated shadows
+ */
+$box-shadow: $shadow-md;
+$box-shadow-card: $shadow;
 $box-shadow-focus: rgba($color-focus, 0.25) 0 0 0 3px;
 $box-shadow-positive: rgba($color-positive, 0.25) 0 0 0 3px;
 $box-shadow-focus-full: $color-focus 0 0 0 2px,
@@ -121,11 +202,6 @@ $breakpoint-menu: 45em;
 $breakpoint-medium: 65em;
 $breakpoint-large: 90em;
 $breakpoint-huge: 120em;
-
-/**
- * Widths
- */
-$width-menu: 12.5rem;
 
 /**
  * Focus Ring
@@ -158,7 +234,12 @@ $spacing: (
   4: 1rem,
   5: 1.25rem,
   6: 1.5rem,
-  8: 3rem,
-  10: 4.5rem,
-  12: 6rem
+  8: 2rem,
+  10: 2.5rem,
+  12: 3rem,
+  16: 4rem,
+  20: 5rem,
+  24: 6rem
 );
+
+

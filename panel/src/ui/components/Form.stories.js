@@ -8,7 +8,7 @@ export default {
   decorators: [Padding]
 };
 
-export const regular = () => ({
+export const simple = () => ({
   data() {
     return {
       values: {}
@@ -56,3 +56,58 @@ export const regular = () => ({
   `,
 });
 
+export const login = () => ({
+  data() {
+    return {
+      credentials: {
+        email: null,
+        password: null,
+      },
+      remember: false
+    };
+  },
+  computed: {
+    fields() {
+      return {
+        email: {
+          label: "Email",
+          type: "email",
+        },
+        password: {
+          label: "Password",
+          type: "password",
+          counter: false,
+        }
+      }
+    }
+  },
+  methods: {
+    onLogin: action("login")
+  },
+  template: `
+    <k-view align="center">
+      <k-form
+        :fields="fields"
+        v-model="credentials"
+        @submit="onLogin"
+      >
+        <footer
+          slot="footer"
+          class="pt-8 flex justify-between"
+        >
+          <k-toggle-input
+            class="text-sm"
+            text="Remember me"
+            v-model="remember"
+          />
+          <k-button
+            icon="check"
+            type="submit"
+            theme="positive">
+            Login
+          </k-button>
+        </footer>
+      </k-form>
+    </k-view>
+  `,
+});

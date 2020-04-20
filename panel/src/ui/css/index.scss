@@ -53,13 +53,13 @@ noscript {
 }
 
 html {
-  font-family: $font-family-sans;
+  font-family: $font-sans;
   background: $color-background;
 }
 
 html,
 body {
-  color: $color-dark;
+  color: $color-black;
   overflow: hidden;
   height: 100%;
 }
@@ -206,139 +206,6 @@ b {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.underline {
-  text-decoration: underline;
-}
-.text-white {
-  color: $color-white;
-}
-.text-black {
-  color: $color-black;
-}
-
-/** Positioning **/
-.absolute {
-  position: absolute;
-}
-.relative {
-  position: relative;
-}
-.static {
-  position: static;
-}
-.sticky {
-  position: sticky;
-}
-.fixed {
-  position: fixed;
-}
-
-/** Display **/
-.block {
-  display: block;
-}
-.inline-block {
-  display: inline-block;
-}
-
-/** Flex **/
-.flex {
-  display: flex;
-}
-.items-stretch {
-  align-items: stretch;
-}
-.items-start {
-  align-items: flex-start;
-}
-.items-center {
-  align-items: center;
-}
-.items-end {
-  align-items: flex-end;
-}
-.items-baseline {
-  align-items: baseline;
-}
-.justify-start {
-  justify-content: flex-start;
-}
-.justify-center {
-  justify-content: center;
-}
-.justify-end {
-  justify-content: flex-end;
-}
-.justify-between {
-  justify-content: space-between;
-}
-
-/** Backgrounds **/
-.bg-black {
-  background: $color-black;
-}
-.bg-light {
-  background: $color-background;
-}
-.bg-white {
-  background: $color-white;
-}
-.bg-pattern {
-  background: lighten($color-dark, 10%) url($pattern);
-}
-
-/* Border Radius */
-.rounded {
-  border-radius: $border-radius;
-}
-
-/* Margins */
-@each $index, $size in $spacing {
-  .m-#{$index},
-  .my-#{$index},
-  .mt-#{$index} {
-    margin-top: $size;
-  }
-  .m-#{$index},
-  .mx-#{$index},
-  .mr-#{$index} {
-    margin-right: $size;
-  }
-  .m-#{$index},
-  .my-#{$index},
-  .mb-#{$index} {
-    margin-bottom: $size;
-  }
-  .m-#{$index},
-  .mx-#{$index},
-  .ml-#{$index} {
-    margin-left: $size;
-  }
-}
-
-/* Paddings */
-@each $index, $size in $spacing {
-  .p-#{$index},
-  .py-#{$index},
-  .pt-#{$index} {
-    padding-top: $size;
-  }
-  .p-#{$index},
-  .px-#{$index},
-  .pr-#{$index} {
-    padding-right: $size;
-  }
-  .p-#{$index},
-  .py-#{$index},
-  .pb-#{$index} {
-    padding-bottom: $size;
-  }
-  .p-#{$index},
-  .px-#{$index},
-  .pl-#{$index} {
-    padding-left: $size;
-  }
-}
 
 
 .object-contain {
@@ -349,21 +216,5 @@ b {
 }
 
 
-/** Shadows **/
-.shadow {
-  box-shadow: $box-shadow;
-}
 
-/** Text size **/
-.text-xs {
-  font-size: $font-size-tiny;
-}
-.text-sm {
-  font-size: $font-size-small;
-}
-.text-base {
-  font-size: $font-size-medium;
-}
-.text-lg {
-  font-size: $font-size-large;
-}
+@import "utilities.scss";
