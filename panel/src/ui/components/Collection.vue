@@ -7,6 +7,10 @@
       :items="items"
       :layout="layout"
       :sortable="sortable"
+      @flag="onFlag"
+      @option="onOption"
+      @sort="onSort"
+      @sortChange="onSortChange"
     />
     <footer
       v-if="hasFooter"
@@ -22,7 +26,7 @@
         <k-pagination
           v-if="hasPagination"
           v-bind="paginationOptions"
-          @paginate="$emit('paginate', $event)"
+          @paginate="onPaginate"
         />
       </div>
     </footer>
@@ -88,6 +92,25 @@ export default {
         hide: false,
         ...options
       };
+    }
+  },
+  methods: {
+    onFlag(item, itemIndex) {
+      this.$emit("flag", item, itemIndex);
+    },
+    onOption(option, item, itemIndex) {
+      // deprecated
+      this.$emit("action", option, item, itemIndex);
+      this.$emit("option", option, item, itemIndex);
+    },
+    onPaginate(pagination) {
+      this.$emit("paginate", pagination);
+    },
+    onSort(items, event) {
+      this.$emit("sort", items, event);
+    },
+    onSortChange(items, event) {
+      this.$emit("sortChange", items, event);
     }
   }
 };

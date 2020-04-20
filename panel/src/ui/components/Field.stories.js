@@ -39,6 +39,53 @@ export const required = () => ({
   `
 });
 
+export const disabled = () => ({
+  template: `
+    <k-field
+      :input="_uid"
+      :disabled="true"
+      label="My field"
+    >
+      <k-input
+        :id="_uid"
+        :required="true"
+        type="text"
+        theme="field"
+      />
+    </k-field>
+  `
+});
+
+export const counter = () => ({
+  data() {
+    return {
+      value: ""
+    };
+  },
+  template: `
+    <k-field
+      :counter="{
+        count: value.length,
+        max: 100,
+        min: 10
+      }"
+      :input="_uid"
+      :required="true"
+      label="My field"
+    >
+      <k-input
+        v-model="value"
+        :id="_uid"
+        :maxlength="100"
+        :minlength="10"
+        :required="true"
+        type="text"
+        theme="field"
+      />
+    </k-field>
+  `
+});
+
 export const options = () => ({
   template: `
     <k-field
@@ -59,5 +106,4 @@ export const options = () => ({
     </k-field>
   `
 });
-
 

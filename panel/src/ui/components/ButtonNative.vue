@@ -2,6 +2,7 @@
   <button
     :id="id"
     :aria-current="current"
+    :accesskey="accesskey"
     :autofocus="autofocus"
     :data-theme="theme"
     :data-responsive="responsive"
@@ -32,6 +33,7 @@ export default {
   mixins: [tab],
   inheritAttrs: false,
   props: {
+    accesskey: String,
     autofocus: Boolean,
     current: [String, Boolean],
     icon: String,

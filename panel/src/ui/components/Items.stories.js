@@ -1,5 +1,6 @@
 import Items from "./Items.vue";
 import Padding from "../storybook/Padding.js";
+import { action } from "@storybook/addon-actions";
 
 export default {
   title: "UI | Data / Items",
@@ -26,10 +27,22 @@ export const list = () => ({
       })
     };
   },
+  methods: {
+    onFlag: action("flag"),
+    onOption: action("option"),
+    onPaginate: action("paginate"),
+    onSort: action("sort"),
+    onSortChange: action("sortChange"),
+  },
   template: `
     <k-items
       :items="items"
       :sortable="true"
+      @flag="onFlag"
+      @option="onOption"
+      @paginate="onPaginate"
+      @sort="onSort"
+      @sortChange="onSortChange"
     />
   `
 });
@@ -41,6 +54,11 @@ export const cardlets = () => ({
       :items="items"
       :sortable="true"
       layout="cardlets"
+      @flag="onFlag"
+      @option="onOption"
+      @paginate="onPaginate"
+      @sort="onSort"
+      @sortChange="onSortChange"
     />
   `
 });
@@ -52,6 +70,8 @@ export const cards = () => ({
       :items="items"
       :sortable="true"
       layout="cards"
+      @sort="onSort"
+      @sortChange="onSortChange"
     />
   `
 });

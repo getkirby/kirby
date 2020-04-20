@@ -1,6 +1,7 @@
 <template>
   <k-link
     :id="id"
+    :accesskey="accesskey"
     :aria-current="current"
     :autofocus="autofocus"
     :data-theme="theme"
@@ -32,6 +33,7 @@
 export default {
   inheritAttrs: false,
   props: {
+    accesskey: String,
     autofocus: Boolean,
     current: [String, Boolean],
     icon: String,

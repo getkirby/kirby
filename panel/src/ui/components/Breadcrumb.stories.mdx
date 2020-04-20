@@ -11,12 +11,32 @@ import Breadcrumb from "./Breadcrumb.vue";
 ### `<k-breadcrumb>`
 
 <Preview>
-  <Story name="Example">
+  <Story name="Simple">
     {{
       computed: {
         links() {
           return [
             { link: "https://getkirby.com", text: "Home" },
+            { link: "https://getkirby.com/docs", text: "Docs" },
+            { link: "https://getkirby.com/docs/guide", text: "Guide" },
+            { link: "https://getkirby.com/docs/guide/blueprints", text: "Blueprints" }
+          ];
+        }
+      },
+      template: `
+        <k-breadcrumb :links="links" />
+      `,
+    }}
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="With Icon">
+    {{
+      computed: {
+        links() {
+          return [
+            { link: "https://getkirby.com", text: "Home", icon: "home" },
             { link: "https://getkirby.com/docs", text: "Docs" },
             { link: "https://getkirby.com/docs/guide", text: "Guide" },
             { link: "https://getkirby.com/docs/guide/blueprints", text: "Blueprints" }

@@ -65,7 +65,7 @@ export default {
       this.$emit("sortChange", this.items, event);
     },
     onSortEnd(event) {
-      this.$emit("sort", this.items);
+      this.$emit("sort", this.items, event);
     }
   }
 };

@@ -26,7 +26,8 @@ export const customLayout = () => ({
   },
   template: `
     <div style="position: relative">
-      <k-toolbar :buttons="[
+      <k-toolbar
+        :layout="[
           'bold',
           'italic',
           '|',
@@ -54,12 +55,28 @@ Vue.component("k-toolbar-hr-button", {
 });
 
 export const customButton = () => ({
+  computed: {
+    buttons() {
+      return {
+        hr: () => {
+          return {
+            label: "Horizontal line",
+            icon: "dots",
+            command: "insert",
+            args: "****",
+          };
+        }
+      };
+    }
+  },
   methods: {
     command: action("command")
   },
   template: `
     <div style="position: relative">
-      <k-toolbar :buttons="[
+      <k-toolbar
+        :buttons="buttons"
+        :layout="[
           'bold',
           'italic',
           '|',
@@ -77,3 +94,47 @@ export const customButton = () => ({
   `,
 });
 
+
+export const shortcut = () => ({
+  methods: {
+    command: action("command")
+  },
+  template: `
+    <div class="relative">
+      <k-toolbar
+        ref="toolbar"
+        class="mb-6"
+        @command="command"
+      />
+
+      <k-headline class="mb-3">Shortcuts</k-headline>
+      <ul>
+        <li><k-button @click="$refs.toolbar.shortcut('b')">$refs.toolbar.shortcut("b")</k-button></li>
+        <li><k-button @click="$refs.toolbar.shortcut('i')">$refs.toolbar.shortcut("i")</k-button></li>
+        <li><k-button @click="$refs.toolbar.shortcut('k')">$refs.toolbar.shortcut("k")</k-button></li>
+        <li><k-button @click="$refs.toolbar.shortcut('e')">$refs.toolbar.shortcut("e")</k-button></li>
+      </ul>
+    </div>
+  `
+});
+
+export const options = () => ({
+  methods: {
+    command: action("command")
+  },
+  template: `
+    <div style="position: relative">
+      <k-toolbar
+        :options="{
+          headings: {
+            levels: 6
+          },
+          file: {
+            select: false
+          }
+        }"
+        @command="command"
+      />
+    </div>
+  `
+});

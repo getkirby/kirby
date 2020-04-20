@@ -68,20 +68,16 @@ Vue.component("k-pages-field", PagesField);
 Vue.component("k-users-field", UsersField);
 
 /* Layout */
-import Collection from "@/components/Layout/Collection.vue";
 import FilePreview from "@/components/Layout/FilePreview.vue";
 import TabsView from "@/components/Layout/Tabs.vue";
 
-Vue.component("k-collection", Collection);
 Vue.component("k-file-preview", FilePreview);
 Vue.component("k-tabs-view", TabsView);
 
 /* Navigation */
-import Languages from "@/components/Navigation/Languages.vue";
 import Search from "@/components/Navigation/Search.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
 
-Vue.component("k-languages-dropdown", Languages);
 Vue.component("k-search", Search);
 Vue.component("k-topbar", Topbar);
 

@@ -2,7 +2,9 @@
   <nav v-if="buttonSetup.length" class="k-toolbar">
     <div class="k-toolbar-wrapper">
       <div class="k-toolbar-buttons">
+
         <template v-for="(button, buttonIndex) in buttonSetup">
+
           <!-- divider -->
           <template v-if="button === '|'">
             <span
@@ -10,39 +12,124 @@
               class="k-toolbar-divider"
             />
           </template>
-          <!-- button from component -->
+
+          <!-- dropdown -->
+          <template v-else-if="button.dropdown">
+            <k-dropdown :key="buttonIndex">
+              <k-button
+                :key="buttonIndex"
+                :icon="button.icon"
+                :tooltip="button.label"
+                tabindex="-1"
+                class="k-toolbar-button"
+                @click="$refs[buttonIndex + '-dropdown'][0].toggle()"
+              />
+              <k-dropdown-content :ref="buttonIndex + '-dropdown'">
+                <k-dropdown-item
+                  v-for="(dropdownItem, dropdownItemIndex) in button.dropdown"
+                  :key="dropdownItemIndex"
+                  :icon="dropdownItem.icon"
+                  @click="onCommand(dropdownItem.command, dropdownItem.args)"
+                >
+                  {{ dropdownItem.label }}
+                </k-dropdown-item>
+              </k-dropdown-content>
+            </k-dropdown>
+          </template>
+
+          <!-- single button -->
           <template v-else>
-            <component
+            <k-button
               :key="buttonIndex"
-              :is="'k-toolbar-' + button + '-button'"
+              :icon="button.icon"
+              :tooltip="button.label"
               tabindex="-1"
-              v-on="$listeners"
+              class="k-toolbar-button"
+              @click="onCommand(button.command, button.args)"
             />
           </template>
+
         </template>
+
       </div>
     </div>
   </nav>
 </template>
 
 <script>
+import systemButtons from "./ToolbarButtons.js";
+
 export default {
   props: {
     buttons: {
+      type: Object
+    },
+    layout: {
       type: [Boolean, Array],
       default: true,
+    },
+    options: {
+      type: Object,
+      default() {
+        return {};
+      }
     }
   },
   computed: {
+    buttonDefinitions() {
+      let config = {};
+
+      const buttons = {
+        ...systemButtons,
+        ...this.buttons
+      };
+
+      Object.keys(buttons).forEach(buttonName => {
+        const defaults = {
+          command: buttonName,
+          icon: buttonName,
+          label: this.$t("toolbar.button." + buttonName),
+          name: buttonName
+        };
+
+        config[buttonName] = {
+          ...defaults,
+          ...buttons[buttonName](this, this.options[buttonName] || {})
+        };
+
+        // dropdown clean-up
+        if (config[buttonName].dropdown) {
+          // convert dropdown to array
+          config[buttonName].dropdown = Object.values(config[buttonName].dropdown);
+
+          // convert single option dropdown to regular button
+          if (config[buttonName].dropdown.length === 1) {
+            const firstOption = config[buttonName].dropdown[0];
+
+            config[buttonName].args    = firstOption.args;
+            config[buttonName].command = firstOption.command;
+            config[buttonName].label   = firstOption.label;
+
+            delete config[buttonName].dropdown;
+          }
+        }
+
+      });
+
+      return config;
+    },
     buttonSetup() {
+
+      let layout = this.layout;
+
       // disabled buttons
-      if (this.buttons === false) {
+      if (layout === false) {
         return [];
       }
 
-      // default buttons
-      if (this.buttons === true) {
-        return [
+      // default layout
+      if (layout === true) {
+        layout = [
           "headings",
           "bold",
           "italic",
@@ -57,13 +144,47 @@ export default {
         ];
       }
 
-      // custom button setup
-      return this.buttons;
+      let setup = [];
+
+      layout.forEach(buttonName => {
+        if (buttonName === "|") {
+          setup.push("|");
+        }
+
+        if (this.buttonDefinitions[buttonName]) {
+          setup.push(this.buttonDefinitions[buttonName]);
+        }
+      });
+
+      return setup;
     }
   },
   methods: {
+    onCommand(command, args) {
+      if (!args) {
+        this.$emit("command", command);
+        return;
+      }
+
+      if (Array.isArray(args) === true) {
+        this.$emit("command", command, ...args);
+        return;
+      }
+
+      this.$emit("command", command, args);
+    },
     shortcut(key) {
-      console.log(this.$children);
+      this.buttonSetup.forEach(button => {
+        if (button.dropdown) {
+          Object.values(button.dropdown).forEach(dropdown => {
+            if (dropdown.shortcut && dropdown.shortcut === key) {
+              this.onCommand(dropdown.command, dropdown.args);
+            }
+          });
+        } else if (button.shortcut && button.shortcut === key) {
+          this.onCommand(button.command, button.args);
+        }
+      });
     }
   }
 };

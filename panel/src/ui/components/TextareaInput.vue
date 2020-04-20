@@ -8,7 +8,7 @@
       <k-toolbar
         v-if="buttons && !disabled"
         ref="toolbar"
-        :buttons="buttons"
+        :layout="buttons"
         @mousedown.native.prevent
         @command="onCommand"
       />

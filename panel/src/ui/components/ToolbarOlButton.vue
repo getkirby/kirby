@@ -1,9 +1,0 @@
-<template>
-  <k-toolbar-button
-    args="ol"
-    command="list"
-    icon="list-numbers"
-    :tooltip="$t('toolbar.button.ol')"
-    v-on="$listeners"
-  />
-</template>
