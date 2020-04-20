@@ -38,7 +38,9 @@ trait SiteActions
         $kirby->trigger('site.' . $action . ':before', ...$arguments);
         $result = $callback(...$arguments);
         $kirby->trigger('site.' . $action . ':after', $result, $old);
+        $kirby->trigger('cache.pages.flush:before');
         $kirby->cache('pages')->flush();
+        $kirby->trigger('cache.pages.flush:after');
         return $result;
     }
 

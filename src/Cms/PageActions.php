@@ -317,7 +317,9 @@ trait PageActions
         $this->kirby()->trigger('page.' . $action . ':before', ...$arguments);
         $result = $callback(...$arguments);
         $this->kirby()->trigger('page.' . $action . ':after', $result, $old);
+        $this->kirby()->trigger('cache.pages.flush:before');
         $this->kirby()->cache('pages')->flush();
+        $this->kirby()->trigger('cache.pages.flush:after');
         return $result;
     }
 
