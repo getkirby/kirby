@@ -200,7 +200,7 @@ export default {
 .k-upload-error-list li {
   padding: 0.75rem;
   background: $color-white;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
 }
 .k-upload-error-list li:not(:last-child) {
   margin-bottom: 2px;

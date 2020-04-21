@@ -245,7 +245,7 @@ $range-track-focus-color: $color-focus;
   font-size: $font-size-tiny;
   line-height: 1;
   text-align: center;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
   background: $color-dark;
   margin-left: 1rem;
   padding: 0 .25rem;

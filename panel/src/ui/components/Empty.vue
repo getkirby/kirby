@@ -37,7 +37,7 @@ export default {
 .k-empty {
   display: flex;
   align-items: stretch;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
   color: $color-dark-grey;
   border: 1px dashed $color-border;
 }

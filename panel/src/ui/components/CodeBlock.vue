@@ -23,6 +23,6 @@ export default {
   font-family: $font-family-mono;
   font-size: .75rem;
   line-height: 1.5em;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
 }
 </style>

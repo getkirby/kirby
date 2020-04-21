@@ -147,7 +147,7 @@ export default {
 .k-item {
   position: relative;
   background: $color-white;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
   box-shadow: $box-shadow-card;
   display: grid;
   line-height: 1;
@@ -325,7 +325,7 @@ export default {
 .k-cardlet-item .k-item-sort-handle {
   margin: .25rem;
   background: $color-background;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
   box-shadow: $box-shadow;
 }
 .k-cardlet-item .k-item-figure {
@@ -358,7 +358,7 @@ export default {
 .k-card-item .k-item-sort-handle {
   margin: .25rem;
   background: $color-background;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
   box-shadow: $box-shadow;
 }
 .k-card-item .k-item-figure {

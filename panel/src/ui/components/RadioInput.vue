@@ -111,7 +111,7 @@ export default {
   background: $color-dark;
 }
 .k-radio-input input:focus + label::before {
-  border-color: $color-focus-border;
+  border-color: $color-focus;
 }
 .k-radio-input input:focus:checked + label::before {
   background: $color-focus;

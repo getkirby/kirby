@@ -259,7 +259,7 @@ export default {
   background: $color-light;
   width: 100%;
   box-shadow: $box-shadow;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
   line-height: 1;
   max-height: calc(100vh - 3rem);
   margin: 1.5rem;
@@ -343,15 +343,15 @@ export default {
 }
 .k-dialog-header {
   border-bottom: 1px solid lighten($color-border, 8%);
-  border-top-left-radius: $border-radius;
-  border-top-right-radius: $border-radius;
+  border-top-left-radius: $rounded-sm;
+  border-top-right-radius: $rounded-sm;
   height: 2.5rem;
 }
 
 .k-dialog-footer {
   border-top: 1px solid lighten($color-border, 8%);
-  border-bottom-left-radius: $border-radius;
-  border-bottom-right-radius: $border-radius;
+  border-bottom-left-radius: $rounded-sm;
+  border-bottom-right-radius: $rounded-sm;
 }
 
 .k-dialog-footer .k-button-group {
@@ -392,6 +392,6 @@ export default {
   background: rgba(#000, .075);
   padding: 0 1rem;
   height: 36px;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
 }
 </style>

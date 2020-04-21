@@ -239,7 +239,7 @@ export default {
       ));
 
       /**
-       * The input event is fired when a date is selected. 
+       * The input event is fired when a date is selected.
        * The date is passed as ISO date string.
        */
       this.$emit("input", date.toISOString());
@@ -255,7 +255,7 @@ $cell-padding: 0.25rem 0.5rem;
   padding: 0.5rem;
   background: $color-dark;
   color: $color-light;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
 }
 .k-calendar-table {
   table-layout: fixed;

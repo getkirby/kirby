@@ -108,7 +108,7 @@ export default {
   display: block;
 }
 .k-checkbox-input-native:focus + .k-checkbox-input-icon {
-  border-color: $color-focus-border;
+  border-color: $color-focus;
 }
 .k-checkbox-input-native:focus:checked + .k-checkbox-input-icon {
   background: $color-focus;

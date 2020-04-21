@@ -193,7 +193,7 @@ export default {
   color: $color-white;
   z-index: z-index(dropdown);
   box-shadow: $box-shadow;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
   text-align: left;
   margin-bottom: 6rem;
 

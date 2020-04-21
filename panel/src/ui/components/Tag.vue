@@ -40,7 +40,7 @@ export default {
   cursor: pointer;
   background-color: $color-dark;
   color: $color-light;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
