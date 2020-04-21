@@ -122,7 +122,7 @@ button::-moz-focus-inner {
 .k-button {
   display: inline-block;
   position: relative;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   transition: color 0.3s;
   line-height: 1;
 

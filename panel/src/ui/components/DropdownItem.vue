@@ -54,7 +54,7 @@ export default {
   display: flex;
   width: 100%;
   align-items: center;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   padding: 6px 16px;
 
   &:focus {

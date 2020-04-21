@@ -223,7 +223,7 @@ export default {
 }
 .k-search-types > .k-button {
   padding: 0 0 0 .7rem;
-  font-size: $font-size-medium;
+  font-size: $text-base;
   line-height: 1;
   height: 2.5rem;
 
@@ -265,11 +265,11 @@ export default {
 }
 .k-search li strong {
   display: block;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   font-weight: 400;
 }
 .k-search li small {
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   color: $color-dark-grey;
 }
 .k-search li[data-selected] {
@@ -279,7 +279,7 @@ export default {
 }
 .k-search-empty {
   padding: .825rem .75rem;
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   background: $color-background;
   border-top: 1px dashed $color-border;
   color: $color-dark-grey;

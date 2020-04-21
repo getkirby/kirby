@@ -163,7 +163,7 @@ export default {
 
 .k-form-lock-info {
   display: flex;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   align-items: center;
   line-height: 1.5em;
   padding: .625rem 0;

@@ -68,7 +68,7 @@ export default {
 
 <style lang="scss">
 .k-counter {
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   color: $color-dark;
   font-weight: $font-weight-bold;
 }

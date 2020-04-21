@@ -94,7 +94,7 @@ export default {
 
 .k-topbar-button {
   display: inline-flex;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   align-items: center;
   height: 2.5rem;
   padding: 0 .75rem;

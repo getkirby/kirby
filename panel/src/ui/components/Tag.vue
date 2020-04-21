@@ -35,7 +35,7 @@ export default {
 <style lang="scss">
 .k-tag {
   position: relative;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   line-height: 1;
   cursor: pointer;
   background-color: $color-dark;

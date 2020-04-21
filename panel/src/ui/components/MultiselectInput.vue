@@ -265,7 +265,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   position: relative;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   min-height: 2.25rem;
   line-height: 1;
 }

@@ -102,7 +102,7 @@ export default {
   height: 2.5rem;
 }
 .k-drawer-title {
-  font-size: $font-size-small;
+  font-size: $text-sm;
   font-weight: 400;
   padding: 0 1.5rem;
 }

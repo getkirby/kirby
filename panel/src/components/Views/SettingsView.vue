@@ -212,7 +212,7 @@ export default {
   flex-basis: 0;
 }
 .k-system-info-box dt {
-  font-size: $font-size-small;
+  font-size: $text-sm;
   color: $color-dark-grey;
   margin-bottom: .25rem;
 }

@@ -191,7 +191,7 @@ export default {
 .k-upload-list,
 .k-upload-error-list {
   line-height: 1.5em;
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-upload-list-filename {
   color: $color-dark-grey;

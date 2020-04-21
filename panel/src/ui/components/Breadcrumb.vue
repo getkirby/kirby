@@ -61,7 +61,7 @@ export default {
 }
 .k-breadcrumb-link {
   display: flex;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   padding: .75rem .5rem;
   line-height: 1;
   overflow: hidden;

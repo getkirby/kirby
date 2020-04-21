@@ -174,7 +174,7 @@ $range-track-focus-color: $color-focus;
   width: 100%;
   height: $range-thumb-size;
   background: transparent;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   line-height: 1;
 
   &::-webkit-slider-thumb {
@@ -242,7 +242,7 @@ $range-track-focus-color: $color-focus;
   display: flex;
   align-items: center;
   color: $color-white;
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   line-height: 1;
   text-align: center;
   border-radius: $rounded-sm;

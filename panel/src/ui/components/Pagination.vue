@@ -247,7 +247,7 @@ export default {
   white-space: nowrap;
 }
 .k-pagination > span {
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-pagination[data-align="center"] {
   text-align: center;
@@ -285,7 +285,7 @@ export default {
   border-right: 1px solid rgba(#fff, .35);
   align-items: center;
   padding: .625rem 1rem;
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
 }
 .k-pagination-settings label span {
   margin-right: .5rem;

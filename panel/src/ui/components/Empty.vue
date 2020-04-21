@@ -48,7 +48,7 @@ button.k-empty:focus {
   outline: none;
 }
 .k-empty p {
-  font-size: $font-size-small;
+  font-size: $text-sm;
   color: $color-dark-grey;
 }
 .k-empty > .k-icon {

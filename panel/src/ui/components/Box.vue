@@ -29,7 +29,7 @@ export default {
 <style lang="scss">
 .k-box {
   word-wrap: break-word;
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-box:not([data-theme="none"]) {
   background: lighten($color-light-grey, 25%);
@@ -44,7 +44,7 @@ export default {
   border: 1px solid $color-black;
   color: $color-light;
   font-family: "Input", "Menlo", monospace;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   line-height: 1.5;
 }
 .k-box[data-theme="button"] {

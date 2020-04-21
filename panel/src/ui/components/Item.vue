@@ -183,7 +183,7 @@ export default {
 }
 .k-item-title,
 .k-item-info {
-  font-size: $font-size-small;
+  font-size: $text-sm;
   font-weight: normal;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -220,7 +220,7 @@ export default {
   align-items: center;
 }
 .k-item-label-button.k-button {
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   font-family: $font-family-mono;
   display: flex;
   padding: .125rem .5rem;

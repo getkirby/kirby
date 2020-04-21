@@ -170,7 +170,7 @@ $table-row-height: 38px;
   table-layout: fixed;
   width: 100%;
   background: $color-white;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   border-spacing: 0;
   border-collapse: collapse;
   box-shadow: $box-shadow-card;
@@ -254,7 +254,7 @@ $table-row-height: 38px;
   text-align: center;
 }
 .k-table .k-table-index {
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   color: $color-light-grey;
 }
 

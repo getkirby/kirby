@@ -185,7 +185,7 @@ export default {
   }
 }
 .k-file-preview-details h3 {
-  font-size: $font-size-small;
+  font-size: $text-sm;
   font-weight: 500;
   color: $color-light-grey;
 }
@@ -194,7 +194,7 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   color: rgba($color-white, 0.75);
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-file-preview-details p a {
   display: block;

@@ -318,7 +318,7 @@ export default {
     }
     .k-radio-input .k-radio-input-info {
       display: block;
-      font-size: $font-size-small;
+      font-size: $text-sm;
       color: $color-dark-grey;
       line-height: $field-input-line-height;
       padding-top: $field-input-line-height / 10;
@@ -367,10 +367,10 @@ export default {
       margin-right: .25rem;
       margin-bottom: .25rem;
       height: 1.75rem;
-      font-size: $font-size-small;
+      font-size: $text-sm;
     }
     .k-tags-input input {
-      font-size: $font-size-small;
+      font-size: $text-sm;
       padding: 0 .25rem;
       height: 1.75rem;
       line-height: 1;
@@ -393,7 +393,7 @@ export default {
       margin-right: .25rem;
       margin-bottom: .25rem;
       height: 1.75rem;
-      font-size: $font-size-small;
+      font-size: $text-sm;
     }
     .k-input-icon {
       position: absolute;

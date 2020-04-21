@@ -139,7 +139,7 @@ export default {
   justify-content: center;
   align-items: center;
   padding: .625rem .75rem;
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   text-transform: uppercase;
   text-align: center;
   font-weight: 500;
@@ -176,7 +176,7 @@ export default {
   text-overflow: ellipsis;
 
   @media screen and (min-width: $breakpoint-small) {
-    font-size: $font-size-tiny;
+    font-size: $text-xs;
     padding-top: 0;
   }
 

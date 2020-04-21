@@ -635,7 +635,7 @@ $structure-item-height: 38px;
   table-layout: fixed;
   width: 100%;
   background: #fff;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   border-spacing: 0;
   box-shadow: $box-shadow-card;
 
@@ -771,7 +771,7 @@ $structure-item-height: 38px;
     text-align: center;
   }
   .k-structure-table-index-number {
-    font-size: $font-size-tiny;
+    font-size: $text-xs;
     color: $color-light-grey;
     padding-top: 0.15rem;
   }
@@ -834,7 +834,7 @@ $structure-item-height: 38px;
 .k-structure-form {
   position: relative;
   z-index: 3;
-  border-radius: $border-radius;
+  border-radius: $rounded-sm;
   margin-bottom: 1px;
   box-shadow: rgba($color-dark, 0.05) 0 0 0 3px;
   border: 1px solid $color-border;

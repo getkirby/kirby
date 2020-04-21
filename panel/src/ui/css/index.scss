@@ -30,12 +30,12 @@
   --font-family-sans: #{$font-family-sans};
 
   /** Font sizes **/
-  --font-size-tiny: #{$font-size-tiny};
-  --font-size-small: #{$font-size-small};
-  --font-size-medium: #{$font-size-medium};
-  --font-size-large: #{$font-size-large};
-  --font-size-huge: #{$font-size-huge};
-  --font-size-monster: #{$font-size-monster};
+  --font-size-tiny: #{$text-xs};
+  --font-size-small: #{$text-sm};
+  --font-size-medium: #{$text-base};
+  --font-size-large: #{$text-xl};
+  --font-size-huge: #{$text-2xl};
+  --font-size-monster: #{$text-3xl};
 
   /** Shadows **/
   --box-shadow-dropdown: #{$box-shadow};

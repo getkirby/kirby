@@ -286,7 +286,7 @@ export default {
 .k-topbar-button {
   padding: 0.75rem;
   line-height: 1;
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-topbar-signals .k-button .k-button-text {
   opacity: 1;
@@ -323,7 +323,7 @@ export default {
 }
 .k-topbar-crumbs a {
   position: relative;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -445,7 +445,7 @@ export default {
 }
 .k-registration p {
   color: $color-negative-on-dark;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   margin-right: 1rem;
   font-weight: 600;
   display: none;

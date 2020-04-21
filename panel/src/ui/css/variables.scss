@@ -104,16 +104,6 @@ $text-5xl: 3rem;
 $text-6xl: 4rem;
 
 /**
- * Deprecated text sizes
- */
-$font-size-tiny: $text-xs;
-$font-size-small: $text-sm;
-$font-size-medium: $text-base;
-$font-size-large: $text-xl;
-$font-size-huge: $text-2xl;
-$font-size-monster: $text-3xl;
-
-/**
  * Font families
  */
 $font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
@@ -142,11 +132,6 @@ $font-weight-bold: 600;
  */
 $rounded-sm: 0.125rem;
 $rounded: 0.25rem;
-
-/**
- * Deprecated border radius
- */
-$rounded-sm: $rounded-sm;
 
 /**
  * Shadows
@@ -217,7 +202,7 @@ $spacing: (
 $field-input-padding: .5rem;
 $field-input-height: 2.25rem;
 $field-input-line-height: 1.25rem;
-$field-input-font-size: $font-size-medium;
+$field-input-font-size: $text-base;
 $field-input-color-before: $color-dark-grey;
 $field-input-color-after: $color-dark-grey;
 $field-input-border: 1px solid $color-border;
@@ -237,6 +222,6 @@ $field-input-disabled-border: 1px solid lighten($color-border, 2%);
  */
 $list-item-height: calc(2rem + 2px);
 $list-item-text-color: $color-dark;
-$list-item-text-font-size: $font-size-small;
+$list-item-text-font-size: $text-sm;
 $list-item-info-color: $color-dark-grey;
-$list-item-info-font-size: $font-size-tiny;
+$list-item-info-font-size: $text-xs;
