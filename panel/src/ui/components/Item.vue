@@ -221,7 +221,7 @@ export default {
 }
 .k-item-label-button.k-button {
   font-size: $text-xs;
-  font-family: $font-family-mono;
+  font-family: $font-mono;
   display: flex;
   padding: .125rem .5rem;
   border: 2px solid $color-border;

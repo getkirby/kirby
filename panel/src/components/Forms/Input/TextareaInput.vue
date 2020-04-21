@@ -331,7 +331,7 @@ export default {
   min-height: 45rem;
 }
 .k-textarea-input-native[data-font="monospace"] {
-  font-family: $font-family-mono;
+  font-family: $font-mono;
 }
 
 .k-toolbar {

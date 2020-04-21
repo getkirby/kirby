@@ -20,7 +20,7 @@ export default {
 }
 .k-code-block code {
   color: $color-white;
-  font-family: $font-family-mono;
+  font-family: $font-mono;
   font-size: .75rem;
   line-height: 1.5em;
   border-radius: $rounded-sm;

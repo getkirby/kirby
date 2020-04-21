@@ -108,7 +108,7 @@ export default {
 button {
   line-height: inherit;
   border: 0;
-  font-family: $font-family-sans;
+  font-family: $font-sans;
   font-size: 1rem;
   color: currentColor;
   background: none;
