@@ -207,7 +207,7 @@ export default {
 }
 .k-upload-error-filename {
   color: $color-negative;
-  font-weight: $font-weight-bold;
+  font-weight: $font-bold;
 }
 .k-upload-error-message {
   color: $color-dark-grey;

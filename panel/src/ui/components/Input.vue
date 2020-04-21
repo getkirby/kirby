@@ -223,7 +223,7 @@ export default {
   .k-date-input .k-select-input:focus-within,
   .k-time-input .k-select-input:focus-within {
     color: $color-focus;
-    font-weight: $font-weight-bold;
+    font-weight: $font-bold;
   }
   .k-time-input .k-time-input-meridiem {
     padding-left: $field-input-padding;

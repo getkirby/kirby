@@ -289,7 +289,7 @@ $cell-padding: 0.25rem 0.5rem;
 }
 .k-calendar-selects .k-select-input {
   padding: 0 0.5rem;
-  font-weight: $font-weight-normal;
+  font-weight: $font-normal;
   font-size: $text-sm;
 }
 .k-calendar-selects .k-select-input:focus-within {

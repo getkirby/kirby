@@ -166,7 +166,7 @@ export default {
 
 .k-form-indicator-info {
   font-size: $text-sm;
-  font-weight: $font-weight-bold;
+  font-weight: $font-bold;
   padding: .75rem 1rem .25rem;
   line-height: 1.25em;
   width: 15rem;

@@ -405,7 +405,7 @@ export default {
 }
 
 .k-topbar-notification {
-  font-weight: $font-weight-bold;
+  font-weight: $font-bold;
   line-height: 1;
   display: flex;
 }

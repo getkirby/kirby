@@ -157,6 +157,6 @@ export default {
   cursor: default;
 }
 .k-select-input-native {
-  font-weight: $font-weight-normal;
+  font-weight: $font-normal;
 }
 </style>

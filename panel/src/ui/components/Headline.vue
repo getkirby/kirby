@@ -38,7 +38,7 @@ export default {
 <style lang="scss">
 .k-headline {
   font-size: $text-base;
-  font-weight: $font-weight-bold;
+  font-weight: $font-bold;
   line-height: 1.25em;
 }
 .k-headline[data-size="small"] {
@@ -46,7 +46,7 @@ export default {
 }
 .k-headline[data-size="large"] {
   font-size: $text-xl;
-  font-weight: $font-weight-normal;
+  font-weight: $font-normal;
 
   @media screen and (min-width: $breakpoint-medium) {
     font-size: $text-2xl;

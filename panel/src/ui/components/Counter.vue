@@ -70,7 +70,7 @@ export default {
 .k-counter {
   font-size: $text-xs;
   color: $color-dark;
-  font-weight: $font-weight-bold;
+  font-weight: $font-bold;
 }
 .k-counter[data-invalid] {
   box-shadow: none;
@@ -79,7 +79,7 @@ export default {
 }
 .k-counter-rules {
   color: $color-dark-grey;
-  font-weight: $font-weight-normal;
+  font-weight: $font-normal;
 
   [dir="ltr"] & {
     padding-left: .5rem;
