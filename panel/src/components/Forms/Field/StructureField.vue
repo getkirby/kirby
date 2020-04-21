@@ -809,7 +809,7 @@ $structure-item-height: 38px;
 
   .k-sortable-ghost {
     background: $color-white;
-    box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
+    box-shadow: $shadow-lg;
     outline: 2px solid $color-focus;
     margin-bottom: 2px;
     cursor: grabbing;
@@ -836,7 +836,7 @@ $structure-item-height: 38px;
   z-index: 3;
   border-radius: $rounded-sm;
   margin-bottom: 1px;
-  box-shadow: rgba($color-dark, 0.05) 0 0 0 3px;
+  box-shadow: rgba($color-black, 0.05) 0 0 0 3px;
   border: 1px solid $color-border;
   background: $color-background;
 }

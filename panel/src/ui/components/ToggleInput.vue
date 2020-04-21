@@ -74,7 +74,7 @@ export default {
 <style lang="scss">
 $toggle-background: $color-white;
 $toggle-color: $color-border;
-$toggle-active-color: $color-dark;
+$toggle-active-color: $color-black;
 $toggle-focus-color: $color-focus;
 $toggle-height: 16px;
 

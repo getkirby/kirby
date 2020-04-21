@@ -85,7 +85,7 @@ export default {
 </script>
 <style lang="scss">
 .k-file-preview {
-  background: lighten($color-dark, 10%);
+  background: lighten($color-black, 10%);
 }
 .k-file-preview-layout {
   display: grid;

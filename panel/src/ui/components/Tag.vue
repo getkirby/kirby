@@ -38,7 +38,7 @@ export default {
   font-size: $text-sm;
   line-height: 1;
   cursor: pointer;
-  background-color: $color-dark;
+  background-color: $color-black;
   color: $color-light;
   border-radius: $rounded-sm;
   display: inline-flex;

@@ -40,7 +40,7 @@ export default {
   padding: 0.5rem 1.5rem;
 }
 .k-box[data-theme="code"] {
-  background: $color-dark;
+  background: $color-black;
   border: 1px solid $color-black;
   color: $color-light;
   font-family: "Input", "Menlo", monospace;

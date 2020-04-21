@@ -205,7 +205,7 @@ export default {
     right: -1px;
     height: 2px;
     top: -1px;
-    background: $color-dark;
+    background: $color-black;
   }
 
   &::after {

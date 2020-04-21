@@ -116,13 +116,13 @@ export default {
 <style lang="scss">
 
 $range-thumb-size: 16px;
-$range-thumb-border: 4px solid $color-dark;
+$range-thumb-border: 4px solid $color-black;
 $range-thumb-background: $color-background;
 $range-thumb-focus-border: 4px solid $color-focus;
 $range-thumb-focus-background: $color-background;
 $range-track-height: 4px;
 $range-track-background: $color-border;
-$range-track-color: $color-dark;
+$range-track-color: $color-black;
 $range-track-focus-color: $color-focus;
 
 @mixin track($fill: 0) {
@@ -246,7 +246,7 @@ $range-track-focus-color: $color-focus;
   line-height: 1;
   text-align: center;
   border-radius: $rounded-sm;
-  background: $color-dark;
+  background: $color-black;
   margin-left: 1rem;
   padding: 0 .25rem;
   white-space: nowrap;
@@ -259,7 +259,7 @@ $range-track-focus-color: $color-focus;
     height: 0;
     transform: translateY(-50%);
     border-top: 5px solid transparent;
-    border-right: 5px solid $color-dark;
+    border-right: 5px solid $color-black;
     border-bottom: 5px solid transparent;
     content: "";
   }

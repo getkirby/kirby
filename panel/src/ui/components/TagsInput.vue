@@ -363,6 +363,7 @@ export default {
 }
 .k-tags-input .k-sortable-ghost {
   background: $color-focus;
+  box-shadow: none;
 }
 .k-tags-input-element {
   flex-grow: 1;

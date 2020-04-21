@@ -3,25 +3,20 @@
     <div
       :dir="$direction"
       :data-size="size"
-      class="k-dialog"
+      class="k-dialog bg-backdrop"
       @click="cancel"
     >
       <div
         ref="box"
-        class="k-dialog-box"
+        class="k-dialog-box bg-light rounded-sm shadow-md"
         @click.stop
       >
-        <div
+        <k-notification
           v-if="notification"
-          :data-theme="notification.type"
+          v-bind="notification"
           class="k-dialog-notification"
-        >
-          <p>{{ notification.message }}</p>
-          <k-button
-            icon="cancel"
-            @click="notification = null"
-          />
-        </div>
+          @close="notification = null"
+        />
         <header
           v-if="$slots['header']"
           class="k-dialog-header"
@@ -249,17 +244,13 @@ export default {
   width: 100%;
   height: 100%;
 
-  background: $color-backdrop;
   z-index: z-index(dialog);
   transform: translate3d(0, 0, 0);
 }
 
 .k-dialog-box {
   position: relative;
-  background: $color-light;
   width: 100%;
-  box-shadow: $shadow-md;
-  border-radius: $rounded-sm;
   line-height: 1;
   max-height: calc(100vh - 3rem);
   margin: 1.5rem;
@@ -292,36 +283,12 @@ export default {
   }
 }
 
-.k-dialog-notification {
-  padding: 0.75rem 1.5rem;
-  background: $color-dark;
-  width: 100%;
-  line-height: 1.25rem;
-  color: $color-white;
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-}
-
-.k-dialog-notification[data-theme="error"] {
-  background: $color-negative-on-dark;
-  color: $color-black;
-}
-
-.k-dialog-notification[data-theme="success"] {
-  background: $color-positive-on-dark;
-  color: $color-black;
-}
-
-.k-dialog-notification p {
-  flex-grow: 1;
-  word-wrap: break-word;
-  overflow: hidden;
-}
-
-.k-dialog-notification .k-button {
-  display: flex;
-  margin-left: 1rem;
+.k-dialog .k-dialog-notification {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  border-top-left-radius: $rounded-sm;
+  border-top-right-radius: $rounded-sm;
+  margin-top: -3px;
 }
 
 .k-dialog-body {
@@ -343,15 +310,11 @@ export default {
 }
 .k-dialog-header {
   border-bottom: 1px solid lighten($color-border, 8%);
-  border-top-left-radius: $rounded-sm;
-  border-top-right-radius: $rounded-sm;
   height: 2.5rem;
 }
 
 .k-dialog-footer {
   border-top: 1px solid lighten($color-border, 8%);
-  border-bottom-left-radius: $rounded-sm;
-  border-bottom-right-radius: $rounded-sm;
 }
 
 .k-dialog-footer .k-button-group {
@@ -360,8 +323,9 @@ export default {
   justify-content: space-between;
 
   .k-button {
-    padding: 0.75rem 1rem;
+    padding: 0.625rem 1rem;
     line-height: 1.25rem;
+    height: 2.5rem;
   }
 
   .k-button:first-child {

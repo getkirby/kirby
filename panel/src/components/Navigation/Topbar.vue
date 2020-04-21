@@ -240,7 +240,7 @@ export default {
   flex-shrink: 0;
   height: 2.5rem;
   line-height: 1;
-  background: $color-dark;
+  background: $color-black;
 }
 .k-topbar-wrapper {
   position: relative;
@@ -257,7 +257,7 @@ export default {
   height: 2.5rem;
   width: 2.5rem;
   padding: .75rem;
-  background: $color-dark;
+  background: $color-black;
   z-index: 1;
   display: flex;
   align-items: center;
@@ -362,7 +362,7 @@ export default {
 .k-topbar-signals {
   position: absolute;
   top: 0;
-  background: $color-dark;
+  background: $color-black;
   height: 2.5rem;
   display: flex;
   align-items: center;
@@ -386,8 +386,8 @@ export default {
     left: -0.5rem;
     background: -webkit-linear-gradient(
       left,
-      rgba($color-dark, 0),
-      rgba($color-dark, 1)
+      rgba($color-black, 0),
+      rgba($color-black, 1)
     );
   }
 
@@ -395,8 +395,8 @@ export default {
     right: -0.5rem;
     background: -webkit-linear-gradient(
       right,
-      rgba($color-dark, 0),
-      rgba($color-dark, 1)
+      rgba($color-black, 0),
+      rgba($color-black, 1)
     );
   }
 }
@@ -426,7 +426,7 @@ export default {
   opacity: 1;
 }
 .k-topbar .k-dropdown-content {
-  color: $color-dark;
+  color: $color-black;
   background: $color-white;
 }
 .k-topbar .k-dropdown-content hr:after {

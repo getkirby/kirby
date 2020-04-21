@@ -22,7 +22,7 @@
   --color-positive: #{$color-positive};
   --color-positive-light: #{$color-positive-on-dark};
   --color-positive-outline: #{$color-positive-outline};
-  --color-text: #{$color-dark};
+  --color-text: #{$color-black};
   --color-text-light: #{$color-dark-grey};
 
   /** Font families **/
@@ -62,6 +62,7 @@ body {
   color: $color-black;
   overflow: hidden;
   height: 100%;
+  line-height: 1;
 }
 
 a {
@@ -154,7 +155,7 @@ b {
 }
 
 .k-offline-warning {
-  background: rgba($color-dark, 0.7);
+  background: rgba($color-black, 0.7);
   content: "offline";
   display: flex;
   align-items: center;
@@ -206,15 +207,6 @@ b {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-
-
-.object-contain {
-  object-fit: contain;
-}
-.object-cover {
-  object-fit: cover;
-}
-
 
 
 @import "utilities.scss";

@@ -153,7 +153,7 @@ export default {
   line-height: 1;
 }
 .k-item:focus-within {
-  box-shadow: $color-focus 0 0 0 2px;
+  box-shadow: $shadow-outline;
 }
 .k-item a:focus {
   outline: 0;
@@ -167,16 +167,6 @@ export default {
 }
 .k-item:hover .k-item-sort-handle {
   opacity: 1;
-}
-.k-item.k-sortable-ghost {
-  position: relative;
-  outline: 2px solid $color-focus;
-  z-index: 1;
-  box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
-}
-.k-item.k-sortable-fallback {
-  opacity: 0.25 !important;
-  overflow: hidden;
 }
 .k-item-content {
   overflow: hidden;
@@ -265,7 +255,8 @@ export default {
 }
 .k-list-item .k-item-figure {
   width: 38px;
-  flex-shrink: 0;
+  border-top-left-radius: $rounded-sm;
+  border-bottom-left-radius: $rounded-sm;
 }
 .k-list-item .k-item-content {
   display: flex;
@@ -325,11 +316,12 @@ export default {
 .k-cardlet-item .k-item-sort-handle {
   margin: .25rem;
   background: $color-background;
-  border-radius: $rounded-sm;
   box-shadow: $shadow-md;
 }
 .k-cardlet-item .k-item-figure {
   grid-area: figure;
+  border-top-left-radius: $rounded-sm;
+  border-bottom-left-radius: $rounded-sm;
 }
 .k-cardlet-item .k-item-content {
   padding: .5rem .75rem;
@@ -358,11 +350,12 @@ export default {
 .k-card-item .k-item-sort-handle {
   margin: .25rem;
   background: $color-background;
-  border-radius: $rounded-sm;
   box-shadow: $shadow-md;
 }
 .k-card-item .k-item-figure {
   grid-area: figure;
+  border-top-left-radius: $rounded-sm;
+  border-top-right-radius: $rounded-sm;
 }
 .k-card-item .k-item-content {
   grid-area: content;

@@ -247,4 +247,7 @@ export default {
   background: $color-white;
   color: $color-black;
 }
+.k-dropdown-content[data-theme="light"] hr::after {
+  opacity: 0.1;
+}
 </style>

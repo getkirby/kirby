@@ -86,3 +86,15 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.k-sortable-ghost {
+  position: relative;
+  box-shadow: $shadow-outline, $shadow-xl;
+  z-index: 1;
+}
+.k-sortable-fallback {
+  opacity: 0.25 !important;
+  overflow: hidden;
+}
+</style>

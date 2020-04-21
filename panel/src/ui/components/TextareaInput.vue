@@ -328,7 +328,7 @@ export default {
   right: 0;
   left: 0;
   z-index: 1;
-  box-shadow: rgba(0, 0, 0, 0.05) 0 2px 5px;
+  box-shadow: $shadow-sticky;
   border-bottom: 1px solid rgba(#000, 0.1);
   color: #000;
 }

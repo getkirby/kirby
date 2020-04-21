@@ -314,7 +314,6 @@ export default {
     .k-radio-input label::before {
       top: ($field-input-height - 1rem) / 2;
       left: $field-input-padding;
-      margin-top: -1px;
     }
     .k-radio-input .k-radio-input-info {
       display: block;

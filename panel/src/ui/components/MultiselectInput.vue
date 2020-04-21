@@ -271,6 +271,7 @@ export default {
 }
 .k-multiselect-input .k-sortable-ghost {
   background: $color-focus;
+  box-shadow: none;
 }
 
 .k-multiselect-input .k-dropdown-content {

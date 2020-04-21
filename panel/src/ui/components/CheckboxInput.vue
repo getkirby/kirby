@@ -87,12 +87,16 @@ export default {
 .k-checkbox-input-icon {
   position: absolute;
   left: 0;
-  width: 1rem;
-  height: 1rem;
-  border: 2px solid $color-light-grey;
+  width: 16px;
+  height: 16px;
+  border: 2px solid $color-gray-500;
+  border-radius: $rounded-sm;
+  box-shadow: $shadow-inset;
 }
 .k-checkbox-input-icon svg {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 12px;
   height: 12px;
   display: none;
@@ -101,8 +105,8 @@ export default {
   stroke: $color-white;
 }
 .k-checkbox-input-native:checked + .k-checkbox-input-icon {
-  border-color: $color-dark;
-  background: $color-dark;
+  border-color: $color-black;
+  background: $color-black;
 }
 .k-checkbox-input-native:checked + .k-checkbox-input-icon svg {
   display: block;

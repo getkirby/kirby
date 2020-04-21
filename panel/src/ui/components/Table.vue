@@ -172,9 +172,9 @@ $table-row-height: 38px;
   background: $color-white;
   font-size: $text-sm;
   border-spacing: 0;
-  border-collapse: collapse;
   box-shadow: $shadow;
   font-variant-numeric: tabular-nums;
+  border-radius: $rounded-sm;
 }
 
 /** Cells **/
@@ -184,6 +184,7 @@ $table-row-height: 38px;
   text-overflow: ellipsis;
   width: 100%;
   border-bottom: 1px solid $color-background;
+  line-height: 1.15em;
 
   [dir="ltr"] & {
     border-right: 1px solid $color-background;
@@ -194,6 +195,13 @@ $table-row-height: 38px;
   }
 
 }
+.k-table tr:first-child th:first-child {
+  border-top-left-radius: $rounded-sm;
+}
+.k-table tr:first-child th:last-child {
+  border-top-right-radius: $rounded-sm;
+}
+
 .k-table tr:last-child td {
   border-bottom: 0;
 }
@@ -204,7 +212,7 @@ $table-row-height: 38px;
 .k-table-header-label,
 .k-table-cell-value {
   padding: 0 0.75rem;
-  overflow: hidden;
+  overflow-x: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -232,7 +240,7 @@ $table-row-height: 38px;
   right: 0;
   left: 0;
   width: 100%;
-  font-weight: 400;
+  font-weight: $font-normal;
   z-index: 1;
   color: $color-dark-grey;
   background: $color-white;
@@ -246,6 +254,16 @@ $table-row-height: 38px;
   }
 
 }
+.k-table th::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  height: .5rem;
+  background: -webkit-linear-gradient(top, rgba($color-black, .05), rgba($color-black, 0));
+  z-index: 2;
+}
 
 /** Index column **/
 .k-table th.k-table-index-column,
@@ -256,6 +274,7 @@ $table-row-height: 38px;
 .k-table .k-table-index {
   font-size: $text-xs;
   color: $color-light-grey;
+  line-height: 1.1em;
 }
 
 /** Options column **/
@@ -281,7 +300,7 @@ $table-row-height: 38px;
 }
 .k-table-row-ghost {
   background: $color-white;
-  box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
+  box-shadow: $shadow-xl;
   outline: 2px solid $color-focus;
   overflow: hidden;
   cursor: grabbing;

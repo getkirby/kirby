@@ -1,11 +1,12 @@
 <template>
   <span
-    :aria-label="alt"
-    :role="alt ? 'img' : null"
     :aria-hidden="!alt"
+    :aria-label="alt"
+    :class="['k-icon', 'k-icon-' + type, back ? 'bg-' + back : false]"
     :data-back="back"
     :data-size="size"
-    :class="'k-icon k-icon-' + type"
+    :role="alt ? 'img' : null"
+    :style="{ color: iconColor }"
   >
     <span
       v-if="emoji"
@@ -13,7 +14,6 @@
     >{{ type }}</span>
     <svg
       v-else
-      :style="{ color: color }"
       viewBox="0 0 16 16"
     >
       <use :xlink:href="'#icon-' + type" />
@@ -30,6 +30,21 @@ export default {
     emoji: Boolean,
     size: String,
     type: String
+  },
+  computed: {
+    iconColor() {
+      if (this.color) {
+        return this.color;
+      }
+
+      switch (this.back) {
+        case "black":
+        case "pattern":
+          return "white";
+      }
+
+      return null;
+    }
   }
 };
 </script>
@@ -49,18 +64,6 @@ export default {
 }
 .k-icon svg * {
   fill: currentColor;
-}
-.k-icon[data-back="black"] {
-  background: $color-dark;
-  color: $color-white;
-}
-.k-icon[data-back="white"] {
-  background: $color-white;
-  color: $color-dark;
-}
-.k-icon[data-back="pattern"] {
-  background: lighten($color-dark, 10%) url($pattern);
-  color: $color-white;
 }
 .k-icon[data-size="medium"] svg {
   width: 2rem;

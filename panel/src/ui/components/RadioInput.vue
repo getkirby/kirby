@@ -97,18 +97,18 @@ export default {
 }
 .k-radio-input label::before {
   position: absolute;
-  top: .175em;
+  top: .25em;
   left: 0;
   content: "";
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  border: 2px solid $color-light-grey;
+  border: 2px solid $color-gray-500;
   box-shadow: $color-white 0 0 0 2px inset;
 }
 .k-radio-input input:checked + label::before {
-  border-color: $color-dark;
-  background: $color-dark;
+  border-color: $color-black;
+  background: $color-black;
 }
 .k-radio-input input:focus + label::before {
   border-color: $color-focus;

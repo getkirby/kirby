@@ -1,5 +1,5 @@
 <template>
-  <pre class="k-code-block"><code v-html="code || ' '" /></pre>
+  <pre class="k-code-block rounded"><code v-html="code || ' '" /></pre>
 </template>
 
 <script>

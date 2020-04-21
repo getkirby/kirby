@@ -1,3 +1,6 @@
+.bg-backdrop {
+  background: $color-backdrop;
+}
 .bg-black {
   background: $color-black;
 }
@@ -8,5 +11,5 @@
   background: $color-white;
 }
 .bg-pattern {
-  background: lighten($color-dark, 10%) url($pattern);
+  background: $color-gray-800 url($pattern);
 }

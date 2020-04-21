@@ -1,28 +1,90 @@
 import Grid from "./Grid.vue";
 import Padding from "../storybook/Padding.js";
-import { withKnobs, number, select } from '@storybook/addon-knobs';
 
 export default {
   title: "UI | Layout / Grid",
-  decorators: [withKnobs, Padding],
+  decorators: [Padding],
   component: Grid
 };
 
-export const configurator = () => ({
-  props: {
-    columns: {
-      default: number("columns", 12)
-    },
-    width: {
-      default: select("column width", ["1/12", "1/6", "1/4", "1/3", "1/2", "1/1"], "1/12")
-    },
-    gutter: {
-      default: select("gutter", ["none", "small", "medium", "large", "huge"], "small")
-    },
-  },
+export const smallGutter = () => ({
   template: `
-    <k-grid :gutter="gutter">
-      <k-column style="background: var(--color-positive-light); height: 6rem; padding: .5rem" v-for="n in columns" :key="width + '-' + n" :width="width">{{ n }}</k-column>
+    <k-grid gutter="small">
+      <k-column
+        width="1/1"
+        class="bg-white p-6 text-xs font-mono text-center shadow"
+      >
+        1/2
+      </k-column>
+      <k-column
+        v-for="n in 2"
+        width="1/2"
+        class="bg-white p-6 text-xs font-mono text-center shadow"
+      >
+        1/2
+      </k-column>
+      <k-column
+        v-for="n in 4"
+        width="1/4"
+        class="bg-white p-6 text-xs font-mono text-center shadow"
+      >
+        1/4
+      </k-column>
+      <k-column
+        v-for="n in 6"
+        width="1/6"
+        class="bg-white p-6 text-xs font-mono text-center shadow"
+      >
+        1/6
+      </k-column>
+      <k-column
+        v-for="n in 12"
+        width="1/12"
+        class="bg-white p-6 text-xs font-mono text-center shadow"
+      >
+        1/12
+      </k-column>
+    </k-grid>
+  `,
+});
+
+export const mediumGutter = () => ({
+  template: `
+    <k-grid gutter="medium">
+      <k-column
+        width="1/1"
+        class="bg-white p-6 text-xs font-mono text-center shadow"
+      >
+        1/2
+      </k-column>
+      <k-column
+        v-for="n in 2"
+        width="1/2"
+        class="bg-white p-6 text-xs font-mono text-center shadow"
+      >
+        1/2
+      </k-column>
+      <k-column
+        v-for="n in 4"
+        width="1/4"
+        class="bg-white p-6 text-xs font-mono text-center shadow"
+      >
+        1/4
+      </k-column>
+      <k-column
+        v-for="n in 6"
+        width="1/6"
+        class="bg-white p-6 text-xs font-mono text-center shadow"
+      >
+        1/6
+      </k-column>
+      <k-column
+        v-for="n in 12"
+        width="1/12"
+        class="bg-white p-6 text-xs font-mono text-center shadow"
+      >
+        1/12
+      </k-column>
     </k-grid>
   `,
 });

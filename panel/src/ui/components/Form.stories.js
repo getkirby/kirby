@@ -63,7 +63,8 @@ export const login = () => ({
         email: null,
         password: null,
       },
-      remember: false
+      remember: false,
+      error: null,
     };
   },
   computed: {
@@ -82,15 +83,30 @@ export const login = () => ({
     }
   },
   methods: {
-    onLogin: action("login")
+    onLogin(values) {
+      action("login")(values);
+      this.error = "Something went wrong";
+      this.$refs.form.focus();
+    },
+    onResetError() {
+      this.error = null;
+    }
   },
   template: `
     <k-view align="center">
       <k-form
+        ref="form"
         :fields="fields"
         v-model="credentials"
         @submit="onLogin"
       >
+        <k-notification
+          slot="header"
+          :message="error"
+          type="error"
+          class="mb-8 rounded-xs shadow-lg"
+          @close="onResetError"
+        />
         <footer
           slot="footer"
           class="pt-8 flex justify-between"

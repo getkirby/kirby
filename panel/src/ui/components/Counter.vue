@@ -69,7 +69,7 @@ export default {
 <style lang="scss">
 .k-counter {
   font-size: $text-xs;
-  color: $color-dark;
+  color: $color-black;
   font-weight: $font-bold;
 }
 .k-counter[data-invalid] {

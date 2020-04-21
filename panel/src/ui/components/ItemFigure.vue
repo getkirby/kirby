@@ -56,3 +56,10 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.k-item-figure {
+  overflow: hidden;
+  flex-shrink: 0;
+}
+</style>

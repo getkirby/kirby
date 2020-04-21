@@ -55,12 +55,12 @@ The Button Group element should always be used when two or more buttons are posi
 
 ### Events
 
-**`focus()`**  
+**`focus()`**
 Set the focus on the field.
 
 ### Methods
 
-**`@input`**  
+**`@input`**
 The input event is triggered when the value changes. The new value is passed.
 
 ## More examples
@@ -162,6 +162,65 @@ The input event is triggered when the value changes. The new value is passed.
           label="Checkboxes"
           @input="input"
         />
+      `,
+    }}
+  </Story>
+</Preview>
+
+### Checkboxes vs. Radios
+<Preview>
+  <Story name="Checkoxes vs. Radios">
+    {{
+      data() {
+        return {
+          checkboxes: [],
+          radios: [],
+        };
+      },
+      computed: {
+        checkboxOptions() {
+          return [
+            { value: "a", text: "A" },
+            { value: "b", text: "B" },
+            { value: "c", text: "C" }
+          ];
+        },
+        radioOptions() {
+          return [
+            { value: "a", text: "A" },
+            { value: "b", text: "B" },
+            { value: "c", text: "C" }
+          ];
+        }
+      },
+      methods: {
+        input: action("input")
+      },
+      template: `
+        <k-grid gutter="large">
+          <k-column width="1/2">
+            <k-checkboxes-field
+              v-model="checkboxes"
+              :columns="3"
+              :options="checkboxOptions"
+              class="mb-6"
+              label="Checkboxes"
+              @input="input"
+            />
+            <k-code-block :code="checkboxes" />
+          </k-column>
+          <k-column width="1/2">
+            <k-radio-field
+              v-model="radios"
+              :columns="3"
+              :options="radioOptions"
+              class="mb-6"
+              label="Radios"
+              @input="input"
+            />
+            <k-code-block :code="radios" />
+          </k-column>
+        </k-grid>
       `,
     }}
   </Story>

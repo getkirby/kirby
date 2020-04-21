@@ -1,5 +1,5 @@
 <template>
-  <div class="k-calendar-input">
+  <div class="k-calendar-input bg-black">
     <nav>
       <k-button
         icon="angle-left"
@@ -253,9 +253,7 @@ $cell-padding: 0.25rem 0.5rem;
 
 .k-calendar-input {
   padding: 0.5rem;
-  background: $color-dark;
   color: $color-light;
-  border-radius: $rounded-sm;
 }
 .k-calendar-table {
   table-layout: fixed;
