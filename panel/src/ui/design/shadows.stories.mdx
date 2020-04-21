@@ -1,0 +1,24 @@
+import { Meta, Preview, Story } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+
+<Meta
+  title="Design System | Shadows"
+  decorators={[Padding]}
+/>
+
+# Shadows
+
+<Preview>
+  <Story name="Regular shadows">
+    {{
+      template: `
+        <k-auto-grid style="--gap: 1.5rem">
+          <div class="p-6 bg-white shadow">shadow</div>
+          <div class="p-6 bg-white shadow-md">shadow-md</div>
+          <div class="p-6 bg-white shadow-lg">shadow-lg</div>
+        </k-auto-grid>
+      `
+    }}
+  </Story>
+</Preview>
+
