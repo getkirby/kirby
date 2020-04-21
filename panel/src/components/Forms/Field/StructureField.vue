@@ -637,7 +637,7 @@ $structure-item-height: 38px;
   background: #fff;
   font-size: $text-sm;
   border-spacing: 0;
-  box-shadow: $box-shadow-card;
+  box-shadow: $shadow;
 
   th,
   td {

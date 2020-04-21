@@ -110,7 +110,7 @@ export default {
   color: #fff;
   font-size: $text-sm;
   border-radius: $rounded-sm;
-  box-shadow: $box-shadow;
+  box-shadow: $shadow-md;
   cursor: pointer;
 }
 </style>

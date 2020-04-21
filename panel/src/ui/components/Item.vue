@@ -148,7 +148,7 @@ export default {
   position: relative;
   background: $color-white;
   border-radius: $rounded-sm;
-  box-shadow: $box-shadow-card;
+  box-shadow: $shadow;
   display: grid;
   line-height: 1;
 }
@@ -326,7 +326,7 @@ export default {
   margin: .25rem;
   background: $color-background;
   border-radius: $rounded-sm;
-  box-shadow: $box-shadow;
+  box-shadow: $shadow-md;
 }
 .k-cardlet-item .k-item-figure {
   grid-area: figure;
@@ -359,7 +359,7 @@ export default {
   margin: .25rem;
   background: $color-background;
   border-radius: $rounded-sm;
-  box-shadow: $box-shadow;
+  box-shadow: $shadow-md;
 }
 .k-card-item .k-item-figure {
   grid-area: figure;

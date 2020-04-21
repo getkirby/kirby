@@ -38,8 +38,8 @@
   --font-size-monster: #{$text-3xl};
 
   /** Shadows **/
-  --box-shadow-dropdown: #{$box-shadow};
-  --box-shadow-item: #{$box-shadow-card};
+  --box-shadow-dropdown: #{$shadow-md};
+  --box-shadow-item: #{$shadow};
   --box-shadow-focus: #{$shadow-outline};
 }
 

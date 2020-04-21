@@ -207,7 +207,7 @@ export default {
 .k-search-box {
   max-width: 30rem;
   margin: 0 auto;
-  box-shadow: $box-shadow;
+  box-shadow: $shadow-md;
 
   @media screen and (min-width: $breakpoint-medium) {
     margin: 2.5rem auto;

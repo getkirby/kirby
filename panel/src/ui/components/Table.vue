@@ -173,7 +173,7 @@ $table-row-height: 38px;
   font-size: $text-sm;
   border-spacing: 0;
   border-collapse: collapse;
-  box-shadow: $box-shadow-card;
+  box-shadow: $shadow;
   font-variant-numeric: tabular-nums;
 }
 

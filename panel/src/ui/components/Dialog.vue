@@ -258,7 +258,7 @@ export default {
   position: relative;
   background: $color-light;
   width: 100%;
-  box-shadow: $box-shadow;
+  box-shadow: $shadow-md;
   border-radius: $rounded-sm;
   line-height: 1;
   max-height: calc(100vh - 3rem);
