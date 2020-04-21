@@ -64,30 +64,30 @@ $color-purple-400: #b294bb;
 $color-purple-600: #9c48b9;
 
 /**
+ * Color Aliases
+ */
+$color-background: $color-gray-200;
+$color-border: $color-gray-400;
+$color-backdrop: rgba($color-black, 0.6);
+
+/**
  * Deprecated Colors
  */
 $color-dark: $color-gray-800;
 $color-dark-grey: $color-gray-700;
 $color-light: $color-gray-200;
 $color-light-grey: $color-gray-500;
-$color-background: $color-gray-200;
 $color-positive: $color-green-600;
-$color-positive-border: $color-positive;
 $color-positive-outline: rgba($color-positive, 0.25);
 $color-positive-on-dark: $color-green-400;
 $color-focus: $color-blue-600;
-$color-focus-border: $color-focus;
 $color-focus-outline: rgba($color-focus, 0.25);
 $color-focus-on-dark: $color-blue-400;
 $color-notice: $color-orange-600;
 $color-notice-on-dark: $color-orange-400;
 $color-negative: $color-red-600;
-$color-negative-border: $color-negative;
 $color-negative-outline: rgba($color-negative, 0.25);
 $color-negative-on-dark: $color-red-400;
-$color-border: $color-gray-400;
-$color-backdrop: rgba($color-dark, 0.6);
-$color-inset: #ebebeb;
 
 /**
  * Text sizes
@@ -138,36 +138,6 @@ $font-weight-normal: 400;
 $font-weight-bold: 600;
 
 /**
- * Fields
- */
-$field-input-padding: .5rem;
-$field-input-height: 2.25rem;
-$field-input-line-height: 1.25rem;
-$field-input-font-size: $font-size-medium;
-$field-input-color-before: $color-dark-grey;
-$field-input-color-after: $color-dark-grey;
-$field-input-border: 1px solid $color-border;
-$field-input-focus-border: 1px solid $color-focus-border;
-$field-input-focus-outline: 2px solid $color-focus-outline;
-$field-input-invalid-border: 1px solid $color-negative-outline;
-$field-input-invalid-outline: 0;
-$field-input-invalid-focus-border: 1px solid $color-negative-border;
-$field-input-invalid-focus-outline: 2px solid $color-negative-outline;
-$field-input-background: $color-white;
-$field-input-disabled-color: $color-light-grey;
-$field-input-disabled-background: lighten($color-background, 2.5%);
-$field-input-disabled-border: 1px solid lighten($color-border, 2%);
-
-/**
- * Lists
- */
-$list-item-height: calc(2rem + 2px);
-$list-item-text-color: $color-dark;
-$list-item-text-font-size: $font-size-small;
-$list-item-info-color: $color-dark-grey;
-$list-item-info-font-size: $font-size-tiny;
-
-/**
  * Border radius
  */
 $rounded-sm: 0.125rem;
@@ -176,23 +146,20 @@ $rounded: 0.25rem;
 /**
  * Deprecated border radius
  */
-$border-radius: $rounded-sm;
+$rounded-sm: $rounded-sm;
 
 /**
  * Shadows
  */
 $shadow: 0 1px 3px 0 rgba($color-black, 0.1), 0 1px 2px 0 rgba($color-black, 0.06);
 $shadow-md: 0 4px 6px -1px rgba($color-black, 0.1), 0 2px 4px -1px rgba($color-black, 0.06);
+$shadow-outline: $color-blue-600 0 0 0 2px, rgba($color-blue-600, 0.2) 0 0 0 2px;
 
 /**
  * Deprecated shadows
  */
 $box-shadow: $shadow-md;
 $box-shadow-card: $shadow;
-$box-shadow-focus: rgba($color-focus, 0.25) 0 0 0 3px;
-$box-shadow-positive: rgba($color-positive, 0.25) 0 0 0 3px;
-$box-shadow-focus-full: $color-focus 0 0 0 2px,
-  rgba($color-focus, 0.2) 0 0 0 2px;
 
 /**
  * Breakpoints
@@ -208,7 +175,7 @@ $breakpoint-huge: 120em;
  */
 @mixin focus-ring {
   outline: none;
-  box-shadow: $box-shadow-focus-full;
+  box-shadow: $shadow-outline;
 }
 
 @mixin highlight-tabbed {
@@ -243,3 +210,33 @@ $spacing: (
 );
 
 
+
+/**
+ * Fields
+ */
+$field-input-padding: .5rem;
+$field-input-height: 2.25rem;
+$field-input-line-height: 1.25rem;
+$field-input-font-size: $font-size-medium;
+$field-input-color-before: $color-dark-grey;
+$field-input-color-after: $color-dark-grey;
+$field-input-border: 1px solid $color-border;
+$field-input-focus-border: 1px solid $color-focus-border;
+$field-input-focus-outline: 2px solid $color-focus-outline;
+$field-input-invalid-border: 1px solid $color-negative-outline;
+$field-input-invalid-outline: 0;
+$field-input-invalid-focus-border: 1px solid $color-negative;
+$field-input-invalid-focus-outline: 2px solid $color-negative-outline;
+$field-input-background: $color-white;
+$field-input-disabled-color: $color-light-grey;
+$field-input-disabled-background: lighten($color-background, 2.5%);
+$field-input-disabled-border: 1px solid lighten($color-border, 2%);
+
+/**
+ * Lists
+ */
+$list-item-height: calc(2rem + 2px);
+$list-item-text-color: $color-dark;
+$list-item-text-font-size: $font-size-small;
+$list-item-info-color: $color-dark-grey;
+$list-item-info-font-size: $font-size-tiny;

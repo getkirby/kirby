@@ -40,7 +40,7 @@
   /** Shadows **/
   --box-shadow-dropdown: #{$box-shadow};
   --box-shadow-item: #{$box-shadow-card};
-  --box-shadow-focus: #{$box-shadow-focus-full};
+  --box-shadow-focus: #{$shadow-outline};
 }
 
 noscript {
