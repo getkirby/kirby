@@ -107,6 +107,9 @@ export default {
     addable() {
       return !this.max || this.state.length < this.max;
     },
+    availableOptions() {
+      return this.$helper.input.options(this.options);
+    },
     draggable() {
       return this.state.length > 1 && !this.sort;
     },
@@ -119,7 +122,7 @@ export default {
     },
     filtered() {
       if (this.q === null) {
-        return this.options.map(option => ({
+        return this.availableOptions.map(option => ({
           ...option,
           display: option.text,
           info: option.value
@@ -147,7 +150,7 @@ export default {
 
       let items = this.state;
 
-      const index = x => this.options.findIndex(y => y.value === x.value);
+      const index = x => this.availableOptions.findIndex(y => y.value === x.value);
       return items.sort((a, b) => index(a) - index(b));
     }
   },

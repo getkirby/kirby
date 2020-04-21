@@ -1,6 +1,7 @@
 import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
 import Padding from "../storybook/Padding.js";
 import Collection from "./Collection.vue";
+import { action } from "@storybook/addon-actions";
 
 <Meta
   title="UI | Data / Collection"
@@ -28,31 +29,43 @@ import Collection from "./Collection.vue";
     {{
       data() {
         return {
-          items: [...Array(10).keys()].map(item => {
-            return {
-              title: "List item no. " + item,
-              info: "List item info",
-              link: "https://getkirby.com",
-              image: {
-                url: "https://source.unsplash.com/user/erondu/1600x900?" + item
-              },
-              options: [
-                { icon: "edit", text: "Edit", click: "edit" },
-                { icon: "trash", text: "Delete", click: "delete" }
-              ]
-            };
-          }),
+          start: 1,
           pagination: {
             total: 230,
             limit: 10
           }
         };
       },
+      computed: {
+        items() {
+          return [...Array(10).keys()].map(item => {
+            return {
+              title: "List item no. " + (item + this.start),
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + (item + this.start)
+              },
+              options: [
+                { icon: "edit", text: "Edit", click: "edit" },
+                { icon: "trash", text: "Delete", click: "delete" }
+              ]
+            };
+          });
+        }
+      },
+      methods: {
+        onPaginate(pagination) {
+          action("paginate")(pagination);
+          this.start = pagination.start;
+        }
+      },
       template: `
         <k-collection
           :items="items"
           :pagination="pagination"
           :sortable="true"
+          @paginate="onPaginate"
         />
       `
     }}
@@ -65,32 +78,44 @@ import Collection from "./Collection.vue";
     {{
       data() {
         return {
-          items: [...Array(10).keys()].map(item => {
-            return {
-              title: "List item no. " + item,
-              info: "List item info",
-              link: "https://getkirby.com",
-              image: {
-                url: "https://source.unsplash.com/user/erondu/1600x900?" + item
-              },
-              options: [
-                { icon: "edit", text: "Edit", click: "edit" },
-                { icon: "trash", text: "Delete", click: "delete" }
-              ]
-            };
-          }),
+          start: 1,
           pagination: {
             total: 230,
             limit: 10
           }
         };
       },
+      computed: {
+        items() {
+          return [...Array(10).keys()].map(item => {
+            return {
+              title: "List item no. " + (item + this.start),
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + (item + this.start)
+              },
+              options: [
+                { icon: "edit", text: "Edit", click: "edit" },
+                { icon: "trash", text: "Delete", click: "delete" }
+              ]
+            };
+          });
+        }
+      },
+      methods: {
+        onPaginate(pagination) {
+          action("paginate")(pagination);
+          this.start = pagination.start;
+        }
+      },
       template: `
         <k-collection
           :items="items"
           :pagination="pagination"
           :sortable="true"
-          layout="cardlets"
+          layout="cardlet"
+          @paginate="onPaginate"
         />
       `
     }}
@@ -103,32 +128,44 @@ import Collection from "./Collection.vue";
     {{
       data() {
         return {
-          items: [...Array(10).keys()].map(item => {
-            return {
-              title: "List item no. " + item,
-              info: "List item info",
-              link: "https://getkirby.com",
-              image: {
-                url: "https://source.unsplash.com/user/erondu/1600x900?" + item
-              },
-              options: [
-                { icon: "edit", text: "Edit", click: "edit" },
-                { icon: "trash", text: "Delete", click: "delete" }
-              ]
-            };
-          }),
+          start: 1,
           pagination: {
             total: 230,
             limit: 10
           }
         };
       },
+      computed: {
+        items() {
+          return [...Array(10).keys()].map(item => {
+            return {
+              title: "List item no. " + (item + this.start),
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + (item + this.start)
+              },
+              options: [
+                { icon: "edit", text: "Edit", click: "edit" },
+                { icon: "trash", text: "Delete", click: "delete" }
+              ]
+            };
+          });
+        }
+      },
+      methods: {
+        onPaginate(pagination) {
+          action("paginate")(pagination);
+          this.start = pagination.start;
+        }
+      },
       template: `
         <k-collection
           :items="items"
           :pagination="pagination"
           :sortable="true"
-          layout="cards"
+          layout="card"
+          @paginate="onPaginate"
         />
       `
     }}

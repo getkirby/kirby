@@ -43,16 +43,6 @@
       />
     </div>
 
-    <k-toolbar-email-dialog
-      ref="emailDialog"
-      @cancel="cancel"
-      @submit="insertEmail($event)"
-    />
-    <k-toolbar-link-dialog
-      ref="linkDialog"
-      @cancel="cancel"
-      @submit="insert($event)"
-    />
     <k-files-dialog
       ref="fileDialog"
       @cancel="cancel"

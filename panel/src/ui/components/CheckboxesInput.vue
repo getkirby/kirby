@@ -4,7 +4,7 @@
     class="k-checkboxes-input"
   >
     <li
-      v-for="(option, index) in options"
+      v-for="(option, index) in checkboxes"
       :key="index"
     >
       <k-checkbox-input
@@ -55,6 +55,11 @@ export default {
   mounted() {
     if (this.$props.autofocus) {
       this.focus();
+    }
+  },
+  computed: {
+    checkboxes() {
+      return this.$helper.input.options(this.options);
     }
   },
   methods: {

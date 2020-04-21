@@ -151,6 +151,7 @@ export default {
   line-height: 1;
   border: $field-input-border;
   background: $field-input-background;
+  border-radius: $rounded-sm;
 
   &:focus-within {
     border: $field-input-focus-border;

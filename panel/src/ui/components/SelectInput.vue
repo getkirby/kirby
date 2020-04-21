@@ -24,7 +24,7 @@
         {{ emptyOption }}
       </option>
       <option
-        v-for="option in options"
+        v-for="option in selectOptions"
         :key="option.value"
         :disabled="option.disabled"
         :value="option.value"
@@ -93,6 +93,9 @@ export default {
       }
 
       return label;
+    },
+    selectOptions() {
+      return this.$helper.input.options(this.options);
     }
   },
   watch: {
@@ -122,7 +125,7 @@ export default {
     },
     text(value) {
       let text = null;
-      this.options.forEach(option => {
+      this.selectOptions.forEach(option => {
         if (option.value == value) {
           text = option.text;
         }

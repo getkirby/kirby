@@ -2,7 +2,7 @@ import ErrorBoundary from "./ErrorBoundary.vue";
 import Padding from "../storybook/Padding.js";
 
 export default {
-  title: "UI | Misc / ErrorBoundary",
+  title: "UI | Error Handling / ErrorBoundary",
   component: ErrorBoundary,
   decorators: [Padding]
 };

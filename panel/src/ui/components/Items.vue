@@ -78,7 +78,7 @@ export default {
 .k-card-items {
   display: grid;
   grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
   /**
     Making sure card doesn't break layout if
     in a parent narrower than 12rem

@@ -324,7 +324,6 @@ export default {
 
   .k-button {
     padding: 0.625rem 1rem;
-    line-height: 1.25rem;
     height: 2.5rem;
   }
 

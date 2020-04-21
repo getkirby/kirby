@@ -1,5 +1,5 @@
 <template>
-  <div class="k-calendar-input bg-black">
+  <div class="k-calendar-input bg-black rounded-sm">
     <nav>
       <k-button
         icon="angle-left"

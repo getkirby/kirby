@@ -2,11 +2,10 @@
   <span
     :aria-hidden="!alt"
     :aria-label="alt"
-    :class="['k-icon', 'k-icon-' + type, back ? 'bg-' + back : false]"
+    :class="classNames"
     :data-back="back"
     :data-size="size"
     :role="alt ? 'img' : null"
-    :style="{ color: iconColor }"
   >
     <span
       v-if="emoji"
@@ -32,6 +31,14 @@ export default {
     type: String
   },
   computed: {
+    classNames() {
+      return [
+        "k-icon",
+        "k-icon-" + this.type,
+        this.back      ? "bg-"   + this.back      : false,
+        this.iconColor ? "text-" + this.iconColor : false
+      ];
+    },
     iconColor() {
       if (this.color) {
         return this.color;

@@ -1,6 +1,7 @@
 import "../helpers/regex.js";
 import clone from "../helpers/clone.js";
 import debounce from "../helpers/debounce.js";
+import input from "../helpers/input.js";
 import isComponent from "../helpers/isComponent.js";
 import isUploadEvent from "../helpers/isUploadEvent.js";
 import kirbytext from "../helpers/kirbytext.js";
@@ -39,6 +40,7 @@ export default {
     Vue.prototype.$helper = {
       clone: clone,
       debounce: debounce,
+      input: input,
       isComponent: isComponent,
       isUploadEvent: isUploadEvent,
       kirbytext: kirbytext,

@@ -4,7 +4,7 @@
     class="k-radio-input"
   >
     <li
-      v-for="(option, index) in options"
+      v-for="(option, index) in radios"
       :key="index"
     >
       <input
@@ -53,6 +53,11 @@ export default {
   mounted() {
     if (this.$props.autofocus) {
       this.focus();
+    }
+  },
+  computed: {
+    radios() {
+      return this.$helper.input.options(this.options);
     }
   },
   methods: {

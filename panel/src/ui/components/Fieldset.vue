@@ -63,8 +63,14 @@ export default {
       let fields = {};
 
       Object.keys(this.fields).forEach(name => {
-        const field = this.fields[name];
+        let field = this.fields[name];
 
+        // guess the field type from the name
+        if (!field.type) {
+          field.type = name;
+        }
+
+        // conditional fields
         if (field.type !== 'hidden' && this.meetsCondition(field)) {
           fields[name] = field;
         }

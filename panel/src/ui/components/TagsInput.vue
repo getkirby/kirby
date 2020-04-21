@@ -29,7 +29,7 @@
     >
       <k-autocomplete
         ref="autocomplete"
-        :options="options"
+        :options="tagOptions"
         :skip="skip"
         @select="addTag"
         @leave="$refs.input.focus()"
@@ -98,12 +98,7 @@ export default {
       tags: this.prepareTags(this.value),
       selected: null,
       newTag: null,
-      tagOptions: this.options.map(tag => {
-        if (this.icon && this.icon.length > 0) {
-          tag.icon = this.icon;
-        }
-        return tag;
-      }, this)
+      tagOptions: this.prepareTags(this.options)
     };
   },
   computed: {
@@ -306,16 +301,16 @@ export default {
         return [];
       }
 
-      return value.map(tag => {
-        if (typeof tag === "string") {
-          return {
-            text: tag,
-            value: tag
-          };
-        } else {
-          return tag;
+      let tags = this.$helper.input.options(value);
+
+      return tags.map(tag => {
+        if (this.icon && this.icon.length > 0) {
+          tag.icon = this.icon;
         }
+
+        return tag;
       });
+
     },
     remove(tag) {
       // get neighboring tags

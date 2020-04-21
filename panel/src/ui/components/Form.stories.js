@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "UI | Form / Foundation / Form",
+  title: "UI | Form / Form",
   component: Form,
   decorators: [Padding]
 };
@@ -55,6 +55,143 @@ export const simple = () => ({
     </div>
   `,
 });
+
+
+export const complex = () => ({
+  data() {
+    return {
+      values: {}
+    };
+  },
+  computed: {
+    fields() {
+      return {
+        checkboxes: {
+          label: "Checkboxes",
+          options: [
+            "Option A",
+            "Option B",
+            "Option C"
+          ],
+          width: "1/2"
+        },
+        radio: {
+          label: "Radios",
+          options: [
+            "Option A",
+            "Option B",
+            "Option C"
+          ],
+          width: "1/2"
+        },
+        date: {
+          label: "Date",
+          before: "Published on",
+          width: "1/2"
+        },
+        range: {
+          label: "Range",
+          before: "Budget",
+          tooltip: {
+            before: "$"
+          },
+          step: 100,
+          max: 100000,
+          width: "1/2"
+        },
+        email: {
+          label: "Email",
+          width: "1/2"
+        },
+        url: {
+          label: "URL",
+          width: "1/2"
+        },
+        tel: {
+          label: "Phone",
+          before: "+49",
+          width: "1/2"
+        },
+        number: {
+          label: "Number",
+          before: "Show",
+          after: "projects per page",
+          width: "1/2"
+        },
+        textarea: {
+          label: "Textarea",
+        },
+        headline: {
+          label: "I'm a headline, use me to provide some structure",
+        },
+        info: {
+          label: "Info",
+          text: "Info fields are great to provide help for editors",
+        },
+        toggle: {
+          label: "Toggle",
+          width: "1/2"
+        },
+        select: {
+          label: "Select",
+          width: "1/2",
+          options: [
+            "Design",
+            "Photography",
+            "Interaction",
+            "Interior",
+            "Architecture"
+          ]
+        },
+        multiselect: {
+          label: "Multiselect",
+          options: [
+            "Design",
+            "Photography",
+            "Interaction",
+            "Interior",
+            "Architecture"
+          ],
+          help: "Select multiple categories",
+          width: "1/2"
+        },
+        tags: {
+          label: "Tags",
+          options: [
+            "Design",
+            "Photography",
+            "Interaction",
+            "Interior",
+            "Architecture"
+          ],
+          width: "1/2"
+        }
+      };
+    }
+  },
+  methods: {
+    input: action("input"),
+    focus: action("focus"),
+    submit: action("submit")
+  },
+  template: `
+    <div>
+      <k-form
+        :fields="fields"
+        v-model="values"
+        class="mb-8"
+        @focus="focus"
+        @input="input"
+        @submit="submit"
+      />
+
+      <k-headline class="mb-3">Values</k-headline>
+      <k-code-block :code="values" />
+    </div>
+  `,
+});
+
+
 
 export const login = () => ({
   data() {
