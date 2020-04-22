@@ -17,11 +17,21 @@
 <script>
 export default {
   props: {
-    removable: Boolean,
+    /**
+     * Enables the remove button.
+     */
+    removable: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     remove() {
       if (this.removable) {
+        /**
+         * This event is emitted when the remove button is being 
+         * clicked or the tag is focussed and the delete key is entered.
+         */
         this.$emit("remove");
       }
     },
