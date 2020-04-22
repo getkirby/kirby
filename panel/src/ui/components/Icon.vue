@@ -23,11 +23,28 @@
 <script>
 export default {
   props: {
+    /**
+     * For better accessibility of icons, you can pass an additional 
+     * alt attribute like for images.
+    emoji: Boolean,
+     */
     alt: String,
     color: String,
+    /**
+     * Like with the `k-image` component, you can set the background for 
+     * the icon. By default, the background is transparent.  
+     * Available options: `black`|`white`|`pattern`
+     */
     back: String,
-    emoji: Boolean,
+    /**
+     * By default the icon size is set to `1rem = 16px`, 
+     * which corresponds with the Panel font size. 
+     * Additional sizes are: `regular`|`medium`|`large`
+     */
     size: String,
+    /**
+     * Select the icon with this attribute.
+     */
     type: String
   },
   computed: {
