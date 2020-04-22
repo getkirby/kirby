@@ -75,10 +75,19 @@
 <script>
 export default {
   props: {
+    /**
+     * The align prop makes it possible to move the pagination 
+     * component to the `left`, `center` or `right` according 
+     * to the wrapper component.
+     */
     align: {
       type: String,
       default: "left"
     },
+    /**
+     * Show/hide the details display with the page selector 
+     * in the center of the two navigation buttons.
+     */
     details: {
       type: Boolean,
       default: false
@@ -93,34 +102,56 @@ export default {
         return Promise.resolve();
       }
     },
+    /**
+     * Sets the current page
+     */
     page: {
       type: Number,
       default: 1
     },
+    /**
+     * Sets the total number of items that are in the paginated list. 
+     * This has to be set higher than `0` to activate pagination.
+     */
     total: {
       type: Number,
       default: 0
     },
+    /**
+     * Sets the limit of items to be shown per page.
+     */
     limit: {
       type: Number,
       default: 10
     },
+    /**
+     * Enable/disable keyboard navigation
+     */
     keys: {
       type: Boolean,
       default: false
     },
+    /**
+     * Sets the label for the page selector
+     */
     pageLabel: {
       type: String,
       default() {
         return this.$t("pagination.page");
       }
     },
+    /**
+     * Sets the label for the `prev` arrow button
+     */
     prevLabel: {
       type: String,
       default() {
         return this.$t("prev");
       }
     },
+    /**
+     * Sets the label for the `next` arrow button
+     */
     nextLabel: {
       type: String,
       default() {
@@ -203,6 +234,12 @@ export default {
             this.$refs.dropdown.close();
           }
 
+          /**
+           * Listening to the paginate event is the most straight 
+           * forward way to react to the pagination component. An object 
+           * with `page`, `start`, `end`, `limit` and `offset` items 
+           * is passed.
+           */
           this.$emit("paginate", {
             page: this.currentPage,
             start: this.start,

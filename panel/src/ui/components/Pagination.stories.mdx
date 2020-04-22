@@ -1,0 +1,146 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Pagination from "./Pagination.vue";
+
+<Meta
+  title="UI | Navigation / Pagination"
+  component={Pagination}
+  decorators={[Padding]}
+/>
+
+# Pagination
+### `<k-pagination>`
+
+<Preview>
+  <Story name="Regular">
+    {{
+      template: `
+        <k-pagination
+          :page="1"
+          :total="20"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={Pagination} />
+
+### Methods
+
+**`goTo(page)`**  
+Jump to the given page
+
+**`prev()`**  
+Jump to the previous page
+
+**`next()`**  
+Jump to the next page
+
+
+## Variants
+
+### Details
+<Preview>
+  <Story name="Details">
+    {{
+      template: `
+        <k-pagination
+          :details="true"
+          :page="1"
+          :total="20"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Center
+<Preview>
+  <Story name="Center">
+    {{
+      template: `
+        <k-pagination
+          :details="true"
+          :page="1"
+          :total="20"
+          align="center"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Right
+<Preview>
+  <Story name="Right">
+    {{
+      template: `
+        <k-pagination
+          :details="true"
+          :page="1"
+          :total="20"
+          align="right"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Disabled Dropdown
+<Preview>
+  <Story name="Disabled Dropdown">
+    {{
+      template: `
+        <k-pagination
+          :details="true"
+          :dropdown="false"
+          :page="1"
+          :total="20"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+
+## Guides
+### Using the `paginate` event
+
+```html
+<template>
+  <section>
+    <h2>Paginated items</h2>
+    <ul>
+      <li v-for="item in items" :key="item.id">{{ item.title }}</li>
+    </ul>
+    <k-pagination :total="total" @paginate="fetch" />
+  </section>
+</template>
+
+<script>
+export default {
+  data() {
+    total: 0,
+    items: []
+  },
+  created() {
+    this.fetch({ page: 1 });
+  },
+  methods: {
+    fetch(pagination) {
+      return this.$api
+        .get('/projects.json', { page: pagination.page })
+        .then(response => {
+          this.items = response.data;
+          this.total = response.total;
+        });
+    }
+  }
+};
+</script>
+```
+
+## CSS class
+
+`.k-pagination`

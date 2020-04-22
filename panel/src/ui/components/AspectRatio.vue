@@ -15,14 +15,14 @@
 <script>
 /**
  * Use `<k-aspect-ratio>` to size content at specified
- * dimensions (e.g. `"16/9"`).
+ * dimensions (e.g. `16/9`).
  */
 
 export default {
   props: {
     /**
      * Background color.
-     * Available options: `"black"`, `"white"`, `"pattern"`
+     * Available options: `black`|`white`|`pattern`
      */
     back: String,
     /**
@@ -33,7 +33,7 @@ export default {
       default: "span",
     },
     /**
-     * Ratio fraction, e.g. `"1/2"`, `"3/2"` etc.
+     * Ratio fraction, e.g. `1/2`|`3/2` etc.
      */
     ratio: {
       type: String,

@@ -14,7 +14,7 @@
 export default {
   props: {
     /**
-     * Available options: `"list"`, `"cardlets"`, `"cards"`
+     * Available options: `list`|`cardlets`|`cards`
      */
     layout: {
       type: String,

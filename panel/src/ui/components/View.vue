@@ -12,7 +12,7 @@
 export default {
   props: {
     /**
-     * Available values: `"center"`
+     * Available values: `center`
      */
     align: String
   }

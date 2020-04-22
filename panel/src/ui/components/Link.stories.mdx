@@ -1,0 +1,87 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Link from "./Link.vue";
+
+<Meta
+  title="UI | Navigation / Link"
+  component={Link}
+  decorators={[Padding]}
+/>
+
+# Link
+### `<k-link>`
+
+Our Link component is a wrapper around a native HTML `a` element, but it is also used to swap this with a Vue `router-link` element in our application whenever it makes sense. It comes with a set of additional useful helpers.
+
+<Preview>
+  <Story name="Regular">
+    {{
+      template: '<k-link to="https://getkirby.com">https://getkirby.com</k-link>',
+    }}
+  </Story>
+</Preview>
+
+<Props of={Link} />
+
+### Methods
+**`focus()`**  
+Set the focus on the link element
+
+## Variants
+### Underlined
+<Preview>
+  <Story name="Underlined">
+    {{
+      template: '<k-link class="underline" to="https://getkirby.com">https://getkirby.com</k-link>'
+    }}
+  </Story>
+</Preview>
+
+### Title
+<Preview>
+  <Story name="Title">
+    {{
+      template: '<k-link title="Kirby Website" to="https://getkirby.com">https://getkirby.com</k-link>'
+    }}
+  </Story>
+</Preview>
+
+### Disabled
+<Preview>
+  <Story name="Disabled">
+    {{
+      template: '<k-link :disabled="true" to="https://getkirby.com">Disabled link</k-link>',
+    }}
+  </Story>
+</Preview>
+
+### Without URL
+<Preview>
+  <Story name="Without URL">
+    {{
+      template: '<k-link>No href attribute</k-link>',
+    }}
+  </Story>
+</Preview>
+
+### rel
+<Preview>
+  <Story name="rel">
+    {{
+      template: '<k-link rel="me" to="https://getkirby.com">https://getkirby.com</k-link>'
+    }}
+  </Story>
+</Preview>
+
+### `target="_blank"`
+<Preview>
+  <Story name="target blank">
+    {{
+      template: '<k-link to="https://getkirby.com" target="_blank">Opens in a new tab</k-link>',
+    }}
+  </Story>
+</Preview>
+
+## CSS class
+
+`.k-link`

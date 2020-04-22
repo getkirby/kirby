@@ -1,0 +1,39 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Tabs from "./Tabs.vue";
+
+<Meta
+  title="UI | Navigation / Tabs"
+  component={Tabs}
+  decorators={[Padding]}
+/>
+
+# Tabs
+### `<k-tabs>`
+
+<Preview>
+  <Story name="Regular">
+    {{
+      computed: {
+        tabs() {
+          return [
+            { name: "content", label: "Content", icon: "page" },
+            { name: "images", label: "Images", icon: "image" },
+            { name: "downloads", label: "Downloads", icon: "download" },
+            { name: "seo", label: "SEO", icon: "search" }
+          ];
+        },
+        tab() {
+          return this.tabs[0];
+        }
+      },
+      template: '<k-tabs :tabs="tabs" :tab="tab" />',
+    }}
+  </Story>
+</Preview>
+
+<Props of={Tabs} />
+
+## CSS class
+
+`.k-tabs`

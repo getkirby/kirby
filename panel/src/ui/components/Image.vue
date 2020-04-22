@@ -31,7 +31,7 @@ export default {
     alt: String,
     /**
      * By default the background of images will be transparent.
-     * But you can change it to `"black"`, `"white"` or `"pattern"`
+     * But you can change it to `black`|`white` or `pattern`
      */
     back: String,
     /**

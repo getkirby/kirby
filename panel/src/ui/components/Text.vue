@@ -12,8 +12,20 @@
 <script>
 export default {
   props: {
+    /**
+     * Changes the text alignment.  
+     * Available options: `left`|`center`|`right`
+     */
     align: String,
+    /**
+     * Changes the font size of the text.  
+     * Available options: `tiny`|`small`|`medium`|`large`|`huge`
+     */
     size: String,
+    /**
+     * Changes the layout/design of the text.  
+     * Available options: `help`
+     */
     theme: String
   }
 }

@@ -58,7 +58,7 @@ export default {
     tabindex: String,
     /**
      * With the theme you can control the general design of the button.
-     * Available options are: `"positive"`|`"negative"`
+     * Available options are: `positive`|`negative`
      */
     theme: String,
     /**
@@ -68,7 +68,7 @@ export default {
     tooltip: String,
     /**
      * The type attribute sets the button type like in HTML.
-     * Available options: `"button"`|`"reset"`|`"submit"`
+     * Available options: `button`|`reset`|`submit`
      */
     type: {
       type: String,

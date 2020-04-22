@@ -15,7 +15,7 @@
 export default {
   props: {
     /**
-     * `"positive"`|`"negative"`|`"info"`|`"none"`
+     * `positive`|`negative`|`info`|`none`
      */
     theme: String,
     /**

@@ -20,14 +20,28 @@
 
 export default {
   props: {
+    /**
+     * You can set a link for the headline. 
+     * The link can be absolute or relative.
+     */
     link: String,
+    /**
+     * Sets the text size.  
+     * Available sizes: `tiny`|`small`|`medium`|`large`|`huge`
+     */
     size: {
       type: String
     },
+    /**
+     * Sets the HTML tag for the headline element.
+     */
     tag: {
       type: String,
       default: "h2"
     },
+    /**
+     * Available options: `positive`|`negative`
+     */
     theme: {
       type: String
     }

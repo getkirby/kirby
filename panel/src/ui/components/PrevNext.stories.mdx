@@ -1,0 +1,68 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import PrevNext from "./PrevNext.vue";
+
+<Meta
+  title="UI | Navigation / PrevNext"
+  component={PrevNext}
+  decorators={[Padding]}
+/>
+
+# PrevNext
+### `<k-prev-next>`
+
+
+```html
+<k-prev-next :prev="prev" :next="next" />
+```
+
+<Props of={PrevNext} />
+
+### Enabled
+<Preview>
+  <Story name="Enabled">
+    {{
+      data() {
+        return {
+          prev: {
+            link: "https://getkirby.com"
+          },
+          next: {
+            link: "https://getkirby.com"
+          }
+        };
+      },
+      template: '<k-prev-next :prev="prev" :next="next" />'
+    }}
+  </Story>
+</Preview>
+
+### Enabled + Disabled
+<Preview>
+  <Story name="Enabled + Disabled">
+    {{
+      data() {
+        return {
+          prev: {
+            link: "https://getkirby.com"
+          }
+        };
+      },
+      template: '<k-prev-next :prev="prev" :next="next" />'
+    }}
+  </Story>
+</Preview>
+
+### Disabled
+<Preview>
+  <Story name="Disabled">
+    {{
+      template: '<k-prev-next />'
+    }}
+  </Story>
+</Preview>
+
+
+## CSS class
+
+`.k-prev-next`

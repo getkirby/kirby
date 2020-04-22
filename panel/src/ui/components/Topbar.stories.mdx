@@ -1,0 +1,98 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import { action } from "@storybook/addon-actions";
+import Padding from "../storybook/Padding.js";
+import Topbar from "./Topbar.vue";
+
+<Meta
+  title="UI | Navigation / Topbar"
+  component={Topbar}
+  decorators={[Padding]}
+/>
+
+# Topbar
+### `<k-topbar>`
+
+<Preview>
+  <Story name="Regular">
+    {{
+      data() {
+        return {
+          loading: false
+        }
+      },
+      computed: {
+        breadcrumb() {
+          return [
+            {
+              icon: "page",
+              link: "site",
+              text: "Maegazine"
+            },
+            {
+              link: "pages/photography",
+              text: "Photography"
+            },
+            {
+              link: "pages/photography+trees",
+              text: "Trees"
+            },
+          ];
+        },
+        menu() {
+          return [
+            { 
+              link: 'site', 
+              icon: 'page', 
+              text: 'Site' 
+            },
+            { 
+              link: 'users', 
+              icon: 'users', 
+              text: 'Users' 
+            },
+            { 
+              link: 'settings', 
+              icon: 'settings', 
+              text: 'Settings' 
+            },
+            '-',
+            { 
+              link: 'account', 
+              icon: 'account', 
+              text: 'Your account' 
+            },
+            '-',
+            { 
+              link: 'logout', 
+              icon: 'logout', 
+              text: 'Logout' 
+              },
+          ];
+        }
+      },
+      methods: {
+        onSearch: action("search")
+      },
+      template: `
+        <div>
+          <k-headline class="mb-2">Preview</k-headline>
+          <k-topbar
+            :breadcrumb="breadcrumb"
+            :loading="loading"
+            :menu="menu"
+            class="mb-6"
+            @search="onSearch"
+          />
+          <k-headline class="mb-2">Controls</k-headline>
+          <k-input type="toggle" v-model="loading" text="Loading state" />
+        </div>
+      `,
+    }}
+  </Story>
+</Preview>
+
+<Props of={Topbar} />
+
+## CSS class
+
+`.k-topbar`
