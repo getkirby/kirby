@@ -1,0 +1,395 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Picker from "./Picker.vue";
+import { action } from "@storybook/addon-actions";
+
+<Meta
+  title="UI | Data / Picker"
+  component={Picker}
+  decorators={[Padding]}
+/>
+
+# Picker
+### `<k-picker>`
+
+
+```html
+<k-picker
+  :items="items"
+  :multiple="true"
+  :pagination="pagination"
+  :sortable="true"
+/>
+```
+
+<Props of={Picker} />
+
+### Single
+<Preview>
+  <Story name="Single">
+    {{
+      data() {
+        return {
+          selected: []
+        };
+      },
+      computed: {
+        options() {
+          return [...Array(10).keys()].map(item => {
+            const id = item;
+            return {
+              id: "_" + id,
+              title: "List item no. " + id,
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + id
+              }
+            };
+          });
+        }
+      },
+      methods: {
+        onSelect(selected) {
+          action("select")(selected);
+        }
+      },
+      template: `
+        <div>
+          <k-headline class="mb-3">Picker</k-headline>
+          <k-picker
+            :options="options"
+            v-model="selected"
+            class="mb-8"
+            @select="onSelect"
+          />
+          <k-headline class="mb-3">Selected</k-headline>
+          <k-code-block :code="selected" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Multiple
+<Preview>
+  <Story name="Multiple">
+    {{
+      data() {
+        return {
+          selected: []
+        };
+      },
+      computed: {
+        options() {
+          return [...Array(10).keys()].map(item => {
+            const id = item;
+            return {
+              id: "_" + id,
+              title: "List item no. " + id,
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + id
+              }
+            };
+          });
+        }
+      },
+      methods: {
+        onSelect(selected) {
+          action("select")(selected);
+        }
+      },
+      template: `
+        <div>
+          <k-headline class="mb-3">Picker</k-headline>
+          <k-picker
+            :multiple="true"
+            :options="options"
+            v-model="selected"
+            class="mb-8"
+            @select="onSelect"
+          />
+          <k-headline class="mb-3">Selected</k-headline>
+          <k-code-block :code="selected" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Max
+<Preview>
+  <Story name="Max">
+    {{
+      data() {
+        return {
+          selected: []
+        };
+      },
+      computed: {
+        options() {
+          return [...Array(10).keys()].map(item => {
+            const id = item;
+            return {
+              id: "_" + id,
+              title: "List item no. " + id,
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + id
+              }
+            };
+          });
+        }
+      },
+      methods: {
+        onSelect(selected) {
+          action("select")(selected);
+        }
+      },
+      template: `
+        <div>
+          <k-headline class="mb-3">Picker</k-headline>
+          <k-picker
+            :max="5"
+            :multiple="true"
+            :options="options"
+            v-model="selected"
+            class="mb-8"
+            @select="onSelect"
+          />
+          <k-headline class="mb-3">Selected</k-headline>
+          <k-code-block :code="selected" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cardlets
+<Preview>
+  <Story name="Cardlets">
+    {{
+      data() {
+        return {
+          selected: []
+        };
+      },
+      computed: {
+        options() {
+          return [...Array(10).keys()].map(item => {
+            const id = item;
+            return {
+              id: "_" + id,
+              title: "List item no. " + id,
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + id
+              }
+            };
+          });
+        }
+      },
+      methods: {
+        onSelect(selected) {
+          action("select")(selected);
+        }
+      },
+      template: `
+        <div>
+          <k-headline class="mb-3">Picker</k-headline>
+          <k-picker
+            v-model="selected"
+            :multiple="true"
+            :options="options"
+            layout="cardlet"
+            class="mb-8"
+            @select="onSelect"
+          />
+          <k-headline class="mb-3">Selected</k-headline>
+          <k-code-block :code="selected" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cards
+<Preview>
+  <Story name="Cards">
+    {{
+      data() {
+        return {
+          selected: []
+        };
+      },
+      computed: {
+        options() {
+          return [...Array(10).keys()].map(item => {
+            const id = item;
+            return {
+              id: "_" + id,
+              title: "List item no. " + id,
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + id
+              }
+            };
+          });
+        }
+      },
+      methods: {
+        onSelect(selected) {
+          action("select")(selected);
+        }
+      },
+      template: `
+        <div>
+          <k-headline class="mb-3">Picker</k-headline>
+          <k-picker
+            v-model="selected"
+            :multiple="true"
+            :options="options"
+            layout="card"
+            class="mb-8"
+            @select="onSelect"
+          />
+          <k-headline class="mb-3">Selected</k-headline>
+          <k-code-block :code="selected" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Pagination
+<Preview>
+  <Story name="Pagination">
+    {{
+      data() {
+        return {
+          start: 1,
+          selected: [],
+          pagination: {
+            total: 230,
+            limit: 10
+          }
+        };
+      },
+      computed: {
+        options() {
+          return [...Array(10).keys()].map(item => {
+            const id = (item + this.start);
+            return {
+              id: "_" + id,
+              title: "List item no. " + id,
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + id
+              }
+            };
+          });
+        }
+      },
+      methods: {
+        onSelect(selected) {
+          action("select")(selected);
+        },
+        onPaginate(pagination) {
+          action("paginate")(pagination);
+          this.start = pagination.start;
+        }
+      },
+      template: `
+        <div>
+          <k-headline class="mb-3">Picker</k-headline>
+          <k-picker
+            :multiple="true"
+            :options="options"
+            :pagination="pagination"
+            v-model="selected"
+            class="mb-8"
+            @select="onSelect"
+            @paginate="onPaginate"
+          />
+          <k-headline class="mb-3">Selected</k-headline>
+          <k-code-block :code="selected" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Field example
+<Preview>
+  <Story name="Field example">
+    {{
+      data() {
+        return {
+          selected: []
+        };
+      },
+      computed: {
+        options() {
+          return [...Array(10).keys()].map(item => {
+            const id = item;
+            return {
+              id: "_" + id,
+              title: "List item no. " + id,
+              info: "List item info",
+              link: "https://getkirby.com",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + id
+              }
+            };
+          });
+        },
+        selectedOptions() {
+          return this.options.filter(option => {
+            return this.selected.includes(option.id);
+          });
+        }
+      },
+      methods: {
+        onSelect(selected) {
+          action("select")(selected);
+        }
+      },
+      template: `
+        <div>
+          <k-bar class="mb-3">
+            <k-headline slot="left">Picker</k-headline>
+            <k-button slot="right" icon="check" @click="$refs.drawer.open()">Select …</k-button>
+          </k-bar>
+          <k-picker
+            :multiple="true"
+            :options="selectedOptions"
+            :sortable="true"
+            v-model="selected"
+            class="mb-8"
+            @select="onSelect"
+          />
+          <k-drawer ref="drawer" title="Select your items …">
+            <k-picker
+              :multiple="true"
+              :options="options"
+              v-model="selected"
+              class="mb-8"
+              @select="onSelect"
+            />
+          </k-drawer>
+          <k-code-block :code="selected" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+## CSS class
+
+`.k-picker`

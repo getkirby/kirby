@@ -2,6 +2,7 @@
   <k-button
     v-if="single && options[0]"
     :icon="options[0].icon"
+    :theme="options[0].theme"
     :tooltip="options[0].text"
     class="k-options-dropdown-toggle"
     @click="$emit('option', options[0].click)"

@@ -13,7 +13,7 @@
       <k-item
         v-for="(item, itemIndex) in items"
         v-bind="item"
-        :key="itemIndex"
+        :key="item.id || itemIndex"
         :layout="itemLayout"
         :sortable="sortable"
         @flag="onFlag(item, itemIndex)"

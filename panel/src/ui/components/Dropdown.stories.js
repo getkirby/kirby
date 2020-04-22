@@ -50,6 +50,26 @@ export const lightTheme = () => ({
   `
 });
 
+export const buttonThemes = () => ({
+  ...darkTheme(),
+  template: `
+    <k-dropdown>
+      <k-button icon="angle-down" @click="$refs.dropdown.toggle()">Open dropdown</k-button>
+      <k-dropdown-content
+        ref="dropdown"
+        @open="open"
+        @close="close"
+      >
+        <k-dropdown-item icon="edit" @click="edit">Edit</k-dropdown-item>
+        <k-dropdown-item icon="copy" @click="edit">Duplicate</k-dropdown-item>
+        <hr>
+        <k-dropdown-item icon="trash" @click="remove">Remove</k-dropdown-item>
+      </k-dropdown-content>
+    </k-dropdown>
+  `
+});
+
+
 export const divider = () => ({
   ...darkTheme(),
   template: `
