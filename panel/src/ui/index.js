@@ -10,6 +10,7 @@ export default {
   install(Vue) {
 
     Vue.prototype.$direction = "ltr";
+    Vue.prototype.$debug = true;
 
     /** Portal */
     Vue.use(VuePortal);

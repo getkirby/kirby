@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import DialogMixin from "@/ui/mixins/dialog.js";
+import DialogMixin from "../mixins/dialog.js";
 
 export default {
   mixins: [DialogMixin],

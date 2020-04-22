@@ -1,15 +1,17 @@
 <template>
   <p class="k-table-cell-value">
-    {{ column.before }}
-    <k-link
-      :to="link"
-      class="k-table-cell-link truncate underline"
-      target="_blank"
-      @click.native.stop
-    >
-      {{ value }}
-    </k-link>
-    {{ column.after }}
+    <template v-if="link">
+      {{ column.before }}
+      <k-link
+        :to="link"
+        class="k-table-cell-link truncate underline"
+        target="_blank"
+        @click.native.stop
+      >
+        {{ value }}
+      </k-link>
+      {{ column.after }}
+    </template>
   </p>
 </template>
 

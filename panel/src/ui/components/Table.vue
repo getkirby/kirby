@@ -12,7 +12,6 @@
         <th
           v-for="(column, columnIndex) in columns"
           :key="columnIndex + '-header'"
-          :data-align="column.align"
           :style="'width:' + width(column.width)"
           class="k-table-column"
           @click="onHeader({
@@ -37,13 +36,13 @@
     </thead>
 
     <k-draggable
-      :list="rows"
+      :list="values"
       :options="dragOptions"
       :handle="true"
       element="tbody"
       @end="onSort"
     >
-      <tr v-for="(row, rowIndex) in rows" :key="rowIndex">
+      <tr v-for="(row, rowIndex) in values" :key="rowIndex">
         <td class="k-table-index-column">
           <k-sort-handle
             v-if="sortable"
@@ -74,13 +73,20 @@
             value: row[columnIndex],
           }">
             <component
-              v-if="$helper.isComponent('table-' + (column.type || 'string') + '-cell')"
-              :is="'k-table-' + column.type + '-cell'"
+              v-if="$helper.isComponent('table-' + (column.type || 'text') + '-cell')"
+              :is="'k-table-' + (column.type || 'text') + '-cell'"
               :column="column"
               :value="row[columnIndex]"
+              @input="onCellUpdate({
+                value: $event,
+                row,
+                rowIndex,
+                column,
+                columnIndex
+              })"
             />
             <p v-else class="k-table-cell-value">
-              {{ column.before }} {{ cellText(row[columnIndex], column.type, column) || "–" }} {{ column.after }}
+              {{ column.before }} {{ row[columnIndex] || "" }} {{ column.after }}
             </p>
           </slot>
         </td>
@@ -110,6 +116,16 @@ export default {
     options: [Array, Function],
     sortable: Boolean
   },
+  data() {
+    return {
+      values: this.rows
+    };
+  },
+  watch: {
+    rows() {
+      this.values = this.rows;
+    }
+  },
   computed: {
     dragOptions() {
       return {
@@ -120,18 +136,15 @@ export default {
     },
   },
   methods: {
-    cellText(value, type, column) {
-      if (typeof value === "object" && value !== null) {
-        return "…";
-      }
-
-      return value.toString();
-    },
     indexOf(index) {
       return this.index + index;
     },
     onCell(params) {
       this.$emit("cell", params);
+    },
+    onCellUpdate({ columnIndex, rowIndex, value }) {
+      this.values[rowIndex][columnIndex] = value;
+      this.$emit("input", this.values);
     },
     onHeader(params) {
       this.$emit("header", params);
@@ -140,7 +153,8 @@ export default {
       this.$emit("option", option, row, rowIndex);
     },
     onSort() {
-      this.$emit("sort", this.rows);
+      this.$emit("input", this.values);
+      this.$emit("sort", this.values);
     },
     width(fraction) {
       if (!fraction) {

@@ -2,7 +2,7 @@
   <component
     :is="element"
     :data-ratio="ratio"
-    :style="'padding-bottom:' + ratioPadding"
+    :style="'--ratio:' + ratio"
     :class="back ? 'bg-' + back : false"
     class="k-aspect-ratio"
     v-on="$listeners"
@@ -21,7 +21,7 @@
 export default {
   props: {
     /**
-     * Background color.  
+     * Background color.
      * Available options: `"black"`, `"white"`, `"pattern"`
      */
     back: String,
@@ -39,20 +39,20 @@ export default {
       type: String,
       default: "1/1"
     }
-  },
-  computed: {
-    ratioPadding() {
-      return this.$helper.ratio(this.ratio || "1/1");
-    }
   }
 }
 </script>
 <style lang="scss">
 .k-aspect-ratio {
+  --ratio: 1/1;
   position: relative;
   display: block;
   line-height: 0;
-  padding-bottom: 100%;
+}
+.k-aspect-ratio::before {
+  content: "";
+  display: block;
+  padding-bottom: calc(100% / (var(--ratio)));
 }
 .k-aspect-ratio > * {
   position: absolute;

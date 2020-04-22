@@ -417,14 +417,6 @@ export default {
     },
     displayText(field, value) {
       switch (field.type) {
-        case "user": {
-          return value.email;
-        }
-        case "date": {
-          const date = this.$library.dayjs(value);
-          const format = field.time === true ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
-          return date.isValid() ? date.format(format) : "";
-        }
         case "tags":
         case "multiselect":
           return value

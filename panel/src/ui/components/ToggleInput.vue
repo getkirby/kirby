@@ -6,13 +6,14 @@
     <input
       :id="id"
       ref="input"
-      :checked="value"
+      :checked="checked"
       :disabled="disabled"
       class="k-toggle-input-native"
       type="checkbox"
       @change="onInput($event.target.checked)"
     >
     <span
+      v-if="text !== false"
       class="k-toggle-input-label"
       v-html="label"
     />
@@ -27,7 +28,7 @@ export default {
     disabled: Boolean,
     id: [Number, String],
     text: {
-      type: [Array, String],
+      type: [Array, Boolean, String],
       default() {
         return [
           this.$t("off"),
@@ -36,9 +37,16 @@ export default {
       }
     },
     required: Boolean,
-    value: Boolean,
+    value: [Boolean, String, Number],
   },
   computed: {
+    checked() {
+      if (this.value == "") {
+        return false;
+      }
+
+      return this.value == true;
+    },
     label() {
       if (Array.isArray(this.text)) {
         return this.value ? this.text[1] : this.text[0];
