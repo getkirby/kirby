@@ -8,7 +8,7 @@
     :role="alt ? 'img' : null"
   >
     <span
-      v-if="emoji"
+      v-if="isEmoji"
       class="k-icon-emoji"
     >{{ type }}</span>
     <svg
@@ -26,7 +26,6 @@ export default {
     /**
      * For better accessibility of icons, you can pass an additional 
      * alt attribute like for images.
-    emoji: Boolean,
      */
     alt: String,
     color: String,
@@ -68,6 +67,9 @@ export default {
       }
 
       return null;
+    },
+    isEmoji() {
+      return this.$helper.isEmoji(this.type);
     }
   }
 };
