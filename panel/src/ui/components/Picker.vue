@@ -4,7 +4,7 @@
     :layout="layout"
     :pagination="pagination"
     :sortable="sortable"
-    @option="onOption"
+    @flag="onFlag"
     @paginate="onPaginate"
     @sort="onSort"
   />
@@ -54,6 +54,11 @@ export default {
      */
     sortable: Boolean,
     /**
+     * Controll the toggle for each item with the
+     * return value of the given function
+     */
+    toggle: Function,
+    /**
      * Array of selected items (array of ids)
      */
     value: Array
@@ -72,21 +77,26 @@ export default {
     items() {
       return this.$helper.clone(this.options).map(item => {
 
-        if (this.selected.includes(item.id)) {
-          item.options = [
-            {
-              icon: this.multiple ? "check" : "circle-filled",
-              text: "Deselect",
-              theme: "positive"
-            }
-          ];
+        const selected = this.selected.includes(item.id);
+        const max      = this.multiple && this.max && this.selected.length >= this.max;
+
+        if (this.toggle) {
+          item.flag = this.toggle(item, selected, max);
         } else {
-          item.options = [
-            {
+          if (this.selected.includes(item.id)) {
+            item.flag = {
+              icon: this.multiple ? "check" : "circle-filled",
+              tooltip: "Deselect",
+              color: "green"
+            };
+          } else {
+            item.flag = {
               icon: "circle-outline",
-              text: "Select",
-            }
-          ];
+              tooltip: "Select",
+              color: max ? "gray-light" : false,
+              disabled: max
+            };
+          }
         }
 
         return item;
@@ -103,7 +113,7 @@ export default {
 
       this.$emit("input", this.selected);
     },
-    onOption(action, item, itemIndex) {
+    onFlag(item, itemIndex) {
       if (this.selected.includes(item.id)) {
         this.onDeselect(item.id, item, itemIndex);
       } else {
@@ -127,7 +137,8 @@ export default {
       this.$emit("input", this.selected);
     },
     onSort(items, event) {
-      this.$emit("sort", items, event);
+      this.selected = items.map(item => item.id);
+      this.$emit("input", this.selected);
     }
   }
 };

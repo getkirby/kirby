@@ -1,6 +1,7 @@
 <template>
   <component
     :is="component"
+    :class="buttonColor ? 'text-' + buttonColor : false"
     ref="button"
     v-bind="$props"
     v-on="$listeners"
@@ -15,13 +16,14 @@ export default {
   inheritAttrs: false,
   props: {
     /**
-     * Keyboard shortcut
-     */
-    accesskey: String,
-    /**
      * Whether the button should be focuse on load
      */
     autofocus: Boolean,
+    /**
+     * Sets the button color.
+     * This will use the text- utility
+     */
+    color: String,
     /**
      * Sets the aria-current attribute.
      * Especially useful in connection with a link attribute.
@@ -76,6 +78,9 @@ export default {
     }
   },
   computed: {
+    buttonColor() {
+      return this.color || this.theme || false;
+    },
     component() {
       if (this.disabled === true) {
         return "k-button-disabled";
@@ -145,14 +150,6 @@ button::-moz-focus-inner {
   @media screen and (min-width: $breakpoint-small) {
     display: inline;
   }
-}
-
-.k-button[data-theme="positive"] {
-  color: $color-positive;
-}
-
-.k-button[data-theme="negative"] {
-  color: $color-negative;
 }
 
 .k-button > .k-button-icon {

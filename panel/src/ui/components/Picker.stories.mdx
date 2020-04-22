@@ -325,9 +325,9 @@ import { action } from "@storybook/addon-actions";
   </Story>
 </Preview>
 
-### Field example
+### Custom toggle
 <Preview>
-  <Story name="Field example">
+  <Story name="Custom toggle">
     {{
       data() {
         return {
@@ -348,11 +348,6 @@ import { action } from "@storybook/addon-actions";
               }
             };
           });
-        },
-        selectedOptions() {
-          return this.options.filter(option => {
-            return this.selected.includes(option.id);
-          });
         }
       },
       methods: {
@@ -362,33 +357,124 @@ import { action } from "@storybook/addon-actions";
       },
       template: `
         <div>
-          <k-bar class="mb-3">
-            <k-headline slot="left">Picker</k-headline>
-            <k-button slot="right" icon="check" @click="$refs.drawer.open()">Select …</k-button>
-          </k-bar>
+          <k-headline class="mb-3">Picker</k-headline>
           <k-picker
-            :multiple="true"
-            :options="selectedOptions"
-            :sortable="true"
             v-model="selected"
+            :multiple="true"
+            :options="options"
+            :toggle="(item, selected, max) => {
+              if (selected) {
+                return {
+                  icon: 'remove',
+                  color: 'green',
+                  tooltip: 'Remove'
+                };
+              } else {
+                return {
+                  icon: 'add',
+                  tooltip: 'Add'
+                };
+              }
+            }"
             class="mb-8"
             @select="onSelect"
           />
-          <k-drawer ref="drawer" title="Select your items …">
-            <k-picker
-              :multiple="true"
-              :options="options"
-              v-model="selected"
-              class="mb-8"
-              @select="onSelect"
-            />
-          </k-drawer>
+          <k-headline class="mb-3">Selected</k-headline>
           <k-code-block :code="selected" />
         </div>
       `
     }}
   </Story>
 </Preview>
+
+<!--
+### Field example
+<Preview>
+  <Story name="Field example">
+    {{
+      data() {
+        return {
+          options: [...Array(10).keys()].map(item => {
+            const id = item;
+            return {
+              id: "_" + id,
+              title: "List item no. " + id,
+              info: "List item info",
+              image: {
+                url: "https://source.unsplash.com/user/erondu/1600x900?" + id
+              }
+            };
+          }),
+          selected: []
+        };
+      },
+      computed: {
+        selectedOptions() {
+          return this.options.filter(option => {
+            return this.selected.includes(option.id);
+          });
+        },
+      },
+      methods: {
+        onSelect(selected) {
+          action("select")(selected);
+        },
+        onSort(selected) {
+          action("sort")(selected);
+        }
+      },
+      template: `
+        <div>
+          <k-field
+            label="Picker"
+            class="mb-8"
+          >
+            <k-button
+              slot="options"
+              icon="check"
+              @click="$refs.drawer.open()"
+            >
+              Select …
+            </k-button>
+            <k-empty
+              v-if="selectedOptions.length === 0"
+              icon="page"
+            >
+              Nothing selected yet …
+            </k-empty>
+            <k-picker
+              v-else
+              :multiple="true"
+              :options="selectedOptions"
+              :sortable="true"
+              :toggle="(item, selected) => {
+                return {
+                  text: 'Remove',
+                  icon: 'remove'
+                };
+              }"
+              v-model="selected"
+              class="mb-8"
+              @select="onSelect"
+              @sort="onSort"
+            />
+            <k-drawer ref="drawer" title="Select your items …">
+              <k-picker
+                :multiple="true"
+                :options="options"
+                v-model="selected"
+                class="mb-8"
+                @select="onSelect"
+              />
+            </k-drawer>
+          </k-field>
+          <k-code-block :code="selected" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+-->
 
 ## CSS class
 

@@ -7,6 +7,7 @@
 .text-black {
   color: $color-black;
 }
+.text-focus,
 .text-blue {
   color: $color-blue-600;
 }
@@ -19,6 +20,7 @@
 .text-gray-light {
   color: $color-gray-400;
 }
+.text-positive,
 .text-green {
   color: $color-green-600;
 }
@@ -37,6 +39,7 @@
 .text-purple-light {
   color: $color-purple-400;
 }
+.text-negative,
 .text-red {
   color: $color-red-600;
 }
@@ -52,3 +55,4 @@
 .text-white {
   color: $color-white;
 }
+
