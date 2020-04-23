@@ -2,8 +2,8 @@
   <component
     :is="element"
     :data-ratio="ratio"
-    :style="'--ratio:' + ratio"
-    :class="back ? 'bg-' + back : false"
+    :class="this.back ? 'bg-' + this.back : false"
+    :style="'--ratio:' + ratio + ';' + styles"
     class="k-aspect-ratio"
     v-on="$listeners"
   >
@@ -13,16 +13,10 @@
 </template>
 
 <script>
-/**
- * Use `<k-aspect-ratio>` to size content at specified
- * dimensions (e.g. `16/9`).
- */
-
 export default {
   props: {
     /**
-     * Background color.
-     * Available options: `black`|`white`|`pattern`
+     * Background color. Hex code or suffix for a `bg-` utility class
      */
     back: String,
     /**
@@ -38,6 +32,15 @@ export default {
     ratio: {
       type: String,
       default: "1/1"
+    }
+  },
+  computed: {
+    styles() {
+      if (this.back.substring(0, 1) === "#") {
+        return 'background-color: ' + this.back;
+      }
+
+      return;
     }
   }
 }
