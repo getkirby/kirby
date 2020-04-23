@@ -1,9 +1,8 @@
 <template>
   <k-aspect-ratio
     :ratio="ratio"
-    :data-back="back"
     :data-cover="cover"
-    :class="back ? `bg-${back}` : false"
+    :back="back"
     class="k-image"
     v-on="$listeners"
   >
@@ -31,7 +30,7 @@ export default {
     alt: String,
     /**
      * By default the background of images will be transparent.
-     * But you can change it to `black`|`white` or `pattern`
+     * But you can change it to `black`|`white"`|`pattern"` or a hex code.
      */
     back: String,
     /**

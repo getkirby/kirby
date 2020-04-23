@@ -2,7 +2,8 @@
   <component
     :is="component"
     ref="button"
-    :class="buttonColor ? 'text-' + buttonColor : false"
+    :class="$helper.color.class(buttonColor)"
+    :style="$helper.color.style(buttonColor)"
     v-bind="$props"
     v-on="$listeners"
   >

@@ -3,6 +3,7 @@
     :aria-hidden="!alt"
     :aria-label="alt"
     :class="classNames"
+    :style="styles"
     :data-back="back"
     :data-size="size"
     :role="alt ? 'img' : null"
@@ -54,8 +55,8 @@ export default {
       return [
         "k-icon",
         "k-icon-" + this.type,
-        this.back      ? "bg-"   + this.back      : false,
-        this.iconColor ? "text-" + this.iconColor : false
+        this.$helper.color.class(this.back, "bg-"),
+        this.$helper.color.class(this.iconColor)
       ];
     },
     iconColor() {
@@ -72,7 +73,15 @@ export default {
       return null;
     },
     isEmoji() {
-      return this.$helper.isEmoji(this.type);
+      return this.$helper.string.isEmoji(this.type);
+    },
+    styles() {
+      let styles = [
+        this.$helper.color.style(this.back, "background-"),
+        this.$helper.color.style(this.iconColor)
+      ];
+
+      return styles.filter(x => x !== false).join("; ");
     }
   }
 };

@@ -56,43 +56,7 @@ import Button from "./Button.vue";
 
 <Props of={Button} />
 
-
-## Themes
-
-<Preview>
-  <Story name="Positive">
-    {{
-      methods: {
-        action: action('clicked')
-      },
-      template: '<k-button icon="check" theme="positive" @click="action">Nice one!</k-button>'
-    }}
-  </Story>
-</Preview>
-
-<Preview>
-  <Story name="Negative">
-    {{
-      methods: {
-        action: action('clicked')
-      },
-      template: '<k-button icon="trash" theme="negative" @click="action">Uh oh!</k-button>'
-    }}
-  </Story>
-</Preview>
-
-<Preview>
-  <Story name="Disabled">
-    {{
-      methods: {
-        action: action('clicked')
-      },
-      template: '<k-button :disabled="true" icon="trash" @click="action">Disabled button</k-button>'
-    }}
-  </Story>
-</Preview>
-
-## Methods
+#### Methods
 
 **`focus()`**  
 Focuses the button manually
@@ -103,8 +67,72 @@ Activate the tab style of the button manually
 **`untab()`**  
 Deactivates the tab style of the button manually
 
-## Events
+#### Events
 You can bind any typical button event to this component.
+
+
+### Themes
+
+<Preview>
+  <Story name="Positive">
+    {{
+      methods: {
+        action: action('clicked')
+      },
+      template: `
+        <k-button icon="check" theme="positive" @click="action">
+          Nice one!
+        </k-button>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Negative">
+    {{
+      methods: {
+        action: action('clicked')
+      },
+      template: `
+        <k-button icon="trash" theme="negative" @click="action">
+          Uh oh!
+        </k-button>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Disabled">
+    {{
+      methods: {
+        action: action('clicked')
+      },
+      template: `
+        <k-button :disabled="true" icon="trash" @click="action">
+          Disabled button
+        </k-button>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Custom color
+<Preview>
+  <Story name="Custom color">
+    {{
+      methods: {
+        action: action('clicked')
+      },
+      template: `
+        <k-button color="#cca000" icon="star" @click="action">
+          Activate sunshine
+        </k-button>
+      `
+    }}
+  </Story>
+</Preview>
 
 ## CSS class
 `.k-button`

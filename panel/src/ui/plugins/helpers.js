@@ -4,7 +4,6 @@ import color from "../helpers/color.js";
 import debounce from "../helpers/debounce.js";
 import input from "../helpers/input.js";
 import isComponent from "../helpers/isComponent.js";
-import isEmoji from "../helpers/isEmoji.js";
 import isUploadEvent from "../helpers/isUploadEvent.js";
 import kirbytext from "../helpers/kirbytext.js";
 import markdown from "../helpers/markdown.js";
@@ -45,7 +44,6 @@ export default {
       debounce: debounce,
       input: input,
       isComponent: isComponent,
-      isEmoji: isEmoji,
       isUploadEvent: isUploadEvent,
       kirbytext: kirbytext,
       markdown: markdown,
