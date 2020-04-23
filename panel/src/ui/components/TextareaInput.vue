@@ -9,6 +9,7 @@
         v-if="buttons && !disabled"
         ref="toolbar"
         :layout="buttons"
+        :options="toolbarOptions"
         @mousedown.native.prevent
         @command="onCommand"
       />
@@ -52,6 +53,11 @@
       @submit="insertLink"
     />
 
+    <k-upload
+      v-if="uploads"
+      ref="upload"
+      @success="insertUpload"
+    />
 
   </div>
 </template>
@@ -66,7 +72,12 @@ export default {
       default: true
     },
     disabled: Boolean,
+    files: {
+      type: [Boolean, Object, Array],
+      default: false,
+    },
     font: String,
+    headings: Number,
     id: [Number, String],
     name: [Number, String],
     markup: {
@@ -84,13 +95,29 @@ export default {
       default: "off"
     },
     theme: String,
-    uploads: [Boolean, Object, Array],
+    uploads: {
+      type: [Boolean, Object, Array],
+      default: false,
+    },
     value: String
   },
   data() {
     return {
       over: false
     };
+  },
+  computed: {
+    toolbarOptions() {
+      return {
+        headings: {
+          levels: this.headings,
+        },
+        file: {
+          select: this.files !== false,
+          upload: this.uploads !== false,
+        }
+      };
+    }
   },
   watch: {
     value() {
@@ -128,6 +155,23 @@ export default {
     email(email, text) {
       this.$refs.emailDialog.open(email, text || this.selection());
     },
+    file(action) {
+
+      switch (action) {
+        case "select":
+          break;
+        case "upload":
+          if (this.uploads) {
+            this.$refs.upload.open({
+              url: this.uploads.api,
+              multiple: this.uploads.multiple,
+              accept: this.uploads.accept
+            });
+          }
+          break;
+      }
+
+    },
     focus() {
       this.$refs.input.focus();
     },
@@ -161,6 +205,10 @@ export default {
     },
     insertLink(url, text) {
       this.insert(this.$helper[this.markup].link(url, text));
+    },
+    insertUpload(files, response) {
+      this.insert(response.map(file => file.dragText).join("\n\n"));
+      this.$events.$emit("model.update");
     },
     italic() {
       this.wrap("*");

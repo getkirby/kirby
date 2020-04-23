@@ -1,26 +1,28 @@
+import Api from "./config/api.js";
 import App from "./App.vue";
+import Components from "./config/components.js";
+import Config from "./config/config.js";
+import ErrorHandling from "./config/errors.js";
+import I18n from "vuex-i18n";
+import Plugins from "./config/plugins.js";
+import Router from "./config/router.js";
+import Store from "./store/store.js";
 import Ui from "@/ui/index.js";
 import Vue from "vue";
-import I18n from "vuex-i18n";
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
-import "./config/components.js";
-import "./config/api.js";
-import "./config/errors.js";
-import "./config/plugins.js";
-
-import store from "./store/store.js";
-
-Vue.use(I18n.plugin, store);
+Vue.use(I18n.plugin, Store);
 Vue.use(Ui);
-
-import router from "./config/router.js";
+Vue.use(Components);
+Vue.use(ErrorHandling);
+Vue.use(Api, Store, Config);
+Vue.use(Plugins, Store);
 
 new Vue({
-  router,
-  store,
+  router: Router(Vue, Store, Config),
+  store: Store,
   created() {
     window.panel.app = this;
 

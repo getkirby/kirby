@@ -108,6 +108,31 @@ export const monospace = () => ({
   `,
 });
 
+export const headings = () => ({
+  ...regular(),
+  data() {
+    return {
+      value: "Let's customize the heading levels"
+    };
+  },
+  template: `
+    <div>
+      <k-headline class="mb-3">Input</k-headline>
+      <k-textarea-input
+        v-model="value"
+        :headings="6"
+        class="mb-6"
+        theme="field"
+        @input="input"
+        @submit="submit"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `,
+});
+
 export const dragAndDrop = () => ({
   ...regular(),
   data() {
@@ -138,6 +163,39 @@ export const dragAndDrop = () => ({
       <k-headline class="mb-3">Input</k-headline>
       <k-textarea-input
         v-model="value"
+        class="mb-6"
+        theme="field"
+        @input="input"
+        @submit="submit"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `,
+});
+
+export const uploads = () => ({
+  ...regular(),
+  data() {
+    return {
+      value: ""
+    };
+  },
+  methods: {
+    input: action("input"),
+    submit: action("submit"),
+  },
+  template: `
+    <div>
+      <k-headline class="mb-3">Input</k-headline>
+      <k-textarea-input
+        v-model="value"
+        :uploads="{
+          api: '/upload',
+          accept: 'image/jpeg',
+          multiple: false
+        }"
         class="mb-6"
         theme="field"
         @input="input"

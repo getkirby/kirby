@@ -1,4 +1,4 @@
-import Field from "@/components/Forms/Field.vue";
+import Field from "@/ui/components/Field.vue";
 
 export default {
   inheritAttrs: false,

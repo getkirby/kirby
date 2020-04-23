@@ -27,7 +27,7 @@
       <h3 class="k-item-title">
         <template v-if="link">
           <k-link
-            :target="link"
+            :target="target"
             :to="link"
             class="k-item-title-link"
           >
