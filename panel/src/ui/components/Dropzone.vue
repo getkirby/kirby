@@ -15,6 +15,9 @@
 <script>
 export default {
   props: {
+    /**
+     * You can deactivate the dropzone with this prop
+     */
     disabled: {
       type: Boolean,
       default: false
@@ -47,6 +50,12 @@ export default {
       this.$events.$emit("dropzone.drop");
 
       this.files = $event.dataTransfer.files;
+
+      /**
+       * The drop event is triggered when files are being dropped into 
+       * the dropzone. The event receives the files list as argument, 
+       * which can then be used to start an upload for example.
+       */
       this.$emit("drop", this.files);
       this.reset();
     },

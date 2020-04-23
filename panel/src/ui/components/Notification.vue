@@ -14,6 +14,9 @@ export default {
   inheritAttrs: false,
   props: {
     message: String,
+    /**
+     * Available options: `error`|`success`
+     */
     type: String
   }
 };

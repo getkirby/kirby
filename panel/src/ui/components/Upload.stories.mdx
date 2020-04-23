@@ -1,0 +1,219 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Upload from "./Upload.vue";
+
+<Meta
+  title="UI | Interaction / Upload"
+  component={Upload}
+  decorators={[Padding]}
+/>
+
+# Upload 
+### `<k-upload>`
+
+The Upload component is a combination of a native file input and a dialog. The native file input is invisible and only serves to open the file selector from the OS. Once files are selected the dialog will open and show the progress and potential upload errors.
+
+
+<Preview>
+  <Story name="Regular">
+    {{
+      template: `
+        <div>
+          <k-button
+            icon="upload"
+            @click="$refs.upload.open()"
+          >
+            Upload
+          </k-button>
+          <k-upload ref="upload" />
+        </div>
+      `,
+    }}
+  </Story>
+</Preview>
+
+
+### Accept MIME
+<Preview>
+  <Story name="Accept MIME">
+    {{
+      template: `
+        <div>
+          <k-button
+            icon="upload"
+            @click="$refs.upload.open({
+              accept: 'image/*'
+            })"
+          >
+            Upload Image
+          </k-button>
+          <k-upload ref="upload" />
+        </div>
+      `,
+    }}
+  </Story>
+</Preview>
+
+### Single Upload
+<Preview>
+  <Story name="Single Upload">
+    {{
+      template: `
+         <div>
+          <k-button
+            icon="upload"
+            @click="$refs.upload.open({
+              accept: 'image/*',
+              multiple: false
+            })"
+          >
+            Upload Image
+          </k-button>
+          <k-upload ref="upload" />
+        </div>
+      `,
+    }}
+  </Story>
+</Preview>
+
+### Image Upload
+<Preview>
+  <Story name="Image Upload">
+    {{
+      template: `
+         <div>
+          <k-button-native
+            @click="$refs.upload.open({ accept: 'image/*' })">
+            <k-image
+              :cover="true"
+              back="black"
+              style="display: block; width: 6rem"
+              src="https://source.unsplash.com/user/erondu/1600x900"
+            />
+          </k-button-native>
+          <k-upload ref="upload" />
+        </div>
+      `,
+    }}
+  </Story>
+</Preview>
+
+### With Dropzone
+<Preview>
+  <Story name="With Dropzoned">
+    {{
+      computed: {
+        styles() {
+          return {
+            padding: "2rem",
+            border: "1px dashed #ddd",
+            width: "100%"
+          };
+        },
+        params() {
+          return {
+            accept: "image/*"
+          }
+        }
+      },
+      template: `
+        <div>
+          <k-dropzone @drop="$refs.upload.drop($event, params)">
+            <k-button
+              icon="upload"
+              :style="styles"
+              @click="$refs.upload.open(params)"
+            >
+              Click or Drop to upload
+            </k-button>
+          </k-dropzone>
+          <k-upload ref="upload" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+
+<Props of={Upload} />
+
+#### Methods
+
+**`drop(files, params)`**  
+Instead of opening the file picker first you can also start the uploader directly, by "dropping" a `FileList` from a drop event for example.
+
+**`open(params)`**
+Opens the uploader with the object of given parameters. For all available parameters, check out the component props. If no additional parameters are passed, the properties from the upload element are used.
+
+```html
+<template>
+  <div>
+    <k-upload ref="upload" />
+    <k-button icon="upload" @click="upload">Upload</k-button>
+  </div>
+</template>
+
+<script>
+export default {
+  methods: {
+    upload() {
+      this.$refs.upload.open({
+        url: window.panel.api + "/my-plugin/upload",
+        accept: "image/*",
+        multiple: false
+      });
+    }
+  }
+};
+</script>
+```
+
+#### Events
+```html
+<template>
+  <k-upload ref="upload" @success="onSuccess" @error="onError" />
+</template>
+
+<script>
+export default {
+  methods: {
+    onSuccess() {
+      alert("All files have been uploaded!");
+    },
+    onError() {
+      alert("The files could not be uploaded");
+    }
+  }
+}
+</script>
+```
+
+Since v3.1.0, the API response is returned as second argument in the `@success` event:
+```html
+<template>
+  <k-upload @success="onSuccess" />
+</template>
+
+<script>
+export default {
+  methods: {
+    onSuccess (uploads, response) {
+      // i.e.
+      response[0].type;
+      response[0].filename;
+      response[0].niceSize;
+      // etc.
+    }
+  }
+}
+</script>
+```
+
+
+
+
+
+
+## CSS class
+
+`.k-upload`

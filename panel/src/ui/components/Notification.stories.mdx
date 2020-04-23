@@ -1,0 +1,73 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import { action } from "@storybook/addon-actions";
+import Padding from "../storybook/Padding.js";
+import Notification from "./Notification.vue";
+
+<Meta
+  title="UI | Interaction / Notification"
+  component={Notification}
+  decorators={[Padding]}
+/>
+
+# Notification
+### `<k-notification>`
+
+
+<Preview>
+  <Story name="Regular">
+    {{
+      methods: {
+        onClose: action("close")
+      },
+      template: `
+        <k-notification
+          message="Just a message"
+          @close="onClose"
+        />
+      `,
+    }}
+  </Story>
+</Preview>
+
+<Props of={Notification} />
+
+### Error
+<Preview>
+  <Story name="Error">
+    {{
+      methods: {
+        onClose: action("close")
+      },
+      template: `
+        <k-notification
+          message="An error message"
+          type="error"
+          @close="onClose"
+        />
+      `,
+    }}
+  </Story>
+</Preview>
+
+### Success
+<Preview>
+  <Story name="Success">
+    {{
+      methods: {
+        onClose: action("close")
+      },
+      template: `
+        <k-notification
+          message="A success message"
+          type="success"
+          @close="onClose"
+        />
+      `,
+    }}
+  </Story>
+</Preview>
+
+
+## CSS class
+
+`.k-notification`

@@ -156,12 +156,19 @@ export default {
 
         if (this.errors.length > 0) {
           this.$forceUpdate();
+          /**
+           * Fired when something went wrong.
+           */
           this.$emit("error", this.files);
           return;
         }
 
         setTimeout(() => {
           this.$refs.dialog.close();
+          /**
+           * Fired when all files have been uploaded successfully.  
+           * Parameters passed: `uploads`, `response`
+           */
           this.$emit("success", this.files, Object.values(this.completed));
         }, 250);
       }
