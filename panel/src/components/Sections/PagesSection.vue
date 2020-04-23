@@ -42,6 +42,7 @@
         :sortable="options.sortable"
         :size="options.size"
         :data-invalid="isInvalid"
+        @flag="action('status', $event)"
         @change="sort"
         @paginate="paginate"
         @action="action"
@@ -186,9 +187,6 @@ export default {
           tooltip: isEnabled ? this.$t("page.status") : `${this.$t("page.status")} (${this.$t("disabled")})`,
           icon: isEnabled ? "circle" : "protected",
           disabled: !isEnabled,
-          click: () => {
-            this.action(page, "status");
-          }
         };
 
         page.options = ready => {
