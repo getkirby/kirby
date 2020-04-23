@@ -58,8 +58,9 @@ button.k-empty:focus {
   color: $color-light-grey;
 }
 
-/* layout:cards */
-.k-empty[data-layout="cards"] {
+/* layout:cards & cardlets */
+.k-empty[data-layout="cards"],
+.k-empty[data-layout="cardlets"] {
   text-align: center;
   padding: 1.5rem;
   justify-content: center;
