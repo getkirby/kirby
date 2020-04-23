@@ -121,3 +121,25 @@ code {
 .hljs .function {
   color: #7e9abf !important;
 }
+
+/* Since */
+[data-version] {
+  position: relative;
+  margin: 3rem 0 0 0 !important;
+  padding-top: .35rem;
+}
+
+[data-version]::before {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  display: inline-block;
+  content: "Since " attr(data-version);
+  font-family: var(--font-family-mono);
+  background: #f9e8c7;
+  border-radius: 3px;
+  box-decoration-break: clone;
+  font-size: .75em;
+  line-height: 1;
+  padding: .35em .5em;
+}
