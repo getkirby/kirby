@@ -35,7 +35,10 @@
         class="k-header-right"
       />
     </k-bar>
-    <k-tabs :tabs="tabs" :tab="tab" />
+    <k-tabs
+      :tabs="tabs"
+      :tab="tab"
+    />
   </header>
 </template>
 

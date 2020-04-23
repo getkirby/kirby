@@ -66,12 +66,6 @@ export default {
       invisibleTabs: []
     }
   },
-  created() {
-    window.addEventListener("resize", this.resize);
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.resize);
-  },
   watch: {
     tab() {
       this.currentTab = this.tab;
@@ -81,6 +75,12 @@ export default {
         this.invisibleTabs = [];
       this.resize(true);
     }
+  },
+  created() {
+    window.addEventListener("resize", this.resize);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.resize);
   },
   methods: {
     resize(force) {

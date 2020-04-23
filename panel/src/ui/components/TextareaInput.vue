@@ -58,7 +58,6 @@
       ref="upload"
       @success="insertUpload"
     />
-
   </div>
 </template>
 

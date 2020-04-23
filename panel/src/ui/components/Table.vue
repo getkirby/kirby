@@ -20,12 +20,17 @@
             columnIndex
           })"
         >
-          <slot name="header" v-bind="{
-            column,
-            columnIndex,
-            label: column.label || columnIndex,
-          }">
-            <p class="k-table-header-label">{{ column.label || columnIndex }}</p>
+          <slot
+            name="header"
+            v-bind="{
+              column,
+              columnIndex,
+              label: column.label || columnIndex,
+            }"
+          >
+            <p class="k-table-header-label">
+              {{ column.label || columnIndex }}
+            </p>
           </slot>
         </th>
         <th
@@ -42,7 +47,10 @@
       element="tbody"
       @end="onSort"
     >
-      <tr v-for="(row, rowIndex) in values" :key="rowIndex">
+      <tr
+        v-for="(row, rowIndex) in values"
+        :key="rowIndex"
+      >
         <td class="k-table-index-column">
           <k-sort-handle
             v-if="sortable"
@@ -65,16 +73,19 @@
             columnIndex
           })"
         >
-          <slot name="cell" v-bind="{
-            column,
-            columnIndex,
-            row,
-            rowIndex,
-            value: row[columnIndex],
-          }">
+          <slot
+            name="cell"
+            v-bind="{
+              column,
+              columnIndex,
+              row,
+              rowIndex,
+              value: row[columnIndex],
+            }"
+          >
             <component
-              v-if="$helper.isComponent('table-' + (column.type || 'text') + '-cell')"
               :is="'k-table-' + (column.type || 'text') + '-cell'"
+              v-if="$helper.isComponent('table-' + (column.type || 'text') + '-cell')"
               :column="column"
               :value="row[columnIndex]"
               @input="onCellUpdate({
@@ -85,7 +96,10 @@
                 columnIndex
               })"
             />
-            <p v-else class="k-table-cell-value">
+            <p
+              v-else
+              class="k-table-cell-value"
+            >
               {{ column.before }} {{ row[columnIndex] || "" }} {{ column.after }}
             </p>
           </slot>
@@ -121,11 +135,6 @@ export default {
       values: this.rows
     };
   },
-  watch: {
-    rows() {
-      this.values = this.rows;
-    }
-  },
   computed: {
     dragOptions() {
       return {
@@ -134,6 +143,11 @@ export default {
         ghostClass: "k-table-row-ghost"
       };
     },
+  },
+  watch: {
+    rows() {
+      this.values = this.rows;
+    }
   },
   methods: {
     indexOf(index) {

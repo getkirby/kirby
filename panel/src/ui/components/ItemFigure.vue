@@ -15,7 +15,8 @@
       />
 
       <!-- icon -->
-      <k-icon v-else
+      <k-icon
+        v-else
         :color="icon.color || 'white'"
         :size="icon.size"
         :type="icon.type || 'page'"

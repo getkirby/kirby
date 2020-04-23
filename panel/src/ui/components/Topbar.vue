@@ -17,8 +17,7 @@
             :options="menu"
             class="k-topbar-menu"
             theme="light"
-          >
-          </k-dropdown-content>
+          />
         </k-dropdown>
 
         <!-- Breadcrumb -->
@@ -42,7 +41,6 @@
             />
           </template>
         </div>
-
       </div>
     </k-view>
   </div>

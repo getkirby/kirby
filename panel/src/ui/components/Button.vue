@@ -1,8 +1,8 @@
 <template>
   <component
     :is="component"
-    :class="buttonColor ? 'text-' + buttonColor : false"
     ref="button"
+    :class="buttonColor ? 'text-' + buttonColor : false"
     v-bind="$props"
     v-on="$listeners"
   >

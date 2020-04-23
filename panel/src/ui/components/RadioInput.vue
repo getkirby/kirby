@@ -50,14 +50,14 @@ export default {
     required: Boolean,
     value: [String, Number, Boolean]
   },
-  mounted() {
-    if (this.$props.autofocus) {
-      this.focus();
-    }
-  },
   computed: {
     radios() {
       return this.$helper.input.options(this.options);
+    }
+  },
+  mounted() {
+    if (this.$props.autofocus) {
+      this.focus();
     }
   },
   methods: {

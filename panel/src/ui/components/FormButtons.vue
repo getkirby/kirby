@@ -3,7 +3,6 @@
     :data-theme="mode"
     class="k-form-buttons"
   >
-
     <!-- regular -->
     <template v-if="mode === 'changes'">
       <k-view>
@@ -83,7 +82,6 @@
         </span>
       </k-view>
     </template>
-
   </nav>
 </template>
 

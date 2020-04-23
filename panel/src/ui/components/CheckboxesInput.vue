@@ -8,8 +8,8 @@
       :key="index"
     >
       <k-checkbox-input
-        :disabled="disabled"
         :id="id + '-' + index"
+        :disabled="disabled"
         :label="option.text"
         :value="selected.indexOf(option.value) !== -1"
         @input="onInput(option.value, $event)"
@@ -47,6 +47,11 @@ export default {
       selected: this.valueToArray(this.value)
     }
   },
+  computed: {
+    checkboxes() {
+      return this.$helper.input.options(this.options);
+    }
+  },
   watch: {
     value(value) {
       this.selected = this.valueToArray(value);
@@ -55,11 +60,6 @@ export default {
   mounted() {
     if (this.$props.autofocus) {
       this.focus();
-    }
-  },
-  computed: {
-    checkboxes() {
-      return this.$helper.input.options(this.options);
     }
   },
   methods: {

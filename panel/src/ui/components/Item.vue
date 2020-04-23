@@ -52,8 +52,8 @@
       class="k-item-footer"
     >
       <nav
-        class="k-item-buttons"
         v-if="flag || options"
+        class="k-item-buttons"
       >
         <!-- Flag -->
         <slot name="flag">

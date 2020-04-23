@@ -1,5 +1,8 @@
 <template>
-  <k-view class="k-error-view" align="center">
+  <k-view
+    class="k-error-view"
+    align="center"
+  >
     <k-text class="k-error-view-content text-center">
       <k-icon
         class="k-error-view-icon mb-3"

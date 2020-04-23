@@ -17,8 +17,14 @@
             :title="$t('field.required')"
           >*</abbr></label>
         </slot>
-        <slot v-if="$slots['options']" name="options" />
-        <slot v-else name="counter">
+        <slot
+          v-if="$slots['options']"
+          name="options"
+        />
+        <slot
+          v-else
+          name="counter"
+        >
           <k-counter
             v-if="counter"
             v-bind="counter"

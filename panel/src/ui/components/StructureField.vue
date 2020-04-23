@@ -4,7 +4,6 @@
     v-bind="$props"
     class="k-structure-field"
   >
-
     <!-- Add button -->
     <template slot="options">
       <k-button
@@ -45,8 +44,8 @@
       :title="label + ' / Add'"
     >
       <k-form
-        :fields="newRowFields"
         v-model="newRowModel"
+        :fields="newRowFields"
         @cancel="closeNewRowDialog"
         @submit="submitNewRow"
       />
@@ -58,8 +57,8 @@
       :title="label + ' / Edit'"
     >
       <k-form
-        :fields="editRowFields"
         v-model="editRowModel"
+        :fields="editRowFields"
         @cancel="closeEditRowDialog"
         @submit="submitEditRow"
       />
@@ -72,7 +71,6 @@
       @cancel="closeRemoveRowDialog"
       @submit="submitRemoveRow"
     />
-
   </k-field>
 </template>
 

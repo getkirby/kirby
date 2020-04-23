@@ -12,8 +12,8 @@
     <slot>
       <k-item
         v-for="(item, itemIndex) in items"
-        v-bind="item"
         :key="item.id || itemIndex"
+        v-bind="item"
         :layout="itemLayout"
         :sortable="sortable"
         @flag="onFlag(item, itemIndex)"

@@ -5,7 +5,10 @@
     class="k-notification"
   >
     <p>{{ message }}</p>
-    <k-button icon="cancel" @click="$emit('close')" />
+    <k-button
+      icon="cancel"
+      @click="$emit('close')"
+    />
   </div>
 </template>
 

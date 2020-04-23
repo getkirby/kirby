@@ -11,7 +11,9 @@
         @click.stop
       >
         <header class="k-drawer-header">
-          <h2 class="k-drawer-title">{{ title }}</h2>
+          <h2 class="k-drawer-title">
+            {{ title }}
+          </h2>
 
           <k-button
             icon="cancel"

@@ -68,11 +68,6 @@ export default {
       selected: this.value
     };
   },
-  watch: {
-    value() {
-      this.selected = this.value;
-    }
-  },
   computed: {
     items() {
       return this.$helper.clone(this.options).map(item => {
@@ -101,6 +96,11 @@ export default {
 
         return item;
       });
+    }
+  },
+  watch: {
+    value() {
+      this.selected = this.value;
     }
   },
   methods: {

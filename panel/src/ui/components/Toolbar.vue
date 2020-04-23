@@ -1,10 +1,11 @@
 <template>
-  <nav v-if="buttonSetup.length" class="k-toolbar">
+  <nav
+    v-if="buttonSetup.length"
+    class="k-toolbar"
+  >
     <div class="k-toolbar-wrapper">
       <div class="k-toolbar-buttons">
-
         <template v-for="(button, buttonIndex) in buttonSetup">
-
           <!-- divider -->
           <template v-if="button === '|'">
             <span
@@ -48,9 +49,7 @@
               @click="onCommand(button.command, button.args)"
             />
           </template>
-
         </template>
-
       </div>
     </div>
   </nav>
