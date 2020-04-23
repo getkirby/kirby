@@ -28,6 +28,9 @@ export default {
      * alt attribute like for images.
      */
     alt: String,
+    /**
+     * Color of the icon.
+    */
     color: String,
     /**
      * Like with the `k-image` component, you can set the background for 

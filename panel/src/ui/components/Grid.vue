@@ -9,6 +9,11 @@
 
 <script>
 export default {
+  /**
+   * The grid does not have any gutter by default, but you can pass 
+   * the following gutter sizes to control spacing between columns:
+   * `small`|`medium`|`large`|`huge`
+   */
   props: {
     gutter: String,
   }

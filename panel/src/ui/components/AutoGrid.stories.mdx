@@ -1,0 +1,60 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import AutoGrid from "./AutoGrid.vue";
+
+
+<Meta
+  title="UI | Layout / Auto Grid"
+  component={AutoGrid}
+  decorators={[Padding]}
+/>
+
+# Auto Grid
+### `<k-auto-grid>`
+
+```html
+<k-auto-grid style="--min: 5rem; --gap: 1.5rem">
+  <div></div>
+  <div></div>
+  <div></div>
+</k-auto-grid>
+```
+
+
+<Preview>
+  <Story name="Examples">
+    {{
+      template: `
+        <div>
+          <k-headline class="mb-3">min: 5rem</k-headline>
+          <k-auto-grid style="--min: 5rem; --gap: 1.5rem" class="mb-10">
+            <div
+              v-for="n in 10"
+              class="bg-white p-6 text-xs font-mono text-center shadow"
+            />
+          </k-auto-grid>
+          <k-headline class="mb-3">min: 10rem</k-headline>
+          <k-auto-grid style="--min: 10rem; --gap: 1.5rem" class="mb-10">
+            <div
+              v-for="n in 10"
+              class="bg-white p-6 text-xs font-mono text-center shadow"
+            />
+          </k-auto-grid>
+          <k-headline class="mb-3">min: 25rem</k-headline>
+          <k-auto-grid style="--min: 25rem; --gap: 1.5rem" class="mb-10">
+            <div
+              v-for="n in 10"
+              class="bg-white p-6 text-xs font-mono text-center shadow"
+            />
+          </k-auto-grid>
+        </div>
+      `,
+    }}
+  </Story>
+</Preview>
+
+<Props of={AutoGrid} />
+
+## CSS class
+
+`.k-auto-grid`

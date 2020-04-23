@@ -10,7 +10,7 @@
       <span
         v-if="editable && $listeners.edit"
         class="k-headline-editable"
-        @click="$emit('edit')"
+        @click="onClick"
       >
         <!-- @slot Use the default slot to inject the headline -->
         <slot />
@@ -28,7 +28,7 @@
         name="left"
         class="k-header-left"
       />
-      <!-- @slot The right slot is perfect for PrevNext navigation or additional options -->
+      <!-- @slot The right slot is perfect for `PrevNext` navigation or additional options -->
       <slot
         slot="right"
         name="right"
@@ -59,6 +59,14 @@ export default {
      * The name/id of the currently active tab
      */
     tab: Object
+  },
+  methods: {
+    onClick() {
+      /**
+       * Headline with edit icon has been clicked.
+       */
+      this.$emit('edit');
+    }
   }
 }
 </script>

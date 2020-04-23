@@ -110,6 +110,8 @@ code {
 
 .hljs .title,
 .hljs .variable,
+.hljs .selector,
+.hljs .class,
 .hljs .deletion,
 .hljs .template-tag, 
 .hljs .tag {

@@ -19,6 +19,9 @@ export default {
   props: {
     text: String,
     icon: String,
+    /**
+     * Available options: `list`|`cards`
+     */
     layout: {
       type: String,
       default: "list"

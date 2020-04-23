@@ -1,0 +1,67 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import Empty from "./Empty.vue";
+
+<Meta
+  title="UI | Layout / Empty"
+  component={Empty}
+  decorators={[Padding]}
+/>
+
+# Empty
+### `<k-empty>`
+
+Whenever you have to deal with an "empty" state, such as an empty list or a search without results, you can use the `k-empty` component to make it a bit nicer. The component combines an icon with text in a wrapper box.
+
+<Preview>
+  <Story name="Regular">
+    {{
+      template: `
+        <k-empty>
+          This is an empty state
+        </k-empty>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={Empty} />
+
+#### Events
+You can bind any events to the component
+
+```html
+<k-empty icon="image" @click="addFirst">No images yet</k-empty>
+```
+
+
+### Icon
+<Preview>
+  <Story name="Icon">
+    {{
+      template: `
+        <k-empty icon="page">
+          This is an empty state
+        </k-empty>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Card layout
+<Preview>
+  <Story name="Card layout">
+    {{
+      template: `
+        <k-empty icon="page" layout="cards">
+          This is an empty state
+        </k-empty>
+      `
+    }}
+  </Story>
+</Preview>
+
+
+## CSS class
+
+`.k-empty`
