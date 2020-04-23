@@ -1,5 +1,6 @@
 import "../helpers/regex.js";
 import clone from "../helpers/clone.js";
+import color from "../helpers/color.js";
 import debounce from "../helpers/debounce.js";
 import input from "../helpers/input.js";
 import isComponent from "../helpers/isComponent.js";
@@ -40,6 +41,7 @@ export default {
     /** global helpers */
     Vue.prototype.$helper = {
       clone: clone,
+      color: color,
       debounce: debounce,
       input: input,
       isComponent: isComponent,

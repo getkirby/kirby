@@ -2,8 +2,8 @@
   <component
     :is="element"
     :data-ratio="ratio"
-    :class="this.back ? 'bg-' + this.back : false"
-    :style="'--ratio:' + ratio + ';' + styles"
+    :class="$helper.color.class(back, 'bg-')"
+    :style="'--ratio:' + ratio + ';' + $helper.color.style(back, 'background-')"
     class="k-aspect-ratio"
     v-on="$listeners"
   >
@@ -32,15 +32,6 @@ export default {
     ratio: {
       type: String,
       default: "1/1"
-    }
-  },
-  computed: {
-    styles() {
-      if (this.back.substring(0, 1) === "#") {
-        return 'background-color: ' + this.back;
-      }
-
-      return;
     }
   }
 }
