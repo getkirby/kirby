@@ -38,9 +38,12 @@ export default {
       type: [Object, Boolean],
       default: true
     },
+    /**
+     * Available options: `list`|`card`
+     */
     layout: {
       type: String,
-      default: "list"
+      default: "card"
     },
   },
   computed: {

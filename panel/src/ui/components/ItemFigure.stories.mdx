@@ -1,0 +1,209 @@
+import { Meta, Props, Preview, Story } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import ItemFigure from "./ItemFigure.vue";
+
+<Meta
+  title="UI | Data / Item Figure"
+  component={ItemFigure}
+  decorators={[Padding]}
+/>
+
+# Item Figure
+### `<k-item-figure>`
+
+<Props of={ItemFigure} />
+
+### Image
+<Preview>
+  <Story name="Image">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure
+            :image="{
+              url: 'https://source.unsplash.com/user/erondu/1600x900'
+            }"
+          />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Image Back
+<Preview>
+  <Story name="Image Back">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure
+            :image="{
+              url: 'https://source.unsplash.com/user/erondu/1600x900',
+              back: 'pattern'
+            }"
+          />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Image Cover
+<Preview>
+  <Story name="Image Cover">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure
+            :image="{
+              url: 'https://source.unsplash.com/user/erondu/1600x900',
+              cover: true
+            }"
+          />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Image Ratio
+<Preview>
+  <Story name="Image Ratio">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure
+            :image="{
+              url: 'https://source.unsplash.com/user/erondu/1600x900',
+              cover: true,
+              ratio: '16/9'
+            }"
+          />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Icon
+<Preview>
+  <Story name="Icon">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure
+            :icon="true"
+          />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Icon Type
+<Preview>
+  <Story name="Icon Type">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure
+            :icon="{
+              type: 'user'
+            }"
+          />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Icon Color
+<Preview>
+  <Story name="Icon Color">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure
+            :icon="{
+              color: 'green-light',
+              type: 'image',
+            }"
+          />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Icon Back
+<Preview>
+  <Story name="Icon Back">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure
+            :icon="{
+              back: 'pattern',
+              color: 'green-light',
+              type: 'image',
+            }"
+          />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Icon Size
+<Preview>
+  <Story name="Icon Size">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure
+            :icon="{
+              back: 'pattern',
+              color: 'green-light',
+              size: 'large',
+              type: 'image',
+            }"
+          />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### No Image Src
+<Preview>
+  <Story name="No Image Src">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### No Image, No Icon
+<Preview>
+  <Story name="No Image, No Icon">
+    {{
+      template: `
+        <div style="max-width: 20rem">
+          <k-item-figure
+            :icon="false"
+            :image="false"
+          />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+
+## CSS class
+
+`.k-item-figure`
