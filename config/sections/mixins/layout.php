@@ -6,7 +6,9 @@ return [
          * Section layout. Available layout methods: `list`, `cards`.
          */
         'layout' => function (string $layout = 'list') {
-            return $layout === 'cards' ? 'cards' : 'list';
+            $layouts = ['list', 'cardlets', 'cards'];
+
+            return in_array($layout, $layouts) ? $layout : 'list';
         }
     ]
 ];
