@@ -25,6 +25,10 @@ export default {
       ...options
     };
 
+    if (options.select === false && options.upload === false) {
+      return false;
+    }
+
     // select option
     if (options.select) {
       dropdown.select = {

@@ -92,9 +92,15 @@ export default {
           name: buttonName
         };
 
+        const definition = buttons[buttonName](this, this.options[buttonName] || {});
+
+        if (definition === false) {
+          return true;
+        }
+
         config[buttonName] = {
           ...defaults,
-          ...buttons[buttonName](this, this.options[buttonName] || {})
+          ...definition
         };
 
         // dropdown clean-up
