@@ -104,7 +104,7 @@ export default {
   computed: {
     dragOptions() {
       return {
-        delay: 1,
+        delay: 20,
         disabled: !this.draggable,
         draggable: ".k-tag"
       };

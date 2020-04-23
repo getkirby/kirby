@@ -61,6 +61,7 @@
             v-if="flag"
             :icon="flag.icon"
             :color="flag.color"
+            :class="flag.class"
             class="k-item-button k-item-flag-button"
             @click="onFlag"
           />
@@ -230,7 +231,7 @@ export default {
   justify-content: flex-end;
   flex-shrink: 0;
   flex-grow: 1;
-  z-index: 1;
+  z-index: 2;
 }
 .k-item-button.k-button,
 .k-item-buttons .k-options-dropdown {
@@ -388,5 +389,4 @@ export default {
   align-items: flex-end;
   padding-left: 0;
 }
-
 </style>

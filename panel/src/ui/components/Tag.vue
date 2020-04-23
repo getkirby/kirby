@@ -6,11 +6,12 @@
     @keydown.delete.prevent="remove"
   >
     <span class="k-tag-text"><slot /></span>
-    <span
+    <k-button
       v-if="removable"
       class="k-tag-toggle"
+      icon="cancel-small"
       @click="remove"
-    >&times;</span>
+    />
   </span>
 </template>
 
@@ -29,7 +30,7 @@ export default {
     remove() {
       if (this.removable) {
         /**
-         * This event is emitted when the remove button is being 
+         * This event is emitted when the remove button is being
          * clicked or the tag is focussed and the delete key is entered.
          */
         this.$emit("remove");
@@ -68,15 +69,8 @@ export default {
 }
 .k-tag-toggle {
   color: rgba(255, 255, 255, 0.7);
-  width: 2rem;
+  width: calc(2rem - 1px);
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   border-left: 1px solid rgba(255, 255, 255, 0.15);
-}
-.k-tag-toggle:hover {
-  background: rgba(255, 255, 255, 0.2);
-  color: #fff;
 }
 </style>

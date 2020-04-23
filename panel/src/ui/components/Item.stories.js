@@ -86,13 +86,95 @@ export const link = () => ({
 
 export const flag = () => ({
   extends: link(),
-  data() {
-    return {
-      flag: {
-        icon: "circle"
-      }
+  computed: {
+    draftFlag() {
+      return {
+        icon: 'circle-outline',
+        color: 'red-light',
+        class: 'k-status-button'
+      };
+    },
+    unlistedFlag() {
+      return {
+        icon: 'circle-half',
+        color: 'blue-light',
+        class: 'k-status-button'
+      };
+    },
+    listedFlag() {
+      return {
+        icon: 'circle',
+        color: 'green-light',
+        class: 'k-status-button'
+      };
     }
-  }
+  },
+  template: `
+    <k-auto-grid style="--gap: 3rem">
+      <div>
+        <k-headline class="mb-3">Draft</k-headline>
+        <k-item
+          v-bind="$data"
+          :flag="draftFlag"
+          class="mb-6"
+        />
+        <k-item
+          v-bind="$data"
+          :flag="draftFlag"
+          class="mb-6"
+          layout="cardlet"
+        />
+        <k-item
+          v-bind="$data"
+          :flag="draftFlag"
+          class="mb-6"
+          layout="card"
+        />
+      </div>
+
+      <div>
+        <k-headline class="mb-3">Unlisted</k-headline>
+        <k-item
+          v-bind="$data"
+          :flag="unlistedFlag"
+          class="mb-6"
+        />
+        <k-item
+          v-bind="$data"
+          :flag="unlistedFlag"
+          class="mb-6"
+          layout="cardlet"
+        />
+        <k-item
+          v-bind="$data"
+          :flag="unlistedFlag"
+          class="mb-6"
+          layout="card"
+        />
+      </div>
+
+      <div>
+        <k-headline class="mb-3">Listed</k-headline>
+        <k-item
+          v-bind="$data"
+          :flag="listedFlag"
+          class="mb-6"
+        />
+        <k-item
+          v-bind="$data"
+          :flag="listedFlag"
+          class="mb-6"
+          layout="cardlet"
+        />
+        <k-item
+          v-bind="$data"
+          :flag="listedFlag"
+          class="mb-6"
+          layout="card"
+        />
+      </div>
+    </k-auto-grid>
+  `
 });
 
 export const imageRatio = () => ({
