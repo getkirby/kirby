@@ -139,11 +139,10 @@ $shadow-sticky: rgba($color-black, 0.05) 0 2px 5px;
 /**
  * Breakpoints
  */
-$breakpoint-small: 30em;
-$breakpoint-menu: 45em;
-$breakpoint-medium: 65em;
-$breakpoint-large: 90em;
-$breakpoint-huge: 120em;
+$breakpoint-sm: 30em;
+$breakpoint-md: 65em;
+$breakpoint-lg: 90em;
+$breakpoint-xl: 120em;
 
 /**
  * Focus Ring

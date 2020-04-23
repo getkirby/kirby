@@ -695,7 +695,7 @@ $structure-item-height: 38px;
   }
 
   /* mobile */
-  @media screen and (max-width: $breakpoint-medium) {
+  @media screen and (max-width: $breakpoint-md) {
     td,
     th {
       display: none;
@@ -845,7 +845,7 @@ $structure-item-height: 38px;
 
 .k-structure-form-buttons .k-pagination {
   display: none;
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     display: flex;
   }
 }

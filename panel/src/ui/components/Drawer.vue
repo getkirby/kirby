@@ -68,12 +68,12 @@ export default {
   background: $color-background;
 }
 
-@media screen and (min-width: $breakpoint-medium) {
+@media screen and (min-width: $breakpoint-md) {
   .k-drawer-box {
     width: 66.66%;
   }
 }
-@media screen and (min-width: $breakpoint-large) {
+@media screen and (min-width: $breakpoint-lg) {
   .k-drawer-box {
     width: 50%;
     max-width: 60rem;

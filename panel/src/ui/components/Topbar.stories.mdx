@@ -1,12 +1,10 @@
 import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
 import { action } from "@storybook/addon-actions";
-import Padding from "../storybook/Padding.js";
 import Topbar from "./Topbar.vue";
 
 <Meta
   title="UI | Navigation / Topbar"
   component={Topbar}
-  decorators={[Padding]}
 />
 
 # Topbar
@@ -40,32 +38,34 @@ import Topbar from "./Topbar.vue";
         },
         menu() {
           return [
-            { 
-              link: 'site', 
-              icon: 'page', 
-              text: 'Site' 
+            {
+              link: 'site',
+              icon: 'page',
+              text: 'Site'
             },
-            { 
-              link: 'users', 
-              icon: 'users', 
-              text: 'Users' 
+            {
+              link: 'users',
+              icon: 'users',
+              text: 'Users',
+              current: 'page',
+              color: 'blue'
             },
-            { 
-              link: 'settings', 
-              icon: 'settings', 
-              text: 'Settings' 
-            },
-            '-',
-            { 
-              link: 'account', 
-              icon: 'account', 
-              text: 'Your account' 
+            {
+              link: 'settings',
+              icon: 'settings',
+              text: 'Settings'
             },
             '-',
-            { 
-              link: 'logout', 
-              icon: 'logout', 
-              text: 'Logout' 
+            {
+              link: 'account',
+              icon: 'account',
+              text: 'Your account'
+            },
+            '-',
+            {
+              link: 'logout',
+              icon: 'logout',
+              text: 'Logout'
               },
           ];
         }
@@ -75,7 +75,6 @@ import Topbar from "./Topbar.vue";
       },
       template: `
         <div>
-          <k-headline class="mb-2">Preview</k-headline>
           <k-topbar
             :breadcrumb="breadcrumb"
             :loading="loading"
@@ -83,8 +82,10 @@ import Topbar from "./Topbar.vue";
             class="mb-6"
             @search="onSearch"
           />
-          <k-headline class="mb-2">Controls</k-headline>
-          <k-input type="toggle" v-model="loading" text="Loading state" />
+          <k-view>
+            <k-headline class="mb-2">Controls</k-headline>
+            <k-input type="toggle" v-model="loading" text="Loading state" />
+          </k-view>
         </div>
       `,
     }}

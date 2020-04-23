@@ -90,14 +90,14 @@ export default {
 .k-file-preview-layout {
   display: grid;
 
-  @media screen and (max-width: $breakpoint-medium) {
+  @media screen and (max-width: $breakpoint-md) {
     padding: 0 !important;
   }
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     grid-template-columns: 50% auto;
   }
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     display: flex;
     align-items: center;
   }
@@ -109,10 +109,10 @@ export default {
   position: relative;
   background: url($pattern);
 
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     width: 33.33%;
   }
-  @media screen and (min-width: $breakpoint-large) {
+  @media screen and (min-width: $breakpoint-lg) {
     width: 25%;
   }
 }
@@ -121,7 +121,7 @@ export default {
   overflow: hidden;
   padding-bottom: 66.66%;
 
-  @media screen and (min-width: $breakpoint-small) and (max-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-sm) and (max-width: $breakpoint-md) {
     position: absolute;
     top: 0;
     left: 0;
@@ -130,7 +130,7 @@ export default {
     padding-bottom: 0 !important;
   }
 
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     padding-bottom: 100%;
   }
 }
@@ -169,7 +169,7 @@ export default {
   padding: 1.5rem;
   flex-grow: 1;
 
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     padding: 3rem;
   }
 }
@@ -180,7 +180,7 @@ export default {
   grid-gap: 1.5rem 3rem;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 }

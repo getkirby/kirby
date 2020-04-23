@@ -26,12 +26,12 @@ export default {
   margin: 0 auto;
   max-width: 100rem;
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     padding-left: 3rem;
     padding-right: 3rem;
   }
 
-  @media screen and (min-width: $breakpoint-large) {
+  @media screen and (min-width: $breakpoint-lg) {
     padding-left: 6rem;
     padding-right: 6rem;
   }

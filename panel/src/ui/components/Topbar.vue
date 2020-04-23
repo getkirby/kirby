@@ -122,6 +122,7 @@ export default {
   flex-shrink: 1;
   min-width: 0;
   margin-right: .5rem;
+  flex-grow: 1;
 }
 
 /** Options **/
@@ -129,8 +130,7 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  flex-grow: 1;
+  margin-left: auto;
   background: #000;
 }
 

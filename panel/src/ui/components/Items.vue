@@ -89,7 +89,7 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(#{"min(12rem, 100%)"}, 1fr));
 }
 
-@media screen and (min-width: $breakpoint-small) {
+@media screen and (min-width: $breakpoint-sm) {
 /**
  * Cards
  */
@@ -153,7 +153,7 @@ export default {
   }
 }
 
-@media screen and (min-width: $breakpoint-medium) {
+@media screen and (min-width: $breakpoint-md) {
 /**
  * Cards
  */

@@ -351,7 +351,7 @@ export default {
 .k-topbar-breadcrumb-menu {
   flex-shrink: 0;
 }
-@media screen and (min-width: $breakpoint-small) {
+@media screen and (min-width: $breakpoint-sm) {
   .k-topbar-crumbs a {
     display: block;
   }
@@ -418,7 +418,7 @@ export default {
 .k-topbar .k-button[data-theme="negative"] .k-button-text {
   display: none;
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     display: inline;
   }
 }
@@ -450,7 +450,7 @@ export default {
   font-weight: 600;
   display: none;
 
-  @media screen and (min-width: $breakpoint-large) {
+  @media screen and (min-width: $breakpoint-lg) {
     display: block;
   }
 }

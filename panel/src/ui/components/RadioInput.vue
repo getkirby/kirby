@@ -79,7 +79,7 @@ export default {
   display: grid;
   grid-template-columns: 1fr;
 }
-@media screen and (min-width: $breakpoint-medium) {
+@media screen and (min-width: $breakpoint-md) {
   .k-radio-input {
     grid-template-columns: repeat(var(--columns), 1fr);
   }

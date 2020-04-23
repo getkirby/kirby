@@ -16,6 +16,8 @@
 export default {
   inheritAttrs: false,
   props: {
+    color: String,
+    current: [Boolean, String],
     disabled: Boolean,
     icon: String,
     image: [String, Object],
@@ -23,7 +25,6 @@ export default {
     target: String,
     theme: String,
     upload: String,
-    current: [String, Boolean]
   },
   data() {
     return {

@@ -258,7 +258,7 @@ export default {
       margin-bottom: -1px;
       margin-right: -1px;
 
-      @media screen and (min-width: $breakpoint-medium) {
+      @media screen and (min-width: $breakpoint-md) {
         grid-template-columns: repeat(var(--columns), 1fr);
       }
 
@@ -297,7 +297,7 @@ export default {
       margin-bottom: -1px;
       margin-right: -1px;
 
-      @media screen and (min-width: $breakpoint-medium) {
+      @media screen and (min-width: $breakpoint-md) {
         grid-template-columns: repeat(var(--columns), 1fr);
       }
     }

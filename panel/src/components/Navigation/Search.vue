@@ -209,7 +209,7 @@ export default {
   margin: 0 auto;
   box-shadow: $shadow-md;
 
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     margin: 2.5rem auto;
   }
 }

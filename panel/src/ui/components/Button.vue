@@ -148,7 +148,7 @@ button::-moz-focus-inner {
 .k-button[data-responsive] .k-button-text {
   display: none;
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     display: inline;
   }
 }

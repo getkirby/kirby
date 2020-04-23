@@ -150,12 +150,12 @@ export default {
   flex-direction: column;
   max-width: 15rem;
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     flex-direction: row;
   }
 }
 .k-tab-button.k-button .k-icon {
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     margin-right: .5rem;
   }
 }
@@ -175,7 +175,7 @@ export default {
 
   text-overflow: ellipsis;
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     font-size: $text-xs;
     padding-top: 0;
   }

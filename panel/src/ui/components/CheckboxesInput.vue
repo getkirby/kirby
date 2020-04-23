@@ -103,7 +103,7 @@ export default {
   grid-template-columns: 1fr;
 }
 
-@media screen and (min-width: $breakpoint-medium) {
+@media screen and (min-width: $breakpoint-md) {
   .k-checkboxes-input {
     grid-template-columns: repeat(var(--columns), 1fr);
   }

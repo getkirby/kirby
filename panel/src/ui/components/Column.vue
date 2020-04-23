@@ -29,7 +29,7 @@ export default {
   z-index: 2;
 }
 
-@media screen and (min-width: $breakpoint-medium) {
+@media screen and (min-width: $breakpoint-md) {
   .k-column[data-width="1/1"],
   .k-column[data-width="2/2"],
   .k-column[data-width="3/3"],

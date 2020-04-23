@@ -21,12 +21,12 @@
 export default {
   props: {
     /**
-     * You can set a link for the headline. 
+     * You can set a link for the headline.
      * The link can be absolute or relative.
      */
     link: String,
     /**
-     * Sets the text size.  
+     * Sets the text size.
      * Available sizes: `tiny`|`small`|`medium`|`large`|`huge`
      */
     size: {
@@ -62,7 +62,7 @@ export default {
   font-size: $text-xl;
   font-weight: $font-normal;
 
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     font-size: $text-2xl;
   }
 }
@@ -70,7 +70,7 @@ export default {
   font-size: $text-2xl;
   line-height: 1.15em;
 
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     font-size: $text-3xl;
   }
 }
