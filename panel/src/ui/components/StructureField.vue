@@ -173,9 +173,22 @@ export default {
     },
     options() {
       return [
-        { icon: "edit", text: this.$t("edit"), click: "openEditRowDialog" },
-        { icon: "copy", text: this.$t("duplicate"), click: "duplicateRow" },
-        { icon: "trash", text: this.$t("delete"), click: "openRemoveRowDialog" },
+        { 
+          icon: "edit", 
+          text: this.$t("edit"), 
+          click: "openEditRowDialog" 
+        },
+        { 
+          icon: "copy", 
+          text: this.$t("duplicate"), 
+          click: "duplicateRow",
+          disabled: !this.more
+        },
+        { 
+          icon: "trash", 
+          text: this.$t("delete"), 
+          click: "openRemoveRowDialog" 
+        },
       ];
     }
   },
