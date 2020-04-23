@@ -119,8 +119,7 @@ export default {
         );
       }
     },
-    action(page, action) {
-
+    action(action, page) {
       switch (action) {
         case "duplicate": {
           this.$refs.duplicate.open(page.id);

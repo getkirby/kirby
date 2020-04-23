@@ -54,6 +54,7 @@
       <k-collection
         :items="users"
         :pagination="pagination"
+        layout="cardlets"
         @paginate="paginate"
         @action="action"
       />
@@ -215,7 +216,7 @@ export default {
       this.limit = pagination.limit;
       this.fetch();
     },
-    action(user, action) {
+    action(action, user) {
       switch (action) {
         case "edit":
           this.$router.push("/users/" + user.id);

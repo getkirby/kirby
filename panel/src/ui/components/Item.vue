@@ -71,6 +71,7 @@
         <slot name="options">
           <k-options-dropdown
             :options="options"
+            class="k-item-options-dropdown"
             @option="onOption"
           />
         </slot>
@@ -178,7 +179,7 @@ export default {
   font-weight: normal;
   text-overflow: ellipsis;
   white-space: nowrap;
-  line-height: 1.25rem;
+  line-height: 1.125rem;
   overflow: hidden;
 }
 .k-item-info {
@@ -203,45 +204,28 @@ export default {
   align-items: center;
   min-width: 0;
 }
-.k-item-label {
-  display: flex;
-  flex-shrink: 1;
-  min-width: 0;
-  height: 38px;
-  align-items: center;
-}
-.k-item-label-button.k-button {
-  font-size: $text-xs;
-  font-family: $font-mono;
-  display: flex;
-  padding: .125rem .5rem;
-  border: 2px solid $color-border;
-  border-radius: 2rem;
-  white-space: nowrap;
-  max-width: 100%;
-  z-index: 2;
-}
-.k-item-label .k-button-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
 .k-item-buttons {
   position: relative;
   display: flex;
   justify-content: flex-end;
   flex-shrink: 0;
   flex-grow: 1;
-  z-index: 2;
 }
-.k-item-button.k-button,
-.k-item-buttons .k-options-dropdown {
+.k-item-flag-button,
+.k-item-options-dropdown {
+  position: relative;
   width: 38px;
   height: 38px;
   display: flex;
   align-items: center;
   justify-content: center;
   line-height: 1;
-  z-index:  2;
+}
+.k-item-flag-button {
+  z-index: 1;
+}
+.k-item-options-dropdown {
+  z-index: 2;
 }
 
 /** List Item **/
@@ -369,6 +353,9 @@ export default {
   white-space: normal;
   word-wrap: break-word;
 }
+.k-card-item .k-item-info {
+  padding-top: .125rem;
+}
 .k-card-item .k-item-footer {
   grid-area: footer;
   width: auto;
@@ -380,7 +367,7 @@ export default {
 }
 .k-card-item:not([data-has-label]) {
   grid-template-columns: auto auto;
-  grid-template-rows: auto auto;
+  grid-template-rows: auto 1fr;
   grid-template-areas:
     "figure figure"
     "content footer";
