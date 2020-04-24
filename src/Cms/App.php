@@ -190,7 +190,7 @@ class App
      * @param string $name Full event name
      * @param array $args Associative array of named event arguments
      * @param string $modify Key in $args that is modified by the hooks
-     * @param \Kirby\Cms\Event|null $originalName Event object (internal use)
+     * @param \Kirby\Cms\Event|null $originalEvent Event object (internal use)
      * @return mixed Resulting value as modified by the hooks
      */
     public function apply(string $name, array $args, string $modify, ?Event $originalEvent = null)
@@ -1347,7 +1347,7 @@ class App
      * @internal
      * @param string $name Full event name
      * @param array $args Associative array of named event arguments
-     * @param \Kirby\Cms\Event|null $originalName Event object (internal use)
+     * @param \Kirby\Cms\Event|null $originalEvent Event object (internal use)
      * @return void
      */
     public function trigger(string $name, array $args = [], ?Event $originalEvent = null)
