@@ -201,12 +201,5 @@ b {
   box-shadow: $color-negative-outline 0 0 0 2px !important;
 }
 
-/** Text **/
-.truncate {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 
 @import "utilities.scss";

@@ -53,6 +53,27 @@ import BuilderField from "./BuilderField.vue";
                 }
               }
             },
+            nested: {
+              name: "Nested",
+              fields: {
+                builder: {
+                  label: "Another builder",
+                  type: "builder",
+                  columns: 2,
+                  fieldsets: {
+                    teaser: {
+                      name: "Teaser",
+                      fields: {
+                        text: {
+                          type: "text"
+                        }
+                      }
+                    }
+                  },
+                  value: []
+                }
+              }
+            },
             related: {
               name: "Related content",
               fields: {
@@ -84,7 +105,7 @@ import BuilderField from "./BuilderField.vue";
           <k-builder-field
             :fieldsets="fieldsets"
             :value="value"
-            label="Builder" 
+            label="Builder"
             class="mb-8"
           />
           <k-headline class="mb-3">Value</k-headline>

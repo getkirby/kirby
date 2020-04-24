@@ -1,29 +1,30 @@
 <template>
-  <article class="k-builder-block">
-    
-    <!-- Sort handle -->
-    <k-sort-handle
-      class="k-builder-block-sort-handle"
-    />
+  <k-column :width="width" class="k-builder-block">
+    <article class="bg-white shadow px-2px rounded-sm">
+      <header class="flex items-center cursor-pointer" @click="toggle">
+        <!-- Sort handle -->
+        <k-sort-handle class="k-builder-block-sort-handle" />
 
-    <div class="k-builder-block-content bg-white shadow p-2px mb-2 rounded-sm">
-      <header class="flex items-center px-3 cursor-pointer" @click="toggle">
-        <k-button 
-          :icon="isOpen ? 'angle-down' : 'angle-right'" 
-          class="k-builder-block-title text-left"
+        <!-- Title -->
+        <k-button
+          :icon="isOpen ? 'angle-down' : 'angle-right'"
+          class="k-builder-block-title px-3 text-left truncate"
         >
           {{ title }}
         </k-button>
+
+        <!-- Options -->
         <k-options-dropdown
           :options="options"
           @option="onOption"
         />
       </header>
 
-      <footer 
-        v-if="isOpen" 
+      <footer
+        v-if="isOpen"
         class="k-builder-block-fields bg-background p-4"
       >
+        <!-- Fields -->
         <k-fieldset
           ref="fieldset"
           v-model="block"
@@ -32,9 +33,9 @@
           @input="onInput"
         />
       </footer>
-    </div>
 
-  </article>
+    </article>
+  </k-column>
 </template>
 
 <script>
@@ -56,7 +57,8 @@ export default {
       default: () => {
         return {};
       }
-    }
+    },
+    width: String
   },
   data() {
     return {
@@ -72,28 +74,28 @@ export default {
   computed: {
     options() {
       return [
-        { 
-          icon: 'preview', 
+        {
+          icon: 'preview',
           text: 'Preview'
         },
-        { 
-          icon: 'edit', 
+        {
+          icon: 'edit',
           text: 'Edit block'
         },
         '-',
-        { 
-          icon: 'angle-up', 
+        {
+          icon: 'angle-up',
           text: 'Insert above'
         },
-        { 
-          icon: 'angle-down', 
+        {
+          icon: 'angle-down',
           text: 'Insert below',
           indexOffset: 1
         },
         '-',
-        { 
-          icon: 'trash', 
-          text: 'Delete block' 
+        {
+          icon: 'trash',
+          text: 'Delete block'
         },
       ];
     },
@@ -148,18 +150,13 @@ export default {
 </script>
 
 <style lang="scss">
-.k-builder-block-sort-handle.k-sort-handle {
-  position: absolute;
-  opacity: 0;
-  width: 4rem;
-  height: 2.5rem;
-  left: 0;
-  z-index: 2;
-}
-.k-builder-block:hover .k-builder-block-sort-handle {
-  opacity: 1;
+.k-builder-block-sort-handle {
+  border-right: 1px solid $color-background;
 }
 .k-builder-block-title {
   flex-grow: 1;
+}
+.k-builder-block-fields {
+  border-bottom: 2px solid $color-white;
 }
 </style>

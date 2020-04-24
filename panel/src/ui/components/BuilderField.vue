@@ -8,39 +8,47 @@
       :handle="true"
       :options="dragOptions"
       :list="blocks"
+      element="k-grid"
+      style="--col-gap: .5rem; --row-gap: .25rem"
       @end="onSort"
     >
-      <k-builder-block 
+      <!-- Blocks -->
+      <k-builder-block
         v-for="(block, blockIndex) in blocks"
         :key="blockIndex"
         :ref="'block-' + blockIndex"
         v-model="block.value"
         v-bind="fieldsets[block.type]"
         :index="blockIndex"
+        :width="'1/' + columns"
         @current="setCurrent(block, blockIndex + $event)"
         @input="onInput"
         @insert="$refs.create.open()"
         @remove="$refs.remove.open()"
         @preview="$refs.preview.open()"
       />
+
+      <!-- Add zone -->
+      <k-column :width="'1/' + columns" slot="footer">
+        <k-empty
+          layout="list"
+          class="cursor-pointer flex justify-center"
+          @click="
+            setCurrent({}, blocks.length);
+            $refs.create.open();
+          "
+        >
+          <k-button icon="add">Add block</k-button>
+        </k-empty>
+      </k-column>
+
     </k-draggable>
 
-    <!-- Add zone -->
-    <k-empty 
-      layout="list" 
-      class="cursor-pointer flex justify-center"
-      @click="
-        setCurrent({}, blocks.length); 
-        $refs.create.open();
-      "
-    >
-      <k-button icon="add">Add block</k-button>
-    </k-empty>
 
     <!-- Preview drawer -->
-    <k-drawer 
-      ref="preview" 
-      :title="'Preview / ' + previewTitle" 
+    <k-drawer
+      ref="preview"
+      :title="'Preview / ' + previewTitle"
       flow="vertical"
     >
       <k-builder-preview v-bind="current" />
@@ -74,6 +82,13 @@ export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
+    /**
+     * Blocks will be placed in a grid, if higher than 1
+     */
+    columns: {
+      type: Number,
+      default: 1
+    },
     /**
      * Object of all available fieldset definitions
      */
@@ -126,7 +141,7 @@ export default {
     previewTitle() {
       if (this.current.fieldset.label) {
         return this.$helper.string.template(
-          this.current.fieldset.label, 
+          this.current.fieldset.label,
           this.current.block.value
         );
       }
@@ -146,7 +161,10 @@ export default {
       this.$refs.create.close();
       this.onInput();
       this.$nextTick(() => {
-        this.$refs["block-" + this.current.index][0].open();
+        let newBlock = this.$refs["block-" + this.current.index];
+        if (newBlock) {
+          newBlock[0].open();
+        }
       });
     },
     onRemove(index) {
