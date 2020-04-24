@@ -29,6 +29,7 @@
 
         <!-- Options -->
         <div class="k-topbar-options">
+          <slot name="options" />
           <template v-if="loading">
             <k-loader class="k-topbar-loader" />
           </template>

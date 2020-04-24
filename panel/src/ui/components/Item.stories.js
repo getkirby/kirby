@@ -75,6 +75,17 @@ export const options = () => ({
   }
 });
 
+export const singleOption = () => ({
+  extends: info(),
+  data() {
+    return {
+      options: [
+        { icon: 'edit', text: 'Edit', click: 'edit' },
+      ]
+    }
+  }
+});
+
 export const link = () => ({
   extends: options(),
   data() {
