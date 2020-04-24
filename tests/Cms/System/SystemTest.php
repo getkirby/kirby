@@ -62,8 +62,8 @@ class SystemTest extends TestCase
             ['localhost', true],
             ['mydomain.local', true],
             ['mydomain.test', true],
-            ['mydomain.dev', true],
             ['mydomain.com', false],
+            ['mydomain.dev', false],
         ];
     }
 
