@@ -36,6 +36,9 @@
 <script>
 export default {
   props: {
+    /**
+     * Help text to be displayed below the collection in grey.
+     */
     help: String,
     items: {
       type: [Array, Object],
@@ -50,6 +53,9 @@ export default {
       type: String,
       default: "list"
     },
+    /**
+     * Allow manual sorting via drag-and-drop
+     */
     sortable: Boolean,
     pagination: {
       type: [Boolean, Object],
@@ -96,20 +102,37 @@ export default {
   },
   methods: {
     onFlag(item, itemIndex) {
+      /**
+       * The flag icon for an item has been clicked
+       */
       this.$emit("flag", item, itemIndex);
     },
     onOption(option, item, itemIndex) {
-      // deprecated
+      /**
+       * Deprecated!
+       */
       this.$emit("action", option, item, itemIndex);
+      /**
+       * The options icon for an item has been clicked
+       */
       this.$emit("option", option, item, itemIndex);
     },
     onPaginate(pagination) {
+      /**
+       * Pagination has been altered/navigated
+       */
       this.$emit("paginate", pagination);
     },
     onSort(items, event) {
+      /**
+       * Items have been re-sorted via drag-and-drop (Vue-draggable `end` event)
+       */
       this.$emit("sort", items, event);
     },
     onSortChange(items, event) {
+      /**
+       * Items sorting has changed (Vue-draggable `change` event)
+       */
       this.$emit("sortChange", items, event);
     }
   }
