@@ -26,14 +26,24 @@ this.$helper.isEmoji(🙌)
 ### `lcfirst`
 
 ```js
-return this.$helper.string.lcfirst("Hello);
+return this.$helper.string.lcfirst("Hello");
 // result: "hello"
+```
+
+### `template`
+
+```js
+return this.$helper.string.template("Walk from {{ a }} to {{ b }}", {
+  a: "Berlin",
+  b: "Paris"
+});
+// result: "Walk from Berlin to Paris"
 ```
 
 
 ### `ucfirst`
 
 ```js
-return this.$helper.string.ucfirst("hello);
+return this.$helper.string.ucfirst("hello");
 // result: "Hello"
 ```

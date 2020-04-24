@@ -179,7 +179,7 @@ export default {
     onClick(click, option, optionIndex) {
       // legacy
       this.$emit('action', click, option, optionIndex);
-      this.$emit('option', click, option, optionIndex);
+      this.$emit('option', option, optionIndex);
     }
   }
 };

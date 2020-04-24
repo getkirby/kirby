@@ -12,6 +12,13 @@ export default {
     const str = String(string);
     return str.charAt(0).toLowerCase() + str.substr(1);
   },
+  template(string, object) {
+    [...string.matchAll(/{{(.*?)}}/ig)].forEach(match => {
+      string = string.replace(match[0], object[match[1].trim()] || "");
+    })
+
+    return string;
+  },
   ucfirst (string) {
     const str = String(string);
     return str.charAt(0).toUpperCase() + str.substr(1);

@@ -6,10 +6,15 @@ export default {
   component: Drawer,
 };
 
-export const regular = () => ({
+export const fromSide = () => ({
   methods: {
     close: action('close'),
     open: action('open'),
+  },
+  computed: {
+    flow() {
+      return "horizontal";
+    }
   },
   template: `
     <div>
@@ -28,7 +33,7 @@ export const regular = () => ({
             Open drawer
           </k-button>
         </k-text>
-        <k-drawer ref="drawer">
+        <k-drawer ref="drawer" :flow="flow">
           <k-form
             :fields="{
               firstName: {
@@ -58,3 +63,11 @@ export const regular = () => ({
   `,
 });
 
+export const fromBotton = () => ({
+  extends: fromSide(),
+  computed: {
+    flow() {
+      return "vertical";
+    }
+  }
+});

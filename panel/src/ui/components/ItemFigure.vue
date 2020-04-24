@@ -1,7 +1,6 @@
 <template>
-  <div class="k-item-figure">
+  <div class="k-item-figure" v-if="image || icon">
     <k-aspect-ratio
-      v-if="image || icon"
       :back="back"
       :ratio="ratio"
     >
