@@ -241,7 +241,7 @@ export const login = () => ({
           slot="header"
           :message="error"
           type="error"
-          class="mb-8 rounded-xs shadow-lg"
+          class="mb-8 rounded-xs shadow-md"
           @close="onResetError"
         />
         <footer

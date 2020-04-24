@@ -53,11 +53,18 @@ code {
 .hljs {
   color: #fff !important;
   background: #000 !important;
+  line-height: 1.5em !important;
+  overflow-x: auto;
+  overflow-y: hidden;
 }
 
 .hljs > code {
-  font-size: 1em !important;
+  font-size: 1rem !important;
 }
+.hljs > * .token {
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+}
+
 
 .hljs .section {
   color: #fff !important;
@@ -113,7 +120,7 @@ code {
 .hljs .selector,
 .hljs .class,
 .hljs .deletion,
-.hljs .template-tag, 
+.hljs .template-tag,
 .hljs .tag {
   color: var(--color-negative-light) !important;
 }

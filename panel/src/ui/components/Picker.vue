@@ -4,6 +4,8 @@
     :layout="layout"
     :pagination="pagination"
     :sortable="sortable"
+    class="k-picker"
+    @item="onItem"
     @flag="onFlag"
     @paginate="onPaginate"
     @sort="onSort"
@@ -120,6 +122,9 @@ export default {
         this.onSelect(item.id, item, itemIndex);
       }
     },
+    onItem(item, itemIndex) {
+      this.onFlag(item, itemIndex);
+    },
     onPaginate(pagination) {
       this.$emit("paginate", pagination);
     },
@@ -143,3 +148,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.k-picker .k-item-title-link::after {
+  display: none;
+}
+</style>

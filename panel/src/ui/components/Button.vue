@@ -38,7 +38,7 @@ export default {
     /**
      * Adds an icon to the button.
      */
-    icon: String,
+    icon: [String, Object],
     id: [String, Number],
     /**
      * If the link attribute is set, the button will
@@ -167,14 +167,6 @@ button::-moz-focus-inner {
   [dir="rtl"] & {
     padding-right: 0.5rem;
   }
-}
-
-.k-button-text {
-  opacity: 0.75;
-}
-.k-button:focus .k-button-text,
-.k-button:hover .k-button-text {
-  opacity: 1;
 }
 
 .k-button-text span,

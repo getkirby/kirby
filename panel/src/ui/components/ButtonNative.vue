@@ -15,8 +15,7 @@
   >
     <k-icon
       v-if="icon"
-      :type="icon"
-      :alt="tooltip"
+      v-bind="iconOptions"
       class="k-button-icon"
     />
     <span
@@ -46,6 +45,21 @@ export default {
     type: {
       type: String,
       default: "button"
+    }
+  },
+  computed: {
+    iconOptions() {
+      if (typeof this.icon === "object") {
+        return {
+          ...this.icon,
+          alt: this.tooltip
+        };
+      }
+
+      return {
+        type: this.icon,
+        alt: this.tooltip
+      };
     }
   }
 };

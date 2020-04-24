@@ -147,15 +147,24 @@ The icon component can be used to display any icon from our own icon set.
   <Story name="Sizes">
     {{
       template: `
-        <k-auto-grid style="--gap: 1.5rem">
+        <k-auto-grid style="--gap: 1.5rem" class="font-mono text-xs">
           <figure class="flex items-center bg-white p-3">
             <k-icon
               class="mr-3"
               size="small"
               type="edit"
             />
-            <figcaption class="text-sm text-gray">
-              small (default)
+            <figcaption>
+              small
+            </figcaption>
+          </figure>
+          <figure class="flex items-center bg-white p-3">
+            <k-icon
+              class="mr-3"
+              type="edit"
+            />
+            <figcaption>
+              regular (default)
             </figcaption>
           </figure>
           <figure class="flex items-center bg-white p-3">
@@ -164,7 +173,7 @@ The icon component can be used to display any icon from our own icon set.
               size="medium"
               type="edit"
             />
-            <figcaption class="text-sm text-gray">
+            <figcaption>
               medium
             </figcaption>
           </figure>
@@ -174,7 +183,7 @@ The icon component can be used to display any icon from our own icon set.
               size="large"
               type="edit"
             />
-            <figcaption class="text-sm text-gray">
+            <figcaption>
               large
             </figcaption>
           </figure>

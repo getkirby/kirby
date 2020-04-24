@@ -100,21 +100,30 @@ export const flag = () => ({
   computed: {
     draftFlag() {
       return {
-        icon: 'circle-outline',
+        icon: {
+          type: 'circle-outline',
+          size: 'small',
+        },
         color: 'red-light',
         class: 'k-status-button'
       };
     },
     unlistedFlag() {
       return {
-        icon: 'circle-half',
+        icon: {
+          type: 'circle-half',
+          size: 'small',
+        },
         color: 'blue-light',
         class: 'k-status-button'
       };
     },
     listedFlag() {
       return {
-        icon: 'circle',
+        icon: {
+          type: 'circle',
+          size: 'small',
+        },
         color: 'green-light',
         class: 'k-status-button'
       };

@@ -40,32 +40,40 @@ $color-gray-800: #333;
 $color-gray-900: #111;
 
 $color-red-200: #edc1c1;
+$color-red-300: #e3a0a0;
 $color-red-400: #d16464;
 $color-red-600: #c82829;
 
 $color-orange-200: #f2d4bf;
+$color-orange-300: #ebbe9e;
 $color-orange-400: #de935f;
 $color-orange-600: #f4861f;
 
+$color-yellow-200: #f9e8c7;
+$color-yellow-300: #f7e2b8;
+$color-yellow-400: #f0c674;
+$color-yellow-600: #cca000;
+
 $color-green-200: #dce5c2;
+$color-green-300: #c6d49d;
 $color-green-400: #a7bd68;
 $color-green-600: #5d800d;
 
 $color-aqua-200: #d0e5e2;
+$color-aqua-300: #bbd9d5;
 $color-aqua-400: #8abeb7;
 $color-aqua-600: #398e93;
 
 $color-blue-200: #cbd7e5;
+$color-blue-300: #b1c2d8;
 $color-blue-400: #7e9abf;
 $color-blue-600: #4271ae;
 
 $color-purple-200: #e0d4e4;
+$color-purple-300: #d4c3d9;
 $color-purple-400: #b294bb;
 $color-purple-600: #9c48b9;
 
-$color-yellow-200: #f9e8c7;
-$color-yellow-400: #f0c674;
-$color-yellow-600: #cca000;
 
 /**
  * Color Aliases
@@ -132,7 +140,7 @@ $shadow: 0 1px 3px 0 rgba($color-black, 0.1), 0 1px 2px 0 rgba($color-black, 0.0
 $shadow-md: 0 4px 6px -1px rgba($color-black, 0.1), 0 2px 4px -1px rgba($color-black, 0.06);
 $shadow-lg: 0 10px 15px -3px rgba($color-black, 0.1), 0 4px 6px -2px rgba($color-black, 0.05);
 $shadow-xl: 0 20px 25px -5px rgba($color-black, 0.1), 0 10px 10px -5px rgba($color-black, 0.04);
-$shadow-outline: $color-blue-600 0 0 0 2px;
+$shadow-outline: currentColor 0 0 0 2px;
 $shadow-inset: inset 0 2px 4px 0 rgba($color-black, 0.06);
 $shadow-sticky: rgba($color-black, 0.05) 0 2px 5px;
 

@@ -90,11 +90,15 @@ export default {
 <style lang="scss">
 .k-sortable-ghost {
   position: relative;
-  box-shadow: $shadow-outline, $shadow-xl;
+  box-shadow: $shadow-outline, $shadow-xl !important;
   z-index: 1;
 }
+.k-sortable-ghost .k-sort-handle {
+  display: none !important;
+}
 .k-sortable-fallback {
-  opacity: 0.25 !important;
+  display: none;
+  opacity: 0 !important;
   overflow: hidden;
 }
 </style>

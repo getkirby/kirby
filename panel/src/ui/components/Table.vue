@@ -329,12 +329,11 @@ $table-row-height: 38px;
 .k-table-row-ghost {
   background: $color-white;
   box-shadow: $shadow-xl;
-  outline: 2px solid $color-focus;
+  outline: 2px solid currentColor;
   overflow: hidden;
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
-
 
 </style>

@@ -37,11 +37,11 @@ export default {
   align-items: center;
 }
 .k-notification[data-theme="error"] {
-  background: $color-red-400;
+  background: $color-red-300;
   color: $color-black;
 }
 .k-notification[data-theme="success"] {
-  background: $color-green-400;
+  background: $color-green-300;
   color: $color-black;
 }
 .k-notification p {

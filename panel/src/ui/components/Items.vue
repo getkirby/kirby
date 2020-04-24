@@ -16,6 +16,7 @@
         v-bind="item"
         :layout="itemLayout"
         :sortable="sortable"
+        @click="onItem(item, itemIndex)"
         @flag="onFlag(item, itemIndex)"
         @option="$emit('option', $event, item, itemIndex)"
       />
@@ -57,6 +58,9 @@ export default {
   methods: {
     onFlag(item, itemIndex) {
       this.$emit('flag', item, itemIndex)
+    },
+    onItem(item, itemIndex) {
+      this.$emit('item', item, itemIndex)
     },
     onOption(option, item, itemIndex) {
       this.$emit('option', option, item, itemIndex)

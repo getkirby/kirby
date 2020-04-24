@@ -46,7 +46,7 @@ export default {
 .k-aspect-ratio::before {
   content: "";
   display: block;
-  padding-bottom: calc(100% / (var(--ratio)));
+  padding-bottom: #{"calc(100% / (var(--ratio)))"};
 }
 .k-aspect-ratio > * {
   position: absolute;

@@ -40,7 +40,7 @@
                   <option
                     v-for="p in pages"
                     :key="p"
-                    :selected="page === p"
+                    :selected="currentPage === p"
                     :value="p"
                   >
                     {{ p }}
@@ -76,8 +76,8 @@
 export default {
   props: {
     /**
-     * The align prop makes it possible to move the pagination 
-     * component to the `left`, `center` or `right` according 
+     * The align prop makes it possible to move the pagination
+     * component to the `left`, `center` or `right` according
      * to the wrapper component.
      */
     align: {
@@ -85,7 +85,7 @@ export default {
       default: "left"
     },
     /**
-     * Show/hide the details display with the page selector 
+     * Show/hide the details display with the page selector
      * in the center of the two navigation buttons.
      */
     details: {
@@ -110,7 +110,7 @@ export default {
       default: 1
     },
     /**
-     * Sets the total number of items that are in the paginated list. 
+     * Sets the total number of items that are in the paginated list.
      * This has to be set higher than `0` to activate pagination.
      */
     total: {
@@ -235,9 +235,9 @@ export default {
           }
 
           /**
-           * Listening to the paginate event is the most straight 
-           * forward way to react to the pagination component. An object 
-           * with `page`, `start`, `end`, `limit` and `offset` items 
+           * Listening to the paginate event is the most straight
+           * forward way to react to the pagination component. An object
+           * with `page`, `start`, `end`, `limit` and `offset` items
            * is passed.
            */
           this.$emit("paginate", {

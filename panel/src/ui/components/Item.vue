@@ -7,6 +7,8 @@
     :data-has-label="Boolean(label)"
     :data-has-options="Boolean(options)"
     class="k-item"
+    tabindex="-1"
+    @click="onClick"
     @dragstart="onDragStart"
   >
     <!-- Figure -->
@@ -54,6 +56,7 @@
       <nav
         v-if="flag || options"
         class="k-item-buttons"
+        @click.stop
       >
         <!-- Flag -->
         <slot name="flag">
@@ -127,6 +130,9 @@ export default {
     }
   },
   methods: {
+    onClick() {
+      this.$emit("click", event);
+    },
     onDragStart(event) {
       this.$store.dispatch("drag", {
         type: "text",
@@ -153,6 +159,9 @@ export default {
   box-shadow: $shadow;
   display: grid;
   line-height: 1;
+}
+.k-item:focus {
+  outline: 0;
 }
 .k-item:focus-within {
   box-shadow: $shadow-outline;

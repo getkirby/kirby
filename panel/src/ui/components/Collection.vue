@@ -8,6 +8,7 @@
       :layout="layout"
       :sortable="sortable"
       @flag="onFlag"
+      @item="onItem"
       @option="onOption"
       @sort="onSort"
       @sortChange="onSortChange"
@@ -106,6 +107,9 @@ export default {
        * The flag icon for an item has been clicked
        */
       this.$emit("flag", item, itemIndex);
+    },
+    onItem(item, itemIndex) {
+      this.$emit("item", item, itemIndex);
     },
     onOption(option, item, itemIndex) {
       /**

@@ -25,7 +25,7 @@
 export default {
   props: {
     /**
-     * For better accessibility of icons, you can pass an additional 
+     * For better accessibility of icons, you can pass an additional
      * alt attribute like for images.
      */
     alt: String,
@@ -34,14 +34,14 @@ export default {
     */
     color: String,
     /**
-     * Like with the `k-image` component, you can set the background for 
-     * the icon. By default, the background is transparent.  
+     * Like with the `k-image` component, you can set the background for
+     * the icon. By default, the background is transparent.
      * Available options: `black`|`white`|`pattern`
      */
     back: String,
     /**
-     * By default the icon size is set to `1rem = 16px`, 
-     * which corresponds with the Panel font size. 
+     * By default the icon size is set to `1rem = 16px`,
+     * which corresponds with the Panel font size.
      * Additional sizes are: `regular`|`medium`|`large`
      */
     size: String,
@@ -102,6 +102,10 @@ export default {
 }
 .k-icon svg * {
   fill: currentColor;
+}
+.k-icon[data-size="small"] svg {
+  width: 14px;
+  height: 14px;
 }
 .k-icon[data-size="medium"] svg {
   width: 2rem;
