@@ -200,10 +200,6 @@ class System
             return true;
         }
 
-        if (Str::endsWith($host, '.dev') === true) {
-            return true;
-        }
-
         if (Str::endsWith($host, '.local') === true) {
             return true;
         }
