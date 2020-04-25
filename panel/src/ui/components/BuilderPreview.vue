@@ -1,23 +1,38 @@
 <template>
-  <iframe class="k-builder-preview bg-yellow" />
+  <k-drawer
+    ref="drawer"
+    :title="`Preview / ${field} / ${title}`"
+    flow="vertical"
+  >
+    <iframe class="k-builder-preview bg-yellow" />
+  </k-drawer>
 </template>
 
 <script>
 
 export default {
-  inheritAttrs: false,
   props: {
-    fieldset: {
-      type: Object,
-      default: () => {
-        return {};
-      }
-    },
-    block: {
-      type: Object,
-      default: () => {
-        return {};
-      }
+    field: String
+  },
+  data() {
+    return {
+      block: {},
+      fieldset: {}
+    };
+  },
+  computed: {
+    title() {
+      return this.$helper.string.template(
+        this.fieldset.label || this.fieldset.name || "",
+        this.block.value
+      );
+    }
+  },
+  methods: {
+    open(params) {
+      this.block = params.block;
+      this.fieldset = params.fieldset;
+      this.$refs.drawer.open();
     }
   }
 }

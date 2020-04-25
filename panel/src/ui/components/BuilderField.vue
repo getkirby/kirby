@@ -9,6 +9,7 @@
       :options="dragOptions"
       :list="blocks"
       element="k-grid"
+      class="k-builder-field-grid"
       style="--col-gap: .5rem; --row-gap: .25rem"
       @end="onSort"
     >
@@ -16,16 +17,15 @@
       <k-builder-block
         v-for="(block, blockIndex) in blocks"
         :key="blockIndex"
-        :ref="'block-' + blockIndex"
+        ref="block"
         v-model="block.value"
         v-bind="fieldsets[block.type]"
-        :index="blockIndex"
         :width="'1/' + columns"
-        @current="setCurrent(block, blockIndex + $event)"
         @input="onInput"
-        @insert="$refs.create.open()"
-        @remove="$refs.remove.open()"
-        @preview="$refs.preview.open()"
+        @duplicate="onDuplicate(block, blockIndex)"
+        @insert="openCreateDialog(blockIndex, $event)"
+        @remove="openRemoveDialog(blockIndex)"
+        @preview="openPreview(block)"
       />
 
       <!-- Add zone -->
@@ -33,10 +33,7 @@
         <k-empty
           layout="list"
           class="cursor-pointer flex justify-center"
-          @click="
-            setCurrent({}, blocks.length);
-            $refs.create.open();
-          "
+          @click="openCreateDialog(blocks.length)"
         >
           <k-button icon="add">Add block</k-button>
         </k-empty>
@@ -46,18 +43,13 @@
 
 
     <!-- Preview drawer -->
-    <k-drawer
-      ref="preview"
-      :title="'Preview / ' + previewTitle"
-      flow="vertical"
-    >
-      <k-builder-preview v-bind="current" />
-    </k-drawer>
+    <k-builder-preview :field="label" ref="preview" />
 
     <!-- Create dialog -->
     <k-dialog
       ref="create"
       :submitButton="false"
+      @close="closeCreateDialog"
     >
       <k-items
         :items="fieldsetItems"
@@ -70,6 +62,7 @@
     <k-remove-dialog
       ref="remove"
       text="Do you really want to delete this block?"
+      @close="closeRemoveDialog"
       @submit="onRemove"
     />
   </k-field>
@@ -108,10 +101,8 @@ export default {
   data() {
     return {
       blocks: this.value,
-      current: {
-        fieldset: {},
-        block: {}
-      }
+      createBlockIndex: null,
+      removeBlockIndex: null
     };
   },
   watch: {
@@ -137,50 +128,55 @@ export default {
           ]
         };
       });
-    },
-    previewTitle() {
-      if (this.current.fieldset.label) {
-        return this.$helper.string.template(
-          this.current.fieldset.label,
-          this.current.block.value
-        );
-      }
-
-      return this.current.fieldset.name;
     }
   },
   methods: {
+    closeCreateDialog() {
+      this.createBlockIndex = null;
+    },
+    closeRemoveDialog() {
+      this.removeBlockIndex = null;
+    },
+    onDuplicate(block, index) {
+      this.blocks = this.blocks.splice(index, 0, block);
+      this.onInput();
+    },
     onInput() {
       this.$emit("input", this.blocks);
     },
     onInsert(click, option) {
-      this.blocks = this.blocks.splice(this.current.index, 0, {
+      const index = this.createBlockIndex;
+      this.blocks.splice(index, 0, {
         type: option.fieldset,
         value: {}
       });
       this.$refs.create.close();
       this.onInput();
       this.$nextTick(() => {
-        let newBlock = this.$refs["block-" + this.current.index];
-        if (newBlock) {
-          newBlock[0].open();
-        }
+        this.$refs["block"][index].open();
       });
     },
     onRemove(index) {
-      this.blocks = this.blocks.splice(this.current.index, 1);
+      this.blocks = this.blocks.splice(this.removeBlockIndex, 1);
       this.$refs.remove.close();
       this.onInput();
     },
     onSort(event) {
       this.$emit("input", this.blocks);
     },
-    setCurrent(block, index) {
-      this.current = {
-        fieldset: this.fieldsets[block.type] || {},
+    openCreateDialog(index, offset = 0) {
+      this.createBlockIndex = index + offset;
+      this.$refs.create.open();
+    },
+    openPreview(block) {
+      this.$refs.preview.open({
         block: block,
-        index: index
-      };
+        fieldset: this.fieldsets[block.type] || {}
+      });
+    },
+    openRemoveDialog(index) {
+      this.removeBlockIndex = index;
+      this.$refs.remove.open();
     }
   }
 }
@@ -191,5 +187,13 @@ export default {
   display: flex;
   justify-content: space-between;
   align-content: center;
+}
+
+/**
+* Ugly fix because of .k-fieldset .k-grid rule
+*/
+.k-grid.k-builder-field-grid {
+  grid-column-gap: var(--col-gap) !important;
+  grid-row-gap: var(--row-gap) !important;
 }
 </style>

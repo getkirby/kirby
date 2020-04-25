@@ -45,7 +45,6 @@ export default {
   props: {
     name: String,
     label: String,
-    index: Number,
     fields: {
       type: Object,
       default: () => {
@@ -89,8 +88,11 @@ export default {
         },
         {
           icon: 'angle-down',
-          text: 'Insert below',
-          indexOffset: 1
+          text: 'Insert below'
+        },
+        {
+          icon: 'copy',
+          text: this.$t("duplicate")
         },
         '-',
         {
@@ -112,8 +114,6 @@ export default {
       this.$emit("input", this.block);
     },
     onOption(option) {
-      this.$emit("current", option.indexOffset || 0);
-
       switch(option.icon) {
         case "preview":
           this.$emit("preview");
@@ -122,10 +122,13 @@ export default {
           this.open();
           break;
         case "angle-up":
-          this.$emit("insert");
+          this.$emit("insert", 0);
           break;
         case "angle-down":
-          this.$emit("insert");
+          this.$emit("insert", 1);
+          break;
+        case "copy":
+          this.$emit("duplicate");
           break;
         case "trash":
           this.$emit("remove");
@@ -134,9 +137,6 @@ export default {
     },
     open() {
       this.isOpen = true;
-      this.$nextTick(() => {
-        this.$refs.fieldset.focus();
-      });
     },
     toggle() {
       if (this.isOpen) {
