@@ -3,6 +3,7 @@
     <article class="bg-white shadow px-2px rounded-sm">
       <header class="flex items-center cursor-pointer" @click="toggle">
         <!-- Sort handle -->
+        <k-icon :type="icon" class="k-builder-block-icon k-sort-handle" />
         <k-sort-handle class="k-builder-block-sort-handle" />
 
         <!-- Title -->
@@ -46,6 +47,10 @@ export default {
     name: String,
     label: String,
     more: Boolean,
+    icon: {
+      type: String,
+      default: "dashboard"
+    },
     fields: {
       type: Object,
       default: () => {
@@ -154,8 +159,18 @@ export default {
 </script>
 
 <style lang="scss">
-.k-builder-block-sort-handle {
+.k-builder-block-icon {
   border-right: 1px solid $color-background;
+}
+.k-builder-block:hover .k-builder-block-icon {
+  display: none;
+}
+.k-builder-block-sort-handle.k-sort-handle {
+  display: none;
+  border-right: 1px solid $color-background;
+}
+.k-builder-block:hover .k-builder-block-sort-handle {
+  display: flex;
 }
 .k-builder-block-title {
   flex-grow: 1;
