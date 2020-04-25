@@ -12,106 +12,152 @@ import BuilderField from "./BuilderField.vue";
 # Builder Field
 ### `<k-builder-field>`
 
-<Preview>
-  <Story name="Simple">
-    {{
-      data() {
-        return {
-          value: [
-            {
-              type: "headline",
-              value: {
-                headline: "Welcome to the Builder Field!"
-              }
-            },
-            {
-              type: "text",
-              value: {}
+export function regular() {
+  return {
+    data() {
+      return {
+        value: [
+          {
+            type: "headline",
+            value: {
+              headline: "Welcome to the Builder Field!"
             }
-          ],
-        };
-      },
-      computed: {
-        fieldsets() {
-          return {
-            headline: {
-              name: "Headline",
-              label: "Headline: \"{{ headline }}\"",
-              fields: {
-                headline: {
-                  label: "Headline",
-                  type: "text"
-                }
+          },
+          {
+            type: "text",
+            value: {}
+          }
+        ],
+      };
+    },
+    computed: {
+      fieldsets() {
+        return {
+          headline: {
+            name: "Headline",
+            label: "Headline: \"{{ headline }}\"",
+            fields: {
+              headline: {
+                label: "Headline",
+                type: "text"
               }
-            },
-            text: {
-              name: "Text block",
-              fields: {
-                text: {
-                  label: "Content",
-                  type: "textarea"
-                }
+            }
+          },
+          text: {
+            name: "Text block",
+            fields: {
+              text: {
+                label: "Content",
+                type: "textarea"
               }
-            },
-            nested: {
-              name: "Nested",
-              fields: {
-                builder: {
-                  label: "Another builder",
-                  type: "builder",
-                  columns: 2,
-                  fieldsets: {
-                    teaser: {
-                      name: "Teaser",
-                      fields: {
-                        text: {
-                          type: "text"
-                        }
+            }
+          },
+          nested: {
+            name: "Nested",
+            fields: {
+              builder: {
+                label: "Another builder",
+                type: "builder",
+                columns: 2,
+                fieldsets: {
+                  teaser: {
+                    name: "Teaser",
+                    fields: {
+                      text: {
+                        type: "text"
                       }
                     }
-                  },
-                  value: []
-                }
-              }
-            },
-            related: {
-              name: "Related content",
-              fields: {
-                categories: {
-                  label: "Categories",
-                  type: "multiselect",
-                  options: [
-                    { value: "study", text: "Study" },
-                    { value: "research", text: "Research" },
-                    { value: "news", text: "News" }
-                  ],
-                  width: "1/2"
+                  }
                 },
-                max: {
-                  label: "Maximum items",
-                  type: "number",
-                  min: 0,
-                  max: 10,
-                  default: 4,
-                  width: "1/2"
-                }
+                value: []
               }
             }
-          };
-        }
-      },
+          },
+          related: {
+            name: "Related content",
+            fields: {
+              categories: {
+                label: "Categories",
+                type: "multiselect",
+                options: [
+                  { value: "study", text: "Study" },
+                  { value: "research", text: "Research" },
+                  { value: "news", text: "News" }
+                ],
+                width: "1/2"
+              },
+              max: {
+                label: "Maximum items",
+                type: "number",
+                min: 0,
+                max: 10,
+                default: 4,
+                width: "1/2"
+              }
+            }
+          }
+        };
+      }
+    },
+    template: `
+      <div>
+        <k-builder-field
+          :fieldsets="fieldsets"
+          :value="value"
+          label="Builder"
+          class="mb-8"
+        />
+        <k-headline class="mb-3">Value</k-headline>
+        <k-code-block :code="value" />
+      </div>
+    `,
+  };
+};
+
+<Preview>
+  <Story name="Simple">
+    { regular() }
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Disabled">
+    {{
+      ...regular(),
       template: `
-        <div>
-          <k-builder-field
-            :fieldsets="fieldsets"
-            :value="value"
-            label="Builder"
-            class="mb-8"
-          />
-          <k-headline class="mb-3">Value</k-headline>
-          <k-code-block :code="value" />
-        </div>
-      `,
+      <div>
+        <k-builder-field
+          :fieldsets="fieldsets"
+          :value="value"
+          :disabled="true"
+          label="Builder"
+          class="mb-8"
+        />
+        <k-headline class="mb-3">Value</k-headline>
+        <k-code-block :code="value" />
+      </div>
+    `,
+    }}
+  </Story>
+</Preview>
+
+<Preview>
+  <Story name="Max">
+    {{
+      extends: regular(),
+      template: `
+      <div>
+        <k-builder-field
+          :fieldsets="fieldsets"
+          :value="value"
+          :max="3"
+          label="Builder"
+          class="mb-8"
+        />
+        <k-headline class="mb-3">Value</k-headline>
+        <k-code-block :code="value" />
+      </div>
+    `,
     }}
   </Story>
 </Preview>

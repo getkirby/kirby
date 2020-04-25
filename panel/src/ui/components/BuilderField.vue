@@ -20,6 +20,7 @@
         ref="block"
         v-model="block.value"
         v-bind="fieldsets[block.type]"
+        :more="more"
         :width="'1/' + columns"
         @input="onInput"
         @duplicate="onDuplicate(block, blockIndex)"
@@ -29,7 +30,7 @@
       />
 
       <!-- Add zone -->
-      <k-column :width="'1/' + columns" slot="footer">
+      <k-column v-if="more" :width="'1/' + columns" slot="footer">
         <k-empty
           layout="list"
           class="cursor-pointer flex justify-center"
@@ -91,6 +92,10 @@ export default {
         return {};
       }
     },
+    /**
+     * Maximum number of blocks
+     */
+    max: Number,
     value: {
       type: Array,
       default() {
@@ -128,7 +133,18 @@ export default {
           ]
         };
       });
-    }
+    },
+    more() {
+      if (this.disabled === true) {
+        return false;
+      }
+
+      if (this.max && this.blocks.length >= this.max) {
+        return false;
+      }
+
+      return true;
+    },
   },
   methods: {
     closeCreateDialog() {

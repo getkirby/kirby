@@ -45,6 +45,7 @@ export default {
   props: {
     name: String,
     label: String,
+    more: Boolean,
     fields: {
       type: Object,
       default: () => {
@@ -84,15 +85,18 @@ export default {
         '-',
         {
           icon: 'angle-up',
-          text: 'Insert above'
+          text: 'Insert above',
+          disabled: !this.more
         },
         {
           icon: 'angle-down',
-          text: 'Insert below'
+          text: 'Insert below',
+          disabled: !this.more
         },
         {
           icon: 'copy',
-          text: this.$t("duplicate")
+          text: this.$t("duplicate"),
+          disabled: !this.more
         },
         '-',
         {
