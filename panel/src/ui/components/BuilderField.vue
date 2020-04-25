@@ -10,7 +10,7 @@
       :list="blocks"
       element="k-grid"
       class="k-builder-field-grid"
-      style="--col-gap: .5rem; --row-gap: .25rem"
+      :style="`--columns: ${columns};`"
       @end="onSort"
     >
       <!-- Blocks -->
@@ -21,7 +21,6 @@
         v-model="block.value"
         v-bind="fieldsets[block.type]"
         :more="more"
-        :width="'1/' + columns"
         @input="onInput"
         @duplicate="onDuplicate(block, blockIndex)"
         @insert="openCreateDialog(blockIndex, $event)"
@@ -30,18 +29,16 @@
       />
 
       <!-- Add zone -->
-      <k-column v-if="more" :width="'1/' + columns" slot="footer">
-        <k-empty
-          layout="list"
-          class="cursor-pointer flex justify-center"
-          @click="openCreateDialog(blocks.length)"
-        >
-          <k-button icon="add">Add block</k-button>
-        </k-empty>
-      </k-column>
-
+      <k-empty
+        v-if="more"
+        slot="footer"
+        layout="list"
+        class="cursor-pointer flex justify-center"
+        @click="openCreateDialog(blocks.length)"
+      >
+        <k-button icon="add">Add block</k-button>
+      </k-empty>
     </k-draggable>
-
 
     <!-- Preview drawer -->
     <k-builder-preview :field="label" ref="preview" />
@@ -125,8 +122,7 @@ export default {
       return Object.keys(this.fieldsets).map(key => {
         return {
           title: this.fieldsets[key].name || this.fieldsets[key].label,
-          icon: false,
-          image: false,
+          icon: { type: this.fieldsets[key].icon || "dashboard" },
           fieldset: key,
           options: [
             { icon: "add", text: "Add" }
@@ -177,7 +173,7 @@ export default {
       this.$refs.remove.close();
       this.onInput();
     },
-    onSort(event) {
+    onSort() {
       this.$emit("input", this.blocks);
     },
     openCreateDialog(index, offset = 0) {
@@ -209,6 +205,9 @@ export default {
 * Ugly fix because of .k-fieldset .k-grid rule
 */
 .k-grid.k-builder-field-grid {
+  --col-gap: .5rem;
+  --row-gap: .5rem;
+  align-items: start;
   grid-column-gap: var(--col-gap) !important;
   grid-row-gap: var(--row-gap) !important;
 }

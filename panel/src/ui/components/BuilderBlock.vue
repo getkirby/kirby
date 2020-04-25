@@ -1,6 +1,5 @@
 <template>
-  <k-column :width="width" class="k-builder-block">
-    <article class="bg-white shadow px-2px rounded-sm">
+    <article class="k-builder-block bg-white shadow px-2px rounded-sm">
       <header class="flex items-center cursor-pointer" @click="toggle">
         <!-- Sort handle -->
         <k-icon
@@ -40,7 +39,6 @@
       </footer>
 
     </article>
-  </k-column>
 </template>
 
 <script>
