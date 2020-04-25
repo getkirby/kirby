@@ -14,7 +14,18 @@ export default {
   },
   template(string, object) {
     [...string.matchAll(/{{(.*?)}}/ig)].forEach(match => {
-      string = string.replace(match[0], object[match[1].trim()] || "");
+      const key = match[1].trim();
+      let value = object[key] || "";
+
+      if (Array.isArray(value)) {
+        value = value.map(el => {
+          return el.text || el.label || el.value || el;
+        }).join(", ");
+      } else if (typeof value === 'object') {
+        value = value.text || value.label || value.value;
+      }
+
+      string = string.replace(match[0], value);
     })
 
     return string;
