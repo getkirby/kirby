@@ -27,7 +27,7 @@
 
       <footer
         v-if="isOpen"
-        class="k-builder-block-fields bg-background p-4"
+        class="k-builder-block-fields bg-background pt-6 pb-8 px-10"
       >
         <!-- Fields -->
         <k-fieldset
