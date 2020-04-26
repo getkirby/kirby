@@ -21,10 +21,10 @@ Steps to reproduce the behavior:
 <!-- If applicable, add screenshots to help explain your problem. -->
 
 **Kirby Version**  
-<!-- Add the Kirby version you are using. You can find the version number in `kirby/composer.json` or in the  settings view of the panel. -->
+<!-- Add the Kirby version you are using. You can find the version number in `kirby/composer.json` or in the settings view of the Panel. -->
 
 **Console output**  
-<!-- If you are working with the panel, please check the browser console for errors and send the output. -->
+<!-- If you are working with the Panel, please check the browser console for errors and send the output. -->
 
 **Desktop (please complete the following information):**  
  - OS: <!-- e.g. macOS -->
