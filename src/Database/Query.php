@@ -30,8 +30,9 @@ class Query
 
     /**
      * The object which should be fetched for each row
+     * or function to call for each row
      *
-     * @var string
+     * @var string|\Closure
      */
     protected $fetch = 'Kirby\Toolkit\Obj';
 
@@ -219,13 +220,14 @@ class Query
     }
 
     /**
-     * Sets the object class, which should be fetched
-     * Set this to array to get a simple array instead of an object
+     * Sets the object class, which should be fetched;
+     * set this to `'array'` to get a simple array instead of an object;
+     * pass a function that receives the `$data` and the `$key` to generate arbitrary data structures
      *
-     * @param string $fetch
+     * @param string|\Closure $fetch
      * @return \Kirby\Database\Query
      */
-    public function fetch(string $fetch)
+    public function fetch($fetch)
     {
         $this->fetch = $fetch;
         return $this;
