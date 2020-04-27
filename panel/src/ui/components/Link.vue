@@ -29,16 +29,16 @@ export default {
   mixins: [tab],
   props: {
     /**
-     * Disabled links will have no pointer events and cannot be 
+     * Disabled links will have no pointer events and cannot be
      * clicked or focused.
      */
     disabled: Boolean,
     rel: String,
     tabindex: [String, Number],
-    target: String,
+    target: [String, Boolean],
     title: String,
     /**
-     * The path or absolute URL for the link. 
+     * The path or absolute URL for the link.
      * Can also be a callback function.
      */
     to: [String, Function],
