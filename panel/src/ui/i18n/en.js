@@ -45,6 +45,7 @@ export default {
   "revert": "Revert",
   "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
   "save": "Save",
+  "search": "Search",
   "today": "Today",
   "toolbar.button.bold": "Bold",
   "toolbar.button.code": "Code",

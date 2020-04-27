@@ -26,6 +26,9 @@ export default {
     Vue.prototype.$router = {
       push(path) {
         alert("$router.push('" + path + "')");
+      },
+      options: {
+        url: null
       }
     };
 
