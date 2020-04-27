@@ -161,19 +161,17 @@ export default {
 </script>
 
 <style lang="scss">
-.k-builder-block-icon {
+.k-builder-block-icon,
+.k-builder-block-sort-handle {
   border-right: 1px solid $color-background;
 }
-.k-builder-block:hover .k-builder-block-icon {
+.k-builder-block header:hover .k-builder-block-icon {
   display: none;
-}
-.k-builder-block-sort-handle.k-sort-handle {
-  border-right: 1px solid $color-background;
 }
 .k-builder-block-icon + .k-builder-block-sort-handle.k-sort-handle  {
   display: none;
 }
-.k-builder-block:hover .k-builder-block-sort-handle {
+.k-builder-block header:hover .k-builder-block-sort-handle {
   display: flex;
 }
 .k-builder-block-title {
@@ -181,5 +179,8 @@ export default {
 }
 .k-builder-block-fields {
   border-bottom: 2px solid $color-white;
+}
+.k-builder-block .k-builder-block {
+  box-shadow: none;
 }
 </style>
