@@ -44,9 +44,10 @@ export default {
   line-height: 0;
 }
 .k-aspect-ratio::before {
+  --ratioCalculated: calc(var(--ratio));
   content: "";
   display: block;
-  padding-bottom: #{"calc(100% / (var(--ratio)))"};
+  padding-bottom: calc(100% / var(--ratioCalculated));
 }
 .k-aspect-ratio > * {
   position: absolute;
