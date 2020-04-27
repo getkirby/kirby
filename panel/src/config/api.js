@@ -6,6 +6,18 @@ import store from "@/store/store.js";
 Api.config.endpoint = config.api;
 Api.requests = [];
 
+Api.config.onPrepare = (options) => {
+  // if language set, add to headers
+  if (store.state.languages.current) {
+    options.headers["x-language"] = store.state.languages.current.code;
+  }
+
+  // add the csrf token to every request
+  options.headers["x-csrf"] = window.panel.csrf;
+
+  return options;
+};
+
 Api.config.onStart = (requestId, silent) => {
   if (silent === false) {
     store.dispatch("isLoading", true);

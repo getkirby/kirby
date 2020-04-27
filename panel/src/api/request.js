@@ -1,5 +1,4 @@
 import api from "./api.js";
-import store from "@/store/store.js";
 
 export default {
   running: 0,
@@ -21,13 +20,8 @@ export default {
       options.method = 'POST';
     }
 
-    // if language set, add to headers
-    if (store.state.languages.current) {
-      options.headers["x-language"] = store.state.languages.current.code;
-    }
-
-    // add the csrf token to every request
-    options.headers["x-csrf"] = window.panel.csrf;
+    // CMS specific options via callbacl
+    options = api.config.onPrepare(options);
 
     // create a request id
     const id = path + "/" + JSON.stringify(options);
