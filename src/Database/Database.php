@@ -559,6 +559,11 @@ class Database
             }
         }
 
+        // update cache
+        if (in_array($table, $this->tableWhitelist) !== true) {
+            $this->tableWhitelist[] = $table;
+        }
+
         return true;
     }
 
@@ -571,7 +576,17 @@ class Database
     public function dropTable($table): bool
     {
         $sql = $this->sql()->dropTable($table);
-        return $this->execute($sql['query'], $sql['bindings']);
+        if ($this->execute($sql['query'], $sql['bindings']) !== true) {
+            return false;
+        }
+
+        // update cache
+        $key = array_search($this->tableWhitelist, $table);
+        if ($key !== false) {
+            unset($this->tableWhitelist[$key]);
+        }
+
+        return true;
     }
 
     /**
