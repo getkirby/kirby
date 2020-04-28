@@ -230,7 +230,7 @@ class Database
     }
 
     /**
-     * Sets the exception mode for the next query
+     * Sets the exception mode
      *
      * @param bool $fail
      * @return \Kirby\Database\Database
@@ -394,9 +394,6 @@ class Database
             'bindings' => $bindings,
             'error'    => $this->lastError
         ]);
-
-        // reset some stuff
-        $this->fail = false;
 
         // return true or false on success or failure
         return $this->lastError === null;
