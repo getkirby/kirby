@@ -57,7 +57,7 @@ export default {
   },
   methods: {
     onOption(option) {
-      this.$emit("option", option);
+      this.$emit("option", option.option || option.click, option);
     }
   }
 }

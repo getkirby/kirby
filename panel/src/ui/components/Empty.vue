@@ -29,7 +29,7 @@ export default {
   },
   computed: {
     element() {
-      return this.$listeners["click"] ? "button" : "div";
+      return this.$listeners["click"] !== undefined ? "button" : "div";
     }
   }
 };

@@ -1,0 +1,115 @@
+import { Meta, Props, Preview, Story } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import EmptyItems from "./EmptyItems.vue";
+
+<Meta
+  title="UI | Data / Empty Items"
+  component={EmptyItems}
+  decorators={[Padding]}
+/>
+
+# Empty Items
+### `<k-empty-items>`
+
+```html
+<k-empty-items />
+```
+
+## List
+
+<Preview>
+  <Story name="List">
+    {{
+      template: `
+        <k-empty-items />
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={EmptyItems} />
+
+## List with info
+
+<Preview>
+  <Story name="List with info">
+    {{
+      template: `
+        <k-empty-items :info="true" />
+      `
+    }}
+  </Story>
+</Preview>
+
+## Cardlets
+
+<Preview>
+  <Story name="Cardlets">
+    {{
+      template: `
+        <k-empty-items layout="cardlet" />
+      `
+    }}
+  </Story>
+</Preview>
+
+## Cardlets with info
+
+<Preview>
+  <Story name="Cardlets with info">
+    {{
+      template: `
+        <k-empty-items
+          :info="true"
+          layout="cardlet"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+## Cards
+
+<Preview>
+  <Story name="Cards">
+    {{
+      template: `
+        <k-empty-items layout="card" />
+      `
+    }}
+  </Story>
+</Preview>
+
+## Cards with info
+
+<Preview>
+  <Story name="Cards with info">
+    {{
+      template: `
+        <k-empty-items
+          :info="true"
+          layout="card"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+## Cards with custom ratio
+
+<Preview>
+  <Story name="Cards with ratio">
+    {{
+      template: `
+        <k-empty-items
+          layout="card"
+          ratio="3/2"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+## CSS class
+
+`.k-empty-items`

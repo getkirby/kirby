@@ -1,11 +1,12 @@
 <template>
   <article
-    :class="layout ? 'k-' + layout + '-item' : false"
+    :class="[layout ? 'k-' + layout + '-item' : false, className]"
     :data-has-flag="Boolean(flag)"
     :data-has-figure="Boolean(image) || Boolean(icon)"
     :data-has-info="Boolean(info)"
     :data-has-label="Boolean(label)"
     :data-has-options="Boolean(options)"
+    :style="styles"
     class="k-item"
     tabindex="-1"
     @click="onClick"
@@ -87,6 +88,7 @@
 export default {
   inheritAttrs: false,
   props: {
+    className: String,
     dragText: String,
     flag: {
       type: [Boolean, Object],
@@ -100,7 +102,7 @@ export default {
       type: [Object, Boolean],
       default: true,
     },
-    info: String,
+    info: [Boolean, String],
     layout: {
       type: String,
       default: "list",
@@ -118,6 +120,7 @@ export default {
       type: Boolean,
       default: false
     },
+    styles: [String, Object],
     target: {
       type: [Boolean, String],
     },

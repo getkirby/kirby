@@ -1,6 +1,7 @@
 import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
 import { action } from "@storybook/addon-actions";
 import Padding from "../storybook/Padding.js";
+import items from "../storybook/Items.js";
 import Collection from "./Collection.vue";
 
 <Meta
@@ -38,20 +39,7 @@ import Collection from "./Collection.vue";
       },
       computed: {
         items() {
-          return [...Array(10).keys()].map(item => {
-            return {
-              title: "List item no. " + (item + this.start),
-              info: "List item info",
-              link: "https://getkirby.com",
-              image: {
-                url: "https://source.unsplash.com/user/erondu/1600x900?" + (item + this.start)
-              },
-              options: [
-                { icon: "edit", text: "Edit", click: "edit" },
-                { icon: "trash", text: "Delete", click: "delete" }
-              ]
-            };
-          });
+          return items(10, this.start);
         }
       },
       methods: {
@@ -66,6 +54,102 @@ import Collection from "./Collection.vue";
           :pagination="pagination"
           :sortable="true"
           @paginate="onPaginate"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### List empty
+<Preview>
+  <Story name="List empty">
+    {{
+      methods: {
+        onEmpty: action("empty")
+      },
+      template: `
+        <k-collection @empty="onEmpty" />
+      `
+    }}
+  </Story>
+</Preview>
+
+### List custom empty
+<Preview>
+  <Story name="List custom empty">
+    {{
+      methods: {
+        onEmpty: action("empty")
+      },
+      template: `
+        <k-collection
+          :empty="{
+            icon: 'add',
+            text: 'Add the first item …'
+          }"
+          @empty="onEmpty"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### List loading
+<Preview>
+  <Story name="List loading">
+    {{
+      computed: {
+        items() {
+          return items(10);
+        }
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :loading="true"
+          :pagination="{ total: 230 }"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### List loading with limit
+<Preview>
+  <Story name="List loading with limit">
+    {{
+      computed: {
+        items() {
+          return items(10);
+        }
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :loader="{ limit: 5 }"
+          :loading="true"
+          :pagination="{ total: 230 }"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### List loading with info
+<Preview>
+  <Story name="List loading with info">
+    {{
+      computed: {
+        items() {
+          return items(10);
+        }
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :loader="{ info: true }"
+          :loading="true"
+          :pagination="{ total: 230 }"
         />
       `
     }}
@@ -87,20 +171,7 @@ import Collection from "./Collection.vue";
       },
       computed: {
         items() {
-          return [...Array(10).keys()].map(item => {
-            return {
-              title: "List item no. " + (item + this.start),
-              info: "List item info",
-              link: "https://getkirby.com",
-              image: {
-                url: "https://source.unsplash.com/user/erondu/1600x900?" + (item + this.start)
-              },
-              options: [
-                { icon: "edit", text: "Edit", click: "edit" },
-                { icon: "trash", text: "Delete", click: "delete" }
-              ]
-            };
-          });
+          return items(10, this.start);
         }
       },
       methods: {
@@ -122,6 +193,109 @@ import Collection from "./Collection.vue";
   </Story>
 </Preview>
 
+### Cardlets empty
+<Preview>
+  <Story name="Cardlets empty">
+    {{
+      methods: {
+        onEmpty: action("empty")
+      },
+      template: `
+        <k-collection
+          layout="cardlets"
+          @empty="onEmpty"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cardlets custom empty
+<Preview>
+  <Story name="Cardlets custom empty">
+    {{
+      methods: {
+        onEmpty: action("empty")
+      },
+      template: `
+        <k-collection
+          :empty="{
+            icon: 'add',
+            text: 'Add the first item …'
+          }"
+          layout="cardlets"
+          @empty="onEmpty"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cardlets loading
+<Preview>
+  <Story name="Cardlets loading">
+    {{
+      computed: {
+        items() {
+          return items(10);
+        }
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :loading="true"
+          :pagination="{ total: 230 }"
+          layout="cardlets"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cardlets loading with limit
+<Preview>
+  <Story name="Cardlets loading with limit">
+    {{
+      computed: {
+        items() {
+          return items(10);
+        }
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :loader="{ limit: 5 }"
+          :loading="true"
+          :pagination="{ total: 230 }"
+          layout="cardlets"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cardlets loading with info
+<Preview>
+  <Story name="Cardlets loading with info">
+    {{
+      computed: {
+        items() {
+          return items(10);
+        }
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :loader="{ info: true }"
+          :loading="true"
+          :pagination="{ total: 230 }"
+          layout="cardlets"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
 ### Cards
 <Preview>
   <Story name="Cards">
@@ -137,20 +311,7 @@ import Collection from "./Collection.vue";
       },
       computed: {
         items() {
-          return [...Array(10).keys()].map(item => {
-            return {
-              title: "List item no. " + (item + this.start),
-              info: "List item info",
-              link: "https://getkirby.com",
-              image: {
-                url: "https://source.unsplash.com/user/erondu/1600x900?" + (item + this.start)
-              },
-              options: [
-                { icon: "edit", text: "Edit", click: "edit" },
-                { icon: "trash", text: "Delete", click: "delete" }
-              ]
-            };
-          });
+          return items(10, this.start);
         }
       },
       methods: {
@@ -172,6 +333,108 @@ import Collection from "./Collection.vue";
   </Story>
 </Preview>
 
+### Cards empty
+<Preview>
+  <Story name="Cards empty">
+    {{
+      methods: {
+        onEmpty: action("empty")
+      },
+      template: `
+        <k-collection
+          layout="cards"
+          @empty="onEmpty"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cards custom empty
+<Preview>
+  <Story name="Cards custom empty">
+    {{
+      methods: {
+        onEmpty: action("empty")
+      },
+      template: `
+        <k-collection
+          :empty="{
+            icon: 'add',
+            text: 'Add the first item …'
+          }"
+          layout="cards"
+          @empty="onEmpty"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cards loading
+<Preview>
+  <Story name="Cards loading">
+    {{
+      computed: {
+        items() {
+          return items(10);
+        }
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :loading="true"
+          :pagination="{ total: 230 }"
+          layout="cards"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cards loading with limit
+<Preview>
+  <Story name="Cards loading with limit">
+    {{
+      computed: {
+        items() {
+          return items(10);
+        }
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :loader="{ limit: 5 }"
+          :loading="true"
+          :pagination="{ total: 230 }"
+          layout="cards"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cards loading with info
+<Preview>
+  <Story name="Cards loading with info">
+    {{
+      computed: {
+        items() {
+          return items(10);
+        }
+      },
+      template: `
+        <k-collection
+          :items="items"
+          :loader="{ info: true }"
+          :loading="true"
+          :pagination="{ total: 230 }"
+          layout="cards"
+        />
+      `
+    }}
+  </Story>
+</Preview>
 
 ## CSS class
 

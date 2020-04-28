@@ -12,7 +12,7 @@ export default {
      * Help text to be displayed below the collection in grey.
      */
     help: String,
-    load: {
+    items: {
       type: Function,
       default() {
         return async ({ page, limit }) => {
@@ -28,6 +28,16 @@ export default {
       default: "list"
     },
     /**
+     * Settings for the empty loading state.
+     * See EmptyItems for available options
+     */
+    loader: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    /**
      * Allow manual sorting via drag-and-drop
      */
     sortable: Boolean,
@@ -39,16 +49,18 @@ export default {
     }
   },
   watch: {
-    load: {
+    items: {
       handler() {
-        return this.fetch();
+        return this.load();
       },
       immediate: true
     }
   },
   data() {
     return {
-      items: [],
+      data: [],
+      loading: true,
+      loadingTimeout: false,
       limit: 10,
       page: 1,
       total: 0
@@ -57,12 +69,18 @@ export default {
   computed: {
     collection() {
       return {
-        items: this.items,
+        help: this.help,
+        items: this.data,
+        layout: this.layout,
+        loader: this.loader,
+        loading: this.loading,
         pagination: {
+          ...this.pagination,
           page: this.page,
           limit: this.limit,
           total: this.total
-        }
+        },
+        sortable: this.sortable
       };
     },
     listeners() {
@@ -71,19 +89,36 @@ export default {
         paginate: (pagination) => {
           this.page  = pagination.page;
           this.limit = pagination.limit;
-          this.fetch();
+          this.$emit("paginate", pagination);
+          this.load();
         }
       };
     }
   },
   methods: {
-    fetch() {
+    startLoading() {
+      clearTimeout(this.loadingTimeout);
+      this.loadingTimeout = setTimeout(() => {
+        this.loading = true;
+      }, 150);
+    },
+    stopLoading() {
+      clearTimeout(this.loadingTimeout);
+      this.loading = false;
+    },
+    load() {
+      this.startLoading();
       this
-        .load({ page: this.page, limit: this.limit })
+        .items({ page: this.page, limit: this.limit })
         .then(result => {
-          this.total = result.pagination.total;
-          this.items = result.data;
+          this.total   = result.pagination.total;
+          this.data    = result.data;
+          this.stopLoading();
         })
+    },
+    reload() {
+      this.data = [];
+      this.load();
     }
   }
 };

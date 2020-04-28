@@ -18,6 +18,7 @@ export default {
   "field.structure.delete.confirm": "Do you really want to delete this row?",
   "field.structure.empty": "No entries yet",
   "insert": "Insert",
+  "items.empty": "No results",
   "link": "Link",
   "link.text": "Link text",
   "lock.unsaved": "Unsaved changes",

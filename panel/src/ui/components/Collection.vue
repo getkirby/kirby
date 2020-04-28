@@ -1,18 +1,43 @@
 <template>
   <div
     :data-layout="layout"
+    :data-loading="loading"
     class="k-collection"
   >
-    <k-items
-      :items="items"
-      :layout="layout"
-      :sortable="sortable"
-      @flag="onFlag"
-      @item="onItem"
-      @option="onOption"
-      @sort="onSort"
-      @sortChange="onSortChange"
-    />
+    <template v-if="loading">
+      <slot name="loading">
+        <k-empty-items
+          v-bind="loader"
+          :layout="layout"
+          :limit="loader.limit || pagination.limit"
+        />
+      </slot>
+    </template>
+    <template v-else-if="items.length">
+      <k-items
+        :items="items"
+        :layout="layout"
+        :sortable="sortable"
+        @flag="onFlag"
+        @item="onItem"
+        @option="onOption"
+        @sort="onSort"
+        @sortChange="onSortChange"
+      />
+    </template>
+    <template v-else>
+      <slot name="empty">
+        <k-empty
+          :layout="layout"
+          :icon="empty.icon || 'page'"
+          v-on="{
+            click: $listeners['empty'] || false
+          }"
+        >
+          {{ empty.text || $t('items.empty') }}
+        </k-empty>
+      </slot>
+    </template>
     <footer
       v-if="hasFooter"
       class="k-collection-footer"
@@ -37,6 +62,15 @@
 <script>
 export default {
   props: {
+    empty: {
+      type: Object,
+      default() {
+        return {
+          icon: "page",
+          text: this.$t("items.empty")
+        };
+      }
+    },
     /**
      * Help text to be displayed below the collection in grey.
      */
@@ -53,6 +87,23 @@ export default {
     layout: {
       type: String,
       default: "list"
+    },
+    /**
+     * Settings for the empty loading state.
+     * See EmptyItems for available options
+     */
+    loader: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    /**
+     * Enable/disable the loading state of the collection
+     */
+    loading: {
+      type: Boolean,
+      default: false,
     },
     /**
      * Allow manual sorting via drag-and-drop
@@ -160,5 +211,11 @@ export default {
 .k-collection-pagination .k-pagination .k-button {
   padding: .5rem .75rem;
   line-height: 1.125rem;
+}
+.k-collection[data-loading] {
+  cursor: wait;
+}
+.k-collection[data-loading] * {
+  pointer-events: none;
 }
 </style>

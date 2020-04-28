@@ -4,6 +4,9 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: currentColor;
 }
 
 :root {
@@ -77,6 +80,11 @@ li {
 strong,
 b {
   font-weight: $font-bold;
+}
+
+hr {
+  border-top-width: 1px;
+  border-color: $color-border;
 }
 
 .fade-enter-active,
