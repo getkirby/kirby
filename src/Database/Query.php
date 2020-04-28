@@ -814,10 +814,16 @@ class Query
      */
     public function column($column)
     {
-        $sql        = $this->database->sql();
-        $primaryKey = $sql->combineIdentifier($this->table, $this->primaryKeyName);
+        // if there isn't already an explicit order, order by the primary key
+        // instead of the column that was requested (which would be implied otherwise)
+        if ($this->order === null) {
+            $sql        = $this->database->sql();
+            $primaryKey = $sql->combineIdentifier($this->table, $this->primaryKeyName);
 
-        $results = $this->query($this->select([$column])->order($primaryKey . ' ASC')->build('select'), [
+            $this->order($primaryKey . ' ASC');
+        }
+
+        $results = $this->query($this->select([$column])->build('select'), [
             'iterator' => 'array',
             'fetch'    => 'array',
         ]);
