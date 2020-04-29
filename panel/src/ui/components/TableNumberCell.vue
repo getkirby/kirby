@@ -4,7 +4,7 @@ import TableTextCell from "./TableTextCell.vue";
 export default {
   extends: TableTextCell,
   props: {
-    value: Number
+    value: [Number, String]
   },
   computed: {
     align() {
