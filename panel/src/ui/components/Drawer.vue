@@ -3,25 +3,32 @@
     <div
       :dir="$direction"
       :data-flow="flow"
-      class="k-drawer"
+      class="k-drawer fixed flex items-center justify-end"
       @click="cancel"
     >
       <div
         ref="box"
-        class="k-drawer-box"
+        class="k-drawer-box relative flex"
         @click.stop
       >
-        <header class="k-drawer-header">
+        <header class="k-drawer-header flex items-center justify-between mb-2">
           <h2 class="k-drawer-title">
             {{ title }}
           </h2>
 
-          <k-button
-            icon="cancel"
-            @click="close()"
-          />
+          <slot name="context" />
+
+          <div class="px-6">
+            <slot name="options">
+              <k-button
+                icon="cancel"
+                @click="close()"
+                class
+              />
+            </slot>
+          </div>
         </header>
-        <div class="k-drawer-body">
+        <div class="k-drawer-body p-6">
           <slot />
         </div>
       </div>
@@ -49,7 +56,6 @@ export default {
 
 <style lang="scss">
 .k-drawer {
-  position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
@@ -57,20 +63,15 @@ export default {
   width: 100%;
   height: 100%;
   border: 0;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
   z-index: z-index(drawer);
   transform: translate3d(0, 0, 0);
-  background: rgba($color-black, .05);
+  background: rgba($color-black, 0.05);
 }
 .k-drawer[data-flow="vertical"] {
   flex-direction: column;
 }
 
 .k-drawer-box {
-  position: relative;
-  display: flex;
   flex-direction: column;
   width: 100%;
   background: $color-background;
@@ -98,36 +99,28 @@ export default {
   content: "";
   position: absolute;
   pointer-events: none;
+  background: -webkit-linear-gradient(var(--start), rgba(#000, 0), rgba(#000, .075));
 }
 [data-flow="horizontal"] .k-drawer-box::before {
   top: 0;
   bottom: 0;
   left: -4.5rem;
   width: 4.5rem;
-  background: -webkit-linear-gradient(left, rgba(#000, 0), rgba(#000, .075));
+  --start: left;
 }
 [data-flow="vertical"] .k-drawer-box::before {
   left: 0;
   right: 0;
   top: -4.5rem;
   height: 4.5rem;
-  background: -webkit-linear-gradient(top, rgba(#000, 0), rgba(#000, .075));
+  --start: top;
 }
-
-
 
 .k-drawer-header {
   height: 2.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   flex-shrink: 0;
   line-height: 1;
-  border-bottom: 1px solid rgba(#000, .05);
-}
-.k-drawer-header .k-button {
-  width: 2.5rem;
-  height: 2.5rem;
+  border-bottom: 1px solid $color-gray-300;
 }
 .k-drawer-title {
   font-size: $text-sm;
@@ -136,7 +129,6 @@ export default {
 }
 .k-drawer-body {
   flex-grow: 1;
-  padding: 1.5rem;
   overflow: auto;
 }
 </style>

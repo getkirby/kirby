@@ -126,9 +126,15 @@ You can bind any typical button event to this component.
         action: action('clicked')
       },
       template: `
-        <k-button color="yellow" icon="star" @click="action">
-          Activate sunshine
-        </k-button>
+        <div>
+          <k-button color="yellow" icon="star" @click="action">
+            Activate sunshine
+          </k-button>
+          <br/><br/>
+          <k-button color="#ff0000" icon="heart" @click="action">
+            Spread love
+          </k-button>
+        </div>
       `
     }}
   </Story>

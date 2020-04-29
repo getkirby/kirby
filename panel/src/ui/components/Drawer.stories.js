@@ -71,3 +71,58 @@ export const fromBotton = () => ({
     }
   }
 });
+
+export const withOptions = () => ({
+  template: `
+    <div>
+      <k-view class="py-6">
+        <k-button
+          icon="open"
+          @click="$refs.drawer.open()"
+        >
+          Open drawer
+        </k-button>
+        <k-drawer ref="drawer" :flow="flow">
+          Content
+
+          <k-button-group slot="options">
+            <k-button
+              icon="cancel"
+              @click="$refs.drawer.close()"
+            />
+            <k-button
+              icon="check"
+            > Save </k-button>
+          </k-button-group>
+        </k-drawer>
+      </k-view>
+    </div>
+  `,
+});
+
+export const withContext = () => ({
+  template: `
+    <div>
+      <k-view class="py-6">
+        <k-button
+          icon="open"
+          @click="$refs.drawer.open()"
+        >
+          Open drawer
+        </k-button>
+        <k-drawer ref="drawer" :flow="flow">
+          Content
+
+          <k-pagination
+            :details="true"
+            :page="1"
+            :limit="1"
+            :total="20"
+            :dropdown="false"
+            slot="context"
+          />
+        </k-drawer>
+      </k-view>
+    </div>
+  `,
+});

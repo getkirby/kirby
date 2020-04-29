@@ -29,6 +29,20 @@ export const regular = () => ({
           type: "url"
         }
       };
+    },
+    fields() {
+      return {
+        platform: {
+          label: "Platform",
+          type: "text",
+          width: "1/2"
+        },
+        url: {
+          label: "URL",
+          type: "url",
+          width: "1/2"
+        },
+      };
     }
   },
   methods: {
@@ -39,6 +53,7 @@ export const regular = () => ({
       <k-structure-field
         v-model="value"
         :columns="columns"
+        :fields="fields"
         label="Social"
         class="mb-8"
         @input="input"
@@ -57,6 +72,7 @@ export const disabledSorting = () => ({
       <k-structure-field
         v-model="value"
         :columns="columns"
+        :fields="fields"
         :sortable="false"
         class="mb-8"
         label="Social"
@@ -76,6 +92,7 @@ export const max = () => ({
       <k-structure-field
         v-model="value"
         :columns="columns"
+        :fields="fields"
         :max="4"
         class="mb-8"
         help="There's a maximum of four rows"
@@ -96,6 +113,7 @@ export const sortBy = () => ({
       <k-structure-field
         v-model="value"
         :columns="columns"
+        :fields="fields"
         class="mb-8"
         label="Social"
         sortBy="platform asc"
@@ -115,6 +133,7 @@ export const disabled = () => ({
       <k-structure-field
         v-model="value"
         :columns="columns"
+        :fields="fields"
         :disabled="true"
         class="mb-8"
         label="Social"
@@ -139,6 +158,7 @@ export const empty = () => ({
       <k-structure-field
         v-model="value"
         :columns="columns"
+        :fields="fields"
         class="mb-8"
         label="Social"
         @input="input"
@@ -162,6 +182,7 @@ export const customEmptyMessage = () => ({
       <k-structure-field
         v-model="value"
         :columns="columns"
+        :fields="fields"
         class="mb-8"
         empty="No social media accounts yet"
         label="Social"
@@ -173,5 +194,3 @@ export const customEmptyMessage = () => ({
     </div>
   `
 });
-
-

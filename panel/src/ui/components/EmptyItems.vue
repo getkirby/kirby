@@ -59,6 +59,7 @@ export default {
 .k-empty-item {
   color: $color-gray-200;
   pointer-events: none;
+  cursor: progress;
 }
 .k-empty-item .k-item-figure {
   display: block;

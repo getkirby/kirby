@@ -45,7 +45,7 @@
     >
       <k-form
         v-model="newRowModel"
-        :fields="newRowFields"
+        :fields="fields"
         @cancel="closeNewRowDialog"
         @submit="submitNewRow"
       />
@@ -56,9 +56,31 @@
       ref="editRowDialog"
       :title="label + ' / Edit'"
     >
+      <k-pagination
+        slot="context"
+        :details="true"
+        :page="editRowIndex + 1"
+        :limit="1"
+        :total="rows.length"
+        :dropdown="false"
+        @paginate="navigateRowDialog"
+      />
+
+      <k-button-group slot="options">
+        <k-button
+          icon="cancel"
+          @click="closeEditRowDialog"
+        />
+        <k-button
+          icon="check"
+          theme="positive"
+          @click="submitEditRow"
+        />
+      </k-button-group>
+
       <k-form
         v-model="editRowModel"
-        :fields="editRowFields"
+        :fields="fields"
         @cancel="closeEditRowDialog"
         @submit="submitEditRow"
       />
@@ -120,20 +142,6 @@ export default {
     };
   },
   computed: {
-    editRowFields() {
-      return {
-        platform: {
-          label: "Platform",
-          type: "text",
-          width: "1/2"
-        },
-        url: {
-          label: "URL",
-          type: "url",
-          width: "1/2"
-        },
-      };
-    },
     isSortable() {
       if (this.sortBy) {
         return false;
@@ -168,26 +176,23 @@ export default {
 
       return true;
     },
-    newRowFields() {
-      return this.editRowFields;
-    },
     options() {
       return [
-        { 
-          icon: "edit", 
-          text: this.$t("edit"), 
-          click: "openEditRowDialog" 
+        {
+          icon: "edit",
+          text: this.$t("edit"),
+          click: "openEditRowDialog"
         },
-        { 
-          icon: "copy", 
-          text: this.$t("duplicate"), 
+        {
+          icon: "copy",
+          text: this.$t("duplicate"),
           click: "duplicateRow",
           disabled: !this.more
         },
-        { 
-          icon: "trash", 
-          text: this.$t("delete"), 
-          click: "openRemoveRowDialog" 
+        {
+          icon: "trash",
+          text: this.$t("delete"),
+          click: "openRemoveRowDialog"
         },
       ];
     }
@@ -224,6 +229,11 @@ export default {
       if (this.$refs.addButton && this.$refs.addButton.focus) {
         this.$refs.addButton.focus();
       }
+    },
+    navigateRowDialog(pagination) {
+      const index = pagination.page - 1;
+      const row   = this.rows[index];
+      this.openEditRowDialog(row, index);
     },
     onInput() {
       this.$emit("input", this.rows);
