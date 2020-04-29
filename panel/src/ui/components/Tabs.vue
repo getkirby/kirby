@@ -14,6 +14,13 @@
         class="k-tab-button"
       >
         {{ tab.label }}
+
+        <span
+          v-if="tab.badge"
+          :class="'k-tabs-badge text-' + (tab.badge.color || 'red')"
+        >
+          {{ tab.badge.count || tab.badge }}
+        </span>
       </k-button>
 
       <k-button
@@ -220,5 +227,14 @@ export default {
 .k-tabs-dropdown {
   top: 100%;
   right: 0;
+}
+.k-tabs-badge {
+  [dir="ltr"] & {
+    padding-left: .25rem;
+  }
+
+  [dir="rtl"] & {
+    padding-right: .25rem;
+  }
 }
 </style>

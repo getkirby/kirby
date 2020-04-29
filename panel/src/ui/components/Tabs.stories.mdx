@@ -34,6 +34,48 @@ import Tabs from "./Tabs.vue";
 
 <Props of={Tabs} />
 
+### With Badges
+<Preview>
+  <Story name="With Badges">
+    {{
+      computed: {
+        tabs() {
+          return [
+            {
+              name: "content",
+              label: "Content",
+              icon: "page",
+              badge: { count: 5, color: "green" }
+            },
+            {
+              name: "images",
+              label: "Images",
+              icon: "image",
+              badge: 10
+            },
+            {
+              name: "downloads",
+              label: "Downloads",
+              icon: "download",
+              badge: { count: 7 }
+            },
+            {
+              name: "seo",
+              label: "SEO",
+              icon: "search",
+              badge: { count: 7, color: "aqua" }
+            }
+          ];
+        },
+        tab() {
+          return this.tabs[0];
+        }
+      },
+      template: '<k-tabs :tabs="tabs" :tab="tab" />',
+    }}
+  </Story>
+</Preview>
+
 ## CSS class
 
 `.k-tabs`
