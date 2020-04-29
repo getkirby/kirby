@@ -11,22 +11,20 @@
         class="k-drawer-box relative flex"
         @click.stop
       >
-        <header class="k-drawer-header flex items-center justify-between mb-2">
-          <h2 class="k-drawer-title">
+        <header class="k-drawer-header flex items-center justify-between mb-2 px-6">
+          <h2 class="text-sm font-normal">
             {{ title }}
           </h2>
 
           <slot name="context" />
 
-          <div class="px-6">
-            <slot name="options">
-              <k-button
-                icon="cancel"
-                @click="close()"
-                class
-              />
-            </slot>
-          </div>
+          <slot name="options">
+            <k-button
+              icon="cancel"
+              @click="close()"
+              class
+            />
+          </slot>
         </header>
         <div class="k-drawer-body p-6">
           <slot />
@@ -99,21 +97,21 @@ export default {
   content: "";
   position: absolute;
   pointer-events: none;
-  background: -webkit-linear-gradient(var(--start), rgba(#000, 0), rgba(#000, .075));
+  background: -webkit-linear-gradient(var(--start), rgba($color-black, 0), rgba($color-black, .075));
 }
 [data-flow="horizontal"] .k-drawer-box::before {
+  --start: left;
   top: 0;
   bottom: 0;
   left: -4.5rem;
   width: 4.5rem;
-  --start: left;
 }
 [data-flow="vertical"] .k-drawer-box::before {
+  --start: top;
   left: 0;
   right: 0;
   top: -4.5rem;
   height: 4.5rem;
-  --start: top;
 }
 
 .k-drawer-header {
@@ -121,11 +119,6 @@ export default {
   flex-shrink: 0;
   line-height: 1;
   border-bottom: 1px solid $color-gray-300;
-}
-.k-drawer-title {
-  font-size: $text-sm;
-  font-weight: 400;
-  padding: 0 1.5rem;
 }
 .k-drawer-body {
   flex-grow: 1;
