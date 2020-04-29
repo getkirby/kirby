@@ -62,6 +62,25 @@ import PrevNext from "./PrevNext.vue";
   </Story>
 </Preview>
 
+### Vertical
+<Preview>
+  <Story name="Vertical">
+    {{
+      data() {
+        return {
+          prev: {
+            link: "https://getkirby.com"
+          },
+          next: {
+            link: "https://getkirby.com"
+          }
+        };
+      },
+      template: '<k-prev-next :prev="prev" :next="next" direction="vertical" />'
+    }}
+  </Story>
+</Preview>
+
 
 ## CSS class
 
