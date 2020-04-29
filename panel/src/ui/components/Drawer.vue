@@ -16,14 +16,24 @@
             {{ title }}
           </h2>
 
+          <!-- Center slot in the drawer header -->
           <slot name="context" />
 
+          <!-- Slot to replace the option buttons on the right of the header -->
           <slot name="options">
-            <k-button
-              icon="cancel"
-              @click="close()"
-              class
-            />
+            <k-button-group>
+              <k-button
+                v-if="cancelButton"
+                icon="cancel"
+                @click="cancel()"
+              />
+              <k-button
+                v-if="submitButton"
+                :icon="icon"
+                :theme="theme"
+                @click="submit()"
+              />
+            </k-button-group>
           </slot>
         </header>
         <div class="k-drawer-body p-6">
@@ -47,6 +57,10 @@ export default {
     flow: {
       type: String,
       default: "horizontal"
+    },
+    submitButton: {
+      type: [Boolean, String],
+      default: false
     }
   },
 }

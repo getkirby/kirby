@@ -55,6 +55,10 @@
     <k-drawer
       ref="editRowDialog"
       :title="label + ' / Edit'"
+      :submitButton="true"
+      theme="positive"
+      @cancel="closeEditRowDialog"
+      @submit="submitEditRow"
     >
       <k-pagination
         slot="context"
@@ -65,18 +69,6 @@
         :dropdown="false"
         @paginate="navigateRowDialog"
       />
-
-      <k-button-group slot="options">
-        <k-button
-          icon="cancel"
-          @click="closeEditRowDialog"
-        />
-        <k-button
-          icon="check"
-          theme="positive"
-          @click="submitEditRow"
-        />
-      </k-button-group>
 
       <k-form
         v-model="editRowModel"
