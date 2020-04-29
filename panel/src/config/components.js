@@ -43,7 +43,6 @@ import Topbar from "@/components/Navigation/Topbar.vue";
 
 /* Sections */
 import Sections from "@/components/Sections/Sections.vue";
-import InfoSection from "@/components/Sections/InfoSection.vue";
 import PagesSection from "@/components/Sections/PagesSection.vue";
 import FilesSection from "@/components/Sections/FilesSection.vue";
 import FieldsSection from "@/components/Sections/FieldsSection.vue";

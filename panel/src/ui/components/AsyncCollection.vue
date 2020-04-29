@@ -111,8 +111,17 @@ export default {
       this
         .items({ page: this.page, limit: this.limit })
         .then(result => {
-          this.total = result.pagination.total;
-          this.data  = result.data;
+          if (result.data) {
+            this.total = result.pagination.total;
+            this.data  = result.data;
+          } else if (Array.isArray(result) === true) {
+            this.total = result.length;
+            this.data  = result;
+          } else {
+            this.total = 0;
+            this.data  = [];
+          }
+
           this.stopLoading();
         })
     },

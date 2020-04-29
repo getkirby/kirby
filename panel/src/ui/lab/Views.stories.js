@@ -28,7 +28,6 @@ export const SiteView = () => ({
       <k-view>
         <k-header>
           Site
-
           <k-button-group slot="left">
             <k-button icon="open">Open</k-button>
           </k-button-group>
@@ -43,7 +42,6 @@ export const SiteView = () => ({
               />
             </section>
           </k-column>
-
           <k-column width="1/2">
             <section>
               <k-headline class="mb-3">Notes</k-headline>
@@ -53,8 +51,6 @@ export const SiteView = () => ({
               />
             </section>
           </k-column>
-
-
         </k-grid>
       </k-view>
     </div>

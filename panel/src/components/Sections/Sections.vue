@@ -79,34 +79,3 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.k-sections {
-  padding-bottom: 3rem;
-}
-.k-section {
-  padding-bottom: 3rem;
-}
-.k-section-header {
-  position: relative;
-  display: flex;
-  align-items: baseline;
-  z-index: 1;
-}
-.k-section-header .k-headline {
-  line-height: 1.25rem;
-  padding-bottom: 0.75rem;
-  min-height: 2rem;
-}
-.k-section-header .k-button-group {
-  position: absolute;
-  top: -.875rem;
-
-  [dir="ltr"] & {
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-  }
-}
-</style>

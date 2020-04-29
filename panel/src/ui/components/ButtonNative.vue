@@ -35,7 +35,7 @@ export default {
     accesskey: String,
     autofocus: Boolean,
     current: [String, Boolean],
-    icon: String,
+    icon: [String, Object],
     id: [String, Number],
     responsive: Boolean,
     role: String,

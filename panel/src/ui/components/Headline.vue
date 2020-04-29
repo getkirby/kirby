@@ -24,7 +24,10 @@ export default {
      * You can set a link for the headline.
      * The link can be absolute or relative.
      */
-    link: String,
+    link: {
+      type: [Boolean, String],
+      default: false
+    },
     /**
      * Sets the text size.
      * Available sizes: `tiny`|`small`|`medium`|`large`|`huge`

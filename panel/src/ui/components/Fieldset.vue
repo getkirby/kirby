@@ -13,6 +13,7 @@
             :ref="fieldName"
             v-model="value[fieldName]"
             :name="fieldName"
+            :label="label(field, fieldName)"
             :novalidate="novalidate"
             :disabled="disabled || field.disabled"
             v-bind="field"
@@ -99,6 +100,9 @@ export default {
     },
     hasField(name) {
       return this.$refs[name] && this.$refs[name][0];
+    },
+    label(field, name) {
+      return field.label || this.$helper.string.ucfirst(name);
     },
     meetsCondition(field) {
 

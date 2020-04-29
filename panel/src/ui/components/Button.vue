@@ -144,12 +144,16 @@ button::-moz-focus-inner {
   }
 }
 
+.k-button-text {
+  display: inline-block;
+}
+
 /* hide button text on small screens */
 .k-button[data-responsive] .k-button-text {
   display: none;
 
   @media screen and (min-width: $breakpoint-sm) {
-    display: inline;
+    display: inline-block;
   }
 }
 
