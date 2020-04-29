@@ -3,6 +3,9 @@ import TableTextCell from "./TableTextCell.vue";
 
 export default {
   extends: TableTextCell,
+  props: {
+    value: Number
+  },
   computed: {
     align() {
       return this.column.align || "right";
@@ -27,4 +30,3 @@ export default {
   }
 }
 </script>
-

@@ -12,7 +12,7 @@
         @click.stop
       >
         <header class="k-drawer-header flex items-center justify-between px-6">
-          <h2 class="text-sm font-normal">
+          <h2 class="text-sm font-normal truncate">
             {{ title }}
           </h2>
 
@@ -26,13 +26,13 @@
                 v-if="cancelButton"
                 icon="cancel"
                 @click="cancel()"
-              />
+              >{{ cancelButtonLabel }}</k-button>
               <k-button
                 v-if="submitButton"
                 :icon="icon"
                 :theme="theme"
                 @click="submit()"
-              />
+              >{{ submitButtonLabel }}</k-button>
             </k-button-group>
           </slot>
         </header>
@@ -62,7 +62,7 @@ export default {
       type: [Boolean, String],
       default: false
     }
-  },
+  }
 }
 </script>
 

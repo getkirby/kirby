@@ -42,7 +42,8 @@
     <k-drawer
       ref="newRowDialog"
       :title="label + ' / Add'"
-      :submitButton="true"
+      :submitButton="$t('add')"
+      icon="add"
       theme="positive"
       @cancel="closeNewRowDialog"
       @submit="submitNewRow"

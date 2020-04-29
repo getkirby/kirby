@@ -1,5 +1,5 @@
 <template>
-  <label class="k-range-input">
+  <label class="k-range-input flex items-center">
     <input
       ref="input"
       v-bind="{
@@ -20,7 +20,7 @@
     >
     <span
       v-if="tooltip"
-      class="k-range-input-tooltip"
+      class="k-range-input-tooltip relative flex items-center bg-black text-white text-xs text-center border-sm ml-4 px-1"
     >
       <span
         v-if="tooltip.before"
@@ -156,13 +156,7 @@ $range-track-focus-color: $color-focus;
   border: $range-thumb-focus-border;
 }
 
-.k-range-input {
-  display: flex;
-  align-items: center;
-}
-
 .k-range-input-native {
-
   --min: 0;
   --max: 100;
   --value: 0;
@@ -237,18 +231,7 @@ $range-track-focus-color: $color-focus;
 }
 
 .k-range-input-tooltip {
-  position: relative;
-  max-width: 20%;
-  display: flex;
-  align-items: center;
-  color: $color-white;
-  font-size: $text-xs;
   line-height: 1;
-  text-align: center;
-  border-radius: $rounded-sm;
-  background: $color-black;
-  margin-left: 1rem;
-  padding: 0 .25rem;
   white-space: nowrap;
 
   &::after {

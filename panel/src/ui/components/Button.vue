@@ -160,6 +160,10 @@ button::-moz-focus-inner {
 }
 
 .k-button-icon ~ .k-button-text {
+  &:empty {
+    display: none;
+  }
+
   [dir="ltr"] & {
     padding-left: 0.5rem;
   }
