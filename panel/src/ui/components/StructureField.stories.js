@@ -1,6 +1,7 @@
-import StructureField from "./StructureField.vue";
 import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
+import { complex } from "./Form.stories.js";
+import StructureField from "./StructureField.vue";
 
 export default {
   title: "UI | Form / Field / Structure Field",
@@ -55,6 +56,49 @@ export const regular = () => ({
         :columns="columns"
         :fields="fields"
         label="Social"
+        class="mb-8"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `,
+});
+
+export const manyFields = () => ({
+  data() {
+    return {
+      value: [
+        { range: 50000, select: "Design" },
+        { range: 2000, select: "Photography" }
+      ]
+    };
+  },
+  computed: {
+    columns() {
+      return {
+        select: {
+          label: "Area"
+        },
+        range: {
+          label: "Budget",
+          type: "number",
+          before: "$"
+        }
+      };
+    },
+    fields() {
+      return complex().computed.fields();
+    }
+  },
+  template: `
+    <div>
+      <k-structure-field
+        v-model="value"
+        :columns="columns"
+        :fields="fields"
+        label="Complex from with many fields"
         class="mb-8"
         @input="input"
       />

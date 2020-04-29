@@ -42,6 +42,10 @@
     <k-drawer
       ref="newRowDialog"
       :title="label + ' / Add'"
+      :submitButton="true"
+      theme="positive"
+      @cancel="closeNewRowDialog"
+      @submit="submitNewRow"
     >
       <k-form
         v-model="newRowModel"

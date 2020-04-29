@@ -11,7 +11,7 @@
         class="k-drawer-box relative flex"
         @click.stop
       >
-        <header class="k-drawer-header flex items-center justify-between mb-2 px-6">
+        <header class="k-drawer-header flex items-center justify-between px-6">
           <h2 class="text-sm font-normal">
             {{ title }}
           </h2>
