@@ -80,7 +80,23 @@ export default {
   margin-top: 1px;
   vertical-align: middle;
   background: $color-gray-200;
+  background: linear-gradient(90deg, $color-gray-200, $color-gray-300, $color-gray-100);
+  background-size: 400% 100%;
+  -webkit-animation: EmptyItemsLoading 3s ease infinite;
+  animation: EmptyItemsLoading 3s ease infinite;
 }
+
+@-webkit-keyframes EmptyItemsLoading {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+@keyframes EmptyItemsLoading {
+    0%{background-position:0% 50%}
+    50%{background-position:100% 50%}
+    100%{background-position:0% 50%}
+}
+
 .k-list-item.k-empty-item .k-item-title::after,
 .k-list-item.k-empty-item .k-item-info::after {
   margin-top: -2px;
