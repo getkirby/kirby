@@ -11,6 +11,15 @@ export default {
 
 export const list = () => ({
   computed: {
+    add() {
+      return false;
+    },
+    empty() {
+      return null;
+    },
+    help() {
+      return false;
+    },
     layout() {
       return "list";
     },
@@ -26,18 +35,63 @@ export const list = () => ({
     }
   },
   methods: {
+    onEmpty: action("empty"),
     onFlag: action("flag"),
     onOption: action("option")
   },
   template: `
     <k-pages-section
+      :add="add"
+      :empty="empty"
+      :help="help"
       :layout="layout"
       :pages="pages"
       label="Pages"
+      @empty="onEmpty"
       @flag="onFlag"
       @option="onOption"
     />
   `
+});
+
+export const listWithHelp = () => ({
+  extends: list(),
+  computed: {
+    help() {
+      return "Here's some help";
+    },
+  }
+});
+
+export const listEmpty = () => ({
+  extends: list(),
+  computed: {
+    pages() {
+      return async () => {
+        return [];
+      };
+    },
+  }
+});
+
+export const listCustomEmpty = () => ({
+  extends: list(),
+  computed: {
+    add() {
+      return true;
+    },
+    empty() {
+      return {
+        icon: "draft",
+        text: "No drafts yet",
+      };
+    },
+    pages() {
+      return async () => {
+        return [];
+      };
+    },
+  }
 });
 
 export const cardlets = () => ({
@@ -49,12 +103,92 @@ export const cardlets = () => ({
   }
 });
 
+export const cardletsWithHelp = () => ({
+  extends: cardlets(),
+  computed: {
+    help() {
+      return "Here's some help";
+    },
+  }
+});
+
+export const cardletsEmpty = () => ({
+  extends: cardlets(),
+  computed: {
+    pages() {
+      return async () => {
+        return [];
+      };
+    },
+  }
+});
+
+export const cardletsCustomEmpty = () => ({
+  extends: cardlets(),
+  computed: {
+    add() {
+      return true;
+    },
+    empty() {
+      return {
+        icon: "draft",
+        text: "No drafts yet",
+      };
+    },
+    pages() {
+      return async () => {
+        return [];
+      };
+    },
+  }
+});
+
 export const cards = () => ({
   extends: list(),
   computed: {
     layout() {
       return "cards";
     }
+  }
+});
+
+export const cardsWithHelp = () => ({
+  extends: cards(),
+  computed: {
+    help() {
+      return "Here's some help";
+    },
+  }
+});
+
+export const cardsEmpty = () => ({
+  extends: cards(),
+  computed: {
+    pages() {
+      return async () => {
+        return [];
+      };
+    },
+  }
+});
+
+export const cardsCustomEmpty = () => ({
+  extends: cards(),
+  computed: {
+    add() {
+      return true;
+    },
+    empty() {
+      return {
+        icon: "draft",
+        text: "No drafts yet",
+      };
+    },
+    pages() {
+      return async () => {
+        return [];
+      };
+    },
   }
 });
 

@@ -42,6 +42,7 @@ export default {
   "months.december": "December",
   "off": "off",
   "on": "on",
+  "pages.empty": "No pages yet",
   "pagination.page": "Page",
   "revert": "Revert",
   "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",

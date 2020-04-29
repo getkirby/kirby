@@ -6,10 +6,12 @@
     @option="onSectionOption"
   >
     <k-async-collection
+      :empty="empty || $t('pages.empty')"
       :help="help"
       :items="pages"
       :layout="layout"
       :sortable="sortable"
+      v-on="listeners"
       @flag="onFlag"
       @option="onPageOption"
     />
@@ -28,12 +30,22 @@ export default {
       type: Boolean,
       default: false
     },
+    empty: [String, Object],
     help: String,
     layout: String,
     pages: Function,
     sortable: Boolean
   },
   computed: {
+    listeners() {
+      if (this.add) {
+        return {
+          empty: this.onEmpty
+        }
+      }
+
+      return {};
+    },
     sectionOptions() {
       if (this.add === false) {
         return [];
@@ -49,6 +61,10 @@ export default {
     }
   },
   methods: {
+    onEmpty(event) {
+      this.$emit("empty", event);
+      this.onSectionOption("add");
+    },
     onFlag(item, itemIndex) {
       this.$emit("flag", item, itemIndex);
     },

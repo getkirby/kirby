@@ -29,12 +29,10 @@
       <slot name="empty">
         <k-empty
           :layout="layout"
-          :icon="empty.icon || 'page'"
-          v-on="{
-            click: $listeners['empty'] || false
-          }"
+          :icon="emptyOptions.icon || 'page'"
+          v-on="emptyListeners"
         >
-          {{ empty.text || $t('items.empty') }}
+          {{ emptyOptions.text || $t('items.empty') }}
         </k-empty>
       </slot>
     </template>
@@ -63,7 +61,7 @@
 export default {
   props: {
     empty: {
-      type: Object,
+      type: [String, Object],
       default() {
         return {
           icon: "page",
@@ -117,6 +115,24 @@ export default {
     }
   },
   computed: {
+    emptyListeners() {
+      if (this.$listeners["empty"]) {
+        return {
+          click: this.$listeners["empty"]
+        };
+      }
+
+      return {};
+    },
+    emptyOptions() {
+      if (typeof this.empty === "string") {
+        return {
+          text: this.empty
+        };
+      }
+
+      return this.empty;
+    },
     hasPagination() {
       if (this.pagination === false) {
         return false;

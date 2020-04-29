@@ -20,6 +20,7 @@
 <script>
 export default {
   props: {
+    empty: [String, Object],
     /**
      * Help text to be displayed below the collection in grey.
      */
@@ -82,6 +83,7 @@ export default {
   computed: {
     collection() {
       return {
+        empty: this.empty,
         help: this.help,
         items: this.data,
         layout: this.layout,
