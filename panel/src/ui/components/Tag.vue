@@ -1,11 +1,11 @@
 <template>
   <span
     ref="button"
-    class="k-tag"
+    class="k-tag relative inline-flex items-center justify-between text-sm cursor-pointer bg-black text-white rounded-sm"
     tabindex="0"
     @keydown.delete.prevent="remove"
   >
-    <span class="k-tag-text"><slot /></span>
+    <span class="k-tag-text px-3"><slot /></span>
     <k-button
       v-if="removable"
       class="k-tag-toggle"
@@ -45,16 +45,7 @@ export default {
 
 <style lang="scss">
 .k-tag {
-  position: relative;
-  font-size: $text-sm;
   line-height: 1;
-  cursor: pointer;
-  background-color: $color-black;
-  color: $color-light;
-  border-radius: $rounded-sm;
-  display: inline-flex;
-  align-items: center;
-  justify-content: space-between;
   user-select: none;
   height: 1.5rem;
 }
@@ -63,9 +54,6 @@ export default {
   background-color: $color-focus;
   border-color: $color-focus;
   color: #fff;
-}
-.k-tag-text {
-  padding: 0 .75rem;
 }
 .k-tag-toggle {
   color: rgba(255, 255, 255, 0.7);

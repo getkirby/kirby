@@ -1,59 +1,45 @@
 <template>
-  <k-draggable
-    ref="box"
-    :list="tags"
-    :data-layout="layout"
-    :options="dragOptions"
-    class="k-tags-input"
-    @end="onInput"
-  >
-    <k-tag
-      v-for="(tag, tagIndex) in tags"
-      :ref="tag.value"
-      :key="tagIndex"
+  <div class="k-tags-input flex">
+    <k-tags
+      ref="tags"
+      v-model="tags"
+      :layout="layout"
+      :max="max"
       :removable="!disabled"
-      name="tag"
-      @click.native.stop
-      @blur.native="selectTag(null)"
-      @focus.native="selectTag(tag)"
-      @keydown.native.left="navigate('prev')"
-      @keydown.native.right="navigate('next')"
-      @dblclick.native="edit(tag)"
-      @remove="remove(tag)"
-    >
-      {{ tag.text }}
-    </k-tag>
-    <span
-      slot="footer"
-      class="k-tags-input-element"
-    >
+      @input="onInput"
+      @edit="onEdit"
+      @blur="$refs.input.focus()"
+      @navigate-next="$refs.input.focus()"
+    />
+
+    <span class="k-tags-input-element">
       <k-autocomplete
         ref="autocomplete"
-        :options="tagOptions"
-        :skip="skip"
-        @select="addTag"
+        v-bind="autocomplete"
+        @select="onSelect"
         @leave="$refs.input.focus()"
       >
         <input
           :id="id"
           ref="input"
-          v-model.trim="newTag"
+          v-model.trim="typed"
           :autofocus="autofocus"
           :disabled="disabled || (max && tags.length >= max)"
           :name="name"
           autocomplete="off"
           type="text"
-          @input="type($event.target.value)"
-          @blur="blurInput"
-          @keydown.meta.s="blurInput"
-          @keydown.left.exact="leaveInput"
-          @keydown.enter.exact="enter"
-          @keydown.tab.exact="tab"
-          @keydown.backspace.exact="leaveInput"
+          class="text-sm p-1 bg-none"
+          @input="onType($event.target.value)"
+          @blur="onBlur"
+          @keydown.meta.s="onBlur"
+          @keydown.enter.exact="onConfirm"
+          @keydown.tab.exact="onConfirm"
+          @keydown.left.exact="onLeave"
+          @keydown.backspace.exact="onLeave"
         >
       </k-autocomplete>
     </span>
-  </k-draggable>
+  </div>
 </template>
 
 <script>
@@ -95,30 +81,21 @@ export default {
   },
   data() {
     return {
-      tags: this.prepareTags(this.value),
-      selected: null,
-      newTag: null,
-      tagOptions: this.prepareTags(this.options)
+      tags: this.sanitize(this.value),
+      typed: null
     };
   },
   computed: {
-    dragOptions() {
+    autocomplete() {
       return {
-        delay: 20,
-        disabled: !this.draggable,
-        draggable: ".k-tag"
+        options: this.sanitize(this.options),
+        skip: this.tags.map(tag => tag.value)
       };
-    },
-    draggable() {
-      return this.tags.length > 1;
-    },
-    skip() {
-      return this.tags.map(tag => tag.value);
     }
   },
   watch: {
     value(value) {
-      this.tags = this.prepareTags(value);
+      this.tags = this.sanitize(value);
     }
   },
   mounted() {
@@ -127,45 +104,10 @@ export default {
     }
   },
   methods: {
-    addString(string) {
-      if (!string) {
-        return;
-      }
-
-      string = string.trim();
-
-      if (string.includes(this.separator)) {
-        string.split(this.separator).forEach(tag => {
-          this.addString(tag);
-        });
-
-        return;
-      }
-
-      if (string.length === 0) {
-        return;
-      }
-
-      if (this.accept === "options") {
-        const option = this.options.filter(
-          option => option.text === string
-        )[0];
-
-        if (!option) {
-          return;
-        }
-
-        this.addTag(option);
-      } else {
-        this.addTag({ text: string, value: string });
-      }
-    },
-    addTag(tag) {
-      this.addTagToIndex(tag);
-      this.$refs.autocomplete.close();
+    focus() {
       this.$refs.input.focus();
     },
-    addTagToIndex(tag) {
+    onAdd(tag) {
       if (this.accept === "options") {
         const option = this.options.filter(
           option => option.value === tag.value
@@ -176,17 +118,10 @@ export default {
         }
       }
 
-      if (
-        this.index(tag) === -1 &&
-        (!this.max || this.tags.length < this.max)
-      ) {
-        this.tags.push(tag);
-        this.onInput();
-      }
-
-      this.newTag = null;
+      this.$refs.tags.add(tag);
+      this.typed = null;
     },
-    blurInput(event) {
+    onBlur(event) {
       let related = event.relatedTarget || event.explicitOriginalTarget;
 
       if (
@@ -197,106 +132,47 @@ export default {
       }
 
       if (this.$refs.input.value.length) {
-        this.addTagToIndex(this.$refs.input.value);
+        this.onAdd(this.$refs.input.value);
         this.$refs.autocomplete.close();
       }
     },
-    edit(tag) {
-      this.newTag = tag.text;
+    onConfirm(event) {
+      if (this.typed && this.typed.length > 0) {
+        event.preventDefault();
+
+        this.typed.split(this.separator).forEach(tag => {
+          this.onAdd({ text: tag, value: tag });
+        });
+      }
+    },
+    onEdit(tag) {
+      this.typed = tag.text;
       this.$refs.input.select();
-      this.remove(tag);
-    },
-    enter(event) {
-      if (!this.newTag || this.newTag.length === 0) {
-        return true;
-      }
-
-      event.preventDefault();
-      this.addString(this.newTag);
-    },
-    focus() {
-      this.$refs.input.focus();
-    },
-    get(position) {
-      let nextIndex = null;
-      let currIndex = null;
-
-      switch (position) {
-        case "prev":
-          if (!this.selected) return;
-
-          currIndex = this.index(this.selected);
-          nextIndex = currIndex - 1;
-
-          if (nextIndex < 0) return;
-          break;
-
-        case "next":
-          if (!this.selected) return;
-
-          currIndex = this.index(this.selected);
-          nextIndex = currIndex + 1;
-
-          if (nextIndex >= this.tags.length) return;
-          break;
-
-        case "first":
-          nextIndex = 0;
-          break;
-
-        case "last":
-          nextIndex = this.tags.length - 1;
-          break;
-
-        default:
-          nextIndex = position;
-          break;
-      }
-
-      let nextTag = this.tags[nextIndex];
-
-      if (nextTag) {
-        let nextRef = this.$refs[nextTag.value];
-
-        if (nextRef && nextRef[0]) {
-          return {
-            ref: nextRef[0],
-            tag: nextTag,
-            index: nextIndex
-          };
-        }
-      }
-
-      return false;
-    },
-    index(tag) {
-      return this.tags.findIndex(item => item.value === tag.value);
     },
     onInput() {
       this.$emit("input", this.tags);
     },
-    leaveInput(e) {
+    onLeave(e) {
       if (
         e.target.selectionStart === 0 &&
         e.target.selectionStart === e.target.selectionEnd &&
         this.tags.length !== 0
       ) {
         this.$refs.autocomplete.close();
-        this.navigate("last");
+        this.$refs.tags.focus("last");
         e.preventDefault();
       }
     },
-    navigate(position) {
-      var result = this.get(position);
-      if (result) {
-        result.ref.focus();
-        this.selectTag(result.tag);
-      } else if (position === "next") {
-        this.$refs.input.focus();
-        this.selectTag(null);
-      }
+    onSelect(tag) {
+      this.addTagToIndex(tag);
+      this.$refs.autocomplete.close();
+      this.$refs.input.focus();
     },
-    prepareTags(value) {
+    onType(value) {
+      this.typed = value;
+      this.$refs.autocomplete.search(value);
+    },
+    sanitize(value) {
       if (Array.isArray(value) === false) {
         return [];
       }
@@ -310,42 +186,9 @@ export default {
 
         return tag;
       });
-
-    },
-    remove(tag) {
-      // get neighboring tags
-      const prev = this.get("prev");
-      const next = this.get("next");
-
-      // remove tag and fire input event
-      this.tags.splice(this.index(tag), 1);
-      this.onInput();
-
-      if (prev) {
-        this.selectTag(prev.tag);
-        prev.ref.focus();
-      } else if (next) {
-        this.selectTag(next.tag);
-      } else {
-        this.selectTag(null);
-        this.$refs.input.focus();
-      }
     },
     select() {
       this.focus();
-    },
-    selectTag(tag) {
-      this.selected = tag;
-    },
-    tab(event) {
-      if (this.newTag && this.newTag.length > 0) {
-        event.preventDefault();
-        this.addString(this.newTag);
-      }
-    },
-    type(value) {
-      this.newTag = value;
-      this.$refs.autocomplete.search(value);
     }
   }
 };
@@ -353,33 +196,31 @@ export default {
 
 <style lang="scss">
 .k-tags-input {
-  display: flex;
   flex-wrap: wrap;
 }
-.k-tags-input .k-sortable-ghost {
-  background: $color-focus;
-  box-shadow: none;
+.k-tags-input > .k-tags:not(:empty) {
+  margin-right: .2rem
 }
 .k-tags-input-element {
   flex-grow: 1;
   flex-basis: 0;
   min-width: 0;
-}
-.k-tags-input:focus-within .k-tags-input-element {
-  flex-basis: 4rem;
+
+  .k-tags-input:focus-within & {
+    flex-basis: 4rem;
+  }
 }
 .k-tags-input-element input {
   font: inherit;
+  line-height: 1;
   border: 0;
   width: 100%;
-  background: none;
-}
-.k-tags-input-element input:focus {
-  outline: 0;
-}
 
-.k-tags-input[data-layout="list"] .k-tag {
-  width: 100%;
-  margin-right: 0 !important;
+  &:focus {
+    outline: 0;
+  }
+}
+.k-tags-input .k-dropdown-content {
+  top: calc(100% + .5rem + 2px);
 }
 </style>

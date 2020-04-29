@@ -358,29 +358,6 @@ export default {
     }
   }
 
-  /* Tags */
-  &[data-type="tags"] {
-    .k-tags-input {
-      padding: .25rem .25rem 0 .25rem;
-    }
-    .k-tag {
-      margin-right: .25rem;
-      margin-bottom: .25rem;
-      height: 1.75rem;
-      font-size: $text-sm;
-    }
-    .k-tags-input input {
-      font-size: $text-sm;
-      padding: 0 .25rem;
-      height: 1.75rem;
-      line-height: 1;
-      margin-bottom: .25rem;
-    }
-    .k-tags-input .k-dropdown-content {
-      top: calc(100% + .5rem + 2px);
-    }
-  }
-
   /* Multiselect */
   &[data-type="multiselect"] {
     position: relative;
