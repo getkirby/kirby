@@ -18,16 +18,23 @@
     </template>
 
     <!-- Table -->
-    <k-table
-      v-if="rows.length"
-      :columns="columns"
-      :rows="rows"
-      :sortable="isSortable"
-      :options="options"
-      @cell="openEditRowDialog($event.row, $event.rowIndex)"
-      @sort="onSort"
-      @option="onOption"
-    />
+    <template v-if="rows.length">
+      <k-table
+        :columns="columns"
+        :rows="paginatedRows"
+        :sortable="isSortable"
+        :index="(page - 1) * limit + 1"
+        :options="options"
+        @cell="onCell"
+        @sort="onSort"
+        @option="onOption"
+      />
+
+      <k-pagination
+        v-bind="pagination"
+        @paginate="page = $event.page"
+      />
+    </template>
 
     <!-- Empty state -->
     <k-empty
@@ -41,7 +48,7 @@
     <!-- New Row Dialog -->
     <k-drawer
       ref="newRowDialog"
-      :title="label + ' / Add'"
+      :title="label + ' / ' + $t('add')"
       :submitButton="$t('add')"
       icon="add"
       theme="positive"
@@ -59,7 +66,8 @@
     <!-- Edit Dialog -->
     <k-drawer
       ref="editRowDialog"
-      :title="label + ' / Edit'"
+      :title="label + ' / ' + $t('edit')"
+      :autofocus="false"
       :submitButton="true"
       theme="positive"
       @cancel="closeEditRowDialog"
@@ -76,8 +84,10 @@
       />
 
       <k-form
+        ref="editRowForm"
         v-model="editRowModel"
         :fields="fields"
+        @focus="focusEditRowField"
         @cancel="closeEditRowDialog"
         @submit="submitEditRow"
       />
@@ -101,10 +111,6 @@ export default {
   props: {
     ...Field.props,
     columns: Object,
-    duplicate: {
-      type: Boolean,
-      default: true
-    },
     empty: {
       type: String,
       default() {
@@ -112,7 +118,10 @@ export default {
       }
     },
     fields: Object,
-    limit: Number,
+    limit: {
+      type: Number,
+      default: 0
+    },
     max: Number,
     min: Number,
     sortable: {
@@ -131,11 +140,13 @@ export default {
     return {
       editRowIndex: null,
       editRowModel: {},
+      editRowField: null,
       newRowIndex: null,
       newRowModel: {},
       removeRowIndex: null,
       removeRowModel: {},
       rows: this.sanitize(this.value),
+      page: 1
     };
   },
   computed: {
@@ -192,7 +203,33 @@ export default {
           click: "openRemoveRowDialog"
         },
       ];
-    }
+    },
+    paginatedRows() {
+      if (!this.limit) {
+        return this.rows;
+      }
+
+      return this.rows.slice(
+        this.pagination.offset,
+        this.pagination.offset + this.limit
+      );
+    },
+    pagination() {
+      let offset = 0;
+
+      if (this.limit) {
+        offset = (this.page - 1) * this.limit;
+      }
+
+      return {
+        page: this.page,
+        offset: offset,
+        limit: this.limit,
+        total: this.rows.length,
+        align: "center",
+        details: true
+      };
+    },
   },
   watch: {
     value(value) {
@@ -210,6 +247,7 @@ export default {
     closeEditRowDialog() {
       this.editRowIndex = null;
       this.editRowModel = {};
+      this.editRowField = null;
       this.$refs.editRowDialog.close();
     },
     closeRemoveRowDialog() {
@@ -227,10 +265,19 @@ export default {
         this.$refs.addButton.focus();
       }
     },
+    focusEditRowField(event, field, fieldName) {
+      this.editRowField = fieldName;
+    },
     navigateRowDialog(pagination) {
       const index = pagination.page - 1;
       const row   = this.rows[index];
       this.openEditRowDialog(row, index);
+    },
+    onCell(cell) {
+      this.editRowField = cell.columnIndex;
+      const offset = (this.page - 1) * this.limit;
+      const index  = cell.rowIndex + offset;
+      this.openEditRowDialog(cell.row, index);
     },
     onInput() {
       this.$emit("input", this.rows);
@@ -246,7 +293,16 @@ export default {
     openEditRowDialog(row, rowIndex) {
       this.editRowIndex = rowIndex;
       this.editRowModel = this.$helper.clone(row);
+
+     if (this.limit > 0) {
+        this.page = Math.ceil((rowIndex + 1) / this.limit);
+      }
+
       this.$refs.editRowDialog.open();
+
+      setTimeout(() => {
+        this.$refs.editRowForm.focus(this.editRowField);
+      }, 50);
     },
     openNewRowDialog() {
       this.newRowIndex = 0;
@@ -290,14 +346,14 @@ export default {
       }
 
       this.rows.splice(this.removeRowIndex, 1);
-      this.onInput();
-      this.closeRemoveRowDialog();
-
-      // if (this.paginatedItems.length === 0 && this.page > 1) {
-      //   this.page--;
-      // }
-
       this.rows = this.sort(this.rows);
+      this.onInput();
+
+      if (this.paginatedRows.length === 0 && this.page > 1) {
+        this.page--;
+      }
+
+      this.closeRemoveRowDialog();
     },
   }
 }

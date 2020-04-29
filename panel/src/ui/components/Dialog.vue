@@ -41,7 +41,7 @@
                   class="k-dialog-button-cancel"
                   @click="cancel"
                 >
-                  {{ cancelButtonLabel }}
+                  {{ cancelButton }}
                 </k-button>
               </span>
               <span>
@@ -52,7 +52,7 @@
                   class="k-dialog-button-submit"
                   @click="submit"
                 >
-                  {{ submitButtonLabel }}
+                  {{ submitButton }}
                 </k-button>
               </span>
             </k-button-group>
@@ -67,9 +67,15 @@
 export default {
   inheritAttrs: false,
   props: {
+    autofocus: {
+      type: Boolean,
+      default: true
+    },
     cancelButton: {
       type: [String, Boolean],
-      default: true,
+      default() {
+        return this.$t("cancel");
+      },
     },
     icon: {
       type: String,
@@ -81,7 +87,9 @@ export default {
     },
     submitButton: {
       type: [String, Boolean],
-      default: true
+      default() {
+        return this.$t("confirm");
+      },
     },
     text: String,
     theme: String,
@@ -95,19 +103,7 @@ export default {
     };
   },
   computed: {
-    cancelButtonLabel() {
-      if (this.cancelButton === false) {
-        return false;
-      }
-
-      if (this.cancelButton === true || this.cancelButton.length === 0) {
-        return this.$t("cancel");
-      }
-
-      return this.cancelButton;
-    },
     submitButtonConfig() {
-
       if (this.$attrs["button"] !== undefined) {
         return this.$attrs["button"];
       }
@@ -117,13 +113,6 @@ export default {
       }
 
       return true;
-    },
-    submitButtonLabel() {
-      if (this.submitButton === true || this.submitButton.length === 0) {
-        return this.$t("confirm");
-      }
-
-      return this.submitButton;
     }
   },
   created() {
@@ -186,20 +175,19 @@ export default {
       this.close();
     },
     focus() {
-
       const box = this.$refs.box;
 
       if (box && box.querySelector) {
-        let autofocus = box.querySelector(
+        let target = box.querySelector(
           "[autofocus], [data-autofocus], input, textarea, select, .k-dialog-button-submit"
         );
 
-        if (!autofocus) {
+        if (!target) {
           autofocus = box.querySelector(".k-dialog-button-cancel");
         }
 
-        if (autofocus) {
-          autofocus.focus();
+        if (this.autofocus && target) {
+          target.focus();
           return;
         }
       }

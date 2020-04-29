@@ -48,7 +48,6 @@ code {
   padding: .05em .5em;
 }
 
-
 /* Syntax highlighting */
 .hljs {
   color: #fff !important;
@@ -56,15 +55,12 @@ code {
   line-height: 1.5em !important;
   overflow-x: auto;
   overflow-y: hidden;
+  font-size: .875rem !important;
 }
 
-.hljs > code {
-  font-size: 1rem !important;
-}
 .hljs > * .token {
-  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+  font-family: var(--font-family-mono) !important;
 }
-
 
 .hljs .section {
   color: #fff !important;

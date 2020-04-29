@@ -166,7 +166,7 @@ export default {
   },
   computed: {
     show() {
-      return this.pages > 1;
+      return this.limit > 0 && this.pages > 1;
     },
     start() {
       return (this.currentPage - 1) * this.limit + 1;

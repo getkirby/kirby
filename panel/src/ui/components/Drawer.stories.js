@@ -86,13 +86,9 @@ export const withOptions = () => ({
           Content
 
           <k-button-group slot="options">
-            <k-button
-              icon="cancel"
-              @click="$refs.drawer.close()"
-            />
-            <k-button
-              icon="check"
-            > Save </k-button>
+            <k-button color="blue">Just</k-button>
+            <k-button color="red">three</k-button>
+            <k-button color="yellow">buttons</k-button>
           </k-button-group>
         </k-drawer>
       </k-view>

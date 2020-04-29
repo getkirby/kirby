@@ -190,6 +190,26 @@ export const disabled = () => ({
   `
 });
 
+export const pagination = () => ({
+  ...regular(),
+  template: `
+    <div>
+      <k-structure-field
+        v-model="value"
+        :columns="columns"
+        :fields="fields"
+        :limit="2"
+        class="mb-8"
+        label="Social"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `
+});
+
 export const empty = () => ({
   ...regular(),
   data() {
