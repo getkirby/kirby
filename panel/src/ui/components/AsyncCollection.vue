@@ -111,13 +111,12 @@ export default {
       this
         .items({ page: this.page, limit: this.limit })
         .then(result => {
-          this.total   = result.pagination.total;
-          this.data    = result.data;
+          this.total = result.pagination.total;
+          this.data  = result.data;
           this.stopLoading();
         })
     },
     reload() {
-      this.data = [];
       this.load();
     }
   }

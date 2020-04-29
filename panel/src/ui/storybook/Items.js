@@ -5,7 +5,7 @@ export default (limit, start = 1) => {
       info: "List item info",
       link: "https://getkirby.com",
       image: {
-        url: "https://source.unsplash.com/user/erondu/1600x900?" + (item + start)
+        url: "https://source.unsplash.com/user/erondu/400x225?" + (item + start)
       },
       options: [
         { icon: "edit", text: "Edit", click: "edit" },
