@@ -8,6 +8,7 @@
     </k-button>
     <k-dropdown-content
       ref="options"
+      :align="align"
       :options="options"
       @option="onOption"
     />
@@ -18,6 +19,9 @@
 export default {
   props: {
     after: {
+      type: String,
+    },
+    align: {
       type: String,
     },
     before: {

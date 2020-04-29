@@ -13,6 +13,7 @@ import ratio from "../helpers/ratio.js";
 import slug from "../helpers/slug.js";
 import sort from "../helpers/sort.js";
 import string from "../helpers/string.js";
+import supports from "../helpers/supports.js";
 import upload from "../helpers/upload.js";
 
 export default {
@@ -53,6 +54,7 @@ export default {
       slug: slug,
       sort: sort,
       string: string,
+      supports: supports,
       upload: upload
     };
   }
