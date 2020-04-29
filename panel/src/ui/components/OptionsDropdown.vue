@@ -9,7 +9,7 @@
   />
   <k-dropdown
     v-else-if="options.length"
-    class="k-options-dropdown"
+    class="k-options-dropdown flex items-center justify-center"
   >
     <k-button
       :icon="icon"
@@ -64,13 +64,7 @@ export default {
 </script>
 
 <style lang="scss">
-.k-options-dropdown {
-  display: flex;
-  width: 38px;
-  height: 38px;
-  align-items: center;
-  justify-content: center;
-}
+.k-options-dropdown,
 .k-options-dropdown-toggle {
   width: 38px;
   height: 38px;

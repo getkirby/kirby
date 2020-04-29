@@ -6,10 +6,11 @@
     <k-headline
       tag="h1"
       size="huge"
+      class="mb-2"
     >
       <span
         v-if="editable && $listeners.edit"
-        class="k-headline-editable"
+        class="k-headline-editable cursor-pointer"
         @click="onClick"
       >
         <!-- @slot Use the default slot to inject the headline -->
@@ -82,18 +83,14 @@ export default {
 }
 .k-header .k-headline {
   min-height: 1.25em;
-  margin-bottom: .5rem;
   word-wrap: break-word;
 }
 .k-header .k-header-buttons {
   margin-top: -.5rem;
   height: 3.25rem;
 }
-.k-header .k-headline-editable {
-  cursor: pointer;
-}
 .k-header .k-headline-editable .k-icon {
-  color: $color-light-grey;
+  color: $color-gray-500;
   opacity: 0;
   transition: opacity .3s;
   display: inline-block;

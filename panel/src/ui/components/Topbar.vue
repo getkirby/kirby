@@ -1,7 +1,7 @@
 <template>
-  <div class="k-topbar">
+  <div class="k-topbar relative text-white bg-black">
     <k-view>
-      <div class="k-topbar-wrapper">
+      <div class="k-topbar-wrapper relative flex items-center">
         <!-- Main Menu -->
         <k-dropdown class="k-topbar-menu">
           <k-button
@@ -28,7 +28,7 @@
         />
 
         <!-- Options -->
-        <div class="k-topbar-options">
+        <div class="k-topbar-options relative flex items-center">
           <slot name="options" />
           <template v-if="loading">
             <k-loader class="k-topbar-loader" />
@@ -76,27 +76,21 @@ export default {
 
 <style lang="scss">
 .k-topbar {
-  position: relative;
-  color: $color-white;
   flex-shrink: 0;
   height: 2.5rem;
   line-height: 1;
-  background: $color-black;
 }
 .k-topbar-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
   margin-left: -0.75rem;
   margin-right: -0.75rem;
 }
 
 .k-topbar-button {
   display: inline-flex;
-  font-size: $text-sm;
   align-items: center;
   height: 2.5rem;
   padding: 0 .75rem;
+  font-size: $text-sm;
 }
 .k-topbar-button .k-button-text {
   display: flex;
@@ -128,11 +122,7 @@ export default {
 
 /** Options **/
 .k-topbar-options {
-  position: relative;
-  display: flex;
-  align-items: center;
   margin-left: auto;
-  background: #000;
 }
 
 /** Loader **/

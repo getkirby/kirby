@@ -109,4 +109,44 @@ export default {
   }
 }
 
+/** Theming **/
+.k-input[data-theme="field"][data-type="checkboxes"] {
+  .k-input-before {
+    border-right: 1px solid $color-background;
+  }
+  .k-input-element + .k-input-after,
+  .k-input-element + .k-input-icon {
+    border-left : 1px solid $color-background;
+  }
+  .k-input-element {
+    overflow: hidden;
+  }
+  .k-checkboxes-input {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: -1px;
+    margin-right: -1px;
+
+    @media screen and (min-width: $breakpoint-md) {
+      grid-template-columns: repeat(var(--columns), 1fr);
+    }
+
+  }
+  .k-checkboxes-input li {
+    border-right: 1px solid $color-background;
+    border-bottom: 1px solid $color-background;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  .k-checkboxes-input label {
+    display: block;
+    line-height: $field-input-line-height;
+    padding: $field-input-padding;
+  }
+  .k-checkbox-input-icon {
+    top: ($field-input-height - $field-input-font-size) / 2;
+    left: $field-input-padding;
+    margin-top: 0px;
+  }
+}
 </style>

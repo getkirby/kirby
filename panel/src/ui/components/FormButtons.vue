@@ -163,9 +163,9 @@ export default {
   display: flex;
   font-size: $text-sm;
   align-items: center;
+  margin-right: 3rem;
   line-height: 1.5em;
   padding: .625rem 0;
-  margin-right: 3rem;
 
   > .k-icon {
     margin-right: .5rem;

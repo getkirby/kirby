@@ -1,5 +1,5 @@
 <template>
-  <div class="k-time-input">
+  <div class="k-time-input flex items-center">
     <k-select-input
       :id="id"
       ref="hour"
@@ -185,9 +185,7 @@ export default {
 
 <style lang="scss">
 .k-time-input {
-  display: flex;
   flex-grow: 1;
-  align-items: center;
   line-height: 1;
 }
 .k-time-input-separator {
@@ -195,5 +193,28 @@ export default {
 }
 .k-time-input-meridiem {
   padding-left: $field-input-padding;
+}
+
+/** Theming **/
+.k-input[data-theme="field"] {
+  .k-time-input .k-select-input {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .k-time-input .k-select-input:first-child {
+    [dir="ltr"] & {
+      padding-left: $field-input-padding;
+    }
+    [dir="rtl"] & {
+      padding-right: $field-input-padding;
+    }
+  }
+  .k-time-input .k-select-input:focus-within {
+    color: $color-focus;
+    font-weight: $font-bold;
+  }
+  .k-time-input .k-time-input-meridiem {
+    padding-left: $field-input-padding;
+  }
 }
 </style>

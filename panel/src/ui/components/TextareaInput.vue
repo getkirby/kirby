@@ -10,6 +10,7 @@
         ref="toolbar"
         :layout="buttons"
         :options="toolbarOptions"
+        class="mb-1"
         @mousedown.native.prevent
         @command="onCommand"
       />
@@ -338,7 +339,7 @@ export default {
   color: inherit;
 }
 .k-textarea-input-native::placeholder {
-  color: $color-light-grey;
+  color: $color-placeholder;
 }
 .k-textarea-input-native:focus {
   outline: 0;
@@ -365,7 +366,6 @@ export default {
 
 /** Toolbar **/
 .k-textarea-input .k-toolbar {
-  margin-bottom: 0.25rem;
   border-bottom: 1px solid $color-background;
   color: #aaa;
 }

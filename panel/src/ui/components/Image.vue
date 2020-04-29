@@ -1,9 +1,8 @@
 <template>
   <k-aspect-ratio
     :ratio="ratio"
-    :data-cover="cover"
     :back="back"
-    class="k-image"
+    :class="classes"
     v-on="$listeners"
   >
     <img
@@ -51,18 +50,12 @@ export default {
     srcset: String,
   },
   computed: {
+    classes() {
+      return "k-image object-" + (this.cover ? "cover" : "contain");
+    },
     ratioPadding() {
       return this.$helper.ratio(this.ratio || "1/1");
     }
   }
 };
 </script>
-
-<style lang="scss">
-.k-image img {
-  object-fit: contain;
-}
-.k-image[data-cover] img {
-  object-fit: cover;
-}
-</style>

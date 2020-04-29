@@ -195,7 +195,7 @@ export default {
   overflow: hidden;
 }
 .k-item-info {
-  color: $color-dark-grey;
+  color: $color-gray-700;
   grid-area: info;
 }
 .k-item-title-link.k-link[data-tabbed] {

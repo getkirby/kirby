@@ -2,11 +2,12 @@
   <div
     v-if="message"
     :data-theme="type"
-    class="k-notification"
+    class="k-notification flex items-center bg-black text-white"
   >
     <p>{{ message }}</p>
     <k-button
       icon="cancel"
+      class="flex ml-4"
       @click="$emit('close')"
     />
   </div>
@@ -28,13 +29,9 @@ export default {
 <style lang="scss">
 .k-notification {
   padding: 0.625rem 1rem;
-  background: $color-black;
   width: 100%;
   line-height: 1.25rem;
-  color: $color-white;
-  display: flex;
   flex-shrink: 0;
-  align-items: center;
 }
 .k-notification[data-theme="error"] {
   background: $color-red-300;
@@ -48,9 +45,5 @@ export default {
   flex-grow: 1;
   word-wrap: break-word;
   overflow: hidden;
-}
-.k-notification .k-button {
-  display: flex;
-  margin-left: 1rem;
 }
 </style>

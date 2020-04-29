@@ -1,6 +1,6 @@
 <template>
   <span
-    class="k-dropdown"
+    class="k-dropdown relative"
     @click.stop
   >
     <slot />
@@ -15,9 +15,3 @@ export default {
 
 }
 </script>
-
-<style lang="scss">
-.k-dropdown {
-  position: relative;
-}
-</style>

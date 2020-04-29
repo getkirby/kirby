@@ -40,12 +40,12 @@
     </template>
     <footer
       v-if="hasFooter"
-      class="k-collection-footer"
+      class="k-collection-footer flex justify-between"
     >
       <k-text
         v-if="help"
         theme="help"
-        class="k-collection-help"
+        class="k-collection-help py-2 px-3"
         v-html="help"
       />
       <div class="k-collection-pagination">
@@ -195,12 +195,7 @@ export default {
 </script>
 
 <style lang="scss">
-.k-collection-help {
-  padding: .5rem .75rem;
-}
 .k-collection-footer {
-  display: flex;
-  justify-content: space-between;
   margin-right: -.75rem;
   margin-left: -.75rem;
 }

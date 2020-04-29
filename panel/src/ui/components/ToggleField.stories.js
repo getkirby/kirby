@@ -34,7 +34,7 @@ export const regular = () => ({
 });
 
 export const toggleText = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-toggle-field
@@ -52,7 +52,7 @@ export const toggleText = () => ({
 });
 
 export const autofocus   = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-toggle-field
@@ -89,7 +89,7 @@ export const disabled = () => ({
 });
 
 export const noText = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-toggle-field

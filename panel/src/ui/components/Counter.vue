@@ -1,7 +1,8 @@
 <template>
   <span
     :data-invalid="!valid"
-    class="k-counter"
+    class="k-counter text-xs text-black font-bold"
+
   >
     <span>{{ count }}</span>
     <span
@@ -67,18 +68,13 @@ export default {
 </script>
 
 <style lang="scss">
-.k-counter {
-  font-size: $text-xs;
-  color: $color-black;
-  font-weight: $font-bold;
-}
 .k-counter[data-invalid] {
   box-shadow: none;
   border: 0;
   color: $color-negative;
 }
 .k-counter-rules {
-  color: $color-dark-grey;
+  color: $color-gray-700;
   font-weight: $font-normal;
 
   [dir="ltr"] & {

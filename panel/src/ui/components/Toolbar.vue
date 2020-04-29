@@ -1,10 +1,10 @@
 <template>
   <nav
     v-if="buttonSetup.length"
-    class="k-toolbar"
+    class="k-toolbar bg-white"
   >
     <div class="k-toolbar-wrapper">
-      <div class="k-toolbar-buttons">
+      <div class="k-toolbar-buttons flex">
         <template v-for="(button, buttonIndex) in buttonSetup">
           <!-- divider -->
           <template v-if="button === '|'">
@@ -197,7 +197,6 @@ export default {
 
 <style lang="scss">
 .k-toolbar {
-  background: $color-white;
   height: 36px;
 }
 .k-toolbar-wrapper {
@@ -206,9 +205,6 @@ export default {
   right: 0;
   left: 0;
   max-width: 100%;
-}
-.k-toolbar-buttons {
-  display: flex;
 }
 .k-toolbar-divider {
   width: 1px;

@@ -162,4 +162,30 @@ export default {
 .k-select-input-native {
   font-weight: $font-normal;
 }
+
+/** Theming **/
+.k-input[data-theme="field"] {
+  .k-select-input {
+    padding: $field-input-padding;
+    line-height: $field-input-line-height;
+  }
+
+  &[data-type="select"] {
+    position: relative;
+
+    .k-input-icon {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+
+      [dir="ltr"] & {
+        right: 0;
+      }
+
+      [dir="rtl"] & {
+        left: 0;
+      }
+    }
+  }
+}
 </style>

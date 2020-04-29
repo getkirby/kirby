@@ -2,7 +2,7 @@
   <portal v-if="isOpen">
     <div
       :dir="$direction"
-      class="k-search"
+      class="k-search fixed bg-backdrop"
       role="search"
       @click="close"
     >
@@ -10,8 +10,8 @@
         class="k-search-box shadow-xl bg-background rounded-sm"
         @click.stop
       >
-        <div class="k-search-input">
-          <k-dropdown class="k-search-types">
+        <div class="k-search-input flex">
+          <k-dropdown class="k-search-types flex">
             <k-button
               :icon="currentType.icon"
               @click="$refs.types.toggle()"
@@ -173,14 +173,12 @@ export default {
 
 <style lang="scss">
 .k-search {
-  position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
   z-index: 1000;
   overflow: auto;
-  background: $color-backdrop;
 }
 .k-search-box {
   max-width: 30rem;
@@ -190,12 +188,8 @@ export default {
     margin: 2.5rem auto;
   }
 }
-.k-search-input {
-  display: flex;
-}
 .k-search-types {
   flex-shrink: 0;
-  display: flex;
 }
 .k-search-types > .k-button {
   padding: 0 0 0 .7rem;
@@ -264,7 +258,7 @@ export default {
   font-size: $text-xs;
   background: $color-background;
   border-top: 1px dashed $color-border;
-  color: $color-dark-grey;
+  color: $color-gray-700;
 }
 
 </style>

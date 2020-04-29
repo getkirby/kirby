@@ -223,4 +223,12 @@ export default {
 .k-tags-input .k-dropdown-content {
   top: calc(100% + .5rem + 2px);
 }
+
+/** Theming **/
+.k-input[data-theme="field"][data-type="tags"] {
+  .k-tag,
+  .k-tags-input input {
+    height: 1.75rem;
+  }
+}
 </style>

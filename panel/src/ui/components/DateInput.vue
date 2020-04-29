@@ -187,4 +187,24 @@ export default {
 .k-date-input-separator {
   padding: 0 $field-input-padding / 4;
 }
+
+/** Theming **/
+.k-input[data-theme="field"] {
+  .k-date-input .k-select-input {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .k-date-input .k-select-input:first-child {
+    [dir="ltr"] & {
+      padding-left: $field-input-padding;
+    }
+    [dir="rtl"] & {
+      padding-right: $field-input-padding;
+    }
+  }
+  .k-date-input .k-select-input:focus-within {
+    color: $color-focus;
+    font-weight: $font-bold;
+  }
+}
 </style>

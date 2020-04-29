@@ -21,10 +21,8 @@ export default {
 </script>
 
 <style lang="scss">
-
 .k-info-field .k-headline {
   padding-bottom: .75rem;
   line-height: 1.25rem;
 }
-
 </style>

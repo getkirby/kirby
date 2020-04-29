@@ -1,20 +1,20 @@
 <template>
   <label
     :data-disabled="disabled"
-    class="k-toggle-input"
+    class="k-toggle-input flex items-center"
   >
     <input
       :id="id"
       ref="input"
       :checked="checked"
       :disabled="disabled"
-      class="k-toggle-input-native"
+      class="k-toggle-input-native relative cursor-pointer"
       type="checkbox"
       @change="onInput($event.target.checked)"
     >
     <span
       v-if="text !== false"
-      class="k-toggle-input-label"
+      class="k-toggle-input-label cursor-pointer"
       v-html="label"
     />
   </label>
@@ -86,12 +86,7 @@ $toggle-active-color: $color-black;
 $toggle-focus-color: $color-focus;
 $toggle-height: 16px;
 
-.k-toggle-input {
-  display: flex;
-  align-items: center;
-}
 .k-toggle-input-native {
-  position: relative;
   height: $toggle-height;
   width: $toggle-height * 2;
   border-radius: $toggle-height;
@@ -101,7 +96,6 @@ $toggle-height: 16px;
   outline: 0;
   transition: all ease-in-out 0.1s;
   appearance: none;
-  cursor: pointer;
   flex-shrink: 0;
 
   &:checked {
@@ -129,10 +123,22 @@ $toggle-height: 16px;
     opacity: 0;
   }
 }
-
 .k-toggle-input-label {
-  cursor: pointer;
   flex-grow: 1;
   padding-left: .75rem;
+}
+
+/** Theming **/
+.k-input[data-theme="field"][data-type="toggle"] {
+  .k-input-before {
+    padding-right: $field-input-padding / 2;
+  }
+  .k-toggle-input {
+    padding-left: $field-input-padding;
+  }
+  .k-toggle-input-label {
+    padding: 0 $field-input-padding 0 .75rem;
+    line-height: $field-input-height;
+  }
 }
 </style>

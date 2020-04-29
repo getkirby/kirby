@@ -53,12 +53,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.k-input[data-theme="field"] {
-  .k-tag,
-  .k-tags-input input {
-    height: 1.75rem;
-  }
-}
-</style>

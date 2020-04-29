@@ -4,7 +4,7 @@
     class="k-breadcrumb"
   >
 
-    <k-dropdown class="k-breadcrumb-dropdown">
+    <k-dropdown class="k-breadcrumb-dropdown flex items-center justify-center">
       <k-button
         icon="road-sign"
         @click="$refs.dropdown.toggle()"
@@ -16,23 +16,24 @@
       />
     </k-dropdown>
 
-    <ol>
+    <ol class="hidden items-center">
       <li
         v-for="(crumb, index) in links"
         :key="index"
+        class="flex items-center"
       >
         <k-link
           :title="crumb.text || crumb.label"
           :to="crumb.link"
           :aria-current="isLast(index) ? 'page' : false"
-          class="k-breadcrumb-link"
+          class="k-breadcrumb-link flex items-center text-sm"
         >
           <k-icon
             v-if="crumb.icon"
             :type="crumb.icon"
-            class="k-breadcrumb-icon"
+            class="k-breadcrumb-icon mr-2"
           />
-          <span class="k-breadcrumb-link-text">
+          <span class="k-breadcrumb-link-text truncate">
             {{ crumb.text || crumb.label }}
           </span>
         </k-link>
@@ -79,16 +80,8 @@ export default {
 
 <style lang="scss">
 .k-breadcrumb-dropdown {
-  display: flex;
-  align-items: center;
-  justify-content: center;
   height: 2.5rem;
   width: 2.5rem;
-}
-
-.k-breadcrumb ol {
-  display: none;
-  align-items: center;
 }
 
 @media screen and (min-width: $breakpoint-sm) {
@@ -101,26 +94,14 @@ export default {
 }
 
 .k-breadcrumb-link {
-  display: flex;
-  font-size: $text-sm;
-  padding: .625rem .5rem;
-  align-self: stretch;
-  line-height: 1.25rem;
-  align-items: center;
   min-width: 0;
-}
-.k-breadcrumb-link-text {
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.k-breadcrumb-icon {
-  margin-right: .5rem;
+  align-self: stretch;
+  padding: .625rem .5rem;
+  line-height: 1.25rem;
 }
 .k-breadcrumb li {
-  display: flex;
   flex-shrink: 3;
   min-width: 0;
-  align-items: center;
 }
 .k-breadcrumb li:last-child {
   flex-shrink: 1;

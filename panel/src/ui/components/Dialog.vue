@@ -3,18 +3,18 @@
     <div
       :dir="$direction"
       :data-size="size"
-      class="k-dialog bg-backdrop"
+      class="k-dialog fixed flex items-center justify-center bg-backdrop"
       @click="cancel"
     >
       <div
         ref="box"
-        class="k-dialog-box bg-light rounded-sm shadow-md"
+        class="k-dialog-box relative m-6 bg-light rounded-sm shadow-md"
         @click.stop
       >
         <k-notification
           v-if="notification"
           v-bind="notification"
-          class="k-dialog-notification"
+          class="k-dialog-notification px-6"
           @close="notification = null"
         />
         <header
@@ -23,7 +23,7 @@
         >
           <slot name="header" />
         </header>
-        <div class="k-dialog-body">
+        <div class="k-dialog-body p-6">
           <slot>
             <k-text v-html="text" />
           </slot>
@@ -218,11 +218,6 @@ export default {
 
 <style lang="scss">
 .k-dialog {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
@@ -237,11 +232,9 @@ export default {
 }
 
 .k-dialog-box {
-  position: relative;
   width: 100%;
   line-height: 1;
   max-height: calc(100vh - 3rem);
-  margin: 1.5rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -272,15 +265,12 @@ export default {
 }
 
 .k-dialog .k-dialog-notification {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
   border-top-left-radius: $rounded-sm;
   border-top-right-radius: $rounded-sm;
   margin-top: -3px;
 }
 
 .k-dialog-body {
-  padding: 1.5rem;
   overflow-y: auto;
   overflow-x: hidden;
   flex-grow: 1;
@@ -329,9 +319,6 @@ export default {
 /** Pagination **/
 .k-dialog-pagination {
   margin-bottom: -1.5rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
 /** Dialog search field **/

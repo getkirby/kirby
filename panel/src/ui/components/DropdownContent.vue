@@ -3,13 +3,14 @@
     v-if="isOpen"
     :data-align="align"
     :data-theme="theme"
-    class="k-dropdown-content"
+    class="k-dropdown-content absolute mb-24 bg-black text-white rounded-sm shadow-lg"
   >
     <slot>
       <template v-for="(option, index) in items">
         <hr
           v-if="option === '-'"
           :key="_uid + '-item-' + index"
+          class="relative py-2"
         >
         <k-dropdown-item
           v-else
@@ -187,15 +188,9 @@ export default {
 
 <style lang="scss">
 .k-dropdown-content {
-  position: absolute;
   top: 100%;
-  background: $color-black;
-  color: $color-white;
-  z-index: z-index(dropdown);
-  box-shadow: $shadow-lg;
-  border-radius: $rounded-sm;
   text-align: left;
-  margin-bottom: 6rem;
+  z-index: z-index(dropdown);
 
   [dir="ltr"] & {
     left: 0;
@@ -208,7 +203,6 @@ export default {
 }
 
 .k-dropdown-content[data-align="right"] {
-
   [dir="ltr"] & {
     left: auto;
     right: 0;
@@ -218,7 +212,6 @@ export default {
     left: 0;
     right: auto;
   }
-
 }
 .k-dropdown-content > .k-dropdown-item:first-child {
   margin-top: .5rem;
@@ -227,8 +220,6 @@ export default {
   margin-bottom: .5rem;
 }
 .k-dropdown-content hr {
-  position: relative;
-  padding: 0.5rem 0;
   border: 0;
 
   &::after {

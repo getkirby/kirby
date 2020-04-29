@@ -2,7 +2,7 @@
   <div
     :data-dragging="dragging"
     :data-over="over"
-    class="k-dropzone"
+    class="k-dropzone relative"
     @dragenter="onEnter"
     @dragleave="onLeave"
     @dragover="onOver"
@@ -52,8 +52,8 @@ export default {
       this.files = $event.dataTransfer.files;
 
       /**
-       * The drop event is triggered when files are being dropped into 
-       * the dropzone. The event receives the files list as argument, 
+       * The drop event is triggered when files are being dropped into
+       * the dropzone. The event receives the files list as argument,
        * which can then be used to start an upload for example.
        */
       this.$emit("drop", this.files);
@@ -78,9 +78,6 @@ export default {
 </script>
 
 <style lang="scss">
-.k-dropzone {
-  position: relative;
-}
 .k-dropzone::after {
   content: "";
   position: absolute;
@@ -97,5 +94,4 @@ export default {
   outline: 1px solid $color-focus;
   box-shadow: $color-focus-outline 0 0 0 3px;
 }
-
 </style>

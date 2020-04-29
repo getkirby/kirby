@@ -86,7 +86,7 @@ export default {
 }
 .k-field-label abbr {
   text-decoration: none;
-  color: $color-light-grey;
+  color: $color-gray-500;
   padding-left: 0.25rem;
 }
 .k-field-header {

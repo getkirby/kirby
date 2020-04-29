@@ -1,5 +1,5 @@
 <template>
-  <pre class="k-code-block rounded-sm"><code v-html="code || ' '" /></pre>
+  <pre class="k-code-block p-3 bg-black rounded-sm"><code class="text-white font-mono text-xs" v-html="code || ' '" /></pre>
 </template>
 
 <script>
@@ -14,15 +14,9 @@ export default {
 
 <style lang="scss">
 .k-code-block {
-  background: $color-black;
-  padding: .75rem;
   overflow-x: auto;
 }
 .k-code-block code {
-  color: $color-white;
-  font-family: $font-mono;
-  font-size: .75rem;
   line-height: 1.5em;
-  border-radius: $rounded-sm;
 }
 </style>

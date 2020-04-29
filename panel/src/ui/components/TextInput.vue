@@ -98,7 +98,7 @@ export default {
   color: inherit;
 }
 .k-text-input::placeholder {
-  color: $color-light-grey;
+  color: $color-placeholder;
 }
 .k-text-input:focus {
   outline: 0;
@@ -106,5 +106,13 @@ export default {
 .k-text-input:invalid {
   box-shadow: none;
   outline: 0;
+}
+
+/** Theming **/
+.k-input[data-theme="field"] {
+  .k-text-input {
+    padding: $field-input-padding;
+    line-height: $field-input-line-height;
+  }
 }
 </style>

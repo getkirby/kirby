@@ -16,9 +16,9 @@
         class="k-radio-input-native"
         @change="onInput(option.value)"
       >
-      <label :for="id + '-' + index">
+      <label :for="id + '-' + index" class="items-center cursor-pointer">
         <template v-if="option.info">
-          <span class="k-radio-input-text">{{ option.text }}</span>
+          <span class="k-radio-input-text block">{{ option.text }}</span>
           <span class="k-radio-input-info">{{ option.info }}</span>
         </template>
         <template v-else>
@@ -96,10 +96,6 @@ export default {
   appearance: none;
   opacity: 0;
 }
-.k-radio-input label {
-  cursor: pointer;
-  align-items: center;
-}
 .k-radio-input label::before {
   position: absolute;
   top: .25em;
@@ -122,7 +118,58 @@ export default {
   background: $color-focus;
 }
 
-.k-radio-input-text {
-  display: block;
+/** Theming **/
+.k-input[data-theme="field"][data-type="radio"] {
+  .k-input-before {
+    border-right: 1px solid $color-background;
+  }
+  .k-input-element + .k-input-after,
+  .k-input-element + .k-input-icon {
+    border-left : 1px solid $color-background;
+  }
+  .k-input-element {
+    overflow: hidden;
+  }
+  .k-radio-input {
+    display: grid;
+    grid-template-columns: 1fr;
+    margin-bottom: -1px;
+    margin-right: -1px;
+
+    @media screen and (min-width: $breakpoint-md) {
+      grid-template-columns: repeat(var(--columns), 1fr);
+    }
+  }
+  .k-radio-input li {
+    border-right: 1px solid $color-background;
+    border-bottom: 1px solid $color-background;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  .k-radio-input label {
+    display: block;
+    flex-grow: 1;
+    min-height: $field-input-height;
+    line-height: $field-input-line-height;
+    padding: (($field-input-height - $field-input-line-height) / 2) $field-input-padding;
+  }
+  .k-radio-input label::before {
+    top: ($field-input-height - 1rem) / 2;
+    left: $field-input-padding;
+  }
+  .k-radio-input .k-radio-input-info {
+    display: block;
+    font-size: $text-sm;
+    color: $color-gray-700;
+    line-height: $field-input-line-height;
+    padding-top: $field-input-line-height / 10;
+  }
+  .k-radio-input .k-icon {
+    width: $field-input-height;
+    height: $field-input-height;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>

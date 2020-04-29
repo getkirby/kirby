@@ -1,7 +1,7 @@
 <template>
   <div
     :data-align="align"
-    class="k-view"
+    class="k-view px-6"
   >
     <!-- @slot View content -->
     <slot />
@@ -21,8 +21,6 @@ export default {
 
 <style lang="scss">
 .k-view {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
   margin: 0 auto;
   max-width: 100rem;
 

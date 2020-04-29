@@ -5,7 +5,7 @@
   >
     <header
       v-if="label || headline"
-      class="k-section-header"
+      class="k-section-header relative flex justify-between items-center"
     >
       <k-headline
         :link="link"
@@ -79,10 +79,6 @@ export default {
 
 <style lang="scss">
 .k-section-header {
-  position: relative;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   z-index: 1;
   height: 2.5rem;
   margin-top: -.75rem;

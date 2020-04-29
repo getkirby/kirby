@@ -327,7 +327,7 @@ export default {
 }
 
 .k-multiselect-value {
-  color: $color-light-grey;
+  color: $color-gray-500;
   margin-left: 0.25rem;
 
   &::before {
@@ -341,5 +341,28 @@ export default {
 .k-multiselect-input[data-layout="list"] .k-tag {
   width: 100%;
   margin-right: 0 !important;
+}
+
+/** Theming **/
+.k-input[data-theme="field"][data-type="multiselect"] {
+  position: relative;
+
+  .k-multiselect-input {
+    padding: .25rem 2rem 0 .25rem;
+    min-height: 2.25rem;
+  }
+  .k-tag {
+    margin-right: .25rem;
+    margin-bottom: .25rem;
+    height: 1.75rem;
+    font-size: $text-sm;
+  }
+  .k-input-icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+  }
 }
 </style>

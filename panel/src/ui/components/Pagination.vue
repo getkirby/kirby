@@ -30,8 +30,8 @@
             class="k-pagination-selector"
             @open="$nextTick(() => $refs.page.focus())"
           >
-            <div class="k-pagination-settings">
-              <label for="k-pagination-page">
+            <div class="k-pagination-settings flex items-center justify-center">
+              <label for="k-pagination-page flex items-center text-xs">
                 <span>{{ pageLabel }}:</span>
                 <select
                   id="k-pagination-page"
@@ -308,21 +308,12 @@ export default {
     direction: rtl;
   }
 }
-
-.k-pagination-settings {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
 .k-pagination-settings .k-button {
   line-height: 1;
 }
 .k-pagination-settings label {
-  display: flex;
   border-right: 1px solid rgba(#fff, .35);
-  align-items: center;
   padding: .625rem 1rem;
-  font-size: $text-xs;
 }
 .k-pagination-settings label span {
   margin-right: .5rem;

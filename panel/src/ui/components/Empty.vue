@@ -3,7 +3,7 @@
     :is="element"
     :data-layout="layout"
     :type="element === 'button' ? 'button' : false"
-    class="k-empty"
+    class="k-empty flex items-stretch rounded-sm"
     v-on="$listeners"
   >
     <k-icon
@@ -38,10 +38,7 @@ export default {
 <style lang="scss">
 /* global styles */
 .k-empty {
-  display: flex;
-  align-items: stretch;
-  border-radius: $rounded-sm;
-  color: $color-dark-grey;
+  color: $color-gray-700;
   border: 1px dashed $color-border;
 }
 button.k-empty {
@@ -52,10 +49,10 @@ button.k-empty:focus {
 }
 .k-empty p {
   font-size: $text-sm;
-  color: $color-dark-grey;
+  color: $color-gray-700;
 }
 .k-empty > .k-icon {
-  color: $color-light-grey;
+  color: $color-gray-500;
 }
 
 /* layout:cards & cardlets */

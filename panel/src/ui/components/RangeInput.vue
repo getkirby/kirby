@@ -250,4 +250,11 @@ $range-track-focus-color: $color-focus;
 .k-range-input-tooltip > * {
   padding: 4px;
 }
+
+/** Theming **/
+.k-input[data-theme="field"][data-type="range"] {
+  .k-range-input {
+    padding: $field-input-padding;
+  }
+}
 </style>

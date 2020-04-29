@@ -128,7 +128,7 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 .k-number-input {
   width: 100%;
   border: 0;
@@ -137,7 +137,7 @@ export default {
   color: inherit;
 }
 .k-number-input::placeholder {
-  color: $color-light-grey;
+  color: $color-gray-500;
 }
 .k-number-input:focus {
   outline: 0;
@@ -145,5 +145,13 @@ export default {
 .k-number-input:invalid {
   box-shadow: none;
   outline: 0;
+}
+
+/** Theming **/
+.k-input[data-theme="field"] {
+  .k-number-input {
+    padding: $field-input-padding;
+    line-height: $field-input-line-height;
+  }
 }
 </style>

@@ -270,7 +270,7 @@ $table-row-height: 38px;
   width: 100%;
   font-weight: $font-normal;
   z-index: 1;
-  color: $color-dark-grey;
+  color: $color-gray-700;
   background: $color-white;
 
   [dir="ltr"] & {
@@ -301,7 +301,7 @@ $table-row-height: 38px;
 }
 .k-table .k-table-index {
   font-size: $text-xs;
-  color: $color-light-grey;
+  color: $color-gray-500;
   line-height: 1.1em;
 }
 

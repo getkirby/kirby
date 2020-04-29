@@ -166,7 +166,7 @@ export default {
         setTimeout(() => {
           this.$refs.dialog.close();
           /**
-           * Fired when all files have been uploaded successfully.  
+           * Fired when all files have been uploaded successfully.
            * Parameters passed: `uploads`, `response`
            */
           this.$emit("success", this.files, Object.values(this.completed));
@@ -201,7 +201,7 @@ export default {
   font-size: $text-sm;
 }
 .k-upload-list-filename {
-  color: $color-dark-grey;
+  color: $color-gray-700;
 }
 
 .k-upload-error-list li {
@@ -217,6 +217,6 @@ export default {
   font-weight: $font-bold;
 }
 .k-upload-error-message {
-  color: $color-dark-grey;
+  color: $color-gray-700;
 }
 </style>

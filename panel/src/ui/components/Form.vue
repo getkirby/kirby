@@ -21,7 +21,7 @@
     <slot name="footer" />
     <input
       ref="submitter"
-      class="k-form-submitter"
+      class="k-form-submitter hidden"
       type="submit"
     >
   </form>
@@ -72,9 +72,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.k-form-submitter {
-  display: none;
-}
-</style>

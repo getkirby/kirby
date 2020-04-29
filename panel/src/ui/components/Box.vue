@@ -1,7 +1,7 @@
 <template>
   <div
     :data-theme="theme"
-    class="k-box"
+    class="k-box text-sm"
     v-on="$listeners"
   >
     <!-- @slot Fill the box with custom content instead of text -->
@@ -29,14 +29,13 @@ export default {
 <style lang="scss">
 .k-box {
   word-wrap: break-word;
-  font-size: $text-sm;
 }
 .k-box:not([data-theme="none"]) {
-  background: lighten($color-light-grey, 25%);
+  background: lighten($color-gray-500, 25%);
   border-radius: $rounded-sm;
   padding: 0.375rem 0.75rem;
   line-height: 1.25rem;
-  border-left: 2px solid $color-light-grey;
+  border-left: 2px solid $color-gray-500;
   padding: 0.5rem 1.5rem;
 }
 .k-box[data-theme="code"] {
@@ -95,14 +94,14 @@ export default {
   flex-direction: column;
   background: $color-background;
   border-radius: $rounded-sm;
-  color: $color-dark-grey;
+  color: $color-gray-700;
   border: 1px dashed $color-border;
 }
 .k-box[data-theme="empty"] .k-icon {
   margin-bottom: 0.5rem;
-  color: $color-light-grey;
+  color: $color-gray-500;
 }
 .k-box[data-theme="empty"] p {
-  color: $color-dark-grey;
+  color: $color-gray-700;
 }
 </style>

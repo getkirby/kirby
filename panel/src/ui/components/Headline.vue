@@ -85,7 +85,7 @@ export default {
 }
 
 .k-headline abbr {
-  color: $color-light-grey;
+  color: $color-gray-500;
   padding-left: .25rem;
   text-decoration: none;
 }
