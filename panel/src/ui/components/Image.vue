@@ -2,7 +2,7 @@
   <k-aspect-ratio
     :ratio="ratio"
     :back="back"
-    :class="classes"
+    class="k-image"
     v-on="$listeners"
   >
     <img
@@ -10,6 +10,7 @@
       :src="src"
       :srcset="srcset"
       :sizes="sizes"
+      :class="imgClasses"
       @dragstart.prevent
     >
   </k-aspect-ratio>
@@ -50,8 +51,8 @@ export default {
     srcset: String,
   },
   computed: {
-    classes() {
-      return "k-image object-" + (this.cover ? "cover" : "contain");
+    imgClasses() {
+      return "object-" + (this.cover ? "cover" : "contain");
     },
     ratioPadding() {
       return this.$helper.ratio(this.ratio || "1/1");
