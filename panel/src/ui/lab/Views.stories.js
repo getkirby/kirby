@@ -26,7 +26,11 @@ export const SiteView = () => ({
               add: true,
               pages: async () => Pages(10),
               type: "pages",
-              layout: "cards"
+              layout: "cards",
+              image: {
+                ratio: "3/2",
+                cover: true
+              }
             }
           },
         },

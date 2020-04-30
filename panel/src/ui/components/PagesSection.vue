@@ -24,6 +24,7 @@
       @flag="onFlag"
       @option="onPageOption"
     />
+    <slot />
   </k-section>
 </template>
 
@@ -40,7 +41,10 @@ export default {
     },
     empty: [String, Object],
     help: [Boolean, String],
-    image: [Boolean, Object],
+    image: {
+      type: [Boolean, Object],
+      default: true,
+    },
     info: [Boolean, String],
     layout: String,
     limit: {
@@ -91,6 +95,12 @@ export default {
     },
     onSectionOption(option) {
       this.$emit("option", option);
+
+      switch (option) {
+        case "add":
+          this.$emit("add");
+          break;
+      }
     }
   }
 };
