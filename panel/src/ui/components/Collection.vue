@@ -44,7 +44,7 @@
       <k-text
         v-if="help"
         theme="help"
-        class="k-collection-help py-2 px-3"
+        class="k-collection-help py-2 px-3 flex items-center"
         v-html="help"
       />
       <div class="k-collection-pagination">
@@ -219,14 +219,6 @@ export default {
 .k-collection-footer {
   margin-right: -.75rem;
   margin-left: -.75rem;
-}
-.k-collection-pagination {
-  line-height: 1.25rem;
-  min-height: 2.75rem;
-}
-.k-collection-pagination .k-pagination .k-button {
-  padding: .5rem .75rem;
-  line-height: 1.125rem;
 }
 .k-collection[data-loading] {
   cursor: wait;
