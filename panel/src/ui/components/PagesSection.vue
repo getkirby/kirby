@@ -11,6 +11,14 @@
       :image="image"
       :items="pages"
       :layout="layout"
+      :loader="{
+        info,
+        ratio: image.ratio
+      }"
+      :pagination="{
+        page,
+        limit
+      }"
       :sortable="sortable"
       v-on="listeners"
       @flag="onFlag"
@@ -33,7 +41,16 @@ export default {
     empty: [String, Object],
     help: [Boolean, String],
     image: [Boolean, Object],
+    info: [Boolean, String],
     layout: String,
+    limit: {
+      type: Number,
+      default: 20,
+    },
+    page: {
+      type: Number,
+      default: 1,
+    },
     pages: Function,
     sortable: Boolean
   },

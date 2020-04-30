@@ -23,7 +23,7 @@ export const list = () => ({
         await new Promise(r => setTimeout(r, this.delay));
 
         return {
-          data: items(10, ((page - 1) * limit) + 1),
+          data: items(limit, ((page - 1) * limit) + 1),
           pagination: {
             total: 230
           }

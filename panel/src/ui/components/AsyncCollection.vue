@@ -24,8 +24,11 @@ export default {
     /**
      * Help text to be displayed below the collection in grey.
      */
-    help: String,
-    image: [Boolean, Object],
+    help: [Boolean, String],
+    image: {
+      type: [Object, Boolean],
+      default: true,
+    },
     items: {
       type: Function,
       default() {
@@ -75,8 +78,8 @@ export default {
       data: [],
       loading: true,
       loadingTimeout: false,
-      limit: 10,
-      page: 1,
+      limit: this.pagination.limit || 20,
+      page: this.pagination.page || 1,
       total: 0,
       error: null
     };
@@ -115,10 +118,9 @@ export default {
   methods: {
     startLoading() {
       clearTimeout(this.loadingTimeout);
-      this.loading = true;
       this.loadingTimeout = setTimeout(() => {
         this.loading = true;
-      }, 150);
+      }, 250);
     },
     stopLoading() {
       clearTimeout(this.loadingTimeout);

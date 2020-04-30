@@ -14,6 +14,9 @@ export const list = () => ({
     add() {
       return false;
     },
+    delay() {
+      return 0;
+    },
     empty() {
       return null;
     },
@@ -23,19 +26,31 @@ export const list = () => ({
     image() {
       return {};
     },
+    limit() {
+      return 10;
+    },
     layout() {
       return "list";
     },
+    page() {
+      return 1;
+    },
     pages() {
       return async ({ page, limit }) => {
+
+        await new Promise(r => setTimeout(r, this.delay));
+
         return {
-          data: Pages(10, ((page - 1) * limit) + 1),
+          data: Pages(limit, ((page - 1) * limit) + 1),
           pagination: {
             total: 230
           }
         };
       };
-    }
+    },
+    sortable() {
+      return false;
+    },
   },
   methods: {
     onEmpty: action("empty"),
@@ -48,8 +63,12 @@ export const list = () => ({
       :empty="empty"
       :help="help"
       :image="image"
+      :info="true"
       :layout="layout"
+      :page="page"
       :pages="pages"
+      :limit="limit"
+      :sortable="sortable"
       label="Pages"
       @empty="onEmpty"
       @flag="onFlag"
@@ -71,11 +90,58 @@ export const listWithImageSettings = () => ({
   }
 });
 
+export const listSortable = () => ({
+  extends: list(),
+  computed: {
+    sortable() {
+      return true;
+    },
+  }
+});
+
+export const listWithLimit = () => ({
+  extends: list(),
+  computed: {
+    limit() {
+      return 20;
+    },
+  }
+});
+
+export const listWithPage = () => ({
+  extends: list(),
+  computed: {
+    page() {
+      return 2;
+    },
+  }
+});
+
 export const listWithHelp = () => ({
   extends: list(),
   computed: {
     help() {
       return "Here's some help";
+    },
+  }
+});
+
+export const listWithError = () => ({
+  extends: list(),
+  computed: {
+    pages() {
+      return async ({ page, limit }) => {
+        throw new Error("The pages could not be loaded");
+      };
+    },
+  }
+});
+
+export const listWithSlowServer = () => ({
+  extends: list(),
+  computed: {
+    delay() {
+      return 2500;
     },
   }
 });
@@ -120,15 +186,6 @@ export const cardlets = () => ({
   }
 });
 
-export const cardletsWithHelp = () => ({
-  extends: cardlets(),
-  computed: {
-    help() {
-      return "Here's some help";
-    },
-  }
-});
-
 export const cardletsWithImageSettings = () => ({
   extends: cardlets(),
   computed: {
@@ -139,6 +196,44 @@ export const cardletsWithImageSettings = () => ({
         ratio: "3/2",
       };
     }
+  }
+});
+
+export const cardletsSortable = () => ({
+  extends: cardlets(),
+  computed: {
+    sortable() {
+      return true;
+    },
+  }
+});
+
+export const cardletsWithHelp = () => ({
+  extends: cardlets(),
+  computed: {
+    help() {
+      return "Here's some help";
+    },
+  }
+});
+
+export const cardletsWithError = () => ({
+  extends: cardlets(),
+  computed: {
+    pages() {
+      return async ({ page, limit }) => {
+        throw new Error("The pages could not be loaded");
+      };
+    },
+  }
+});
+
+export const cardletsWithSlowServer = () => ({
+  extends: cardlets(),
+  computed: {
+    delay() {
+      return 2500;
+    },
   }
 });
 
@@ -195,12 +290,48 @@ export const cardsWithImageSettings = () => ({
   }
 });
 
+export const cardsSortable = () => ({
+  extends: cards(),
+  computed: {
+    sortable() {
+      return true;
+    },
+  }
+});
+
 export const cardsWithHelp = () => ({
   extends: cards(),
   computed: {
     help() {
       return "Here's some help";
     },
+  }
+});
+
+export const cardsWithError = () => ({
+  extends: cards(),
+  computed: {
+    pages() {
+      return async ({ page, limit }) => {
+        throw new Error("The pages could not be loaded");
+      };
+    },
+  }
+});
+
+export const cardsWithSlowServer = () => ({
+  extends: cards(),
+  computed: {
+    delay() {
+      return 2500;
+    },
+    image() {
+      return {
+        back: "pattern",
+        cover: true,
+        ratio: "3/2",
+      };
+    }
   }
 });
 

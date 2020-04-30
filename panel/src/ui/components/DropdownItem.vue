@@ -2,7 +2,7 @@
   <k-button
     ref="button"
     v-bind="$props"
-    class="k-dropdown-item flex items-center text-sm"
+    class="k-dropdown-item flex items-center text-left text-sm px-5"
     v-on="listeners"
   >
     <slot />
@@ -51,7 +51,6 @@ export default {
 <style lang="scss">
 .k-dropdown-item {
   white-space: nowrap;
-  line-height: 1;
   width: 100%;
   padding: 6px 16px;
 

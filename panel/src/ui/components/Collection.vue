@@ -76,9 +76,7 @@ export default {
     help: [Boolean, String],
     image: {
       type: [Object, Boolean],
-      default() {
-        return {};
-      }
+      default: true,
     },
     items: {
       type: [Array, Object],
