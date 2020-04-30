@@ -4,6 +4,9 @@
 .bg-aqua {
   background: $color-aqua-400;
 }
+.bg-aqua-light {
+  background: $color-aqua-300;
+}
 .bg-backdrop {
   background: $color-backdrop;
 }
@@ -16,11 +19,17 @@
 .bg-blue {
   background: $color-blue-400;
 }
+.bg-blue-light {
+  background: $color-blue-300;
+}
 .bg-dark {
   background: $color-gray-800;
 }
 .bg-green {
   background: $color-green-400;
+}
+.bg-green-light {
+  background: $color-green-300;
 }
 .bg-light {
   background: $color-gray-200;
@@ -28,18 +37,30 @@
 .bg-orange {
   background: $color-orange-400;
 }
+.bg-orange-light {
+  background: $color-orange-300;
+}
 .bg-pattern {
   background: $color-gray-800 url($pattern);
 }
 .bg-purple {
   background: $color-purple-400;
 }
+.bg-purple-light {
+  background: $color-purple-300;
+}
 .bg-red {
   background: $color-red-400;
+}
+.bg-red-light {
+  background: $color-red-300;
 }
 .bg-white {
   background: $color-white;
 }
 .bg-yellow {
   background: $color-yellow-400;
+}
+.bg-yellow-light {
+  background: $color-yellow-300;
 }
