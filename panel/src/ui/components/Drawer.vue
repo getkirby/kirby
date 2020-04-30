@@ -2,7 +2,7 @@
   <portal v-if="isOpen">
     <div
       :dir="$direction"
-      class="k-drawer fixed flex items-center justify-end"
+      class="k-drawer fixed flex items-center justify-end bg-backdrop"
       @click="cancel"
     >
 
@@ -10,7 +10,7 @@
         v-if="cancelButton"
         icon="cancel"
         @click.stop="cancel()"
-        class="k-drawer-cancel bg-black text-white p-3"
+        class="k-drawer-cancel text-white p-3"
       />
 
       <div
@@ -19,12 +19,14 @@
         @click.stop
       >
         <header class="k-drawer-header flex items-center justify-between px-6">
-          <h2 class="text-sm font-normal truncate">
-            {{ title }}
-          </h2>
+          <span class="flex items-center">
+            <h2 class="text-sm font-normal truncate">
+              {{ title }}
+            </h2>
 
-          <!-- Center slot in the drawer header -->
-          <slot name="context" />
+            <!-- Center slot in the drawer header -->
+            <slot name="context" />
+          </span>
 
           <k-button
             v-if="submitButton"
@@ -85,7 +87,6 @@ export default {
   border: 0;
   z-index: z-index(drawer);
   transform: translate3d(0, 0, 0);
-  background: rgba($color-black, 0.05);
 }
 
 .k-drawer-cancel {
