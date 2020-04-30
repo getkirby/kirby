@@ -18,7 +18,9 @@ import ErrorItems from "./ErrorItems.vue";
   <Story name="List">
     {{
       template: `
-        <k-error-items>This is an error!</k-error-items>
+        <k-error-items>
+          This is an error! <k-link to="reload" class="ml-2 underline">Try again</k-link>
+        </k-error-items>
       `
     }}
   </Story>

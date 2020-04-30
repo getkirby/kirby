@@ -5,8 +5,10 @@
       :layout="layout"
       :limit="limit"
     />
-    <div class="k-error-items-message absolute flex items-center justify-center rounded-sm">
-      <p class="p-3 bg-white rounded-sm"><slot /></p>
+    <div class="k-error-items-message absolute flex items-center justify-center">
+      <p class="bg-red-light shadow-lg rounded-sm py-2 px-3 text-sm flex items-center">
+        <k-icon type="alert" class="mr-2" /><slot />
+      </p>
     </div>
   </div>
 </template>
@@ -39,14 +41,13 @@ export default {
 <style lang="scss">
 .k-error-items-message {
   top: 0;
-  right: 0;
-  bottom: 0;
   left: 0;
-  background: rgba($color-red-300, .5);
-  z-index: z-index(dropzone);
-
-  > span {
-
-  }
+  bottom: 0;
+  right: 0;
+}
+.k-error-items .k-empty-item .k-item-title::after,
+.k-error-items .k-empty-item .k-item-info::after {
+  animation: none;
+  background: $color-gray-200;
 }
 </style>

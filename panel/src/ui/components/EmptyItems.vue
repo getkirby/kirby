@@ -83,7 +83,6 @@ export default {
   background: $color-gray-200;
   background: linear-gradient(90deg, $color-gray-200, $color-gray-300, $color-gray-100);
   background-size: 400% 100%;
-  -webkit-animation: EmptyItemsLoading 3s ease infinite;
   animation: EmptyItemsLoading 3s ease infinite;
 }
 
