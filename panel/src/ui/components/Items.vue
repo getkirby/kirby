@@ -68,6 +68,10 @@ export default {
         return false;
       }
 
+      if (this.image === true) {
+        return this.image;
+      }
+
       return {
         ...item.image,
         ...this.image,

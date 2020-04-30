@@ -20,6 +20,9 @@ export const list = () => ({
     help() {
       return false;
     },
+    image() {
+      return {};
+    },
     layout() {
       return "list";
     },
@@ -148,6 +151,18 @@ export const cards = () => ({
   computed: {
     layout() {
       return "cards";
+    }
+  }
+});
+
+export const cardsWithImageSettings = () => ({
+  extends: cards(),
+  computed: {
+    image() {
+      return {
+        ratio: "3/2"
+
+      };
     }
   }
 });
