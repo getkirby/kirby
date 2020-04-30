@@ -71,6 +71,12 @@ return [
             return $min;
         },
         /**
+          * Add new items to the top of the list, if `true`
+          */
+          'prepend' => function (bool $prepend = false) {
+            return $prepend;
+        },
+        /**
          * Toggles drag & drop sorting
          */
         'sortable' => function (bool $sortable = null) {

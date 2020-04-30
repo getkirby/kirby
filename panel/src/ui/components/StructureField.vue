@@ -118,16 +118,34 @@ export default {
       }
     },
     fields: Object,
+    /**
+     * Show X entries per pagination page
+     */
     limit: {
       type: Number,
       default: 0
     },
+    /**
+     * Maximum count of entries
+     */
     max: Number,
-    min: Number,
+    /**
+     * Add new entries to the top of the list
+     */
+    prepend: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * Can be sorted manually via drag-n-drop
+     */
     sortable: {
       type: Boolean,
       default: true
     },
+    /**
+     * Sort automatically by this rule
+     */
     sortBy: String,
     value: {
       type: Array,
@@ -335,7 +353,12 @@ export default {
       this.closeEditRowDialog();
     },
     submitNewRow() {
-      this.rows.push(this.newRowModel);
+      if (this.prepend === true){
+        this.rows.unshift(this.newRowModel);
+      } else {
+        this.rows.push(this.newRowModel);
+      }
+
       this.rows = this.sort(this.rows);
       this.onInput();
       this.closeNewRowDialog();

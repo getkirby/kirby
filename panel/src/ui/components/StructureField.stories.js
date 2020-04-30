@@ -210,6 +210,23 @@ export const pagination = () => ({
   `
 });
 
+export const prepend = () => ({
+  ...regular(),
+  template: `
+    <div>
+      <k-structure-field
+        v-model="value"
+        :columns="columns"
+        :fields="fields"
+        :prepend="true"
+        class="mb-8"
+        label="Social"
+        @input="input"
+      />
+    </div>
+  `
+});
+
 export const empty = () => ({
   ...regular(),
   data() {
