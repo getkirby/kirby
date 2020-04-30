@@ -73,7 +73,7 @@ export default {
     /**
      * Help text to be displayed below the collection in grey.
      */
-    help: String,
+    help: [Boolean, String],
     image: {
       type: [Object, Boolean],
       default() {

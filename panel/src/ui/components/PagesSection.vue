@@ -30,7 +30,7 @@ export default {
       default: false
     },
     empty: [String, Object],
-    help: String,
+    help: [Boolean, String],
     layout: String,
     pages: Function,
     sortable: Boolean
