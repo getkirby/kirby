@@ -10,7 +10,6 @@
         <hr
           v-if="option === '-'"
           :key="_uid + '-item-' + index"
-          class="relative py-2"
         >
         <k-dropdown-item
           v-else
@@ -220,25 +219,15 @@ export default {
   margin-bottom: .5rem;
 }
 .k-dropdown-content hr {
-  border: 0;
-
-  &::after {
-    position: absolute;
-    top: 0.5rem;
-    left: 1rem;
-    right: 1rem;
-    content: "";
-    height: 1px;
-    background: currentColor;
-    opacity: 0.2;
-  }
+  border-color: currentColor;
+  opacity: 0.2;
+  margin: .5rem 1rem;
 }
-
 .k-dropdown-content[data-theme="light"] {
   background: $color-white;
   color: $color-black;
 }
-.k-dropdown-content[data-theme="light"] hr::after {
+.k-dropdown-content[data-theme="light"] hr {
   opacity: 0.1;
 }
 </style>
