@@ -1,64 +1,29 @@
 <template>
   <nav
     v-if="show"
-    :data-align="align"
     class="k-pagination"
   >
     <k-button
       v-if="show"
       :disabled="!hasPrev"
       :tooltip="prevLabel"
+      class="k-pagination-button"
       icon="angle-left"
       @click="prev"
     />
-
     <template v-if="details">
       <template v-if="dropdown">
-        <k-dropdown>
-          <k-button
-            :disabled="!hasPages"
-            class="k-pagination-details"
-            @click="$refs.dropdown.toggle()"
-          >
-            <template v-if="total > 1">
-              {{ detailsText }}
-            </template>{{ total }}
-          </k-button>
-
-          <k-dropdown-content
-            ref="dropdown"
-            class="k-pagination-selector"
-            @open="$nextTick(() => $refs.page.focus())"
-          >
-            <div class="k-pagination-settings flex items-center justify-center">
-              <label for="k-pagination-page flex items-center text-xs">
-                <span>{{ pageLabel }}:</span>
-                <select
-                  id="k-pagination-page"
-                  ref="page"
-                >
-                  <option
-                    v-for="p in pages"
-                    :key="p"
-                    :selected="currentPage === p"
-                    :value="p"
-                  >
-                    {{ p }}
-                  </option>
-                </select>
-              </label>
-              <k-button
-                icon="check"
-                @click="goTo($refs.page.value)"
-              />
-            </div>
-          </k-dropdown-content>
-        </k-dropdown>
+        <k-page-dropdown
+          :page="currentPage"
+          :page-label="pageLabel"
+          :pages="pages"
+          :text="detailsText"
+          class="k-pagination-details"
+          @change="goTo($event)"
+        />
       </template>
       <template v-else>
-        <span class="k-pagination-details">
-          <template v-if="total > 1">{{ detailsText }}</template>{{ total }}
-        </span>
+        <span class="k-pagination-details text-sm">{{ detailsText }}</span>
       </template>
     </template>
 
@@ -66,6 +31,7 @@
       v-if="show"
       :disabled="!hasNext"
       :tooltip="nextLabel"
+      class="k-pagination-button"
       icon="angle-right"
       @click="next"
     />
@@ -75,15 +41,6 @@
 <script>
 export default {
   props: {
-    /**
-     * The align prop makes it possible to move the pagination
-     * component to the `left`, `center` or `right` according
-     * to the wrapper component.
-     */
-    align: {
-      type: String,
-      default: "left"
-    },
     /**
      * Show/hide the details display with the page selector
      * in the center of the two navigation buttons.
@@ -181,11 +138,15 @@ export default {
       }
     },
     detailsText() {
-      if (this.limit === 1) {
-        return this.start + " / ";
-      } else {
-        return this.start + "-" + this.end + " / ";
+      if (this.total <= 1) {
+        return this.total;
       }
+
+      if (this.limit === 1) {
+        return this.start + " / " + this.total;
+      }
+
+      return this.start + "-" + this.end + " / " + this.total;
     },
     pages() {
       return Math.ceil(this.total / this.limit);
@@ -230,10 +191,6 @@ export default {
 
           this.currentPage = page;
 
-          if (this.$refs.dropdown) {
-            this.$refs.dropdown.close();
-          }
-
           /**
            * Listening to the paginate event is the most straight
            * forward way to react to the pagination component. An object
@@ -274,48 +231,28 @@ export default {
 
 <style lang="scss">
 .k-pagination {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
   user-select: none;
-  direction: ltr;
-}
-.k-pagination .k-button {
-  padding: 1rem;
 }
 .k-pagination-details {
   white-space: nowrap;
-}
-.k-pagination > span {
-  font-size: $text-sm;
-}
-.k-pagination[data-align="center"] {
-  text-align: center;
-}
-.k-pagination[data-align="right"] {
-  text-align: right;
-}
-
-.k-dropdown-content.k-pagination-selector {
-  position: absolute;
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
-  background: $color-black;
-
-  [dir="ltr"] & {
-    direction: ltr;
-  }
-
-  [dir="rtl"] & {
-    direction: rtl;
-  }
-}
-.k-pagination-settings .k-button {
+  display: flex;
+  align-items: center;
+  height: 2.5rem;
   line-height: 1;
 }
-.k-pagination-settings label {
-  border-right: 1px solid rgba(#fff, .35);
-  padding: .625rem 1rem;
+.k-pagination-details .k-page-dropdown-toggle {
+  display: inline-flex;
+  height: 2.5rem;
+  padding: 0 .5rem;
 }
-.k-pagination-settings label span {
-  margin-right: .5rem;
+.k-pagination-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 2.5rem;
+  width: 2.5rem;
 }
 </style>

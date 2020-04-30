@@ -28,13 +28,13 @@ import Pagination from "./Pagination.vue";
 
 ### Methods
 
-**`goTo(page)`**  
+**`goTo(page)`**
 Jump to the given page
 
-**`prev()`**  
+**`prev()`**
 Jump to the previous page
 
-**`next()`**  
+**`next()`**
 Jump to the next page
 
 
@@ -71,32 +71,16 @@ Jump to the next page
   </Story>
 </Preview>
 
-### Center
+### Zero entries
 <Preview>
-  <Story name="Center">
+  <Story name="Zero entries">
     {{
       template: `
         <k-pagination
           :details="true"
           :page="1"
-          :total="20"
-          align="center"
-        />
-      `
-    }}
-  </Story>
-</Preview>
-
-### Right
-<Preview>
-  <Story name="Right">
-    {{
-      template: `
-        <k-pagination
-          :details="true"
-          :page="1"
-          :total="20"
-          align="right"
+          :limit="1"
+          :total="0"
         />
       `
     }}
