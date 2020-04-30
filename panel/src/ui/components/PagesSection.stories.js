@@ -47,6 +47,7 @@ export const list = () => ({
       :add="add"
       :empty="empty"
       :help="help"
+      :image="image"
       :layout="layout"
       :pages="pages"
       label="Pages"
@@ -55,6 +56,19 @@ export const list = () => ({
       @option="onOption"
     />
   `
+});
+
+export const listWithImageSettings = () => ({
+  extends: list(),
+  computed: {
+    image() {
+      return {
+        back: "pattern",
+        cover: true,
+        ratio: "3/2",
+      };
+    }
+  }
 });
 
 export const listWithHelp = () => ({
@@ -115,6 +129,19 @@ export const cardletsWithHelp = () => ({
   }
 });
 
+export const cardletsWithImageSettings = () => ({
+  extends: cardlets(),
+  computed: {
+    image() {
+      return {
+        back: "pattern",
+        cover: true,
+        ratio: "3/2",
+      };
+    }
+  }
+});
+
 export const cardletsEmpty = () => ({
   extends: cardlets(),
   computed: {
@@ -160,8 +187,9 @@ export const cardsWithImageSettings = () => ({
   computed: {
     image() {
       return {
-        ratio: "3/2"
-
+        back: "pattern",
+        cover: true,
+        ratio: "3/2",
       };
     }
   }

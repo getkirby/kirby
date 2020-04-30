@@ -25,6 +25,7 @@ export default {
      * Help text to be displayed below the collection in grey.
      */
     help: String,
+    image: [Boolean, Object],
     items: {
       type: Function,
       default() {
@@ -85,6 +86,7 @@ export default {
       return {
         empty: this.empty,
         help: this.help,
+        image: this.image,
         items: this.data,
         layout: this.layout,
         loader: this.loader,

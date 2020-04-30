@@ -8,6 +8,7 @@
     <k-async-collection
       :empty="empty || $t('pages.empty')"
       :help="help"
+      :image="image"
       :items="pages"
       :layout="layout"
       :sortable="sortable"
@@ -31,6 +32,7 @@ export default {
     },
     empty: [String, Object],
     help: [Boolean, String],
+    image: [Boolean, Object],
     layout: String,
     pages: Function,
     sortable: Boolean

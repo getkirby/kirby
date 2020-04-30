@@ -14,7 +14,7 @@
         v-for="(item, itemIndex) in items"
         :key="item.id || itemIndex"
         v-bind="item"
-        :image="itemImage(item)"
+        :image="imageSettings(item)"
         :layout="itemLayout"
         :sortable="sortable"
         @click="onItem(item, itemIndex)"
@@ -63,18 +63,29 @@ export default {
     },
   },
   methods: {
-    itemImage(item) {
-      if (this.image === false) {
+    imageSettings(item) {
+      let globalSettings = this.image;
+      let localSettings  = item.image;
+
+      if (globalSettings === false) {
         return false;
       }
 
-      if (this.image === true) {
-        return this.image;
+      if (typeof globalSettings !== "object") {
+        globalSettings = {};
+      }
+
+      if (typeof localSettings !== "object") {
+        localSettings = {};
       }
 
       return {
-        ...item.image,
-        ...this.image,
+        // global settings
+        cover: globalSettings.cover || localSettings.cover,
+        ratio: globalSettings.ratio || localSettings.ratio,
+        // individual settings
+        back: localSettings.back || globalSettings.back,
+        url: localSettings.url
       };
     },
     onFlag(item, itemIndex) {
