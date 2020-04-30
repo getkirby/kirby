@@ -333,6 +333,48 @@ import Collection from "./Collection.vue";
   </Story>
 </Preview>
 
+### Cards with image settings
+<Preview>
+  <Story name="Cards with image settings">
+    {{
+      data() {
+        return {
+          start: 1,
+          pagination: {
+            total: 230,
+            limit: 10
+          }
+        };
+      },
+      computed: {
+        items() {
+          return items(10, this.start);
+        }
+      },
+      methods: {
+        onPaginate(pagination) {
+          action("paginate")(pagination);
+          this.start = pagination.start;
+        }
+      },
+      template: `
+        <k-collection
+          :image="{
+            ratio: '3/2',
+            back: 'pattern',
+            cover: true
+          }"
+          :items="items"
+          :pagination="pagination"
+          :sortable="true"
+          layout="card"
+          @paginate="onPaginate"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
 ### Cards empty
 <Preview>
   <Story name="Cards empty">

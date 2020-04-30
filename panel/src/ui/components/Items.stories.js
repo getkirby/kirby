@@ -47,6 +47,23 @@ export const list = () => ({
   `
 });
 
+export const listWithImageSettings = () => ({
+  extends: cards(),
+  template: `
+    <k-items
+      :image="{
+        ratio: '4/5',
+        back: 'pattern',
+      }"
+      :items="items"
+      :sortable="true"
+      layout="list"
+      @sort="onSort"
+      @sortChange="onSortChange"
+    />
+  `
+});
+
 export const cardlets = () => ({
   extends: list(),
   template: `
@@ -63,10 +80,44 @@ export const cardlets = () => ({
   `
 });
 
+export const cardletsWithImageSettings = () => ({
+  extends: cards(),
+  template: `
+    <k-items
+      :image="{
+        ratio: '4/5',
+        back: 'pattern',
+      }"
+      :items="items"
+      :sortable="true"
+      layout="cardlets"
+      @sort="onSort"
+      @sortChange="onSortChange"
+    />
+  `
+});
+
 export const cards = () => ({
   extends: list(),
   template: `
     <k-items
+      :items="items"
+      :sortable="true"
+      layout="cards"
+      @sort="onSort"
+      @sortChange="onSortChange"
+    />
+  `
+});
+
+export const cardsWithImageSettings = () => ({
+  extends: cards(),
+  template: `
+    <k-items
+      :image="{
+        ratio: '4/5',
+        back: 'pattern',
+      }"
       :items="items"
       :sortable="true"
       layout="cards"

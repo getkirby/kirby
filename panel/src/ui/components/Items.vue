@@ -14,6 +14,7 @@
         v-for="(item, itemIndex) in items"
         :key="item.id || itemIndex"
         v-bind="item"
+        :image="itemImage(item)"
         :layout="itemLayout"
         :sortable="sortable"
         @click="onItem(item, itemIndex)"
@@ -28,6 +29,12 @@
 export default {
   inheritAttrs: false,
   props: {
+    image: {
+      type: [Object, Boolean],
+      default() {
+        return {};
+      }
+    },
     items: Array,
     layout: {
       type: String,
@@ -56,6 +63,16 @@ export default {
     },
   },
   methods: {
+    itemImage(item) {
+      if (this.image === false) {
+        return false;
+      }
+
+      return {
+        ...item.image,
+        ...this.image,
+      };
+    },
     onFlag(item, itemIndex) {
       this.$emit('flag', item, itemIndex)
     },

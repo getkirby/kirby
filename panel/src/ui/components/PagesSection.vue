@@ -15,7 +15,6 @@
       @flag="onFlag"
       @option="onPageOption"
     />
-
   </k-section>
 </template>
 

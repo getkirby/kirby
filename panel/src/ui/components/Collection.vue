@@ -15,6 +15,7 @@
     </template>
     <template v-else-if="items.length">
       <k-items
+        :image="image"
         :items="items"
         :layout="layout"
         :sortable="sortable"
@@ -73,6 +74,12 @@ export default {
      * Help text to be displayed below the collection in grey.
      */
     help: String,
+    image: {
+      type: [Object, Boolean],
+      default() {
+        return {};
+      }
+    },
     items: {
       type: [Array, Object],
       default() {
