@@ -201,6 +201,11 @@ export default {
 
 }
 
+.k-dropdown-content[data-align="center"] {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
 .k-dropdown-content[data-align="right"] {
   [dir="ltr"] & {
     left: auto;
@@ -212,6 +217,8 @@ export default {
     right: auto;
   }
 }
+
+
 .k-dropdown-content > .k-dropdown-item:first-child {
   margin-top: .5rem;
 }
