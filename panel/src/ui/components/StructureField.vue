@@ -80,7 +80,7 @@
         :limit="1"
         :total="rows.length"
         :dropdown="false"
-        @paginate="navigateRowDialog"
+        @paginate="navigateRowDialog($event.page - 1)"
       />
 
       <k-form
@@ -267,6 +267,8 @@ export default {
       this.editRowModel = {};
       this.editRowField = null;
       this.$refs.editRowDialog.close();
+      // this.$events.$off("keydown.cmd.right", this.navigateRowDialogNext);
+      // this.$events.$off("keydown.cmd.left", this.navigateRowDialogPrev);
     },
     closeRemoveRowDialog() {
       this.removeRowIndex = null;
@@ -286,10 +288,19 @@ export default {
     focusEditRowField(event, field, fieldName) {
       this.editRowField = fieldName;
     },
-    navigateRowDialog(pagination) {
-      const index = pagination.page - 1;
-      const row   = this.rows[index];
-      this.openEditRowDialog(row, index);
+    navigateRowDialog(index) {
+      if (index < 0 || index >= this.rows.length) {
+        return;
+      }
+
+      const row = this.rows[index];
+      this.setEditRowDialog(row, index);
+    },
+    navigateRowDialogPrev() {
+      this.navigateRowDialog(this.editRowIndex - 1)
+    },
+    navigateRowDialogNext() {
+      this.navigateRowDialog(this.editRowIndex + 1)
     },
     onCell(cell) {
       this.editRowField = cell.columnIndex;
@@ -309,17 +320,13 @@ export default {
       this.onInput();
     },
     openEditRowDialog(row, rowIndex) {
-      this.editRowIndex = rowIndex;
-      this.editRowModel = this.$helper.clone(row);
-
-     if (this.limit > 0) {
-        this.page = Math.ceil((rowIndex + 1) / this.limit);
-      }
-
+      this.setEditRowDialog(row, rowIndex);
       this.$refs.editRowDialog.open();
 
       setTimeout(() => {
         this.$refs.editRowForm.focus(this.editRowField);
+        // this.$events.$on("keydown.cmd.right", this.navigateRowDialogNext);
+        // this.$events.$on("keydown.cmd.left", this.navigateRowDialogPrev);
       }, 50);
     },
     openNewRowDialog() {
@@ -338,6 +345,14 @@ export default {
       }
 
       return this.sort(rows);
+    },
+    setEditRowDialog(row, rowIndex) {
+      this.editRowIndex = rowIndex;
+      this.editRowModel = this.$helper.clone(row);
+
+     if (this.limit > 0) {
+        this.page = Math.ceil((rowIndex + 1) / this.limit);
+      }
     },
     sort(rows) {
       if (!this.sortBy) {
@@ -377,7 +392,7 @@ export default {
       }
 
       this.closeRemoveRowDialog();
-    },
+    }
   }
 }
 </script>
