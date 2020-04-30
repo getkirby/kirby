@@ -5,18 +5,22 @@
     :theme="options[0].theme"
     :tooltip="options[0].text"
     class="k-options-dropdown-toggle"
-    @click="$emit('option', options[0].click)"
-  />
+    @click="onOption(options[0].option || options[0].click, options[0], 0)"
+  >
+    <template slot="default" v-if="text">{{ text }}</template>
+  </k-button>
   <k-dropdown
     v-else-if="options.length"
     class="k-options-dropdown flex items-center justify-center"
   >
     <k-button
-      :icon="icon"
+      :icon="icon || 'dots'"
       :tooltip="$t('options')"
       class="k-options-dropdown-toggle"
       @click="$refs.options.toggle()"
-    />
+    >
+      <template slot="default" v-if="text">{{ text }}</template>
+    </k-button>
     <k-dropdown-content
       ref="options"
       :align="align"
@@ -45,6 +49,10 @@ export default {
         return []
       }
     },
+    text: {
+      type: [Boolean, String],
+      default: false
+    },
     theme: {
       type: String,
       default: "dark",
@@ -56,17 +64,21 @@ export default {
     }
   },
   methods: {
-    onOption(option) {
-      this.$emit("option", option.option || option.click, option);
+    onOption(option, item, itemIndex) {
+      this.$emit("option", option, item, itemIndex);
     }
   }
 }
 </script>
 
 <style lang="scss">
-.k-options-dropdown,
-.k-options-dropdown-toggle {
-  width: 38px;
+.k-options-dropdown {
   height: 38px;
+}
+.k-options-dropdown-toggle {
+  display: block;
+  min-width: 38px;
+  height: 38px;
+  padding: 0 .75rem;
 }
 </style>

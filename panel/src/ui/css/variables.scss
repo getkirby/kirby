@@ -23,6 +23,10 @@ $z-index: (
   @return map-get($z-index, $key) + $add;
 }
 
+@function spacing($key) {
+  @return map-get($spacing, $key);
+}
+
 /**
  * Colors
  */

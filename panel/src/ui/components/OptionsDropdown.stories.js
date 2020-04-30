@@ -29,6 +29,28 @@ export const single = () => ({
   `
 });
 
+export const singleWithText = () => ({
+  computed: {
+    options() {
+      return [
+        { icon: "edit", text: "Edit", click: "edit" },
+      ];
+    }
+  },
+  methods: {
+    option: action("option")
+  },
+  template: `
+    <div class="flex justify-end bg-white">
+      <k-options-dropdown
+        :options="options"
+        text="Options"
+        @option="option"
+      />
+    </div>
+  `
+});
+
 export const multiple = () => ({
   ...single(),
   computed: {
@@ -43,6 +65,19 @@ export const multiple = () => ({
     <div class="flex justify-end bg-white">
       <k-options-dropdown
         :options="options"
+        @option="option"
+      />
+    </div>
+  `
+});
+
+export const multipleWithText = () => ({
+  ...multiple(),
+  template: `
+    <div class="flex justify-end bg-white">
+      <k-options-dropdown
+        :options="options"
+        text="Options"
         @option="option"
       />
     </div>

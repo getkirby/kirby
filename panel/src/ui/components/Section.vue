@@ -3,34 +3,15 @@
     :class="`k-${type}-section k-section-name-${sectionName}`"
     class="k-section"
   >
-    <header
+    <k-header-bar
       v-if="label || headline"
-      class="k-section-header relative flex justify-between items-center"
-    >
-      <k-headline
-        :link="link"
-        :class="`k-${type}-section-headline`"
-        class="k-section-headline"
-      >
-        {{ label || headline }}
-        <abbr v-if="required" :title="$t('section.required')">*</abbr>
-      </k-headline>
-
-      <template v-if="options && options.length === 1">
-        <k-button
-          v-bind="options[0]"
-          @click="onOption(options[0].option || options[0].click)"
-        >
-          {{ options[0].text }}
-        </k-button>
-      </template>
-      <template v-else>
-        <k-options-dropdown
-          :options="options"
-          @option="onOption"
-        />
-      </template>
-    </header>
+      :link="link"
+      :options="options"
+      :required="required"
+      :text="label || headline"
+      class="k-section-header"
+      element="h2"
+    />
     <slot />
   </section>
 </template>
@@ -80,14 +61,6 @@ export default {
 <style lang="scss">
 .k-section-header {
   z-index: 1;
-  height: 2.5rem;
   margin-top: -.75rem;
-}
-.k-section-header .k-headline .k-link {
-  display: flex;
-  align-items: center;
-  padding: 0 .75rem;
-  height: 2.5rem;
-  margin-left: -.75rem;
 }
 </style>

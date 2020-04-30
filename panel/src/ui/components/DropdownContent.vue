@@ -16,7 +16,7 @@
           :ref="_uid + '-item-' + index"
           :key="_uid + '-item-' + index"
           v-bind="option"
-          @click="onClick(option.click, option, index)"
+          @click="onClick(option.option || option.click, option, index)"
         >
           {{ option.text }}
         </k-dropdown-item>
