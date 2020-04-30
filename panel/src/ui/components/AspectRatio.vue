@@ -4,7 +4,7 @@
     :data-ratio="ratio"
     :class="$helper.color.class(back, 'bg-')"
     :style="'--ratio:' + ratio + ';' + $helper.color.style(back, 'background-')"
-    class="k-aspect-ratio"
+    class="k-aspect-ratio relative block"
     v-on="$listeners"
   >
     <!-- @slot Content that should be sized at the specified ratio -->
@@ -39,8 +39,6 @@ export default {
 <style lang="scss">
 .k-aspect-ratio {
   --ratio: 1/1;
-  position: relative;
-  display: block;
   line-height: 0;
 }
 .k-aspect-ratio::before {

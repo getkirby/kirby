@@ -1,5 +1,17 @@
 <template>
+  <!-- Error -->
+  <k-error-items
+    v-if="error"
+    :loader="loader"
+    :layout="layout"
+    :limit="loader.limit || pagination.limit"
+  >
+    {{ error }}
+  </k-error-items>
+
+  <!-- Collection -->
   <k-collection
+    v-else
     v-bind="collection"
     v-on="listeners"
   />
@@ -63,7 +75,8 @@ export default {
       loadingTimeout: false,
       limit: 10,
       page: 1,
-      total: 0
+      total: 0,
+      error: null
     };
   },
   computed: {
@@ -98,6 +111,7 @@ export default {
   methods: {
     startLoading() {
       clearTimeout(this.loadingTimeout);
+      this.loading = true;
       this.loadingTimeout = setTimeout(() => {
         this.loading = true;
       }, 150);
@@ -106,26 +120,31 @@ export default {
       clearTimeout(this.loadingTimeout);
       this.loading = false;
     },
-    load() {
+    async load() {
       this.startLoading();
-      this
-        .items({ page: this.page, limit: this.limit })
-        .then(result => {
-          if (result.data) {
-            this.total = result.pagination.total;
-            this.data  = result.data;
-          } else if (Array.isArray(result) === true) {
-            this.total = result.length;
-            this.data  = result;
-          } else {
-            this.total = 0;
-            this.data  = [];
-          }
 
-          this.stopLoading();
-        })
+      try {
+        const result = await this.items({ page: this.page, limit: this.limit });
+
+        if (result.data) {
+          this.total = result.pagination.total;
+          this.data  = result.data;
+        } else if (Array.isArray(result) === true) {
+          this.total = result.length;
+          this.data  = result;
+        } else {
+          this.total = 0;
+          this.data  = [];
+        }
+
+      } catch (error) {
+        this.error = error;
+      }
+
+      this.stopLoading();
     },
     reload() {
+      this.error = null;
       this.load();
     }
   }

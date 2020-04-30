@@ -1,0 +1,57 @@
+import { Meta, Props, Preview, Story } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import ErrorItems from "./ErrorItems.vue";
+
+<Meta
+  title="UI | Error Handling / Error Items"
+  component={ErrorItems}
+  decorators={[Padding]}
+/>
+
+# Error Items
+### `<k-error-items>`
+
+
+## List
+
+<Preview>
+  <Story name="List">
+    {{
+      template: `
+        <k-error-items>This is an error!</k-error-items>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={ErrorItems} />
+
+
+## Cardlets
+
+<Preview>
+  <Story name="Cardlets">
+    {{
+      template: `
+        <k-error-items layout="cardlet">This is an error!</k-error-items>
+      `
+    }}
+  </Story>
+</Preview>
+
+## Cards
+
+<Preview>
+  <Story name="Cards">
+    {{
+      template: `
+        <k-error-items layout="card">This is an error!</k-error-items>
+      `
+    }}
+  </Story>
+</Preview>
+
+
+## CSS class
+
+`.k-error-items`

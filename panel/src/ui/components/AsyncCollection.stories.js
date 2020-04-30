@@ -155,3 +155,21 @@ export const cardsWithSlowServer = () => ({
     },
   }
 });
+
+export const cardsWithErrorAndDelay = () => ({
+  extends: list(),
+  computed: {
+    delay() {
+      return 2000;
+    },
+    items() {
+      return async () => {
+        await new Promise(r => setTimeout(r, this.delay));
+        throw new Error("Something went wrong");
+      };
+    },
+    layout() {
+      return "cards";
+    },
+  }
+});

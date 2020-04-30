@@ -1,7 +1,7 @@
 import ErrorView from "./ErrorView.vue";
 
 export default {
-  title: "UI | Error Handling / ErrorView",
+  title: "UI | Error Handling / Error View",
   component: ErrorView,
 };
 
@@ -22,4 +22,3 @@ export const longText = () => ({
     </k-error-view>
   `,
 });
-
