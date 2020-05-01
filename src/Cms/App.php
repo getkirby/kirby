@@ -93,6 +93,9 @@ class App
         $this->optionsFromConfig();
         $this->optionsFromProps($props['options'] ?? []);
 
+        // register the Whoops error handler
+        $this->handleErrors();
+
         // set the path to make it available for the url bakery
         $this->setPath($props['path'] ?? null);
 
@@ -125,9 +128,6 @@ class App
 
         // trigger hook for use in plugins
         $this->trigger('system.loadPlugins:after');
-
-        // handle those damn errors
-        $this->handleErrors();
 
         // execute a ready callback from the config
         $this->optionsFromReadyCallback();
