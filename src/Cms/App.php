@@ -861,6 +861,27 @@ class App
 
             // inject all last-minute options recursively
             $this->options = array_replace_recursive($this->options, $options);
+
+            // update the system with changed options
+            if (
+                isset($options['debug']) === true ||
+                isset($options['whoops']) === true ||
+                isset($options['editor']) === true
+            ) {
+                $this->handleErrors();
+            }
+
+            if (isset($options['debug']) === true) {
+                $this->api = null;
+            }
+
+            if (isset($options['home']) === true || isset($options['error']) === true) {
+                $this->site = null;
+            }
+
+            if (isset($options['slugs']) === true) {
+                $this->i18n();
+            }
         }
 
         return $this->options;
