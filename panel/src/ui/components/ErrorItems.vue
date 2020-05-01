@@ -44,6 +44,7 @@ export default {
   left: 0;
   bottom: 0;
   right: 0;
+  z-index: 10;
 }
 .k-error-items .k-empty-item .k-item-title::after,
 .k-error-items .k-empty-item .k-item-info::after {

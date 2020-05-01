@@ -4,6 +4,7 @@
     :icon="options[0].icon"
     :theme="options[0].theme"
     :tooltip="options[0].text"
+    :disabled="options[0].disabled"
     class="k-options-dropdown-toggle"
     @click="onOption(options[0].option || options[0].click, options[0], 0)"
   >
@@ -76,7 +77,7 @@ export default {
   height: 38px;
 }
 .k-options-dropdown-toggle {
-  display: block;
+  display: flex;
   min-width: 38px;
   height: 38px;
   padding: 0 .75rem;

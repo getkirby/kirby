@@ -71,9 +71,9 @@ return [
             return $min;
         },
         /**
-          * Add new items to the top of the list, if `true`
-          */
-          'prepend' => function (bool $prepend = false) {
+         * Add new items to the top of the list, if `true`
+         */
+        'prepend' => function (bool $prepend = false) {
             return $prepend;
         },
         /**

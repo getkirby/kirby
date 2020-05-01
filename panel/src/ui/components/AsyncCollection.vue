@@ -145,6 +145,7 @@ export default {
 
       } catch (error) {
         this.error = error;
+        console.error(error);
       }
 
       this.stopLoading();

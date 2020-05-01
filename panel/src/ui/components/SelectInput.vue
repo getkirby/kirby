@@ -23,14 +23,34 @@
       >
         {{ emptyOption }}
       </option>
-      <option
-        v-for="option in selectOptions"
-        :key="option.value"
-        :disabled="option.disabled"
-        :value="option.value"
-      >
-        {{ option.text }}
-      </option>
+
+      <template v-for="option in selectOptions">
+        <!-- grouped -->
+        <optgroup
+          v-if="hasGroups"
+          :key="option.group"
+          :label="option.group"
+        >
+          <option
+            v-for="opt in option.options"
+            :key="opt.value"
+            :disabled="opt.disabled"
+            :value="opt.value"
+            >
+            {{ opt.text }}
+          </option>
+        </optgroup>
+
+        <!-- regular -->
+        <option
+          v-else
+          :key="option.value"
+          :disabled="option.disabled"
+          :value="option.value"
+          >
+          {{ option.text }}
+        </option>
+      </template>
     </select>
     {{ label }}
   </span>
@@ -85,6 +105,10 @@ export default {
 
       return !(this.required && this.default);
     },
+    hasGroups() {
+      return this.options[0].hasOwnProperty("group") === true &&
+             this.options[0].hasOwnProperty("options") === true;
+    },
     label() {
       const label = this.text(this.selected);
 
@@ -95,6 +119,13 @@ export default {
       return label;
     },
     selectOptions() {
+      if (this.hasGroups) {
+        return this.options.map(group => {
+          group.options = this.$helper.input.options(group.options);
+          return group;
+        });
+      }
+
       return this.$helper.input.options(this.options);
     }
   },
@@ -123,14 +154,21 @@ export default {
     select() {
       this.focus();
     },
-    text(value) {
-      let text = null;
-      this.selectOptions.forEach(option => {
-        if (option.value == value) {
-          text = option.text;
+    text(value, options = this.selectOptions) {
+      for (let i = 0; i < options.length; i++) {
+        // regular list
+        if (options[i].value == value) {
+          return options[i].text;
         }
-      });
-      return text;
+
+        // grouped options list
+        if (options[i].options) {
+          const text = this.text(value, options[i].options);
+          if (text) {
+            return text;
+          }
+        }
+      }
     }
   }
 }

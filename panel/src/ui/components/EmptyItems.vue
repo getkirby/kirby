@@ -21,6 +21,7 @@ export default {
       type: Number,
       default: 10
     },
+    options: Array,
     ratio: {
       type: String,
       default: "1/1"
@@ -41,7 +42,7 @@ export default {
             "--title": this.placeholder(100, 200),
             "--info": this.placeholder(50, 100),
           },
-          options: [{ icon: "dots", text: "Edit" }],
+          options: this.options || [{ icon: "dots", text: "Edit" }],
           title: " ",
         };
       });

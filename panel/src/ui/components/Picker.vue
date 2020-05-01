@@ -1,20 +1,43 @@
 <template>
-  <k-collection
-    :items="items"
-    :layout="layout"
-    :pagination="pagination"
-    :sortable="sortable"
-    class="k-picker"
-    @item="onItem"
-    @flag="onFlag"
-    @paginate="onPaginate"
-    @sort="onSort"
-  />
+  <div>
+    <!-- Search -->
+    <k-input
+      v-if="search"
+      v-model="q"
+      :autofocus="true"
+      :placeholder="$t('search') + ' …'"
+      type="text"
+      icon="search"
+      class="k-picker-search mb-4 py-2 px-4 rounded-sm"
+    />
+
+    <!-- Collection -->
+    <k-async-collection
+      ref="collection"
+      :items="items"
+      :image="image"
+      :layout="layout"
+      :pagination="pagination"
+      :sortable="sortable"
+      class="k-picker"
+      @item="onItem"
+      @flag="onFlag"
+      @option="onOption"
+      @paginate="onPaginate"
+      @sort="onSort"
+    />
+  </div>
 </template>
 
 <script>
+import debounce from "@/ui/helpers/debounce.js";
+
 export default {
   props: {
+    image: {
+      type: [Object, Boolean],
+      default: true,
+    },
     /**
      * Available options: `list`|`cardlets`|`cards`
      */
@@ -37,7 +60,7 @@ export default {
      * Available options in the picker
      */
     options: {
-      type: [Array, Object],
+      type: [Array, Object, Function],
       default() {
         return [];
       }
@@ -52,6 +75,10 @@ export default {
       }
     },
     /**
+     * Enable search input
+     */
+    search: Boolean,
+    /**
      * Enable drag & drop sorting for picker items
      */
     sortable: Boolean,
@@ -63,49 +90,87 @@ export default {
     /**
      * Array of selected items (array of ids)
      */
-    value: Array
+    value: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
   },
   data() {
     return {
-      selected: this.value
+      selected: this.value,
+      q: null
     };
   },
   computed: {
+    loader() {
+      return async () => {
+        return await this.options({
+            ...this.pagination,
+            search: this.q
+          });
+      }
+    },
     items() {
-      return this.$helper.clone(this.options).map(item => {
-
-        const selected = this.selected.includes(item.id);
-        const max      = this.multiple && this.max && this.selected.length >= this.max;
-
-        if (this.toggle) {
-          item.flag = this.toggle(item, selected, max);
-        } else {
-          if (this.selected.includes(item.id)) {
-            item.flag = {
-              icon: this.multiple ? "check" : "circle-filled",
-              tooltip: "Deselect",
-              color: "green"
-            };
-          } else {
-            item.flag = {
-              icon: "circle-outline",
-              tooltip: "Select",
-              color: max ? "gray-light" : false,
-              disabled: max
-            };
-          }
+      return async () => {
+        // Async options
+        if (typeof this.options === 'function') {
+          const result = await this.loader();
+          result.data = result.data.map(this.mapItem);
+          return result;
         }
 
-        return item;
-      });
+        // Array/Object of options
+        return this.$helper.clone(this.options).map(this.mapItem);
+      }
     }
   },
   watch: {
     value() {
       this.selected = this.value;
-    }
+      this.reload();
+    },
+    pagination() {
+      this.reload();
+    },
+    q: debounce(function () {
+      this.page = 1;
+      this.reload();
+    }, 250)
   },
   methods: {
+    mapItem(item) {
+      const selected = this.selected.includes(item.id);
+      const max = this.multiple && this.max && this.selected.length >= this.max;
+
+      // custom toggle function
+      if (this.toggle) {
+        item.flag = this.toggle(item, selected, max);
+
+      // selected
+      } else if (selected) {
+        item.flag = {
+          icon: this.multiple ? "check" : "circle-filled",
+          tooltip: "Deselect",
+          color: "green"
+        };
+
+      // unselected
+      } else {
+        item.flag = {
+          icon: "circle-outline",
+          tooltip: "Select",
+          color: max ? "gray" : null,
+          disabled: Boolean(max)
+        };
+      }
+
+      // Disable links in picker
+      delete item.link;
+
+      return item;
+    },
     onDeselect(id, item, itemIndex) {
       const index = this.selected.indexOf(id);
 
@@ -113,7 +178,7 @@ export default {
         this.$delete(this.selected, index);
       }
 
-      this.$emit("input", this.selected);
+      this.onInput();
     },
     onFlag(item, itemIndex) {
       if (this.selected.includes(item.id)) {
@@ -122,8 +187,14 @@ export default {
         this.onSelect(item.id, item, itemIndex);
       }
     },
+    onInput() {
+      this.$emit("input", this.selected);
+    },
     onItem(item, itemIndex) {
       this.onFlag(item, itemIndex);
+    },
+    onOption(option, item, itemIndex) {
+      this.$emit("option", option, item, itemIndex);
     },
     onPaginate(pagination) {
       this.$emit("paginate", pagination);
@@ -139,11 +210,17 @@ export default {
       }
 
       this.selected.push(id);
-      this.$emit("input", this.selected);
+      this.onInput();
     },
     onSort(items, event) {
       this.selected = items.map(item => item.id);
-      this.$emit("input", this.selected);
+      this.onInput();
+    },
+    reload() {
+      this.$refs.collection.reload();
+    },
+    reset() {
+      this.q = null;
     }
   }
 };
@@ -152,5 +229,8 @@ export default {
 <style lang="scss">
 .k-picker .k-item-title-link::after {
   display: none;
+}
+.k-picker-search {
+  background: $color-gray-300;
 }
 </style>

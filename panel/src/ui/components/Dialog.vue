@@ -81,6 +81,9 @@ export default {
       type: String,
       default: "check"
     },
+    /**
+     * Available options: `small`|`default`|`medium`|`large`
+     */
     size: {
       type: String,
       default: "default"
@@ -183,7 +186,7 @@ export default {
         );
 
         if (!target) {
-          autofocus = box.querySelector(".k-dialog-button-cancel");
+          target = box.querySelector(".k-dialog-button-cancel");
         }
 
         if (this.autofocus && target) {

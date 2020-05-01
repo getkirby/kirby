@@ -1,0 +1,233 @@
+import { Meta, Preview, Story } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import { Files } from "../storybook/PickerItems.js";
+import FilesField from "./FilesField.vue";
+
+<Meta
+  title="UI | Form / Field / Files Field"
+  component={FilesField}
+  decorators={[Padding]}
+/>
+
+# Files Field
+### `<k-files-field>`
+
+<Preview>
+  <Story name="List">
+    {{
+      extends: Files(),
+      template: `
+        <div>
+          <k-files-field
+            v-model="value"
+            :options="options"
+            :items="items"
+            label="Files"
+          />
+          <k-headline class="mt-8 mb-3">Value</k-headline>
+          <k-code-block :code="value" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={FilesField} />
+
+
+### Cardlets
+<Preview>
+  <Story name="Cardlets">
+    {{
+      extends: Files(),
+      template: `
+        <k-files-field
+          v-model="value"
+          :options="options"
+          :items="items"
+          label="Files"
+          layout="cardlets"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cards
+<Preview>
+  <Story name="Cards">
+    {{
+      extends: Files(),
+      template: `
+        <k-files-field
+          v-model="value"
+          :options="options"
+          :items="items"
+          label="Files"
+          layout="cards"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cards in picker, `size: large`
+<Preview>
+  <Story name="Cards in picker">
+    {{
+      extends: Files(),
+      template: `
+        <k-files-field
+          v-model="value"
+          :options="options"
+          :items="items"
+          label="Files"
+          :picker="{
+            layout: 'cards',
+            size: 'large',
+            image: { cover: true }
+          }"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+
+
+### Multiple values
+<Preview>
+  <Story name="Multiple values">
+    {{
+      extends: Files(),
+      template: `
+        <div>
+          <k-files-field
+            v-model="value"
+            :options="options"
+            :items="items"
+            label="Picker"
+          />
+          <k-headline class="mt-8 mb-3">Value</k-headline>
+          <k-code-block :code="value" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Single value
+<Preview>
+  <Story name="Single value">
+    {{
+      extends: Files(),
+      template: `
+        <div>
+          <k-files-field
+            :options="options"
+            :items="items"
+            :multiple="false"
+            :search="false"
+            label="Picker"
+            help="Only one items allowed"
+          />
+          <k-headline class="mt-8 mb-3">Value</k-headline>
+          <k-code-block :code="value" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### `max: 3`
+<Preview>
+  <Story name="Max">
+    {{
+      extends: Files(),
+      template: `
+        <k-files-field
+          :value="value"
+          :options="options"
+          :items="items"
+          :max="3"
+          label="Picker"
+          help="Maximum 3 items allowed"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### `search: false`
+<Preview>
+  <Story name="No search">
+    {{
+      extends: Files(),
+      template: `
+        <k-files-field
+          :options="options"
+          :items="items"
+          :search="false"
+          label="Picker"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### `sortable: false`
+<Preview>
+  <Story name="Not sortable">
+    {{
+      extends: Files(),
+      template: `
+        <k-files-field
+          :value="value"
+          :options="options"
+          :items="items"
+          :sortable="false"
+          label="Picker"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Custom empty
+<Preview>
+  <Story name="Custom empty">
+    {{
+      extends: Files(),
+      template: `
+        <k-files-field
+          :options="options"
+          :items="items"
+          :empty="{ text: 'Add some fruits to your life', icon: 'heart' }"
+          label="Picker"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Disabled
+<Preview>
+  <Story name="Disabled">
+    {{
+      extends: Files(),
+      template: `
+        <k-files-field
+          :value="value"
+          :options="options"
+          :items="items"
+          :disabled="true"
+          label="Picker"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+## CSS class
+
+`.k-files-field`

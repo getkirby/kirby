@@ -11,7 +11,7 @@
         <slot name="label">
           <label
             :for="input"
-            class="k-field-label"
+            class="k-field-label block font-bold pb-3"
           >{{ labelText }} <abbr
             v-if="required"
             :title="$t('field.required')"
@@ -44,7 +44,7 @@
           <k-text
             v-if="help"
             theme="help"
-            class="k-field-help"
+            class="k-field-help pt-2"
             v-html="help"
           />
         </slot>
@@ -78,9 +78,6 @@ export default {
 
 <style lang="scss">
 .k-field-label {
-  font-weight: $font-bold;
-  display: block;
-  padding: 0 0 0.75rem;
   flex-grow: 1;
   line-height: 1.25em;
 }
@@ -128,8 +125,5 @@ export default {
 }
 .k-field:focus-within > .k-field-header > .k-field-counter {
   display: block;
-}
-.k-field-help {
-  padding-top: 0.5rem;
 }
 </style>

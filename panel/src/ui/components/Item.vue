@@ -66,6 +66,7 @@
             :icon="flag.icon"
             :color="flag.color"
             :class="flag.class"
+            :disabled="flag.disabled"
             class="k-item-button k-item-flag-button"
             @click="onFlag"
           />
@@ -74,6 +75,7 @@
         <!-- Options -->
         <slot name="options">
           <k-options-dropdown
+            v-if="options"
             :options="options"
             class="k-item-options-dropdown"
             @option="onOption"

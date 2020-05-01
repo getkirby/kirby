@@ -1,0 +1,40 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import { Pages } from "../storybook/PickerItems.js";
+import PagesPicker from "./PagesPicker.vue";
+
+<Meta
+  title="UI | Data / Picker / Pages Picker"
+  component={PagesPicker}
+  decorators={[Padding]}
+/>
+
+# Pages Picker
+### `<k-pages-picker>`
+
+<Preview>
+  <Story name="Regular">
+    {{
+      extends: Pages(),
+      template: `
+        <div>
+          <k-pages-picker
+            v-model="value"
+            :options="options"
+            :pagination="pagination"
+            label="Pick your favorite"
+            @paginate="onPaginate"
+          />
+          <k-headline class="mt-8 mb-3">Value</k-headline>
+          <k-code-block :code="value" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={PagesPicker} />
+
+## CSS class
+
+`.k-pages-picker`

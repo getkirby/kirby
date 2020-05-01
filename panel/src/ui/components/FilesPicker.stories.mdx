@@ -1,0 +1,42 @@
+import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import { Files } from "../storybook/PickerItems.js";
+import FilesPicker from "./FilesPicker.vue";
+
+<Meta
+  title="UI | Data / Picker / Files Picker"
+  component={FilesPicker}
+  decorators={[Padding]}
+/>
+
+# Files Picker
+### `<k-files-picker>`
+
+<Preview>
+  <Story name="Regular">
+    {{
+      extends: Files(),
+      template: `
+        <div>
+          <k-files-picker
+            v-model="value"
+            :options="options"
+            :limit="8"
+            :pagination="pagination"
+            @paginate="onPaginate"
+            layout="cards"
+            label="Pick your favorite"
+          />
+          <k-headline class="mt-8 mb-3">Value</k-headline>
+          <k-code-block :code="value" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={FilesPicker} />
+
+## CSS class
+
+`.k-files-picker`

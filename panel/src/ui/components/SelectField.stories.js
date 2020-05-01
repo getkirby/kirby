@@ -77,3 +77,43 @@ export const autofocus = () => ({
   `
 });
 
+export const groups = () => ({
+  ...regular(),
+  data() {
+    return {
+      value: "b",
+      options: [
+        {
+          group: "Letters",
+          options: [
+            { value: "a", text: "A" },
+            { value: "b", text: "B" },
+            { value: "c", text: "C" }
+          ]
+        },
+        {
+          group: "Numbers",
+          options: [
+            { value: "1", text: "1" },
+            { value: "2", text: "2" },
+            { value: "3", text: "3" }
+          ]
+        }
+      ]
+    };
+  },
+  template: `
+    <div>
+      <k-select-field
+        v-model="value"
+        :options="options"
+        class="mb-6"
+        placeholder="Please select something …"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `
+});

@@ -2,6 +2,7 @@
   <portal v-if="isOpen">
     <div
       :dir="$direction"
+      :data-size="size"
       class="k-drawer fixed flex items-center justify-end bg-backdrop"
       @click="cancel"
     >
@@ -9,7 +10,7 @@
       <k-button
         v-if="cancelButton"
         icon="cancel"
-        @click.stop="cancel()"
+        @click.stop="cancel"
         class="k-drawer-cancel text-white p-3"
       />
 
@@ -32,7 +33,7 @@
             v-if="submitButton"
             :icon="icon"
             :theme="theme"
-            @click="submit()"
+            @click="submit"
           >
             {{ submitButtonLabel }}
           </k-button>
@@ -101,6 +102,14 @@ export default {
 @media screen and (min-width: $breakpoint-md) {
   .k-drawer-box {
     width: 66.66%;
+  }
+  .k-drawer[data-size="small"] .k-drawer-box {
+    width: 40%;
+    max-width: 40rem;
+  }
+  .k-drawer[data-size="large"] .k-drawer-box {
+    width: 80%;
+    max-width: 60rem;
   }
 }
 @media screen and (min-width: $breakpoint-lg) {

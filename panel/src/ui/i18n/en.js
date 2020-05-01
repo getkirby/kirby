@@ -1,7 +1,8 @@
 export default {
   "add": "Add",
-  "confirm": "Ok",
   "cancel": "Cancel",
+  "change": "Change",
+  "confirm": "Ok",
   "days.mon": "Mon",
   "days.tue": "Tue",
   "days.wed": "Wed",

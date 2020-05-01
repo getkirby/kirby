@@ -1,0 +1,232 @@
+import { Meta, Preview, Story } from '@storybook/addon-docs/blocks';
+import Padding from "../storybook/Padding.js";
+import { Users } from "../storybook/PickerItems.js";
+import UsersField from "./UsersField.vue";
+
+<Meta
+  title="UI | Form / Field / Users Field"
+  component={UsersField}
+  decorators={[Padding]}
+/>
+
+# Users Field
+### `<k-users-field>`
+
+<Preview>
+  <Story name="List">
+    {{
+      extends: Users(),
+      template: `
+        <div>
+          <k-users-field
+            v-model="value"
+            :options="options"
+            :items="items"
+            label="Users"
+          />
+          <k-headline class="mt-8 mb-3">Value</k-headline>
+          <k-code-block :code="value" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+<Props of={UsersField} />
+
+### Cardlets
+<Preview>
+  <Story name="Cardlets">
+    {{
+      extends: Users(),
+      template: `
+        <k-users-field
+          v-model="value"
+          :options="options"
+          :items="items"
+          label="Users"
+          layout="cardlets"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cards
+<Preview>
+  <Story name="Cards">
+    {{
+      extends: Users(),
+      template: `
+        <k-users-field
+          v-model="value"
+          :options="options"
+          :items="items"
+          label="Users"
+          layout="cards"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Cards in picker, `size: large`
+<Preview>
+  <Story name="Cards in picker">
+    {{
+      extends: Users(),
+      template: `
+        <k-users-field
+          v-model="value"
+          :options="options"
+          :items="items"
+          label="Users"
+          :picker="{
+            layout: 'cards',
+            size: 'large',
+            image: { cover: true }
+          }"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+
+
+### Multiple values
+<Preview>
+  <Story name="Multiple values">
+    {{
+      extends: Users(),
+      template: `
+        <div>
+          <k-users-field
+            v-model="value"
+            :options="options"
+            :items="items"
+            label="Picker"
+          />
+          <k-headline class="mt-8 mb-3">Value</k-headline>
+          <k-code-block :code="value" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### Single value
+<Preview>
+  <Story name="Single value">
+    {{
+      extends: Users(),
+      template: `
+        <div>
+          <k-users-field
+            :options="options"
+            :items="items"
+            :multiple="false"
+            :search="false"
+            label="Picker"
+            help="Only one items allowed"
+          />
+          <k-headline class="mt-8 mb-3">Value</k-headline>
+          <k-code-block :code="value" />
+        </div>
+      `
+    }}
+  </Story>
+</Preview>
+
+### `max: 3`
+<Preview>
+  <Story name="Max">
+    {{
+      extends: Users(),
+      template: `
+        <k-users-field
+          :value="value"
+          :options="options"
+          :items="items"
+          :max="3"
+          label="Picker"
+          help="Maximum 3 items allowed"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### `search: false`
+<Preview>
+  <Story name="No search">
+    {{
+      extends: Users(),
+      template: `
+        <k-users-field
+          :options="options"
+          :items="items"
+          :search="false"
+          label="Picker"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### `sortable: false`
+<Preview>
+  <Story name="Not sortable">
+    {{
+      extends: Users(),
+      template: `
+        <k-users-field
+          :value="value"
+          :options="options"
+          :items="items"
+          :sortable="false"
+          label="Picker"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Custom empty
+<Preview>
+  <Story name="Custom empty">
+    {{
+      extends: Users(),
+      template: `
+        <k-users-field
+          :options="options"
+          :items="items"
+          :empty="{ text: 'Add some fruits to your life', icon: 'heart' }"
+          label="Picker"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Disabled
+<Preview>
+  <Story name="Disabled">
+    {{
+      extends: Users(),
+      template: `
+        <k-users-field
+          :value="value"
+          :options="options"
+          :items="items"
+          :disabled="true"
+          label="Picker"
+        />
+      `
+    }}
+  </Story>
+</Preview>
+
+## CSS class
+
+`.k-users-field`
