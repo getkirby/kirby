@@ -1,21 +1,21 @@
 <template>
   <div class="k-item-figure" v-if="image || icon">
+    <!-- image -->
+    <k-image
+      v-if="image.url"
+      :back="back"
+      :cover="image.cover"
+      :ratio="ratio"
+      :src="image.url"
+      class="k-item-image"
+    />
+    <!-- icon -->
     <k-aspect-ratio
+      v-else-if="icon.type !== false"
       :back="back"
       :ratio="ratio"
     >
-      <!-- image -->
-      <k-image
-        v-if="image.url"
-        :cover="image.cover"
-        :ratio="ratio"
-        :src="image.url"
-        class="k-item-image"
-      />
-
-      <!-- icon -->
       <k-icon
-        v-else-if="icon.type !== false"
         :color="icon.color || 'white'"
         :size="icon.size"
         :type="icon.type || 'page'"

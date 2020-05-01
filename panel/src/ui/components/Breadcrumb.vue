@@ -3,8 +3,7 @@
     :aria-label="label"
     class="k-breadcrumb"
   >
-
-    <k-dropdown class="k-breadcrumb-dropdown flex items-center justify-center">
+    <k-dropdown class="k-breadcrumb-dropdown items-center justify-center">
       <k-button
         icon="road-sign"
         @click="$refs.dropdown.toggle()"
@@ -82,6 +81,7 @@ export default {
 .k-breadcrumb-dropdown {
   height: 2.5rem;
   width: 2.5rem;
+  display: flex;
 }
 
 @media screen and (min-width: $breakpoint-sm) {

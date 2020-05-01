@@ -13,9 +13,11 @@
     "sandbox": "vue serve ./src/ui/main.js",
     "storybook:build": "vue-cli-service storybook:build -c config/storybook",
     "storybook:serve": "vue-cli-service storybook:serve -p 6006 -c config/storybook",
+    "build-storybook": "vue-cli-service storybook:build -c config/storybook",
     "test:e2e:record": "vue-cli-service test:e2e --headless --record --key 6e3e7aae-66e8-4d69-8e62-0210742b8415",
     "test:unit:watch": "vue-cli-service test:unit --watch",
-    "testkit:reset": "./scripts/reset-testkit"
+    "testkit:reset": "./scripts/reset-testkit",
+    "chromatic": "chromatic ./storybook-static --project-token=6s8oqh7iry"
   },
   "dependencies": {
     "autosize": "^4.0.2",
@@ -48,6 +50,7 @@
     "babel-jest": "^23.6.0",
     "babel-loader": "^8.1.0",
     "babel-plugin-wildcard": "^4.0.0",
+    "chromatic": "^4.0.2",
     "core-js": "^3.6.5",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.1.2",
