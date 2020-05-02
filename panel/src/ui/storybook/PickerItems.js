@@ -1,108 +1,62 @@
 
-export const Items = () => ({
-  data() {
-    return {
-      value: ["13", "72"],
-      pagination: {
-        page: 1,
-        limit: 12
-      }
+export const Item = (id, model) =>  {
+  return {
+    id: id.toString(),
+    title: model + " no. " + id,
+    info: model + " info",
+    link: "https://getkirby.com",
+    image: {
+      url: "https://source.unsplash.com/user/erondu/400x225?" + id
     }
-  },
-  computed: {
-    items() {
-      return async (ids) => {
-        return ids.map(this.item);
-      };
-    },
-    model() {
-      return "Item";
-    },
-    options() {
-      return async ({page, limit, parent, search}) => {
-        const total = 230;
+  };
+};
 
-        let data = [...Array(total).keys()].map(number => {
-          let id = parent ? parent.id + "-" : null;
-          id += number + 1;
-          return this.item(id);
-        });
+export const Options = async (page, limit, parent, search, model) => {
+  const total = 215;
 
+  let data = [...Array(total).keys()].map(number => {
+    let id = number +1;
+    id = parent ? parent.id + "-" + id : id;
+    return model(id);
+  });
 
-        if (search) {
-          data = data.filter(option => option.title.includes(search));
-        }
-
-        const offset = (page - 1) * limit;
-        data = data.slice(offset, offset + limit);
-
-        return {
-          data: data,
-          pagination: {
-            total: total
-          }
-        };
-      };
-    },
-    parents() {
-      return false;
-    }
-  },
-  methods: {
-    item(id) {
-      let item = {
-        id: id.toString(),
-        title: this.model + " no. " + id,
-        info: this.model + " info",
-        link: "https://getkirby.com",
-        image: {
-          url: "https://source.unsplash.com/user/erondu/400x225?" + id
-        }
-      };
-
-      if (this.parents) {
-        item.options= [{ icon: "angle-right", text: "Open"}];
-      }
-
-      return item;
-    },
-    onPaginate(pagination) {
-      this.pagination = pagination;
-    }
+  if (search) {
+    data = data.filter(option => option.title.includes(search));
   }
-});
 
-export const Pages = () => ({
-  extends: Items(),
-  data() {
-    return {
-      value: ["14", "28", "53"]
-    }
-  },
-  computed: {
-    model() {
-      return "Page";
-    },
-    parents() {
-      return true;
-    }
-  }
-});
+  const offset = (page - 1) * limit;
+  data = data.slice(offset, offset + limit);
 
-export const Files = () => ({
-  extends: Items(),
-  computed: {
-    model() {
-      return "File";
+  return {
+    data: data,
+    pagination: {
+      total: total
     }
-  }
-});
+  };
+};
 
-export const Users = () => ({
-  extends: Items(),
-  computed: {
-    model() {
-      return "User";
-    }
-  }
-});
+export const Page = (id) => {
+  let item = Item(id, "Page");
+  item.options= [{ icon: "angle-right", text: "Open"}];
+  return item;
+};
+
+export const Pages = (page, limit, parent, search) => {
+  return Options(page, limit, parent, search, Page);
+};
+
+export const File = (id) => {
+  return Item(id, "File");
+};
+
+export const Files = (page, limit, parent, search) => {
+  return Options(page, limit, parent, search, File);
+};
+
+export const User = (id) => {
+  return Item(id, "User");
+};
+
+export const Users = (page, limit, parent, search) => {
+  return Options(page, limit, parent, search, User);
+};

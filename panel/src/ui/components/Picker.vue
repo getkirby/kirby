@@ -122,7 +122,10 @@ export default {
         }
 
         // Array/Object of options
-        return this.$helper.clone(this.options).map(this.mapItem);
+        return {
+          data: this.$helper.clone(this.options).map(this.mapItem),
+          pagination: this.pagination
+        };
       }
     }
   },
@@ -135,7 +138,7 @@ export default {
       this.reload();
     },
     q: debounce(function () {
-      this.page = 1;
+      this.onPaginate({ ...this.pagination, page: 1 });
       this.reload();
     }, 250)
   },

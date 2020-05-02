@@ -1,12 +1,29 @@
 <script>
 import PickerField from "./PickerField.vue";
 
+// TODO: implement actual API instead
+import { User, Users } from "../storybook/PickerItems.js";
+
 export default {
   extends: PickerField,
-  computed: {
-    model() {
-      return "users";
+  props: {
+    empty: {
+      type: [String, Object],
+      default() {
+        return {
+          icon: "user",
+          text: this.$t("field.users.empty")
+        };
+      }
     }
+  },
+  methods: {
+    async getItems(ids) {
+      return ids.map(id => User(id));
+    },
+    async getOptions({page, limit, parent, search}) {
+      return Users(page, limit, parent, search);
+    },
   }
 }
 </script>

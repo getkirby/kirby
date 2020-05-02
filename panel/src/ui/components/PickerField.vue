@@ -36,13 +36,13 @@
       @submit="onSelect"
     >
       <component
-        :is="'k-' + model + '-picker'"
+        :is="component"
         ref="picker"
         v-model="updated"
         v-bind="picker"
         :max="max"
         :multiple="multiple"
-        :options="options"
+        :options="getOptions"
         :search="search"
         :pagination="pagination"
         @paginate="onPaginate"
@@ -54,6 +54,9 @@
 <script>
 import Field from "@/ui/components/Field.vue";
 
+// Dummy data
+import { getItems, getOptions } from "../storybook/PickerItems.js";
+
 export default {
   props: {
     ...Field.props,
@@ -63,14 +66,6 @@ export default {
       default: true,
     },
     info: String,
-    items: {
-      type: Function,
-      default() {
-        return async () => {
-          return [];
-        };
-      }
-    },
     /**
      * Available options: `list`|`cardlets`|`cards`
      */
@@ -86,14 +81,6 @@ export default {
     multiple: {
       type: Boolean,
       default: true
-    },
-    options: {
-      type: Function,
-      default() {
-        return async () => {
-          return [];
-        };
-      }
     },
     picker: {
       type: [Object],
@@ -172,7 +159,7 @@ export default {
         empty: this.empty,
         image: this.image,
         items: async () => {
-          const items = await this.items(this.selected);
+          const items = await this.getItems(this.selected);
           return items.map(item => {
             item.options = options;
             return item;
@@ -188,6 +175,9 @@ export default {
         pagination: false,
         sortable: this.isSortable
       };
+    },
+    component() {
+      return "k-picker";
     },
     isSortable() {
       if (this.disabled === true) {
@@ -208,9 +198,6 @@ export default {
 
       return true;
     },
-    model() {
-      return "model";
-    },
     more() {
       if (!this.max) {
         return true;
@@ -226,6 +213,12 @@ export default {
     }
   },
   methods: {
+    async getItems(ids) {
+      return getItems(ids, "Item", false);
+    },
+    async getOptions({page, limit, parent, search}) {
+      return getOptions(page, limit, parent, false, search, "Item");
+    },
     onEmpty() {
       this.onOpen();
     },

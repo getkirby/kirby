@@ -1,6 +1,5 @@
 import { Meta, Preview, Story } from '@storybook/addon-docs/blocks';
 import Padding from "../storybook/Padding.js";
-import { Users } from "../storybook/PickerItems.js";
 import UsersField from "./UsersField.vue";
 
 <Meta
@@ -15,13 +14,15 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="List">
     {{
-      extends: Users(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <div>
           <k-users-field
             v-model="value"
-            :options="options"
-            :items="items"
             label="Users"
           />
           <k-headline class="mt-8 mb-3">Value</k-headline>
@@ -34,16 +35,19 @@ import UsersField from "./UsersField.vue";
 
 <Props of={UsersField} />
 
-### Cardlets
+### Layouts
+#### Cardlets
 <Preview>
   <Story name="Cardlets">
     {{
-      extends: Users(),
+      data() {
+        return {
+          value: ["13", "72", "76", "99"]
+        };
+      },
       template: `
         <k-users-field
           v-model="value"
-          :options="options"
-          :items="items"
           label="Users"
           layout="cardlets"
         />
@@ -52,16 +56,18 @@ import UsersField from "./UsersField.vue";
   </Story>
 </Preview>
 
-### Cards
+#### Cards
 <Preview>
   <Story name="Cards">
     {{
-      extends: Users(),
+      data() {
+        return {
+          value: ["13", "72", "1"]
+        };
+      },
       template: `
         <k-users-field
           v-model="value"
-          :options="options"
-          :items="items"
           label="Users"
           layout="cards"
         />
@@ -70,21 +76,22 @@ import UsersField from "./UsersField.vue";
   </Story>
 </Preview>
 
-### Cards in picker, `size: large`
+### Picker layout
 <Preview>
-  <Story name="Cards in picker">
+  <Story name="Picker layout">
     {{
-      extends: Users(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-users-field
           v-model="value"
-          :options="options"
-          :items="items"
           label="Users"
+          layout="cardlets"
           :picker="{
-            layout: 'cards',
-            size: 'large',
-            image: { cover: true }
+            layout: 'list'
           }"
         />
       `
@@ -92,42 +99,16 @@ import UsersField from "./UsersField.vue";
   </Story>
 </Preview>
 
-
-
-### Multiple values
+### `multiple: false`
 <Preview>
-  <Story name="Multiple values">
+  <Story name="Single value">
     {{
-      extends: Users(),
       template: `
         <div>
           <k-users-field
             v-model="value"
-            :options="options"
-            :items="items"
-            label="Picker"
-          />
-          <k-headline class="mt-8 mb-3">Value</k-headline>
-          <k-code-block :code="value" />
-        </div>
-      `
-    }}
-  </Story>
-</Preview>
-
-### Single value
-<Preview>
-  <Story name="Single value">
-    {{
-      extends: Users(),
-      template: `
-        <div>
-          <k-users-field
-            :options="options"
-            :items="items"
             :multiple="false"
-            :search="false"
-            label="Picker"
+            label="Users"
             help="Only one items allowed"
           />
           <k-headline class="mt-8 mb-3">Value</k-headline>
@@ -142,14 +123,16 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="Max">
     {{
-      extends: Users(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-users-field
-          :value="value"
-          :options="options"
-          :items="items"
+          v-model="value"
           :max="3"
-          label="Picker"
+          label="Users"
           help="Maximum 3 items allowed"
         />
       `
@@ -161,13 +144,10 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="No search">
     {{
-      extends: Users(),
       template: `
         <k-users-field
-          :options="options"
-          :items="items"
           :search="false"
-          label="Picker"
+          label="Users"
         />
       `
     }}
@@ -178,15 +158,28 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="Not sortable">
     {{
-      extends: Users(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-users-field
-          :value="value"
-          :options="options"
-          :items="items"
+          v-model="value"
           :sortable="false"
-          label="Picker"
+          label="Users"
         />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Empty
+<Preview>
+  <Story name="Empty">
+    {{
+      template: `
+        <k-users-field label="Users" />
       `
     }}
   </Story>
@@ -196,13 +189,11 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="Custom empty">
     {{
-      extends: Users(),
       template: `
         <k-users-field
-          :options="options"
-          :items="items"
-          :empty="{ text: 'Add some fruits to your life', icon: 'heart' }"
-          label="Picker"
+          :empty="{ text: 'Select the employee of the month', icon: 'star' }"
+          :multiple="false"
+          label="Highlights"
         />
       `
     }}
@@ -211,16 +202,18 @@ import UsersField from "./UsersField.vue";
 
 ### Disabled
 <Preview>
-  <Story name="Disabled">
+  <Story name="Disabled">^
     {{
-      extends: Users(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-users-field
-          :value="value"
-          :options="options"
-          :items="items"
+          v-model="value"
           :disabled="true"
-          label="Picker"
+          label="Users"
         />
       `
     }}

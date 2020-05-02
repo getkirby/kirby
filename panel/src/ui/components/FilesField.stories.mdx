@@ -1,6 +1,5 @@
 import { Meta, Preview, Story } from '@storybook/addon-docs/blocks';
 import Padding from "../storybook/Padding.js";
-import { Files } from "../storybook/PickerItems.js";
 import FilesField from "./FilesField.vue";
 
 <Meta
@@ -15,13 +14,15 @@ import FilesField from "./FilesField.vue";
 <Preview>
   <Story name="List">
     {{
-      extends: Files(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <div>
           <k-files-field
             v-model="value"
-            :options="options"
-            :items="items"
             label="Files"
           />
           <k-headline class="mt-8 mb-3">Value</k-headline>
@@ -34,17 +35,19 @@ import FilesField from "./FilesField.vue";
 
 <Props of={FilesField} />
 
-
-### Cardlets
+### Layout
+#### Cardlets
 <Preview>
   <Story name="Cardlets">
     {{
-      extends: Files(),
+      data() {
+        return {
+          value: ["13", "72", "82", "2"]
+        };
+      },
       template: `
         <k-files-field
           v-model="value"
-          :options="options"
-          :items="items"
           label="Files"
           layout="cardlets"
         />
@@ -57,12 +60,14 @@ import FilesField from "./FilesField.vue";
 <Preview>
   <Story name="Cards">
     {{
-      extends: Files(),
+      data() {
+        return {
+          value: ["13", "72", "189"]
+        };
+      },
       template: `
         <k-files-field
           v-model="value"
-          :options="options"
-          :items="items"
           label="Files"
           layout="cards"
         />
@@ -71,16 +76,18 @@ import FilesField from "./FilesField.vue";
   </Story>
 </Preview>
 
-### Cards in picker, `size: large`
+### Picker layout: cards, `size: large`
 <Preview>
-  <Story name="Cards in picker">
+  <Story name="Picker layout">
     {{
-      extends: Files(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-files-field
           v-model="value"
-          :options="options"
-          :items="items"
           label="Files"
           :picker="{
             layout: 'cards',
@@ -93,41 +100,20 @@ import FilesField from "./FilesField.vue";
   </Story>
 </Preview>
 
-
-
-### Multiple values
+### `multiple: false`
 <Preview>
-  <Story name="Multiple values">
+  <Story name="Single value">
     {{
-      extends: Files(),
+      data() {
+        return {
+          value: ["42"]
+        };
+      },
       template: `
         <div>
           <k-files-field
             v-model="value"
-            :options="options"
-            :items="items"
-            label="Picker"
-          />
-          <k-headline class="mt-8 mb-3">Value</k-headline>
-          <k-code-block :code="value" />
-        </div>
-      `
-    }}
-  </Story>
-</Preview>
-
-### Single value
-<Preview>
-  <Story name="Single value">
-    {{
-      extends: Files(),
-      template: `
-        <div>
-          <k-files-field
-            :options="options"
-            :items="items"
             :multiple="false"
-            :search="false"
             label="Picker"
             help="Only one items allowed"
           />
@@ -143,12 +129,14 @@ import FilesField from "./FilesField.vue";
 <Preview>
   <Story name="Max">
     {{
-      extends: Files(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-files-field
           :value="value"
-          :options="options"
-          :items="items"
           :max="3"
           label="Picker"
           help="Maximum 3 items allowed"
@@ -162,11 +150,8 @@ import FilesField from "./FilesField.vue";
 <Preview>
   <Story name="No search">
     {{
-      extends: Files(),
       template: `
         <k-files-field
-          :options="options"
-          :items="items"
           :search="false"
           label="Picker"
         />
@@ -179,15 +164,28 @@ import FilesField from "./FilesField.vue";
 <Preview>
   <Story name="Not sortable">
     {{
-      extends: Files(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-files-field
-          :value="value"
-          :options="options"
-          :items="items"
+          v-model="value"
           :sortable="false"
           label="Picker"
         />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Empty
+<Preview>
+  <Story name="Empty">
+    {{
+      template: `
+        <k-files-field label="Files" />
       `
     }}
   </Story>
@@ -197,12 +195,9 @@ import FilesField from "./FilesField.vue";
 <Preview>
   <Story name="Custom empty">
     {{
-      extends: Files(),
       template: `
         <k-files-field
-          :options="options"
-          :items="items"
-          :empty="{ text: 'Add some fruits to your life', icon: 'heart' }"
+          :empty="{ text: 'Add your favorite photos', icon: 'heart' }"
           label="Picker"
         />
       `
@@ -214,12 +209,14 @@ import FilesField from "./FilesField.vue";
 <Preview>
   <Story name="Disabled">
     {{
-      extends: Files(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-files-field
           :value="value"
-          :options="options"
-          :items="items"
           :disabled="true"
           label="Picker"
         />

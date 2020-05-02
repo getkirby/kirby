@@ -1,6 +1,5 @@
 import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
 import Padding from "../storybook/Padding.js";
-import { Pages } from "../storybook/PickerItems.js";
 import PagesField from "./PagesField.vue";
 
 <Meta
@@ -15,13 +14,15 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="List">
     {{
-      extends: Pages(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <div>
           <k-pages-field
             v-model="value"
-            :options="options"
-            :items="items"
             label="Pages"
           />
           <k-headline class="mt-8 mb-3">Value</k-headline>
@@ -34,16 +35,20 @@ import PagesField from "./PagesField.vue";
 
 <Props of={PagesField} />
 
-### Cardlets
+
+### Layouts
+#### Cardlets
 <Preview>
   <Story name="Cardlets">
     {{
-      extends: Pages(),
+      data() {
+        return {
+          value: ["13", "72", "24", "117"]
+        };
+      },
       template: `
         <k-pages-field
           v-model="value"
-          :options="options"
-          :items="items"
           label="Pages"
           layout="cardlets"
         />
@@ -52,16 +57,19 @@ import PagesField from "./PagesField.vue";
   </Story>
 </Preview>
 
-### Cards
+
+#### Cards
 <Preview>
   <Story name="Cards">
     {{
-      extends: Pages(),
+      data() {
+        return {
+          value: ["72", "123", "4"]
+        };
+      },
       template: `
         <k-pages-field
           v-model="value"
-          :options="options"
-          :items="items"
           label="Pages"
           layout="cards"
         />
@@ -70,21 +78,22 @@ import PagesField from "./PagesField.vue";
   </Story>
 </Preview>
 
-### Cardlets in picker, `size: large`
+### Picker layout: cardlets, `size: large`
 <Preview>
-  <Story name="Cardlets in picker">
+  <Story name="Picker layout">
     {{
-      extends: Pages(),
+      data() {
+        return {
+          value: ["1", "2", "6", "24", "120"]
+        };
+      },
       template: `
         <k-pages-field
           v-model="value"
-          :options="options"
-          :items="items"
           label="Pages"
           :picker="{
             layout: 'cardlets',
-            size: 'large',
-            image: { cover: true, ratio: '16/9' }
+            size: 'large'
           }"
         />
       `
@@ -93,40 +102,20 @@ import PagesField from "./PagesField.vue";
 </Preview>
 
 
-
-### Multiple values
+### `multiple: false`
 <Preview>
-  <Story name="Multiple values">
+  <Story name="Single value">
     {{
-      extends: Pages(),
+      data() {
+        return {
+          value: ["42"]
+        };
+      },
       template: `
         <div>
           <k-pages-field
             v-model="value"
-            :options="options"
-            :items="items"
-            label="Picker"
-          />
-          <k-headline class="mt-8 mb-3">Value</k-headline>
-          <k-code-block :code="value" />
-        </div>
-      `
-    }}
-  </Story>
-</Preview>
-
-### Single value
-<Preview>
-  <Story name="Single value">
-    {{
-      extends: Pages(),
-      template: `
-        <div>
-          <k-pages-field
-            :options="options"
-            :items="items"
             :multiple="false"
-            :search="false"
             label="Picker"
             help="Only one items allowed"
           />
@@ -138,16 +127,19 @@ import PagesField from "./PagesField.vue";
   </Story>
 </Preview>
 
+
 ### `max: 3`
 <Preview>
   <Story name="Max">
     {{
-      extends: Pages(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-pages-field
           :value="value"
-          :options="options"
-          :items="items"
           :max="3"
           label="Picker"
           help="Maximum 3 items allowed"
@@ -161,11 +153,8 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="No search">
     {{
-      extends: Pages(),
       template: `
         <k-pages-field
-          :options="options"
-          :items="items"
           :search="false"
           label="Picker"
         />
@@ -178,15 +167,28 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Not sortable">
     {{
-      extends: Pages(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-pages-field
-          :value="value"
-          :options="options"
-          :items="items"
+          v-model="value"
           :sortable="false"
           label="Picker"
         />
+      `
+    }}
+  </Story>
+</Preview>
+
+### Empty
+<Preview>
+  <Story name="Empty">
+    {{
+      template: `
+        <k-pages-field label="Pages" />
       `
     }}
   </Story>
@@ -196,13 +198,10 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Custom empty">
     {{
-      extends: Pages(),
       template: `
         <k-pages-field
-          :options="options"
-          :items="items"
-          :empty="{ text: 'Add some fruits to your life', icon: 'heart' }"
-          label="Picker"
+          :empty="{ text: 'Add related projects', icon: 'parent' }"
+          label="Related"
         />
       `
     }}
@@ -213,12 +212,14 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Disabled">
     {{
-      extends: Pages(),
+      data() {
+        return {
+          value: ["13", "72"]
+        };
+      },
       template: `
         <k-pages-field
-          :value="value"
-          :options="options"
-          :items="items"
+          v-model="value"
           :disabled="true"
           label="Picker"
         />

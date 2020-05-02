@@ -4,7 +4,7 @@ import { Pages } from "../storybook/PickerItems.js";
 import PagesPicker from "./PagesPicker.vue";
 
 <Meta
-  title="UI | Data / Picker / Pages Picker"
+  title="UI | Data / Pages Picker"
   component={PagesPicker}
   decorators={[Padding]}
 />
@@ -15,7 +15,27 @@ import PagesPicker from "./PagesPicker.vue";
 <Preview>
   <Story name="Regular">
     {{
-      extends: Pages(),
+      data() {
+        return {
+          pagination: {
+            page: 1,
+            limit: 10,
+            total: 0
+          }
+        }
+      },
+      computed: {
+        options() {
+          return async ({page, limit, parent, search}) => {
+            return Pages(page, limit, parent, search);
+          };
+        }
+      },
+      methods: {
+        onPaginate(pagination) {
+          this.pagination = pagination;
+        }
+      },
       template: `
         <div>
           <k-pages-picker
