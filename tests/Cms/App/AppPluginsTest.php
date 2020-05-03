@@ -543,6 +543,53 @@ class AppPluginsTest extends TestCase
         $this->assertInstanceOf('TestPage', $page);
     }
 
+    public function testPermission()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'permissions' => [
+                'test-category' => [
+                    'test-action' => true,
+                    'another'     => false
+                ]
+            ]
+        ]);
+
+        $permissions = new Permissions([]);
+        $this->assertTrue($permissions->for('test-category', 'test-action'));
+        $this->assertFalse($permissions->for('test-category', 'another'));
+
+        // reset actions
+        Permissions::$extendedActions = [];
+    }
+
+    public function testPermissionPlugin()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $plugin = new Plugin('kirby/manual', [
+            'permissions' => [
+                'test-action' => true,
+                'another'     => false
+            ]
+        ]);
+
+        $kirby->extend($plugin->extends(), $plugin);
+
+        $permissions = new Permissions([]);
+        $this->assertTrue($permissions->for('kirby.manual', 'test-action'));
+        $this->assertFalse($permissions->for('kirby.manual', 'another'));
+
+        // reset actions
+        Permissions::$extendedActions = [];
+    }
+
     public function testOption()
     {
         // simple

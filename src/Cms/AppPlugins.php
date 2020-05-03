@@ -63,6 +63,7 @@ trait AppPlugins
         'pageMethods' => [],
         'pagesMethods' => [],
         'pageModels' => [],
+        'permissions' => [],
         'routes' => [],
         'sections' => [],
         'siteMethods' => [],
@@ -333,6 +334,22 @@ trait AppPlugins
     protected function extendPages(array $pages): array
     {
         return $this->extensions['pages'] = array_merge($this->extensions['pages'], $pages);
+    }
+
+    /**
+     * Registers additional permissions
+     *
+     * @param array $permissions
+     * @param \Kirby\Cms\Plugin|null $plugin
+     * @return array
+     */
+    protected function extendPermissions(array $permissions, Plugin $plugin = null): array
+    {
+        if ($plugin !== null) {
+            $permissions = [$plugin->prefix() => $permissions];
+        }
+
+        return $this->extensions['permissions'] = Permissions::$extendedActions = array_merge(Permissions::$extendedActions, $permissions);
     }
 
     /**
