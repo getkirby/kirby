@@ -189,18 +189,11 @@ class System
      */
     public function isLocal(): bool
     {
-        $server = $this->app->server();
-        $host   = $server->host();
+        $server  = $this->app->server();
+        $visitor = $this->app->visitor();
+        $host    = $server->host();
 
         if ($host === 'localhost') {
-            return true;
-        }
-
-        if (in_array($server->address(), ['::1', '127.0.0.1', '0.0.0.0']) === true) {
-            return true;
-        }
-
-        if (Str::endsWith($host, '.dev') === true) {
             return true;
         }
 
@@ -209,6 +202,27 @@ class System
         }
 
         if (Str::endsWith($host, '.test') === true) {
+            return true;
+        }
+
+        if (in_array($visitor->ip(), ['::1', '127.0.0.1']) === true) {
+            // ensure that there is no reverse proxy in between
+
+            if (
+                isset($_SERVER['HTTP_X_FORWARDED_FOR']) === true &&
+                in_array($_SERVER['HTTP_X_FORWARDED_FOR'], ['::1', '127.0.0.1']) === false
+            ) {
+                return false;
+            }
+
+            if (
+                isset($_SERVER['HTTP_CLIENT_IP']) === true &&
+                in_array($_SERVER['HTTP_CLIENT_IP'], ['::1', '127.0.0.1']) === false
+            ) {
+                return false;
+            }
+
+            // no reverse proxy or the real client also comes from localhost
             return true;
         }
 

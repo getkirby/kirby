@@ -28,13 +28,13 @@ Steps to reproduce the behavior:
 
 **Desktop (please complete the following information):**  
  - OS: <!-- e.g. macOS -->
- - Browser: <!-- e.g. chrome, safari -->
+ - Browser: <!-- e.g. Chrome, Safari -->
  - Version: <!-- e.g. 22 -->
 
 **Smartphone (please complete the following information):**  
- - Device: <!-- e.g. iPhone11 -->
- - OS: <!-- e.g. iOS12.1 -->
- - Browser: <!-- e.g. stock browser, safari -->
+ - Device: <!-- e.g. iPhone 11 -->
+ - OS: <!-- e.g. iOS 13.3 -->
+ - Browser: <!-- e.g. stock browser, Safari -->
  - Version: <!-- e.g. 22 -->
 
 **Additional context**  
