@@ -834,7 +834,12 @@ class App
 
         $config = Config::$data;
 
-        return $this->options = array_replace_recursive($config, $main, $host, $addr);
+        return $this->options = array_replace_recursive(
+            A::nest($config),
+            A::nest($main),
+            A::nest($host),
+            A::nest($addr)
+        );
     }
 
     /**
@@ -845,7 +850,7 @@ class App
      */
     protected function optionsFromProps(array $options = []): array
     {
-        return $this->options = array_replace_recursive($this->options, $options);
+        return $this->options = array_replace_recursive($this->options, A::nest($options));
     }
 
     /**
@@ -860,7 +865,7 @@ class App
             $options = (array)$this->options['ready']($this);
 
             // inject all last-minute options recursively
-            $this->options = array_replace_recursive($this->options, $options);
+            $this->options = array_replace_recursive($this->options, A::nest($options));
 
             // update the system with changed options
             if (

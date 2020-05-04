@@ -204,13 +204,18 @@ class AppTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
-            'options' => $options = [
+            'options' => [
                 'a' => 'A',
-                'b' => 'B'
+                'b.c' => 'C'
             ]
         ]);
 
-        $this->assertEquals($options, $app->options());
+        $this->assertSame([
+            'a' => 'A',
+            'b' => [
+                'c' => 'C'
+            ]
+        ], $app->options());
     }
 
     public function testOptionsOnReady()
@@ -231,9 +236,10 @@ class AppTest extends TestCase
                 ]
             ],
             'options' => [
-                'ready' => function ($kirby) {
+                'ready' => $ready = function ($kirby) {
                     return [
                         'test'  => $kirby->root('index'),
+                        'another.test' => 'foo'
                         'debug' => true,
                         'home'  => $kirby->site()->content()->home(),
                         'error' => $kirby->site()->content()->error(),
@@ -243,7 +249,13 @@ class AppTest extends TestCase
             ]
         ]);
 
-        $this->assertSame('/dev/null', $app->option('test'));
+        $this->assertSame([
+            'ready' => $ready,
+            'test' => '/dev/null',
+            'another' => [
+                'test' => 'foo'
+            ]
+        ], $app->options());
 
         $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
         $whoopsMethod->setAccessible(true);
