@@ -238,11 +238,11 @@ class Pages extends Collection
     public function findByIdRecursive(string $id, string $startAt = null, bool $multiLang = false)
     {
         $path       = explode('/', $id);
-        $collection = $this;
         $item       = null;
         $query      = $startAt;
 
         foreach ($path as $key) {
+            $collection = $item ? $item->children() : $this;
             $query = ltrim($query . '/' . $key, '/');
             $item  = $collection->get($query) ?? null;
 
@@ -253,8 +253,6 @@ class Pages extends Collection
             if ($item === null) {
                 return null;
             }
-
-            $collection = $item->children();
         }
 
         return $item;

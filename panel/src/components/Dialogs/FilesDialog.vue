@@ -7,7 +7,10 @@
     @submit="submit"
   >
     <template v-if="issue">
-      <k-box :text="issue" theme="negative" />
+      <k-box
+        :text="issue"
+        theme="negative"
+      />
     </template>
 
     <template v-else>
@@ -58,7 +61,10 @@
           @paginate="paginate"
         />
       </template>
-      <k-empty v-else icon="image">
+      <k-empty
+        v-else
+        icon="image"
+      >
         {{ $t("dialog.files.empty") }}
       </k-empty>
     </template>

@@ -99,7 +99,7 @@ class Dir
     }
 
     /**
-     * Checks if the directory exsits on disk
+     * Checks if the directory exists on disk
      *
      * @param string $dir
      * @return bool

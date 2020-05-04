@@ -1,4 +1,3 @@
-
 export default {
   ucfirst (string) {
     const str = String(string);

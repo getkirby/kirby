@@ -2,8 +2,7 @@
   <fieldset class="k-fieldset">
     <k-grid>
       <k-column
-        v-for="(field, fieldName) in fields"
-        v-if="field.type !== 'hidden' && meetsCondition(field)"
+        v-for="(field, fieldName) in visibleFields"
         :key="field.signature"
         :width="field.width"
       >
@@ -22,7 +21,10 @@
             @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"
             @submit="$emit('submit', $event, field, fieldName)"
           />
-          <k-box v-else theme="negative">
+          <k-box
+            v-else
+            theme="negative"
+          >
             <k-text size="small">
               The field type <strong>"{{ fieldName }}"</strong> does not exist
             </k-text>
@@ -61,6 +63,21 @@ export default {
     return {
       errors: {}
     };
+  },
+  computed: {
+    visibleFields() {
+      let fields = {};
+
+      Object.keys(this.fields).forEach(name => {
+        const field = this.fields[name];
+
+        if (field.type !== 'hidden' && this.meetsCondition(field)) {
+          fields[name] = field;
+        }
+      });
+
+      return fields;
+    }
   },
   methods: {
     focus(name) {

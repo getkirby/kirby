@@ -154,14 +154,15 @@ class I18nTest extends TestCase
     {
         I18n::$translations = [
             'en' => [
-                'car' => ['No cars', 'One car', 'Many cars']
+                'car' => ['No cars', 'One car', 'Two cars', 'Many cars']
             ]
         ];
 
         $this->assertEquals('No cars', I18n::translateCount('car', 0));
         $this->assertEquals('One car', I18n::translateCount('car', 1));
-        $this->assertEquals('Many cars', I18n::translateCount('car', 2));
+        $this->assertEquals('Two cars', I18n::translateCount('car', 2));
         $this->assertEquals('Many cars', I18n::translateCount('car', 3));
+        $this->assertEquals('Many cars', I18n::translateCount('car', 4));
     }
 
     public function testTranslateCountWithPlaceholders()
@@ -189,26 +190,37 @@ class I18nTest extends TestCase
     {
         I18n::$translations = [
             'en' => [
-                'car' => 'One car'
+                'car' => '{{ count }} car(s)'
             ]
         ];
 
-        $this->assertEquals('One car', I18n::translateCount('car', 1));
-        $this->assertEquals('One car', I18n::translateCount('car', 2));
+        $this->assertEquals('1 car(s)', I18n::translateCount('car', 1));
+        $this->assertEquals('2 car(s)', I18n::translateCount('car', 2));
     }
 
-    public function testTranslateCountWithInvalidArgs()
+    public function testTranslateCountWithCallback()
     {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('Please provide 3 translations');
-
         I18n::$translations = [
             'en' => [
-                'car' => ['No cars', 'One car']
+                'car' => function ($count) {
+                    switch ($count) {
+                        case 0:
+                            return 'No car';
+                        case 1:
+                            return 'One car';
+                        case in_array($count, [2, 3, 4]) === true:
+                            return 'Few cars';
+                        default:
+                            return 'Many cars';
+                    }
+                }
             ]
         ];
 
-        I18n::translateCount('car', 2);
+        $this->assertEquals('No car', I18n::translateCount('car', 0));
+        $this->assertEquals('One car', I18n::translateCount('car', 1));
+        $this->assertEquals('Few cars', I18n::translateCount('car', 2));
+        $this->assertEquals('Many cars', I18n::translateCount('car', 5));
     }
 
     public function testLoadTranslation()

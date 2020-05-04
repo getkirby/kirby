@@ -1,11 +1,25 @@
 <template>
-  <k-view v-if="system" align="center" class="k-installation-view">
-    <form v-if="state === 'install'" @submit.prevent="install">
+  <k-view
+    v-if="system"
+    align="center"
+    class="k-installation-view"
+  >
+    <form
+      v-if="state === 'install'"
+      @submit.prevent="install"
+    >
       <h1 class="k-offscreen">
         {{ $t("installation") }}
       </h1>
-      <k-fieldset v-model="user" :fields="fields" :novalidate="true" />
-      <k-button type="submit" icon="check">
+      <k-fieldset
+        v-model="user"
+        :fields="fields"
+        :novalidate="true"
+      />
+      <k-button
+        type="submit"
+        icon="check"
+      >
         {{ $t("install") }}
       </k-button>
     </form>
@@ -67,7 +81,10 @@
         </li>
       </ul>
 
-      <k-button icon="refresh" @click="check">
+      <k-button
+        icon="refresh"
+        @click="check"
+      >
         <span v-html="$t('retry')" />
       </k-button>
     </div>
@@ -91,7 +108,6 @@ export default {
   },
   computed: {
     state() {
-
       if (this.system.isOk && this.system.isInstallable && !this.system.isInstalled) {
         return 'install';
       }
@@ -100,6 +116,7 @@ export default {
         return 'completed';
       }
 
+      return null;
     },
     translation() {
       return this.$store.state.translation.current;

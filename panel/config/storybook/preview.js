@@ -1,22 +1,19 @@
-import { addDecorator } from '@storybook/vue';
+import { addDecorator, addParameters } from '@storybook/vue';
 import Icons from "@/ui/components/Icons.vue";
 import Vue from "vue";
 import Ui from "@/ui/index.js";
 
 Vue.use(Ui);
 
-/** Store mockup */
-Vue.prototype.$store = {
-  dispatch() {
-
-  },
-  commit() {
-
-  }
-};
-
 import "@/ui/css/index.scss";
+import "./theme.css";
 import "@/ui/index.js";
+
+addParameters({
+  docs: {
+    inlineStories: true,
+  },
+});
 
 addDecorator(() => {
   return {

@@ -18,12 +18,15 @@
       :alt="tooltip"
       class="k-button-icon"
     />
-    <span v-if="$slots.default" class="k-button-text"><slot /></span>
+    <span
+      v-if="$slots.default"
+      class="k-button-text"
+    ><slot /></span>
   </button>
 </template>
 
 <script>
-import tab from "@/mixins/tab.js";
+import tab from "@/ui/mixins/tab.js";
 
 export default {
   mixins: [tab],

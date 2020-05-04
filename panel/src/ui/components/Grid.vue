@@ -1,5 +1,8 @@
 <template>
-  <div :data-gutter="gutter" class="k-grid">
+  <div
+    :data-gutter="gutter"
+    class="k-grid"
+  >
     <slot />
   </div>
 </template>

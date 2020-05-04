@@ -1,5 +1,9 @@
 <template>
-  <progress :value="state" max="100" class="k-progress">
+  <progress
+    :value="state"
+    max="100"
+    class="k-progress"
+  >
     {{ state }}%
   </progress>
 </template>
@@ -12,15 +16,15 @@ export default {
       default: 0
     }
   },
-  watch: {
-    value(value) {
-      this.set(value);
-    }
-  },
   data() {
     return {
       state: this.value
     };
+  },
+  watch: {
+    value(value) {
+      this.set(value);
+    }
   },
   methods: {
     set(value) {

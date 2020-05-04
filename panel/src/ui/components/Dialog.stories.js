@@ -1,9 +1,11 @@
+import Dialog from "./Dialog.vue";
 import { action } from "@storybook/addon-actions";
 import { withKnobs, text, select } from '@storybook/addon-knobs';
 
 export default {
-  title: "Dialog",
-  decorators: [withKnobs]
+  title: "Interaction / Dialog",
+  decorators: [withKnobs],
+  component: Dialog
 };
 
 export const configurator = () => ({
