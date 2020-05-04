@@ -30,8 +30,9 @@ class Query
 
     /**
      * The object which should be fetched for each row
+     * or function to call for each row
      *
-     * @var string
+     * @var string|\Closure
      */
     protected $fetch = 'Kirby\Toolkit\Obj';
 
@@ -219,13 +220,14 @@ class Query
     }
 
     /**
-     * Sets the object class, which should be fetched
-     * Set this to array to get a simple array instead of an object
+     * Sets the object class, which should be fetched;
+     * set this to `'array'` to get a simple array instead of an object;
+     * pass a function that receives the `$data` and the `$key` to generate arbitrary data structures
      *
-     * @param string $fetch
+     * @param string|\Closure $fetch
      * @return \Kirby\Database\Query
      */
-    public function fetch(string $fetch)
+    public function fetch($fetch)
     {
         $this->fetch = $fetch;
         return $this;
@@ -559,55 +561,55 @@ class Query
     /**
      * Builds a count query
      *
-     * @return \Kirby\Database\Query
+     * @return int
      */
-    public function count()
+    public function count(): int
     {
-        return $this->aggregate('COUNT');
+        return (int)$this->aggregate('COUNT');
     }
 
     /**
      * Builds a max query
      *
      * @param string $column
-     * @return \Kirby\Database\Query
+     * @return float
      */
-    public function max(string $column)
+    public function max(string $column): float
     {
-        return $this->aggregate('MAX', $column);
+        return (float)$this->aggregate('MAX', $column);
     }
 
     /**
      * Builds a min query
      *
      * @param string $column
-     * @return \Kirby\Database\Query
+     * @return float
      */
-    public function min(string $column)
+    public function min(string $column): float
     {
-        return $this->aggregate('MIN', $column);
+        return (float)$this->aggregate('MIN', $column);
     }
 
     /**
      * Builds a sum query
      *
      * @param string $column
-     * @return \Kirby\Database\Query
+     * @return float
      */
-    public function sum(string $column)
+    public function sum(string $column): float
     {
-        return $this->aggregate('SUM', $column);
+        return (float)$this->aggregate('SUM', $column);
     }
 
     /**
      * Builds an average query
      *
      * @param string $column
-     * @return \Kirby\Database\Query
+     * @return float
      */
-    public function avg(string $column)
+    public function avg(string $column): float
     {
-        return $this->aggregate('AVG', $column);
+        return (float)$this->aggregate('AVG', $column);
     }
 
     /**
@@ -812,10 +814,16 @@ class Query
      */
     public function column($column)
     {
-        $sql        = $this->database->sql();
-        $primaryKey = $sql->combineIdentifier($this->table, $this->primaryKeyName);
+        // if there isn't already an explicit order, order by the primary key
+        // instead of the column that was requested (which would be implied otherwise)
+        if ($this->order === null) {
+            $sql        = $this->database->sql();
+            $primaryKey = $sql->combineIdentifier($this->table, $this->primaryKeyName);
 
-        $results = $this->query($this->select([$column])->order($primaryKey . ' ASC')->build('select'), [
+            $this->order($primaryKey . ' ASC');
+        }
+
+        $results = $this->query($this->select([$column])->build('select'), [
             'iterator' => 'array',
             'fetch'    => 'array',
         ]);
