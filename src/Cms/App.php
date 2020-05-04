@@ -93,6 +93,9 @@ class App
         $this->optionsFromConfig();
         $this->optionsFromProps($props['options'] ?? []);
 
+        // register the Whoops error handler
+        $this->handleErrors();
+
         // set the path to make it available for the url bakery
         $this->setPath($props['path'] ?? null);
 
@@ -125,9 +128,6 @@ class App
 
         // trigger hook for use in plugins
         $this->trigger('system.loadPlugins:after');
-
-        // handle those damn errors
-        $this->handleErrors();
 
         // execute a ready callback from the config
         $this->optionsFromReadyCallback();
@@ -861,6 +861,27 @@ class App
 
             // inject all last-minute options recursively
             $this->options = array_replace_recursive($this->options, $options);
+
+            // update the system with changed options
+            if (
+                isset($options['debug']) === true ||
+                isset($options['whoops']) === true ||
+                isset($options['editor']) === true
+            ) {
+                $this->handleErrors();
+            }
+
+            if (isset($options['debug']) === true) {
+                $this->api = null;
+            }
+
+            if (isset($options['home']) === true || isset($options['error']) === true) {
+                $this->site = null;
+            }
+
+            if (isset($options['slugs']) === true) {
+                $this->i18n();
+            }
         }
 
         return $this->options;

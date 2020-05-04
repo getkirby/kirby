@@ -69,14 +69,6 @@ class OptionsApiTest extends TestCase
             ]
         ]);
 
-        $api = new OptionsApi([
-            'data'  => [],
-            'url'   => $source,
-            'fetch' => 'Companies',
-            'text'  => '{{ item.name }}',
-            'value' => '{{ item.name.slug }}'
-        ]);
-
         $expected = [
             [
                 'value' => 'apple',
@@ -92,8 +84,45 @@ class OptionsApiTest extends TestCase
             ],
         ];
 
+        // API from file
+        $api = new OptionsApi([
+            'data'  => [],
+            'url'   => $source,
+            'fetch' => 'Companies',
+            'text'  => '{{ item.name }}',
+            'value' => '{{ item.name.slug }}'
+        ]);
+
         $this->assertEquals($expected, $api->options());
         $this->assertEquals($expected, $api->toArray());
+
+        // API from URL (using cURL)
+        $api = new OptionsApi([
+            'data'  => [],
+            'url'   => 'file://' . $source,
+            'fetch' => 'Companies',
+            'text'  => '{{ item.name }}',
+            'value' => '{{ item.name.slug }}'
+        ]);
+
+        $this->assertEquals($expected, $api->options());
+        $this->assertEquals($expected, $api->toArray());
+    }
+
+    public function testOptionsFileNotFound()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Local file /does/not/exist was not found');
+
+        $api = new OptionsApi([
+            'data'  => [],
+            'url'   => '/does/not/exist',
+            'fetch' => 'Companies',
+            'text'  => '{{ item.name }}',
+            'value' => '{{ item.name.slug }}'
+        ]);
+
+        $api->options();
     }
 
     public function testSortedOptions()

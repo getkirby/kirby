@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Http\Route;
+use Kirby\Http\Server;
+use Kirby\Toolkit\Str;
+use ReflectionMethod;
 
 /**
  * @coversDefaultClass \Kirby\Cms\App
@@ -214,20 +217,46 @@ class AppTest extends TestCase
     {
         App::destroy();
 
+        // fake a non-CLI environment for testing debug mode
+        Server::$cli = false;
+
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ],
+            'site' => [
+                'content' => [
+                    'home'  => 'test',
+                    'error' => 'another-test'
+                ]
+            ],
             'options' => [
                 'ready' => function ($kirby) {
                     return [
-                        'test' => $kirby->root('index')
+                        'test'  => $kirby->root('index'),
+                        'debug' => true,
+                        'home'  => $kirby->site()->content()->home(),
+                        'error' => $kirby->site()->content()->error(),
+                        'slugs' => 'de'
                     ];
                 }
             ]
         ]);
 
-        $this->assertEquals('/dev/null', $app->option('test'));
+        $this->assertSame('/dev/null', $app->option('test'));
+
+        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+        $whoopsMethod->setAccessible(true);
+        $whoopsHandler = $whoopsMethod->invoke($app)->getHandlers()[0];
+        $this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $whoopsHandler);
+
+        $this->assertSame('test', $app->site()->homePageId());
+        $this->assertSame('another-test', $app->site()->errorPageId());
+
+        $this->assertSame('ss', Str::$language['ß']);
+
+        // reset global environment
+        Server::$cli = true;
     }
 
     public function testRolesFromFixtures()

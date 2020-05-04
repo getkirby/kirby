@@ -5,6 +5,14 @@ namespace Kirby\Cms;
 use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
+class UncreatablePage extends Page
+{
+    public static function create(array $props)
+    {
+        return 'the model was used';
+    }
+}
+
 class PageCreateTest extends TestCase
 {
     protected $app;
@@ -21,11 +29,17 @@ class PageCreateTest extends TestCase
         $this->app->impersonate('kirby');
 
         Dir::make($this->fixtures);
+
+        Page::$models = [
+            'uncreatable-page' => UncreatablePage::class
+        ];
     }
 
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+
+        Page::$models = [];
     }
 
     public function testCreateDraft()
@@ -139,6 +153,21 @@ class PageCreateTest extends TestCase
         $this->assertEquals('child', $child->slug());
         $this->assertEquals('mother/child', $child->id());
         $this->assertTrue($mother->drafts()->has($child->id()));
+    }
+
+    public function testCreateChildCustomModel()
+    {
+        $mother = Page::create([
+            'slug' => 'mother'
+        ]);
+
+        $child = $mother->createChild([
+            'slug'     => 'child',
+            'template' => 'uncreatable-page'
+        ]);
+
+        $this->assertSame('the model was used', $child);
+        $this->assertTrue($mother->drafts()->isEmpty());
     }
 
     public function testCreateFile()
