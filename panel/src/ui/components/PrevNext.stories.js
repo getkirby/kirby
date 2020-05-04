@@ -1,5 +1,8 @@
+import PrevNext from "./PrevNext.vue";
+
 export default {
-  title: "PrevNext"
+  title: "Navigation / PrevNext",
+  component: PrevNext
 };
 
 export const enabled = () => ({

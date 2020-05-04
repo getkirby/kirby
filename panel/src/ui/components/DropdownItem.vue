@@ -10,6 +10,9 @@
 </template>
 
 <script>
+/**
+ * k-dropdown-item elements inherit all the attributes from k-button elements, like link, icon or image
+ */
 export default {
   inheritAttrs: false,
   props: {

@@ -1,5 +1,9 @@
 <template>
-  <k-field v-bind="$props" class="k-structure-field" @click.native.stop>
+  <k-field
+    v-bind="$props"
+    class="k-structure-field"
+    @click.native.stop
+  >
     <!-- Add button -->
     <template slot="options">
       <k-button
@@ -15,7 +19,10 @@
 
     <!-- Form -->
     <template v-if="currentIndex !== null">
-      <div class="k-structure-backdrop" @click="escape" />
+      <div
+        class="k-structure-backdrop"
+        @click="escape"
+      />
       <section class="k-structure-form">
         <k-form
           ref="form"
@@ -26,7 +33,11 @@
           @submit="submit"
         />
         <footer class="k-structure-form-buttons">
-          <k-button class="k-structure-form-cancel-button" icon="cancel" @click="close">
+          <k-button
+            class="k-structure-form-cancel-button"
+            icon="cancel"
+            @click="close"
+          >
             {{ $t('cancel') }}
           </k-button>
           <k-pagination
@@ -39,7 +50,11 @@
             :validate="beforePaginate"
             @paginate="paginate"
           />
-          <k-button class="k-structure-form-submit-button" icon="check" @click="submit">
+          <k-button
+            class="k-structure-form-submit-button"
+            icon="check"
+            @click="submit"
+          >
             {{ $t(currentIndex !== 'new' ? 'confirm' : 'add') }}
           </k-button>
         </footer>
@@ -131,11 +146,20 @@
                   class="k-structure-table-options-button"
                   @click="$refs[index + '-actions'][0].toggle()"
                 />
-                <k-dropdown-content :ref="index + '-actions'" align="right">
-                  <k-dropdown-item icon="copy" @click="duplicateItem(index)">
+                <k-dropdown-content
+                  :ref="index + '-actions'"
+                  align="right"
+                >
+                  <k-dropdown-item
+                    icon="copy"
+                    @click="duplicateItem(index)"
+                  >
                     {{ $t('duplicate') }}
                   </k-dropdown-item>
-                  <k-dropdown-item icon="remove" @click="confirmRemove(index)">
+                  <k-dropdown-item
+                    icon="remove"
+                    @click="confirmRemove(index)"
+                  >
                     {{ $t('remove') }}
                   </k-dropdown-item>
                 </k-dropdown-content>
@@ -152,7 +176,11 @@
           </tr>
         </k-draggable>
       </table>
-      <k-pagination v-if="limit" v-bind="pagination" @paginate="paginateItems" />
+      <k-pagination
+        v-if="limit"
+        v-bind="pagination"
+        @paginate="paginateItems"
+      />
       <k-dialog
         v-if="!disabled"
         ref="remove"

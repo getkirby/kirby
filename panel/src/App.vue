@@ -12,21 +12,36 @@
     <keep-alive>
       <k-icons />
     </keep-alive>
-    <header v-if="inside" class="k-panel-header">
+    <header
+      v-if="inside"
+      class="k-panel-header"
+    >
       <k-topbar @register="$refs.registration.open()" />
-      <k-search v-if="$store.state.search" v-bind="$store.state.search" />
+      <k-search
+        v-if="$store.state.search"
+        v-bind="$store.state.search"
+      />
     </header>
     <main class="k-panel-view">
       <router-view />
     </main>
     <k-form-buttons v-if="inside" />
     <k-error-dialog />
-    <div v-if="offline" class="k-offline-warning">
+    <div
+      v-if="offline"
+      class="k-offline-warning"
+    >
       <p>The panel is currently offline</p>
     </div>
-    <k-registration v-if="inside" ref="registration" />
+    <k-registration
+      v-if="inside"
+      ref="registration"
+    />
   </div>
-  <div v-else class="k-panel">
+  <div
+    v-else
+    class="k-panel"
+  >
     <main class="k-panel-view">
       <k-error-view>
         <p v-if="debug">
@@ -41,14 +56,12 @@
 </template>
 
 <script>
-import Icons from "@/components/Misc/Icons.vue";
 import Registration from "@/components/Dialogs/RegistrationDialog.vue";
 import config from "@/config/config.js";
 
 export default {
   name: "App",
   components: {
-    "k-icons": Icons,
     "k-registration": Registration,
   },
   data() {

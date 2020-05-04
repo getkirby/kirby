@@ -1,5 +1,9 @@
 <template>
-  <div :data-theme="theme" class="k-box" v-on="$listeners">
+  <div
+    :data-theme="theme"
+    class="k-box"
+    v-on="$listeners"
+  >
     <slot>
       <k-text v-html="text" />
     </slot>

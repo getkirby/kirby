@@ -1,5 +1,9 @@
 <template>
-  <div :data-width="width" :data-sticky="sticky" class="k-column">
+  <div
+    :data-width="width"
+    :data-sticky="sticky"
+    class="k-column"
+  >
     <div><slot /></div>
   </div>
 </template>

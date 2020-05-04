@@ -1,5 +1,8 @@
 <template>
-  <div :data-align="align" class="k-view">
+  <div
+    :data-align="align"
+    class="k-view"
+  >
     <slot />
   </div>
 </template>

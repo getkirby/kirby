@@ -1,3 +1,4 @@
+import Pagination from "./Pagination.vue";
 import {
   withKnobs,
   text,
@@ -7,8 +8,9 @@ import {
 } from '@storybook/addon-knobs';
 
 export default {
-  title: "Pagination",
-  decorators: [withKnobs]
+  title: "Navigation / Pagination",
+  decorators: [withKnobs],
+  component: Pagination
 };
 
 export const configurator = () => ({

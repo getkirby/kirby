@@ -1,9 +1,17 @@
+import Dropdown from "./Dropdown.vue";
+import DropdownContent from "./DropdownContent.vue";
+import DropdownItem from "./DropdownItem.vue";
 import { action } from "@storybook/addon-actions";
-import { withKnobs, text } from '@storybook/addon-knobs';
+import { withKnobs } from '@storybook/addon-knobs';
 
 export default {
-  title: "Dropdown",
-  decorators: [withKnobs]
+  title: "Navigation / Dropdown",
+  decorators: [withKnobs],
+  component: Dropdown,
+  subcomponents: {
+    DropdownContent,
+    DropdownItem
+  }
 };
 
 export const simple = () => ({

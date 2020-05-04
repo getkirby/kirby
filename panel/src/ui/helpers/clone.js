@@ -1,4 +1,3 @@
-
 export default function (array) {
   if (array === undefined) {
     return undefined;

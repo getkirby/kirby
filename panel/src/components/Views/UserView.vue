@@ -2,7 +2,11 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <div v-else-if="ready" :data-locked="isLocked" class="k-user-view">
+  <div
+    v-else-if="ready"
+    :data-locked="isLocked"
+    class="k-user-view"
+  >
     <div class="k-user-profile">
       <k-view>
         <template v-if="avatar">
@@ -21,29 +25,51 @@
               />
             </k-button>
             <k-dropdown-content ref="picture">
-              <k-dropdown-item icon="upload" @click="$refs.upload.open()">
+              <k-dropdown-item
+                icon="upload"
+                @click="$refs.upload.open()"
+              >
                 {{ $t('change') }}
               </k-dropdown-item>
-              <k-dropdown-item icon="trash" @click="action('picture.delete')">
+              <k-dropdown-item
+                icon="trash"
+                @click="action('picture.delete')"
+              >
                 {{ $t('delete') }}
               </k-dropdown-item>
             </k-dropdown-content>
           </k-dropdown>
         </template>
         <template v-else>
-          <k-button :tooltip="$t('avatar')" class="k-user-view-image" @click="$refs.upload.open()">
+          <k-button
+            :tooltip="$t('avatar')"
+            class="k-user-view-image"
+            @click="$refs.upload.open()"
+          >
             <k-icon type="user" />
           </k-button>
         </template>
 
         <k-button-group>
-          <k-button :disabled="!permissions.changeEmail || isLocked" icon="email" @click="action('email')">
+          <k-button
+            :disabled="!permissions.changeEmail || isLocked"
+            icon="email"
+            @click="action('email')"
+          >
             {{ $t("email") }}: {{ user.email }}
           </k-button>
-          <k-button :disabled="!permissions.changeRole || isLocked" icon="bolt" @click="action('role')">
+          <k-button
+            :disabled="!permissions.changeRole || isLocked"
+            icon="bolt"
+            @click="action('role')"
+          >
             {{ $t("role") }}: {{ user.role.title }}
           </k-button>
-          <k-button :disabled="!permissions.changeLanguage || isLocked" icon="globe" @click="action('language')">
+          <k-button
+            :disabled="!permissions.changeLanguage || isLocked"
+            icon="globe"
+            @click="action('language')"
+          >
             {{ $t("language") }}: {{ user.language }}
           </k-button>
         </k-button-group>
@@ -57,16 +83,27 @@
         :tab="tab"
         @edit="action('rename')"
       >
-        <span v-if="!user.name || user.name.length === 0" class="k-user-name-placeholder">{{ $t("name") }} …</span>
+        <span
+          v-if="!user.name || user.name.length === 0"
+          class="k-user-name-placeholder"
+        >{{ $t("name") }} …</span>
         <template v-else>
           {{ user.name }}
         </template>
         <k-button-group slot="left">
           <k-dropdown>
-            <k-button :disabled="isLocked" icon="cog" @click="$refs.settings.toggle()">
+            <k-button
+              :disabled="isLocked"
+              icon="cog"
+              @click="$refs.settings.toggle()"
+            >
               {{ $t('settings') }}
             </k-button>
-            <k-dropdown-content ref="settings" :options="options" @action="action" />
+            <k-dropdown-content
+              ref="settings"
+              :options="options"
+              @action="action"
+            />
           </k-dropdown>
           <k-languages-dropdown />
         </k-button-group>
@@ -89,14 +126,30 @@
         @tab="tab = $event"
       />
 
-      <k-box v-else-if="ready" :text="$t('user.blueprint', { role: user.role.name })" theme="info" />
+      <k-box
+        v-else-if="ready"
+        :text="$t('user.blueprint', { role: user.role.name })"
+        theme="info"
+      />
 
-      <k-user-email-dialog ref="email" @success="fetch" />
-      <k-user-language-dialog ref="language" @success="fetch" />
+      <k-user-email-dialog
+        ref="email"
+        @success="fetch"
+      />
+      <k-user-language-dialog
+        ref="language"
+        @success="fetch"
+      />
       <k-user-password-dialog ref="password" />
       <k-user-remove-dialog ref="remove" />
-      <k-user-rename-dialog ref="rename" @success="fetch" />
-      <k-user-role-dialog ref="role" @success="fetch" />
+      <k-user-rename-dialog
+        ref="rename"
+        @success="fetch"
+      />
+      <k-user-role-dialog
+        ref="role"
+        @success="fetch"
+      />
 
       <k-upload
         ref="upload"
@@ -157,6 +210,8 @@ export default {
           tooltip: this.user.next.name
         };
       }
+
+      return null;
     },
     prev() {
       if (this.user.prev) {
@@ -165,6 +220,8 @@ export default {
           tooltip: this.user.prev.name
         };
       }
+
+      return null;
     },
     tabsKey() {
       return "user-" + this.user.id + "-tabs";

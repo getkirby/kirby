@@ -1,5 +1,9 @@
 <template>
-  <nav v-if="show" :data-align="align" class="k-pagination">
+  <nav
+    v-if="show"
+    :data-align="align"
+    class="k-pagination"
+  >
     <k-button
       v-if="show"
       :disabled="!hasPrev"
@@ -11,7 +15,11 @@
     <template v-if="details">
       <template v-if="dropdown">
         <k-dropdown>
-          <k-button :disabled="!hasPages" class="k-pagination-details" @click="$refs.dropdown.toggle()">
+          <k-button
+            :disabled="!hasPages"
+            class="k-pagination-details"
+            @click="$refs.dropdown.toggle()"
+          >
             <template v-if="total > 1">
               {{ detailsText }}
             </template>{{ total }}
@@ -25,7 +33,10 @@
             <div class="k-pagination-settings">
               <label for="k-pagination-page">
                 <span>{{ pageLabel }}:</span>
-                <select id="k-pagination-page" ref="page">
+                <select
+                  id="k-pagination-page"
+                  ref="page"
+                >
                   <option
                     v-for="p in pages"
                     :key="p"
@@ -36,7 +47,10 @@
                   </option>
                 </select>
               </label>
-              <k-button icon="check" @click="goTo($refs.page.value)" />
+              <k-button
+                icon="check"
+                @click="goTo($refs.page.value)"
+              />
             </div>
           </k-dropdown-content>
         </k-dropdown>
