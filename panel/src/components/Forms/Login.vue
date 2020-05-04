@@ -78,22 +78,20 @@ export default {
     }
   },
   methods: {
-    login() {
+    async login() {
       this.issue     = null;
       this.isLoading = true;
 
-      this.$store
-        .dispatch("user/login", this.user)
-        .then(() => {
-          this.$store.dispatch("system/load", true).then(() => {
-            this.$store.dispatch("notification/success", this.$t("welcome"));
-            this.isLoading = false;
-          });
-        })
-        .catch(() => {
-          this.issue     = this.$t("error.access.login");
-          this.isLoading = false;
-        });
+      try {
+        await this.$store.dispatch("user/login", this.user);
+        await this.$store.dispatch("system/load", true);
+        this.$store.dispatch("notification/success", this.$t("welcome"));
+
+      } catch () {
+        this.issue = this.$t("error.access.login");
+      }
+
+      this.isLoading = false;
     }
   }
 };

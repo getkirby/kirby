@@ -178,36 +178,37 @@ export default {
     window.removeEventListener("keydown", this.navigate, false);
   },
   methods: {
-    goTo(page) {
-      this.validate(page)
-        .then(() => {
-          if (page < 1) {
-            page = 1;
-          }
+    async goTo(page) {
+      try {
+        await this.validate(page);
 
-          if (page > this.pages) {
-            page = this.pages;
-          }
+        if (page < 1) {
+          page = 1;
+        }
 
-          this.currentPage = page;
+        if (page > this.pages) {
+          page = this.pages;
+        }
 
-          /**
-           * Listening to the paginate event is the most straight
-           * forward way to react to the pagination component. An object
-           * with `page`, `start`, `end`, `limit` and `offset` items
-           * is passed.
-           */
-          this.$emit("paginate", {
-            page: this.currentPage,
-            start: this.start,
-            end: this.end,
-            limit: this.limit,
-            offset: this.offset
-          });
-        })
-        .catch(() => {
-          // pagination stopped
+        this.currentPage = page;
+
+        /**
+         * Listening to the paginate event is the most straight
+         * forward way to react to the pagination component. An object
+         * with `page`, `start`, `end`, `limit` and `offset` items
+         * is passed.
+         */
+        this.$emit("paginate", {
+          page: this.currentPage,
+          start: this.start,
+          end: this.end,
+          limit: this.limit,
+          offset: this.offset
         });
+
+      } catch () {
+        // pagination stopped
+      }
     },
     prev() {
       this.goTo(this.currentPage - 1);

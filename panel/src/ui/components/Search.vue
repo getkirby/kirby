@@ -142,18 +142,16 @@ export default {
         this.$refs.input.focus();
       }, 1);
     },
-    search(query) {
+    async search(query) {
       this.$refs.types.close();
-      this.currentType
-        .search()({ query, limit: 10 })
-        .then(items => {
-          this.items = items;
-          this.selected = -1;
-        })
-        .catch(() => {
-          this.items = [];
-          this.selected = -1;
-        });
+
+      try {
+        this.items = await this.currentType.search()({ query, limit: 10 });
+      } catch () {
+        this.items = [];
+      }
+
+      this.selected = -1;
     },
     tab() {
       const item = this.items[this.selected];

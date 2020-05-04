@@ -48,16 +48,16 @@ export default {
     };
   },
   methods: {
-    fetchOptions(ready) {
+    async fetchOptions(ready) {
       if (this.options) {
         if (typeof this.options === "string") {
-          fetch(this.options)
-            .then(response => response.json())
-            .then(json => {
-              return ready(json);
-            });
+          const response = await fetch(this.options);
+          const json     = response.json();
+          return ready(json);
+
         } else if (typeof this.options === "function") {
           this.options(ready);
+
         } else if (Array.isArray(this.options)) {
           ready(this.options);
         }

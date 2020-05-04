@@ -167,44 +167,46 @@ export default {
      */
 
     getLock() {
-      return this.$api
-        .get(...this.api.lock)
-        .then(response => {
+      try {
+        const response = await this.$api.get(...this.api.lock);
 
-          // if content locking is not supported by model,
-          // set flag and stop listening
-          if (response.supported === false) {
-            this.supportsLocking = false;
-            this.$store.dispatch("heartbeat/remove", this.getLock);
-            return;
-          }
+        // if content locking is not supported by model,
+        // set flag and stop listening
+        if (response.supported === false) {
+          this.supportsLocking = false;
+          this.$store.dispatch("heartbeat/remove", this.getLock);
+          return;
+        }
 
-          // if content is locked, dispatch info to store
-          if (response.locked !== false) {
-            this.$store.dispatch("content/lock", response.locked);
-            return;
-          }
+        // if content is locked, dispatch info to store
+        if (response.locked !== false) {
+          this.$store.dispatch("content/lock", response.locked);
+          return;
+        }
 
-          // if content is not locked but store still holds a lock
-          // from another user, that lock has been lifted and thus
-          // the content needs to be reloaded to reflect changes
-          if (
-            this.isLocked &&
-            this.form.lock.user !== this.$store.state.user.current.id
-          ) {
-            this.$events.$emit("model.reload");
-          }
+        // if content is not locked but store still holds a lock
+        // from another user, that lock has been lifted and thus
+        // the content needs to be reloaded to reflect changes
+        if (
+          this.isLocked &&
+          this.form.lock.user !== this.$store.state.user.current.id
+        ) {
+          this.$events.$emit("model.reload");
+        }
 
-          this.$store.dispatch("content/lock", null);
-        })
-        .catch(() => {
-          // fail silently
-        });
+        this.$store.dispatch("content/lock", null);
+
+      } catch (error) {
+        // fail silently
+      }
     },
 
-    setLock() {
+    async setLock() {
       if (this.supportsLocking === true) {
-        this.$api.patch(...this.api.lock).catch(error => {
+        try {
+          await this.$api.patch(...this.api.lock);
+
+        } catch (error) {
           // turns out: locking is not supported
           if (error.key === "error.lock.notImplemented") {
             this.supportsLocking = false;
@@ -218,55 +220,52 @@ export default {
           this.$store.dispatch("content/revert", this.id);
           this.$store.dispatch("heartbeat/remove", this.setLock);
           this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-        });
+        }
       }
     },
 
-    removeLock() {
+    async removeLock() {
       if (this.supportsLocking === true) {
         this.$store.dispatch("heartbeat/remove", this.setLock);
 
-        this.$api
-          .delete(...this.api.lock)
-          .then(() => {
-            this.$store.dispatch("content/lock", null);
-            this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-          })
-          .catch(() => {
-            // fail silently
-          });
+        try {
+          await this.$api.delete(...this.api.lock);
+          this.$store.dispatch("content/lock", null);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
+
+        } catch () {
+          // fail silently
+        }
       }
     },
 
-    setUnlock() {
+    async setUnlock() {
       if (this.supportsLocking === true) {
         this.$store.dispatch("heartbeat/remove", this.setLock);
 
-        this.$api
-          .patch(...this.api.unlock)
-          .then(() => {
-            this.$store.dispatch("content/lock", null);
-            this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-          })
-          .catch(() => {
-            // fail silently
-          });
+        try {
+          await this.$api.patch(...this.api.unlock);
+          this.$store.dispatch("content/lock", null);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
+
+        } catch () {
+          // fail silently
+        }
       }
     },
 
-    removeUnlock() {
+    async removeUnlock() {
       if (this.supportsLocking === true) {
         this.$store.dispatch("heartbeat/remove", this.setLock);
 
-        this.$api
-          .delete(...this.api.unlock)
-          .then(() => {
-            this.$store.dispatch("content/unlock", null);
-            this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-          })
-          .catch(() => {
-            // fail silently
-          });
+        try {
+          await this.$api.delete(...this.api.unlock);
+          this.$store.dispatch("content/unlock", null);
+          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
+
+        } catch () {
+          // fail silently
+        }
       }
     },
 
@@ -302,7 +301,7 @@ export default {
       this.$refs.revert.close();
     },
 
-    onSave(e) {
+    async onSave(e) {
       if (!e) {
         return false;
       }
@@ -315,32 +314,31 @@ export default {
         return true;
       }
 
-      this.$store
-        .dispatch("content/save")
-        .then(() => {
-          this.$events.$emit("model.update");
-          this.$store.dispatch("notification/success", ":)");
-        })
-        .catch(response => {
-          if (response.code === 403) {
-            return;
-          }
+      try {
+        await this.$store.dispatch("content/save");
+        this.$events.$emit("model.update");
+        this.$store.dispatch("notification/success", ":)");
 
-          if (response.details && Object.keys(response.details).length > 0) {
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.form.incomplete"),
-              details: response.details
-            });
-          } else {
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.form.notSaved"),
-              details: [{
-                label: "Exception: " + response.exception,
-                message: response.message
-              }]
-            });
-          }
-        });
+      } catch (response) {
+        if (response.code === 403) {
+          return;
+        }
+
+        if (response.details && Object.keys(response.details).length > 0) {
+          this.$store.dispatch("notification/error", {
+            message: this.$t("error.form.incomplete"),
+            details: response.details
+          });
+        } else {
+          this.$store.dispatch("notification/error", {
+            message: this.$t("error.form.notSaved"),
+            details: [{
+              label: "Exception: " + response.exception,
+              message: response.message
+            }]
+          });
+        }
+      }
     }
   },
 };

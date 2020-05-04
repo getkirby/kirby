@@ -35,10 +35,8 @@ export default {
       };
     }
   },
-  created() {
-    this.$model.translations.options().then(languages => {
-      this.languages = languages;
-    });
+  async created() {
+    this.languages = await this.$model.translations.options();
   },
   methods: {
     async open(id) {

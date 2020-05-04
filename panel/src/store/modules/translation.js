@@ -23,17 +23,16 @@ export default {
       context.commit("INSTALL", translation);
       Vue.i18n.add(translation.id, translation.data);
     },
-    activate(context, id) {
+    async activate(context, id) {
       const translation = context.state.installed[id];
 
       // if translation is not yet install,
       // load from API, install translation and
       // then call this method again
       if (!translation) {
-        context.dispatch("load", id).then(translation => {
-          context.dispatch("install", translation);
-          context.dispatch("activate", id);
-        });
+        const translation = await context.dispatch("load", id);
+        context.dispatch("install", translation);
+        context.dispatch("activate", id);
         return;
       }
 

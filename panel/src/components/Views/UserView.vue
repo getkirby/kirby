@@ -247,7 +247,7 @@ export default {
     }
   },
   methods: {
-    action(action) {
+    async action(action) {
       switch (action) {
         case "email":
           this.$refs.email.open(this.user.id);
@@ -259,10 +259,9 @@ export default {
           this.$refs.password.open(this.user.id);
           break;
         case "picture.delete":
-          this.$api.users.deleteAvatar(this.id).then(() => {
-            this.$store.dispatch("notification/success", ":)");
-            this.avatar = null;
-          });
+          await this.$api.users.deleteAvatar(this.id);
+          this.$store.dispatch("notification/success", ":)");
+          this.avatar = null;
           break;
         case "remove":
           this.$refs.remove.open(this.user.id);

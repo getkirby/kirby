@@ -252,7 +252,7 @@ export default {
           localStorage.removeItem("kirby$form$" + id);
         });
     },
-    create(context, model) {
+    async create(context, model) {
       // attach the language to the id
       model.id = context.getters.id(model.id);
 
@@ -268,19 +268,17 @@ export default {
       };
 
       // check if content was previously unlocked
-      Api
-        .get(model.api + "/unlock")
-        .then(response => {
-          if (
-            response.supported === true &&
-            response.unlocked === true
-          ) {
-            context.commit("UNLOCK", context.state.models[model.id].changes);
-          }
-        })
-        .catch(() => {
-          // fail silently
-        });
+      try {
+        const response = Api.get(model.api + "/unlock");
+        if (
+          response.supported === true &&
+          response.unlocked === true
+        ) {
+          context.commit("UNLOCK", context.state.models[model.id].changes);
+        }
+      // fail silently
+      } catch (e) {}
+
 
       context.commit("CREATE", [model.id, data]);
       context.dispatch("current", model.id);
@@ -313,7 +311,7 @@ export default {
       id = id || context.state.current;
       context.commit("REVERT", id);
     },
-    save(context, id) {
+    async save(context, id) {
       id = id || context.state.current;
 
       // don't allow save if model is not current
@@ -332,23 +330,23 @@ export default {
       const data  = {...model.originals, ...model.changes};
 
       // Send updated values to API
-      return Api
-        .patch(model.api, data)
-        .then(() => {
-          // re-create model with updated values as originals
-          context.commit("CREATE", [id, {
-            ...model,
-            originals: data
-          }]);
+      try {
+        await Api.patch(model.api, data);
 
-          // revert unsaved changes (which also removes localStorage entry)
-          context.dispatch("revert", id);
-          context.dispatch("enable");
-        })
-        .catch(error => {
-          context.dispatch("enable");
-          throw error;
-        });
+        // re-create model with updated values as originals
+        context.commit("CREATE", [id, {
+          ...model,
+          originals: data
+        }]);
+
+        // revert unsaved changes (which also removes localStorage entry)
+        context.dispatch("revert", id);
+        context.dispatch("enable");
+
+      } catch (error) {
+        context.dispatch("enable");
+        throw error;
+      }
     },
     unlock(context, unlock) {
       context.commit("UNLOCK", unlock);

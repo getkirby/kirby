@@ -64,19 +64,15 @@ export default {
         this.$store.dispatch('notification/error', error);
       }
     },
-    submit() {
+    async submit() {
       this.$events.$emit("keydown.cmd.s");
-      this.$api.pages
-        .template(this.page.id, this.page.template)
-        .then(() => {
-          this.success({
-            message: ":)",
-            event: "page.changeTemplate"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
-        });
+      try {
+        await this.$api.pages.template(this.page.id, this.page.template);
+        this.success({ message: ":)", event: "page.changeTemplate" });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };
