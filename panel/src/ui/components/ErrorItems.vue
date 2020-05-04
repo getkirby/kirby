@@ -7,7 +7,10 @@
     />
     <div class="k-error-items-message absolute flex items-center justify-center">
       <p class="bg-red-light shadow-lg rounded-sm py-2 px-3 text-sm flex items-center">
-        <k-icon type="alert" class="mr-2" /><slot />
+        <k-icon
+          type="alert"
+          class="mr-2"
+        /><slot />
       </p>
     </div>
   </div>

@@ -8,7 +8,12 @@
     class="k-options-dropdown-toggle"
     @click="onOption(options[0].option || options[0].click, options[0], 0)"
   >
-    <template slot="default" v-if="text">{{ text }}</template>
+    <template
+      v-if="text"
+      slot="default"
+    >
+      {{ text }}
+    </template>
   </k-button>
   <k-dropdown
     v-else-if="options.length"
@@ -20,7 +25,12 @@
       class="k-options-dropdown-toggle"
       @click="$refs.options.toggle()"
     >
-      <template slot="default" v-if="text">{{ text }}</template>
+      <template
+        v-if="text"
+        slot="default"
+      >
+        {{ text }}
+      </template>
     </k-button>
     <k-dropdown-content
       ref="options"

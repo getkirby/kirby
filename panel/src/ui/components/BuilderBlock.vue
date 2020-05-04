@@ -1,44 +1,46 @@
 <template>
-    <article class="k-builder-block bg-white shadow px-2px rounded-sm">
-      <header class="flex items-center cursor-pointer" @click="toggle">
-        <!-- Sort handle -->
-        <k-icon
-          v-if="icon"
-          :type="icon"
-          class="k-builder-block-icon k-sort-handle"
-        />
-        <k-sort-handle class="k-builder-block-sort-handle" />
+  <article class="k-builder-block bg-white shadow px-2px rounded-sm">
+    <header
+      class="flex items-center cursor-pointer"
+      @click="toggle"
+    >
+      <!-- Sort handle -->
+      <k-icon
+        v-if="icon"
+        :type="icon"
+        class="k-builder-block-icon k-sort-handle"
+      />
+      <k-sort-handle class="k-builder-block-sort-handle" />
 
-        <!-- Title -->
-        <k-button
-          :icon="isOpen ? 'angle-down' : 'angle-right'"
-          class="k-builder-block-title px-3 text-left truncate"
-        >
-          {{ title }}
-        </k-button>
-
-        <!-- Options -->
-        <k-options-dropdown
-          :options="options"
-          @option="onOption"
-        />
-      </header>
-
-      <footer
-        v-if="isOpen"
-        class="k-builder-block-fields bg-background pt-6 pb-8 px-10"
+      <!-- Title -->
+      <k-button
+        :icon="isOpen ? 'angle-down' : 'angle-right'"
+        class="k-builder-block-title px-3 text-left truncate"
       >
-        <!-- Fields -->
-        <k-fieldset
-          ref="fieldset"
-          v-model="block"
-          :fields="fields"
-          :validate="true"
-          @input="onInput"
-        />
-      </footer>
+        {{ title }}
+      </k-button>
 
-    </article>
+      <!-- Options -->
+      <k-options-dropdown
+        :options="options"
+        @option="onOption"
+      />
+    </header>
+
+    <footer
+      v-if="isOpen"
+      class="k-builder-block-fields bg-background pt-6 pb-8 px-10"
+    >
+      <!-- Fields -->
+      <k-fieldset
+        ref="fieldset"
+        v-model="block"
+        :fields="fields"
+        :validate="true"
+        @input="onInput"
+      />
+    </footer>
+  </article>
 </template>
 
 <script>
@@ -71,11 +73,6 @@ export default {
     return {
       isOpen: false,
       block: this.value
-    }
-  },
-  watch: {
-    value(value) {
-      this.block = value;
     }
   },
   computed: {
@@ -118,6 +115,11 @@ export default {
       }
 
       return this.name;
+    }
+  },
+  watch: {
+    value(value) {
+      this.block = value;
     }
   },
   methods: {

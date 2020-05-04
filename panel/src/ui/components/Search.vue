@@ -147,7 +147,7 @@ export default {
 
       try {
         this.items = await this.currentType.search()({ query, limit: 10 });
-      } catch () {
+      } catch (error) {
         this.items = [];
       }
 

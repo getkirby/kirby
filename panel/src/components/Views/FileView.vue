@@ -137,6 +137,8 @@ export default {
           tooltip: this.file.next.filename
         };
       }
+
+      return null;
     },
     prev() {
       if (this.file.prev) {

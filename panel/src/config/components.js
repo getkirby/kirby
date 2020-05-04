@@ -48,7 +48,6 @@ import FilesSection from "@/components/Sections/FilesSection.vue";
 import FieldsSection from "@/components/Sections/FieldsSection.vue";
 
 /* Views */
-import BrowserView from "@/components/Views/BrowserView.vue";
 import CustomView from "@/components/Views/CustomView.vue";
 import FileView from "@/components/Views/FileView.vue";
 import InstallationView from "@/components/Views/InstallationView.vue";
@@ -107,13 +106,11 @@ export default {
 
     /* Sections */
     Vue.component("k-sections", Sections);
-    Vue.component("k-info-section", InfoSection);
     Vue.component("k-pages-section", PagesSection);
     Vue.component("k-files-section", FilesSection);
     Vue.component("k-fields-section", FieldsSection);
 
     /* Views */
-    Vue.component("k-browser-view", BrowserView);
     Vue.component("k-custom-view", CustomView);
     Vue.component("k-file-view", FileView);
     Vue.component("k-installation-view", InstallationView);
@@ -126,18 +123,3 @@ export default {
 
   }
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

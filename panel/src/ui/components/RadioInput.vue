@@ -16,7 +16,10 @@
         class="k-radio-input-native"
         @change="onInput(option.value)"
       >
-      <label :for="id + '-' + index" class="items-center cursor-pointer">
+      <label
+        :for="id + '-' + index"
+        class="items-center cursor-pointer"
+      >
         <template v-if="option.info">
           <span class="k-radio-input-text block">{{ option.text }}</span>
           <span class="k-radio-input-info">{{ option.info }}</span>

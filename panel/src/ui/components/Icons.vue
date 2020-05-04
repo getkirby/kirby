@@ -73,8 +73,7 @@
       <symbol
         id="icon-blank"
         viewBox="0 0 16 16"
-      >
-      </symbol>
+      />
       <symbol
         id="icon-bold"
         viewBox="0 0 16 16"

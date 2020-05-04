@@ -65,14 +65,6 @@ export default {
       }
     }
   },
-  watch: {
-    items: {
-      handler() {
-        return this.load();
-      },
-      immediate: true
-    }
-  },
   data() {
     return {
       data: [],
@@ -113,6 +105,14 @@ export default {
           this.load();
         }
       };
+    }
+  },
+  watch: {
+    items: {
+      handler() {
+        return this.load();
+      },
+      immediate: true
     }
   },
   methods: {

@@ -6,12 +6,11 @@
       class="k-drawer fixed flex items-center justify-end bg-backdrop"
       @click="cancel"
     >
-
       <k-button
         v-if="cancelButton"
         icon="cancel"
-        @click.stop="cancel"
         class="k-drawer-cancel text-white p-3"
+        @click.stop="cancel"
       />
 
       <div

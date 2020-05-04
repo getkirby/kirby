@@ -2,7 +2,6 @@
   <span
     :data-invalid="!valid"
     class="k-counter text-xs text-black font-bold"
-
   >
     <span>{{ count }}</span>
     <span

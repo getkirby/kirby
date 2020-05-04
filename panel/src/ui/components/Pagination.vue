@@ -206,7 +206,7 @@ export default {
           offset: this.offset
         });
 
-      } catch () {
+      } catch (error) {
         // pagination stopped
       }
     },

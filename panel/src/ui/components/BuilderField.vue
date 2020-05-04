@@ -36,17 +36,22 @@
         class="cursor-pointer flex justify-center"
         @click="openCreateDialog(blocks.length)"
       >
-        <k-button icon="add">Add block</k-button>
+        <k-button icon="add">
+          Add block
+        </k-button>
       </k-empty>
     </k-draggable>
 
     <!-- Preview drawer -->
-    <k-builder-preview :field="label" ref="preview" />
+    <k-builder-preview
+      ref="preview"
+      :field="label"
+    />
 
     <!-- Create dialog -->
     <k-dialog
       ref="create"
-      :submitButton="false"
+      :submit-button="false"
       @close="closeCreateDialog"
     >
       <k-items
@@ -107,11 +112,6 @@ export default {
       removeBlockIndex: null
     };
   },
-  watch: {
-    value(value) {
-      this.blocks = value;
-    }
-  },
   computed: {
     dragOptions() {
       return {
@@ -141,6 +141,11 @@ export default {
 
       return true;
     },
+  },
+  watch: {
+    value(value) {
+      this.blocks = value;
+    }
   },
   methods: {
     closeCreateDialog() {

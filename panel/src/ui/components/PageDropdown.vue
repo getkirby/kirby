@@ -1,6 +1,9 @@
 <template>
   <k-dropdown class="k-page-dropdown">
-    <k-button class="k-page-dropdown-toggle" @click="$refs.dropdown.toggle()">
+    <k-button
+      class="k-page-dropdown-toggle"
+      @click="$refs.dropdown.toggle()"
+    >
       {{ text }}
     </k-button>
     <k-dropdown-content
@@ -9,12 +12,15 @@
       class="k-page-dropdown-content flex items-center justify-center"
       @open="onOpen"
     >
-      <label for="k-pagination-page" class="flex items-center text-sm px-3 py-3">
+      <label
+        for="k-pagination-page"
+        class="flex items-center text-sm px-3 py-3"
+      >
         <span class="mr-4">{{ pageLabel }}:</span>
         <select
+          id="k-pagination-page"
           ref="select"
           v-model="selectedPage"
-          id="k-pagination-page"
         >
           <option
             v-for="p in pages"

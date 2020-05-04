@@ -1,5 +1,8 @@
 <template>
-  <div class="k-item-figure" v-if="image || icon">
+  <div
+    v-if="image || icon"
+    class="k-item-figure"
+  >
     <!-- image -->
     <k-image
       v-if="image.url"

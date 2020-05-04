@@ -11,8 +11,8 @@
       v-bind="$props"
       theme="field"
       type="tags"
-      v-on="$listeners"
       class="p-1"
+      v-on="$listeners"
     />
   </k-field>
 </template>

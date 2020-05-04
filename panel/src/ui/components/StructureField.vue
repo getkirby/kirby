@@ -49,7 +49,7 @@
     <k-drawer
       ref="newRowDialog"
       :title="label + ' / ' + $t('add')"
-      :submitButton="$t('add')"
+      :submit-button="$t('add')"
       icon="add"
       theme="positive"
       @cancel="closeNewRowDialog"
@@ -68,7 +68,7 @@
       ref="editRowDialog"
       :title="label + ' / ' + $t('edit')"
       :autofocus="false"
-      :submitButton="true"
+      :submit-button="true"
       theme="positive"
       @cancel="closeEditRowDialog"
       @submit="submitEditRow"

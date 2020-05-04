@@ -30,7 +30,7 @@
     <k-drawer
       ref="drawer"
       :title="label + ' / ' + btnLabel"
-      :submitButton="true"
+      :submit-button="true"
       :size="picker.size || 'small'"
       @close="$refs.picker.reset()"
       @submit="onSelect"

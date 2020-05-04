@@ -36,7 +36,7 @@
             :key="opt.value"
             :disabled="opt.disabled"
             :value="opt.value"
-            >
+          >
             {{ opt.text }}
           </option>
         </optgroup>
@@ -47,7 +47,7 @@
           :key="option.value"
           :disabled="option.disabled"
           :value="option.value"
-          >
+        >
           {{ option.text }}
         </option>
       </template>

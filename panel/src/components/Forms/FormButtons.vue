@@ -166,7 +166,7 @@ export default {
      *  Locking API
      */
 
-    getLock() {
+    async getLock() {
       try {
         const response = await this.$api.get(...this.api.lock);
 
@@ -233,7 +233,7 @@ export default {
           this.$store.dispatch("content/lock", null);
           this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
 
-        } catch () {
+        } catch (error) {
           // fail silently
         }
       }
@@ -248,7 +248,7 @@ export default {
           this.$store.dispatch("content/lock", null);
           this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
 
-        } catch () {
+        } catch (error) {
           // fail silently
         }
       }
@@ -263,7 +263,7 @@ export default {
           this.$store.dispatch("content/unlock", null);
           this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
 
-        } catch () {
+        } catch (error) {
           // fail silently
         }
       }

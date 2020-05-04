@@ -87,7 +87,7 @@ export default {
         await this.$store.dispatch("system/load", true);
         this.$store.dispatch("notification/success", this.$t("welcome"));
 
-      } catch () {
+      } catch (error) {
         this.issue = this.$t("error.access.login");
       }
 

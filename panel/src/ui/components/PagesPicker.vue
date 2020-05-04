@@ -14,8 +14,8 @@
     <!-- Navigation -->
     <header
       v-if="parent"
-      class="k-picker-navbar mb-4"
       slot="navigation"
+      class="k-picker-navbar mb-4"
     >
       <k-button
         :disabled="!parent.id"
