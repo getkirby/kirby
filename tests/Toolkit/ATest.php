@@ -55,20 +55,27 @@ class ATest extends TestCase
             'grand.ma' => $grandma = [
                 'mother' => $mother = [
                     'child' => $child = 'a',
-                    'another.child' => $anotherChild = 'b',
-                ]
+                    'another.nested.child' => $anotherChild = 'b',
+                ],
+                'uncle.dot' => $uncle = 'uncle'
             ],
+            'grand.ma.mother' => $anotherMother = 'another mother'
         ];
 
         $this->assertEquals($grandma, A::get($data, 'grand.ma'));
-        $this->assertEquals($mother, A::get($data, 'grand.ma.mother'));
+        $this->assertEquals($uncle, A::get($data, 'grand.ma.uncle.dot'));
+        $this->assertEquals($anotherMother, A::get($data, 'grand.ma.mother'));
         $this->assertEquals($child, A::get($data, 'grand.ma.mother.child'));
-        $this->assertEquals($anotherChild, A::get($data, 'grand.ma.mother.another.child'));
+        $this->assertEquals($anotherChild, A::get($data, 'grand.ma.mother.another.nested.child'));
 
         // with default
         $this->assertEquals('default', A::get($data, 'grand', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.grandaunt', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.aunt', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.uncle.dot.cousin', 'default'));
         $this->assertEquals('default', A::get($data, 'grand.ma.mother.sister', 'default'));
         $this->assertEquals('default', A::get($data, 'grand.ma.mother.child.grandchild', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.mother.child.another.nested.sister', 'default'));
     }
 
     public function testGetWithNonexistingOptions()
@@ -220,6 +227,86 @@ class ATest extends TestCase
 
         $this->assertEquals(['elephant'], A::missing($this->_array(), $required));
         $this->assertEquals([], A::missing($this->_array(), ['cat']));
+    }
+
+    public function testNest()
+    {
+        // simple example
+        $input = [
+            'a' => 'a value',
+            'b.c' => [
+                'd.e.f' => 'another value'
+            ]
+        ];
+        $expected = [
+            'a' => 'a value',
+            'b' => [
+                'c' => [
+                    'd' => [
+                        'e' => [
+                            'f' => 'another value'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $this->assertSame($expected, A::nest($input));
+
+        // recursive array replacement
+        $input = [
+            // replace strings with arrays within deep structures
+            'a' => 'this will be overwritten',
+            'a.b' => [
+                'c' => 'this as well',
+                'd' => 'and this',
+                'e' => 'but this will be preserved'
+            ],
+            'a.b.c' => 'a value',
+            'a.b.d.f' => 'another value',
+
+            // replace arrays with strings
+            'g.h' => [
+                'i' => 'this will be overwritten as well'
+            ],
+            'g' => 'and another value',
+
+            // replacements within two different trees
+            'j.k' => [
+                'l' => 'this will be replaced',
+                'm' => 'but this will not be'
+            ],
+            'j' => [
+                'k.l' => 'a nice replacement',
+                'n' => 'and this string is nice too'
+            ]
+        ];
+        $expected = [
+            'a' => [
+                'b' => [
+                    'c' => 'a value',
+                    'd' => [
+                        'f' => 'another value'
+                    ],
+                    'e' => 'but this will be preserved'
+                ]
+            ],
+            'g' => 'and another value',
+            'j' => [
+                'k' => [
+                    'l' => 'a nice replacement',
+                    'm' => 'but this will not be'
+                ],
+                'n' => 'and this string is nice too'
+            ]
+        ];
+        $this->assertSame($expected, A::nest($input));
+    }
+
+    public function testNestByKeys()
+    {
+        $this->assertSame('test', A::nestByKeys('test', []));
+        $this->assertSame(['a' => 'test'], A::nestByKeys('test', ['a']));
+        $this->assertSame(['a' => ['b' => 'test']], A::nestByKeys('test', ['a', 'b']));
     }
 
     public function testSort()

@@ -7,7 +7,7 @@ export default {
       }
 
       Store.dispatch("notification/error", {
-        message: error.message || "An error occurred. Please reload the panel"
+        message: error.message || "An error occurred. Please reload the Panel"
       });
     };
 

@@ -31,7 +31,7 @@
       v-if="offline"
       class="k-offline-warning"
     >
-      <p>The panel is currently offline</p>
+      <p>The Panel is currently offline</p>
     </div>
     <k-registration
       v-if="inside"
@@ -48,7 +48,7 @@
           {{ $store.state.system.info.error }}
         </p>
         <p v-else>
-          The panel cannot connect to the API
+          The Panel cannot connect to the API
         </p>
       </k-error-view>
     </main>

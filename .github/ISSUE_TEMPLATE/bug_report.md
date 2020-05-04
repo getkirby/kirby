@@ -21,20 +21,20 @@ Steps to reproduce the behavior:
 <!-- If applicable, add screenshots to help explain your problem. -->
 
 **Kirby Version**  
-<!-- Add the Kirby version you are using. You can find the version number in `kirby/composer.json` or in the  settings view of the panel. -->
+<!-- Add the Kirby version you are using. You can find the version number in `kirby/composer.json` or in the settings view of the Panel. -->
 
 **Console output**  
-<!-- If you are working with the panel, please check the browser console for errors and send the output. -->
+<!-- If you are working with the Panel, please check the browser console for errors and send the output. -->
 
 **Desktop (please complete the following information):**  
  - OS: <!-- e.g. macOS -->
- - Browser: <!-- e.g. chrome, safari -->
+ - Browser: <!-- e.g. Chrome, Safari -->
  - Version: <!-- e.g. 22 -->
 
 **Smartphone (please complete the following information):**  
- - Device: <!-- e.g. iPhone11 -->
- - OS: <!-- e.g. iOS12.1 -->
- - Browser: <!-- e.g. stock browser, safari -->
+ - Device: <!-- e.g. iPhone 11 -->
+ - OS: <!-- e.g. iOS 13.3 -->
+ - Browser: <!-- e.g. stock browser, Safari -->
  - Version: <!-- e.g. 22 -->
 
 **Additional context**  

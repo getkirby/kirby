@@ -8,6 +8,11 @@
 
 namespace Laminas\ZendFrameworkBridge;
 
+use function array_merge;
+use function str_replace;
+use function strpos;
+use function strtr;
+
 class Replacements
 {
     /** @var string[] */
@@ -19,8 +24,17 @@ class Replacements
             require __DIR__ . '/../config/replacements.php',
             $additionalReplacements
         );
+
+        // Provide multiple variants of strings containing namespace separators
+        foreach ($this->replacements as $original => $replacement) {
+            if (false === strpos($original, '\\')) {
+                continue;
+            }
+            $this->replacements[str_replace('\\', '\\\\', $original)] = str_replace('\\', '\\\\', $replacement);
+            $this->replacements[str_replace('\\', '\\\\\\\\', $original)] = str_replace('\\', '\\\\\\\\', $replacement);
+        }
     }
-    
+
     /**
      * @param string $value
      * @return string

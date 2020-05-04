@@ -4,7 +4,7 @@
 
 ## Related issues
 
-<!-- PR relates to issues in the `kirby` or `idea` repo: -->
+<!-- PR relates to issues in the `kirby` or `ideas` repo: -->
 
 - Fixes #
 
