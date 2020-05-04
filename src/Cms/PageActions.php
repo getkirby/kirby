@@ -463,7 +463,8 @@ trait PageActions
             'site'   => $this->site(),
         ]);
 
-        return static::create($props);
+        $modelClass = Page::$models[$props['template']] ?? Page::class;
+        return $modelClass::create($props);
     }
 
     /**
