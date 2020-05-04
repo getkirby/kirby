@@ -16,6 +16,7 @@
     class="k-number-input"
     type="number"
     @keydown.meta.s="clean"
+    @keydown.ctrl.s="clean"
     v-on="listeners"
   >
 </template>

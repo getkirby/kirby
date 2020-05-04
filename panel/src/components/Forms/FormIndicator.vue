@@ -88,7 +88,7 @@ export default {
               icon: "page",
               label: response.title,
               target: {
-                link: this.$api.pages.link(response.id)
+                link: this.$model.pages.link(response.id)
               }
             };
 
@@ -106,7 +106,7 @@ export default {
               icon: "user",
               label: response.email,
               target: {
-                link: this.$api.users.link(response.id),
+                link: this.$model.users.link(response.id),
               }
             };
           } else {

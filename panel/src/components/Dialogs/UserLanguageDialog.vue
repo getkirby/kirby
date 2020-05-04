@@ -36,40 +36,40 @@ export default {
     }
   },
   created() {
-    this.$api.translations.options().then(languages => {
+    this.$model.translations.options().then(languages => {
       this.languages = languages;
     });
   },
   methods: {
-    open(id) {
-      this.$api.users.get(id, { view: "compact" })
-        .then(user => {
-          this.user = user;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+    async open(id) {
+      try {
+        this.user = this.$api.users.get(id, { view: "compact" });
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
-      this.$api.users
-        .changeLanguage(this.user.id, this.user.language)
-        .then(user => {
-          this.user = user;
+    async submit() {
+      try {
+        this.user = await this.$api.users.changeLanguage(
+          this.user.id,
+          this.user.language
+        );
 
-          // If current panel user, update store to switch language
-          if (this.$user.id === this.user.id) {
-            this.$store.dispatch("user/language", this.user.language);
-          }
+        // If current panel user, update store to switch language
+        if (this.$user.id === this.user.id) {
+          await this.$store.dispatch("user/language", this.user.language);
+        }
 
-          this.success({
-            message: ":)",
-            event: "user.changeLanguage"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+        this.success({
+          message: ":)",
+          event: "user.changeLanguage"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

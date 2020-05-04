@@ -134,45 +134,6 @@ export default {
     this.fetch();
   },
   methods: {
-    fetch() {
-
-      if (this.multilang === false) {
-        this.languages = [];
-        return;
-      }
-
-      this.$api
-        .get("languages")
-        .then(response => {
-          this.languages = response.data.map(language => {
-            return {
-              id: language.code,
-              default: language.default,
-              icon: { type: "globe", back: "black" },
-              image: true,
-              text: language.name,
-              info: language.code,
-              link: () => {
-                this.$refs.update.open(language.code);
-              },
-              options: [
-                {
-                  icon: "edit",
-                  text: this.$t("edit"),
-                  click: "update"
-                },
-                {
-                  icon: "trash",
-                  text: this.$t("delete"),
-                  disabled: language.default && response.data.length !== 1,
-                  click: "remove"
-                }
-              ]
-            };
-          });
-        });
-
-    },
     action(language, action) {
       switch (action) {
         case "update":
@@ -182,6 +143,41 @@ export default {
           this.$refs.remove.open(language.id);
           break;
       }
+    },
+    async fetch() {
+      if (this.multilang === false) {
+        this.languages = [];
+        return;
+      }
+
+      const response = await this.$api.get("languages");
+
+      this.languages = response.data.map(language => {
+        return {
+          id: language.code,
+          default: language.default,
+          icon: { type: "globe", back: "black" },
+          image: true,
+          text: language.name,
+          info: language.code,
+          link: () => {
+            this.$refs.update.open(language.code);
+          },
+          options: [
+            {
+              icon: "edit",
+              text: this.$t("edit"),
+              click: "update"
+            },
+            {
+              icon: "trash",
+              text: this.$t("delete"),
+              disabled: language.default && response.data.length !== 1,
+              click: "remove"
+            }
+          ]
+        };
+      });
     }
   }
 };

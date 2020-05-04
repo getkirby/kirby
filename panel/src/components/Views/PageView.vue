@@ -66,7 +66,7 @@
       v-if="page.id"
       ref="tabs"
       :key="tabsKey"
-      :parent="$api.pages.url(page.id)"
+      :parent="$model.pages.url(page.id)"
       :blueprint="blueprint"
       :tabs="tabs"
       @tab="onTab"
@@ -130,7 +130,7 @@ export default {
     next() {
       if (this.page.next) {
         return {
-          link: this.$api.pages.link(this.page.next.id),
+          link: this.$model.pages.link(this.page.next.id),
           tooltip: this.page.next.title
         };
       }
@@ -140,7 +140,7 @@ export default {
     prev() {
       if (this.page.prev) {
         return {
-          link: this.$api.pages.link(this.page.prev.id),
+          link: this.$model.pages.link(this.page.prev.id),
           tooltip: this.page.prev.title
         };
       }
@@ -199,39 +199,39 @@ export default {
           break;
       }
     },
-    fetch() {
-      this.$api.pages
-        .get(this.path, { view: "panel" })
-        .then(page => {
-          this.page = page;
-          this.blueprint = page.blueprint.name;
-          this.permissions = page.options;
-          this.tabs = page.blueprint.tabs;
-          this.options = ready => {
-            this.$api.pages.options(this.page.id).then(options => {
-              ready(options);
-            });
-          };
+    async fetch() {
+      try {
+        this.page = await this.$api.pages.get(this.path, { view: "panel" });
+        this.blueprint   = this.page.blueprint.name;
+        this.permissions = this.page.options;
+        this.tabs        = this.page.blueprint.tabs;
 
-          this.$store.dispatch("breadcrumb", this.$api.pages.breadcrumb(page));
-          this.$store.dispatch("title", this.page.title);
+        this.options = async ready => {
+          let options = await this.$model.pages.options(this.page.id);
+          ready(options);
+        };
 
-          this.$store.dispatch("content/create", {
-            id: "pages/" + this.page.id,
-            api: this.$api.pages.link(this.page.id),
-            content: this.page.content
-          });
+        this.$store.dispatch(
+          "breadcrumb",
+          this.$model.pages.breadcrumb(this.page)
+        );
+        this.$store.dispatch("title", this.page.title);
 
-        })
-        .catch(error => {
-          this.issue = error;
+        this.$store.dispatch("content/create", {
+          id: "pages/" + this.page.id,
+          api: this.$model.pages.link(this.page.id),
+          content: this.page.content
         });
+
+      } catch (error) {
+        this.issue = error;
+      }
     },
     onTab(tab) {
       this.tab = tab;
     },
-    update() {
-      this.fetch();
+    async update() {
+      await this.fetch();
       this.$emit("model.update");
     }
   }

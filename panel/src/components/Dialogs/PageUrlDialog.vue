@@ -76,18 +76,17 @@ export default {
         this.url = this.slug;
       }
     },
-    open(id) {
-      this.$api.pages.get(id, { view: "panel" })
-        .then(page => {
-          this.page = page;
-          this.sluggify(this.page.slug);
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+    async open(id) {
+      try {
+        this.page = await this.$api.pages.get(id, { view: "panel" });
+        this.sluggify(this.page.slug);
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
+    async submit() {
       if (this.slug === this.page.slug) {
         this.$refs.dialog.close();
         this.$store.dispatch("notification/success", ":)");
@@ -99,39 +98,38 @@ export default {
         return;
       }
 
-      this.$api.pages
-        .slug(this.page.id, this.slug)
-        .then(page => {
+      try {
+        const page = await this.$api.pages.slug(this.page.id, this.slug);
 
-          // move form changes
-          this.$store.dispatch("content/move", [
-            "pages/" + this.page.id,
-            "pages/" + page.id
-          ]);
+        // move form changes
+        await this.$store.dispatch("content/move", [
+          "pages/" + this.page.id,
+          "pages/" + page.id
+        ]);
 
-          const payload = {
-            message: ":)",
-            event: "page.changeSlug"
-          };
+        const payload = {
+          message: ":)",
+          event: "page.changeSlug"
+        };
 
-          // if in PageView and default language, redirect
-          if (
-            this.$route.params.path &&
-            this.page.id === this.$route.params.path.replace(/\+/g, "/") &&
-            (
-              !this.$store.state.languages.current ||
-              this.$store.state.languages.current.default === true
-            )
-          ) {
-            payload.route = this.$api.pages.link(page.id);
-            delete payload.event;
-          }
+        // if in PageView and default language, redirect
+        if (
+          this.$route.params.path &&
+          this.page.id === this.$route.params.path.replace(/\+/g, "/") &&
+          (
+            !this.$store.state.languages.current ||
+            this.$store.state.languages.current.default === true
+          )
+        ) {
+          payload.route = this.$model.pages.link(page.id);
+          delete payload.event;
+        }
 
-          this.success(payload);
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
-        });
+        this.success(payload);
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

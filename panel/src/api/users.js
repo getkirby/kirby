@@ -1,111 +1,40 @@
-import Vue from "vue";
 import api from "./api.js";
 
 export default {
-  create(data) {
-    return api.post(this.url(), data);
+  async create(data) {
+    return api.post("users", data);
   },
-  list(query) {
-    return api.post(this.url(null, "search"), query);
+  async list(query) {
+    return api.post("users/search", query);
   },
-  get(id, query) {
-    return api.get(this.url(id), query);
+  async get(id, query) {
+    return api.get("users/" + id, query);
   },
-  update(id, data) {
-    return api.patch(this.url(id), data);
+  async update(id, data) {
+    return api.patch("users/" + id, data);
   },
-  delete(id) {
-    return api.delete(this.url(id));
+  async delete(id) {
+    return api.delete("users/" + id);
   },
-  changeEmail(id, email) {
-    return api.patch(this.url(id, "email"), { email: email });
+  async blueprint(id) {
+    return api.get("users/" + id + "/blueprint");
   },
-  changeLanguage(id, language) {
-    return api.patch(this.url(id, "language"), { language: language });
+  async changeEmail(id, email) {
+    return api.patch("users/" + id + "/email", { email: email });
   },
-  changeName(id, name) {
-    return api.patch(this.url(id, "name"), { name: name });
+  async changeLanguage(id, language) {
+    return api.patch("users/" + id + "/language", { language: language });
   },
-  changePassword(id, password) {
-    return api.patch(this.url(id, "password"), { password: password });
+  async changeName(id, name) {
+    return api.patch("users/" + id + "/name", { name: name });
   },
-  changeRole(id, role) {
-    return api.patch(this.url(id, "role"), { role: role });
+  async changePassword(id, password) {
+    return api.patch("users/" + id + "/password", { password: password });
   },
-  deleteAvatar(id) {
-    return api.delete(this.url(id, "avatar"));
+  async changeRole(id, role) {
+    return api.patch("users/" + id + "/role", { role: role });
   },
-  blueprint(id) {
-    return api.get(this.url(id, "blueprint"));
-  },
-  breadcrumb(user) {
-    return [
-      {
-        link: "/users/" + user.id,
-        label: user.username
-      }
-    ];
-  },
-  options(id) {
-    return api.get(this.url(id), {select: "options"}).then(user => {
-      const options = user.options;
-      let result    = [];
-
-      result.push({
-        click: "rename",
-        icon: "title",
-        text: Vue.i18n.translate("user.changeName"),
-        disabled: !options.changeName
-      });
-
-      result.push({
-        click: "email",
-        icon: "email",
-        text: Vue.i18n.translate("user.changeEmail"),
-        disabled: !options.changeEmail
-      });
-
-      result.push({
-        click: "role",
-        icon: "bolt",
-        text: Vue.i18n.translate("user.changeRole"),
-        disabled: !options.changeRole
-      });
-
-      result.push({
-        click: "password",
-        icon: "key",
-        text: Vue.i18n.translate("user.changePassword"),
-        disabled: !options.changePassword
-      });
-
-      result.push({
-        click: "language",
-        icon: "globe",
-        text: Vue.i18n.translate("user.changeLanguage"),
-        disabled: !options.changeLanguage
-      });
-
-      result.push({
-        click: "remove",
-        icon: "trash",
-        text: Vue.i18n.translate("user.delete"),
-        disabled: !options.delete
-      });
-
-      return result;
-    });
-  },
-  url(id, path) {
-    let url = !id ? "users" : "users/" + id;
-
-    if (path) {
-      url += "/" + path;
-    }
-
-    return url;
-  },
-  link(id, path) {
-    return "/" + this.url(id, path);
+  async deleteAvatar(id) {
+    return api.delete("users/" + id + "/avatar");
   }
 };

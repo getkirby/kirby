@@ -134,89 +134,11 @@ export default {
   },
   created() {
     this.$store.dispatch("content/current", null);
-    this.$api.roles.options().then(roles => {
-      this.roles = roles;
-      this.fetch();
-    });
+    this.roles = this.$model.roles.options();
+    this.fetch();
   },
   methods: {
-    fetch() {
-      this.$store.dispatch("title", this.$t("view.users"));
-
-      let query = {
-        paginate: {
-          page: this.page,
-          limit: this.limit
-        },
-        sortBy: "username asc"
-      };
-
-      if (this.role) {
-        query.filterBy = [
-          {
-            field: "role",
-            operator: "==",
-            value: this.role.value
-          }
-        ];
-      }
-
-      this.$api.users
-        .list(query)
-        .then(response => {
-          this.users = response.data.map(user => {
-            let item = {
-              id: user.id,
-              icon: { type: "user", back: "black" },
-              text: user.name || user.email,
-              info: user.role.title,
-              link: "/users/" + user.id,
-              options: ready => {
-                this.$api.users
-                  .options(user.id, "list")
-                  .then(options => ready(options))
-                  .catch(error => {
-                    this.$store.dispatch("notification/error", error);
-                  });
-              },
-              image: true
-            };
-
-            if (user.avatar) {
-              item.image = {
-                url: user.avatar.url,
-                cover: true
-              };
-            }
-
-            return item;
-          });
-
-          if (this.role) {
-            this.$store.dispatch("breadcrumb", [
-              {
-                link: "/users/role/" + this.role.value,
-                label: this.$t("role") + ": " + this.role.text
-              }
-            ]);
-          } else {
-            this.$store.dispatch("breadcrumb", []);
-          }
-
-          // keep the pagination updated
-          this.total = response.pagination.total;
-
-        })
-        .catch(error => {
-          this.issue = error;
-        });
-    },
-    paginate(pagination) {
-      this.page = pagination.page;
-      this.limit = pagination.limit;
-      this.fetch();
-    },
-    action(action, user) {
+    action(user, action) {
       switch (action) {
         case "edit":
           this.$router.push("/users/" + user.id);
@@ -241,6 +163,76 @@ export default {
           break;
       }
     },
+    async fetch() {
+      this.$store.dispatch("title", this.$t("view.users"));
+
+      let query = {
+        paginate: {
+          page: this.page,
+          limit: this.limit
+        },
+        sortBy: "username asc"
+      };
+
+      if (this.role) {
+        query.filterBy = [
+          {
+            field: "role",
+            operator: "==",
+            value: this.role.value
+          }
+        ];
+      }
+
+      try {
+        const response = await this.$api.users.list(query);
+
+        this.users = response.data.map(user => {
+          let item = {
+            id: user.id,
+            icon: { type: "user", back: "black" },
+            text: user.name || user.email,
+            info: user.role.title,
+            link: "/users/" + user.id,
+            options: async ready => {
+              try {
+                let options = this.$model.users.options(user.id, "list");
+                ready(options);
+              } catch (error){
+                this.$store.dispatch("notification/error", error);
+              }
+            },
+            image: true
+          };
+
+          if (user.avatar) {
+            item.image = {
+              url: user.avatar.url,
+              cover: true
+            };
+          }
+
+          return item;
+        });
+
+        if (this.role) {
+          this.$store.dispatch("breadcrumb", [
+            {
+              link: "/users/role/" + this.role.value,
+              label: this.$t("role") + ": " + this.role.text
+            }
+          ]);
+        } else {
+          this.$store.dispatch("breadcrumb", []);
+        }
+
+        // keep the pagination updated
+        this.total = response.pagination.total;
+
+      } catch (error) {
+        this.issue = error;
+      }
+    },
     filter(role) {
       if (role === false) {
         this.$router.push("/users");
@@ -249,6 +241,11 @@ export default {
       }
 
       this.$refs.roles.close();
+    },
+    paginate(pagination) {
+      this.page  = pagination.page;
+      this.limit = pagination.limit;
+      this.fetch();
     }
   }
 };

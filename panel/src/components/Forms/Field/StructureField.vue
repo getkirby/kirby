@@ -551,50 +551,53 @@ export default {
 
       return items.sortBy(this.sortBy);
     },
-    save() {
+    async save() {
       if (this.currentIndex !== null && this.currentIndex !== undefined) {
-        return this.validate(this.currentModel)
-          .then(() => {
-            if (this.currentIndex === "new") {
-              this.items.push(this.currentModel);
-            } else {
-              this.items[this.currentIndex] = this.currentModel;
-            }
 
-            this.items = this.sort(this.items);
-            this.onInput();
+        try {
+          await this.validate(this.currentModel);
 
-            return true;
-          })
-          .catch(errors => {
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.form.incomplete"),
-              details: errors
-            });
+          if (this.currentIndex === "new") {
+            this.items.push(this.currentModel);
+          } else {
+            this.items[this.currentIndex] = this.currentModel;
+          }
 
-            throw errors;
+          this.items = this.sort(this.items);
+          this.onInput();
+
+          return true;
+
+        } catch (error) {
+          this.$store.dispatch("notification/error", {
+            message: this.$t("error.form.incomplete"),
+            details: error
           });
-      } else {
-        return Promise.resolve();
+
+          throw error;
+        }
+      }
+
+      return Promise.resolve();
+    },
+    async submit() {
+      try {
+        await this.save();
+      } catch (error) {
+        // dob't close
       }
     },
-    submit() {
-      this.save()
-        .then(this.close)
-        .catch(() => {
-          // don't close
-        });
-    },
-    validate(model) {
-      return this.$api
-        .post(this.endpoints.field + "/validate", model)
-        .then(errors => {
-          if (errors.length > 0) {
-            throw errors;
-          } else {
-            return true;
-          }
-        });
+    async validate(model) {
+      const errors = await this.$api.post(
+        this.endpoints.field + "/validate",
+        model
+      );
+
+      if (errors.length > 0) {
+        throw errors;
+      } else {
+        return true;
+      }
     },
     width(fraction) {
       if (!fraction) {

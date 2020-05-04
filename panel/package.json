@@ -82,6 +82,7 @@
     ],
     "rules": {
       "vue/require-default-prop": "off",
+      "vue/return-in-computed-property": "warn",
       "vue/attributes-order": "error",
       "vue/require-prop-types": "error",
       "vue/max-attributes-per-line": [

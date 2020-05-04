@@ -39,17 +39,16 @@ export default {
     }
   },
   methods: {
-    open(id) {
-      this.$api.users.get(id)
-        .then(user => {
-          this.user = user;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+    async open(id) {
+      try {
+        this.user = await this.$api.users.get(id);
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
+    async submit() {
       if (!this.values.password || this.values.password.length < 8) {
         this.$refs.dialog.error(this.$t("error.user.password.invalid"));
         return false;
@@ -60,17 +59,20 @@ export default {
         return false;
       }
 
-      this.$api.users
-        .changePassword(this.user.id, this.values.password)
-        .then(() => {
-          this.success({
-            message: ":)",
-            event: "user.changePassword"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+      try {
+        await this.$api.users.changePassword(
+          this.user.id,
+          this.values.password
+        );
+
+        this.success({
+          message: ":)",
+          event: "user.changePassword"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

@@ -24,25 +24,26 @@ export default {
       issue: null
     };
   },
-  created() {
+  async created() {
     this.$store.dispatch("content/current", null);
-    this.$store
-      .dispatch("system/load")
-      .then(system => {
-        if (!system.isReady) {
-          this.$router.push("/installation");
-        }
 
-        if (system.user && system.user.id) {
-          this.$router.push("/");
-        }
+    try {
+      const system = await this.$store.dispatch("system/load");
 
-        this.ready = true;
-        this.$store.dispatch("title", this.$t("login"));
-      })
-      .catch(error => {
-        this.issue = error;
-      });
+      if (!system.isReady) {
+        this.$router.push("/installation");
+      }
+
+      if (system.user && system.user.id) {
+        this.$router.push("/");
+      }
+
+      this.ready = true;
+      this.$store.dispatch("title", this.$t("login"));
+
+    } catch (error) {
+      this.issue = error;
+    }
   }
 };
 </script>

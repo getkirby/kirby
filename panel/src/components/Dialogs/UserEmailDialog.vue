@@ -34,43 +34,48 @@ export default {
     }
   },
   methods: {
-    open(id) {
-      this.$api.users.get(id, { select: ["id", "email"] })
-        .then(user => {
-          this.user = user;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+    async open(id) {
+      try {
+        this.user = await this.$api.users.get(id, { select: ["id", "email"] });
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
-      this.$api.users
-        .changeEmail(this.user.id, this.user.email)
-        .then(response => {
+    async submit() {
+      try {
+        const user = await this.$api.users.changeEmail(
+          this.user.id,
+          this.user.email
+        );
 
-          // remove changes for the old user
-          this.$store.dispatch("content/revert", "users/" + this.user.id);
+        // move content store
+        await this.$store.dispatch("content/move", [
+          "users/" + this.user.id,
+          "users/" + user.id
+        ]);
 
-          // If current panel user, update store
-          if (this.$user.id === this.user.id) {
-            this.$store.dispatch("user/email", this.user.email);
-          }
+        // If current panel user, update user store
+        if (this.$user.id === this.user.id) {
+          await this.$store.dispatch("user/email", this.user.email);
+        }
 
-          let payload = {
-            message: ":)",
-            event: "user.changeEmail",
-          };
+        let payload = {
+          message: ":)",
+          event: "user.changeEmail",
+        };
 
-          if (this.$route.name === "User") {
-            payload.route = this.$api.users.link(response.id);
-          }
+        // redirect if on user view
+        if (this.$route.name === "User") {
+          payload.route = this.$model.users.link(user.id);
+        }
 
-          this.success(payload);
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
-        });
+        this.success(payload);
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

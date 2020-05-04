@@ -34,35 +34,35 @@ export default {
     }
   },
   methods: {
-    open(id) {
-      this.$api.users.get(id, { select: ["id", "name"] })
-        .then(user => {
-          this.user = user;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+    async open(id) {
+      try {
+        this.user = await this.$api.users.get(id, { select: ["id", "name"] });
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
+
     },
-    submit() {
+    async submit() {
       this.user.name = this.user.name.trim();
 
-      this.$api.users
-        .changeName(this.user.id, this.user.name)
-        .then(() => {
-          // If current panel user, update store
-          if (this.$user.id === this.user.id) {
-            this.$store.dispatch("user/name", this.user.name);
-          }
+      try {
+        await this.$api.users.changeName(this.user.id, this.user.name);
 
-          this.success({
-            message: ":)",
-            event: "user.changeName"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+        // if current panel user, update store
+        if (this.$user.id === this.user.id) {
+          await this.$store.dispatch("user/name", this.user.name);
+        }
+
+        this.success({
+          message: ":)",
+          event: "user.changeName"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

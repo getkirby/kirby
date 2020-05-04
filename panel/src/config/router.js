@@ -39,5 +39,3 @@ export default (Vue, store, config) => {
   return router;
 
 };
-
-

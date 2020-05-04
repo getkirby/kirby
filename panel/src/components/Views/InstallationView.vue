@@ -165,32 +165,28 @@ export default {
     this.check();
   },
   methods: {
-    install() {
-      this.$api.system
-        .install(this.user)
-        .then(user => {
-          this.$store.dispatch("user/current", user);
-          this.$store.dispatch("notification/success", this.$t("welcome") + "!");
-          this.$router.push("/");
-        })
-        .catch(error => {
-          this.$store.dispatch("notification/error", error);
-        });
+    async check() {
+     this.system = await this.$store.dispatch("system/load", true);
+
+      if (this.system.isInstalled === true && this.system.isReady) {
+        this.$router.push("/login");
+        return;
+      }
+
+      this.languages = await this.$model.translations.options();
+      this.$store.dispatch("title", this.$t("view.installation"));
     },
-    check() {
-      this.$store.dispatch("system/load", true).then(system => {
-        if (system.isInstalled === true && system.isReady) {
-          this.$router.push("/login");
-          return;
-        }
+    async install() {
+      try {
+        const user = await this.$api.system.install(this.user);
 
-        this.$api.translations.options().then(languages => {
-          this.languages = languages;
+        await this.$store.dispatch("user/current", user);
+        this.$store.dispatch("notification/success", this.$t("welcome") + "!");
+        this.$router.push("/");
 
-          this.system = system;
-          this.$store.dispatch("title", this.$t("view.installation"));
-        });
-      });
+      } catch (error) {
+        this.$store.dispatch("notification/error", error);
+      }
     }
   }
 };

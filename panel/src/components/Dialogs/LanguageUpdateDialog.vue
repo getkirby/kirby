@@ -33,25 +33,22 @@ export default {
     onNameChanges() {
       return false;
     },
-    open(code) {
-      this.$api
-        .get("languages/" + code)
-        .then(language => {
-          this.language = language;
+    async open(code) {
+      try {
+        this.language = await this.$api.get("languages/" + code);
 
-          const localeKeys = Object.keys(this.language.locale);
+        const keys = Object.keys(this.language.locale);
+        if (keys.length === 1) {
+          this.language.locale = this.language.locale[keys[0]];
+        }
 
-          if (localeKeys.length === 1) {
-            this.language.locale = this.language.locale[localeKeys[0]];
-          }
+        this.$refs.dialog.open();
 
-          this.$refs.dialog.open();
-        })
-        .catch (error => {
-          this.$store.dispatch('notification/error', error);
-        });
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
+    async submit() {
       if (this.language.name.length === 0) {
         this.$refs.dialog.error(this.$t("error.language.name"));
         return;
@@ -61,22 +58,23 @@ export default {
         this.language.locale = this.language.locale.trim() || null;
       }
 
-      this.$api
-        .patch("languages/" + this.language.code, {
+      try {
+        await this.$api.patch("languages/" + this.language.code, {
           name: this.language.name,
           direction: this.language.direction,
           locale: this.language.locale
-        })
-        .then(() => {
-          this.$store.dispatch("languages/load");
-          this.success({
-            message: this.$t("language.updated"),
-            event: "language.update"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
         });
+
+        await this.$store.dispatch("languages/load");
+
+        this.success({
+          message: this.$t("language.updated"),
+          event: "language.update"
+        });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

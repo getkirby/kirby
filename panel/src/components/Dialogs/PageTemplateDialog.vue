@@ -37,28 +37,32 @@ export default {
     }
   },
   methods: {
-    open(id) {
-      this.$api.pages
-        .get(id, { select: ["id", "template", "blueprints"] })
-        .then(page => {
-          if (page.blueprints.length <= 1) {
-            return this.$store.dispatch("notification/error", {
-              message: this.$t("error.page.changeTemplate.invalid", {
-                slug: page.id
-              })
-            });
-          }
+    async open(id) {
+      try {
+        const page = await this.$api.pages.get(id, {
+          select: ["id", "template", "blueprints"]
+        });
 
-          this.page = page;
-          this.page.blueprints = this.page.blueprints.map(blueprint => ({
+        if (page.blueprints.length <= 1) {
+          return this.$store.dispatch("notification/error", {
+            message: this.$t("error.page.changeTemplate.invalid", {
+              slug: page.id
+            })
+          });
+        }
+
+        this.page = page;
+        this.page.blueprints = this.page.blueprints.map(blueprint => {
+          return {
             text: blueprint.title,
             value: blueprint.name
-          }));
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
+          };
         });
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
     submit() {
       this.$events.$emit("keydown.cmd.s");
