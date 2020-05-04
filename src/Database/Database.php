@@ -2,6 +2,7 @@
 
 namespace Kirby\Database;
 
+use Closure;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
@@ -230,7 +231,7 @@ class Database
     }
 
     /**
-     * Sets the exception mode for the next query
+     * Sets the exception mode
      *
      * @param bool $fail
      * @return \Kirby\Database\Database
@@ -369,7 +370,7 @@ class Database
             $this->statement->execute($bindings);
 
             $this->affected  = $this->statement->rowCount();
-            $this->lastId    = $this->connection->lastInsertId();
+            $this->lastId    = Str::startsWith($query, 'insert ', true) ? $this->connection->lastInsertId() : null;
             $this->lastError = null;
 
             // store the final sql to add it to the trace later
@@ -394,9 +395,6 @@ class Database
             'bindings' => $bindings,
             'error'    => $this->lastError
         ]);
-
-        // reset some stuff
-        $this->fail = false;
 
         // return true or false on success or failure
         return $this->lastError === null;
@@ -426,7 +424,11 @@ class Database
         }
 
         // define the default flag for the fetch method
-        $flags = $options['fetch'] === 'array' ? PDO::FETCH_ASSOC : PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE;
+        if ($options['fetch'] instanceof Closure || $options['fetch'] === 'array') {
+            $flags = PDO::FETCH_ASSOC;
+        } else {
+            $flags = PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE;
+        }
 
         // add optional flags
         if (empty($options['flag']) === false) {
@@ -434,7 +436,7 @@ class Database
         }
 
         // set the fetch mode
-        if ($options['fetch'] === 'array') {
+        if ($options['fetch'] instanceof Closure || $options['fetch'] === 'array') {
             $this->statement->setFetchMode($flags);
         } else {
             $this->statement->setFetchMode($flags, $options['fetch']);
@@ -442,6 +444,13 @@ class Database
 
         // fetch that stuff
         $results = $this->statement->{$options['method']}();
+
+        // apply the fetch closure to all results if given
+        if ($options['fetch'] instanceof Closure) {
+            foreach ($results as $key => $result) {
+                $results[$key] = $options['fetch']($result, $key);
+            }
+        }
 
         if ($options['iterator'] === 'array') {
             return $this->lastResult = $results;
@@ -559,6 +568,11 @@ class Database
             }
         }
 
+        // update cache
+        if (in_array($table, $this->tableWhitelist) !== true) {
+            $this->tableWhitelist[] = $table;
+        }
+
         return true;
     }
 
@@ -571,7 +585,17 @@ class Database
     public function dropTable($table): bool
     {
         $sql = $this->sql()->dropTable($table);
-        return $this->execute($sql['query'], $sql['bindings']);
+        if ($this->execute($sql['query'], $sql['bindings']) !== true) {
+            return false;
+        }
+
+        // update cache
+        $key = array_search($this->tableWhitelist, $table);
+        if ($key !== false) {
+            unset($this->tableWhitelist[$key]);
+        }
+
+        return true;
     }
 
     /**
