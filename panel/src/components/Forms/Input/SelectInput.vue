@@ -1,11 +1,15 @@
 <template>
-  <span :data-disabled="disabled" :data-empty="selected === ''" class="k-select-input">
+  <span
+    :data-disabled="disabled"
+    :data-empty="selected === ''"
+    class="k-select-input"
+  >
     <select
+      :id="id"
       ref="input"
       :autofocus="autofocus"
       :aria-label="ariaLabel"
       :disabled="disabled"
-      :id="id"
       :name="name"
       :required="required"
       :value="selected"
@@ -21,8 +25,8 @@
       </option>
       <option
         v-for="option in options"
-        :disabled="option.disabled"
         :key="option.value"
+        :disabled="option.disabled"
         :value="option.value"
       >
         {{ option.text }}
@@ -68,7 +72,7 @@ export default {
         ...this.$listeners,
         click: (event) => this.onClick(event),
         change: (event) => this.onInput(event.target.value),
-        input: (event) => {}
+        input: () => {}
       }
     };
   },

@@ -611,19 +611,20 @@ abstract class ModelWithContent extends Model
      * String template builder
      *
      * @param string|null $template
+     * @param array $data
      * @return string
      */
-    public function toString(string $template = null): string
+    public function toString(string $template = null, array $data = []): string
     {
         if ($template === null) {
             return $this->id();
         }
 
-        $result = Str::template($template, [
+        $result = Str::template($template, array_replace([
             'kirby'             => $this->kirby(),
             'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
-        ]);
+        ], $data));
 
         return $result;
     }

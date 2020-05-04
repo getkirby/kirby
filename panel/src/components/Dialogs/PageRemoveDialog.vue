@@ -1,29 +1,32 @@
 <template>
-  <k-dialog
+  <k-remove-dialog
     ref="dialog"
-    :button="$t('delete')"
     :size="hasSubpages ? 'medium' : 'small'"
-    theme="negative"
-    icon="trash"
     @submit="submit"
     @close="reset"
   >
     <template v-if="page.hasChildren || page.hasDrafts">
       <k-text v-html="$t('page.delete.confirm', { title: page.title })" />
       <div class="k-page-remove-warning">
-        <k-box theme="negative" v-html="$t('page.delete.confirm.subpages')" />
+        <k-box
+          theme="negative"
+          v-html="$t('page.delete.confirm.subpages')"
+        />
       </div>
       <k-form
         v-if="hasSubpages"
-        :fields="fields"
         v-model="model"
+        :fields="fields"
         @submit="submit"
       />
     </template>
     <template v-else>
-      <k-text @keydown.enter="submit" v-html="$t('page.delete.confirm', { title: page.title })" />
+      <k-text
+        @keydown.enter="submit"
+        v-html="$t('page.delete.confirm', { title: page.title })"
+      />
     </template>
-  </k-dialog>
+  </k-remove-dialog>
 </template>
 
 <script>

@@ -880,4 +880,46 @@ class AppPluginsTest extends TestCase
         // hook should have been called only once after the firs initialization
         $this->assertEquals(1, $executed);
     }
+
+    public function testThirdPartyExtensions()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'tags' => [
+                'test' => $testTag = function () {
+                },
+            ],
+            'thirdParty' => [
+                'blocks' => [
+                    'test' => $testBlock = function () {
+                    }
+                ]
+            ]
+        ]);
+
+        $this->assertSame($testTag, $kirby->extensions('tags')['test']);
+        $this->assertSame($testBlock, $kirby->extensions('thirdParty')['blocks']['test']);
+    }
+
+    public function testNativeComponents()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'urls' => [
+                'index' => 'https://getkirby.com'
+            ],
+            'components' => [
+                'url' => function ($kirby, $path) {
+                    return 'https://rewritten.getkirby.com/' . $path;
+                },
+            ]
+        ]);
+
+        $this->assertEquals('https://rewritten.getkirby.com/test', $kirby->component('url')($kirby, 'test'));
+        $this->assertEquals('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
+    }
 }

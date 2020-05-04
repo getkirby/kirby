@@ -44,7 +44,7 @@ class KirbyTagsTest extends TestCase
             'test' => [
                 'attr' => ['a'],
                 'html' => function ($tag) {
-                    return $tag->value . '|' . $tag->a ;
+                    return $tag->value . '|' . $tag->a;
                 }
             ]
         ];
@@ -65,5 +65,32 @@ class KirbyTagsTest extends TestCase
         ];
 
         $this->assertSame('(test: foo)', KirbyTags::parse('(test: foo)'));
+    }
+
+    public function testParseWithBrackets()
+    {
+        KirbyTag::$types = [
+            'test' => [
+                'attr' => ['a'],
+                'html' => function ($tag) {
+                    $value = $tag->value;
+
+                    if (empty($tag->a) === false) {
+                        $value .= ' - ' . $tag->a;
+                    }
+
+                    return $value;
+                }
+            ]
+        ];
+
+        $this->assertSame('foo(bar)', KirbyTags::parse('(test: foo(bar))'));
+        $this->assertSame('foo(bar) - hello(world)', KirbyTags::parse('(test: foo(bar) a: hello(world))'));
+        $this->assertSame('foo(bar) hello', KirbyTags::parse('(test: foo(bar) hello)'));
+        $this->assertSame('foo(bar hello(world))', KirbyTags::parse('(test: foo(bar hello(world)))'));
+        $this->assertSame('foo - (bar)', KirbyTags::parse('(test: foo a: (bar))'));
+        $this->assertSame('(bar)', KirbyTags::parse('(test: (bar))'));
+        // will not parse if brackets don't match
+        $this->assertSame('(test: foo (bar)', KirbyTags::parse('(test: foo (bar)'));
     }
 }

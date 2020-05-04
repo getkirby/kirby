@@ -1,13 +1,20 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('change')"
+    :submit-button="$t('change')"
     size="medium"
     theme="positive"
     @submit="$refs.form.submit()"
   >
-    <k-form ref="form" @submit="submit">
-      <k-text-field v-bind="field" :value="slug" @input="sluggify($event)">
+    <k-form
+      ref="form"
+      @submit="submit"
+    >
+      <k-text-field
+        v-bind="field"
+        :value="slug"
+        @input="sluggify($event)"
+      >
         <k-button
           slot="options"
           icon="wand"
@@ -98,7 +105,7 @@ export default {
 
           // move form changes
           this.$store.dispatch("content/move", [
-            "pages/" + this.page.id, 
+            "pages/" + this.page.id,
             "pages/" + page.id
           ]);
 

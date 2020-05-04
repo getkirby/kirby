@@ -309,7 +309,7 @@ return function (App $app) {
          * @param string $rep
          * @return \Kirby\Cms\Field
          */
-        'excerpt' => function (Field $field, int $chars = 0, bool $strip = true, string $rep = '…') {
+        'excerpt' => function (Field $field, int $chars = 0, bool $strip = true, string $rep = ' …') {
             $field->value = Str::excerpt($field->kirbytext()->value(), $chars, $strip, $rep);
             return $field;
         },
@@ -322,6 +322,24 @@ return function (App $app) {
          */
         'html' => function (Field $field) {
             $field->value = htmlentities($field->value, ENT_COMPAT, 'utf-8');
+            return $field;
+        },
+
+        /**
+         * Strips all block-level HTML elements from the field value,
+         * it can be safely placed inside of other inline elements
+         * without the risk of breaking the HTML structure.
+         * @since 3.3.0
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
+         */
+        'inline' => function (Field $field) {
+            // List of valid inline elements taken from: https://developer.mozilla.org/de/docs/Web/HTML/Inline_elemente
+            // Obsolete elements, script tags, image maps and form elements have
+            // been excluded for safety reasons and as they are most likely not
+            // needed in most cases.
+            $field->value = strip_tags($field->value, '<b><i><small><abbr><cite><code><dfn><em><kbd><strong><samp><var><a><bdo><br><img><q><span><sub><sup>');
             return $field;
         },
 
@@ -385,24 +403,6 @@ return function (App $app) {
         },
 
         /**
-         * Strips all block-level HTML elements from the field value,
-         * it can be safely placed inside of other inline elements
-         * without the risk of breaking the HTML structure.
-         * @since 3.3.0
-         *
-         * @param \Kirby\Cms\Field $field
-         * @return \Kirby\Cms\Field
-         */
-        'inline' => function (Field $field) {
-            // List of valid inline elements taken from: https://developer.mozilla.org/de/docs/Web/HTML/Inline_elemente
-            // Obsolete elements, script tags, image maps and form elements have
-            // been excluded for safety reasons and as they are most likely not
-            // needed in most cases.
-            $field->value = strip_tags($field->value, '<b><i><small><abbr><cite><code><dfn><em><kbd><strong><samp><var><a><bdo><br><img><q><span><sub><sup>');
-            return $field;
-        },
-
-        /**
          * Converts the field content to lowercase
          *
          * @param \Kirby\Cms\Field $field
@@ -425,13 +425,42 @@ return function (App $app) {
         },
 
         /**
-         * Converts the field content to valid XML
+         * Uses the field value as Kirby query
          *
          * @param \Kirby\Cms\Field $field
+         * @param string|null $expect
+         * @return mixed
+         */
+        'query' => function (Field $field, string $expect = null) use ($app) {
+            if ($parent = $field->parent()) {
+                return $parent->query($field->value, $expect);
+            }
+
+            return Str::query($field->value, [
+                'kirby' => $app,
+                'site'  => $app->site(),
+                'page'  => $app->page()
+            ]);
+        },
+
+        /**
+         * It parses any queries found in the field value.
+         *
+         * @param \Kirby\Cms\Field $field
+         * @param array $data
          * @return \Kirby\Cms\Field
          */
-        'xml' => function (Field $field) {
-            $field->value = Xml::encode($field->value);
+        'replace' => function (Field $field, array $data = []) use ($app) {
+            if ($parent = $field->parent()) {
+                $field->value = $field->parent()->toString($field->value, $data);
+            } else {
+                $field->value = Str::template($field->value, array_replace([
+                    'kirby' => $app,
+                    'site'  => $app->site(),
+                    'page'  => $app->page()
+                ], $data));
+            }
+
             return $field;
         },
 
@@ -475,7 +504,7 @@ return function (App $app) {
          * Splits the field content into an array
          *
          * @param \Kirby\Cms\Field $field
-         * @return \Kirby\cms\Field
+         * @return array
          */
         'split' => function (Field $field, $separator = ',') {
             return Str::split((string)$field->value, $separator);
@@ -501,6 +530,17 @@ return function (App $app) {
          */
         'widont' => function (Field $field) {
             $field->value = Str::widont($field->value);
+            return $field;
+        },
+
+        /**
+         * Converts the field content to valid XML
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
+         */
+        'xml' => function (Field $field) {
+            $field->value = Xml::encode($field->value);
             return $field;
         },
 

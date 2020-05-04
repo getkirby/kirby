@@ -356,7 +356,9 @@ trait PageActions
             'slug'    => $slug,
         ]);
 
-        $ignore = [];
+        $ignore = [
+            $this->kirby()->locks()->file($this)
+        ];
 
         // don't copy files
         if ($files === false) {
@@ -375,7 +377,7 @@ trait PageActions
         // remove all translated slugs
         if ($this->kirby()->multilang() === true) {
             foreach ($this->kirby()->languages() as $language) {
-                if ($language->isDefault() === false) {
+                if ($language->isDefault() === false && $copy->translation($language)->exists() === true) {
                     $copy = $copy->save(['slug' => null], $language->code());
                 }
             }
@@ -520,7 +522,7 @@ trait PageActions
                     'kirby' => $app,
                     'page'  => $app->page($this->id()),
                     'site'  => $app->site(),
-                ]);
+                ], '');
 
                 return (int)$template;
         }

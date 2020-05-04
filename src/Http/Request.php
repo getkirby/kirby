@@ -107,7 +107,7 @@ class Request
     public function __construct(array $options = [])
     {
         $this->options = $options;
-        $this->method  = $options['method'] ?? $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $this->method  = $this->detectRequestMethod($options['method'] ?? null);
 
         if (isset($options['body']) === true) {
             $this->body = new Body($options['body']);
@@ -206,6 +206,39 @@ class Request
     public function data(): array
     {
         return array_merge($this->body()->toArray(), $this->query()->toArray());
+    }
+
+    /**
+     * Detect the request method from various
+     * options: given method, query string, server vars
+     *
+     * @param string $method
+     * @return string
+     */
+    public function detectRequestMethod(string $method = null): string
+    {
+        // all possible methods
+        $methods = ['GET', 'HEAD', 'POST', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'TRACE', 'PATCH'];
+
+        // the request method can be overwritten with a header
+        $methodOverride = strtoupper($_SERVER['HTTP_X_HTTP_METHOD_OVERRIDE'] ?? null);
+
+        if ($method === null && in_array($methodOverride, $methods) === true) {
+            $method = $methodOverride;
+        }
+
+        // final chain of options to detect the method
+        $method = $method ?? $_SERVER['REQUEST_METHOD'] ?? 'GET';
+
+        // uppercase the shit out of it
+        $method = strtoupper($method);
+
+        // sanitize the method
+        if (in_array($method, $methods) === false) {
+            $method = 'GET';
+        }
+
+        return $method;
     }
 
     /**

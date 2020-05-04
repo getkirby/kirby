@@ -515,11 +515,12 @@ class User extends ModelWithContent
      *
      * @param string $format
      * @param string|null $handler
+     * @param string|null $languageCode
      * @return int|string
      */
-    public function modified(string $format = 'U', string $handler = null)
+    public function modified(string $format = 'U', string $handler = null, string $languageCode = null)
     {
-        $modifiedContent = F::modified($this->contentFile());
+        $modifiedContent = F::modified($this->contentFile($languageCode));
         $modifiedIndex   = F::modified($this->root() . '/index.php');
         $modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
         $handler         = $handler ?? $this->kirby()->option('date.handler', 'date');
@@ -844,15 +845,16 @@ class User extends ModelWithContent
      * String template builder
      *
      * @param string|null $template
+     * @param array|null $data
      * @return string
      */
-    public function toString(string $template = null): string
+    public function toString(string $template = null, array $data = []): string
     {
         if ($template === null) {
             $template = $this->email();
         }
 
-        return parent::toString($template);
+        return parent::toString($template, $data);
     }
 
     /**

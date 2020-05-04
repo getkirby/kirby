@@ -359,7 +359,7 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals('a', $structure->first()->title()->value());
         $this->assertEquals('b', $structure->last()->title()->value());
     }
-    
+
     public function testToStructureWithInvalidData()
     {
         $data = [
@@ -483,6 +483,14 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals('&ouml;', $this->field('ö')->html());
     }
 
+    public function testInline()
+    {
+        $html = '<div><h1>Headline</h1> <p>Subtitle with <a href="#">link</a>.</p></div>';
+        $expected = 'Headline Subtitle with <a href="#">link</a>.';
+
+        $this->assertEquals($expected, $this->field($html)->inline());
+    }
+
     public function testNl2br()
     {
         $input = 'Multiline' . PHP_EOL . 'test' . PHP_EOL . 'string';
@@ -517,14 +525,6 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals($expected, $this->field($kirbytext)->kirbytags());
     }
 
-    public function testInline()
-    {
-        $html = '<div><h1>Headline</h1> <p>Subtitle with <a href="#">link</a>.</p></div>';
-        $expected = 'Headline Subtitle with <a href="#">link</a>.';
-
-        $this->assertEquals($expected, $this->field($html)->inline());
-    }
-
     public function testLower()
     {
         $this->assertEquals('abc', $this->field('ABC')->lower());
@@ -542,6 +542,44 @@ class FieldMethodsTest extends TestCase
     {
         $this->assertEquals('field value', $this->field('field value')->or('fallback')->value());
         $this->assertEquals('fallback', $this->field()->or('fallback')->value());
+    }
+
+    public function testQuery()
+    {
+        // with page
+        $page = new Page([
+            'slug'    => 'test',
+            'content' => [
+                'title' => 'Hello world',
+                'text'  => 'page.title'
+            ]
+        ]);
+
+        $this->assertEquals('Hello world', $page->text()->query()->value());
+    }
+
+    public function testReplace()
+    {
+        // simple replacement
+        $this->assertEquals('Hello world', $this->field('Hello {{ message }}')->replace(['message' => 'world']));
+
+        // nested replacement
+        $this->assertEquals('Hello world', $this->field('Hello {{ message.text }}')->replace([
+            'message' => [
+                'text' => 'world'
+            ]
+        ]));
+
+        // with page
+        $page = new Page([
+            'slug'    => 'test',
+            'content' => [
+                'title' => 'Hello world',
+                'text'  => 'Title: {{ page.title }}'
+            ]
+        ]);
+
+        $this->assertEquals('Title: Hello world', $page->text()->replace());
     }
 
     public function testShort()

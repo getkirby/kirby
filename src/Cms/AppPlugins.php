@@ -31,6 +31,13 @@ trait AppPlugins
     protected static $plugins = [];
 
     /**
+     * Cache for system extensions
+     *
+     * @var array
+     */
+    protected static $systemExtensions = null;
+
+    /**
      * The extension registry
      *
      * @var array
@@ -62,19 +69,13 @@ trait AppPlugins
         'snippets' => [],
         'tags' => [],
         'templates' => [],
+        'thirdParty' => [],
         'translations' => [],
         'userMethods' => [],
         'userModels' => [],
         'usersMethods' => [],
         'validators' => []
     ];
-
-    /**
-     * Cache for system extensions
-     *
-     * @var array
-     */
-    protected static $systemExtensions = null;
 
     /**
      * Flag when plugins have been loaded
@@ -427,6 +428,20 @@ trait AppPlugins
     }
 
     /**
+     * Add third party extensions to the registry
+     * so they can be used as plugins for plugins
+     * for example.
+     *
+     * @param string $type
+     * @param array $extensions
+     * @return array
+     */
+    protected function extendThirdParty(array $extensions): array
+    {
+        return $this->extensions['thirdParty'] = array_replace_recursive($this->extensions['thirdParty'], $extensions);
+    }
+
+    /**
      * Registers additional user methods
      *
      * @param array $methods
@@ -654,6 +669,18 @@ trait AppPlugins
         $this->extendFields(static::$systemExtensions['fields']);
         $this->extendFieldMethods((static::$systemExtensions['fieldMethods'])($this));
         $this->extendTags(static::$systemExtensions['tags']);
+    }
+
+    /**
+     * Returns the native implementation
+     * of a core component
+     *
+     * @param string $component
+     * @return \Closure | false
+     */
+    public function nativeComponent(string $component)
+    {
+        return static::$systemExtensions['components'][$component] ?? false;
     }
 
     /**

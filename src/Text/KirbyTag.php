@@ -84,7 +84,14 @@ class KirbyTag
     public static function parse(string $string, array $data = [], array $options = [])
     {
         // remove the brackets, extract the first attribute (the tag type)
-        $tag  = trim(rtrim(ltrim($string, '('), ')'));
+        $tag  = trim(ltrim($string, '('));
+
+        // use substr instead of rtrim to keep non-tagged brackets
+        // (link: file.pdf text: Download (PDF))
+        if (substr($tag, -1) === ')') {
+            $tag = substr($tag, 0, -1);
+        }
+
         $type = trim(substr($tag, 0, strpos($tag, ':')));
         $type = strtolower($type);
         $attr = static::$types[$type]['attr'] ?? [];

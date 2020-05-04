@@ -367,9 +367,9 @@
   "page.status.draft": "Utkast",
   "page.status.draft.description":
     "Sidan är ett utkast och endast synlig för inloggade redaktörer",
-  "page.status.listed": "Publika",
+  "page.status.listed": "Publik",
   "page.status.listed.description": "Sidan är publik för vem som helst",
-  "page.status.unlisted": "Olistade",
+  "page.status.unlisted": "Olistad",
   "page.status.unlisted.description": "Sidan är endast åtkomlig via URL",
 
   "pages": "Sidor",

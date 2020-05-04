@@ -6,18 +6,19 @@
     @cancel="$emit('cancel')"
     @submit="submit"
   >
-
     <template v-if="issue">
-      <k-box :text="issue" theme="negative" />
+      <k-box
+        :text="issue"
+        theme="negative"
+      />
     </template>
 
     <template v-else>
-
       <k-input
         v-if="options.search"
+        v-model="search"
         :autofocus="true"
         :placeholder="$t('search') + ' …'"
-        v-model="search"
         type="text"
         class="k-dialog-search"
         icon="search"
@@ -59,7 +60,10 @@
           @paginate="paginate"
         />
       </template>
-      <k-empty v-else icon="users">
+      <k-empty
+        v-else
+        icon="users"
+      >
         {{ $t("dialog.users.empty") }}
       </k-empty>
     </template>

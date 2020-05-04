@@ -3,7 +3,10 @@
     <div class="k-error-view-content">
       <k-text>
         <p>
-          <k-icon class="k-error-view-icon" type="alert" />
+          <k-icon
+            class="k-error-view-icon"
+            type="alert"
+          />
         </p>
         <p>
           <slot />
