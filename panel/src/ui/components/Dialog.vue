@@ -1,14 +1,32 @@
 <template>
-  <div v-if="isOpen" class="k-dialog" @click="cancel">
-    <div :data-size="size" class="k-dialog-box" @click.stop>
-      <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
+  <div
+    v-if="isOpen"
+    class="k-dialog"
+    @click="cancel"
+  >
+    <div
+      :data-size="size"
+      class="k-dialog-box"
+      @click.stop
+    >
+      <div
+        v-if="notification"
+        :data-theme="notification.type"
+        class="k-dialog-notification"
+      >
         <p>{{ notification.message }}</p>
-        <k-button icon="cancel" @click="notification = null" />
+        <k-button
+          icon="cancel"
+          @click="notification = null"
+        />
       </div>
       <div class="k-dialog-body">
         <slot />
       </div>
-      <footer v-if="$slots['footer'] || cancelButton || submitButton" class="k-dialog-footer">
+      <footer
+        v-if="$slots['footer'] || cancelButton || submitButton"
+        class="k-dialog-footer"
+      >
         <slot name="footer">
           <k-button-group>
             <span>

@@ -1,7 +1,11 @@
 <template>
   <k-dropdown class="k-autocomplete">
     <slot />
-    <k-dropdown-content ref="dropdown" :autofocus="true" v-on="$listeners">
+    <k-dropdown-content
+      ref="dropdown"
+      :autofocus="true"
+      v-on="$listeners"
+    >
       <k-dropdown-item
         v-for="(item, index) in matches"
         :key="index"
@@ -26,7 +30,7 @@ export default {
   props: {
     limit: {
       type: Number,
-      default: 10
+      default: 10,
     },
     skip: {
       type: Array,

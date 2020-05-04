@@ -1,6 +1,12 @@
 <template>
-  <ul :style="'--columns:' + columns" class="k-radio-input">
-    <li v-for="(option, index) in options" :key="index">
+  <ul
+    :style="'--columns:' + columns"
+    class="k-radio-input"
+  >
+    <li
+      v-for="(option, index) in options"
+      :key="index"
+    >
       <input
         :id="id + '-' + index"
         :value="option.value"
@@ -19,7 +25,10 @@
           {{ option.text }}
         </template>
       </label>
-      <k-icon v-if="option.icon" :type="option.icon" />
+      <k-icon
+        v-if="option.icon"
+        :type="option.icon"
+      />
     </li>
   </ul>
 </template>

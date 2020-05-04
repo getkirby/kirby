@@ -81,29 +81,38 @@ class A
             return $array[$key];
         }
 
-        // support dot notation
+        // extract data from nested array structures using the dot notation
         if (strpos($key, '.') !== false) {
             $keys     = explode('.', $key);
             $firstKey = array_shift($keys);
 
+            // if the input array also uses dot notation, try to find a subset of the $keys
             if (isset($array[$firstKey]) === false) {
                 $currentKey = $firstKey;
 
                 while ($innerKey = array_shift($keys)) {
-                    $currentKey = $currentKey . '.' . $innerKey;
+                    $currentKey .= '.' . $innerKey;
 
-                    if (isset($array[$currentKey]) === true && is_array($array[$currentKey])) {
+                    // the element needs to exist and also needs to be an array; otherwise
+                    // we cannot find the remaining keys within it (invalid array structure)
+                    if (isset($array[$currentKey]) === true && is_array($array[$currentKey]) === true) {
+                        // $keys only holds the remaining keys that have not been shifted off yet
                         return static::get($array[$currentKey], implode('.', $keys), $default);
                     }
                 }
 
+                // searching through the full chain of keys wasn't successful
                 return $default;
             }
 
+            // if the input array uses a completely nested structure,
+            // recursively progress layer by layer
             if (is_array($array[$firstKey]) === true) {
                 return static::get($array[$firstKey], implode('.', $keys), $default);
             }
 
+            // the $firstKey element was found, but isn't an array, so we cannot
+            // find the remaining keys within it (invalid array structure)
             return $default;
         }
 
@@ -408,6 +417,74 @@ class A
             }
         }
         return $missing;
+    }
+
+    /**
+     * Normalizes an array into a nested form by converting
+     * dot notation in keys to nested structures
+     *
+     * @param array $array
+     * @return array
+     */
+    public static function nest(array $array): array
+    {
+        $result = [];
+
+        foreach ($array as $key => $value) {
+            // untangle elements where the key uses dot notation
+            if (strpos($key, '.') !== false) {
+                // extract the first part of the key, keep the others
+                $keys = explode('.', $key);
+                $key  = array_shift($keys);
+
+                // now $key is the first part of the key, $value should be
+                // the untangled array
+                $value = static::nestByKeys($value, $keys);
+            }
+
+            // now recursively do the same for each array level if needed
+            if (is_array($value) === true) {
+                $value = static::nest($value);
+            }
+
+            // merge arrays with previous results if necessary
+            // (needed when the same keys are used both with and without dot notation)
+            if (
+                isset($result[$key]) === true &&
+                is_array($result[$key]) === true &&
+                is_array($value) === true
+            ) {
+                $result[$key] = array_replace_recursive($result[$key], $value);
+            } else {
+                $result[$key] = $value;
+            }
+        }
+
+        return $result;
+    }
+
+    /**
+     * Recursively creates a nested array from a set of keys
+     * with a key on each level
+     *
+     * @param mixed $value Arbitrary value that will end up at the bottom of the tree
+     * @param array $keys List of keys to use sorted from the topmost level
+     * @return array|mixed Nested array or (if `$keys` is empty) the input `$value`
+     */
+    public static function nestByKeys($value, array $keys)
+    {
+        // shift off the first key from the list
+        $firstKey = array_shift($keys);
+
+        // stop further recursion if there are no more keys
+        if ($firstKey === null) {
+            return $value;
+        }
+
+        // return one level of the output tree, recurse further
+        return [
+            $firstKey => static::nestByKeys($value, $keys)
+        ];
     }
 
     /**

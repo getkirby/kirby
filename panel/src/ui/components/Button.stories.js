@@ -1,9 +1,11 @@
+import Button from "./Button.vue";
 import { action } from "@storybook/addon-actions";
 import { withKnobs, text, boolean, select } from '@storybook/addon-knobs';
 
 export default {
-  title: "Button",
-  decorators: [withKnobs]
+  title: "Navigation / Button",
+  decorators: [withKnobs],
+  component: Button
 };
 
 

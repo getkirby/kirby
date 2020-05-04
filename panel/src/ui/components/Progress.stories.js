@@ -1,11 +1,13 @@
+import Progress from "./Progress.vue";
 import {
   withKnobs,
   number
 } from '@storybook/addon-knobs';
 
 export default {
-  title: "Progress",
-  decorators: [withKnobs]
+  title: "Interaction / Progress",
+  decorators: [withKnobs],
+  component: Progress
 };
 
 export const configurator = () => ({

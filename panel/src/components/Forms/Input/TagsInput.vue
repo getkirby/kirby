@@ -23,7 +23,10 @@
     >
       {{ tag.text }}
     </k-tag>
-    <span slot="footer" class="k-tags-input-element">
+    <span
+      slot="footer"
+      class="k-tags-input-element"
+    >
       <k-autocomplete
         ref="autocomplete"
         :options="options"

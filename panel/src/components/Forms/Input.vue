@@ -6,10 +6,17 @@
     :data-type="type"
     class="k-input"
   >
-    <span v-if="$slots.before || before" class="k-input-before" @click="focus">
+    <span
+      v-if="$slots.before || before"
+      class="k-input-before"
+      @click="focus"
+    >
       <slot name="before">{{ before }}</slot>
     </span>
-    <span class="k-input-element" @click.stop="focus">
+    <span
+      class="k-input-element"
+      @click.stop="focus"
+    >
       <slot>
         <component
           :is="'k-' + type + '-input'"
@@ -20,10 +27,18 @@
         />
       </slot>
     </span>
-    <span v-if="$slots.after || after" class="k-input-after" @click="focus">
+    <span
+      v-if="$slots.after || after"
+      class="k-input-after"
+      @click="focus"
+    >
       <slot name="after">{{ after }}</slot>
     </span>
-    <span v-if="$slots.icon || icon" class="k-input-icon" @click="focus">
+    <span
+      v-if="$slots.icon || icon"
+      class="k-input-icon"
+      @click="focus"
+    >
       <slot name="icon">
         <k-icon :type="icon" />
       </slot>

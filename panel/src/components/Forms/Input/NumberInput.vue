@@ -15,7 +15,6 @@
     :step="stepNumber"
     class="k-number-input"
     type="number"
-    @keydown.ctrl.s="clean"
     @keydown.meta.s="clean"
     v-on="listeners"
   >

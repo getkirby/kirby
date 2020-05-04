@@ -1,8 +1,10 @@
+import Box from "./Box.vue";
 import { withKnobs, text, select } from '@storybook/addon-knobs';
 
 export default {
-  title: "Box",
-  decorators: [withKnobs]
+  title: "Layout / Box",
+  decorators: [withKnobs],
+  component: Box
 };
 
 export const configurator = () => ({

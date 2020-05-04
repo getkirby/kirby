@@ -2,7 +2,11 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <k-view v-else-if="ready" align="center" class="k-login-view">
+  <k-view
+    v-else-if="ready"
+    align="center"
+    class="k-login-view"
+  >
     <k-login-form />
   </k-view>
 </template>

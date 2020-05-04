@@ -1,5 +1,9 @@
 <template>
-  <k-field :input="_uid" v-bind="$props" class="k-url-field">
+  <k-field
+    :input="_uid"
+    v-bind="$props"
+    class="k-url-field"
+  >
     <k-input
       :id="_uid"
       ref="input"
