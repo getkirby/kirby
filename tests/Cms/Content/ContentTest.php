@@ -141,11 +141,17 @@ class ContentTest extends TestCase
     public function testUpdate()
     {
         $content = $this->mockObject();
+
         $content = $content->update([
             'category' => 'test'
         ]);
-
         $this->assertEquals('test', $content->get('category')->value());
+
+        // Field objects should be cleared on update
+        $content = $content->update([
+            'category' => 'another-test'
+        ]);
+        $this->assertEquals('another-test', $content->get('category')->value());
     }
 
     public function testDebuginfo()
