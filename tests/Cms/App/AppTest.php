@@ -238,12 +238,12 @@ class AppTest extends TestCase
             'options' => [
                 'ready' => $ready = function ($kirby) {
                     return [
-                        'test'  => $kirby->root('index'),
-                        'another.test' => 'foo'
-                        'debug' => true,
-                        'home'  => $kirby->site()->content()->home(),
-                        'error' => $kirby->site()->content()->error(),
-                        'slugs' => 'de'
+                        'test'         => $kirby->root('index'),
+                        'another.test' => 'foo',
+                        'debug'        => true,
+                        'home'         => $kirby->site()->content()->home()->value(),
+                        'error'        => $kirby->site()->content()->error()->value(),
+                        'slugs'        => 'de'
                     ];
                 }
             ]
@@ -254,7 +254,11 @@ class AppTest extends TestCase
             'test' => '/dev/null',
             'another' => [
                 'test' => 'foo'
-            ]
+            ],
+            'debug' => true,
+            'home' => 'test',
+            'error' => 'another-test',
+            'slugs' => 'de'
         ], $app->options());
 
         $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
