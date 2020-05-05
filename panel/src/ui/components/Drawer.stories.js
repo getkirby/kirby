@@ -82,7 +82,7 @@ export const withOptions = () => ({
         >
           Open drawer
         </k-button>
-        <k-drawer ref="drawer" :flow="flow">
+        <k-drawer ref="drawer">
           Content
 
           <k-button-group slot="options">
@@ -106,7 +106,7 @@ export const withContext = () => ({
         >
           Open drawer
         </k-button>
-        <k-drawer ref="drawer" :flow="flow">
+        <k-drawer ref="drawer">
           Content
 
           <k-pagination

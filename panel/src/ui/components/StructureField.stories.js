@@ -92,6 +92,9 @@ export const manyFields = () => ({
       return complex().computed.fields();
     }
   },
+  methods: {
+    input: action("input")
+  },
   template: `
     <div>
       <k-structure-field

@@ -1,7 +1,9 @@
+import Padding from "../storybook/Padding.js";
 import CustomPickerField from "./CustomPickerField.vue";
 
 export default {
   title: "Lab | Custom Picker Field",
+  decorators: [Padding]
 };
 
 export const Custom = () => ({

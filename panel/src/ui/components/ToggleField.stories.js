@@ -71,6 +71,9 @@ export const autofocus   = () => ({
 });
 
 export const disabled = () => ({
+  methods: {
+    input: action("input")
+  },
   template: `
     <div>
       <k-toggle-field
