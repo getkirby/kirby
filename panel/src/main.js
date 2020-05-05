@@ -4,6 +4,7 @@ import Components from "./config/components.js";
 import Config from "./config/config.js";
 import ErrorHandling from "./config/errors.js";
 import I18n from "vuex-i18n";
+import Models from "./config/models.js";
 import Plugins from "./config/plugins.js";
 import Router from "./config/router.js";
 import Store from "./store/store.js";
@@ -18,6 +19,7 @@ Vue.use(Ui);
 Vue.use(Components);
 Vue.use(ErrorHandling);
 Vue.use(Api, Store, Config);
+Vue.use(Models);
 Vue.use(Plugins, Store);
 
 new Vue({

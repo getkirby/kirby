@@ -23,8 +23,9 @@ export default {
     /** Auto-load components */
     const req = require.context('./components/', true, /\.vue$/i);
     req.keys().map(key => {
-      const name = key.match(/\w+/)[0];
-      return Vue.component("k-" + Vue.prototype.$helper.string.camelToKebab(name), req(key).default);
+      let name = key.match(/\w+/)[0];
+          name = "k-" + Vue.prototype.$helper.string.camelToKebab(name);
+      return Vue.component(name, req(key).default);
     });
 
   }

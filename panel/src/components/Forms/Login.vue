@@ -35,7 +35,8 @@
         icon="check"
         type="submit"
       >
-        {{ $t("login") }} <template v-if="isLoading">
+        {{ $t("login") }}
+        <template v-if="isLoading">
           …
         </template>
       </k-button>

@@ -1,4 +1,3 @@
-import "../helpers/regex.js";
 import clone from "../helpers/clone.js";
 import color from "../helpers/color.js";
 import debounce from "../helpers/debounce.js";
@@ -37,6 +36,9 @@ export default {
         }
       });
     };
+
+    /** RegExp.escape() */
+    RegExp.escape = s => s.replace(new RegExp("[-/\\\\^$*+?.()[\\]{}]", "gu"), '\\$&');
 
     /** global helpers */
     Vue.prototype.$helper = {
