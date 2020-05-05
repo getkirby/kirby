@@ -75,6 +75,30 @@ export const SiteView = () => ({
 });
 
 
+export const SettingsView = () => ({
+  components: {
+    "k-topbar": Topbar
+  },
+  computed: {
+    breadcrumb() {
+      return [
+        { icon: "settings", text: "Settings" }
+      ]
+    },
+  },
+  template: `
+    <div class="k-settings-view">
+      <k-topbar :breadcrumb="breadcrumb" />
+      <k-view>
+        <k-header>
+          Settings
+        </k-header>
+      </k-view>
+    </div>
+  `
+});
+
+
 
 export const UsersView = () => ({
   components: {

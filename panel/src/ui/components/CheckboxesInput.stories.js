@@ -1,5 +1,6 @@
 import CheckboxesInput from "./CheckboxesInput.vue";
 import Padding from "../storybook/Padding.js";
+import Options from "../storybook/Options.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
@@ -16,11 +17,7 @@ export const regular = () => ({
   },
   computed: {
     options() {
-      return [
-        { value: "a", text: "A" },
-        { value: "b", text: "B" },
-        { value: "c", text: "C" }
-      ];
+      return Options(3);
     }
   },
   methods: {
@@ -82,12 +79,11 @@ export const disabled = () => ({
 });
 
 export const columns = () => ({
-  ...regular(),
+  extends: regular(),
   computed: {
     columns() {
       return 3;
-    },
-    options: regular().computed.options
+    }
   },
   template: `
     <div>

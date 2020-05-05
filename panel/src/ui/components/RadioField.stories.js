@@ -1,5 +1,6 @@
 import RadioField from "./RadioField.vue";
 import Padding from "../storybook/Padding.js";
+import Options from "../storybook/Options.js";
 
 export default {
   title: "UI | Form / Field / Radio Field",
@@ -15,11 +16,7 @@ export const regular = () => ({
   },
   computed: {
     options() {
-      return [
-        { value: "a", text: "A" },
-        { value: "b", text: "B" },
-        { value: "c", text: "C" }
-      ];
+      return Options(3);
     }
   },
   template: `
@@ -35,6 +32,15 @@ export const regular = () => ({
       <k-code-block :code="value" />
     </div>
   `,
+});
+
+export const info = () => ({
+  extends: regular(),
+  computed: {
+    options() {
+      return Options(3, true);
+    }
+  }
 });
 
 export const autofocus = () => ({
@@ -89,5 +95,14 @@ export const columns = () => ({
       <k-code-block :code="value" />
     </div>
   `
+});
+
+export const columnsWithInfo = () => ({
+  ...columns(),
+  computed: {
+    options() {
+      return Options(5, true);
+    }
+  }
 });
 

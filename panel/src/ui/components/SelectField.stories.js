@@ -1,5 +1,6 @@
 import SelectField from "./SelectField.vue";
 import Padding from "../storybook/Padding.js";
+import Options from "../storybook/Options.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
@@ -11,13 +12,13 @@ export default {
 export const regular = () => ({
   data() {
     return {
-      value: "b",
-      options: [
-        { value: "a", text: "A" },
-        { value: "b", text: "B" },
-        { value: "c", text: "C" }
-      ]
+      value: 2,
     };
+  },
+  computed: {
+    options() {
+      return Options(10);
+    }
   },
   methods: {
     input: action("input")
@@ -39,7 +40,7 @@ export const regular = () => ({
 });
 
 export const placeholder = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-select-field
@@ -58,7 +59,7 @@ export const placeholder = () => ({
 });
 
 export const autofocus = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-select-field
@@ -78,11 +79,15 @@ export const autofocus = () => ({
 });
 
 export const groups = () => ({
-  ...regular(),
+  extends: regular(),
   data() {
     return {
       value: "b",
-      options: [
+    };
+  },
+  computed: {
+    options() {
+      return [
         {
           group: "Letters",
           options: [
@@ -99,15 +104,16 @@ export const groups = () => ({
             { value: "3", text: "3" }
           ]
         }
-      ]
-    };
+      ];
+    }
   },
   template: `
     <div>
       <k-select-field
         v-model="value"
         :options="options"
-        class="mb-6"
+        class="mb-8"
+        label="Select"
         placeholder="Please select something …"
         @input="input"
       />

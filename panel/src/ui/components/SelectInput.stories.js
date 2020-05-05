@@ -1,5 +1,6 @@
 import SelectInput from "./SelectInput.vue";
 import Padding from "../storybook/Padding.js";
+import Options from "../storybook/Options.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
@@ -11,13 +12,13 @@ export default {
 export const regular = () => ({
   data() {
     return {
-      value: "b",
-      options: [
-        { value: "a", text: "A" },
-        { value: "b", text: "B" },
-        { value: "c", text: "C" }
-      ]
+      value: 2
     };
+  },
+  computed: {
+    options() {
+      return Options(10);
+    }
   },
   methods: {
     input: action("input")
@@ -39,7 +40,7 @@ export const regular = () => ({
 });
 
 export const placeholder = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-headline class="mb-3">Input</k-headline>
@@ -58,7 +59,7 @@ export const placeholder = () => ({
 });
 
 export const autofocus = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-headline class="mb-3">Input</k-headline>
@@ -78,11 +79,10 @@ export const autofocus = () => ({
 });
 
 export const groups = () => ({
-  ...regular(),
-  data() {
-    return {
-      value: "b",
-      options: [
+  extends: regular(),
+  computed: {
+    options() {
+      return [
         {
           group: "Letters",
           options: [
@@ -99,8 +99,8 @@ export const groups = () => ({
             { value: "3", text: "3" }
           ]
         }
-      ]
-    };
+      ];
+    }
   },
   template: `
     <div>

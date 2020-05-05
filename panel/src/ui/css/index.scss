@@ -166,25 +166,6 @@ hr {
   user-select: none;
 }
 
-.k-offline-warning {
-  position: fixed;
-  content: " ";
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: z-index(loader);
-}
-
-.k-offline-warning {
-  background: rgba($color-black, 0.7);
-  content: "offline";
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $color-white;
-}
-
 @keyframes LoadingCursor {
   100% {
     cursor: progress;

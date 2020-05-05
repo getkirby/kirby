@@ -1,6 +1,7 @@
 import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
 import { action } from "@storybook/addon-actions";
 import Padding from "../storybook/Padding.js";
+import Options from "../storybook/Options.js";
 import CheckboxesField from "./CheckboxesField.vue";
 
 <Meta
@@ -22,11 +23,7 @@ import CheckboxesField from "./CheckboxesField.vue";
       },
       computed: {
         options() {
-          return [
-            { value: "a", text: "A" },
-            { value: "b", text: "B" },
-            { value: "c", text: "C" }
-          ];
+          return Options();
         }
       },
       methods: {
@@ -75,11 +72,7 @@ The input event is triggered when the value changes. The new value is passed.
       },
       computed: {
         options() {
-          return [
-            { value: "a", text: "A" },
-            { value: "b", text: "B" },
-            { value: "c", text: "C" }
-          ];
+          return Options();
         }
       },
       methods: {
@@ -109,11 +102,7 @@ The input event is triggered when the value changes. The new value is passed.
       },
       computed: {
         options() {
-          return [
-            { value: "a", text: "A" },
-            { value: "b", text: "B" },
-            { value: "c", text: "C" }
-          ];
+          return Options();
         }
       },
       methods: {
@@ -143,11 +132,7 @@ The input event is triggered when the value changes. The new value is passed.
       },
       computed: {
         options() {
-          return [
-            { value: "a", text: "A" },
-            { value: "b", text: "B" },
-            { value: "c", text: "C" }
-          ];
+          return Options();
         }
       },
       methods: {
@@ -178,18 +163,10 @@ The input event is triggered when the value changes. The new value is passed.
       },
       computed: {
         checkboxOptions() {
-          return [
-            { value: "a", text: "A" },
-            { value: "b", text: "B" },
-            { value: "c", text: "C" }
-          ];
+          return Options();
         },
         radioOptions() {
-          return [
-            { value: "a", text: "A" },
-            { value: "b", text: "B" },
-            { value: "c", text: "C" }
-          ];
+          return Options();
         }
       },
       methods: {

@@ -37,6 +37,18 @@ export const regular = () => ({
   `,
 });
 
+export const info = () => ({
+  extends: regular(),
+  computed: {
+    options() {
+      return [
+        { value: "a", text: "A", info: "Info for option A" },
+        { value: "b", text: "B", info: "Info for option B" },
+        { value: "c", text: "C", info: "Info for option C" }
+      ];
+    }
+  }
+});
 
 export const autofocus = () => ({
   ...regular(),
