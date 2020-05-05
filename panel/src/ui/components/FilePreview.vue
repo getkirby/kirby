@@ -115,14 +115,10 @@ export default {
 .k-file-preview-image {
   height: 100%;
 }
-.k-file-preview-image .k-image {
-  width: 100%;
-}
-
+.k-file-preview-image .k-image,
 .k-file-preview-icon-container {
   width: 100%;
 }
-
 
 /** Details Table **/
 .k-file-preview-details {
