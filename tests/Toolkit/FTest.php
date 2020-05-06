@@ -238,6 +238,16 @@ class FTest extends TestCase
         F::write($file = $this->fixtures . '/test.php', '<?php $fallback = "test"; return "foo";');
         $expected = ['a' => 'b'];
         $this->assertSame($expected, F::load($file, $expected));
+
+        // with data
+        F::write($file = $this->fixtures . '/test.php', '<?php return $variable;');
+        $this->assertSame('foobar', F::load($file, null, ['variable' => 'foobar']));
+
+        // with overwritten $data
+        $this->assertSame('foobar', F::load($file, null, ['variable' => 'foobar', 'data' => []]));
+
+        // with overwritten $file
+        $this->assertSame('foobar', F::load($file, null, ['variable' => 'foobar', 'file' => null]));
     }
 
     public function testLoadOnce()
