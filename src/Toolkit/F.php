@@ -379,6 +379,22 @@ class F
     }
 
     /**
+     * Loads a file using `include_once()` and returns whether loading was successful
+     *
+     * @param string $file
+     * @return bool
+     */
+    public static function loadOnce(string $file): bool
+    {
+        if (is_file($file) === false) {
+            return false;
+        }
+
+        include_once $file;
+        return true;
+    }
+
+    /**
      * Returns the mime type of a file
      *
      * @param string $file

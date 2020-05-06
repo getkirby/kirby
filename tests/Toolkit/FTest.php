@@ -241,6 +241,16 @@ class FTest extends TestCase
         $this->assertEquals($expected, F::load($file, $expected));
     }
 
+    public function testLoadOnce()
+    {
+        // basic behavior
+        F::write($file = $this->fixtures . '/test.php', '<?php return "foo";');
+        $this->assertTrue(F::loadOnce($file));
+
+        // non-existing file
+        $this->assertFalse(F::loadOnce('does-not-exist.php'));
+    }
+
     public function testMove()
     {
         F::write($this->tmp, 'test');
