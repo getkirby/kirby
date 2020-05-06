@@ -30,6 +30,7 @@
         <!-- Options -->
         <div class="k-topbar-options relative flex items-center">
           <slot name="options" />
+
           <template v-if="loading">
             <k-loader class="k-topbar-loader" />
           </template>
@@ -67,8 +68,8 @@ export default {
     }
   },
   methods: {
-    onSearch() {
-      this.$emit("search");
+    onSearch(event) {
+      this.$emit("search", event);
     }
   }
 }

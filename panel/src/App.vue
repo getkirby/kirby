@@ -1,10 +1,15 @@
 <template>
+  <k-inside v-if="inside">
+    <router-view />
+  </k-inside>
+  <k-outside v-else>
+
+  </k-outside>
+
   <div
     v-if="!$store.state.system.info.isBroken"
     :data-dragging="$store.state.drag"
     :data-loading="$store.state.isLoading"
-    :data-topbar="inside"
-    :data-dialog="$store.state.dialog"
     :data-translation="translation"
     :data-translation-default="defaultTranslation"
     class="k-panel"
@@ -13,10 +18,8 @@
       <k-icons />
     </keep-alive>
     <header
-      v-if="inside"
       class="k-panel-header"
     >
-      <k-topbar @register="$refs.registration.open()" />
       <k-search
         v-if="$store.state.search"
         v-bind="$store.state.search"
@@ -81,11 +84,9 @@ export default {
     }
   },
   created() {
-    this.$events.$on("keydown.cmd.shift.f", this.search);
     this.$events.$on("drop", this.drop);
   },
   destroyed() {
-    this.$events.$off("keydown.cmd.shift.f", this.search);
     this.$events.$off("drop", this.drop);
   },
   methods: {

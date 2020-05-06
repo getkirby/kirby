@@ -1004,3 +1004,11 @@ export default {
   }
 };
 </script>
+
+<style>
+.k-icons {
+  position: absolute;
+  width: 0;
+  height: 0;
+}
+</style>

@@ -32,5 +32,9 @@ export default {
       }
     };
 
+    Vue.component("router-view", {
+      template: "<slot />"
+    });
+
   }
 };

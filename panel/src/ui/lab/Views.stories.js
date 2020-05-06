@@ -1,5 +1,4 @@
 import { action } from "@storybook/addon-actions";
-import Topbar from "../storybook/Topbar.vue";
 import Pages from "../storybook/Pages.js";
 import Users from "../storybook/Users.js";
 
@@ -8,9 +7,6 @@ export default {
 };
 
 export const SiteView = () => ({
-  components: {
-    "k-topbar": Topbar
-  },
   computed: {
     breadcrumb() {
       return [
@@ -56,9 +52,12 @@ export const SiteView = () => ({
     onEdit: action("edit")
   },
   template: `
-    <div class="k-site-view">
-      <k-topbar :breadcrumb="breadcrumb" />
-      <k-view>
+    <k-inside
+      :breadcrumb="breadcrumb"
+      :registered="true"
+      view="site"
+    >
+      <k-view class="k-site-view">
         <k-header
           :editable="true"
           @edit="onEdit"
@@ -70,15 +69,12 @@ export const SiteView = () => ({
         </k-header>
         <k-sections :columns="columns" />
       </k-view>
-    </div>
+    </k-inside>
   `
 });
 
 
 export const SettingsView = () => ({
-  components: {
-    "k-topbar": Topbar
-  },
   computed: {
     breadcrumb() {
       return [
@@ -87,23 +83,23 @@ export const SettingsView = () => ({
     },
   },
   template: `
-    <div class="k-settings-view">
-      <k-topbar :breadcrumb="breadcrumb" />
-      <k-view>
+    <k-inside
+      :breadcrumb="breadcrumb"
+      :registered="true"
+      view="settings"
+    >
+      <k-view class="k-settings-view">
         <k-header>
           Settings
         </k-header>
       </k-view>
-    </div>
+    </k-inside>
   `
 });
 
 
 
 export const UsersView = () => ({
-  components: {
-    "k-topbar": Topbar
-  },
   data() {
     return {
       role: null,
@@ -156,9 +152,13 @@ export const UsersView = () => ({
     },
   },
   template: `
-    <div class="k-users-view">
-      <k-topbar :breadcrumb="breadcrumb" />
-      <k-view>
+    <k-inside
+      :breadcrumb="breadcrumb"
+      :registered="true"
+      search="users"
+      view="users"
+    >
+      <k-view class="k-users-view">
         <k-header>
           Users
           <k-button-group slot="left">
@@ -178,7 +178,7 @@ export const UsersView = () => ({
           layout="cardlets"
         />
       </k-view>
-    </div>
+    </k-inside>
   `
 });
 

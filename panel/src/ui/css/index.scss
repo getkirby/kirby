@@ -101,35 +101,15 @@ hr {
   border-color: $color-border;
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
+[data-loading] {
+  cursor: progress;
 }
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
+[data-loading] > * {
+  pointer-events: none;
 }
-
-.k-panel {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: $color-background;
-}
-
-.k-panel[data-loading] {
-  animation: LoadingCursor 0.5s;
-}
-
-.k-panel-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: z-index(navigation);
+[data-loading],
+[data-dragging] {
+  user-select: none;
 }
 
 .k-panel .k-form-buttons {
@@ -138,38 +118,6 @@ hr {
   left: 0;
   right: 0;
   z-index: z-index(navigation);
-}
-
-.k-panel-view {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding-bottom: 6rem;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  transform: translate3d(0, 0, 0);
-}
-
-.k-panel[data-dialog] .k-panel-view {
-  overflow: hidden;
-  transform: none;
-}
-
-.k-panel[data-topbar] .k-panel-view {
-  top: 2.5rem;
-}
-
-.k-panel[data-loading]::after,
-.k-panel[data-dragging] {
-  user-select: none;
-}
-
-@keyframes LoadingCursor {
-  100% {
-    cursor: progress;
-  }
 }
 
 @keyframes Spin {
@@ -187,22 +135,5 @@ hr {
   white-space: nowrap;
   width: 1px;
 }
-
-.k-icons {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
-
-[data-invalid] {
-  border: 1px solid $color-negative-outline;
-  box-shadow: $color-negative-outline 0 0 3px 2px;
-}
-
-[data-invalid]:focus-within {
-  border: $field-input-invalid-focus-border !important;
-  box-shadow: $color-negative-outline 0 0 0 2px !important;
-}
-
 
 @import "utilities.scss";
