@@ -458,6 +458,16 @@ class FieldMethodsTest extends TestCase
         $this->assertEquals(3, $this->field('abc')->length());
     }
 
+    public function testCallback()
+    {
+        $field  = $this->field('Hello world');
+        $result = $field->callback(function ($field) {
+            $field->value = 'foo';
+            return $field;
+        });
+        $this->assertSame('foo', $result->toString());
+    }
+
     public function testEscape()
     {
         $this->assertEquals('&lt;script&gt;alert(&quot;hello&quot;)&lt;/script&gt;', $this->field('<script>alert("hello")</script>')->escape());
