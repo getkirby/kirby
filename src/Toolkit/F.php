@@ -357,7 +357,8 @@ class F
     }
 
     /**
-     * Loads a file and returns the result
+     * Loads a file and returns the result or `false` if the
+     * file to load does not exist
      *
      * @param string $file
      * @param mixed $fallback
@@ -365,17 +366,31 @@ class F
      */
     public static function load(string $file, $fallback = null)
     {
-        if (file_exists($file) === false) {
+        if (is_file($file) === false) {
             return $fallback;
         }
 
-        $result = include $file;
+        // we use the loadIsolated() method here to prevent the included
+        // file from overwriting our $fallback in this variable scope; see
+        // https://www.php.net/manual/en/function.include.php#example-124
+        $result = static::loadIsolated($file);
 
         if ($fallback !== null && gettype($result) !== gettype($fallback)) {
             return $fallback;
         }
 
         return $result;
+    }
+
+    /**
+     * Loads a file with as little as possible in the variable scope
+     *
+     * @param string $file
+     * @return mixed
+     */
+    protected static function loadIsolated(string $file)
+    {
+        return include $file;
     }
 
     /**

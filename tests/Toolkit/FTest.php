@@ -222,23 +222,22 @@ class FTest extends TestCase
 
     public function testLoad()
     {
-        F::write($file = $this->fixtures . '/test.php', '<?php return "foo"; ?>');
+        // basic behavior
+        F::write($file = $this->fixtures . '/test.php', '<?php return "foo";');
+        $this->assertSame('foo', F::load($file));
 
-        $this->assertEquals('foo', F::load($file));
-    }
+        // non-existing file
+        $this->assertSame('foo', F::load('does-not-exist.php', 'foo'));
 
-    public function testLoadWithFallback()
-    {
-        $this->assertEquals('foo', F::load('does-not-exist.php', 'foo'));
-    }
-
-    public function testLoadWithTypeMismatch()
-    {
-        F::write($file = $this->fixtures . '/test.php', '<?php return "foo"; ?>');
-
+        // type mismatch
+        F::write($file = $this->fixtures . '/test.php', '<?php return "foo";');
         $expected = ['a' => 'b'];
+        $this->assertSame($expected, F::load($file, $expected));
 
-        $this->assertEquals($expected, F::load($file, $expected));
+        // type mismatch with overwritten $fallback
+        F::write($file = $this->fixtures . '/test.php', '<?php $fallback = "test"; return "foo";');
+        $expected = ['a' => 'b'];
+        $this->assertSame($expected, F::load($file, $expected));
     }
 
     public function testLoadOnce()
