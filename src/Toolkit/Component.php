@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use ArgumentCountError;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use TypeError;
 
@@ -224,8 +225,12 @@ class Component
         $definition = static::$types[$type];
 
         // load definitions from string
-        if (is_array($definition) === false) {
-            static::$types[$type] = $definition = include $definition;
+        if (is_string($definition) === true) {
+            if (is_file($definition) !== true) {
+                throw new Exception('Component definition ' . $definition . ' does not exist');
+            }
+
+            static::$types[$type] = $definition = F::load($definition);
         }
 
         return $definition;
