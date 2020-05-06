@@ -287,6 +287,7 @@ return function (App $app) {
 
         /**
          * Applies the callback function to the field
+         * @since 3.4.0
          *
          * @param \Kirby\Cms\Field $field
          * @param Closure $callback
