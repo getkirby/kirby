@@ -288,6 +288,16 @@ return function (App $app) {
         // manipulators
 
         /**
+         * Applies the callback function to the field
+         *
+         * @param \Kirby\Cms\Field $field
+         * @param Closure $callback
+         */
+        'callback' => function (Field $field, Closure $callback) {
+            return $callback($field);
+        },
+
+        /**
          * Escapes the field value to be safely used in HTML
          * templates without the risk of XSS attacks
          *
