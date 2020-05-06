@@ -459,7 +459,8 @@ class Session
                 'lifetime' => $this->tokenExpiry,
                 'path'     => Url::index(['host' => null, 'trailingSlash' => true]),
                 'secure'   => Url::scheme() === 'https',
-                'httpOnly' => true
+                'httpOnly' => true,
+                'sameSite' => 'Lax'
             ]);
         } else {
             $this->needsRetransmission = true;
