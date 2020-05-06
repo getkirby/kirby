@@ -289,8 +289,14 @@ class FTest extends TestCase
     {
         F::write($this->tmp, 'test');
 
-        $this->assertEquals('4 B', F::niceSize($this->tmp));
-        $this->assertEquals('4 B', F::niceSize(4));
+        $this->assertSame('4 B', F::niceSize($this->tmp));
+        $this->assertSame('4 B', F::niceSize(4));
+        $this->assertSame('4 KB', F::niceSize(4096));
+        $this->assertSame('4 KB', F::niceSize(4100));
+        $this->assertSame('4.1 KB', F::niceSize(4200));
+        $this->assertSame('4 MB', F::niceSize(4194304));
+        $this->assertSame('4.29 MB', F::niceSize(4500000));
+        $this->assertSame('4 GB', F::niceSize(4294967296));
     }
 
     public function testRead()
