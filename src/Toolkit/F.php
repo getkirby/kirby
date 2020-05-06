@@ -362,9 +362,10 @@ class F
      *
      * @param string $file
      * @param mixed $fallback
+     * @param array $data Optional array of variables to extract in the variable scope
      * @return mixed
      */
-    public static function load(string $file, $fallback = null)
+    public static function load(string $file, $fallback = null, array $data = [])
     {
         if (is_file($file) === false) {
             return $fallback;
@@ -373,7 +374,7 @@ class F
         // we use the loadIsolated() method here to prevent the included
         // file from overwriting our $fallback in this variable scope; see
         // https://www.php.net/manual/en/function.include.php#example-124
-        $result = static::loadIsolated($file);
+        $result = static::loadIsolated($file, $data);
 
         if ($fallback !== null && gettype($result) !== gettype($fallback)) {
             return $fallback;
@@ -386,11 +387,17 @@ class F
      * Loads a file with as little as possible in the variable scope
      *
      * @param string $file
+     * @param array $data Optional array of variables to extract in the variable scope
      * @return mixed
      */
-    protected static function loadIsolated(string $file)
+    protected static function loadIsolated(string $file, array $data = [])
     {
-        return include $file;
+        // extract the $data variables in this scope to be accessed by the included file;
+        // protect $file against being overwritten by a $data variable
+        $___file___ = $file;
+        extract($data);
+
+        return include $___file___;
     }
 
     /**
