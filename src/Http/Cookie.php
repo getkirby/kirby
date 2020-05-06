@@ -35,18 +35,19 @@ class Cookie
      * @param string $key The name of the cookie
      * @param string $value The cookie content
      * @param array $options Array of options:
-     *                       lifetime, path, domain, secure, httpOnly
+     *                       lifetime, path, domain, secure, httpOnly, sameSite
      * @return bool true: cookie was created,
      *              false: cookie creation failed
      */
     public static function set(string $key, string $value, array $options = []): bool
     {
         // extract options
-        $lifetime = $options['lifetime'] ?? 0;
+        $expires  = static::lifetime($options['lifetime'] ?? 0);
         $path     = $options['path']     ?? '/';
         $domain   = $options['domain']   ?? null;
         $secure   = $options['secure']   ?? false;
-        $httpOnly = $options['httpOnly'] ?? true;
+        $httponly = $options['httpOnly'] ?? true;
+        $samesite = $options['sameSite'] ?? 'Lax';
 
         // add an HMAC signature of the value
         $value = static::hmac($value) . '+' . $value;
@@ -55,7 +56,14 @@ class Cookie
         $_COOKIE[$key] = $value;
 
         // store the cookie
-        return setcookie($key, $value, static::lifetime($lifetime), $path, $domain, $secure, $httpOnly);
+        // the array syntax is only supported by PHP 7.3+
+        // TODO: Always use the first alternative when support for PHP 7.2 is dropped
+        if (version_compare(PHP_VERSION, '7.3.0', '>=') === true) {
+            $options = compact('expires', 'path', 'domain', 'secure', 'httponly', 'samesite');
+            return setcookie($key, $value, $options);
+        } else {
+            return setcookie($key, $value, $expires, $path, $domain, $secure, $httponly);
+        }
     }
 
     /**
