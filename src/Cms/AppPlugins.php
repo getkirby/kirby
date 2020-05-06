@@ -546,7 +546,7 @@ trait AppPlugins
             $class = str_replace(['.', '-', '_'], '', $name) . 'Page';
 
             // load the model class
-            include_once $model;
+            F::loadOnce($model);
 
             if (class_exists($class) === true) {
                 $models[$name] = $class;
@@ -777,7 +777,7 @@ trait AppPlugins
                 continue;
             }
 
-            include_once $entry;
+            F::loadOnce($entry);
 
             $loaded[] = $dir;
         }
