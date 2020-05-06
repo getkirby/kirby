@@ -2,10 +2,8 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Field;
-use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
-use Kirby\Cms\Page;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Url;
 use Kirby\Data\Json;
@@ -354,18 +352,6 @@ return function (App $app) {
         },
 
         /**
-         * Converts all line breaks in the field content to `<br>` tags.
-         * @since 3.3.0
-         *
-         * @param \Kirby\Cms\Field $field
-         * @return \Kirby\Cms\Field
-         */
-        'nl2br' => function (Field $field) {
-            $field->value = nl2br($field->value, false);
-            return $field;
-        },
-
-        /**
          * Converts the field content from Markdown/Kirbytext to valid HTML
          *
          * @param \Kirby\Cms\Field $field
@@ -431,6 +417,18 @@ return function (App $app) {
          */
         'markdown' => function (Field $field) use ($app) {
             $field->value = $app->markdown($field->value);
+            return $field;
+        },
+
+        /**
+         * Converts all line breaks in the field content to `<br>` tags.
+         * @since 3.3.0
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
+         */
+        'nl2br' => function (Field $field) {
+            $field->value = nl2br($field->value, false);
             return $field;
         },
 
