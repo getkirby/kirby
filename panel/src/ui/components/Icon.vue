@@ -103,7 +103,7 @@ export default {
 .k-icon svg * {
   fill: currentColor;
 }
-.k-icon[data-size="small"] svg {
+.k-icon[data-size="small"] svg, {
   width: 14px;
   height: 14px;
 }
@@ -120,6 +120,15 @@ export default {
   line-height: 1;
   font-style: normal;
   font-size: 1rem;
+}
+.k-icon[data-size="small"] .k-icon-emoji {
+  font-size: 14px;
+}
+.k-icon[data-size="medium"] .k-icon-emoji {
+  font-size: 2rem;
+}
+.k-icon[data-size="large"] .k-icon-emoji {
+  font-size: 3rem;
 }
 
 /* fix emoji alignment on high-res screens */

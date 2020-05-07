@@ -198,14 +198,57 @@ The icon component can be used to display any icon from our own icon set.
   <Story name="Emoji">
     {{
       template: `
-        <k-auto-grid style="--min: 3rem">
-          <k-icon type="🤯" />
-          <k-icon type="😱" />
-          <k-icon type="❤️" />
-          <k-icon type="🎉" />
-          <k-icon type="🚀" />
-          <k-icon type="🤘" />
-        </k-auto-grid>
+        <div>
+          <k-auto-grid style="--min: 3rem" class="mb-8">
+            <k-icon type="🤯" />
+            <k-icon type="😱" />
+            <k-icon type="❤️" />
+            <k-icon type="🎉" />
+            <k-icon type="🚀" />
+            <k-icon type="🤘" />
+          </k-auto-grid>
+          <k-auto-grid style="--gap: 1.5rem" class="font-mono text-xs">
+            <figure class="flex items-center bg-white p-3">
+              <k-icon
+                class="mr-3"
+                size="small"
+                type="🌏"
+              />
+              <figcaption>
+                small
+              </figcaption>
+            </figure>
+            <figure class="flex items-center bg-white p-3">
+              <k-icon
+                class="mr-3"
+                type="🌏"
+              />
+              <figcaption>
+                regular (default)
+              </figcaption>
+            </figure>
+            <figure class="flex items-center bg-white p-3">
+              <k-icon
+                class="mr-3"
+                size="medium"
+                type="🌏"
+              />
+              <figcaption>
+                medium
+              </figcaption>
+            </figure>
+            <figure class="flex items-center bg-white p-3">
+              <k-icon
+                class="mr-3"
+                size="large"
+                type="🌏"
+              />
+              <figcaption>
+                large
+              </figcaption>
+            </figure>
+          </k-auto-grid>
+        </div>
       `,
     }}
   </Story>
