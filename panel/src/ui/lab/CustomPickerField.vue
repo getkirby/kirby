@@ -30,7 +30,7 @@ export default {
       let items  = data.map(item);
 
       if (search) {
-        items = items.filter(item => item.title.includes(search.toLowerCase()));
+        items = items.filter(item => item.title.toLowerCase().includes(search.toLowerCase()));
       }
 
       const offset = (page - 1) * limit;
