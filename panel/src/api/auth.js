@@ -5,13 +5,13 @@ export default {
     return api.get("auth");
   },
   async login(user) {
-    let data = {
+    const data = {
       long: user.remember || false,
       email: user.email,
       password: user.password
     };
 
-    let auth = await api.post("auth/login", data);
+    const auth = await api.post("auth/login", data);
     return auth.user;
   },
   async logout() {

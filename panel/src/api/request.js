@@ -30,8 +30,8 @@ export default {
     this.running++;
 
     // fetch the resquest's response
-    let response = await fetch(api.config.endpoint + "/" + path, options);
-    let text     = await response.text();
+    const response = await fetch(api.config.endpoint + "/" + path, options);
+    const text     = await response.text();
 
     // try to parse JSON
     let json;
@@ -46,16 +46,16 @@ export default {
         throw json;
       }
 
-      let response = json;
+      let data = json;
 
       if (json.data && json.type && json.type === "model") {
-        response = json.data;
+        data = json.data;
       }
 
       this.running--;
       api.config.onComplete(id);
       api.config.onSuccess(json);
-      return response;
+      return data;
 
     } catch (e) {
       this.running--;
@@ -69,17 +69,8 @@ export default {
       path +=
         "?" +
         Object.keys(query)
-          .map(key => {
-            const value = query[key];
-
-            if (value !== undefined && value !== null) {
-              return key + "=" + value;
-            } else {
-              return null;
-            }
-
-          })
-          .filter(value => value !== null)
+          .filter(key => query[key] !== undefined && query[key] !== null)
+          .map(key => key + "=" + query[key])
           .join("&");
     }
 
