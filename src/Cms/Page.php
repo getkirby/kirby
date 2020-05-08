@@ -1467,7 +1467,8 @@ class Page extends ModelWithContent
      */
     protected function token(): string
     {
-        return sha1($this->id() . $this->template());
+        $salt = $this->kirby()->option('content.salt', $this->root());
+        return sha1($this->id() . $this->template() . $salt);
     }
 
     /**
