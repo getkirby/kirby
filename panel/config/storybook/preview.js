@@ -10,6 +10,7 @@ Vue.use(Ui);
 import "@/ui/css/index.scss";
 import "./theme.css";
 import "@/ui/index.js";
+import "@/ui/css/utilities.scss";
 
 addParameters({
   docs: {

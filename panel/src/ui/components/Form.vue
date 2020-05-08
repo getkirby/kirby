@@ -1,10 +1,10 @@
 <template>
   <form
     ref="form"
+    :novalidate="novalidate"
     method="POST"
     autocomplete="off"
     class="k-form"
-    novalidate
     @submit.prevent="onSubmit"
   >
     <slot name="header" />

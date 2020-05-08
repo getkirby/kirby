@@ -1,11 +1,4 @@
 <template>
-  <k-inside v-if="inside">
-    <router-view />
-  </k-inside>
-  <k-outside v-else>
-
-  </k-outside>
-
   <div
     v-if="!$store.state.system.info.isBroken"
     :data-dragging="$store.state.drag"

@@ -2,10 +2,13 @@
 @import "./utilities/border.radius.scss";
 @import "./utilities/cursor.scss";
 @import "./utilities/display.scss";
-@import "./utilities/flex.scss";
+@import "./utilities/flex.grow.scss";
+@import "./utilities/flex.shrink.scss";
 @import "./utilities/font.family.scss";
 @import "./utilities/font.weight.scss";
 @import "./utilities/grid.gap.scss";
+@import "./utilities/items.scss";
+@import "./utilities/justify.scss";
 @import "./utilities/margin.scss";
 @import "./utilities/object.fit.scss";
 @import "./utilities/overflow.scss";

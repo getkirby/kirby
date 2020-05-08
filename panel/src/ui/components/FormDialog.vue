@@ -1,5 +1,5 @@
 <template>
-  <k-dialog
+  <k-abstract-dialog
     ref="dialog"
     v-bind="$props"
     v-on="listeners"
@@ -12,14 +12,14 @@
       @input="onInput"
       @submit="onSubmit"
     />
-  </k-dialog>
+  </k-abstract-dialog>
 </template>
 
 <script>
-import DialogMixin from "../mixins/dialog.js";
+import Dialog from "./Dialog.vue";
 
 export default {
-  mixins: [DialogMixin],
+  extends: Dialog,
   props: {
     fields: {
       type: [Array, Object],
@@ -29,21 +29,15 @@ export default {
     },
     novalidate: {
       type: Boolean,
-      default: true
+      default: false
     },
     size: {
-      type: String,
-      default: "medium",
+      default: "medium"
     },
     submitButton: {
-      type: [String, Boolean],
       default() {
-        return this.$t('save');
+        return this.$t("save");
       }
-    },
-    theme: {
-      type: String,
-      default: "positive",
     },
     value: {
       type: Object,
@@ -56,7 +50,9 @@ export default {
     return {
       listeners: {
         ...this.$listeners,
-        submit: this.onSubmit
+        submit: () => {
+          this.$refs.form.submit();
+        }
       }
     }
   },

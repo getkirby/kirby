@@ -1,85 +1,74 @@
 <template>
-  <portal v-if="isOpen">
-    <div
-      :dir="$direction"
+  <k-overlay ref="overlay" :visible="visible">
+    <k-backdrop
       :data-size="size"
-      class="k-dialog fixed flex items-center justify-center bg-backdrop"
+      class="k-dialog flex items-center justify-center"
       @click="cancel"
     >
-      <div
-        ref="box"
+      <k-modal
+        ref="modal"
+        :cancel-button="cancelButton"
+        :submit-button="submitButton"
         class="k-dialog-box relative m-6 bg-light rounded-sm shadow-md"
-        @click.stop
       >
-        <k-notification
-          v-if="notification"
-          v-bind="notification"
-          class="k-dialog-notification px-6"
-          @close="notification = null"
-        />
-        <header
-          v-if="$slots['header']"
-          class="k-dialog-header"
-        >
-          <slot name="header" />
-        </header>
-        <div class="k-dialog-body p-6">
-          <slot>
-            <k-text v-html="text" />
+        <template slot-scope="{
+          cancelButton,
+          closeNotification,
+          notification,
+          submitButton
+        }">
+          <k-notification
+            v-if="notification"
+            v-bind="notification"
+            class="k-dialog-notification"
+            @close="closeNotification()"
+          />
+          <div class="k-dialog-body p-6">
+            <slot>
+              <k-text>{{ text }}</k-text>
+            </slot>
+          </div>
+          <slot
+            name="footer"
+            :cancel="cancel"
+            :cancelButton="cancelButton"
+            :submitButton="submitButton"
+            :submit="submit"
+          >
+            <footer
+              v-if="cancelButton || submitButton"
+              class="k-dialog-footer flex justify-between"
+            >
+              <k-button
+                v-if="cancelButton"
+                v-bind="cancelButton"
+                class="k-dialog-cancel-button mr-auto py-3 px-6"
+                @click="cancel"
+              >
+                {{ cancelButton.text }}
+              </k-button>
+              <k-button
+                v-if="submitButton"
+                v-bind="submitButton"
+                class="k-dialog-submit-button ml-auto py-3 px-6"
+                @click="submit"
+              >
+                {{ submitButton.text }}
+              </k-button>
+            </footer>
           </slot>
-        </div>
-        <footer
-          v-if="$slots['footer'] || cancelButton || submitButton"
-          class="k-dialog-footer"
-        >
-          <slot name="footer">
-            <k-button-group>
-              <span>
-                <k-button
-                  v-if="cancelButton"
-                  icon="cancel"
-                  class="k-dialog-button-cancel"
-                  @click="cancel"
-                >
-                  {{ cancelButton }}
-                </k-button>
-              </span>
-              <span>
-                <k-button
-                  v-if="submitButtonConfig"
-                  :icon="icon"
-                  :theme="theme"
-                  class="k-dialog-button-submit"
-                  @click="submit"
-                >
-                  {{ submitButton }}
-                </k-button>
-              </span>
-            </k-button-group>
-          </slot>
-        </footer>
-      </div>
-    </div>
-  </portal>
+        </template>
+      </k-modal>
+    </k-backdrop>
+  </k-overlay>
 </template>
 
 <script>
 export default {
-  inheritAttrs: false,
   props: {
-    autofocus: {
-      type: Boolean,
-      default: true
-    },
     cancelButton: {
-      type: [String, Boolean],
-      default() {
-        return this.$t("cancel");
-      },
-    },
-    icon: {
-      type: String,
-      default: "check"
+      type: [Boolean, Object, String],
+      default: true
     },
     /**
      * Available options: `small`|`default`|`medium`|`large`
@@ -89,151 +78,46 @@ export default {
       default: "default"
     },
     submitButton: {
-      type: [String, Boolean],
-      default() {
-        return this.$t("confirm");
-      },
+      type: [Boolean, Object, String],
+      default: true
     },
-    text: String,
-    theme: String,
-    visible: Boolean
-  },
-  data() {
-    return {
-      notification: null,
-      isOpen: this.visible,
-      scrollTop: 0
-    };
-  },
-  computed: {
-    submitButtonConfig() {
-      if (this.$attrs["button"] !== undefined) {
-        return this.$attrs["button"];
-      }
-
-      if (this.submitButton !== undefined) {
-        return this.submitButton;
-      }
-
-      return true;
-    }
-  },
-  created() {
-    this.$events.$on("keydown.esc", this.close, false);
-  },
-  destroyed() {
-    this.$events.$off("keydown.esc", this.close, false);
-    document.removeEventListener("focus", this.focustrap);
-  },
-  mounted() {
-    if (this.visible === true) {
-      this.$emit("open");
+    text: {
+      type: String
+    },
+    visible: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {
-    storeScrollPosition() {
-      const view = document.querySelector(".k-panel-view");
-
-      if (view && view.scrollTop) {
-        this.scrollTop = view.scrollTop;
-      } else {
-        this.scrollTop = 0;
-      }
-    },
-    restoreScrollPosition() {
-      const view = document.querySelector(".k-panel-view");
-
-      if (view && view.scrollTop) {
-        view.scrollTop = this.scrollTop;
-      }
-    },
-    open() {
-      this.storeScrollPosition();
-      this.$store.dispatch("dialog", true);
-      this.notification = null;
-      this.isOpen = true;
-      this.$emit("open");
-      this.$events.$on("keydown.esc", this.close);
-
-      setTimeout(() => {
-        if (this.$refs.box) {
-          // focus on the first useful element
-          this.focus();
-
-          // blur trap
-          document.body.addEventListener("focus", this.focustrap, true);
-        }
-      }, 0);
-    },
-    close() {
-      this.notification = null;
-      this.isOpen = false;
-      this.$emit("close");
-      this.$events.$off("keydown.esc", this.close);
-      this.$store.dispatch("dialog", null);
-      this.restoreScrollPosition();
-    },
     cancel() {
       this.$emit("cancel");
       this.close();
     },
-    focus() {
-      const box = this.$refs.box;
-
-      if (box && box.querySelector) {
-        let target = box.querySelector(
-          "[autofocus], [data-autofocus], input, textarea, select, .k-dialog-button-submit"
-        );
-
-        if (!target) {
-          target = box.querySelector(".k-dialog-button-cancel");
-        }
-
-        if (this.autofocus && target) {
-          target.focus();
-          return;
-        }
-      }
-    },
-    focustrap(e) {
-      if (this.$refs.box && this.$refs.box.contains(e.target) === false) {
-        this.focus();
-      }
+    close() {
+      this.$emit("close");
+      this.$refs.overlay.close();
     },
     error(message) {
-      this.notification = {
-        message: message,
-        type: "error"
-      };
+      this.$refs.modal.error(message);
+    },
+    focus() {
+      this.$refs.modal.focus();
+    },
+    open() {
+      this.$refs.overlay.open();
     },
     submit() {
       this.$emit("submit");
     },
     success(message) {
-      this.notification = {
-        message: message,
-        type: "success"
-      };
+      this.$refs.modal.success(message);
     }
   }
 };
 </script>
 
 <style lang="scss">
-.k-dialog {
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border: 0;
-
-  width: 100%;
-  height: 100%;
-
-  z-index: z-index(dialog);
-  transform: translate3d(0, 0, 0);
-}
-
 .k-dialog-box {
   width: 100%;
   line-height: 1;
@@ -267,72 +151,33 @@ export default {
   }
 }
 
-.k-dialog .k-dialog-notification {
-  border-top-left-radius: $rounded-sm;
-  border-top-right-radius: $rounded-sm;
-  margin-top: -3px;
-}
-
-.k-dialog-body {
-  overflow-y: auto;
-  overflow-x: hidden;
-  flex-grow: 1;
-}
-
-.k-dialog-body .k-fieldset {
-  padding-bottom: 0.5rem;
-}
-
+/** Sections **/
 .k-dialog-header,
 .k-dialog-footer {
   padding: 0;
   line-height: 1;
   flex-shrink: 0;
-}
-.k-dialog-header {
-  border-bottom: 1px solid lighten($color-border, 8%);
+  border-color: lighten($color-border, 8%);
   height: 2.5rem;
 }
-
+.k-dialog-body {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex-grow: 1;
+}
+.k-dialog-header {
+  border-bottom-width: 1px;
+}
 .k-dialog-footer {
-  border-top: 1px solid lighten($color-border, 8%);
+  border-top-width: 1px;
 }
 
-.k-dialog-footer .k-button-group {
-  display: flex;
-  margin: 0;
-  justify-content: space-between;
-
-  .k-button {
-    padding: 0.625rem 1rem;
-    height: 2.5rem;
-  }
-
-  .k-button:first-child {
-    text-align: left;
-    padding-left: 1.5rem;
-  }
-
-  .k-button:last-child {
-    text-align: right;
-    padding-right: 1.5rem;
-  }
-}
-
-/** Pagination **/
-.k-dialog-pagination {
-  margin-bottom: -1.5rem;
-}
-
-/** Dialog search field **/
-.k-dialog-search {
-  margin-bottom: .75rem;
-}
-
-.k-dialog-search.k-input {
-  background: rgba(#000, .075);
-  padding: 0 1rem;
-  height: 36px;
-  border-radius: $rounded-sm;
+/** Notification **/
+.k-dialog .k-dialog-notification {
+  border-top-left-radius: $rounded-sm;
+  border-top-right-radius: $rounded-sm;
+  margin-top: -3px;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 </style>

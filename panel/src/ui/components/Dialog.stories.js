@@ -3,7 +3,7 @@ import Padding from "../storybook/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "UI | Dialog / Base Dialog",
+  title: "UI | Dialog / Dialog",
   component: Dialog,
   decorators: [Padding],
 };
@@ -31,8 +31,125 @@ export const regular = () => ({
   `,
 });
 
+export const customSubmitButton = () => ({
+  extends: regular(),
+  template: `
+    <div>
+      <k-button icon="open" @click="$refs.dialog.open()">Open Dialog</k-button>
+      <k-dialog
+        ref="dialog"
+        :submitButton="{
+          icon: 'trash',
+          text: 'Delete',
+          color: 'red'
+        }"
+        text="Delete this?"
+        @cancel="cancel"
+        @close="close"
+        @open="open"
+        @submit="submit"
+      />
+    </div>
+  `,
+});
+
+export const legacySubmitButton = () => ({
+  extends: regular(),
+  template: `
+    <div>
+      <k-button icon="open" @click="$refs.dialog.open()">Open Dialog</k-button>
+      <k-dialog
+        ref="dialog"
+        button="Delete"
+        theme="negative"
+        text="Delete this?"
+        @cancel="cancel"
+        @close="close"
+        @open="open"
+        @submit="submit"
+      />
+    </div>
+  `,
+});
+
+export const noSubmitButton = () => ({
+  extends: regular(),
+  template: `
+    <div>
+      <k-button icon="open" @click="$refs.dialog.open()">Open Dialog</k-button>
+      <k-dialog
+        ref="dialog"
+        :submit-button="false"
+        text="Delete this?"
+        @cancel="cancel"
+        @close="close"
+        @open="open"
+        @submit="submit"
+      />
+    </div>
+  `,
+});
+
+export const customCancelButton = () => ({
+  extends: regular(),
+  template: `
+    <div>
+      <k-button icon="open" @click="$refs.dialog.open()">Open Dialog</k-button>
+      <k-dialog
+        ref="dialog"
+        :cancelButton="{
+          icon: 'alert',
+          text: 'Nope',
+          color: 'purple'
+        }"
+        text="Delete this?"
+        @cancel="cancel"
+        @close="close"
+        @open="open"
+        @submit="submit"
+      />
+    </div>
+  `,
+});
+
+export const legacyCancelButton = () => ({
+  extends: regular(),
+  template: `
+    <div>
+      <k-button icon="open" @click="$refs.dialog.open()">Open Dialog</k-button>
+      <k-dialog
+        ref="dialog"
+        cancel="Nope"
+        text="Delete this?"
+        @cancel="cancel"
+        @close="close"
+        @open="open"
+        @submit="submit"
+      />
+    </div>
+  `,
+});
+
+export const noCancelButton = () => ({
+  extends: regular(),
+  template: `
+    <div>
+      <k-button icon="open" @click="$refs.dialog.open()">Open Dialog</k-button>
+      <k-dialog
+        ref="dialog"
+        :cancel-button="false"
+        text="Delete this?"
+        @cancel="cancel"
+        @close="close"
+        @open="open"
+        @submit="submit"
+      />
+    </div>
+  `,
+});
+
 export const open = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-button icon="open" @click="$refs.dialog.open()">Open Dialog</k-button>
@@ -50,10 +167,29 @@ export const open = () => ({
   `,
 });
 
+export const loading = () => ({
+  extends: regular(),
+  template: `
+    <div>
+      <k-button icon="open" @click="$refs.dialog.open()">Open Dialog</k-button>
+
+      <k-dialog
+        ref="dialog"
+        :loading="true"
+        :visible="true"
+        text="This is a dialog while loading"
+        @cancel="cancel"
+        @close="close"
+        @open="open"
+        @submit="submit"
+      />
+    </div>
+  `,
+});
 
 export const errorNotification = () => ({
+  extends: regular(),
   methods: {
-    ...regular().methods,
     submit() {
       action("submit");
       this.$refs.dialog.error("Something went wrong");
@@ -75,8 +211,8 @@ export const errorNotification = () => ({
 });
 
 export const successNotification = () => ({
+  extends: regular(),
   methods: {
-    ...regular().methods,
     submit() {
       action("submit");
       this.$refs.dialog.success("Yayayay!");
@@ -93,6 +229,42 @@ export const successNotification = () => ({
         @open="open"
         @submit="submit"
       />
+    </div>
+  `,
+});
+
+export const customFooter = () => ({
+  extends: regular(),
+  template: `
+    <div>
+      <k-button icon="open" @click="$refs.dialog.open()">Open Dialog</k-button>
+      <k-dialog
+        ref="dialog"
+        text="Click confirm to raise a success message"
+        @cancel="cancel"
+        @close="close"
+        @open="open"
+        @submit="submit"
+      >
+        <footer
+          slot="footer"
+          class="k-dialog-footer flex items-center justify-between bg-black text-white"
+          slot-scope="{ cancel, cancelButton, submit, submitButton }"
+        >
+          <k-button
+            v-if="submitButton"
+            v-bind="submitButton"
+            class="px-6 py-3 mr-auto"
+            @click="submit"
+          />
+          <k-button
+            v-if="cancelButton"
+            v-bind="cancelButton"
+            class="px-6 py-3 ml-auto"
+            @click="cancel"
+          />
+        </footer>
+      </k-dialog>
     </div>
   `,
 });
