@@ -103,7 +103,7 @@ class F
         ],
     ];
 
-    public static $units = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+    public static $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
     /**
      * Appends new content to an existing file
@@ -536,7 +536,7 @@ class F
 
         // avoid errors for invalid sizes
         if ($size <= 0) {
-            return '0 kB';
+            return '0 KB';
         }
 
         // the math magic
