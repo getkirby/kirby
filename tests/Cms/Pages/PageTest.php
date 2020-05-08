@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\F;
+use ReflectionMethod;
 
 class PageTestModel extends Page
 {
@@ -607,7 +608,7 @@ class PageTest extends TestCase
         ]);
 
         if ($draft === true && $expected !== null) {
-            $expected = str_replace('{token}', 'token=' . sha1($page->id() . $page->template()), $expected);
+            $expected = str_replace('{token}', 'token=' . sha1($page->id() . $page->template() . $page->root()), $expected);
         }
 
         $this->assertEquals($expected, $page->previewUrl());
@@ -617,6 +618,46 @@ class PageTest extends TestCase
     {
         $page = new Page(['slug' => 'test']);
         $this->assertEquals('test', $page->slug());
+    }
+
+    public function testToken()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'root'     => '/var/www/content/test',
+            'template' => 'default'
+        ]);
+
+        $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+        $method->setAccessible(true);
+
+        $expected = sha1('test' . 'default' . '/var/www/content/test');
+        $this->assertSame($expected, $method->invoke($page));
+    }
+
+    public function testTokenWithCustomSalt()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'content' => [
+                    'salt' => 'testsalt'
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug'     => 'test',
+            'template' => 'default'
+        ]);
+
+        $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+        $method->setAccessible(true);
+
+        $expected = sha1('test' . 'default' . 'testsalt');
+        $this->assertSame($expected, $method->invoke($page));
     }
 
     public function testToString()
