@@ -112,32 +112,30 @@ class AppTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
-            'options' => [
-                'hooks' => [
-                    'test.event:after' => [
-                        function ($value, $event) use ($self) {
-                            $self->assertSame('test.event:after', $event->name());
+            'hooks' => [
+                'test.event:after' => [
+                    function ($value, $event) use ($self) {
+                        $self->assertSame('test.event:after', $event->name());
 
-                            return $value * 2 + 1;
-                        },
-                        function ($value) {
-                            return $value * 3 + 5;
-                        }
-                    ],
-                    'test.*:after' => [
-                        function ($value, $event) use ($self) {
-                            $self->assertSame('test.event:after', $event->name());
+                        return $value * 2 + 1;
+                    },
+                    function ($value) {
+                        return $value * 3 + 5;
+                    }
+                ],
+                'test.*:after' => [
+                    function ($value, $event) use ($self) {
+                        $self->assertSame('test.event:after', $event->name());
 
-                            return $value * 2 + 7;
-                        }
-                    ],
-                    'test.event:*' => [
-                        function ($value, $event) use ($self) {
-                            $self->assertSame('test.event:after', $event->name());
+                        return $value * 2 + 7;
+                    }
+                ],
+                'test.event:*' => [
+                    function ($value, $event) use ($self) {
+                        $self->assertSame('test.event:after', $event->name());
 
-                            return $value * 3 + 2;
-                        }
-                    ]
+                        return $value * 3 + 2;
+                    }
                 ]
             ]
         ]);
@@ -633,32 +631,30 @@ class AppTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
-            'options' => [
-                'hooks' => [
-                    'test.event:after' => [
-                        function ($event) use ($self, &$count) {
-                            $self->assertSame('test.event:after', $event->name());
+            'hooks' => [
+                'test.event:after' => [
+                    function ($event) use ($self, &$count) {
+                        $self->assertSame('test.event:after', $event->name());
 
-                            $count = $count * 2 + 1;
-                        },
-                        function () use (&$count) {
-                            $count = $count * 3 + 5;
-                        }
-                    ],
-                    'test.*:after' => [
-                        function ($event) use ($self, &$count) {
-                            $self->assertSame('test.event:after', $event->name());
+                        $count = $count * 2 + 1;
+                    },
+                    function () use (&$count) {
+                        $count = $count * 3 + 5;
+                    }
+                ],
+                'test.*:after' => [
+                    function ($event) use ($self, &$count) {
+                        $self->assertSame('test.event:after', $event->name());
 
-                            $count = $count * 2 + 7;
-                        }
-                    ],
-                    'test.event:*' => [
-                        function ($event) use ($self, &$count) {
-                            $self->assertSame('test.event:after', $event->name());
+                        $count = $count * 2 + 7;
+                    }
+                ],
+                'test.event:*' => [
+                    function ($event) use ($self, &$count) {
+                        $self->assertSame('test.event:after', $event->name());
 
-                            $count = $count * 3 + 2;
-                        }
-                    ]
+                        $count = $count * 3 + 2;
+                    }
                 ]
             ]
         ]);
