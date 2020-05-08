@@ -68,7 +68,7 @@ class PHP extends Handler
             throw new Exception('The file "' . $file . '" does not exist');
         }
 
-        return (array)(include $file);
+        return (array)F::load($file, []);
     }
 
     /**

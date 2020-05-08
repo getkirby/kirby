@@ -17,6 +17,8 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Permissions
 {
+    public static $extendedActions = [];
+
     protected $actions = [
         'access' => [
             'panel'    => true,
@@ -75,6 +77,15 @@ class Permissions
 
     public function __construct($settings = [])
     {
+        // dynamically register the extended actions
+        foreach (static::$extendedActions as $key => $actions) {
+            if (isset($this->actions[$key]) === true) {
+                throw new InvalidArgumentException('The action ' . $key . ' is already a core action');
+            }
+
+            $this->actions[$key] = $actions;
+        }
+
         if (is_array($settings) === true) {
             return $this->setCategories($settings);
         }

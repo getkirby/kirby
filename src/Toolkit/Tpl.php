@@ -18,23 +18,21 @@ class Tpl
     /**
      * Renders the template
      *
-     * @param string $__file
-     * @param array $__data
+     * @param string $file
+     * @param array $data
      * @return string
      */
-    public static function load(string $__file = null, array $__data = []): string
+    public static function load(string $file = null, array $data = []): string
     {
-        if (file_exists($__file) === false) {
+        if (is_file($file) === false) {
             return '';
         }
 
-        $exception = null;
-
         ob_start();
-        extract($__data);
 
+        $exception = null;
         try {
-            require $__file;
+            F::load($file, null, $data);
         } catch (Throwable $e) {
             $exception = $e;
         }

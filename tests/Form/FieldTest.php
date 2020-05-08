@@ -674,6 +674,61 @@ class FieldTest extends TestCase
         $this->assertArrayNotHasKey('model', $array);
     }
 
+    public function testValidateByAttr()
+    {
+        Field::$types = [
+            'test' => []
+        ];
+
+        $model = new Page(['slug' => 'test']);
+
+        // with simple string validation
+        $field = new Field('test', [
+            'model'    => $model,
+            'value'    => 'https://getkirby.com',
+            'validate' => 'url'
+        ]);
+        $this->assertTrue($field->isValid());
+
+        $field = new Field('test', [
+            'model'    => $model,
+            'value'    => 'definitely not a URL',
+            'validate' => 'url'
+        ]);
+        $this->assertFalse($field->isValid());
+
+        // with an array of validators
+        $field = new Field('test', [
+            'model'    => $model,
+            'value'    => 'thisIsATest',
+            'validate' => [
+                'startsWith' => 'this',
+                'alpha'
+            ]
+        ]);
+        $this->assertTrue($field->isValid());
+
+        $field = new Field('test', [
+            'model'    => $model,
+            'value'    => 'thisIsATest',
+            'validate' => [
+                'startsWith' => 'that',
+                'alpha'
+            ]
+        ]);
+        $this->assertFalse($field->isValid());
+
+        $field = new Field('test', [
+            'model'    => $model,
+            'value'    => 'thisIsA123',
+            'validate' => [
+                'startsWith' => 'this',
+                'alpha'
+            ]
+        ]);
+        $this->assertFalse($field->isValid());
+    }
+
     public function testWidth()
     {
         Field::$types = [

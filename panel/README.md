@@ -18,7 +18,7 @@ return [
 ];
 ```
 
-Afterwards install the panel dependencies…
+Afterwards install the Panel dependencies…
 
 ```
 npm i

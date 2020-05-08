@@ -270,8 +270,10 @@ trait UserActions
      */
     protected function readCredentials(): array
     {
-        if (file_exists($this->root() . '/index.php') === true) {
-            $credentials = require $this->root() . '/index.php';
+        $path = $this->root() . '/index.php';
+
+        if (is_file($path) === true) {
+            $credentials = F::load($path);
 
             return is_array($credentials) === false ? [] : $credentials;
         } else {
