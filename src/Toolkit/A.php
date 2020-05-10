@@ -424,27 +424,42 @@ class A
      * dot notation in keys to nested structures
      *
      * @param array $array
+     * @param array $ignore List of keys in dot notation that should
+     *                      not be converted to a nested structure
      * @return array
      */
-    public static function nest(array $array): array
+    public static function nest(array $array, array $ignore = []): array
     {
+        // convert a simple ignore list to a nested $key => true array
+        if (isset($ignore[0]) === true) {
+            $ignore = array_map(function () {
+                return true;
+            }, array_flip($ignore));
+
+            $ignore = A::nest($ignore);
+        }
+
         $result = [];
 
-        foreach ($array as $key => $value) {
-            // untangle elements where the key uses dot notation
-            if (strpos($key, '.') !== false) {
-                // extract the first part of the key, keep the others
-                $keys = explode('.', $key);
-                $key  = array_shift($keys);
+        foreach ($array as $fullKey => $value) {
+            // extract the first part of a multi-level key, keep the others
+            $subKeys = explode('.', $fullKey);
+            $key     = array_shift($subKeys);
 
-                // now $key is the first part of the key, $value should be
-                // the untangled array
-                $value = static::nestByKeys($value, $keys);
+            // skip the magic for ignored keys
+            if (isset($ignore[$key]) === true && $ignore[$key] === true) {
+                $result[$fullKey] = $value;
+                continue;
+            }
+
+            // untangle elements where the key uses dot notation
+            if (count($subKeys) > 0) {
+                $value = static::nestByKeys($value, $subKeys);
             }
 
             // now recursively do the same for each array level if needed
             if (is_array($value) === true) {
-                $value = static::nest($value);
+                $value = static::nest($value, $ignore[$key] ?? []);
             }
 
             // merge arrays with previous results if necessary
