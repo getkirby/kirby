@@ -536,6 +536,35 @@ class AppPluginsTest extends TestCase
         $this->assertEquals($expected, Page::$models);
     }
 
+    public function testExtensionsFromOptions()
+    {
+        $calledRoute = false;
+        $calledHook  = false;
+
+        $kirby = new App([
+            'options' => [
+                'routes' => [
+                    [
+                        'pattern' => 'test',
+                        'action'  => function () use (&$calledRoute) {
+                            $calledRoute = true;
+                        }
+                    ]
+                ],
+                'hooks' => [
+                    'type.action:state' => function () use (&$calledHook) {
+                        $calledHook = true;
+                    }
+                ]
+            ]
+        ]);
+
+        $kirby->call('test');
+        $kirby->trigger('type.action:state');
+        $this->assertTrue($calledRoute);
+        $this->assertTrue($calledHook);
+    }
+
     public function testPluginOptions()
     {
         App::plugin('test/plugin', [
