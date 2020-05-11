@@ -184,37 +184,42 @@ class App
     }
 
     /**
-     * Applies a hook to the given value;
-     * the value that gets modified by the hooks
-     * is always the last argument
+     * Applies a hook to the given value
      *
      * @internal
-     * @param string $name Hook name
-     * @param mixed ...$args Arguments to pass to the hooks
+     * @param string $name Full event name
+     * @param array $args Associative array of named event arguments
+     * @param string $modify Key in $args that is modified by the hooks
+     * @param \Kirby\Cms\Event|null $originalEvent Event object (internal use)
      * @return mixed Resulting value as modified by the hooks
      */
-    public function apply(string $name, ...$args)
+    public function apply(string $name, array $args, string $modify, ?Event $originalEvent = null)
     {
-        // split up args into "passive" args and the value
-        $value = array_pop($args);
+        $event = $originalEvent ?? new Event($name, $args);
 
         if ($functions = $this->extension('hooks', $name)) {
             foreach ($functions as $function) {
-                // re-assemble args
-                $hookArgs   = $args;
-                $hookArgs[] = $value;
-
                 // bind the App object to the hook
-                $newValue = $function->call($this, ...$hookArgs);
+                $newValue = $event->call($this, $function);
 
                 // update value if one was returned
                 if ($newValue !== null) {
-                    $value = $newValue;
+                    $event->updateArgument($modify, $newValue);
                 }
             }
         }
 
-        return $value;
+        // apply wildcard hooks if available
+        $nameWildcards = $event->nameWildcards();
+        if ($originalEvent === null && count($nameWildcards) > 0) {
+            foreach ($nameWildcards as $nameWildcard) {
+                // the $event object is passed by reference
+                // and will be modified down the chain
+                $this->apply($nameWildcard, $event->arguments(), $modify, $event);
+            }
+        }
+
+        return $event->argument($modify);
     }
 
     /**
@@ -287,11 +292,11 @@ class App
         $router = $this->router();
 
         $router::$beforeEach = function ($route, $path, $method) {
-            $this->trigger('route:before', $route, $path, $method);
+            $this->trigger('route:before', compact('route', 'path', 'method'));
         };
 
         $router::$afterEach = function ($route, $path, $method, $result) {
-            return $this->apply('route:after', $route, $path, $method, $result);
+            return $this->apply('route:after', compact('route', 'path', 'method', 'result'), 'result');
         };
 
         return $router->call($path ?? $this->path(), $method ?? $this->request()->method());
@@ -661,7 +666,7 @@ class App
         $data['site']   = $data['site']   ?? $data['kirby']->site();
         $data['parent'] = $data['parent'] ?? $data['site']->page();
 
-        return KirbyTags::parse($text, $data, $this->options, $this->extensions['hooks']);
+        return KirbyTags::parse($text, $data, $this->options, $this);
     }
 
     /**
@@ -675,7 +680,7 @@ class App
      */
     public function kirbytext(string $text = null, array $data = [], bool $inline = false): string
     {
-        $text = $this->apply('kirbytext:before', $text);
+        $text = $this->apply('kirbytext:before', compact('text'), 'text');
         $text = $this->kirbytags($text, $data);
         $text = $this->markdown($text, $inline);
 
@@ -683,7 +688,7 @@ class App
             $text = $this->smartypants($text);
         }
 
-        $text = $this->apply('kirbytext:after', $text);
+        $text = $this->apply('kirbytext:after', compact('text'), 'text');
 
         return $text;
     }
@@ -1340,12 +1345,15 @@ class App
      * Trigger a hook by name
      *
      * @internal
-     * @param string $name
-     * @param mixed ...$arguments
+     * @param string $name Full event name
+     * @param array $args Associative array of named event arguments
+     * @param \Kirby\Cms\Event|null $originalEvent Event object (internal use)
      * @return void
      */
-    public function trigger(string $name, ...$arguments)
+    public function trigger(string $name, array $args = [], ?Event $originalEvent = null)
     {
+        $event = $originalEvent ?? new Event($name, $args);
+
         if ($functions = $this->extension('hooks', $name)) {
             static $level = 0;
             static $triggered = [];
@@ -1360,13 +1368,21 @@ class App
                 $triggered[$name][] = $function;
 
                 // bind the App object to the hook
-                $function->call($this, ...$arguments);
+                $event->call($this, $function);
             }
 
             $level--;
 
             if ($level === 0) {
                 $triggered = [];
+            }
+        }
+
+        // trigger wildcard hooks if available
+        $nameWildcards = $event->nameWildcards();
+        if ($originalEvent === null && count($nameWildcards) > 0) {
+            foreach ($nameWildcards as $nameWildcard) {
+                $this->trigger($nameWildcard, $args, $event);
             }
         }
     }
