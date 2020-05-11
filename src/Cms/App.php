@@ -295,8 +295,8 @@ class App
             $this->trigger('route:before', compact('route', 'path', 'method'));
         };
 
-        $router::$afterEach = function ($route, $path, $method, $result) {
-            return $this->apply('route:after', compact('route', 'path', 'method', 'result'), 'result');
+        $router::$afterEach = function ($route, $path, $method, $result, $final) {
+            return $this->apply('route:after', compact('route', 'path', 'method', 'result', 'final'), 'result');
         };
 
         return $router->call($path ?? $this->path(), $method ?? $this->request()->method());
