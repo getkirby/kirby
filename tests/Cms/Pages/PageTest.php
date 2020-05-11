@@ -660,6 +660,36 @@ class PageTest extends TestCase
         $this->assertSame($expected, $method->invoke($page));
     }
 
+    public function testTokenWithSaltCallback()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'content' => [
+                    'salt' => function ($page) {
+                        return $page->date();
+                    }
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug'     => 'test',
+            'template' => 'default',
+            'content'  => [
+                'date' => '2012-12-12'
+            ]
+        ]);
+
+        $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+        $method->setAccessible(true);
+
+        $expected = sha1('test' . 'default' . '2012-12-12');
+        $this->assertSame($expected, $method->invoke($page));
+    }
+
     public function testToString()
     {
         $page = new Page(['slug' => 'test']);

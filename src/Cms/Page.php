@@ -1468,6 +1468,11 @@ class Page extends ModelWithContent
     protected function token(): string
     {
         $salt = $this->kirby()->option('content.salt', $this->root());
+
+        if (is_a($salt, 'Closure') === true) {
+            $salt = $salt($this);
+        }
+
         return sha1($this->id() . $this->template() . $salt);
     }
 
