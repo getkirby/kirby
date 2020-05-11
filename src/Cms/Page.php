@@ -1473,7 +1473,7 @@ class Page extends ModelWithContent
             $salt = $salt($this);
         }
 
-        return sha1($this->id() . $this->template() . $salt);
+        return hash_hmac('sha1', $this->id() . $this->template(), $salt);
     }
 
     /**
