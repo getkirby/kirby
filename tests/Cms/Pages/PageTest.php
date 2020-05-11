@@ -631,7 +631,7 @@ class PageTest extends TestCase
         $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
         $method->setAccessible(true);
 
-        $expected = sha1('test' . 'default' . '/var/www/content/test');
+        $expected = hash_hmac('sha1', 'test' . 'default', '/var/www/content/test');
         $this->assertSame($expected, $method->invoke($page));
     }
 
@@ -686,7 +686,7 @@ class PageTest extends TestCase
         $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
         $method->setAccessible(true);
 
-        $expected = sha1('test' . 'default' . '2012-12-12');
+        $expected = hash_hmac('sha1', 'test' . 'default', '2012-12-12');
         $this->assertSame($expected, $method->invoke($page));
     }
 
