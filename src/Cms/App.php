@@ -46,7 +46,6 @@ class App
     use Properties;
 
     protected static $instance;
-    protected static $root;
     protected static $version;
 
     public $data = [];
@@ -91,9 +90,6 @@ class App
      */
     public function __construct(array $props = [])
     {
-        // the kirby folder directory
-        static::$root = dirname(__DIR__, 2);
-
         // register all roots to be able to load stuff afterwards
         $this->bakeRoots($props['roots'] ?? []);
 
@@ -1437,7 +1433,7 @@ class App
     public static function version(): ?string
     {
         try {
-            return static::$version = static::$version ?? Data::read(static::$root . '/composer.json')['version'] ?? null;
+            return static::$version = static::$version ?? Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;
         } catch (Throwable $e) {
             throw new LogicException('The Kirby version cannot be detected. The composer.json is probably missing or not readable.');
         }
