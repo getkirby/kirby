@@ -179,7 +179,7 @@ class App
             return $this->api;
         }
 
-        $root       = static::$root . '/config/api';
+        $root       = $this->root('kirby') . '/config/api';
         $extensions = $this->extensions['api'] ?? [];
         $routes     = (include $root . '/routes.php')($this);
 
@@ -255,7 +255,7 @@ class App
      */
     protected function bakeRoots(array $roots = null)
     {
-        $roots = array_merge(require static::$root . '/config/roots.php', (array)$roots);
+        $roots = array_merge(require dirname(__DIR__, 2) . '/config/roots.php', (array)$roots);
         $this->roots = Ingredients::bake($roots);
         return $this;
     }
@@ -273,7 +273,7 @@ class App
             $urls['index'] = $this->options['url'];
         }
 
-        $urls = array_merge(require static::$root . '/config/urls.php', (array)$urls);
+        $urls = array_merge(require $this->root('kirby') . '/config/urls.php', (array)$urls);
         $this->urls = Ingredients::bake($urls);
         return $this;
     }
@@ -1144,7 +1144,7 @@ class App
         }
 
         $registry = $this->extensions('routes');
-        $system   = (include static::$root . '/config/routes.php')($this);
+        $system   = (include $this->root('kirby') . '/config/routes.php')($this);
         $routes   = array_merge($system['before'], $registry, $system['after']);
 
         return $this->routes = $routes;
