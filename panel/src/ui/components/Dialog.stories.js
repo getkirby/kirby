@@ -61,6 +61,7 @@ export const legacySubmitButton = () => ({
       <k-dialog
         ref="dialog"
         button="Delete"
+        icon="trash"
         theme="negative"
         text="Delete this?"
         @cancel="cancel"

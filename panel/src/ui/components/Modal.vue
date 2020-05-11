@@ -17,6 +17,10 @@ export default {
       type: [Boolean, Object, String],
       default: true
     },
+    loading: {
+      type: [Boolean],
+      default: false
+    },
     submitButton: {
       type: [Boolean, Object, String],
       default: true
@@ -24,9 +28,14 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
+      isLoading: this.loading,
       notification: false
     };
+  },
+  watch: {
+    loading() {
+      this.isLoading = this.loading;
+    }
   },
   mounted() {
     if (this.autofocus !== true) {
@@ -78,7 +87,9 @@ export default {
       };
     },
     cancel(event) {
-      this.$emit("cancel", event);
+      if (this.isLoading === false) {
+        this.$emit("cancel", event);
+      }
     },
     closeNotification() {
       this.notification = false;
@@ -99,7 +110,9 @@ export default {
       this.isLoading = false;
     },
     submit(event) {
-      this.$emit("submit", event);
+      if (this.isLoading === false) {
+        this.$emit("submit", event);
+      }
     },
     success(message) {
       this.openNotification({

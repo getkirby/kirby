@@ -1,5 +1,5 @@
 <template>
-  <k-abstract-dialog
+  <k-dialog
     ref="dialog"
     v-bind="$props"
     v-on="listeners"
@@ -9,10 +9,11 @@
       v-model="value"
       :fields="fields"
       :novalidate="novalidate"
+      class="mb-3"
       @input="onInput"
       @submit="onSubmit"
     />
-  </k-abstract-dialog>
+  </k-dialog>
 </template>
 
 <script>
