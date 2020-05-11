@@ -2,12 +2,12 @@
   <div
     v-if="message"
     :data-theme="type"
-    class="k-notification flex items-center bg-black text-white"
+    class="k-notification flex flex-shrink-0 items-center bg-black text-white"
   >
-    <p>{{ message }}</p>
+    <p class="flex-grow px-3">{{ message }}</p>
     <k-button
       icon="cancel"
-      class="flex ml-4"
+      class="flex ml-4 p-3"
       @click="$emit('close')"
     />
   </div>
@@ -27,23 +27,17 @@ export default {
 </script>
 
 <style lang="scss">
-.k-notification {
-  padding: 0.625rem 1rem;
-  width: 100%;
-  line-height: 1.25rem;
-  flex-shrink: 0;
-}
 .k-notification[data-theme="error"] {
-  background: $color-red-300;
+  background-color: $color-red-300;
   color: $color-black;
 }
 .k-notification[data-theme="success"] {
-  background: $color-green-300;
+  background-color: $color-green-300;
   color: $color-black;
 }
 .k-notification p {
-  flex-grow: 1;
   word-wrap: break-word;
   overflow: hidden;
+  line-height: 1.25em;
 }
 </style>

@@ -73,16 +73,18 @@ export const focustrap = () => ({
             <div class="p-6">
 
               <k-fieldset :fields="{
-                text: {
-                  label: 'Text',
-                  type: 'text',
-                  autofocus: true
-                },
-                email: {
-                  label: 'Email',
-                  type: 'email'
-                }
-              }" />
+                  text: {
+                    label: 'Text',
+                    type: 'text',
+                    autofocus: true
+                  },
+                  email: {
+                    label: 'Email',
+                    type: 'email'
+                  }
+                }"
+                class="mb-3"
+              />
 
             </div>
             <hr>
@@ -125,9 +127,9 @@ export const inline = () => ({
         class="bg-black absolute rounded text-white shadow-lg"
         @submit="onSubmit"
       >
-        <div class="flex items-center" slot-scope="{ cancelButton, submitButton }">
-          <k-input type="url" class="p-2" />
-          <k-button v-bind="submitButton" class="p-2" @click="save" />
+        <div class="flex items-center justify-between" slot-scope="{ cancelButton, submitButton }">
+          <k-input type="url" class="p-3 text-sm" />
+          <k-button v-bind="submitButton" class="p-3" @click="save" />
         </div>
       </k-modal>
     </div>
@@ -135,20 +137,29 @@ export const inline = () => ({
 });
 
 export const notification = () => ({
+  extends: inline(),
   template: `
-    <k-modal class="bg-black absolute rounded text-white shadow-lg">
-      <template slot-scope="{ notification, closeNotification, error }">
-        <k-notification
-          v-if="notification"
-          v-bind="notification"
-          class="text-sm"
-          @close="closeNotification()"
-        />
-        <p class="p-6">
-          <k-button icon="alert" @click="error('Something went wrong')">Trigger notification</k-button>
-        </p>
-      </template>
-    </k-modal>
+    <div class="relative">
+      <k-button icon="edit" class="py-3" @click.stop="open()">Click to edit …</k-button>
+      <k-modal
+        v-if="edit"
+        class="bg-black absolute rounded text-white shadow-lg"
+        @submit="onSubmit"
+      >
+        <div slot-scope="{ cancelButton, closeNotification, notification, error, submitButton }">
+          <k-notification
+            v-if="notification"
+            v-bind="notification"
+            class="text-sm rounded rounded-b-none"
+            @close="closeNotification()"
+          />
+          <div class="flex items-center justify-between">
+            <k-input type="url" class="text-sm p-3" />
+            <k-button v-bind="submitButton" class="p-3" @click="error('Something went wrong')" />
+          </div>
+        </div>
+      </k-modal>
+    </div>
   `
 });
 

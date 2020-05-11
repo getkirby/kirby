@@ -20,7 +20,7 @@
           <k-notification
             v-if="notification"
             v-bind="notification"
-            class="k-dialog-notification"
+            class="k-dialog-notification px-3"
             @close="closeNotification()"
           />
           <div class="k-dialog-body p-6">
@@ -177,7 +177,5 @@ export default {
   border-top-left-radius: $rounded-sm;
   border-top-right-radius: $rounded-sm;
   margin-top: -3px;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
 }
 </style>

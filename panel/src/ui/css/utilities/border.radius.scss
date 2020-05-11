@@ -7,3 +7,24 @@
 .rounded {
   border-radius: $rounded;
 }
+
+.rounded-none,
+.rounded-t-none,
+.rounded-l-none {
+  border-top-left-radius: 0;
+}
+.rounded-none,
+.rounded-t-none,
+.rounded-r-none {
+  border-top-right-radius: 0;
+}
+.rounded-none,
+.rounded-b-none,
+.rounded-l-none {
+  border-bottom-left-radius: 0;
+}
+.rounded-none,
+.rounded-b-none,
+.rounded-r-none {
+  border-bottom-right-radius: 0;
+}
