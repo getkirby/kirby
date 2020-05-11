@@ -656,7 +656,7 @@ class PageTest extends TestCase
         $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
         $method->setAccessible(true);
 
-        $expected = sha1('test' . 'default' . 'testsalt');
+        $expected = hash_hmac('sha1', 'test' . 'default', 'testsalt');
         $this->assertSame($expected, $method->invoke($page));
     }
 
