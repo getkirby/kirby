@@ -1,26 +1,18 @@
-<template>
-  <k-focus-boundary
-    ref="modal"
-    :dir="$direction"
-    class="k-modal"
-    @click.stop
-  >
-    <slot
-      :cancel="cancel"
-      :cancelButton="cancelButtonConfig"
-      :closeNotification="closeNotification"
-      :error="error"
-      :notification="notification"
-      :submitButton="submitButtonConfig"
-      :submit="submit"
-      :success="success"
-    />
-  </k-focus-boundary>
-</template>
-
 <script>
+
+/**
+ * The Modal component is a renderless component.
+ * It is meant to be used as boilerplate for all
+ * kinds of modal dialogs and quick inline inputs.
+ * It's also the foundation of the big
+ * Dialog and Drawer components.
+ */
 export default {
   props: {
+    autofocus: {
+      type: Boolean,
+      default: true,
+    },
     cancelButton: {
       type: [Boolean, Object, String],
       default: true
@@ -32,12 +24,23 @@ export default {
   },
   data() {
     return {
+      isLoading: false,
       notification: false
     };
   },
   mounted() {
-    // autofocus
-    this.$refs.modal.focus();
+    if (this.autofocus !== true) {
+      return;
+    }
+
+    let target = this.$el.querySelector(
+      "[autofocus], [data-autofocus], input, textarea, select, button"
+    );
+
+    if (target && typeof target.focus === "function") {
+      target.focus();
+      return;
+    }
   },
   computed: {
     cancelButtonConfig() {
@@ -81,20 +84,45 @@ export default {
       this.notification = false;
     },
     error(message) {
-      this.notification = {
+      this.openNotification({
         message: message,
         type: "error"
-      };
+      });
+    },
+    openNotification(notification) {
+      this.notification = notification;
+    },
+    startLoading() {
+      this.isLoading = true;
+    },
+    stopLoading() {
+      this.isLoading = false;
     },
     submit(event) {
       this.$emit("submit", event);
     },
     success(message) {
-      this.notification = {
+      this.openNotification({
         message: message,
         type: "success"
-      };
-    }
+      });
+    },
+  },
+  render() {
+    return this.$scopedSlots.default({
+      cancel: this.cancel,
+      cancelButton: this.cancelButtonConfig,
+      closeNotification: this.closeNotification,
+      error: this.error,
+      isLoading: this.isLoading,
+      notification: this.notification,
+      openNotification: this.openNotification,
+      startLoading: this.startLoading,
+      stopLoading: this.stopLoading,
+      submitButton: this.submitButtonConfig,
+      submit: this.submit,
+      success: this.success,
+    })
   }
 };
 </script>

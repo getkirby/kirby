@@ -61,31 +61,3 @@ export const visible = () => ({
   `
 });
 
-export const dialog = () => ({
-  methods: {
-    onClose: action("close"),
-    onOpen: action("open")
-  },
-  template: `
-    <div>
-      <k-button icon="open" @click="$refs.overlay.open()">Open</k-button>
-
-      <k-overlay
-        ref="overlay"
-        @close="onClose"
-        @open="onOpen"
-      >
-        <k-backdrop
-          slot-scope="{ close }"
-          class="flex items-center justify-center"
-          @click="close"
-        >
-          <k-modal class="bg-light rounded-sm shadow-lg">
-            Hallo
-          </k-modal>
-        </k-backdrop>
-      </k-overlay>
-    </div>
-  `
-});
-
