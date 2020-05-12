@@ -6,19 +6,18 @@ export default {
   component: Drawer,
 };
 
-export const fromSide = () => ({
+export const regular = () => ({
   methods: {
     close: action('close'),
     open: action('open'),
   },
   computed: {
-    flow() {
-      return "horizontal";
+    loading() {
+      return false;
     }
   },
   template: `
-    <div>
-      <k-topbar />
+    <k-inside :registered="true">
       <k-view class="py-6">
         <k-text>
           <p>
@@ -33,7 +32,7 @@ export const fromSide = () => ({
             Open drawer
           </k-button>
         </k-text>
-        <k-drawer ref="drawer" :flow="flow">
+        <k-drawer ref="drawer" :loading="loading">
           <k-form
             :fields="{
               firstName: {
@@ -59,46 +58,22 @@ export const fromSide = () => ({
           />
         </k-drawer>
       </k-view>
-    </div>
+    </k-inside>
   `,
 });
 
-export const fromBotton = () => ({
-  extends: fromSide(),
+export const loading = () => ({
+  extends: regular(),
   computed: {
-    flow() {
-      return "vertical";
+    loading() {
+      return true;
     }
   }
 });
 
-export const withOptions = () => ({
-  template: `
-    <div>
-      <k-view class="py-6">
-        <k-button
-          icon="open"
-          @click="$refs.drawer.open()"
-        >
-          Open drawer
-        </k-button>
-        <k-drawer ref="drawer">
-          Content
-
-          <k-button-group slot="options">
-            <k-button color="blue">Just</k-button>
-            <k-button color="red">three</k-button>
-            <k-button color="yellow">buttons</k-button>
-          </k-button-group>
-        </k-drawer>
-      </k-view>
-    </div>
-  `,
-});
-
 export const withContext = () => ({
   template: `
-    <div>
+    <k-inside :registered="true">
       <k-view class="py-6">
         <k-button
           icon="open"
@@ -119,6 +94,41 @@ export const withContext = () => ({
           />
         </k-drawer>
       </k-view>
-    </div>
+    </k-inside>
   `,
+});
+
+export const successNotification = () => ({
+  methods: {
+    onSubmit() {
+      this.$refs.drawer.success("Awesome stuff!");
+    },
+  },
+  template: `
+    <k-inside :registered="true">
+      <k-view class="py-6">
+        <k-button
+          icon="open"
+          @click="$refs.drawer.open()"
+        >
+          Open drawer
+        </k-button>
+        <k-drawer
+          ref="drawer"
+          @submit="onSubmit"
+        >
+          Click "OK" to trigger the notification
+        </k-drawer>
+      </k-view>
+    </k-inside>
+  `,
+});
+
+export const errorNotification = () => ({
+  extends: successNotification(),
+  methods: {
+    onSubmit() {
+      this.$refs.drawer.error("Oh oh! Something's seriously wrong here.");
+    },
+  },
 });
