@@ -7,20 +7,16 @@ export default {
     return {
       fields: {
         title: {
-          label: this.$t("title"),
-          type: "text",
-          required: true,
           icon: "title",
-          preselect: true
+          label: this.$t("title"),
+          preselect: true,
+          required: true,
+          trim: true,
+          type: "text",
         }
       },
       submitButton: this.$t("rename")
     };
-  },
-  watch: {
-    "values.title"(value) {
-      this.values.title = value.trim();
-    }
   },
   methods: {
     async load(id) {

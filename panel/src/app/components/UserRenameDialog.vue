@@ -3,11 +3,6 @@ import AsyncFormDialog from "@/ui/components/AsyncFormDialog.vue";
 
 export default {
   extends: AsyncFormDialog,
-  watch: {
-    "values.name"(value) {
-      this.values.name = value.trim();
-    },
-  },
   methods: {
     async load(id) {
       this.id     = id;
@@ -17,10 +12,11 @@ export default {
 
       this.fields = {
         name: {
-          label: this.$t("name"),
-          type: "text",
           icon: "user",
-          preselect: true
+          label: this.$t("name"),
+          preselect: true,
+          trim: true,
+          type: "text",
         }
       };
 

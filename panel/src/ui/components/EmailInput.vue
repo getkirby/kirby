@@ -15,6 +15,10 @@ export default {
         return this.$t("email.placeholder");
       }
     },
+    trim: {
+      type: Boolean,
+      default: true,
+    },
     type: {
       type: String,
       default: "email"

@@ -7,18 +7,19 @@ export default {
     async load() {
       this.fields = {
         license: {
-          label: this.$t("license.register.label"),
-          type: "text",
-          required: true,
           counter: false,
+          help: this.$t("license.register.help"),
+          label: this.$t("license.register.label"),
           placeholder: "K3-",
-          help: this.$t("license.register.help")
+          required: true,
+          trim: true,
+          type: "text",
         },
         email: {
+          counter: false,
           label: this.$t("email"),
-          type: "email",
           required: true,
-          counter: false
+          type: "email",
         }
       };
 

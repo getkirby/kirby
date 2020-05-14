@@ -3,6 +3,8 @@ import FileRemoveDialog from "./FileRemoveDialog.vue";
 import LanguageCreateDialog from "./LanguageCreateDialog.vue";
 import LanguageRemoveDialog from "./LanguageRemoveDialog.vue";
 import LanguageUpdateDialog from "./LanguageUpdateDialog.vue";
+import PageCreateDialog from "./PageCreateDialog.vue";
+import PageDuplicateDialog from "./PageDuplicateDialog.vue";
 import PageRenameDialog from "./PageRenameDialog.vue";
 import PageTemplateDialog from "./PageTemplateDialog.vue";
 import RegistrationDialog from "./RegistrationDialog.vue";
@@ -85,6 +87,30 @@ export const LanguageUpdate = () => ({
   methods: {
     open() {
       this.$refs.dialog.open("de");
+    }
+  }
+});
+
+export const PageCreate = () => ({
+  extends: DialogStory(),
+  components: {
+    "k-story-dialog": PageCreateDialog
+  },
+  methods: {
+    open() {
+      this.$refs.dialog.open("photography", "some-section");
+    }
+  }
+});
+
+export const PageDuplicate = () => ({
+  extends: DialogStory(),
+  components: {
+    "k-story-dialog": PageDuplicateDialog
+  },
+  methods: {
+    open() {
+      this.$refs.dialog.open("photography");
     }
   }
 });

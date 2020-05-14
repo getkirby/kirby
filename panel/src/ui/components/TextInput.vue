@@ -13,8 +13,8 @@
       required,
       spellcheck,
       type,
-      value
     }"
+    :value="sanitize(value)"
     class="k-text-input"
     v-on="listeners"
   >
@@ -42,15 +42,23 @@ export default {
     minlength: Number,
     name: [Number, String],
     pattern: String,
-    placeholder: String,
+    placeholder: [Boolean, String],
     preselect: Boolean,
     required: {
       type: Boolean,
       default: false,
     },
+    slug: {
+      type: [Boolean, String],
+      default: false
+    },
     spellcheck: {
       type: [Boolean, String],
       default: "off"
+    },
+    trim: {
+      type: [Boolean, String],
+      default: false
     },
     type: {
       type: String,
@@ -63,7 +71,7 @@ export default {
       listeners: {
         ...this.$listeners,
         input: event => this.onInput(event.target.value)
-      }
+      },
     };
   },
   mounted() {
@@ -79,8 +87,22 @@ export default {
     focus() {
       this.$refs.input.focus();
     },
+    sanitize(value) {
+      if (this.trim === true && value) {
+        value = value.trim();
+      }
+
+      if (this.slug) {
+        const allowed = typeof this.slug === "string" ? this.slug : "";
+
+        // TODO: add global rules
+        value = this.$helper.slug(value, [], allowed);
+      }
+
+      return value;
+    },
     onInput(value) {
-      this.$emit("input", value);
+      this.$emit("input", this.sanitize(value));
     },
     select() {
       this.$refs.input.select();

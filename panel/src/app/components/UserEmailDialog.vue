@@ -5,7 +5,7 @@ export default {
   extends: AsyncFormDialog,
   methods: {
     async load(id) {
-      this.id     = id;
+      this.id = id;
       this.values = await this.$api.users.get(id, {
         select: ["email"]
       });

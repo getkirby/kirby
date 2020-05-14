@@ -15,6 +15,14 @@ Vue.prototype.$user = {
   }
 };
 Vue.prototype.$model = {
+  pages: {
+    blueprints(id, section) {
+      return [
+        { name: "article", title: "Article" },
+        { name: "project", title: "Project" }
+      ];
+    },
+  },
   roles: {
     async options() {
       return [

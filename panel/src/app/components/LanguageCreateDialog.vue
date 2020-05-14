@@ -4,14 +4,8 @@ import AsyncFormDialog from "@/ui/components/AsyncFormDialog.vue";
 export default {
   extends: AsyncFormDialog,
   watch: {
-    "values.code"(code) {
-      this.values.code = this.$helper.slug(code);
-    },
-    "values.locale"(locale) {
-      this.values.locale = String(locale).trim();
-    },
     "values.name"(name) {
-      this.values.code = this.$helper.slug(name).substr(0, 2);
+      this.values.code = name.substr(0, 2);
     },
   },
   methods: {
@@ -29,6 +23,7 @@ export default {
           required: true,
           counter: false,
           icon: "globe",
+          slug: true,
           width: "1/2"
         },
         direction: {
@@ -44,6 +39,7 @@ export default {
         },
         locale: {
           label: this.$t("language.locale"),
+          trim: true,
           type: "text",
           placeholder: "en_US"
         },

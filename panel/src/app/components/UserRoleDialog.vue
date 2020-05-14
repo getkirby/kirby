@@ -14,6 +14,8 @@ export default {
       this.roles = await this.$model.roles.options({ canBe: "changed" });
 
       // don't let non-admins promote anyone to admin
+      // this will be checked in the backend again, but
+      // it's better to avoid this in the frontend already
       if (this.$user.role.name !== "admin") {
         this.roles = this.roles.filter(role => {
           return role.value !== "admin";

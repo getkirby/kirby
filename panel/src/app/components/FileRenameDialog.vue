@@ -3,11 +3,6 @@ import AsyncFormDialog from "@/ui/components/AsyncFormDialog.vue";
 
 export default {
   extends: AsyncFormDialog,
-  watch: {
-    "values.name"(name) {
-      this.values.name = this.$helper.slug(name);
-    }
-  },
   methods: {
     async load(parent, filename) {
       this.filename = filename;
@@ -23,7 +18,8 @@ export default {
           required: true,
           icon: "title",
           after: "." + this.file.extension,
-          preselect: true
+          preselect: true,
+          slug: "@._-"
         }
       };
 

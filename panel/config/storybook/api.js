@@ -61,6 +61,9 @@ export default {
     delete(id) {
       return request.delete("pages/" + id);
     },
+    duplicate(id, slug, params) {
+
+    },
     get(id) {
       request.get("pages/" + id);
       return {
@@ -68,6 +71,9 @@ export default {
           { name: "article", title: "Article" },
           { name: "project", title: "Project" }
         ],
+        hasChildren: true,
+        hasFiles: true,
+        slug: "photography",
         template: "article",
         title: "Photography",
       };
@@ -85,6 +91,10 @@ export default {
         id: id,
         title: title,
       };
+    },
+    create(parent, values) {
+      request.post("pages/" + parent + "/children", values);
+      return values;
     }
   },
   site: {
