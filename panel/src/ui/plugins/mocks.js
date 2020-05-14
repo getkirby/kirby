@@ -4,8 +4,8 @@ export default {
   install(Vue) {
 
     /** Fake translations */
-    Vue.prototype.$t = function(string, fallback) {
-      return en[string] || fallback || "$t('" + string + "')";
+    Vue.prototype.$t = function(string, replace) {
+      return en[string] || "$t('" + string + "')";
     };
 
     /** Fake store */

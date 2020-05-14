@@ -1,12 +1,16 @@
 <template>
   <k-drawer
     ref="dialog"
-    v-bind="$props"
+    v-bind="{
+      ...$props,
+      autofocus: false
+    }"
     v-on="listeners"
   >
     <k-form
       ref="form"
       v-model="value"
+      :autofocus="true"
       :fields="fields"
       :novalidate="novalidate"
       class="mb-3"

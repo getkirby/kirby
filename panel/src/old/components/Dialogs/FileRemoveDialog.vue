@@ -33,6 +33,7 @@ export default {
     },
     async submit() {
       try {
+
         await this.$api.files.delete(this.parent, this.filename);
 
         // remove data from content store

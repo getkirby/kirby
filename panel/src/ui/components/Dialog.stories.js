@@ -13,7 +13,11 @@ export const regular = () => ({
     cancel: action("cancel"),
     close: action("close"),
     open: action("open"),
-    submit: action("submit")
+    submit() {
+      action("submit")();
+      alert("submitted");
+      this.$refs.dialog.close();
+    }
   },
   template: `
     <div>

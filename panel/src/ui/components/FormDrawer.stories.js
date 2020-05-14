@@ -1,6 +1,9 @@
 import FormDrawer from "./FormDrawer.vue";
 import Padding from "../storybook/Padding.js";
-import { action } from "@storybook/addon-actions";
+import {
+  regular as regularFormDialog,
+  prefilled as prefilledFormDialog
+} from "./FormDialog.stories.js";
 
 export default {
   title: "UI | Dialog / Form Drawer",
@@ -9,38 +12,7 @@ export default {
 };
 
 export const regular = () => ({
-  methods: {
-    cancel: action("cancel"),
-    close: action("close"),
-    input: action("input"),
-    open: action("open"),
-    submit: action("submit")
-  },
-  data() {
-    return {
-      values: {}
-    };
-  },
-  computed: {
-    fields() {
-      return {
-        name: {
-          label: "Name",
-          type: "text",
-          width: "1/2"
-        },
-        email: {
-          label: "Email",
-          type: "email",
-          width: "1/2"
-        },
-        text: {
-          label: "Text",
-          type: "text"
-        }
-      };
-    }
-  },
+  extends: regularFormDialog(),
   template: `
     <div>
       <k-button icon="open" @click="$refs.dialog.open()">Open Drawer</k-button>
@@ -63,16 +35,7 @@ export const regular = () => ({
 });
 
 export const prefilled = () => ({
-  ...regular(),
-  data() {
-    return {
-      values: {
-        name: "Peter Jackson",
-        email: "peter@wetaworkshop.com",
-        text: "Oh lord"
-      }
-    };
-  },
+  extends: prefilledFormDialog(),
   template: `
     <div>
       <k-button icon="open" @click="$refs.dialog.open()">Open Drawer</k-button>
@@ -80,6 +43,7 @@ export const prefilled = () => ({
         ref="dialog"
         :fields="fields"
         :value="values"
+        title="Edit contact"
         @cancel="cancel"
         @close="close"
         @input="input"

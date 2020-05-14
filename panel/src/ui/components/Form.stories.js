@@ -15,6 +15,9 @@ export const simple = () => ({
     };
   },
   computed: {
+    autofocus() {
+      return false;
+    },
     fields() {
       return {
         name: {
@@ -42,6 +45,7 @@ export const simple = () => ({
   template: `
     <div>
       <k-form
+        :autofocus="autofocus"
         :fields="fields"
         v-model="values"
         class="mb-8"
@@ -56,6 +60,14 @@ export const simple = () => ({
   `,
 });
 
+export const autofocus = () => ({
+  extends: simple(),
+  computed: {
+    autofocus() {
+      return true;
+    },
+  }
+});
 
 export const complex = () => ({
   data() {

@@ -14,7 +14,10 @@ export const regular = () => ({
     close: action("close"),
     input: action("input"),
     open: action("open"),
-    submit: action("submit")
+    submit() {
+      action("submit")();
+      alert("Submitted");
+    }
   },
   data() {
     return {
@@ -47,7 +50,7 @@ export const regular = () => ({
       <k-form-dialog
         ref="dialog"
         :fields="fields"
-        :value="values"
+        v-model="values"
         @cancel="cancel"
         @close="close"
         @input="input"

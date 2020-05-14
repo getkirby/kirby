@@ -2,7 +2,7 @@
   <div
     v-if="message"
     :data-theme="type"
-    class="k-notification flex flex-shrink-0 items-center bg-black text-white"
+    class="k-notification flex flex-shrink-0 items-center bg-black text-white text-sm"
   >
     <p class="flex-grow px-3">{{ message }}</p>
     <k-button

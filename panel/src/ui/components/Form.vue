@@ -11,7 +11,8 @@
     <slot>
       <k-fieldset
         ref="fields"
-        v-model="value"
+        :value="value"
+        :autofocus="autofocus"
         :disabled="disabled"
         :fields="fields"
         :novalidate="novalidate"
@@ -30,8 +31,11 @@
 <script>
 export default {
   props: {
+    autofocus: {
+      type: Boolean,
+      default: false,
+    },
     disabled: Boolean,
-    config: Object,
     fields: {
       type: [Array, Object],
       default() {
@@ -53,6 +57,7 @@ export default {
     return {
       listeners: {
         ...this.$listeners,
+        input: this.onInput,
         submit: this.onSubmit
       }
     };
@@ -63,8 +68,11 @@ export default {
         this.$refs.fields.focus(name);
       }
     },
-    onSubmit() {
-      this.$emit("submit", this.value);
+    onInput(values) {
+      this.$emit("input", values);
+    },
+    onSubmit(values) {
+      this.$emit("submit", values);
     },
     submit() {
       this.$refs.submitter.click();

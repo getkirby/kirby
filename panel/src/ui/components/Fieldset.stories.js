@@ -15,6 +15,9 @@ export const regular = () => ({
     };
   },
   computed: {
+    autofocus() {
+      return false;
+    },
     fields() {
       return {
         name: {
@@ -42,6 +45,7 @@ export const regular = () => ({
   template: `
     <div>
       <k-fieldset
+        :autofocus="autofocus"
         :fields="fields"
         v-model="values"
         class="mb-8"
@@ -49,6 +53,46 @@ export const regular = () => ({
         @input="input"
         @submit="submit"
       />
+
+      <k-headline class="mb-3">Values</k-headline>
+      <k-code-block :code="values" />
+    </div>
+  `,
+});
+
+export const autofocus = () => ({
+  extends: regular(),
+  computed: {
+    autofocus() {
+      return true;
+    },
+  }
+});
+
+export const biDirectional = () => ({
+  extends: regular(),
+  template: `
+    <div>
+      <k-grid gutter="large" class="mb-8">
+        <k-column width="1/2">
+          <k-fieldset
+            :fields="fields"
+            v-model="values"
+            @focus="focus"
+            @input="input"
+            @submit="submit"
+          />
+        </k-column>
+        <k-column width="1/2">
+          <k-fieldset
+            :fields="fields"
+            v-model="values"
+            @focus="focus"
+            @input="input"
+            @submit="submit"
+          />
+        </k-column>
+      </k-grid>
 
       <k-headline class="mb-3">Values</k-headline>
       <k-code-block :code="values" />

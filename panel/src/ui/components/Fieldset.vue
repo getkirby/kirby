@@ -10,14 +10,14 @@
           <component
             :is="'k-' + field.type + '-field'"
             v-if="hasFieldType(field.type)"
-            :ref="fieldName"
-            v-model="value[fieldName]"
-            :name="fieldName"
-            :label="label(field, fieldName)"
-            :novalidate="novalidate"
             :disabled="disabled || field.disabled"
+            :label="label(fieldName)"
+            :name="fieldName"
+            :novalidate="novalidate"
+            :ref="fieldName"
+            v-model="values[fieldName]"
             v-bind="field"
-            @input="$emit('input', value, field, fieldName)"
+            @input="onInput"
             @focus="$emit('focus', $event, field, fieldName)"
             @submit="$emit('submit', $event, field, fieldName)"
           />
@@ -40,12 +40,15 @@ import Vue from "vue";
 
 export default {
   props: {
-    config: Object,
+    autofocus: {
+      type: Boolean,
+      default: false,
+    },
     disabled: Boolean,
     fields: {
-      type: [Array, Object],
+      type: Object,
       default() {
-        return [];
+        return {};
       }
     },
     novalidate: {
@@ -58,6 +61,16 @@ export default {
         return {};
       }
     }
+  },
+  mounted() {
+    if (this.autofocus) {
+      this.focus();
+    }
+  },
+  data() {
+    return {
+      values: this.value
+    };
   },
   computed: {
     visibleFields() {
@@ -80,6 +93,11 @@ export default {
       return fields;
     }
   },
+  watch: {
+    value() {
+      this.values = this.value;
+    }
+  },
   methods: {
     focus(name) {
       if (name) {
@@ -96,16 +114,15 @@ export default {
       this.focus(key);
     },
     hasFieldType(type) {
-      return Vue.options.components["k-" + type + "-field"];
+      return this.$helper.isComponent(type + "-field");
     },
     hasField(name) {
       return this.$refs[name] && this.$refs[name][0];
     },
-    label(field, name) {
-      return field.label || this.$helper.string.ucfirst(name);
+    label(name) {
+      return this.fields[name].label || this.$helper.string.ucfirst(name);
     },
     meetsCondition(field) {
-
       if (!field.when) {
         return true;
       }
@@ -123,6 +140,9 @@ export default {
 
       return result;
 
+    },
+    onInput() {
+      this.$emit("input", this.values);
     }
   }
 };

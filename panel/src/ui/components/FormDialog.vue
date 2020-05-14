@@ -6,7 +6,8 @@
   >
     <k-form
       ref="form"
-      v-model="value"
+      :value="value"
+      :autofocus="true"
       :fields="fields"
       :novalidate="novalidate"
       class="mb-3"
@@ -58,11 +59,11 @@ export default {
     }
   },
   methods: {
-    onInput(input) {
-      this.$emit("input", this.value);
+    onInput(value) {
+      this.$emit("input", value);
     },
-    onSubmit(event) {
-      this.$emit("submit", this.value);
+    onSubmit(value) {
+      this.$emit("submit", value);
     }
   }
 }

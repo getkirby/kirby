@@ -2,15 +2,17 @@ import Padding from "../storybook/Padding.js";
 import AsyncFormDialog from "./AsyncFormDialog.vue";
 
 export default {
-  title: "Lab | Async Form Dialog",
+  title: "UI | Dialog / Async Form Dialog",
   decorators: [Padding]
 };
 
 const RegistrationDialog = {
   extends: AsyncFormDialog,
-  computed: {
-    fields() {
-      return {
+  methods: {
+    async load() {
+      await new Promise(r => setTimeout(r, 500));
+
+      this.fields = {
         license: {
           label: this.$t("license.register.label"),
           type: "text",
@@ -26,33 +28,26 @@ const RegistrationDialog = {
           counter: false
         }
       };
-    },
-    submitButton() {
-      return "Register";
-    }
-  },
-  methods: {
-    async load() {
-      await new Promise(r => setTimeout(r, 500));
 
-      return {
-        email: "mail@bastianallgeier.com"
+      this.submitButton = {
+        color: "green",
+        icon: "key",
+        text: "Register"
       };
-    },
-    async submit(values) {
-      await new Promise(r => setTimeout(r, 500));
 
-      throw "The registration failed";
+      this.values = {
+        email: "bastian@getkirby.com"
+      };
+
     },
-    async validate(values) {
-      if (values.license.length !== 5) {
-        throw "Please enter a valid email";
-      }
+    async submit() {
+      await new Promise(r => setTimeout(r, 500));
+      return true;
     }
   }
 };
 
-export const simple = () => ({
+export const registrationDialog = () => ({
   components: {
     "k-registration-dialog": RegistrationDialog
   },

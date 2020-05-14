@@ -12,12 +12,11 @@
       <k-backdrop
         :dir="$direction"
         :data-size="size"
-        :data-loading="isLoading"
+        :data-loading="loading"
         slot-scope="{
           cancel,
           cancelButton,
           closeNotification,
-          isLoading,
           notification,
           submit,
           submitButton
@@ -37,7 +36,7 @@
           />
           <div class="k-dialog-body p-6">
             <slot>
-              <k-text>{{ text }}</k-text>
+              <k-text v-html="text" />
             </slot>
           </div>
           <slot
@@ -151,10 +150,18 @@ export default {
   },
   methods: {
     cancel() {
+      if (this.loading) {
+        return false;
+      }
+
       this.$emit("cancel");
       this.close();
     },
     close() {
+      if (this.loading) {
+        return false;
+      }
+
       this.$emit("close");
       this.$refs.overlay.close();
     },
@@ -165,6 +172,10 @@ export default {
       this.$refs.overlay.open();
     },
     submit() {
+      if (this.loading) {
+        return false;
+      }
+
       this.$emit("submit");
     },
     success(message) {

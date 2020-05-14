@@ -1,11 +1,11 @@
 <script>
-import FormDialog from "../components/FormDialog.vue";
+import AsyncFormDialog from "@/ui/components/AsyncFormDialog.vue";
 
 export default {
-  extends: FormDialog,
-  computed: {
-    fields() {
-      return {
+  extends: AsyncFormDialog,
+  methods: {
+    async load() {
+      this.fields = {
         license: {
           label: this.$t("license.register.label"),
           type: "text",
@@ -21,17 +21,21 @@ export default {
           counter: false
         }
       };
-    }
-  },
-  methods: {
-    async load() {
-      return {
+
+      this.submitButton = {
+        color: "green",
+        icon: "key",
+        text: this.$t("license.register")
+      };
+
+      this.values = {
         license: null,
         email: null
       };
     },
-    async submit(values) {
-      await this.$api.system.register(values);
+    async submit() {
+      await this.$api.system.register();
+      return true;
     }
   }
 }
