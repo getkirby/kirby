@@ -1,6 +1,16 @@
 
 export default function (Vue) {
+  const Api = Vue.prototype.$api;
+
   return {
+    async create(parent, props) {
+      const page = await Api.pages.create(parent, props);
+      this.$store.dispatch("notification/success", ":)");
+      this.$events.$emit("page.create", page);
+
+      const path = this.link(page.id);
+      this.$router.push(path);
+    },
     breadcrumb(page, self = true) {
       let breadcrumb = page.parents.map(parent => ({
         label: parent.title,
@@ -16,18 +26,21 @@ export default function (Vue) {
 
       return breadcrumb;
     },
-    id(id) {
-      return id.replace(/\//g, "+");
-    },
-    unid(id) {
-      return id.replace(/\+/g, "/");
+    async duplicate(id, slug, props) {
+      const page = await Api.pages.duplicate(id, slug, props);
+      this.$store.dispatch("notification/success", ":)");
+      this.$events.$emit("page.create", page);
+      this.$events.$emit("page.duplicate", page);
+
+      const path = this.link(page.id);
+      this.$router.push(path);
     },
     link(id) {
       return "/" + this.url(id);
     },
     async options(id, view = "view") {
       const url     = this.url(id);
-      const page    = await Vue.prototype.$api.get(url, { select: "options" });
+      const page    = await Api.get(url, { select: "options" });
       const options = page.options;
       let result    = [];
 
@@ -90,8 +103,18 @@ export default function (Vue) {
 
       return result;
     },
+    async remove(id, props) {
+      // send API request to delete page
+      await Api.pages.delete(id, props);
+
+      // remove data from content store
+      await this.$store.dispatch("content/remove", "pages/" + id);
+
+      this.$store.dispatch("notification/success", ":)");
+      this.$events.$emit("page.delete", id);
+    },
     url(id, path) {
-      let url = id === null ? "pages" : "pages/" + this.id(id);
+      let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");
 
       if (path) {
         url += "/" + path;

@@ -68,7 +68,7 @@ export default {
       this.submitButton = this.$t("page.draft.create");
     },
     async submit() {
-      return await this.$api.pages.create(this.parent, {
+      return await this.$model.pages.create(this.parent, {
         content: {
           title: this.values.title
         },

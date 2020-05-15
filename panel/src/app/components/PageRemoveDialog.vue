@@ -39,6 +39,7 @@ export default {
       fields: {},
       hasChildren: false,
       id: null,
+      parent: null,
       title: null,
       values: {}
     };
@@ -48,6 +49,7 @@ export default {
       const page = await this.$api.pages.get(id, {
         select: [
           "title",
+          "parent",
           "hasChildren",
           "hasDrafts"
         ]
@@ -55,6 +57,9 @@ export default {
 
       // keep the id to delete the page later
       this.id = id;
+
+      // keep the parent to redirect router later
+      this.parent = page.parent;
 
       // check if there are any subpages or drafts
       // in this case, additional confirmation is needed
@@ -92,7 +97,21 @@ export default {
       };
     },
     async submit() {
-      await this.$api.pages.delete(this.id, { force: true });
+      await this.$model.pages.delete(this.id, { force: true });
+
+      // redirect to parent page
+      // if the current view is the deleted page
+      if (
+        this.$route.params.path &&
+        id === this.$route.params.path.replace(/\+/g, "/")
+      ) {
+        if (this.parent) {
+          const path = this.$model.pages.link(this.parent.id);
+          this.$router.push(path);
+        } else {
+          this.$router.push("/pages");
+        }
+      }
     },
     async validate() {
       if (this.hasChildren === false) {

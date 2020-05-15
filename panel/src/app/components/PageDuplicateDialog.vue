@@ -57,7 +57,7 @@ export default {
 
     },
     async submit() {
-      return await this.$api.pages.duplicate(
+      return await this.$model.pages.duplicate(
         this.id,
         this.values.slug,
         {
