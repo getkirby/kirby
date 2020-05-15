@@ -6,6 +6,7 @@
       </template>
       <template v-else>
         <k-form
+          :autofocus="true"
           :fields="fields"
           v-model="user"
           @submit="onSubmit"
