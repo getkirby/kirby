@@ -3,7 +3,7 @@ import Padding from "../../../storybook/theme/Padding.js";
 import PagesField from "./PagesField.vue";
 
 <Meta
-  title="UI | Form / Field / Pages Field"
+  title="App | Form / Field / Pages Field"
   component={PagesField}
   decorators={[Padding]}
 />
@@ -11,14 +11,21 @@ import PagesField from "./PagesField.vue";
 # Pages Field
 ### `<k-pages-field>`
 
+export const regular = () => ({
+  components: {
+    "k-pages-field": PagesField,
+  },
+  data() {
+    return {
+      value: ["13", "72"]
+    };
+  },
+});
+
 <Preview>
   <Story name="List">
     {{
-      data() {
-        return {
-          value: ["13", "72"]
-        };
-      },
+      extends: regular(),
       template: `
         <div>
           <k-pages-field
@@ -41,6 +48,7 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Cardlets">
     {{
+      extends: regular(),
       data() {
         return {
           value: ["13", "72", "24", "117"]
@@ -62,6 +70,7 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Cards">
     {{
+      extends: regular(),
       data() {
         return {
           value: ["72", "123", "4"]
@@ -82,6 +91,7 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Picker layout">
     {{
+      extends: regular(),
       data() {
         return {
           value: ["1", "2", "6", "24", "120"]
@@ -106,6 +116,7 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Single value">
     {{
+      extends: regular(),
       data() {
         return {
           value: ["42"]
@@ -132,11 +143,7 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Max">
     {{
-      data() {
-        return {
-          value: ["13", "72"]
-        };
-      },
+      extends: regular(),
       template: `
         <k-pages-field
           :value="value"
@@ -153,6 +160,7 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="No search">
     {{
+      extends: regular(),
       template: `
         <k-pages-field
           :search="false"
@@ -167,11 +175,7 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Not sortable">
     {{
-      data() {
-        return {
-          value: ["13", "72"]
-        };
-      },
+      extends: regular(),
       template: `
         <k-pages-field
           v-model="value"
@@ -187,6 +191,7 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Empty">
     {{
+      extends: regular(),
       template: `
         <k-pages-field label="Pages" />
       `
@@ -198,6 +203,7 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Custom empty">
     {{
+      extends: regular(),
       template: `
         <k-pages-field
           :empty="{ text: 'Add related projects', icon: 'parent' }"
@@ -212,11 +218,7 @@ import PagesField from "./PagesField.vue";
 <Preview>
   <Story name="Disabled">
     {{
-      data() {
-        return {
-          value: ["13", "72"]
-        };
-      },
+      extends: regular(),
       template: `
         <k-pages-field
           v-model="value"

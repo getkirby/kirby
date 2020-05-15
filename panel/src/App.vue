@@ -69,10 +69,21 @@ export default {
         : false;
     },
     defaultTranslation() {
-      return this.$store.state.languages.current ? this.$store.state.languages.current === this.$store.state.languages.default : false;
+      if (!this.languages.current ) {
+        return false;
+      }
+
+      return this.languages.current === this.languages.default;
+    },
+    languages() {
+      return this.$store.state.languages;
     },
     translation() {
-      return this.$store.state.languages.current ? this.$store.state.languages.current.code : false;
+      if (!this.languages.current ) {
+        return false;
+      }
+
+      return this.languages.current.code;
     }
   },
   created() {

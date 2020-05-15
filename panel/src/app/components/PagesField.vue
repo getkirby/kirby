@@ -1,5 +1,5 @@
 <script>
-import PickerField from "./PickerField.vue";
+import PickerField from "@/ui/components/PickerField.vue";
 
 // TODO: implement actual API instead
 import { Page, Pages } from "../../../storybook/data/PickerItems.js";

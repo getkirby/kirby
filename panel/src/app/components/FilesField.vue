@@ -1,8 +1,8 @@
 <script>
-import PickerField from "./PickerField.vue";
+import PickerField from "@/ui/components/PickerField.vue";
 
 // TODO: implement actual API instead
-import { User, Users } from "../../../storybook/data/PickerItems.js";
+import { File, Files } from "../../../storybook/data/PickerItems.js";
 
 export default {
   extends: PickerField,
@@ -11,18 +11,18 @@ export default {
       type: [String, Object],
       default() {
         return {
-          icon: "user",
-          text: this.$t("field.users.empty")
+          icon: "file",
+          text: this.$t("field.files.empty")
         };
       }
     }
   },
   methods: {
     async getItems(ids) {
-      return ids.map(id => User(id));
+      return ids.map(id => File(id));
     },
     async getOptions({page, limit, parent, search}) {
-      return Users(page, limit, parent, search);
+      return Files(page, limit, parent, search);
     },
   }
 }

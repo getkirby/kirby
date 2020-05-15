@@ -1,29 +1,36 @@
 import { Meta, Preview, Story } from '@storybook/addon-docs/blocks';
 import Padding from "../../../storybook/theme/Padding.js";
-import UsersField from "./UsersField.vue";
+import FilesField from "./FilesField.vue";
 
 <Meta
-  title="UI | Form / Field / Users Field"
-  component={UsersField}
+  title="App | Form / Field / Files Field"
+  component={FilesField}
   decorators={[Padding]}
 />
 
-# Users Field
-### `<k-users-field>`
+# Files Field
+### `<k-files-field>`
+
+export const regular = () => ({
+  components: {
+    "k-files-field": FilesField,
+  },
+  data() {
+    return {
+      value: ["13", "72"]
+    };
+  },
+});
 
 <Preview>
   <Story name="List">
     {{
-      data() {
-        return {
-          value: ["13", "72"]
-        };
-      },
+      extends: regular(),
       template: `
         <div>
-          <k-users-field
+          <k-files-field
             v-model="value"
-            label="Users"
+            label="Files"
           />
           <k-headline class="mt-8 mb-3">Value</k-headline>
           <k-code-block :code="value" />
@@ -33,22 +40,23 @@ import UsersField from "./UsersField.vue";
   </Story>
 </Preview>
 
-<Props of={UsersField} />
+<Props of={FilesField} />
 
-### Layouts
+### Layout
 #### Cardlets
 <Preview>
   <Story name="Cardlets">
     {{
+      extends: regular(),
       data() {
         return {
-          value: ["13", "72", "76", "99"]
+          value: ["13", "72", "82", "2"]
         };
       },
       template: `
-        <k-users-field
+        <k-files-field
           v-model="value"
-          label="Users"
+          label="Files"
           layout="cardlets"
         />
       `
@@ -56,19 +64,20 @@ import UsersField from "./UsersField.vue";
   </Story>
 </Preview>
 
-#### Cards
+### Cards
 <Preview>
   <Story name="Cards">
     {{
+      extends: regular(),
       data() {
         return {
-          value: ["13", "72", "1"]
+          value: ["13", "72", "189"]
         };
       },
       template: `
-        <k-users-field
+        <k-files-field
           v-model="value"
-          label="Users"
+          label="Files"
           layout="cards"
         />
       `
@@ -76,22 +85,19 @@ import UsersField from "./UsersField.vue";
   </Story>
 </Preview>
 
-### Picker layout
+### Picker layout: cards, `size: large`
 <Preview>
   <Story name="Picker layout">
     {{
-      data() {
-        return {
-          value: ["13", "72"]
-        };
-      },
+      extends: regular(),
       template: `
-        <k-users-field
+        <k-files-field
           v-model="value"
-          label="Users"
-          layout="cardlets"
+          label="Files"
           :picker="{
-            layout: 'list'
+            layout: 'cards',
+            size: 'large',
+            image: { cover: true }
           }"
         />
       `
@@ -103,12 +109,18 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="Single value">
     {{
+      extends: regular(),
+      data() {
+        return {
+          value: ["42"]
+        };
+      },
       template: `
         <div>
-          <k-users-field
+          <k-files-field
             v-model="value"
             :multiple="false"
-            label="Users"
+            label="Picker"
             help="Only one items allowed"
           />
           <k-headline class="mt-8 mb-3">Value</k-headline>
@@ -123,16 +135,12 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="Max">
     {{
-      data() {
-        return {
-          value: ["13", "72"]
-        };
-      },
+      extends: regular(),
       template: `
-        <k-users-field
-          v-model="value"
+        <k-files-field
+          :value="value"
           :max="3"
-          label="Users"
+          label="Picker"
           help="Maximum 3 items allowed"
         />
       `
@@ -144,10 +152,11 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="No search">
     {{
+      extends: regular(),
       template: `
-        <k-users-field
+        <k-files-field
           :search="false"
-          label="Users"
+          label="Picker"
         />
       `
     }}
@@ -158,16 +167,12 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="Not sortable">
     {{
-      data() {
-        return {
-          value: ["13", "72"]
-        };
-      },
+      extends: regular(),
       template: `
-        <k-users-field
+        <k-files-field
           v-model="value"
           :sortable="false"
-          label="Users"
+          label="Picker"
         />
       `
     }}
@@ -178,8 +183,9 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="Empty">
     {{
+      extends: regular(),
       template: `
-        <k-users-field label="Users" />
+        <k-files-field label="Files" />
       `
     }}
   </Story>
@@ -189,11 +195,11 @@ import UsersField from "./UsersField.vue";
 <Preview>
   <Story name="Custom empty">
     {{
+      extends: regular(),
       template: `
-        <k-users-field
-          :empty="{ text: 'Select the employee of the month', icon: 'star' }"
-          :multiple="false"
-          label="Highlights"
+        <k-files-field
+          :empty="{ text: 'Add your favorite photos', icon: 'heart' }"
+          label="Picker"
         />
       `
     }}
@@ -202,18 +208,14 @@ import UsersField from "./UsersField.vue";
 
 ### Disabled
 <Preview>
-  <Story name="Disabled">^
+  <Story name="Disabled">
     {{
-      data() {
-        return {
-          value: ["13", "72"]
-        };
-      },
+      extends: regular(),
       template: `
-        <k-users-field
-          v-model="value"
+        <k-files-field
+          :value="value"
           :disabled="true"
-          label="Users"
+          label="Picker"
         />
       `
     }}
@@ -222,4 +224,4 @@ import UsersField from "./UsersField.vue";
 
 ## CSS class
 
-`.k-users-field`
+`.k-files-field`
