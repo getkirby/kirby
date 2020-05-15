@@ -86,6 +86,16 @@ class Auth
     }
 
     /**
+     * Returns the currently impersonated user
+     *
+     * @return \Kirby\Cms\User|null
+     */
+    public function currentUserFromImpersonation()
+    {
+        return $this->impersonate;
+    }
+
+    /**
      * Returns the logged in user by checking
      * the current session and finding a valid
      * valid user id in there
@@ -124,10 +134,10 @@ class Auth
     /**
      * Become any existing user
      *
-     * @param string|null $who
+     * @param string|null $who User ID or email address
      * @return \Kirby\Cms\User|null
      */
-    public function impersonate(string $who = null)
+    public function impersonate(?string $who = null)
     {
         switch ($who) {
             case null:

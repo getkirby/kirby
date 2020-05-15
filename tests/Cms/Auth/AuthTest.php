@@ -52,6 +52,7 @@ class AuthTest extends TestCase
     }
 
     /**
+     * @covers ::currentUserFromImpersonation
      * @covers ::impersonate
      * @covers ::user
      */
@@ -64,19 +65,23 @@ class AuthTest extends TestCase
         $this->assertSame('kirby@getkirby.com', $user->email());
         $this->assertSame('admin', $user->role()->name());
         $this->assertSame($user, $this->auth->user());
+        $this->assertSame($user, $this->auth->currentUserFromImpersonation());
         $this->assertNull($this->auth->user(null, false));
 
         $user = $this->auth->impersonate('homer@simpsons.com');
         $this->assertSame('homer@simpsons.com', $user->email());
         $this->assertSame($user, $this->auth->user());
+        $this->assertSame($user, $this->auth->currentUserFromImpersonation());
         $this->assertNull($this->auth->user(null, false));
 
         $this->assertNull($this->auth->impersonate(null));
         $this->assertNull($this->auth->user());
+        $this->assertNull($this->auth->currentUserFromImpersonation());
         $this->assertNull($this->auth->user(null, false));
 
         $this->assertNull($this->auth->impersonate());
         $this->assertNull($this->auth->user());
+        $this->assertNull($this->auth->currentUserFromImpersonation());
         $this->assertNull($this->auth->user(null, false));
     }
 
@@ -101,6 +106,9 @@ class AuthTest extends TestCase
 
         $user = $this->auth->user();
         $this->assertSame('marge@simpsons.com', $user->email());
+
+        // impersonation is not set
+        $this->assertNull($this->auth->currentUserFromImpersonation());
 
         // value is cached
         $session->set('user.id', 'homer');
