@@ -1,4 +1,4 @@
-import en from "../i18n/en.js";
+import en from "../../../../i18n/translations/en.json";
 
 export default {
   install(Vue) {
