@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Toolkit\Dir;
 
@@ -24,45 +25,82 @@ class AppUsersTest extends TestCase
         Dir::remove($this->fixtures);
     }
 
-    public function testImpersonateAsKirby()
+    public function testImpersonate()
     {
-        $app = $this->app;
-        $app->impersonate('kirby');
+        $self = $this;
 
-        $this->assertSame('kirby@getkirby.com', $app->user()->email());
-        $this->assertTrue($app->user()->isKirby());
-        $this->assertNull($app->user(null, false));
-    }
-
-    public function testImpersonateAsNull()
-    {
-        $app = $this->app;
-        $app->impersonate('kirby');
-
-        $this->assertEquals('kirby@getkirby.com', $app->user()->email());
-        $this->assertTrue($app->user()->isKirby());
-
-        $app->impersonate();
-
-        $this->assertEquals(null, $app->user());
-    }
-
-    public function testImpersonateAsExistingUser()
-    {
         $app = $this->app->clone([
             'users' => [
                 [
+                    'id'    => 'testtest',
                     'email' => 'homer@simpsons.com',
                     'role'  => 'admin'
                 ]
             ]
         ]);
 
-        $app->impersonate('homer@simpsons.com');
-        $this->assertEquals('homer@simpsons.com', $app->user()->email());
+        // impersonate as kirby
+        $user = $app->impersonate('kirby');
+        $this->assertSame('kirby', $user->id());
+        $this->assertSame('kirby@getkirby.com', $user->email());
+        $this->assertSame('admin', $user->role()->name());
+        $this->assertTrue($user->isKirby());
+        $this->assertSame($user, $app->user());
+        $this->assertNull($app->user(null, false));
+
+        // impersonate as existing user
+        $user = $app->impersonate('homer@simpsons.com');
+        $this->assertSame('homer@simpsons.com', $user->email());
+        $this->assertSame($user, $app->user());
+        $user = $app->impersonate('testtest');
+        $this->assertSame('homer@simpsons.com', $user->email());
+        $this->assertSame($user, $app->user());
+        $this->assertNull($app->user(null, false));
+
+        // unimpersonate
+        $user = $app->impersonate();
+        $this->assertNull($user);
+        $this->assertNull($app->user());
+        $this->assertNull($app->user(null, false));
+
+        // with callback
+        $result = $app->impersonate('homer@simpsons.com', function ($user) use ($app, $self) {
+            $self->assertSame($app, $this);
+            $self->assertSame('homer@simpsons.com', $user->email());
+            $self->assertSame($user, $this->user());
+            $self->assertNull($app->user(null, false));
+
+            return 'test1';
+        });
+        $this->assertSame('test1', $result);
+        $this->assertNull($app->user());
+        $this->assertNull($app->user(null, false));
+
+        // with Exception in the callback
+        $app->impersonate('kirby');
+        $caught = false;
+        try {
+            $app->impersonate('homer@simpsons.com', function ($user) use ($app, $self) {
+                $self->assertSame($app, $this);
+                $self->assertSame('homer@simpsons.com', $user->email());
+                $self->assertSame($user, $this->user());
+                $self->assertNull($app->user(null, false));
+
+                throw new Exception('Something bad happened');
+            });
+        } catch (Exception $e) {
+            $caught = true;
+
+            $this->assertSame('Something bad happened', $e->getMessage());
+
+            // the previous user should be restored
+            $this->assertSame('kirby@getkirby.com', $app->user()->email());
+            $this->assertNull($app->user(null, false));
+        }
+        $this->assertTrue($caught);
     }
 
-    public function testImpersonateAsMissingUser()
+    public function testImpersonateErrorMissingUser()
     {
         $this->expectException('Kirby\Exception\NotFoundException');
         $this->app->impersonate('homer@simpsons.com');
