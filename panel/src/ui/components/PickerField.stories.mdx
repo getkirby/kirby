@@ -1,6 +1,6 @@
 import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import Padding from "../storybook/Padding.js";
-import { Items } from "../storybook/PickerItems.js";
+import Padding from "../../../storybook/theme/Padding.js";
+import { Item } from "../../../storybook/data/PickerItems.js";
 import PickerField from "./PickerField.vue";
 
 <Meta
@@ -14,13 +14,15 @@ import PickerField from "./PickerField.vue";
 <Preview>
   <Story name="List">
     {{
-      extends: Items(),
+      data() {
+        return {
+          value: []
+        }
+      },
       template: `
         <div>
           <k-picker-field
             v-model="value"
-            :options="options"
-            :items="items"
             label="Pages"
           />
           <k-headline class="mt-8 mb-3">Value</k-headline>

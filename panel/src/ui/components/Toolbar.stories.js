@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Toolbar from "./Toolbar.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {

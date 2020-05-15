@@ -1,5 +1,5 @@
 import LineField from "./LineField.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 
 export default {
   title: "UI | Form / Field / Line Field",

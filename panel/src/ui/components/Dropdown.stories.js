@@ -1,7 +1,7 @@
 import Dropdown from "./Dropdown.vue";
 import DropdownContent from "./DropdownContent.vue";
 import DropdownItem from "./DropdownItem.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
@@ -138,4 +138,3 @@ export const iconColors = () => ({
     </k-button-group>
   `
 });
-

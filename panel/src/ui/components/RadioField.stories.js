@@ -1,6 +1,6 @@
 import RadioField from "./RadioField.vue";
-import Padding from "../storybook/Padding.js";
-import Options from "../storybook/Options.js";
+import Padding from "../../../storybook/theme/Padding.js";
+import Options from "../../../storybook/data/Options.js";
 
 export default {
   title: "UI | Form / Field / Radio Field",
@@ -105,4 +105,3 @@ export const columnsWithInfo = () => ({
     }
   }
 });
-

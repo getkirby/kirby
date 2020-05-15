@@ -1,5 +1,5 @@
 import InfoField from "./InfoField.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 
 export default {
   title: "UI | Form / Field / Info Field",

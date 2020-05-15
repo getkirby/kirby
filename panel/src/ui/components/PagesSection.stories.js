@@ -1,7 +1,7 @@
 import { action } from "@storybook/addon-actions";
 import PagesSection from "./PagesSection.vue";
-import Padding from "../storybook/Padding.js";
-import Pages from "../storybook/Pages.js";
+import Padding from "../../../storybook/theme/Padding.js";
+import Pages from "../../../storybook/data/Pages.js";
 
 export default {
   title: "UI | Blueprints / Pages Section",
@@ -365,4 +365,3 @@ export const cardsCustomEmpty = () => ({
     },
   }
 });
-

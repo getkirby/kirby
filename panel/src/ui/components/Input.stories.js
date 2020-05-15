@@ -1,5 +1,5 @@
 import Input from "./Input.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 
 export default {
   title: "UI | Form / Foundation / Input",
@@ -30,4 +30,3 @@ export const styledWithCustomInput = () => ({
     </k-input>
   `
 });
-

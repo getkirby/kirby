@@ -1,6 +1,6 @@
 import { action } from "@storybook/addon-actions";
-import Pages from "../storybook/Pages.js";
-import Users from "../storybook/Users.js";
+import Pages from "../../../storybook/data/Pages.js";
+import Users from "../../../storybook/data/Users.js";
 
 export default {
   title: "Lab | Views",
@@ -181,5 +181,3 @@ export const UsersView = () => ({
     </k-inside>
   `
 });
-
-

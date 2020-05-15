@@ -1,5 +1,5 @@
 
-export const Item = (id, model) =>  {
+export const Item = (id, model = "Item") =>  {
   return {
     id: id.toString(),
     title: model + " no. " + id,

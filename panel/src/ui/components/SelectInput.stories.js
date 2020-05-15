@@ -1,6 +1,6 @@
 import SelectInput from "./SelectInput.vue";
-import Padding from "../storybook/Padding.js";
-import Options from "../storybook/Options.js";
+import Padding from "../../../storybook/theme/Padding.js";
+import Options from "../../../storybook/data/Options.js";
 import { action } from "@storybook/addon-actions";
 
 export default {

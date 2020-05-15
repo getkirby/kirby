@@ -1,5 +1,5 @@
 import Offline from "./Offline.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 
 export default {
   title: "UI | Error Handling / Offline warning",

@@ -1,5 +1,5 @@
 import Field from "./Field.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 
 export default {
   title: "UI | Form / Foundation / Field",
@@ -106,4 +106,3 @@ export const options = () => ({
     </k-field>
   `
 });
-

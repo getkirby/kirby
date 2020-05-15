@@ -1,5 +1,5 @@
 import InfoSection from "./InfoSection.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 
 export default {
   title: "UI | Blueprints / Info Section",

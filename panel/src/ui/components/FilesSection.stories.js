@@ -1,7 +1,7 @@
 import { action } from "@storybook/addon-actions";
+import Padding from "../../../storybook/theme/Padding.js";
+import Files from "../../../storybook/data/Files.js";
 import FilesSection from "./FilesSection.vue";
-import Padding from "../storybook/Padding.js";
-import Files from "../storybook/Files.js";
 
 export default {
   title: "UI | Blueprints / Files Section",
@@ -57,4 +57,3 @@ export const cards = () => ({
     }
   }
 });
-

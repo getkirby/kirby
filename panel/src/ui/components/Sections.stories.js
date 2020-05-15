@@ -1,7 +1,7 @@
 import Sections from "./Sections.vue";
-import Padding from "../storybook/Padding.js";
-import Files from "../storybook/Files.js";
-import Pages from "../storybook/Pages.js";
+import Padding from "../../../storybook/theme/Padding.js";
+import Files from "../../../storybook/data/Files.js";
+import Pages from "../../../storybook/data/Pages.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
@@ -150,4 +150,3 @@ export const note = () => ({
     }
   },
 });
-

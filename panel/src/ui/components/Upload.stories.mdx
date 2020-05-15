@@ -1,5 +1,5 @@
 import { Meta, Preview, Story, Props } from '@storybook/addon-docs/blocks';
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 import Upload from "./Upload.vue";
 
 <Meta
@@ -8,7 +8,7 @@ import Upload from "./Upload.vue";
   decorators={[Padding]}
 />
 
-# Upload 
+# Upload
 ### `<k-upload>`
 
 The Upload component is a combination of a native file input and a dialog. The native file input is invisible and only serves to open the file selector from the OS. Once files are selected the dialog will open and show the progress and potential upload errors.
@@ -139,7 +139,7 @@ The Upload component is a combination of a native file input and a dialog. The n
 
 #### Methods
 
-**`drop(files, params)`**  
+**`drop(files, params)`**
 Instead of opening the file picker first you can also start the uploader directly, by "dropping" a `FileList` from a drop event for example.
 
 **`open(params)`**

@@ -1,4 +1,4 @@
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 import AsyncFormDialog from "./AsyncFormDialog.vue";
 
 export default {

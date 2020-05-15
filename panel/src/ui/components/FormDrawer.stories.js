@@ -1,5 +1,5 @@
 import FormDrawer from "./FormDrawer.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 import {
   regular as regularFormDialog,
   prefilled as prefilledFormDialog
@@ -56,4 +56,3 @@ export const prefilled = () => ({
     </div>
   `,
 });
-

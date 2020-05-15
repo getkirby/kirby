@@ -1,5 +1,5 @@
 import RangeInput from "./RangeInput.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {

@@ -6,19 +6,18 @@ export default create({
   colorPrimary: "#d16464",
   colorSecondary: "#7e9abf",
 
-  // // UI
+  // UI
   appBg: "rgba(0,0,0, .0125)",
-  // appContentBg: '#efefef',
   appBorderColor: "#dedede",
   appBorderRadius: 0,
 
-  // // Typography
+  // Typography
   fontBase:
     '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"',
   fontCode:
     '"SFMono-Regular", Consolas, Liberation Mono, Menlo, Courier, monospace',
 
-  // // Text colors
+  // Text colors
   textColor: "black",
   textInverseColor: "rgba(255,255,255,0.9)",
 

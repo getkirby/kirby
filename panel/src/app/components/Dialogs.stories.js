@@ -1,3 +1,6 @@
+import { action } from "@storybook/addon-actions";
+import Padding from "../../../storybook/theme/Padding.js";
+
 import FileRenameDialog from "./FileRenameDialog.vue";
 import FileRemoveDialog from "./FileRemoveDialog.vue";
 import LanguageCreateDialog from "./LanguageCreateDialog.vue";
@@ -19,8 +22,6 @@ import UserPasswordDialog from "./UserPasswordDialog.vue";
 import UserRemoveDialog from "./UserRemoveDialog.vue";
 import UserRenameDialog from "./UserRenameDialog.vue";
 import UserRoleDialog from "./UserRoleDialog.vue";
-import Padding from "@/ui/storybook/Padding.js";
-import { action } from "@storybook/addon-actions";
 
 export default {
   title: "App | Dialogs",

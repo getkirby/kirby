@@ -2,7 +2,7 @@
 import PickerField from "./PickerField.vue";
 
 // TODO: implement actual API instead
-import { User, Users } from "../storybook/PickerItems.js";
+import { User, Users } from "../../../storybook/data/PickerItems.js";
 
 export default {
   extends: PickerField,

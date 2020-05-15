@@ -50,7 +50,6 @@
 
 <script>
 import Registration from "@/components/Dialogs/RegistrationDialog.vue";
-import config from "@/config/config.js";
 
 export default {
   name: "App",
@@ -60,7 +59,7 @@ export default {
   data() {
     return {
       dragging: false,
-      debug: config.debug
+      debug: this.$config.debug
     };
   },
   computed: {

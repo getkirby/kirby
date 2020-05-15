@@ -13,4 +13,8 @@ const defaults = {
   }
 };
 
-export default { ...defaults, ...panel };
+export default {
+  install(Vue) {
+    Vue.prototype.$config = { ...defaults, ...panel };
+  }
+};

@@ -1,5 +1,5 @@
 import Dialog from "./Dialog.vue";
-import Padding from "../storybook/Padding.js";
+import Padding from "../../../storybook/theme/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
@@ -237,4 +237,3 @@ export const successNotification = () => ({
     </div>
   `,
 });
-

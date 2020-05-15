@@ -70,7 +70,6 @@
 </template>
 
 <script>
-import config from "@/config/config.js";
 import debounce from "@/ui/helpers/debounce.js";
 
 export default {
@@ -258,5 +257,4 @@ export default {
   border-top: 1px dashed $color-border;
   color: $color-gray-700;
 }
-
 </style>

@@ -1,9 +1,9 @@
 import Api from "../api/api.js";
 
 export default {
-  install(Vue, store, config) {
+  install(Vue, store) {
 
-    Api.config.endpoint = config.api;
+    Api.config.endpoint = Vue.prototype.$config.api;
     Api.requests = [];
 
     Api.config.onPrepare = (options) => {
