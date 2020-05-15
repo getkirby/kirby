@@ -17,11 +17,6 @@ export default {
       }
     }
   },
-  computed: {
-    component() {
-      return "k-pages-picker";
-    }
-  },
   methods: {
     async getItems(ids) {
       return ids.map(id => Page(id));

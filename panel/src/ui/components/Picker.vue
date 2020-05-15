@@ -11,6 +11,22 @@
       class="k-picker-search mb-4 py-2 px-4 rounded-sm"
     />
 
+    <!-- Navigation -->
+    <header
+      v-if="parent"
+      slot="navigation"
+      class="k-picker-navbar mb-4"
+    >
+      <k-button
+        :disabled="!parent.id"
+        :tooltip="$t('back')"
+        icon="angle-left"
+        @click="onBack"
+      >
+        {{ parent.title }}
+      </k-button>
+    </header>
+
     <!-- Collection -->
     <k-async-collection
       ref="collection"
@@ -100,7 +116,8 @@ export default {
   data() {
     return {
       selected: this.value,
-      q: null
+      q: null,
+      parents: [],
     };
   },
   computed: {
@@ -108,7 +125,8 @@ export default {
       return async () => {
         return await this.options({
             ...this.pagination,
-            search: this.q
+            search: this.q,
+            parent: this.parent
           });
       }
     },
@@ -127,6 +145,13 @@ export default {
           pagination: this.pagination
         };
       }
+    },
+    parent() {
+      if (this.parents.length === 0) {
+        return null;
+      }
+
+      return this.parents[this.parents.length - 1];
     }
   },
   watch: {
@@ -174,6 +199,11 @@ export default {
 
       return item;
     },
+    onBack() {
+      this.parents.pop();
+      this.reset();
+      this.reload();
+    },
     onDeselect(id, item, itemIndex) {
       const index = this.selected.indexOf(id);
 
@@ -197,6 +227,12 @@ export default {
       this.onFlag(item, itemIndex);
     },
     onOption(option, item, itemIndex) {
+      if (option === "enter") {
+        this.parents.push(item);
+        this.reset();
+        this.reload();
+      }
+
       this.$emit("option", option, item, itemIndex);
     },
     onPaginate(pagination) {

@@ -35,8 +35,7 @@
       @close="$refs.picker.reset()"
       @submit="onSelect"
     >
-      <component
-        :is="component"
+      <k-picker
         ref="picker"
         v-model="updated"
         v-bind="picker"
@@ -175,9 +174,6 @@ export default {
         pagination: false,
         sortable: this.isSortable
       };
-    },
-    component() {
-      return "k-picker";
     },
     isSortable() {
       if (this.disabled === true) {
