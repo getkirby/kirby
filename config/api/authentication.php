@@ -4,7 +4,7 @@ use Kirby\Exception\PermissionException;
 
 return function () {
     $auth               = $this->kirby()->auth();
-    $allowImpersonation = $this->kirby()->option('api.allowImpersonation', false);
+    $allowImpersonation = $this->kirby()->option('api.allowImpersonation') ?? false;
 
     // csrf token check
     if ($auth->type($allowImpersonation) === 'session' && $auth->csrf() === false) {

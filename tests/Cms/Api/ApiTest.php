@@ -45,6 +45,7 @@ class ApiTest extends TestCase
             ],
             'options' => [
                 'api' => [
+                    'allowImpersonation' => true,
                     'authentication' => function () {
                         return true;
                     },
