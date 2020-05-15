@@ -77,20 +77,23 @@ trait AppUsers
      * Returns a specific user by id
      * or the current user if no id is given
      *
-     * @param string $id
+     * @param string|null $id
+     * @param bool $allowImpersonation If set to false, only the actually
+     *                                 logged in user will be returned
+     *                                 (when `$id` is passed as `null`)
      * @return \Kirby\Cms\User|null
      */
-    public function user(string $id = null)
+    public function user(?string $id = null, bool $allowImpersonation = true)
     {
         if ($id !== null) {
             return $this->users()->find($id);
         }
 
-        if (is_string($this->user) === true) {
+        if ($allowImpersonation === true && is_string($this->user) === true) {
             return $this->auth()->impersonate($this->user);
         } else {
             try {
-                return $this->auth()->user();
+                return $this->auth()->user(null, $allowImpersonation);
             } catch (Throwable $e) {
                 return null;
             }

@@ -57,23 +57,27 @@ class AuthTest extends TestCase
      */
     public function testImpersonate()
     {
-        $this->assertEquals(null, $this->auth->user());
+        $this->assertSame(null, $this->auth->user());
 
         $user = $this->auth->impersonate('kirby');
-        $this->assertEquals('kirby', $user->id());
-        $this->assertEquals('kirby@getkirby.com', $user->email());
-        $this->assertEquals('admin', $user->role());
-        $this->assertEquals($user, $this->auth->user());
+        $this->assertSame('kirby', $user->id());
+        $this->assertSame('kirby@getkirby.com', $user->email());
+        $this->assertSame('admin', $user->role()->name());
+        $this->assertSame($user, $this->auth->user());
+        $this->assertNull($this->auth->user(null, false));
 
         $user = $this->auth->impersonate('homer@simpsons.com');
-        $this->assertEquals('homer@simpsons.com', $user->email());
-        $this->assertEquals($user, $this->auth->user());
+        $this->assertSame('homer@simpsons.com', $user->email());
+        $this->assertSame($user, $this->auth->user());
+        $this->assertNull($this->auth->user(null, false));
 
         $this->assertNull($this->auth->impersonate(null));
         $this->assertNull($this->auth->user());
+        $this->assertNull($this->auth->user(null, false));
 
         $this->assertNull($this->auth->impersonate());
         $this->assertNull($this->auth->user());
+        $this->assertNull($this->auth->user(null, false));
     }
 
     /**
@@ -96,12 +100,12 @@ class AuthTest extends TestCase
         $session->set('user.id', 'marge');
 
         $user = $this->auth->user();
-        $this->assertEquals('marge@simpsons.com', $user->email());
+        $this->assertSame('marge@simpsons.com', $user->email());
 
         // value is cached
         $session->set('user.id', 'homer');
         $user = $this->auth->user();
-        $this->assertEquals('marge@simpsons.com', $user->email());
+        $this->assertSame('marge@simpsons.com', $user->email());
     }
 
     /**
@@ -113,7 +117,7 @@ class AuthTest extends TestCase
         $session->set('user.id', 'homer');
 
         $user = $this->auth->user($session);
-        $this->assertEquals('homer@simpsons.com', $user->email());
+        $this->assertSame('homer@simpsons.com', $user->email());
     }
 
     /**
@@ -124,7 +128,7 @@ class AuthTest extends TestCase
         $_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode('homer@simpsons.com:springfield123');
 
         $user = $this->auth->user();
-        $this->assertEquals('homer@simpsons.com', $user->email());
+        $this->assertSame('homer@simpsons.com', $user->email());
     }
 
     /**
