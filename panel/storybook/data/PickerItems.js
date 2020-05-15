@@ -37,7 +37,7 @@ export const Options = async (page, limit, parent, search, model) => {
 
 export const Page = (id) => {
   let item = Item(id, "Page");
-  item.options= [{ icon: "angle-right", text: "Open"}];
+  item.options= [{ option: "enter", icon: "angle-right", text: "Open"}];
   return item;
 };
 

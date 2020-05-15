@@ -53,9 +53,6 @@
 <script>
 import Field from "@/ui/components/Field.vue";
 
-// Dummy data
-import { Item, Options } from "../../../storybook/data/PickerItems.js";
-
 export default {
   props: {
     ...Field.props,
@@ -209,11 +206,19 @@ export default {
     }
   },
   methods: {
+    /**
+     * Takes a list of ids and return full item objects.
+     * Has to be implemented by actual field
+     */
     async getItems(ids) {
-      return ids.map(id => Item(id));
+      return [];
     },
+    /**
+     * Returns item objects.
+     * Has to be implemented by actual field
+     */
     async getOptions({page, limit, parent, search}) {
-      return Options(page, limit, parent, search, Item);
+      return [];
     },
     onEmpty() {
       this.onOpen();
