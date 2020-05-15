@@ -4,8 +4,16 @@ export default {
   install(Vue) {
 
     /** Fake translations */
-    Vue.prototype.$t = function(string, replace) {
-      return en[string] || "$t('" + string + "')";
+    Vue.prototype.$t = function(string, replace = {}) {
+
+      let message = en[string] || "$t('" + string + "')";
+
+      Object.keys(replace).forEach(key => {
+        const regex = new RegExp("{" + key + "}", "g");
+        message = message.replace(regex, replace[key]);
+      });
+
+      return message;
     };
 
     /** Fake store */

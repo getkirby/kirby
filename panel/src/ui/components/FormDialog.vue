@@ -13,7 +13,9 @@
       class="mb-3"
       @input="onInput"
       @submit="onSubmit"
-    />
+    >
+      <slot />
+    </k-form>
   </k-dialog>
 </template>
 

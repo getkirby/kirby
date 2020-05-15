@@ -8,7 +8,9 @@
     :submit-button="submitButton"
     @input="onInput"
     @submit="onSubmit"
-  />
+  >
+    <slot />
+  </k-form-dialog>
 </template>
 <script>
 import AsyncDialog from "./AsyncDialog.vue";

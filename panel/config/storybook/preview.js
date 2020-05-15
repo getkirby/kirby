@@ -15,6 +15,11 @@ Vue.prototype.$user = {
   }
 };
 Vue.prototype.$model = {
+  languages: {
+    defaultLanguageCode() {
+      return "en";
+    },
+  },
   pages: {
     blueprints(id, section) {
       return [

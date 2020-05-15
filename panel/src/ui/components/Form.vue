@@ -12,7 +12,6 @@
       <k-fieldset
         ref="fields"
         :value="value"
-        :autofocus="autofocus"
         :disabled="disabled"
         :fields="fields"
         :novalidate="novalidate"
@@ -53,6 +52,11 @@ export default {
       }
     }
   },
+  mounted() {
+    if (this.autofocus) {
+      this.$nextTick(this.focus);
+    }
+  },
   data() {
     return {
       listeners: {
@@ -66,6 +70,16 @@ export default {
     focus(name) {
       if (this.$refs.fields && this.$refs.fields.focus) {
         this.$refs.fields.focus(name);
+        return;
+      }
+
+      let target = this.$el.querySelector(
+        "[autofocus], [data-autofocus], input, textarea, select"
+      );
+
+      if (target && typeof target.focus === "function") {
+        target.focus();
+        return;
       }
     },
     onInput(values) {

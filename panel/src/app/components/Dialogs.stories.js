@@ -5,10 +5,14 @@ import LanguageRemoveDialog from "./LanguageRemoveDialog.vue";
 import LanguageUpdateDialog from "./LanguageUpdateDialog.vue";
 import PageCreateDialog from "./PageCreateDialog.vue";
 import PageDuplicateDialog from "./PageDuplicateDialog.vue";
+import PageRemoveDialog from "./PageRemoveDialog.vue";
 import PageRenameDialog from "./PageRenameDialog.vue";
+import PageStatusDialog from "./PageStatusDialog.vue";
 import PageTemplateDialog from "./PageTemplateDialog.vue";
+import PageUrlDialog from "./PageUrlDialog.vue";
 import RegistrationDialog from "./RegistrationDialog.vue";
 import SiteRenameDialog from "./SiteRenameDialog.vue";
+import UserCreateDialog from "./UserCreateDialog.vue";
 import UserEmailDialog from "./UserEmailDialog.vue";
 import UserLanguageDialog from "./UserLanguageDialog.vue";
 import UserPasswordDialog from "./UserPasswordDialog.vue";
@@ -115,6 +119,18 @@ export const PageDuplicate = () => ({
   }
 });
 
+export const PageRemove = () => ({
+  extends: DialogStory(),
+  components: {
+    "k-story-dialog": PageRemoveDialog
+  },
+  methods: {
+    open() {
+      this.$refs.dialog.open("photography");
+    }
+  }
+});
+
 export const PageRename = () => ({
   extends: DialogStory(),
   components: {
@@ -127,10 +143,24 @@ export const PageRename = () => ({
   }
 });
 
+export const PageStatus = () => ({
+  extends: PageRename(),
+  components: {
+    "k-story-dialog": PageStatusDialog
+  }
+});
+
 export const PageTemplate = () => ({
   extends: PageRename(),
   components: {
     "k-story-dialog": PageTemplateDialog
+  }
+});
+
+export const PageUrl = () => ({
+  extends: PageRename(),
+  components: {
+    "k-story-dialog": PageUrlDialog
   }
 });
 
@@ -145,6 +175,13 @@ export const SiteRename = () => ({
   extends: DialogStory(),
   components: {
     "k-story-dialog": SiteRenameDialog
+  }
+});
+
+export const UserCreate = () => ({
+  extends: DialogStory(),
+  components: {
+    "k-story-dialog": UserCreateDialog
   }
 });
 

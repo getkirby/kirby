@@ -67,15 +67,53 @@ export default {
     get(id) {
       request.get("pages/" + id);
       return {
+        blueprint: {
+          status: {
+            draft: {
+              label: "Draft",
+              text: "The page is in draft mode and only visible for logged in editors",
+            },
+            unlisted: {
+              label: "Unlisted",
+              text: "The page is only accessible via URL",
+            },
+            listed: {
+              label: "Public",
+              text: "The page is public for anyone",
+            }
+          },
+          options: {
+            changeStatus: true
+          }
+        },
         blueprints: [
           { name: "article", title: "Article" },
           { name: "project", title: "Project" }
         ],
+        errors: [],
         hasChildren: true,
         hasFiles: true,
+        num: 1,
+        parents: [],
         slug: "photography",
+        status: "listed",
         template: "article",
         title: "Photography",
+      };
+    },
+    changeSlug(id, slug) {
+      request.patch("pages/" + id + "/slug");
+      return {
+        id: id,
+        slug: slug,
+      };
+    },
+    changeStatus(id, status, position) {
+      request.patch("pages/" + id + "/status");
+      return {
+        id: id,
+        position: position,
+        status: status,
       };
     },
     changeTemplate(id, template) {
@@ -117,6 +155,10 @@ export default {
     }
   },
   users: {
+    create(user) {
+      request.post("users", user);
+      return user;
+    },
     changeEmail(id, email) {
       request.patch("users/" + id + "/email");
       return {
