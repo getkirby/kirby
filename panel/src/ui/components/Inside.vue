@@ -194,4 +194,9 @@ export default {
   -webkit-overflow-scrolling: touch;
   transform: translate3d(0, 0, 0);
 }
+.k-panel-inside .k-view {
+  height: calc(100vh - 6rem);
+  min-height: none;
+  padding: 0 3rem;
+}
 </style>

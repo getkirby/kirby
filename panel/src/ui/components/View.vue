@@ -36,11 +36,11 @@ export default {
 }
 
 .k-view[data-align="center"] {
-  height: calc(100vh - 6rem);
+  min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 3rem;
+  padding: 1.5rem;
   overflow: auto;
 }
 .k-view[data-align="center"] > * {
