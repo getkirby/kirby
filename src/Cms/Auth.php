@@ -416,16 +416,19 @@ class Auth
     /**
      * Returns the current authentication type
      *
+     * @param bool $allowImpersonation If set to false, 'impersonate' won't
+     *                                 be returned as authentication type
+     *                                 even if an impersonation is active
      * @return string
      */
-    public function type(): string
+    public function type(bool $allowImpersonation = true): string
     {
         $basicAuth = $this->kirby->option('api.basicAuth', false);
         $auth      = $this->kirby->request()->auth();
 
         if ($basicAuth === true && $auth && $auth->type() === 'basic') {
             return 'basic';
-        } elseif ($this->impersonate !== null) {
+        } elseif ($allowImpersonation === true && $this->impersonate !== null) {
             return 'impersonate';
         } else {
             return 'session';
@@ -436,13 +439,15 @@ class Auth
      * Validates the currently logged in user
      *
      * @param \Kirby\Session\Session|array|null $session
+     * @param bool $allowImpersonation If set to false, only the actually
+     *                                 logged in user will be returned
      * @return \Kirby\Cms\User
      *
      * @throws \Throwable If an authentication error occured
      */
-    public function user($session = null)
+    public function user($session = null, bool $allowImpersonation = true)
     {
-        if ($this->impersonate !== null) {
+        if ($allowImpersonation === true && $this->impersonate !== null) {
             return $this->impersonate;
         }
 

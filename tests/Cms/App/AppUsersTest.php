@@ -28,8 +28,10 @@ class AppUsersTest extends TestCase
     {
         $app = $this->app;
         $app->impersonate('kirby');
-        $this->assertEquals('kirby@getkirby.com', $app->user()->email());
+
+        $this->assertSame('kirby@getkirby.com', $app->user()->email());
         $this->assertTrue($app->user()->isKirby());
+        $this->assertNull($app->user(null, false));
     }
 
     public function testImpersonateAsNull()
