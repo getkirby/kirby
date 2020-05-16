@@ -37,7 +37,7 @@
     >
       <k-picker
         ref="picker"
-        v-model="updated"
+        v-model="temp"
         v-bind="picker"
         :max="max"
         :multiple="multiple"
@@ -109,12 +109,11 @@ export default {
   data() {
     return {
       selected: this.value,
-      updated: null,
+      temp: null,
       pagination: {
         page: 1,
-        limit: 15,
-        total: 0,
-        ...this.picker.pagination
+        limit: this.picker.limit || 15,
+        total: 0
       }
     };
   },
@@ -227,7 +226,7 @@ export default {
       this.$emit("input", this.selected);
     },
     onOpen() {
-      this.updated = this.$helper.clone(this.selected);
+      this.temp = this.$helper.clone(this.selected);
       this.$refs.drawer.open();
     },
     onPaginate(pagination) {
@@ -238,7 +237,7 @@ export default {
       this.onInput();
     },
     onSelect() {
-      this.selected = this.updated;
+      this.selected = this.temp;
       this.onInput();
       this.$refs.drawer.close();
     },

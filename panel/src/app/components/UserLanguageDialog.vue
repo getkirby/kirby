@@ -32,7 +32,10 @@ export default {
       this.submitButton = this.$t("change");
     },
     async submit() {
-      return await this.$api.users.changeLanguage(this.id, this.values.language);
+      return await this.$model.users.changeLanguage(
+        this.id,
+        this.values.language
+      );
     }
   }
 }

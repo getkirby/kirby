@@ -23,7 +23,7 @@ export default {
     Vue.use(I18n.plugin, Store);
     Vue.use(Api, Store);
     Vue.use(ErrorHandling);
-    Vue.use(Models);
+    Vue.use(Models, Api, Store);
     Vue.use(Plugins, Store);
   }
 };

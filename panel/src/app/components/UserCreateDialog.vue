@@ -66,7 +66,7 @@ export default {
       this.submitButton = this.$t("create");
     },
     async submit() {
-      return await this.$api.users.create(this.values);
+      return await this.$model.users.create(this.values);
     }
   }
 }

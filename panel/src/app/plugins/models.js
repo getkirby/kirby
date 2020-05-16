@@ -6,15 +6,21 @@ import translations from "@/models/translations.js";
 import users from "@/models/users.js";
 
 export default {
-  install(Vue) {
+  install(Vue, Api, Store) {
+    const plugins = {
+      $api: Api,
+      $events: Vue.prototype.$events,
+      $store: Store,
+      $user: Vue.prototype.$user
+    };
 
     Vue.prototype.$model = {
-      files: files(Vue),
-      pages: pages(Vue),
-      roles: roles(Vue),
-      site: site(Vue),
-      translations: translations(Vue),
-      users: users(Vue)
+      files: files(Vue, plugins),
+      pages: pages(Vue, plugins),
+      roles: roles(Vue, plugins),
+      site: site(Vue, plugins),
+      translations: translations(Vue, plugins),
+      users: users(Vue, plugins)
     };
   }
 };

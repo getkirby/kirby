@@ -23,7 +23,7 @@ export default {
       this.submitButton = this.$t("rename");
     },
     async submit() {
-      return await this.$api.users.changeName(this.id, this.values.name);
+      return await this.$model.users.changeName(this.id, this.values.name);
     }
   }
 }

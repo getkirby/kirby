@@ -12,8 +12,9 @@ export default {
       });
     },
     async submit() {
-      await this.$api.users.delete(this.id);
+      await this.$model.users.delete(this.id);
       return this.user;
+      // TODO: routing away from view
     }
   }
 }

@@ -1,14 +1,6 @@
 
-export default function (Vue) {
-  const Api = Vue.prototype.$api;
-
+export default function (Vue, { $api, $events, $store}) {
   return {
-    async create(parent, props) {
-      const page = await Api.pages.create(parent, props);
-      this.$events.$emit("page.create", page);
-      this.$store.dispatch("notification/success");
-      return page;
-    },
     breadcrumb(page, self = true) {
       let breadcrumb = page.parents.map(parent => ({
         label: parent.title,
@@ -25,51 +17,57 @@ export default function (Vue) {
       return breadcrumb;
     },
     async changeSlug(id, slug) {
-      const page = await Api.pages.changeSlug(id, slug);
+      const page = await $api.pages.changeSlug(id, slug);
 
       // move in content store
-      await this.$store.dispatch("content/move", [
+      await $store.dispatch("content/move", [
         "pages/" + id,
         "pages/" + page.id
       ]);
 
-      this.$events.$emit("page.changeSlug", page);
-      this.$store.dispatch("notification/success");
+      $events.$emit("page.changeSlug", page);
+      $store.dispatch("notification/success");
       return page;
     },
     async changeStatus(id, status, position) {
-      const page = await Api.pages.changeStatus(id, status, position);
-      this.$events.$emit("page.changeStatus", page);
-      this.$store.dispatch("notification/success");
+      const page = await $api.pages.changeStatus(id, status, position);
+      $events.$emit("page.changeStatus", page);
+      $store.dispatch("notification/success");
       return page;
     },
     async changeTemplate(id, template) {
-      const page = await Api.pages.changeTemplate(id, template);
-      this.$events.$emit("page.changeTemplate", page);
-      this.$store.dispatch("notification/success");
+      const page = await $api.pages.changeTemplate(id, template);
+      $events.$emit("page.changeTemplate", page);
+      $store.dispatch("notification/success");
       return page;
     },
     async changeTitle(id, title) {
-      const page = await Api.pages.changeTitle(id, title);
-      this.$events.$emit("page.changeTitle", page);
-      this.$store.dispatch("notification/success");
+      const page = await $api.pages.changeTitle(id, title);
+      $events.$emit("page.changeTitle", page);
+      $store.dispatch("notification/success");
+      return page;
+    },
+    async create(parent, props) {
+      const page = await $api.pages.create(parent, props);
+      $events.$emit("page.create", page);
+      $store.dispatch("notification/success");
       return page;
     },
     async delete(id, props) {
       // send API request to delete page
-      await Api.pages.delete(id, props);
+      await $api.pages.delete(id, props);
 
       // remove data from content store
-      await this.$store.dispatch("content/remove", "pages/" + id);
+      await $store.dispatch("content/remove", "pages/" + id);
 
-      this.$events.$emit("page.delete", id);
-      this.$store.dispatch("notification/success");
+      $events.$emit("page.delete", id);
+      $store.dispatch("notification/success");
     },
     async duplicate(id, slug, props) {
-      const page = await Api.pages.duplicate(id, slug, props);
-      this.$events.$emit("page.create", page);
-      this.$events.$emit("page.duplicate", page);
-      this.$store.dispatch("notification/success");
+      const page = await $api.pages.duplicate(id, slug, props);
+      $events.$emit("page.create", page);
+      $events.$emit("page.duplicate", page);
+      $store.dispatch("notification/success");
       return page;
     },
     link(id) {
@@ -77,7 +75,7 @@ export default function (Vue) {
     },
     async options(id, view = "view") {
       const url     = this.url(id);
-      const page    = await Api.get(url, { select: "options" });
+      const page    = await $api.get(url, { select: "options" });
       const options = page.options;
       let result    = [];
 

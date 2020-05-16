@@ -23,6 +23,7 @@ export default {
     },
     async submit() {
       return await this.$api.users.changeEmail(this.id, this.values.email);
+      // TODO: routing in view
     }
   }
 }

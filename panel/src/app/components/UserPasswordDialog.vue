@@ -34,7 +34,10 @@ export default {
       this.submitButton = this.$t("change");
     },
     async submit() {
-      return await this.$api.users.changePassword(this.id, this.values.password);
+      return await this.$model.users.changePassword(
+        this.id,
+        this.values.password
+      );
     },
     async validate() {
       if (!this.values.password || this.values.password.length < 8) {

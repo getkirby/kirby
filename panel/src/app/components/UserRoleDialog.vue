@@ -34,7 +34,7 @@ export default {
       this.submitButton = this.$t("change");
     },
     async submit() {
-      return await this.$api.users.changeRole(this.id, this.values.role);
+      return await this.$model.users.changeRole(this.id, this.values.role);
     }
   }
 }
