@@ -44,7 +44,7 @@
   background-color: $color-orange-300;
 }
 .bg-pattern {
-  background-color: $color-gray-800 url($pattern);
+  background: $color-gray-800 url($pattern);
 }
 .bg-purple {
   background-color: $color-purple-400;
