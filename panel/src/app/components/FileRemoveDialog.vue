@@ -14,9 +14,9 @@ export default {
     },
     async submit() {
       await this.$model.files.delete(
+        this.file.id,
         this.parent,
-        this.filename,
-        this.file
+        this.filename
       );
       return this.file;
     }

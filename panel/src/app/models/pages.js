@@ -25,32 +25,27 @@ export default function (Vue, { $api, $events, $store}) {
         "pages/" + page.id
       ]);
 
-      $events.$emit("page.changeSlug", page);
-      $store.dispatch("notification/success");
+      this.onUpdate("changeSlug", page);
       return page;
     },
     async changeStatus(id, status, position) {
       const page = await $api.pages.changeStatus(id, status, position);
-      $events.$emit("page.changeStatus", page);
-      $store.dispatch("notification/success");
+      this.onUpdate("changeStatus", page);
       return page;
     },
     async changeTemplate(id, template) {
       const page = await $api.pages.changeTemplate(id, template);
-      $events.$emit("page.changeTemplate", page);
-      $store.dispatch("notification/success");
+      this.onUpdate("changeTemplate", page);
       return page;
     },
     async changeTitle(id, title) {
       const page = await $api.pages.changeTitle(id, title);
-      $events.$emit("page.changeTitle", page);
-      $store.dispatch("notification/success");
+      this.onUpdate("changeTitle", page);
       return page;
     },
     async create(parent, props) {
       const page = await $api.pages.create(parent, props);
-      $events.$emit("page.create", page);
-      $store.dispatch("notification/success");
+      this.onUpdate("create", page);
       return page;
     },
     async delete(id, props) {
@@ -60,18 +55,25 @@ export default function (Vue, { $api, $events, $store}) {
       // remove data from content store
       await $store.dispatch("content/remove", "pages/" + id);
 
-      $events.$emit("page.delete", id);
-      $store.dispatch("notification/success");
+      this.onUpdate("delete", id);
     },
     async duplicate(id, slug, props) {
       const page = await $api.pages.duplicate(id, slug, props);
-      $events.$emit("page.create", page);
-      $events.$emit("page.duplicate", page);
-      $store.dispatch("notification/success");
+      this.onUpdate(["create", "duplicate"], page);
       return page;
     },
     link(id) {
       return "/" + this.url(id);
+    },
+    onUpdate(event, data) {
+      if (Array.isArray(event)) {
+        event.forEach(e => {
+          this.onUpdate(e, data);
+        });
+      }
+
+      $events.$emit("page." + event, data);
+      $store.dispatch("notification/success");
     },
     async options(id, view = "view") {
       const url     = this.url(id);

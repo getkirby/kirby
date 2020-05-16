@@ -42,22 +42,24 @@ export default function (Vue, { $api, $events, $store}) {
         "files/" + file.id
       ]);
 
-      $events.$emit("file.changeName", file);
-      $store.dispatch("notification/success");
+      this.onUpdate("changeName", file);
       return file;
     },
-    async delete(parent, filename, file) {
+    async delete(id, parent, filename) {
       // send API request to delete file
       await $api.files.delete(parent, filename);
 
       // remove data from content store
-      await $store.dispatch("content/remove", "files/" + file.id);
+      await $store.dispatch("content/remove", "files/" + id);
 
-      $events.$emit("file.delete", file);
-      $store.dispatch("notification/success");
+      this.onUpdate("delete", id);
     },
     link(parent, filename, path) {
       return "/" + this.url(parent, filename, path);
+    },
+    onUpdate(event, data) {
+      $events.$emit("file." + event, data);
+      $store.dispatch("notification/success");
     },
     async options(parent, filename, view) {
       const url     = this.url(parent, filename);

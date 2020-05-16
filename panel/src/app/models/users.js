@@ -23,8 +23,7 @@ export default function (Vue, { $api, $events, $store, $user}) {
         "users/" + user.id
       ]);
 
-      $events.$emit("user.changeEmail", user);
-      $store.dispatch("notification/success");
+      this.onUpdate("changeEmail", user);
       return user;
     },
     async changeLanguage(id, language) {
@@ -35,8 +34,7 @@ export default function (Vue, { $api, $events, $store, $user}) {
         await $store.dispatch("user/language", language);
       }
 
-      $events.$emit("user.changeLanguage", user);
-      $store.dispatch("notification/success");
+      this.onUpdate("changeLanguage", user);
       return user;
     },
     async changeName(id, name) {
@@ -47,14 +45,12 @@ export default function (Vue, { $api, $events, $store, $user}) {
         await $store.dispatch("user/name", name);
       }
 
-      $events.$emit("user.changeName", user);
-      $store.dispatch("notification/success");
+      this.onUpdate("changeName", user);
       return user;
     },
     async changePassword(id, password) {
       const user = await $api.users.changePassword(id, password);
-      $events.$emit("user.changePassword", user);
-      $store.dispatch("notification/success");
+      this.onUpdate("changePassword", user);
       return user;
     },
     async changeRole(id, role) {
@@ -65,14 +61,12 @@ export default function (Vue, { $api, $events, $store, $user}) {
         await $store.dispatch("user/load");
       }
 
-      $events.$emit("user.changeRole", user);
-      $store.dispatch("notification/success");
+      this.onUpdate("changeRole", user);
       return user;
     },
     async create(values) {
       const user = await $api.users.create(values);
-      $events.$emit("user.create", user);
-      $store.dispatch("notification/success");
+      this.onUpdate("create", user);
       return user;
     },
     async delete(id) {
@@ -82,11 +76,14 @@ export default function (Vue, { $api, $events, $store, $user}) {
       // remove data from content store
       await $store.dispatch("content/remove", "users/" + id);
 
-      $events.$emit("user.delete", file);
-      $store.dispatch("notification/success");
+      this.onUpdate("delete", id);
     },
     link(id, path) {
       return "/" + this.url(id, path);
+    },
+    onUpdate(event, data) {
+      $events.$emit("user." + event, data);
+      $store.dispatch("notification/success");
     },
     async options(id) {
       const url     = this.url(id);
