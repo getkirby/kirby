@@ -10,14 +10,16 @@
         <k-image
           v-if="image"
           :src="image"
+          back="pattern"
         />
         <k-aspect-ratio
           v-else-if="icon"
           class="k-file-preview-icon-container"
+          back="pattern"
         >
           <k-icon
             v-bind="icon"
-            size="medium"
+            size="large"
             class="k-file-preview-icon"
           />
         </k-aspect-ratio>
