@@ -41,6 +41,12 @@ export default {
         payload = { message: payload };
       }
 
+      // defaults
+      payload = {
+        message: ":)",
+        ...payload
+      };
+
       context.dispatch("open", {
         type: "success",
         timeout: 4000,

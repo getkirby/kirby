@@ -113,7 +113,7 @@ export default {
       return options;
     },
     async submit() {
-      return await this.$api.pages.changeStatus(
+      return await this.$model.pages.changeStatus(
         this.id,
         this.values.status,
         this.values.position || 1

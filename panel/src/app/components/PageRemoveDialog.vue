@@ -99,6 +99,7 @@ export default {
     async submit() {
       await this.$model.pages.delete(this.id, { force: true });
 
+      // TODO: this should actually go into the View!
       // redirect to parent page
       // if the current view is the deleted page
       if (

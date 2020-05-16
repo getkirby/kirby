@@ -20,9 +20,14 @@ export default {
   methods: {
     async getItems(ids) {
       return ids.map(id => Page(id));
+      // TODO: actual API call
+      // const items = ids.map(async id => this.$api.get("field/pages/item"));
+      // return await Promise.all(items);
     },
     async getOptions({page, limit, parent, search}) {
       return Pages(page, limit, parent, search);
+      // TODO: actual API call
+      // return await this.$api.get("field/pages/options");
     },
   }
 }

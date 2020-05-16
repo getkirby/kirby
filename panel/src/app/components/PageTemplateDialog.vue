@@ -43,7 +43,10 @@ export default {
 
     },
     async submit() {
-      return await this.$api.pages.changeTemplate(this.id, this.values.template);
+      return await this.$model.pages.changeTemplate(
+        this.id,
+        this.values.template
+      );
     },
   }
 }

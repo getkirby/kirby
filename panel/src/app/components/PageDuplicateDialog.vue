@@ -57,7 +57,8 @@ export default {
 
     },
     async submit() {
-      return await this.$model.pages.duplicate(
+      // duplicate the current page with new slug
+      const page = await this.$model.pages.duplicate(
         this.id,
         this.values.slug,
         {
@@ -65,6 +66,12 @@ export default {
           files:    this.values.files
         }
       );
+
+      // route to new page
+      const path = this.link(page.id);
+      this.$router.push(path);
+
+      return page;
     }
   }
 }

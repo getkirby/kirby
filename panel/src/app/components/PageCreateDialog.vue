@@ -68,13 +68,20 @@ export default {
       this.submitButton = this.$t("page.draft.create");
     },
     async submit() {
-      return await this.$model.pages.create(this.parent, {
+      // create new page
+      const page = await this.$model.pages.create(this.parent, {
         content: {
           title: this.values.title
         },
         slug: this.values.slug,
         template: this.values.template,
       });
+
+      // route to new page
+      const path = this.link(page.id);
+      this.$router.push(path);
+
+      return page;
     },
     async validate() {
       if (this.values.title.length === 0) {

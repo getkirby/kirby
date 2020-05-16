@@ -5,11 +5,9 @@ export default function (Vue) {
   return {
     async create(parent, props) {
       const page = await Api.pages.create(parent, props);
-      this.$store.dispatch("notification/success", ":)");
       this.$events.$emit("page.create", page);
-
-      const path = this.link(page.id);
-      this.$router.push(path);
+      this.$store.dispatch("notification/success");
+      return page;
     },
     breadcrumb(page, self = true) {
       let breadcrumb = page.parents.map(parent => ({
@@ -26,14 +24,43 @@ export default function (Vue) {
 
       return breadcrumb;
     },
+    async changeSlug(id, slug) {
+      const page = await this.$api.pages.changeSlug(id, slug);
+
+      // move in content store
+      await this.$store.dispatch("content/move", [
+        "pages/" + id,
+        "pages/" + page.id
+      ]);
+
+      this.$events.$emit("page.changeSlug", page);
+      this.$store.dispatch("notification/success");
+      return page;
+    },
+    async changeStatus(id, status, position) {
+      const page = await this.$api.pages.changeStatus(id, status, position);
+      this.$events.$emit("page.changeStatus", page);
+      this.$store.dispatch("notification/success");
+      return page;
+    },
+    async changeTemplate(id, template) {
+      const page = await this.$api.pages.changeTemplate(id, template);
+      this.$events.$emit("page.changeTemplate", page);
+      this.$store.dispatch("notification/success");
+      return page;
+    },
+    async changeTitle(id, title) {
+      const page = await this.$api.pages.changeTitle(id, title);
+      this.$events.$emit("page.changeTitle", page);
+      this.$store.dispatch("notification/success");
+      return page;
+    },
     async duplicate(id, slug, props) {
       const page = await Api.pages.duplicate(id, slug, props);
-      this.$store.dispatch("notification/success", ":)");
       this.$events.$emit("page.create", page);
       this.$events.$emit("page.duplicate", page);
-
-      const path = this.link(page.id);
-      this.$router.push(path);
+      this.$store.dispatch("notification/success");
+      return page;
     },
     link(id) {
       return "/" + this.url(id);
@@ -110,8 +137,8 @@ export default function (Vue) {
       // remove data from content store
       await this.$store.dispatch("content/remove", "pages/" + id);
 
-      this.$store.dispatch("notification/success", ":)");
       this.$events.$emit("page.delete", id);
+      this.$store.dispatch("notification/success");
     },
     url(id, path) {
       let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");
