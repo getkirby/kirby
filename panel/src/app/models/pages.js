@@ -25,7 +25,7 @@ export default function (Vue) {
       return breadcrumb;
     },
     async changeSlug(id, slug) {
-      const page = await this.$api.pages.changeSlug(id, slug);
+      const page = await Api.pages.changeSlug(id, slug);
 
       // move in content store
       await this.$store.dispatch("content/move", [
@@ -38,22 +38,32 @@ export default function (Vue) {
       return page;
     },
     async changeStatus(id, status, position) {
-      const page = await this.$api.pages.changeStatus(id, status, position);
+      const page = await Api.pages.changeStatus(id, status, position);
       this.$events.$emit("page.changeStatus", page);
       this.$store.dispatch("notification/success");
       return page;
     },
     async changeTemplate(id, template) {
-      const page = await this.$api.pages.changeTemplate(id, template);
+      const page = await Api.pages.changeTemplate(id, template);
       this.$events.$emit("page.changeTemplate", page);
       this.$store.dispatch("notification/success");
       return page;
     },
     async changeTitle(id, title) {
-      const page = await this.$api.pages.changeTitle(id, title);
+      const page = await Api.pages.changeTitle(id, title);
       this.$events.$emit("page.changeTitle", page);
       this.$store.dispatch("notification/success");
       return page;
+    },
+    async delete(id, props) {
+      // send API request to delete page
+      await Api.pages.delete(id, props);
+
+      // remove data from content store
+      await this.$store.dispatch("content/remove", "pages/" + id);
+
+      this.$events.$emit("page.delete", id);
+      this.$store.dispatch("notification/success");
     },
     async duplicate(id, slug, props) {
       const page = await Api.pages.duplicate(id, slug, props);
@@ -129,16 +139,6 @@ export default function (Vue) {
       });
 
       return result;
-    },
-    async remove(id, props) {
-      // send API request to delete page
-      await Api.pages.delete(id, props);
-
-      // remove data from content store
-      await this.$store.dispatch("content/remove", "pages/" + id);
-
-      this.$events.$emit("page.delete", id);
-      this.$store.dispatch("notification/success");
     },
     url(id, path) {
       let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");

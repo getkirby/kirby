@@ -1,6 +1,7 @@
 import Users from "./users.js";
 
 export default function (Vue) {
+  const Api = Vue.prototype.$api;
 
   return {
     breadcrumb(file, route) {
@@ -33,6 +34,29 @@ export default function (Vue) {
       });
 
       return breadcrumb;
+    },
+    async changeName(id, parent, filename, name) {
+      const file = await Api.pages.changeName(parent, filename, name);
+
+      // move in content store
+      await this.$store.dispatch("content/move", [
+        "files/" + id,
+        "files/" + file.id
+      ]);
+
+      this.$events.$emit("file.changeName", file);
+      this.$store.dispatch("notification/success");
+      return file;
+    },
+    async delete(parent, filename, file) {
+      // send API request to delete page
+      await Api.files.delete(parent, filename);
+
+      // remove data from content store
+      await this.$store.dispatch("content/remove", "files/" + file.id);
+
+      this.$events.$emit("file.delete", file);
+      this.$store.dispatch("notification/success");
     },
     link(parent, filename, path) {
       return "/" + this.url(parent, filename, path);

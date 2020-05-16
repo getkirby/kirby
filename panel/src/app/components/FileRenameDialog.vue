@@ -30,7 +30,13 @@ export default {
       };
     },
     async submit() {
-      return await this.$api.files.changeName(this.parent, this.filename, this.file.name);
+      return await this.$model.files.changeName(
+        this.file.id,
+        this.parent,
+        this.filename,
+        this.file.name
+      );
+      // TODO: routing in view
     },
     async validate() {
       if (this.values.name.length === 0) {

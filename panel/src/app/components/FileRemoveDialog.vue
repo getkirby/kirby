@@ -13,7 +13,11 @@ export default {
       });
     },
     async submit() {
-      await this.$api.files.delete(this.parent, this.filename);
+      await this.$model.files.delete(
+        this.parent,
+        this.filename,
+        this.file
+      );
       return this.file;
     }
   }
