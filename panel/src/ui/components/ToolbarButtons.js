@@ -64,7 +64,7 @@ export default {
           args: level,
           command: "heading",
           icon: "title",
-          label: Toolbar.$t("toolbar.button.heading." + level, "Heading " + level)
+          label: Toolbar.$t("toolbar.button.heading." + level)
         };
       })
     };

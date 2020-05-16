@@ -109,6 +109,11 @@ export const regular = () => ({
   <Story name="Single value">
     {{
       extends: regular(),
+      data() {
+        return {
+          value: ["42"]
+        }
+      },
       template: `
         <div>
           <k-users-field
