@@ -12,42 +12,42 @@
             <span v-html="$t('installation.disabled')" />
           </li>
 
-          <li v-if="requirements.php === false">
+          <li v-if="!php">
             <k-icon type="alert" />
             <span v-html="$t('installation.issues.php')" />
           </li>
 
-          <li v-if="requirements.server === false">
+          <li v-if="!server">
             <k-icon type="alert" />
             <span v-html="$t('installation.issues.server')" />
           </li>
 
-          <li v-if="requirements.mbstring === false">
+          <li v-if="!mbstring">
             <k-icon type="alert" />
             <span v-html="$t('installation.issues.mbstring')" />
           </li>
 
-          <li v-if="requirements.curl === false">
+          <li v-if="!curl">
             <k-icon type="alert" />
             <span v-html="$t('installation.issues.curl')" />
           </li>
 
-          <li v-if="requirements.accounts === false">
+          <li v-if="!accounts">
             <k-icon type="alert" />
             <span v-html="$t('installation.issues.accounts')" />
           </li>
 
-          <li v-if="requirements.content === false">
+          <li v-if="!content">
             <k-icon type="alert" />
             <span v-html="$t('installation.issues.content')" />
           </li>
 
-          <li v-if="requirements.media === false">
+          <li v-if="!media">
             <k-icon type="alert" />
             <span v-html="$t('installation.issues.media')" />
           </li>
 
-          <li v-if="requirements.sessions === false">
+          <li v-if="!sessions">
             <k-icon type="alert" />
             <span v-html="$t('installation.issues.sessions')" />
           </li>
@@ -67,23 +67,40 @@
 export default {
   props: {
     disabled: {
+      default: false,
       type: Boolean,
-      default: true
     },
-    requirements: {
-      type: Object,
-      default() {
-        return {
-          accounts: false,
-          content: false,
-          curl: false,
-          mbstring: false,
-          media: false,
-          php: false,
-          server: false,
-          sessions: false,
-        };
-      }
+    accounts: {
+      default: true,
+      type: Boolean,
+    },
+    content: {
+      default: true,
+      type: Boolean,
+    },
+    curl: {
+      default: true,
+      type: Boolean,
+    },
+    mbstring: {
+      default: true,
+      type: Boolean,
+    },
+    media: {
+      default: true,
+      type: Boolean,
+    },
+    php: {
+      default: true,
+      type: Boolean,
+    },
+    server: {
+      default: true,
+      type: Boolean,
+    },
+    sessions: {
+      default: true,
+      type: Boolean,
     }
   },
   methods: {

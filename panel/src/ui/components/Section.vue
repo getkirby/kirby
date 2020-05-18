@@ -11,6 +11,7 @@
       :text="label || headline"
       class="k-section-header"
       element="h2"
+      @option="onOption"
     />
     <slot />
   </section>

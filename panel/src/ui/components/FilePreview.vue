@@ -55,7 +55,7 @@
             <h3>{{ $t("dimensions") }}</h3>
             <p>
               <template v-if="width || height">
-                {{ width }}&times;{{ height }} {{ $t("pixel") }}
+                {{ width }} &times; {{ height }} {{ $t("pixel") }}
               </template>
             </p>
           </li>

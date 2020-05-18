@@ -18,14 +18,14 @@
           </header>
           <footer
             slot="footer"
-            class="pt-8"
+            class="pt-6"
           >
             <k-button
               class="k-installation-button p-3"
               icon="check"
               type="submit"
             >
-              {{ $t("install") }}
+              {{ $t("install") }} &rarr;
             </k-button>
           </footer>
         </k-form>

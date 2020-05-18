@@ -150,6 +150,9 @@ export default {
     }
   },
   system: {
+    install() {
+
+    },
     register() {
       return request.post("system/register");
     }

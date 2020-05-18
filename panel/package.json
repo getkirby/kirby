@@ -7,7 +7,6 @@
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "buildene": "vue-cli-service build",
     "dev": "vue-cli-service serve --open",
     "pre-commit": "pretty-quick --staged",
     "sandbox": "vue serve ./src/ui/main.js",
@@ -16,7 +15,6 @@
     "build-storybook": "vue-cli-service storybook:build -c storybook",
     "test:e2e:record": "vue-cli-service test:e2e --headless --record --key 6e3e7aae-66e8-4d69-8e62-0210742b8415",
     "test:unit:watch": "vue-cli-service test:unit --watch",
-    "testkit:reset": "./scripts/reset-testkit",
     "chromatic": "chromatic ./storybook-static --project-token=6s8oqh7iry"
   },
   "dependencies": {

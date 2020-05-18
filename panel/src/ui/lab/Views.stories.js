@@ -74,31 +74,6 @@ export const SiteView = () => ({
 });
 
 
-export const SettingsView = () => ({
-  computed: {
-    breadcrumb() {
-      return [
-        { icon: "settings", text: "Settings" }
-      ]
-    },
-  },
-  template: `
-    <k-inside
-      :breadcrumb="breadcrumb"
-      :registered="true"
-      view="settings"
-    >
-      <k-view class="k-settings-view">
-        <k-header>
-          Settings
-        </k-header>
-      </k-view>
-    </k-inside>
-  `
-});
-
-
-
 export const UsersView = () => ({
   data() {
     return {

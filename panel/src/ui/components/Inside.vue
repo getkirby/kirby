@@ -3,7 +3,8 @@
     :data-loading="loading"
     :data-translation="translation"
     :data-translation-default="defaultTranslation"
-    class="k-panel k-panel-inside">
+    class="k-panel k-panel-inside"
+  >
     <!-- Topbar -->
     <header class="k-panel-header">
       <k-topbar
@@ -12,13 +13,11 @@
         :loading="loading"
         @search="onSearch"
       >
-
         <k-registration-buttons
           v-if="registered === false"
           slot="options"
           @register="onRegister"
         />
-
       </k-topbar>
     </header>
 
@@ -193,10 +192,5 @@ export default {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   transform: translate3d(0, 0, 0);
-}
-.k-panel-inside .k-view {
-  height: calc(100vh - 6rem);
-  min-height: none;
-  padding: 0 3rem;
 }
 </style>

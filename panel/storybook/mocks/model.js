@@ -1,6 +1,17 @@
 
 export default {
+  files: {
+    delete() {
+
+    }
+  },
   languages: {
+    list() {
+      return [
+        { code: "en", name: "English", default: true },
+        { code: "de", name: "Deutsch" },
+      ];
+    },
     defaultLanguageCode() {
       return "en";
     },

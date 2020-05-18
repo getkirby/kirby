@@ -8,7 +8,7 @@
       :for="$attrs['for']"
       class="flex font-bold items-center"
     >
-      <k-link :to="link">
+      <k-link v-if="link" :to="link">
         {{ text }}
         <abbr
           v-if="required"
@@ -18,6 +18,16 @@
           *
         </abbr>
       </k-link>
+      <template v-else>
+        {{ text }}
+        <abbr
+          v-if="required"
+          :title="$t('required')"
+          class="text-gray ml-1"
+        >
+          *
+        </abbr>
+      </template>
     </component>
 
     <!-- Options -->

@@ -15,7 +15,7 @@
       />
       <footer
         slot="footer"
-        class="pt-8 flex justify-between"
+        class="pt-6 flex justify-between"
       >
         <k-toggle-input
           class="text-sm"
@@ -23,6 +23,7 @@
           v-model="remember"
         />
         <k-button
+          class="k-login-button p-3"
           icon="check"
           type="submit"
           theme="positive">
@@ -68,3 +69,9 @@ export default {
   },
 }
 </script>
+
+<style>
+.k-login-button {
+  margin-right: -.75rem;
+}
+</style>
