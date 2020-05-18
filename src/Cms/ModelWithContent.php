@@ -40,6 +40,17 @@ abstract class ModelWithContent extends Model
     public $translations;
 
     /**
+     * Magic getter for content field access
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function __get(string $name)
+    {
+        return $this->content()->get($name);
+    }
+
+    /**
      * Returns the blueprint of the model
      *
      * @return \Kirby\Cms\Blueprint
