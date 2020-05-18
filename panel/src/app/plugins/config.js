@@ -1,4 +1,3 @@
-/* global process */
 
 const panel = window.panel || {};
 const defaults = {

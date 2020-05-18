@@ -22,11 +22,11 @@
       <router-view />
     </main>
     <k-form-buttons v-if="inside" />
-    <k-error-dialog />
+    <!-- <k-error-dialog /> -->
 
     <k-offline />
 
-    <k-registration
+    <k-registration-dialog
       v-if="inside"
       ref="registration"
     />
@@ -49,13 +49,8 @@
 </template>
 
 <script>
-import Registration from "@/components/Dialogs/RegistrationDialog.vue";
-
 export default {
   name: "App",
-  components: {
-    "k-registration": Registration,
-  },
   data() {
     return {
       dragging: false,

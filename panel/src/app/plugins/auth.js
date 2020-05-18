@@ -1,4 +1,3 @@
-import config from "./config.js";
 
 export default (Vue, store) => {
 
@@ -19,7 +18,7 @@ export default (Vue, store) => {
 
     // no access? redirect to website
     if (access.panel === false) {
-      window.location.href = config.site;
+      window.location.href = Vue.prototype.$config.site;
       return false;
     }
 

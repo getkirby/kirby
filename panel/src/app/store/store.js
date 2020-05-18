@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import Api from "@/api/api.js";
 
 // store modules
 import content from "./modules/content.js";

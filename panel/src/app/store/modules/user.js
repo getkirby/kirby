@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Api from "@/api/api.js";
-import router from "@/config/router.js";
+import router from "@/app/plugins/router.js";
 
 export default {
   namespaced: true,

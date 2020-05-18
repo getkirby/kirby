@@ -1,23 +1,23 @@
 export default {
-  install(Vue, Store, Config) {
+  install(Vue, store) {
 
     Vue.config.errorHandler = error => {
-      if (Config.debug) {
+      if (Vue.prototype.$config.debug) {
         window.console.error(error);
       }
 
-      Store.dispatch("notification/error", {
+      store.dispatch("notification/error", {
         message: error.message || "An error occurred. Please reload the Panel"
       });
     };
 
     window.panel = window.panel || {};
     window.panel.error = (notification, msg) => {
-      if (Config.debug) {
+      if (Vue.prototype.$config.debug) {
         window.console.error(notification + ": " + msg);
       }
 
-      Store.dispatch(
+      store.dispatch(
         "error",
         notification + ". See the console for more information."
       );

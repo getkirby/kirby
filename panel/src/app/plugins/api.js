@@ -1,4 +1,4 @@
-import Api from "../api/api.js";
+import Api from "@/api/api.js";
 
 export default {
   install(Vue, store) {
@@ -58,6 +58,5 @@ export default {
     };
 
     Vue.prototype.$api = Api;
-
   }
 };
