@@ -1,5 +1,5 @@
 <template>
-  <k-inside class="k-system-view">
+  <k-inside class="k-settings-view">
     <k-view>
       <k-header>
         {{ $t('view.settings') }}
@@ -45,12 +45,7 @@
 </template>
 
 <script>
-import Languages from "./Languages.vue";
-
 export default {
-  components: {
-    "k-languages": Languages,
-  },
   props: {
     license: String,
     multilang: Boolean,

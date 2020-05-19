@@ -37,8 +37,8 @@
       />
     </k-bar>
     <k-tabs
-      :tabs="tabs"
       :tab="tab"
+      :tabs="tabs"
     />
   </header>
 </template>
@@ -62,7 +62,7 @@ export default {
     /**
      * The name/id of the currently active tab
      */
-    tab: Object
+    tab: String
   },
   methods: {
     onClick() {

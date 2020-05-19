@@ -23,14 +23,12 @@ Vue.prototype.$user = {
   role: { name: "admin" }
 };
 
-/* Global icons */
-import Icons from "@/ui/components/Icons.vue";
+/** App components */
+import components from "@/app/components/index.js";
+Vue.use(components);
 
 addDecorator(() => {
   return {
-    components: {
-      "k-icons": Icons
-    },
     template: `
       <div :dir="$direction">
         <k-icons />

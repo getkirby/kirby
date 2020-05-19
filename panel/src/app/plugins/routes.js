@@ -15,16 +15,10 @@ export default (Vue, store) => {
       path: "/browser",
       name: "Browser",
       component: Vue.component("k-browser-view"),
-      meta: {
-        outside: true
-      }
     },
     {
       path: "/login",
       component: Vue.component("k-login-view"),
-      meta: {
-        outside: true
-      }
     },
     {
       path: "/logout",
@@ -39,17 +33,11 @@ export default (Vue, store) => {
 
         store.dispatch("user/logout");
 
-      },
-      meta: {
-        outside: true
       }
     },
     {
       path: "/installation",
       component: Vue.component("k-installation-view"),
-      meta: {
-        outside: true
-      }
     },
     {
       path: "/site",

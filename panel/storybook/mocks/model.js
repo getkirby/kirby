@@ -1,8 +1,22 @@
+import Users from "../data/Users.js";
+
 export default (Vue) => {
   return {
     files: {
       changeName() {},
       delete() {},
+      get(parent, filename) {
+        return {
+          filename: "example.jpg",
+          height: 900,
+          mime: "image/jpeg",
+          niceSize: "128 KB",
+          orientation: "landscape",
+          template: "cover",
+          url: "https://source.unsplash.com/user/erondu/1600x900",
+          width: 1600,
+        };
+      },
       options(parent, filename, view) {
         let result = [];
 
@@ -86,6 +100,9 @@ export default (Vue) => {
       changeRole() {},
       create() {},
       delete() {}
+      async list({ limit }) {
+        return Users(limit);
+      }
     }
   };
 };

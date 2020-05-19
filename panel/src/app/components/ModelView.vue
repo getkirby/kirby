@@ -17,12 +17,19 @@
         :next="next"
       />
     </k-header>
+    <k-sections :columns="columns" />
   </k-view>
 </template>
 
 <script>
 export default {
   props: {
+    columns: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     next: {
       type: String,
     },
@@ -32,6 +39,16 @@ export default {
     rename: {
       type: Boolean,
       default: true
+    },
+    tab: {
+      type: String,
+      default: ""
+    },
+    tabs: {
+      type: Array,
+      default() {
+        return [];
+      }
     },
     title: {
       type: String,

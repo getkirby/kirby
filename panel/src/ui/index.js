@@ -2,9 +2,11 @@
 import VuePortal from "@linusborg/vue-simple-portal";
 
 /** Plugins */
+import caniuse from "./plugins/caniuse.js";
 import events from "./plugins/events.js";
 import helpers from "./plugins/helpers.js";
 import libraries from "./plugins/libraries.js";
+import components from "./components/index.js";
 
 export default {
   install(Vue) {
@@ -16,17 +18,12 @@ export default {
     Vue.use(VuePortal);
 
     /** Plugins */
+    Vue.use(caniuse);
     Vue.use(events);
     Vue.use(libraries);
     Vue.use(helpers);
 
     /** Auto-load components */
-    const req = require.context('./components/', true, /\.vue$/i);
-    req.keys().map(key => {
-      let name = key.match(/\w+/)[0];
-          name = "k-" + Vue.prototype.$helper.string.camelToKebab(name);
-      return Vue.component(name, req(key).default);
-    });
-
+    Vue.use(components);
   }
 };

@@ -5,21 +5,21 @@
   >
     <nav>
       <k-button
-        v-for="(tab, tabIndex) in visibleTabs"
-        :key="$route.fullPath + '-tab-' + tabIndex"
-        :link="'#' + tab.name"
-        :current="currentTab && currentTab.name === tab.name"
-        :icon="tab.icon"
-        :tooltip="tab.label"
+        v-for="tabButton in visibleTabs"
+        :key="tabButton.name"
+        :link="'#' + tabButton.name"
+        :current="tab === tabButton.name"
+        :icon="tabButton.icon"
+        :tooltip="tabButton.label"
         class="k-tab-button"
       >
-        {{ tab.label }}
+        {{ tabButton.label || tabButton.name }}
 
         <span
-          v-if="tab.badge"
-          :class="'k-tabs-badge text-' + (tab.badge.color || 'red')"
+          v-if="tabButton.badge"
+          :class="'k-tabs-badge text-' + (tabButton.badge.color || 'red')"
         >
-          {{ tab.badge.count || tab.badge }}
+          {{ tabButton.badge.count || tabButton.badge }}
         </span>
       </k-button>
 
@@ -40,14 +40,14 @@
       class="k-tabs-dropdown"
     >
       <k-dropdown-item
-        v-for="(tab, tabIndex) in invisibleTabs"
-        :key="'more-' + tabIndex"
-        :link="'#' + tab.name"
-        :current="currentTab && currentTab.name === tab.name"
-        :icon="tab.icon"
-        :tooltip="tab.label"
+        v-for="tabButton in invisibleTabs"
+        :key="'more-' + tabButton.name"
+        :link="'#' + tabButton.name"
+        :current="tab === tabButton.name"
+        :icon="tabButton.icon"
+        :tooltip="tabButton.label"
       >
-        {{ tab.label }}
+        {{ tabButton.label || tabButton.name }}
       </k-dropdown-item>
     </k-dropdown-content>
   </div>
@@ -57,29 +57,25 @@
 export default {
   props: {
     /**
+     * The name/id of the currently active tab
+     */
+    tab: String,
+    /**
      * An array of tab definitions to add tabs to the header
      */
     tabs: Array,
-    /**
-     * The name/id of the currently active tab
-     */
-    tab: Object
   },
   data() {
     return {
       size: null,
-      currentTab: this.tab,
       visibleTabs: this.tabs,
       invisibleTabs: []
     }
   },
   watch: {
-    tab() {
-      this.currentTab = this.tab;
-    },
     tabs(tabs) {
       this.visibleTabs = tabs,
-        this.invisibleTabs = [];
+      this.invisibleTabs = [];
       this.resize(true);
     }
   },

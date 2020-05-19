@@ -2,9 +2,11 @@
   <k-inside class="k-file-view">
     <k-file-preview v-bind="preview" />
     <k-model-view
-      :title="file.filename"
+      :columns="columns"
       :rename="true"
-      :tabs="blueprint.tabs"
+      :tab="tab"
+      :tabs="tabs"
+      :title="file.filename"
       @rename="onRename"
     >
       <template slot="options">
@@ -35,43 +37,48 @@
 
     <k-file-rename-dialog
       ref="rename"
-      @success="renamed"
+      @success="onRenamed"
     />
     <k-file-remove-dialog
       ref="remove"
-      @success="deleted"
+      @success="onRemoved"
     />
     <k-upload
       ref="replace"
-      @success="uploaded"
+      @success="onUploaded"
     />
 
   </k-inside>
 </template>
 
 <script>
-import ModelView from "./ModelView.vue";
-import FileRenameDialog from "./FileRenameDialog.vue";
-import FileRemoveDialog from "./FileRemoveDialog.vue";
-
 export default {
-  components: {
-    "k-model-view": ModelView,
-    "k-file-rename-dialog": FileRenameDialog,
-    "k-file-remove-dialog": FileRemoveDialog,
-  },
   props: {
+    columns: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     file: {
       type: Object,
       default() {
         return {};
       }
     },
-    blueprint: {
-      type: Object,
+    isLocked: {
+      type: Boolean,
+      default: false
+    },
+    tabs: {
+      type: Array,
       default() {
-        return {}
+        return []
       }
+    },
+    tab: {
+      type: String,
+      default: ""
     }
   },
   computed: {
@@ -107,6 +114,15 @@ export default {
     },
     onRename() {
       this.$refs.rename.open(this.file.filename);
+    },
+    onRenamed() {
+
+    },
+    onRemoved() {
+
+    },
+    onUploaded() {
+
     }
   }
 };

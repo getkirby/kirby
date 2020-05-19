@@ -1,13 +1,11 @@
 import LoginView from "./LoginView.vue";
 
 export default {
-  title: "App | Views / Login"
+  title: "App | Views / Login",
+  component: LoginView
 };
 
 export const regular = () => ({
-  components: {
-    "k-login-view": LoginView
-  },
   template: `
     <k-login-view />
   `

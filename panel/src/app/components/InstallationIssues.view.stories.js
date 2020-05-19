@@ -1,13 +1,8 @@
-import InstallationIssuesView from "./InstallationIssuesView.vue";
-
 export default {
   title: "App | Views / Installation Issues"
 };
 
 export const disabled = () => ({
-  components: {
-    "k-installation-issues-view": InstallationIssuesView
-  },
   template: `
     <k-installation-issues-view :disabled="true" />
   `

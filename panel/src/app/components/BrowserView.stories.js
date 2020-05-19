@@ -6,9 +6,6 @@ export default {
 };
 
 export const regular = () => ({
-  components: {
-    "k-browser-view": BrowserView
-  },
   template: `
     <k-browser-view />
   `

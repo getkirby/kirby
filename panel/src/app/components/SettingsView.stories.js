@@ -1,13 +1,11 @@
 import SettingsView from "./SettingsView.vue";
 
 export default {
-  title: "App | Views / Settings"
+  title: "App | Views / Settings",
+  component: SettingsView
 };
 
 export const regular = () => ({
-  components: {
-    "k-settings-view": SettingsView
-  },
   methods: {
     onRegister() {
       alert("register");
@@ -33,14 +31,8 @@ export const registered = () => ({
 
 export const languages = () => ({
   extends: regular(),
-  data() {
-    return {
-      languages: this.$model.languages.list(),
-    }
-  },
   template: `
     <k-settings-view
-      :languages="languages"
       :multilang="true"
       license="K3-1234-5678"
       version="3.4"

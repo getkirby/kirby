@@ -57,16 +57,7 @@
   </div>
 </template>
 <script>
-import LanguageCreateDialog from "./LanguageCreateDialog.vue";
-import LanguageRemoveDialog from "./LanguageRemoveDialog.vue";
-import LanguageUpdateDialog from "./LanguageUpdateDialog.vue";
-
 export default {
-  components: {
-    "k-language-create-dialog": LanguageCreateDialog,
-    "k-language-remove-dialog": LanguageRemoveDialog,
-    "k-language-update-dialog": LanguageUpdateDialog,
-  },
   data() {
     return {
       languages: []
