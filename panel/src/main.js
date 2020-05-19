@@ -1,10 +1,10 @@
 import App from "@/app/index.js";
 import Api from "@/app/plugins/api.js";
-import Component from "@/app/App.vue";
 import Config from "@/app/plugins/config.js";
 import ErrorHandling from "@/app/plugins/errors.js";
 import I18n from "vuex-i18n";
 import Models from "@/app/plugins/models.js";
+import Panel from "@/app/Panel.vue";
 import Plugins from "@/app/plugins/plugins.js";
 import Router from "@/app/plugins/router.js";
 import Store from "@/app/store/store.js";
@@ -38,6 +38,6 @@ new Vue({
     this.$store.dispatch("content/init");
   },
   render: h => {
-    return h(Component);
+    return h(Panel);
   },
 }).$mount("#app");

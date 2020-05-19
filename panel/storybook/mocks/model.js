@@ -1,6 +1,7 @@
 export default (Vue) => {
   return {
     files: {
+      changeName() {},
       delete() {},
       options(parent, filename, view) {
         let result = [];
@@ -52,6 +53,13 @@ export default (Vue) => {
           { name: "project", title: "Project" },
         ];
       },
+      changeSlug() {},
+      changeStatus() {},
+      changeTemplate() {},
+      changeTitle() {},
+      create() {},
+      delete() {},
+      duplicate() {},
     },
     roles: {
       async options() {
@@ -70,5 +78,14 @@ export default (Vue) => {
         ];
       },
     },
+    users: {
+      changeEmail() {},
+      changeLanguage() {},
+      changeName() {},
+      changePassword() {},
+      changeRole() {},
+      create() {},
+      delete() {}
+    }
   };
 };
