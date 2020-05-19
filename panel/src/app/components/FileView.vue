@@ -1,7 +1,7 @@
 <template>
   <k-inside class="k-file-view">
     <k-file-preview v-bind="preview" />
-    <k-edit-view
+    <k-model-view
       :title="file.filename"
       :rename="true"
       :tabs="blueprint.tabs"
@@ -27,11 +27,11 @@
           <k-dropdown-content
             ref="settings"
             :options="options"
-            @action="action"
+            @option="onOption"
           />
         </k-dropdown>
       </template>
-    </k-edit-view>
+    </k-model-view>
 
     <k-file-rename-dialog
       ref="rename"
@@ -42,10 +42,7 @@
       @success="deleted"
     />
     <k-upload
-      ref="upload"
-      :url="uploadApi"
-      :accept="file.mime"
-      :multiple="false"
+      ref="replace"
       @success="uploaded"
     />
 
@@ -53,13 +50,13 @@
 </template>
 
 <script>
-import EditView from "./EditView.vue";
+import ModelView from "./ModelView.vue";
 import FileRenameDialog from "./FileRenameDialog.vue";
 import FileRemoveDialog from "./FileRemoveDialog.vue";
 
 export default {
   components: {
-    "k-edit-view": EditView,
+    "k-model-view": ModelView,
     "k-file-rename-dialog": FileRenameDialog,
     "k-file-remove-dialog": FileRemoveDialog,
   },
@@ -78,6 +75,9 @@ export default {
     }
   },
   computed: {
+    options() {
+      return this.$model.files.options(this.file.parent, this.file.filename, "file");
+    },
     preview() {
       return {
         ...this.file,
@@ -90,6 +90,20 @@ export default {
   methods: {
     onOpen() {
       window.open(this.file.url);
+    },
+    onOption(option) {
+      switch (option) {
+        case "rename":
+          return this.$refs.rename.open(this.file.parent, this.file.filename);
+        case "replace":
+          return this.$refs.replace.open({
+            url: this.file.replaceApi,
+            accept: this.file.mime,
+            multiple: false
+          });
+        case "remove":
+          return this.$refs.remove.open(this.file.parent, this.file.filename);
+      }
     },
     onRename() {
       this.$refs.rename.open(this.file.filename);

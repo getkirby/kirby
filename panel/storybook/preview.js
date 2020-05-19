@@ -14,11 +14,11 @@ import Model from "./mocks/model.js";
 import Router from "./mocks/router.js";
 import Store from "./mocks/store.js";
 
+Vue.prototype.$t = I18n;
 Vue.prototype.$api = Api;
-Vue.prototype.$model = Model;
+Vue.prototype.$model = Model(Vue.prototype);
 Vue.use(Router);
 Vue.prototype.$store = Store;
-Vue.prototype.$t = I18n;
 Vue.prototype.$user = {
   role: { name: "admin" }
 };
