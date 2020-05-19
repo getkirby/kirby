@@ -65,6 +65,17 @@ class StructureObject extends Model
     }
 
     /**
+     * Magic getter for content field access
+     *
+     * @param string $name
+     * @return mixed
+     */
+    public function __get(string $name)
+    {
+        return $this->content()->get($name);
+    }
+
+    /**
      * Creates a new StructureObject with the given props
      *
      * @param array $props
