@@ -99,7 +99,7 @@ export default (Vue) => {
       changePassword() {},
       changeRole() {},
       create() {},
-      delete() {}
+      delete() {},
       async list({ limit }) {
         return Users(limit);
       }
