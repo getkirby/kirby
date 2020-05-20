@@ -7,6 +7,8 @@
     }"
     v-on="listeners"
   >
+    <slot name="context" slot="context" />
+
     <k-form
       ref="form"
       v-model="value"
@@ -14,6 +16,7 @@
       :fields="fields"
       :novalidate="novalidate"
       class="mb-3"
+      @focus="onFocus"
       @input="onInput"
       @submit="onSubmit"
     />
@@ -62,10 +65,16 @@ export default {
     }
   },
   methods: {
-    onInput(input) {
+    focus(fieldName) {
+      this.$refs.form.focus(fieldName);
+    },
+    onFocus(event, field, fieldName) {
+      this.$emit("focus", event, field, fieldName);
+    },
+    onInput() {
       this.$emit("input", this.value);
     },
-    onSubmit(event) {
+    onSubmit() {
       this.$emit("submit", this.value);
     }
   }

@@ -49,13 +49,15 @@
             v-else
             class="k-drawer-header flex flex-shrink-0 items-center justify-between pl-6"
           >
-            <span class="flex items-center">
-              <h2 class="text-sm font-normal truncate">
+            <span class="flex flex-grow items-center">
+              <h2 class="flex-shrink-0 text-sm font-normal truncate">
                 {{ title }}
               </h2>
 
               <!-- Center slot in the drawer header -->
-              <slot name="context" />
+              <div class="flex-grow flex items-center justify-center">
+                <slot name="context" />
+              </div>
             </span>
 
             <k-button

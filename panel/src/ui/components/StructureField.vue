@@ -11,7 +11,7 @@
         :id="_uid"
         ref="addButton"
         icon="add"
-        @click="openNewRowDialog"
+        @click="openNewRowDrawer"
       >
         {{ $t("add") }}
       </k-button>
@@ -40,37 +40,30 @@
     <k-empty
       v-else
       icon="list-bullet"
-      @click="openNewRowDialog"
+      @click="openNewRowDrawer"
     >
       {{ empty }}
     </k-empty>
 
     <!-- New Row Dialog -->
-    <k-drawer
-      ref="newRowDialog"
+    <k-form-drawer
+      ref="newRowDrawer"
+      v-model="newRowModel"
+      :fields="fields"
       :title="label + ' / ' + $t('add')"
-      :submit-button="$t('add')"
-      icon="add"
-      theme="positive"
-      @cancel="closeNewRowDialog"
+      @cancel="closeNewRowDrawer"
       @submit="submitNewRow"
-    >
-      <k-form
-        v-model="newRowModel"
-        :fields="fields"
-        @cancel="closeNewRowDialog"
-        @submit="submitNewRow"
-      />
-    </k-drawer>
+    />
 
     <!-- Edit Dialog -->
-    <k-drawer
-      ref="editRowDialog"
+    <k-form-drawer
+      ref="editRowDrawer"
+      v-model="editRowModel"
+      :fields="fields"
+      :submitButton="$t('confirm')"
       :title="label + ' / ' + $t('edit')"
-      :autofocus="false"
-      :submit-button="true"
-      theme="positive"
-      @cancel="closeEditRowDialog"
+      @focus="focusEditRowField"
+      @cancel="closeEditRowDrawer"
       @submit="submitEditRow"
     >
       <k-pagination
@@ -82,16 +75,7 @@
         :dropdown="false"
         @paginate="navigateRowDialog($event.page - 1)"
       />
-
-      <k-form
-        ref="editRowForm"
-        v-model="editRowModel"
-        :fields="fields"
-        @focus="focusEditRowField"
-        @cancel="closeEditRowDialog"
-        @submit="submitEditRow"
-      />
-    </k-drawer>
+    </k-form-drawer>
 
     <!-- Remove Row Dialog -->
     <k-dialog
@@ -212,7 +196,7 @@ export default {
         {
           icon: "edit",
           text: this.$t("edit"),
-          click: "openEditRowDialog"
+          click: "openEditRowDrawer"
         },
         {
           icon: "copy",
@@ -262,18 +246,16 @@ export default {
     }
   },
   methods: {
-    closeNewRowDialog() {
+    closeNewRowDrawer() {
       this.newRowIndex = null;
       this.newRowModel = {};
-      this.$refs.newRowDialog.close();
+      this.$refs.newRowDrawer.close();
     },
-    closeEditRowDialog() {
+    closeEditRowDrawer() {
       this.editRowIndex = null;
       this.editRowModel = {};
       this.editRowField = null;
-      this.$refs.editRowDialog.close();
-      // this.$events.$off("keydown.cmd.right", this.navigateRowDialogNext);
-      // this.$events.$off("keydown.cmd.left", this.navigateRowDialogPrev);
+      this.$refs.editRowDrawer.close();
     },
     closeRemoveRowDialog() {
       this.removeRowIndex = null;
@@ -299,7 +281,7 @@ export default {
       }
 
       const row = this.rows[index];
-      this.setEditRowDialog(row, index);
+      this.setEditRowDrawer(row, index);
     },
     navigateRowDialogPrev() {
       this.navigateRowDialog(this.editRowIndex - 1)
@@ -311,7 +293,7 @@ export default {
       this.editRowField = cell.columnIndex;
       const offset = (this.page - 1) * this.limit;
       const index  = cell.rowIndex + offset;
-      this.openEditRowDialog(cell.row, index);
+      this.openEditRowDrawer(cell.row, index);
     },
     onInput() {
       this.$emit("input", this.rows);
@@ -324,20 +306,14 @@ export default {
     onSort() {
       this.onInput();
     },
-    openEditRowDialog(row, rowIndex) {
-      this.setEditRowDialog(row, rowIndex);
-      this.$refs.editRowDialog.open();
-
-      setTimeout(() => {
-        this.$refs.editRowForm.focus(this.editRowField);
-        // this.$events.$on("keydown.cmd.right", this.navigateRowDialogNext);
-        // this.$events.$on("keydown.cmd.left", this.navigateRowDialogPrev);
-      }, 50);
+    openEditRowDrawer(row, rowIndex) {
+      this.setEditRowDrawer(row, rowIndex);
+      this.$refs.editRowDrawer.open();
     },
-    openNewRowDialog() {
+    openNewRowDrawer() {
       this.newRowIndex = 0;
       this.newRowModel = {};
-      this.$refs.newRowDialog.open();
+      this.$refs.newRowDrawer.open();
     },
     openRemoveRowDialog(row, rowIndex) {
       this.removeRowIndex = rowIndex;
@@ -351,13 +327,17 @@ export default {
 
       return this.sort(rows);
     },
-    setEditRowDialog(row, rowIndex) {
+    setEditRowDrawer(row, rowIndex) {
       this.editRowIndex = rowIndex;
       this.editRowModel = this.$helper.clone(row);
 
-     if (this.limit > 0) {
+      if (this.limit > 0) {
         this.page = Math.ceil((rowIndex + 1) / this.limit);
       }
+
+      setTimeout(() => {
+        this.$refs.editRowDrawer.focus(this.editRowField);
+      }, 50);
     },
     sort(rows) {
       if (!this.sortBy) {
@@ -370,7 +350,7 @@ export default {
       this.$set(this.rows, this.editRowIndex, this.editRowModel);
       this.rows = this.sort(this.rows);
       this.onInput();
-      this.closeEditRowDialog();
+      this.closeEditRowDrawer();
     },
     submitNewRow() {
       if (this.prepend === true){
@@ -381,7 +361,7 @@ export default {
 
       this.rows = this.sort(this.rows);
       this.onInput();
-      this.closeNewRowDialog();
+      this.closeNewRowDrawer();
     },
     submitRemoveRow() {
       if (this.removeRowIndex === null) {
