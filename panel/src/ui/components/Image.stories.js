@@ -1,7 +1,7 @@
 import Padding from "../../../storybook/theme/Padding.js";
 
 export default {
-  title: "UI | Media / Imag",
+  title: "UI | Media / Image",
   decorators: [Padding]
 };
 

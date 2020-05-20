@@ -44,8 +44,6 @@ import { withA11y } from '@storybook/addon-a11y';
 addDecorator(withA11y);
 
 /* Docs */
-import "./theme/theme.css";
-
 addParameters({
   options: {
     storySort: (a, b) =>

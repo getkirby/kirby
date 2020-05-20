@@ -11,3 +11,9 @@
 [id*="--"] .sidebar-svg-icon {
   color: #ccc !important;
 }
+
+.sidebar-subheading {
+  font-family: var(--font-family-sans) !important;
+  letter-spacing: 0 !important;
+  color: #000 !important;
+}
