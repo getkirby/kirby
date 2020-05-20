@@ -5,6 +5,9 @@ export default (api) => {
     },
     async delete(code) {
       return api.delete("languages/" + code);
-    }
+    },
+    async list() {
+      return await api.get("languages");
+    },
   }
 };

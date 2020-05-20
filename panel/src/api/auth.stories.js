@@ -8,7 +8,7 @@ export default {
 export const login = () => ({
   template: `
     <api-example
-      call="this.$api.auth.login({ email: 'demo@getkirby.com', password: 'demodemo' })"
+      call="this.$api.auth.login({ email: 'ada@getkirby.com', password: 'demodemo' })"
       method="POST"
       endpoint="/api/auth/login"
     />
@@ -26,6 +26,9 @@ export const logout = () => ({
 });
 
 export const user = () => ({
+  created() {
+    this.$api.auth.login({ email: "ada@getkirby.com", password: "demodemo" });
+  },
   template: `
     <api-example
       call="this.$api.auth.user()"

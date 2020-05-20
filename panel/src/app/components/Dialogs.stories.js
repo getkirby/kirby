@@ -53,7 +53,7 @@ export const FileRemove = () => ({
   },
   methods: {
     open() {
-      this.$refs.dialog.open("pages/photography", "some-file.jpg");
+      this.$refs.dialog.open("pages/photography+animals", "peacock.jpg");
     }
   }
 });

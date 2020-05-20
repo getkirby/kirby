@@ -13,7 +13,10 @@ import users from "./users.js";
 export default (extensions = {}) => {
 
   const defaults = {
-    onPrepare() { },
+    endpoint: "/api",
+    onPrepare(options) {
+      return options;
+    },
     onStart() { },
     onComplete() { },
     onSuccess() { },

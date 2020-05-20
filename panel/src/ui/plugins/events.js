@@ -1,7 +1,7 @@
 
 export default {
   install(Vue) {
-    Vue.prototype.$events = new Vue({
+    Vue.prototype.$events = Vue.$events = new Vue({
       data() {
         return {
           entered: null

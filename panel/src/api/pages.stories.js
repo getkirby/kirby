@@ -8,7 +8,7 @@ export default {
 export const get = () => ({
   template: `
     <api-example
-      call="this.$api.pages.get('photography')"
+      call="this.$api.pages.get('photography/animals')"
       method="GET"
       endpoint="/api/pages/:id"
     />

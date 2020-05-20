@@ -4,7 +4,7 @@ export default (api) => {
       return api.get("blueprints", params);
     },
     async get(name) {
-      return api.get("blueprints/" + name);
+      return api.get("blueprints/" + name.replace("/", "+"));
     }
   }
 };

@@ -7,21 +7,25 @@ import Ui from "@/ui/index.js";
 Vue.use(Ui);
 import "@/ui/css/utilities.scss";
 
+/* Fake API */
+import "@/api/fake/index.js";
+
 /* Mocks */
-import Api from "../src/api/fake/index.js";
+import Api from "@/api/index.js";
 import I18n from "./mocks/i18n.js";
-import Model from "./mocks/model.js";
+import Model from "../src/app/plugins/models.js";
 import Router from "./mocks/router.js";
 import Store from "./mocks/store.js";
 
-Vue.prototype.$t = I18n;
-Vue.prototype.$api = Api;
-Vue.prototype.$model = Model(Vue.prototype);
+Vue.prototype.$t = Vue.$t = I18n;
+Vue.prototype.$api = Vue.$api = Api();
 Vue.use(Router);
-Vue.prototype.$store = Store;
-Vue.prototype.$user = {
+Vue.prototype.$store = Vue.$store = Store;
+Vue.prototype.$user = Vue.$user = {
   role: { name: "admin" }
 };
+
+Vue.use(Model, Store);
 
 /** App components */
 import components from "@/app/components/index.js";

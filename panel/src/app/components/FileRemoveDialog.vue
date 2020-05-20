@@ -5,20 +5,22 @@ export default {
   extends: AsyncRemoveDialog,
   methods: {
     async load(parent, filename) {
-      this.filename = filename;
+      const file = await this.$api.files.get(parent, filename);
+
       this.parent   = parent;
-      this.file     = await this.$api.files.get(parent, filename);
-      this.text     = this.$t('file.delete.confirm', {
-        filename: filename
+      this.id       = file.id;
+      this.filename = file.filename;
+
+      this.text = this.$t('file.delete.confirm', {
+        filename: this.filename
       });
     },
     async submit() {
-      await this.$model.files.delete(
-        this.file.id,
+      return await this.$model.files.delete(
+        this.id,
         this.parent,
         this.filename
       );
-      return this.file;
     }
   }
 }
