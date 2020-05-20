@@ -94,8 +94,13 @@
     </k-drawer>
 
     <!-- Remove Row Dialog -->
-    <k-remove-dialog
+    <k-dialog
       ref="removeRowDialog"
+      :submitButton="{
+        icon: 'trash',
+        text: 'Delete',
+        color: 'red'
+      }"
       :text="$t('field.structure.delete.confirm')"
       @cancel="closeRemoveRowDialog"
       @submit="submitRemoveRow"

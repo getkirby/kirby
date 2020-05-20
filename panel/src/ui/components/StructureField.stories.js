@@ -113,7 +113,7 @@ export const manyFields = () => ({
 });
 
 export const disabledSorting = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-structure-field
@@ -133,7 +133,7 @@ export const disabledSorting = () => ({
 });
 
 export const max = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-structure-field
@@ -154,7 +154,7 @@ export const max = () => ({
 });
 
 export const sortBy = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-structure-field
@@ -174,7 +174,7 @@ export const sortBy = () => ({
 });
 
 export const disabled = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-structure-field
@@ -194,7 +194,7 @@ export const disabled = () => ({
 });
 
 export const pagination = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-structure-field
@@ -214,7 +214,7 @@ export const pagination = () => ({
 });
 
 export const prepend = () => ({
-  ...regular(),
+  extends: regular(),
   template: `
     <div>
       <k-structure-field
@@ -231,7 +231,7 @@ export const prepend = () => ({
 });
 
 export const empty = () => ({
-  ...regular(),
+  extends: regular(),
   data() {
     return {
       value: []
@@ -255,7 +255,7 @@ export const empty = () => ({
 });
 
 export const customEmptyMessage = () => ({
-  ...regular(),
+  extends: regular(),
   data() {
     return {
       value: []
