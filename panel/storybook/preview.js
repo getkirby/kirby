@@ -8,7 +8,7 @@ Vue.use(Ui);
 import "@/ui/css/utilities.scss";
 
 /* Mocks */
-import Api from "./mocks/api.js";
+import Api from "../src/api/fake/index.js";
 import I18n from "./mocks/i18n.js";
 import Model from "./mocks/model.js";
 import Router from "./mocks/router.js";
@@ -44,6 +44,13 @@ import { withA11y } from '@storybook/addon-a11y';
 addDecorator(withA11y);
 
 /* Docs */
+import "./theme/theme.css";
+
+/* Custom Components for our docs */
+import ApiExample from "./components/ApiExample.vue";
+
+Vue.component("api-example", ApiExample);
+
 addParameters({
   options: {
     storySort: (a, b) =>
