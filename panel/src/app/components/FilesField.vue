@@ -68,13 +68,13 @@
 </template>
 
 <script>
-import PickerField from "@/ui/components/PickerField.vue";
+import PickerFieldFoundation from "@/ui/components/PickerFieldFoundation.vue";
 
 // TODO: implement actual API instead
 import { File, Files } from "../../../storybook/data/PickerItems.js";
 
 export default {
-  extends: PickerField,
+  extends: PickerFieldFoundation,
   props: {
     empty: {
       type: [String, Object],

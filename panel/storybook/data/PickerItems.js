@@ -25,12 +25,14 @@ export const Options = async (page, limit, parent, search, model) => {
   }
 
   const offset = (page - 1) * limit;
-  data = data.slice(offset, offset + limit);
+  const paginated = data.slice(offset, offset + limit);
 
   return {
-    data: data,
+    data: paginated,
     pagination: {
-      total: total
+      page: page,
+      limit: limit,
+      total: data.length
     }
   };
 };
