@@ -28,25 +28,24 @@
     <!-- Content -->
     <header class="k-item-content">
       <h3 class="k-item-title">
-        <template v-if="link">
-          <k-link
-            :target="target"
-            :to="link"
-            class="k-item-title-link"
-          >
-            {{ heading }}
-          </k-link>
-        </template>
-        <template v-else>
-          {{ heading }}
-        </template>
+        <k-link
+          v-if="link"
+          :target="target"
+          :to="link"
+          class="k-item-title-link"
+        >
+          <span v-html="heading" />
+        </k-link>
+        <span
+          v-else
+          v-html="heading"
+        />
       </h3>
       <p
         v-if="info"
         class="k-item-info"
-      >
-        {{ info }}
-      </p>
+        v-html="info"
+      />
     </header>
 
     <!-- Footer -->
