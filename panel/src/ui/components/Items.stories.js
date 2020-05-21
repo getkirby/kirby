@@ -126,3 +126,16 @@ export const cardsWithImageSettings = () => ({
     />
   `
 });
+
+export const cardsTinySize = () => ({
+  extends: cards(),
+  template: `
+    <k-items
+      :items="items"
+      layout="cards"
+      size="tiny"
+      @sort="onSort"
+      @sortChange="onSortChange"
+    />
+  `
+});

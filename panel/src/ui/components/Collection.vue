@@ -18,6 +18,7 @@
         :image="image"
         :items="items"
         :layout="layout"
+        :size="size"
         :sortable="sortable"
         @flag="onFlag"
         @item="onItem"
@@ -107,6 +108,10 @@ export default {
     loading: {
       type: Boolean,
       default: false,
+    },
+    size: {
+      type: String,
+      default: "default"
     },
     /**
      * Allow manual sorting via drag-and-drop

@@ -54,6 +54,10 @@ export default {
         return {}
       }
     },
+    size: {
+      type: String,
+      default: "default"
+    },
     /**
      * Allow manual sorting via drag-and-drop
      */
@@ -92,6 +96,7 @@ export default {
           limit: this.limit,
           total: this.total
         },
+        size: this.size,
         sortable: this.sortable
       };
     },

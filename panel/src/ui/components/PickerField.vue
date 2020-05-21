@@ -178,7 +178,7 @@ export default {
     },
     selector() {
       return {
-        ...this.picker,
+        ...this.picker.items,
         max: this.max,
         multiple: this.multiple,
         options: this.getOptions,

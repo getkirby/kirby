@@ -5,6 +5,7 @@
     :handle="true"
     :options="dragOptions"
     :data-layout="layout"
+    :data-size="size"
     :list="items"
     @change="onSortChange"
     @end="onSortEnd"
@@ -39,6 +40,10 @@ export default {
     layout: {
       type: String,
       default: "list"
+    },
+    size: {
+      type: String,
+      default: "default"
     },
     sortable: Boolean,
   },
@@ -129,13 +134,13 @@ export default {
 
 @media screen and (min-width: $breakpoint-sm) {
   .k-card-items[data-size="tiny"] {
-    --min: 10rem;
+    --min: 8rem;
   }
   .k-card-items[data-size="small"] {
-    --min: 16rem;
+    --min: 10rem;
   }
   .k-card-items[data-size="medium"] {
-    --min: 24rem;
+    --min: 16rem;
   }
   .k-card-items[data-size="large"],
   .k-card-items[data-size="huge"] {
