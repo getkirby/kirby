@@ -138,6 +138,7 @@ new Server({
     });
 
     // whitelist
-    this.passthrough('https://raw.githubusercontent.com/mledoze/countries/master/countries.json');
+    this.passthrough("https://raw.githubusercontent.com/mledoze/countries/master/countries.json");
+    this.passthrough("https://api.themoviedb.org/**");
   },
 });

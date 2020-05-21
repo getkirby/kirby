@@ -227,7 +227,10 @@ export default {
       this.$emit("option", option, item, itemIndex);
     },
     onPaginate(pagination) {
+      this.page  = pagination.page;
+      this.limit = pagination.limit;
       this.$emit("paginate", pagination);
+      this.reload();
     },
     onSelect(id, item, itemIndex) {
       if (this.multiple === false) {
