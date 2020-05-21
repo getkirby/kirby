@@ -51,6 +51,19 @@ export const singleWithText = () => ({
   `
 });
 
+export const singleWithTextInferred = () => ({
+  extends: singleWithText(),
+  template: `
+    <div class="flex justify-end bg-white">
+      <k-options-dropdown
+        :options="options"
+        :text="true"
+        @option="option"
+      />
+    </div>
+  `
+});
+
 export const multiple = () => ({
   ...single(),
   computed: {

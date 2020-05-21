@@ -8,7 +8,7 @@
     <k-options-dropdown
       v-if="!disabled && actions.length"
       :options="actions"
-      :text="actionsLabel"
+      :text="true"
       @option="onAction"
       slot="options"
     />
@@ -127,13 +127,6 @@ export default {
       }
 
       return [];
-    },
-    actionsLabel() {
-      if (this.actions.length > 1) {
-        return false;
-      }
-
-      return this.actions[0].text;
     },
     items() {
       return async () => {

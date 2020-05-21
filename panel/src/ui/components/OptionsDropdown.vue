@@ -9,10 +9,10 @@
     @click="onOption(options[0].option || options[0].click, options[0], 0)"
   >
     <template
-      v-if="text"
+      v-if="label"
       slot="default"
     >
-      {{ text }}
+      {{ label }}
     </template>
   </k-button>
   <k-dropdown
@@ -70,6 +70,13 @@ export default {
     },
   },
   computed: {
+    label() {
+      if (this.text !== true) {
+        return this.text;
+      }
+
+      return this.options[0].text;
+    },
     single() {
       return Array.isArray(this.options) && this.options.length === 1;
     }
