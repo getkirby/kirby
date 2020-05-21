@@ -26,6 +26,7 @@
     <k-collection
       v-else
       v-bind="collection"
+      :help="false"
       :data-has-actions="this.actions.length > 0"
       @empty="onEmpty"
       @option="onRemove"
