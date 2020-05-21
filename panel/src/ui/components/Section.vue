@@ -7,6 +7,7 @@
       v-if="label || headline"
       :link="link"
       :options="options"
+      :optionsText="true"
       :required="required"
       :text="label || headline"
       class="k-section-header"
