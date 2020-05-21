@@ -4,23 +4,20 @@
     v-bind="$props"
     class="k-picker-field"
   >
-    <!-- Add button -->
-    <template slot="options">
-      <k-button
-        v-if="!disabled"
-        :id="_uid"
-        ref="button"
-        :icon="btnIcon"
-        @click="onOpen"
-      >
-        {{ btnLabel }}
-      </k-button>
-    </template>
+    <!-- Actions button/dropdown -->
+    <k-options-dropdown
+      v-if="!disabled && actions.length"
+      :options="actions"
+      :text="actionsLabel"
+      @option="onAction"
+      slot="options"
+    />
 
     <!-- Collection -->
     <k-async-collection
       ref="collection"
       v-bind="collection"
+      :data-has-actions="this.actions.length > 0"
       @empty="onEmpty"
       @option="onRemove"
       @sort="onSort"
@@ -29,7 +26,7 @@
     <!-- Drawer & Picker -->
     <k-drawer
       ref="drawer"
-      :title="label + ' / ' + btnLabel"
+      :title="label + ' / ' + $t('select')"
       :submit-button="true"
       :size="picker.size || 'small'"
       @close="$refs.picker.reset()"
@@ -57,6 +54,10 @@ export default {
   props: {
     ...Field.props,
     empty: [String, Object],
+    hasOptions: {
+      type: Boolean,
+      default: true
+    },
     image: {
       type: [Object, Boolean],
       default: true,
@@ -118,26 +119,23 @@ export default {
     };
   },
   computed: {
-    btnMode() {
-      if (!this.more) {
-        return "change";
+    actions() {
+      // only show select action if items are available
+      // as options in the picker
+      if (this.hasOptions) {
+        return [
+          { icon: "circle-nested", text: this.$t("select"), click: "select" }
+        ];
       }
 
-       if (!this.multiple && this.selected.length > 0) {
-        return "change";
-      }
-
-      return "add"
+      return [];
     },
-    btnIcon() {
-      if (this.btnMode === "change") {
-        return "refresh";
+    actionsLabel() {
+      if (this.actions.length > 1) {
+        return false;
       }
 
-      return this.btnMode;
-    },
-    btnLabel() {
-      return this.$t(this.btnMode);
+      return this.actions[0].text;
     },
     collection() {
       let options = [];
@@ -189,13 +187,6 @@ export default {
       }
 
       return true;
-    },
-    more() {
-      if (!this.max) {
-        return true;
-      }
-
-      return this.max > this.selected.length;
     }
   },
   watch: {
@@ -219,8 +210,17 @@ export default {
     async getOptions({page, limit, parent, search}) {
       return [];
     },
+    onAction(option, item, itemIndex) {
+      switch (option) {
+        case "select":
+          this.onOpen();
+          break;
+      }
+    },
     onEmpty() {
-      this.onOpen();
+      if (this.actions.length > 0) {
+        this.onAction(this.actions[0].click);
+      }
     },
     onInput() {
       this.$emit("input", this.selected);
@@ -248,3 +248,9 @@ export default {
   }
 }
 </script>
+
+<style>
+.k-picker-field > .k-collection:not([data-has-actions]) .k-empty {
+  cursor: default;
+}
+</style>

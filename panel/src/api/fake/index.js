@@ -128,5 +128,16 @@ new Server({
 
     this.get("/users");
     this.get("/users/:id");
+
+    // temp test
+    this.post("/upload", (schema) => {
+      return {
+        status: "ok",
+        code: 200
+      };
+    });
+
+    // whitelist
+    this.passthrough('https://raw.githubusercontent.com/mledoze/countries/master/countries.json');
   },
 });
