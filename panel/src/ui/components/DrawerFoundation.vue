@@ -97,7 +97,6 @@ export default {
 </script>
 
 <style lang="scss">
-
 .k-drawer-cancel,
 .k-drawer-loader {
   align-self: flex-start;

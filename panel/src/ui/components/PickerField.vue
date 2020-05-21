@@ -26,11 +26,12 @@
     <!-- Drawer & Picker -->
     <k-drawer
       ref="drawer"
+      :loading="loading"
       :title="label + ' / ' + $t('select')"
-      :submit-button="true"
       :size="picker.size || 'small'"
       @close="$refs.picker.reset()"
       @submit="onSelect"
+
     >
       <k-picker
         ref="picker"
@@ -42,6 +43,8 @@
         :search="search"
         :pagination="pagination"
         @paginate="onPaginate"
+        @startLoading="onLoading"
+        @stopLoading="onLoaded"
       />
     </k-drawer>
   </k-field>
@@ -111,6 +114,7 @@ export default {
     return {
       selected: this.value,
       temp: null,
+      loading: false,
       pagination: {
         page: 1,
         limit: this.picker.limit || 15,
@@ -224,6 +228,12 @@ export default {
     },
     onInput() {
       this.$emit("input", this.selected);
+    },
+    onLoading() {
+      this.loading = true;
+    },
+    onLoaded() {
+      this.loading = false;
     },
     onOpen() {
       this.temp = this.$helper.clone(this.selected);

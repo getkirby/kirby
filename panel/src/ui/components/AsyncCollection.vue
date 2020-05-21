@@ -121,10 +121,12 @@ export default {
       this.loadingTimeout = setTimeout(() => {
         this.loading = true;
       }, 250);
+      this.$emit("startLoading");
     },
     stopLoading() {
       clearTimeout(this.loadingTimeout);
       this.loading = false;
+      this.$emit("stopLoading");
     },
     async load() {
       this.startLoading();

@@ -41,6 +41,8 @@
       @option="onOption"
       @paginate="onPaginate"
       @sort="onSort"
+      @startLoading="$emit('startLoading')"
+      @stopLoading="$emit('stopLoading')"
     />
   </div>
 </template>

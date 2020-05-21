@@ -28,8 +28,8 @@
     <!-- Drawer & Picker -->
     <k-drawer
       ref="drawer"
+      :loading="loading"
       :title="label + ' / ' + $t('select')"
-      :submit-button="true"
       :size="picker.size || 'small'"
       @close="$refs.picker.reset()"
       @submit="onSelect"
@@ -45,6 +45,8 @@
           :search="search"
           :pagination="pagination"
           @paginate="onPaginate"
+          @startLoading="onLoading"
+          @stopLoading="onLoaded"
         />
       </k-dropzone>
     </k-drawer>
@@ -108,6 +110,7 @@ export default {
       return ids.map(id => File(id));
     },
     async getOptions({page, limit, parent, search}) {
+      await new Promise(r => setTimeout(r, 5000));
       return Files(page, limit, parent, search);
     },
     onAction(option, item, itemIndex) {
