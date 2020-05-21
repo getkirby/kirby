@@ -145,6 +145,8 @@ export default {
           this.data  = [];
         }
 
+        this.map();
+
       } catch (error) {
         this.error = error;
         console.error(error);
@@ -152,6 +154,7 @@ export default {
 
       this.stopLoading();
     },
+    map() {},
     reload() {
       this.error = null;
       this.load();

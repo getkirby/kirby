@@ -110,7 +110,7 @@ export default {
       return ids.map(id => File(id));
     },
     async getOptions({page, limit, parent, search}) {
-      await new Promise(r => setTimeout(r, 5000));
+      await new Promise(r => setTimeout(r, 1500));
       return Files(page, limit, parent, search);
     },
     onAction(option, item, itemIndex) {

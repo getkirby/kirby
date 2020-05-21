@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="k-picker">
     <!-- Search -->
     <k-input
       v-if="search"
@@ -27,42 +27,35 @@
       </k-button>
     </header>
 
-    <!-- Collection -->
-    <k-async-collection
-      ref="collection"
-      :items="items"
-      :image="image"
+    <!-- Error -->
+    <k-error-items
+      v-if="error"
       :layout="layout"
-      :pagination="pagination"
-      :sortable="sortable"
-      class="k-picker"
-      @item="onItem"
-      @flag="onFlag"
-      @option="onOption"
-      @paginate="onPaginate"
-      @sort="onSort"
-      @startLoading="$emit('startLoading')"
-      @stopLoading="$emit('stopLoading')"
+      :limit="pagination.limit"
+    >
+      {{ error }}
+    </k-error-items>
+
+    <!-- Collection -->
+    <k-collection
+      v-else
+      v-bind="collection"
+      v-on="listeners"
     />
   </div>
 </template>
 
 <script>
+import AsyncCollection from "@/ui/components/AsyncCollection.vue";
 import debounce from "@/ui/helpers/debounce.js";
 
 export default {
+  extends: AsyncCollection,
+  beforeCreate: function(){
+    this.$delete(this.$options.props, "items");
+    this.$delete(this.$options.props, "loader");
+  },
   props: {
-    image: {
-      type: [Object, Boolean],
-      default: true,
-    },
-    /**
-     * Available options: `list`|`cardlets`|`cards`
-     */
-    layout: {
-      type: String,
-      default: "list"
-    },
     /**
      * Maximum number of selectable items in "multiple" mode
      */
@@ -84,22 +77,9 @@ export default {
       }
     },
     /**
-     * Pagination settings
-     */
-    pagination: {
-      type: [Boolean, Object],
-      default() {
-        return false;
-      }
-    },
-    /**
      * Enable search input
      */
     search: Boolean,
-    /**
-     * Enable drag & drop sorting for picker items
-     */
-    sortable: Boolean,
     /**
      * Controll the toggle for each item with the
      * return value of the given function
@@ -118,35 +98,38 @@ export default {
   data() {
     return {
       selected: this.value,
-      q: null,
       parents: [],
+      q: null
     };
   },
   computed: {
-    loader() {
-      return async () => {
-        return await this.options({
-            ...this.pagination,
-            search: this.q,
-            parent: this.parent
-          });
-      }
-    },
     items() {
       return async () => {
         // Async options
         if (typeof this.options === 'function') {
-          const result = await this.loader();
-          result.data = result.data.map(this.mapItem);
-          return result;
+          return await this.options({
+            ...this.pagination,
+            search: this.q,
+            parent: this.parent
+          });
         }
 
         // Array/Object of options
         return {
-          data: this.$helper.clone(this.options).map(this.mapItem),
+          data: this.$helper.clone(this.options),
           pagination: this.pagination
         };
       }
+    },
+    listeners() {
+      return {
+        ...this.$listeners,
+        item: this.onItem,
+        flag: this.onFlag,
+        option: this.onOption,
+        paginate: this.onPaginate,
+        sort: this.onSort
+      };
     },
     parent() {
       if (this.parents.length === 0) {
@@ -157,8 +140,7 @@ export default {
     }
   },
   watch: {
-    value() {
-      this.selected = this.value;
+    options() {
       this.reload();
     },
     pagination() {
@@ -167,39 +149,46 @@ export default {
     q: debounce(function () {
       this.onPaginate({ ...this.pagination, page: 1 });
       this.reload();
-    }, 250)
+    }, 250),
+    value() {
+      this.selected = this.value;
+      this.map();
+    },
   },
   methods: {
-    mapItem(item) {
-      const selected = this.selected.includes(item.id);
+    map() {
       const max = this.multiple && this.max && this.selected.length >= this.max;
 
-      // custom toggle function
-      if (this.toggle) {
-        item.flag = this.toggle(item, selected, max);
+      this.data = this.data.map(item => {
+        const selected = this.selected.includes(item.id);
 
-      // selected
-      } else if (selected) {
-        item.flag = {
-          icon: this.multiple ? "check" : "circle-filled",
-          tooltip: "Deselect",
-          color: "green"
-        };
+        // custom toggle function
+        if (this.toggle) {
+          item.flag = this.toggle(item, selected, max);
 
-      // unselected
-      } else {
-        item.flag = {
-          icon: "circle-outline",
-          tooltip: "Select",
-          color: max ? "gray" : null,
-          disabled: Boolean(max)
-        };
-      }
+        // selected
+        } else if (selected) {
+          item.flag = {
+            icon: this.multiple ? "check" : "circle-filled",
+            tooltip: "Deselect",
+            color: "green"
+          };
 
-      // Disable links in picker
-      delete item.link;
+        // unselected
+        } else {
+          item.flag = {
+            icon: "circle-outline",
+            tooltip: "Select",
+            color: max ? "gray" : null,
+            disabled: Boolean(max)
+          };
+        }
 
-      return item;
+        // Disable links in picker
+        delete item.link;
+
+        return item;
+      });
     },
     onBack() {
       this.parents.pop();
@@ -257,20 +246,15 @@ export default {
       this.selected = items.map(item => item.id);
       this.onInput();
     },
-    reload() {
-      this.$refs.collection.reload();
-    },
     reset() {
       this.q = null;
+      this.onPaginate({ ...this.pagination, page: 1 });
     }
   }
 };
 </script>
 
 <style lang="scss">
-.k-picker .k-item-title-link::after {
-  display: none;
-}
 .k-picker-search {
   background: $color-gray-300;
 }

@@ -3,7 +3,7 @@ import Padding from "../../../storybook/theme/Padding.js";
 import items from "../../../storybook/data/Items.js"
 
 export default {
-  title: "UI | Data / Pickere",
+  title: "UI | Data / Picker",
   decorators: [Padding]
 };
 
@@ -61,7 +61,7 @@ export const multiple = () => ({
 });
 
 export const max = () => ({
-  extends: regular(),
+  extends: single(),
   template: `
     <div>
       <k-headline class="mb-3">Picker</k-headline>
@@ -80,7 +80,7 @@ export const max = () => ({
 });
 
 export const cardlets = () => ({
-  extends: regular(),
+  extends: single(),
   template: `
     <div>
       <k-headline class="mb-3">Picker</k-headline>
@@ -99,7 +99,7 @@ export const cardlets = () => ({
 });
 
 export const cards = () => ({
-  extends: regular(),
+  extends: single(),
   template: `
     <div>
       <k-headline class="mb-3">Picker</k-headline>
@@ -118,7 +118,7 @@ export const cards = () => ({
 });
 
 export const pagination = () => ({
-  extends: regular(),
+  extends: single(),
   data() {
     return {
       selected: [],
@@ -131,11 +131,10 @@ export const pagination = () => ({
   },
   computed: {
     options() {
-      let items = items(
+      return items(
         this.pagination.limit,
         ((this.pagination.page - 1) * this.pagination.limit) + 1
-      );
-      return items.map(item => {
+      ).map(item => {
         delete item.options;
         return item;
       });
@@ -169,7 +168,7 @@ export const pagination = () => ({
 });
 
 export const customToggle = () => ({
-  extends: regular(),
+  extends: single(),
   template: `
     <div>
       <k-headline class="mb-3">Picker</k-headline>
@@ -198,4 +197,31 @@ export const customToggle = () => ({
       <k-code-block :code="selected" />
     </div>
   `
+});
+
+export const async = () => ({
+  extends: single(),
+  computed: {
+    options() {
+      return async () => {
+        await new Promise(r => setTimeout(r, 1500));
+        return items(10, 1).map(item => {
+          delete item.options;
+          return item;
+        });
+      };
+    }
+  },
+});
+
+export const asyncWithError = () => ({
+  extends: single(),
+  computed: {
+    options() {
+      return async () => {
+        await new Promise(r => setTimeout(r, 1500));
+        throw new Error("Something went wrong")
+      };
+    }
+  },
 });
