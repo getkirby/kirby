@@ -87,8 +87,11 @@
 </template>
 
 <script>
+import figure from "@/ui/mixins/figure.js";
+
 export default {
   inheritAttrs: false,
+  mixins: [figure],
   props: {
     className: String,
     dragText: String,
@@ -96,19 +99,7 @@ export default {
       type: [Boolean, Object],
       default: false,
     },
-    icon: {
-      type: [Object, Boolean],
-      default: true,
-    },
-    image: {
-      type: [Object, Boolean],
-      default: true,
-    },
     info: [Boolean, String],
-    layout: {
-      type: String,
-      default: "list",
-    },
     label: String,
     link: {
       type: [Boolean, String, Function],

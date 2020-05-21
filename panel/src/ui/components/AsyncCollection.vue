@@ -18,17 +18,15 @@
 </template>
 
 <script>
+import items from "@/ui/mixins/items.js";
+
 export default {
+  mixins: [items],
   props: {
-    empty: [String, Object],
     /**
      * Help text to be displayed below the collection in grey.
      */
     help: [Boolean, String],
-    image: {
-      type: [Object, Boolean],
-      default: true,
-    },
     items: {
       type: Function,
       default() {
@@ -36,13 +34,6 @@ export default {
           return [];
         };
       }
-    },
-    /**
-     * Available options: `list`|`cardlets`|`cards`
-     */
-    layout: {
-      type: String,
-      default: "list"
     },
     /**
      * Settings for the empty loading state.
@@ -53,10 +44,6 @@ export default {
       default() {
         return {}
       }
-    },
-    size: {
-      type: String,
-      default: "default"
     },
     /**
      * Allow manual sorting via drag-and-drop

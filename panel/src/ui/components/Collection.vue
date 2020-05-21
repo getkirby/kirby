@@ -60,37 +60,20 @@
 </template>
 
 <script>
+import items from "@/ui/mixins/items.js";
+
 export default {
+  mixins: [items],
   props: {
-    empty: {
-      type: [String, Object],
-      default() {
-        return {
-          icon: "page",
-          text: this.$t("items.empty")
-        };
-      }
-    },
     /**
      * Help text to be displayed below the collection in grey.
      */
     help: [Boolean, String],
-    image: {
-      type: [Object, Boolean],
-      default: true,
-    },
     items: {
       type: [Array, Object],
       default() {
         return [];
       }
-    },
-    /**
-     * Available options: `list`|`cardlets`|`cards`
-     */
-    layout: {
-      type: String,
-      default: "list"
     },
     /**
      * Settings for the empty loading state.
@@ -108,10 +91,6 @@ export default {
     loading: {
       type: Boolean,
       default: false,
-    },
-    size: {
-      type: String,
-      default: "default"
     },
     /**
      * Allow manual sorting via drag-and-drop
@@ -137,11 +116,16 @@ export default {
     emptyOptions() {
       if (typeof this.empty === "string") {
         return {
+          icon: "bars",
           text: this.empty
         };
       }
 
-      return this.empty;
+      return {
+        icon: "bars",
+        text: this.$t("items.empty"),
+        ...this.empty
+      };
     },
     hasPagination() {
       if (this.pagination === false) {
