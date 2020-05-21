@@ -15,6 +15,7 @@
         v-for="(item, itemIndex) in items"
         :key="item.id || itemIndex"
         v-bind="item"
+        :icon="iconSettings(item)"
         :image="imageSettings(item)"
         :layout="itemLayout"
         :sortable="sortable"
@@ -27,23 +28,17 @@
 </template>
 
 <script>
+import items from "@/ui/mixins/items.js";
+
 export default {
   inheritAttrs: false,
+  mixins: [items],
   props: {
-    image: {
-      type: [Object, Boolean],
+    items: {
+      type: Array,
       default() {
-        return {};
+        return [];
       }
-    },
-    items: Array,
-    layout: {
-      type: String,
-      default: "list"
-    },
-    size: {
-      type: String,
-      default: "default"
     },
     sortable: Boolean,
   },
@@ -68,11 +63,41 @@ export default {
     },
   },
   methods: {
+    iconSettings(item) {
+      let globalSettings = this.icon;
+      let localSettings  = item.icon;
+
+      if (globalSettings === false) {
+        return false;
+      }
+
+      if (localSettings === false) {
+        return false;
+      }
+
+      if (typeof globalSettings !== "object") {
+        globalSettings = {};
+      }
+
+      if (typeof localSettings !== "object") {
+        localSettings = {};
+      }
+
+      return {
+        // individual settings
+        type: localSettings.type || globalSettings.type,
+        back: localSettings.back || globalSettings.back,
+      };
+    },
     imageSettings(item) {
       let globalSettings = this.image;
       let localSettings  = item.image;
 
       if (globalSettings === false) {
+        return false;
+      }
+
+      if (localSettings === false) {
         return false;
       }
 

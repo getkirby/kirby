@@ -32,11 +32,11 @@
 export default {
   inheritAttrs: false,
   props: {
-    image: {
+    icon: {
       type: [Object, Boolean],
       default: true
     },
-    icon: {
+    image: {
       type: [Object, Boolean],
       default: true
     },

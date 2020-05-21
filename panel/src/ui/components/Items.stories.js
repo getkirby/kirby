@@ -48,13 +48,41 @@ export const list = () => ({
 });
 
 export const listWithImageSettings = () => ({
-  extends: cards(),
+  extends: list(),
   template: `
     <k-items
       :image="{
-        ratio: '4/5',
-        back: 'pattern',
+        back: 'pattern'
       }"
+      :items="items"
+      :sortable="true"
+      layout="list"
+      @sort="onSort"
+      @sortChange="onSortChange"
+    />
+  `
+});
+
+export const listWithDefaultIcon = () => ({
+  extends: list(),
+  template: `
+    <k-items
+      :image="false"
+      :items="items"
+      :sortable="true"
+      layout="list"
+      @sort="onSort"
+      @sortChange="onSortChange"
+    />
+  `
+});
+
+export const listWithoutFigure = () => ({
+  extends: list(),
+  template: `
+    <k-items
+      :image="false"
+      :icon="false"
       :items="items"
       :sortable="true"
       layout="list"
@@ -81,13 +109,42 @@ export const cardlets = () => ({
 });
 
 export const cardletsWithImageSettings = () => ({
-  extends: cards(),
+  extends: list(),
   template: `
     <k-items
       :image="{
         ratio: '4/5',
         back: 'pattern',
       }"
+      :items="items"
+      :sortable="true"
+      layout="cardlets"
+      @sort="onSort"
+      @sortChange="onSortChange"
+    />
+  `
+});
+
+export const cardletsWithDefaultIcon = () => ({
+  extends: list(),
+  template: `
+    <k-items
+      :image="false"
+      :items="items"
+      :sortable="true"
+      layout="cardlets"
+      @sort="onSort"
+      @sortChange="onSortChange"
+    />
+  `
+});
+
+export const cardletsWithoutFigure = () => ({
+  extends: list(),
+  template: `
+    <k-items
+      :image="false"
+      :icon="false"
       :items="items"
       :sortable="true"
       layout="cardlets"
@@ -111,7 +168,7 @@ export const cards = () => ({
 });
 
 export const cardsWithImageSettings = () => ({
-  extends: cards(),
+  extends: list(),
   template: `
     <k-items
       :image="{
@@ -127,8 +184,37 @@ export const cardsWithImageSettings = () => ({
   `
 });
 
+export const cardsWithDefaultIcon = () => ({
+  extends: list(),
+  template: `
+    <k-items
+      :image="false"
+      :items="items"
+      :sortable="true"
+      layout="cards"
+      @sort="onSort"
+      @sortChange="onSortChange"
+    />
+  `
+});
+
+export const cardsWithoutFigure = () => ({
+  extends: list(),
+  template: `
+    <k-items
+      :image="false"
+      :icon="false"
+      :items="items"
+      :sortable="true"
+      layout="cards"
+      @sort="onSort"
+      @sortChange="onSortChange"
+    />
+  `
+});
+
 export const cardsTinySize = () => ({
-  extends: cards(),
+  extends: list(),
   template: `
     <k-items
       :items="items"
