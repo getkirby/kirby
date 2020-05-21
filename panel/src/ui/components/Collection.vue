@@ -15,6 +15,7 @@
     </template>
     <template v-else-if="items.length">
       <k-items
+        :icon="icon"
         :image="image"
         :items="items"
         :layout="layout"

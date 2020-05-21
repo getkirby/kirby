@@ -72,6 +72,7 @@ export default {
       return {
         empty: this.empty,
         help: this.help,
+        icon: this.icon,
         image: this.image,
         items: this.data,
         layout: this.layout,

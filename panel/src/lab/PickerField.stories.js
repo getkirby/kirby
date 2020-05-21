@@ -159,6 +159,7 @@ export const Movies = () => ({
           icon: 'video',
           text: 'Pick a movie and start binging'
         }"
+        :image="{ cover: true }"
         layout="cardlets"
         :picker="{
           items: { layout: 'cards', size: 'small' },

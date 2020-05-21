@@ -23,6 +23,9 @@ export const list = () => ({
     help() {
       return false;
     },
+    icon() {
+      return {};
+    },
     image() {
       return {};
     },
@@ -62,6 +65,7 @@ export const list = () => ({
       :add="add"
       :empty="empty"
       :help="help"
+      :icon="icon"
       :image="image"
       :info="true"
       :items="pages"
@@ -87,6 +91,21 @@ export const listWithImageSettings = () => ({
         ratio: "3/2",
       };
     }
+  }
+});
+
+export const listWithoutFigure = () => ({
+  extends: list(),
+  computed: {
+    icon() {
+      return false;
+    },
+    image() {
+      return false;
+    },
+    sortable() {
+      return true;
+    },
   }
 });
 
