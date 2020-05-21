@@ -1,5 +1,5 @@
 import Padding from "../../storybook/theme/Padding.js";
-import PickerFieldFoundation from "@/ui/components/PickerFieldFoundation.vue";
+import PickerFieldFoundation from "@/app/components/PickerFieldFoundation.vue";
 
 export default {
   title: "Lab | Picker Field",
@@ -159,7 +159,7 @@ export const Movies = () => ({
           icon: 'video',
           text: 'Pick a movie and start binging'
         }"
-        :image="{ cover: true }"
+        layout="cardlets"
         :picker="{
           items: { layout: 'cards', size: 'small' },
           size: 'large'
