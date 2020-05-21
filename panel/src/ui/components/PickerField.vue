@@ -13,9 +13,18 @@
       slot="options"
     />
 
+    <!-- Error -->
+    <k-error-items
+      v-if="error"
+      :layout="layout"
+      :limit="value.length"
+    >
+      {{ error }}
+    </k-error-items>
+
     <!-- Collection -->
-    <k-async-collection
-      ref="collection"
+    <k-collection
+      v-else
       v-bind="collection"
       :data-has-actions="this.actions.length > 0"
       @empty="onEmpty"
@@ -26,22 +35,16 @@
     <!-- Drawer & Picker -->
     <k-drawer
       ref="drawer"
-      :loading="loading"
+      :loading="drawer.loading"
       :title="label + ' / ' + $t('select')"
       :size="picker.size || 'small'"
       @close="$refs.picker.reset()"
       @submit="onSelect"
-
     >
       <k-picker
         ref="picker"
-        v-model="temp"
-        v-bind="picker"
-        :max="max"
-        :multiple="multiple"
-        :options="getOptions"
-        :search="search"
-        :pagination="pagination"
+        v-model="drawer.value"
+        v-bind="selector"
         @paginate="onPaginate"
         @startLoading="onLoading"
         @stopLoading="onLoaded"
@@ -51,29 +54,22 @@
 </template>
 
 <script>
+import AsyncCollection from "@/ui/components/AsyncCollection.vue";
 import Field from "@/ui/components/Field.vue";
 
 export default {
+  extends: AsyncCollection,
+  beforeCreate: function(){
+    this.$delete(this.$options.props, "items");
+    this.$delete(this.$options.props, "loader");
+  },
   props: {
     ...Field.props,
-    empty: [String, Object],
     hasOptions: {
       type: Boolean,
       default: true
     },
-    image: {
-      type: [Object, Boolean],
-      default: true,
-    },
     info: String,
-    /**
-     * Available options: `list`|`cardlets`|`cards`
-     */
-    layout: {
-      type: String,
-      default: "list"
-    },
-    limit: Number,
     /**
      * Maximum number of items
      */
@@ -113,12 +109,10 @@ export default {
   data() {
     return {
       selected: this.value,
-      temp: null,
-      loading: false,
-      pagination: {
+      drawer: {
+        value: null,
         page: 1,
-        limit: this.picker.limit || 15,
-        total: 0
+        loading: false
       }
     };
   },
@@ -141,7 +135,12 @@ export default {
 
       return this.actions[0].text;
     },
-    collection() {
+    items() {
+      return async () => {
+        return await this.getItems(this.selected);
+      };
+    },
+    loader() {
       let options = [];
 
       if (this.multiple) {
@@ -153,25 +152,10 @@ export default {
       }
 
       return {
-        empty: this.empty,
-        image: this.image,
-        items: async () => {
-          const items = await this.getItems(this.selected);
-          return items.map(item => {
-            item.options = options;
-            return item;
-          });
-        },
-        layout: this.layout,
-        limit: this.limit,
-        loader: {
-          info: this.info,
-          limit: this.value.length,
-          options: options
-        },
-        pagination: false,
-        sortable: this.isSortable
-      };
+        info: this.info,
+        limit: this.value.length,
+        options: options
+      }
     },
     isSortable() {
       if (this.disabled === true) {
@@ -191,12 +175,25 @@ export default {
       }
 
       return true;
+    },
+    selector() {
+      return {
+        ...this.picker,
+        max: this.max,
+        multiple: this.multiple,
+        options: this.getOptions,
+        search: this.search,
+        pagination: {
+          page: this.drawer.page,
+          limit: this.picker.limit || 15,
+          total: 0
+        }
+      };
     }
   },
   watch: {
     value() {
       this.selected = this.value;
-      this.$refs.collection.reload();
     }
   },
   methods: {
@@ -214,6 +211,12 @@ export default {
     async getOptions({page, limit, parent, search}) {
       return [];
     },
+    map() {
+      this.data = this.data.map(item => {
+        item.options = this.loader.options;
+        return item;
+      });
+    },
     onAction(option, item, itemIndex) {
       switch (option) {
         case "select":
@@ -226,29 +229,34 @@ export default {
         this.onAction(this.actions[0].click);
       }
     },
-    onInput() {
+    onInput(reload = false) {
+      if (reload) {
+        this.reload();
+      }
+
       this.$emit("input", this.selected);
     },
     onLoading() {
-      this.loading = true;
+      this.drawer.loading = true;
     },
     onLoaded() {
-      this.loading = false;
+      this.drawer.loading = false;
     },
     onOpen() {
-      this.temp = this.$helper.clone(this.selected);
+      this.drawer.value = this.$helper.clone(this.selected);
       this.$refs.drawer.open();
     },
     onPaginate(pagination) {
-      this.pagination = pagination;
+      this.drawer.page = pagination.page;
     },
     onRemove(option, item, itemIndex) {
       this.selected.splice(itemIndex, 1);
+      this.data.splice(itemIndex, 1);
       this.onInput();
     },
     onSelect() {
-      this.selected = this.temp;
-      this.onInput();
+      this.selected = this.drawer.value;
+      this.onInput(true);
       this.$refs.drawer.close();
     },
     onSort(items) {

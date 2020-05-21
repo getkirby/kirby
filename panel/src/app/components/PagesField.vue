@@ -25,7 +25,6 @@ export default {
     },
     async getOptions({page, limit, parent, search}) {
       return Pages(page, limit, parent, search);
-      // TODO: actual singular API call
     },
   }
 }

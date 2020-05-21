@@ -13,9 +13,22 @@
       slot="options"
     />
 
+    <!-- Error -->
+    <k-error-items
+      v-if="error"
+      :layout="layout"
+      :limit="value.length"
+    >
+      {{ error }}
+    </k-error-items>
+
     <!-- Collection -->
-    <k-dropzone :disabled="disabled" @drop="onDrop">
-      <k-async-collection
+    <k-dropzone
+      v-else
+      :disabled="disabled"
+      @drop="onDrop"
+    >
+      <k-collection
         ref="collection"
         v-bind="collection"
         :data-has-actions="this.actions.length > 0"
@@ -28,7 +41,7 @@
     <!-- Drawer & Picker -->
     <k-drawer
       ref="drawer"
-      :loading="loading"
+      :loading="drawer.loading"
       :title="label + ' / ' + $t('select')"
       :size="picker.size || 'small'"
       @close="$refs.picker.reset()"
@@ -37,13 +50,8 @@
       <k-dropzone @drop="onDrop">
         <k-picker
           ref="picker"
-          v-model="temp"
-          v-bind="picker"
-          :max="max"
-          :multiple="multiple"
-          :options="getOptions"
-          :search="search"
-          :pagination="pagination"
+          v-model="drawer.value"
+          v-bind="selector"
           @paginate="onPaginate"
           @startLoading="onLoading"
           @stopLoading="onLoaded"
@@ -107,6 +115,7 @@ export default {
   },
   methods: {
     async getItems(ids) {
+      await new Promise(r => setTimeout(r, 1500));
       return ids.map(id => File(id));
     },
     async getOptions({page, limit, parent, search}) {
@@ -129,12 +138,12 @@ export default {
     },
     onUpload(files, response) {
       // TODO: handle result and add to array
-      // remove this fake line
       this.selected.push("1");
+      this.onInput(true);
 
       // make sure to update drawer selection for the
       // case that the drawer is currently open
-      this.temp = this.$helper.clone(this.selected);
+      this.drawer.value = this.$helper.clone(this.selected);
     }
   }
 }
