@@ -129,11 +129,9 @@ new Server({
     this.resource("languages");
     this.resource("pages");
 
-    // temp fix
-    this.get("/translations", (schema) => {
-      return {
-        data: []
-      };
+    // files
+    this.get("/:parent/:pageId/files/:fileId", function (schema, request) {
+      return schema.files.find(request.params.parent + "/" + request.params.pageId + "/" + request.params.fileId);
     });
 
     this.get("/site", (schema) => {

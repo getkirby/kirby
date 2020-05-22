@@ -1,5 +1,6 @@
 export default {
-  title: "App | Views / File"
+  title: "App | Views / File",
+  component: FileView,
 };
 
 const altField = {

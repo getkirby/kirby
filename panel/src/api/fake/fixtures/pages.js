@@ -24,9 +24,7 @@ export default [
         }
       }
     },
-    childIds: [
-      "photography+animals",
-    ],
+    childIds: ["photography+animals"],
     errors: [],
     hasChildren: true,
     hasFiles: false,
@@ -42,9 +40,7 @@ export default [
     blueprintId: "pages/album",
     blueprints: [],
     errors: [],
-    fileIds: [
-      "free-wheely.jpg"
-    ],
+    fileIds: ["pages/photography+animals/free-wheely.jpg"],
     hasChildren: true,
     hasFiles: false,
     num: 1,
@@ -53,5 +49,5 @@ export default [
     status: "listed",
     template: "album",
     title: "Animals",
-  }
+  },
 ];
