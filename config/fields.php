@@ -1,7 +1,6 @@
 <?php
 
 return [
-    'builder'     => __DIR__ . '/fields/builder.php',
     'checkboxes'  => __DIR__ . '/fields/checkboxes.php',
     'date'        => __DIR__ . '/fields/date.php',
     'email'       => __DIR__ . '/fields/email.php',
