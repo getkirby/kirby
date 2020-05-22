@@ -25,17 +25,18 @@
       />
 
       <!-- Add zone -->
-      <k-empty
-        v-if="more"
-        slot="footer"
-        layout="list"
-        class="cursor-pointer flex justify-center"
-        @click="openCreateDialog(blocks.length)"
-      >
-        <k-button icon="add">
-          Add block
-        </k-button>
-      </k-empty>
+      <template v-slot:footer>
+        <k-empty
+          v-if="more"
+          layout="list"
+          class="cursor-pointer flex justify-center"
+          @click="openCreateDialog(blocks.length)"
+        >
+          <k-button icon="add">
+            Add block
+          </k-button>
+        </k-empty>
+      </template>
     </k-draggable>
 
     <!-- Preview drawer -->

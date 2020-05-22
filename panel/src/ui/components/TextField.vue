@@ -4,10 +4,9 @@
     :counter="counterOptions"
     v-bind="$props"
   >
-    <slot
-      slot="options"
-      name="options"
-    />
+    <template v-slot:options>
+      <slot name="options" />
+    </template>
     <k-input
       :id="_uid"
       ref="input"

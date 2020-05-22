@@ -47,10 +47,9 @@
             :icon="page.icon"
             @click="toggle(page)"
           >
-            <template slot="options">
+            <template v-slot:options>
               <k-button
                 v-if="isSelected(page)"
-                slot="options"
                 :autofocus="true"
                 :icon="checkedIcon"
                 :tooltip="$t('remove')"
@@ -58,7 +57,6 @@
               />
               <k-button
                 v-else
-                slot="options"
                 :autofocus="true"
                 :tooltip="$t('select')"
                 icon="circle-outline"

@@ -13,20 +13,21 @@
     />
 
     <!-- Navigation -->
-    <header
-      v-if="parent"
-      slot="navigation"
-      class="k-picker-navbar mb-4"
-    >
-      <k-button
-        :disabled="!parent.id"
-        :tooltip="$t('back')"
-        icon="angle-left"
-        @click="onBack"
+    <slot name="navigation">
+      <header
+        v-if="parent"
+        class="k-picker-navbar mb-4"
       >
-        {{ parent.title }}
-      </k-button>
-    </header>
+        <k-button
+          :disabled="!parent.id"
+          :tooltip="$t('back')"
+          icon="angle-left"
+          @click="onBack"
+        >
+          {{ parent.title }}
+        </k-button>
+      </header>
+    </slot>
 
     <!-- Error -->
     <k-error-items

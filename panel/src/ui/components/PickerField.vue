@@ -2,12 +2,13 @@
   <k-field :input="_uid" v-bind="$props">
 
     <!-- Actions button/dropdown -->
-    <k-options-dropdown
-      v-if="hasActions"
-      v-bind="actionsOptions"
-      slot="options"
-      @option="onAction"
-    />
+    <template v-slot:options>
+      <k-options-dropdown
+        v-if="hasActions"
+        v-bind="actionsOptions"
+        @option="onAction"
+      />
+    </template>
 
     <!-- Error -->
     <k-error-items

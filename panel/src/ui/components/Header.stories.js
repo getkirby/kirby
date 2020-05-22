@@ -25,10 +25,12 @@ export const withOptions = () => ({
   template: `
     <k-header>
       Headline
-      <k-button-group slot="left">
-        <k-button icon="edit">Edit</k-button>
-        <k-button icon="trash">Delete</k-button>
-      </k-button-group>
+      <template v-slot:left>
+        <k-button-group>
+          <k-button icon="edit">Edit</k-button>
+          <k-button icon="trash">Delete</k-button>
+        </k-button-group>
+      </template>
     </k-header>
   `
 });
@@ -37,11 +39,16 @@ export const bellsAndWhistles = () => ({
   template: `
     <k-header>
       Headline
-      <k-button-group slot="left">
-        <k-button icon="edit">Edit</k-button>
-        <k-button icon="trash">Delete</k-button>
-      </k-button-group>
-      <k-prev-next slot="right" />
+      <template v-slot:left>
+        <k-button-group>
+          <k-button icon="edit">Edit</k-button>
+          <k-button icon="trash">Delete</k-button>
+        </k-button-group>
+      </template>
+
+      <template v-slot:right>
+        <k-prev-next/>
+      </template>
     </k-header>
   `
 });
@@ -58,11 +65,15 @@ export const withTabs = () => ({
   template: `
     <k-header :tabs="tabs" :tab="tabs[0]">
       Headline
-      <k-button-group slot="left">
-        <k-button icon="edit">Edit</k-button>
-        <k-button icon="trash">Delete</k-button>
-      </k-button-group>
-      <k-prev-next slot="right" />
+      <template v-slot:left>
+        <k-button-group>
+          <k-button icon="edit">Edit</k-button>
+          <k-button icon="trash">Delete</k-button>
+        </k-button-group>
+      </template>
+      <template v-slot:right>
+        <k-prev-next />
+      </template>
     </k-header>
   `,
 });

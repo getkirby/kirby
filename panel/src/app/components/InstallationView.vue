@@ -11,23 +11,25 @@
           v-model="user"
           @submit="onSubmit"
         >
-          <header slot="header">
-            <h1 class="sr-only">
-              {{ $t("installation") }}
-            </h1>
-          </header>
-          <footer
-            slot="footer"
-            class="pt-6"
-          >
-            <k-button
-              class="k-installation-button p-3"
-              icon="check"
-              type="submit"
-            >
-              {{ $t("install") }} &rarr;
-            </k-button>
-          </footer>
+          <template v-slot:header>
+            <header>
+              <h1 class="sr-only">
+                {{ $t("installation") }}
+              </h1>
+            </header>
+          </template>
+
+          <template v-slot:footer>
+            <footer class="pt-6">
+              <k-button
+                class="k-installation-button p-3"
+                icon="check"
+                type="submit"
+              >
+                {{ $t("install") }} &rarr;
+              </k-button>
+            </footer>
+          </template>
         </k-form>
       </template>
     </k-view>

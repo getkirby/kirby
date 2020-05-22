@@ -7,7 +7,9 @@
     }"
     v-on="listeners"
   >
-    <slot name="context" slot="context" />
+    <template v-slot:context>
+      <slot name="context" />
+    </template>
 
     <k-form
       ref="form"

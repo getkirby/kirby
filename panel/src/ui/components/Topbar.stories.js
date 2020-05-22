@@ -104,22 +104,24 @@ export const options = () => ({
         class="mb-6"
         @search="onSearch"
       >
-        <k-dropdown slot="options">
-          <k-button
-            class="k-topbar-button"
-            color="orange-light"
-            icon="edit"
-            @click="$refs.changes.toggle()"
-          />
-          <k-dropdown-content
-            ref="changes"
-            align="right"
-            theme="light"
-          >
-            <k-dropdown-item icon="page">Some page</k-dropdown-item>
-            <k-dropdown-item icon="image">some-file.jpg</k-dropdown-item>
-          </k-dropdown-content>
-        </k-dropdown>
+        <template v-slot:option>
+          <k-dropdown>
+            <k-button
+              class="k-topbar-button"
+              color="orange-light"
+              icon="edit"
+              @click="$refs.changes.toggle()"
+            />
+            <k-dropdown-content
+              ref="changes"
+              align="right"
+              theme="light"
+            >
+              <k-dropdown-item icon="page">Some page</k-dropdown-item>
+              <k-dropdown-item icon="image">some-file.jpg</k-dropdown-item>
+            </k-dropdown-content>
+          </k-dropdown>
+        </template>
       </k-topbar>
       <k-view>
         <k-headline class="mb-2">Controls</k-headline>

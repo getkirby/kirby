@@ -4,7 +4,9 @@
     v-bind="$props"
     v-on="$listeners"
   >
-    <slot name="context" slot="context" />
+    <template v-slot:context>
+      <slot name="context" />
+    </template>
     <slot />
   </k-drawer-foundation>
 </template>

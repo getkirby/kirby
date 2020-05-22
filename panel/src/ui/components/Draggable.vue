@@ -8,10 +8,9 @@
     v-on="listeners"
   >
     <slot />
-    <slot
-      slot="footer"
-      name="footer"
-    />
+    <template v-slot:footer>
+      <slot name="footer" />
+    </template>
   </draggable>
 </template>
 

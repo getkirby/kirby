@@ -9,7 +9,7 @@
       theme="field"
       v-on="listeners"
     >
-      <template slot="icon">
+      <template v-slot:icon>
         <k-dropdown>
           <k-button
             :icon="icon"

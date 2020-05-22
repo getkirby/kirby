@@ -249,29 +249,31 @@ export const login = () => ({
         v-model="credentials"
         @submit="onLogin"
       >
-        <k-notification
-          slot="header"
-          :message="error"
-          type="error"
-          class="mb-8 rounded-xs shadow-md"
-          @close="onResetError"
-        />
-        <footer
-          slot="footer"
-          class="pt-8 flex justify-between"
-        >
-          <k-toggle-input
-            class="text-sm"
-            text="Remember me"
-            v-model="remember"
+        <template v-slot:header>
+          <k-notification
+            :message="error"
+            type="error"
+            class="mb-8 rounded-xs shadow-md"
+            @close="onResetError"
           />
-          <k-button
-            icon="check"
-            type="submit"
-            theme="positive">
-            Login
-          </k-button>
-        </footer>
+        </template>
+        <template v-slot:footer>
+          <footer
+            class="pt-8 flex justify-between"
+          >
+            <k-toggle-input
+              class="text-sm"
+              text="Remember me"
+              v-model="remember"
+            />
+            <k-button
+              icon="check"
+              type="submit"
+              theme="positive">
+              Login
+            </k-button>
+          </footer>
+        </template>
       </k-form>
     </k-view>
   `,

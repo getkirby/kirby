@@ -18,14 +18,15 @@
       name="slug"
       v-model="slug"
     >
-      <k-button
-        slot="options"
-        icon="wand"
-        data-options
-        @click="useTitle"
-      >
-        {{ $t("page.changeSlug.fromTitle") }}
-      </k-button>
+      <template v-slot:options>
+        <k-button
+          icon="wand"
+          data-options
+          @click="useTitle"
+        >
+          {{ $t("page.changeSlug.fromTitle") }}
+        </k-button>
+      </template>
     </k-text-field>
   </k-form-dialog>
 </template>

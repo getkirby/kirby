@@ -13,7 +13,7 @@
       :title="site.title"
       @rename="$refs.rename.open()"
     >
-      <template slot="options">
+      <template v-slot:options>
         <k-button
           :responsive="true"
           :link="site.previewUrl"

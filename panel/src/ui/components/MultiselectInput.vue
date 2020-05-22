@@ -22,47 +22,48 @@
       {{ tag.text }}
     </k-tag>
 
-    <k-dropdown-content
-      slot="footer"
-      ref="dropdown"
-      @open="onOpen"
-      @close="onClose"
-      @keydown.native.esc.stop="close"
-    >
-      <k-dropdown-item
-        v-if="search"
-        icon="search"
-        class="k-multiselect-search"
+    <template v-slot:footer>
+      <k-dropdown-content
+        ref="dropdown"
+        @open="onOpen"
+        @close="onClose"
+        @keydown.native.esc.stop="close"
       >
-        <input
-          ref="search"
-          v-model="q"
-          @keydown.esc.stop="escape"
-        >
-      </k-dropdown-item>
-
-      <div class="k-multiselect-options">
         <k-dropdown-item
-          v-for="option in filtered"
-          :key="option.value"
-          :icon="isSelected(option) ? 'check' : 'circle-outline'"
-          :class="{
-            'k-multiselect-option': true,
-            'selected': isSelected(option),
-            'disabled': !addable
-          }"
-          @click.prevent="select(option)"
-          @keydown.native.enter.prevent.stop="select(option)"
-          @keydown.native.space.prevent.stop="select(option)"
+          v-if="search"
+          icon="search"
+          class="k-multiselect-search"
         >
-          <span v-html="option.display" />
-          <span
-            class="k-multiselect-value"
-            v-html="option.info"
-          />
+          <input
+            ref="search"
+            v-model="q"
+            @keydown.esc.stop="escape"
+          >
         </k-dropdown-item>
-      </div>
-    </k-dropdown-content>
+
+        <div class="k-multiselect-options">
+          <k-dropdown-item
+            v-for="option in filtered"
+            :key="option.value"
+            :icon="isSelected(option) ? 'check' : 'circle-outline'"
+            :class="{
+              'k-multiselect-option': true,
+              'selected': isSelected(option),
+              'disabled': !addable
+            }"
+            @click.prevent="select(option)"
+            @keydown.native.enter.prevent.stop="select(option)"
+            @keydown.native.space.prevent.stop="select(option)"
+          >
+            <span v-html="option.display" />
+            <span
+              class="k-multiselect-value"
+              v-html="option.info"
+            />
+          </k-dropdown-item>
+        </div>
+      </k-dropdown-content>
+    </template>
   </k-draggable>
 </template>
 

@@ -13,11 +13,12 @@
         :loading="loading"
         @search="onSearch"
       >
-        <k-registration-buttons
-          v-if="registered === false"
-          slot="options"
-          @register="onRegister"
-        />
+        <template v-slot:option>
+          <k-registration-buttons
+            v-if="registered === false"
+            @register="onRegister"
+          />
+        </template>
       </k-topbar>
     </header>
 

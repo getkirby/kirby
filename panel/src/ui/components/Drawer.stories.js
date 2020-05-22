@@ -84,14 +84,15 @@ export const withContext = () => ({
       <k-drawer ref="drawer">
         Content
 
-        <k-pagination
-          :details="true"
-          :page="1"
-          :limit="1"
-          :total="20"
-          :dropdown="false"
-          slot="context"
-        />
+        <template v-slot:context>
+          <k-pagination
+            :details="true"
+            :page="1"
+            :limit="1"
+            :total="20"
+            :dropdown="false"
+          />
+        </template>
       </k-drawer>
     </div>
   `,

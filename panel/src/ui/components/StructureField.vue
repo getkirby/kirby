@@ -1,7 +1,7 @@
 <template>
   <k-field :input="_uid" v-bind="$props">
     <!-- Add button -->
-    <template slot="options">
+    <template v-slot:options>
       <k-button
         v-if="more"
         :id="_uid"
@@ -62,15 +62,16 @@
       @cancel="closeEditRowDrawer"
       @submit="submitEditRow"
     >
-      <k-pagination
-        slot="context"
-        :details="true"
-        :page="editRowIndex + 1"
-        :limit="1"
-        :total="rows.length"
-        :dropdown="false"
-        @paginate="navigateRowDialog($event.page - 1)"
-      />
+      <template v-slot:context>
+        <k-pagination
+          :details="true"
+          :page="editRowIndex + 1"
+          :limit="1"
+          :total="rows.length"
+          :dropdown="false"
+          @paginate="navigateRowDialog($event.page - 1)"
+        />
+      </template>
     </k-form-drawer>
 
     <!-- Remove Row Dialog -->

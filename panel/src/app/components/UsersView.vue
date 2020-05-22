@@ -9,23 +9,27 @@
       <!-- header -->
       <k-header>
         {{ $t('view.users') }}
-        <k-button-group slot="left">
-          <k-button
-            :responsive="true"
-            icon="add"
-            @click="$refs.create.open()"
-          >
-            {{ $t('user.create') }}
-          </k-button>
-        </k-button-group>
-        <k-select-dropdown
-          :options="roleFilters"
-          slot="right"
-          align="right"
-          icon="funnel"
-          before="Role:"
-          @change="onChangeRole"
-        />
+        <template v-slot:left>
+          <k-button-group>
+            <k-button
+              :responsive="true"
+              icon="add"
+              @click="$refs.create.open()"
+            >
+              {{ $t('user.create') }}
+            </k-button>
+          </k-button-group>
+        </template>
+
+        <template v-slot:right>
+          <k-select-dropdown
+            :options="roleFilters"
+            align="right"
+            icon="funnel"
+            before="Role:"
+            @change="onChangeRole"
+          />
+        </template>
       </k-header>
 
       <!-- user cardlets -->
@@ -127,4 +131,3 @@ export default {
   },
 };
 </script>
-

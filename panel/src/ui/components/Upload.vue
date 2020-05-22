@@ -48,7 +48,7 @@
           </li>
         </ul>
       </template>
-      <template slot="footer">
+      <template v-slot:footer>
         <template v-if="errors.length > 0">
           <k-button-group>
             <k-button

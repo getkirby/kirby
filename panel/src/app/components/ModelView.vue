@@ -7,15 +7,16 @@
       @edit="$emit('rename')"
     >
       {{ title }}
-      <k-button-group slot="left">
-        <slot name="options" />
-        <k-languages-dropdown />
-      </k-button-group>
-      <k-prev-next
-        slot="right"
-        :prev="prev"
-        :next="next"
-      />
+      <template v-slot:left>
+        <k-button-group>
+          <slot name="options" />
+          <k-languages-dropdown />
+        </k-button-group>
+      </template>
+
+      <template v-slot:right>
+        <k-prev-next :prev="prev" :next="next" />
+      </template>
     </k-header>
     <k-sections :columns="columns" />
   </k-view>

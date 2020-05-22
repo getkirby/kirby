@@ -24,17 +24,19 @@
       class="k-header-buttons"
     >
       <!-- @slot The left slot is normaly used to inject option buttons with a button group -->
-      <slot
-        slot="left"
-        name="left"
-        class="k-header-left"
-      />
+      <template v-slot:left>
+        <slot
+          name="left"
+          class="k-header-left"
+        />
+      </template>
       <!-- @slot The right slot is perfect for `PrevNext` navigation or additional options -->
-      <slot
-        slot="right"
-        name="right"
-        class="k-header-right"
-      />
+      <template v-slot:right>
+        <slot
+          name="right"
+          class="k-header-right"
+        />
+      </template>
     </k-bar>
     <k-tabs
       :tab="tab"

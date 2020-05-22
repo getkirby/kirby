@@ -9,7 +9,7 @@
       :title="file.filename"
       @rename="onRename"
     >
-      <template slot="options">
+      <template v-slot:options>
         <k-button
           :responsive="true"
           icon="open"
