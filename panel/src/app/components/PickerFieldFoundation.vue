@@ -239,6 +239,9 @@ export default {
     onOpen() {
       this.drawer.value = this.$helper.clone(this.selected);
       this.$refs.drawer.open();
+      setTimeout(() => {
+        this.$refs.picker.$refs.search.focus();
+      }, 50);
     },
     onPaginate(pagination) {
       this.drawer.page = pagination.page;

@@ -4,6 +4,7 @@
     <k-input
       v-if="search"
       v-model="q"
+      ref="search"
       :autofocus="true"
       :placeholder="$t('search') + ' …'"
       type="text"
