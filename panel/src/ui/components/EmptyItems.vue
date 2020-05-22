@@ -32,17 +32,17 @@ export default {
       return [...Array(this.limit).keys()].map(item => {
         return {
           className: "k-empty-item",
-          image: {
-            url: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
+          info: Boolean(this.info) ? " " : false,
+          options: this.options || [{ icon: "dots", text: "Edit" }],
+          preview: {
+            image: "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7",
             back: "background",
             ratio: this.ratio
           },
-          info: Boolean(this.info) ? " " : false,
           styles: {
             "--title": this.placeholder(100, 200),
             "--info": this.placeholder(50, 100),
           },
-          options: this.options || [{ icon: "dots", text: "Edit" }],
           title: " ",
         };
       });

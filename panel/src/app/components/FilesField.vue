@@ -43,7 +43,7 @@
       ref="drawer"
       :loading="drawer.loading"
       :title="label + ' / ' + $t('select')"
-      :size="picker.size || 'small'"
+      :size="picker.width || 'small'"
       @close="$refs.picker.reset()"
       @submit="onSelect"
     >

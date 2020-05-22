@@ -5,7 +5,7 @@ export default (limit, start = 1) => {
   return items(limit, start).map((item) => {
     item.title = "User no. " + item.id,
     item.info  = "mail+" + item.id + "@getkirby.com",
-    item.image.cover = true;
+    item.preview.cover = true;
 
     item.options = [
       { icon: "title", text: "Rename this user", click: "rename" },
@@ -23,4 +23,3 @@ export default (limit, start = 1) => {
   });
 
 };
-

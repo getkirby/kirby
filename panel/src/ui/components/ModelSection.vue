@@ -8,18 +8,17 @@
     <k-async-collection
       :empty="emptyOptions"
       :help="help"
-      :icon="icon"
-      :image="image"
       :items="items"
       :layout="layout"
       :loader="{
         info,
-        ratio: image.ratio
+        ratio: preview.ratio
       }"
       :pagination="{
         page,
         limit
       }"
+      :preview="preview"
       :sortable="sortable"
       v-on="listeners"
       @flag="onFlag"

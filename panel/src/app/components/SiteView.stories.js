@@ -26,7 +26,7 @@ export const regular = () => ({
               pages: async () => Pages(10),
               type: "pages",
               layout: "cards",
-              image: {
+              preview: {
                 ratio: "3/2",
                 cover: true,
               },
@@ -58,4 +58,3 @@ export const regular = () => ({
     />
   `
 });
-

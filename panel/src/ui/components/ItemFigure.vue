@@ -1,60 +1,48 @@
 <template>
   <div
-    v-if="image || icon"
+    v-if="preview"
     class="k-item-figure"
   >
     <!-- image -->
     <k-image
-      v-if="image.url"
+      v-if="preview.image"
       :back="back"
-      :cover="image.cover"
+      :cover="preview.cover"
       :ratio="ratio"
-      :src="image.url"
+      :src="preview.image.src || preview.image"
       class="k-item-image"
     />
     <!-- icon -->
     <k-aspect-ratio
-      v-else-if="icon.type !== false"
+      v-else
       :back="back"
       :ratio="ratio"
     >
-      <k-icon
-        :color="icon.color || 'white'"
-        :size="icon.size"
-        :type="icon.type || 'page'"
-        class="k-item-icon"
-      />
+      <template v-if="preview.icon !== false">
+        <k-icon
+          :color="preview.color || 'white'"
+          :size="preview.size"
+          :type="preview.icon || 'page'"
+          class="k-item-icon"
+        />
+      </template>
     </k-aspect-ratio>
   </div>
 </template>
 
 <script>
+import figure from "@/ui/mixins/figure.js";
+
 export default {
   inheritAttrs: false,
-  props: {
-    icon: {
-      type: [Object, Boolean],
-      default: true
-    },
-    image: {
-      type: [Object, Boolean],
-      default: true
-    },
-    /**
-     * Available options: `list`|`card`
-     */
-    layout: {
-      type: String,
-      default: "card"
-    },
-  },
+  mixins: [figure],
   computed: {
     back() {
-      return this.image.back || this.icon.back || "black";
+      return this.preview.back || "black";
     },
     ratio() {
       if (this.layout === "card") {
-        return this.image.ratio || this.icon.ratio || "1/1";
+        return this.preview.ratio || "1/1";
       }
 
       return "1/1";

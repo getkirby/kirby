@@ -33,7 +33,7 @@ export const pages = () => ({
               label: "Published",
               layout: "cards",
               type: "pages",
-              image: {
+              preview: {
                 ratio: "3/2"
               },
               pages: async () => {

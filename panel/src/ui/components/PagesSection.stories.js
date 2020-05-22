@@ -26,9 +26,6 @@ export const list = () => ({
     icon() {
       return {};
     },
-    image() {
-      return {};
-    },
     limit() {
       return 10;
     },
@@ -51,6 +48,9 @@ export const list = () => ({
         };
       };
     },
+    preview() {
+      return {};
+    },
     sortable() {
       return false;
     },
@@ -65,12 +65,11 @@ export const list = () => ({
       :add="add"
       :empty="empty"
       :help="help"
-      :icon="icon"
-      :image="image"
       :info="true"
       :items="pages"
       :layout="layout"
       :page="page"
+      :preview="preview"
       :limit="limit"
       :sortable="sortable"
       label="Pages"
@@ -81,10 +80,10 @@ export const list = () => ({
   `
 });
 
-export const listWithImageSettings = () => ({
+export const listWithPreviewSettings = () => ({
   extends: list(),
   computed: {
-    image() {
+    preview() {
       return {
         back: "pattern",
         cover: true,
@@ -100,7 +99,7 @@ export const listWithoutFigure = () => ({
     icon() {
       return false;
     },
-    image() {
+    preview() {
       return false;
     },
     sortable() {
@@ -205,10 +204,10 @@ export const cardlets = () => ({
   }
 });
 
-export const cardletsWithImageSettings = () => ({
+export const cardletsWithPreviewSettings = () => ({
   extends: cardlets(),
   computed: {
-    image() {
+    preview() {
       return {
         back: "pattern",
         cover: true,
@@ -296,10 +295,10 @@ export const cards = () => ({
   }
 });
 
-export const cardsWithImageSettings = () => ({
+export const cardsWithPreviewSettings = () => ({
   extends: cards(),
   computed: {
-    image() {
+    preview() {
       return {
         back: "pattern",
         cover: true,
@@ -344,7 +343,7 @@ export const cardsWithSlowServer = () => ({
     delay() {
       return 2500;
     },
-    image() {
+    preview() {
       return {
         back: "pattern",
         cover: true,

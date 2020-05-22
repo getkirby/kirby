@@ -81,10 +81,9 @@ export default {
         return {
           id: language.code,
           default: language.default,
-          icon: {
-            type: "globe"
+          preview: {
+            icon: "globe"
           },
-          image: true,
           text: language.name,
           info: language.code,
           link: () => {

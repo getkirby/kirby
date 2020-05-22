@@ -7,8 +7,8 @@ export default (limit, start = 1) => {
       title: "List item no. " + id,
       info: "List item info",
       link: "https://getkirby.com",
-      image: {
-        url: "https://source.unsplash.com/user/erondu/400x225?" + id
+      preview: {
+        image: "https://source.unsplash.com/user/erondu/400x225?" + id
       },
       options: [
         { icon: "edit", text: "Edit", click: "edit" },
@@ -17,4 +17,3 @@ export default (limit, start = 1) => {
     };
   });
 };
-

@@ -72,8 +72,6 @@ export default {
       return {
         empty: this.empty,
         help: this.help,
-        icon: this.icon,
-        image: this.image,
         items: this.data,
         layout: this.layout,
         loader: this.loader,
@@ -84,6 +82,7 @@ export default {
           limit: this.limit,
           total: this.total
         },
+        preview: this.preview,
         size: this.size,
         sortable: this.sortable
       };

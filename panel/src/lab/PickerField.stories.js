@@ -58,8 +58,9 @@ export const Countries = () => ({
             id: data.cca3,
             title: data.name.common,
             info: "Capital: " + data.capital[0],
-            icon: {
-              type: data.flag
+            preview: {
+              icon: data.flag,
+              size: "meduium"
             }
           };
         }
@@ -136,8 +137,8 @@ export const Movies = () => ({
             id: data.id,
             title: data.title,
             info: `Rating: ${data.vote_average || '–'}`,
-            image: {
-              url: "http://image.tmdb.org/t/p/w500/" + data.poster_path,
+            preview: {
+              image: "http://image.tmdb.org/t/p/w500/" + data.poster_path,
               ratio: "11.333/17"
             }
           };
@@ -159,11 +160,12 @@ export const Movies = () => ({
           icon: 'video',
           text: 'Pick a movie and start binging'
         }"
-        :image="{ cover: true }"
+        :preview="{ cover: true }"
         layout="cardlets"
         :picker="{
-          items: { layout: 'cards', size: 'small' },
-          size: 'large'
+          layout: 'cards',
+          size: 'small',
+          width: 'large'
         }"
       />
       <k-headline class="mt-8 mb-3">Value</k-headline>

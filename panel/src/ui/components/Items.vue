@@ -15,9 +15,8 @@
         v-for="(item, itemIndex) in items"
         :key="item.id || itemIndex"
         v-bind="item"
-        :icon="iconSettings(item)"
-        :image="imageSettings(item)"
         :layout="itemLayout"
+        :preview="previewSettings(item)"
         :sortable="sortable"
         @click="onItem(item, itemIndex)"
         @flag="onFlag(item, itemIndex)"
@@ -63,61 +62,6 @@ export default {
     },
   },
   methods: {
-    iconSettings(item) {
-      let globalSettings = this.icon;
-      let localSettings  = item.icon;
-
-      if (globalSettings === false) {
-        return false;
-      }
-
-      if (localSettings === false) {
-        return false;
-      }
-
-      if (typeof globalSettings !== "object") {
-        globalSettings = {};
-      }
-
-      if (typeof localSettings !== "object") {
-        localSettings = {};
-      }
-
-      return {
-        // individual settings
-        type: localSettings.type || globalSettings.type,
-        back: localSettings.back || globalSettings.back,
-      };
-    },
-    imageSettings(item) {
-      let globalSettings = this.image;
-      let localSettings  = item.image;
-
-      if (globalSettings === false) {
-        return false;
-      }
-
-      if (localSettings === false) {
-        return false;
-      }
-
-      if (typeof globalSettings !== "object") {
-        globalSettings = {};
-      }
-
-      if (typeof localSettings !== "object") {
-        localSettings = {};
-      }
-
-      return {
-        // global settings
-        cover: globalSettings.cover || localSettings.cover,
-        ratio: globalSettings.ratio || localSettings.ratio,
-        // individual settings
-        back: localSettings.back || globalSettings.back,
-        url: localSettings.url
-      };
-    },
     onFlag(item, itemIndex) {
       this.$emit('flag', item, itemIndex)
     },
@@ -132,7 +76,32 @@ export default {
     },
     onSortEnd(event) {
       this.$emit("sort", this.items, event);
-    }
+    },
+    previewSettings(item) {
+      let globalSettings = this.preview;
+      let localSettings  = item.preview;
+
+      if (globalSettings === false) {
+        return false;
+      }
+
+      if (localSettings === false) {
+        return false;
+      }
+
+      if (typeof globalSettings !== "object") {
+        globalSettings = {};
+      }
+
+      if (typeof localSettings !== "object") {
+        localSettings = {};
+      }
+
+      return {
+        ...localSettings,
+        ...globalSettings
+      };
+    },
   }
 };
 </script>

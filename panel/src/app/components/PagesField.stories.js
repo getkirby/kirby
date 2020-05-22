@@ -69,7 +69,7 @@ export const pickerLayout = () => ({
       label="Pages"
       :picker="{
         layout: 'cardlets',
-        size: 'large'
+        width: 'large'
       }"
     />
   `

@@ -16,8 +16,8 @@ export const list = () => ({
           title: "List item no. " + item,
           info: "List item info",
           link: "https://getkirby.com",
-          image: {
-            url: "https://source.unsplash.com/user/erondu/1600x900?" + item
+          preview: {
+            image: "https://source.unsplash.com/user/erondu/1600x900?" + item
           },
           options: [
             { icon: "edit", text: "Edit", click: "edit" },
@@ -47,11 +47,11 @@ export const list = () => ({
   `
 });
 
-export const listWithImageSettings = () => ({
+export const listWithPreviewSettings = () => ({
   extends: list(),
   template: `
     <k-items
-      :image="{
+      :preview="{
         back: 'pattern'
       }"
       :items="items"
@@ -67,7 +67,7 @@ export const listWithDefaultIcon = () => ({
   extends: list(),
   template: `
     <k-items
-      :image="false"
+      :preview="{ image: false }"
       :items="items"
       :sortable="true"
       layout="list"
@@ -81,7 +81,7 @@ export const listWithoutFigure = () => ({
   extends: list(),
   template: `
     <k-items
-      :image="false"
+      :preview="false"
       :icon="false"
       :items="items"
       :sortable="true"
@@ -108,11 +108,11 @@ export const cardlets = () => ({
   `
 });
 
-export const cardletsWithImageSettings = () => ({
+export const cardletsWithPreviewSettings = () => ({
   extends: list(),
   template: `
     <k-items
-      :image="{
+      :preview="{
         ratio: '4/5',
         back: 'pattern',
       }"
@@ -129,7 +129,7 @@ export const cardletsWithDefaultIcon = () => ({
   extends: list(),
   template: `
     <k-items
-      :image="false"
+      :preview="{ image: false }"
       :items="items"
       :sortable="true"
       layout="cardlets"
@@ -143,7 +143,7 @@ export const cardletsWithoutFigure = () => ({
   extends: list(),
   template: `
     <k-items
-      :image="false"
+      :preview="false"
       :icon="false"
       :items="items"
       :sortable="true"
@@ -167,11 +167,11 @@ export const cards = () => ({
   `
 });
 
-export const cardsWithImageSettings = () => ({
+export const cardsWithPreviewSettings = () => ({
   extends: list(),
   template: `
     <k-items
-      :image="{
+      :preview="{
         ratio: '4/5',
         back: 'pattern',
       }"
@@ -188,7 +188,7 @@ export const cardsWithDefaultIcon = () => ({
   extends: list(),
   template: `
     <k-items
-      :image="false"
+      :preview="{ image: false }"
       :items="items"
       :sortable="true"
       layout="cards"
@@ -202,7 +202,7 @@ export const cardsWithoutFigure = () => ({
   extends: list(),
   template: `
     <k-items
-      :image="false"
+      :preview="false"
       :icon="false"
       :items="items"
       :sortable="true"

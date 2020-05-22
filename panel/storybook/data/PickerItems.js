@@ -5,8 +5,8 @@ export const Item = (id, model = "Item") =>  {
     title: model + " no. " + id,
     info: model + " info",
     link: "https://getkirby.com",
-    image: {
-      url: "https://source.unsplash.com/user/erondu/400x225?" + id
+    preview: {
+      image: "https://source.unsplash.com/user/erondu/400x225?" + id
     }
   };
 };

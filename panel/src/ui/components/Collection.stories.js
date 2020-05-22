@@ -251,7 +251,7 @@ export const cards = () => ({
   `
 });
 
-export const cardsWithImageSettings = () => ({
+export const cardsWithPreviewSettings = () => ({
   data() {
     return {
       start: 1,
@@ -274,13 +274,13 @@ export const cardsWithImageSettings = () => ({
   },
   template: `
     <k-collection
-      :image="{
+      :items="items"
+      :pagination="pagination"
+      :preview="{
         ratio: '3/2',
         back: 'pattern',
         cover: true
       }"
-      :items="items"
-      :pagination="pagination"
       :sortable="true"
       layout="card"
       @paginate="onPaginate"

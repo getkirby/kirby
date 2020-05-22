@@ -63,8 +63,8 @@ export const pickerLayout = () => ({
       label="Files"
       :picker="{
         layout: 'cards',
-        size: 'large',
-        image: { cover: true }
+        preview: { cover: true },
+        width: 'large'
       }"
     />
   `

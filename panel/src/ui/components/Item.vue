@@ -2,7 +2,7 @@
   <article
     :class="[layout ? 'k-' + layout + '-item' : false, className]"
     :data-has-flag="Boolean(flag)"
-    :data-has-figure="Boolean(image) || Boolean(icon)"
+    :data-has-figure="Boolean(preview)"
     :data-has-info="Boolean(info)"
     :data-has-label="Boolean(label)"
     :data-has-options="Boolean(options)"
@@ -14,9 +14,8 @@
   >
     <!-- Figure -->
     <k-item-figure
-      :icon="icon"
-      :image="image"
       :layout="layout"
+      :preview="preview"
     />
 
     <!-- Sort handle -->

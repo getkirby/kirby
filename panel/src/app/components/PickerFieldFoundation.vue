@@ -38,7 +38,7 @@
       ref="drawer"
       :loading="drawer.loading"
       :title="label + ' / ' + $t('select')"
-      :size="picker.size || 'small'"
+      :size="picker.width || 'small'"
       @close="$refs.picker.reset()"
       @submit="onSelect"
     >
@@ -172,7 +172,7 @@ export default {
     },
     selector() {
       return {
-        ...this.picker.items,
+        ...this.picker,
         max: this.max,
         multiple: this.multiple,
         options: this.getOptions,

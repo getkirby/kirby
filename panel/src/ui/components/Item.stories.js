@@ -11,8 +11,8 @@ export default {
 export const simple = () => ({
   data() {
     return {
-      image: {
-        url: "https://source.unsplash.com/user/erondu/1600x900"
+      preview: {
+        image: "https://source.unsplash.com/user/erondu/1600x900"
       },
       title: "Item title"
     };
@@ -197,11 +197,11 @@ export const flag = () => ({
   `
 });
 
-export const imageRatio = () => ({
+export const previewRatio = () => ({
   extends: flag(),
   data() {
     return {
-      image: {
+      preview: {
         ratio: "4/5"
       }
     }
@@ -211,22 +211,22 @@ export const imageRatio = () => ({
   }
 });
 
-export const imageBack = () => ({
-  extends: imageRatio(),
+export const previewBack = () => ({
+  extends: previewRatio(),
   data() {
     return {
-      image: {
+      preview: {
         back: "pattern"
       }
     }
   }
 });
 
-export const imageCover = () => ({
-  extends: imageBack(),
+export const previewCover = () => ({
+  extends: previewBack(),
   data() {
     return {
-      image: {
+      preview: {
         cover: true
       }
     };

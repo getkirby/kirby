@@ -11,7 +11,7 @@
 
 <script>
 /**
- * k-dropdown-item elements inherit all the attributes from k-button elements, like link, icon or image
+ * k-dropdown-item elements inherit all the attributes from k-button elements, like link or icon
  */
 export default {
   inheritAttrs: false,
@@ -20,7 +20,6 @@ export default {
     current: [Boolean, String],
     disabled: Boolean,
     icon: String,
-    image: [String, Object],
     link: String,
     target: String,
     theme: String,
