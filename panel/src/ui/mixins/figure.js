@@ -1,12 +1,14 @@
 
 export default {
   props: {
-    /**
-     * Available options: `list`|`cardlets`|`cards`
-     */
     layout: {
       type: String,
-      default: "list"
+      default: "list",
+      validator: (prop) => [
+        "list",
+        "cardlets",
+        "cards",
+      ].includes(prop)
     },
     /**
      * Global preview image/icon settings for items

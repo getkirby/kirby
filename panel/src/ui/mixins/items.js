@@ -12,11 +12,17 @@ export default {
     },
     /**
      * Card sizes.
-     * Available options: `tiny`|`small`|`default`|`medium`|`large`
      */
     size: {
       type: String,
-      default: "default"
+      default: "default",
+      validator: (prop) => [
+        "tiny",
+        "small",
+        "default",
+        "medium",
+        "large"
+      ].includes(prop)
     },
   }
 }

@@ -157,6 +157,17 @@ export const hasNoFiles = () => ({
   `
 });
 
+export const noUpload = () => ({
+  extends: list(),
+  template: `
+    <k-files-field
+      :value="value"
+      :upload="false"
+      label="Picker"
+    />
+  `
+});
+
 export const disabled = () => ({
   extends: list(),
   template: `

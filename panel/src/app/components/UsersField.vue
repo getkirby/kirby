@@ -1,11 +1,11 @@
 <script>
-import PickerFieldFoundation from "@/app/components/PickerFieldFoundation.vue";
+import PickerField from "@/ui/components/PickerField.vue";
 
 // TODO: implement actual API instead
 import { User, Users } from "../../../storybook/data/PickerItems.js";
 
 export default {
-  extends: PickerFieldFoundation,
+  extends: PickerField,
   props: {
     empty: {
       type: [String, Object],

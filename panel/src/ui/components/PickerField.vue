@@ -1,16 +1,12 @@
 <template>
-  <k-field
-    :input="_uid"
-    v-bind="$props"
-    class="k-picker-field"
-  >
+  <k-field :input="_uid" v-bind="$props">
+
     <!-- Actions button/dropdown -->
     <k-options-dropdown
-      v-if="!disabled && actions.length"
-      :options="actions"
-      :text="true"
-      @option="onAction"
+      v-if="hasActions"
+      v-bind="actionsOptions"
       slot="options"
+      @option="onAction"
     />
 
     <!-- Error -->
@@ -25,9 +21,7 @@
     <!-- Collection -->
     <k-collection
       v-else
-      v-bind="collection"
-      :help="false"
-      :data-has-actions="this.actions.length > 0"
+      v-bind="collectionOptions"
       @empty="onEmpty"
       @option="onRemove"
       @sort="onSort"
@@ -35,17 +29,16 @@
 
     <!-- Drawer & Picker -->
     <k-drawer
+      v-if="hasOptions"
+      v-bind="drawerOptions"
       ref="drawer"
-      :loading="drawer.loading"
-      :title="label + ' / ' + $t('select')"
-      :size="picker.width || 'small'"
       @close="$refs.picker.reset()"
       @submit="onSelect"
     >
       <k-picker
         ref="picker"
         v-model="drawer.value"
-        v-bind="selector"
+        v-bind="pickerOptions"
         @paginate="onPaginate"
         @startLoading="onLoading"
         @stopLoading="onLoaded"
@@ -61,11 +54,14 @@ import Field from "@/ui/components/Field.vue";
 export default {
   extends: AsyncCollection,
   beforeCreate: function(){
-    this.$delete(this.$options.props, "items");
     this.$delete(this.$options.props, "loader");
+    this.$delete(this.$options.props, "items");
   },
   props: {
     ...Field.props,
+    forItems: {
+      type: Function
+    },
     hasOptions: {
       type: Boolean,
       default: true
@@ -119,8 +115,7 @@ export default {
   },
   computed: {
     actions() {
-      // only show select action if items are available
-      // as options in the picker
+      // only show select action when options available
       if (this.hasOptions) {
         return [
           { icon: "circle-nested", text: this.$t("select"), click: "select" }
@@ -128,6 +123,32 @@ export default {
       }
 
       return [];
+    },
+    actionsOptions() {
+      return {
+        options: this.actions,
+        text: this.actions.length < 2
+      };
+    },
+    collectionOptions() {
+      return {
+        ...this.collection,
+        help: false
+      };
+    },
+    drawerOptions() {
+      return {
+        loading: this.drawer.loading,
+        title: this.label + " / " + this.$t("select"),
+        size: this.picker.width || "small"
+      };
+    },
+    hasActions() {
+      if (this.disabled) {
+        return false;
+      }
+
+      return this.actions.length > 0;
     },
     items() {
       return async () => {
@@ -170,7 +191,7 @@ export default {
 
       return true;
     },
-    selector() {
+    pickerOptions() {
       return {
         ...this.picker,
         max: this.max,
@@ -193,14 +214,12 @@ export default {
   methods: {
     /**
      * Takes a list of ids and return full item objects.
-     * Has to be implemented by actual field
      */
     async getItems(ids) {
       return [];
     },
     /**
      * Returns item objects.
-     * Has to be implemented by actual field
      */
     async getOptions({page, limit, parent, search}) {
       return [];
@@ -218,6 +237,7 @@ export default {
           break;
       }
     },
+    onDrop(event) {},
     onEmpty() {
       if (this.actions.length > 0) {
         this.onAction(this.actions[0].click);
@@ -263,9 +283,3 @@ export default {
   }
 }
 </script>
-
-<style>
-.k-picker-field > .k-collection:not([data-has-actions]) .k-empty {
-  cursor: default;
-}
-</style>

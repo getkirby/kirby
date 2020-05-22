@@ -1,15 +1,15 @@
-import Padding from "../../storybook/theme/Padding.js";
-import PickerFieldFoundation from "@/app/components/PickerFieldFoundation.vue";
+import Padding from "../../../storybook/theme/Padding.js";
+import PickerField from "@/ui/components/PickerField.vue";
 
 export default {
-  title: "Lab | Picker Field",
+  title: "Ui | Form / Field / Picker Field",
   decorators: [Padding]
 };
 
 export const Countries = () => ({
   components: {
     "k-custom-picker-field": {
-      extends: PickerFieldFoundation,
+      extends: PickerField,
       computed: {
         api() {
           return async () => {
@@ -87,7 +87,7 @@ export const Countries = () => ({
 export const Movies = () => ({
   components: {
     "k-custom-picker-field": {
-      extends: PickerFieldFoundation,
+      extends: PickerField,
       computed: {
         apiKey() {
           return "965697b4f94821082f5e099332e12ff1";

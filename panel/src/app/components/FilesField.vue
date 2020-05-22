@@ -1,16 +1,12 @@
 <template>
-  <k-field
-    :input="_uid"
-    v-bind="$props"
-    class="k-picker-field"
-  >
+  <k-field :input="_uid" v-bind="$props">
+
     <!-- Actions button/dropdown -->
     <k-options-dropdown
-      v-if="!disabled && actions.length"
-      :options="actions"
-      :text="actionsLabel"
-      @option="onAction"
+      v-if="hasActions"
+      v-bind="actionsOptions"
       slot="options"
+      @option="onAction"
     />
 
     <!-- Error -->
@@ -29,9 +25,7 @@
       @drop="onDrop"
     >
       <k-collection
-        ref="collection"
-        v-bind="collection"
-        :data-has-actions="this.actions.length > 0"
+        v-bind="collectionOptions"
         @empty="onEmpty"
         @option="onRemove"
         @sort="onSort"
@@ -40,10 +34,9 @@
 
     <!-- Drawer & Picker -->
     <k-drawer
+      v-if="hasOptions"
+      v-bind="drawerOptions"
       ref="drawer"
-      :loading="drawer.loading"
-      :title="label + ' / ' + $t('select')"
-      :size="picker.width || 'small'"
       @close="$refs.picker.reset()"
       @submit="onSelect"
     >
@@ -51,7 +44,7 @@
         <k-picker
           ref="picker"
           v-model="drawer.value"
-          v-bind="selector"
+          v-bind="pickerOptions"
           @paginate="onPaginate"
           @startLoading="onLoading"
           @stopLoading="onLoaded"
@@ -60,21 +53,22 @@
     </k-drawer>
 
     <k-upload
+      v-if="upload"
       ref="upload"
-      v-bind="upload"
+      v-bind="uploadOptions"
       @success="onUpload"
     />
   </k-field>
 </template>
 
 <script>
-import PickerFieldFoundation from "@/app/components/PickerFieldFoundation.vue";
+import PickerField from "@/ui/components/PickerField.vue";
 
 // TODO: implement actual API instead
 import { File, Files } from "../../../storybook/data/PickerItems.js";
 
 export default {
-  extends: PickerFieldFoundation,
+  extends: PickerField,
   props: {
     empty: {
       type: [String, Object],
@@ -84,6 +78,10 @@ export default {
           text: this.$t("field.files.empty")
         };
       }
+    },
+    upload: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -98,15 +96,17 @@ export default {
         });
       }
 
-      actions.push({
-        icon: "upload",
-        text: this.$t("upload"),
-        click: "upload"
-      });
+      if (this.upload) {
+        actions.push({
+          icon: "upload",
+          text: this.$t("upload"),
+          click: "upload"
+        });
+      }
 
       return actions;
     },
-    upload() {
+    uploadOptions() {
       return {
         url: "api/upload",
         multiple: this.multiple
