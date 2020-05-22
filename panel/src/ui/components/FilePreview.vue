@@ -4,25 +4,13 @@
       <k-link
         :to="link"
         :title="$t('open')"
-        class="k-file-preview-image bg-pattern flex items-center justify-center"
+        class="flex items-center justify-center"
         target="_blank"
       >
-        <k-image
-          v-if="image"
-          :src="image"
-          back="pattern"
+        <k-item-figure
+          layout="card"
+          :preview="preview"
         />
-        <k-aspect-ratio
-          v-else-if="icon"
-          class="k-file-preview-icon-container"
-          back="pattern"
-        >
-          <k-icon
-            v-bind="icon"
-            size="large"
-            class="k-file-preview-icon"
-          />
-        </k-aspect-ratio>
       </k-link>
       <div class="k-file-preview-details text-sm">
         <ul>
@@ -76,7 +64,7 @@
 <script>
 export default {
   props: {
-    height: Number,
+    height: [Number, String],
     icon: Object,
     image: String,
     link: String,
@@ -85,8 +73,25 @@ export default {
     orientation: String,
     size: String,
     template: String,
-    width: Number,
+    width: [Number, String],
   },
+  computed: {
+    preview() {
+      let preview = {
+        image: this.image,
+        back: 'pattern',
+        ratio: '1/1'
+      };
+
+      if (this.icon) {
+        preview.icon  = this.icon.type;
+        preview.color = this.icon.color;
+        preview.size  = this.icon.size || 'large';
+      }
+
+      return preview;
+    }
+  }
 };
 </script>
 <style lang="scss">
@@ -113,12 +118,8 @@ export default {
   min-width: 0;
 }
 
-/** Image **/
-.k-file-preview-image {
-  height: 100%;
-}
-.k-file-preview-image .k-image,
-.k-file-preview-icon-container {
+/** Image/icon **/
+.k-file-preview .k-item-figure {
   width: 100%;
 }
 
