@@ -3,7 +3,6 @@
     :input="_uid"
     :counter="counterOptions"
     v-bind="$props"
-    class="k-multiselect-field"
     @blur="blur"
     @keydown.native.enter.prevent="focus"
   >

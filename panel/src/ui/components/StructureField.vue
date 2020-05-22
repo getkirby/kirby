@@ -1,9 +1,5 @@
 <template>
-  <k-field
-    :input="_uid"
-    v-bind="$props"
-    class="k-structure-field"
-  >
+  <k-field :input="_uid" v-bind="$props">
     <!-- Add button -->
     <template slot="options">
       <k-button

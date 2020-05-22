@@ -1,9 +1,5 @@
 <template>
-  <k-field
-    :counter="counterOptions"
-    v-bind="$props"
-    class="k-checkboxes-field"
-  >
+  <k-field :counter="counterOptions" v-bind="$props">
     <k-input
       :id="_uid"
       ref="input"

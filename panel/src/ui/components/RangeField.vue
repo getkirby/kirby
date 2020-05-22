@@ -2,7 +2,6 @@
   <k-field
     :input="_uid"
     v-bind="$props"
-    class="k-range-field"
   >
     <k-input
       :id="_uid"

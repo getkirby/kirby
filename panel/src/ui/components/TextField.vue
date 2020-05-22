@@ -3,7 +3,6 @@
     :input="_uid"
     :counter="counterOptions"
     v-bind="$props"
-    class="k-text-field"
   >
     <slot
       slot="options"

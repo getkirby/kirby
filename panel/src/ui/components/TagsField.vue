@@ -3,7 +3,6 @@
     :input="_uid"
     :counter="counterOptions"
     v-bind="$props"
-    class="k-tags-field"
   >
     <k-input
       :id="_uid"

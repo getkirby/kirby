@@ -1,9 +1,5 @@
 <template>
-  <k-field
-    :input="_uid"
-    v-bind="$props"
-    class="k-builder-field"
-  >
+  <k-field :input="_uid" v-bind="$props">
     <k-draggable
       :handle="true"
       :options="dragOptions"
