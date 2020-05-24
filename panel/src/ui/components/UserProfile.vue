@@ -9,7 +9,10 @@
             class="k-user-profile-image"
             @click="$refs.picture.toggle()"
           >
-            <k-item-figure v-bind="avatar" />
+            <k-item-figure
+              v-bind="avatar"
+              class="rounded-sm"
+            />
           </k-button>
           <k-dropdown-content
             ref="picture"

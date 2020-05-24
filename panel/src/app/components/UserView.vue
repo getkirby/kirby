@@ -49,7 +49,7 @@
       @success="$emit('update')"
     />
     <k-user-password-dialog
-      ref="language"
+      ref="password"
     />
     <k-user-remove-dialog
       ref="remove"
@@ -61,6 +61,10 @@
     />
     <k-user-role-dialog
       ref="role"
+      @success="$emit('update')"
+    />
+    <k-upload
+      ref="upload"
       @success="$emit('update')"
     />
   </k-inside>
@@ -104,8 +108,17 @@ export default {
   methods: {
     onOpen() {
     },
-    onOption(option) {
+    async onOption(option) {
       switch (option) {
+        case "avatar.remove":
+          await this.$api.users.deleteAvatar(this.user.id);
+          return this.$emit("update");
+        case "avatar.upload":
+          return this.$refs.upload.open({
+            url: this.user.avatarApi,
+            accept: "image/*",
+            multiple: false
+          });
         case "email":
           return this.$refs.email.open(this.user.id);
         case "language":
