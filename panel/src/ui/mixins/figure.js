@@ -7,7 +7,9 @@ export default {
       validator: (prop) => [
         "list",
         "cardlets",
+        "cardlet",
         "cards",
+        "card"
       ].includes(prop)
     },
     /**

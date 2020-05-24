@@ -1,9 +1,6 @@
-import { action } from "@storybook/addon-actions";
-import FilePreview from "./FilePreview.vue";
 
 export default {
-  title: "UI | Layout / File Preview",
-  component: FilePreview,
+  title: "UI | Layout / File Preview"
 };
 
 export const imageOnly = () => ({
