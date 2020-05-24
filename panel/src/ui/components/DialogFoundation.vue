@@ -13,6 +13,7 @@
         :dir="$direction"
         :data-size="size"
         :data-loading="loading"
+        :is-dimmed="!loading"
         slot-scope="{
           cancel,
           cancelButton,
@@ -26,6 +27,7 @@
       >
         <div
           class="k-dialog-box relative m-6 bg-light rounded-sm shadow-md"
+          v-if="isOpen"
           @click.stop
         >
           <k-notification
@@ -108,6 +110,11 @@ export default {
       default: false
     }
   },
+  data() {
+    return {
+      isOpen: false
+    }
+  },
   computed: {
     /**
      * Supports deprecated cancel button config
@@ -164,11 +171,16 @@ export default {
 
       this.$emit("close");
       this.$refs.overlay.close();
+      this.isOpen = false;
     },
     error(message) {
       this.$refs.modal.error(message);
     },
     open() {
+      this.isOpen = true;
+      this.$refs.overlay.open();
+    },
+    ready() {
       this.$refs.overlay.open();
     },
     submit() {

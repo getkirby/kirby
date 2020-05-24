@@ -76,11 +76,15 @@ export default {
      * the result will be waited for.
      */
     async open(...args) {
+      this.isLoading = true;
       try {
-        await this.load(...args);
+        this.$refs.dialog.ready();
+        await this.load(...args)
         this.$refs.dialog.open();
       } catch (error) {
         this.$store.dispatch("notification/error", error);
+      } finally {
+        this.isLoading = false;
       }
     },
     /**

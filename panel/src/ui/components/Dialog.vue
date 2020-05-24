@@ -26,6 +26,9 @@ export default {
     open() {
       this.$refs.dialog.open();
     },
+    ready() {
+      this.$refs.dialog.ready();
+    },
     submit() {
       this.$refs.dialog.submit();
     },
