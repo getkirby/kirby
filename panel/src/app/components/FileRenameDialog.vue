@@ -36,7 +36,6 @@ export default {
         this.filename,
         this.file.name
       );
-      // TODO: routing in view
     },
     async validate() {
       if (this.values.name.length === 0) {

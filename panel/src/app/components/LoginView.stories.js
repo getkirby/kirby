@@ -1,8 +1,5 @@
-import LoginView from "./LoginView.vue";
-
 export default {
-  title: "App | Views / Login",
-  component: LoginView
+  title: "App | Views / Login"
 };
 
 export const regular = () => ({
@@ -10,4 +7,3 @@ export const regular = () => ({
     <k-login-view />
   `
 });
-

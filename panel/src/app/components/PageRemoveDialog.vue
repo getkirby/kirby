@@ -98,21 +98,6 @@ export default {
     },
     async submit() {
       await this.$model.pages.delete(this.id, { force: true });
-
-      // TODO: this should actually go into the View!
-      // redirect to parent page
-      // if the current view is the deleted page
-      if (
-        this.$route.params.path &&
-        id === this.$route.params.path.replace(/\+/g, "/")
-      ) {
-        if (this.parent) {
-          const path = this.$model.pages.link(this.parent.id);
-          this.$router.push(path);
-        } else {
-          this.$router.push("/pages");
-        }
-      }
     },
     async validate() {
       if (this.hasChildren === false) {

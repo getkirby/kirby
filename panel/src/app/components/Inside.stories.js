@@ -1,8 +1,5 @@
-import Inside from "./Inside.vue";
-
 export default {
-  title: "App | Separation / Inside",
-  component: Inside,
+  title: "App | Separation / Inside"
 };
 
 export const unregistered = () => ({

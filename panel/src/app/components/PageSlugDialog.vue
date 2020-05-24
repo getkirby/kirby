@@ -73,20 +73,6 @@ export default {
     },
     async submit() {
       return await this.$api.pages.changeSlug(this.id, this.slug);
-
-      // TODO: put this into view
-      // if in PageView and default language, redirect
-      if (
-        this.$route.params.path &&
-        this.page.id === this.$route.params.path.replace(/\+/g, "/") &&
-        (
-          !this.$store.state.languages.current ||
-          this.$store.state.languages.current.default === true
-        )
-      ) {
-        payload.route = this.$model.pages.link(page.id);
-        delete payload.event;
-      }
     },
     async validate() {
       if (this.slug.length === 0) {

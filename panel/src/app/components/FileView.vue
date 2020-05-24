@@ -7,7 +7,7 @@
       :tab="tab"
       :tabs="tabs"
       :title="file.filename"
-      @rename="onRename"
+      @rename="onOption('rename')"
     >
       <template v-slot:options>
         <k-button
@@ -35,17 +35,18 @@
       </template>
     </k-model-view>
 
+    <!-- Dialogs -->
     <k-file-rename-dialog
       ref="rename"
-      @success="onRenamed"
+      @success="$emit('rename', $event)"
     />
     <k-file-remove-dialog
       ref="remove"
-      @success="onRemoved"
+      @success="$emit('remove')"
     />
     <k-upload
       ref="replace"
-      @success="onUploaded"
+      @success="$emit('update')"
     />
 
   </k-inside>
@@ -83,7 +84,10 @@ export default {
   },
   computed: {
     options() {
-      return this.$model.files.options(this.file.parent, this.file.filename, "file");
+      return async () => this.$model.files.options(
+        this.file.parent,
+        this.file.filename
+      );
     },
     preview() {
       return {
@@ -101,7 +105,10 @@ export default {
     onOption(option) {
       switch (option) {
         case "rename":
-          return this.$refs.rename.open(this.file.parent, this.file.filename);
+          return this.$refs.rename.open(
+            this.file.parent,
+            this.file.filename
+          );
         case "replace":
           return this.$refs.replace.open({
             url: this.file.replaceApi,
@@ -109,20 +116,11 @@ export default {
             multiple: false
           });
         case "remove":
-          return this.$refs.remove.open(this.file.parent, this.file.filename);
+          return this.$refs.remove.open(
+            this.file.parent,
+            this.file.filename
+          );
       }
-    },
-    onRename() {
-      this.$refs.rename.open(this.file.filename);
-    },
-    onRenamed() {
-
-    },
-    onRemoved() {
-
-    },
-    onUploaded() {
-
     }
   }
 };

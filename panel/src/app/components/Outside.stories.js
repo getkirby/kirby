@@ -1,8 +1,5 @@
-import Outside from "./Outside.vue";
-
 export default {
-  title: "App | Separation / Outside",
-  component: Outside,
+  title: "App | Separation / Outside"
 };
 
 export const simple = () => ({

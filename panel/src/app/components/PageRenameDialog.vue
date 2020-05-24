@@ -27,7 +27,6 @@ export default {
     },
     async submit() {
       return await this.$model.pages.changeTitle(this.id, this.values.title);
-      //TODO: routing to new path in page view
     },
     async validate() {
       if (this.values.title.length === 0) {

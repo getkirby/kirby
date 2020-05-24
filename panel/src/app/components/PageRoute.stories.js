@@ -1,10 +1,9 @@
-
 export default {
-  title: "App | Routes / Login "
+  title: "App | Routes / Page "
 };
 
 export const regular = () => ({
   template: `
-    <k-login-route />
+    <k-page-route />
   `
 });

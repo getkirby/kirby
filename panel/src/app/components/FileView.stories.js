@@ -1,5 +1,3 @@
-import FileView from "./FileView.vue";
-
 export default {
   title: "App | Views / File"
 };
@@ -10,9 +8,6 @@ const altField = {
 };
 
 export const regular = () => ({
-  components: {
-    "k-file-view": FileView
-  },
   data() {
     return {
       columns: [

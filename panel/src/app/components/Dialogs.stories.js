@@ -10,9 +10,9 @@ import PageCreateDialog from "./PageCreateDialog.vue";
 import PageDuplicateDialog from "./PageDuplicateDialog.vue";
 import PageRemoveDialog from "./PageRemoveDialog.vue";
 import PageRenameDialog from "./PageRenameDialog.vue";
+import PageSlugDialog from "./PageSlugDialog.vue";
 import PageStatusDialog from "./PageStatusDialog.vue";
 import PageTemplateDialog from "./PageTemplateDialog.vue";
-import PageUrlDialog from "./PageUrlDialog.vue";
 import RegistrationDialog from "./RegistrationDialog.vue";
 import SiteRenameDialog from "./SiteRenameDialog.vue";
 import UserCreateDialog from "./UserCreateDialog.vue";
@@ -161,7 +161,7 @@ export const PageTemplate = () => ({
 export const PageUrl = () => ({
   extends: PageRename(),
   components: {
-    "k-story-dialog": PageUrlDialog
+    "k-story-dialog": PageSlugDialog
   }
 });
 

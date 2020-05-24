@@ -24,6 +24,12 @@
 
 <script>
 export default {
+  // TODO: use actual languages dropdown once created
+  components: {
+    "k-languages-dropdown": {
+      template: "<span></span>"
+    }
+  },
   props: {
     columns: {
       type: Array,

@@ -1,8 +1,5 @@
-import BrowserView from "./BrowserView.vue";
-
 export default {
-  title: "App | Views / Browser ",
-  component: BrowserView
+  title: "App | Views / Browser "
 };
 
 export const regular = () => ({
@@ -34,4 +31,3 @@ export const noFetchNoGrid = () => ({
     />
   `
 });
-
