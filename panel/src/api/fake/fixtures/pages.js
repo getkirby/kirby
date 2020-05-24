@@ -3,6 +3,27 @@ export default [
     id: "photography",
     blueprintId: "pages/photography",
     blueprints: [],
+    /** TODO: do this smarter/dynamic? */
+    blueprint: {
+      options: {},
+      status: {
+        draft: {
+          text: "Draft",
+          icon: "circle-outline",
+          color: "red-light"
+        },
+        unlisted: {
+          text: "Unlisted",
+          icon: "circle-half",
+          color: "blue-light"
+        },
+        listed: {
+          text: "Listed",
+          icon: "circle",
+          color: "green-light"
+        }
+      }
+    },
     childIds: [
       "photography+animals",
     ],
