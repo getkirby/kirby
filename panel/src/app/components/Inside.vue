@@ -35,7 +35,7 @@
     />
 
     <!-- Registration Dialog -->
-    <k-registration ref="registration" />
+    <k-registration-dialog ref="registration" />
   </div>
 </template>
 

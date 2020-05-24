@@ -1,7 +1,7 @@
 import Inside from "./Inside.vue";
 
 export default {
-  title: "UI | App / Inside",
+  title: "App | Separation / Inside",
   component: Inside,
 };
 

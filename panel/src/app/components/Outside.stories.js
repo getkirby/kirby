@@ -1,7 +1,7 @@
 import Outside from "./Outside.vue";
 
 export default {
-  title: "UI | App / Outside",
+  title: "App | Separation / Outside",
   component: Outside,
 };
 

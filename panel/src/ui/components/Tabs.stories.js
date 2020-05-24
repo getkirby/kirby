@@ -16,7 +16,7 @@ export const regular = () => ({
       ];
     },
     tab() {
-      return "content";
+      return "images";
     }
   },
   template: '<k-tabs :tabs="tabs" :tab="tab" />',
