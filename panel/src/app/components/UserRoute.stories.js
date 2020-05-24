@@ -1,9 +1,9 @@
 export default {
-  title: "App | Routes / Page"
+  title: "App | Routes / User"
 };
 
 export const regular = () => ({
   template: `
-    <k-page-route />
+    <k-user-route />
   `
 });

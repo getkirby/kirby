@@ -17,10 +17,15 @@ import Model from "../src/app/plugins/models.js";
 import Router from "./mocks/router.js";
 import Store from "./mocks/store.js";
 
-Vue.prototype.$t = Vue.$t = I18n;
+Vue.prototype.$t = Vue.$t = Vue.i18n = I18n;
 Vue.prototype.$api = Vue.$api = Api();
 Vue.use(Router);
 Vue.prototype.$store = Vue.$store = Store;
+Vue.prototype.$permissions = Vue.$permissions = {
+  changeEmail: true,
+  changeRole: true,
+  changeLanguage: true
+};
 Vue.prototype.$user = Vue.$user = {
   role: { name: "admin" }
 };

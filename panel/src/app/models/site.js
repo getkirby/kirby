@@ -8,7 +8,7 @@ export default (Vue, store) => ({
     result.push({
       click: "rename",
       icon: "title",
-      text: Vue.i18n.translate("rename"),
+      text: Vue.$t("rename"),
       disabled: !options.changeTitle
     });
 

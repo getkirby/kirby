@@ -84,7 +84,7 @@ export default (Vue, store) => ({
       result.push({
         click: "preview",
         icon: "open",
-        text: Vue.i18n.translate("open"),
+        text: Vue.$t("open"),
         disabled: options.preview === false
       });
 
@@ -94,14 +94,14 @@ export default (Vue, store) => ({
     result.push({
       click: "rename",
       icon: "title",
-      text: Vue.i18n.translate("rename"),
+      text: Vue.$t("rename"),
       disabled: !options.changeTitle
     });
 
     result.push({
       click: "duplicate",
       icon: "copy",
-      text: Vue.i18n.translate("duplicate"),
+      text: Vue.$t("duplicate"),
       disabled: !options.duplicate
     });
 
@@ -110,21 +110,21 @@ export default (Vue, store) => ({
     result.push({
       click: "url",
       icon: "url",
-      text: Vue.i18n.translate("page.changeSlug"),
+      text: Vue.$t("page.changeSlug"),
       disabled: !options.changeSlug
     });
 
     result.push({
       click: "status",
       icon: "preview",
-      text: Vue.i18n.translate("page.changeStatus"),
+      text: Vue.$t("page.changeStatus"),
       disabled: !options.changeStatus
     });
 
     result.push({
       click: "template",
       icon: "template",
-      text: Vue.i18n.translate("page.changeTemplate"),
+      text: Vue.$t("page.changeTemplate"),
       disabled: !options.changeTemplate
     });
 
@@ -133,7 +133,7 @@ export default (Vue, store) => ({
     result.push({
       click: "remove",
       icon: "trash",
-      text: Vue.i18n.translate("delete"),
+      text: Vue.$t("delete"),
       disabled: !options.delete
     });
 

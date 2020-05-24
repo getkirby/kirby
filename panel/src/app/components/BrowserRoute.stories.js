@@ -1,8 +1,6 @@
-import BrowserRoute from "./BrowserRoute.vue";
 
 export default {
-  title: "App | Routes / Browser ",
-  component: BrowserRoute
+  title: "App | Routes / Browser "
 };
 
 export const regular = () => ({

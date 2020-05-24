@@ -58,7 +58,7 @@ export default (Vue, store) => ({
     Vue.$events.$emit("file." + event, data);
     store.dispatch("notification/success");
   },
-  async options(parent, filename, view) {
+  async options(parent, filename, view = "view") {
     const url     = this.url(parent, filename);
     const file    = await Vue.$api.get(url, { select: "options" });
     const options = file.options;
@@ -67,28 +67,28 @@ export default (Vue, store) => ({
     if (view === "list") {
       result.push({
         icon: "open",
-        text: Vue.i18n.translate("open"),
+        text: Vue.$t("open"),
         click: "download"
       });
     }
 
     result.push({
       icon: "title",
-      text: Vue.i18n.translate("rename"),
+      text: Vue.$t("rename"),
       click: "rename",
       disabled: !options.changeName
     });
 
     result.push({
       icon: "upload",
-      text: Vue.i18n.translate("replace"),
+      text: Vue.$t("replace"),
       click: "replace",
       disabled: !options.replace
     });
 
     result.push({
       icon: "trash",
-      text: Vue.i18n.translate("delete"),
+      text: Vue.$t("delete"),
       click: "remove",
       disabled: !options.delete
     });

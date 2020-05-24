@@ -48,7 +48,6 @@
       ref="replace"
       @success="$emit('update')"
     />
-
   </k-inside>
 </template>
 

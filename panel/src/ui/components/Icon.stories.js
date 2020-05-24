@@ -34,7 +34,7 @@ export const iconset = () => ({
         </k-auto-grid>
       </section>
       <section>
-        <k-auto-grid style="--gap: 1px; --min: 11rem" class="bg-dark">
+        <k-auto-grid style="--gap: 1px; --min: 11rem" class="bg-black-light">
           <figure
             v-for="icon in icons"
             :key="icon"
