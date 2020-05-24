@@ -79,6 +79,19 @@ export const disabled = () => ({
   `
 });
 
+export const withIcons = () => ({
+  ...regular(),
+  computed: {
+    options() {
+      return [
+        { value: "a", text: "A", icon: "heart", color: "red" },
+        { value: "b", text: "B", icon: "bolt", color: "yellow" },
+        { value: "c", text: "C", icon: "live", color: "aqua" }
+      ];
+    }
+  },
+});
+
 export const columns = () => ({
   ...regular(),
   template: `

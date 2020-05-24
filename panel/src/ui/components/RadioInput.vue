@@ -20,18 +20,20 @@
         :for="id + '-' + index"
         class="items-center cursor-pointer"
       >
-        <template v-if="option.info">
-          <span class="k-radio-input-text block">{{ option.text }}</span>
-          <span class="k-radio-input-info">{{ option.info }}</span>
-        </template>
-        <template v-else>
-          {{ option.text }}
-        </template>
+        <k-icon
+          v-bind="toggleState(option)"
+          class="k-radio-input-toggle"
+        />
+        <div>
+          <template v-if="option.info">
+            <span class="k-radio-input-text block">{{ option.text }}</span>
+            <span class="k-radio-input-info">{{ option.info }}</span>
+          </template>
+          <template v-else>
+            {{ option.text }}
+          </template>
+        </div>
       </label>
-      <k-icon
-        v-if="option.icon"
-        :type="option.icon"
-      />
     </li>
   </ul>
 </template>
@@ -72,6 +74,19 @@ export default {
     },
     select() {
       this.focus();
+    },
+    toggleState(option) {
+      if (this.value === option.value) {
+        return {
+          type: option.icon || "circle-filled",
+          color: option.color || "black"
+        };
+      }
+
+      return {
+        type: option.icon || "circle-outline",
+        color: "gray-light"
+      };
     }
   },
 }
@@ -90,7 +105,6 @@ export default {
 .k-radio-input li {
   position: relative;
   line-height: 1.5rem;
-  padding-left: 1.75rem;
 }
 .k-radio-input input {
   position: absolute;
@@ -99,80 +113,54 @@ export default {
   appearance: none;
   opacity: 0;
 }
-.k-radio-input label::before {
-  position: absolute;
-  top: .25em;
-  left: 0;
-  content: "";
-  width: 1rem;
-  height: 1rem;
-  border-radius: 50%;
-  border: 2px solid $color-gray-500;
-  box-shadow: $color-white 0 0 0 2px inset;
+
+.k-radio-input input:focus:checked + label .k-radio-input-toggle {
+  color: $color-focus;
 }
-.k-radio-input input:checked + label::before {
-  border-color: $color-black;
-  background: $color-black;
+
+.k-radio-input-toggle {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  padding-right: .75rem;
 }
-.k-radio-input input:focus + label::before {
-  border-color: $color-focus;
-}
-.k-radio-input input:focus:checked + label::before {
-  background: $color-focus;
+
+.k-radio-input-info {
+  display: block;
+  font-size: $text-sm;
+  color: $color-gray-700;
 }
 
 /** Theming **/
 .k-input[data-theme="field"][data-type="radio"] {
+  margin-bottom: -1px;
+  margin-right: -1px;
+
   .k-input-before {
     border-right: 1px solid $color-background;
   }
-  .k-input-element + .k-input-after,
-  .k-input-element + .k-input-icon {
+  .k-input-after {
     border-left : 1px solid $color-background;
   }
-  .k-input-element {
-    overflow: hidden;
-  }
-  .k-radio-input {
-    display: grid;
-    grid-template-columns: 1fr;
-    margin-bottom: -1px;
-    margin-right: -1px;
-
-    @media screen and (min-width: $breakpoint-md) {
-      grid-template-columns: repeat(var(--columns), 1fr);
-    }
-  }
-  .k-radio-input li {
+  li {
     border-right: 1px solid $color-background;
     border-bottom: 1px solid $color-background;
     min-width: 0;
     overflow-wrap: break-word;
   }
-  .k-radio-input label {
-    display: block;
-    flex-grow: 1;
+  label {
+    display: flex;
+    align-items: flex-start;
     min-height: $field-input-height;
     line-height: $field-input-line-height;
     padding: (($field-input-height - $field-input-line-height) / 2) $field-input-padding;
   }
-  .k-radio-input label::before {
+  label::before {
     top: ($field-input-height - 1rem) / 2;
     left: $field-input-padding;
   }
-  .k-radio-input .k-radio-input-info {
-    display: block;
-    font-size: $text-sm;
-    color: $color-gray-700;
+  .k-radio-input-info {
     line-height: $field-input-line-height;
     padding-top: $field-input-line-height / 10;
-  }
-  .k-radio-input .k-icon {
-    width: $field-input-height;
-    height: $field-input-height;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
 }
 </style>

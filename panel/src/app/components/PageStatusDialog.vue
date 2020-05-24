@@ -50,7 +50,9 @@ export default {
             return {
               value: key,
               text: page.blueprint.status[key].label,
-              info: page.blueprint.status[key].text
+              info: page.blueprint.status[key].text,
+              icon: page.blueprint.status[key].icon,
+              color: page.blueprint.status[key].color
             };
           })
         }
