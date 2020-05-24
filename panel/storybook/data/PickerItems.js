@@ -16,7 +16,7 @@ export const Options = async (page, limit, parent, search, model) => {
 
   let data = [...Array(total).keys()].map(number => {
     let id = number +1;
-    id = parent ? parent.id + "-" + id : id;
+    id = parent ? parent + "-" + id : id;
     return model(id);
   });
 

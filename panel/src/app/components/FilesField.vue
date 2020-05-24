@@ -1,12 +1,10 @@
 <template>
   <k-field :input="_uid" v-bind="$props">
-
     <!-- Actions button/dropdown -->
     <template v-slot:options>
       <k-options-dropdown
         v-if="hasActions"
         v-bind="actionsOptions"
-
         @option="onAction"
       />
     </template>
@@ -34,26 +32,17 @@
       />
     </k-dropzone>
 
-    <!-- Drawer & Picker -->
-    <k-drawer
-      v-if="hasOptions"
-      v-bind="drawerOptions"
-      ref="drawer"
-      @close="$refs.picker.reset()"
+    <!-- Drawer with picker -->
+    <component
+      :is="'k-' + type + '-dialog'"
+      ref="dialog"
+      v-bind="dialogOptions"
+      :has-drop="true"
       @submit="onSelect"
-    >
-      <k-dropzone @drop="onDrop">
-        <k-picker
-          ref="picker"
-          v-model="drawer.value"
-          v-bind="pickerOptions"
-          @paginate="onPaginate"
-          @startLoading="onLoading"
-          @stopLoading="onLoaded"
-        />
-      </k-dropzone>
-    </k-drawer>
+      @drop="onDrop"
+    />
 
+    <!-- Upload -->
     <k-upload
       v-if="upload"
       ref="upload"
@@ -64,13 +53,10 @@
 </template>
 
 <script>
-import PickerField from "@/ui/components/PickerField.vue";
-
-// TODO: implement actual API instead
-import { File, Files } from "../../../storybook/data/PickerItems.js";
+import ModelsField from "@/app/components/ModelsField.vue";
 
 export default {
-  extends: PickerField,
+  extends: ModelsField,
   props: {
     empty: {
       type: [String, Object],
@@ -80,6 +66,18 @@ export default {
           text: this.$t("field.files.empty")
         };
       }
+    },
+    items: {
+      type: Function,
+      async default(ids) {
+        const params = { ids: JSON.stringify(this.selected) };
+        // TODO: actual API endpoint
+        return this.$api.get("field/files/items", params);
+      },
+    },
+    type: {
+      type: String,
+      default: "files"
     },
     upload: {
       type: Boolean,
@@ -116,14 +114,6 @@ export default {
     }
   },
   methods: {
-    async getItems(ids) {
-      await new Promise(r => setTimeout(r, 1500));
-      return ids.map(id => File(id));
-    },
-    async getOptions({page, limit, parent, search}) {
-      await new Promise(r => setTimeout(r, 1500));
-      return Files(page, limit, parent, search);
-    },
     onAction(option, item, itemIndex) {
       switch (option) {
         case "upload":
@@ -142,10 +132,6 @@ export default {
       // TODO: handle result and add to array
       this.selected.push("1");
       this.onInput(true);
-
-      // make sure to update drawer selection for the
-      // case that the drawer is currently open
-      this.drawer.value = this.$helper.clone(this.selected);
     }
   }
 }

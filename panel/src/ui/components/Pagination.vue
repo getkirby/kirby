@@ -245,7 +245,6 @@ export default {
   line-height: 1;
 }
 .k-pagination-details .k-page-dropdown-toggle {
-  display: inline-flex;
   height: 2.5rem;
   padding: 0 .5rem;
 }

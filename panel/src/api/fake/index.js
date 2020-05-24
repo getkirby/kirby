@@ -18,6 +18,16 @@ import roleSerializer from "./serializers/role.js";
 import siteSerializer from "./serializers/site.js";
 import userSerializer from "./serializers/user.js";
 
+// TODO: Don't rely on storybook mock data
+import {
+  File,
+  Files,
+  Page,
+  Pages,
+  User,
+  Users
+} from "../../../storybook/data/PickerItems.js";
+
 /* API */
 new Server({
   models: {
@@ -135,6 +145,38 @@ new Server({
 
     this.get("/users");
     this.get("/users/:id");
+
+    // temp for models fields, dialogs, pickers
+    // TODO: figure out actual endpoint
+    const toItems = (request, model) => {
+      return JSON.parse(request.queryParams.ids).map(id => model(id));
+    }
+    const toOptions = (request, models) => {
+      return models(
+        parseInt(request.queryParams.page),
+        parseInt(request.queryParams.limit),
+        request.queryParams.parent,
+        request.queryParams.search
+      );
+    }
+    this.get("/field/files/items", (schema, request) => {
+      return toItems(request, File);
+    });
+    this.get("/field/files/options", (schema, request) => {
+      return toOptions(request, Files);
+    });
+    this.get("/field/pages/items", (schema, request) => {
+      return toItems(request, Page);
+    });
+    this.get("/field/pages/options", (schema, request) => {
+      return toOptions(request, Pages);
+    });
+    this.get("/field/users/items", (schema, request) => {
+      return toItems(request, User);
+    });
+    this.get("/field/users/options", (schema, request) => {
+      return toOptions(request, Users);
+    });
 
     // temp test
     this.post("/upload", (schema) => {

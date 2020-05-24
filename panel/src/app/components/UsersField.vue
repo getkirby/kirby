@@ -1,11 +1,8 @@
 <script>
-import PickerField from "@/ui/components/PickerField.vue";
-
-// TODO: implement actual API instead
-import { User, Users } from "../../../storybook/data/PickerItems.js";
+import ModelsField from "@/app/components/ModelsField.vue";
 
 export default {
-  extends: PickerField,
+  extends: ModelsField,
   props: {
     empty: {
       type: [String, Object],
@@ -15,15 +12,19 @@ export default {
           text: this.$t("field.users.empty")
         };
       }
+    },
+    items: {
+      type: Function,
+      async default(ids) {
+        const params = { ids: JSON.stringify(this.selected) };
+        // TODO: actual API endpoint
+        return this.$api.get("field/users/items", params);
+      },
+    },
+    type: {
+      type: String,
+      default: "users"
     }
-  },
-  methods: {
-    async getItems(ids) {
-      return ids.map(id => User(id));
-    },
-    async getOptions({page, limit, parent, search}) {
-      return Users(page, limit, parent, search);
-    },
   }
 }
 </script>

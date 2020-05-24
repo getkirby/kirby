@@ -1,15 +1,15 @@
-import Padding from "../../../storybook/theme/Padding.js";
-import PickerField from "@/ui/components/PickerField.vue";
+import Padding from "../../storybook/theme/Padding.js";
+import ModelsField from "@/app/components/ModelsField.vue";
 
 export default {
-  title: "Ui | Form / Field / Picker Field",
+  title: "Lab | Picker Field",
   decorators: [Padding]
 };
 
 export const Countries = () => ({
   components: {
     "k-custom-picker-field": {
-      extends: PickerField,
+      extends: ModelsField,
       computed: {
         api() {
           return async () => {
@@ -19,40 +19,6 @@ export const Countries = () => ({
         }
       },
       methods: {
-        /**
-         * Return options array for a list of ids
-         */
-        async getItems(ids) {
-          const data = await this.api();
-          return ids.map(id => {
-            const index = data.findIndex(item => item.cca3 === id);
-            return this.item(data[index]);
-          })
-        },
-        /**
-         * Return options array for all available items
-         * (and paginate and filter them)
-         */
-        async getOptions({page, limit, search}) {
-          const data = await this.api();
-          let items  = data.map(this.item);
-
-          if (search) {
-            items = items.filter(item => item.title.toLowerCase().includes(search.toLowerCase()));
-          }
-
-          const offset = (page - 1) * limit;
-          const paginated = items.slice(offset, offset + limit);
-
-          return {
-            data: paginated,
-            pagination: {
-              page: page,
-              limit: limit,
-              total: items.length
-            }
-          }
-        },
         item(data) {
           return {
             id: data.cca3,
@@ -63,7 +29,34 @@ export const Countries = () => ({
               size: "meduium"
             }
           };
-        }
+        },
+        async items() {
+          const data = await this.api();
+          return this.selected.map(id => {
+            const index = data.findIndex(item => item.cca3 === id);
+            return this.item(data[index]);
+          });
+        },
+        async options({page, limit, search}) {
+          const data = await this.api();
+            let items  = data.map(this.item);
+
+            if (search) {
+              items = items.filter(item => item.title.toLowerCase().includes(search.toLowerCase()));
+            }
+
+            const offset = (page - 1) * limit;
+            const paginated = items.slice(offset, offset + limit);
+
+            return {
+              data: paginated,
+              pagination: {
+                page: page,
+                limit: limit,
+                total: items.length
+              }
+            };
+        },
       }
     }
   },
@@ -87,7 +80,7 @@ export const Countries = () => ({
 export const Movies = () => ({
   components: {
     "k-custom-picker-field": {
-      extends: PickerField,
+      extends: ModelsField,
       computed: {
         apiKey() {
           return "965697b4f94821082f5e099332e12ff1";
@@ -97,8 +90,8 @@ export const Movies = () => ({
         /**
          * Return options array for a list of ids
          */
-        async getItems(ids) {
-          const calls = ids.map(async id => {
+        async items() {
+          const calls = this.selected.map(async id => {
             const response = await fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${this.apiKey}`);
             const data = await response.json();
             return this.item(data);
@@ -109,7 +102,7 @@ export const Movies = () => ({
          * Return options array for all available items
          * (and paginate and filter them)
          */
-        async getOptions({page, limit, search}) {
+        async options({page, limit, search}) {
           let items, data;
 
           if (search) {
@@ -160,7 +153,6 @@ export const Movies = () => ({
           icon: 'video',
           text: 'Pick a movie and start binging'
         }"
-        :preview="{ cover: true }"
         layout="cardlets"
         :picker="{
           layout: 'cards',
@@ -172,4 +164,4 @@ export const Movies = () => ({
       <k-code-block :code="value" />
     </div>
   `
-})
+});

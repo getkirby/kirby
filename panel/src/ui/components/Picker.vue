@@ -39,11 +39,16 @@
     </k-error-items>
 
     <!-- Collection -->
-    <k-collection
+    <k-dropzone
       v-else
-      v-bind="collection"
-      v-on="listeners"
-    />
+      :disabled="hasDrop"
+      @drop="onDrop"
+    >
+      <k-collection
+        v-bind="collection"
+        v-on="listeners"
+      />
+    </k-dropzone>
   </div>
 </template>
 
@@ -56,8 +61,10 @@ export default {
   beforeCreate: function(){
     this.$delete(this.$options.props, "items");
     this.$delete(this.$options.props, "loader");
+    this.$delete(this.$options.props, "sortable");
   },
   props: {
+    hasDrop: Boolean,
     /**
      * Maximum number of selectable items in "multiple" mode
      */
@@ -110,9 +117,10 @@ export default {
         // Async options
         if (typeof this.options === 'function') {
           return await this.options({
-            ...this.pagination,
+            page: this.page,
+            limit: this.limit,
             search: this.q,
-            parent: this.parent
+            parent: this.parent ? this.parent.id : null
           });
         }
 
@@ -145,11 +153,8 @@ export default {
     options() {
       this.reload();
     },
-    pagination() {
-      this.reload();
-    },
     q: debounce(function () {
-      this.onPaginate({ ...this.pagination, page: 1 });
+      this.page = 1;
       this.reload();
     }, 250),
     value() {
@@ -206,6 +211,9 @@ export default {
 
       this.onInput();
     },
+    onDrop(event) {
+      this.$emit("drop", event);
+    },
     onFlag(item, itemIndex) {
       if (this.selected.includes(item.id)) {
         this.onDeselect(item.id, item, itemIndex);
@@ -225,7 +233,6 @@ export default {
         this.reset();
         this.reload();
       }
-
       this.$emit("option", option, item, itemIndex);
     },
     onPaginate(pagination) {
@@ -252,8 +259,8 @@ export default {
       this.onInput();
     },
     reset() {
+      this.page  = 1;
       this.q = null;
-      this.onPaginate({ ...this.pagination, page: 1 });
     }
   }
 };

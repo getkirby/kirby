@@ -1,6 +1,5 @@
 <template>
   <k-field :input="_uid" v-bind="$props">
-
     <!-- Actions button/dropdown -->
     <template v-slot:options>
       <k-options-dropdown
@@ -28,23 +27,13 @@
       @sort="onSort"
     />
 
-    <!-- Drawer & Picker -->
-    <k-drawer
-      v-if="hasOptions"
-      v-bind="drawerOptions"
-      ref="drawer"
-      @close="$refs.picker.reset()"
+    <!-- Drawer with picker -->
+    <component
+      :is="'k-' + type + '-dialog'"
+      ref="dialog"
+      v-bind="dialogOptions"
       @submit="onSelect"
-    >
-      <k-picker
-        ref="picker"
-        v-model="drawer.value"
-        v-bind="pickerOptions"
-        @paginate="onPaginate"
-        @startLoading="onLoading"
-        @stopLoading="onLoaded"
-      />
-    </k-drawer>
+    />
   </k-field>
 </template>
 
@@ -60,9 +49,6 @@ export default {
   },
   props: {
     ...Field.props,
-    forItems: {
-      type: Function
-    },
     hasOptions: {
       type: Boolean,
       default: true
@@ -97,6 +83,10 @@ export default {
       default: true
     },
     sortBy: String,
+    type: {
+      type: String,
+      default: "models"
+    },
     value: {
       type: Array,
       default() {
@@ -106,12 +96,7 @@ export default {
   },
   data() {
     return {
-      selected: this.value,
-      drawer: {
-        value: null,
-        page: 1,
-        loading: false
-      }
+      selected: this.value
     };
   },
   computed: {
@@ -137,11 +122,17 @@ export default {
         help: false
       };
     },
-    drawerOptions() {
+    dialogOptions() {
       return {
-        loading: this.drawer.loading,
+        ...this.picker,
+        hasDrop: this.hasDrop,
+        limit: this.picker.limit || 15,
+        max: this.max,
+        multiple: this.multiple,
+        options: this.options,
+        search: this.search,
+        width: this.picker.width || "small",
         title: this.label + " / " + this.$t("select"),
-        size: this.picker.width || "small"
       };
     },
     hasActions() {
@@ -150,11 +141,6 @@ export default {
       }
 
       return this.actions.length > 0;
-    },
-    items() {
-      return async () => {
-        return await this.getItems(this.selected);
-      };
     },
     loader() {
       let options = [];
@@ -191,20 +177,6 @@ export default {
       }
 
       return true;
-    },
-    pickerOptions() {
-      return {
-        ...this.picker,
-        max: this.max,
-        multiple: this.multiple,
-        options: this.getOptions,
-        search: this.search,
-        pagination: {
-          page: this.drawer.page,
-          limit: this.picker.limit || 15,
-          total: 0
-        }
-      };
     }
   },
   watch: {
@@ -213,16 +185,7 @@ export default {
     }
   },
   methods: {
-    /**
-     * Takes a list of ids and return full item objects.
-     */
-    async getItems(ids) {
-      return [];
-    },
-    /**
-     * Returns item objects.
-     */
-    async getOptions({page, limit, parent, search}) {
+    async items() {
       return [];
     },
     map() {
@@ -238,7 +201,6 @@ export default {
           break;
       }
     },
-    onDrop(event) {},
     onEmpty() {
       if (this.actions.length > 0) {
         this.onAction(this.actions[0].click);
@@ -251,31 +213,17 @@ export default {
 
       this.$emit("input", this.selected);
     },
-    onLoading() {
-      this.drawer.loading = true;
-    },
-    onLoaded() {
-      this.drawer.loading = false;
-    },
     onOpen() {
-      this.drawer.value = this.$helper.clone(this.selected);
-      this.$refs.drawer.open();
-      setTimeout(() => {
-        this.$refs.picker.$refs.search.focus();
-      }, 50);
-    },
-    onPaginate(pagination) {
-      this.drawer.page = pagination.page;
+      this.$refs.dialog.open(this.selected);
     },
     onRemove(option, item, itemIndex) {
       this.selected.splice(itemIndex, 1);
       this.data.splice(itemIndex, 1);
       this.onInput();
     },
-    onSelect() {
-      this.selected = this.drawer.value;
+    onSelect(value) {
+      this.selected = value;
       this.onInput(true);
-      this.$refs.drawer.close();
     },
     onSort(items) {
       this.selected = items.map(item => item.id)
