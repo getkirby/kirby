@@ -24,7 +24,7 @@
           v-bind="toggleState(option)"
           class="k-radio-input-toggle"
         />
-        <div>
+        <div class="flex-grow">
           <template v-if="option.info">
             <span class="k-radio-input-text block">{{ option.text }}</span>
             <span class="k-radio-input-info">{{ option.info }}</span>
@@ -33,6 +33,12 @@
             {{ option.text }}
           </template>
         </div>
+        <k-icon
+          v-if="option.icon"
+          :type="option.icon"
+          :color="value === option.value ? (option.color || 'black') : 'gray-light'"
+          class="k-radio-input-icon"
+        />
       </label>
     </li>
   </ul>
@@ -78,13 +84,13 @@ export default {
     toggleState(option) {
       if (this.value === option.value) {
         return {
-          type: option.icon || "circle-filled",
-          color: option.color || "black"
+          type: "circle-filled",
+          color: "black"
         };
       }
 
       return {
-        type: option.icon || "circle-outline",
+        type: "circle-outline",
         color: "gray-light"
       };
     }
@@ -119,15 +125,17 @@ export default {
 }
 
 .k-radio-input-toggle {
-  padding-top: 2px;
-  padding-bottom: 2px;
+  padding-top: 3px;
   padding-right: .75rem;
 }
-
 .k-radio-input-info {
   display: block;
   font-size: $text-sm;
   color: $color-gray-700;
+}
+.k-radio-input-icon {
+  padding-top: 3px;
+  justify-self: flex-end;
 }
 
 /** Theming **/
