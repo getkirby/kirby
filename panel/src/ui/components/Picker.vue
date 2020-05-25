@@ -60,11 +60,22 @@ export default {
   extends: AsyncCollection,
   beforeCreate: function(){
     this.$delete(this.$options.props, "items");
-    this.$delete(this.$options.props, "loader");
     this.$delete(this.$options.props, "sortable");
   },
   props: {
     hasDrop: Boolean,
+    /**
+     * Settings for the empty loading state.
+     * See EmptyItems for available options
+     */
+    loader: {
+      type: Object,
+      default() {
+        return {
+          options: [{ icon: "circle-outline" }],
+        }
+      }
+    },
     /**
      * Maximum number of selectable items in "multiple" mode
      */
