@@ -3,7 +3,7 @@ import Padding from "../../../storybook/theme/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "UI | Blueprints / Fields Section",
+  title: "App | Blueprints / Fields Section",
   component: FieldsSection,
   decorators: [Padding]
 };

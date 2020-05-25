@@ -5,7 +5,7 @@ import Pages from "../../../storybook/data/Pages.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
-  title: "UI | Blueprints / Sections",
+  title: "App | Blueprints / Sections",
   decorators: [Padding],
   component: Sections
 };

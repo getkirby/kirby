@@ -1,3 +1,5 @@
+import FileView from "./FileView.vue";
+
 export default {
   title: "App | Views / File",
   component: FileView,

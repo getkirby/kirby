@@ -1,11 +1,11 @@
 import { action } from "@storybook/addon-actions";
+import PagesSection from "./PagesSection.vue";
 import Padding from "../../../storybook/theme/Padding.js";
-import Files from "../../../storybook/data/Files.js";
-import FilesSection from "./FilesSection.vue";
+import Pages from "../../../storybook/data/Pages.js";
 
 export default {
-  title: "UI | Blueprints / Files Section",
-  component: FilesSection,
+  title: "App | Blueprints / Pages Section",
+  component: PagesSection,
   decorators: [Padding]
 };
 
@@ -23,6 +23,9 @@ export const list = () => ({
     help() {
       return false;
     },
+    icon() {
+      return {};
+    },
     limit() {
       return 10;
     },
@@ -32,43 +35,45 @@ export const list = () => ({
     page() {
       return 1;
     },
-    preview() {
-      return {};
-    },
-    files() {
+    pages() {
       return async ({ page, limit }) => {
 
         await new Promise(r => setTimeout(r, this.delay));
 
         return {
-          data: Files(10, ((page - 1) * limit) + 1),
+          data: Pages(limit, ((page - 1) * limit) + 1),
           pagination: {
             total: 230
           }
         };
       };
     },
+    preview() {
+      return {};
+    },
     sortable() {
       return false;
     },
   },
   methods: {
+    onEmpty: action("empty"),
     onFlag: action("flag"),
     onOption: action("option")
   },
   template: `
-    <k-files-section
+    <k-pages-section
       :add="add"
       :empty="empty"
       :help="help"
       :info="true"
-      :items="files"
+      :items="pages"
       :layout="layout"
       :page="page"
       :preview="preview"
       :limit="limit"
       :sortable="sortable"
-      label="Files"
+      label="Pages"
+      @empty="onEmpty"
       @flag="onFlag"
       @option="onOption"
     />
@@ -85,6 +90,21 @@ export const listWithPreviewSettings = () => ({
         ratio: "3/2",
       };
     }
+  }
+});
+
+export const listWithoutFigure = () => ({
+  extends: list(),
+  computed: {
+    icon() {
+      return false;
+    },
+    preview() {
+      return false;
+    },
+    sortable() {
+      return true;
+    },
   }
 });
 
@@ -127,9 +147,9 @@ export const listWithHelp = () => ({
 export const listWithError = () => ({
   extends: list(),
   computed: {
-    files() {
+    pages() {
       return async ({ page, limit }) => {
-        throw new Error("The files could not be loaded");
+        throw new Error("The pages could not be loaded");
       };
     },
   }
@@ -147,7 +167,7 @@ export const listWithSlowServer = () => ({
 export const listEmpty = () => ({
   extends: list(),
   computed: {
-    files() {
+    pages() {
       return async () => {
         return [];
       };
@@ -163,11 +183,11 @@ export const listCustomEmpty = () => ({
     },
     empty() {
       return {
-        icon: "heart",
-        text: "No favorite images yet",
+        icon: "draft",
+        text: "No drafts yet",
       };
     },
-    files() {
+    pages() {
       return async () => {
         return [];
       };
@@ -183,7 +203,6 @@ export const cardlets = () => ({
     }
   }
 });
-
 
 export const cardletsWithPreviewSettings = () => ({
   extends: cardlets(),
@@ -219,9 +238,9 @@ export const cardletsWithHelp = () => ({
 export const cardletsWithError = () => ({
   extends: cardlets(),
   computed: {
-    files() {
+    pages() {
       return async ({ page, limit }) => {
-        throw new Error("The files could not be loaded");
+        throw new Error("The pages could not be loaded");
       };
     },
   }
@@ -239,7 +258,7 @@ export const cardletsWithSlowServer = () => ({
 export const cardletsEmpty = () => ({
   extends: cardlets(),
   computed: {
-    files() {
+    pages() {
       return async () => {
         return [];
       };
@@ -255,11 +274,11 @@ export const cardletsCustomEmpty = () => ({
     },
     empty() {
       return {
-        icon: "heart",
-        text: "No favorite images yet",
+        icon: "draft",
+        text: "No drafts yet",
       };
     },
-    files() {
+    pages() {
       return async () => {
         return [];
       };
@@ -275,7 +294,6 @@ export const cards = () => ({
     }
   }
 });
-
 
 export const cardsWithPreviewSettings = () => ({
   extends: cards(),
@@ -311,9 +329,9 @@ export const cardsWithHelp = () => ({
 export const cardsWithError = () => ({
   extends: cards(),
   computed: {
-    files() {
+    pages() {
       return async ({ page, limit }) => {
-        throw new Error("The files could not be loaded");
+        throw new Error("The pages could not be loaded");
       };
     },
   }
@@ -338,7 +356,7 @@ export const cardsWithSlowServer = () => ({
 export const cardsEmpty = () => ({
   extends: cards(),
   computed: {
-    files() {
+    pages() {
       return async () => {
         return [];
       };
@@ -354,11 +372,11 @@ export const cardsCustomEmpty = () => ({
     },
     empty() {
       return {
-        icon: "heart",
-        text: "No favorite images yet",
+        icon: "draft",
+        text: "No drafts yet",
       };
     },
-    files() {
+    pages() {
       return async () => {
         return [];
       };
