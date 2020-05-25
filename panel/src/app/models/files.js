@@ -30,19 +30,21 @@ export default (Vue, store) => ({
 
     return breadcrumb;
   },
-  async changeName(id, parent, filename, name) {
+  async changeName(parent, filename, name) {
     const file = await Vue.$api.pages.changeName(parent, filename, name);
 
     // move in content store
     await store.dispatch("content/move", [
-      "files/" + id,
-      "files/" + file.id
+      "files/" + this.id(parent, filename),
+      "files/" + this.id(parent, file.filename)
     ]);
 
     this.onUpdate("changeName", file);
     return file;
   },
-  async delete(id, parent, filename) {
+  async delete(parent, filename) {
+    const id = this.id(parent, filename);
+
     // send API request to delete file
     await Vue.$api.files.delete(parent, filename);
 
@@ -50,6 +52,9 @@ export default (Vue, store) => ({
     await store.dispatch("content/remove", "files/" + id);
 
     this.onUpdate("delete", id);
+  },
+  id(parent, filename) {
+    return parent + "/" + filename;
   },
   link(parent, filename, path) {
     return "/" + this.url(parent, filename, path);

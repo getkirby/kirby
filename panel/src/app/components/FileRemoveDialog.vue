@@ -16,11 +16,7 @@ export default {
       });
     },
     async submit() {
-      return await this.$model.files.delete(
-        this.id,
-        this.parent,
-        this.filename
-      );
+      return await this.$model.files.delete(this.parent, this.filename);
     }
   }
 }
