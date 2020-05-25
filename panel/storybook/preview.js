@@ -18,7 +18,11 @@ import Router from "./mocks/router.js";
 import Store from "./mocks/store.js";
 
 Vue.prototype.$t = Vue.$t = Vue.i18n = I18n;
-Vue.prototype.$api = Vue.$api = Api();
+Vue.prototype.$api = Vue.$api = Api({
+  config: {
+    methodOverwrite: false
+  }
+});
 Vue.use(Router);
 Vue.prototype.$store = Vue.$store = Store;
 Vue.prototype.$permissions = Vue.$permissions = {
