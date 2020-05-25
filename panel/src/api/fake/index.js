@@ -171,17 +171,37 @@ new Server({
     });
 
     // files
-    this.get("/:parent/:pageId/files/:fileId", function(schema, request) {
+    this.get("/:parentType/:parentId/files/:fileId", function(schema, request) {
       return schema.files.find(
-        request.params.parent + "/" +
-        request.params.pageId + "/" +
+        request.params.parentType + "/" +
+        request.params.parentId + "/" +
         request.params.fileId
       );
     });
-    this.delete("/:parent/:pageId/files/:fileId", function(schema, request) {
+
+    this.patch("/:parentType/:parentId/files/:fileId/name", function(schema, request) {
       let file = schema.files.find(
-        request.params.parent + "/" +
-        request.params.pageId + "/" +
+        request.params.parentType + "/" +
+        request.params.parentId + "/" +
+        request.params.fileId
+      );
+
+      const attrs = JSON.parse(request.requestBody);
+      const filename = attrs.name + "." + file.extension;
+
+      file.update({
+        id: request.params.parentType + "/" + request.params.parentId + "/" + filename,
+        name: attrs.name,
+        filename: filename
+      });
+
+      return file;
+    });
+
+    this.delete("/:parentType/:parentId/files/:fileId", function(schema, request) {
+      let file = schema.files.find(
+        request.params.parentType + "/" +
+        request.params.parentId + "/" +
         request.params.fileId
       );
 

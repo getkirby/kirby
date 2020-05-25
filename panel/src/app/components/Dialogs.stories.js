@@ -1,8 +1,6 @@
 import { action } from "@storybook/addon-actions";
 import Padding from "../../../storybook/theme/Padding.js";
 
-import FileRenameDialog from "./FileRenameDialog.vue";
-import FileRemoveDialog from "./FileRemoveDialog.vue";
 import LanguageCreateDialog from "./LanguageCreateDialog.vue";
 import LanguageRemoveDialog from "./LanguageRemoveDialog.vue";
 import LanguageUpdateDialog from "./LanguageUpdateDialog.vue";
@@ -13,7 +11,6 @@ import PageRenameDialog from "./PageRenameDialog.vue";
 import PageSlugDialog from "./PageSlugDialog.vue";
 import PageStatusDialog from "./PageStatusDialog.vue";
 import PageTemplateDialog from "./PageTemplateDialog.vue";
-import RegistrationDialog from "./RegistrationDialog.vue";
 import SiteRenameDialog from "./SiteRenameDialog.vue";
 import UserCreateDialog from "./UserCreateDialog.vue";
 import UserEmailDialog from "./UserEmailDialog.vue";
@@ -44,25 +41,6 @@ const DialogStory = () => ({
       <k-story-dialog ref="dialog" @submit="onSubmit" />
     </div>
   `
-});
-
-export const FileRemove = () => ({
-  extends: DialogStory(),
-  components: {
-    "k-story-dialog": FileRemoveDialog
-  },
-  methods: {
-    open() {
-      this.$refs.dialog.open("pages/photography+animals", "peacock.jpg");
-    }
-  }
-});
-
-export const FileRename = () => ({
-  extends: FileRemove(),
-  components: {
-    "k-story-dialog": FileRenameDialog
-  }
 });
 
 export const LanguageCreate = () => ({
@@ -162,13 +140,6 @@ export const PageUrl = () => ({
   extends: PageRename(),
   components: {
     "k-story-dialog": PageSlugDialog
-  }
-});
-
-export const Registration = () => ({
-  extends: DialogStory(),
-  components: {
-    "k-story-dialog": RegistrationDialog
   }
 });
 

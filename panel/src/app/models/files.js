@@ -31,7 +31,7 @@ export default (Vue, store) => ({
     return breadcrumb;
   },
   async changeName(parent, filename, name) {
-    const file = await Vue.$api.pages.changeName(parent, filename, name);
+    const file = await Vue.$api.files.changeName(parent, filename, name);
 
     // move in content store
     await store.dispatch("content/move", [
