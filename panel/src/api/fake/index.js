@@ -7,6 +7,7 @@ import languages from "./fixtures/languages.js";
 import pages from "./fixtures/pages.js";
 import roles from "./fixtures/roles.js";
 import sites from "./fixtures/sites.js";
+import translations from "./fixtures/translations.js";
 import users from "./fixtures/users.js";
 
 /* Serializers */
@@ -16,6 +17,7 @@ import languageSerializer from "./serializers/language.js";
 import pageSerializer from "./serializers/page.js";
 import roleSerializer from "./serializers/role.js";
 import siteSerializer from "./serializers/site.js";
+import translationSerializer from "./serializers/translation.js";
 import userSerializer from "./serializers/user.js";
 
 // TODO: Don't rely on storybook mock data
@@ -48,6 +50,7 @@ new Server({
       drafts: hasMany("page"),
       children: hasMany("page"),
     }),
+    translation: Model,
     user: Model.extend({
       role: belongsTo(),
     }),
@@ -59,6 +62,7 @@ new Server({
     pages: pages,
     roles: roles,
     sites: sites,
+    translations: translations,
     users: users,
   },
   serializers: {
@@ -68,6 +72,7 @@ new Server({
     page: pageSerializer,
     role: roleSerializer,
     site: siteSerializer,
+    translation: translationSerializer,
     user: userSerializer,
   },
   seeds(server) {
@@ -76,12 +81,14 @@ new Server({
   routes() {
     this.namespace = "api";
 
-    this.post("/auth/login", function (schema, request) {
+    this.post("/auth/login", function(schema, request) {
       const params = JSON.parse(request.requestBody);
-      const user  = this.serialize(schema.users.findBy({
-        email: params.email,
-        password: params.password
-      }));
+      const user = this.serialize(
+        schema.users.findBy({
+          email: params.email,
+          password: params.password,
+        })
+      );
 
       if (!user) {
         return {
@@ -92,7 +99,7 @@ new Server({
       }
 
       schema.sessions.create({
-        user: user.data.id
+        user: user.data.id,
       });
 
       return {
@@ -107,11 +114,11 @@ new Server({
       sessions.destroy();
       return {
         status: "ok",
-        code: 200
+        code: 200,
       };
     });
 
-    this.get("/auth", function (schema) {
+    this.get("/auth", function(schema) {
       const session = schema.sessions.first();
 
       if (session) {
@@ -130,8 +137,14 @@ new Server({
     this.resource("pages");
 
     // files
-    this.get("/:parent/:pageId/files/:fileId", function (schema, request) {
-      return schema.files.find(request.params.parent + "/" + request.params.pageId + "/" + request.params.fileId);
+    this.get("/:parent/:pageId/files/:fileId", function(schema, request) {
+      return schema.files.find(
+        request.params.parent +
+          "/" +
+          request.params.pageId +
+          "/" +
+          request.params.fileId
+      );
     });
 
     this.get("/site", (schema) => {
@@ -140,6 +153,9 @@ new Server({
 
     this.get("/roles");
     this.get("/roles/:id");
+
+    this.get("/translations");
+    this.get("/translations/:id");
 
     this.get("/users");
     this.get("/users/:id");
@@ -180,12 +196,15 @@ new Server({
     this.post("/upload", (schema) => {
       return {
         status: "ok",
-        code: 200
+        code: 200,
       };
     });
 
+
     // whitelist
-    this.passthrough("https://raw.githubusercontent.com/mledoze/countries/master/countries.json");
+    this.passthrough(
+      "https://raw.githubusercontent.com/mledoze/countries/master/countries.json"
+    );
     this.passthrough("https://api.themoviedb.org/**");
   },
 });
