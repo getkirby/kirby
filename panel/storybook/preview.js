@@ -40,6 +40,9 @@ Vue.use(Model, Store);
 import components from "@/app/components/index.js";
 Vue.use(components);
 
+/** Testing */
+import "./tests/addon.js";
+
 addDecorator(() => {
   return {
     template: `
@@ -52,9 +55,6 @@ addDecorator(() => {
     `
   };
 });
-
-import { withA11y } from '@storybook/addon-a11y';
-addDecorator(withA11y);
 
 /* Docs */
 import "./theme/theme.css";

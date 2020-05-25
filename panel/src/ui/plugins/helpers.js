@@ -7,7 +7,6 @@ import isUploadEvent from "../helpers/isUploadEvent.js";
 import kirbytext from "../helpers/kirbytext.js";
 import markdown from "../helpers/markdown.js";
 import pad from "../helpers/pad.js";
-import previewThumb from "../helpers/previewThumb.js";
 import ratio from "../helpers/ratio.js";
 import slug from "../helpers/slug.js";
 import sort from "../helpers/sort.js";
@@ -51,7 +50,6 @@ export default {
       kirbytext: kirbytext,
       markdown: markdown,
       pad: pad,
-      previewThumb: previewThumb,
       ratio: ratio,
       slug: slug,
       sort: sort,
