@@ -91,6 +91,7 @@ export default {
     preview() {
       return {
         ...this.file,
+        ...this.file.dimensions || {},
         image: this.file.url,
         link: this.file.url,
         size: this.file.niceSize,

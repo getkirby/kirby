@@ -27,7 +27,7 @@ export default {
 
 const DialogStory = () => ({
   components: {
-    "k-story-dialog": FileRemoveDialog,
+    "k-story-dialog": UserRoleDialog,
   },
   methods: {
     onSubmit: action("submit"),

@@ -29,7 +29,7 @@ export default {
   },
   methods: {
     async load() {
-      this.file = await this.$model.files.get(this.parent, this.filename);
+      this.file = await this.$api.files.get(this.parent, this.filename);
     },
     onRemoved() {
       const path = this.$model.pages.link(this.parent);
