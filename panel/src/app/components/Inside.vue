@@ -13,7 +13,7 @@
         :loading="loading"
         @search="onSearch"
       >
-        <template v-slot:option>
+        <template v-slot:options>
           <k-registration-buttons
             v-if="registered === false"
             @register="onRegister"
