@@ -197,25 +197,16 @@ new Server({
     });
 
     this.post("/system/register", (schema, request) => {
-      return {
-        status: "error",
-        code: 400,
-        message: "Invalid license key"
-      };
-
       const params = JSON.parse(request.requestBody);
-
-
 
       if (params.license === "K3-test") {
         return {
-          code: 200,
-          status: "ok"
+          status: "ok",
+          code: 200
         };
       }
 
       throw "Invalid license key";
-
     });
 
     // translations
