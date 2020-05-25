@@ -32,15 +32,23 @@ export default (config) => {
       const response = await fetch(config.endpoint + "/" + path, options);
       const text     = await response.text();
 
-      // try to parse JSON
-      let json;
       try {
-        json = JSON.parse(text);
-      } catch (e) {
-        throw new Error("The JSON response from the API could not be parsed. Please check your API connection.");
-      }
 
-      try {
+        // try to parse JSON
+        let json;
+
+        try {
+          json = JSON.parse(text);
+        } catch (e) {
+          throw new Error("The JSON response from the API could not be parsed. Please check your API connection.");
+        }
+
+        // check for the server response code
+        if (response.status < 200 || response.status > 299) {
+          throw json;
+        }
+
+        // look for an error status
         if (json.status && json.status === "error") {
           throw json;
         }
