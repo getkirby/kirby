@@ -14,7 +14,7 @@ export default (config) => {
       });
 
       // adapt headers for all non-GET and nob-POST methods
-      if (options.method !== 'GET' && options.method !== 'POST') {
+      if (config.methodOverwrite && options.method !== 'GET' && options.method !== 'POST') {
         options.headers["x-http-method-override"] = options.method;
         options.method = 'POST';
       }

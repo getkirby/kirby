@@ -14,6 +14,7 @@ export default (extensions = {}) => {
 
   const defaults = {
     endpoint: "/api",
+    methodOverwrite: true,
     onPrepare(options) {
       return options;
     },
