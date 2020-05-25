@@ -173,12 +173,24 @@ new Server({
     // files
     this.get("/:parent/:pageId/files/:fileId", function(schema, request) {
       return schema.files.find(
-        request.params.parent +
-          "/" +
-          request.params.pageId +
-          "/" +
-          request.params.fileId
+        request.params.parent + "/" +
+        request.params.pageId + "/" +
+        request.params.fileId
       );
+    });
+    this.delete("/:parent/:pageId/files/:fileId", function(schema, request) {
+      let file = schema.files.find(
+        request.params.parent + "/" +
+        request.params.pageId + "/" +
+        request.params.fileId
+      );
+
+      file.destroy();
+
+      return {
+        status: "ok",
+        code: 200
+      };
     });
 
     // languages
