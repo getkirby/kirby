@@ -35,7 +35,7 @@ export default {
       };
     },
     async submit() {
-      await this.$api.system.register();
+      await this.$model.system.register(this.values);
     }
   }
 }
