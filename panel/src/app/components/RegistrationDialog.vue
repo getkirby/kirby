@@ -36,7 +36,6 @@ export default {
     },
     async submit() {
       await this.$api.system.register();
-      return true;
     }
   }
 }

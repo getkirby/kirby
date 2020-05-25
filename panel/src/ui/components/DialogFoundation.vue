@@ -1,6 +1,17 @@
 <template>
-  <k-overlay ref="overlay" :visible="visible">
+  <k-overlay
+    ref="overlay"
+    :visible="visible"
+  >
+    <k-backdrop
+      v-if="preloading"
+      :data-loading="true"
+      class="flex items-center justify-center"
+    >
+      <k-loader class="text-white" />
+    </k-backdrop>
     <k-modal
+      v-else
       ref="modal"
       :autofocus="autofocus"
       :cancel-button="cancelButtonConfig"
@@ -13,7 +24,6 @@
         :dir="$direction"
         :data-size="size"
         :data-loading="loading"
-        :is-dimmed="!loading"
         slot-scope="{
           cancel,
           cancelButton,
@@ -27,7 +37,6 @@
       >
         <div
           class="k-dialog-box relative m-6 bg-light rounded-sm shadow-md"
-          v-if="isOpen"
           @click.stop
         >
           <k-notification
@@ -112,7 +121,12 @@ export default {
   },
   data() {
     return {
-      isOpen: false
+      preloading: false
+    };
+  },
+  mounted() {
+    if (this.visible) {
+      this.open();
     }
   },
   computed: {
@@ -169,18 +183,20 @@ export default {
         return false;
       }
 
+      this.preloading = false;
       this.$emit("close");
       this.$refs.overlay.close();
-      this.isOpen = false;
     },
     error(message) {
       this.$refs.modal.error(message);
     },
     open() {
-      this.isOpen = true;
+      this.preloading = false;
       this.$refs.overlay.open();
+      this.$emit("open");
     },
-    ready() {
+    preload() {
+      this.preloading = true;
       this.$refs.overlay.open();
     },
     submit() {

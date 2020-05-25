@@ -159,7 +159,7 @@ export default {
   },
   methods: {
     onRegister() {
-      alert("register");
+      this.$refs.registration.open();
     },
     onSearch(event) {
       event.preventDefault();

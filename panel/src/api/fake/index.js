@@ -81,6 +81,34 @@ new Server({
   routes() {
     this.namespace = "api";
 
+    // temp for models fields, dialogs, pickers
+    // TODO: figure out actual endpoint
+    const toItems = (request, model) => {
+      return JSON.parse(request.queryParams.ids).map(id => model(id));
+    }
+
+    const toOptions = (request, models) => {
+      return models(
+        parseInt(request.queryParams.page),
+        parseInt(request.queryParams.limit),
+        request.queryParams.parent,
+        request.queryParams.search
+      );
+    }
+
+    // authentication
+    this.get("/auth", function(schema) {
+      const session = schema.sessions.first();
+
+      if (session) {
+        const user = schema.users.find(session.attrs.user);
+
+        if (user) {
+          return this.serialize(user);
+        }
+      }
+    });
+
     this.post("/auth/login", function(schema, request) {
       const params = JSON.parse(request.requestBody);
       const user = this.serialize(
@@ -118,61 +146,11 @@ new Server({
       };
     });
 
-    this.get("/auth", function(schema) {
-      const session = schema.sessions.first();
-
-      if (session) {
-        const user = schema.users.find(session.attrs.user);
-
-        if (user) {
-          return this.serialize(user);
-        }
-      }
-    });
-
+    // blueprints
     this.get("/blueprints");
     this.get("/blueprints/:id");
 
-    this.resource("languages");
-    this.resource("pages");
-
-    // files
-    this.get("/:parent/:pageId/files/:fileId", function(schema, request) {
-      return schema.files.find(
-        request.params.parent +
-          "/" +
-          request.params.pageId +
-          "/" +
-          request.params.fileId
-      );
-    });
-
-    this.get("/site", (schema) => {
-      return schema.sites.first();
-    });
-
-    this.get("/roles");
-    this.get("/roles/:id");
-
-    this.get("/translations");
-    this.get("/translations/:id");
-
-    this.get("/users");
-    this.get("/users/:id");
-
-    // temp for models fields, dialogs, pickers
-    // TODO: figure out actual endpoint
-    const toItems = (request, model) => {
-      return JSON.parse(request.queryParams.ids).map(id => model(id));
-    }
-    const toOptions = (request, models) => {
-      return models(
-        parseInt(request.queryParams.page),
-        parseInt(request.queryParams.limit),
-        request.queryParams.parent,
-        request.queryParams.search
-      );
-    }
+    // fields
     this.get("/field/files/items", (schema, request) => {
       return toItems(request, File);
     });
@@ -192,6 +170,62 @@ new Server({
       return toOptions(request, Users);
     });
 
+    // files
+    this.get("/:parent/:pageId/files/:fileId", function(schema, request) {
+      return schema.files.find(
+        request.params.parent +
+          "/" +
+          request.params.pageId +
+          "/" +
+          request.params.fileId
+      );
+    });
+
+    // languages
+    this.resource("languages");
+
+    // pages
+    this.resource("pages");
+
+    // roles
+    this.get("/roles");
+    this.get("/roles/:id");
+
+    // site
+    this.get("/site", (schema) => {
+      return schema.sites.first();
+    });
+
+    this.post("/system/register", (schema, request) => {
+      return {
+        status: "error",
+        code: 400,
+        message: "Invalid license key"
+      };
+
+      const params = JSON.parse(request.requestBody);
+
+
+
+      if (params.license === "K3-test") {
+        return {
+          code: 200,
+          status: "ok"
+        };
+      }
+
+      throw "Invalid license key";
+
+    });
+
+    // translations
+    this.get("/translations");
+    this.get("/translations/:id");
+
+    // users
+    this.get("/users");
+    this.get("/users/:id");
+
     // temp test
     this.post("/upload", (schema) => {
       return {
@@ -200,11 +234,11 @@ new Server({
       };
     });
 
-
     // whitelist
     this.passthrough(
       "https://raw.githubusercontent.com/mledoze/countries/master/countries.json"
     );
+
     this.passthrough("https://api.themoviedb.org/**");
   },
 });

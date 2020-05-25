@@ -10,10 +10,10 @@ export default {
 
 export const regular = () => ({
   methods: {
-    cancel: action("cancel"),
-    close: action("close"),
-    open: action("open"),
-    submit() {
+    onCancel: action("cancel"),
+    onClose: action("close"),
+    onOpen: action("open"),
+    onSubmit() {
       action("submit")();
       alert("submitted");
       this.$refs.dialog.close();
@@ -26,10 +26,10 @@ export const regular = () => ({
       <k-dialog
         ref="dialog"
         text="This is a nice dialog"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,
@@ -48,10 +48,10 @@ export const customSubmitButton = () => ({
           color: 'red'
         }"
         text="Delete this?"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,
@@ -68,10 +68,10 @@ export const legacySubmitButton = () => ({
         icon="trash"
         theme="negative"
         text="Delete this?"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,
@@ -86,10 +86,10 @@ export const noSubmitButton = () => ({
         ref="dialog"
         :submit-button="false"
         text="Delete this?"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,
@@ -108,10 +108,10 @@ export const customCancelButton = () => ({
           color: 'purple'
         }"
         text="Delete this?"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,
@@ -126,10 +126,10 @@ export const legacyCancelButton = () => ({
         ref="dialog"
         cancel="Nope"
         text="Delete this?"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,
@@ -144,10 +144,10 @@ export const noCancelButton = () => ({
         ref="dialog"
         :cancel-button="false"
         text="Delete this?"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,
@@ -163,10 +163,36 @@ export const open = () => ({
         ref="dialog"
         :visible="true"
         text="This is a nice dialog"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
+      />
+    </div>
+  `,
+});
+
+export const preloading = () => ({
+  extends: regular(),
+  methods: {
+    open() {
+      this.$refs.dialog.preload();
+      setTimeout(() => {
+        this.$refs.dialog.open();
+      }, 1000);
+    }
+  },
+  template: `
+    <div>
+      <k-button icon="open" @click="open">Open Dialog</k-button>
+
+      <k-dialog
+        ref="dialog"
+        text="This is a dialog that demonstrates the preloading effect for async stuff"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,
@@ -183,10 +209,10 @@ export const loading = () => ({
         :loading="true"
         :visible="true"
         text="This is a dialog while loading"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,
@@ -195,7 +221,7 @@ export const loading = () => ({
 export const errorNotification = () => ({
   extends: regular(),
   methods: {
-    submit() {
+    onSubmit() {
       action("submit");
       this.$refs.dialog.error("Something went wrong");
     }
@@ -206,10 +232,10 @@ export const errorNotification = () => ({
       <k-dialog
         ref="dialog"
         text="Click confirm to raise an error"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,
@@ -218,7 +244,7 @@ export const errorNotification = () => ({
 export const successNotification = () => ({
   extends: regular(),
   methods: {
-    submit() {
+    onSubmit() {
       action("submit");
       this.$refs.dialog.success("Yayayay!");
     }
@@ -229,10 +255,10 @@ export const successNotification = () => ({
       <k-dialog
         ref="dialog"
         text="Click confirm to raise a success message"
-        @cancel="cancel"
-        @close="close"
-        @open="open"
-        @submit="submit"
+        @cancel="onCancel"
+        @close="onClose"
+        @open="onOpen"
+        @submit="onSubmit"
       />
     </div>
   `,

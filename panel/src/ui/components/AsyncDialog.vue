@@ -65,7 +65,7 @@ export default {
      * the dialog is closed.
      */
     onSuccess(response) {
-      this.$emit("submit", response);
+      this.$emit("success", response);
       this.$nextTick(() => {
         this.$refs.dialog.close();
       });
@@ -76,15 +76,13 @@ export default {
      * the result will be waited for.
      */
     async open(...args) {
-      this.isLoading = true;
+      this.$refs.dialog.preload();
       try {
-        this.$refs.dialog.ready();
         await this.load(...args)
         this.$refs.dialog.open();
       } catch (error) {
+        this.$refs.dialog.close();
         this.$store.dispatch("notification/error", error);
-      } finally {
-        this.isLoading = false;
       }
     },
     /**
