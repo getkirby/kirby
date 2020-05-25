@@ -81,10 +81,8 @@ export default {
       switch (position) {
         case "first":
           return this.tagFor(0);
-          break;
         case "last":
           return this.tagFor(this.tags.length - 1);
-          break;
         case "prev":
           if (!this.selected) return;
 

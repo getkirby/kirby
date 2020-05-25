@@ -21,7 +21,7 @@
     <!-- Collection -->
     <k-dropzone
       v-else
-      :disabled="disabled"
+      :disabled="disabled || !uploads"
       @drop="onDrop"
     >
       <k-collection
@@ -37,14 +37,14 @@
       :is="'k-' + type + '-dialog'"
       ref="dialog"
       v-bind="dialogOptions"
-      :has-drop="true"
+      :has-drop="!!uploads"
       @submit="onSelect"
       @drop="onDrop"
     />
 
     <!-- Upload -->
     <k-upload
-      v-if="upload"
+      v-if="uploads"
       ref="upload"
       v-bind="uploadOptions"
       @success="onUpload"
@@ -67,21 +67,15 @@ export default {
         };
       }
     },
-    items: {
-      type: Function,
-      async default(ids) {
-        const params = { ids: JSON.stringify(this.selected) };
-        // TODO: actual API endpoint
-        return this.$api.get("field/files/items", params);
-      },
-    },
     type: {
       type: String,
       default: "files"
     },
-    upload: {
-      type: Boolean,
-      default: true
+    uploads: {
+      type: [Boolean, Object],
+      default() {
+        return {};
+      }
     }
   },
   computed: {
@@ -96,7 +90,7 @@ export default {
         });
       }
 
-      if (this.upload) {
+      if (this.uploads) {
         actions.push({
           icon: "upload",
           text: this.$t("upload"),
@@ -108,7 +102,8 @@ export default {
     },
     uploadOptions() {
       return {
-        url: "api/upload",
+        url: this.endpoints.field + "/upload",
+        accept: this.uploads.accept,
         multiple: this.multiple
       }
     }
@@ -117,12 +112,9 @@ export default {
     onAction(option, item, itemIndex) {
       switch (option) {
         case "upload":
-          this.$refs.upload.open();
-          // TODO: add file upload dialog
-          break;
+          return this.$refs.upload.open();
         case "select":
-          this.onOpen();
-          break;
+          return this.onOpen();
       }
     },
     onDrop(event) {

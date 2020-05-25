@@ -56,6 +56,7 @@ export default {
     },
     picker() {
       return {
+        endpoint: this.endpoint,
         layout: this.layout,
         max: this.max,
         multiple: this.multiple,

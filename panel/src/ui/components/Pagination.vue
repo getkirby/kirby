@@ -219,11 +219,9 @@ export default {
     navigate(e) {
       switch (e.code) {
         case "ArrowLeft":
-          this.prev();
-          break;
+          return this.prev();
         case "ArrowRight":
-          this.next();
-          break;
+          return this.next();
       }
     }
   }

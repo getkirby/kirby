@@ -4,12 +4,10 @@ import ModelsDialog from "./ModelsDialog.vue";
 export default {
   extends: ModelsDialog,
   props: {
-    options: {
-      type: Function,
-      async default(params) {
-        // TODO: actual API endpoint
-        return this.$api.get("field/files/options", params);
-      }
+    endpoint: {
+      type: String,
+      // TODO: actual API endpoint
+      default: "field/files/options"
     }
   },
   computed: {

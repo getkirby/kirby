@@ -11,10 +11,19 @@ export const list = () => ({
       value: ["13", "72"]
     };
   },
+  computed: {
+    endpoints() {
+      return {
+        // TODO: actual fake API endpoint
+        field: "field/pages"
+      };
+    }
+  },
   template: `
     <div>
       <k-pages-field
         v-model="value"
+        :endpoints="endpoints"
         label="Pages"
       />
       <k-headline class="mt-8 mb-3">Value</k-headline>
@@ -33,6 +42,7 @@ export const cardlets = () => ({
   template: `
     <k-pages-field
       v-model="value"
+      :endpoints="endpoints"
       label="Pages"
       layout="cardlets"
     />
@@ -49,6 +59,7 @@ export const cards = () => ({
   template: `
     <k-pages-field
       v-model="value"
+      :endpoints="endpoints"
       label="Pages"
       layout="cards"
     />
@@ -66,6 +77,7 @@ export const pickerLayout = () => ({
   template: `
     <k-pages-field
       v-model="value"
+      :endpoints="endpoints"
       label="Pages"
       :picker="{
         layout: 'cardlets',
@@ -86,6 +98,7 @@ export const single = () => ({
     <div>
       <k-pages-field
         v-model="value"
+        :endpoints="endpoints"
         :multiple="false"
         label="Picker"
         help="Only one items allowed"
@@ -100,6 +113,7 @@ export const max = () => ({
   extends: list(),
   template: `
     <k-pages-field
+      :endpoints="endpoints"
       :value="value"
       :max="3"
       label="Picker"
@@ -112,6 +126,7 @@ export const noSearch = () => ({
   extends: list(),
   template: `
     <k-pages-field
+      :endpoints="endpoints"
       :search="false"
       label="Picker"
     />
@@ -123,6 +138,7 @@ export const nonSortable = () => ({
   template: `
     <k-pages-field
       v-model="value"
+      :endpoints="endpoints"
       :sortable="false"
       label="Picker"
     />
@@ -132,7 +148,10 @@ export const nonSortable = () => ({
 export const empty = () => ({
   extends: list(),
   template: `
-    <k-pages-field label="Pages" />
+    <k-pages-field
+      :endpoints="endpoints"
+      label="Pages"
+    />
   `
 });
 
@@ -140,6 +159,7 @@ export const customEmpty = () => ({
   extends: list(),
   template: `
     <k-pages-field
+     :endpoints="endpoints"
       :empty="{ text: 'Add related projects', icon: 'parent' }"
       label="Related"
     />
@@ -155,6 +175,7 @@ export const hasNoPages = () => ({
   },
   template: `
     <k-pages-field
+      :endpoints="endpoints"
       :value="value"
       :hasOptions="false"
       label="Picker"
@@ -167,6 +188,7 @@ export const disabled = () => ({
   template: `
     <k-pages-field
       v-model="value"
+      :endpoints="endpoints"
       :disabled="true"
       label="Picker"
     />

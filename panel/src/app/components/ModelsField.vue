@@ -123,17 +123,27 @@ export default {
       };
     },
     dialogOptions() {
-      return {
+      let options = {
         ...this.picker,
         hasDrop: this.hasDrop,
         limit: this.picker.limit || 15,
         max: this.max,
         multiple: this.multiple,
-        options: this.options,
         search: this.search,
         width: this.picker.width || "small",
         title: this.label + " / " + this.$t("select"),
       };
+
+      // provided a custom async function for options
+      if (this.options) {
+        options.options = this.options;
+
+      // use API endpoint for options
+      } else if (this.endpoints) {
+        options.endpoint = this.endpoints.field + "/options";
+      }
+
+      return options;
     },
     hasActions() {
       if (this.disabled) {
@@ -186,7 +196,9 @@ export default {
   },
   methods: {
     async items() {
-      return [];
+      return this.$api.get(this.endpoints.field + "/items", {
+        ids: JSON.stringify(this.selected)
+      });
     },
     map() {
       this.data = this.data.map(item => {
@@ -197,8 +209,7 @@ export default {
     onAction(option, item, itemIndex) {
       switch (option) {
         case "select":
-          this.onOpen();
-          break;
+          return this.onOpen();
       }
     },
     onEmpty() {

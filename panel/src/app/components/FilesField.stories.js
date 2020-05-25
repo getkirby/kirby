@@ -11,10 +11,19 @@ export const list = () => ({
       value: ["13", "72"]
     };
   },
+  computed: {
+    endpoints() {
+      return {
+        // TODO: actual fake API endpoint
+        field: "field/files"
+      };
+    }
+  },
   template: `
     <div>
       <k-files-field
         v-model="value"
+        :endpoints="endpoints"
         label="Files"
       />
       <k-headline class="mt-8 mb-3">Value</k-headline>
@@ -33,6 +42,7 @@ export const cardlets = () => ({
   template: `
     <k-files-field
       v-model="value"
+      :endpoints="endpoints"
       label="Files"
       layout="cardlets"
     />
@@ -49,6 +59,7 @@ export const cards = () => ({
   template: `
     <k-files-field
       v-model="value"
+      :endpoints="endpoints"
       label="Files"
       layout="cards"
     />
@@ -61,6 +72,7 @@ export const pickerLayout = () => ({
     <k-files-field
       v-model="value"
       label="Files"
+      :endpoints="endpoints"
       :picker="{
         layout: 'cards',
         preview: { cover: true },
@@ -81,6 +93,7 @@ export const single = () => ({
     <div>
       <k-files-field
         v-model="value"
+        :endpoints="endpoints"
         :multiple="false"
         label="Picker"
         help="Only one items allowed"
@@ -95,6 +108,7 @@ export const max = () => ({
   extends: list(),
   template: `
     <k-files-field
+      :endpoints="endpoints"
       :value="value"
       :max="3"
       label="Picker"
@@ -107,6 +121,7 @@ export const noSearch = () => ({
   extends: list(),
   template: `
     <k-files-field
+      :endpoints="endpoints"
       :search="false"
       label="Picker"
     />
@@ -118,6 +133,7 @@ export const nonSortable = () => ({
   template: `
     <k-files-field
       v-model="value"
+      :endpoints="endpoints"
       :sortable="false"
       label="Picker"
     />
@@ -127,7 +143,10 @@ export const nonSortable = () => ({
 export const empty = () => ({
   extends: list(),
   template: `
-    <k-files-field label="Files" />
+    <k-files-field
+      :endpoints="endpoints"
+      label="Files"
+    />
   `
 });
 
@@ -135,6 +154,7 @@ export const customEmpty = () => ({
   extends: list(),
   template: `
     <k-files-field
+      :endpoints="endpoints"
       :empty="{ text: 'Add your favorite photos', icon: 'heart' }"
       label="Picker"
     />
@@ -150,6 +170,7 @@ export const hasNoFiles = () => ({
   },
   template: `
     <k-files-field
+      :endpoints="endpoints"
       :value="value"
       :hasOptions="false"
       label="Picker"
@@ -157,12 +178,25 @@ export const hasNoFiles = () => ({
   `
 });
 
-export const noUpload = () => ({
+export const noUploads = () => ({
   extends: list(),
   template: `
     <k-files-field
+      :endpoints="endpoints"
       :value="value"
-      :upload="false"
+      :uploads="false"
+      label="Picker"
+    />
+  `
+});
+
+export const uploadOnlyImages = () => ({
+  extends: list(),
+  template: `
+    <k-files-field
+      :endpoints="endpoints"
+      :value="value"
+      :uploads="{ accept: 'images/*' }"
       label="Picker"
     />
   `
@@ -172,6 +206,7 @@ export const disabled = () => ({
   extends: list(),
   template: `
     <k-files-field
+      :endpoints="endpoints"
       :value="value"
       :disabled="true"
       label="Picker"

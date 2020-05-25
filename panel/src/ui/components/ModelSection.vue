@@ -104,8 +104,7 @@ export default {
 
       switch (option) {
         case "add":
-          this.$emit("add");
-          break;
+          return this.$emit("add");
       }
     }
   }

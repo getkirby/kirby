@@ -11,10 +11,19 @@ export const list = () => ({
       value: ["13", "72"]
     };
   },
+  computed: {
+    endpoints() {
+      return {
+        // TODO: actual fake API endpoint
+        field: "field/users"
+      };
+    }
+  },
   template: `
     <div>
       <k-users-field
         v-model="value"
+        :endpoints="endpoints"
         label="Users"
       />
 
@@ -34,6 +43,7 @@ export const cardlets = () => ({
   template: `
     <k-users-field
       v-model="value"
+      :endpoints="endpoints"
       label="Users"
       layout="cardlets"
     />
@@ -50,6 +60,7 @@ export const cards = () => ({
   template: `
     <k-users-field
       v-model="value"
+      :endpoints="endpoints"
       label="Users"
       layout="cards"
     />
@@ -61,6 +72,7 @@ export const pickerLayout = () => ({
   template: `
     <k-users-field
       v-model="value"
+      :endpoints="endpoints"
       label="Users"
       layout="cardlets"
       :picker="{
@@ -81,6 +93,7 @@ export const single = () => ({
     <div>
       <k-users-field
         v-model="value"
+        :endpoints="endpoints"
         :multiple="false"
         label="Users"
         help="Only one items allowed"
@@ -97,6 +110,7 @@ export const max = () => ({
   template: `
     <k-users-field
       v-model="value"
+      :endpoints="endpoints"
       :max="3"
       label="Users"
       help="Maximum 3 items allowed"
@@ -108,6 +122,7 @@ export const noSearch = () => ({
   extends: list(),
   template: `
     <k-users-field
+      :endpoints="endpoints"
       :search="false"
       label="Users"
     />
@@ -119,6 +134,7 @@ export const nonSortable = () => ({
   template: `
     <k-users-field
       v-model="value"
+      :endpoints="endpoints"
       :sortable="false"
       label="Users"
     />
@@ -128,7 +144,10 @@ export const nonSortable = () => ({
 export const empty = () => ({
   extends: list(),
   template: `
-    <k-users-field label="Users" />
+    <k-users-field
+      :endpoints="endpoints"
+      label="Users"
+    />
   `
 });
 
@@ -136,6 +155,7 @@ export const customEmpty = () => ({
   extends: list(),
   template: `
     <k-users-field
+      :endpoints="endpoints"
       :empty="{ text: 'Select the employee of the month', icon: 'star' }"
       :multiple="false"
       label="Highlights"
@@ -152,6 +172,7 @@ export const hasNoUsers = () => ({
   },
   template: `
     <k-users-field
+      :endpoints="endpoints"
       :value="value"
       :hasOptions="false"
       label="Picker"
@@ -164,6 +185,7 @@ export const disabled = () => ({
   template: `
     <k-users-field
       v-model="value"
+      :endpoints="endpoints"
       :disabled="true"
       label="Users"
     />
