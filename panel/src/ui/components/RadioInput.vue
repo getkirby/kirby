@@ -18,7 +18,7 @@
       >
       <label
         :for="id + '-' + index"
-        class="items-center cursor-pointer"
+        class="flex items-start cursor-pointer"
       >
         <k-icon
           v-bind="toggleState(option)"
@@ -99,6 +99,8 @@ export default {
 </script>
 
 <style lang="scss">
+$input-line-height: 1.5rem;
+
 .k-radio-input {
   display: grid;
   grid-template-columns: 1fr;
@@ -110,7 +112,7 @@ export default {
 }
 .k-radio-input li {
   position: relative;
-  line-height: 1.5rem;
+  line-height: $input-line-height;
 }
 .k-radio-input input {
   position: absolute;
@@ -125,7 +127,7 @@ export default {
 }
 
 .k-radio-input-toggle {
-  padding-top: 3px;
+  height: $input-line-height;
   padding-right: .75rem;
 }
 .k-radio-input-info {
@@ -134,8 +136,9 @@ export default {
   color: $color-gray-700;
 }
 .k-radio-input-icon {
-  padding-top: 3px;
+  height: $input-line-height;
   justify-self: flex-end;
+  padding-left: .75rem;
 }
 
 /** Theming **/
@@ -156,15 +159,13 @@ export default {
     overflow-wrap: break-word;
   }
   label {
-    display: flex;
-    align-items: flex-start;
     min-height: $field-input-height;
     line-height: $field-input-line-height;
     padding: (($field-input-height - $field-input-line-height) / 2) $field-input-padding;
   }
-  label::before {
-    top: ($field-input-height - 1rem) / 2;
-    left: $field-input-padding;
+  .k-radio-input-toggle,
+  .k-radio-input-icon  {
+    height: $field-input-line-height;
   }
   .k-radio-input-info {
     line-height: $field-input-line-height;
