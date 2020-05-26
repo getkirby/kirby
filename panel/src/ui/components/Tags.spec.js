@@ -1,10 +1,6 @@
 import stories from "./Tags.stories.js";
 
 describe("Tags - regular", () => {
-  before(() => {
-    cy.visitStorybook();
-  });
-
   beforeEach(() => {
     cy.loadStory(stories.title, "Regular");
   });

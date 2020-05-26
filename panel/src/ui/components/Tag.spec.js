@@ -1,10 +1,6 @@
 import stories from "./Tag.stories.js";
 
 describe("Tag - regular", () => {
-  before(() => {
-    cy.visitStorybook();
-  });
-
   beforeEach(() => {
     cy.loadStory(stories.title, "Regular");
   });
@@ -19,10 +15,6 @@ describe("Tag - regular", () => {
 })
 
 describe("Tag - removable", () => {
-  before(() => {
-    cy.visitStorybook();
-  });
-
   beforeEach(() => {
     cy.loadStory(stories.title, "Removable");
   });
@@ -37,7 +29,7 @@ describe("Tag - removable", () => {
 
   it("@remove when toggle clicked", () => {
     cy.get(".k-tag-toggle").click();
-    cy.emitted('remove').should('not.be.empty');
+    cy.emitted("remove").should("not.be.empty");
   });
 
 })
