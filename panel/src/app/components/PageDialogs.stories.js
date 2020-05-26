@@ -39,7 +39,7 @@ export const regular = () => ({
         text="Pages"
         @option="$refs.createDialog.open()"
       />
-      <ul class="mb-8">
+      <ul class="mb-8" data-cy="pages">
         <li
           v-for="page in pages.data"
           :key="page.id"
@@ -65,4 +65,3 @@ export const regular = () => ({
     </div>
   `,
 });
-
