@@ -40,7 +40,7 @@ describe("RegistrationDialog", () => {
     cy.emitted("success").should("not.be.empty");
   });
 
-  it("error if licsense wrong", () => {
+  it("error if license wrong", () => {
     cy.contains("Open").click();
     cy.get("input[name=license]").type("foo");
     cy.get("input[name=email]").type("homer@simpson.de");

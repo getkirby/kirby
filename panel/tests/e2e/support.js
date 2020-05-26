@@ -2,6 +2,11 @@ Cypress.Commands.add('loadStory', (component, story) => {
   component = component.replace(" | ", "-").replace(" / ", "-").replace(" ", "-").toLowerCase();
   story = story.replace(" ", "-").toLowerCase();
   cy.visit(`iframe.html?id=${component}--${story}`);
+
+  // Reset storybook helpers
+  const win = cy.state('window')
+  win.__actions = [];
+  win.__routed = [];
 });
 
 Cypress.Commands.add('emitted', type => {
@@ -11,17 +16,8 @@ Cypress.Commands.add('emitted', type => {
     .map(action => action.data.args);
 });
 
-Cypress.Commands.add('expectRoutingTo', path => {
-  window.__routed = false;
-  cy.on('window:alert', (str) => {
-    expect(str).to.equal(`$router.push('${path}')`);
-    window.__routed = true;
-  });
-
-});
-
-Cypress.Commands.add('wasRouted', path => {
-  cy.wrap(null).should(() => {
-    expect( window.__routed).to.be.true
-  })
+Cypress.Commands.add('routed', path => {
+  const win = cy.state('window')
+  return win.__routed
+    .filter(route => route === path);
 });

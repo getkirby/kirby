@@ -11,6 +11,7 @@ import "@/ui/css/utilities.scss";
 import "@/api/fake/index.js";
 
 /* Mocks */
+import Actions from "./mocks/actions.js";
 import Api from "@/api/index.js";
 import I18n from "./mocks/i18n.js";
 import Model from "../src/app/plugins/models.js";
@@ -39,9 +40,6 @@ Vue.use(Model, Store);
 /** App components */
 import components from "@/app/components/index.js";
 Vue.use(components);
-
-/** Testing */
-import "./tests/addon.js";
 
 addDecorator(() => {
   return {

@@ -14,9 +14,9 @@ describe("Breadcrumb - simple", () => {
   });
 
   it("routes when clicked", () => {
-    cy.expectRoutingTo("https://getkirby.com");
+    cy.routed("https://getkirby.com").should("be.empty");
     cy.get(".k-breadcrumb li").first().click();
-    cy.wasRouted();
+    cy.routed("https://getkirby.com").should("not.be.empty");
   });
 })
 

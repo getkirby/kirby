@@ -2,10 +2,13 @@
 export default {
   install(Vue) {
 
-    /** Fake routing */
+    // Cypress helper
+    window.__routed = [];
+
     Vue.prototype.$route = {};
     Vue.prototype.$router = {
       push(path) {
+        window.__routed.push(path);
         alert("$router.push('" + path + "')");
       },
       options: {
