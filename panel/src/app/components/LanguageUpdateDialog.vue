@@ -29,7 +29,7 @@ export default {
       this.submitButton = this.$t("save");
     },
     async submit() {
-      return await this.$api.languages.update(this.code, this.values);
+      return await this.$model.languages.update(this.code, this.values);
     }
   }
 }

@@ -56,7 +56,7 @@ export default {
       this.submitButton = this.$t("language.create");
     },
     async submit() {
-      await this.$model.languages.create(this.values);
+      return await this.$model.languages.create(this.values);
     },
     async validate() {
       if (this.values.name.length === 0) {

@@ -1,8 +1,6 @@
 import { action } from "@storybook/addon-actions";
 import Padding from "../../../storybook/theme/Padding.js";
 
-import LanguageRemoveDialog from "./LanguageRemoveDialog.vue";
-import LanguageUpdateDialog from "./LanguageUpdateDialog.vue";
 import PageCreateDialog from "./PageCreateDialog.vue";
 import PageDuplicateDialog from "./PageDuplicateDialog.vue";
 import PageRemoveDialog from "./PageRemoveDialog.vue";
@@ -11,13 +9,6 @@ import PageSlugDialog from "./PageSlugDialog.vue";
 import PageStatusDialog from "./PageStatusDialog.vue";
 import PageTemplateDialog from "./PageTemplateDialog.vue";
 import SiteRenameDialog from "./SiteRenameDialog.vue";
-import UserCreateDialog from "./UserCreateDialog.vue";
-import UserEmailDialog from "./UserEmailDialog.vue";
-import UserLanguageDialog from "./UserLanguageDialog.vue";
-import UserPasswordDialog from "./UserPasswordDialog.vue";
-import UserRemoveDialog from "./UserRemoveDialog.vue";
-import UserRenameDialog from "./UserRenameDialog.vue";
-import UserRoleDialog from "./UserRoleDialog.vue";
 
 export default {
   title: "App | Dialogs",
@@ -40,30 +31,6 @@ const DialogStory = () => ({
       <k-story-dialog ref="dialog" @submit="onSubmit" />
     </div>
   `
-});
-
-export const LanguageRemove = () => ({
-  extends: DialogStory(),
-  components: {
-    "k-story-dialog": LanguageRemoveDialog
-  },
-  methods: {
-    open() {
-      this.$refs.dialog.open("de");
-    }
-  }
-});
-
-export const LanguageUpdate = () => ({
-  extends: DialogStory(),
-  components: {
-    "k-story-dialog": LanguageUpdateDialog
-  },
-  methods: {
-    open() {
-      this.$refs.dialog.open("de");
-    }
-  }
 });
 
 export const PageCreate = () => ({
@@ -142,56 +109,3 @@ export const SiteRename = () => ({
   }
 });
 
-export const UserCreate = () => ({
-  extends: DialogStory(),
-  components: {
-    "k-story-dialog": UserCreateDialog
-  }
-});
-
-export const UserEmail = () => ({
-  extends: DialogStory(),
-  components: {
-    "k-story-dialog": UserEmailDialog
-  },
-  methods: {
-    open() {
-      this.$refs.dialog.open("xyz");
-    }
-  }
-});
-
-export const UserLanguage = () => ({
-  extends: UserEmail(),
-  components: {
-    "k-story-dialog": UserLanguageDialog
-  },
-});
-
-export const UserPassword = () => ({
-  extends: UserEmail(),
-  components: {
-    "k-story-dialog": UserPasswordDialog
-  },
-});
-
-export const UserRemove = () => ({
-  extends: UserEmail(),
-  components: {
-    "k-story-dialog": UserRemoveDialog
-  },
-});
-
-export const UserRename = () => ({
-  extends: UserEmail(),
-  components: {
-    "k-story-dialog": UserRenameDialog
-  }
-});
-
-export const UserRole = () => ({
-  extends: UserEmail(),
-  components: {
-    "k-story-dialog": UserRoleDialog
-  }
-});

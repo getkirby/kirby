@@ -12,5 +12,8 @@ export default (api) => {
     async list() {
       return await api.get("languages");
     },
+    async update(code, values) {
+      return api.patch("languages/" + code, values);
+    },
   };
 };

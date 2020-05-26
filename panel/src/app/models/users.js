@@ -16,12 +16,6 @@ export default (Vue, store) => ({
       await store.dispatch("user/email", email);
     }
 
-    // move in content store
-    await store.dispatch("content/move", [
-      "users/" + id,
-      "users/" + user.id
-    ]);
-
     this.onUpdate("changeEmail", user);
     return user;
   },
@@ -70,11 +64,9 @@ export default (Vue, store) => ({
   },
   async delete(id) {
     // send API request to delete user
-    await Vue.$api.files.delete(id);
-
+    await Vue.$api.users.delete(id);
     // remove data from content store
     await store.dispatch("content/remove", "users/" + id);
-
     this.onUpdate("delete", id);
   },
   link(id, path) {

@@ -22,7 +22,7 @@ export default {
       this.submitButton = this.$t("change");
     },
     async submit() {
-      return await this.$api.users.changeEmail(this.id, this.values.email);
+      return await this.$model.users.changeEmail(this.id, this.values.email);
       // TODO: routing in view
     }
   }

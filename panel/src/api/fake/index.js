@@ -81,11 +81,32 @@ new Server({
   routes() {
     this.namespace = "api";
 
+    // helpers
+    const findFile = (schema, request) => {
+      return schema.files.find(
+        request.params.parentType + "/" +
+        request.params.parentId + "/" +
+        request.params.fileId
+      );
+    };
+
+    const ok = (data = {}) => {
+      return {
+        status: "ok",
+        code: 200,
+        data: data
+      }
+    };
+
+    const requestValues = (request) => {
+      return JSON.parse(request.requestBody);
+    };
+
     // temp for models fields, dialogs, pickers
     // TODO: figure out actual endpoint
     const toItems = (request, model) => {
       return JSON.parse(request.queryParams.ids).map(id => model(id));
-    }
+    };
 
     const toOptions = (request, models) => {
       return models(
@@ -94,7 +115,13 @@ new Server({
         request.queryParams.parent,
         request.queryParams.search
       );
-    }
+    };
+
+    const updateUser = (schema, request) => {
+      return schema.users
+        .find(request.params.id)
+        .update(requestValues(request));
+    };
 
     // authentication
     this.get("/auth", function(schema) {
@@ -110,11 +137,11 @@ new Server({
     });
 
     this.post("/auth/login", function(schema, request) {
-      const params = JSON.parse(request.requestBody);
+      const values = requestValues(request);
       const user = this.serialize(
         schema.users.findBy({
-          email: params.email,
-          password: params.password,
+          email: values.email,
+          password: values.password,
         })
       );
 
@@ -140,10 +167,7 @@ new Server({
     this.post("/auth/logout", (schema) => {
       let sessions = schema.sessions.all();
       sessions.destroy();
-      return {
-        status: "ok",
-        code: 200,
-      };
+      return ok();
     });
 
     // blueprints
@@ -172,61 +196,50 @@ new Server({
 
     // files
     this.get("/:parentType/:parentId/files/:fileId", function(schema, request) {
-      return schema.files.find(
-        request.params.parentType + "/" +
-        request.params.parentId + "/" +
-        request.params.fileId
-      );
+      return findFile(schema, request);
     });
 
     this.patch("/:parentType/:parentId/files/:fileId/name", function(schema, request) {
-      let file = schema.files.find(
-        request.params.parentType + "/" +
-        request.params.parentId + "/" +
-        request.params.fileId
-      );
+      let file = findFile(schema, request);
+      const values = requestValues(request);
+      const filename = values.name + "." + file.extension;
 
-      const attrs = JSON.parse(request.requestBody);
-      const filename = attrs.name + "." + file.extension;
-
-      file.update({
+      return file.update({
         id: request.params.parentType + "/" + request.params.parentId + "/" + filename,
-        name: attrs.name,
+        name: values.name,
         filename: filename
       });
-
-      return file;
     });
 
     this.delete("/:parentType/:parentId/files/:fileId", function(schema, request) {
-      let file = schema.files.find(
-        request.params.parentType + "/" +
-        request.params.parentId + "/" +
-        request.params.fileId
-      );
-
-      file.destroy();
-
-      return {
-        status: "ok",
-        code: 200
-      };
+      findFile(schema, request).destroy();
+      return ok();
     });
 
     // languages
     this.resource("languages");
-    this.post("languages", (schema, request) => {
-      const values = JSON.parse(request.requestBody);
-      return schema.languages.create(values);
-    });
-    this.delete("/languages/:code", function(schema, request) {
-      let language = schema.languages.find(request.params.code);
-      language.destroy();
 
-      return {
-        status: "ok",
-        code: 200
-      };
+    this.post("languages", (schema, request) => {
+      const values = requestValues(request);
+      return schema.languages.create({
+        ...values,
+        code: values.code.toLowerCase()
+      });
+    });
+
+    this.get("/languages/:code", function (schema, request) {
+      return schema.languages.findBy({ code: request.params.code });
+    });
+
+    this.patch("/languages/:code", function(schema, request) {
+      return schema.languages
+          .find(request.params.code)
+          .update(requestValues(request));
+    });
+
+    this.delete("/languages/:code", function(schema, request) {
+      schema.languages.find(request.params.code).destroy();
+      return ok();
     });
 
     // pages
@@ -242,13 +255,10 @@ new Server({
     });
 
     this.post("/system/register", (schema, request) => {
-      const params = JSON.parse(request.requestBody);
+      const values = requestValues(request);
 
-      if (params.license === "K3-test") {
-        return {
-          status: "ok",
-          code: 200
-        };
+      if (values.license === "K3-test") {
+        return ok();
       }
 
       throw "Invalid license key";
@@ -258,16 +268,40 @@ new Server({
     this.get("/translations");
     this.get("/translations/:id");
 
-    // users
     this.get("/users");
+    this.post("/users", (schema, request) => {
+      return schema.users.create(requestValues(request));
+    });
     this.get("/users/:id");
+    this.patch("/users/:id", (schema, request) => {
+      return updateUser(schema, request);
+    });
+    this.patch("/users/:id/email", (schema, request) => {
+      return updateUser(schema, request);
+    });
+    this.patch("/users/:id/language", (schema, request) => {
+      return updateUser(schema, request);
+    });
+    this.patch("/users/:id/name", (schema, request) => {
+      return updateUser(schema, request);
+    });
+    this.patch("/users/:id/password", (schema, request) => {
+      return updateUser(schema, request);
+    });
+    this.patch("/users/:id/role", (schema, request) => {
+      return updateUser(schema, request);
+    });
+
+
+
+    this.delete("/users/:id", (schema, request) => {
+      schema.users.find(request.params.id).destroy();
+      return ok();
+    });
 
     // temp test
     this.post("/upload", (schema) => {
-      return {
-        status: "ok",
-        code: 200,
-      };
+      return ok();
     });
 
     // whitelist
