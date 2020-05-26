@@ -4,5 +4,5 @@
   "pluginsFile": false,
   "fixturesFolder": false,
   "integrationFolder": "src",
-  "testFiles": "**/*.spec.js"
+  "testFiles": "**/*.test.js"
 }
