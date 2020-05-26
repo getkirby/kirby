@@ -76,8 +76,8 @@ export default {
   },
   methods: {
     async load() {
-      this.languages = await this.$model.languages.list();
-      this.languages = this.languages.map(language => {
+      this.languages = await this.$api.languages.list();
+      this.languages = this.languages.data.map(language => {
         return {
           id: language.code,
           default: language.default,
