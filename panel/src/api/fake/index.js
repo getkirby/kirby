@@ -215,6 +215,10 @@ new Server({
 
     // languages
     this.resource("languages");
+    this.post("languages", (schema, request) => {
+      const values = JSON.parse(request.requestBody);
+      return schema.languages.create(values);
+    });
 
     // pages
     this.resource("pages");
