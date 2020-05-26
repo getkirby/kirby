@@ -5,8 +5,7 @@ export default {
   extends: AsyncFormDialog,
   methods: {
     async load(id) {
-      this.id = id;
-      this.values = await this.$api.pages.get(id, {
+      const page = await this.$api.pages.get(id, {
         language: "@default",
         select: [
           "hasChildren",
@@ -18,9 +17,12 @@ export default {
         ]
       });
 
-      // add the appendix to the slug to make it more unique
-      // and indicate that it needs to be changed
-      this.values.slug += "-" + this.$helper.slug(this.$t("page.duplicate.appendix"));
+      this.id = id;
+      this.values = {
+        children: false,
+        files: false,
+        slug: page.slug + "-" + this.$helper.slug(this.$t("page.duplicate.appendix"))
+      };
 
       const hasChildren = this.values.hasChildren || this.values.hasDrafts;
       const hasFiles    = this.values.hasFiles;
