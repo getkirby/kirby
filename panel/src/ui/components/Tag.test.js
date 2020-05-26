@@ -7,6 +7,8 @@ describe("Tag - regular", () => {
 
   it("has text", () => {
     cy.get(".k-tag").should("have.text", "Tag");
+    cy.get('.k-tag').toMatchSnapshot();
+    cy.get('.k-tag').toMatchImageSnapshot();
   });
 
   it("has no toggle", () => {
@@ -21,6 +23,8 @@ describe("Tag - removable", () => {
 
   it("has text", () => {
     cy.get(".k-tag").should("have.text", "Tag");
+    cy.get('.k-tag').toMatchSnapshot();
+    cy.get('.k-tag').toMatchImageSnapshot();
   });
 
   it("has toggle", () => {
@@ -31,5 +35,4 @@ describe("Tag - removable", () => {
     cy.get(".k-tag-toggle").click();
     cy.emitted("remove").should("not.be.empty");
   });
-
 })

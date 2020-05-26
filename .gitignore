@@ -16,7 +16,8 @@
 
 # tests
 .phpunit.result.cache
-/panel/cypress
+/panel/src/ui/components/__*
+/panel/src/app/components/__*
 /tests/coverage
 
 # ignore all the vendor cruft

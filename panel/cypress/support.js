@@ -1,3 +1,5 @@
+import 'cypress-plugin-snapshots/commands';
+
 Cypress.Commands.add('loadStory', (component, story) => {
   component = component.replace(" | ", "-").replace(" / ", "-").replace(" ", "-").toLowerCase();
   story = story.replace(" ", "-").toLowerCase();

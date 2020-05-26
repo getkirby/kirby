@@ -1,8 +1,21 @@
 {
   "baseUrl": "http://localhost:6006",
-  "supportFile": "tests/e2e/support.js",
-  "pluginsFile": false,
+  "supportFile": "cypress/support.js",
+  "pluginsFile": "cypress/plugins.js",
   "fixturesFolder": false,
   "integrationFolder": "src",
-  "testFiles": "**/*.test.js"
+  "testFiles": "**/*.test.js",
+  "ignoreTestFiles": [
+    "**/__snapshots__/*",
+    "**/__image_snapshots__/*"
+  ],
+  "video": false,
+  "env": {
+    "cypress-plugin-snapshots": {
+      "autoCleanUp": true,
+      "imageConfig": {
+        "threshold": 0.05
+      }
+    }
+  }
 }

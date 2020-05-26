@@ -35,7 +35,7 @@
     "babel-plugin-wildcard": "^4.0.0",
     "core-js": "^3.6.5",
     "cypress": "^4.6.0",
-    "cypress-storybook": "^0.2.0",
+    "cypress-plugin-snapshots": "^1.4.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.1.2",
     "miragejs": "^0.1.40",

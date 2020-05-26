@@ -16,9 +16,11 @@ tests/ export-ignore
 # panel
 panel/.env.example export-ignore
 panel/cypress.json export-ignore
+panel/cypress export-ignore
 panel/package-lock.json export-ignore
 panel/package.json export-ignore
 panel/public export-ignore
 panel/README.md export-ignore
 panel/src export-ignore
+panel/storybook export-ignore
 panel/vue.config.js export-ignore
