@@ -1,7 +1,6 @@
 import { action } from "@storybook/addon-actions";
 import Padding from "../../../storybook/theme/Padding.js";
 
-import LanguageCreateDialog from "./LanguageCreateDialog.vue";
 import LanguageRemoveDialog from "./LanguageRemoveDialog.vue";
 import LanguageUpdateDialog from "./LanguageUpdateDialog.vue";
 import PageCreateDialog from "./PageCreateDialog.vue";
@@ -41,13 +40,6 @@ const DialogStory = () => ({
       <k-story-dialog ref="dialog" @submit="onSubmit" />
     </div>
   `
-});
-
-export const LanguageCreate = () => ({
-  extends: DialogStory(),
-  components: {
-    "k-story-dialog": LanguageCreateDialog
-  }
 });
 
 export const LanguageRemove = () => ({

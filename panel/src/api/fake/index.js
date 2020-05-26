@@ -219,6 +219,15 @@ new Server({
       const values = JSON.parse(request.requestBody);
       return schema.languages.create(values);
     });
+    this.delete("/languages/:code", function(schema, request) {
+      let language = schema.languages.find(request.params.code);
+      language.destroy();
+
+      return {
+        status: "ok",
+        code: 200
+      };
+    });
 
     // pages
     this.resource("pages");

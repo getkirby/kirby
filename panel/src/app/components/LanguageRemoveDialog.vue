@@ -12,7 +12,7 @@ export default {
       });
     },
     async submit() {
-      await this.$api.languages.delete(this.code);
+      await this.$model.languages.delete(this.code);
       return this.language;
     }
   }
