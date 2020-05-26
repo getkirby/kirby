@@ -279,6 +279,10 @@ new Server({
       return schema.sites.first();
     });
 
+    this.patch("/site/title", (schema, request) => {
+      return schema.sites.first().update(requestValues(request));
+    });
+
     this.post("/system/register", (schema, request) => {
       const values = requestValues(request);
 

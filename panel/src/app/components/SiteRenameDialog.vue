@@ -10,7 +10,7 @@ export default {
       });
     },
     async submit() {
-      return await this.$api.site.changeTitle(this.values.title);
+      return await this.$model.site.changeTitle(this.values.title);
     },
     async validate() {
       if (this.values.title.length === 0) {

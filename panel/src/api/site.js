@@ -1,12 +1,12 @@
 export default (api) => {
-  return {
+  let site = {
     async get(query) {
       return api.get("site", query);
     },
     async update(data) {
       return api.post("site", data);
     },
-    async title(title) {
+    async changeTitle(title) {
       return api.patch("site/title", { title: title });
     },
     async children(query) {
@@ -18,5 +18,10 @@ export default (api) => {
     async blueprints() {
       return api.get("site/blueprints");
     }
-  }
+  };
+
+  // deprecated aliases
+  site.title = site.changeTitle;
+
+  return site;
 };
