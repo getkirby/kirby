@@ -264,18 +264,21 @@ new Server({
 
     this.patch("/languages/:code", (schema, request) => {
       return schema.languages
-          .find(request.params.code)
+          .findBy({ code: request.params.code })
           .update(requestValues(request));
     });
 
     this.delete("/languages/:code", (schema, request) => {
-      schema.languages.find(request.params.code).destroy();
+      schema.languages.findBy({ code: request.params.code }).destroy();
       return ok();
     });
 
     // pages
     this.get("pages/:id", (schema, request) => {
       return schema.pages.find(request.params.id);
+    });
+    this.post("pages/:id/duplicate", (schema, request) => {
+      throw "Not yet implemented";
     });
     this.post("pages/:id/children/search", (schema, request) => {
       return schema.pages.where({ parentId: request.params.id });
