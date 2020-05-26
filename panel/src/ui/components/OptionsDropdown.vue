@@ -19,7 +19,7 @@
     <k-button
       :icon="icon || 'dots'"
       :tooltip="$t('options')"
-      class="k-options-dropdown-toggle"
+      class="k-options-dropdown-toggle flex items-center justify-center"
       @click="$refs.options.toggle()"
     >
       <template v-if="text">
@@ -88,7 +88,6 @@ export default {
   height: 38px;
 }
 .k-options-dropdown-toggle {
-  display: flex;
   min-width: 38px;
   height: 38px;
   padding: 0 .75rem;
