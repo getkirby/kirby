@@ -256,19 +256,22 @@ new Server({
       return schema.languages.findBy({ code: request.params.code });
     });
 
-    this.patch("/languages/:code", function(schema, request) {
+    this.patch("/languages/:code", (schema, request) => {
       return schema.languages
           .find(request.params.code)
           .update(requestValues(request));
     });
 
-    this.delete("/languages/:code", function(schema, request) {
+    this.delete("/languages/:code", (schema, request) => {
       schema.languages.find(request.params.code).destroy();
       return ok();
     });
 
     // pages
     this.resource("pages");
+    this.post("pages/:id/children/search", (schema, request) => {
+      return schema.pages.where({ parentId: request.params.id });
+    });
 
     // roles
     this.get("/roles");

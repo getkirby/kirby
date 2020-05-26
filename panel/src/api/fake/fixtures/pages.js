@@ -1,3 +1,17 @@
+const options = (merge) => {
+  return {
+    changeSlug: true,
+    changeStatus: true,
+    changeTemplate: true,
+    changeTitle: true,
+    delete: true,
+    duplicate: true,
+    preview: true,
+    ...merge
+  };
+};
+
+
 export default [
   {
     id: "photography",
@@ -29,6 +43,7 @@ export default [
     hasChildren: true,
     hasFiles: false,
     num: 1,
+    options: options(),
     parents: [],
     slug: "photography",
     status: "listed",
@@ -44,6 +59,8 @@ export default [
     hasChildren: true,
     hasFiles: false,
     num: 1,
+    options: options(),
+    parentId: "photography",
     parents: [],
     slug: "animals",
     status: "listed",

@@ -14,7 +14,7 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-button @click="$refs.dialog.open()" class="mb-8">Open</k-button>
+      <k-button class="mb-8" icon="key" @click="$refs.dialog.open()">Register Kirby</k-button>
 
       <k-text theme="help">
         Use: <b>K3-test</b> for a successful registration.
