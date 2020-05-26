@@ -14,7 +14,7 @@
             <k-button
               :responsive="true"
               icon="add"
-              @click="$refs.create.open()"
+              @click="$refs.createDialog.open()"
             >
               {{ $t('user.create') }}
             </k-button>
@@ -40,35 +40,36 @@
         }"
         :items="users"
         layout="cardlets"
+        @option="onOption"
       />
 
       <!-- dialogs -->
       <k-user-create-dialog
-        ref="create"
-        @success="fetch"
+        ref="createDialog"
+        @success="onSuccess"
       />
       <k-user-email-dialog
-        ref="email"
-        @success="fetch"
+        ref="emailDialog"
+        @success="onSuccess"
       />
       <k-user-language-dialog
-        ref="language"
-        @success="fetch"
+        ref="languageDialog"
+        @success="onSuccess"
       />
       <k-user-password-dialog
-        ref="password"
+        ref="passwordDialog"
       />
       <k-user-remove-dialog
-        ref="remove"
-        @success="fetch"
+        ref="removeDialog"
+        @success="onSuccess"
       />
       <k-user-rename-dialog
-        ref="rename"
-        @success="fetch"
+        ref="renameDialog"
+        @success="onSuccess"
       />
       <k-user-role-dialog
-        ref="role"
-        @success="fetch"
+        ref="roleDialog"
+        @success="onSuccess"
       />
     </k-view>
   </k-inside>
@@ -121,13 +122,40 @@ export default {
     },
     users() {
       return async ({ page, limit }) => {
-        return await this.$model.users.list({
+        const response = await this.$api.users.list({
           page: page,
           limit: limit,
           role: this.role
         });
+
+        return response.data.map(user => {
+          return {
+            id: user.id,
+            info: user.role.title,
+            link: this.$model.users.link(user.id),
+            options: async (ready) => {
+              return ready(await this.$model.users.options(user.id))
+            },
+            preview: {
+              image: user.avatar.url,
+              cover: true
+            },
+            title: user.name || user.email,
+          }
+        });
       }
     }
   },
+  methods: {
+    onOption(option, user) {
+
+      console.log(user);
+
+      this.$refs[option + "Dialog"].open(user.id);
+    },
+    onSuccess() {
+
+    }
+  }
 };
 </script>

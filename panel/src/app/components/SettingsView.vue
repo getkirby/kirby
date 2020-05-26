@@ -22,7 +22,7 @@
                   v-else
                   class="k-system-unregistered text-red font-bold"
                   type="button"
-                  @click="$emit('register')"
+                  @click="$refs.registrationDialog.open()"
                 >
                   {{ $t('license.unregistered') }}
               </button>
@@ -38,7 +38,11 @@
         </ul>
       </section>
 
+      <!-- languages -->
       <k-languages v-if="multilang" />
+
+      <!-- dialogs -->
+      <k-registration-dialog ref="registrationDialog" />
 
     </k-view>
   </k-inside>
@@ -59,5 +63,8 @@ export default {
   flex-shrink: 0;
   flex-grow: 1;
   flex-basis: 0;
+}
+.k-system-unregistered:focus {
+  outline: none;
 }
 </style>

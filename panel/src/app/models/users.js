@@ -89,6 +89,8 @@ export default (Vue, store) => ({
       disabled: !options.changeName
     });
 
+    result.push("-");
+
     result.push({
       click: "email",
       icon: "email",
@@ -116,6 +118,8 @@ export default (Vue, store) => ({
       text: Vue.$t("user.changeLanguage"),
       disabled: !options.changeLanguage
     });
+
+    result.push("-");
 
     result.push({
       click: "remove",
