@@ -5,10 +5,14 @@ export default {
   extends: AsyncFormDialog,
   methods: {
     async load(id) {
-      this.id     = id;
-      this.values = await this.$api.users.get(id, {
+      const user = await this.$api.users.get(id, {
         select: ["role"]
       });
+
+      this.id = id;
+      this.values = {
+        role: user.role.id
+      };
 
       // load all available roles
       this.roles = await this.$model.roles.options({ canBe: "changed" });
