@@ -117,6 +117,12 @@ new Server({
       );
     };
 
+    const updatePage = (schema, request) => {
+      return schema.pages
+        .find(request.params.id)
+        .update(requestValues(request));
+    };
+
     const updateUser = (schema, request) => {
       return schema.users
         .find(request.params.id)
@@ -268,9 +274,30 @@ new Server({
     });
 
     // pages
-    this.resource("pages");
+    this.get("pages/:id", (schema, request) => {
+      return schema.pages.find(request.params.id);
+    });
     this.post("pages/:id/children/search", (schema, request) => {
       return schema.pages.where({ parentId: request.params.id });
+    });
+    this.patch("pages/:id", (schema, request) => {
+      return updatePage(schema, request);
+    });
+    this.patch("pages/:id/slug", (schema, request) => {
+      throw "Not implemented yet";
+    });
+    this.patch("pages/:id/status", (schema, request) => {
+      return updatePage(schema, request);
+    });
+    this.patch("pages/:id/template", (schema, request) => {
+      return updatePage(schema, request);
+    });
+    this.patch("pages/:id/title", (schema, request) => {
+      return updatePage(schema, request);
+    });
+    this.delete("pages/:id", (schema, request) => {
+      schema.pages.find(request.params.id).destroy();
+      return ok();
     });
 
     // roles

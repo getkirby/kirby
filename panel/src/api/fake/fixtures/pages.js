@@ -11,6 +11,30 @@ const options = (merge) => {
   };
 };
 
+const blueprint = (merge) => {
+  return {
+    options: options(),
+    num: "default",
+    status: {
+      draft: {
+        text: "Draft",
+        icon: "circle-outline",
+        color: "red-light",
+      },
+      unlisted: {
+        text: "Unlisted",
+        icon: "circle-half",
+        color: "blue-light",
+      },
+      listed: {
+        text: "Listed",
+        icon: "circle",
+        color: "green-light",
+      },
+    },
+    ...merge
+  };
+};
 
 export default [
   {
@@ -18,26 +42,7 @@ export default [
     blueprintId: "pages/photography",
     blueprints: [],
     /** TODO: do this smarter/dynamic? */
-    blueprint: {
-      options: {},
-      status: {
-        draft: {
-          text: "Draft",
-          icon: "circle-outline",
-          color: "red-light"
-        },
-        unlisted: {
-          text: "Unlisted",
-          icon: "circle-half",
-          color: "blue-light"
-        },
-        listed: {
-          text: "Listed",
-          icon: "circle",
-          color: "green-light"
-        }
-      }
-    },
+    blueprint: blueprint(),
     childIds: ["photography+animals"],
     errors: [],
     hasChildren: true,
@@ -54,6 +59,7 @@ export default [
     id: "photography+animals",
     blueprintId: "pages/album",
     blueprints: [],
+    blueprint: blueprint(),
     errors: [],
     fileIds: ["pages/photography+animals/free-wheely.jpg"],
     hasChildren: true,

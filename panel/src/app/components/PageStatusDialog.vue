@@ -66,7 +66,7 @@ export default {
         });
 
         // create the select box
-        fields.position = {
+        this.fields.position = {
           name: "position",
           label: this.$t("page.changeStatus.position"),
           type: "select",
@@ -88,6 +88,8 @@ export default {
     positions(siblings) {
       let options = [];
       let index = 0;
+
+      siblings = Array.isArray(siblings) ? siblings : [];
 
       siblings.forEach(sibling => {
         if (sibling.id === this.id || sibling.num < 1) {
