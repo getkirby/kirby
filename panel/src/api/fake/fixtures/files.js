@@ -8,6 +8,7 @@ export default [
     extension: "jpg",
     filename: "free-wheely.jpg",
     id: "pages/photography+animals/free-wheely.jpg",
+    parentId: "photography+animals",
     mime: "image/jpeg",
     name: "free-wheely",
     niceSize: "453.75 kB",

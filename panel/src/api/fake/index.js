@@ -199,16 +199,41 @@ new Server({
       return findFile(schema, request);
     });
 
-    this.patch("/:parentType/:parentId/files/:fileId/name", function(schema, request) {
-      let file = findFile(schema, request);
-      const values = requestValues(request);
-      const filename = values.name + "." + file.extension;
+    this.post("/:parentType/:parentId/files", function(schema, request) {
 
-      return file.update({
+      const file = request.requestBody.get("file");
+
+      return schema.files.create({
+        id: request.params.parentType + "/" + request.params.parentId + "/" + file.name,
+        filename: file.name,
+        extension: file.name.split(".").pop(),
+        name: file.name.split(".").slice(0, -1).join('.'),
+        parentId: request.params.parentId,
+        size: file.size,
+        niceSize: file.size + "kb",
+        mime: file.type,
+        template: "image",
+        url: "https://source.unsplash.com/user/erondu/1600x900"
+      });
+    });
+
+    this.post("/:parentType/:parentId/files/search", function(schema, request) {
+      return schema.files.where({ parentId: request.params.parentId });
+    });
+
+    this.patch("/:parentType/:parentId/files/:fileId/name", function(schema, request) {
+      let oldFile = findFile(schema, request);
+      const values = requestValues(request);
+      const filename = values.name + "." + oldFile.extension;
+      const newFile = schema.files.create({
+        ...oldFile.attrs,
         id: request.params.parentType + "/" + request.params.parentId + "/" + filename,
         name: values.name,
         filename: filename
       });
+
+      oldFile.destroy();
+      return newFile;
     });
 
     this.delete("/:parentType/:parentId/files/:fileId", function(schema, request) {
