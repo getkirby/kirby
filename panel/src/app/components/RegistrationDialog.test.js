@@ -1,7 +1,8 @@
+import stories from "./RegistrationDialog.stories.js";
 
 describe("RegistrationDialog", () => {
   beforeEach(() => {
-    cy.loadStory("App | Dialogs / Registration Dialog", "Regular");
+    cy.loadStory(stories.title, "Regular");
     cy.contains("Register Kirby").as("button");
   });
 

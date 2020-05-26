@@ -1,3 +1,4 @@
+import 'cypress-file-upload';
 import 'cypress-plugin-snapshots/commands';
 
 Cypress.Commands.add('loadStory', (component, story) => {

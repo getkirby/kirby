@@ -1,10 +1,8 @@
 import { action } from "@storybook/addon-actions";
 import Padding from "../../../storybook/theme/Padding.js";
-import RegistrationDialog from "./RegistrationDialog.vue";
 
 export default {
   title: "App | Dialogs / Registration Dialog",
-  component: RegistrationDialog,
   decorators: [Padding],
 };
 

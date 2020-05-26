@@ -40,7 +40,7 @@ export const regular = () => ({
         text="Files"
         @option="upload"
       />
-      <ul class="mb-8">
+      <ul class="mb-8" data-cy="files">
         <li
           v-for="file in files.data"
           :key="file.id"
@@ -65,4 +65,3 @@ export const regular = () => ({
     </div>
   `,
 });
-

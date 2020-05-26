@@ -18,6 +18,7 @@
 .phpunit.result.cache
 /panel/src/ui/components/__*
 /panel/src/app/components/__*
+/panel/cypress/screenshots
 /tests/coverage
 
 # ignore all the vendor cruft

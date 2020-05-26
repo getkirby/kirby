@@ -2,7 +2,6 @@
   "baseUrl": "http://localhost:6006",
   "supportFile": "cypress/support.js",
   "pluginsFile": "cypress/plugins.js",
-  "fixturesFolder": false,
   "integrationFolder": "src",
   "testFiles": "**/*.test.js",
   "ignoreTestFiles": [
