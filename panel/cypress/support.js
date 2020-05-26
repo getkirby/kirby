@@ -1,8 +1,8 @@
 import 'cypress-plugin-snapshots/commands';
 
 Cypress.Commands.add('loadStory', (component, story) => {
-  component = component.replace(" | ", "-").replace(" / ", "-").replace(" ", "-").toLowerCase();
-  story = story.replace(" ", "-").toLowerCase();
+  component = component.replace(/\s\|\s/g, "-").replace(/\s\/\s/g, "-").replace(/\s/g, "-").toLowerCase();
+  story = story.replace(/ /g, "-").toLowerCase();
   cy.visit(`iframe.html?id=${component}--${story}`);
 
   // Reset storybook helpers

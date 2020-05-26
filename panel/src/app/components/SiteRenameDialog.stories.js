@@ -1,10 +1,8 @@
 import { action } from "@storybook/addon-actions";
 import Padding from "../../../storybook/theme/Padding.js";
-import SiteRenameDialog from "./SiteRenameDialog.vue";
 
 export default {
   title: "App | Dialogs / Site Rename Dialog",
-  component: SiteRenameDialog,
   decorators: [Padding],
 };
 
@@ -22,4 +20,3 @@ export const regular = () => ({
     </div>
   `
 });
-

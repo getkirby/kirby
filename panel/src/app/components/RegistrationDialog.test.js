@@ -2,50 +2,49 @@
 describe("RegistrationDialog", () => {
   beforeEach(() => {
     cy.loadStory("App | Dialogs / Registration Dialog", "Regular");
+    cy.contains("Register Kirby").as("button");
   });
 
   // TODO: move the first two to Dialog test
   it("opens", () => {
     cy.get(".k-dialog").should("not.exist");
-    cy.contains("Open").click();
+    cy.get("@button").click();
     cy.get(".k-dialog").should("exist");
   });
 
-  it("can be closed", () => {
-    cy.contains("Open").click();
+  it("can be canceled", () => {
+    cy.get("@button").click();
     cy.get(".k-dialog").should("exist");
-    cy.contains("Cancel").click();
+    cy.get(".k-dialog-cancel-button").click();
     cy.get(".k-dialog").should("not.exist");
   });
 
-  it("is empty on (re-)open", () => {
-    cy.contains("Open").click();
-    cy.get("input[name=license]").should("be.empty");
-    cy.get("input[name=email]").should("be.empty");
+  it("resets when canceled", () => {
+    cy.get("@button").click();
     cy.get("input[name=license]").type("foo");
     cy.get("input[name=email]").type("homer@simpson.de");
-    cy.contains("Cancel").click();
-    cy.contains("Open").click();
+    cy.get(".k-dialog-cancel-button").click();
+    cy.get("@button").click();
     cy.get("input[name=license]").should("be.empty");
     cy.get("input[name=email]").should("be.empty");
   });
 
   it("@success on submit", () => {
-    cy.contains("Open").click();
+    cy.get("@button").click();
     cy.get("input[name=license]").type("K3-test");
     cy.get("input[name=email]").type("homer@simpson.de");
     cy.emitted("success").should("be.empty");
-    cy.contains("Register").click();
+    cy.get(".k-dialog-submit-button").click();
     cy.wait(500);
     cy.emitted("success").should("not.be.empty");
   });
 
-  it("error if license wrong", () => {
-    cy.contains("Open").click();
+  it("invalid license", () => {
+    cy.get("@button").click();
     cy.get("input[name=license]").type("foo");
     cy.get("input[name=email]").type("homer@simpson.de");
-    cy.contains("Invalid license key").should("not.exist");
-    cy.contains("Register").click();
-    cy.contains("Invalid license key").should("exist");
+    cy.get(".k-notification[data-theme=error]").should("not.exist");
+    cy.get(".k-dialog-submit-button").click();
+    cy.get(".k-notification[data-theme=error]").should("exist");
   });
 })
