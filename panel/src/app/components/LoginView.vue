@@ -19,16 +19,16 @@
         <footer class="pt-6 flex justify-between">
           <k-toggle-input
             class="text-sm"
-            text="Remember me"
+            :text="$t('login.remember')"
             v-model="remember"
           />
           <k-button
+            :text="$t('login')"
             class="k-login-button p-3"
             icon="check"
             type="submit"
-            theme="positive">
-            Login
-          </k-button>
+            theme="positive"
+          />
         </footer>
       </template>
     </k-form>

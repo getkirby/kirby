@@ -61,7 +61,8 @@ describe("PageStatusDialog", () => {
     cy.get("@code").should("contains.text", '"status": "listed"');
     cy.get("@options").click();
     cy.get("@options").contains("Change status").click();
-    cy.get(".k-radio-input label").first().click();
+    cy.get(".k-radio-input label").eq(0).click();
+    cy.get("select[name=position]").should("not.exist");
     cy.get(".k-dialog-submit-button").click();
     cy.get("@code").should("contains.text", '"status": "draft"');
   });
@@ -71,8 +72,19 @@ describe("PageStatusDialog", () => {
     cy.get("@options").click();
     cy.get("@options").contains("Change status").click();
     cy.get(".k-radio-input label").eq(1).click();
+    cy.get("select[name=position]").should("not.exist");
     cy.get(".k-dialog-submit-button").click();
     cy.get("@code").should("contains.text", '"status": "unlisted"');
+  });
+
+  it("submit as listed", () => {
+    cy.get("@code").should("contains.text", '"status": "listed"');
+    cy.get("@options").click();
+    cy.get("@options").contains("Change status").click();
+    cy.get(".k-radio-input label").eq(2).click();
+    cy.get("select[name=position]").should("exist");
+    cy.get(".k-dialog-submit-button").click();
+    cy.get("@code").should("contains.text", '"status": "listed"');
   });
 })
 

@@ -23,8 +23,6 @@ describe("Tag - removable", () => {
 
   it("has text", () => {
     cy.get(".k-tag").should("have.text", "Tag");
-    cy.get('.k-tag').toMatchSnapshot();
-    cy.get('.k-tag').toMatchImageSnapshot();
   });
 
   it("has toggle", () => {

@@ -37,11 +37,10 @@
     <template v-slot:footer>
       <k-button-group>
         <k-button
+          :text="$t('confirm')"
           icon="check"
           @click="close"
-        >
-          {{ $t("confirm") }}
-        </k-button>
+        />
       </k-button-group>
     </template>
   </k-dialog>

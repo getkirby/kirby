@@ -52,11 +52,10 @@
         <template v-if="errors.length > 0">
           <k-button-group>
             <k-button
+              :text="$t('confirm')"
               icon="check"
               @click="$refs.dialog.close()"
-            >
-              {{ $t("confirm") }}
-            </k-button>
+            />
           </k-button-group>
         </template>
       </template>

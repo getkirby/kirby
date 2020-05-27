@@ -7,24 +7,22 @@
         type: 'key'
       }"
       :responsive="true"
+      :text="$t('license.register')"
       :tooltip="$t('license.unregistered')"
       class="k-registration-button"
       @click="$emit('register')"
-    >
-      {{ $t('license.register') }}
-    </k-button>
+    />
     <k-button
       :icon="{
         color: 'green-light',
         type: 'cart'
       }"
       :responsive="true"
+      :text="$t('license.buy')"
       class="k-registration-button"
       link="https://getkirby.com/buy"
       target="_blank"
-    >
-      {{ $t('license.buy') }}
-    </k-button>
+    />
   </div>
 </template>
 

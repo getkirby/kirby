@@ -8,7 +8,7 @@
     :data-responsive="responsive"
     :role="role"
     :tabindex="tabindex"
-    :title="tooltip"
+    :title="tooltip || text"
     :type="type"
     class="k-button"
     v-on="$listeners"
@@ -40,6 +40,7 @@ export default {
     responsive: Boolean,
     role: String,
     tabindex: String,
+    text: String,
     theme: String,
     tooltip: String,
     type: {

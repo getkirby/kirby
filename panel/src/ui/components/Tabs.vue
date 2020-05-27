@@ -25,12 +25,11 @@
 
       <k-button
         v-if="invisibleTabs.length"
+        :text="$t('more')"
         class="k-tab-button k-tabs-dropdown-button"
         icon="dots"
         @click.stop="$refs.more.toggle()"
-      >
-        {{ $t('more') }}
-      </k-button>
+      />
     </nav>
 
     <k-dropdown-content

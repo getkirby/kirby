@@ -20,12 +20,11 @@
     >
       <template v-slot:options>
         <k-button
+          :text="$t('page.changeSlug.fromTitle')"
           icon="wand"
           data-options
           @click="useTitle"
-        >
-          {{ $t("page.changeSlug.fromTitle") }}
-        </k-button>
+        />
       </template>
     </k-text-field>
   </k-form-dialog>

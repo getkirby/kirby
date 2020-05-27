@@ -8,20 +8,18 @@
       <k-view>
         <k-button
           :disabled="isDisabled"
+          :text="$t('revert')"
           icon="undo"
           class="k-form-button"
           @click="$refs.revert.open()"
-        >
-          {{ $t("revert") }}
-        </k-button>
+        />
         <k-button
           :disabled="isDisabled"
+          :text="$t('save')"
           icon="check"
           class="k-form-button"
           @click="onSave"
-        >
-          {{ $t("save") }}
-        </k-button>
+        />
       </k-view>
 
       <k-dialog
@@ -49,12 +47,11 @@
         />
         <k-button
           v-else
+          :text="$t('lock.unlock')"
           icon="unlock"
           class="k-form-button"
           @click="onUnlock"
-        >
-          {{ $t('lock.unlock') }}
-        </k-button>
+        />
       </k-view>
     </template>
 
@@ -66,19 +63,17 @@
         </p>
         <span class="k-form-lock-buttons">
           <k-button
+            :text="$t('download')"
             icon="download"
             class="k-form-button"
             @click="onDownload"
-          >
-            {{ $t("download") }}
-          </k-button>
+          />
           <k-button
+            :text="$t('confirm')"
             icon="check"
             class="k-form-button"
             @click="onResolve"
-          >
-            {{ $t("confirm") }}
-          </k-button>
+          />
         </span>
       </k-view>
     </template>

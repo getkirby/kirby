@@ -23,13 +23,12 @@
       <template v-slot:options>
         <k-dropdown>
           <k-button
-            :responsive="true"
             :disabled="isLocked"
+            :responsive="true"
+            :text="$t('settings')"
             icon="cog"
             @click="$refs.settings.toggle()"
-          >
-            {{ $t('settings') }}
-          </k-button>
+          />
           <k-dropdown-content
             ref="settings"
             :options="options"

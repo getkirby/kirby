@@ -7,8 +7,12 @@
     v-bind="$props"
     v-on="$listeners"
   >
-    <!-- @slot Content of the button -->
-    <slot />
+    <template v-if="$slots.default">
+      <slot />
+    </template>
+    <template v-else>
+      {{ text }}
+    </template>
   </component>
 </template>
 
@@ -59,6 +63,7 @@ export default {
      */
     target: String,
     tabindex: String,
+    text: String,
     /**
      * With the theme you can control the general design of the button.
      * Available options are: `positive`|`negative`

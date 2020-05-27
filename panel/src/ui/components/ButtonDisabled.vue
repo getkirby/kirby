@@ -4,7 +4,7 @@
     :data-disabled="true"
     :data-responsive="responsive"
     :data-theme="theme"
-    :title="tooltip"
+    :title="tooltip || text"
     class="k-button cursor-default"
   >
     <k-icon
@@ -27,6 +27,7 @@ export default {
     icon: [String, Object],
     id: [String, Number],
     responsive: Boolean,
+    text: String,
     theme: String,
     tooltip: String,
   }

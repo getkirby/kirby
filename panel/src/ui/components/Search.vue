@@ -13,11 +13,10 @@
         <div class="k-search-input flex">
           <k-dropdown class="k-search-types flex">
             <k-button
+              :text="currentType.label"
               :icon="currentType.icon"
               @click="$refs.types.toggle()"
-            >
-              {{ currentType.label }}:
-            </k-button>
+            />
             <k-dropdown-content ref="types">
               <k-dropdown-item
                 v-for="(searchType, searchTypeIndex) in types"

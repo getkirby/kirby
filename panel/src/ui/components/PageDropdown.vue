@@ -1,11 +1,10 @@
 <template>
   <k-dropdown class="k-page-dropdown">
     <k-button
+      :text="text"
       class="k-page-dropdown-toggle"
       @click="$refs.dropdown.toggle()"
-    >
-      {{ text }}
-    </k-button>
+    />
     <k-dropdown-content
       ref="dropdown"
       align="center"

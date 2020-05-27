@@ -66,17 +66,13 @@
                 v-bind="cancelButton"
                 class="k-dialog-cancel-button mr-auto py-3 px-6"
                 @click="cancel"
-              >
-                {{ cancelButton.text }}
-              </k-button>
+              />
               <k-button
                 v-if="submitButton"
                 v-bind="submitButton"
                 class="k-dialog-submit-button ml-auto py-3 px-6"
                 @click="submit"
-              >
-                {{ submitButton.text }}
-              </k-button>
+              />
             </footer>
           </slot>
         </div>

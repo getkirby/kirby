@@ -17,11 +17,10 @@
         <k-button
           :responsive="true"
           :link="site.previewUrl"
+          :text="$t('open')"
           target="_blank"
           icon="open"
-        >
-          {{ $t('open') }}
-        </k-button>
+        />
       </template>
     </k-model-view>
 

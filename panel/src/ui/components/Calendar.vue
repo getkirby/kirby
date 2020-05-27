@@ -49,10 +49,9 @@
           >
             <k-button
               v-if="dayButton"
+              :text="dayButton"
               @click="select(dayButton)"
-            >
-              {{ dayButton }}
-            </k-button>
+            />
           </td>
         </tr>
       </tbody>
@@ -62,9 +61,10 @@
             class="k-calendar-today"
             colspan="7"
           >
-            <k-button @click="selectToday">
-              {{ $t("today") }}
-            </k-button>
+            <k-button
+              :text="$t('today')"
+              @click="selectToday"
+            />
           </td>
         </tr>
       </tfoot>

@@ -5,12 +5,11 @@
       <k-button
         v-if="more"
         :id="_uid"
+        :text="$t('add')"
         ref="addButton"
         icon="add"
         @click="openNewRowDrawer"
-      >
-        {{ $t("add") }}
-      </k-button>
+      />
     </template>
 
     <!-- Table -->

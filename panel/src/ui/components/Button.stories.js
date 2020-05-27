@@ -13,6 +13,13 @@ export const onlyText = () => ({
   template: '<k-button @click="action">Text Button</k-button>',
 });
 
+export const textAsProp = () => ({
+  methods: {
+    action: action('clicked')
+  },
+  template: '<k-button text="Text Button" @click="action">',
+});
+
 export const textAndIcon = () => ({
   methods: {
     action: action('clicked')

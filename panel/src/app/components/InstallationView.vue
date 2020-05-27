@@ -22,9 +22,10 @@
           <template v-slot:footer>
             <footer class="pt-6">
               <k-button
-                class="k-installation-button p-3"
+                :tooltip="$t('install')"
                 icon="check"
                 type="submit"
+                class="k-installation-button p-3"
               >
                 {{ $t("install") }} &rarr;
               </k-button>

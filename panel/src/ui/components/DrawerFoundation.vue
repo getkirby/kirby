@@ -65,11 +65,8 @@
               v-bind="submitButton"
               class="k-drawer-submit-button py-3 px-6 text-black"
               @click="submit"
-            >
-              {{ submitButton.text }}
-            </k-button>
+            />
           </header>
-
 
           <div class="k-drawer-body p-6 flex-grow">
             <slot>

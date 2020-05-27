@@ -20,12 +20,11 @@
       >
         <k-button
           :disabled="!parent.id"
+          :text="parent.title"
           :tooltip="$t('back')"
           icon="angle-left"
           @click="onBack"
-        >
-          {{ parent.title }}
-        </k-button>
+        />
       </header>
     </slot>
 

@@ -13,11 +13,10 @@
           <k-button-group>
             <k-button
               :responsive="true"
+              :text="$t('user.create')"
               icon="add"
               @click="$refs.createDialog.open()"
-            >
-              {{ $t('user.create') }}
-            </k-button>
+            />
           </k-button-group>
         </template>
 
