@@ -35,16 +35,16 @@
 
     <!-- Dialogs -->
     <k-file-rename-dialog
-      ref="rename"
-      @success="$emit('rename', $event)"
+      ref="renameDialog"
+      @success="$emit('renamed', $event)"
     />
     <k-file-remove-dialog
-      ref="remove"
-      @success="$emit('remove')"
+      ref="removeDialog"
+      @success="$emit('removed', $event)"
     />
     <k-upload
-      ref="replace"
-      @success="$emit('update')"
+      ref="replaceDialog"
+      @success="$emit('replaced', $event)"
     />
   </k-inside>
 </template>
@@ -68,6 +68,12 @@ export default {
       type: Boolean,
       default: false
     },
+    options: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     tabs: {
       type: Array,
       default() {
@@ -80,12 +86,6 @@ export default {
     }
   },
   computed: {
-    options() {
-      return async () => this.$model.files.options(
-        this.file.parent,
-        this.file.filename
-      );
-    },
     preview() {
       return {
         ...this.file,
@@ -103,19 +103,19 @@ export default {
     onOption(option) {
       switch (option) {
         case "rename":
-          return this.$refs.rename.open(
-            this.file.parent,
+          return this.$refs.renameDialog.open(
+            this.file.parent.guid,
             this.file.filename
           );
         case "replace":
-          return this.$refs.replace.open({
+          return this.$refs.replaceDialog.open({
             url: this.file.replaceApi,
             accept: this.file.mime,
             multiple: false
           });
         case "remove":
-          return this.$refs.remove.open(
-            this.file.parent,
+          return this.$refs.removeDialog.open(
+            this.file.parent.guid,
             this.file.filename
           );
       }

@@ -69,6 +69,57 @@ export default (Vue, store) => ({
     await store.dispatch("content/remove", "users/" + id);
     this.onUpdate("delete", id);
   },
+  dropdown(options = {}) {
+    let dropdown = [];
+
+    dropdown.push({
+      click: "rename",
+      icon: "title",
+      text: Vue.$t("user.changeName"),
+      disabled: !options.changeName,
+    });
+
+    dropdown.push("-");
+
+    dropdown.push({
+      click: "email",
+      icon: "email",
+      text: Vue.$t("user.changeEmail"),
+      disabled: !options.changeEmail,
+    });
+
+    dropdown.push({
+      click: "role",
+      icon: "bolt",
+      text: Vue.$t("user.changeRole"),
+      disabled: !options.changeRole,
+    });
+
+    dropdown.push({
+      click: "password",
+      icon: "key",
+      text: Vue.$t("user.changePassword"),
+      disabled: !options.changePassword,
+    });
+
+    dropdown.push({
+      click: "language",
+      icon: "globe",
+      text: Vue.$t("user.changeLanguage"),
+      disabled: !options.changeLanguage,
+    });
+
+    dropdown.push("-");
+
+    dropdown.push({
+      click: "remove",
+      icon: "trash",
+      text: Vue.$t("user.delete"),
+      disabled: !options.delete,
+    });
+
+    return dropdown;
+  },
   link(id, path) {
     return "/" + this.url(id, path);
   },
@@ -77,58 +128,9 @@ export default (Vue, store) => ({
     store.dispatch("notification/success");
   },
   async options(id) {
-    const url     = this.url(id);
-    const user    = await Vue.$api.get(url, { select: "options" });
-    const options = user.options;
-    let result    = [];
-
-    result.push({
-      click: "rename",
-      icon: "title",
-      text: Vue.$t("user.changeName"),
-      disabled: !options.changeName
-    });
-
-    result.push("-");
-
-    result.push({
-      click: "email",
-      icon: "email",
-      text: Vue.$t("user.changeEmail"),
-      disabled: !options.changeEmail
-    });
-
-    result.push({
-      click: "role",
-      icon: "bolt",
-      text: Vue.$t("user.changeRole"),
-      disabled: !options.changeRole
-    });
-
-    result.push({
-      click: "password",
-      icon: "key",
-      text: Vue.$t("user.changePassword"),
-      disabled: !options.changePassword
-    });
-
-    result.push({
-      click: "language",
-      icon: "globe",
-      text: Vue.$t("user.changeLanguage"),
-      disabled: !options.changeLanguage
-    });
-
-    result.push("-");
-
-    result.push({
-      click: "remove",
-      icon: "trash",
-      text: Vue.$t("user.delete"),
-      disabled: !options.delete
-    });
-
-    return result;
+    const url  = this.url(id);
+    const user = await Vue.$api.get(url, { select: "options" });
+    return this.dropdown(user.options);
   },
   url(id, path) {
     let url = !id ? "users" : "users/" + id;

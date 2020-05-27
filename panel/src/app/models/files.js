@@ -53,6 +53,40 @@ export default (Vue, store) => ({
 
     this.onUpdate("delete", id);
   },
+  dropdown(options = {}, view = "view") {
+    let dropdown = [];
+
+    if (view === "list") {
+      dropdown.push({
+        icon: "open",
+        text: Vue.$t("open"),
+        click: "download",
+      });
+    }
+
+    dropdown.push({
+      icon: "title",
+      text: Vue.$t("rename"),
+      click: "rename",
+      disabled: !options.changeName,
+    });
+
+    dropdown.push({
+      icon: "upload",
+      text: Vue.$t("replace"),
+      click: "replace",
+      disabled: !options.replace,
+    });
+
+    dropdown.push({
+      icon: "trash",
+      text: Vue.$t("delete"),
+      click: "remove",
+      disabled: !options.delete,
+    });
+
+    return dropdown;
+  },
   id(parent, filename) {
     return parent + "/" + filename;
   },
@@ -64,41 +98,9 @@ export default (Vue, store) => ({
     store.dispatch("notification/success");
   },
   async options(parent, filename, view = "view") {
-    const url     = this.url(parent, filename);
-    const file    = await Vue.$api.get(url, { select: "options" });
-    const options = file.options;
-    let result    = [];
-
-    if (view === "list") {
-      result.push({
-        icon: "open",
-        text: Vue.$t("open"),
-        click: "download"
-      });
-    }
-
-    result.push({
-      icon: "title",
-      text: Vue.$t("rename"),
-      click: "rename",
-      disabled: !options.changeName
-    });
-
-    result.push({
-      icon: "upload",
-      text: Vue.$t("replace"),
-      click: "replace",
-      disabled: !options.replace
-    });
-
-    result.push({
-      icon: "trash",
-      text: Vue.$t("delete"),
-      click: "remove",
-      disabled: !options.delete
-    });
-
-    return result;
+    const url  = this.url(parent, filename);
+    const file = await Vue.$api.get(url, { select: "options" });
+    return this.dropdown(file.options, vie);
   },
   url(parent, filename, path) {
     let url = parent + "/files/" + filename;

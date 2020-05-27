@@ -56,6 +56,68 @@ export default (Vue, store) => ({
 
     this.onUpdate("delete", id);
   },
+  dropdown(options = {}, view = "view") {
+    let dropdown = [];
+
+    if (view === "list") {
+      dropdown.push({
+        click: "preview",
+        icon: "open",
+        text: Vue.$t("open"),
+        disabled: options.preview === false,
+      });
+
+      dropdown.push("-");
+    }
+
+    dropdown.push({
+      click: "rename",
+      icon: "title",
+      text: Vue.$t("rename"),
+      disabled: !options.changeTitle,
+    });
+
+    dropdown.push({
+      click: "duplicate",
+      icon: "copy",
+      text: Vue.$t("duplicate"),
+      disabled: !options.duplicate,
+    });
+
+    dropdown.push("-");
+
+    dropdown.push({
+      click: "slug",
+      icon: "url",
+      text: Vue.$t("page.changeSlug"),
+      disabled: !options.changeSlug,
+    });
+
+    dropdown.push({
+      click: "status",
+      icon: "preview",
+      text: Vue.$t("page.changeStatus"),
+      disabled: !options.changeStatus,
+    });
+
+    dropdown.push({
+      click: "template",
+      icon: "template",
+      text: Vue.$t("page.changeTemplate"),
+      disabled: !options.changeTemplate,
+    });
+
+    dropdown.push("-");
+
+    dropdown.push({
+      click: "remove",
+      icon: "trash",
+      text: Vue.$t("delete"),
+      disabled: !options.delete,
+    });
+
+    return dropdown;
+  },
   async duplicate(id, slug, props) {
     const page = await Vue.$api.pages.duplicate(id, slug, props);
     this.onUpdate(["create", "duplicate"], page);
@@ -75,69 +137,9 @@ export default (Vue, store) => ({
     store.dispatch("notification/success");
   },
   async options(id, view = "view") {
-    const url     = this.url(id);
-    const page    = await Vue.$api.get(url, { select: "options" });
-    const options = page.options;
-    let result    = [];
-
-    if (view === "list") {
-      result.push({
-        click: "preview",
-        icon: "open",
-        text: Vue.$t("open"),
-        disabled: options.preview === false
-      });
-
-      result.push("-");
-    }
-
-    result.push({
-      click: "rename",
-      icon: "title",
-      text: Vue.$t("rename"),
-      disabled: !options.changeTitle
-    });
-
-    result.push({
-      click: "duplicate",
-      icon: "copy",
-      text: Vue.$t("duplicate"),
-      disabled: !options.duplicate
-    });
-
-    result.push("-");
-
-    result.push({
-      click: "slug",
-      icon: "url",
-      text: Vue.$t("page.changeSlug"),
-      disabled: !options.changeSlug
-    });
-
-    result.push({
-      click: "status",
-      icon: "preview",
-      text: Vue.$t("page.changeStatus"),
-      disabled: !options.changeStatus
-    });
-
-    result.push({
-      click: "template",
-      icon: "template",
-      text: Vue.$t("page.changeTemplate"),
-      disabled: !options.changeTemplate
-    });
-
-    result.push("-");
-
-    result.push({
-      click: "remove",
-      icon: "trash",
-      text: Vue.$t("delete"),
-      disabled: !options.delete
-    });
-
-    return result;
+    const url  = this.url(id);
+    const page = await Vue.$api.get(url, { select: "options" });
+    return this.dropdown(page.options, view);
   },
   url(id, path) {
     let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");

@@ -21,7 +21,7 @@
       @rename="onOption('rename')"
     >
       <template v-slot:options>
-        <k-dropdown>
+        <k-dropdown v-if="options.length">
           <k-button
             :disabled="isLocked"
             :responsive="true"
@@ -82,6 +82,12 @@ export default {
       type: Boolean,
       default: false
     },
+    options: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
     tabs: {
       type: Array,
       default() {
@@ -97,11 +103,6 @@ export default {
       default() {
         return {};
       }
-    }
-  },
-  computed: {
-    options() {
-      return async () => this.$model.users.options(this.user.id);
     }
   },
   methods: {

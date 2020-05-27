@@ -6,22 +6,20 @@ export default (Vue, store) => ({
     this.onUpdate("changeTitle", site);
     return site;
   },
+  dropdown(options = {}) {
+    return [{
+      click: "rename",
+      icon: "title",
+      text: Vue.$t("rename"),
+      disabled: !options.changeTitle,
+    }];
+  },
   onUpdate(event, data) {
     Vue.$events.$emit("file." + event, data);
     store.dispatch("notification/success");
   },
   async options() {
     const site = await Vue.$api.get("site", { select: "options" });
-    const options = site.options;
-    let result = [];
-
-    result.push({
-      click: "rename",
-      icon: "title",
-      text: Vue.$t("rename"),
-      disabled: !options.changeTitle,
-    });
-
-    return result;
+    return this.dropdown(site.options);
   },
 });

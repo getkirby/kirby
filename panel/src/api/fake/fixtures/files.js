@@ -1,3 +1,12 @@
+const options = (merge) => {
+  return {
+    changeName: true,
+    replace: true,
+    delete: true,
+    ...merge,
+  };
+};
+
 export default [
   {
     dimensions: {
@@ -8,6 +17,7 @@ export default [
     extension: "jpg",
     filename: "free-wheely.jpg",
     id: "pages/photography+animals/free-wheely.jpg",
+    options: options(),
     parentId: "photography+animals",
     mime: "image/jpeg",
     name: "free-wheely",

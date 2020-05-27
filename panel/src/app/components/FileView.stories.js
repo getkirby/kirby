@@ -27,15 +27,23 @@ export const regular = () => ({
         },
       ],
       file: {
-        filename: "example.jpg",
+        filename: "free-wheely.jpg",
         height: 900,
         mime: "image/jpeg",
         niceSize: "128 KB",
         orientation: "landscape",
+        parent: {
+          guid: "pages/photography+animals"
+        },
         template: "cover",
         url: "https://source.unsplash.com/user/erondu/1600x900",
         width: 1600,
       },
+      options: this.$model.files.dropdown({
+        changeName: true,
+        replace: true,
+        delete: true
+      }),
       tabs: [
         { name: "main", label: "Main" },
         { name: "seo", label: "SEO" },
@@ -46,6 +54,7 @@ export const regular = () => ({
     <k-file-view
       :columns="columns"
       :file="file"
+      :options="options"
       :tabs="tabs"
       tab="main"
     />
