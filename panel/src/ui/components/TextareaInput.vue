@@ -362,6 +362,7 @@ export default {
 }
 .k-textarea-input-native[data-font="monospace"] {
   font-family: $font-mono;
+  font-size: .95em;
 }
 
 /** Toolbar **/

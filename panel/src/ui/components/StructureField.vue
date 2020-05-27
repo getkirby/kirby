@@ -45,6 +45,8 @@
       ref="newRowDrawer"
       v-model="newRowModel"
       :fields="fields"
+      :size="size"
+      :submit-button="{ text: $t('add'), color: 'positive' }"
       :title="label + ' / ' + $t('add')"
       @cancel="closeNewRowDrawer"
       @submit="submitNewRow"
@@ -56,7 +58,8 @@
       v-model="editRowModel"
       :autofocus="editRowModel === null"
       :fields="fields"
-      :submitButton="$t('confirm')"
+      :size="size"
+      :submit-button="{ text: $t('confirm'), color: 'positive' }"
       :title="label + ' / ' + $t('edit')"
       @focus="focusEditRowField"
       @cancel="closeEditRowDrawer"
@@ -123,6 +126,10 @@ export default {
       type: Boolean,
       default: false
     },
+    /**
+     * Size of the drawer
+     */
+    size: String,
     /**
      * Can be sorted manually via drag-n-drop
      */

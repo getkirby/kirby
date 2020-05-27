@@ -186,9 +186,6 @@ export const disabled = () => ({
         label="Social"
         @input="input"
       />
-
-      <k-headline class="mb-3">Value</k-headline>
-      <k-code-block :code="value" />
     </div>
   `
 });
@@ -247,9 +244,6 @@ export const empty = () => ({
         label="Social"
         @input="input"
       />
-
-      <k-headline class="mb-3">Value</k-headline>
-      <k-code-block :code="value" />
     </div>
   `
 });
@@ -272,9 +266,32 @@ export const customEmptyMessage = () => ({
         label="Social"
         @input="input"
       />
+    </div>
+  `
+});
 
-      <k-headline class="mb-3">Value</k-headline>
-      <k-code-block :code="value" />
+export const smallDrawer = () => ({
+  extends: regular(),
+  computed: {
+    fields() {
+      let fields = regular().computed.fields();
+      Object.keys(fields).forEach(field => {
+        delete fields[field].width;
+      });
+      return fields;
+    }
+  },
+  template: `
+    <div>
+      <k-structure-field
+        v-model="value"
+        :columns="columns"
+        :fields="fields"
+        class="mb-8"
+        label="Social"
+        size="small"
+        @input="input"
+      />
     </div>
   `
 });
