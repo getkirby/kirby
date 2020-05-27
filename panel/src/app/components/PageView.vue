@@ -139,7 +139,6 @@ export default {
 
     },
     onOption(option) {
-      console.log(option);
       switch (option) {
         case "duplicate":
           return this.$refs.duplicate.open(this.page.id);

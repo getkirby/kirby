@@ -8,29 +8,18 @@ export default {
 
 export const onlyText = () => ({
   methods: {
-    action: action('clicked')
+    action: action('click')
   },
   template: '<k-button @click="action">Text Button</k-button>',
 });
 
-export const textAsProp = () => ({
-  methods: {
-    action: action('clicked')
-  },
-  template: '<k-button text="Text Button" @click="action">',
-});
-
 export const textAndIcon = () => ({
-  methods: {
-    action: action('clicked')
-  },
+  extends: onlyText(),
   template: '<k-button icon="edit" @click="action">Icon & Text</k-button>',
 });
 
 export const onlyIcon = () => ({
-  methods: {
-    action: action('clicked')
-  },
+  extends: onlyText(),
   template: '<k-button icon="edit" @click="action" />',
 });
 
@@ -39,9 +28,7 @@ export const link = () => ({
 });
 
 export const positive = () => ({
-  methods: {
-    action: action('clicked')
-  },
+  extends: onlyText(),
   template: `
     <k-button icon="check" theme="positive" @click="action">
       Nice one!
@@ -50,9 +37,7 @@ export const positive = () => ({
 });
 
 export const negative = () => ({
-  methods: {
-    action: action('clicked')
-  },
+  extends: onlyText(),
   template: `
     <k-button icon="trash" theme="negative" @click="action">
       Uh oh!
@@ -61,9 +46,7 @@ export const negative = () => ({
 });
 
 export const disabled = () => ({
-  methods: {
-    action: action('clicked')
-  },
+  extends: onlyText(),
   template: `
     <k-button :disabled="true" icon="trash" @click="action">
       Disabled button
@@ -72,9 +55,7 @@ export const disabled = () => ({
 });
 
 export const customColor = () => ({
-  methods: {
-    action: action('clicked')
-  },
+  extends: onlyText(),
   template: `
     <div>
       <k-button color="yellow" icon="star" @click="action">
@@ -86,4 +67,18 @@ export const customColor = () => ({
       </k-button>
     </div>
   `
+});
+
+export const textAsProp = () => ({
+  extends: onlyText(),
+  template: `
+    <k-button text="Text Button" @click="action" />
+  `,
+});
+
+export const textFalse = () => ({
+  extends: onlyText(),
+  template: `
+    <k-button :text="false" @click="action" />
+  `,
 });
