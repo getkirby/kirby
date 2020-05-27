@@ -10,7 +10,7 @@
     <template v-if="$slots.default">
       <slot />
     </template>
-    <template v-else>
+    <template v-else-if="text">
       {{ text }}
     </template>
   </component>
