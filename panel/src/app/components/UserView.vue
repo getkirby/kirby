@@ -1,7 +1,7 @@
 <template>
   <k-inside class="k-user-view">
     <k-user-profile
-      :can-change-avatar="true"
+      :can-change-avatar="!isLocked"
       :can-change-email="$permissions.changeEmail && !isLocked"
       :can-change-language="$permissions.changeRole && !isLocked"
       :can-change-role="$permissions.changeLanguage && !isLocked"
@@ -14,29 +14,15 @@
     />
     <k-model-view
       :columns="columns"
+      :is-locked="isLocked"
+      :options="options"
       :rename="true"
       :tab="tab"
       :tabs="tabs"
       :title="user.name || user.email"
       @rename="onOption('rename')"
-    >
-      <template v-slot:options>
-        <k-dropdown v-if="options.length">
-          <k-button
-            :disabled="isLocked"
-            :responsive="true"
-            :text="$t('settings')"
-            icon="cog"
-            @click="$refs.settings.toggle()"
-          />
-          <k-dropdown-content
-            ref="settings"
-            :options="options"
-            @option="onOption"
-          />
-        </k-dropdown>
-      </template>
-    </k-model-view>
+      @option="onOption"
+    />
 
     <!-- Dialogs -->
     <k-user-email-dialog

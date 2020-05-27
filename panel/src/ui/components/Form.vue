@@ -5,7 +5,7 @@
     method="POST"
     autocomplete="off"
     class="k-form"
-    @submit.prevent="onSubmit"
+    @submit.prevent="$emit('submit', value)"
   >
     <slot name="header" />
     <slot>
@@ -15,7 +15,7 @@
         :disabled="disabled"
         :fields="fields"
         :novalidate="novalidate"
-        v-on="listeners"
+        v-on="$listeners"
       />
     </slot>
     <slot name="footer" />
@@ -81,12 +81,6 @@ export default {
         target.focus();
         return;
       }
-    },
-    onInput(values) {
-      this.$emit("input", values);
-    },
-    onSubmit(values) {
-      this.$emit("submit", values);
     },
     submit() {
       this.$refs.submitter.click();

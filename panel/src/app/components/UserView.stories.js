@@ -52,13 +52,28 @@ export const regular = () => ({
       },
     };
   },
+  computed: {
+    isLocked() {
+      return false;
+    }
+  },
   template: `
     <k-user-view
       :columns="columns"
+      :is-locked="isLocked"
       :options="options"
       :tabs="tabs"
       :user="user"
       tab="main"
     />
   `
+});
+
+export const locked = () => ({
+  extends: regular(),
+  computed: {
+    isLocked() {
+      return true;
+    },
+  },
 });

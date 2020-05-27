@@ -5,10 +5,9 @@
   >
     <k-form
       :fields="fields"
-      :value="values"
+      :value="value"
       :disabled="disabled"
-      @input="onInput"
-      @submit="onSubmit"
+      v-on="$listeners"
     />
   </k-section>
 </template>
@@ -22,15 +21,6 @@ export default {
   props: {
     disabled: Boolean,
     fields: Object,
-    values: Object,
-  },
-  methods: {
-    onInput(values) {
-      this.$emit("input", values);
-    },
-    onSubmit(values) {
-      this.$emit("submit", values);
-    }
   }
 };
 </script>

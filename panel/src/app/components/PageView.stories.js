@@ -42,6 +42,14 @@ export const regular = () => ({
           },
         },
       ],
+      options: this.$model.pages.dropdown({
+        changeTitle: true,
+        duplicate: true,
+        changeSlug: true,
+        changeStatus: true,
+        changeTemplate: false,
+        delete: false
+      }),
       page: fixtures[0],
       tabs: [
         { name: "main", label: "Main" },
@@ -49,12 +57,28 @@ export const regular = () => ({
       ],
     };
   },
+  computed: {
+    isLocked() {
+      return false;
+    }
+  },
   template: `
     <k-page-view
       :columns="columns"
+      :is-locked="isLocked"
+      :options="options"
       :page="page"
       :tabs="tabs"
       tab="main"
     />
   `
+});
+
+export const locked = () => ({
+  extends: regular(),
+  computed: {
+    isLocked() {
+      return true;
+    },
+  },
 });

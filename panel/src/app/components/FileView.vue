@@ -3,11 +3,14 @@
     <k-file-preview v-bind="preview" />
     <k-model-view
       :columns="columns"
+      :is-locked="isLocked"
+      :options="options"
       :rename="true"
       :tab="tab"
       :tabs="tabs"
       :title="file.filename"
       @rename="onOption('rename')"
+      @option="onOption"
     >
       <template v-slot:options>
         <k-button
@@ -16,20 +19,6 @@
           icon="open"
           @click="onOpen"
         />
-        <k-dropdown>
-          <k-button
-            :disabled="isLocked"
-            :responsive="true"
-            :text="$t('settings')"
-            icon="cog"
-            @click="$refs.settings.toggle()"
-          />
-          <k-dropdown-content
-            ref="settings"
-            :options="options"
-            @option="onOption"
-          />
-        </k-dropdown>
       </template>
     </k-model-view>
 

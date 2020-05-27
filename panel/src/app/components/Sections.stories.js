@@ -11,6 +11,11 @@ export default {
 };
 
 export const pages = () => ({
+  data() {
+    return {
+      value: {}
+    };
+  },
   computed: {
     columns() {
       return [
@@ -45,8 +50,17 @@ export const pages = () => ({
       ];
     }
   },
+  methods: {
+    onInput: action("input"),
+    onSubmit: action("submit")
+  },
   template: `
-    <k-sections :columns="columns" />
+    <k-sections
+      :columns="columns"
+      :value="value"
+      @input="onInput"
+      @submit="onSubmit"
+    />
   `
 });
 

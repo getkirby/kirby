@@ -9,8 +9,7 @@
   >
     <k-icon
       v-if="icon"
-      :type="icon"
-      :alt="tooltip"
+      v-bind="iconOptions"
       class="k-button-icon"
     />
     <span
@@ -21,16 +20,11 @@
 </template>
 
 <script>
+import ButtonNative from "./ButtonNative.vue";
+
 export default {
+  extends: ButtonNative,
   inheritAttrs: false,
-  props: {
-    icon: [String, Object],
-    id: [String, Number],
-    responsive: Boolean,
-    text: String,
-    theme: String,
-    tooltip: String,
-  }
 };
 </script>
 

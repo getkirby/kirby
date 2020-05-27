@@ -7,6 +7,7 @@
     <!-- blueprint -->
     <k-model-view
       :columns="columns"
+      :is-locked="isLocked"
       :rename="true"
       :tab="tab"
       :tabs="tabs"
@@ -40,6 +41,10 @@ export default {
       default() {
         return [];
       }
+    },
+    isLocked: {
+      type: Boolean,
+      default: false
     },
     site: {
       type: Object,

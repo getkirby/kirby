@@ -7,14 +7,12 @@
     <template v-if="mode === 'changes'">
       <k-view>
         <k-button
-          :disabled="isDisabled"
           :text="$t('revert')"
           icon="undo"
           class="k-form-button"
           @click="$refs.revert.open()"
         />
         <k-button
-          :disabled="isDisabled"
           :text="$t('save')"
           icon="check"
           class="k-form-button"

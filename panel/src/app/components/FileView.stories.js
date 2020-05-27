@@ -50,13 +50,29 @@ export const regular = () => ({
       ],
     };
   },
+  computed: {
+    isLocked() {
+      return false;
+    }
+  },
   template: `
     <k-file-view
       :columns="columns"
+      :is-locked="isLocked"
       :file="file"
       :options="options"
       :tabs="tabs"
       tab="main"
     />
   `
+});
+
+
+export const locked = () => ({
+  extends: regular(),
+  computed: {
+    isLocked() {
+      return true;
+    }
+  }
 });

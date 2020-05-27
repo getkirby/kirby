@@ -13,7 +13,7 @@
         :tooltip="tabButton.label"
         class="k-tab-button"
       >
-        {{ tabButton.label || tabButton.name }}
+        {{ tabButton.label || tabButton.text || tabButton.name }}
 
         <span
           v-if="tabButton.badge"

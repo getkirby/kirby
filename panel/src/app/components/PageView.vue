@@ -2,10 +2,13 @@
   <k-inside class="k-page-view">
     <k-model-view
       :columns="columns"
+      :is-locked="isLocked"
+      :options="options"
       :rename="true"
       :tab="tab"
       :tabs="tabs"
       :title="page.title"
+      @option="onOption"
       @rename="onOption('rename')"
     >
       <template v-slot:options>
@@ -16,56 +19,44 @@
           @click="onOpen"
         />
         <k-button
+          :disabled="isLocked"
           :responsive="true"
           v-bind="statusBtn"
           @click="onOption('status')"
           class="k-status-button"
         />
         <k-button
+          :disabled="isLocked"
           :responsive="true"
           v-bind="templateBtn"
           @click="onOption('template')"
         />
-        <k-dropdown>
-          <k-button
-            :disabled="isLocked"
-            :responsive="true"
-            :text="$t('settings')"
-            icon="cog"
-            @click="$refs.settings.toggle()"
-          />
-          <k-dropdown-content
-            ref="settings"
-            :options="options"
-            @option="onOption"
-          />
-        </k-dropdown>
       </template>
     </k-model-view>
 
     <!-- Dialogs -->
     <k-page-duplicate-dialog
-      ref="duplicate"
+      ref="duplicateDialog"
       @success="$emit('duplicate')"
     />
     <k-page-remove-dialog
-      ref="remove"
+      ref="removeDialog"
       @success="$emit('remove')"
     />
     <k-page-rename-dialog
-      ref="rename"
+      ref="renameDialog"
       @success="$emit('update')"
     />
     <k-page-slug-dialog
-      ref="slug"
+      ref="slugDialog"
       @success="$emit('slug', $event)"
     />
     <k-page-status-dialog
-      ref="status"
+      ref="statusDialog"
       @success="$emit('update')"
     />
     <k-page-template-dialog
-      ref="template"
+      ref="templateDialog"
       @success="$emit('update')"
     />
   </k-inside>
@@ -83,6 +74,12 @@ export default {
     isLocked: {
       type: Boolean,
       default: false
+    },
+    options: {
+      type: Array,
+      default() {
+        return [];
+      }
     },
     page: {
       type: Object,
@@ -102,11 +99,6 @@ export default {
     }
   },
   computed: {
-     options() {
-      return async (ready) => {
-        return ready(await this.$model.pages.options(this.page.id));
-      };
-    },
     statusBtn() {
       const status = this.page.blueprint.status[this.page.status];
       const text   = status ? status.text : this.page.status;
@@ -139,20 +131,7 @@ export default {
 
     },
     onOption(option) {
-      switch (option) {
-        case "duplicate":
-          return this.$refs.duplicate.open(this.page.id);
-        case "remove":
-          return this.$refs.remove.open(this.page.id);
-        case "rename":
-          return this.$refs.rename.open(this.page.id);
-        case "slug":
-          return this.$refs.slug.open(this.page.id);
-        case "status":
-          return this.$refs.status.open(this.page.id);
-        case "template":
-          return this.$refs.template.open(this.page.id);
-      }
+      this.$refs[option + "Dialog"].open(this.page.id);
     }
   }
 };

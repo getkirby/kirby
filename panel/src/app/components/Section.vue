@@ -46,6 +46,12 @@ export default {
     type: {
       type: String,
     },
+    value: {
+      type: Object,
+      default() {
+        return {};
+      }
+    }
   },
   computed: {
     sectionName() {

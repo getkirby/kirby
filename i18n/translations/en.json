@@ -377,6 +377,7 @@
   "translation.name": "English",
   "translation.locale": "en_US",
 
+  "untitled": "Untitled",
   "upload": "Upload",
   "upload.error.cantMove": "The uploaded file could not be moved",
   "upload.error.cantWrite": "Failed to write file to disk",

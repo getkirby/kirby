@@ -49,12 +49,25 @@ export const regular = () => ({
           },
         },
       ];
+    },
+    isLocked() {
+      return false;
     }
   },
   template: `
     <k-site-view
       :columns="columns"
+      :is-locked="isLocked"
       :site="site"
     />
   `
+});
+
+export const locked = () => ({
+  extends: regular(),
+  computed: {
+    isLocked() {
+      return true;
+    },
+  },
 });

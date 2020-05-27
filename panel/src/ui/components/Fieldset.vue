@@ -15,9 +15,9 @@
             :name="fieldName"
             :novalidate="novalidate"
             :ref="fieldName"
-            v-model="values[fieldName]"
+            :value="value[fieldName]"
             v-bind="field"
-            @input="onInput"
+            @input="onInput(fieldName, $event)"
             @focus="$emit('focus', $event, field, fieldName)"
             @submit="$emit('submit', $event, field, fieldName)"
           />
@@ -67,11 +67,6 @@ export default {
       this.focus();
     }
   },
-  data() {
-    return {
-      values: this.value
-    };
-  },
   computed: {
     visibleFields() {
       let fields = {};
@@ -91,11 +86,6 @@ export default {
       });
 
       return fields;
-    }
-  },
-  watch: {
-    value() {
-      this.values = this.value;
     }
   },
   methods: {
@@ -141,8 +131,10 @@ export default {
       return result;
 
     },
-    onInput() {
-      this.$emit("input", this.values);
+    onInput(field, value) {
+      let values = this.value;
+      this.$set(values, field, value);
+      this.$emit("input", values);
     }
   }
 };

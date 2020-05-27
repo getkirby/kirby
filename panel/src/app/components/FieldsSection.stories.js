@@ -1,17 +1,15 @@
-import FieldsSection from "./FieldsSection.vue";
 import Padding from "../../../storybook/theme/Padding.js";
 import { action } from "@storybook/addon-actions";
 
 export default {
   title: "App | Blueprints / Fields Section",
-  component: FieldsSection,
   decorators: [Padding]
 };
 
 export const regular = () => ({
   data() {
     return {
-      values: {}
+      value: {}
     };
   },
   computed: {
@@ -38,21 +36,24 @@ export const regular = () => ({
     }
   },
   methods: {
-    input: action("input"),
-    focus: action("focus"),
-    submit: action("submit")
+    onFocus: action("focus"),
+    onInput: action("input"),
+    onSubmit: action("submit")
   },
   template: `
     <div>
       <k-fields-section
         :disabled="disabled"
         :fields="fields"
-        :values="values"
+        :value="value"
         class="mb-10"
+        @focus="onFocus"
+        @input="onInput"
+        @submit="onSubmit"
       />
 
-      <k-headline class="mb-3">Values</k-headline>
-      <k-code-block :code="values" />
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
     </div>
   `,
 });
