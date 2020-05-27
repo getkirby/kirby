@@ -161,8 +161,6 @@ export default {
         ...defaults,
         ...button
       };
-
-      return this.$attrs["button"] || this.submitButton;
     }
   },
   methods: {

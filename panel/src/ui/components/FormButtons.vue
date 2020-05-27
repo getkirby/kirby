@@ -22,10 +22,12 @@
 
       <k-dialog
         ref="revert"
-        :submit-button="$t('revert')"
+        :submit-button="{
+          text: $t('revert'),
+          icon: 'undo',
+          color: 'negative'
+        }"
         :text="$t('revert.confirm')"
-        icon="undo"
-        theme="negative"
         @submit="onRevert"
       />
     </template>

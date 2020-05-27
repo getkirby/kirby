@@ -1,7 +1,7 @@
 <template>
   <k-dialog-foundation
     ref="dialog"
-    v-bind="$props"
+    v-bind="{...$props, ...$attrs}"
     v-on="$listeners"
   >
     <slot />
