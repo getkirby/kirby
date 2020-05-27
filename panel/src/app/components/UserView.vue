@@ -22,26 +22,26 @@
 
     <!-- Dialogs -->
     <k-user-email-dialog
-      ref="email"
+      ref="emailDialog"
       @success="$emit('update')"
     />
     <k-user-language-dialog
-      ref="language"
+      ref="languageDialog"
       @success="$emit('update')"
     />
     <k-user-password-dialog
-      ref="password"
+      ref="passwordDialog"
     />
     <k-user-remove-dialog
-      ref="remove"
+      ref="removeDialog"
       @success="$emit('remove')"
     />
     <k-user-rename-dialog
-      ref="rename"
+      ref="renameDialog"
       @success="$emit('update')"
     />
     <k-user-role-dialog
-      ref="role"
+      ref="roleDialog"
       @success="$emit('update')"
     />
     <k-upload
@@ -78,18 +78,8 @@ export default {
             accept: "image/*",
             multiple: false
           });
-        case "email":
-          return this.$refs.email.open(this.user.id);
-        case "language":
-          return this.$refs.language.open(this.user.id);
-        case "password":
-          return this.$refs.password.open(this.user.id);
-        case "remove":
-          return this.$refs.remove.open(this.user.id);
-        case "rename":
-          return this.$refs.rename.open(this.user.id);
-        case "role":
-          return this.$refs.role.open(this.user.id);
+        default:
+          return this.$refs[option + "Dialog"].open(this.user.id);
       }
     }
   }
