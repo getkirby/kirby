@@ -54,6 +54,7 @@
     <k-form-drawer
       ref="editRowDrawer"
       v-model="editRowModel"
+      :autofocus="editRowModel === null"
       :fields="fields"
       :submitButton="$t('confirm')"
       :title="label + ' / ' + $t('edit')"

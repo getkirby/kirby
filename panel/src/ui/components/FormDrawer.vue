@@ -14,7 +14,7 @@
     <k-form
       ref="form"
       v-model="value"
-      :autofocus="true"
+      :autofocus="autofocus"
       :fields="fields"
       :novalidate="novalidate"
       class="mb-3"
