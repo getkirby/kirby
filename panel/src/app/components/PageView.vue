@@ -15,14 +15,14 @@
           @click="onOpen"
         />
         <k-button
-          :disabled="isLocked"
+          :disabled="lock !== false"
           :responsive="true"
           v-bind="statusBtn"
           @click="onOption('status')"
           class="k-status-button"
         />
         <k-button
-          :disabled="isLocked"
+          :disabled="lock !== false"
           :responsive="true"
           v-bind="templateBtn"
           @click="onOption('template')"
