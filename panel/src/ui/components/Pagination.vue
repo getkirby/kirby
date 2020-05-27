@@ -6,9 +6,9 @@
     <k-button
       v-if="show"
       :disabled="!hasPrev"
+      :icon="direction === 'horizontal' ? 'angle-left' : 'angle-up'"
       :tooltip="prevLabel"
       class="k-pagination-button"
-      icon="angle-left"
       @click="prev"
     />
     <template v-if="details">
@@ -30,9 +30,9 @@
     <k-button
       v-if="show"
       :disabled="!hasNext"
+      :icon="direction === 'horizontal' ? 'angle-right' : 'angle-down'"
       :tooltip="nextLabel"
       class="k-pagination-button"
-      icon="angle-right"
       @click="next"
     />
   </nav>
@@ -48,6 +48,14 @@ export default {
     details: {
       type: Boolean,
       default: false
+    },
+    /**
+     * Define whether the arrows point left-right or up-down.
+     * Available options: `horizontal`|`vertical`
+     */
+    direction: {
+      type: String,
+      default: "horizontal"
     },
     dropdown: {
       type: Boolean,

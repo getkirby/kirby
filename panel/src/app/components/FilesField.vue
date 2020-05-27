@@ -37,7 +37,7 @@
       :is="'k-' + type + '-dialog'"
       ref="dialog"
       v-bind="dialogOptions"
-      :has-drop="!!uploads"
+      :has-drop="Boolean(uploads)"
       @submit="onSelect"
       @drop="onDrop"
     />

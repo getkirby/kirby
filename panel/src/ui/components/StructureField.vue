@@ -69,6 +69,7 @@
           :limit="1"
           :total="rows.length"
           :dropdown="false"
+          direction="vertical"
           @paginate="navigateRowDialog($event.page - 1)"
         />
       </template>
