@@ -150,7 +150,11 @@ export default {
       this.$refs.input.select();
     },
     onInput() {
-      this.$emit("input", this.tags);
+      const tags = this.tags.map(tag => {
+        delete tag.icon;
+        return tag;
+      });
+      this.$emit("input", tags);
     },
     onLeave(e) {
       if (

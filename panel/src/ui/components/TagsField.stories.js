@@ -11,7 +11,7 @@ export default {
 export const regular = () => ({
   data() {
     return {
-      value: "",
+      value: [],
     };
   },
   computed: {
