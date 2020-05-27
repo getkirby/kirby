@@ -1,3 +1,4 @@
+import fixtures from "@/api/fake/fixtures/pages.js"
 
 export default {
   title: "App | Views / Page"
@@ -41,15 +42,7 @@ export const regular = () => ({
           },
         },
       ],
-      page: {
-        id: "photography",
-        status: {
-          value: "listed",
-          text: "Listed"
-        },
-        title: "Photography",
-
-      },
+      page: fixtures[0],
       tabs: [
         { name: "main", label: "Main" },
         { name: "seo", label: "SEO" },

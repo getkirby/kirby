@@ -54,16 +54,18 @@ export default {
           const response = await fetch(this.options);
           const json     = response.json();
           return ready(json);
-
-        } else if (typeof this.options === "function") {
-          this.options(ready);
-
-        } else if (Array.isArray(this.options)) {
-          ready(this.options);
         }
-      } else {
-        return ready(this.items);
+
+        if (typeof this.options === "function") {
+          return this.options(ready);
+        }
+
+        if (Array.isArray(this.options)) {
+          return ready(this.options);
+        }
       }
+
+      return ready(this.items);
     },
     open() {
 

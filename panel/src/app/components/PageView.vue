@@ -11,28 +11,29 @@
       <template v-slot:options>
         <k-button
           :responsive="true"
+          :text="$t('open')"
           icon="open"
-          @click="on"
-        >
-          {{ $t("open") }}
-        </k-button>
+          @click="onOpen"
+        />
         <k-button
           :responsive="true"
-          v-bind="statusFlag"
+          v-bind="statusBtn"
           @click="onOption('status')"
           class="k-status-button"
-        >
-          {{ page.status.text || $t('page.status') }}
-        </k-button>
+        />
+        <k-button
+          :responsive="true"
+          v-bind="templateBtn"
+          @click="onOption('template')"
+        />
         <k-dropdown>
           <k-button
-            :responsive="true"
             :disabled="isLocked"
+            :responsive="true"
+            :text="$t('settings')"
             icon="cog"
             @click="$refs.settings.toggle()"
-          >
-            {{ $t('settings') }}
-          </k-button>
+          />
           <k-dropdown-content
             ref="settings"
             :options="options"
@@ -102,34 +103,33 @@ export default {
   },
   computed: {
      options() {
-      return async () => this.$model.pages.options(this.page.id);
+      return async (ready) => {
+        return ready(await this.$model.pages.options(this.page.id));
+      };
     },
-    statusFlag() {
-      if (this.page.status.value === "unlisted") {
-        return {
-          icon: {
-            type: 'circle-half',
-            size: 'small',
-            color: 'blue-light',
-          },
-        };
-      }
-
-      if (this.page.status.value === "listed") {
-        return {
-          icon: {
-            type: 'circle',
-            size: 'small',
-            color: 'green-light',
-          }
-        };
-      }
+    statusBtn() {
+      const status = this.page.blueprint.status[this.page.status];
+      const text   = status ? status.text : this.page.status;
 
       return {
+        text: text,
+        tooltip: `${this.$t("page.status")}: ${text}`,
         icon: {
-          type: 'circle-outline',
-          size: 'small',
-          color: 'red-light',
+          type: status.icon,
+          color: status.color,
+          size: "small"
+        }
+      };
+    },
+    templateBtn() {
+      const text = this.page.blueprint.title || this.page.template;
+
+      return {
+        text: text,
+        tooltip: `${this.$t("template")}: ${text}`,
+        icon: {
+          type: 'template',
+          size: 'small'
         },
       };
     }
@@ -139,6 +139,7 @@ export default {
 
     },
     onOption(option) {
+      console.log(option);
       switch (option) {
         case "duplicate":
           return this.$refs.duplicate.open(this.page.id);

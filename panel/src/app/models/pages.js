@@ -108,7 +108,7 @@ export default (Vue, store) => ({
     result.push("-");
 
     result.push({
-      click: "url",
+      click: "slug",
       icon: "url",
       text: Vue.$t("page.changeSlug"),
       disabled: !options.changeSlug

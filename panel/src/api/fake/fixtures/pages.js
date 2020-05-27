@@ -42,7 +42,7 @@ export default [
     blueprintId: "pages/photography",
     blueprints: [],
     /** TODO: do this smarter/dynamic? */
-    blueprint: blueprint(),
+    blueprint: blueprint({ title: "Photography" }),
     childIds: ["photography+animals"],
     errors: [],
     hasChildren: true,
@@ -59,7 +59,7 @@ export default [
     id: "photography+animals",
     blueprintId: "pages/album",
     blueprints: [],
-    blueprint: blueprint(),
+    blueprint: blueprint({ title: "Album" }),
     errors: [],
     fileIds: ["pages/photography+animals/free-wheely.jpg"],
     hasChildren: true,
