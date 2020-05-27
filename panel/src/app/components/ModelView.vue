@@ -92,7 +92,7 @@ export default {
       default: false
     },
     next: {
-      type: String,
+      type: Object,
     },
     options: {
       type: Array,
@@ -101,7 +101,7 @@ export default {
       }
     },
     prev: {
-      type: String,
+      type: Object,
     },
     rename: {
       type: Boolean,

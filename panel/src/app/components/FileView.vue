@@ -2,12 +2,8 @@
   <k-inside class="k-file-view">
     <k-file-preview v-bind="preview" />
     <k-model-view
-      :columns="columns"
-      :is-locked="isLocked"
-      :options="options"
+      v-bind="$props"
       :rename="true"
-      :tab="tab"
-      :tabs="tabs"
       :title="file.filename"
       @rename="onOption('rename')"
       @option="onOption"
@@ -39,39 +35,16 @@
 </template>
 
 <script>
+import ModelView from "./ModelView.vue";
+
 export default {
   props: {
-    columns: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
+    ...ModelView.props,
     file: {
       type: Object,
       default() {
         return {};
       }
-    },
-    isLocked: {
-      type: Boolean,
-      default: false
-    },
-    options: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
-    tabs: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
-    tab: {
-      type: String,
-      default: ""
     }
   },
   computed: {

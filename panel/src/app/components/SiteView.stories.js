@@ -50,14 +50,14 @@ export const regular = () => ({
         },
       ];
     },
-    isLocked() {
+    lock() {
       return false;
     }
   },
   template: `
     <k-site-view
       :columns="columns"
-      :is-locked="isLocked"
+      :lock="lock"
       :site="site"
     />
   `
@@ -66,8 +66,10 @@ export const regular = () => ({
 export const locked = () => ({
   extends: regular(),
   computed: {
-    isLocked() {
-      return true;
+    lock() {
+      return {
+        email: "ada@getkirby.com",
+      };
     },
   },
 });

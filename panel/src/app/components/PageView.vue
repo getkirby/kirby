@@ -1,12 +1,8 @@
 <template>
   <k-inside class="k-page-view">
     <k-model-view
-      :columns="columns"
-      :is-locked="isLocked"
-      :options="options"
+      v-bind="$props"
       :rename="true"
-      :tab="tab"
-      :tabs="tabs"
       :title="page.title"
       @option="onOption"
       @rename="onOption('rename')"
@@ -63,39 +59,16 @@
 </template>
 
 <script>
+import ModelView from "./ModelView.vue";
+
 export default {
   props: {
-    columns: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
-    isLocked: {
-      type: Boolean,
-      default: false
-    },
-    options: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
+    ...ModelView.props,
     page: {
       type: Object,
       default() {
         return {};
       }
-    },
-    tabs: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
-    tab: {
-      type: String,
-      default: ""
     }
   },
   computed: {

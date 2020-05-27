@@ -13,12 +13,8 @@
       @role="onOption('role')"
     />
     <k-model-view
-      :columns="columns"
-      :is-locked="isLocked"
-      :options="options"
+      v-bind="$props"
       :rename="true"
-      :tab="tab"
-      :tabs="tabs"
       :title="user.name || user.email"
       @rename="onOption('rename')"
       @option="onOption"
@@ -56,34 +52,11 @@
 </template>
 
 <script>
+import ModelView from "./ModelView.vue";
+
 export default {
   props: {
-    columns: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
-    isLocked: {
-      type: Boolean,
-      default: false
-    },
-    options: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
-    tabs: {
-      type: Array,
-      default() {
-        return []
-      }
-    },
-    tab: {
-      type: String,
-      default: ""
-    },
+    ...ModelView.props,
     user: {
       type: Object,
       default() {

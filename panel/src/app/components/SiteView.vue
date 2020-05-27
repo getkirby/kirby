@@ -6,11 +6,8 @@
   >
     <!-- blueprint -->
     <k-model-view
-      :columns="columns"
-      :is-locked="isLocked"
+      v-bind="$props"
       :rename="true"
-      :tab="tab"
-      :tabs="tabs"
       :title="site.title"
       @rename="$refs.rename.open()"
     >
@@ -34,18 +31,11 @@
 </template>
 
 <script>
+import ModelView from "./ModelView.vue";
+
 export default {
   props: {
-    columns: {
-      type: Array,
-      default() {
-        return [];
-      }
-    },
-    isLocked: {
-      type: Boolean,
-      default: false
-    },
+    ...ModelView.props,
     site: {
       type: Object,
       default() {
@@ -53,15 +43,6 @@ export default {
           previewUrl: "/",
           title: this.$t("view.site"),
         }
-      }
-    },
-    tab: {
-      type: String
-    },
-    tabs: {
-      type: Array,
-      default() {
-        return []
       }
     }
   },
