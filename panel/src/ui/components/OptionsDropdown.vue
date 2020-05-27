@@ -22,7 +22,7 @@
       class="k-options-dropdown-toggle flex items-center justify-center"
       @click="$refs.options.toggle()"
     >
-      <template v-if="text">
+      <template v-if="text && text !== true">
         {{ text }}
       </template>
     </k-button>
