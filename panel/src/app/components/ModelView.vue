@@ -1,5 +1,5 @@
 <template>
-  <k-view>
+  <k-view class="pb-24">
     <k-header
       :editable="rename && lock === false"
       :tab="tab"
