@@ -6,55 +6,36 @@ export default {
 };
 
 export const state = () => ({
-  data() {
-    return {
-      value: {}
-    };
-  },
   computed: {
-    fields() {
-      return {
-        type: {
-          type: "select",
-          options: ["success", "error", "info"],
-          width: "1/3"
-        },
-        message: {
-          type: "text",
-          width: "2/3"
-        },
-        permanent: {
-          type: "toggle",
-          width: "1/3"
-        },
-        details: {
-          type: "text",
-          width: "2/3"
-        }
-      };
+    actions() {
+      return [
+        "this.$store.dispatch('notification/success')",
+        "this.$store.dispatch('notification/info')",
+        "this.$store.dispatch('notification/error')"
+      ]
     }
   },
   methods: {
-    onSubmit() {
-      this.$store.dispatch("notification/" + this.value.type, {
-        ...this.value,
-        details: this.value.details ? [this.value.details] : null
-      });
+    onAction(action) {
+      eval(action);
     }
   },
   template: `
     <div>
-      <k-fieldset
-        v-model="value"
-        :fields="fields"
-        class="mb-4"
-      />
-      <k-button icon="bell" @click="onSubmit" >
-        Send notification
-      </k-button>
+      <k-headline class="mb-2">Actions</k-headline>
+      <k-button-group>
+        <k-button
+          v-for="(action, index) in actions"
+          icon="angle-right"
+          class="mb-1 mr-1 bg-white font-mono text-xs"
+          @click="onAction(action)"
+        >
+          {{ action }}
+        </k-button>
+      </k-button-group>
 
-      <k-code-block :code="$store.state.notification" class="mt-8" />
-      <k-notifications />
+      <k-headline class="mt-8 mb-2">State</k-headline>
+      <k-code-block :code="$store.state.notification" />
     </div>
   `
 });

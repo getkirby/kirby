@@ -1,4 +1,4 @@
-import Store from "@/app/store/store.js";
+import Store from "@/app/store/index.js";
 
 Store.subscribe(mutation => {
   console.log(`store.commit(${mutation.type}, ${mutation.payload})`);

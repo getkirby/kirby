@@ -7,7 +7,7 @@ import Models from "@/app/plugins/models.js";
 import Panel from "@/app/Panel.vue";
 import Plugins from "@/app/plugins/plugins.js";
 import Router from "@/app/plugins/router.js";
-import Store from "@/app/store/store.js";
+import Store from "@/app/store/index.js";
 import Ui from "@/ui/index.js";
 import Vue from "vue";
 
