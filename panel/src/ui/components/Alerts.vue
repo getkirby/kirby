@@ -1,10 +1,6 @@
 <template>
   <portal>
-    <transition-group
-      name="k-alerts"
-      tag="ul"
-      class="k-alerts"
-    >
+    <ul class="k-alerts">
       <li
         v-for="alert in alerts"
         :key="alert.id"
@@ -16,7 +12,7 @@
           @close="$emit('close', alert.id)"
         />
       </li>
-    </transition-group>
+    </ul>
   </portal>
 </template>
 
@@ -69,14 +65,5 @@ export default {
 }
 .k-alerts .k-notification {
   max-width: 20rem;
-}
-
-.k-alerts-enter-active,
-.k-alerts-leave-active {
-  transition: opacity .25s;
-}
-.k-alerts-enter,
-.k-alerts-leave-to {
-  opacity: 0;
 }
 </style>
