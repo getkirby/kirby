@@ -18,6 +18,7 @@
             v-if="registered === false"
             @register="onRegister"
           />
+          <k-form-indicator v-bind="indicator" />
         </template>
       </k-topbar>
     </header>
@@ -124,6 +125,12 @@ export default {
       }
 
       return menu;
+    },
+    indicator() {
+      return {
+        models: this.$store.state.content.models,
+        languages: this.$store.state.languages
+      };
     },
     searchTypes() {
       return {

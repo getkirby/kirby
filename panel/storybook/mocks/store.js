@@ -1,7 +1,8 @@
 
 export default {
   state: {
-
+    content: {},
+    languages: {}
   },
   dispatch(action, ...args) {
     console.log(`store.dispatch(${action}, ${args[0]})`);

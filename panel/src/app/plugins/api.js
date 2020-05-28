@@ -18,10 +18,8 @@ export default {
       return options;
     };
 
-    Api.config.onStart = (requestId, silent) => {
-      if (silent === false) {
-        store.dispatch("isLoading", true);
-      }
+    Api.config.onStart = (requestId) => {
+      store.dispatch("isLoading", true);
       Api.requests.push(requestId);
     };
 

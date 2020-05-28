@@ -1,7 +1,7 @@
 export default (config) => {
   return {
     running: 0,
-    async request(path, options, silent = false) {
+    async request(path, options) {
       // create options object
       options = Object.assign(options || {}, {
         credentials: "same-origin",
@@ -25,7 +25,7 @@ export default (config) => {
       // create a request id
       const id = path + "/" + JSON.stringify(options);
 
-      config.onStart(id, silent);
+      config.onStart(id);
       this.running++;
 
       // fetch the resquest's response
@@ -71,7 +71,7 @@ export default (config) => {
         throw e;
       }
     },
-    async get(path, query, options, silent = false) {
+    async get(path, query, options) {
       if (query) {
         path +=
           "?" +
@@ -88,11 +88,10 @@ export default (config) => {
           {
             method: "GET"
           }
-        ),
-        silent
+        )
       );
     },
-    async post(path, data, options, method = "POST", silent = false) {
+    async post(path, data, options, method = "POST") {
       return this.request(
         path,
         Object.assign(
@@ -101,15 +100,14 @@ export default (config) => {
             method: method,
             body: JSON.stringify(data)
           }
-        ),
-        silent
+        )
       );
     },
-    async patch(path, data, options, silent = false) {
-      return this.post(path, data, options, "PATCH", silent);
+    async patch(path, data, options) {
+      return this.post(path, data, options, "PATCH");
     },
-    async delete(path, data, options, silent = false) {
-      return this.post(path, data, options, "DELETE", silent);
+    async delete(path, data, options) {
+      return this.post(path, data, options, "DELETE");
     }
   }
 };
