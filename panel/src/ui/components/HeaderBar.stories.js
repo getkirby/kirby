@@ -27,6 +27,23 @@ export const singleOption = () => ({
   `,
 });
 
+export const singleOptionOnlyIcon = () => ({
+  computed: {
+    options() {
+      return [
+        { icon: "add", text: "Add", option: "add" },
+      ];
+    }
+  },
+  template: `
+    <k-header-bar
+      :options="options"
+      :options-text="false"
+      text="Pages"
+    />
+  `,
+});
+
 export const multipleOptions = () => ({
   computed: {
     options() {
@@ -44,7 +61,7 @@ export const multipleOptions = () => ({
   `,
 });
 
-export const optionsIconAndText = () => ({
+export const multipleOptionsIconAndText = () => ({
   computed: {
     options() {
       return [

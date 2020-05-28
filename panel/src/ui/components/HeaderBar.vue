@@ -63,7 +63,7 @@ export default {
     },
     optionsText: {
       type: [Boolean, String],
-      default: false
+      default: true
     },
     required: {
       type: Boolean,
