@@ -1,67 +1,84 @@
 export default {
-  timer: null,
   namespaced: true,
   state: {
-    type: null,
-    message: null,
-    details: null,
-    timeout: null
+    alerts: [],
+    dialog: null
   },
   mutations: {
-    SET(state, notification) {
-      state.type = notification.type;
-      state.message = notification.message;
-      state.details = notification.details;
-      state.timeout = notification.timeout;
+    ADD_ALERT(state, notification) {
+      state.alerts.push(notification);
     },
-    UNSET(state) {
-      state.type = null;
-      state.message = null;
-      state.details = null;
-      state.timeout = null;
+    REMOVE_ALERT(state, id) {
+      state.alerts = state.alerts.filter(alert => alert.id !== id);
+    },
+    SET_DIALOG(state, notification) {
+      state.dialog = notification;
+    },
+    UNSET_DIALOG(state) {
+      state.dialog = null;
     }
   },
   actions: {
-    close(context) {
-      clearTimeout(this.timer);
-      context.commit("UNSET");
-    },
-    open(context, payload) {
-      context.dispatch("close");
-      context.commit("SET", payload);
-
-      if (payload.timeout) {
-        this.timer = setTimeout(() => {
-          context.dispatch("close");
-        }, payload.timeout);
+    close(context, id) {
+      if (id) {
+        context.commit("REMOVE_ALERT", id);
+      } else {
+        context.commit("UNSET_DIALOG");
       }
     },
-    success(context, payload) {
+    send(context, [payload, defaults]) {
+      // shorthand
       if (typeof payload === "string") {
         payload = { message: payload };
       }
 
       // defaults
       payload = {
-        message: ":)",
+        id: Date.now(),
+        ...defaults,
         ...payload
       };
 
-      context.dispatch("open", {
-        type: "success",
-        timeout: 4000,
-        ...payload
-      });
-    },
-    error(context, payload) {
-      if (typeof payload === "string") {
-        payload = { message: payload };
+      // permanent
+      if (payload.permanent) {
+        delete payload.timeout;
       }
 
-      context.dispatch("open", {
+      // dialog with details
+      if (payload.details && Object.keys(payload.details).length) {
+        context.commit("SET_DIALOG", payload);
+
+      // alert
+      } else {
+        context.commit("ADD_ALERT", payload);
+
+        if (payload.timeout) {
+          setTimeout(() => {
+            context.commit("REMOVE_ALERT", payload.id);
+          }, payload.timeout);
+        }
+      }
+    },
+
+    /** Shortcuts for notification types */
+    error(context, payload) {
+      context.dispatch("send", [payload, {
         type: "error",
-        ...payload
-      });
+        permanent: true
+      }]);
+    },
+    info(context, payload) {
+      context.dispatch("send", [payload, {
+        type: "info",
+        timeout: 4000
+      }]);
+    },
+    success(context, payload) {
+      context.dispatch("send", [payload, {
+        type: "success",
+        message: ":)",
+        timeout: 4000
+      }]);
     }
   }
 };

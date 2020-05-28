@@ -1,12 +1,14 @@
+import Padding from "../../../storybook/theme/Padding.js";
 
 export default {
-  title: "Ui | Interaction / Notifications "
+  title: "Ui | Interaction / Alerts",
+  decorators: [Padding]
 };
 
 export const regular = () => ({
   data() {
     return {
-      notifications: []
+      alerts: []
     }
   },
   computed: {
@@ -51,39 +53,37 @@ export const regular = () => ({
   },
   methods: {
     onAdd() {
-      const notification = {
+      const alert = {
         ...this.pool[Math.floor(Math.random() * this.pool.length)],
         id: Date.now()
       };
-      this.notifications.push(notification);
+      this.alerts.push(alert);
 
       if (
-        notification.permanent !== true &&
-        notification.type !== "error"
+        alert.permanent !== true &&
+        alert.type !== "error"
       ) {
         setTimeout(() => {
-          this.onClose(notification.id);
+          this.onClose(alert.id);
         }, 2500);
       }
     },
     onClose(id) {
-      this.notifications = this.notifications.filter(notification => notification.id !== id);
+      this.alerts = this.alerts.filter(alert => alert.id !== id);
     }
   },
   template: `
-    <k-inside :registered="true">
-      <k-view class="py-6">
-        <k-notifications
-          :notifications="notifications"
-          @close="onClose"
-        />
-        <k-button
-          icon="wand"
-          text="Trigger new notification"
-          @click="onAdd"
-        />
-        <k-code-block :code="notifications" class="mt-8" />
-      </k-view>
-    </k-inside>
+    <div>
+      <k-alerts
+        :alerts="alerts"
+        @close="onClose"
+      />
+      <k-button
+        icon="wand"
+        text="Trigger new alert"
+        @click="onAdd"
+      />
+      <k-code-block :code="alerts" class="mt-8" />
+    </div>
   `
 });

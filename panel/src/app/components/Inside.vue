@@ -25,6 +25,7 @@
 
     <!-- Main View -->
     <main class="k-panel-view">
+      <k-notifications />
       <slot />
     </main>
 

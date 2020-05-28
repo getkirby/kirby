@@ -1,19 +1,19 @@
 <template>
   <portal>
     <transition-group
-      name="k-notifications"
+      name="k-alerts"
       tag="ul"
-      class="k-notifications"
+      class="k-alerts"
     >
       <li
-        v-for="notification in notifications"
-        :key="notification.id"
+        v-for="alert in alerts"
+        :key="alert.id"
       >
         <k-notification
-          v-bind="notification"
-          :class="getClasses(notification)"
-          @click="onClick(notification)"
-          @close="$emit('close', notification.id)"
+          v-bind="alert"
+          :class="getClasses(alert)"
+          @click="onClick(alert)"
+          @close="$emit('close', alert.id)"
         />
       </li>
     </transition-group>
@@ -23,7 +23,7 @@
 <script>
 export default {
   props: {
-    notifications: {
+    alerts: {
       type: Array,
       default() {
         return [];
@@ -31,7 +31,7 @@ export default {
     }
   },
   methods: {
-    getClasses(notification) {
+    getClasses(alert) {
       let classes = [
         "inline-flex",
         "rounded-sm",
@@ -39,16 +39,16 @@ export default {
         "text-left"
       ];
 
-      if (notification.click) {
+      if (alert.click) {
         classes.push("cursor-pointer");
       }
 
       return classes.join(" ");
     },
-    onClick(notification) {
-      if (notification.click) {
-        notification.click();
-        this.$emit('close', notification.id)
+    onClick(alert) {
+      if (alert.click) {
+        alert.click();
+        this.$emit('close', alert.id)
       }
     }
   }
@@ -56,7 +56,7 @@ export default {
 </script>
 
 <style lang="scss">
-.k-notifications {
+.k-alerts {
   position: fixed;
   top: .75rem;
   right: .75rem;
@@ -67,16 +67,16 @@ export default {
   }
   z-index: z-index(toolbar);
 }
-.k-notifications .k-notification {
+.k-alerts .k-notification {
   max-width: 20rem;
 }
 
-.k-notifications-enter-active,
-.k-notifications-leave-active {
+.k-alerts-enter-active,
+.k-alerts-leave-active {
   transition: opacity .25s;
 }
-.k-notifications-enter,
-.k-notifications-leave-to {
+.k-alerts-enter,
+.k-alerts-leave-to {
   opacity: 0;
 }
 </style>

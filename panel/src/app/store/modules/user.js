@@ -1,5 +1,5 @@
 import Vue from "vue";
-import Api from "@/api/api.js";
+import Api from "@/api/index.js";
 import router from "@/app/plugins/router.js";
 
 export default {

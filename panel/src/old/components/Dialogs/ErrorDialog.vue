@@ -74,32 +74,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.k-error-details {
-  background: $color-white;
-  display: block;
-  overflow: auto;
-  padding: 1rem;
-  font-size: $text-sm;
-  line-height: 1.25em;
-  margin-top: 0.75rem;
-}
-.k-error-details dt {
-  color: $color-negative-on-dark;
-  margin-bottom: 0.25rem;
-}
-.k-error-details dd {
-  overflow: hidden;
-  overflow-wrap: break-word;
-  text-overflow: ellipsis;
-}
-.k-error-details dd:not(:last-of-type) {
-  margin-bottom: 1.5em;
-}
-.k-error-details li:not(:last-child) {
-  border-bottom: 1px solid $color-background;
-  padding-bottom: 0.25rem;
-  margin-bottom: 0.25rem;
-}
-</style>
