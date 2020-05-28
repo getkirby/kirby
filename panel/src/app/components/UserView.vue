@@ -1,5 +1,8 @@
 <template>
-  <k-inside class="k-user-view">
+  <k-inside
+    class="k-user-view"
+    search="users"
+  >
     <k-user-profile
       :can-change-avatar="lock === false"
       :can-change-email="$permissions.changeEmail && lock === false"
