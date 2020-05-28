@@ -10,7 +10,7 @@
       v-bind="$props"
       theme="field"
       type="tags"
-      class="p-1"
+      class="px-1 pt-1 pb-0"
       v-on="$listeners"
     />
   </k-field>
@@ -52,3 +52,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.k-tags-field:not(:focus-within) .k-tags-input-element {
+  min-width: 0;
+}
+</style>

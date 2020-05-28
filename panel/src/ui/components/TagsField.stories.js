@@ -33,6 +33,7 @@ export const regular = () => ({
         :options="options"
         class="mb-8"
         label="Tags"
+        type="tags"
         @input="input"
       />
 

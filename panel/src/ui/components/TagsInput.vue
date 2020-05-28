@@ -1,5 +1,5 @@
 <template>
-  <div class="k-tags-input flex">
+  <div class="k-tags-input">
     <k-tags
       ref="tags"
       v-model="tags"
@@ -10,35 +10,37 @@
       @edit="onEdit"
       @blur="$refs.input.focus()"
       @navigate-next="$refs.input.focus()"
-    />
-
-    <span class="k-tags-input-element">
-      <k-autocomplete
-        ref="autocomplete"
-        v-bind="autocomplete"
-        @select="onSelect"
-        @leave="$refs.input.focus()"
-      >
-        <input
-          :id="id"
-          ref="input"
-          v-model.trim="typed"
-          :autofocus="autofocus"
-          :disabled="disabled || (max && tags.length >= max)"
-          :name="name"
-          autocomplete="off"
-          type="text"
-          class="text-sm p-1 bg-none"
-          @input="onType($event.target.value)"
-          @blur="onBlur"
-          @keydown.meta.s="onBlur"
-          @keydown.enter.exact="onConfirm"
-          @keydown.tab.exact="onConfirm"
-          @keydown.left.exact="onLeave"
-          @keydown.backspace.exact="onLeave"
-        >
-      </k-autocomplete>
-    </span>
+    >
+      <template v-slot:footer>
+        <span class="k-tags-input-element">
+          <k-autocomplete
+            ref="autocomplete"
+            v-bind="autocomplete"
+            @select="onSelect"
+            @leave="$refs.input.focus()"
+          >
+            <input
+              :id="id"
+              ref="input"
+              v-model.trim="typed"
+              :autofocus="autofocus"
+              :disabled="disabled || (max && tags.length >= max)"
+              :name="name"
+              autocomplete="off"
+              type="text"
+              class="text-sm p-1 bg-none"
+              @input="onType($event.target.value)"
+              @blur="onBlur"
+              @keydown.meta.s="onBlur"
+              @keydown.enter.exact="onConfirm"
+              @keydown.tab.exact="onConfirm"
+              @keydown.left.exact="onLeave"
+              @keydown.backspace.exact="onLeave"
+            >
+          </k-autocomplete>
+        </span>
+      </template>
+    </k-tags>
   </div>
 </template>
 
@@ -150,10 +152,7 @@ export default {
       this.$refs.input.select();
     },
     onInput() {
-      const tags = this.tags.map(tag => {
-        delete tag.icon;
-        return tag;
-      });
+      const tags = this.unsanitize(this.tags);
       this.$emit("input", tags);
     },
     onLeave(e) {
@@ -183,7 +182,7 @@ export default {
 
       let tags = this.$helper.input.options(value);
 
-      return tags.map(tag => {
+      return this.$helper.clone(tags).map(tag => {
         if (this.icon && this.icon.length > 0) {
           tag.icon = this.icon;
         }
@@ -193,22 +192,22 @@ export default {
     },
     select() {
       this.focus();
+    },
+    unsanitize(value) {
+      return this.$helper.clone(value).map(tag => {
+        delete tag.icon;
+        return tag;
+      });
     }
   }
 };
 </script>
 
 <style lang="scss">
-.k-tags-input {
-  flex-wrap: wrap;
-}
-.k-tags-input > .k-tags:not(:empty) {
-  margin-right: .2rem
-}
 .k-tags-input-element {
   flex-grow: 1;
   flex-basis: 0;
-  min-width: 0;
+  min-width: 20%;
 
   .k-tags-input:focus-within & {
     flex-basis: 4rem;

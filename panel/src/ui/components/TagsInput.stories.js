@@ -80,10 +80,28 @@ export const autofocus = () => ({
   `,
 });
 
-export const disabled = () => ({
+export const listLayout = () => ({
   ...regular(),
   template: `
     <div>
+      <k-headline class="mb-3">Input</k-headline>
+      <k-tags-input
+        v-model="value"
+        :options="options"
+        layout="list"
+        class="mb-6"
+        @input="input"
+      />
+
+      <k-headline class="mb-3">Value</k-headline>
+      <k-code-block :code="value" />
+    </div>
+  `,
+});
+
+export const disabled = () => ({
+  ...regular(),
+  template: `
       <k-headline class="mb-3">Input</k-headline>
       <k-tags-input
         v-model="value"
@@ -92,9 +110,5 @@ export const disabled = () => ({
         class="mb-6"
         @input="input"
       />
-
-      <k-headline class="mb-3">Value</k-headline>
-      <k-code-block :code="value" />
-    </div>
   `,
 });

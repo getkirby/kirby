@@ -23,6 +23,10 @@
     >
       {{ tag.text }}
     </k-tag>
+
+    <template v-slot:footer>
+      <slot name="footer" />
+    </template>
   </k-draggable>
 </template>
 
@@ -176,17 +180,18 @@ export default {
 </script>
 
 <style lang="scss">
-.k-tags:not([data-layout="list"]) > .k-tag + .k-tag {
-  margin-left: .2rem;
-}
-.k-tags[data-layout="list"] {
+.k-tags {
   flex-wrap: wrap;
 }
+.k-tags > * {
+  margin-bottom: .25rem;
+}
+.k-tags:not([data-layout="list"]) > *:not(:last-child) {
+  margin-right: .25rem;
+}
+
 .k-tags[data-layout="list"] > .k-tag {
   width: 100%;
-}
-.k-tags[data-layout="list"] > .k-tag + .k-tag {
-  margin-top: .2rem;
 }
 .k-tags .k-sortable-ghost {
   background: $color-focus;
