@@ -6,6 +6,10 @@ export default {
   },
   mutations: {
     ADD_ALERT(state, notification) {
+      state.alerts = state.alerts.filter(existing => {
+        return existing.type !== notification.type ||
+               existing.message !== notification.message;
+      });
       state.alerts.push(notification);
     },
     REMOVE_ALERT(state, id) {
