@@ -5,14 +5,14 @@
     class="k-notification flex flex-shrink-0 items-center bg-black text-white text-sm"
   >
     <p
-      class="flex-grow p-3"
+      class="flex-grow py-2 px-3"
       @click="$emit('click')"
     >
       {{ message }}
     </p>
     <k-button
       icon="cancel"
-      class="flex p-3"
+      class="flex py-2 px-3"
       @click="$emit('close')"
     />
   </div>
@@ -47,6 +47,9 @@ export default {
 .k-notification p {
   word-wrap: break-word;
   overflow: hidden;
-  line-height: 1.25em;
+  line-height: 1.35em;
+}
+.k-notification .k-button {
+  height: 2rem;
 }
 </style>

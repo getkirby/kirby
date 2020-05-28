@@ -1,21 +1,23 @@
 <template>
-  <transition-group
-    name="k-notifications"
-    tag="ul"
-    class="k-notifications"
-  >
-    <li
-      v-for="notification in notifications"
-      :key="notification.id"
+  <portal>
+    <transition-group
+      name="k-notifications"
+      tag="ul"
+      class="k-notifications"
     >
-      <k-notification
-        v-bind="notification"
-        :class="getClasses(notification)"
-        @click="onClick(notification)"
-        @close="$emit('close', notification.id)"
-      />
-    </li>
-  </transition-group>
+      <li
+        v-for="notification in notifications"
+        :key="notification.id"
+      >
+        <k-notification
+          v-bind="notification"
+          :class="getClasses(notification)"
+          @click="onClick(notification)"
+          @close="$emit('close', notification.id)"
+        />
+      </li>
+    </transition-group>
+  </portal>
 </template>
 
 <script>
@@ -33,6 +35,7 @@ export default {
       let classes = [
         "inline-flex",
         "rounded-sm",
+        "shadow-lg",
         "text-left"
       ];
 
@@ -54,24 +57,25 @@ export default {
 
 <style lang="scss">
 .k-notifications {
-  position: absolute;
-  top: 1rem;
-  right: 3rem;
+  position: fixed;
+  top: .75rem;
+  right: .75rem;
   text-align: right;
 
   li + li {
     margin-top: .5rem;
   }
+  z-index: z-index(toolbar);
 }
 .k-notifications .k-notification {
   max-width: 20rem;
 }
 
 .k-notifications-enter-active {
-  transition: opacity .35s;
+  transition: opacity .25s;
 }
 .k-notifications-leave-active {
-  transition: opacity 1s;
+  transition: opacity .25s;
 }
 .k-notifications-enter,
 .k-notifications-leave-to {
