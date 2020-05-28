@@ -90,12 +90,18 @@ export default {
   },
   computed: {
     breadcrumb() {
+      const role = this.roles.find(role => role.name === this.role);
+
+      if (!role) {
+        return [];
+      }
+
       return [
         {
-          icon: "users",
-          text: this.$t("view.users")
+          label: this.$t("role") + ": " + role.title,
+          link: "/users/" + role.name
         }
-      ]
+      ];
     },
     roleFilters() {
       let options = [
@@ -111,6 +117,7 @@ export default {
       this.roles.forEach(role => {
         options.push({
           current: this.role === role.name,
+          color: this.role === role.name ? "blue-light" : "white",
           icon: "bolt",
           id: role.name,
           text: role.title,
@@ -147,9 +154,6 @@ export default {
   },
   methods: {
     onOption(option, user) {
-
-      console.log(user);
-
       this.$refs[option + "Dialog"].open(user.id);
     },
     onSuccess() {

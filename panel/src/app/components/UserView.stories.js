@@ -5,6 +5,12 @@ export default {
 export const regular = () => ({
   data() {
     return {
+      breadcrumb: [
+        {
+          label: "Ada Lovelace",
+          link: "/users/ada",
+        }
+      ],
       columns: [
         {
           width: "1/1",
@@ -59,6 +65,7 @@ export const regular = () => ({
   },
   template: `
     <k-user-view
+      :breadcrumb="breadcrumb"
       :columns="columns"
       :lock="lock"
       :options="options"

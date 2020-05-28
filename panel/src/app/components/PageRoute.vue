@@ -43,6 +43,7 @@ export default {
       this.page = await this.$api.pages.get(this.id);
       this.original = this.$helper.clone(this.page.content);
       this.view = {
+        breadcrumb: this.$model.pages.breadcrumb(this.page),
         changes: false,
         columns: this.columns(this.page.blueprint.tabs, this.tab),
         id: this.id,

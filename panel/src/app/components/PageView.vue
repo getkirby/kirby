@@ -1,5 +1,9 @@
 <template>
-  <k-inside class="k-page-view">
+  <k-inside
+    :breadcrumb="breadcrumb"
+    view="site"
+    class="k-page-view"
+  >
     <k-model-view
       v-bind="$props"
       @option="onOption"

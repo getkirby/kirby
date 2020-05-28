@@ -16,7 +16,17 @@ export const regular = () => ({
     }
   },
   template: `
-    <k-users-view />
+    <k-users-view :roles="roles" />
   `
+});
+
+export const roleFilter = () => ({
+  extends: regular(),
+  template: `
+    <k-users-view
+      :roles="roles"
+      role="editor"
+    />
+  `,
 });
 

@@ -80,7 +80,7 @@ export default {
     success(context, payload) {
       context.dispatch("send", [payload, {
         type: "success",
-        message: ":)",
+        message: "👍",
         timeout: 4000
       }]);
     }

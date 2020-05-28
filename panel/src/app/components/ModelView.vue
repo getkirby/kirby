@@ -85,6 +85,12 @@ export default {
     }
   },
   props: {
+    breadcrumb: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     changes: {
       type: Boolean,
       default: false

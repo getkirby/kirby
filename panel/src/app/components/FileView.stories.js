@@ -13,6 +13,20 @@ const altField = {
 export const regular = () => ({
   data() {
     return {
+      breadcrumb: [
+        {
+          label: "Photography",
+          link: "/pages/photography"
+        },
+        {
+          label: "Animals",
+          link: "/pages/photography+animals"
+        },
+        {
+          label: "free-wheely.jpg",
+          link: "/pages/photography+animals/files/free-wheely.jpg"
+        }
+      ],
       columns: [
         {
           width: "1/1",
@@ -44,10 +58,12 @@ export const regular = () => ({
         replace: true,
         delete: true
       }),
+      tab: "main",
       tabs: [
         { name: "main", label: "Main" },
         { name: "seo", label: "SEO" },
       ],
+      view: "site"
     };
   },
   computed: {
@@ -57,12 +73,14 @@ export const regular = () => ({
   },
   template: `
     <k-file-view
+      :breadcrumb="breadcrumb"
       :columns="columns"
       :lock="lock"
       :file="file"
       :options="options"
+      :tab="tab"
       :tabs="tabs"
-      tab="main"
+      :view="view"
     />
   `
 });
@@ -76,5 +94,38 @@ export const locked = () => ({
         email: "ada@getkirby.com",
       };
     },
+  },
+});
+
+export const siteFile = () => ({
+  extends: regular(),
+  data() {
+    return {
+      breadcrumb: [
+        {
+          label: "free-wheely.jpg",
+          link: "/site/files/free-wheely.jpg"
+        }
+      ]
+    };
+  }
+});
+
+export const userFile = () => ({
+  extends: regular(),
+  data() {
+    return {
+      breadcrumb: [
+        {
+          label: "Ada Lovelace",
+          link: "/users/ada"
+        },
+        {
+          label: "free-wheely.jpg",
+          link: "/users/ada/files/free-wheely.jpg",
+        },
+      ],
+      view: "users"
+    };
   },
 });

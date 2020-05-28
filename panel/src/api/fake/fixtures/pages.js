@@ -44,7 +44,12 @@ export default [
     hasFiles: true,
     num: 1,
     parentId: "photography",
-    parents: [],
+    parents: [
+      {
+        title: "Photography",
+        id: "photography"
+      }
+    ],
     title: "Animals",
   }),
   page("notes", {
@@ -56,12 +61,18 @@ export default [
   }),
   page("notes+through-the-desert", {
     blueprint: blueprint("note"),
-    num: 20121212,
-    title: "Through the desert",
     content: {
       text: "Hello world",
       date: "2012-12-12",
       tags: ["nature", "landscape", "desert"],
-    }
+    },
+    num: 20121212,
+    parents: [
+      {
+        title: "Notes",
+        id: "notes"
+      }
+    ],
+    title: "Through the desert",
   }),
 ];

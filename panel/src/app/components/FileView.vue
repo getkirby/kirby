@@ -1,5 +1,9 @@
 <template>
-  <k-inside class="k-file-view">
+  <k-inside
+    :breadcrumb="breadcrumb"
+    :view="view"
+    class="k-file-view"
+  >
     <k-file-preview v-bind="preview" />
     <k-model-view
       v-bind="$props"
@@ -45,6 +49,10 @@ export default {
       default() {
         return {};
       }
+    },
+    view: {
+      type: String,
+      default: "site"
     }
   },
   computed: {

@@ -5,6 +5,16 @@ export default {
 export const regular = () => ({
   data() {
     return {
+      breadcrumb: [
+        {
+          label: "Notes",
+          link: "/pages/notes"
+        },
+        {
+          label: "Through the desert",
+          link: "/pages/notes+through-the-desert"
+        }
+      ],
       columns: [
         {
           width: "2/3",
@@ -79,6 +89,7 @@ export const regular = () => ({
   },
   template: `
     <k-page-view
+      :breadcrumb="breadcrumb"
       :columns="columns"
       :id="id"
       :lock="lock"

@@ -1,7 +1,9 @@
 <template>
   <k-inside
+    :breadcrumb="breadcrumb"
     class="k-user-view"
     search="users"
+    view="users"
   >
     <k-user-profile
       :can-change-avatar="lock === false"

@@ -8,7 +8,10 @@
     <!-- Topbar -->
     <header class="k-panel-header">
       <k-topbar
-        :breadcrumb="breadcrumb"
+        :breadcrumb="[
+          viewCrumb,
+          ...breadcrumb
+        ]"
         :menu="menu"
         :loading="loading"
         @search="onSearch"
@@ -45,8 +48,10 @@
 export default {
   props: {
     breadcrumb: {
-      type: [Boolean, Array],
-      default: false
+      type: Array,
+      default() {
+        return []
+      }
     },
     defaultTranslation: {
       type: Boolean,
@@ -68,7 +73,8 @@ export default {
       default: false
     },
     view: {
-      type: String
+      type: String,
+      default: "site"
     }
   },
   created() {
@@ -78,41 +84,14 @@ export default {
     this.$events.$off("keydown.cmd.shift.f", this.onSearch);
   },
   computed: {
+    indicator() {
+      return {
+        models: this.$store.state.content.models,
+        languages: this.$store.state.languages
+      };
+    },
     menu() {
-      let menu = [
-        {
-          id: "site",
-          link: "site",
-          icon: "page",
-          text: "Site"
-        },
-        {
-          id: "users",
-          link: "users",
-          icon: "users",
-          text: "Users"
-        },
-        {
-          id: "settings",
-          link: "settings",
-          icon: "settings",
-          text: "Settings"
-        },
-        "-",
-        {
-          id: "account",
-          link: "account",
-          icon: "account",
-          text: "Your account"
-        },
-        "-",
-        {
-          id: "logout",
-          link: "logout",
-          icon: "logout",
-          text: "Logout"
-        },
-      ];
+      let menu = this.views;
 
       if (this.view) {
         menu = menu.map(item => {
@@ -126,12 +105,6 @@ export default {
       }
 
       return menu;
-    },
-    indicator() {
-      return {
-        models: this.$store.state.content.models,
-        languages: this.$store.state.languages
-      };
     },
     searchTypes() {
       return {
@@ -163,6 +136,46 @@ export default {
           }
         }
       };
+    },
+    views() {
+      // TODO: replace with views from store
+      return [
+        {
+          id: "site",
+          link: "site",
+          icon: "home",
+          text: this.$t("view.site"),
+        },
+        {
+          id: "users",
+          link: "users",
+          icon: "users",
+          text: this.$t("view.users"),
+        },
+        {
+          id: "settings",
+          link: "settings",
+          icon: "settings",
+          text: this.$t("view.settings")
+        },
+        "-",
+        {
+          id: "account",
+          link: "account",
+          icon: "account",
+          text: this.$t("view.account")
+        },
+        "-",
+        {
+          id: "logout",
+          link: "logout",
+          icon: "logout",
+          text: this.$t("logout")
+        },
+      ];
+    },
+    viewCrumb() {
+      return this.views.find(view => view.id === this.view) || this.views[0];
     }
   },
   methods: {

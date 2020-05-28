@@ -1,5 +1,8 @@
 <template>
-  <k-inside class="k-settings-view">
+  <k-inside
+    class="k-settings-view"
+    view="settings"
+  >
     <k-view>
       <k-header>
         {{ $t('view.settings') }}

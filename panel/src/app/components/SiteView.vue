@@ -1,6 +1,5 @@
 <template>
   <k-inside
-    :breadcrumb="breadcrumb"
     class="k-site-view"
     view="site"
   >
@@ -44,16 +43,6 @@ export default {
           title: this.$t("view.site"),
         }
       }
-    }
-  },
-  computed: {
-    breadcrumb() {
-      return [
-        {
-          icon: "home",
-          text: "Site"
-        }
-      ]
     }
   },
   methods: {
