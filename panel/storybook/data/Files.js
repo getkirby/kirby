@@ -12,7 +12,7 @@ export default (limit, start = 1) => {
       { icon: "title", text: "Rename", click: "rename" },
       { icon: "upload", text: "Replace", click: "replace" },
       "-",
-      { icon: "trash", text: "Delete", click: "delete" },
+      { icon: "trash", text: "Delete", click: "remove" },
     ];
 
 
@@ -20,4 +20,3 @@ export default (limit, start = 1) => {
   });
 
 };
-

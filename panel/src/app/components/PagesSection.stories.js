@@ -18,13 +18,13 @@ export const list = () => ({
       return 0;
     },
     empty() {
-      return null;
+      return;
     },
     help() {
       return false;
     },
     icon() {
-      return {};
+      return;
     },
     limit() {
       return 10;
@@ -37,7 +37,6 @@ export const list = () => ({
     },
     pages() {
       return async ({ page, limit }) => {
-
         await new Promise(r => setTimeout(r, this.delay));
 
         return {

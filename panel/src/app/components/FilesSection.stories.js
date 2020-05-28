@@ -18,7 +18,7 @@ export const list = () => ({
       return 0;
     },
     empty() {
-      return null;
+      return;
     },
     help() {
       return false;
@@ -33,7 +33,7 @@ export const list = () => ({
       return 1;
     },
     preview() {
-      return {};
+      return;
     },
     files() {
       return async ({ page, limit }) => {

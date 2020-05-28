@@ -70,7 +70,7 @@ export const multiple = () => ({
     options() {
       return [
         { icon: "edit", text: "Edit", click: "edit" },
-        { icon: "trash", text: "Delete", click: "delete" }
+        { icon: "trash", text: "Delete", click: "remove" }
       ];
     }
   },

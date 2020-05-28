@@ -22,7 +22,7 @@ export default (limit, start = 1) => {
       { icon: "url", text: "Change URL", click: "changeUrl" },
       { icon: "preview", text: "Change status", click: "changeStatus" },
       "-",
-      { icon: "trash", text: "Delete", click: "delete" },
+      { icon: "trash", text: "Delete", click: "remove" },
     ];
 
 
@@ -30,4 +30,3 @@ export default (limit, start = 1) => {
   });
 
 };
-

@@ -2,7 +2,7 @@
   <k-section
     v-bind="$props"
     :options="options"
-    type="pages"
+    :type="type"
     @option="onSectionOption"
   >
     <k-async-collection
@@ -24,7 +24,8 @@
       @flag="onFlag"
       @option="onItemOption"
     />
-    <slot />
+
+    <slot name="footer" />
   </k-section>
 </template>
 
@@ -52,28 +53,18 @@ export default {
       type: Number,
       default: 1,
     },
-    sortable: Boolean
+    sortable: Boolean,
+    type: String
   },
   computed: {
-    defaultEmpty() {
-      return {};
-    },
     emptyOptions() {
-      if (this.empty) {
-        if (typeof this.empty === "string") {
-          return {
-            ...this.defaultEmpty,
-            text: this.empty
-          };
-        }
-
+      if (typeof this.empty === "string") {
         return {
-          ...this.defaultEmpty,
-          ...this.empty
+          text: this.empty
         };
       }
 
-      return this.defaultEmpty;
+      return this.empty;
     },
     listeners() {
       if (this.add) {
@@ -83,9 +74,6 @@ export default {
       }
 
       return {};
-    },
-    type() {
-      return "model";
     }
   },
   methods: {
@@ -96,16 +84,11 @@ export default {
     onFlag(item, itemIndex) {
       this.$emit("flag", item, itemIndex);
     },
-    onItemOption(option, page, pageIndex) {
-      this.$emit("option", option, page, pageIndex);
+    onItemOption(option, model, modelIndex) {
+      this.$emit("option", option, model, modelIndex);
     },
     onSectionOption(option) {
       this.$emit("option", option);
-
-      switch (option) {
-        case "add":
-          return this.$emit("add");
-      }
     }
   }
 };

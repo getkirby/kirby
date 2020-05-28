@@ -15,7 +15,7 @@ export default (limit, start = 1) => {
       { icon: "key", text: "Change password", click: "password" },
       { icon: "globe", text: "Change language", click: "language" },
       "-",
-      { icon: "trash", text: "Delete this user", click: "delete" },
+      { icon: "trash", text: "Delete this user", click: "remove" },
     ];
 
 
