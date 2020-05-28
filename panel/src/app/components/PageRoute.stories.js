@@ -4,6 +4,6 @@ export default {
 
 export const regular = () => ({
   template: `
-    <k-page-route />
+    <k-page-route id="notes+through-the-desert" />
   `
 });

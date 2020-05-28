@@ -36,6 +36,7 @@
       :columns="columns"
       :value="value"
       v-on="$listeners"
+      @submit="$emit('save', $event)"
     />
 
     <slot name="footer" />

@@ -2,29 +2,28 @@
   <k-inside class="k-page-view">
     <k-model-view
       v-bind="$props"
-      :rename="true"
-      :title="page.title"
       @option="onOption"
       @rename="onOption('rename')"
+      v-on="$listeners"
     >
       <template v-slot:options>
         <k-button
+          v-if="preview !== false"
           :responsive="true"
+          :link="preview"
           :text="$t('open')"
           icon="open"
           @click="onOpen"
         />
         <k-button
-          :disabled="lock !== false"
-          :responsive="true"
-          v-bind="statusBtn"
-          @click="onOption('status')"
+          v-if="status !== false"
+          v-bind="statusButton"
           class="k-status-button"
+          @click="onOption('status')"
         />
         <k-button
-          :disabled="lock !== false"
-          :responsive="true"
-          v-bind="templateBtn"
+          v-if="template !== false"
+          v-bind="templateButton"
           @click="onOption('template')"
         />
       </template>
@@ -33,27 +32,27 @@
     <!-- Dialogs -->
     <k-page-duplicate-dialog
       ref="duplicateDialog"
-      @success="$emit('duplicate')"
+      @success="$emit('duplicate', $event)"
     />
     <k-page-remove-dialog
       ref="removeDialog"
-      @success="$emit('remove')"
+      @success="$emit('delete')"
     />
     <k-page-rename-dialog
       ref="renameDialog"
-      @success="$emit('update')"
+      @success="$emit('changeTitle', $event)"
     />
     <k-page-slug-dialog
       ref="slugDialog"
-      @success="$emit('slug', $event)"
+      @success="$emit('changeSlug', $event)"
     />
     <k-page-status-dialog
       ref="statusDialog"
-      @success="$emit('update')"
+      @success="$emit('changeStatus', $event)"
     />
     <k-page-template-dialog
       ref="templateDialog"
-      @success="$emit('update')"
+      @success="$emit('changeTemplate', $event)"
     />
   </k-inside>
 </template>
@@ -64,47 +63,63 @@ import ModelView from "./ModelView.vue";
 export default {
   props: {
     ...ModelView.props,
-    page: {
-      type: Object,
-      default() {
-        return {};
-      }
+    id: {
+      type: String,
+      required: true
+    },
+    preview: {
+      type: [Boolean, String],
+      default: false
+    },
+    status: {
+      type: [Boolean, Object],
+      default: false,
+    },
+    template: {
+      type: [Boolean, String],
+      default: false
     }
   },
   computed: {
-    statusBtn() {
-      const status = this.page.blueprint.status[this.page.status];
-      const text   = status ? status.text : this.page.status;
-
+    statusButton() {
       return {
-        text: text,
-        tooltip: `${this.$t("page.status")}: ${text}`,
-        icon: {
-          type: status.icon,
-          color: status.color,
-          size: "small"
-        }
+        ...this.status,
+        responsive: true,
+        disabled: this.isDisabledOption("status", this.status.disabled || false),
       };
     },
-    templateBtn() {
-      const text = this.page.blueprint.title || this.page.template;
-
+    templateButton() {
       return {
-        text: text,
-        tooltip: `${this.$t("template")}: ${text}`,
+        disabled: this.isDisabledOption("template"),
         icon: {
-          type: 'template',
-          size: 'small'
+          type: "template",
+          size: "small"
         },
+        responsive: true,
+        text: this.template,
+        tooltip: `${this.$t("template")}: ${this.template}`,
       };
     }
   },
   methods: {
+    isDisabledOption(name, fallback = false) {
+      let option = this.options.filter(option => option.click === name)[0];
+
+      if (!option || option.disabled === true) {
+        return true;
+      }
+
+      if (this.lock !== false) {
+        return true;
+      }
+
+      return fallback;
+    },
     onOpen() {
 
     },
     onOption(option) {
-      this.$refs[option + "Dialog"].open(this.page.id);
+      this.$refs[option + "Dialog"].open(this.id);
     }
   }
 };

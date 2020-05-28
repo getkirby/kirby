@@ -141,6 +141,11 @@ export default (Vue, store) => ({
     const page = await Vue.$api.get(url, { select: "options" });
     return this.dropdown(page.options, view);
   },
+  update(id, data) {
+    const page = Vue.$api.pages.update(id, data);
+    this.onUpdate("update", page);
+    return page;
+  },
   url(id, path) {
     let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");
 
@@ -148,5 +153,24 @@ export default (Vue, store) => ({
       url += "/" + path;
     }
     return url;
+  },
+  statusIcon(status) {
+    return this.statusIcons()[status];
+  },
+  statusIcons() {
+    return {
+      draft: {
+        type: "circle-outline",
+        color: "red-light",
+      },
+      unlisted: {
+        type: "circle-half",
+        color: "blue-light",
+      },
+      listed: {
+        type: "circle",
+        color: "green-light",
+      }
+    };
   }
 });

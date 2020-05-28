@@ -1,5 +1,3 @@
-import fixtures from "@/api/fake/fixtures/pages.js"
-
 export default {
   title: "App | Views / Page"
 };
@@ -17,8 +15,8 @@ export const regular = () => ({
                 text: {
                   label: "Text",
                   type: "textarea",
-                  size: "medium"
-                }
+                  size: "large",
+                },
               },
             },
           },
@@ -29,32 +27,49 @@ export const regular = () => ({
             fields: {
               type: "fields",
               fields: {
-                name: {
-                  label: "Location",
-                  type: "text",
+                date: {
+                  label: "Date",
+                  type: "date",
                 },
-                email: {
-                  label: "Copyright",
-                  type: "text",
-                }
+                tags: {
+                  label: "Tags",
+                  type: "tags",
+                },
               },
             },
           },
         },
       ],
+      id: "notes+through-the-desert",
       options: this.$model.pages.dropdown({
         changeTitle: true,
         duplicate: true,
         changeSlug: true,
         changeStatus: true,
         changeTemplate: false,
-        delete: false
+        delete: true,
       }),
-      page: fixtures[0],
+      preview: "https://demo.getkirby.com/notes/through-the-desert",
+      status: {
+        text: "Published",
+        tooltip: "Published",
+        icon: {
+          type: "circle",
+          color: "green-light",
+          size: "small",
+        },
+      },
       tabs: [
-        { name: "main", label: "Main" },
-        { name: "seo", label: "SEO" },
+        { icon: "text", name: "main", label: "Content" },
+        { icon: "search", name: "seo", label: "SEO" },
       ],
+      template: "Article",
+      title: "Through the desert",
+      value: {
+        text: "Hello world",
+        date: "2012-12-12",
+        tags: ["travelling", "nature", "desert"]
+      }
     };
   },
   computed: {
@@ -65,10 +80,16 @@ export const regular = () => ({
   template: `
     <k-page-view
       :columns="columns"
+      :id="id"
       :lock="lock"
       :options="options"
-      :page="page"
+      :preview="preview"
+      :rename="true"
+      :status="status"
       :tabs="tabs"
+      :template="template"
+      :title="title"
+      :value="value"
       tab="main"
     />
   `

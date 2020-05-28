@@ -284,7 +284,9 @@ new Server({
       return schema.pages.where({ parentId: request.params.id });
     });
     this.patch("pages/:id", (schema, request) => {
-      return updatePage(schema, request);
+      return schema.pages
+        .find(request.params.id)
+        .update({ content: requestValues(request) });
     });
     this.patch("pages/:id/slug", (schema, request) => {
       throw "Not implemented yet";

@@ -1,76 +1,67 @@
-const options = (merge) => {
-  return {
-    changeSlug: true,
-    changeStatus: true,
-    changeTemplate: true,
-    changeTitle: true,
-    delete: true,
-    duplicate: true,
-    preview: true,
-    ...merge
-  };
+import blueprints from "./blueprints.js";
+
+const blueprint = (name) => {
+  return blueprints.filter(blueprint => blueprint.name === name)[0] || blueprints[0];
 };
 
-const blueprint = (merge) => {
+const page = (id, merge) => {
+  const slug = id.split("+").pop();
+  const blueprint = merge.blueprint || blueprint("default");
+
   return {
-    options: options(),
-    num: "default",
-    status: {
-      draft: {
-        text: "Draft",
-        icon: "circle-outline",
-        color: "red-light",
-      },
-      unlisted: {
-        text: "Unlisted",
-        icon: "circle-half",
-        color: "blue-light",
-      },
-      listed: {
-        text: "Listed",
-        icon: "circle",
-        color: "green-light",
-      },
-    },
-    ...merge
+    id: id,
+    blueprints: [],
+    childIds: [],
+    errors: [],
+    hasChildren: false,
+    hasFiles: false,
+    num: null,
+    options: blueprint.options,
+    parents: [],
+    previewUrl: "https://demo.getkirby.com/" + id,
+    slug: slug,
+    status: "listed",
+    template: blueprint.name,
+    title: slug,
+    ...merge,
+    blueprint: blueprint
   };
-};
+}
 
 export default [
-  {
-    id: "photography",
-    blueprintId: "pages/photography",
-    blueprints: [],
-    /** TODO: do this smarter/dynamic? */
-    blueprint: blueprint({ title: "Photography" }),
+  page("photography", {
+    blueprint: blueprint("photography"),
     childIds: ["photography+animals"],
-    errors: [],
     hasChildren: true,
-    hasFiles: false,
     num: 1,
-    options: options(),
-    parents: [],
-    slug: "photography",
-    status: "listed",
-    template: "photography",
     title: "Photography",
-  },
-  {
-    id: "photography+animals",
-    blueprintId: "pages/album",
+  }),
+  page("photography+animals", {
     blueprints: [],
-    blueprint: blueprint({ title: "Album" }),
+    blueprint: blueprint("album"),
     errors: [],
     fileIds: ["pages/photography+animals/free-wheely.jpg"],
-    hasChildren: true,
-    hasFiles: false,
+    hasFiles: true,
     num: 1,
-    options: options(),
     parentId: "photography",
     parents: [],
-    slug: "animals",
-    status: "listed",
-    template: "album",
     title: "Animals",
-  },
+  }),
+  page("notes", {
+    blueprint: blueprint("notes"),
+    childIds: ["notes+through-the-desert"],
+    hasChildren: true,
+    num: 2,
+    title: "Notes",
+  }),
+  page("notes+through-the-desert", {
+    blueprint: blueprint("note"),
+    num: 20121212,
+    title: "Through the desert",
+    content: {
+      text: "Hello world",
+      date: "2012-12-12",
+      tags: ["nature", "landscape", "desert"],
+    }
+  }),
 ];
