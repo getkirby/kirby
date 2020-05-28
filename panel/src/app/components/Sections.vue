@@ -17,6 +17,7 @@
               v-if="sectionExists(section.type)"
               v-bind="section"
               :label="label(section, sectionName)"
+              :lock="lock"
               :value="model"
               v-on="listeners"
             />
@@ -35,6 +36,10 @@ export default {
   inheritAttrs: false,
   props: {
     columns: Array,
+    lock: {
+      type: [Boolean, Object],
+      default: false,
+    },
     value: {
       type: Object,
       default() {

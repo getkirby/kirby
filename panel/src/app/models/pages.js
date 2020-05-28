@@ -141,8 +141,8 @@ export default (Vue, store) => ({
     const page = await Vue.$api.get(url, { select: "options" });
     return this.dropdown(page.options, view);
   },
-  update(id, data) {
-    const page = Vue.$api.pages.update(id, data);
+  async update(id, data) {
+    const page = await Vue.$api.pages.update(id, data);
     this.onUpdate("update", page);
     return page;
   },

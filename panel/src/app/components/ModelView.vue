@@ -1,5 +1,7 @@
 <template>
-  <k-view class="pb-24">
+  <k-view class="pb-24" @keydown.meta.s.native.prevent="$emit('save', value)">
+
+    <!-- header -->
     <k-header
       :editable="rename && lock === false"
       :tab="tab"
@@ -32,15 +34,20 @@
         <k-prev-next :prev="prev" :next="next" />
       </template>
     </k-header>
+
+    <!-- columns -->
     <k-sections
       :columns="columns"
+      :lock="lock"
       :value="value"
       v-on="$listeners"
-      @submit="$emit('save', $event)"
+      @submit="$emit('save', value)"
     />
 
+    <!-- footer -->
     <slot name="footer" />
 
+    <!-- form buttons -->
     <portal>
       <k-form-buttons
         v-if="unlocked"

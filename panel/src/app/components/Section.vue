@@ -32,6 +32,10 @@ export default {
       type: [Boolean, String],
       default: false,
     },
+    lock: {
+      type: [Boolean, Object],
+      default: false,
+    },
     options: {
       type: [Boolean, Array]
     },

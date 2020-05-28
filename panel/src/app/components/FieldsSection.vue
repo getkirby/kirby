@@ -6,7 +6,7 @@
     <k-form
       :fields="fields"
       :value="value"
-      :disabled="disabled"
+      :disabled="disabled || lock !== false"
       v-on="$listeners"
     />
   </k-section>
