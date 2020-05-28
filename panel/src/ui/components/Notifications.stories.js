@@ -25,12 +25,16 @@ export const regular = () => ({
           message: "File uploaded"
         },
         {
-          type: "error",
+          type: "info",
           message: 'The status of "album" cannot be changed'
         },
         {
           type: "error",
           message: 'Cannot connect to API'
+        },
+        {
+          type: "error",
+          message: 'Error: in line 89'
         },
         {
           type: "info",
@@ -59,7 +63,7 @@ export const regular = () => ({
       ) {
         setTimeout(() => {
           this.onClose(notification.id);
-        }, 5000);
+        }, 2500);
       }
     },
     onClose(id) {

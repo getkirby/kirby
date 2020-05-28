@@ -19,9 +19,7 @@ export const regular = () => ({
 });
 
 export const error = () => ({
-  methods: {
-    onClose: action("close")
-  },
+  extends: regular(),
   template: `
     <k-notification
       message="An error message"
@@ -32,13 +30,22 @@ export const error = () => ({
 });
 
 export const success = () => ({
-  methods: {
-    onClose: action("close")
-  },
+  extends: regular(),
   template: `
     <k-notification
       message="A success message"
       type="success"
+      @close="onClose"
+    />
+  `,
+});
+
+export const info = () => ({
+  extends: regular(),
+  template: `
+    <k-notification
+      message="Quick info"
+      type="info"
       @close="onClose"
     />
   `,

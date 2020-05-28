@@ -268,7 +268,8 @@ export default {
   border-top-right-radius: $rounded-sm;
   margin-top: -3px;
 }
-.k-dialog .k-dialog-notification .k-button {
+.k-dialog .k-dialog-notification .k-button,
+.k-drawer .k-drawer-notification .k-button {
   height: 2.5rem;
 }
 

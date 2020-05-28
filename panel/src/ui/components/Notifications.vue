@@ -71,9 +71,7 @@ export default {
   max-width: 20rem;
 }
 
-.k-notifications-enter-active {
-  transition: opacity .25s;
-}
+.k-notifications-enter-active,
 .k-notifications-leave-active {
   transition: opacity .25s;
 }
