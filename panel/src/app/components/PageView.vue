@@ -13,7 +13,6 @@
           :link="preview"
           :text="$t('open')"
           icon="open"
-          @click="onOpen"
         />
         <k-button
           v-if="status !== false"
@@ -114,9 +113,6 @@ export default {
       }
 
       return fallback;
-    },
-    onOpen() {
-
     },
     onOption(option) {
       this.$refs[option + "Dialog"].open(this.id);
