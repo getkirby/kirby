@@ -16,7 +16,8 @@ export default (Vue, store) => ({
       await store.dispatch("user/email", email);
     }
 
-    this.onUpdate("changeEmail", user);
+    Vue.$events.$emit("user.changeEmail", user);
+    store.dispatch("notification/success");
     return user;
   },
   async changeLanguage(id, language) {
@@ -27,7 +28,8 @@ export default (Vue, store) => ({
       await store.dispatch("user/language", language);
     }
 
-    this.onUpdate("changeLanguage", user);
+    Vue.$events.$emit("user.changeLanguage", user);
+    store.dispatch("notification/success");
     return user;
   },
   async changeName(id, name) {
@@ -38,12 +40,14 @@ export default (Vue, store) => ({
       await store.dispatch("user/name", name);
     }
 
-    this.onUpdate("changeName", user);
+    Vue.$events.$emit("user.changeName", user);
+    store.dispatch("notification/success");
     return user;
   },
   async changePassword(id, password) {
     const user = await Vue.$api.users.changePassword(id, password);
-    this.onUpdate("changePassword", user);
+    Vue.$events.$emit("user.changePassword", user);
+    store.dispatch("notification/success");
     return user;
   },
   async changeRole(id, role) {
@@ -54,20 +58,25 @@ export default (Vue, store) => ({
       await store.dispatch("user/load");
     }
 
-    this.onUpdate("changeRole", user);
+    Vue.$events.$emit("user.changeRole", user);
+    store.dispatch("notification/success");
     return user;
   },
   async create(values) {
     const user = await Vue.$api.users.create(values);
-    this.onUpdate("create", user);
+    Vue.$events.$emit("user.create", user);
+    store.dispatch("notification/success");
     return user;
   },
   async delete(id) {
     // send API request to delete user
     await Vue.$api.users.delete(id);
+
     // remove data from content store
     await store.dispatch("content/remove", "users/" + id);
-    this.onUpdate("delete", id);
+
+    Vue.$events.$emit("user.delete", id);
+    store.dispatch("notification/success");
   },
   dropdown(options = {}) {
     let dropdown = [];
@@ -123,10 +132,7 @@ export default (Vue, store) => ({
   link(id, path) {
     return "/" + this.url(id, path);
   },
-  onUpdate(event, data) {
-    Vue.$events.$emit("user." + event, data);
-    store.dispatch("notification/success");
-  },
+
   async options(id) {
     const url  = this.url(id);
     const user = await Vue.$api.get(url, { select: "options" });

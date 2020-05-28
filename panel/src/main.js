@@ -35,7 +35,7 @@ new Vue({
     });
 
     // initialize content store
-    this.$store.dispatch("content/init");
+    this.$store.dispatch("content/load");
   },
   render: h => {
     return h(Panel);

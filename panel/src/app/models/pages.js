@@ -19,32 +19,37 @@ export default (Vue, store) => ({
     const page = await Vue.$api.pages.changeSlug(id, slug);
 
     // move in content store
-    await store.dispatch("content/move", [
-      "pages/" + id,
-      "pages/" + page.id
-    ]);
+    await store.dispatch("content/move", {
+      from: "pages/" + id,
+      to: "pages/" + page.id
+    });
 
-    this.onUpdate("changeSlug", page);
+    Vue.$events.$emit("page.changeSlug", page);
+    store.dispatch("notification/success");
     return page;
   },
   async changeStatus(id, status, position) {
     const page = await Vue.$api.pages.changeStatus(id, status, position);
-    this.onUpdate("changeStatus", page);
+    Vue.$events.$emit("page.changeStatus", page);
+    store.dispatch("notification/success");
     return page;
   },
   async changeTemplate(id, template) {
     const page = await Vue.$api.pages.changeTemplate(id, template);
-    this.onUpdate("changeTemplate", page);
+    Vue.$events.$emit("page.changeTemplate", page);
+    store.dispatch("notification/success");
     return page;
   },
   async changeTitle(id, title) {
     const page = await Vue.$api.pages.changeTitle(id, title);
-    this.onUpdate("changeTitle", page);
+    Vue.$events.$emit("page.changeTitle", page);
+    store.dispatch("notification/success");
     return page;
   },
   async create(parent, props) {
     const page = await Vue.$api.pages.create(parent, props);
-    this.onUpdate("create", page);
+    Vue.$events.$emit("page.create", page);
+    store.dispatch("notification/success");
     return page;
   },
   async delete(id, props) {
@@ -54,7 +59,8 @@ export default (Vue, store) => ({
     // remove data from content store
     await store.dispatch("content/remove", "pages/" + id);
 
-    this.onUpdate("delete", id);
+    Vue.$events.$emit("page.delete", id);
+    store.dispatch("notification/success");
   },
   dropdown(options = {}, view = "view") {
     let dropdown = [];
@@ -120,21 +126,13 @@ export default (Vue, store) => ({
   },
   async duplicate(id, slug, props) {
     const page = await Vue.$api.pages.duplicate(id, slug, props);
-    this.onUpdate(["create", "duplicate"], page);
+    Vue.$events.$emit("page.create", page);
+    Vue.$events.$emit("page.duplicate", page);
+    store.dispatch("notification/success");
     return page;
   },
   link(id) {
     return "/" + this.url(id);
-  },
-  onUpdate(event, data) {
-    if (Array.isArray(event)) {
-      event.forEach(e => {
-        this.onUpdate(e, data);
-      });
-    }
-
-    Vue.$events.$emit("page." + event, data);
-    store.dispatch("notification/success");
   },
   async options(id, view = "view") {
     const url  = this.url(id);
@@ -143,7 +141,9 @@ export default (Vue, store) => ({
   },
   async update(id, data) {
     const page = await Vue.$api.pages.update(id, data);
-    this.onUpdate("update", page);
+    store.dispatch("content/update", { id: id, data: data });
+    Vue.$events.$emit("page.update", data);
+    store.dispatch("notification/success");
     return page;
   },
   url(id, path) {

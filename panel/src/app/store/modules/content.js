@@ -13,79 +13,33 @@ export default {
   namespaced: true,
 
   state: {
-    /**
-     * ID of current model
-     */
-    current: null,
-
-    /**
-     * Object of models:
-     *  Key   => type/slug/language, e.g. pages/blog+a-blog-post/de
-     *  Value => Object of
-     *            - api: API endpoint
-     *            - originals: values as they are in the content file
-     *            - changes: values with unsaved changes
-     */
-    models: {},
-
-    /**
-     * Object of status flags/info
-     */
-    status: {
-      // whether form shall be disabled (e.g. for structure fields)
-      enabled: true,
-
-      // content lock info
+    current: {
+      id: null,
       lock: null,
-
-      // content unlock info
       unlock: null
-    }
+    },
+    models: {}
   },
 
-
   getters: {
-    // status getters
-
-    /**
-     * Checks for an ID if a model exists in the store
-     */
     exists: state => id => {
-      return Object.prototype.hasOwnProperty.call(state.models, id);
+      return state.models.hasOwnProperty(id);
     },
-    /**
-     * Checks for an ID if a model has unsaved changes
-     */
     hasChanges: (state, getters) => id => {
       const changes = getters.model(id).changes;
       return Object.keys(changes).length > 0;
     },
-    /**
-     * Checks for an ID if it is the current model
-     */
-    isCurrent: (state) => id => {
-      return state.current === id;
-    },
-
-    // data getters
-
-    /**
-     * Returns ID (current or provided) with correct language suffix
-     */
     id: (state, getters, rootState) => id => {
-      id = id || state.current;
+      id = id || state.current.id;
 
       if (rootState.languages.current) {
         return id + "/" + rootState.languages.current.code;
-      } else {
-        return id;
       }
+
+      return id;
     },
-    /**
-     * Return the full model object for passed ID
-     */
     model: (state, getters) => id => {
-      id = id || state.current;
+      id = id || state.current.id;
 
       if (getters.exists(id) === true) {
         return state.models[id];
@@ -98,53 +52,66 @@ export default {
         changes: {},
       };
     },
-    /**
-     * Returns original (in content file) values for passed model ID
-     */
-    originals: (state, getters) => id => {
-      return clone(getters.model(id).originals);
-    },
-    /**
-     * Returns values (incl. unsaved changes) for passed model ID
-     */
     values: (state, getters) => id => {
       return {
         ...getters.originals(id),
         ...getters.changes(id)
       };
     },
-    /**
-     * Returns unsaved changes for passed model ID
-     */
+    originals: (state, getters) => id => {
+      return clone(getters.model(id).originals);
+    },
     changes: (state, getters) => id => {
       return clone(getters.model(id).changes);
     }
   },
 
-
   mutations: {
-    CREATE(state, [id, model]) {
+    ADD_MODEL(state, { id, model }) {
       if (!model) {
         return false;
       }
 
-      // if model already in store, use stored changes,
-      // otherwise fallback to provided changes
-      let changes = state.models[id] ? state.models[id].changes : model.changes ;
+      // if model already exists in store, keep stored changes
+      let changes = state.models.hasOwnProperty(id)
+                  ? state.models[id].changes
+                  : model.changes ;
 
       Vue.set(state.models, id, {
-        api: model.api,
+        api:       model.api,
         originals: model.originals,
-        changes: changes || {}
+        changes:   changes || {}
       });
     },
-    CURRENT(state, id) {
-      state.current = id;
+    INPUT_MODEL(state, { id, values }) {
+      if (!state.models[id]) {
+        return false;
+      }
+
+      Object.keys(values).forEach(field => {
+        const value = clone(values[field]);
+
+        // compare current field value with its original value
+        const current  = JSON.stringify(value);
+        const original = JSON.stringify(state.models[id].originals[field]);
+
+        // if same, there are no unsaved changes
+        if (original === current) {
+          Vue.delete(state.models[id].changes, field);
+
+        // if different, set as unsaved change
+        } else {
+          Vue.set(state.models[id].changes, field, value);
+        }
+      });
+
+      keep(id, {
+        api:       state.models[id].api,
+        originals: state.models[id].originals,
+        changes:   state.models[id].changes
+      });
     },
-    LOCK(state, lock) {
-      Vue.set(state.status, "lock", lock);
-    },
-    MOVE(state, [from, to]) {
+    MOVE_MODEL(state, { from, to }) {
       // move state
       const model = clone(state.models[from]);
       Vue.delete(state.models, from);
@@ -155,104 +122,36 @@ export default {
       localStorage.removeItem("kirby$content$" + from);
       localStorage.setItem("kirby$content$" + to, storage);
     },
-    REMOVE(state, id) {
+    REMOVE_MODEL(state, id) {
       Vue.delete(state.models, id);
       localStorage.removeItem("kirby$content$" + id);
     },
-    REVERT(state, id) {
-      if (state.models[id]) {
-        Vue.set(state.models[id], "changes", {});
-        localStorage.removeItem("kirby$content$" + id);
-      }
-    },
-    STATUS(state, enabled) {
-      Vue.set(state.status, "enabled", enabled);
-    },
-    UNLOCK(state, unlock) {
-      if (unlock) {
-        // reset unsaved changes if content has been unlocked by another user
-        Vue.set(state.models[state.current], "changes", {});
-      }
-
-      Vue.set(state.status, "unlock", unlock);
-    },
-    UPDATE(state, [id, field, value]) {
-      // avoid updating without a valid model
+    REVERT_MODEL(state, id) {
       if (!state.models[id]) {
         return false;
       }
 
-      value = clone(value);
-
-      // compare current field value with its original value
-      const current  = JSON.stringify(value);
-      const original = JSON.stringify(state.models[id].originals[field]);
-
-      if (original === current) {
-        // if the same, there are no unsaved changes
-        Vue.delete(state.models[id].changes, field);
-      } else {
-        // if they differ, set as unsaved change
-        Vue.set(state.models[id].changes, field, value);
+      Vue.set(state.models[id], "changes", {});
+      localStorage.removeItem("kirby$content$" + id);
+    },
+    SET_CURRENT(state, id) {
+      state.current.id = id;
+    },
+    SET_LOCK(state, lock) {
+      Vue.set(state.current, "lock", lock);
+    },
+    SET_UNLOCK(state, unlock) {
+      // reset unsaved changes if content has been unlocked by another user
+      if (unlock) {
+        Vue.set(state.models[state.current.id], "changes", {});
       }
 
-      keep(id, {
-        api: state.models[id].api,
-        originals: state.models[id].originals,
-        changes: state.models[id].changes
-      });
+      Vue.set(state.current, "unlock", unlock);
     }
   },
 
-
   actions: {
-    init(context) {
-      // load models in store from localStorage
-      Object.keys(localStorage)
-            .filter(key => key.startsWith("kirby$content$"))
-            .map(key => key.split("kirby$content$")[1])
-            .forEach(id => {
-              const data = localStorage.getItem("kirby$content$" + id);
-              context.commit("CREATE", [id, JSON.parse(data)]);
-            });
-
-      // load old format
-      Object.keys(localStorage)
-        .filter(key => key.startsWith("kirby$form$"))
-        .map(key => key.split("kirby$form$")[1])
-        .forEach(id => {
-          const json = localStorage.getItem("kirby$form$" + id);
-          let   data = null;
-
-          try {
-            data = JSON.parse(json);
-          } catch (e) {
-            // fail silently
-          }
-
-          if (!data || !data.api) {
-            // remove invalid entry
-            localStorage.removeItem("kirby$form$" + id);
-            return false;
-          }
-
-          const model = {
-            api: data.api,
-            originals: data.originals,
-            changes: data.values
-          };
-
-          // add it to the state
-          context.commit("CREATE", [id, model]);
-
-          // keep it in localStorage
-          keep(id, model);
-
-          // remove the old entry
-          localStorage.removeItem("kirby$form$" + id);
-        });
-    },
-    async create(context, model) {
+    create(context, model) {
       // attach the language to the id
       model.id = context.getters.id(model.id);
 
@@ -261,99 +160,82 @@ export default {
         delete model.content.title;
       }
 
-      const data = {
-        api: model.api,
-        originals: clone(model.content),
-        changes: {}
-      };
-
-      // check if content was previously unlocked
-      try {
-        const response = Api.get(model.api + "/unlock");
-        if (
-          response.supported === true &&
-          response.unlocked === true
-        ) {
-          context.commit("UNLOCK", context.state.models[model.id].changes);
+      context.commit("ADD_MODEL", {
+        id: model.id,
+        model: {
+          api:       model.api,
+          originals: clone(model.content),
+          changes:   {}
         }
-      // fail silently
-      } catch (e) {}
-
-
-      context.commit("CREATE", [model.id, data]);
+      });
       context.dispatch("current", model.id);
     },
     current(context, id) {
-      context.commit("CURRENT", id);
+      context.commit("SET_CURRENT", id);
     },
-    disable(context) {
-      context.commit("STATUS", false);
+    async hasUnlock(context) {
+      const id       = context.state.current.id;
+      // TODO: fix unlock API route
+     // const response = await Api.get(id + "/unlock");
+     const response = {};
+
+      if (response.supported === true && response.unlocked === true ) {
+        context.dispatch("unlock", context.getters.changes(id));
+      }
     },
-    enable(context) {
-      context.commit("STATUS", true);
+    input(context, { id, values }) {
+      context.commit("INPUT_MODEL", {
+        id:     id || context.state.current.id,
+        values: values
+      });
+    },
+    load(context) {
+      const stored = Object.keys(localStorage).filter(key => {
+        return key.startsWith("kirby$content$");
+      });
+      const ids    = stored.map(key => key.split("kirby$content$")[1]);
+
+      ids.forEach(id => {
+        const data = localStorage.getItem("kirby$content$" + id);
+        context.commit("ADD_MODEL", { id: id, model: JSON.parse(data) });
+      });
     },
     lock(context, lock) {
-      context.commit("LOCK", lock);
+      context.commit("SET_LOCK", lock);
     },
-    move(context, [from, to]) {
-      from = context.getters.id(from);
-      to   = context.getters.id(to);
-      context.commit("MOVE", [from, to]);
+    move(context, { from, to }) {
+      context.commit("MOVE_MODEL", {
+        from: context.getters.id(from),
+        to:   context.getters.id(to)
+      });
     },
     remove(context, id) {
-      context.commit("REMOVE", id);
+      context.commit("REMOVE_MODEL", id);
 
       if (context.getters.isCurrent(id)) {
-        context.commit("CURRENT", null);
+        context.commit("SET_CURRENT", null);
       }
     },
     revert(context, id) {
-      id = id || context.state.current;
-      context.commit("REVERT", id);
-    },
-    async save(context, id) {
-      id = id || context.state.current;
-
-      // don't allow save if model is not current
-      // or the form is currently disabled
-      if (
-        context.getters.isCurrent(id) &&
-        context.state.status.enabled === false
-      ) {
-        return false;
-      }
-
-      // disable form while saving
-      context.dispatch("disable");
-
-      const model = context.getters.model(id);
-      const data  = {...model.originals, ...model.changes};
-
-      // Send updated values to API
-      try {
-        await Api.patch(model.api, data);
-
-        // re-create model with updated values as originals
-        context.commit("CREATE", [id, {
-          ...model,
-          originals: data
-        }]);
-
-        // revert unsaved changes (which also removes localStorage entry)
-        context.dispatch("revert", id);
-        context.dispatch("enable");
-
-      } catch (error) {
-        context.dispatch("enable");
-        throw error;
-      }
+      context.commit("REVERT_MODEL", id || context.state.current.id);
     },
     unlock(context, unlock) {
-      context.commit("UNLOCK", unlock);
+      context.commit("SET_UNLOCK", unlock);
     },
-    update(context, [field, value, id]) {
-      id = id || context.state.current;
-      context.commit("UPDATE", [id, field, value]);
+    update(context, { id, values }) {
+      id = id || context.state.current.id;
+
+      // re-create model with updated values as originals
+      context.commit("ADD_MODEL", {
+        id: id,
+        model: {
+          ...context.getters.model(id),
+          originals: values
+        }
+      });
+
+      // revert unsaved changes (which also removes localStorage entry)
+      context.dispatch("revert", id);
     }
   }
 };

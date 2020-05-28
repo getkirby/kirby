@@ -23,10 +23,33 @@ export default {
   },
   data() {
     return {
-      original: {},
-      page: {},
-      view: {},
+      page: {}
     };
+  },
+  computed: {
+    changes() {
+      return this.$store.getters["content/hasChanges"]();
+    },
+    values() {
+      return this.$store.getters["content/values"]();
+    },
+    view() {
+      return {
+        breadcrumb: this.$model.pages.breadcrumb(this.page),
+        changes: this.changes,
+        columns: this.columns(this.page.blueprint.tabs, this.tab),
+        id: this.id,
+        options: this.$model.pages.dropdown(this.page.options),
+        preview: this.page.previewUrl,
+        rename: this.page.options.changeTitle,
+        status: this.status(this.page),
+        tabs: this.page.blueprint.tabs,
+        tab: this.tab,
+        template: this.page.blueprint.title,
+        title: this.page.title,
+        value: this.values
+      };
+    }
   },
   created() {
     this.load();
@@ -41,22 +64,8 @@ export default {
     },
     async load() {
       this.page = await this.$api.pages.get(this.id);
-      this.original = this.$helper.clone(this.page.content);
-      this.view = {
-        breadcrumb: this.$model.pages.breadcrumb(this.page),
-        changes: false,
-        columns: this.columns(this.page.blueprint.tabs, this.tab),
-        id: this.id,
-        options: this.$model.pages.dropdown(this.page.options),
-        preview: this.page.previewUrl,
-        rename: this.page.options.changeTitle,
-        status: this.status(this.page),
-        tabs: this.page.blueprint.tabs,
-        tab: this.tab,
-        template: this.page.blueprint.title,
-        title: this.page.title,
-        value: this.page.content
-      };
+      await this.$store.dispatch("content/hasUnlock");
+      this.$store.dispatch("content/create", this.page);
     },
     onChangeSlug(page) {
       // Redirect, if slug was changed in default language
@@ -69,10 +78,10 @@ export default {
       }
     },
     onChangeStatus(page) {
-      this.view.status = this.status(page);
+      this.page.status = this.status(page);
     },
     onChangeTitle(page) {
-      this.view.title = page.title;
+      this.page.title = page.title;
     },
     onDelete() {
       if (this.page.parent) {
@@ -82,18 +91,16 @@ export default {
         this.$router.push("/pages");
       }
     },
-    onInput(value) {
-      this.view.changes = JSON.stringify(this.original) != JSON.stringify(value);
-      this.view.value   = value;
+    onInput(values) {
+      this.$store.dispatch("content/input", { id: this.id, values: values });
     },
     onRevert() {
-      this.view.value = this.$helper.clone(this.original);
-      this.view.changes = false;
+      this.$store.dispatch("content/revert", this.id);
     },
     async onSave() {
-      await this.$model.pages.update(this.id, this.view.value);
-      this.original = this.$helper.clone(this.view.value);
-      this.view.changes = false;
+      const values = this.$store.getters["content/values"](this.id);
+      await this.$model.pages.update(this.id, values);
+      this.$store.dispatch("content/update", { id: this.id, values: values });
     },
     status(page) {
       const icon = this.$model.pages.statusIcon(page.status);

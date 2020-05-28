@@ -39,7 +39,8 @@ export default (Vue, store) => ({
       "files/" + this.id(parent, file.filename)
     ]);
 
-    this.onUpdate("changeName", file);
+    Vue.$events.$emit("file.changeName", file);
+    store.dispatch("notification/success");
     return file;
   },
   async delete(parent, filename) {
@@ -51,7 +52,8 @@ export default (Vue, store) => ({
     // remove data from content store
     await store.dispatch("content/remove", "files/" + id);
 
-    this.onUpdate("delete", id);
+    Vue.$events.$emit("file.delete", id);
+    store.dispatch("notification/success");
   },
   dropdown(options = {}, view = "view") {
     let dropdown = [];
@@ -92,10 +94,6 @@ export default (Vue, store) => ({
   },
   link(parent, filename, path) {
     return "/" + this.url(parent, filename, path);
-  },
-  onUpdate(event, data) {
-    Vue.$events.$emit("file." + event, data);
-    store.dispatch("notification/success");
   },
   async options(parent, filename, view = "view") {
     const url  = this.url(parent, filename);

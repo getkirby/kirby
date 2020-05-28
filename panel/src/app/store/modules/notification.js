@@ -30,7 +30,7 @@ export default {
         context.commit("UNSET_DIALOG");
       }
     },
-    send(context, [payload, defaults]) {
+    send(context, { payload, defaults }) {
       // shorthand
       if (typeof payload === "string") {
         payload = { message: payload };
@@ -66,23 +66,32 @@ export default {
 
     /** Shortcuts for notification types */
     error(context, payload) {
-      context.dispatch("send", [payload, {
-        type: "error",
-        permanent: true
-      }]);
+      context.dispatch("send", {
+        payload: payload,
+        defaults: {
+          type: "error",
+          permanent: true
+        }
+      });
     },
     info(context, payload) {
-      context.dispatch("send", [payload, {
-        type: "info",
-        timeout: 4000
-      }]);
+      context.dispatch("send", {
+        payload: payload,
+        defaults: {
+          type: "info",
+          timeout: 4000
+        }
+      });
     },
     success(context, payload) {
-      context.dispatch("send", [payload, {
-        type: "success",
-        message: "👍",
-        timeout: 4000
-      }]);
+      context.dispatch("send", {
+        payload: payload,
+        defaults: {
+          type: "success",
+          message: "👍",
+          timeout: 4000
+        }
+      });
     }
   }
 };
