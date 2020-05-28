@@ -1,13 +1,11 @@
+import Store from "@/app/store/store.js";
 
-export default {
-  state: {
-    content: {},
-    languages: {}
-  },
-  dispatch(action, ...args) {
-    console.log(`store.dispatch(${action}, ${args[0]})`);
-  },
-  commit() {
-    console.log(`store.commit(${action}, ${args[0]})`);
-  }
-};
+Store.subscribe(mutation => {
+  console.log(`store.commit(${mutation.type}, ${mutation.payload})`);
+})
+
+Store.subscribeAction(action => {
+  console.log(`store.dispatch(${action.type}, ${action.payload})`);
+});
+
+export default Store;
