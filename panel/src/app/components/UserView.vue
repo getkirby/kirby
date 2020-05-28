@@ -1,10 +1,10 @@
 <template>
   <k-inside class="k-user-view">
     <k-user-profile
-      :can-change-avatar="!isLocked"
-      :can-change-email="$permissions.changeEmail && !isLocked"
-      :can-change-language="$permissions.changeRole && !isLocked"
-      :can-change-role="$permissions.changeLanguage && !isLocked"
+      :can-change-avatar="lock === false"
+      :can-change-email="$permissions.changeEmail && lock === false"
+      :can-change-language="$permissions.changeRole && lock === false"
+      :can-change-role="$permissions.changeLanguage && lock === false"
       :user="user"
       @remove-avatar="onOption('avatar.remove')"
       @upload-avatar="onOption('avatar.upload')"
