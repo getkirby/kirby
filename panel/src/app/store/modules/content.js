@@ -103,7 +103,6 @@ export default {
       });
 
       keep(id, {
-        api:       state.models[id].api,
         originals: state.models[id].originals,
         changes:   state.models[id].changes
       });
