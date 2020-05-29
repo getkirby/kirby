@@ -1,5 +1,6 @@
 <template>
   <nav
+    :data-loading="saving"
     :data-theme="mode"
     class="k-form-buttons"
   >
@@ -13,6 +14,7 @@
           @click="$refs.revert.open()"
         />
         <k-button
+          :loading="saving"
           :text="$t('save')"
           icon="check"
           class="k-form-button"
@@ -96,6 +98,10 @@ export default {
       type: String,
       default: "changes"
     },
+    saving: {
+      type: Boolean,
+      default: false
+    }
   },
   methods: {
     onDownload() {

@@ -252,8 +252,9 @@ export const changes = () => ({
     };
 
     return {
+      original: this.$helper.clone(empty),
+      saving: false,
       value: this.$helper.clone(empty),
-      original: this.$helper.clone(empty)
     };
   },
   computed: {
@@ -262,7 +263,14 @@ export const changes = () => ({
     }
   },
   methods: {
-    onSave: action("save"),
+    onSave($event) {
+      action("save", $event);
+      this.saving = true;
+      setTimeout(() => {
+        this.saving   = false;
+        this.original = this.$helper.clone(this.value);
+      }, 2000);
+    },
     onRevert($event) {
       action("revert")($event);
       this.value = this.$helper.clone(this.original);
@@ -275,6 +283,7 @@ export const changes = () => ({
         :columns="columns"
         :options="options"
         :rename="true"
+        :saving="saving"
         :title="title"
         v-model="value"
         @save="onSave"

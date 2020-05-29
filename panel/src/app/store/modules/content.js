@@ -45,7 +45,6 @@ export default {
       }
 
       return {
-        api: null,
         originals: {},
         values: {},
         changes: {},
@@ -77,7 +76,6 @@ export default {
                   : model.changes ;
 
       Vue.set(state.models, id, {
-        api:       model.api,
         originals: model.originals,
         changes:   changes || {}
       });
@@ -150,24 +148,23 @@ export default {
   },
 
   actions: {
-    create(context, model) {
+    create(context, { id, values }) {
       // attach the language to the id
-      model.id = context.getters.id(model.id);
+      id = context.getters.id(id);
 
       // remove title from model content
-      if (model.id.startsWith("pages/") || model.id.startsWith("site")) {
-        delete model.content.title;
+      if (id.startsWith("pages/") || id.startsWith("site")) {
+        delete values.title;
       }
 
       context.commit("ADD_MODEL", {
-        id: model.id,
+        id: id,
         model: {
-          api:       model.api,
-          originals: clone(model.content),
+          originals: clone(values),
           changes:   {}
         }
       });
-      context.dispatch("current", model.id);
+      context.dispatch("current", id);
     },
     current(context, id) {
       context.commit("SET_CURRENT", id);

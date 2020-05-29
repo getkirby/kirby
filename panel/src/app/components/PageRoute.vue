@@ -1,7 +1,8 @@
 <template>
   <k-page-view
-    v-if="page.id"
+    v-if="model.id"
     v-bind="view"
+    :saving="saving"
     @changeStatus="onChangeStatus"
     @changeTitle="onChangeTitle"
     @delete="onDelete"
@@ -11,61 +12,35 @@
   />
 </template>
 <script>
+import ModelRoute from "./ModelRoute.vue";
+
 export default {
-  props: {
-    id: {
-      type: String
-    },
-    tab: {
-      type: String,
-      default: "main"
-    }
-  },
-  data() {
-    return {
-      page: {}
-    };
-  },
+  extends: ModelRoute,
   computed: {
-    changes() {
-      return this.$store.getters["content/hasChanges"]();
-    },
-    values() {
-      return this.$store.getters["content/values"]();
+    storeId() {
+      return "/pages/" + this.id;
     },
     view() {
       return {
-        breadcrumb: this.$model.pages.breadcrumb(this.page),
+        breadcrumb: this.$model.pages.breadcrumb(this.model),
         changes: this.changes,
-        columns: this.columns(this.page.blueprint.tabs, this.tab),
+        columns: this.columns(this.model.blueprint.tabs, this.tab),
         id: this.id,
-        options: this.$model.pages.dropdown(this.page.options),
-        preview: this.page.previewUrl,
-        rename: this.page.options.changeTitle,
-        status: this.status(this.page),
-        tabs: this.page.blueprint.tabs,
+        options: this.$model.pages.dropdown(this.model.options),
+        preview: this.model.previewUrl,
+        rename: this.model.options.changeTitle,
+        status: this.status(this.model),
+        tabs: this.model.blueprint.tabs,
         tab: this.tab,
-        template: this.page.blueprint.title,
-        title: this.page.title,
+        template: this.model.blueprint.title,
+        title: this.model.title,
         value: this.values
       };
     }
   },
-  created() {
-    this.load();
-  },
-  watch: {
-    "$route": "load",
-  },
   methods: {
-    columns(tabs, currentTab) {
-      const tab = tabs.find(tab => tab.name === currentTab) || tabs[0];
-      return tab.columns || {};
-    },
-    async load() {
-      this.page = await this.$api.pages.get(this.id);
-      await this.$store.dispatch("content/hasUnlock");
-      this.$store.dispatch("content/create", this.page);
+    async loadModel() {
+      return await this.$api.pages.get(this.id);
     },
     onChangeSlug(page) {
       // Redirect, if slug was changed in default language
@@ -78,29 +53,21 @@ export default {
       }
     },
     onChangeStatus(page) {
-      this.page.status = this.status(page);
+      this.model.status = this.status(page);
     },
     onChangeTitle(page) {
-      this.page.title = page.title;
+      this.model.title = page.title;
     },
     onDelete() {
-      if (this.page.parent) {
-        const path = this.$model.pages.link(this.page.parent.id);
+      if (this.model.parent) {
+        const path = this.$model.pages.link(this.model.parent.id);
         this.$router.push(path);
       } else {
         this.$router.push("/pages");
       }
     },
-    onInput(values) {
-      this.$store.dispatch("content/input", { id: this.id, values: values });
-    },
-    onRevert() {
-      this.$store.dispatch("content/revert", this.id);
-    },
-    async onSave() {
-      const values = this.$store.getters["content/values"](this.id);
-      await this.$model.pages.update(this.id, values);
-      this.$store.dispatch("content/update", { id: this.id, values: values });
+    async saveModel(values) {
+      return await this.$model.pages.update(this.id, values);
     },
     status(page) {
       const icon = this.$model.pages.statusIcon(page.status);

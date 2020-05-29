@@ -1,5 +1,9 @@
 <template>
-  <k-view class="pb-24" @keydown.meta.s.native.prevent="$emit('save', value)">
+  <k-view
+    :data-loading="saving"
+    class="pb-24"
+    @keydown.meta.s.native.prevent="$emit('save', value)"
+  >
 
     <!-- header -->
     <k-header
@@ -67,6 +71,7 @@
       <k-form-buttons
         v-else-if="changes"
         :dir="$direction"
+        :saving="saving"
         class="k-model-form-buttons"
         mode="changes"
         v-on="$listeners"
@@ -120,6 +125,10 @@ export default {
     rename: {
       type: Boolean,
       default: false
+    },
+    saving: {
+      type: Boolean,
+      default: false,
     },
     tab: {
       type: String,

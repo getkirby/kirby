@@ -19,6 +19,17 @@ export const regular = () => ({
   `,
 });
 
+export const saving = () => ({
+  extends: regular(),
+  template: `
+    <k-form-buttons
+      :saving="true"
+      @revert="onRevert"
+      @save="onSave"
+    />
+  `,
+});
+
 export const locked = () => ({
   methods: {
     onUnlock: action("unlock"),
