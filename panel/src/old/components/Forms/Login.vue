@@ -84,8 +84,8 @@ export default {
       this.isLoading = true;
 
       try {
-        await this.$store.dispatch("user/login", this.user);
-        await this.$store.dispatch("system/load", true);
+        await this.$model.users.login(this.user);
+        await this.$model.system.load();
         this.$store.dispatch("notification/success", this.$t("welcome"));
 
       } catch (error) {

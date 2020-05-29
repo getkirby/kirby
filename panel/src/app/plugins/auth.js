@@ -2,15 +2,15 @@
 export default (Vue, store) => {
 
   return async (to, from, next) => {
-
     // load the system, the user and the translation
-    await store.dispatch("system/load");
+    await Vue.$model.system.load();
+
     const user = store.state.user.current;
 
     // no user? logout!
     if (!user) {
       store.dispatch("user/visit", to.path);
-      store.dispatch("user/logout");
+      Vue.$model.users.logout();
       return false;
     }
 

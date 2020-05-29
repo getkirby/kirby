@@ -1,4 +1,3 @@
-import Api from "@/api/index.js";
 
 export default {
   namespaced: true,
@@ -19,58 +18,14 @@ export default {
     }
   },
   actions: {
-    title(context, title) {
-      context.commit("SET_TITLE", title);
+    info(context, info) {
+      context.commit("SET_INFO", info);
     },
     register(context, license) {
       context.commit("SET_LICENSE", license);
     },
-    async load(context, reload) {
-      // reuse the cached system info
-      if (
-        !reload &&
-        context.state.info.isReady &&
-        context.rootState.user.current
-      ) {
-        return new Promise(resolve => {
-          resolve(context.state.info);
-        });
-      }
-
-      // reload the system info
-      try {
-        const info = await Api.system.info({ view: "panel" });
-
-        context.commit("SET_INFO", {
-          isReady: info.isInstalled && info.isOk,
-          ...info
-        });
-
-        if (info.languages) {
-          context.dispatch("languages/install", info.languages, {
-            root: true
-          });
-        }
-
-        context.dispatch("translation/install", info.translation, {
-          root: true
-        });
-        context.dispatch("translation/activate", info.translation.id, {
-          root: true
-        });
-
-        if (info.user) {
-          context.dispatch("user/current", info.user, { root: true });
-        }
-
-        return context.state.info;
-
-      } catch (error) {
-        context.commit("SET_INFO", {
-          isBroken: true,
-          error: error.message
-        });
-      }
+    title(context, title) {
+      context.commit("SET_TITLE", title);
     }
   }
 };

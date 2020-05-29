@@ -23,7 +23,6 @@ export default (Vue, store) => {
     {
       path: "/logout",
       beforeEnter() {
-
         // remove all form changes from localStorage
         Object.keys(localStorage).forEach(key => {
           if (key.startsWith("kirby$content$")) {
@@ -31,8 +30,7 @@ export default (Vue, store) => {
           }
         });
 
-        store.dispatch("user/logout");
-
+        Vue.$model.users.logout();
       }
     },
     {

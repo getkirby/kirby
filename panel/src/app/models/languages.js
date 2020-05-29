@@ -2,8 +2,9 @@
 export default (Vue, store) => ({
   async create(values) {
     const language = await Vue.$api.languages.create(values);
-    await store.dispatch("languages/load");
-    this.onUpdate("create", language);
+    await this.load();
+    Vue.$events.$emit("language.create", language);
+    store.dispatch("notification/success");
     return language;
   },
   defaultLanguageCode() {
@@ -16,12 +17,13 @@ export default (Vue, store) => ({
   async delete(code) {
     // send API request to delete page
     await Vue.$api.languages.delete(code);
-    await store.dispatch("languages/load");
-    this.onUpdate("delete", code);
-  },
-  onUpdate(event, data) {
-    Vue.$events.$emit("language." + event, data);
+    await this.load();
+    Vue.$events.$emit("language.delete", code);
     store.dispatch("notification/success");
+  },
+  async load() {
+    const response = await Vue.$api.get("languages");
+    store.dispatch("languages/install", response.data);
   },
   async update(code, values) {
     const language = await Vue.$api.languages.update(code, {
@@ -29,7 +31,8 @@ export default (Vue, store) => ({
       direction: values.direction,
       locale: values.locale,
     });
-    await store.dispatch("languages/load");
-    this.onUpdate("update", language);
+    await this.load();
+    Vue.$events.$emit("language.update", language);
+    store.dispatch("notification/success");
   },
 });

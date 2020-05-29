@@ -166,7 +166,7 @@ export default {
   },
   methods: {
     async check() {
-     this.system = await this.$store.dispatch("system/load", true);
+     this.system = await this.$model.system.load(true);
 
       if (this.system.isInstalled === true && this.system.isReady) {
         this.$router.push("/login");

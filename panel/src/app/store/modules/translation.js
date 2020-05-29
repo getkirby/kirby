@@ -1,5 +1,4 @@
 import Vue from "vue";
-import Api from "@/api/index.js";
 
 export default {
   namespaced: true,
@@ -16,9 +15,6 @@ export default {
     }
   },
   actions: {
-    async load(context, id) {
-      return Api.translations.get(id);
-    },
     install(context, translation) {
       context.commit("INSTALL", translation);
       Vue.i18n.add(translation.id, translation.data);
@@ -30,7 +26,7 @@ export default {
       // load from API, install translation and
       // then call this method again
       if (!translation) {
-        const translation = await context.dispatch("load", id);
+        const translation = await Vue.$model.translations.load(id);
         context.dispatch("install", translation);
         context.dispatch("activate", id);
         return;

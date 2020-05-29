@@ -43,7 +43,7 @@ export default {
         error.code === 403 &&
         (error.message === "Unauthenticated" || error.key === "access.panel")
       ) {
-        store.dispatch("user/logout", true);
+        Vue.$model.users.logout(true);
       }
     };
 

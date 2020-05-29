@@ -1,4 +1,3 @@
-import Api from "@/api/index.js";
 
 export default {
   namespaced: true,
@@ -52,17 +51,11 @@ export default {
 
 
         if (currentLanguage) {
-          context.dispatch("current", currentLanguage);
-          return;
+          return context.dispatch("current", currentLanguage);
         }
       }
 
       context.dispatch("current", defaultLanguage || languages[0] || null);
-
-    },
-    async load(context) {
-      const response = await Api.get("languages");
-      context.dispatch("install", response.data);
     }
   }
 };

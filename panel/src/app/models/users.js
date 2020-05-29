@@ -55,7 +55,7 @@ export default (Vue, store) => ({
 
     // if current panel user, update store
     if (id === Vue.$user.id) {
-      await store.dispatch("user/load");
+      await this.load();
     }
 
     Vue.$events.$emit("user.changeRole", user);
@@ -132,7 +132,32 @@ export default (Vue, store) => ({
   link(id, path) {
     return "/" + this.url(id, path);
   },
+  async load() {
+    const user = await Vue.$api.auth.user();
+    store.dispatch("user/current", user);
+    return user;
+  },
+  async login(credentials) {
+    const user = await Vue.$api.auth.login(credentials)
+    store.dispatch("user/current", user);
+    store.dispatch("translation/activate", user.language);
+    Vue.$router.push(store.state.user.path || "/");
+    return user;
+  },
+  async logout(force = false) {
+    store.dispatch("user/current", null);
 
+    if (force) {
+      window.location.href = (window.panel.url || "") + "/login";
+      return;
+    }
+
+    try {
+      await Vue.$api.auth.logout();
+    } finally {
+      Vue.$router.push("/login");
+    }
+  },
   async options(id) {
     const url  = this.url(id);
     const user = await Vue.$api.get(url, { select: "options" });

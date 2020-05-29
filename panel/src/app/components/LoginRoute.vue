@@ -5,7 +5,7 @@
 <script>
 export default {
   async beforeRouteEnter(to, from, next) {
-    const system = await this.$store.dispatch("system/load");
+    const system = await this.$model.system.load();
 
     if (system.isReady !== true) {
       next("/installation");
@@ -20,4 +20,3 @@ export default {
   }
 };
 </script>
-

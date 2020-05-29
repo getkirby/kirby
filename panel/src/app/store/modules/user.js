@@ -1,6 +1,4 @@
 import Vue from "vue";
-import Api from "@/api/index.js";
-import router from "@/app/plugins/router.js";
 
 export default {
   namespaced: true,
@@ -40,33 +38,6 @@ export default {
         ...context.state.current,
         language: language,
       });
-    },
-    async load(context) {
-      const user = await Api.auth.user();
-      context.commit("SET_CURRENT", user);
-      return user;
-    },
-    async login(context, credentials) {
-      const user = await Api.auth.login(credentials)
-      context.commit("SET_CURRENT", user);
-      context.dispatch("translation/activate", user.language, { root: true });
-      router.push(context.state.path || "/");
-      return user;
-    },
-    async logout(context, force) {
-      context.commit("SET_CURRENT", null);
-
-      if (force) {
-        window.location.href = (window.panel.url || "") + "/login";
-        return;
-      }
-
-      try {
-        await Api.auth.logout();
-        router.push("/login");
-      } catch (error) {
-        router.push("/login");
-      }
     },
     name(context, name) {
       context.commit("SET_CURRENT", {

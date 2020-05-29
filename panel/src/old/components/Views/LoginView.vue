@@ -28,7 +28,7 @@ export default {
     this.$store.dispatch("content/current", null);
 
     try {
-      const system = await this.$store.dispatch("system/load");
+      const system = await this.$model.system.load();
 
       if (!system.isReady) {
         this.$router.push("/installation");
