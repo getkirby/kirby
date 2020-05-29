@@ -70,6 +70,7 @@
               <k-button
                 v-if="submitButton"
                 v-bind="submitButton"
+                :loading="loading"
                 class="k-dialog-submit-button ml-auto py-3 px-6"
                 @click="submit"
               />
