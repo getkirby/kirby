@@ -7,6 +7,7 @@ import languages from "./fixtures/languages.js";
 import pages from "./fixtures/pages.js";
 import roles from "./fixtures/roles.js";
 import sites from "./fixtures/sites.js";
+import systems from "./fixtures/systems.js";
 import translations from "./fixtures/translations.js";
 import users from "./fixtures/users.js";
 
@@ -50,6 +51,7 @@ new Server({
       drafts: hasMany("page"),
       children: hasMany("page"),
     }),
+    system: Model,
     translation: Model,
     user: Model.extend({
       role: belongsTo(),
@@ -62,6 +64,7 @@ new Server({
     pages: pages,
     roles: roles,
     sites: sites,
+    systems: systems,
     translations: translations,
     users: users,
   },
@@ -318,6 +321,33 @@ new Server({
       return schema.sites.first().update(requestValues(request));
     });
 
+    this.get("system", (schema, request) => {
+      const system = schema.systems.first();
+
+      return {
+        code: 200,
+        data: system.attrs,
+        status: "ok",
+        type: "model"
+      };
+    });
+
+    this.post("/system/install", (schema, request) => {
+      let values = requestValues(request);
+
+      values.roleId = values.role;
+      delete values.role;
+
+      const user = schema.users.create(values);
+
+      return {
+        code: 200,
+        status: "ok",
+        token: "test",
+        user: user
+      };
+    });
+
     this.post("/system/register", (schema, request) => {
       const values = requestValues(request);
 
@@ -355,8 +385,6 @@ new Server({
     this.patch("/users/:id/role", (schema, request) => {
       return updateUser(schema, request);
     });
-
-
 
     this.delete("/users/:id", (schema, request) => {
       schema.users.find(request.params.id).destroy();

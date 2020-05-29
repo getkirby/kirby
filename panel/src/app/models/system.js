@@ -1,4 +1,9 @@
 export default (Vue, store) => ({
+  async install(values) {
+    const user = await Vue.$api.system.install(values);
+    await store.dispatch("user/current", user);
+    return user;
+  },
   async load(reload = false) {
     // reuse cached system info
     if (reload === false) {
@@ -6,7 +11,7 @@ export default (Vue, store) => ({
         store.state.system.info.isReady &&
         store.state.user.current
       ) {
-        return new Promise(resolve => resolve(store.state.system.info));
+        return store.state.system.info;
       }
     }
 
@@ -29,14 +34,13 @@ export default (Vue, store) => ({
       if (info.user) {
         store.dispatch("user/current", info.user);
       }
-
-      return store.state.system.info;
-
     } catch (error) {
       store.dispatch("system/info", {
         isBroken: true,
         error: error.message
       });
+    } finally {
+      return store.state.system.info;
     }
   },
   async register(registration) {

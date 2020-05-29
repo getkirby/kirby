@@ -13,11 +13,17 @@
     class="k-button"
     v-on="$listeners"
   >
-    <k-icon
-      v-if="icon"
-      v-bind="iconOptions"
-      class="k-button-icon"
-    />
+    <template v-if="icon">
+      <k-loader
+        v-if="loading"
+        class="k-button-icon"
+      />
+      <k-icon
+        v-else
+        v-bind="iconOptions"
+        class="k-button-icon"
+      />
+    </template>
     <span
       v-if="$slots.default"
       class="k-button-text"
@@ -37,6 +43,7 @@ export default {
     current: [String, Boolean],
     icon: [String, Object],
     id: [String, Number],
+    loading: Boolean,
     responsive: Boolean,
     role: String,
     tabindex: String,

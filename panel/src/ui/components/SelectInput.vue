@@ -106,6 +106,10 @@ export default {
       return !(this.required && this.default);
     },
     hasGroups() {
+      if (!this.options[0]) {
+        return false;
+      }
+
       return this.options[0].hasOwnProperty("group") === true &&
              this.options[0].hasOwnProperty("options") === true;
     },

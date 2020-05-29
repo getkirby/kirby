@@ -49,6 +49,7 @@ export default {
      * automatically be converted to a proper a tag.
      */
     link: String,
+    loading: Boolean,
     /**
      * A responsive button will hide the button text on
      * smaller screens automatically and only keep the icon.

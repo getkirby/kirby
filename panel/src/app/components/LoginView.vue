@@ -1,57 +1,68 @@
 <template>
-  <k-view align="center">
-    <k-form
-      ref="form"
-      :fields="fields"
-      v-model="credentials"
-      @submit="onLogin"
-    >
-      <template v-slot:header>
-        <k-notification
-          :message="error"
-          type="error"
-          class="mb-8 rounded-xs shadow-md"
-          @close="onResetError"
-        />
+  <k-outside
+    :loading="loading || authenticating"
+    class="k-loading-view"
+  >
+    <k-view align="center">
+      <template v-if="loading">
+        <k-loader />
       </template>
-
-      <template v-slot:footer>
-        <footer class="pt-6 flex justify-between">
-          <k-toggle-input
-            class="text-sm"
-            :text="$t('login.remember')"
-            v-model="remember"
-          />
-          <k-button
-            :text="$t('login')"
-            class="k-login-button p-3"
-            icon="check"
-            type="submit"
-            theme="positive"
-          />
-        </footer>
+      <template v-else>
+        <k-form
+          ref="form"
+          :autofocus="!authenticating"
+          :fields="fields"
+          v-model="values"
+          @submit="$emit('login', $event)"
+        >
+          <template v-slot:footer>
+            <footer class="pt-6 flex justify-between">
+              <k-toggle-input
+                class="text-sm"
+                :text="$t('login.remember')"
+                v-model="values.remember"
+              />
+              <k-button
+                :loading="authenticating"
+                :text="$t('login')"
+                class="k-login-button p-3"
+                icon="check"
+                type="submit"
+                theme="positive"
+              />
+            </footer>
+          </template>
+        </k-form>
       </template>
-    </k-form>
-  </k-view>
+    </k-view>
+  </k-outside>
 </template>
 
 <script>
 export default {
+  props: {
+    authenticating: {
+      type: Boolean,
+      default: false
+    },
+    loading: {
+      type: Boolean,
+      default: false
+    }
+  },
   data() {
     return {
-      credentials: {
+      values: {
         email: null,
         password: null,
-      },
-      remember: false,
-      error: null,
+        remember: false,
+      }
     };
   },
   computed: {
     fields() {
       return {
         email: {
-          autofocus: true,
           label: this.$t("email"),
           type: "email",
           required: true,
