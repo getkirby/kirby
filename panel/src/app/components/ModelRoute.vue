@@ -1,9 +1,6 @@
 <script>
 export default {
   props: {
-    id: {
-      type: String
-    },
     tab: {
       type: String,
       default: "main"
@@ -42,7 +39,18 @@ export default {
     },
     async load() {
       this.model = await this.loadModel();
-      await this.$store.dispatch("content/hasUnlock", this.storeId);
+
+      // check for unlock
+      // TODO: fake API route needed to uncomment the following line
+      // const unlock = await this.$api.get(this.id + "/unlock");
+      const unlock = {};
+
+        if (unlock.supported === true && unlock.unlocked === true ) {
+          this.$store.dispatch("content/unlock",
+            this.$store.getters["content/changes"](this.storeId)
+          );
+        }
+
       this.$store.dispatch("content/create", {
         id: this.storeId,
         values: this.model.content

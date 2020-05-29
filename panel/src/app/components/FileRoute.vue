@@ -1,14 +1,20 @@
 <template>
   <k-file-view
-    :file="file"
-    :options="options"
-    @removed="onRemoved"
-    @renamed="onRenamed"
-    @replaced="onReplaced"
+    v-if="model.filename"
+    v-bind="view"
+    @remove="onRemove"
+    @rename="onRename"
+    @replace="onReplace"
+    @input="onInput"
+    @revert="onRevert"
+    @save="onSave"
   />
 </template>
 <script>
+import ModelRoute from "./ModelRoute.vue";
+
 export default {
+  extends: ModelRoute,
   props: {
     parent: {
       type: String
@@ -17,34 +23,57 @@ export default {
       type: String
     }
   },
-  data() {
-    return {
-      file: {},
-      options: []
-    };
-  },
-  created() {
-    this.load();
-  },
-  watch: {
-    "$route": "load",
+  computed: {
+    id() {
+      return this.parent + "/" + this.filename;
+    },
+    storeId() {
+      return "/files/" + this.id;
+    },
+    view() {
+      console.log(this.model);
+      return {
+        breadcrumb: this.$model.files.breadcrumb(this.model),
+        changes:    this.changes,
+        columns:    this.columns(this.model.blueprint.tabs, this.tab),
+        filename:   this.model.filename,
+        options:    this.$model.files.dropdown(this.model.options),
+        parent:     this.model.parent.id,
+        preview:    {
+          ...this.model,
+          ...this.model.dimensions || {},
+          image: this.model.url,
+          link:  this.model.url,
+          size:  this.model.niceSize,
+        },
+        rename:     true,
+        saving:     this.saving,
+        tabs:       this.model.blueprint.tabs,
+        tab:        this.tab,
+        url:        this.model.url,
+        value:      this.values,
+        view:       "site"
+      };
+    }
   },
   methods: {
-    async load() {
-      this.file    = await this.$api.files.get(this.parent, this.filename);
-      this.options = this.$model.files.dropdown(this.file.options);
+    async loadModel() {
+      return await this.$api.files.get(this.parent, this.filename);
     },
-    onRemoved() {
+    onRemove() {
       const path = this.$model.pages.link(this.parent);
       this.$router.push(path);
     },
-    onRenamed(file) {
+    onRename(file) {
       const path = this.$model.files.link(this.parent, file.filename);
       this.$router.push(path);
     },
-    onReplaced(file) {
+    onReplace(file) {
       this.load();
-    }
+    },
+    async saveModel(values) {
+      return await this.$model.files.update(this.parent, this.filename, values);
+    },
   }
 }
 </script>

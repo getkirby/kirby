@@ -4,20 +4,23 @@
     :view="view"
     class="k-file-view"
   >
-    <k-file-preview v-bind="preview" />
+    <k-file-preview
+      v-if="preview"
+      v-bind="preview"
+    />
     <k-model-view
       v-bind="$props"
-      :rename="true"
-      :title="file.filename"
+      :title="filename"
       @rename="onOption('rename')"
       @option="onOption"
     >
       <template v-slot:options>
         <k-button
+          v-if="url !== false"
+          :link="url"
           :responsive="true"
           :text="$t('open')"
           icon="open"
-          @click="onOpen"
         />
       </template>
     </k-model-view>
@@ -25,15 +28,15 @@
     <!-- Dialogs -->
     <k-file-rename-dialog
       ref="renameDialog"
-      @success="$emit('renamed', $event)"
+      @success="$emit('rename', $event)"
     />
     <k-file-remove-dialog
       ref="removeDialog"
-      @success="$emit('removed', $event)"
+      @success="$emit('remove', $event)"
     />
     <k-upload
       ref="replaceDialog"
-      @success="$emit('replaced', $event)"
+      @success="$emit('replace', $event)"
     />
   </k-inside>
 </template>
@@ -44,38 +47,34 @@ import ModelView from "./ModelView.vue";
 export default {
   props: {
     ...ModelView.props,
-    file: {
-      type: Object,
-      default() {
-        return {};
-      }
+    filename: {
+      type: String,
+      required: true
+    },
+    parent: {
+      type: String,
+      required: true
+    },
+    preview: {
+      type: [Boolean, Object],
+      default: false
+    },
+    url: {
+      type: [Boolean, String],
+      default: false
     },
     view: {
       type: String,
       default: "site"
     }
   },
-  computed: {
-    preview() {
-      return {
-        ...this.file,
-        ...this.file.dimensions || {},
-        image: this.file.url,
-        link: this.file.url,
-        size: this.file.niceSize,
-      };
-    }
-  },
   methods: {
-    onOpen() {
-      window.open(this.file.url);
-    },
     onOption(option) {
       switch (option) {
         case "rename":
           return this.$refs.renameDialog.open(
-            this.file.parent.guid,
-            this.file.filename
+            this.parent,
+            this.filename
           );
         case "replace":
           return this.$refs.replaceDialog.open({
@@ -85,8 +84,8 @@ export default {
           });
         case "remove":
           return this.$refs.removeDialog.open(
-            this.file.parent.guid,
-            this.file.filename
+            this.parent,
+            this.filename
           );
       }
     }

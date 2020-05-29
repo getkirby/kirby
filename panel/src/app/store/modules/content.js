@@ -168,16 +168,6 @@ export default {
     current(context, id) {
       context.commit("SET_CURRENT", id);
     },
-    async hasUnlock(context) {
-      const id       = context.state.current.id;
-      // TODO: fix unlock API route
-     // const response = await Api.get(id + "/unlock");
-     const response = {};
-
-      if (response.supported === true && response.unlocked === true ) {
-        context.dispatch("unlock", context.getters.changes(id));
-      }
-    },
     input(context, { id, values }) {
       context.commit("INPUT_MODEL", {
         id:     id || context.state.current.id,

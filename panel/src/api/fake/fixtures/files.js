@@ -1,3 +1,5 @@
+import { blueprint } from "./blueprints.js";
+
 const options = (merge) => {
   return {
     changeName: true,
@@ -9,6 +11,7 @@ const options = (merge) => {
 
 export default [
   {
+    blueprint: blueprint("image"),
     dimensions: {
       width: 1400,
       height: 930,
@@ -22,7 +25,6 @@ export default [
     mime: "image/jpeg",
     name: "free-wheely",
     niceSize: "453.75 kB",
-    template: "image",
     url: "https://source.unsplash.com/user/erondu/1600x900",
   },
 ];

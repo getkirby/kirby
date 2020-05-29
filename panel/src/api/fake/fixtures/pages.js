@@ -1,8 +1,4 @@
-import blueprints from "./blueprints.js";
-
-const blueprint = (name) => {
-  return blueprints.filter(blueprint => blueprint.name === name)[0] || blueprints[0];
-};
+import { blueprint } from "./blueprints.js";
 
 const page = (id, merge) => {
   const slug = id.split("+").pop();

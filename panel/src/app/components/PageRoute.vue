@@ -2,7 +2,6 @@
   <k-page-view
     v-if="model.id"
     v-bind="view"
-    :saving="saving"
     @changeStatus="onChangeStatus"
     @changeTitle="onChangeTitle"
     @delete="onDelete"
@@ -16,6 +15,11 @@ import ModelRoute from "./ModelRoute.vue";
 
 export default {
   extends: ModelRoute,
+  props: {
+    id: {
+      type: String
+    }
+  },
   computed: {
     storeId() {
       return "/pages/" + this.id;
@@ -23,18 +27,19 @@ export default {
     view() {
       return {
         breadcrumb: this.$model.pages.breadcrumb(this.model),
-        changes: this.changes,
-        columns: this.columns(this.model.blueprint.tabs, this.tab),
-        id: this.id,
-        options: this.$model.pages.dropdown(this.model.options),
-        preview: this.model.previewUrl,
-        rename: this.model.options.changeTitle,
-        status: this.status(this.model),
-        tabs: this.model.blueprint.tabs,
-        tab: this.tab,
-        template: this.model.blueprint.title,
-        title: this.model.title,
-        value: this.values
+        changes:    this.changes,
+        columns:    this.columns(this.model.blueprint.tabs, this.tab),
+        id:         this.id,
+        options:    this.$model.pages.dropdown(this.model.options),
+        preview:    this.model.previewUrl,
+        rename:     this.model.options.changeTitle,
+        saving:     this.saving,
+        status:     this.status(this.model),
+        tabs:       this.model.blueprint.tabs,
+        tab:        this.tab,
+        template:   this.model.blueprint.title,
+        title:      this.model.title,
+        value:      this.values
       };
     }
   },

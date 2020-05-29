@@ -37,8 +37,7 @@ const pageOptions = (merge) => {
   };
 };
 
-
-export default [
+const blueprints = [
   {
     id: "pages+default",
     name: "default",
@@ -71,4 +70,19 @@ export default [
     status: status(),
     title: "Photography",
   },
+  {
+    id: "files+image",
+    name: "image",
+    title: "Image",
+    tabs: [
+      tabs["files+image+meta"],
+      tabs["files+image+seo"]
+    ],
+  },
 ];
+
+export const blueprint = (name) => {
+  return blueprints.filter(blueprint => blueprint.name === name)[0] || blueprints[0];
+};
+
+export default blueprints;

@@ -45,4 +45,44 @@ export default {
     label: "SEO",
     name: "seo",
   },
+  "files+image+meta": {
+    columns: [
+      {
+        width: "2/3",
+        sections: {
+          fields: {
+            type: "fields",
+            fields: {
+              caption: {
+                label: "Caption",
+                type: "text"
+              },
+            },
+          },
+        },
+      },
+      {
+        width: "1/3",
+        sections: {
+          fields: {
+            type: "fields",
+            fields: {
+              copyright: {
+                label: "Copyright",
+                type: "text",
+              }
+            },
+          },
+        },
+      },
+    ],
+    icon: "image",
+    label: "Meta",
+    name: "meta",
+  },
+  "files+image+seo": {
+    icon: "search",
+    label: "SEO",
+    name: "seo",
+  },
 };
