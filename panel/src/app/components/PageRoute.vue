@@ -24,6 +24,20 @@ export default {
     storeId() {
       return "/pages/" + this.id;
     },
+    status() {
+      const defaults  = this.$model.pages.statusIcon(this.model.status);
+      const blueprint = this.model.blueprint.status[this.model.status];
+
+      return {
+        icon: {
+          type: blueprint.icon   || defaults.type,
+          color: blueprint.color || defaults.color,
+          size: "small",
+        },
+        text: blueprint.label,
+        tooltip: blueprint.text,
+      };
+    },
     view() {
       return {
         breadcrumb: this.$model.pages.breadcrumb(this.model),
@@ -34,7 +48,7 @@ export default {
         preview:    this.model.previewUrl,
         rename:     this.model.options.changeTitle,
         saving:     this.saving,
-        status:     this.status(this.model),
+        status:     this.status,
         tabs:       this.model.blueprint.tabs,
         tab:        this.tab,
         template:   this.model.blueprint.title,
@@ -58,7 +72,7 @@ export default {
       }
     },
     onChangeStatus(page) {
-      this.model.status = this.status(page);
+      this.model.status = page.status;
     },
     onChangeTitle(page) {
       this.model.title = page.title;
@@ -73,21 +87,7 @@ export default {
     },
     async saveModel(values) {
       return await this.$model.pages.update(this.id, values);
-    },
-    status(page) {
-      const icon = this.$model.pages.statusIcon(page.status);
-      const status = page.blueprint.status[page.status];
-
-      return {
-        icon: {
-          type: status.icon || icon.type,
-          color: status.color || icon.color,
-          size: "small",
-        },
-        text: status.label,
-        tooltip: status.text,
-      };
-    },
+    }
   }
 }
 </script>
