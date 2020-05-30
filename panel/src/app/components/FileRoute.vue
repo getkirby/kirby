@@ -10,6 +10,7 @@
     @save="onSave"
   />
 </template>
+
 <script>
 import ModelRoute from "./ModelRoute.vue";
 
@@ -27,31 +28,32 @@ export default {
     id() {
       return this.parent + "/" + this.filename;
     },
+    preview() {
+      return {
+        dimensions:  this.model.dimensions,
+        icon:        this.model.icon,
+        image:       this.model.url,
+        link: {
+          url: this.model.url
+        },
+        mime:        this.model.mime,
+        size:        this.model.niceSize,
+        template:    this.model.blueprint.name
+      };
+    },
     storeId() {
       return "/files/" + this.id;
     },
     view() {
-      console.log(this.model);
       return {
+        ...this.viewDefaults,
         breadcrumb: this.$model.files.breadcrumb(this.model),
-        changes:    this.changes,
-        columns:    this.columns(this.model.blueprint.tabs, this.tab),
-        filename:   this.model.filename,
+        filename:   this.filename,
         options:    this.$model.files.dropdown(this.model.options),
-        parent:     this.model.parent.id,
-        preview:    {
-          ...this.model,
-          ...this.model.dimensions || {},
-          image: this.model.url,
-          link:  this.model.url,
-          size:  this.model.niceSize,
-        },
+        parent:     this.parent,
+        preview:    this.preview,
         rename:     true,
-        saving:     this.saving,
-        tabs:       this.model.blueprint.tabs,
-        tab:        this.tab,
         url:        this.model.url,
-        value:      this.values,
         view:       "site"
       };
     }

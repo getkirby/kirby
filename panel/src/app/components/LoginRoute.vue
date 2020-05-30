@@ -32,7 +32,7 @@ export default {
       try {
         await this.$model.users.login(values);
         await this.$model.system.load();
-        this.$store.dispatch("notification/success", this.$t("welcome"));
+        this.$store.dispatch("notification/info", this.$t("welcome"));
       } catch (error) {
         this.$store.dispatch("notification/error", error);
       }

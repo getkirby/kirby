@@ -27,7 +27,7 @@ export default {
       return;
     }
 
-    this.translation = system.translation;
+    this.translation  = system.translation;
     this.translations = await this.$model.translations.options();
     this.loading = false;
   },
@@ -36,7 +36,7 @@ export default {
       this.installing = true;
       try {
         await this.$model.system.install(values);
-        this.$store.dispatch("notification/success", this.$t("welcome") + "!");
+        this.$store.dispatch("notification/info", this.$t("welcome") + "!");
         this.$router.push("/");
       } catch (error) {
         this.$store.dispatch("notification/error", error);

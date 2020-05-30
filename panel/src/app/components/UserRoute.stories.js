@@ -4,6 +4,6 @@ export default {
 
 export const regular = () => ({
   template: `
-    <k-user-route />
+    <k-user-route id="ada" />
   `
 });

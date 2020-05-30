@@ -6,11 +6,7 @@
     view="users"
   >
     <k-user-profile
-      :can-change-avatar="lock === false"
-      :can-change-email="$permissions.changeEmail && lock === false"
-      :can-change-language="$permissions.changeRole && lock === false"
-      :can-change-role="$permissions.changeLanguage && lock === false"
-      :user="user"
+      v-bind="profile"
       @remove-avatar="onOption('avatar.remove')"
       @upload-avatar="onOption('avatar.upload')"
       @email="onOption('email')"
@@ -20,7 +16,7 @@
     <k-model-view
       v-bind="$props"
       :rename="true"
-      :title="user.name || user.email"
+      :title="title"
       @rename="onOption('rename')"
       @option="onOption"
     />
@@ -62,12 +58,14 @@ import ModelView from "./ModelView.vue";
 export default {
   props: {
     ...ModelView.props,
-    user: {
+    id: String,
+    profile: {
       type: Object,
       default() {
         return {};
       }
-    }
+    },
+    title: String
   },
   methods: {
     onOpen() {
@@ -75,16 +73,17 @@ export default {
     async onOption(option) {
       switch (option) {
         case "avatar.remove":
-          await this.$api.users.deleteAvatar(this.user.id);
+          await this.$api.users.deleteAvatar(this.id);
           return this.$emit("update");
         case "avatar.upload":
           return this.$refs.upload.open({
-            url: this.user.avatarApi,
+            // TODO: API endpoint
+            url: "",
             accept: "image/*",
             multiple: false
           });
         default:
-          return this.$refs[option + "Dialog"].open(this.user.id);
+          return this.$refs[option + "Dialog"].open(this.id);
       }
     }
   }

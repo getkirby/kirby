@@ -2,7 +2,7 @@
   <div class="k-file-preview bg-black-light text-white">
     <k-view class="k-file-preview-layout items-center">
       <k-link
-        :to="link"
+        :to="link.url"
         :title="$t('open')"
         class="flex items-center justify-center"
         target="_blank"
@@ -27,11 +27,11 @@
             <p>
               <k-link
                 v-if="link"
-                :to="link"
+                :to="link.url"
                 tabindex="-1"
                 target="_blank"
               >
-                {{ linkText || link }}
+                {{ link.text || link.url }}
               </k-link>
             </p>
           </li>
@@ -42,16 +42,16 @@
           <li>
             <h3>{{ $t("dimensions") }}</h3>
             <p>
-              <template v-if="width || height">
-                {{ width }} &times; {{ height }} {{ $t("pixel") }}
+              <template v-if="dimensions.width || dimensions.height">
+                {{ dimensions.width }} &times; {{ dimensions.height }} {{ $t("pixel") }}
               </template>
             </p>
           </li>
           <li>
             <h3>{{ $t("orientation") }}</h3>
             <p>
-              <template v-if="orientation">
-                {{ $t("orientation." + orientation) }}
+              <template v-if="dimensions.orientation">
+                {{ $t("orientation." + dimensions.orientation) }}
               </template>
             </p>
           </li>
@@ -64,16 +64,17 @@
 <script>
 export default {
   props: {
-    height: [Number, String],
+    dimensions: {
+      type: Object,
+    },
     icon: Object,
     image: String,
-    link: String,
-    linkText: String,
+    link: {
+      type: Object
+    },
     mime: String,
-    orientation: String,
     size: String,
     template: String,
-    width: [Number, String],
   },
   computed: {
     preview() {

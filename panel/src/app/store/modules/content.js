@@ -14,8 +14,8 @@ export default {
   state: {
     current: {
       id: null,
-      lock: null,
-      unlock: null
+      lock: false,
+      unlocked: false
     },
     models: {}
   },
@@ -36,6 +36,9 @@ export default {
       }
 
       return id;
+    },
+    isCurrent: (state, getters) => id => {
+      return id === state.current.id;
     },
     model: (state, getters) => id => {
       id = id || state.current.id;
@@ -136,13 +139,13 @@ export default {
     SET_LOCK(state, lock) {
       Vue.set(state.current, "lock", lock);
     },
-    SET_UNLOCK(state, unlock) {
+    SET_UNLOCKED(state, unlocked) {
       // reset unsaved changes if content has been unlocked by another user
-      if (unlock) {
+      if (unlocked) {
         Vue.set(state.models[state.current.id], "changes", {});
       }
 
-      Vue.set(state.current, "unlock", unlock);
+      Vue.set(state.current, "unlocked", unlocked);
     }
   },
 
@@ -204,8 +207,8 @@ export default {
     revert(context, id) {
       context.commit("REVERT_MODEL", id || context.state.current.id);
     },
-    unlock(context, unlock) {
-      context.commit("SET_UNLOCK", unlock);
+    unlocked(context, unlocked) {
+      context.commit("SET_UNLOCKED", unlocked);
     },
     update(context, { id, values }) {
       id = id || context.state.current.id;

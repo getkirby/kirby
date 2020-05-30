@@ -40,20 +40,15 @@ export default {
     },
     view() {
       return {
+        ...this.viewDefaults,
         breadcrumb: this.$model.pages.breadcrumb(this.model),
-        changes:    this.changes,
-        columns:    this.columns(this.model.blueprint.tabs, this.tab),
         id:         this.id,
         options:    this.$model.pages.dropdown(this.model.options),
         preview:    this.model.previewUrl,
         rename:     this.model.options.changeTitle,
-        saving:     this.saving,
         status:     this.status,
-        tabs:       this.model.blueprint.tabs,
-        tab:        this.tab,
         template:   this.model.blueprint.title,
-        title:      this.model.title,
-        value:      this.values
+        title:      this.model.title
       };
     }
   },

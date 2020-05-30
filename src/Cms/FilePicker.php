@@ -52,8 +52,8 @@ class FilePicker extends Picker
         $files = $model->query($query);
 
         // help mitigate some typical query usage issues
-        // by converting site and page objects to proper
-        // pages by returning their children
+        // by returning associated files when result is
+        // a site, page or user object
         if (is_a($files, 'Kirby\Cms\Site') === true) {
             $files = $files->files();
         } elseif (is_a($files, 'Kirby\Cms\Page') === true) {

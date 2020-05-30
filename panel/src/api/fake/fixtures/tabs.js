@@ -85,4 +85,26 @@ export default {
     label: "SEO",
     name: "seo",
   },
+  "users+admin+profile": {
+    columns: [
+      {
+        width: "1/1",
+        sections: {
+          fields: {
+            type: "fields",
+            fields: {
+              twitter: {
+                label: "Twitter",
+                type: "text",
+                before: "@"
+              },
+            },
+          },
+        },
+      }
+    ],
+    icon: "user",
+    label: "Profile",
+    name: "profile",
+  },
 };

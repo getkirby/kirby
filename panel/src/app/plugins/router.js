@@ -28,8 +28,8 @@ export default (Vue, store) => {
     store.dispatch("view", to.meta.view);
 
     // reset the content locks
-    store.dispatch("content/lock", null);
-    store.dispatch("content/unlock", null);
+    store.dispatch("content/lock", false);
+    store.dispatch("content/unlocked", false);
 
     // clear all heartbeats
     store.dispatch("heartbeat/clear");

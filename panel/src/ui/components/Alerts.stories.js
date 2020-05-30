@@ -46,7 +46,7 @@ export const regular = () => ({
         },
         {
           type: "info",
-          message: "Welcome Bastian!"
+          message: "Welcome!"
         }
       ]
     }

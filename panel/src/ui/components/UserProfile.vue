@@ -10,7 +10,7 @@
             @click="$refs.picture.toggle()"
           >
             <k-item-figure
-              v-bind="avatar"
+              v-bind="avatarPreview"
               class="rounded-sm"
             />
           </k-button>
@@ -27,21 +27,21 @@
           icon="email"
           @click="$emit('email')"
         >
-          {{ $t("email") }}: {{ user.email || "–" }}
+          {{ $t("email") }}: {{ email || "–" }}
         </k-button>
         <k-button
           :disabled="!canChangeRole"
           icon="bolt"
           @click="$emit('role')"
         >
-          {{ $t("role") }}: {{ user.role.title || "–" }}
+          {{ $t("role") }}: {{ role || "–" }}
         </k-button>
         <k-button
           :disabled="!canChangeLanguage"
           icon="globe"
           @click="$emit('language')"
         >
-          {{ $t("language") }}: {{ user.language || "–" }}
+          {{ $t("language") }}: {{ language || "–" }}
         </k-button>
       </k-button-group>
     </k-view>
@@ -67,18 +67,16 @@ export default {
       type: Boolean,
       default: true
     },
-    user: {
-      type: Object,
-      default() {
-        return {};
-      }
-    }
+    email: String,
+    language: String,
+    role: String,
+    avatar: String
   },
   computed: {
-    avatar() {
+    avatarPreview() {
       return {
         preview: {
-          image: this.user.avatar.url,
+          image: this.avatar,
           icon: "user",
           back: "black",
           ratio: "1/1",
@@ -87,7 +85,7 @@ export default {
       }
     },
     avatarOptions() {
-      if (this.avatar.url) {
+      if (this.avatar) {
         return [
           {
             icon: "upload",

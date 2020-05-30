@@ -1,8 +1,11 @@
+import { blueprint } from "./blueprints.js";
+
 export default [
   {
     avatar: {
       url: "https://source.unsplash.com/user/erondu/400x400",
     },
+    blueprint: blueprint("admin"),
     id: "ada",
     roleId: "admin",
     email: "ada@getkirby.com",
