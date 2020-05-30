@@ -20,5 +20,8 @@ export default [
       delete: true
     },
     password: "demodemo",
+    content: {
+      twitter: "adalovelace"
+    }
   },
 ];

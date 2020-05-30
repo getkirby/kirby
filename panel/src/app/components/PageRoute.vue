@@ -6,6 +6,7 @@
     @changeTitle="onChangeTitle"
     @delete="onDelete"
     @input="onInput"
+    @language="onLanguage"
     @revert="onRevert"
     @save="onSave"
   />

@@ -2,7 +2,14 @@
   <k-user-view
     v-if="model.id"
     v-bind="view"
-    @remove="onRemoved"
+    @changeEmail="onChangeEmail"
+    @changeName="onChangeName"
+    @changeLanguage="onChangeLanguage"
+    @changeRole="onChangeRole"
+    @input="onInput"
+    @language="onLanguage"
+    @revert="onRevert"
+    @save="onSave"
   />
 </template>
 
@@ -49,8 +56,23 @@ export default {
     async loadModel() {
       return await this.$api.users.get(this.id);
     },
-    onRemoved() {
+    onRemove() {
       this.$router.push("/users");
+    },
+    onChangeEmail(user) {
+      this.model.email = user.email;
+    },
+    onChangeLanguage(user) {
+      this.model.language = user.language;
+    },
+    onChangeName(user) {
+      this.model.name = user.name;
+    },
+    onChangeRole(user) {
+      this.model.role = user.role;
+    },
+    onUpload() {
+      // TODO: remove or update avatar
     },
     async saveModel(values) {
       return await this.$model.users.update(this.id, values);

@@ -171,5 +171,12 @@ export default (Vue, store) => ({
     }
 
     return url;
-  }
+  },
+  async update(id, data) {
+    const user = await Vue.$api.users.update(id, data);
+    store.dispatch("content/update", { id: id, data: data });
+    Vue.$events.$emit("user.update", user);
+    store.dispatch("notification/success");
+    return user;
+  },
 });

@@ -2,6 +2,7 @@
   <k-file-view
     v-if="model.filename"
     v-bind="view"
+    @language="onLanguage"
     @remove="onRemove"
     @rename="onRename"
     @replace="onReplace"

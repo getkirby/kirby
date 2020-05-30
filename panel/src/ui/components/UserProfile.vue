@@ -17,6 +17,7 @@
           <k-dropdown-content
             ref="picture"
             :options="avatarOptions"
+            @option="onOption"
           />
         </k-dropdown>
       </template>
@@ -25,21 +26,21 @@
         <k-button
           :disabled="!canChangeEmail"
           icon="email"
-          @click="$emit('email')"
+          @click="onOption('email')"
         >
           {{ $t("email") }}: {{ email || "–" }}
         </k-button>
         <k-button
           :disabled="!canChangeRole"
           icon="bolt"
-          @click="$emit('role')"
+          @click="onOption('role')"
         >
           {{ $t("role") }}: {{ role || "–" }}
         </k-button>
         <k-button
           :disabled="!canChangeLanguage"
           icon="globe"
-          @click="$emit('language')"
+          @click="onOption('language')"
         >
           {{ $t("language") }}: {{ language || "–" }}
         </k-button>
@@ -90,12 +91,12 @@ export default {
           {
             icon: "upload",
             text: this.$t("replace"),
-            click: () => $emit("uploadAvatar")
+            option: "uploadAvatar"
           },
           {
             icon: "trash",
             text: this.$t("delete"),
-            click: () => $emit("removeAvatar")
+            option: "removeAvatar"
           }
         ];
       }
@@ -104,9 +105,14 @@ export default {
         {
           icon: "upload",
           text: this.$t("upload"),
-          click: () => $emit("uploadAvatar")
+          option: "uploadAvatar"
         }
       ];
+    }
+  },
+  methods: {
+    onOption(option) {
+      this.$emit("option", option);
     }
   }
 };

@@ -74,7 +74,13 @@ export default {
       return {};
     },
     onInput(values) {
-      this.$store.dispatch("content/input", { id: this.storeId, values: values });
+      this.$store.dispatch("content/input", {
+        id: this.storeId,
+        values: values
+      });
+    },
+    onLanguage(language) {
+      this.load();
     },
     onRevert() {
       this.$store.dispatch("content/revert", this.storeId);
@@ -83,7 +89,10 @@ export default {
       this.saving = true;
       const values = this.$store.getters["content/values"](this.storeId);
       await this.saveModel(values);
-      this.$store.dispatch("content/update", { id: this.storeId, values: values });
+      this.$store.dispatch("content/update", {
+        id: this.storeId,
+        values: values
+      });
       this.saving = false;
     },
     async saveModel(values) {

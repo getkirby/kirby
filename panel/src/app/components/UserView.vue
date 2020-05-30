@@ -7,11 +7,7 @@
   >
     <k-user-profile
       v-bind="profile"
-      @remove-avatar="onOption('avatar.remove')"
-      @upload-avatar="onOption('avatar.upload')"
-      @email="onOption('email')"
-      @language="onOption('language')"
-      @role="onOption('role')"
+      @option="onOption"
     />
     <k-model-view
       v-bind="$props"
@@ -19,16 +15,17 @@
       :title="title"
       @rename="onOption('rename')"
       @option="onOption"
+      v-on="$listeners"
     />
 
     <!-- Dialogs -->
     <k-user-email-dialog
       ref="emailDialog"
-      @success="$emit('update')"
+      @success="$emit('changeEmail', $event)"
     />
     <k-user-language-dialog
       ref="languageDialog"
-      @success="$emit('update')"
+      @success="$emit('changeLanguage', $event)"
     />
     <k-user-password-dialog
       ref="passwordDialog"
@@ -39,15 +36,15 @@
     />
     <k-user-rename-dialog
       ref="renameDialog"
-      @success="$emit('update')"
+      @success="$emit('changeName', $event)"
     />
     <k-user-role-dialog
       ref="roleDialog"
-      @success="$emit('update')"
+      @success="$emit('changeRole', $event)"
     />
     <k-upload
       ref="upload"
-      @success="$emit('update')"
+      @success="$emit('upload', $event)"
     />
   </k-inside>
 </template>
@@ -68,14 +65,12 @@ export default {
     title: String
   },
   methods: {
-    onOpen() {
-    },
     async onOption(option) {
       switch (option) {
-        case "avatar.remove":
+        case "removeAvatar":
           await this.$api.users.deleteAvatar(this.id);
-          return this.$emit("update");
-        case "avatar.upload":
+          return this.$emit("upload");
+        case "uploadAvatar":
           return this.$refs.upload.open({
             // TODO: API endpoint
             url: "",

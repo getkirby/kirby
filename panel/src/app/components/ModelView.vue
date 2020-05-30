@@ -30,7 +30,7 @@
               @option="onOption"
             />
           </k-dropdown>
-          <k-languages-dropdown />
+          <k-languages-dropdown @change="$emit('language', $event)" />
         </k-button-group>
       </template>
 
