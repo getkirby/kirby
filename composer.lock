@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "48e12d960a63efff8623eca36b5852ad",
+    "content-hash": "4e478ea0669f7d25a98c4207a7af11ce",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -47,16 +47,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.7.1",
+            "version": "2.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "fff6f1e4f36be0e0d0b84d66b413d9dcb0c49130"
+                "reference": "17d0d3f266c8f925ebd035cd36f83cf802b47d4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/fff6f1e4f36be0e0d0b84d66b413d9dcb0c49130",
-                "reference": "fff6f1e4f36be0e0d0b84d66b413d9dcb0c49130",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/17d0d3f266c8f925ebd035cd36f83cf802b47d4a",
+                "reference": "17d0d3f266c8f925ebd035cd36f83cf802b47d4a",
                 "shasum": ""
             },
             "require": {
@@ -104,7 +104,7 @@
                 "throwable",
                 "whoops"
             ],
-            "time": "2020-01-15T10:00:00+00:00"
+            "time": "2020-05-05T12:28:07+00:00"
         },
         {
             "name": "getkirby/composer-installer",
@@ -195,16 +195,16 @@
         },
         {
             "name": "laminas/laminas-zendframework-bridge",
-            "version": "1.0.3",
+            "version": "1.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-zendframework-bridge.git",
-                "reference": "bfbbdb6c998d50dbf69d2187cb78a5f1fa36e1e9"
+                "reference": "fcd87520e4943d968557803919523772475e8ea3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/bfbbdb6c998d50dbf69d2187cb78a5f1fa36e1e9",
-                "reference": "bfbbdb6c998d50dbf69d2187cb78a5f1fa36e1e9",
+                "url": "https://api.github.com/repos/laminas/laminas-zendframework-bridge/zipball/fcd87520e4943d968557803919523772475e8ea3",
+                "reference": "fcd87520e4943d968557803919523772475e8ea3",
                 "shasum": ""
             },
             "require": {
@@ -249,7 +249,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2020-04-03T16:01:00+00:00"
+            "time": "2020-05-20T16:45:56+00:00"
         },
         {
             "name": "league/color-extractor",
@@ -407,16 +407,16 @@
         },
         {
             "name": "phpmailer/phpmailer",
-            "version": "v6.1.5",
+            "version": "v6.1.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PHPMailer/PHPMailer.git",
-                "reference": "a8bf068f64a580302026e484ee29511f661b2ad3"
+                "reference": "c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/a8bf068f64a580302026e484ee29511f661b2ad3",
-                "reference": "a8bf068f64a580302026e484ee29511f661b2ad3",
+                "url": "https://api.github.com/repos/PHPMailer/PHPMailer/zipball/c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3",
+                "reference": "c2796cb1cb99d7717290b48c4e6f32cb6c60b7b3",
                 "shasum": ""
             },
             "require": {
@@ -467,19 +467,11 @@
             "description": "PHPMailer is a full-featured email creation and transfer class for PHP",
             "funding": [
                 {
-                    "url": "https://marcus.bointon.com/donations/",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/Synchro",
+                    "url": "https://github.com/synchro",
                     "type": "github"
-                },
-                {
-                    "url": "https://www.patreon.com/marcusbointon",
-                    "type": "patreon"
                 }
             ],
-            "time": "2020-03-14T14:23:48+00:00"
+            "time": "2020-05-27T12:24:03+00:00"
         },
         {
             "name": "psr/log",
@@ -530,16 +522,16 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.15.0",
+            "version": "v1.17.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "81ffd3a9c6d707be22e3012b827de1c9775fc5ac"
+                "reference": "fa79b11539418b02fc5e1897267673ba2c19419c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/81ffd3a9c6d707be22e3012b827de1c9775fc5ac",
-                "reference": "81ffd3a9c6d707be22e3012b827de1c9775fc5ac",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/fa79b11539418b02fc5e1897267673ba2c19419c",
+                "reference": "fa79b11539418b02fc5e1897267673ba2c19419c",
                 "shasum": ""
             },
             "require": {
@@ -551,7 +543,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.15-dev"
+                    "dev-master": "1.17-dev"
                 }
             },
             "autoload": {
@@ -599,7 +591,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-03-09T19:04:49+00:00"
+            "time": "2020-05-12T16:47:27+00:00"
         },
         {
             "name": "true/punycode",

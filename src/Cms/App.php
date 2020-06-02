@@ -77,6 +77,14 @@ class App
     protected $visitor;
 
     /**
+     * List of options that shouldn't be converted
+     * to a tree structure by dot syntax
+     *
+     * @var array
+     */
+    public static $nestIgnoreOptions = ['hooks'];
+
+    /**
      * Creates a new App instance
      *
      * @param array $props
@@ -123,8 +131,13 @@ class App
         $this->extensionsFromSystem();
         $this->extensionsFromProps($props);
         $this->extensionsFromPlugins();
-        $this->extensionsFromOptions();
         $this->extensionsFromFolders();
+
+        // bake the options for the first time
+        $this->bakeOptions();
+
+        // register the extensions from the normalized options
+        $this->extensionsFromOptions();
 
         // trigger hook for use in plugins
         $this->trigger('system.loadPlugins:after');
@@ -132,8 +145,8 @@ class App
         // execute a ready callback from the config
         $this->optionsFromReadyCallback();
 
-        // bake config
-        Config::$data = $this->options;
+        // bake the options again with those from the ready callback
+        $this->bakeOptions();
     }
 
     /**
@@ -220,6 +233,18 @@ class App
         }
 
         return $event->argument($modify);
+    }
+
+    /**
+     * Normalizes and globally sets the configured options
+     *
+     * @return self
+     */
+    protected function bakeOptions()
+    {
+        $this->options = A::nest($this->options, static::$nestIgnoreOptions);
+        Config::$data = $this->options;
+        return $this;
     }
 
     /**
@@ -839,12 +864,7 @@ class App
 
         $config = Config::$data;
 
-        return $this->options = array_replace_recursive(
-            A::nest($config),
-            A::nest($main),
-            A::nest($host),
-            A::nest($addr)
-        );
+        return $this->options = array_replace_recursive($config, $main, $host, $addr);
     }
 
     /**
@@ -855,7 +875,7 @@ class App
      */
     protected function optionsFromProps(array $options = []): array
     {
-        return $this->options = array_replace_recursive($this->options, A::nest($options));
+        return $this->options = array_replace_recursive($this->options, $options);
     }
 
     /**
@@ -870,7 +890,7 @@ class App
             $options = (array)$this->options['ready']($this);
 
             // inject all last-minute options recursively
-            $this->options = array_replace_recursive($this->options, A::nest($options));
+            $this->options = array_replace_recursive($this->options, $options);
 
             // update the system with changed options
             if (

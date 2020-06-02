@@ -536,12 +536,41 @@ class AppPluginsTest extends TestCase
         $this->assertEquals($expected, Page::$models);
     }
 
+    public function testExtensionsFromOptions()
+    {
+        $calledRoute = false;
+        $calledHook  = false;
+
+        $kirby = new App([
+            'options' => [
+                'routes' => [
+                    [
+                        'pattern' => 'test',
+                        'action'  => function () use (&$calledRoute) {
+                            $calledRoute = true;
+                        }
+                    ]
+                ],
+                'hooks' => [
+                    'type.action:state' => function () use (&$calledHook) {
+                        $calledHook = true;
+                    }
+                ]
+            ]
+        ]);
+
+        $kirby->call('test');
+        $kirby->trigger('type.action:state');
+        $this->assertTrue($calledRoute);
+        $this->assertTrue($calledHook);
+    }
+
     public function testPluginOptions()
     {
         App::plugin('test/plugin', [
             'options' => [
                 'foo' => 'bar',
-                'another-foo' => 'bar',
+                'another.foo' => 'bar',
                 'dot' => 'line'
             ]
         ]);
@@ -563,7 +592,9 @@ class AppPluginsTest extends TestCase
             'test' => [
                 'plugin' => [
                     'foo' => 'another-bar',
-                    'another-foo' => 'bar',
+                    'another' => [
+                        'foo' => 'bar'
+                    ],
                     'dot' => 'another-line'
                 ]
             ]
@@ -588,17 +619,19 @@ class AppPluginsTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals(['three'], $kirby->option('test.plugin.foo'));
+        $this->assertSame(['three'], $kirby->option('test.plugin.foo'));
     }
 
     public function testPluginOptionsWithAssociativeArray()
     {
-        // non-associative
+        // associative
         App::plugin('test/plugin', [
             'options' => [
-                'foo' => [
-                    'a' => 'A',
-                    'b' => 'B'
+                'foo.a' => 'A',
+                'foo.b.c' => 'B.C',
+                'another.foo' => [
+                    'e' => 'D',
+                    'f.g' => 'E.F'
                 ]
             ]
         ]);
@@ -608,13 +641,39 @@ class AppPluginsTest extends TestCase
                 'index' => '/dev/null'
             ],
             'options' => [
-                'test.plugin.foo' => [
-                    'a' => 'Custom A'
+                'test.plugin' => [
+                    'foo' => [
+                        'a' => 'Custom A',
+                        'b.d' => 'Custom B.D'
+                    ],
+                    'another' => [
+                        'foo' => [
+                            'e' => 'Custom E',
+                            'f.h' => 'Custom F.H'
+                        ]
+                    ]
                 ]
             ]
         ]);
 
-        $this->assertEquals(['a' => 'Custom A', 'b' => 'B'], $kirby->option('test.plugin.foo'));
+        $this->assertSame([
+            'foo' => [
+                'a' => 'Custom A',
+                'b' => [
+                    'c' => 'B.C',
+                    'd' => 'Custom B.D'
+                ]
+            ],
+
+            // the another.foo option should be protected against nesting
+            'another' => [
+                'foo' => [
+                    'e' => 'Custom E',
+                    'f.g' => 'E.F',
+                    'f.h' => 'Custom F.H'
+                ]
+            ]
+        ], $kirby->option('test.plugin'));
     }
 
     public function testRoutes()

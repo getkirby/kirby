@@ -289,7 +289,11 @@ trait AppPlugins
             $options = $prefixed;
         }
 
-        return $this->extensions['options'] = $this->options = A::merge(A::nest($options), $this->options, A::MERGE_REPLACE);
+        // register each option in the nesting blacklist;
+        // this prevents Kirby from nesting the array keys inside each option
+        static::$nestIgnoreOptions = array_merge(static::$nestIgnoreOptions, array_keys($options));
+
+        return $this->extensions['options'] = $this->options = A::merge($options, $this->options, A::MERGE_REPLACE);
     }
 
     /**
