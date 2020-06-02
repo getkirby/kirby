@@ -1,6 +1,6 @@
 export default {
   install(Vue, store) {
-    Vue.prototype.$model = {};
+    Vue.prototype.$model = Vue.$model = {};
 
     /** Auto-load models */
     const req = require.context('@/app/models/', true, /\.js$/i);

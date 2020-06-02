@@ -14,6 +14,8 @@ import Vue from "vue";
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
+import "@/ui/css/index.scss";
+
 Vue.use(Config);
 Vue.use(I18n.plugin, Store);
 Vue.use(Ui);
@@ -22,6 +24,8 @@ Vue.use(ErrorHandling, Store);
 Vue.use(Api, Store);
 Vue.use(Models, Store);
 Vue.use(Plugins, Store);
+
+import "@/ui/css/utilities.scss";
 
 new Vue({
   router: Router(Vue, Store),

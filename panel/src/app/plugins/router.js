@@ -6,7 +6,7 @@ export default (Vue, store) => {
 
   Vue.use(Router);
 
-  const config = Vue.prototype.$config;
+  const config = Vue.$config;
   const router = new Router({
     mode: "history",
     routes: Routes(Vue, store),

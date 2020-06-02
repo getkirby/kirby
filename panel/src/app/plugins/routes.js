@@ -14,11 +14,11 @@ export default (Vue, store) => {
     {
       path: "/browser",
       name: "Browser",
-      component: Vue.component("k-browser-view"),
+      component: Vue.component("k-browser-route"),
     },
     {
       path: "/login",
-      component: Vue.component("k-login-view"),
+      component: Vue.component("k-login-route"),
     },
     {
       path: "/logout",
@@ -35,7 +35,7 @@ export default (Vue, store) => {
     },
     {
       path: "/installation",
-      component: Vue.component("k-installation-view"),
+      component: Vue.component("k-installation-route"),
     },
     {
       path: "/site",
@@ -43,7 +43,7 @@ export default (Vue, store) => {
       meta: {
         view: "site"
       },
-      component: Vue.component("k-site-view"),
+      component: Vue.component("k-site-route"),
       beforeEnter: authenticate
     },
     {
@@ -52,7 +52,7 @@ export default (Vue, store) => {
       meta: {
         view: "site"
       },
-      component: Vue.component("k-file-view"),
+      component: Vue.component("k-file-route"),
       beforeEnter: authenticate,
       props: route => ({
         path: "site",
@@ -65,7 +65,7 @@ export default (Vue, store) => {
       meta: {
         view: "site"
       },
-      component: Vue.component("k-file-view"),
+      component: Vue.component("k-file-route"),
       beforeEnter: authenticate,
       props: route => ({
         path: "pages/" + route.params.path,
@@ -78,7 +78,7 @@ export default (Vue, store) => {
       meta: {
         view: "users"
       },
-      component: Vue.component("k-file-view"),
+      component: Vue.component("k-file-route"),
       beforeEnter: authenticate,
       props: route => ({
         path: "users/" + route.params.path,
@@ -91,7 +91,7 @@ export default (Vue, store) => {
       meta: {
         view: "site"
       },
-      component: Vue.component("k-page-view"),
+      component: Vue.component("k-page-route"),
       beforeEnter: authenticate,
       props: route => ({
         path: route.params.path
@@ -103,7 +103,7 @@ export default (Vue, store) => {
       meta: {
         view: "settings"
       },
-      component: Vue.component("k-settings-view"),
+      component: Vue.component("k-settings-route"),
       beforeEnter: authenticate
     },
     {
@@ -112,7 +112,7 @@ export default (Vue, store) => {
       meta: {
         view: "users"
       },
-      component: Vue.component("k-users-view"),
+      component: Vue.component("k-users-route"),
       beforeEnter: authenticate,
       props: route => ({
         role: route.params.role
@@ -125,7 +125,7 @@ export default (Vue, store) => {
         view: "users"
       },
       beforeEnter: authenticate,
-      component: Vue.component("k-users-view")
+      component: Vue.component("k-users-route")
     },
     {
       path: "/users/:id",
@@ -133,7 +133,7 @@ export default (Vue, store) => {
       meta: {
         view: "users"
       },
-      component: Vue.component("k-user-view"),
+      component: Vue.component("k-user-route"),
       beforeEnter: authenticate,
       props: route => ({
         id: route.params.id
@@ -145,7 +145,7 @@ export default (Vue, store) => {
       meta: {
         view: "account"
       },
-      component: Vue.component("k-user-view"),
+      component: Vue.component("k-user-route"),
       beforeEnter: authenticate,
       props: () => ({
         id: store.state.user.current ? store.state.user.current.id : null
@@ -161,7 +161,7 @@ export default (Vue, store) => {
         plugin: route.params.id
       }),
       beforeEnter: authenticate,
-      component: Vue.component("k-custom-view")
+      component: Vue.component("k-custom-route")
     },
     {
       path: "*",
