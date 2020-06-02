@@ -113,9 +113,8 @@ class Query
                 static::accessError($data, $method, 'method/property');
             }
 
-            if (is_array($value) || is_object($value)) {
-                $data = $value;
-            }
+            // continue with the current value for the next part
+            $data = $value;
         }
 
         return $value;
