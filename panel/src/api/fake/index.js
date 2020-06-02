@@ -364,7 +364,12 @@ new Server({
 
     this.get("/users");
     this.post("/users", (schema, request) => {
-      return schema.users.create(requestValues(request));
+      let values = requestValues(request);
+
+      values.roleId = values.role;
+      delete values.role;
+
+      return schema.users.create(values);
     });
     this.get("/users/:id");
     this.patch("/users/:id", (schema, request) => {
