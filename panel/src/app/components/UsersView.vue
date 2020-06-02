@@ -30,7 +30,6 @@
           />
         </template>
       </k-header>
-
       <!-- user cardlets -->
       <k-async-collection
         ref="users"
