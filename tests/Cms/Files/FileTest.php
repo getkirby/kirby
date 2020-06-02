@@ -283,40 +283,6 @@ class FileTest extends TestCase
         Dir::remove(dirname($index));
     }
 
-    public function testPanelIconDefault()
-    {
-        $file = new File([
-            'filename' => 'something.jpg'
-        ]);
-
-        $icon     = $file->panelIcon();
-        $expected = [
-            'type'  => 'file-image',
-            'back'  => 'pattern',
-            'color' => '#de935f',
-            'ratio' => null
-        ];
-
-        $this->assertEquals($expected, $icon);
-    }
-
-    public function testPanelIconWithRatio()
-    {
-        $file = new File([
-            'filename' => 'something.jpg'
-        ]);
-
-        $icon     = $file->panelIcon(['ratio' => '3/2']);
-        $expected = [
-            'type'  => 'file-image',
-            'back'  => 'pattern',
-            'color' => '#de935f',
-            'ratio' => '3/2'
-        ];
-
-        $this->assertEquals($expected, $icon);
-    }
-
     public function testPanelOptions()
     {
         $file = new File([

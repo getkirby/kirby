@@ -822,7 +822,7 @@ class PageTest extends TestCase
             'type'  => 'page',
             'back'  => 'pattern',
             'ratio' => null,
-            'color' => '#c5c9c6'
+            'color' => 'gray-light'
         ];
 
         $this->assertEquals($expected, $icon);
@@ -843,7 +843,7 @@ class PageTest extends TestCase
             'type'  => 'test',
             'back'  => 'pattern',
             'ratio' => null,
-            'color' => '#c5c9c6'
+            'color' => 'gray-light'
         ];
 
         $this->assertEquals($expected, $icon);
@@ -860,7 +860,7 @@ class PageTest extends TestCase
             'type'  => 'page',
             'back'  => 'pattern',
             'ratio' => '3/2',
-            'color' => '#c5c9c6'
+            'color' => 'gray-light'
         ];
 
         $this->assertEquals($expected, $icon);
@@ -878,7 +878,6 @@ class PageTest extends TestCase
 
         $icon = $page->panelIcon();
 
-        $this->assertTrue($icon['emoji']);
         $this->assertEquals($emoji, $icon['type']);
         $this->assertEquals('pattern', $icon['back']);
         $this->assertEquals(null, $icon['ratio']);

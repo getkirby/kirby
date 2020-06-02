@@ -322,10 +322,10 @@ class PagesSectionTest extends TestCase
         $data = $section->data();
 
         // existing covers
-        $this->assertStringContainsString('data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw', $data[0]['image']['cards']['url']);
+        $this->assertSame('/media/pages/test/a/670812281-0/cover.jpg', $data[0]['preview']['image']['url']);
 
         // non-existing covers
-        $this->assertNull($data[2]['image']['cards']['url'] ?? null);
+        $this->assertNull($data[2]['preview']['image']['url'] ?? null);
     }
 
     public function testTemplates()

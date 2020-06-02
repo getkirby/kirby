@@ -923,11 +923,6 @@ class Page extends ModelWithContent
     {
         if ($icon = $this->blueprint()->icon()) {
             $params['type'] = $icon;
-
-            // check for emojis
-            if (strlen($icon) !== Str::length($icon)) {
-                $params['emoji'] = true;
-            }
         }
 
         return parent::panelIcon($params);
@@ -952,13 +947,13 @@ class Page extends ModelWithContent
      * @param string|null $query
      * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
      */
-    protected function panelImageSource(string $query = null)
+    protected function panelImage(string $query = null)
     {
         if ($query === null) {
             $query = 'page.image';
         }
 
-        return parent::panelImageSource($query);
+        return parent::panelImage($query);
     }
 
     /**
@@ -981,17 +976,13 @@ class Page extends ModelWithContent
      */
     public function panelPickerData(array $params = []): array
     {
-        $image = $this->panelImage($params['image'] ?? []);
-        $icon  = $this->panelIcon($image);
-
         return [
             'dragText'    => $this->dragText(),
             'hasChildren' => $this->hasChildren(),
-            'icon'        => $icon,
             'id'          => $this->id(),
-            'image'       => $image,
             'info'        => $this->toString($params['info'] ?? false),
             'link'        => $this->panelUrl(true),
+            'preview'     => $this->panelPreview($params['preview'] ?? []),
             'text'        => $this->toString($params['text'] ?? '{{ page.title }}'),
             'url'         => $this->url(),
         ];

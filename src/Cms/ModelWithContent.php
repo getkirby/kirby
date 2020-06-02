@@ -303,16 +303,47 @@ abstract class ModelWithContent extends Model
      * @param array $params
      * @return array
      */
-    public function panelIcon(array $params = null): array
+    protected function panelIcon(array $params = null): array
     {
         $defaults = [
             'type'  => 'page',
             'ratio' => null,
             'back'  => 'pattern',
-            'color' => '#c5c9c6',
+            'color' => 'gray-light',
         ];
 
         return array_merge($defaults, $params ?? []);
+    }
+
+    /**
+     * Returns the image file object based on provided query
+     *
+     * @internal
+     * @param string|null $query
+     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
+     */
+    protected function panelImage(string $query = null)
+    {
+        $image = $this->query($query ?? null);
+
+        // validate the query result
+        if (
+            is_a($image, 'Kirby\Cms\File') === false &&
+            is_a($image, 'Kirby\Cms\Asset') === false
+        ) {
+            $image = null;
+        }
+
+        // fallback for files
+        if (
+            $image === null &&
+            is_a($this, 'Kirby\Cms\File') === true &&
+            $this->isViewable() === true
+        ) {
+            $image = $this;
+        }
+
+        return $image;
     }
 
     /**
@@ -320,7 +351,7 @@ abstract class ModelWithContent extends Model
      * @param string|array|false $settings
      * @return array|null
      */
-    public function panelImage($settings = null): ?array
+    public function panelPreview($settings = null): ?array
     {
         $defaults = [
             'ratio' => '3/2',
@@ -339,14 +370,9 @@ abstract class ModelWithContent extends Model
             ];
         }
 
-        if ($image = $this->panelImageSource($settings['query'] ?? null)) {
-
-            // main url
-            $settings['url'] = $image->url();
-
-            // for cards
-            $settings['cards'] = [
-                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+        if ($image = $this->panelImage($settings['query'] ?? null)) {
+            $settings['image'] = [
+                'url'    => $image->url(),
                 'srcset' => $image->srcset([
                     352,
                     864,
@@ -354,51 +380,14 @@ abstract class ModelWithContent extends Model
                 ])
             ];
 
-            // for lists
-            $settings['list'] = [
-                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
-                'srcset' => $image->srcset([
-                    '1x' => [
-                        'width' => 38,
-                        'height' => 38,
-                        'crop' => 'center'
-                    ],
-                    '2x' => [
-                        'width' => 76,
-                        'height' => 76,
-                        'crop' => 'center'
-                    ],
-                ])
-            ];
-
             unset($settings['query']);
         }
 
+        if ($icon = $this->panelIcon($settings['icon'] ?? null)) {
+            $settings['icon'] = $icon;
+        }
+
         return array_merge($defaults, (array)$settings);
-    }
-
-    /**
-     * Returns the image file object based on provided query
-     *
-     * @internal
-     * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
-     */
-    protected function panelImageSource(string $query = null)
-    {
-        $image = $this->query($query ?? null);
-
-        // validate the query result
-        if (is_a($image, 'Kirby\Cms\File') === false && is_a($image, 'Kirby\Cms\Asset') === false) {
-            $image = null;
-        }
-
-        // fallback for files
-        if ($image === null && is_a($this, 'Kirby\Cms\File') === true && $this->isViewable() === true) {
-            $image = $this;
-        }
-
-        return $image;
     }
 
     /**

@@ -59,11 +59,8 @@ return [
         'options' => function (File $file) {
             return $file->panelOptions();
         },
-        'panelIcon' => function (File $file) {
-            return $file->panelIcon();
-        },
-        'panelImage' => function (File $file) {
-            return $file->panelImage();
+        'panelPreview' => function (File $file) {
+            return $file->panelPreview();
         },
         'panelUrl' => function (File $file) {
             return $file->panelUrl(true);
@@ -153,8 +150,7 @@ return [
             'nextWithTemplate' => 'compact',
             'niceSize',
             'options',
-            'panelIcon',
-            'panelImage',
+            'panelPreview',
             'parent' => 'compact',
             'parents' => ['id', 'slug', 'title'],
             'prevWithTemplate' => 'compact',

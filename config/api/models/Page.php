@@ -58,11 +58,8 @@ return [
         'options' => function (Page $page) {
             return $page->panelOptions(['preview']);
         },
-        'panelIcon' => function (Page $page) {
-            return $page->panelIcon();
-        },
-        'panelImage' => function (Page $page) {
-            return $page->panelImage();
+        'panelPreview' => function (Page $page) {
+            return $page->panelPreview();
         },
         'parent' => function (Page $page) {
             return $page->parent();
@@ -148,8 +145,7 @@ return [
             'children' => [
                 'hasChildren',
                 'id',
-                'panelIcon',
-                'panelImage',
+                'panelPreview',
                 'title',
             ],
         ]

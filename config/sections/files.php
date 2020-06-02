@@ -13,6 +13,7 @@ return [
         'max',
         'pagination',
         'parent',
+        'preview'
     ],
     'props' => [
         /**
@@ -20,12 +21,6 @@ return [
          */
         'flip' => function (bool $flip = false) {
             return $flip;
-        },
-        /**
-         * Image options to control the source and look of file previews
-         */
-        'image' => function ($image = null) {
-            return $image ?? [];
         },
         /**
          * Optional info text setup. Info text is shown on the right (lists) or below (cards) the filename.
@@ -110,21 +105,18 @@ return [
             $dragTextAbsolute = $this->model->is($this->parent) === false;
 
             foreach ($this->files as $file) {
-                $image = $file->panelImage($this->image);
-
                 $data[] = [
-                    'dragText' => $file->dragText('auto', $dragTextAbsolute),
+                    'dragText'  => $file->dragText('auto', $dragTextAbsolute),
                     'extension' => $file->extension(),
-                    'filename' => $file->filename(),
-                    'id'       => $file->id(),
-                    'icon'     => $file->panelIcon($image),
-                    'image'    => $image,
-                    'info'     => $file->toString($this->info ?? false),
-                    'link'     => $file->panelUrl(true),
-                    'mime'     => $file->mime(),
-                    'parent'   => $file->parent()->panelPath(),
-                    'text'     => $file->toString($this->text),
-                    'url'      => $file->url(),
+                    'filename'  => $file->filename(),
+                    'id'        => $file->id(),
+                    'info'      => $file->toString($this->info ?? false),
+                    'link'      => $file->panelUrl(true),
+                    'mime'      => $file->mime(),
+                    'parent'    => $file->parent()->panelPath(),
+                    'preview'   => $file->panelPreview($this->preview()),
+                    'text'      => $file->toString($this->text),
+                    'url'       => $file->url(),
                 ];
             }
 
@@ -226,6 +218,7 @@ return [
                 'link'     => $this->link,
                 'max'      => $this->max,
                 'min'      => $this->min,
+                'preview'  => $this->preview(),
                 'size'     => $this->size,
                 'sortable' => $this->sortable,
                 'upload'   => $this->upload

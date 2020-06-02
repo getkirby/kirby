@@ -617,6 +617,7 @@ trait AppPlugins
             FormField::$mixins['options']    = include static::$root . '/config/fields/mixins/options.php';
             FormField::$mixins['pagepicker'] = include static::$root . '/config/fields/mixins/pagepicker.php';
             FormField::$mixins['picker']     = include static::$root . '/config/fields/mixins/picker.php';
+            FormField::$mixins['preview']   = include static::$root . '/config/fields/mixins/preview.php';
             FormField::$mixins['upload']     = include static::$root . '/config/fields/mixins/upload.php';
             FormField::$mixins['userpicker'] = include static::$root . '/config/fields/mixins/userpicker.php';
 

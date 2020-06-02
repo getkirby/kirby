@@ -581,13 +581,13 @@ class User extends ModelWithContent
      * @param string|null $query
      * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
      */
-    protected function panelImageSource(string $query = null)
+    protected function panelImage(string $query = null)
     {
         if ($query === null) {
             return $this->avatar();
         }
 
-        return parent::panelImageSource($query);
+        return parent::panelImage($query);
     }
 
     /**
@@ -609,16 +609,12 @@ class User extends ModelWithContent
      */
     public function panelPickerData(array $params = null): array
     {
-        $image = $this->panelImage($params['image'] ?? []);
-        $icon  = $this->panelIcon($image);
-
         return [
-            'icon'     => $icon,
             'id'       => $this->id(),
-            'image'    => $image,
             'email'    => $this->email(),
             'info'     => $this->toString($params['info'] ?? false),
             'link'     => $this->panelUrl(true),
+            'preview'  => $this->panelPreview($params['preview'] ?? []),
             'text'     => $this->toString($params['text'] ?? '{{ user.username }}'),
             'username' => $this->username(),
         ];
