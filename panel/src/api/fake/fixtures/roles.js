@@ -1,5 +1,5 @@
 export default [
-  { id: "admin", code: "admin", title: "Admin" },
-  { id: "editor", code: "editor", title: "Editor" },
-  { id: "client", code: "client", title: "Client" },
+  { id: "admin", name: "admin", title: "Admin" },
+  { id: "editor", name: "editor", title: "Editor" },
+  { id: "client", name: "client", title: "Client" },
 ];
