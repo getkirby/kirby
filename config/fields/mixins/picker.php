@@ -1,9 +1,27 @@
 <?php
 
+use Kirby\Data\Yaml;
 use Kirby\Toolkit\I18n;
 
 return [
     'props' => [
+        /**
+         * Unset inherited props
+         */
+        'after'       => null,
+        'before'      => null,
+        'autofocus'   => null,
+        'icon'        => null,
+        'placeholder' => null,
+
+        /**
+         * Sets the model(s), which are selected by default
+         * when a new page/file/user is created
+         */
+        'default' => function ($default = null) {
+            return $default;
+        },
+
         /**
          * The placeholder text if none have been selected yet
          */
@@ -12,17 +30,17 @@ return [
         },
 
         /**
-         * Image settings for each item
-         */
-        'image' => function ($image = null) {
-            return $image;
-        },
-
-        /**
          * Info text for each item
          */
         'info' => function (string $info = null) {
             return $info;
+        },
+
+        /**
+         * Changes the layout of the selected files. Available layouts: `list`, `cards`
+         */
+        'layout' => function (string $layout = 'list') {
+            return $layout;
         },
 
         /**
@@ -68,11 +86,56 @@ return [
         },
 
         /**
+         * Layout size for cards: `tiny`, `small`, `medium`, `large` or `huge`
+         */
+        'size' => function (string $size = 'auto') {
+            return $size;
+        },
+
+        /**
          * Main text for each item
          */
         'text' => function (string $text = null) {
             return $text;
         },
 
+        'value' => function ($value = null) {
+            return $value;
+        }
+
     ],
+    'computed' => [
+        'default' => function () {
+            return Yaml::decode($this->default);
+        },
+        'value' => function () {
+            return Yaml::decode($this->value);
+        },
+    ],
+    'methods' => [
+        'modelResponse' => function ($model) {
+            return $model->panelPickerData([
+                'info'    => $this->info ?? false,
+                'model'   => $this->model(),
+                'preview' => $this->preview,
+                'text'    => $this->text,
+            ]);
+        },
+        'toModel' => function ($id = null) {
+            return $id;
+        },
+        'toModels' => function ($ids = [], Closure $callback) {
+            $models = array_map(function ($id) {
+                if ($model = $this->toModel($id)) {
+                    return $this->modelResponse($model);
+                }
+            }, $ids);
+            $models = array_filter($ids);
+            return $models;
+        }
+    ],
+    'validations' => [
+        'max',
+        'min'
+    ]
 ];

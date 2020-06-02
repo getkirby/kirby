@@ -1,20 +1,13 @@
 <?php
 
-use Kirby\Data\Yaml;
-use Kirby\Toolkit\A;
-
 return [
-    'mixins' => ['min', 'picker', 'userpicker'],
+    'mixins' => [
+        'min',
+        'picker',
+        'preview',
+        'userpicker'
+    ],
     'props' => [
-        /**
-         * Unset inherited props
-         */
-        'after'       => null,
-        'autofocus'   => null,
-        'before'      => null,
-        'icon'        => null,
-        'placeholder' => null,
-
         /**
          * Default selected user(s) when a new page/file/user is created
          */
@@ -23,75 +16,49 @@ return [
                 return [];
             }
 
-            if ($default === null && $user = $this->kirby()->user()) {
+            if (
+                $default === null &&
+                $user = $this->kirby()->user()
+            ) {
                 return [
                     $this->userResponse($user)
                 ];
             }
 
-            return $this->toUsers($default);
-        },
-
-        'value' => function ($value = null) {
-            return $this->toUsers($value);
-        },
-    ],
-    'computed' => [
-        /**
-         * Unset inherited computed
-         */
-        'default' => null
+            return $default;
+        }
     ],
     'methods' => [
-        'userResponse' => function ($user) {
-            return $user->panelPickerData([
-                'info'  => $this->info,
-                'image' => $this->image,
-                'text'  => $this->text,
-            ]);
-        },
-        'toUsers' => function ($value = null) {
-            $users = [];
-            $kirby = kirby();
-
-            foreach (Yaml::decode($value) as $email) {
-                if (is_array($email) === true) {
-                    $email = $email['email'] ?? null;
-                }
-
-                if ($email !== null && ($user = $kirby->user($email))) {
-                    $users[] = $this->userResponse($user);
-                }
-            }
-
-            return $users;
+        'toModel' => function ($id = null) {
+            return $this->kirby()->user($id);
         }
     ],
     'api' => function () {
         return [
             [
-                'pattern' => '/',
+                'pattern' => 'items',
+                'action'  => function () {
+                    $field = $this->field();
+                    $ids   = $this->requestQuery('ids');
+                    return $field->toUsers($ids);
+                }
+            ],
+            [
+                'pattern' => 'options',
                 'action' => function () {
                     $field = $this->field();
 
                     return $field->userpicker([
-                        'image'  => $field->image(),
-                        'info'   => $field->info(),
-                        'limit'  => $field->limit(),
-                        'page'   => $this->requestQuery('page'),
-                        'query'  => $field->query(),
-                        'search' => $this->requestQuery('search'),
-                        'text'   => $field->text()
+                        'info'    => $field->info(),
+                        'limit'   => $field->limit(),
+                        'page'    => $this->requestQuery('page'),
+                        'preview' => $field->preview(),
+                        'query'   => $field->query(),
+                        'search'  => $this->requestQuery('search'),
+                        'text'    => $field->text()
                     ]);
                 }
             ]
         ];
-    },
-    'save' => function ($value = null) {
-        return A::pluck($value, 'id');
-    },
-    'validations' => [
-        'max',
-        'min'
-    ]
+    }
 ];

@@ -152,23 +152,6 @@ export default {
 
       return this.actions.length > 0;
     },
-    loader() {
-      let options = [];
-
-      if (this.multiple) {
-        options.push({
-          icon: "remove",
-          text: "Remove",
-          disabled: this.disabled
-        });
-      }
-
-      return {
-        info: this.info,
-        limit: this.value.length,
-        options: options
-      }
-    },
     isSortable() {
       if (this.disabled === true) {
         return false;
@@ -187,6 +170,23 @@ export default {
       }
 
       return true;
+    },
+    loader() {
+      let options = [];
+
+      if (this.multiple) {
+        options.push({
+          icon: "remove",
+          text: "Remove",
+          disabled: this.disabled
+        });
+      }
+
+      return {
+        info: this.info,
+        limit: this.value.length,
+        options: options
+      }
     }
   },
   watch: {

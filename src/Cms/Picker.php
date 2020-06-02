@@ -50,8 +50,6 @@ abstract class Picker
     {
         // default params
         return [
-            // image settings (ratio, cover, etc.)
-            'image' => [],
             // query template for the info field
             'info' => false,
             // number of users displayed per pagination page
@@ -62,6 +60,8 @@ abstract class Picker
             'model' => site(),
             // current page when paginating
             'page' => 1,
+            // image/icon settings (ratio, cover, etc.)
+            'preview' => [],
             // a query string to fetch specific items
             'query' => null,
             // search query
@@ -99,10 +99,10 @@ abstract class Picker
                 $result[] = $this->options['map']($item);
             } else {
                 $result[] = $item->panelPickerData([
-                    'image' => $this->options['image'],
-                    'info'  => $this->options['info'],
-                    'model' => $this->options['model'],
-                    'text'  => $this->options['text'],
+                    'preview' => $this->options['preview'],
+                    'info'    => $this->options['info'],
+                    'model'   => $this->options['model'],
+                    'text'    => $this->options['text'],
                 ]);
             }
         }
