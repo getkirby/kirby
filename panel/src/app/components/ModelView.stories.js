@@ -208,6 +208,25 @@ export const prevNext = () => ({
   `,
 });
 
+export const disabledPrevNext = () => ({
+  extends: customOptions(),
+  template: `
+    <k-model-view
+      :columns="columns"
+      :options="options"
+      :prevnext="false"
+      :rename="true"
+      :title="title"
+      @option="onOption"
+      @rename="onRename"
+    >
+      <template slot="options">
+        <k-button icon="open" text="Open" @click="onOpen" />
+      </template>
+    </k-model-view>
+  `,
+});
+
 export const values = () => ({
   extends: customOptions(),
   data() {
