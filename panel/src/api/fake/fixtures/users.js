@@ -6,22 +6,23 @@ export default [
       url: "https://source.unsplash.com/user/erondu/400x400",
     },
     blueprint: blueprint("admin"),
+    content: {
+      twitter: "adalovelace",
+    },
     id: "ada",
-    roleId: "admin",
     email: "ada@getkirby.com",
-    name: "Ada Lovelace",
     language: "en",
+    name: "Ada Lovelace",
     options: {
       changeEmail: true,
       changeLanguage: true,
       changeName: true,
       changePassword: true,
       changeRole: true,
-      delete: true
+      delete: true,
     },
     password: "demodemo",
-    content: {
-      twitter: "adalovelace"
-    }
+    roleId: "admin",
+    username: "Ada Lovelace"
   },
 ];
