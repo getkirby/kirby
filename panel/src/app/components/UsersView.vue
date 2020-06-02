@@ -86,7 +86,8 @@ export default {
           title: this.$t("role.admin.title")
         }];
       }
-    }
+    },
+    users: Function
   },
   computed: {
     breadcrumb() {
@@ -125,41 +126,11 @@ export default {
       });
 
       return options;
-    },
-    users() {
-      return async ({ page, limit }) => {
-        const response = await this.$api.users.list({
-          page: page,
-          limit: limit,
-          role: this.role
-        });
-
-        return response.data.map(user => {
-          return {
-            id: user.id,
-            info: user.role.title,
-            link: this.$model.users.link(user.id),
-            options: async (ready) => {
-              return ready(await this.$model.users.options(user.id))
-            },
-            preview: user.avatar ?
-              {
-                image: user.avatar.url,
-                cover: true
-              }
-              :
-              {
-                icon: "user"
-              },
-            title: user.name || user.email,
-          }
-        });
-      }
     }
   },
   methods: {
-    onChangeRole(role) {
-      this.$emit("role", role);
+    onChangeRole(option) {
+      this.$emit("role", option.id);
     },
     onOption(option, user) {
       this.$refs[option + "Dialog"].open(user.id);
