@@ -8,8 +8,11 @@ export default {
       // load and filter roles
       this.roles = await this.$model.roles.options({ canBe: "created" });
 
+      // get the role of the current user
+      const currentRole = this.$user.role && this.$user.role.name ? this.$user.role.name : "admin";
+
       // don't let non-admins create admins
-      if (this.$user.role.name !== "admin") {
+      if (currentRole !== "admin") {
         this.roles = this.roles.filter(role => {
           return role.value !== "admin";
         });
@@ -24,7 +27,7 @@ export default {
         language: this.$model.languages.defaultLanguageCode() || "en",
         name: "",
         password: "",
-        role: this.$user.role.name
+        role: currentRole
       };
 
       // field setup

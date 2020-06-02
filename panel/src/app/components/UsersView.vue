@@ -33,6 +33,7 @@
 
       <!-- user cardlets -->
       <k-async-collection
+        ref="users"
         :empty="{
           icon: 'users',
           text: $t('role.empty')
@@ -142,10 +143,15 @@ export default {
             options: async (ready) => {
               return ready(await this.$model.users.options(user.id))
             },
-            preview: {
-              image: user.avatar.url,
-              cover: true
-            },
+            preview: user.avatar ?
+              {
+                image: user.avatar.url,
+                cover: true
+              }
+              :
+              {
+                icon: "user"
+              },
             title: user.name || user.email,
           }
         });
@@ -153,11 +159,14 @@ export default {
     }
   },
   methods: {
+    onChangeRole(role) {
+      this.$emit("role", role);
+    },
     onOption(option, user) {
       this.$refs[option + "Dialog"].open(user.id);
     },
     onSuccess() {
-
+      this.$refs.users.reload();
     }
   }
 };
