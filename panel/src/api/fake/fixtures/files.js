@@ -12,6 +12,10 @@ const options = (merge) => {
 export default [
   {
     blueprint: blueprint("image"),
+    content: {
+      caption: "Caption this!",
+      copyright: "2020"
+    },
     dimensions: {
       width: 1400,
       height: 930,

@@ -7,17 +7,17 @@ export default (Vue, store) => ({
       case "UserFile":
         breadcrumb.push({
           label: file.parent.username,
-          link: Vue.$model.users.link(file.parent.id)
+          link: Vue.$model.users.link(file.parent.id),
         });
-        parent = 'users/' + file.parent.id;
+        parent = "users/" + file.parent.id;
         break;
       case "SiteFile":
         parent = "site";
         break;
       case "PageFile":
-        breadcrumb = file.parents.map(parent => ({
+        breadcrumb = file.parents.map((parent) => ({
           label: parent.title,
-          link: this.link(parent.id)
+          link: this.link(parent.id),
         }));
         parent = this.url(file.parent.id);
         break;
@@ -25,7 +25,7 @@ export default (Vue, store) => ({
 
     breadcrumb.push({
       label: file.filename,
-      link: this.link(parent, file.filename)
+      link: this.link(parent, file.filename),
     });
 
     return breadcrumb;
@@ -36,7 +36,7 @@ export default (Vue, store) => ({
     // move in content store
     await store.dispatch("content/move", [
       "files/" + this.id(parent, filename),
-      "files/" + this.id(parent, file.filename)
+      "files/" + this.id(parent, file.filename),
     ]);
 
     Vue.$events.$emit("file.changeName", file);
@@ -96,7 +96,7 @@ export default (Vue, store) => ({
     return "/" + this.url(parent, filename, path);
   },
   async options(parent, filename, view = "view") {
-    const url  = this.url(parent, filename);
+    const url = this.url(parent, filename);
     const file = await Vue.$api.get(url, { select: "options" });
     return this.dropdown(file.options, vie);
   },
@@ -108,5 +108,12 @@ export default (Vue, store) => ({
     }
 
     return url;
-  }
+  },
+  async update(parent, filename, data) {
+    const file = await Vue.$api.files.update(parent, filename, data);
+    store.dispatch("content/update", { id: parent + "/" + filename, data: data });
+    Vue.$events.$emit("file.update", data);
+    store.dispatch("notification/success");
+    return file;
+  },
 });

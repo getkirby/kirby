@@ -208,6 +208,12 @@ new Server({
       return findFile(schema, request);
     });
 
+    this.patch("/:parentType/:parentId/files/:fileId", function(schema, request) {
+      return findFile(schema, request).update({
+        content: requestValues(request)
+      })
+    });
+
     this.post("/:parentType/:parentId/files", function(schema, request) {
 
       const file = request.requestBody.get("file");
@@ -230,6 +236,7 @@ new Server({
       return schema.files.where({ parentId: request.params.parentId });
     });
 
+    // change filename
     this.patch("/:parentType/:parentId/files/:fileId/name", function(schema, request) {
       let oldFile = findFile(schema, request);
       const values = requestValues(request);

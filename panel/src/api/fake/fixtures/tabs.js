@@ -78,7 +78,7 @@ export default {
     ],
     icon: "image",
     label: "Meta",
-    name: "meta",
+    name: "main",
   },
   "files+image+seo": {
     icon: "search",

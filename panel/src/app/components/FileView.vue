@@ -13,6 +13,7 @@
       :title="filename"
       @rename="onOption('rename')"
       @option="onOption"
+      v-on="$listeners"
     >
       <template v-slot:options>
         <k-button
