@@ -87,6 +87,14 @@ const blueprints = [
       tabs["users+admin+profile"]
     ],
   },
+  {
+    id: "site",
+    name: "site",
+    title: "Site",
+    tabs: [
+      tabs["site+main"]
+    ],
+  },
 ];
 
 export const blueprint = (name) => {

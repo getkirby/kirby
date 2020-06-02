@@ -1,9 +1,15 @@
+import { blueprint } from "./blueprints.js";
+
 export default [
   {
-    id: "site",
-    title: "Maegazine",
+    blueprint: blueprint("site"),
     childIds: [
       "photography"
-    ]
+    ],
+    id: "site",
+    options: {
+      changeTitle: true
+    },
+    title: "Maegazine",
   },
 ];
