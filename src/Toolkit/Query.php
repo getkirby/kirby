@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Exception\BadMethodCallException;
+
 /**
  * The Query class can be used to
  * query arrays and objects, including their
@@ -73,6 +75,8 @@ class Query
      *
      * @param string $query
      * @return mixed
+     *
+     * @throws Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
      */
     protected function resolve(string $query)
     {
@@ -92,15 +96,21 @@ class Query
             $value  = null;
 
             if (is_array($data)) {
-                $value = $data[$method] ?? null;
+                if (array_key_exists($method, $data) === true) {
+                    $value = $data[$method];
+                } else {
+                    static::accessError($data, $method, 'property');
+                }
             } elseif (is_object($data)) {
                 if (method_exists($data, $method) || method_exists($data, '__call')) {
                     $value = $data->$method(...$info['args']);
+                } else {
+                    $label = ($args === []) ? 'method/property' : 'method';
+                    static::accessError($data, $method, $label);
                 }
-            } elseif (is_scalar($data)) {
-                return $data;
             } else {
-                return null;
+                // further parts on a scalar/null value
+                static::accessError($data, $method, 'method/property');
             }
 
             if (is_array($value) || is_object($value)) {
@@ -199,5 +209,28 @@ class Query
 
         // resolve parameter for objects and methods itself
         return $this->resolve($arg);
+    }
+
+    /**
+     * Throws an exception for an access to an invalid method
+     *
+     * @param mixed $data Variable on which the access was tried
+     * @param string $name Name of the method/property that was accessed
+     * @param string $label Type of the name (`method`, `property` or `method/property`)
+     * @return void
+     *
+     * @throws Kirby\Exception\BadMethodCallException
+     */
+    protected static function accessError($data, string $name, string $label): void
+    {
+        $type = strtolower(gettype($data));
+        if ($type === 'double') {
+            $type = 'float';
+        }
+
+        $nonExisting = in_array($type, ['array', 'object']) ? 'non-existing ' : '';
+
+        $error = 'Access to ' . $nonExisting . $label . ' ' . $name . ' on ' . $type;
+        throw new BadMethodCallException($error);
     }
 }
