@@ -34,7 +34,7 @@
         </k-button-group>
       </template>
 
-      <template v-slot:right>
+      <template v-if="prevnext" v-slot:right>
         <k-prev-next :prev="prev" :next="next" />
       </template>
     </k-header>
@@ -115,6 +115,10 @@ export default {
     },
     prev: {
       type: Object,
+    },
+    prevnext: {
+      type: Boolean,
+      default: true
     },
     rename: {
       type: Boolean,
