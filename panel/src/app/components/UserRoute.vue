@@ -54,7 +54,8 @@ export default {
   },
   methods: {
     async loadModel() {
-      return await this.$api.users.get(this.id);
+
+      return await this.$api.users.get(this.id, { view: "panel" });
     },
     onRemove() {
       this.$router.push("/users");

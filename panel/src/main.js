@@ -4,7 +4,7 @@ import Config from "@/app/plugins/config.js";
 import ErrorHandling from "@/app/plugins/errors.js";
 import I18n from "vuex-i18n";
 import Models from "@/app/plugins/models.js";
-import Panel from "@/app/Panel.vue";
+import Panel from "@/app/components/Panel.vue";
 import Plugins from "@/app/plugins/plugins.js";
 import Router from "@/app/plugins/router.js";
 import Store from "@/app/store/index.js";
