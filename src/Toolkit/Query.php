@@ -23,8 +23,8 @@ class Query
 
     const NO_PNTH = '\([^\(]+\)(*SKIP)(*FAIL)';
     const NO_SQBR = '\[[^]]+\](*SKIP)(*FAIL)';
-    const NO_DLQU = '\"[^"]+\"(*SKIP)(*FAIL)';
-    const NO_SLQU = '\'[^\']+\'(*SKIP)(*FAIL)';
+    const NO_DLQU = '\"(?:[^"\\\\]|\\\\.)*\"(*SKIP)(*FAIL)';  // allow \" escaping inside string
+    const NO_SLQU = '\'(?:[^\'\\\\]|\\\\.)*\'(*SKIP)(*FAIL)'; // allow \' escaping inside string
     const SKIP    = self::NO_PNTH . '|' . self::NO_SQBR . '|' .
                     self::NO_DLQU . '|' . self::NO_SLQU;
 
@@ -175,13 +175,13 @@ class Query
         $arg = trim($arg);
 
         // string with double quotes
-        if (substr($arg, 0, 1) === '"') {
-            return trim($arg, '"');
+        if (substr($arg, 0, 1) === '"' && substr($arg, -1) === '"') {
+            return str_replace('\"', '"', substr($arg, 1, -1));
         }
 
         // string with single quotes
-        if (substr($arg, 0, 1) === '\'') {
-            return trim($arg, '\'');
+        if (substr($arg, 0, 1) === "'" && substr($arg, -1) === "'") {
+            return str_replace("\'", "'", substr($arg, 1, -1));
         }
 
         // boolean or null
