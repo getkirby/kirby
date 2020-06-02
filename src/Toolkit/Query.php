@@ -110,8 +110,18 @@ class Query
                     static::accessError($data, $method, 'property');
                 }
             } elseif (is_object($data)) {
-                if (method_exists($data, $method) || method_exists($data, '__call')) {
+                if (
+                    method_exists($data, $method) === true ||
+                    method_exists($data, '__call') === true
+                ) {
                     $value = $data->$method(...$args);
+                } elseif (
+                    $args === [] && (
+                        property_exists($data, $method) === true ||
+                        method_exists($data, '__get') === true
+                    )
+                ) {
+                    $value = $data->$method;
                 } else {
                     $label = ($args === []) ? 'method/property' : 'method';
                     static::accessError($data, $method, $label);
