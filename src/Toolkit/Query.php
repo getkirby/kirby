@@ -20,7 +20,7 @@ class Query
 {
     const PARTS      = '!([a-zA-Z_][a-zA-Z0-9_]*(\(.*?\))?)\.|' . self::SKIP . '!';
     const METHOD     = '!\((.*)\)!';
-    const PARAMETERS = '!,|' . self::SKIP . '!';
+    const PARAMETERS = '!,|' . self::SKIP . '!'; // split by comma, but not inside skip groups
 
     const NO_PNTH = '\([^\(]+\)(*SKIP)(*FAIL)';
     const NO_SQBR = '\[[^]]+\](*SKIP)(*FAIL)';
@@ -46,10 +46,10 @@ class Query
     /**
      * Creates a new Query object
      *
-     * @param string $query
+     * @param string|null $query
      * @param array|object $data
      */
-    public function __construct(string $query = null, $data = [])
+    public function __construct(?string $query = null, $data = [])
     {
         $this->query = $query;
         $this->data  = $data;
@@ -57,7 +57,7 @@ class Query
 
     /**
      * Returns the query result if anything
-     * can be found. Otherwise returns null.
+     * can be found, otherwise returns null
      *
      * @return mixed
      */
@@ -72,7 +72,7 @@ class Query
 
     /**
      * Resolves the query if anything
-     * can be found. Otherwise returns null.
+     * can be found, otherwise returns null
      *
      * @param string $query
      * @return mixed
@@ -90,12 +90,10 @@ class Query
         $data  = $this->data;
         $value = null;
 
-        while (count($parts)) {
-            $part   = array_shift($parts);
+        foreach ($parts as $part) {
             $info   = $this->part($part);
             $method = $info['method'];
             $args   = $info['args'];
-            $value  = null;
 
             if (is_array($data)) {
                 if (array_key_exists($method, $data) === true) {
@@ -162,7 +160,7 @@ class Query
 
     /**
      * Analyzes each part of the query string and
-     * extracts methods and method arguments.
+     * extracts methods and method arguments
      *
      * @param string $part
      * @return array
@@ -182,13 +180,13 @@ class Query
     }
 
     /**
-     * Converts a parameter of query to
-     * proper type.
+     * Converts a parameter of a query to
+     * its proper native PHP type
      *
-     * @param mixed $arg
+     * @param string $arg
      * @return mixed
      */
-    protected function parameter($arg)
+    protected function parameter(string $arg)
     {
         $arg = trim($arg);
 
