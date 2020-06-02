@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Kirby\Exception\BadMethodCallException;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * The Query class can be used to
@@ -93,17 +94,24 @@ class Query
             $part   = array_shift($parts);
             $info   = $this->part($part);
             $method = $info['method'];
+            $args   = $info['args'];
             $value  = null;
 
             if (is_array($data)) {
                 if (array_key_exists($method, $data) === true) {
                     $value = $data[$method];
+
+                    if (is_a($value, 'Closure') === true) {
+                        $value = $value(...$args);
+                    } elseif ($args !== []) {
+                        throw new InvalidArgumentException('Cannot access array element ' . $method . ' with arguments');
+                    }
                 } else {
                     static::accessError($data, $method, 'property');
                 }
             } elseif (is_object($data)) {
                 if (method_exists($data, $method) || method_exists($data, '__call')) {
-                    $value = $data->$method(...$info['args']);
+                    $value = $data->$method(...$args);
                 } else {
                     $label = ($args === []) ? 'method/property' : 'method';
                     static::accessError($data, $method, $label);
