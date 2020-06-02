@@ -7,14 +7,6 @@ export default {
 };
 
 export const regular = () => ({
-  data() {
-    return {
-      site: {
-        title: "Maegazine",
-        previewUrl: "https://getkirby.com"
-      }
-    };
-  },
   computed: {
     columns() {
       return [
@@ -52,13 +44,21 @@ export const regular = () => ({
     },
     lock() {
       return false;
+    },
+    preview() {
+      return "https://getkirby.com";
+    },
+    title() {
+      return "Maegazine";
     }
   },
   template: `
     <k-site-view
       :columns="columns"
       :lock="lock"
-      :site="site"
+      :rename="true"
+      :preview="preview"
+      :title="title"
     />
   `
 });

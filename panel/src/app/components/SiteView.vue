@@ -6,14 +6,14 @@
     <!-- blueprint -->
     <k-model-view
       v-bind="$props"
-      :rename="true"
-      :title="site.title"
+      :prevnext="false"
       @rename="$refs.rename.open()"
     >
       <template v-slot:options>
         <k-button
+          v-if="preview"
           :responsive="true"
-          :link="site.previewUrl"
+          :link="preview"
           :text="$t('open')"
           target="_blank"
           icon="open"
@@ -35,14 +35,9 @@ import ModelView from "./ModelView.vue";
 export default {
   props: {
     ...ModelView.props,
-    site: {
-      type: Object,
-      default() {
-        return {
-          previewUrl: "/",
-          title: this.$t("view.site"),
-        }
-      }
+    preview: {
+      type: [Boolean, String],
+      default: "/",
     }
   },
   methods: {
