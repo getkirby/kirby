@@ -1,6 +1,7 @@
 <template>
   <k-model-section
     v-bind="$props"
+    :empty="emptyOptions"
     :options="optionOptions"
     type="pages"
     @option="onOption"
@@ -44,18 +45,13 @@ import ModelSection from "./ModelSection.vue";
 
 export default {
   extends: ModelSection,
-  props: {
-    empty: {
-      type: Object,
-      default() {
-        return {
-          icon: "page",
-          text: this.$t("pages.empty")
-        };
-      }
-    }
-  },
   computed: {
+    emptyDefaults() {
+      return {
+        icon: "page",
+        text: this.$t("pages.empty")
+      };
+    },
     optionOptions() {
       if (this.add === false) {
         return [];

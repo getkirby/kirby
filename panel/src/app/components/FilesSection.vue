@@ -34,18 +34,13 @@ import ModelSection from "./ModelSection.vue";
 
 export default {
   extends: ModelSection,
-  props: {
-    empty: {
-      type: Object,
-      default() {
-        return {
-          icon: "file",
-          text: this.$t("files.empty")
-        };
-      }
-    }
-  },
   computed: {
+    emptyDefaults() {
+      return {
+        icon: "file",
+        text: this.$t("files.empty")
+      };
+    },
     optionOptions() {
       if (this.add === false) {
         return [];

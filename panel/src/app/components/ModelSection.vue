@@ -60,11 +60,15 @@ export default {
     emptyOptions() {
       if (typeof this.empty === "string") {
         return {
+          ...this.emptyDefaults,
           text: this.empty
         };
       }
 
-      return this.empty;
+      return {
+        ...this.emptyDefaults,
+        ...this.empty
+      }
     },
     listeners() {
       if (this.add) {
