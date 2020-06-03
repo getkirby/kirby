@@ -134,6 +134,7 @@ export default {
         title: this.label + " / " + this.$t("select"),
       };
 
+
       // provided a custom async function for options
       if (this.options) {
         options.options = this.options;

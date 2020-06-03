@@ -61,7 +61,7 @@ export default {
       data: [],
       loading: true,
       loadingTimeout: false,
-      limit: this.pagination.limit || 20,
+      limit: this.pagination.limit || 10,
       page: this.pagination.page || 1,
       total: 0,
       error: null

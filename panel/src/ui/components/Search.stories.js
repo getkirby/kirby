@@ -15,7 +15,11 @@ export const regular = () => ({
     };
   },
   computed: {
+    delay() {
+      return 0;
+    },
     types() {
+      const delay = this.delay;
       return {
         pages: {
           label: "Pages",
@@ -26,6 +30,8 @@ export const regular = () => ({
               if (query.length === 0) {
                 return [];
               }
+
+              await new Promise(r => setTimeout(r, delay));
 
               return [
                 {
@@ -74,8 +80,19 @@ export const regular = () => ({
   },
   template: `
     <div>
-      <k-button icon="search" @click="$refs.search.open()">Open search</k-button>
+      <k-button icon="search" @click="$refs.search.open()">
+        Open search
+      </k-button>
       <k-search ref="search" :types="types" :type="type" />
     </div>
   `
+});
+
+export const slowResponse = () => ({
+  extends: regular(),
+  computed: {
+    delay() {
+      return 2500;
+    }
+  }
 });

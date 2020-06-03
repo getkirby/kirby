@@ -2,6 +2,7 @@
   <portal v-if="isOpen">
     <div
       :dir="$direction"
+      :data-loading="isLoading"
       class="k-search fixed bg-backdrop"
       role="search"
       @click="close"
@@ -11,6 +12,7 @@
         @click.stop
       >
         <div class="k-search-input flex">
+          <!-- Types select -->
           <k-dropdown class="k-search-types flex">
             <k-button
               :text="currentType.label"
@@ -28,6 +30,8 @@
               </k-dropdown-item>
             </k-dropdown-content>
           </k-dropdown>
+
+          <!-- Input -->
           <input
             ref="input"
             v-model="q"
@@ -43,11 +47,13 @@
           <k-button
             :tooltip="$t('close')"
             class="k-search-close"
-            icon="cancel"
+            :icon="isLoading ? 'loader' : 'cancel'"
             @click="close"
           />
         </div>
+
         <ul>
+          <!-- Results -->
           <li
             v-for="(item, itemIndex) in items"
             :key="item.id"
@@ -60,6 +66,13 @@
             >
               <strong>{{ item.title }}</strong>
               <small>{{ item.info }}</small>
+            </k-link>
+          </li>
+
+          <!-- No results -->
+          <li v-if="q && isLoaded && items.length < 1">
+            <k-link :disabled="true">
+              <strong>{{ $t("search.empty") }}</strong>
             </k-link>
           </li>
         </ul>
@@ -87,9 +100,11 @@ export default {
     return {
       currentType: this.getCurrentType(this.type),
       isOpen: false,
+      isLoading: false,
+      isLoaded: false,
       items: [],
       q: null,
-      selected: -1,
+      selected: -1
     }
   },
   watch: {
@@ -110,7 +125,9 @@ export default {
     },
     close() {
       this.isOpen = false;
+      this.isLoaded = false;
       this.items = [];
+      this.q = null;
     },
     down() {
       if (this.selected < this.items.length - 1) {
@@ -142,6 +159,8 @@ export default {
     },
     async search(query) {
       this.$refs.types.close();
+      this.isLoaded  = false;
+      this.isLoading = true;
 
       try {
         this.items = await this.currentType.search()({ query, limit: 10 });
@@ -150,6 +169,8 @@ export default {
       }
 
       this.selected = -1;
+      this.isLoading = false;
+      this.isLoaded  = true;
     },
     tab() {
       const item = this.items[this.selected];
@@ -215,6 +236,9 @@ export default {
 }
 .k-search input:focus {
   outline: 0;
+}
+.k-search .k-icon-loader {
+  animation: Spin 2s linear infinite;
 }
 .k-search ul {
   background: $color-white;
