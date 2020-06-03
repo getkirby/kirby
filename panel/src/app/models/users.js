@@ -172,11 +172,21 @@ export default (Vue, store) => ({
 
     return url;
   },
-  async update(id, data) {
+  async update(id) {
+    // get values
+    const storeId = this.storeId(id);
+    const data = store.getters["content/values"](storeId);
+
+    // send updates to API and store
     const user = await Vue.$api.users.update(id, data);
-    store.dispatch("content/update", { id: id, data: data });
+    store.dispatch("content/update", { id: storeId, values: data });
+
+    // emit events
     Vue.$events.$emit("user.update", user);
     store.dispatch("notification/success");
     return user;
   },
+  storeId(id) {
+    return store.getters["content/id"]("/users/" + id);
+  }
 });

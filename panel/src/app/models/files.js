@@ -109,11 +109,21 @@ export default (Vue, store) => ({
 
     return url;
   },
-  async update(parent, filename, data) {
+  async update(parent, filename) {
+    // get values
+    const storeId = this.storeId(parent + "/" + filename);
+    const data = store.getters["content/values"](storeId);
+
+    // send updates to API and store
     const file = await Vue.$api.files.update(parent, filename, data);
-    store.dispatch("content/update", { id: parent + "/" + filename, data: data });
+    store.dispatch("content/update", { id: storeId, values: data });
+
+    // emit events
     Vue.$events.$emit("file.update", data);
     store.dispatch("notification/success");
     return file;
   },
+  storeId(id) {
+    return store.getters["content/id"]("/files/" + id);
+  }
 });

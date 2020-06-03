@@ -87,15 +87,10 @@ export default {
     },
     async onSave() {
       this.saving = true;
-      const values = this.$store.getters["content/values"](this.storeId);
-      await this.saveModel(values);
-      this.$store.dispatch("content/update", {
-        id: this.storeId,
-        values: values
-      });
+      await this.saveModel();
       this.saving = false;
     },
-    async saveModel(values) {
+    async saveModel() {
       // Hit the model API
       return {};
     }

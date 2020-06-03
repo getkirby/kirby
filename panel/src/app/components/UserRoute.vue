@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     storeId() {
-      return "/users/" + this.id;
+      return this.$model.users.storeId(this.id);
     },
     profile() {
       return {
@@ -77,8 +77,8 @@ export default {
     onChangeRole(user) {
       this.model.role = user.role;
     },
-    async saveModel(values) {
-      return await this.$model.users.update(this.id, values);
+    async saveModel() {
+      return await this.$model.users.update(this.id);
     }
   }
 }

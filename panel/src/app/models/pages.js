@@ -139,9 +139,16 @@ export default (Vue, store) => ({
     const page = await Vue.$api.get(url, { select: "options" });
     return this.dropdown(page.options, view);
   },
-  async update(id, data) {
+  async update(id) {
+    // get values
+    const storeId = this.storeId(id);
+    const data = store.getters["content/values"](storeId);
+
+    // send updates to API and store
     const page = await Vue.$api.pages.update(id, data);
-    store.dispatch("content/update", { id: id, data: data });
+    store.dispatch("content/update", { id: storeId, values: data });
+
+    // emit events
     Vue.$events.$emit("page.update", data);
     store.dispatch("notification/success");
     return page;
@@ -172,5 +179,8 @@ export default (Vue, store) => ({
         color: "green-light",
       }
     };
+  },
+  storeId(id) {
+    return store.getters["content/id"]("/pages/" + id);
   }
 });

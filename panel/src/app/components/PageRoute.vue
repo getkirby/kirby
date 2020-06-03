@@ -23,7 +23,7 @@ export default {
   },
   computed: {
     storeId() {
-      return "/pages/" + this.id;
+      return this.$model.pages.storeId(this.id);
     },
     status() {
       const defaults  = this.$model.pages.statusIcon(this.model.status);
@@ -81,8 +81,8 @@ export default {
         this.$router.push("/pages");
       }
     },
-    async saveModel(values) {
-      return await this.$model.pages.update(this.id, values);
+    async saveModel() {
+      return await this.$model.pages.update(this.id);
     }
   }
 }

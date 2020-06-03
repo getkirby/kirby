@@ -43,7 +43,7 @@ export default {
       };
     },
     storeId() {
-      return "/files/" + this.id;
+      return this.$models.file.storeId(this.id);
     },
     view() {
       return {
@@ -74,8 +74,8 @@ export default {
     onReplace(file) {
       this.load();
     },
-    async saveModel(values) {
-      return await this.$model.files.update(this.parent, this.filename, values);
+    async saveModel() {
+      return await this.$model.files.update(this.parent, this.filename);
     },
   }
 }

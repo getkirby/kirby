@@ -105,6 +105,6 @@ const store = new Vuex.Store({
   }
 });
 
-hasContentLocking(store);
+hasContentLocking(Vue, store);
 
 export default store;
