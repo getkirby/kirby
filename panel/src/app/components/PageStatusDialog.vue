@@ -47,12 +47,14 @@ export default {
           type: "radio",
           required: true,
           options: Object.keys(page.blueprint.status).map(key => {
+            const icon = this.$model.pages.statusIcon(key);
+
             return {
               value: key,
               text: page.blueprint.status[key].label,
               info: page.blueprint.status[key].text,
-              icon: page.blueprint.status[key].icon,
-              color: page.blueprint.status[key].color
+              icon: icon.type,
+              color: icon.color
             };
           })
         }
