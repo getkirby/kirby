@@ -5,17 +5,34 @@ import Pages from "../../../storybook/data/Pages.js";
 
 export default {
   title: "App | Blueprints / Pages Section",
-  component: PagesSection,
   decorators: [Padding]
 };
 
+const section = (delay = 0) => ({
+  extends: PagesSection,
+  computed: {
+    pages() {
+      return async ({ page, limit }) => {
+        await new Promise(r => setTimeout(r, delay));
+
+        return {
+          data: Pages(limit, ((page - 1) * limit) + 1),
+          pagination: {
+            total: 230
+          }
+        };
+      };
+    }
+  }
+});
+
 export const list = () => ({
+  components: {
+    "k-pages-section": section()
+  },
   computed: {
     add() {
       return false;
-    },
-    delay() {
-      return 0;
     },
     empty() {
       return;
@@ -35,18 +52,6 @@ export const list = () => ({
     page() {
       return 1;
     },
-    pages() {
-      return async ({ page, limit }) => {
-        await new Promise(r => setTimeout(r, this.delay));
-
-        return {
-          data: Pages(limit, ((page - 1) * limit) + 1),
-          pagination: {
-            total: 230
-          }
-        };
-      };
-    },
     preview() {
       return {};
     },
@@ -65,7 +70,6 @@ export const list = () => ({
       :empty="empty"
       :help="help"
       :info="true"
-      :items="pages"
       :layout="layout"
       :page="page"
       :preview="preview"
@@ -156,10 +160,8 @@ export const listWithError = () => ({
 
 export const listWithSlowServer = () => ({
   extends: list(),
-  computed: {
-    delay() {
-      return 2500;
-    },
+  components: {
+    "k-pages-section": section(2500)
   }
 });
 
@@ -247,10 +249,8 @@ export const cardletsWithError = () => ({
 
 export const cardletsWithSlowServer = () => ({
   extends: cardlets(),
-  computed: {
-    delay() {
-      return 2500;
-    },
+  components: {
+    "k-pages-section": section(2500)
   }
 });
 
@@ -338,10 +338,10 @@ export const cardsWithError = () => ({
 
 export const cardsWithSlowServer = () => ({
   extends: cards(),
+  components: {
+    "k-pages-section": section(2500)
+  },
   computed: {
-    delay() {
-      return 2500;
-    },
     preview() {
       return {
         back: "pattern",

@@ -1,21 +1,38 @@
 import { action } from "@storybook/addon-actions";
-import Padding from "../../../storybook/theme/Padding.js";
 import Files from "../../../storybook/data/Files.js";
+import Padding from "../../../storybook/theme/Padding.js";
 import FilesSection from "./FilesSection.vue";
 
 export default {
   title: "App | Blueprints / Files Section",
-  component: FilesSection,
   decorators: [Padding]
 };
 
+const section = (delay = 0) => ({
+  extends: FilesSection,
+  computed: {
+    files() {
+      return async ({ page, limit }) => {
+        await new Promise(r => setTimeout(r, delay));
+
+        return {
+          data: Files(limit, ((page - 1) * limit) + 1),
+          pagination: {
+            total: 230
+          }
+        };
+      };
+    }
+  }
+});
+
 export const list = () => ({
+  components: {
+    "k-files-section": section()
+  },
   computed: {
     add() {
       return false;
-    },
-    delay() {
-      return 0;
     },
     empty() {
       return;
@@ -35,19 +52,6 @@ export const list = () => ({
     preview() {
       return;
     },
-    files() {
-      return async ({ page, limit }) => {
-
-        await new Promise(r => setTimeout(r, this.delay));
-
-        return {
-          data: Files(10, ((page - 1) * limit) + 1),
-          pagination: {
-            total: 230
-          }
-        };
-      };
-    },
     sortable() {
       return false;
     },
@@ -62,7 +66,6 @@ export const list = () => ({
       :empty="empty"
       :help="help"
       :info="true"
-      :items="files"
       :layout="layout"
       :page="page"
       :preview="preview"
@@ -137,10 +140,8 @@ export const listWithError = () => ({
 
 export const listWithSlowServer = () => ({
   extends: list(),
-  computed: {
-    delay() {
-      return 2500;
-    },
+  components: {
+    "k-files-section": section(2500)
   }
 });
 
@@ -229,10 +230,8 @@ export const cardletsWithError = () => ({
 
 export const cardletsWithSlowServer = () => ({
   extends: cardlets(),
-  computed: {
-    delay() {
-      return 2500;
-    },
+  components: {
+    "k-files-section": section(2500)
   }
 });
 
@@ -321,10 +320,10 @@ export const cardsWithError = () => ({
 
 export const cardsWithSlowServer = () => ({
   extends: cards(),
+  components: {
+    "k-files-section": section(2500)
+  },
   computed: {
-    delay() {
-      return 2500;
-    },
     preview() {
       return {
         back: "pattern",

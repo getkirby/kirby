@@ -1,6 +1,9 @@
 <template>
   <k-model-section
+    ref="section"
     v-bind="$props"
+    :empty="emptyOptions"
+    :items="files"
     :options="optionOptions"
     type="files"
     @option="onOption"
@@ -10,19 +13,15 @@
         <!-- Dialogs -->
         <k-file-rename-dialog
           ref="renameDialog"
-          @success="$emit('renamed', $event)"
+          @success="onChanged"
         />
         <k-file-remove-dialog
           ref="removeDialog"
-          @success="$emit('removed', $event)"
+          @success="onChanged"
         />
         <k-upload
-          ref="replaceDialog"
-          @success="$emit('replaced', $event)"
-        />
-        <k-upload
-          ref="uploadDialog"
-          @success="$emit('uploaded', $event)"
+          ref="upload"
+          @success="onChanged"
         />
       </portal>
     </template>
@@ -41,6 +40,23 @@ export default {
         text: this.$t("files.empty")
       };
     },
+    files() {
+      return async () => {
+        const response = await this.load();
+
+        const items = response.data.map(file => {
+
+          file.options = async ready => ready(await this.$model.files.options(file.parent, file.filename, "list"));
+
+          return file;
+        });
+
+        return {
+          data: items,
+          pagination: response.pagination
+        };
+      }
+    },
     optionOptions() {
       if (this.add === false) {
         return [];
@@ -52,6 +68,9 @@ export default {
     }
   },
   methods: {
+    onChanged() {
+      this.$refs.section.$refs.collection.reload();
+    },
     onOption(option, file = {}, fileIndex) {
       switch (option) {
         case "rename":
@@ -60,7 +79,7 @@ export default {
             file.filename
           );
         case "replace":
-          return this.$refs.replaceDialog.open({
+          return this.$refs.upload.open({
             url: file.replaceApi,
             accept: file.mime,
             multiple: false
@@ -71,7 +90,7 @@ export default {
             file.filename
           );
         case "upload":
-          return this.$refs.uploadDialog.open({
+          return this.$refs.upload.open({
             url: endpoint.uploadApi
           });
       }
