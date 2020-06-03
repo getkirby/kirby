@@ -2,6 +2,7 @@
   <k-site-view
     v-if="model.title"
     v-bind="view"
+    @changeTitle="onChangeTitle"
     @input="onInput"
     @language="onLanguage"
     @revert="onRevert"
@@ -30,6 +31,9 @@ export default {
   methods: {
     async loadModel() {
       return await this.$api.site.get({ view: "panel" });
+    },
+    onChangeTitle(site) {
+      this.model.title = site.title;
     },
     async saveModel(values) {
       return await this.$model.site.update(values);

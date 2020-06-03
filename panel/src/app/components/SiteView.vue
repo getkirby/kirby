@@ -24,7 +24,7 @@
     <!-- dialogs -->
     <k-site-rename-dialog
       ref="rename"
-      @success="onRenamed"
+      @success="$emit('changeTitle', $event)"
     />
   </k-inside>
 </template>
@@ -38,11 +38,6 @@ export default {
     preview: {
       type: [Boolean, String],
       default: "/",
-    }
-  },
-  methods: {
-    onRenamed() {
-
     }
   }
 }
