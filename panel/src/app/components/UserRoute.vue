@@ -2,6 +2,7 @@
   <k-user-view
     v-if="model.id"
     v-bind="view"
+    @changeAvatar="onChangeAvatar"
     @changeEmail="onChangeEmail"
     @changeName="onChangeName"
     @changeLanguage="onChangeLanguage"
@@ -29,7 +30,7 @@ export default {
     },
     profile() {
       return {
-        avatar:   this.model.avatar.url,
+        avatar:   this.model.avatar ? this.model.avatar.url : null,
         email:    this.model.email,
         language: this.model.language,
         role:     this.model.role.title,
@@ -54,11 +55,14 @@ export default {
   },
   methods: {
     async loadModel() {
-
       return await this.$api.users.get(this.id, { view: "panel" });
     },
     onRemove() {
       this.$router.push("/users");
+    },
+    async onChangeAvatar() {
+      await this.load();
+      this.$store.dispatch("notification/success");
     },
     onChangeEmail(user) {
       this.model.email = user.email;
@@ -71,9 +75,6 @@ export default {
     },
     onChangeRole(user) {
       this.model.role = user.role;
-    },
-    onUpload() {
-      // TODO: remove or update avatar
     },
     async saveModel(values) {
       return await this.$model.users.update(this.id, values);

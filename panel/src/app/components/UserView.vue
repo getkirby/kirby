@@ -44,7 +44,7 @@
     />
     <k-upload
       ref="upload"
-      @success="$emit('upload', $event)"
+      @success="$emit('changeAvatar')"
     />
   </k-inside>
 </template>
@@ -69,11 +69,10 @@ export default {
       switch (option) {
         case "removeAvatar":
           await this.$api.users.deleteAvatar(this.id);
-          return this.$emit("upload");
+          return this.$emit("changeAvatar");
         case "uploadAvatar":
           return this.$refs.upload.open({
-            // TODO: API endpoint
-            url: "",
+            url: this.$config.api + "/users/" + this.id + "/avatar",
             accept: "image/*",
             multiple: false
           });
