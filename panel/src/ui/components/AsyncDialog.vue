@@ -42,6 +42,7 @@ export default {
      */
     onError(error) {
       this.$refs.dialog.error(error.message || error);
+      console.error(error);
     },
     /**
      * Handle submitting of the dialog
