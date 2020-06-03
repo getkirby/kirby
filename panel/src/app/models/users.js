@@ -187,6 +187,6 @@ export default (Vue, store) => ({
     return user;
   },
   storeId(id) {
-    return store.getters["content/id"]("/users/" + id);
+    return store.getters["content/id"]("users/" + id);
   }
 });

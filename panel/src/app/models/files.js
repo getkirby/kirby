@@ -124,6 +124,6 @@ export default (Vue, store) => ({
     return file;
   },
   storeId(id) {
-    return store.getters["content/id"]("/files/" + id);
+    return store.getters["content/id"]("files/" + id);
   }
 });

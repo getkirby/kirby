@@ -16,7 +16,7 @@ export default {
   extends: ModelRoute,
   computed: {
     storeId() {
-      return "/site";
+      return this.$model.site.storeId();
     },
     view() {
       return {
@@ -35,8 +35,8 @@ export default {
     onChangeTitle(site) {
       this.model.title = site.title;
     },
-    async saveModel(values) {
-      return await this.$model.site.update(values);
+    async saveModel() {
+      return await this.$model.site.update();
     }
   }
 }
