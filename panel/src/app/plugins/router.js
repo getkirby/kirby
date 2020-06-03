@@ -1,6 +1,5 @@
 import Router from "vue-router";
 import Routes from "./routes.js";
-import supports from "./supports.js";
 
 export default (Vue, store) => {
 
@@ -13,6 +12,7 @@ export default (Vue, store) => {
     url: config.url === '/' ? '' : config.url,
   });
 
-  return router;
+  Vue.$router = router;
 
+  return router;
 };
