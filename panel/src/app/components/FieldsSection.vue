@@ -4,9 +4,7 @@
     type="fields"
   >
     <k-form
-      :fields="fields"
-      :value="value"
-      :disabled="disabled || lock !== false"
+      v-bind="form"
       v-on="$listeners"
     />
   </k-section>
@@ -21,6 +19,26 @@ export default {
   props: {
     disabled: Boolean,
     fields: Object,
+  },
+  computed: {
+    form() {
+      let fields = this.fields;
+
+      Object.keys(this.fields).forEach(name => {
+        fields[name].section = this.name;
+        fields[name].endpoints = {
+          field: this.api + "/fields/" + name,
+          section: this.api + "/sections/" + this.name,
+          model: this.api
+        };
+      });
+
+      return {
+        fields: fields,
+        value: this.value,
+        disabled: this.disabled || this.lock !== false
+      }
+    }
   }
 };
 </script>

@@ -57,8 +57,11 @@ export default {
   },
   methods: {
     onChangeRole(role) {
-      // TODO: actual path for role filters
-      this.$router.push("/users/" + role);
+      if (role) {
+        return this.$router.push("/users/role/" + role);
+      }
+
+      this.$router.push("/users");
     }
   }
 }

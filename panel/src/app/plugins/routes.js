@@ -28,6 +28,15 @@ export default (Vue, store) => {
       beforeEnter: authenticate,
     },
     {
+      path: "/pages/:id",
+      name: "Page",
+      component: Vue.component("k-page-route"),
+      beforeEnter: authenticate,
+      props: (route) => ({
+        id: route.params.id,
+      }),
+    },
+    {
       path: "/users",
       name: "Users",
       component: Vue.component("k-users-route"),

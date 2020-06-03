@@ -124,13 +124,13 @@ return [
         'toModel' => function ($id = null) {
             return $id;
         },
-        'toModels' => function ($ids = [], Closure $callback) {
+        'toModels' => function (array $ids = []) {
             $models = array_map(function ($id) {
                 if ($model = $this->toModel($id)) {
                     return $this->modelResponse($model);
                 }
             }, $ids);
-            $models = array_filter($ids);
+            $models = array_filter($models);
             return $models;
         }
     ],

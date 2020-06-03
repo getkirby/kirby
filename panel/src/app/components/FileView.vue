@@ -10,6 +10,7 @@
     />
     <k-model-view
       v-bind="$props"
+      :api="apiEndpoint"
       :title="filename"
       @rename="onOption('rename')"
       @option="onOption"
@@ -67,6 +68,11 @@ export default {
     view: {
       type: String,
       default: "site"
+    }
+  },
+  computed: {
+    apiEndpoint() {
+      return this.parent + "/files/" + this.filename;
     }
   },
   methods: {

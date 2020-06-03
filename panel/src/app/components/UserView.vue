@@ -11,6 +11,7 @@
     />
     <k-model-view
       v-bind="$props"
+      :api="apiEndpoint"
       :rename="true"
       :title="title"
       @rename="onOption('rename')"
@@ -63,6 +64,11 @@ export default {
       }
     },
     title: String
+  },
+  computed: {
+    apiEndpoint() {
+      return "users/" + this.id;
+    }
   },
   methods: {
     async onOption(option) {

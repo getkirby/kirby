@@ -39,7 +39,7 @@ return [
                 'pattern' => 'items',
                 'action'  => function () {
                     $field = $this->field();
-                    $ids   = $this->requestQuery('ids');
+                    $ids   = Str::split($this->requestQuery('ids'));
                     return $field->toUsers($ids);
                 }
             ],

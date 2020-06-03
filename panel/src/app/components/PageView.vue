@@ -6,6 +6,7 @@
   >
     <k-model-view
       v-bind="$props"
+      :api="apiEndpoint"
       @option="onOption"
       @rename="onOption('rename')"
       v-on="$listeners"
@@ -80,6 +81,9 @@ export default {
     }
   },
   computed: {
+    apiEndpoint() {
+      return "pages/" + this.id;
+    },
     statusButton() {
       return {
         ...this.status,

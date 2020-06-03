@@ -21,6 +21,7 @@
 export default {
   inheritAttrs: false,
   props: {
+    api: String,
     /**
      * Deprecated. Use label!
      */

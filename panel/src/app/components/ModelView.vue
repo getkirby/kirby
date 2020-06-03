@@ -41,9 +41,9 @@
 
     <!-- columns -->
     <k-sections
+      :api="api"
       :columns="columns"
       :lock="lock"
-      :parent="id"
       :value="value"
       v-on="$listeners"
       @submit="$emit('save', value)"
@@ -85,6 +85,7 @@
 <script>
 export default {
   props: {
+    api: String,
     breadcrumb: {
       type: Array,
       default() {

@@ -7,6 +7,7 @@
     <k-model-view
       v-bind="$props"
       :prevnext="false"
+      api="site"
       @rename="$refs.rename.open()"
     >
       <template v-slot:options>

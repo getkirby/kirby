@@ -16,9 +16,9 @@
               :is="'k-' + section.type + '-section'"
               v-if="sectionExists(section.type)"
               v-bind="section"
+              :api="api"
               :label="label(section, sectionName)"
               :lock="lock"
-              :parent="parent"
               :value="model"
               v-on="listeners"
             />
@@ -36,12 +36,12 @@
 export default {
   inheritAttrs: false,
   props: {
+    api: String,
     columns: Array,
     lock: {
       type: [Boolean, Object],
       default: false,
     },
-    parent: String,
     value: {
       type: Object,
       default() {

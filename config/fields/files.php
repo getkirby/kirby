@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Toolkit\Str;
+
 return [
     'mixins' => [
         'filepicker',
@@ -37,8 +39,8 @@ return [
                 'pattern' => 'items',
                 'action'  => function () {
                     $field = $this->field();
-                    $ids   = $this->requestQuery('ids');
-                    return $field->toFiles($ids);
+                    $ids   = Str::split($this->requestQuery('ids'));
+                    return $field->toModels($ids);
                 }
             ],
             [

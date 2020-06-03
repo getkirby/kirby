@@ -13,8 +13,8 @@ export default (Vue, store) => {
 
   const getLock = async () => {
     const response = await Vue.$api.get(store.state.content.current.id + "/lock");
-    console.log("-> getLock:");
-    console.log(response);
+    // console.log("-> getLock:");
+    // console.log(response);
 
     // if content locking is not supported by model,
     // set flag and stop listening
@@ -56,14 +56,14 @@ export default (Vue, store) => {
 
   const onRouting = () => {
     if (store.state.content.current.id) {
-      console.log("@onRouting");
+      // console.log("@onRouting");
       repeat(getLock, 10);
     }
   }
 
   const onChanges = hasChanges => {
-    console.log("@onChanges: " + hasChanges);
-    console.log(store.getters["content/changes"]());
+    // console.log("@onChanges: " + hasChanges);
+    // console.log(store.getters["content/changes"]());
 
     // if user started to make changes,
     // start setting lock every 30 seconds
@@ -89,7 +89,7 @@ export default (Vue, store) => {
       action.type === "content/revert" ||
       action.type === "content/update"
       ) {
-      console.log("@onAction: " + action.type);
+      // console.log("@onAction: " + action.type);
       return removeLock();
     }
   })

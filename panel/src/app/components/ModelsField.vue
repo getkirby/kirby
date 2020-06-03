@@ -197,7 +197,7 @@ export default {
   methods: {
     async items() {
       return this.$api.get(this.endpoints.field + "/items", {
-        ids: JSON.stringify(this.selected)
+        ids: this.selected.join(",")
       });
     },
     map() {

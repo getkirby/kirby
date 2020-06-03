@@ -54,10 +54,6 @@ export default {
       type: Number,
       default: 1,
     },
-    parent: {
-      type: String,
-      default: "site"
-    },
     sortable: Boolean,
     type: String
   },
@@ -88,7 +84,7 @@ export default {
   methods: {
     async load() {
       return this.$api.get(
-        this.parent + "/sections/" + this.name,
+        this.api + "/sections/" + this.name,
         {
           page: this.page
         }

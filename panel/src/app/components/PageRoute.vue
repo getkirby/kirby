@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     async loadModel() {
-      return await this.$api.pages.get(this.id);
+      return await this.$api.pages.get(this.id, { view: "panel" });
     },
     onChangeSlug(page) {
       // Redirect, if slug was changed in default language
