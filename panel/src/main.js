@@ -2,7 +2,7 @@ import App from "@/app/index.js";
 import Api from "@/app/plugins/api.js";
 import Config from "@/app/plugins/config.js";
 import ErrorHandling from "@/app/plugins/errors.js";
-import I18n from "vuex-i18n";
+import I18n from "@/app/plugins/i18n.js";
 import Models from "@/app/plugins/models.js";
 import Panel from "@/app/components/Panel.vue";
 import Plugins from "@/app/plugins/plugins.js";
@@ -17,7 +17,7 @@ Vue.config.devtools = true;
 import "@/ui/css/index.scss";
 
 Vue.use(Config);
-Vue.use(I18n.plugin, Store);
+Vue.use(I18n, Store);
 Vue.use(Ui);
 Vue.use(App);
 Vue.use(ErrorHandling, Store);
