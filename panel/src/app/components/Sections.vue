@@ -18,6 +18,7 @@
               v-bind="section"
               :label="label(section, sectionName)"
               :lock="lock"
+              :parent="parent"
               :value="model"
               v-on="listeners"
             />
@@ -40,6 +41,7 @@ export default {
       type: [Boolean, Object],
       default: false,
     },
+    parent: String,
     value: {
       type: Object,
       default() {

@@ -916,16 +916,13 @@ class Page extends ModelWithContent
      * according to the blueprint settings
      *
      * @internal
-     * @param array $params
      * @return array
      */
-    public function panelIcon(array $params = null): array
+    public function panelIcon(): array
     {
         if ($icon = $this->blueprint()->icon()) {
-            $params['type'] = $icon;
+            return ['type' => $icon];
         }
-
-        return parent::panelIcon($params);
     }
 
     /**

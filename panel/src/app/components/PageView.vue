@@ -66,10 +66,6 @@ import ModelView from "./ModelView.vue";
 export default {
   props: {
     ...ModelView.props,
-    id: {
-      type: String,
-      required: true
-    },
     preview: {
       type: [Boolean, String],
       default: false

@@ -7,7 +7,7 @@
   >
     <img
       :alt="alt || ''"
-      :src="src"
+      :src="srcset ? 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw' : src"
       :srcset="srcset"
       :sizes="sizes"
       :class="imgClasses"

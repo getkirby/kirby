@@ -61,10 +61,7 @@
         <slot name="flag">
           <k-button
             v-if="flag"
-            :icon="flag.icon"
-            :color="flag.color"
-            :class="flag.class"
-            :disabled="flag.disabled"
+            v-bind="flag"
             class="k-item-button k-item-flag-button"
             @click="onFlag"
           />

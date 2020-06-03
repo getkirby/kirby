@@ -43,6 +43,7 @@
     <k-sections
       :columns="columns"
       :lock="lock"
+      :parent="id"
       :value="value"
       v-on="$listeners"
       @submit="$emit('save', value)"
@@ -100,6 +101,7 @@ export default {
         return [];
       }
     },
+    id: String,
     lock: {
       type: [Boolean, Object],
       default: false

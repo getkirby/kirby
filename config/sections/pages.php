@@ -153,7 +153,7 @@ return [
                     'id'          => $item->id(),
                     'dragText'    => $item->dragText(),
                     'text'        => $item->toString($this->text),
-                    'info'        => $item->toString($this->info ?? false),
+                    'info'        => $this->info ? $item->toString($this->info) : false,
                     'parent'      => $item->parentId(),
                     'preview'     => $item->panelPreview($this->preview()),
                     'link'        => $item->panelUrl(true),

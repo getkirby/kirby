@@ -9,6 +9,7 @@
     @changeRole="onChangeRole"
     @input="onInput"
     @language="onLanguage"
+    @remove="onRemove"
     @revert="onRevert"
     @save="onSave"
   />

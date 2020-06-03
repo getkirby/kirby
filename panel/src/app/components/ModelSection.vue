@@ -6,6 +6,7 @@
     @option="onSectionOption"
   >
     <k-async-collection
+      ref="collection"
       :empty="emptyOptions"
       :help="help"
       :items="items"
@@ -53,6 +54,10 @@ export default {
       type: Number,
       default: 1,
     },
+    parent: {
+      type: String,
+      default: "site"
+    },
     sortable: Boolean,
     type: String
   },
@@ -81,6 +86,14 @@ export default {
     }
   },
   methods: {
+    async load() {
+      return this.$api.get(
+        this.parent + "/sections/" + this.name,
+        {
+          page: this.page
+        }
+      );
+    },
     onEmpty(event) {
       this.$emit("empty", event);
       this.onSectionOption("add");

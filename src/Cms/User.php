@@ -564,14 +564,11 @@ class User extends ModelWithContent
      * Panel icon definition
      *
      * @internal
-     * @param array $params
      * @return array
      */
-    public function panelIcon(array $params = null): array
+    public function panelIcon(): array
     {
-        $params['type'] = 'user';
-
-        return parent::panelIcon($params);
+        return ['type' => 'user'];
     }
 
     /**

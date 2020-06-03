@@ -430,10 +430,9 @@ class File extends ModelWithContent
      * Panel icon definition
      *
      * @internal
-     * @param array $params
      * @return array
      */
-    public function panelIcon(array $params = null): array
+    public function panelIcon(): array
     {
         $types = [
             'image'    => ['color' => 'orange-light', 'type' => 'file-image'],
@@ -461,10 +460,10 @@ class File extends ModelWithContent
             $extensions[$this->extension()] ?? []
         );
 
-        $params['type']  = $definition['type']  ?? 'file';
-        $params['color'] = $definition['color'] ?? 'gray-light';
-
-        return parent::panelIcon($params);
+        return [
+            'type' => $definition['type']  ?? 'file',
+            'color' => $definition['color'] ?? 'gray-light'
+        ];
     }
 
     /**
@@ -474,13 +473,13 @@ class File extends ModelWithContent
      * @param string|null $query
      * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
      */
-    protected function panelImageSource(string $query = null)
+    protected function panelImage(string $query = null)
     {
         if ($query === null && $this->isViewable()) {
             return $this;
         }
 
-        return parent::panelImageSource($query);
+        return parent::panelImage($query);
     }
 
     /**

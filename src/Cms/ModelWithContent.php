@@ -297,25 +297,6 @@ abstract class ModelWithContent extends Model
     }
 
     /**
-     * Returns the panel icon definition
-     *
-     * @internal
-     * @param array $params
-     * @return array
-     */
-    protected function panelIcon(array $params = null): array
-    {
-        $defaults = [
-            'type'  => 'page',
-            'ratio' => null,
-            'back'  => 'pattern',
-            'color' => 'gray-light',
-        ];
-
-        return array_merge($defaults, $params ?? []);
-    }
-
-    /**
      * Returns the image file object based on provided query
      *
      * @internal
@@ -356,10 +337,10 @@ abstract class ModelWithContent extends Model
         $defaults = [
             'ratio' => '3/2',
             'back'  => 'pattern',
-            'cover' => false
+            'cover' => false,
         ];
 
-        // switch the image off
+        // switch the preview off
         if ($settings === false) {
             return null;
         }
@@ -372,7 +353,7 @@ abstract class ModelWithContent extends Model
 
         if ($image = $this->panelImage($settings['query'] ?? null)) {
             $settings['image'] = [
-                'url'    => $image->url(),
+                'src'    => $image->url(),
                 'srcset' => $image->srcset([
                     352,
                     864,
@@ -384,7 +365,8 @@ abstract class ModelWithContent extends Model
         }
 
         if ($icon = $this->panelIcon($settings['icon'] ?? null)) {
-            $settings['icon'] = $icon;
+            $settings['icon'] = $icon['type'] ?? 'page';
+            $settings['color'] = $icon['color'] ?? 'gray-light';
         }
 
         return array_merge($defaults, (array)$settings);

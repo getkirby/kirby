@@ -10,6 +10,7 @@
       :cover="preview.cover"
       :ratio="ratio"
       :src="preview.image.src || preview.image"
+      :srcset="preview.image.srcset"
       class="k-item-image"
     />
     <!-- icon -->
