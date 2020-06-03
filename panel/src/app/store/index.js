@@ -3,16 +3,18 @@ import Vuex from "vuex";
 
 // store modules
 import content from "./modules/content.js";
-import heartbeat from "./modules/heartbeat.js";
 import languages from "./modules/languages.js";
 import notification from "./modules/notification.js";
 import system from "./modules/system.js";
 import translation from "./modules/translation.js";
 import user from "./modules/user.js";
 
+// store watchers
+import hasContentLocking from "./watchers/hasContentLocking.js"
+
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+const store = new Vuex.Store({
   // eslint-disable-next-line
   strict: process.env.NODE_ENV !== "production",
   state: {
@@ -95,7 +97,6 @@ export default new Vuex.Store({
   },
   modules: {
     content: content,
-    heartbeat: heartbeat,
     languages: languages,
     notification: notification,
     system: system,
@@ -103,3 +104,7 @@ export default new Vuex.Store({
     user: user
   }
 });
+
+hasContentLocking(store);
+
+export default store;

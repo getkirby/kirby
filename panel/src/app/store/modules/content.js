@@ -1,13 +1,6 @@
 import Vue from "vue";
 import clone from "@/ui/helpers/clone.js";
 
-const keep = (id, data) => {
-  localStorage.setItem(
-    "kirby$content$" + id,
-    JSON.stringify(data)
-  );
-};
-
 export default {
   namespaced: true,
 
@@ -105,10 +98,13 @@ export default {
         }
       });
 
-      keep(id, {
-        originals: state.models[id].originals,
-        changes:   state.models[id].changes
-      });
+      localStorage.setItem(
+        "kirby$content$" + id,
+        JSON.stringify({
+          originals: state.models[id].originals,
+          changes:   state.models[id].changes
+        })
+      );
     },
     MOVE_MODEL(state, { from, to }) {
       // move state
