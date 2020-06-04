@@ -3,6 +3,8 @@
 namespace Kirby\Text;
 
 use Exception;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Str;
 
 /**
  * Parses and converts custom kirbytags in any
@@ -31,9 +33,22 @@ class KirbyTags
         !isx';
 
         return preg_replace_callback($regex, function ($match) use ($data, $options) {
+            $debug = $options['debug'] ?? false;
+
             try {
                 return static::$tagClass::parse($match[0], $data, $options)->render();
+            } catch (InvalidArgumentException $e) {
+                // stay silent in production and ignore non-existing tags
+                if ($debug !== true || Str::startsWith($e->getMessage(), 'Undefined tag type:') === true) {
+                    return $match[0];
+                }
+
+                throw $e;
             } catch (Exception $e) {
+                if ($debug === true) {
+                    throw $e;
+                }
+
                 return $match[0];
             }
         }, $text);
