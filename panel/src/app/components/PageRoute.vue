@@ -14,28 +14,26 @@
 import ModelRoute from "./ModelRoute.vue";
 import Vue from "vue";
 
+const load = async (id) => {
+  return await Vue.$api.pages.get(id, { view: "panel" });
+};
+
 export default {
   extends: ModelRoute,
-  props: {
-    id: {
-      type: String
-    }
-  },
   async beforeRouteEnter(to, from, next) {
-    const page = await Vue.$api.pages.get(to.params.id, { view: "panel" });
-
+    const model = await load(to.params.id);
     next(vm => {
-      return vm.load(page);
+      return vm.load(model);
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    const page = await Vue.$api.pages.get(to.params.id, { view: "panel" });
-    this.load(page);
+    const model = await load(to.params.id);
+    this.load(model);
     next();
   },
   computed: {
     storeId() {
-      return this.$model.pages.storeId(this.id);
+      return this.$model.pages.storeId(this.model.id);
     },
     status() {
       const defaults  = this.$model.pages.statusIcon(this.model.status);
@@ -59,7 +57,7 @@ export default {
       return {
         ...this.viewDefaults,
         breadcrumb: this.$model.pages.breadcrumb(this.model),
-        id:         this.id,
+        id:         this.model.id,
         options:    this.$model.pages.dropdown(this.model.options),
         preview:    this.model.previewUrl,
         rename:     this.model.options.changeTitle,
@@ -94,8 +92,12 @@ export default {
         this.$router.push("/pages");
       }
     },
+    async reload() {
+      const model = await load(this.model.id);
+      this.load(model);
+    },
     async saveModel() {
-      return await this.$model.pages.update(this.id);
+      return await this.$model.pages.update(this.model.id);
     }
   }
 }

@@ -57,10 +57,6 @@ export default {
       type: Boolean,
       default: false
     },
-    loading: {
-      type: Boolean,
-      default: false
-    },
     registered: {
       type: Boolean,
       default: false
@@ -89,6 +85,9 @@ export default {
         models: this.$store.state.content.models,
         languages: this.$store.state.languages
       };
+    },
+    loading() {
+      return this.$store.state.isLoading;
     },
     menu() {
       let menu = this.views;

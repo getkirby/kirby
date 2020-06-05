@@ -19,28 +19,26 @@
 import ModelRoute from "./ModelRoute.vue";
 import Vue from "vue";
 
+const load = async (id) => {
+  return await Vue.$api.users.get(id, { view: "panel" });
+};
+
 export default {
   extends: ModelRoute,
-  props: {
-    id: {
-      type: String
-    }
-  },
   async beforeRouteEnter(to, from, next) {
-    const user = await Vue.$api.users.get(to.params.id, { view: "panel" });
-
+    const model = await load(to.params.id);
     next(vm => {
-      return vm.load(user);
+      return vm.load(model);
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    const user = await Vue.$api.users.get(to.params.id, { view: "panel" });
+    const model = await load(to.params.id);
     this.load(user);
     next();
   },
   computed: {
     storeId() {
-      return this.$model.users.storeId(this.id);
+      return this.$model.users.storeId(this.model.id);
     },
     profile() {
       return {
@@ -64,7 +62,7 @@ export default {
       return {
         ...this.viewDefaults,
         breadcrumb: this.$model.users.breadcrumb(this.model),
-        id:         this.id,
+        id:         this.model.id,
         options:    this.$model.users.dropdown(this.model.options),
         profile:    this.profile,
         title:      this.model.name || this.model.email,
@@ -77,7 +75,7 @@ export default {
       this.$router.push("/users");
     },
     async onChangeAvatar() {
-      await this.load();
+      await this.reload();
       this.$store.dispatch("notification/success");
     },
     onChangeEmail(user) {
@@ -93,7 +91,11 @@ export default {
       this.model.role = user.role;
     },
     async saveModel() {
-      return await this.$model.users.update(this.id);
+      return await this.$model.users.update(this.model.id);
+    },
+    async reload() {
+      const model = await load(this.mode.id);
+      this.load(model);
     }
   }
 }
