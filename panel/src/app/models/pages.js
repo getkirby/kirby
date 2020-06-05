@@ -131,6 +131,9 @@ export default (Vue, store) => ({
     store.dispatch("notification/success");
     return page;
   },
+  id(id) {
+    return id.replace(/\//g, "+");
+  },
   link(id) {
     return "/" + this.url(id);
   },
@@ -154,7 +157,7 @@ export default (Vue, store) => ({
     return page;
   },
   url(id, path) {
-    let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");
+    let url = id === null ? "pages" : "pages/" + this.id(id);
 
     if (path) {
       url += "/" + path;
@@ -181,6 +184,6 @@ export default (Vue, store) => ({
     };
   },
   storeId(id) {
-    return store.getters["content/id"]("pages/" + id);
+    return store.getters["content/id"](this.url(id));
   }
 });

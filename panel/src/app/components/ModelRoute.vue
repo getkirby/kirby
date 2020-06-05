@@ -72,9 +72,6 @@ export default {
         values: this.model.content
       });
     },
-    async loadModel() {
-      return {};
-    },
     onInput(values) {
       this.$store.dispatch("content/input", {
         id: this.storeId,
@@ -90,10 +87,10 @@ export default {
     },
     async onSave() {
       this.saving = true;
-      await this.saveModel();
+      await this.save();
       this.saving = false;
     },
-    async saveModel() {
+    async save() {
       // Hit the model API
       return {};
     }

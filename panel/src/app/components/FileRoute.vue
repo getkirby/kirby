@@ -15,35 +15,36 @@
 import ModelRoute from "./ModelRoute.vue";
 import Vue from "vue";
 
+const load = async (parent, filename) => {
+  let model = await Vue.$api.files.get(parent, filename, { view: "panel" });
+  model.parent.guid = parent;
+  return model;
+};
+
 export default {
   extends: ModelRoute,
-  props: {
+  params: {
     filename: {
       type: String
     },
     parent: {
       type: String
-    },
-    type: {
-      type: String,
-      default: "pages"
     }
   },
   async beforeRouteEnter(to, from, next) {
-    const file = await Vue.$api.files.get(to.params.parentType + "/" + to.params.parentId, to.params.filename, { view: "panel" });
-
+    const model = await load(to.params.parentType + "/" + to.params.parentId, to.params.filename);
     next(vm => {
-      return vm.load(file);
+      return vm.load(model);
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    const file = await Vue.$api.pages.get(to.params.parentType + "/" + to.params.parentId, to.params.filename, { view: "panel" });
-    this.load(file);
+    const model = await load(to.params.parentType + "/" + to.params.parentId, to.params.filename);
+    this.load(model);
     next();
   },
   computed: {
     id() {
-      return this.parent + "/" + this.filename;
+      return this.model.parent.guid + "/" + this.model.filename;
     },
     preview() {
       return {
@@ -70,9 +71,9 @@ export default {
       return {
         ...this.viewDefaults,
         breadcrumb: this.$model.files.breadcrumb(this.model),
-        filename:   this.filename,
+        filename:   this.model.filename,
         options:    this.$model.files.dropdown(this.model.options),
-        parent:     this.parent,
+        parent:     this.model.parent.guid,
         preview:    this.preview,
         rename:     true,
         url:        this.model.url,
@@ -82,18 +83,22 @@ export default {
   },
   methods: {
     onRemove() {
-      const path = this.$model.pages.link(this.parent);
+      const path = this.$model.pages.link(this.model.parent.guid);
       this.$router.push(path);
     },
     onRename(file) {
-      const path = this.$model.files.link(this.parent, file.filename);
+      const path = this.$model.files.link(this.model.parent.guid, file.filename);
       this.$router.push(path);
     },
     onReplace(file) {
       this.load();
     },
-    async saveModel() {
-      return await this.$model.files.update(this.parent, this.filename);
+    async reload() {
+      const model = await load(this.model.parent.guid, this.model.filename);
+      this.load(model);
+    },
+    async save() {
+      return await this.$model.files.update(this.model.parent.guid, this.model.filename);
     },
   }
 }

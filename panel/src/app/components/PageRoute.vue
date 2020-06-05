@@ -57,7 +57,7 @@ export default {
       return {
         ...this.viewDefaults,
         breadcrumb: this.$model.pages.breadcrumb(this.model),
-        id:         this.model.id,
+        id:         this.$model.pages.id(this.model.id),
         options:    this.$model.pages.dropdown(this.model.options),
         preview:    this.model.previewUrl,
         rename:     this.model.options.changeTitle,
@@ -96,7 +96,7 @@ export default {
       const model = await load(this.model.id);
       this.load(model);
     },
-    async saveModel() {
+    async save() {
       return await this.$model.pages.update(this.model.id);
     }
   }

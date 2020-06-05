@@ -32,20 +32,12 @@ export default (Vue, store) => {
       name: "File",
       component: Vue.component("k-file-route"),
       beforeEnter: authenticate,
-      props: route => ({
-        filename: route.params.filename,
-        parent: route.params.parentType + "/" + route.params.parentId,
-        type: route.params.parentType,
-      })
     },
     {
       path: "/pages/:id",
       name: "Page",
       component: Vue.component("k-page-route"),
       beforeEnter: authenticate,
-      props: (route) => ({
-        id: route.params.id,
-      }),
     },
     {
       path: "/users",
@@ -66,9 +58,6 @@ export default (Vue, store) => {
       path: "/users/:id",
       name: "User",
       component: Vue.component("k-user-route"),
-      props: (route) => ({
-        id: route.params.id,
-      }),
       beforeEnter: authenticate,
     },
     {

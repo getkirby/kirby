@@ -12,18 +12,21 @@
 import ModelRoute from "./ModelRoute.vue";
 import Vue from "vue";
 
+const load = async () => {
+  return await Vue.$api.site.get({ view: "panel" });
+};
+
 export default {
   extends: ModelRoute,
   async beforeRouteEnter(to, from, next) {
-    const site = await Vue.$api.site.get({ view: "panel" });
-
+    const model = await load();
     next(vm => {
-      return vm.load(site);
+      return vm.load(model);
     });
   },
   async beforeRouteUpdate(to, from, next) {
-    const site = await Vue.$api.site.get({ view: "panel" });
-    this.load(site);
+    const model = await load();
+    this.load(model);
     next();
   },
   computed: {
@@ -49,7 +52,11 @@ export default {
     onChangeTitle(site) {
       this.model.title = site.title;
     },
-    async saveModel() {
+    async reload() {
+      const model = await load();
+      this.load(model);
+    },
+    async save() {
       return await this.$model.site.update();
     }
   }

@@ -1,6 +1,5 @@
 <template>
   <k-user-view
-    v-if="model.id"
     v-bind="view"
     @changeAvatar="onChangeAvatar"
     @changeEmail="onChangeEmail"
@@ -90,12 +89,12 @@ export default {
     onChangeRole(user) {
       this.model.role = user.role;
     },
-    async saveModel() {
-      return await this.$model.users.update(this.model.id);
-    },
     async reload() {
-      const model = await load(this.mode.id);
+      const model = await load(this.model.id);
       this.load(model);
+    },
+    async save() {
+      return await this.$model.users.update(this.model.id);
     }
   }
 }
