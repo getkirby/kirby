@@ -81,7 +81,11 @@ class Api extends BaseApi
             'data'   => array_merge($this->data(), ['field' => $field])
         ]);
 
-        return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
+        return $fieldApi->call(
+            $path,
+            $this->requestMethod(),
+            $this->requestData()
+        );
     }
 
     /**

@@ -45,6 +45,9 @@ return [
             ],
             [
                 'pattern' => 'options',
+                // TODO: the following line should not be needed,
+                // but removing it causes errors
+                'method' => 'GET',
                 'action'  => function () {
                     $field = $this->field();
 
