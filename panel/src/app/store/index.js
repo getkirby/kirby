@@ -73,23 +73,14 @@ const store = new Vuex.Store({
       context.commit("SET_SEARCH", search);
     },
     async title(context, title) {
-      let site;
-
-      if (context.state.user.current) {
-        site = await Api.site.get(["title"]);
-      } else {
-        site = context.state.system.info;
-      }
-
+      let site = context.state.system.info.title;
       context.commit("SET_TITLE", title);
-      context.dispatch("system/title", site.title);
-      document.title = title || "";
 
       if (title !== null) {
-        document.title += " | " + site.title;
-      } else {
-        document.title += site.title;
+        site = title + " | " + site;
       }
+
+      document.title = site;
     },
     view(context, view) {
       context.commit("SET_VIEW", view);

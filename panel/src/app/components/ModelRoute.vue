@@ -79,7 +79,8 @@ export default {
         values: values
       });
     },
-    onLanguage(language) {
+    async onLanguage(language) {
+      await this.$store.dispatch("system/load", true);
       this.load();
     },
     onRevert() {
