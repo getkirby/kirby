@@ -1,5 +1,5 @@
 
-export default (Vue, store) => {
+export default (Vue) => {
   const api = async ({endpoint, query, limit, fields, map}) => {
     const response = await Vue.$api.get(endpoint, {
       q: query,

@@ -1,23 +1,35 @@
-export default {
-  site: {
+export default (Vue) => [
+  {
+    id: "site",
     link: "/site",
-    icon: "page",
-    menu: true
+    icon: "home",
+    text: Vue.$t("view.site"),
   },
-  users: {
+  ...Object.values(window.panel.plugins.views),
+  {
+    id: "users",
     link: "/users",
     icon: "users",
-    menu: true
+    text: Vue.$t("view.users"),
   },
-  settings: {
+  {
+    id: "settings",
     link: "/settings",
     icon: "settings",
-    menu: true
+    text: Vue.$t("view.settings")
   },
-  account: {
+  "-",
+  {
+    id: "account",
     link: "/account",
-    icon: "users",
-    menu: false
+    icon: "account",
+    text: Vue.$t("view.account")
   },
-  ...window.panel.plugins.views
-};
+  "-",
+  {
+    id: "logout",
+    link: "/logout",
+    icon: "logout",
+    text: Vue.$t("logout")
+  }
+];

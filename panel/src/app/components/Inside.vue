@@ -36,7 +36,7 @@
     <k-search
       ref="search"
       :type="search"
-      :types="$model.search"
+      :types="searchTypes"
     />
 
     <!-- Registration Dialog -->
@@ -45,6 +45,9 @@
 </template>
 
 <script>
+import search from "@/app/plugins/search.js";
+import views from "@/app/plugins/views.js";
+
 export default {
   props: {
     breadcrumb: {
@@ -105,42 +108,11 @@ export default {
 
       return menu;
     },
+    searchTypes() {
+      return search(this);
+    },
     views() {
-      // TODO: replace with views from store
-      return [
-        {
-          id: "site",
-          link: "/site",
-          icon: "home",
-          text: this.$t("view.site"),
-        },
-        {
-          id: "users",
-          link: "/users",
-          icon: "users",
-          text: this.$t("view.users"),
-        },
-        {
-          id: "settings",
-          link: "/settings",
-          icon: "settings",
-          text: this.$t("view.settings")
-        },
-        "-",
-        {
-          id: "account",
-          link: "/account",
-          icon: "account",
-          text: this.$t("view.account")
-        },
-        "-",
-        {
-          id: "logout",
-          link: "/logout",
-          icon: "logout",
-          text: this.$t("logout")
-        },
-      ];
+      return views(this).filter(view => view.menu !== false);
     },
     viewCrumb() {
       return this.views.find(view => view.id === this.view) || this.views[0];
