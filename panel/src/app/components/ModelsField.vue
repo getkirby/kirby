@@ -207,6 +207,10 @@ export default {
   },
   methods: {
     async items() {
+      if (this.selected.length === 0) {
+        return [];
+      }
+
       return this.$api.get(this.endpoints.field + "/items", {
         ids: this.selected.join(",")
       });
