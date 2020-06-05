@@ -119,7 +119,8 @@ export default {
     collectionOptions() {
       return {
         ...this.collection,
-        help: false
+        help: false,
+        sortable: this.isSortable
       };
     },
     dialogOptions() {

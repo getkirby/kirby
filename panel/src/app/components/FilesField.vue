@@ -46,7 +46,6 @@
     <k-upload
       v-if="uploads"
       ref="upload"
-      v-bind="uploadOptions"
       @success="onUpload"
     />
   </k-field>
@@ -99,20 +98,17 @@ export default {
       }
 
       return actions;
-    },
-    uploadOptions() {
-      return {
-        url: this.endpoints.field + "/upload",
-        accept: this.uploads.accept,
-        multiple: this.multiple
-      }
     }
   },
   methods: {
     onAction(option, item, itemIndex) {
       switch (option) {
         case "upload":
-          return this.$refs.upload.open();
+          return this.$refs.upload.open({
+            url: this.endpoints.field + "/upload",
+            accept: this.uploads.accept,
+            multiple: this.multiple
+          });
         case "select":
           return this.onOpen();
       }
