@@ -98,7 +98,7 @@ export default (Vue, store) => ({
   async options(parent, filename, view = "view") {
     const url = this.url(parent, filename);
     const file = await Vue.$api.get(url, { select: "options" });
-    return this.dropdown(file.options, vie);
+    return this.dropdown(file.options, view);
   },
   url(parent, filename, path) {
     let url = parent + "/files/" + filename;

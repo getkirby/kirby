@@ -75,18 +75,18 @@ export default {
       switch (option) {
         case "rename":
           return this.$refs.renameDialog.open(
-            file.parent.guid,
+            file.parent,
             file.filename
           );
         case "replace":
           return this.$refs.upload.open({
-            url: file.replaceApi,
+            url: this.$config.api + "/" + file.parent + "/files/" + file.filename,
             accept: file.mime,
             multiple: false
           });
         case "remove":
           return this.$refs.removeDialog.open(
-            file.parent.guid,
+            file.parent,
             file.filename
           );
         case "upload":
