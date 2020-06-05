@@ -22,9 +22,7 @@ export default {
   extends: ModelRoute,
   async beforeRouteEnter(to, from, next) {
     const model = await load(to.params.id);
-    next(vm => {
-      return vm.load(model);
-    });
+    next(vm => vm.load(model));
   },
   async beforeRouteUpdate(to, from, next) {
     const model = await load(to.params.id);
@@ -89,7 +87,8 @@ export default {
         const path = this.$model.pages.link(this.model.parent.id);
         this.$router.push(path);
       } else {
-        this.$router.push("/pages");
+        const path = this.$model.pages.link();
+        this.$router.push(path);
       }
     },
     async reload() {

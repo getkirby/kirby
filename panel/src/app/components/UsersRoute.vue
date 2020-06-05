@@ -57,11 +57,8 @@ export default {
   },
   methods: {
     onChangeRole(role) {
-      if (role) {
-        return this.$router.push("/users/role/" + role);
-      }
-
-      this.$router.push("/users");
+      const path = this.$model.users.link(null, role ? "role/" + role : null);
+      this.$router.push(path);
     }
   }
 }

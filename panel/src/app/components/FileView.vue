@@ -50,12 +50,10 @@ export default {
   props: {
     ...ModelView.props,
     filename: {
-      type: String,
-      required: true
+      type: String
     },
     parent: {
-      type: String,
-      required: true
+      type: String
     },
     preview: {
       type: [Boolean, Object],

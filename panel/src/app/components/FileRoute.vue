@@ -32,13 +32,17 @@ export default {
     }
   },
   async beforeRouteEnter(to, from, next) {
-    const model = await load(to.params.parentType + "/" + to.params.parentId, to.params.filename);
-    next(vm => {
-      return vm.load(model);
-    });
+    const model = await load(
+      to.params.parentType + "/" + to.params.parentId,
+      to.params.filename
+    );
+    next(vm => vm.load(model));
   },
   async beforeRouteUpdate(to, from, next) {
-    const model = await load(to.params.parentType + "/" + to.params.parentId, to.params.filename);
+    const model = await load(
+      to.params.parentType + "/" + to.params.parentId,
+      to.params.filename
+    );
     this.load(model);
     next();
   },
@@ -51,9 +55,7 @@ export default {
         dimensions:  this.model.dimensions,
         icon:        this.model.icon,
         image:       this.model.url,
-        link: {
-          url: this.model.url
-        },
+        link: { url: this.model.url },
         mime:        this.model.mime,
         size:        this.model.niceSize,
         template:    this.model.blueprint.name
@@ -63,7 +65,6 @@ export default {
       return this.$model.files.storeId(this.id);
     },
     view() {
-
       if (!this.model) {
         return {};
       }

@@ -163,6 +163,9 @@ export default (Vue, store) => ({
     const user = await Vue.$api.get(url, { select: "options" });
     return this.dropdown(user.options);
   },
+  storeId(id) {
+    return store.getters["content/id"](this.url(id));
+  },
   url(id, path) {
     let url = !id ? "users" : "users/" + id;
 
@@ -185,8 +188,5 @@ export default (Vue, store) => ({
     Vue.$events.$emit("user.update", user);
     store.dispatch("notification/success");
     return user;
-  },
-  storeId(id) {
-    return store.getters["content/id"]("users/" + id);
   }
 });

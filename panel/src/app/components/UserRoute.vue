@@ -26,9 +26,7 @@ export default {
   extends: ModelRoute,
   async beforeRouteEnter(to, from, next) {
     const model = await load(to.params.id);
-    next(vm => {
-      return vm.load(model);
-    });
+    next(vm => vm.load(model));
   },
   async beforeRouteUpdate(to, from, next) {
     const model = await load(to.params.id);
@@ -53,7 +51,6 @@ export default {
       };
     },
     view() {
-
       if (!this.model) {
         return {};
       }
@@ -71,7 +68,8 @@ export default {
   },
   methods: {
     onRemove() {
-      this.$router.push("/users");
+      const path = this.$model.users.link();
+      this.$router.push(path);
     },
     async onChangeAvatar() {
       await this.reload();
