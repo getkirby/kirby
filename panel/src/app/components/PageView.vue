@@ -67,8 +67,7 @@ export default {
   props: {
     ...ModelView.props,
     id: {
-      type: String,
-      required: true
+      type: String
     },
     preview: {
       type: [Boolean, String],

@@ -32,10 +32,16 @@ export default {
       return this.$store.getters["content/values"](this.storeId);
     },
     viewDefaults() {
+      if (!this.model) {
+        return {};
+      }
+
       return {
         changes:  this.changes,
         columns:  this.columns(this.tabs, this.tab),
         lock:     this.lock,
+        next:     this.model.next,
+        prev:     this.model.prev,
         saving:   this.saving,
         tabs:     this.tabs,
         tab:      this.tab,
