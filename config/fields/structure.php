@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\Form;
-use Kirby\Data\Yaml;
+use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -139,18 +139,20 @@ return [
     ],
     'methods' => [
         'rows' => function ($value) {
-            $rows  = Yaml::decode($value);
-            $value = [];
+            if (is_array($value) !== true) {
+                $value = Data::decode($value, 'yaml');
+            }
 
-            foreach ($rows as $index => $row) {
+            $rows = [];
+            foreach ($value as $index => $row) {
                 if (is_array($row) === false) {
                     continue;
                 }
 
-                $value[] = $this->form($row)->values();
+                $rows[] = $this->form($row)->values();
             }
 
-            return $value;
+            return $rows;
         },
         'form' => function (array $values = []) {
             return new Form([

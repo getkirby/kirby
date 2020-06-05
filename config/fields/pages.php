@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Data\Yaml;
+use Kirby\Data\Data;
 use Kirby\Toolkit\A;
 
 return [
@@ -72,7 +72,11 @@ return [
             $pages = [];
             $kirby = kirby();
 
-            foreach (Yaml::decode($value) as $id) {
+            if (is_array($value) !== true) {
+                $value = Data::decode($value, 'yaml');
+            }
+
+            foreach ($value as $id) {
                 if (is_array($id) === true) {
                     $id = $id['id'] ?? null;
                 }
