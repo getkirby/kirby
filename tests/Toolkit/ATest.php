@@ -252,6 +252,32 @@ class ATest extends TestCase
         ];
         $this->assertSame($expected, A::nest($input));
 
+        // ignored key
+        $input = [
+            'a' => 'a value',
+            'b' => 'another value',
+            'b.c' => [
+                'd.e.f' => 'a third value'
+            ]
+        ];
+        $expected = $input;
+        $this->assertSame($expected, A::nest($input, ['b']));
+
+        // nested ignored key
+        $expected = [
+            'a' => 'a value',
+            'b' => [
+                'c' => [
+                    'd.e.f' => 'a third value'
+                ]
+            ]
+        ];
+        $this->assertSame($expected, A::nest($input, ['b.c']));
+
+        // ignored key with partially nested input
+        $input = $expected;
+        $this->assertSame($expected, A::nest($input, ['b.c']));
+
         // recursive array replacement
         $input = [
             // replace strings with arrays within deep structures
@@ -300,6 +326,63 @@ class ATest extends TestCase
             ]
         ];
         $this->assertSame($expected, A::nest($input));
+
+        // merged arrays
+        $input1 = [
+            'a' => 'a-1',
+            'b' => [
+                'c' => 'b.c-1',
+                'd' => 'b.d-1'
+            ],
+            'e.f' => [
+                'g.h' => 'e.f.g.h-1',
+                'g.i' => 'e.f.g.i-1'
+            ],
+            'l' => [
+                'm' => 'l.m-1',
+                'o.p' => 'l.o.p-1'
+            ]
+        ];
+        $input2 = [
+            'a' => 'a-2',
+            'b.c' => 'b.c-2',
+            'e' => [
+                'f.g' => [
+                    'h' => 'e.f.g.h-2',
+                    'j' => 'e.f.g.j-2'
+                ],
+                'k' => 'e.k-2'
+            ],
+            'l' => [
+                'm.n' => 'l.m.n-2',
+                'o' => 'l.o-2'
+            ]
+        ];
+        $expected = [
+            'a' => 'a-2',
+            'b' => [
+                'c' => 'b.c-2',
+                'd' => 'b.d-1'
+            ],
+            'e' => [
+                'f' => [
+                    'g' => [
+                        'h' => 'e.f.g.h-2',
+                        'i' => 'e.f.g.i-1',
+                        'j' => 'e.f.g.j-2'
+                    ]
+                ],
+                'k' => 'e.k-2'
+            ],
+            'l' => [
+                'm' => 'l.m-1',
+                'o.p' => 'l.o.p-1',
+                'm.n' => 'l.m.n-2',
+                'o' => 'l.o-2'
+            ]
+        ];
+        $this->assertSame($expected, A::nest(array_replace_recursive($input1, $input2), ['l.m', 'l.o']));
+        $this->assertSame($expected, A::nest(A::merge($input1, $input2, A::MERGE_REPLACE), ['l.m', 'l.o']));
     }
 
     public function testNestByKeys()

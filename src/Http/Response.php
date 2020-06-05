@@ -245,12 +245,12 @@ class Response
      * @param int $code
      * @return self
      */
-    public static function redirect(?string $location = null, ?int $code = null)
+    public static function redirect(string $location = '/', int $code = 302)
     {
         return new static([
-            'code' => $code ?? 302,
+            'code' => $code,
             'headers' => [
-                'Location' => Url::unIdn($location ?? '/')
+                'Location' => Url::unIdn($location)
             ]
         ]);
     }

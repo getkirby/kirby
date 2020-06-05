@@ -310,7 +310,7 @@
   "page.duplicate.pages": "Copy pages",
   "page.status": "Status",
   "page.status.draft": "Draft",
-  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "Public",
   "page.status.listed.description": "The page is public for anyone",
   "page.status.unlisted": "Unlisted",

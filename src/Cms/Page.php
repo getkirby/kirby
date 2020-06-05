@@ -454,6 +454,20 @@ class Page extends ModelWithContent
     }
 
     /**
+     * Redirects to this page,
+     * wrapper for the `go()` helper
+     *
+     * @since 3.4.0
+     *
+     * @param array $options Options for `Kirby\Http\Uri` to create URL parts
+     * @param int $code HTTP status code
+     */
+    public function go(array $options = [], int $code = 302)
+    {
+        go($this->url($options), $code);
+    }
+
+    /**
      * Checks if the intended template
      * for the page exists.
      *
@@ -1441,7 +1455,13 @@ class Page extends ModelWithContent
      */
     protected function token(): string
     {
-        return sha1($this->id() . $this->template());
+        $salt = $this->kirby()->option('content.salt', $this->root());
+
+        if (is_a($salt, 'Closure') === true) {
+            $salt = $salt($this);
+        }
+
+        return hash_hmac('sha1', $this->id() . $this->template(), $salt);
     }
 
     /**

@@ -25,13 +25,13 @@ header {
   background: rgba(203, 215, 229, 0.5);
 }
 
-.clipboard {
+.rightButton {
   color: #999;
   box-shadow: inset 0 0 0 1px #777;
   border-radius: 0;
 }
 
-.clipboard:hover {
+.rightButton:hover {
   box-shadow: inset 0 0 0 1px #555;
   color: #777;
 }

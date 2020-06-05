@@ -900,7 +900,11 @@ class Str
 
             // if the placeholder contains a dot, it is a query
             if (strpos($query, '.') !== false) {
-                $result = (new Query($match[1], $data))->result();
+                try {
+                    $result = (new Query($match[1], $data))->result();
+                } catch (Exception $e) {
+                    $result = null;
+                }
             } else {
                 $result = $data[$query] ?? null;
             }

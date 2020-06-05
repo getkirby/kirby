@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
 /**
@@ -109,8 +110,9 @@ class Users extends Collection
             }
 
             // get role information
-            if (file_exists($root . '/' . $userDirectory . '/index.php') === true) {
-                $credentials = require $root . '/' . $userDirectory . '/index.php';
+            $path = $root . '/' . $userDirectory . '/index.php';
+            if (is_file($path) === true) {
+                $credentials = F::load($path);
             }
 
             // create user model based on role
