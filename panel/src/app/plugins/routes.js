@@ -28,6 +28,17 @@ export default (Vue, store) => {
       beforeEnter: authenticate,
     },
     {
+      path: "/:parentType/:parentId/files/:filename",
+      name: "File",
+      component: Vue.component("k-file-route"),
+      beforeEnter: authenticate,
+      props: route => ({
+        filename: route.params.filename,
+        parent: route.params.parentType + "/" + route.params.parentId,
+        type: route.params.parentType,
+      })
+    },
+    {
       path: "/pages/:id",
       name: "Page",
       component: Vue.component("k-page-route"),

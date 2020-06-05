@@ -18,11 +18,15 @@ import ModelRoute from "./ModelRoute.vue";
 export default {
   extends: ModelRoute,
   props: {
+    filename: {
+      type: String
+    },
     parent: {
       type: String
     },
-    filename: {
-      type: String
+    type: {
+      type: String,
+      default: "pages"
     }
   },
   computed: {
@@ -43,7 +47,7 @@ export default {
       };
     },
     storeId() {
-      return this.$models.file.storeId(this.id);
+      return this.$model.files.storeId(this.id);
     },
     view() {
       return {
@@ -61,7 +65,7 @@ export default {
   },
   methods: {
     async loadModel() {
-      return await this.$api.files.get(this.parent, this.filename);
+      return await this.$api.files.get(this.parent, this.filename, { view: "panel" });
     },
     onRemove() {
       const path = this.$model.pages.link(this.parent);
