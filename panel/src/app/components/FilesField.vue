@@ -21,7 +21,7 @@
     <!-- Collection -->
     <k-dropzone
       v-else
-      :disabled="disabled || !uploads"
+      :disabled="disabled || !canUpload"
       @drop="onDrop"
     >
       <k-collection
@@ -37,7 +37,7 @@
       :is="'k-' + type + '-dialog'"
       ref="dialog"
       v-bind="dialogOptions"
-      :has-drop="Boolean(uploads)"
+      :has-drop="canUpload"
       @submit="onSelect"
       @drop="onDrop"
     />
@@ -89,7 +89,7 @@ export default {
         });
       }
 
-      if (this.uploads) {
+      if (this.canUpload) {
         actions.push({
           icon: "upload",
           text: this.$t("upload"),
@@ -98,6 +98,9 @@ export default {
       }
 
       return actions;
+    },
+    canUpload() {
+      return this.uploads && this.more;
     }
   },
   methods: {
@@ -105,7 +108,7 @@ export default {
       switch (option) {
         case "upload":
           return this.$refs.upload.open({
-            url: this.endpoints.field + "/upload",
+            url: this.$config.api + "/" + this.endpoints.field + "/upload",
             accept: this.uploads.accept,
             multiple: this.multiple
           });
@@ -117,8 +120,7 @@ export default {
       this.$refs.upload.drop(event);
     },
     onUpload(files, response) {
-      // TODO: handle result and add to array
-      this.selected.push("1");
+      response.forEach(file => this.selected.push(file.uuid))
       this.onInput(true);
     }
   }

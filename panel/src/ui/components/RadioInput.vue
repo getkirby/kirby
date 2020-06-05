@@ -138,7 +138,7 @@ $input-line-height: 1.5rem;
 .k-radio-input-icon {
   height: $input-line-height;
   justify-self: flex-end;
-  padding-left: .75rem;
+  padding-left: 1.5rem;
 }
 
 /** Theming **/

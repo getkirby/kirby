@@ -173,27 +173,36 @@ export default {
       return true;
     },
     loader() {
-      let options = [];
-
-      if (this.multiple) {
-        options.push({
-          icon: "remove",
-          text: "Remove",
-          disabled: this.disabled
-        });
-      }
-
       return {
         info: this.info,
-        limit: this.value.length,
-        options: options
+        limit: this.value.length || 1,
+        options: [
+          {
+            icon: "remove",
+            text: "Remove",
+            disabled: this.disabled
+          }
+        ]
       }
+    },
+    more() {
+      if (!this.multiple && this.selected.length >= 1) {
+        return false;
+      }
+
+      if (!this.max) {
+        return true;
+      }
+
+      return this.max > this.selected.length;
     }
   },
   watch: {
     value() {
-      this.selected = this.value;
-      this.reload();
+      if (JSON.stringify(this.selected) !== JSON.stringify(this.value)) {
+        this.selected = this.value;
+        this.reload();
+      }
     }
   },
   methods: {
