@@ -39,8 +39,11 @@ export default {
 
           return options;
         },
-        onStart: (requestId) => {
-          store.dispatch("isLoading", true);
+        onStart: (requestId, silent = false) => {
+          if (silent === false) {
+            store.dispatch("isLoading", true);
+          }
+
           Vue.$api.requests.push(requestId);
         },
         onSuccess: () => {

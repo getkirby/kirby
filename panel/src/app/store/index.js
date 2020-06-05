@@ -10,7 +10,7 @@ import translation from "./modules/translation.js";
 import user from "./modules/user.js";
 
 // store watchers
-import hasContentLocking from "./watchers/hasContentLocking.js"
+import withContentLocking from "./watchers/content.js"
 
 Vue.use(Vuex);
 
@@ -96,6 +96,6 @@ const store = new Vuex.Store({
   }
 });
 
-hasContentLocking(Vue, store);
+withContentLocking(Vue, store);
 
 export default store;

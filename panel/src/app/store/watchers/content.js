@@ -12,7 +12,12 @@ export default (Vue, store) => {
   }
 
   const getLock = async () => {
-    const response = await Vue.$api.get(store.state.content.current.id + "/lock");
+    const response = await Vue.$api.get(
+      store.state.content.current.id + "/lock",
+      null,
+      null,
+      true
+    );
     // console.log("-> getLock:");
     // console.log(response);
 
@@ -29,8 +34,13 @@ export default (Vue, store) => {
   const setLock = async () => {
     if (supported === true) {
       try {
-        console.log("-> setLock");
-        await Vue.$api.patch(store.state.content.current.id + "/lock");
+        // console.log("-> setLock");
+        await Vue.$api.patch(
+          store.state.content.current.id + "/lock",
+          null,
+          null,
+          true
+        );
 
       } catch (error) {
         // turns out: locking is not supported
@@ -49,7 +59,12 @@ export default (Vue, store) => {
   const removeLock = async () => {
     if (supported === true) {
       clearInterval(heartbeat);
-      await Vue.$api.delete(store.state.content.current.id + "/lock");
+      await Vue.$api.delete(
+        store.state.content.current.id + "/lock",
+        null,
+        null,
+        true
+      );
       store.dispatch("content/lock", false);
     }
   }
