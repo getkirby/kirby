@@ -134,7 +134,6 @@ export default {
         title: this.label + " / " + this.$t("select"),
       };
 
-
       // provided a custom async function for options
       if (this.options) {
         options.options = this.options;
@@ -193,6 +192,7 @@ export default {
   watch: {
     value() {
       this.selected = this.value;
+      this.reload();
     }
   },
   methods: {
