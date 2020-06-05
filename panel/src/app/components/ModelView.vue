@@ -102,7 +102,6 @@ export default {
         return [];
       }
     },
-    id: String,
     lock: {
       type: [Boolean, Object],
       default: false

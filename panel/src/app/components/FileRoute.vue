@@ -74,15 +74,21 @@ export default {
 
       return {
         ...this.viewDefaults,
+        api:        this.$model.files.url(
+          this.model.parent.guid,
+          this.model.filename
+        ),
         breadcrumb: this.$model.files.breadcrumb(
           this.model,
           this.$route.params.parentType
         ),
         filename:   this.model.filename,
+        mime:       this.model.mime,
         options:    this.$model.files.dropdown(this.model.options),
         parent:     this.model.parent.guid,
         preview:    this.preview,
         rename:     true,
+        template:   this.model.template,
         url:        this.model.url,
         view:       "site"
       };
@@ -97,8 +103,8 @@ export default {
       const path = this.$model.files.link(this.model.parent.guid, file.filename);
       this.$router.push(path);
     },
-    onReplace(file) {
-      this.load();
+    onReplace() {
+      this.reload();
     },
     async reload() {
       const model = await load(this.model.parent.guid, this.model.filename);

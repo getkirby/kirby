@@ -54,6 +54,7 @@ export default {
 
       return {
         ...this.viewDefaults,
+        api:        this.$model.pages.url(this.model.id),
         breadcrumb: this.$model.pages.breadcrumb(this.model),
         id:         this.$model.pages.id(this.model.id),
         options:    this.$model.pages.dropdown(this.model.options),

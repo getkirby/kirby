@@ -11,7 +11,6 @@
     />
     <k-model-view
       v-bind="$props"
-      :api="apiEndpoint"
       :rename="true"
       :title="title"
       @rename="onOption('rename')"
@@ -56,7 +55,10 @@ import ModelView from "./ModelView.vue";
 export default {
   props: {
     ...ModelView.props,
-    id: String,
+    id: {
+      type: String,
+      required: true
+    },
     profile: {
       type: Object,
       default() {
@@ -64,11 +66,6 @@ export default {
       }
     },
     title: String
-  },
-  computed: {
-    apiEndpoint() {
-      return "users/" + this.id;
-    }
   },
   methods: {
     async onOption(option) {

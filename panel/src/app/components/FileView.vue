@@ -11,7 +11,6 @@
     />
     <k-model-view
       v-bind="$props"
-      :api="apiEndpoint"
       :title="filename"
       @rename="onOption('rename')"
       @option="onOption"
@@ -25,6 +24,10 @@
           :text="$t('open')"
           icon="open"
         />
+        <k-button
+          v-if="template !== false"
+          v-bind="templateButton"
+        />
       </template>
     </k-model-view>
 
@@ -35,11 +38,11 @@
     />
     <k-file-remove-dialog
       ref="removeDialog"
-      @success="$emit('remove', $event)"
+      @success="$emit('remove')"
     />
     <k-upload
       ref="replaceDialog"
-      @success="$emit('replace', $event)"
+      @success="$emit('replace')"
     />
   </k-inside>
 </template>
@@ -53,11 +56,18 @@ export default {
     filename: {
       type: String
     },
+    mime: {
+      type: String
+    },
     parent: {
       type: String
     },
     preview: {
       type: [Boolean, Object],
+      default: false
+    },
+    template: {
+      type: [Boolean, String],
       default: false
     },
     url: {
@@ -70,12 +80,21 @@ export default {
     }
   },
   computed: {
-    apiEndpoint() {
-      return this.parent + "/files/" + this.filename;
+    templateButton() {
+      return {
+        disabled: true,
+        icon: {
+          type: "template",
+          size: "small"
+        },
+        responsive: true,
+        text: this.template,
+        tooltip: `${this.$t("template")}: ${this.template}`,
+      };
     }
   },
   methods: {
-    onOption(option) {
+    onOption(option, file) {
       switch (option) {
         case "rename":
           return this.$refs.renameDialog.open(
@@ -84,8 +103,8 @@ export default {
           );
         case "replace":
           return this.$refs.replaceDialog.open({
-            url: this.file.replaceApi,
-            accept: this.file.mime,
+            url: this.$config.api + "/" + this.api,
+            accept: this.mime,
             multiple: false
           });
         case "remove":

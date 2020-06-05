@@ -6,7 +6,6 @@
   >
     <k-model-view
       v-bind="$props"
-      :api="apiEndpoint"
       @option="onOption"
       @rename="onOption('rename')"
       v-on="$listeners"
@@ -67,6 +66,10 @@ import ModelView from "./ModelView.vue";
 export default {
   props: {
     ...ModelView.props,
+    id: {
+      type: String,
+      required: true
+    },
     preview: {
       type: [Boolean, String],
       default: false
@@ -81,9 +84,6 @@ export default {
     }
   },
   computed: {
-    apiEndpoint() {
-      return "pages/" + this.id;
-    },
     statusButton() {
       return {
         ...this.status,

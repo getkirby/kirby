@@ -57,6 +57,7 @@ export default {
 
       return {
         ...this.viewDefaults,
+        api:        this.$model.users.url(this.model.id),
         breadcrumb: this.$model.users.breadcrumb(this.model),
         id:         this.model.id,
         options:    this.$model.users.dropdown(this.model.options),
