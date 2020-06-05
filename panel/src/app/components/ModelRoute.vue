@@ -8,7 +8,7 @@ export default {
   },
   data() {
     return {
-      model: {},
+      model: null,
       saving: false
     };
   },
@@ -44,12 +44,6 @@ export default {
       };
     }
   },
-  created() {
-    this.load();
-  },
-  watch: {
-    "$route": "load",
-  },
   methods: {
     columns(tabs, currentTab) {
       const tab = tabs.find(tab => tab.name === currentTab) || tabs[0];
@@ -60,8 +54,8 @@ export default {
 
       return {};
     },
-    async load() {
-      this.model = await this.loadModel();
+    load(model) {
+      this.model = model;
 
       // check for unlock
       // TODO: fake API route needed to uncomment the following line

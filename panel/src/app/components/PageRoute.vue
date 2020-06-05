@@ -12,6 +12,7 @@
 </template>
 <script>
 import ModelRoute from "./ModelRoute.vue";
+import Vue from "vue";
 
 export default {
   extends: ModelRoute,
@@ -19,6 +20,18 @@ export default {
     id: {
       type: String
     }
+  },
+  async beforeRouteEnter(to, from, next) {
+    const page = await Vue.$api.pages.get(to.params.id, { view: "panel" });
+
+    next(vm => {
+      return vm.load(page);
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    const page = await Vue.$api.pages.get(to.params.id, { view: "panel" });
+    this.load(page);
+    next();
   },
   computed: {
     storeId() {
@@ -39,7 +52,7 @@ export default {
       };
     },
     view() {
-      if (!this.model.id) {
+      if (!this.model) {
         return {};
       }
 
@@ -57,9 +70,6 @@ export default {
     }
   },
   methods: {
-    async loadModel() {
-      return await this.$api.pages.get(this.id, { view: "panel" });
-    },
     onChangeSlug(page) {
       // Redirect, if slug was changed in default language
       if (

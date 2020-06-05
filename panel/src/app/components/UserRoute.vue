@@ -17,6 +17,7 @@
 
 <script>
 import ModelRoute from "./ModelRoute.vue";
+import Vue from "vue";
 
 export default {
   extends: ModelRoute,
@@ -24,6 +25,18 @@ export default {
     id: {
       type: String
     }
+  },
+  async beforeRouteEnter(to, from, next) {
+    const user = await Vue.$api.users.get(to.params.id, { view: "panel" });
+
+    next(vm => {
+      return vm.load(user);
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    const user = await Vue.$api.users.get(to.params.id, { view: "panel" });
+    this.load(user);
+    next();
   },
   computed: {
     storeId() {
@@ -43,6 +56,11 @@ export default {
       };
     },
     view() {
+
+      if (!this.model) {
+        return {};
+      }
+
       return {
         ...this.viewDefaults,
         breadcrumb: this.$model.users.breadcrumb(this.model),
@@ -55,9 +73,6 @@ export default {
     }
   },
   methods: {
-    async loadModel() {
-      return await this.$api.users.get(this.id, { view: "panel" });
-    },
     onRemove() {
       this.$router.push("/users");
     },

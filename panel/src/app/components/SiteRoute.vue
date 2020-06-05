@@ -10,15 +10,29 @@
 </template>
 <script>
 import ModelRoute from "./ModelRoute.vue";
+import Vue from "vue";
 
 export default {
   extends: ModelRoute,
+  async beforeRouteEnter(to, from, next) {
+    const site = await Vue.$api.site.get({ view: "panel" });
+
+    next(vm => {
+      return vm.load(site);
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    const site = await Vue.$api.site.get({ view: "panel" });
+    this.load(site);
+    next();
+  },
   computed: {
     storeId() {
       return this.$model.site.storeId();
     },
     view() {
-      if (!this.model.title) {
+
+      if (!this.model) {
         return {};
       }
 
@@ -32,9 +46,6 @@ export default {
     }
   },
   methods: {
-    async loadModel() {
-      return await this.$api.site.get({ view: "panel" });
-    },
     onChangeTitle(site) {
       this.model.title = site.title;
     },

@@ -13,6 +13,7 @@
 
 <script>
 import ModelRoute from "./ModelRoute.vue";
+import Vue from "vue";
 
 export default {
   extends: ModelRoute,
@@ -27,6 +28,18 @@ export default {
       type: String,
       default: "pages"
     }
+  },
+  async beforeRouteEnter(to, from, next) {
+    const file = await Vue.$api.files.get(to.params.parentType + "/" + to.params.parentId, to.params.filename, { view: "panel" });
+
+    next(vm => {
+      return vm.load(file);
+    });
+  },
+  async beforeRouteUpdate(to, from, next) {
+    const file = await Vue.$api.pages.get(to.params.parentType + "/" + to.params.parentId, to.params.filename, { view: "panel" });
+    this.load(file);
+    next();
   },
   computed: {
     id() {
@@ -50,7 +63,7 @@ export default {
     },
     view() {
 
-      if (!this.model.filename) {
+      if (!this.model) {
         return {};
       }
 
@@ -68,9 +81,6 @@ export default {
     }
   },
   methods: {
-    async loadModel() {
-      return await this.$api.files.get(this.parent, this.filename, { view: "panel" });
-    },
     onRemove() {
       const path = this.$model.pages.link(this.parent);
       this.$router.push(path);
