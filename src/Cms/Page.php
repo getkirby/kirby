@@ -916,9 +916,9 @@ class Page extends ModelWithContent
      * according to the blueprint settings
      *
      * @internal
-     * @return array
+     * @return array|void
      */
-    public function panelIcon(): array
+    public function panelIcon()
     {
         if ($icon = $this->blueprint()->icon()) {
             return ['type' => $icon];
@@ -979,7 +979,7 @@ class Page extends ModelWithContent
             'id'          => $this->id(),
             'info'        => $this->toString($params['info'] ?? false),
             'link'        => $this->panelUrl(true),
-            'preview'     => $this->panelPreview($params['preview'] ?? []),
+            'preview'     => $this->panelPreview($params['preview'] ?? null),
             'text'        => $this->toString($params['text'] ?? '{{ page.title }}'),
             'url'         => $this->url(),
         ];

@@ -515,7 +515,7 @@ class File extends ModelWithContent
             'id'       => $this->id(),
             'info'     => $this->toString($params['info'] ?? false),
             'link'     => $this->panelUrl(true),
-            'preview'  => $this->panelPreview($params['preview'] ?? []),
+            'preview'  => $this->panelPreview($params['preview'] ?? null),
             'text'     => $this->toString($params['text'] ?? '{{ file.filename }}'),
             'type'     => $this->type(),
             'url'      => $this->url(),

@@ -297,6 +297,14 @@ abstract class ModelWithContent extends Model
     }
 
     /**
+     * Returns the panel icon definition
+     *
+     * @internal
+     * @return array|void
+     */
+    public function panelIcon() {}
+
+    /**
      * Returns the image file object based on provided query
      *
      * @internal
@@ -330,9 +338,9 @@ abstract class ModelWithContent extends Model
     /**
      * @internal
      * @param string|array|false $settings
-     * @return array|null
+     * @return array|false
      */
-    public function panelPreview($settings = null): ?array
+    public function panelPreview($settings = [])
     {
         $defaults = [
             'ratio' => '3/2',
@@ -342,7 +350,7 @@ abstract class ModelWithContent extends Model
 
         // switch the preview off
         if ($settings === false) {
-            return null;
+            return false;
         }
 
         if (is_string($settings) === true) {
@@ -364,7 +372,7 @@ abstract class ModelWithContent extends Model
             unset($settings['query']);
         }
 
-        if ($icon = $this->panelIcon($settings['icon'] ?? null)) {
+        if ($icon = $this->panelIcon()) {
             $settings['icon'] = $icon['type'] ?? 'page';
             $settings['color'] = $icon['color'] ?? 'gray-light';
         }

@@ -611,7 +611,7 @@ class User extends ModelWithContent
             'email'    => $this->email(),
             'info'     => $this->toString($params['info'] ?? false),
             'link'     => $this->panelUrl(true),
-            'preview'  => $this->panelPreview($params['preview'] ?? []),
+            'preview'  => $this->panelPreview($params['preview'] ?? null),
             'text'     => $this->toString($params['text'] ?? '{{ user.username }}'),
             'username' => $this->username(),
         ];

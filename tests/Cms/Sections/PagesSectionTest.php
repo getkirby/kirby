@@ -322,7 +322,7 @@ class PagesSectionTest extends TestCase
         $data = $section->data();
 
         // existing covers
-        $this->assertSame('/media/pages/test/a/670812281-0/cover.jpg', $data[0]['preview']['image']['url']);
+        $this->assertSame('/media/pages/test/a/670812281-0/cover.jpg', $data[0]['preview']['image']['src']);
 
         // non-existing covers
         $this->assertNull($data[2]['preview']['image']['url'] ?? null);

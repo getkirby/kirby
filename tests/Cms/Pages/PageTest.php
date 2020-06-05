@@ -811,23 +811,6 @@ class PageTest extends TestCase
         Dir::remove($index);
     }
 
-    public function testPanelIconDefault()
-    {
-        $page = new Page([
-            'slug' => 'test'
-        ]);
-
-        $icon     = $page->panelIcon();
-        $expected = [
-            'type'  => 'page',
-            'back'  => 'pattern',
-            'ratio' => null,
-            'color' => 'gray-light'
-        ];
-
-        $this->assertEquals($expected, $icon);
-    }
-
     public function testPanelIconFromBlueprint()
     {
         $page = new Page([
@@ -838,32 +821,8 @@ class PageTest extends TestCase
             ]
         ]);
 
-        $icon     = $page->panelIcon();
-        $expected = [
-            'type'  => 'test',
-            'back'  => 'pattern',
-            'ratio' => null,
-            'color' => 'gray-light'
-        ];
-
-        $this->assertEquals($expected, $icon);
-    }
-
-    public function testPanelIconWithRatio()
-    {
-        $page = new Page([
-            'slug' => 'test'
-        ]);
-
-        $icon     = $page->panelIcon(['ratio' => '3/2']);
-        $expected = [
-            'type'  => 'page',
-            'back'  => 'pattern',
-            'ratio' => '3/2',
-            'color' => 'gray-light'
-        ];
-
-        $this->assertEquals($expected, $icon);
+        $icon = $page->panelIcon();
+        $this->assertSame(['type'  => 'test'], $icon);
     }
 
     public function testPanelIconWithEmoji()
@@ -877,10 +836,95 @@ class PageTest extends TestCase
         ]);
 
         $icon = $page->panelIcon();
+        $this->assertSame($emoji, $icon['type']);
+    }
 
-        $this->assertEquals($emoji, $icon['type']);
-        $this->assertEquals('pattern', $icon['back']);
-        $this->assertEquals(null, $icon['ratio']);
+    public function testPanelPreviewDefaults()
+    {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $preview = $page->panelPreview();
+
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => false
+        ], $preview);
+    }
+
+    public function testPanelPreviewFalse()
+    {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $preview = $page->panelPreview(false);
+        $this->assertSame(false, $preview);
+    }
+
+    public function testPanelPreviewWithSettings()
+    {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $preview = $page->panelPreview([
+            'icon' => 'heart',
+            'back' => 'yellow',
+            'cover' => true
+        ]);
+
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'yellow',
+            'cover' => true,
+            'icon' => 'heart'
+        ], $preview);
+    }
+
+    public function testPanelPreviewWithIconFromBlueprint()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'blueprint' => [
+                'name' => 'test',
+                'icon' => 'test'
+            ]
+        ]);
+
+        $preview = $page->panelPreview();
+
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => false,
+            'icon' => 'test',
+            'color' => 'gray-light'
+        ], $preview);
+    }
+
+    public function testPanelPreviewWithImage()
+    {
+        $page = new Page([
+            'slug' => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $preview = $page->panelPreview();
+
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => false,
+            'image' => [
+                'src' => '/media/pages/test/3960865239-0/test.jpg',
+                'srcset' => '/media/pages/test/3960865239-0/test.jpg 352w, /media/pages/test/3960865239-0/test.jpg 864w, /media/pages/test/3960865239-0/test.jpg 1408w'
+            ]
+        ], $preview);
     }
 
     public function testPanelOptions()
