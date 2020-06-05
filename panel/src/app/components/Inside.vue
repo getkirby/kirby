@@ -142,33 +142,33 @@ export default {
       return [
         {
           id: "site",
-          link: "site",
+          link: "/site",
           icon: "home",
           text: this.$t("view.site"),
         },
         {
           id: "users",
-          link: "users",
+          link: "/users",
           icon: "users",
           text: this.$t("view.users"),
         },
         {
           id: "settings",
-          link: "settings",
+          link: "/settings",
           icon: "settings",
           text: this.$t("view.settings")
         },
         "-",
         {
           id: "account",
-          link: "account",
+          link: "/account",
           icon: "account",
           text: this.$t("view.account")
         },
         "-",
         {
           id: "logout",
-          link: "logout",
+          link: "/logout",
           icon: "logout",
           text: this.$t("logout")
         },
