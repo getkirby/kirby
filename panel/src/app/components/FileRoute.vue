@@ -74,7 +74,10 @@ export default {
 
       return {
         ...this.viewDefaults,
-        breadcrumb: this.$model.files.breadcrumb(this.model),
+        breadcrumb: this.$model.files.breadcrumb(
+          this.model,
+          this.$route.params.parentType
+        ),
         filename:   this.model.filename,
         options:    this.$model.files.dropdown(this.model.options),
         parent:     this.model.parent.guid,

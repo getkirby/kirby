@@ -1,25 +1,25 @@
 export default (Vue, store) => ({
-  breadcrumb(file, route) {
+  breadcrumb(file, parentType) {
     let parent = null;
     let breadcrumb = [];
 
-    switch (route) {
-      case "UserFile":
+    switch (parentType) {
+      case "users":
         breadcrumb.push({
           label: file.parent.username,
           link: Vue.$model.users.link(file.parent.id),
         });
-        parent = "users/" + file.parent.id;
+        parent = Vue.model.users.url(file.parent.id);
         break;
-      case "SiteFile":
+      case "site":
         parent = "site";
         break;
-      case "PageFile":
+      case "pages":
         breadcrumb = file.parents.map((parent) => ({
           label: parent.title,
-          link: this.link(parent.id),
+          link: Vue.$model.pages.link(parent.id),
         }));
-        parent = this.url(file.parent.id);
+        parent = Vue.$model.pages.url(file.parent.id);
         break;
     }
 
