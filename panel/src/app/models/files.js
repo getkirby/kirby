@@ -100,6 +100,9 @@ export default (Vue, store) => ({
     const file = await Vue.$api.get(url, { select: "options" });
     return this.dropdown(file.options, view);
   },
+  storeId(parent, filename) {
+    return store.getters["content/id"](this.url(parent, filename));
+  },
   url(parent, filename, path) {
     let url = parent + "/files/" + filename;
 
@@ -111,7 +114,7 @@ export default (Vue, store) => ({
   },
   async update(parent, filename) {
     // get values
-    const storeId = this.storeId(parent + "/" + filename);
+    const storeId = this.storeId(parent, filename);
     const data = store.getters["content/values"](storeId);
 
     // send updates to API and store
@@ -122,8 +125,5 @@ export default (Vue, store) => ({
     Vue.$events.$emit("file.update", data);
     store.dispatch("notification/success");
     return file;
-  },
-  storeId(id) {
-    return store.getters["content/id"]("files/" + id);
   }
 });

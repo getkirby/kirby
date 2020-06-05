@@ -62,7 +62,10 @@ export default {
       };
     },
     storeId() {
-      return this.$model.files.storeId(this.id);
+      return this.$model.files.storeId(
+        this.model.parent.guid,
+        this.model.filename
+      );
     },
     view() {
       if (!this.model) {

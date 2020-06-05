@@ -142,28 +142,6 @@ export default (Vue, store) => ({
     const page = await Vue.$api.get(url, { select: "options" });
     return this.dropdown(page.options, view);
   },
-  async update(id) {
-    // get values
-    const storeId = this.storeId(id);
-    const data = store.getters["content/values"](storeId);
-
-    // send updates to API and store
-    const page = await Vue.$api.pages.update(id, data);
-    store.dispatch("content/update", { id: storeId, values: data });
-
-    // emit events
-    Vue.$events.$emit("page.update", data);
-    store.dispatch("notification/success");
-    return page;
-  },
-  url(id, path) {
-    let url = id === null ? "pages" : "pages/" + this.id(id);
-
-    if (path) {
-      url += "/" + path;
-    }
-    return url;
-  },
   statusIcon(status) {
     return this.statusIcons()[status];
   },
@@ -185,5 +163,27 @@ export default (Vue, store) => ({
   },
   storeId(id) {
     return store.getters["content/id"](this.url(id));
+  },
+  async update(id) {
+    // get values
+    const storeId = this.storeId(id);
+    const data = store.getters["content/values"](storeId);
+
+    // send updates to API and store
+    const page = await Vue.$api.pages.update(id, data);
+    store.dispatch("content/update", { id: storeId, values: data });
+
+    // emit events
+    Vue.$events.$emit("page.update", data);
+    store.dispatch("notification/success");
+    return page;
+  },
+  url(id, path) {
+    let url = id === null ? "pages" : "pages/" + this.id(id);
+
+    if (path) {
+      url += "/" + path;
+    }
+    return url;
   }
 });
