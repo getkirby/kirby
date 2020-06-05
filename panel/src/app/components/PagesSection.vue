@@ -6,6 +6,7 @@
     :items="pages"
     :options="optionOptions"
     type="pages"
+    @flag="onOption('status', $event)"
     @option="onOption"
   >
     <template v-slot:footer>
