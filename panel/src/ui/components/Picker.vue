@@ -177,7 +177,7 @@ export default {
       const max = this.multiple && this.max && this.selected.length >= this.max;
 
       this.data = this.data.map(item => {
-        const selected = this.selected.includes(item.id);
+        const selected = this.selected.includes(item.uuid || item.id);
 
         // custom toggle function
         if (this.toggle) {
@@ -225,10 +225,12 @@ export default {
       this.$emit("drop", event);
     },
     onFlag(item, itemIndex) {
-      if (this.selected.includes(item.id)) {
-        this.onDeselect(item.id, item, itemIndex);
+      const id = item.uuid || item.id;
+
+      if (this.selected.includes(id)) {
+        this.onDeselect(id, item, itemIndex);
       } else {
-        this.onSelect(item.id, item, itemIndex);
+        this.onSelect(id, item, itemIndex);
       }
     },
     onInput() {
@@ -265,7 +267,7 @@ export default {
       this.onInput();
     },
     onSort(items, event) {
-      this.selected = items.map(item => item.id);
+      this.selected = items.map(item => item.uuid || item.id);
       this.onInput();
     },
     reset() {
