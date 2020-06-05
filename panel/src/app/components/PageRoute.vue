@@ -1,6 +1,5 @@
 <template>
   <k-page-view
-    v-if="model.id"
     v-bind="view"
     @changeStatus="onChangeStatus"
     @changeTitle="onChangeTitle"
@@ -40,6 +39,10 @@ export default {
       };
     },
     view() {
+      if (!this.model.id) {
+        return {};
+      }
+
       return {
         ...this.viewDefaults,
         breadcrumb: this.$model.pages.breadcrumb(this.model),

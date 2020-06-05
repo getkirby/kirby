@@ -1,6 +1,5 @@
 <template>
   <k-site-view
-    v-if="model.title"
     v-bind="view"
     @changeTitle="onChangeTitle"
     @input="onInput"
@@ -19,6 +18,10 @@ export default {
       return this.$model.site.storeId();
     },
     view() {
+      if (!this.model.title) {
+        return {};
+      }
+
       return {
         ...this.viewDefaults,
         options: [],

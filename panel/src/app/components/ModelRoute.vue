@@ -22,6 +22,9 @@ export default {
     storeId() {
       return this.id;
     },
+    tabs() {
+      return this.model.blueprint && this.model.blueprint.tabs ? this.model.blueprint.tabs : [];
+    },
     unlocked() {
       return this.$store.state.content.current.unlocked;
     },
@@ -31,10 +34,10 @@ export default {
     viewDefaults() {
       return {
         changes:  this.changes,
-        columns:  this.columns(this.model.blueprint.tabs, this.tab),
+        columns:  this.columns(this.tabs, this.tab),
         lock:     this.lock,
         saving:   this.saving,
-        tabs:     this.model.blueprint.tabs,
+        tabs:     this.tabs,
         tab:      this.tab,
         unlocked: this.unlocked,
         value:    this.values
@@ -50,7 +53,12 @@ export default {
   methods: {
     columns(tabs, currentTab) {
       const tab = tabs.find(tab => tab.name === currentTab) || tabs[0];
-      return tab.columns || {};
+
+      if (tab && tab.columns) {
+        return tab.columns;
+      }
+
+      return {};
     },
     async load() {
       this.model = await this.loadModel();

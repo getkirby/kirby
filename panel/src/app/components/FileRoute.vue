@@ -1,6 +1,5 @@
 <template>
   <k-file-view
-    v-if="model.filename"
     v-bind="view"
     @language="onLanguage"
     @remove="onRemove"
@@ -50,6 +49,11 @@ export default {
       return this.$model.files.storeId(this.id);
     },
     view() {
+
+      if (!this.model.filename) {
+        return {};
+      }
+
       return {
         ...this.viewDefaults,
         breadcrumb: this.$model.files.breadcrumb(this.model),
