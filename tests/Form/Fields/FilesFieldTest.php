@@ -63,6 +63,8 @@ class FilesFieldTest extends TestCase
             'model' => $this->model()
         ]);
 
+        var_dump($field->default);
+
         $this->assertEquals('files', $field->type());
         $this->assertEquals('files', $field->name());
         $this->assertEquals([], $field->value());
@@ -85,14 +87,13 @@ class FilesFieldTest extends TestCase
         ]);
 
         $value = $field->value();
-        $ids   = array_column($value, 'id');
 
         $expected = [
             'test/a.jpg',
             'test/b.jpg'
         ];
 
-        $this->assertEquals($expected, $ids);
+        $this->assertEquals($expected, $value);
     }
 
     public function testMin()
@@ -140,14 +141,12 @@ class FilesFieldTest extends TestCase
         ]);
 
         $value = $field->value();
-        $ids   = array_column($value, 'id');
-
         $expected = [
             'test-draft/a.jpg',
             'test-draft/b.jpg'
         ];
 
-        $this->assertEquals($expected, $ids);
+        $this->assertEquals($expected, $value);
     }
 
     public function testQueryWithPageParent()

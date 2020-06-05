@@ -66,14 +66,12 @@ class PagesFieldTest extends TestCase
         ]);
 
         $value = $field->value();
-        $ids   = array_column($value, 'id');
-
         $expected = [
             'a/aa',
             'a/ab'
         ];
 
-        $this->assertEquals($expected, $ids);
+        $this->assertEquals($expected, $value);
     }
 
     public function testMin()

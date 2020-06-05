@@ -29,7 +29,7 @@ return [
         }
     ],
     'methods' => [
-        'toModel' => function ($id = null) {
+        'toModel' => function (string $id = null) {
             return $this->kirby()->file($id, $this->model());
         }
     ],

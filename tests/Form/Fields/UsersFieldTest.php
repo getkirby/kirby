@@ -53,7 +53,7 @@ class UsersFieldTest extends TestCase
             'model' => new Page(['slug' => 'test'])
         ]);
 
-        $this->assertEquals('raphael@getkirby.com', $field->default()[0]['email']);
+        $this->assertEquals('raphael@getkirby.com', $field->default()[0]);
     }
 
     public function testMultipleDefaultUsers()
@@ -68,8 +68,8 @@ class UsersFieldTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('raphael@getkirby.com', $field->default()[0]['email']);
-        $this->assertEquals('donatello@getkirby.com', $field->default()[1]['email']);
+        $this->assertEquals('raphael@getkirby.com', $field->default()[0]);
+        $this->assertEquals('donatello@getkirby.com', $field->default()[1]);
     }
 
     public function testDefaultUserDisabled()
@@ -96,14 +96,12 @@ class UsersFieldTest extends TestCase
         ]);
 
         $value = $field->value();
-        $ids   = array_column($value, 'email');
-
         $expected = [
             'leonardo@getkirby.com',
             'raphael@getkirby.com'
         ];
 
-        $this->assertEquals($expected, $ids);
+        $this->assertEquals($expected, $value);
     }
 
     public function testMin()

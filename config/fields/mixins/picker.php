@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Data\Yaml;
+use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -18,7 +18,7 @@ return [
          * Sets the model(s), which are selected by default
          * when a new page/file/user is created
          */
-        'default' => function ($default = null) {
+        'default' => function ($default = []) {
             return $default;
         },
 
@@ -99,21 +99,21 @@ return [
             return $text;
         },
 
-        'value' => function ($value = null) {
+        'value' => function ($value = []) {
             return $value;
         }
 
     ],
     'computed' => [
-        'default' => function () {
-            return Yaml::decode($this->default);
+        'default' => function (): array {
+            return $this->toValue($this->default);
         },
-        'value' => function () {
-            return Yaml::decode($this->value);
+        'value' => function (): array {
+            return $this->toValue($this->value);
         },
     ],
     'methods' => [
-        'modelResponse' => function ($model) {
+        'modelResponse' => function ($model): array {
             return $model->panelPickerData([
                 'info'    => $this->info ?? false,
                 'model'   => $this->model(),
@@ -121,10 +121,7 @@ return [
                 'text'    => $this->text,
             ]);
         },
-        'toModel' => function ($id = null) {
-            return $id;
-        },
-        'toModels' => function (array $ids = []) {
+        'toModels' => function (array $ids = []): array {
             $models = array_map(function ($id) {
                 if ($model = $this->toModel($id)) {
                     return $this->modelResponse($model);
@@ -132,6 +129,13 @@ return [
             }, $ids);
             $models = array_filter($models);
             return $models;
+        },
+        'toValue' => function ($value): array {
+            if (is_array($value) === true) {
+                return $value;
+            }
+
+            return Data::decode($value, 'yaml');
         }
     ],
     'validations' => [

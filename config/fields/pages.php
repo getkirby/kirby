@@ -16,8 +16,8 @@ return [
         },
     ],
     'methods' => [
-        'toModel' => function ($id = null) {
-            return $this->kirby()->page($id));
+        'toModel' => function (string $id = null) {
+            return $this->kirby()->page($id);
         }
     ],
     'api' => function () {
@@ -27,7 +27,7 @@ return [
                 'action'  => function () {
                     $field = $this->field();
                     $ids   = Str::split($this->requestQuery('ids'));
-                    return $field->toPages($ids);
+                    return $field->toModels($ids);
                 }
             ],
             [

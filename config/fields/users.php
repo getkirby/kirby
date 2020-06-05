@@ -29,7 +29,7 @@ return [
         }
     ],
     'methods' => [
-        'toModel' => function ($id = null) {
+        'toModel' => function (string $id = null) {
             return $this->kirby()->user($id);
         }
     ],
@@ -40,7 +40,7 @@ return [
                 'action'  => function () {
                     $field = $this->field();
                     $ids   = Str::split($this->requestQuery('ids'));
-                    return $field->toUsers($ids);
+                    return $field->toModels($ids);
                 }
             ],
             [
