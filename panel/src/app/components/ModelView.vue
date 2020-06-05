@@ -97,7 +97,7 @@ export default {
       default: false
     },
     columns: {
-      type: Array,
+      type: [Array, Object],
       default() {
         return [];
       }

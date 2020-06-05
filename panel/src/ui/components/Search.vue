@@ -38,6 +38,7 @@
             :placeholder="$t('search') + ' …'"
             aria-label="$t('search')"
             type="text"
+            @input="hasResults = true"
             @keydown.down.prevent="down"
             @keydown.up.prevent="up"
             @keydown.tab.prevent="tab"
@@ -52,7 +53,7 @@
           />
         </div>
 
-        <ul>
+        <ul @mouseout="selected = -1">
           <!-- Results -->
           <li
             v-for="(item, itemIndex) in items"
@@ -64,14 +65,17 @@
               :to="item.link"
               @click="click(itemIndex)"
             >
-              <strong>{{ item.title }}</strong>
-              <small>{{ item.info }}</small>
+              <k-item-figure :preview="item.preview" />
+              <div class="py-2 px-3">
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.info }}</small>
+              </div>
             </k-link>
           </li>
 
           <!-- No results -->
-          <li v-if="q && isLoaded && items.length < 1">
-            <k-link :disabled="true">
+          <li v-if="q && !hasResults">
+            <k-link :disabled="true" class="py-2 px-3">
               <strong>{{ $t("search.empty") }}</strong>
             </k-link>
           </li>
@@ -101,7 +105,7 @@ export default {
       currentType: this.getCurrentType(this.type),
       isOpen: false,
       isLoading: false,
-      isLoaded: false,
+      hasResults: true,
       items: [],
       q: null,
       selected: -1
@@ -112,7 +116,9 @@ export default {
       this.search(this.q);
     },
     q: debounce(function (q) {
-      this.search(q);
+      if (this.isOpen) {
+        this.search(q);
+      }
     }, 200),
     type() {
       this.currentType = this.getCurrentType(this.type);
@@ -125,7 +131,7 @@ export default {
     },
     close() {
       this.isOpen = false;
-      this.isLoaded = false;
+      this.hasResults = true;
       this.items = [];
       this.q = null;
     },
@@ -158,19 +164,31 @@ export default {
       }, 1);
     },
     async search(query) {
-      this.$refs.types.close();
-      this.isLoaded  = false;
       this.isLoading = true;
 
+      if (this.$refs.types) {
+        this.$refs.types.close();
+      }
+
       try {
-        this.items = await this.currentType.search()({ query, limit: 10 });
+        // Skip API call if query empty
+        if (query === "") {
+          throw new Error;
+        }
+
+        this.items = await this.currentType.search({
+          query: query,
+          limit: 10
+        });
+
       } catch (error) {
         this.items = [];
       }
 
-      this.selected = -1;
-      this.isLoading = false;
-      this.isLoaded  = true;
+
+      this.selected   = -1;
+      this.isLoading  = false;
+      this.hasResults = this.items.length > 0;
     },
     tab() {
       const item = this.items[this.selected];
@@ -202,7 +220,7 @@ export default {
   margin: 0 auto;
 
   @media screen and (min-width: $breakpoint-md) {
-    margin: 2.5rem auto;
+    margin: 3.5rem auto;
   }
 }
 .k-search-types {
@@ -248,16 +266,19 @@ export default {
 }
 .k-search li {
   border-bottom: 1px solid $color-background;
-  line-height: 1.125;
+  line-height: 1;
   display: flex;
 }
 .k-search li:last-child {
   border-bottom: 0;
 }
 .k-search li .k-link {
-  display: block;
-  padding: .5rem .75rem;
+  display: flex;
   flex-grow: 1;
+}
+.k-search li .k-item-figure {
+  width: 50px;
+  padding-right: .25rem;
 }
 .k-search li strong {
   display: block;
@@ -270,7 +291,6 @@ export default {
 }
 .k-search li[data-selected] {
   background: $color-black;
-  border-bottom: 1px solid transparent;
   color: #fff;
 }
 .k-search-empty {

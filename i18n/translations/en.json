@@ -344,7 +344,9 @@
   "role.nobody.title": "Nobody",
 
   "save": "Save",
+
   "search": "Search",
+  "search.empty": "No results found",
 
   "section.required": "The section is required",
 

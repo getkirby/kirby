@@ -2,6 +2,7 @@
   <k-inside
     :breadcrumb="breadcrumb"
     :view="view"
+    search="files"
     class="k-file-view"
   >
     <k-file-preview

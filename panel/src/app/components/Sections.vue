@@ -37,7 +37,7 @@ export default {
   inheritAttrs: false,
   props: {
     api: String,
-    columns: Array,
+    columns: [Array, Object],
     lock: {
       type: [Boolean, Object],
       default: false,

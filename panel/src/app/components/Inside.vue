@@ -36,7 +36,7 @@
     <k-search
       ref="search"
       :type="search"
-      :types="searchTypes"
+      :types="$model.search"
     />
 
     <!-- Registration Dialog -->
@@ -104,37 +104,6 @@ export default {
       }
 
       return menu;
-    },
-    searchTypes() {
-      return {
-        pages: {
-          label: "Pages",
-          icon: "page",
-          search() {
-            return async ({ query, limit }) => {
-              return [];
-            };
-          }
-        },
-        files: {
-          label: "Files",
-          icon: "image",
-          search(q) {
-            return async () => {
-              return [];
-            }
-          }
-        },
-        users: {
-          label: "Users",
-          icon: "users",
-          search(q) {
-            return async () => {
-              return [];
-            }
-          }
-        }
-      };
     },
     views() {
       // TODO: replace with views from store

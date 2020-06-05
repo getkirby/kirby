@@ -24,55 +24,47 @@ export const regular = () => ({
         pages: {
           label: "Pages",
           icon: "page",
-          search() {
-            return async ({ query, limit }) => {
+          search: async ({ query, limit }) => {
+            if (query.length === 0) {
+              return [];
+            }
 
-              if (query.length === 0) {
-                return [];
+            await new Promise(r => setTimeout(r, delay));
+
+            return [
+              {
+                id: "explore",
+                title: "Explore the universe",
+                link: "/explore",
+                info: "explore"
+              },
+              {
+                id: "chasing",
+                title: "Chasing waterfalls",
+                link: "/chasing",
+                info: "chasing"
+              },
+              {
+                id: "himalaya",
+                title: "Himalaya and back",
+                link: "/himalaya",
+                info: "himalaya"
               }
-
-              await new Promise(r => setTimeout(r, delay));
-
-              return [
-                {
-                  id: "explore",
-                  title: "Explore the universe",
-                  link: "/explore",
-                  info: "explore"
-                },
-                {
-                  id: "chasing",
-                  title: "Chasing waterfalls",
-                  link: "/chasing",
-                  info: "chasing"
-                },
-                {
-                  id: "himalaya",
-                  title: "Himalaya and back",
-                  link: "/himalaya",
-                  info: "himalaya"
-                }
-              ];
-
-            };
+            ];
           }
         },
         files: {
           label: "Files",
           icon: "image",
-          search(q) {
-            return async () => {
-              return [];
-            }
+          search: async ({ query, limit }) => {
+            return [];
           }
         },
         users: {
           label: "Users",
           icon: "users",
-          search(q) {
-            return async () => {
-              return [];
-            }
+          search: async ({ query, limit }) => {
+            return [];
           }
         }
       };
