@@ -2,7 +2,7 @@
 export const Item = (id, model = "Item") =>  {
   return {
     id: id.toString(),
-    title: model + " no. " + id,
+    text: model + " no. " + id,
     info: model + " info",
     link: "https://getkirby.com",
     preview: {

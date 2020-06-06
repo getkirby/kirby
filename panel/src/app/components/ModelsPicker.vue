@@ -18,7 +18,8 @@ export default {
   props: {
     ...Picker.props,
     endpoint: {
-      type: String
+      type: String,
+      required: true
     },
     help: String,
     limit: {
@@ -36,13 +37,23 @@ export default {
   },
   methods: {
     async load(params) {
-      // Provided an async function
+      let response;
+
+      // provided an async function
       if (this.options) {
-        return this.options(params);
+        response = await this.options(params);
+
+      // provided an API endpoint
+      } else {
+        response = await this.$api.get(this.endpoint, params);
       }
 
-      // Provided an API endpoint
-      return this.$api.get(this.endpoint, params);
+      // map items if mapper method existis
+      if (this.map) {
+        response = this.map(response);
+      }
+
+      return response;
     },
     onPaginate(pagination) {
       this.page = pagination.page;

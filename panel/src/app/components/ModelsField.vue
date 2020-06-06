@@ -54,6 +54,7 @@ export default {
       default: true
     },
     info: String,
+    link: Boolean,
     /**
      * Maximum number of items
      */
@@ -173,16 +174,20 @@ export default {
       return true;
     },
     loader() {
+      let options = [];
+
+      if (!this.disabled) {
+        options.push({
+          icon: "remove",
+          text: "Remove",
+          disabled: this.disabled
+        });
+      }
+
       return {
         info: this.info,
         limit: this.value.length || 1,
-        options: [
-          {
-            icon: "remove",
-            text: "Remove",
-            disabled: this.disabled
-          }
-        ]
+        options: options
       }
     },
     more() {
@@ -217,6 +222,10 @@ export default {
     },
     map() {
       this.data = this.data.map(item => {
+        if (this.link === false) {
+          delete item.link;
+        }
+
         item.options = this.loader.options;
         return item;
       });

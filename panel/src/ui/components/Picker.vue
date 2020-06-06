@@ -20,7 +20,7 @@
       >
         <k-button
           :disabled="!parent.id"
-          :text="parent.title"
+          :text="parent.text"
           :tooltip="$t('back')"
           icon="angle-left"
           @click="onBack"

@@ -23,9 +23,10 @@ return [
         },
 
         /**
-         * The placeholder text if none have been selected yet
+         * The placeholder text/icon if none have been selected yet
          */
         'empty' => function ($empty = null) {
+            // TODO: handle cases where defined as text-icon array
             return I18n::translate($empty, $empty);
         },
 
@@ -37,7 +38,8 @@ return [
         },
 
         /**
-         * Changes the layout of the selected files. Available layouts: `list`, `cards`
+         * Changes the layout of the selected files.
+         * Available layouts: `list`, `cards`
          */
         'layout' => function (string $layout = 'list') {
             return $layout;
@@ -47,6 +49,8 @@ return [
          * Whether each item should be clickable
          */
         'link' => function (bool $link = true) {
+            // TODO: the default value somehow gets ignored/
+            // not passed to Vue component
             return $link;
         },
 
@@ -102,7 +106,6 @@ return [
         'value' => function ($value = []) {
             return $value;
         }
-
     ],
     'computed' => [
         'default' => function (): array {
