@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\System;
+use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -67,6 +68,13 @@ return [
         'kirbytext' => function () {
             return $this->kirby()->option('panel.kirbytext') ?? true;
         },
+        'updateStatus' => function (System $system) {
+            try {
+                return $system->updateStatus();
+            } catch (PermissionException $e) {
+                return false;
+            }
+        },
         'user' => function () {
             return $this->user();
         },
@@ -112,6 +120,7 @@ return [
             'slugs',
             'title',
             'translation',
+            'updateStatus',
             'user' => 'auth',
             'version'
         ]
