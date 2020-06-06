@@ -2,6 +2,7 @@
 
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\LogicException;
 
 /**
  * System Routes
@@ -30,6 +31,19 @@ return [
                     'type'   => 'model'
                 ];
             }
+        }
+    ],
+    [
+        'pattern' => 'system/update',
+        'method'  => 'GET',
+        'action'  => function () {
+            $data = $this->kirby()->system()->updateStatus(true);
+
+            if ($data === false) {
+                throw new LogicException('Checking for updates is disabled in the config');
+            }
+
+            return $data;
         }
     ],
     [
