@@ -96,7 +96,7 @@ export default {
   },
   methods: {
     onRemove() {
-      const path = this.$model.pages.link(this.model.parent.guid);
+      const path = this.$model.pages.link(this.model.parent.id);
       this.$router.push(path);
     },
     onRename(file) {
