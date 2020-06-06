@@ -73,7 +73,8 @@ trait AppCaches
      */
     protected function cacheOptions(string $key): array
     {
-        $options = $this->option($cacheKey = $this->cacheOptionsKey($key), false);
+        $default = $key === 'system' ? true : false;
+        $options = $this->option($cacheKey = $this->cacheOptionsKey($key), $default);
 
         if ($options === false) {
             return [
