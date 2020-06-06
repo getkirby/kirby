@@ -187,6 +187,14 @@ export default {
     lock(context, lock) {
       context.commit("SET_LOCK", lock);
     },
+    logout(context) {
+      // remove all form changes from localStorage
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith("kirby$content$")) {
+          localStorage.removeItem(key);
+        }
+      });
+    },
     move(context, { from, to }) {
       context.commit("MOVE_MODEL", {
         from: context.getters.id(from),

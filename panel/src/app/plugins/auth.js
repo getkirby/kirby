@@ -10,7 +10,7 @@ export default (Vue, store) => {
     // no user? logout!
     if (!user) {
       store.dispatch("user/visit", to.path);
-      Vue.$model.users.logout();
+      await Vue.$model.users.logout();
       return false;
     }
 
@@ -18,7 +18,7 @@ export default (Vue, store) => {
 
     // no access? redirect to website
     if (access.panel === false) {
-      window.location.href = Vue.prototype.$config.site;
+      window.location.href = Vue.$config.site;
       return false;
     }
 

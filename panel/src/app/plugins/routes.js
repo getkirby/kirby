@@ -16,6 +16,12 @@ export default (Vue, store) => {
       component: Vue.component("k-login-route"),
     },
     {
+      path: "/logout",
+      beforeEnter(to, from, next) {
+        Vue.$model.users.logout();
+      }
+    },
+    {
       path: "/settings",
       name: "Settings",
       component: Vue.component("k-settings-route"),

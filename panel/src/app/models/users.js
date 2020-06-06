@@ -146,16 +146,17 @@ export default (Vue, store) => ({
   },
   async logout(force = false) {
     store.dispatch("user/current", null);
-
-    if (force) {
-      window.location.href = (window.panel.url || "") + "/login";
-      return;
-    }
+    store.dispatch("content/logout");
 
     try {
       await Vue.$api.auth.logout();
+
     } finally {
-      Vue.$router.push("/login");
+      if (force) {
+        window.location.href = (window.panel.url || "") + "/login";
+      } else {
+        Vue.$router.push("/login");
+      }
     }
   },
   async options(id) {
