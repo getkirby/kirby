@@ -110,7 +110,7 @@ return [
                     'extension' => $file->extension(),
                     'filename'  => $file->filename(),
                     'id'        => $file->id(),
-                    'info'      => $file->toString($this->info ?? false),
+                    'info'      => $this->info ? $file->toString($this->info) : false,
                     'link'      => $file->panelUrl(true),
                     'mime'      => $file->mime(),
                     'parent'    => $file->parent()->panelPath(),

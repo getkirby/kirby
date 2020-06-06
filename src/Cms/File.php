@@ -513,7 +513,7 @@ class File extends ModelWithContent
             'filename' => $this->filename(),
             'dragText' => $this->dragText('auto', $absolute ?? false),
             'id'       => $this->id(),
-            'info'     => $this->toString($params['info'] ?? false),
+            'info'     => $params['info'] ? $this->toString($params['info']) : false,
             'link'     => $this->panelUrl(true),
             'preview'  => $this->panelPreview($params['preview'] ?? null),
             'text'     => $this->toString($params['text'] ?? '{{ file.filename }}'),

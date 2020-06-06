@@ -146,18 +146,18 @@ return [
         'data' => function () {
             $data = [];
 
-            foreach ($this->pages as $item) {
-                $permissions = $item->permissions();
+            foreach ($this->pages as $page) {
+                $permissions = $page->permissions();
 
                 $data[] = [
-                    'id'          => $item->id(),
-                    'dragText'    => $item->dragText(),
-                    'text'        => $item->toString($this->text),
-                    'info'        => $this->info ? $item->toString($this->info) : false,
-                    'parent'      => $item->parentId(),
-                    'preview'     => $item->panelPreview($this->preview()),
-                    'link'        => $item->panelUrl(true),
-                    'status'      => $item->status(),
+                    'id'          => $page->id(),
+                    'dragText'    => $page->dragText(),
+                    'text'        => $page->toString($this->text),
+                    'info'        => $this->info ? $page->toString($this->info) : false,
+                    'parent'      => $page->parentId(),
+                    'preview'     => $page->panelPreview($this->preview()),
+                    'link'        => $page->panelUrl(true),
+                    'status'      => $page->status(),
                     'permissions' => [
                         'sort'         => $permissions->can('sort'),
                         'changeStatus' => $permissions->can('changeStatus')

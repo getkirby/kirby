@@ -991,7 +991,7 @@ class Page extends ModelWithContent
             'dragText'    => $this->dragText(),
             'hasChildren' => $this->hasChildren(),
             'id'          => $this->id(),
-            'info'        => $this->toString($params['info'] ?? false),
+            'info'        => $params['info'] ? $this->toString($params['info']) : false,
             'link'        => $this->panelUrl(true),
             'preview'     => $this->panelPreview($params['preview'] ?? null),
             'text'        => $this->toString($params['text'] ?? '{{ page.title }}'),
