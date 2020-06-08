@@ -29,6 +29,9 @@ export default (Vue, store) => ({
         version:      response.version
       });
 
+      // set system update info
+      store.dispatch("system/update", response.updateStatus)
+
       // set system status
       store.dispatch("system/status", {
         isInstallable: response.isInstallable,
@@ -91,5 +94,10 @@ export default (Vue, store) => ({
     }
 
     document.title = site;
+  },
+  async update() {
+    const response = await Vue.$api.system.update();
+    store.dispatch("system/update", response);
+    return response;
   }
 });

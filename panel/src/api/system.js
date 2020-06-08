@@ -9,6 +9,9 @@ export default (api) => {
     },
     async register(license) {
       return api.post("system/register", license);
+    },
+    async update() {
+      return await api.get("system/update");
     }
   }
 };
