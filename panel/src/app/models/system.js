@@ -75,6 +75,7 @@ export default (Vue, store) => ({
 
       return store.state.system;
     }
+  },
   async register(registration) {
     await Vue.$api.system.register(registration);
     await store.dispatch("system/register", registration.license);
