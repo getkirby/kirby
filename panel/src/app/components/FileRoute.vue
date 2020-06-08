@@ -106,6 +106,9 @@ export default {
     onReplace() {
       this.reload();
     },
+    onTitle() {
+      this.$model.system.title(this.model.filename);
+    },
     async reload() {
       const model = await load(this.model.parent.guid, this.model.filename);
       this.load(model);

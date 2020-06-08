@@ -62,6 +62,7 @@ export default {
     },
     load(model) {
       this.model = model;
+      this.onTitle();
 
       // check for unlock
       // TODO: fake API route needed to uncomment the following line
@@ -95,6 +96,9 @@ export default {
       this.saving = true;
       await this.save();
       this.saving = false;
+    },
+    onTitle() {
+      this.$model.system.title(this.model.id);
     },
     async save() {
       // Hit the model API

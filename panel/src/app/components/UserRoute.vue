@@ -88,6 +88,9 @@ export default {
     onChangeRole(user) {
       this.model.role = user.role;
     },
+    onTitle() {
+      this.$model.system.title(this.model.name || this.model.email);
+    },
     async reload() {
       const model = await load(this.model.id);
       this.load(model);

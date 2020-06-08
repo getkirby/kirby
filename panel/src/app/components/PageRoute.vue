@@ -92,6 +92,9 @@ export default {
         this.$router.push(path);
       }
     },
+    onTitle() {
+      this.$model.system.title(this.model.title);
+    },
     async reload() {
       const model = await load(this.model.id);
       this.load(model);
