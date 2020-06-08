@@ -3,6 +3,53 @@ import AsyncFormDialog from "@/ui/components/AsyncFormDialog.vue";
 
 export default {
   extends: AsyncFormDialog,
+  data() {
+    return {
+      id: null,
+      num: null,
+      siblings: [],
+      stati: {},
+      values: {},
+    };
+  },
+  computed: {
+    fieldsetup() {
+      // field setup
+      let fields = {
+        status: {
+          name: "status",
+          label: this.$t("page.changeStatus.select"),
+          type: "radio",
+          required: true,
+          options: Object.keys(this.stati).map(key => {
+            const icon = this.$model.pages.statusIcon(key);
+
+            return {
+              value: key,
+              text: this.stati[key].label,
+              info: this.stati[key].text,
+              icon: icon.type,
+              color: icon.color
+            };
+          })
+        }
+      };
+
+      // add the position field if needed
+      if (this.values.status === "listed" && this.num === "default") {
+        // create the select box
+        fields.position = {
+          name: "position",
+          label: this.$t("page.changeStatus.position"),
+          type: "select",
+          empty: false,
+          options: this.positions(this.siblings)
+        };
+      }
+
+      return fields;
+    }
+  },
   methods: {
     async load(id) {
       const page = await this.$api.pages.get(id, {
@@ -34,51 +81,26 @@ export default {
       // store the id for the submit request
       this.id = id;
 
-      // form values
-      this.values = {
-        status: page.status
-      };
+      // num
+      this.num = page.blueprint.num;
 
-      // field setup
-      this.fields = {
-        status: {
-          name: "status",
-          label: this.$t("page.changeStatus.select"),
-          type: "radio",
-          required: true,
-          options: Object.keys(page.blueprint.status).map(key => {
-            const icon = this.$model.pages.statusIcon(key);
+      // stati
+      this.stati = page.blueprint.status;
 
-            return {
-              value: key,
-              text: page.blueprint.status[key].label,
-              info: page.blueprint.status[key].text,
-              icon: icon.type,
-              color: icon.color
-            };
-          })
-        }
-      };
-
-      // add the position field if needed
-      if (page.status === "listed" && page.blueprint.num === "default") {
-        // load all siblings
-        const { siblings } = await this.$api.pages.get(id, {
+      // load all siblings
+      if (this.num === "default") {
+        const { siblings } = await this.$api.pages.get(this.id, {
           select: ["siblings"]
         });
 
-        // create the select box
-        this.fields.position = {
-          name: "position",
-          label: this.$t("page.changeStatus.position"),
-          type: "select",
-          empty: false,
-          options: this.positions(siblings)
-        };
-
-        // add the selected position to the form values
-        this.values.position = page.num || (siblings.length + 1)
+        this.siblings = siblings;
       }
+
+      // form values
+      this.values = {
+        position: page.num,
+        status: page.status,
+      };
 
       // set up the submit button
       this.submitButton = this.$t("change");

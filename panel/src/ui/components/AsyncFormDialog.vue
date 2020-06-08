@@ -3,7 +3,7 @@
     ref="dialog"
     v-model="values"
     :loading="isLoading"
-    :fields="fields"
+    :fields="fieldsetup"
     :cancel-button="cancelButton"
     :submit-button="submitButton"
     @input="onInput"
@@ -22,6 +22,11 @@ export default {
       fields: {},
       values: {}
     };
+  },
+  computed: {
+    fieldsetup() {
+      return this.fields;
+    }
   },
   methods: {
     onInput(values) {
