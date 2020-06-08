@@ -11,6 +11,7 @@ import user from "./modules/user.js";
 
 // store watchers
 import withContentLock from "./watchers/content-lock.js"
+import withCheckUpdate from "./watchers/update.js"
 
 Vue.use(Vuex);
 
@@ -90,5 +91,6 @@ const store = new Vuex.Store({
 });
 
 withContentLock(Vue, store);
+withCheckUpdate(Vue, store);
 
 export default store;
