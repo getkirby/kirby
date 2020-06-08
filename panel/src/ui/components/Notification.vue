@@ -7,9 +7,8 @@
     <p
       class="flex-grow py-2 px-3"
       @click="$emit('click')"
-    >
-      {{ message }}
-    </p>
+      v-html="message"
+    />
     <k-button
       icon="cancel"
       class="flex py-2 px-3"
