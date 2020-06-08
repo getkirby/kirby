@@ -16,7 +16,8 @@
       <template v-slot:left>
         <k-button-group>
           <slot name="options" />
-          <k-dropdown v-if="options.length">
+          {{ options }}
+          <k-dropdown v-if="hasOptions">
             <k-button
               :disabled="lock !== false"
               :responsive="true"
@@ -154,6 +155,11 @@ export default {
       default() {
         return {};
       }
+    }
+  },
+  computed: {
+    hasOptions() {
+      return this.options.filter(option => option.disabled !== false).length;
     }
   },
   methods: {
