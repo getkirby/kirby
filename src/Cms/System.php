@@ -6,7 +6,6 @@ use Kirby\Data\Json;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
-use Kirby\Http\Remote;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 use Kirby\Toolkit\A;
@@ -38,11 +37,18 @@ class System
     protected $app;
 
     /**
-     * @param \Kirby\Cms\App $app
+     * @var string
      */
-    public function __construct(App $app)
+    protected $remoteClass;
+
+    /**
+     * @param \Kirby\Cms\App $app
+     * @param string $remoteClass Class to use for making HTTP requests (used for testing)
+     */
+    public function __construct(App $app, string $remoteClass = 'Kirby\Http\Remote')
     {
-        $this->app = $app;
+        $this->app         = $app;
+        $this->remoteClass = $remoteClass;
 
         // try to create all folders that could be missing
         $this->init();
@@ -392,7 +398,7 @@ class System
             ]);
         }
 
-        $response = Remote::get('https://licenses.getkirby.com/register', [
+        $response = $this->remoteClass::get('https://licenses.getkirby.com/register', [
             'data' => [
                 'license' => $license,
                 'email'   => $email,
@@ -467,6 +473,123 @@ class System
     public function toArray(): array
     {
         return $this->status();
+    }
+
+    /**
+     * Checks for available updates
+     *
+     * @param bool $force If true, the status is also checked if checking is set
+     *                    to 'manual' in the config (but not if disabled completely)
+     * @return array|null|false `null` if checking is set to 'manual' in the config,
+     *                          `false` if checking is disabled completely
+     *
+     * @throws Kirby\Exception\PermissionException If the current user does not have the
+     *                                             permission to access the update status
+     */
+    public function updateStatus(bool $force = false)
+    {
+        $current = $this->app->version();
+
+        // check for the user permissions
+        $user = $this->app->user();
+        if (!$user || $user->role()->permissions()->for('access', 'settings') !== true) {
+            throw new PermissionException();
+        }
+
+        // determine if the status check is enabled in the config
+        $mode = $this->app->option('update.kirby') ??
+                $this->app->option('update', 'notify');
+
+        if ($mode === false) {
+            return false;
+        } elseif ($mode === 'manual' && $force === false) {
+            return null;
+        }
+
+        // try to get the status from the cache
+        $cache = null;
+        if ($mode === 'notify') {
+            $cache  = $this->app->cache('system');
+            $cached = $cache->get('updateStatus');
+
+            // but only if no current data is required and if the
+            // cached status was based on the current Kirby version
+            if ($force === false && $cached !== null && $cached['current'] === $current) {
+                return $cached;
+            }
+        }
+
+        // get fresh information
+        $url  = 'https://getkirby.com/security.json';
+        $data = $this->remoteClass::get($url)->json();
+        $latest       = $data['latest']    ?? null;
+        $latestUrl    = $data['latestUrl'] ?? null;
+        $incidentsRaw = $data['incidents'] ?? [];
+
+        // filter the incidents
+        $incidents = [];
+        foreach ($incidentsRaw as $incident) {
+            // check if the current version is affected
+            $affected = explode(' ', $incident['affected'] ?? '');
+            foreach ($affected as $constraint) {
+                if (preg_match('/^([<>!=]+)([0-9.]+)$/', $constraint, $matches) !== 1) {
+                    // skip version constraints we can't parse for compatibility
+                    continue;
+                }
+
+                if (version_compare($current, $matches[2], $matches[1]) !== true) {
+                    // skip the incident if at least one of the constraints doesn't match
+                    continue 2;
+                }
+            }
+
+            $incidents[] = $incident;
+        }
+
+        // interpret the data
+        if (empty($incidents) === false) {
+            $status   = 'at-risk';
+            $severity = array_reduce($incidents, function ($carry, $incident) {
+                $severities = ['minor', 'notable', 'major'];
+
+                // return the higher of the carried and the current severity
+                $severityPosition = array_search($incident['severity'], $severities);
+                if (
+                    $severityPosition !== false &&
+                    (
+                        $carry === null ||
+                        $severityPosition > array_search($carry, $severities)
+                    )
+                ) {
+                    return $incident['severity'];
+                }
+
+                return $carry;
+            });
+        } elseif (version_compare($current, $latest, '<') === true) {
+            $status   = 'outdated';
+            $severity = null;
+        } else {
+            $status   = 'ok';
+            $severity = null;
+        }
+
+        // assemble the returned array
+        $result = [
+            'updated'   => time(),
+            'status'    => $status,
+            'severity'  => $severity,
+            'current'   => $current,
+            'latest'    => $latest,
+            'latestUrl' => $latestUrl,
+            'incidents' => $incidents
+        ];
+
+        if ($cache !== null) {
+            $cache->set('updateStatus', $result, 60 * 24 * 3);
+        }
+
+        return $result;
     }
 
     /**
