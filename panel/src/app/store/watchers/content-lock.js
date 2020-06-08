@@ -20,13 +20,23 @@ export default (Vue, store) => {
     callback();
   }
 
+  const toEndpoint = (storeId, path) => {
+    storeId = store.getters["content/api"](storeId);
+
+    if (path) {
+      storeId += "/" + path;
+    }
+
+    return storeId;
+  }
+
   /**
    * Actions
    */
 
   const getLock = async () => {
     const response = await Vue.$api.get(
-      store.state.content.current.id + "/lock",
+      toEndpoint(store.state.content.current.id, "lock"),
       null,
       null,
       true
@@ -51,7 +61,7 @@ export default (Vue, store) => {
       try {
         // console.log("+++ PATCH /lock");
         await Vue.$api.patch(
-          store.state.content.current.id + "/lock",
+          toEndpoint(store.state.content.current.id, "lock"),
           null,
           null,
           true
@@ -79,7 +89,7 @@ export default (Vue, store) => {
     if (supported === true) {
       // console.log("+++ DELETE /lock");
       await Vue.$api.delete(
-        store.state.content.current.id + "/lock",
+        toEndpoint(store.state.content.current.id, "lock"),
         null,
         null,
         true
@@ -90,7 +100,7 @@ export default (Vue, store) => {
 
   const getUnlock = async () => {
     const response = await Vue.$api.get(
-      store.state.content.current.id + "/unlock",
+      toEndpoint(store.state.content.current.id, "unlock"),
       null,
       null,
       true
@@ -102,7 +112,7 @@ export default (Vue, store) => {
   const unsetUnlock = async() => {
     // console.log("+++ DELETE /unlock");
     await Vue.$api.delete(
-      store.state.content.current.id + "/unlock",
+      toEndpoint(store.state.content.current.id, "unlock"),
       null,
       null,
       true

@@ -1,6 +1,7 @@
 <template>
   <k-settings-view
     :license="license"
+    :multilang="multilang"
     :version="version"
   />
 </template>

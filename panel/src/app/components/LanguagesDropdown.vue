@@ -10,21 +10,36 @@
 export default {
   computed: {
     current() {
-      return this.$store.state.languages.current
+      return this.$store.state.languages.current;
+    },
+    default() {
+      return this.$store.state.languages.default;
     },
     languages() {
-      return this.$store.state.languages.all.map(language => {
+      let options    = [];
+      const toOption = (language) => {
         return {
           ...language,
-          text: language.code,
+          text: language.name || language.code,
           current: language.code === this.current.code
-        }
-      });
+        };
+      };
+
+      if (this.default) {
+        options.push(toOption(this.default));
+        options.push("-")
+      }
+
+
+
+      return [
+        ...options,
+        ...this.$store.state.languages.all.filter(language => language.code !== this.default.code).map(toOption)
+      ];
     }
   },
   methods: {
     onChange(language) {
-      this.$store.dispatch("languages/current", language);
       this.$emit("change", language);
     }
   }

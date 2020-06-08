@@ -3,7 +3,7 @@ export default (Vue, store) => ({
   async changeTitle(title) {
     const site = await Vue.$api.site.changeTitle(title);
     store.dispatch("system/title", title);
-    Vue.$events.$emit("site.changeTitle", data);
+    Vue.$events.$emit("site.changeTitle", site);
     store.dispatch("notification/success");
     return site;
   },

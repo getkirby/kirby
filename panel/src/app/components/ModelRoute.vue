@@ -107,8 +107,9 @@ export default {
       });
     },
     async onLanguage(language) {
+      await this.$store.dispatch("languages/current", language);
       await this.$model.system.load(true);
-      this.load();
+      this.reload();
     },
     async onSave() {
       this.saving = true;

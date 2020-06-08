@@ -14,14 +14,25 @@ export default {
   },
 
   getters: {
-    exists: state => id => {
+    api: (state, getters, rootState) => (storeId) => {
+      if (rootState.languages.current) {
+        storeId = storeId.split("/");
+        storeId = storeId.slice(0, storeId.length - 1).join("/");
+      }
+
+      return storeId;
+    },
+    changes: (state, getters) => (id) => {
+      return clone(getters.model(id).changes);
+    },
+    exists: (state) => (id) => {
       return state.models.hasOwnProperty(id);
     },
-    hasChanges: (state, getters) => id => {
+    hasChanges: (state, getters) => (id) => {
       const changes = getters.model(id).changes;
       return Object.keys(changes).length > 0;
     },
-    id: (state, getters, rootState) => id => {
+    id: (state, getters, rootState) => (id) => {
       id = id || state.current.id;
 
       if (rootState.languages.current) {
@@ -30,10 +41,10 @@ export default {
 
       return id;
     },
-    isCurrent: (state, getters) => id => {
+    isCurrent: (state, getters) => (id) => {
       return id === state.current.id;
     },
-    model: (state, getters) => id => {
+    model: (state, getters) => (id) => {
       id = id || state.current.id;
 
       if (getters.exists(id) === true) {
@@ -46,17 +57,14 @@ export default {
         changes: {},
       };
     },
-    values: (state, getters) => id => {
+    originals: (state, getters) => (id) => {
+      return clone(getters.model(id).originals);
+    },
+    values: (state, getters) => (id) => {
       return {
         ...getters.originals(id),
         ...getters.changes(id)
       };
-    },
-    originals: (state, getters) => id => {
-      return clone(getters.model(id).originals);
-    },
-    changes: (state, getters) => id => {
-      return clone(getters.model(id).changes);
     }
   },
 
@@ -149,6 +157,24 @@ export default {
   },
 
   actions: {
+    create(context, { id, values }) {
+      // remove title from model content
+      if (id.startsWith("pages/") || id.startsWith("site")) {
+        delete values.title;
+      }
+
+      context.commit("ADD_MODEL", {
+        id: id,
+        model: {
+          originals: clone(values),
+          changes:   {}
+        }
+      });
+      context.dispatch("current", id);
+    },
+    current(context, id) {
+      context.commit("SET_CURRENT", id);
+    },
     download(context) {
       let content = "";
       console.log(context.state.current.unlocked)
@@ -166,27 +192,6 @@ export default {
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    },
-    create(context, { id, values }) {
-      // attach the language to the id
-      id = context.getters.id(id);
-
-      // remove title from model content
-      if (id.startsWith("pages/") || id.startsWith("site")) {
-        delete values.title;
-      }
-
-      context.commit("ADD_MODEL", {
-        id: id,
-        model: {
-          originals: clone(values),
-          changes:   {}
-        }
-      });
-      context.dispatch("current", id);
-    },
-    current(context, id) {
-      context.commit("SET_CURRENT", id);
     },
     input(context, { id, values }) {
       context.commit("INPUT_MODEL", {

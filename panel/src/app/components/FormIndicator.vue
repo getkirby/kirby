@@ -60,7 +60,7 @@ export default {
         ];
 
         const changed = this.changes.map(async model => {
-          const endpoint = this.mapEndpoint(model.id);
+          const endpoint = this.$store.getters["content/api"](model.id);
           const response = await this.$api.get(endpoint, { view: "compact" });
           let option     = this.mapOption(model.id, response);
 
@@ -81,15 +81,6 @@ export default {
     }
   },
   methods: {
-    mapEndpoint(id) {
-
-      if (this.$store.state.languages.current) {
-        id = id.split("/");
-        id = id.slice(0, id.length - 2).join("/");
-      }
-
-      return id;
-    },
     mapOption(id, model) {
       if (id.startsWith("pages/") === true) {
         return {

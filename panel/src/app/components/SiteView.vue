@@ -9,6 +9,7 @@
       :prevnext="false"
       api="site"
       @rename="$refs.rename.open()"
+      v-on="$listeners"
     >
       <template v-slot:options>
         <k-button
