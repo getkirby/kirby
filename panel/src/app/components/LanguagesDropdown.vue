@@ -2,6 +2,8 @@
   <k-select-dropdown
     :options="languages"
     icon="globe"
+    theme="light"
+    class="k-languages-dropdown"
     @change="onChange"
   />
 </template>
@@ -20,7 +22,7 @@ export default {
       const toOption = (language) => {
         return {
           ...language,
-          text: language.name || language.code,
+          text: language.name,
           current: language.code === this.current.code
         };
       };
@@ -39,8 +41,9 @@ export default {
     }
   },
   methods: {
-    onChange(language) {
-      this.$emit("change", language);
+    async onChange(language) {
+      await this.$store.dispatch("languages/current", language);
+      await this.$model.system.load(true);
     }
   }
 }

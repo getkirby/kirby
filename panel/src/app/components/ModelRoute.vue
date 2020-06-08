@@ -16,6 +16,9 @@ export default {
     changes() {
       return this.$store.getters["content/hasChanges"](this.storeId);
     },
+    language() {
+      return this.$store.state.languages.current;
+    },
     listeners() {
       return {
         contentDownload: this.onContentDownload,
@@ -23,9 +26,7 @@ export default {
         contentRevert:   this.onContentRevert,
         contentSave:     this.save,
         contentUnlock:   this.onContentUnlock,
-
-        language: this.onLanguage,
-        input:    this.onInput,
+        input:           this.onInput,
       };
     },
     lock() {
@@ -63,6 +64,9 @@ export default {
     }
   },
   watch: {
+    language() {
+      this.reload();
+    },
     lock(newValue, oldValue) {
       if (newValue === false && oldValue !== false) {
         this.reload();
@@ -105,11 +109,6 @@ export default {
         id: this.storeId,
         values: values
       });
-    },
-    async onLanguage(language) {
-      await this.$store.dispatch("languages/current", language);
-      await this.$model.system.load(true);
-      this.reload();
     },
     async onSave() {
       this.saving = true;

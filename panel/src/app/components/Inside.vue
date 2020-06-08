@@ -19,6 +19,7 @@
         <template v-slot:options>
           <k-registration-buttons v-if="registered === false" />
           <k-form-indicator v-bind="indicator" />
+          <k-languages-dropdown />
         </template>
       </k-topbar>
     </header>
