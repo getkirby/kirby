@@ -1,6 +1,6 @@
 export default (api) => {
   let site = {
-    async get(query) {
+    async get(query = { view: "panel" }) {
       return api.get("site", query);
     },
     async update(data) {

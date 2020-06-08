@@ -20,6 +20,7 @@ export default {
       return this.$router.push("/");
     }
 
+    this.$model.system.title(this.$t("login"));
     this.loading = false;
   },
   data() {

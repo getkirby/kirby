@@ -3,7 +3,7 @@ export default (Vue) => [
     id: "site",
     link: "/site",
     icon: "home",
-    text: Vue.$store.state.system.title || Vue.$t("view.site")
+    text: Vue.$store.state.system.site || Vue.$t("view.site")
   },
   ...Object.values(window.panel.plugins.views),
   {

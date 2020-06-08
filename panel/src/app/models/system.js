@@ -16,7 +16,7 @@ export default (Vue, store) => ({
 
     // reload the system info
     try {
-      const response = await Vue.$api.system.get({ view: "panel" });
+      const response = await Vue.$api.system.get();
 
       // set system info
       store.dispatch("system/set", {

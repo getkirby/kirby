@@ -13,7 +13,7 @@ import ModelRoute from "./ModelRoute.vue";
 import Vue from "vue";
 
 const load = async () => {
-  return await Vue.$api.site.get({ view: "panel" });
+  return await Vue.$api.site.get();
 };
 
 export default {
@@ -58,7 +58,10 @@ export default {
     },
     async save() {
       return await this.$model.site.update();
-    }
+    },
+    onTitle() {
+      this.$model.system.title(this.$store.state.system.site);
+    },
   }
 }
 </script>

@@ -28,6 +28,7 @@ export default {
 
     this.translation  = this.$store.state.translation.current;
     this.translations = await this.$model.translations.options();
+    this.$model.system.title(this.$t("installation"));
     this.loading = false;
   },
   methods: {

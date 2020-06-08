@@ -52,6 +52,7 @@ export default {
     }
   },
   async created() {
+    this.$model.system.title(this.$t("view.users"));
     const response = await this.$api.roles.list();
     this.roles = response.data;
   },
