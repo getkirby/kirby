@@ -45,7 +45,12 @@ export default {
 
       // provided an API endpoint
       } else {
-        response = await this.$api.get(this.endpoint, params);
+        response = await this.$api.get(
+          this.endpoint,
+          params,
+          null,
+          true
+        );
       }
 
       // map items if mapper method existis

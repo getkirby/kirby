@@ -94,7 +94,9 @@ export default {
         this.api + "/sections/" + this.name,
         {
           page: this.page
-        }
+        },
+        null,
+        true
       );
     },
     onEmpty(event) {

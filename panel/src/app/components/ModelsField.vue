@@ -216,9 +216,12 @@ export default {
         return [];
       }
 
-      return this.$api.get(this.endpoints.field + "/items", {
-        ids: this.selected.join(",")
-      });
+      return this.$api.get(
+        this.endpoints.field + "/items",
+        { ids: this.selected.join(",") },
+        null,
+        true
+      );
     },
     map() {
       this.data = this.data.map(item => {
