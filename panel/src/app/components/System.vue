@@ -52,7 +52,7 @@
       <li>
         <dl>
           <dt>
-            {{ $t('update.checked', { last: updated }) }}
+            {{ $t('update.checked', { date: updated }) }}
           </dt>
           <dd>
             <k-button icon="refresh" @click="$emit('update')">

@@ -385,6 +385,17 @@
   "translation.locale": "en_US",
 
   "untitled": "Untitled",
+
+  "update.latest": "Latest Kirby release",
+  "update.status": "Status",
+  "update.check": "Check for update",
+  "update.checked": "Last checked: {date}",
+  "update.incidents": "Your current Kirby installation is affected by the following security threats",
+  "update.status.ok": "Up to date",
+  "update.status.outdates": "Update available",
+  "update.status.at-risk": "Security update available",
+  "update.critical": "Kirby {version} has been released which closes critical security threats.<br><br>Please <b><a href='{link}'>update your installation</a></b> as soon as possible.",
+
   "upload": "Upload",
   "upload.error.cantMove": "The uploaded file could not be moved",
   "upload.error.cantWrite": "Failed to write file to disk",
