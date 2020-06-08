@@ -14,47 +14,57 @@
       :cancel-button="false"
       :submit-button="{ text: $t('confirm') }"
       @close="onClose()"
-      @submit="onClose()"
+      @submit="onSubmit()"
       class="k-notifications-dialog"
     >
-      <k-text>
-        {{ dialog.message }}
-      </k-text>
-      <dl
-        :data-theme="dialog.type"
-        class="k-notifications-details bg-white block overflow-auto p-4 text-sm mt-3"
-      >
-        <template v-for="(detail, index) in dialog.details">
-          <dd
-            v-if="typeof detail === 'string'"
-            :key="'detail-message-' + index"
-            class="truncate"
-          >
-            {{ detail }}
-          </dd>
+      <div :data-theme="dialog.type">
 
-          <template v-else>
-            <dt :key="'detail-label-' + index" class="mb-1">
-              {{ detail.label }}
-            </dt>
-            <dd :key="'detail-message-' + index" class="truncate">
-              <template v-if="typeof detail.message === 'object'">
-                <ul>
-                  <li
-                    v-for="(msg, msgIndex) in detail.message"
-                    :key="msgIndex"
-                  >
-                    {{ msg }}
-                  </li>
-                </ul>
-              </template>
-              <template v-else>
-                {{ dialog.message }}
-              </template>
-            </dd>
-          </template>
+        <!-- details is a string -->
+        <template v-if="typeof dialog.details === 'string'">
+          <div class="k-notifications-title">
+            {{ dialog.message }}
+          </div>
+
+          <dl class="k-notifications-details">
+            <dd v-html="dialog.details" />
+          </dl>
         </template>
-      </dl>
+
+        <!-- details as array -->
+        <template v-else>
+          <k-text>
+            {{ dialog.message }}
+          </k-text>
+
+          <dl class="k-notifications-details">
+            <template v-for="(detail, index) in dialog.details">
+                <dt
+                  :key="'detail-label-' + index"
+                  class="k-notifications-title mb-1"
+                >
+                  {{ detail.label }}
+                </dt>
+                <dd :key="'detail-message-' + index" class="truncate">
+                  <template v-if="typeof detail.message === 'string'">
+                    {{ dialog.message }}
+                  </template>
+                  <template v-else>
+                    <ul>
+                      <li
+                        v-for="(msg, msgIndex) in detail.message"
+                        :key="msgIndex"
+                      >
+                        {{ msg }}
+                      </li>
+                    </ul>
+                  </template>
+
+                </dd>
+            </template>
+          </dl>
+        </template>
+
+      </div>
     </k-dialog>
   </portal>
 </template>
@@ -72,6 +82,12 @@ export default {
   methods: {
     onClose(id) {
       this.$store.dispatch("notification/close", id);
+    },
+    onSubmit(id) {
+      if (this.dialog.click) {
+        this.dialog.click();
+      }
+      this.onClose(id);
     }
   }
 }
@@ -80,7 +96,13 @@ export default {
 
 <style lang="scss">
 .k-notifications-details {
+  display: block;
+  padding: 1rem;
+  margin-top: .75rem;
+  font-size: $text-sm;
   line-height: 1.25em;
+  background: $color-white;
+  overflow: auto;
 }
 .k-notifications-details dd:not(:last-of-type) {
   margin-bottom: 1.5em;
@@ -90,13 +112,13 @@ export default {
   padding-bottom: 0.25rem;
   margin-bottom: 0.25rem;
 }
-.k-notifications-details[data-theme="success"] dt {
+[data-theme="success"] .k-notifications-title {
   color: $color-green-600;
 }
-.k-notifications-details[data-theme="info"] dt {
+[data-theme="info"] .k-notifications-title {
   color: $color-blue-600;
 }
-.k-notifications-details[data-theme="error"] dt {
+[data-theme="error"] .k-notifications-title {
   color: $color-red-600;
 }
 </style>
