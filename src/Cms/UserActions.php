@@ -331,7 +331,13 @@ trait UserActions
      */
     protected function writeCredentials(array $credentials): bool
     {
-        return Data::write($this->root() . '/index.php', $credentials);
+        $path = $this->root() . '/index.php';
+
+        if ($success = Data::write($path, $credentials)) {
+            F::invalidateOpcodeCache($path);
+        }
+
+        return $success;
     }
 
     /**
