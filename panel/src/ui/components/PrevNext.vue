@@ -1,11 +1,11 @@
 <template>
   <k-button-group class="k-prev-next">
     <k-button
-      v-bind="prev"
+      v-bind="prev ? prev : { disabled: true, link: '#' }"
       :icon="prevIcon"
     />
     <k-button
-      v-bind="next"
+      v-bind="next ? next : { disabled: true, link: '#' }"
       :icon="nextIcon"
     />
   </k-button-group>
@@ -23,22 +23,12 @@ export default {
       default: "horizontal"
     },
     prev: {
-      type: Object,
-      default() {
-        return {
-          disabled: true,
-          link: "#",
-        }
-      }
+      type: [Boolean, Object],
+      default: false
     },
     next: {
-      type: Object,
-      default() {
-        return {
-          disabled: true,
-          link: "#"
-        }
-      }
+      type: [Boolean, Object],
+      default: false
     }
   },
   computed: {

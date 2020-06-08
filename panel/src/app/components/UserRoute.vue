@@ -30,12 +30,25 @@ export default {
   },
   async beforeRouteUpdate(to, from, next) {
     const model = await load(to.params.id);
-    this.load(user);
+    this.load(model);
     next();
   },
   computed: {
-    storeId() {
-      return this.$model.users.storeId(this.model.id);
+    next() {
+      if (!this.model.next) return false;
+
+      return {
+        link: this.$model.users.link(this.model.next.id),
+        tooltip: this.model.next.username
+      };
+    },
+    prev() {
+      if (!this.model.prev) return false;
+
+      return {
+        link: this.$model.users.link(this.model.prev.id),
+        tooltip: this.model.prev.username
+      };
     },
     profile() {
       return {
@@ -50,6 +63,9 @@ export default {
         canChaneRole: this.$permissions.changeLanguage && this.lock === false
       };
     },
+    storeId() {
+      return this.$model.users.storeId(this.model.id);
+    },
     view() {
       if (!this.model) {
         return {};
@@ -60,7 +76,9 @@ export default {
         api:        this.$model.users.url(this.model.id),
         breadcrumb: this.$model.users.breadcrumb(this.model),
         id:         this.model.id,
+        next:       this.next,
         options:    this.$model.users.dropdown(this.model.options),
+        prev:       this.prev,
         profile:    this.profile,
         title:      this.model.name || this.model.email,
         url:        this.model.url

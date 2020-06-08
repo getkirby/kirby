@@ -50,6 +50,22 @@ export default {
     id() {
       return this.model.parent.guid + "/" + this.model.filename;
     },
+    next() {
+      if (!this.model.nextWithTemplate) return false;
+
+      return {
+        link: this.model.nextWithTemplate.link,
+        tooltip: this.model.nextWithTemplate.filename
+      };
+    },
+    prev() {
+      if (!this.model.prevWithTemplate) return false;
+
+      return {
+        link: this.model.prevWithTemplate.link,
+        tooltip: this.model.prevWithTemplate.filename
+      };
+    },
     preview() {
       return {
         dimensions:  this.model.dimensions,
@@ -84,8 +100,10 @@ export default {
         ),
         filename:   this.model.filename,
         mime:       this.model.mime,
+        next:       this.next,
         options:    this.$model.files.dropdown(this.model.options),
         parent:     this.model.parent.guid,
+        prev:       this.prev,
         preview:    this.preview,
         rename:     true,
         template:   this.model.template,

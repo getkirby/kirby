@@ -107,7 +107,8 @@ export default {
       default: false
     },
     next: {
-      type: Object,
+      type: [Boolean, Object],
+      default: false
     },
     options: {
       type: Array,
@@ -116,7 +117,8 @@ export default {
       }
     },
     prev: {
-      type: Object,
+      type: [Boolean, Object],
+      default: false
     },
     prevnext: {
       type: Boolean,

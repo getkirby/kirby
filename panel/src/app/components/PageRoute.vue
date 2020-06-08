@@ -30,6 +30,22 @@ export default {
     next();
   },
   computed: {
+    next() {
+      if (!this.model.next) return false;
+
+      return {
+        link: this.$model.pages.link(this.model.next.id),
+        tooltip: this.model.next.title
+      };
+    },
+    prev() {
+      if (!this.model.prev) return false;
+
+      return {
+        link: this.$model.pages.link(this.model.prev.id),
+        tooltip: this.model.prev.title
+      };
+    },
     storeId() {
       return this.$model.pages.storeId(this.model.id);
     },
@@ -57,7 +73,9 @@ export default {
         api:        this.$model.pages.url(this.model.id),
         breadcrumb: this.$model.pages.breadcrumb(this.model),
         id:         this.$model.pages.id(this.model.id),
+        next:       this.next,
         options:    this.$model.pages.dropdown(this.model.options),
+        prev:       this.prev,
         preview:    this.model.previewUrl,
         rename:     this.model.options.changeTitle,
         status:     this.status,
