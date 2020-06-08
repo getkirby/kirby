@@ -105,16 +105,16 @@ export default {
       this.$store.dispatch("notification/success");
     },
     onChangeEmail(user) {
-      this.model.email = user.email;
+      this.reload();
     },
     onChangeLanguage(user) {
-      this.model.language = user.language;
+      this.reload();
     },
     onChangeName(user) {
-      this.model.name = user.name;
+      this.reload();
     },
     onChangeRole(user) {
-      this.model.role = user.role;
+      this.reload();
     },
     onTitle() {
       this.$model.system.title(this.model.name || this.model.email);

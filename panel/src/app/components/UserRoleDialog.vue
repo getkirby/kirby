@@ -11,7 +11,7 @@ export default {
 
       this.id = id;
       this.values = {
-        role: user.role.id
+        role: user.role.name
       };
 
       // load all available roles
