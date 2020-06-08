@@ -71,7 +71,13 @@ return [
             return $this->user();
         },
         'version' => function () {
-            return $this->kirby()->version();
+            $user = $this->user();
+
+            if ($user && $user->role()->permissions()->for('access', 'settings') === true) {
+                return $this->kirby()->version();
+            } else {
+                return null;
+            }
         }
     ],
     'type'   => 'Kirby\Cms\System',
