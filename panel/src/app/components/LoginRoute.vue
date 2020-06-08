@@ -35,7 +35,7 @@ export default {
 
       try {
         await this.$model.users.login(values);
-        await this.$model.system.load();
+        await this.$model.system.load(true);
         this.$store.dispatch("notification/info", this.$t("welcome"));
 
       } catch (error) {

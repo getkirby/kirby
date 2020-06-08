@@ -23,9 +23,6 @@ export default {
     },
     SET_CURRENT(state, language) {
       state.current = language;
-      if (language && language.code) {
-        localStorage.setItem("kirby$language", language.code);
-      }
     },
     SET_DEFAULT(state, language) {
       state.default = language;
@@ -37,6 +34,10 @@ export default {
   actions: {
     current(context, language) {
       context.commit("SET_CURRENT", language);
+
+      if (language) {
+        localStorage.setItem("kirby$language", JSON.stringify(language));
+      }
     },
     install(context, languages) {
       const defaultLanguage = languages.filter(language => language.default)[0];

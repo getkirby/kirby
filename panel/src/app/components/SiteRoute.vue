@@ -17,9 +17,7 @@ export default {
   extends: ModelRoute,
   async beforeRouteEnter(to, from, next) {
     const model = await load();
-    next(vm => {
-      return vm.load(model);
-    });
+    next(vm => vm.load(model));
   },
   async beforeRouteUpdate(to, from, next) {
     const model = await load();

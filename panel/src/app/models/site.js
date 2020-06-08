@@ -1,8 +1,14 @@
 
 export default (Vue, store) => ({
   async changeTitle(title) {
+    // send API request
     const site = await Vue.$api.site.changeTitle(title);
+
+    // update document title
     store.dispatch("system/title", title);
+    Vue.$model.system.title(store.state.system.site);
+
+    // emit events
     Vue.$events.$emit("site.changeTitle", site);
     store.dispatch("notification/success");
     return site;
