@@ -35,8 +35,8 @@ export default {
     current(context, language) {
       context.commit("SET_CURRENT", language);
 
-      if (language) {
-        localStorage.setItem("kirby$language", JSON.stringify(language));
+      if (language && language.code) {
+        localStorage.setItem("kirby$language", language.code);
       }
     },
     install(context, languages) {
