@@ -33,11 +33,11 @@
           submitButton
         }"
         class="k-dialog flex items-center justify-center"
-        @click="cancel"
+        @mousedown="cancel"
       >
         <div
           class="k-dialog-box relative m-6 bg-light rounded-sm shadow-md"
-          @click.stop
+          @mousedown.stop
         >
           <k-notification
             v-if="notification"
