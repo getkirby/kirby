@@ -1,5 +1,7 @@
 <template>
   <div class="k-languages">
+
+    <!-- languages -->
     <template v-if="languages.length > 0">
       <k-section
         :label="$t('languages.default')"
@@ -34,7 +36,19 @@
       </k-section>
     </template>
 
-    <template v-else-if="languages.length === 0">
+    <!-- loading -->
+    <template v-else-if="isLoading">
+      <k-section :label="$t('languages')">
+        <k-empty-items
+          info="true"
+          :limit="1"
+          @click="$refs.create.open()"
+        />
+      </k-section>
+    </template>
+
+    <!-- empty -->
+    <template v-else>
       <k-section
         :label="$t('languages')"
         :options="[
@@ -60,7 +74,8 @@
 export default {
   data() {
     return {
-      languages: []
+      languages: [],
+      isLoading: true
     }
   },
   created() {
@@ -76,8 +91,9 @@ export default {
   },
   methods: {
     async load() {
-      this.languages = await this.$api.languages.list();
-      this.languages = this.languages.data.map(language => {
+      this.isLoading = true;
+      const response = await this.$api.languages.list();
+      this.languages = response.data.map(language => {
         return {
           id: language.code,
           default: language.default,
@@ -103,8 +119,8 @@ export default {
             }
           ]
         };
-
       });
+      this.isLoading = false;
     },
     onOption(option, language) {
       switch (option) {
