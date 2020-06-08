@@ -1,13 +1,10 @@
 <template>
   <k-file-view
     v-bind="view"
-    @language="onLanguage"
+    v-on="listeners"
     @remove="onRemove"
     @rename="onRename"
     @replace="onReplace"
-    @input="onInput"
-    @revert="onRevert"
-    @save="onSave"
   />
 </template>
 

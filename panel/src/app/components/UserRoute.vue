@@ -1,16 +1,13 @@
 <template>
   <k-user-view
     v-bind="view"
+    v-on="listeners"
     @changeAvatar="onChangeAvatar"
     @changeEmail="onChangeEmail"
     @changeName="onChangeName"
     @changeLanguage="onChangeLanguage"
     @changeRole="onChangeRole"
-    @input="onInput"
-    @language="onLanguage"
     @remove="onRemove"
-    @revert="onRevert"
-    @save="onSave"
   />
 </template>
 

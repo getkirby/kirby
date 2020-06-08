@@ -1,13 +1,10 @@
 <template>
   <k-page-view
     v-bind="view"
+    v-on="listeners"
     @changeStatus="onChangeStatus"
     @changeTitle="onChangeTitle"
     @delete="onDelete"
-    @input="onInput"
-    @language="onLanguage"
-    @revert="onRevert"
-    @save="onSave"
   />
 </template>
 <script>

@@ -244,7 +244,7 @@ export default {
         this.$store.dispatch("heartbeat/remove", this.setLock);
 
         try {
-          await this.$api.patch(...this.api.unlock);
+
           this.$store.dispatch("content/lock", null);
           this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
 

@@ -16,6 +16,18 @@ export default {
     changes() {
       return this.$store.getters["content/hasChanges"](this.storeId);
     },
+    listeners() {
+      return {
+        contentDownload: this.onContentDownload,
+        contentResolve:  this.onContentResolve,
+        contentRevert:   this.onContentRevert,
+        contentSave:     this.save,
+        contentUnlock:   this.onContentUnlock,
+
+        language: this.onLanguage,
+        input:    this.onInput,
+      };
+    },
     lock() {
       return this.$store.state.content.current.lock;
     },
@@ -26,7 +38,7 @@ export default {
       return this.model.blueprint && this.model.blueprint.tabs ? this.model.blueprint.tabs : [];
     },
     unlocked() {
-      return this.$store.state.content.current.unlocked;
+      return this.$store.state.content.current.unlocked !== false;
     },
     values() {
       return this.$store.getters["content/values"](this.storeId);
@@ -50,6 +62,13 @@ export default {
       };
     }
   },
+  watch: {
+    lock(newValue, oldValue) {
+      if (newValue === false && oldValue !== false) {
+        this.reload();
+      }
+    }
+  },
   methods: {
     columns(tabs, currentTab) {
       const tab = tabs.find(tab => tab.name === currentTab) || tabs[0];
@@ -64,20 +83,22 @@ export default {
       this.model = model;
       this.onTitle();
 
-      // check for unlock
-      // TODO: fake API route needed to uncomment the following line
-      // const unlock = await this.$api.get(this.id + "/unlock");
-      const unlock = {};
-      if (unlock.supported === true && unlock.unlocked === true ) {
-        this.$store.dispatch("content/unlocked",
-          this.$store.getters["content/changes"](this.storeId)
-        );
-      }
-
       this.$store.dispatch("content/create", {
         id: this.storeId,
         values: this.model.content
       });
+    },
+    onContentDownload() {
+      this.$store.dispatch("content/download");
+    },
+    onContentResolve() {
+      this.$store.dispatch("content/unlocked", false);
+    },
+    onContentRevert() {
+      this.$store.dispatch("content/revert", this.storeId);
+    },
+    onContentUnlock() {
+      this.$store.dispatch("content/unlock");
     },
     onInput(values) {
       this.$store.dispatch("content/input", {
@@ -88,9 +109,6 @@ export default {
     async onLanguage(language) {
       await this.$model.system.load(true);
       this.load();
-    },
-    onRevert() {
-      this.$store.dispatch("content/revert", this.storeId);
     },
     async onSave() {
       this.saving = true;

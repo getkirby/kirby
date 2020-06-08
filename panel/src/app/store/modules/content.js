@@ -131,13 +131,16 @@ export default {
     },
     SET_CURRENT(state, id) {
       state.current.id = id;
+      state.current.lock = false;
+      state.current.unlocked = false;
     },
     SET_LOCK(state, lock) {
       Vue.set(state.current, "lock", lock);
     },
     SET_UNLOCKED(state, unlocked) {
       // reset unsaved changes if content has been unlocked by another user
-      if (unlocked) {
+      if (unlocked === true) {
+        unlocked = clone(state.models[state.current.id].changes);
         Vue.set(state.models[state.current.id], "changes", {});
       }
 
@@ -146,6 +149,24 @@ export default {
   },
 
   actions: {
+    download(context) {
+      let content = "";
+      console.log(context.state.current.unlocked)
+
+      Object.keys(context.state.current.unlocked).forEach(key => {
+        content += key + ": \n\n" + context.state.current.unlocked[key];
+        content += "\n\n----\n\n";
+      });
+
+      let link = document.createElement('a');
+      link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
+      link.setAttribute('download', context.getters["id"]() + ".txt");
+      link.style.display = 'none';
+
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
     create(context, { id, values }) {
       // attach the language to the id
       id = context.getters.id(id);
@@ -210,6 +231,15 @@ export default {
     },
     revert(context, id) {
       context.commit("REVERT_MODEL", id || context.state.current.id);
+    },
+    async unlock(context) {
+      await Vue.$api.patch(
+        context.state.current.id + "/unlock",
+        null,
+        null,
+        true
+      );
+      context.dispatch("lock", false);
     },
     unlocked(context, unlocked) {
       context.commit("SET_UNLOCKED", unlocked);
