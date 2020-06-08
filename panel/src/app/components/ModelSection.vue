@@ -81,6 +81,13 @@ export default {
       return {};
     }
   },
+  watch: {
+    api() {
+      if (this.$refs.collection) {
+        this.$refs.collection.reload();
+      }
+    }
+  },
   methods: {
     async load() {
       return this.$api.get(
