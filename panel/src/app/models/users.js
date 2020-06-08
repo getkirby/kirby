@@ -138,9 +138,14 @@ export default (Vue, store) => ({
     return user;
   },
   async login(credentials) {
+    // authenticate user
     const user = await Vue.$api.auth.login(credentials)
     store.dispatch("user/current", user);
+
+    // activate UI language for user
     store.dispatch("translation/activate", user.language);
+
+    // route to view
     Vue.$router.push(store.state.user.path || "/");
     return user;
   },

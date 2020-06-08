@@ -4,7 +4,8 @@ export default {
   state: {
     all: [],
     current: null,
-    default: null
+    default: null,
+    rules: {}
   },
   mutations: {
     SET_ALL(state, languages) {
@@ -28,6 +29,9 @@ export default {
     },
     SET_DEFAULT(state, language) {
       state.default = language;
+    },
+    SET_RULES(state, rules) {
+      state.rules = rules;
     }
   },
   actions: {
@@ -56,6 +60,9 @@ export default {
       }
 
       context.dispatch("current", defaultLanguage || languages[0] || null);
-    }
+    },
+    rules(context, rules) {
+      context.commit("SET_RULES", rules);
+    },
   }
 };

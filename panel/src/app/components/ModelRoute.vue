@@ -85,7 +85,7 @@ export default {
       });
     },
     async onLanguage(language) {
-      await this.$store.dispatch("system/load", true);
+      await this.$model.system.load(true);
       this.load();
     },
     onRevert() {

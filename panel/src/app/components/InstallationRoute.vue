@@ -14,7 +14,6 @@ export default {
   data() {
     return {
       installing: false,
-      translation: "en",
       translations: [],
       loading: true,
     };
@@ -22,24 +21,27 @@ export default {
   async created() {
     const system = await this.$model.system.load();
 
-    if (system.isInstalled === true && system.isReady) {
+    if (system.status.isInstalled === true && system.status.isReady) {
       this.$router.push("/login");
       return;
     }
 
-    this.translation  = system.translation;
+    this.translation  = this.$store.state.translation.current;
     this.translations = await this.$model.translations.options();
     this.loading = false;
   },
   methods: {
     async onInstall(values) {
       this.installing = true;
+
       try {
         await this.$model.system.install(values);
         this.$store.dispatch("notification/info", this.$t("welcome") + "!");
         this.$router.push("/");
+
       } catch (error) {
         this.$store.dispatch("notification/error", error);
+
       } finally {
         this.installing = false;
       }

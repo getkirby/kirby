@@ -72,15 +72,8 @@ const store = new Vuex.Store({
     search(context, search) {
       context.commit("SET_SEARCH", search);
     },
-    async title(context, title) {
-      let site = context.state.system.info.title;
+    title(context, title) {
       context.commit("SET_TITLE", title);
-
-      if (title !== null) {
-        site = title + " | " + site;
-      }
-
-      document.title = site;
     },
     view(context, view) {
       context.commit("SET_VIEW", view);

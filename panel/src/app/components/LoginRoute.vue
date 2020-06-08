@@ -11,11 +11,12 @@ export default {
   async created() {
     const system = await this.$model.system.load();
 
-    if (system.isReady !== true) {
+    if (system.status.isReady !== true) {
       return this.$router.push("/installation");
     }
 
-    if (system.user && system.user.id) {
+    const user = this.$store.state.user.current;
+    if (user && user.id) {
       return this.$router.push("/");
     }
 
@@ -29,12 +30,18 @@ export default {
   },
   methods: {
     async onLogin(values) {
+      this.authenticating = true;
+
       try {
         await this.$model.users.login(values);
         await this.$model.system.load();
         this.$store.dispatch("notification/info", this.$t("welcome"));
+
       } catch (error) {
         this.$store.dispatch("notification/error", error);
+
+      } finally {
+        this.authenticating = false;
       }
     }
   }

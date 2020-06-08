@@ -4,21 +4,21 @@ export default {
   namespaced: true,
   state: {
     current: null,
+    default: null,
     installed: []
   },
   mutations: {
     SET_CURRENT(state, id) {
       state.current = id;
     },
+    SET_DEFAULT(state, id) {
+      state.default = id;
+    },
     INSTALL(state, translation) {
       state.installed[translation.id] = translation;
     }
   },
   actions: {
-    install(context, translation) {
-      context.commit("INSTALL", translation);
-      Vue.i18n.add(translation.id, translation.data);
-    },
     async activate(context, id) {
       const translation = context.state.installed[id];
 
@@ -43,6 +43,13 @@ export default {
 
       // change the lang attribute on the html element
       document.documentElement.lang = id;
-    }
+    },
+    default(context, id) {
+      context.commit("SET_DEFAULT", id);
+    },
+    install(context, translation) {
+      context.commit("INSTALL", translation);
+      Vue.i18n.add(translation.id, translation.data);
+    },
   }
 };

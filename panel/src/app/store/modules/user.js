@@ -11,11 +11,11 @@ export default {
       state.current = user;
 
       if (user && user.permissions) {
-        Vue.prototype.$user        = user;
-        Vue.prototype.$permissions = user.permissions;
+        Vue.$user        = Vue.prototype.$user        = user;
+        Vue.$permissions = Vue.prototype.$permissions = user.permissions;
       } else {
-        Vue.prototype.$user = null;
-        Vue.prototype.$permissions = null;
+        Vue.$user        = Vue.prototype.$user = null;
+        Vue.$permissions = Vue.prototype.$permissions = null;
       }
     },
     SET_PATH(state, path) {
