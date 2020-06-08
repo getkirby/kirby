@@ -10,7 +10,7 @@
       :text="$t('license.register')"
       :tooltip="$t('license.unregistered')"
       class="k-registration-button"
-      @click="$emit('register')"
+      @click="$refs.registrationDialog.open()"
     />
     <k-button
       :icon="{
@@ -23,6 +23,9 @@
       link="https://getkirby.com/buy"
       target="_blank"
     />
+
+    <!-- Registration Dialog -->
+    <k-registration-dialog ref="registrationDialog" />
   </div>
 </template>
 

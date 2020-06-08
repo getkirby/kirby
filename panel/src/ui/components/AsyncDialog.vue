@@ -68,7 +68,10 @@ export default {
     onSuccess(response) {
       this.$emit("success", response);
       this.$nextTick(() => {
-        this.$refs.dialog.close();
+        // close the dialog if it wasn't closed already
+        if (this.$refs.dialog) {
+          this.$refs.dialog.close();
+        }
       });
     },
     /**

@@ -17,10 +17,7 @@
         @search="onSearch"
       >
         <template v-slot:options>
-          <k-registration-buttons
-            v-if="registered === false"
-            @register="onRegister"
-          />
+          <k-registration-buttons v-if="registered === false" />
           <k-form-indicator v-bind="indicator" />
         </template>
       </k-topbar>
@@ -38,9 +35,6 @@
       :type="search"
       :types="searchTypes"
     />
-
-    <!-- Registration Dialog -->
-    <k-registration-dialog ref="registration" />
   </div>
 </template>
 
@@ -57,10 +51,6 @@ export default {
       }
     },
     defaultTranslation: {
-      type: Boolean,
-      default: false
-    },
-    registered: {
       type: Boolean,
       default: false
     },
@@ -108,6 +98,9 @@ export default {
 
       return menu;
     },
+    registered() {
+      return this.$store.state.system.license;
+    },
     searchTypes() {
       return search(this);
     },
@@ -119,9 +112,6 @@ export default {
     }
   },
   methods: {
-    onRegister() {
-      this.$refs.registration.open();
-    },
     onSearch(event) {
       event.preventDefault();
       this.$refs.search.open();
