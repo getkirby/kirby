@@ -13,8 +13,8 @@ export default (api) => {
     async logout() {
       return api.post("auth/logout");
     },
-    async user() {
-      return api.get("auth");
+    async user(params) {
+      return api.get("auth", params);
     },
   }
 };

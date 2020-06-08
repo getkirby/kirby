@@ -83,7 +83,7 @@ export default {
       return this.$store.state.isLoading;
     },
     menu() {
-      let menu = this.views;
+      let menu = this.$helper.clone(this.views);
 
       if (this.view) {
         menu = menu.map(item => {

@@ -1,9 +1,9 @@
 <template>
   <k-inside
     :breadcrumb="breadcrumb"
+    :view="account ? 'account' : 'users'"
     class="k-user-view"
     search="users"
-    view="users"
   >
     <k-user-profile
       v-bind="profile"
@@ -55,9 +55,12 @@ import ModelView from "./ModelView.vue";
 export default {
   props: {
     ...ModelView.props,
+    account: {
+      type: Boolean,
+      default: false
+    },
     id: {
-      type: String,
-      required: true
+      type: String
     },
     profile: {
       type: Object,

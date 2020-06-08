@@ -12,7 +12,7 @@ return [
         'method'  => 'GET',
         'action'  => function () {
             if ($user = $this->kirby()->auth()->user()) {
-                return $this->resolve($user)->view('auth');
+                return $this->resolve($user)->view(get('view', 'auth'));
             }
 
             throw new NotFoundException('The user cannot be found');

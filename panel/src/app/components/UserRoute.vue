@@ -31,6 +31,9 @@ export default {
     next();
   },
   computed: {
+    account() {
+      return false;
+    },
     next() {
       if (!this.model.next) return false;
 
@@ -68,18 +71,28 @@ export default {
         return {};
       }
 
-      return {
+      let view = {
         ...this.viewDefaults,
+        account:    this.account,
         api:        this.$model.users.url(this.model.id),
         breadcrumb: this.$model.users.breadcrumb(this.model),
         id:         this.model.id,
         next:       this.next,
         options:    this.$model.users.dropdown(this.model.options),
         prev:       this.prev,
+        prevnext:   true,
         profile:    this.profile,
         title:      this.model.name || this.model.email,
-        url:        this.model.url
+        url:        this.model.url,
       };
+
+      if (this.account) {
+        view.breadcrumb = [];
+        view.prevnext   = false;
+        view.account    = true;
+      }
+
+      return view;
     }
   },
   methods: {

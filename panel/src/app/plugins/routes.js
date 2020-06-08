@@ -12,6 +12,12 @@ export default (Vue, store) => {
       redirect: "/site",
     },
     {
+      path: "/account",
+      name: "Account",
+      component: Vue.component("k-account-route"),
+      beforeEnter: authenticate,
+    },
+    {
       path: "/login",
       component: Vue.component("k-login-route"),
     },
