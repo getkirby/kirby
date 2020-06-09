@@ -5,7 +5,10 @@ export default (Vue) => [
     icon: "home",
     text: Vue.$store.state.system.site || Vue.$t("view.site")
   },
-  ...Object.values(window.panel.plugins.views).filter(view => view.menu !== false),
+  ...Object.values(window.panel.plugins.views).map(view => {
+    view.text = view.text || Vue.$t("view." + view.id);
+    return view;
+  }),
   {
     id: "users",
     link: "/users",

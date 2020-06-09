@@ -91,7 +91,7 @@ export default {
       // Update view
       window.panel.plugins.views[name] = {
         id: name,
-        text: options.text || options.label || Vue.$t("view." + name),
+        text: options.text || options.label,
         link: options.link,
         icon: options.icon,
         menu: options.menu
