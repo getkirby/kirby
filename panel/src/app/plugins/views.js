@@ -5,7 +5,7 @@ export default (Vue) => [
     icon: "home",
     text: Vue.$store.state.system.site || Vue.$t("view.site")
   },
-  ...Object.values(window.panel.plugins.views),
+  ...Object.values(window.panel.plugins.views).filter(view => view.menu !== false),
   {
     id: "users",
     link: "/users",

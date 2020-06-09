@@ -38,15 +38,23 @@ export default {
       Vue.component(name, component);
     };
 
-    // Components
+    /**
+     * Components
+     */
     Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
       registerComponent(name, options);
     });
 
+    /**
+     * Fields
+     */
     Object.entries(window.panel.plugins.fields).forEach(([name, options]) => {
       registerComponent(name, options);
     });
 
+    /**
+     * Sections
+     */
     Object.entries(window.panel.plugins.sections).forEach(([name, options]) => {
       registerComponent(name, {
         ...options,
@@ -54,7 +62,9 @@ export default {
       });
     });
 
-    // Views
+    /**
+     * Views
+     */
     Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
       // Check for all required properties
       if (!options.component) {
@@ -80,6 +90,8 @@ export default {
 
       // Update view
       window.panel.plugins.views[name] = {
+        id: name,
+        text: options.text || options.label || Vue.$t("view." + name),
         link: options.link,
         icon: options.icon,
         menu: options.menu
@@ -88,7 +100,9 @@ export default {
       Vue.component("k-" + name + "-plugin-view", options.component);
     });
 
-    // Vue.use
+    /**
+     * Vue.use
+     */
     window.panel.plugins.use.forEach(plugin => {
       Vue.use(plugin);
     });
