@@ -1,11 +1,5 @@
 <script>
 export default {
-  props: {
-    tab: {
-      type: String,
-      default: "main"
-    }
-  },
   data() {
     return {
       model: null,
@@ -35,8 +29,17 @@ export default {
     storeId() {
       return this.id;
     },
+    tab() {
+      const current = this.$route.hash.slice(1) || "main";
+      const tab = this.tabs.find(tab => tab.name === current) || this.tabs[0];
+      return tab;
+    },
     tabs() {
-      return this.model.blueprint && this.model.blueprint.tabs ? this.model.blueprint.tabs : [];
+      if (this.model.blueprint && this.model.blueprint.tabs) {
+        return this.model.blueprint.tabs;
+      }
+
+      return  [];
     },
     unlocked() {
       return this.$store.state.content.current.unlocked !== false;
@@ -51,13 +54,13 @@ export default {
 
       return {
         changes:  this.changes,
-        columns:  this.columns(this.tabs, this.tab),
+        columns:  this.tab.columns || {},
         lock:     this.lock,
         next:     this.model.next,
         prev:     this.model.prev,
         saving:   this.saving,
         tabs:     this.tabs,
-        tab:      this.tab,
+        tab:      this.tab.name,
         unlocked: this.unlocked,
         value:    this.values
       };
@@ -74,15 +77,6 @@ export default {
     }
   },
   methods: {
-    columns(tabs, currentTab) {
-      const tab = tabs.find(tab => tab.name === currentTab) || tabs[0];
-
-      if (tab && tab.columns) {
-        return tab.columns;
-      }
-
-      return {};
-    },
     load(model) {
       this.model = model;
       this.onTitle();
