@@ -39,7 +39,8 @@ export default {
   data() {
     return {
       selected: [],
-      loading: false
+      loading: false,
+      legacy: {}
     }
   },
   computed: {
@@ -55,15 +56,17 @@ export default {
       return this.$t("select");
     },
     picker() {
+      // <3.4 legacy support for options that were not passed as
+      // props but instead through the open(options) method
       return {
-        endpoint: this.endpoint,
-        layout: this.layout,
-        max: this.max,
-        multiple: this.multiple,
-        options: this.options,
-        search: this.search,
-        size: this.size,
-        toggle: this. toggle
+        endpoint: this.legacy.endpoint || this.endpoint,
+        layout:   this.legacy.layout   || this.layout,
+        max:      this.legacy.max      || this.max,
+        multiple: this.legacy.multiple || this.multiple,
+        options:  this.legacy.options  || this.options,
+        search:   this.legacy.search   || this.search,
+        size:     this.legacy.size     || this.size,
+        toggle:   this.legacy.toggle   || this.toggle
       };
     },
     type() {
@@ -71,8 +74,14 @@ export default {
     }
   },
   methods: {
-    open(selected) {
-      this.selected = this.$helper.clone(selected);
+    open(selected = []) {
+      if (Array.isArray(selected)) {
+        this.selected = this.$helper.clone(selected);
+      } else {
+        this.selected = this.$helper.clone(selected.selected || []);
+        this.legacy   = selected;
+      }
+
       this.$refs.drawer.open();
       setTimeout(() => {
         if (this.$refs.picker.$refs.search) {

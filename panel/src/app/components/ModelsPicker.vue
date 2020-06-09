@@ -18,8 +18,7 @@ export default {
   props: {
     ...Picker.props,
     endpoint: {
-      type: String,
-      required: true
+      type: String
     },
     help: String,
     limit: {
