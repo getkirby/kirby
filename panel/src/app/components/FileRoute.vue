@@ -36,11 +36,14 @@ export default {
     next(vm => vm.load(model));
   },
   async beforeRouteUpdate(to, from, next) {
-    const model = await load(
-      to.params.parentType + "/" + to.params.parentId,
-      to.params.filename
-    );
-    this.load(model);
+    // do not reload if only tab hash has changed
+    if (to.path !== from.path) {
+      const model = await load(
+        to.params.parentType + "/" + to.params.parentId,
+        to.params.filename
+      );
+      this.load(model);
+    }
     next();
   },
   computed: {

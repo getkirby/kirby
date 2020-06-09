@@ -20,8 +20,11 @@ export default {
     next(vm => vm.load(model));
   },
   async beforeRouteUpdate(to, from, next) {
-    const model = await load();
-    this.load(model);
+    // do not reload if only tab hash has changed
+    if (to.path !== from.path) {
+      const model = await load();
+      this.load(model);
+    }
     next();
   },
   computed: {
