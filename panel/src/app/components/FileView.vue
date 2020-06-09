@@ -1,6 +1,7 @@
 <template>
   <k-inside
     :breadcrumb="breadcrumb"
+    :languages="true"
     :view="view"
     search="files"
     class="k-file-view"

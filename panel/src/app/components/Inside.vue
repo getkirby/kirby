@@ -19,7 +19,7 @@
         <template v-slot:options>
           <k-registration-buttons v-if="registered === false" />
           <k-form-indicator v-bind="indicator" />
-          <k-languages-dropdown />
+          <k-languages-dropdown v-if="languages" />
         </template>
       </k-topbar>
     </header>
@@ -54,6 +54,9 @@ export default {
     defaultTranslation: {
       type: Boolean,
       default: false
+    },
+    languages: {
+      Boolean
     },
     search: {
       type: String,

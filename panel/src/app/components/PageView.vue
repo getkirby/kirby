@@ -1,6 +1,7 @@
 <template>
   <k-inside
     :breadcrumb="breadcrumb"
+    :languages="true"
     view="site"
     class="k-page-view"
   >

@@ -1,6 +1,7 @@
 <template>
   <k-inside
     :breadcrumb="breadcrumb"
+    :languages="true"
     :view="account ? 'account' : 'users'"
     class="k-user-view"
     search="users"
