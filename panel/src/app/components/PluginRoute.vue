@@ -23,12 +23,13 @@
 export default {
   beforeRouteEnter(to, from, next) {
     next(vm => {
-      vm.reload();
+      vm.onEnter();
       vm.$store.dispatch("content/current", null);
     });
   },
   beforeRouteUpdate(to, from, next) {
     this.reload();
+    this.onEnter();
     next();
   },
   data() {
@@ -45,12 +46,14 @@ export default {
     }
   },
   methods: {
+    onEnter() {
+      this.$model.system.title(this.view.text);
+    },
     onBreadcrumb(breadcrumb) {
       this.breadcrumb = breadcrumb;
     },
     reload() {
       this.breadcrumb = [];
-      this.$model.system.title(this.view.text);
     }
   }
 }
