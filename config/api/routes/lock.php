@@ -10,17 +10,9 @@ return [
         'pattern' => '(:all)/lock',
         'method'  => 'GET',
         'action'  => function (string $path) {
-            if ($lock = $this->parent($path)->lock()) {
-                return [
-                    'supported' => true,
-                    'locked'    => $lock->get()
-                ];
+            if ($model = $this->parent($path)) {
+                return $this->resolve($model)->select('lock');
             }
-
-            return [
-                'supported' => false,
-                'locked'    => null
-            ];
         }
     ],
     [
@@ -56,16 +48,8 @@ return [
         'method'  => 'GET',
         'action'  => function (string $path) {
             if ($lock = $this->parent($path)->lock()) {
-                return [
-                    'supported' => true,
-                    'unlocked'  => $lock->isUnlocked()
-                ];
+                return ['unlocked' => $lock->isUnlocked()];
             }
-
-            return [
-                'supported' => false,
-                'unlocked'  => null
-            ];
         }
     ],
     [

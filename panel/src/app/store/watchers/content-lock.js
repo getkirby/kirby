@@ -6,28 +6,28 @@ export default (Vue, store) => {
    * internal states
    */
 
-  let model     = null;
-  let supported = true;
   let heartbeat = null;
 
   /**
    * Helpers
    */
 
-  const repeat = (callback, seconds) => {
+  const repeat = (callback, seconds, immediate = false) => {
     clearInterval(heartbeat);
     heartbeat = setInterval(callback, seconds * 1000);
-    callback();
+    if (immediate) {
+      callback();
+    }
   }
 
-  const toEndpoint = (storeId, path) => {
-    storeId = store.getters["content/api"](storeId);
+  const toEndpoint = (path) => {
+    let endpoint = store.getters["content/api"](store.state.content.current);
 
     if (path) {
-      storeId += "/" + path;
+      endpoint += "/" + path;
     }
 
-    return storeId;
+    return endpoint;
   }
 
   /**
@@ -36,83 +36,61 @@ export default (Vue, store) => {
 
   const getLock = async () => {
     const response = await Vue.$api.get(
-      toEndpoint(store.state.content.current.id, "lock"),
+      toEndpoint("lock"),
       null,
       null,
       true
     );
     // console.log("+++ GET /lock: " + JSON.stringify(response));
-
-
-    // if content locking is not supported by model,
-    // set flag and stop listening
-    if (response.supported === false) {
-      // console.log("-> content locking not supported, set flag");
-      // console.log("###");
-      supported = false;
-      return clearInterval(heartbeat);
-    }
-
-    store.dispatch("content/lock", response.locked);
+    store.dispatch("content/lock", response.lock);
   };
 
   const setLock = async () => {
-    if (supported === true) {
-      try {
-        // console.log("+++ PATCH /lock");
-        await Vue.$api.patch(
-          toEndpoint(store.state.content.current.id, "lock"),
-          null,
-          null,
-          true
-        );
-
-      } catch (error) {
-        // turns out: locking is not supported
-        if (error.key === "error.lock.notImplemented") {
-          // console.log("-> content locking not supported, set flag");
-          // console.log("###");
-          supported = false;
-
-          return clearInterval(heartbeat);
-        }
-
-        // If setting lock failed, a competing lock has been set between
-        // API calls. In that case, discard unsaved changes.
-        // console.log("-> setting log failed (e.g. competing lock), discard unsaved changes");
-        store.dispatch("content/revert");
-      }
-    }
-  };
-
-  const unsetLock = async () => {
-    if (supported === true) {
-      // console.log("+++ DELETE /lock");
-      await Vue.$api.delete(
-        toEndpoint(store.state.content.current.id, "lock"),
+    try {
+      // console.log("+++ PATCH /lock");
+      await Vue.$api.patch(
+        toEndpoint("lock"),
         null,
         null,
         true
       );
-      store.dispatch("content/lock", false);
+
+    } catch (error) {
+      // If setting lock failed, a competing lock has been set between
+      // API calls. In that case, discard unsaved changes.
+      // console.log("-> setting log failed (e.g. competing lock), discard unsaved changes");
+      store.dispatch("content/revert");
     }
+  };
+
+  const unsetLock = async () => {
+    // console.log("+++ DELETE /lock");
+    await Vue.$api.delete(
+      toEndpoint("lock"),
+      null,
+      null,
+      true
+    );
+    store.dispatch("content/lock", false);
   }
 
   const getUnlock = async () => {
     const response = await Vue.$api.get(
-      toEndpoint(store.state.content.current.id, "unlock"),
+      toEndpoint("unlock"),
       null,
       null,
       true
     );
     // console.log("+++ GET /unlock: " + JSON.stringify(response));
-    return response.supported === true && response.unlocked === true;
+    const isUnlocked = response.unlocked === true;
+    store.dispatch("content/unlocked", isUnlocked)
+    return isUnlocked;
   };
 
   const unsetUnlock = async() => {
     // console.log("+++ DELETE /unlock");
     await Vue.$api.delete(
-      toEndpoint(store.state.content.current.id, "unlock"),
+      toEndpoint("unlock"),
       null,
       null,
       true
@@ -124,37 +102,44 @@ export default (Vue, store) => {
    */
 
   const onChangeModel = async (current) => {
-    // console.log("@onLoadModel: " + current || "–");
+    // console.log("+++++++++++++++++");
+    // console.log("@onChangeModel: " + current);
+    // console.log("-> clear heartbeat");
+    clearInterval(heartbeat);
 
-    // stop if no current model is set (e.g. Settings view)
-    if (current === null) {
-      // console.log("-> no model set");
-      // console.log("###");
-      return clearInterval(heartbeat);
+    const isSupported = store.state.content.locking.supported;
+
+    // console.log("-> is locking supported? " + isSupported);
+    if (isSupported === false) {
+      // console.log("###")
+      return;
     }
 
-    // console.log("-> model set");
-
     // if model has unsaved changes, check for unlock
-    if (store.getters['content/hasChanges'](current)) {
-      // console.log("-> has unsaved changes, check if unlocked");
+    const hasChanges = store.getters['content/hasChanges'](current);
+    // console.log("-> already has unsaved changes? " + hasChanges);
+    if (hasChanges === true) {
+      // console.log("-> check if those were unlocked");
       const hasUnlock = await getUnlock();
 
       // has been unlocked
       if (hasUnlock) {
         // console.log("-> has been unlocked");
         // console.log("###");
-        return store.dispatch("content/unlocked", true);
+        return;
       }
+      // console.log("-> has not been unlocked, proceed")
     }
 
     // watch for unsaved changes
-    // console.log("-> start watching changes")
+    // console.log("-> start watching for changes...")
     store.watch(
       () => store.getters['content/hasChanges'](current),
       onChanges,
       { immediate: true }
     );
+
+
   };
 
   const onChanges = (hasChanges) => {
@@ -165,13 +150,14 @@ export default (Vue, store) => {
     if (hasChanges) {
       // console.log("-> changes: " + JSON.stringify(store.getters["content/changes"]()));
       // console.log("-> has changes, setLock every 30 seconds")
-      repeat(setLock, 30);
+      repeat(setLock, 30, true);
 
     // if there are no unsaved changes,
     // listen to lock from other users
     } else {
-      // console.log("-> has no changes, getLock every 10 seconds")
-      repeat(getLock, 10);
+      // console.log("-> has no changes, getLock every 10/30 seconds")
+      const hasLock = store.state.content.locking.lock !== false;
+      repeat(getLock, hasLock ? 30 : 10);
     }
   };
 
@@ -180,7 +166,7 @@ export default (Vue, store) => {
    *  Watchers
    */
 
-  store.watch(() => store.state.content.current.id, onChangeModel);
+  store.watch(() => store.state.content.current, onChangeModel);
 
   store.subscribeAction((action, state) => {
     if (action.type === "content/revert") {
@@ -189,7 +175,7 @@ export default (Vue, store) => {
     }
 
     if (action.type === "content/unlocked") {
-      if (state.content.current.unlocked !== false && action.payload === false) {
+      if (state.content.locking.unlocked !== false && action.payload === false) {
         // console.log("@onAction: " + action.type);
         // console.log("-> removing unlock");
         return unsetUnlock();

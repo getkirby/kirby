@@ -35,6 +35,11 @@ return [
         'link' => function (File $file) {
             return $file->panelUrl(true);
         },
+        'lock' => function (File $file) {
+            if ($lock = $file->lock()) {
+                return $lock->get();
+            }
+        },
         'mime' => function (File $file) {
             return $file->mime();
         },
@@ -144,6 +149,7 @@ return [
             'filename',
             'id',
             'link',
+            'lock',
             'mime',
             'modified',
             'name',

@@ -44,6 +44,11 @@ return [
         'isSortable' => function (Page $page) {
             return $page->isSortable();
         },
+        'lock' => function (Page $page) {
+            if ($lock = $page->lock()) {
+                return $lock->get();
+            }
+        },
         'next' => function (Page $page) {
             return $page
                 ->nextAll()
@@ -125,6 +130,7 @@ return [
             'id',
             'blueprint',
             'content',
+            'lock',
             'status',
             'options',
             'next'    => ['id', 'slug', 'title'],

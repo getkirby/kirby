@@ -105,20 +105,20 @@ export default {
   },
   methods: {
     onDownload() {
-      this.$emit("contentDownload");
+      this.$emit("content", "download");
     },
     onResolve() {
-      this.$emit("contentResolve");
+      this.$emit("content", "resolve");
     },
     onRevert() {
-      this.$emit("contentRevert");
+      this.$emit("content", "revert");
       this.$refs.revert.close();
     },
     onSave() {
-      this.$emit("contentSave");
+      this.$emit("content", "save");
     },
     onUnlock() {
-      this.$emit("contentUnlock");
+      this.$emit("content", "unlock");
     }
   }
 };

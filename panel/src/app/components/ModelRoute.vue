@@ -15,16 +15,12 @@ export default {
     },
     listeners() {
       return {
-        contentDownload: this.onContentDownload,
-        contentResolve:  this.onContentResolve,
-        contentRevert:   this.onContentRevert,
-        contentSave:     this.save,
-        contentUnlock:   this.onContentUnlock,
-        input:           this.onInput,
+        content: this.onContent,
+        input:   this.onInput
       };
     },
     lock() {
-      return this.$store.state.content.current.lock;
+      return this.$store.state.content.locking.lock;
     },
     storeId() {
       return this.id;
@@ -37,7 +33,7 @@ export default {
     tabs() {
       if (this.model.blueprint && this.model.blueprint.tabs) {
         return this.model.blueprint.tabs.map(tab => {
-          tab.badge = this.changesInTab(tab);
+          tab.badge = this.$store.getters["content/badge"](this.storeId, tab);
           return tab;
         });
       }
@@ -45,7 +41,7 @@ export default {
       return  [];
     },
     unlocked() {
-      return this.$store.state.content.current.unlocked !== false;
+      return this.$store.state.content.locking.unlocked !== false;
     },
     values() {
       return this.$store.getters["content/values"](this.storeId);
@@ -80,43 +76,42 @@ export default {
     }
   },
   methods: {
-    changesInTab(tab) {
-      let count = 0;
-
-      tab.columns.forEach(column => {
-        let changes  = Object.keys(this.$store.getters["content/changes"](this.storeId));
-        let sections = Object.values(column.sections);
-            sections = sections.filter(section => section.type === "fields");
-
-        sections.forEach(section => {
-          let fields  = Object.keys(section.fields);
-          let changed = fields.filter(field => changes.includes(field));
-          count += changed.length;
-        })
-      })
-
-      return count;
-    },
     load(model) {
       this.model = model;
       this.onTitle();
 
+      // create content store entry
       this.$store.dispatch("content/create", {
         id: this.storeId,
         values: this.model.content
       });
+
+      // activate content locking if supported
+      // and set initial state
+      if (this.model.lock !== undefined) {
+        this.$store.dispatch("content/hasLocking", true);
+        this.$store.dispatch("content/lock", this.model.lock);
+      }
     },
-    onContentDownload() {
-      this.$store.dispatch("content/download");
-    },
-    onContentResolve() {
-      this.$store.dispatch("content/unlocked", false);
-    },
-    onContentRevert() {
-      this.$store.dispatch("content/revert", this.storeId);
-    },
-    onContentUnlock() {
-      this.$store.dispatch("content/unlock");
+    async onContent(action) {
+      switch (action) {
+        case "download":
+          return this.$store.dispatch("content/download");
+        case "resolve":
+          return this.$store.dispatch("content/unlocked", false);
+        case "revert":
+          return this.$store.dispatch("content/revert", this.storeId);
+        case "save":
+          return this.onSave();
+        case "unlock":
+          await this.$api.patch(
+            this.$store.getters["content/api"](this.storeId) + "/unlock",
+            null,
+            null,
+            true
+          );
+          return this.$store.dispatch("content/lock", false);
+      }
     },
     onInput(values) {
       this.$store.dispatch("content/input", {

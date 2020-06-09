@@ -5,8 +5,9 @@ export default {
   namespaced: true,
 
   state: {
-    current: {
-      id: null,
+    current: null,
+    locking: {
+      supported: false,
       lock: false,
       unlocked: false
     },
@@ -22,6 +23,23 @@ export default {
 
       return storeId;
     },
+    badge: (state, getters) => (id, tab) => {
+      let count = 0;
+
+      tab.columns.forEach(column => {
+        let changes  = Object.keys(getters["changes"](id));
+        let sections = Object.values(column.sections);
+            sections = sections.filter(section => section.type === "fields");
+
+        sections.forEach(section => {
+          let fields  = Object.keys(section.fields);
+          let changed = fields.filter(field => changes.includes(field));
+          count += changed.length;
+        })
+      })
+
+      return count;
+    },
     changes: (state, getters) => (id) => {
       return clone(getters.model(id).changes);
     },
@@ -33,7 +51,7 @@ export default {
       return Object.keys(changes).length > 0;
     },
     id: (state, getters, rootState) => (id) => {
-      id = id || state.current.id;
+      id = id || state.current;
 
       if (rootState.languages.current) {
         return id + "/" + rootState.languages.current.code;
@@ -42,10 +60,10 @@ export default {
       return id;
     },
     isCurrent: (state, getters) => (id) => {
-      return id === state.current.id;
+      return id === state.current;
     },
     model: (state, getters) => (id) => {
-      id = id || state.current.id;
+      id = id || state.current;
 
       if (getters.exists(id) === true) {
         return state.models[id];
@@ -69,6 +87,9 @@ export default {
   },
 
   mutations: {
+    ACTIVATE_LOCKING(state) {
+      Vue.set(state.locking, "supported", true);
+    },
     ADD_MODEL(state, { id, model }) {
       if (!model) {
         return false;
@@ -129,6 +150,13 @@ export default {
       Vue.delete(state.models, id);
       localStorage.removeItem("kirby$content$" + id);
     },
+    RESET_LOCKING(state) {
+      Vue.set(state, "locking", {
+        supported: false,
+        lock: false,
+        unlocked: false
+      });
+    },
     REVERT_MODEL(state, id) {
       if (!state.models[id]) {
         return false;
@@ -138,21 +166,19 @@ export default {
       localStorage.removeItem("kirby$content$" + id);
     },
     SET_CURRENT(state, id) {
-      state.current.id = id;
-      state.current.lock = false;
-      state.current.unlocked = false;
+      state.current = id;
     },
     SET_LOCK(state, lock) {
-      Vue.set(state.current, "lock", lock);
+      Vue.set(state.locking, "lock", lock);
     },
     SET_UNLOCKED(state, unlocked) {
       // reset unsaved changes if content has been unlocked by another user
       if (unlocked === true) {
-        unlocked = clone(state.models[state.current.id].changes);
-        Vue.set(state.models[state.current.id], "changes", {});
+        unlocked = clone(state.models[state.current].changes);
+        Vue.set(state.models[state.current], "changes", {});
       }
 
-      Vue.set(state.current, "unlocked", unlocked);
+      Vue.set(state.locking, "unlocked", unlocked);
     }
   },
 
@@ -174,13 +200,14 @@ export default {
     },
     current(context, id) {
       context.commit("SET_CURRENT", id);
+      context.dispatch("hasLocking", false);
     },
     download(context) {
-      let content = "";
-      console.log(context.state.current.unlocked)
+      const stored = context.state.locking.unlocked;
+      let content  = "";
 
-      Object.keys(context.state.current.unlocked).forEach(key => {
-        content += key + ": \n\n" + context.state.current.unlocked[key];
+      Object.keys(stored).forEach(key => {
+        content += key + ": \n\n" + stored[key];
         content += "\n\n----\n\n";
       });
 
@@ -193,9 +220,16 @@ export default {
       link.click();
       document.body.removeChild(link);
     },
+    hasLocking(context, hasLocking) {
+      if (hasLocking === true) {
+        return context.commit("ACTIVATE_LOCKING");
+      }
+
+      return context.commit("RESET_LOCKING");
+    },
     input(context, { id, values }) {
       context.commit("INPUT_MODEL", {
-        id:     id || context.state.current.id,
+        id:     id || context.state.current,
         values: values
       });
     },
@@ -235,22 +269,13 @@ export default {
       }
     },
     revert(context, id) {
-      context.commit("REVERT_MODEL", id || context.state.current.id);
-    },
-    async unlock(context) {
-      await Vue.$api.patch(
-        context.state.current.id + "/unlock",
-        null,
-        null,
-        true
-      );
-      context.dispatch("lock", false);
+      context.commit("REVERT_MODEL", id || context.state.current);
     },
     unlocked(context, unlocked) {
       context.commit("SET_UNLOCKED", unlocked);
     },
     update(context, { id, values }) {
-      id = id || context.state.current.id;
+      id = id || context.state.current;
 
       // re-create model with updated values as originals
       context.commit("ADD_MODEL", {

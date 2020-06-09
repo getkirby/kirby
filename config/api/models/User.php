@@ -32,6 +32,11 @@ return [
         'language' => function (User $user) {
             return $user->language();
         },
+        'lock' => function (User $user) {
+            if ($lock = $user->lock()) {
+                return $lock->get();
+            }
+        },
         'name' => function (User $user) {
             return $user->name()->value();
         },
@@ -97,6 +102,7 @@ return [
             'email',
             'id',
             'language',
+            'lock',
             'name',
             'next' => ['id', 'name'],
             'options',

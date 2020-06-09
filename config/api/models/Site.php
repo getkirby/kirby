@@ -26,6 +26,11 @@ return [
         'files' => function (Site $site) {
             return $site->files()->sortBy('sort', 'asc', 'filename', 'asc');
         },
+        'lock' => function (Site $site) {
+            if ($lock = $site->lock()) {
+                return $lock->get();
+            }
+        },
         'options' => function (Site $site) {
             return $site->permissions()->toArray();
         },
@@ -55,6 +60,7 @@ return [
             'title',
             'blueprint',
             'content',
+            'lock',
             'options',
             'previewUrl',
             'url'
