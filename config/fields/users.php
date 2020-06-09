@@ -11,18 +11,16 @@ return [
         /**
          * Default selected user(s) when a new page/file/user is created
          */
-        'default' => function ($default = null) {
+        'default' => function ($default = []) {
             if ($default === false) {
                 return [];
             }
 
             if (
-                $default === null &&
+                $default === [] &&
                 $user = $this->kirby()->user()
             ) {
-                return [
-                    $this->userResponse($user)
-                ];
+                return [$user->email()];
             }
 
             return $default;
