@@ -36,7 +36,10 @@ export default {
     },
     tabs() {
       if (this.model.blueprint && this.model.blueprint.tabs) {
-        return this.model.blueprint.tabs;
+        return this.model.blueprint.tabs.map(tab => {
+          tab.badge = this.changesInTab(tab);
+          return tab;
+        });
       }
 
       return  [];
@@ -77,6 +80,23 @@ export default {
     }
   },
   methods: {
+    changesInTab(tab) {
+      let count = 0;
+
+      tab.columns.forEach(column => {
+        let changes  = Object.keys(this.$store.getters["content/changes"](this.storeId));
+        let sections = Object.values(column.sections);
+            sections = sections.filter(section => section.type === "fields");
+
+        sections.forEach(section => {
+          let fields  = Object.keys(section.fields);
+          let changed = fields.filter(field => changes.includes(field));
+          count += changed.length;
+        })
+      })
+
+      return count;
+    },
     load(model) {
       this.model = model;
       this.onTitle();

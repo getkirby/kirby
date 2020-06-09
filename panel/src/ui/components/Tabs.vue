@@ -17,7 +17,7 @@
 
         <span
           v-if="tabButton.badge"
-          :class="'k-tabs-badge text-' + (tabButton.badge.color || 'red')"
+          :class="'k-tabs-badge text-' + (tabButton.badge.color || 'orange')"
         >
           {{ tabButton.badge.count || tabButton.badge }}
         </span>
