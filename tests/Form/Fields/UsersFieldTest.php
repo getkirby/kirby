@@ -88,7 +88,7 @@ class UsersFieldTest extends TestCase
     {
         $field = $this->field('users', [
             'model' => new Page(['slug' => 'test']),
-            'value' => [
+            'value' => $original = [
                 'leonardo@getkirby.com', // exists
                 'raphael@getkirby.com', // exists
                 'homer@getkirby.com'  // does not exist
@@ -96,12 +96,15 @@ class UsersFieldTest extends TestCase
         ]);
 
         $value = $field->value();
+        $this->assertSame($original, $value);
+
+        $models   = $field->toModels($value);
         $expected = [
             'leonardo@getkirby.com',
             'raphael@getkirby.com'
         ];
+        $this->assertSame($expected, array_column($models, 'email'));
 
-        $this->assertEquals($expected, $value);
     }
 
     public function testMin()

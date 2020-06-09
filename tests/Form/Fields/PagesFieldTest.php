@@ -58,7 +58,7 @@ class PagesFieldTest extends TestCase
     {
         $field = $this->field('pages', [
             'model' => $this->model(),
-            'value' => [
+            'value' => $original = [
                 'a/aa', // exists
                 'a/ab', // exists
                 'a/ac'  // does not exist
@@ -66,12 +66,14 @@ class PagesFieldTest extends TestCase
         ]);
 
         $value = $field->value();
+        $this->assertSame($original, $value);
+
+        $models   = $field->toModels($value);
         $expected = [
             'a/aa',
             'a/ab'
         ];
-
-        $this->assertEquals($expected, $value);
+        $this->assertSame($expected, array_column($models, 'id'));
     }
 
     public function testMin()

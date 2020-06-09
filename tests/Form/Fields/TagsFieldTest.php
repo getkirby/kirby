@@ -105,7 +105,11 @@ class TagsFieldTest extends TestCase
     {
         $field = $this->field('tags', [
             'value'   => 'a',
-            'options' => ['a', 'b', 'c'],
+            'options' => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
             'min'     => 2
         ]);
 
@@ -119,7 +123,11 @@ class TagsFieldTest extends TestCase
     {
         $field = $this->field('tags', [
             'value'   => 'a, b',
-            'options' => ['a', 'b', 'c'],
+            'options' => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
             'max'     => 1
         ]);
 
@@ -131,7 +139,11 @@ class TagsFieldTest extends TestCase
     public function testRequiredProps()
     {
         $field = $this->field('tags', [
-            'options'  => ['a', 'b', 'c'],
+            'options'  => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
             'required' => true
         ]);
 
@@ -142,7 +154,11 @@ class TagsFieldTest extends TestCase
     public function testRequiredInvalid()
     {
         $field = $this->field('tags', [
-            'options'  => ['a', 'b', 'c'],
+            'options'  => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
             'value'    => null,
             'required' => true
         ]);
@@ -153,7 +169,11 @@ class TagsFieldTest extends TestCase
     public function testRequiredValid()
     {
         $field = $this->field('tags', [
-            'options'  => ['a', 'b', 'c'],
+            'options'  => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
             'required' => true,
             'value'    => 'a'
         ]);

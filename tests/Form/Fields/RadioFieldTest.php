@@ -4,6 +4,7 @@ namespace Kirby\Form\Fields;
 
 class RadioFieldTest extends TestCase
 {
+
     public function testDefaultProps()
     {
         $field = $this->field('radio');
@@ -33,13 +34,43 @@ class RadioFieldTest extends TestCase
     {
         $field = $this->field('radio', [
             'options' => [
-                'a',
-                'b',
-                'c'
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
             ],
             'value' => $input
         ]);
 
-        $this->assertTrue($expected === $field->value());
+        $this->assertSame($expected, $field->value());
+    }
+
+    public function testDefaultValue()
+    {
+        $field = $this->field('radio', [
+            'default' => 'c',
+            'options' => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
+        ]);
+
+        $this->assertSame('c', $field->default());
+        $this->assertSame('c', $field->data(true));
+    }
+
+    public function testDefaultValueWithInvalidOptions()
+    {
+        $field = $this->field('radio', [
+            'default' => 'd',
+            'options' => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
+        ]);
+
+        $this->assertNull($field->default());
+        $this->assertNull($field->data(true));
     }
 }

@@ -19,14 +19,14 @@ class CheckboxesFieldTest extends TestCase
     {
         $field = $this->field('checkboxes', [
             'value'   => 'a,b,c',
-            'options' => $expected = [
-                'a',
-                'b',
-                'c'
+            'options' => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
             ]
         ]);
 
-        $this->assertEquals($expected, $field->value());
+        $this->assertEquals(['a', 'b', 'c'], $field->value());
     }
 
     public function testEmptyValue()
@@ -41,9 +41,9 @@ class CheckboxesFieldTest extends TestCase
         $field = $this->field('checkboxes', [
             'default' => 'a,b,d',
             'options' => [
-                'a',
-                'b',
-                'c'
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
             ],
         ]);
 
@@ -55,9 +55,9 @@ class CheckboxesFieldTest extends TestCase
     {
         $field = $this->field('checkboxes', [
             'options' => [
-                'a',
-                'b',
-                'c'
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
             ],
             'value' => 'a,b,c,d'
         ]);
@@ -69,9 +69,9 @@ class CheckboxesFieldTest extends TestCase
     {
         $field = $this->field('checkboxes', [
             'options' => [
-                'a',
-                'b',
-                'c'
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
             ],
             'value' => 'a, b, d'
         ]);
@@ -83,7 +83,11 @@ class CheckboxesFieldTest extends TestCase
     {
         $field = $this->field('checkboxes', [
             'value'   => 'a',
-            'options' => ['a', 'b', 'c'],
+            'options' => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
             'min'     => 2
         ]);
 
@@ -96,7 +100,11 @@ class CheckboxesFieldTest extends TestCase
     {
         $field = $this->field('checkboxes', [
             'value'   => 'a, b',
-            'options' => ['a', 'b', 'c'],
+            'options' => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
             'max'     => 1
         ]);
 
@@ -107,7 +115,11 @@ class CheckboxesFieldTest extends TestCase
     public function testRequiredProps()
     {
         $field = $this->field('checkboxes', [
-            'options'  => ['a', 'b', 'c'],
+            'options'  => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
             'required' => true
         ]);
 
@@ -118,7 +130,11 @@ class CheckboxesFieldTest extends TestCase
     public function testRequiredInvalid()
     {
         $field = $this->field('checkboxes', [
-            'options'  => ['a', 'b', 'c'],
+            'options'  => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
             'value'    => null,
             'required' => true
         ]);
@@ -129,7 +145,11 @@ class CheckboxesFieldTest extends TestCase
     public function testRequiredValid()
     {
         $field = $this->field('checkboxes', [
-            'options'  => ['a', 'b', 'c'],
+            'options'  => [
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
+            ],
             'required' => true,
             'value'    => 'a'
         ]);

@@ -63,8 +63,6 @@ class FilesFieldTest extends TestCase
             'model' => $this->model()
         ]);
 
-        var_dump($field->default);
-
         $this->assertEquals('files', $field->type());
         $this->assertEquals('files', $field->name());
         $this->assertEquals([], $field->value());
@@ -79,7 +77,7 @@ class FilesFieldTest extends TestCase
     {
         $field = $this->field('files', [
             'model' => $this->model(),
-            'value' => [
+            'value' => $original = [
                 'a.jpg', // exists
                 'b.jpg', // exists
                 'e.jpg'  // does not exist
@@ -87,13 +85,14 @@ class FilesFieldTest extends TestCase
         ]);
 
         $value = $field->value();
+        $this->assertSame($original, $value);
 
+        $models   = $field->toModels($value);
         $expected = [
             'test/a.jpg',
             'test/b.jpg'
         ];
-
-        $this->assertEquals($expected, $value);
+        $this->assertSame($expected, array_column($models, 'id'));
     }
 
     public function testMin()
@@ -133,7 +132,7 @@ class FilesFieldTest extends TestCase
     {
         $field = $this->field('files', [
             'model' => $this->app->page('test-draft'),
-            'value' => [
+            'value' => $original =[
                 'a.jpg', // exists
                 'b.jpg', // exists
                 'e.jpg', // does not exist
@@ -141,12 +140,14 @@ class FilesFieldTest extends TestCase
         ]);
 
         $value = $field->value();
+        $this->assertSame($original, $value);
+
+        $models   = $field->toModels($value);
         $expected = [
             'test-draft/a.jpg',
             'test-draft/b.jpg'
         ];
-
-        $this->assertEquals($expected, $value);
+        $this->assertSame($expected, array_column($models, 'id'));
     }
 
     public function testQueryWithPageParent()

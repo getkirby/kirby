@@ -33,13 +33,13 @@ class SelectFieldTest extends TestCase
     {
         $field = $this->field('select', [
             'options' => [
-                'a',
-                'b',
-                'c'
+                ['value' => 'a', 'text' => 'a'],
+                ['value' => 'b', 'text' => 'b'],
+                ['value' => 'c', 'text' => 'c']
             ],
             'value' => $input
         ]);
 
-        $this->assertTrue($expected === $field->value());
+        $this->assertSame($expected, $field->value());
     }
 }
