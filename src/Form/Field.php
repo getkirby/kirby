@@ -82,7 +82,7 @@ class Field extends Component
         $save = $this->options['save'] ?? true;
 
         if ($default === true && $this->isEmpty($this->value)) {
-            $value = $this->default();
+            $value = $this->default;
         } else {
             $value = $this->value;
         }

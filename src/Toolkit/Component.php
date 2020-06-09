@@ -250,24 +250,30 @@ class Component
         // load component definition
         $definition = static::load($type);
 
+        // collect definition parts
+        $options = [];
+
+        // add genereal field defaults;
+        $options[] = static::defaults();
+
+        // extend other definitions
         if (isset($definition['extends']) === true) {
-            // extend other definitions
-            $options = array_replace_recursive(static::defaults(), static::load($definition['extends']), $definition);
-        } else {
-            // inject defaults
-            $options = array_replace_recursive(static::defaults(), $definition);
+            $options[] = static::setup($definition['extends']);
         }
 
+
         // inject mixins
-        if (isset($options['mixins']) === true) {
-            foreach ($options['mixins'] as $mixin) {
+        if (isset($definition['mixins']) === true) {
+            foreach ($definition['mixins'] as $mixin) {
                 if (isset(static::$mixins[$mixin]) === true) {
-                    $options = array_replace_recursive(static::$mixins[$mixin], $options);
+                    $options[] = static::$mixins[$mixin];
                 }
             }
         }
 
-        return $options;
+        $options[] = $definition;
+
+        return array_replace_recursive(...$options);
     }
 
     /**
