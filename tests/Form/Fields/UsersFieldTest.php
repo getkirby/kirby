@@ -104,7 +104,6 @@ class UsersFieldTest extends TestCase
             'raphael@getkirby.com'
         ];
         $this->assertSame($expected, array_column($models, 'email'));
-
     }
 
     public function testMin()

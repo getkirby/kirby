@@ -4,7 +4,6 @@ namespace Kirby\Form\Fields;
 
 class RadioFieldTest extends TestCase
 {
-
     public function testDefaultProps()
     {
         $field = $this->field('radio');

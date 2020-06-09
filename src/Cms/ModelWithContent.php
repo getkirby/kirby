@@ -302,7 +302,9 @@ abstract class ModelWithContent extends Model
      * @internal
      * @return array|void
      */
-    public function panelIcon() {}
+    public function panelIcon()
+    {
+    }
 
     /**
      * Returns the image file object based on provided query
