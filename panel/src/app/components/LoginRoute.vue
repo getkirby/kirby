@@ -1,7 +1,7 @@
 <template>
   <k-login-view
-    :authenticating="authenticating"
     :loading="loading"
+    :processing="processing"
     @login="onLogin"
   />
 </template>
@@ -25,25 +25,17 @@ export default {
   },
   data() {
     return {
-      authenticating: false,
-      loading: true
+      loading: true,
+      processing: false
     };
   },
   methods: {
-    async onLogin(values) {
-      this.authenticating = true;
-
-      try {
-        await this.$model.users.login(values);
-        await this.$model.system.load(true);
-        this.$store.dispatch("notification/info", this.$t("welcome"));
-
-      } catch (error) {
-        this.$store.dispatch("notification/error", error);
-
-      } finally {
-        this.authenticating = false;
-      }
+    async onLogin(user) {
+      this.processing = true;
+      await this.$model.users.login(user);
+      this.$router.push(this.$store.state.user.path || "/");
+      this.$store.dispatch("notification/info", this.$t("welcome"));
+      this.processing = false;
     }
   }
 };

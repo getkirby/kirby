@@ -39,6 +39,7 @@ export default {
       // defaults
       payload = {
         id: Date.now(),
+        timeout: 4000,
         ...defaults,
         ...payload
       };
@@ -78,8 +79,7 @@ export default {
       context.dispatch("send", {
         payload: payload,
         defaults: {
-          type: "info",
-          timeout: 4000
+          type: "info"
         }
       });
     },
@@ -88,8 +88,7 @@ export default {
         payload: payload,
         defaults: {
           type: "success",
-          message: "👍",
-          timeout: 4000
+          message: "👍"
         }
       });
     }

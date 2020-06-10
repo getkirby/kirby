@@ -137,16 +137,16 @@ export default (Vue, store) => ({
     store.dispatch("user/current", user);
     return user;
   },
-  async login(credentials) {
-    // authenticate user
-    const user = await Vue.$api.auth.login(credentials)
+  async login(user) {
+    // set current user
     store.dispatch("user/current", user);
 
     // activate UI language for user
     store.dispatch("translation/activate", user.language);
 
-    // route to view
-    Vue.$router.push(store.state.user.path || "/");
+    // reload system info
+    await Vue.$model.system.load(true);
+
     return user;
   },
   async logout(force = false) {
