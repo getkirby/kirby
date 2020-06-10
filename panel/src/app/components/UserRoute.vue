@@ -85,6 +85,7 @@ export default {
         prev:       this.prev,
         prevnext:   true,
         profile:    this.profile,
+        role:       this.model.role.name,
         title:      this.model.name || this.model.email,
         url:        this.model.url,
       };

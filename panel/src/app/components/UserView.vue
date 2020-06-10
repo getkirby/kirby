@@ -17,7 +17,14 @@
       @rename="onOption('rename')"
       @option="onOption"
       v-on="$listeners"
-    />
+    >
+      <template v-slot:empty>
+        <k-box
+          :text="$t('user.blueprint', { role: role })"
+          theme="info"
+        />
+      </template>
+    </k-model-view>
 
     <!-- Dialogs -->
     <k-user-email-dialog
@@ -69,6 +76,7 @@ export default {
         return {};
       }
     },
+    role: String,
     title: String
   },
   methods: {

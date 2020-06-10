@@ -40,6 +40,7 @@
 
     <!-- columns -->
     <k-sections
+      v-if="columns.length"
       :api="api"
       :columns="columns"
       :lock="lock"
@@ -47,6 +48,9 @@
       v-on="$listeners"
       @submit="$emit('save', value)"
     />
+    <template v-else>
+      <slot name="empty" />
+    </template>
 
     <!-- footer -->
     <slot name="footer" />
