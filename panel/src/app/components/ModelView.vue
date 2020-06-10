@@ -156,12 +156,6 @@ export default {
       }
     }
   },
-  created() {
-    this.$events.$on("keydown.cmd.s", this.onSave);
-  },
-  destroyed() {
-    this.$events.$off("keydown.cmd.s", this.onSave);
-  },
   computed: {
     hasOptions() {
       return this.options.filter(option => option.disabled !== true).length;
@@ -170,10 +164,6 @@ export default {
   methods: {
     onOption(option, item, itemIndex) {
       this.$emit("option", option, item, itemIndex);
-    },
-    onSave(e) {
-      e.preventDefault();
-      this.$emit("save", this.value);
     }
   }
 };

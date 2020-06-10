@@ -6,6 +6,12 @@ export default {
       saving: false
     };
   },
+  created() {
+    this.$events.$on("keydown.cmd.s", this.onCommandS);
+  },
+  destroyed() {
+    this.$events.$off("keydown.cmd.s", this.onCommandS);
+  },
   computed: {
     changes() {
       return this.$store.getters["content/hasChanges"](this.storeId);
@@ -93,6 +99,10 @@ export default {
         this.$store.dispatch("content/hasLocking", true);
         this.$store.dispatch("content/lock", this.model.lock);
       }
+    },
+    onCommandS(e) {
+      e.preventDefault();
+      this.onSave();
     },
     async onContent(action) {
       switch (action) {
