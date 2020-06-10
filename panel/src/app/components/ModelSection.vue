@@ -90,9 +90,7 @@ export default {
     async load() {
       return this.$api.get(
         this.api + "/sections/" + this.name,
-        {
-          page: this.page
-        },
+        { page: this.page },
         null,
         true
       );

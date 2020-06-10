@@ -110,9 +110,10 @@ return [
     'views' => [
         'compact' => [
             'id',
+            'num',
+            'slug',
             'title',
-            'url',
-            'num'
+            'url'
         ],
         'default' => [
             'content',
