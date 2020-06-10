@@ -83,9 +83,7 @@ export default {
   },
   watch: {
     api() {
-      if (this.$refs.collection) {
-        this.$refs.collection.reload();
-      }
+      this.reload();
     }
   },
   methods: {
@@ -111,6 +109,11 @@ export default {
     },
     onSectionOption(option) {
       this.$emit("option", option);
+    },
+    reload() {
+      if (this.$refs.collection) {
+        this.$refs.collection.reload();
+      }
     }
   }
 };
