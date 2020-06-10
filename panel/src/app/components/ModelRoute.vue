@@ -88,7 +88,7 @@ export default {
 
       // activate content locking if supported
       // and set initial state
-      if (this.model.lock !== undefined) {
+      if (this.model.lock !== null) {
         this.$store.dispatch("content/hasLocking", true);
         this.$store.dispatch("content/lock", this.model.lock);
       }
