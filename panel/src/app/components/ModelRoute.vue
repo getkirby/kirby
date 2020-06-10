@@ -27,7 +27,7 @@ export default {
     },
     tab() {
       const current = this.$route.hash.slice(1) || "main";
-      const tab = this.tabs.find(tab => tab.name === current) || this.tabs[0];
+      const tab = this.tabs.find(tab => tab.name === current) || this.tabs[0] || {};
       return tab;
     },
     tabs() {

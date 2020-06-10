@@ -159,7 +159,7 @@ export default {
   },
   computed: {
     hasOptions() {
-      return this.options.filter(option => option.disabled !== false).length;
+      return this.options.filter(option => option.disabled !== true).length;
     }
   },
   methods: {

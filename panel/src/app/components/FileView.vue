@@ -35,15 +35,15 @@
     <!-- Dialogs -->
     <k-file-rename-dialog
       ref="renameDialog"
-      @success="$emit('rename', $event)"
+      @success="$emit('renamed', $event)"
     />
     <k-file-remove-dialog
       ref="removeDialog"
-      @success="$emit('remove')"
+      @success="$emit('removed')"
     />
     <k-upload
       ref="replaceDialog"
-      @success="$emit('replace')"
+      @success="$emit('replaced')"
     />
   </k-inside>
 </template>

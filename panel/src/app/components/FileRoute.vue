@@ -2,9 +2,9 @@
   <k-file-view
     v-bind="view"
     v-on="listeners"
-    @remove="onRemove"
-    @rename="onRename"
-    @replace="onReplace"
+    @removed="onRemoved"
+    @renamed="onRenamed"
+    @replaced="onReplaced"
   />
 </template>
 
@@ -113,15 +113,15 @@ export default {
     }
   },
   methods: {
-    onRemove() {
+    onRemoved() {
       const path = this.$model.pages.link(this.model.parent.id);
       this.$router.push(path);
     },
-    onRename(file) {
+    onRenamed(file) {
       const path = this.$model.files.link(this.model.parent.guid, file.filename);
       this.$router.push(path);
     },
-    onReplace() {
+    onReplaced() {
       this.reload();
     },
     onTitle() {
