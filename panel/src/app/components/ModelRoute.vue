@@ -16,7 +16,8 @@ export default {
     listeners() {
       return {
         content: this.onContent,
-        input:   this.onInput
+        input:   this.onInput,
+        save:    this.onSave
       };
     },
     lock() {
@@ -120,6 +121,10 @@ export default {
       });
     },
     async onSave() {
+      if (!this.changes) {
+        return true;
+      }
+
       this.saving = true;
       await this.save();
       this.saving = false;
