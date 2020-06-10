@@ -9,7 +9,6 @@
       </template>
       <template v-else>
         <login-form
-          :is="form"
           :processing="processing"
           v-on="$listeners"
         />
