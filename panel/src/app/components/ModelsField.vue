@@ -259,8 +259,8 @@ export default {
       this.data.splice(itemIndex, 1);
       this.onInput();
     },
-    onSelect(value) {
-      this.selected = value;
+    onSelect(items) {
+      this.selected = items.map(item => item.id);
       this.onInput(true);
     },
     onSort(items) {

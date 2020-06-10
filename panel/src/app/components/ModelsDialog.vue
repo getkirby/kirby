@@ -78,6 +78,8 @@ export default {
       if (Array.isArray(selected)) {
         this.selected = this.$helper.clone(selected);
       } else {
+        // TODO: deprecated. Remove in Kirby 3.6
+        console.warn("ModelsDialog: Passing options via the `open()` method has been deprecated and will be removed in a future release. Pass options as attributes on the component instead.")
         this.selected = this.$helper.clone(selected.selected || []);
         this.legacy   = selected;
       }
@@ -96,7 +98,7 @@ export default {
       this.loading = false;
     },
     onSubmit() {
-      this.$emit("submit", this.selected);
+      this.$emit("submit", this.selected.map(item => ({ id: item })));
       this.$refs.drawer.close();
     }
   }
