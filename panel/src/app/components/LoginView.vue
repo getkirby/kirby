@@ -18,9 +18,11 @@
 </template>
 
 <script>
+import LoginForm from "./LoginForm"
+
 export default {
   components: {
-    "login-form": window.panel.plugins.login || "k-login-form"
+    "k-login-form": window.panel.plugins.login || LoginForm
   },
   props: {
     loading: {
