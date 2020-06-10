@@ -11,7 +11,13 @@ return [
         'pattern' => 'users',
         'method'  => 'GET',
         'action'  => function () {
-            return $this->users();
+            $users = $this->users();
+
+            if ($role = get('role')) {
+                $users = $users->filterBy('role', $role);
+            }
+
+            return $users;
         }
     ],
     [

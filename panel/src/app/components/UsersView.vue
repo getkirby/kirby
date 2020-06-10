@@ -128,6 +128,11 @@ export default {
       return options;
     }
   },
+  watch: {
+    role() {
+      this.reload();
+    }
+  },
   methods: {
     onChangeRole(option) {
       this.$emit("role", option.id);
@@ -136,6 +141,9 @@ export default {
       this.$refs[option + "Dialog"].open(user.id);
     },
     onSuccess() {
+      this.reload();
+    },
+    reload() {
       this.$refs.users.reload();
     }
   }
