@@ -40,6 +40,7 @@ export default (Vue, store) => ({
     ]);
 
     Vue.$events.$emit("file.changeName", file);
+    Vue.$events.$emit("file.modify", file);
     store.dispatch("notification/success");
     return file;
   },
@@ -123,6 +124,7 @@ export default (Vue, store) => ({
 
     // emit events
     Vue.$events.$emit("file.update", data);
+    Vue.$events.$emit("file.modify", file);
     store.dispatch("notification/success");
     return file;
   }

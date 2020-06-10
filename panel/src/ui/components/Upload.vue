@@ -169,6 +169,7 @@ export default {
            * Parameters passed: `uploads`, `response`
            */
           this.$emit("success", this.files, Object.values(this.completed));
+          this.$events.$emit("upload", this.files, Object.values(this.completed));
         }, 250);
       }
     }

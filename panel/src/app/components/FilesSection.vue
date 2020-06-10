@@ -11,17 +11,11 @@
     <template v-slot:footer>
       <portal>
         <!-- Dialogs -->
-        <k-file-rename-dialog
-          ref="renameDialog"
-          @success="onChanged"
-        />
-        <k-file-remove-dialog
-          ref="removeDialog"
-          @success="onChanged"
-        />
+        <k-file-rename-dialog ref="renameDialog" />
+        <k-file-remove-dialog ref="removeDialog" />
         <k-upload
           ref="upload"
-          @success="onChanged"
+          @success="onUpload"
         />
       </portal>
     </template>
@@ -33,6 +27,16 @@ import ModelSection from "./ModelSection.vue";
 
 export default {
   extends: ModelSection,
+  created() {
+    this.$events.$on("file.delete", this.reload);
+    this.$events.$on("file.modify", this.reload);
+    this.$events.$on("upload", this.reload);
+  },
+  destroyed() {
+    this.$events.$off("file.delete", this.reload);
+    this.$events.$off("file.modify", this.reload);
+    this.$events.$off("upload", this.reload);
+  },
   computed: {
     emptyDefaults() {
       return {
@@ -68,9 +72,6 @@ export default {
     }
   },
   methods: {
-    onChanged() {
-      this.$refs.section.$refs.collection.reload();
-    },
     onOption(option, file = {}, fileIndex) {
       switch (option) {
         case "rename":
