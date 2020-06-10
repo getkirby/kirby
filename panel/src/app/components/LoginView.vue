@@ -8,7 +8,7 @@
         <k-loader />
       </template>
       <template v-else>
-        <login-form
+        <k-login-form
           :processing="processing"
           v-on="$listeners"
         />
