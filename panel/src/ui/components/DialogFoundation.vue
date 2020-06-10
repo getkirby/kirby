@@ -50,32 +50,31 @@
               <k-text v-html="text" />
             </slot>
           </div>
-          <slot
-            name="footer"
-            :cancel="cancel"
-            :cancelButton="cancelButton"
-            :submitButton="submitButton"
-            :submit="submit"
-          >
-            <footer
+
+          <footer class="k-dialog-footer flex justify-between items-center">
+            <slot
               v-if="cancelButton || submitButton"
-              class="k-dialog-footer flex justify-between"
+              name="footer"
+              :cancel="cancel"
+              :cancelButton="cancelButton"
+              :submitButton="submitButton"
+              :submit="submit"
             >
               <k-button
                 v-if="cancelButton"
                 v-bind="cancelButton"
-                class="k-dialog-cancel-button mr-auto py-3 px-6"
+                class="k-dialog-cancel-button"
                 @click="cancel"
               />
               <k-button
                 v-if="submitButton"
                 v-bind="submitButton"
                 :loading="loading"
-                class="k-dialog-submit-button ml-auto py-3 px-6"
+                class="k-dialog-submit-button"
                 @click="submit"
               />
-            </footer>
-          </slot>
+            </slot>
+          </footer>
         </div>
       </k-backdrop>
     </k-modal>
@@ -288,5 +287,17 @@ export default {
   padding: 0 1rem;
   height: 36px;
   border-radius: $rounded-sm;
+}
+
+/** Footer buttons */
+.k-dialog-footer .k-button {
+  padding: .75rem 1.5rem;
+}
+.k-dialog-footer > .k-button-group {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 0;
 }
 </style>
