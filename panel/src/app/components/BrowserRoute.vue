@@ -5,11 +5,13 @@
   />
 </template>
 <script>
+import Vue from "vue";
+
 export default {
   beforeRouteEnter(to, from, next) {
     // if browser support is fine,
     // redirect to the main view
-    if (this.$caniuse.all() === true) {
+    if (Vue.$caniuse.all() === true) {
       next("/");
     };
 

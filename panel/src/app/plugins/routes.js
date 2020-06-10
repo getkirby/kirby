@@ -12,6 +12,11 @@ export default (Vue, store) => {
       redirect: "/site",
     },
     {
+      path: "/browser",
+      name: "Browser",
+      component: Vue.component("k-browser-route"),
+    },
+    {
       path: "/login",
       component: Vue.component("k-login-route"),
     },

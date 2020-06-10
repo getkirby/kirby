@@ -1,6 +1,6 @@
 export default {
   install(Vue) {
-    Vue.prototype.$caniuse = {
+    Vue.$caniuse = Vue.prototype.$caniuse = {
       grid() {
         if (window.CSS && window.CSS.supports("display", "grid")) {
           return true;
