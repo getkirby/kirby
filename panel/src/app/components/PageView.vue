@@ -36,27 +36,27 @@
     <!-- Dialogs -->
     <k-page-duplicate-dialog
       ref="duplicateDialog"
-      @success="$emit('duplicate', $event)"
+      @success="$emit('duplicated', $event)"
     />
     <k-page-remove-dialog
       ref="removeDialog"
-      @success="$emit('delete')"
+      @success="$emit('deleted')"
     />
     <k-page-rename-dialog
       ref="renameDialog"
-      @success="$emit('changeTitle', $event)"
+      @success="$emit('changedTitle', $event)"
     />
     <k-page-slug-dialog
       ref="slugDialog"
-      @success="$emit('changeSlug', $event)"
+      @success="$emit('changedSlug', $event)"
     />
     <k-page-status-dialog
       ref="statusDialog"
-      @success="$emit('changeStatus', $event)"
+      @success="$emit('changedStatus', $event)"
     />
     <k-page-template-dialog
       ref="templateDialog"
-      @success="$emit('changeTemplate', $event)"
+      @success="$emit('changedTemplate', $event)"
     />
   </k-inside>
 </template>

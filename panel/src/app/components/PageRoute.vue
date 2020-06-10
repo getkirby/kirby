@@ -2,9 +2,11 @@
   <k-page-view
     v-bind="view"
     v-on="listeners"
-    @changeStatus="onChangeStatus"
-    @changeTitle="onChangeTitle"
-    @delete="onDelete"
+    @changedStatus="onChangedStatus"
+    @changedTemplate="onChangedTemplate"
+    @changedTitle="onChangedTitle"
+    @deleted="onDeleted"
+    @reload="onReload"
   />
 </template>
 <script>
@@ -85,7 +87,7 @@ export default {
     }
   },
   methods: {
-    onChangeSlug(page) {
+    onChangedSlug(page) {
       // Redirect, if slug was changed in default language
       if (
         !this.$store.state.languages.current ||
@@ -95,13 +97,20 @@ export default {
         this.$router.push(path);
       }
     },
-    onChangeStatus(page) {
+    onChangedStatus(page) {
       this.model.status = page.status;
+      this.reload();
     },
-    onChangeTitle(page) {
+    onChangedTemplate(page) {
+      this.model.template = page.template;
+      this.reload();
+    },
+    onChangedTitle(page) {
       this.model.title = page.title;
+      this.reload();
+      this.onTitle();
     },
-    onDelete() {
+    onDeleted() {
       if (this.model.parent) {
         const path = this.$model.pages.link(this.model.parent.id);
         this.$router.push(path);
@@ -109,6 +118,9 @@ export default {
         const path = this.$model.pages.link();
         this.$router.push(path);
       }
+    },
+    onReload() {
+      this.reload();
     },
     onTitle() {
       this.$model.system.title(this.model.title);
