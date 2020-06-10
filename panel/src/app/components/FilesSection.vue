@@ -13,10 +13,7 @@
         <!-- Dialogs -->
         <k-file-rename-dialog ref="renameDialog" />
         <k-file-remove-dialog ref="removeDialog" />
-        <k-upload
-          ref="upload"
-          @success="onUpload"
-        />
+        <k-upload ref="upload" @success="onOption('upload')" />
       </portal>
     </template>
   </k-model-section>
