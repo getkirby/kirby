@@ -1,5 +1,6 @@
 <template>
   <k-inside
+    :languages="true"
     class="k-site-view"
     view="site"
   >
