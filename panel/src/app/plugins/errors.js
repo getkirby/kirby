@@ -7,7 +7,8 @@ export default {
       }
 
       store.dispatch("notification/error", {
-        message: error.message || "An error occurred. Please reload the Panel"
+        message: "Error",
+        details: error.message || "An error occurred. Please reload the Panel"
       });
     };
 
@@ -22,6 +23,12 @@ export default {
         notification + ". See the console for more information."
       );
     };
+
+    window.$deprecated = (message) => {
+      if (Vue.$config.debug) {
+        window.console.warn(message);
+      }
+    }
 
   }
 };

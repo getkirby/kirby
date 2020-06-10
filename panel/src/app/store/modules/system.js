@@ -24,6 +24,11 @@ export default {
     }
   },
   actions: {
+    async load(reload) {
+      // TODO: remove in Kirby 3.6
+      $deprecated("$store.dispatch('system/load') has been deprecated. Please use `this.$model.system.load()` instead.");
+      await this.$model.systen.load(reload);
+    },
     register(context, license) {
       context.commit("SET", {
         license: license
