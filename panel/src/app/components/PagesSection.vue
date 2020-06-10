@@ -11,34 +11,13 @@
   >
     <template v-slot:footer>
       <!-- Dialogs -->
-      <k-page-create-dialog
-        ref="createDialog"
-        @success="onChanged"
-      />
-      <k-page-duplicate-dialog
-        ref="duplicateDialog"
-        @success="onChanged"
-      />
-      <k-page-remove-dialog
-        ref="removeDialog"
-        @success="onChanged"
-      />
-      <k-page-rename-dialog
-        ref="renameDialog"
-        @success="onChanged"
-      />
-      <k-page-slug-dialog
-        ref="slugDialog"
-        @success="onChanged"
-      />
-      <k-page-status-dialog
-        ref="statusDialog"
-        @success="onChanged"
-      />
-      <k-page-template-dialog
-        ref="templateDialog"
-        @success="onChanged"
-      />
+      <k-page-create-dialog ref="createDialog" />
+      <k-page-duplicate-dialog ref="duplicateDialog" />
+      <k-page-remove-dialog ref="removeDialog" />
+      <k-page-rename-dialog ref="renameDialog" />
+      <k-page-slug-dialog ref="slugDialog" />
+      <k-page-status-dialog ref="statusDialog" />
+      <k-page-template-dialog ref="templateDialog" />
     </template>
   </k-model-section>
 </template>
@@ -48,6 +27,16 @@ import ModelSection from "./ModelSection.vue";
 
 export default {
   extends: ModelSection,
+  created() {
+    this.$events.$on("page.create", this.reload);
+    this.$events.$on("page.delete", this.reload);
+    this.$events.$on("page.modify", this.reload);
+  },
+  destroyed() {
+    this.$events.$off("page.create", this.reload);
+    this.$events.$off("page.delete", this.reload);
+    this.$events.$off("page.modify", this.reload);
+  },
   computed: {
     emptyDefaults() {
       return {
@@ -92,11 +81,12 @@ export default {
     }
   },
   methods: {
-    onChanged() {
-      this.$refs.section.$refs.collection.reload();
-    },
     onOption(option, page = {}, pageIndex) {
-      this.$refs[option + "Dialog"].open(page.id);
+      const dialog = this.$refs[option + "Dialog"];
+      if (dialog) {
+        return dialog.open(page.id);
+      }
+      throw "The option does not exist";
     }
   }
 };

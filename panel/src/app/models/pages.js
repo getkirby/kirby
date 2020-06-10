@@ -25,24 +25,28 @@ export default (Vue, store) => ({
     });
 
     Vue.$events.$emit("page.changeSlug", page);
+    Vue.$events.$emit("page.modify", page);
     store.dispatch("notification/success");
     return page;
   },
   async changeStatus(id, status, position) {
     const page = await Vue.$api.pages.changeStatus(id, status, position);
     Vue.$events.$emit("page.changeStatus", page);
+    Vue.$events.$emit("page.modify", page);
     store.dispatch("notification/success");
     return page;
   },
   async changeTemplate(id, template) {
     const page = await Vue.$api.pages.changeTemplate(id, template);
     Vue.$events.$emit("page.changeTemplate", page);
+    Vue.$events.$emit("page.modify", page);
     store.dispatch("notification/success");
     return page;
   },
   async changeTitle(id, title) {
     const page = await Vue.$api.pages.changeTitle(id, title);
     Vue.$events.$emit("page.changeTitle", page);
+    Vue.$events.$emit("page.modify", page);
     store.dispatch("notification/success");
     return page;
   },
@@ -175,6 +179,7 @@ export default (Vue, store) => ({
 
     // emit events
     Vue.$events.$emit("page.update", data);
+    Vue.$events.$emit("page.modify", page);
     store.dispatch("notification/success");
     return page;
   },

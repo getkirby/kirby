@@ -113,6 +113,8 @@ export default {
     reload() {
       if (this.$refs.collection) {
         this.$refs.collection.reload();
+      } else if (this.$refs.section) {
+        this.$refs.section.reload();
       }
     }
   }
