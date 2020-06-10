@@ -12,16 +12,30 @@ export default (Vue, store) => {
       redirect: "/site",
     },
     {
+      path: "/account",
+      name: "Account",
+      component: Vue.component("k-account-route"),
+      beforeEnter: authenticate,
+    },
+    {
       path: "/browser",
       name: "Browser",
       component: Vue.component("k-browser-route"),
     },
     {
+      path: "/:parentType/:parentId/files/:filename",
+      name: "File",
+      component: Vue.component("k-file-route"),
+      beforeEnter: authenticate,
+    },
+    {
       path: "/login",
+      name: "Login",
       component: Vue.component("k-login-route"),
     },
     {
       path: "/logout",
+      name: "Logout",
       beforeEnter(to, from, next) {
         Vue.$model.users.logout();
       }
@@ -39,15 +53,15 @@ export default (Vue, store) => {
       beforeEnter: authenticate,
     },
     {
-      path: "/:parentType/:parentId/files/:filename",
-      name: "File",
-      component: Vue.component("k-file-route"),
-      beforeEnter: authenticate,
-    },
-    {
       path: "/pages/:id",
       name: "Page",
       component: Vue.component("k-page-route"),
+      beforeEnter: authenticate,
+    },
+    {
+      path: "/plugins/:id",
+      name: "Plugin",
+      component: Vue.component("k-plugin-route"),
       beforeEnter: authenticate,
     },
     {
@@ -69,18 +83,6 @@ export default (Vue, store) => {
       path: "/users/:id",
       name: "User",
       component: Vue.component("k-user-route"),
-      beforeEnter: authenticate,
-    },
-    {
-      path: "/account",
-      name: "Account",
-      component: Vue.component("k-account-route"),
-      beforeEnter: authenticate,
-    },
-    {
-      path: "/plugins/:id",
-      name: "Plugin",
-      component: Vue.component("k-plugin-route"),
       beforeEnter: authenticate,
     },
     {
