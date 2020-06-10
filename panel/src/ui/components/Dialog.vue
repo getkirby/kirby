@@ -5,6 +5,10 @@
     v-on="$listeners"
   >
     <slot />
+
+    <template v-slot:footer>
+      <slot name="footer" />
+    </template>
   </k-dialog-foundation>
 </template>
 
