@@ -82,6 +82,14 @@ export default {
   },
   methods: {
     mapOption(id, model) {
+      if (id.includes("/files/") === true) {
+        return {
+          icon: "image",
+          text: model.filename,
+          to:   model.link
+        };
+      }
+
       if (id.startsWith("pages/") === true) {
         return {
           icon: "page",
@@ -90,27 +98,21 @@ export default {
         };
       }
 
-      if (id.startsWith("files/") === true) {
-        return {
-          icon: "image",
-          text: model.filename,
-          to:   model.link
-        };
-      }
-
       if (id.startsWith("users/") === true) {
         return {
           icon: "user",
-          text: model.email,
+          text: model.name || model.email,
           to:   this.$model.users.link(model.id)
         };
       }
 
-      return {
-        icon: "home",
-        text: model.title,
-        to:   "/site"
-      };
+      if (id === "/") {
+        return {
+          icon: "home",
+          text: model.title,
+          to:   "/site"
+        };
+      }
     },
     onOption(click, option) {
       // if a language is set for an option
