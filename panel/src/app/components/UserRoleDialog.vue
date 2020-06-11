@@ -17,6 +17,11 @@ export default {
       // load all available roles
       this.roles = await this.$model.roles.options({ canBe: "changed" });
 
+      // if there are no options to select, don't open dialog
+      if (this.roles.length === 0) {
+        throw this.$t("error.user.changeRole.none");
+      }
+
       // don't let non-admins promote anyone to admin
       // this will be checked in the backend again, but
       // it's better to avoid this in the frontend already

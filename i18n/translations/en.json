@@ -131,6 +131,7 @@
   "error.user.changeName.permission": "You are not allowed to change the name for the user \"{name}\"",
   "error.user.changePassword.permission": "You are not allowed to change the password for the user \"{name}\"",
   "error.user.changeRole.lastAdmin": "The role for the last admin cannot be changed",
+  "error.user.changeRole.none": "No other roles can be selected for this user",
   "error.user.changeRole.permission": "You are not allowed to change the role for the user \"{name}\"",
   "error.user.changeRole.toAdmin": "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "You are not allowed to create this user",
