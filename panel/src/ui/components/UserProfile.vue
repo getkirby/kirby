@@ -1,11 +1,17 @@
 <template>
   <div class="k-user-profile bg-white py-12">
     <k-view class="k-user-profile-layout items-center">
-      <template>
+      <!-- avatar -->
+      <template v-if="!canChangeAvatar">
+        <k-item-figure
+          v-bind="avatarPreview"
+          class="rounded-sm"
+        />
+      </template>
+      <template v-else-if="avatar">
         <k-dropdown>
           <k-button
             :tooltip="$t('avatar')"
-            :disabled="!canChangeAvatar"
             class="k-user-profile-image"
             @click="$refs.picture.toggle()"
           >
@@ -21,7 +27,20 @@
           />
         </k-dropdown>
       </template>
+      <template v-else>
+        <k-button
+          :tooltip="$t('avatar')"
+          class="k-user-profile-image"
+          @click="onOption('uploadAvatar')"
+        >
+          <k-item-figure
+            v-bind="avatarPreview"
+            class="rounded-sm"
+          />
+        </k-button>
+      </template>
 
+      <!-- profile information -->
       <k-button-group>
         <k-button
           :disabled="!canChangeEmail"
