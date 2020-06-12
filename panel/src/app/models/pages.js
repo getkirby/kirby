@@ -146,8 +146,14 @@ export default (Vue, store) => ({
     const page = await Vue.$api.get(url, { select: "options" });
     return this.dropdown(page.options, view);
   },
-  statusIcon(status) {
-    return this.statusIcons()[status];
+  statusIcon(status, disabled = false) {
+    let icon = this.statusIcons()[status];
+
+    if (disabled === true) {
+      icon.color = "gray";
+    }
+
+    return icon;
   },
   statusIcons() {
     return {

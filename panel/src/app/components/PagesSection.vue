@@ -52,7 +52,7 @@ export default {
           const isEnabled = page.permissions.changeStatus !== false;
 
           page.flag = {
-            icon: this.$model.pages.statusIcon(page.status),
+            icon: this.$model.pages.statusIcon(page.status, !isEnabled),
             tooltip: isEnabled
               ? `${this.$t("page.status")}: ${page.status}`
               : `${this.$t("page.status")}: ${page.status} (${this.$t("disabled")})`,

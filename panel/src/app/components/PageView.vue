@@ -92,11 +92,13 @@ export default {
       };
     },
     templateButton() {
+      const disabled = this.isDisabledOption("template");
       return {
-        disabled: this.isDisabledOption("template"),
+        disabled: disabled,
         icon: {
           type: "template",
-          size: "small"
+          size: "small",
+          color: disabled ? "gray" : "black",
         },
         responsive: true,
         text: this.template,

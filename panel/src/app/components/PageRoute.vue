@@ -52,7 +52,7 @@ export default {
       return this.$model.pages.storeId(this.model.id);
     },
     status() {
-      const defaults  = this.$model.pages.statusIcon(this.model.status);
+      const defaults  = this.$model.pages.statusIcon(this.model.status, !this.model.options.changeStatus);
       const blueprint = this.model.blueprint.status[this.model.status];
 
       return {
