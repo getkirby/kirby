@@ -71,6 +71,9 @@ export default {
   methods: {
     onOption(option, file = {}, fileIndex) {
       switch (option) {
+        case "download":
+          window.open(file.url);
+          break;
         case "rename":
           return this.$refs.renameDialog.open(
             file.parent,

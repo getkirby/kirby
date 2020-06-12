@@ -23,6 +23,7 @@
           :link="url"
           :responsive="true"
           :text="$t('open')"
+          target="_blank"
           icon="open"
         />
         <k-button
