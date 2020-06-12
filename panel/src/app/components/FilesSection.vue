@@ -91,6 +91,7 @@ export default {
             file.filename
           );
         case "upload":
+          // TODO: fix this
           return this.$refs.upload.open({
             url: endpoint.uploadApi
           });

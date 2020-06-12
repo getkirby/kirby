@@ -87,7 +87,7 @@ export default {
           return this.$emit("changeAvatar");
         case "uploadAvatar":
           return this.$refs.upload.open({
-            url: this.$config.api + "/users/" + this.id + "/avatar",
+            api: "users/" + this.id + "/avatar",
             accept: "image/*",
             multiple: false
           });

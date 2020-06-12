@@ -66,9 +66,6 @@
 <script>
 export default {
   props: {
-    url: {
-      type: String
-    },
     accept: {
       type: String,
       default: "*"
@@ -76,13 +73,16 @@ export default {
     attributes: {
       type: Object
     },
+    max: {
+      type: Number
+    },
     multiple: {
       type: Boolean,
       default: true
     },
-    max: {
-      type: Number
-    }
+    url: {
+      type: String
+    },
   },
   data() {
     return {
@@ -94,6 +94,17 @@ export default {
     };
   },
   methods: {
+    api() {
+      if (this.$config && this.options.api) {
+        return this.$config.api + "/" + this.options.api;
+      }
+
+      return this.options.url;
+    },
+    drop(files, params) {
+      this.params(params);
+      this.upload(files);
+    },
     open(params) {
       this.params(params);
 
@@ -102,14 +113,13 @@ export default {
       }, 1);
     },
     params(params) {
-      this.options = Object.assign({}, this.$props, params);
+      this.options = {
+        ...this.$props,
+        ...params
+      };
     },
     select(e) {
       this.upload(e.target.files);
-    },
-    drop(files, params) {
-      this.params(params);
-      this.upload(files);
     },
     upload(files) {
       this.$refs.dialog.open();
@@ -126,7 +136,7 @@ export default {
       this.total = this.files.length;
       this.files.forEach(file => {
         this.$helper.upload(file, {
-          url: this.options.url,
+          url: this.api(),
           attributes: this.options.attributes,
           headers: {
             "X-CSRF": (window.panel || {}).csrf || ""

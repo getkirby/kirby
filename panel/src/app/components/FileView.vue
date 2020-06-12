@@ -105,7 +105,7 @@ export default {
           );
         case "replace":
           return this.$refs.replaceDialog.open({
-            url: this.$config.api + "/" + this.api,
+            api: this.api,
             accept: this.mime,
             multiple: false
           });
