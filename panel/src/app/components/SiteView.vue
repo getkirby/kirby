@@ -22,6 +22,12 @@
           icon="open"
         />
       </template>
+      <template v-slot:empty>
+        <k-box
+          :text="$t('site.blueprint', { role: role })"
+          theme="info"
+        />
+      </template>
     </k-model-view>
 
     <!-- dialogs -->

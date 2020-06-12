@@ -296,6 +296,7 @@
   "orientation.portrait": "Portrait",
   "orientation.square": "Square",
 
+  "page.blueprint": "You can define sections and form fields for the page in <strong>{template}</strong>",
   "page.changeSlug": "Change URL",
   "page.changeSlug.fromTitle": "Create from title",
   "page.changeStatus": "Change status",
@@ -353,6 +354,9 @@
 
   "select": "Select",
   "settings": "Settings",
+
+  "site.blueprint": "You can define sections and form fields for the site in <strong>/site/blueprints/site.yml</strong>",
+
   "size": "Size",
   "slug": "URL appendix",
   "sort": "Sort",

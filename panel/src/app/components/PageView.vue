@@ -31,6 +31,12 @@
           @click="onOption('template')"
         />
       </template>
+      <template v-slot:empty>
+        <k-box
+          :text="$t('page.blueprint', { template: '/site/blueprints/' + template.name + '.yml' })"
+          theme="info"
+        />
+      </template>
     </k-model-view>
 
     <!-- Dialogs -->
@@ -79,7 +85,7 @@ export default {
       default: false,
     },
     template: {
-      type: [Boolean, String],
+      type: [Boolean, Object],
       default: false
     }
   },
@@ -101,8 +107,8 @@ export default {
           color: disabled ? "gray" : "black",
         },
         responsive: true,
-        text: this.template,
-        tooltip: `${this.$t("template")}: ${this.template}`,
+        text: this.template.title,
+        tooltip: `${this.$t("template")}: ${this.template.name}`,
       };
     }
   },

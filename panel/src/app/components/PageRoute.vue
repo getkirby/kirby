@@ -72,17 +72,20 @@ export default {
 
       return {
         ...this.viewDefaults,
-        api:        this.$model.pages.url(this.model.id),
+        api: this.$model.pages.url(this.model.id),
         breadcrumb: this.$model.pages.breadcrumb(this.model),
-        id:         this.$model.pages.id(this.model.id),
-        next:       this.next,
-        options:    this.$model.pages.dropdown(this.model.options),
-        prev:       this.prev,
-        preview:    this.model.previewUrl,
-        rename:     this.model.options.changeTitle,
-        status:     this.status,
-        template:   this.model.blueprint.title,
-        title:      this.model.title
+        id: this.$model.pages.id(this.model.id),
+        next: this.next,
+        options: this.$model.pages.dropdown(this.model.options),
+        prev: this.prev,
+        preview: this.model.previewUrl,
+        rename: this.model.options.changeTitle,
+        status: this.status,
+        template: {
+          title: this.model.blueprint.title,
+          name: this.model.blueprint.name,
+        },
+        title: this.model.title
       };
     }
   },
