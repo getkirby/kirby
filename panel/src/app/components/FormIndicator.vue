@@ -5,7 +5,7 @@
   >
     <k-button
       icon="edit"
-      color="orange"
+      color="orange-light"
       class="k-topbar-button"
       @click="$refs.dropdown.toggle()"
     />
