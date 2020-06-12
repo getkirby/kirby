@@ -2,6 +2,10 @@ export default {
   install(Vue, store) {
 
     Vue.config.errorHandler = error => {
+      if (error === undefined) {
+        error = { message: "An unexpected error occurred. Please reload the Panel" };
+      }
+
       if (Vue.prototype.$config.debug) {
         window.console.error(error);
       }

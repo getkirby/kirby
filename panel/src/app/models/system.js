@@ -31,9 +31,10 @@ export default (Vue, store) => ({
 
       // set system status
       store.dispatch("system/status", {
-        isInstalled: response.isInstalled,
-        isLocale:    response.isLocal,
-        isOk:        response.isOk,
+        isInstallable: response.isInstallable,
+        isInstalled:   response.isInstalled,
+        isLocale:      response.isLocal,
+        isOk:          response.isOk,
       });
 
       // set content languages

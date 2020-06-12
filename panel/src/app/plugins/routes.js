@@ -23,6 +23,11 @@ export default (Vue, store) => {
       component: Vue.component("k-browser-route"),
     },
     {
+      path: "/installation",
+      name: "Installation",
+      component: Vue.component("k-installation-route"),
+    },
+    {
       path: "/:parentType/:parentId/files/:filename",
       name: "File",
       component: Vue.component("k-file-route"),
