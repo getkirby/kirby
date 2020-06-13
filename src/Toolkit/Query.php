@@ -18,11 +18,10 @@ use Kirby\Exception\InvalidArgumentException;
  */
 class Query
 {
-    const PARTS      = '!([a-zA-Z_][a-zA-Z0-9_]*(\(.*?\))?)\.|' . self::SKIP . '!';
-    const METHOD     = '!\((.*)\)!';
+    const PARTS      = '!\.|(\(([^()]+|(?1))*+\))(*SKIP)(*FAIL)!'; // split by dot, but not inside (nested) parens
     const PARAMETERS = '!,|' . self::SKIP . '!'; // split by comma, but not inside skip groups
 
-    const NO_PNTH = '\([^\(]+\)(*SKIP)(*FAIL)';
+    const NO_PNTH = '\([^(]+\)(*SKIP)(*FAIL)';
     const NO_SQBR = '\[[^]]+\](*SKIP)(*FAIL)';
     const NO_DLQU = '\"(?:[^"\\\\]|\\\\.)*\"(*SKIP)(*FAIL)';  // allow \" escaping inside string
     const NO_SLQU = '\'(?:[^\'\\\\]|\\\\.)*\'(*SKIP)(*FAIL)'; // allow \' escaping inside string
@@ -144,18 +143,7 @@ class Query
      */
     protected function parts(string $query): array
     {
-        $query = trim($query);
-
-        // match all parts but the last
-        preg_match_all(self::PARTS, $query, $match);
-
-        // remove all matched parts from the query to retrieve last part
-        foreach ($match[0] as $part) {
-            $query = Str::after($query, $part);
-        }
-
-        array_push($match[1], $query);
-        return $match[1];
+        return preg_split(self::PARTS, trim($query), -1, PREG_SPLIT_NO_EMPTY);
     }
 
     /**
@@ -167,16 +155,21 @@ class Query
      */
     protected function part(string $part): array
     {
-        $args   = [];
-        $method = preg_replace_callback(self::METHOD, function ($match) use (&$args) {
-            $args = preg_split(self::PARAMETERS, $match[1]);
-            $args = array_map('self::parameter', $args);
-        }, $part);
+        if (Str::endsWith($part, ')') === true) {
+            $method = Str::before($part, '(');
 
-        return [
-            'method' => $method,
-            'args'   => $args
-        ];
+            // the args are everything inside the *outer* parentheses
+            $args = Str::substr($part, Str::position($part, '(') + 1, -1);
+            $args = preg_split(self::PARAMETERS, $args);
+            $args = array_map('self::parameter', $args);
+
+            return compact('method', 'args');
+        } else {
+            return [
+                'method' => $part,
+                'args'   => []
+            ];
+        }
     }
 
     /**
