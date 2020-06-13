@@ -7,7 +7,7 @@ use Kirby\Exception\DuplicateException;
 use Kirby\Form\Field as FormField;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Collection;
+use Kirby\Toolkit\Collection as ToolkitCollection;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\V;
@@ -54,6 +54,7 @@ trait AppPlugins
         'components' => [],
         'controllers' => [],
         'collectionFilters' => [],
+        'collectionMethods' => [],
         'fieldMethods' => [],
         'fileMethods' => [],
         'filesMethods' => [],
@@ -154,7 +155,18 @@ trait AppPlugins
      */
     protected function extendCollectionFilters(array $filters): array
     {
-        return $this->extensions['collectionFilters'] = Collection::$filters = array_merge(Collection::$filters, $filters);
+        return $this->extensions['collectionFilters'] = ToolkitCollection::$filters = array_merge(ToolkitCollection::$filters, $filters);
+    }
+
+    /**
+     * Registers additional collection methods
+     *
+     * @param array $methods
+     * @return array
+     */
+    protected function extendCollectionMethods(array $methods): array
+    {
+        return $this->extensions['collectionMethods'] = Collection::$methods = array_merge(Collection::$methods, $methods);
     }
 
     /**
