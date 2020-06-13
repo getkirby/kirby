@@ -41,22 +41,6 @@ class QueryTest extends TestCase
         $this->assertSame('@homer', $query->result());
     }
 
-    public function testWithStartsNumericParts()
-    {
-        $this->expectException('Kirby\Exception\BadMethodCallException');
-        $this->expectExceptionMessage('Access to non-existing property user on array');
-
-        $query = new Query('0user.1profiles.twitter', [
-            '0user' => [
-                '1profiles' => [
-                    'twitter' => '@homer'
-                ]
-            ]
-        ]);
-
-        $query->result();
-    }
-
     public function testWithArray1Level()
     {
         $query = new Query('user.username', [
@@ -66,6 +50,27 @@ class QueryTest extends TestCase
         ]);
 
         $this->assertSame('homer', $query->result());
+    }
+
+    public function testWithArrayNumeric()
+    {
+        $query = new Query('user.0', [
+            'user' => [
+                'homer',
+                'marge'
+            ]
+        ]);
+
+        $this->assertSame('homer', $query->result());
+        
+        $query = new Query('user.1', [
+            'user' => [
+                'homer',
+                'marge'
+            ]
+        ]);
+
+        $this->assertSame('marge', $query->result());
     }
 
     public function testWithArray2Level()
@@ -377,7 +382,7 @@ class QueryTest extends TestCase
 
     public function testWithObjectMethodWithTrickyCharacters()
     {
-        $query = new Query("user.likes(['(', ',', ']', '[']).self.brainDump('hello')", [
+        $query = new Query("user.likes(['(', ',', ']', '[', ')']).self.brainDump('hello')", [
             'user' => new QueryTestUser()
         ]);
 
@@ -402,9 +407,18 @@ class QueryTest extends TestCase
         $this->assertTrue($query->result());
     }
 
+    public function testWithNestedMethodCall()
+    {
+        $query = new Query('user.check("gin", "tonic", user.array("gin", "tonic").args)', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertTrue($query->result());
+    }
+
     public function testWithObjectMethodWithObjectMethodAsParameterAndMoreLevels()
     {
-        $query = new Query("user.likes([',']).likes(user.brainDump(['(', ',', ']', '['])).self", [
+        $query = new Query("user.likes([',']).likes(user.brainDump(['(', ',', ']', ')', '['])).self", [
             'user' => $user = new QueryTestUser()
         ]);
 
