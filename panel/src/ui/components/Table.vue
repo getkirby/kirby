@@ -87,6 +87,7 @@
               :is="'k-table-' + (column.type || 'text') + '-cell'"
               v-if="$helper.isComponent('table-' + (column.type || 'text') + '-cell')"
               :column="column"
+              :row="row"
               :value="row[columnIndex]"
               @input="onCellUpdate({
                 value: $event,
