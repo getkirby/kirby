@@ -109,7 +109,13 @@ export default {
       return search(this);
     },
     views() {
-      return views(this).filter(view => view.menu !== false);
+      return views(this).filter(view => {
+        if (typeof view.menu === 'function') {
+          return view.menu(this) !== false;
+        }
+
+        return view.menu !== false;
+      });
     },
     viewCrumb() {
       return this.views.find(view => view.id === this.view) || this.views[0];
