@@ -55,11 +55,19 @@ class MediaTest extends TestCase
     {
         F::write($this->fixtures . '/content/projects/test.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
 
+        // with the correct media token
         $file   = $this->app->file('projects/test.svg');
-        $result = Media::link($this->app->page('projects'), 'abc', $file->filename());
+        $result = Media::link($this->app->page('projects'), $file->mediaToken() . '-12345', $file->filename());
 
         $this->assertInstanceOf(Response::class, $result);
         $this->assertEquals(307, $result->code());
+
+        // with a completely invalid hash
+        $file   = $this->app->file('projects/test.svg');
+        $result = Media::link($this->app->page('projects'), 'abcde-12345', $file->filename());
+
+        $this->assertInstanceOf(Response::class, $result);
+        $this->assertEquals(404, $result->code());
     }
 
     public function testLinkWithoutModel()
