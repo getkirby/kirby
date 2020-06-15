@@ -386,6 +386,31 @@ class App
     }
 
     /**
+     * Generates a non-guessable token based on model
+     * data and a configured salt
+     *
+     * @param mixed $model Object to pass to the salt callback if configured
+     * @param string $value Model data to include in the generated token
+     * @return string
+     */
+    public function contentToken($model, string $value): string
+    {
+        if (method_exists($model, 'root') === true) {
+            $default = $model->root();
+        } else {
+            $default = $this->root('content');
+        }
+
+        $salt = $this->option('content.salt', $default);
+
+        if (is_a($salt, 'Closure') === true) {
+            $salt = $salt($model);
+        }
+
+        return hash_hmac('sha1', $value, $salt);
+    }
+
+    /**
      * Calls a page controller by name
      * and with the given arguments
      *
