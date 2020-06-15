@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -41,9 +42,15 @@ class Media
         // this should work for all original files
         if ($file = $model->file($filename)) {
 
-            // the media hash is outdated. redirect to the correct url
+            // check if the request contained an outdated media hash
             if ($file->mediaHash() !== $hash) {
-                return Response::redirect($file->mediaUrl(), 307);
+                // if at least the token was correct, redirect
+                if (Str::startsWith($hash, $file->mediaToken() . '-') === true) {
+                    return Response::redirect($file->mediaUrl(), 307);
+                } else {
+                    // don't leak the correct token
+                    return new Response('Not Found', 'text/plain', 404);
+                }
             }
 
             // send the file to the browser
