@@ -1,8 +1,19 @@
 <template>
-  <div class="k-auto-grid">
+  <component :is="element" class="k-auto-grid">
     <slot />
-  </div>
+  </component>
 </template>
+
+<script>
+export default {
+  props: {
+    element: {
+      type: String,
+      default: "div"
+    }
+  }
+};
+</script>
 
 <style lang="scss">
 .k-auto-grid {

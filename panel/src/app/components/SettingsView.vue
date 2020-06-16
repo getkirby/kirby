@@ -13,11 +13,11 @@
           <k-headline>Kirby</k-headline>
         </header>
 
-        <ul class="k-system-info-box bg-white p-3 flex items-center shadow rounded-sm">
+        <k-auto-grid element="ul" style="--gap: 1.5rem" class="k-system-info-box bg-white p-3 shadow rounded-sm">
           <li>
             <dl>
               <dt class="text-sm text-gray mb-2">{{ $t('license') }}</dt>
-              <dd>
+              <dd class="truncate leading-tight">
                 <template v-if="license">
                   {{ license }}
                 </template>
@@ -35,10 +35,10 @@
           <li>
             <dl>
               <dt class="text-sm text-gray mb-2">{{ $t('version') }}</dt>
-              <dd>{{ version }}</dd>
+              <dd class="leading-tight">{{ version }}</dd>
             </dl>
           </li>
-        </ul>
+        </k-auto-grid>
       </section>
 
       <!-- languages -->
