@@ -211,10 +211,35 @@ class ApiTest extends TestCase
         $this->assertEquals('test.jpg', $api->file('pages/a', 'test.jpg')->filename());
         $this->assertEquals('test.jpg', $api->file('pages/a+a', 'test.jpg')->filename());
         $this->assertEquals('test.jpg', $api->file('users/test@getkirby.com', 'test.jpg')->filename());
+    }
 
+    public function testFileNotFound()
+    {
         $this->expectException('Kirby\Exception\NotFoundException');
         $this->expectExceptionMessage('The file "nope.jpg" cannot be found');
+
         $this->api->file('site', 'nope.jpg');
+    }
+
+    public function testFileNotReadable()
+    {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The file "protected.jpg" cannot be found');
+
+        $app = $this->app->clone([
+            'blueprints' => [
+                'files/protected' => [
+                    'options' => ['read' => false]
+                ]
+            ],
+            'site' => [
+                'files' => [
+                    ['filename' => 'protected.jpg', 'template' => 'protected']
+                ]
+            ]
+        ]);
+
+        $this->api->file('site', 'protected.jpg');
     }
 
     public function testPage()
