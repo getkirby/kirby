@@ -24,7 +24,7 @@
       </template>
       <template v-slot:empty>
         <k-box
-          :text="$t('site.blueprint', { role: role })"
+          :text="$t('site.blueprint')"
           theme="info"
         />
       </template>
