@@ -1,8 +1,8 @@
 <template>
   <k-installation-view
     v-if="isOk"
-    :installing="installing"
     :loading="loading"
+    :processing="processing"
     :translation="translation"
     :translations="translations"
     @translate="onTranslate"
@@ -20,7 +20,7 @@
 export default {
   data() {
     return {
-      installing: false,
+      processing: false,
       isInstallable: true,
       isOk: true,
       loading: true,
@@ -54,7 +54,7 @@ export default {
       this.loading = false;
     },
     async onInstall(values) {
-      this.installing = true;
+      this.processing = true;
 
       try {
         await this.$model.system.install(values);
@@ -65,7 +65,7 @@ export default {
         this.$store.dispatch("notification/error", error);
 
       } finally {
-        this.installing = false;
+        this.processing = false;
       }
     },
     onRetry() {

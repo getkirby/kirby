@@ -1,6 +1,6 @@
 <template>
   <k-outside
-    :loading="loading || installing"
+    :loading="loading || processing"
     class="k-installation-view"
   >
     <k-view align="center">
@@ -9,7 +9,7 @@
       </template>
       <template v-else>
         <k-form
-          :autofocus="!installing"
+          :autofocus="!processing"
           :fields="fields"
           v-model="values"
           @submit="$emit('install', $event)"
@@ -24,14 +24,14 @@
           <template v-slot:footer>
             <footer class="pt-6">
               <k-button
-                :loading="installing"
+                :loading="processing"
                 :tooltip="$t('install')"
                 color="green"
                 icon="check"
                 type="submit"
                 class="k-installation-button p-3"
               >
-                <template v-if="!installing">
+                <template v-if="!processing">
                   {{ $t("install") }}
                 </template>
               </k-button>
@@ -46,7 +46,7 @@
 <script>
 export default {
   props: {
-    installing: {
+    processing: {
       type: Boolean,
       default: false
     },

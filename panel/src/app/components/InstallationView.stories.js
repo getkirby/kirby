@@ -14,9 +14,9 @@ export const loading = () => ({
   `
 });
 
-export const installing = () => ({
+export const processing = () => ({
   template: `
-    <k-installation-view :installing="true" />
+    <k-installation-view :processing="true" />
   `,
 });
 
