@@ -70,8 +70,7 @@ export default {
       );
 
       // route to new page
-      const path = this.link(page.id);
-      this.$router.push(path);
+      this.$router.push(this.$model.pages.link(page.id));
 
       return page;
     }
