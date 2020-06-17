@@ -5,6 +5,7 @@
       :accept="options.accept"
       :multiple="options.multiple"
       aria-hidden="true"
+      class="sr-only"
       type="file"
       tabindex="-1"
       @change="select"
