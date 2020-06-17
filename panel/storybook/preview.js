@@ -15,6 +15,7 @@ import Actions from "./mocks/actions.js";
 import Api from "@/api/index.js";
 import I18n from "./mocks/i18n.js";
 import Model from "../src/app/plugins/models.js";
+import Plugins from "../src/app/plugins/plugins.js";
 import Router from "./mocks/router.js";
 import Store from "./mocks/store.js";
 
@@ -36,6 +37,7 @@ Vue.prototype.$user = Vue.$user = {
 };
 
 Vue.use(Model, Store);
+Vue.use(Plugins, Store);
 
 /** App components */
 import components from "@/app/components/index.js";

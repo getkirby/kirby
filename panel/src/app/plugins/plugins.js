@@ -3,6 +3,21 @@ import section from "@/old/mixins/section/section.js";
 export default {
   install(Vue, store) {
 
+    const panel = window.panel || {};
+
+    Vue.prototype.$plugins = Vue.$plugins = {
+      components: {},
+      created: [],
+      fields: {},
+      icons: {},
+      sections: {},
+      routes: [],
+      use: [],
+      views: {},
+      thirdParty: {},
+      ...(panel.plugins || {}),
+    };
+
     let components = {};
 
     for (var key in Vue.options.components) {
@@ -41,21 +56,21 @@ export default {
     /**
      * Components
      */
-    Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
+    Object.entries(Vue.$plugins.components).forEach(([name, options]) => {
       registerComponent(name, options);
     });
 
     /**
      * Fields
      */
-    Object.entries(window.panel.plugins.fields).forEach(([name, options]) => {
+    Object.entries(Vue.$plugins.fields).forEach(([name, options]) => {
       registerComponent(name, options);
     });
 
     /**
      * Sections
      */
-    Object.entries(window.panel.plugins.sections).forEach(([name, options]) => {
+    Object.entries(Vue.$plugins.sections).forEach(([name, options]) => {
       registerComponent(name, {
         ...options,
         mixins: [section].concat(options.mixins || [])
@@ -65,14 +80,14 @@ export default {
     /**
      * Views
      */
-    Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
+    Object.entries(Vue.$plugins.views).forEach(([name, options]) => {
       // Check for all required properties
       if (!options.component) {
         store.dispatch(
           "notification/error",
           `No view component provided when loading view "${name}". The view has not been registered.`
         );
-        delete window.panel.plugins.views[name];
+        delete Vue.$plugins.views[name];
         return;
       }
 
@@ -89,7 +104,7 @@ export default {
       }
 
       // Update view
-      window.panel.plugins.views[name] = {
+      Vue.$plugins.views[name] = {
         id: name,
         text: options.text || options.label,
         link: options.link,
@@ -103,7 +118,7 @@ export default {
     /**
      * Vue.use
      */
-    window.panel.plugins.use.forEach(plugin => {
+    Vue.$plugins.use.forEach(plugin => {
       Vue.use(plugin);
     });
 

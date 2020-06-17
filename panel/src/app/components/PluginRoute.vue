@@ -42,7 +42,7 @@ export default {
       return this.$route.params.id;
     },
     view() {
-      return window.panel.plugins.views[this.plugin];
+      return this.$plugins.views[this.plugin];
     }
   },
   methods: {

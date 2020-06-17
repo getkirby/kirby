@@ -19,10 +19,11 @@
 
 <script>
 import LoginForm from "./LoginForm"
+import Vue from "vue";
 
 export default {
   components: {
-    "k-login-form": window.panel.plugins.login || LoginForm
+    "k-login-form": Vue.$plugins.login || LoginForm
   },
   props: {
     loading: {

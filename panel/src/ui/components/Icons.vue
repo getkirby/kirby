@@ -995,8 +995,8 @@
 export default {
   computed: {
     icons() {
-      if (window.panel && window.panel.plugins && window.panel.plugins.icons) {
-        return window.panel.plugins.icons
+      if (this.$plugins.icons) {
+        return this.$plugins.icons
       }
 
       return [];
