@@ -148,7 +148,7 @@ export default {
       this.wrap("**");
     },
     cancel() {
-      this.$refs.input.focus();
+      this.focus();
     },
     code() {
       this.wrap("`");
@@ -371,6 +371,7 @@ export default {
   border-bottom: 1px solid $color-background;
   color: $color-gray-400;
 }
+.k-textarea-input:hover .k-toolbar,
 .k-textarea-input:focus-within .k-toolbar {
   position: sticky;
   top: 0;

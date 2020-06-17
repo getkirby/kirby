@@ -4,8 +4,10 @@
     v-model="value"
     :fields="fields"
     :submit-button="$t('insert')"
-    @close="cancel"
-    @submit="submit"
+    v-on="{
+      ...$listeners,
+      submit: submit
+    }"
   />
 </template>
 

@@ -30,7 +30,7 @@
                   v-for="(dropdownItem, dropdownItemIndex) in button.dropdown"
                   :key="dropdownItemIndex"
                   :icon="dropdownItem.icon"
-                  @click="onCommand(dropdownItem.command, dropdownItem.args)"
+                  @click.stop="onCommand(dropdownItem.command, dropdownItem.args)"
                 >
                   {{ dropdownItem.label }}
                 </k-dropdown-item>
@@ -46,7 +46,7 @@
               :tooltip="button.label"
               tabindex="-1"
               class="k-toolbar-button"
-              @click="onCommand(button.command, button.args)"
+              @click.stop="onCommand(button.command, button.args)"
             />
           </template>
         </template>

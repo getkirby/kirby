@@ -4,8 +4,10 @@
     v-model="value"
     :fields="fields"
     :submit-button="$t('insert')"
-    @close="cancel"
-    @submit="submit"
+    v-on="{
+      ...$listeners,
+      submit: submit
+    }"
   />
 </template>
 
@@ -37,9 +39,6 @@ export default {
       };
 
       this.$refs.dialog.open();
-    },
-    cancel() {
-      this.$emit("cancel");
     },
     submit() {
       // insert the link
