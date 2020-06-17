@@ -30,6 +30,7 @@ class Permissions
             'changeName' => true,
             'create'     => true,
             'delete'     => true,
+            'read'       => true,
             'replace'    => true,
             'update'     => true
         ],

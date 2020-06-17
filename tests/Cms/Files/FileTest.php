@@ -192,6 +192,43 @@ class FileTest extends TestCase
         $this->assertEquals('super.jpg', $file->toString('{{ file.filename }}'));
     }
 
+    public function testIsReadable()
+    {
+        $app = new App([
+            'blueprints' => [
+                'files/test' => [
+                    'options' => ['read' => false]
+                ]
+            ],
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'users' => [
+                [
+                    'email' => 'admin@getkirby.com',
+                    'id'    => 'admin',
+                    'role'  => 'admin'
+                ]
+            ],
+            'user' => 'admin'
+        ]);
+
+        $file = new File([
+            'kirby'    => $app,
+            'filename' => 'test.jpg'
+        ]);
+        $this->assertTrue($file->isReadable());
+        $this->assertTrue($file->isReadable()); // test caching
+
+        $file = new File([
+            'kirby'    => $app,
+            'filename' => 'test.jpg',
+            'template' => 'test'
+        ]);
+        $this->assertFalse($file->isReadable());
+        $this->assertFalse($file->isReadable()); // test caching
+    }
+
     public function testModified()
     {
         $app = new App([
@@ -329,6 +366,7 @@ class FileTest extends TestCase
             'changeName' => true,
             'create'     => true,
             'delete'     => true,
+            'read'       => true,
             'replace'    => true,
             'update'     => true,
         ];
@@ -349,6 +387,7 @@ class FileTest extends TestCase
             'changeName' => false,
             'create'     => false,
             'delete'     => false,
+            'read'       => false,
             'replace'    => false,
             'update'     => false,
         ];
@@ -360,6 +399,7 @@ class FileTest extends TestCase
             'changeName' => false,
             'create'     => false,
             'delete'     => true,
+            'read'       => false,
             'replace'    => false,
             'update'     => false,
         ];

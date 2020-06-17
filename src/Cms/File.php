@@ -326,6 +326,24 @@ class File extends ModelWithContent
     }
 
     /**
+     * Check if the file can be read by the current user
+     *
+     * @return bool
+     */
+    public function isReadable(): bool
+    {
+        static $readable = [];
+
+        $template = $this->template();
+
+        if (isset($readable[$template]) === true) {
+            return $readable[$template];
+        }
+
+        return $readable[$template] = $this->permissions()->can('read');
+    }
+
+    /**
      * Create a unique media hash
      *
      * @internal
