@@ -95,8 +95,9 @@ class Api extends BaseApi
     public function file(string $path = null, string $filename)
     {
         $filename = urldecode($filename);
+        $file     = $this->parent($path)->file($filename);
 
-        if ($file = $this->parent($path)->file($filename)) {
+        if ($file && $file->isReadable() === true) {
             return $file;
         }
 
@@ -192,7 +193,7 @@ class Api extends BaseApi
         $id   = str_replace('+', '/', $id);
         $page = $this->kirby->page($id);
 
-        if ($page && $page->isReadable()) {
+        if ($page && $page->isReadable() === true) {
             return $page;
         }
 
