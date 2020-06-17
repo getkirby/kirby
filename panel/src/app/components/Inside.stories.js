@@ -13,8 +13,18 @@ export const unregistered = () => ({
 });
 
 export const registered = () => ({
+  created() {
+    this.$store.dispatch("system/set", {
+      license: "K3-test",
+    });
+  },
+  destroyed() {
+    this.$store.dispatch("system/set", {
+      license: null,
+    });
+  },
   template: `
-    <k-inside :registered="true">
+    <k-inside>
       <k-view class="py-6">
         Inside the Panel
       </k-view>
@@ -23,9 +33,14 @@ export const registered = () => ({
 });
 
 export const loading = () => ({
+  created() {
+    this.$store.dispatch("isLoading", true);
+  },
+  destroyed() {
+    this.$store.dispatch("isLoading", false);
+  },
   template: `
     <k-inside
-      :loading="true"
       :registered="true"
     >
       <k-view class="py-6">
@@ -39,7 +54,8 @@ export const breadcrumb = () => ({
   computed: {
     breadcrumb() {
       return [
-        { icon: "home", text: "Site", link: "site" }
+        { text: "Photography", link: "/pages/photography" },
+        { text: "Animals", link: "/pages/photography+animals" }
       ]
     },
   },

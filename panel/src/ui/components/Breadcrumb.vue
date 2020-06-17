@@ -27,8 +27,12 @@
           :aria-current="isLast(index) ? 'page' : false"
           class="k-breadcrumb-link flex items-center text-sm"
         >
+          <k-loader
+            v-if="crumb.loading"
+            class="k-breadcrumb-icon mr-2"
+          />
           <k-icon
-            v-if="crumb.icon"
+            v-else-if="crumb.icon"
             :type="crumb.icon"
             class="k-breadcrumb-icon mr-2"
           />

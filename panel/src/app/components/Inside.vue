@@ -17,7 +17,7 @@
         @search="onSearch"
       >
         <template v-slot:options>
-          <k-registration-buttons v-if="registered === false" />
+          <k-registration-buttons v-if="!registered" />
           <k-form-indicator v-bind="indicator" />
           <k-languages-dropdown v-if="languages" />
         </template>
@@ -118,7 +118,12 @@ export default {
       });
     },
     viewCrumb() {
-      return this.views.find(view => view.id === this.view) || this.views[0];
+      let crumb = this.views.find(view => view.id === this.view) || this.views[0];
+
+      // inject the loading state
+      crumb.loading = this.loading;
+
+      return crumb;
     }
   },
   methods: {

@@ -30,18 +30,12 @@
         <!-- Options -->
         <div class="k-topbar-options relative flex items-center">
           <slot name="options" />
-
-          <template v-if="loading">
-            <k-loader class="k-topbar-loader" />
-          </template>
-          <template v-else>
-            <k-button
-              :tooltip="$t('search')"
-              class="k-topbar-button"
-              icon="search"
-              @click="onSearch"
-            />
-          </template>
+          <k-button
+            :tooltip="$t('search')"
+            class="k-topbar-button"
+            icon="search"
+            @click="onSearch"
+          />
         </div>
       </div>
     </k-view>
@@ -54,10 +48,6 @@ export default {
   props: {
     breadcrumb: {
       type: [Array, Boolean],
-      default: false
-    },
-    loading: {
-      type: Boolean,
       default: false
     },
     menu: {
@@ -125,11 +115,4 @@ export default {
 .k-topbar-options {
   margin-left: auto;
 }
-
-/** Loader **/
-.k-topbar-loader {
-  width: 2.5rem;
-  height: 2.5rem;
-}
-
 </style>
