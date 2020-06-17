@@ -13,7 +13,8 @@
       :layout="layout"
       :loader="{
         info,
-        ratio: preview.ratio
+        ratio: preview.ratio,
+        limit: 5
       }"
       :pagination="{
         page,
