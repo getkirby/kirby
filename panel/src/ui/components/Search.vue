@@ -53,7 +53,7 @@
           />
         </div>
 
-        <ul @mouseout="selected = -1">
+        <ul v-if="items.length" @mouseout="selected = -1">
           <!-- Results -->
           <li
             v-for="(item, itemIndex) in items"
@@ -72,14 +72,12 @@
               </div>
             </k-link>
           </li>
-
-          <!-- No results -->
-          <li v-if="q && !hasResults">
-            <k-link :disabled="true" class="py-2 px-3">
-              <strong>{{ $t("search.empty") }}</strong>
-            </k-link>
-          </li>
         </ul>
+
+        <!-- No results -->
+        <p v-else-if="q && !hasResults" class="p-6 text-sm text-center text-gray">
+          {{ $t("search.empty") }}
+        </p>
       </div>
     </div>
   </portal>
@@ -220,7 +218,7 @@ export default {
   margin: 0 auto;
 
   @media screen and (min-width: $breakpoint-md) {
-    margin: 3.5rem auto;
+    margin: 2.5rem auto;
   }
 }
 .k-search-types {
@@ -259,15 +257,19 @@ export default {
   animation: Spin 2s linear infinite;
 }
 .k-search ul {
-  background: $color-white;
   overflow: hidden;
   border-bottom-left-radius: $rounded-sm;
   border-bottom-right-radius: $rounded-sm;
+  padding: .75rem;
 }
 .k-search li {
-  border-bottom: 1px solid $color-background;
+  margin-bottom: .25rem;
   line-height: 1;
   display: flex;
+  background: $color-white;
+  border-radius: $rounded-sm;
+  overflow: hidden;
+  box-shadow: $shadow;
 }
 .k-search li:last-child {
   border-bottom: 0;
@@ -290,8 +292,7 @@ export default {
   opacity: .75;
 }
 .k-search li[data-selected] {
-  background: $color-black;
-  color: #fff;
+  box-shadow: $shadow-outline;
 }
 .k-search-empty {
   padding: .825rem .75rem;
