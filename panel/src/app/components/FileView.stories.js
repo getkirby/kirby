@@ -40,30 +40,35 @@ export const regular = () => ({
           },
         },
       ],
-      file: {
-        filename: "free-wheely.jpg",
-        height: 900,
-        mime: "image/jpeg",
-        niceSize: "128 KB",
-        orientation: "landscape",
-        parent: {
-          guid: "pages/photography+animals"
-        },
-        template: "cover",
-        url: "https://source.unsplash.com/user/erondu/1600x900",
-        width: 1600,
+      filename: "free-wheely.jpg",
+      parent: {
+        guid: "pages/photography+animals"
       },
       options: this.$model.files.dropdown({
         changeName: true,
         replace: true,
         delete: true
       }),
+      preview: {
+        height: 800,
+        image: "https://source.unsplash.com/user/erondu/1600x900",
+        mime: "image/jpeg",
+        size: "128 KB",
+        orientation: "landscape",
+        template: "cover",
+        width: 1600,
+        link: "https://source.unsplash.com/user/erondu/1600x900",
+        linkText: "/user/erondu/1600x900"
+      },
       tab: "main",
       tabs: [
         { name: "main", label: "Main" },
         { name: "seo", label: "SEO" },
       ],
-      view: "site"
+      value: {
+        alt: "A really nice image"
+      },
+      view: "site",
     };
   },
   computed: {
@@ -76,10 +81,12 @@ export const regular = () => ({
       :breadcrumb="breadcrumb"
       :columns="columns"
       :lock="lock"
-      :file="file"
+      :filename="filename"
       :options="options"
+      :preview="preview"
       :tab="tab"
       :tabs="tabs"
+      :value="value"
       :view="view"
     />
   `

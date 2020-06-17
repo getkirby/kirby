@@ -68,13 +68,13 @@ export default {
     },
     preview() {
       return {
-        dimensions:  this.model.dimensions,
-        icon:        this.model.icon,
-        image:       this.model.url,
-        link: { url: this.model.url },
-        mime:        this.model.mime,
-        size:        this.model.niceSize,
-        template:    this.model.blueprint.name
+        ...this.model.dimensions || {},
+        icon: this.model.icon,
+        image: this.model.url,
+        link: this.model.url,
+        mime: this.model.mime,
+        size: this.model.niceSize,
+        template: this.model.blueprint.name,
       };
     },
     storeId() {

@@ -17,13 +17,13 @@ Vue.config.devtools = true;
 import "@/ui/css/index.scss";
 
 Vue.use(Config);
+Vue.use(Plugins, Store);
 Vue.use(I18n, Store);
 Vue.use(Ui);
 Vue.use(App);
 Vue.use(ErrorHandling, Store);
 Vue.use(Api, Store);
 Vue.use(Models, Store);
-Vue.use(Plugins, Store);
 
 import "@/ui/css/utilities.scss";
 

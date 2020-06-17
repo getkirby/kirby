@@ -1,4 +1,4 @@
-import section from "@/old/mixins/section/section.js";
+import section from "@/app/mixins/section.js";
 
 export default {
   install(Vue, store) {
