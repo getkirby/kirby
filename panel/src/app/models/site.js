@@ -21,6 +21,9 @@ export default (Vue, store) => ({
       disabled: !options.changeTitle,
     }];
   },
+  link() {
+    return "/site";
+  },
   async options() {
     const site = await Vue.$api.get("site", { select: "options" });
     return this.dropdown(site.options);
