@@ -18,9 +18,13 @@
             <dl>
               <dt class="text-sm text-gray mb-2">{{ $t('license') }}</dt>
               <dd class="truncate leading-tight">
-                <template v-if="license">
+                <k-link
+                  v-if="license"
+                  target="_blank"
+                  to="https://licenses.getkirby.com"
+                >
                   {{ license }}
-                </template>
+                </k-link>
                 <button
                   v-else
                   class="k-system-unregistered text-red font-bold"
@@ -35,7 +39,14 @@
           <li>
             <dl>
               <dt class="text-sm text-gray mb-2">{{ $t('version') }}</dt>
-              <dd class="leading-tight">{{ version }}</dd>
+              <dd class="leading-tight">
+                <k-link
+                  target="_blank"
+                  to="https://github.com/getkirby/kirby/releases"
+                >
+                  {{ version }}
+                </k-link>
+              </dd>
             </dl>
           </li>
         </k-auto-grid>
