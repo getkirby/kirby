@@ -14,8 +14,8 @@ export const loading = () => ({
   `,
 });
 
-export const authenticating = () => ({
+export const processing = () => ({
   template: `
-    <k-login-view :authenticating="true" />
+    <k-login-view :processing="true" />
   `,
 });
