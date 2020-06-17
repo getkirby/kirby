@@ -2,6 +2,7 @@
   <div
     :data-theme="theme"
     :data-over="over"
+    :data-disabled="disabled"
     class="k-textarea-input"
   >
     <div class="k-textarea-input-wrapper">
@@ -368,7 +369,7 @@ export default {
 /** Toolbar **/
 .k-textarea-input .k-toolbar {
   border-bottom: 1px solid $color-background;
-  color: #aaa;
+  color: $color-gray-400;
 }
 .k-textarea-input:focus-within .k-toolbar {
   position: sticky;
@@ -378,12 +379,12 @@ export default {
   z-index: 1;
   box-shadow: $shadow-sticky;
   border-bottom: 1px solid rgba(#000, 0.1);
-  color: #000;
+  color: $color-black;
 }
 
 /** Theming **/
-.k-textarea-input[data-theme="field"] {
-  background: #fff;
+.k-textarea-input[data-theme="field"]:not([data-disabled]) {
+  background: $color-white;
 }
 .k-textarea-input[data-theme="field"] .k-textarea-input-native {
   padding: .25rem $field-input-padding;
