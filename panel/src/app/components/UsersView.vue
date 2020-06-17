@@ -30,45 +30,48 @@
           />
         </template>
       </k-header>
+
       <!-- user cardlets -->
-      <k-async-collection
-        ref="users"
+      <k-collection
         :empty="{
           icon: 'users',
           text: $t('role.empty')
         }"
         :items="users"
+        :loader="{ info: true }"
+        :loading="loading"
         layout="cardlets"
         @option="onOption"
+        @paginate="onPaginate"
       />
 
       <!-- dialogs -->
       <k-user-create-dialog
         ref="createDialog"
-        @success="onSuccess"
+        @success="reload"
       />
       <k-user-email-dialog
         ref="emailDialog"
-        @success="onSuccess"
+        @success="reload"
       />
       <k-user-language-dialog
         ref="languageDialog"
-        @success="onSuccess"
+        @success="reload"
       />
       <k-user-password-dialog
         ref="passwordDialog"
       />
       <k-user-remove-dialog
         ref="removeDialog"
-        @success="onSuccess"
+        @success="reload"
       />
       <k-user-rename-dialog
         ref="renameDialog"
-        @success="onSuccess"
+        @success="reload"
       />
       <k-user-role-dialog
         ref="roleDialog"
-        @success="onSuccess"
+        @success="reload"
       />
     </k-view>
   </k-inside>
@@ -77,6 +80,10 @@
 <script>
 export default {
   props: {
+    loading: {
+      type: Boolean,
+      default: false
+    },
     role: String,
     roles: {
       type: Array,
@@ -87,7 +94,12 @@ export default {
         }];
       }
     },
-    users: Function
+    users: {
+      type: Array,
+      default() {
+        return [];
+      }
+    }
   },
   computed: {
     breadcrumb() {
@@ -128,11 +140,6 @@ export default {
       return options;
     }
   },
-  watch: {
-    role() {
-      this.reload();
-    }
-  },
   methods: {
     onChangeRole(option) {
       this.$emit("role", option.id);
@@ -140,11 +147,11 @@ export default {
     onOption(option, user) {
       this.$refs[option + "Dialog"].open(user.id);
     },
-    onSuccess() {
-      this.reload();
+    onPaginate(pagination) {
+      this.$emit("paginate", pagination);
     },
     reload() {
-      this.$refs.users.reload();
+      this.$emit("reload");
     }
   }
 };

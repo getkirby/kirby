@@ -5,13 +5,15 @@
     class="k-collection"
   >
     <template v-if="loading">
-      <slot name="loading">
-        <k-empty-items
-          v-bind="loader"
-          :layout="layout"
-          :limit="loader.limit || pagination.limit"
-        />
-      </slot>
+      <template v-if="showLoader">
+        <slot name="loading">
+          <k-empty-items
+            v-bind="loader"
+            :layout="layout"
+            :limit="loader.limit || pagination.limit"
+          />
+        </slot>
+      </template>
     </template>
     <template v-else-if="items.length">
       <k-items
@@ -103,6 +105,12 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      showLoader: false,
+      showLoaderTimeout: null
+    };
+  },
   computed: {
     emptyListeners() {
       if (this.$listeners["empty"]) {
@@ -160,6 +168,17 @@ export default {
         hide: false,
         ...options
       };
+    }
+  },
+  watch: {
+    loading: {
+      handler() {
+        clearTimeout(this.showLoaderTimeout);
+        this.showLoaderTimeout = setTimeout(() => {
+          this.showLoader = this.loading;
+        }, 250);
+      },
+      immediate: true
     }
   },
   methods: {
