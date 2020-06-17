@@ -34,6 +34,20 @@ class FileBlueprint extends Blueprint
 
         // normalize the accept settings
         $this->props['accept'] = $this->normalizeAccept($this->props['accept'] ?? []);
+
+        // default values for security props
+        if (isset($this->props['createMedia']) !== true) {
+            $this->props['createMedia'] = true;
+        }
+
+        if (isset($this->props['protect']) !== true) {
+            $this->props['protect'] = false;
+        }
+
+        // file protection always implies protection against publishing
+        if ($this->props['protect'] === true) {
+            $this->props['createMedia'] = false;
+        }
     }
 
     /**
@@ -42,6 +56,14 @@ class FileBlueprint extends Blueprint
     public function accept(): array
     {
         return $this->props['accept'];
+    }
+
+    /**
+     * @return bool
+     */
+    public function createMedia(): bool
+    {
+        return $this->props['createMedia'];
     }
 
     /**
@@ -75,5 +97,13 @@ class FileBlueprint extends Blueprint
         ];
 
         return array_merge($defaults, $accept);
+    }
+
+    /**
+     * @return bool
+     */
+    public function protect(): bool
+    {
+        return $this->props['protect'];
     }
 }

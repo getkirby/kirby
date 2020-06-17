@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
+use Kirby\Http\Route;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -53,8 +54,27 @@ class Media
                 }
             }
 
+            // check for user permissions
+            if (
+                $file->blueprint()->protect() === true &&
+                $file->permissions()->can('read') !== true
+            ) {
+                // handle this request like the file doesn't exist
+                Route::next();
+            }
+
             // send the file to the browser
-            return Response::file($file->publish()->mediaRoot());
+            if ($file->blueprint()->createMedia() === true) {
+                return Response::file($file->publish()->mediaRoot());
+            } elseif ($file->blueprint()->protect() === true) {
+                return Response::file($file->root(), [
+                    'headers' => [
+                        'Cache-Control' => 'no-cache, no-store, must-revalidate'
+                    ]
+                ]);
+            } else {
+                return Response::file($file->root());
+            }
         }
 
         // try to generate a thumb for the file

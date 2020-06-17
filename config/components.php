@@ -75,7 +75,10 @@ return [
      * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion
      */
     'file::version' => function (App $kirby, $file, array $options = []) {
-        if ($file->isResizable() === false) {
+        if (
+            $file->isResizable() === false ||
+            $file->blueprint()->createMedia() === false
+        ) {
             return $file;
         }
 

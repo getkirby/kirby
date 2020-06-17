@@ -37,6 +37,7 @@ class MediaTest extends TestCase
         $this->assertInstanceOf(Response::class, $result);
         $this->assertEquals(200, $result->code());
         $this->assertEquals('image/svg+xml', $result->type());
+        $this->assertFileExists($file->mediaRoot());
     }
 
     public function testLinkPageFile()
@@ -49,6 +50,7 @@ class MediaTest extends TestCase
         $this->assertInstanceOf(Response::class, $result);
         $this->assertEquals(200, $result->code());
         $this->assertEquals('image/svg+xml', $result->type());
+        $this->assertFileExists($file->mediaRoot());
     }
 
     public function testLinkWithInvalidHash()
@@ -73,6 +75,52 @@ class MediaTest extends TestCase
     public function testLinkWithoutModel()
     {
         $this->assertFalse(Media::link(null, 'hash', 'filename.jpg'));
+    }
+
+    public function testLinkProtected()
+    {
+        F::write($this->fixtures . '/content/nomedia.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
+        F::write($this->fixtures . '/content/nomedia.svg.txt', 'Template: nomedia');
+        F::write($this->fixtures . '/content/protected.svg', '<svg xmlns="http://www.w3.org/2000/svg"/>');
+        F::write($this->fixtures . '/content/protected.svg.txt', 'Template: protected');
+
+        $app = $this->app->clone([
+            'blueprints' => [
+                'files/nomedia' => [
+                    'createMedia' => false
+                ],
+                'files/protected' => [
+                    'protect' => true
+                ]
+            ]
+        ]);
+        $app->impersonate('kirby');
+
+        $nomedia = $app->file('nomedia.svg');
+        $result  = Media::link($app->site(), $nomedia->mediaHash(), $nomedia->filename());
+        $this->assertInstanceOf(Response::class, $result);
+        $this->assertSame(200, $result->code());
+        $this->assertSame('image/svg+xml', $result->type());
+        $this->assertSame([], $result->headers());
+        $this->assertFileNotExists($nomedia->mediaRoot());
+
+        $protected = $app->file('protected.svg');
+        $result    = Media::link($app->site(), $protected->mediaHash(), $protected->filename());
+        $this->assertInstanceOf(Response::class, $result);
+        $this->assertSame(200, $result->code());
+        $this->assertSame('image/svg+xml', $result->type());
+        $this->assertSame([
+            'Cache-Control' => 'no-cache, no-store, must-revalidate'
+        ], $result->headers());
+        $this->assertFileNotExists($protected->mediaRoot());
+
+        $app->impersonate(null);
+
+        $result = Media::link($app->site(), $nomedia->mediaHash(), $nomedia->filename());
+        $this->assertSame(200, $result->code());
+
+        $this->expectException('Kirby\Http\Exceptions\NextRouteException');
+        $result = Media::link($app->site(), $protected->mediaHash(), $protected->filename());
     }
 
     public function testPublish()

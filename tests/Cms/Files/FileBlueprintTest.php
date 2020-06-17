@@ -22,6 +22,41 @@ class FileBlueprintTest extends TestCase
         $this->assertEquals($expected, $blueprint->options());
     }
 
+    public function testCreateMediaProtect()
+    {
+        $blueprint = new FileBlueprint([
+            'model' => new File(['filename' => 'test.jpg'])
+        ]);
+
+        $this->assertTrue($blueprint->createMedia());
+        $this->assertFalse($blueprint->protect());
+
+        $blueprint = new FileBlueprint([
+            'model'       => new File(['filename' => 'test.jpg']),
+            'createMedia' => false
+        ]);
+
+        $this->assertFalse($blueprint->createMedia());
+        $this->assertFalse($blueprint->protect());
+
+        $blueprint = new FileBlueprint([
+            'model'       => new File(['filename' => 'test.jpg']),
+            'createMedia' => false,
+            'protect'     => true
+        ]);
+
+        $this->assertFalse($blueprint->createMedia());
+        $this->assertTrue($blueprint->protect());
+
+        $blueprint = new FileBlueprint([
+            'model'   => new File(['filename' => 'test.jpg']),
+            'protect' => true
+        ]);
+
+        $this->assertFalse($blueprint->createMedia());
+        $this->assertTrue($blueprint->protect());
+    }
+
     public function testTemplateFromContent()
     {
         $file = new File([
