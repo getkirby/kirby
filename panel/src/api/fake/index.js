@@ -284,11 +284,24 @@ new Server({
     });
 
     // pages
-    this.get("pages/:id", (schema, request) => {
-      return schema.pages.find(request.params.id);
+    this.get("pages/:id", function (schema, request) {
+      let page = schema.pages.find(request.params.id);
+      let json = this.serialize(page);
+      return json;
     });
     this.post("pages/:id/duplicate", (schema, request) => {
       throw "Not yet implemented";
+    });
+    this.get("pages/:id/children/blueprints", function (schema, request) {
+      let blueprints = schema.blueprints.where({ name: "album" });
+      let json = this.serialize(blueprints);
+
+      return json.data.map(blueprint => {
+        return {
+          name: blueprint.name,
+          title: blueprint.title
+        }
+      });
     });
     this.post("pages/:id/children/search", (schema, request) => {
       return schema.pages.where({ parentId: request.params.id });

@@ -37,7 +37,7 @@ export const regular = () => ({
           { icon: 'add', text: 'Add page' }
         ]"
         text="Pages"
-        @option="$refs.createDialog.open()"
+        @option="$refs.createDialog.open('photography')"
       />
       <ul class="mb-8" data-cy="pages">
         <li

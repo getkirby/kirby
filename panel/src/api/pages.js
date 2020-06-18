@@ -4,6 +4,11 @@ export default (api) => {
     id(id) {
       return id.replace(/\//g, "+");
     },
+    async blueprints(parent, section) {
+      return api.get("pages/" + this.id(parent) + "/children/blueprints", {
+        section: section
+      });
+    },
     async create(parent, data) {
       if (parent === null || parent === "/") {
         return api.post("site/children", data);

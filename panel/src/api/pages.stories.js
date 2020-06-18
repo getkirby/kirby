@@ -15,3 +15,13 @@ export const get = () => ({
   `
 });
 
+export const blueprints = () => ({
+  template: `
+    <api-example
+      call="this.$api.pages.blueprints('photography')"
+      method="GET"
+      endpoint="/api/pages/:id/children/blueprints"
+    />
+  `
+});
+

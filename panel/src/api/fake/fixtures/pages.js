@@ -38,7 +38,6 @@ export default [
     blueprints: [],
     blueprint: blueprint("album"),
     errors: [],
-    fileIds: ["pages/photography+animals/free-wheely.jpg"],
     hasFiles: true,
     num: 1,
     parentId: "photography",
@@ -49,6 +48,22 @@ export default [
       }
     ],
     title: "Animals",
+  }),
+  page("photography+sky", {
+    blueprints: [],
+    blueprint: blueprint("album"),
+    errors: [],
+    fileIds: ["pages/photography+sky/blood-moon.jpg"],
+    hasFiles: true,
+    num: 2,
+    parentId: "photography",
+    parents: [
+      {
+        title: "Photography",
+        id: "photography"
+      }
+    ],
+    title: "Sky",
   }),
   page("notes", {
     blueprint: blueprint("notes"),

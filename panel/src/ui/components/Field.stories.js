@@ -86,7 +86,7 @@ export const counter = () => ({
   `
 });
 
-export const options = () => ({
+export const singleOption = () => ({
   template: `
     <k-field
       :input="_uid"

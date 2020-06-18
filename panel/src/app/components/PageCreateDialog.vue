@@ -14,7 +14,7 @@ export default {
       this.section = section;
 
       // load all available blueprints based on the section
-      const blueprints = await this.$model.pages.blueprints(parent, section);
+      const blueprints = await this.$api.pages.blueprints(parent, section);
 
       // create the options for the template select field
       const templates = blueprints.map(blueprint => {
