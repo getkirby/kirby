@@ -21,15 +21,20 @@ import siteSerializer from "./serializers/site.js";
 import translationSerializer from "./serializers/translation.js";
 import userSerializer from "./serializers/user.js";
 
-// TODO: Don't rely on storybook mock data
-import {
-  File,
-  Files,
-  Page,
-  Pages,
-  User,
-  Users
-} from "../../../storybook/data/PickerItems.js";
+/** Helpers */
+import ok from "./helpers/ok.js";
+
+/** Routes */
+import authRoutes from "./routes/auth.js";
+import fieldRoutes from "./routes/fields.js";
+import fileRoutes from "./routes/files.js";
+import languageRoutes from "./routes/languages.js";
+import pageRoutes from "./routes/pages.js";
+import roleRoutes from "./routes/roles.js";
+import siteRoutes from "./routes/site.js";
+import systemRoutes from "./routes/system.js";
+import translationRoutes from "./routes/translations.js";
+import userRoutes from "./routes/users.js";
 
 /* API */
 new Server({
@@ -84,337 +89,16 @@ new Server({
   routes() {
     this.namespace = "api";
 
-    // helpers
-    const findFile = (schema, request) => {
-      return schema.files.find(
-        request.params.parentType + "/" +
-        request.params.parentId + "/" +
-        request.params.fileId
-      );
-    };
-
-    const ok = (data = {}) => {
-      return {
-        status: "ok",
-        code: 200,
-        data: data
-      }
-    };
-
-    const requestValues = (request) => {
-      return JSON.parse(request.requestBody);
-    };
-
-    // temp for models fields, dialogs, pickers
-    // TODO: figure out actual endpoint
-    const toItems = (request, model) => {
-      return JSON.parse(request.queryParams.ids).map(id => model(id));
-    };
-
-    const toOptions = (request, models) => {
-      return models(
-        parseInt(request.queryParams.page),
-        parseInt(request.queryParams.limit),
-        request.queryParams.parent,
-        request.queryParams.search
-      );
-    };
-
-    const updatePage = (schema, request) => {
-      return schema.pages
-        .find(request.params.id)
-        .update(requestValues(request));
-    };
-
-    const updateUser = (schema, request) => {
-      return schema.users
-        .find(request.params.id)
-        .update(requestValues(request));
-    };
-
-    // authentication
-    this.get("/auth", function(schema) {
-      const session = schema.sessions.first();
-
-      if (session) {
-        const user = schema.users.find(session.attrs.user);
-
-        if (user) {
-          return this.serialize(user);
-        }
-      }
-    });
-
-    this.post("/auth/login", function(schema, request) {
-      const values = requestValues(request);
-      const user = this.serialize(
-        schema.users.findBy({
-          email: values.email,
-          password: values.password,
-        })
-      );
-
-      if (!user) {
-        return {
-          status: "error",
-          code: 400,
-          message: "Invalid email or password",
-        };
-      }
-
-      schema.sessions.create({
-        user: user.data.id,
-      });
-
-      return {
-        status: "ok",
-        code: 200,
-        user: user.data,
-      };
-    });
-
-    this.post("/auth/logout", (schema) => {
-      let sessions = schema.sessions.all();
-      sessions.destroy();
-      return ok();
-    });
-
-    // blueprints
-    this.get("/blueprints");
-    this.get("/blueprints/:id");
-
-    // fields
-    this.get("/field/files/items", (schema, request) => {
-      return toItems(request, File);
-    });
-    this.get("/field/files/options", (schema, request) => {
-      return toOptions(request, Files);
-    });
-    this.get("/field/pages/items", (schema, request) => {
-      return toItems(request, Page);
-    });
-    this.get("/field/pages/options", (schema, request) => {
-      return toOptions(request, Pages);
-    });
-    this.get("/field/users/items", (schema, request) => {
-      return toItems(request, User);
-    });
-    this.get("/field/users/options", (schema, request) => {
-      return toOptions(request, Users);
-    });
-
-    // files
-    this.get("/:parentType/:parentId/files/:fileId", function(schema, request) {
-      return findFile(schema, request);
-    });
-
-    this.patch("/:parentType/:parentId/files/:fileId", function(schema, request) {
-      return findFile(schema, request).update({
-        content: requestValues(request)
-      })
-    });
-
-    this.post("/:parentType/:parentId/files", function(schema, request) {
-
-      const file = request.requestBody.get("file");
-
-      return schema.files.create({
-        id: request.params.parentType + "/" + request.params.parentId + "/" + file.name,
-        filename: file.name,
-        extension: file.name.split(".").pop(),
-        name: file.name.split(".").slice(0, -1).join('.'),
-        parentId: request.params.parentId,
-        size: file.size,
-        niceSize: file.size + "kb",
-        mime: file.type,
-        template: "image",
-        url: "https://source.unsplash.com/user/erondu/1600x900"
-      });
-    });
-
-    this.post("/:parentType/:parentId/files/search", function(schema, request) {
-      return schema.files.where({ parentId: request.params.parentId });
-    });
-
-    // change filename
-    this.patch("/:parentType/:parentId/files/:fileId/name", function(schema, request) {
-      let oldFile = findFile(schema, request);
-      const values = requestValues(request);
-      const filename = values.name + "." + oldFile.extension;
-      const newFile = schema.files.create({
-        ...oldFile.attrs,
-        id: request.params.parentType + "/" + request.params.parentId + "/" + filename,
-        name: values.name,
-        filename: filename
-      });
-
-      oldFile.destroy();
-      return newFile;
-    });
-
-    this.delete("/:parentType/:parentId/files/:fileId", function(schema, request) {
-      findFile(schema, request).destroy();
-      return ok();
-    });
-
-    // languages
-    this.resource("languages");
-
-    this.post("languages", (schema, request) => {
-      const values = requestValues(request);
-      return schema.languages.create({
-        ...values,
-        code: values.code.toLowerCase()
-      });
-    });
-
-    this.get("/languages/:code", function (schema, request) {
-      return schema.languages.findBy({ code: request.params.code });
-    });
-
-    this.patch("/languages/:code", (schema, request) => {
-      return schema.languages
-          .findBy({ code: request.params.code })
-          .update(requestValues(request));
-    });
-
-    this.delete("/languages/:code", (schema, request) => {
-      schema.languages.findBy({ code: request.params.code }).destroy();
-      return ok();
-    });
-
-    // pages
-    this.get("pages/:id", function (schema, request) {
-      let page = schema.pages.find(request.params.id);
-      let json = this.serialize(page);
-      return json;
-    });
-    this.post("pages/:id/duplicate", (schema, request) => {
-      throw "Not yet implemented";
-    });
-    this.get("pages/:id/children/blueprints", function (schema, request) {
-      let blueprints = schema.blueprints.where({ name: "album" });
-      let json = this.serialize(blueprints);
-
-      return json.data.map(blueprint => {
-        return {
-          name: blueprint.name,
-          title: blueprint.title
-        }
-      });
-    });
-    this.post("pages/:id/children/search", (schema, request) => {
-      return schema.pages.where({ parentId: request.params.id });
-    });
-    this.patch("pages/:id", (schema, request) => {
-      return schema.pages
-        .find(request.params.id)
-        .update({ content: requestValues(request) });
-    });
-    this.patch("pages/:id/slug", (schema, request) => {
-      throw "Not implemented yet";
-    });
-    this.patch("pages/:id/status", (schema, request) => {
-      return updatePage(schema, request);
-    });
-    this.patch("pages/:id/template", (schema, request) => {
-      return updatePage(schema, request);
-    });
-    this.patch("pages/:id/title", (schema, request) => {
-      return updatePage(schema, request);
-    });
-    this.delete("pages/:id", (schema, request) => {
-      schema.pages.find(request.params.id).destroy();
-      return ok();
-    });
-
-    // roles
-    this.get("/roles");
-    this.get("/roles/:id");
-
-    // site
-    this.get("/site", (schema) => {
-      return schema.sites.first();
-    });
-
-    this.patch("/site/title", (schema, request) => {
-      return schema.sites.first().update(requestValues(request));
-    });
-
-    this.get("system", (schema, request) => {
-      const system = schema.systems.first();
-
-      return {
-        code: 200,
-        data: system.attrs,
-        status: "ok",
-        type: "model"
-      };
-    });
-
-    this.post("/system/install", (schema, request) => {
-      let values = requestValues(request);
-
-      values.roleId = values.role;
-      delete values.role;
-
-      const user = schema.users.create(values);
-
-      return {
-        code: 200,
-        status: "ok",
-        token: "test",
-        user: user
-      };
-    });
-
-    this.post("/system/register", (schema, request) => {
-      const values = requestValues(request);
-
-      if (values.license === "K3-test") {
-        return ok();
-      }
-
-      throw "Invalid license key";
-    });
-
-    // translations
-    this.get("/translations");
-    this.get("/translations/:id");
-
-    this.get("/users");
-    this.post("/users", (schema, request) => {
-      let values = requestValues(request);
-
-      values.roleId = values.role;
-      delete values.role;
-
-      return schema.users.create(values);
-    });
-    this.get("/users/:id");
-    this.patch("/users/:id", (schema, request) => {
-      return updateUser(schema, request);
-    });
-    this.patch("/users/:id/email", (schema, request) => {
-      return updateUser(schema, request);
-    });
-    this.patch("/users/:id/language", (schema, request) => {
-      return updateUser(schema, request);
-    });
-    this.patch("/users/:id/name", (schema, request) => {
-      return updateUser(schema, request);
-    });
-    this.patch("/users/:id/password", (schema, request) => {
-      return updateUser(schema, request);
-    });
-    this.patch("/users/:id/role", (schema, request) => {
-      return updateUser(schema, request);
-    });
-
-    this.delete("/users/:id", (schema, request) => {
-      schema.users.find(request.params.id).destroy();
-      return ok();
-    });
+    authRoutes(this);
+    fieldRoutes(this);
+    fileRoutes(this);
+    languageRoutes(this);
+    pageRoutes(this);
+    roleRoutes(this);
+    siteRoutes(this);
+    systemRoutes(this);
+    translationRoutes(this);
+    userRoutes(this);
 
     // temp test
     this.post("/upload", (schema) => {

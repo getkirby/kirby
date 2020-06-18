@@ -1,5 +1,4 @@
 import auth from "./auth.js";
-import blueprints from "./blueprints.js";
 import files from "./files.js";
 import languages from "./languages.js";
 import pages from "./pages.js";
@@ -41,7 +40,6 @@ export default (extensions = {}) => {
   return {
     ...api,
     auth: auth(api),
-    blueprints: blueprints(api),
     files: files(api),
     languages: languages(api),
     pages: pages(api),
