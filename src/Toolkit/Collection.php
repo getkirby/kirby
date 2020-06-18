@@ -1294,3 +1294,99 @@ Collection::$filters['maxwords'] = [
 Collection::$filters['minwords'] = [
     'validator' => 'V::minWords',
 ];
+
+/**
+ * Date Equals Filter
+ */
+Collection::$filters['date =='] = [
+    'validator' => function ($value, $test) {
+        $value = strtotime($value);
+        $test  = strtotime($test);
+
+        if (is_int($value) === true && is_int($test) === true) {
+            return $value === $test;
+        } else {
+            return false;
+        }
+    }
+];
+
+/**
+ * Date Not Equals Filter
+ */
+Collection::$filters['date !='] = [
+    'validator' => function ($value, $test) {
+        $value = strtotime($value);
+        $test  = strtotime($test);
+
+        if (is_int($value) === true && is_int($test) === true) {
+            return $value !== $test;
+        } else {
+            return false;
+        }
+    }
+];
+
+/**
+ * Date More Filter
+ */
+Collection::$filters['date >'] = [
+    'validator' => function ($value, $test) {
+        $value = strtotime($value);
+        $test  = strtotime($test);
+
+        if (is_int($value) === true && is_int($test) === true) {
+            return $value > $test;
+        } else {
+            return false;
+        }
+    }
+];
+
+/**
+ * Date Min Filter
+ */
+Collection::$filters['date >='] = [
+    'validator' => function ($value, $test) {
+        $value = strtotime($value);
+        $test  = strtotime($test);
+
+        if (is_int($value) === true && is_int($test) === true) {
+            return $value >= $test;
+        } else {
+            return false;
+        }
+    }
+];
+
+/**
+ * Date Less Filter
+ */
+Collection::$filters['date <'] = [
+    'validator' => function ($value, $test) {
+        $value = strtotime($value);
+        $test  = strtotime($test);
+
+        if (is_int($value) === true && is_int($test) === true) {
+            return $value < $test;
+        } else {
+            return false;
+        }
+    }
+];
+
+/**
+ * Date Max Filter
+ */
+Collection::$filters['date <='] = [
+    'validator' => function ($value, $test) {
+        $value = strtotime($value);
+        $test  = strtotime($test);
+
+        if (is_int($value) === true && is_int($test) === true) {
+            return $value <= $test;
+        } else {
+            return false;
+        }
+    }
+];
