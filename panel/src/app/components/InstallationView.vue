@@ -31,9 +31,7 @@
                 type="submit"
                 class="k-installation-button p-3"
               >
-                <template v-if="!processing">
-                  {{ $t("install") }}
-                </template>
+                {{ $t("install") }}
               </k-button>
             </footer>
           </template>
