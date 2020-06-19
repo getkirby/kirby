@@ -338,7 +338,7 @@ class Page extends ModelWithContent
         // create the template data
         $data = array_merge($data, [
             'kirby' => $kirby = $this->kirby(),
-            'site'  => $site = $this->site(),
+            'site'  => $site  = $this->site(),
             'pages' => $site->children(),
             'page'  => $site->visit($this)
         ]);
@@ -364,7 +364,6 @@ class Page extends ModelWithContent
                     $data[$key] = $value;
                 }
             }
-
         }
 
         return $data;
