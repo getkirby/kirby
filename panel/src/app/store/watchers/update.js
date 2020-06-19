@@ -2,7 +2,6 @@
 export default (Vue, store) => {
 
   const onUpdate = (update) => {
-    console.log(update);
     // only notify those who have the permission
     if (!Vue.$permissions || Vue.$permissions.access.settings !== true) {
       return;
@@ -15,7 +14,7 @@ export default (Vue, store) => {
 
     let message = `
       <b>${Vue.$t("update.status." + update.status)}</b><br>
-      Kirby ${update.current}
+      Kirby ${update.latest}
     `;
     let type = "info";
     let details = null;
@@ -23,11 +22,9 @@ export default (Vue, store) => {
     if (update.status === "at-risk") {
       type = "error";
 
-      console.log(update);
-
       if (update.severity === "major") {
         message = Vue.$t("update.status." + update.status);
-        details = Vue.$t("update.critical", { version: update.current, link: update.latestUrl });
+        details = Vue.$t("update.critical", { version: update.latest, link: update.latestUrl });
       }
     }
 
