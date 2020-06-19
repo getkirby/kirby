@@ -1,17 +1,25 @@
 <template>
-  <section class="k-system mb-12">
+  <section class="k-system-info mb-12">
     <header class="mb-3">
       <k-headline>Kirby</k-headline>
     </header>
 
-    <ul class="k-system-box">
+    <k-auto-grid
+      element="ul"
+      style="--gap: 1.5rem"
+      class="k-system-info-box bg-white p-3 shadow rounded-sm mb-2"
+    >
       <li>
         <dl>
-          <dt>{{ $t('license') }}</dt>
-          <dd>
-            <template v-if="license">
+          <dt class="text-sm text-gray mb-2">{{ $t('license') }}</dt>
+          <dd class="truncate leading-tight">
+            <k-link
+              v-if="license"
+              target="_blank"
+              to="https://licenses.getkirby.com"
+            >
               {{ license }}
-            </template>
+            </k-link>
             <button
               v-else
               class="k-system-unregistered text-red font-bold"
@@ -25,62 +33,64 @@
       </li>
       <li>
         <dl>
-          <dt>{{ $t('version') }}</dt>
-          <dd>{{ version || "–" }}</dd>
+          <dt class="text-sm text-gray mb-2">{{ $t('version') }}</dt>
+          <dd class="truncate leading-tight">{{ version || "–" }}</dd>
         </dl>
       </li>
-    </ul>
+    </k-auto-grid>
 
     <!-- update -->
-    <ul v-if="!isDisabled" class="k-system-box">
+    <k-auto-grid
+      v-if="!isDisabled"
+      element="ul"
+      style="--gap: 1.5rem"
+      class="k-system-info-box bg-white p-3 shadow rounded-sm mb-2"
+    >
       <li>
         <dl>
-          <dt>{{ $t('update.latest') }}</dt>
-          <dd>
-            <k-button v-bind="latest" />
-          </dd>
+          <dt class="text-sm text-gray mb-2">{{ $t('update.latest') }}</dt>
+          <dd class="truncate leading-tight"><k-button v-bind="latest" /></dd>
         </dl>
       </li>
       <li>
         <dl>
-          <dt>{{ $t('update.status') }}</dt>
-          <dd>
-            <k-button v-bind="status" />
-          </dd>
+          <dt class="text-sm text-gray mb-2">{{ $t('update.status') }}</dt>
+          <dd class="truncate leading-tight"><k-button v-bind="status" /></dd>
         </dl>
       </li>
       <li>
         <dl>
-          <dt>
-            {{ $t('update.checked', { date: updated }) }}
-          </dt>
-          <dd>
+          <dt class="text-sm text-gray mb-2">{{ $t('update.checked', { date: updated }) }}</dt>
+          <dd class="truncate leading-tight">
             <k-button icon="refresh" @click="$emit('update')">
               {{ $t('update.check') }}
             </k-button>
           </dd>
         </dl>
       </li>
-    </ul>
+    </k-auto-grid>
 
     <!-- incidents -->
-    <ul
+    <k-auto-grid
       v-if="isChecked && update.incidents.length"
-      class="k-system-box k-system-incidents"
+      element="ul"
+      style="--gap: 1.5rem"
+      class="k-system-info-box bg-white p-3 shadow rounded-sm"
     >
       <li>
         <dl>
-          <dt>{{ $t('update.incidents') }}</dt>
-          <dd>
+          <dt class="text-sm text-gray mb-2">{{ $t('update.incidents') }}</dt>
+          <dd class="truncate leading-tight">
             <k-button
               v-for="incident in update.incidents"
               :key="incident.id"
               v-bind="getIncident(incident)"
+              class="mb-2"
             />
           </dd>
         </dl>
       </li>
-    </ul>
+    </k-auto-grid>
 
     <!-- dialogs -->
     <k-registration-dialog ref="registrationDialog" />
@@ -178,38 +188,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-.k-system-box {
-  display: flex;
-  margin-top: .75rem;
-  padding: .75rem;
-  align-items: center;
-  background: $color-white;
-  box-shadow: $shadow;
-  border-radius: $rounded-sm;
-}
-.k-system-box li {
-  flex-shrink: 0;
-  flex-grow: 1;
-  flex-basis: 0;
-}
-.k-system-box dt {
-  font-size: $text-sm;
-  color: $color-gray-600;
-  margin-bottom: .5rem;
-}
-.k-system-box .k-button {
-  font-size: 1rem;
-}
-.k-system-incidents {
-  margin-top: .25rem;
-}
-.k-system-incidents .k-button {
-  display: block;
-
-  + .k-button {
-    margin-top: .75rem;
-  }
-}
-</style>
