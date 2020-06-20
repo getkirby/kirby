@@ -107,7 +107,7 @@ return [
         'columns' => function () {
             $columns = [];
 
-            if (empty($this->columns)) {
+            if (empty($this->columns) === true) {
                 foreach ($this->fields as $field) {
 
                     // Skip hidden fields.

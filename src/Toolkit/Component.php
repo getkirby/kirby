@@ -261,7 +261,6 @@ class Component
             $options[] = static::setup($definition['extends']);
         }
 
-
         // inject mixins
         if (isset($definition['mixins']) === true) {
             foreach ($definition['mixins'] as $mixin) {

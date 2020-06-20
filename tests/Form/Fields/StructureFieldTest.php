@@ -63,6 +63,19 @@ class StructureFieldTest extends TestCase
         $this->assertEquals($expected, $field->data());
     }
 
+    public function testColumnsFallback()
+    {
+        $field = $this->field('structure', [
+            'fields' => [
+                'camelCase' => [
+                    'type' => 'text'
+                ]
+            ],
+        ]);
+
+        $this->assertEquals(['camelcase'], array_keys($field->columns()));
+    }
+
     public function testLowerCaseColumnsNames()
     {
         $field = $this->field('structure', [
