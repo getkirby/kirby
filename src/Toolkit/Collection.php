@@ -1259,7 +1259,7 @@ Collection::$filters['!^='] = [
 /**
  * Between Filter
  */
-Collection::$filters['between'] = [
+Collection::$filters['between'] = Collection::$filters['..'] = [
     'validator' => function ($value, $test) {
         return V::between($value, ...$test) === true;
     },
