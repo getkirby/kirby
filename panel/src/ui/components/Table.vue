@@ -323,6 +323,7 @@ $table-row-height: 38px;
 }
 .k-table[data-sortable] tr:hover .k-table-sort-handle {
   display: flex;
+  margin: 0 auto;
 }
 .k-table-row-fallback {
   opacity: 0 !important;
