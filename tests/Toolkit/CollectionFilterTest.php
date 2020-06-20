@@ -413,6 +413,20 @@ class CollectionFilterTest extends TestCase
                 'expected'   => ['a', 'b'],
                 'split'      => ','
             ],
+            [
+                'attributes' => ['a' => 1, 'b' => 2, 'c' => 3],
+                'operator'   =>  '..',
+                'test'       => [2, 3],
+                'expected'   => ['b', 'c'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '1, 2', 'b' => '3, 4', 'c' => '5, 6'],
+                'operator'   =>  '..',
+                'test'       => [1, 4],
+                'expected'   => ['a', 'b'],
+                'split'      => ','
+            ],
 
             // MATCH
             [
