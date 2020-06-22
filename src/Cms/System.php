@@ -413,6 +413,7 @@ class System
             'caddy',
             'litespeed',
             'nginx',
+            'symfony',
             'php'
         ];
 
