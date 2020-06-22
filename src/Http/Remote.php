@@ -149,7 +149,7 @@ class Remote
             CURLOPT_RETURNTRANSFER   => $this->options['body'],
             CURLOPT_FOLLOWLOCATION   => true,
             CURLOPT_MAXREDIRS        => 10,
-            CURLOPT_SSL_VERIFYPEER   => false,
+            CURLOPT_SSL_VERIFYPEER   => true,
             CURLOPT_HEADER           => false,
             CURLOPT_HEADERFUNCTION   => function ($curl, $header) {
                 $parts = Str::split($header, ':');
