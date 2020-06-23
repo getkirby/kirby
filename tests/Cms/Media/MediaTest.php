@@ -69,65 +69,102 @@ class MediaTest extends TestCase
 
     public function testPublish()
     {
-        $filename  = 'test.jpg';
-        $hash      = crc32($filename);
-        $directory = $this->fixtures . '/media/pages/projects';
+        F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
+        $file = new File([
+            'kirby'    => $this->app,
+            'filename' => $filename = 'test.jpg'
+        ]);
 
-        touch($src = $this->fixtures . '/test.jpg');
+        $oldToken  = crc32($filename);
+        $newToken  = $file->mediaToken();
+        $directory = $this->fixtures . '/media/site';
 
-        Dir::make($versionA = $directory . '/' . $hash . '-1234');
-        Dir::make($versionB = $directory . '/' . $hash . '-5678');
+        Dir::make($versionA1 = $directory . '/' . $oldToken . '-1234');
+        Dir::make($versionA2 = $directory . '/' . $oldToken . '-5678');
+        Dir::make($versionB1 = $directory . '/' . $newToken . '-1234');
+        Dir::make($versionB2 = $directory . '/' . $newToken . '-5678');
 
-        $this->assertTrue(Media::publish($src, $dest = $versionB . '/test.jpg'));
+        $this->assertTrue(Media::publish($file, $dest = $versionB2 . '/test.jpg'));
 
         // the file should be copied
-        $this->assertTrue(is_dir($versionB));
+        $this->assertTrue(is_dir($versionB2));
         $this->assertTrue(is_file($dest));
 
         // older versions should be removed
-        $this->assertFalse(is_dir($versionA));
+        $this->assertFalse(is_dir($versionA1));
+        $this->assertFalse(is_dir($versionA2));
+        $this->assertFalse(is_dir($versionB1));
     }
 
     public function testUnpublish()
     {
-        $filename  = 'test.jpg';
-        $hash      = crc32($filename);
-        $directory = $this->fixtures . '/media';
+        F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
+        $file = new File([
+            'kirby'    => $this->app,
+            'filename' => $filename = 'test.jpg'
+        ]);
 
-        Dir::make($versionA = $directory . '/' . $hash . '-1234');
-        Dir::make($versionB = $directory . '/' . $hash . '-5678');
+        $oldToken  = crc32($filename);
+        $newToken  = $file->mediaToken();
+        $directory = $this->fixtures . '/media/site';
 
-        $this->assertTrue(is_dir($versionA));
-        $this->assertTrue(is_dir($versionB));
+        Dir::make($versionA1 = $directory . '/' . $oldToken . '-1234');
+        Dir::make($versionA2 = $directory . '/' . $oldToken . '-5678');
+        Dir::make($versionB1 = $directory . '/' . $newToken . '-1234');
+        Dir::make($versionB2 = $directory . '/' . $newToken . '-5678');
 
-        Media::unpublish($directory, $filename);
+        $this->assertTrue(is_dir($versionA1));
+        $this->assertTrue(is_dir($versionA2));
+        $this->assertTrue(is_dir($versionB1));
+        $this->assertTrue(is_dir($versionB2));
 
-        $this->assertFalse(is_dir($versionA));
-        $this->assertFalse(is_dir($versionB));
+        Media::unpublish($directory, $file);
+
+        $this->assertFalse(is_dir($versionA1));
+        $this->assertFalse(is_dir($versionA2));
+        $this->assertFalse(is_dir($versionB1));
+        $this->assertFalse(is_dir($versionB2));
     }
 
     public function testUnpublishAndIgnore()
     {
-        $filename  = 'test.jpg';
-        $hash      = crc32($filename);
-        $directory = $this->fixtures . '/media';
+        F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
+        $file = new File([
+            'kirby'    => $this->app,
+            'filename' => $filename = 'test.jpg'
+        ]);
 
-        Dir::make($versionA = $directory . '/' . $hash . '-1234');
-        Dir::make($versionB = $directory . '/' . $hash . '-5678');
+        $oldToken  = crc32($filename);
+        $newToken  = $file->mediaToken();
+        $directory = $this->fixtures . '/media/site';
 
-        $this->assertTrue(is_dir($versionA));
-        $this->assertTrue(is_dir($versionB));
+        Dir::make($versionA1 = $directory . '/' . $oldToken . '-1234');
+        Dir::make($versionA2 = $directory . '/' . $oldToken . '-5678');
+        Dir::make($versionB1 = $directory . '/' . $newToken . '-1234');
+        Dir::make($versionB2 = $directory . '/' . $newToken . '-5678');
 
-        Media::unpublish($directory, $filename, $versionA);
+        $this->assertTrue(is_dir($versionA1));
+        $this->assertTrue(is_dir($versionA2));
+        $this->assertTrue(is_dir($versionB1));
+        $this->assertTrue(is_dir($versionB2));
 
-        $this->assertTrue(is_dir($versionA));
-        $this->assertFalse(is_dir($versionB));
+        Media::unpublish($directory, $file, $versionB1);
+
+        $this->assertTrue(is_dir($versionB1));
+        $this->assertFalse(is_dir($versionA1));
+        $this->assertFalse(is_dir($versionA2));
+        $this->assertFalse(is_dir($versionB2));
     }
 
     public function testUnpublishNonExistingDirectory()
     {
         $directory = $this->fixtures . '/does-not-exist';
 
-        $this->assertTrue(Media::unpublish($directory, 'something.jpg'));
+        $file = new File([
+            'kirby'    => $this->app,
+            'filename' => 'does-not-exist.jpg'
+        ]);
+
+        $this->assertTrue(Media::unpublish($directory, $file));
     }
 }
