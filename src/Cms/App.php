@@ -46,7 +46,6 @@ class App
     use Properties;
 
     protected static $instance;
-    protected static $root;
     protected static $version;
 
     public $data = [];
@@ -77,15 +76,20 @@ class App
     protected $visitor;
 
     /**
+     * List of options that shouldn't be converted
+     * to a tree structure by dot syntax
+     *
+     * @var array
+     */
+    public static $nestIgnoreOptions = ['hooks'];
+
+    /**
      * Creates a new App instance
      *
      * @param array $props
      */
     public function __construct(array $props = [])
     {
-        // the kirby folder directory
-        static::$root = dirname(__DIR__, 2);
-
         // register all roots to be able to load stuff afterwards
         $this->bakeRoots($props['roots'] ?? []);
 
@@ -123,8 +127,13 @@ class App
         $this->extensionsFromSystem();
         $this->extensionsFromProps($props);
         $this->extensionsFromPlugins();
-        $this->extensionsFromOptions();
         $this->extensionsFromFolders();
+
+        // bake the options for the first time
+        $this->bakeOptions();
+
+        // register the extensions from the normalized options
+        $this->extensionsFromOptions();
 
         // trigger hook for use in plugins
         $this->trigger('system.loadPlugins:after');
@@ -132,8 +141,8 @@ class App
         // execute a ready callback from the config
         $this->optionsFromReadyCallback();
 
-        // bake config
-        Config::$data = $this->options;
+        // bake the options again with those from the ready callback
+        $this->bakeOptions();
     }
 
     /**
@@ -166,7 +175,7 @@ class App
             return $this->api;
         }
 
-        $root       = static::$root . '/config/api';
+        $root       = $this->root('kirby') . '/config/api';
         $extensions = $this->extensions['api'] ?? [];
         $routes     = (include $root . '/routes.php')($this);
 
@@ -223,6 +232,18 @@ class App
     }
 
     /**
+     * Normalizes and globally sets the configured options
+     *
+     * @return self
+     */
+    protected function bakeOptions()
+    {
+        $this->options = A::nest($this->options, static::$nestIgnoreOptions);
+        Config::$data = $this->options;
+        return $this;
+    }
+
+    /**
      * Sets the directory structure
      *
      * @param array $roots
@@ -230,7 +251,7 @@ class App
      */
     protected function bakeRoots(array $roots = null)
     {
-        $roots = array_merge(require static::$root . '/config/roots.php', (array)$roots);
+        $roots = array_merge(require dirname(__DIR__, 2) . '/config/roots.php', (array)$roots);
         $this->roots = Ingredients::bake($roots);
         return $this;
     }
@@ -248,7 +269,7 @@ class App
             $urls['index'] = $this->options['url'];
         }
 
-        $urls = array_merge(require static::$root . '/config/urls.php', (array)$urls);
+        $urls = array_merge(require $this->root('kirby') . '/config/urls.php', (array)$urls);
         $this->urls = Ingredients::bake($urls);
         return $this;
     }
@@ -839,12 +860,7 @@ class App
 
         $config = Config::$data;
 
-        return $this->options = array_replace_recursive(
-            A::nest($config),
-            A::nest($main),
-            A::nest($host),
-            A::nest($addr)
-        );
+        return $this->options = array_replace_recursive($config, $main, $host, $addr);
     }
 
     /**
@@ -855,7 +871,7 @@ class App
      */
     protected function optionsFromProps(array $options = []): array
     {
-        return $this->options = array_replace_recursive($this->options, A::nest($options));
+        return $this->options = array_replace_recursive($this->options, $options);
     }
 
     /**
@@ -870,7 +886,7 @@ class App
             $options = (array)$this->options['ready']($this);
 
             // inject all last-minute options recursively
-            $this->options = array_replace_recursive($this->options, A::nest($options));
+            $this->options = array_replace_recursive($this->options, $options);
 
             // update the system with changed options
             if (
@@ -1124,7 +1140,7 @@ class App
         }
 
         $registry = $this->extensions('routes');
-        $system   = (include static::$root . '/config/routes.php')($this);
+        $system   = (include $this->root('kirby') . '/config/routes.php')($this);
         $routes   = array_merge($system['before'], $registry, $system['after']);
 
         return $this->routes = $routes;
@@ -1417,7 +1433,7 @@ class App
     public static function version(): ?string
     {
         try {
-            return static::$version = static::$version ?? Data::read(static::$root . '/composer.json')['version'] ?? null;
+            return static::$version = static::$version ?? Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;
         } catch (Throwable $e) {
             throw new LogicException('The Kirby version cannot be detected. The composer.json is probably missing or not readable.');
         }

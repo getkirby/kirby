@@ -128,6 +128,7 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
         'Kirby\\Cms\\ContentTranslation' => __DIR__ . '/../..' . '/src/Cms/ContentTranslation.php',
         'Kirby\\Cms\\Dir' => __DIR__ . '/../..' . '/src/Cms/Dir.php',
         'Kirby\\Cms\\Email' => __DIR__ . '/../..' . '/src/Cms/Email.php',
+        'Kirby\\Cms\\Event' => __DIR__ . '/../..' . '/src/Cms/Event.php',
         'Kirby\\Cms\\Field' => __DIR__ . '/../..' . '/src/Cms/Field.php',
         'Kirby\\Cms\\File' => __DIR__ . '/../..' . '/src/Cms/File.php',
         'Kirby\\Cms\\FileActions' => __DIR__ . '/../..' . '/src/Cms/FileActions.php',
