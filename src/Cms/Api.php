@@ -39,7 +39,8 @@ class Api extends BaseApi
 
         $this->kirby->setCurrentLanguage($this->language());
 
-        if ($user = $this->kirby->user()) {
+        $allowImpersonation = $this->kirby()->option('api.allowImpersonation', false);
+        if ($user = $this->kirby->user(null, $allowImpersonation)) {
             $this->kirby->setCurrentTranslation($user->language());
         }
 
@@ -137,7 +138,7 @@ class Api extends BaseApi
                 $model = $kirby->site();
                 break;
             case 'account':
-                $model = $kirby->user();
+                $model = $kirby->user(null, $kirby->option('api.allowImpersonation', false));
                 break;
             case 'page':
                 $id    = str_replace(['+', ' '], '/', basename($path));
@@ -243,7 +244,7 @@ class Api extends BaseApi
     {
         // get the authenticated user
         if ($id === null) {
-            return $this->kirby->auth()->user();
+            return $this->kirby->auth()->user(null, $this->kirby()->option('api.allowImpersonation', false));
         }
 
         // get a specific user by id
