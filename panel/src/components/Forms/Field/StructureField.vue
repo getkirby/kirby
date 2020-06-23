@@ -230,6 +230,10 @@ export default {
     limit: Number,
     max: Number,
     min: Number,
+    prepend: {
+      type: Boolean,
+      default: false
+    },
     sortable: {
       type: Boolean,
       default: true
@@ -582,7 +586,11 @@ export default {
         return this.validate(this.currentModel)
           .then(() => {
             if (this.currentIndex === "new") {
-              this.items.push(this.currentModel);
+              if (this.prepend === true) {
+                this.items.unshift(this.currentModel);
+              } else {
+                this.items.push(this.currentModel);
+              }
             } else {
               this.items[this.currentIndex] = this.currentModel;
             }
