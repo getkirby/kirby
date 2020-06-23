@@ -34,6 +34,7 @@ return array(
     'Kirby\\Cms\\ContentTranslation' => $baseDir . '/src/Cms/ContentTranslation.php',
     'Kirby\\Cms\\Dir' => $baseDir . '/src/Cms/Dir.php',
     'Kirby\\Cms\\Email' => $baseDir . '/src/Cms/Email.php',
+    'Kirby\\Cms\\Event' => $baseDir . '/src/Cms/Event.php',
     'Kirby\\Cms\\Field' => $baseDir . '/src/Cms/Field.php',
     'Kirby\\Cms\\File' => $baseDir . '/src/Cms/File.php',
     'Kirby\\Cms\\FileActions' => $baseDir . '/src/Cms/FileActions.php',
