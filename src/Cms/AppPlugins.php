@@ -625,16 +625,18 @@ trait AppPlugins
      */
     protected function extensionsFromSystem()
     {
+        $root = $this->root('kirby');
+
         // load static extensions only once
         if (static::$systemExtensions === null) {
             // Form Field Mixins
-            FormField::$mixins['filepicker'] = include static::$root . '/config/fields/mixins/filepicker.php';
-            FormField::$mixins['min']        = include static::$root . '/config/fields/mixins/min.php';
-            FormField::$mixins['options']    = include static::$root . '/config/fields/mixins/options.php';
-            FormField::$mixins['pagepicker'] = include static::$root . '/config/fields/mixins/pagepicker.php';
-            FormField::$mixins['picker']     = include static::$root . '/config/fields/mixins/picker.php';
-            FormField::$mixins['upload']     = include static::$root . '/config/fields/mixins/upload.php';
-            FormField::$mixins['userpicker'] = include static::$root . '/config/fields/mixins/userpicker.php';
+            FormField::$mixins['filepicker'] = include $root . '/config/fields/mixins/filepicker.php';
+            FormField::$mixins['min']        = include $root . '/config/fields/mixins/min.php';
+            FormField::$mixins['options']    = include $root . '/config/fields/mixins/options.php';
+            FormField::$mixins['pagepicker'] = include $root . '/config/fields/mixins/pagepicker.php';
+            FormField::$mixins['picker']     = include $root . '/config/fields/mixins/picker.php';
+            FormField::$mixins['upload']     = include $root . '/config/fields/mixins/upload.php';
+            FormField::$mixins['userpicker'] = include $root . '/config/fields/mixins/userpicker.php';
 
             // Tag Aliases
             KirbyTag::$aliases = [
@@ -660,32 +662,32 @@ trait AppPlugins
             ];
 
             // blueprint presets
-            PageBlueprint::$presets['pages']   = include static::$root . '/config/presets/pages.php';
-            PageBlueprint::$presets['page']    = include static::$root . '/config/presets/page.php';
-            PageBlueprint::$presets['files']   = include static::$root . '/config/presets/files.php';
+            PageBlueprint::$presets['pages']   = include $root . '/config/presets/pages.php';
+            PageBlueprint::$presets['page']    = include $root . '/config/presets/page.php';
+            PageBlueprint::$presets['files']   = include $root . '/config/presets/files.php';
 
             // section mixins
-            Section::$mixins['empty']          = include static::$root . '/config/sections/mixins/empty.php';
-            Section::$mixins['headline']       = include static::$root . '/config/sections/mixins/headline.php';
-            Section::$mixins['help']           = include static::$root . '/config/sections/mixins/help.php';
-            Section::$mixins['layout']         = include static::$root . '/config/sections/mixins/layout.php';
-            Section::$mixins['max']            = include static::$root . '/config/sections/mixins/max.php';
-            Section::$mixins['min']            = include static::$root . '/config/sections/mixins/min.php';
-            Section::$mixins['pagination']     = include static::$root . '/config/sections/mixins/pagination.php';
-            Section::$mixins['parent']         = include static::$root . '/config/sections/mixins/parent.php';
+            Section::$mixins['empty']          = include $root . '/config/sections/mixins/empty.php';
+            Section::$mixins['headline']       = include $root . '/config/sections/mixins/headline.php';
+            Section::$mixins['help']           = include $root . '/config/sections/mixins/help.php';
+            Section::$mixins['layout']         = include $root . '/config/sections/mixins/layout.php';
+            Section::$mixins['max']            = include $root . '/config/sections/mixins/max.php';
+            Section::$mixins['min']            = include $root . '/config/sections/mixins/min.php';
+            Section::$mixins['pagination']     = include $root . '/config/sections/mixins/pagination.php';
+            Section::$mixins['parent']         = include $root . '/config/sections/mixins/parent.php';
 
             // section types
-            Section::$types['info']            = include static::$root . '/config/sections/info.php';
-            Section::$types['pages']           = include static::$root . '/config/sections/pages.php';
-            Section::$types['files']           = include static::$root . '/config/sections/files.php';
-            Section::$types['fields']          = include static::$root . '/config/sections/fields.php';
+            Section::$types['info']            = include $root . '/config/sections/info.php';
+            Section::$types['pages']           = include $root . '/config/sections/pages.php';
+            Section::$types['files']           = include $root . '/config/sections/files.php';
+            Section::$types['fields']          = include $root . '/config/sections/fields.php';
 
             static::$systemExtensions = [
-                'components'   => include static::$root . '/config/components.php',
-                'blueprints'   => include static::$root . '/config/blueprints.php',
-                'fields'       => include static::$root . '/config/fields.php',
-                'fieldMethods' => include static::$root . '/config/methods.php',
-                'tags'         => include static::$root . '/config/tags.php'
+                'components'   => include $root . '/config/components.php',
+                'blueprints'   => include $root . '/config/blueprints.php',
+                'fields'       => include $root . '/config/fields.php',
+                'fieldMethods' => include $root . '/config/methods.php',
+                'tags'         => include $root . '/config/tags.php'
             ];
         }
 
