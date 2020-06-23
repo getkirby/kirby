@@ -252,7 +252,7 @@ class FileActionsTest extends TestCase
 
         $app = $this->app->clone([
             'hooks' => [
-                'file.create:before' => function (File $file, Image $image) use (&$before) {
+                'file.create:before' => function (File $file, Image $upload) use (&$before) {
                     $before = true;
                 },
                 'file.create:after' => function (File $file) use (&$after, $phpunit) {

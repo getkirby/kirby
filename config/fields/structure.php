@@ -24,6 +24,14 @@ return [
             // be lowercase as well.
             return array_change_key_case($columns);
         },
+
+        /**
+         * Toggles duplicating rows for the structure
+         */
+        'duplicate' => function (bool $duplicate = true) {
+            return $duplicate;
+        },
+
         /**
          * The placeholder text if no items have been added yet
          */

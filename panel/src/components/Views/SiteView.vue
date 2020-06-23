@@ -37,8 +37,10 @@
       @tab="tab = $event"
     />
 
-    <k-site-rename-dialog ref="rename" @success="fetch" />
-
+    <k-site-rename-dialog
+      ref="rename"
+      @success="fetch"
+    />
   </k-view>
 </template>
 

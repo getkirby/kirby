@@ -56,11 +56,13 @@
           @keydown.native.space.prevent.stop="select(option)"
         >
           <span v-html="option.display" />
-          <span class="k-multiselect-value" v-html="option.info" />
+          <span
+            class="k-multiselect-value"
+            v-html="option.info"
+          />
         </k-dropdown-item>
       </div>
     </k-dropdown-content>
-
   </k-draggable>
 </template>
 

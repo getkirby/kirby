@@ -1,5 +1,5 @@
 <template>
-  <hr class="k-line-field" >
+  <hr class="k-line-field">
 </template>
 
 <style lang="scss">

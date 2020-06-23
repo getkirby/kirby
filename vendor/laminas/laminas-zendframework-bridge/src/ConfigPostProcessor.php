@@ -8,8 +8,27 @@
 
 namespace Laminas\ZendFrameworkBridge;
 
+use function array_intersect_key;
+use function array_key_exists;
+use function array_pop;
+use function array_push;
+use function count;
+use function in_array;
+use function is_array;
+use function is_callable;
+use function is_int;
+use function is_string;
+
 class ConfigPostProcessor
 {
+    /** @internal */
+    const SERVICE_MANAGER_KEYS_OF_INTEREST = [
+        'aliases'    => true,
+        'factories'  => true,
+        'invokables' => true,
+        'services'   => true,
+    ];
+
     /** @var array String keys => string values */
     private $exactReplacements = [
         'zend-expressive' => 'mezzio',
@@ -62,15 +81,10 @@ class ConfigPostProcessor
                     : null;
             },
 
-            // Aliases and invokables
-            function ($value, array $keys) {
-                static $keysOfInterest;
-
-                $keysOfInterest = $keysOfInterest ?: ['aliases', 'invokables'];
-                $key            = array_pop($keys);
-
-                return in_array($key, $keysOfInterest, true) && is_array($value)
-                    ? [$this, 'replaceDependencyAliases']
+            // service- and pluginmanager handling
+            function ($value) {
+                return is_array($value) && array_intersect_key(self::SERVICE_MANAGER_KEYS_OF_INTEREST, $value) !== []
+                    ? [$this, 'replaceDependencyConfiguration']
                     : null;
             },
 
@@ -182,7 +196,7 @@ class ConfigPostProcessor
                 $a[] = $value;
                 continue;
             }
-            
+
             if (is_array($value) && is_array($a[$key])) {
                 $a[$key] = static::merge($a[$key], $value);
                 continue;
@@ -234,22 +248,117 @@ class ConfigPostProcessor
         return $this->exactReplacements[$value];
     }
 
+    private function replaceDependencyConfiguration(array $config)
+    {
+        $aliases = isset($config['aliases']) && is_array($config['aliases'])
+            ? $this->replaceDependencyAliases($config['aliases'])
+            : [];
+
+        if ($aliases) {
+            $config['aliases'] = $aliases;
+        }
+
+        $config = $this->replaceDependencyInvokables($config);
+        $config = $this->replaceDependencyFactories($config);
+        $config = $this->replaceDependencyServices($config);
+
+        $keys = self::SERVICE_MANAGER_KEYS_OF_INTEREST;
+        foreach ($config as $key => $data) {
+            if (isset($keys[$key])) {
+                continue;
+            }
+
+            $config[$key] = is_array($data) ? $this->__invoke($data, [$key]) :  $data;
+        }
+
+        return $config;
+    }
+
     /**
      * Rewrite dependency aliases array
      *
      * In this case, we want to keep the alias as-is, but rewrite the target.
      *
-     * This same logic can be used for invokables, which are essentially just
-     * an alias map.
+     * We need also provide an additional alias if the alias key is a legacy class.
      *
      * @return array
      */
     private function replaceDependencyAliases(array $aliases)
     {
         foreach ($aliases as $alias => $target) {
-            $aliases[$alias] = $this->replacements->replace($target);
+            if (! is_string($alias) || ! is_string($target)) {
+                continue;
+            }
+
+            $newTarget = $this->replacements->replace($target);
+            $newAlias  = $this->replacements->replace($alias);
+
+            $notIn = [$newTarget];
+            $name  = $newTarget;
+            while (isset($aliases[$name])) {
+                $notIn[] = $aliases[$name];
+                $name    = $aliases[$name];
+            }
+
+            if ($newAlias === $alias && ! in_array($alias, $notIn, true)) {
+                $aliases[$alias] = $newTarget;
+                continue;
+            }
+
+            if (isset($aliases[$newAlias])) {
+                continue;
+            }
+
+            if (! in_array($newAlias, $notIn, true)) {
+                $aliases[$alias]    = $newAlias;
+                $aliases[$newAlias] = $newTarget;
+            }
         }
+
         return $aliases;
+    }
+
+    /**
+     * Rewrite dependency invokables array
+     *
+     * In this case, we want to keep the alias as-is, but rewrite the target.
+     *
+     * We need also provide an additional alias if invokable is defined with
+     * an alias which is a legacy class.
+     *
+     * @return array
+     */
+    private function replaceDependencyInvokables(array $config)
+    {
+        if (empty($config['invokables']) || ! is_array($config['invokables'])) {
+            return $config;
+        }
+
+        foreach ($config['invokables'] as $alias => $target) {
+            if (! is_string($alias)) {
+                continue;
+            }
+
+            $newTarget = $this->replacements->replace($target);
+            $newAlias  = $this->replacements->replace($alias);
+
+            if ($alias === $target || isset($config['aliases'][$newAlias])) {
+                $config['invokables'][$alias] = $newTarget;
+                continue;
+            }
+
+            $config['invokables'][$newAlias] = $newTarget;
+
+            if ($newAlias === $alias) {
+                continue;
+            }
+
+            $config['aliases'][$alias] = $newAlias;
+
+            unset($config['invokables'][$alias]);
+        }
+
+        return $config;
     }
 
     /**
@@ -259,5 +368,67 @@ class ConfigPostProcessor
     private function noopReplacement($value)
     {
         return $value;
+    }
+
+    private function replaceDependencyFactories(array $config)
+    {
+        if (empty($config['factories']) || ! is_array($config['factories'])) {
+            return $config;
+        }
+
+        foreach ($config['factories'] as $service => $factory) {
+            if (! is_string($service)) {
+                continue;
+            }
+
+            $replacedService = $this->replacements->replace($service);
+            $factory         = is_string($factory) ? $this->replacements->replace($factory) : $factory;
+            $config['factories'][$replacedService] = $factory;
+
+            if ($replacedService === $service) {
+                continue;
+            }
+
+            unset($config['factories'][$service]);
+            if (isset($config['aliases'][$service])) {
+                continue;
+            }
+
+            $config['aliases'][$service] = $replacedService;
+        }
+
+        return $config;
+    }
+
+    private function replaceDependencyServices(array $config)
+    {
+        if (empty($config['services']) || ! is_array($config['services'])) {
+            return $config;
+        }
+
+        foreach ($config['services'] as $service => $serviceInstance) {
+            if (! is_string($service)) {
+                continue;
+            }
+
+            $replacedService = $this->replacements->replace($service);
+            $serviceInstance = is_array($serviceInstance) ? $this->__invoke($serviceInstance) : $serviceInstance;
+
+            $config['services'][$replacedService] = $serviceInstance;
+
+            if ($service === $replacedService) {
+                continue;
+            }
+
+            unset($config['services'][$service]);
+
+            if (isset($config['aliases'][$service])) {
+                continue;
+            }
+
+            $config['aliases'][$service] = $replacedService;
+        }
+
+        return $config;
     }
 }

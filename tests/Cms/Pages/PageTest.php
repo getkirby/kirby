@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\F;
+use ReflectionMethod;
 
 class PageTestModel extends Page
 {
@@ -607,7 +608,7 @@ class PageTest extends TestCase
         ]);
 
         if ($draft === true && $expected !== null) {
-            $expected = str_replace('{token}', 'token=' . sha1($page->id() . $page->template()), $expected);
+            $expected = str_replace('{token}', 'token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->root()), $expected);
         }
 
         $this->assertEquals($expected, $page->previewUrl());
@@ -617,6 +618,76 @@ class PageTest extends TestCase
     {
         $page = new Page(['slug' => 'test']);
         $this->assertEquals('test', $page->slug());
+    }
+
+    public function testToken()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'root'     => '/var/www/content/test',
+            'template' => 'default'
+        ]);
+
+        $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+        $method->setAccessible(true);
+
+        $expected = hash_hmac('sha1', 'test' . 'default', '/var/www/content/test');
+        $this->assertSame($expected, $method->invoke($page));
+    }
+
+    public function testTokenWithCustomSalt()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'content' => [
+                    'salt' => 'testsalt'
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug'     => 'test',
+            'template' => 'default'
+        ]);
+
+        $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+        $method->setAccessible(true);
+
+        $expected = hash_hmac('sha1', 'test' . 'default', 'testsalt');
+        $this->assertSame($expected, $method->invoke($page));
+    }
+
+    public function testTokenWithSaltCallback()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'content' => [
+                    'salt' => function ($page) {
+                        return $page->date();
+                    }
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug'     => 'test',
+            'template' => 'default',
+            'content'  => [
+                'date' => '2012-12-12'
+            ]
+        ]);
+
+        $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+        $method->setAccessible(true);
+
+        $expected = hash_hmac('sha1', 'test' . 'default', '2012-12-12');
+        $this->assertSame($expected, $method->invoke($page));
     }
 
     public function testToString()
@@ -771,6 +842,42 @@ class PageTest extends TestCase
         $app->setCurrentTranslation('de');
 
         $this->assertEquals($modified, $app->page('test')->modified());
+
+        Dir::remove($index);
+    }
+
+    public function testModifiedSpecifyingLanguage()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/PageTest/modified',
+                'content' => $index
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'name'    => 'English'
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        // create the english page
+        F::write($file = $index . '/test/test.en.txt', 'test');
+        touch($file, $modifiedEnContent = \time() + 2);
+
+        // create the german page
+        F::write($file = $index . '/test/test.de.txt', 'test');
+        touch($file, $modifiedDeContent = \time() + 5);
+
+        $page = $app->page('test');
+
+        $this->assertEquals($modifiedEnContent, $page->modified(null, null, 'en'));
+        $this->assertEquals($modifiedDeContent, $page->modified(null, null, 'de'));
 
         Dir::remove($index);
     }

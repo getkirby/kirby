@@ -2,25 +2,24 @@
 
 namespace Kirby\Database;
 
-use Kirby\Toolkit\F;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
+use ReflectionProperty;
 
+/**
+ * @coversDefaultClass Kirby\Database\Db
+ */
 class DbTest extends TestCase
 {
-    public static $database = null;
-
     public function setUp(): void
     {
-        self::$database = ':memory:';
-
         Db::connect([
-            'database' => self::$database,
+            'database' => ':memory:',
             'type'     => 'sqlite'
         ]);
 
-        // create a dummy user table, which we can use for our tests
-        Db::query('
-
+        // create a dummy user table which we can use for our tests
+        Db::execute('
             CREATE TABLE "users" (
             "id" INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
             "username" TEXT UNIQUE ON CONFLICT FAIL NOT NULL,
@@ -29,7 +28,6 @@ class DbTest extends TestCase
             "password" TEXT NOT NULL,
             "email" TEXT NOT NULL
             );
-
         ');
 
         // insert some silly dummy data
@@ -58,149 +56,243 @@ class DbTest extends TestCase
         ]);
     }
 
-    public static function tearDownAfterClass(): void
-    {
-        // kill the database
-        F::remove(self::$database);
-    }
-
+    /**
+     * @covers ::connect
+     */
     public function testConnect()
     {
-        $this->assertInstanceOf('Database', Db::connect());
+        $db = Db::connect();
+        $this->assertInstanceOf(Database::class, $db);
+
+        // cached instance
+        $this->assertSame($db, Db::connect());
+
+        // new instance
+        $this->assertNotSame($db, Db::connect([
+            'type'     => 'sqlite',
+            'database' => ':memory:'
+        ]));
+
+        // new instance with custom options
+        $db = Db::connect([
+            'type'     => 'sqlite',
+            'database' => ':memory:',
+            'prefix'   => 'test_'
+        ]);
+        $this->assertSame('test_', $db->prefix());
+
+        // cache of the new instance
+        $this->assertSame($db, Db::connect());
     }
 
+    /**
+     * @covers ::connection
+     */
     public function testConnection()
     {
-        $this->assertInstanceOf('Database', Db::connection());
+        $this->assertInstanceOf(Database::class, Db::connection());
     }
 
-    public function testType()
+    /**
+     * @covers ::table
+     */
+    public function testTable()
     {
-        Db::connect([
-            'database' => self::$database,
-            'type'     => 'sqlite'
-        ]);
+        $tableProp = new ReflectionProperty(Query::class, 'table');
+        $tableProp->setAccessible(true);
 
-        $this->assertEquals('sqlite', Db::type());
+        $query = Db::table('users');
+        $this->assertInstanceOf(Query::class, $query);
+        $this->assertSame('users', $tableProp->getValue($query));
     }
 
-    public function testPrefix()
+    /**
+     * @covers ::query
+     */
+    public function testQuery()
+    {
+        $result = Db::query('SELECT * FROM users WHERE username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
+        $this->assertSame('paul', $result[0]['username']);
+    }
+
+    /**
+     * @covers ::execute
+     */
+    public function testExecute()
+    {
+        $result = Db::query('SELECT * FROM users WHERE username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
+        $this->assertSame('paul', $result[0]['username']);
+
+        $result = Db::execute('DELETE FROM users WHERE username = :username', ['username' => 'paul']);
+        $this->assertTrue($result);
+
+        $result = Db::query('SELECT * FROM users WHERE username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
+        $this->assertEmpty($result);
+    }
+
+    /**
+     * @covers ::__callStatic
+     */
+    public function testCallStatic()
     {
         Db::connect([
-            'database' => self::$database,
+            'database' => ':memory:',
             'type'     => 'sqlite',
             'prefix'   => 'myprefix_'
         ]);
 
-        $this->assertEquals('myprefix_', Db::prefix());
+        Db::$queries['test'] = function ($test) {
+            return $test . ' test';
+        };
+        $this->assertSame('This is a test', Db::test('This is a'));
+        unset(Db::$queries['test']);
 
-        Db::connect([
-            'database' => self::$database,
-            'type'     => 'sqlite'
-        ]);
+        $this->assertSame('sqlite', Db::type());
+        $this->assertSame('myprefix_', Db::prefix());
     }
 
-    public function testLastId()
+    /**
+     * @covers ::__callStatic
+     */
+    public function testCallStaticInvalid()
     {
-        $id = Db::insert('users', [
+        $this->expectException(InvalidArgumentException::class);
+        $this->expectExceptionMessage('Invalid static Db method: thisIsInvalid');
+
+        Db::thisIsInvalid();
+    }
+
+    /**
+     * @coversNothing
+     */
+    public function testSelect()
+    {
+        $result = Db::select('users');
+        $this->assertSame(3, $result->count());
+
+        $result = Db::select('users', 'username', ['username' => 'paul']);
+        $this->assertSame(1, $result->count());
+        $this->assertSame('paul', $result->first()->username());
+
+        $result = Db::select('users', 'username', null, 'username ASC', 1, 1);
+        $this->assertSame(1, $result->count());
+        $this->assertSame('john', $result->first()->username());
+    }
+
+    /**
+     * @coversNothing
+     */
+    public function testFirst()
+    {
+        $result = Db::first('users');
+        $this->assertSame('john', $result->username());
+
+        $result = Db::first('users', '*', ['username' => 'paul']);
+        $this->assertSame('paul', $result->username());
+
+        $result = Db::first('users', '*', null, 'username ASC');
+        $this->assertSame('george', $result->username());
+
+        $result = Db::row('users');
+        $this->assertSame('john', $result->username());
+
+        $result = Db::one('users');
+        $this->assertSame('john', $result->username());
+    }
+
+    /**
+     * @coversNothing
+     */
+    public function testColumn()
+    {
+        $result = Db::column('users', 'username');
+        $this->assertSame(['john', 'paul', 'george'], $result->toArray());
+
+        $result = Db::column('users', 'username', ['username' => 'paul']);
+        $this->assertSame(['paul'], $result->toArray());
+
+        $result = Db::column('users', 'username', null, 'username ASC');
+        $this->assertSame(['george', 'john', 'paul'], $result->toArray());
+
+        $result = Db::column('users', 'username', null, 'username ASC', 1, 1);
+        $this->assertSame(['john'], $result->toArray());
+    }
+
+    /**
+     * @coversNothing
+     */
+    public function testInsert()
+    {
+        $result = Db::insert('users', [
             'username' => 'ringo',
             'fname'    => 'Ringo',
             'lname'    => 'Starr',
             'email'    => 'ringo@test.com',
             'password' => 'beatles'
         ]);
-
-        $this->assertEquals(4, $id);
-        $this->assertEquals($id, Db::lastId());
+        $this->assertSame(4, $result);
+        $this->assertSame('ringo@test.com', Db::row('users', '*', ['username' => 'ringo'])->email());
     }
 
-    public function testLastResult()
-    {
-        $result = Db::select('users', '*');
-        $this->assertEquals($result, Db::lastResult());
-    }
-
-    public function testLastError()
-    {
-        $result = Db::select('users', 'nonexisting');
-        $this->assertInstanceOf('PDOException', Db::lastError());
-    }
-
-    public function testQuery()
-    {
-        $result = Db::query('select * from users where username = :username', ['username' => 'paul'], ['fetch' => 'array', 'iterator' => 'array']);
-
-        $this->assertEquals('paul', $result[0]['username']);
-    }
-
-    public function testTable()
-    {
-        $this->assertInstanceOf('Kirby\Database\Query', Db::table('users'));
-    }
-
-    public function testSelect()
-    {
-        $result = Db::select('users');
-
-        $this->assertEquals(3, $result->count());
-
-        $result = Db::select('users', '*', ['username' => 'paul']);
-
-        $this->assertEquals(1, $result->count());
-    }
-
-    public function testFirst()
-    {
-        $result = Db::first('users');
-        $this->assertEquals('john', $result->username());
-    }
-
-    public function testColumn()
-    {
-        $result = Db::column('users', 'username');
-        $this->assertEquals(['john', 'paul', 'george'], $result->toArray());
-    }
-
+    /**
+     * @coversNothing
+     */
     public function testUpdate()
     {
-        Db::update('users', ['email' => 'john@gmail.com'], ['username' => 'john']);
-        $this->assertEquals('john@gmail.com', Db::row('users', '*', ['username' => 'john'])->email());
+        $result = Db::update('users', ['email' => 'john@gmail.com'], ['username' => 'john']);
+        $this->assertTrue($result);
+        $this->assertSame('john@gmail.com', Db::row('users', '*', ['username' => 'john'])->email());
+        $this->assertSame('paul@test.com', Db::row('users', '*', ['username' => 'paul'])->email());
     }
 
+    /**
+     * @coversNothing
+     */
     public function testDelete()
     {
-        Db::delete('users', ['username' => 'ringo']);
-        $this->assertFalse(Db::one('users', '*', ['username' => 'ringo']));
+        $result = Db::delete('users', ['username' => 'john']);
+        $this->assertTrue($result);
+        $this->assertFalse(Db::one('users', '*', ['username' => 'john']));
+        $this->assertSame(2, Db::count('users'));
     }
 
+    /**
+     * @coversNothing
+     */
     public function testCount()
     {
-        $this->assertEquals(3, Db::count('users'));
+        $this->assertSame(3, Db::count('users'));
     }
 
+    /**
+     * @coversNothing
+     */
     public function testMin()
     {
-        $this->assertEquals(1, Db::min('users', 'id'));
+        $this->assertSame(1.0, Db::min('users', 'id'));
     }
 
+    /**
+     * @coversNothing
+     */
     public function testMax()
     {
-        $this->assertEquals(3, Db::max('users', 'id'));
+        $this->assertSame(3.0, Db::max('users', 'id'));
     }
 
+    /**
+     * @coversNothing
+     */
     public function testAvg()
     {
-        $this->assertEquals(2.0, Db::avg('users', 'id'));
+        $this->assertSame(2.0, Db::avg('users', 'id'));
     }
 
+    /**
+     * @coversNothing
+     */
     public function testSum()
     {
-        $this->assertEquals(6, Db::sum('users', 'id'));
-    }
-
-    public function testAffected()
-    {
-        Db::delete('users');
-        $this->assertEquals(3, Db::affected());
+        $this->assertSame(6.0, Db::sum('users', 'id'));
     }
 }

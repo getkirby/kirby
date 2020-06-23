@@ -1,5 +1,4 @@
 import { mount } from '@vue/test-utils';
-import Vue from "vue";
 import ButtonGroup from '@/components/Navigation/ButtonGroup.vue';
 
 describe("ButtonGroup.vue", () => {

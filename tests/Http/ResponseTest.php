@@ -29,7 +29,7 @@ class ResponseTest extends TestCase
         $this->assertEquals(200, $response->code());
         $this->assertEquals([
             'Pragma'                    => 'public',
-            'Expires'                   => '0',
+            'Cache-Control'             => 'no-cache, no-store, must-revalidate',
             'Last-Modified'             => gmdate('D, d M Y H:i:s', filemtime(__FILE__)) . ' GMT',
             'Content-Disposition'       => 'attachment; filename="test.php"',
             'Content-Transfer-Encoding' => 'binary',

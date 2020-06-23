@@ -1,0 +1,83 @@
+body {
+  background: #efefef;
+  font: normal normal 400 12px/1.5 -apple-system, BlinkMacSystemFont, Segoe UI,
+    Roboto, Helvetica, Arial, sans-serif;
+}
+
+.left-panel {
+  background: transparent;
+}
+
+header {
+  background-color: #313740;
+}
+
+.exc-title-primary {
+  color: hsl(0, 71%, 55%);
+}
+
+.frame.active {
+  color: hsl(0, 71%, 55%);
+  box-shadow: inset -5px 0 0 0 #d16464;
+}
+
+.frame:not(.active):hover {
+  background: rgba(203, 215, 229, 0.5);
+}
+
+.rightButton {
+  color: #999;
+  box-shadow: inset 0 0 0 1px #777;
+  border-radius: 0;
+}
+
+.rightButton:hover {
+  box-shadow: inset 0 0 0 1px #555;
+  color: #777;
+}
+
+.details-heading {
+  color: #7e9abf;
+  font-weight: 500;
+}
+
+.frame-code {
+  background: #000;
+}
+
+pre.code-block,
+code.code-block,
+.frame-args.code-block,
+.frame-args.code-block samp {
+  background: #16171a;
+}
+
+.linenums li.current {
+  background: transparent;
+}
+
+.linenums li.current.active {
+  background: rgba(209, 100, 100, 0.3);
+}
+
+pre .atv,
+code .atv,
+pre .str,
+code .str {
+  color: #a7bd68;
+}
+
+pre .tag,
+code .tag {
+  color: #d16464;
+}
+
+pre .kwd,
+code .kwd {
+  color: #8abeb7;
+}
+
+pre .atn,
+code .atn {
+  color: #de935f;
+}
