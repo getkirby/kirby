@@ -18,7 +18,7 @@ class QueryTestUser
 
     public function says(...$message)
     {
-        return implode(' ', $message);
+        return implode(' : ', $message);
     }
 
     public function age(int $years)
@@ -60,5 +60,10 @@ class QueryTestUser
         }
 
         return $this;
+    }
+
+    public function nothing()
+    {
+        return null;
     }
 }
