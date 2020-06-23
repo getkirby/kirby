@@ -423,7 +423,7 @@ class System
      */
     public function server(): bool
     {
-        if ($servers = $this->app->option('server')) {
+        if ($servers = $this->app->option('servers')) {
             $servers = A::wrap($servers);
         } else {
             $servers = [

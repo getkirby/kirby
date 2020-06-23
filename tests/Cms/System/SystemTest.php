@@ -62,7 +62,23 @@ class SystemTest extends TestCase
 
         $app = $this->app->clone([
             'options' => [
-                'server' => 'symfony'
+                'servers' => 'symfony'
+            ]
+        ]);
+
+        $system = new System($app);
+        $server = $system->server();
+
+        $this->assertTrue($server);
+    }
+
+    public function testCustomServers()
+    {
+        $_SERVER['SERVER_SOFTWARE'] = 'symfony';
+
+        $app = $this->app->clone([
+            'options' => [
+                'servers' => ['symfony', 'apache']
             ]
         ]);
 
