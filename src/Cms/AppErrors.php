@@ -85,7 +85,7 @@ trait AppErrors
                 if (is_a($fatal, 'Closure') === true) {
                     echo $fatal($this);
                 } else {
-                    include static::$root . '/views/fatal.php';
+                    include $this->root('kirby') . '/views/fatal.php';
                 }
 
                 return Handler::QUIT;
