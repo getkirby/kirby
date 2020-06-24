@@ -229,6 +229,50 @@ class FileTest extends TestCase
         $this->assertFalse($file->isReadable()); // test caching
     }
 
+    public function testMediaHash()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/FileTest/mediaHash',
+                'content' => $index
+            ],
+            'options' => [
+                'content.salt' => 'test'
+            ]
+        ]);
+
+        F::write($index . '/test.jpg', 'test');
+        touch($index . '/test.jpg', 5432112345);
+        $file = new File([
+            'kirby'    => $app,
+            'filename' => 'test.jpg'
+        ]);
+
+        $this->assertSame('08756f3115-5432112345', $file->mediaHash());
+
+        Dir::remove(dirname($index));
+    }
+
+    public function testMediaToken()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/FileTest/mediaHash',
+                'content' => $index
+            ],
+            'options' => [
+                'content.salt' => 'test'
+            ]
+        ]);
+
+        $file = new File([
+            'kirby'    => $app,
+            'filename' => 'test.jpg'
+        ]);
+
+        $this->assertSame('08756f3115', $file->mediaToken());
+    }
+
     public function testModified()
     {
         $app = new App([

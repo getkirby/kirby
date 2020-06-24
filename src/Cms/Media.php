@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -41,9 +42,15 @@ class Media
         // this should work for all original files
         if ($file = $model->file($filename)) {
 
-            // the media hash is outdated. redirect to the correct url
+            // check if the request contained an outdated media hash
             if ($file->mediaHash() !== $hash) {
-                return Response::redirect($file->mediaUrl(), 307);
+                // if at least the token was correct, redirect
+                if (Str::startsWith($hash, $file->mediaToken() . '-') === true) {
+                    return Response::redirect($file->mediaUrl(), 307);
+                } else {
+                    // don't leak the correct token
+                    return new Response('Not Found', 'text/plain', 404);
+                }
             }
 
             // send the file to the browser
@@ -57,18 +64,18 @@ class Media
     /**
      * Copy the file to the final media folder location
      *
-     * @param string $src
+     * @param \Kirby\Cms\File $file
      * @param string $dest
      * @return bool
      */
-    public static function publish(string $src, string $dest): bool
+    public static function publish(File $file, string $dest): bool
     {
-        $filename  = basename($src);
+        $src       = $file->root();
         $version   = dirname($dest);
         $directory = dirname($version);
 
         // unpublish all files except stuff in the version folder
-        Media::unpublish($directory, $filename, $version);
+        Media::unpublish($directory, $file, $version);
 
         // copy/overwrite the file to the dest folder
         return F::copy($src, $dest, true);
@@ -125,21 +132,25 @@ class Media
     }
 
     /**
-     * Deletes all versions of the given filename
+     * Deletes all versions of the given file
      * within the parent directory
      *
      * @param string $directory
-     * @param string $filename
+     * @param \Kirby\Cms\File $file
      * @param string $ignore
      * @return bool
      */
-    public static function unpublish(string $directory, string $filename, string $ignore = null): bool
+    public static function unpublish(string $directory, File $file, string $ignore = null): bool
     {
         if (is_dir($directory) === false) {
             return true;
         }
 
-        $versions = glob($directory . '/' . crc32($filename) . '*', GLOB_ONLYDIR);
+        // get both old and new versions (pre and post Kirby 3.4.0)
+        $versions = array_merge(
+            glob($directory . '/' . crc32($file->filename()) . '-*', GLOB_ONLYDIR),
+            glob($directory . '/' . $file->mediaToken() . '-*', GLOB_ONLYDIR)
+        );
 
         // delete all versions of the file
         foreach ($versions as $version) {
