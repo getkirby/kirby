@@ -56,10 +56,11 @@ class SystemTest extends TestCase
         $this->assertEquals($expected, $server);
     }
 
-    public function testCustomServer()
+    public function testServerOverwrite()
     {
         $_SERVER['SERVER_SOFTWARE'] = 'symfony';
 
+        // single server
         $app = $this->app->clone([
             'options' => [
                 'servers' => 'symfony'
@@ -70,12 +71,8 @@ class SystemTest extends TestCase
         $server = $system->server();
 
         $this->assertTrue($server);
-    }
 
-    public function testCustomServers()
-    {
-        $_SERVER['SERVER_SOFTWARE'] = 'symfony';
-
+        // array of servers
         $app = $this->app->clone([
             'options' => [
                 'servers' => ['symfony', 'apache']
