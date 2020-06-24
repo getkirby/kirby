@@ -634,6 +634,21 @@ class CollectionFilterTest extends TestCase
                 'split'      => false
             ],
 
+            // DATE BETWEEN
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => '31.12.2344', 'e' => 'invalid date'],
+                'operator'   =>  'date between',
+                'test'       => ['2345-01-01', '2345-01-05'],
+                'expected'   => ['a', 'b', 'c'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => '31.12.2344', 'e' => 'invalid date'],
+                'operator'   =>  'date ..',
+                'test'       => ['2345-01-01', '2345-01-05'],
+                'expected'   => ['a', 'b', 'c'],
+                'split'      => false
+            ]
         ];
     }
 

@@ -1364,3 +1364,13 @@ Collection::$filters['date <='] = [
         return V::date($value, '<=', $test);
     }
 ];
+
+/**
+ * Date Between Filter
+ */
+Collection::$filters['date between'] = Collection::$filters['date ..'] = [
+    'validator' => function ($value, $test) {
+        return V::date($value, '>=', $test[0]) &&
+               V::date($value, '<=', $test[1]);
+    }
+];
