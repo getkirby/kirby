@@ -27,6 +27,14 @@ class Collection extends Iterator implements Countable
     public static $filters = [];
 
     /**
+     * Whether the collection keys should be
+     * treated as case-sensitive
+     *
+     * @var bool
+     */
+    protected $caseSensitive = false;
+
+    /**
      * Pagination object
      * @var Pagination
      */
@@ -48,9 +56,12 @@ class Collection extends Iterator implements Countable
      * Constructor
      *
      * @param array $data
+     * @param bool $caseSensitive Whether the collection keys should be
+     *                            treated as case-sensitive
      */
-    public function __construct(array $data = [])
+    public function __construct(array $data = [], bool $caseSensitive = false)
     {
+        $this->caseSensitive = $caseSensitive;
         $this->set($data);
     }
 
@@ -72,11 +83,11 @@ class Collection extends Iterator implements Countable
      */
     public function __get($key)
     {
-        if (isset($this->data[$key])) {
-            return $this->data[$key];
+        if ($this->caseSensitive === true) {
+            return $this->data[$key] ?? null;
         }
 
-        return $this->data[strtolower($key)] ?? null;
+        return $this->data[$key] ?? $this->data[strtolower($key)] ?? null;
     }
 
     /**
@@ -87,7 +98,12 @@ class Collection extends Iterator implements Countable
      */
     public function __set(string $key, $value)
     {
-        $this->data[strtolower($key)] = $value;
+        if ($this->caseSensitive === true) {
+            $this->data[$key] = $value;
+        } else {
+            $this->data[strtolower($key)] = $value;
+        }
+
         return $this;
     }
 
