@@ -1,7 +1,11 @@
 <template>
   <p class="k-url-field-preview">
     {{ column.before }}
-    <k-link :to="link" target="_blank" @click.native.stop>
+    <k-link
+      :to="link"
+      target="_blank"
+      @click.native.stop
+    >
       {{ value }}
     </k-link>
     {{ column.after }}

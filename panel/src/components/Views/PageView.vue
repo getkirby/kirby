@@ -2,7 +2,11 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <k-view v-else :data-locked="isLocked" class="k-page-view">
+  <k-view
+    v-else
+    :data-locked="isLocked"
+    class="k-page-view"
+  >
     <k-header
       :tabs="tabs"
       :tab="tab"
@@ -40,7 +44,11 @@
           >
             {{ $t('settings') }}
           </k-button>
-          <k-dropdown-content ref="settings" :options="options" @action="action" />
+          <k-dropdown-content
+            ref="settings"
+            :options="options"
+            @action="action"
+          />
         </k-dropdown>
 
         <k-languages-dropdown />
@@ -64,11 +72,20 @@
       @tab="onTab"
     />
 
-    <k-page-rename-dialog ref="rename" @success="update" />
+    <k-page-rename-dialog
+      ref="rename"
+      @success="update"
+    />
     <k-page-duplicate-dialog ref="duplicate" />
     <k-page-url-dialog ref="url" />
-    <k-page-status-dialog ref="status" @success="update" />
-    <k-page-template-dialog ref="template" @success="update" />
+    <k-page-status-dialog
+      ref="status"
+      @success="update"
+    />
+    <k-page-template-dialog
+      ref="template"
+      @success="update"
+    />
     <k-page-remove-dialog ref="remove" />
   </k-view>
 </template>
@@ -117,6 +134,8 @@ export default {
           tooltip: this.page.next.title
         };
       }
+
+      return null;
     },
     prev() {
       if (this.page.prev) {
@@ -125,6 +144,8 @@ export default {
           tooltip: this.page.prev.title
         };
       }
+
+      return null;
     },
     status() {
       return this.page.status !== null

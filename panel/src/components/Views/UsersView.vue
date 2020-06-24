@@ -2,31 +2,48 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <k-view v-else class="k-users-view">
+  <k-view
+    v-else
+    class="k-users-view"
+  >
     <k-header>
       {{ $t('view.users') }}
       <k-button-group slot="left">
-        <k-button :disabled="$permissions.users.create === false" icon="add" @click="$refs.create.open()">
+        <k-button
+          :disabled="$permissions.users.create === false"
+          icon="add"
+          @click="$refs.create.open()"
+        >
           {{ $t('user.create') }}
         </k-button>
       </k-button-group>
       <k-button-group slot="right">
         <k-dropdown>
-          <k-button :responsive="true" icon="funnel" @click="$refs.roles.toggle()">
+          <k-button
+            :responsive="true"
+            icon="funnel"
+            @click="$refs.roles.toggle()"
+          >
             {{ $t("role") }}: {{ role ? role.text : $t("role.all") }}
           </k-button>
-          <k-dropdown-content ref="roles" align="right">
-            <k-dropdown-item icon="bolt" @click="filter(false)">
+          <k-dropdown-content
+            ref="roles"
+            align="right"
+          >
+            <k-dropdown-item
+              icon="bolt"
+              @click="filter(false)"
+            >
               {{ $t("role.all") }}
             </k-dropdown-item>
             <hr>
             <k-dropdown-item
-              v-for="role in roles"
-              :key="role.value"
+              v-for="roleFilter in roles"
+              :key="roleFilter.value"
               icon="bolt"
-              @click="filter(role)"
+              @click="filter(roleFilter)"
             >
-              {{ role.text }}
+              {{ roleFilter.text }}
             </k-dropdown-item>
           </k-dropdown-content>
         </k-dropdown>
@@ -47,13 +64,31 @@
       </k-empty>
     </template>
 
-    <k-user-create-dialog ref="create" @success="fetch" />
-    <k-user-email-dialog ref="email" @success="fetch" />
-    <k-user-language-dialog ref="language" @success="fetch" />
+    <k-user-create-dialog
+      ref="create"
+      @success="fetch"
+    />
+    <k-user-email-dialog
+      ref="email"
+      @success="fetch"
+    />
+    <k-user-language-dialog
+      ref="language"
+      @success="fetch"
+    />
     <k-user-password-dialog ref="password" />
-    <k-user-remove-dialog ref="remove" @success="fetch" />
-    <k-user-rename-dialog ref="rename" @success="fetch" />
-    <k-user-role-dialog ref="role" @success="fetch" />
+    <k-user-remove-dialog
+      ref="remove"
+      @success="fetch"
+    />
+    <k-user-rename-dialog
+      ref="rename"
+      @success="fetch"
+    />
+    <k-user-role-dialog
+      ref="role"
+      @success="fetch"
+    />
   </k-view>
 </template>
 

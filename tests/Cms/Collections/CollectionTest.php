@@ -34,6 +34,33 @@ class MockObject extends Model
 
 class CollectionTest extends TestCase
 {
+    public function testCollectionMethods()
+    {
+        $kirby = $this->kirby([
+            'collectionMethods' => [
+                'test' => function () {
+                    return 'collection test';
+                }
+            ],
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $this->assertSame('collection test', (new Collection())->test());
+        $this->assertSame('collection test', $kirby->site()->children()->test());
+
+        Pages::$methods['test'] = function () {
+            return 'pages test';
+        };
+
+        $this->assertSame('collection test', (new Collection())->test());
+        $this->assertSame('pages test', $kirby->site()->children()->test());
+
+        Collection::$methods = [];
+        Pages::$methods = [];
+    }
+
     public function testWithValidObjects()
     {
         $collection = new Collection([

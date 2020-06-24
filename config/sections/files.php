@@ -83,6 +83,9 @@ return [
         'files' => function () {
             $files = $this->parent->files()->template($this->template);
 
+            // filter out all protected files
+            $files = $files->filterBy('isReadable', true);
+
             if ($this->sortBy) {
                 $files = $files->sortBy(...$files::sortArgs($this->sortBy));
             } elseif ($this->sortable === true) {
@@ -220,6 +223,7 @@ return [
             'errors'  => $this->errors,
             'options' => [
                 'accept'   => $this->accept,
+                'apiUrl'   => $this->parent->apiUrl(true),
                 'empty'    => $this->empty,
                 'headline' => $this->headline,
                 'help'     => $this->help,

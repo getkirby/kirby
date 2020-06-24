@@ -18,10 +18,19 @@
       class="k-range-input-native"
       v-on="listeners"
     >
-    <span v-if="tooltip" class="k-range-input-tooltip">
-      <span v-if="tooltip.before" class="k-range-input-tooltip-before">{{ tooltip.before }}</span>
+    <span
+      v-if="tooltip"
+      class="k-range-input-tooltip"
+    >
+      <span
+        v-if="tooltip.before"
+        class="k-range-input-tooltip-before"
+      >{{ tooltip.before }}</span>
       <span class="k-range-input-tooltip-text">{{ label }}</span>
-      <span v-if="tooltip.after" class="k-range-input-tooltip-after">{{ tooltip.after }}</span>
+      <span
+        v-if="tooltip.after"
+        class="k-range-input-tooltip-after"
+      >{{ tooltip.after }}</span>
     </span>
   </label>
 </template>
@@ -73,13 +82,13 @@ export default {
     baseline() {
       // If the minimum is below 0, the baseline should be placed at 0.
       // Otherwise place the baseline at the minimum
-      return this.min < 0 ? 0 : this.min;  
+      return this.min < 0 ? 0 : this.min;
     },
     label() {
-      return this.required || this.value ? this.format(this.position) : "–";
+      return this.required || (this.value || this.value === 0) ? this.format(this.position) : "–";
     },
     position() {
-      return this.value || this.default || this.baseline;
+      return (this.value || this.value === 0) ? this.value : this.default || this.baseline;
     }
   },
   watch: {

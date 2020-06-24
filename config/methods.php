@@ -2,10 +2,8 @@
 
 use Kirby\Cms\App;
 use Kirby\Cms\Field;
-use Kirby\Cms\File;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
-use Kirby\Cms\Page;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Url;
 use Kirby\Data\Json;
@@ -288,6 +286,17 @@ return function (App $app) {
         // manipulators
 
         /**
+         * Applies the callback function to the field
+         * @since 3.4.0
+         *
+         * @param \Kirby\Cms\Field $field
+         * @param Closure $callback
+         */
+        'callback' => function (Field $field, Closure $callback) {
+            return $callback($field);
+        },
+
+        /**
          * Escapes the field value to be safely used in HTML
          * templates without the risk of XSS attacks
          *
@@ -340,18 +349,6 @@ return function (App $app) {
             // been excluded for safety reasons and as they are most likely not
             // needed in most cases.
             $field->value = strip_tags($field->value, '<b><i><small><abbr><cite><code><dfn><em><kbd><strong><samp><var><a><bdo><br><img><q><span><sub><sup>');
-            return $field;
-        },
-
-        /**
-         * Converts all line breaks in the field content to `<br>` tags.
-         * @since 3.3.0
-         *
-         * @param \Kirby\Cms\Field $field
-         * @return \Kirby\Cms\Field
-         */
-        'nl2br' => function (Field $field) {
-            $field->value = nl2br($field->value, false);
             return $field;
         },
 
@@ -421,6 +418,18 @@ return function (App $app) {
          */
         'markdown' => function (Field $field) use ($app) {
             $field->value = $app->markdown($field->value);
+            return $field;
+        },
+
+        /**
+         * Converts all line breaks in the field content to `<br>` tags.
+         * @since 3.3.0
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Field
+         */
+        'nl2br' => function (Field $field) {
+            $field->value = nl2br($field->value, false);
             return $field;
         },
 

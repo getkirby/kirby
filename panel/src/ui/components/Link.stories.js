@@ -1,8 +1,10 @@
+import Link from "./Link.vue";
 import { withKnobs, text, boolean } from '@storybook/addon-knobs';
 
 export default {
-  title: "Link",
-  decorators: [withKnobs]
+  title: "Navigation / Link",
+  decorators: [withKnobs],
+  component: Link
 };
 
 export const configurator = () => ({

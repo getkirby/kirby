@@ -1,8 +1,10 @@
+import Empty from "./Empty.vue";
 import { withKnobs, text, select } from '@storybook/addon-knobs';
 
 export default {
-  title: "Empty",
-  decorators: [withKnobs]
+  title: "Layout / Empty",
+  decorators: [withKnobs],
+  component: Empty
 };
 
 export const configurator = () => ({

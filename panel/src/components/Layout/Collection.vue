@@ -1,5 +1,8 @@
 <template>
-  <div :data-layout="layout" class="k-collection">
+  <div
+    :data-layout="layout"
+    class="k-collection"
+  >
     <k-draggable
       :list="items"
       :options="dragOptions"
@@ -20,7 +23,10 @@
       />
     </k-draggable>
 
-    <footer v-if="hasFooter" class="k-collection-footer">
+    <footer
+      v-if="hasFooter"
+      class="k-collection-footer"
+    >
       <k-text
         v-if="help"
         theme="help"

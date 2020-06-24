@@ -1,9 +1,11 @@
+import Header from "./Header.vue";
 import { action } from "@storybook/addon-actions";
 import { withKnobs, text } from '@storybook/addon-knobs';
 
 export default {
-  title: "Header",
-  decorators: [withKnobs]
+  title: "Layout / Header",
+  decorators: [withKnobs],
+  component: Header,
 };
 
 export const simple = () => ({

@@ -32,24 +32,41 @@
       </ul>
     </section>
 
-    <section v-if="multilang" class="k-languages">
+    <section
+      v-if="multilang"
+      class="k-languages"
+    >
       <template v-if="languages.length > 0">
         <section class="k-languages-section">
           <header>
             <k-headline>{{ $t('languages.default') }}</k-headline>
           </header>
-          <k-collection :items="defaultLanguage" @action="action" />
+          <k-collection
+            :items="defaultLanguage"
+            @action="action"
+          />
         </section>
 
         <section class="k-languages-section">
           <header>
             <k-headline>{{ $t('languages.secondary') }}</k-headline>
-            <k-button icon="add" @click="$refs.create.open()">
+            <k-button
+              icon="add"
+              @click="$refs.create.open()"
+            >
               {{ $t('language.create') }}
             </k-button>
           </header>
-          <k-collection v-if="translations.length" :items="translations" @action="action" />
-          <k-empty v-else icon="globe" @click="$refs.create.open()">
+          <k-collection
+            v-if="translations.length"
+            :items="translations"
+            @action="action"
+          />
+          <k-empty
+            v-else
+            icon="globe"
+            @click="$refs.create.open()"
+          >
             {{ $t('languages.secondary.empty') }}
           </k-empty>
         </section>
@@ -58,18 +75,33 @@
       <template v-else-if="languages.length === 0">
         <header>
           <k-headline>{{ $t('languages') }}</k-headline>
-          <k-button icon="add" @click="$refs.create.open()">
+          <k-button
+            icon="add"
+            @click="$refs.create.open()"
+          >
             {{ $t('language.create') }}
           </k-button>
         </header>
-        <k-empty icon="globe" @click="$refs.create.open()">
+        <k-empty
+          icon="globe"
+          @click="$refs.create.open()"
+        >
           {{ $t('languages.empty') }}
         </k-empty>
       </template>
 
-      <k-language-create-dialog ref="create" @success="fetch" />
-      <k-language-update-dialog ref="update" @success="fetch" />
-      <k-language-remove-dialog ref="remove" @success="fetch" />
+      <k-language-create-dialog
+        ref="create"
+        @success="fetch"
+      />
+      <k-language-update-dialog
+        ref="update"
+        @success="fetch"
+      />
+      <k-language-remove-dialog
+        ref="remove"
+        @success="fetch"
+      />
     </section>
   </k-view>
 </template>
