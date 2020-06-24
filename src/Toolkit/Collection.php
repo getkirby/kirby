@@ -1316,14 +1316,7 @@ Collection::$filters['minwords'] = [
  */
 Collection::$filters['date =='] = [
     'validator' => function ($value, $test) {
-        $value = strtotime($value);
-        $test  = strtotime($test);
-
-        if (is_int($value) === true && is_int($test) === true) {
-            return $value === $test;
-        } else {
-            return false;
-        }
+        return V::date($value, '==', $test);
     }
 ];
 
@@ -1332,14 +1325,7 @@ Collection::$filters['date =='] = [
  */
 Collection::$filters['date !='] = [
     'validator' => function ($value, $test) {
-        $value = strtotime($value);
-        $test  = strtotime($test);
-
-        if (is_int($value) === true && is_int($test) === true) {
-            return $value !== $test;
-        } else {
-            return false;
-        }
+        return V::date($value, '!=', $test);
     }
 ];
 
@@ -1348,14 +1334,7 @@ Collection::$filters['date !='] = [
  */
 Collection::$filters['date >'] = [
     'validator' => function ($value, $test) {
-        $value = strtotime($value);
-        $test  = strtotime($test);
-
-        if (is_int($value) === true && is_int($test) === true) {
-            return $value > $test;
-        } else {
-            return false;
-        }
+        return V::date($value, '>', $test);
     }
 ];
 
@@ -1364,14 +1343,7 @@ Collection::$filters['date >'] = [
  */
 Collection::$filters['date >='] = [
     'validator' => function ($value, $test) {
-        $value = strtotime($value);
-        $test  = strtotime($test);
-
-        if (is_int($value) === true && is_int($test) === true) {
-            return $value >= $test;
-        } else {
-            return false;
-        }
+        return V::date($value, '>=', $test);
     }
 ];
 
@@ -1380,14 +1352,7 @@ Collection::$filters['date >='] = [
  */
 Collection::$filters['date <'] = [
     'validator' => function ($value, $test) {
-        $value = strtotime($value);
-        $test  = strtotime($test);
-
-        if (is_int($value) === true && is_int($test) === true) {
-            return $value < $test;
-        } else {
-            return false;
-        }
+        return V::date($value, '<', $test);
     }
 ];
 
@@ -1396,13 +1361,6 @@ Collection::$filters['date <'] = [
  */
 Collection::$filters['date <='] = [
     'validator' => function ($value, $test) {
-        $value = strtotime($value);
-        $test  = strtotime($test);
-
-        if (is_int($value) === true && is_int($test) === true) {
-            return $value <= $test;
-        } else {
-            return false;
-        }
+        return V::date($value, '<=', $test);
     }
 ];
