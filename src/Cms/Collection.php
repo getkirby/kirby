@@ -45,7 +45,7 @@ class Collection extends BaseCollection
     public function __call(string $key, $arguments)
     {
         // collection methods
-        if ($this->hasMethod($key)) {
+        if ($this->hasMethod($key) === true) {
             return $this->callMethod($key, $arguments);
         }
     }

@@ -15,6 +15,7 @@ class PermissionsTest extends TestCase
             ['files', 'changeName'],
             ['files', 'create'],
             ['files', 'delete'],
+            ['files', 'read'],
             ['files', 'replace'],
             ['files', 'update'],
 

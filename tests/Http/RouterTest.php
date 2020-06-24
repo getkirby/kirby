@@ -126,11 +126,12 @@ class RouterTest extends TestCase
             ]
         ]);
 
-        $router::$afterEach = function ($route, $path, $method, $result) {
+        $router::$afterEach = function ($route, $path, $method, $result, $final) {
             $this->assertInstanceOf(Route::class, $route);
             $this->assertEquals('/', $path);
             $this->assertEquals('GET', $method);
             $this->assertEquals('test', $result);
+            $this->assertTrue($final);
 
             return $result . ':after';
         };
@@ -189,6 +190,40 @@ class RouterTest extends TestCase
         $this->expectExceptionMessage('No route found for path: "d" and request method: "GET"');
 
         $result = $router->call('d');
+    }
+
+    public function testNextAfterEach()
+    {
+        $router = new Router([
+            [
+                'pattern' => 'a',
+                'action'  => function () {
+                    /** @var \Kirby\Http\Route $this */
+                    $this->next();
+                }
+            ],
+            [
+                'pattern' => 'a',
+                'action'  => function () {
+                    return 'a';
+                }
+            ]
+        ]);
+
+        $numTotal = 0;
+        $numFinal = 0;
+
+        $router::$afterEach = function ($route, $path, $method, $result, $final) use (&$numTotal, &$numFinal) {
+            $numTotal++;
+
+            if ($final === true) {
+                $numFinal++;
+            }
+        };
+
+        $router->call('a');
+        $this->assertEquals(2, $numTotal);
+        $this->assertEquals(1, $numFinal);
     }
 
     public function testCallWithCallback()

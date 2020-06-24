@@ -158,7 +158,7 @@ class Route
      *
      * @return void
      */
-    public function next(): void
+    public static function next(): void
     {
         throw new Exceptions\NextRouteException('next');
     }
