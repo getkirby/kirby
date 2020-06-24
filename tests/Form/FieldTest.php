@@ -754,4 +754,54 @@ class FieldTest extends TestCase
         $this->assertEquals('1/2', $field->width());
         $this->assertEquals('1/2', $field->width);
     }
+
+    public function testValidate()
+    {
+        Field::$types = [
+            'test' => []
+        ];
+
+        $page = new Page(['slug' => 'test']);
+
+        // default
+        $field = new Field('test', [
+            'model'    => $page,
+            'validate' => [
+                'integer'
+            ],
+        ]);
+
+        $this->assertEquals([], $field->errors());
+
+        // required
+        $field = new Field('test', [
+            'model'    => $page,
+            'required' => true,
+            'validate' => [
+                'integer'
+            ],
+        ]);
+
+        $expected = [
+            'required' => 'Please enter something',
+            'integer'  => 'Please enter a valid integer',
+        ];
+
+        $this->assertEquals($expected, $field->errors());
+
+        // invalid
+        $field = new Field('test', [
+            'model'    => $page,
+            'value'    => 'abc',
+            'validate' => [
+                'integer'
+            ],
+        ]);
+
+        $expected = [
+            'integer' => 'Please enter a valid integer',
+        ];
+
+        $this->assertEquals($expected, $field->errors());
+    }
 }

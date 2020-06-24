@@ -325,9 +325,14 @@ class Field extends Component
             }
         }
 
-        if (empty($this->validate) === false) {
-            $rules  = A::wrap($this->validate);
-            $errors = V::errors($this->value(), $rules);
+        if (
+            empty($this->validate) === false &&
+            (
+                $this->isEmpty() === false ||
+                ($this->isEmpty() === true && $this->isRequired() === true)
+            )
+        ) {
+            $errors = V::errors($this->value(), $this->validate);
 
             if (empty($errors) === false) {
                 $this->errors = array_merge($this->errors, $errors);
