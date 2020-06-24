@@ -332,7 +332,8 @@ class Field extends Component
                 ($this->isEmpty() === true && $this->isRequired() === true)
             )
         ) {
-            $errors = V::errors($this->value(), $this->validate);
+            $rules  = A::wrap($this->validate);
+            $errors = V::errors($this->value(), $rules);
 
             if (empty($errors) === false) {
                 $this->errors = array_merge($this->errors, $errors);
