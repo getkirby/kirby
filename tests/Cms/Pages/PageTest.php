@@ -1111,4 +1111,69 @@ class PageTest extends TestCase
 
         Page::$models = [];
     }
+
+    public function testPageController()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => __DIR__ . '/fixtures/PageTest'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'content' => [
+                            'title' => 'Test Title',
+                        ]
+                    ]
+                ]
+            ],
+            'controllers' => [
+                'default' => function ($page) {
+                    $page = $page->changeTitle('New Title');
+
+                    return ['page' => $page];
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+        $page = $app->page('test');
+        $data = $page->controller();
+
+        $this->assertCount(4, $data);
+        $this->assertInstanceOf('Kirby\Cms\Page', $data['page']);
+        $this->assertSame('New Title', $data['page']->title()->value());
+    }
+
+    public function testPageControllerInvalid()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Passing "page" data must be instance of Kirby\Cms\Page in controller');
+
+        $app = new App([
+            'roots' => [
+                'index' => __DIR__ . '/fixtures/PageTest'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'content' => [
+                            'title' => 'Test Title',
+                        ]
+                    ]
+                ]
+            ],
+            'controllers' => [
+                'default' => function () {
+                    return ['page' => 'string'];
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+        $page = $app->page('test');
+        $page->controller();
+    }
 }
