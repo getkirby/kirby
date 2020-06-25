@@ -1259,7 +1259,7 @@ Collection::$filters['!^='] = [
 /**
  * Between Filter
  */
-Collection::$filters['between'] = [
+Collection::$filters['between'] = Collection::$filters['..'] = [
     'validator' => function ($value, $test) {
         return V::between($value, ...$test) === true;
     },
@@ -1309,4 +1309,68 @@ Collection::$filters['maxwords'] = [
  */
 Collection::$filters['minwords'] = [
     'validator' => 'V::minWords',
+];
+
+/**
+ * Date Equals Filter
+ */
+Collection::$filters['date =='] = [
+    'validator' => function ($value, $test) {
+        return V::date($value, '==', $test);
+    }
+];
+
+/**
+ * Date Not Equals Filter
+ */
+Collection::$filters['date !='] = [
+    'validator' => function ($value, $test) {
+        return V::date($value, '!=', $test);
+    }
+];
+
+/**
+ * Date More Filter
+ */
+Collection::$filters['date >'] = [
+    'validator' => function ($value, $test) {
+        return V::date($value, '>', $test);
+    }
+];
+
+/**
+ * Date Min Filter
+ */
+Collection::$filters['date >='] = [
+    'validator' => function ($value, $test) {
+        return V::date($value, '>=', $test);
+    }
+];
+
+/**
+ * Date Less Filter
+ */
+Collection::$filters['date <'] = [
+    'validator' => function ($value, $test) {
+        return V::date($value, '<', $test);
+    }
+];
+
+/**
+ * Date Max Filter
+ */
+Collection::$filters['date <='] = [
+    'validator' => function ($value, $test) {
+        return V::date($value, '<=', $test);
+    }
+];
+
+/**
+ * Date Between Filter
+ */
+Collection::$filters['date between'] = Collection::$filters['date ..'] = [
+    'validator' => function ($value, $test) {
+        return V::date($value, '>=', $test[0]) &&
+               V::date($value, '<=', $test[1]);
+    }
 ];
