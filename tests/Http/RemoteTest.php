@@ -2,6 +2,7 @@
 
 namespace Kirby\Http;
 
+use Kirby\Cms\App;
 use PHPUnit\Framework\TestCase;
 
 class RemoteTest extends TestCase
@@ -13,7 +14,8 @@ class RemoteTest extends TestCase
         $this->defaults = Remote::$defaults;
 
         Remote::$defaults = array_merge($this->defaults, [
-            'test' => true
+            'test' => true,
+            'key'  => 'value'
         ]);
     }
 
@@ -42,6 +44,22 @@ class RemoteTest extends TestCase
             'basicAuth' => 'user:pw'
         ]);
         $this->assertSame('user:pw', $request->curlopt[CURLOPT_USERPWD]);
+    }
+
+    public function testOptionsFromApp()
+    {
+        new App([
+            'options' => [
+                'remote.key' => 'different-value',
+                'remote.body' => false
+            ]
+        ]);
+
+        $request = Remote::get('https://getkirby.com');
+
+        $options = $request->options();
+        $this->assertSame('different-value', $options['key']);
+        $this->assertFalse($options['body']);
     }
 
     public function testContent()

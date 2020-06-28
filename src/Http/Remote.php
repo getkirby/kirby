@@ -3,6 +3,7 @@
 namespace Kirby\Http;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
@@ -96,8 +97,17 @@ class Remote
      */
     public function __construct(string $url, array $options = [])
     {
+        $defaults = static::$defaults;
+
+        // update the defaults with App config if set;
+        // request the App instance lazily
+        $app = App::instance(null, true);
+        if ($app !== null) {
+            $defaults = array_merge($defaults, $app->option('remote', []));
+        }
+
         // set all options
-        $this->options = array_merge(static::$defaults, $options);
+        $this->options = array_merge($defaults, $options);
 
         // add the url
         $this->options['url'] = $url;
