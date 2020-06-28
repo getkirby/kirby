@@ -577,12 +577,17 @@ class App
      * Returns the current App instance
      *
      * @param \Kirby\Cms\App $instance
-     * @return self
+     * @param bool $lazy If `true`, the instance is only returned if already existing
+     * @return self|null
      */
-    public static function instance(self $instance = null)
+    public static function instance(self $instance = null, bool $lazy = false)
     {
         if ($instance === null) {
-            return static::$instance ?? new static();
+            if ($lazy === true) {
+                return static::$instance;
+            } else {
+                return static::$instance ?? new static();
+            }
         }
 
         return static::$instance = $instance;
