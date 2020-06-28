@@ -44,7 +44,8 @@
     "test": "phpunit --stderr --coverage-html=tests/coverage",
     "zip": "composer archive --format=zip --file=dist",
     "build": "./scripts/build",
-    "fix": "php-cs-fixer fix --config .php_cs"
+    "fix": "php-cs-fixer fix --config .php_cs",
+    "post-update-cmd": "curl -o cacert.pem https://curl.haxx.se/ca/cacert.pem"
   },
   "config": {
     "optimize-autoloader": true
