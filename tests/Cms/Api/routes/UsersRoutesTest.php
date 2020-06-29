@@ -11,6 +11,9 @@ class UsersRoutesTest extends TestCase
     public function setUp(): void
     {
         $this->app = new App([
+            'options' => [
+                'api.allowImpersonation' => true
+            ],
             'roots' => [
                 'index' => '/dev/null'
             ],

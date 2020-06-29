@@ -254,7 +254,7 @@ trait FileActions
      */
     public function publish()
     {
-        Media::publish($this->root(), $this->mediaRoot());
+        Media::publish($this, $this->mediaRoot());
         return $this;
     }
 
@@ -306,7 +306,7 @@ trait FileActions
      */
     public function unpublish()
     {
-        Media::unpublish($this->parent()->mediaRoot(), $this->filename());
+        Media::unpublish($this->parent()->mediaRoot(), $this);
         return $this;
     }
 }

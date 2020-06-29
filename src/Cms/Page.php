@@ -1492,13 +1492,7 @@ class Page extends ModelWithContent
      */
     protected function token(): string
     {
-        $salt = $this->kirby()->option('content.salt', $this->root());
-
-        if (is_a($salt, 'Closure') === true) {
-            $salt = $salt($this);
-        }
-
-        return hash_hmac('sha1', $this->id() . $this->template(), $salt);
+        return $this->kirby()->contentToken($this, $this->id() . $this->template());
     }
 
     /**

@@ -14,6 +14,7 @@ class FileBlueprintTest extends TestCase
             'changeName' => null,
             'create'     => null,
             'delete'     => null,
+            'read'       => null,
             'replace'    => null,
             'update'     => null,
         ];

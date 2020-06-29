@@ -9,6 +9,7 @@ use Kirby\Exception\PermissionException;
 use Kirby\Http\Remote;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -281,7 +282,9 @@ class System
      * Loads the license file and returns
      * the license information if available
      *
-     * @return string|false
+     * @return string|bool License key or `false` if the current user has
+     *                     permissions for access.settings, otherwise just a
+     *                     boolean that tells whether a valid license is active
      */
     public function license()
     {
@@ -326,7 +329,14 @@ class System
             return false;
         }
 
-        return $license['license'];
+        // only return the actual license key if the
+        // current user has appropriate permissions
+        $user = $this->app->user();
+        if ($user && $user->role()->permissions()->for('access', 'settings') === true) {
+            return $license['license'];
+        } else {
+            return true;
+        }
     }
 
     /**
@@ -422,13 +432,17 @@ class System
      */
     public function server(): bool
     {
-        $servers = [
-            'apache',
-            'caddy',
-            'litespeed',
-            'nginx',
-            'php'
-        ];
+        if ($servers = $this->app->option('servers')) {
+            $servers = A::wrap($servers);
+        } else {
+            $servers = [
+                'apache',
+                'caddy',
+                'litespeed',
+                'nginx',
+                'php'
+            ];
+        }
 
         $software = $_SERVER['SERVER_SOFTWARE'] ?? null;
 

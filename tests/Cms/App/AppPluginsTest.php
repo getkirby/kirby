@@ -204,6 +204,9 @@ class AppPluginsTest extends TestCase
         ]);
 
         $app = new App([
+            'options' => [
+                'api.allowImpersonation' => true
+            ],
             'roots' => [
                 'index' => '/dev/null'
             ],
