@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "De avatar kon niet worden geupload",
   "error.avatar.delete.fail": "De avatar kan niet worden verwijderd",
-  "error.avatar.dimensions.invalid":
-    "Houd de breedte en hoogte van de avatar onder 3000 pixels",
-  "error.avatar.mime.forbidden":
-    "De avatar moet een JPEG of PNG bestand zijn",
+  "error.avatar.dimensions.invalid": "Houd de breedte en hoogte van de avatar onder 3000 pixels",
+  "error.avatar.mime.forbidden": "De avatar moet een JPEG of PNG bestand zijn",
 
   "error.blueprint.notFound": "De blueprint \"{name}\" kon niet geladen worden",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Ongeldige converter \"{converter}\"",
 
   "error.file.changeName.empty": "De naam mag niet leeg zijn",
-  "error.file.changeName.permission":
-    "Je hebt geen rechten om de naam te wijzigen van \"{filename}\"",
+  "error.file.changeName.permission": "Je hebt geen rechten om de naam te wijzigen van \"{filename}\"",
   "error.file.duplicate": "Er bestaat al een bestand met de naam \"{filename}\"",
-  "error.file.extension.forbidden":
-    "Bestandsextensie \"{extension}\" is niet toegestaan",
-  "error.file.extension.missing":
-    "Je kunt geen bestanden uploaden zonder bestandsextensie",
+  "error.file.extension.forbidden": "Bestandsextensie \"{extension}\" is niet toegestaan",
+  "error.file.extension.missing": "Je kunt geen bestanden uploaden zonder bestandsextensie",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
   "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
-  "error.file.mime.differs":
-    "Het geüploade bestand moet van hetzelfde mime-type zijn: \"{mime}\"",
+  "error.file.mime.differs": "Het geüploade bestand moet van hetzelfde mime-type zijn: \"{mime}\"",
   "error.file.mime.forbidden": "Het type \"{mime}\" is niet toegestaan",
   "error.file.mime.invalid": "Invalid mime type: {mime}",
-  "error.file.mime.missing":
-    "Het mediatype voor \"{filename}\" kan niet worden gedecteerd",
+  "error.file.mime.missing": "Het mediatype voor \"{filename}\" kan niet worden gedecteerd",
   "error.file.minheight": "The height of the image must be at least {height} pixels",
   "error.file.minsize": "The file is too small",
   "error.file.minwidth": "The width of the image must be at least {width} pixels",
@@ -90,111 +83,77 @@
   "error.license.email": "Gelieve een geldig emailadres in te voeren",
   "error.license.verification": "De licentie kon niet worden geverifieerd. ",
 
-  "error.page.changeSlug.permission":
-    "Je kunt de URL van deze pagina niet wijzigen",
-  "error.page.changeStatus.incomplete":
-    "Deze pagina bevat fouten en kan niet worden gepubliceerd",
-  "error.page.changeStatus.permission":
-    "De status van deze pagina kan niet worden gewijzigd",
-  "error.page.changeStatus.toDraft.invalid":
-    "De pagina \"{slug}\" kan niet worden aangepast naar 'concept'",
-  "error.page.changeTemplate.invalid":
-    "De template van deze pagina \"{slug}\" kan niet worden gewijzigd",
-  "error.page.changeTemplate.permission":
-    "Je hebt geen rechten om het template te wijzigen van \"{slug}\"",
+  "error.page.changeSlug.permission": "Je kunt de URL van deze pagina niet wijzigen",
+  "error.page.changeStatus.incomplete": "Deze pagina bevat fouten en kan niet worden gepubliceerd",
+  "error.page.changeStatus.permission": "De status van deze pagina kan niet worden gewijzigd",
+  "error.page.changeStatus.toDraft.invalid": "De pagina \"{slug}\" kan niet worden aangepast naar 'concept'",
+  "error.page.changeTemplate.invalid": "De template van deze pagina \"{slug}\" kan niet worden gewijzigd",
+  "error.page.changeTemplate.permission": "Je hebt geen rechten om het template te wijzigen van \"{slug}\"",
   "error.page.changeTitle.empty": "De titel mag niet leeg zijn",
-  "error.page.changeTitle.permission":
-    "Je hebt geen rechten om de titel te wijzigen van \"{slug}\"",
+  "error.page.changeTitle.permission": "Je hebt geen rechten om de titel te wijzigen van \"{slug}\"",
   "error.page.create.permission": "Je hebt geen rechten om \"{slug}\" aan te maken",
   "error.page.delete": "De pagina \"{slug}\" kan niet worden verwijderd",
   "error.page.delete.confirm": "Voer de paginatitel in om te bevestigen",
-  "error.page.delete.hasChildren":
-    "Deze pagina heeft subpagina's en kan niet worden verwijderd",
+  "error.page.delete.hasChildren": "Deze pagina heeft subpagina's en kan niet worden verwijderd",
   "error.page.delete.permission": "Je hebt geen rechten om \"{slug}\" te verwijderen",
-  "error.page.draft.duplicate":
-    "Er bestaat al een conceptpagina met de URL-appendix \"{slug}\"",
-  "error.page.duplicate":
-    "Er bestaat al een pagina met de URL-appendix \"{slug}\"",
+  "error.page.draft.duplicate": "Er bestaat al een conceptpagina met de URL-appendix \"{slug}\"",
+  "error.page.duplicate": "Er bestaat al een pagina met de URL-appendix \"{slug}\"",
   "error.page.duplicate.permission": "Je bent niet gemachtigd om \"{slug}\" te dupliceren",
   "error.page.notFound": "De pagina \"{slug}\" kan niet worden gevonden",
-  "error.page.num.invalid":
-    "Vul een geldig sorteer-cijfer in. Het cijfer mag niet negatief zijn",
+  "error.page.num.invalid": "Vul een geldig sorteer-cijfer in. Het cijfer mag niet negatief zijn",
   "error.page.slug.invalid": "Vul een geldige URL-prefix in",
   "error.page.sort.permission": "De pagina \"{slug}\" kan niet worden gesorteerd",
   "error.page.status.invalid": "Zorg voor een geldige paginastatus",
   "error.page.undefined": "De pagina kan niet worden gevonden",
   "error.page.update.permission": "Je hebt geen rechten om \"{slug}\" te updaten",
 
-  "error.section.files.max.plural":
-    "Voeg niet meer dan {max} bestanden toe aan de zone \"{section}\"",
-  "error.section.files.max.singular":
-    "Je kunt niet meer dan 1 bestand toevoegen aan de zone \"{section}\"",
-  "error.section.files.min.plural":
-    "De \"{section}\" sectie moet minimaal {min} bestanden bevatten.",
-  "error.section.files.min.singular":
-    "De \"{section}\" sectie moet minimaal 1 bestand bevatten.",
+  "error.section.files.max.plural": "Voeg niet meer dan {max} bestanden toe aan de zone \"{section}\"",
+  "error.section.files.max.singular": "Je kunt niet meer dan 1 bestand toevoegen aan de zone \"{section}\"",
+  "error.section.files.min.plural": "De \"{section}\" sectie moet minimaal {min} bestanden bevatten.",
+  "error.section.files.min.singular": "De \"{section}\" sectie moet minimaal 1 bestand bevatten.",
 
-  "error.section.pages.max.plural":
-    "Je kunt niet meer dan {max} pagina's toevoegen aan de zone \"{section}\"",
-  "error.section.pages.max.singular":
-    "Je kunt niet meer dan 1 pagina toevoegen aan de zone \"{section}\"",
-  "error.section.pages.min.plural":
-    "De \"{section}\" sectie moet minimaal {min} pagina's bevatten.",
-  "error.section.pages.min.singular":
-    "De \"{section}\" sectie moet minimaal 1 pagina bevatten.",
+  "error.section.pages.max.plural": "Je kunt niet meer dan {max} pagina's toevoegen aan de zone \"{section}\"",
+  "error.section.pages.max.singular": "Je kunt niet meer dan 1 pagina toevoegen aan de zone \"{section}\"",
+  "error.section.pages.min.plural": "De \"{section}\" sectie moet minimaal {min} pagina's bevatten.",
+  "error.section.pages.min.singular": "De \"{section}\" sectie moet minimaal 1 pagina bevatten.",
 
   "error.section.notLoaded": "De zone \"{name}\" kan niet worden geladen",
   "error.section.type.invalid": "Zone-type \"{type}\" is niet geldig",
 
   "error.site.changeTitle.empty": "De titel mag niet leeg zijn",
-  "error.site.changeTitle.permission":
-    "Je hebt geen rechten om de titel van de site te wijzigen",
+  "error.site.changeTitle.permission": "Je hebt geen rechten om de titel van de site te wijzigen",
   "error.site.update.permission": "Je hebt geen rechten om de site te updaten",
 
   "error.template.default.notFound": "Het standaard template bestaat niet",
 
-  "error.user.changeEmail.permission":
-    "Je hebt geen rechten om het e-mailadres van gebruiker \"{name}\" te wijzigen",
-  "error.user.changeLanguage.permission":
-    "Je hebt geen rechten om de taal voor gebruiker \"{name}\" te wijzigen",
-  "error.user.changeName.permission":
-    "Je hebt geen rechten om de naam van gebruiker \"{name}\" te wijzigen",
-  "error.user.changePassword.permission":
-    "Je hebt geen rechten om het wachtwoord van gebruiker \"{name}\" te wijzigen",
-  "error.user.changeRole.lastAdmin":
-    "De rol van de laatste beheerder kan niet worden gewijzigd",
-  "error.user.changeRole.permission":
-    "Je hebt geen rechten om de rol van gebruiker \"{name}\" te wijzigen",
-  "error.user.changeRole.toAdmin":
-    "Je hebt geen rechten om de rol van iemand te wijzigen naar admin",
+  "error.user.changeEmail.permission": "Je hebt geen rechten om het e-mailadres van gebruiker \"{name}\" te wijzigen",
+  "error.user.changeLanguage.permission": "Je hebt geen rechten om de taal voor gebruiker \"{name}\" te wijzigen",
+  "error.user.changeName.permission": "Je hebt geen rechten om de naam van gebruiker \"{name}\" te wijzigen",
+  "error.user.changePassword.permission": "Je hebt geen rechten om het wachtwoord van gebruiker \"{name}\" te wijzigen",
+  "error.user.changeRole.lastAdmin": "De rol van de laatste beheerder kan niet worden gewijzigd",
+  "error.user.changeRole.permission": "Je hebt geen rechten om de rol van gebruiker \"{name}\" te wijzigen",
+  "error.user.changeRole.toAdmin": "Je hebt geen rechten om de rol van iemand te wijzigen naar admin",
   "error.user.create.permission": "Je hebt geen rechten om deze gebruiker aan te maken",
   "error.user.delete": "De gebruiker \"{name}\" kan niet worden verwijderd",
   "error.user.delete.lastAdmin": "Je kan de laatste admin niet verwijderen",
   "error.user.delete.lastUser": "De laatste gebruiker kan niet worden verwijderd",
-  "error.user.delete.permission":
-    "Je hebt geen rechten om gebruiker \"{name}\" te verwijderen",
-  "error.user.duplicate":
-    "Er bestaat al een gebruiker met e-mailadres \"{email}\"",
+  "error.user.delete.permission": "Je hebt geen rechten om gebruiker \"{name}\" te verwijderen",
+  "error.user.duplicate": "Er bestaat al een gebruiker met e-mailadres \"{email}\"",
   "error.user.email.invalid": "Gelieve een geldig emailadres in te voeren",
   "error.user.language.invalid": "Gelieve een geldige taal in te voeren",
   "error.user.notFound": "De gebruiker \"{name}\" kan niet worden gevonden",
-  "error.user.password.invalid":
-    "Gelieve een geldig wachtwoord in te voeren. Wachtwoorden moeten minstens 8 karakters lang zijn.",
+  "error.user.password.invalid": "Gelieve een geldig wachtwoord in te voeren. Wachtwoorden moeten minstens 8 karakters lang zijn.",
   "error.user.password.notSame": "De wachtwoorden komen niet overeen",
   "error.user.password.undefined": "De gebruiker heeft geen wachtwoord",
   "error.user.role.invalid": "Gelieve een geldige rol in te voeren",
-  "error.user.update.permission":
-    "Je hebt geen rechten om gebruiker \"{name}\" te updaten",
+  "error.user.update.permission": "Je hebt geen rechten om gebruiker \"{name}\" te updaten",
 
   "error.validation.accepted": "Gelieve te bevestigen",
   "error.validation.alpha": "Vul alleen a-z karakters in",
-  "error.validation.alphanum":
-    "Vul alleen a-z karakters of cijfers (0-9) in",
-  "error.validation.between":
-    "Vul een waarde tussen \"{min}\" en \"{max}\"",
+  "error.validation.alphanum": "Vul alleen a-z karakters of cijfers (0-9) in",
+  "error.validation.between": "Vul een waarde tussen \"{min}\" en \"{max}\"",
   "error.validation.boolean": "Ga akkoord of weiger",
-  "error.validation.contains":
-    "Vul een waarde in die \"{needle}\" bevat",
+  "error.validation.contains": "Vul een waarde in die \"{needle}\" bevat",
   "error.validation.date": "Vul een geldige datum in",
   "error.validation.date.after": "Vul een datum in na {date}",
   "error.validation.date.before": "Vul een datum in voor {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Vul een waarde in lager dan {max}",
   "error.validation.match": "De invoer klopt niet met het verwachte patroon",
   "error.validation.max": "Vul een waarde in die gelijk is aan of lager dan {max}",
-  "error.validation.maxlength":
-    "Gebruik minder karakters (maximaal {max} karakters)",
+  "error.validation.maxlength": "Gebruik minder karakters (maximaal {max} karakters)",
   "error.validation.maxwords": "Vul minder dan {max} woorden in",
   "error.validation.min": "Vul een waarde in die gelijk is aan of groter dan {min}",
-  "error.validation.minlength":
-    "Gebruik meer karakters (minimaal {min} karakters)",
+  "error.validation.minlength": "Gebruik meer karakters (minimaal {min} karakters)",
   "error.validation.minwords": "Vul minimaal {min} woorden in",
   "error.validation.more": "Vul een grotere waarde in dan {min}",
-  "error.validation.notcontains":
-    "Zorg dat de invoer niet \"{needle}\" bevat",
-  "error.validation.notin":
-    "Vul de volgende dingen niet in: {{notIn}}",
+  "error.validation.notcontains": "Zorg dat de invoer niet \"{needle}\" bevat",
+  "error.validation.notin": "Vul de volgende dingen niet in: {{notIn}}",
   "error.validation.option": "Selecteer een geldige optie",
   "error.validation.num": "Vul een geldig cijfer in",
   "error.validation.required": "Vul iets in",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Nog geen items.",
   "field.users.empty": "Nog geen gebruikers geselecteerd",
 
-  "file.delete.confirm":
-    "Wil je dit bestand <br><strong>{filename}</strong> verwijderen?",
+  "file.delete.confirm": "Wil je dit bestand <br><strong>{filename}</strong> verwijderen?",
 
   "files": "Bestanden",
   "files.empty": "Nog geen bestanden",
@@ -251,29 +205,22 @@
   "installation": "Installatie",
   "installation.completed": "Het Panel is geïnstalleerd",
   "installation.disabled": "Je kan geen Panel installatie uitvoeren op een openbare server. Voer het installatieprogramma uit op een lokale computer of schakel het in met de <code>panel.install</code> optie.",
-  "installation.issues.accounts":
-    "De map <code>/site/accounts</code> heeft geen schrijfrechten",
-  "installation.issues.content":
-    "De map <code>/content</code> bestaat niet of heeft geen schrijfrechten",
+  "installation.issues.accounts": "De map <code>/site/accounts</code> heeft geen schrijfrechten",
+  "installation.issues.content": "De map <code>/content</code> bestaat niet of heeft geen schrijfrechten",
   "installation.issues.curl": "De <code>CURL</code>-extensie is vereist",
   "installation.issues.headline": "Het Panel kan niet worden geïnstalleerd",
-  "installation.issues.mbstring":
-    "De <code>MB String</code> extensie is verplicht",
-  "installation.issues.media":
-    "De map <code>/media</code>bestaat niet of heeft geen schrijfrechten",
+  "installation.issues.mbstring": "De <code>MB String</code> extensie is verplicht",
+  "installation.issues.media": "De map <code>/media</code>bestaat niet of heeft geen schrijfrechten",
   "installation.issues.php": "Gebruik <code>PHP7+</code>",
-  "installation.issues.server":
-    "Kirby vereist <code>Apache</code>, <code>Nginx</code>of <code>Caddy</code>",
+  "installation.issues.server": "Kirby vereist <code>Apache</code>, <code>Nginx</code>of <code>Caddy</code>",
   "installation.issues.sessions": "De map <code>/site/sessions</code> bestaat niet of heeft geen schrijfrechten",
 
   "language": "Taal",
   "language.code": "Code",
   "language.convert": "Maak standaard",
-  "language.convert.confirm":
-    "<p>Weet je zeker dat je <strong>{name}</strong>wilt aanpassen naar de standaard taal? Dit kan niet ongedaan worden gemaakt</p><p>Als <strong>{name}</strong> nog niet vertaalde content heeft, is er geen content meer om op terug te vallen en zouden delen van je site leeg kunnen zijn.</p>",
+  "language.convert.confirm": "<p>Weet je zeker dat je <strong>{name}</strong>wilt aanpassen naar de standaard taal? Dit kan niet ongedaan worden gemaakt</p><p>Als <strong>{name}</strong> nog niet vertaalde content heeft, is er geen content meer om op terug te vallen en zouden delen van je site leeg kunnen zijn.</p>",
   "language.create": "Nieuwe taal toevoegen",
-  "language.delete.confirm":
-    "Weet je zeker dat je de taal <strong>{name}</strong> inclusief alle vertalingen wilt verwijderen? Je kunt dit niet ongedaan maken!",
+  "language.delete.confirm": "Weet je zeker dat je de taal <strong>{name}</strong> inclusief alle vertalingen wilt verwijderen? Je kunt dit niet ongedaan maken!",
   "language.deleted": "De taal is verwijderd",
   "language.direction": "Leesrichting",
   "language.direction.ltr": "Links naar rechts",
@@ -292,8 +239,7 @@
   "license": "Licentie",
   "license.buy": "Koop een licentie",
   "license.register": "Registreren",
-  "license.register.help":
-    "Je hebt de licentie via e-mail gekregen nadat je de aankoop hebt gedaan. Kopieer en plak de licentie om te registreren. ",
+  "license.register.help": "Je hebt de licentie via e-mail gekregen nadat je de aankoop hebt gedaan. Kopieer en plak de licentie om te registreren. ",
   "license.register.label": "Vul je licentie in",
   "license.register.success": "Bedankt dat je Kirby ondersteunt",
   "license.unregistered": "Dit is een niet geregistreerde demo van Kirby",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Selecteer een positie",
   "page.changeStatus.select": "Selecteer een nieuwe status",
   "page.changeTemplate": "Verander template",
-  "page.delete.confirm":
-    "Weet je zeker dat je pagina <strong>{title}</strong> wilt verwijderen?",
-  "page.delete.confirm.subpages":
-    "<strong>Deze pagina heeft subpagina's</strong>. <br>Alle subpagina's worden ook verwijderd.",
+  "page.delete.confirm": "Weet je zeker dat je pagina <strong>{title}</strong> wilt verwijderen?",
+  "page.delete.confirm.subpages": "<strong>Deze pagina heeft subpagina's</strong>. <br>Alle subpagina's worden ook verwijderd.",
   "page.delete.confirm.title": "Voeg een paginatitel in om te bevestigen",
   "page.draft.create": "Maak concept",
   "page.duplicate.appendix": "Kopiëren",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Kopieer pagina's",
   "page.status": "Status",
   "page.status.draft": "Concept",
-  "page.status.draft.description":
-    "De pagina is in concept-modus en alleen zichtbaar voor ingelogde redacteuren",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "Openbaar",
   "page.status.listed.description": "Deze pagina is toegankelijk voor iedereen",
   "page.status.unlisted": "Niet gepubliceerd",
@@ -388,6 +331,7 @@
   "replace": "Vervang",
   "retry": "Probeer opnieuw",
   "revert": "Annuleren",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "Rol",
   "role.admin.description": "De admin heeft alle rechten",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://voorbeeld.nl",
 
   "user": "Gebruiker",
-  "user.blueprint":
-    "Je kunt extra zones en formuliervelden voor deze rol toevoegen in <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Je kunt extra zones en formuliervelden voor deze rol toevoegen in <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Email veranderen",
   "user.changeLanguage": "Taal veranderen",
   "user.changeName": "Gebruiker hernoemen",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Kies een nieuwe rol",
   "user.create": "Voeg een nieuwe gebruiker toe",
   "user.delete": "Verwijder deze gebruiker",
-  "user.delete.confirm":
-    "Weet je zeker dat je <br><strong>{email}</strong>wil verwijderen?",
+  "user.delete.confirm": "Weet je zeker dat je <br><strong>{email}</strong>wil verwijderen?",
 
   "users": "Gebruikers",
 

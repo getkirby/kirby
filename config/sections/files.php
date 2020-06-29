@@ -83,6 +83,9 @@ return [
         'files' => function () {
             $files = $this->parent->files()->template($this->template);
 
+            // filter out all protected files
+            $files = $files->filterBy('isReadable', true);
+
             if ($this->sortBy) {
                 $files = $files->sortBy(...$files::sortArgs($this->sortBy));
             } elseif ($this->sortable === true) {
@@ -96,8 +99,9 @@ return [
 
             // apply the default pagination
             $files = $files->paginate([
-                'page'  => $this->page,
-                'limit' => $this->limit
+                'page'   => $this->page,
+                'limit'  => $this->limit,
+                'method' => 'none' // the page is manually provided
             ]);
 
             return $files;
@@ -219,6 +223,7 @@ return [
             'errors'  => $this->errors,
             'options' => [
                 'accept'   => $this->accept,
+                'apiUrl'   => $this->parent->apiUrl(true),
                 'empty'    => $this->empty,
                 'headline' => $this->headline,
                 'help'     => $this->help,

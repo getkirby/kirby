@@ -94,7 +94,7 @@ class Languages extends Collection
         $files     = glob(App::instance()->root('languages') . '/*.php');
 
         foreach ($files as $file) {
-            $props = include $file;
+            $props = F::load($file);
 
             if (is_array($props) === true) {
                 // inject the language code from the filename if it does not exist

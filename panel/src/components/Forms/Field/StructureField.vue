@@ -1,12 +1,15 @@
 <template>
-  <k-field v-bind="$props" class="k-structure-field" @click.native.stop>
-
+  <k-field
+    v-bind="$props"
+    class="k-structure-field"
+    @click.native.stop
+  >
     <!-- Add button -->
     <template slot="options">
       <k-button
         v-if="more && currentIndex === null"
-        ref="add"
         :id="_uid"
+        ref="add"
         icon="add"
         @click="add"
       >
@@ -16,18 +19,27 @@
 
     <!-- Form -->
     <template v-if="currentIndex !== null">
-      <div class="k-structure-backdrop" @click="escape" />
+      <div
+        class="k-structure-backdrop"
+        @click="escape"
+      />
       <section class="k-structure-form">
         <k-form
           ref="form"
-          :fields="formFields"
           v-model="currentModel"
+          :fields="formFields"
           class="k-structure-form-fields"
           @input="onInput"
           @submit="submit"
         />
         <footer class="k-structure-form-buttons">
-          <k-button class="k-structure-form-cancel-button" icon="cancel" @click="close">{{ $t('cancel') }}</k-button>
+          <k-button
+            class="k-structure-form-cancel-button"
+            icon="cancel"
+            @click="close"
+          >
+            {{ $t('cancel') }}
+          </k-button>
           <k-pagination
             v-if="currentIndex !== 'new'"
             :dropdown="false"
@@ -38,7 +50,13 @@
             :validate="beforePaginate"
             @paginate="paginate"
           />
-          <k-button class="k-structure-form-submit-button" icon="check" @click="submit">{{ $t(currentIndex !== 'new' ? 'confirm' : 'add') }}</k-button>
+          <k-button
+            class="k-structure-form-submit-button"
+            icon="check"
+            @click="submit"
+          >
+            {{ $t(currentIndex !== 'new' ? 'confirm' : 'add') }}
+          </k-button>
         </footer>
       </section>
     </template>
@@ -62,7 +80,9 @@
       >
         <thead>
           <tr>
-            <th class="k-structure-table-index">#</th>
+            <th class="k-structure-table-index">
+              #
+            </th>
             <th
               v-for="(column, columnName) in columns"
               :key="columnName + '-header'"
@@ -103,8 +123,8 @@
             >
               <template v-if="columnIsEmpty(item[columnName]) === false">
                 <component
-                  v-if="previewExists(column.type)"
                   :is="'k-' + column.type + '-field-preview'"
+                  v-if="previewExists(column.type)"
                   :value="item[columnName]"
                   :column="column"
                   :field="fields[columnName]"
@@ -126,9 +146,22 @@
                   class="k-structure-table-options-button"
                   @click="$refs[index + '-actions'][0].toggle()"
                 />
-                <k-dropdown-content :ref="index + '-actions'" align="right">
-                  <k-dropdown-item icon="copy" @click="duplicateItem(index)">{{ $t('duplicate') }}</k-dropdown-item>
-                  <k-dropdown-item icon="remove" @click="confirmRemove(index)">{{ $t('remove') }}</k-dropdown-item>
+                <k-dropdown-content
+                  :ref="index + '-actions'"
+                  align="right"
+                >
+                  <k-dropdown-item
+                    icon="copy"
+                    @click="duplicateItem(index)"
+                  >
+                    {{ $t('duplicate') }}
+                  </k-dropdown-item>
+                  <k-dropdown-item
+                    icon="remove"
+                    @click="confirmRemove(index)"
+                  >
+                    {{ $t('remove') }}
+                  </k-dropdown-item>
                 </k-dropdown-content>
               </template>
               <template v-else>
@@ -143,7 +176,11 @@
           </tr>
         </k-draggable>
       </table>
-      <k-pagination v-if="limit" v-bind="pagination" @paginate="paginateItems" />
+      <k-pagination
+        v-if="limit"
+        v-bind="pagination"
+        @paginate="paginateItems"
+      />
       <k-dialog
         v-if="!disabled"
         ref="remove"
@@ -154,7 +191,6 @@
         <k-text>{{ $t("field.structure.delete.confirm") }}</k-text>
       </k-dialog>
     </template>
-
   </k-field>
 </template>
 
@@ -194,6 +230,10 @@ export default {
     limit: Number,
     max: Number,
     min: Number,
+    prepend: {
+      type: Boolean,
+      default: false
+    },
     sortable: {
       type: Boolean,
       default: true
@@ -546,7 +586,11 @@ export default {
         return this.validate(this.currentModel)
           .then(() => {
             if (this.currentIndex === "new") {
-              this.items.push(this.currentModel);
+              if (this.prepend === true) {
+                this.items.unshift(this.currentModel);
+              } else {
+                this.items.push(this.currentModel);
+              }
             } else {
               this.items[this.currentIndex] = this.currentModel;
             }

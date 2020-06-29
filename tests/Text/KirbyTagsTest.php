@@ -3,6 +3,7 @@
 namespace Kirby\Text;
 
 use Exception;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class KirbyTagsTest extends TestCase
@@ -61,10 +62,67 @@ class KirbyTagsTest extends TestCase
                 'html' => function () {
                     throw new Exception('Just for fun');
                 }
+            ],
+            'invalidargument' => [
+                'html' => function () {
+                    throw new InvalidArgumentException('Just for fun');
+                }
+            ],
+            'undefined' => [
+                'html' => function () {
+                    throw new InvalidArgumentException('Undefined tag type: undefined');
+                }
             ]
         ];
 
         $this->assertSame('(test: foo)', KirbyTags::parse('(test: foo)'));
+        $this->assertSame('(invalidargument: foo)', KirbyTags::parse('(invalidargument: foo)'));
+        $this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)'));
+    }
+
+    public function testParseWithExceptionDebug1()
+    {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Just for fun');
+
+        KirbyTag::$types = [
+            'test' => [
+                'html' => function () {
+                    throw new Exception('Just for fun');
+                }
+            ]
+        ];
+
+        KirbyTags::parse('(test: foo)', [], ['debug' => true]);
+    }
+
+    public function testParseWithExceptionDebug2()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Just for fun');
+
+        KirbyTag::$types = [
+            'invalidargument' => [
+                'html' => function () {
+                    throw new InvalidArgumentException('Just for fun');
+                }
+            ]
+        ];
+
+        KirbyTags::parse('(invalidargument: foo)', [], ['debug' => true]);
+    }
+
+    public function testParseWithExceptionDebug3()
+    {
+        KirbyTag::$types = [
+            'undefined' => [
+                'html' => function () {
+                    throw new InvalidArgumentException('Undefined tag type: undefined');
+                }
+            ]
+        ];
+
+        $this->assertSame('(undefined: foo)', KirbyTags::parse('(undefined: foo)', [], ['debug' => true]));
     }
 
     public function testParseWithBrackets()

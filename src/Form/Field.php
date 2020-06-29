@@ -5,6 +5,7 @@ namespace Kirby\Form;
 use Exception;
 use Kirby\Cms\Model;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\V;
@@ -324,8 +325,12 @@ class Field extends Component
             }
         }
 
-        if (empty($this->validate) === false) {
-            $errors = V::errors($this->value(), $this->validate);
+        if (
+            empty($this->validate) === false &&
+            ($this->isEmpty() === false || $this->isRequired() === true)
+        ) {
+            $rules  = A::wrap($this->validate);
+            $errors = V::errors($this->value(), $rules);
 
             if (empty($errors) === false) {
                 $this->errors = array_merge($this->errors, $errors);

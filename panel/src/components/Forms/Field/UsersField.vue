@@ -1,7 +1,12 @@
 <template>
-  <k-field v-bind="$props" class="k-users-field">
-
-    <k-button-group slot="options" class="k-field-options">
+  <k-field
+    v-bind="$props"
+    class="k-users-field"
+  >
+    <k-button-group
+      slot="options"
+      class="k-field-options"
+    >
       <k-button
         v-if="more && !disabled"
         :icon="btnIcon"
@@ -21,8 +26,8 @@
         @end="onInput"
       >
         <component
-          v-for="(user, index) in selected"
           :is="elements.item"
+          v-for="(user, index) in selected"
           :key="user.email"
           :sortable="!disabled && selected.length > 1"
           :text="user.text"
@@ -48,7 +53,10 @@
     >
       {{ empty || $t("field.users.empty") }}
     </k-empty>
-    <k-users-dialog ref="selector" @submit="select" />
+    <k-users-dialog
+      ref="selector"
+      @submit="select"
+    />
   </k-field>
 </template>
 

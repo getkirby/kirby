@@ -3,13 +3,12 @@
     ref="dialog"
     v-bind="$props"
     v-on="$listeners"
-    @submit="$refs.form.submit()"
   >
     <k-form
       ref="form"
+      v-model="value"
       :fields="fields"
       :novalidate="novalidate"
-      v-model="value"
       @input="$emit('input', $event)"
       @submit="$emit('submit', $event)"
     />

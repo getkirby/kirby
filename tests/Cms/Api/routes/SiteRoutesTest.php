@@ -11,6 +11,9 @@ class SiteRoutesTest extends TestCase
     public function setUp(): void
     {
         $this->app = new App([
+            'options' => [
+                'api.allowImpersonation' => true
+            ],
             'roots' => [
                 'index' => '/dev/null'
             ],
@@ -85,10 +88,7 @@ class SiteRoutesTest extends TestCase
 
     public function testFilesSorted()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'files' => [
                     [
@@ -136,10 +136,7 @@ class SiteRoutesTest extends TestCase
 
     public function testFind()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'children' => [
                     [

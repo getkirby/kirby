@@ -1,6 +1,8 @@
 <template>
-  <nav :data-theme="mode" class="k-form-buttons">
-
+  <nav
+    :data-theme="mode"
+    class="k-form-buttons"
+  >
     <k-view v-if="mode === 'unlock'">
       <p class="k-form-lock-info">
         {{ $t("lock.isUnlocked") }}
@@ -122,6 +124,8 @@ export default {
       if (this.hasChanges === true) {
         return "changes";
       }
+
+      return null;
     }
   },
   watch: {

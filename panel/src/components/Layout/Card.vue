@@ -1,19 +1,37 @@
 <template>
-  <figure class="k-card" v-on="$listeners">
+  <figure
+    class="k-card"
+    v-on="$listeners"
+  >
     <k-sort-handle v-if="sortable" />
 
-    <component :is="wrapper" :to="link" :target="target">
+    <component
+      :is="wrapper"
+      :to="link"
+      :target="target"
+    >
       <k-image
         v-if="imageOptions"
         v-bind="imageOptions"
         class="k-card-image"
       />
-      <span v-else :style="'padding-bottom:' + ratioPadding" class="k-card-icon">
+      <span
+        v-else
+        :style="'padding-bottom:' + ratioPadding"
+        class="k-card-icon"
+      >
         <k-icon v-bind="icon" />
       </span>
       <figcaption class="k-card-content">
-        <span :data-noinfo="!info" class="k-card-text">{{ text }}</span>
-        <span v-if="info" class="k-card-info" v-html="info" />
+        <span
+          :data-noinfo="!info"
+          class="k-card-text"
+        >{{ text }}</span>
+        <span
+          v-if="info"
+          class="k-card-info"
+          v-html="info"
+        />
       </figcaption>
     </component>
 
@@ -41,13 +59,10 @@
         />
       </slot>
     </nav>
-
   </figure>
 </template>
 
 <script>
-import previewThumb from "@/helpers/previewThumb.js";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -80,7 +95,7 @@ export default {
         : this.$helper.ratio("3/2");
     },
     imageOptions() {
-      return previewThumb(this.image, "cards", this.column);
+      return this.$helper.previewThumb(this.image, "cards", this.column);
     }
   }
 };

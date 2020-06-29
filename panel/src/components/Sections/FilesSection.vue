@@ -1,13 +1,22 @@
 <template>
-
-  <section v-if="isLoading === false" class="k-files-section">
-
+  <section
+    v-if="isLoading === false"
+    class="k-files-section"
+  >
     <header class="k-section-header">
       <k-headline>
-        {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
+        {{ headline }} <abbr
+          v-if="options.min"
+          :title="$t('section.required')"
+        >*</abbr>
       </k-headline>
       <k-button-group v-if="add">
-        <k-button icon="upload" @click="upload">{{ $t("add") }}</k-button>
+        <k-button
+          icon="upload"
+          @click="upload"
+        >
+          {{ $t("add") }}
+        </k-button>
       </k-button-group>
     </header>
 
@@ -21,7 +30,10 @@
     </template>
 
     <template v-else>
-      <k-dropzone :disabled="add === false" @drop="drop">
+      <k-dropzone
+        :disabled="add === false"
+        @drop="drop"
+      >
         <k-collection
           v-if="data.length"
           :help="help"
@@ -30,7 +42,7 @@
           :pagination="pagination"
           :sortable="options.sortable"
           :size="options.size"
-          :data-invalid="isInvalid" 
+          :data-invalid="isInvalid"
           @sort="sort"
           @paginate="paginate"
           @action="action"
@@ -38,7 +50,7 @@
         <template v-else>
           <k-empty
             :layout="options.layout"
-            :data-invalid="isInvalid" 
+            :data-invalid="isInvalid"
             icon="image"
             @click="if (add) upload()"
           >
@@ -55,11 +67,20 @@
         </template>
       </k-dropzone>
 
-      <k-file-rename-dialog ref="rename" @success="update" />
-      <k-file-remove-dialog ref="remove" @success="update" />
-      <k-upload ref="upload" @success="uploaded" @error="reload" />
+      <k-file-rename-dialog
+        ref="rename"
+        @success="update"
+      />
+      <k-file-remove-dialog
+        ref="remove"
+        @success="update"
+      />
+      <k-upload
+        ref="upload"
+        @success="uploaded"
+        @error="reload"
+      />
     </template>
-
   </section>
 </template>
 
@@ -166,7 +187,7 @@ export default {
       });
 
       this.$api
-        .patch(this.parent + "/files/sort", {
+        .patch(this.options.apiUrl + "/files/sort", {
           files: items,
           index: this.pagination.offset
         })

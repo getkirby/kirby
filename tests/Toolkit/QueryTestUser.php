@@ -18,7 +18,7 @@ class QueryTestUser
 
     public function says(...$message)
     {
-        return implode(' ', $message);
+        return implode(' : ', $message);
     }
 
     public function age(int $years)
@@ -36,6 +36,11 @@ class QueryTestUser
         return $dump;
     }
 
+    public function array(...$args)
+    {
+        return ['args' => $args];
+    }
+
     public function check($needle1, $needle2, $array)
     {
         return in_array($needle1, $array) && in_array($needle2, $array);
@@ -51,14 +56,19 @@ class QueryTestUser
         return $this;
     }
 
-    public function likes($arguments)
+    public function likes(array $arguments)
     {
         foreach ($arguments as $arg) {
-            if (in_array($arg, ['(', ',', ']', '[']) === false) {
+            if (in_array($arg, ['(', ')', ',', ']', '[']) === false) {
                 throw new \Exception();
             }
         }
 
         return $this;
+    }
+
+    public function nothing()
+    {
+        return null;
     }
 }

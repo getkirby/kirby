@@ -56,14 +56,43 @@ class SystemTest extends TestCase
         $this->assertEquals($expected, $server);
     }
 
+    public function testServerOverwrite()
+    {
+        $_SERVER['SERVER_SOFTWARE'] = 'symfony';
+
+        // single server
+        $app = $this->app->clone([
+            'options' => [
+                'servers' => 'symfony'
+            ]
+        ]);
+
+        $system = new System($app);
+        $server = $system->server();
+
+        $this->assertTrue($server);
+
+        // array of servers
+        $app = $this->app->clone([
+            'options' => [
+                'servers' => ['symfony', 'apache']
+            ]
+        ]);
+
+        $system = new System($app);
+        $server = $system->server();
+
+        $this->assertTrue($server);
+    }
+
     public function serverNameProvider()
     {
         return [
             ['localhost', true],
             ['mydomain.local', true],
             ['mydomain.test', true],
-            ['mydomain.dev', true],
             ['mydomain.com', false],
+            ['mydomain.dev', false],
         ];
     }
 
@@ -76,33 +105,34 @@ class SystemTest extends TestCase
 
         $system = new System($this->app);
         $this->assertEquals($expected, $system->isLocal());
-
-        // reset SERVER_NAME
-        $_SERVER['SERVER_NAME'] = null;
     }
 
-    public function serverAddressProvider()
+    public function clientAddressProvider()
     {
         return [
-            ['127.0.0.1', true],
-            ['::1', true],
-            ['0.0.0.0', true],
-            ['1.2.3.4', false],
+            ['127.0.0.1', '127.0.0.1', true],
+            ['::1', '::1', true],
+            ['127.0.0.1', '::1', true],
+            ['::1', '127.0.0.1', true],
+            ['1.2.3.4', '127.0.0.1', false],
+            ['127.0.0.1', '1.2.3.4', false],
         ];
     }
 
     /**
-     * @dataProvider serverAddressProvider
+     * @dataProvider clientAddressProvider
      */
-    public function testIsLocalWithServerAddresses($address, $expected)
+    public function testIsLocalWithClientAddresses(string $address, string $forwardedAddress, bool $expected)
     {
-        $_SERVER['SERVER_ADDR'] = $address;
-
         $system = new System($this->app);
-        $this->assertEquals($expected, $system->isLocal());
 
-        // reset SERVER_ADDR
-        $_SERVER['SERVER_ADDR'] = null;
+        $_SERVER['REMOTE_ADDR'] = $address;
+        $_SERVER['HTTP_X_FORWARDED_FOR'] = $forwardedAddress;
+        $this->assertSame($expected, $system->isLocal());
+
+        unset($_SERVER['HTTP_X_FORWARDED_FOR']);
+        $_SERVER['HTTP_CLIENT_IP'] = $forwardedAddress;
+        $this->assertSame($expected, $system->isLocal());
     }
 
     public function indexUrlProvider()
@@ -172,7 +202,7 @@ class SystemTest extends TestCase
 
     public function testIsInstallableOnLocalhost()
     {
-        $_SERVER['SERVER_NAME'] = 'localhost';
+        $_SERVER['REMOTE_ADDR'] = '127.0.0.1';
 
         $system = new System($this->app);
 
@@ -181,7 +211,7 @@ class SystemTest extends TestCase
 
     public function testIsInstallableOnPublicServer()
     {
-        $_SERVER['SERVER_NAME'] = 'getkirby.com';
+        $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
 
         $system = new System($this->app);
 
@@ -190,7 +220,7 @@ class SystemTest extends TestCase
 
     public function testIsInstallableOnPublicServerWithOverride()
     {
-        $_SERVER['SERVER_NAME'] = 'getkirby.com';
+        $_SERVER['REMOTE_ADDR'] = '1.2.3.4';
 
         $app = $this->app->clone([
             'options' => [

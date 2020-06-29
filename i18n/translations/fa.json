@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "بارگزاری تصویر پروفایل موفق نبود",
   "error.avatar.delete.fail": "\u062a\u0635\u0648\u06cc\u0631 \u067e\u0631\u0648\u0641\u0627\u06cc\u0644 \u0631\u0627 \u0646\u0645\u06cc\u062a\u0648\u0627\u0646 \u062d\u0630\u0641 \u06a9\u0631\u062f",
-  "error.avatar.dimensions.invalid":
-    "لطفا طول و عرض تصویر پروفایل را زیر 3000 پیکسل انتخاب کنید",
-  "error.avatar.mime.forbidden":
-    "تصویر پروفایل باید از نوع JPEG یا PNG باشد",
+  "error.avatar.dimensions.invalid": "لطفا طول و عرض تصویر پروفایل را زیر 3000 پیکسل انتخاب کنید",
+  "error.avatar.mime.forbidden": "تصویر پروفایل باید از نوع JPEG یا PNG باشد",
 
   "error.blueprint.notFound": "بلوپرینت با نام «{name}» قابل بارگذاری نیست",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "مبدل «{converter}» نامعتبر است",
 
   "error.file.changeName.empty": "The name must not be empty",
-  "error.file.changeName.permission":
-    "شما اجازه تنغییر نام فایل «{filename}» را ندارید",
+  "error.file.changeName.permission": "شما اجازه تنغییر نام فایل «{filename}» را ندارید",
   "error.file.duplicate": "فایلی هم نام با «{filename}» هم اکنون موجود است",
-  "error.file.extension.forbidden":
-    "پسوند فایل «{extension}» غیرمجاز است",
-  "error.file.extension.missing":
-    "\u0634\u0645\u0627 \u0646\u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0641\u0627\u06cc\u0644\u200c\u0647\u0627\u06cc \u0628\u062f\u0648\u0646 \u067e\u0633\u0648\u0646\u062f \u0631\u0627 \u0622\u067e\u0644\u0648\u062f \u06a9\u0646\u06cc\u062f",
+  "error.file.extension.forbidden": "پسوند فایل «{extension}» غیرمجاز است",
+  "error.file.extension.missing": "\u0634\u0645\u0627 \u0646\u0645\u06cc\u200c\u062a\u0648\u0627\u0646\u06cc\u062f \u0641\u0627\u06cc\u0644\u200c\u0647\u0627\u06cc \u0628\u062f\u0648\u0646 \u067e\u0633\u0648\u0646\u062f \u0631\u0627 \u0622\u067e\u0644\u0648\u062f \u06a9\u0646\u06cc\u062f",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
   "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
-  "error.file.mime.differs":
-    "فایل آپلود شده باید از همان نوع باشد «{mime}»",
+  "error.file.mime.differs": "فایل آپلود شده باید از همان نوع باشد «{mime}»",
   "error.file.mime.forbidden": "فرمت فایل «{mime}» غیرمجاز است",
   "error.file.mime.invalid": "Invalid mime type: {mime}",
-  "error.file.mime.missing":
-    "فرمت فایل «{filename}» قابل شناسایی نیست",
+  "error.file.mime.missing": "فرمت فایل «{filename}» قابل شناسایی نیست",
   "error.file.minheight": "The height of the image must be at least {height} pixels",
   "error.file.minsize": "The file is too small",
   "error.file.minwidth": "The width of the image must be at least {width} pixels",
@@ -90,111 +83,77 @@
   "error.license.email": "لطفا ایمیل صحیحی وارد کنید",
   "error.license.verification": "The license could not be verified",
 
-  "error.page.changeSlug.permission":
-    "شما امکان تغییر پسوند Url صفحه «{slug}» را ندارید",
-  "error.page.changeStatus.incomplete":
-    "صفحه حاوی خطا است و قابل انتشار نیست",
-  "error.page.changeStatus.permission":
-    "وضعیت صفحه جاری قابل تغییر نیست",
-  "error.page.changeStatus.toDraft.invalid":
-    "صفحه «{slug}» قابل تبدیل به پیش نویس نیست",
-  "error.page.changeTemplate.invalid":
-    "قالب صفحه «{slug}» قابل تغییر نیست",
-  "error.page.changeTemplate.permission":
-    "شما اجازه تغییر قالب «{slug}» را ندارید",
+  "error.page.changeSlug.permission": "شما امکان تغییر پسوند Url صفحه «{slug}» را ندارید",
+  "error.page.changeStatus.incomplete": "صفحه حاوی خطا است و قابل انتشار نیست",
+  "error.page.changeStatus.permission": "وضعیت صفحه جاری قابل تغییر نیست",
+  "error.page.changeStatus.toDraft.invalid": "صفحه «{slug}» قابل تبدیل به پیش نویس نیست",
+  "error.page.changeTemplate.invalid": "قالب صفحه «{slug}» قابل تغییر نیست",
+  "error.page.changeTemplate.permission": "شما اجازه تغییر قالب «{slug}» را ندارید",
   "error.page.changeTitle.empty": "عنوان اجباری است",
-  "error.page.changeTitle.permission":
-    "شما اجازه تغییر عنوان «{slug}» را ندارید",
+  "error.page.changeTitle.permission": "شما اجازه تغییر عنوان «{slug}» را ندارید",
   "error.page.create.permission": "شما اجازه ایجاد «{slug}» را ندارید",
   "error.page.delete": "حذف صفحه «{slug}» ممکن نیست",
   "error.page.delete.confirm": "جهت ادامه عنوان صفحه را وارد کنید",
-  "error.page.delete.hasChildren":
-    "این صفحه جاوی زیرصفحه است و نمی تواند حذف شود",
+  "error.page.delete.hasChildren": "این صفحه جاوی زیرصفحه است و نمی تواند حذف شود",
   "error.page.delete.permission": "شما اجازه حذف «{slug}» را ندارید",
-  "error.page.draft.duplicate":
-    "صفحه پیش‌نویسی با پسوند Url مشابه «{slug}» هم اکنون موجود است",
-  "error.page.duplicate":
-    "صفحه‌ای با آدرس Url مشابه «{slug}» هم اکنون موجود است",
+  "error.page.draft.duplicate": "صفحه پیش‌نویسی با پسوند Url مشابه «{slug}» هم اکنون موجود است",
+  "error.page.duplicate": "صفحه‌ای با آدرس Url مشابه «{slug}» هم اکنون موجود است",
   "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "صفحه مورد نظر با آدرس «{slug}» پیدا نشد.",
-  "error.page.num.invalid":
-    "لطفا شماره ترتیب را بدرستی وارد نمایید. اعداد نباید منفی باشند.",
+  "error.page.num.invalid": "لطفا شماره ترتیب را بدرستی وارد نمایید. اعداد نباید منفی باشند.",
   "error.page.slug.invalid": "لطفا یک پیشوند Url صحیح وارد کنید",
   "error.page.sort.permission": "امکان مرتب‌سازی «{slug}» نیست",
   "error.page.status.invalid": "لطفا وضعیت صحیحی برای صفحه انتخاب کنید",
   "error.page.undefined": "صفحه مورد نظر پیدا نشد",
   "error.page.update.permission": "شما اجازه بروزرسانی «{slug}» را ندارید",
 
-  "error.section.files.max.plural":
-    "نباید بیش از {max} فایل به بخش «{section}» اضافه کنید",
-  "error.section.files.max.singular":
-    "نباید بیش از یک فایل به بخش «{section}» اضافه کنید",
-  "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
-  "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+  "error.section.files.max.plural": "نباید بیش از {max} فایل به بخش «{section}» اضافه کنید",
+  "error.section.files.max.singular": "نباید بیش از یک فایل به بخش «{section}» اضافه کنید",
+  "error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
+  "error.section.files.min.singular": "The \"{section}\" section requires at least one file",
 
-  "error.section.pages.max.plural":
-    "نباید بیش از {max} صفحه به بخش «{section}» اضافه کنید",
-  "error.section.pages.max.singular":
-    "نباید بیش از یک صفحه به بخش «{section}» اضافه کنید",
-  "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
-  "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+  "error.section.pages.max.plural": "نباید بیش از {max} صفحه به بخش «{section}» اضافه کنید",
+  "error.section.pages.max.singular": "نباید بیش از یک صفحه به بخش «{section}» اضافه کنید",
+  "error.section.pages.min.plural": "The \"{section}\" section requires at least {min} pages",
+  "error.section.pages.min.singular": "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "بخش «{name}» قابل بارکذاری نیست",
   "error.section.type.invalid": "نوع بخش «{type}» غیرمجاز است",
 
   "error.site.changeTitle.empty": "عنوان اجباری است",
-  "error.site.changeTitle.permission":
-    "شما اجازه تغییر عنوان سایت را ندارید",
+  "error.site.changeTitle.permission": "شما اجازه تغییر عنوان سایت را ندارید",
   "error.site.update.permission": "شما اجازه بروزرسانی سایت را ندارید",
 
   "error.template.default.notFound": "قالب پیش فرض موجود نیست",
 
-  "error.user.changeEmail.permission":
-    "شما اجازه تغییر ایمیل کاربر «{name}» را ندارید",
-  "error.user.changeLanguage.permission":
-    "شما اجازه تغییر زبان برای کاربر «{name}» را ندارید",
-  "error.user.changeName.permission":
-    "شما اجازه تنغییر نام کاربر «{name}» را ندارید",
-  "error.user.changePassword.permission":
-    "شما اجازه تغییر رمز عبور کاربر «{name}» را ندارید",
-  "error.user.changeRole.lastAdmin":
-    "نقش آخرین مدیر سیستم قابل تغییر نیست",
-  "error.user.changeRole.permission":
-    "شما اجازه تغییر نقش کاربر «{name}» را ندارید",
-  "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+  "error.user.changeEmail.permission": "شما اجازه تغییر ایمیل کاربر «{name}» را ندارید",
+  "error.user.changeLanguage.permission": "شما اجازه تغییر زبان برای کاربر «{name}» را ندارید",
+  "error.user.changeName.permission": "شما اجازه تنغییر نام کاربر «{name}» را ندارید",
+  "error.user.changePassword.permission": "شما اجازه تغییر رمز عبور کاربر «{name}» را ندارید",
+  "error.user.changeRole.lastAdmin": "نقش آخرین مدیر سیستم قابل تغییر نیست",
+  "error.user.changeRole.permission": "شما اجازه تغییر نقش کاربر «{name}» را ندارید",
+  "error.user.changeRole.toAdmin": "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "شما اجازه ایجاد این کاربر را ندارید",
   "error.user.delete": "کاربر «{name}» نمی تواند حذف شود",
   "error.user.delete.lastAdmin": "\u062d\u0630\u0641 \u0622\u062e\u0631\u06cc\u0646 \u0645\u062f\u06cc\u0631 \u0633\u06cc\u0633\u062a\u0645 \u0645\u0645\u06a9\u0646 \u0646\u06cc\u0633\u062a",
   "error.user.delete.lastUser": "حذف آخرین کاربر ممکن نیست",
-  "error.user.delete.permission":
-    "شما اجازه حذف کاربر «{name}» را ندارید",
-  "error.user.duplicate":
-    "کاربری با ایمیل «{email}» هم اکنون موجود است",
+  "error.user.delete.permission": "شما اجازه حذف کاربر «{name}» را ندارید",
+  "error.user.duplicate": "کاربری با ایمیل «{email}» هم اکنون موجود است",
   "error.user.email.invalid": "لطفا یک ایمیل معتبر وارد کنید",
   "error.user.language.invalid": "لطفا زبان معتبری انتخاب کنید",
   "error.user.notFound": "کاربر «{name}» پیدا نشد",
-  "error.user.password.invalid":
-    "لطفا گذرواژه صحیحی با حداقل طول 8 حرف وارد کنید. ",
+  "error.user.password.invalid": "لطفا گذرواژه صحیحی با حداقل طول 8 حرف وارد کنید. ",
   "error.user.password.notSame": "\u0644\u0637\u0641\u0627 \u062a\u06a9\u0631\u0627\u0631 \u06af\u0630\u0631\u0648\u0627\u0698\u0647 \u0631\u0627 \u0648\u0627\u0631\u062f \u0646\u0645\u0627\u06cc\u06cc\u062f",
   "error.user.password.undefined": "کاربر فاقد گذرواژه است",
   "error.user.role.invalid": "لطفا نقش صحیحی وارد نمایید",
-  "error.user.update.permission":
-    "شما اجازه بروزرسانی کاربر «{name}» را ندارید",
+  "error.user.update.permission": "شما اجازه بروزرسانی کاربر «{name}» را ندارید",
 
   "error.validation.accepted": "لطفا تایید کنید",
   "error.validation.alpha": "لطفا تنها از بین حروف a-z انتخاب کنید",
-  "error.validation.alphanum":
-    "لطفا تنها از بین حروف a-z و اعداد 0-9 انتخاب کنید",
-  "error.validation.between":
-    "لطفا مقداری مابین «{min}» و «{max}» وارد کنید",
+  "error.validation.alphanum": "لطفا تنها از بین حروف a-z و اعداد 0-9 انتخاب کنید",
+  "error.validation.between": "لطفا مقداری مابین «{min}» و «{max}» وارد کنید",
   "error.validation.boolean": "لطفا تایید یا رد کنید",
-  "error.validation.contains":
-    "لطفا مقداری شامل «{needle}» وارد کنید",
+  "error.validation.contains": "لطفا مقداری شامل «{needle}» وارد کنید",
   "error.validation.date": "لطفا تاریخ معتبری وارد کنید",
   "error.validation.date.after": "Please enter a date after {date}",
   "error.validation.date.before": "Please enter a date before {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "لطفا مقداری کمتر از {max} وارد کنید",
   "error.validation.match": "مقدار وارد شده با الگوی مورد نظر همخوانی ندارد",
   "error.validation.max": "لطفا مقداری کوچکتر یا مساوی {min} وارد کنید",
-  "error.validation.maxlength":
-    "لطفا عبارت کوتاه‌تری وارد کنید. (حداکثر {max} حرف)",
+  "error.validation.maxlength": "لطفا عبارت کوتاه‌تری وارد کنید. (حداکثر {max} حرف)",
   "error.validation.maxwords": "لطفا بیش از {max} کلمه وارد نکنید",
   "error.validation.min": "لطفا مقداری بزرگتر یا مساوی با {min} وارد کنید",
-  "error.validation.minlength":
-    "لطفا عبارتی طولانی‌تری وارد کنید. (حداقل {min} حرف)",
+  "error.validation.minlength": "لطفا عبارتی طولانی‌تری وارد کنید. (حداقل {min} حرف)",
   "error.validation.minwords": "لطفا حداقل {min} کلمه وارد کنید",
   "error.validation.more": "لطفا مقداری بیش از {min} وارد کنید",
-  "error.validation.notcontains":
-    "لطفا مقداری فاقد «{needle}» وارد کنید",
-  "error.validation.notin":
-    "لطفا از مقادیر روبرو استفاده نکنید: ({notin})",
+  "error.validation.notcontains": "لطفا مقداری فاقد «{needle}» وارد کنید",
+  "error.validation.notin": "لطفا از مقادیر روبرو استفاده نکنید: ({notin})",
   "error.validation.option": "لطفا گزینه معتبری انتخاب کنید",
   "error.validation.num": "لطفا عدد صحیحی وارد کنید",
   "error.validation.required": "لطفا مقداری وارد کنید",
@@ -238,8 +193,7 @@
   "field.structure.empty": "\u0645\u0648\u0631\u062f\u06cc \u0648\u062c\u0648\u062f \u0646\u062f\u0627\u0631\u062f.",
   "field.users.empty": "کاربری انتخاب نشده است",
 
-  "file.delete.confirm":
-    "آیا واقعا می خواهید این فایل را حذف کنید؟<br><strong>{filename}</strong>",
+  "file.delete.confirm": "آیا واقعا می خواهید این فایل را حذف کنید؟<br><strong>{filename}</strong>",
 
   "files": "فایل‌ها",
   "files.empty": "فایلی موجود نیست",
@@ -251,29 +205,22 @@
   "installation": "نصب و راه اندازی",
   "installation.completed": "پنل کاربری نصب شد",
   "installation.disabled": "نصب کننده پانل کاربری بصورت پیش‌فرض در سرورهای عمومی غیرفعال است. لطفا نصب را روی یک ماشین محلی اجرا کنید یا آن را با استفاده از <code>panel.install</code> فعال کنید.",
-  "installation.issues.accounts":
-    "پوشه <code>/site/accounts</code> موجود نیست یا قابل نوشتن نیست.",
-  "installation.issues.content":
-    "پوشه <code>/content</code> موجود نیست یا قابل نوشتن نیست",
+  "installation.issues.accounts": "پوشه <code>/site/accounts</code> موجود نیست یا قابل نوشتن نیست.",
+  "installation.issues.content": "پوشه <code>/content</code> موجود نیست یا قابل نوشتن نیست",
   "installation.issues.curl": "افزونه <code>CURL</code> مورد نیاز است",
   "installation.issues.headline": "نصب پانل کاربری ممکن نیست",
-  "installation.issues.mbstring":
-    "افزونه <code>MB String</code> مورد نیاز است",
-  "installation.issues.media":
-    "پوشه <code>/media</code> موجود نیست یا قابل نوشتن نیست",
+  "installation.issues.mbstring": "افزونه <code>MB String</code> مورد نیاز است",
+  "installation.issues.media": "پوشه <code>/media</code> موجود نیست یا قابل نوشتن نیست",
   "installation.issues.php": "لطفا از پی‌اچ‌پی 7 یا بالاتر استفاده کنید",
-  "installation.issues.server":
-    "کربی نیاز به <code>Apache</code>، <code>Nginx</code> یا <code>Caddy</code> دارد",
+  "installation.issues.server": "کربی نیاز به <code>Apache</code>، <code>Nginx</code> یا <code>Caddy</code> دارد",
   "installation.issues.sessions": "پوشه <code>/site/sessions</code> وجود ندارد یا قابل نوشتن نیست",
 
   "language": "\u0632\u0628\u0627\u0646",
   "language.code": "کد",
   "language.convert": "پیش‌فرض شود",
-  "language.convert.confirm":
-    "<p>آیا واقعا میخواهید <strong>{name}</strong> را به زبان پیشفرض تبدیل کنید؟ این عمل برگشت ناپذیر است.</p> <p>اگر <strong>{name}</strong> دارای محتوای غیر ترجمه شده باشد، جایگزین معتبر دیگری نخواهد بود و ممکن است بخش‌هایی از سایت شما خالی باشد.</p>",
+  "language.convert.confirm": "<p>آیا واقعا میخواهید <strong>{name}</strong> را به زبان پیشفرض تبدیل کنید؟ این عمل برگشت ناپذیر است.</p> <p>اگر <strong>{name}</strong> دارای محتوای غیر ترجمه شده باشد، جایگزین معتبر دیگری نخواهد بود و ممکن است بخش‌هایی از سایت شما خالی باشد.</p>",
   "language.create": "افزودن زبان جدید",
-  "language.delete.confirm":
-    "آیا واقعا میخواهید زبان </strong>{name}</strong> را به همراه تمام ترجمه‌ها حذف کنید؟ این عمل قابل بازگشت نخواهد بود!",
+  "language.delete.confirm": "آیا واقعا میخواهید زبان </strong>{name}</strong> را به همراه تمام ترجمه‌ها حذف کنید؟ این عمل قابل بازگشت نخواهد بود!",
   "language.deleted": "زبان مورد نظر حذف شد",
   "language.direction": "rtl",
   "language.direction.ltr": "چپ به راست",
@@ -292,8 +239,7 @@
   "license": "\u0645\u062c\u0648\u0632",
   "license.buy": "خرید مجوز",
   "license.register": "ثبت",
-  "license.register.help":
-    "پس از خرید از طریق ایمیل، کد مجوز خود را دریافت کردید. لطفا برای ثبت‌نام آن را کپی و اینجا پیست کنید.",
+  "license.register.help": "پس از خرید از طریق ایمیل، کد مجوز خود را دریافت کردید. لطفا برای ثبت‌نام آن را کپی و اینجا پیست کنید.",
   "license.register.label": "لطفا کد مجوز خود را وارد کنید",
   "license.register.success": "با تشکر از شما برای حمایت از کربی",
   "license.unregistered": "این یک نسخه آزمایشی ثبت نشده از کربی است",
@@ -325,7 +271,7 @@
   "months.april": "\u0622\u0648\u0631\u06cc\u0644",
   "months.august": "\u0627\u0648\u062a",
   "months.december": "\u062f\u0633\u0627\u0645\u0628\u0631",
-  "months.february": "\u0641\u0648\u0631\u06cc\u0647",
+  "months.february": "فوریه",
   "months.january": "\u0698\u0627\u0646\u0648\u06cc\u0647",
   "months.july": "\u0698\u0648\u0626\u06cc\u0647",
   "months.june": "\u0698\u0648\u0626\u0646",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "لطفا یک موقعیت را انتخاب کنید",
   "page.changeStatus.select": "یک وضعیت جدید را انتخاب کنید",
   "page.changeTemplate": "تغییر قالب",
-  "page.delete.confirm":
-    "صفحه <strong>{title}</strong> حذف شود؟",
-  "page.delete.confirm.subpages":
-    "<strong>این صفحه دارای زیرصفحه است</strong>. <br>تمام زیر صفحات نیز حذف خواهد شد.",
+  "page.delete.confirm": "صفحه <strong>{title}</strong> حذف شود؟",
+  "page.delete.confirm.subpages": "<strong>این صفحه دارای زیرصفحه است</strong>. <br>تمام زیر صفحات نیز حذف خواهد شد.",
   "page.delete.confirm.title": "جهت ادامه عنوان صفحه را وارد کنید",
   "page.draft.create": "ایجاد پیش‌نویس",
   "page.duplicate.appendix": "کپی",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Copy pages",
   "page.status": "وضعیت",
   "page.status.draft": "پیش‌نویس",
-  "page.status.draft.description":
-    "این صفحه در حالت پیش‌نویس است و تنها برای ویرایشگران وارد شده قابل مشاهده است",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "عمومی",
   "page.status.listed.description": "این صفحه برای عموم قابل مشاهده است",
   "page.status.unlisted": "فهرست نشده",
@@ -388,6 +331,7 @@
   "replace": "\u062c\u0627\u06cc\u06af\u0632\u06cc\u0646\u06cc",
   "retry": "\u062a\u0644\u0627\u0634 \u0645\u062c\u062f\u062f",
   "revert": "بازگرداندن تغییرات",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "\u0646\u0642\u0634",
   "role.admin.description": "The admin has all rights",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "کاربر",
-  "user.blueprint":
-    "شما می توانید قسمت‌های اضافی و فیلدهای فرم را برای این نقش کاربر در <strong>/site/blueprints/users/{role}.yml</strong> تعریف کنید",
+  "user.blueprint": "شما می توانید قسمت‌های اضافی و فیلدهای فرم را برای این نقش کاربر در <strong>/site/blueprints/users/{role}.yml</strong> تعریف کنید",
   "user.changeEmail": "تغییر ایمیل",
   "user.changeLanguage": "تغییر زبان",
   "user.changeName": "تغییر نام این کاربر",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "یک نقش جدید را انتخاب کنید",
   "user.create": "افزودن کاربر جدید",
   "user.delete": "حذف کاربر جاری",
-  "user.delete.confirm":
-    "آیا واقعا میخواهید<strong> {email}</strong> را حذف کنید؟",
+  "user.delete.confirm": "آیا واقعا میخواهید<strong> {email}</strong> را حذف کنید؟",
 
   "users": "کاربران",
 
