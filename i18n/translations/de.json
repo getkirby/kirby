@@ -31,7 +31,7 @@
 
   "dialog.files.empty": "Keine verfügbaren Dateien",
   "dialog.pages.empty": "Keine verfügbaren Seiten",
-  "dialog.users.empty": "Keine verfügbaren Benutzer",
+  "dialog.users.empty": "Keine verfügbaren Benutzer*innen",
 
   "email": "E-Mail",
   "email.placeholder": "mail@beispiel.de",
@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "Das Profilbild konnte nicht hochgeladen werden",
   "error.avatar.delete.fail": "Das Profilbild konnte nicht gel\u00f6scht werden",
-  "error.avatar.dimensions.invalid":
-    "Bitte lade ein Profilbild hoch, das nicht breiter oder höher als 3000 Pixel ist.",
-  "error.avatar.mime.forbidden":
-    "Das Profilbild muss vom Format JPEG oder PNG sein",
+  "error.avatar.dimensions.invalid": "Bitte lade ein Profilbild hoch, das nicht breiter oder höher als 3000 Pixel ist.",
+  "error.avatar.mime.forbidden": "Das Profilbild muss vom Format JPEG oder PNG sein",
 
   "error.blueprint.notFound": "Das Blueprint \"{name}\" konnte nicht geladen werden.",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Ungültiger Konverter:  \"{converter}\"",
 
   "error.file.changeName.empty": "Bitte gib einen Namen an",
-  "error.file.changeName.permission":
-    "Du darfst den Dateinamen von \"{filename}\" nicht ändern",
+  "error.file.changeName.permission": "Du darfst den Dateinamen von \"{filename}\" nicht ändern",
   "error.file.duplicate": "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
-  "error.file.extension.forbidden":
-    "Verbotene Dateiendung \"{extension}\"",
-  "error.file.extension.missing":
-    "Du kannst keine Dateien ohne Dateiendung hochladen",
+  "error.file.extension.forbidden": "Verbotene Dateiendung \"{extension}\"",
+  "error.file.extension.missing": "Du kannst keine Dateien ohne Dateiendung hochladen",
   "error.file.maxheight": "Die Bildhöhe darf {height} Pixel nicht überschreiten",
   "error.file.maxsize": "Die Datei ist zu groß",
   "error.file.maxwidth": "Die Bildbreite darf {height} Pixel nicht überschreiten",
-  "error.file.mime.differs":
-    "Die Datei muss den Medientyp \"{mime}\" haben.",
+  "error.file.mime.differs": "Die Datei muss den Medientyp \"{mime}\" haben.",
   "error.file.mime.forbidden": "Der Medientyp \"{mime}\"  ist nicht erlaubt",
   "error.file.mime.invalid": "Ungültiger Dateityp: {mime}",
-  "error.file.mime.missing":
-    "Der Medientyp für \"{filename}\" konnte nicht erkannt werden",
+  "error.file.mime.missing": "Der Medientyp für \"{filename}\" konnte nicht erkannt werden",
   "error.file.minheight": "Die Bildhöhe muss mindestens {height} Pixel betragen",
   "error.file.minsize": "Die Datei ist zu klein",
   "error.file.minwidth": "Die Bildbreite muss mindestens {height} Pixel betragen",
@@ -90,111 +83,77 @@
   "error.license.email": "Bitte gib eine gültige E-Mailadresse an",
   "error.license.verification": "Die Lizenz konnte nicht verifiziert werden",
 
-  "error.page.changeSlug.permission":
-    "Du darfst die URL der Seite \"{slug}\" nicht ändern",
-  "error.page.changeStatus.incomplete":
-    "Die Seite ist nicht vollständig und kann daher nicht veröffentlicht werden",
-  "error.page.changeStatus.permission":
-    "Der Status der Seite kann nicht geändert werden",
-  "error.page.changeStatus.toDraft.invalid":
-    "Die Seite \"{slug}\" kann nicht in einen Entwurf umgewandelt werden",
-  "error.page.changeTemplate.invalid":
-    "Die Vorlage für die Seite \"{slug}\" kann nicht geändert werden",
-  "error.page.changeTemplate.permission":
-    "Du kannst die Vorlage für die Seite \"{slug}\" nicht ändern",
+  "error.page.changeSlug.permission": "Du darfst die URL der Seite \"{slug}\" nicht ändern",
+  "error.page.changeStatus.incomplete": "Die Seite ist nicht vollständig und kann daher nicht veröffentlicht werden",
+  "error.page.changeStatus.permission": "Der Status der Seite kann nicht geändert werden",
+  "error.page.changeStatus.toDraft.invalid": "Die Seite \"{slug}\" kann nicht in einen Entwurf umgewandelt werden",
+  "error.page.changeTemplate.invalid": "Die Vorlage für die Seite \"{slug}\" kann nicht geändert werden",
+  "error.page.changeTemplate.permission": "Du kannst die Vorlage für die Seite \"{slug}\" nicht ändern",
   "error.page.changeTitle.empty": "Bitte gib einen Titel an",
-  "error.page.changeTitle.permission":
-    "Du kannst den Titel für die Seite \"{slug}\" nicht ändern",
+  "error.page.changeTitle.permission": "Du kannst den Titel für die Seite \"{slug}\" nicht ändern",
   "error.page.create.permission": "Du kannst die Seite \"{slug}\" nicht anlegen",
   "error.page.delete": "Die Seite \"{slug}\" kann nicht gelöscht werden",
   "error.page.delete.confirm": "Bitte gib zur Bestätigung den Seitentitel ein",
-  "error.page.delete.hasChildren":
-    "Die Seite hat Unterseiten und kann nicht gelöscht werden",
+  "error.page.delete.hasChildren": "Die Seite hat Unterseiten und kann nicht gelöscht werden",
   "error.page.delete.permission": "Du kannst die Seite \"{slug}\" nicht löschen",
-  "error.page.draft.duplicate":
-    "Ein Entwurf mit dem URL-Kürzel \"{slug}\" besteht bereits",
-  "error.page.duplicate":
-    "Eine Seite mit dem URL-Kürzel \"{slug}\" besteht bereits",
+  "error.page.draft.duplicate": "Ein Entwurf mit dem URL-Kürzel \"{slug}\" besteht bereits",
+  "error.page.duplicate": "Eine Seite mit dem URL-Kürzel \"{slug}\" besteht bereits",
   "error.page.duplicate.permission": "Du kannst die Seite \"{slug}\" nicht duplizieren",
   "error.page.notFound": "Die Seite \"{slug}\" konnte nicht gefunden werden",
-  "error.page.num.invalid":
-    "Bitte gib eine gültige Sortierungszahl an. Negative Zahlen sind nicht erlaubt.",
+  "error.page.num.invalid": "Bitte gib eine gültige Sortierungszahl an. Negative Zahlen sind nicht erlaubt.",
   "error.page.slug.invalid": "Bitte gib ein gültiges URL-Kürzel an",
   "error.page.sort.permission": "Die Seite \"{slug}\" kann nicht umsortiert werden",
   "error.page.status.invalid": "Bitte gib einen gültigen Seitenstatus an",
   "error.page.undefined": "Die Seite konnte nicht gefunden werden",
   "error.page.update.permission": "Du kannst die Seite \"{slug}\" nicht editieren",
 
-  "error.section.files.max.plural":
-    "Bitte füge nicht mehr als {max} Dateien zum Bereich \"{section}\" hinzu",
-  "error.section.files.max.singular":
-    "Bitte füge nicht mehr als eine Datei zum Bereich \"{section}\" hinzu",
-  "error.section.files.min.plural":
-    "Der Bereich \"{section}\" benötigt mindestens {min} Dateien",
-  "error.section.files.min.singular":
-    "Der Bereich \"{section}\" benötigt mindestens eine Datei",
+  "error.section.files.max.plural": "Bitte füge nicht mehr als {max} Dateien zum Bereich \"{section}\" hinzu",
+  "error.section.files.max.singular": "Bitte füge nicht mehr als eine Datei zum Bereich \"{section}\" hinzu",
+  "error.section.files.min.plural": "Der Bereich \"{section}\" benötigt mindestens {min} Dateien",
+  "error.section.files.min.singular": "Der Bereich \"{section}\" benötigt mindestens eine Datei",
 
-  "error.section.pages.max.plural":
-    "Bitte füge nicht mehr als {max} Seiten zum Bereich \"{section}\" hinzu",
-  "error.section.pages.max.singular":
-    "Bitte füge nicht mehr als eine Seite zum Bereich \"{section}\" hinzu",
-  "error.section.pages.min.plural":
-    "Der Bereich \"{section}\" benötigt mindestens {min} Seiten",
-  "error.section.pages.min.singular":
-    "Der Bereich \"{section}\" benötigt mindestens eine Seite",
+  "error.section.pages.max.plural": "Bitte füge nicht mehr als {max} Seiten zum Bereich \"{section}\" hinzu",
+  "error.section.pages.max.singular": "Bitte füge nicht mehr als eine Seite zum Bereich \"{section}\" hinzu",
+  "error.section.pages.min.plural": "Der Bereich \"{section}\" benötigt mindestens {min} Seiten",
+  "error.section.pages.min.singular": "Der Bereich \"{section}\" benötigt mindestens eine Seite",
 
   "error.section.notLoaded": "Der Bereich \"{name}\" konnte nicht geladen werden",
   "error.section.type.invalid": "Der Bereichstyp \"{type}\" ist nicht gültig",
 
   "error.site.changeTitle.empty": "Bitte gib einen Titel an",
-  "error.site.changeTitle.permission":
-    "Du kannst den Titel der Seite nicht ändern",
+  "error.site.changeTitle.permission": "Du kannst den Titel der Seite nicht ändern",
   "error.site.update.permission": "Du darfst die Seite nicht editieren",
 
   "error.template.default.notFound": "Die \"Default\"-Vorlage existiert nicht",
 
-  "error.user.changeEmail.permission":
-    "Du kannst die E-Mailadresse für den Benutzer \"{name}\" nicht ändern",
-  "error.user.changeLanguage.permission":
-    "Du kannst die Sprache für den Benutzer \"{name}\" nicht ändern",
-  "error.user.changeName.permission":
-    "Du kannst den Namen für den Benutzer \"{name}\" nicht ändern",
-  "error.user.changePassword.permission":
-    "Du kannst das Passwort für den Benutzer \"{name}\" nicht ändern",
-  "error.user.changeRole.lastAdmin":
-    "Die Rolle des letzten Administrators kann nicht geändert werden",
-  "error.user.changeRole.permission":
-    "Du kannst die Rolle für den Benutzer \"{name}\" nicht ändern",
-  "error.user.changeRole.toAdmin":
-    "Du darfst die Admin Rolle nicht an andere Benutzer vergeben",
+  "error.user.changeEmail.permission": "Du kannst die E-Mailadresse für den Benutzer \"{name}\" nicht ändern",
+  "error.user.changeLanguage.permission": "Du kannst die Sprache für den Benutzer \"{name}\" nicht ändern",
+  "error.user.changeName.permission": "Du kannst den Namen für den Benutzer \"{name}\" nicht ändern",
+  "error.user.changePassword.permission": "Du kannst das Passwort für den Benutzer \"{name}\" nicht ändern",
+  "error.user.changeRole.lastAdmin": "Die Rolle des letzten Administrators kann nicht geändert werden",
+  "error.user.changeRole.permission": "Du kannst die Rolle für den Benutzer \"{name}\" nicht ändern",
+  "error.user.changeRole.toAdmin": "Du darfst die Admin Rolle nicht an andere Benutzer*innen vergeben",
   "error.user.create.permission": "Du kannst diesen Benutzer nicht anlegen",
   "error.user.delete": "Der Benutzer \"{name}\" konnte nicht gelöscht werden",
   "error.user.delete.lastAdmin": "Du kannst den letzten Admin nicht l\u00f6schen",
   "error.user.delete.lastUser": "Der letzte Benutzer kann nicht gelöscht werden",
-  "error.user.delete.permission":
-    "Du darfst den Benutzer \"{name}\" nicht löschen",
-  "error.user.duplicate":
-    "Ein Benutzer mit der E-Mailadresse \"{email}\" besteht bereits",
+  "error.user.delete.permission": "Du darfst den Benutzer \"{name}\" nicht löschen",
+  "error.user.duplicate": "Ein Benutzer mit der E-Mailadresse \"{email}\" besteht bereits",
   "error.user.email.invalid": "Bitte gib eine gültige E-Mailadresse an",
   "error.user.language.invalid": "Bitte gib eine gültige Sprache an",
   "error.user.notFound": "Der Benutzer \"{name}\" wurde nicht gefunden",
-  "error.user.password.invalid":
-    "Bitte gib ein gültiges Passwort ein. Passwörter müssen mindestens 8 Zeichen lang sein.",
+  "error.user.password.invalid": "Bitte gib ein gültiges Passwort ein. Passwörter müssen mindestens 8 Zeichen lang sein.",
   "error.user.password.notSame": "Die Passwörter stimmen nicht überein",
   "error.user.password.undefined": "Der Benutzer hat kein Passwort",
   "error.user.role.invalid": "Bitte gib eine gültige Rolle an",
-  "error.user.update.permission":
-    "Du darfst den den Benutzer \"{name}\" nicht editieren",
+  "error.user.update.permission": "Du darfst den den Benutzer \"{name}\" nicht editieren",
 
   "error.validation.accepted": "Bitte bestätige",
   "error.validation.alpha": "Bitte gib nur Zeichen zwischen A und Z ein",
-  "error.validation.alphanum":
-    "Bitte gib nur Zeichen zwischen A und Z und Zahlen zwischen 0 und 9 ein",
-  "error.validation.between":
-    "Bitte gib einen Wert zwischen \"{min}\" und \"{max}\" ein",
+  "error.validation.alphanum": "Bitte gib nur Zeichen zwischen A und Z und Zahlen zwischen 0 und 9 ein",
+  "error.validation.between": "Bitte gib einen Wert zwischen \"{min}\" und \"{max}\" ein",
   "error.validation.boolean": "Bitte bestätige oder lehne ab",
-  "error.validation.contains":
-    "Bitte gib einen Wert ein, der \"{needle}\" enthält",
+  "error.validation.contains": "Bitte gib einen Wert ein, der \"{needle}\" enthält",
   "error.validation.date": "Bitte gib ein gültiges Datum ein",
   "error.validation.date.after": "Bitte gib ein Datum nach dem {date} ein",
   "error.validation.date.before": "Bitte gib ein Datum vor dem {date} ein",
@@ -210,18 +169,14 @@
   "error.validation.less": "Bitte gib einen Wert kleiner als {max} ein",
   "error.validation.match": "Der Wert entspricht nicht dem erwarteten Muster",
   "error.validation.max": "Bitte gib einen Wert ein, der nicht größer als {max} ist",
-  "error.validation.maxlength":
-    "Bitte gib einen kürzeren Text ein (max. {max} Zeichen)",
+  "error.validation.maxlength": "Bitte gib einen kürzeren Text ein (max. {max} Zeichen)",
   "error.validation.maxwords": "Bitte nutze nicht mehr als {max} Wort(e)",
   "error.validation.min": "Bitte gib einen Wert ein, der nicht kleiner als {min} ist",
-  "error.validation.minlength":
-    "Bitte gib einen längeren Text ein. (min. {min} Zeichen)",
+  "error.validation.minlength": "Bitte gib einen längeren Text ein. (min. {min} Zeichen)",
   "error.validation.minwords": "Bitte nutze mindestens {min} Wort(e)",
   "error.validation.more": "Bitte gib einen größeren Wert als {min} ein",
-  "error.validation.notcontains":
-    "Bitte gib einen Wert ein, der nicht \"{needle}\" enthält",
-  "error.validation.notin":
-    "Bitte gib keinen der folgenden Werte ein: ({notIn})",
+  "error.validation.notcontains": "Bitte gib einen Wert ein, der nicht \"{needle}\" enthält",
+  "error.validation.notin": "Bitte gib keinen der folgenden Werte ein: ({notIn})",
   "error.validation.option": "Bitte wähle eine gültige Option aus",
   "error.validation.num": "Bitte gib eine gültige Zahl an",
   "error.validation.required": "Bitte gib etwas ein",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Es bestehen keine Eintr\u00e4ge.",
   "field.users.empty": "Keine Benutzer ausgewählt",
 
-  "file.delete.confirm":
-    "Willst du die Datei <strong>{filename}</strong> <br>wirklich löschen?",
+  "file.delete.confirm": "Willst du die Datei <strong>{filename}</strong> <br>wirklich löschen?",
 
   "files": "Dateien",
   "files.empty": "Keine Dateien",
@@ -251,29 +205,22 @@
   "installation": "Installation",
   "installation.completed": "Das Panel wurde installiert",
   "installation.disabled": "Die Panel-Installation ist auf öffentlichen Servern automatisch deaktiviert. Bitte installiere das Panel auf einem lokalen Server oder aktiviere die Installation gezielt mit der <code>panel.install</code> Option. ",
-  "installation.issues.accounts":
-    "<code>/site/accounts</code> ist nicht beschreibbar",
-  "installation.issues.content":
-    "<code>/content</code> existiert nicht oder ist nicht beschreibbar",
+  "installation.issues.accounts": "<code>/site/accounts</code> ist nicht beschreibbar",
+  "installation.issues.content": "<code>/content</code> existiert nicht oder ist nicht beschreibbar",
   "installation.issues.curl": "Die <code>CURL</code> Erweiterung wird benötigt",
   "installation.issues.headline": "Das Panel kann nicht installiert werden",
-  "installation.issues.mbstring":
-    "Die <code>MB String</code> Erweiterung wird benötigt",
-  "installation.issues.media":
-    "Der <code>/media</code> Ordner ist nicht beschreibbar",
+  "installation.issues.mbstring": "Die <code>MB String</code> Erweiterung wird benötigt",
+  "installation.issues.media": "Der <code>/media</code> Ordner ist nicht beschreibbar",
   "installation.issues.php": "Bitte verwende <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby benötigt <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
+  "installation.issues.server": "Kirby benötigt <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
   "installation.issues.sessions": "<code>/site/sessions</code> ist nicht beschreibbar",
 
   "language": "Sprache",
   "language.code": "Code",
   "language.convert": "Als Standard auswählen",
-  "language.convert.confirm":
-    "<p>Willst du <strong>{name}</strong> wirklich in die Standardsprache umwandeln? Dieser Schritt kann nicht rückgängig gemacht werden.</p><p>Wenn <strong>{name}</strong> unübersetzte Felder hat, gibt es keine gültigen Standardwerte für diese Felder und Inhalte könnten verloren gehen.</p>",
+  "language.convert.confirm": "<p>Willst du <strong>{name}</strong> wirklich in die Standardsprache umwandeln? Dieser Schritt kann nicht rückgängig gemacht werden.</p><p>Wenn <strong>{name}</strong> unübersetzte Felder hat, gibt es keine gültigen Standardwerte für diese Felder und Inhalte könnten verloren gehen.</p>",
   "language.create": "Neue Sprache anlegen",
-  "language.delete.confirm":
-    "Willst du <strong>{name}</strong> inklusive aller Übersetzungen wirklich löschen? Dieser Schritt kann nicht rückgängig gemacht werden!",
+  "language.delete.confirm": "Willst du <strong>{name}</strong> inklusive aller Übersetzungen wirklich löschen? Dieser Schritt kann nicht rückgängig gemacht werden!",
   "language.deleted": "Die Sprache wurde gelöscht",
   "language.direction": "Leserichtung",
   "language.direction.ltr": "Von links nach rechts",
@@ -292,8 +239,7 @@
   "license": "Lizenz",
   "license.buy": "Kaufe eine Lizenz",
   "license.register": "Registrieren",
-  "license.register.help":
-    "Den Lizenzcode findest du in der Bestätigungsmail zu deinem Kauf. Bitte kopiere und füge ihn ein, um Kirby zu registrieren.",
+  "license.register.help": "Den Lizenzcode findest du in der Bestätigungsmail zu deinem Kauf. Bitte kopiere und füge ihn ein, um Kirby zu registrieren.",
   "license.register.label": "Bitte gib deinen Lizenzcode ein",
   "license.register.success": "Vielen Dank für deine Unterstützung",
   "license.unregistered": "Dies ist eine unregistrierte Kirby-Demo",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Bitte wähle eine Position aus",
   "page.changeStatus.select": "Wähle einen neuen Status aus",
   "page.changeTemplate": "Vorlage ändern",
-  "page.delete.confirm":
-    "Willst du die Seite <strong>{title}</strong> wirklich löschen?",
-  "page.delete.confirm.subpages":
-    "<strong>Diese Seite hat Unterseiten</strong>. <br>Alle Unterseiten werden ebenfalls gelöscht.",
+  "page.delete.confirm": "Willst du die Seite <strong>{title}</strong> wirklich löschen?",
+  "page.delete.confirm.subpages": "<strong>Diese Seite hat Unterseiten</strong>. <br>Alle Unterseiten werden ebenfalls gelöscht.",
   "page.delete.confirm.title": "Gib zur Bestätigung den Seitentitel ein",
   "page.draft.create": "Entwurf anlegen",
   "page.duplicate.appendix": "Kopie",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Seiten kopieren",
   "page.status": "Status",
   "page.status.draft": "Entwurf",
-  "page.status.draft.description":
-    "Die Seite ist im Entwurfsmodus und ist nur für angemeldete Benutzer sichtbar",
+  "page.status.draft.description": "Die Seite ist im Entwurfsmodus und ist nur für angemeldete Benutzer*innen oder über den geheimen Link sichtbar",
   "page.status.listed": "Öffentlich",
   "page.status.listed.description": "Die Seite ist öffentlich für alle Besucher",
   "page.status.unlisted": "Ungelistet",
@@ -388,10 +331,11 @@
   "replace": "Ersetzen",
   "retry": "Wiederholen",
   "revert": "Verwerfen",
+  "revert.confirm": "Willst du wirklich alle ungespeicherten Änderungen verwerfen? ",
 
   "role": "Rolle",
-  "role.admin.description": "Administratoren haben alle Rechte",
-  "role.admin.title": "Administrator",
+  "role.admin.description": "Administrator*innen haben alle Rechte",
+  "role.admin.title": "Administrator*in",
   "role.all": "Alle",
   "role.empty": "Keine Benutzer mit dieser Rolle",
   "role.description.placeholder": "Keine Beschreibung",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://beispiel.de",
 
   "user": "Benutzer",
-  "user.blueprint":
-    "Du kannst zusätzliche Felder und Bereiche für diese Benutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> anlegen",
+  "user.blueprint": "Du kannst zusätzliche Felder und Bereiche für diese Benutzerrolle in <strong>/site/blueprints/users/{role}.yml</strong> anlegen",
   "user.changeEmail": "E-Mail ändern",
   "user.changeLanguage": "Sprache ändern",
   "user.changeName": "Benutzer umbenennen",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Neue Rolle auswählen",
   "user.create": "Neuen Benutzer anlegen",
   "user.delete": "Benutzer löschen",
-  "user.delete.confirm":
-    "Willst du den Benutzer <br><strong>{email}</strong> wirklich löschen?",
+  "user.delete.confirm": "Willst du den Benutzer <br><strong>{email}</strong> wirklich löschen?",
 
   "users": "Benutzer",
 

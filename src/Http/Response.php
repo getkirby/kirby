@@ -151,9 +151,10 @@ class Response
      *
      * @param string $file
      * @param string $filename
+     * @param array $props Custom overrides for response props (e.g. headers)
      * @return self
      */
-    public static function download(string $file, string $filename = null)
+    public static function download(string $file, string $filename = null, array $props = [])
     {
         if (file_exists($file) === false) {
             throw new Exception('The file could not be found');
@@ -164,19 +165,21 @@ class Response
         $body     = file_get_contents($file);
         $size     = strlen($body);
 
-        return new static([
+        $props = array_replace_recursive([
             'body'    => $body,
             'type'    => 'application/force-download',
             'headers' => [
                 'Pragma'                    => 'public',
-                'Expires'                   => '0',
+                'Cache-Control'             => 'no-cache, no-store, must-revalidate',
                 'Last-Modified'             => gmdate('D, d M Y H:i:s', $modified) . ' GMT',
                 'Content-Disposition'       => 'attachment; filename="' . $filename . '"',
                 'Content-Transfer-Encoding' => 'binary',
                 'Content-Length'            => $size,
                 'Connection'                => 'close'
             ]
-        ]);
+        ], $props);
+
+        return new static($props);
     }
 
     /**
@@ -184,11 +187,17 @@ class Response
      * sends the file content to the browser
      *
      * @param string $file
+     * @param array $props Custom overrides for response props (e.g. headers)
      * @return self
      */
-    public static function file(string $file)
+    public static function file(string $file, array $props = [])
     {
-        return new static(F::read($file), F::extensionToMime(F::extension($file)));
+        $props = array_merge([
+            'body' => F::read($file),
+            'type' => F::extensionToMime(F::extension($file))
+        ], $props);
+
+        return new static($props);
     }
 
     /**
@@ -245,12 +254,12 @@ class Response
      * @param int $code
      * @return self
      */
-    public static function redirect(?string $location = null, ?int $code = null)
+    public static function redirect(string $location = '/', int $code = 302)
     {
         return new static([
-            'code' => $code ?? 302,
+            'code' => $code,
             'headers' => [
-                'Location' => Url::unIdn($location ?? '/')
+                'Location' => Url::unIdn($location)
             ]
         ]);
     }

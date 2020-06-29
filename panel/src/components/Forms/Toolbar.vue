@@ -3,18 +3,20 @@
     <div class="k-toolbar-wrapper">
       <div class="k-toolbar-buttons">
         <template v-for="(button, buttonIndex) in layout">
-
           <!-- divider -->
           <template v-if="button.divider">
-            <span :key="buttonIndex" class="k-toolbar-divider" />
+            <span
+              :key="buttonIndex"
+              class="k-toolbar-divider"
+            />
           </template>
 
           <!-- dropdown -->
           <template v-else-if="button.dropdown">
             <k-dropdown :key="buttonIndex">
               <k-button
-                :icon="button.icon"
                 :key="buttonIndex"
+                :icon="button.icon"
                 :tooltip="button.label"
                 tabindex="-1"
                 class="k-toolbar-button"
@@ -36,15 +38,14 @@
           <!-- single button -->
           <template v-else>
             <k-button
-              :icon="button.icon"
               :key="buttonIndex"
+              :icon="button.icon"
               :tooltip="button.label"
               tabindex="-1"
               class="k-toolbar-button"
               @click="command(button.command, button.args)"
             />
           </template>
-
         </template>
       </div>
     </div>
@@ -208,7 +209,7 @@ export default {
         link: {
           label: this.$t("toolbar.button.link"),
           icon: "url",
-          shortcut: "l",
+          shortcut: "k",
           command: "dialog",
           args: "link"
         },

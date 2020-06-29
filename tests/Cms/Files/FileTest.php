@@ -192,6 +192,87 @@ class FileTest extends TestCase
         $this->assertEquals('super.jpg', $file->toString('{{ file.filename }}'));
     }
 
+    public function testIsReadable()
+    {
+        $app = new App([
+            'blueprints' => [
+                'files/test' => [
+                    'options' => ['read' => false]
+                ]
+            ],
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'users' => [
+                [
+                    'email' => 'admin@getkirby.com',
+                    'id'    => 'admin',
+                    'role'  => 'admin'
+                ]
+            ],
+            'user' => 'admin'
+        ]);
+
+        $file = new File([
+            'kirby'    => $app,
+            'filename' => 'test.jpg'
+        ]);
+        $this->assertTrue($file->isReadable());
+        $this->assertTrue($file->isReadable()); // test caching
+
+        $file = new File([
+            'kirby'    => $app,
+            'filename' => 'test.jpg',
+            'template' => 'test'
+        ]);
+        $this->assertFalse($file->isReadable());
+        $this->assertFalse($file->isReadable()); // test caching
+    }
+
+    public function testMediaHash()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/FileTest/mediaHash',
+                'content' => $index
+            ],
+            'options' => [
+                'content.salt' => 'test'
+            ]
+        ]);
+
+        F::write($index . '/test.jpg', 'test');
+        touch($index . '/test.jpg', 5432112345);
+        $file = new File([
+            'kirby'    => $app,
+            'filename' => 'test.jpg'
+        ]);
+
+        $this->assertSame('08756f3115-5432112345', $file->mediaHash());
+
+        Dir::remove(dirname($index));
+    }
+
+    public function testMediaToken()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/FileTest/mediaHash',
+                'content' => $index
+            ],
+            'options' => [
+                'content.salt' => 'test'
+            ]
+        ]);
+
+        $file = new File([
+            'kirby'    => $app,
+            'filename' => 'test.jpg'
+        ]);
+
+        $this->assertSame('08756f3115', $file->mediaToken());
+    }
+
     public function testModified()
     {
         $app = new App([
@@ -231,19 +312,54 @@ class FileTest extends TestCase
 
         // create a file
         F::write($file = $index . '/test.js', 'test');
-
-        // write the content file a bit later
-        usleep(1000000);
+        touch($file, $modifiedFile = \time() + 2);
 
         F::write($content = $index . '/test.js.txt', 'test');
-
-        $modifiedFile    = F::modified($file);
-        $modifiedContent = F::modified($content);
+        touch($file, $modifiedContent = \time() + 5);
 
         $file = $app->file('test.js');
 
         $this->assertNotEquals($modifiedFile, $file->modified());
         $this->assertEquals($modifiedContent, $file->modified());
+
+        Dir::remove(dirname($index));
+    }
+
+    public function testModifiedSpecifyingLanguage()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/FileTest/modified',
+                'content' => $index
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'name'    => 'English'
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        // create a file
+        F::write($index . '/test.js', 'test');
+
+        // create the english content
+        F::write($file = $index . '/test.js.en.txt', 'test');
+        touch($file, $modifiedEnContent = \time() + 2);
+
+        // create the german content
+        F::write($file = $index . '/test.js.de.txt', 'test');
+        touch($file, $modifiedDeContent = \time() + 5);
+
+        $file = $app->file('test.js');
+
+        $this->assertEquals($modifiedEnContent, $file->modified(null, null, 'en'));
+        $this->assertEquals($modifiedDeContent, $file->modified(null, null, 'de'));
 
         Dir::remove(dirname($index));
     }
@@ -294,6 +410,7 @@ class FileTest extends TestCase
             'changeName' => true,
             'create'     => true,
             'delete'     => true,
+            'read'       => true,
             'replace'    => true,
             'update'     => true,
         ];
@@ -314,6 +431,7 @@ class FileTest extends TestCase
             'changeName' => false,
             'create'     => false,
             'delete'     => false,
+            'read'       => false,
             'replace'    => false,
             'update'     => false,
         ];
@@ -325,6 +443,7 @@ class FileTest extends TestCase
             'changeName' => false,
             'create'     => false,
             'delete'     => true,
+            'read'       => false,
             'replace'    => false,
             'update'     => false,
         ];

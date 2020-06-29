@@ -103,5 +103,21 @@ return [
             return $this->file($path, $filename)->changeName($this->requestBody('name'));
         }
     ],
+    [
+        'pattern' => 'files/search',
+        'method'  => 'GET|POST',
+        'action'  => function () {
+            $files = $this
+                ->site()
+                ->index(true)
+                ->filterBy('isReadable', true)
+                ->files();
 
+            if ($this->requestMethod() === 'GET') {
+                return $files->search($this->requestQuery('q'));
+            } else {
+                return $files->query($this->requestBody());
+            }
+        }
+    ],
 ];

@@ -99,6 +99,17 @@ class Dir
     }
 
     /**
+     * Checks if the directory exists on disk
+     *
+     * @param string $dir
+     * @return bool
+     */
+    public static function exists(string $dir): bool
+    {
+        return is_dir($dir) === true;
+    }
+
+    /**
      * Get all files
      *
      * @param string $dir

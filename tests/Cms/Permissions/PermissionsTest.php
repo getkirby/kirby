@@ -4,12 +4,18 @@ namespace Kirby\Cms;
 
 class PermissionsTest extends TestCase
 {
-    public function actions()
+    public function tearDown(): void
+    {
+        Permissions::$extendedActions = [];
+    }
+
+    public function actionsProvider()
     {
         return [
             ['files', 'changeName'],
             ['files', 'create'],
             ['files', 'delete'],
+            ['files', 'read'],
             ['files', 'replace'],
             ['files', 'update'],
 
@@ -44,9 +50,8 @@ class PermissionsTest extends TestCase
         ];
     }
 
-
     /**
-     * @dataProvider actions
+     * @dataProvider actionsProvider
      */
     public function testActions(string $category, $action)
     {
@@ -84,5 +89,46 @@ class PermissionsTest extends TestCase
         ]);
 
         $this->assertTrue($p->for($category, $action));
+    }
+
+    public function testExtendActions()
+    {
+        Permissions::$extendedActions = [
+            'test-category' => [
+                'test-action' => true,
+                'another'     => false
+            ]
+        ];
+
+        // default values
+        $permissions = new Permissions();
+        $this->assertTrue($permissions->for('test-category', 'test-action'));
+        $this->assertFalse($permissions->for('test-category', 'another'));
+        $this->assertFalse($permissions->for('test-category', 'does-not-exist'));
+
+        // overridden values
+        $permissions = new Permissions([
+            'test-category' => [
+                '*'       => false,
+                'another' => true
+            ]
+        ]);
+        $this->assertFalse($permissions->for('test-category', 'test-action'));
+        $this->assertTrue($permissions->for('test-category', 'another'));
+        $this->assertFalse($permissions->for('test-category', 'does-not-exist'));
+    }
+
+    public function testExtendActionsCoreOverride()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The action pages is already a core action');
+
+        Permissions::$extendedActions = [
+            'pages' => [
+                'test-action' => true
+            ]
+        ];
+
+        new Permissions();
     }
 }

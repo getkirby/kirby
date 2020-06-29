@@ -237,7 +237,7 @@ class AppComponentsTest extends TestCase
     {
         $this->kirby->clone([
             'components' => [
-                'url' => function ($kirby, $path, $options, $original) {
+                'url' => function ($kirby, $path, $options) {
                     return 'test';
                 }
             ]

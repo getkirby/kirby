@@ -341,7 +341,7 @@ class Str
      * @param string $rep The element, which should be added if the string is too long. Ellipsis is the default.
      * @return string The shortened string
      */
-    public static function excerpt($string, $chars = 140, $strip = true, $rep = '…')
+    public static function excerpt($string, $chars = 140, $strip = true, $rep = ' …')
     {
         if ($strip === true) {
             $string = strip_tags(str_replace('<', ' <', $string));
@@ -361,7 +361,7 @@ class Str
             return $string;
         }
 
-        return static::substr($string, 0, strrpos(static::substr($string, 0, $chars), ' ')) . ' ' . $rep;
+        return static::substr($string, 0, mb_strrpos(static::substr($string, 0, $chars), ' ')) . $rep;
     }
 
     /**
@@ -373,6 +373,11 @@ class Str
      */
     public static function float($value): string
     {
+        // Convert exponential to decimal, 1e-8 as 0.00000001
+        if (strpos(strtolower($value), 'e') !== false) {
+            $value = rtrim(sprintf('%.16f', (float)$value), '0');
+        }
+
         $value   = str_replace(',', '.', $value);
         $decimal = strlen(substr(strrchr($value, '.'), 1));
         return number_format((float)$value, $decimal, '.', false);
@@ -892,10 +897,25 @@ class Str
     {
         return preg_replace_callback('!' . $start . '(.*?)' . $end . '!', function ($match) use ($data, $fallback) {
             $query = trim($match[1]);
+
+            // if the placeholder contains a dot, it is a query
             if (strpos($query, '.') !== false) {
-                return (new Query($match[1], $data))->result() ?? $fallback;
+                try {
+                    $result = (new Query($match[1], $data))->result();
+                } catch (Exception $e) {
+                    $result = null;
+                }
+            } else {
+                $result = $data[$query] ?? null;
             }
-            return $data[$query] ?? $fallback;
+
+            // if we don't have a result, use the fallback if given
+            if ($result === null && $fallback !== null) {
+                $result = $fallback;
+            }
+
+            // if we still don't have a result, keep the original placeholder
+            return $result ?? $match[0];
         }, $string);
     }
 

@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "Nepavyko įkelti profilio nuotraukos",
   "error.avatar.delete.fail": "Nepavyko pašalinti profilio nuotraukos",
-  "error.avatar.dimensions.invalid":
-    "Profilio nuotraukos plotis ar aukštis turėtų būti iki 3000 pikselių",
-  "error.avatar.mime.forbidden":
-    "Profilio nuotrauka turi būti JPEG arba PNG",
+  "error.avatar.dimensions.invalid": "Profilio nuotraukos plotis ar aukštis turėtų būti iki 3000 pikselių",
+  "error.avatar.mime.forbidden": "Profilio nuotrauka turi būti JPEG arba PNG",
 
   "error.blueprint.notFound": "Blueprint \"{name}\" negali būti užkrautas",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Neteisingas konverteris \"{converter}\"",
 
   "error.file.changeName.empty": "Pavadinimas negali būti tuščias",
-  "error.file.changeName.permission":
-    "Neturite teisės pakeisti failo pavadinimo \"{filename}\"",
+  "error.file.changeName.permission": "Neturite teisės pakeisti failo pavadinimo \"{filename}\"",
   "error.file.duplicate": "Failas su pavadinimu \"{filename}\" jau yra",
-  "error.file.extension.forbidden":
-    "Failo tipas (plėtinys) \"{extension}\" neleidžiamas",
-  "error.file.extension.missing":
-    "Failui \"{filename}\" trūksta tipo (plėtinio)",
+  "error.file.extension.forbidden": "Failo tipas (plėtinys) \"{extension}\" neleidžiamas",
+  "error.file.extension.missing": "Failui \"{filename}\" trūksta tipo (plėtinio)",
   "error.file.maxheight": "Failo aukštis neturi viršyti {height} px",
   "error.file.maxsize": "Failas per didelis",
   "error.file.maxwidth": "Failo plotis neturi viršyti {width} px",
-  "error.file.mime.differs":
-    "Įkėliamas failas turi būti tokio pat mime tipo \"{mime}\"",
+  "error.file.mime.differs": "Įkėliamas failas turi būti tokio pat mime tipo \"{mime}\"",
   "error.file.mime.forbidden": "Media tipas \"{mime}\" neleidžiamas",
   "error.file.mime.invalid": "Neteisingas mime tipas: {mime}",
-  "error.file.mime.missing":
-    "Failui \"{filename}\" nepavyko atpažinti media (mime) tipo",
+  "error.file.mime.missing": "Failui \"{filename}\" nepavyko atpažinti media (mime) tipo",
   "error.file.minheight": "Failo aukštis turi būti bent {height} px",
   "error.file.minsize": "Failas per mažas",
   "error.file.minwidth": "Failo plotis turi būti bent {width} px",
@@ -90,111 +83,77 @@
   "error.license.email": "Prašome įrašyti teisingą el. pašto adresą",
   "error.license.verification": "Nepavyko patikrinti licenzijos",
 
-  "error.page.changeSlug.permission":
-    "Neturite teisės pakeisti \"{slug}\" URL",
-  "error.page.changeStatus.incomplete":
-    "Puslapis turi klaidų ir negali būti paskelbtas",
-  "error.page.changeStatus.permission":
-    "Šiam puslapiui negalima pakeisti statuso",
-  "error.page.changeStatus.toDraft.invalid":
-    "Puslapio \"{slug}\" negalima paversti juodraščiu",
-  "error.page.changeTemplate.invalid":
-    "Šablono puslapiui \"{slug}\" negalima keisti",
-  "error.page.changeTemplate.permission":
-    "Neturite leidimo keisti šabloną puslapiui \"{slug}\"",
+  "error.page.changeSlug.permission": "Neturite teisės pakeisti \"{slug}\" URL",
+  "error.page.changeStatus.incomplete": "Puslapis turi klaidų ir negali būti paskelbtas",
+  "error.page.changeStatus.permission": "Šiam puslapiui negalima pakeisti statuso",
+  "error.page.changeStatus.toDraft.invalid": "Puslapio \"{slug}\" negalima paversti juodraščiu",
+  "error.page.changeTemplate.invalid": "Šablono puslapiui \"{slug}\" negalima keisti",
+  "error.page.changeTemplate.permission": "Neturite leidimo keisti šabloną puslapiui \"{slug}\"",
   "error.page.changeTitle.empty": "Pavadinimas negali būti tuščias",
-  "error.page.changeTitle.permission":
-    "Neturite leidimo keisti pavadinimo puslapiui \"{slug}\"",
+  "error.page.changeTitle.permission": "Neturite leidimo keisti pavadinimo puslapiui \"{slug}\"",
   "error.page.create.permission": "Neturite leidimo sukurti \"{slug}\"",
   "error.page.delete": "Puslapio \"{slug}\" negalima pašalinti",
   "error.page.delete.confirm": "Įrašykite puslapio pavadinimą, tam kad patvirtintumėte",
-  "error.page.delete.hasChildren":
-    "Puslapis turi vidinių puslapių, dėl to negalima jo pašalinti",
+  "error.page.delete.hasChildren": "Puslapis turi vidinių puslapių, dėl to negalima jo pašalinti",
   "error.page.delete.permission": "Neturite leidimo šalinti \"{slug}\"",
-  "error.page.draft.duplicate":
-    "Puslapio juodraštis su URL pabaiga \"{slug}\" jau yra",
-  "error.page.duplicate":
-    "Puslapis su URL pabaiga \"{slug}\" jau yra",
+  "error.page.draft.duplicate": "Puslapio juodraštis su URL pabaiga \"{slug}\" jau yra",
+  "error.page.duplicate": "Puslapis su URL pabaiga \"{slug}\" jau yra",
   "error.page.duplicate.permission": "Neturite leidimo dubliuoti \"{slug}\"",
   "error.page.notFound": "Puslapis \"{slug}\" nerastas",
-  "error.page.num.invalid":
-    "Įrašykite teisingą eiliškumo numerį. Numeris negali būti neigiamas.",
+  "error.page.num.invalid": "Įrašykite teisingą eiliškumo numerį. Numeris negali būti neigiamas.",
   "error.page.slug.invalid": "Įrašykite teisingą URL prefiksą",
   "error.page.sort.permission": "Puslapiui \"{slug}\" negalima pakeisti eiliškumo",
   "error.page.status.invalid": "Nustatykite teisingą puslapio statusą",
   "error.page.undefined": "Puslapis nerastas",
   "error.page.update.permission": "Neturite leidimo atnaujinti \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "Į sekciją \"{section}\" negalima pridėti daugiau nei {max} failų",
-  "error.section.files.max.singular":
-    "Į sekciją \"{section}\" negalima pridėti daugiau nei vieną failą",
-  "error.section.files.min.plural":
-    "Sekcija \"{section}\" reikalauja bent {min} failų",
-  "error.section.files.min.singular":
-    "Sekcija \"{section}\" reikalauja bent vieno failo",
+  "error.section.files.max.plural": "Į sekciją \"{section}\" negalima pridėti daugiau nei {max} failų",
+  "error.section.files.max.singular": "Į sekciją \"{section}\" negalima pridėti daugiau nei vieną failą",
+  "error.section.files.min.plural": "Sekcija \"{section}\" reikalauja bent {min} failų",
+  "error.section.files.min.singular": "Sekcija \"{section}\" reikalauja bent vieno failo",
 
-  "error.section.pages.max.plural":
-    "Į sekciją \"{section}\" negalima pridėti daugiau nei {max} puslapių",
-  "error.section.pages.max.singular":
-    "Į sekciją \"{section}\" negalima pridėti daugiau nei vieną puslapį",
-  "error.section.pages.min.plural":
-    "Sekcija \"{section}\" reikalauja bent {min} puslapių",
-  "error.section.pages.min.singular":
-    "Sekcija \"{section}\" reikalauja bent vieno puslapio",
+  "error.section.pages.max.plural": "Į sekciją \"{section}\" negalima pridėti daugiau nei {max} puslapių",
+  "error.section.pages.max.singular": "Į sekciją \"{section}\" negalima pridėti daugiau nei vieną puslapį",
+  "error.section.pages.min.plural": "Sekcija \"{section}\" reikalauja bent {min} puslapių",
+  "error.section.pages.min.singular": "Sekcija \"{section}\" reikalauja bent vieno puslapio",
 
   "error.section.notLoaded": "Sekcija \"{name}\" negali būti užkrauta",
   "error.section.type.invalid": "Sekcijos tipas \"{type}\" yra neteisingas",
 
   "error.site.changeTitle.empty": "Pavadinimas negali būti tuščias",
-  "error.site.changeTitle.permission":
-    "Neturite leidimo keisti svetainės pavadinimo",
+  "error.site.changeTitle.permission": "Neturite leidimo keisti svetainės pavadinimo",
   "error.site.update.permission": "Neturite leidimo atnaujinti svetainės",
 
   "error.template.default.notFound": "Nėra šablono pagal nutylėjimą",
 
-  "error.user.changeEmail.permission":
-    "Neturite leidimo keisti vartotojo \"{name}\" el. paštą",
-  "error.user.changeLanguage.permission":
-    "Neturite leidimo keisti vartotojo \"{name}\" kalbą",
-  "error.user.changeName.permission":
-    "Neturite leidimo keisti vartotojo \"{name}\" vardą",
-  "error.user.changePassword.permission":
-    "Neturite leidimo keisti vartotojo \"{name}\" slaptažodį",
-  "error.user.changeRole.lastAdmin":
-    "Vienintelio administratoriaus rolės negalima pakeisti",
-  "error.user.changeRole.permission":
-    "Neturite leidimo pakeisti vartotojo \"{name}\" rolės",
-  "error.user.changeRole.toAdmin":
-    "Jūs neturite teisių suteikti administratoriaus rolę",
+  "error.user.changeEmail.permission": "Neturite leidimo keisti vartotojo \"{name}\" el. paštą",
+  "error.user.changeLanguage.permission": "Neturite leidimo keisti vartotojo \"{name}\" kalbą",
+  "error.user.changeName.permission": "Neturite leidimo keisti vartotojo \"{name}\" vardą",
+  "error.user.changePassword.permission": "Neturite leidimo keisti vartotojo \"{name}\" slaptažodį",
+  "error.user.changeRole.lastAdmin": "Vienintelio administratoriaus rolės negalima pakeisti",
+  "error.user.changeRole.permission": "Neturite leidimo pakeisti vartotojo \"{name}\" rolės",
+  "error.user.changeRole.toAdmin": "Jūs neturite teisių suteikti administratoriaus rolę",
   "error.user.create.permission": "Neturite leidimo sukurti šį vartotoją",
   "error.user.delete": "Vartotojo \"{name}\" negalima pašalinti",
   "error.user.delete.lastAdmin": "Vienintelio administratoriaus negalima pašalinti",
   "error.user.delete.lastUser": "Vienintelio vartotojo negalima pašalinti",
-  "error.user.delete.permission":
-    "Neturite leidimo pašalinti vartotoją \"{name}\"",
-  "error.user.duplicate":
-    "Vartotojas su el. paštu \"{email}\" jau yra",
+  "error.user.delete.permission": "Neturite leidimo pašalinti vartotoją \"{name}\"",
+  "error.user.duplicate": "Vartotojas su el. paštu \"{email}\" jau yra",
   "error.user.email.invalid": "Įrašykite teisingą el. pašto adresą",
   "error.user.language.invalid": "Įrašykite teisingą kalbą",
   "error.user.notFound": "Vartotojas \"{name}\" nerastas",
-  "error.user.password.invalid":
-    "Prašome įrašyti galiojantį slaptažodį. Slaptažodį turi sudaryti bent 8 simboliai.",
+  "error.user.password.invalid": "Prašome įrašyti galiojantį slaptažodį. Slaptažodį turi sudaryti bent 8 simboliai.",
   "error.user.password.notSame": "Slaptažodžiai nesutampa",
   "error.user.password.undefined": "Vartotojas neturi slaptažodžio",
   "error.user.role.invalid": "Įrašykite teisingą rolę",
-  "error.user.update.permission":
-    "Neturite teisės keisti vartotojo \"{name}\"",
+  "error.user.update.permission": "Neturite teisės keisti vartotojo \"{name}\"",
 
   "error.validation.accepted": "Prašome patvirtinti",
   "error.validation.alpha": "Prašome įrašyti tik raides a-z",
-  "error.validation.alphanum":
-    "Prašome įrašyti tik raides a-z arba skaičius 0-9",
-  "error.validation.between":
-    "Prašome įrašyti reikšmę tarp \"{min}\" ir \"{max}\"",
+  "error.validation.alphanum": "Prašome įrašyti tik raides a-z arba skaičius 0-9",
+  "error.validation.between": "Prašome įrašyti reikšmę tarp \"{min}\" ir \"{max}\"",
   "error.validation.boolean": "Patvirtinkite arba atšaukite",
-  "error.validation.contains":
-    "Prašome įrašyti reikšmę, kuri turėtų \"{needle}\"",
+  "error.validation.contains": "Prašome įrašyti reikšmę, kuri turėtų \"{needle}\"",
   "error.validation.date": "Prašome įrašyti korektišką datą",
   "error.validation.date.after": "Įrašykite datą nuo {date}",
   "error.validation.date.before": "Įrašykite datą iki {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Prašome įrašyti mažiau nei {max}",
   "error.validation.match": "Reikšmė nesutampa su laukiamu šablonu",
   "error.validation.max": "Prašome įrašyti reikšmę lygią arba didesnę, nei {max}",
-  "error.validation.maxlength":
-    "Prašome įrašyti trumpesnę reikšmę. (max. {max} characters)",
+  "error.validation.maxlength": "Prašome įrašyti trumpesnę reikšmę. (max. {max} characters)",
   "error.validation.maxwords": "Please enter no more than {max} word(s)",
   "error.validation.min": "Please enter a value equal to or greater than {min}",
-  "error.validation.minlength":
-    "Prašome įrašyti ilgesnę reikšmę. (min. {min} characters)",
+  "error.validation.minlength": "Prašome įrašyti ilgesnę reikšmę. (min. {min} characters)",
   "error.validation.minwords": "Prašome įrašyti bent {min} žodžius",
   "error.validation.more": "Prašome įrašyti daugiau nei {min}",
-  "error.validation.notcontains":
-    "Prašome įrašyti reikšmę, kuri neturi \"{needle}\"",
-  "error.validation.notin":
-    "Prašome neįrašyti vieną iš šių: ({notIn})",
+  "error.validation.notcontains": "Prašome įrašyti reikšmę, kuri neturi \"{needle}\"",
+  "error.validation.notin": "Prašome neįrašyti vieną iš šių: ({notIn})",
   "error.validation.option": "Prašome pasirinkti korektišką opciją",
   "error.validation.num": "Prašome įrašyti teisingą numerį",
   "error.validation.required": "Prašome įrašyti ką nors",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Dar nėra įrašų",
   "field.users.empty": "Dar nėra vartotojų",
 
-  "file.delete.confirm":
-    "Ar tikrai norite pašalinti <br><strong>{filename}</strong>?",
+  "file.delete.confirm": "Ar tikrai norite pašalinti <br><strong>{filename}</strong>?",
 
   "files": "Failai",
   "files.empty": "Įkelti",
@@ -251,29 +205,22 @@
   "installation": "Įdiegimas",
   "installation.completed": "Valdymo pultas įdiegtas",
   "installation.disabled": "Pagal nutylėjimą valdymo pulto įdiegimas viešuose serveriuose yra negalimas. Prašome įdiegti lokalioje aplinkoje arba įgalinkite jį su <code>panel.install</code> opcija.",
-  "installation.issues.accounts":
-    "Katalogas <code>/site/accounts</code> neegzistuoja arba neturi įrašymo teisių",
-  "installation.issues.content":
-    "Katalogas <code>/content</code> neegzistuoja arba neturi įrašymo teisių",
+  "installation.issues.accounts": "Katalogas <code>/site/accounts</code> neegzistuoja arba neturi įrašymo teisių",
+  "installation.issues.content": "Katalogas <code>/content</code> neegzistuoja arba neturi įrašymo teisių",
   "installation.issues.curl": "Plėtinys <code>CURL</code> yra privalomas",
   "installation.issues.headline": "Nepavyko įdiegti valdymo pulto",
-  "installation.issues.mbstring":
-    "Plėtinys <code>MB String</code> yra privalomas",
-  "installation.issues.media":
-    "Katalogas <code>/media</code> neegzistuoja arba neturi įrašymo teisių",
+  "installation.issues.mbstring": "Plėtinys <code>MB String</code> yra privalomas",
+  "installation.issues.media": "Katalogas <code>/media</code> neegzistuoja arba neturi įrašymo teisių",
   "installation.issues.php": "Įsitikinkite, kad naudojama <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby reikalauja <code>Apache</code>, <code>Nginx</code> arba <code>Caddy</code>",
+  "installation.issues.server": "Kirby reikalauja <code>Apache</code>, <code>Nginx</code> arba <code>Caddy</code>",
   "installation.issues.sessions": "Katalogas <code>/site/sessions</code> neegzistuoja arba neturi įrašymo teisių",
 
   "language": "Kalba",
   "language.code": "Kodas",
   "language.convert": "Padaryti pagrindinį",
-  "language.convert.confirm":
-    "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
+  "language.convert.confirm": "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
   "language.create": "Pridėti naują kalbą",
-  "language.delete.confirm":
-    "Ar tikrai norite pašalinti <strong>{name}</strong> kalbą, kartu su visais vertimais? Grąžinti nebus įmanoma! 🙀",
+  "language.delete.confirm": "Ar tikrai norite pašalinti <strong>{name}</strong> kalbą, kartu su visais vertimais? Grąžinti nebus įmanoma! 🙀",
   "language.deleted": "Kalba pašalinta",
   "language.direction": "Skaitymo kryptis",
   "language.direction.ltr": "Iš kairės į dešinę",
@@ -292,8 +239,7 @@
   "license": "Licenzija",
   "license.buy": "Pirkti licenziją",
   "license.register": "Registruoti",
-  "license.register.help":
-    "Licenzijos kodą gavote el. paštu po apmokėjimo. Prašome įterpti čia, kad sistema būtų užregistruota.",
+  "license.register.help": "Licenzijos kodą gavote el. paštu po apmokėjimo. Prašome įterpti čia, kad sistema būtų užregistruota.",
   "license.register.label": "Prašome įrašyti jūsų licenzijos kodą",
   "license.register.success": "Ačiū, kad palaikote Kirby",
   "license.unregistered": "Tai neregistruota Kirby demo versija",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Pasirinkite poziciją",
   "page.changeStatus.select": "Pasirinkite statusą",
   "page.changeTemplate": "Pakeisti šabloną",
-  "page.delete.confirm":
-    "🙀 Ar tikrai norite pašalinti puslapį <strong>{title}</strong>?",
-  "page.delete.confirm.subpages":
-    "<strong>Šis puslapis turi sub-puslapių</strong>. <br>Visi sub-puslapiai taip pat bus pašalinti.",
+  "page.delete.confirm": "🙀 Ar tikrai norite pašalinti puslapį <strong>{title}</strong>?",
+  "page.delete.confirm.subpages": "<strong>Šis puslapis turi sub-puslapių</strong>. <br>Visi sub-puslapiai taip pat bus pašalinti.",
   "page.delete.confirm.title": "Įrašykite puslapio pavadinimą tam, kad patvirtinti",
   "page.draft.create": "Sukurti juodraštį",
   "page.duplicate.appendix": "Kopijuoti",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Kopijuoti puslapius",
   "page.status": "Statusas",
   "page.status.draft": "Juodraštis",
-  "page.status.draft.description":
-    "Puslapis nematomas viešai, bet matomas tik prisijungusiems administratoriams",
+  "page.status.draft.description": "Šis puslapis yra juodraščio režime ir prieinamas tik redaktoriams arba per slaptą nuorodą",
   "page.status.listed": "Paskelbtas",
   "page.status.listed.description": "Matomas viešai visiems",
   "page.status.unlisted": "Nerodomas",
@@ -388,6 +331,7 @@
   "replace": "Apkeisti",
   "retry": "Bandyti dar",
   "revert": "Grąžinti",
+  "revert.confirm": "Ar tikrai norite atšaukti <strong>visus neišsaugotus pakeitimus</strong>?",
 
   "role": "Rolė",
   "role.admin.description": "Admin turi visas teises",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Vartotojas",
-  "user.blueprint":
-    "Galite nustatyti papildomas sekcijas ir formos laukelius šiai vartotojo rolei faile <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Galite nustatyti papildomas sekcijas ir formos laukelius šiai vartotojo rolei faile <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Keisti el. paštą",
   "user.changeLanguage": "Keisti kalbą",
   "user.changeName": "Pervadinti vartotoją",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Pasirinkti naują rolę",
   "user.create": "Pridėti naują vartotoją",
   "user.delete": "Pašalinti šį vartotoją",
-  "user.delete.confirm":
-    "Ar tikrai norite pašalinti vartotoją <br><strong>{email}</strong>?",
+  "user.delete.confirm": "Ar tikrai norite pašalinti vartotoją <br><strong>{email}</strong>?",
 
   "users": "Vartotojai",
 

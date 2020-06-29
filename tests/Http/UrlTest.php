@@ -87,6 +87,7 @@ class UrlTest extends TestCase
         $this->assertTrue(Url::isAbsolute('//getkirby.com/docs'));
         $this->assertTrue(Url::isAbsolute('mailto:mail@getkirby.com'));
         $this->assertTrue(Url::isAbsolute('tel:1234567'));
+        $this->assertTrue(Url::isAbsolute('geo:49.0158,8.3239?z=11'));
         $this->assertFalse(Url::isAbsolute('../getkirby.com/docs'));
     }
 

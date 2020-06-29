@@ -23,7 +23,10 @@
     >
       {{ tag.text }}
     </k-tag>
-    <span slot="footer" class="k-tags-input-element">
+    <span
+      slot="footer"
+      class="k-tags-input-element"
+    >
       <k-autocomplete
         ref="autocomplete"
         :options="options"
@@ -32,12 +35,12 @@
         @leave="$refs.input.focus()"
       >
         <input
+          :id="id"
           ref="input"
+          v-model.trim="newTag"
           :autofocus="autofocus"
           :disabled="disabled || (max && tags.length >= max)"
-          :id="id"
           :name="name"
-          v-model.trim="newTag"
           autocomplete="off"
           type="text"
           @input="type($event.target.value)"
@@ -98,9 +101,11 @@ export default {
       selected: null,
       newTag: null,
       tagOptions: this.options.map(tag => {
-        tag.icon = "tag";
+        if (this.icon && this.icon.length > 0) {
+          tag.icon = this.icon;
+        }
         return tag;
-      })
+      }, this)
     };
   },
   computed: {
@@ -228,10 +233,21 @@ export default {
 
       switch (position) {
         case "prev":
+          if (!this.selected) return;
+
+          currIndex = this.index(this.selected);
+          nextIndex = currIndex - 1;
+
+          if (nextIndex < 0) return;
+          break;
+
         case "next":
           if (!this.selected) return;
+
           currIndex = this.index(this.selected);
-          nextIndex = position === "prev" ? currIndex - 1 : currIndex + 1;
+          nextIndex = currIndex + 1;
+
+          if (nextIndex >= this.tags.length) return;
           break;
 
         case "first":
@@ -275,22 +291,22 @@ export default {
     leaveInput(e) {
       if (
         e.target.selectionStart === 0 &&
-        e.target.selectionStart === e.target.selectionEnd
+        e.target.selectionStart === e.target.selectionEnd &&
+        this.tags.length !== 0
       ) {
-        this.navigate("last");
         this.$refs.autocomplete.close();
+        this.navigate("last");
         e.preventDefault();
-        e.target.blur();
       }
     },
     navigate(position) {
       var result = this.get(position);
       if (result) {
         result.ref.focus();
-        this.selected = result.tag;
+        this.selectTag(result.tag);
       } else if (position === "next") {
         this.$refs.input.focus();
-        this.selected = null;
+        this.selectTag(null);
       }
     },
     prepareTags(value) {
@@ -319,10 +335,12 @@ export default {
       this.onInput();
 
       if (prev) {
+        this.selectTag(prev.tag);
         prev.ref.focus();
       } else if (next) {
-        next.ref.focus();
+        this.selectTag(next.tag);
       } else {
+        this.selectTag(null);
         this.$refs.input.focus();
       }
     },

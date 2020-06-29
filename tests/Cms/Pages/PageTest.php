@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\F;
+use ReflectionMethod;
 
 class PageTestModel extends Page
 {
@@ -607,7 +608,7 @@ class PageTest extends TestCase
         ]);
 
         if ($draft === true && $expected !== null) {
-            $expected = str_replace('{token}', 'token=' . sha1($page->id() . $page->template()), $expected);
+            $expected = str_replace('{token}', 'token=' . hash_hmac('sha1', $page->id() . $page->template(), $page->root()), $expected);
         }
 
         $this->assertEquals($expected, $page->previewUrl());
@@ -617,6 +618,76 @@ class PageTest extends TestCase
     {
         $page = new Page(['slug' => 'test']);
         $this->assertEquals('test', $page->slug());
+    }
+
+    public function testToken()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'root'     => '/var/www/content/test',
+            'template' => 'default'
+        ]);
+
+        $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+        $method->setAccessible(true);
+
+        $expected = hash_hmac('sha1', 'test' . 'default', '/var/www/content/test');
+        $this->assertSame($expected, $method->invoke($page));
+    }
+
+    public function testTokenWithCustomSalt()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'content' => [
+                    'salt' => 'testsalt'
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug'     => 'test',
+            'template' => 'default'
+        ]);
+
+        $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+        $method->setAccessible(true);
+
+        $expected = hash_hmac('sha1', 'test' . 'default', 'testsalt');
+        $this->assertSame($expected, $method->invoke($page));
+    }
+
+    public function testTokenWithSaltCallback()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'content' => [
+                    'salt' => function ($page) {
+                        return $page->date();
+                    }
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug'     => 'test',
+            'template' => 'default',
+            'content'  => [
+                'date' => '2012-12-12'
+            ]
+        ]);
+
+        $method = new ReflectionMethod('Kirby\Cms\Page', 'token');
+        $method->setAccessible(true);
+
+        $expected = hash_hmac('sha1', 'test' . 'default', '2012-12-12');
+        $this->assertSame($expected, $method->invoke($page));
     }
 
     public function testToString()
@@ -758,25 +829,55 @@ class PageTest extends TestCase
 
         // create the english page
         F::write($file = $index . '/test/test.en.txt', 'test');
+        touch($file, $modified = \time() + 2);
 
-        $modified = filemtime($file);
-        $page     = $app->page('test');
-
-        $this->assertEquals($modified, $page->modified());
-
-        sleep(1);
+        $this->assertEquals($modified, $app->page('test')->modified());
 
         // create the german page
         F::write($file = $index . '/test/test.de.txt', 'test');
+        touch($file, $modified = \time() + 5);
 
         // change the language
         $app->setCurrentLanguage('de');
         $app->setCurrentTranslation('de');
 
-        $modified = filemtime($file);
-        $page     = $app->page('test');
+        $this->assertEquals($modified, $app->page('test')->modified());
 
-        $this->assertEquals($modified, $page->modified());
+        Dir::remove($index);
+    }
+
+    public function testModifiedSpecifyingLanguage()
+    {
+        $app = new App([
+            'roots' => [
+                'index'   => $index = __DIR__ . '/fixtures/PageTest/modified',
+                'content' => $index
+            ],
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'name'    => 'English'
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        // create the english page
+        F::write($file = $index . '/test/test.en.txt', 'test');
+        touch($file, $modifiedEnContent = \time() + 2);
+
+        // create the german page
+        F::write($file = $index . '/test/test.de.txt', 'test');
+        touch($file, $modifiedDeContent = \time() + 5);
+
+        $page = $app->page('test');
+
+        $this->assertEquals($modifiedEnContent, $page->modified(null, null, 'en'));
+        $this->assertEquals($modifiedDeContent, $page->modified(null, null, 'de'));
 
         Dir::remove($index);
     }
@@ -1009,5 +1110,68 @@ class PageTest extends TestCase
         $this->assertInstanceOf(PageTestModel::class, $page);
 
         Page::$models = [];
+    }
+
+    public function testController()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => __DIR__ . '/fixtures/PageTest'
+            ],
+            'templates' => [
+                'foo' => __DIR__ . '/fixtures/PageTemplateTest/template.php',
+                'bar' => __DIR__ . '/fixtures/PageTemplateTest/template.php',
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug'      => 'foo',
+                        'template'  => 'foo',
+                        'content'   => [
+                            'title' => 'Foo Title',
+                        ]
+                    ],
+                    [
+                        'slug'      => 'bar',
+                        'template'  => 'bar',
+                        'content'   => [
+                            'title' => 'Bar Title',
+                        ]
+                    ]
+                ],
+            ],
+            'controllers' => [
+                // valid return
+                'foo' => function ($page) {
+                    $page = $page->changeTitle('New Foo Title');
+
+                    return compact('page');
+                },
+                // invalid return
+                'bar' => function ($page) {
+                    return ['page' => 'string'];
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        // valid test
+        $page = $app->page('foo');
+        $data = $page->controller();
+
+        $this->assertCount(4, $data);
+        $this->assertSame($app, $data['kirby']);
+        $this->assertSame($app->site(), $data['site']);
+        $this->assertSame($app->site()->children(), $data['pages']);
+        $this->assertInstanceOf('Kirby\Cms\Page', $data['page']);
+        $this->assertSame('New Foo Title', $data['page']->title()->value());
+
+        // invalid test
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The returned variable "page" from the controller "bar" is not of the required type "Kirby\Cms\Page"');
+
+        $page = $app->page('bar');
+        $page->controller();
     }
 }

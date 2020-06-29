@@ -7,19 +7,23 @@
     novalidate
     @submit.prevent="onSubmit"
   >
-    <slot name="header"/>
+    <slot name="header" />
     <slot>
       <k-fieldset
         ref="fields"
+        v-model="value"
         :disabled="disabled"
         :fields="fields"
         :novalidate="novalidate"
-        v-model="value"
         v-on="listeners"
       />
     </slot>
-    <slot name="footer"/>
-    <input ref="submitter" class="k-form-submitter" type="submit">
+    <slot name="footer" />
+    <input
+      ref="submitter"
+      class="k-form-submitter"
+      type="submit"
+    >
   </form>
 </template>
 

@@ -118,7 +118,7 @@ class FileTest extends TestCase
 
         // non-existing file
         $file = $this->_file('does/not/exist.js');
-        $this->assertEquals('0 kB', $file->niceSize());
+        $this->assertEquals('0 KB', $file->niceSize());
     }
 
     public function testModified()

@@ -426,13 +426,13 @@ class User extends ModelWithContent
 
         $session = $this->sessionFromOptions($session);
 
-        $kirby->trigger('user.login:before', $this, $session);
+        $kirby->trigger('user.login:before', ['user' => $this, 'session' => $session]);
 
         $session->regenerateToken(); // privilege change
         $session->data()->set('user.id', $this->id());
         $this->kirby()->auth()->setUser($this);
 
-        $kirby->trigger('user.login:after', $this, $session);
+        $kirby->trigger('user.login:after', ['user' => $this, 'session' => $session]);
     }
 
     /**
@@ -446,7 +446,7 @@ class User extends ModelWithContent
         $kirby   = $this->kirby();
         $session = $this->sessionFromOptions($session);
 
-        $kirby->trigger('user.logout:before', $this, $session);
+        $kirby->trigger('user.logout:before', ['user' => $this, 'session' => $session]);
 
         // remove the user from the session for future requests
         $session->data()->remove('user.id');
@@ -458,12 +458,12 @@ class User extends ModelWithContent
             // session is now empty, we might as well destroy it
             $session->destroy();
 
-            $kirby->trigger('user.logout:after', $this, null);
+            $kirby->trigger('user.logout:after', ['user' => $this, 'session' => null]);
         } else {
             // privilege change
             $session->regenerateToken();
 
-            $kirby->trigger('user.logout:after', $this, $session);
+            $kirby->trigger('user.logout:after', ['user' => $this, 'session' => $session]);
         }
     }
 
@@ -515,11 +515,12 @@ class User extends ModelWithContent
      *
      * @param string $format
      * @param string|null $handler
+     * @param string|null $languageCode
      * @return int|string
      */
-    public function modified(string $format = 'U', string $handler = null)
+    public function modified(string $format = 'U', string $handler = null, string $languageCode = null)
     {
-        $modifiedContent = F::modified($this->contentFile());
+        $modifiedContent = F::modified($this->contentFile($languageCode));
         $modifiedIndex   = F::modified($this->root() . '/index.php');
         $modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
         $handler         = $handler ?? $this->kirby()->option('date.handler', 'date');
@@ -879,15 +880,16 @@ class User extends ModelWithContent
      * String template builder
      *
      * @param string|null $template
+     * @param array|null $data
      * @return string
      */
-    public function toString(string $template = null): string
+    public function toString(string $template = null, array $data = []): string
     {
         if ($template === null) {
             $template = $this->email();
         }
 
-        return parent::toString($template);
+        return parent::toString($template, $data);
     }
 
     /**

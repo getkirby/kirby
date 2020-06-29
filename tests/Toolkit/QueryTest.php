@@ -2,46 +2,46 @@
 
 namespace Kirby\Toolkit;
 
+use stdClass;
+
+/**
+ * @covers Kirby\Toolkit\Query
+ */
 class QueryTest extends TestCase
 {
-    public function testWithMissingData()
-    {
-        // 1-level
-        $query = new Query('user', []);
-
-        $this->assertEquals(null, $query->result());
-
-        // 2-level
-        $query = new Query('user.username', []);
-
-        $this->assertEquals(null, $query->result());
-    }
-
     public function testWithEmptyQuery()
     {
         $query = new Query('', $data = ['foo' => 'bar']);
-        $this->assertEquals($data, $query->result());
+        $this->assertSame($data, $query->result());
     }
 
-    public function testWithDottedData()
-    {
-        $query = new Query('user.username', [
-            'user.username' => 'homer'
-        ]);
-
-        $this->assertEquals('homer', $query->result());
-    }
-
-    public function test0LevelArrayQuery()
+    public function testWithExactArrayMatch()
     {
         $query = new Query('user', [
             'user' => 'homer'
         ]);
+        $this->assertSame('homer', $query->result());
 
-        $this->assertEquals('homer', $query->result());
+        $query = new Query('user.username', [
+            'user.username' => 'homer'
+        ]);
+        $this->assertSame('homer', $query->result());
     }
 
-    public function test1LevelArrayQuery()
+    public function testWithContainsNumericParts()
+    {
+        $query = new Query('user0.profiles1.twitter', [
+            'user0' => [
+                'profiles1' => [
+                    'twitter' => '@homer'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('@homer', $query->result());
+    }
+
+    public function testWithArray1Level()
     {
         $query = new Query('user.username', [
             'user' => [
@@ -49,10 +49,31 @@ class QueryTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('homer', $query->result());
+        $this->assertSame('homer', $query->result());
     }
 
-    public function test2LevelArrayQuery()
+    public function testWithArrayNumeric()
+    {
+        $query = new Query('user.0', [
+            'user' => [
+                'homer',
+                'marge'
+            ]
+        ]);
+
+        $this->assertSame('homer', $query->result());
+        
+        $query = new Query('user.1', [
+            'user' => [
+                'homer',
+                'marge'
+            ]
+        ]);
+
+        $this->assertSame('marge', $query->result());
+    }
+
+    public function testWithArray2Level()
     {
         $query = new Query('user.profiles.twitter', [
             'user' => [
@@ -62,61 +83,25 @@ class QueryTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('@homer', $query->result());
-    }
-
-    public function test1LevelObjectQuery()
-    {
-        $query = new Query('user.username', [
-            'user' => new QueryTestUser()
-        ]);
-
-        $this->assertEquals('homer', $query->result());
-
-        // 2-level
-        $query = new Query('user.profiles.twitter', [
-            'user' => new QueryTestUser()
-        ]);
-
-        $this->assertEquals('@homer', $query->result());
-    }
-
-    public function test2LevelObjectQuery()
-    {
-        $query = new Query('user.profiles.twitter', [
-            'user' => new QueryTestUser()
-        ]);
-
-        $this->assertEquals('@homer', $query->result());
-    }
-
-    public function scalarProvider()
-    {
-        return [
-            ['test'],
-            [1],
-            [1.1],
-            [true],
-            [false]
-        ];
+        $this->assertSame('@homer', $query->result());
     }
 
     /**
      * @dataProvider scalarProvider
      */
-    public function test1LevelScalarQuery($scalar)
+    public function testWithArrayScalarValue($scalar)
     {
         $query = new Query('value', [
             'value' => $scalar
         ]);
 
-        $this->assertEquals($scalar, $query->result());
+        $this->assertSame($scalar, $query->result());
     }
 
     /**
      * @dataProvider scalarProvider
      */
-    public function test2LevelScalarQuery($scalar)
+    public function testWithArrayScalarValue2Level($scalar)
     {
         $query = new Query('parent.value', [
             'parent' => [
@@ -124,28 +109,146 @@ class QueryTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals($scalar, $query->result());
+        $this->assertSame($scalar, $query->result());
     }
 
-    public function testNullValueQuery()
+    /**
+     * @dataProvider scalarProvider
+     */
+    public function testWithArrayScalarValueError($scalar, $type)
+    {
+        $this->expectException('Kirby\Exception\BadMethodCallException');
+        $this->expectExceptionMessage('Access to method/property method on ' . $type);
+
+        $query = new Query('value.method', [
+            'value' => $scalar
+        ]);
+
+        $query->result();
+    }
+
+    public function scalarProvider()
+    {
+        return [
+            ['test', 'string'],
+            [1, 'integer'],
+            [1.1, 'float'],
+            [true, 'boolean'],
+            [false, 'boolean']
+        ];
+    }
+
+    public function testWithArrayNullValue()
     {
         $query = new Query('value', [
             'value' => null
         ]);
 
-        $this->assertEquals(null, $query->result());
+        $this->assertNull($query->result());
     }
 
-    public function testObjectMethodWithInteger()
+    public function testWithArrayNullValueError()
+    {
+        $this->expectException('Kirby\Exception\BadMethodCallException');
+        $this->expectExceptionMessage('Access to method/property method on null');
+
+        $query = new Query('value.method', [
+            'value' => null
+        ]);
+
+        $this->assertNull($query->result());
+    }
+
+    public function testWithArrayCallClosure()
+    {
+        $query = new Query('closure("test")', [
+            'closure' => function ($arg) {
+                return strtoupper($arg);
+            }
+        ]);
+
+        $this->assertSame('TEST', $query->result());
+    }
+
+    public function testWithArrayCallError()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Cannot access array element user with arguments');
+
+        $query = new Query('user("test")', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $query->result();
+    }
+
+    public function testWithArrayMissingKey1()
+    {
+        $this->expectException('Kirby\Exception\BadMethodCallException');
+        $this->expectExceptionMessage('Access to non-existing property user on array');
+
+        $query = new Query('user', []);
+        $query->result();
+    }
+
+    public function testWithArrayMissingKey2()
+    {
+        $this->expectException('Kirby\Exception\BadMethodCallException');
+        $this->expectExceptionMessage('Access to non-existing property user on array');
+
+        $query = new Query('user.username', []);
+        $query->result();
+    }
+
+    public function testWithObject1Level()
+    {
+        $query = new Query('user.username', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame('homer', $query->result());
+    }
+
+    public function testWithObject2Level()
+    {
+        $query = new Query('user.profiles.twitter', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame('@homer', $query->result());
+    }
+
+    public function testWithObjectProperty()
+    {
+        $obj = new stdClass();
+        $obj->test = 'testtest';
+        $query = new Query('obj.test', compact('obj'));
+
+        $this->assertSame('testtest', $query->result());
+    }
+
+    public function testWithObjectPropertyCallError()
+    {
+        $this->expectException('Kirby\Exception\BadMethodCallException');
+        $this->expectExceptionMessage('Access to non-existing method test on object');
+
+        $obj = new stdClass();
+        $obj->test = 'testtest';
+        $query = new Query('obj.test(123)', compact('obj'));
+
+        $query->result();
+    }
+
+    public function testWithObjectMethodWithInteger()
     {
         $query = new Query('user.age(12)', [
             'user' => new QueryTestUser()
         ]);
 
-        $this->assertEquals(12, $query->result());
+        $this->assertSame(12, $query->result());
     }
 
-    public function testObjectMethodWithBoolean()
+    public function testWithObjectMethodWithBoolean()
     {
         // true
         $query = new Query('user.isYello(true)', [
@@ -162,7 +265,7 @@ class QueryTest extends TestCase
         $this->assertFalse($query->result());
     }
 
-    public function testObjectMethodWithNull()
+    public function testWithObjectMethodWithNull()
     {
         $query = new Query('user.brainDump(null)', [
             'user' => new QueryTestUser()
@@ -171,52 +274,122 @@ class QueryTest extends TestCase
         $this->assertNull($query->result());
     }
 
-    public function testObjectMethodWithSingleArgument()
+    public function testWithObjectMethodWithString()
     {
+        // double quotes
         $query = new Query('user.says("hello world")', [
             'user' => new QueryTestUser()
         ]);
 
-        $this->assertEquals('hello world', $query->result());
+        $this->assertSame('hello world', $query->result());
+
+        // single quotes
+        $query = new Query("user.says('hello world')", [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame('hello world', $query->result());
     }
 
-    public function testObjectMethodWithMultipleArguments()
+    public function testWithObjectMethodWithEmptyString()
+    {
+        // double quotes
+        $query = new Query('user.says("")', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame('', $query->result());
+
+        // single quotes
+        $query = new Query("user.says('')", [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame('', $query->result());
+    }
+
+    public function testWithObjectMethodWithStringEscape()
+    {
+        // double quotes
+        $query = new Query('user.says("hello \" world")', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame('hello " world', $query->result());
+
+        // single quotes
+        $query = new Query("user.says('hello \' world')", [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame("hello ' world", $query->result());
+    }
+
+    public function testWithObjectMethodWithMultipleArguments()
     {
         $query = new Query('user.says("hello", "world")', [
             'user' => new QueryTestUser()
         ]);
 
-        $this->assertEquals('hello world', $query->result());
+        $this->assertSame('hello : world', $query->result());
+
+        // with escaping
+        $query = new Query('user.says("hello\"", "world")', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame('hello" : world', $query->result());
+
+        // with mixed quotes
+        $query = new Query('user.says(\'hello\\\'\', "world\"")', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame('hello\' : world"', $query->result());
     }
 
-    public function testObjectMethodWithMultipleArgumentsAndComma()
+    public function testWithObjectMethodWithMultipleArgumentsAndComma()
     {
         $query = new Query('user.says("hello,", "world")', [
             'user' => new QueryTestUser()
         ]);
 
-        $this->assertEquals('hello, world', $query->result());
+        $this->assertSame('hello, : world', $query->result());
+
+        // with escaping
+        $query = new Query('user.says("hello,\"", "world")', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame('hello," : world', $query->result());
     }
 
-    public function testObjectMethodWithMultipleArgumentsAndDot()
+    public function testWithObjectMethodWithMultipleArgumentsAndDot()
     {
         $query = new Query('user.says("I like", "love.jpg")', [
             'user' => new QueryTestUser()
         ]);
 
-        $this->assertEquals('I like love.jpg', $query->result());
-    }
+        $this->assertSame('I like : love.jpg', $query->result());
 
-    public function testObjectMethodWithTrickyCharacters()
-    {
-        $query = new Query("user.likes(['(', ',', ']', '[']).self.brainDump('hello')", [
+        // with escaping
+        $query = new Query('user.says("I \" like", "love.\"jpg")', [
             'user' => new QueryTestUser()
         ]);
 
-        $this->assertEquals('hello', $query->result());
+        $this->assertSame('I " like : love."jpg', $query->result());
     }
 
-    public function testObjectMethodWithArray()
+    public function testWithObjectMethodWithTrickyCharacters()
+    {
+        $query = new Query("user.likes(['(', ',', ']', '[', ')']).self.brainDump('hello')", [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertSame('hello', $query->result());
+    }
+
+    public function testWithObjectMethodWithArray()
     {
         $query = new Query('user.self.check("gin", "tonic", ["gin", "tonic", "cucumber"])', [
             'user' => new QueryTestUser()
@@ -225,7 +398,7 @@ class QueryTest extends TestCase
         $this->assertTrue($query->result());
     }
 
-    public function testObjectMethodWithObjectMethodAsParameter()
+    public function testWithObjectMethodWithObjectMethodAsParameter()
     {
         $query = new Query('user.self.check("gin", "tonic", user.drink)', [
             'user' => new QueryTestUser()
@@ -234,12 +407,39 @@ class QueryTest extends TestCase
         $this->assertTrue($query->result());
     }
 
-    public function testObjectMethodWithObjectMethodAsParameterAndMoreLevels()
+    public function testWithNestedMethodCall()
     {
-        $query = new Query("user.likes([',']).likes(user.brainDump(['(', ',', ']', '['])).self", [
+        $query = new Query('user.check("gin", "tonic", user.array("gin", "tonic").args)', [
+            'user' => new QueryTestUser()
+        ]);
+
+        $this->assertTrue($query->result());
+    }
+
+    public function testWithObjectMethodWithObjectMethodAsParameterAndMoreLevels()
+    {
+        $query = new Query("user.likes([',']).likes(user.brainDump(['(', ',', ']', ')', '['])).self", [
             'user' => $user = new QueryTestUser()
         ]);
 
-        $this->assertEquals($user, $query->result());
+        $this->assertSame($user, $query->result());
+    }
+
+    public function testWithObjectMissingMethod1()
+    {
+        $this->expectException('Kirby\Exception\BadMethodCallException');
+        $this->expectExceptionMessage('Access to non-existing method/property username on object');
+
+        $query = new Query('user.username', ['user' => new stdClass()]);
+        $query->result();
+    }
+
+    public function testWithObjectMissingMethod2()
+    {
+        $this->expectException('Kirby\Exception\BadMethodCallException');
+        $this->expectExceptionMessage('Access to non-existing method username on object');
+
+        $query = new Query('user.username(12)', ['user' => new stdClass()]);
+        $query->result();
     }
 }

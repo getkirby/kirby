@@ -41,7 +41,25 @@ final class Run implements RunInterface
     }
 
     /**
-     * Pushes a handler to the end of the stack
+     * Explicitly request your handler runs as the last of all currently registered handlers
+     */
+    public function appendHandler($handler)
+    {
+        array_unshift($this->handlerStack, $this->resolveHandler($handler));
+        return $this;
+    }
+
+    /**
+     * Explicitly request your handler runs as the first of all currently registered handlers
+     */
+    public function prependHandler($handler)
+    {
+        return $this->pushHandler($handler);
+    }
+
+    /**
+     * Register your handler as the last of all currently registered handlers.
+     * Prefer using appendHandler and prependHandler for clarity.
      *
      * @throws InvalidArgumentException  If argument is not callable or instance of HandlerInterface
      * @param  Callable|HandlerInterface $handler
@@ -49,29 +67,34 @@ final class Run implements RunInterface
      */
     public function pushHandler($handler)
     {
-        if (is_callable($handler)) {
-            $handler = new CallbackHandler($handler);
-        }
-
-        if (!$handler instanceof HandlerInterface) {
-            throw new InvalidArgumentException(
-                  "Argument to " . __METHOD__ . " must be a callable, or instance of "
-                . "Whoops\\Handler\\HandlerInterface"
-            );
-        }
-
-        $this->handlerStack[] = $handler;
+        $this->handlerStack[] = $this->resolveHandler($handler);
         return $this;
     }
 
     /**
-     * Removes the last handler in the stack and returns it.
-     * Returns null if there"s nothing else to pop.
+     * See removeFirstHandler and removeLastHandler
      * @return null|HandlerInterface
      */
     public function popHandler()
     {
         return array_pop($this->handlerStack);
+    }
+
+
+    /**
+     * Removes the first handler
+     */
+    public function removeFirstHandler()
+    {
+        array_pop($this->handlerStack);
+    }
+
+    /**
+     * Removes the last handler
+     */
+    public function removeLastHandler()
+    {
+        array_shift($this->handlerStack);
     }
 
     /**
@@ -260,32 +283,34 @@ final class Run implements RunInterface
         $handlerResponse = null;
         $handlerContentType = null;
 
-        foreach (array_reverse($this->handlerStack) as $handler) {
-            $handler->setRun($this);
-            $handler->setInspector($inspector);
-            $handler->setException($exception);
+        try {
+            foreach (array_reverse($this->handlerStack) as $handler) {
+                $handler->setRun($this);
+                $handler->setInspector($inspector);
+                $handler->setException($exception);
 
-            // The HandlerInterface does not require an Exception passed to handle()
-            // and neither of our bundled handlers use it.
-            // However, 3rd party handlers may have already relied on this parameter,
-            // and removing it would be possibly breaking for users.
-            $handlerResponse = $handler->handle($exception);
+                // The HandlerInterface does not require an Exception passed to handle()
+                // and neither of our bundled handlers use it.
+                // However, 3rd party handlers may have already relied on this parameter,
+                // and removing it would be possibly breaking for users.
+                $handlerResponse = $handler->handle($exception);
 
-            // Collect the content type for possible sending in the headers.
-            $handlerContentType = method_exists($handler, 'contentType') ? $handler->contentType() : null;
+                // Collect the content type for possible sending in the headers.
+                $handlerContentType = method_exists($handler, 'contentType') ? $handler->contentType() : null;
 
-            if (in_array($handlerResponse, [Handler::LAST_HANDLER, Handler::QUIT])) {
-                // The Handler has handled the exception in some way, and
-                // wishes to quit execution (Handler::QUIT), or skip any
-                // other handlers (Handler::LAST_HANDLER). If $this->allowQuit
-                // is false, Handler::QUIT behaves like Handler::LAST_HANDLER
-                break;
+                if (in_array($handlerResponse, [Handler::LAST_HANDLER, Handler::QUIT])) {
+                    // The Handler has handled the exception in some way, and
+                    // wishes to quit execution (Handler::QUIT), or skip any
+                    // other handlers (Handler::LAST_HANDLER). If $this->allowQuit
+                    // is false, Handler::QUIT behaves like Handler::LAST_HANDLER
+                    break;
+                }
             }
+
+            $willQuit = $handlerResponse == Handler::QUIT && $this->allowQuit();
+        } finally {
+            $output = $this->system->cleanOutputBuffer();
         }
-
-        $willQuit = $handlerResponse == Handler::QUIT && $this->allowQuit();
-
-        $output = $this->system->cleanOutputBuffer();
 
         // If we're allowed to, send output generated by handlers directly
         // to the output, otherwise, and if the script doesn't quit, return
@@ -375,6 +400,7 @@ final class Run implements RunInterface
         if ($error && Misc::isLevelFatal($error['type'])) {
             // If there was a fatal error,
             // it was not handled in handleError yet.
+            $this->allowQuit = false;
             $this->handleError(
                 $error['type'],
                 $error['message'],
@@ -389,6 +415,22 @@ final class Run implements RunInterface
      * @var bool
      */
     private $canThrowExceptions = true;
+
+    private function resolveHandler($handler)
+    {
+        if (is_callable($handler)) {
+            $handler = new CallbackHandler($handler);
+        }
+
+        if (!$handler instanceof HandlerInterface) {
+            throw new InvalidArgumentException(
+                  "Handler must be a callable, or instance of "
+                . "Whoops\\Handler\\HandlerInterface"
+            );
+        }
+
+        return $handler;
+    }
 
     /**
      * Echo something to the browser

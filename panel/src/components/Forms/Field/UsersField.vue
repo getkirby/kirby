@@ -1,14 +1,19 @@
 <template>
-  <k-field v-bind="$props" class="k-users-field">
-
-    <k-button-group slot="options" class="k-field-options">
+  <k-field
+    v-bind="$props"
+    class="k-users-field"
+  >
+    <k-button-group
+      slot="options"
+      class="k-field-options"
+    >
       <k-button
         v-if="more && !disabled"
-        icon="add"
+        :icon="btnIcon"
         class="k-field-options-button"
         @click="open"
       >
-        {{ $t('select') }}
+        {{ btnLabel }}
       </k-button>
     </k-button-group>
 
@@ -21,13 +26,13 @@
         @end="onInput"
       >
         <component
-          v-for="(user, index) in selected"
           :is="elements.item"
+          v-for="(user, index) in selected"
           :key="user.email"
           :sortable="!disabled && selected.length > 1"
           :text="user.text"
           :info="user.info"
-          :link="$api.users.link(user.id)"
+          :link="link ? $api.users.link(user.id) : null"
           :image="user.image"
           :icon="user.icon"
         >
@@ -40,15 +45,18 @@
         </component>
       </k-draggable>
     </template>
-    <k-empty
-      v-else
-      :data-invalid="isInvalid"
-      icon="users"
+    <k-empty 
+      v-else 
+      :data-invalid="isInvalid" 
+      icon="users" 
       @click="open"
     >
-      {{ empty || $t('field.users.empty') }}
+      {{ empty || $t("field.users.empty") }}
     </k-empty>
-    <k-users-dialog ref="selector" @submit="select" />
+    <k-users-dialog
+      ref="selector"
+      @submit="select"
+    />
   </k-field>
 </template>
 

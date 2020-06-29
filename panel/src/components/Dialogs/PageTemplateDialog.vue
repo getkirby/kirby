@@ -1,18 +1,11 @@
 <template>
-  <k-dialog
+  <k-form-dialog
     ref="dialog"
-    :button="$t('change')"
-    size="medium"
-    theme="positive"
-    @submit="$refs.form.submit()"
-  >
-    <k-form
-      ref="form"
-      :fields="fields"
-      v-model="page"
-      @submit="submit"
-    />
-  </k-dialog>
+    v-model="page"
+    :fields="fields"
+    :submit-button="$t('change')"
+    @submit="submit"
+  />
 </template>
 
 <script>

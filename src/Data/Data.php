@@ -8,7 +8,7 @@ use Kirby\Toolkit\F;
 /**
  * The `Data` class provides readers and
  * writers for data. The class comes with
- * four handlers for `json`, `php`, `txt`
+ * handlers for `json`, `php`, `txt`, `xml`
  * and `yaml` encoded data, but can be
  * extended and customized.
  *
@@ -32,6 +32,7 @@ class Data
     public static $aliases = [
         'md'    => 'txt',
         'mdown' => 'txt',
+        'rss'   => 'xml',
         'yml'   => 'yaml',
     ];
 
@@ -44,6 +45,7 @@ class Data
         'json' => 'Kirby\Data\Json',
         'php'  => 'Kirby\Data\PHP',
         'txt'  => 'Kirby\Data\Txt',
+        'xml'  => 'Kirby\Data\Xml',
         'yaml' => 'Kirby\Data\Yaml',
     ];
 

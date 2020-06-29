@@ -9,13 +9,13 @@
       min,
       name,
       placeholder,
-      required,
-      step
+      required
     }"
     :value="number"
+    :step="stepNumber"
     class="k-number-input"
     type="number"
-    @keydown.cmd.s="clean"
+    @keydown.meta.s="clean"
     v-on="listeners"
   >
 </template>
@@ -48,6 +48,7 @@ export default {
   data() {
     return {
       number: this.format(this.value),
+      stepNumber: this.format(this.step),
       timeout: null,
       listeners: {
         ...this.$listeners,
@@ -82,6 +83,10 @@ export default {
 
       if (Math.floor(step) === step) {
         return 0;
+      }
+
+      if (step.toString().indexOf('e') !== -1) {
+        return parseInt(step.toFixed(16).split(".")[1].split("").reverse().join("")).toString().length;
       }
 
       return step.toString().split(".")[1].length || 0;

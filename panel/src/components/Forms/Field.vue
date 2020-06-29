@@ -1,6 +1,7 @@
 <template>
   <div
     :data-disabled="disabled"
+    :data-translate="translate"
     :class="'k-field k-field-name-' + name"
     @focusin="$emit('focus', $event)"
     @focusout="$emit('blur', $event)"
@@ -8,7 +9,13 @@
     <slot name="header">
       <header class="k-field-header">
         <slot name="label">
-          <label :for="input" class="k-field-label">{{ labelText }} <abbr v-if="required" :title="$t('field.required')">*</abbr></label>
+          <label
+            :for="input"
+            class="k-field-label"
+          >{{ labelText }} <abbr
+            v-if="required"
+            :title="$t('field.required')"
+          >*</abbr></label>
         </slot>
         <slot name="options" />
         <slot name="counter">
@@ -23,7 +30,10 @@
     </slot>
     <slot />
     <slot name="footer">
-      <footer v-if="help || $slots.help" class="k-field-footer">
+      <footer
+        v-if="help || $slots.help"
+        class="k-field-footer"
+      >
         <slot name="help">
           <k-text
             v-if="help"
@@ -49,6 +59,7 @@ export default {
     label: String,
     name: [String, Number],
     required: Boolean,
+    translate: Boolean,
     type: String
   },
   computed: {
@@ -98,6 +109,7 @@ export default {
 }
 .k-field[data-disabled] {
   cursor: not-allowed;
+  opacity: .4;
 }
 .k-field[data-disabled] * {
   pointer-events: none;

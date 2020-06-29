@@ -55,20 +55,27 @@ class ATest extends TestCase
             'grand.ma' => $grandma = [
                 'mother' => $mother = [
                     'child' => $child = 'a',
-                    'another.child' => $anotherChild = 'b',
-                ]
+                    'another.nested.child' => $anotherChild = 'b',
+                ],
+                'uncle.dot' => $uncle = 'uncle'
             ],
+            'grand.ma.mother' => $anotherMother = 'another mother'
         ];
 
         $this->assertEquals($grandma, A::get($data, 'grand.ma'));
-        $this->assertEquals($mother, A::get($data, 'grand.ma.mother'));
+        $this->assertEquals($uncle, A::get($data, 'grand.ma.uncle.dot'));
+        $this->assertEquals($anotherMother, A::get($data, 'grand.ma.mother'));
         $this->assertEquals($child, A::get($data, 'grand.ma.mother.child'));
-        $this->assertEquals($anotherChild, A::get($data, 'grand.ma.mother.another.child'));
+        $this->assertEquals($anotherChild, A::get($data, 'grand.ma.mother.another.nested.child'));
 
         // with default
         $this->assertEquals('default', A::get($data, 'grand', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.grandaunt', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.aunt', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.uncle.dot.cousin', 'default'));
         $this->assertEquals('default', A::get($data, 'grand.ma.mother.sister', 'default'));
         $this->assertEquals('default', A::get($data, 'grand.ma.mother.child.grandchild', 'default'));
+        $this->assertEquals('default', A::get($data, 'grand.ma.mother.child.another.nested.sister', 'default'));
     }
 
     public function testGetWithNonexistingOptions()
@@ -220,6 +227,169 @@ class ATest extends TestCase
 
         $this->assertEquals(['elephant'], A::missing($this->_array(), $required));
         $this->assertEquals([], A::missing($this->_array(), ['cat']));
+    }
+
+    public function testNest()
+    {
+        // simple example
+        $input = [
+            'a' => 'a value',
+            'b.c' => [
+                'd.e.f' => 'another value'
+            ]
+        ];
+        $expected = [
+            'a' => 'a value',
+            'b' => [
+                'c' => [
+                    'd' => [
+                        'e' => [
+                            'f' => 'another value'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+        $this->assertSame($expected, A::nest($input));
+
+        // ignored key
+        $input = [
+            'a' => 'a value',
+            'b' => 'another value',
+            'b.c' => [
+                'd.e.f' => 'a third value'
+            ]
+        ];
+        $expected = $input;
+        $this->assertSame($expected, A::nest($input, ['b']));
+
+        // nested ignored key
+        $expected = [
+            'a' => 'a value',
+            'b' => [
+                'c' => [
+                    'd.e.f' => 'a third value'
+                ]
+            ]
+        ];
+        $this->assertSame($expected, A::nest($input, ['b.c']));
+
+        // ignored key with partially nested input
+        $input = $expected;
+        $this->assertSame($expected, A::nest($input, ['b.c']));
+
+        // recursive array replacement
+        $input = [
+            // replace strings with arrays within deep structures
+            'a' => 'this will be overwritten',
+            'a.b' => [
+                'c' => 'this as well',
+                'd' => 'and this',
+                'e' => 'but this will be preserved'
+            ],
+            'a.b.c' => 'a value',
+            'a.b.d.f' => 'another value',
+
+            // replace arrays with strings
+            'g.h' => [
+                'i' => 'this will be overwritten as well'
+            ],
+            'g' => 'and another value',
+
+            // replacements within two different trees
+            'j.k' => [
+                'l' => 'this will be replaced',
+                'm' => 'but this will not be'
+            ],
+            'j' => [
+                'k.l' => 'a nice replacement',
+                'n' => 'and this string is nice too'
+            ]
+        ];
+        $expected = [
+            'a' => [
+                'b' => [
+                    'c' => 'a value',
+                    'd' => [
+                        'f' => 'another value'
+                    ],
+                    'e' => 'but this will be preserved'
+                ]
+            ],
+            'g' => 'and another value',
+            'j' => [
+                'k' => [
+                    'l' => 'a nice replacement',
+                    'm' => 'but this will not be'
+                ],
+                'n' => 'and this string is nice too'
+            ]
+        ];
+        $this->assertSame($expected, A::nest($input));
+
+        // merged arrays
+        $input1 = [
+            'a' => 'a-1',
+            'b' => [
+                'c' => 'b.c-1',
+                'd' => 'b.d-1'
+            ],
+            'e.f' => [
+                'g.h' => 'e.f.g.h-1',
+                'g.i' => 'e.f.g.i-1'
+            ],
+            'l' => [
+                'm' => 'l.m-1',
+                'o.p' => 'l.o.p-1'
+            ]
+        ];
+        $input2 = [
+            'a' => 'a-2',
+            'b.c' => 'b.c-2',
+            'e' => [
+                'f.g' => [
+                    'h' => 'e.f.g.h-2',
+                    'j' => 'e.f.g.j-2'
+                ],
+                'k' => 'e.k-2'
+            ],
+            'l' => [
+                'm.n' => 'l.m.n-2',
+                'o' => 'l.o-2'
+            ]
+        ];
+        $expected = [
+            'a' => 'a-2',
+            'b' => [
+                'c' => 'b.c-2',
+                'd' => 'b.d-1'
+            ],
+            'e' => [
+                'f' => [
+                    'g' => [
+                        'h' => 'e.f.g.h-2',
+                        'i' => 'e.f.g.i-1',
+                        'j' => 'e.f.g.j-2'
+                    ]
+                ],
+                'k' => 'e.k-2'
+            ],
+            'l' => [
+                'm' => 'l.m-1',
+                'o.p' => 'l.o.p-1',
+                'm.n' => 'l.m.n-2',
+                'o' => 'l.o-2'
+            ]
+        ];
+        $this->assertSame($expected, A::nest(array_replace_recursive($input1, $input2), ['l.m', 'l.o']));
+        $this->assertSame($expected, A::nest(A::merge($input1, $input2, A::MERGE_REPLACE), ['l.m', 'l.o']));
+    }
+
+    public function testNestByKeys()
+    {
+        $this->assertSame('test', A::nestByKeys('test', []));
+        $this->assertSame(['a' => 'test'], A::nestByKeys('test', ['a']));
+        $this->assertSame(['a' => ['b' => 'test']], A::nestByKeys('test', ['a', 'b']));
     }
 
     public function testSort()

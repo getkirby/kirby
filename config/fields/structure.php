@@ -24,6 +24,14 @@ return [
             // be lowercase as well.
             return array_change_key_case($columns);
         },
+
+        /**
+         * Toggles duplicating rows for the structure
+         */
+        'duplicate' => function (bool $duplicate = true) {
+            return $duplicate;
+        },
+
         /**
          * The placeholder text if no items have been added yet
          */
@@ -61,6 +69,12 @@ return [
          */
         'min' => function (int $min = null) {
             return $min;
+        },
+        /**
+         * Toggles adding to the top or bottom of the list
+         */
+        'prepend' => function (bool $prepend = null) {
+            return $prepend;
         },
         /**
          * Toggles drag & drop sorting

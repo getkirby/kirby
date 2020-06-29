@@ -1,19 +1,12 @@
 <template>
-  <k-dialog
+  <k-form-dialog
     ref="dialog"
-    :button="$t('rename')"
-    size="medium"
-    theme="positive"
-    @submit="$refs.form.submit()"
-  >
-    <k-form
-      ref="form"
-      :fields="fields"
-      v-model="file"
-      @submit="submit"
-      @input="file.name = sluggify(file.name)"
-    />
-  </k-dialog>
+    v-model="file"
+    :fields="fields"
+    :submit-button="$t('rename')"
+    @input="file.name = sluggify(file.name)"
+    @submit="submit"
+  />
 </template>
 
 <script>
@@ -85,7 +78,7 @@ export default {
 
           // move form changes
           this.$store.dispatch("content/move", [
-            "files/" + this.file.id, 
+            "files/" + this.file.id,
             "files/" + file.id
           ]);
 

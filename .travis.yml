@@ -1,7 +1,6 @@
 language: php
 os: linux
 dist: bionic
-sudo: false
 services:
   - memcached
 
@@ -45,5 +44,5 @@ cache:
     - $HOME/.php-cs-fixer
     - $HOME/pecl_cache
 
-matrix:
+jobs:
   fast_finish: true

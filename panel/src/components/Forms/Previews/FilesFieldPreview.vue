@@ -1,17 +1,31 @@
 <template>
-  <ul v-if="value" class="k-files-field-preview">
-    <li v-for="file in value" :key="file.url">
-      <k-link :title="file.filename" :to="file.link" @click.native.stop>
-        <k-image v-if="file.type === 'image'" v-bind="imageOptions(file)" />
-        <k-icon v-else v-bind="file.icon" />
+  <ul
+    v-if="value"
+    class="k-files-field-preview"
+  >
+    <li
+      v-for="file in value"
+      :key="file.url"
+    >
+      <k-link
+        :title="file.filename"
+        :to="file.link"
+        @click.native.stop
+      >
+        <k-image
+          v-if="file.type === 'image'"
+          v-bind="imageOptions(file)"
+        />
+        <k-icon
+          v-else
+          v-bind="file.icon"
+        />
       </k-link>
     </li>
   </ul>
 </template>
 
 <script>
-import previewThumb from "@/helpers/previewThumb.js";
-
 export default {
   props: {
     value: Array,
@@ -19,14 +33,14 @@ export default {
   },
   methods: {
     imageOptions(file) {
-      const image = previewThumb(file.image);
-      
+      const image = this.$helper.previewThumb(file.image);
+
       if (!image.src) {
         return {
           src: file.url
         };
       }
-      
+
       return {
         ...image,
         back: "pattern",

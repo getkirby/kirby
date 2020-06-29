@@ -43,11 +43,26 @@
       />
     </div>
 
-    <k-toolbar-email-dialog ref="emailDialog" @cancel="cancel" @submit="insert($event)" />
-    <k-toolbar-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
-    <k-files-dialog ref="fileDialog" @cancel="cancel" @submit="insertFile($event)" />
-    <k-upload v-if="uploads" ref="fileUpload" @success="insertUpload" />
-
+    <k-toolbar-email-dialog
+      ref="emailDialog"
+      @cancel="cancel"
+      @submit="insert($event)"
+    />
+    <k-toolbar-link-dialog
+      ref="linkDialog"
+      @cancel="cancel"
+      @submit="insert($event)"
+    />
+    <k-files-dialog
+      ref="fileDialog"
+      @cancel="cancel"
+      @submit="insertFile($event)"
+    />
+    <k-upload
+      v-if="uploads"
+      ref="fileUpload"
+      @success="insertUpload"
+    />
   </div>
 </template>
 
@@ -174,7 +189,7 @@ export default {
     },
     onDrop($event) {
       // dropping files
-      if (this.$helper.isUploadEvent($event)) {
+      if (this.uploads && this.$helper.isUploadEvent($event)) {
         return this.$refs.fileUpload.drop($event.dataTransfer.files, {
           url: config.api + "/" + this.endpoints.field + "/upload",
           multiple: false
@@ -203,7 +218,6 @@ export default {
       this.over = false;
     },
     onOver($event) {
-
       // drag & drop for files
       if (this.uploads && this.$helper.isUploadEvent($event)) {
         $event.dataTransfer.dropEffect = "copy";

@@ -89,7 +89,7 @@ class Panel
                 go($kirby->url('index') . '/' . $kirby->path());
             }
         } catch (Throwable $e) {
-            die('The panel assets cannot be installed properly. Please check permissions of your media folder.');
+            die('The Panel assets cannot be installed properly. ' . $e->getMessage());
         }
 
         // get the uri object for the panel url

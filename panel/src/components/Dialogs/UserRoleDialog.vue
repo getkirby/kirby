@@ -1,18 +1,11 @@
 <template>
-  <k-dialog
+  <k-form-dialog
     ref="dialog"
-    :button="$t('user.changeRole')"
-    size="medium"
-    theme="positive"
-    @submit="$refs.form.submit()"
-  >
-    <k-form
-      ref="form"
-      :fields="fields"
-      v-model="user"
-      @submit="submit"
-    />
-  </k-dialog>
+    v-model="user"
+    :fields="fields"
+    :submit-button="$t('user.changeRole')"
+    @submit="submit"
+  />
 </template>
 
 <script>

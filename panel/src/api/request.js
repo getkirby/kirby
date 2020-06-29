@@ -14,6 +14,11 @@ export default {
       }
     });
 
+    if (options.method !== 'GET' && options.method !== 'POST') {
+      options.headers["x-http-method-override"] = options.method;
+      options.method = 'POST';
+    }
+
     if (store.state.languages.current) {
       options.headers["x-language"] = store.state.languages.current.code;
     }

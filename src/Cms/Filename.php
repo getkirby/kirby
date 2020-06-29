@@ -298,6 +298,6 @@ class Filename
             'name'       => $this->name(),
             'attributes' => $this->attributesToString('-'),
             'extension'  => $this->extension()
-        ]);
+        ], '');
     }
 }

@@ -34,8 +34,8 @@ class Camera
      */
     public function __construct(array $exif)
     {
-        $this->make  = @$exif['Make'];
-        $this->model = @$exif['Model'];
+        $this->make  = $exif['Make'] ?? null;
+        $this->model = $exif['Model'] ?? null;
     }
 
     /**

@@ -38,7 +38,7 @@ trait FileActions
             return $this;
         }
 
-        return $this->commit('changeName', [$this, $name], function ($oldFile, $name) {
+        return $this->commit('changeName', ['file' => $this, 'name' => $name], function ($oldFile, $name) {
             $newFile = $oldFile->clone([
                 'filename' => $name . '.' . $oldFile->extension(),
             ]);
@@ -87,7 +87,7 @@ trait FileActions
      */
     public function changeSort(int $sort)
     {
-        return $this->commit('changeSort', [$this, $sort], function ($file, $sort) {
+        return $this->commit('changeSort', ['file' => $this, 'position' => $sort], function ($file, $sort) {
             return $file->save(['sort' => $sort]);
         });
     }
@@ -108,13 +108,24 @@ trait FileActions
      */
     protected function commit(string $action, array $arguments, Closure $callback)
     {
-        $old   = $this->hardcopy();
-        $kirby = $this->kirby();
+        $old            = $this->hardcopy();
+        $kirby          = $this->kirby();
+        $argumentValues = array_values($arguments);
 
-        $this->rules()->$action(...$arguments);
-        $kirby->trigger('file.' . $action . ':before', ...$arguments);
-        $result = $callback(...$arguments);
-        $kirby->trigger('file.' . $action . ':after', $result, $old);
+        $this->rules()->$action(...$argumentValues);
+        $kirby->trigger('file.' . $action . ':before', $arguments);
+
+        $result = $callback(...$argumentValues);
+
+        if ($action === 'create') {
+            $argumentsAfter = ['file' => $result];
+        } elseif ($action === 'delete') {
+            $argumentsAfter = ['status' => $result, 'file' => $old];
+        } else {
+            $argumentsAfter = ['newFile' => $result, 'oldFile' => $old];
+        }
+        $kirby->trigger('file.' . $action . ':after', $argumentsAfter);
+
         $kirby->cache('pages')->flush();
         return $result;
     }
@@ -163,7 +174,7 @@ trait FileActions
         $props['model'] = strtolower($props['template'] ?? 'default');
 
         // create the basic file and a test upload object
-        $file = File::factory($props);
+        $file = static::factory($props);
         $upload = new Image($props['source']);
 
         // create a form for the file
@@ -175,7 +186,7 @@ trait FileActions
         $file = $file->clone(['content' => $form->strings(true)]);
 
         // run the hook
-        return $file->commit('create', [$file, $upload], function ($file, $upload) {
+        return $file->commit('create', compact('file', 'upload'), function ($file, $upload) {
 
             // delete all public versions
             $file->unpublish();
@@ -211,7 +222,7 @@ trait FileActions
      */
     public function delete(): bool
     {
-        return $this->commit('delete', [$this], function ($file) {
+        return $this->commit('delete', ['file' => $this], function ($file) {
 
             // remove all versions in the media folder
             $file->unpublish();
@@ -243,7 +254,7 @@ trait FileActions
      */
     public function publish()
     {
-        Media::publish($this->root(), $this->mediaRoot());
+        Media::publish($this, $this->mediaRoot());
         return $this;
     }
 
@@ -273,7 +284,7 @@ trait FileActions
      */
     public function replace(string $source)
     {
-        return $this->commit('replace', [$this, new Image($source)], function ($file, $upload) {
+        return $this->commit('replace', ['file' => $this, 'upload' => new Image($source)], function ($file, $upload) {
 
             // delete all public versions
             $file->unpublish();
@@ -295,7 +306,7 @@ trait FileActions
      */
     public function unpublish()
     {
-        Media::unpublish($this->parent()->mediaRoot(), $this->filename());
+        Media::unpublish($this->parent()->mediaRoot(), $this);
         return $this;
     }
 }
