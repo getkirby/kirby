@@ -408,9 +408,16 @@ class AppTest extends TestCase
 
     public function testInstance()
     {
-        $instance = new App();
+        App::destroy();
+        $this->assertNull(App::instance(null, true));
 
-        $this->assertEquals($instance, App::instance());
+        $instance1 = new App();
+        $this->assertSame($instance1, App::instance());
+
+        $instance2 = new App();
+        $this->assertSame($instance2, App::instance());
+        $this->assertSame($instance1, App::instance($instance1));
+        $this->assertSame($instance1, App::instance());
     }
 
     public function testFindPageFile()
