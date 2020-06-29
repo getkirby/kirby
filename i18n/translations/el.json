@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "Δεν ήταν δυνατή η μεταφόρτωση της εικόνας προφίλ",
   "error.avatar.delete.fail": "Δεν ήταν δυνατή η διαγραφή της εικόνας προφίλ",
-  "error.avatar.dimensions.invalid":
-    "Διατηρήστε το πλάτος και το ύψος της εικόνας προφίλ κάτω από 3000 εικονοστοιχεία",
-  "error.avatar.mime.forbidden":
-    "\u039c\u03b7 \u03b1\u03c0\u03bf\u03b4\u03b5\u03ba\u03c4\u03cc\u03c2 \u03c4\u03cd\u03c0\u03bf\u03c2 \u03b1\u03c1\u03c7\u03b5\u03af\u03bf\u03c5",
+  "error.avatar.dimensions.invalid": "Διατηρήστε το πλάτος και το ύψος της εικόνας προφίλ κάτω από 3000 εικονοστοιχεία",
+  "error.avatar.mime.forbidden": "\u039c\u03b7 \u03b1\u03c0\u03bf\u03b4\u03b5\u03ba\u03c4\u03cc\u03c2 \u03c4\u03cd\u03c0\u03bf\u03c2 \u03b1\u03c1\u03c7\u03b5\u03af\u03bf\u03c5",
 
   "error.blueprint.notFound": "Δεν ήταν δυνατή η φόρτωση του προσχεδίου \"{name}\"",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Μη έγκυρος μετατροπέας \"{converter}\"",
 
   "error.file.changeName.empty": "The name must not be empty",
-  "error.file.changeName.permission":
-    "Δεν επιτρέπεται να αλλάξετε το όνομα του \"{filename}\"",
+  "error.file.changeName.permission": "Δεν επιτρέπεται να αλλάξετε το όνομα του \"{filename}\"",
   "error.file.duplicate": "Ένα αρχείο με το όνομα \"{filename}\" υπάρχει ήδη",
-  "error.file.extension.forbidden":
-    "\u039c\u03b7 \u03b1\u03c0\u03bf\u03b4\u03b5\u03ba\u03c4\u03ae \u03b5\u03c0\u03ad\u03ba\u03c4\u03b1\u03c3\u03b7 \u03b1\u03c1\u03c7\u03b5\u03af\u03bf\u03c5",
-  "error.file.extension.missing":
-    "Λείπει η επέκταση για το \"{filename}\"",
+  "error.file.extension.forbidden": "\u039c\u03b7 \u03b1\u03c0\u03bf\u03b4\u03b5\u03ba\u03c4\u03ae \u03b5\u03c0\u03ad\u03ba\u03c4\u03b1\u03c3\u03b7 \u03b1\u03c1\u03c7\u03b5\u03af\u03bf\u03c5",
+  "error.file.extension.missing": "Λείπει η επέκταση για το \"{filename}\"",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
   "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
-  "error.file.mime.differs":
-    "Το αρχείο πρέπει να είναι του ίδιου τύπου mime \"{mime}\"",
+  "error.file.mime.differs": "Το αρχείο πρέπει να είναι του ίδιου τύπου mime \"{mime}\"",
   "error.file.mime.forbidden": "Ο τύπος μέσου \"{mime}\" δεν επιτρέπεται",
   "error.file.mime.invalid": "Invalid mime type: {mime}",
-  "error.file.mime.missing":
-    "Δεν είναι δυνατό να εντοπιστεί ο τύπος μέσου για το \"{filename}\"",
+  "error.file.mime.missing": "Δεν είναι δυνατό να εντοπιστεί ο τύπος μέσου για το \"{filename}\"",
   "error.file.minheight": "The height of the image must be at least {height} pixels",
   "error.file.minsize": "The file is too small",
   "error.file.minwidth": "The width of the image must be at least {width} pixels",
@@ -90,111 +83,77 @@
   "error.license.email": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου",
   "error.license.verification": "The license could not be verified",
 
-  "error.page.changeSlug.permission":
-    "Δεν επιτρέπεται να αλλάξετε το URL της σελίδας \"{slug}\"",
-  "error.page.changeStatus.incomplete":
-    "Δεν ήταν δυνατή η δημοσίευση της σελίδας καθώς περιέχει σφάλματα",
-  "error.page.changeStatus.permission":
-    "Δεν είναι δυνατή η αλλαγή κατάστασης για αυτή τη σελίδα",
-  "error.page.changeStatus.toDraft.invalid":
-    "Δεν είναι δυνατή η μετατροπή της σελίδας \"{slug}\" σε προσχέδιο",
-  "error.page.changeTemplate.invalid":
-    "Δεν είναι δυνατή η αλλαγή προτύπου για τη σελίδα \"{slug}\"",
-  "error.page.changeTemplate.permission":
-    "Δεν επιτρέπεται να αλλάξετε το πρότυπο για τη σελίδα \"{slug}\"",
+  "error.page.changeSlug.permission": "Δεν επιτρέπεται να αλλάξετε το URL της σελίδας \"{slug}\"",
+  "error.page.changeStatus.incomplete": "Δεν ήταν δυνατή η δημοσίευση της σελίδας καθώς περιέχει σφάλματα",
+  "error.page.changeStatus.permission": "Δεν είναι δυνατή η αλλαγή κατάστασης για αυτή τη σελίδα",
+  "error.page.changeStatus.toDraft.invalid": "Δεν είναι δυνατή η μετατροπή της σελίδας \"{slug}\" σε προσχέδιο",
+  "error.page.changeTemplate.invalid": "Δεν είναι δυνατή η αλλαγή προτύπου για τη σελίδα \"{slug}\"",
+  "error.page.changeTemplate.permission": "Δεν επιτρέπεται να αλλάξετε το πρότυπο για τη σελίδα \"{slug}\"",
   "error.page.changeTitle.empty": "Ο τίτλος δεν μπορεί να είναι κενός",
-  "error.page.changeTitle.permission":
-    "Δεν επιτρέπεται να αλλάξετε τον τίτλο για τη σελίδα \"{slug}\"",
+  "error.page.changeTitle.permission": "Δεν επιτρέπεται να αλλάξετε τον τίτλο για τη σελίδα \"{slug}\"",
   "error.page.create.permission": "Δεν επιτρέπεται να δημιουργήσετε τη σελίδα \"{slug}\"",
   "error.page.delete": "Δεν είναι δυνατή η διαγραφή της σελίδας \"{slug}\"",
   "error.page.delete.confirm": "Παρακαλώ εισάγετε τον τίτλο της σελίδας για επιβεβαίωση",
-  "error.page.delete.hasChildren":
-    "Δεν είναι δυνατή η διαγραφή της σελίδας καθώς περιέχει υποσελίδες",
+  "error.page.delete.hasChildren": "Δεν είναι δυνατή η διαγραφή της σελίδας καθώς περιέχει υποσελίδες",
   "error.page.delete.permission": "Δεν επιτρέπεται η διαγραφή της σελίδας \"{slug}\"",
-  "error.page.draft.duplicate":
-    "Υπάρχει ήδη ένα προσχέδιο σελίδας με την διεύθυνση URL \"{slug}\"",
-  "error.page.duplicate":
-    "Υπάρχει ήδη μια σελίδα με την διεύθυνση URL \"{slug}\"",
+  "error.page.draft.duplicate": "Υπάρχει ήδη ένα προσχέδιο σελίδας με την διεύθυνση URL \"{slug}\"",
+  "error.page.duplicate": "Υπάρχει ήδη μια σελίδα με την διεύθυνση URL \"{slug}\"",
   "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "Δεν ήταν δυνατή η εύρεση της σελίδας \"{slug}\"",
-  "error.page.num.invalid":
-    "Παρακαλώ εισάγετε έναν έγκυρο αριθμό ταξινόμησης. Οι αριθμοί δεν μπορεί να είναι αρνητικοί.",
+  "error.page.num.invalid": "Παρακαλώ εισάγετε έναν έγκυρο αριθμό ταξινόμησης. Οι αριθμοί δεν μπορεί να είναι αρνητικοί.",
   "error.page.slug.invalid": "Παρακαλώ εισάγετε ένα έγκυρο πρόθεμα διεύθυνσης URL",
   "error.page.sort.permission": "Δεν είναι δυνατή η ταξινόμηση της σελίδας \"{slug}\"",
   "error.page.status.invalid": "Ορίστε μια έγκυρη κατάσταση σελίδας",
   "error.page.undefined": "Δεν ήταν δυνατή η εύρεση της σελίδας",
   "error.page.update.permission": "Δεν επιτρέπεται η ενημέρωση της σελίδας \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "Δεν πρέπει να προσθέσετε περισσότερα από {max} αρχεία στην ενότητα \"{section}\"",
-  "error.section.files.max.singular":
-    "Δεν πρέπει να προσθέσετε περισσότερα από ένα αρχεία στην ενότητα \"{section}\"",
-  "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
-  "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+  "error.section.files.max.plural": "Δεν πρέπει να προσθέσετε περισσότερα από {max} αρχεία στην ενότητα \"{section}\"",
+  "error.section.files.max.singular": "Δεν πρέπει να προσθέσετε περισσότερα από ένα αρχεία στην ενότητα \"{section}\"",
+  "error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
+  "error.section.files.min.singular": "The \"{section}\" section requires at least one file",
 
-  "error.section.pages.max.plural":
-    "Δεν μπορείτε να προσθέσετε περισσότερες από {max} σελίδες στην ενότητα \"{section}\"",
-  "error.section.pages.max.singular":
-    "Δεν μπορείτε να προσθέσετε περισσότερες από μία σελίδες στην ενότητα \"{section}\"",
-  "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
-  "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+  "error.section.pages.max.plural": "Δεν μπορείτε να προσθέσετε περισσότερες από {max} σελίδες στην ενότητα \"{section}\"",
+  "error.section.pages.max.singular": "Δεν μπορείτε να προσθέσετε περισσότερες από μία σελίδες στην ενότητα \"{section}\"",
+  "error.section.pages.min.plural": "The \"{section}\" section requires at least {min} pages",
+  "error.section.pages.min.singular": "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Δεν ήταν δυνατή η φόρτωση της ενότητας \"{name}\"",
   "error.section.type.invalid": "Ο τύπος ενότητας \"{type}\" δεν είναι έγκυρος",
 
   "error.site.changeTitle.empty": "Ο τίτλος δεν μπορεί να είναι κενός",
-  "error.site.changeTitle.permission":
-    "Δεν επιτρέπεται να αλλάξετε τον τίτλο του ιστότοπου",
+  "error.site.changeTitle.permission": "Δεν επιτρέπεται να αλλάξετε τον τίτλο του ιστότοπου",
   "error.site.update.permission": "Δεν επιτρέπεται η ενημέρωση του ιστότοπου",
 
   "error.template.default.notFound": "Το προεπιλεγμένο πρότυπο δεν υπάρχει",
 
-  "error.user.changeEmail.permission":
-    "Δεν επιτρέπεται να αλλάξετε τη διεύθινση ηλεκτρονικού ταχυδρομείου για τον χρήστη \"{name}\"",
-  "error.user.changeLanguage.permission":
-    "Δεν επιτρέπεται να αλλάξετε τη γλώσσα για τον χρήστη \"{name}\"",
-  "error.user.changeName.permission":
-    "Δεν επιτρέπεται να αλλάξετε το όνομα του χρήστη \"{name}",
-  "error.user.changePassword.permission":
-    "Δεν επιτρέπεται να αλλάξετε τον κωδικό πρόσβασης για τον χρήστη \"{name}\"",
-  "error.user.changeRole.lastAdmin":
-    "Ο ρόλος του τελευταίου διαχειριστή δεν μπορεί να αλλάξει",
-  "error.user.changeRole.permission":
-    "Δεν επιτρέπεται να αλλάξετε το ρόλο του χρήστη \"{name}\"",
-  "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+  "error.user.changeEmail.permission": "Δεν επιτρέπεται να αλλάξετε τη διεύθινση ηλεκτρονικού ταχυδρομείου για τον χρήστη \"{name}\"",
+  "error.user.changeLanguage.permission": "Δεν επιτρέπεται να αλλάξετε τη γλώσσα για τον χρήστη \"{name}\"",
+  "error.user.changeName.permission": "Δεν επιτρέπεται να αλλάξετε το όνομα του χρήστη \"{name}",
+  "error.user.changePassword.permission": "Δεν επιτρέπεται να αλλάξετε τον κωδικό πρόσβασης για τον χρήστη \"{name}\"",
+  "error.user.changeRole.lastAdmin": "Ο ρόλος του τελευταίου διαχειριστή δεν μπορεί να αλλάξει",
+  "error.user.changeRole.permission": "Δεν επιτρέπεται να αλλάξετε το ρόλο του χρήστη \"{name}\"",
+  "error.user.changeRole.toAdmin": "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Δεν επιτρέπεται η δημιουργία αυτού του χρήστη",
   "error.user.delete": "\u039f \u03c7\u03c1\u03ae\u03c3\u03c4\u03b7\u03c2 \u03b4\u03b5\u03bd \u03bc\u03c0\u03bf\u03c1\u03bf\u03cd\u03c3\u03b5 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03b1\u03c6\u03b5\u03af",
   "error.user.delete.lastAdmin": "Δεν είναι δυνατή η διαγραφή του τελευταίου διαχειριστή",
   "error.user.delete.lastUser": "Δεν είναι δυνατή η διαγραφή του τελευταίου χρήστη",
-  "error.user.delete.permission":
-    "Δεν επιτρέπεται να διαγράψετ τον χρήστη \"{name}\"",
-  "error.user.duplicate":
-    "Ένας χρήστης με τη διεύθυνση ηλεκτρονικού ταχυδρομείου \"{email}\" υπάρχει ήδη",
+  "error.user.delete.permission": "Δεν επιτρέπεται να διαγράψετ τον χρήστη \"{name}\"",
+  "error.user.duplicate": "Ένας χρήστης με τη διεύθυνση ηλεκτρονικού ταχυδρομείου \"{email}\" υπάρχει ήδη",
   "error.user.email.invalid": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου",
   "error.user.language.invalid": "Παρακαλώ εισαγάγετε μια έγκυρη γλώσσα",
   "error.user.notFound": "Δεν είναι δυνατή η εύρεση του χρήστη \"{name}\"",
-  "error.user.password.invalid":
-    "Παρακαλώ εισάγετε έναν έγκυρο κωδικό πρόσβασης. Οι κωδικοί πρόσβασης πρέπει να έχουν μήκος τουλάχιστον 8 χαρακτήρων.",
+  "error.user.password.invalid": "Παρακαλώ εισάγετε έναν έγκυρο κωδικό πρόσβασης. Οι κωδικοί πρόσβασης πρέπει να έχουν μήκος τουλάχιστον 8 χαρακτήρων.",
   "error.user.password.notSame": "\u03a0\u03b1\u03c1\u03b1\u03ba\u03b1\u03bb\u03bf\u03cd\u03bc\u03b5 \u03b5\u03c0\u03b9\u03b2\u03b5\u03b2\u03b1\u03b9\u03ce\u03c3\u03c4\u03b5 \u03c4\u03bf\u03bd \u039a\u03c9\u03b4\u03b9\u03ba\u03cc \u03a0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
   "error.user.password.undefined": "Ο χρήστης δεν έχει κωδικό πρόσβασης",
   "error.user.role.invalid": "Παρακαλώ εισαγάγετε έναν έγκυρο ρόλο",
-  "error.user.update.permission":
-    "Δεν επιτρέπεται η ενημέρωση του χρήστη \"{name}\"",
+  "error.user.update.permission": "Δεν επιτρέπεται η ενημέρωση του χρήστη \"{name}\"",
 
   "error.validation.accepted": "Παρακαλώ επιβεβαιώστε",
   "error.validation.alpha": "Παρακαλώ εισάγετε μόνο χαρακτήρες μεταξύ των a-z",
-  "error.validation.alphanum":
-    "Παρακαλώ εισάγετε μόνο χαρακτήρες μεταξύ των a-z ή αριθμούς απο το 0 έως το 9",
-  "error.validation.between":
-    "Παρακαλώ εισάγετε μια τιμή μεταξύ \"{min}\" και \"{max}\"",
+  "error.validation.alphanum": "Παρακαλώ εισάγετε μόνο χαρακτήρες μεταξύ των a-z ή αριθμούς απο το 0 έως το 9",
+  "error.validation.between": "Παρακαλώ εισάγετε μια τιμή μεταξύ \"{min}\" και \"{max}\"",
   "error.validation.boolean": "Παρακαλώ επιβεβαιώστε ή αρνηθείτε",
-  "error.validation.contains":
-    "Παρακαλώ καταχωρίστε μια τιμή που περιέχει \"{needle}\"",
+  "error.validation.contains": "Παρακαλώ καταχωρίστε μια τιμή που περιέχει \"{needle}\"",
   "error.validation.date": "Παρακαλώ εισάγετε μία έγκυρη ημερομηνία",
   "error.validation.date.after": "Please enter a date after {date}",
   "error.validation.date.before": "Please enter a date before {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Παρακαλώ εισάγετε μια τιμή μικρότερη από {max}",
   "error.validation.match": "Η τιμή δεν ταιριάζει με το αναμενόμενο πρότυπο",
   "error.validation.max": "Παρακαλώ εισάγετε μια τιμή ίση ή μικρότερη από {max}",
-  "error.validation.maxlength":
-    "Παρακαλώ εισάγετε μια μικρότερη τιμή. (max. {max} χαρακτήρες)",
+  "error.validation.maxlength": "Παρακαλώ εισάγετε μια μικρότερη τιμή. (max. {max} χαρακτήρες)",
   "error.validation.maxwords": "Παρακαλώ εισάγετε το πολύ {max} λέξεις",
   "error.validation.min": "Παρακαλώ εισάγετε μια τιμή ίση ή μεγαλύτερη από {min}",
-  "error.validation.minlength":
-    "Παρακαλώ εισάγετε μεγαλύτερη τιμή. (τουλάχιστον {min} χαρακτήρες)",
+  "error.validation.minlength": "Παρακαλώ εισάγετε μεγαλύτερη τιμή. (τουλάχιστον {min} χαρακτήρες)",
   "error.validation.minwords": "Παρακαλώ εισάγετε τουλάχιστον {min} λέξεις",
   "error.validation.more": "Παρακαλώ εισάγετε τουλάχιστον {min} λέξεις",
-  "error.validation.notcontains":
-    "Παρακαλώ εισάγετε μια τιμή που δεν περιέχει \"{needle}\"",
-  "error.validation.notin":
-    "Παρακαλώ μην εισάγετε κανένα από τα παρακάτω: ({notIn})",
+  "error.validation.notcontains": "Παρακαλώ εισάγετε μια τιμή που δεν περιέχει \"{needle}\"",
+  "error.validation.notin": "Παρακαλώ μην εισάγετε κανένα από τα παρακάτω: ({notIn})",
   "error.validation.option": "Παρακαλώ κάντε μια έγκυρη επιλογή",
   "error.validation.num": "Παρακαλώ εισάγετε έναν έγκυρο αριθμό",
   "error.validation.required": "Παρακαλώ εισάγετε κάτι",
@@ -238,8 +193,7 @@
   "field.structure.empty": "\u0394\u03b5\u03bd \u03c5\u03c0\u03ac\u03c1\u03c7\u03bf\u03c5\u03bd \u03b1\u03ba\u03cc\u03bc\u03b7 \u03ba\u03b1\u03c4\u03b1\u03c7\u03c9\u03c1\u03af\u03c3\u03b5\u03b9\u03c2.",
   "field.users.empty": "Δεν έχουν επιλεγεί ακόμη χρήστες",
 
-  "file.delete.confirm":
-    "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03cc \u03c4\u03bf \u03b1\u03c1\u03c7\u03b5\u03af\u03bf;",
+  "file.delete.confirm": "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03cc \u03c4\u03bf \u03b1\u03c1\u03c7\u03b5\u03af\u03bf;",
 
   "files": "Αρχεία",
   "files.empty": "Δεν υπάρχουν ακόμα αρχεία",
@@ -251,29 +205,22 @@
   "installation": "Εγκατάσταση",
   "installation.completed": "Ο πίνακας ελέγχου έχει εγκατασταθεί",
   "installation.disabled": "Η εγκατάσταση του πίνακα ελέγχου είναι απενεργοποιημένη για δημόσιους διακομιστές από προεπιλογή. Εκτελέστε την εγκατάσταση σε ένα τοπικό μηχάνημα ή ενεργοποιήστε την με την επιλογή panel.install.",
-  "installation.issues.accounts":
-    "\u039f \u03c6\u03ac\u03ba\u03b5\u03bb\u03bf\u03c2 \/site\/accounts \u03b4\u03b5\u03bd \u03b5\u03af\u03bd\u03b1\u03b9 \u03b5\u03b3\u03b3\u03c1\u03ac\u03c8\u03b9\u03bc\u03bf\u03c2",
-  "installation.issues.content":
-    "\u039f \u03c6\u03ac\u03ba\u03b5\u03bb\u03bf\u03c2 content \u03ba\u03b1\u03b9 \u03cc\u03bb\u03bf\u03b9 \u03bf\u03b9 \u03c5\u03c0\u03bf\u03c6\u03ac\u03ba\u03b5\u03bb\u03bf\u03b9 \u03c0\u03c1\u03ad\u03c0\u03b5\u03b9 \u03bd\u03b1 \u03b5\u03af\u03bd\u03b1\u03b9 \u03b5\u03b3\u03b3\u03c1\u03ac\u03c8\u03b9\u03bc\u03bf\u03b9.",
+  "installation.issues.accounts": "\u039f \u03c6\u03ac\u03ba\u03b5\u03bb\u03bf\u03c2 \/site\/accounts \u03b4\u03b5\u03bd \u03b5\u03af\u03bd\u03b1\u03b9 \u03b5\u03b3\u03b3\u03c1\u03ac\u03c8\u03b9\u03bc\u03bf\u03c2",
+  "installation.issues.content": "\u039f \u03c6\u03ac\u03ba\u03b5\u03bb\u03bf\u03c2 content \u03ba\u03b1\u03b9 \u03cc\u03bb\u03bf\u03b9 \u03bf\u03b9 \u03c5\u03c0\u03bf\u03c6\u03ac\u03ba\u03b5\u03bb\u03bf\u03b9 \u03c0\u03c1\u03ad\u03c0\u03b5\u03b9 \u03bd\u03b1 \u03b5\u03af\u03bd\u03b1\u03b9 \u03b5\u03b3\u03b3\u03c1\u03ac\u03c8\u03b9\u03bc\u03bf\u03b9.",
   "installation.issues.curl": "Απαιτείται η επέκταση <code>CURL</code>",
   "installation.issues.headline": "Ο πίνακας ελέγχου δεν μπορεί να εγκατασταθεί",
-  "installation.issues.mbstring":
-    "Απαιτείται η επέκταση <code>MB String</code> ",
-  "installation.issues.media":
-    "Ο φάκελος <code>/media</code>  δεν υπάρχει ή δεν είναι εγγράψιμος",
+  "installation.issues.mbstring": "Απαιτείται η επέκταση <code>MB String</code> ",
+  "installation.issues.media": "Ο φάκελος <code>/media</code>  δεν υπάρχει ή δεν είναι εγγράψιμος",
   "installation.issues.php": "Βεβαιωθείτε ότι χρησιμοποιήτε <code>PHP 7+</code>",
-  "installation.issues.server":
-    "To Kirby απαιτεί <code>Apache</code>, <code>Nginx</code> ή <code>Caddy</code>",
+  "installation.issues.server": "To Kirby απαιτεί <code>Apache</code>, <code>Nginx</code> ή <code>Caddy</code>",
   "installation.issues.sessions": "Ο φάκελος <code>/site/sessions</code> δεν υπάρχει ή δεν είναι εγγράψιμος",
 
   "language": "\u0393\u03bb\u03ce\u03c3\u03c3\u03b1",
   "language.code": "Κώδικας",
   "language.convert": "Χρήση ως προεπιλογή",
-  "language.convert.confirm":
-    "<p>Θέλετε πραγματικά να μετατρέψετε τη <strong>{name}</strong> στην προεπιλεγμένη γλώσσα; Αυτό δεν μπορεί να ανακληθεί.</p><p>Αν το <strong>{name}</strong> χει μη μεταφρασμένο περιεχόμενο, δεν θα υπάρχει πλέον έγκυρη εναλλακτική λύση και τμήματα του ιστότοπού σας ενδέχεται να είναι κενά.</p>",
+  "language.convert.confirm": "<p>Θέλετε πραγματικά να μετατρέψετε τη <strong>{name}</strong> στην προεπιλεγμένη γλώσσα; Αυτό δεν μπορεί να ανακληθεί.</p><p>Αν το <strong>{name}</strong> χει μη μεταφρασμένο περιεχόμενο, δεν θα υπάρχει πλέον έγκυρη εναλλακτική λύση και τμήματα του ιστότοπού σας ενδέχεται να είναι κενά.</p>",
   "language.create": "Προσθέστε μια νέα γλώσσα",
-  "language.delete.confirm":
-    "Θέλετε πραγματικά να διαγράψετε τη γλώσσα {name} συμπεριλαμβανομένων όλων των μεταφράσεων; Αυτό δεν μπορεί να αναιρεθεί!",
+  "language.delete.confirm": "Θέλετε πραγματικά να διαγράψετε τη γλώσσα {name} συμπεριλαμβανομένων όλων των μεταφράσεων; Αυτό δεν μπορεί να αναιρεθεί!",
   "language.deleted": "Η γλώσσα έχει διαγραφεί",
   "language.direction": "Κατεύθυνση ανάγνωσης",
   "language.direction.ltr": "Αριστερά προς τα δεξιά",
@@ -292,8 +239,7 @@
   "license": "\u0386\u03b4\u03b5\u03b9\u03b1 \u03a7\u03c1\u03ae\u03c3\u03b7\u03c2 \u03c4\u03bf\u03c5 Kirby",
   "license.buy": "Αγοράστε μια άδεια",
   "license.register": "Εγγραφή",
-  "license.register.help":
-    "Έχετε λάβει τον κωδικό άδειας χρήσης μετά την αγορά μέσω ηλεκτρονικού ταχυδρομείου. Παρακαλώ αντιγράψτε και επικολλήστε τον για να εγγραφείτε.",
+  "license.register.help": "Έχετε λάβει τον κωδικό άδειας χρήσης μετά την αγορά μέσω ηλεκτρονικού ταχυδρομείου. Παρακαλώ αντιγράψτε και επικολλήστε τον για να εγγραφείτε.",
   "license.register.label": "Παρακαλώ εισαγάγετε τον κωδικό άδειας χρήσης",
   "license.register.success": "Σας ευχαριστούμε για την υποστήριξη του Kirby",
   "license.unregistered": "Αυτό είναι ένα μη καταχωρημένο demo του Kirby",
@@ -325,7 +271,7 @@
   "months.april": "\u0391\u03c0\u03c1\u03af\u03bb\u03b9\u03bf\u03c2",
   "months.august": "\u0391\u03cd\u03b3\u03bf\u03c5\u03c3\u03c4\u03bf\u03c2",
   "months.december": "\u0394\u03b5\u03ba\u03ad\u03bc\u03b2\u03c1\u03b9\u03bf\u03c2",
-  "months.february": "\u03a6\u03b5\u03b2\u03c1\u03bf\u03c5\u03ac\u03c1\u03b9\u03bf\u03c2",
+  "months.february": "Φεβρουάριος",
   "months.january": "\u0399\u03b1\u03bd\u03bf\u03c5\u03ac\u03c1\u03b9\u03bf\u03c2",
   "months.july": "\u0399\u03bf\u03cd\u03bb\u03b9\u03bf\u03c2",
   "months.june": "\u0399\u03bf\u03cd\u03bd\u03b9\u03bf\u03c2",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Επιλέξτε μια θέση",
   "page.changeStatus.select": "Επιλέξτε μια νέα κατάσταση",
   "page.changeTemplate": "Αλλαγή προτύπου",
-  "page.delete.confirm":
-    "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03ae\u03bd \u03c4\u03b7 \u03c3\u03b5\u03bb\u03af\u03b4\u03b1;",
-  "page.delete.confirm.subpages":
-    "<strong>Αυτή η σελίδα έχει υποσελίδες</strong>. <br>Όλες οι υποσελίδες θα διαγραφούν επίσης.",
+  "page.delete.confirm": "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03ae\u03bd \u03c4\u03b7 \u03c3\u03b5\u03bb\u03af\u03b4\u03b1;",
+  "page.delete.confirm.subpages": "<strong>Αυτή η σελίδα έχει υποσελίδες</strong>. <br>Όλες οι υποσελίδες θα διαγραφούν επίσης.",
   "page.delete.confirm.title": "Εισάγετε τον τίτλο της σελίδας για επιβεβαίωση",
   "page.draft.create": "Δημιουργία προσχεδίου",
   "page.duplicate.appendix": "Αντιγραφή",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Copy pages",
   "page.status": "Kατάσταση",
   "page.status.draft": "Προσχέδιο",
-  "page.status.draft.description":
-    "Η σελίδα είναι σε κατάσταση προσχεδίου και είναι ορατή μόνο για συνδεδεμένους συντάκτες",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "Δημοσιευμένο",
   "page.status.listed.description": "Αυτή η σελίδα είναι δημοσιευμένη για οποιονδήποτε",
   "page.status.unlisted": "Μη καταχωρημένο",
@@ -388,6 +331,7 @@
   "replace": "\u0391\u03bd\u03c4\u03b9\u03ba\u03b1\u03c4\u03ac\u03c3\u03c4\u03b1\u03c3\u03b7",
   "retry": "\u0395\u03c0\u03b1\u03bd\u03ac\u03bb\u03b7\u03c8\u03b7",
   "revert": "\u0391\u03b3\u03bd\u03cc\u03b7\u03c3\u03b7",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "\u03a1\u03cc\u03bb\u03bf\u03c2",
   "role.admin.description": "The admin has all rights",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Χρήστης",
-  "user.blueprint":
-    "Μπορείτε να ορίσετε επιπλέον τμήματα και πεδία φόρμας για αυτόν τον ρόλο χρήστη στο <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Μπορείτε να ορίσετε επιπλέον τμήματα και πεδία φόρμας για αυτόν τον ρόλο χρήστη στο <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Αλλαγή διεύθινσης ηλεκτρονικού ταχυδρομείου",
   "user.changeLanguage": "Αλλαγή γλώσσας",
   "user.changeName": "Μετονομασία χρήστη",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Επιλογή νέου ρόλου",
   "user.create": "Προσθήκη νέου χρήστη",
   "user.delete": "Διαγραφή χρήστη",
-  "user.delete.confirm":
-    "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03cc\u03bd \u03c4\u03bf\u03bd \u03c7\u03c1\u03ae\u03c3\u03c4\u03b7;",
+  "user.delete.confirm": "\u0398\u03ad\u03bb\u03b5\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03b1 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03cc\u03bd \u03c4\u03bf\u03bd \u03c7\u03c1\u03ae\u03c3\u03c4\u03b7;",
 
   "users": "Χρήστες",
 

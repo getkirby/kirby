@@ -37,15 +37,13 @@
   "email.placeholder": "eposta@ornek.com",
 
   "error.access.login": "Geçersiz giriş",
-  "error.access.panel": "Panele erişim izniniz yok",
-  "error.access.view": "Panelin bu bölümüne erişemezsiniz",
+  "error.access.panel": "Panel'e erişim izniniz yok",
+  "error.access.view": "Panel'in bu bölümüne erişim izniniz yok",
 
   "error.avatar.create.fail": "Profil resmi yüklenemedi",
   "error.avatar.delete.fail": "Profil resmi silinemedi",
-  "error.avatar.dimensions.invalid":
-    "Lütfen profil resminin genişliğini ve yüksekliğini 3000 pikselin altında tutun",
-  "error.avatar.mime.forbidden":
-    "Profil resmi JPEG veya PNG dosyaları olmalıdır",
+  "error.avatar.dimensions.invalid": "Lütfen profil resminin genişliğini ve yüksekliğini 3000 pikselin altında tutun",
+  "error.avatar.mime.forbidden": "Profil resmi JPEG veya PNG dosyaları olmalıdır",
 
   "error.blueprint.notFound": "\"{name}\" adlı plan yüklenemedi",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Geçersiz dönüştürücü \"{converter}\"",
 
   "error.file.changeName.empty": "İsim boş olmamalıdır",
-  "error.file.changeName.permission":
-    "\"{filename}\" adını değiştiremezsiniz",
+  "error.file.changeName.permission": "\"{filename}\" adını değiştiremezsiniz",
   "error.file.duplicate": "\"{filename}\" isimli bir dosya zaten var",
-  "error.file.extension.forbidden":
-    "\"{extension}\" dosya uzantısına izin verilmiyor",
-  "error.file.extension.missing":
-    "\"{filename}\" dosyasının uzantısı yok",
+  "error.file.extension.forbidden": "\"{extension}\" dosya uzantısına izin verilmiyor",
+  "error.file.extension.missing": "\"{filename}\" dosyasının uzantısı yok",
   "error.file.maxheight": "Resmin yüksekliği {height} pikselden büyük olmamalıdır",
   "error.file.maxsize": "Dosya çok büyük",
   "error.file.maxwidth": "Resmin genişliği {width} pikselden büyük olmamalıdır",
-  "error.file.mime.differs":
-    "Yüklenen dosya aynı dosya türü \"{mime}\" olmalıdır",
+  "error.file.mime.differs": "Yüklenen dosya aynı dosya türü \"{mime}\" olmalıdır",
   "error.file.mime.forbidden": "\"{mime}\" medya türüne izin verilmiyor",
   "error.file.mime.invalid": "Geçersiz medya türü: {mime}",
-  "error.file.mime.missing":
-    "\"{filename}\" için medya türü tespit edilemiyor",
+  "error.file.mime.missing": "\"{filename}\" için medya türü tespit edilemiyor",
   "error.file.minheight": "Resmin yüksekliği en az {height} piksel olmalıdır",
   "error.file.minsize": "Dosya çok küçük",
   "error.file.minwidth": "Resmin genişliği en az {width} piksel olmalıdır",
@@ -90,111 +83,77 @@
   "error.license.email": "Lütfen geçerli bir e-posta adresi girin",
   "error.license.verification": "Lisans doğrulanamadı",
 
-  "error.page.changeSlug.permission":
-    "\"{slug}\" uzantısına sahip bu sayfanın adresini değiştirilemez",
-  "error.page.changeStatus.incomplete":
-    "Sayfada hatalar var ve yayınlanamadı",
-  "error.page.changeStatus.permission":
-    "Bu sayfanın durumu değiştirilemez",
-  "error.page.changeStatus.toDraft.invalid":
-    "\"{slug}\" sayfası bir taslak haline dönüştürülemiyor",
-  "error.page.changeTemplate.invalid":
-    "\"{slug}\" sayfası için şablon değiştirilemiyor",
-  "error.page.changeTemplate.permission":
-    "\"{slug}\" için şablonu değiştiremezsiniz",
+  "error.page.changeSlug.permission": "\"{slug}\" uzantısına sahip bu sayfanın adresini değiştirilemez",
+  "error.page.changeStatus.incomplete": "Sayfada hatalar var ve yayınlanamadı",
+  "error.page.changeStatus.permission": "Bu sayfanın durumu değiştirilemez",
+  "error.page.changeStatus.toDraft.invalid": "\"{slug}\" sayfası bir taslak haline dönüştürülemiyor",
+  "error.page.changeTemplate.invalid": "\"{slug}\" sayfası için şablon değiştirilemiyor",
+  "error.page.changeTemplate.permission": "\"{slug}\" için şablonu değiştiremezsiniz",
   "error.page.changeTitle.empty": "Başlık boş bırakılamaz",
-  "error.page.changeTitle.permission":
-    "\"{slug}\" için başlığı değiştiremezsiniz",
+  "error.page.changeTitle.permission": "\"{slug}\" için başlığı değiştiremezsiniz",
   "error.page.create.permission": "\"{slug}\" oluşturmanıza izin verilmiyor",
   "error.page.delete": "\"{slug}\" sayfası silinemedi",
   "error.page.delete.confirm": "Onaylamak için sayfa başlığını girin",
-  "error.page.delete.hasChildren":
-    "Sayfada alt sayfalar var ve silinemiyor",
+  "error.page.delete.hasChildren": "Sayfada alt sayfalar var ve silinemiyor",
   "error.page.delete.permission": "\"{slug}\" öğesini silmenize izin verilmiyor",
-  "error.page.draft.duplicate":
-    "\"{slug}\" adres eki olan bir sayfa taslağı zaten mevcut",
-  "error.page.duplicate":
-    "\"{slug}\" adres eki içeren bir sayfa zaten mevcut",
+  "error.page.draft.duplicate": "\"{slug}\" adres eki olan bir sayfa taslağı zaten mevcut",
+  "error.page.duplicate": "\"{slug}\" adres eki içeren bir sayfa zaten mevcut",
   "error.page.duplicate.permission": "\"{slug}\" öğesini çoğaltmanıza izin verilmiyor",
   "error.page.notFound": "\"{slug}\" uzantısındaki sayfa bulunamadı",
-  "error.page.num.invalid":
-    "Lütfen geçerli bir sıralama numarası girin. Sayılar negatif olmamalıdır.",
+  "error.page.num.invalid": "Lütfen geçerli bir sıralama numarası girin. Sayılar negatif olmamalıdır.",
   "error.page.slug.invalid": "Lütfen geçerli bir adres öneki girin",
   "error.page.sort.permission": "\"{slug}\" sayfası sıralanamıyor",
   "error.page.status.invalid": "Lütfen geçerli bir sayfa durumu ayarlayın",
   "error.page.undefined": "Sayfa bulunamad\u0131",
   "error.page.update.permission": "\"{slug}\" güncellemesine izin verilmiyor",
 
-  "error.section.files.max.plural":
-    "\"{section}\" bölümüne {max} dosyadan daha fazlasını eklememelisiniz",
-  "error.section.files.max.singular":
-    "\"{section}\" bölümüne birden fazla dosya eklememelisiniz",
-  "error.section.files.min.plural":
-    "\"{section}\" bölümü en az {min} dosya gerektiriyor",
-  "error.section.files.min.singular":
-    "\"{section}\" bölümü en az bir dosya gerektiriyor",
+  "error.section.files.max.plural": "\"{section}\" bölümüne {max} dosyadan daha fazlasını eklememelisiniz",
+  "error.section.files.max.singular": "\"{section}\" bölümüne birden fazla dosya eklememelisiniz",
+  "error.section.files.min.plural": "\"{section}\" bölümü en az {min} dosya gerektiriyor",
+  "error.section.files.min.singular": "\"{section}\" bölümü en az bir dosya gerektiriyor",
 
-  "error.section.pages.max.plural":
-    "\"{section}\" bölümüne maksimum {max} sayfadan fazla ekleyemezsiniz",
-  "error.section.pages.max.singular":
-    "\"{section}\" bölümüne birden fazla sayfa ekleyemezsiniz",
-  "error.section.pages.min.plural":
-    "\"{section}\" bölümü en az {min} sayfa gerektiriyor",
-  "error.section.pages.min.singular":
-    "\"{section}\" bölümü en az bir sayfa gerektiriyor",
+  "error.section.pages.max.plural": "\"{section}\" bölümüne maksimum {max} sayfadan fazla ekleyemezsiniz",
+  "error.section.pages.max.singular": "\"{section}\" bölümüne birden fazla sayfa ekleyemezsiniz",
+  "error.section.pages.min.plural": "\"{section}\" bölümü en az {min} sayfa gerektiriyor",
+  "error.section.pages.min.singular": "\"{section}\" bölümü en az bir sayfa gerektiriyor",
 
   "error.section.notLoaded": "\"{name}\" bölümü yüklenemedi",
   "error.section.type.invalid": "\"{type}\" tipi geçerli değil",
 
   "error.site.changeTitle.empty": "Başlık boş bırakılamaz",
-  "error.site.changeTitle.permission":
-    "Sitenin başlığını değiştiremezsin",
+  "error.site.changeTitle.permission": "Sitenin başlığını değiştiremezsin",
   "error.site.update.permission": "Siteyi güncellemenize izin verilmiyor",
 
   "error.template.default.notFound": "Varsayılan şablon yok",
 
-  "error.user.changeEmail.permission":
-    "\"{name}\" kullanıcısı için e-postayı değiştiremezsiniz",
-  "error.user.changeLanguage.permission":
-    "\"{name}\" kullanıcısının dilini değiştiremezsin",
-  "error.user.changeName.permission":
-    "\"{name}\" kullanıcısının adını değiştiremezsiniz",
-  "error.user.changePassword.permission":
-    "\"{name}\" kullanıcısının şifresini değiştiremezsiniz",
-  "error.user.changeRole.lastAdmin":
-    "Son yöneticinin rolü değiştirilemez",
-  "error.user.changeRole.permission":
-    "\"{name}\" kullanıcısının rolünü değiştiremezsin",
-  "error.user.changeRole.toAdmin":
-    "Birini yönetici rolüne tanıtmanıza izin verilmiyor",
+  "error.user.changeEmail.permission": "\"{name}\" kullanıcısı için e-postayı değiştiremezsiniz",
+  "error.user.changeLanguage.permission": "\"{name}\" kullanıcısının dilini değiştiremezsin",
+  "error.user.changeName.permission": "\"{name}\" kullanıcısının adını değiştiremezsiniz",
+  "error.user.changePassword.permission": "\"{name}\" kullanıcısının şifresini değiştiremezsiniz",
+  "error.user.changeRole.lastAdmin": "Son yöneticinin rolü değiştirilemez",
+  "error.user.changeRole.permission": "\"{name}\" kullanıcısının rolünü değiştiremezsin",
+  "error.user.changeRole.toAdmin": "Birini yönetici rolüne tanıtmanıza izin verilmiyor",
   "error.user.create.permission": "Bu kullanıcıyı oluşturmanıza izin verilmiyor",
   "error.user.delete": "\"{name}\" kullanıcısı silinemedi",
   "error.user.delete.lastAdmin": "Son y\u00f6netici kullan\u0131c\u0131y\u0131 silemezsiniz",
   "error.user.delete.lastUser": "Son kullanıcı silinemez",
-  "error.user.delete.permission":
-    "\"{name}\" kullanıcısını silme yetkiniz yok",
-  "error.user.duplicate":
-    "\"{email}\" e-posta adresine sahip bir kullanıcı zaten var",
+  "error.user.delete.permission": "\"{name}\" kullanıcısını silme yetkiniz yok",
+  "error.user.duplicate": "\"{email}\" e-posta adresine sahip bir kullanıcı zaten var",
   "error.user.email.invalid": "Lütfen geçerli bir e-posta adresi girin",
   "error.user.language.invalid": "Lütfen geçerli bir dil girin",
   "error.user.notFound": "\"{name}\" kullanıcısı bulunamadı",
-  "error.user.password.invalid":
-    "Lütfen geçerli bir şifre giriniz. Şifreler en az 8 karakter uzunluğunda olmalıdır.",
+  "error.user.password.invalid": "Lütfen geçerli bir şifre giriniz. Şifreler en az 8 karakter uzunluğunda olmalıdır.",
   "error.user.password.notSame": "L\u00fctfen \u015fifreyi do\u011frulay\u0131n",
   "error.user.password.undefined": "Bu kullanıcının şifresi yok",
   "error.user.role.invalid": "Lütfen geçerli bir rol girin",
-  "error.user.update.permission":
-    "\"{name}\" kullanıcısını güncellemenize izin verilmiyor",
+  "error.user.update.permission": "\"{name}\" kullanıcısını güncellemenize izin verilmiyor",
 
   "error.validation.accepted": "Lütfen onaylayın",
   "error.validation.alpha": "Lütfen sadece a-z arasındaki karakterleri girin",
-  "error.validation.alphanum":
-    "Lütfen sadece a-z veya 0-9 arasındaki rakamları girin",
-  "error.validation.between":
-    "Lütfen \"{min}\" ile \"{max}\" arasında bir değer girin",
+  "error.validation.alphanum": "Lütfen sadece a-z veya 0-9 arasındaki rakamları girin",
+  "error.validation.between": "Lütfen \"{min}\" ile \"{max}\" arasında bir değer girin",
   "error.validation.boolean": "Lütfen onaylayın veya reddedin",
-  "error.validation.contains":
-    "Lütfen \"{needle}\" içeren bir değer girin",
+  "error.validation.contains": "Lütfen \"{needle}\" içeren bir değer girin",
   "error.validation.date": "Lütfen geçerli bir tarih girin",
   "error.validation.date.after": "Lütfen {date} tarihinden sonra bir tarih girin",
   "error.validation.date.before": "Lütfen {date} tarihinden önce bir tarih girin",
@@ -210,18 +169,14 @@
   "error.validation.less": "Lütfen {max} 'dan daha düşük bir değer girin",
   "error.validation.match": "Değer beklenen modelle eşleşmiyor",
   "error.validation.max": "Lütfen {max} 'a eşit veya daha küçük bir değer girin",
-  "error.validation.maxlength":
-    "Lütfen daha kısa bir değer girin. (maks. {max} karakter)",
+  "error.validation.maxlength": "Lütfen daha kısa bir değer girin. (maks. {max} karakter)",
   "error.validation.maxwords": "Lütfen en fazla {max} kelime(ler) girin",
   "error.validation.min": "Lütfen {min} ile eşit veya daha büyük bir değer girin",
-  "error.validation.minlength":
-    "Lütfen daha uzun bir değer girin. (min. {min} karakter)",
+  "error.validation.minlength": "Lütfen daha uzun bir değer girin. (min. {min} karakter)",
   "error.validation.minwords": "Lütfen en az {min} kelime(ler) girin",
   "error.validation.more": "Lütfen {min} değerinden daha büyük bir değer girin",
-  "error.validation.notcontains":
-    "Lütfen \"{needle}\" içermeyen bir değer girin",
-  "error.validation.notin":
-    "Lütfen bunlardan herhangi birini girmeyin: ({notIn})",
+  "error.validation.notcontains": "Lütfen \"{needle}\" içermeyen bir değer girin",
+  "error.validation.notin": "Lütfen bunlardan herhangi birini girmeyin: ({notIn})",
   "error.validation.option": "Lütfen geçerli bir seçenek girin",
   "error.validation.num": "Lütfen geçerli bir sayı girin",
   "error.validation.required": "Lütfen birşeyler girin",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Hen\u00fcz bir girdi yok",
   "field.users.empty": "Henüz kullanıcı seçilmedi",
 
-  "file.delete.confirm":
-    "<strong>{filename}</strong> dosyasını silmek istediğinizden emin misiniz?",
+  "file.delete.confirm": "<strong>{filename}</strong> dosyasını silmek istediğinizden emin misiniz?",
 
   "files": "Dosyalar",
   "files.empty": "Henüz dosya yok",
@@ -251,29 +205,22 @@
   "installation": "Kurulum",
   "installation.completed": "Panel kuruldu",
   "installation.disabled": "Panel yükleyici, herkese açık sunucularda varsayılan olarak devre dışıdır. Lütfen yükleyiciyi yerel bir makinede çalıştırın veya <code>panel.install</code> seçeneğiyle etkinleştirin.",
-  "installation.issues.accounts":
-    "<code>/site/accounts</code> klasörü yok yada yazılabilir değil",
-  "installation.issues.content":
-    "<code>/content</code> klasörü yok yada yazılabilir değil",
+  "installation.issues.accounts": "<code>/site/accounts</code> klasörü yok yada yazılabilir değil",
+  "installation.issues.content": "<code>/content</code> klasörü yok yada yazılabilir değil",
   "installation.issues.curl": "<code>CURL</code> eklentisi gerekli",
   "installation.issues.headline": "Panel kurulamadı",
-  "installation.issues.mbstring":
-    "<code>MB String</code> eklentisi gerekli",
-  "installation.issues.media":
-    "<code>/media</code> klasörü yok yada yazılamaz",
+  "installation.issues.mbstring": "<code>MB String</code> eklentisi gerekli",
+  "installation.issues.media": "<code>/media</code> klasörü yok yada yazılamaz",
   "installation.issues.php": "<code>PHP 7+</code> kullandığınızdan emin olun. ",
-  "installation.issues.server":
-    "Kirby <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code> gerektirir",
+  "installation.issues.server": "Kirby <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code> gerektirir",
   "installation.issues.sessions": "<code>/site/sessions</code> klasörü mevcut değil veya yazılabilir değil",
 
   "language": "Dil",
   "language.code": "Kod",
   "language.convert": "Varsayılan yap",
-  "language.convert.confirm":
-    "<p><strong>{name}</strong>'i varsayılan dile dönüştürmek istiyor musunuz? Bu geri alınamaz.</p> <p><strong>{name}</strong> çevrilmemiş içeriğe sahipse, artık geçerli bir geri dönüş olmaz ve sitenizin bazı bölümleri boş olabilir.</p>",
+  "language.convert.confirm": "<p><strong>{name}</strong>'i varsayılan dile dönüştürmek istiyor musunuz? Bu geri alınamaz.</p> <p><strong>{name}</strong> çevrilmemiş içeriğe sahipse, artık geçerli bir geri dönüş olmaz ve sitenizin bazı bölümleri boş olabilir.</p>",
   "language.create": "Yeni bir dil ekle",
-  "language.delete.confirm":
-    "Tüm çevirileri içeren <strong>{name}</strong> dilini gerçekten silmek istiyor musunuz? Bu geri alınamaz!",
+  "language.delete.confirm": "Tüm çevirileri içeren <strong>{name}</strong> dilini gerçekten silmek istiyor musunuz? Bu geri alınamaz!",
   "language.deleted": "Dil silindi",
   "language.direction": "Okuma yönü",
   "language.direction.ltr": "Soldan sağa",
@@ -292,8 +239,7 @@
   "license": "Lisans",
   "license.buy": "Bir lisans satın al",
   "license.register": "Kayıt Ol",
-  "license.register.help":
-    "Satın alma işleminden sonra e-posta yoluyla lisans kodunuzu aldınız. Lütfen kayıt olmak için kodu kopyalayıp yapıştırın.",
+  "license.register.help": "Satın alma işleminden sonra e-posta yoluyla lisans kodunuzu aldınız. Lütfen kayıt olmak için kodu kopyalayıp yapıştırın.",
   "license.register.label": "Lütfen lisans kodunu giriniz",
   "license.register.success": "Kirby'yi desteklediğiniz için teşekkürler",
   "license.unregistered": "Bu Kirby'nin kayıtsız bir demosu",
@@ -325,7 +271,7 @@
   "months.april": "Nisan",
   "months.august": "A\u011fustos",
   "months.december": "Aral\u0131k",
-  "months.february": "\u015eubat",
+  "months.february": "Şubat",
   "months.january": "Ocak",
   "months.july": "Temmuz",
   "months.june": "Haziran",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Lütfen bir pozisyon seçin",
   "page.changeStatus.select": "Yeni bir durum seçin",
   "page.changeTemplate": "Şablonu değiştir",
-  "page.delete.confirm":
-    "<strong>{title}</strong> sayfasını silmek istediğinizden emin misiniz?",
-  "page.delete.confirm.subpages":
-    "<strong>Bu sayfada alt sayfalar var</strong>. <br>Tüm alt sayfalar da silinecek.",
+  "page.delete.confirm": "<strong>{title}</strong> sayfasını silmek istediğinizden emin misiniz?",
+  "page.delete.confirm.subpages": "<strong>Bu sayfada alt sayfalar var</strong>. <br>Tüm alt sayfalar da silinecek.",
   "page.delete.confirm.title": "Onaylamak için sayfa başlığını girin",
   "page.draft.create": "Taslak oluştur",
   "page.duplicate.appendix": "Kopya",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Sayfaları kopyala",
   "page.status": "Durum",
   "page.status.draft": "Taslak",
-  "page.status.draft.description":
-    "Sayfa taslak modunda ve sadece giriş yapılan düzenleyiciler için görünür durumda",
+  "page.status.draft.description": "Sayfa taslak halinde ve yalnızca oturum açmış editörler için veya gizli bağlantı üzerinden görülebilir",
   "page.status.listed": "Herkese Açık",
   "page.status.listed.description": "Bu sayfa herkese açık",
   "page.status.unlisted": "Liste Dışı",
@@ -388,6 +331,7 @@
   "replace": "De\u011fi\u015ftir",
   "retry": "Tekrar Dene",
   "revert": "Vazge\u00e7",
+  "revert.confirm": "Gerçekten <strong>kaydedilmemiş tüm değişiklikleri silmek</strong> istiyor musunuz?",
 
   "role": "Rol",
   "role.admin.description": "Yönetici tüm haklara sahiptir",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://ornek.com",
 
   "user": "Kullanıcı",
-  "user.blueprint":
-    "Bu kullanıcı rolü için <strong>/site/blueprints/users/{role}.yml</strong> içinde ek bölümler ve form alanları tanımlayabilirsiniz",
+  "user.blueprint": "Bu kullanıcı rolü için <strong>/site/blueprints/users/{role}.yml</strong> içinde ek bölümler ve form alanları tanımlayabilirsiniz",
   "user.changeEmail": "E-postayı değiştir",
   "user.changeLanguage": "Dili değiştir",
   "user.changeName": "Kullanıcıyı yeniden adlandır",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Yeni bir rol seçin",
   "user.create": "Yeni bir kullanıcı ekle",
   "user.delete": "Bu kullanıcıyı sil",
-  "user.delete.confirm":
-    "<strong>{email}</strong> kullanıcısını silmek istediğinizden emin misiniz?",
+  "user.delete.confirm": "<strong>{email}</strong> kullanıcısını silmek istediğinizden emin misiniz?",
 
   "users": "Kullanıcılar",
 

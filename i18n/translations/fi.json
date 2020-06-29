@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "Profiilikuvaa ei voitu lähettää",
   "error.avatar.delete.fail": "Profiilikuvaa ei voitu poistaa",
-  "error.avatar.dimensions.invalid":
-    "Profiilikuvan leveys ja korkeus voivat olla enintään 3000 pikseliä",
-  "error.avatar.mime.forbidden":
-    "Profiilikuvan täytyy olla joko JPEG- tai PNG-formaatissa",
+  "error.avatar.dimensions.invalid": "Profiilikuvan leveys ja korkeus voivat olla enintään 3000 pikseliä",
+  "error.avatar.mime.forbidden": "Profiilikuvan täytyy olla joko JPEG- tai PNG-formaatissa",
 
   "error.blueprint.notFound": "Kaavaa \"{name}\" ei voitu ladata",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Muunnin \"{converter}\" ei kelpaa",
 
   "error.file.changeName.empty": "Nimi ei voi olla tyhjä",
-  "error.file.changeName.permission":
-    "Sinulla ei ole oikeutta muuttaa tiedoston \"{filename}\" nimeä",
+  "error.file.changeName.permission": "Sinulla ei ole oikeutta muuttaa tiedoston \"{filename}\" nimeä",
   "error.file.duplicate": "Tiedosto nimellä \"{filename}\" on jo olemassa",
-  "error.file.extension.forbidden":
-    "Tiedostopääte \"{extension}\" ei ole sallittu",
-  "error.file.extension.missing":
-    "Tiedoston \"{filename}\" tiedostopääte puuttuu",
+  "error.file.extension.forbidden": "Tiedostopääte \"{extension}\" ei ole sallittu",
+  "error.file.extension.missing": "Tiedoston \"{filename}\" tiedostopääte puuttuu",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
   "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
-  "error.file.mime.differs":
-    "Lähetetyllä tiedostolla täytyy olla sama mime-tyyppi \"{mime}\"",
+  "error.file.mime.differs": "Lähetetyllä tiedostolla täytyy olla sama mime-tyyppi \"{mime}\"",
   "error.file.mime.forbidden": "Median tyyppi \"{mime}\" ei ole sallittu",
   "error.file.mime.invalid": "Invalid mime type: {mime}",
-  "error.file.mime.missing":
-    "Tiedoston \"{filename}\" mediatyyppiä ei voida tunnistaa",
+  "error.file.mime.missing": "Tiedoston \"{filename}\" mediatyyppiä ei voida tunnistaa",
   "error.file.minheight": "The height of the image must be at least {height} pixels",
   "error.file.minsize": "The file is too small",
   "error.file.minwidth": "The width of the image must be at least {width} pixels",
@@ -90,111 +83,77 @@
   "error.license.email": "Anna kelpaava sähköpostiosoite",
   "error.license.verification": "Lisenssiä ei voitu vahvistaa",
 
-  "error.page.changeSlug.permission":
-    "Sinulla ei ole oikeutta muuttaa URL-liitettä sivulle \"{slug}\"",
-  "error.page.changeStatus.incomplete":
-    "Sivulla on virheitä eikä sitä voitu julkaista",
-  "error.page.changeStatus.permission":
-    "Tämän sivun tilaa ei voi muuttaa",
-  "error.page.changeStatus.toDraft.invalid":
-    "Sivua \"{slug}\" ei voi muuttaa luonnokseksi",
-  "error.page.changeTemplate.invalid":
-    "Sivun \"{slug}\" pohjaa ei voi muuttaa",
-  "error.page.changeTemplate.permission":
-    "Sinulla ei ole oikeutta muuttaa sivun \"{slug}\" sivupohjaa",
+  "error.page.changeSlug.permission": "Sinulla ei ole oikeutta muuttaa URL-liitettä sivulle \"{slug}\"",
+  "error.page.changeStatus.incomplete": "Sivulla on virheitä eikä sitä voitu julkaista",
+  "error.page.changeStatus.permission": "Tämän sivun tilaa ei voi muuttaa",
+  "error.page.changeStatus.toDraft.invalid": "Sivua \"{slug}\" ei voi muuttaa luonnokseksi",
+  "error.page.changeTemplate.invalid": "Sivun \"{slug}\" pohjaa ei voi muuttaa",
+  "error.page.changeTemplate.permission": "Sinulla ei ole oikeutta muuttaa sivun \"{slug}\" sivupohjaa",
   "error.page.changeTitle.empty": "Nimi ei voi olla tyhjä",
-  "error.page.changeTitle.permission":
-    "Sinulla ei ole oikeutta muuttaa sivun \"{slug}\" nimeä",
+  "error.page.changeTitle.permission": "Sinulla ei ole oikeutta muuttaa sivun \"{slug}\" nimeä",
   "error.page.create.permission": "Sinulla ei ole oikeutta luoda sivua \"{slug}\"",
   "error.page.delete": "Sivua \"{slug}\" ei voi poistaa",
   "error.page.delete.confirm": "Anna vahvistuksena sivun nimi",
-  "error.page.delete.hasChildren":
-    "Sivu sisältää alasivuja eikä sitä voida poistaa",
+  "error.page.delete.hasChildren": "Sivu sisältää alasivuja eikä sitä voida poistaa",
   "error.page.delete.permission": "Sinulla ei ole oikeutta poistaa sivua \"{slug}\"",
-  "error.page.draft.duplicate":
-    "Sivuluonnos URL-liitteellä \"{slug}\" on jo olemassa",
-  "error.page.duplicate":
-    "Sivu URL-liitteellä \"{slug}\" on jo olemassa",
+  "error.page.draft.duplicate": "Sivuluonnos URL-liitteellä \"{slug}\" on jo olemassa",
+  "error.page.duplicate": "Sivu URL-liitteellä \"{slug}\" on jo olemassa",
   "error.page.duplicate.permission": "Sinulla ei ole oikeutta kahdentaa sivua \"{slug}\"",
   "error.page.notFound": "Sivua \"{slug}\" ei löytynyt",
-  "error.page.num.invalid":
-    "Anna kelpaava järjestysnumero. Numero ei voi olla negatiivinen.",
+  "error.page.num.invalid": "Anna kelpaava järjestysnumero. Numero ei voi olla negatiivinen.",
   "error.page.slug.invalid": "Anna kelpaava URL-etuliite",
   "error.page.sort.permission": "Sivua \"{slug}\" ei voi järjestellä",
   "error.page.status.invalid": "Aseta kelvollinen sivun tila",
   "error.page.undefined": "Sivua ei l\u00f6ytynyt",
   "error.page.update.permission": "Sinulla ei ole oikeutta päivittää sivua \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "Et voi lisätä enemmän kuin {max} tiedostoa osioon \"{section}\"",
-  "error.section.files.max.singular":
-    "Et voi lisätä enempää kuin yhden tiedoston osioon \"{section}\"",
-  "error.section.files.min.plural":
-    "Osio \"{section}\" vaatii ainakin {min} tiedostoa",
-  "error.section.files.min.singular":
-    "Osio \"{section}\" vaatii ainakin yhden sivun",
+  "error.section.files.max.plural": "Et voi lisätä enemmän kuin {max} tiedostoa osioon \"{section}\"",
+  "error.section.files.max.singular": "Et voi lisätä enempää kuin yhden tiedoston osioon \"{section}\"",
+  "error.section.files.min.plural": "Osio \"{section}\" vaatii ainakin {min} tiedostoa",
+  "error.section.files.min.singular": "Osio \"{section}\" vaatii ainakin yhden sivun",
 
-  "error.section.pages.max.plural":
-    "Et voi lisätä enemmän kuin {max} sivua osioon \"{section}\"",
-  "error.section.pages.max.singular":
-    "Et voi lisätä enempää kuin yhden sivun osioon \"{section}\"",
-  "error.section.pages.min.plural":
-    "Osio \"{section}\" vaatii ainakin {min} sivua",
-  "error.section.pages.min.singular":
-    "Osio \"{section}\" vaatii ainakin yhden sivun",
+  "error.section.pages.max.plural": "Et voi lisätä enemmän kuin {max} sivua osioon \"{section}\"",
+  "error.section.pages.max.singular": "Et voi lisätä enempää kuin yhden sivun osioon \"{section}\"",
+  "error.section.pages.min.plural": "Osio \"{section}\" vaatii ainakin {min} sivua",
+  "error.section.pages.min.singular": "Osio \"{section}\" vaatii ainakin yhden sivun",
 
   "error.section.notLoaded": "Osiota \"{name}\" ei voitu ladata",
   "error.section.type.invalid": "Osion tyyppi \"{type}\" ei ole kelvollinen",
 
   "error.site.changeTitle.empty": "Nimi ei voi olla tyhjä",
-  "error.site.changeTitle.permission":
-    "Sinulla ei ole oikeutta päivittää sivuston nimeä",
+  "error.site.changeTitle.permission": "Sinulla ei ole oikeutta päivittää sivuston nimeä",
   "error.site.update.permission": "Sinulla ei ole oikeutta päivittää sivuston tietoja",
 
   "error.template.default.notFound": "Oletussivupohjaa ei ole määritetty",
 
-  "error.user.changeEmail.permission":
-    "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" sähköpostiosoitetta",
-  "error.user.changeLanguage.permission":
-    "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" kieltä",
-  "error.user.changeName.permission":
-    "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" nimeä",
-  "error.user.changePassword.permission":
-    "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" salasanaa",
-  "error.user.changeRole.lastAdmin":
-    "Ainoan pääkäyttäjän roolia ei voi muuttaa",
-  "error.user.changeRole.permission":
-    "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" käyttäjätasoa",
-  "error.user.changeRole.toAdmin":
-    "Sinulla ei ole oikeutta vaihtaa käyttäjätasoa pääkäyttäjäksi",
+  "error.user.changeEmail.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" sähköpostiosoitetta",
+  "error.user.changeLanguage.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" kieltä",
+  "error.user.changeName.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" nimeä",
+  "error.user.changePassword.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" salasanaa",
+  "error.user.changeRole.lastAdmin": "Ainoan pääkäyttäjän roolia ei voi muuttaa",
+  "error.user.changeRole.permission": "Sinulla ei ole oikeutta vaihtaa käyttäjän \"{name}\" käyttäjätasoa",
+  "error.user.changeRole.toAdmin": "Sinulla ei ole oikeutta vaihtaa käyttäjätasoa pääkäyttäjäksi",
   "error.user.create.permission": "Sinulla ei ole oikeutta luoda tätä käyttäjää",
   "error.user.delete": "Käyttäjää \"{name}\" ei voi poistaa",
   "error.user.delete.lastAdmin": "Ainoaa pääkäyttäjää ei voi poistaa",
   "error.user.delete.lastUser": "Ainoaa käyttäjää ei voi poistaa",
-  "error.user.delete.permission":
-    "Sinulla ei ole oikeutta poistaa käyttäjää \"{name}\"",
-  "error.user.duplicate":
-    "Käyttäjä, jonka sähköpostiosoite on \"{name}\", on jo olemassa",
+  "error.user.delete.permission": "Sinulla ei ole oikeutta poistaa käyttäjää \"{name}\"",
+  "error.user.duplicate": "Käyttäjä, jonka sähköpostiosoite on \"{name}\", on jo olemassa",
   "error.user.email.invalid": "Anna kelpaava sähköpostiosoite",
   "error.user.language.invalid": "Anna kelpaava kieli",
   "error.user.notFound": "K\u00e4ytt\u00e4j\u00e4\u00e4 ei l\u00f6ytynyt",
-  "error.user.password.invalid":
-    "Anna kelpaava salasana. Salasanan täytyy olla ainakin 8 merkkiä pitkä.",
+  "error.user.password.invalid": "Anna kelpaava salasana. Salasanan täytyy olla ainakin 8 merkkiä pitkä.",
   "error.user.password.notSame": "Salasanat eivät täsmää",
   "error.user.password.undefined": "Käyttäjällä ei ole salasanaa",
   "error.user.role.invalid": "Anna kelpaava käyttäjätaso",
-  "error.user.update.permission":
-    "Sinulla ei ole oikeutta päivittää käyttäjää \"{name}\"",
+  "error.user.update.permission": "Sinulla ei ole oikeutta päivittää käyttäjää \"{name}\"",
 
   "error.validation.accepted": "Ole hyvä ja vahvista",
   "error.validation.alpha": "Anna vain merkkejä väliltä a-z",
-  "error.validation.alphanum":
-    "Anna vain merkkejä väliltä a-z tai/ja numeroita väliltä 0-9",
-  "error.validation.between":
-    "Anna arvo väliltä \"{min}\" ja \"{max}\"",
+  "error.validation.alphanum": "Anna vain merkkejä väliltä a-z tai/ja numeroita väliltä 0-9",
+  "error.validation.between": "Anna arvo väliltä \"{min}\" ja \"{max}\"",
   "error.validation.boolean": "Vahvista tai peruuta",
-  "error.validation.contains":
-    "Anna arvo joka sisältää \"{needle}\"",
+  "error.validation.contains": "Anna arvo joka sisältää \"{needle}\"",
   "error.validation.date": "Anna kelpaava päivämäärä",
   "error.validation.date.after": "Anna päivämäärä {date} jälkeen",
   "error.validation.date.before": "Anna päivämäärä ennen {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Anna arvo joka on pienempi kuin {max}",
   "error.validation.match": "Arvo ei vastaa vaadittua kaavaa",
   "error.validation.max": "Anna arvo joka on enintään {max}",
-  "error.validation.maxlength":
-    "Anna lyhyempi arvo. (enintään {max} merkkiä)",
+  "error.validation.maxlength": "Anna lyhyempi arvo. (enintään {max} merkkiä)",
   "error.validation.maxwords": "Anna korkeintaan {max} sana(a)",
   "error.validation.min": "Anna arvo joka on vähintään {min}",
-  "error.validation.minlength":
-    "Anna pidempi arvo. (vähintään {min} merkkiä)",
+  "error.validation.minlength": "Anna pidempi arvo. (vähintään {min} merkkiä)",
   "error.validation.minwords": "Anna vähintään {min} sana(a)",
   "error.validation.more": "Anna suurempi arvo kuin {min}",
-  "error.validation.notcontains":
-    "Anna arvo joka ei sisällä \"{needle}\"",
-  "error.validation.notin":
-    "Arvo ei voi sisältää mitään seuraavista: ({notIn})",
+  "error.validation.notcontains": "Anna arvo joka ei sisällä \"{needle}\"",
+  "error.validation.notin": "Arvo ei voi sisältää mitään seuraavista: ({notIn})",
   "error.validation.option": "Valitse kelpaava vaihtoehto",
   "error.validation.num": "Anna kelpaava numero",
   "error.validation.required": "Arvo ei voi olla tyhjä",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Rivejä ei ole vielä lisätty",
   "field.users.empty": "Käyttäjiä ei ole vielä valittu",
 
-  "file.delete.confirm":
-    "Haluatko varmasti poistaa tiedoston <br><strong>{filename}</strong>?",
+  "file.delete.confirm": "Haluatko varmasti poistaa tiedoston <br><strong>{filename}</strong>?",
 
   "files": "Tiedostot",
   "files.empty": "Tiedostoja ei ole vielä lisätty",
@@ -251,29 +205,22 @@
   "installation": "Asennus",
   "installation.completed": "Paneeli on asennettu",
   "installation.disabled": "Paneelin asennus on oletuksena poissa käytöstä julkisilla palvelimilla. Aja asennus paikallisella koneella, tai ota paneeli käyttöön <code>panel.install</code>-optiolla.",
-  "installation.issues.accounts":
-    "<code>/site/accounts</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
-  "installation.issues.content":
-    "<code>/content</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
+  "installation.issues.accounts": "<code>/site/accounts</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
+  "installation.issues.content": "<code>/content</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
   "installation.issues.curl": "<code>CURL</code>-laajennos on pakollinen",
   "installation.issues.headline": "Paneelia ei voida asentaa",
-  "installation.issues.mbstring":
-    "<code>MB String</code>-laajennos on pakollinen",
-  "installation.issues.media":
-    "<code>/media</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
+  "installation.issues.mbstring": "<code>MB String</code>-laajennos on pakollinen",
+  "installation.issues.media": "<code>/media</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
   "installation.issues.php": "Varmista että <code>PHP 7+</code> on käytössä",
-  "installation.issues.server":
-    "Kirby tarvitsee jonkun seuraavista: <code>Apache</code>, <code>Nginx</code> tai <code>Caddy</code>",
+  "installation.issues.server": "Kirby tarvitsee jonkun seuraavista: <code>Apache</code>, <code>Nginx</code> tai <code>Caddy</code>",
   "installation.issues.sessions": "<code>/site/sessions</code> -kansio ei ole olemassa tai siihen ei voi kirjoittaa",
 
   "language": "Kieli",
   "language.code": "Tunniste",
   "language.convert": "Muuta oletukseksi",
-  "language.convert.confirm":
-    "<p>Haluatko varmasti muuttaa kielen <strong>{name}</strong> oletuskieleksi? Tätä muutosta ei voi peruuttaa.</p><p>Jos<strong>{name}</strong> sisältää kääntämättömiä kohtia, varakäännöstä ei enää ole näille kohdille ja sivustosi saattaa olla osittain tyhjä.</p>",
+  "language.convert.confirm": "<p>Haluatko varmasti muuttaa kielen <strong>{name}</strong> oletuskieleksi? Tätä muutosta ei voi peruuttaa.</p><p>Jos<strong>{name}</strong> sisältää kääntämättömiä kohtia, varakäännöstä ei enää ole näille kohdille ja sivustosi saattaa olla osittain tyhjä.</p>",
   "language.create": "Lisää uusi kieli",
-  "language.delete.confirm":
-    "Haluatko varmasti poistaa kielen <strong>{name}</strong>, mukaanlukien kaikki käännökset? Tätä toimintoa ei voi peruuttaa!",
+  "language.delete.confirm": "Haluatko varmasti poistaa kielen <strong>{name}</strong>, mukaanlukien kaikki käännökset? Tätä toimintoa ei voi peruuttaa!",
   "language.deleted": "Kieli on poistettu",
   "language.direction": "Lukusuunta",
   "language.direction.ltr": "Vasemmalta oikealle",
@@ -292,8 +239,7 @@
   "license": "Lisenssi",
   "license.buy": "Osta lisenssi",
   "license.register": "Rekisteröi",
-  "license.register.help":
-    "Lisenssiavain on lähetetty oston jälkeen sähköpostiisi. Kopioi ja liitä avain tähän.",
+  "license.register.help": "Lisenssiavain on lähetetty oston jälkeen sähköpostiisi. Kopioi ja liitä avain tähän.",
   "license.register.label": "Anna lisenssiavain",
   "license.register.success": "Kiitos kun tuet Kirbyä",
   "license.unregistered": "Tämä on rekisteröimätön demo Kirbystä",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Valitse järjestyspaikka",
   "page.changeStatus.select": "Valitse uusi tila",
   "page.changeTemplate": "Vaihda sivupohja",
-  "page.delete.confirm":
-    "Haluatko varmasti poistaa sivun <strong>{title}</strong>?",
-  "page.delete.confirm.subpages":
-    "<strong>Tällä sivulla on alasivuja</strong>.<br>Myös kaikki alasivut poistetaan.",
+  "page.delete.confirm": "Haluatko varmasti poistaa sivun <strong>{title}</strong>?",
+  "page.delete.confirm.subpages": "<strong>Tällä sivulla on alasivuja</strong>.<br>Myös kaikki alasivut poistetaan.",
   "page.delete.confirm.title": "Anna vahvistuksena sivun nimi",
   "page.draft.create": "Uusi luonnos",
   "page.duplicate.appendix": "Kopioi",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Copy pages",
   "page.status": "Tila",
   "page.status.draft": "Luonnos",
-  "page.status.draft.description":
-    "Sivu on luonnostilassa ja näkyy vain kirjautuneille muokkaajille",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "Julkinen",
   "page.status.listed.description": "Sivu on julkinen kaikille",
   "page.status.unlisted": "Listaamaton",
@@ -388,6 +331,7 @@
   "replace": "Korvaa",
   "retry": "Yrit\u00e4 uudelleen",
   "revert": "Palauta",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "K\u00e4ytt\u00e4j\u00e4taso",
   "role.admin.description": "Pääkäyttäjällä on kaikki oikeudet",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://esimerkki.fi",
 
   "user": "Käyttäjä",
-  "user.blueprint":
-    "Voit määrittää lisää osioita ja lomakekenttiä tälle käyttäjälle kaavassa <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Voit määrittää lisää osioita ja lomakekenttiä tälle käyttäjälle kaavassa <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Muuta sähköpostiosoite",
   "user.changeLanguage": "Vaihda kieli",
   "user.changeName": "Nimeä uudelleen",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Valitse uusi käyttäjätaso",
   "user.create": "Lisää uusi käyttäjä",
   "user.delete": "Poista tämä käyttäjä",
-  "user.delete.confirm":
-    "Haluatko varmsti poistaa käyttäjän <br><strong>{email}</strong>?",
+  "user.delete.confirm": "Haluatko varmsti poistaa käyttäjän <br><strong>{email}</strong>?",
 
   "users": "Käyttäjät",
 
