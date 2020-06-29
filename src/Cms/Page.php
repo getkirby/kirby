@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
@@ -344,7 +345,31 @@ class Page extends ModelWithContent
         ]);
 
         // call the template controller if there's one.
-        return array_merge($kirby->controller($this->template()->name(), $data, $contentType), $data);
+        $controllerData = $kirby->controller($this->template()->name(), $data, $contentType);
+
+        // merge controller data with original data safely
+        if (empty($controllerData) === false) {
+            $classes = [
+                'kirby' => 'Kirby\Cms\App',
+                'site'  => 'Kirby\Cms\Site',
+                'pages' => 'Kirby\Cms\Pages',
+                'page'  => 'Kirby\Cms\Page'
+            ];
+
+            foreach ($controllerData as $key => $value) {
+                if (array_key_exists($key, $classes) === true) {
+                    if (is_a($value, $classes[$key]) === true) {
+                        $data[$key] = $value;
+                    } else {
+                        throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"');
+                    }
+                } else {
+                    $data[$key] = $value;
+                }
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -1467,13 +1492,7 @@ class Page extends ModelWithContent
      */
     protected function token(): string
     {
-        $salt = $this->kirby()->option('content.salt', $this->root());
-
-        if (is_a($salt, 'Closure') === true) {
-            $salt = $salt($this);
-        }
-
-        return hash_hmac('sha1', $this->id() . $this->template(), $salt);
+        return $this->kirby()->contentToken($this, $this->id() . $this->template());
     }
 
     /**

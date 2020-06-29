@@ -46,7 +46,6 @@ class App
     use Properties;
 
     protected static $instance;
-    protected static $root;
     protected static $version;
 
     public $data = [];
@@ -91,9 +90,6 @@ class App
      */
     public function __construct(array $props = [])
     {
-        // the kirby folder directory
-        static::$root = dirname(__DIR__, 2);
-
         // register all roots to be able to load stuff afterwards
         $this->bakeRoots($props['roots'] ?? []);
 
@@ -179,7 +175,7 @@ class App
             return $this->api;
         }
 
-        $root       = static::$root . '/config/api';
+        $root       = $this->root('kirby') . '/config/api';
         $extensions = $this->extensions['api'] ?? [];
         $routes     = (include $root . '/routes.php')($this);
 
@@ -255,7 +251,7 @@ class App
      */
     protected function bakeRoots(array $roots = null)
     {
-        $roots = array_merge(require static::$root . '/config/roots.php', (array)$roots);
+        $roots = array_merge(require dirname(__DIR__, 2) . '/config/roots.php', (array)$roots);
         $this->roots = Ingredients::bake($roots);
         return $this;
     }
@@ -273,7 +269,7 @@ class App
             $urls['index'] = $this->options['url'];
         }
 
-        $urls = array_merge(require static::$root . '/config/urls.php', (array)$urls);
+        $urls = array_merge(require $this->root('kirby') . '/config/urls.php', (array)$urls);
         $this->urls = Ingredients::bake($urls);
         return $this;
     }
@@ -320,8 +316,8 @@ class App
             $this->trigger('route:before', compact('route', 'path', 'method'));
         };
 
-        $router::$afterEach = function ($route, $path, $method, $result) {
-            return $this->apply('route:after', compact('route', 'path', 'method', 'result'), 'result');
+        $router::$afterEach = function ($route, $path, $method, $result, $final) {
+            return $this->apply('route:after', compact('route', 'path', 'method', 'result', 'final'), 'result');
         };
 
         return $router->call($path ?? $this->path(), $method ?? $this->request()->method());
@@ -387,6 +383,31 @@ class App
     public function contentIgnore(): array
     {
         return $this->options['content']['ignore'] ?? Dir::$ignore;
+    }
+
+    /**
+     * Generates a non-guessable token based on model
+     * data and a configured salt
+     *
+     * @param mixed $model Object to pass to the salt callback if configured
+     * @param string $value Model data to include in the generated token
+     * @return string
+     */
+    public function contentToken($model, string $value): string
+    {
+        if (method_exists($model, 'root') === true) {
+            $default = $model->root();
+        } else {
+            $default = $this->root('content');
+        }
+
+        $salt = $this->option('content.salt', $default);
+
+        if (is_a($salt, 'Closure') === true) {
+            $salt = $salt($model);
+        }
+
+        return hash_hmac('sha1', $value, $salt);
     }
 
     /**
@@ -556,12 +577,17 @@ class App
      * Returns the current App instance
      *
      * @param \Kirby\Cms\App $instance
-     * @return self
+     * @param bool $lazy If `true`, the instance is only returned if already existing
+     * @return self|null
      */
-    public static function instance(self $instance = null)
+    public static function instance(self $instance = null, bool $lazy = false)
     {
         if ($instance === null) {
-            return static::$instance ?? new static();
+            if ($lazy === true) {
+                return static::$instance;
+            } else {
+                return static::$instance ?? new static();
+            }
         }
 
         return static::$instance = $instance;
@@ -1144,7 +1170,7 @@ class App
         }
 
         $registry = $this->extensions('routes');
-        $system   = (include static::$root . '/config/routes.php')($this);
+        $system   = (include $this->root('kirby') . '/config/routes.php')($this);
         $routes   = array_merge($system['before'], $registry, $system['after']);
 
         return $this->routes = $routes;
@@ -1437,7 +1463,7 @@ class App
     public static function version(): ?string
     {
         try {
-            return static::$version = static::$version ?? Data::read(static::$root . '/composer.json')['version'] ?? null;
+            return static::$version = static::$version ?? Data::read(dirname(__DIR__, 2) . '/composer.json')['version'] ?? null;
         } catch (Throwable $e) {
             throw new LogicException('The Kirby version cannot be detected. The composer.json is probably missing or not readable.');
         }

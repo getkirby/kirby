@@ -197,6 +197,36 @@ class VTest extends TestCase
         $this->assertFalse(V::email('@getkirby.com'));
     }
 
+    public function testDateComparison()
+    {
+        $this->assertTrue(V::date('2345-01-01', '==', '01.01.2345'));
+        $this->assertFalse(V::date('2345-01-02', '==', '01.01.2345'));
+
+        $this->assertTrue(V::date('2345-01-02', '!=', '01.01.2345'));
+        $this->assertFalse(V::date('2345-01-01', '!=', '01.01.2345'));
+
+        $this->assertTrue(V::date('2345-01-02', '>', '01.01.2345'));
+        $this->assertFalse(V::date('2345-01-01', '>', '01.01.2345'));
+        $this->assertFalse(V::date('2344-12-31', '>', '01.01.2345'));
+
+        $this->assertTrue(V::date('2345-01-01', '>=', '01.01.2345'));
+        $this->assertTrue(V::date('2345-01-02', '>=', '01.01.2345'));
+        $this->assertFalse(V::date('2344-12-31', '>=', '01.01.2345'));
+
+        $this->assertTrue(V::date('2344-12-31', '<', '01.01.2345'));
+        $this->assertFalse(V::date('2345-01-01', '<', '01.01.2345'));
+        $this->assertFalse(V::date('2345-01-02', '<', '01.01.2345'));
+
+        $this->assertTrue(V::date('2345-01-01', '<=', '01.01.2345'));
+        $this->assertTrue(V::date('2344-12-31', '<=', '01.01.2345'));
+        $this->assertFalse(V::date('2345-01-02', '<=', '01.01.2345'));
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid date comparison operator: "<>". Allowed operators: "==", "!=", "<", "<=", ">", ">="');
+
+        V::date('2345-01-01', '<>', '2345-01-01');
+    }
+
     public function testFilename()
     {
         $this->assertTrue(V::filename('size.txt'));

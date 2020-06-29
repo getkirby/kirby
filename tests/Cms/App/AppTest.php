@@ -143,6 +143,39 @@ class AppTest extends TestCase
         $this->assertSame(143, $app->apply('test.event:after', ['value' => 2], 'value'));
     }
 
+    /**
+     * @covers ::contentToken
+     */
+    public function testContentToken()
+    {
+        // without configured salt
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+        $this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken('model', 'test'));
+        $this->assertSame(hash_hmac('sha1', 'test', '/dev/null'), $app->contentToken($app, 'test'));
+
+        // with custom static salt
+        $app = new App([
+            'options' => [
+                'content.salt' => 'salt and pepper and chili'
+            ]
+        ]);
+        $this->assertSame(hash_hmac('sha1', 'test', 'salt and pepper and chili'), $app->contentToken('model', 'test'));
+
+        // with callback
+        $app = new App([
+            'options' => [
+                'content.salt' => function ($model) {
+                    return 'salt ' . $model;
+                }
+            ]
+        ]);
+        $this->assertSame(hash_hmac('sha1', 'test', 'salt lake city'), $app->contentToken('lake city', 'test'));
+    }
+
     public function testDebugInfo()
     {
         $app = new App();
@@ -375,9 +408,16 @@ class AppTest extends TestCase
 
     public function testInstance()
     {
-        $instance = new App();
+        App::destroy();
+        $this->assertNull(App::instance(null, true));
 
-        $this->assertEquals($instance, App::instance());
+        $instance1 = new App();
+        $this->assertSame($instance1, App::instance());
+
+        $instance2 = new App();
+        $this->assertSame($instance2, App::instance());
+        $this->assertSame($instance1, App::instance($instance1));
+        $this->assertSame($instance1, App::instance());
     }
 
     public function testFindPageFile()

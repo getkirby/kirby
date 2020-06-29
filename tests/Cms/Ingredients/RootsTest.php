@@ -77,7 +77,6 @@ class RootsTest extends TestCase
         return [
             [$public, 'index'],
             [$public . '/media', 'media'],
-            [$base . '/kirby', 'kirby'],
             [$base . '/content', 'content'],
             [$base . '/site', 'site'],
         ];
@@ -97,7 +96,6 @@ class RootsTest extends TestCase
             'roots' => [
                 'index'   => $public,
                 'media'   => $public . '/media',
-                'kirby'   => $base . '/kirby',
                 'content' => $base . '/content',
                 'site'    => $base . '/site'
             ]

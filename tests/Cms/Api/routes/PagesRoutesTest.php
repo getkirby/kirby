@@ -6,12 +6,23 @@ use PHPUnit\Framework\TestCase;
 
 class PagesRoutesTest extends TestCase
 {
-    public function testGet()
+    protected $app;
+
+    public function setUp(): void
     {
-        $app = new App([
+        $this->app = new App([
+            'options' => [
+                'api.allowImpersonation' => true
+            ],
             'roots' => [
                 'index' => '/dev/null'
-            ],
+            ]
+        ]);
+    }
+
+    public function testGet()
+    {
+        $app = $this->app->clone([
             'site' => [
                 'children' => [
                     [
@@ -39,10 +50,7 @@ class PagesRoutesTest extends TestCase
 
     public function testChildren()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'children' => [
                     [
@@ -70,10 +78,7 @@ class PagesRoutesTest extends TestCase
 
     public function testFiles()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'children' => [
                     [
@@ -106,10 +111,7 @@ class PagesRoutesTest extends TestCase
 
     public function testFilesSorted()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'children' => [
                     [
@@ -143,10 +145,7 @@ class PagesRoutesTest extends TestCase
 
     public function testFile()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'children' => [
                     [

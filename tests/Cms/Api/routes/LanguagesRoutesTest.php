@@ -15,6 +15,7 @@ class LanguagesRoutesTest extends TestCase
                 'index' => $fixtures = __DIR__ . '/fixtures/LanguagesRoutesTest'
             ],
             'options' => [
+                'api.allowImpersonation' => true,
                 'languages' => true
             ],
             'languages' => [
