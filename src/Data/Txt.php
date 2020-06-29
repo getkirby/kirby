@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -48,7 +49,7 @@ class Txt extends Handler
     {
         // avoid problems with arrays
         if (is_array($value) === true) {
-            $value = Yaml::encode($value);
+            $value = Data::encode($value, 'yaml');
         // avoid problems with localized floats
         } elseif (is_float($value) === true) {
             $value = Str::float($value);
@@ -91,6 +92,18 @@ class Txt extends Handler
      */
     public static function decode($string): array
     {
+        if ($string === null) {
+            return [];
+        }
+
+        if (is_array($string) === true) {
+            return $string;
+        }
+
+        if (is_string($string) === false) {
+            throw new InvalidArgumentException('Invalid data. Please pass a string');
+        }
+
         // remove BOM
         $string = str_replace("\xEF\xBB\xBF", '', $string);
         // explode all fields by the line separator

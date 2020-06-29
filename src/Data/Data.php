@@ -75,11 +75,11 @@ class Data
     /**
      * Decodes data with the specified handler
      *
-     * @param string $data
+     * @param mixed $data
      * @param string $type
      * @return array
      */
-    public static function decode(string $data = null, string $type): array
+    public static function decode($data = null, string $type): array
     {
         return static::handler($type)->decode($data);
     }

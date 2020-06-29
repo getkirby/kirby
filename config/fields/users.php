@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Data\Yaml;
+use Kirby\Data\Data;
 use Kirby\Toolkit\A;
 
 return [
@@ -54,7 +54,7 @@ return [
             $users = [];
             $kirby = kirby();
 
-            foreach (Yaml::decode($value) as $email) {
+            foreach (Data::decode($value, 'yaml') as $email) {
                 if (is_array($email) === true) {
                     $email = $email['email'] ?? null;
                 }

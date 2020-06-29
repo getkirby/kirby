@@ -2,7 +2,7 @@
 
 namespace Kirby\Data;
 
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Spyc;
 
 /**
@@ -55,6 +55,10 @@ class Yaml extends Handler
             return $yaml;
         }
 
+        if (is_string($yaml) === false) {
+            throw new InvalidArgumentException('Invalid YAML data. Please pass a string');
+        }
+
         // remove BOM
         $yaml   = str_replace("\xEF\xBB\xBF", '', $yaml);
         $result = Spyc::YAMLLoadString($yaml);
@@ -64,7 +68,7 @@ class Yaml extends Handler
         } else {
             // apparently Spyc always returns an array, even for invalid YAML syntax
             // so this Exception should currently never be thrown
-            throw new Exception('YAML string is invalid'); // @codeCoverageIgnore
+            throw new InvalidArgumentException('The YAML data cannot be parsed'); // @codeCoverageIgnore
         }
     }
 }

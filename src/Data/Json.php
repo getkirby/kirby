@@ -2,7 +2,7 @@
 
 namespace Kirby\Data;
 
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 
 /**
  * Simple Wrapper around json_encode and json_decode
@@ -34,12 +34,24 @@ class Json extends Handler
      */
     public static function decode($json): array
     {
+        if ($json === null) {
+            return [];
+        }
+
+        if (is_array($json) === true) {
+            return $json;
+        }
+
+        if (is_string($json) === false) {
+            throw new InvalidArgumentException('Invalid JSON data. Please pass a string');
+        }
+
         $result = json_decode($json, true);
 
         if (is_array($result) === true) {
             return $result;
         } else {
-            throw new Exception('JSON string is invalid');
+            throw new InvalidArgumentException('JSON string is invalid');
         }
     }
 }

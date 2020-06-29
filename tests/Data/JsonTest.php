@@ -25,6 +25,16 @@ class JsonTest extends TestCase
 
         $result = Json::decode($data);
         $this->assertSame($array, $result);
+
+        // pass invalid object
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid JSON data. Please pass a string');
+        Json::decode(new \stdClass());
+
+        // pass invalid int
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid JSON data. Please pass a string');
+        Json::decode(1);
     }
 
     /**

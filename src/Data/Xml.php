@@ -2,7 +2,7 @@
 
 namespace Kirby\Data;
 
-use Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Xml as XmlConverter;
 
 /**
@@ -35,6 +35,18 @@ class Xml extends Handler
      */
     public static function decode($xml): array
     {
+        if ($xml === null) {
+            return [];
+        }
+
+        if (is_array($xml) === true) {
+            return $xml;
+        }
+
+        if (is_string($xml) === false) {
+            throw new InvalidArgumentException('Invalid XML data. Please pass a string');
+        }
+
         $result = XmlConverter::parse($xml);
 
         if (is_array($result) === true) {
@@ -46,7 +58,7 @@ class Xml extends Handler
 
             return $result;
         } else {
-            throw new Exception('XML string is invalid');
+            throw new InvalidArgumentException('XML string is invalid');
         }
     }
 }
