@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "Profilový obrázok sa nepodarilo nahrať",
   "error.avatar.delete.fail": "Profilový obrázok sa nepodarilo zmazať",
-  "error.avatar.dimensions.invalid":
-    "Prosím, dodržte, aby šírka a výška profilového obrázka bola menšia ako 3000 pixelov.",
-  "error.avatar.mime.forbidden":
-    "Profilový obrázok musí byť súbor JPEG alebo PNG.",
+  "error.avatar.dimensions.invalid": "Prosím, dodržte, aby šírka a výška profilového obrázka bola menšia ako 3000 pixelov.",
+  "error.avatar.mime.forbidden": "Profilový obrázok musí byť súbor JPEG alebo PNG.",
 
   "error.blueprint.notFound": "Blueprint \"{name}\" sa nepodarilo načítať",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Neplatný converter \"{converter}\"",
 
   "error.file.changeName.empty": "The name must not be empty",
-  "error.file.changeName.permission":
-    "Nemáte povolenie na zmenu názvu pre \"{filename}\"",
+  "error.file.changeName.permission": "Nemáte povolenie na zmenu názvu pre \"{filename}\"",
   "error.file.duplicate": "Súbor s názvom \"{filename}\" už existuje",
-  "error.file.extension.forbidden":
-    "Prípona \"{extension}\" nie je povolená",
-  "error.file.extension.missing":
-    "Prípona pre \"{filename}\" chýba",
+  "error.file.extension.forbidden": "Prípona \"{extension}\" nie je povolená",
+  "error.file.extension.missing": "Prípona pre \"{filename}\" chýba",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
   "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
-  "error.file.mime.differs":
-    "MIME typ nahratého súboru msa musí zhodovať s \"{mime}\"",
+  "error.file.mime.differs": "MIME typ nahratého súboru msa musí zhodovať s \"{mime}\"",
   "error.file.mime.forbidden": "Typ média \"{mime}\" nie je povolený",
   "error.file.mime.invalid": "Invalid mime type: {mime}",
-  "error.file.mime.missing":
-    "Typ média pre \"{filename}\" sa nepodarilo zistiť",
+  "error.file.mime.missing": "Typ média pre \"{filename}\" sa nepodarilo zistiť",
   "error.file.minheight": "The height of the image must be at least {height} pixels",
   "error.file.minsize": "The file is too small",
   "error.file.minwidth": "The width of the image must be at least {width} pixels",
@@ -90,111 +83,77 @@
   "error.license.email": "Prosím, zadajte platnú e-mailovú adresu",
   "error.license.verification": "The license could not be verified",
 
-  "error.page.changeSlug.permission":
-    "Nemáte povolenie na zmenu URL príponu pre \"{slug}\"",
-  "error.page.changeStatus.incomplete":
-    "Stránka obsahuje chyby a nemôže byť zverejnená",
-  "error.page.changeStatus.permission":
-    "Status tejto stránky nemôže byť zmenený",
-  "error.page.changeStatus.toDraft.invalid":
-    "Stránka \"{slug}\" nemôže byť zmenená na koncept.",
-  "error.page.changeTemplate.invalid":
-    "Šablónu pre stránku \"{slug}\" nie je možné zmeniť",
-  "error.page.changeTemplate.permission":
-    "Nemáte povolenie na zmenu šablóny pre \"{slug}\"",
+  "error.page.changeSlug.permission": "Nemáte povolenie na zmenu URL príponu pre \"{slug}\"",
+  "error.page.changeStatus.incomplete": "Stránka obsahuje chyby a nemôže byť zverejnená",
+  "error.page.changeStatus.permission": "Status tejto stránky nemôže byť zmenený",
+  "error.page.changeStatus.toDraft.invalid": "Stránka \"{slug}\" nemôže byť zmenená na koncept.",
+  "error.page.changeTemplate.invalid": "Šablónu pre stránku \"{slug}\" nie je možné zmeniť",
+  "error.page.changeTemplate.permission": "Nemáte povolenie na zmenu šablóny pre \"{slug}\"",
   "error.page.changeTitle.empty": "Titulok nemôže byť prázdny",
-  "error.page.changeTitle.permission":
-    "Nemáte povolenie na zmenu titulku pre \"{slug}\"",
+  "error.page.changeTitle.permission": "Nemáte povolenie na zmenu titulku pre \"{slug}\"",
   "error.page.create.permission": "Nemáte povolenie na vytvorenie \"{slug}\"",
   "error.page.delete": "Stránku \"{slug}\" nie je možné vymazať",
   "error.page.delete.confirm": "Prosím, zadajte titulok stránky pre potvrdenie",
-  "error.page.delete.hasChildren":
-    "Táto stránka obsahuje podstránky a nemôže byť zmazaná",
+  "error.page.delete.hasChildren": "Táto stránka obsahuje podstránky a nemôže byť zmazaná",
   "error.page.delete.permission": "Nemáte povolenie na zmazanie stránky \"{slug}\"",
-  "error.page.draft.duplicate":
-    "Koncept stránky s URL appendix-om \"{slug}\" už existuje",
-  "error.page.duplicate":
-    "Stránka s URL appendix-om \"{slug}\" už existuje",
+  "error.page.draft.duplicate": "Koncept stránky s URL appendix-om \"{slug}\" už existuje",
+  "error.page.duplicate": "Stránka s URL appendix-om \"{slug}\" už existuje",
   "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "Stránku \"{slug}\" nie je možné nájsť",
-  "error.page.num.invalid":
-    "Prosím, zadajte platné číslo pre radenie. Čísla nemôžu byť záporné.",
+  "error.page.num.invalid": "Prosím, zadajte platné číslo pre radenie. Čísla nemôžu byť záporné.",
   "error.page.slug.invalid": "Prosím, zadajte platný URL prefix.",
   "error.page.sort.permission": "Stránku \"{slug}\" nie je možné preradiť.",
   "error.page.status.invalid": "Prosím, nastavte platnú status pre stránku",
   "error.page.undefined": "Stránku nie je možné nájsť",
   "error.page.update.permission": "Nemáte povolenie na aktualizáciu \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "Nemôžete pridať viac ako {max} súbory/ov do sekcie \"{section}\"",
-  "error.section.files.max.singular":
-    "Nemôžete pridať viac ako 1 súbor do sekcie \"{section}\"",
-  "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
-  "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+  "error.section.files.max.plural": "Nemôžete pridať viac ako {max} súbory/ov do sekcie \"{section}\"",
+  "error.section.files.max.singular": "Nemôžete pridať viac ako 1 súbor do sekcie \"{section}\"",
+  "error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
+  "error.section.files.min.singular": "The \"{section}\" section requires at least one file",
 
-  "error.section.pages.max.plural":
-    "Nemôžete pridať viac ako {max} stránky/ok do sekcie \"{section}\"",
-  "error.section.pages.max.singular":
-    "Nemôžete pridať viac ako 1 stránku do sekcie \"{section}\"",
-  "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
-  "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+  "error.section.pages.max.plural": "Nemôžete pridať viac ako {max} stránky/ok do sekcie \"{section}\"",
+  "error.section.pages.max.singular": "Nemôžete pridať viac ako 1 stránku do sekcie \"{section}\"",
+  "error.section.pages.min.plural": "The \"{section}\" section requires at least {min} pages",
+  "error.section.pages.min.singular": "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Sekciu \"{name}\" sa nepodarilo nahrať",
   "error.section.type.invalid": "Typ sekcie \"{type}\" nie je platný",
 
   "error.site.changeTitle.empty": "Titulok nemôže byť prázdny",
-  "error.site.changeTitle.permission":
-    "Nemáte povolenie na zmenu titulku pre portál",
+  "error.site.changeTitle.permission": "Nemáte povolenie na zmenu titulku pre portál",
   "error.site.update.permission": "Nemáte povolenie na aktualizovanie portálu",
 
   "error.template.default.notFound": "Predvolená šablóna neexistuje",
 
-  "error.user.changeEmail.permission":
-    "Nemáte povolenie na zmenu e-mailu pre užívateľa \"{name}\"",
-  "error.user.changeLanguage.permission":
-    "Nemáte povolenie na zmenu jazyka pre užívateľa \"{name}\"",
-  "error.user.changeName.permission":
-    "Nemáte povolenie na zmenu mena pre užívateľa \"{name}\"",
-  "error.user.changePassword.permission":
-    "Nemáte povolenie na zmenu hesla pre užívateľa \"{name}\"",
-  "error.user.changeRole.lastAdmin":
-    "Rolu pre posledného administrátora nie je možné zmeniť",
-  "error.user.changeRole.permission":
-    "Nemáte povolenie na zmenu role pre užívateľa \"{name}\"",
-  "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+  "error.user.changeEmail.permission": "Nemáte povolenie na zmenu e-mailu pre užívateľa \"{name}\"",
+  "error.user.changeLanguage.permission": "Nemáte povolenie na zmenu jazyka pre užívateľa \"{name}\"",
+  "error.user.changeName.permission": "Nemáte povolenie na zmenu mena pre užívateľa \"{name}\"",
+  "error.user.changePassword.permission": "Nemáte povolenie na zmenu hesla pre užívateľa \"{name}\"",
+  "error.user.changeRole.lastAdmin": "Rolu pre posledného administrátora nie je možné zmeniť",
+  "error.user.changeRole.permission": "Nemáte povolenie na zmenu role pre užívateľa \"{name}\"",
+  "error.user.changeRole.toAdmin": "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Nemáte povolenie na vytvorenie tohto užívateľa",
   "error.user.delete": "Užívateľa \"{name}\" nie je možné zmazať",
   "error.user.delete.lastAdmin": "Posledného administrátora nie je možné zmazať",
   "error.user.delete.lastUser": "Posledného užívateľa nie je možné zmazať",
-  "error.user.delete.permission":
-    "Nemáte povolenie na zmazanie užívateľa \"{name}\"",
-  "error.user.duplicate":
-    "Užívateľ s e-mailovou adresou \"{email}\" už existuje",
+  "error.user.delete.permission": "Nemáte povolenie na zmazanie užívateľa \"{name}\"",
+  "error.user.duplicate": "Užívateľ s e-mailovou adresou \"{email}\" už existuje",
   "error.user.email.invalid": "Prosím, zadajte platnú e-mailovú adresu",
   "error.user.language.invalid": "Prosím, zadajte platný jazyk",
   "error.user.notFound": "Užívateľa \"{name}\" nie je možné nájsť",
-  "error.user.password.invalid":
-    "Prosím, zadajte platné heslo. Dĺžka hesla musí byť aspoň 8 znakov.",
+  "error.user.password.invalid": "Prosím, zadajte platné heslo. Dĺžka hesla musí byť aspoň 8 znakov.",
   "error.user.password.notSame": "Heslá nie sú rovnaké",
   "error.user.password.undefined": "Užívateľ nemá heslo",
   "error.user.role.invalid": "Prosím, zadajte platnú rolu",
-  "error.user.update.permission":
-    "Nemáte povolenie na aktualizáciu užívateľa \"{name}\"",
+  "error.user.update.permission": "Nemáte povolenie na aktualizáciu užívateľa \"{name}\"",
 
   "error.validation.accepted": "Prosím, potvrďte",
   "error.validation.alpha": "Prosím, zadajte len znaky z hlások a-z",
-  "error.validation.alphanum":
-    "Prosím, zadajte len znaky z hlások a-z a čísloviek 0-9",
-  "error.validation.between":
-    "Prosím, zadajte hodnotu od \"{min}\" do \"{max}\"",
+  "error.validation.alphanum": "Prosím, zadajte len znaky z hlások a-z a čísloviek 0-9",
+  "error.validation.between": "Prosím, zadajte hodnotu od \"{min}\" do \"{max}\"",
   "error.validation.boolean": "Prosím, potvrďte alebo odmietnite",
-  "error.validation.contains":
-    "Prosím, zadajte hodnotu, ktorá obsahuje \"{needle}\"",
+  "error.validation.contains": "Prosím, zadajte hodnotu, ktorá obsahuje \"{needle}\"",
   "error.validation.date": "Prosím, zadajte platný dátum",
   "error.validation.date.after": "Please enter a date after {date}",
   "error.validation.date.before": "Please enter a date before {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Prosím, zadajte hodnotu menšiu ako {max}",
   "error.validation.match": "Hodnota nezodpovedá očakávanému vzoru",
   "error.validation.max": "Prosím, zadajte hodnotu rovnú alebo menšiu ako {max}",
-  "error.validation.maxlength":
-    "Prosím, zadajte kratšiu hodnotu. (max. {max} charaktery/ov)",
+  "error.validation.maxlength": "Prosím, zadajte kratšiu hodnotu. (max. {max} charaktery/ov)",
   "error.validation.maxwords": "Prosím, nezadávajte viac ako {max} slovo/á/ov",
   "error.validation.min": "Prosím, zadajte hodnotu rovnú alebo väčšiu ako {min}",
-  "error.validation.minlength":
-    "Prosím, zadajte dlhšiu hodnotu. (min. {min} charaktery/ov)",
+  "error.validation.minlength": "Prosím, zadajte dlhšiu hodnotu. (min. {min} charaktery/ov)",
   "error.validation.minwords": "Prosím, zadajte aspoň {min} slovo/á/ov",
   "error.validation.more": "Prosím zadajte hodnotu väčšiu ako {min}",
-  "error.validation.notcontains":
-    "Prosím, zadajte hodnotu, ktorá neobsahuje \"{needle}\"",
-  "error.validation.notin":
-    "Prosím, nezadávajte ani jedno z nasledujúcich: ({notIn})",
+  "error.validation.notcontains": "Prosím, zadajte hodnotu, ktorá neobsahuje \"{needle}\"",
+  "error.validation.notin": "Prosím, nezadávajte ani jedno z nasledujúcich: ({notIn})",
   "error.validation.option": "Prosím, zadajte platnú voľbu",
   "error.validation.num": "Prosím, zadajte platné číslo",
   "error.validation.required": "Prosím, zadajte niečo",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Zatiaľ žiadne údaje",
   "field.users.empty": "Žiadni užívatelia zatiaľ neboli zvolení",
 
-  "file.delete.confirm":
-    "Ste si istý, že chcete zmazať <br><strong>{filename}</strong>?",
+  "file.delete.confirm": "Ste si istý, že chcete zmazať <br><strong>{filename}</strong>?",
 
   "files": "Súbory",
   "files.empty": "Zatiaľ žiadne súbory",
@@ -251,29 +205,22 @@
   "installation": "Inštalácia",
   "installation.completed": "Panel bol nainštalovaný",
   "installation.disabled": "Inštalácia Panelu na verejných serveroch je štandardne zablokovaná. Prosím, spustite inštaláciu na lokálnom serveri alebo aktivujte voľbu <code>panel.install</code>.",
-  "installation.issues.accounts":
-    "Priečinok <code>/site/accounts</code> neexistuje alebo nie je nastavený ako zapisovateľný",
-  "installation.issues.content":
-    "Priečinok <code>/content</code> neexistuje alebo nie je nastavený ako zapisovateľný",
+  "installation.issues.accounts": "Priečinok <code>/site/accounts</code> neexistuje alebo nie je nastavený ako zapisovateľný",
+  "installation.issues.content": "Priečinok <code>/content</code> neexistuje alebo nie je nastavený ako zapisovateľný",
   "installation.issues.curl": "<code>CURL</code> rozšírenie je povinné",
   "installation.issues.headline": "Panel nie je možné naištalovať",
-  "installation.issues.mbstring":
-    "<code>MB String</code> rozšírenie je povinné",
-  "installation.issues.media":
-    "Priečinok <code>/media</code> neexistuje alebo nie je nastavený ako zapisovateľný",
+  "installation.issues.mbstring": "<code>MB String</code> rozšírenie je povinné",
+  "installation.issues.media": "Priečinok <code>/media</code> neexistuje alebo nie je nastavený ako zapisovateľný",
   "installation.issues.php": "Uistite sa, že používate <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby vyžaduje <code>Apache</code>, <code>Nginx</code> alebo <code>Caddy</code>",
+  "installation.issues.server": "Kirby vyžaduje <code>Apache</code>, <code>Nginx</code> alebo <code>Caddy</code>",
   "installation.issues.sessions": "Priečinok <code>/site/sessions</code> neexistuje alebo nie je nastavený ako zapisovateľný",
 
   "language": "Jazyk",
   "language.code": "Kód",
   "language.convert": "Nastaviť ako predvolené",
-  "language.convert.confirm":
-    "<p>Ste si istý, že chcete nastaviť <strong>{name}</strong> ako predvolený jazyk? Túto akciu nie je možné zvrátiť.</p><p>Ak <strong>{name}</strong> obsahuje nepreložený obsah, tak pre tento obsah nebude fungovať platné volanie a niektoré časti vašich stránok zostanú prázdne.</p>",
+  "language.convert.confirm": "<p>Ste si istý, že chcete nastaviť <strong>{name}</strong> ako predvolený jazyk? Túto akciu nie je možné zvrátiť.</p><p>Ak <strong>{name}</strong> obsahuje nepreložený obsah, tak pre tento obsah nebude fungovať platné volanie a niektoré časti vašich stránok zostanú prázdne.</p>",
   "language.create": "Pridať nový jazyk",
-  "language.delete.confirm":
-    "Ste si istý, že chcete zmazať jazyk <strong>{name}</strong> vrátane všetkých prekladov? Túto akciu nie je možné zvrátiť.",
+  "language.delete.confirm": "Ste si istý, že chcete zmazať jazyk <strong>{name}</strong> vrátane všetkých prekladov? Túto akciu nie je možné zvrátiť.",
   "language.deleted": "Jazyk bol zmazaný",
   "language.direction": "Smer čítania",
   "language.direction.ltr": "Zľava doprava",
@@ -292,8 +239,7 @@
   "license": "Licencia",
   "license.buy": "Zakúpiť licenciu",
   "license.register": "Registrovať",
-  "license.register.help":
-    "Licenčný kód vám bol doručený e-mailom po úspešnom nákupe. Prosím, skopírujte a prilepte ho na uskutočnenie registrácie.",
+  "license.register.help": "Licenčný kód vám bol doručený e-mailom po úspešnom nákupe. Prosím, skopírujte a prilepte ho na uskutočnenie registrácie.",
   "license.register.label": "Prosím, zadajte váš licenčný kód",
   "license.register.success": "Ďakujeme za vašu podporu Kirby",
   "license.unregistered": "Toto je neregistrované demo Kirby",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Prosím, zmeňte pozíciu",
   "page.changeStatus.select": "Zvoľte nový status",
   "page.changeTemplate": "Zmeniť šablónu",
-  "page.delete.confirm":
-    "Ste si istý, že chcete zmazať <strong>{title}</strong>?",
-  "page.delete.confirm.subpages":
-    "<strong>Táto stránka obsahuje podstránky</strong>. <br>Všetky podstránky budú taktiež zmazané.",
+  "page.delete.confirm": "Ste si istý, že chcete zmazať <strong>{title}</strong>?",
+  "page.delete.confirm.subpages": "<strong>Táto stránka obsahuje podstránky</strong>. <br>Všetky podstránky budú taktiež zmazané.",
   "page.delete.confirm.title": "Pre potvrdenie zadajte titulok stránky",
   "page.draft.create": "Vytvoriť koncept",
   "page.duplicate.appendix": "Kopírovať",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Copy pages",
   "page.status": "Status",
   "page.status.draft": "Koncept",
-  "page.status.draft.description":
-    "Stránka je koncept móde a je viditeľná len pre prihlásených užívateľov",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "Verejné",
   "page.status.listed.description": "Stránka je prístupná pre všetkých",
   "page.status.unlisted": "Skryté",
@@ -388,6 +331,7 @@
   "replace": "Nahradiť",
   "retry": "Skúsiť ešte raz",
   "revert": "Vrátiť späť",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "Rola",
   "role.admin.description": "The admin has all rights",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Užívateľ",
-  "user.blueprint":
-    "Ďalšie sekcie a formulárové polia pre túto užívateľskú rolu môžete definovať v rámci <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Ďalšie sekcie a formulárové polia pre túto užívateľskú rolu môžete definovať v rámci <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Zmeniť e-mail",
   "user.changeLanguage": "Zmeniť jazyk",
   "user.changeName": "Premenovať tohto užívateľa",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Zvoliť novú rolu",
   "user.create": "Pridať nového užívateľa",
   "user.delete": "Zmazať tohto užívateľa",
-  "user.delete.confirm":
-    "Ste si istý, že chcete zmazať <br><strong>{email}</strong>?",
+  "user.delete.confirm": "Ste si istý, že chcete zmazať <br><strong>{email}</strong>?",
 
   "users": "Užívatelia",
 

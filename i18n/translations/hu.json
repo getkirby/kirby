@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "A profilkép feltöltése nem sikerült",
   "error.avatar.delete.fail": "A profilkép nem törölhető",
-  "error.avatar.dimensions.invalid":
-    "A profilkép maximális szélessége és magassága 3000 pixel lehet",
-  "error.avatar.mime.forbidden":
-    "A profilkép formátuma csak JPEG vagy PNG lehet",
+  "error.avatar.dimensions.invalid": "A profilkép maximális szélessége és magassága 3000 pixel lehet",
+  "error.avatar.mime.forbidden": "A profilkép formátuma csak JPEG vagy PNG lehet",
 
   "error.blueprint.notFound": "A \"{name}\" oldalsablon nem tölthető be",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Érvénytelen konverter: \"{converter}\"",
 
   "error.file.changeName.empty": "The name must not be empty",
-  "error.file.changeName.permission":
-    "Nincs jogosultságod megváltoztatni a \"{filename}\" fájl nevét",
+  "error.file.changeName.permission": "Nincs jogosultságod megváltoztatni a \"{filename}\" fájl nevét",
   "error.file.duplicate": "Már létezik \"{filename}\" nevű fájl",
-  "error.file.extension.forbidden":
-    "Tiltott kiterjeszt\u00e9s\u0171 f\u00e1jl",
-  "error.file.extension.missing":
-    "Kiterjeszt\u00e9s n\u00e9lk\u00fcli f\u00e1jl nem t\u00f6lthet\u0151 fel",
+  "error.file.extension.forbidden": "Tiltott kiterjeszt\u00e9s\u0171 f\u00e1jl",
+  "error.file.extension.missing": "Kiterjeszt\u00e9s n\u00e9lk\u00fcli f\u00e1jl nem t\u00f6lthet\u0151 fel",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
   "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
-  "error.file.mime.differs":
-    "A feltöltött fájlnak azonos \"{mime}\" típusúnak kell lennie",
+  "error.file.mime.differs": "A feltöltött fájlnak azonos \"{mime}\" típusúnak kell lennie",
   "error.file.mime.forbidden": "A \"{mime}\" típusú médiafájlok nem engedélyezettek",
   "error.file.mime.invalid": "Invalid mime type: {mime}",
-  "error.file.mime.missing":
-    "A \"{filename}\" fájl típusa nem állapítható meg",
+  "error.file.mime.missing": "A \"{filename}\" fájl típusa nem állapítható meg",
   "error.file.minheight": "The height of the image must be at least {height} pixels",
   "error.file.minsize": "The file is too small",
   "error.file.minwidth": "The width of the image must be at least {width} pixels",
@@ -90,111 +83,77 @@
   "error.license.email": "Kérlek adj meg egy valós email-címet",
   "error.license.verification": "A licensz nem ellenőrizhető",
 
-  "error.page.changeSlug.permission":
-    "Nem változtathatod meg az URL-előtagot: \"{slug}\"",
-  "error.page.changeStatus.incomplete":
-    "Az oldal hibákat tartalmaz és nem publikálható",
-  "error.page.changeStatus.permission":
-    "Az oldal státusza nem változtatható meg",
-  "error.page.changeStatus.toDraft.invalid":
-    "A(z) \"{slug}\" oldalt nem lehet piszkozattá alakítani",
-  "error.page.changeTemplate.invalid":
-    "A \"{slug}\" oldal sablonját nem lehet megváltoztatni",
-  "error.page.changeTemplate.permission":
-    "Nincs jogosultságod megváltoztatni a sablont ehhez: \"{slug}\"",
+  "error.page.changeSlug.permission": "Nem változtathatod meg az URL-előtagot: \"{slug}\"",
+  "error.page.changeStatus.incomplete": "Az oldal hibákat tartalmaz és nem publikálható",
+  "error.page.changeStatus.permission": "Az oldal státusza nem változtatható meg",
+  "error.page.changeStatus.toDraft.invalid": "A(z) \"{slug}\" oldalt nem lehet piszkozattá alakítani",
+  "error.page.changeTemplate.invalid": "A \"{slug}\" oldal sablonját nem lehet megváltoztatni",
+  "error.page.changeTemplate.permission": "Nincs jogosultságod megváltoztatni a sablont ehhez: \"{slug}\"",
   "error.page.changeTitle.empty": "A cím nem lehet üres",
-  "error.page.changeTitle.permission":
-    "Nincs jogosultságod megváltoztatni a címet: \"{slug}\"",
+  "error.page.changeTitle.permission": "Nincs jogosultságod megváltoztatni a címet: \"{slug}\"",
   "error.page.create.permission": "Nincs jogosultságod az oldal létrehozásához: \"{slug}\"",
   "error.page.delete": "A(z) \"{slug}\" oldal nem törölhető",
   "error.page.delete.confirm": "Megerősítéshez add meg az oldal címét",
-  "error.page.delete.hasChildren":
-    "Az oldalnak vannak aloldalai és nem törölhető",
+  "error.page.delete.hasChildren": "Az oldalnak vannak aloldalai és nem törölhető",
   "error.page.delete.permission": "Nincs jogosultságod a(z) \"{slug}\" oldal törléséhez",
-  "error.page.draft.duplicate":
-    "Van már egy másik oldal ezzel az URL-lel: \"{slug}\"",
-  "error.page.duplicate":
-    "Van már egy másik oldal ezzel az URL-lel: \"{slug}\"",
+  "error.page.draft.duplicate": "Van már egy másik oldal ezzel az URL-lel: \"{slug}\"",
+  "error.page.duplicate": "Van már egy másik oldal ezzel az URL-lel: \"{slug}\"",
   "error.page.duplicate.permission": "Nincs engedélyed a(z) \"{slug}\" másolat keszítéséhez",
   "error.page.notFound": "Az oldal nem tal\u00e1lhat\u00f3",
-  "error.page.num.invalid":
-    "Kérlek megfelelő oldalszámozást adj meg. Negatív szám itt nem használható.",
+  "error.page.num.invalid": "Kérlek megfelelő oldalszámozást adj meg. Negatív szám itt nem használható.",
   "error.page.slug.invalid": "Kérlek megfelelő URL-előtagot adj meg",
   "error.page.sort.permission": "A(z) \"{slug}\" oldal nem illeszthető a sorrendbe",
   "error.page.status.invalid": "Kérlek add meg a megfelelő oldalstátuszt",
   "error.page.undefined": "Az oldal nem tal\u00e1lhat\u00f3",
   "error.page.update.permission": "Nincs jogosultságod a(z) \"{slug}\" oldal frissítéséhez",
 
-  "error.section.files.max.plural":
-    "Maximum {max} fájlt adhatsz hozzá a(z) \"{section}\" szekcióhoz",
-  "error.section.files.max.singular":
-    "Nem adhatsz hozzá egynél több fájlt a(z) \"{section}\" szekcióhoz",
-  "error.section.files.min.plural":
-    "A \"{section}\" szakasz legalább {min} fájlt igényel",
-  "error.section.files.min.singular":
-    "A \"{section}\" szakasz legalább egy fájlt igényel",
+  "error.section.files.max.plural": "Maximum {max} fájlt adhatsz hozzá a(z) \"{section}\" szekcióhoz",
+  "error.section.files.max.singular": "Nem adhatsz hozzá egynél több fájlt a(z) \"{section}\" szekcióhoz",
+  "error.section.files.min.plural": "A \"{section}\" szakasz legalább {min} fájlt igényel",
+  "error.section.files.min.singular": "A \"{section}\" szakasz legalább egy fájlt igényel",
 
-  "error.section.pages.max.plural":
-    "Maximum {max} oldalt adhatsz hozzá a(z) \"{section}\" szekcióhoz",
-  "error.section.pages.max.singular":
-    "Nem adhatsz hozzá egynél több oldalt a(z) \"{section}\" szekcióhoz",
-  "error.section.pages.min.plural":
-    "A \"{section}\" szakasz legalább {min} oldalt igényel",
-  "error.section.pages.min.singular":
-    "A \"{section}\" szakasz legalább egy oldalt igényel",
+  "error.section.pages.max.plural": "Maximum {max} oldalt adhatsz hozzá a(z) \"{section}\" szekcióhoz",
+  "error.section.pages.max.singular": "Nem adhatsz hozzá egynél több oldalt a(z) \"{section}\" szekcióhoz",
+  "error.section.pages.min.plural": "A \"{section}\" szakasz legalább {min} oldalt igényel",
+  "error.section.pages.min.singular": "A \"{section}\" szakasz legalább egy oldalt igényel",
 
   "error.section.notLoaded": "A(z) \"{name}\" szekció nem tölthető be",
   "error.section.type.invalid": "A szekció típusa (\"{type}\") nem megfelelő",
 
   "error.site.changeTitle.empty": "A cím nem lehet üres",
-  "error.site.changeTitle.permission":
-    "Nincs jogosultságod megváltoztatni az honlap címét",
+  "error.site.changeTitle.permission": "Nincs jogosultságod megváltoztatni az honlap címét",
   "error.site.update.permission": "Nincs jogosultságod frissíteni a honlapot",
 
   "error.template.default.notFound": "Az alapértelmezett sablon nem létezik",
 
-  "error.user.changeEmail.permission":
-    "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó email-címét",
-  "error.user.changeLanguage.permission":
-    "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó nyelvi beállításait",
-  "error.user.changeName.permission":
-    "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó nevét",
-  "error.user.changePassword.permission":
-    "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó jelszavát",
-  "error.user.changeRole.lastAdmin":
-    "Az egyedüli adminisztrátor szerepkörét nem lehet megváltoztatni",
-  "error.user.changeRole.permission":
-    "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó szerepkörét",
-  "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+  "error.user.changeEmail.permission": "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó email-címét",
+  "error.user.changeLanguage.permission": "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó nyelvi beállításait",
+  "error.user.changeName.permission": "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó nevét",
+  "error.user.changePassword.permission": "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó jelszavát",
+  "error.user.changeRole.lastAdmin": "Az egyedüli adminisztrátor szerepkörét nem lehet megváltoztatni",
+  "error.user.changeRole.permission": "Nincs jogosultságod megváltoztatni \"{name}\" felhasználó szerepkörét",
+  "error.user.changeRole.toAdmin": "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Nincs jogosultságod létrehozni ezt a felhasználót",
   "error.user.delete": "A felhaszn\u00e1l\u00f3 nem t\u00f6r\u00f6lhet\u0151",
   "error.user.delete.lastAdmin": "Nem t\u00f6r\u00f6lheted az egyetlen adminisztr\u00e1tort",
   "error.user.delete.lastUser": "Nem törölheted az egyetlen felhasználót",
-  "error.user.delete.permission":
-    "Nincs jogosults\u00e1god t\u00f6r\u00f6lni ezt a felhaszn\u00e1l\u00f3t",
-  "error.user.duplicate":
-    "Már létezik felhasználó \"{email}\" email-címmel",
+  "error.user.delete.permission": "Nincs jogosults\u00e1god t\u00f6r\u00f6lni ezt a felhaszn\u00e1l\u00f3t",
+  "error.user.duplicate": "Már létezik felhasználó \"{email}\" email-címmel",
   "error.user.email.invalid": "Kérlek adj meg egy valós email-címet",
   "error.user.language.invalid": "Kérlek add meg a megfelelő nyelvi beállítást",
   "error.user.notFound": "A felhaszn\u00e1l\u00f3 nem tal\u00e1lhat\u00f3",
-  "error.user.password.invalid":
-    "Kérlek adj meg egy megfelelő jelszót. A jelszónak legalább 8 karakter hosszúságúnak kell lennie.",
+  "error.user.password.invalid": "Kérlek adj meg egy megfelelő jelszót. A jelszónak legalább 8 karakter hosszúságúnak kell lennie.",
   "error.user.password.notSame": "K\u00e9rlek er\u0151s\u00edtsd meg a jelsz\u00f3t",
   "error.user.password.undefined": "A felhasználónak nincs jelszó megadva",
   "error.user.role.invalid": "Kérlek adj meg egy megfelelő szerepkört",
-  "error.user.update.permission":
-    "Nincs jogosultságod frissíteni \"{name}\" felhasználó adatait",
+  "error.user.update.permission": "Nincs jogosultságod frissíteni \"{name}\" felhasználó adatait",
 
   "error.validation.accepted": "Kérlek erősítsd meg",
   "error.validation.alpha": "Kérlek csak kis betűket használj (a-z)",
-  "error.validation.alphanum":
-    "Kérlek csak kis betűket és számjegyeket használj (a-z, 0-9)",
-  "error.validation.between":
-    "Kérlek egy \"{min}\" és \"{max}\" közötti értéket adj meg",
+  "error.validation.alphanum": "Kérlek csak kis betűket és számjegyeket használj (a-z, 0-9)",
+  "error.validation.between": "Kérlek egy \"{min}\" és \"{max}\" közötti értéket adj meg",
   "error.validation.boolean": "Kérlek erősítsd meg vagy vesd el",
-  "error.validation.contains":
-    "Kérlek olyan értéket adj meg, amely tartalmazza ezt: \"{needle}\"",
+  "error.validation.contains": "Kérlek olyan értéket adj meg, amely tartalmazza ezt: \"{needle}\"",
   "error.validation.date": "Kérlek megfelelő dátumot adj meg",
   "error.validation.date.after": "Please enter a date after {date}",
   "error.validation.date.before": "Please enter a date before {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "A megadott érték kevesebb legyen, mint {max}",
   "error.validation.match": "A megadott érték nem felel meg az elvárt struktúrának",
   "error.validation.max": "A megadott érték egyenlő vagy kevesebb legyen, mint {max}",
-  "error.validation.maxlength":
-    "Kérlek rövidebb értéket adj meg (legfeljebb {max} karakter)",
+  "error.validation.maxlength": "Kérlek rövidebb értéket adj meg (legfeljebb {max} karakter)",
   "error.validation.maxwords": "Kérlek ide legfeljebb {max} szót írj",
   "error.validation.min": "A megadott érték egyenlő vagy nagyobb legyen, mint {min}",
-  "error.validation.minlength":
-    "Kérlek hosszabb értéket adj meg (legalább {min} karakter)",
+  "error.validation.minlength": "Kérlek hosszabb értéket adj meg (legalább {min} karakter)",
   "error.validation.minwords": "Kérlek ide legalább {min} szót írj",
   "error.validation.more": "A megadott érték legyen nagyobb, mint {min} ",
-  "error.validation.notcontains":
-    "Kérlek olyan értéket adj meg, amely nem tartalmazza ezt: \"{needle}\" ",
-  "error.validation.notin":
-    "Kérlek egyiket se használd az alábbiak közül: ({notIn})",
+  "error.validation.notcontains": "Kérlek olyan értéket adj meg, amely nem tartalmazza ezt: \"{needle}\" ",
+  "error.validation.notin": "Kérlek egyiket se használd az alábbiak közül: ({notIn})",
   "error.validation.option": "Kérlek válassz egy megfelelő opciót",
   "error.validation.num": "Kérlek adj meg egy megfelelő számot",
   "error.validation.required": "Kérlek írj be valamit",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Nincs m\u00e9g bejegyz\u00e9s",
   "field.users.empty": "Nincs felhasználó kiválasztva",
 
-  "file.delete.confirm":
-    "Biztos törölni akarod ezt a fájlt: <br><strong>{filename}</strong>?",
+  "file.delete.confirm": "Biztos törölni akarod ezt a fájlt: <br><strong>{filename}</strong>?",
 
   "files": "Fájlok",
   "files.empty": "Még nincsenek fájlok",
@@ -251,29 +205,22 @@
   "installation": "Telepítés",
   "installation.completed": "A panel sikeresen telepítve",
   "installation.disabled": "A panel telepítője alapértelmezés szerint le van tiltva a nyilvános szervereken. Kérlek, futtassd a telepítőt egy helyi gépen vagy engedélyezze a <code>panel.install</code> opcióval.",
-  "installation.issues.accounts":
-    "A <code>/site/accounts</code> mappa nem létezik, vagy nem írható",
-  "installation.issues.content":
-    "A <code>/content</code> mappa nem létezik vagy nem írható",
+  "installation.issues.accounts": "A <code>/site/accounts</code> mappa nem létezik, vagy nem írható",
+  "installation.issues.content": "A <code>/content</code> mappa nem létezik vagy nem írható",
   "installation.issues.curl": "A <code>CURL</code> bővítmény engedélyezése szükséges",
   "installation.issues.headline": "A panel telepítése sikertelen",
-  "installation.issues.mbstring":
-    "Az <code>MB String</code> bővítmény engedélyezése szükséges",
-  "installation.issues.media":
-    "A <code>/media</code> mappa nem létezik vagy nem írható",
+  "installation.issues.mbstring": "Az <code>MB String</code> bővítmény engedélyezése szükséges",
+  "installation.issues.media": "A <code>/media</code> mappa nem létezik vagy nem írható",
   "installation.issues.php": "Bizonyosodj meg róla, hogy az általad használt PHP-verzió <code>PHP 7+</code>",
-  "installation.issues.server":
-    "A Kirby az alábbi szervereken futtatható: <code>Apache</code>, <code>Nginx</code> vagy <code>Caddy</code>",
+  "installation.issues.server": "A Kirby az alábbi szervereken futtatható: <code>Apache</code>, <code>Nginx</code> vagy <code>Caddy</code>",
   "installation.issues.sessions": "A <code>/site/sessions</code> könyvtár nem létezik vagy nem írható",
 
   "language": "Nyelv",
   "language.code": "Kód",
   "language.convert": "Alapértelmezettnek jelölés",
-  "language.convert.confirm":
-    "<p>Tényleg az alaőértelmezett nyelvre szeretnéd konvertálni ezt: <strong>{name}</strong>? Ez a művelet nem vonható vissza.</p><p>Ha<strong>{name}</strong> olyat is tartalmaz, amelynek nincs megfelelő fordítása, a honlapod egyes részei az új alapértelmezett nyelv hiányosságai miatt üresek maradhatnak.</p>",
+  "language.convert.confirm": "<p>Tényleg az alaőértelmezett nyelvre szeretnéd konvertálni ezt: <strong>{name}</strong>? Ez a művelet nem vonható vissza.</p><p>Ha<strong>{name}</strong> olyat is tartalmaz, amelynek nincs megfelelő fordítása, a honlapod egyes részei az új alapértelmezett nyelv hiányosságai miatt üresek maradhatnak.</p>",
   "language.create": "Új nyelv hozzáadása",
-  "language.delete.confirm":
-    "Tényleg törölni szeretnéd a(z) <strong>{name}</strong> nyelvet, annak minden fordításával együtt? Ez a művelet nem vonható vissza!",
+  "language.delete.confirm": "Tényleg törölni szeretnéd a(z) <strong>{name}</strong> nyelvet, annak minden fordításával együtt? Ez a művelet nem vonható vissza!",
   "language.deleted": "A nyelv törölve lett",
   "language.direction": "Olvasási irány",
   "language.direction.ltr": "Balról jobbra",
@@ -292,8 +239,7 @@
   "license": "Kirby licenc",
   "license.buy": "Licenc vásárlása",
   "license.register": "Regisztráció",
-  "license.register.help":
-    "A vásárlás után emailben küldjük el a licenc-kódot. Regisztrációhoz másold ide a kapott kódot.",
+  "license.register.help": "A vásárlás után emailben küldjük el a licenc-kódot. Regisztrációhoz másold ide a kapott kódot.",
   "license.register.label": "Kérlek írd be a licenc-kódot",
   "license.register.success": "Köszönjük, hogy támogatod a Kirby-t",
   "license.unregistered": "Jelenleg a Kirby nem regisztrált próbaverzióját használod",
@@ -325,7 +271,7 @@
   "months.april": "\u00e1prilis",
   "months.august": "augusztus",
   "months.december": "december",
-  "months.february": "febru\u00e1r",
+  "months.february": "február",
   "months.january": "janu\u00e1r",
   "months.july": "j\u00falius",
   "months.june": "j\u00fanius",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Kérlek válaszd ki a pozíciót",
   "page.changeStatus.select": "Új állapot kiválasztása",
   "page.changeTemplate": "Sablon módosítása",
-  "page.delete.confirm":
-    "Biztos vagy benne, hogy törlöd az alábbi oldalt: <strong>{title}</strong>?",
-  "page.delete.confirm.subpages":
-    "<strong>Ehhez az oldalhoz aloldalak tartoznak</strong>. <br>Az oldal törlésekor a hozzá tartozó aloldalak is törlődnek.",
+  "page.delete.confirm": "Biztos vagy benne, hogy törlöd az alábbi oldalt: <strong>{title}</strong>?",
+  "page.delete.confirm.subpages": "<strong>Ehhez az oldalhoz aloldalak tartoznak</strong>. <br>Az oldal törlésekor a hozzá tartozó aloldalak is törlődnek.",
   "page.delete.confirm.title": "Megerősítéshez add meg az oldal címét",
   "page.draft.create": "Piszkozat létrehozása",
   "page.duplicate.appendix": "Másol",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Oldalak másolása",
   "page.status": "Állapot",
   "page.status.draft": "Piszkozat",
-  "page.status.draft.description":
-    "Az oldal jelenleg piszkozat státuszban van és csak bejelentkezett szerkesztők számára látható",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "Publikus",
   "page.status.listed.description": "Az oldal mindenki számára elérhető",
   "page.status.unlisted": "Nem listázott",
@@ -388,6 +331,7 @@
   "replace": "Cser\u00e9l",
   "retry": "Próbáld újra",
   "revert": "Visszavon\u00e1s",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "Szerepkör",
   "role.admin.description": "Az adminisztrátornak minden joga van",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://pelda.hu",
 
   "user": "Felhasználó",
-  "user.blueprint":
-    "Ehhez a szerepkörhöz további szekciókat és mezőket vehetsz fel a <strong>/site/blueprints/users/{role}.yml</strong> fájlban",
+  "user.blueprint": "Ehhez a szerepkörhöz további szekciókat és mezőket vehetsz fel a <strong>/site/blueprints/users/{role}.yml</strong> fájlban",
   "user.changeEmail": "Email módosítása",
   "user.changeLanguage": "Nyelv módosítása",
   "user.changeName": "Felhasználó átnevezése",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Új szerepkör kiválasztása",
   "user.create": "Új felhasználó hozzáadása",
   "user.delete": "Felhasználó törlése",
-  "user.delete.confirm":
-    "Biztos törlöd ezt a felhasználót: <br><strong>{email}</strong>?",
+  "user.delete.confirm": "Biztos törlöd ezt a felhasználót: <br><strong>{email}</strong>?",
 
   "users": "Felhasználók",
 

@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "No s'ha pogut carregar la imatge del perfil",
   "error.avatar.delete.fail": "La imatge del perfil no s'ha pogut eliminar",
-  "error.avatar.dimensions.invalid":
-    "Mantingueu l'amplada i l'alçada de la imatge de perfil de menys de 3000 píxels",
-  "error.avatar.mime.forbidden":
-    "La imatge del perfil ha de ser fitxers JPEG o PNG",
+  "error.avatar.dimensions.invalid": "Mantingueu l'amplada i l'alçada de la imatge de perfil de menys de 3000 píxels",
+  "error.avatar.mime.forbidden": "La imatge del perfil ha de ser fitxers JPEG o PNG",
 
   "error.blueprint.notFound": "No s'ha potgut carregar el blueprint \"{name}\"",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Convertidor no vàlid \"{converter}\"",
 
   "error.file.changeName.empty": "El nom no pot estar buit",
-  "error.file.changeName.permission":
-    "No tens permís per canviar el nom de \"{filename}\"",
+  "error.file.changeName.permission": "No tens permís per canviar el nom de \"{filename}\"",
   "error.file.duplicate": "Ja existeix un fitxer amb el nom \"{filename}\"",
-  "error.file.extension.forbidden":
-    "L'extensió de l'arxiu \"{extension}\" no està permesa",
-  "error.file.extension.missing":
-    "Falta l'extensió de l'arxiu \"{filename}\"",
+  "error.file.extension.forbidden": "L'extensió de l'arxiu \"{extension}\" no està permesa",
+  "error.file.extension.missing": "Falta l'extensió de l'arxiu \"{filename}\"",
   "error.file.maxheight": "L'alçada de la imatge no ha de ser superior a {height} píxels",
   "error.file.maxsize": "El fitxer és massa gran",
   "error.file.maxwidth": "L'amplada de la imatge no ha de ser superior a {width} píxels",
-  "error.file.mime.differs":
-    "L'arxiu carregat ha ha de ser del mateix tipus de mime \"{mime}\"",
+  "error.file.mime.differs": "L'arxiu carregat ha ha de ser del mateix tipus de mime \"{mime}\"",
   "error.file.mime.forbidden": "El tipus de mitjà \"{mime}\" no està permès",
   "error.file.mime.invalid": "Mime type no vàlid: {mime}",
-  "error.file.mime.missing":
-    "El tipus de suport per a \"{filename}\" no es pot detectar",
+  "error.file.mime.missing": "El tipus de suport per a \"{filename}\" no es pot detectar",
   "error.file.minheight": "L'alçada de la imatge ha de ser com a mínim de {height} píxels",
   "error.file.minsize": "El fitxer és massa petit",
   "error.file.minwidth": "L'amplada de la imatge ha de ser com a mínim de {width} píxels",
@@ -90,111 +83,77 @@
   "error.license.email": "Si us plau, introdueix una adreça de correu electrònic vàlida",
   "error.license.verification": "No s’ha pogut verificar la llicència",
 
-  "error.page.changeSlug.permission":
-    "No teniu permís per canviar l'apèndix d'URL per a \"{slug}\"",
-  "error.page.changeStatus.incomplete":
-    "La pàgina té errors i no es pot publicar",
-  "error.page.changeStatus.permission":
-    "No es pot canviar l'estat d'aquesta pàgina",
-  "error.page.changeStatus.toDraft.invalid":
-    "La pàgina \"{slug}\" no es pot convertir en un esborrany",
-  "error.page.changeTemplate.invalid":
-    "La plantilla per a la pàgina \"{slug}\" no es pot canviar",
-  "error.page.changeTemplate.permission":
-    "No tens permís per canviar la plantilla per \"{slug}\"",
+  "error.page.changeSlug.permission": "No teniu permís per canviar l'apèndix d'URL per a \"{slug}\"",
+  "error.page.changeStatus.incomplete": "La pàgina té errors i no es pot publicar",
+  "error.page.changeStatus.permission": "No es pot canviar l'estat d'aquesta pàgina",
+  "error.page.changeStatus.toDraft.invalid": "La pàgina \"{slug}\" no es pot convertir en un esborrany",
+  "error.page.changeTemplate.invalid": "La plantilla per a la pàgina \"{slug}\" no es pot canviar",
+  "error.page.changeTemplate.permission": "No tens permís per canviar la plantilla per \"{slug}\"",
   "error.page.changeTitle.empty": "El títol no pot estar buit",
-  "error.page.changeTitle.permission":
-    "No tens permís per canviar el títol de \"{slug}\"",
+  "error.page.changeTitle.permission": "No tens permís per canviar el títol de \"{slug}\"",
   "error.page.create.permission": "No tens permís per crear \"{slug}\"",
   "error.page.delete": "La pàgina \"{slug}\" no es pot esborrar",
   "error.page.delete.confirm": "Si us plau, introdueix el títol de la pàgina per confirmar",
-  "error.page.delete.hasChildren":
-    "La pàgina té subpàgines i no es pot esborrar",
+  "error.page.delete.hasChildren": "La pàgina té subpàgines i no es pot esborrar",
   "error.page.delete.permission": "No tens permís per esborrar \"{slug}\"",
-  "error.page.draft.duplicate":
-    "Ja existeix un esborrany de pàgina amb l'apèndix d'URL \"{slug}\"",
-  "error.page.duplicate":
-    "Ja existeix una pàgina amb l'apèndix d'URL \"{slug}\"",
+  "error.page.draft.duplicate": "Ja existeix un esborrany de pàgina amb l'apèndix d'URL \"{slug}\"",
+  "error.page.duplicate": "Ja existeix una pàgina amb l'apèndix d'URL \"{slug}\"",
   "error.page.duplicate.permission": "No tens permís per duplicar \"{slug}\"",
   "error.page.notFound": "La pàgina \"{slug}\" no s'ha trobat",
-  "error.page.num.invalid":
-    "Si us plau, introdueix un número d 'ordenació vàlid. Els números no poden ser negatius.",
+  "error.page.num.invalid": "Si us plau, introdueix un número d 'ordenació vàlid. Els números no poden ser negatius.",
   "error.page.slug.invalid": "Introduïu un prefix d'URL vàlid",
   "error.page.sort.permission": "La pàgina \"{slug}\" no es pot ordenar",
   "error.page.status.invalid": "Si us plau, estableix un estat de pàgina vàlid",
   "error.page.undefined": "La p\u00e0gina no s'ha trobat",
   "error.page.update.permission": "No tens permís per actualitzar \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "No has d'afegir més de {max} fitxers a la secció \"{section}\"",
-  "error.section.files.max.singular":
-    "No podeu afegir més d'un fitxer a la secció \"{section}\"",
-  "error.section.files.min.plural":
-    "La secció \"{section}\" requereix almenys {min} fitxer",
-  "error.section.files.min.singular":
-    "La secció \"{section}\" requereix almenys un fitxer",
+  "error.section.files.max.plural": "No has d'afegir més de {max} fitxers a la secció \"{section}\"",
+  "error.section.files.max.singular": "No podeu afegir més d'un fitxer a la secció \"{section}\"",
+  "error.section.files.min.plural": "La secció \"{section}\" requereix almenys {min} fitxer",
+  "error.section.files.min.singular": "La secció \"{section}\" requereix almenys un fitxer",
 
-  "error.section.pages.max.plural":
-    "No heu d'afegir més de {max} pàgines a la secció \"{section}\"",
-  "error.section.pages.max.singular":
-    "No podeu afegir més d'una pàgina a la secció \"{section}\"",
-  "error.section.pages.min.plural":
-    "La secció \"{section}\" requereix almenys {min} pàgines",
-  "error.section.pages.min.singular":
-    "La secció \"{section}\" requereix almenys una pàgina",
+  "error.section.pages.max.plural": "No heu d'afegir més de {max} pàgines a la secció \"{section}\"",
+  "error.section.pages.max.singular": "No podeu afegir més d'una pàgina a la secció \"{section}\"",
+  "error.section.pages.min.plural": "La secció \"{section}\" requereix almenys {min} pàgines",
+  "error.section.pages.min.singular": "La secció \"{section}\" requereix almenys una pàgina",
 
   "error.section.notLoaded": "No s'ha pogut carregar la secció \"{name}\"",
   "error.section.type.invalid": "La secció tipus \"{type}\" no és vàlida",
 
   "error.site.changeTitle.empty": "El títol no pot estar buit",
-  "error.site.changeTitle.permission":
-    "No tens permís per canviar el títol del lloc web",
+  "error.site.changeTitle.permission": "No tens permís per canviar el títol del lloc web",
   "error.site.update.permission": "No tens permís per actualitzar el lloc web",
 
   "error.template.default.notFound": "La plantilla predeterminada no existeix",
 
-  "error.user.changeEmail.permission":
-    "No tens permís per canviar el correu electrònic per a l'usuari \"{name}\"",
-  "error.user.changeLanguage.permission":
-    "No tens permís per canviar l'idioma de l'usuari \"{name}\"",
-  "error.user.changeName.permission":
-    "No tens permís per canviar el nom de l'usuari \"{name}\"",
-  "error.user.changePassword.permission":
-    "No tens permís per canviar la contrasenya de l'usuari \"{name}\"",
-  "error.user.changeRole.lastAdmin":
-    "El rol del darrer administrador no es pot canviar",
-  "error.user.changeRole.permission":
-    "No tens permís per canviar el rol de l'usuari \"{name}\"",
-  "error.user.changeRole.toAdmin":
-    "No tens permís per promocionar algú al rol d’administrador",
+  "error.user.changeEmail.permission": "No tens permís per canviar el correu electrònic per a l'usuari \"{name}\"",
+  "error.user.changeLanguage.permission": "No tens permís per canviar l'idioma de l'usuari \"{name}\"",
+  "error.user.changeName.permission": "No tens permís per canviar el nom de l'usuari \"{name}\"",
+  "error.user.changePassword.permission": "No tens permís per canviar la contrasenya de l'usuari \"{name}\"",
+  "error.user.changeRole.lastAdmin": "El rol del darrer administrador no es pot canviar",
+  "error.user.changeRole.permission": "No tens permís per canviar el rol de l'usuari \"{name}\"",
+  "error.user.changeRole.toAdmin": "No tens permís per promocionar algú al rol d’administrador",
   "error.user.create.permission": "No tens permís per crear aquest usuari",
   "error.user.delete": "L'usuari \"{name}\" no es pot eliminar",
   "error.user.delete.lastAdmin": "No es pot eliminar l'\u00faltim administrador",
   "error.user.delete.lastUser": "El darrer usuari no es pot eliminar",
-  "error.user.delete.permission":
-    "No pots eliminar l'usuari \"{name}\"",
-  "error.user.duplicate":
-    "Ja existeix un usuari amb l'adreça electrònica \"{email}\"",
+  "error.user.delete.permission": "No pots eliminar l'usuari \"{name}\"",
+  "error.user.duplicate": "Ja existeix un usuari amb l'adreça electrònica \"{email}\"",
   "error.user.email.invalid": "Si us plau, introdueix una adreça de correu electrònic vàlida",
   "error.user.language.invalid": "Introduïu un idioma vàlid",
   "error.user.notFound": "L'usuari \"{name}\" no s'ha trobat",
-  "error.user.password.invalid":
-    "Introduïu una contrasenya vàlida. Les contrasenyes han de tenir com a mínim 8 caràcters.",
+  "error.user.password.invalid": "Introduïu una contrasenya vàlida. Les contrasenyes han de tenir com a mínim 8 caràcters.",
   "error.user.password.notSame": "Les contrasenyes no coincideixen",
   "error.user.password.undefined": "L'usuari no té una contrasenya",
   "error.user.role.invalid": "Si us plau, introdueix un rol vàlid",
-  "error.user.update.permission":
-    "No tens permís per actualitzar l'usuari \"{name}\"",
+  "error.user.update.permission": "No tens permís per actualitzar l'usuari \"{name}\"",
 
   "error.validation.accepted": "Si us plau confirma",
   "error.validation.alpha": "Si us plau, introdueix únicament caràcters entre a-z",
-  "error.validation.alphanum":
-    "Si us plau, introdueix únicament caràcters entre a-z o números de 0-9",
-  "error.validation.between":
-    "Introdueix un valor entre \"{min}\" i \"{max}\"",
+  "error.validation.alphanum": "Si us plau, introdueix únicament caràcters entre a-z o números de 0-9",
+  "error.validation.between": "Introdueix un valor entre \"{min}\" i \"{max}\"",
   "error.validation.boolean": "Si us plau confirma o denega",
-  "error.validation.contains":
-    "Si us plau, introduïu un valor que contingui  \"{needle}\"",
+  "error.validation.contains": "Si us plau, introduïu un valor que contingui  \"{needle}\"",
   "error.validation.date": "Si us plau, introdueix una data vàlida",
   "error.validation.date.after": "Introdueix una data posterior {date}",
   "error.validation.date.before": "Introdueix una data anterior {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Si us plau, introduïu un valor inferior a {max}",
   "error.validation.match": "El valor no coincideix amb el patró esperat",
   "error.validation.max": "Si us plau, introduïu un valor igual o inferior a {max}",
-  "error.validation.maxlength":
-    "Si us plau, introduïu un valor més curt. (màxim {max} caràcters)",
+  "error.validation.maxlength": "Si us plau, introduïu un valor més curt. (màxim {max} caràcters)",
   "error.validation.maxwords": "Si us plau, introduïu no més de {max} paraula(es)",
   "error.validation.min": "Si us plau, introduïu un valor igual o superior a {min}",
-  "error.validation.minlength":
-    "Si us plau, introduïu un valor més llarg. (min. {min} caràcters)",
+  "error.validation.minlength": "Si us plau, introduïu un valor més llarg. (min. {min} caràcters)",
   "error.validation.minwords": "Si us plau, introduïu almenys {min} paraula(es)",
   "error.validation.more": "Si us plau, introduïu un valor més gran que {min}",
-  "error.validation.notcontains":
-    "Introduïu un valor que no contingui \"{needle}\"",
-  "error.validation.notin":
-    "Si us plau, no introduïu cap d'aquests elements: ({notIn})",
+  "error.validation.notcontains": "Introduïu un valor que no contingui \"{needle}\"",
+  "error.validation.notin": "Si us plau, no introduïu cap d'aquests elements: ({notIn})",
   "error.validation.option": "Si us plau, seleccioneu una opció vàlida",
   "error.validation.num": "Si us plau, introduïu un número vàlid",
   "error.validation.required": "Si us plau, introduïu alguna cosa",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Encara no hi ha entrades.",
   "field.users.empty": "Encara no s'ha seleccionat cap usuari",
 
-  "file.delete.confirm":
-    "Esteu segurs d'eliminar <br><strong>{filename}</strong>?",
+  "file.delete.confirm": "Esteu segurs d'eliminar <br><strong>{filename}</strong>?",
 
   "files": "Arxius",
   "files.empty": "Encara no hi ha fitxers",
@@ -251,29 +205,22 @@
   "installation": "Instal·lació",
   "installation.completed": "S'ha instal·lat el panell",
   "installation.disabled": "L'instal·lador del panell està desactivat per defecte als servidors públics. Si us plau, executeu l'instal·lador en una màquina local o habiliteu-lo amb l'opció <code>panel.install</code>",
-  "installation.issues.accounts":
-    "La carpeta <code>/site/accounts</code> no existeix o no es pot escriure",
-  "installation.issues.content":
-    "La carpeta <code>/content no existeix o no es pot escriure",
+  "installation.issues.accounts": "La carpeta <code>/site/accounts</code> no existeix o no es pot escriure",
+  "installation.issues.content": "La carpeta <code>/content no existeix o no es pot escriure",
   "installation.issues.curl": "Es requereix l'extensió <code>CURL</code>",
   "installation.issues.headline": "El panell no es pot instal·lar",
-  "installation.issues.mbstring":
-    "Es requereix l'extensió de <code>MB String</code>",
-  "installation.issues.media":
-    "La carpeta <code>/media</code> no existeix o no es pot escriure",
+  "installation.issues.mbstring": "Es requereix l'extensió de <code>MB String</code>",
+  "installation.issues.media": "La carpeta <code>/media</code> no existeix o no es pot escriure",
   "installation.issues.php": "Assegureu-vos d'utilitzar <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby requereix <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
+  "installation.issues.server": "Kirby requereix <code>Apache</code>, <code>Nginx</code> o <code>Caddy</code>",
   "installation.issues.sessions": "La carpeta <code>/site/sessions</code> no existeix o no es pot escriure",
 
   "language": "Idioma",
   "language.code": "Codi",
   "language.convert": "Fer per defecte",
-  "language.convert.confirm":
-    "<p>Segur que voleu convertir <strong>{name}</strong> a l'idioma predeterminat? Això no es pot desfer.</p> <p> Si <strong>{name}</strong> té contingut no traduït, ja no podreu tornar enrere i algunes parts del vostre lloc poden quedar buides.</p>",
+  "language.convert.confirm": "<p>Segur que voleu convertir <strong>{name}</strong> a l'idioma predeterminat? Això no es pot desfer.</p> <p> Si <strong>{name}</strong> té contingut no traduït, ja no podreu tornar enrere i algunes parts del vostre lloc poden quedar buides.</p>",
   "language.create": "Afegir un nou idioma",
-  "language.delete.confirm":
-    "Segur que voleu eliminar l'idioma <strong>{name}</strong> incloent totes les traduccions? Això no es pot desfer!",
+  "language.delete.confirm": "Segur que voleu eliminar l'idioma <strong>{name}</strong> incloent totes les traduccions? Això no es pot desfer!",
   "language.deleted": "S'ha suprimit l'idioma",
   "language.direction": "Direcció de lectura",
   "language.direction.ltr": "Esquerra a dreta",
@@ -292,8 +239,7 @@
   "license": "Llic\u00e8ncia Kirby",
   "license.buy": "Comprar una llicència",
   "license.register": "Registrar",
-  "license.register.help":
-    "Heu rebut el codi de la vostra llicència després de la compra, per correu electrònic. Copieu-lo i enganxeu-lo per registrar-vos.",
+  "license.register.help": "Heu rebut el codi de la vostra llicència després de la compra, per correu electrònic. Copieu-lo i enganxeu-lo per registrar-vos.",
   "license.register.label": "Si us plau, introdueixi el seu codi de llicència",
   "license.register.success": "Gràcies per donar suport a Kirby",
   "license.unregistered": "Aquesta és una demo no registrada de Kirby",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Si us plau, seleccioneu una posició",
   "page.changeStatus.select": "Seleccioneu un nou estat",
   "page.changeTemplate": "Canviar la plantilla",
-  "page.delete.confirm":
-    "Segur que voleu eliminar <strong>{title}</strong>?",
-  "page.delete.confirm.subpages":
-    "<strong>Aquesta pàgina té subpàgines</strong>. <br>Totes les subpàgines també s'eliminaran.",
+  "page.delete.confirm": "Segur que voleu eliminar <strong>{title}</strong>?",
+  "page.delete.confirm.subpages": "<strong>Aquesta pàgina té subpàgines</strong>. <br>Totes les subpàgines també s'eliminaran.",
   "page.delete.confirm.title": "Introduïu el títol de la pàgina per confirmar",
   "page.draft.create": "Crear un esborrany",
   "page.duplicate.appendix": "Copiar",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Copiar pàgines",
   "page.status": "Estat",
   "page.status.draft": "Esborrany",
-  "page.status.draft.description":
-    "La pàgina està en mode d'esborrany i només és visible per als editors registrats",
+  "page.status.draft.description": "La pàgina està en mode d'esborrany i només és visible per als editors registrats o a través d'un enllaç secret",
   "page.status.listed": "Públic",
   "page.status.listed.description": "La pàgina és pública per a tothom",
   "page.status.unlisted": "Sense classificar",
@@ -388,6 +331,7 @@
   "replace": "Reempla\u00e7ar",
   "retry": "Reintentar",
   "revert": "Revertir",
+  "revert.confirm": "Segur que voleu eliminar <strong>tots els canvis pendents desar</strong>?",
 
   "role": "Rol",
   "role.admin.description": "L’administrador té tots els permisos",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Usuari",
-  "user.blueprint":
-    "Podeu definir seccions addicionals i camps de formulari per a aquest rol d'usuari a <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Podeu definir seccions addicionals i camps de formulari per a aquest rol d'usuari a <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Canviar e-mail",
   "user.changeLanguage": "Canviar idioma",
   "user.changeName": "Canviar el nom d'aquest usuari",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Seleccionar un nou rol",
   "user.create": "Afegir un nou usuari",
   "user.delete": "Eliminar aquest usuari",
-  "user.delete.confirm":
-    "Segur que voleu eliminar <br> <strong>{email}</strong>?",
+  "user.delete.confirm": "Segur que voleu eliminar <br> <strong>{email}</strong>?",
 
   "users": "Usuaris",
 
