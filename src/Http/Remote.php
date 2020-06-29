@@ -4,6 +4,7 @@ namespace Kirby\Http;
 
 use Exception;
 use Kirby\Cms\App;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
@@ -19,6 +20,9 @@ use Kirby\Toolkit\Str;
  */
 class Remote
 {
+    const CA_INTERNAL = 1;
+    const CA_SYSTEM   = 2;
+
     /**
      * @var array
      */
@@ -26,6 +30,7 @@ class Remote
         'agent'     => null,
         'basicAuth' => null,
         'body'      => true,
+        'ca'        => self::CA_INTERNAL,
         'data'      => [],
         'encoding'  => 'utf-8',
         'file'      => null,
@@ -148,7 +153,6 @@ class Remote
      */
     public function fetch()
     {
-
         // curl options
         $this->curlopt = [
             CURLOPT_URL              => $this->options['url'],
@@ -159,7 +163,6 @@ class Remote
             CURLOPT_RETURNTRANSFER   => $this->options['body'],
             CURLOPT_FOLLOWLOCATION   => true,
             CURLOPT_MAXREDIRS        => 10,
-            CURLOPT_SSL_VERIFYPEER   => false,
             CURLOPT_HEADER           => false,
             CURLOPT_HEADERFUNCTION   => function ($curl, $header) {
                 $parts = Str::split($header, ':');
@@ -172,6 +175,24 @@ class Remote
                 return strlen($header);
             }
         ];
+
+        // determine the TLS CA to use
+        if (is_file($this->options['ca']) === true) {
+            $this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
+            $this->curlopt[CURLOPT_CAINFO] = $this->options['ca'];
+        } elseif (is_dir($this->options['ca']) === true) {
+            $this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
+            $this->curlopt[CURLOPT_CAPATH] = $this->options['ca'];
+        } elseif ($this->options['ca'] === self::CA_INTERNAL) {
+            $this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
+            $this->curlopt[CURLOPT_CAINFO] = dirname(__DIR__, 2) . '/cacert.pem';
+        } elseif ($this->options['ca'] === self::CA_SYSTEM) {
+            $this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
+        } elseif ($this->options['ca'] === false) {
+            $this->curlopt[CURLOPT_SSL_VERIFYPEER] = false;
+        } else {
+            throw new InvalidArgumentException('Invalid "ca" option for the Remote class');
+        }
 
         // add the progress
         if (is_callable($this->options['progress']) === true) {
