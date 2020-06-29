@@ -1118,6 +1118,10 @@ class PageTest extends TestCase
             'roots' => [
                 'index' => __DIR__ . '/fixtures/PageTest'
             ],
+            'templates' => [
+                'foo' => __DIR__ . '/fixtures/PageTemplateTest/template.php',
+                'bar' => __DIR__ . '/fixtures/PageTemplateTest/template.php',
+            ],
             'site' => [
                 'children' => [
                     [
