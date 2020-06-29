@@ -2,9 +2,7 @@
 
 namespace Kirby\Cms;
 
-
 use Kirby\Exception\InvalidArgumentException;
-use Throwable;
 
 /**
  * The `$pages` object refers to a
