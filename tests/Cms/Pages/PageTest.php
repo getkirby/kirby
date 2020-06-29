@@ -1121,24 +1121,39 @@ class PageTest extends TestCase
             'site' => [
                 'children' => [
                     [
-                        'slug' => 'test',
-                        'content' => [
-                            'title' => 'Test Title',
+                        'slug'      => 'foo',
+                        'template'  => 'foo',
+                        'content'   => [
+                            'title' => 'Foo Title',
+                        ]
+                    ],
+                    [
+                        'slug'      => 'bar',
+                        'template'  => 'bar',
+                        'content'   => [
+                            'title' => 'Bar Title',
                         ]
                     ]
-                ]
+                ],
             ],
             'controllers' => [
-                'default' => function ($page) {
-                    $page = $page->changeTitle('New Title');
+                // valid return
+                'foo' => function ($page) {
+                    $page = $page->changeTitle('New Foo Title');
 
                     return compact('page');
+                },
+                // invalid return
+                'bar' => function ($page) {
+                    return ['page' => 'string'];
                 }
             ]
         ]);
 
         $app->impersonate('kirby');
-        $page = $app->page('test');
+
+        // valid test
+        $page = $app->page('foo');
         $data = $page->controller();
 
         $this->assertCount(4, $data);
@@ -1146,37 +1161,13 @@ class PageTest extends TestCase
         $this->assertSame($app->site(), $data['site']);
         $this->assertSame($app->site()->children(), $data['pages']);
         $this->assertInstanceOf('Kirby\Cms\Page', $data['page']);
-        $this->assertSame('New Title', $data['page']->title()->value());
-    }
+        $this->assertSame('New Foo Title', $data['page']->title()->value());
 
-    public function testControllerInvalid()
-    {
+        // invalid test
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The returned variable "page" from the controller "default" is not of the required type "Kirby\Cms\Page"');
+        $this->expectExceptionMessage('The returned variable "page" from the controller "bar" is not of the required type "Kirby\Cms\Page"');
 
-        $app = new App([
-            'roots' => [
-                'index' => __DIR__ . '/fixtures/PageTest'
-            ],
-            'site' => [
-                'children' => [
-                    [
-                        'slug' => 'test',
-                        'content' => [
-                            'title' => 'Test Title',
-                        ]
-                    ]
-                ]
-            ],
-            'controllers' => [
-                'default' => function () {
-                    return ['page' => 'string'];
-                }
-            ]
-        ]);
-
-        $app->impersonate('kirby');
-        $page = $app->page('test');
+        $page = $app->page('bar');
         $page->controller();
     }
 }
