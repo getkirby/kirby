@@ -684,6 +684,41 @@ class User extends ModelWithContent
     }
 
     /**
+     * Returns all available roles
+     * for this user, that can be selected
+     * by the authenticated user
+     *
+     * @return \Kirby\Cms\Roles
+     */
+    public function roles()
+    {
+        $kirby = $this->kirby();
+        $roles = $kirby->roles();
+
+        // a collection with just the one role of the user
+        $myRole = $roles->filterBy('id', $this->role()->id());
+
+        // if there's an authenticated user …
+        if ($user = $kirby->user()) {
+
+            // admin users can select pretty much any role
+            if ($user->isAdmin() === true) {
+                // except if the user is the last admin
+                if ($this->isLastAdmin() === true) {
+                    // in which case they have to stay admin
+                    return $myRole;
+                }
+
+                // return all roles for mighty admins
+                return $roles;
+            }
+        }
+
+        // any other user can only keep their role
+        return $myRole;
+    }
+
+    /**
      * The absolute path to the user directory
      *
      * @return string
