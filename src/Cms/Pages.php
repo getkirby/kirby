@@ -340,14 +340,12 @@ class Pages extends Collection
 
         foreach ($this->data as $pageKey => $page) {
             $this->index->data[$pageKey] = $page;
-            $index = $page->children()->index($drafts);
+            $index = $page->index($drafts);
 
-            if (!$index) {
-                $index = new Pages([]);
-            }
-
-            foreach ($index as $childKey => $child) {
-                $this->index->data[$childKey] = $child;
+            if ($index) {
+                foreach ($index as $childKey => $child) {
+                    $this->index->data[$childKey] = $child;
+                }
             }
         }
 
