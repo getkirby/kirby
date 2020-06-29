@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Data\Yaml;
+use Kirby\Data\Data;
 use Kirby\Toolkit\A;
 
 return [
@@ -78,7 +78,7 @@ return [
         'toFiles' => function ($value = null) {
             $files = [];
 
-            foreach (Yaml::decode($value) as $id) {
+            foreach (Data::decode($value, 'yaml') as $id) {
                 if (is_array($id) === true) {
                     $id = $id['id'] ?? null;
                 }

@@ -2,7 +2,7 @@
 
 namespace Kirby\Form;
 
-use Kirby\Data\Yaml;
+use Kirby\Data\Data;
 use Throwable;
 
 /**
@@ -154,7 +154,7 @@ class Form
             if ($value === null) {
                 $strings[$key] = null;
             } elseif (is_array($value) === true) {
-                $strings[$key] = Yaml::encode($value);
+                $strings[$key] = Data::encode($value, 'yaml');
             } else {
                 $strings[$key] = $value;
             }

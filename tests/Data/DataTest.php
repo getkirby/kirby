@@ -81,6 +81,21 @@ class DataTest extends TestCase
             $decoded = Data::decode($encoded, $handler);
 
             $this->assertSame($data, $decoded);
+
+            // decode invalid integer value
+            $this->expectException('Kirby\Exception\InvalidArgumentException');
+            $this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data. Please pass a string');
+            Data::decode(1, $handler);
+
+            // decode invalid object value
+            $this->expectException('Kirby\Exception\InvalidArgumentException');
+            $this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data. Please pass a string');
+            Data::decode(new \stdClass(), $handler);
+
+            // decode invalid boolean value
+            $this->expectException('Kirby\Exception\InvalidArgumentException');
+            $this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data. Please pass a string');
+            Data::decode(true, $handler);
         }
     }
 

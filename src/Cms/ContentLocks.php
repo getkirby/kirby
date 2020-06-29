@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Yaml;
+use Kirby\Data\Data;
 use Kirby\Exception\Exception;
 use Kirby\Toolkit\F;
 
@@ -108,7 +108,7 @@ class ContentLocks
                 // always read the whole file
                 rewind($handle);
                 $string = fread($handle, $filesize);
-                $data   = Yaml::decode($string);
+                $data   = Data::decode($string, 'yaml');
             }
         }
 
@@ -207,7 +207,7 @@ class ContentLocks
             return F::remove($file);
         }
 
-        $yaml = Yaml::encode($this->data[$file]);
+        $yaml = Data::encode($this->data[$file], 'yaml');
 
         // delete all file contents first
         if (rewind($handle) !== true || ftruncate($handle, 0) !== true) {
