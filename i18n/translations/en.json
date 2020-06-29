@@ -288,6 +288,7 @@
   "on": "on",
   "open": "Open",
   "options": "Options",
+  "options.none": "No options",
 
   "orientation": "Orientation",
   "orientation.landscape": "Landscape",
@@ -344,6 +345,9 @@
 
   "save": "Save",
   "search": "Search",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "The section is required",
 
