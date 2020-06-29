@@ -361,7 +361,7 @@ class Page extends ModelWithContent
                     if (is_a($value, $classes[$key]) === true) {
                         $data[$key] = $value;
                     } else {
-                        throw new InvalidArgumentException('Passing "' . $key . '" data must be instance of ' . $classes[$key] . ' in controller');
+                        throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"');
                     }
                 } else {
                     $data[$key] = $value;

@@ -1112,7 +1112,7 @@ class PageTest extends TestCase
         Page::$models = [];
     }
 
-    public function testPageController()
+    public function testController()
     {
         $app = new App([
             'roots' => [
@@ -1132,7 +1132,7 @@ class PageTest extends TestCase
                 'default' => function ($page) {
                     $page = $page->changeTitle('New Title');
 
-                    return ['page' => $page];
+                    return compact('page');
                 }
             ]
         ]);
@@ -1142,14 +1142,17 @@ class PageTest extends TestCase
         $data = $page->controller();
 
         $this->assertCount(4, $data);
+        $this->assertSame($app, $data['kirby']);
+        $this->assertSame($app->site(), $data['site']);
+        $this->assertSame($app->site()->children(), $data['pages']);
         $this->assertInstanceOf('Kirby\Cms\Page', $data['page']);
         $this->assertSame('New Title', $data['page']->title()->value());
     }
 
-    public function testPageControllerInvalid()
+    public function testControllerInvalid()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Passing "page" data must be instance of Kirby\Cms\Page in controller');
+        $this->expectExceptionMessage('The returned variable "page" from the controller "default" is not of the required type "Kirby\Cms\Page"');
 
         $app = new App([
             'roots' => [
