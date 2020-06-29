@@ -2,10 +2,12 @@
   <k-button-group class="k-prev-next">
     <k-button
       v-bind="prev"
+      :disabled="!prev"
       icon="angle-left"
     />
     <k-button
       v-bind="next"
+      :disabled="!next"
       icon="angle-right"
     />
   </k-button-group>
@@ -15,7 +17,7 @@
 export default {
   props: {
     prev: {
-      type: Object,
+      type: [Object, Boolean],
       default() {
         return {
           disabled: true,
@@ -24,7 +26,7 @@ export default {
       }
     },
     next: {
-      type: Object,
+      type: [Object, Boolean],
       default() {
         return {
           disabled: true,
