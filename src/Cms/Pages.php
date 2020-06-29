@@ -2,7 +2,9 @@
 
 namespace Kirby\Cms;
 
+
 use Kirby\Exception\InvalidArgumentException;
+use Throwable;
 
 /**
  * The `$pages` object refers to a
@@ -338,8 +340,13 @@ class Pages extends Collection
 
         foreach ($this->data as $pageKey => $page) {
             $this->index->data[$pageKey] = $page;
+            $index = $page->children()->index($drafts);
 
-            foreach ($page->index($drafts) as $childKey => $child) {
+            if (!$index) {
+                $index = new Pages([]);
+            }
+
+            foreach ($index as $childKey => $child) {
                 $this->index->data[$childKey] = $child;
             }
         }
