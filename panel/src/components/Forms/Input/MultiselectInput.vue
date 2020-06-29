@@ -101,7 +101,7 @@ export default {
       }
     },
     required: Boolean,
-    search: [Array, Boolean],
+    search: [Object, Boolean],
     separator: {
       type: String,
       default: ","
