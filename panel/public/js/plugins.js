@@ -58,8 +58,6 @@ window.panel.plugin = function (plugin, parts) {
     window.panel.plugins["thirdParty"][name] = options;
   });
 
-
-  console.log(window.panel);
 };
 
 function resolve(object, type, callback) {
