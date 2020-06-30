@@ -57,10 +57,7 @@
           @keydown.native.space.prevent.stop="select(option)"
         >
           <span v-html="option.display" />
-          <span
-            class="k-multiselect-value"
-            v-html="option.info"
-          />
+          <span class="k-multiselect-value" v-html="option.info" />
         </k-dropdown-item>
 
         <k-dropdown-item
@@ -80,6 +77,7 @@
         {{ $t("search.all") }} ({{ filtered.length }})
       </k-button>
     </k-dropdown-content>
+
   </k-draggable>
 </template>
 

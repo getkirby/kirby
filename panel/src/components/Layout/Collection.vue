@@ -1,8 +1,5 @@
 <template>
-  <div
-    :data-layout="layout"
-    class="k-collection"
-  >
+  <div :data-layout="layout" class="k-collection">
     <k-draggable
       :list="items"
       :options="dragOptions"
@@ -13,20 +10,17 @@
       @end="onEnd"
     >
       <component
-        :is="elements.item"
         v-for="(item, index) in items"
-        :key="index"
+        :is="elements.item"
         :class="{'k-draggable-item': item.sortable}"
+        :key="index"
         v-bind="item"
         @action="$emit('action', item, $event)"
         @dragstart="onDragStart($event, item.dragText)"
       />
     </k-draggable>
 
-    <footer
-      v-if="hasFooter"
-      class="k-collection-footer"
-    >
+    <footer v-if="hasFooter" class="k-collection-footer">
       <k-text
         v-if="help"
         theme="help"
@@ -42,6 +36,7 @@
       </div>
     </footer>
   </div>
+
 </template>
 
 <script>

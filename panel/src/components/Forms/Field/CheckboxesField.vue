@@ -5,8 +5,8 @@
     class="k-checkboxes-field"
   >
     <k-input
-      :id="_uid"
       ref="input"
+      :id="_uid"
       v-bind="$props"
       theme="field"
       v-on="$listeners"

@@ -1,36 +1,35 @@
 <template>
   <fieldset class="k-fieldset">
     <k-grid>
-      <k-column
-        v-for="(field, fieldName) in visibleFields"
-        :key="field.signature"
-        :width="field.width"
-      >
-        <k-error-boundary>
-          <component
-            :is="'k-' + field.type + '-field'"
-            v-if="hasFieldType(field.type)"
-            :ref="fieldName"
-            v-model="value[fieldName]"
-            :name="fieldName"
-            :novalidate="novalidate"
-            :disabled="disabled || field.disabled"
-            v-bind="field"
-            @input="$emit('input', value, field, fieldName)"
-            @focus="$emit('focus', $event, field, fieldName)"
-            @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"
-            @submit="$emit('submit', $event, field, fieldName)"
-          />
-          <k-box
-            v-else
-            theme="negative"
-          >
-            <k-text size="small">
-              The field type <strong>"{{ fieldName }}"</strong> does not exist
-            </k-text>
-          </k-box>
-        </k-error-boundary>
-      </k-column>
+      <template v-for="(field, fieldName) in fields">
+        <k-column
+          v-if="field.type !== 'hidden' && meetsCondition(field)"
+          :key="field.signature"
+          :width="field.width"
+        >
+          <k-error-boundary>
+            <component
+              :is="'k-' + field.type + '-field'"
+              v-if="hasFieldType(field.type)"
+              :ref="fieldName"
+              v-model="value[fieldName]"
+              :name="fieldName"
+              :novalidate="novalidate"
+              :disabled="disabled || field.disabled"
+              v-bind="field"
+              @input="$emit('input', value, field, fieldName)"
+              @focus="$emit('focus', $event, field, fieldName)"
+              @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"
+              @submit="$emit('submit', $event, field, fieldName)"
+            />
+            <k-box v-else theme="negative">
+              <k-text size="small">
+                The field type <strong>"{{ fieldName }}"</strong> does not exist
+              </k-text>
+            </k-box>
+          </k-error-boundary>
+        </k-column>
+      </template>
     </k-grid>
   </fieldset>
 </template>
@@ -63,21 +62,6 @@ export default {
     return {
       errors: {}
     };
-  },
-  computed: {
-    visibleFields() {
-      let fields = {};
-
-      Object.keys(this.fields).forEach(name => {
-        const field = this.fields[name];
-
-        if (field.type !== 'hidden' && this.meetsCondition(field)) {
-          fields[name] = field;
-        }
-      });
-
-      return fields;
-    }
   },
   methods: {
     focus(name) {

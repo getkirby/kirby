@@ -7,16 +7,11 @@
     @submit="submit"
   >
     <template v-if="issue">
-      <k-box
-        :text="issue"
-        theme="negative"
-      />
+      <k-box :text="issue" theme="negative" />
     </template>
     <template v-else>
-      <header
-        v-if="model"
-        class="k-pages-dialog-navbar"
-      >
+
+      <header v-if="model" class="k-pages-dialog-navbar">
         <k-button
           :disabled="!model.id"
           :tooltip="$t('back')"
@@ -28,9 +23,9 @@
 
       <k-input
         v-if="options.search"
-        v-model="search"
         :autofocus="true"
         :placeholder="$t('search') + ' …'"
+        v-model="search"
         type="text"
         class="k-dialog-search"
         icon="search"
@@ -82,10 +77,7 @@
           @paginate="paginate"
         />
       </template>
-      <k-empty
-        v-else
-        icon="page"
-      >
+      <k-empty v-else icon="page">
         {{ $t("dialog.pages.empty") }}
       </k-empty>
     </template>

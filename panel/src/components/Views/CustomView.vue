@@ -1,10 +1,7 @@
 <template>
   <k-error-boundary :key="plugin">
     <component :is="'k-' + plugin + '-plugin-view'" />
-    <k-error-view
-      slot="error"
-      slot-scope="{ error }"
-    >
+    <k-error-view slot="error" slot-scope="{ error }">
       {{ error.message || error }}
     </k-error-view>
   </k-error-boundary>

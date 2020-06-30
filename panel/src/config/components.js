@@ -4,6 +4,7 @@ import Vue from "vue";
 import "@/components/Misc/Invalid.vue";
 
 /* Dialogs */
+import Dialog from "@/components/Dialogs/Dialog.vue";
 import ErrorDialog from "@/components/Dialogs/ErrorDialog.vue";
 import FileRemoveDialog from "@/components/Dialogs/FileRemoveDialog.vue";
 import FileRenameDialog from "@/components/Dialogs/FileRenameDialog.vue";
@@ -32,6 +33,7 @@ import UserRenameDialog from "@/components/Dialogs/UserRenameDialog.vue";
 import UserRoleDialog from "@/components/Dialogs/UserRoleDialog.vue";
 import UsersDialog from "@/components/Dialogs/UsersDialog.vue";
 
+Vue.component("k-dialog", Dialog);
 Vue.component("k-error-dialog", ErrorDialog);
 Vue.component("k-file-rename-dialog", FileRenameDialog);
 Vue.component("k-file-remove-dialog", FileRemoveDialog);
@@ -196,36 +198,88 @@ Vue.component("k-url-field-preview", UrlFieldPreview);
 Vue.component("k-users-field-preview", UsersFieldPreview);
 
 /* Layout */
+import Bar from "@/components/Layout/Bar.vue";
+import Box from "@/components/Layout/Box.vue";
 import Card from "@/components/Layout/Card.vue";
 import Cards from "@/components/Layout/Cards.vue";
 import Collection from "@/components/Layout/Collection.vue";
+import Column from "@/components/Layout/Column.vue";
+import Dropzone from "@/components/Layout/Dropzone.vue";
+import Empty from "@/components/Layout/Empty.vue";
 import FilePreview from "@/components/Layout/FilePreview.vue";
+import Grid from "@/components/Layout/Grid.vue";
+import Header from "@/components/Layout/Header.vue";
 import List from "@/components/Layout/List.vue";
 import ListItem from "@/components/Layout/ListItem.vue";
 import Tabs from "@/components/Layout/Tabs.vue";
 import View from "@/components/Layout/View.vue";
 
+Vue.component("k-bar", Bar);
+Vue.component("k-box", Box);
 Vue.component("k-card", Card);
 Vue.component("k-cards", Cards);
 Vue.component("k-collection", Collection);
+Vue.component("k-column", Column);
+Vue.component("k-dropzone", Dropzone);
+Vue.component("k-empty", Empty);
 Vue.component("k-file-preview", FilePreview);
+Vue.component("k-grid", Grid);
+Vue.component("k-header", Header);
 Vue.component("k-list", List);
 Vue.component("k-list-item", ListItem);
 Vue.component("k-tabs", Tabs);
 Vue.component("k-view", View);
 
 /* Misc */
+import Draggable from "@/components/Misc/Draggable.vue";
 import ErrorBoundary from "@/components/Misc/ErrorBoundary.vue";
+import Headline from "@/components/Misc/Headline.vue";
+import Icon from "@/components/Misc/Icon.vue";
+import Image from "@/components/Misc/Image.vue";
+import Progress from "@/components/Misc/Progress.vue";
+import SortHandle from "@/components/Misc/SortHandle.vue";
+import Text from "@/components/Misc/Text.vue";
 
+Vue.component("k-draggable", Draggable);
 Vue.component("k-error-boundary", ErrorBoundary);
+Vue.component("k-headline", Headline);
+Vue.component("k-icon", Icon);
+Vue.component("k-image", Image);
+Vue.component("k-progress", Progress);
+Vue.component("k-sort-handle", SortHandle);
+Vue.component("k-text", Text);
 
 /* Navigation */
+import Button from "@/components/Navigation/Button.vue";
+import ButtonDisabled from "@/components/Navigation/ButtonDisabled.vue";
+import ButtonGroup from "@/components/Navigation/ButtonGroup.vue";
+import ButtonLink from "@/components/Navigation/ButtonLink.vue";
+import ButtonNative from "@/components/Navigation/ButtonNative.vue";
+import Dropdown from "@/components/Navigation/Dropdown.vue";
+import DropdownContent from "@/components/Navigation/DropdownContent.vue";
+import DropdownItem from "@/components/Navigation/DropdownItem.vue";
+import Link from "@/components/Navigation/Link.vue";
 import Languages from "@/components/Navigation/Languages.vue";
+import Pagination from "@/components/Navigation/Pagination.vue";
+import PrevNext from "@/components/Navigation/PrevNext.vue";
 import Search from "@/components/Navigation/Search.vue";
+import Tag from "@/components/Navigation/Tag.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
 
+Vue.component("k-button", Button);
+Vue.component("k-button-disabled", ButtonDisabled);
+Vue.component("k-button-group", ButtonGroup);
+Vue.component("k-button-link", ButtonLink);
+Vue.component("k-button-native", ButtonNative);
+Vue.component("k-dropdown", Dropdown);
+Vue.component("k-dropdown-content", DropdownContent);
+Vue.component("k-dropdown-item", DropdownItem);
 Vue.component("k-languages-dropdown", Languages);
+Vue.component("k-link", Link);
+Vue.component("k-pagination", Pagination);
+Vue.component("k-prev-next", PrevNext);
 Vue.component("k-search", Search);
+Vue.component("k-tag", Tag);
 Vue.component("k-topbar", Topbar);
 
 /* Sections */

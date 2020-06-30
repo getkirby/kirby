@@ -20,10 +20,7 @@
             :style="{ color: file.panelIcon.color }"
             class="k-file-preview-icon"
           />
-          <span
-            v-else
-            class="k-file-preview-placeholder"
-          />
+          <span v-else class="k-file-preview-placeholder" />
         </k-link>
       </div>
       <div class="k-file-preview-details">
@@ -39,13 +36,7 @@
           <li>
             <h3>{{ $t("url") }}</h3>
             <p>
-              <k-link
-                :to="file.url"
-                tabindex="-1"
-                target="_blank"
-              >
-                /{{ file.id }}
-              </k-link>
+              <k-link :to="file.url" tabindex="-1" target="_blank">/{{ file.id }}</k-link>
             </p>
           </li>
           <li>
@@ -54,21 +45,13 @@
           </li>
           <li>
             <h3>{{ $t("dimensions") }}</h3>
-            <p v-if="file.dimensions">
-              {{ file.dimensions.width }}&times;{{ file.dimensions.height }} {{ $t("pixel") }}
-            </p>
-            <p v-else>
-              —
-            </p>
+            <p v-if="file.dimensions">{{ file.dimensions.width }}&times;{{ file.dimensions.height }} {{ $t("pixel") }}</p>
+            <p v-else>—</p>
           </li>
           <li>
             <h3>{{ $t("orientation") }}</h3>
-            <p v-if="file.dimensions">
-              {{ $t("orientation." + file.dimensions.orientation) }}
-            </p>
-            <p v-else>
-              —
-            </p>
+            <p v-if="file.dimensions">{{ $t("orientation." + file.dimensions.orientation) }}</p>
+            <p v-else>—</p>
           </li>
         </ul>
       </div>

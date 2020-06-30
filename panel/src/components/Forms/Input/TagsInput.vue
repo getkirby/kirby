@@ -23,10 +23,7 @@
     >
       {{ tag.text }}
     </k-tag>
-    <span
-      slot="footer"
-      class="k-tags-input-element"
-    >
+    <span slot="footer" class="k-tags-input-element">
       <k-autocomplete
         ref="autocomplete"
         :options="options"
@@ -35,12 +32,12 @@
         @leave="$refs.input.focus()"
       >
         <input
-          :id="id"
           ref="input"
-          v-model.trim="newTag"
           :autofocus="autofocus"
           :disabled="disabled || (max && tags.length >= max)"
+          :id="id"
           :name="name"
+          v-model.trim="newTag"
           autocomplete="off"
           type="text"
           @input="type($event.target.value)"

@@ -1,11 +1,8 @@
 <template>
-  <k-field
-    v-bind="$props"
-    class="k-radio-field"
-  >
+  <k-field v-bind="$props" class="k-radio-field">
     <k-input
-      :id="_uid"
       ref="input"
+      :id="_uid"
       v-bind="$props"
       theme="field"
       v-on="$listeners"

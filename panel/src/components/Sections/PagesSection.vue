@@ -1,23 +1,13 @@
 <template>
-  <section
-    v-if="isLoading === false"
-    class="k-pages-section"
-  >
+  <section v-if="isLoading === false" class="k-pages-section">
+
     <header class="k-section-header">
       <k-headline :link="options.link">
-        {{ headline }} <abbr
-          v-if="options.min"
-          :title="$t('section.required')"
-        >*</abbr>
+        {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
 
       <k-button-group v-if="add">
-        <k-button
-          icon="add"
-          @click="create"
-        >
-          {{ $t("add") }}
-        </k-button>
+        <k-button icon="add" @click="create">{{ $t("add") }}</k-button>
       </k-button-group>
     </header>
 
@@ -68,28 +58,15 @@
 
       <k-page-create-dialog ref="create" />
       <k-page-duplicate-dialog ref="duplicate" />
-      <k-page-rename-dialog
-        ref="rename"
-        @success="update"
-      />
-      <k-page-url-dialog
-        ref="url"
-        @success="update"
-      />
-      <k-page-status-dialog
-        ref="status"
-        @success="update"
-      />
-      <k-page-template-dialog
-        ref="template"
-        @success="update"
-      />
-      <k-page-remove-dialog
-        ref="remove"
-        @success="update"
-      />
+      <k-page-rename-dialog ref="rename" @success="update" />
+      <k-page-url-dialog ref="url" @success="update" />
+      <k-page-status-dialog ref="status" @success="update" />
+      <k-page-template-dialog ref="template" @success="update" />
+      <k-page-remove-dialog ref="remove" @success="update" />
     </template>
+
   </section>
+
 </template>
 
 <script>

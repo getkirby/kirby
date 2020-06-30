@@ -18,19 +18,10 @@
       class="k-range-input-native"
       v-on="listeners"
     >
-    <span
-      v-if="tooltip"
-      class="k-range-input-tooltip"
-    >
-      <span
-        v-if="tooltip.before"
-        class="k-range-input-tooltip-before"
-      >{{ tooltip.before }}</span>
+    <span v-if="tooltip" class="k-range-input-tooltip">
+      <span v-if="tooltip.before" class="k-range-input-tooltip-before">{{ tooltip.before }}</span>
       <span class="k-range-input-tooltip-text">{{ label }}</span>
-      <span
-        v-if="tooltip.after"
-        class="k-range-input-tooltip-after"
-      >{{ tooltip.after }}</span>
+      <span v-if="tooltip.after" class="k-range-input-tooltip-after">{{ tooltip.after }}</span>
     </span>
   </label>
 </template>

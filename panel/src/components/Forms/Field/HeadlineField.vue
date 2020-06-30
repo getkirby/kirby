@@ -1,9 +1,5 @@
 <template>
-  <k-headline
-    :data-numbered="numbered"
-    size="large"
-    class="k-headline-field"
-  >
+  <k-headline :data-numbered="numbered" size="large" class="k-headline-field">
     {{ label }}
   </k-headline>
 </template>

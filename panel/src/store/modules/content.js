@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Api from "@/api/api.js";
-import clone from "@/ui/helpers/clone.js";
+import clone from "@/helpers/clone.js";
 
 const keep = (id, data) => {
   localStorage.setItem(
@@ -51,7 +51,7 @@ export default {
      * Checks for an ID if a model exists in the store
      */
     exists: state => id => {
-      return Object.prototype.hasOwnProperty.call(state.models, id);
+      return state.models.hasOwnProperty(id);
     },
     /**
      * Checks for an ID if a model has unsaved changes

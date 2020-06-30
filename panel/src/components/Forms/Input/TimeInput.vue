@@ -1,14 +1,14 @@
 <template>
   <div class="k-time-input">
     <k-select-input
-      :id="id"
       ref="hour"
-      v-model="hour"
+      :id="id"
       :aria-label="$t('hour')"
       :autofocus="autofocus"
       :options="hours"
       :required="required"
       :disabled="disabled"
+      v-model="hour"
       placeholder="––"
       @input="setHour"
       @invalid="onInvalid"
@@ -16,11 +16,11 @@
     <span class="k-time-input-separator">:</span>
     <k-select-input
       ref="minute"
-      v-model="minute"
       :aria-label="$t('minutes')"
       :options="minutes"
       :required="required"
       :disabled="disabled"
+      v-model="minute"
       placeholder="––"
       @input="setMinute"
       @invalid="onInvalid"
@@ -28,7 +28,6 @@
     <k-select-input
       v-if="notation === 12"
       ref="meridiem"
-      v-model="meridiem"
       :aria-label="$t('meridiem')"
       :empty="false"
       :options="[
@@ -37,6 +36,7 @@
       ]"
       :required="required"
       :disabled="disabled"
+      v-model="meridiem"
       class="k-time-input-meridiem"
       @input="onInput"
     />

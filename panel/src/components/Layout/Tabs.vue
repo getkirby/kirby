@@ -1,9 +1,5 @@
 <template>
-  <k-box
-    v-if="tabs.length === 0"
-    text="This page has no blueprint setup yet"
-    theme="info"
-  />
+  <k-box v-if="tabs.length === 0" text="This page has no blueprint setup yet" theme="info" />
   <k-sections
     v-else-if="tab"
     :parent="parent"

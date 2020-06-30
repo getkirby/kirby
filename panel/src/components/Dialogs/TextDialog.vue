@@ -1,9 +1,5 @@
 <template>
-  <k-dialog
-    ref="dialog"
-    v-bind="$props"
-    v-on="$listeners"
-  >
+  <k-dialog ref="dialog" v-bind="$props" v-on="$listeners">
     <slot>
       <k-text v-html="text" />
     </slot>

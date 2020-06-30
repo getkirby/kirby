@@ -25,10 +25,10 @@
     />
     <span class="k-date-input-separator">-</span>
     <k-select-input
-      :id="id"
       ref="days"
       :aria-label="$t('day')"
       :autofocus="autofocus"
+      :id="id"
       :options="days"
       :disabled="disabled"
       :required="required"

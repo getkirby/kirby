@@ -7,8 +7,8 @@
   >
     <k-form
       ref="form"
-      v-model="value"
       :fields="fields"
+      v-model="value"
       @submit="submit"
     />
   </k-dialog>

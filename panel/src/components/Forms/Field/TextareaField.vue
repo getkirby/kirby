@@ -6,8 +6,8 @@
     class="k-textarea-field"
   >
     <k-input
-      :id="_uid"
       ref="input"
+      :id="_uid"
       v-bind="$props"
       type="textarea"
       theme="field"

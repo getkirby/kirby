@@ -1,12 +1,8 @@
 <template>
-  <k-field
-    :input="_uid"
-    v-bind="$props"
-    class="k-date-field"
-  >
+  <k-field :input="_uid" v-bind="$props" class="k-date-field">
     <k-input
-      :id="_uid"
       ref="input"
+      :id="_uid"
       :type="inputType"
       :value="date"
       v-bind="$props"
@@ -22,10 +18,7 @@
             tabindex="-1"
             @click="$refs.dropdown.toggle()"
           />
-          <k-dropdown-content
-            ref="dropdown"
-            align="right"
-          >
+          <k-dropdown-content ref="dropdown" align="right">
             <k-calendar
               :value="date"
               @input="onInput($event); $refs.dropdown.close()"
@@ -33,6 +26,7 @@
           </k-dropdown-content>
         </k-dropdown>
       </template>
+
     </k-input>
   </k-field>
 </template>

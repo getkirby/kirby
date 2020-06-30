@@ -1,12 +1,6 @@
 <template>
-  <ul
-    :style="'--columns:' + columns"
-    class="k-checkboxes-input"
-  >
-    <li
-      v-for="(option, index) in options"
-      :key="index"
-    >
+  <ul :style="'--columns:' + columns" class="k-checkboxes-input">
+    <li v-for="(option, index) in options" :key="index">
       <k-checkbox-input
         :id="id + '-' + index"
         :label="option.text"

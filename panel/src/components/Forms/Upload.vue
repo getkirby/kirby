@@ -20,30 +20,18 @@
       <template v-if="errors.length > 0">
         <k-headline>{{ $t("upload.errors") }}</k-headline>
         <ul class="k-upload-error-list">
-          <li
-            v-for="(error, index) in errors"
-            :key="'error-' + index"
-          >
-            <p class="k-upload-error-filename">
-              {{ error.file.name }}
-            </p>
-            <p class="k-upload-error-message">
-              {{ error.message }}
-            </p>
+          <li v-for="(error, index) in errors" :key="'error-' + index">
+            <p class="k-upload-error-filename">{{ error.file.name }}</p>
+            <p class="k-upload-error-message">{{ error.message }}</p>
           </li>
         </ul>
       </template>
       <template v-else>
         <k-headline>{{ $t("upload.progress") }}</k-headline>
         <ul class="k-upload-list">
-          <li
-            v-for="(file, index) in files"
-            :key="'file-' + index"
-          >
-            <k-progress :ref="file.name" />
-            <p class="k-upload-list-filename">
-              {{ file.name }}
-            </p>
+          <li v-for="(file, index) in files" :key="'file-' + index">
+            <k-progress :ref="file.name"/>
+            <p class="k-upload-list-filename">{{ file.name }}</p>
             <p>{{ errors[file.name] }}</p>
           </li>
         </ul>
@@ -51,16 +39,14 @@
       <template slot="footer">
         <template v-if="errors.length > 0">
           <k-button-group>
-            <k-button
-              icon="check"
-              @click="$refs.dialog.close()"
-            >
+            <k-button icon="check" @click="$refs.dialog.close()">
               {{ $t("confirm") }}
             </k-button>
           </k-button-group>
         </template>
       </template>
     </k-dialog>
+
   </div>
 </template>
 

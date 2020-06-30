@@ -1,29 +1,17 @@
 <template>
-  <div
-    class="k-search"
-    role="search"
-    @click="close"
-  >
-    <div
-      class="k-search-box"
-      @click.stop
-    >
+  <div class="k-search" role="search" @click="close">
+    <div class="k-search-box" @click.stop>
       <div class="k-search-input">
         <k-dropdown class="k-search-types">
-          <k-button
-            :icon="type.icon"
-            @click="$refs.types.toggle()"
-          >
-            {{ type.label }}:
-          </k-button>
+          <k-button :icon="type.icon" @click="$refs.types.toggle()">{{ type.label }}:</k-button>
           <k-dropdown-content ref="types">
             <k-dropdown-item
-              v-for="(searchType, searchTypeIndex) in types"
-              :key="searchTypeIndex"
-              :icon="searchType.icon"
-              @click="currentType = searchTypeIndex"
+              v-for="(type, typeIndex) in types"
+              :key="typeIndex"
+              :icon="type.icon"
+              @click="currentType = typeIndex"
             >
-              {{ searchType.label }}
+              {{ type.label }}
             </k-dropdown-item>
           </k-dropdown-content>
         </k-dropdown>
@@ -53,10 +41,7 @@
           :data-selected="selected === itemIndex"
           @mouseover="selected = itemIndex"
         >
-          <k-link
-            :to="item.link"
-            @click="click(itemIndex)"
-          >
+          <k-link :to="item.link" @click="click(itemIndex)">
             <strong>{{ item.title }}</strong>
             <small>{{ item.info }}</small>
           </k-link>
@@ -68,7 +53,7 @@
 
 <script>
 import config from "@/config/config.js";
-import debounce from "@/ui/helpers/debounce.js";
+import debounce from "@/helpers/debounce.js";
 
 export default {
   data() {

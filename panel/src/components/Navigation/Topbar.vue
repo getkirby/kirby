@@ -1,8 +1,5 @@
 <template>
-  <div
-    v-if="user && view"
-    class="k-topbar"
-  >
+  <div v-if="user && view" class="k-topbar">
     <k-view>
       <div class="k-topbar-wrapper">
         <k-dropdown class="k-topbar-menu">
@@ -14,39 +11,32 @@
           >
             <k-icon type="angle-down" />
           </k-button>
-          <k-dropdown-content
-            ref="menu"
-            class="k-topbar-menu"
-          >
+          <k-dropdown-content ref="menu" class="k-topbar-menu">
             <ul>
-              <li
-                v-for="(menuItem, menuItemName) in visibleViews"
-                :key="'menu-item-' + menuItemName"
-                :aria-current="$store.state.view === menuItemName"
-              >
-                <k-dropdown-item
-                  :disabled="$permissions.access[menuItemName] === false"
-                  :icon="menuItem.icon"
-                  :link="menuItem.link"
+              <template v-for="(entry, entryName) in views">
+                <li
+                  v-if="entry.menu"
+                  :key="'menu-item-' + entryName"
+                  :aria-current="$store.state.view === entryName"
                 >
-                  {{ menuTitle(menuItem, menuItemName) }}
-                </k-dropdown-item>
-              </li>
+                  <k-dropdown-item
+                    :disabled="$permissions.access[entryName] === false"
+                    :icon="entry.icon"
+                    :link="entry.link"
+                  >
+                    {{ menuTitle(entry, entryName) }}
+                  </k-dropdown-item>
+                </li>
+              </template>
               <li><hr></li>
               <li :aria-current="$route.meta.view === 'account'">
-                <k-dropdown-item
-                  icon="account"
-                  link="/account"
-                >
+                <k-dropdown-item icon="account" link="/account">
                   {{ $t("view.account") }}
                 </k-dropdown-item>
               </li>
               <li><hr></li>
               <li>
-                <k-dropdown-item
-                  icon="logout"
-                  link="/logout"
-                >
+                <k-dropdown-item icon="logout" link="/logout">
                   {{ $t("logout") }}
                 </k-dropdown-item>
               </li>
@@ -62,23 +52,14 @@
           <k-icon :type="view.icon" /> {{ breadcrumbTitle }}
         </k-link>
 
-        <k-dropdown
-          v-if="$store.state.breadcrumb.length > 1"
-          class="k-topbar-breadcrumb-menu"
-        >
-          <k-button
-            class="k-topbar-button"
-            @click="$refs.crumb.toggle()"
-          >
+        <k-dropdown v-if="$store.state.breadcrumb.length > 1" class="k-topbar-breadcrumb-menu">
+          <k-button class="k-topbar-button" @click="$refs.crumb.toggle()">
             …
             <k-icon type="angle-down" />
           </k-button>
 
           <k-dropdown-content ref="crumb">
-            <k-dropdown-item
-              :icon="view.icon"
-              :link="view.link"
-            >
+            <k-dropdown-item :icon="view.icon" :link="view.link">
               {{ $t(`view.${$store.state.view}`, view.label) }}
             </k-dropdown-item>
             <k-dropdown-item
@@ -104,15 +85,9 @@
 
         <div class="k-topbar-signals">
           <!-- loader -->
-          <span
-            v-show="$store.state.isLoading"
-            class="k-topbar-loader"
-          >
+          <span v-show="$store.state.isLoading" class="k-topbar-loader">
             <svg viewBox="0 0 16 18">
-              <path
-                fill="white"
-                d="M8,0 L16,4.50265232 L16,13.5112142 L8,18.0138665 L0,13.5112142 L0,4.50265232 L8,0 Z M2.10648757,5.69852516 L2.10648757,12.3153414 L8,15.632396 L13.8935124,12.3153414 L13.8935124,5.69852516 L8,2.38147048 L2.10648757,5.69852516 Z"
-              />
+              <path fill="white" d="M8,0 L16,4.50265232 L16,13.5112142 L8,18.0138665 L0,13.5112142 L0,4.50265232 L8,0 Z M2.10648757,5.69852516 L2.10648757,12.3153414 L8,15.632396 L13.8935124,12.3153414 L13.8935124,5.69852516 L8,2.38147048 L2.10648757,5.69852516 Z" />
             </svg>
           </span>
 
@@ -189,18 +164,6 @@ export default {
     },
     views() {
       return views;
-    },
-    visibleViews() {
-      let visible = {};
-
-      Object.keys(this.views).forEach(name => {
-        const view = this.views[name];
-        if (view.menu) {
-          visible[name] = view;
-        }
-      });
-
-      return visible;
     },
     user() {
       return this.$store.state.user.current;

@@ -1,70 +1,46 @@
 <template>
   <div class="k-calendar-input">
     <nav>
-      <k-button
-        icon="angle-left"
-        @click="prev"
-      />
+      <k-button icon="angle-left" @click="prev" />
       <span class="k-calendar-selects">
         <k-select-input
-          v-model.number="month"
           :options="months"
           :disabled="disabled"
           :required="true"
+          v-model.number="month"
         />
         <k-select-input
-          v-model.number="year"
           :options="years"
           :disabled="disabled"
           :required="true"
+          v-model.number="year"
         />
       </span>
-      <k-button
-        icon="angle-right"
-        @click="next"
-      />
+      <k-button icon="angle-right" @click="next" />
     </nav>
     <table class="k-calendar-table">
       <thead>
         <tr>
-          <th
-            v-for="dayHeader in weekdays"
-            :key="'weekday_' + dayHeader"
-          >
-            {{ dayHeader }}
-          </th>
+          <th v-for="day in weekdays" :key="'weekday_' + day">{{ day }}</th>
         </tr>
       </thead>
       <tbody>
-        <tr
-          v-for="week in numberOfWeeks"
-          :key="'week_' + week"
-        >
+        <tr v-for="week in numberOfWeeks" :key="'week_' + week">
           <td
-            v-for="(dayButton, dayIndex) in days(week)"
+            v-for="(day, dayIndex) in days(week)"
             :key="'day_' + dayIndex"
-            :aria-current="isToday(dayButton) ? 'date' : false"
-            :aria-selected="isCurrent(dayButton) ? 'date' : false"
+            :aria-current="isToday(day) ? 'date' : false"
+            :aria-selected="isCurrent(day) ? 'date' : false"
             class="k-calendar-day"
           >
-            <k-button
-              v-if="dayButton"
-              @click="select(dayButton)"
-            >
-              {{ dayButton }}
-            </k-button>
+            <k-button v-if="day" @click="select(day)">{{ day }}</k-button>
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
-          <td
-            class="k-calendar-today"
-            colspan="7"
-          >
-            <k-button @click="selectToday">
-              {{ $t("today") }}
-            </k-button>
+          <td class="k-calendar-today" colspan="7">
+            <k-button @click="selectToday">{{ $t("today") }}</k-button>
           </td>
         </tr>
       </tfoot>

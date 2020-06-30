@@ -1,15 +1,11 @@
 <template>
-  <span
-    :data-disabled="disabled"
-    :data-empty="selected === ''"
-    class="k-select-input"
-  >
+  <span :data-disabled="disabled" :data-empty="selected === ''" class="k-select-input">
     <select
-      :id="id"
       ref="input"
       :autofocus="autofocus"
       :aria-label="ariaLabel"
       :disabled="disabled"
+      :id="id"
       :name="name"
       :required="required"
       :value="selected"
@@ -25,8 +21,8 @@
       </option>
       <option
         v-for="option in options"
-        :key="option.value"
         :disabled="option.disabled"
+        :key="option.value"
         :value="option.value"
       >
         {{ option.text }}
