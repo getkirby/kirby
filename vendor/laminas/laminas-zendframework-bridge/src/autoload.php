@@ -6,4 +6,4 @@
  * @license   https://github.com/laminas/laminas-zendframework-bridge/blob/master/LICENSE.md New BSD License
  */
 
-\Laminas\ZendFrameworkBridge\Autoloader::load();
+Laminas\ZendFrameworkBridge\Autoloader::load();

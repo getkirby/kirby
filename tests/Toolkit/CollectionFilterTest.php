@@ -413,6 +413,20 @@ class CollectionFilterTest extends TestCase
                 'expected'   => ['a', 'b'],
                 'split'      => ','
             ],
+            [
+                'attributes' => ['a' => 1, 'b' => 2, 'c' => 3],
+                'operator'   =>  '..',
+                'test'       => [2, 3],
+                'expected'   => ['b', 'c'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '1, 2', 'b' => '3, 4', 'c' => '5, 6'],
+                'operator'   =>  '..',
+                'test'       => [1, 4],
+                'expected'   => ['a', 'b'],
+                'split'      => ','
+            ],
 
             // MATCH
             [
@@ -510,6 +524,131 @@ class CollectionFilterTest extends TestCase
                 'split'      => ','
             ],
 
+            // DATE EQUALS
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => 'invalid date'],
+                'operator'   =>  'date ==',
+                'test'       => '2345-01-01',
+                'expected'   => ['a', 'b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => date('Y-m-d'), 'b' => '02.01.2345'],
+                'operator'   =>  'date ==',
+                'test'       => 'today',
+                'expected'   => ['a'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '02.01.2345'],
+                'operator'   =>  'date ==',
+                'test'       => 'invalid date',
+                'expected'   => [],
+                'split'      => false
+            ],
+
+            // DATE NOT EQUALS
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => 'invalid date'],
+                'operator'   =>  'date !=',
+                'test'       => '2345-01-01',
+                'expected'   => ['c'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => date('Y-m-d'), 'b' => '02.01.2345'],
+                'operator'   =>  'date !=',
+                'test'       => 'today',
+                'expected'   => ['b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '02.01.2345'],
+                'operator'   =>  'date !=',
+                'test'       => 'invalid date',
+                'expected'   => [],
+                'split'      => false
+            ],
+
+            // DATE MORE
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => 'invalid date'],
+                'operator'   =>  'date >',
+                'test'       => '2345-01-01',
+                'expected'   => ['c'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => 'invalid date'],
+                'operator'   =>  'date >',
+                'test'       => 'invalid date',
+                'expected'   => [],
+                'split'      => false
+            ],
+
+            // DATE MIN
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => '03.01.2345', 'e' => 'invalid date'],
+                'operator'   =>  'date >=',
+                'test'       => '2345-01-02',
+                'expected'   => ['c', 'd'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => '03.01.2345', 'e' => 'invalid date'],
+                'operator'   =>  'date >=',
+                'test'       => 'invalid date',
+                'expected'   => [],
+                'split'      => false
+            ],
+
+            // DATE LESS
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => 'invalid date'],
+                'operator'   =>  'date <',
+                'test'       => '2345-01-02',
+                'expected'   => ['a', 'b'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => 'invalid date'],
+                'operator'   =>  'date <',
+                'test'       => 'invalid date',
+                'expected'   => [],
+                'split'      => false
+            ],
+
+            // DATE MAX
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => '03.01.2345', 'e' => 'invalid date'],
+                'operator'   =>  'date <=',
+                'test'       => '2345-01-02',
+                'expected'   => ['a', 'b', 'c'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => '03.01.2345', 'e' => 'invalid date'],
+                'operator'   =>  'date <=',
+                'test'       => 'invalid date',
+                'expected'   => [],
+                'split'      => false
+            ],
+
+            // DATE BETWEEN
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => '31.12.2344', 'e' => 'invalid date'],
+                'operator'   =>  'date between',
+                'test'       => ['2345-01-01', '2345-01-05'],
+                'expected'   => ['a', 'b', 'c'],
+                'split'      => false
+            ],
+            [
+                'attributes' => ['a' => '2345-01-01', 'b' => '01.01.2345', 'c' => '02.01.2345', 'd' => '31.12.2344', 'e' => 'invalid date'],
+                'operator'   =>  'date ..',
+                'test'       => ['2345-01-01', '2345-01-05'],
+                'expected'   => ['a', 'b', 'c'],
+                'split'      => false
+            ]
         ];
     }
 

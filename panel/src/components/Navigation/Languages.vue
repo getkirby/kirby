@@ -1,13 +1,26 @@
 <template>
   <k-dropdown v-if="languages.length">
-    <k-button :responsive="true" icon="globe" @click="$refs.languages.toggle()">
+    <k-button
+      :responsive="true"
+      icon="globe"
+      @click="$refs.languages.toggle()"
+    >
       {{ language.name }}
     </k-button>
-    <k-dropdown-content v-if="languages" ref="languages">
-      <k-dropdown-item @click="change(defaultLanguage)">{{ defaultLanguage.name }}</k-dropdown-item>
+    <k-dropdown-content
+      v-if="languages"
+      ref="languages"
+    >
+      <k-dropdown-item @click="change(defaultLanguage)">
+        {{ defaultLanguage.name }}
+      </k-dropdown-item>
       <hr>
-      <k-dropdown-item v-for="language in languages" :key="language.code" @click="change(language)">
-        {{ language.name }}
+      <k-dropdown-item
+        v-for="languageFilter in languages"
+        :key="languageFilter.code"
+        @click="change(languageFilter)"
+      >
+        {{ languageFilter.name }}
       </k-dropdown-item>
     </k-dropdown-content>
   </k-dropdown>

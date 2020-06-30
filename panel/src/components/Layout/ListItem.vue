@@ -1,18 +1,34 @@
 <template>
-  <component :is="element" class="k-list-item" v-on="$listeners">
+  <component
+    :is="element"
+    class="k-list-item"
+    v-on="$listeners"
+  >
     <k-sort-handle v-if="sortable" />
     <k-link
       :to="link"
       :target="target"
       class="k-list-item-content"
     >
-      <span class="k-list-item-image">
-        <k-image v-if="imageOptions" v-bind="imageOptions" />
-        <k-icon v-else v-bind="icon" />
+      <span
+        v-if="image"
+        class="k-list-item-image"
+      >
+        <k-image
+          v-if="imageOptions"
+          v-bind="imageOptions"
+        />
+        <k-icon
+          v-else
+          v-bind="icon"
+        />
       </span>
       <span class="k-list-item-text">
         <em>{{ text }}</em>
-        <small v-if="info" v-html="info" />
+        <small
+          v-if="info"
+          v-html="info"
+        />
       </span>
     </k-link>
     <nav class="k-list-item-options">
@@ -43,8 +59,6 @@
 </template>
 
 <script>
-import previewThumb from "@/helpers/previewThumb.js";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -52,7 +66,7 @@ export default {
       type: String,
       default: "li"
     },
-    image: Object,
+    image: [Object, Boolean],
     icon: {
       type: Object,
       default() {
@@ -72,7 +86,7 @@ export default {
   },
   computed: {
     imageOptions() {
-      return previewThumb(this.image);
+      return this.$helper.previewThumb(this.image);
     }
   }
 };

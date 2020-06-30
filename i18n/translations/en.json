@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "The profile picture could not be uploaded",
   "error.avatar.delete.fail": "The profile picture could not be deleted",
-  "error.avatar.dimensions.invalid":
-    "Please keep the width and height of the profile picture under 3000 pixels",
-  "error.avatar.mime.forbidden":
-    "The profile picture must be JPEG or PNG files",
+  "error.avatar.dimensions.invalid": "Please keep the width and height of the profile picture under 3000 pixels",
+  "error.avatar.mime.forbidden": "The profile picture must be JPEG or PNG files",
 
   "error.blueprint.notFound": "The blueprint \"{name}\" could not be loaded",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Invalid converter \"{converter}\"",
 
   "error.file.changeName.empty": "The name must not be empty",
-  "error.file.changeName.permission":
-    "You are not allowed to change the name of \"{filename}\"",
+  "error.file.changeName.permission": "You are not allowed to change the name of \"{filename}\"",
   "error.file.duplicate": "A file with the name \"{filename}\" already exists",
-  "error.file.extension.forbidden":
-    "The extension \"{extension}\" is not allowed",
-  "error.file.extension.missing":
-    "The extensions for \"{filename}\" is missing",
+  "error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
+  "error.file.extension.missing": "The extensions for \"{filename}\" is missing",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
   "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
-  "error.file.mime.differs":
-    "The uploaded file must be of the same mime type \"{mime}\"",
+  "error.file.mime.differs": "The uploaded file must be of the same mime type \"{mime}\"",
   "error.file.mime.forbidden": "The media type \"{mime}\" is not allowed",
   "error.file.mime.invalid": "Invalid mime type: {mime}",
-  "error.file.mime.missing":
-    "The media type for \"{filename}\" cannot be detected",
+  "error.file.mime.missing": "The media type for \"{filename}\" cannot be detected",
   "error.file.minheight": "The height of the image must be at least {height} pixels",
   "error.file.minsize": "The file is too small",
   "error.file.minwidth": "The width of the image must be at least {width} pixels",
@@ -90,111 +83,77 @@
   "error.license.email": "Please enter a valid email address",
   "error.license.verification": "The license could not be verified",
 
-  "error.page.changeSlug.permission":
-    "You are not allowed to change the URL appendix for \"{slug}\"",
-  "error.page.changeStatus.incomplete":
-    "The page has errors and cannot be published",
-  "error.page.changeStatus.permission":
-    "The status for this page cannot be changed",
-  "error.page.changeStatus.toDraft.invalid":
-    "The page \"{slug}\" cannot be converted to a draft",
-  "error.page.changeTemplate.invalid":
-    "The template for the page \"{slug}\" cannot be changed",
-  "error.page.changeTemplate.permission":
-    "You are not allowed to change the template for \"{slug}\"",
+  "error.page.changeSlug.permission": "You are not allowed to change the URL appendix for \"{slug}\"",
+  "error.page.changeStatus.incomplete": "The page has errors and cannot be published",
+  "error.page.changeStatus.permission": "The status for this page cannot be changed",
+  "error.page.changeStatus.toDraft.invalid": "The page \"{slug}\" cannot be converted to a draft",
+  "error.page.changeTemplate.invalid": "The template for the page \"{slug}\" cannot be changed",
+  "error.page.changeTemplate.permission": "You are not allowed to change the template for \"{slug}\"",
   "error.page.changeTitle.empty": "The title must not be empty",
-  "error.page.changeTitle.permission":
-    "You are not allowed to change the title for \"{slug}\"",
+  "error.page.changeTitle.permission": "You are not allowed to change the title for \"{slug}\"",
   "error.page.create.permission": "You are not allowed to create \"{slug}\"",
   "error.page.delete": "The page \"{slug}\" cannot be deleted",
   "error.page.delete.confirm": "Please enter the page title to confirm",
-  "error.page.delete.hasChildren":
-    "The page has subpages and cannot be deleted",
+  "error.page.delete.hasChildren": "The page has subpages and cannot be deleted",
   "error.page.delete.permission": "You are not allowed to delete \"{slug}\"",
-  "error.page.draft.duplicate":
-    "A page draft with the URL appendix \"{slug}\" already exists",
-  "error.page.duplicate":
-    "A page with the URL appendix \"{slug}\" already exists",
+  "error.page.draft.duplicate": "A page draft with the URL appendix \"{slug}\" already exists",
+  "error.page.duplicate": "A page with the URL appendix \"{slug}\" already exists",
   "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "The page \"{slug}\" cannot be found",
-  "error.page.num.invalid":
-    "Please enter a valid sorting number. Numbers must not be negative.",
+  "error.page.num.invalid": "Please enter a valid sorting number. Numbers must not be negative.",
   "error.page.slug.invalid": "Please enter a valid URL prefix",
   "error.page.sort.permission": "The page \"{slug}\" cannot be sorted",
   "error.page.status.invalid": "Please set a valid page status",
   "error.page.undefined": "The page cannot be found",
   "error.page.update.permission": "You are not allowed to update \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "You must not add more than {max} files to the \"{section}\" section",
-  "error.section.files.max.singular":
-    "You must not add more than one file to the \"{section}\" section",
-  "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
-  "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+  "error.section.files.max.plural": "You must not add more than {max} files to the \"{section}\" section",
+  "error.section.files.max.singular": "You must not add more than one file to the \"{section}\" section",
+  "error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
+  "error.section.files.min.singular": "The \"{section}\" section requires at least one file",
 
-  "error.section.pages.max.plural":
-    "You must not add more than {max} pages to the \"{section}\" section",
-  "error.section.pages.max.singular":
-    "You must not add more than one page to the \"{section}\" section",
-  "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
-  "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+  "error.section.pages.max.plural": "You must not add more than {max} pages to the \"{section}\" section",
+  "error.section.pages.max.singular": "You must not add more than one page to the \"{section}\" section",
+  "error.section.pages.min.plural": "The \"{section}\" section requires at least {min} pages",
+  "error.section.pages.min.singular": "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "The section \"{name}\" could not be loaded",
   "error.section.type.invalid": "The section type \"{type}\" is not valid",
 
   "error.site.changeTitle.empty": "The title must not be empty",
-  "error.site.changeTitle.permission":
-    "You are not allowed to change the title of the site",
+  "error.site.changeTitle.permission": "You are not allowed to change the title of the site",
   "error.site.update.permission": "You are not allowed to update the site",
 
   "error.template.default.notFound": "The default template does not exist",
 
-  "error.user.changeEmail.permission":
-    "You are not allowed to change the email for the user \"{name}\"",
-  "error.user.changeLanguage.permission":
-    "You are not allowed to change the language for the user \"{name}\"",
-  "error.user.changeName.permission":
-    "You are not allowed to change the name for the user \"{name}\"",
-  "error.user.changePassword.permission":
-    "You are not allowed to change the password for the user \"{name}\"",
-  "error.user.changeRole.lastAdmin":
-    "The role for the last admin cannot be changed",
-  "error.user.changeRole.permission":
-    "You are not allowed to change the role for the user \"{name}\"",
-  "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+  "error.user.changeEmail.permission": "You are not allowed to change the email for the user \"{name}\"",
+  "error.user.changeLanguage.permission": "You are not allowed to change the language for the user \"{name}\"",
+  "error.user.changeName.permission": "You are not allowed to change the name for the user \"{name}\"",
+  "error.user.changePassword.permission": "You are not allowed to change the password for the user \"{name}\"",
+  "error.user.changeRole.lastAdmin": "The role for the last admin cannot be changed",
+  "error.user.changeRole.permission": "You are not allowed to change the role for the user \"{name}\"",
+  "error.user.changeRole.toAdmin": "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "You are not allowed to create this user",
   "error.user.delete": "The user \"{name}\" cannot be deleted",
   "error.user.delete.lastAdmin": "The last admin cannot be deleted",
   "error.user.delete.lastUser": "The last user cannot be deleted",
-  "error.user.delete.permission":
-    "You are not allowed to delete the user \"{name}\"",
-  "error.user.duplicate":
-    "A user with the email address \"{email}\" already exists",
+  "error.user.delete.permission": "You are not allowed to delete the user \"{name}\"",
+  "error.user.duplicate": "A user with the email address \"{email}\" already exists",
   "error.user.email.invalid": "Please enter a valid email address",
   "error.user.language.invalid": "Please enter a valid language",
   "error.user.notFound": "The user \"{name}\" cannot be found",
-  "error.user.password.invalid":
-    "Please enter a valid password. Passwords must be at least 8 characters long.",
+  "error.user.password.invalid": "Please enter a valid password. Passwords must be at least 8 characters long.",
   "error.user.password.notSame": "The passwords do not match",
   "error.user.password.undefined": "The user does not have a password",
   "error.user.role.invalid": "Please enter a valid role",
-  "error.user.update.permission":
-    "You are not allowed to update the user \"{name}\"",
+  "error.user.update.permission": "You are not allowed to update the user \"{name}\"",
 
   "error.validation.accepted": "Please confirm",
   "error.validation.alpha": "Please only enter characters between a-z",
-  "error.validation.alphanum":
-    "Please only enter characters between a-z or numerals 0-9",
-  "error.validation.between":
-    "Please enter a value between \"{min}\" and \"{max}\"",
+  "error.validation.alphanum": "Please only enter characters between a-z or numerals 0-9",
+  "error.validation.between": "Please enter a value between \"{min}\" and \"{max}\"",
   "error.validation.boolean": "Please confirm or deny",
-  "error.validation.contains":
-    "Please enter a value that contains \"{needle}\"",
+  "error.validation.contains": "Please enter a value that contains \"{needle}\"",
   "error.validation.date": "Please enter a valid date",
   "error.validation.date.after": "Please enter a date after {date}",
   "error.validation.date.before": "Please enter a date before {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Please enter a value lower than {max}",
   "error.validation.match": "The value does not match the expected pattern",
   "error.validation.max": "Please enter a value equal to or lower than {max}",
-  "error.validation.maxlength":
-    "Please enter a shorter value. (max. {max} characters)",
+  "error.validation.maxlength": "Please enter a shorter value. (max. {max} characters)",
   "error.validation.maxwords": "Please enter no more than {max} word(s)",
   "error.validation.min": "Please enter a value equal to or greater than {min}",
-  "error.validation.minlength":
-    "Please enter a longer value. (min. {min} characters)",
+  "error.validation.minlength": "Please enter a longer value. (min. {min} characters)",
   "error.validation.minwords": "Please enter at least {min} word(s)",
   "error.validation.more": "Please enter a greater value than {min}",
-  "error.validation.notcontains":
-    "Please enter a value that does not contain \"{needle}\"",
-  "error.validation.notin":
-    "Please don't enter any of the following: ({notIn})",
+  "error.validation.notcontains": "Please enter a value that does not contain \"{needle}\"",
+  "error.validation.notin": "Please don't enter any of the following: ({notIn})",
   "error.validation.option": "Please select a valid option",
   "error.validation.num": "Please enter a valid number",
   "error.validation.required": "Please enter something",
@@ -238,8 +193,7 @@
   "field.structure.empty": "No entries yet",
   "field.users.empty": "No users selected yet",
 
-  "file.delete.confirm":
-    "Do you really want to delete <br><strong>{filename}</strong>?",
+  "file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
 
   "files": "Files",
   "files.empty": "No files yet",
@@ -251,29 +205,22 @@
   "installation": "Installation",
   "installation.completed": "The panel has been installed",
   "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
-  "installation.issues.accounts":
-    "The <code>/site/accounts</code> folder does not exist or is not writable",
-  "installation.issues.content":
-    "The <code>/content</code> folder does not exist or is not writable",
+  "installation.issues.accounts": "The <code>/site/accounts</code> folder does not exist or is not writable",
+  "installation.issues.content": "The <code>/content</code> folder does not exist or is not writable",
   "installation.issues.curl": "The <code>CURL</code> extension is required",
   "installation.issues.headline": "The panel cannot be installed",
-  "installation.issues.mbstring":
-    "The <code>MB String</code> extension is required",
-  "installation.issues.media":
-    "The <code>/media</code> folder does not exist or is not writable",
+  "installation.issues.mbstring": "The <code>MB String</code> extension is required",
+  "installation.issues.media": "The <code>/media</code> folder does not exist or is not writable",
   "installation.issues.php": "Make sure to use <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby requires <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
+  "installation.issues.server": "Kirby requires <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code>",
   "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
   "language": "Language",
   "language.code": "Code",
   "language.convert": "Make default",
-  "language.convert.confirm":
-    "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
+  "language.convert.confirm": "<p>Do you really want to convert <strong>{name}</strong> to the default language? This cannot be undone.</p><p>If <strong>{name}</strong> has untranslated content, there will no longer be a valid fallback and parts of your site might be empty.</p>",
   "language.create": "Add a new language",
-  "language.delete.confirm":
-    "Do you really want to delete the language <strong>{name}</strong> including all translations? This cannot be undone!",
+  "language.delete.confirm": "Do you really want to delete the language <strong>{name}</strong> including all translations? This cannot be undone!",
   "language.deleted": "The language has been deleted",
   "language.direction": "Reading direction",
   "language.direction.ltr": "Left to right",
@@ -292,8 +239,7 @@
   "license": "License",
   "license.buy": "Buy a license",
   "license.register": "Register",
-  "license.register.help":
-    "You received your license code after the purchase via email. Please copy and paste it to register.",
+  "license.register.help": "You received your license code after the purchase via email. Please copy and paste it to register.",
   "license.register.label": "Please enter your license code",
   "license.register.success": "Thank you for supporting Kirby",
   "license.unregistered": "This is an unregistered demo of Kirby",
@@ -342,6 +288,7 @@
   "on": "on",
   "open": "Open",
   "options": "Options",
+  "options.none": "No options",
 
   "orientation": "Orientation",
   "orientation.landscape": "Landscape",
@@ -354,10 +301,8 @@
   "page.changeStatus.position": "Please select a position",
   "page.changeStatus.select": "Select a new status",
   "page.changeTemplate": "Change template",
-  "page.delete.confirm":
-    "Do you really want to delete <strong>{title}</strong>?",
-  "page.delete.confirm.subpages":
-    "<strong>This page has subpages</strong>. <br>All subpages will be deleted as well.",
+  "page.delete.confirm": "Do you really want to delete <strong>{title}</strong>?",
+  "page.delete.confirm.subpages": "<strong>This page has subpages</strong>. <br>All subpages will be deleted as well.",
   "page.delete.confirm.title": "Enter the page title to confirm",
   "page.draft.create": "Create draft",
   "page.duplicate.appendix": "Copy",
@@ -365,8 +310,7 @@
   "page.duplicate.pages": "Copy pages",
   "page.status": "Status",
   "page.status.draft": "Draft",
-  "page.status.draft.description":
-    "The page is in draft mode and only visible for logged in editors",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "Public",
   "page.status.listed.description": "The page is public for anyone",
   "page.status.unlisted": "Unlisted",
@@ -388,6 +332,7 @@
   "replace": "Replace",
   "retry": "Try again",
   "revert": "Revert",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "Role",
   "role.admin.description": "The admin has all rights",
@@ -400,6 +345,9 @@
 
   "save": "Save",
   "search": "Search",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "The section is required",
 
@@ -451,8 +399,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "User",
-  "user.blueprint":
-    "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Change email",
   "user.changeLanguage": "Change language",
   "user.changeName": "Rename this user",
@@ -463,8 +410,7 @@
   "user.changeRole.select": "Select a new role",
   "user.create": "Add a new user",
   "user.delete": "Delete this user",
-  "user.delete.confirm":
-    "Do you really want to delete <br><strong>{email}</strong>?",
+  "user.delete.confirm": "Do you really want to delete <br><strong>{email}</strong>?",
 
   "users": "Users",
 

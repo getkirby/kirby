@@ -674,6 +674,61 @@ class FieldTest extends TestCase
         $this->assertArrayNotHasKey('model', $array);
     }
 
+    public function testValidateByAttr()
+    {
+        Field::$types = [
+            'test' => []
+        ];
+
+        $model = new Page(['slug' => 'test']);
+
+        // with simple string validation
+        $field = new Field('test', [
+            'model'    => $model,
+            'value'    => 'https://getkirby.com',
+            'validate' => 'url'
+        ]);
+        $this->assertTrue($field->isValid());
+
+        $field = new Field('test', [
+            'model'    => $model,
+            'value'    => 'definitely not a URL',
+            'validate' => 'url'
+        ]);
+        $this->assertFalse($field->isValid());
+
+        // with an array of validators
+        $field = new Field('test', [
+            'model'    => $model,
+            'value'    => 'thisIsATest',
+            'validate' => [
+                'startsWith' => 'this',
+                'alpha'
+            ]
+        ]);
+        $this->assertTrue($field->isValid());
+
+        $field = new Field('test', [
+            'model'    => $model,
+            'value'    => 'thisIsATest',
+            'validate' => [
+                'startsWith' => 'that',
+                'alpha'
+            ]
+        ]);
+        $this->assertFalse($field->isValid());
+
+        $field = new Field('test', [
+            'model'    => $model,
+            'value'    => 'thisIsA123',
+            'validate' => [
+                'startsWith' => 'this',
+                'alpha'
+            ]
+        ]);
+        $this->assertFalse($field->isValid());
+    }
+
     public function testWidth()
     {
         Field::$types = [
@@ -698,5 +753,55 @@ class FieldTest extends TestCase
 
         $this->assertEquals('1/2', $field->width());
         $this->assertEquals('1/2', $field->width);
+    }
+
+    public function testValidate()
+    {
+        Field::$types = [
+            'test' => []
+        ];
+
+        $page = new Page(['slug' => 'test']);
+
+        // default
+        $field = new Field('test', [
+            'model'    => $page,
+            'validate' => [
+                'integer'
+            ],
+        ]);
+
+        $this->assertEquals([], $field->errors());
+
+        // required
+        $field = new Field('test', [
+            'model'    => $page,
+            'required' => true,
+            'validate' => [
+                'integer'
+            ],
+        ]);
+
+        $expected = [
+            'required' => 'Please enter something',
+            'integer'  => 'Please enter a valid integer',
+        ];
+
+        $this->assertEquals($expected, $field->errors());
+
+        // invalid
+        $field = new Field('test', [
+            'model'    => $page,
+            'value'    => 'abc',
+            'validate' => [
+                'integer'
+            ],
+        ]);
+
+        $expected = [
+            'integer' => 'Please enter a valid integer',
+        ];
+
+        $this->assertEquals($expected, $field->errors());
     }
 }

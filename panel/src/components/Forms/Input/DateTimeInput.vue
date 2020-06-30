@@ -1,10 +1,10 @@
 <template>
   <div class="k-datetime-input">
     <k-date-input
+      :id="id"
       ref="dateInput"
       :autofocus="autofocus"
       :required="required"
-      :id="id"
       :min="min"
       :max="max"
       :disabled="disabled"

@@ -1,8 +1,18 @@
 <template>
-  <ul v-if="value" class="k-users-field-preview">
-    <li v-for="user in value" :key="user.email">
+  <ul
+    v-if="value"
+    class="k-users-field-preview"
+  >
+    <li
+      v-for="user in value"
+      :key="user.email"
+    >
       <figure>
-        <k-link :title="user.email" :to="$api.users.link(user.id)" @click.native.stop>
+        <k-link
+          :title="user.email"
+          :to="$api.users.link(user.id)"
+          @click.native.stop
+        >
           <k-image
             v-if="user.avatar"
             :src="user.avatar.url"

@@ -107,13 +107,14 @@ class Router
                     $result = $route->action()->call($route, ...$route->arguments());
                 }
 
-                $loop   = false;
+                $loop = false;
             } catch (Exceptions\NextRouteException $e) {
                 $ignore[] = $route;
             }
 
             if (is_a(static::$afterEach, 'Closure') === true) {
-                $result = (static::$afterEach)($route, $path, $method, $result);
+                $final  = $loop === false;
+                $result = (static::$afterEach)($route, $path, $method, $result, $final);
             }
         }
 

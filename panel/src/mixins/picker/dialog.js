@@ -1,4 +1,4 @@
-import debounce from "@/helpers/debounce.js";
+import debounce from "@/ui/helpers/debounce.js";
 
 export default {
   data() {

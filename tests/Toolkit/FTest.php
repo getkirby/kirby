@@ -222,23 +222,42 @@ class FTest extends TestCase
 
     public function testLoad()
     {
-        F::write($file = $this->fixtures . '/test.php', '<?php return "foo"; ?>');
+        // basic behavior
+        F::write($file = $this->fixtures . '/test.php', '<?php return "foo";');
+        $this->assertSame('foo', F::load($file));
 
-        $this->assertEquals('foo', F::load($file));
-    }
+        // non-existing file
+        $this->assertSame('foo', F::load('does-not-exist.php', 'foo'));
 
-    public function testLoadWithFallback()
-    {
-        $this->assertEquals('foo', F::load('does-not-exist.php', 'foo'));
-    }
-
-    public function testLoadWithTypeMismatch()
-    {
-        F::write($file = $this->fixtures . '/test.php', '<?php return "foo"; ?>');
-
+        // type mismatch
+        F::write($file = $this->fixtures . '/test.php', '<?php return "foo";');
         $expected = ['a' => 'b'];
+        $this->assertSame($expected, F::load($file, $expected));
 
-        $this->assertEquals($expected, F::load($file, $expected));
+        // type mismatch with overwritten $fallback
+        F::write($file = $this->fixtures . '/test.php', '<?php $fallback = "test"; return "foo";');
+        $expected = ['a' => 'b'];
+        $this->assertSame($expected, F::load($file, $expected));
+
+        // with data
+        F::write($file = $this->fixtures . '/test.php', '<?php return $variable;');
+        $this->assertSame('foobar', F::load($file, null, ['variable' => 'foobar']));
+
+        // with overwritten $data
+        $this->assertSame('foobar', F::load($file, null, ['variable' => 'foobar', 'data' => []]));
+
+        // with overwritten $file
+        $this->assertSame('foobar', F::load($file, null, ['variable' => 'foobar', 'file' => null]));
+    }
+
+    public function testLoadOnce()
+    {
+        // basic behavior
+        F::write($file = $this->fixtures . '/test.php', '<?php return "foo";');
+        $this->assertTrue(F::loadOnce($file));
+
+        // non-existing file
+        $this->assertFalse(F::loadOnce('does-not-exist.php'));
     }
 
     public function testMove()
@@ -289,8 +308,14 @@ class FTest extends TestCase
     {
         F::write($this->tmp, 'test');
 
-        $this->assertEquals('4 B', F::niceSize($this->tmp));
-        $this->assertEquals('4 B', F::niceSize(4));
+        $this->assertSame('4 B', F::niceSize($this->tmp));
+        $this->assertSame('4 B', F::niceSize(4));
+        $this->assertSame('4 KB', F::niceSize(4096));
+        $this->assertSame('4 KB', F::niceSize(4100));
+        $this->assertSame('4.1 KB', F::niceSize(4200));
+        $this->assertSame('4 MB', F::niceSize(4194304));
+        $this->assertSame('4.29 MB', F::niceSize(4500000));
+        $this->assertSame('4 GB', F::niceSize(4294967296));
     }
 
     public function testRead()

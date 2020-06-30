@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
@@ -344,7 +345,31 @@ class Page extends ModelWithContent
         ]);
 
         // call the template controller if there's one.
-        return array_merge($kirby->controller($this->template()->name(), $data, $contentType), $data);
+        $controllerData = $kirby->controller($this->template()->name(), $data, $contentType);
+
+        // merge controller data with original data safely
+        if (empty($controllerData) === false) {
+            $classes = [
+                'kirby' => 'Kirby\Cms\App',
+                'site'  => 'Kirby\Cms\Site',
+                'pages' => 'Kirby\Cms\Pages',
+                'page'  => 'Kirby\Cms\Page'
+            ];
+
+            foreach ($controllerData as $key => $value) {
+                if (array_key_exists($key, $classes) === true) {
+                    if (is_a($value, $classes[$key]) === true) {
+                        $data[$key] = $value;
+                    } else {
+                        throw new InvalidArgumentException('The returned variable "' . $key . '" from the controller "' . $this->template()->name() . '" is not of the required type "' . $classes[$key] . '"');
+                    }
+                } else {
+                    $data[$key] = $value;
+                }
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -451,6 +476,20 @@ class Page extends ModelWithContent
         }
 
         return new static($props);
+    }
+
+    /**
+     * Redirects to this page,
+     * wrapper for the `go()` helper
+     *
+     * @since 3.4.0
+     *
+     * @param array $options Options for `Kirby\Http\Uri` to create URL parts
+     * @param int $code HTTP status code
+     */
+    public function go(array $options = [], int $code = 302)
+    {
+        go($this->url($options), $code);
     }
 
     /**
@@ -889,11 +928,16 @@ class Page extends ModelWithContent
      *
      * @param string $format
      * @param string|null $handler
+     * @param string|null $languageCode
      * @return int|string
      */
-    public function modified(string $format = null, string $handler = null)
+    public function modified(string $format = null, string $handler = null, string $languageCode = null)
     {
-        return F::modified($this->contentFile(), $format, $handler ?? $this->kirby()->option('date.handler', 'date'));
+        return F::modified(
+            $this->contentFile($languageCode),
+            $format,
+            $handler ?? $this->kirby()->option('date.handler', 'date')
+        );
     }
 
     /**
@@ -1448,7 +1492,7 @@ class Page extends ModelWithContent
      */
     protected function token(): string
     {
-        return sha1($this->id() . $this->template());
+        return $this->kirby()->contentToken($this, $this->id() . $this->template());
     }
 
     /**

@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Http\Route;
+use Kirby\Http\Server;
+use Kirby\Toolkit\Str;
+use ReflectionMethod;
 
 /**
  * @coversDefaultClass \Kirby\Cms\App
@@ -27,7 +30,12 @@ class AppTest extends TestCase
      */
     public function testApply()
     {
+        $self = $this;
+
         $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
             'options' => [
                 'hooks' => [
                     'noModify' => [
@@ -40,10 +48,10 @@ class AppTest extends TestCase
                         }
                     ],
                     'singleParam' => [
-                        function ($value) {
-                            if (func_num_args() !== 1) {
-                                throw new \Exception();
-                            }
+                        function ($event, $value) use ($self) {
+                            $self->assertSame(2, func_num_args());
+                            $self->assertSame('singleParam', $event->name());
+                            $self->assertSame(['value' => $value], $event->arguments());
 
                             return $value * 2;
                         },
@@ -55,24 +63,23 @@ class AppTest extends TestCase
                         },
                     ],
                     'multiParams' => [
-                        function ($arg1, $arg2, $value) {
-                            if (func_num_args() !== 3 || $arg1 !== 'arg1' || $arg2 !== 'arg2') {
-                                throw new \Exception();
-                            }
+                        function ($arg2, $arg1, $value) use ($self) {
+                            $self->assertSame(3, func_num_args());
+                            $self->assertSame('Arg1', $arg1);
+                            $self->assertSame('Arg2', $arg2);
 
                             return $value * 2;
                         },
-                        function ($arg1, $arg2, $value) {
-                            if (func_num_args() !== 3 || $arg1 !== 'arg1' || $arg2 !== 'arg2') {
-                                throw new \Exception();
-                            }
-
-                            // don't return anything
+                        function ($arg1, $value, $arg3, $arg2) use ($self) {
+                            $self->assertSame(4, func_num_args());
+                            $self->assertSame('Arg1', $arg1);
+                            $self->assertSame('Arg2', $arg2);
+                            $self->assertNull($arg3);
                         },
-                        function ($arg1, $arg2, $value) {
-                            if (func_num_args() !== 3 || $arg1 !== 'arg1' || $arg2 !== 'arg2') {
-                                throw new \Exception();
-                            }
+                        function ($arg1, $arg2, $value) use ($self) {
+                            $self->assertSame(3, func_num_args());
+                            $self->assertSame('Arg1', $arg1);
+                            $self->assertSame('Arg2', $arg2);
 
                             return $value + 1;
                         },
@@ -81,15 +88,92 @@ class AppTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals(10, $app->apply('noModify', 10));
+        $this->assertSame(10, $app->apply('noModify', ['value' => 10], 'value'));
 
-        $this->assertEquals(5, $app->apply('singleParam', 2));
-        $this->assertEquals(21, $app->apply('singleParam', 10));
+        $this->assertSame(5, $app->apply('singleParam', ['value' => 2], 'value'));
+        $this->assertSame(21, $app->apply('singleParam', ['value' => 10], 'value'));
 
-        $this->assertEquals(5, $app->apply('multiParams', 'arg1', 'arg2', 2));
-        $this->assertEquals(21, $app->apply('multiParams', 'arg1', 'arg2', 10));
+        $arguments = ['arg1' => 'Arg1', 'arg2' => 'Arg2', 'value' => 2];
+        $this->assertSame(5, $app->apply('multiParams', $arguments, 'value'));
+        $arguments['value'] = 10;
+        $this->assertSame(21, $app->apply('multiParams', $arguments, 'value'));
 
-        $this->assertEquals(2, $app->apply('does-not-exist', 2));
+        $this->assertSame(2, $app->apply('does-not-exist', ['value' => 2], 'value'));
+    }
+
+    /**
+     * @covers ::apply
+     */
+    public function testApplyWildcard()
+    {
+        $self = $this;
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'hooks' => [
+                'test.event:after' => [
+                    function ($value, $event) use ($self) {
+                        $self->assertSame('test.event:after', $event->name());
+
+                        return $value * 2 + 1;
+                    },
+                    function ($value) {
+                        return $value * 3 + 5;
+                    }
+                ],
+                'test.*:after' => [
+                    function ($value, $event) use ($self) {
+                        $self->assertSame('test.event:after', $event->name());
+
+                        return $value * 2 + 7;
+                    }
+                ],
+                'test.event:*' => [
+                    function ($value, $event) use ($self) {
+                        $self->assertSame('test.event:after', $event->name());
+
+                        return $value * 3 + 2;
+                    }
+                ]
+            ]
+        ]);
+
+        $this->assertSame(143, $app->apply('test.event:after', ['value' => 2], 'value'));
+    }
+
+    /**
+     * @covers ::contentToken
+     */
+    public function testContentToken()
+    {
+        // without configured salt
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+        $this->assertSame(hash_hmac('sha1', 'test', '/dev/null/content'), $app->contentToken('model', 'test'));
+        $this->assertSame(hash_hmac('sha1', 'test', '/dev/null'), $app->contentToken($app, 'test'));
+
+        // with custom static salt
+        $app = new App([
+            'options' => [
+                'content.salt' => 'salt and pepper and chili'
+            ]
+        ]);
+        $this->assertSame(hash_hmac('sha1', 'test', 'salt and pepper and chili'), $app->contentToken('model', 'test'));
+
+        // with callback
+        $app = new App([
+            'options' => [
+                'content.salt' => function ($model) {
+                    return 'salt ' . $model;
+                }
+            ]
+        ]);
+        $this->assertSame(hash_hmac('sha1', 'test', 'salt lake city'), $app->contentToken('lake city', 'test'));
     }
 
     public function testDebugInfo()
@@ -201,33 +285,75 @@ class AppTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
-            'options' => $options = [
+            'options' => [
                 'a' => 'A',
-                'b' => 'B'
+                'b.c' => 'C'
             ]
         ]);
 
-        $this->assertEquals($options, $app->options());
+        $this->assertSame([
+            'a' => 'A',
+            'b' => [
+                'c' => 'C'
+            ]
+        ], $app->options());
     }
 
     public function testOptionsOnReady()
     {
         App::destroy();
 
+        // fake a non-CLI environment for testing debug mode
+        Server::$cli = false;
+
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ],
+            'site' => [
+                'content' => [
+                    'home'  => 'test',
+                    'error' => 'another-test'
+                ]
+            ],
             'options' => [
-                'ready' => function ($kirby) {
+                'ready' => $ready = function ($kirby) {
                     return [
-                        'test' => $kirby->root('index')
+                        'test'         => $kirby->root('index'),
+                        'another.test' => 'foo',
+                        'debug'        => true,
+                        'home'         => $kirby->site()->content()->home()->value(),
+                        'error'        => $kirby->site()->content()->error()->value(),
+                        'slugs'        => 'de'
                     ];
                 }
             ]
         ]);
 
-        $this->assertEquals('/dev/null', $app->option('test'));
+        $this->assertSame([
+            'ready' => $ready,
+            'test' => '/dev/null',
+            'another' => [
+                'test' => 'foo'
+            ],
+            'debug' => true,
+            'home' => 'test',
+            'error' => 'another-test',
+            'slugs' => 'de'
+        ], $app->options());
+
+        $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
+        $whoopsMethod->setAccessible(true);
+        $whoopsHandler = $whoopsMethod->invoke($app)->getHandlers()[0];
+        $this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $whoopsHandler);
+
+        $this->assertSame('test', $app->site()->homePageId());
+        $this->assertSame('another-test', $app->site()->errorPageId());
+
+        $this->assertSame('ss', Str::$language['ß']);
+
+        // reset global environment
+        Server::$cli = true;
     }
 
     public function testRolesFromFixtures()
@@ -282,9 +408,16 @@ class AppTest extends TestCase
 
     public function testInstance()
     {
-        $instance = new App();
+        App::destroy();
+        $this->assertNull(App::instance(null, true));
 
-        $this->assertEquals($instance, App::instance());
+        $instance1 = new App();
+        $this->assertSame($instance1, App::instance());
+
+        $instance2 = new App();
+        $this->assertSame($instance2, App::instance());
+        $this->assertSame($instance1, App::instance($instance1));
+        $this->assertSame($instance1, App::instance());
     }
 
     public function testFindPageFile()
@@ -412,6 +545,164 @@ class AppTest extends TestCase
         $this->assertEquals($expected, $app->blueprints('files'));
 
         Dir::remove($fixtures);
+    }
+
+    /**
+     * @covers ::trigger
+     */
+    public function testTrigger()
+    {
+        $self  = $this;
+        $count = 0;
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'hooks' => [
+                    'simple' => [
+                        function ($arg) use ($self, &$count) {
+                            $self->assertSame(1, func_num_args());
+
+                            $count += $arg;
+                        }
+                    ],
+                    'multiple' => [
+                        function ($arg) use ($self, &$count) {
+                            $self->assertSame(1, func_num_args());
+
+                            $count = $count * 2 + $arg;
+                        },
+                        function ($arg) use ($self, &$count) {
+                            $self->assertSame(1, func_num_args());
+
+                            $count = $count * 3 + $arg * 2;
+                        }
+                    ],
+                    'arguments' => [
+                        function ($arg2, $arg1, $arg3, $event) use ($self, &$count) {
+                            $self->assertSame(4, func_num_args());
+                            $self->assertSame('Arg1', $arg1);
+                            $self->assertSame('Arg2', $arg2);
+                            $self->assertNull($arg3);
+                            $self->assertSame('arguments', $event->name());
+                            $self->assertSame(['arg1' => 'Arg1', 'arg2' => 'Arg2'], $event->arguments());
+
+                            $count++;
+                        }
+                    ],
+                    'recursive1' => [
+                        function () use ($self, &$count) {
+                            $self->assertSame(0, func_num_args());
+
+                            $count += 5;
+
+                            $this->trigger('recursive3');
+                            if ($count < 50) { // prevent too much recursion
+                                $this->trigger('recursive2');
+                            }
+                        },
+                    ],
+                    'recursive2' => [
+                        function () use ($self, &$count) {
+                            $self->assertSame(0, func_num_args());
+
+                            $count = $count * 2 + 1;
+
+                            if ($count < 50) { // prevent too much recursion
+                                $this->trigger('recursive1');
+                            }
+                        }
+                    ],
+                    'recursive3' => [
+                        function () use ($self, &$count) {
+                            $self->assertSame(0, func_num_args());
+
+                            $count += 4;
+                        }
+                    ]
+                ]
+            ]
+        ]);
+
+        // simple test
+        $count = 0;
+        $app->trigger('simple', ['arg' => 2]);
+        $this->assertSame(2, $count);
+        $app->trigger('simple', ['arg' => 3]);
+        $this->assertSame(5, $count);
+
+        // multiple hooks get run in the correct order
+        $count = 0;
+        $app->trigger('multiple', ['arg' => 2]);
+        $this->assertSame(10, $count);
+
+        // ensure that the correct arguments get passed in the right order
+        $count = 0;
+        $app->trigger('arguments', ['arg1' => 'Arg1', 'arg2' => 'Arg2']);
+        $this->assertSame(1, $count);
+
+        // each hook should only be called once
+        $count = 0;
+        $app->trigger('recursive1');
+        $this->assertSame(19, $count);
+
+        // but in a separate run each hook should be triggered again
+        $count = 0;
+        $app->trigger('recursive1');
+        $this->assertSame(19, $count);
+
+        // hooks get called in the correct order
+        $count = 0;
+        $app->trigger('recursive2');
+        $this->assertSame(10, $count);
+    }
+
+    /**
+     * @covers ::trigger
+     */
+    public function testTriggerWildcard()
+    {
+        $self  = $this;
+        $count = 0;
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'hooks' => [
+                'test.event:after' => [
+                    function ($event) use ($self, &$count) {
+                        $self->assertSame('test.event:after', $event->name());
+
+                        $count = $count * 2 + 1;
+                    },
+                    function () use (&$count) {
+                        $count = $count * 3 + 5;
+                    }
+                ],
+                'test.*:after' => [
+                    function ($event) use ($self, &$count) {
+                        $self->assertSame('test.event:after', $event->name());
+
+                        $count = $count * 2 + 7;
+                    }
+                ],
+                'test.event:*' => [
+                    function ($event) use ($self, &$count) {
+                        $self->assertSame('test.event:after', $event->name());
+
+                        $count = $count * 3 + 2;
+                    }
+                ]
+            ]
+        ]);
+
+        // hooks get called in the correct order
+        $count = 2;
+        $app->trigger('test.event:after');
+        $this->assertSame(143, $count);
     }
 
     public function testVersionHash()

@@ -17,10 +17,11 @@ return [
     ],
     'props' => [
         /**
-         * Optional array of templates that should only be allowed to add.
+         * Optional array of templates that should only be allowed to add
+         * or `false` to completely disable page creation
          */
-        'create' => function ($add = null) {
-            return $add;
+        'create' => function ($create = null) {
+            return $create;
         },
         /**
          * Enables/disables reverse sorting
@@ -135,8 +136,9 @@ return [
 
             // pagination
             $pages = $pages->paginate([
-                'page'  => $this->page,
-                'limit' => $this->limit
+                'page'   => $this->page,
+                'limit'  => $this->limit,
+                'method' => 'none' // the page is manually provided
             ]);
 
             return $pages;

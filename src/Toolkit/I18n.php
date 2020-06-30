@@ -3,7 +3,6 @@
 namespace Kirby\Toolkit;
 
 use Closure;
-use Exception;
 
 /**
  * Localization class, roughly inspired by VueI18n
@@ -191,7 +190,14 @@ class I18n
     }
 
     /**
-     * Translate amounts
+     * Translates amounts
+     *
+     * Translation definition options:
+     * - Translation is a simple string: `{{ count }}` gets replaced in the template
+     * - Translation is an array with a value for each count: Chooses the correct template and
+     *   replaces `{{ count }}` in the template; if no specific template for the input count is
+     *   defined, the template that is defined last in the translation array is used
+     * - Translation is a callback with a `$count` argument: Returns the callback return value
      *
      * @param string $key
      * @param int $count
@@ -206,23 +212,18 @@ class I18n
             return null;
         }
 
+        if (is_a($translation, 'Closure') === true) {
+            return $translation($count);
+        }
+
         if (is_string($translation) === true) {
-            return $translation;
-        }
-
-        if (count($translation) !== 3) {
-            throw new Exception('Please provide 3 translations');
-        }
-
-        switch ($count) {
-            case 0:
-                $message = $translation[0];
-                break;
-            case 1:
-                $message = $translation[1];
-                break;
-            default:
-                $message = $translation[2];
+            $message = $translation;
+        } else {
+            if (isset($translation[$count]) === true) {
+                $message = $translation[$count];
+            } else {
+                $message = end($translation);
+            }
         }
 
         return str_replace('{{ count }}', $count, $message);

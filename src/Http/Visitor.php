@@ -55,7 +55,7 @@ class Visitor
      */
     public function __construct(array $arguments = [])
     {
-        $this->ip($arguments['ip'] ?? getenv('REMOTE_ADDR'));
+        $this->ip($arguments['ip'] ?? $_SERVER['REMOTE_ADDR'] ?? '');
         $this->userAgent($arguments['userAgent'] ?? $_SERVER['HTTP_USER_AGENT'] ?? '');
         $this->acceptedLanguage($arguments['acceptedLanguage'] ?? $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '');
         $this->acceptedMimeType($arguments['acceptedMimeType'] ?? $_SERVER['HTTP_ACCEPT'] ?? '');

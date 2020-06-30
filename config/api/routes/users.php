@@ -120,6 +120,12 @@ return [
         }
     ],
     [
+        'pattern' => 'users/(:any)/roles',
+        'action'  => function (string $id) {
+            return $this->user($id)->roles();
+        }
+    ],
+    [
         'pattern' => 'users/(:any)/sections/(:any)',
         'method'  => 'GET',
         'action'  => function (string $id, string $sectionName) {

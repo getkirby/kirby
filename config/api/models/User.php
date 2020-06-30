@@ -50,6 +50,9 @@ return [
         'role' => function (User $user) {
             return $user->role();
         },
+        'roles' => function (User $user) {
+            return $user->roles();
+        },
         'username' => function (User $user) {
             return $user->username();
         }

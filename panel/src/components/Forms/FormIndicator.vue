@@ -1,10 +1,22 @@
 <template>
-  <k-dropdown v-if="hasChanges" class="k-form-indicator">
-    <k-button class="k-topbar-button" @click="toggle">
-      <k-icon type="edit" class="k-form-indicator-icon" />
+  <k-dropdown
+    v-if="hasChanges"
+    class="k-form-indicator"
+  >
+    <k-button
+      class="k-topbar-button"
+      @click="toggle"
+    >
+      <k-icon
+        type="edit"
+        class="k-form-indicator-icon"
+      />
     </k-button>
 
-    <k-dropdown-content ref="list" align="right">
+    <k-dropdown-content
+      ref="list"
+      align="right"
+    >
       <p class="k-form-indicator-info">
         {{ $t("lock.unsaved") }}:
       </p>

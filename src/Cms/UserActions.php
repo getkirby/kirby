@@ -29,7 +29,7 @@ trait UserActions
      */
     public function changeEmail(string $email)
     {
-        return $this->commit('changeEmail', [$this, $email], function ($user, $email) {
+        return $this->commit('changeEmail', ['user' => $this, 'email' => $email], function ($user, $email) {
             $user = $user->clone([
                 'email' => $email
             ]);
@@ -50,7 +50,7 @@ trait UserActions
      */
     public function changeLanguage(string $language)
     {
-        return $this->commit('changeLanguage', [$this, $language], function ($user, $language) {
+        return $this->commit('changeLanguage', ['user' => $this, 'language' => $language], function ($user, $language) {
             $user = $user->clone([
                 'language' => $language,
             ]);
@@ -71,7 +71,7 @@ trait UserActions
      */
     public function changeName(string $name)
     {
-        return $this->commit('changeName', [$this, $name], function ($user, $name) {
+        return $this->commit('changeName', ['user' => $this, 'name' => $name], function ($user, $name) {
             $user = $user->clone([
                 'name' => $name
             ]);
@@ -92,7 +92,7 @@ trait UserActions
      */
     public function changePassword(string $password)
     {
-        return $this->commit('changePassword', [$this, $password], function ($user, $password) {
+        return $this->commit('changePassword', ['user' => $this, 'password' => $password], function ($user, $password) {
             $user = $user->clone([
                 'password' => $password = User::hashPassword($password)
             ]);
@@ -111,7 +111,7 @@ trait UserActions
      */
     public function changeRole(string $role)
     {
-        return $this->commit('changeRole', [$this, $role], function ($user, $role) {
+        return $this->commit('changeRole', ['user' => $this, 'role' => $role], function ($user, $role) {
             $user = $user->clone([
                 'role' => $role,
             ]);
@@ -144,13 +144,25 @@ trait UserActions
             throw new PermissionException('The Kirby user cannot be changed');
         }
 
-        $old = $this->hardcopy();
+        $old            = $this->hardcopy();
+        $kirby          = $this->kirby();
+        $argumentValues = array_values($arguments);
 
-        $this->rules()->$action(...$arguments);
-        $this->kirby()->trigger('user.' . $action . ':before', ...$arguments);
-        $result = $callback(...$arguments);
-        $this->kirby()->trigger('user.' . $action . ':after', $result, $old);
-        $this->kirby()->cache('pages')->flush();
+        $this->rules()->$action(...$argumentValues);
+        $kirby->trigger('user.' . $action . ':before', $arguments);
+
+        $result = $callback(...$argumentValues);
+
+        if ($action === 'create') {
+            $argumentsAfter = ['user' => $result];
+        } elseif ($action === 'delete') {
+            $argumentsAfter = ['status' => $result, 'user' => $old];
+        } else {
+            $argumentsAfter = ['newUser' => $result, 'oldUser' => $old];
+        }
+        $kirby->trigger('user.' . $action . ':after', $argumentsAfter);
+
+        $kirby->cache('pages')->flush();
         return $result;
     }
 
@@ -181,7 +193,7 @@ trait UserActions
         $user = $user->clone(['content' => $form->strings(true)]);
 
         // run the hook
-        return $user->commit('create', [$user, $props], function ($user, $props) {
+        return $user->commit('create', ['user' => $user, 'input' => $props], function ($user, $props) {
             $user->writeCredentials([
                 'email'    => $user->email(),
                 'language' => $user->language(),
@@ -231,7 +243,7 @@ trait UserActions
      */
     public function delete(): bool
     {
-        return $this->commit('delete', [$this], function ($user) {
+        return $this->commit('delete', ['user' => $this], function ($user) {
             if ($user->exists() === false) {
                 return true;
             }
@@ -258,8 +270,10 @@ trait UserActions
      */
     protected function readCredentials(): array
     {
-        if (file_exists($this->root() . '/index.php') === true) {
-            $credentials = require $this->root() . '/index.php';
+        $path = $this->root() . '/index.php';
+
+        if (is_file($path) === true) {
+            $credentials = F::load($path);
 
             return is_array($credentials) === false ? [] : $credentials;
         } else {

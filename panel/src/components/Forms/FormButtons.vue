@@ -1,6 +1,8 @@
 <template>
-  <nav :data-theme="mode" class="k-form-buttons">
-
+  <nav
+    :data-theme="mode"
+    class="k-form-buttons"
+  >
     <k-view v-if="mode === 'unlock'">
       <p class="k-form-lock-info">
         {{ $t("lock.isUnlocked") }}
@@ -49,7 +51,7 @@
         :disabled="isDisabled"
         icon="undo"
         class="k-form-button"
-        @click="onRevert"
+        @click="$refs.revert.open()"
       >
         {{ $t("revert") }}
       </k-button>
@@ -62,6 +64,16 @@
         {{ $t("save") }}
       </k-button>
     </k-view>
+
+    <k-dialog
+      ref="revert"
+      :submit-button="$t('revert')"
+      icon="undo"
+      theme="negative"
+      @submit="onRevert"
+    >
+      <k-text v-html="$t('revert.confirm')" />
+    </k-dialog>
   </nav>
 </template>
 
@@ -112,6 +124,8 @@ export default {
       if (this.hasChanges === true) {
         return "changes";
       }
+
+      return null;
     }
   },
   watch: {
@@ -285,6 +299,7 @@ export default {
 
     onRevert() {
       this.$store.dispatch("content/revert");
+      this.$refs.revert.close();
     },
 
     onSave(e) {

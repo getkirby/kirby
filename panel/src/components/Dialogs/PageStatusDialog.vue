@@ -1,18 +1,11 @@
 <template>
-  <k-dialog
+  <k-form-dialog
     ref="dialog"
-    :button="$t('change')"
-    size="medium"
-    theme="positive"
+    v-model="form"
+    :fields="fields"
+    :submit-button="$t('change')"
     @submit="submit"
-  >
-    <k-form
-      ref="form"
-      :fields="fields"
-      v-model="form"
-      @submit="changeStatus"
-    />
-  </k-dialog>
+  />
 </template>
 
 <script>
@@ -153,9 +146,6 @@ export default {
       this.$refs.dialog.open();
     },
     submit() {
-      this.$refs.form.submit();
-    },
-    changeStatus() {
       this.$api.pages
         .status(this.page.id, this.form.status, this.form.position || 1)
         .then(() => {

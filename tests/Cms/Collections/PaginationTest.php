@@ -150,4 +150,30 @@ class PaginationTest extends TestCase
 
         $this->assertEquals('https://getkirby.com', $pagination->prevPageUrl());
     }
+
+    public function testMethod()
+    {
+        $pagination = $this->pagination([
+            'page' => 2
+        ]);
+        $this->assertSame('https://getkirby.com/page:2', $pagination->pageUrl());
+
+        $pagination = $this->pagination([
+            'page'   => 2,
+            'method' => 'query'
+        ]);
+        $this->assertSame('https://getkirby.com?page=2', $pagination->pageUrl());
+
+        $pagination = $this->pagination([
+            'page'   => 2,
+            'method' => 'param'
+        ]);
+        $this->assertSame('https://getkirby.com/page:2', $pagination->pageUrl());
+
+        $pagination = $this->pagination([
+            'page'   => 2,
+            'method' => 'none'
+        ]);
+        $this->assertNull($pagination->pageUrl());
+    }
 }

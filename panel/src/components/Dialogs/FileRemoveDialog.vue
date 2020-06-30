@@ -1,13 +1,9 @@
 <template>
-  <k-dialog
+  <k-remove-dialog
     ref="dialog"
-    :button="$t('delete')"
-    theme="negative"
-    icon="trash"
+    :text="$t('file.delete.confirm', { filename: filename })"
     @submit="submit"
-  >
-    <k-text v-html="$t('file.delete.confirm', { filename: filename })" />
-  </k-dialog>
+  />
 </template>
 
 <script>

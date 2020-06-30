@@ -1,14 +1,14 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('insert')"
+    :submit-button="$t('insert')"
     @close="cancel"
     @submit="$refs.form.submit()"
   >
     <k-form
       ref="form"
-      :fields="fields"
       v-model="value"
+      :fields="fields"
       @submit="submit"
     />
   </k-dialog>

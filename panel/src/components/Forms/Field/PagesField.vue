@@ -1,6 +1,12 @@
 <template>
-  <k-field v-bind="$props" class="k-pages-field">
-    <k-button-group slot="options" class="k-field-options">
+  <k-field
+    v-bind="$props"
+    class="k-pages-field"
+  >
+    <k-button-group
+      slot="options"
+      class="k-field-options"
+    >
       <k-button
         v-if="more && !disabled"
         :icon="btnIcon"
@@ -20,8 +26,8 @@
         @end="onInput"
       >
         <component
-          v-for="(page, index) in selected"
           :is="elements.item"
+          v-for="(page, index) in selected"
           :key="page.id"
           :sortable="!disabled && selected.length > 1"
           :text="page.text"
@@ -48,7 +54,10 @@
     >
       {{ empty || $t("field.pages.empty") }}
     </k-empty>
-    <k-pages-dialog ref="selector" @submit="select" />
+    <k-pages-dialog
+      ref="selector"
+      @submit="select"
+    />
   </k-field>
 </template>
 

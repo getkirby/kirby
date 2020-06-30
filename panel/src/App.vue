@@ -12,39 +12,56 @@
     <keep-alive>
       <k-icons />
     </keep-alive>
-    <header v-if="inside" class="k-panel-header">
+    <header
+      v-if="inside"
+      class="k-panel-header"
+    >
       <k-topbar @register="$refs.registration.open()" />
-      <k-search v-if="$store.state.search" v-bind="$store.state.search" />
+      <k-search
+        v-if="$store.state.search"
+        v-bind="$store.state.search"
+      />
     </header>
     <main class="k-panel-view">
       <router-view />
     </main>
     <k-form-buttons v-if="inside" />
     <k-error-dialog />
-    <div v-if="offline" class="k-offline-warning">
-      <p>The panel is currently offline</p>
+    <div
+      v-if="offline"
+      class="k-offline-warning"
+    >
+      <p>The Panel is currently offline</p>
     </div>
-    <k-registration v-if="inside" ref="registration" />
+    <k-registration
+      v-if="inside"
+      ref="registration"
+    />
   </div>
-  <div v-else class="k-panel">
+  <div
+    v-else
+    class="k-panel"
+  >
     <main class="k-panel-view">
       <k-error-view>
-        <p v-if="debug">{{ $store.state.system.info.error }}</p>
-        <p v-else>The panel cannot connect to the API</p>
+        <p v-if="debug">
+          {{ $store.state.system.info.error }}
+        </p>
+        <p v-else>
+          The Panel cannot connect to the API
+        </p>
       </k-error-view>
     </main>
   </div>
 </template>
 
 <script>
-import Icons from "@/components/Misc/Icons.vue";
 import Registration from "@/components/Dialogs/RegistrationDialog.vue";
 import config from "@/config/config.js";
 
 export default {
   name: "App",
   components: {
-    "k-icons": Icons,
     "k-registration": Registration,
   },
   data() {
@@ -101,185 +118,5 @@ export default {
 </script>
 
 <style lang="scss">
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-:root {
-  /** Colors **/
-  --color-backdrop: #{$color-backdrop};
-  --color-background: #{$color-background};
-  --color-border: #{$color-border};
-  --color-focus: #{$color-focus};
-  --color-focus-light: #{$color-focus-on-dark};
-  --color-focus-outline: #{$color-focus-outline};
-  --color-negative: #{$color-negative};
-  --color-negative-light: #{$color-negative-on-dark};
-  --color-negative-outline: #{$color-negative-outline};
-  --color-notice: #{$color-notice};
-  --color-notice-light: #{$color-notice-on-dark};
-  --color-positive: #{$color-positive};
-  --color-positive-light: #{$color-positive-on-dark};
-  --color-positive-outline: #{$color-positive-outline};
-  --color-text: #{$color-dark};
-  --color-text-light: #{$color-dark-grey};
-
-  /** Font families **/
-  --font-family-mono: #{$font-family-mono};
-  --font-family-sans: #{$font-family-sans};
-
-  /** Font sizes **/
-  --font-size-tiny: #{$font-size-tiny};
-  --font-size-small: #{$font-size-small};
-  --font-size-medium: #{$font-size-medium};
-  --font-size-large: #{$font-size-large};
-  --font-size-huge: #{$font-size-huge};
-  --font-size-monster: #{$font-size-monster};
-
-  /** Shadows **/
-  --box-shadow-dropdown: #{$box-shadow};
-  --box-shadow-item: #{$box-shadow-card};
-  --box-shadow-focus: #{$box-shadow-focus-full};
-}
-
-noscript {
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-}
-
-html {
-  font-family: $font-family-sans;
-  background: $color-background;
-}
-
-html,
-body {
-  color: $color-dark;
-  overflow: hidden;
-  height: 100%;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-li {
-  list-style: none;
-}
-
-strong,
-b {
-  font-weight: $font-weight-bold;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.k-panel {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: $color-background;
-}
-.k-panel[data-loading] {
-  animation: LoadingCursor 0.5s;
-}
-.k-panel-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: z-index(navigation);
-}
-.k-panel .k-form-buttons {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: z-index(navigation);
-}
-.k-panel-view {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding-bottom: 6rem;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  transform: translate3d(0, 0, 0);
-}
-.k-panel[data-dialog] .k-panel-view {
-  overflow: hidden;
-  transform: none;
-}
-.k-panel[data-topbar] .k-panel-view {
-  top: 2.5rem;
-}
-.k-panel[data-loading]::after,
-.k-panel[data-dragging] {
-  user-select: none;
-}
-.k-offline-warning {
-  position: fixed;
-  content: " ";
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: z-index(loader);
-}
-.k-offline-warning {
-  background: rgba($color-dark, 0.7);
-  content: "offline";
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $color-white;
-}
-
-@keyframes LoadingCursor {
-  100% {
-    cursor: progress;
-  }
-}
-
-@keyframes Spin {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-.k-offscreen {
-  clip-path: inset(100%);
-  clip: rect(1px, 1px, 1px, 1px);
-  height: 1px;
-  overflow: hidden;
-  position: absolute;
-  white-space: nowrap;
-  width: 1px;
-}
-
-.k-icons {
-  position: absolute;
-  width: 0;
-  height: 0;
-}
+  @import "@/ui/css/index.scss";
 </style>

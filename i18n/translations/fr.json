@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "L’image du profil n’a pu être transférée",
   "error.avatar.delete.fail": "L’image du profil n’a pu être supprimée",
-  "error.avatar.dimensions.invalid":
-    "Veuillez choisir une image de profil de largeur et hauteur inférieures à 3000 pixels",
-  "error.avatar.mime.forbidden":
-    "L'image du profil utilisateur doit être un fichier JPEG ou PNG",
+  "error.avatar.dimensions.invalid": "Veuillez choisir une image de profil de largeur et hauteur inférieures à 3000 pixels",
+  "error.avatar.mime.forbidden": "L'image du profil utilisateur doit être un fichier JPEG ou PNG",
 
   "error.blueprint.notFound": "Le blueprint «&nbsp;{name}&nbsp;» n’a pu être chargé",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Convertisseur «&nbsp;{converter}&nbsp;» incorrect",
 
   "error.file.changeName.empty": "Le nom ne peut être vide",
-  "error.file.changeName.permission":
-    "Vous n’êtes pas autorisé à modifier le nom de «&nbsp;{filename}&nbsp;»",
+  "error.file.changeName.permission": "Vous n’êtes pas autorisé à modifier le nom de «&nbsp;{filename}&nbsp;»",
   "error.file.duplicate": "Un fichier nommé «&nbsp;{filename}&nbsp;» existe déjà",
-  "error.file.extension.forbidden":
-    "L’extension «&nbsp;{extension}&nbsp;» n’est pas autorisée",
-  "error.file.extension.missing":
-    "L’extension pour «&nbsp;{filename}&nbsp;» est manquante",
+  "error.file.extension.forbidden": "L’extension «&nbsp;{extension}&nbsp;» n’est pas autorisée",
+  "error.file.extension.missing": "L’extension pour «&nbsp;{filename}&nbsp;» est manquante",
   "error.file.maxheight": "La hauteur de l'image ne doit pas excéder {height} pixels",
   "error.file.maxsize": "Le fichier est trop volumineux",
   "error.file.maxwidth": "La largeur de l'image ne doit pas excéder {width} pixels",
-  "error.file.mime.differs":
-    "Le fichier transféré doit être du même type de média «&nbsp;{mime}&nbsp;»",
+  "error.file.mime.differs": "Le fichier transféré doit être du même type de média «&nbsp;{mime}&nbsp;»",
   "error.file.mime.forbidden": "Le type de média «&nbsp;{mime}&nbsp;» n’est pas autorisé",
   "error.file.mime.invalid": "Type de média invalide : {mime}",
-  "error.file.mime.missing":
-    "Le type de média de «&nbsp;{filename}&nbsp;» n’a pu être détecté",
+  "error.file.mime.missing": "Le type de média de «&nbsp;{filename}&nbsp;» n’a pu être détecté",
   "error.file.minheight": "La hauteur de l'image doit être au moins {height} pixels",
   "error.file.minsize": "Le fichier n'est pas assez volumineux",
   "error.file.minwidth": "La largeur de l'image doit être au moins {width} pixels",
@@ -90,111 +83,77 @@
   "error.license.email": "Veuillez saisir un courriel valide",
   "error.license.verification": "La licence n’a pu être vérifiée",
 
-  "error.page.changeSlug.permission":
-    "Vous n’êtes pas autorisé à modifier l’identifiant d’URL pour «&nbsp;{slug}&nbsp;»",
-  "error.page.changeStatus.incomplete":
-    "La page comporte des erreurs et ne peut pas être publiée",
-  "error.page.changeStatus.permission":
-    "Le statut de cette page ne peut être modifié",
-  "error.page.changeStatus.toDraft.invalid":
-    "La page «&nbsp;{slug}&nbsp;» ne peut être convertie en brouillon",
-  "error.page.changeTemplate.invalid":
-    "Le modèle de la page «&nbsp;{slug}&nbsp;» ne peut être changé",
-  "error.page.changeTemplate.permission":
-    "Vous n’êtes pas autorisé à changer le modèle de «&nbsp;{slug}&nbsp;»",
+  "error.page.changeSlug.permission": "Vous n’êtes pas autorisé à modifier l’identifiant d’URL pour «&nbsp;{slug}&nbsp;»",
+  "error.page.changeStatus.incomplete": "La page comporte des erreurs et ne peut pas être publiée",
+  "error.page.changeStatus.permission": "Le statut de cette page ne peut être modifié",
+  "error.page.changeStatus.toDraft.invalid": "La page «&nbsp;{slug}&nbsp;» ne peut être convertie en brouillon",
+  "error.page.changeTemplate.invalid": "Le modèle de la page «&nbsp;{slug}&nbsp;» ne peut être changé",
+  "error.page.changeTemplate.permission": "Vous n’êtes pas autorisé à changer le modèle de «&nbsp;{slug}&nbsp;»",
   "error.page.changeTitle.empty": "Le titre ne peut être vide",
-  "error.page.changeTitle.permission":
-    "Vous n’êtes pas autorisé à modifier le titre de «&nbsp;{slug}&nbsp;»",
+  "error.page.changeTitle.permission": "Vous n’êtes pas autorisé à modifier le titre de «&nbsp;{slug}&nbsp;»",
   "error.page.create.permission": "Vous n’êtes pas autorisé à créer «&nbsp;{slug}&nbsp;»",
   "error.page.delete": "La page «&nbsp;{slug}&nbsp;» ne peut être supprimée",
   "error.page.delete.confirm": "Veuillez saisir le titre de la page pour confirmer",
-  "error.page.delete.hasChildren":
-    "La page comporte des sous-pages et ne peut pas être supprimée",
+  "error.page.delete.hasChildren": "La page comporte des sous-pages et ne peut pas être supprimée",
   "error.page.delete.permission": "Vous n’êtes pas autorisé à supprimer «&nbsp;{slug}&nbsp;»",
-  "error.page.draft.duplicate":
-    "Un brouillon avec l’identifiant d’URL «&nbsp;{slug}&nbsp;» existe déjà",
-  "error.page.duplicate":
-    "Une page avec l’identifiant d’URL «&nbsp;{slug}&nbsp;» existe déjà",
+  "error.page.draft.duplicate": "Un brouillon avec l’identifiant d’URL «&nbsp;{slug}&nbsp;» existe déjà",
+  "error.page.duplicate": "Une page avec l’identifiant d’URL «&nbsp;{slug}&nbsp;» existe déjà",
   "error.page.duplicate.permission": "Vous n'êtes pas autorisé à dupliquer «&nbsp;{slug}&nbsp;»",
   "error.page.notFound": "La page «&nbsp;{slug}&nbsp;» n’a pu être trouvée",
-  "error.page.num.invalid":
-    "Veuillez saisir un numéro de position valide. Les numéros ne doivent pas être négatifs.",
+  "error.page.num.invalid": "Veuillez saisir un numéro de position valide. Les numéros ne doivent pas être négatifs.",
   "error.page.slug.invalid": "Veuillez saisir un préfixe d’URL valide",
   "error.page.sort.permission": "La page «&nbsp;{slug}&nbsp;» ne peut être réordonnée",
   "error.page.status.invalid": "Veuillez choisir un statut de page valide",
   "error.page.undefined": "La page n’a pu être trouvée",
   "error.page.update.permission": "Vous n’êtes pas autorisé à modifier «&nbsp;{slug}&nbsp;»",
 
-  "error.section.files.max.plural":
-    "Vous ne pouvez ajouter plus de {max} fichier(s) à la section «&nbsp;{section}&nbsp;»",
-  "error.section.files.max.singular":
-    "Vous ne pouvez ajouter plus d’un fichier à la section «&nbsp;{section}&nbsp;»",
-  "error.section.files.min.plural":
-    "La section «&nbsp;{section}\"&nbsp;» requiert au moins {min} fichiers",
-  "error.section.files.min.singular":
-    "La section «&nbsp;{section}\"&nbsp;» requiert au moins un fichier",
+  "error.section.files.max.plural": "Vous ne pouvez ajouter plus de {max} fichier(s) à la section «&nbsp;{section}&nbsp;»",
+  "error.section.files.max.singular": "Vous ne pouvez ajouter plus d’un fichier à la section «&nbsp;{section}&nbsp;»",
+  "error.section.files.min.plural": "La section «&nbsp;{section}\"&nbsp;» requiert au moins {min} fichiers",
+  "error.section.files.min.singular": "La section «&nbsp;{section}\"&nbsp;» requiert au moins un fichier",
 
-  "error.section.pages.max.plural":
-    "Vous ne pouvez ajouter plus de {max} pages à la section «&nbsp;{section}&nbsp;»",
-  "error.section.pages.max.singular":
-    "Vous ne pouvez ajouter plus d’une page à la section «&nbsp;{section}&nbsp;»",
-  "error.section.pages.min.plural":
-    "La section «&nbsp;{section}\"&nbsp;» requiert au moins {min} pages",
-  "error.section.pages.min.singular":
-    "La section «&nbsp;{section}\"&nbsp;» requiert au moins une page",
+  "error.section.pages.max.plural": "Vous ne pouvez ajouter plus de {max} pages à la section «&nbsp;{section}&nbsp;»",
+  "error.section.pages.max.singular": "Vous ne pouvez ajouter plus d’une page à la section «&nbsp;{section}&nbsp;»",
+  "error.section.pages.min.plural": "La section «&nbsp;{section}\"&nbsp;» requiert au moins {min} pages",
+  "error.section.pages.min.singular": "La section «&nbsp;{section}\"&nbsp;» requiert au moins une page",
 
   "error.section.notLoaded": "La section «&nbsp;{name}&nbsp;» n’a pu être chargée",
   "error.section.type.invalid": "Le type de section «&nbsp;{type}&nbsp;» est incorrect",
 
   "error.site.changeTitle.empty": "Le titre ne peut être vide",
-  "error.site.changeTitle.permission":
-    "Vous n’êtes pas autorisé à modifier le titre du site",
+  "error.site.changeTitle.permission": "Vous n’êtes pas autorisé à modifier le titre du site",
   "error.site.update.permission": "Vous n’êtes pas autorisé à modifier le contenu global du site",
 
   "error.template.default.notFound": "Le modèle par défaut n’existe pas",
 
-  "error.user.changeEmail.permission":
-    "Vous n’êtes pas autorisé à modifier le courriel de l’utilisateur « {name} »",
-  "error.user.changeLanguage.permission":
-    "Vous n’êtes pas autorisé à changer la langue de l’utilisateur « {name} »",
-  "error.user.changeName.permission":
-    "Vous n’êtes pas autorisé à modifier le nom de l’utilisateur « {name} »",
-  "error.user.changePassword.permission":
-    "Vous n’êtes pas autorisé à changer le mot de passe de l’utilisateur « {name} »",
-  "error.user.changeRole.lastAdmin":
-    "Le rôle du dernier administrateur ne peut être modifié",
-  "error.user.changeRole.permission":
-    "Vous n’êtes pas autorisé à changer le rôle de l’utilisateur « {name} »",
-  "error.user.changeRole.toAdmin":
-    "Vous n’êtes pas autorisé à attribuer le rôle d’administrateur aux utilisateurs",
+  "error.user.changeEmail.permission": "Vous n’êtes pas autorisé à modifier le courriel de l’utilisateur « {name} »",
+  "error.user.changeLanguage.permission": "Vous n’êtes pas autorisé à changer la langue de l’utilisateur « {name} »",
+  "error.user.changeName.permission": "Vous n’êtes pas autorisé à modifier le nom de l’utilisateur « {name} »",
+  "error.user.changePassword.permission": "Vous n’êtes pas autorisé à changer le mot de passe de l’utilisateur « {name} »",
+  "error.user.changeRole.lastAdmin": "Le rôle du dernier administrateur ne peut être modifié",
+  "error.user.changeRole.permission": "Vous n’êtes pas autorisé à changer le rôle de l’utilisateur « {name} »",
+  "error.user.changeRole.toAdmin": "Vous n’êtes pas autorisé à attribuer le rôle d’administrateur aux utilisateurs",
   "error.user.create.permission": "Vous n’êtes pas autorisé à créer cet utilisateur",
   "error.user.delete": "L’utilisateur « {name} » ne peut être supprimé",
   "error.user.delete.lastAdmin": "Le dernier administrateur ne peut être supprimé",
   "error.user.delete.lastUser": "Le dernier utilisateur ne peut être supprimé",
-  "error.user.delete.permission":
-    "Vous n’êtes pas autorisé à supprimer l’utilisateur « {name} »",
-  "error.user.duplicate":
-    "Un utilisateur avec le courriel « {email} » existe déjà",
+  "error.user.delete.permission": "Vous n’êtes pas autorisé à supprimer l’utilisateur « {name} »",
+  "error.user.duplicate": "Un utilisateur avec le courriel « {email} » existe déjà",
   "error.user.email.invalid": "Veuillez saisir un courriel valide",
   "error.user.language.invalid": "Veuillez saisir une langue valide",
   "error.user.notFound": "L’utilisateur « {name} » n’a pu être trouvé",
-  "error.user.password.invalid":
-    "Veuillez saisir un mot de passe valide. Les mots de passe doivent comporter au moins 8 caractères.",
+  "error.user.password.invalid": "Veuillez saisir un mot de passe valide. Les mots de passe doivent comporter au moins 8 caractères.",
   "error.user.password.notSame": "Les mots de passe ne sont pas identiques",
   "error.user.password.undefined": "Cet utilisateur n’a pas de mot de passe",
   "error.user.role.invalid": "Veuillez saisir un rôle valide",
-  "error.user.update.permission":
-    "Vous n’êtes pas autorisé à modifier l’utilisateur « {name} »",
+  "error.user.update.permission": "Vous n’êtes pas autorisé à modifier l’utilisateur « {name} »",
 
   "error.validation.accepted": "Veuillez confirmer",
   "error.validation.alpha": "Veuillez saisir uniquement des caractères alphabétiques minuscules",
-  "error.validation.alphanum":
-    "Veuillez ne saisir que des minuscules de a à z et des chiffres de 0 à 9",
-  "error.validation.between":
-    "Veuillez saisir une valeur entre «&nbsp;{min}&nbsp;» et «&nbsp;{max}&nbsp;»",
+  "error.validation.alphanum": "Veuillez ne saisir que des minuscules de a à z et des chiffres de 0 à 9",
+  "error.validation.between": "Veuillez saisir une valeur entre «&nbsp;{min}&nbsp;» et «&nbsp;{max}&nbsp;»",
   "error.validation.boolean": "Veuillez confirmer ou refuser",
-  "error.validation.contains":
-    "Veuillez saisir une valeur contenant «&nbsp;{needle}&nbsp;»",
+  "error.validation.contains": "Veuillez saisir une valeur contenant «&nbsp;{needle}&nbsp;»",
   "error.validation.date": "Veuillez saisir une date valide",
   "error.validation.date.after": "Veuillez saisir une date après {date}",
   "error.validation.date.before": "Veuillez saisir une date avant {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Veuillez saisir une valeur inférieure à {max}",
   "error.validation.match": "La valeur ne correspond pas au modèle attendu",
   "error.validation.max": "Veuillez saisir une valeur inférieure ou égale à {max}",
-  "error.validation.maxlength":
-    "Veuillez saisir une valeur plus courte (max. {max} caractères)",
+  "error.validation.maxlength": "Veuillez saisir une valeur plus courte (max. {max} caractères)",
   "error.validation.maxwords": "Veuillez ne pas saisir plus de {max} mot(s)",
   "error.validation.min": "Veuillez saisir une valeur supérieure ou égale à {min}",
-  "error.validation.minlength":
-    "Veuillez saisir une valeur plus longue (min. {min} caractères)",
+  "error.validation.minlength": "Veuillez saisir une valeur plus longue (min. {min} caractères)",
   "error.validation.minwords": "Veuillez saisir au moins {min} mot(s)",
   "error.validation.more": "Veuillez saisir une valeur supérieure à {min}",
-  "error.validation.notcontains":
-    "Veuillez saisir une valeur ne contenant pas «&nbsp;{needle}&nbsp;»",
-  "error.validation.notin":
-    "Veuillez ne saisir aucun des éléments suivants: ({notIn})",
+  "error.validation.notcontains": "Veuillez saisir une valeur ne contenant pas «&nbsp;{needle}&nbsp;»",
+  "error.validation.notin": "Veuillez ne saisir aucun des éléments suivants: ({notIn})",
   "error.validation.option": "Veuillez sélectionner une option valide",
   "error.validation.num": "Veuillez saisir un nombre valide",
   "error.validation.required": "Veuillez saisir quelque chose",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Pas encore d’entrée",
   "field.users.empty": "Pas encore d’utilisateur sélectionné",
 
-  "file.delete.confirm":
-    "Voulez-vous vraiment supprimer <br><strong>{filename}</strong>&nbsp;?",
+  "file.delete.confirm": "Voulez-vous vraiment supprimer <br><strong>{filename}</strong>&nbsp;?",
 
   "files": "Fichiers",
   "files.empty": "Pas encore de fichier",
@@ -251,29 +205,22 @@
   "installation": "Installation",
   "installation.completed": "Le Panel a été installé",
   "installation.disabled": "L'installation du Panel est désactivée par défaut sur les serveurs publics. Veuillez lancer l'installation sur un serveur local, ou activez-la avec l'option <code>panel.install</code>.",
-  "installation.issues.accounts":
-    "Le dossier <code>/site/accounts</code> n’existe pas ou n’est pas accessible en écriture",
-  "installation.issues.content":
-    "Le dossier <code>/content</code> n’existe pas ou n’est pas accessible en écriture",
+  "installation.issues.accounts": "Le dossier <code>/site/accounts</code> n’existe pas ou n’est pas accessible en écriture",
+  "installation.issues.content": "Le dossier <code>/content</code> n’existe pas ou n’est pas accessible en écriture",
   "installation.issues.curl": "L’extension <code>CURL</code> est requise",
   "installation.issues.headline": "Le Panel ne peut être installé",
-  "installation.issues.mbstring":
-    "L’extension <code>MB String</code> est requise",
-  "installation.issues.media":
-    "Le dossier <code>/media</code> n’existe pas ou n’est pas accessible en écriture",
+  "installation.issues.mbstring": "L’extension <code>MB String</code> est requise",
+  "installation.issues.media": "Le dossier <code>/media</code> n’existe pas ou n’est pas accessible en écriture",
   "installation.issues.php": "Veuillez utiliser <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby requiert <code>Apache</code>, <code>Nginx</code> ou <code>Caddy</code>",
+  "installation.issues.server": "Kirby requiert <code>Apache</code>, <code>Nginx</code> ou <code>Caddy</code>",
   "installation.issues.sessions": "Le dossier <code>/site/sessions</code> n’existe pas ou n’est pas accessible en écriture",
 
   "language": "Langue",
   "language.code": "Code",
   "language.convert": "Choisir comme langue par défaut",
-  "language.convert.confirm":
-    "<p>Souhaitez-vous vraiment convertir <strong>{name}</strong> vers la langue par défaut&nbsp;? Cette action ne peut pas être annulée.</p><p>Si <strong>{name}</strong> a un contenu non traduit, il n’y aura plus de solution de secours possible et certaines parties de votre site pourraient être vides.</p>",
+  "language.convert.confirm": "<p>Souhaitez-vous vraiment convertir <strong>{name}</strong> vers la langue par défaut&nbsp;? Cette action ne peut pas être annulée.</p><p>Si <strong>{name}</strong> a un contenu non traduit, il n’y aura plus de solution de secours possible et certaines parties de votre site pourraient être vides.</p>",
   "language.create": "Ajouter une nouvelle langue",
-  "language.delete.confirm":
-    "Voulez-vous vraiment supprimer la langue <strong>{name}</strong>, ainsi que toutes ses traductions&nbsp;? Cette action ne peut être annulée&nbsp;!",
+  "language.delete.confirm": "Voulez-vous vraiment supprimer la langue <strong>{name}</strong>, ainsi que toutes ses traductions&nbsp;? Cette action ne peut être annulée&nbsp;!",
   "language.deleted": "La langue a été supprimée",
   "language.direction": "Sens de lecture",
   "language.direction.ltr": "De gauche à droite",
@@ -292,8 +239,7 @@
   "license": "Licence",
   "license.buy": "Acheter une licence",
   "license.register": "S’enregistrer",
-  "license.register.help":
-    "Vous avez reçu votre numéro de licence par courriel après l'achat. Veuillez le copier et le coller ici pour l'enregistrer.",
+  "license.register.help": "Vous avez reçu votre numéro de licence par courriel après l'achat. Veuillez le copier et le coller ici pour l'enregistrer.",
   "license.register.label": "Veuillez saisir votre numéro de licence",
   "license.register.success": "Merci pour votre soutien à Kirby",
   "license.unregistered": "Ceci est une démo non enregistrée de Kirby",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Veuillez sélectionner une position",
   "page.changeStatus.select": "Sélectionner un nouveau statut",
   "page.changeTemplate": "Changer de modèle",
-  "page.delete.confirm":
-    "Voulez-vous vraiment supprimer <strong>{title}</strong>&nbsp;?",
-  "page.delete.confirm.subpages":
-    "<strong>Cette page contient des sous-pages</strong>. <br>Toutes les sous-pages seront également supprimées.",
+  "page.delete.confirm": "Voulez-vous vraiment supprimer <strong>{title}</strong>&nbsp;?",
+  "page.delete.confirm.subpages": "<strong>Cette page contient des sous-pages</strong>. <br>Toutes les sous-pages seront également supprimées.",
   "page.delete.confirm.title": "Veuillez saisir le titre de la page pour confirmer",
   "page.draft.create": "Créer un brouillon",
   "page.duplicate.appendix": "Copier",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Copier les pages",
   "page.status": "Statut",
   "page.status.draft": "Brouillon",
-  "page.status.draft.description":
-    "La page est en mode brouillon et n’est visible que par les éditeurs connectés",
+  "page.status.draft.description": "Cette page est un brouillon et n’est visible que pour les éditeurs connectés ou par un lien secret",
   "page.status.listed": "Public",
   "page.status.listed.description": "La page est publique pour tout le monde",
   "page.status.unlisted": "Non listé",
@@ -388,6 +331,7 @@
   "replace": "Remplacer",
   "retry": "Essayer à nouveau",
   "revert": "Revenir",
+  "revert.confirm": "Voulez-vous vraiment <strong>supprimer toutes les modifications non-enregistrées</strong> ?",
 
   "role": "Rôle",
   "role.admin.description": "L’administrateur dispose de tous les droits",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Utilisateur",
-  "user.blueprint":
-    "Vous pouvez définir des sections et des champs de formulaire supplémentaires pour ce rôle d’utilisateur dans <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Vous pouvez définir des sections et des champs de formulaire supplémentaires pour ce rôle d’utilisateur dans <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Modifier le courriel",
   "user.changeLanguage": "Modifier la langue",
   "user.changeName": "Renommer cet utilisateur",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Sélectionner un nouveau rôle",
   "user.create": "Ajouter un nouvel utilisateur",
   "user.delete": "Supprimer cet utilisateur",
-  "user.delete.confirm":
-    "Voulez-vous vraiment supprimer <br><strong>{email}</strong>?",
+  "user.delete.confirm": "Voulez-vous vraiment supprimer <br><strong>{email}</strong>?",
 
   "users": "Utilisateurs",
 

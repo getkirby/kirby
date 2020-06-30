@@ -611,19 +611,20 @@ abstract class ModelWithContent extends Model
      * String template builder
      *
      * @param string|null $template
+     * @param array $data
      * @return string
      */
-    public function toString(string $template = null): string
+    public function toString(string $template = null, array $data = []): string
     {
         if ($template === null) {
             return $this->id();
         }
 
-        $result = Str::template($template, [
+        $result = Str::template($template, array_replace([
             'kirby'             => $this->kirby(),
             'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
-        ]);
+        ], $data));
 
         return $result;
     }
@@ -691,7 +692,8 @@ abstract class ModelWithContent extends Model
             }
         }
 
-        return $this->commit('update', [$this, $form->data(), $form->strings(), $languageCode], function ($model, $values, $strings, $languageCode) {
+        $arguments = [static::CLASS_ALIAS => $this, 'values' => $form->data(), 'strings' => $form->strings(), 'languageCode' => $languageCode];
+        return $this->commit('update', $arguments, function ($model, $values, $strings, $languageCode) {
             // save updated values
             $model = $model->save($strings, $languageCode, true);
 

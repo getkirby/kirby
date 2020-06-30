@@ -20,11 +20,13 @@ class DataTest extends TestCase
         $this->assertInstanceOf(Json::class, Data::handler('json'));
         $this->assertInstanceOf(PHP::class, Data::handler('php'));
         $this->assertInstanceOf(Txt::class, Data::handler('txt'));
+        $this->assertInstanceOf(Xml::class, Data::handler('xml'));
         $this->assertInstanceOf(Yaml::class, Data::handler('yaml'));
 
         // aliases
         $this->assertInstanceOf(Txt::class, Data::handler('md'));
         $this->assertInstanceOf(Txt::class, Data::handler('mdown'));
+        $this->assertInstanceOf(Xml::class, Data::handler('rss'));
         $this->assertInstanceOf(Yaml::class, Data::handler('yml'));
 
         // different case
@@ -72,13 +74,28 @@ class DataTest extends TestCase
             'email' => 'homer@simpson.com'
         ];
 
-        $handlers = ['json', 'yml', 'txt'];
+        $handlers = ['json', 'yml', 'xml', 'txt'];
 
         foreach ($handlers as $handler) {
             $encoded = Data::encode($data, $handler);
             $decoded = Data::decode($encoded, $handler);
 
             $this->assertSame($data, $decoded);
+
+            // decode invalid integer value
+            $this->expectException('Kirby\Exception\InvalidArgumentException');
+            $this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data. Please pass a string');
+            Data::decode(1, $handler);
+
+            // decode invalid object value
+            $this->expectException('Kirby\Exception\InvalidArgumentException');
+            $this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data. Please pass a string');
+            Data::decode(new \stdClass(), $handler);
+
+            // decode invalid boolean value
+            $this->expectException('Kirby\Exception\InvalidArgumentException');
+            $this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data. Please pass a string');
+            Data::decode(true, $handler);
         }
     }
 

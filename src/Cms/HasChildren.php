@@ -126,7 +126,7 @@ trait HasChildren
      * Finds one or multiple children by id
      *
      * @param string ...$arguments
-     * @return \Kirby\Cms\Page|\Kirby\Cms\Pages
+     * @return \Kirby\Cms\Page|\Kirby\Cms\Pages|null
      */
     public function find(...$arguments)
     {

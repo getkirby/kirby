@@ -25,17 +25,7 @@ class UserPermissions extends ModelPermissions
 
     protected function canChangeRole(): bool
     {
-        // only one role, makes no sense to change it
-        if ($this->user->kirby()->roles()->count() < 2) {
-            return false;
-        }
-
-        // users who are not admins cannot change their own role
-        if ($this->user->is($this->model) === true && $this->user->isAdmin() === false) {
-            return false;
-        }
-
-        return $this->model->isLastAdmin() !== true;
+        return $this->model->roles()->count() > 1;
     }
 
     protected function canCreate(): bool
