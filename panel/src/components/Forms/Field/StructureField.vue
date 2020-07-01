@@ -389,6 +389,7 @@ export default {
     },
     duplicateItem(index) {
       this.items.push(this.items[index]);
+      this.onInput();
     },
     createForm(field) {
       this.$events.$on("keydown.esc", this.escape);
