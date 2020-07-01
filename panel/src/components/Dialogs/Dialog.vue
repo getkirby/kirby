@@ -54,7 +54,10 @@
         type: String,
         default: "default"
       },
-      submitButton: [String, Boolean],
+      submitButton: {
+        type: [String, Boolean],
+        default: true
+      },
       theme: String,
       visible: Boolean
     },
