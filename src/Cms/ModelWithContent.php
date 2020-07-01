@@ -624,7 +624,7 @@ abstract class ModelWithContent extends Model
             'kirby'             => $this->kirby(),
             'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
-        ], $data));
+        ], $data), '');
 
         return $result;
     }
