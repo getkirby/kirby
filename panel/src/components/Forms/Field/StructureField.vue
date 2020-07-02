@@ -354,6 +354,16 @@ export default {
 
       this.createForm();
     },
+    addItem(value) {
+      if (this.prepend === true) {
+        this.items.unshift(value);
+      } else {
+        this.items.push(value);
+      }
+    },
+    beforePaginate() {
+      return this.save(this.currentModel);
+    },
     close() {
       this.currentIndex = null;
       this.currentModel = null;
@@ -386,10 +396,6 @@ export default {
       this.close();
       this.trash = index;
       this.$refs.remove.open();
-    },
-    duplicateItem(index) {
-      this.items.push(this.items[index]);
-      this.onInput();
     },
     createForm(field) {
       this.$events.$on("keydown.esc", this.escape);
@@ -447,6 +453,10 @@ export default {
 
       return value.toString();
     },
+    duplicateItem(index) {
+      this.addItem(this.items[index]);
+      this.onInput();
+    },
     escape() {
       if (this.currentIndex === "new") {
         let row = Object.values(this.currentModel);
@@ -499,9 +509,6 @@ export default {
       this.currentModel = this.$helper.clone(this.items[index]);
       this.createForm(field);
     },
-    beforePaginate() {
-      return this.save(this.currentModel);
-    },
     paginate(pagination) {
       this.open(pagination.offset);
     },
@@ -551,11 +558,7 @@ export default {
         return this.validate(this.currentModel)
           .then(() => {
             if (this.currentIndex === "new") {
-              if (this.prepend === true) {
-                this.items.unshift(this.currentModel);
-              } else {
-                this.items.push(this.currentModel);
-              }
+              this.addItem(this.currentModel);
             } else {
               this.items[this.currentIndex] = this.currentModel;
             }
