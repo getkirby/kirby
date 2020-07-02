@@ -102,7 +102,7 @@ class Txt extends Handler
         }
 
         if (is_string($string) === false) {
-            throw new InvalidArgumentException('Invalid data; please pass a string');
+            throw new InvalidArgumentException('Invalid TXT data; please pass a string');
         }
 
         // remove BOM
