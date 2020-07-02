@@ -2,6 +2,7 @@
 
 namespace Kirby\Data;
 
+use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\Exception;
 use Kirby\Toolkit\F;
 
@@ -46,14 +47,14 @@ class PHP extends Handler
     }
 
     /**
-     * PHP arrays don't have to be decoded
+     * PHP strings shouldn't be decoded manually
      *
      * @param mixed $array
      * @return array
      */
     public static function decode($array): array
     {
-        return $array;
+        throw new BadMethodCallException('The PHP::decode() method is not implemented');
     }
 
     /**

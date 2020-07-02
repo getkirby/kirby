@@ -31,10 +31,11 @@ class PHPTest extends TestCase
      */
     public function testDecode()
     {
+        $this->expectException('Kirby\Exception\BadMethodCallException');
+        $this->expectExceptionMessage('The PHP::decode() method is not implemented');
+
         $input  = include __DIR__ . '/fixtures/php/input.php';
         $result = PHP::decode($input);
-
-        $this->assertSame($input, $result);
     }
 
     /**
