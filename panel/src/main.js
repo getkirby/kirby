@@ -24,7 +24,7 @@ import store from "./store/store.js";
 
 Vue.prototype.$go = (path) => {
   router.push(path).catch(e => {
-    if (e.name && e.name === "NavigationDuplicated") {
+    if (e && e.name && e.name === "NavigationDuplicated") {
       return true;
     }
 

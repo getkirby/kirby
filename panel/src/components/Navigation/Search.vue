@@ -41,7 +41,7 @@
           :data-selected="selected === itemIndex"
           @mouseover="selected = itemIndex"
         >
-          <k-link :to="item.link" @click="click(itemIndex)">
+          <k-link :to="item.link" @click="close">
             <strong>{{ item.title }}</strong>
             <small>{{ item.info }}</small>
           </k-link>
@@ -150,6 +150,9 @@ export default {
       };
     },
     navigate(item) {
+
+      console.log(item);
+
       this.$go(item.link);
       this.close();
     },
