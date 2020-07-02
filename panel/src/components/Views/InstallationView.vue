@@ -146,7 +146,7 @@ export default {
         .then(user => {
           this.$store.dispatch("user/current", user);
           this.$store.dispatch("notification/success", this.$t("welcome") + "!");
-          this.$router.push("/");
+          this.$go("/");
         })
         .catch(error => {
           this.$store.dispatch("notification/error", error);
@@ -155,7 +155,7 @@ export default {
     check() {
       this.$store.dispatch("system/load", true).then(system => {
         if (system.isInstalled === true && system.isReady) {
-          this.$router.push("/login");
+          this.$go("/login");
           return;
         }
 

@@ -90,7 +90,7 @@ export default {
 
       switch (action) {
         case "edit":
-          this.$router.push(file.link);
+          this.$go(file.link);
           break;
         case "download":
           window.open(file.url);

@@ -150,7 +150,7 @@ export default {
       };
     },
     navigate(item) {
-      this.$router.push(item.link);
+      this.$go(item.link);
       this.close();
     },
     search(query) {

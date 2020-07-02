@@ -26,11 +26,11 @@ export default {
       .dispatch("system/load")
       .then(system => {
         if (!system.isReady) {
-          this.$router.push("/installation");
+          this.$go("/installation");
         }
 
         if (system.user && system.user.id) {
-          this.$router.push("/");
+          this.$go("/");
         }
 
         this.ready = true;

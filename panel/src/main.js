@@ -22,8 +22,17 @@ Vue.use(Vuelidate);
 import router from "./config/router.js";
 import store from "./store/store.js";
 
+Vue.prototype.$go = (path) => {
+  router.push(path).catch(e => {
+    if (e.name && e.name === "NavigationDuplicated") {
+      return true;
+    }
 
- new Vue({
+    throw e;
+  });
+};
+
+new Vue({
   router,
   store,
   created() {
