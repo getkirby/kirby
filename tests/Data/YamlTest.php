@@ -34,12 +34,12 @@ class YamlTest extends TestCase
 
         // pass invalid object
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid YAML data. Please pass a string');
+        $this->expectExceptionMessage('Invalid YAML data; please pass a string');
         Yaml::decode(new \stdClass());
 
         // pass invalid int
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid YAML data. Please pass a string');
+        $this->expectExceptionMessage('Invalid YAML data; please pass a string');
         Yaml::decode(1);
     }
 

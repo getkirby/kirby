@@ -2,7 +2,7 @@
 
 namespace Kirby\Data;
 
-use Exception;
+use Kirby\Exception\Exception;
 use Kirby\Toolkit\F;
 
 /**
@@ -75,13 +75,13 @@ class Data
     /**
      * Decodes data with the specified handler
      *
-     * @param mixed $data
+     * @param mixed $string
      * @param string $type
      * @return array
      */
-    public static function decode($data = null, string $type): array
+    public static function decode($string = null, string $type): array
     {
-        return static::handler($type)->decode($data);
+        return static::handler($type)->decode($string);
     }
 
     /**

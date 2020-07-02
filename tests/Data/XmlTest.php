@@ -41,12 +41,12 @@ class XmlTest extends TestCase
 
         // pass invalid object
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid XML data. Please pass a string');
+        $this->expectExceptionMessage('Invalid XML data; please pass a string');
         Xml::decode(new \stdClass());
 
         // pass invalid int
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid XML data. Please pass a string');
+        $this->expectExceptionMessage('Invalid XML data; please pass a string');
         Xml::decode(1);
     }
 

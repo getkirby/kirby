@@ -2,7 +2,7 @@
 
 namespace Kirby\Data;
 
-use Exception;
+use Kirby\Exception\Exception;
 use Kirby\Toolkit\F;
 
 /**
@@ -23,7 +23,7 @@ class PHP extends Handler
      * @param string $indent For internal use only
      * @return string
      */
-    public static function encode($data, $indent = ''): string
+    public static function encode($data, string $indent = ''): string
     {
         switch (gettype($data)) {
             case 'array':
@@ -48,7 +48,7 @@ class PHP extends Handler
     /**
      * PHP arrays don't have to be decoded
      *
-     * @param array $array
+     * @param mixed $array
      * @return array
      */
     public static function decode($array): array

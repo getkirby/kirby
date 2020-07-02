@@ -2,7 +2,7 @@
 
 namespace Kirby\Data;
 
-use Exception;
+use Kirby\Exception\Exception;
 use Kirby\Toolkit\F;
 
 /**
@@ -23,7 +23,7 @@ abstract class Handler
      *
      * Needs to throw an Exception if the file can't be parsed.
      *
-     * @param string $string
+     * @param mixed $string
      * @return array
      */
     abstract public static function decode($string): array;

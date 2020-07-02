@@ -88,7 +88,7 @@ class Txt extends Handler
     /**
      * Parses a Kirby txt string and returns a multi-dimensional array
      *
-     * @param string $string
+     * @param mixed $string
      * @return array
      */
     public static function decode($string): array
@@ -102,7 +102,7 @@ class Txt extends Handler
         }
 
         if (is_string($string) === false) {
-            throw new InvalidArgumentException('Invalid data. Please pass a string');
+            throw new InvalidArgumentException('Invalid data; please pass a string');
         }
 
         // remove BOM

@@ -29,24 +29,24 @@ class Json extends Handler
     /**
      * Parses an encoded JSON string and returns a multi-dimensional array
      *
-     * @param string $json
+     * @param mixed $string
      * @return array
      */
-    public static function decode($json): array
+    public static function decode($string): array
     {
-        if ($json === null) {
+        if ($string === null) {
             return [];
         }
 
-        if (is_array($json) === true) {
-            return $json;
+        if (is_array($string) === true) {
+            return $string;
         }
 
-        if (is_string($json) === false) {
-            throw new InvalidArgumentException('Invalid JSON data. Please pass a string');
+        if (is_string($string) === false) {
+            throw new InvalidArgumentException('Invalid JSON data; please pass a string');
         }
 
-        $result = json_decode($json, true);
+        $result = json_decode($string, true);
 
         if (is_array($result) === true) {
             return $result;
