@@ -20,6 +20,10 @@ class PHPTest extends TestCase
         $result   = PHP::encode(include $input);
 
         $this->assertSame(trim(file_get_contents($expected)), $result);
+
+        // scalar values
+        $this->assertSame("'test'", PHP::encode('test'));
+        $this->assertSame('123', PHP::encode(123));
     }
 
     /**

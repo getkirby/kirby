@@ -51,6 +51,15 @@ class XmlTest extends TestCase
     }
 
     /**
+     * @covers ::encode
+     */
+    public function testEncodeScalar()
+    {
+        $expected = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<data>test</data>';
+        $this->assertSame($expected, Xml::encode('test'));
+    }
+
+    /**
      * @covers ::decode
      */
     public function testDecodeCorrupted()

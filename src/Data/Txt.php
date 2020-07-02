@@ -3,6 +3,7 @@
 namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -26,7 +27,7 @@ class Txt extends Handler
     {
         $result = [];
 
-        foreach ((array)$data as $key => $value) {
+        foreach (A::wrap($data) as $key => $value) {
             if (empty($key) === true || $value === null) {
                 continue;
             }

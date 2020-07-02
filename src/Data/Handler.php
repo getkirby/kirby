@@ -55,10 +55,10 @@ abstract class Handler
      * Writes data to a file
      *
      * @param string $file
-     * @param array $data
+     * @param mixed $data
      * @return bool
      */
-    public static function write(string $file = null, array $data = []): bool
+    public static function write(string $file = null, $data = []): bool
     {
         return F::write($file, static::encode($data));
     }

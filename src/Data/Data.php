@@ -87,11 +87,11 @@ class Data
     /**
      * Encodes data with the specified handler
      *
-     * @param array $data
+     * @param mixed $data
      * @param string $type
      * @return string
      */
-    public static function encode(array $data = null, string $type): string
+    public static function encode($data = null, string $type): string
     {
         return static::handler($type)->encode($data);
     }
@@ -116,11 +116,11 @@ class Data
      * the extension if not specified
      *
      * @param string $file
-     * @param array $data
+     * @param mixed $data
      * @param string $type
      * @return bool
      */
-    public static function write(string $file = null, array $data = [], string $type = null): bool
+    public static function write(string $file = null, $data = [], string $type = null): bool
     {
         return static::handler($type ?? F::extension($file))->write($file, $data);
     }

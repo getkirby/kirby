@@ -75,10 +75,10 @@ class PHP extends Handler
      * Creates a PHP file with the given data
      *
      * @param string $file
-     * @param array $data
+     * @param mixed $data
      * @return bool
      */
-    public static function write(string $file = null, array $data = []): bool
+    public static function write(string $file = null, $data = []): bool
     {
         $php = static::encode($data);
         $php = "<?php\n\nreturn $php;";
