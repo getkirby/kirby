@@ -333,7 +333,7 @@ abstract class ModelWithContent extends Model
             return null;
         }
 
-        if ($settings === false) {
+        if (is_string($settings) === true) {
             $settings = [
                 'query' => $settings
             ];
