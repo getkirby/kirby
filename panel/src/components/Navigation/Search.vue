@@ -150,9 +150,6 @@ export default {
       };
     },
     navigate(item) {
-
-      console.log(item);
-
       this.$go(item.link);
       this.close();
     },
