@@ -61,6 +61,9 @@ class Url extends BaseUrl
     public static function to(string $path = null, $options = null): string
     {
         $kirby = App::instance();
-        return $kirby->component('url')($kirby, $path, $options);
+
+        return $kirby->component('url')($kirby, $path, $options, function (string $path = null, array $options = []) use ($kirby) {
+            return $kirby->nativeComponent('url')($kirby, $path, $options);
+        });
     }
 }
