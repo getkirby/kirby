@@ -99,7 +99,7 @@ export default {
 
       if (this.isRoutable(event)) {
         event.preventDefault();
-        this.$router.push(this.to);
+        this.$go(this.to);
       }
 
       this.$emit("click", event);
