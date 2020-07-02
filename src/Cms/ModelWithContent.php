@@ -612,9 +612,10 @@ abstract class ModelWithContent extends Model
      *
      * @param string|null $template
      * @param array $data
+     * @param string $fallback Fallback for tokens in the template that cannot be replaced
      * @return string
      */
-    public function toString(string $template = null, array $data = []): string
+    public function toString(string $template = null, array $data = [], string $fallback = ''): string
     {
         if ($template === null) {
             return $this->id();
@@ -624,7 +625,7 @@ abstract class ModelWithContent extends Model
             'kirby'             => $this->kirby(),
             'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
-        ], $data), '');
+        ], $data), $fallback);
 
         return $result;
     }
