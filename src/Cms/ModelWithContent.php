@@ -329,11 +329,11 @@ abstract class ModelWithContent extends Model
         ];
 
         // switch the image off
-        if ($settings === false) {
+        if ($settings === false || $settings === 'icon') {
             return null;
         }
 
-        if ($settings === false || $settings === 'icon') {
+        if ($settings === false) {
             $settings = [
                 'query' => $settings
             ];
