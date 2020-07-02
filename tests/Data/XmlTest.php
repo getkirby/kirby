@@ -38,6 +38,9 @@ class XmlTest extends TestCase
         ];
         $result = Xml::decode($expected);
         $this->assertSame($array, $result);
+
+        $this->assertSame([], Xml::decode(null));
+        $this->assertSame(['this is' => 'an array'], Xml::decode(['this is' => 'an array']));
     }
 
     /**

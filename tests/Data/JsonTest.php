@@ -25,6 +25,9 @@ class JsonTest extends TestCase
 
         $result = Json::decode($data);
         $this->assertSame($array, $result);
+
+        $this->assertSame([], Json::decode(null));
+        $this->assertSame(['this is' => 'an array'], Json::decode(['this is' => 'an array']));
     }
 
     /**
