@@ -26,14 +26,29 @@ class JsonTest extends TestCase
         $result = Json::decode($data);
         $this->assertSame($array, $result);
 
+        $this->assertSame([], Json::decode(null));
+        $this->assertSame(['this is' => 'an array'], Json::decode(['this is' => 'an array']));
+    }
+
+    /**
+     * @covers ::decode
+     */
+    public function testDecodeInvalid1()
+    {
         // pass invalid object
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid JSON data. Please pass a string');
+        $this->expectExceptionMessage('Invalid JSON data; please pass a string');
         Json::decode(new \stdClass());
+    }
 
+    /**
+     * @covers ::decode
+     */
+    public function testDecodeInvalid2()
+    {
         // pass invalid int
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid JSON data. Please pass a string');
+        $this->expectExceptionMessage('Invalid JSON data; please pass a string');
         Json::decode(1);
     }
 

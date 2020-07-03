@@ -42,26 +42,26 @@ class Yaml extends Handler
     /**
      * Parses an encoded YAML string and returns a multi-dimensional array
      *
-     * @param string $yaml
+     * @param mixed $string
      * @return array
      */
-    public static function decode($yaml): array
+    public static function decode($string): array
     {
-        if ($yaml === null) {
+        if ($string === null) {
             return [];
         }
 
-        if (is_array($yaml) === true) {
-            return $yaml;
+        if (is_array($string) === true) {
+            return $string;
         }
 
-        if (is_string($yaml) === false) {
-            throw new InvalidArgumentException('Invalid YAML data. Please pass a string');
+        if (is_string($string) === false) {
+            throw new InvalidArgumentException('Invalid YAML data; please pass a string');
         }
 
         // remove BOM
-        $yaml   = str_replace("\xEF\xBB\xBF", '', $yaml);
-        $result = Spyc::YAMLLoadString($yaml);
+        $string = str_replace("\xEF\xBB\xBF", '', $string);
+        $result = Spyc::YAMLLoadString($string);
 
         if (is_array($result)) {
             return $result;
