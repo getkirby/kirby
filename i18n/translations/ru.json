@@ -372,7 +372,7 @@
   "toolbar.button.ul": "Маркированный список",
 
   "translation.author": "Команда Kirby",
-  "translation.direction": "слева-направо",
+  "translation.direction": "ltr",
   "translation.name": "Русский (Russian)",
   "translation.locale": "ru_RU",
 
