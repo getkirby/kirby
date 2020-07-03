@@ -1,6 +1,6 @@
 
 export default function (image, type = "list", column = "1/1") {
-  if (!image || image === "icon") {
+  if (!image || image.length === 0) {
     return false;
   }
 
