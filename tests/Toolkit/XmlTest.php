@@ -151,6 +151,11 @@ class XmlTest extends TestCase
         $this->assertSame('Süper Önencœded ßtring', Xml::decode($expected));
 
         $this->assertSame('S&#252;per Täst', Xml::encode('S&uuml;per Täst', false));
+
+        $this->assertSame('', Xml::decode(''));
+        $this->assertSame('', Xml::encode(''));
+        $this->assertSame('', Xml::decode(null));
+        $this->assertSame('', Xml::encode(null));
     }
 
     /**
