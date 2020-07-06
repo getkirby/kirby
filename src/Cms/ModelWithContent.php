@@ -329,11 +329,16 @@ abstract class ModelWithContent extends Model
         ];
 
         // switch the image off
-        if ($settings === false || $settings === 'icon') {
+        if ($settings === false) {
             return null;
         }
 
         if (is_string($settings) === true) {
+            // use defined icon in blueprint
+            if ($settings === 'icon') {
+                return [];
+            }
+
             $settings = [
                 'query' => $settings
             ];
