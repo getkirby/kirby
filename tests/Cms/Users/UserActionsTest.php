@@ -51,6 +51,19 @@ class UserActionsTest extends TestCase
         $this->assertEquals('another@domain.com', $user->email());
     }
 
+    public function testChangeEmailWithUnicode()
+    {
+        $user = $this->app->user('editor@domain.com');
+
+        // with Unicode email
+        $user = $user->changeEmail('test@exämple.com');
+        $this->assertSame('test@exämple.com', $user->email());
+
+        // with Punycode email
+        $user = $user->changeEmail('test@xn--tst-qla.com');
+        $this->assertSame('test@täst.com', $user->email());
+    }
+
     public function testChangeLanguage()
     {
         $user = $this->app->user('editor@domain.com');
@@ -94,6 +107,29 @@ class UserActionsTest extends TestCase
 
         $this->assertEquals('new@domain.com', $user->email());
         $this->assertEquals('admin', $user->role());
+    }
+
+    public function testCreateUserWithUnicodeEmail()
+    {
+        // with Unicode email
+        $user = User::create([
+            'email' => 'test@exämple.com',
+            'role'  => 'admin',
+        ]);
+
+        $this->assertTrue($user->exists());
+        $this->assertSame('test@exämple.com', $user->email());
+        $this->assertSame('admin', $user->role()->name());
+
+        // with Punycode email
+        $user = User::create([
+            'email' => 'test@xn--tst-qla.com',
+            'role'  => 'admin',
+        ]);
+
+        $this->assertTrue($user->exists());
+        $this->assertSame('test@täst.com', $user->email());
+        $this->assertSame('admin', $user->role()->name());
     }
 
     public function testCreateEditor()
