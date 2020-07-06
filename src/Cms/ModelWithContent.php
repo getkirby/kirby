@@ -453,11 +453,22 @@ abstract class ModelWithContent extends Model
             return null;
         }
 
-        $result = Str::query($query, [
-            'kirby'             => $this->kirby(),
-            'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
-            static::CLASS_ALIAS => $this
-        ]);
+        $kirby = $this->kirby();
+
+        try {
+            $result = Str::query($query, [
+                'kirby'             => $kirby,
+                'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
+                static::CLASS_ALIAS => $this
+            ]);
+        } catch (Throwable $e) {
+            // don't swallow exceptions in debug mode
+            if ($kirby->option('debug') === true) {
+                throw $e;
+            }
+
+            return null;
+        }
 
         if ($expect !== null && is_a($result, $expect) !== true) {
             return null;
