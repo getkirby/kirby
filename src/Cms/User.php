@@ -5,7 +5,6 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
-use Kirby\Session\Session;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
@@ -764,7 +763,7 @@ class User extends ModelWithContent
     protected function setEmail(string $email = null)
     {
         if ($email !== null) {
-            $this->email = strtolower(trim($email));
+            $this->email = Str::lower(trim($email));
         }
         return $this;
     }
@@ -825,7 +824,7 @@ class User extends ModelWithContent
      */
     protected function setRole(string $role = null)
     {
-        $this->role = $role !== null ? strtolower(trim($role)) : null;
+        $this->role = $role !== null ? Str::lower(trim($role)) : null;
         return $this;
     }
 
