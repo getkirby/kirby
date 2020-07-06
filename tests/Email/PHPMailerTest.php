@@ -52,6 +52,6 @@ class PHPMailerTest extends TestCase
 
         $this->assertSame($transport, $mail->transport());
         $this->assertInstanceOf('Closure', $phpmailer);
-        $this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $phpmailer(new MailProvider));
+        $this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $phpmailer(new MailProvider()));
     }
 }
