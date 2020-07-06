@@ -306,10 +306,7 @@ V::$validators = [
     'email' => function ($value): bool {
         if (filter_var($value, FILTER_VALIDATE_EMAIL) === false) {
             try {
-                $parts   = Str::split($value, '@');
-                $address = $parts[0] ?? null;
-                $domain  = Idn::encode($parts[1] ?? '');
-                $email   = $address . '@' . $domain;
+                $email = Idn::encodeEmail($value);
             } catch (Throwable $e) {
                 return false;
             }
