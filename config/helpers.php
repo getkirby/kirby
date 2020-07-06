@@ -223,11 +223,11 @@ function go(string $url = null, int $code = 302)
 /**
  * Shortcut for html()
  *
- * @param string $string unencoded text
+ * @param string|null $string unencoded text
  * @param bool $keepTags
  * @return string
  */
-function h(string $string = null, bool $keepTags = false)
+function h(?string $string, bool $keepTags = false)
 {
     return Html::encode($string, $keepTags);
 }
@@ -235,11 +235,11 @@ function h(string $string = null, bool $keepTags = false)
 /**
  * Creates safe html by encoding special characters
  *
- * @param string $string unencoded text
+ * @param string|null $string unencoded text
  * @param bool $keepTags
  * @return string
  */
-function html(string $string = null, bool $keepTags = false)
+function html(?string $string, bool $keepTags = false)
 {
     return Html::encode($string, $keepTags);
 }

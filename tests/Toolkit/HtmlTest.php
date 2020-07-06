@@ -245,6 +245,9 @@ class HtmlTest extends TestCase
         $html = Html::encode('ä<span title="Amazing &amp; great">ö</span>', true);
         $expected = '&auml;<span title="Amazing &amp; great">&ouml;</span>';
         $this->assertSame($expected, $html);
+
+        $this->assertSame('', Html::encode(''));
+        $this->assertSame('', Html::encode(null));
     }
 
     /**

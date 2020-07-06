@@ -148,12 +148,16 @@ class Html extends Xml
     /**
      * Converts a string to an HTML-safe string
      *
-     * @param string $string
+     * @param string|null $string
      * @param bool $keepTags If true, existing tags won't be escaped
      * @return string The HTML string
      */
-    public static function encode(string $string, bool $keepTags = false): string
+    public static function encode(?string $string, bool $keepTags = false): string
     {
+        if ($string === null) {
+            return '';
+        }
+
         if ($keepTags === true) {
             $list = static::entities();
             unset($list['"'], $list['<'], $list['>'], $list['&']);
