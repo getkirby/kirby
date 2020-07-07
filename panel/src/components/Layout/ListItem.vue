@@ -6,7 +6,7 @@
       :target="target"
       class="k-list-item-content"
     >
-      <span class="k-list-item-image">
+      <span v-if="image" class="k-list-item-image">
         <k-image v-if="imageOptions" v-bind="imageOptions" />
         <k-icon v-else v-bind="icon" />
       </span>
@@ -52,7 +52,7 @@ export default {
       type: String,
       default: "li"
     },
-    image: Object,
+    image: [Object, Boolean],
     icon: {
       type: Object,
       default() {

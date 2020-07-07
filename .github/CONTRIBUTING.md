@@ -26,6 +26,10 @@ Make sure your branch is up to date with the latest state on the `develop` branc
 
 Fix code style issues with [PHP CS](https://github.com/FriendsOfPHP/PHP-CS-Fixer) before you submit the PR. [Install PHP CS globally](https://github.com/FriendsOfPHP/PHP-CS-Fixer#globally-composer) via composer and then run `composer fix` in the kirby repository. Our tests will fail if there are CS issues in your code.
 
+## Translations
+
+We are really happy about any help with our translations. Please, do not translate directly in the JSON files though. We use a service called Transifex to handle all languages for the Panel: https://www.transifex.com/getkirby/panel/ Create an account there and send us a request to join our translator group. Please, also send us an email at <support@getkirby.com>. Unfortunately, we don't get notified properly about new translator requests and often miss them.
+
 ## Features
 
 Create feature PRs on a new feature branch. Follow the branch name scheme: `feature/issue_number-feature-x`. Always send feature PRs to the `develop` branch––not `master`!

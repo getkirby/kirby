@@ -1,34 +1,35 @@
 <template>
   <fieldset class="k-fieldset">
     <k-grid>
-      <k-column
-        v-for="(field, fieldName) in fields"
-        v-if="field.type !== 'hidden' && meetsCondition(field)"
-        :key="field.signature"
-        :width="field.width"
-      >
-        <k-error-boundary>
-          <component
-            v-if="hasFieldType(field.type)"
-            :is="'k-' + field.type + '-field'"
-            :name="fieldName"
-            :ref="fieldName"
-            :novalidate="novalidate"
-            :disabled="disabled || field.disabled"
-            v-bind="field"
-            v-model="value[fieldName]"
-            @input="$emit('input', value, field, fieldName)"
-            @focus="$emit('focus', $event, field, fieldName)"
-            @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"
-            @submit="$emit('submit', $event, field, fieldName)"
-          />
-          <k-box v-else theme="negative">
-            <k-text size="small">
-              The field type <strong>"{{ fieldName }}"</strong> does not exist
-            </k-text>
-          </k-box>
-        </k-error-boundary>
-      </k-column>
+      <template v-for="(field, fieldName) in fields">
+        <k-column
+          v-if="field.type !== 'hidden' && meetsCondition(field)"
+          :key="field.signature"
+          :width="field.width"
+        >
+          <k-error-boundary>
+            <component
+              :is="'k-' + field.type + '-field'"
+              v-if="hasFieldType(field.type)"
+              :ref="fieldName"
+              v-model="value[fieldName]"
+              :name="fieldName"
+              :novalidate="novalidate"
+              :disabled="disabled || field.disabled"
+              v-bind="field"
+              @input="$emit('input', value, field, fieldName)"
+              @focus="$emit('focus', $event, field, fieldName)"
+              @invalid="($invalid, $v) => onInvalid($invalid, $v, field, fieldName)"
+              @submit="$emit('submit', $event, field, fieldName)"
+            />
+            <k-box v-else theme="negative">
+              <k-text size="small">
+                The field type <strong>"{{ fieldName }}"</strong> does not exist
+              </k-text>
+            </k-box>
+          </k-error-boundary>
+        </k-column>
+      </template>
     </k-grid>
   </fieldset>
 </template>

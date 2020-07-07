@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Controller;
+use Kirby\Toolkit\F;
 
 /**
  * Manages and loads all collections
@@ -119,8 +120,8 @@ class Collections
         // first check for collection file
         $file = $kirby->root('collections') . '/' . $name . '.php';
 
-        if (file_exists($file)) {
-            $collection = require $file;
+        if (is_file($file) === true) {
+            $collection = F::load($file);
 
             if (is_a($collection, 'Closure')) {
                 return $collection;

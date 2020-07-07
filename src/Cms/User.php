@@ -426,13 +426,13 @@ class User extends ModelWithContent
 
         $session = $this->sessionFromOptions($session);
 
-        $kirby->trigger('user.login:before', $this, $session);
+        $kirby->trigger('user.login:before', ['user' => $this, 'session' => $session]);
 
         $session->regenerateToken(); // privilege change
         $session->data()->set('user.id', $this->id());
         $this->kirby()->auth()->setUser($this);
 
-        $kirby->trigger('user.login:after', $this, $session);
+        $kirby->trigger('user.login:after', ['user' => $this, 'session' => $session]);
     }
 
     /**
@@ -446,7 +446,7 @@ class User extends ModelWithContent
         $kirby   = $this->kirby();
         $session = $this->sessionFromOptions($session);
 
-        $kirby->trigger('user.logout:before', $this, $session);
+        $kirby->trigger('user.logout:before', ['user' => $this, 'session' => $session]);
 
         // remove the user from the session for future requests
         $session->data()->remove('user.id');
@@ -458,12 +458,12 @@ class User extends ModelWithContent
             // session is now empty, we might as well destroy it
             $session->destroy();
 
-            $kirby->trigger('user.logout:after', $this, null);
+            $kirby->trigger('user.logout:after', ['user' => $this, 'session' => null]);
         } else {
             // privilege change
             $session->regenerateToken();
 
-            $kirby->trigger('user.logout:after', $this, $session);
+            $kirby->trigger('user.logout:after', ['user' => $this, 'session' => $session]);
         }
     }
 
@@ -515,11 +515,12 @@ class User extends ModelWithContent
      *
      * @param string $format
      * @param string|null $handler
+     * @param string|null $languageCode
      * @return int|string
      */
-    public function modified(string $format = 'U', string $handler = null)
+    public function modified(string $format = 'U', string $handler = null, string $languageCode = null)
     {
-        $modifiedContent = F::modified($this->contentFile());
+        $modifiedContent = F::modified($this->contentFile($languageCode));
         $modifiedIndex   = F::modified($this->root() . '/index.php');
         $modifiedTotal   = max([$modifiedContent, $modifiedIndex]);
         $handler         = $handler ?? $this->kirby()->option('date.handler', 'date');
@@ -680,6 +681,41 @@ class User extends ModelWithContent
         }
 
         return $this->role = Role::nobody();
+    }
+
+    /**
+     * Returns all available roles
+     * for this user, that can be selected
+     * by the authenticated user
+     *
+     * @return \Kirby\Cms\Roles
+     */
+    public function roles()
+    {
+        $kirby = $this->kirby();
+        $roles = $kirby->roles();
+
+        // a collection with just the one role of the user
+        $myRole = $roles->filterBy('id', $this->role()->id());
+
+        // if there's an authenticated user …
+        if ($user = $kirby->user()) {
+
+            // admin users can select pretty much any role
+            if ($user->isAdmin() === true) {
+                // except if the user is the last admin
+                if ($this->isLastAdmin() === true) {
+                    // in which case they have to stay admin
+                    return $myRole;
+                }
+
+                // return all roles for mighty admins
+                return $roles;
+            }
+        }
+
+        // any other user can only keep their role
+        return $myRole;
     }
 
     /**
@@ -844,15 +880,17 @@ class User extends ModelWithContent
      * String template builder
      *
      * @param string|null $template
+     * @param array|null $data
+     * @param string $fallback Fallback for tokens in the template that cannot be replaced
      * @return string
      */
-    public function toString(string $template = null): string
+    public function toString(string $template = null, array $data = [], string $fallback = ''): string
     {
         if ($template === null) {
             $template = $this->email();
         }
 
-        return parent::toString($template);
+        return parent::toString($template, $data);
     }
 
     /**

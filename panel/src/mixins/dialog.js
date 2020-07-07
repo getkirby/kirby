@@ -1,12 +1,28 @@
 export default {
-  methods: {
-    open() {
-      this.$refs.dialog.open();
-      this.$emit("open");
+  props: {
+    cancelButton: {
+      type: [String, Boolean],
+      default: true,
     },
+    icon: String,
+    submitButton: {
+      type: [String, Boolean],
+      default: true
+    },
+    size: String,
+    theme: String
+  },
+  methods: {
     close() {
       this.$refs.dialog.close();
       this.$emit("close");
+    },
+    error(message) {
+      this.$refs.dialog.error(message);
+    },
+    open() {
+      this.$refs.dialog.open();
+      this.$emit("open");
     },
     success(payload) {
       this.$refs.dialog.close();

@@ -5,7 +5,7 @@
   "cancel": "\u041e\u0442\u043c\u0435\u043d\u0438\u0442\u044c",
   "change": "\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c",
   "close": "\u0417\u0430\u043a\u0440\u044b\u0442\u044c",
-  "confirm": "Сохранить",
+  "confirm": "Ок",
   "copy": "Скопировать",
   "create": "Создать",
 
@@ -34,7 +34,7 @@
   "dialog.users.empty": "Нет пользователей для выбора",
 
   "email": "Эл. почта",
-  "email.placeholder": "pochta@domen.com",
+  "email.placeholder": "mail@example.com",
 
   "error.access.login": "Неправильный логин",
   "error.access.panel": "У вас нет права доступа к панели",
@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "Не удалось загрузить фотографию профиля",
   "error.avatar.delete.fail": "\u0410\u0432\u0430\u0442\u0430\u0440 (\u0444\u043e\u0442\u043e) \u043a \u0430\u043a\u043a\u0430\u0443\u043d\u0442\u0443 \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0431\u044b\u0442\u044c \u0443\u0434\u0430\u043b\u0435\u043d",
-  "error.avatar.dimensions.invalid":
-    "Пожалуйста, сделайте чтобы ширина или высота фотографии была меньше 3000 пикселей",
-  "error.avatar.mime.forbidden":
-    "Фотография профиля должна быть JPEG или PNG",
+  "error.avatar.dimensions.invalid": "Пожалуйста, сделайте чтобы ширина или высота фотографии была меньше 3000 пикселей",
+  "error.avatar.mime.forbidden": "Фотография профиля должна быть JPEG или PNG",
 
   "error.blueprint.notFound": "Не удалось загрузить blueprint \"{name}\"",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Неверный конвертер \"{converter}\"",
 
   "error.file.changeName.empty": "Название не может быть пустым",
-  "error.file.changeName.permission":
-    "У вас нет права поменять название \"{filename}\"",
+  "error.file.changeName.permission": "У вас нет права поменять название \"{filename}\"",
   "error.file.duplicate": "Файл с названием \"{filename}\" уже есть",
-  "error.file.extension.forbidden":
-    "Расширение файла \"{extension}\" неразрешено",
-  "error.file.extension.missing":
-    "Файлу \"{filename}\" не хватает расширения",
+  "error.file.extension.forbidden": "Расширение файла \"{extension}\" неразрешено",
+  "error.file.extension.missing": "Файлу \"{filename}\" не хватает расширения",
   "error.file.maxheight": "Высота картинки не должна превышать {height} px",
   "error.file.maxsize": "Файл слишком большой",
   "error.file.maxwidth": "Ширина картинки не должна превышать {width} px",
-  "error.file.mime.differs":
-    "Загруженный файл должен быть того же mime типа: \"{mime}\"",
+  "error.file.mime.differs": "Загруженный файл должен быть того же mime типа: \"{mime}\"",
   "error.file.mime.forbidden": "Тип медиа \"{mime}\" не допустим",
   "error.file.mime.invalid": "Неверный тип mime: {mime}",
-  "error.file.mime.missing":
-    "Не удалось определить тип медиа для файла \"{filename}\"",
+  "error.file.mime.missing": "Не удалось определить тип медиа для файла \"{filename}\"",
   "error.file.minheight": "Высота файла должна быть хотя бы {height} px",
   "error.file.minsize": "Файл слишком маленький",
   "error.file.minwidth": "Ширина файла должна быть хотя бы {width} px",
@@ -90,146 +83,108 @@
   "error.license.email": "Пожалуйста, введите правильный адрес эл. почты",
   "error.license.verification": "Лицензия не подтверждена",
 
-  "error.page.changeSlug.permission":
-    "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c URL \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
-  "error.page.changeStatus.incomplete":
-    "На странице есть ошибки и поэтому ее нельзя опубликовать",
-  "error.page.changeStatus.permission":
-    "Невозможно поменять статус для этой страницы",
-  "error.page.changeStatus.toDraft.invalid":
-    "Невозможно конвертировать в черновик страницу \"{slug}\"",
-  "error.page.changeTemplate.invalid":
-    "Невозможно поменять шаблон страницы \"{slug}\"",
-  "error.page.changeTemplate.permission":
-    "У вас нет права поменять шаблон для \"{slug}\"",
+  "error.page.changeSlug.permission": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0438\u0437\u043c\u0435\u043d\u0438\u0442\u044c URL \u044d\u0442\u043e\u0439 \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u044b",
+  "error.page.changeStatus.incomplete": "На странице есть ошибки и поэтому ее нельзя опубликовать",
+  "error.page.changeStatus.permission": "Невозможно поменять статус для этой страницы",
+  "error.page.changeStatus.toDraft.invalid": "Невозможно конвертировать в черновик страницу \"{slug}\"",
+  "error.page.changeTemplate.invalid": "Невозможно поменять шаблон страницы \"{slug}\"",
+  "error.page.changeTemplate.permission": "У вас нет права поменять шаблон для \"{slug}\"",
   "error.page.changeTitle.empty": "Название не может быть пустым",
-  "error.page.changeTitle.permission":
-    "у вас нет права поменять название \"{slug}\"",
+  "error.page.changeTitle.permission": "у вас нет права поменять название \"{slug}\"",
   "error.page.create.permission": "У вас нет права создать \"{slug}\"",
   "error.page.delete": "Невозможно удалить страницу \"{slug}\"",
   "error.page.delete.confirm": "Впишите название страницы чтобы подтвердить",
-  "error.page.delete.hasChildren":
-    "У страницы есть внутренние страницы, поэтому ее невозможно удалить",
+  "error.page.delete.hasChildren": "У страницы есть внутренние страницы, поэтому ее невозможно удалить",
   "error.page.delete.permission": "У вас нет права удалить \"{slug}\"",
-  "error.page.draft.duplicate":
-    "Черновик страницы с аппендиксом URL \"{slug}\" уже есть",
-  "error.page.duplicate":
-    "Страница с аппендиксом URL \"{slug}\" уже есть",
+  "error.page.draft.duplicate": "Черновик страницы с аппендиксом URL \"{slug}\" уже есть",
+  "error.page.duplicate": "Страница с аппендиксом URL \"{slug}\" уже есть",
   "error.page.duplicate.permission": "У вас нет права дублировать \"{slug}\"",
   "error.page.notFound": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430",
-  "error.page.num.invalid":
-    "Пожалуйста, впишите правильное число сортировки. Число не может быть отрицательным.",
+  "error.page.num.invalid": "Пожалуйста, впишите правильное число сортировки. Число не может быть отрицательным.",
   "error.page.slug.invalid": "Пожалуйста, впишите правильный префикс URL",
   "error.page.sort.permission": "Невозможно сортировать страницу \"{slug}\"",
   "error.page.status.invalid": "Пожалуйста, установите верный статус страницы",
   "error.page.undefined": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430",
   "error.page.update.permission": "У вас нет права обновить \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "Нельзя добавить больше чем {max} файлов в секции \"{section}\"",
-  "error.section.files.max.singular":
-    "Можно добавить не больше 1 файла в секции \"{section}\"",
-  "error.section.files.min.plural":
-    "Секция \"{section}\" требует хотя бы {min} файлов",
-  "error.section.files.min.singular":
-    "Секция \"{section}\" требует хотя бы 1 файл",
+  "error.section.files.max.plural": "Нельзя добавить больше чем {max} файлов в секции \"{section}\"",
+  "error.section.files.max.singular": "Можно добавить не больше 1 файла в секции \"{section}\"",
+  "error.section.files.min.plural": "Секция \"{section}\" требует хотя бы {min} файлов",
+  "error.section.files.min.singular": "Секция \"{section}\" требует хотя бы 1 файл",
 
-  "error.section.pages.max.plural":
-    "Можно добавить не больше {max} страниц в секции \"{section}\"",
-  "error.section.pages.max.singular":
-    "Нельзя добавить больше чем 1 страницу в секции \"{section}\"",
-  "error.section.pages.min.plural":
-    "Секция \"{section}\" требует хотя бы {min} страниц",
-  "error.section.pages.min.singular":
-    "Секция \"{section}\" требует хотя бы одну страницу",
+  "error.section.pages.max.plural": "Можно добавить не больше {max} страниц в секции \"{section}\"",
+  "error.section.pages.max.singular": "Нельзя добавить больше чем 1 страницу в секции \"{section}\"",
+  "error.section.pages.min.plural": "Секция \"{section}\" требует хотя бы {min} страниц",
+  "error.section.pages.min.singular": "Секция \"{section}\" требует хотя бы одну страницу",
 
   "error.section.notLoaded": "Секция \"{name}\" не может быть загружена",
   "error.section.type.invalid": "Тип секции {type} неверный",
 
   "error.site.changeTitle.empty": "Название не может быть пустым",
-  "error.site.changeTitle.permission":
-    "У вас нет права поменять название сайта",
+  "error.site.changeTitle.permission": "У вас нет права поменять название сайта",
   "error.site.update.permission": "У вас нет права обновить сайт",
 
   "error.template.default.notFound": "Нет шаблона по умолчанию",
 
-  "error.user.changeEmail.permission":
-    "У вас нет права поменять эл. почту пользователя \"{name}\"",
-  "error.user.changeLanguage.permission":
-    "У вас нет права поменять язык для пользователя \"{name}\"",
-  "error.user.changeName.permission":
-    "У вас нет права поменять имя пользователя \"{name}\"",
-  "error.user.changePassword.permission":
-    "У вас нет права поменять пароль для пользователя \"{name}\"",
-  "error.user.changeRole.lastAdmin":
-    "Роль единственного администратора нельзя поменять",
-  "error.user.changeRole.permission":
-    "У вас нет права поменять поль для пользователя \"{name}\"",
-  "error.user.changeRole.toAdmin":
-    "У вас нет прав предоставить роль администратора",
+  "error.user.changeEmail.permission": "У вас нет права поменять эл. почту пользователя \"{name}\"",
+  "error.user.changeLanguage.permission": "У вас нет права поменять язык для пользователя \"{name}\"",
+  "error.user.changeName.permission": "У вас нет права поменять имя пользователя \"{name}\"",
+  "error.user.changePassword.permission": "У вас нет права поменять пароль для пользователя \"{name}\"",
+  "error.user.changeRole.lastAdmin": "Роль единственного администратора нельзя поменять",
+  "error.user.changeRole.permission": "У вас нет права поменять поль для пользователя \"{name}\"",
+  "error.user.changeRole.toAdmin": "У вас нет прав предоставить роль администратора",
   "error.user.create.permission": "У вас нет права создать этого пользователя",
   "error.user.delete": "\u0410\u043a\u043a\u0430\u0443\u043d\u0442 \u043d\u0435 \u043c\u043e\u0436\u0435\u0442 \u0431\u044b\u0442\u044c \u0443\u0434\u0430\u043b\u0435\u043d",
   "error.user.delete.lastAdmin": "\u0412\u044b \u043d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0435\u0434\u0438\u043d\u0441\u0442\u0432\u0435\u043d\u043d\u043e\u0433\u043e \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440\u0430",
   "error.user.delete.lastUser": "Нельзя удалить единственного пользователя",
-  "error.user.delete.permission":
-    "У вас нет права удалить пользователя \"{name}\"",
-  "error.user.duplicate":
-    "Пользователь с эл. почтой \"{email}\" уже есть",
+  "error.user.delete.permission": "У вас нет права удалить пользователя \"{name}\"",
+  "error.user.duplicate": "Пользователь с эл. почтой \"{email}\" уже есть",
   "error.user.email.invalid": "Пожалуйста, введите правильный адрес эл. почты",
-  "error.user.language.invalid": "Впишите правильный язык",
+  "error.user.language.invalid": "Введите правильный язык",
   "error.user.notFound": "\u0410\u043a\u043a\u0430\u0443\u043d\u0442 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
-  "error.user.password.invalid":
-    "Пожалуйста, впишите правильный пароль. Он должен быть минимум из 8 символов.",
+  "error.user.password.invalid": "Пожалуйста, введите правильный пароль. Он должен состоять минимум из 8 символов.",
   "error.user.password.notSame": "\u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043f\u043e\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0435 \u043f\u0430\u0440\u043e\u043b\u044c",
   "error.user.password.undefined": "У пользователя нет пароля",
-  "error.user.role.invalid": "Впишите правильную роль",
-  "error.user.update.permission":
-    "У вас нет права обновить пользователя \"{name}\"",
+  "error.user.role.invalid": "Введите правильную роль",
+  "error.user.update.permission": "У вас нет права обновить пользователя \"{name}\"",
 
   "error.validation.accepted": "Пожалуйста, подтвердите",
-  "error.validation.alpha": "Пожалуйста, впишите только буквы a-z",
-  "error.validation.alphanum":
-    "Пожалуйста, впишите только буквы a-z или числа 0-9",
-  "error.validation.between":
-    "Пожалуйста, впишите значение от \"{min}\" до \"{max}\"",
+  "error.validation.alpha": "Пожалуйста, введите только буквы a-z",
+  "error.validation.alphanum": "Пожалуйста, введите только буквы a-z или числа 0-9",
+  "error.validation.between": "Пожалуйста, введите значение от \"{min}\" до \"{max}\"",
   "error.validation.boolean": "Пожалуйста, подтвердите или отмените",
-  "error.validation.contains":
-    "Пожалуйста, впишите значение, которое содержит \"{needle}\"",
-  "error.validation.date": "Пожалуйста, впишите правильную дату",
-  "error.validation.date.after": "Пожалуйста, впишите дату после {date}",
-  "error.validation.date.before": "Пожалуйста, впишите дату до {date}",
-  "error.validation.date.between": "Пожалуйста, впишите дату между {min} и {max}",
+  "error.validation.contains": "Пожалуйста, впишите значение, которое содержит \"{needle}\"",
+  "error.validation.date": "Пожалуйста, укажите правильную дату",
+  "error.validation.date.after": "Пожалуйста, укажите дату после {date}",
+  "error.validation.date.before": "Пожалуйста, укажите дату до {date}",
+  "error.validation.date.between": "Пожалуйста, укажите дату между {min} и {max}",
   "error.validation.denied": "Пожалуйста отмените",
   "error.validation.different": "Значение не может быть \"{other}\"",
   "error.validation.email": "Пожалуйста, введите правильный адрес эл. почты",
   "error.validation.endswith": "Значение должно заканчиваться с \"{end}\"",
-  "error.validation.filename": "Пожалуйста, впишите правильное название файла",
-  "error.validation.in": "Пожалуйста, впишите одно из следующих: ({in})",
-  "error.validation.integer": "Пожалуйста, впишите правильное целое число",
-  "error.validation.ip": "Пожалуйста, впишите правильный IP адрес",
-  "error.validation.less": "Пожалуйста, впишите значение меньше чем {max}",
+  "error.validation.filename": "Пожалуйста, введите правильное название файла",
+  "error.validation.in": "Пожалуйста, введите одно из следующих: ({in})",
+  "error.validation.integer": "Пожалуйста, введите правильное целое число",
+  "error.validation.ip": "Пожалуйста, введите правильный IP адрес",
+  "error.validation.less": "Пожалуйста, введите значение меньше чем {max}",
   "error.validation.match": "Значение не соответствует ожидаемому шаблону",
-  "error.validation.max": "Пожалуйста, впишите значение равное или больше чем {max}",
-  "error.validation.maxlength":
-    "Пожалуйста, впишите значение короче (макс. {max} символов)",
-  "error.validation.maxwords": "Пожалуйста, впишите не более {max} слов ",
-  "error.validation.min": "Пожалуйста, впишите значение равное или больше чем {min}",
-  "error.validation.minlength":
-    "Пожалуйста, впишите значение длиннее (мин. {min} символов)",
-  "error.validation.minwords": "Пожалуйста, впишите хотя бы {min} слов",
-  "error.validation.more": "Пожалуйста, впишите значение больше, чем {min}",
-  "error.validation.notcontains":
-    "Пожалуйста, впишите значение, которое не содержит \"{needle}\"",
-  "error.validation.notin":
-    "Пожалуйста, не вписывайте одно из:  ({notIn})",
+  "error.validation.max": "Пожалуйста, введите значение равное или больше чем {max}",
+  "error.validation.maxlength": "Пожалуйста, введите значение короче (макс. {max} символов)",
+  "error.validation.maxwords": "Пожалуйста, введите не более {max} слов ",
+  "error.validation.min": "Пожалуйста, введите значение равное или больше чем {min}",
+  "error.validation.minlength": "Пожалуйста, введите значение длиннее (мин. {min} символов)",
+  "error.validation.minwords": "Пожалуйста, введите хотя бы {min} слов",
+  "error.validation.more": "Пожалуйста, введите значение больше, чем {min}",
+  "error.validation.notcontains": "Пожалуйста, введите значение, которое не содержит \"{needle}\"",
+  "error.validation.notin": "Пожалуйста, не вписывайте одно из:  ({notIn})",
   "error.validation.option": "Пожалуйста, выберите правильную опцию ",
-  "error.validation.num": "Пожалуйста, впишите правильный номер",
-  "error.validation.required": "Пожалуйста, впишите что-нибудь",
-  "error.validation.same": "Пожалуйста, впишите \"{other}\"",
+  "error.validation.num": "Пожалуйста, введите правильный номер",
+  "error.validation.required": "Пожалуйста, введите что-нибудь",
+  "error.validation.same": "Пожалуйста, введите \"{other}\"",
   "error.validation.size": "Значение размера должно быть \"{size}\"",
   "error.validation.startswith": "Значение должно начинаться с \"{start}\"",
-  "error.validation.time": "Пожалуйста, впишите правильную дату",
-  "error.validation.url": "Пожалуйста, впишите правильный URL",
+  "error.validation.time": "Пожалуйста, введите правильную дату",
+  "error.validation.url": "Пожалуйста, введите правильный URL",
 
   "field.required": "Поле обязательно",
   "field.files.empty": "Еще не выбраны файлы",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Еще нет записей",
   "field.users.empty": "Еще нет пользователей",
 
-  "file.delete.confirm":
-    "Вы точно хотите удалить файл?",
+  "file.delete.confirm": "Вы точно хотите удалить файл <br><strong>{filename}</strong>?",
 
   "files": "Файлы",
   "files.empty": "Еще нет файлов",
@@ -251,29 +205,22 @@
   "installation": "Установка",
   "installation.completed": "Панель установлена",
   "installation.disabled": "Установка панели по умолчанию отключена на общедоступных серверах. Пожалуйста запустите установку на локальном сервере или включите такую возможность с помощью опции <code>panel.install</code>",
-  "installation.issues.accounts":
-    "Каталог <code>/site/accounts</code> не существует или не имеет прав записи",
-  "installation.issues.content":
-    "Каталог <code>/content</code> не существует или не имеет прав записи",
+  "installation.issues.accounts": "Каталог <code>/site/accounts</code> не существует или не имеет прав записи",
+  "installation.issues.content": "Каталог <code>/content</code> не существует или не имеет прав записи",
   "installation.issues.curl": "Расширение <code>CURL</code> необходимо",
   "installation.issues.headline": "Не удалось установить панель",
-  "installation.issues.mbstring":
-    "Расширение <code>MB String</code> необходимо",
-  "installation.issues.media":
-    "Каталог <code>/media</code> не существует или нет прав записи",
+  "installation.issues.mbstring": "Расширение <code>MB String</code> необходимо",
+  "installation.issues.media": "Каталог <code>/media</code> не существует или нет прав записи",
   "installation.issues.php": "Убедитесь, что используется <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby требует <code>Apache</code>, <code>Nginx</code> или <code>Caddy</code> ",
+  "installation.issues.server": "Kirby требует <code>Apache</code>, <code>Nginx</code> или <code>Caddy</code> ",
   "installation.issues.sessions": "Каталог <code>/site/sessions</code> не существует или нет прав записи",
 
   "language": "\u042f\u0437\u044b\u043a",
   "language.code": "Код",
   "language.convert": "Установить по умолчанию",
-  "language.convert.confirm":
-    "<p>Вы точно хотите конвертировать <strong>{name}</strong> в главный язык? Это нельзя будет отменить.</p><p>Если <strong>{name}</strong> имеет непереведенный контент, то больше не будет верного каскада и части вашего сайта могут быть пустыми.</p>",
+  "language.convert.confirm": "<p>Вы точно хотите конвертировать <strong>{name}</strong> в главный язык? Это нельзя будет отменить.</p><p>Если <strong>{name}</strong> имеет непереведенный контент, то больше не будет верного каскада и части вашего сайта могут быть пустыми.</p>",
   "language.create": "Добавить новый язык",
-  "language.delete.confirm":
-    "Вы точно хотите удалить <strong>{name}</strong> язык, включая все переводы? Это нельзя будет вернуть.",
+  "language.delete.confirm": "Вы точно хотите удалить <strong>{name}</strong> язык, включая все переводы? Это нельзя будет вернуть.",
   "language.deleted": "Язык удален",
   "language.direction": "Направление чтения",
   "language.direction.ltr": "Слева направо",
@@ -292,8 +239,7 @@
   "license": "\u041b\u0438\u0446\u0435\u043d\u0437\u0438\u044f Kirby",
   "license.buy": "Купить лицензию",
   "license.register": "Зарегистрировать",
-  "license.register.help":
-    "После покупки вы получили по эл. почте код лицензии. Пожалуйста скопируйте и вставьте сюда чтобы зарегистрировать.",
+  "license.register.help": "После покупки вы получили по эл. почте код лицензии. Пожалуйста скопируйте и вставьте сюда чтобы зарегистрировать.",
   "license.register.label": "Пожалуйста вставьте код лицензии",
   "license.register.success": "Спасибо за поддержку Kirby",
   "license.unregistered": "Это незарегистрированная версия Kirby",
@@ -325,7 +271,7 @@
   "months.april": "\u0410\u043f\u0440\u0435\u043b\u044c",
   "months.august": "\u0410\u0432\u0433\u0443\u0441\u0442",
   "months.december": "\u0414\u0435\u043a\u0430\u0431\u0440\u044c",
-  "months.february": "\u0424\u0435\u0432\u0440\u0430\u043b\u044c",
+  "months.february": "Февраль",
   "months.january": "\u042f\u043d\u0432\u0430\u0440\u044c",
   "months.july": "\u0418\u044e\u043b\u044c",
   "months.june": "\u0418\u044e\u043d\u044c",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Пожалуйста, выберите позицию",
   "page.changeStatus.select": "Выбрать новый статус",
   "page.changeTemplate": "Поменять шаблон",
-  "page.delete.confirm":
-    "Вы точно хотите удалить эту страницу?",
-  "page.delete.confirm.subpages":
-    "<strong>У этой страницы есть внутренние страницы</strong>.<br>Все внутренние страницы так же будут удалены.",
+  "page.delete.confirm": "Вы точно хотите удалить страницу <strong>{title}</strong>?",
+  "page.delete.confirm.subpages": "<strong>У этой страницы есть внутренние страницы</strong>.<br>Все внутренние страницы так же будут удалены.",
   "page.delete.confirm.title": "Напишите название страницы, чтобы подтвердить",
   "page.draft.create": "Создать черновик",
   "page.duplicate.appendix": "Скопировать",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Копировать страницы",
   "page.status": "Статус",
   "page.status.draft": "Черновик",
-  "page.status.draft.description":
-    "Страница в режиме черновика и видна только для авторизированных редакторов",
+  "page.status.draft.description": "Страница находится в черновом режиме и видна только зарегистрированным пользователям или по секретной ссылке",
   "page.status.listed": "Опубликована",
   "page.status.listed.description": "Страница доступна для всех посетителей",
   "page.status.unlisted": "Скрыта",
@@ -388,10 +331,11 @@
   "replace": "\u0417\u0430\u043c\u0435\u043d\u0438\u0442\u044c",
   "retry": "\u041f\u043e\u0432\u0442\u043e\u0440\u0438\u0442\u044c",
   "revert": "\u0421\u0431\u0440\u043e\u0441",
+  "revert.confirm": "Вы действительно хотите <strong>удалить все несохраненные изменения</strong>?",
 
   "role": "\u0420\u043e\u043b\u044c",
-  "role.admin.description": "Admin имеет все права",
-  "role.admin.title": "Admin",
+  "role.admin.description": "Администратор имеет все права",
+  "role.admin.title": "Администратор",
   "role.all": "Все",
   "role.empty": "Нет пользователей с такой ролью",
   "role.description.placeholder": "Без описания",
@@ -414,12 +358,12 @@
 
   "toolbar.button.code": "Код",
   "toolbar.button.bold": "\u0416\u0438\u0440\u043d\u044b\u0439 \u0448\u0440\u0438\u0444\u0442",
-  "toolbar.button.email": "\u042d\u043b.\u043f\u043e\u0447\u0442\u0430",
+  "toolbar.button.email": "Эл. почта",
   "toolbar.button.headings": "Заголовки",
   "toolbar.button.heading.1": "Заголовок 1",
   "toolbar.button.heading.2": "Заголовок 2",
   "toolbar.button.heading.3": "Заголовок 3",
-  "toolbar.button.italic": "\u041d\u0430\u043a\u043b\u043e\u043d\u043d\u044b\u0439 \u0448\u0440\u0438\u0444\u0442",
+  "toolbar.button.italic": "Курсив",
   "toolbar.button.file": "Файл",
   "toolbar.button.file.select": "Выбрать файл",
   "toolbar.button.file.upload": "Закачать файл",
@@ -427,7 +371,7 @@
   "toolbar.button.ol": "Нумерованный список",
   "toolbar.button.ul": "Маркированный список",
 
-  "translation.author": "Команда Кирби",
+  "translation.author": "Команда Kirby",
   "translation.direction": "ltr",
   "translation.name": "Русский (Russian)",
   "translation.locale": "ru_RU",
@@ -447,24 +391,22 @@
   "upload.errors": "Ошибка",
   "upload.progress": "Закачивается...",
 
-  "url": "Url",
+  "url": "URL",
   "url.placeholder": "https://example.com",
 
   "user": "Пользователь",
-  "user.blueprint":
-    "Вы можете определить новые секции и поля формы для этой роли пользователя в <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Вы можете определить новые секции и поля формы для этой роли пользователя в <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Поменять эл. почту",
   "user.changeLanguage": "Поменять язык",
   "user.changeName": "Переназвать этого пользователя",
   "user.changePassword": "Поменять пароль",
   "user.changePassword.new": "Новый пароль",
-  "user.changePassword.new.confirm": "Подтвердить новый пароль",
+  "user.changePassword.new.confirm": "Подтвердить новый пароль…",
   "user.changeRole": "Поменять роль",
   "user.changeRole.select": "Выбрать новую роль",
   "user.create": "Добавить нового пользователя",
   "user.delete": "Удалить этого пользователя",
-  "user.delete.confirm":
-    "\u0412\u044b \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0442\u0435\u043b\u044c\u043d\u043e \u0445\u043e\u0442\u0438\u0442\u0435 \u0443\u0434\u0430\u043b\u0438\u0442\u044c \u0430\u043a\u043a\u0430\u0443\u043d\u0442?",
+  "user.delete.confirm": "Вы действительно хотите аккаунт <br><strong>{email}</strong>?",
 
   "users": "Пользователи",
 

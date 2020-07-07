@@ -23,18 +23,53 @@ class ResponseTest extends TestCase
 
     public function testDownload()
     {
+        $response = Response::download(__FILE__);
+
+        $this->assertSame($body = file_get_contents(__FILE__), $response->body());
+        $this->assertSame(200, $response->code());
+        $this->assertSame([
+            'Pragma'                    => 'public',
+            'Cache-Control'             => 'no-cache, no-store, must-revalidate',
+            'Last-Modified'             => gmdate('D, d M Y H:i:s', filemtime(__FILE__)) . ' GMT',
+            'Content-Disposition'       => 'attachment; filename="' . basename(__FILE__) . '"',
+            'Content-Transfer-Encoding' => 'binary',
+            'Content-Length'            => strlen($body),
+            'Connection'                => 'close'
+        ], $response->headers());
+
         $response = Response::download(__FILE__, 'test.php');
 
-        $this->assertEquals($body = file_get_contents(__FILE__), $response->body());
-        $this->assertEquals(200, $response->code());
-        $this->assertEquals([
+        $this->assertSame($body, $response->body());
+        $this->assertSame(200, $response->code());
+        $this->assertSame([
             'Pragma'                    => 'public',
-            'Expires'                   => '0',
+            'Cache-Control'             => 'no-cache, no-store, must-revalidate',
             'Last-Modified'             => gmdate('D, d M Y H:i:s', filemtime(__FILE__)) . ' GMT',
             'Content-Disposition'       => 'attachment; filename="test.php"',
             'Content-Transfer-Encoding' => 'binary',
             'Content-Length'            => strlen($body),
             'Connection'                => 'close'
+        ], $response->headers());
+
+        $response = Response::download(__FILE__, 'test.php', [
+            'code'    => '201',
+            'headers' => [
+                'Pragma' => 'no-cache',
+                'X-Test' => 'Test'
+            ]
+        ]);
+
+        $this->assertSame($body, $response->body());
+        $this->assertSame(201, $response->code());
+        $this->assertSame([
+            'Pragma'                    => 'no-cache',
+            'Cache-Control'             => 'no-cache, no-store, must-revalidate',
+            'Last-Modified'             => gmdate('D, d M Y H:i:s', filemtime(__FILE__)) . ' GMT',
+            'Content-Disposition'       => 'attachment; filename="test.php"',
+            'Content-Transfer-Encoding' => 'binary',
+            'Content-Length'            => strlen($body),
+            'Connection'                => 'close',
+            'X-Test'                    => 'Test'
         ], $response->headers());
     }
 
@@ -107,8 +142,23 @@ class ResponseTest extends TestCase
 
         $response = Response::file($file);
 
-        $this->assertEquals('text/plain', $response->type());
-        $this->assertEquals('test', $response->body());
+        $this->assertSame('text/plain', $response->type());
+        $this->assertSame(200, $response->code());
+        $this->assertSame('test', $response->body());
+
+        $response = Response::file($file, [
+            'code'    => '201',
+            'headers' => [
+                'Pragma' => 'no-cache'
+            ]
+        ]);
+
+        $this->assertSame('text/plain', $response->type());
+        $this->assertSame(201, $response->code());
+        $this->assertSame('test', $response->body());
+        $this->assertSame([
+            'Pragma' => 'no-cache'
+        ], $response->headers());
     }
 
     public function testType()

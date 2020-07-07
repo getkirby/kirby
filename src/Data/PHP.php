@@ -2,7 +2,8 @@
 
 namespace Kirby\Data;
 
-use Exception;
+use Kirby\Exception\BadMethodCallException;
+use Kirby\Exception\Exception;
 use Kirby\Toolkit\F;
 
 /**
@@ -23,7 +24,7 @@ class PHP extends Handler
      * @param string $indent For internal use only
      * @return string
      */
-    public static function encode($data, $indent = ''): string
+    public static function encode($data, string $indent = ''): string
     {
         switch (gettype($data)) {
             case 'array':
@@ -46,14 +47,14 @@ class PHP extends Handler
     }
 
     /**
-     * PHP arrays don't have to be decoded
+     * PHP strings shouldn't be decoded manually
      *
-     * @param array $array
+     * @param mixed $array
      * @return array
      */
     public static function decode($array): array
     {
-        return $array;
+        throw new BadMethodCallException('The PHP::decode() method is not implemented');
     }
 
     /**
@@ -68,17 +69,17 @@ class PHP extends Handler
             throw new Exception('The file "' . $file . '" does not exist');
         }
 
-        return (array)(include $file);
+        return (array)F::load($file, []);
     }
 
     /**
      * Creates a PHP file with the given data
      *
      * @param string $file
-     * @param array $data
+     * @param mixed $data
      * @return bool
      */
-    public static function write(string $file = null, array $data = []): bool
+    public static function write(string $file = null, $data = []): bool
     {
         $php = static::encode($data);
         $php = "<?php\n\nreturn $php;";

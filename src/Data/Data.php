@@ -2,13 +2,13 @@
 
 namespace Kirby\Data;
 
-use Exception;
+use Kirby\Exception\Exception;
 use Kirby\Toolkit\F;
 
 /**
  * The `Data` class provides readers and
  * writers for data. The class comes with
- * four handlers for `json`, `php`, `txt`
+ * handlers for `json`, `php`, `txt`, `xml`
  * and `yaml` encoded data, but can be
  * extended and customized.
  *
@@ -32,6 +32,7 @@ class Data
     public static $aliases = [
         'md'    => 'txt',
         'mdown' => 'txt',
+        'rss'   => 'xml',
         'yml'   => 'yaml',
     ];
 
@@ -44,6 +45,7 @@ class Data
         'json' => 'Kirby\Data\Json',
         'php'  => 'Kirby\Data\PHP',
         'txt'  => 'Kirby\Data\Txt',
+        'xml'  => 'Kirby\Data\Xml',
         'yaml' => 'Kirby\Data\Yaml',
     ];
 
@@ -73,23 +75,23 @@ class Data
     /**
      * Decodes data with the specified handler
      *
-     * @param string $data
+     * @param mixed $string
      * @param string $type
      * @return array
      */
-    public static function decode(string $data = null, string $type): array
+    public static function decode($string = null, string $type): array
     {
-        return static::handler($type)->decode($data);
+        return static::handler($type)->decode($string);
     }
 
     /**
      * Encodes data with the specified handler
      *
-     * @param array $data
+     * @param mixed $data
      * @param string $type
      * @return string
      */
-    public static function encode(array $data = null, string $type): string
+    public static function encode($data = null, string $type): string
     {
         return static::handler($type)->encode($data);
     }
@@ -114,11 +116,11 @@ class Data
      * the extension if not specified
      *
      * @param string $file
-     * @param array $data
+     * @param mixed $data
      * @param string $type
      * @return bool
      */
-    public static function write(string $file = null, array $data = [], string $type = null): bool
+    public static function write(string $file = null, $data = [], string $type = null): bool
     {
         return static::handler($type ?? F::extension($file))->write($file, $data);
     }

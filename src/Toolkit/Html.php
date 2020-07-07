@@ -6,7 +6,7 @@ use Exception;
 use Kirby\Http\Url;
 
 /**
- * Html builder for the most common elements
+ * HTML builder for the most common elements
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -14,58 +14,60 @@ use Kirby\Http\Url;
  * @copyright Bastian Allgeier GmbH
  * @license   https://opensource.org/licenses/MIT
  */
-class Html
+class Html extends Xml
 {
     /**
-     * An internal store for a html entities translation table
+     * An internal store for an HTML entities translation table
      *
      * @var array
      */
     public static $entities;
 
     /**
-     * Can be used to switch to trailing slashes if required
+     * Closing string for void tags;
+     * can be used to switch to trailing slashes if required
      *
      * ```php
-     * html::$void = ' />'
+     * Html::$void = ' />'
      * ```
      *
-     * @var string $void
+     * @var string
      */
     public static $void = '>';
 
     /**
      * Generic HTML tag generator
+     * Can be called like `Html::p('A paragraph', ['class' => 'text'])`
      *
-     * @param string $tag
-     * @param array $arguments
+     * @param string $tag Tag name
+     * @param array $arguments Further arguments for the Html::tag() method
      * @return string
      */
     public static function __callStatic(string $tag, array $arguments = []): string
     {
         if (static::isVoid($tag) === true) {
-            return Html::tag($tag, null, ...$arguments);
+            return static::tag($tag, null, ...$arguments);
         }
 
-        return Html::tag($tag, ...$arguments);
+        return static::tag($tag, ...$arguments);
     }
 
     /**
-     * Generates an `a` tag
+     * Generates an `<a>` tag; automatically supports mailto: and tel: links
      *
-     * @param string $href The url for the `a` tag
-     * @param mixed $text The optional text. If `null`, the url will be used as text
+     * @param string $href The URL for the `<a>` tag
+     * @param string|array|null $text The optional text; if `null`, the URL will be used as text
      * @param array $attr Additional attributes for the tag
-     * @return string the generated html
+     * @return string The generated HTML
      */
-    public static function a(string $href = null, $text = null, array $attr = []): string
+    public static function a(string $href, $text = null, array $attr = []): string
     {
         if (Str::startsWith($href, 'mailto:')) {
-            return static::email($href, $text, $attr);
+            return static::email(substr($href, 7), $text, $attr);
         }
 
         if (Str::startsWith($href, 'tel:')) {
-            return static::tel($href, $text, $attr);
+            return static::tel(substr($href, 4), $text, $attr);
         }
 
         return static::link($href, $text, $attr);
@@ -74,92 +76,47 @@ class Html
     /**
      * Generates a single attribute or a list of attributes
      *
-     * @param string $name mixed string: a single attribute with that name will be generated. array: a list of attributes will be generated. Don't pass a second argument in that case.
-     * @param string $value if used for a single attribute, pass the content for the attribute here
-     * @return string the generated html
+     * @param string|array $name String: A single attribute with that name will be generated.
+     *                           Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
+     * @param mixed $value If used with a `$name` string, pass the value of the attribute here.
+     *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
+     * @return string|null The generated HTML attributes string
      */
-    public static function attr($name, $value = null): string
+    public static function attr($name, $value = null): ?string
     {
-        if (is_array($name) === true) {
-            $attributes = [];
-
-            ksort($name);
-
-            foreach ($name as $key => $val) {
-                $a = static::attr($key, $val);
-
-                if ($a) {
-                    $attributes[] = $a;
-                }
-            }
-
-            return implode(' ', $attributes);
+        // HTML supports boolean attributes without values
+        if (is_array($name) === false && is_bool($value) === true) {
+            return $value === true ? strtolower($name) : null;
         }
 
-        if ($value === null || $value === '' || $value === []) {
-            return false;
-        }
+        // all other cases can share the XML variant
+        $attr = parent::attr($name, $value);
 
-        if ($value === ' ') {
-            return strtolower($name) . '=""';
-        }
-
-        if (is_bool($value) === true) {
-            return $value === true ? strtolower($name) : '';
-        }
-
-        if (is_array($value) === true) {
-            if (isset($value['value'], $value['escape'])) {
-                $value = $value['escape'] === true ? htmlspecialchars($value['value'], ENT_QUOTES, 'UTF-8') : $value['value'];
-            } else {
-                $value = implode(' ', array_filter($value, function ($value) {
-                    return !empty($value) || is_numeric($value);
-                }));
-            }
-        } else {
-            $value = htmlspecialchars($value, ENT_QUOTES, 'UTF-8');
-        }
-
-        return strtolower($name) . '="' . $value . '"';
+        // HTML supports named entities
+        $entities = parent::entities();
+        $html = array_keys($entities);
+        $xml  = array_values($entities);
+        return str_replace($xml, $html, $attr);
     }
 
     /**
-     * Converts lines in a string into html breaks
+     * Converts lines in a string into HTML breaks
      *
      * @param string $string
      * @return string
      */
-    public static function breaks(string $string = null): string
+    public static function breaks(string $string): string
     {
         return nl2br($string);
     }
 
     /**
-     * Removes all html tags and encoded chars from a string
+     * Generates an `<a>` tag with `mailto:`
      *
-     * <code>
-     *
-     * echo html::decode('some uber <em>crazy</em> stuff');
-     * // output: some uber crazy stuff
-     *
-     * </code>
-     *
-     * @param string $string
-     * @return string The html string
-     */
-    public static function decode(string $string = null): string
-    {
-        $string = strip_tags($string);
-        return html_entity_decode($string, ENT_COMPAT, 'utf-8');
-    }
-
-    /**
-     * Generates an `a` tag with `mailto:`
-     *
-     * @param string $email The url for the a tag
-     * @param mixed $text The optional text. If null, the url will be used as text
+     * @param string $email The email address
+     * @param string|array|null $text The optional text; if `null`, the email address will be used as text
      * @param array $attr Additional attributes for the tag
-     * @return string the generated html
+     * @return string The generated HTML
      */
     public static function email(string $email, $text = null, array $attr = []): string
     {
@@ -168,8 +125,10 @@ class Html
         }
 
         if (empty($text) === true) {
-            // show only the eMail address without additional parameters (if the 'text' argument is empty)
-            $text = [Str::encode(Str::split($email, '?')[0])];
+            // show only the email address without additional parameters
+            $address = Str::contains($email, '?') ? Str::before($email, '?') : $email;
+
+            $text = [Str::encode($address)];
         }
 
         $email = Str::encode($email);
@@ -187,14 +146,18 @@ class Html
     }
 
     /**
-     * Converts a string to a html-safe string
+     * Converts a string to an HTML-safe string
      *
-     * @param string $string
-     * @param bool $keepTags
-     * @return string The html string
+     * @param string|null $string
+     * @param bool $keepTags If true, existing tags won't be escaped
+     * @return string The HTML string
      */
-    public static function encode(string $string = null, bool $keepTags = false): string
+    public static function encode(?string $string, bool $keepTags = false): string
     {
+        if ($string === null) {
+            return '';
+        }
+
         if ($keepTags === true) {
             $list = static::entities();
             unset($list['"'], $list['<'], $list['>'], $list['&']);
@@ -209,24 +172,24 @@ class Html
     }
 
     /**
-     * Returns the entities translation table
+     * Returns the entity translation table
      *
      * @return array
      */
     public static function entities(): array
     {
-        return static::$entities = static::$entities ?? get_html_translation_table(HTML_ENTITIES);
+        return self::$entities = self::$entities ?? get_html_translation_table(HTML_ENTITIES);
     }
 
     /**
-     * Creates a figure tag with optional caption
+     * Creates a `<figure>` tag with optional caption
      *
-     * @param string|array $content
-     * @param string|array $caption
-     * @param array $attr
-     * @return string
+     * @param string|array $content Contents of the `<figure>` tag
+     * @param string|array $caption Optional `<figcaption>` text to use
+     * @param array $attr Additional attributes for the `<figure>` tag
+     * @return string The generated HTML
      */
-    public static function figure($content, $caption = null, array $attr = []): string
+    public static function figure($content, $caption = '', array $attr = []): string
     {
         if ($caption) {
             $figcaption = static::tag('figcaption', $caption);
@@ -242,14 +205,14 @@ class Html
     }
 
     /**
-     * Embeds a gist
+     * Embeds a GitHub Gist
      *
-     * @param string $url
-     * @param string $file
-     * @param array $attr
-     * @return string
+     * @param string $url Gist URL
+     * @param string|null $file Optional specific file to embed
+     * @param array $attr Additional attributes for the `<script>` tag
+     * @return string The generated HTML
      */
-    public static function gist(string $url, string $file = null, array $attr = []): string
+    public static function gist(string $url, ?string $file = null, array $attr = []): string
     {
         if ($file === null) {
             $src = $url . '.js';
@@ -257,29 +220,27 @@ class Html
             $src = $url . '.js?file=' . $file;
         }
 
-        return static::tag('script', null, array_merge($attr, [
-            'src' => $src
-        ]));
+        return static::tag('script', '', array_merge($attr, ['src' => $src]));
     }
 
     /**
-     * Creates an iframe
+     * Creates an `<iframe>`
      *
      * @param string $src
-     * @param array $attr
-     * @return string
+     * @param array $attr Additional attributes for the `<iframe>` tag
+     * @return string The generated HTML
      */
     public static function iframe(string $src, array $attr = []): string
     {
-        return static::tag('iframe', null, array_merge(['src' => $src], $attr));
+        return static::tag('iframe', '', array_merge(['src' => $src], $attr));
     }
 
     /**
-     * Generates an img tag
+     * Generates an `<img>` tag
      *
-     * @param string $src The url of the image
-     * @param array $attr Additional attributes for the image tag
-     * @return string the generated html
+     * @param string $src The URL of the image
+     * @param array $attr Additional attributes for the `<img>` tag
+     * @return string The generated HTML
      */
     public static function img(string $src, array $attr = []): string
     {
@@ -288,7 +249,7 @@ class Html
             'alt' => ' '
         ], $attr);
 
-        return static::tag('img', null, $attr);
+        return static::tag('img', '', $attr);
     }
 
     /**
@@ -322,14 +283,14 @@ class Html
     }
 
     /**
-     * Generates an `a` link tag
+     * Generates an `<a>` link tag (without automatic email: and tel: detection)
      *
-     * @param string $href The url for the `a` tag
-     * @param mixed $text The optional text. If `null`, the url will be used as text
+     * @param string $href The URL for the `<a>` tag
+     * @param string|array|null $text The optional text; if `null`, the URL will be used as text
      * @param array $attr Additional attributes for the tag
-     * @return string the generated html
+     * @return string The generated HTML
      */
-    public static function link(string $href = null, $text = null, array $attr = []): string
+    public static function link(string $href, $text = null, array $attr = []): string
     {
         $attr = array_merge(['href' => $href], $attr);
 
@@ -348,13 +309,13 @@ class Html
     }
 
     /**
-     * Add noopeener noreferrer to rels when target is `_blank`
+     * Add noopener & noreferrer to rels when target is `_blank`
      *
-     * @param string $rel
-     * @param string $target
-     * @return string|null
+     * @param string|null $rel Current `rel` value
+     * @param string|null $target Current `target` value
+     * @return string|null New `rel` value or `null` if not needed
      */
-    public static function rel(string $rel = null, string $target = null)
+    public static function rel(?string $rel = null, ?string $target = null): ?string
     {
         $rel = trim($rel);
 
@@ -370,47 +331,35 @@ class Html
     }
 
     /**
-     * Generates an Html tag with optional content and attributes
+     * Builds an HTML tag
      *
-     * @param string $name The name of the tag, i.e. `a`
-     * @param mixed $content The content if availble. Pass `null` to generate a self-closing tag, Pass an empty string to generate empty content
+     * @param string $name Tag name
+     * @param array|string|null $content Scalar value or array with multiple lines of content or `null` to
+     *                                   generate a self-closing tag; pass an empty string to generate empty content
      * @param array $attr An associative array with additional attributes for the tag
-     * @return string The generated Html
+     * @param string|null $indent Indentation string, defaults to two spaces or `null` for output on one line
+     * @param int $level Indentation level
+     * @return string The generated HTML
      */
-    public static function tag(string $name, $content = null, array $attr = []): string
+    public static function tag(string $name, $content = '', array $attr = null, string $indent = null, int $level = 0): string
     {
-        $html = '<' . $name;
-        $attr = static::attr($attr);
-
-        if (empty($attr) === false) {
-            $html .= ' ' . $attr;
-        }
-
+        // force void elements to be self-closing
         if (static::isVoid($name) === true) {
-            $html .= static::$void;
-        } else {
-            if (is_array($content) === true) {
-                $content = implode($content);
-            } else {
-                $content = static::encode($content, false);
-            }
-
-            $html .= '>' . $content . '</' . $name . '>';
+            $content = null;
         }
 
-        return $html;
+        return parent::tag($name, $content, $attr, $indent, $level);
     }
 
-
     /**
-     * Generates an `a` tag for a phone number
+     * Generates an `<a>` tag for a phone number
      *
      * @param string $tel The phone number
-     * @param mixed $text The optional text. If `null`, the number will be used as text
+     * @param string|array|null $text The optional text; if `null`, the phone number will be used as text
      * @param array $attr Additional attributes for the tag
-     * @return string the generated html
+     * @return string The generated HTML
      */
-    public static function tel($tel = null, $text = null, array $attr = []): string
+    public static function tel(string $tel, $text = null, array $attr = []): string
     {
         $number = preg_replace('![^0-9\+]+!', '', $tel);
 
@@ -422,16 +371,44 @@ class Html
     }
 
     /**
-     * Creates a video embed via iframe for Youtube or Vimeo
-     * videos. The embed Urls are automatically detected from
-     * the given URL.
+     * Properly encodes tag contents
      *
-     * @param string $url
-     * @param array $options
-     * @param array $attr
-     * @return string
+     * @param mixed $value
+     * @return string|null
      */
-    public static function video(string $url, ?array $options = [], array $attr = []): string
+    public static function value($value): ?string
+    {
+        if ($value === true) {
+            return 'true';
+        }
+
+        if ($value === false) {
+            return 'false';
+        }
+
+        if (is_numeric($value) === true) {
+            return (string)$value;
+        }
+
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return static::encode($value, false);
+    }
+
+    /**
+     * Creates a video embed via `<iframe>` for YouTube or Vimeo
+     * videos; the embed URLs are automatically detected from
+     * the given URL
+     *
+     * @param string $url Video URL
+     * @param array $options Additional `vimeo` and `youtube` options
+     *                       (will be used as query params in the embed URL)
+     * @param array $attr Additional attributes for the `<iframe>` tag
+     * @return string The generated HTML
+     */
+    public static function video(string $url, array $options = [], array $attr = []): string
     {
         // YouTube video
         if (preg_match('!youtu!i', $url) === 1) {
@@ -447,14 +424,14 @@ class Html
     }
 
     /**
-     * Embeds a Vimeo video by URL in an iframe
+     * Embeds a Vimeo video by URL in an `<iframe>`
      *
-     * @param string $url
-     * @param array $options
-     * @param array $attr
-     * @return string
+     * @param string $url Vimeo video URL
+     * @param array $options Query params for the embed URL
+     * @param array $attr Additional attributes for the `<iframe>` tag
+     * @return string The generated HTML
      */
-    public static function vimeo(string $url, ?array $options = [], array $attr = []): string
+    public static function vimeo(string $url, array $options = [], array $attr = []): string
     {
         if (preg_match('!vimeo.com\/([0-9]+)!i', $url, $array) === 1) {
             $id = $array[1];
@@ -477,59 +454,106 @@ class Html
     }
 
     /**
-     * Embeds a Youtube video by URL in an iframe
+     * Embeds a YouTube video by URL in an `<iframe>`
      *
-     * @param string $url
-     * @param array $options
-     * @param array $attr
-     * @return string
+     * @param string $url YouTube video URL
+     * @param array $options Query params for the embed URL
+     * @param array $attr Additional attributes for the `<iframe>` tag
+     * @return string The generated HTML
      */
-    public static function youtube(string $url, ?array $options = [], array $attr = []): string
+    public static function youtube(string $url, array $options = [], array $attr = []): string
     {
-        // youtube embed domain
-        $domain = 'youtube.com';
-        $id     = null;
+        // default YouTube embed domain
+        $domain     = 'youtube.com';
+        $uri        = 'embed/';
+        $id         = null;
+        $urlOptions = [];
 
         $schemes = [
-            // http://www.youtube.com/embed/d9NF2edxy-M
-            ['pattern' => 'youtube.com\/embed\/([a-zA-Z0-9_-]+)'],
+            // https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
+            [
+                'pattern' => 'youtube.com\/embed\/videoseries\?list=([a-zA-Z0-9_-]+)',
+                'uri'     => 'embed/videoseries?list='
+            ],
+
+            // https://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
+            [
+                'pattern' => 'youtube-nocookie.com\/embed\/videoseries\?list=([a-zA-Z0-9_-]+)',
+                'domain'  => 'www.youtube-nocookie.com',
+                'uri'     => 'embed/videoseries?list='
+            ],
+
+            // https://www.youtube.com/embed/d9NF2edxy-M
+            // https://www.youtube.com/embed/d9NF2edxy-M?start=10
+            ['pattern' => 'youtube.com\/embed\/([a-zA-Z0-9_-]+)(?:\?(.+))?'],
+
             // https://www.youtube-nocookie.com/embed/d9NF2edxy-M
+            // https://www.youtube-nocookie.com/embed/d9NF2edxy-M?start=10
             [
-                'pattern' => 'youtube-nocookie.com\/embed\/([a-zA-Z0-9_-]+)',
+                'pattern' => 'youtube-nocookie.com\/embed\/([a-zA-Z0-9_-]+)(?:\?(.+))?',
                 'domain'  => 'www.youtube-nocookie.com'
             ],
+
             // https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M
+            // https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M&t=10
             [
-                'pattern' => 'youtube-nocookie.com\/watch\?v=([a-zA-Z0-9_-]+)',
+                'pattern' => 'youtube-nocookie.com\/watch\?v=([a-zA-Z0-9_-]+)(?:&(.+))?',
                 'domain'  => 'www.youtube-nocookie.com'
             ],
-            // http://www.youtube.com/watch?v=d9NF2edxy-M
-            ['pattern' => 'v=([a-zA-Z0-9_-]+)'],
-            // http://youtu.be/d9NF2edxy-M
-            ['pattern' => 'youtu.be\/([a-zA-Z0-9_-]+)']
+
+            // https://www.youtube-nocookie.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
+            [
+                'pattern' => 'youtube-nocookie.com\/playlist\?list=([a-zA-Z0-9_-]+)',
+                'domain'  => 'www.youtube-nocookie.com',
+                'uri'     => 'embed/videoseries?list='
+            ],
+
+            // https://www.youtube.com/watch?v=d9NF2edxy-M
+            // https://www.youtube.com/watch?v=d9NF2edxy-M&t=10
+            ['pattern' => 'youtube.com\/watch\?v=([a-zA-Z0-9_-]+)(?:&(.+))?'],
+
+            // https://www.youtube.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
+            [
+                'pattern' => 'youtube.com\/playlist\?list=([a-zA-Z0-9_-]+)',
+                'uri'     => 'embed/videoseries?list='
+            ],
+
+            // https://youtu.be/d9NF2edxy-M
+            // https://youtu.be/d9NF2edxy-M?t=10
+            ['pattern' => 'youtu.be\/([a-zA-Z0-9_-]+)(?:\?(.+))?']
         ];
 
         foreach ($schemes as $schema) {
             if (preg_match('!' . $schema['pattern'] . '!i', $url, $array) === 1) {
                 $domain = $schema['domain'] ?? $domain;
+                $uri    = $schema['uri'] ?? $uri;
                 $id     = $array[1];
+                if (isset($array[2]) === true) {
+                    parse_str($array[2], $urlOptions);
+
+                    // convert video URL options to embed URL options
+                    if (isset($urlOptions['t']) === true) {
+                        $urlOptions['start'] = $urlOptions['t'];
+                        unset($urlOptions['t']);
+                    }
+                }
                 break;
             }
         }
 
         // no match
         if ($id === null) {
-            throw new Exception('Invalid Youtube source');
+            throw new Exception('Invalid YouTube source');
         }
 
         // build the options query
-        if (empty($options) === false) {
-            $query = '?' . http_build_query($options);
+        if (empty($options) === false || empty($urlOptions) === false) {
+            $query = (Str::contains($uri, '?') === true ? '&' : '?') . http_build_query(array_merge($urlOptions, $options));
         } else {
             $query = '';
         }
 
-        $url = 'https://' . $domain . '/embed/' . $id . $query;
+        $url = 'https://' . $domain . '/' . $uri . $id . $query;
 
         return static::iframe($url, array_merge(['allowfullscreen' => true], $attr));
     }

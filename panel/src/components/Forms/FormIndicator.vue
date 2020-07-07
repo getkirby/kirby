@@ -61,7 +61,7 @@ export default {
         }
       }
 
-      this.$router.push(target.link);
+      this.$go(target.link);
     },
     load() {
       // create an API request promise for each model with changes

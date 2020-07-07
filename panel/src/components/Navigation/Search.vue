@@ -41,7 +41,7 @@
           :data-selected="selected === itemIndex"
           @mouseover="selected = itemIndex"
         >
-          <k-link :to="item.link" @click="click(itemIndex)">
+          <k-link :to="item.link" @click="close">
             <strong>{{ item.title }}</strong>
             <small>{{ item.info }}</small>
           </k-link>
@@ -74,6 +74,11 @@ export default {
           label: this.$t("pages"),
           icon: "page",
           endpoint: "site/search"
+        },
+        files: {
+          label: this.$t("files"),
+          icon: "image",
+          endpoint: "files/search"
         },
         users: {
           label: this.$t("users"),
@@ -120,6 +125,14 @@ export default {
         this.navigate(item);
       }
     },
+    map_files(item) {
+      return {
+        id: item.id,
+        title: item.filename,
+        link: item.link,
+        info: item.id
+      };
+    },
     map_pages(item) {
       return {
         id: item.id,
@@ -137,7 +150,7 @@ export default {
       };
     },
     navigate(item) {
-      this.$router.push(item.link);
+      this.$go(item.link);
       this.close();
     },
     search(query) {

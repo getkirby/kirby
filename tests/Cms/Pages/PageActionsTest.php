@@ -431,4 +431,53 @@ class PageActionsTest extends TestCase
 
         $page->changeStatus('unlisted');
     }
+
+    public function testDuplicate()
+    {
+        $app = $this->app->clone();
+
+        $app->impersonate('kirby');
+
+        $page = Page::create([
+            'slug' => 'test',
+        ]);
+        $page->lock()->create();
+        $this->assertFileExists($app->locks()->file($page));
+
+        $copy = $page->duplicate('test-copy');
+        $this->assertFileNotExists($this->fixtures . $copy->root() . '/.lock');
+    }
+
+    public function testDuplicateMultiLang()
+    {
+        $app = $this->app->clone([
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'name' => 'English',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                    'name' => 'Deutsch',
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = Page::create([
+            'slug' => 'test',
+        ]);
+
+        new ContentTranslation([
+            'parent' => $page,
+            'code'   => 'en',
+        ]);
+        $this->assertFileExists($page->contentFile('en'));
+
+        $copy = $page->duplicate('test-copy');
+        $this->assertFileExists($copy->contentFile('en'));
+        $this->assertFileNotExists($copy->contentFile('de'));
+    }
 }

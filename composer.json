@@ -1,7 +1,7 @@
 {
   "name": "getkirby/cms",
   "description": "The Kirby 3 core",
-  "version": "3.3.6",
+  "version": "3.4.0",
   "license": "proprietary",
   "keywords": ["kirby", "cms", "core"],
   "homepage": "https://getkirby.com",
@@ -20,17 +20,17 @@
     "source": "https://github.com/getkirby/kirby"
   },
   "require": {
-    "php": ">=7.1.0",
+    "php": ">=7.2.0 <7.5.0",
     "ext-mbstring": "*",
     "ext-ctype": "*",
     "getkirby/composer-installer": "^1.0",
-    "mustangostang/spyc": "0.6.2",
+    "mustangostang/spyc": "0.6.3",
     "michelf/php-smartypants": "1.8.1",
-    "claviska/simpleimage": "3.3.3",
-    "phpmailer/phpmailer": "6.0.7",
-    "filp/whoops": "2.3.1",
+    "claviska/simpleimage": "3.3.4",
+    "phpmailer/phpmailer": "6.1.6",
+    "filp/whoops": "2.7.2",
     "true/punycode": "2.1.1",
-    "laminas/laminas-escaper": "2.6.0"
+    "laminas/laminas-escaper": "2.6.1"
   },
   "autoload": {
     "files": ["config/setup.php"],
@@ -41,10 +41,11 @@
   },
   "scripts": {
     "analyze": "phpstan analyse",
-    "test": "phpunit --stderr --coverage-html=tests/coverage",
-    "zip": "composer archive --format=zip --file=dist",
     "build": "./scripts/build",
-    "fix": "php-cs-fixer fix --config .php_cs"
+    "fix": "php-cs-fixer fix --config .php_cs",
+    "post-update-cmd": "curl -o cacert.pem https://curl.haxx.se/ca/cacert.pem",
+    "test": "phpunit --stderr --coverage-html=tests/coverage",
+    "zip": "composer archive --format=zip --file=dist"
   },
   "config": {
     "optimize-autoloader": true

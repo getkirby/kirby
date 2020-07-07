@@ -1,7 +1,7 @@
 <template>
   <k-dialog
     ref="dialog"
-    :button="$t('insert')"
+    :submit-button="$t('insert')"
     @close="cancel"
     @submit="$refs.form.submit()"
   >

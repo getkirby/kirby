@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "Профилната снимка не може да се качи",
   "error.avatar.delete.fail": "Профилната снимка не може да бъде изтрита",
-  "error.avatar.dimensions.invalid":
-    "Моля запазете ширината и височината на профилната снимка под 3000 пиксела",
-  "error.avatar.mime.forbidden":
-    "Профилната снимка трябва да бъде в JPEG или PNG формат",
+  "error.avatar.dimensions.invalid": "Моля запазете ширината и височината на профилната снимка под 3000 пиксела",
+  "error.avatar.mime.forbidden": "Профилната снимка трябва да бъде в JPEG или PNG формат",
 
   "error.blueprint.notFound": "Образецът \"{name}\" не може да бъде зареден",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Невалиден конвертор \"{converter}\"",
 
   "error.file.changeName.empty": "The name must not be empty",
-  "error.file.changeName.permission":
-    "Не можете да смените името на \"{filename}\"",
+  "error.file.changeName.permission": "Не можете да смените името на \"{filename}\"",
   "error.file.duplicate": "Файл с име \"{filename}\" вече съществува",
-  "error.file.extension.forbidden":
-    "Файловото разширение \"{extension}\" не е позволено",
-  "error.file.extension.missing":
-    "Липсва файлово разширение за файла \"{filename}\"",
+  "error.file.extension.forbidden": "Файловото разширение \"{extension}\" не е позволено",
+  "error.file.extension.missing": "Липсва файлово разширение за файла \"{filename}\"",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
   "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
-  "error.file.mime.differs":
-    "Каченият файл трябва да бъде от същия mime тип \"{mime}\"",
+  "error.file.mime.differs": "Каченият файл трябва да бъде от същия mime тип \"{mime}\"",
   "error.file.mime.forbidden": "The media type \"{mime}\" is not allowed",
   "error.file.mime.invalid": "Invalid mime type: {mime}",
-  "error.file.mime.missing":
-    "The media type for \"{filename}\" cannot be detected",
+  "error.file.mime.missing": "The media type for \"{filename}\" cannot be detected",
   "error.file.minheight": "The height of the image must be at least {height} pixels",
   "error.file.minsize": "The file is too small",
   "error.file.minwidth": "The width of the image must be at least {width} pixels",
@@ -90,111 +83,77 @@
   "error.license.email": "Моля въведете валиден email адрес",
   "error.license.verification": "The license could not be verified",
 
-  "error.page.changeSlug.permission":
-    "Не можете да смените URL на \"{slug}\"",
-  "error.page.changeStatus.incomplete":
-    "Страницата съдържа грешки и не може да бъде публикувана",
-  "error.page.changeStatus.permission":
-    "Статусът на страницата не може да бъде променен",
-  "error.page.changeStatus.toDraft.invalid":
-    "Страницата \"{slug}\" не може да бъде променена в чернова",
-  "error.page.changeTemplate.invalid":
-    "Темплейтът за страница \"{slug}\" не може да бъде променен",
-  "error.page.changeTemplate.permission":
-    "Нямате права за да промените шаблона за \"{slug}\"",
+  "error.page.changeSlug.permission": "Не можете да смените URL на \"{slug}\"",
+  "error.page.changeStatus.incomplete": "Страницата съдържа грешки и не може да бъде публикувана",
+  "error.page.changeStatus.permission": "Статусът на страницата не може да бъде променен",
+  "error.page.changeStatus.toDraft.invalid": "Страницата \"{slug}\" не може да бъде променена в чернова",
+  "error.page.changeTemplate.invalid": "Темплейтът за страница \"{slug}\" не може да бъде променен",
+  "error.page.changeTemplate.permission": "Нямате права за да промените шаблона за \"{slug}\"",
   "error.page.changeTitle.empty": "Заглавието е задължително",
-  "error.page.changeTitle.permission":
-    "Не можете да промените заглавието на \"{slug}\"",
+  "error.page.changeTitle.permission": "Не можете да промените заглавието на \"{slug}\"",
   "error.page.create.permission": "Не можете да създадете \"{slug}\"",
   "error.page.delete": "Страницата \"{slug}\" не може да бъде изтрита",
   "error.page.delete.confirm": "Моля въведете името на страницата, за да потвърдите",
-  "error.page.delete.hasChildren":
-    "Страницата има подстраници и не може да бъде изтрита",
+  "error.page.delete.hasChildren": "Страницата има подстраници и не може да бъде изтрита",
   "error.page.delete.permission": "Не можете да изтриете \"{slug}\"",
-  "error.page.draft.duplicate":
-    "Вече съществува чернова с URL-добавка \"{slug}\"",
-  "error.page.duplicate":
-    "Страница с URL-добавка \"{slug}\" вече съществува",
+  "error.page.draft.duplicate": "Вече съществува чернова с URL-добавка \"{slug}\"",
+  "error.page.duplicate": "Страница с URL-добавка \"{slug}\" вече съществува",
   "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "Страницата \"{slug}\" не може да бъде намерена",
-  "error.page.num.invalid":
-    "Моля въведете валидно число за сортиране. Числата не трябва да са негативни.",
+  "error.page.num.invalid": "Моля въведете валидно число за сортиране. Числата не трябва да са негативни.",
   "error.page.slug.invalid": "Моля въведете валиден URL префикс",
   "error.page.sort.permission": "Страницата \"{slug}\" не може да бъде сортирана",
   "error.page.status.invalid": "Моля изберете валиден статус на страницата",
   "error.page.undefined": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430\u0442\u0430 \u043d\u0435 \u043c\u043e\u0436\u0435 \u0434\u0430 \u0431\u044a\u0434\u0435 \u043d\u0430\u043c\u0435\u0440\u0435\u043d\u0430",
   "error.page.update.permission": "Не можете да обновите \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "Не можете да добавяте повече от {max} файлa в секция \"{section}\"",
-  "error.section.files.max.singular":
-    "Не можете да добавяте повече от един файл в секция \"{section}\"",
-  "error.section.files.min.plural":
-    "The \"{section}\" section requires at least {min} files",
-  "error.section.files.min.singular":
-    "The \"{section}\" section requires at least one file",
+  "error.section.files.max.plural": "Не можете да добавяте повече от {max} файлa в секция \"{section}\"",
+  "error.section.files.max.singular": "Не можете да добавяте повече от един файл в секция \"{section}\"",
+  "error.section.files.min.plural": "The \"{section}\" section requires at least {min} files",
+  "error.section.files.min.singular": "The \"{section}\" section requires at least one file",
 
-  "error.section.pages.max.plural":
-    "Не можете да добавяте повече от {max} страници в секция \"{section}\"",
-  "error.section.pages.max.singular":
-    "Не можете да добавяте повече от една страница в секция \"{section}\"",
-  "error.section.pages.min.plural":
-    "The \"{section}\" section requires at least {min} pages",
-  "error.section.pages.min.singular":
-    "The \"{section}\" section requires at least one page",
+  "error.section.pages.max.plural": "Не можете да добавяте повече от {max} страници в секция \"{section}\"",
+  "error.section.pages.max.singular": "Не можете да добавяте повече от една страница в секция \"{section}\"",
+  "error.section.pages.min.plural": "The \"{section}\" section requires at least {min} pages",
+  "error.section.pages.min.singular": "The \"{section}\" section requires at least one page",
 
   "error.section.notLoaded": "Секция \"{name}\" не може да бъде заредена",
   "error.section.type.invalid": "Типът \"{type}\" на секция не е валиден",
 
   "error.site.changeTitle.empty": "Заглавието е задължително",
-  "error.site.changeTitle.permission":
-    "Не може да променяте заглавието на сайта",
+  "error.site.changeTitle.permission": "Не може да променяте заглавието на сайта",
   "error.site.update.permission": "Нямате права за да обновите сайта",
 
   "error.template.default.notFound": "Стандартният шаблон не съществува",
 
-  "error.user.changeEmail.permission":
-    "Нямате права да промените имейла на този потребител \"{name}\"",
-  "error.user.changeLanguage.permission":
-    "Нямате права да промените езика за този потребител \"{name}\"",
-  "error.user.changeName.permission":
-    "Нямате права да промените името на този потребител \"{name}\"",
-  "error.user.changePassword.permission":
-    "Нямате права да промените паролата за този потребител \"{name}\"",
-  "error.user.changeRole.lastAdmin":
-    "Ролята на последния администратор не може да бъде променена",
-  "error.user.changeRole.permission":
-    "Нямате права да промените ролята на този потребител \"{name}\"",
-  "error.user.changeRole.toAdmin":
-    "You are not allowed to promote someone to the admin role",
+  "error.user.changeEmail.permission": "Нямате права да промените имейла на този потребител \"{name}\"",
+  "error.user.changeLanguage.permission": "Нямате права да промените езика за този потребител \"{name}\"",
+  "error.user.changeName.permission": "Нямате права да промените името на този потребител \"{name}\"",
+  "error.user.changePassword.permission": "Нямате права да промените паролата за този потребител \"{name}\"",
+  "error.user.changeRole.lastAdmin": "Ролята на последния администратор не може да бъде променена",
+  "error.user.changeRole.permission": "Нямате права да промените ролята на този потребител \"{name}\"",
+  "error.user.changeRole.toAdmin": "You are not allowed to promote someone to the admin role",
   "error.user.create.permission": "Нямате права да създадете този потребител",
   "error.user.delete": "\u041f\u043e\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b\u044f\u0442 \u043d\u0435 \u043c\u043e\u0436\u0435 \u0434\u0430 \u0431\u044a\u0434\u0435 \u0438\u0437\u0442\u0440\u0438\u0442",
   "error.user.delete.lastAdmin": "\u041d\u0435 \u043c\u043e\u0436\u0435\u0442\u0435 \u0434\u0430 \u0438\u0437\u0442\u0440\u0438\u0435\u0442\u0435 \u043f\u043e\u0441\u043b\u0435\u0434\u043d\u0438\u044f \u0430\u0434\u043c\u0438\u043d\u0438\u0441\u0442\u0440\u0430\u0442\u043e\u0440",
   "error.user.delete.lastUser": "Последният потребител не може да бъде изтрит",
-  "error.user.delete.permission":
-    "\u041d\u0435 \u0435 \u043f\u043e\u0437\u0432\u043e\u043b\u0435\u043d\u043e \u0434\u0430 \u0438\u0437\u0442\u0440\u0438\u0432\u0430\u0442\u0435 \u0442\u043e\u0437\u0438 \u043f\u043e\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b",
-  "error.user.duplicate":
-    "Потребител с имейл \"{email}\" вече съществува",
+  "error.user.delete.permission": "\u041d\u0435 \u0435 \u043f\u043e\u0437\u0432\u043e\u043b\u0435\u043d\u043e \u0434\u0430 \u0438\u0437\u0442\u0440\u0438\u0432\u0430\u0442\u0435 \u0442\u043e\u0437\u0438 \u043f\u043e\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b",
+  "error.user.duplicate": "Потребител с имейл \"{email}\" вече съществува",
   "error.user.email.invalid": "Моля въведете валиден email адрес",
   "error.user.language.invalid": "Моля въведете валиден език",
   "error.user.notFound": "\u041f\u043e\u0442\u0440\u0435\u0431\u0438\u0442\u0435\u043b\u044f\u0442 \u043d\u0435 \u043c\u043e\u0436\u0435 \u0434\u0430 \u0431\u044a\u0434\u0435 \u043d\u0430\u043c\u0435\u0440\u0435\u043d.",
-  "error.user.password.invalid":
-    "Моля въведете валидна парола. Тя трабва да съдържа поне 8 символа.",
+  "error.user.password.invalid": "Моля въведете валидна парола. Тя трабва да съдържа поне 8 символа.",
   "error.user.password.notSame": "\u041c\u043e\u043b\u044f, \u043f\u043e\u0442\u0432\u044a\u0440\u0434\u0435\u0442\u0435 \u043f\u0430\u0440\u043e\u043b\u0430\u0442\u0430",
   "error.user.password.undefined": "Потребителят няма парола",
   "error.user.role.invalid": "Моля въведете валидна роля",
-  "error.user.update.permission":
-    "Нямате права да обновите този потребител \"{name}\"",
+  "error.user.update.permission": "Нямате права да обновите този потребител \"{name}\"",
 
   "error.validation.accepted": "Моля потвърдете",
   "error.validation.alpha": "Моля въвдете символи измежду a-z",
-  "error.validation.alphanum":
-    "Моля въвдете символи измежду a-z или цифри 0-9",
-  "error.validation.between":
-    "Моля въведете стойност между \"{min}\" и \"{max}\"",
+  "error.validation.alphanum": "Моля въвдете символи измежду a-z или цифри 0-9",
+  "error.validation.between": "Моля въведете стойност между \"{min}\" и \"{max}\"",
   "error.validation.boolean": "Моля потвърдете или откажете",
-  "error.validation.contains":
-    "Моля въведете стойност, която съдържа \"{needle}\"",
+  "error.validation.contains": "Моля въведете стойност, която съдържа \"{needle}\"",
   "error.validation.date": "Моля въведете валидна дата",
   "error.validation.date.after": "Please enter a date after {date}",
   "error.validation.date.before": "Please enter a date before {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Моля въведете стойност по-ниска от {max}",
   "error.validation.match": "Стойността не съвпада с очаквания модел",
   "error.validation.max": "Please enter a value equal to or lower than {max}",
-  "error.validation.maxlength":
-    "Моля въведете по-къса стойност. (макс. {max} символа)",
+  "error.validation.maxlength": "Моля въведете по-къса стойност. (макс. {max} символа)",
   "error.validation.maxwords": "Моля въведете не повече от {max} дума(и)",
   "error.validation.min": "Please enter a value equal to or greater than {min}",
-  "error.validation.minlength":
-    "Моля въведете по-дълга стойност. (мин. {min} символа)",
+  "error.validation.minlength": "Моля въведете по-дълга стойност. (мин. {min} символа)",
   "error.validation.minwords": "Моля въведете поне {min} дума(и).",
   "error.validation.more": "Моля въведете стойност по-висока от {min}",
-  "error.validation.notcontains":
-    "Моля въведете стойност, която не съдържа \"{needle}\"",
-  "error.validation.notin":
-    "Моля не въвеждайте нито едно от следните: ({notIn})",
+  "error.validation.notcontains": "Моля въведете стойност, която не съдържа \"{needle}\"",
+  "error.validation.notin": "Моля не въвеждайте нито едно от следните: ({notIn})",
   "error.validation.option": "Моля изберете валидна опция",
   "error.validation.num": "Моля въведете валидно число",
   "error.validation.required": "Моля въведете нещо",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Все още няма статии",
   "field.users.empty": "Все още не са избрани потребители",
 
-  "file.delete.confirm":
-    "Сигурни ли сте, че искате да изтриете <br><strong>{filename}</strong>?",
+  "file.delete.confirm": "Сигурни ли сте, че искате да изтриете <br><strong>{filename}</strong>?",
 
   "files": "Файлове",
   "files.empty": "Няма файлове",
@@ -251,29 +205,22 @@
   "installation": "Инсталация",
   "installation.completed": "The panel has been installed",
   "installation.disabled": "The panel installer is disabled on public servers by default. Please run the installer on a local machine or enable it with the <code>panel.install</code> option.",
-  "installation.issues.accounts":
-    "Папката <code>/site/accounts</code> не съществува или не позволява запис",
-  "installation.issues.content":
-    "Папката <code>/content</code> и всички файлове в нея трябва да позволяват запис",
+  "installation.issues.accounts": "Папката <code>/site/accounts</code> не съществува или не позволява запис",
+  "installation.issues.content": "Папката <code>/content</code> и всички файлове в нея трябва да позволяват запис",
   "installation.issues.curl": "Изисква се <code>CURL</code> разширението",
   "installation.issues.headline": "Панелът не може да бъде инсталиран",
-  "installation.issues.mbstring":
-    "Изисква се разширението <code>MB String</code>",
-  "installation.issues.media":
-    "Папката <code>/media</code> не съществува или няма права за запис",
+  "installation.issues.mbstring": "Изисква се разширението <code>MB String</code>",
+  "installation.issues.media": "Папката <code>/media</code> не съществува или няма права за запис",
   "installation.issues.php": "Бъдете сигурни, че използвате <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby изисква <code>Apache</code>, <code>Nginx</code> или <code>Caddy</code>",
+  "installation.issues.server": "Kirby изисква <code>Apache</code>, <code>Nginx</code> или <code>Caddy</code>",
   "installation.issues.sessions": "The <code>/site/sessions</code> folder does not exist or is not writable",
 
   "language": "\u0415\u0437\u0438\u043a",
   "language.code": "Код",
   "language.convert": "Направи по подразбиране",
-  "language.convert.confirm":
-    "<p>Сигурни ли сте, че искате да зададете <strong>{name}</strong> за език по подразбиране? Действието не може да бъде отменено.</p><p>В случай, че в <strong>{name}</strong> има непреведено съдържание, то части от сайта ви могат да останат празни.</p>",
+  "language.convert.confirm": "<p>Сигурни ли сте, че искате да зададете <strong>{name}</strong> за език по подразбиране? Действието не може да бъде отменено.</p><p>В случай, че в <strong>{name}</strong> има непреведено съдържание, то части от сайта ви могат да останат празни.</p>",
   "language.create": "Добавете нов език",
-  "language.delete.confirm":
-    "Сигурни ли сте, че искате да изтриете език <strong>{name}</strong>, включително всички негови преводи? Действието не може да бъде отменено!",
+  "language.delete.confirm": "Сигурни ли сте, че искате да изтриете език <strong>{name}</strong>, включително всички негови преводи? Действието не може да бъде отменено!",
   "language.deleted": "Езикът беше изтрит",
   "language.direction": "Посока на четене",
   "language.direction.ltr": "Отляво надясно",
@@ -292,8 +239,7 @@
   "license": "\u041b\u0438\u0446\u0435\u043d\u0437 \u0437\u0430 Kirby",
   "license.buy": "Купи лиценз",
   "license.register": "Регистрирай",
-  "license.register.help":
-    "You received your license code after the purchase via email. Please copy and paste it to register.",
+  "license.register.help": "You received your license code after the purchase via email. Please copy and paste it to register.",
   "license.register.label": "Please enter your license code",
   "license.register.success": "Thank you for supporting Kirby",
   "license.unregistered": "Това е нерегистрирана демо версия на Kirby",
@@ -325,7 +271,7 @@
   "months.april": "\u0410\u043f\u0440\u0438\u043b",
   "months.august": "\u0410\u0432\u0433\u0443\u0441\u0442",
   "months.december": "\u0414\u0435\u043a\u0435\u043c\u0432\u0440\u0438",
-  "months.february": "\u0424\u0435\u0432\u0440\u0443\u0430\u0440\u0438",
+  "months.february": "Февруари",
   "months.january": "\u042f\u043d\u0443\u0430\u0440\u0438",
   "months.july": "\u042e\u043b\u0438",
   "months.june": "\u042e\u043d\u0438",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Моля изберете позиция",
   "page.changeStatus.select": "Изберете нов статус",
   "page.changeTemplate": "Промени шаблон",
-  "page.delete.confirm":
-    "Сигурни ли сте, че искате да изтриете <strong>{title}</strong>?",
-  "page.delete.confirm.subpages":
-    "<strong>Тази страница има подстраници</strong>. <br>Всички подстраници също ще бъдат изтрити.",
+  "page.delete.confirm": "Сигурни ли сте, че искате да изтриете <strong>{title}</strong>?",
+  "page.delete.confirm.subpages": "<strong>Тази страница има подстраници</strong>. <br>Всички подстраници също ще бъдат изтрити.",
   "page.delete.confirm.title": "Въведи заглавие на страница за да потвърдиш",
   "page.draft.create": "Създай чернова",
   "page.duplicate.appendix": "Копирай",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Copy pages",
   "page.status": "Status",
   "page.status.draft": "Чернова",
-  "page.status.draft.description":
-    "Страницата е в режим на чернова и е видима само за оторизирани редактори",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "Публично",
   "page.status.listed.description": "Страницата е публична за всички",
   "page.status.unlisted": "Скрит",
@@ -388,6 +331,7 @@
   "replace": "\u0417\u0430\u043c\u0435\u0441\u0442\u0438",
   "retry": "\u041e\u043f\u0438\u0442\u0430\u0439 \u043f\u0430\u043a",
   "revert": "\u041e\u0442\u043c\u0435\u043d\u0438",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "\u0420\u043e\u043b\u044f",
   "role.admin.description": "The admin has all rights",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Потребител",
-  "user.blueprint":
-    "Можете да дефинирате допълнителни секции и полета на форми за тази потребителска роля в <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Можете да дефинирате допълнителни секции и полета на форми за тази потребителска роля в <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Промени email",
   "user.changeLanguage": "Промени език",
   "user.changeName": "Преименувай този потребител",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Изберете нова роля",
   "user.create": "Добавете нов потребител",
   "user.delete": "Изтрийте потребителя",
-  "user.delete.confirm":
-    "Сигурни ли сте, че искате да изтриете <br><strong>{email}</strong>?",
+  "user.delete.confirm": "Сигурни ли сте, че искате да изтриете <br><strong>{email}</strong>?",
 
   "users": "Потребители",
 

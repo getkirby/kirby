@@ -96,6 +96,17 @@ export default {
       return result;
     });
   },
+  roles(id) {
+    return api.get(this.url(id, "roles")).then(roles => {
+      return roles.data.map(role => {
+        return {
+          info: role.description || `(${Vue.i18n.translate("role.description.placeholder")})`,
+          text: role.title,
+          value: role.name
+        };
+      });
+    });
+  },
   url(id, path) {
     let url = !id ? "users" : "users/" + id;
 

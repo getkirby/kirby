@@ -11,7 +11,12 @@
       @click.stop
     >
 
-    <k-dialog ref="dialog" size="medium">
+    <k-dialog
+      ref="dialog"
+      :cancel-button="false"
+      :submit-button="false"
+      size="medium"
+    >
       <template v-if="errors.length > 0">
         <k-headline>{{ $t("upload.errors") }}</k-headline>
         <ul class="k-upload-error-list">

@@ -28,7 +28,7 @@
         <k-list>
           <k-list-item
             v-for="file in models"
-            :key="file.filename"
+            :key="file.id"
             :text="file.text"
             :info="file.info"
             :image="file.image"

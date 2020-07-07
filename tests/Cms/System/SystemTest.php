@@ -56,6 +56,35 @@ class SystemTest extends TestCase
         $this->assertEquals($expected, $server);
     }
 
+    public function testServerOverwrite()
+    {
+        $_SERVER['SERVER_SOFTWARE'] = 'symfony';
+
+        // single server
+        $app = $this->app->clone([
+            'options' => [
+                'servers' => 'symfony'
+            ]
+        ]);
+
+        $system = new System($app);
+        $server = $system->server();
+
+        $this->assertTrue($server);
+
+        // array of servers
+        $app = $this->app->clone([
+            'options' => [
+                'servers' => ['symfony', 'apache']
+            ]
+        ]);
+
+        $system = new System($app);
+        $server = $system->server();
+
+        $this->assertTrue($server);
+    }
+
     public function serverNameProvider()
     {
         return [

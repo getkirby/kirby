@@ -2,6 +2,8 @@
 
 namespace Kirby\Data;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -25,7 +27,7 @@ class Txt extends Handler
     {
         $result = [];
 
-        foreach ((array)$data as $key => $value) {
+        foreach (A::wrap($data) as $key => $value) {
             if (empty($key) === true || $value === null) {
                 continue;
             }
@@ -48,7 +50,7 @@ class Txt extends Handler
     {
         // avoid problems with arrays
         if (is_array($value) === true) {
-            $value = Yaml::encode($value);
+            $value = Data::encode($value, 'yaml');
         // avoid problems with localized floats
         } elseif (is_float($value) === true) {
             $value = Str::float($value);
@@ -86,11 +88,23 @@ class Txt extends Handler
     /**
      * Parses a Kirby txt string and returns a multi-dimensional array
      *
-     * @param string $string
+     * @param mixed $string
      * @return array
      */
     public static function decode($string): array
     {
+        if ($string === null) {
+            return [];
+        }
+
+        if (is_array($string) === true) {
+            return $string;
+        }
+
+        if (is_string($string) === false) {
+            throw new InvalidArgumentException('Invalid TXT data; please pass a string');
+        }
+
         // remove BOM
         $string = str_replace("\xEF\xBB\xBF", '', $string);
         // explode all fields by the line separator

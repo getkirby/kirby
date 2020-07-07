@@ -29,7 +29,7 @@ class Collection
     {
         $this->api   = $api;
         $this->data  = $data;
-        $this->model = $schema['model'];
+        $this->model = $schema['model'] ?? null;
         $this->view  = $schema['view'] ?? null;
 
         if ($data === null) {
@@ -40,7 +40,10 @@ class Collection
             $this->data = $schema['default']->call($this->api);
         }
 
-        if (isset($schema['type']) === true && is_a($this->data, $schema['type']) === false) {
+        if (
+            isset($schema['type']) === true &&
+            is_a($this->data, $schema['type']) === false
+        ) {
             throw new Exception('Invalid collection type');
         }
     }

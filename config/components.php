@@ -1,17 +1,21 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\Collection;
 use Kirby\Cms\File;
 use Kirby\Cms\Filename;
 use Kirby\Cms\FileVersion;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
 use Kirby\Http\Server;
+use Kirby\Http\Uri;
+use Kirby\Http\Url;
 use Kirby\Image\Darkroom;
 use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl as Snippet;
 
 return [
@@ -135,6 +139,106 @@ return [
     },
 
     /**
+     * Add your own search engine
+     *
+     * @param \Kirby\Cms\App $kirby Kirby instance
+     * @param \Kirby\Cms\Collection $collection Collection of searchable models
+     * @param string $query
+     * @param mixed $params
+     * @return \Kirby\Cms\Collection|bool
+     */
+    'search' => function (App $kirby, Collection $collection, string $query = null, $params = []) {
+        if (empty(trim($query)) === true) {
+            return $collection->limit(0);
+        }
+
+        if (is_string($params) === true) {
+            $params = ['fields' => Str::split($params, '|')];
+        }
+
+        $defaults = [
+            'fields'    => [],
+            'minlength' => 2,
+            'score'     => [],
+            'words'     => false,
+        ];
+
+        $options     = array_merge($defaults, $params);
+        $collection  = clone $collection;
+        $searchwords = preg_replace('/(\s)/u', ',', $query);
+        $searchwords = Str::split($searchwords, ',', $options['minlength']);
+        $lowerQuery  = mb_strtolower($query);
+
+        if (empty($options['stopwords']) === false) {
+            $searchwords = array_diff($searchwords, $options['stopwords']);
+        }
+
+        $searchwords = array_map(function ($value) use ($options) {
+            return $options['words'] ? '\b' . preg_quote($value) . '\b' : preg_quote($value);
+        }, $searchwords);
+
+        $preg    = '!(' . implode('|', $searchwords) . ')!i';
+        $results = $collection->filter(function ($item) use ($query, $preg, $options, $lowerQuery) {
+            $data = $item->content()->toArray();
+            $keys = array_keys($data);
+            $keys[] = 'id';
+
+            if (is_a($item, 'Kirby\Cms\User') === true) {
+                $keys[] = 'name';
+                $keys[] = 'email';
+                $keys[] = 'role';
+            } elseif (is_a($item, 'Kirby\Cms\Page') === true) {
+                // apply the default score for pages
+                $options['score'] = array_merge([
+                    'id'    => 64,
+                    'title' => 64,
+                ], $options['score']);
+            }
+
+            if (empty($options['fields']) === false) {
+                $fields = array_map('strtolower', $options['fields']);
+                $keys   = array_intersect($keys, $fields);
+            }
+
+            $item->searchHits  = 0;
+            $item->searchScore = 0;
+
+            foreach ($keys as $key) {
+                $score = $options['score'][$key] ?? 1;
+                $value = $data[$key] ?? (string)$item->$key();
+
+                $lowerValue = mb_strtolower($value);
+
+                // check for exact matches
+                if ($lowerQuery == $lowerValue) {
+                    $item->searchScore += 16 * $score;
+                    $item->searchHits  += 1;
+
+                // check for exact beginning matches
+                } elseif (Str::startsWith($lowerValue, $lowerQuery) === true) {
+                    $item->searchScore += 8 * $score;
+                    $item->searchHits  += 1;
+
+                // check for exact query matches
+                } elseif ($matches = preg_match_all('!' . preg_quote($query) . '!i', $value, $r)) {
+                    $item->searchScore += 2 * $score;
+                    $item->searchHits  += $matches;
+                }
+
+                // check for any match
+                if ($matches = preg_match_all($preg, $value, $r)) {
+                    $item->searchHits  += $matches;
+                    $item->searchScore += $matches * $score;
+                }
+            }
+
+            return $item->searchHits > 0 ? true : false;
+        });
+
+        return $results->sortBy('searchScore', 'desc');
+    },
+
+    /**
      * Add your own SmartyPants parser
      *
      * @param \Kirby\Cms\App $kirby Kirby instance
@@ -221,12 +325,51 @@ return [
      *
      * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string $path URL path
-     * @param array|null $options Array of options for the Uri class
-     * @param Closure $originalHandler Callback function to the original URL handler with `$path` and `$options` as parameters
+     * @param array|string|null $options Array of options for the Uri class
+     * @param Closure $originalHandler Deprecated: Callback function to the original URL handler with `$path` and `$options` as parameters
+     *                                 Use `$kirby->nativeComponent('url')` inside your URL component instead.
      * @return string
      */
-    'url' => function (App $kirby, string $path = null, $options = [], Closure $originalHandler): string {
-        return $originalHandler($path, $options);
+    'url' => function (App $kirby, string $path = null, $options = null, Closure $originalHandler = null): string {
+        $language = null;
+
+        // get language from simple string option
+        if (is_string($options) === true) {
+            $language = $options;
+            $options  = null;
+        }
+
+        // get language from array
+        if (is_array($options) === true && isset($options['language']) === true) {
+            $language = $options['language'];
+            unset($options['language']);
+        }
+
+        // get a language url for the linked page, if the page can be found
+        if ($kirby->multilang() === true) {
+            $parts = Str::split($path, '#');
+
+            if ($page = page($parts[0] ?? null)) {
+                $path = $page->url($language);
+
+                if (isset($parts[1]) === true) {
+                    $path .= '#' . $parts[1];
+                }
+            }
+        }
+
+        // keep relative urls
+        if (substr($path, 0, 2) === './' || substr($path, 0, 3) === '../') {
+            return $path;
+        }
+
+        $url = Url::makeAbsolute($path, $kirby->url());
+
+        if ($options === null) {
+            return $url;
+        }
+
+        return (new Uri($url, $options))->toString();
     },
 
 ];

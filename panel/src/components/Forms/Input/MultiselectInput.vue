@@ -37,19 +37,20 @@
         <input
           ref="search"
           v-model="q"
+          :placeholder="search.min ? $t('search.min', { min: search.min }) : $t('search') + ' …'"
           @keydown.esc.stop="escape"
         >
       </k-dropdown-item>
 
       <div class="k-multiselect-options">
         <k-dropdown-item
-          v-for="option in filtered"
+          v-for="option in visible"
           :key="option.value"
           :icon="isSelected(option) ? 'check' : 'circle-outline'"
           :class="{
             'k-multiselect-option': true,
             'selected': isSelected(option),
-            'disabled': !addable
+            'disabled': !more
           }"
           @click.prevent="select(option)"
           @keydown.native.enter.prevent.stop="select(option)"
@@ -58,7 +59,23 @@
           <span v-html="option.display" />
           <span class="k-multiselect-value" v-html="option.info" />
         </k-dropdown-item>
+
+        <k-dropdown-item
+          v-if="filtered.length === 0"
+          :disabled="true"
+          class="k-multiselect-option"
+        >
+          {{ emptyLabel }}
+        </k-dropdown-item>
       </div>
+
+      <k-button
+        v-if="visible.length < filtered.length"
+        class="k-multiselect-more"
+        @click.stop="limit = false"
+      >
+        {{ $t("search.all") }} ({{ filtered.length }})
+      </k-button>
     </k-dropdown-content>
 
   </k-draggable>
@@ -70,8 +87,8 @@ import { required, minLength, maxLength } from "vuelidate/lib/validators";
 export default {
   inheritAttrs: false,
   props: {
-    disabled: Boolean,
     id: [Number, String],
+    disabled: Boolean,
     max: Number,
     min: Number,
     layout: String,
@@ -82,7 +99,7 @@ export default {
       }
     },
     required: Boolean,
-    search: Boolean,
+    search: [Object, Boolean],
     separator: {
       type: String,
       default: ","
@@ -100,13 +117,11 @@ export default {
     return {
       state: this.value,
       q: null,
+      limit: true,
       scrollTop: 0
     };
   },
   computed: {
-    addable() {
-      return !this.max || this.state.length < this.max;
-    },
     draggable() {
       return this.state.length > 1 && !this.sort;
     },
@@ -117,28 +132,41 @@ export default {
         delay: 1
       };
     },
-    filtered() {
-      if (this.q === null) {
-        return this.options.map(option => ({
-          ...option,
-          display: option.text,
-          info: option.value
-        }));
+    emptyLabel() {
+      if (this.q) {
+        return this.$t("search.results.none");
       }
 
-      const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
+      return this.$t("options.none");
+    },
+    visible() {
+      if (this.limit) {
+        return this.filtered.slice(0, this.search.display || this.filtered.length);
+      }
 
-      return this.options
-        .filter(option => {
-          return String(option.text).match(regex) || String(option.value).match(regex);
-        })
-        .map(option => {
-          return {
-            ...option,
-            display: String(option.text).replace(regex, "<b>$1</b>"),
-            info: String(option.value).replace(regex, "<b>$1</b>")
-          };
-        });
+      return this.filtered;
+    },
+    filtered() {
+      if (this.q && this.q.length >= (this.search.min || 0)) {
+        const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
+
+        return this.options.filter(option => {
+              return String(option.text).match(regex) ||
+                     String(option.value).match(regex);
+            }).map(option => {
+              return {
+                ...option,
+                display: String(option.text).replace(regex, "<b>$1</b>"),
+                info: String(option.value).replace(regex, "<b>$1</b>")
+              };
+            });
+      }
+
+      return this.options.map(option => ({
+              ...option,
+              display: option.text,
+              info: option.value
+            }));
     },
     sorted() {
       if (this.sort === false) {
@@ -149,7 +177,10 @@ export default {
 
       const index = x => this.options.findIndex(y => y.value === x.value);
       return items.sort((a, b) => index(a) - index(b));
-    }
+    },
+    more() {
+      return !this.max || this.state.length < this.max;
+    },
   },
   watch: {
     value(value) {
@@ -168,7 +199,7 @@ export default {
   },
   methods: {
     add(option) {
-      if (this.addable === true) {
+      if (this.more === true) {
         this.state.push(option);
         this.onInput();
       }
@@ -179,6 +210,7 @@ export default {
     close() {
       if (this.$refs.dropdown.isOpen === true) {
         this.$refs.dropdown.close();
+        this.limit = true;
       }
     },
     escape() {
@@ -299,6 +331,7 @@ export default {
 
   > .k-button-text {
     flex: 1;
+    opacity: 1 !important;
   }
 
   input {
@@ -314,8 +347,8 @@ export default {
 
 .k-multiselect-options {
   position: relative;
-  max-height: 240px;
-  overflow-y: scroll;
+  max-height: 275px;
+  overflow-y: auto;
   padding: 0.5rem 0;
 }
 
@@ -351,5 +384,17 @@ export default {
 .k-multiselect-input[data-layout="list"] .k-tag {
   width: 100%;
   margin-right: 0 !important;
+}
+
+.k-multiselect-more {
+  width: 100%;
+  padding: .75rem;
+  color: rgba($color-white, .8);
+  text-align: center;
+  border-top: 1px dashed rgba($color-white, 0.2);
+
+  &:hover {
+    color: $color-white;
+  }
 }
 </style>

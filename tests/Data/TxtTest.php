@@ -32,6 +32,9 @@ class TxtTest extends TestCase
 
         $result = Txt::decode($data);
         $this->assertSame($array, $result);
+
+        $this->assertSame([], Txt::decode(null));
+        $this->assertSame(['this is' => 'an array'], Txt::decode(['this is' => 'an array']));
     }
 
     /**
@@ -157,5 +160,27 @@ class TxtTest extends TestCase
 
         $data = Txt::decode(file_get_contents(static::FIXTURES . '/decode.txt'));
         $this->assertSame($array, $data);
+    }
+
+    /**
+     * @covers ::decode
+     */
+    public function testDecodeInvalid1()
+    {
+        // pass invalid object
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid TXT data; please pass a string');
+        Txt::decode(new \stdClass());
+    }
+
+    /**
+     * @covers ::decode
+     */
+    public function testDecodeInvalid2()
+    {
+        // pass invalid int
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid TXT data; please pass a string');
+        Txt::decode(1);
     }
 }

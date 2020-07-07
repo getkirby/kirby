@@ -9,6 +9,7 @@ window.panel.plugins = {
   routes: [],
   use: [],
   views: {},
+  thirdParty: {}
 };
 
 window.panel.plugin = function (plugin, parts) {
@@ -51,6 +52,11 @@ window.panel.plugin = function (plugin, parts) {
   if (parts.login) {
     window.panel.plugins.login = parts.login;
   }
+
+  // Third-party plugins
+  resolve(parts, "thirdParty", function(name, options) {
+    window.panel.plugins["thirdParty"][name] = options;
+  });
 
 };
 

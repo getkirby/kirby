@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "Profilbilden kunde inte laddas upp",
   "error.avatar.delete.fail": "Profilbilden kunde inte raderas",
-  "error.avatar.dimensions.invalid":
-    "Se till att profilbildens bredd och höjd är mindre än 3000 pixlar",
-  "error.avatar.mime.forbidden":
-    "Profilbilden måste vara i formatet JPEG eller PNG",
+  "error.avatar.dimensions.invalid": "Se till att profilbildens bredd och höjd är mindre än 3000 pixlar",
+  "error.avatar.mime.forbidden": "Profilbilden måste vara i formatet JPEG eller PNG",
 
   "error.blueprint.notFound": "Blueprint \"{name}\" kunde inte laddas",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Ogiltig omvandlare \"{converter}\"",
 
   "error.file.changeName.empty": "Namnet får inte vara tomt",
-  "error.file.changeName.permission":
-    "Du har inte behörighet att ändra namnet på \"{filename}\"",
+  "error.file.changeName.permission": "Du har inte behörighet att ändra namnet på \"{filename}\"",
   "error.file.duplicate": "En fil med namnet \"{filename}\" existerar redan",
-  "error.file.extension.forbidden":
-    "Filändelsen \"{extension}\" är inte tillåten",
-  "error.file.extension.missing":
-    "Filen \"{filename}\" saknar filändelse",
+  "error.file.extension.forbidden": "Filändelsen \"{extension}\" är inte tillåten",
+  "error.file.extension.missing": "Filen \"{filename}\" saknar filändelse",
   "error.file.maxheight": "Bildens höjd får inte överstiga {height} pixlar",
   "error.file.maxsize": "Filen är för stor",
   "error.file.maxwidth": "Bildens bredd får inte överstiga {width} pixlar",
-  "error.file.mime.differs":
-    "Den uppladdade filen måste vara av samma mime-typ \"{mime}\"",
+  "error.file.mime.differs": "Den uppladdade filen måste vara av samma mime-typ \"{mime}\"",
   "error.file.mime.forbidden": "Mediatypen \"{mime}\" är inte tillåten",
   "error.file.mime.invalid": "Ogiltig mime-typ: {mime}",
-  "error.file.mime.missing":
-    "Mediatypen för \"{filename}\" kan inte detekteras",
+  "error.file.mime.missing": "Mediatypen för \"{filename}\" kan inte detekteras",
   "error.file.minheight": "Bildens höjd måste vara minst {height} pixlar",
   "error.file.minsize": "Filen är för liten",
   "error.file.minwidth": "Bildens bredd måste vara minst {width} pixlar",
@@ -90,111 +83,77 @@
   "error.license.email": "Ange en giltig e-postadress",
   "error.license.verification": "Licensen kunde inte verifieras",
 
-  "error.page.changeSlug.permission":
-    "Du har inte behörighet att ändra URL-appendixen för \"{slug}\"",
-  "error.page.changeStatus.incomplete":
-    "Sidan innehåller fel och kan inte publiceras",
-  "error.page.changeStatus.permission":
-    "Statusen för denna sida kan inte ändras",
-  "error.page.changeStatus.toDraft.invalid":
-    "Statusen för sidan \"{slug}\" kan inte ändras till utkast",
-  "error.page.changeTemplate.invalid":
-    "Mallen för sidan \"{slug}\" kan inte ändras",
-  "error.page.changeTemplate.permission":
-    "Du har inte behörighet att ändra mallen för \"{slug}\"",
+  "error.page.changeSlug.permission": "Du har inte behörighet att ändra URL-appendixen för \"{slug}\"",
+  "error.page.changeStatus.incomplete": "Sidan innehåller fel och kan inte publiceras",
+  "error.page.changeStatus.permission": "Statusen för denna sida kan inte ändras",
+  "error.page.changeStatus.toDraft.invalid": "Statusen för sidan \"{slug}\" kan inte ändras till utkast",
+  "error.page.changeTemplate.invalid": "Mallen för sidan \"{slug}\" kan inte ändras",
+  "error.page.changeTemplate.permission": "Du har inte behörighet att ändra mallen för \"{slug}\"",
   "error.page.changeTitle.empty": "Titeln får inte vara tom",
-  "error.page.changeTitle.permission":
-    "Du har inte behörighet att ändra titeln för \"{slug}\"",
+  "error.page.changeTitle.permission": "Du har inte behörighet att ändra titeln för \"{slug}\"",
   "error.page.create.permission": "Du har inte behörighet att skapa \"{slug}\"",
   "error.page.delete": "Sidan \"{slug}\" kan inte raderas",
   "error.page.delete.confirm": "Fyll i sidans titel för att bekräfta",
-  "error.page.delete.hasChildren":
-    "Sidan har undersidor och kan inte raderas",
+  "error.page.delete.hasChildren": "Sidan har undersidor och kan inte raderas",
   "error.page.delete.permission": "Du har inte behörighet att radera \"{slug}\"",
-  "error.page.draft.duplicate":
-    "Ett utkast med URL-appendixen \"{slug}\" existerar redan",
-  "error.page.duplicate":
-    "En sida med URL-appendixen \"{slug}\" existerar redan",
+  "error.page.draft.duplicate": "Ett utkast med URL-appendixen \"{slug}\" existerar redan",
+  "error.page.duplicate": "En sida med URL-appendixen \"{slug}\" existerar redan",
   "error.page.duplicate.permission": "Du har inte behörighet att duplicera \"{slug}\"",
   "error.page.notFound": "Sidan \"{slug}\" kan inte hittas",
-  "error.page.num.invalid":
-    "Ange ett giltigt nummer för sortering. Numret får inte vara negativt.",
+  "error.page.num.invalid": "Ange ett giltigt nummer för sortering. Numret får inte vara negativt.",
   "error.page.slug.invalid": "Ange ett giltigt URL-prefix",
   "error.page.sort.permission": "Sidan \"{slug}\" kan inte sorteras",
   "error.page.status.invalid": "Sätt en giltig status för sidan",
   "error.page.undefined": "Sidan kan inte hittas",
   "error.page.update.permission": "Du har inte behörighet att uppdatera \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "Du får inte lägga till mer än {max} filer till sektionen \"{section}\"",
-  "error.section.files.max.singular":
-    "Du får inte lägga till mer än en fil i sektionen \"{section}\"",
-  "error.section.files.min.plural":
-    "Sektionen \"{section}\" kräver minst {min} filer",
-  "error.section.files.min.singular":
-    "Sektionen \"{section}\" kräver minst en fil",
+  "error.section.files.max.plural": "Du får inte lägga till mer än {max} filer till sektionen \"{section}\"",
+  "error.section.files.max.singular": "Du får inte lägga till mer än en fil i sektionen \"{section}\"",
+  "error.section.files.min.plural": "Sektionen \"{section}\" kräver minst {min} filer",
+  "error.section.files.min.singular": "Sektionen \"{section}\" kräver minst en fil",
 
-  "error.section.pages.max.plural":
-    "Du får inte lägga till mer än {max} sidor till sektionen \"{section}\"",
-  "error.section.pages.max.singular":
-    "Du får inte lägga till mer än en sida i sektionen \"{section}\"",
-  "error.section.pages.min.plural":
-    "Sektionen \"{section}\" kräver minst {min} sidor",
-  "error.section.pages.min.singular":
-    "Sektionen \"{section}\" kräver minst en sida",
+  "error.section.pages.max.plural": "Du får inte lägga till mer än {max} sidor till sektionen \"{section}\"",
+  "error.section.pages.max.singular": "Du får inte lägga till mer än en sida i sektionen \"{section}\"",
+  "error.section.pages.min.plural": "Sektionen \"{section}\" kräver minst {min} sidor",
+  "error.section.pages.min.singular": "Sektionen \"{section}\" kräver minst en sida",
 
   "error.section.notLoaded": "Sektionen \"{name}\" kunde inte laddas",
   "error.section.type.invalid": "Sektionstypen \"{type}\" är inte giltig",
 
   "error.site.changeTitle.empty": "Titeln får inte vara tom",
-  "error.site.changeTitle.permission":
-    "Du har inte behörighet att ändra titeln på webbplatsen",
+  "error.site.changeTitle.permission": "Du har inte behörighet att ändra titeln på webbplatsen",
   "error.site.update.permission": "Du har inte behörighet att uppdatera webbplatsen",
 
   "error.template.default.notFound": "Standardmallen existerar inte",
 
-  "error.user.changeEmail.permission":
-    "Du har inte behörighet att ändra e-postadressen för användaren \"{name}\"",
-  "error.user.changeLanguage.permission":
-    "Du har inte behörighet att ändra språket för användaren \"{name}\"",
-  "error.user.changeName.permission":
-    "Du har inte behörighet att ändra namnet för användaren \"{name}\"",
-  "error.user.changePassword.permission":
-    "Du har inte behörighet att ändra lösenordet för användaren \"{name}\"",
-  "error.user.changeRole.lastAdmin":
-    "Rollen för den återstående adminanvändaren kan inte ändras",
-  "error.user.changeRole.permission":
-    "Du har inte behörighet att ändra rollen för användaren \"{name}\"",
-  "error.user.changeRole.toAdmin":
-    "Du har inte behörighet att ge någon en administratörsroll",
+  "error.user.changeEmail.permission": "Du har inte behörighet att ändra e-postadressen för användaren \"{name}\"",
+  "error.user.changeLanguage.permission": "Du har inte behörighet att ändra språket för användaren \"{name}\"",
+  "error.user.changeName.permission": "Du har inte behörighet att ändra namnet för användaren \"{name}\"",
+  "error.user.changePassword.permission": "Du har inte behörighet att ändra lösenordet för användaren \"{name}\"",
+  "error.user.changeRole.lastAdmin": "Rollen för den återstående adminanvändaren kan inte ändras",
+  "error.user.changeRole.permission": "Du har inte behörighet att ändra rollen för användaren \"{name}\"",
+  "error.user.changeRole.toAdmin": "Du har inte behörighet att ge någon en administratörsroll",
   "error.user.create.permission": "Du har inte behörighet att skapa denna användare",
   "error.user.delete": "Användaren kan inte raderas",
   "error.user.delete.lastAdmin": "Den återstående administratören kan inte raderas",
   "error.user.delete.lastUser": "Den återstående användaren kan inte raderas",
-  "error.user.delete.permission":
-    "Du har inte behörighet att radera användaren \"{name}\"",
-  "error.user.duplicate":
-    "En användare med e-postadressen \"{email}\" finns redan",
+  "error.user.delete.permission": "Du har inte behörighet att radera användaren \"{name}\"",
+  "error.user.duplicate": "En användare med e-postadressen \"{email}\" finns redan",
   "error.user.email.invalid": "Ange en giltig e-postadress",
   "error.user.language.invalid": "Ange ett giltigt språk",
   "error.user.notFound": "Användaren \"{name}\" kan ej hittas",
-  "error.user.password.invalid":
-    "Ange ett giltigt lösenord. Lösenordet måste vara minst 8 tecken långt.",
+  "error.user.password.invalid": "Ange ett giltigt lösenord. Lösenordet måste vara minst 8 tecken långt.",
   "error.user.password.notSame": "Lösenorden matchar inte",
   "error.user.password.undefined": "Användaren har inget lösenord",
   "error.user.role.invalid": "Ange en giltig roll",
-  "error.user.update.permission":
-    "Du har inte behörighet att uppdatera användaren \"{name}\"",
+  "error.user.update.permission": "Du har inte behörighet att uppdatera användaren \"{name}\"",
 
   "error.validation.accepted": "Vänligen bekräfta",
   "error.validation.alpha": "Ange endast tecken mellan a-z",
-  "error.validation.alphanum":
-    "Ange endast tecken mellan a-z eller siffror 0-9",
-  "error.validation.between":
-    "Ange ett värde mellan \"{min}\" och \"{max}\"",
+  "error.validation.alphanum": "Ange endast tecken mellan a-z eller siffror 0-9",
+  "error.validation.between": "Ange ett värde mellan \"{min}\" och \"{max}\"",
   "error.validation.boolean": "Bekräfta eller neka",
-  "error.validation.contains":
-    "Ange ett värde som innehåller \"{needle}\"",
+  "error.validation.contains": "Ange ett värde som innehåller \"{needle}\"",
   "error.validation.date": "Ange ett giltigt datum",
   "error.validation.date.after": "Ange ett datum efter {date}",
   "error.validation.date.before": "Ange ett datum före {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Ange ett värde lägre än {max}",
   "error.validation.match": "Värdet matchar inte det förväntade mönstret",
   "error.validation.max": "Ange ett värde som är lika med eller lägre än {max}",
-  "error.validation.maxlength":
-    "Ange ett kortare värde. (max {max} tecken)",
+  "error.validation.maxlength": "Ange ett kortare värde. (max {max} tecken)",
   "error.validation.maxwords": "Ange inte mer än {max} ord",
   "error.validation.min": "Ange ett värde som är lika med eller större än {min}",
-  "error.validation.minlength":
-    "Ange ett längre värde. (minst {min} tecken)",
+  "error.validation.minlength": "Ange ett längre värde. (minst {min} tecken)",
   "error.validation.minwords": "Ange minst {min} ord",
   "error.validation.more": "Ange ett större värde än {min}",
-  "error.validation.notcontains":
-    "Ange ett värde som inte innehåller \"{needle}\"",
-  "error.validation.notin":
-    "Ange inte något av följande: ({notIn})",
+  "error.validation.notcontains": "Ange ett värde som inte innehåller \"{needle}\"",
+  "error.validation.notin": "Ange inte något av följande: ({notIn})",
   "error.validation.option": "Välj ett giltigt alternativ",
   "error.validation.num": "Ange ett giltigt nummer",
   "error.validation.required": "Ange någonting",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Inga poster än",
   "field.users.empty": "Inga användare valda än",
 
-  "file.delete.confirm":
-    "Vill du verkligen radera <br><strong>{filename}</strong>?",
+  "file.delete.confirm": "Vill du verkligen radera <br><strong>{filename}</strong>?",
 
   "files": "Filer",
   "files.empty": "Inga filer än",
@@ -251,29 +205,22 @@
   "installation": "Installation",
   "installation.completed": "Panelen har installerats",
   "installation.disabled": "Installeraren för panelen är som standard inaktiverad på offentliga servrar. Kör installeraren på en lokal maskin eller aktivera den med alternativet <code>panel.install</code>.",
-  "installation.issues.accounts":
-    "Mappen <code>/site/accounts</code> finns inte eller är inte skrivbar",
-  "installation.issues.content":
-    "Mappen <code>/content</code> finns inte eller är inte skrivbar",
+  "installation.issues.accounts": "Mappen <code>/site/accounts</code> finns inte eller är inte skrivbar",
+  "installation.issues.content": "Mappen <code>/content</code> finns inte eller är inte skrivbar",
   "installation.issues.curl": "Tillägget <code>CURL</code> krävs",
   "installation.issues.headline": "Panelen kan inte installeras",
-  "installation.issues.mbstring":
-    "Tillägget <code>MB String</code> krävs",
-  "installation.issues.media":
-    "Mappen <code>/media</code> finns inte eller är inte skrivbar",
+  "installation.issues.mbstring": "Tillägget <code>MB String</code> krävs",
+  "installation.issues.media": "Mappen <code>/media</code> finns inte eller är inte skrivbar",
   "installation.issues.php": "Se till att du använder <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby kräver <code>Apache</code>, <code>Nginx</code> eller <code>Caddy</code>",
+  "installation.issues.server": "Kirby kräver <code>Apache</code>, <code>Nginx</code> eller <code>Caddy</code>",
   "installation.issues.sessions": "Mappen <code>/site/sessions</code> finns inte eller är inte skrivbar",
 
   "language": "Spr\u00e5k",
   "language.code": "Kod",
   "language.convert": "Ange som standard",
-  "language.convert.confirm":
-    "<p>Vill du verkligen göra <strong>{name}</strong> till standardspråket? Detta kan inte ångras.</p><p>Om <strong>{name}</strong> har oöversatt innehåll, kommer det inte längre finnas en alternativ översättning och delar av sajten kommer kanske att vara tom.</p>",
+  "language.convert.confirm": "<p>Vill du verkligen göra <strong>{name}</strong> till standardspråket? Detta kan inte ångras.</p><p>Om <strong>{name}</strong> har oöversatt innehåll, kommer det inte längre finnas en alternativ översättning och delar av sajten kommer kanske att vara tom.</p>",
   "language.create": "Lägg till ett nytt språk",
-  "language.delete.confirm":
-    "Vill du verkligen radera språket <strong>{name}</strong> inklusive alla översättningar? Detta kan inte ångras!",
+  "language.delete.confirm": "Vill du verkligen radera språket <strong>{name}</strong> inklusive alla översättningar? Detta kan inte ångras!",
   "language.deleted": "Språket har raderats",
   "language.direction": "Läsriktning",
   "language.direction.ltr": "Vänster till höger",
@@ -292,8 +239,7 @@
   "license": "Licens",
   "license.buy": "Köp en licens",
   "license.register": "Registrera",
-  "license.register.help":
-    "Du fick din licenskod via e-post efter inköpet. Kopiera och klistra in den för att registrera licensen.",
+  "license.register.help": "Du fick din licenskod via e-post efter inköpet. Kopiera och klistra in den för att registrera licensen.",
   "license.register.label": "Ange din licenskod",
   "license.register.success": "Tack för att du stödjer Kirby",
   "license.unregistered": "Detta är en oregistrerad demo av Kirby",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Välj en ny position",
   "page.changeStatus.select": "Välj en ny status",
   "page.changeTemplate": "Ändra mall",
-  "page.delete.confirm":
-    "Vill du verkligen radera <strong>{title}</strong>?",
-  "page.delete.confirm.subpages":
-    "<strong>Denna sida har undersidor.</strong> <br>Alla undersidor kommer också att raderas.",
+  "page.delete.confirm": "Vill du verkligen radera <strong>{title}</strong>?",
+  "page.delete.confirm.subpages": "<strong>Denna sida har undersidor.</strong> <br>Alla undersidor kommer också att raderas.",
   "page.delete.confirm.title": "Fyll i sidans titel för att bekräfta",
   "page.draft.create": "Skapa utkast",
   "page.duplicate.appendix": "Kopiera",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Kopiera sidor",
   "page.status": "Status",
   "page.status.draft": "Utkast",
-  "page.status.draft.description":
-    "Sidan är ett utkast och endast synlig för inloggade redaktörer",
+  "page.status.draft.description": "Sidan är ett utkast och endast synlig för inloggade redaktörer eller via en hemlig länk",
   "page.status.listed": "Publik",
   "page.status.listed.description": "Sidan är publik för vem som helst",
   "page.status.unlisted": "Olistad",
@@ -388,6 +331,7 @@
   "replace": "Ersätt",
   "retry": "F\u00f6rs\u00f6k igen",
   "revert": "Återgå",
+  "revert.confirm": "Vill du verkligen <strong>radera alla osparade ändringar</strong>?",
 
   "role": "Roll",
   "role.admin.description": "Administratören har alla behörigheter",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://exempel.se",
 
   "user": "Användare",
-  "user.blueprint":
-    "Du kan ange ytterligare sektioner och fält för denna användarroll i <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Du kan ange ytterligare sektioner och fält för denna användarroll i <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Ändra e-postadress",
   "user.changeLanguage": "Ändra språk",
   "user.changeName": "Byt namn på denna användare",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Välj en ny roll",
   "user.create": "Lägg till en ny användare",
   "user.delete": "Radera denna användare",
-  "user.delete.confirm":
-    "Vill du verkligen radera <br><strong>{email}</strong>?",
+  "user.delete.confirm": "Vill du verkligen radera <br><strong>{email}</strong>?",
 
   "users": "Användare",
 

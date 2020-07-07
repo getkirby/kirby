@@ -20,11 +20,13 @@ class DataTest extends TestCase
         $this->assertInstanceOf(Json::class, Data::handler('json'));
         $this->assertInstanceOf(PHP::class, Data::handler('php'));
         $this->assertInstanceOf(Txt::class, Data::handler('txt'));
+        $this->assertInstanceOf(Xml::class, Data::handler('xml'));
         $this->assertInstanceOf(Yaml::class, Data::handler('yaml'));
 
         // aliases
         $this->assertInstanceOf(Txt::class, Data::handler('md'));
         $this->assertInstanceOf(Txt::class, Data::handler('mdown'));
+        $this->assertInstanceOf(Xml::class, Data::handler('rss'));
         $this->assertInstanceOf(Yaml::class, Data::handler('yml'));
 
         // different case
@@ -64,24 +66,74 @@ class DataTest extends TestCase
     /**
      * @covers ::encode
      * @covers ::decode
+     * @dataProvider handlerProvider
      */
-    public function testEncodeDecode()
+    public function testEncodeDecode($handler)
     {
         $data = [
             'name'  => 'Homer Simpson',
             'email' => 'homer@simpson.com'
         ];
 
-        $handlers = ['json', 'yml', 'txt'];
+        $encoded = Data::encode($data, $handler);
+        $decoded = Data::decode($encoded, $handler);
 
-        foreach ($handlers as $handler) {
-            $encoded = Data::encode($data, $handler);
-            $decoded = Data::decode($encoded, $handler);
-
-            $this->assertSame($data, $decoded);
-        }
+        $this->assertSame($data, $decoded);
     }
 
+    /**
+     * @covers ::decode
+     * @dataProvider handlerProvider
+     */
+    public function testDecodeInvalid1($handler)
+    {
+        // decode invalid integer value
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data; please pass a string');
+        Data::decode(1, $handler);
+    }
+
+    /**
+     * @covers ::decode
+     * @dataProvider handlerProvider
+     */
+    public function testDecodeInvalid2($handler)
+    {
+        // decode invalid object value
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data; please pass a string');
+        Data::decode(new \stdClass(), $handler);
+    }
+
+    /**
+     * @covers ::decode
+     * @dataProvider handlerProvider
+     */
+    public function testDecodeInvalid3($handler)
+    {
+        // decode invalid boolean value
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid ' . strtoupper($handler) . ' data; please pass a string');
+        Data::decode(true, $handler);
+    }
+
+    public function handlerProvider()
+    {
+        $handlers = array_filter(array_keys(Data::$handlers), function ($handler) {
+            // the PHP handler doesn't support decoding and therefore cannot be
+            // tested with the test methods in this test class
+            return $handler !== 'php';
+        });
+
+        return array_map(function ($handler) {
+            return [$handler];
+        }, $handlers);
+    }
+
+    /**
+     * @covers ::read
+     * @covers ::write
+     */
     public function testReadWrite()
     {
         $data = [

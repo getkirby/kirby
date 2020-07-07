@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "Profilbilledet kunne blev ikke uploadet ",
   "error.avatar.delete.fail": "Profilbilledet kunne ikke slettes",
-  "error.avatar.dimensions.invalid":
-    "Hold venligst bredte og højde på billedet under 3000 pixels",
-  "error.avatar.mime.forbidden":
-    "Uacceptabel fil-type",
+  "error.avatar.dimensions.invalid": "Hold venligst bredte og højde på billedet under 3000 pixels",
+  "error.avatar.mime.forbidden": "Uacceptabel fil-type",
 
   "error.blueprint.notFound": "Blueprint \"{name}\" kunne ikke indlæses",
 
@@ -54,22 +52,17 @@
   "error.field.converter.invalid": "Ugyldig converter \"{converter}\"",
 
   "error.file.changeName.empty": "Navn kan ikke efterlades tomt",
-  "error.file.changeName.permission":
-    "Du har ikke tilladelse til at ændre navnet på filen \"{filename}\"",
+  "error.file.changeName.permission": "Du har ikke tilladelse til at ændre navnet på filen \"{filename}\"",
   "error.file.duplicate": "En fil med navnet \"{filename}\" eksisterer allerede",
-  "error.file.extension.forbidden":
-    "Uacceptabel fil-endelse",
-  "error.file.extension.missing":
-    "Du kan ikke uploade filer uden fil-endelse",
+  "error.file.extension.forbidden": "Uacceptabel fil-endelse",
+  "error.file.extension.missing": "Du kan ikke uploade filer uden fil-endelse",
   "error.file.maxheight": "Højden på billedet af billedet må ikke være større end {height} pixels",
   "error.file.maxsize": "Filen er for stor",
   "error.file.maxwidth": "Bredden af billedet må ikke være større end {width} pixels",
-  "error.file.mime.differs":
-    "Den uploadede fil skal være af samme mime type \"{mime}\"",
+  "error.file.mime.differs": "Den uploadede fil skal være af samme mime type \"{mime}\"",
   "error.file.mime.forbidden": "Media typen \"{mime}\" er ikke tilladt",
   "error.file.mime.invalid": "Ugyldig mime type: {mime}",
-  "error.file.mime.missing":
-    "Media typen for \"{filename}\" kan ikke bestemmes",
+  "error.file.mime.missing": "Media typen for \"{filename}\" kan ikke bestemmes",
   "error.file.minheight": "Højden af billedet skal mindst være {height} pixels",
   "error.file.minsize": "Filen er for lille",
   "error.file.minwidth": "Bredden af billedet skal mindst være {width} pixels",
@@ -90,111 +83,77 @@
   "error.license.email": "Indtast venligst en gyldig email adresse",
   "error.license.verification": "Licensen kunne ikke verificeres",
 
-  "error.page.changeSlug.permission":
-    "Du kan ikke \u00e6ndre denne sides URL",
-  "error.page.changeStatus.incomplete":
-    "Siden indeholder fejl og kan derfor ikke udgives",
-  "error.page.changeStatus.permission":
-    "Status for denne side kan ikke ændres",
-  "error.page.changeStatus.toDraft.invalid":
-    "Siden \"{slug}\" kan ikke konverteres om til en kladde",
-  "error.page.changeTemplate.invalid":
-    "Skabelonen for siden \"{slug}\" kan ikke ændres",
-  "error.page.changeTemplate.permission":
-    "Du har ikke tilladelse til at ændre skabelonen for \"{slug}\"",
+  "error.page.changeSlug.permission": "Du kan ikke \u00e6ndre denne sides URL",
+  "error.page.changeStatus.incomplete": "Siden indeholder fejl og kan derfor ikke udgives",
+  "error.page.changeStatus.permission": "Status for denne side kan ikke ændres",
+  "error.page.changeStatus.toDraft.invalid": "Siden \"{slug}\" kan ikke konverteres om til en kladde",
+  "error.page.changeTemplate.invalid": "Skabelonen for siden \"{slug}\" kan ikke ændres",
+  "error.page.changeTemplate.permission": "Du har ikke tilladelse til at ændre skabelonen for \"{slug}\"",
   "error.page.changeTitle.empty": "Titlen kan ikke være tom",
-  "error.page.changeTitle.permission":
-    "Du har ikke tilladelse til at ændre titlen for \"{slug}\"",
+  "error.page.changeTitle.permission": "Du har ikke tilladelse til at ændre titlen for \"{slug}\"",
   "error.page.create.permission": "Du har ikke tilladelse til at oprette \"{slug}\"",
   "error.page.delete": "Siden \"{slug}\" kan ikke slettes",
   "error.page.delete.confirm": "Indtast venligst sidens titel for at bekræfte",
-  "error.page.delete.hasChildren":
-    "Siden har unsersider og kan derfor ikke slettes",
+  "error.page.delete.hasChildren": "Siden har unsersider og kan derfor ikke slettes",
   "error.page.delete.permission": "Du har ikke tilladelse til at slette \"{slug}\"",
-  "error.page.draft.duplicate":
-    "En sidekladde med URL-endelsen \"{slug}\" eksisterer allerede",
-  "error.page.duplicate":
-    "En side med URL-endelsen \"{slug}\" eksisterer allerede",
+  "error.page.draft.duplicate": "En sidekladde med URL-endelsen \"{slug}\" eksisterer allerede",
+  "error.page.duplicate": "En side med URL-endelsen \"{slug}\" eksisterer allerede",
   "error.page.duplicate.permission": "Du har ikke mulighed for at duplikere \"{slug}\"",
   "error.page.notFound": "Siden kunne ikke findes",
-  "error.page.num.invalid":
-    "Indtast venligst et gyldigt sorteringsnummer. Nummeret kan ikke være negativt.",
+  "error.page.num.invalid": "Indtast venligst et gyldigt sorteringsnummer. Nummeret kan ikke være negativt.",
   "error.page.slug.invalid": "Indtast venligst en gyldig URL prefix",
   "error.page.sort.permission": "Siden \"{slug}\" kan ikke sorteres",
   "error.page.status.invalid": "Sæt venligst en gyldig status for siden",
   "error.page.undefined": "Siden kunne ikke findes",
   "error.page.update.permission": "Du har ikke tilladelse til at opdatere \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "Du kan ikk tilføje mere end {max} filer til \"{section}\" sektionen",
-  "error.section.files.max.singular":
-    "Du kan ikke tilføje mere end en fil til \"{section}\" sektionen",
-  "error.section.files.min.plural":
-    "Sektionen \"{section}\" kræver mindst {min} filer",
-  "error.section.files.min.singular":
-    "Sektionen \"{section}\" kræver mindst en fil",
+  "error.section.files.max.plural": "Du kan ikk tilføje mere end {max} filer til \"{section}\" sektionen",
+  "error.section.files.max.singular": "Du kan ikke tilføje mere end en fil til \"{section}\" sektionen",
+  "error.section.files.min.plural": "Sektionen \"{section}\" kræver mindst {min} filer",
+  "error.section.files.min.singular": "Sektionen \"{section}\" kræver mindst en fil",
 
-  "error.section.pages.max.plural":
-    "Du kan ikke tilføje flere end {max} sider til \"{section}\" sektionen",
-  "error.section.pages.max.singular":
-    "Du kan ikke tilføje mere end een side til \"{section}\" sektionen",
-  "error.section.pages.min.plural":
-    "Sektionen \"{section}\" kræver mindst {min} sider",
-  "error.section.pages.min.singular":
-    "Sektionen \"{section}\" kræver mindst en side",
+  "error.section.pages.max.plural": "Du kan ikke tilføje flere end {max} sider til \"{section}\" sektionen",
+  "error.section.pages.max.singular": "Du kan ikke tilføje mere end een side til \"{section}\" sektionen",
+  "error.section.pages.min.plural": "Sektionen \"{section}\" kræver mindst {min} sider",
+  "error.section.pages.min.singular": "Sektionen \"{section}\" kræver mindst en side",
 
   "error.section.notLoaded": "Sektionen \"{section}\" kunne ikke indlæses",
   "error.section.type.invalid": "Sektionstypen \"{type}\" er ikke gyldig",
 
   "error.site.changeTitle.empty": "Titlen kan ikke være tom",
-  "error.site.changeTitle.permission":
-    "Du har ikke tilladelse til at ændre titlen på sitet",
+  "error.site.changeTitle.permission": "Du har ikke tilladelse til at ændre titlen på sitet",
   "error.site.update.permission": "Du har ikke tilladelse til at opdatere sitet",
 
   "error.template.default.notFound": "Standardskabelonen eksisterer ikke",
 
-  "error.user.changeEmail.permission":
-    "Du har ikke tilladelse til at ændre emailen for brugeren \"{name}\"",
-  "error.user.changeLanguage.permission":
-    "Du har ikke tilladelse til at ændre sproget for brugeren \"{name}\"",
-  "error.user.changeName.permission":
-    "Du har ikke tilladelse til at ændre navn på brugeren \"{name}\"",
-  "error.user.changePassword.permission":
-    "Du har ikke tilladelse til at ændre adgangskoden for brugeren \"{name}\"",
-  "error.user.changeRole.lastAdmin":
-    "Rollen for den sidste admin kan ikke ændres",
-  "error.user.changeRole.permission":
-    "Du har ikke tilladelse til at ændre rollen for brugeren \"{name}\"",
-  "error.user.changeRole.toAdmin":
-    "Du har ikke tilladelse til at tildele nogen admin rollen",
+  "error.user.changeEmail.permission": "Du har ikke tilladelse til at ændre emailen for brugeren \"{name}\"",
+  "error.user.changeLanguage.permission": "Du har ikke tilladelse til at ændre sproget for brugeren \"{name}\"",
+  "error.user.changeName.permission": "Du har ikke tilladelse til at ændre navn på brugeren \"{name}\"",
+  "error.user.changePassword.permission": "Du har ikke tilladelse til at ændre adgangskoden for brugeren \"{name}\"",
+  "error.user.changeRole.lastAdmin": "Rollen for den sidste admin kan ikke ændres",
+  "error.user.changeRole.permission": "Du har ikke tilladelse til at ændre rollen for brugeren \"{name}\"",
+  "error.user.changeRole.toAdmin": "Du har ikke tilladelse til at tildele nogen admin rollen",
   "error.user.create.permission": "Du har ikke tilladelse til at oprette denne bruger",
   "error.user.delete": "Brugeren kunne ikke slettes",
   "error.user.delete.lastAdmin": "Du kan ikke slette den sidste admin",
   "error.user.delete.lastUser": "Den sidste bruger kan ikke slettes",
-  "error.user.delete.permission":
-    "Du har ikke tilladelse til at slette denne bruger",
-  "error.user.duplicate":
-    "En bruger med email adresse \"{email}\" eksisterer allerede",
+  "error.user.delete.permission": "Du har ikke tilladelse til at slette denne bruger",
+  "error.user.duplicate": "En bruger med email adresse \"{email}\" eksisterer allerede",
   "error.user.email.invalid": "Indtast venligst en gyldig email adresse",
   "error.user.language.invalid": "Indtast venligst et gyldigt sprog",
   "error.user.notFound": "Brugeren kunne ikke findes",
-  "error.user.password.invalid":
-    "Indtast venligst en gyldig adgangskode. Adgangskoder skal minimum være 8 tegn lange.",
+  "error.user.password.invalid": "Indtast venligst en gyldig adgangskode. Adgangskoder skal minimum være 8 tegn lange.",
   "error.user.password.notSame": "Bekr\u00e6ft venligst adgangskoden",
   "error.user.password.undefined": "Brugeren har ikke en adgangskode",
   "error.user.role.invalid": "Indtast venligst en gyldig rolle",
-  "error.user.update.permission":
-    "Du har ikke tilladelse til at opdatere brugeren \"{name}\"",
+  "error.user.update.permission": "Du har ikke tilladelse til at opdatere brugeren \"{name}\"",
 
   "error.validation.accepted": "Bekræft venligst",
   "error.validation.alpha": "Indtast venligst kun bogstaver imellem a-z",
-  "error.validation.alphanum":
-    "Indtast venligst kun bogstaver og tal imellem a-z eller 0-9",
-  "error.validation.between":
-    "Indtast venligst en værdi imellem \"{min}\" og \"{max}\"",
+  "error.validation.alphanum": "Indtast venligst kun bogstaver og tal imellem a-z eller 0-9",
+  "error.validation.between": "Indtast venligst en værdi imellem \"{min}\" og \"{max}\"",
   "error.validation.boolean": "Venligst bekræft eller afvis",
-  "error.validation.contains":
-    "Indtast venligst en værdi der indeholder \"{needle}\"",
+  "error.validation.contains": "Indtast venligst en værdi der indeholder \"{needle}\"",
   "error.validation.date": "Indtast venligst en gyldig dato",
   "error.validation.date.after": "Indtast venligst en dato efter {date}",
   "error.validation.date.before": "Indtast venligst en dato før {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Indtast venligst en værdi mindre end {max}",
   "error.validation.match": "Værdien matcher ikke det forventede mønster",
   "error.validation.max": "Indtast venligst en værdi lig med eller lavere end {max}",
-  "error.validation.maxlength":
-    "Indtast venligst en kortere værdi. (maks. {max} karakterer)",
+  "error.validation.maxlength": "Indtast venligst en kortere værdi. (maks. {max} karakterer)",
   "error.validation.maxwords": "Indtast ikke flere end {max} ord",
   "error.validation.min": "Indtast en værdi lig med eller højere end {min}",
-  "error.validation.minlength":
-    "Indtast venligst en længere værdi. (min. {min} karakterer)",
+  "error.validation.minlength": "Indtast venligst en længere værdi. (min. {min} karakterer)",
   "error.validation.minwords": "Indtast venligst mindst {min} ord",
   "error.validation.more": "Indtast venligst en værdi større end {min}",
-  "error.validation.notcontains":
-    "Indtast venligst en værdi der ikke indeholder \"{needle}\"",
-  "error.validation.notin":
-    "Indtast venligst ikke nogen af følgende: ({notIn})",
+  "error.validation.notcontains": "Indtast venligst en værdi der ikke indeholder \"{needle}\"",
+  "error.validation.notin": "Indtast venligst ikke nogen af følgende: ({notIn})",
   "error.validation.option": "Vælg venligst en gyldig mulighed",
   "error.validation.num": "Indtast venligst et gyldigt nummer",
   "error.validation.required": "Indtast venligst noget",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Ingen indtastninger endnu.",
   "field.users.empty": "Ingen brugere er valgt",
 
-  "file.delete.confirm":
-    "\u00d8nsker du virkelig at slette denne fil?",
+  "file.delete.confirm": "\u00d8nsker du virkelig at slette denne fil?",
 
   "files": "Filer",
   "files.empty": "Ingen filer endnu",
@@ -251,29 +205,22 @@
   "installation": "Installation",
   "installation.completed": "Panelet er blevet installeret",
   "installation.disabled": "Panel installationen er deaktiveret på offentlige servere som standard. Kør venligst installationen på en lokal maskine eller aktiver det med panel.install <code>panel.install</code> muligheden.",
-  "installation.issues.accounts":
-    "\/site\/accounts er ikke skrivbar",
-  "installation.issues.content":
-    "Content mappen samt alle underliggende filer og mapper skal v\u00e6re skrivbare.",
+  "installation.issues.accounts": "\/site\/accounts er ikke skrivbar",
+  "installation.issues.content": "Content mappen samt alle underliggende filer og mapper skal v\u00e6re skrivbare.",
   "installation.issues.curl": "<code>CURL</code> extension er påkrævet",
   "installation.issues.headline": "Panelet kan ikke installeres",
-  "installation.issues.mbstring":
-    "<code>MB String</code> extension er påkrævet",
-  "installation.issues.media":
-    "<code>/media</code> mappen eksisterer ikke eller er ikke skrivbar",
+  "installation.issues.mbstring": "<code>MB String</code> extension er påkrævet",
+  "installation.issues.media": "<code>/media</code> mappen eksisterer ikke eller er ikke skrivbar",
   "installation.issues.php": "Sikre dig at der benyttes <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby kræver <code>Apache</code>, <code>Nginx</code> eller <code>Caddy</code>",
+  "installation.issues.server": "Kirby kræver <code>Apache</code>, <code>Nginx</code> eller <code>Caddy</code>",
   "installation.issues.sessions": "/site/sessions mappen eksisterer ikke eller er ikke skrivbar",
 
   "language": "Sprog",
   "language.code": "Kode",
   "language.convert": "Gør standard",
-  "language.convert.confirm":
-    "<p>Ønsker du virkelig at konvertere <strong>{name}</strong> til standardsproget? Dette kan ikke fortrydes.</p><p>Hvis <strong>{name}</strong> har uoversat indhold, vil der ikke længere være et gyldigt tilbagefald og dele af dit website vil måske fremstå tomt.</p>",
+  "language.convert.confirm": "<p>Ønsker du virkelig at konvertere <strong>{name}</strong> til standardsproget? Dette kan ikke fortrydes.</p><p>Hvis <strong>{name}</strong> har uoversat indhold, vil der ikke længere være et gyldigt tilbagefald og dele af dit website vil måske fremstå tomt.</p>",
   "language.create": "Tilføj nyt sprog",
-  "language.delete.confirm":
-    "Ønsker du virkelig at slette sproget <strong>{name}</strong> inklusiv alle oversættelser? Kan ikke fortrydes!",
+  "language.delete.confirm": "Ønsker du virkelig at slette sproget <strong>{name}</strong> inklusiv alle oversættelser? Kan ikke fortrydes!",
   "language.deleted": "Sproget er blevet slettet",
   "language.direction": "Læseretning",
   "language.direction.ltr": "Venstre mod højre",
@@ -292,8 +239,7 @@
   "license": "Kirby licens",
   "license.buy": "Køb en licens",
   "license.register": "Registrer",
-  "license.register.help":
-    "Du modtog din licenskode efter købet via email. Venligst kopier og indsæt den for at registrere.",
+  "license.register.help": "Du modtog din licenskode efter købet via email. Venligst kopier og indsæt den for at registrere.",
   "license.register.label": "Indtast venligst din licenskode",
   "license.register.success": "Tak for din støtte af Kirby",
   "license.unregistered": "Dette er en uregistreret demo af Kirby",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Vælg venligst position",
   "page.changeStatus.select": "Vælg en ny status",
   "page.changeTemplate": "Skift skabelon",
-  "page.delete.confirm":
-    "\u00d8nsker du virkelig at slette denne side?",
-  "page.delete.confirm.subpages":
-    "<strong>Denne side har undersider</strong>. <br>Alle undersider vil også blive slettet.",
+  "page.delete.confirm": "\u00d8nsker du virkelig at slette denne side?",
+  "page.delete.confirm.subpages": "<strong>Denne side har undersider</strong>. <br>Alle undersider vil også blive slettet.",
   "page.delete.confirm.title": "Indtast sidens titel for at bekræfte",
   "page.draft.create": "Opret kladde",
   "page.duplicate.appendix": "Kopier",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Kopier sider",
   "page.status": "Status",
   "page.status.draft": "Kladde",
-  "page.status.draft.description":
-    "Siden er i kladdetilstand og kun synlig for redaktører der er logget ind",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "Offentlig",
   "page.status.listed.description": "Siden er offentlig for enhver",
   "page.status.unlisted": "Ulistede",
@@ -388,6 +331,7 @@
   "replace": "Erstat",
   "retry": "Pr\u00f8v igen",
   "revert": "Kass\u00e9r",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "Rolle",
   "role.admin.description": "Admin har alle rettigheder",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "Bruger",
-  "user.blueprint":
-    "Du kan definere yderligere sektioner og formular felter for denne brugerrolle i <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Du kan definere yderligere sektioner og formular felter for denne brugerrolle i <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Skift email",
   "user.changeLanguage": "Skift sprog",
   "user.changeName": "Omdøb denne bruger",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Vælg en ny rolle",
   "user.create": "Tilføj en ny bruger",
   "user.delete": "Slet denne bruger",
-  "user.delete.confirm":
-    "\u00d8nsker du virkelig at slette denne bruger?",
+  "user.delete.confirm": "\u00d8nsker du virkelig at slette denne bruger?",
 
   "users": "Brugere",
 

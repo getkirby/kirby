@@ -117,8 +117,28 @@
                 </template>
               </template>
             </td>
-            <td class="k-structure-table-option">
-              <k-button :tooltip="$t('remove')" icon="remove" @click="confirmRemove(index)" />
+            <td class="k-structure-table-options">
+              <template v-if="duplicate && more && currentIndex === null">
+                <k-button
+                  ref="actionsToggle"
+                  :key="index"
+                  icon="dots"
+                  class="k-structure-table-options-button"
+                  @click="$refs[index + '-actions'][0].toggle()"
+                />
+                <k-dropdown-content :ref="index + '-actions'" align="right">
+                  <k-dropdown-item icon="copy" @click="duplicateItem(index)">{{ $t('duplicate') }}</k-dropdown-item>
+                  <k-dropdown-item icon="remove" @click="confirmRemove(index)">{{ $t('remove') }}</k-dropdown-item>
+                </k-dropdown-content>
+              </template>
+              <template v-else>
+                <k-button
+                  :tooltip="$t('remove')"
+                  class="k-structure-table-options-button"
+                  icon="remove"
+                  @click="confirmRemove(index)"
+                />
+              </template>
             </td>
           </tr>
         </k-draggable>
@@ -127,7 +147,7 @@
       <k-dialog
         v-if="!disabled"
         ref="remove"
-        :button="$t('delete')"
+        :submit-button="$t('delete')"
         theme="negative"
         @submit="remove"
       >
@@ -165,11 +185,19 @@ export default {
   props: {
     ...Field.props,
     columns: Object,
+    duplicate: {
+      type: Boolean,
+      default: true
+    },
     empty: String,
     fields: Object,
     limit: Number,
     max: Number,
     min: Number,
+    prepend: {
+      type: Boolean,
+      default: false
+    },
     sortable: {
       type: Boolean,
       default: true
@@ -326,6 +354,16 @@ export default {
 
       this.createForm();
     },
+    addItem(value) {
+      if (this.prepend === true) {
+        this.items.unshift(value);
+      } else {
+        this.items.push(value);
+      }
+    },
+    beforePaginate() {
+      return this.save(this.currentModel);
+    },
     close() {
       this.currentIndex = null;
       this.currentModel = null;
@@ -415,6 +453,10 @@ export default {
 
       return value.toString();
     },
+    duplicateItem(index) {
+      this.addItem(this.items[index]);
+      this.onInput();
+    },
     escape() {
       if (this.currentIndex === "new") {
         let row = Object.values(this.currentModel);
@@ -467,9 +509,6 @@ export default {
       this.currentModel = this.$helper.clone(this.items[index]);
       this.createForm(field);
     },
-    beforePaginate() {
-      return this.save(this.currentModel);
-    },
     paginate(pagination) {
       this.open(pagination.offset);
     },
@@ -519,7 +558,7 @@ export default {
         return this.validate(this.currentModel)
           .then(() => {
             if (this.currentIndex === "new") {
-              this.items.push(this.currentModel);
+              this.addItem(this.currentModel);
             } else {
               this.items[this.currentIndex] = this.currentModel;
             }
@@ -608,6 +647,10 @@ $structure-item-height: 38px;
     [dir="rtl"] & {
       border-left: 1px solid $color-background;
     }
+  }
+
+  td:last-child {
+    overflow: visible;
   }
 
   th {
@@ -740,11 +783,13 @@ $structure-item-height: 38px;
     display: flex !important;
   }
 
-  .k-structure-table-option {
+  .k-structure-table-options {
+    position: relative;
     width: $structure-item-height;
     text-align: center;
+    height: $structure-item-height;
   }
-  .k-structure-table-option .k-button {
+  .k-structure-table-options-button {
     width: $structure-item-height;
     height: $structure-item-height;
   }

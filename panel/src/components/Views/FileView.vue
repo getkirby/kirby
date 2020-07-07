@@ -198,7 +198,7 @@ export default {
               config.api +
               "/" +
               this.$api.files.url(this.path, this.file.filename),
-            accept: this.file.mime
+            accept: "." + this.file.extension + "," + this.file.mime
           });
           break;
         case "remove":
@@ -208,13 +208,13 @@ export default {
     },
     deleted() {
       if (this.path) {
-        this.$router.push('/' + this.path);
+        this.$go('/' + this.path);
       } else {
-        this.$router.push('/site');
+        this.$go('/site');
       }
     },
     renamed(file) {
-      this.$router.push(this.$api.files.link(this.path, file.filename));
+      this.$go(this.$api.files.link(this.path, file.filename));
     },
     uploaded() {
       this.fetch();

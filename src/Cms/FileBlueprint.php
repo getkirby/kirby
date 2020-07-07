@@ -26,6 +26,7 @@ class FileBlueprint extends Blueprint
                 'changeName' => null,
                 'create'     => null,
                 'delete'     => null,
+                'read'       => null,
                 'replace'    => null,
                 'update'     => null,
             ]

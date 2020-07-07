@@ -42,10 +42,8 @@
 
   "error.avatar.create.fail": "Gambar profil tidak dapat diunggah",
   "error.avatar.delete.fail": "Gambar profil tidak dapat dihapus",
-  "error.avatar.dimensions.invalid":
-    "Pastikan lebar dan tinggi gambar profil di bawah 3000 piksel",
-  "error.avatar.mime.forbidden":
-    "Gambar profil harus berupa berkas JPEG atau PNG",
+  "error.avatar.dimensions.invalid": "Pastikan lebar dan tinggi gambar profil di bawah 3000 piksel",
+  "error.avatar.mime.forbidden": "Gambar profil harus berupa berkas JPEG atau PNG",
 
   "error.blueprint.notFound": "Cetak biru \"{name}\" tidak dapat dimuat",
 
@@ -54,28 +52,23 @@
   "error.field.converter.invalid": "Konverter \"{converter}\" tidak valid",
 
   "error.file.changeName.empty": "Nama harus diisi",
-  "error.file.changeName.permission":
-    "Anda tidak diizinkan mengubah nama berkas \"{filename}\"",
+  "error.file.changeName.permission": "Anda tidak diizinkan mengubah nama berkas \"{filename}\"",
   "error.file.duplicate": "Berkas dengan nama \"{filename}\" sudah ada",
-  "error.file.extension.forbidden":
-    "Ekstensi \"{extension}\" tidak diizinkan",
-  "error.file.extension.missing":
-    "Berkas \"{filename}\" harus memiliki ekstensi",
-  "error.file.maxheight": "The height of the image must not exceed {height} pixels",
-  "error.file.maxsize": "The file is too large",
-  "error.file.maxwidth": "The width of the image must not exceed {width} pixels",
-  "error.file.mime.differs":
-    "Berkas yang diunggah harus memiliki tipe mime sama \"{mime}\"",
+  "error.file.extension.forbidden": "Ekstensi \"{extension}\" tidak diizinkan",
+  "error.file.extension.missing": "Berkas \"{filename}\" harus memiliki ekstensi",
+  "error.file.maxheight": "Tinggi gambar tidak boleh melebihi {height} piksel",
+  "error.file.maxsize": "Berkas terlalu besar",
+  "error.file.maxwidth": "Lebar gambar tidak boleh melebihi {width} piksel",
+  "error.file.mime.differs": "Berkas yang diunggah harus memiliki tipe mime sama \"{mime}\"",
   "error.file.mime.forbidden": "Media dengan tipe mime \"{mime}\" tidak diizinkan",
-  "error.file.mime.invalid": "Invalid mime type: {mime}",
-  "error.file.mime.missing":
-    "Tipe media untuk \"{filename}\" tidak dapat dideteksi",
-  "error.file.minheight": "The height of the image must be at least {height} pixels",
-  "error.file.minsize": "The file is too small",
-  "error.file.minwidth": "The width of the image must be at least {width} pixels",
+  "error.file.mime.invalid": "Tipe mime tidak valid: {mime}",
+  "error.file.mime.missing": "Tipe media untuk \"{filename}\" tidak dapat dideteksi",
+  "error.file.minheight": "Tinggi gambar setidaknya {height} piksel",
+  "error.file.minsize": "Berkas terlalu kecil",
+  "error.file.minwidth": "Lebar gambar setidaknya {width} piksel",
   "error.file.name.missing": "Nama berkas harus diisi",
   "error.file.notFound": "Berkas \"{filename}\" tidak dapat ditemukan",
-  "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
+  "error.file.orientation": "Orientasi gambar harus \"{orientation}\"",
   "error.file.type.forbidden": "Anda tidak diizinkan mengunggah berkas dengan tipe {type}",
   "error.file.undefined": "Berkas tidak dapat ditemukan",
 
@@ -90,111 +83,77 @@
   "error.license.email": "Masukkan surel yang valid",
   "error.license.verification": "Lisensi tidak dapat diverifikasi",
 
-  "error.page.changeSlug.permission":
-    "Anda tidak diizinkan mengubah akhiran URL untuk \"{slug}\"",
-  "error.page.changeStatus.incomplete":
-    "Halaman memiliki kesalahan dan tidak dapat diterbitkan",
-  "error.page.changeStatus.permission":
-    "Status halaman ini tidak dapat diubah",
-  "error.page.changeStatus.toDraft.invalid":
-    "Halaman \"{slug}\" tidak dapat dikonversi menjadi draf",
-  "error.page.changeTemplate.invalid":
-    "Templat untuk halaman \"{slug}\" tidak dapat diubah",
-  "error.page.changeTemplate.permission":
-    "Anda tidak diizinkan mengubah templat dari \"{slug}\"",
+  "error.page.changeSlug.permission": "Anda tidak diizinkan mengubah akhiran URL untuk \"{slug}\"",
+  "error.page.changeStatus.incomplete": "Halaman memiliki kesalahan dan tidak dapat diterbitkan",
+  "error.page.changeStatus.permission": "Status halaman ini tidak dapat diubah",
+  "error.page.changeStatus.toDraft.invalid": "Halaman \"{slug}\" tidak dapat dikonversi menjadi draf",
+  "error.page.changeTemplate.invalid": "Templat untuk halaman \"{slug}\" tidak dapat diubah",
+  "error.page.changeTemplate.permission": "Anda tidak diizinkan mengubah templat dari \"{slug}\"",
   "error.page.changeTitle.empty": "Judul harus diisi",
-  "error.page.changeTitle.permission":
-    "Anda tidak diizinkan mengubah judul dari \"{slug}\"",
+  "error.page.changeTitle.permission": "Anda tidak diizinkan mengubah judul dari \"{slug}\"",
   "error.page.create.permission": "Anda tidak diizinkan membuat \"{slug}\"",
   "error.page.delete": "Halaman \"{slug}\" tidak dapat dihapus",
   "error.page.delete.confirm": "Masukkan judul halaman untuk mengonfirmasi",
-  "error.page.delete.hasChildren":
-    "Halaman ini memiliki sub-halaman dan tidak dapat dihapus",
+  "error.page.delete.hasChildren": "Halaman ini memiliki sub-halaman dan tidak dapat dihapus",
   "error.page.delete.permission": "Anda tidak diizinkan menghapus \"{slug}\"",
-  "error.page.draft.duplicate":
-    "Draf halaman dengan akhiran URL \"{slug}\" sudah ada",
-  "error.page.duplicate":
-    "Halaman dengan akhiran URL \"{slug}\" sudah ada",
+  "error.page.draft.duplicate": "Draf halaman dengan akhiran URL \"{slug}\" sudah ada",
+  "error.page.duplicate": "Halaman dengan akhiran URL \"{slug}\" sudah ada",
   "error.page.duplicate.permission": "Anda tidak diizinkan menduplikasi \"{slug}\"",
   "error.page.notFound": "Halaman \"{slug}\" tidak dapat ditemukan",
-  "error.page.num.invalid":
-    "Masukkan nomor urut yang valid. Nomor tidak boleh negatif.",
+  "error.page.num.invalid": "Masukkan nomor urut yang valid. Nomor tidak boleh negatif.",
   "error.page.slug.invalid": "Masukkan awalan URL yang valid",
   "error.page.sort.permission": "Halaman \"{slug}\" tidak dapat diurutkan",
   "error.page.status.invalid": "Atur status halaman yang valid",
   "error.page.undefined": "Halaman tidak dapat ditemukan",
   "error.page.update.permission": "Anda tidak diizinkan memperbaharui \"{slug}\"",
 
-  "error.section.files.max.plural":
-    "Anda hanya boleh menambahkan maksimal {max} berkas ke bagian \"{section}\"",
-  "error.section.files.max.singular":
-    "Anda hanya boleh menambahkan satu berkas ke bagian \"{section}\"",
-  "error.section.files.min.plural":
-    "Bagian \"{section}\" setidaknya memiliki {min} berkas",
-  "error.section.files.min.singular":
-    "Bagian \"{section}\" setidaknya memiliki satu berkas",
+  "error.section.files.max.plural": "Anda hanya boleh menambahkan maksimal {max} berkas ke bagian \"{section}\"",
+  "error.section.files.max.singular": "Anda hanya boleh menambahkan satu berkas ke bagian \"{section}\"",
+  "error.section.files.min.plural": "Bagian \"{section}\" setidaknya memiliki {min} berkas",
+  "error.section.files.min.singular": "Bagian \"{section}\" setidaknya memiliki satu berkas",
 
-  "error.section.pages.max.plural":
-    "Anda hanya boleh menambahkan maksimal {max} halaman ke bagian \"{section}\"",
-  "error.section.pages.max.singular":
-    "Anda hanya boleh menambahkan satu halaman ke bagian \"{section}\"",
-  "error.section.pages.min.plural":
-    "Bagian \"{section}\" setidaknya memiliki {min} halaman",
-  "error.section.pages.min.singular":
-    "Bagian \"{section}\" setidaknya memiliki satu halaman",
+  "error.section.pages.max.plural": "Anda hanya boleh menambahkan maksimal {max} halaman ke bagian \"{section}\"",
+  "error.section.pages.max.singular": "Anda hanya boleh menambahkan satu halaman ke bagian \"{section}\"",
+  "error.section.pages.min.plural": "Bagian \"{section}\" setidaknya memiliki {min} halaman",
+  "error.section.pages.min.singular": "Bagian \"{section}\" setidaknya memiliki satu halaman",
 
   "error.section.notLoaded": "Bagian \"{name}\" tidak dapat dimuat",
   "error.section.type.invalid": "Tipe bagian \"{type}\" tidak valid",
 
   "error.site.changeTitle.empty": "Judul harus diisi",
-  "error.site.changeTitle.permission":
-    "Anda tidak diizinkan mengubah judul situs",
+  "error.site.changeTitle.permission": "Anda tidak diizinkan mengubah judul situs",
   "error.site.update.permission": "Anda tidak diizinkan memperbaharui situs",
 
   "error.template.default.notFound": "Templat bawaan tidak ada",
 
-  "error.user.changeEmail.permission":
-    "Anda tidak diizinkan mengubah surel dari pengguna \"{name}\"",
-  "error.user.changeLanguage.permission":
-    "Anda tidak diizinkan mengubah bahasa dari pengguna \"{name}\"",
-  "error.user.changeName.permission":
-    "Anda tidak diizinkan mengubah nama dari pengguna \"{name}\"",
-  "error.user.changePassword.permission":
-    "Anda tidak diizinkan mengubah sandi dari pengguna \"{name}\"",
-  "error.user.changeRole.lastAdmin":
-    "Peran dari admin satu-satunya tidak dapat diubah",
-  "error.user.changeRole.permission":
-    "Anda tidak diizinkan mengubah peran dari pengguna \"{name}\"",
-  "error.user.changeRole.toAdmin":
-    "Anda tidak diizinkan mempromosikan seseorang menjadi admin",
+  "error.user.changeEmail.permission": "Anda tidak diizinkan mengubah surel dari pengguna \"{name}\"",
+  "error.user.changeLanguage.permission": "Anda tidak diizinkan mengubah bahasa dari pengguna \"{name}\"",
+  "error.user.changeName.permission": "Anda tidak diizinkan mengubah nama dari pengguna \"{name}\"",
+  "error.user.changePassword.permission": "Anda tidak diizinkan mengubah sandi dari pengguna \"{name}\"",
+  "error.user.changeRole.lastAdmin": "Peran dari admin satu-satunya tidak dapat diubah",
+  "error.user.changeRole.permission": "Anda tidak diizinkan mengubah peran dari pengguna \"{name}\"",
+  "error.user.changeRole.toAdmin": "Anda tidak diizinkan mempromosikan seseorang menjadi admin",
   "error.user.create.permission": "Anda tidak diizinkan membuat pengguna ini",
   "error.user.delete": "Pengguna \"{nama}\" tidak dapat dihapus",
   "error.user.delete.lastAdmin": "Admin satu-satunya tidak dapat dihapus",
   "error.user.delete.lastUser": "Pengguna satu-satunya tidak dapat dihapus",
-  "error.user.delete.permission":
-    "Anda tidak diizinkan menghapus pengguna \"{name}\"",
-  "error.user.duplicate":
-    "Pengguna dengan surel \"{email}\" sudah ada",
+  "error.user.delete.permission": "Anda tidak diizinkan menghapus pengguna \"{name}\"",
+  "error.user.duplicate": "Pengguna dengan surel \"{email}\" sudah ada",
   "error.user.email.invalid": "Masukkan surel yang valid",
   "error.user.language.invalid": "Masukkan bahasa yang valid",
   "error.user.notFound": "Pengguna \"{name}\" tidak dapat ditemukan",
-  "error.user.password.invalid":
-    "Masukkan sandi yang valid. Sandi setidaknya mengandung 8 karakter.",
+  "error.user.password.invalid": "Masukkan sandi yang valid. Sandi setidaknya mengandung 8 karakter.",
   "error.user.password.notSame": "Sandi tidak cocok",
   "error.user.password.undefined": "Pengguna tidak memiliki sandi",
   "error.user.role.invalid": "Masukkan peran yang valid",
-  "error.user.update.permission":
-    "Anda tidak diizinkan memperbaharui pengguna \"{name}\"",
+  "error.user.update.permission": "Anda tidak diizinkan memperbaharui pengguna \"{name}\"",
 
   "error.validation.accepted": "Mohon konfirmasi",
   "error.validation.alpha": "Masukkan hanya karakter a-z",
-  "error.validation.alphanum":
-    "Masukkan hanya karakter a-z atau 0-9",
-  "error.validation.between":
-    "Masukkan nilai antara \"{min}\" dan \"{max}\"",
+  "error.validation.alphanum": "Masukkan hanya karakter a-z atau 0-9",
+  "error.validation.between": "Masukkan nilai antara \"{min}\" dan \"{max}\"",
   "error.validation.boolean": "Mohon konfirmasi atau tolak",
-  "error.validation.contains":
-    "Masukkan nilai yang mengandung \"{needle}\"",
+  "error.validation.contains": "Masukkan nilai yang mengandung \"{needle}\"",
   "error.validation.date": "Masukkan tanggal yang valid",
   "error.validation.date.after": "Masukkan tanggal setelah {date}",
   "error.validation.date.before": "Masukkan tanggal sebelum {date}",
@@ -210,18 +169,14 @@
   "error.validation.less": "Masukkan nilai kurang dari {max}",
   "error.validation.match": "Nilai tidak cocok dengan pola yang semestinya",
   "error.validation.max": "Masukkan nilai yang sama dengan atau kurang dari {max}",
-  "error.validation.maxlength":
-    "Masukkan nilai yang lebih pendek. (maksimal {max} karakter)",
+  "error.validation.maxlength": "Masukkan nilai yang lebih pendek. (maksimal {max} karakter)",
   "error.validation.maxwords": "Masukkan tidak lebih dari {max} kata",
   "error.validation.min": "Masukkan nilai yang sama dengan atau lebih dari {min}",
-  "error.validation.minlength":
-    "Masukkan nilai yang lebih panjang. (minimal {min} karakter)",
+  "error.validation.minlength": "Masukkan nilai yang lebih panjang. (minimal {min} karakter)",
   "error.validation.minwords": "Masukkan setidaknya {min} kata",
   "error.validation.more": "Masukkan nilai yang lebih besar dari {min}",
-  "error.validation.notcontains":
-    "Masukkan nilai yang tidak mengandung \"{needle}\"",
-  "error.validation.notin":
-    "Jangan masukkan satupun: ({notIn})",
+  "error.validation.notcontains": "Masukkan nilai yang tidak mengandung \"{needle}\"",
+  "error.validation.notin": "Jangan masukkan satupun: ({notIn})",
   "error.validation.option": "Pilih opsi yang valid",
   "error.validation.num": "Masukkan nomor yang valid",
   "error.validation.required": "Masukkan sesuatu",
@@ -238,8 +193,7 @@
   "field.structure.empty": "Belum ada entri",
   "field.users.empty": "Belum ada pengguna yang dipilih",
 
-  "file.delete.confirm":
-    "Anda yakin menghapus <br> <strong>{filename}</strong>?",
+  "file.delete.confirm": "Anda yakin menghapus <br> <strong>{filename}</strong>?",
 
   "files": "Berkas",
   "files.empty": "Belum ada berkas",
@@ -251,29 +205,22 @@
   "installation": "Pemasangan",
   "installation.completed": "Panel sudah dipasang",
   "installation.disabled": "Pemasang panel dimatikan di server publik secara bawaan. Mohon jalankan di server lokal atau ubah opsi <code>panel.install</code> untuk menjalankan di server saat ini.",
-  "installation.issues.accounts":
-    "Folder <code>/site/accounts</code> tidak ada atau tidak dapat ditulis",
-  "installation.issues.content":
-    "Folder <code>/content</code> tidak ada atau tidak dapat ditulis",
+  "installation.issues.accounts": "Folder <code>/site/accounts</code> tidak ada atau tidak dapat ditulis",
+  "installation.issues.content": "Folder <code>/content</code> tidak ada atau tidak dapat ditulis",
   "installation.issues.curl": "Ekstensi <code>CURL</code> diperlukan",
   "installation.issues.headline": "Panel tidak dapat dipasang",
-  "installation.issues.mbstring":
-    "Ekstensi <code>MB String</code> diperlukan",
-  "installation.issues.media":
-    "Folder <code>/media</code> tidak ada atau tidak dapat ditulis",
+  "installation.issues.mbstring": "Ekstensi <code>MB String</code> diperlukan",
+  "installation.issues.media": "Folder <code>/media</code> tidak ada atau tidak dapat ditulis",
   "installation.issues.php": "Pastikan Anda menggunakan <code>PHP 7+</code>",
-  "installation.issues.server":
-    "Kirby memerlukan <code>Apache</code>, <code>Nginx</code>, atau <code>Caddy</code>",
+  "installation.issues.server": "Kirby memerlukan <code>Apache</code>, <code>Nginx</code>, atau <code>Caddy</code>",
   "installation.issues.sessions": "Folder <code>/site/sessions</code> tidak ada atau tidak dapat ditulis",
 
   "language": "Bahasa",
   "language.code": "Kode",
   "language.convert": "Atur sebagai bawaan",
-  "language.convert.confirm":
-    "<p>Anda yakin mengubah <strong>{name}</strong> menjadi bahasa bawaan? Ini tidak dapat dibatalkan.</p> <p>Jika <strong>{name}</strong> memiliki konten yang tidak diterjemahkan, tidak akan ada pengganti yang valid dan dapat menyebabkan beberapa bagian dari situs Anda menjadi kosong.</p>",
+  "language.convert.confirm": "<p>Anda yakin mengubah <strong>{name}</strong> menjadi bahasa bawaan? Ini tidak dapat dibatalkan.</p> <p>Jika <strong>{name}</strong> memiliki konten yang tidak diterjemahkan, tidak akan ada pengganti yang valid dan dapat menyebabkan beberapa bagian dari situs Anda menjadi kosong.</p>",
   "language.create": "Tambah bahasa baru",
-  "language.delete.confirm":
-    "Anda yakin menghapus bahasa <strong>{name}</strong> termasuk semua terjemahannya? Ini tidak dapat dibatalkan!",
+  "language.delete.confirm": "Anda yakin menghapus bahasa <strong>{name}</strong> termasuk semua terjemahannya? Ini tidak dapat dibatalkan!",
   "language.deleted": "Bahasa sudah dihapus",
   "language.direction": "Arah baca",
   "language.direction.ltr": "Kiri ke kanan",
@@ -292,8 +239,7 @@
   "license": "Lisensi Kirby",
   "license.buy": "Beli lisensi",
   "license.register": "Daftar",
-  "license.register.help":
-    "Anda menerima kode lisensi via surel setelah pembelian. Salin dan tempel kode tersebut untuk mendaftarkan.",
+  "license.register.help": "Anda menerima kode lisensi via surel setelah pembelian. Salin dan tempel kode tersebut untuk mendaftarkan.",
   "license.register.label": "Masukkan kode lisensi Anda",
   "license.register.success": "Terima kasih atas dukungan untuk Kirby",
   "license.unregistered": "Ini adalah demo tidak diregistrasi dari Kirby",
@@ -354,10 +300,8 @@
   "page.changeStatus.position": "Pilih posisi",
   "page.changeStatus.select": "Pilih status baru",
   "page.changeTemplate": "Ubah templat",
-  "page.delete.confirm":
-    "Anda yakin menghapus <strong>{title}</strong>?",
-  "page.delete.confirm.subpages":
-    "<strong>Halaman ini memiliki sub-halaman</strong>. <br>Semua sub-halaman akan ikut dihapus.",
+  "page.delete.confirm": "Anda yakin menghapus <strong>{title}</strong>?",
+  "page.delete.confirm.subpages": "<strong>Halaman ini memiliki sub-halaman</strong>. <br>Semua sub-halaman akan ikut dihapus.",
   "page.delete.confirm.title": "Masukkan judul halaman untuk mengonfirmasi",
   "page.draft.create": "Buat draf",
   "page.duplicate.appendix": "Salin",
@@ -365,8 +309,7 @@
   "page.duplicate.pages": "Salin halaman",
   "page.status": "Status",
   "page.status.draft": "Draf",
-  "page.status.draft.description":
-    "Halaman hanya terlihat untuk penyunting",
+  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
   "page.status.listed": "Publik",
   "page.status.listed.description": "Halaman publik untuk siapapun",
   "page.status.unlisted": "Tidak tercantum",
@@ -388,6 +331,7 @@
   "replace": "Ganti",
   "retry": "Coba lagi",
   "revert": "Kembalikan",
+  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
 
   "role": "Peran",
   "role.admin.description": "Admin memiliki semua izin",
@@ -451,8 +395,7 @@
   "url.placeholder": "https://contoh.com",
 
   "user": "Pengguna",
-  "user.blueprint":
-    "Anda dapat mendefinisikan bagian tambahan dan bidang formulir untuk peran pengguna ini di <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "Anda dapat mendefinisikan bagian tambahan dan bidang formulir untuk peran pengguna ini di <strong>/site/blueprints/users/{role}.yml</strong>",
   "user.changeEmail": "Ubah surel",
   "user.changeLanguage": "Ubah bahasa",
   "user.changeName": "Ubah nama pengguna ini",
@@ -463,8 +406,7 @@
   "user.changeRole.select": "Pilih peran baru",
   "user.create": "Tambah pengguna baru",
   "user.delete": "Hapus pengguna ini",
-  "user.delete.confirm":
-    "Anda yakin menghapus <br><strong>{email}</strong>?",
+  "user.delete.confirm": "Anda yakin menghapus <br><strong>{email}</strong>?",
 
   "users": "Pengguna",
 

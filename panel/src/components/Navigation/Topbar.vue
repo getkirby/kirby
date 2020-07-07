@@ -13,20 +13,21 @@
           </k-button>
           <k-dropdown-content ref="menu" class="k-topbar-menu">
             <ul>
-              <li
-                v-for="(view, viewName) in views"
-                v-if="view.menu"
-                :aria-current="$store.state.view === viewName"
-                :key="'menu-item-' + viewName"
-              >
-                <k-dropdown-item
-                  :disabled="$permissions.access[viewName] === false"
-                  :icon="view.icon"
-                  :link="view.link"
+              <template v-for="(entry, entryName) in views">
+                <li
+                  v-if="entry.menu"
+                  :key="'menu-item-' + entryName"
+                  :aria-current="$store.state.view === entryName"
                 >
-                  {{ menuTitle(view, viewName) }}
-                </k-dropdown-item>
-              </li>
+                  <k-dropdown-item
+                    :disabled="$permissions.access[entryName] === false"
+                    :icon="entry.icon"
+                    :link="entry.link"
+                  >
+                    {{ menuTitle(entry, entryName) }}
+                  </k-dropdown-item>
+                </li>
+              </template>
               <li><hr></li>
               <li :aria-current="$route.meta.view === 'account'">
                 <k-dropdown-item icon="account" link="/account">

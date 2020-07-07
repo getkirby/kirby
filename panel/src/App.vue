@@ -21,16 +21,23 @@
     </main>
     <k-form-buttons v-if="inside" />
     <k-error-dialog />
-    <div v-if="offline" class="k-offline-warning">
-      <p>The panel is currently offline</p>
+    <div
+      v-if="offline"
+      class="k-offline-warning"
+    >
+      <p>The Panel is currently offline</p>
     </div>
     <k-registration v-if="inside" ref="registration" />
   </div>
   <div v-else class="k-panel">
     <main class="k-panel-view">
       <k-error-view>
-        <p v-if="debug">{{ $store.state.system.info.error }}</p>
-        <p v-else>The panel cannot connect to the API</p>
+        <p v-if="debug">
+          {{ $store.state.system.info.error }}
+        </p>
+        <p v-else>
+          The Panel cannot connect to the API
+        </p>
       </k-error-view>
     </main>
   </div>

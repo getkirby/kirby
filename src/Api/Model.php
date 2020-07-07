@@ -48,7 +48,10 @@ class Model
             $this->data = $schema['default']->call($this->api);
         }
 
-        if (isset($schema['type']) === true && is_a($this->data, $schema['type']) === false) {
+        if (
+            isset($schema['type']) === true &&
+            is_a($this->data, $schema['type']) === false
+        ) {
             throw new Exception(sprintf('Invalid model type "%s" expected: "%s"', get_class($this->data), $schema['type']));
         }
     }
@@ -130,7 +133,10 @@ class Model
                 $value = $this->api->resolve($value);
             }
 
-            if (is_a($value, 'Kirby\Api\Collection') === true || is_a($value, 'Kirby\Api\Model') === true) {
+            if (
+                is_a($value, 'Kirby\Api\Collection') === true ||
+                is_a($value, 'Kirby\Api\Model') === true
+            ) {
                 $selection = $select[$key];
 
                 if ($subview = $selection['view']) {

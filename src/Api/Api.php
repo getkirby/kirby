@@ -294,6 +294,24 @@ class Api
     }
 
     /**
+     * Matches an object with an array item
+     * based on the `type` field
+     *
+     * @param array models or collections
+     * @param mixed $object
+     *
+     * @return string key of match
+     */
+    protected function match(array $array, $object = null)
+    {
+        foreach ($array as $definition => $model) {
+            if (is_a($object, $model['type']) === true) {
+                return $definition;
+            }
+        }
+    }
+
+    /**
      * Returns an API model instance by name
      *
      * @param string $name
@@ -302,8 +320,15 @@ class Api
      *
      * @throws \Kirby\Exception\NotFoundException If no model for `$name` exists
      */
-    public function model(string $name, $object = null)
+    public function model(string $name = null, $object = null)
     {
+        // Try to auto-match object with API models
+        if ($name === null) {
+            if ($model = $this->match($this->models, $object)) {
+                $name = $model;
+            }
+        }
+
         if (isset($this->models[$name]) === false) {
             throw new NotFoundException(sprintf('The model "%s" does not exist', $name));
         }
@@ -420,29 +445,15 @@ class Api
             return $object;
         }
 
-        $className = strtolower(get_class($object));
-        $lastDash  = strrpos($className, '\\');
-
-        if ($lastDash !== false) {
-            $className = substr($className, $lastDash + 1);
+        if ($model = $this->match($this->models, $object)) {
+            return $this->model($model, $object);
         }
 
-        if (isset($this->models[$className]) === true) {
-            return $this->model($className, $object);
+        if ($collection = $this->match($this->collections, $object)) {
+            return $this->collection($collection, $object);
         }
 
-        if (isset($this->collections[$className]) === true) {
-            return $this->collection($className, $object);
-        }
-
-        // now models deeply by checking for the actual type
-        foreach ($this->models as $modelClass => $model) {
-            if (is_a($object, $model['type']) === true) {
-                return $this->model($modelClass, $object);
-            }
-        }
-
-        throw new NotFoundException(sprintf('The object "%s" cannot be resolved', $className));
+        throw new NotFoundException(sprintf('The object "%s" cannot be resolved', get_class($object)));
     }
 
     /**

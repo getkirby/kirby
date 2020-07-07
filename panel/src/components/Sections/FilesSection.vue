@@ -30,7 +30,7 @@
           :pagination="pagination"
           :sortable="options.sortable"
           :size="options.size"
-          :data-invalid="isInvalid" 
+          :data-invalid="isInvalid"
           @sort="sort"
           @paginate="paginate"
           @action="action"
@@ -38,7 +38,7 @@
         <template v-else>
           <k-empty
             :layout="options.layout"
-            :data-invalid="isInvalid" 
+            :data-invalid="isInvalid"
             icon="image"
             @click="if (add) upload()"
           >
@@ -90,7 +90,7 @@ export default {
 
       switch (action) {
         case "edit":
-          this.$router.push(file.link);
+          this.$go(file.link);
           break;
         case "download":
           window.open(file.url);
@@ -166,7 +166,7 @@ export default {
       });
 
       this.$api
-        .patch(this.parent + "/files/sort", {
+        .patch(this.options.apiUrl + "/files/sort", {
           files: items,
           index: this.pagination.offset
         })

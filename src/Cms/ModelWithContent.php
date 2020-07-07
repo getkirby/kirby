@@ -334,6 +334,11 @@ abstract class ModelWithContent extends Model
         }
 
         if (is_string($settings) === true) {
+            // use defined icon in blueprint
+            if ($settings === 'icon') {
+                return [];
+            }
+
             $settings = [
                 'query' => $settings
             ];
@@ -448,11 +453,15 @@ abstract class ModelWithContent extends Model
             return null;
         }
 
-        $result = Str::query($query, [
-            'kirby'             => $this->kirby(),
-            'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
-            static::CLASS_ALIAS => $this
-        ]);
+        try {
+            $result = Str::query($query, [
+                'kirby'             => $this->kirby(),
+                'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
+                static::CLASS_ALIAS => $this
+            ]);
+        } catch (Throwable $e) {
+            return null;
+        }
 
         if ($expect !== null && is_a($result, $expect) !== true) {
             return null;
@@ -611,19 +620,21 @@ abstract class ModelWithContent extends Model
      * String template builder
      *
      * @param string|null $template
+     * @param array $data
+     * @param string $fallback Fallback for tokens in the template that cannot be replaced
      * @return string
      */
-    public function toString(string $template = null): string
+    public function toString(string $template = null, array $data = [], string $fallback = ''): string
     {
         if ($template === null) {
             return $this->id();
         }
 
-        $result = Str::template($template, [
+        $result = Str::template($template, array_replace([
             'kirby'             => $this->kirby(),
             'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
-        ]);
+        ], $data), $fallback);
 
         return $result;
     }
@@ -691,7 +702,8 @@ abstract class ModelWithContent extends Model
             }
         }
 
-        return $this->commit('update', [$this, $form->data(), $form->strings(), $languageCode], function ($model, $values, $strings, $languageCode) {
+        $arguments = [static::CLASS_ALIAS => $this, 'values' => $form->data(), 'strings' => $form->strings(), 'languageCode' => $languageCode];
+        return $this->commit('update', $arguments, function ($model, $values, $strings, $languageCode) {
             // save updated values
             $model = $model->save($strings, $languageCode, true);
 

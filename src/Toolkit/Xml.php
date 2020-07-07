@@ -2,8 +2,10 @@
 
 namespace Kirby\Toolkit;
 
+use SimpleXMLElement;
+
 /**
- * XML parser and creator Class
+ * XML parser and creator class
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -14,7 +16,7 @@ namespace Kirby\Toolkit;
 class Xml
 {
     /**
-     * Conversion table for html entities
+     * HTML to XML conversion table for entities
      *
      * @var array
      */
@@ -54,166 +56,349 @@ class Xml
     ];
 
     /**
-     * Creates an XML string from an array
+     * Closing string for void tags
      *
-     * @param string $props The source array
-     * @param string $name The name of the root element
-     * @param bool $head Include the xml declaration head or not
-     * @param int $level The indendation level
-     * @return string The XML string
+     * @var string
      */
-    public static function create($props, string $name = 'root', bool $head = true, $level = 0): string
+    public static $void = ' />';
+
+    /**
+     * Generates a single attribute or a list of attributes
+     *
+     * @param string|array $name String: A single attribute with that name will be generated.
+     *                           Key-value array: A list of attributes will be generated. Don't pass a second argument in that case.
+     * @param mixed $value If used with a `$name` string, pass the value of the attribute here.
+     *                     If used with a `$name` array, this can be set to `false` to disable attribute sorting.
+     * @return string|null The generated XML attributes string
+     */
+    public static function attr($name, $value = null): ?string
     {
-        $attributes = $props['@attributes'] ?? null;
-        $value      = $props['@value'] ?? null;
-        $children   = $props;
-        $indent     = str_repeat('  ', $level);
-        $nextLevel  = $level + 1;
+        if (is_array($name) === true) {
+            if ($value !== false) {
+                ksort($name);
+            }
 
-        if (is_array($children) === true) {
-            unset($children['@attributes'], $children['@value']);
+            $attributes = [];
+            foreach ($name as $key => $val) {
+                $a = static::attr($key, $val);
 
-            $childTags = [];
-
-            foreach ($children as $childName => $childItems) {
-                if (is_array($childItems) === true) {
-
-                    // another tag with attributes
-                    if (A::isAssociative($childItems) === true) {
-                        $childTags[] = static::create($childItems, $childName, false, $level);
-
-                    // just children
-                    } else {
-                        foreach ($childItems as $childItem) {
-                            $childTags[] = static::create($childItem, $childName, false, $nextLevel);
-                        }
-                    }
-                } else {
-                    $childTags[] = static::tag($childName, $childItems, null, $indent);
+                if ($a) {
+                    $attributes[] = $a;
                 }
             }
 
-            if (empty($childTags) === false) {
-                $value = $childTags;
-            }
+            return implode(' ', $attributes);
         }
 
-        $result  = $head === true ? '<?xml version="1.0" encoding="utf-8"?>' . PHP_EOL : null;
-        $result .= static::tag($name, $value, $attributes, $indent);
+        if ($value === null || $value === '' || $value === []) {
+            return null;
+        }
 
-        return $result;
+        if ($value === ' ') {
+            return strtolower($name) . '=""';
+        }
+
+        if (is_bool($value) === true) {
+            return $value === true ? strtolower($name) . '="' . strtolower($name) . '"' : null;
+        }
+
+        if (is_array($value) === true) {
+            if (isset($value['value'], $value['escape'])) {
+                $value = $value['escape'] === true ? static::encode($value['value']) : $value['value'];
+            } else {
+                $value = implode(' ', array_filter($value, function ($value) {
+                    return !empty($value) || is_numeric($value);
+                }));
+            }
+        } else {
+            $value = static::encode($value);
+        }
+
+        return strtolower($name) . '="' . $value . '"';
     }
 
     /**
-     * Removes all xml entities from a string
-     * and convert them to html entities first
-     * and remove all html entities afterwards.
+     * Creates an XML string from an array
      *
-     * <code>
+     * Supports special array keys `@name` (element name),
+     * `@attributes` (XML attribute key-value array),
+     * `@namespaces` (array with XML namespaces) and
+     * `@value` (element content)
      *
-     * echo xml::decode('some <em>&#252;ber</em> crazy stuff');
-     * // output: some &uuml;ber crazy stuff
+     * @param array|string $props The source array or tag content (used internally)
+     * @param string $name The name of the root element
+     * @param bool $head Include the XML declaration head or not
+     * @param string $indent Indentation string, defaults to two spaces
+     * @param int $level The indendation level (used internally)
+     * @return string The XML string
+     */
+    public static function create($props, string $name = 'root', bool $head = true, string $indent = '  ', int $level = 0): string
+    {
+        if (is_array($props) === true) {
+            if (A::isAssociative($props) === true) {
+                // a tag with attributes or named children
+
+                // extract metadata from special array keys
+                $name       = $props['@name'] ?? $name;
+                $attributes = $props['@attributes'] ?? [];
+                $value      = $props['@value'] ?? null;
+                if (isset($props['@namespaces'])) {
+                    foreach ($props['@namespaces'] as $key => $namespace) {
+                        $key = 'xmlns' . (($key)? ':' . $key : '');
+                        $attributes[$key] = $namespace;
+                    }
+                }
+
+                // continue with just the children
+                unset($props['@name'], $props['@attributes'], $props['@namespaces'], $props['@value']);
+
+                if (count($props) > 0) {
+                    // there are children, use them instead of the value
+
+                    $value = [];
+                    foreach ($props as $childName => $childItem) {
+                        // render the child, but don't include the indentation of the first line
+                        $value[] = trim(static::create($childItem, $childName, false, $indent, $level + 1));
+                    }
+                }
+
+                $result = static::tag($name, $value, $attributes, $indent, $level);
+            } else {
+                // just children
+
+                $result = [];
+                foreach ($props as $childItem) {
+                    $result[] = static::create($childItem, $name, false, $indent, $level);
+                }
+
+                $result = implode(PHP_EOL, $result);
+            }
+        } else {
+            // scalar value
+
+            $result = static::tag($name, $props, null, $indent, $level);
+        }
+
+        if ($head === true) {
+            return '<?xml version="1.0" encoding="UTF-8"?>' . PHP_EOL . $result;
+        } else {
+            return $result;
+        }
+    }
+
+    /**
+     * Removes all HTML/XML tags and encoded chars from a string
      *
-     * </code>
+     * ```
+     * echo Xml::decode('some &uuml;ber <em>crazy</em> stuff');
+     * // output: some über crazy stuff
+     * ```
      *
-     * @param string $string
+     * @param string|null $string
      * @return string
      */
-    public static function decode(string $string = null): string
+    public static function decode(?string $string): string
     {
-        return Html::decode($string);
+        if ($string === null) {
+            $string = '';
+        }
+
+        $string = strip_tags($string);
+        return html_entity_decode($string, ENT_COMPAT, 'utf-8');
     }
 
     /**
-     * Converts a string to a xml-safe string
-     * Converts it to html-safe first and then it
-     * will replace html entities to xml entities
+     * Converts a string to an XML-safe string
      *
-     * <code>
+     * Converts it to HTML-safe first and then it
+     * will replace HTML entities with XML entities
      *
-     * echo xml::encode('some über crazy stuff');
+     * ```php
+     * echo Xml::encode('some über crazy stuff');
      * // output: some &#252;ber crazy stuff
+     * ```
      *
-     * </code>
-     *
-     * @param string $string
-     * @param bool $html True: convert to html first
+     * @param string|null $string
+     * @param bool $html True = Convert to HTML-safe first
      * @return string
      */
-    public static function encode(string $string = null, bool $html = true): string
+    public static function encode(?string $string, bool $html = true): string
     {
+        if ($string === null) {
+            return '';
+        }
+
         if ($html === true) {
             $string = Html::encode($string, false);
         }
 
-        $entities = static::entities();
-        $searches = array_keys($entities);
-        $values   = array_values($entities);
+        $entities = self::entities();
+        $html = array_keys($entities);
+        $xml  = array_values($entities);
 
-        return str_replace($searches, $values, $string);
+        return str_replace($html, $xml, $string);
     }
 
     /**
-     * Returns the html to xml entities translation table
+     * Returns the HTML-to-XML entity translation table
      *
      * @return array
      */
     public static function entities(): array
     {
-        return static::$entities;
+        return self::$entities;
     }
 
     /**
-     * Parses a XML string and returns an array
+     * Parses an XML string and returns an array
      *
      * @param string $xml
-     * @return array|false
+     * @return array|null Parsed array or `null` on error
      */
-    public static function parse(string $xml = null)
+    public static function parse(string $xml): ?array
     {
-        $xml = preg_replace('/(<\/?)(\w+):([^>]*>)/', '$1$2$3', $xml);
-        $xml = @simplexml_load_string($xml, null, LIBXML_NOENT | LIBXML_NOCDATA);
+        $xml = @simplexml_load_string($xml, 'SimpleXMLElement', LIBXML_NOENT);
 
-        $xml = @json_encode($xml);
-        $xml = @json_decode($xml, true);
-        return is_array($xml) === true ? $xml : false;
+        if (is_object($xml) !== true) {
+            return null;
+        }
+
+        return static::simplify($xml);
+    }
+
+    /**
+     * Breaks a SimpleXMLElement down into a simpler tree
+     * structure of arrays and strings
+     *
+     * @param \SimpleXMLElement $element
+     * @param bool $collectName Whether the element name should be collected (for the root element)
+     * @return array|string
+     */
+    public static function simplify(SimpleXMLElement $element, bool $collectName = true)
+    {
+        // get all XML namespaces of the whole document to iterate over later;
+        // we don't need the global namespace (empty string) in the list
+        $usedNamespaces = $element->getNamespaces(true);
+        if (isset($usedNamespaces[''])) {
+            unset($usedNamespaces['']);
+        }
+
+        // now collect element metadata of the parent
+        $array = [];
+        if ($collectName === true) {
+            $array['@name'] = $element->getName();
+        }
+
+        // collect attributes with each defined document namespace;
+        // also check for attributes without any namespace
+        $attributeArray = [];
+        foreach (array_merge([0 => null], array_keys($usedNamespaces)) as $namespace) {
+            $prefix = ($namespace)? $namespace . ':' : '';
+            $attributes = $element->attributes($namespace, true);
+
+            foreach ($attributes as $key => $value) {
+                $attributeArray[$prefix . $key] = (string)$value;
+            }
+        }
+        if (count($attributeArray) > 0) {
+            $array['@attributes'] = $attributeArray;
+        }
+
+        // collect namespace definitions of this particular XML element
+        if ($namespaces = $element->getDocNamespaces(false, false)) {
+            $array['@namespaces'] = $namespaces;
+        }
+
+        // check for children with each defined document namespace;
+        // also check for children without any namespace
+        $hasChildren = false;
+        foreach (array_merge([0 => null], array_keys($usedNamespaces)) as $namespace) {
+            $prefix = ($namespace)? $namespace . ':' : '';
+            $children = $element->children($namespace, true);
+
+            if (count($children) > 0) {
+                // there are children, recursively simplify each one
+                $hasChildren = true;
+
+                // make a grouped collection of elements per element name
+                foreach ($children as $child) {
+                    $array[$prefix . $child->getName()][] = static::simplify($child, false);
+                }
+            }
+        }
+
+        if ($hasChildren === true) {
+            // there were children of any namespace
+
+            // reduce elements where there is only one item
+            // of the respective type to a simple string;
+            // don't do anything with special `@` metadata keys
+            foreach ($array as $name => $item) {
+                if (substr($name, 0, 1) !== '@' && count($item) === 1) {
+                    $array[$name] = $item[0];
+                }
+            }
+
+            return $array;
+        } else {
+            // we didn't find any XML children above, only use the string value
+            $element = (string)$element;
+
+            if (count($array) > 0) {
+                $array['@value'] = $element;
+
+                return $array;
+            } else {
+                return $element;
+            }
+        }
     }
 
     /**
      * Builds an XML tag
      *
-     * @param string $name
-     * @param mixed $content
-     * @param array $attr
-     * @param mixed $indent
-     * @return string
+     * @param string $name Tag name
+     * @param array|string|null $content Scalar value or array with multiple lines of content or `null` to
+     *                                   generate a self-closing tag; pass an empty string to generate empty content
+     * @param array $attr An associative array with additional attributes for the tag
+     * @param string|null $indent Indentation string, defaults to two spaces or `null` for output on one line
+     * @param int $level Indentation level
+     * @return string The generated XML
      */
-    public static function tag(string $name, $content = null, array $attr = null, $indent = null): string
+    public static function tag(string $name, $content = '', array $attr = null, ?string $indent = null, int $level = 0): string
     {
-        $attr  = Html::attr($attr);
-        $start = '<' . $name . ($attr ? ' ' . $attr : null) . '>';
-        $end   = '</' . $name . '>';
+        $attr       = static::attr($attr);
+        $start      = '<' . $name . ($attr ? ' ' . $attr : '') . '>';
+        $startShort = '<' . $name . ($attr ? ' ' . $attr : '') . static::$void;
+        $end        = '</' . $name . '>';
+        $baseIndent = $indent ? str_repeat($indent, $level) : '';
 
         if (is_array($content) === true) {
-            $xml = $indent . $start . PHP_EOL;
-            foreach ($content as $line) {
-                $xml .= $indent . $indent . $line . PHP_EOL;
+            if (is_string($indent) === true) {
+                $xml = $baseIndent . $start . PHP_EOL;
+                foreach ($content as $line) {
+                    $xml .= $baseIndent . $indent . $line . PHP_EOL;
+                }
+                $xml .= $baseIndent . $end;
+            } else {
+                $xml = $start . implode($content) . $end;
             }
-            $xml .= $indent . $end;
+        } elseif ($content === null) {
+            $xml = $baseIndent . $startShort;
         } else {
-            $xml = $indent . $start . static::value($content) . $end;
+            $xml = $baseIndent . $start . static::value($content) . $end;
         }
 
         return $xml;
     }
 
     /**
-     * Encodes the value as cdata if necessary
+     * Properly encodes tag contents
      *
      * @param mixed $value
-     * @return mixed
+     * @return string|null
      */
-    public static function value($value)
+    public static function value($value): ?string
     {
         if ($value === true) {
             return 'true';
@@ -224,23 +409,25 @@ class Xml
         }
 
         if (is_numeric($value) === true) {
-            return $value;
+            return (string)$value;
         }
 
         if ($value === null || $value === '') {
             return null;
         }
 
-        if (Str::contains($value, '<![CDATA[') === true) {
+        if (Str::startsWith($value, '<![CDATA[') === true) {
             return $value;
         }
 
         $encoded = htmlentities($value);
-
         if ($encoded === $value) {
+            // no CDATA block needed
             return $value;
         }
 
-        return '<![CDATA[' . static::encode($value) . ']]>';
+        // wrap everything in a CDATA block
+        // and ensure that it is not closed in the input string
+        return '<![CDATA[' . str_replace(']]>', ']]]]><![CDATA[>', $value) . ']]>';
     }
 }
