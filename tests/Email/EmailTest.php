@@ -2,6 +2,8 @@
 
 namespace Kirby\Email;
 
+use PHPMailer\PHPMailer\PHPMailer as Mailer;
+
 class EmailTest extends TestCase
 {
     protected function _email($props = [], $mailer = Email::class)
@@ -132,5 +134,64 @@ class EmailTest extends TestCase
         ]);
 
         $this->assertEquals($attachments, $email->attachments());
+    }
+
+    public function testCallback()
+    {
+        $phpunit = $this;
+
+        // valid
+        $mail = $this->_email([
+            'transport' => $transport = [
+                'type' => 'smtp',
+                'host' => 'mail.getkirby.com',
+                'port' => 465,
+                'security' => true,
+                'auth' => true,
+                'username' => 'test@test.com',
+                'password' => 'randomString',
+            ],
+            'callback' => $callback = function ($mailer) use ($phpunit) {
+                $phpunit->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $mailer);
+
+                $mailer->SMTPOptions = [
+                    'ssl' => [
+                        'verify_peer' => false,
+                        'verify_peer_name' => false,
+                        'allow_self_signed' => true
+                    ]
+                ];
+
+                return $mailer;
+            }
+        ], PHPMailer::class);
+
+        $this->assertSame($transport, $mail->transport());
+        $this->assertSame($mail->callback(), $callback);
+        $this->assertInstanceOf('Closure', $mail->callback());
+        $this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $mail->callback()(new Mailer()));
+
+        // invalid
+        $mail = $this->_email([
+            'transport' => [
+                'type' => 'smtp',
+                'host' => 'mail.getkirby.com',
+                'port' => 465,
+                'security' => true,
+                'auth' => true,
+                'username' => 'test@test.com',
+                'password' => 'randomString',
+            ],
+            'callback' => $callback = function ($mailer) {
+                return 'string';
+            }
+        ], PHPMailer::class);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('"callback" option return should be instance of PHPMailer\PHPMailer\PHPMailer');
+        $this->assertSame($mail->callback(), $callback);
+        $this->assertInstanceOf('Closure', $mail->callback());
+
+        $mail->send(true);
     }
 }

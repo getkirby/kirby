@@ -2,6 +2,7 @@
 
 namespace Kirby\Email;
 
+use Closure;
 use Exception;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\V;
@@ -23,6 +24,7 @@ class Email
     protected $attachments;
     protected $body;
     protected $bcc;
+    protected $callback;
     protected $cc;
     protected $from;
     protected $fromName;
@@ -58,6 +60,11 @@ class Email
     public function bcc(): array
     {
         return $this->bcc;
+    }
+
+    public function callback(): ?Closure
+    {
+        return $this->callback;
     }
 
     public function cc(): array
@@ -156,6 +163,12 @@ class Email
     protected function setBcc($bcc = null)
     {
         $this->bcc = $this->resolveEmail($bcc);
+        return $this;
+    }
+
+    protected function setCallback(Closure $callback = null)
+    {
+        $this->callback = $callback;
         return $this;
     }
 
