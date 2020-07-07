@@ -66,16 +66,16 @@ class PHPMailer extends Email
             $mailer->Password   = $this->transport()['password'] ?? null;
             $mailer->SMTPSecure = $this->transport()['security'] ?? 'ssl';
             $mailer->Port       = $this->transport()['port'] ?? null;
+        }
 
-            // accessible phpMailer instance
-            $phpMailer = $this->transport()['phpmailer'] ?? null;
+        // accessible phpMailer instance
+        $callback = $this->callback();
 
-            if (empty($phpMailer) === false && is_a($phpMailer, 'Closure')) {
-                $mailer = $phpMailer->call($this, $mailer);
+        if (empty($callback) === false && is_a($callback, 'Closure')) {
+            $mailer = $callback->call($this, $mailer);
 
-                if (empty($mailer) === true || is_a($mailer, 'PHPMailer\PHPMailer\PHPMailer') === false) {
-                    throw new InvalidArgumentException('SMTP transport "phpmailer" callback option return should be instance of PHPMailer\PHPMailer\PHPMailer');
-                }
+            if (empty($mailer) === true || is_a($mailer, 'PHPMailer\PHPMailer\PHPMailer') === false) {
+                throw new InvalidArgumentException('"callback" option return should be instance of PHPMailer\PHPMailer\PHPMailer');
             }
         }
 
