@@ -185,7 +185,7 @@ class Exif
      *
      * @return bool|null
      */
-    public function isBW(): bool
+    public function isBW(): ?bool
     {
         return ($this->isColor !== null) ? $this->isColor === false : null;
     }
