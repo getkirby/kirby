@@ -528,6 +528,48 @@ class PagesTest extends TestCase
         $this->assertCount(2, $result);
     }
 
+    public function testSearchWords()
+    {
+        $pages = Pages::factory([
+            [
+                'slug'    => 'mtb',
+                'content' => [
+                    'title' => 'Mountainbike'
+                ]
+            ],
+            [
+                'slug'    => 'mountain',
+                'content' => [
+                    'title' => 'Mountain'
+                ]
+            ],
+            [
+                'slug'    => 'everest-mountain',
+                'content' => [
+                    'title' => 'Everest Mountain'
+                ]
+            ],
+            [
+                'slug'    => 'mount',
+                'content' => [
+                    'title' => 'Mount'
+                ]
+            ],
+            [
+                'slug'    => 'lakes',
+                'content' => [
+                    'title' => 'Lakes'
+                ]
+            ]
+        ]);
+
+        $result = $pages->search('mountain', ['words' => true]);
+        $this->assertCount(2, $result);
+
+        $result = $pages->search('mount', ['words' => false]);
+        $this->assertCount(4, $result);
+    }
+
     public function testCustomMethods()
     {
         Pages::$methods = [

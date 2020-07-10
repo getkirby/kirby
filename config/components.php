@@ -165,20 +165,21 @@ return [
 
         $options     = array_merge($defaults, $params);
         $collection  = clone $collection;
-        $searchwords = preg_replace('/(\s)/u', ',', $query);
-        $searchwords = Str::split($searchwords, ',', $options['minlength']);
-        $lowerQuery  = mb_strtolower($query);
+        $searchWords = preg_replace('/(\s)/u', ',', $query);
+        $searchWords = Str::split($searchWords, ',', $options['minlength']);
+        $lowerQuery  = Str::lower($query);
+        $exactQuery  = $options['words'] ? '(\b' . preg_quote($query) . '\b)' : preg_quote($query);
 
         if (empty($options['stopwords']) === false) {
-            $searchwords = array_diff($searchwords, $options['stopwords']);
+            $searchWords = array_diff($searchWords, $options['stopwords']);
         }
 
-        $searchwords = array_map(function ($value) use ($options) {
+        $searchWords = array_map(function ($value) use ($options) {
             return $options['words'] ? '\b' . preg_quote($value) . '\b' : preg_quote($value);
-        }, $searchwords);
+        }, $searchWords);
 
-        $preg    = '!(' . implode('|', $searchwords) . ')!i';
-        $results = $collection->filter(function ($item) use ($query, $preg, $options, $lowerQuery) {
+        $preg    = '!(' . implode('|', $searchWords) . ')!i';
+        $results = $collection->filter(function ($item) use ($query, $preg, $options, $lowerQuery, $exactQuery) {
             $data = $item->content()->toArray();
             $keys = array_keys($data);
             $keys[] = 'id';
@@ -207,7 +208,7 @@ return [
                 $score = $options['score'][$key] ?? 1;
                 $value = $data[$key] ?? (string)$item->$key();
 
-                $lowerValue = mb_strtolower($value);
+                $lowerValue = Str::lower($value);
 
                 // check for exact matches
                 if ($lowerQuery == $lowerValue) {
@@ -215,12 +216,12 @@ return [
                     $item->searchHits  += 1;
 
                 // check for exact beginning matches
-                } elseif (Str::startsWith($lowerValue, $lowerQuery) === true) {
+                } elseif ($options['words'] === false && Str::startsWith($lowerValue, $lowerQuery) === true) {
                     $item->searchScore += 8 * $score;
                     $item->searchHits  += 1;
 
                 // check for exact query matches
-                } elseif ($matches = preg_match_all('!' . preg_quote($query) . '!i', $value, $r)) {
+                } elseif ($matches = preg_match_all('!' . $exactQuery . '!i', $value, $r)) {
                     $item->searchScore += 2 * $score;
                     $item->searchHits  += $matches;
                 }
