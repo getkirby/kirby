@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
 use Kirby\Toolkit\F;
 
 class LanguageRoutes
@@ -95,7 +96,13 @@ class LanguageRoutes
                     }
                 }
 
-                return $kirby->defaultLanguage()->router()->call($path);
+                // try the current language first
+                // use the default language if it fails
+                try {
+                    return $kirby->language()->router()->call($path);
+                } catch (Exception $e) {
+                    return $kirby->defaultLanguage()->router()->call($path);
+                }
             }
         ];
     }
