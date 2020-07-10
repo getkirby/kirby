@@ -455,17 +455,18 @@ return function (App $app) {
          *
          * @param \Kirby\Cms\Field $field
          * @param array $data
+         * @param string $fallback Fallback for tokens in the template that cannot be replaced
          * @return \Kirby\Cms\Field
          */
-        'replace' => function (Field $field, array $data = []) use ($app) {
+        'replace' => function (Field $field, array $data = [], string $fallback = '') use ($app) {
             if ($parent = $field->parent()) {
-                $field->value = $field->parent()->toString($field->value, $data);
+                $field->value = $field->parent()->toString($field->value, $data, $fallback);
             } else {
                 $field->value = Str::template($field->value, array_replace([
                     'kirby' => $app,
                     'site'  => $app->site(),
                     'page'  => $app->page()
-                ], $data));
+                ], $data), $fallback);
             }
 
             return $field;

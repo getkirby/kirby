@@ -3,6 +3,7 @@
 namespace Kirby\Data;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 
 /**
@@ -26,7 +27,7 @@ class Txt extends Handler
     {
         $result = [];
 
-        foreach ((array)$data as $key => $value) {
+        foreach (A::wrap($data) as $key => $value) {
             if (empty($key) === true || $value === null) {
                 continue;
             }
@@ -87,7 +88,7 @@ class Txt extends Handler
     /**
      * Parses a Kirby txt string and returns a multi-dimensional array
      *
-     * @param string $string
+     * @param mixed $string
      * @return array
      */
     public static function decode($string): array
@@ -101,7 +102,7 @@ class Txt extends Handler
         }
 
         if (is_string($string) === false) {
-            throw new InvalidArgumentException('Invalid data. Please pass a string');
+            throw new InvalidArgumentException('Invalid TXT data; please pass a string');
         }
 
         // remove BOM

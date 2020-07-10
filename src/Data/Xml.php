@@ -30,24 +30,24 @@ class Xml extends Handler
     /**
      * Parses an encoded XML string and returns a multi-dimensional array
      *
-     * @param string $xml
+     * @param mixed $string
      * @return array
      */
-    public static function decode($xml): array
+    public static function decode($string): array
     {
-        if ($xml === null) {
+        if ($string === null) {
             return [];
         }
 
-        if (is_array($xml) === true) {
-            return $xml;
+        if (is_array($string) === true) {
+            return $string;
         }
 
-        if (is_string($xml) === false) {
-            throw new InvalidArgumentException('Invalid XML data. Please pass a string');
+        if (is_string($string) === false) {
+            throw new InvalidArgumentException('Invalid XML data; please pass a string');
         }
 
-        $result = XmlConverter::parse($xml);
+        $result = XmlConverter::parse($string);
 
         if (is_array($result) === true) {
             // remove the root's name if it is the default <data> to ensure that

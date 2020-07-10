@@ -309,7 +309,7 @@
   "page.duplicate.pages": "페이지 복사",
   "page.status": "상태",
   "page.status.draft": "초안",
-  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
+  "page.status.draft.description": "로그인한 사용자나 URL을 통해서만 읽을 수 있습니다.",
   "page.status.listed": "공개",
   "page.status.listed.description": "누구나 읽을 수 있습니다.",
   "page.status.unlisted": "비공개",
@@ -331,7 +331,7 @@
   "replace": "\uad50\uccb4",
   "retry": "\ub2e4\uc2dc \uc2dc\ub3c4",
   "revert": "복원",
-  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
+  "revert.confirm": "<strong>저장되지 않은 내용</strong>을 삭제할까요?",
 
   "role": "역할",
   "role.admin.description": "관리자는 모든 권한이 있습니다.",

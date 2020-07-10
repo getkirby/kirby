@@ -43,7 +43,7 @@ export default {
           });
 
           if (this.$route.name === "User") {
-            this.$router.push("/users");
+            this.$go("/users");
           }
         })
         .catch(error => {

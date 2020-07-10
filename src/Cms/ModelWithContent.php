@@ -334,6 +334,11 @@ abstract class ModelWithContent extends Model
         }
 
         if (is_string($settings) === true) {
+            // use defined icon in blueprint
+            if ($settings === 'icon') {
+                return [];
+            }
+
             $settings = [
                 'query' => $settings
             ];
@@ -448,11 +453,15 @@ abstract class ModelWithContent extends Model
             return null;
         }
 
-        $result = Str::query($query, [
-            'kirby'             => $this->kirby(),
-            'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
-            static::CLASS_ALIAS => $this
-        ]);
+        try {
+            $result = Str::query($query, [
+                'kirby'             => $this->kirby(),
+                'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
+                static::CLASS_ALIAS => $this
+            ]);
+        } catch (Throwable $e) {
+            return null;
+        }
 
         if ($expect !== null && is_a($result, $expect) !== true) {
             return null;
@@ -612,9 +621,10 @@ abstract class ModelWithContent extends Model
      *
      * @param string|null $template
      * @param array $data
+     * @param string $fallback Fallback for tokens in the template that cannot be replaced
      * @return string
      */
-    public function toString(string $template = null, array $data = []): string
+    public function toString(string $template = null, array $data = [], string $fallback = ''): string
     {
         if ($template === null) {
             return $this->id();
@@ -624,7 +634,7 @@ abstract class ModelWithContent extends Model
             'kirby'             => $this->kirby(),
             'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this
-        ], $data));
+        ], $data), $fallback);
 
         return $result;
     }

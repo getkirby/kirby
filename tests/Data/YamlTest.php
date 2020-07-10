@@ -31,15 +31,27 @@ class YamlTest extends TestCase
 
         $this->assertSame([], Yaml::decode(null));
         $this->assertSame(['this is' => 'an array'], Yaml::decode(['this is' => 'an array']));
+    }
 
+    /**
+     * @covers ::decode
+     */
+    public function testDecodeInvalid1()
+    {
         // pass invalid object
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid YAML data. Please pass a string');
+        $this->expectExceptionMessage('Invalid YAML data; please pass a string');
         Yaml::decode(new \stdClass());
+    }
 
+    /**
+     * @covers ::decode
+     */
+    public function testDecodeInvalid2()
+    {
         // pass invalid int
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid YAML data. Please pass a string');
+        $this->expectExceptionMessage('Invalid YAML data; please pass a string');
         Yaml::decode(1);
     }
 

@@ -309,7 +309,7 @@
   "page.duplicate.pages": "Kopiera sidor",
   "page.status": "Status",
   "page.status.draft": "Utkast",
-  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
+  "page.status.draft.description": "Sidan är ett utkast och endast synlig för inloggade redaktörer eller via en hemlig länk",
   "page.status.listed": "Publik",
   "page.status.listed.description": "Sidan är publik för vem som helst",
   "page.status.unlisted": "Olistad",
@@ -331,7 +331,7 @@
   "replace": "Ersätt",
   "retry": "F\u00f6rs\u00f6k igen",
   "revert": "Återgå",
-  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
+  "revert.confirm": "Vill du verkligen <strong>radera alla osparade ändringar</strong>?",
 
   "role": "Roll",
   "role.admin.description": "Administratören har alla behörigheter",

@@ -181,7 +181,7 @@ export default {
     action(user, action) {
       switch (action) {
         case "edit":
-          this.$router.push("/users/" + user.id);
+          this.$go("/users/" + user.id);
           break;
         case "email":
           this.$refs.email.open(user.id);
@@ -205,9 +205,9 @@ export default {
     },
     filter(role) {
       if (role === false) {
-        this.$router.push("/users");
+        this.$go("/users");
       } else {
-        this.$router.push("/users/role/" + role.value);
+        this.$go("/users/role/" + role.value);
       }
 
       this.$refs.roles.close();
