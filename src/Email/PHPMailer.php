@@ -69,13 +69,13 @@ class PHPMailer extends Email
         }
 
         // accessible phpMailer instance
-        $callback = $this->callback();
+        $beforeSend = $this->beforeSend();
 
-        if (empty($callback) === false && is_a($callback, 'Closure')) {
-            $mailer = $callback->call($this, $mailer);
+        if (empty($beforeSend) === false && is_a($beforeSend, 'Closure') === true) {
+            $mailer = $beforeSend->call($this, $mailer) ?? $mailer;
 
-            if (empty($mailer) === true || is_a($mailer, 'PHPMailer\PHPMailer\PHPMailer') === false) {
-                throw new InvalidArgumentException('"callback" option return should be instance of PHPMailer\PHPMailer\PHPMailer');
+            if (is_a($mailer, 'PHPMailer\PHPMailer\PHPMailer') === false) {
+                throw new InvalidArgumentException('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
             }
         }
 

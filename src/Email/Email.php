@@ -24,7 +24,7 @@ class Email
     protected $attachments;
     protected $body;
     protected $bcc;
-    protected $callback;
+    protected $beforeSend;
     protected $cc;
     protected $from;
     protected $fromName;
@@ -62,9 +62,9 @@ class Email
         return $this->bcc;
     }
 
-    public function callback(): ?Closure
+    public function beforeSend(): ?Closure
     {
-        return $this->callback;
+        return $this->beforeSend;
     }
 
     public function cc(): array
@@ -166,9 +166,9 @@ class Email
         return $this;
     }
 
-    protected function setCallback(Closure $callback = null)
+    protected function setBeforeSend(?Closure $beforeSend = null)
     {
-        $this->callback = $callback;
+        $this->beforeSend = $beforeSend;
         return $this;
     }
 

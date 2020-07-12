@@ -136,61 +136,84 @@ class EmailTest extends TestCase
         $this->assertEquals($attachments, $email->attachments());
     }
 
-    public function testCallback()
+    public function testBeforeSend()
     {
         $phpunit = $this;
+        $smtpOptions = [
+            'ssl' => [
+                'verify_peer'       => false,
+                'verify_peer_name'  => false,
+                'allow_self_signed' => true
+            ]
+        ];
+        $transport = [
+            'type'     => 'smtp',
+            'host'     => 'mail.getkirby.com',
+            'port'     => 465,
+            'security' => true,
+            'auth'     => true,
+            'username' => 'test@test.com',
+            'password' => 'randomString',
+        ];
 
-        // valid
+        // valid with return $mailer instance
         $mail = $this->_email([
-            'transport' => $transport = [
-                'type' => 'smtp',
-                'host' => 'mail.getkirby.com',
-                'port' => 465,
-                'security' => true,
-                'auth' => true,
-                'username' => 'test@test.com',
-                'password' => 'randomString',
-            ],
-            'callback' => $callback = function ($mailer) use ($phpunit) {
+            'transport'  => $transport,
+            'beforeSend' => $beforeSend = function ($mailer) use ($phpunit, $smtpOptions) {
                 $phpunit->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $mailer);
 
-                $mailer->SMTPOptions = [
-                    'ssl' => [
-                        'verify_peer' => false,
-                        'verify_peer_name' => false,
-                        'allow_self_signed' => true
-                    ]
-                ];
+                $mailer->SMTPOptions = $smtpOptions;
 
                 return $mailer;
             }
         ], PHPMailer::class);
 
+        $mailer = new Mailer();
+
         $this->assertSame($transport, $mail->transport());
-        $this->assertSame($mail->callback(), $callback);
-        $this->assertInstanceOf('Closure', $mail->callback());
-        $this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $mail->callback()(new Mailer()));
+        $this->assertSame($mail->beforeSend(), $beforeSend);
+        $this->assertInstanceOf('Closure', $mail->beforeSend());
+
+        $newMailer = $mail->beforeSend()->call($this, $mailer);
+        $this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $mailer);
+        $this->assertSame($newMailer, $mailer);
+        $this->assertSame($smtpOptions, $mailer->SMTPOptions);
+        $this->assertTrue($mail->send(true));
+
+        // valid without return $mailer instance
+        $mail = $this->_email([
+            'transport'  => $transport,
+            'beforeSend' => $beforeSend = function ($mailer) use ($phpunit, $smtpOptions) {
+                $phpunit->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $mailer);
+
+                $mailer->SMTPOptions = $smtpOptions;
+            }
+        ], PHPMailer::class);
+
+        $mailer = new Mailer();
+
+        $this->assertSame($transport, $mail->transport());
+        $this->assertSame($mail->beforeSend(), $beforeSend);
+        $this->assertInstanceOf('Closure', $mail->beforeSend());
+
+        $newMailer = $mail->beforeSend()->call($this, $mailer);
+        $this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $mailer);
+        $this->assertNull($newMailer);
+        $this->assertSame($smtpOptions, $mailer->SMTPOptions);
+        $this->assertTrue($mail->send(true));
 
         // invalid
         $mail = $this->_email([
-            'transport' => [
-                'type' => 'smtp',
-                'host' => 'mail.getkirby.com',
-                'port' => 465,
-                'security' => true,
-                'auth' => true,
-                'username' => 'test@test.com',
-                'password' => 'randomString',
-            ],
-            'callback' => $callback = function ($mailer) {
+            'transport'  => $transport,
+            'beforeSend' => $beforeSend = function ($mailer) {
                 return 'string';
             }
         ], PHPMailer::class);
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('"callback" option return should be instance of PHPMailer\PHPMailer\PHPMailer');
-        $this->assertSame($mail->callback(), $callback);
-        $this->assertInstanceOf('Closure', $mail->callback());
+        $this->expectExceptionMessage('"beforeSend" option return should be instance of PHPMailer\PHPMailer\PHPMailer class');
+        $this->assertSame($mail->beforeSend(), $beforeSend);
+        $this->assertInstanceOf('Closure', $mail->beforeSend());
 
         $mail->send(true);
     }
