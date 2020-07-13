@@ -96,13 +96,7 @@ class LanguageRoutes
                     }
                 }
 
-                // try the current language first
-                // use the default language if it fails
-                try {
-                    return $kirby->language()->router()->call($path);
-                } catch (Exception $e) {
-                    return $kirby->defaultLanguage()->router()->call($path);
-                }
+                return $kirby->language()->router()->call($path);
             }
         ];
     }
