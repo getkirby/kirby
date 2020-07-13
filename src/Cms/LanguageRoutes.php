@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Exception\Exception;
 use Kirby\Toolkit\F;
 
 class LanguageRoutes
