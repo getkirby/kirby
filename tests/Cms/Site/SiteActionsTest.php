@@ -92,4 +92,59 @@ class SiteActionsTest extends TestCase
 
         $this->assertEquals(2018, $site->copyright()->value());
     }
+
+    public function testChangeTitleHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'site.changeTitle:before' => function (Site $site, $title, $languageCode) use ($phpunit, &$calls) {
+                    $phpunit->assertNull($site->title()->value());
+                    $phpunit->assertSame('New Title', $title);
+                    $phpunit->assertNull($languageCode);
+                    $calls++;
+                },
+                'site.changeTitle:after' => function (Site $newSite, Site $oldSite) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('New Title', $newSite->title()->value());
+                    $phpunit->assertNull($oldSite->title()->value());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $app->site()->changeTitle('New Title');
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testUpdateHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+        $input = [
+            'copyright' => 'Kirby'
+        ];
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'site.update:before' => function (Site $site, $values, $strings) use ($phpunit, $input, &$calls) {
+                    $phpunit->assertNull($site->copyright()->value());
+                    $phpunit->assertSame($input, $values);
+                    $phpunit->assertSame($input, $strings);
+                    $calls++;
+                },
+                'site.update:after' => function (Site $newSite, Site $oldSite) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('Kirby', $newSite->copyright()->value());
+                    $phpunit->assertNull($oldSite->copyright()->value());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $app->site()->update($input);
+
+        $this->assertSame(2, $calls);
+    }
 }
