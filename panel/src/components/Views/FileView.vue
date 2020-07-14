@@ -208,13 +208,13 @@ export default {
     },
     deleted() {
       if (this.path) {
-        this.$router.push('/' + this.path);
+        this.$go('/' + this.path);
       } else {
-        this.$router.push('/site');
+        this.$go('/site');
       }
     },
     renamed(file) {
-      this.$router.push(this.$api.files.link(this.path, file.filename));
+      this.$go(this.$api.files.link(this.path, file.filename));
     },
     uploaded() {
       this.fetch();

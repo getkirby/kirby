@@ -39,15 +39,39 @@ class XmlTest extends TestCase
         $result = Xml::decode($expected);
         $this->assertSame($array, $result);
 
+        $this->assertSame([], Xml::decode(null));
+        $this->assertSame(['this is' => 'an array'], Xml::decode(['this is' => 'an array']));
+    }
+
+    /**
+     * @covers ::decode
+     */
+    public function testDecodeInvalid1()
+    {
         // pass invalid object
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid XML data. Please pass a string');
+        $this->expectExceptionMessage('Invalid XML data; please pass a string');
         Xml::decode(new \stdClass());
+    }
 
+    /**
+     * @covers ::decode
+     */
+    public function testDecodeInvalid2()
+    {
         // pass invalid int
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid XML data. Please pass a string');
+        $this->expectExceptionMessage('Invalid XML data; please pass a string');
         Xml::decode(1);
+    }
+
+    /**
+     * @covers ::encode
+     */
+    public function testEncodeScalar()
+    {
+        $expected = '<?xml version="1.0" encoding="UTF-8"?>' . "\n" . '<data>test</data>';
+        $this->assertSame($expected, Xml::encode('test'));
     }
 
     /**

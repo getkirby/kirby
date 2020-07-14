@@ -194,11 +194,15 @@ class Xml
      * // output: some über crazy stuff
      * ```
      *
-     * @param string $string
+     * @param string|null $string
      * @return string
      */
-    public static function decode(string $string): string
+    public static function decode(?string $string): string
     {
+        if ($string === null) {
+            $string = '';
+        }
+
         $string = strip_tags($string);
         return html_entity_decode($string, ENT_COMPAT, 'utf-8');
     }
@@ -214,12 +218,16 @@ class Xml
      * // output: some &#252;ber crazy stuff
      * ```
      *
-     * @param string $string
+     * @param string|null $string
      * @param bool $html True = Convert to HTML-safe first
      * @return string
      */
-    public static function encode(string $string, bool $html = true): string
+    public static function encode(?string $string, bool $html = true): string
     {
+        if ($string === null) {
+            return '';
+        }
+
         if ($html === true) {
             $string = Html::encode($string, false);
         }

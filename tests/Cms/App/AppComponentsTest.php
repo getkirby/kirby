@@ -18,6 +18,20 @@ class AppComponentsTest extends TestCase
         ]);
     }
 
+    public function testCssPlugin()
+    {
+        $this->kirby->clone([
+            'components' => [
+                'css' => function ($kirby, $url, $options) {
+                    return '/test.css';
+                }
+            ]
+        ]);
+
+        $expected = '<link href="/test.css" rel="stylesheet">';
+        $this->assertEquals($expected, css('something.css'));
+    }
+
     public function testDump()
     {
         $kirby = $this->kirby->clone([
@@ -29,6 +43,20 @@ class AppComponentsTest extends TestCase
         ]);
 
         $this->assertEquals('test', dump('test'));
+    }
+
+    public function testJsPlugin()
+    {
+        $this->kirby->clone([
+            'components' => [
+                'js' => function ($kirby, $url, $options) {
+                    return '/test.js';
+                }
+            ]
+        ]);
+
+        $expected = '<script src="/test.js"></script>';
+        $this->assertEquals($expected, js('something.js'));
     }
 
     public function testMarkdown()
@@ -205,34 +233,6 @@ class AppComponentsTest extends TestCase
         $this->assertInstanceOf(Template::class, $this->kirby->template('default'));
     }
 
-    public function testCssPlugin()
-    {
-        $this->kirby->clone([
-            'components' => [
-                'css' => function ($kirby, $url, $options) {
-                    return '/test.css';
-                }
-            ]
-        ]);
-
-        $expected = '<link href="/test.css" rel="stylesheet">';
-        $this->assertEquals($expected, css('something.css'));
-    }
-
-    public function testJsPlugin()
-    {
-        $this->kirby->clone([
-            'components' => [
-                'js' => function ($kirby, $url, $options) {
-                    return '/test.js';
-                }
-            ]
-        ]);
-
-        $expected = '<script src="/test.js"></script>';
-        $this->assertEquals($expected, js('something.js'));
-    }
-
     public function testUrlPlugin()
     {
         $this->kirby->clone([
@@ -244,5 +244,41 @@ class AppComponentsTest extends TestCase
         ]);
 
         $this->assertEquals('test', url('anything'));
+    }
+
+    public function testUrlPluginWithOriginalHandler()
+    {
+        $this->kirby->clone([
+            'components' => [
+                'url' => function ($kirby, $path, $options, $originalHandler) {
+                    if ($path === 'test') {
+                        return 'test-path';
+                    }
+
+                    return $originalHandler($path);
+                }
+            ]
+        ]);
+
+        $this->assertEquals('test-path', url('test'));
+        $this->assertEquals('/any/page', url('any/page'));
+    }
+
+    public function testUrlPluginWithNativeComponent()
+    {
+        $this->kirby->clone([
+            'components' => [
+                'url' => function ($kirby, $path, $options) {
+                    if ($path === 'test') {
+                        return 'test-path';
+                    }
+
+                    return $kirby->nativeComponent('url')($kirby, $path, $options);
+                }
+            ]
+        ]);
+
+        $this->assertEquals('test-path', url('test'));
+        $this->assertEquals('/any/page', url('any/page'));
     }
 }
