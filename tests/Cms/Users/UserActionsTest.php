@@ -280,4 +280,222 @@ class UserActionsTest extends TestCase
         $this->assertEquals($url, $app->user()->website()->value());
         $user->logout();
     }
+
+    public function testChangeEmailHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'user.changeEmail:before' => function (User $user, $email) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('editor@domain.com', $user->email());
+                    $phpunit->assertSame('another@domain.com', $email);
+                    $calls++;
+                },
+                'user.changeEmail:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('another@domain.com', $newUser->email());
+                    $phpunit->assertSame('editor@domain.com', $oldUser->email());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $user = $app->user('editor@domain.com');
+        $user->changeEmail('another@domain.com');
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testChangeLanguageHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'user.changeLanguage:before' => function (User $user, $language) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('en', $user->language());
+                    $phpunit->assertSame('de', $language);
+                    $calls++;
+                },
+                'user.changeLanguage:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('de', $newUser->language());
+                    $phpunit->assertSame('en', $oldUser->language());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $user = $app->user('editor@domain.com');
+        $user->changeLanguage('de');
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testChangeNameHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'user.changeName:before' => function (User $user, $name) use ($phpunit, &$calls) {
+                    $phpunit->assertNull($user->name()->value());
+                    $phpunit->assertSame('Edith Thor', $name);
+                    $calls++;
+                },
+                'user.changeName:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('Edith Thor', $newUser->name()->value());
+                    $phpunit->assertNull($oldUser->name()->value());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $user = $app->user('editor@domain.com');
+        $user->changeName('Edith Thor');
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testChangePasswordHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'user.changePassword:before' => function (User $user, $password) use ($phpunit, &$calls) {
+                    $phpunit->assertEmpty($user->password());
+                    $phpunit->assertSame('topsecret2018', $password);
+                    $calls++;
+                },
+                'user.changePassword:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
+                    $phpunit->assertTrue($newUser->validatePassword('topsecret2018'));
+                    $phpunit->assertEmpty($oldUser->password());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $user = $app->user('editor@domain.com');
+        $user->changePassword('topsecret2018');
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testChangeRoleHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'user.changeRole:before' => function (User $user, $role) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('editor', $user->role()->name());
+                    $phpunit->assertSame('admin', $role);
+                    $calls++;
+                },
+                'user.changeRole:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('admin', $newUser->role()->name());
+                    $phpunit->assertSame('editor', $oldUser->role()->name());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $user = $app->user('editor@domain.com');
+        $user->changeRole('admin');
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testCreateHooks()
+    {
+        $calls = 0;
+        $phpunit= $this;
+        $userInput = [
+            'email' => 'new@domain.com',
+            'role'  => 'admin',
+            'model' => 'admin',
+        ];
+
+        $this->app->clone([
+            'hooks' => [
+                'user.create:before' => function (User $user, $input) use ($phpunit, $userInput, &$calls) {
+                    $phpunit->assertSame('new@domain.com', $user->email());
+                    $phpunit->assertSame('admin', $user->role()->name());
+                    $phpunit->assertSame($userInput, $input);
+                    $calls++;
+                },
+                'user.create:after' => function (User $user) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('new@domain.com', $user->email());
+                    $phpunit->assertSame('admin', $user->role()->name());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        User::create($userInput);
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testDeleteHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'user.delete:before' => function (User $user) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('editor@domain.com', $user->email());
+                    $phpunit->assertSame('editor', $user->role()->name());
+                    $calls++;
+                },
+                'user.delete:after' => function ($status, User $user) use ($phpunit, &$calls) {
+                    $phpunit->assertTrue($status);
+                    $phpunit->assertSame('editor@domain.com', $user->email());
+                    $phpunit->assertSame('editor', $user->role()->name());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $user = $app->user('editor@domain.com');
+        $user->delete();
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testUpdateHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+        $input = [
+            'website' => 'https://getkirby.com'
+        ];
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'user.update:before' => function (User $user, $values, $strings) use ($phpunit, $input, &$calls) {
+                    $phpunit->assertNull($user->website()->value());
+                    $phpunit->assertSame($input, $values);
+                    $phpunit->assertSame($input, $strings);
+                    $calls++;
+                },
+                'user.update:after' => function (User $newUser, User $oldUser) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('https://getkirby.com', $newUser->website()->value());
+                    $phpunit->assertNull($oldUser->website()->value());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $user = $app->user('editor@domain.com');
+        $user->update($input);
+
+        $this->assertSame(2, $calls);
+    }
 }
