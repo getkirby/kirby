@@ -405,4 +405,45 @@ class PageRulesTest extends TestCase
 
         PageRules::duplicate($page, 'something');
     }
+
+    public function testSlugMaxlength()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'user' => 'test@getkirby.com',
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'role'  => 'admin'
+                ]
+            ],
+            'options' => [
+                'content.slug.maxlength' => 10
+            ]
+        ]);
+
+        // valid
+        $page = new Page([
+            'slug'  => 'a-ten-slug',
+            'kirby' => $app
+        ]);
+
+        PageRules::create($page);
+
+        $this->assertSame('a-ten-slug', $page->slug());
+        $this->assertSame(10, strlen($page->slug()));
+
+        // invalid
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionCode('error.page.slug.maxlength');
+
+        $page = new Page([
+            'slug'  => 'very-very-long-slug',
+            'kirby' => $app
+        ]);
+
+        PageRules::create($page);
+    }
 }
