@@ -39,6 +39,8 @@ class PageRules
             ]);
         }
 
+        self::slugMaxlength($page, $slug);
+
         $siblings = $page->parentModel()->children();
         $drafts   = $page->parentModel()->drafts();
 
@@ -211,6 +213,8 @@ class PageRules
             ]);
         }
 
+        self::slugMaxlength($page);
+
         if ($page->exists() === true) {
             throw new DuplicateException([
                 'key'  => 'page.draft.duplicate',
@@ -293,6 +297,25 @@ class PageRules
             ]);
         }
 
+        self::slugMaxlength($page);
+
         return true;
+    }
+
+    protected static function slugMaxlength(Page $page, string $slug = null): void
+    {
+        if ($slugMaxlength = option('content.slug.maxlength')) {
+            $slug      = $slug ?? $page->slug();
+            $maxlength = (int)$slugMaxlength;
+
+            if (Str::length($slug) > $maxlength) {
+                throw new InvalidArgumentException([
+                    'key' => 'page.slug.maxlength',
+                    'data' => [
+                        'length' => $maxlength
+                    ]
+                ]);
+            }
+        }
     }
 }
