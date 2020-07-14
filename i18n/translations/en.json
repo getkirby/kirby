@@ -102,6 +102,7 @@
   "error.page.notFound": "The page \"{slug}\" cannot be found",
   "error.page.num.invalid": "Please enter a valid sorting number. Numbers must not be negative.",
   "error.page.slug.invalid": "Please enter a valid URL prefix",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "The page \"{slug}\" cannot be sorted",
   "error.page.status.invalid": "Please set a valid page status",
   "error.page.undefined": "The page cannot be found",
