@@ -329,7 +329,7 @@ trait PageActions
         if ($action === 'create') {
             $argumentsAfter = ['page' => $result];
         } elseif ($action === 'duplicate') {
-            $argumentsAfter = ['duplicatePage' => $result];
+            $argumentsAfter = ['duplicatePage' => $result, 'originalPage' => $old];
         } elseif ($action === 'delete') {
             $argumentsAfter = ['status' => $result, 'page' => $old];
         } else {
