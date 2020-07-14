@@ -95,7 +95,7 @@ class LanguageRoutes
                     }
                 }
 
-                return $kirby->defaultLanguage()->router()->call($path);
+                return $kirby->language()->router()->call($path);
             }
         ];
     }
