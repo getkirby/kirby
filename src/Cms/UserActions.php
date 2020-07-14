@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Http\Idn;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -29,7 +30,7 @@ trait UserActions
      */
     public function changeEmail(string $email)
     {
-        return $this->commit('changeEmail', ['user' => $this, 'email' => $email], function ($user, $email) {
+        return $this->commit('changeEmail', ['user' => $this, 'email' => Idn::decodeEmail($email)], function ($user, $email) {
             $user = $user->clone([
                 'email' => $email
             ]);
@@ -175,6 +176,10 @@ trait UserActions
     public static function create(array $props = null)
     {
         $data = $props;
+
+        if (isset($props['email']) === true) {
+            $data['email'] = Idn::decodeEmail($props['email']);
+        }
 
         if (isset($props['password']) === true) {
             $data['password'] = User::hashPassword($props['password']);

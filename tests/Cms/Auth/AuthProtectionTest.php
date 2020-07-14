@@ -27,6 +27,10 @@ class AuthProtectionTest extends TestCase
                 [
                     'email'    => 'homer@simpsons.com',
                     'password' => password_hash('springfield123', PASSWORD_DEFAULT)
+                ],
+                [
+                    'email'    => 'test@exämple.com',
+                    'password' => password_hash('springfield123', PASSWORD_DEFAULT)
                 ]
             ]
         ]);
@@ -290,5 +294,33 @@ class AuthProtectionTest extends TestCase
 
         $this->app->visitor()->ip('10.2.123.234');
         $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+    }
+
+    /**
+     * @covers ::validatePassword
+     */
+    public function testValidatePasswordWithUnicodeEmail()
+    {
+        copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+
+        $this->app->visitor()->ip('10.3.123.234');
+        $user = $this->auth->validatePassword('test@exämple.com', 'springfield123');
+
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertSame('test@exämple.com', $user->email());
+    }
+
+    /**
+     * @covers ::validatePassword
+     */
+    public function testValidatePasswordWithPunycodeEmail()
+    {
+        copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
+
+        $this->app->visitor()->ip('10.3.123.234');
+        $user = $this->auth->validatePassword('test@xn--exmple-cua.com', 'springfield123');
+
+        $this->assertInstanceOf(User::class, $user);
+        $this->assertSame('test@exämple.com', $user->email());
     }
 }

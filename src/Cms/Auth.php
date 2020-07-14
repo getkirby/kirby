@@ -6,6 +6,7 @@ use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
+use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Toolkit\F;
 use Throwable;
@@ -256,6 +257,9 @@ class Auth
      */
     public function validatePassword(string $email, string $password)
     {
+        // ensure that email addresses with IDN domains are in Unicode format
+        $email = Idn::decodeEmail($email);
+
         // check for blocked ips
         if ($this->isBlocked($email) === true) {
             if ($this->kirby->option('debug') === true) {
