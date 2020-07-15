@@ -945,8 +945,8 @@ class App
                 $this->site = null;
             }
 
-            if (isset($options['slugs']) === true) {
-                if (is_string($options['slugs']) === true || isset($options['slugs']['language']) === true) {
+            if ($slugsOption = $this->option('slugs', $this->option('slugs.language'))) {
+                if (is_string($slugsOption) === true || isset($slugsOption['language']) === true) {
                     $this->i18n();
                 }
             }
