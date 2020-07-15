@@ -376,7 +376,7 @@ class Request
     /**
      * Returns the Query object
      *
-     * @return \Kirby\Http\Query
+     * @return \Kirby\Http\Request\Query
      */
     public function query()
     {
