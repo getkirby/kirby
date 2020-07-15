@@ -286,7 +286,7 @@ class Field extends Component
 
         $array['errors']    = $this->errors();
         $array['invalid']   = $this->isInvalid();
-        $array['save']      = $this->save();
+        $array['saveable']  = $this->save();
         $array['signature'] = md5(json_encode($array));
 
         ksort($array);
