@@ -39,7 +39,7 @@ class PageRules
             ]);
         }
 
-        self::slugMaxlength($page, $slug);
+        self::validateSlugLength($slug);
 
         $siblings = $page->parentModel()->children();
         $drafts   = $page->parentModel()->drafts();
@@ -213,7 +213,7 @@ class PageRules
             ]);
         }
 
-        self::slugMaxlength($page);
+        self::validateSlugLength($page->slug());
 
         if ($page->exists() === true) {
             throw new DuplicateException([
@@ -297,20 +297,26 @@ class PageRules
             ]);
         }
 
-        self::slugMaxlength($page);
-
         return true;
     }
 
-    protected static function slugMaxlength(Page $page, string $slug = null): void
+    /**
+     * Ensures that the slug doesn't exceed the maximum length to make
+     * sure that the directory name will be accepted by the filesystem
+     *
+     * @param string $slug New slug to check
+     * @return void
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the slug is too long
+     */
+    protected static function validateSlugLength(string $slug): void
     {
-        if ($slugsMaxlength = option('slugs.maxlength')) {
-            $slug      = $slug ?? $page->slug();
+        if ($slugsMaxlength = option('slugs.maxlength', 255)) {
             $maxlength = (int)$slugsMaxlength;
 
             if (Str::length($slug) > $maxlength) {
                 throw new InvalidArgumentException([
-                    'key' => 'page.slug.maxlength',
+                    'key'  => 'page.slug.maxlength',
                     'data' => [
                         'length' => $maxlength
                     ]
