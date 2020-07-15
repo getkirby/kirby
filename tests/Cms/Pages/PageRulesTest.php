@@ -435,13 +435,32 @@ class PageRulesTest extends TestCase
         $this->assertSame('a-ten-slug', $page->slug());
         $this->assertSame(10, strlen($page->slug()));
 
+        // disabled with long slug that 273 characters
+        // default slug maxlength is 255 characters
+        $page = new Page([
+            'slug' => 'lorem-ipsum-dolor-sit-amet-consectetur-adipiscing-elit-integer-metus-neque-molestie-ut-sagittis-eget-venenatis-quis-ipsum-ut-ultricies-hendrerit-magna-eu-molestie-enim-vestibulum-ante-ipsum-primis-in-faucibus-orci-luctus-et-ultrices-posuere-cubilia-curae-cras-nec-elementum',
+            'kirby' => $app->clone([
+                'options' => [
+                    'slugs.maxlength' => false
+                ]
+            ])
+        ]);
+
+        PageRules::create($page);
+
+        $this->assertSame(273, strlen($page->slug()));
+
         // invalid
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionCode('error.page.slug.maxlength');
 
         $page = new Page([
             'slug'  => 'very-very-long-slug',
-            'kirby' => $app
+            'kirby' => $app->clone([
+                'options' => [
+                    'slugs.maxlength' => 10
+                ]
+            ])
         ]);
 
         PageRules::create($page);

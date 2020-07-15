@@ -65,8 +65,7 @@ trait AppTranslations
 
         I18n::$translations = [];
 
-        if (isset($this->options['slugs']) === true) {
-            $slugsOption   = $this->options['slugs'];
+        if ($slugsOption = $this->option('slugs', $this->option('slugs.language'))) {
             $slugsLanguage = is_string($slugsOption) === true ? $slugsOption : ($slugsOption['language'] ?? null);
 
             if ($slugsLanguage !== null) {
