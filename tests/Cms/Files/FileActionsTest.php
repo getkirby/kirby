@@ -381,4 +381,186 @@ class FileActionsTest extends TestCase
 
         $this->assertEquals($caption, $file->caption()->value());
     }
+
+    public function testChangeNameHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'file.changeName:before' => function (File $file, $name) use ($phpunit, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $file);
+                    $phpunit->assertSame('test', $name);
+                    $phpunit->assertSame('site.js', $file->filename());
+                    $calls++;
+                },
+                'file.changeName:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $newFile);
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $oldFile);
+                    $phpunit->assertSame('test.js', $newFile->filename());
+                    $phpunit->assertSame('site.js', $oldFile->filename());
+                    $calls++;
+                },
+            ]
+        ]);
+
+        $app->site()->file()->changeName('test');
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testChangeSortHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'site' => [
+                'files' => [
+                    [
+                        'filename' => 'site-1.js'
+                    ],
+                    [
+                        'filename' => 'site-2.js'
+                    ],
+                    [
+                        'filename' => 'site-3.js'
+                    ]
+                ],
+            ],
+            'hooks' => [
+                'file.changeSort:before' => function (File $file, $position) use ($phpunit, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $file);
+                    $phpunit->assertSame(3, $position);
+                    $phpunit->assertNull($file->sort()->value());
+                    $calls++;
+                },
+                'file.changeSort:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $newFile);
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $oldFile);
+                    $phpunit->assertSame(3, $newFile->sort()->value());
+                    $phpunit->assertNull($oldFile->sort()->value());
+                    $calls++;
+                },
+            ]
+        ]);
+
+        $app->site()->file()->changeSort(3);
+
+        $this->assertSame(2, $calls);
+    }
+
+    /**
+     * @dataProvider parentProvider
+     */
+    public function testDeleteHooks($parent)
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $this->app->clone([
+            'hooks' => [
+                'file.delete:before' => function (File $file) use ($phpunit, &$calls) {
+                    $phpunit->assertFileExists($file->root());
+                    $phpunit->assertSame('test.md', $file->filename());
+                    $calls++;
+                },
+                'file.delete:after' => function ($status, File $file) use ($phpunit, &$calls) {
+                    $phpunit->assertTrue($status);
+                    $phpunit->assertFileNotExists($file->root());
+                    $phpunit->assertSame('test.md', $file->filename());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        // create the dummy source
+        F::write($source = $this->fixtures . '/source.md', '# Test');
+
+        $file = File::create([
+            'filename' => 'test.md',
+            'source'   => $source,
+            'parent'   => $parent
+        ]);
+
+        $file->delete();
+
+        $this->assertSame(2, $calls);
+    }
+
+    /**
+     * @dataProvider parentProvider
+     */
+    public function testReplaceHooks($parent)
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'file.replace:before' => function (File $file, $upload) use ($phpunit, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $file);
+                    $phpunit->assertInstanceOf('Kirby\Image\Image', $upload);
+                    $phpunit->assertSame('site.js', $file->filename());
+                    $phpunit->assertSame('replace.js', $upload->filename());
+                    $phpunit->assertFileNotExists($file->root());
+                    $calls++;
+                },
+                'file.replace:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $newFile);
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $oldFile);
+                    $phpunit->assertSame('site.js', $newFile->filename());
+                    $phpunit->assertSame('Replace', F::read($newFile->root()));
+                    $phpunit->assertSame('site.js', $oldFile->filename());
+                    $calls++;
+                },
+            ]
+        ]);
+
+        // create the dummy source
+        F::write($source = $this->fixtures . '/replace.js', 'Replace');
+
+        File::create([
+            'filename' => 'replace.js',
+            'source'   => $source,
+            'parent'   => $parent
+        ]);
+
+        $app->site()->file()->replace($source);
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testUpdateHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+        $input = [
+            'title' => 'Test'
+        ];
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'file.update:before' => function (File $file, $values, $strings) use ($phpunit, $input, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $file);
+                    $phpunit->assertNull($file->title()->value());
+                    $phpunit->assertSame($input, $values);
+                    $phpunit->assertSame($input, $strings);
+                    $calls++;
+                },
+                'file.update:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $newFile);
+                    $phpunit->assertInstanceOf('Kirby\Cms\File', $oldFile);
+                    $phpunit->assertSame('Test', $newFile->title()->value());
+                    $phpunit->assertNull($oldFile->title()->value());
+                    $calls++;
+                },
+            ]
+        ]);
+
+        $app->site()->file()->update($input);
+
+        $this->assertSame(2, $calls);
+    }
 }
