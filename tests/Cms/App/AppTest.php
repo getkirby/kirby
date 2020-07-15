@@ -726,4 +726,45 @@ class AppTest extends TestCase
     {
         $this->assertEquals(md5(App::version()), App::versionHash());
     }
+
+    public function testSlugsOption()
+    {
+        // string option
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'slugs' => 'de'
+            ]
+        ]);
+
+        $this->assertSame('AE', Str::$language['Ä']);
+
+        // string option with dot notation
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'slugs.language' => 'de'
+            ]
+        ]);
+
+        $this->assertSame('ss', Str::$language['ß']);
+
+        // array option
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'slugs' => [
+                    'language' => 'de'
+                ]
+            ]
+        ]);
+
+        $this->assertSame('ae', Str::$language['ä']);
+    }
 }

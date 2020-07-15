@@ -420,7 +420,7 @@ class PageRulesTest extends TestCase
                 ]
             ],
             'options' => [
-                'content.slug.maxlength' => 10
+                'slugs.maxlength' => 10
             ]
         ]);
 
