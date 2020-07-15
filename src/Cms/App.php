@@ -900,7 +900,7 @@ class App
 
         $config = Config::$data;
 
-        return $this->options = array_replace_recursive($config, $main, $host, $addr);
+        return $this->options = A::nest(array_replace_recursive($config, $main, $host, $addr), static::$nestIgnoreOptions);
     }
 
     /**
@@ -911,7 +911,7 @@ class App
      */
     protected function optionsFromProps(array $options = []): array
     {
-        return $this->options = array_replace_recursive($this->options, $options);
+        return $this->options = array_replace_recursive($this->options, A::nest($options, static::$nestIgnoreOptions));
     }
 
     /**
@@ -945,7 +945,7 @@ class App
                 $this->site = null;
             }
 
-            if ($slugsOption = $this->option('slugs', $this->option('slugs.language'))) {
+            if ($slugsOption = $this->option('slugs')) {
                 if (is_string($slugsOption) === true || isset($slugsOption['language']) === true) {
                     $this->i18n();
                 }
