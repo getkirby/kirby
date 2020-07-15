@@ -946,7 +946,9 @@ class App
             }
 
             if (isset($options['slugs']) === true) {
-                $this->i18n();
+                if (is_string($options['slugs']) === true || isset($options['slugs']['language']) === true) {
+                    $this->i18n();
+                }
             }
         }
 

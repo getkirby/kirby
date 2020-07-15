@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Data\Data;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -65,16 +66,21 @@ trait AppTranslations
         I18n::$translations = [];
 
         if (isset($this->options['slugs']) === true) {
-            $file = $this->root('i18n:rules') . '/' . $this->options['slugs'] . '.json';
+            $slugsOption   = $this->options['slugs'];
+            $slugsLanguage = is_string($slugsOption) === true ? $slugsOption : ($slugsOption['language'] ?? null);
 
-            if (F::exists($file) === true) {
-                try {
-                    $data = Data::read($file);
-                } catch (\Exception $e) {
-                    $data = [];
+            if ($slugsLanguage !== null) {
+                $file = $this->root('i18n:rules') . '/' . $slugsLanguage . '.json';
+
+                if (F::exists($file) === true) {
+                    try {
+                        $data = Data::read($file);
+                    } catch (Exception $e) {
+                        $data = [];
+                    }
+
+                    Str::$language = $data;
                 }
-
-                Str::$language = $data;
             }
         }
     }

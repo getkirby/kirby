@@ -304,9 +304,9 @@ class PageRules
 
     protected static function slugMaxlength(Page $page, string $slug = null): void
     {
-        if ($slugMaxlength = option('content.slug.maxlength')) {
+        if ($slugsMaxlength = option('slugs.maxlength')) {
             $slug      = $slug ?? $page->slug();
-            $maxlength = (int)$slugMaxlength;
+            $maxlength = (int)$slugsMaxlength;
 
             if (Str::length($slug) > $maxlength) {
                 throw new InvalidArgumentException([
