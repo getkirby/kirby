@@ -110,9 +110,9 @@ return [
             if (empty($this->columns)) {
                 foreach ($this->fields as $field) {
 
-                    // Skip hidden fields.
+                    // Skip hidden and unsaveable fields
                     // They should never be included as column
-                    if ($field['type'] === 'hidden') {
+                    if ($field['type'] === 'hidden' || $field['saveable'] === false) {
                         continue;
                     }
 
@@ -129,7 +129,7 @@ return [
 
                     $field = $this->fields[$columnName] ?? null;
 
-                    if (empty($field) === true) {
+                    if (empty($field) === true || $field['saveable'] === false) {
                         continue;
                     }
 
@@ -181,7 +181,7 @@ return [
         $data = [];
 
         foreach ($value as $row) {
-            $data[] = $this->form($row)->data();
+            $data[] = $this->form($row)->content();
         }
 
         return $data;
