@@ -56,6 +56,26 @@ class Query
     }
 
     /**
+     * Returns `true` if the request doesn't contain query variables
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return empty($this->data) === true;
+    }
+
+    /**
+     * Returns `true` if the request contains query variables
+     *
+     * @return bool
+     */
+    public function isNotEmpty(): bool
+    {
+        return empty($this->data) === false;
+    }
+
+    /**
      * Converts the query data array
      * back to a query string
      *
