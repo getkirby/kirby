@@ -281,4 +281,44 @@ class FormTest extends TestCase
         $this->assertCount(2, $form->toArray()['fields']);
         $this->assertEquals(false, $form->toArray()['invalid']);
     }
+
+    public function testContent()
+    {
+        $form = new Form([
+            'fields' => [],
+            'values' => $values = [
+                'a' => 'A',
+                'b' => 'B'
+            ]
+        ]);
+
+        $this->assertEquals($values, $form->content());
+    }
+
+    public function testContentFromUnsaveableFields()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+
+        $page = new Page(['slug' => 'test']);
+        $form = new Form([
+            'fields' => [
+                'info' => [
+                    'type' => 'info',
+                    'model' => $page
+                ]
+            ],
+            'values' => [
+                'info' => 'Yay'
+            ]
+        ]);
+
+        $this->assertCount(0, $form->content());
+        $this->assertArrayNotHasKey('info', $form->content());
+        $this->assertCount(1, $form->data());
+        $this->assertArrayHasKey('info', $form->data());
+    }
 }
