@@ -9,8 +9,8 @@
         >
           <k-error-boundary>
             <component
-              :is="'k-' + field.type + '-field'"
               v-if="hasFieldType(field.type)"
+              :is="'k-' + field.type + '-field'"
               :ref="fieldName"
               v-model="value[fieldName]"
               :name="fieldName"
@@ -35,8 +35,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-
 export default {
   props: {
     config: Object,
