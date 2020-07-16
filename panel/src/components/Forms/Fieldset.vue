@@ -79,7 +79,7 @@ export default {
       this.focus(key);
     },
     hasFieldType(type) {
-      return Vue.options.components["k-" + type + "-field"];
+      return this.$helper.isComponent(`k-${type}-field`);
     },
     hasField(name) {
       return this.$refs[name] && this.$refs[name][0];
