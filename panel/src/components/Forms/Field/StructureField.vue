@@ -516,19 +516,7 @@ export default {
       this.page = pagination.page;
     },
     previewExists(type) {
-      if (
-        Vue.options.components["k-" + type + "-field-preview"] !== undefined
-      ) {
-        return true;
-      }
-
-      if (
-        this.$options.components["k-" + type + "-field-preview"] !== undefined
-      ) {
-        return true;
-      }
-
-      return false;
+      return this.$helper.isComponent(`k-${type}-field-preview`);
     },
     remove() {
       if (this.trash === null) {
