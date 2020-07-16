@@ -45,7 +45,7 @@ export default {
   },
   methods: {
     exists(type) {
-      return Vue.options.components["k-" + type + "-section"];
+      return this.$helper.isComponent(`k-${type}-section`);
     },
     meetsCondition(section) {
 
