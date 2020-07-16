@@ -159,26 +159,7 @@
 </template>
 
 <script>
-import Vue from "vue";
 import Field from "../Field.vue";
-
-Array.prototype.sortBy = function(sortBy) {
-  const sort = Vue.prototype.$helper.sort();
-  const options = sortBy.split(" ");
-  const field = options[0];
-  const direction = options[1] || "asc";
-
-  return this.sort((a, b) => {
-    const valueA = String(a[field]).toLowerCase();
-    const valueB = String(b[field]).toLowerCase();
-
-    if (direction === "desc") {
-      return sort(valueB, valueA);
-    } else {
-      return sort(valueA, valueB);
-    }
-  });
-};
 
 export default {
   inheritAttrs: false,
