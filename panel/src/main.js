@@ -3,14 +3,16 @@ import Filters from "./config/filters.js";
 import Events from "./config/events.js";
 import Vue from "vue";
 import Vuelidate from "vuelidate";
+import Helpers from "./helpers/index.js";
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
+Vue.use(Helpers);
+
 import "./config/components.js";
 import "./config/api.js";
 import "./config/errors.js";
-import "./config/helpers.js";
 import "./config/i18n.js";
 import "./config/libraries.js";
 import "./config/plugins.js";
