@@ -24,6 +24,19 @@ class QueryTest extends TestCase
         $this->assertEquals($data, $query->data());
     }
 
+    public function testIsEmpty()
+    {
+        // without data
+        $query = new Query();
+        $this->assertTrue($query->isEmpty());
+        $this->assertFalse($query->isNotEmpty());
+
+        // with data
+        $query = new Query(['foo' => 'bar']);
+        $this->assertFalse($query->isEmpty());
+        $this->assertTrue($query->isNotEmpty());
+    }
+
     public function testGet()
     {
         // default
