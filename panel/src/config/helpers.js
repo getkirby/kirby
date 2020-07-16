@@ -1,7 +1,5 @@
 import Vue from "vue";
 
-import "@/helpers/regex.js";
-
 import clone from "@/helpers/clone.js";
 import debounce from "@/helpers/debounce.js";
 import isComponent from "@/helpers/isComponent.js";
@@ -16,7 +14,7 @@ import upload from "@/helpers/upload.js";
 /**
  * Array.sortBy()
  */
-Array.prototype.sortBy = function(sortBy) {
+Array.prototype.sortBy = function (sortBy) {
   const sort = Vue.prototype.$helper.sort();
   const options = sortBy.split(" ");
   const field = options[0];
@@ -32,6 +30,13 @@ Array.prototype.sortBy = function(sortBy) {
       return sort(valueA, valueB);
     }
   });
+};
+
+/**
+ * RegExp.escape(string)
+ */
+RegExp.escape = function (string) {
+  return string.replace(new RegExp("[-/\\\\^$*+?.()[\\]{}]", "gu"), '\\$&');
 };
 
 Vue.prototype.$helper = {
