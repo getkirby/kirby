@@ -112,7 +112,7 @@ export default {
   mixins: [PrevNext],
   props: {
     id: {
-      type: String,
+      type: [Boolean, String],
       required: true
     }
   },
@@ -216,6 +216,12 @@ export default {
       }
     },
     fetch() {
+
+      if (!this.id) {
+        // don't load a user if there's no id
+        return;
+      }
+
       this.$api.users
         .get(this.id, { view: "panel" })
         .then(user => {
