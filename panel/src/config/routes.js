@@ -160,7 +160,7 @@ export default [
     component: Vue.component("k-user-view"),
     beforeEnter: auth,
     props: () => ({
-      id: store.state.user.current ? store.state.user.current.id : null
+      id: store.state.user.current ? store.state.user.current.id : false
     })
   },
   {
