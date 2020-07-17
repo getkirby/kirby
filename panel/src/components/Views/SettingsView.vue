@@ -100,7 +100,7 @@ export default {
   methods: {
     fetch() {
 
-      if (this.multilang === false) {
+      if (this.multilang !== true) {
         this.languages = [];
         return;
       }
