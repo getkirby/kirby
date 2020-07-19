@@ -9,7 +9,6 @@ import Helpers from "./helpers/index.js";
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
-Vue.use(Helpers);
 import "@/ui/css/index.scss";
 
 import "./config/components.js";
