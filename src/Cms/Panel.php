@@ -6,7 +6,6 @@ use Exception;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\View;
 use Throwable;
 
@@ -35,11 +34,6 @@ class Panel
         }
 
         return false;
-    }
-
-    public static function icons(App $kirby): string
-    {
-        return F::read($kirby->root('kirby') . '/panel/dist/img/icons.svg');
     }
 
     /**
@@ -103,7 +97,6 @@ class Panel
             'config'    => $kirby->option('panel'),
             'assetUrl'  => $kirby->url('media') . '/panel/' . $kirby->versionHash(),
             'customCss' => static::customCss($kirby),
-            'icons'     => static::icons($kirby),
             'pluginCss' => $plugins->url('css'),
             'pluginJs'  => $plugins->url('js'),
             'panelUrl'  => $uri->path()->toString(true) . '/',
