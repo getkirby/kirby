@@ -1,5 +1,4 @@
 import Vue from "vue";
-import Api from "@/api/api.js";
 import clone from "@/helpers/clone.js";
 
 const keep = (id, data) => {
@@ -268,7 +267,7 @@ export default {
       };
 
       // check if content was previously unlocked
-      Api
+      Vue.$api
         .get(model.api + "/unlock")
         .then(response => {
           if (
@@ -332,7 +331,7 @@ export default {
       const data  = {...model.originals, ...model.changes};
 
       // Send updated values to API
-      return Api
+      return Vue.$api
         .patch(model.api, data)
         .then(() => {
           // re-create model with updated values as originals

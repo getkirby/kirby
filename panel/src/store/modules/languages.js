@@ -1,4 +1,4 @@
-import Api from "@/api/api.js";
+import Vue from "vue";
 
 export default {
   namespaced: true,
@@ -60,10 +60,9 @@ export default {
       context.dispatch("current", defaultLanguage || languages[0] || null);
 
     },
-    load(context) {
-      return Api.get("languages").then(response => {
-        context.dispatch("install", response.data);
-      });
+    async load(context) {
+      const response = await Vue.$api.get("languages");
+      context.dispatch("install", response.data);
     }
   }
 };
