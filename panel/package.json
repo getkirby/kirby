@@ -7,12 +7,7 @@
     "build": "vue-cli-service build && mv dist/js/chunk*.js dist/js/vendor.js && rm dist/index.html",
     "lint": "vue-cli-service lint",
     "pre-commit": "pretty-quick --staged",
-    "sandbox": "vue serve ./src/ui/main.js",
-    "test:e2e": "vue-cli-service test:e2e",
-    "test:e2e:record": "vue-cli-service test:e2e --headless --record --key 6e3e7aae-66e8-4d69-8e62-0210742b8415",
-    "test:unit": "vue-cli-service test:unit",
-    "test:unit:watch": "vue-cli-service test:unit --watch",
-    "testkit:reset": "./scripts/reset-testkit"
+    "sandbox": "vue serve ./src/ui/main.js"
   },
   "dependencies": {
     "autosize": "^4.0.2",
@@ -27,13 +22,9 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.12.1",
-    "@vue/cli-plugin-e2e-cypress": "^3.12.1",
     "@vue/cli-plugin-eslint": "^3.12.1",
-    "@vue/cli-plugin-unit-jest": "^3.12.1",
     "@vue/cli-service": "^3.12.1",
-    "@vue/test-utils": "^1.0.0-beta.32",
     "babel-core": "7.0.0-bridge.0",
-    "babel-jest": "^23.6.0",
     "babel-plugin-wildcard": "^4.0.0",
     "node-sass": "^4.13.1",
     "prettier": "^1.19.1",
