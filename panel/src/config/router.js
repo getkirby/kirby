@@ -1,7 +1,6 @@
 import Vue from "vue";
 import Router from "vue-router";
 import routes from "./routes.js";
-import supports from "./supports.js";
 import store from "@/store/store.js";
 import config from "./config.js";
 
@@ -15,7 +14,7 @@ const router = new Router({
 
 router.beforeEach((to, from, next) => {
   // check for supported browsers
-  if (to.name !== "Browser" && supports.all() === false) {
+  if (to.name !== "Browser" && Vue.$caniuse.all() === false) {
     next("/browser");
   }
 
@@ -23,16 +22,16 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.outside) {
     store.dispatch("user/visit", to.path);
   }
-  
+
   // store the current view
   store.dispatch("view", to.meta.view);
-  
+
   // reset the content locks
   store.dispatch("content/lock", null);
   store.dispatch("content/unlock", null);
-  
+
   // clear all heartbeats
-  store.dispatch("heartbeat/clear");  
+  store.dispatch("heartbeat/clear");
 
   next();
 });

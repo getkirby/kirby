@@ -17,9 +17,12 @@ import "./config/errors.js";
 import "./config/i18n.js";
 import "./config/libraries.js";
 
+import caniuse from "./config/caniuse.js";
+
 Vue.use(Events);
 Vue.use(Filters);
 Vue.use(Vuelidate);
+Vue.use(caniuse);
 
 import router from "./config/router.js";
 import store from "./store/store.js";

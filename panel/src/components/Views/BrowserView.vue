@@ -23,21 +23,19 @@
 </template>
 
 <script>
-import supports from "@/config/supports.js";
-
 export default {
   computed: {
     hasFetchSupport() {
-      return supports.fetch();
+      return this.$caniuse.fetch();
     },
     hasGridSupport() {
-      return supports.grid();
+      return this.$caniuse.grid();
     }
   },
   created() {
     this.$store.dispatch("content/current", null);
 
-    if (supports.all()) {
+    if (this.$caniuse.all()) {
       this.$go("/");
     }
   }
