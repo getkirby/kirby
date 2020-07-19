@@ -1,6 +1,7 @@
 import App from "./App.vue";
 import Api from "./config/api.js";
 import Helpers from "./helpers/index.js";
+import ErrorHandling from "@/app/plugins/errors.js";
 import Go from "@/app/plugins/go.js";
 import I18n from "@/app/plugins/i18n.js";
 import Panel from "@/app/components/Panel.vue";
@@ -14,7 +15,6 @@ Vue.config.devtools = true;
 
 
 import "./config/components.js";
-import "./config/errors.js";
 import router from "./config/router.js";
 import store from "./store/store.js";
 
@@ -25,6 +25,7 @@ Vue.use(Helpers);
 Vue.use(Go, router);
 Vue.use(Ui);
 Vue.use(App);
+Vue.use(ErrorHandling, store);
 Vue.use(Vuelidate);
 
 new Vue({
