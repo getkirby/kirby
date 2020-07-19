@@ -1,8 +1,10 @@
 import App from "./App.vue";
 import Api from "./config/api.js";
-import Events from "./config/events.js";
 import Helpers from "./helpers/index.js";
-import Plugins from "./config/plugins.js";
+import I18n from "@/app/plugins/i18n.js";
+import Panel from "@/app/components/Panel.vue";
+import Plugins from "@/app/plugins/plugins.js";
+import Ui from "@/ui/index.js";
 import Vue from "vue";
 import Vuelidate from "vuelidate";
 
@@ -12,23 +14,16 @@ Vue.config.devtools = true;
 
 import "./config/components.js";
 import "./config/errors.js";
-
-import caniuse from "./config/caniuse.js";
-import libraries from "./config/libraries.js";
-
-Vue.use(Events);
-Vue.use(Helpers);
-Vue.use(Vuelidate);
-Vue.use(caniuse);
-Vue.use(libraries);
-
-import I18n from "./config/i18n.js";
 import router from "./config/router.js";
 import store from "./store/store.js";
 
 Vue.use(Api, store);
-Vue.use(I18n, store);
 Vue.use(Plugins, store);
+Vue.use(I18n, store);
+Vue.use(Helpers);
+Vue.use(Ui);
+Vue.use(App);
+Vue.use(Vuelidate);
 
 Vue.prototype.$go = (path) => {
   router.push(path).catch(e => {
@@ -47,7 +42,7 @@ new Vue({
     window.panel.app = this;
 
     // created plugin callbacks
-    window.panel.plugins.created.forEach(plugin => {
+    this.$plugins.created.forEach(plugin => {
       plugin(this);
     });
 
@@ -55,6 +50,6 @@ new Vue({
     this.$store.dispatch("content/init");
   },
   render: h => {
-    return h(App);
+    return h(Panel);
   },
 }).$mount("#app");
