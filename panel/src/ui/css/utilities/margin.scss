@@ -1,0 +1,32 @@
+/* Margins */
+.mx-auto,
+.mr-auto {
+  margin-right: auto;
+}
+.mx-auto,
+.ml-auto {
+  margin-left: auto;
+}
+
+@each $index, $size in $spacing {
+  .m-#{$index},
+  .my-#{$index},
+  .mt-#{$index} {
+    margin-top: $size;
+  }
+  .m-#{$index},
+  .mx-#{$index},
+  .mr-#{$index} {
+    margin-right: $size;
+  }
+  .m-#{$index},
+  .my-#{$index},
+  .mb-#{$index} {
+    margin-bottom: $size;
+  }
+  .m-#{$index},
+  .mx-#{$index},
+  .ml-#{$index} {
+    margin-left: $size;
+  }
+}

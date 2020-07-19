@@ -21,6 +21,8 @@ Vue.use(Events);
 Vue.use(Filters);
 Vue.use(Vuelidate);
 
+import "@/ui/css/utilities.scss";
+
 import router from "./config/router.js";
 import store from "./store/store.js";
 

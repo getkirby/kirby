@@ -1,0 +1,23 @@
+/* Paddings */
+@each $index, $size in $spacing {
+  .p-#{$index},
+  .py-#{$index},
+  .pt-#{$index} {
+    padding-top: $size;
+  }
+  .p-#{$index},
+  .px-#{$index},
+  .pr-#{$index} {
+    padding-right: $size;
+  }
+  .p-#{$index},
+  .py-#{$index},
+  .pb-#{$index} {
+    padding-bottom: $size;
+  }
+  .p-#{$index},
+  .px-#{$index},
+  .pl-#{$index} {
+    padding-left: $size;
+  }
+}

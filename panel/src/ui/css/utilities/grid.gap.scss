@@ -1,0 +1,6 @@
+/* Grid Gaps */
+@each $index, $size in $spacing {
+  .gap-#{$index} {
+    grid-gap: $size;
+  }
+}
