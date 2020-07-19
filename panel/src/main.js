@@ -1,6 +1,7 @@
 import App from "./App.vue";
 import Api from "./config/api.js";
 import Helpers from "./helpers/index.js";
+import Go from "@/app/plugins/go.js";
 import I18n from "@/app/plugins/i18n.js";
 import Panel from "@/app/components/Panel.vue";
 import Plugins from "@/app/plugins/plugins.js";
@@ -21,19 +22,10 @@ Vue.use(Api, store);
 Vue.use(Plugins, store);
 Vue.use(I18n, store);
 Vue.use(Helpers);
+Vue.use(Go, router);
 Vue.use(Ui);
 Vue.use(App);
 Vue.use(Vuelidate);
-
-Vue.prototype.$go = (path) => {
-  router.push(path).catch(e => {
-    if (e && e.name && e.name === "NavigationDuplicated") {
-      return true;
-    }
-
-    throw e;
-  });
-};
 
 new Vue({
   router,
