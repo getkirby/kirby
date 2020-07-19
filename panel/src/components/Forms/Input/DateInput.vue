@@ -9,7 +9,6 @@
       :value="year"
       placeholder="––––"
       @input="setYear"
-      @invalid="onInvalid"
     />
     <span class="k-date-input-separator">-</span>
     <k-select-input
@@ -21,7 +20,6 @@
       :value="month"
       placeholder="––"
       @input="setMonth"
-      @invalid="onInvalid"
     />
     <span class="k-date-input-separator">-</span>
     <k-select-input
@@ -35,7 +33,6 @@
       :value="day"
       placeholder="––"
       @input="setDay"
-      @invalid="onInvalid"
     />
   </div>
 </template>
@@ -110,9 +107,6 @@ export default {
       }
 
       this.$emit("input", this.date.toISOString());
-    },
-    onInvalid($invalid, $v) {
-      this.$emit("invalid", $invalid, $v);
     },
     options(start, end) {
       let options = [];

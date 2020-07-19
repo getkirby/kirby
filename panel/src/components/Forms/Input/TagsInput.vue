@@ -54,8 +54,6 @@
 </template>
 
 <script>
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -123,12 +121,9 @@ export default {
   watch: {
     value(value) {
       this.tags = this.prepareTags(value);
-      this.onInvalid();
     }
   },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -282,9 +277,6 @@ export default {
     onInput() {
       this.$emit("input", this.tags);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     leaveInput(e) {
       if (
         e.target.selectionStart === 0 &&
@@ -357,15 +349,6 @@ export default {
       this.newTag = value;
       this.$refs.autocomplete.search(value);
     }
-  },
-  validations() {
-    return {
-      tags: {
-        required: this.required ? required : true,
-        minLength: this.min ? minLength(this.min) : true,
-        maxLength: this.max ? maxLength(this.max) : true
-      }
-    };
   }
 };
 </script>

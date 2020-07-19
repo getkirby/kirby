@@ -53,7 +53,6 @@
 
 <script>
 import config from "@/config/config.js";
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
   inheritAttrs: false,
@@ -89,7 +88,6 @@ export default {
   },
   watch: {
     value() {
-      this.onInvalid();
       this.$nextTick(() => {
         this.resize();
       });
@@ -99,8 +97,6 @@ export default {
     this.$nextTick(() => {
       this.$library.autosize(this.$refs.input);
     });
-
-    this.onInvalid();
 
     if (this.$props.autofocus) {
       this.focus();
@@ -195,9 +191,6 @@ export default {
     onInput($event) {
       this.$emit("input", $event.target.value);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     onOut() {
       this.$refs.input.blur();
       this.over = false;
@@ -264,15 +257,6 @@ export default {
     wrap(text) {
       this.insert(text + this.selection() + text);
     }
-  },
-  validations() {
-    return {
-      value: {
-        required: this.required ? required : true,
-        minLength: this.minlength ? minLength(this.minlength) : true,
-        maxLength: this.maxlength ? maxLength(this.maxlength) : true
-      }
-    };
   }
 };
 </script>

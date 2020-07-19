@@ -3,7 +3,6 @@ import Api from "./config/api.js";
 import Filters from "./config/filters.js";
 import Events from "./config/events.js";
 import Vue from "vue";
-import Vuelidate from "vuelidate";
 import Helpers from "./helpers/index.js";
 
 Vue.config.productionTip = false;
@@ -19,7 +18,6 @@ import "./config/plugins.js";
 
 Vue.use(Events);
 Vue.use(Filters);
-Vue.use(Vuelidate);
 
 import router from "./config/router.js";
 import store from "./store/store.js";

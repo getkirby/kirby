@@ -1,7 +1,6 @@
 <template>
   <div
     :data-disabled="disabled"
-    :data-invalid="!novalidate && isInvalid"
     :data-theme="theme"
     :data-type="type"
     class="k-input"
@@ -16,7 +15,7 @@
           :is="'k-' + type + '-input'"
           :value="value"
           v-bind="inputProps"
-          v-on="listeners"
+          v-on="$listeners"
         />
       </slot>
     </span>
@@ -40,28 +39,11 @@ export default {
     disabled: Boolean,
     type: String,
     icon: [String, Boolean],
-    invalid: Boolean,
     theme: String,
-    novalidate: {
-      type: Boolean,
-      default: false,
-    },
     value: {
       type: [String, Boolean, Number, Object, Array],
       default: null
     }
-  },
-  data() {
-    return {
-      isInvalid: this.invalid,
-      listeners: {
-        ...this.$listeners,
-        invalid: ($invalid, $v) => {
-          this.isInvalid = $invalid;
-          this.$emit("invalid", $invalid, $v);
-        }
-      }
-    };
   },
   computed: {
     inputProps() {

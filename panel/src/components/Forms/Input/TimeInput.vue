@@ -11,7 +11,6 @@
       v-model="hour"
       placeholder="––"
       @input="setHour"
-      @invalid="onInvalid"
     />
     <span class="k-time-input-separator">:</span>
     <k-select-input
@@ -23,7 +22,6 @@
       v-model="minute"
       placeholder="––"
       @input="setMinute"
-      @invalid="onInvalid"
     />
     <k-select-input
       v-if="notation === 12"
@@ -137,9 +135,6 @@ export default {
       const date = this.$library.dayjs("2000-01-01 " + time, "YYYY-MM-DD " + format);
 
       this.$emit("input", date.format("HH:mm"));
-    },
-    onInvalid($invalid, $v) {
-      this.$emit("invalid", $invalid, $v);
     },
     options(start, end, step = 1) {
       let options = [];

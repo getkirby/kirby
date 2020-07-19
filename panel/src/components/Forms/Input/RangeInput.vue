@@ -27,8 +27,6 @@
 </template>
 
 <script>
-import { required, minValue, maxValue } from "vuelidate/lib/validators";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -82,14 +80,7 @@ export default {
       return (this.value || this.value === 0) ? this.value : this.default || this.baseline;
     }
   },
-  watch: {
-    position() {
-      this.onInvalid();
-    }
-  },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -106,21 +97,9 @@ export default {
         minimumFractionDigits: digits
       }).format(value);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     onInput(value) {
       this.$emit("input", value);
     },
-  },
-  validations() {
-    return {
-      position: {
-        required: this.required ? required : true,
-        min: this.min ? minValue(this.min) : true,
-        max: this.max ? maxValue(this.max) : true
-      }
-    };
   }
 }
 </script>

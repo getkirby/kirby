@@ -12,8 +12,6 @@
 </template>
 
 <script>
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -45,14 +43,9 @@ export default {
   watch: {
     value(value) {
       this.selected = this.valueToArray(value);
-    },
-    selected() {
-      this.onInvalid();
     }
   },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -72,9 +65,6 @@ export default {
       }
       this.$emit("input", this.selected);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     select() {
       this.focus();
     },
@@ -91,15 +81,6 @@ export default {
         return Object.values(value);
       }
     },
-  },
-  validations() {
-    return {
-      selected: {
-        required: this.required ? required : true,
-        min: this.min ? minLength(this.min) : true,
-        max: this.max ? maxLength(this.max) : true,
-      }
-    };
   }
 }
 
