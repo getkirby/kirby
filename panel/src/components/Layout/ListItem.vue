@@ -86,8 +86,8 @@ $list-item-height: 38px;
   display: flex;
   align-items: center;
   background: $color-white;
-  border-radius: $border-radius;
-  box-shadow: $box-shadow-card;
+  border-radius: $rounded-xs;
+  box-shadow: $shadow-md;
 }
 .k-list-item .k-sort-handle {
   position: absolute;
@@ -106,7 +106,7 @@ $list-item-height: 38px;
   position: relative;
   outline: 2px solid $color-focus;
   z-index: 1;
-  box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
+  box-shadow: rgba($color-black, 0.25) 0 5px 10px;
 }
 .k-list-item.k-sortable-fallback {
   opacity: 0.25 !important;
@@ -156,19 +156,19 @@ $list-item-height: 38px;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: $font-size-small;
-  color: $list-item-text-color;
+  font-size: $text-sm;
+  color: $color-gray-700;
 }
 .k-list-item-text small {
   color: $color-light-grey;
-  font-size: $font-size-tiny;
-  color: $list-item-info-color;
+  font-size: $text-xs;
+  color: $color-gray-500;
   display: none;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     display: block;
   }
 }

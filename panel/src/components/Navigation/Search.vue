@@ -198,9 +198,9 @@ export default {
 .k-search-box {
   max-width: 30rem;
   margin: 0 auto;
-  box-shadow: $box-shadow;
+  box-shadow: $shadow;
 
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     margin: 2.5rem auto;
   }
 }
@@ -214,7 +214,7 @@ export default {
 }
 .k-search-types > .k-button {
   padding: 0 0 0 .7rem;
-  font-size: $font-size-medium;
+  font-size: $text-base;
   line-height: 1;
   height: 2.5rem;
 
@@ -256,12 +256,12 @@ export default {
 }
 .k-search li strong {
   display: block;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   font-weight: 400;
 }
 .k-search li small {
-  font-size: $font-size-tiny;
-  color: $color-dark-grey;
+  font-size: $text-xs;
+  color: $color-gray-700;
 }
 .k-search li[data-selected] {
   outline: 2px solid $color-focus;
@@ -270,10 +270,10 @@ export default {
 }
 .k-search-empty {
   padding: .825rem .75rem;
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   background: $color-background;
   border-top: 1px dashed $color-border;
-  color: $color-dark-grey;
+  color: $color-gray-700;
 }
 
 </style>

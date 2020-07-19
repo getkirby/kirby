@@ -1,5 +1,8 @@
 <template>
-  <span class="k-sort-handle" aria-hidden="true">
+  <span
+    class="k-sort-handle cursor-grab"
+    aria-hidden="true"
+  >
     <svg viewBox="0 0 16 16">
       <use xlink:href="#icon-sort" />
     </svg>
@@ -8,12 +11,8 @@
 
 <style lang="scss">
 .k-sort-handle {
-  cursor: move;
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
   line-height: 0;
-  color: $color-dark;
+  color: $color-black;
   justify-content: center;
   align-items: center;
   line-height: 0;
@@ -26,10 +25,5 @@
 }
 .k-sort-handle svg {
   width: 1rem;
-}
-.k-sort-handle:active {
-  cursor: grabbing;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
 }
 </style>

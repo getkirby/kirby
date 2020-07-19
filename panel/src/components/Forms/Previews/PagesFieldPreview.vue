@@ -34,7 +34,7 @@ export default {
   display: flex;
   align-items: stretch;
   background: $color-background;
-  box-shadow: $box-shadow-card;
+  box-shadow: $shadow-md;
 }
 .k-pages-field-preview-image {
   width: 1.525rem;
@@ -47,7 +47,7 @@ export default {
   padding: 0 0.5rem;
   border: 1px solid $color-border;
   border-left: 0;
-  border-radius: $border-radius;
+  border-radius: $rounded-xs;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

@@ -176,8 +176,8 @@ export default {
   flex-basis: 0;
 }
 .k-system-info-box dt {
-  font-size: $font-size-small;
-  color: $color-dark-grey;
+  font-size: $text-sm;
+  color: $color-gray-700;
   margin-bottom: .25rem;
 }
 .k-system-unregistered {

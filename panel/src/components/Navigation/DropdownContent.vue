@@ -169,11 +169,11 @@ export default {
 .k-dropdown-content {
   position: absolute;
   top: 100%;
-  background: $color-dark;
+  background: $color-black;
   color: $color-white;
   z-index: z-index(dropdown);
-  box-shadow: $box-shadow;
-  border-radius: $border-radius;
+  box-shadow: $shadow;
+  border-radius: $rounded-xs;
   text-align: left;
   margin-bottom: 6rem;
 

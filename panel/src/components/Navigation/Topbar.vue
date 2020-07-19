@@ -203,7 +203,7 @@ export default {
   flex-shrink: 0;
   height: 2.5rem;
   line-height: 1;
-  background: $color-dark;
+  background: $color-black;
 }
 .k-topbar-wrapper {
   position: relative;
@@ -220,7 +220,7 @@ export default {
   height: 2.5rem;
   width: 2.5rem;
   padding: .75rem;
-  background: $color-dark;
+  background: $color-black;
   z-index: 1;
   display: flex;
   align-items: center;
@@ -249,7 +249,7 @@ export default {
 .k-topbar-button {
   padding: 0.75rem;
   line-height: 1;
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-topbar-signals .k-button .k-button-text {
   opacity: 1;
@@ -286,7 +286,7 @@ export default {
 }
 .k-topbar-crumbs a {
   position: relative;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -314,7 +314,7 @@ export default {
 .k-topbar-breadcrumb-menu {
   flex-shrink: 0;
 }
-@media screen and (min-width: $breakpoint-small) {
+@media screen and (min-width: $breakpoint-sm) {
   .k-topbar-crumbs a {
     display: block;
   }
@@ -325,7 +325,7 @@ export default {
 .k-topbar-signals {
   position: absolute;
   top: 0;
-  background: $color-dark;
+  background: $color-black;
   height: 2.5rem;
   display: flex;
   align-items: center;
@@ -349,8 +349,8 @@ export default {
     left: -0.5rem;
     background: -webkit-linear-gradient(
       left,
-      rgba($color-dark, 0),
-      rgba($color-dark, 1)
+      rgba($color-black, 0),
+      rgba($color-black, 1)
     );
   }
 
@@ -358,8 +358,8 @@ export default {
     right: -0.5rem;
     background: -webkit-linear-gradient(
       right,
-      rgba($color-dark, 0),
-      rgba($color-dark, 1)
+      rgba($color-black, 0),
+      rgba($color-black, 1)
     );
   }
 }
@@ -368,7 +368,7 @@ export default {
 }
 
 .k-topbar-notification {
-  font-weight: $font-weight-bold;
+  font-weight: $font-bold;
   line-height: 1;
   display: flex;
 }
@@ -381,7 +381,7 @@ export default {
 .k-topbar .k-button[data-theme="negative"] .k-button-text {
   display: none;
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     display: inline;
   }
 }
@@ -389,8 +389,8 @@ export default {
   opacity: 1;
 }
 .k-topbar .k-dropdown-content {
-  color: $color-dark;
   background: $color-white;
+  color: $color-black;
 }
 .k-topbar .k-dropdown-content hr:after {
   opacity: 0.1;
@@ -408,12 +408,12 @@ export default {
 }
 .k-registration p {
   color: $color-negative-on-dark;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   margin-right: 1rem;
   font-weight: 600;
   display: none;
 
-  @media screen and (min-width: $breakpoint-large) {
+  @media screen and (min-width: $breakpoint-lg) {
     display: block;
   }
 }

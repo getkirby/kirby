@@ -23,13 +23,13 @@ export default {
 .k-empty {
   display: flex;
   align-items: stretch;
-  border-radius: $border-radius;
-  color: $color-dark-grey;
+  border-radius: $rounded-xs;
+  color: $color-gray-700;
   border: 1px dashed $color-border;
 }
 .k-empty p {
-  font-size: $font-size-small;
-  color: $color-dark-grey;
+  font-size: $text-sm;
+  color: $color-gray-700;
 }
 .k-empty > .k-icon {
   color: $color-light-grey;

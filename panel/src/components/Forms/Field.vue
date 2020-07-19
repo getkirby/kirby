@@ -63,7 +63,7 @@ export default {
 
 <style lang="scss">
 .k-field-label {
-  font-weight: $font-weight-bold;
+  font-weight: $font-bold;
   display: block;
   padding: 0 0 0.75rem;
   flex-grow: 1;

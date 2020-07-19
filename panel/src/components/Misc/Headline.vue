@@ -32,27 +32,27 @@ export default {
 
 <style lang="scss">
 .k-headline {
-  font-size: $font-size-medium;
-  font-weight: $font-weight-bold;
+  font-size: $text-base;
+  font-weight: $font-bold;
   line-height: 1.5em;
 }
 .k-headline[data-size="small"] {
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-headline[data-size="large"] {
-  font-size: $font-size-large;
-  font-weight: $font-weight-normal;
+  font-size: $text-lg;
+  font-weight: $font-normal;
 
-  @media screen and (min-width: $breakpoint-medium) {
-    font-size: $font-size-huge;
+  @media screen and (min-width: $breakpoint-md) {
+    font-size: $text-xl;
   }
 }
 .k-headline[data-size="huge"] {
-  font-size: $font-size-huge;
+  font-size: $text-xl;
   line-height: 1.15em;
 
-  @media screen and (min-width: $breakpoint-medium) {
-    font-size: $font-size-monster;
+  @media screen and (min-width: $breakpoint-md) {
+    font-size: $text-3xl;
   }
 }
 .k-headline[data-theme="negative"] {

@@ -128,13 +128,13 @@ export default {
 <style lang="scss">
 
 $range-thumb-size: 16px;
-$range-thumb-border: 4px solid $color-dark;
+$range-thumb-border: 4px solid $color-gray-700;
 $range-thumb-background: $color-background;
 $range-thumb-focus-border: 4px solid $color-focus;
 $range-thumb-focus-background: $color-background;
 $range-track-height: 4px;
 $range-track-background: $color-border;
-$range-track-color: $color-dark;
+$range-track-color: $color-gray-700;
 $range-track-focus-color: $color-focus;
 
 @mixin track($fill: 0) {
@@ -186,7 +186,7 @@ $range-track-focus-color: $color-focus;
   width: 100%;
   height: $range-thumb-size;
   background: transparent;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   line-height: 1;
 
   &::-webkit-slider-thumb {
@@ -254,11 +254,11 @@ $range-track-focus-color: $color-focus;
   display: flex;
   align-items: center;
   color: $color-white;
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   line-height: 1;
   text-align: center;
-  border-radius: $border-radius;
-  background: $color-dark;
+  border-radius: $rounded-xs;
+  background: $color-black;
   margin-left: 1rem;
   padding: 0 .25rem;
   white-space: nowrap;
@@ -271,7 +271,7 @@ $range-track-focus-color: $color-focus;
     height: 0;
     transform: translateY(-50%);
     border-top: 5px solid transparent;
-    border-right: 5px solid $color-dark;
+    border-right: 5px solid $color-gray-700;
     border-bottom: 5px solid transparent;
     content: "";
   }

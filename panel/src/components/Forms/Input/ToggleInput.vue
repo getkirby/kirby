@@ -87,7 +87,7 @@ export default {
 <style lang="scss">
 $toggle-background: $color-white;
 $toggle-color: $color-light-grey;
-$toggle-active-color: $color-dark;
+$toggle-active-color: $color-black;
 $toggle-focus-color: $color-focus;
 $toggle-height: 16px;
 
@@ -120,7 +120,7 @@ $toggle-height: 16px;
     box-shadow: inset 0 0 0 2px $color-background, inset $toggle-height*-1 0px 0px 2px $color-background;
     background-color: $color-border;
   }
-  
+
   &[disabled]:checked {
     box-shadow: inset 0 0 0 2px $color-background, inset $toggle-height 0px 0px 2px $color-background;
   }

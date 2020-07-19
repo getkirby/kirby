@@ -108,11 +108,11 @@ export default {
   box-shadow: $color-white 0 0 0 2px inset;
 }
 .k-radio-input input:checked + label::before {
-  border-color: $color-dark;
-  background: $color-dark;
+  border-color: $color-black;
+  background: $color-black;
 }
 .k-radio-input input:focus + label::before {
-  border-color: $color-focus-border;
+  border-color: $color-blue-600;
 }
 .k-radio-input input:focus:checked + label::before {
   background: $color-focus;
