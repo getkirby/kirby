@@ -2,33 +2,34 @@ import App from "./App.vue";
 import Api from "./config/api.js";
 import Filters from "./config/filters.js";
 import Events from "./config/events.js";
+import Helpers from "./helpers/index.js";
 import Plugins from "./config/plugins.js";
 import Vue from "vue";
 import Vuelidate from "vuelidate";
-import Helpers from "./helpers/index.js";
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
-Vue.use(Helpers);
 
 import "./config/components.js";
 import "./config/errors.js";
-import "./config/i18n.js";
 
 import caniuse from "./config/caniuse.js";
 import libraries from "./config/libraries.js";
 
 Vue.use(Events);
+Vue.use(Helpers);
 Vue.use(Filters);
 Vue.use(Vuelidate);
 Vue.use(caniuse);
 Vue.use(libraries);
 
+import I18n from "./config/i18n.js";
 import router from "./config/router.js";
 import store from "./store/store.js";
 
 Vue.use(Api, store);
+Vue.use(I18n, store);
 Vue.use(Plugins, store);
 
 Vue.prototype.$go = (path) => {

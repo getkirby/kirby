@@ -1,5 +1,8 @@
-import Vue from "vue";
 import I18n from "vuex-i18n";
-import store from "@/store/store.js";
 
-Vue.use(I18n.plugin, store);
+export default {
+  install(Vue, store) {
+    Vue.use(I18n.plugin, store);
+    Vue.$t = Vue.prototype.$t;
+  }
+};
