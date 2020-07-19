@@ -1,53 +1,53 @@
 import Vue from "vue";
-import api from "./api.js";
 
-export default {
-  create(data) {
-    return api.post(this.url(), data);
-  },
-  list(query) {
-    return api.post(this.url(null, "search"), query);
-  },
-  get(id, query) {
-    return api.get(this.url(id), query);
-  },
-  update(id, data) {
-    return api.patch(this.url(id), data);
-  },
-  delete(id) {
-    return api.delete(this.url(id));
-  },
-  changeEmail(id, email) {
-    return api.patch(this.url(id, "email"), { email: email });
-  },
-  changeLanguage(id, language) {
-    return api.patch(this.url(id, "language"), { language: language });
-  },
-  changeName(id, name) {
-    return api.patch(this.url(id, "name"), { name: name });
-  },
-  changePassword(id, password) {
-    return api.patch(this.url(id, "password"), { password: password });
-  },
-  changeRole(id, role) {
-    return api.patch(this.url(id, "role"), { role: role });
-  },
-  deleteAvatar(id) {
-    return api.delete(this.url(id, "avatar"));
-  },
-  blueprint(id) {
-    return api.get(this.url(id, "blueprint"));
-  },
-  breadcrumb(user) {
-    return [
-      {
-        link: "/users/" + user.id,
-        label: user.username
-      }
-    ];
-  },
-  options(id) {
-    return api.get(this.url(id), {select: "options"}).then(user => {
+export default (api) => {
+  return {
+    async blueprint(id) {
+      return api.get("users/" + id + "/blueprint");
+    },
+    breadcrumb(user) {
+      return [
+        {
+          link: "/users/" + user.id,
+          label: user.username
+        }
+      ];
+    },
+    async changeEmail(id, email) {
+      return api.patch("users/" + id + "/email", { email: email });
+    },
+    async changeLanguage(id, language) {
+      return api.patch("users/" + id + "/language", { language: language });
+    },
+    async changeName(id, name) {
+      return api.patch("users/" + id + "/name", { name: name });
+    },
+    async changePassword(id, password) {
+      return api.patch("users/" + id + "/password", { password: password });
+    },
+    async changeRole(id, role) {
+      return api.patch("users/" + id + "/role", { role: role });
+    },
+    async create(data) {
+      return api.post("users", data);
+    },
+    async delete(id) {
+      return api.delete("users/" + id);
+    },
+    async deleteAvatar(id) {
+      return api.delete("users/" + id + "/avatar");
+    },
+    link(id, path) {
+      return "/" + this.url(id, path);
+    },
+    async list(query) {
+      return api.get("users", query);
+    },
+    async get(id, query) {
+      return api.get("users/" + id, query);
+    },
+    async options(id) {
+      const user    = await api.get(this.url(id), {select: "options"});
       const options = user.options;
       let result    = [];
 
@@ -94,29 +94,29 @@ export default {
       });
 
       return result;
-    });
-  },
-  roles(id) {
-    return api.get(this.url(id, "roles")).then(roles => {
-      return roles.data.map(role => {
-        return {
-          info: role.description || `(${Vue.i18n.translate("role.description.placeholder")})`,
-          text: role.title,
-          value: role.name
-        };
-      });
-    });
-  },
-  url(id, path) {
-    let url = !id ? "users" : "users/" + id;
+    },
+    async roles(id) {
+      const roles = await api.get(this.url(id, "roles"));
+      return roles.data.map(role => ({
+        info: role.description || `(${Vue.i18n.translate("role.description.placeholder")})`,
+        text: role.title,
+        value: role.name
+      }));
+    },
+    async search(query) {
+      return api.post("users/search", query);
+    },
+    async update(id, data) {
+      return api.patch("users/" + id, data);
+    },
+    url(id, path) {
+      let url = !id ? "users" : "users/" + id;
 
-    if (path) {
-      url += "/" + path;
-    }
+      if (path) {
+        url += "/" + path;
+      }
 
-    return url;
-  },
-  link(id, path) {
-    return "/" + this.url(id, path);
+      return url;
+    },
   }
 };
