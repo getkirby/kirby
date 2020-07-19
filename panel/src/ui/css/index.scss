@@ -1,0 +1,127 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  border-width: 0;
+  border-style: solid;
+  border-color: currentColor;
+}
+
+:root {
+  /** Colors **/
+  --color-backdrop: #{$color-backdrop};
+  --color-background: #{$color-background};
+  --color-border: #{$color-border};
+  --color-focus: #{$color-focus};
+  --color-focus-light: #{$color-focus-on-dark};
+  --color-focus-outline: #{$color-focus-outline};
+  --color-negative: #{$color-negative};
+  --color-negative-light: #{$color-negative-on-dark};
+  --color-negative-outline: #{$color-negative-outline};
+  --color-notice: #{$color-notice};
+  --color-notice-light: #{$color-notice-on-dark};
+  --color-positive: #{$color-positive};
+  --color-positive-light: #{$color-positive-on-dark};
+  --color-positive-outline: #{$color-positive-outline};
+  --color-text: #{$color-black};
+  --color-text-light: #{$color-gray-700};
+
+  /** Font families **/
+  --font-family-mono: #{$font-mono};
+  --font-family-sans: #{$font-sans};
+
+  /** Font sizes **/
+  --font-size-tiny: #{$text-xs};
+  --font-size-small: #{$text-sm};
+  --font-size-medium: #{$text-base};
+  --font-size-large: #{$text-xl};
+  --font-size-huge: #{$text-2xl};
+  --font-size-monster: #{$text-3xl};
+
+  /** Shadows **/
+  --box-shadow-dropdown: #{$shadow-md};
+  --box-shadow-item: #{$shadow};
+  --box-shadow-focus: #{$shadow-outline};
+}
+
+noscript {
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+}
+
+html {
+  font-family: $font-sans;
+  background: $color-background;
+}
+
+html,
+body {
+  color: $color-black;
+  overflow: hidden;
+  height: 100%;
+  line-height: 1;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+li {
+  list-style: none;
+}
+
+abbr {
+  text-decoration: none;
+}
+
+strong,
+b {
+  font-weight: $font-bold;
+}
+
+hr {
+  border-top-width: 1px;
+  border-color: $color-border;
+}
+
+[data-loading] {
+  cursor: progress;
+}
+[data-loading] > * {
+  pointer-events: none;
+}
+[data-loading],
+[data-dragging] {
+  user-select: none;
+}
+
+.k-panel .k-form-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: z-index(navigation);
+}
+
+@keyframes Spin {
+  100% {
+    transform: rotate(360deg);
+  }
+}
