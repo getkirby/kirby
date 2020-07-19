@@ -93,49 +93,47 @@ export default {
 
       return options;
     },
-    open(id) {
-      this.$api.pages
-        .get(id, {
+    async open(id) {
+      try {
+        const page = await this.$api.pages.get(id, {
           select: ["id", "status", "num", "errors", "blueprint"]
-        })
-        .then(page => {
-          if (page.blueprint.options.changeStatus === false) {
-            return this.$store.dispatch("notification/error", {
-              message: this.$t("error.page.changeStatus.permission")
-            });
-          }
-
-          if (page.status === "draft" && Object.keys(page.errors).length > 0) {
-            return this.$store.dispatch("notification/error", {
-              message: this.$t("error.page.changeStatus.incomplete"),
-              details: page.errors
-            });
-          }
-
-          if (page.blueprint.num === "default") {
-            this.$api.pages
-              .get(id, { select: ["siblings"] })
-              .then(response => {
-                this.setup({
-                  ...page,
-                  siblings: response.siblings
-                });
-              })
-              .catch(error => {
-                this.$store.dispatch('notification/error', error);
-              });
-          } else {
-            this.setup({
-              ...page,
-              siblings: []
-            });
-          }
-
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
         });
 
+        if (page.blueprint.options.changeStatus === false) {
+          return this.$store.dispatch("notification/error", {
+            message: this.$t("error.page.changeStatus.permission")
+          });
+        }
+
+        if (page.status === "draft" && Object.keys(page.errors).length > 0) {
+          return this.$store.dispatch("notification/error", {
+            message: this.$t("error.page.changeStatus.incomplete"),
+            details: page.errors
+          });
+        }
+
+        if (page.blueprint.num === "default") {
+          try {
+            const response = await this.$api.pages.get(id, {
+              select: ["siblings"]
+            });
+            this.setup({
+              ...page,
+              siblings: response.siblings
+            });
+          } catch (error) {
+            this.$store.dispatch('notification/error', error);
+          }
+        } else {
+          this.setup({
+            ...page,
+            siblings: []
+          });
+        }
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
     setup(page) {
       this.page          = page;
@@ -145,18 +143,21 @@ export default {
 
       this.$refs.dialog.open();
     },
-    submit() {
-      this.$api.pages
-        .status(this.page.id, this.form.status, this.form.position || 1)
-        .then(() => {
-          this.success({
-            message: ":)",
-            event: "page.changeStatus"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+    async submit() {
+      try {
+        await this.$api.pages.status(
+          this.page.id,
+          this.form.status,
+          this.form.position || 1
+        );
+        this.success({
+          message: ":)",
+          event: "page.changeStatus"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };
