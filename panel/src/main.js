@@ -16,7 +16,7 @@ Vue.config.devtools = true;
 
 import "./config/components.js";
 import router from "./config/router.js";
-import store from "./store/store.js";
+import store from "@/app/store/index.js";
 
 Vue.use(Api, store);
 Vue.use(Plugins, store);

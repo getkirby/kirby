@@ -1,6 +1,6 @@
 import Vue from "vue";
 import auth from "./auth.js";
-import store from "@/store/store.js";
+import store from "@/app/store/index.js";
 
 /* Routes */
 export default [
