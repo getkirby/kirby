@@ -1,6 +1,5 @@
 import App from "./App.vue";
 import Api from "./config/api.js";
-import Filters from "./config/filters.js";
 import Events from "./config/events.js";
 import Helpers from "./helpers/index.js";
 import Plugins from "./config/plugins.js";
@@ -19,7 +18,6 @@ import libraries from "./config/libraries.js";
 
 Vue.use(Events);
 Vue.use(Helpers);
-Vue.use(Filters);
 Vue.use(Vuelidate);
 Vue.use(caniuse);
 Vue.use(libraries);
