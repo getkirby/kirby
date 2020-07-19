@@ -15,14 +15,15 @@ Vue.use(Helpers);
 import "./config/components.js";
 import "./config/errors.js";
 import "./config/i18n.js";
-import "./config/libraries.js";
 
 import caniuse from "./config/caniuse.js";
+import libraries from "./config/libraries.js";
 
 Vue.use(Events);
 Vue.use(Filters);
 Vue.use(Vuelidate);
 Vue.use(caniuse);
+Vue.use(libraries);
 
 import router from "./config/router.js";
 import store from "./store/store.js";
