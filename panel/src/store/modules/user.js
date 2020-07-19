@@ -1,5 +1,4 @@
 import Vue from "vue";
-import Api from "@/api/api.js";
 import router from "@/config/router.js";
 
 export default {
@@ -42,13 +41,13 @@ export default {
       });
     },
     load(context) {
-      return Api.auth.user().then(user => {
+      return Vue.$api.auth.user().then(user => {
         context.commit("SET_CURRENT", user);
         return user;
       });
     },
     login(context, credentials) {
-      return Api.auth.login(credentials).then(user => {
+      return Vue.$api.auth.login(credentials).then(user => {
         context.commit("SET_CURRENT", user);
         context.dispatch("translation/activate", user.language, { root: true });
         router.push(context.state.path || "/");
@@ -64,7 +63,7 @@ export default {
         return;
       }
 
-      Api.auth
+      Vue.$api.auth
         .logout()
         .then(() => {
           router.push("/login");

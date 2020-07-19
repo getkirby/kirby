@@ -1,4 +1,4 @@
-import Api from "@/api/api.js";
+import Vue from "vue";
 
 export default {
   namespaced: true,
@@ -38,9 +38,7 @@ export default {
       }
 
       // reload the system info
-      return Api.system
-        .info({ view: "panel" })
-        .then(info => {
+      return Vue.$api.system.get().then(info => {
           context.commit("SET_INFO", {
             isReady: info.isInstalled && info.isOk,
             ...info

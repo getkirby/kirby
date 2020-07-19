@@ -1,4 +1,5 @@
 import App from "./App.vue";
+import Api from "./config/api.js";
 import Filters from "./config/filters.js";
 import Events from "./config/events.js";
 import Vue from "vue";
@@ -8,7 +9,6 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 import "./config/components.js";
-import "./config/api.js";
 import "./config/errors.js";
 import "./config/helpers.js";
 import "./config/i18n.js";
@@ -21,6 +21,8 @@ Vue.use(Vuelidate);
 
 import router from "./config/router.js";
 import store from "./store/store.js";
+
+Vue.use(Api, store);
 
 Vue.prototype.$go = (path) => {
   router.push(path).catch(e => {

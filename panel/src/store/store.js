@@ -1,6 +1,5 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import Api from "@/api/api.js";
 
 // store modules
 import content from "./modules/content.js";
@@ -75,7 +74,7 @@ export default new Vuex.Store({
       let site;
 
       if (context.state.user.current) {
-        site = Api.site.get(["title"]);
+        site = Vue.$api.site.get(["title"]);
       } else {
         site = new Promise(resolve => {
           resolve(context.state.system.info);

@@ -1,4 +1,4 @@
-import Api from "@/api/api.js";
+import Vue from "vue";
 
 export default {
   namespaced: true,
@@ -61,7 +61,7 @@ export default {
 
     },
     load(context) {
-      return Api.get("languages").then(response => {
+      return Vue.$api.list().then(response => {
         context.dispatch("install", response.data);
       });
     }
