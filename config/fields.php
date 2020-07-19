@@ -5,6 +5,7 @@ return [
     'date'        => __DIR__ . '/fields/date.php',
     'email'       => __DIR__ . '/fields/email.php',
     'files'       => __DIR__ . '/fields/files.php',
+    'gap'         => __DIR__ . '/fields/gap.php',
     'headline'    => __DIR__ . '/fields/headline.php',
     'hidden'      => __DIR__ . '/fields/hidden.php',
     'info'        => __DIR__ . '/fields/info.php',
