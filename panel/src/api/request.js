@@ -1,106 +1,118 @@
-import api from "./api.js";
-import store from "@/store/store.js";
+export default (config) => {
+  return {
+    running: 0,
+    async request(path, options, silent = false) {
+      // create options object
+      options = Object.assign(options || {}, {
+        credentials: "same-origin",
+        cache: "no-store",
+        headers: {
+          "x-requested-with": "xmlhttprequest",
+          "content-type": "application/json",
+          ...options.headers,
+        }
+      });
 
-export default {
-  running: 0,
-  request(path, options, silent = false) {
-    options = Object.assign(options || {}, {
-      credentials: "same-origin",
-      cache: "no-store",
-      headers: {
-        "x-requested-with": "xmlhttprequest",
-        "content-type": "application/json",
-        ...options.headers,
+      // adapt headers for all non-GET and nob-POST methods
+      if (
+        config.methodOverwrite &&
+        options.method !== 'GET' &&
+        options.method !== 'POST'
+      ) {
+        options.headers["x-http-method-override"] = options.method;
+        options.method = 'POST';
       }
-    });
 
-    if (options.method !== 'GET' && options.method !== 'POST') {
-      options.headers["x-http-method-override"] = options.method;
-      options.method = 'POST';
-    }
+      // CMS specific options via callback
+      options = config.onPrepare(options);
 
-    if (store.state.languages.current) {
-      options.headers["x-language"] = store.state.languages.current.code;
-    }
+      // create a request id
+      const id = path + "/" + JSON.stringify(options);
 
-    // add the csrf token to every request if it has been set
-    options.headers["x-csrf"] = window.panel.csrf;
+      config.onStart(id, silent);
+      this.running++;
 
-    // create a request id
-    const id = path + "/" + JSON.stringify(options);
+      // fetch the resquest's response
+      const response = await fetch(config.endpoint + "/" + path, options);
+      const text     = await response.text();
 
-    api.config.onStart(id, silent);
-    this.running++;
+      try {
+        // try to parse JSON
+        let json;
 
-    return fetch(api.config.endpoint + "/" + path, options)
-      .then(response => {
-        return response.text();
-      })
-      .then(text => {
         try {
-          return JSON.parse(text);
+          json = JSON.parse(text);
         } catch (e) {
           throw new Error("The JSON response from the API could not be parsed. Please check your API connection.");
         }
-      })
-      .then(json => {
+
+        // check for the server response code
+        if (response.status < 200 || response.status > 299) {
+          throw json;
+        }
+
+        // look for an error status
         if (json.status && json.status === "error") {
           throw json;
         }
 
-        let response = json;
+        let data = json;
 
         if (json.data && json.type && json.type === "model") {
-          response = json.data;
+          data = json.data;
         }
 
         this.running--;
-        api.config.onComplete(id);
-        api.config.onSuccess(json);
-        return response;
-      })
-      .catch(error => {
+        config.onComplete(id);
+        config.onSuccess(json);
+        return data;
+
+      } catch (e) {
         this.running--;
-        api.config.onComplete(id);
-        api.config.onError(error);
-        throw error;
-      });
-  },
-  get(path, query, options, silent = false) {
-    if (query) {
-      path +=
-        "?" +
-        Object.keys(query)
-          .map(key => {
-            const value = query[key];
+        config.onComplete(id);
+        config.onError(e);
+        throw e;
+      }
+    },
+    async get(path, query, options, silent = false) {
+      if (query) {
+        path +=
+          "?" +
+          Object.keys(query)
+            .filter(key => query[key] !== undefined && query[key] !== null)
+            .map(key => key + "=" + query[key])
+            .join("&");
+      }
 
-            if (value !== undefined && value !== null) {
-              return key + "=" + value;
-            } else {
-              return null;
-            }
-
-          })
-          .filter(value => value !== null)
-          .join("&");
+      return this.request(
+        path,
+        Object.assign(
+          options || {},
+          {
+            method: "GET"
+          }
+        ),
+        silent
+      );
+    },
+    async post(path, data, options, method = "POST", silent = false) {
+      return this.request(
+        path,
+        Object.assign(
+          options || {},
+          {
+            method: method,
+            body: JSON.stringify(data)
+          }
+        ),
+        silent
+      );
+    },
+    async patch(path, data, options, silent = false) {
+      return this.post(path, data, options, "PATCH", silent);
+    },
+    async delete(path, data, options, silent = false) {
+      return this.post(path, data, options, "DELETE", silent);
     }
-
-    return this.request(path, Object.assign(options || {}, { method: "GET" }), silent);
-  },
-  post(path, data, options, method = "POST", silent = false) {
-    return this.request(
-      path,
-      Object.assign(options || {}, {
-        method: method,
-        body: JSON.stringify(data)
-      }),
-      silent
-    );
-  },
-  patch(path, data, options, silent = false) {
-    return this.post(path, data, options, "PATCH", silent);
-  },
-  delete(path, data, options, silent = false) {
-    return this.post(path, data, options, "DELETE", silent);
   }
 };

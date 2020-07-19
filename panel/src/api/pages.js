@@ -1,44 +1,85 @@
 import Vue from "vue";
-import api from "./api.js";
 
-export default {
-  create(parent, data) {
-    if (parent === null || parent === "/") {
-      return api.post("site/children", data);
-    }
+export default (api) => {
 
-    return api.post(this.url(parent, "children"), data);
-  },
-  duplicate(id, slug, options) {
-    return api.post(this.url(id, "duplicate"), {
-      slug:     slug,
-      children: options.children || false,
-      files:    options.files    || false,
-    });
-  },
-  url(id, path) {
-    let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");
+  let pages = {
+    async blueprints(parent, section) {
+      return api.get("pages/" + this.id(parent) + "/children/blueprints", {
+        section: section
+      });
+    },
+    breadcrumb(page, self = true) {
+      var breadcrumb = page.parents.map(parent => ({
+        label: parent.title,
+        link: this.link(parent.id)
+      }));
 
-    if (path) {
-      url += "/" + path;
-    }
+      if (self === true) {
+        breadcrumb.push({
+          label: page.title,
+          link: this.link(page.id),
+        });
+      }
 
-    return url;
-  },
-  link(id) {
-    return "/" + this.url(id);
-  },
-  get(id, query) {
-    return api.get(this.url(id), query).then(page => {
+      return breadcrumb;
+    },
+    async changeSlug(id, slug) {
+      return api.patch("pages/" + this.id(id) + "/slug", { slug: slug });
+    },
+    async changeStatus(id, status, position) {
+      return api.patch("pages/" + this.id(id) + "/status", {
+        status: status,
+        position: position
+      });
+    },
+    async changeTemplate(id, template) {
+      return api.patch("pages/" + this.id(id) + "/template", {
+        template: template
+      });
+    },
+    async changeTitle(id, title) {
+      return api.patch("pages/" + this.id(id) + "/title", { title: title });
+    },
+    async children(id, query) {
+      return api.post("pages/" + this.id(id) + "/children/search", query);
+    },
+    async create(parent, data) {
+      if (parent === null || parent === "/") {
+        return api.post("site/children", data);
+      }
+
+      return api.post("pages/" + this.id(parent) + "/children", data);
+    },
+    async delete(id, data) {
+      return api.delete("pages/" + this.id(id), data);
+    },
+    async duplicate(id, slug, options) {
+      return api.post("pages/" + this.id(id) + "/duplicate", {
+        slug:     slug,
+        children: options.children || false,
+        files:    options.files    || false,
+      });
+    },
+    async get(id, query) {
+      let page = await api.get("pages/" + this.id(id), query);
+
       if (Array.isArray(page.content) === true) {
         page.content = {};
       }
 
       return page;
-    });
-  },
-  options(id, view = "view") {
-    return api.get(this.url(id), {select: "options"}).then(page => {
+    },
+    id(id) {
+      return id.replace(/\//g, "+");
+    },
+    async files(id, query) {
+      return api.post("pages/" + this.id(id) + "/files/search", query);
+    },
+    link(id) {
+      return "/" + this.url(id);
+    },
+    async options(id, view = "view") {
+      const page    = await api.get(this.url(id), {select: "options"})
       const options = page.options;
       let result    = [];
 
@@ -101,61 +142,38 @@ export default {
       });
 
       return result;
-    });
-  },
-  preview(id) {
-    return this.get(id, { select: "previewUrl" })
-      .then(page => {
-        return page.previewUrl;
-      });
-  },
-  update(id, data) {
-    return api.patch(this.url(id), data);
-  },
-  children(id, query) {
-    return api.post(this.url(id, "children/search"), query);
-  },
-  files(id, query) {
-    return api.post(this.url(id, "files/search"), query);
-  },
-  delete(id, data) {
-    return api.delete(this.url(id), data);
-  },
-  slug(id, slug) {
-    return api.patch(this.url(id, "slug"), { slug: slug });
-  },
-  title(id, title) {
-    return api.patch(this.url(id, "title"), { title: title });
-  },
-  template(id, template) {
-    return api.patch(this.url(id, "template"), { template: template });
-  },
-  search(parent, query) {
-    if (parent) {
-      return api.post('pages/' + parent.replace('/', '+') + '/children/search?select=id,title,hasChildren', query);
-    } else {
+    },
+    async preview(id) {
+      const page = await this.get(this.id(id), { select: "previewUrl" });
+      return page.previewUrl;
+    },
+    async search(parent, query) {
+      if (parent) {
+        return api.post('pages/' + this.id(parent) + '/children/search?select=id,title,hasChildren', query);
+      }
+
       return api.post('site/children/search?select=id,title,hasChildren', query);
-    }
-  },
-  status(id, status, position) {
-    return api.patch(this.url(id, "status"), {
-      status: status,
-      position: position
-    });
-  },
-  breadcrumb(page, self = true) {
-    var breadcrumb = page.parents.map(parent => ({
-      label: parent.title,
-      link: this.link(parent.id)
-    }));
+    },
+    async update(id, data) {
+      return api.patch("pages/" + this.id(id), data);
+    },
+    url(id, path) {
+      let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");
 
-    if (self === true) {
-      breadcrumb.push({
-        label: page.title,
-        link: this.link(page.id),
-      });
-    }
+      if (path) {
+        url += "/" + path;
+      }
 
-    return breadcrumb;
-  }
+      return url;
+    },
+  };
+
+  // @deprecated aliases
+  // TODO: remove in 3.6.0
+  pages.slug     = pages.changeSlug;
+  pages.status   = pages.changeStatus;
+  pages.template = pages.changeTitle;
+  pages.title    = pages.changeTemplate;
+
+  return pages;
 };

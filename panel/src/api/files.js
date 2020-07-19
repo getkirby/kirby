@@ -1,41 +1,62 @@
 import Vue from "vue";
-import api from "./api.js";
 
-export default {
-  get(parent, filename, query) {
-    return api.get(this.url(parent, filename), query).then(file => {
+export default (api) => {
+
+  let files = {
+    async breadcrumb(file, route) {
+
+      let parent = null;
+      let breadcrumb = [];
+
+      switch (route) {
+        case "UserFile":
+          breadcrumb.push({
+            label: file.parent.username,
+            link: api.users.link(file.parent.id)
+          });
+          parent = 'users/' + file.parent.id;
+          break;
+        case "SiteFile":
+          parent = "site";
+          break;
+        case "PageFile":
+          breadcrumb = file.parents.map(parent => ({
+            label: parent.title,
+            link: api.pages.link(parent.id)
+          }));
+          parent = api.pages.url(file.parent.id);
+          break;
+      }
+
+      breadcrumb.push({
+        label: file.filename,
+        link: this.link(parent, file.filename)
+      });
+
+      return breadcrumb;
+    },
+    async changeName(parent, filename, to) {
+      return api.patch(parent + "/files/" + filename + "/name", {
+        name: to
+      });
+    },
+    async delete(parent, filename) {
+      return api.delete(parent + "/files/" + filename);
+    },
+    async get(parent, filename, query) {
+      let file = await api.get(parent + "/files/" + filename, query);
+
       if (Array.isArray(file.content) === true) {
         file.content = {};
       }
 
       return file;
-    });
-  },
-  update(parent, filename, data) {
-    return api.patch(this.url(parent, filename), data);
-  },
-  rename(parent, filename, to) {
-    return api.patch(this.url(parent, filename, "name"), {
-      name: to
-    });
-  },
-  url(parent, filename, path) {
-    let url = parent + "/files/" + filename;
-
-    if (path) {
-      url += "/" + path;
-    }
-
-    return url;
-  },
-  link(parent, filename, path) {
-    return "/" + this.url(parent, filename, path);
-  },
-  delete(parent, filename) {
-    return api.delete(this.url(parent, filename));
-  },
-  options(parent, filename, view) {
-    return api.get(this.url(parent, filename), {select: "options"}).then(file => {
+    },
+    link(parent, filename, path) {
+      return "/" + this.url(parent, filename, path);
+    },
+    async options(parent, filename, view) {
+      const file    = await api.get(this.url(parent, filename), {select: "options"});
       const options = file.options;
       let result    = [];
 
@@ -69,38 +90,24 @@ export default {
       });
 
       return result;
-    });
-  },
-  breadcrumb(file, route) {
+    },
+    async update(parent, filename, data) {
+      return api.patch(parent + "/files/" + filename, data);
+    },
+    url(parent, filename, path) {
+      let url = parent + "/files/" + filename;
 
-    let parent = null;
-    let breadcrumb = [];
+      if (path) {
+        url += "/" + path;
+      }
 
-    switch (route) {
-      case "UserFile":
-        breadcrumb.push({
-          label: file.parent.username,
-          link: api.users.link(file.parent.id)
-        });
-        parent = 'users/' + file.parent.id;
-        break;
-      case "SiteFile":
-        parent = "site";
-        break;
-      case "PageFile":
-        breadcrumb = file.parents.map(parent => ({
-          label: parent.title,
-          link: api.pages.link(parent.id)
-        }));
-        parent = api.pages.url(file.parent.id);
-        break;
+      return url;
     }
+  };
 
-    breadcrumb.push({
-      label: file.filename,
-      link: this.link(parent, file.filename)
-    });
+  // @deprecated aliases
+  // TODO: remove in 3.6.0
+  files.rename = files.changeName;
 
-    return breadcrumb;
-  }
+  return files;
 };

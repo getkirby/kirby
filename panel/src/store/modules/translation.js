@@ -1,5 +1,4 @@
 import Vue from "vue";
-import Api from "@/api/api.js";
 
 export default {
   namespaced: true,
@@ -17,7 +16,7 @@ export default {
   },
   actions: {
     load(context, id) {
-      return Api.translations.get(id);
+      return Vue.$api.translations.get(id);
     },
     install(context, translation) {
       context.commit("INSTALL", translation);
