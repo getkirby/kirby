@@ -1,6 +1,0 @@
-title: Email
-
-fields:
-  email:
-    label: Email
-    type: email
