@@ -5,6 +5,7 @@
       :id="_uid"
       v-bind="$props"
       theme="field"
+      type="url"
       v-on="$listeners"
     >
       <k-button

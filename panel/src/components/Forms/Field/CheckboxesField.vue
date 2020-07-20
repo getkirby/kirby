@@ -9,6 +9,7 @@
       :id="_uid"
       v-bind="$props"
       theme="field"
+      type="checkboxes"
       v-on="$listeners"
     />
   </k-field>
