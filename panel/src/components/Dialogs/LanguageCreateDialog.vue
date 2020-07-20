@@ -83,28 +83,28 @@ export default {
 
       this.$refs.dialog.open();
     },
-    submit() {
+    async submit() {
       if (this.language.locale) {
         this.language.locale = this.language.locale.trim() || null;
       }
 
-      this.$api
-        .post("languages", {
+      try {
+        await this.$api.languages.create({
           name: this.language.name,
           code: this.language.code,
           direction: this.language.direction,
           locale: this.language.locale
-        })
-        .then(() => {
-          this.$store.dispatch("languages/load");
-          this.success({
-            message: ":)",
-            event: "language.create"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
         });
+
+        this.$store.dispatch("languages/load");
+        this.success({
+          message: ":)",
+          event: "language.create"
+        });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };
