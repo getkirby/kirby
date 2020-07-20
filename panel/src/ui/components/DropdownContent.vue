@@ -1,14 +1,22 @@
 <template>
-  <div v-if="isOpen" :data-align="align" class="k-dropdown-content">
+  <div
+    v-if="isOpen"
+    :data-align="align"
+    :data-theme="theme"
+    class="k-dropdown-content absolute mb-24 bg-black text-white rounded-sm shadow-lg"
+  >
     <slot>
       <template v-for="(option, index) in items">
-        <hr v-if="option === '-'" :key="_uid + '-item-' + index">
+        <hr
+          v-if="option === '-'"
+          :key="_uid + '-item-' + index"
+        >
         <k-dropdown-item
           v-else
           :ref="_uid + '-item-' + index"
           :key="_uid + '-item-' + index"
           v-bind="option"
-          @click="$emit('action', option.click)"
+          @click="onClick(option.option || option.click, option, index)"
         >
           {{ option.text }}
         </k-dropdown-item>
@@ -22,8 +30,15 @@ let OpenDropdown = null;
 
 export default {
   props: {
+    align: {
+      type: String,
+      default: "left"
+    },
     options: [Array, Function],
-    align: String
+    theme: {
+      type: String,
+      default: "dark"
+    }
   },
   data() {
     return {
@@ -37,18 +52,20 @@ export default {
       if (this.options) {
         if (typeof this.options === "string") {
           const response = await fetch(this.options);
-          const json = await response.json();
+          const json     = await response.json();
           return ready(json);
-
-        } else if (typeof this.options === "function") {
-          this.options(ready);
-
-        } else if (Array.isArray(this.options)) {
-          ready(this.options);
         }
-      } else {
-        return ready(this.items);
+
+        if (typeof this.options === "function") {
+          return this.options(ready);
+        }
+
+        if (Array.isArray(this.options)) {
+          return ready(this.options);
+        }
       }
+
+      return ready(this.items);
     },
     open() {
 
@@ -160,6 +177,11 @@ export default {
 
           break;
       }
+    },
+    onClick(click, option, optionIndex) {
+      // legacy
+      this.$emit('action', click, option, optionIndex);
+      this.$emit('option', click, option, optionIndex);
     }
   }
 };
@@ -167,15 +189,9 @@ export default {
 
 <style lang="scss">
 .k-dropdown-content {
-  position: absolute;
   top: 100%;
-  background: $color-black;
-  color: $color-white;
-  z-index: z-index(dropdown);
-  box-shadow: $shadow;
-  border-radius: $rounded-xs;
   text-align: left;
-  margin-bottom: 6rem;
+  z-index: z-index(dropdown);
 
   [dir="ltr"] & {
     left: 0;
@@ -187,8 +203,12 @@ export default {
 
 }
 
-.k-dropdown-content[data-align="right"] {
+.k-dropdown-content[data-align="center"] {
+  left: 50%;
+  transform: translateX(-50%);
+}
 
+.k-dropdown-content[data-align="right"] {
   [dir="ltr"] & {
     left: auto;
     right: 0;
@@ -198,8 +218,9 @@ export default {
     left: 0;
     right: auto;
   }
-
 }
+
+
 .k-dropdown-content > .k-dropdown-item:first-child {
   margin-top: .5rem;
 }
@@ -207,19 +228,15 @@ export default {
   margin-bottom: .5rem;
 }
 .k-dropdown-content hr {
-  position: relative;
-  padding: 0.5rem 0;
-  border: 0;
-
-  &::after {
-    position: absolute;
-    top: 0.5rem;
-    left: 1rem;
-    right: 1rem;
-    content: "";
-    height: 1px;
-    background: currentColor;
-    opacity: 0.2;
-  }
+  border-color: currentColor;
+  opacity: 0.2;
+  margin: .5rem 1rem;
+}
+.k-dropdown-content[data-theme="light"] {
+  background: $color-white;
+  color: $color-black;
+}
+.k-dropdown-content[data-theme="light"] hr {
+  opacity: 0.1;
 }
 </style>

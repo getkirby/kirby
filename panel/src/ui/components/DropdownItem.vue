@@ -2,7 +2,7 @@
   <k-button
     ref="button"
     v-bind="$props"
-    class="k-dropdown-item"
+    class="k-dropdown-item flex items-center text-left text-sm px-5"
     v-on="listeners"
   >
     <slot />
@@ -13,14 +13,14 @@
 export default {
   inheritAttrs: false,
   props: {
+    color: String,
+    current: [Boolean, String],
     disabled: Boolean,
     icon: String,
-    image: [String, Object],
     link: String,
     target: String,
     theme: String,
     upload: String,
-    current: [String, Boolean]
   },
   data() {
     return {
@@ -47,11 +47,7 @@ export default {
 <style lang="scss">
 .k-dropdown-item {
   white-space: nowrap;
-  line-height: 1;
-  display: flex;
   width: 100%;
-  align-items: center;
-  font-size: $text-sm;
   padding: 6px 16px;
 
   &:focus {
