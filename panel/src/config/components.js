@@ -265,7 +265,7 @@ import Languages from "@/components/Navigation/Languages.vue";
 import Pagination from "@/components/Navigation/Pagination.vue";
 import PrevNext from "@/components/Navigation/PrevNext.vue";
 import Search from "@/components/Navigation/Search.vue";
-import Tag from "@/components/Navigation/Tag.vue";
+import Tag from "@/ui/components/Tag.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
 
 Vue.component("k-button", Button);
