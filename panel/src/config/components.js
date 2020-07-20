@@ -260,7 +260,7 @@ import ButtonNative from "@/components/Navigation/ButtonNative.vue";
 import Dropdown from "@/components/Navigation/Dropdown.vue";
 import DropdownContent from "@/components/Navigation/DropdownContent.vue";
 import DropdownItem from "@/components/Navigation/DropdownItem.vue";
-import Link from "@/components/Navigation/Link.vue";
+import Link from "@/ui/components/Link.vue";
 import Languages from "@/components/Navigation/Languages.vue";
 import Pagination from "@/components/Navigation/Pagination.vue";
 import PrevNext from "@/ui/components/PrevNext.vue";
