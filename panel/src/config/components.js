@@ -263,7 +263,7 @@ import DropdownItem from "@/components/Navigation/DropdownItem.vue";
 import Link from "@/components/Navigation/Link.vue";
 import Languages from "@/components/Navigation/Languages.vue";
 import Pagination from "@/components/Navigation/Pagination.vue";
-import PrevNext from "@/components/Navigation/PrevNext.vue";
+import PrevNext from "@/ui/components/PrevNext.vue";
 import Search from "@/components/Navigation/Search.vue";
 import Tag from "@/ui/components/Tag.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
