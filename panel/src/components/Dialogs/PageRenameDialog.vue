@@ -35,36 +35,33 @@ export default {
     }
   },
   methods: {
-    open(id) {
-      this.$api.pages.get(id, { select: ["id", "title"] })
-        .then(page => {
-          this.page = page;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+    async open(id) {
+      try {
+        this.page = await this.$api.pages.get(id, { select: ["id", "title"] });
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
+    async submit() {
       // prevent empty title with just spaces
       this.page.title = this.page.title.trim();
 
       if (this.page.title.length === 0) {
-        this.$refs.dialog.error(this.$t("error.page.changeTitle.empty"));
-        return;
+        return this.$refs.dialog.error(this.$t("error.page.changeTitle.empty"));
       }
 
-      this.$api.pages
-        .title(this.page.id, this.page.title)
-        .then(() => {
-          this.success({
-            message: ":)",
-            event: "page.changeTitle"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+      try {
+        await this.$api.pages.changeTitle(this.page.id, this.page.title);
+        this.success({
+          message: ":)",
+          event: "page.changeTitle"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

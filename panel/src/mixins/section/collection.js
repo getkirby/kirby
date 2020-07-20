@@ -38,11 +38,11 @@ export default {
       if (this.options.min && this.data.length < this.options.min) {
         return true;
       }
-      
+
       if (this.options.max && this.data.length > this.options.max) {
         return true;
       }
-      
+
       return false;
     },
     language() {
@@ -61,7 +61,7 @@ export default {
     items(data) {
       return data;
     },
-    load(reload) {
+    async load(reload) {
       if (!reload) {
         this.isLoading = true;
       }
@@ -70,20 +70,22 @@ export default {
         this.pagination.page = localStorage.getItem(this.paginationId) || 1;
       }
 
-      this.$api
-        .get(this.parent + "/sections/" + this.name, {
-          page: this.pagination.page
-        })
-        .then(response => {
-          this.isLoading = false;
-          this.options = response.options;
-          this.pagination = response.pagination;
-          this.data = this.items(response.data);
-        })
-        .catch(error => {
-          this.isLoading = false;
-          this.error = error.message;
-        });
+      try {
+        const response = await this.$api.get(
+          this.parent + "/sections/" + this.name,
+          { page: this.pagination.page }
+        );
+
+        this.options = response.options;
+        this.pagination = response.pagination;
+        this.data = this.items(response.data);
+
+      } catch (error) {
+        this.error = error.message;
+
+      } finally {
+        this.isLoading = false;
+      }
     },
     paginate(pagination) {
       localStorage.setItem(this.paginationId, pagination.page);
