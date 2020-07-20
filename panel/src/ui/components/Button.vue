@@ -1,11 +1,18 @@
 <template>
   <component
-    ref="button"
     :is="component"
+    ref="button"
+    :class="$helper.color.class(buttonColor)"
+    :style="$helper.color.style(buttonColor)"
     v-bind="$props"
     v-on="$listeners"
   >
-    <slot />
+    <template v-if="$slots.default">
+      <slot />
+    </template>
+    <template v-else-if="text">
+      {{ text }}
+    </template>
   </component>
 </template>
 
@@ -13,25 +20,74 @@
 export default {
   inheritAttrs: false,
   props: {
+    /**
+     * Whether the button should be focuse on load
+     */
     autofocus: Boolean,
+    /**
+     * Sets the button color.
+     * This will use the text- utility
+     */
+    color: String,
+    /**
+     * Sets the aria-current attribute.
+     * Especially useful in connection with a link attribute.
+     */
     current: [String, Boolean],
+    /**
+     * A disabled button will have no pointer events and
+     * the opacity is be reduced.
+     */
     disabled: Boolean,
-    icon: String,
+    /**
+     * Adds an icon to the button.
+     */
+    icon: [String, Object],
     id: [String, Number],
+    /**
+     * If the link attribute is set, the button will
+     * automatically be converted to a proper a tag.
+     */
     link: String,
+    loading: Boolean,
+    /**
+     * A responsive button will hide the button text on
+     * smaller screens automatically and only keep the icon.
+     * An icon must be set in this case.
+     */
     responsive: Boolean,
     rel: String,
     role: String,
+    /**
+     * In connection with the `link` prop, you can also set
+     * the target of the link. This does not apply to regular buttons.
+     */
     target: String,
     tabindex: String,
+    text: String,
+    /**
+     * With the theme you can control the general design of the button.
+     * Available options are: `positive`|`negative`
+     */
     theme: String,
+    /**
+     * The tooltip attribute can be used to add additional text
+     * to the button, which is shown on mouseover (with the title attribute).
+     */
     tooltip: String,
+    /**
+     * The type attribute sets the button type like in HTML.
+     * Available options: `button`|`reset`|`submit`
+     */
     type: {
       type: String,
       default: "button"
     }
   },
   computed: {
+    buttonColor() {
+      return this.color || this.theme || false;
+    },
     component() {
       if (this.disabled === true) {
         return "k-button-disabled";
@@ -80,6 +136,7 @@ button::-moz-focus-inner {
   position: relative;
   font-size: $text-sm;
   transition: color 0.3s;
+  line-height: 1;
 
   &:focus,
   &:hover {
@@ -93,30 +150,30 @@ button::-moz-focus-inner {
   }
 }
 
+.k-button-text {
+  display: inline-block;
+}
+
 /* hide button text on small screens */
 .k-button[data-responsive] .k-button-text {
   display: none;
 
   @media screen and (min-width: $breakpoint-sm) {
-    display: inline;
+    display: inline-block;
   }
 }
 
-.k-button[data-theme="positive"] {
-  color: $color-positive;
-}
-
-.k-button[data-theme="negative"] {
-  color: $color-negative;
-}
-
-.k-button-icon {
+.k-button > .k-button-icon {
   display: inline-flex;
   align-items: center;
   line-height: 0;
 }
 
 .k-button-icon ~ .k-button-text {
+  &:empty {
+    display: none;
+  }
+
   [dir="ltr"] & {
     padding-left: 0.5rem;
   }
@@ -124,14 +181,6 @@ button::-moz-focus-inner {
   [dir="rtl"] & {
     padding-right: 0.5rem;
   }
-}
-
-.k-button-text {
-  opacity: 0.75;
-}
-.k-button:focus .k-button-text,
-.k-button:hover .k-button-text {
-  opacity: 1;
 }
 
 .k-button-text span,

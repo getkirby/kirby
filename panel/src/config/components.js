@@ -252,11 +252,11 @@ Vue.component("k-sort-handle", SortHandle);
 Vue.component("k-text", Text);
 
 /* Navigation */
-import Button from "@/components/Navigation/Button.vue";
-import ButtonDisabled from "@/components/Navigation/ButtonDisabled.vue";
-import ButtonGroup from "@/components/Navigation/ButtonGroup.vue";
-import ButtonLink from "@/components/Navigation/ButtonLink.vue";
-import ButtonNative from "@/components/Navigation/ButtonNative.vue";
+import Button from "@/ui/components/Button.vue";
+import ButtonDisabled from "@/ui/components/ButtonDisabled.vue";
+import ButtonGroup from "@/ui/components/ButtonGroup.vue";
+import ButtonLink from "@/ui/components/ButtonLink.vue";
+import ButtonNative from "@/ui/components/ButtonNative.vue";
 import Dropdown from "@/components/Navigation/Dropdown.vue";
 import DropdownContent from "@/components/Navigation/DropdownContent.vue";
 import DropdownItem from "@/components/Navigation/DropdownItem.vue";
