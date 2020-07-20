@@ -5,6 +5,7 @@
       :id="_uid"
       v-bind="$props"
       theme="field"
+      type="time"
       v-on="$listeners"
     />
   </k-field>

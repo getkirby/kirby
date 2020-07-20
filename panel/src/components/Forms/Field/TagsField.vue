@@ -10,6 +10,7 @@
       :id="_uid"
       v-bind="$props"
       theme="field"
+      type="tags"
       v-on="$listeners"
     />
   </k-field>

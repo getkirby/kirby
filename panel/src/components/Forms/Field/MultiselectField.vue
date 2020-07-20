@@ -12,6 +12,7 @@
       :id="_uid"
       v-bind="$props"
       theme="field"
+      type="multiselect"
       v-on="$listeners"
     />
   </k-field>

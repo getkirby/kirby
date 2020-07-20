@@ -5,6 +5,7 @@
       :id="_uid"
       v-bind="$props"
       theme="field"
+      type="toggle"
       v-on="$listeners"
     />
   </k-field>
