@@ -64,7 +64,7 @@ Vue.component("k-users-dialog", UsersDialog);
 
 /* Form */
 import Autocomplete from "@/components/Forms/Autocomplete.vue";
-import Calendar from "@/components/Forms/Calendar.vue";
+import Calendar from "@/ui/components/Calendar.vue";
 import Counter from "@/ui/components/Counter.vue";
 import Form from "@/ui/components/Form.vue";
 import FormButtons from "@/components/Forms/FormButtons.vue";
