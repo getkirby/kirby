@@ -240,7 +240,7 @@ import Icon from "@/components/Misc/Icon.vue";
 import Image from "@/components/Misc/Image.vue";
 import Progress from "@/ui/components/Progress.vue";
 import SortHandle from "@/components/Misc/SortHandle.vue";
-import Text from "@/components/Misc/Text.vue";
+import Text from "@/ui/components/Text.vue";
 
 Vue.component("k-draggable", Draggable);
 Vue.component("k-error-boundary", ErrorBoundary);
