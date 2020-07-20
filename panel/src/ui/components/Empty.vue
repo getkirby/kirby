@@ -1,8 +1,17 @@
 <template>
-  <div :data-layout="layout" class="k-empty" v-on="$listeners">
-    <k-icon v-if="icon" :type="icon" />
+  <component
+    :is="element"
+    :data-layout="layout"
+    :type="element === 'button' ? 'button' : false"
+    class="k-empty flex items-stretch rounded-sm"
+    v-on="$listeners"
+  >
+    <k-icon
+      v-if="icon"
+      :type="icon"
+    />
     <p><slot /></p>
-  </div>
+  </component>
 </template>
 
 <script>
@@ -10,9 +19,17 @@ export default {
   props: {
     text: String,
     icon: String,
+    /**
+     * Available options: `list`|`cards`
+     */
     layout: {
       type: String,
       default: "list"
+    }
+  },
+  computed: {
+    element() {
+      return this.$listeners["click"] !== undefined ? "button" : "div";
     }
   }
 };
@@ -21,18 +38,21 @@ export default {
 <style lang="scss">
 /* global styles */
 .k-empty {
-  display: flex;
-  align-items: stretch;
-  border-radius: $rounded-xs;
   color: $color-gray-700;
   border: 1px dashed $color-border;
+}
+button.k-empty {
+  width: 100%;
+}
+button.k-empty:focus {
+  outline: none;
 }
 .k-empty p {
   font-size: $text-sm;
   color: $color-gray-700;
 }
 .k-empty > .k-icon {
-  color: $color-light-grey;
+  color: $color-gray-500;
 }
 
 /* layout:cards */

@@ -207,7 +207,7 @@ import Cards from "@/components/Layout/Cards.vue";
 import Collection from "@/components/Layout/Collection.vue";
 import Column from "@/components/Layout/Column.vue";
 import Dropzone from "@/ui/components/Dropzone.vue";
-import Empty from "@/components/Layout/Empty.vue";
+import Empty from "@/ui/components/Empty.vue";
 import FilePreview from "@/components/Layout/FilePreview.vue";
 import Grid from "@/components/Layout/Grid.vue";
 import Header from "@/components/Layout/Header.vue";
