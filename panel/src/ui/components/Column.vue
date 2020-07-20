@@ -1,5 +1,9 @@
 <template>
-  <div :data-width="width" :data-sticky="sticky" class="k-column">
+  <div
+    :data-width="width"
+    :data-sticky="sticky"
+    class="k-column"
+  >
     <div><slot /></div>
   </div>
 </template>
@@ -51,6 +55,9 @@ export default {
   }
   .k-column[data-width="1/6"] {
     grid-column-start: span 2;
+  }
+  .k-column[data-width="1/12"] {
+    grid-column-start: span 1;
   }
   .k-column[data-width="5/6"] {
     grid-column-start: span 10;
