@@ -6,8 +6,7 @@
     "dev": "vue-cli-service serve --open",
     "build": "vue-cli-service build && mv dist/js/chunk*.js dist/js/vendor.js && rm dist/index.html",
     "lint": "vue-cli-service lint",
-    "pre-commit": "pretty-quick --staged",
-    "sandbox": "vue serve ./src/ui/main.js"
+    "pre-commit": "pretty-quick --staged"
   },
   "dependencies": {
     "autosize": "^4.0.2",
