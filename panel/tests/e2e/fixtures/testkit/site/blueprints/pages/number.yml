@@ -1,6 +1,0 @@
-title: Number
-
-fields:
-  number:
-    label: Number
-    type: number

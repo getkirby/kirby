@@ -9,8 +9,8 @@
       <template v-for="(section, sectionIndex) in column.sections">
         <template v-if="meetsCondition(section)">
           <component
-            :is="'k-' + section.type + '-section'"
             v-if="exists(section.type)"
+            :is="'k-' + section.type + '-section'"
             :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex + '-' + blueprint"
             :name="section.name"
             :parent="parent"
@@ -30,8 +30,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-
 export default {
   props: {
     parent: String,
@@ -45,7 +43,7 @@ export default {
   },
   methods: {
     exists(type) {
-      return Vue.options.components["k-" + type + "-section"];
+      return this.$helper.isComponent(`k-${type}-section`);
     },
     meetsCondition(section) {
 
