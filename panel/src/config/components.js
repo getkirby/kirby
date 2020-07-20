@@ -214,7 +214,7 @@ import Header from "@/components/Layout/Header.vue";
 import List from "@/components/Layout/List.vue";
 import ListItem from "@/components/Layout/ListItem.vue";
 import Tabs from "@/components/Layout/Tabs.vue";
-import View from "@/components/Layout/View.vue";
+import View from "@/ui/components/View.vue";
 
 Vue.component("k-bar", Bar);
 Vue.component("k-box", Box);

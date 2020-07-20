@@ -1,5 +1,8 @@
 <template>
-  <div :data-align="align" class="k-view" >
+  <div
+    :data-align="align"
+    class="k-view px-6"
+  >
     <slot />
   </div>
 </template>
@@ -7,6 +10,9 @@
 <script>
 export default {
   props: {
+    /**
+     * Available values: `center`
+     */
     align: String
   }
 };
@@ -14,8 +20,6 @@ export default {
 
 <style lang="scss">
 .k-view {
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
   margin: 0 auto;
   max-width: 100rem;
 
@@ -31,11 +35,11 @@ export default {
 }
 
 .k-view[data-align="center"] {
-  height: calc(100vh - 6rem);
+  min-height: calc(100vh - 6rem);
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 0 3rem;
+  padding: 1.5rem;
   overflow: auto;
 }
 .k-view[data-align="center"] > * {
