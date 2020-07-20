@@ -201,7 +201,7 @@ Vue.component("k-users-field-preview", UsersFieldPreview);
 
 /* Layout */
 import Bar from "@/ui/components/Bar.vue";
-import Box from "@/components/Layout/Box.vue";
+import Box from "@/ui/components/Box.vue";
 import Card from "@/components/Layout/Card.vue";
 import Cards from "@/components/Layout/Cards.vue";
 import Collection from "@/components/Layout/Collection.vue";
