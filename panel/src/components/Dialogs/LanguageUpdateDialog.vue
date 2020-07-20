@@ -33,50 +33,46 @@ export default {
     onNameChanges() {
       return false;
     },
-    open(code) {
-      this.$api
-        .get("languages/" + code)
-        .then(language => {
-          this.language = language;
+    async open(code) {
+      try {
+        this.language = await this.$api.languages.get(code);
 
-          const localeKeys = Object.keys(this.language.locale);
+        const localeKeys = Object.keys(this.language.locale);
+        if (localeKeys.length === 1) {
+          this.language.locale = this.language.locale[localeKeys[0]];
+        }
 
-          if (localeKeys.length === 1) {
-            this.language.locale = this.language.locale[localeKeys[0]];
-          }
+        this.$refs.dialog.open();
 
-          this.$refs.dialog.open();
-        })
-        .catch (error => {
-          this.$store.dispatch('notification/error', error);
-        });
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
+    async submit() {
       if (this.language.name.length === 0) {
-        this.$refs.dialog.error(this.$t("error.language.name"));
-        return;
+        return this.$refs.dialog.error(this.$t("error.language.name"));
       }
 
       if (typeof this.language.locale === "string") {
         this.language.locale = this.language.locale.trim() || null;
       }
 
-      this.$api
-        .patch("languages/" + this.language.code, {
+      try {
+        await this.$api.languages.update(this.language.code, {
           name: this.language.name,
           direction: this.language.direction,
           locale: this.language.locale
-        })
-        .then(() => {
-          this.$store.dispatch("languages/load");
-          this.success({
-            message: this.$t("language.updated"),
-            event: "language.update"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
         });
+
+        this.$store.dispatch("languages/load");
+        this.success({
+          message: this.$t("language.updated"),
+          event: "language.update"
+        });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

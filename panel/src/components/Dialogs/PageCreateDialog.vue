@@ -70,32 +70,29 @@ export default {
         template: null
       };
     },
-    open(parent, blueprintApi, section) {
+    async open(parent, blueprintApi, section) {
       this.parent  = parent;
       this.section = section;
 
-      this.$api
-        .get(blueprintApi, {section: section})
-        .then(response => {
-          this.templates = response.map(blueprint => {
-            return {
-              value: blueprint.name,
-              text: blueprint.title
-            };
-          });
+      try {
+        const response = await this.$api.get(blueprintApi, {section: section});
 
-          if (this.templates[0]) {
-            this.page.template = this.templates[0].value;
-          }
+        this.templates = response.map(blueprint => ({
+          value: blueprint.name,
+          text: blueprint.title
+        }));
 
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch("notification/error", error);
-        });
+        if (this.templates[0]) {
+          this.page.template = this.templates[0].value;
+        }
 
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch("notification/error", error);
+      }
     },
-    submit() {
+    async submit() {
       // prevent empty title with just spaces
       this.page.title = this.page.title.trim();
 
@@ -112,18 +109,18 @@ export default {
         }
       };
 
-      this.$api
-        .post(this.parent + "/children", data)
-        .then(page => {
-          this.success({
-            route: this.$api.pages.link(page.id),
-            message: ":)",
-            event: "page.create"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+      try {
+        const page = await this.$api.post(this.parent + "/children", data);
+
+        this.success({
+          route: this.$api.pages.link(page.id),
+          message: ":)",
+          event: "page.create"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     },
     reset() {
       this.page = this.emptyForm();

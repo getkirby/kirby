@@ -59,18 +59,17 @@ export default {
     }
   },
   methods: {
-    create() {
-      this.$api.users
-        .create(this.user)
-        .then(() => {
-          this.success({
-            message: ":)",
-            event: "user.create"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+    async create() {
+      try {
+        await this.$api.users.create(this.user);
+        this.success({
+          message: ":)",
+          event: "user.create"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     },
     emptyForm() {
       return {
@@ -81,32 +80,31 @@ export default {
         role: this.$user.role.name
       };
     },
-    open() {
+    async open() {
+
       // load and filter roles
-      const roles = this.$api.roles.options({ canBe: "created" }).then(roles => {
-        this.roles = roles;
+      try {
+        this.roles = await this.$api.roles.options({ canBe: "created" });
 
         // don't let non-admins create admins
         if (this.$user.role.name !== "admin") {
-          this.roles = this.roles.filter(role => {
-            return role.value !== "admin";
-          });
+          this.roles = this.roles.filter(role => role.value !== "admin");
         }
-      }).catch(error => {
+
+      } catch (error) {
         this.$store.dispatch('notification/error', error);
-      });
+      }
 
       // load all translations
-      const translations = this.$api.translations.options().then(languages => {
-        this.languages = languages;
-      }).catch (error => {
+      try {
+        this.languages = await this.$api.translations.options();
+
+      } catch (error) {
         this.$store.dispatch('notification/error', error);
-      });
+      }
 
       // open dialog when all API requests finished
-      Promise.all([roles, translations]).then(() => {
-        this.$refs.dialog.open();
-      });
+      this.$refs.dialog.open();
     },
     reset() {
       this.user = this.emptyForm();

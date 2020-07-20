@@ -19,28 +19,28 @@ export default {
     };
   },
   methods: {
-    open(code) {
-      this.$api.get("languages/" + code)
-        .then(language => {
-          this.language = language;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch('notification/error', error);
-        });
+    async open(code) {
+      try {
+        this.language = await this.$api.languages.get(code);
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch('notification/error', error);
+      }
     },
-    submit() {
-      this.$api.delete("languages/" + this.language.code)
-        .then(() => {
-          this.$store.dispatch("languages/load");
-          this.success({
-            message: this.$t("language.deleted"),
-            event: "language.delete"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+    async submit() {
+      try {
+        await this.$api.languages.delete(this.language.code);
+
+        this.$store.dispatch("languages/load");
+        this.success({
+          message: this.$t("language.deleted"),
+          event: "language.delete"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };

@@ -75,37 +75,44 @@ export default {
     }
   },
   methods: {
-    open(id) {
-      this.$api.pages
-        .get(id, {language: "@default", select: "id,slug,hasChildren,hasDrafts,hasFiles,title"})
-        .then(page => {
-          this.page.id          = page.id;
-          this.page.slug        = page.slug + "-" + this.$helper.slug(this.$t("page.duplicate.appendix"));
-          this.page.hasChildren = page.hasChildren;
-          this.page.hasDrafts   = page.hasDrafts;
-          this.page.hasFiles    = page.hasFiles;
-          this.$refs.dialog.open();
-        })
-        .catch(error => {
-          this.$store.dispatch("notification/error", error);
+    async open(id) {
+      try {
+        const page = await this.$api.pages.get(id, {
+          language: "@default",
+          select: "id,slug,hasChildren,hasDrafts,hasFiles,title"
         });
+
+        this.page.id          = page.id;
+        this.page.slug        = page.slug + "-" + this.$helper.slug(this.$t("page.duplicate.appendix"));
+        this.page.hasChildren = page.hasChildren;
+        this.page.hasDrafts   = page.hasDrafts;
+        this.page.hasFiles    = page.hasFiles;
+        this.$refs.dialog.open();
+
+      } catch (error) {
+        this.$store.dispatch("notification/error", error);
+      }
     },
-    submit() {
-      this.$api.pages
-        .duplicate(this.page.id, this.page.slug, {
-          children: this.page.children,
-          files:    this.page.files,
-        })
-        .then(page => {
-          this.success({
-            route: this.$api.pages.link(page.id),
-            message: ":)",
-            event: "page.duplicate"
-          });
-        })
-        .catch(error => {
-          this.$refs.dialog.error(error.message);
+    async submit() {
+      try {
+        const page = await this.$api.pages.duplicate(
+          this.page.id,
+          this.page.slug,
+          {
+            children: this.page.children,
+            files:    this.page.files,
+          }
+        );
+
+        this.success({
+          route: this.$api.pages.link(page.id),
+          message: ":)",
+          event: "page.duplicate"
         });
+
+      } catch (error) {
+        this.$refs.dialog.error(error.message);
+      }
     }
   }
 };
