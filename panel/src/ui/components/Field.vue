@@ -2,17 +2,29 @@
   <div
     :data-disabled="disabled"
     :data-translate="translate"
-    :class="'k-field k-field-name-' + name"
+    :class="`k-field k-${type}-field k-field-name-${name}`"
     @focusin="$emit('focus', $event)"
     @focusout="$emit('blur', $event)"
   >
     <slot name="header">
       <header class="k-field-header">
         <slot name="label">
-          <label :for="input" class="k-field-label">{{ labelText }} <abbr v-if="required" :title="$t('field.required')">*</abbr></label>
+          <label
+            :for="input"
+            class="k-field-label block font-bold pb-3"
+          >{{ labelText }} <abbr
+            v-if="required"
+            :title="$t('field.required')"
+          >*</abbr></label>
         </slot>
-        <slot name="options" />
-        <slot name="counter">
+        <slot
+          v-if="$slots['options']"
+          name="options"
+        />
+        <slot
+          v-else
+          name="counter"
+        >
           <k-counter
             v-if="counter"
             v-bind="counter"
@@ -24,12 +36,15 @@
     </slot>
     <slot />
     <slot name="footer">
-      <footer v-if="help || $slots.help" class="k-field-footer">
+      <footer
+        v-if="help || $slots.help"
+        class="k-field-footer"
+      >
         <slot name="help">
           <k-text
             v-if="help"
             theme="help"
-            class="k-field-help"
+            class="k-field-help pt-2"
             v-html="help"
           />
         </slot>
@@ -63,15 +78,12 @@ export default {
 
 <style lang="scss">
 .k-field-label {
-  font-weight: $font-bold;
-  display: block;
-  padding: 0 0 0.75rem;
   flex-grow: 1;
-  line-height: 1.25rem;
+  line-height: 1.25em;
 }
 .k-field-label abbr {
   text-decoration: none;
-  color: $color-light-grey;
+  color: $color-gray-500;
   padding-left: 0.25rem;
 }
 .k-field-header {
@@ -113,8 +125,5 @@ export default {
 }
 .k-field:focus-within > .k-field-header > .k-field-counter {
   display: block;
-}
-.k-field-help {
-  padding-top: 0.5rem;
 }
 </style>

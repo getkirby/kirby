@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
+import Field from "@/ui/components/Field.vue";
 import Input from "../Input.vue";
 import RangeInput from "../Input/RangeInput.vue";
 

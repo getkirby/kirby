@@ -159,7 +159,7 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
+import Field from "@/ui/components/Field.vue";
 
 export default {
   inheritAttrs: false,

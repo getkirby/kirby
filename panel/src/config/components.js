@@ -69,7 +69,7 @@ import Counter from "@/components/Forms/Counter.vue";
 import Form from "@/ui/components/Form.vue";
 import FormButtons from "@/components/Forms/FormButtons.vue";
 import FormIndicator from "@/components/Forms/FormIndicator.vue";
-import Field from "@/components/Forms/Field.vue";
+import Field from "@/ui/components/Field.vue";
 import Fieldset from "@/components/Forms/Fieldset.vue";
 import Input from "@/components/Forms/Input.vue";
 import Upload from "@/components/Forms/Upload.vue";

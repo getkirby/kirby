@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
+import Field from "@/ui/components/Field.vue";
 import Input from "../Input.vue";
 import TagsInput from "../Input/TagsInput.vue";
 
@@ -52,4 +52,3 @@ export default {
   }
 }
 </script>
-

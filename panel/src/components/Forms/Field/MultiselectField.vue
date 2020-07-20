@@ -19,7 +19,7 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
+import Field from "@/ui/components/Field.vue";
 import Input from "../Input.vue";
 import MultiselectInput from "../Input/MultiselectInput.vue";
 
