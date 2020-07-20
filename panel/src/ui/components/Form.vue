@@ -1,33 +1,40 @@
 <template>
   <form
     ref="form"
+    :novalidate="novalidate"
     method="POST"
     autocomplete="off"
     class="k-form"
-    novalidate
-    @submit.prevent="onSubmit"
+    @submit.prevent="$emit('submit', value)"
   >
-    <slot name="header"/>
+    <slot name="header" />
     <slot>
       <k-fieldset
         ref="fields"
+        :value="value"
         :disabled="disabled"
         :fields="fields"
         :novalidate="novalidate"
-        v-model="value"
-        v-on="listeners"
+        v-on="$listeners"
       />
     </slot>
-    <slot name="footer"/>
-    <input ref="submitter" class="k-form-submitter" type="submit">
+    <slot name="footer" />
+    <input
+      ref="submitter"
+      class="k-form-submitter hidden"
+      type="submit"
+    >
   </form>
 </template>
 
 <script>
 export default {
   props: {
+    autofocus: {
+      type: Boolean,
+      default: false,
+    },
     disabled: Boolean,
-    config: Object,
     fields: {
       type: [Array, Object],
       default() {
@@ -45,11 +52,16 @@ export default {
       }
     }
   },
+  mounted() {
+    if (this.autofocus) {
+      this.$nextTick(this.focus);
+    }
+  },
   data() {
     return {
-      errors: {},
       listeners: {
         ...this.$listeners,
+        input: this.onInput,
         submit: this.onSubmit
       }
     };
@@ -58,10 +70,17 @@ export default {
     focus(name) {
       if (this.$refs.fields && this.$refs.fields.focus) {
         this.$refs.fields.focus(name);
+        return;
       }
-    },
-    onSubmit() {
-      this.$emit("submit", this.value);
+
+      let target = this.$el.querySelector(
+        "[autofocus], [data-autofocus], input, textarea, select"
+      );
+
+      if (target && typeof target.focus === "function") {
+        target.focus();
+        return;
+      }
     },
     submit() {
       this.$refs.submitter.click();
@@ -69,9 +88,3 @@ export default {
   }
 };
 </script>
-
-<style>
-.k-form-submitter {
-  display: none;
-}
-</style>
