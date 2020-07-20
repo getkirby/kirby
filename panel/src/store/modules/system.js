@@ -19,13 +19,7 @@ export default {
     }
   },
   actions: {
-    title(context, title) {
-      context.commit("SET_TITLE", title);
-    },
-    register(context, license) {
-      context.commit("SET_LICENSE", license);
-    },
-    load(context, reload) {
+    async load(context, reload) {
       // reuse the cached system info
       if (
         !reload &&
@@ -38,37 +32,45 @@ export default {
       }
 
       // reload the system info
-      return Vue.$api.system.get().then(info => {
-          context.commit("SET_INFO", {
-            isReady: info.isInstalled && info.isOk,
-            ...info
-          });
+      try {
+        const info = await Vue.$api.system.get();
 
-          if (info.languages) {
-            context.dispatch("languages/install", info.languages, {
-              root: true
-            });
-          }
-
-          context.dispatch("translation/install", info.translation, {
-            root: true
-          });
-          context.dispatch("translation/activate", info.translation.id, {
-            root: true
-          });
-
-          if (info.user) {
-            context.dispatch("user/current", info.user, { root: true });
-          }
-
-          return context.state.info;
-        })
-        .catch(error => {
-          context.commit("SET_INFO", {
-            isBroken: true,
-            error: error.message
-          });
+        context.commit("SET_INFO", {
+          isReady: info.isInstalled && info.isOk,
+          ...info
         });
+
+        if (info.languages) {
+          context.dispatch("languages/install", info.languages, {
+            root: true
+          });
+        }
+
+        context.dispatch("translation/install", info.translation, {
+          root: true
+        });
+        context.dispatch("translation/activate", info.translation.id, {
+          root: true
+        });
+
+        if (info.user) {
+          context.dispatch("user/current", info.user, { root: true });
+        }
+
+        return context.state.info;
+
+      } catch (error) {
+        context.commit("SET_INFO", {
+          isBroken: true,
+          error: error.message
+        });
+      }
+    },
+    register(context, license) {
+      context.commit("SET_LICENSE", license);
+    },
+    title(context, title) {
+      context.commit("SET_TITLE", title);
     }
   }
 };
