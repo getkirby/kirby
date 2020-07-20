@@ -235,7 +235,7 @@ Vue.component("k-view", View);
 /* Misc */
 import Draggable from "@/components/Misc/Draggable.vue";
 import ErrorBoundary from "@/components/Misc/ErrorBoundary.vue";
-import Headline from "@/components/Misc/Headline.vue";
+import Headline from "@/ui/components/Headline.vue";
 import Icon from "@/components/Misc/Icon.vue";
 import Image from "@/components/Misc/Image.vue";
 import Progress from "@/components/Misc/Progress.vue";

@@ -6,7 +6,12 @@
     class="k-headline"
     v-on="$listeners"
   >
-    <k-link v-if="link" :to="link"><slot /></k-link>
+    <k-link
+      v-if="link"
+      :to="link"
+    >
+      <slot />
+    </k-link>
     <slot v-else />
   </component>
 </template>
@@ -15,14 +20,31 @@
 
 export default {
   props: {
-    link: String,
+    /**
+     * You can set a link for the headline.
+     * The link can be absolute or relative.
+     */
+    link: {
+      type: [Boolean, String],
+      default: false
+    },
+    /**
+     * Sets the text size.
+     * Available sizes: `tiny`|`small`|`medium`|`large`|`huge`
+     */
     size: {
       type: String
     },
+    /**
+     * Sets the HTML tag for the headline element.
+     */
     tag: {
       type: String,
       default: "h2"
     },
+    /**
+     * Available options: `positive`|`negative`
+     */
     theme: {
       type: String
     }
@@ -34,21 +56,21 @@ export default {
 .k-headline {
   font-size: $text-base;
   font-weight: $font-bold;
-  line-height: 1.5em;
+  line-height: 1.25em;
 }
 .k-headline[data-size="small"] {
   font-size: $text-sm;
 }
 .k-headline[data-size="large"] {
-  font-size: $text-lg;
+  font-size: $text-xl;
   font-weight: $font-normal;
 
   @media screen and (min-width: $breakpoint-md) {
-    font-size: $text-xl;
+    font-size: $text-2xl;
   }
 }
 .k-headline[data-size="huge"] {
-  font-size: $text-xl;
+  font-size: $text-2xl;
   line-height: 1.15em;
 
   @media screen and (min-width: $breakpoint-md) {
@@ -63,7 +85,7 @@ export default {
 }
 
 .k-headline abbr {
-  color: $color-light-grey;
+  color: $color-gray-500;
   padding-left: .25rem;
   text-decoration: none;
 }
