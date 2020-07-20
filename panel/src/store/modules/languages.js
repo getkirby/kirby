@@ -60,10 +60,9 @@ export default {
       context.dispatch("current", defaultLanguage || languages[0] || null);
 
     },
-    load(context) {
-      return Vue.$api.list().then(response => {
-        context.dispatch("install", response.data);
-      });
+    async load(context) {
+      const response = await Vue.$api.languages.list();
+      context.dispatch("install", response.data);
     }
   }
 };
