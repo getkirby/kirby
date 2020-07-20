@@ -1,9 +1,8 @@
 import Vue from "vue";
 
 export default (api) => {
-
-  let files = {
-    async breadcrumb(file, route) {
+  return {
+    breadcrumb(file, route) {
 
       let parent = null;
       let breadcrumb = [];
@@ -104,10 +103,4 @@ export default (api) => {
       return url;
     }
   };
-
-  // @deprecated aliases
-  // TODO: remove in 3.6.0
-  files.rename = files.changeName;
-
-  return files;
 };

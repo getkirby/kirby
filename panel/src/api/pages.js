@@ -1,8 +1,7 @@
 import Vue from "vue";
 
 export default (api) => {
-
-  let pages = {
+  return {
     async blueprints(parent, section) {
       return api.get("pages/" + this.id(parent) + "/children/blueprints", {
         section: section
@@ -167,13 +166,4 @@ export default (api) => {
       return url;
     },
   };
-
-  // @deprecated aliases
-  // TODO: remove in 3.6.0
-  pages.slug     = pages.changeSlug;
-  pages.status   = pages.changeStatus;
-  pages.template = pages.changeTitle;
-  pages.title    = pages.changeTemplate;
-
-  return pages;
 };

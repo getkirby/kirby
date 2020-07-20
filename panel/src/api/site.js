@@ -1,7 +1,7 @@
 import Vue from "vue";
 
 export default (api) => {
-  let site = {
+  return {
     async blueprint() {
       return api.get("site/blueprint");
     },
@@ -35,10 +35,4 @@ export default (api) => {
       return api.post("site", data);
     },
   };
-
-  // @deprecated aliases
-  // TODO: remove in 3.6.0
-  site.title = site.changeTitle;
-
-  return site;
 };
