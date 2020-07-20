@@ -238,7 +238,7 @@ import ErrorBoundary from "@/components/Misc/ErrorBoundary.vue";
 import Headline from "@/ui/components/Headline.vue";
 import Icon from "@/components/Misc/Icon.vue";
 import Image from "@/components/Misc/Image.vue";
-import Progress from "@/components/Misc/Progress.vue";
+import Progress from "@/ui/components/Progress.vue";
 import SortHandle from "@/components/Misc/SortHandle.vue";
 import Text from "@/components/Misc/Text.vue";
 

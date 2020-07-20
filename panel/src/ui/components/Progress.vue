@@ -1,5 +1,9 @@
 <template>
-  <progress :value="state" max="100" class="k-progress">
+  <progress
+    :value="state"
+    max="100"
+    class="k-progress"
+  >
     {{ state }}%
   </progress>
 </template>
@@ -7,6 +11,9 @@
 <script>
 export default {
   props: {
+    /**
+     * Progress percentage (0-100)
+     */
     value: {
       type: Number,
       default: 0
@@ -16,6 +23,11 @@ export default {
     return {
       state: this.value
     };
+  },
+  watch: {
+    value(value) {
+      this.set(value);
+    }
   },
   methods: {
     set(value) {
