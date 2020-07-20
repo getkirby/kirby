@@ -1,5 +1,5 @@
 export default (api) => {
-  let system = {
+  return {
     async get(options = { view: "panel" }) {
       return api.get("system", options);
     },
@@ -10,11 +10,5 @@ export default (api) => {
     async register(license) {
       return api.post("system/register", license);
     }
-  }
-
-  // @deprecated aliases
-  // TODO: remove in 3.6.0
-  system.info = system.get;
-
-  return system;
+  };
 };

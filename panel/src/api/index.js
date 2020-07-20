@@ -31,22 +31,31 @@ export default (extensions = {}) => {
     ...(extensions.config || {})
   };
 
-  const api = {
+  let api = {
     ...config,
     ...request(config),
     ...extensions,
   };
 
-  return {
-    ...api,
-    auth: auth(api),
-    files: files(api),
-    languages: languages(api),
-    pages: pages(api),
-    roles: roles(api),
-    system: system(api),
-    site: site(api),
-    translations: translations(api),
-    users: users(api)
-  };
+  api.auth = auth(api);
+  api.files = files(api);
+  api.languages = languages(api);
+  api.pages = pages(api);
+  api.roles = roles(api);
+  api.system = system(api);
+  api.site = site(api);
+  api.translations = translations(api);
+  api.users = users(api);
+
+  // @deprecated aliases
+  // TODO: remove in 3.6.0
+  api.files.rename = api.files.changeName;
+  api.pages.slug = api.pages.changeSlug;
+  api.pages.status = api.pages.changeStatus;
+  api.pages.template = api.pages.changeTitle;
+  api.pages.title = api.pages.changeTemplate;
+  api.site.title = api.site.changeTitle;
+  api.system.info = api.system.get;
+
+  return api;
 };
