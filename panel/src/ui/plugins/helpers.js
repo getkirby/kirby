@@ -1,13 +1,13 @@
-import clone from "@/helpers/clone.js";
-import debounce from "@/helpers/debounce.js";
-import isComponent from "@/helpers/isComponent.js";
-import isUploadEvent from "@/helpers/isUploadEvent.js";
-import pad from "@/helpers/pad.js";
-import ratio from "@/helpers/ratio.js";
-import slug from "@/helpers/slug.js";
-import sort from "@/helpers/sort.js";
-import string from "@/helpers/string.js";
-import upload from "@/helpers/upload.js";
+import clone from "@/ui/helpers/clone.js";
+import debounce from "@/ui/helpers/debounce.js";
+import isComponent from "@/ui/helpers/isComponent.js";
+import isUploadEvent from "@/ui/helpers/isUploadEvent.js";
+import pad from "@/ui/helpers/pad.js";
+import ratio from "@/ui/helpers/ratio.js";
+import slug from "@/ui/helpers/slug.js";
+import sort from "@/ui/helpers/sort.js";
+import string from "@/ui/helpers/string.js";
+import upload from "@/ui/helpers/upload.js";
 
 export default {
   install(Vue) {

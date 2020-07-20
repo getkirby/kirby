@@ -46,7 +46,7 @@
 </template>
 
 <script>
-import previewThumb from "@/helpers/previewThumb.js";
+import previewThumb from "@/ui/helpers/previewThumb.js";
 
 export default {
   inheritAttrs: false,

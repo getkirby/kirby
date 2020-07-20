@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import previewThumb from "@/helpers/previewThumb.js";
+import previewThumb from "@/ui/helpers/previewThumb.js";
 
 export default {
   props: {
@@ -20,13 +20,13 @@ export default {
   methods: {
     imageOptions(file) {
       const image = previewThumb(file.image);
-      
+
       if (!image.src) {
         return {
           src: file.url
         };
       }
-      
+
       return {
         ...image,
         back: "pattern",

@@ -53,7 +53,7 @@
 
 <script>
 import config from "@/config/config.js";
-import debounce from "@/helpers/debounce.js";
+import debounce from "@/ui/helpers/debounce.js";
 
 export default {
   data() {

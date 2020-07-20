@@ -1,6 +1,5 @@
 import App from "./App.vue";
 import Api from "./config/api.js";
-import Helpers from "./helpers/index.js";
 import ErrorHandling from "@/app/plugins/errors.js";
 import Go from "@/app/plugins/go.js";
 import I18n from "@/app/plugins/i18n.js";
@@ -13,7 +12,6 @@ import Vuelidate from "vuelidate";
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
-
 import "./config/components.js";
 import router from "./config/router.js";
 import store from "@/app/store/index.js";
@@ -21,7 +19,6 @@ import store from "@/app/store/index.js";
 Vue.use(Api, store);
 Vue.use(Plugins, store);
 Vue.use(I18n, store);
-Vue.use(Helpers);
 Vue.use(Go, router);
 Vue.use(Ui);
 Vue.use(App);
