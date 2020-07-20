@@ -262,7 +262,7 @@ import DropdownContent from "@/ui/components/DropdownContent.vue";
 import DropdownItem from "@/ui/components/DropdownItem.vue";
 import Link from "@/ui/components/Link.vue";
 import Languages from "@/components/Navigation/Languages.vue";
-import Pagination from "@/components/Navigation/Pagination.vue";
+import Pagination from "@/ui/components/Pagination.vue";
 import PageDropdown from "@/ui/components/PageDropdown.vue";
 import PrevNext from "@/ui/components/PrevNext.vue";
 import Search from "@/components/Navigation/Search.vue";
