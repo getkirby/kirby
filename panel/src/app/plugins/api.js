@@ -1,5 +1,5 @@
 import Api from "@/api/index.js";
-import config from "./config.js";
+import config from "@/config/config.js";
 
 export default {
   install(Vue, store) {

@@ -1,5 +1,5 @@
-import App from "./App.vue";
-import Api from "./config/api.js";
+import Api from "@/app/plugins/api.js";
+import App from "@/app/index.js";
 import ErrorHandling from "@/app/plugins/errors.js";
 import Go from "@/app/plugins/go.js";
 import I18n from "@/app/plugins/i18n.js";

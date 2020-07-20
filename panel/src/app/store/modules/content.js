@@ -1,5 +1,5 @@
 import Vue from "vue";
-import clone from "@/helpers/clone.js";
+import clone from "@/ui/helpers/clone.js";
 
 const keep = (id, data) => {
   localStorage.setItem(
