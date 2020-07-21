@@ -1,32 +1,39 @@
 /* Margins */
-.mx-auto,
-.mr-auto {
-  margin-right: auto;
+@each $index, $size in $margin {
+  .m-#{$index} {
+    margin: $size;
+  }
 }
-.mx-auto,
-.ml-auto {
-  margin-left: auto;
+@each $index, $size in $margin {
+  .mx-#{$index} {
+    margin-right: $size;
+    margin-left: $size;
+  }
 }
-
-@each $index, $size in $spacing {
-  .m-#{$index},
-  .my-#{$index},
+@each $index, $size in $margin {
+  .my-#{$index} {
+    margin-top: $size;
+    margin-bottom: $size;
+  }
+}
+@each $index, $size in $margin {
   .mt-#{$index} {
     margin-top: $size;
   }
-  .m-#{$index},
-  .mx-#{$index},
+}
+@each $index, $size in $margin {
   .mr-#{$index} {
     margin-right: $size;
   }
-  .m-#{$index},
-  .my-#{$index},
+}
+@each $index, $size in $margin {
   .mb-#{$index} {
     margin-bottom: $size;
   }
-  .m-#{$index},
-  .mx-#{$index},
+}
+@each $index, $size in $margin {
   .ml-#{$index} {
     margin-left: $size;
   }
 }
+
