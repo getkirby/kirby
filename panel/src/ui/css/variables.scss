@@ -200,6 +200,13 @@ $spacing: (
 );
 
 /**
+ * Margin
+ */
+$margin: map-merge((
+  auto: auto
+), $spacing);
+
+/**
  * Fields
  */
 $field-input-padding: .5rem;
