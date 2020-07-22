@@ -146,15 +146,16 @@ class FileTest extends TestCase
         $this->assertEquals('![](test.jpg)', $file->dragText());
     }
 
-    public function testDragTextCustom() {
+    public function testDragTextCustom()
+    {
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ],
 
             'options' => [
-                'fileDragText' => function(\Kirby\Cms\File $file, string $url) {
-                    if($file->extension() === 'heic') {
+                'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+                    if ($file->extension() === 'heic') {
                         return sprintf('(image: %s)', $url);
                     }
             
