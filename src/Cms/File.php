@@ -255,7 +255,7 @@ class File extends ModelWithContent
                 // no break
             default:
                 $fileDragTextFn = option('fileDragText');
-                if(!empty($fileDragTextFn) && is_callable($fileDragTextFn) && !empty($text = $fileDragTextFn($this, $url))) {
+                if (!empty($fileDragTextFn) && is_callable($fileDragTextFn) && !empty($text = $fileDragTextFn($this, $url))) {
                     return $text;
                 }
 
