@@ -146,6 +146,49 @@ class FileTest extends TestCase
         $this->assertEquals('![](test.jpg)', $file->dragText());
     }
 
+    public function testDragTextCustom() {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+
+            'options' => [
+                'fileDragText' => function(\Kirby\Cms\File $file, string $url) {
+                    if($file->extension() === 'heic') {
+                        return sprintf('(image: %s)', $url);
+                    }
+            
+                    return null;
+                },
+            
+            ],
+
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            [
+                                'filename' => 'test.heic'
+                            ],
+                            [
+                                'filename' => 'test.jpg'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        // Custom function does not match and returns null, default case
+        $file = $app->page('test')->file('test.jpg');
+        $this->assertEquals('(image: test.jpg)', $file->dragText());
+
+        // Custom function should return image tag for heic
+        $file = $app->page('test')->file('test.heic');
+        $this->assertEquals('(image: test.heic)', $file->dragText());
+    }
+
     public function testFilename()
     {
         $this->assertEquals($this->defaults()['filename'], $this->file()->filename());
