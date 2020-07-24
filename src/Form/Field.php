@@ -8,6 +8,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
 /**
@@ -227,6 +228,53 @@ class Field extends Component
                     if ($this->placeholder !== null) {
                         return $this->model()->toString($this->placeholder);
                     }
+                },
+                /**
+                 * Normalize when option
+                 */
+                'when' => function () {
+                    if ($this->when !== null && is_array($this->when) === true) {
+                        $when = [];
+
+                        // check if nested option and keep old when syntax
+                        if (is_array(current($this->when)) === true) {
+                            $kirby = $this->kirby();
+
+                            foreach ($this->when as $condition) {
+                                $comparison = Str::upper($condition['comparison'] ?? 'AND');
+                                $otherwise = $condition['otherwise'] ?? [];
+                                $test = $condition['test'] ?? [];
+                                $then = $condition['then'] ?? [];
+
+                                // check if test is query
+                                // boolean should return because it isn't bound to any field
+                                if (is_string($test) === true) {
+                                    $test = (bool)Str::template($test, [
+                                        'kirby' => $kirby,
+                                        'site'  => $kirby->site(),
+                                        'page'  => $kirby->page()
+                                    ], false);
+                                }
+
+                                $when[] = [
+                                    'comparison' => $comparison,
+                                    'otherwise' => $otherwise,
+                                    'test' => $test,
+                                    'then' => $then
+                                ];
+                            }
+                        } else {
+                            $when[] = [
+                                'comparison' => 'AND',
+                                'otherwise' => [],
+                                'test' => $this->when,
+                                'then' => [
+                                    'show' => true
+                                ]
+                            ];
+                        }
+                        return $when;
+                    }
                 }
             ]
         ];
@@ -267,45 +315,72 @@ class Field extends Component
     }
 
     /**
-     * Checks if a field is needs value
-     *
-     * Criteria
-     * - checks the field is saveable
-     * - checks the field is required and empty
-     * - checks matching with when option if defined
+     * Checks if a field is needs value with checking when option
      *
      * @return bool
      */
     protected function isNeedsValue(): bool
     {
-        if ($this->isRequired() === true && $this->save() === true && $this->isEmpty() === true) {
+        if ($this->save() === true) {
+            $isRequired = ($this->isRequired() === true && $this->isEmpty() === true);
+
             // check the data of the relevant fields if there is a when option
             if (empty($this->when) === false && is_array($this->when) === true) {
+                $formFields = $this->formFields();
                 $input = $this->attrs['input'] ?? [];
 
-                if (empty($input) === false) {
-                    foreach ($this->when as $field => $value) {
-                        $formFields = $this->formFields();
+                if (empty($input) === false || $formFields !== null) {
+                    foreach ($this->when as $condition) {
+                        $test       = $condition['test'];
+                        $then       = $condition['then'];
+                        $comparison = $condition['comparison'];
+                        $otherwise  = $condition['otherwise'];
 
-                        // check form fields, otherwise use direct input data
-                        if ($formFields !== null) {
-                            $inputValue = $formFields->{$field}()->exists() ? $formFields->{$field}()->value() : '';
+                        if (is_bool($test) === true) {
+                            if ($test === true) {
+                                return isset($then['required']) === true ? $then['required'] : $isRequired;
+                            } else {
+                                return isset($otherwise['required']) === true ? $otherwise['required'] : false;
+                            }
                         } else {
-                            $inputValue = $input[$field] ?? '';
-                        }
+                            foreach ($test as $field => $value) {
+                                // check form fields, otherwise use direct input data
+                                if ($formFields !== null) {
+                                    $inputValue = $formFields->{$field}() !== null ? $formFields->{$field}()->value() : '';
+                                } else {
+                                    $inputValue = $input[$field] ?? '';
+                                }
 
-                        // if the input data doesn't have data for when fields
-                        // or one of conditions doesn't match
-                        // that means field is not required and can be saved
-                        // all when conditions must be met
-                        if ($inputValue !== $value) {
-                            return false;
+                                if ($comparison === 'AND') {
+                                    // AND comparison
+                                    // one of conditions doesn't match
+                                    // that means field is not required
+                                    // all when conditions must be met
+                                    if ($inputValue !== $value) {
+                                        return isset($otherwise['required']) === true ? $otherwise['required'] : false;
+                                    }
+                                } else {
+                                    // OR comparison
+                                    // one of conditions match
+                                    // that means field is required
+                                    // any condition match is enough
+                                    if ($inputValue === $value) {
+                                        return isset($then['required']) === true ? $then['required'] : $isRequired;
+                                    }
+                                }
+                            }
+
+                            if ($comparison === 'AND') {
+                                return isset($then['required']) === true ? $then['required'] : $isRequired;
+                            } else {
+                                return isset($otherwise['required']) === true ? $otherwise['required'] : false;
+                            }
                         }
                     }
                 }
+            } else {
+                return $isRequired;
             }
-
-            return true;
         }
 
         return false;

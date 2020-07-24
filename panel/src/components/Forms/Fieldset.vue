@@ -88,19 +88,48 @@ export default {
         return true;
       }
 
-      let result = true;
+      let result = null;
 
       Object.keys(field.when).forEach(key => {
-        const value     = this.value[key.toLowerCase()];
-        const condition = field.when[key];
+        const condition  = field.when[key];
+        const test       = condition['test'];
+        const then       = condition['then'];
+        const otherwise  = condition['otherwise'];
+        const comparison = condition['comparison'];
 
-        if (value !== condition) {
-          result = false;
+        if (typeof test === "boolean"){
+          if (test === true) {
+            result = then['show'] !== undefined ? then['show'] : false;
+          } else {
+            result = otherwise['show'] !== undefined ? otherwise['show'] : false;
+          }
+        } else {
+          Object.keys(test).forEach(field => {
+            const expectedValue = test[field];
+            const value         = this.value[field.toLowerCase()];
+
+            if (comparison === 'AND') {
+              if (value !== expectedValue) {
+                result = otherwise['show'] !== undefined ? otherwise['show'] : false;
+              }
+            } else {
+              if (value === expectedValue) {
+                result = then['show'] !== undefined ? then['show'] : false;
+              }
+            }
+          });
+
+          if (result === null) {
+            if (comparison === 'AND') {
+              result = then['show'] !== undefined ? then['show'] : false;
+            } else {
+              result = otherwise['show'] !== undefined ? otherwise['show'] : false;
+            }
+          }
         }
       });
 
-      return result;
-
+      return result !== null ? result : false;
     },
     onInvalid($invalid, $v, field, fieldName) {
       this.errors[fieldName] = $v;
