@@ -285,18 +285,13 @@ class AppTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
-            'options' => [
+            'options' => $options = [
                 'a' => 'A',
-                'b.c' => 'C'
+                'b' => 'B'
             ]
         ]);
 
-        $this->assertSame([
-            'a' => 'A',
-            'b' => [
-                'c' => 'C'
-            ]
-        ], $app->options());
+        $this->assertSame($options, $app->options());
     }
 
     public function testOptionsOnReady()
@@ -333,9 +328,7 @@ class AppTest extends TestCase
         $this->assertSame([
             'ready' => $ready,
             'test' => '/dev/null',
-            'another' => [
-                'test' => 'foo'
-            ],
+            'another.test' => 'foo',
             'debug' => true,
             'home' => 'test',
             'error' => 'another-test',

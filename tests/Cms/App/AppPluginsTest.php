@@ -572,9 +572,7 @@ class AppPluginsTest extends TestCase
     {
         App::plugin('test/plugin', [
             'options' => [
-                'foo' => 'bar',
-                'another.foo' => 'bar',
-                'dot' => 'line'
+                'foo' => 'bar'
             ]
         ]);
 
@@ -584,24 +582,11 @@ class AppPluginsTest extends TestCase
                 'index' => '/dev/null'
             ],
             'options' => [
-                'test.plugin.foo' => 'another-bar',
-                'test.plugin' => [
-                    'dot' => 'another-line'
-                ]
+                'test.plugin.foo' => 'another-bar'
             ]
         ]);
 
-        $this->assertSame([
-            'test' => [
-                'plugin' => [
-                    'foo' => 'another-bar',
-                    'another' => [
-                        'foo' => 'bar'
-                    ],
-                    'dot' => 'another-line'
-                ]
-            ]
-        ], $kirby->options());
+        $this->assertSame('another-bar', $kirby->option('test.plugin.foo'));
     }
 
     public function testPluginOptionsWithNonAssociativeArray()
@@ -630,11 +615,9 @@ class AppPluginsTest extends TestCase
         // associative
         App::plugin('test/plugin', [
             'options' => [
-                'foo.a' => 'A',
-                'foo.b.c' => 'B.C',
-                'another.foo' => [
-                    'e' => 'D',
-                    'f.g' => 'E.F'
+                'foo' => [
+                    'a' => 'A',
+                    'b' => 'B'
                 ]
             ]
         ]);
@@ -644,39 +627,13 @@ class AppPluginsTest extends TestCase
                 'index' => '/dev/null'
             ],
             'options' => [
-                'test.plugin' => [
-                    'foo' => [
-                        'a' => 'Custom A',
-                        'b.d' => 'Custom B.D'
-                    ],
-                    'another' => [
-                        'foo' => [
-                            'e' => 'Custom E',
-                            'f.h' => 'Custom F.H'
-                        ]
-                    ]
+                'test.plugin.foo' => [
+                    'a' => 'Custom A'
                 ]
             ]
         ]);
 
-        $this->assertSame([
-            'foo' => [
-                'a' => 'Custom A',
-                'b' => [
-                    'c' => 'B.C',
-                    'd' => 'Custom B.D'
-                ]
-            ],
-
-            // the another.foo option should be protected against nesting
-            'another' => [
-                'foo' => [
-                    'e' => 'Custom E',
-                    'f.g' => 'E.F',
-                    'f.h' => 'Custom F.H'
-                ]
-            ]
-        ], $kirby->option('test.plugin'));
+        $this->assertSame(['a' => 'Custom A', 'b' => 'B'], $kirby->option('test.plugin.foo'));
     }
 
     public function testRoutes()
