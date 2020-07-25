@@ -261,20 +261,41 @@ class AppTest extends TestCase
             'options' => [
                 'key' => 'A',
                 'nested' => [
-                    'key' => 'B'
-                ]
+                    'key'     => 'B',
+                    'another' => 'C'
+                ],
+                'another' => 'D',
+                'foo'     => 'bar'
             ]
         ]);
 
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
+            ],
+            'options' => [
+                'namespace.plugin' => [
+                    'key' => 'A1'
+                ],
+
+                // legacy syntax (<= Kirby 3.4)
+                'namespace.plugin.nested' => [
+                    'key' => 'B1'
+                ],
+                'namespace.plugin.another' => 'D1'
             ]
         ]);
 
-        $this->assertEquals('A', $app->option('namespace.plugin.key'));
-        $this->assertEquals('B', $app->option('namespace.plugin.nested.key'));
-        $this->assertEquals('B', $app->option('namespace.plugin.nested')['key']);
+        $this->assertSame([
+            'key' => 'A1',
+            'nested' => [
+                'key'     => 'B1',
+                'another' => 'C',
+            ],
+            'another' => 'D1',
+            'foo'     => 'bar'
+        ], $app->option('namespace.plugin'));
+        $this->assertSame('B1', $app->option('namespace.plugin.nested')['key']);
     }
 
     public function testOptions()
@@ -287,7 +308,10 @@ class AppTest extends TestCase
             ],
             'options' => $options = [
                 'a' => 'A',
-                'b' => 'B'
+                'b' => 'B',
+
+                // option that could be from a plugin but isn't
+                'a.b.c' => 'test'
             ]
         ]);
 
