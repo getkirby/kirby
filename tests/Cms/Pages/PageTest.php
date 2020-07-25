@@ -30,6 +30,12 @@ class PageTest extends TestCase
         parent::setUp();
     }
 
+    public function tearDown(): void
+    {
+        parent::tearDown();
+        Dir::remove(__DIR__ . '/fixtures/PageTest');
+    }
+
     public function testBlueprints()
     {
         new App([
@@ -803,8 +809,6 @@ class PageTest extends TestCase
         // custom date handler with format
         $format = '%d.%m.%Y';
         $this->assertEquals(strftime($format, $modified), $page->modified($format, 'strftime'));
-
-        Dir::remove($index);
     }
 
     public function testModifiedInMultilangInstallation()
@@ -842,8 +846,6 @@ class PageTest extends TestCase
         $app->setCurrentTranslation('de');
 
         $this->assertEquals($modified, $app->page('test')->modified());
-
-        Dir::remove($index);
     }
 
     public function testModifiedSpecifyingLanguage()
@@ -878,8 +880,6 @@ class PageTest extends TestCase
 
         $this->assertEquals($modifiedEnContent, $page->modified(null, null, 'en'));
         $this->assertEquals($modifiedDeContent, $page->modified(null, null, 'de'));
-
-        Dir::remove($index);
     }
 
     public function testPanelIconDefault()
