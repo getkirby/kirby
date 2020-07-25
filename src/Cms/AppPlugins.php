@@ -292,13 +292,7 @@ trait AppPlugins
     protected function extendOptions(array $options, Plugin $plugin = null): array
     {
         if ($plugin !== null) {
-            $prefixed = [];
-
-            foreach ($options as $key => $value) {
-                $prefixed[$plugin->prefix() . '.' . $key] = $value;
-            }
-
-            $options = $prefixed;
+            $options = [$plugin->prefix() => $options];
         }
 
         return $this->extensions['options'] = $this->options = A::merge($options, $this->options, A::MERGE_REPLACE);

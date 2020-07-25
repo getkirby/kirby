@@ -582,11 +582,14 @@ class AppPluginsTest extends TestCase
                 'index' => '/dev/null'
             ],
             'options' => [
-                'test.plugin.foo' => 'another-bar'
+                'test.plugin' => [
+                    'foo' => 'another-bar'
+                ]
             ]
         ]);
 
         $this->assertSame('another-bar', $kirby->option('test.plugin.foo'));
+        $this->assertSame(['foo' => 'another-bar'], $kirby->option('test.plugin'));
     }
 
     public function testPluginOptionsWithNonAssociativeArray()
@@ -603,7 +606,9 @@ class AppPluginsTest extends TestCase
                 'index' => '/dev/null'
             ],
             'options' => [
-                'test.plugin.foo' => ['three']
+                'test.plugin' => [
+                    'foo' => ['three']
+                ]
             ]
         ]);
 
@@ -627,8 +632,10 @@ class AppPluginsTest extends TestCase
                 'index' => '/dev/null'
             ],
             'options' => [
-                'test.plugin.foo' => [
-                    'a' => 'Custom A'
+                'test.plugin' => [
+                    'foo' => [
+                        'a' => 'Custom A'
+                    ]
                 ]
             ]
         ]);
