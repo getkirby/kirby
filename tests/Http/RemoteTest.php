@@ -105,8 +105,10 @@ class RemoteTest extends TestCase
     {
         new App([
             'options' => [
-                'remote.key' => 'different-value',
-                'remote.body' => false
+                'remote' => [
+                    'key'  => 'different-value',
+                    'body' => false
+                ]
             ]
         ]);
 
