@@ -103,6 +103,24 @@ class AppComponentsTest extends TestCase
         $this->assertSame($expected, $this->kirby->smartypants($text));
     }
 
+    public function testSmartypantsOptions()
+    {
+        $this->kirby = $this->kirby->clone([
+            'options' => [
+                'languages'   => true,
+                'smartypants' => [
+                    'doublequote.open'  => '<',
+                    'doublequote.close' => '>'
+                ]
+            ]
+        ]);
+
+        $text     = '"Test"';
+        $expected = '<Test>';
+
+        $this->assertSame($expected, $this->kirby->smartypants($text));
+    }
+
     public function testSmartypantsMultiLang()
     {
         $this->kirby = $this->kirby->clone([
