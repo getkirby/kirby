@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Dir;
@@ -24,6 +25,81 @@ use Throwable;
  */
 class Panel
 {
+
+    /**
+     * Generates an array with all assets
+     * that need to be loaded for the panel (js, css, icons)
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @return array
+     */
+    public static function assets(App $kirby): array
+    {
+        $dev = $kirby->option('panel.dev', false);
+        $url = $kirby->url('media') . '/panel/' . $kirby->versionHash();
+
+        // fetch all plugins
+        $plugins = new PanelPlugins();
+
+        $assets = [
+            'css' => [
+                'index'   => $url . '/index.css',
+                'plugins' => $plugins->url('css'),
+                'custom'  => static::customCss($kirby),
+            ],
+            'icons' => [
+                'apple-touch-icon' => $url . '/apple-touch-icon.png',
+                'shortcut icon'    => $url . '/favicon.png'
+            ],
+            'js' => [
+                'manifest'     => $url . '/manifest.js',
+                'vendor'       => $url . '/vendor.js',
+                'pluginloader' => $url . '/plugins.js',
+                'plugins'      => $plugins->url('js'),
+                'custom'       => static::customJs($kirby),
+                'index'        => $url . '/index.js',
+            ]
+        ];
+
+        if ($dev) {
+            $hot = 'http://localhost:8080/dist';
+
+            // css files are not extracted on hot reloading
+            unset($assets['css']['index']);
+
+            // replace hot reloaded js assets
+            $assets['js']['manifest'] = $hot . '/manifest.js';
+            $assets['js']['vendor']   = $hot . '/vendor.js';
+            $assets['js']['index']    = $hot . '/index.js';
+        }
+
+        // remove missing files
+        $assets['css'] = array_filter($assets['css']);
+        $assets['js']  = array_filter($assets['js']);
+
+        return $assets;
+    }
+
+    /**
+     * Renders an error message for
+     * unsupported browsers
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @return \Kirby\Http\Response
+     */
+    public static function browser(App $kirby)
+    {
+        $view = new View($kirby->root('kirby') . '/views/browser.php');
+        return new Response($view->render());
+    }
+
+    /**
+     * Check for a custom css file from the
+     * config (panel.css)
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @return string|false
+     */
     public static function customCss(App $kirby)
     {
         if ($css = $kirby->option('panel.css')) {
@@ -37,9 +113,37 @@ class Panel
         return false;
     }
 
+    /**
+     * Check for a custom js file from the
+     * config (panel.js)
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @return string|false
+     */
+    public static function customJs(App $kirby)
+    {
+        if ($js = $kirby->option('panel.js')) {
+            $asset = asset($js);
+
+            if ($asset->exists() === true) {
+                return $asset->url() . '?' . $asset->modified();
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Load the SVG icon sprite
+     * This will be injected in the
+     * initial HTML document for the Panel
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @return string
+     */
     public static function icons(App $kirby): string
     {
-        return F::read($kirby->root('kirby') . '/panel/dist/img/icons.svg');
+        return F::read($kirby->root('kirby') . '/panel/dist/icons.svg');
     }
 
     /**
@@ -81,7 +185,7 @@ class Panel
      * @param \Kirby\Cms\App $kirby
      * @return \Kirby\Cms\Response
      */
-    public static function render(App $kirby)
+    public static function render(App $kirby, array $inertia = [])
     {
         try {
             if (static::link($kirby) === true) {
@@ -95,32 +199,56 @@ class Panel
         // get the uri object for the panel url
         $uri = new Uri($url = $kirby->url('panel'));
 
-        // fetch all plugins
-        $plugins = new PanelPlugins();
-
         $view = new View($kirby->root('kirby') . '/views/panel.php', [
-            'kirby'     => $kirby,
-            'config'    => $kirby->option('panel'),
-            'assetUrl'  => $kirby->url('media') . '/panel/' . $kirby->versionHash(),
-            'customCss' => static::customCss($kirby),
-            'icons'     => static::icons($kirby),
-            'pluginCss' => $plugins->url('css'),
-            'pluginJs'  => $plugins->url('js'),
-            'panelUrl'  => $uri->path()->toString(true) . '/',
-            'nonce'     => $kirby->nonce(),
-            'options'   => [
-                'url'         => $url,
-                'site'        => $kirby->url('index'),
-                'api'         => $kirby->url('api'),
-                'csrf'        => $kirby->option('api.csrf') ?? csrf(),
-                'translation' => 'en',
-                'debug'       => $kirby->option('debug', false),
-                'search'      => [
-                    'limit' => $kirby->option('panel.search.limit') ?? 10
-                ]
-            ]
+            'assets'   => static::assets($kirby),
+            'icons'    => static::icons($kirby),
+            'nonce'    => $kirby->nonce(),
+            'inertia'  => $inertia,
+            'panelUrl' => $uri->path()->toString(true) . '/',
         ]);
 
         return new Response($view->render());
     }
+
+    public static function router(App $kirby, string $path = null)
+    {
+        if ($kirby->option('panel') === false) {
+            return false;
+        }
+
+        // load all Panel routes
+        $routes = (require $kirby->root('kirby') . '/config/panel.php')($kirby);
+
+        // create a micro-router for the Panel
+        $result = router($path, $kirby->request()->method(), $routes);
+
+        // pass responses directly down to the Kirby router
+        if (is_a($result, 'Kirby\Http\Response') === true) {
+            return $result;
+        }
+
+        // interpret strings as errors
+        if (is_string($result) === true) {
+            return Inertia::error($result);
+        }
+
+        // only expect arrays from here on
+        if (is_array($result) === false) {
+            throw new InvalidArgumentException("Invalid Panel response");
+        }
+
+        $view = $result['view'] ?? 'site';
+
+        if (is_string($view) === true) {
+            $view = Inertia::view($view);
+        } else {
+            $view = Inertia::view($view['id'] ?? 'site', $view);
+        }
+
+        return Inertia::render($result['component'], [
+            '$props' => $result['props'] ?? [],
+            '$view'  => $view,
+        ]);
+    }
+
 }
