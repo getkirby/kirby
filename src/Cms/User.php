@@ -624,6 +624,17 @@ class User extends ModelWithContent
     }
 
     /**
+     * Returns the Translation object
+     * for the selected Panel language
+     *
+     * @return Translation
+     */
+    public function panelTranslation()
+    {
+        return $this->kirby()->translation($this->language()) ?? $this->kirby()->translation('en');
+    }
+
+    /**
      * Returns the url to the editing view
      * in the panel
      *
