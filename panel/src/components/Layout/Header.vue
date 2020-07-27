@@ -16,8 +16,8 @@
       <nav>
         <k-button
           v-for="(tab, tabIndex) in visibleTabs"
-          :key="$route.fullPath + '-tab-' + tabIndex"
-          :link="'#' + tab.name"
+          :key="tabIndex"
+          :link="tab.link"
           :current="currentTab && currentTab.name === tab.name"
           :icon="tab.icon"
           :tooltip="tab.label"

@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import config from "@/config/config.js";
 import debounce from "@/helpers/debounce.js";
 
 export default {
@@ -61,7 +60,7 @@ export default {
       items: [],
       q: null,
       selected: -1,
-      currentType: this.$store.state.view === "users" ? "users" : "pages"
+      currentType: this.$view.search
     }
   },
   computed: {
@@ -157,7 +156,7 @@ export default {
       try {
         const response = await this.$api.get(
           this.type.endpoint,
-          { q: query, limit: config.search.limit }
+          { q: query, limit: this.$config.search.limit }
         );
         this.items = response.data.map(this['map_' + this.currentType]);
 

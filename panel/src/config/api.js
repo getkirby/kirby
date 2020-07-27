@@ -1,12 +1,10 @@
 import Api from "@/api/index.js";
-import config from "./config.js";
 
 export default {
   install(Vue, store) {
-
     Vue.prototype.$api = Vue.$api = Api({
       config: {
-        endpoint: config.api,
+        endpoint: window.panel.$urls.api,
         onComplete: (requestId) => {
           Vue.$api.requests = Vue.$api.requests.filter(value => {
             return value !== requestId;
@@ -17,7 +15,7 @@ export default {
           }
         },
         onError: error => {
-          if (config.debug) {
+          if (window.panel.$config.debug) {
             window.console.error(error);
           }
 
@@ -31,12 +29,12 @@ export default {
         },
         onPrepare: (options) => {
           // if language set, add to headers
-          if (store.state.languages.current) {
-            options.headers["x-language"] = store.state.languages.current.code;
+          if (window.panel.$language) {
+            options.headers["x-language"] = window.panel.$language.code;
           }
 
           // add the csrf token to every request
-          options.headers["x-csrf"] = window.panel.csrf;
+          options.headers["x-csrf"] = window.panel.$system.csrf;
 
           return options;
         },

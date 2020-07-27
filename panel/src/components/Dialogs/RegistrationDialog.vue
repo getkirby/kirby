@@ -45,11 +45,10 @@ export default {
     async submit() {
       try {
         await this.$api.system.register(this.registration);
-        this.$store.dispatch("system/register", this.registration.license);
+
         this.success({
           message: this.$t("license.register.success")
         });
-
       } catch (error) {
         this.$refs.dialog.error(error.message);
       }

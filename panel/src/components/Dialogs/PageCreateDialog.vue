@@ -49,17 +49,11 @@ export default {
           options: this.templates
         }
       };
-    },
-    slugs() {
-      return this.$store.state.languages.default ? this.$store.state.languages.default.rules : this.system.slugs;
-    },
-    system() {
-      return this.$store.state.system.info;
     }
   },
   watch: {
     "page.title"(title) {
-      this.page.slug = this.$helper.slug(title, [this.slugs, this.system.ascii]);
+      this.page.slug = this.$helper.slug(title, [this.$system.slugs, this.$system.ascii]);
     }
   },
   methods: {

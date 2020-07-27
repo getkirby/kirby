@@ -39,11 +39,6 @@ export default {
           message: ":)",
           event: "user.delete"
         });
-
-        if (this.$route.name === "User") {
-          this.$go("/users");
-        }
-
       } catch (error) {
         this.$refs.dialog.error(error.message);
       }

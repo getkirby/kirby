@@ -35,11 +35,11 @@ export default {
       };
     }
   },
-  async created() {
-    this.languages = await this.$api.translations.options();
-  },
   methods: {
     async open(id) {
+
+      this.languages = await this.$api.translations.options();
+
       try {
         this.user = await this.$api.users.get(id, { view: "compact" });
         this.$refs.dialog.open();
@@ -50,21 +50,15 @@ export default {
     },
     async submit() {
       try {
-        this.user = this.$api.users.changeLanguage(
+        this.user = await this.$api.users.changeLanguage(
           this.user.id,
           this.user.language
         );
-
-        // If current panel user, update store to switch language
-        if (this.$user.id === this.user.id) {
-          this.$store.dispatch("user/language", this.user.language);
-        }
 
         this.success({
           message: ":)",
           event: "user.changeLanguage"
         });
-
       } catch (error) {
         this.$refs.dialog.error(error.message);
       }

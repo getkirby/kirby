@@ -50,8 +50,8 @@ export default {
         return '';
       }
 
-      if (this.$route !== undefined && this.to[0] === '/' && !this.target) {
-        return (this.$router.options.url || '') + this.to;
+      if (this.to[0] === '/' && !this.target) {
+        return this.$url(this.to);
       }
 
       return this.to;
@@ -59,11 +59,6 @@ export default {
   },
   methods: {
     isRoutable(e) {
-      // the router is not installed
-      if (this.$route === undefined) {
-        return false;
-      }
-
       // don't redirect with control keys
       if (e.metaKey || e.altKey || e.ctrlKey || e.shiftKey) {
         return false;

@@ -52,7 +52,6 @@
 </template>
 
 <script>
-import config from "@/config/config.js";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 
 export default {
@@ -176,7 +175,7 @@ export default {
       // dropping files
       if (this.uploads && this.$helper.isUploadEvent($event)) {
         return this.$refs.fileUpload.drop($event.dataTransfer.files, {
-          url: config.api + "/" + this.endpoints.field + "/upload",
+          url: this.$urls.api + "/" + this.endpoints.field + "/upload",
           multiple: false
         });
       }
@@ -257,7 +256,7 @@ export default {
     },
     uploadFile() {
       this.$refs.fileUpload.open({
-        url: config.api + "/" + this.endpoints.field + "/upload",
+        url: this.$urls.api + "/" + this.endpoints.field + "/upload",
         multiple: false,
       });
     },

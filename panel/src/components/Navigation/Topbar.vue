@@ -1,5 +1,5 @@
 <template>
-  <div v-if="user && view" class="k-topbar">
+  <div class="k-topbar">
     <k-view>
       <div class="k-topbar-wrapper">
         <k-dropdown class="k-topbar-menu">
@@ -17,19 +17,18 @@
                 <li
                   v-if="entry.menu"
                   :key="'menu-item-' + entryName"
-                  :aria-current="$store.state.view === entryName"
+                  :aria-current="view.id === entryName"
                 >
                   <k-dropdown-item
-                    :disabled="$permissions.access[entryName] === false"
                     :icon="entry.icon"
                     :link="entry.link"
                   >
-                    {{ menuTitle(entry, entryName) }}
+                    {{ entry.label }}
                   </k-dropdown-item>
                 </li>
               </template>
               <li><hr></li>
-              <li :aria-current="$route.meta.view === 'account'">
+              <li :aria-current="view.id === 'account'">
                 <k-dropdown-item icon="account" link="/account">
                   {{ $t("view.account") }}
                 </k-dropdown-item>
@@ -49,10 +48,10 @@
           :to="view.link"
           class="k-topbar-button k-topbar-view-button"
         >
-          <k-icon :type="view.icon" /> {{ breadcrumbTitle }}
+          <k-icon :type="view.icon" /> {{ view.breadcrumbLabel }}
         </k-link>
 
-        <k-dropdown v-if="$store.state.breadcrumb.length > 1" class="k-topbar-breadcrumb-menu">
+        <k-dropdown v-if="breadcrumb.length > 1" class="k-topbar-breadcrumb-menu">
           <k-button class="k-topbar-button" @click="$refs.crumb.toggle()">
             …
             <k-icon type="angle-down" />
@@ -60,10 +59,10 @@
 
           <k-dropdown-content ref="crumb">
             <k-dropdown-item :icon="view.icon" :link="view.link">
-              {{ $t(`view.${$store.state.view}`, view.label) }}
+              {{ view.title }}
             </k-dropdown-item>
             <k-dropdown-item
-              v-for="(crumb, index) in $store.state.breadcrumb"
+              v-for="(crumb, index) in breadcrumb"
               :key="'crumb-' + index + '-dropdown'"
               :icon="view.icon"
               :link="crumb.link"
@@ -75,7 +74,7 @@
 
         <nav class="k-topbar-crumbs">
           <k-link
-            v-for="(crumb, index) in $store.state.breadcrumb"
+            v-for="(crumb, index) in breadcrumb"
             :key="'crumb-' + index"
             :to="crumb.link"
           >
@@ -146,28 +145,15 @@
 </template>
 
 <script>
-import views from "@/config/views.js";
-
 export default {
+  props: {
+    breadcrumb: Array,
+    license: [Boolean, String],
+    title: String,
+    view: Object,
+    views: Object,
+  },
   computed: {
-    breadcrumbTitle() {
-      let title = this.$t(`view.${this.$store.state.view}`, this.view.label);
-
-      if (this.$store.state.view === "site") {
-        return this.$store.state.system.info.title || title;
-      }
-
-      return title;
-    },
-    view() {
-      return views[this.$store.state.view];
-    },
-    views() {
-      return views;
-    },
-    user() {
-      return this.$store.state.user.current;
-    },
     notification() {
       if (
         this.$store.state.notification.type &&
@@ -179,18 +165,7 @@ export default {
       }
     },
     unregistered() {
-      return !this.$store.state.system.info.license ? true : false;
-    }
-  },
-  methods: {
-    menuTitle(view, viewName) {
-      let title = this.$t("view." + viewName, view.label);
-
-      if (viewName === "site") {
-        return this.$store.state.system.info.site || title;
-      }
-
-      return title;
+      return !this.license ? true : false;
     }
   }
 };

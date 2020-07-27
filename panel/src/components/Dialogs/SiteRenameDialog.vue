@@ -25,12 +25,11 @@ export default {
 
       try {
         await this.$api.site.title(this.page.title);
-        this.$store.dispatch("system/title", this.page.title);
+
         this.success({
           message: ":)",
           event: "site.changeTitle"
         });
-
       } catch (error) {
         this.$refs.dialog.error(error.message);
       }

@@ -47,24 +47,15 @@ export default {
     },
     async submit() {
       try {
-        const user = this.$api.users.changeEmail(this.user.id, this.user.email);
+        const user = await this.$api.users.changeEmail(this.user.id, this.user.email);
 
         // remove changes for the old user
         this.$store.dispatch("content/revert", "users/" + this.user.id);
-
-        // If current panel user, update store
-        if (this.$user.id === this.user.id) {
-          this.$store.dispatch("user/email", this.user.email);
-        }
 
         let payload = {
           message: ":)",
           event: "user.changeEmail",
         };
-
-        if (this.$route.name === "User") {
-          payload.route = this.$api.users.link(user.id);
-        }
 
         this.success(payload);
 

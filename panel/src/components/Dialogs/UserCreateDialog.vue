@@ -51,7 +51,7 @@ export default {
         },
         role: {
           label: this.$t("role"),
-          type: this.roles.length === 1 ? "hidden" : "radio",
+          type: this.roles.length <= 1 ? "hidden" : "radio",
           required: true,
           options: this.roles
         }
@@ -76,7 +76,7 @@ export default {
         name: "",
         email: "",
         password: "",
-        language: this.$store.state.system.info.defaultLanguage || "en",
+        language: this.$config.translation || "en",
         role: this.$user.role.name
       };
     },

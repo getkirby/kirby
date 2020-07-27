@@ -22,9 +22,6 @@ export default {
     };
   },
   watch: {
-    '$route'() {
-      this.open();
-    },
     blueprint() {
       this.open();
     }
@@ -40,7 +37,7 @@ export default {
       }
 
       if (!tabName) {
-        tabName = this.$route.hash.replace('#', '');
+        tabName = window.location.hash.replace('#', '');
       }
 
       if (!tabName) {

@@ -66,18 +66,11 @@ export default {
     async login() {
       this.issue     = null;
       this.isLoading = true;
-
       try {
-        await this.$store.dispatch("user/login", this.user);
-        await this.$store.dispatch("system/load", true);
-
-        this.$store.dispatch("notification/success", this.$t("welcome"));
-
-      } catch (error) {
-        this.issue = this.$t("error.access.login");
-
-      } finally {
-        this.isLoading = false;
+        await this.$api.auth.login(this.user);
+        this.$go("/site");
+      } catch (e) {
+        this.issue = e.message;
       }
     }
   }

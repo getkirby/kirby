@@ -31,7 +31,10 @@ export default {
     TODO: refactor once min() is supported by all our browsers
     since LibSASS has its issues with min() we need to be tricky
     */
-  grid-template-columns: repeat(auto-fill, minmax(#{"min(12rem, 100%)"}, 1fr));
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(calc(min(12rem, 100%)), 1fr)
+  );
 }
 
 @media screen and (min-width: $breakpoint-small) {
@@ -46,7 +49,7 @@ export default {
       */
     grid-template-columns: repeat(
       auto-fill,
-      minmax(#{"min(10rem, 100%)"}, 1fr)
+      minmax(calc(min(10rem, 100%)), 1fr)
     );
   }
   .k-cards[data-size="small"] {
@@ -60,7 +63,7 @@ export default {
       */
     grid-template-columns: repeat(
       auto-fill,
-      minmax(#{"min(16rem, 100%)"}, 1fr)
+      minmax(calc(min(16rem, 100%)), 1fr)
     );
   }
   .k-cards[data-size="medium"] {
@@ -74,7 +77,7 @@ export default {
       */
     grid-template-columns: repeat(
       auto-fill,
-      minmax(#{"min(24rem, 100%)"}, 1fr)
+      minmax(calc(min(24rem, 100%)), 1fr)
     );
   }
   .k-cards[data-size="large"],
@@ -95,7 +98,7 @@ export default {
      */
     grid-template-columns: repeat(
       auto-fill,
-      minmax(#{"min(32rem, 100%)"}, 1fr)
+      minmax(calc(min(32rem, 100%)), 1fr)
     );
   }
 }

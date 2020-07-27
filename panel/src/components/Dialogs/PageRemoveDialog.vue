@@ -86,18 +86,6 @@ export default {
           event: "page.delete"
         };
 
-        // if in PageView, redirect
-        if (
-          this.$route.params.path &&
-          this.page.id === this.$route.params.path.replace(/\+/g, "/")
-        ) {
-          if (this.page.parent) {
-            payload.route = this.$api.pages.link(this.page.parent.id);
-          } else {
-            payload.route = "/pages";
-          }
-        }
-
         this.success(payload);
 
       } catch (error) {

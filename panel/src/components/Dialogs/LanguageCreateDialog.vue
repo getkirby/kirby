@@ -58,21 +58,18 @@ export default {
         },
       };
     },
-    system() {
-      return this.$store.state.system.info;
-    }
   },
   watch: {
     "language.name"(name) {
       this.onNameChanges(name);
     },
     "language.code"(code) {
-      this.language.code = this.$helper.slug(code, [this.system.ascii]);
+      this.language.code = this.$helper.slug(code, [this.$system.ascii]);
     }
   },
   methods: {
     onNameChanges(name) {
-      this.language.code = this.$helper.slug(name, [this.language.rules, this.system.ascii]).substr(0, 2);
+      this.language.code = this.$helper.slug(name, [this.language.rules, this.$system.ascii]).substr(0, 2);
     },
     open() {
       this.language = {
@@ -96,7 +93,6 @@ export default {
           locale: this.language.locale
         });
 
-        this.$store.dispatch("languages/load");
         this.success({
           message: ":)",
           event: "language.create"

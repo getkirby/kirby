@@ -70,7 +70,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .k-form-submitter {
   display: none;
 }

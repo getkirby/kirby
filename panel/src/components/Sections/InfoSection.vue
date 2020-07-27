@@ -33,11 +33,9 @@ export default {
   }
 };
 </script>
-<style>
 
+<style lang="scss">
 .k-info-section-headline {
   margin-bottom: .5rem;
 }
-
 </style>
-

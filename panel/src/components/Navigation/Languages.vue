@@ -17,19 +17,23 @@
 export default {
   computed: {
     defaultLanguage() {
-      return this.$store.state.languages.default;
+      return this.$languages.find(language => language.default === true);
     },
     language() {
-      return this.$store.state.languages.current;
+      return this.$language;
     },
     languages() {
-      return this.$store.state.languages.all.filter(language => language.default === false);
+      return this.$languages.filter(language => language.default === false);
     }
   },
   methods: {
     change(language) {
-      this.$store.dispatch("languages/current", language);
       this.$emit("change", language);
+      this.$go(this.$view.path, {
+        data: {
+          language: language.code
+        }
+      });
     }
   }
 }

@@ -29,16 +29,8 @@ export default {
     };
   },
   computed: {
-    language() {
-      return this.$store.state.languages.current;
-    },
     values() {
       return this.$store.getters["content/values"]();
-    }
-  },
-  watch: {
-    language() {
-      this.fetch();
     }
   },
   created: function() {
@@ -80,7 +72,7 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .k-fields-issue-headline {
   margin-bottom: 0.5rem;
 }

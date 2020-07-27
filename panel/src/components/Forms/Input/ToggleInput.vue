@@ -120,7 +120,7 @@ $toggle-height: 16px;
     box-shadow: inset 0 0 0 2px $color-background, inset $toggle-height*-1 0px 0px 2px $color-background;
     background-color: $color-border;
   }
-  
+
   &[disabled]:checked {
     box-shadow: inset 0 0 0 2px $color-background, inset $toggle-height 0px 0px 2px $color-background;
   }

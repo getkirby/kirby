@@ -52,16 +52,17 @@ export default {
   },
   methods: {
     go(target) {
+      let data = {};
+
       // if a target language is set and it is not the current language,
       // switch to it before routing to target view
       if (target.language) {
-        if (this.$store.state.languages.current.code !== target.language) {
-          const language = this.$store.state.languages.all.filter(l => l.code === target.language)[0];
-          this.$store.dispatch("languages/current", language);
-        }
+        data.language = target.language;
       }
 
-      this.$go(target.link);
+      this.$go(target.link, {
+        data: data
+      });
     },
     load() {
       // create an API request promise for each model with changes
@@ -108,7 +109,7 @@ export default {
           }
 
           // add language indicator if in multilang
-          if (this.$store.state.languages.current) {
+          if (this.$language) {
             const language = model.id.split("/").pop();
             entry.label = entry.label + " (" + language + ")";
             entry.target.language = language;

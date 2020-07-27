@@ -1,32 +1,30 @@
 <template>
   <k-button-group class="k-prev-next">
-    <k-button v-bind="prev" icon="angle-left" />
-    <k-button v-bind="next" icon="angle-right" />
+    <k-button v-bind="prevSettings" icon="angle-left" />
+    <k-button v-bind="nextSettings" icon="angle-right" />
   </k-button-group>
 </template>
 
 <script>
 export default {
   props: {
-    prev: {
-      type: Object,
-      default() {
-        return {
-          disabled: true,
-          link: "#",
-        }
-      }
-    },
-    next: {
-      type: Object,
-      default() {
-        return {
-          disabled: true,
-          link: "#"
-        }
-      }
-    }
+    next: [Boolean, Object],
+    prev: [Boolean, Object]
   },
+  computed: {
+    nextSettings() {
+      return this.next || {
+        disabled: true,
+        link: "#",
+      };
+    },
+    prevSettings() {
+      return this.prev || {
+        disabled: true,
+        link: "#",
+      };
+    }
+  }
 };
 </script>
 

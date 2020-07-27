@@ -72,7 +72,6 @@
 </template>
 
 <script>
-import config from "@/config/config.js";
 import picker from "@/mixins/picker/field.js";
 
 export default {
@@ -123,7 +122,7 @@ export default {
     },
     upload() {
       this.$refs.fileUpload.open({
-        url: config.api + "/" + this.endpoints.field + "/upload",
+        url: this.$urls.api + "/" + this.endpoints.field + "/upload",
         multiple: this.multiple,
         accept: this.uploads.accept
       });

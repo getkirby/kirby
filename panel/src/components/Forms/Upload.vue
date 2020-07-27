@@ -116,7 +116,7 @@ export default {
           url: this.options.url,
           attributes: this.options.attributes,
           headers: {
-            "X-CSRF": window.panel.csrf
+            "X-CSRF": window.panel.$system.csrf
           },
           progress: (xhr, file, progress) => {
             if (this.$refs[file.name] && this.$refs[file.name][0]) {

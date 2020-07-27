@@ -154,7 +154,7 @@ export default {
 
 </script>
 
-<style>
+<style lang="scss">
 .k-number-input {
   width: 100%;
   border: 0;

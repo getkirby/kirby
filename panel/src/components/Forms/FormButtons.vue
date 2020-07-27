@@ -85,8 +85,8 @@ export default {
   computed: {
     api() {
       return {
-        lock: [this.$route.path + "/lock", null, null, true],
-        unlock: [this.$route.path + "/unlock", null, null, true]
+        lock: [this.$view.path + "/lock", null, null, true],
+        unlock: [this.$view.path + "/unlock", null, null, true]
       }
     },
     hasChanges() {

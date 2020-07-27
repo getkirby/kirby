@@ -58,16 +58,10 @@ export default {
       try {
         await this.$api.users.changeRole(this.user.id, this.user.role);
 
-        // If current panel user, update store
-        if (this.$user.id === this.user.id) {
-          this.$store.dispatch("user/load");
-        }
-
         this.success({
           message: ":)",
           event: "user.changeRole"
         });
-
       } catch (error) {
         this.$refs.dialog.error(error.message);
       }
