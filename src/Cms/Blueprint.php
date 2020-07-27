@@ -687,6 +687,7 @@ class Blueprint
                 'columns' => $this->normalizeColumns($tabName, $tabProps['columns'] ?? []),
                 'icon'    => $tabProps['icon']  ?? null,
                 'label'   => $this->i18n($tabProps['label'] ?? ucfirst($tabName)),
+                'link'    => $this->model->panelUrl(true) . '/tab:' . $tabName,
                 'name'    => $tabName,
             ]);
         }
@@ -750,11 +751,15 @@ class Blueprint
     /**
      * Returns a single tab by name
      *
-     * @param string $name
+     * @param string|null $name
      * @return array|null
      */
-    public function tab(string $name): ?array
+    public function tab(string $name = null): ?array
     {
+        if ($name === null) {
+            return A::first($this->tabs);
+        }
+
         return $this->tabs[$name] ?? null;
     }
 
