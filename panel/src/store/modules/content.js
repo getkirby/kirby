@@ -74,11 +74,10 @@ export default {
     id: (state, getters, rootState) => id => {
       id = id || state.current;
 
-      if (rootState.languages.current) {
-        return id + "/" + rootState.languages.current.code;
-      } else {
-        return id;
+      if (window.panel.$language) {
+        return id + "/" + window.panel.$language.code;
       }
+      return id;
     },
     /**
      * Return the full model object for passed ID
@@ -267,6 +266,7 @@ export default {
       };
 
       // check if content was previously unlocked
+      // TODO: handle this in inertia
       Vue.$api
         .get(model.api + "/unlock")
         .then(response => {
