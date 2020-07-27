@@ -1,0 +1,12 @@
+{
+    "/dist/index.js": "/dist/index.js",
+    "/css/vue-styles.css": "/css/vue-styles.css",
+    "/dist/manifest.js": "/dist/manifest.js",
+    "/dist/vendor.js": "/dist/vendor.js",
+    "/dist/index.css": "/dist/index.css",
+    "/dist/apple-touch-icon.png": "/dist/apple-touch-icon.png",
+    "/dist/favicon.png": "/dist/favicon.png",
+    "/dist/favicon.svg": "/dist/favicon.svg",
+    "/dist/icons.svg": "/dist/icons.svg",
+    "/dist/plugins.js": "/dist/plugins.js"
+}
