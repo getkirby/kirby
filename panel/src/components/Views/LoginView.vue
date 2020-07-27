@@ -1,10 +1,9 @@
 <template>
-  <k-error-view v-if="issue">
-    {{ issue.message }}
-  </k-error-view>
-  <k-view v-else-if="ready" align="center" class="k-login-view">
-    <k-login-form />
-  </k-view>
+  <k-outside>
+    <k-view align="center" class="k-login-view">
+      <k-login-form />
+    </k-view>
+  </k-outside>
 </template>
 
 <script>
@@ -12,33 +11,7 @@ import LoginForm from "../Forms/Login.vue";
 
 export default {
   components: {
-    "k-login-form": window.panel.plugins.login || LoginForm
-  },
-  data() {
-    return {
-      ready: false,
-      issue: null
-    };
-  },
-  created() {
-    this.$store.dispatch("content/current", null);
-    this.$store
-      .dispatch("system/load")
-      .then(system => {
-        if (!system.isReady) {
-          this.$go("/installation");
-        }
-
-        if (system.user && system.user.id) {
-          this.$go("/");
-        }
-
-        this.ready = true;
-        this.$store.dispatch("title", this.$t("login"));
-      })
-      .catch(error => {
-        this.issue = error;
-      });
+    "k-login-form": LoginForm
   }
 };
 </script>

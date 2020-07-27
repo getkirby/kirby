@@ -1,107 +1,95 @@
 <template>
-  <k-view v-if="system" align="center" class="k-installation-view">
-    <form v-if="state === 'install'" @submit.prevent="install">
-      <h1 class="k-offscreen">{{ $t("installation") }}</h1>
-      <k-fieldset :fields="fields" :novalidate="true" v-model="user" />
-      <k-button type="submit" icon="check">{{ $t("install") }}</k-button>
-    </form>
-    <k-text v-else-if="state === 'completed'">
-      <k-headline>{{ $t("installation.completed") }}</k-headline>
-      <k-link to="/login">{{ $t("login") }}</k-link>
-    </k-text>
-    <div v-else>
-      <k-headline v-if="!system.isInstalled">{{ $t("installation.issues.headline") }}</k-headline>
+  <k-outside>
+    <k-view align="center" class="k-installation-view">
+      <form v-if="state === 'install'" @submit.prevent="install">
+        <h1 class="k-offscreen">{{ $t("installation") }}</h1>
+        <k-fieldset :fields="fields" :novalidate="true" v-model="user" />
+        <k-button type="submit" icon="check">{{ $t("install") }}</k-button>
+      </form>
+      <div v-else>
+        <k-headline v-if="!isInstalled">{{ $t("installation.issues.headline") }}</k-headline>
 
-      <ul class="k-installation-issues">
-        <li v-if="system.isInstallable === false">
-          <k-icon type="alert" />
-          <span v-html="$t('installation.disabled')" />
-        </li>
+        <ul class="k-installation-issues">
+          <li v-if="isInstallable === false">
+            <k-icon type="alert" />
+            <span v-html="$t('installation.disabled')" />
+          </li>
 
-        <li v-if="requirements.php === false">
-          <k-icon type="alert" />
-          <span v-html="$t('installation.issues.php')" />
-        </li>
+          <li v-if="requirements.php === false">
+            <k-icon type="alert" />
+            <span v-html="$t('installation.issues.php')" />
+          </li>
 
-        <li v-if="requirements.server === false">
-          <k-icon type="alert" />
-          <span v-html="$t('installation.issues.server')" />
-        </li>
+          <li v-if="requirements.server === false">
+            <k-icon type="alert" />
+            <span v-html="$t('installation.issues.server')" />
+          </li>
 
-        <li v-if="requirements.mbstring === false">
-          <k-icon type="alert" />
-          <span v-html="$t('installation.issues.mbstring')" />
-        </li>
+          <li v-if="requirements.mbstring === false">
+            <k-icon type="alert" />
+            <span v-html="$t('installation.issues.mbstring')" />
+          </li>
 
-        <li v-if="requirements.curl === false">
-          <k-icon type="alert" />
-          <span v-html="$t('installation.issues.curl')" />
-        </li>
+          <li v-if="requirements.curl === false">
+            <k-icon type="alert" />
+            <span v-html="$t('installation.issues.curl')" />
+          </li>
 
-        <li v-if="requirements.accounts === false">
-          <k-icon type="alert" />
-          <span v-html="$t('installation.issues.accounts')" />
-        </li>
+          <li v-if="requirements.accounts === false">
+            <k-icon type="alert" />
+            <span v-html="$t('installation.issues.accounts')" />
+          </li>
 
-        <li v-if="requirements.content === false">
-          <k-icon type="alert" />
-          <span v-html="$t('installation.issues.content')" />
-        </li>
+          <li v-if="requirements.content === false">
+            <k-icon type="alert" />
+            <span v-html="$t('installation.issues.content')" />
+          </li>
 
-        <li v-if="requirements.media === false">
-          <k-icon type="alert" />
-          <span v-html="$t('installation.issues.media')" />
-        </li>
+          <li v-if="requirements.media === false">
+            <k-icon type="alert" />
+            <span v-html="$t('installation.issues.media')" />
+          </li>
 
-        <li v-if="requirements.sessions === false">
-          <k-icon type="alert" />
-          <span v-html="$t('installation.issues.sessions')" />
-        </li>
+          <li v-if="requirements.sessions === false">
+            <k-icon type="alert" />
+            <span v-html="$t('installation.issues.sessions')" />
+          </li>
 
-      </ul>
+        </ul>
 
-      <k-button icon="refresh" @click="check"><span v-html="$t('retry')" /></k-button>
+        <k-button icon="refresh" @click="$reload"><span v-html="$t('retry')" /></k-button>
 
-    </div>
-  </k-view>
+      </div>
+    </k-view>
+  </k-outside>
 </template>
 
 <script>
+
 export default {
+  props: {
+    isInstallable: Boolean,
+    isInstalled: Boolean,
+    isOk: Boolean,
+    requirements: Object,
+    translations: Array,
+  },
   data() {
     return {
       user: {
         name: "",
         email: "",
-        language: "",
+        language: this.$translation.code,
         password: "",
         role: "admin"
-      },
-      languages: [],
-      system: null
+      }
     };
   },
   computed: {
-    state() {
-
-      if (this.system.isOk && this.system.isInstallable && !this.system.isInstalled) {
-        return 'install';
-      }
-
-      if (this.system.isOk && this.system.isInstallable && this.system.isInstalled) {
-        return 'completed';
-      }
-
-    },
-    translation() {
-      return this.$store.state.translation.current;
-    },
-    requirements() {
-      return this.system && this.system.requirements ? this.system.requirements : {};
-    },
     fields() {
       return {
         email: {
+          autofocus: true,
           label: this.$t("email"),
           type: "email",
           link: false,
@@ -116,35 +104,26 @@ export default {
         language: {
           label: this.$t("language"),
           type: "select",
-          options: this.languages,
+          options: this.translations,
           icon: "globe",
           empty: false,
           required: true
         }
       };
-    }
-  },
-  watch: {
-    translation: {
-      handler(value) {
-        this.user.language = value;
-      },
-      immediate: true
     },
-    "user.language"(language) {
-      this.$store.dispatch("translation/activate", language);
+    state() {
+      if (this.isOk && this.isInstallable && !this.isInstalled) {
+        return "install";
+      }
+
+      return "requirements";
     }
-  },
-  created() {
-    this.$store.dispatch("content/current", null);
-    this.check();
   },
   methods: {
     install() {
       this.$api.system
         .install(this.user)
         .then(user => {
-          this.$store.dispatch("user/current", user);
           this.$store.dispatch("notification/success", this.$t("welcome") + "!");
           this.$go("/");
         })
@@ -152,21 +131,6 @@ export default {
           this.$store.dispatch("notification/error", error);
         });
     },
-    check() {
-      this.$store.dispatch("system/load", true).then(system => {
-        if (system.isInstalled === true && system.isReady) {
-          this.$go("/login");
-          return;
-        }
-
-        this.$api.translations.options().then(languages => {
-          this.languages = languages;
-
-          this.system = system;
-          this.$store.dispatch("title", this.$t("view.installation"));
-        });
-      });
-    }
   }
 };
 </script>

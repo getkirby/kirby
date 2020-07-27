@@ -1,17 +1,30 @@
 <template>
-  <k-view class="k-error-view">
-    <div class="k-error-view-content">
-      <k-text>
-        <p>
-          <k-icon class="k-error-view-icon" type="alert" />
-        </p>
-        <p>
-          <slot />
-        </p>
-      </k-text>
-    </div>
-  </k-view>
+  <component :is="`k-${layout}`">
+    <k-view class="k-error-view">
+      <div class="k-error-view-content">
+        <k-text>
+          <p>
+            <k-icon class="k-error-view-icon" type="alert" />
+          </p>
+          <slot>
+            <p>
+              {{ error }}
+            </p>
+          </slot>
+        </k-text>
+      </div>
+    </k-view>
+  </component>
 </template>
+
+<script>
+export default {
+  props: {
+    error: String,
+    layout: String
+  }
+};
+</script>
 
 <style lang="scss">
 .k-error-view {

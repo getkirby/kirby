@@ -1,225 +1,127 @@
 <template>
+  <k-inside>
+    <div class="k-file-view">
+      <k-file-preview :file="file" />
+      <k-view :data-locked="isLocked" class="k-file-content">
 
-  <k-error-view v-if="issue">
-    {{ issue.message }}
-  </k-error-view>
-  <div v-else class="k-file-view">
-
-    <k-file-preview :file="file" />
-
-    <k-view :data-locked="isLocked" class="k-file-content">
-
-      <k-header
-        :editable="permissions.changeName && !isLocked"
-        :tabs="tabs"
-        :tab="tab"
-        @edit="action('rename')"
-      >
-
-        {{ file.filename }}
-
-        <k-button-group slot="left">
-          <k-button :responsive="true" icon="open" @click="action('download')">
-            {{ $t("open") }}
-          </k-button>
-          <k-dropdown>
-            <k-button
-              :responsive="true"
-              :disabled="isLocked"
-              icon="cog"
-              @click="$refs.settings.toggle()"
-            >
-              {{ $t('settings') }}
+        <k-header
+          :editable="permissions.changeName && !isLocked"
+          :tabs="tabs"
+          :tab="tab"
+          @edit="action('rename')"
+        >
+          {{ file.filename }}
+          <k-button-group slot="left">
+            <k-button :responsive="true" icon="open" @click="action('download')">
+              {{ $t("open") }}
             </k-button>
-            <k-dropdown-content ref="settings" :options="options" @action="action" />
-          </k-dropdown>
-          <k-languages-dropdown />
-        </k-button-group>
+            <k-dropdown>
+              <k-button
+                :responsive="true"
+                :disabled="isLocked"
+                icon="cog"
+                @click="$refs.settings.toggle()"
+              >
+                {{ $t('settings') }}
+              </k-button>
+              <k-dropdown-content ref="settings" :options="options" @action="action" />
+            </k-dropdown>
+            <k-languages-dropdown />
+          </k-button-group>
+          <k-prev-next
+            slot="right"
+            :prev="prev"
+            :next="next"
+          />
+        </k-header>
 
-        <k-prev-next
-          v-if="file.id"
-          slot="right"
-          :prev="prev"
-          :next="next"
+        <k-sections
+          :blueprint="blueprint"
+          :columns="tab.columns"
+          :parent="$api.files.url(file.parent, file.filename)"
         />
-      </k-header>
 
-      <k-tabs
-        v-if="file.id"
-        ref="tabs"
-        :key="tabsKey"
-        :parent="$api.files.url(path, file.filename)"
-        :tabs="tabs"
-        :blueprint="file.blueprint.name"
-        @tab="tab = $event"
-      />
-
-      <k-file-rename-dialog ref="rename" @success="renamed" />
-      <k-file-remove-dialog ref="remove" @success="deleted" />
-      <k-upload
-        ref="upload"
-        :url="uploadApi"
-        :accept="file.mime"
-        :multiple="false"
-        @success="uploaded"
-      />
-
-    </k-view>
-  </div>
-
+        <k-file-rename-dialog ref="rename" @success="onRenamed" />
+        <k-file-remove-dialog ref="remove" @success="onDeleted" />
+        <k-upload
+          ref="upload"
+          :url="uploadApi"
+          :accept="file.mime"
+          :multiple="false"
+          @success="onUploaded"
+        />
+      </k-view>
+    </div>
+  </k-inside>
 </template>
 
 <script>
-import PrevNext from "@/mixins/view/prevnext.js";
-import config from "@/config/config.js";
+import ModelView from "./ModelView";
 
 export default {
-  mixins: [PrevNext],
+  extends: ModelView,
   props: {
-    path: {
-      type: String
-    },
-    filename: {
-      type: String,
-      required: true
-    }
-  },
-  data() {
-    return {
-      name: "",
-      file: {
-        id: null,
-        parent: null,
-        filename: "",
-        url: "",
-        prev: null,
-        next: null,
-        panelIcon: null,
-        panelImage: null,
-        mime: null,
-        content: {}
-      },
-      permissions: {
-        changeName: false,
-        delete: false
-      },
-      issue: null,
-      tabs: [],
-      tab: null,
-      options: null
-    };
+    file: Object
   },
   computed: {
+    options() {
+      return ready => {
+        this.$api.files.options(this.file.parent, this.file.filename).then(options => {
+          ready(options);
+        });
+      };
+    },
     uploadApi() {
-      return config.api + "/" + this.path + "/files/" + this.filename;
+      return this.$urls.api + "/" + this.file.parent + "/files/" + this.file.filename;
     },
-    prev() {
-      if (this.file.prev) {
-        return {
-          link: this.$api.files.link(
-            this.path,
-            this.file.prev.filename
-          ),
-          tooltip: this.file.prev.filename
-        };
-      }
-    },
-    tabsKey() {
-      return "file-" + this.file.id + "-tabs";
-    },
-    language() {
-      return this.$store.state.languages.current;
-    },
-    next() {
-      if (this.file.next) {
-        return {
-          link: this.$api.files.link(
-            this.path,
-            this.file.next.filename
-          ),
-          tooltip: this.file.next.filename
-        };
-      }
-    }
   },
   watch: {
-    language() {
-      this.fetch();
-    },
-    filename() {
-      this.fetch();
+    "file.id": {
+      handler() {
+        this.$store.dispatch("content/create", {
+          id: "files/" + this.file.id,
+          api: this.$api.files.link(this.file.parent, this.file.filename),
+          content: this.file.content
+        });
+      },
+      immediate: true
     }
   },
   methods: {
-    fetch() {
-      this.$api.files
-        .get(this.path, this.filename, { view: "panel" })
-        .then(file => {
-          this.file = file;
-          this.file.next = file.nextWithTemplate;
-          this.file.prev = file.prevWithTemplate;
-          this.file.url = file.url;
-          this.name = file.name;
-          this.tabs = file.blueprint.tabs;
-          this.permissions = file.options;
-          this.options = ready => {
-            this.$api.files
-              .options(this.path, this.file.filename)
-              .then(options => {
-                ready(options);
-              });
-          };
-
-          this.$store.dispatch("breadcrumb", this.$api.files.breadcrumb(this.file, this.$route.name));
-          this.$store.dispatch("title", this.filename);
-          this.$store.dispatch("content/create", {
-            id: "files/" + file.id,
-            api: this.$api.files.link(this.path, this.filename),
-            content: file.content
-          });
-
-        })
-        .catch(error => {
-          window.console.error(error);
-          this.issue = error;
-        });
-    },
     action(action) {
       switch (action) {
         case "download":
           window.open(this.file.url);
           break;
         case "rename":
-          this.$refs.rename.open(this.path, this.file.filename);
+          this.$refs.rename.open(this.file.parent, this.file.filename);
           break;
         case "replace":
           this.$refs.upload.open({
-            url:
-              config.api +
-              "/" +
-              this.$api.files.url(this.path, this.file.filename),
+            url: this.$urls.api + "/" + this.$api.files.url(this.file.parent, this.file.filename),
             accept: "." + this.file.extension + "," + this.file.mime
           });
           break;
         case "remove":
-          this.$refs.remove.open(this.path, this.file.filename);
+          this.$refs.remove.open(this.file.parent, this.file.filename);
           break;
       }
     },
-    deleted() {
-      if (this.path) {
-        this.$go('/' + this.path);
+    onDeleted() {
+      if (this.file.parent) {
+        this.$go('/' + this.file.parent);
       } else {
         this.$go('/site');
       }
     },
-    renamed(file) {
-      this.$go(this.$api.files.link(this.path, file.filename));
+    onRenamed(file) {
+      this.$go(this.$api.files.link(this.file.parent, file.filename));
     },
-    uploaded() {
-      this.fetch();
+    onUploaded() {
       this.$store.dispatch("notification/success", ":)");
+      this.$reload();
     }
   }
 };
 </script>
+
