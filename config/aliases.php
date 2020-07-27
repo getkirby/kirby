@@ -9,6 +9,7 @@ return [
     'file'       => 'Kirby\Cms\File',
     'files'      => 'Kirby\Cms\Files',
     'html'       => 'Kirby\Cms\Html',
+    'inertia'    => 'Kirby\Cms\Inertia',
     'kirby'      => 'Kirby\Cms\App',
     'page'       => 'Kirby\Cms\Page',
     'pages'      => 'Kirby\Cms\Pages',
