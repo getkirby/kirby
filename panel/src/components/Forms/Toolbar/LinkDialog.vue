@@ -63,7 +63,11 @@ export default {
         return `<${this.value.url}>`;
       }
     },
-    submit() {
+    submit(e) {
+      // prevent jumping
+      if (e.preventDefault) {
+        e.preventDefault();
+      }
 
       // insert the link
       this.$emit("submit", this.kirbytext ? this.createKirbytext() : this.createMarkdown());
