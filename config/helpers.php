@@ -5,6 +5,7 @@ use Kirby\Cms\Asset;
 use Kirby\Cms\Html;
 use Kirby\Cms\Response;
 use Kirby\Cms\Url;
+use Kirby\Http\Router;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -601,32 +602,18 @@ function r($condition, $value, $alternative = null)
 }
 
 /**
- * Rounds the minutes of the given date
- * by the defined step
+ * Create a micro-router
+ * and execute the routing action
+ * immediately
  *
- * @param string $date
- * @param int $step
- * @return string|null
+ * @param string $path
+ * @param string $method
+ * @param array $routes
+ * @return void
  */
-function timestamp(string $date = null, int $step = null): ?string
+function router(string $path = null, string $method = 'GET', array $routes = [])
 {
-    if (V::date($date) === false) {
-        return null;
-    }
-
-    $date = strtotime($date);
-
-    if ($step === null) {
-        return $date;
-    }
-
-    $hours   = date('H', $date);
-    $minutes = date('i', $date);
-    $minutes = floor($minutes / $step) * $step;
-    $minutes = str_pad($minutes, 2, 0, STR_PAD_LEFT);
-    $date    = date('Y-m-d', $date) . ' ' . $hours . ':' . $minutes;
-
-    return strtotime($date);
+    return (new Router($routes))->call($path, $method);
 }
 
 /**
@@ -765,6 +752,35 @@ function t($key, string $fallback = null)
 function tc($key, int $count)
 {
     return I18n::translateCount($key, $count);
+}
+
+/**
+ * Rounds the minutes of the given date
+ * by the defined step
+ *
+ * @param string $date
+ * @param int $step
+ * @return string|null
+ */
+function timestamp(string $date = null, int $step = null): ?string
+{
+    if (V::date($date) === false) {
+        return null;
+    }
+
+    $date = strtotime($date);
+
+    if ($step === null) {
+        return $date;
+    }
+
+    $hours   = date('H', $date);
+    $minutes = date('i', $date);
+    $minutes = floor($minutes / $step) * $step;
+    $minutes = str_pad($minutes, 2, 0, STR_PAD_LEFT);
+    $date    = date('Y-m-d', $date) . ' ' . $hours . ':' . $minutes;
+
+    return strtotime($date);
 }
 
 /**
