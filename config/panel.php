@@ -119,6 +119,10 @@ return function ($kirby) {
             'action'  => require __DIR__ . '/views/user.file.php'
         ],
         [
+            'pattern' => 'plugins/(:any)',
+            'action'  => require __DIR__ . '/views/plugin.php'
+        ],
+        [
             'pattern' => '(:all)',
             'action'  => function () use ($kirby) {
                 return 'The view could not be found';

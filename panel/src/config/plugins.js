@@ -65,22 +65,23 @@ Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
     return;
   }
 
-  options.link = "/plugins/" + name;
-
-  // Fallback for icon
+  // Fallbacks
   if (options.icon === undefined) {
     options.icon = "page";
   }
-
-  // Fallback for menu
   if (options.menu === undefined) {
     options.menu = true;
+  }
+  if (options.search === undefined) {
+    options.menu = "pages";
   }
 
   // Update view
   window.panel.plugins.views[name] = {
-    link: options.link,
+    id: name,
+    label: options.label || options.text,
     icon: options.icon,
+    link: "/plugins/" + name,
     menu: options.menu
   };
 

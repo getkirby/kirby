@@ -86,7 +86,10 @@ new Vue({
           Vue.prototype.$urls        = window.panel.$urls        = props.$urls;
           Vue.prototype.$user        = window.panel.$user        = props.$user;
           Vue.prototype.$view        = window.panel.$view        = props.$view;
-          Vue.prototype.$views       = window.panel.$views       = props.$views;
+          Vue.prototype.$views       = window.panel.$views       = {
+            ...props.$views,
+            ...window.panel.plugins.views
+          };
 
           return props.$props;
 
