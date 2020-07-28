@@ -12,7 +12,7 @@
   <?php endforeach ?>
 
   <?php foreach ($assets['icons'] as $rel => $icon): ?>
-  <link nonce="<?= $nonce ?>" rel="<?= $rel ?>" href="<?= $icon ?>">
+  <link nonce="<?= $nonce ?>" rel="<?= $rel ?>" href="<?= $icon['url'] ?>" type="<?= $icon['type'] ?>">
   <?php endforeach ?>
 
   <base href="<?= $panelUrl ?>">

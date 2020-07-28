@@ -48,8 +48,18 @@ class Panel
                 'custom'  => static::customCss($kirby),
             ],
             'icons' => [
-                'apple-touch-icon' => $url . '/apple-touch-icon.png',
-                'shortcut icon'    => $url . '/favicon.png'
+                'apple-touch-icon' => [
+                    'type' => 'image/png',
+                    'url'  => $url . '/apple-touch-icon.png',
+                ],
+                'shortcut icon' => [
+                    'type' => 'image/svg+xml',
+                    'url'  => $url . '/favicon.svg',
+                ],
+                'alternate icon' => [
+                    'type' => 'image/png',
+                    'url'  => $url . '/favicon.png',
+                ]
             ],
             'js' => [
                 'manifest'     => $url . '/manifest.js',
