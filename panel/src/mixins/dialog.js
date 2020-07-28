@@ -36,10 +36,10 @@ export default {
       }
 
       if (payload.event) {
-        this.$events.$emit(payload.event);
+        this.$events.$emit(payload.event, payload);
       }
 
-      this.$emit("success");
+      this.$emit("success", payload);
     }
   }
 };

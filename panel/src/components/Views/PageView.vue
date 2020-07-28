@@ -58,7 +58,7 @@
 
       <k-page-rename-dialog ref="rename" @success="$reload" />
       <k-page-duplicate-dialog ref="duplicate" />
-      <k-page-url-dialog ref="url" />
+      <k-page-url-dialog ref="url" @success="onChangeUrl" />
       <k-page-status-dialog ref="status" @success="$reload" />
       <k-page-template-dialog ref="template" @success="$reload" />
       <k-page-remove-dialog ref="remove" @success="onRemove" />
@@ -129,6 +129,11 @@ export default {
             this.$t("notification.notImplemented")
           );
           break;
+      }
+    },
+    onChangeUrl(page) {
+      if (page.id !== this.page.id) {
+        this.$go(this.$api.pages.link(page.id));
       }
     },
     onRemove() {

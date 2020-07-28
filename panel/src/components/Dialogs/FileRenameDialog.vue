@@ -83,9 +83,7 @@ export default {
 
         this.$store.dispatch("notification/success", ":)");
         this.$emit("success", file);
-
         this.$events.$emit("file.changeName", file);
-
         this.$refs.dialog.close();
 
       } catch (error) {

@@ -93,25 +93,10 @@ export default {
           "pages/" + page.id
         ]);
 
-        const payload = {
-          message: ":)",
-          event: "page.changeSlug"
-        };
-
-        // if in PageView and default language, redirect
-        if (
-          this.$route.params.path &&
-          this.page.id === this.$route.params.path.replace(/\+/g, "/") &&
-          (
-            !this.$language ||
-            this.$language.default === true
-          )
-        ) {
-          payload.route = this.$api.pages.link(page.id);
-          delete payload.event;
-        }
-
-        this.success(payload);
+        this.$store.dispatch("notification/success", ":)");
+        this.$emit("success", page);
+        this.$events.$emit("page.changeSlug", page);
+        this.$refs.dialog.close();
 
       } catch (error) {
         this.$refs.dialog.error(error.message);
