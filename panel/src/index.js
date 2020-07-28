@@ -41,6 +41,14 @@ Vue.prototype.$url = function (path = "") {
   return base.href + path.replace(/^\//, "");
 };
 
+document.addEventListener("inertia:visit", function () {
+  store.dispatch("isLoading", true);
+});
+
+document.addEventListener("inertia:load", function () {
+  store.dispatch("isLoading", false);
+});
+
 new Vue({
   store,
   created() {

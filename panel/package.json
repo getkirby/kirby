@@ -10,7 +10,7 @@
     "pre-commit": "pretty-quick --staged"
   },
   "dependencies": {
-    "@inertiajs/inertia": "npm:inertia-light@0.1.9",
+    "@inertiajs/inertia": "npm:inertia-light@0.1.11",
     "@inertiajs/inertia-vue": "^0.1.4",
     "autosize": "^4.0.2",
     "dayjs": "^1.8.22",
