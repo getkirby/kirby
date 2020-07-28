@@ -50,7 +50,7 @@ export default {
     },
     async submit() {
       try {
-        this.user = this.$api.users.changeLanguage(
+        this.user = await this.$api.users.changeLanguage(
           this.user.id,
           this.user.language
         );

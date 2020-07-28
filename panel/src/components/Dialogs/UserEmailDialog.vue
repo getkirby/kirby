@@ -47,7 +47,7 @@ export default {
     },
     async submit() {
       try {
-        const user = this.$api.users.changeEmail(this.user.id, this.user.email);
+        const user = await this.$api.users.changeEmail(this.user.id, this.user.email);
 
         // remove changes for the old user
         this.$store.dispatch("content/revert", "users/" + this.user.id);
