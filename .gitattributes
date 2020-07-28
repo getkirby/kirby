@@ -9,16 +9,17 @@ scripts/ export-ignore
 
 # tests
 .coveralls.yml export-ignore
+.php_cs export-ignore
 .travis.yml export-ignore
+phpstan.neon.dist export-ignore
 phpunit.xml.dist export-ignore
 tests/ export-ignore
 
 # panel
-panel/.env.example export-ignore
-panel/cypress.json export-ignore
+panel/hot export-ignore
+panel/mix-manifest.json export-ignore
 panel/package-lock.json export-ignore
 panel/package.json export-ignore
-panel/public export-ignore
 panel/README.md export-ignore
 panel/src export-ignore
-panel/vue.config.js export-ignore
+panel/webpack.mix.js export-ignore
