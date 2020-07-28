@@ -111,14 +111,14 @@ export default {
   stroke: $color-white;
 }
 .k-checkbox-input-native:checked + .k-checkbox-input-icon {
-  border-color: $color-dark;
-  background: $color-dark;
+  border-color: $color-gray-900;
+  background: $color-gray-900;
 }
 .k-checkbox-input-native:checked + .k-checkbox-input-icon svg {
   display: block;
 }
 .k-checkbox-input-native:focus + .k-checkbox-input-icon {
-  border-color: $color-focus-border;
+  border-color: $color-blue-600;
 }
 .k-checkbox-input-native:focus:checked + .k-checkbox-input-icon {
   background: $color-focus;

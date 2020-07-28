@@ -121,7 +121,7 @@ export default {
   grid-row-gap: 2.25rem;
 }
 
-@media screen and (min-width: $breakpoint-small) {
+@media screen and (min-width: $breakpoint-sm) {
   .k-fieldset .k-grid {
     grid-column-gap: 1.5rem;
   }

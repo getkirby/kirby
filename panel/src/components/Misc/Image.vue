@@ -108,17 +108,17 @@ export default {
   object-fit: cover;
 }
 .k-image[data-back="black"] span {
-  background: $color-dark;
+  background: $color-gray-900;
 }
 .k-image[data-back="white"] span {
   background: $color-white;
-  color: $color-dark;
+  color: $color-gray-900;
 }
 .k-image[data-back="white"] .k-image-error {
-  background: $color-dark;
+  background: $color-gray-900;
   color: $color-white;
 }
 .k-image[data-back="pattern"] span {
-  background: lighten($color-dark, 10%) url($pattern);
+  background: lighten($color-gray-900, 10%) url($pattern);
 }
 </style>

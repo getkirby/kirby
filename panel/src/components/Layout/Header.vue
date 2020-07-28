@@ -94,5 +94,4 @@ export default {
 .k-header .k-headline-editable:hover .k-icon {
   opacity: 1;
 }
-
 </style>

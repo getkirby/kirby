@@ -308,7 +308,7 @@ export default {
 .k-user-view-image .k-icon {
   width: 4rem;
   height: 4rem;
-  background: $color-dark;
+  background: $color-gray-900;
   color: $color-light-grey;
 }
 
@@ -317,6 +317,6 @@ export default {
   transition: color 0.3s;
 }
 .k-header[data-editable] .k-user-name-placeholder:hover {
-  color: $color-dark;
+  color: $color-gray-900;
 }
 </style>

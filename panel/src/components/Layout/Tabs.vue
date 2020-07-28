@@ -143,7 +143,7 @@ export default {
   justify-content: center;
   align-items: center;
   padding: .625rem .75rem;
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   text-transform: uppercase;
   text-align: center;
   font-weight: 500;
@@ -154,12 +154,12 @@ export default {
   flex-direction: column;
   max-width: 15rem;
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     flex-direction: row;
   }
 }
 .k-tab-button.k-button .k-icon {
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     margin-right: .5rem;
   }
 }
@@ -179,8 +179,8 @@ export default {
 
   text-overflow: ellipsis;
 
-  @media screen and (min-width: $breakpoint-small) {
-    font-size: $font-size-tiny;
+  @media screen and (min-width: $breakpoint-sm) {
+    font-size: $text-xs;
     padding-top: 0;
   }
 
@@ -235,6 +235,6 @@ export default {
   }
 }
 .k-tabs[data-theme="notice"] .k-tabs-badge {
-  color: $color-notice;
+  color: $color-orange-600;
 }
 </style>

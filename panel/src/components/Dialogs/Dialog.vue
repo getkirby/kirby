@@ -191,8 +191,8 @@
   position: relative;
   background: $color-light;
   width: 100%;
-  box-shadow: $box-shadow;
-  border-radius: $border-radius;
+  box-shadow: $shadow-lg;
+  border-radius: $rounded-xs;
   line-height: 1;
   max-height: calc(100vh - 3rem);
   margin: 1.5rem;
@@ -226,7 +226,7 @@
 
 .k-dialog-notification {
   padding: 0.75rem 1.5rem;
-  background: $color-dark;
+  background: $color-gray-900;
   width: 100%;
   line-height: 1.25rem;
   color: $color-white;
@@ -269,8 +269,8 @@
 .k-dialog-footer {
   border-top: 1px solid $color-border;
   padding: 0;
-  border-bottom-left-radius: $border-radius;
-  border-bottom-right-radius: $border-radius;
+  border-bottom-left-radius: $rounded-xs;
+  border-bottom-right-radius: $rounded-xs;
   line-height: 1;
   flex-shrink: 0;
 }
@@ -313,6 +313,6 @@
   background: rgba(#000, .075);
   padding: 0 1rem;
   height: 36px;
-  border-radius: $border-radius;
+  border-radius: $rounded-xs;
 }
 </style>

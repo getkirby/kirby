@@ -70,7 +70,7 @@ export default {
   display: block;
   overflow: auto;
   padding: 1rem;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   line-height: 1.25em;
   margin-top: 0.75rem;
 }

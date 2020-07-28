@@ -177,25 +177,25 @@ export default {
 .k-upload-list,
 .k-upload-error-list {
   line-height: 1.5em;
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-upload-list-filename {
-  color: $color-dark-grey;
+  color: $color-gray-600;
 }
 
 .k-upload-error-list li {
   padding: 0.75rem;
   background: $color-white;
-  border-radius: $border-radius;
+  border-radius: $rounded-xs;
 }
 .k-upload-error-list li:not(:last-child) {
   margin-bottom: 2px;
 }
 .k-upload-error-filename {
   color: $color-negative;
-  font-weight: $font-weight-bold;
+  font-weight: $font-bold;
 }
 .k-upload-error-message {
-  color: $color-dark-grey;
+  color: $color-gray-600;
 }
 </style>

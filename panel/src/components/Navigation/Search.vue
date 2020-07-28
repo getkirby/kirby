@@ -209,9 +209,9 @@ export default {
 .k-search {
   max-width: 30rem;
   margin: 0 auto;
-  box-shadow: $box-shadow;
+  box-shadow: $shadow-lg;
 
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     margin: 2.5rem auto;
   }
 }
@@ -225,7 +225,7 @@ export default {
 }
 .k-search-types > .k-button {
   padding: 0 0 0 1rem;
-  font-size: $font-size-medium;
+  font-size: $text-base;
   line-height: 1;
   height: 2.5rem;
 
@@ -290,17 +290,17 @@ export default {
 
 .k-search li strong {
   display: block;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   font-weight: 400;
 }
 .k-search li small {
-  font-size: $font-size-tiny;
-  color: $color-dark-grey;
+  font-size: $text-xs;
+  color: $color-gray-600;
 }
 
 .k-search-empty {
   text-align: center;
-  font-size: $font-size-small;
-  color: $color-dark-grey;
+  font-size: $text-xs;
+  color: $color-gray-600;
 }
 </style>

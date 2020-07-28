@@ -64,7 +64,7 @@ export default {
 button {
   line-height: inherit;
   border: 0;
-  font-family: $font-family-sans;
+  font-family: $font-sans;
   font-size: 1rem;
   color: currentColor;
   background: none;
@@ -78,7 +78,7 @@ button::-moz-focus-inner {
 .k-button {
   display: inline-block;
   position: relative;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   transition: color 0.3s;
 
   &:focus,
@@ -97,7 +97,7 @@ button::-moz-focus-inner {
 .k-button[data-responsive] .k-button-text {
   display: none;
 
-  @media screen and (min-width: $breakpoint-small) {
+  @media screen and (min-width: $breakpoint-sm) {
     display: inline;
   }
 }

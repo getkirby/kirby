@@ -208,7 +208,7 @@ export default {
   .k-date-input .k-select-input:focus-within,
   .k-time-input .k-select-input:focus-within {
     color: $color-focus;
-    font-weight: $font-weight-bold;
+    font-weight: $font-bold;
   }
   .k-time-input .k-time-input-meridiem {
     padding-left: $field-input-padding;
@@ -242,7 +242,7 @@ export default {
       margin-bottom: -1px;
       margin-right: -1px;
 
-      @media screen and (min-width: $breakpoint-medium) {
+      @media screen and (min-width: $breakpoint-md) {
         grid-template-columns: repeat(var(--columns), 1fr);
       }
 
@@ -281,7 +281,7 @@ export default {
       margin-bottom: -1px;
       margin-right: -1px;
 
-      @media screen and (min-width: $breakpoint-medium) {
+      @media screen and (min-width: $breakpoint-md) {
         grid-template-columns: repeat(var(--columns), 1fr);
       }
     }
@@ -303,8 +303,8 @@ export default {
     }
     .k-radio-input .k-radio-input-info {
       display: block;
-      font-size: $font-size-small;
-      color: $color-dark-grey;
+      font-size: $text-sm;
+      color: $color-gray-600;
       line-height: $field-input-line-height;
       padding-top: $field-input-line-height / 10;
     }
@@ -352,10 +352,10 @@ export default {
       margin-right: .25rem;
       margin-bottom: .25rem;
       height: 1.75rem;
-      font-size: $font-size-small;
+      font-size: $text-sm;
     }
     .k-tags-input input {
-      font-size: $font-size-small;
+      font-size: $text-sm;
       padding: 0 .25rem;
       height: 1.75rem;
       line-height: 1;
@@ -378,7 +378,7 @@ export default {
       margin-right: .25rem;
       margin-bottom: .25rem;
       height: 1.75rem;
-      font-size: $font-size-small;
+      font-size: $text-sm;
     }
     .k-input-icon {
       position: absolute;
