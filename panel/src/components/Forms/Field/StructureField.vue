@@ -603,9 +603,9 @@ $structure-item-height: 38px;
   table-layout: fixed;
   width: 100%;
   background: #fff;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   border-spacing: 0;
-  box-shadow: $box-shadow-card;
+  box-shadow: $shadow;
 
   th,
   td {
@@ -636,7 +636,7 @@ $structure-item-height: 38px;
     background: #fff;
     font-weight: 400;
     z-index: 1;
-    color: $color-dark-grey;
+    color: $color-gray-600;
     padding: 0 0.75rem;
     height: $structure-item-height;
 
@@ -671,7 +671,7 @@ $structure-item-height: 38px;
   }
 
   /* mobile */
-  @media screen and (max-width: $breakpoint-medium) {
+  @media screen and (max-width: $breakpoint-md) {
     td,
     th {
       display: none;
@@ -739,7 +739,7 @@ $structure-item-height: 38px;
     text-align: center;
   }
   .k-structure-table-index-number {
-    font-size: $font-size-tiny;
+    font-size: $text-xs;
     color: $color-light-grey;
     padding-top: 0.15rem;
   }
@@ -777,7 +777,7 @@ $structure-item-height: 38px;
 
   .k-sortable-ghost {
     background: $color-white;
-    box-shadow: rgba($color-dark, 0.25) 0 5px 10px;
+    box-shadow: rgba($color-gray-900, 0.25) 0 5px 10px;
     outline: 2px solid $color-focus;
     margin-bottom: 2px;
     cursor: grabbing;
@@ -802,9 +802,9 @@ $structure-item-height: 38px;
 .k-structure-form {
   position: relative;
   z-index: 3;
-  border-radius: $border-radius;
+  border-radius: $rounded-xs;
   margin-bottom: 1px;
-  box-shadow: rgba($color-dark, 0.05) 0 0 0 3px;
+  box-shadow: rgba($color-gray-900, 0.05) 0 0 0 3px;
   border: 1px solid $color-border;
   background: $color-background;
 }
@@ -821,7 +821,7 @@ $structure-item-height: 38px;
 
 .k-structure-form-buttons .k-pagination {
   display: none;
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     display: flex;
   }
 }

@@ -49,15 +49,15 @@ export default {
   fill: currentColor;
 }
 .k-icon[data-back="black"] {
-  background: $color-dark;
+  background: $color-gray-900;
   color: $color-white;
 }
 .k-icon[data-back="white"] {
   background: $color-white;
-  color: $color-dark;
+  color: $color-gray-900;
 }
 .k-icon[data-back="pattern"] {
-  background: lighten($color-dark, 10%) url($pattern);
+  background: lighten($color-gray-900, 10%) url($pattern);
   color: $color-white;
 }
 .k-icon[data-size="medium"] svg {

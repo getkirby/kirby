@@ -13,7 +13,7 @@
   cursor: -moz-grab;
   cursor: -webkit-grab;
   line-height: 0;
-  color: $color-dark;
+  color: $color-gray-900;
   justify-content: center;
   align-items: center;
   line-height: 0;

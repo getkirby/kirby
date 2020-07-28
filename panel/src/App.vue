@@ -158,25 +158,25 @@ export default {
   --color-positive: #{$color-positive};
   --color-positive-light: #{$color-positive-on-dark};
   --color-positive-outline: #{$color-positive-outline};
-  --color-text: #{$color-dark};
-  --color-text-light: #{$color-dark-grey};
+  --color-text: #{$color-gray-900};
+  --color-text-light: #{$color-gray-600};
 
   /** Font families **/
-  --font-family-mono: #{$font-family-mono};
-  --font-family-sans: #{$font-family-sans};
+  --font-family-mono: #{$font-mono};
+  --font-family-sans: #{$font-sans};
 
   /** Font sizes **/
-  --font-size-tiny: #{$font-size-tiny};
-  --font-size-small: #{$font-size-small};
-  --font-size-medium: #{$font-size-medium};
-  --font-size-large: #{$font-size-large};
-  --font-size-huge: #{$font-size-huge};
-  --font-size-monster: #{$font-size-monster};
+  --font-size-tiny: #{$text-xs};
+  --font-size-small: #{$text-sm};
+  --font-size-medium: #{$text-base};
+  --font-size-large: #{$text-xl};
+  --font-size-huge: #{$text-2xl};
+  --font-size-monster: #{$text-3xl};
 
   /** Shadows **/
-  --box-shadow-dropdown: #{$box-shadow};
-  --box-shadow-item: #{$box-shadow-card};
-  --box-shadow-focus: #{$box-shadow-focus-full};
+  --box-shadow-dropdown: #{$shadow-lg};
+  --box-shadow-item: #{$shadow};
+  --box-shadow-focus: #{$shadow-xl};
 }
 
 noscript {
@@ -189,13 +189,13 @@ noscript {
 }
 
 html {
-  font-family: $font-family-sans;
+  font-family: $font-sans;
   background: $color-background;
 }
 
 html,
 body {
-  color: $color-dark;
+  color: $color-gray-900;
   overflow: hidden;
   height: 100%;
 }
@@ -211,7 +211,7 @@ li {
 
 strong,
 b {
-  font-weight: $font-weight-bold;
+  font-weight: $font-bold;
 }
 
 .fade-enter-active,
@@ -280,7 +280,7 @@ b {
   z-index: z-index(loader);
 }
 .k-offline-warning {
-  background: rgba($color-dark, 0.7);
+  background: rgba($color-gray-900, 0.7);
   content: "offline";
   display: flex;
   align-items: center;

@@ -91,8 +91,8 @@ export default {
   position: relative;
   min-width: 0;
   background: $color-white;
-  border-radius: $border-radius;
-  box-shadow: $box-shadow-card;
+  border-radius: $rounded-xs;
+  box-shadow: $shadow;
 }
 .k-card a {
   min-width: 0;
@@ -110,10 +110,10 @@ export default {
   top: 0.75rem;
   width: 2rem;
   height: 2rem;
-  border-radius: $border-radius;
+  border-radius: $rounded-xs;
   background: $color-white;
   opacity: 0;
-  color: $color-dark;
+  color: $color-gray-900;
   z-index: 1;
   will-change: opacity;
   transition: opacity 0.3s;
@@ -139,8 +139,8 @@ export default {
 
 .k-card-image,
 .k-card-icon {
-  border-top-left-radius: $border-radius;
-  border-top-right-radius: $border-radius;
+  border-top-left-radius: $rounded-xs;
+  border-top-right-radius: $rounded-xs;
   overflow: hidden;
 }
 .k-card-icon {
@@ -164,8 +164,8 @@ export default {
 
 .k-card-content {
   line-height: 1.25rem;
-  border-bottom-left-radius: $border-radius;
-  border-bottom-right-radius: $border-radius;
+  border-bottom-left-radius: $rounded-xs;
+  border-bottom-right-radius: $rounded-xs;
   min-height: 2.25rem;
   padding: 0.5rem 0.75rem;
   overflow-wrap: break-word;
@@ -174,9 +174,9 @@ export default {
 
 .k-card-text {
   display: block;
-  font-weight: $font-weight-normal;
+  font-weight: $font-normal;
   text-overflow: ellipsis;
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-card-text[data-noinfo]:after {
   content: " ";
@@ -185,9 +185,9 @@ export default {
   display: inline-block;
 }
 .k-card-info {
-  color: $color-dark-grey;
+  color: $color-gray-600;
   display: block;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   text-overflow: ellipsis;
   overflow: hidden;
 

@@ -34,7 +34,7 @@ export default {
   grid-template-columns: repeat(auto-fill, minmax(#{"min(12rem, 100%)"}, 1fr));
 }
 
-@media screen and (min-width: $breakpoint-small) {
+@media screen and (min-width: $breakpoint-sm) {
   .k-cards[data-size="tiny"] {
     grid-template-columns: repeat(auto-fill, minmax(10rem, 1fr));
     /**
@@ -83,7 +83,7 @@ export default {
   }
 }
 
-@media screen and (min-width: $breakpoint-medium) {
+@media screen and (min-width: $breakpoint-md) {
   .k-cards[data-size="large"] {
     grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
     /**

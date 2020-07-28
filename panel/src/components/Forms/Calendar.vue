@@ -223,9 +223,9 @@ $cell-padding: 0.25rem 0.5rem;
 
 .k-calendar-input {
   padding: 0.5rem;
-  background: $color-dark;
+  background: $color-gray-900;
   color: $color-light;
-  border-radius: $border-radius;
+  border-radius: $rounded-xs;
 }
 .k-calendar-table {
   table-layout: fixed;
@@ -259,8 +259,8 @@ $cell-padding: 0.25rem 0.5rem;
 }
 .k-calendar-selects .k-select-input {
   padding: 0 0.5rem;
-  font-weight: $font-weight-normal;
-  font-size: $font-size-small;
+  font-weight: $font-normal;
+  font-size: $text-sm;
 }
 .k-calendar-selects .k-select-input:focus-within {
   color: $color-focus-on-dark !important;
@@ -268,7 +268,7 @@ $cell-padding: 0.25rem 0.5rem;
 .k-calendar-input th {
   padding: 0.5rem 0;
   color: $color-light-grey;
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   font-weight: 400;
   text-align: center;
 }
@@ -306,7 +306,7 @@ $cell-padding: 0.25rem 0.5rem;
 }
 .k-calendar-today .k-button {
   color: $color-focus-on-dark;
-  font-size: $font-size-tiny;
+  font-size: $text-xs;
   padding: 1rem;
 }
 .k-calendar-today .k-button-text {
