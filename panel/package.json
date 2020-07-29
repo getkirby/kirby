@@ -11,7 +11,7 @@
   "dependencies": {
     "autosize": "^4.0.2",
     "dayjs": "^1.8.22",
-    "npm": "^6.14.5",
+    "npm": "^6.14.7",
     "vue": "^2.6.11",
     "vue-router": "^3.1.6",
     "vuedraggable": "^2.23.2",
@@ -20,12 +20,12 @@
     "vuex-i18n": "^1.13.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.12.1",
+    "@vue/cli-plugin-babel": "^4.4.6",
     "@vue/cli-plugin-eslint": "^3.12.1",
     "@vue/cli-service": "^3.12.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-plugin-wildcard": "^4.0.0",
-    "node-sass": "^4.13.1",
+    "node-sass": "^4.14.1",
     "prettier": "^1.19.1",
     "pretty-quick": "^1.11.1",
     "sass-loader": "^7.3.1",
