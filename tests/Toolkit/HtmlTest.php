@@ -393,7 +393,7 @@ class HtmlTest extends TestCase
         $this->assertSame($expected, $html);
 
         $html = Html::tag('p', null);
-        $expected = '<p>';
+        $expected = '<p></p>';
         $this->assertSame($expected, $html);
 
         $html = Html::tag('hr', '');
