@@ -324,8 +324,16 @@ class HtmlTest extends TestCase
      */
     public function testIsVoid()
     {
+        $original = Html::$voidList;
+
         $this->assertTrue(Html::isVoid('hr'));
+        $this->assertFalse(Html::isVoid('div'));
         $this->assertFalse(Html::isVoid(''));
+
+        Html::$voidList[] = 'div';
+        $this->assertTrue(Html::isVoid('div'));
+
+        Html::$voidList = $original;
     }
 
     /**
