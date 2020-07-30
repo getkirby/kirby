@@ -36,6 +36,30 @@ class Html extends Xml
     public static $void = '>';
 
     /**
+     * List of HTML tags that are considered to be self-closing
+     *
+     * @var array
+     */
+    public static $voidList = [
+        'area',
+        'base',
+        'br',
+        'col',
+        'command',
+        'embed',
+        'hr',
+        'img',
+        'input',
+        'keygen',
+        'link',
+        'meta',
+        'param',
+        'source',
+        'track',
+        'wbr'
+    ];
+
+    /**
      * Generic HTML tag generator
      * Can be called like `Html::p('A paragraph', ['class' => 'text'])`
      *
@@ -260,26 +284,7 @@ class Html extends Xml
      */
     public static function isVoid(string $tag): bool
     {
-        $void = [
-            'area',
-            'base',
-            'br',
-            'col',
-            'command',
-            'embed',
-            'hr',
-            'img',
-            'input',
-            'keygen',
-            'link',
-            'meta',
-            'param',
-            'source',
-            'track',
-            'wbr',
-        ];
-
-        return in_array(strtolower($tag), $void);
+        return in_array(strtolower($tag), static::$voidList);
     }
 
     /**
