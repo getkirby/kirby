@@ -9,7 +9,9 @@ scripts/ export-ignore
 
 # tests
 .coveralls.yml export-ignore
+.php_cs export-ignore
 .travis.yml export-ignore
+phpstan.neon.dist export-ignore
 phpunit.xml.dist export-ignore
 tests/ export-ignore
 
