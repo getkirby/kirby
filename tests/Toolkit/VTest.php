@@ -190,10 +190,12 @@ class VTest extends TestCase
         $this->assertTrue(V::email('bastian-v3@getkirby.com'));
         $this->assertTrue(V::email('bastian.allgeier@getkirby.com'));
         $this->assertTrue(V::email('bastian@getkürby.com'));
+        $this->assertTrue(V::email('bastian@getkürby.com'));
 
         $this->assertFalse(V::email('bastian@getkirby'));
         $this->assertFalse(V::email('bastiangetkirby.com'));
         $this->assertFalse(V::email('bastian[at]getkirby.com'));
+        $this->assertFalse(V::email('bastian@getkürby'));
         $this->assertFalse(V::email('@getkirby.com'));
     }
 
@@ -276,6 +278,12 @@ class VTest extends TestCase
         $this->assertFalse(V::ip('192.168'));
         $this->assertFalse(V::ip('192:168:255:12'));
         $this->assertFalse(V::ip('192.168.255.24.23'));
+    }
+
+    public function testLess()
+    {
+        $this->assertTrue(V::less(1, 2));
+        $this->assertFalse(V::less(2, 1));
     }
 
     public function testMaxLength()
@@ -527,6 +535,21 @@ class VTest extends TestCase
                 ],
                 false,
                 'The "email" field is missing',
+            ],
+            // skipping missing non-required field
+            [
+                [
+                ],
+                [
+                    'email' => [
+                        'email'
+                    ],
+                    'name' => [
+                        'required' => true
+                    ]
+                ],
+                false,
+                'The "name" field is missing',
             ],
         ];
     }

@@ -60,6 +60,11 @@ class VTest extends TestCase
      */
     public function testMessage($validator, $args, $expected)
     {
-        $this->assertEquals($expected, V::message($validator, ...$args));
+        $this->assertSame($expected, V::message($validator, ...$args));
+    }
+
+    public function testMessageInvalidValidator()
+    {
+        $this->assertNull(V::message('foo'));
     }
 }

@@ -153,7 +153,10 @@ class V
             $fieldValue = $input[$fieldName] ?? null;
 
             // first check for required fields
-            if (($fieldRules['required'] ?? false) === true && $fieldValue === null) {
+            if (
+                ($fieldRules['required'] ?? false) === true &&
+                $fieldValue === null
+            ) {
                 throw new Exception(sprintf('The "%s" field is missing', $fieldName));
             }
 
@@ -166,12 +169,10 @@ class V
             }
 
             try {
-                V::value($fieldValue, $fieldRules);
+                static::value($fieldValue, $fieldRules);
             } catch (Exception $e) {
                 throw new Exception(sprintf($e->getMessage() . ' for field "%s"', $fieldName));
             }
-
-            static::value($fieldValue, $fieldRules);
         }
 
         return true;
