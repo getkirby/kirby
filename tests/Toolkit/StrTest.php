@@ -8,10 +8,10 @@ class StrTest extends TestCase
 {
     public function testAscii()
     {
-        $this->assertEquals('aouss', Str::ascii('äöüß'));
-        $this->assertEquals('Istanbul', Str::ascii('İstanbul'));
-        $this->assertEquals('istanbul', Str::ascii('i̇stanbul'));
-        $this->assertEquals('Nashata istorija', Str::ascii('Нашата история'));
+        $this->assertSame('aouss', Str::ascii('äöüß'));
+        $this->assertSame('Istanbul', Str::ascii('İstanbul'));
+        $this->assertSame('istanbul', Str::ascii('i̇stanbul'));
+        $this->assertSame('Nashata istorija', Str::ascii('Нашата история'));
     }
 
     public function testAfter()
@@ -19,17 +19,17 @@ class StrTest extends TestCase
         $string = 'Hellö Wörld';
 
         // case sensitive
-        $this->assertEquals(' Wörld', Str::after($string, 'ö'));
-        $this->assertEquals(false, Str::after($string, 'Ö'));
-        $this->assertEquals(false, Str::after($string, 'x'));
+        $this->assertSame(' Wörld', Str::after($string, 'ö'));
+        $this->assertSame('', Str::after($string, 'Ö'));
+        $this->assertSame('', Str::after($string, 'x'));
 
         // case insensitive
-        $this->assertEquals(' Wörld', Str::after($string, 'ö', true));
-        $this->assertEquals(' Wörld', Str::after($string, 'Ö', true));
-        $this->assertEquals(false, Str::after($string, 'x'));
+        $this->assertSame(' Wörld', Str::after($string, 'ö', true));
+        $this->assertSame(' Wörld', Str::after($string, 'Ö', true));
+        $this->assertSame('', Str::after($string, 'x'));
 
         // non existing chars
-        $this->assertEquals(false, Str::after('string', '.'), 'string with non-existing character should return false');
+        $this->assertSame('', Str::after('string', '.'), 'string with non-existing character should return false');
     }
 
     public function testBefore()
@@ -37,21 +37,21 @@ class StrTest extends TestCase
         $string = 'Hellö Wörld';
 
         // case sensitive
-        $this->assertEquals('Hell', Str::before($string, 'ö'));
-        $this->assertEquals(false, Str::before($string, 'Ö'));
-        $this->assertEquals(false, Str::before($string, 'x'));
+        $this->assertSame('Hell', Str::before($string, 'ö'));
+        $this->assertSame('', Str::before($string, 'Ö'));
+        $this->assertSame('', Str::before($string, 'x'));
 
         // case insensitive
-        $this->assertEquals('Hell', Str::before($string, 'ö', true));
-        $this->assertEquals('Hell', Str::before($string, 'Ö', true));
-        $this->assertEquals(false, Str::before($string, 'x'));
+        $this->assertSame('Hell', Str::before($string, 'ö', true));
+        $this->assertSame('Hell', Str::before($string, 'Ö', true));
+        $this->assertSame('', Str::before($string, 'x'));
     }
 
     public function testBetween()
     {
-        $this->assertEquals('trin', Str::between('string', 's', 'g'), 'string between s and g should be trin');
-        $this->assertEquals(false, Str::between('string', 's', '.'), 'function with non-existing character should return false');
-        $this->assertEquals(false, Str::between('string', '.', 'g'), 'function with non-existing character should return false');
+        $this->assertSame('trin', Str::between('string', 's', 'g'), 'string between s and g should be trin');
+        $this->assertSame('', Str::between('string', 's', '.'), 'function with non-existing character should return false');
+        $this->assertSame('', Str::between('string', '.', 'g'), 'function with non-existing character should return false');
     }
 
     public function testContains()
@@ -73,7 +73,7 @@ class StrTest extends TestCase
 
     public function testEncoding()
     {
-        $this->assertEquals('UTF-8', Str::encoding('ÖÄÜ'));
+        $this->assertSame('UTF-8', Str::encoding('ÖÄÜ'));
     }
 
     public function testEndsWith()
@@ -101,7 +101,7 @@ class StrTest extends TestCase
         $expected = 'This is a long text with …';
         $result   = Str::excerpt($string, 27);
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testExcerptWithoutChars()
@@ -110,7 +110,7 @@ class StrTest extends TestCase
         $expected = 'This is a long text with some html';
         $result   = Str::excerpt($string);
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testExcerptWithZeroLength()
@@ -118,7 +118,7 @@ class StrTest extends TestCase
         $string = 'This is a long text with some html';
         $result = Str::excerpt($string, 0);
 
-        $this->assertEquals($string, $result);
+        $this->assertSame($string, $result);
     }
 
     public function testExcerptWithoutStripping()
@@ -127,7 +127,7 @@ class StrTest extends TestCase
         $expected = 'This is a long text<br>with …';
         $result   = Str::excerpt($string, 30, false);
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testExcerptWithDifferentRep()
@@ -136,7 +136,7 @@ class StrTest extends TestCase
         $expected = 'This is a long text with ...';
         $result   = Str::excerpt($string, 27, true, ' ...');
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testExcerptWithSpaces()
@@ -145,7 +145,7 @@ class StrTest extends TestCase
         $expected = 'This is a long text with …';
         $result   = Str::excerpt($string, 27);
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testExcerptWithLineBreaks()
@@ -154,7 +154,7 @@ class StrTest extends TestCase
         $expected = 'This is a long text with …';
         $result   = Str::excerpt($string, 27);
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testExcerptWithUnicodeChars()
@@ -163,33 +163,33 @@ class StrTest extends TestCase
         $expected = 'Hellö Wörld text …';
         $result   = Str::excerpt($string, 20);
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testFloat()
     {
-        $this->assertEquals('0', Str::float(false));
-        $this->assertEquals('0', Str::float(null));
-        $this->assertEquals('0', Str::float(0));
-        $this->assertEquals('0', Str::float('0'));
-        $this->assertEquals('1', Str::float(true));
-        $this->assertEquals('1', Str::float(1));
-        $this->assertEquals('1', Str::float('1'));
-        $this->assertEquals('1.1', Str::float(1.1));
-        $this->assertEquals('1.1', Str::float('1.1'));
-        $this->assertEquals('1.1', Str::float('1,1'));
-        $this->assertEquals('1.11', Str::float('1,11'));
-        $this->assertEquals('1.111', Str::float('1,111'));
-        $this->assertEquals('-1', Str::float(-1));
-        $this->assertEquals('-1.1', Str::float(-1.1));
-        $this->assertEquals('-1.11', Str::float('-1.11'));
-        $this->assertEquals('-1.111', Str::float('-1,111'));
-        $this->assertEquals('1000', Str::float('1000'));
-        $this->assertEquals('1000.00', Str::float('1000.00'));
-        $this->assertEquals('1000.00', Str::float('1000,00'));
-        $this->assertEquals('1000', Str::float('1000'));
-        $this->assertEquals('1000000.00', Str::float('1000000.00'));
-        $this->assertEquals('0.00000001', Str::float(0.00000001));
+        $this->assertSame('0', Str::float(false));
+        $this->assertSame('0', Str::float(null));
+        $this->assertSame('0', Str::float(0));
+        $this->assertSame('0', Str::float('0'));
+        $this->assertSame('1', Str::float(true));
+        $this->assertSame('1', Str::float(1));
+        $this->assertSame('1', Str::float('1'));
+        $this->assertSame('1.1', Str::float(1.1));
+        $this->assertSame('1.1', Str::float('1.1'));
+        $this->assertSame('1.1', Str::float('1,1'));
+        $this->assertSame('1.11', Str::float('1,11'));
+        $this->assertSame('1.111', Str::float('1,111'));
+        $this->assertSame('-1', Str::float(-1));
+        $this->assertSame('-1.1', Str::float(-1.1));
+        $this->assertSame('-1.11', Str::float('-1.11'));
+        $this->assertSame('-1.111', Str::float('-1,111'));
+        $this->assertSame('1000', Str::float('1000'));
+        $this->assertSame('1000.00', Str::float('1000.00'));
+        $this->assertSame('1000.00', Str::float('1000,00'));
+        $this->assertSame('1000', Str::float('1000'));
+        $this->assertSame('1000000.00', Str::float('1000000.00'));
+        $this->assertSame('0.00000001', Str::float(0.00000001));
     }
 
     public function testFrom()
@@ -197,44 +197,44 @@ class StrTest extends TestCase
         $string = 'Hellö Wörld';
 
         // case sensitive
-        $this->assertEquals('ö Wörld', Str::from($string, 'ö'));
-        $this->assertEquals(false, Str::from($string, 'Ö'));
-        $this->assertEquals(false, Str::from($string, 'x'));
+        $this->assertSame('ö Wörld', Str::from($string, 'ö'));
+        $this->assertSame('', Str::from($string, 'Ö'));
+        $this->assertSame('', Str::from($string, 'x'));
 
         // case insensitive
-        $this->assertEquals('ö Wörld', Str::from($string, 'ö', true));
-        $this->assertEquals('ö Wörld', Str::from($string, 'Ö', true));
-        $this->assertEquals(false, Str::from($string, 'x'));
+        $this->assertSame('ö Wörld', Str::from($string, 'ö', true));
+        $this->assertSame('ö Wörld', Str::from($string, 'Ö', true));
+        $this->assertSame('', Str::from($string, 'x'));
     }
 
     public function testKebab()
     {
         $string = 'KingCobra';
-        $this->assertEquals('king-cobra', Str::kebab($string));
+        $this->assertSame('king-cobra', Str::kebab($string));
 
         $string = 'kingCobra';
-        $this->assertEquals('king-cobra', Str::kebab($string));
+        $this->assertSame('king-cobra', Str::kebab($string));
     }
 
     public function testLength()
     {
-        $this->assertEquals(0, Str::length(''));
-        $this->assertEquals(3, Str::length('abc'));
-        $this->assertEquals(3, Str::length('öäü'));
-        $this->assertEquals(6, Str::length('Aœ?_ßö'));
+        $this->assertSame(0, Str::length(''));
+        $this->assertSame(3, Str::length('abc'));
+        $this->assertSame(3, Str::length('öäü'));
+        $this->assertSame(6, Str::length('Aœ?_ßö'));
     }
 
     public function testLower()
     {
-        $this->assertEquals('öäü', Str::lower('ÖÄÜ'));
-        $this->assertEquals('öäü', Str::lower('Öäü'));
+        $this->assertSame('öäü', Str::lower('ÖÄÜ'));
+        $this->assertSame('öäü', Str::lower('Öäü'));
     }
 
     public function testLtrim()
     {
-        $this->assertEquals('test', Str::ltrim(' test'));
-        $this->assertEquals('test', Str::ltrim('  test'));
-        $this->assertEquals('jpg', Str::ltrim('test.jpg', 'test.'));
+        $this->assertSame('test', Str::ltrim(' test'));
+        $this->assertSame('test', Str::ltrim('  test'));
+        $this->assertSame('jpg', Str::ltrim('test.jpg', 'test.'));
     }
 
     public function testPosition()
@@ -261,7 +261,7 @@ class StrTest extends TestCase
 
         $this->assertRegexp('/^[[:alnum:]]+$/', Str::random());
         $this->assertIsString(Str::random());
-        $this->assertEquals($length, strlen(Str::random($length)));
+        $this->assertSame($length, strlen(Str::random($length)));
 
         $this->assertRegexp('/^[[:alpha:]]+$/', Str::random($length, 'alpha'));
 
@@ -277,57 +277,57 @@ class StrTest extends TestCase
     public function testReplace()
     {
         // simple strings with limits
-        $this->assertEquals('ths s a strng', Str::replace('this is a string', 'i', ''));
-        $this->assertEquals('this is a string', Str::replace('this is a string', 'i', '', 0));
-        $this->assertEquals('ths is a string', Str::replace('this is a string', 'i', '', 1));
-        $this->assertEquals('ths s a string', Str::replace('this is a string', 'i', '', 2));
-        $this->assertEquals('ths s a strng', Str::replace('this is a string', 'i', '', 3));
-        $this->assertEquals('ths s a strng', Str::replace('this is a string', 'i', '', 1000));
-        $this->assertEquals('th!s !s a string', Str::replace('this is a string', 'i', '!', 2));
-        $this->assertEquals('th?!s ?!s a string', Str::replace('this is a string', 'i', '?!', 2));
-        $this->assertEquals('that also is a string', Str::replace('this is a string', 'this', 'that also', 1));
-        $this->assertEquals('this is aeä string', Str::replace('this is ää string', 'ä', 'ae', 1));
-        $this->assertEquals('this is aeae string', Str::replace('this is ää string', 'ä', 'ae', 2));
-        $this->assertEquals('this is äa string', Str::replace('this is aa string', 'a', 'ä', 1));
-        $this->assertEquals('this is ää string', Str::replace('this is aa string', 'a', 'ä', 2));
+        $this->assertSame('ths s a strng', Str::replace('this is a string', 'i', ''));
+        $this->assertSame('this is a string', Str::replace('this is a string', 'i', '', 0));
+        $this->assertSame('ths is a string', Str::replace('this is a string', 'i', '', 1));
+        $this->assertSame('ths s a string', Str::replace('this is a string', 'i', '', 2));
+        $this->assertSame('ths s a strng', Str::replace('this is a string', 'i', '', 3));
+        $this->assertSame('ths s a strng', Str::replace('this is a string', 'i', '', 1000));
+        $this->assertSame('th!s !s a string', Str::replace('this is a string', 'i', '!', 2));
+        $this->assertSame('th?!s ?!s a string', Str::replace('this is a string', 'i', '?!', 2));
+        $this->assertSame('that also is a string', Str::replace('this is a string', 'this', 'that also', 1));
+        $this->assertSame('this is aeä string', Str::replace('this is ää string', 'ä', 'ae', 1));
+        $this->assertSame('this is aeae string', Str::replace('this is ää string', 'ä', 'ae', 2));
+        $this->assertSame('this is äa string', Str::replace('this is aa string', 'a', 'ä', 1));
+        $this->assertSame('this is ää string', Str::replace('this is aa string', 'a', 'ä', 2));
 
         // $subject as array
-        $this->assertEquals(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'string'], 'i', ''));
-        $this->assertEquals(['this', 'is', 'a', 'string'], Str::replace(['this', 'is', 'a', 'string'], 'i', '', 0));
-        $this->assertEquals(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'string'], 'i', '', 1));
-        $this->assertEquals(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'striing'], 'i', ''));
-        $this->assertEquals(['this', 'is', 'a', 'striing'], Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 0));
-        $this->assertEquals(['ths', 's', 'a', 'string'], Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 1));
-        $this->assertEquals(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 2));
+        $this->assertSame(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'string'], 'i', ''));
+        $this->assertSame(['this', 'is', 'a', 'string'], Str::replace(['this', 'is', 'a', 'string'], 'i', '', 0));
+        $this->assertSame(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'string'], 'i', '', 1));
+        $this->assertSame(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'striing'], 'i', ''));
+        $this->assertSame(['this', 'is', 'a', 'striing'], Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 0));
+        $this->assertSame(['ths', 's', 'a', 'string'], Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 1));
+        $this->assertSame(['ths', 's', 'a', 'strng'], Str::replace(['this', 'is', 'a', 'striing'], 'i', '', 2));
 
         // $subject as Collection
         $subjects = new Collection(['this', 'is', 'a', 'striing']);
-        $this->assertEquals(['ths', 's', 'a', 'strng'], Str::replace($subjects, 'i', ''));
-        $this->assertEquals(['ths', 's', 'a', 'string'], Str::replace($subjects, 'i', '', 1));
+        $this->assertSame(['ths', 's', 'a', 'strng'], Str::replace($subjects, 'i', ''));
+        $this->assertSame(['ths', 's', 'a', 'string'], Str::replace($subjects, 'i', '', 1));
 
         // $search as array/Collection
-        $this->assertEquals('th!! !! a string', Str::replace('this is a string', ['i', 's'], '!', 2));
-        $this->assertEquals('th!! !! a string', Str::replace('this is a string', new Collection(['i', 's']), '!', 2));
-        $this->assertEquals('th!! i! a string', Str::replace('this is a string', ['i', 's'], '!', [1, 2]));
-        $this->assertEquals('th!! i! a !tring', Str::replace('this is a string', ['i', 's'], '!', [1]));
+        $this->assertSame('th!! !! a string', Str::replace('this is a string', ['i', 's'], '!', 2));
+        $this->assertSame('th!! !! a string', Str::replace('this is a string', new Collection(['i', 's']), '!', 2));
+        $this->assertSame('th!! i! a string', Str::replace('this is a string', ['i', 's'], '!', [1, 2]));
+        $this->assertSame('th!! i! a !tring', Str::replace('this is a string', ['i', 's'], '!', [1]));
 
         // $search and $replace as array/Collection
-        $this->assertEquals('th!? !? a string', Str::replace('this is a string', ['i', 's'], ['!', '?'], 2));
-        $this->assertEquals('th! ! a string', Str::replace('this is a string', ['i', 's'], ['!'], 2));
-        $this->assertEquals('th!? !? a string', Str::replace('this is a string', new Collection(['i', 's']), new Collection(['!', '?']), 2));
-        $this->assertEquals('th!? !? a string', Str::replace('this is a string', new Collection(['i', 's']), ['!', '?'], 2));
-        $this->assertEquals('th!? !? a string', Str::replace('this is a string', ['i', 's'], new Collection(['!', '?']), 2));
-        $this->assertEquals('th!? !s a string', Str::replace('this is a string', ['i', 's'], ['!', '?'], [2, 1]));
-        $this->assertEquals('th!s !s a string', Str::replace('this is a string', ['i', 's'], ['!', '?'], [2, 0]));
-        $this->assertEquals('th!? !? a ?tring', Str::replace('this is a string', ['i', 's'], ['!', '?'], [2]));
-        $this->assertEquals('th! ! a tring', Str::replace('this is a string', ['i', 's'], ['!'], [2]));
-        $this->assertEquals('th! !s a string', Str::replace('this is a string', ['i', 's'], ['!'], [2, 1]));
+        $this->assertSame('th!? !? a string', Str::replace('this is a string', ['i', 's'], ['!', '?'], 2));
+        $this->assertSame('th! ! a string', Str::replace('this is a string', ['i', 's'], ['!'], 2));
+        $this->assertSame('th!? !? a string', Str::replace('this is a string', new Collection(['i', 's']), new Collection(['!', '?']), 2));
+        $this->assertSame('th!? !? a string', Str::replace('this is a string', new Collection(['i', 's']), ['!', '?'], 2));
+        $this->assertSame('th!? !? a string', Str::replace('this is a string', ['i', 's'], new Collection(['!', '?']), 2));
+        $this->assertSame('th!? !s a string', Str::replace('this is a string', ['i', 's'], ['!', '?'], [2, 1]));
+        $this->assertSame('th!s !s a string', Str::replace('this is a string', ['i', 's'], ['!', '?'], [2, 0]));
+        $this->assertSame('th!? !? a ?tring', Str::replace('this is a string', ['i', 's'], ['!', '?'], [2]));
+        $this->assertSame('th! ! a tring', Str::replace('this is a string', ['i', 's'], ['!'], [2]));
+        $this->assertSame('th! !s a string', Str::replace('this is a string', ['i', 's'], ['!'], [2, 1]));
 
         // replacement order
-        $this->assertEquals('F', Str::replace('A', ['A', 'B', 'C', 'D', 'E'], ['B', 'C', 'D', 'E', 'F'], 1));
-        $this->assertEquals('apearple p', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], 1));
-        $this->assertEquals('apearpearle p', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], [1, 2]));
-        $this->assertEquals('apearpearle pear', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], [1, 3]));
+        $this->assertSame('F', Str::replace('A', ['A', 'B', 'C', 'D', 'E'], ['B', 'C', 'D', 'E', 'F'], 1));
+        $this->assertSame('apearple p', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], 1));
+        $this->assertSame('apearpearle p', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], [1, 2]));
+        $this->assertSame('apearpearle pear', Str::replace('a p', ['a', 'p'], ['apple', 'pear'], [1, 3]));
     }
 
     public function testReplaceInvalid1()
@@ -354,39 +354,39 @@ class StrTest extends TestCase
     public function testReplacements()
     {
         // simple example
-        $this->assertEquals([
+        $this->assertSame([
             ['search' => 'a', 'replace' => 'b', 'limit' => 2]
         ], Str::replacements('a', 'b', 2));
 
         // multiple searches
-        $this->assertEquals([
+        $this->assertSame([
             ['search' => 'a', 'replace' => 'c', 'limit' => 2],
             ['search' => 'b', 'replace' => 'c', 'limit' => 2]
         ], Str::replacements(['a', 'b'], 'c', 2));
 
         // multiple replacements
-        $this->assertEquals([
+        $this->assertSame([
             ['search' => 'a', 'replace' => 'c', 'limit' => 2],
             ['search' => 'b', 'replace' => 'd', 'limit' => 2]
         ], Str::replacements(['a', 'b'], ['c', 'd'], 2));
 
-        $this->assertEquals([
+        $this->assertSame([
             ['search' => 'a', 'replace' => 'c', 'limit' => 2],
             ['search' => 'b', 'replace' => '', 'limit' => 2]
         ], Str::replacements(['a', 'b'], ['c'], 2));
 
         // multiple limits
-        $this->assertEquals([
+        $this->assertSame([
             ['search' => 'a', 'replace' => 'c', 'limit' => 2],
             ['search' => 'b', 'replace' => 'c', 'limit' => 1]
         ], Str::replacements(['a', 'b'], 'c', [2, 1]));
 
-        $this->assertEquals([
+        $this->assertSame([
             ['search' => 'a', 'replace' => 'c', 'limit' => 2],
             ['search' => 'b', 'replace' => 'd', 'limit' => 1]
         ], Str::replacements(['a', 'b'], ['c', 'd'], [2, 1]));
 
-        $this->assertEquals([
+        $this->assertSame([
             ['search' => 'a', 'replace' => 'c', 'limit' => 2],
             ['search' => 'b', 'replace' => 'd', 'limit' => -1]
         ], Str::replacements(['a', 'b'], ['c', 'd'], [2]));
@@ -401,7 +401,7 @@ class StrTest extends TestCase
 
     public function testReplaceReplacements()
     {
-        $this->assertEquals(
+        $this->assertSame(
             'other other string',
             Str::replaceReplacements('some some string', [
                 [
@@ -412,7 +412,7 @@ class StrTest extends TestCase
             ])
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             'other interesting string',
             Str::replaceReplacements('some some string', [
                 [
@@ -446,9 +446,9 @@ class StrTest extends TestCase
 
     public function testRtrim()
     {
-        $this->assertEquals('test', Str::rtrim('test '));
-        $this->assertEquals('test', Str::rtrim('test  '));
-        $this->assertEquals('test', Str::rtrim('test.jpg', '.jpg'));
+        $this->assertSame('test', Str::rtrim('test '));
+        $this->assertSame('test', Str::rtrim('test  '));
+        $this->assertSame('test', Str::rtrim('test.jpg', '.jpg'));
     }
 
     public function testShort()
@@ -456,55 +456,55 @@ class StrTest extends TestCase
         $string = 'Super Äwesøme String';
 
         // too long
-        $this->assertEquals('Super…', Str::short($string, 5));
+        $this->assertSame('Super…', Str::short($string, 5));
 
         // not too long
-        $this->assertEquals($string, Str::short($string, 100));
+        $this->assertSame($string, Str::short($string, 100));
 
         // zero chars
-        $this->assertEquals($string, Str::short($string, 0));
+        $this->assertSame($string, Str::short($string, 0));
 
         // with different ellipsis character
-        $this->assertEquals('Super---', Str::short($string, 5, '---'));
+        $this->assertSame('Super---', Str::short($string, 5, '---'));
 
         // with null
-        $this->assertEquals('', Str::short(null, 5));
+        $this->assertSame('', Str::short(null, 5));
 
         // with number
-        $this->assertEquals(12345, Str::short(12345, 5));
+        $this->assertSame('12345', Str::short(12345, 5));
 
         // with long number
-        $this->assertEquals('12345…', Str::short(123456, 5));
+        $this->assertSame('12345…', Str::short(123456, 5));
     }
 
     public function testSlug()
     {
         // Double dashes
-        $this->assertEquals('a-b', Str::slug('a--b'));
+        $this->assertSame('a-b', Str::slug('a--b'));
 
         // Dashes at the end of the line
-        $this->assertEquals('a', Str::slug('a-'));
+        $this->assertSame('a', Str::slug('a-'));
 
         // Dashes at the beginning of the line
-        $this->assertEquals('a', Str::slug('-a'));
+        $this->assertSame('a', Str::slug('-a'));
 
         // Underscores converted to dashes
-        $this->assertEquals('a-b', Str::slug('a_b'));
+        $this->assertSame('a-b', Str::slug('a_b'));
 
         // Unallowed characters
-        $this->assertEquals('a-b', Str::slug('a@b'));
+        $this->assertSame('a-b', Str::slug('a@b'));
 
         // Spaces characters
-        $this->assertEquals('a-b', Str::slug('a b'));
+        $this->assertSame('a-b', Str::slug('a b'));
 
         // Double Spaces characters
-        $this->assertEquals('a-b', Str::slug('a  b'));
+        $this->assertSame('a-b', Str::slug('a  b'));
 
         // Custom separator
-        $this->assertEquals('a+b', Str::slug('a-b', '+'));
+        $this->assertSame('a+b', Str::slug('a-b', '+'));
 
         // Allow underscores
-        $this->assertEquals('a_b', Str::slug('a_b', '-', 'a-z0-9_'));
+        $this->assertSame('a_b', Str::slug('a_b', '-', 'a-z0-9_'));
 
         // store default defaults
         $defaults = Str::$defaults['slug'];
@@ -513,37 +513,37 @@ class StrTest extends TestCase
         Str::$defaults['slug']['separator'] = '+';
         Str::$defaults['slug']['allowed']   = 'a-z0-9_';
 
-        $this->assertEquals('a+b', Str::slug('a-b'));
-        $this->assertEquals('a_b', Str::slug('a_b'));
+        $this->assertSame('a+b', Str::slug('a-b'));
+        $this->assertSame('a_b', Str::slug('a_b'));
 
         // Reset str defaults
         Str::$defaults['slug'] = $defaults;
 
         // Language rules
         Str::$language = ['ä' => 'ae'];
-        $this->assertEquals('ae-b', Str::slug('ä b'));
+        $this->assertSame('ae-b', Str::slug('ä b'));
         Str::$language = [];
     }
 
     public function testSnake()
     {
         $string = 'KingCobra';
-        $this->assertEquals('king_cobra', Str::snake($string));
+        $this->assertSame('king_cobra', Str::snake($string));
 
         $string = 'kingCobra';
-        $this->assertEquals('king_cobra', Str::snake($string));
+        $this->assertSame('king_cobra', Str::snake($string));
     }
 
     public function testSplit()
     {
         $string = 'ä,ö,ü,ß';
-        $this->assertEquals(['ä', 'ö', 'ü', 'ß'], Str::split($string));
+        $this->assertSame(['ä', 'ö', 'ü', 'ß'], Str::split($string));
 
         $string = 'ä/ö/ü/ß';
-        $this->assertEquals(['ä', 'ö', 'ü', 'ß'], Str::split($string, '/'));
+        $this->assertSame(['ä', 'ö', 'ü', 'ß'], Str::split($string, '/'));
 
         $string = 'ää/ö/üü/ß';
-        $this->assertEquals(['ää', 'üü'], Str::split($string, '/', 2));
+        $this->assertSame(['ää', 'üü'], Str::split($string, '/', 2));
 
         $string = <<<EOT
             ---
@@ -551,7 +551,7 @@ class StrTest extends TestCase
             ---
             -def-
 EOT;
-        $this->assertEquals(['-abc-', '-def-'], Str::split($string, '---'));
+        $this->assertSame(['-abc-', '-def-'], Str::split($string, '---'));
     }
 
     public function testStartsWith()
@@ -577,25 +577,25 @@ EOT;
     {
         $string = 'äöü';
 
-        $this->assertEquals($string, Str::substr($string));
-        $this->assertEquals($string, Str::substr($string, 0));
-        $this->assertEquals($string, Str::substr($string, 0, 3));
-        $this->assertEquals('ä', Str::substr($string, 0, 1));
-        $this->assertEquals('äö', Str::substr($string, 0, 2));
-        $this->assertEquals('ü', Str::substr($string, -1));
+        $this->assertSame($string, Str::substr($string));
+        $this->assertSame($string, Str::substr($string, 0));
+        $this->assertSame($string, Str::substr($string, 0, 3));
+        $this->assertSame('ä', Str::substr($string, 0, 1));
+        $this->assertSame('äö', Str::substr($string, 0, 2));
+        $this->assertSame('ü', Str::substr($string, -1));
     }
 
     public function testTemplate()
     {
         // query with a string
         $string = 'From {{ b }} to {{ a }}';
-        $this->assertEquals('From here to there', Str::template($string, ['a' => 'there', 'b' => 'here']));
-        $this->assertEquals('From {{ b }} to {{ a }}', Str::template($string, []));
-        $this->assertEquals('From here to {{ a }}', Str::template($string, ['b' => 'here']));
-        $this->assertEquals('From here to {{ a }}', Str::template($string, ['a' => null, 'b' => 'here']));
-        $this->assertEquals('From - to -', Str::template($string, [], '-'));
-        $this->assertEquals('From  to ', Str::template($string, [], ''));
-        $this->assertEquals('From here to -', Str::template($string, ['b' => 'here'], '-'));
+        $this->assertSame('From here to there', Str::template($string, ['a' => 'there', 'b' => 'here']));
+        $this->assertSame('From {{ b }} to {{ a }}', Str::template($string, []));
+        $this->assertSame('From here to {{ a }}', Str::template($string, ['b' => 'here']));
+        $this->assertSame('From here to {{ a }}', Str::template($string, ['a' => null, 'b' => 'here']));
+        $this->assertSame('From - to -', Str::template($string, [], '-'));
+        $this->assertSame('From  to ', Str::template($string, [], ''));
+        $this->assertSame('From here to -', Str::template($string, ['b' => 'here'], '-'));
 
         // query with an array
         $template = Str::template('Hello {{ user.username }}', [
@@ -603,118 +603,118 @@ EOT;
                 'username' => 'homer'
             ]
         ]);
-        $this->assertEquals('Hello homer', $template);
+        $this->assertSame('Hello homer', $template);
 
         $template = Str::template('{{ user.greeting }} {{ user.username }}', [
             'user' => [
                 'username' => 'homer'
             ]
         ]);
-        $this->assertEquals('{{ user.greeting }} homer', $template);
+        $this->assertSame('{{ user.greeting }} homer', $template);
 
         // query with an object
         $template = Str::template('Hello {{ user.username }}', [
             'user' => new QueryTestUser()
         ]);
-        $this->assertEquals('Hello homer', $template);
+        $this->assertSame('Hello homer', $template);
 
         $template = Str::template('{{ user.greeting }} {{ user.username }}', [
             'user' => new QueryTestUser()
         ]);
-        $this->assertEquals('{{ user.greeting }} homer', $template);
+        $this->assertSame('{{ user.greeting }} homer', $template);
 
         // query with an object method
         $template = Str::template('{{ user.username }} says: {{ user.says("hi") }}', [
             'user' => new QueryTestUser()
         ]);
-        $this->assertEquals('homer says: hi', $template);
+        $this->assertSame('homer says: hi', $template);
 
         $template = Str::template('{{ user.username }} says: {{ user.greeting("hi") }}', [
             'user' => new QueryTestUser()
         ]);
-        $this->assertEquals('homer says: {{ user.greeting("hi") }}', $template);
+        $this->assertSame('homer says: {{ user.greeting("hi") }}', $template);
     }
 
     public function testToBytes()
     {
-        $this->assertEquals(0, Str::toBytes(0));
-        $this->assertEquals(0, Str::toBytes(''));
-        $this->assertEquals(0, Str::toBytes(null));
-        $this->assertEquals(0, Str::toBytes(false));
-        $this->assertEquals(0, Str::toBytes('x'));
-        $this->assertEquals(0, Str::toBytes('K'));
-        $this->assertEquals(0, Str::toBytes('M'));
-        $this->assertEquals(0, Str::toBytes('G'));
-        $this->assertEquals(2, Str::toBytes(2));
-        $this->assertEquals(2, Str::toBytes('2'));
-        $this->assertEquals(2 * 1024, Str::toBytes('2K'));
-        $this->assertEquals(2 * 1024, Str::toBytes('2k'));
-        $this->assertEquals(2 * 1024 * 1024, Str::toBytes('2M'));
-        $this->assertEquals(2 * 1024 * 1024, Str::toBytes('2m'));
-        $this->assertEquals(2 * 1024 * 1024 * 1024, Str::toBytes('2G'));
-        $this->assertEquals(2 * 1024 * 1024 * 1024, Str::toBytes('2g'));
+        $this->assertSame(0, Str::toBytes(0));
+        $this->assertSame(0, Str::toBytes(''));
+        $this->assertSame(0, Str::toBytes(null));
+        $this->assertSame(0, Str::toBytes(false));
+        $this->assertSame(0, Str::toBytes('x'));
+        $this->assertSame(0, Str::toBytes('K'));
+        $this->assertSame(0, Str::toBytes('M'));
+        $this->assertSame(0, Str::toBytes('G'));
+        $this->assertSame(2, Str::toBytes(2));
+        $this->assertSame(2, Str::toBytes('2'));
+        $this->assertSame(2 * 1024, Str::toBytes('2K'));
+        $this->assertSame(2 * 1024, Str::toBytes('2k'));
+        $this->assertSame(2 * 1024 * 1024, Str::toBytes('2M'));
+        $this->assertSame(2 * 1024 * 1024, Str::toBytes('2m'));
+        $this->assertSame(2 * 1024 * 1024 * 1024, Str::toBytes('2G'));
+        $this->assertSame(2 * 1024 * 1024 * 1024, Str::toBytes('2g'));
     }
 
     public function testToType()
     {
         // string to string
-        $this->assertEquals('a', Str::toType('a', 'string'));
+        $this->assertSame('a', Str::toType('a', 'string'));
 
         // string to array
-        $this->assertEquals(['a'], Str::toType('a', 'array'));
-        $this->assertEquals(['a'], Str::toType('a', []));
+        $this->assertSame(['a'], Str::toType('a', 'array'));
+        $this->assertSame(['a'], Str::toType('a', []));
 
         // string to bool
-        $this->assertEquals(true, Str::toType(true, 'bool'));
-        $this->assertEquals(true, Str::toType('true', 'bool'));
-        $this->assertEquals(true, Str::toType('true', 'boolean'));
-        $this->assertEquals(true, Str::toType(1, 'bool'));
-        $this->assertEquals(true, Str::toType('1', 'bool'));
-        $this->assertEquals(true, Str::toType('1', true));
-        $this->assertEquals(false, Str::toType(false, 'bool'));
-        $this->assertEquals(false, Str::toType('false', 'bool'));
-        $this->assertEquals(false, Str::toType('false', 'boolean'));
-        $this->assertEquals(false, Str::toType(0, 'bool'));
-        $this->assertEquals(false, Str::toType('0', 'bool'));
-        $this->assertEquals(false, Str::toType('0', false));
+        $this->assertSame(true, Str::toType(true, 'bool'));
+        $this->assertSame(true, Str::toType('true', 'bool'));
+        $this->assertSame(true, Str::toType('true', 'boolean'));
+        $this->assertSame(true, Str::toType(1, 'bool'));
+        $this->assertSame(true, Str::toType('1', 'bool'));
+        $this->assertSame(true, Str::toType('1', true));
+        $this->assertFalse(Str::toType(false, 'bool'));
+        $this->assertFalse(Str::toType('false', 'bool'));
+        $this->assertFalse(Str::toType('false', 'boolean'));
+        $this->assertFalse(Str::toType(0, 'bool'));
+        $this->assertFalse(Str::toType('0', 'bool'));
+        $this->assertFalse(Str::toType('0', false));
 
         // string to float
-        $this->assertEquals(1.1, Str::toType(1.1, 'float'));
-        $this->assertEquals(1.1, Str::toType('1.1', 'float'));
-        $this->assertEquals(1.1, Str::toType('1.1', 'double'));
-        $this->assertEquals(1.1, Str::toType('1.1', 1.1));
+        $this->assertSame(1.1, Str::toType(1.1, 'float'));
+        $this->assertSame(1.1, Str::toType('1.1', 'float'));
+        $this->assertSame(1.1, Str::toType('1.1', 'double'));
+        $this->assertSame(1.1, Str::toType('1.1', 1.1));
 
         // string to int
-        $this->assertEquals(1, Str::toType(1, 'int'));
-        $this->assertEquals(1, Str::toType('1', 'int'));
-        $this->assertEquals(1, Str::toType('1', 'integer'));
-        $this->assertEquals(1, Str::toType('1', 1));
+        $this->assertSame(1, Str::toType(1, 'int'));
+        $this->assertSame(1, Str::toType('1', 'int'));
+        $this->assertSame(1, Str::toType('1', 'integer'));
+        $this->assertSame(1, Str::toType('1', 1));
     }
 
     public function testTrim()
     {
-        $this->assertEquals('test', Str::trim(' test '));
-        $this->assertEquals('test', Str::trim('  test  '));
-        $this->assertEquals('test', Str::trim('.test.', '.'));
+        $this->assertSame('test', Str::trim(' test '));
+        $this->assertSame('test', Str::trim('  test  '));
+        $this->assertSame('test', Str::trim('.test.', '.'));
     }
 
     public function testUcfirst()
     {
-        $this->assertEquals('Hello world', Str::ucfirst('hello world'));
-        $this->assertEquals('Hello world', Str::ucfirst('Hello World'));
+        $this->assertSame('Hello world', Str::ucfirst('hello world'));
+        $this->assertSame('Hello world', Str::ucfirst('Hello World'));
     }
 
     public function testUcwords()
     {
-        $this->assertEquals('Hello World', Str::ucwords('hello world'));
-        $this->assertEquals('Hello World', Str::ucwords('Hello world'));
-        $this->assertEquals('Hello World', Str::ucwords('HELLO WORLD'));
+        $this->assertSame('Hello World', Str::ucwords('hello world'));
+        $this->assertSame('Hello World', Str::ucwords('Hello world'));
+        $this->assertSame('Hello World', Str::ucwords('HELLO WORLD'));
     }
 
     public function testUnhtml()
     {
         $string = 'some <em>crazy</em> stuff';
-        $this->assertEquals('some crazy stuff', Str::unhtml($string));
+        $this->assertSame('some crazy stuff', Str::unhtml($string));
     }
 
     public function testUntil()
@@ -722,19 +722,19 @@ EOT;
         $string = 'Hellö Wörld';
 
         // case sensitive
-        $this->assertEquals('Hellö', Str::until($string, 'ö'));
-        $this->assertEquals(false, Str::until($string, 'Ö'));
-        $this->assertEquals(false, Str::until($string, 'x'));
+        $this->assertSame('Hellö', Str::until($string, 'ö'));
+        $this->assertSame('', Str::until($string, 'Ö'));
+        $this->assertSame('', Str::until($string, 'x'));
 
         // case insensitive
-        $this->assertEquals('Hellö', Str::until($string, 'ö', true));
-        $this->assertEquals('Hellö', Str::until($string, 'Ö', true));
-        $this->assertEquals(false, Str::until($string, 'x'));
+        $this->assertSame('Hellö', Str::until($string, 'ö', true));
+        $this->assertSame('Hellö', Str::until($string, 'Ö', true));
+        $this->assertSame('', Str::until($string, 'x'));
     }
 
     public function testUpper()
     {
-        $this->assertEquals('ÖÄÜ', Str::upper('öäü'));
-        $this->assertEquals('ÖÄÜ', Str::upper('Öäü'));
+        $this->assertSame('ÖÄÜ', Str::upper('öäü'));
+        $this->assertSame('ÖÄÜ', Str::upper('Öäü'));
     }
 }
