@@ -47,6 +47,9 @@ module.exports = {
     proxy: {
       "/api": {
         target: process.env.VUE_APP_DEV_SERVER || "http://kir.by"
+      },
+      "/env": {
+        target: process.env.VUE_APP_DEV_SERVER || "http://kir.by"
       }
     }
   }
