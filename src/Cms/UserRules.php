@@ -115,14 +115,20 @@ class UserRules
         static::validId($user, $user->id());
         static::validEmail($user, $user->email(), true);
         static::validLanguage($user, $user->language());
-        
+
+        // the first user must have a password
+        if ($user->kirby()->users()->count() === 0 && empty($props['password'])) {
+            // trigger invalid password error
+            static::validPassword($user, ' ');
+        }
+
         if (empty($props['password']) === false) {
             static::validPassword($user, $props['password']);
         }
 
         // get the current user if it exists
         $currentUser = $user->kirby()->user();
-        
+
         // admins are allowed everything
         if ($currentUser && $currentUser->isAdmin() === true) {
             return true;
@@ -136,7 +142,7 @@ class UserRules
                 'key' => 'user.create.permission'
             ]);
         }
-        
+
         // check user permissions (if not on install)
         if ($user->kirby()->users()->count() > 0) {
             if ($user->permissions()->create() !== true) {
