@@ -177,19 +177,25 @@ class Remote
         ];
 
         // determine the TLS CA to use
-        if (is_file($this->options['ca']) === true) {
-            $this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
-            $this->curlopt[CURLOPT_CAINFO] = $this->options['ca'];
-        } elseif (is_dir($this->options['ca']) === true) {
-            $this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
-            $this->curlopt[CURLOPT_CAPATH] = $this->options['ca'];
-        } elseif ($this->options['ca'] === self::CA_INTERNAL) {
+        if ($this->options['ca'] === self::CA_INTERNAL) {
             $this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
             $this->curlopt[CURLOPT_CAINFO] = dirname(__DIR__, 2) . '/cacert.pem';
         } elseif ($this->options['ca'] === self::CA_SYSTEM) {
             $this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
         } elseif ($this->options['ca'] === false) {
             $this->curlopt[CURLOPT_SSL_VERIFYPEER] = false;
+        } elseif (
+            is_string($this->options['ca']) === true &&
+            is_file($this->options['ca']) === true
+        ) {
+            $this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
+            $this->curlopt[CURLOPT_CAINFO] = $this->options['ca'];
+        } elseif (
+            is_string($this->options['ca']) === true &&
+            is_dir($this->options['ca']) === true
+        ) {
+            $this->curlopt[CURLOPT_SSL_VERIFYPEER] = true;
+            $this->curlopt[CURLOPT_CAPATH] = $this->options['ca'];
         } else {
             throw new InvalidArgumentException('Invalid "ca" option for the Remote class');
         }
