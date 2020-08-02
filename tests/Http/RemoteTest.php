@@ -62,6 +62,19 @@ class RemoteTest extends TestCase
         $this->assertSame(dirname(__DIR__, 2) . '/cacert.pem', $request->curlopt[CURLOPT_CAINFO]);
         $this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
 
+        // explicit internal CA with an existing file named like the constant
+        $originalCwd = getcwd();
+        chdir(__DIR__ . '/fixtures');
+        touch(Remote::CA_INTERNAL);
+        $request = Remote::get('https://getkirby.com', [
+            'ca' => Remote::CA_INTERNAL
+        ]);
+        $this->assertTrue($request->curlopt[CURLOPT_SSL_VERIFYPEER]);
+        $this->assertSame(dirname(__DIR__, 2) . '/cacert.pem', $request->curlopt[CURLOPT_CAINFO]);
+        $this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
+        unlink(Remote::CA_INTERNAL);
+        chdir($originalCwd);
+
         // CA file
         $request = Remote::get('https://getkirby.com', [
             'ca' => __FILE__
@@ -85,6 +98,19 @@ class RemoteTest extends TestCase
         $this->assertTrue($request->curlopt[CURLOPT_SSL_VERIFYPEER]);
         $this->assertArrayNotHasKey(CURLOPT_CAINFO, $request->curlopt);
         $this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
+
+        // system CA with an existing file named like the constant
+        $originalCwd = getcwd();
+        chdir(__DIR__ . '/fixtures');
+        touch(Remote::CA_SYSTEM);
+        $request = Remote::get('https://getkirby.com', [
+            'ca' => Remote::CA_SYSTEM
+        ]);
+        $this->assertTrue($request->curlopt[CURLOPT_SSL_VERIFYPEER]);
+        $this->assertArrayNotHasKey(CURLOPT_CAINFO, $request->curlopt);
+        $this->assertArrayNotHasKey(CURLOPT_CAPATH, $request->curlopt);
+        unlink(Remote::CA_SYSTEM);
+        chdir($originalCwd);
 
         // disabled
         $request = Remote::get('https://getkirby.com', [
