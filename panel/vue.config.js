@@ -51,6 +51,9 @@ module.exports = {
       },
       "/env": {
         target: host
+      },
+      "/media": {
+        target: host
       }
     }
   }
