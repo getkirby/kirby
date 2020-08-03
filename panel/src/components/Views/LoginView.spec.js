@@ -3,7 +3,7 @@ describe('LoginView', () => {
   const host = 'http://localhost:8080';
 
   before(() => {
-    cy.visit(host + '/env/login');
+    cy.visit(host + '/env/minimal-test-user');
   });
 
   beforeEach(() => {
