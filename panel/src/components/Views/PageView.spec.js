@@ -2,7 +2,7 @@ const dialog = () => {
   return cy.get('.k-dialog');
 };
 
-describe('SiteView', () => {
+describe('PageView', () => {
 
   const host = 'http://localhost:8080';
 

@@ -3,7 +3,7 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <div v-else class="k-file-view">
+  <div v-else v-else-if="file.id !== null" class="k-file-view">
 
     <k-file-preview :file="file" />
 
@@ -19,7 +19,7 @@
         {{ file.filename }}
 
         <k-button-group slot="left">
-          <k-button :responsive="true" icon="open" @click="action('download')">
+          <k-button :link="file.url" :responsive="true" icon="open" target="_blank">
             {{ $t("open") }}
           </k-button>
           <k-dropdown>
@@ -186,9 +186,6 @@ export default {
     },
     action(action) {
       switch (action) {
-        case "download":
-          window.open(this.file.url);
-          break;
         case "rename":
           this.$refs.rename.open(this.path, this.file.filename);
           break;
