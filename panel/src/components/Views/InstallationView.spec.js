@@ -3,7 +3,7 @@ describe('InstallationView', () => {
   const host = 'http://localhost:8080';
 
   before(() => {
-    cy.visit(host + '/env/minimal-no-user');
+    cy.visit(host + '/env/install/minimal');
   });
 
   beforeEach(() => {
