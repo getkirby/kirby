@@ -36,6 +36,30 @@ class Html extends Xml
     public static $void = '>';
 
     /**
+     * List of HTML tags that are considered to be self-closing
+     *
+     * @var array
+     */
+    public static $voidList = [
+        'area',
+        'base',
+        'br',
+        'col',
+        'command',
+        'embed',
+        'hr',
+        'img',
+        'input',
+        'keygen',
+        'link',
+        'meta',
+        'param',
+        'source',
+        'track',
+        'wbr'
+    ];
+
+    /**
      * Generic HTML tag generator
      * Can be called like `Html::p('A paragraph', ['class' => 'text'])`
      *
@@ -260,26 +284,7 @@ class Html extends Xml
      */
     public static function isVoid(string $tag): bool
     {
-        $void = [
-            'area',
-            'base',
-            'br',
-            'col',
-            'command',
-            'embed',
-            'hr',
-            'img',
-            'input',
-            'keygen',
-            'link',
-            'meta',
-            'param',
-            'source',
-            'track',
-            'wbr',
-        ];
-
-        return in_array(strtolower($tag), $void);
+        return in_array(strtolower($tag), static::$voidList);
     }
 
     /**
@@ -334,8 +339,8 @@ class Html extends Xml
      * Builds an HTML tag
      *
      * @param string $name Tag name
-     * @param array|string|null $content Scalar value or array with multiple lines of content or `null` to
-     *                                   generate a self-closing tag; pass an empty string to generate empty content
+     * @param array|string $content Scalar value or array with multiple lines of content; self-closing
+     *                              tags are generated automatically based on the `Html::isVoid()` list
      * @param array $attr An associative array with additional attributes for the tag
      * @param string|null $indent Indentation string, defaults to two spaces or `null` for output on one line
      * @param int $level Indentation level
@@ -343,6 +348,12 @@ class Html extends Xml
      */
     public static function tag(string $name, $content = '', array $attr = null, string $indent = null, int $level = 0): string
     {
+        // treat an explicit `null` value as an empty tag
+        // as void tags are already covered below
+        if ($content === null) {
+            $content = '';
+        }
+        
         // force void elements to be self-closing
         if (static::isVoid($name) === true) {
             $content = null;
