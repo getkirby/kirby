@@ -1,4 +1,5 @@
 {
     "integrationFolder": "src/",
-    "testFiles": "**/*.spec.js"
+    "testFiles": "**/*.spec.js",
+    "video": false
 }
