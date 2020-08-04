@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2647c7673d573d20cb10f5550ea4fe23",
+    "content-hash": "4b96abb049f7a25f83ad2bda07040ecc",
     "packages": [
         {
             "name": "claviska/simpleimage",
@@ -510,7 +510,7 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.18.0",
+            "version": "v1.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
