@@ -24,7 +24,7 @@ export default {
       }
 
       try {
-        await this.$api.site.title(this.page.title);
+        await this.$api.site.changeTitle(this.page.title);
         this.$store.dispatch("system/title", this.page.title);
         this.success({
           message: ":)",
