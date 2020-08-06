@@ -91,7 +91,7 @@ export default {
       }
 
       try {
-        const page = await this.$api.pages.slug(this.page.id, this.slug);
+        const page = await this.$api.pages.changeSlug(this.page.id, this.slug);
 
         // move form changes
         this.$store.dispatch("content/move", [

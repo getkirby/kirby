@@ -145,7 +145,7 @@ export default {
     },
     async submit() {
       try {
-        await this.$api.pages.status(
+        await this.$api.pages.changeStatus(
           this.page.id,
           this.form.status,
           this.form.position || 1

@@ -66,7 +66,7 @@ export default {
       this.$events.$emit("keydown.cmd.s");
 
       try {
-        await this.$api.pages.template(this.page.id, this.page.template);
+        await this.$api.pages.changeTemplate(this.page.id, this.page.template);
         this.success({
           message: ":)",
           event: "page.changeTemplate"
