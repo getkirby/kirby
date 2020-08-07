@@ -28,7 +28,7 @@ export default function(to, from, next) {
         message: Vue.i18n.translate("error.access.view")
       });
 
-      return next("/");
+      return next(access.site === false ? "/account" : "/");
     }
 
     next();
