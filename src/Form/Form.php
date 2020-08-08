@@ -59,7 +59,7 @@ class Form
             }
 
             try {
-                $field = new Field($props['type'], $props);
+                $field = new Field($props['type'], $props, $this->fields);
             } catch (Throwable $e) {
                 $field = static::exceptionField($e, $props);
             }
