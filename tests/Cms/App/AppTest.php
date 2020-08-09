@@ -729,37 +729,19 @@ class AppTest extends TestCase
 
     public function testSlugsOption()
     {
-        // string option with dot notation
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-            'options' => [
-                'slugs.language' => 'fr'
-            ]
-        ]);
-
-        $this->assertSame([
-            'slugs' => [
-                'language' => 'fr'
-            ]
-        ], $app->options());
-        $this->assertSame(['language' => 'fr'], $app->option('slugs'));
-        $this->assertSame('AE', Str::$language['Æ']);
-
         // string option
         $app = new App([
             'roots' => [
                 'index' => '/dev/null'
             ],
             'options' => [
-                'slugs' => 'de'
+                'slugs' => 'fr'
             ]
         ]);
 
-        $this->assertSame(['slugs' => 'de'], $app->options());
-        $this->assertSame('de', $app->option('slugs'));
-        $this->assertSame('ss', Str::$language['ß']);
+        $this->assertSame(['slugs' => 'fr'], $app->options());
+        $this->assertSame('fr', $app->option('slugs'));
+        $this->assertSame('AE', Str::$language['Æ']);
 
         // array option
         $app = new App([
@@ -768,17 +750,17 @@ class AppTest extends TestCase
             ],
             'options' => [
                 'slugs' => [
-                    'language' => 'tr'
+                    'language' => 'de'
                 ]
             ]
         ]);
 
         $this->assertSame([
             'slugs' => [
-                'language' => 'tr'
+                'language' => 'de'
             ]
         ], $app->options());
-        $this->assertSame(['language' => 'tr'], $app->option('slugs'));
-        $this->assertSame('S', Str::$language['Ş']);
+        $this->assertSame(['language' => 'de'], $app->option('slugs'));
+        $this->assertSame('ss', Str::$language['ß']);
     }
 }

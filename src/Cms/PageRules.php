@@ -19,6 +19,14 @@ use Kirby\Toolkit\Str;
  */
 class PageRules
 {
+    /**
+     * Validation for changing page num
+     *
+     * @param Page $page
+     * @param int|null $num
+     * @return bool
+     * @throws InvalidArgumentException
+     */
     public static function changeNum(Page $page, int $num = null): bool
     {
         if ($num !== null && $num < 0) {
@@ -28,6 +36,16 @@ class PageRules
         return true;
     }
 
+    /**
+     * Validation for changing page slug
+     *
+     * @param Page $page
+     * @param string $slug
+     * @return bool
+     * @throws DuplicateException
+     * @throws InvalidArgumentException
+     * @throws PermissionException
+     */
     public static function changeSlug(Page $page, string $slug): bool
     {
         if ($page->permissions()->changeSlug() !== true) {
@@ -69,6 +87,16 @@ class PageRules
         return true;
     }
 
+    /**
+     * Validation for changing page status
+     *
+     * @param Page $page
+     * @param string $status
+     * @param int|null $position
+     * @return bool
+     * @throws InvalidArgumentException
+     * @throws PermissionException
+     */
     public static function changeStatus(Page $page, string $status, int $position = null): bool
     {
         if (isset($page->blueprint()->status()[$status]) === false) {
@@ -87,6 +115,13 @@ class PageRules
         }
     }
 
+    /**
+     * Validation for changing page status to draft
+     *
+     * @param Page $page
+     * @return bool
+     * @throws PermissionException
+     */
     public static function changeStatusToDraft(Page $page)
     {
         if ($page->permissions()->changeStatus() !== true) {
@@ -110,6 +145,15 @@ class PageRules
         return true;
     }
 
+    /**
+     * Validation for changing page status to listed
+     *
+     * @param Page $page
+     * @param int $position
+     * @return bool
+     * @throws InvalidArgumentException
+     * @throws PermissionException
+     */
     public static function changeStatusToListed(Page $page, int $position)
     {
         // no need to check for status changing permissions,
@@ -150,6 +194,13 @@ class PageRules
         return true;
     }
 
+    /**
+     * Validation for changing page status to unlisted
+     *
+     * @param Page $page
+     * @return bool
+     * @throws PermissionException
+     */
     public static function changeStatusToUnlisted(Page $page)
     {
         if ($page->permissions()->changeStatus() !== true) {
@@ -164,6 +215,15 @@ class PageRules
         return true;
     }
 
+    /**
+     * Validation for changing page template
+     *
+     * @param Page $page
+     * @param string $template
+     * @return bool
+     * @throws LogicException
+     * @throws PermissionException
+     */
     public static function changeTemplate(Page $page, string $template): bool
     {
         if ($page->permissions()->changeTemplate() !== true) {
@@ -185,6 +245,15 @@ class PageRules
         return true;
     }
 
+    /**
+     * Validation for changing page title
+     *
+     * @param Page $page
+     * @param string $title
+     * @return bool
+     * @throws InvalidArgumentException
+     * @throws PermissionException
+     */
     public static function changeTitle(Page $page, string $title): bool
     {
         if (Str::length($title) === 0) {
@@ -205,6 +274,15 @@ class PageRules
         return true;
     }
 
+    /**
+     * Validation for page create
+     *
+     * @param Page $page
+     * @return bool
+     * @throws DuplicateException
+     * @throws InvalidArgumentException
+     * @throws PermissionException
+     */
     public static function create(Page $page): bool
     {
         if (Str::length($page->slug()) < 1) {
@@ -254,6 +332,15 @@ class PageRules
         return true;
     }
 
+    /**
+     * Validation for page delete
+     *
+     * @param Page $page
+     * @param bool $force
+     * @return bool
+     * @throws LogicException
+     * @throws PermissionException
+     */
     public static function delete(Page $page, bool $force = false): bool
     {
         if ($page->permissions()->delete() !== true) {
@@ -272,6 +359,15 @@ class PageRules
         return true;
     }
 
+    /**
+     * Validation for page duplicate
+     *
+     * @param Page $page
+     * @param string $slug
+     * @param array $options
+     * @return bool
+     * @throws PermissionException
+     */
     public static function duplicate(Page $page, string $slug, array $options = []): bool
     {
         if ($page->permissions()->duplicate() !== true) {
@@ -286,6 +382,14 @@ class PageRules
         return true;
     }
 
+    /**
+     * Validation for page update
+     *
+     * @param Page $page
+     * @param array $content
+     * @return bool
+     * @throws PermissionException
+     */
     public static function update(Page $page, array $content = []): bool
     {
         if ($page->permissions()->update() !== true) {
@@ -311,7 +415,7 @@ class PageRules
      */
     protected static function validateSlugLength(string $slug): void
     {
-        if ($slugsMaxlength = option('slugs.maxlength', 255)) {
+        if ($slugsMaxlength = App::instance()->option('slugs.maxlength', 255)) {
             $maxlength = (int)$slugsMaxlength;
 
             if (Str::length($slug) > $maxlength) {

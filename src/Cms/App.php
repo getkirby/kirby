@@ -900,7 +900,7 @@ class App
 
         $config = Config::$data;
 
-        return $this->options = A::nest(array_replace_recursive($config, $main, $host, $addr), static::$nestIgnoreOptions);
+        return $this->options = array_replace_recursive($config, $main, $host, $addr);
     }
 
     /**
@@ -911,7 +911,7 @@ class App
      */
     protected function optionsFromProps(array $options = []): array
     {
-        return $this->options = array_replace_recursive($this->options, A::nest($options, static::$nestIgnoreOptions));
+        return $this->options = array_replace_recursive($this->options, $options);
     }
 
     /**
