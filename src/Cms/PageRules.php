@@ -410,7 +410,6 @@ class PageRules
      *
      * @param string $slug New slug to check
      * @return void
-     *
      * @throws \Kirby\Exception\InvalidArgumentException If the slug is too long
      */
     protected static function validateSlugLength(string $slug): void
