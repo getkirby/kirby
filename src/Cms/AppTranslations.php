@@ -65,9 +65,13 @@ trait AppTranslations
 
         I18n::$translations = [];
 
+        // checks custom language definition for slugs
         if ($slugsOption = $this->option('slugs')) {
+            // checks setting in two different ways
+            // "slugs" => "de" or "slugs" => ["language" => "de"]
             $slugsLanguage = is_string($slugsOption) === true ? $slugsOption : ($slugsOption['language'] ?? null);
 
+            // load custom slugs language if it's defined
             if ($slugsLanguage !== null) {
                 $file = $this->root('i18n:rules') . '/' . $slugsLanguage . '.json';
 
@@ -89,7 +93,7 @@ trait AppTranslations
      * Otherwise fall back to the default language
      *
      * @internal
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return \Kirby\Cms\Language|null
      */
     public function setCurrentLanguage(string $languageCode = null)
@@ -116,7 +120,7 @@ trait AppTranslations
      * Set the current translation
      *
      * @internal
-     * @param string $translationCode
+     * @param string|null $translationCode
      * @return void
      */
     public function setCurrentTranslation(string $translationCode = null): void
