@@ -102,6 +102,11 @@ class VTest extends TestCase
         $this->assertFalse(V::alpha('äöüß'));
         $this->assertFalse(V::alpha('abc1234'));
         $this->assertFalse(V::alpha('abc"§$%&/()=?'));
+
+        $this->assertTrue(V::alpha('uñicode', true));
+        $this->assertTrue(V::alpha('nonunicode', true));
+        $this->assertFalse(V::alpha('uñicode', false));
+        $this->assertFalse(V::alpha('uñi-code', true));
     }
 
     public function testAlphanum()
@@ -116,6 +121,11 @@ class VTest extends TestCase
 
         $this->assertFalse(V::alphanum('äöüß'));
         $this->assertFalse(V::alphanum('abc"§$%&/()=?'));
+
+        $this->assertTrue(V::alphanum('uñicode1234', true));
+        $this->assertTrue(V::alphanum('nonunicode1234', true));
+        $this->assertFalse(V::alphanum('uñicode1234', false));
+        $this->assertFalse(V::alphanum('uñicode-1234', true));
     }
 
     public function testBetween()
