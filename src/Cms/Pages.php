@@ -225,7 +225,7 @@ class Pages extends Collection
 
         $multiLang = App::instance()->multilang();
 
-        if ($multiLang === true && $page = $this->findBy('slug', $id)) {
+        if ($multiLang === true && !App::instance()->language()->isDefault() && $page = $this->findBy('slug', $id)) {
             return $page;
         }
 
@@ -254,7 +254,7 @@ class Pages extends Collection
             $query = ltrim($query . '/' . $key, '/');
             $item  = $collection->get($query) ?? null;
 
-            if ($item === null && $multiLang === true) {
+            if ($item === null && $multiLang === true && !App::instance()->language()->isDefault()) {
                 $item = $collection->findBy('slug', $key);
             }
 
