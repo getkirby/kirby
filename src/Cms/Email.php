@@ -40,6 +40,7 @@ class Email
      * @param string|array $preset Preset name from the config or a simple props array
      * @param array $props Props array to override the $preset
      * @throws \Kirby\Exception\NotFoundException
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function __construct($preset = [], array $props = [])
     {
