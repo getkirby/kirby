@@ -22,7 +22,8 @@ class EmailTest extends TestCase
             'to'          => [],
             'cc'          => [],
             'bcc'         => [],
-            'attachments' => []
+            'attachments' => [],
+            'beforeSend'  => null
         ];
 
         $email = new Email($props);
