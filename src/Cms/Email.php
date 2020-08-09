@@ -39,6 +39,7 @@ class Email
      *
      * @param string|array $preset Preset name from the config or a simple props array
      * @param array $props Props array to override the $preset
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function __construct($preset = [], array $props = [])
     {
@@ -51,6 +52,11 @@ class Email
         // add transport settings
         if (isset($this->props['transport']) === false) {
             $this->props['transport'] = $this->options['transport'] ?? [];
+        }
+
+        // add predefined beforeSend option
+        if (isset($this->props['beforeSend']) === false) {
+            $this->props['beforeSend'] = $this->options['beforeSend'] ?? null;
         }
 
         // transform model objects to values
@@ -71,6 +77,7 @@ class Email
      *
      * @param string|array $preset Preset name or simple prop array
      * @return array
+     * @throws \Kirby\Exception\NotFoundException
      */
     protected function preset($preset): array
     {
@@ -95,6 +102,7 @@ class Email
      * to the result
      *
      * @return void
+     * @throws \Kirby\Exception\NotFoundException
      */
     protected function template(): void
     {
@@ -153,6 +161,7 @@ class Email
      *
      * @param string $prop Prop to transform
      * @return void
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function transformFile(string $prop): void
     {
@@ -168,6 +177,7 @@ class Email
      * @param string|null $contentKey Optional model method that returns the array key;
      *                                returns a simple value-only array if not given
      * @return array Simple key-value or just value array with the transformed prop data
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function transformModel(string $prop, string $class, string $contentValue, string $contentKey = null): array
     {
@@ -211,6 +221,7 @@ class Email
      * @param string $addressProp Prop with the email address
      * @param string $nameProp Prop with the name corresponding to the $addressProp
      * @return void
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function transformUserSingle(string $addressProp, string $nameProp): void
     {
@@ -240,6 +251,7 @@ class Email
      *
      * @param string $prop Prop to transform
      * @return void
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function transformUserMultiple(string $prop): void
     {
