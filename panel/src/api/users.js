@@ -5,6 +5,11 @@ export default (api) => {
     async blueprint(id) {
       return api.get("users/" + id + "/blueprint");
     },
+    async blueprints(id, section) {
+      return api.get("users/" + id + "/blueprints", {
+        section: section
+      });
+    },
     breadcrumb(user) {
       return [
         {
