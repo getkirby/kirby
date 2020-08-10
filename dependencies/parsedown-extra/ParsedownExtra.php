@@ -572,6 +572,9 @@ class ParsedownExtra extends Parsedown
 
         # http://stackoverflow.com/q/11309194/200145
         $elementMarkup = mb_convert_encoding($elementMarkup, 'HTML-ENTITIES', 'UTF-8');
+        
+        # Ensure that saveHTML() is not remove new line characters. New lines will be split by this character.
+        $DOMDocument->formatOutput = true;
 
         # http://stackoverflow.com/q/4879946/200145
         $DOMDocument->loadHTML($elementMarkup);
