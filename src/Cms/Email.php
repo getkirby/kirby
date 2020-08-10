@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\Str;
 
 /**
  * Wrapper around our Email package, which
@@ -103,22 +104,41 @@ class Email
             // prepare data to be passed to template
             $data = $this->props['data'] ?? [];
 
-            // check if html/text templates exist
-            $html = $this->getTemplate($this->props['template'], 'html');
-            $text = $this->getTemplate($this->props['template'], 'text');
+            // check if html/kirby/text templates exist
+            $htmlTemplate  = $this->getTemplate($this->props['template'], 'html');
+            $kirbyTemplate = $this->getTemplate($this->props['template'], 'kirby');
+            $textTemplate  = $this->getTemplate($this->props['template'], 'text');
 
-            if ($html->exists()) {
+            // according to the following templates order
+            // whichever one finds first, that template works
+            // if none is found, throws an NotFoundException
+            // - kirby template (.kirby.php extension)
+            // - html template (.html.php extension)
+            // - text template (.text.php extension)
+            // - default php template (.php extension)
+            if ($kirbyTemplate->exists()) {
+                $html = Str::template($kirbyTemplate->render($data), array_merge($data, [
+                    'kirby' => App::instance(),
+                    'site'  => App::instance()->site(),
+                ]), '');
+
                 $this->props['body'] = [
-                    'html' => $html->render($data)
+                    'html' => $html
                 ];
 
-                if ($text->exists()) {
-                    $this->props['body']['text'] = $text->render($data);
+                if ($textTemplate->exists()) {
+                    $this->props['body']['text'] = $textTemplate->render($data);
                 }
+            } elseif ($htmlTemplate->exists()) {
+                $this->props['body'] = [
+                    'html' => $htmlTemplate->render($data)
+                ];
 
-                // fallback to single email text template
-            } elseif ($text->exists()) {
-                $this->props['body'] = $text->render($data);
+                if ($textTemplate->exists()) {
+                    $this->props['body']['text'] = $textTemplate->render($data);
+                }
+            } elseif ($textTemplate->exists()) {
+                $this->props['body'] = $textTemplate->render($data);
             } else {
                 throw new NotFoundException('The email template "' . $this->props['template'] . '" cannot be found');
             }

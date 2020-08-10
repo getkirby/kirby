@@ -88,6 +88,24 @@ class EmailTest extends TestCase
         ], $email->toArray()['body']);
     }
 
+    public function testTemplateKirby()
+    {
+        $app = new App([
+            'templates' => [
+                'emails/media.kirby' => __DIR__ . '/fixtures/emails/media.kirby.php'
+            ],
+            'site' => [
+                'content' => [
+                    'title' => 'Test Site'
+                ]
+            ]
+        ]);
+        $email = new Email(['template' => 'media']);
+        $this->assertEquals([
+            'html' => '<b>Image:</b> <img src="" alt="Test Site"/>'
+        ], $email->toArray()['body']);
+    }
+
     public function testTemplateHtmlText()
     {
         $app = new App([
