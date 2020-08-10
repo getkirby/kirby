@@ -33,17 +33,24 @@ return [
         }
     ],
     [
-        'pattern' => 'site/children/blueprints',
-        'method'  => 'GET',
-        'action'  => function () {
-            return $this->site()->blueprints($this->requestQuery('section'));
-        }
-    ],
-    [
         'pattern' => 'site/children/search',
         'method'  => 'POST',
         'action'  => function () {
             return $this->site()->children()->query($this->requestBody());
+        }
+    ],
+    [
+        'pattern' => 'site/blueprint',
+        'method'  => 'GET',
+        'action'  => function () {
+            return $this->site()->blueprint();
+        }
+    ],
+    [
+        'pattern' => 'site/blueprints',
+        'method'  => 'GET',
+        'action'  => function () {
+            return $this->site()->blueprints($this->requestQuery('section'));
         }
     ],
     [

@@ -82,7 +82,7 @@ class User extends ModelWithContent
     public static $models = [];
 
     /**
-     * @var string
+     * @var Field
      */
     protected $name;
 
@@ -105,6 +105,8 @@ class User extends ModelWithContent
      * @param string $method
      * @param array $arguments
      * @return mixed
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\BadMethodCallException
      */
     public function __call(string $method, array $arguments = [])
     {
@@ -137,6 +139,7 @@ class User extends ModelWithContent
      * Improved `var_dump` output
      *
      * @return array
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function __debugInfo(): array
     {
@@ -176,7 +179,7 @@ class User extends ModelWithContent
     /**
      * Returns the UserBlueprint object
      *
-     * @return \Kirby\Cms\UserBlueprint
+     * @return \Kirby\Cms\Blueprint
      */
     public function blueprint()
     {
@@ -196,11 +199,36 @@ class User extends ModelWithContent
     }
 
     /**
+     * Returns an array with all blueprints that are available
+     *
+     * @param string|null $inSection
+     * @return array
+     */
+    public function blueprints(string $inSection = null): array
+    {
+        $blueprints = [];
+        $blueprint  = $this->blueprint();
+        $sections   = $inSection !== null ? [$blueprint->section($inSection)] : $blueprint->sections();
+
+        foreach ($sections as $section) {
+            if ($section === null) {
+                continue;
+            }
+
+            foreach ((array)$section->blueprints() as $blueprint) {
+                $blueprints[$blueprint['name']] = $blueprint;
+            }
+        }
+
+        return array_values($blueprints);
+    }
+
+    /**
      * Prepares the content for the write method
      *
      * @internal
      * @param array $data
-     * @param string $languageCode Not used so far
+     * @param string|null $languageCode Not used so far
      * @return array
      */
     public function contentFileData(array $data, string $languageCode = null): array
@@ -247,6 +275,7 @@ class User extends ModelWithContent
      * Checks if the user exists
      *
      * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function exists(): bool
     {
@@ -400,10 +429,11 @@ class User extends ModelWithContent
      * Logs the user in
      *
      * @param string $password
-     * @param \Kirby\Session\Session|array $session Session options or session object to set the user in
+     * @param null $session Session options or session object to set the user in
      * @return bool
      *
-     * @throws \Kirby\Exception\PermissionException If the password is not valid
+     * @throws InvalidArgumentException
+     * @throws NotFoundException
      */
     public function login(string $password, $session = null): bool
     {
@@ -416,8 +446,9 @@ class User extends ModelWithContent
     /**
      * Logs the user in without checking the password
      *
-     * @param \Kirby\Session\Session|array $session Session options or session object to set the user in
+     * @param null $session Session options or session object to set the user in
      * @return void
+     * @throws InvalidArgumentException
      */
     public function loginPasswordless($session = null): void
     {
@@ -437,8 +468,9 @@ class User extends ModelWithContent
     /**
      * Logs the user out
      *
-     * @param \Kirby\Session\Session|array $session Session options or session object to unset the user in
+     * @param null $session Session options or session object to unset the user in
      * @return void
+     * @throws InvalidArgumentException
      */
     public function logout($session = null): void
     {
@@ -516,6 +548,7 @@ class User extends ModelWithContent
      * @param string|null $handler
      * @param string|null $languageCode
      * @return int|string
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function modified(string $format = 'U', string $handler = null, string $languageCode = null)
     {
@@ -757,7 +790,7 @@ class User extends ModelWithContent
     /**
      * Sets the user email
      *
-     * @param string $email
+     * @param string|null $email
      * @return self
      */
     protected function setEmail(string $email = null)
@@ -771,7 +804,7 @@ class User extends ModelWithContent
     /**
      * Sets the user id
      *
-     * @param string $id
+     * @param string|null $id
      * @return self
      */
     protected function setId(string $id = null)
@@ -783,7 +816,7 @@ class User extends ModelWithContent
     /**
      * Sets the user language
      *
-     * @param string $language
+     * @param string|null $language
      * @return self
      */
     protected function setLanguage(string $language = null)
@@ -795,7 +828,7 @@ class User extends ModelWithContent
     /**
      * Sets the user name
      *
-     * @param string $name
+     * @param string|null $name
      * @return self
      */
     protected function setName(string $name = null)
@@ -807,7 +840,7 @@ class User extends ModelWithContent
     /**
      * Sets the user's password hash
      *
-     * @param string $password
+     * @param string|null $password
      * @return self
      */
     protected function setPassword(string $password = null)
@@ -819,7 +852,7 @@ class User extends ModelWithContent
     /**
      * Sets the user role
      *
-     * @param string $role
+     * @param string|null $role
      * @return self
      */
     protected function setRole(string $role = null)
@@ -861,6 +894,7 @@ class User extends ModelWithContent
      * to an array
      *
      * @return array
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function toArray(): array
     {
@@ -898,6 +932,7 @@ class User extends ModelWithContent
      * as a fallback
      *
      * @return string|null
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function username(): ?string
     {
@@ -907,12 +942,10 @@ class User extends ModelWithContent
     /**
      * Compares the given password with the stored one
      *
-     * @param string $password
+     * @param string|null $password
      * @return bool
-     *
-     * @throws \Kirby\Exception\NotFoundException If the user has no password
-     * @throws \Kirby\Exception\InvalidArgumentException If the entered password is not valid
      * @throws \Kirby\Exception\InvalidArgumentException If the entered password does not match the user password
+     * @throws \Kirby\Exception\NotFoundException If the user has no password
      */
     public function validatePassword(string $password = null): bool
     {

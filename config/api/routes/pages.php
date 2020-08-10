@@ -41,13 +41,6 @@ return [
         }
     ],
     [
-        'pattern' => 'pages/(:any)/children/blueprints',
-        'method'  => 'GET',
-        'action'  => function (string $id) {
-            return $this->page($id)->blueprints($this->requestQuery('section'));
-        }
-    ],
-    [
         'pattern' => 'pages/(:any)/children/search',
         'method'  => 'GET|POST',
         'action'  => function (string $id) {
@@ -58,6 +51,13 @@ return [
             } else {
                 return $pages->query($this->requestBody());
             }
+        }
+    ],
+    [
+        'pattern' => 'pages/(:any)/blueprints',
+        'method'  => 'GET',
+        'action'  => function (string $id) {
+            return $this->page($id)->blueprints($this->requestQuery('section'));
         }
     ],
     [
