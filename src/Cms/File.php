@@ -245,13 +245,14 @@ class File extends ModelWithContent
 
         $url = $absolute ? $this->id() : $this->filename();
 
+        $dragTextCallback = option('panel.' . $type . '.fileDragText');
+
+        if (empty($dragTextCallback) === false && is_a($dragTextCallback, 'Closure') === true && ($dragText = $dragTextCallback($this, $url)) !== null) {
+            return $dragText;
+        }
+
         switch ($type) {
             case 'markdown':
-                $dragTextFn = option('panel.markdown.fileDragText');
-                if (!empty($dragTextFn) && is_callable($dragTextFn) && !empty($text = $dragTextFn($this, $url))) {
-                    return $text;
-                }
-
                 if ($this->type() === 'image') {
                     return '![' . $this->alt() . '](' . $url . ')';
                 } else {
@@ -259,11 +260,6 @@ class File extends ModelWithContent
                 }
                 // no break
             default:
-                $dragTextFn = option('panel.kirbytext.fileDragText');
-                if (!empty($dragTextFn) && is_callable($dragTextFn) && !empty($text = $dragTextFn($this, $url))) {
-                    return $text;
-                }
-
                 if ($this->type() === 'image') {
                     return '(image: ' . $url . ')';
                 } else {

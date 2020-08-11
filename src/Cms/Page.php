@@ -443,20 +443,16 @@ class Page extends ModelWithContent
             $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
         }
 
+        $dragTextCallback = option('panel.' . $type . '.pageDragText');
+
+        if (empty($dragTextCallback) === false && is_a($dragTextCallback, 'Closure') === true && ($dragText = $dragTextCallback($this)) !== null) {
+            return $dragText;
+        }
+
         switch ($type) {
             case 'markdown':
-                $dragTextFn = option('panel.markdown.pageDragText');
-                if (!empty($dragTextFn) && is_callable($dragTextFn) && !empty($text = $dragTextFn($this))) {
-                    return $text;
-                }
-
                 return '[' . $this->title() . '](' . $this->url() . ')';
             default:
-                $dragTextFn = option('panel.kirbytext.pageDragText');
-                if (!empty($dragTextFn) && is_callable($dragTextFn) && !empty($text = $dragTextFn($this))) {
-                    return $text;
-                }
-
                 return '(link: ' . $this->id() . ' text: ' . $this->title() . ')';
         }
     }
