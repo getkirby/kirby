@@ -40,6 +40,26 @@ class VTest extends TestCase
         $this->assertFalse(V::me('you'));
     }
 
+    public function testCustomValue()
+    {
+        V::$validators['me'] = function ($name): bool {
+            return V::in($name, ['I', 'me', 'myself']);
+        };
+
+        $result = V::value('myself', [
+            'me' => ['I', 'me', 'myself']
+        ]);
+
+        $this->assertTrue($result);
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The "me" validation failed');
+
+        V::value('you', [
+            'me' => ['I', 'me', 'myself']
+        ]);
+    }
+
     public function testInvalidMethod()
     {
         $this->expectException('Exception');
@@ -531,7 +551,7 @@ class VTest extends TestCase
                     ]
                 ],
                 false,
-                'The "email" validation failed for field "email"',
+                'Please enter a valid email address for field "email"',
             ],
             // missing required field
             [
@@ -590,9 +610,9 @@ class VTest extends TestCase
     public function testValueFails()
     {
         $this->expectException('Exception');
-        $this->expectExceptionMessage('The "same" validation failed');
+        $this->expectExceptionMessage('Please enter "b"');
 
-        $result = V::value('a', [
+        V::value('a', [
             'same' => 'b'
         ]);
     }

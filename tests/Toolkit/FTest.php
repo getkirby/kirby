@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Cms\App;
+
 class FTest extends TestCase
 {
     protected $fixtures;
@@ -66,8 +68,29 @@ class FTest extends TestCase
     public function testExtensions()
     {
         $this->assertEquals(array_keys(Mime::types()), F::extensions());
-        $this->assertEquals(F::$types['image'], F::extensions('image'));
+        $this->assertEquals(F::types()['image'], F::extensions('image'));
         $this->assertEquals([], F::extensions('unknown-type'));
+    }
+
+    public function testExtendTypes()
+    {
+        new App([
+            'options' => [
+                'file' => [
+                    'types' => [
+                        'image' => [
+                            'heic'
+                        ],
+                        'video' => [
+                            'm4p'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertTrue(in_array('heic', F::types()['image']));
+        $this->assertTrue(in_array('m4p', F::types()['video']));
     }
 
     public function testFilename()
@@ -497,8 +520,8 @@ class FTest extends TestCase
 
     public function testTypeToExtensions()
     {
-        $this->assertSame(F::$types['audio'], F::typeToExtensions('audio'));
-        $this->assertSame(F::$types['document'], F::typeToExtensions('document'));
+        $this->assertSame(F::types()['audio'], F::typeToExtensions('audio'));
+        $this->assertSame(F::types()['document'], F::typeToExtensions('document'));
         $this->assertNull(F::typeToExtensions('invalid'));
     }
 
