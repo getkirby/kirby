@@ -446,8 +446,18 @@ class Page extends ModelWithContent
 
         switch ($type) {
             case 'markdown':
+                $dragTextFn = option('panel.markdown.pageDragText');
+                if (!empty($dragTextFn) && is_callable($dragTextFn) && !empty($text = $dragTextFn($this))) {
+                    return $text;
+                }
+
                 return '[' . $this->title() . '](' . $this->url() . ')';
             default:
+                $dragTextFn = option('panel.kirbytext.pageDragText');
+                if (!empty($dragTextFn) && is_callable($dragTextFn) && !empty($text = $dragTextFn($this))) {
+                    return $text;
+                }
+
                 return '(link: ' . $this->id() . ' text: ' . $this->title() . ')';
         }
     }
