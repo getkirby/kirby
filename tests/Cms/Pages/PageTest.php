@@ -202,6 +202,76 @@ class PageTest extends TestCase
         $this->assertEquals('[Test Title](/test)', $page->dragText());
     }
 
+
+    public function testDragTextCustomMarkdown()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+
+            'options' => [
+                'panel' => [
+                    'kirbytext' => false,
+                    'markdown' => [
+                        'pageDragText' => function (\Kirby\Cms\Page $page) {
+                            return sprintf('Links sind toll: %s', $page->url());
+                        },
+                    ]
+                ]
+            ],
+
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'content' => [
+                            'title' => 'Test Title'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('test');
+        $this->assertEquals('Links sind toll: /test', $page->dragText());
+    }
+
+    public function testDragTextCustomKirbytext()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+
+            'options' => [
+                'panel' => [
+                    'kirbytext' => [
+                        'pageDragText' => function (\Kirby\Cms\Page $page) {
+                            return sprintf('Links sind toll: %s', $page->url());
+                        },
+                    ]
+                ]
+            ],
+
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'content' => [
+                            'title' => 'Test Title'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('test');
+        $this->assertEquals('Links sind toll: /test', $page->dragText());
+    }
+
+
+
     public function testId()
     {
         $page = new Page([

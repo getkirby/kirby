@@ -146,7 +146,7 @@ class FileTest extends TestCase
         $this->assertEquals('![](test.jpg)', $file->dragText());
     }
 
-    public function testDragTextCustom()
+    public function testDragTextCustomMarkdown()
     {
         $app = new App([
             'roots' => [
@@ -154,14 +154,65 @@ class FileTest extends TestCase
             ],
 
             'options' => [
-                'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
-                    if ($file->extension() === 'heic') {
-                        return sprintf('(image: %s)', $url);
-                    }
-            
-                    return null;
-                },
-            
+                'panel' => [
+                    'kirbytext' => false,
+                    'markdown' => [
+                        'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+                            if ($file->extension() === 'heic') {
+                                return sprintf('![](%s)', $url);
+                            }
+                    
+                            return null;
+                        },
+                    ]
+                ]
+            ],
+
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            [
+                                'filename' => 'test.heic'
+                            ],
+                            [
+                                'filename' => 'test.jpg'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        // Custom function does not match and returns null, default case
+        $file = $app->page('test')->file('test.jpg');
+        $this->assertEquals('![](test.jpg)', $file->dragText());
+
+        // Custom function should return image tag for heic
+        $file = $app->page('test')->file('test.heic');
+        $this->assertEquals('![](test.heic)', $file->dragText());
+    }
+
+    public function testDragTextCustomKirbytext()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+
+            'options' => [
+                'panel' => [
+                    'kirbytext' => [
+                        'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
+                            if ($file->extension() === 'heic') {
+                                return sprintf('(image: %s)', $url);
+                            }
+                    
+                            return null;
+                        },
+                    ]
+                ]
             ],
 
             'site' => [

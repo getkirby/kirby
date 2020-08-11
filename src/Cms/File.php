@@ -247,6 +247,11 @@ class File extends ModelWithContent
 
         switch ($type) {
             case 'markdown':
+                $dragTextFn = option('panel.markdown.fileDragText');
+                if (!empty($dragTextFn) && is_callable($dragTextFn) && !empty($text = $dragTextFn($this, $url))) {
+                    return $text;
+                }
+
                 if ($this->type() === 'image') {
                     return '![' . $this->alt() . '](' . $url . ')';
                 } else {
@@ -254,8 +259,8 @@ class File extends ModelWithContent
                 }
                 // no break
             default:
-                $fileDragTextFn = option('fileDragText');
-                if (!empty($fileDragTextFn) && is_callable($fileDragTextFn) && !empty($text = $fileDragTextFn($this, $url))) {
+                $dragTextFn = option('panel.kirbytext.fileDragText');
+                if (!empty($dragTextFn) && is_callable($dragTextFn) && !empty($text = $dragTextFn($this, $url))) {
                     return $text;
                 }
 
