@@ -825,4 +825,31 @@ class FileTest extends TestCase
         $this->assertSame('https://getkirby.com/panel/users/test/files/user-file.jpg', $panel->url());
         $this->assertSame('/users/test/files/user-file.jpg', $panel->url(true));
     }
+
+    /**
+     * @covers ::prevNext
+     */
+    public function testPrevNext()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'a.jpg'],
+                ['filename' => 'b.jpg'],
+                ['filename' => 'c.jpg']
+            ]
+        ]);
+
+        $prevNext = (new File($page->file('a.jpg')))->prevNext();
+        $this->assertNull($prevNext['prev']());
+        $this->assertSame('/pages/test/files/b.jpg', $prevNext['next']()['link']);
+
+        $prevNext = (new File($page->file('b.jpg')))->prevNext();
+        $this->assertSame('/pages/test/files/a.jpg', $prevNext['prev']()['link']);
+        $this->assertSame('/pages/test/files/c.jpg', $prevNext['next']()['link']);
+
+        $prevNext = (new File($page->file('c.jpg')))->prevNext();
+        $this->assertSame('/pages/test/files/b.jpg', $prevNext['prev']()['link']);
+        $this->assertNull($prevNext['next']());
+    }
 }

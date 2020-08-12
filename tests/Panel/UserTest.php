@@ -349,4 +349,30 @@ class UserTest extends TestCase
         $this->assertSame('foo', $translations->code());
         $this->assertSame(null, $translations->get('translation.name'));
     }
+
+    /**
+     * @covers ::prevNext
+     */
+    public function testPrevNext()
+    {
+        $app = $this->app->clone([
+            'users' => [
+                ['email' => 'a@getkirby.com'],
+                ['email' => 'b@getkirby.com'],
+                ['email' => 'c@getkirby.com']
+            ]
+        ]);
+
+        $prevNext = (new User($app->user('a@getkirby.com')))->prevNext();
+        $this->assertNull($prevNext['prev']());
+        $this->assertSame('b@getkirby.com', $prevNext['next']()['tooltip']);
+
+        $prevNext = (new User($app->user('b@getkirby.com')))->prevNext();
+        $this->assertSame('a@getkirby.com', $prevNext['prev']()['tooltip']);
+        $this->assertSame('c@getkirby.com', $prevNext['next']()['tooltip']);
+
+        $prevNext = (new User($app->user('c@getkirby.com')))->prevNext();
+        $this->assertSame('b@getkirby.com', $prevNext['prev']()['tooltip']);
+        $this->assertNull($prevNext['next']());
+    }
 }

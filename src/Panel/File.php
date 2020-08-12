@@ -251,31 +251,57 @@ class File extends Model
             'asc'
         );
 
-        return array_merge(parent::props(), [
-            'model' => [
-                'content'    => $this->content(),
-                'dimensions' => $file->dimensions()->toArray(),
-                'extension'  => $file->extension(),
-                'filename'   => $file->filename(),
-                'id'         => $file->id(),
-                'mime'       => $file->mime(),
-                'niceSize'   => $file->niceSize(),
-                'parent'     => $file->parent()->panel()->path(),
-                'panelImage' => $this->image([], 'cards'),
-                'previewUrl' => $file->previewUrl(),
-                'url'        => $file->url(),
-                'template'   => $file->template(),
-                'type'       => $file->type(),
-            ],
+        return array_merge(
+            parent::props(),
+            $this->prevNext(),
+            [
+                'model' => [
+                    'content'    => $this->content(),
+                    'dimensions' => $file->dimensions()->toArray(),
+                    'extension'  => $file->extension(),
+                    'filename'   => $file->filename(),
+                    'id'         => $file->id(),
+                    'mime'       => $file->mime(),
+                    'niceSize'   => $file->niceSize(),
+                    'parent'     => $file->parent()->panel()->path(),
+                    'panelImage' => $this->image([], 'cards'),
+                    'previewUrl' => $file->previewUrl(),
+                    'url'        => $file->url(),
+                    'template'   => $file->template(),
+                    'type'       => $file->type(),
+                ]
+            ]
+        );
+    }
+
+    /**
+     * Returns navigation array with
+     * previous and next file
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function prevNext(): array
+    {
+        $file     = $this->model;
+        $siblings = $file->templateSiblings()->sortBy(
+            'sort',
+            'asc',
+            'filename',
+            'asc'
+        );
+
+        return [
             'next' => function () use ($file, $siblings): ?array {
                 $next = $siblings->nth($siblings->indexOf($file) + 1);
-                return $next ? $next->panel()->prevnext('filename') : null;
+                return $next ? $next->panel()->toLink('filename') : null;
             },
             'prev' => function () use ($file, $siblings): ?array {
                 $prev = $siblings->nth($siblings->indexOf($file) - 1);
-                return $prev ? $prev->panel()->prevnext('filename') : null;
+                return $prev ? $prev->panel()->toLink('filename') : null;
             }
-        ]);
+        ];
     }
 
     /**

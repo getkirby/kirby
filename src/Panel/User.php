@@ -107,26 +107,46 @@ class User extends Model
         $user   = $this->model;
         $avatar = $user->avatar();
 
-        return array_merge(parent::props(), [
-            'model' => [
-                'avatar'   => $avatar ? $avatar->url() : null,
-                'content'  => $this->content(),
-                'email'    => $user->email(),
-                'id'       => $user->id(),
-                'language' => $this->translation()->name(),
-                'name'     => $user->name()->toString(),
-                'role'     => $user->role()->title(),
-                'username' => $user->username(),
-            ],
+        return array_merge(
+            parent::props(),
+            $this->prevNext(),
+            [
+                'model' => [
+                    'avatar'   => $avatar ? $avatar->url() : null,
+                    'content'  => $this->content(),
+                    'email'    => $user->email(),
+                    'id'       => $user->id(),
+                    'language' => $this->translation()->name(),
+                    'name'     => $user->name()->toString(),
+                    'role'     => $user->role()->title(),
+                    'username' => $user->username(),
+                ]
+            ]
+        );
+    }
+
+    /**
+     * Returns navigation array with
+     * previous and next user
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function prevNext(): array
+    {
+        $user = $this->model;
+
+        return [
             'next' => function () use ($user) {
                 $next = $user->next();
-                return $next ? $next->panel()->prevnext('username') : null;
+                return $next ? $next->panel()->toLink('username') : null;
             },
             'prev' => function () use ($user) {
                 $prev = $user->prev();
-                return $prev ? $prev->panel()->prevnext('username') : null;
+                return $prev ? $prev->panel()->toLink('username') : null;
             }
-        ]);
+        ];
     }
 
     /**

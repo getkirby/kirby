@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\Collection;
+
 /**
  * Provides information about the page model for the Panel
  * @since 3.6.0
@@ -127,6 +129,77 @@ class Page extends Model
     }
 
     /**
+     * Returns navigation array with
+     * previous and next page
+     * based on blueprint definition
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function prevNext(): array
+    {
+        $page = $this->model;
+
+        // create siblings collection based on
+        // blueprint navigation
+        $siblings = function (string $direction) use ($page) {
+            $navigation = $page->blueprint()->navigation();
+            $sortBy     = $navigation['sortBy'] ?? null;
+            $status     = $navigation['status'] ?? null;
+            $template   = $navigation['template'] ?? null;
+            $direction  = $direction === 'prev' ? 'prev' : 'next';
+
+            // if status is defined in navigation,
+            // all items in the collection are used
+            // (drafts, listed and unlisted) otherwise
+            // it depends on the status of the page
+            $siblings = $status !== null ? $page->parentModel()->childrenAndDrafts() : $page->siblings();
+
+            // sort the collection if custom sortBy
+            // defined in navigation otherwise
+            // default sorting will apply
+            if ($sortBy !== null) {
+                $siblings = $siblings->sort(...$siblings::sortArgs($sortBy));
+            }
+
+            $siblings = $page->{$direction . 'All'}($siblings);
+
+            if (empty($navigation) === false) {
+                $statuses  = (array)($status ?? $page->status());
+                $templates = (array)($template ?? $page->intendedTemplate());
+
+                // do not filter if template navigation is all
+                if (in_array('all', $templates) === false) {
+                    $siblings = $siblings->filter('intendedTemplate', 'in', $templates);
+                }
+
+                // do not filter if status navigation is all
+                if (in_array('all', $statuses) === false) {
+                    $siblings = $siblings->filter('status', 'in', $statuses);
+                }
+            } else {
+                $siblings = $siblings
+                    ->filter('intendedTemplate', $page->intendedTemplate())
+                    ->filter('status', $page->status());
+            }
+
+            return $siblings->filter('isReadable', true);
+        };
+
+        return [
+            'next' => function () use ($siblings) {
+                $next = $siblings('next')->first();
+                return $next ? $next->panel()->toLink('title') : null;
+            },
+            'prev'   => function () use ($siblings) {
+                $prev = $siblings('prev')->last();
+                return $prev ? $prev->panel()->toLink('title') : null;
+            }
+        ];
+    }
+
+    /**
      * Returns the data array for the
      * view's component props
      *
@@ -138,39 +211,25 @@ class Page extends Model
     {
         $page = $this->model;
 
-        return array_merge(parent::props(), [
-            'model' => [
-                'content'    => $this->content(),
-                'id'         => $page->id(),
-                'parent'     => $page->parentModel()->panel()->url(true),
-                'previewUrl' => $page->previewUrl(),
-                'status'     => $page->status(),
-                'title'      => $page->title()->toString(),
-            ],
-            'next' => function () use ($page) {
-                $next = $page
-                    ->nextAll()
-                    ->filterBy('intendedTemplate', $page->intendedTemplate())
-                    ->filterBy('status', $page->status())
-                    ->filterBy('isReadable', true)
-                    ->first();
-                return $next ? $next->panel()->prevnext('title') : null;
-            },
-            'prev'   => function () use ($page) {
-                $prev = $page
-                    ->prevAll()
-                    ->filterBy('intendedTemplate', $page->intendedTemplate())
-                    ->filterBy('status', $page->status())
-                    ->filterBy('isReadable', true)
-                    ->last();
-                return $prev ? $prev->panel()->prevnext('title') : null;
-            },
-            'status' => function () use ($page) {
-                if ($status = $page->status()) {
-                    return $page->blueprint()->status()[$status] ?? null;
-                }
-            },
-        ]);
+        return array_merge(
+            parent::props(),
+            $this->prevNext(),
+            [
+                'model' => [
+                    'content'    => $this->content(),
+                    'id'         => $page->id(),
+                    'parent'     => $page->parentModel()->panel()->url(true),
+                    'previewUrl' => $page->previewUrl(),
+                    'status'     => $page->status(),
+                    'title'      => $page->title()->toString(),
+                ],
+                'status' => function () use ($page) {
+                    if ($status = $page->status()) {
+                        return $page->blueprint()->status()[$status] ?? null;
+                    }
+                },
+            ]
+        );
     }
 
     /**

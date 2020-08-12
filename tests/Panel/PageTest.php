@@ -641,4 +641,300 @@ class PageTest extends TestCase
         $this->assertSame('https://getkirby.com/panel/pages/mother+child', $panel->url());
         $this->assertSame('/pages/mother+child', $panel->url(true));
     }
+
+    /**
+     * @covers ::prevNext
+     */
+    public function testPrevNextOne()
+    {
+        $app = $this->app->clone([
+            'roots' => [
+                'index' => $this->tmp,
+            ],
+            'blueprints' => [
+                'pages/a' => [
+                    'title' => 'A',
+                    'navigation' => [
+                        'status' => 'all',
+                        'template' => 'all'
+                    ]
+                ],
+                'pages/b' => [
+                    'title' => 'B',
+                    'navigation' => [
+                        'status' => 'all',
+                        'template' => 'all'
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $parent = ModelPage::create([
+            'slug' => 'test'
+        ]);
+
+        $parent->createChild([
+            'slug'     => 'a',
+            'template' => 'a'
+        ]);
+
+        $expectedPrev = $parent->createChild([
+            'slug'     => 'b',
+            'template' => 'b'
+        ]);
+
+        $parent->createChild([
+            'slug'     => 'c',
+            'template' => 'a'
+        ]);
+
+        $expectedNext = $parent->createChild([
+            'slug'     => 'd',
+            'template' => 'b'
+        ]);
+
+        $page  = $app->page('test/c');
+        $panel = new Page($page);
+
+        $navigation = $page->blueprint()->navigation();
+        $prevNext   = $panel->prevNext();
+
+        $this->assertSame(['status' => 'all', 'template' => 'all'], $navigation);
+        $this->assertArrayHasKey('next', $prevNext);
+        $this->assertArrayHasKey('prev', $prevNext);
+        $this->assertSame($expectedNext->panel()->toLink(), $prevNext['next']());
+        $this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
+    }
+
+    /**
+     * @covers ::prevNext
+     */
+    public function testPrevNextTwo()
+    {
+        $app = $this->app->clone([
+            'roots' => [
+                'index' => $this->tmp,
+            ],
+            'blueprints' => [
+                'pages/c' => [
+                    'title' => 'C',
+                    'navigation' => [
+                        'status' => ['listed'],
+                        'template' => ['c']
+                    ]
+                ],
+                'pages/d' => [
+                    'title' => 'D',
+                    'navigation' => [
+                        'status' => ['listed'],
+                        'template' => ['c']
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $parent = ModelPage::create([
+            'slug' => 'test'
+        ]);
+
+        $expectedPrev = $parent->createChild([
+            'slug'     => 'a',
+            'template' => 'c'
+        ])->changeStatus('listed');
+
+        $parent->createChild([
+            'slug'     => 'b',
+            'template' => 'd'
+        ])->changeStatus('listed');
+
+        $parent->createChild([
+            'slug'     => 'c',
+            'template' => 'c'
+        ]);
+
+        $parent->createChild([
+            'slug'     => 'd',
+            'template' => 'd'
+        ])->changeStatus('listed');
+
+        $expectedNext = $parent->createChild([
+            'slug'     => 'e',
+            'template' => 'c'
+        ])->changeStatus('listed');
+
+        $parent->createChild([
+            'slug'     => 'f',
+            'template' => 'd'
+        ])->changeStatus('listed');
+
+        $page  = $app->page('test/d');
+        $panel = new Page($page);
+
+        $navigation = $page->blueprint()->navigation();
+        $prevNext   = $panel->prevNext();
+
+        $this->assertSame([
+            'status' => ['listed'],
+            'template' => ['c']
+        ], $navigation);
+        $this->assertArrayHasKey('next', $prevNext);
+        $this->assertArrayHasKey('prev', $prevNext);
+        $this->assertSame($expectedNext->panel()->toLink(), $prevNext['next']());
+        $this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
+    }
+
+    /**
+     * @covers ::prevNext
+     */
+    public function testPrevNextThree()
+    {
+        $app = $this->app->clone([
+            'roots' => [
+                'index' => $this->tmp,
+            ],
+            'blueprints' => [
+                'pages/e' => [
+                    'title' => 'E',
+                    'navigation' => [
+                        'status' => ['listed'],
+                        'template' => ['e', 'f']
+                    ]
+                ],
+                'pages/f' => [
+                    'title' => 'F',
+                    'navigation' => [
+                        'status' => ['listed'],
+                        'template' => ['e', 'f']
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $parent = ModelPage::create([
+            'slug' => 'test'
+        ]);
+
+        $expectedPrev = $parent->createChild([
+            'slug'     => 'a',
+            'template' => 'e'
+        ])->changeStatus('listed');
+
+        $parent->createChild([
+            'slug'     => 'b',
+            'template' => 'f'
+        ])->changeStatus('unlisted');
+
+        $parent->createChild([
+            'slug'     => 'c',
+            'template' => 'e'
+        ])->changeStatus('unlisted');
+
+        $parent->createChild([
+            'slug'     => 'd',
+            'template' => 'f'
+        ])->changeStatus('listed');
+
+        $parent->createChild([
+            'slug'     => 'e',
+            'template' => 'e'
+        ])->changeStatus('unlisted');
+
+        $expectedNext = $parent->createChild([
+            'slug'     => 'f',
+            'template' => 'f'
+        ])->changeStatus('listed');
+
+        $page  = $app->page('test/d');
+        $panel = new Page($page);
+
+        $navigation = $page->blueprint()->navigation();
+        $prevNext   = $panel->prevNext();
+
+        $this->assertSame([
+            'status' => ['listed'],
+            'template' => ['e', 'f']
+        ], $navigation);
+        $this->assertArrayHasKey('next', $prevNext);
+        $this->assertArrayHasKey('prev', $prevNext);
+        $this->assertSame($expectedNext->panel()->toLink(), $prevNext['next']());
+        $this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
+    }
+
+    /**
+     * @covers ::prevNext
+     */
+    public function testPrevNextFour()
+    {
+        $app = $this->app->clone([
+            'roots' => [
+                'index' => $this->tmp,
+            ],
+            'blueprints' => [
+                'pages/g' => [
+                    'title' => 'A',
+                    'navigation' => [
+                        'status' => 'all',
+                        'template' => 'all',
+                        'sortBy' => 'slug desc'
+                    ]
+                ],
+                'pages/h' => [
+                    'title' => 'B',
+                    'navigation' => [
+                        'status' => 'all',
+                        'template' => 'all',
+                        'sortBy' => 'slug desc'
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $parent = ModelPage::create([
+            'slug' => 'test'
+        ]);
+
+        $parent->createChild([
+            'slug'     => 'a',
+            'template' => 'g'
+        ]);
+
+        $expectedNext = $parent->createChild([
+            'slug'     => 'b',
+            'template' => 'h'
+        ]);
+
+        $parent->createChild([
+            'slug'     => 'c',
+            'template' => 'g'
+        ]);
+
+        $expectedPrev = $parent->createChild([
+            'slug'     => 'd',
+            'template' => 'h'
+        ]);
+
+        $page  = $app->page('test/c');
+        $panel = new Page($page);
+
+        $navigation = $page->blueprint()->navigation();
+        $prevNext   = $panel->prevNext();
+
+        $this->assertSame([
+            'status' => 'all',
+            'template' => 'all',
+            'sortBy' => 'slug desc'
+        ], $navigation);
+        $this->assertArrayHasKey('next', $prevNext);
+        $this->assertArrayHasKey('prev', $prevNext);
+        $this->assertSame($expectedNext->panel()->toLink(), $prevNext['next']());
+        $this->assertSame($expectedPrev->panel()->toLink(), $prevNext['prev']());
+    }
 }
