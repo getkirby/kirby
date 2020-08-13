@@ -658,7 +658,7 @@ class ApiTest extends TestCase
 
         // move_uploaded_file error
         $data = $api->upload(function ($source) {
-            //
+            // empty closure
         });
 
         $phpunit->assertSame([
@@ -756,7 +756,7 @@ class ApiTest extends TestCase
 
         $this->expectException('Exception');
         $api->upload(function ($source) {
-            //
+            // empty closure
         });
     }
 }
