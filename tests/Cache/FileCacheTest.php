@@ -6,6 +6,8 @@ use Kirby\Toolkit\Dir;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
+require_once __DIR__ . '/mocks.php';
+
 /**
  * @coversDefaultClass \Kirby\Cache\FileCache
  */
@@ -92,6 +94,7 @@ class FileCacheTest extends TestCase
 
         $time = time();
         $this->assertTrue($cache->set('foo', 'A basic value', 10));
+        touch($root . '/foo', $time);
 
         $this->assertFileExists($root . '/foo');
         $this->assertTrue($cache->exists('foo'));
@@ -122,6 +125,7 @@ class FileCacheTest extends TestCase
 
         $time = time();
         $this->assertTrue($cache->set('foo', 'A basic value', 10));
+        touch($root . '/foo.cache', $time);
 
         $this->assertFileExists($root . '/foo.cache');
         $this->assertTrue($cache->exists('foo'));
@@ -154,6 +158,7 @@ class FileCacheTest extends TestCase
 
         $time = time();
         $this->assertTrue($cache1->set('foo', 'A basic value', 10));
+        touch($root . '/test1/foo', $time);
 
         $this->assertFileExists($root . '/test1/foo');
         $this->assertTrue($cache1->exists('foo'));
@@ -163,6 +168,7 @@ class FileCacheTest extends TestCase
         $this->assertSame($time + 600, $cache1->expires('foo'));
 
         $this->assertTrue($cache2->set('foo', 'Another basic value'));
+        touch($root . '/test2/foo', $time);
         $this->assertTrue($cache2->exists('foo'));
 
         $this->assertSame('A basic value', $cache1->retrieve('foo')->value());
