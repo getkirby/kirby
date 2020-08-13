@@ -2,7 +2,6 @@
 
 namespace Kirby\Database;
 
-use PDOException;
 use PHPUnit\Framework\TestCase;
 
 /**

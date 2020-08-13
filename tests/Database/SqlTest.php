@@ -433,7 +433,7 @@ class SqlTest extends TestCase
         $this->assertSame([
             'query'    => 'FROM `users`',
             'bindings' => []
-        ],  $this->sql->from('users'));
+        ], $this->sql->from('users'));
     }
 
     public function testGroup()
@@ -445,7 +445,7 @@ class SqlTest extends TestCase
         $this->assertSame([
             'query'    => 'GROUP BY test',
             'bindings' => []
-        ],  $this->sql->group('test'));
+        ], $this->sql->group('test'));
     }
 
     public function testHaving()
@@ -457,6 +457,6 @@ class SqlTest extends TestCase
         $this->assertSame([
             'query'    => 'HAVING test < :value',
             'bindings' => []
-        ],  $this->sql->having('test < :value'));
+        ], $this->sql->having('test < :value'));
     }
 }
