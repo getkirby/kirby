@@ -8,10 +8,25 @@ class ModelTest extends TestCase
 {
     public function testConstruct()
     {
+        // success
         $api = new Api([]);
         $model = new Model($api, [], []);
 
         $this->assertInstanceOf('Kirby\Api\Model', $model);
+
+        // invalid model
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid model type "stdClass" expected: "nonexists"');
+
+        $api = new Api([]);
+        new Model($api, new \stdClass(), ['type' => 'nonexists']);
+
+        // missing model
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Missing model data');
+
+        $api = new Api([]);
+        new Model($api, null, []);
     }
 
     public function testSelection()
