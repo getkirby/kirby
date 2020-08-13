@@ -119,15 +119,24 @@ class QueryTest extends TestCase
 
     public function testGroup()
     {
-        $user = $this->database
+        $sum = $this->database
             ->table('users')
             ->group('role_id')
             ->where([
                 'role_id' => 3
             ])
-            ->first();
+            ->sum('balance');
 
-        $this->assertSame('george', $user->username());
+        $this->assertSame((float)150, $sum);
+    }
+
+    public function testSum()
+    {
+        $sum = $this->database
+            ->table('users')
+            ->sum('balance');
+
+        $this->assertSame((float)500, $sum);
     }
 
     public function testAvg()
