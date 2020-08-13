@@ -149,6 +149,7 @@ class Database
      *
      * @param array $params
      * @return void
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function __construct(array $params = [])
     {
@@ -158,7 +159,7 @@ class Database
     /**
      * Returns one of the started instance
      *
-     * @param string $id
+     * @param string|null $id
      * @return self
      */
     public static function instance(string $id = null)
@@ -180,7 +181,8 @@ class Database
      * Connects to a database
      *
      * @param array|null $params This can either be a config key or an array of parameters for the connection
-     * @return \Kirby\Database\Database
+     * @return PDO|null
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function connect(array $params = null)
     {
@@ -223,9 +225,9 @@ class Database
     /**
      * Returns the currently active connection
      *
-     * @return \Kirby\Database\Database|null
+     * @return PDO|null
      */
-    public function connection()
+    public function connection(): ?PDO
     {
         return $this->connection;
     }
@@ -277,10 +279,10 @@ class Database
     /**
      * Adds a value to the db trace and also returns the entire trace if nothing is specified
      *
-     * @param array $data
+     * @param array|null $data
      * @return array
      */
-    public function trace($data = null): array
+    public function trace(array $data = null): array
     {
         // return the full trace
         if ($data === null) {
@@ -360,6 +362,7 @@ class Database
      * @param string $query
      * @param array $bindings
      * @return bool
+     * @throws Throwable
      */
     protected function hit(string $query, array $bindings = []): bool
     {
@@ -407,6 +410,7 @@ class Database
      * @param array $bindings
      * @param array $params
      * @return mixed
+     * @throws Throwable
      */
     public function query(string $query, array $bindings = [], array $params = [])
     {
@@ -465,6 +469,7 @@ class Database
      * @param string $query
      * @param array $bindings
      * @return bool
+     * @throws Throwable
      */
     public function execute(string $query, array $bindings = []): bool
     {
@@ -501,6 +506,7 @@ class Database
      *
      * @param string $table
      * @return bool
+     * @throws Throwable
      */
     public function validateTable(string $table): bool
     {
@@ -525,6 +531,7 @@ class Database
      * @param string $table
      * @param string $column
      * @return bool
+     * @throws Throwable
      */
     public function validateColumn(string $table, string $column): bool
     {
@@ -554,6 +561,7 @@ class Database
      * @param string $table
      * @param array $columns
      * @return bool
+     * @throws Throwable
      */
     public function createTable($table, $columns = []): bool
     {
@@ -569,7 +577,7 @@ class Database
         }
 
         // update cache
-        if (in_array($table, $this->tableWhitelist) !== true) {
+        if (in_array($table, $this->tableWhitelist ?? []) !== true) {
             $this->tableWhitelist[] = $table;
         }
 
@@ -581,6 +589,7 @@ class Database
      *
      * @param string $table
      * @return bool
+     * @throws Throwable
      */
     public function dropTable($table): bool
     {
@@ -590,7 +599,7 @@ class Database
         }
 
         // update cache
-        $key = array_search($this->tableWhitelist, $table);
+        $key = array_search($table, $this->tableWhitelist ?? []);
         if ($key !== false) {
             unset($this->tableWhitelist[$key]);
         }
@@ -605,6 +614,7 @@ class Database
      *
      * @param mixed $method
      * @param mixed $arguments
+     * @return Query
      */
     public function __call($method, $arguments = null)
     {

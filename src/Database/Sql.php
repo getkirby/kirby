@@ -117,6 +117,8 @@ abstract class Sql
      * @param string $column Column name
      * @param bool $enforceQualified If true, a qualified identifier is returned in all cases
      * @return string|null Identifier or null if the table or column is invalid
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Throwable
      */
     public function columnName(string $table, string $column, bool $enforceQualified = false): ?string
     {
@@ -175,6 +177,7 @@ abstract class Sql
      *                      - `unique`: Whether the index (or if not set the column itself) has a UNIQUE constraint
      *                      - `default`: Default value of this column
      * @return array Array with `query` and `key` strings, a `unique` boolean and a `bindings` array
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function createColumn(string $name, array $column): array
     {
@@ -239,6 +242,7 @@ abstract class Sql
      *
      * @param array $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
      * @return array Array with a `query` string and `bindings`, `keys` and `unique` arrays
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function createTableInner(array $columns): array
     {
@@ -281,6 +285,7 @@ abstract class Sql
      * @param string $table Table name
      * @param array $columns Array of column definition arrays, see `Kirby\Database\Sql::createColumn()`
      * @return array Array with a `query` string and a `bindings` array
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function createTable(string $table, array $columns = []): array
     {
@@ -408,7 +413,7 @@ abstract class Sql
     /**
      * Creates the having syntax
      *
-     * @param string $having
+     * @param string|null $having
      * @return array
      */
     public function having(string $having = null): array
@@ -431,6 +436,7 @@ abstract class Sql
      *
      * @param array $params
      * @return array
+     * @throws \Throwable
      */
     public function insert(array $params = []): array
     {
@@ -658,6 +664,8 @@ abstract class Sql
      * @param string $table
      * @param array|string|null $columns
      * @return string
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Throwable
      */
     public function selected($table, $columns = null): string
     {
@@ -692,6 +700,7 @@ abstract class Sql
      * @param $table string Default table if the identifier is not qualified
      * @param $identifier string
      * @return array
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function splitIdentifier($table, $identifier): array
     {
@@ -726,6 +735,8 @@ abstract class Sql
      *
      * @param string $table
      * @return string
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Throwable
      */
     public function tableName(string $table): string
     {
@@ -763,6 +774,7 @@ abstract class Sql
      *
      * @param array $params List of parameters for the update clause. See defaults for more info.
      * @return array
+     * @throws \Throwable
      */
     public function update(array $params = []): array
     {
@@ -798,7 +810,7 @@ abstract class Sql
      * @param string $column
      * @return bool
      *
-     * @throws \Kirby\Exception\InvalidArgumentException If the column is invalid
+     * @throws \Kirby\Exception\InvalidArgumentException|\Throwable If the column is invalid
      */
     public function validateColumn(string $table, string $column): bool
     {
@@ -882,6 +894,7 @@ abstract class Sql
      * @param string $separator
      * @param bool $enforceQualified
      * @param array
+     * @return array
      */
     public function valueSet(string $table, $values, string $separator = ',', bool $enforceQualified = false): array
     {

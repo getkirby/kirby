@@ -191,6 +191,19 @@ class SqlTest extends TestCase
         $this->assertSame('amazing default', A::first($column['bindings']));
         $this->assertNull($column['key']);
         $this->assertFalse($column['unique']);
+
+        // fail with no type
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->sql->createColumn('test', [
+            'default' => 'amazing default'
+        ]);
+
+        // fail with invalid type
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->sql->createColumn('test', [
+            'type'    => 'nonexisting',
+            'default' => 'amazing default'
+        ]);
     }
 
     /**
@@ -215,9 +228,6 @@ class SqlTest extends TestCase
         $this->sql->createColumn('test', ['type' => 'invalid']);
     }
 
-    /**
-     * @covers ::createTableInner
-     */
     public function testCreateTableInner()
     {
         // basic example
@@ -273,9 +283,6 @@ class SqlTest extends TestCase
         $this->assertSame(['test' => true], $inner['unique']);
     }
 
-    /**
-     * @covers ::createTable
-     */
     public function testCreateTable()
     {
         // basic example
@@ -415,5 +422,41 @@ class SqlTest extends TestCase
         $this->expectExceptionMessage('Invalid identifier table.column.invalid');
 
         $this->sql->splitIdentifier('table', 'table.column.invalid');
+    }
+
+    public function testFrom()
+    {
+        $this->database->createTable('users', [
+            'test' => ['type' => 'varchar']
+        ]);
+
+        $this->assertSame([
+            'query'    => 'FROM `users`',
+            'bindings' => []
+        ],  $this->sql->from('users'));
+    }
+
+    public function testGroup()
+    {
+        $this->database->createTable('users', [
+            'test' => ['type' => 'varchar']
+        ]);
+
+        $this->assertSame([
+            'query'    => 'GROUP BY test',
+            'bindings' => []
+        ],  $this->sql->group('test'));
+    }
+
+    public function testHaving()
+    {
+        $this->database->createTable('users', [
+            'test' => ['type' => 'varchar']
+        ]);
+
+        $this->assertSame([
+            'query'    => 'HAVING test < :value',
+            'bindings' => []
+        ],  $this->sql->having('test < :value'));
     }
 }
