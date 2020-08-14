@@ -33,7 +33,8 @@ class FilePicker extends Picker
     /**
      * Search all files for the picker
      *
-     * @return \Kirby\Cms\Files|null
+     * @return \Kirby\Cms\Collection|null
+     * @throws InvalidArgumentException
      */
     public function items()
     {
