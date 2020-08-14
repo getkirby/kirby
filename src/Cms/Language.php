@@ -230,6 +230,7 @@ class Language extends Model
      *
      * @internal
      * @return bool
+     * @throws Exception
      */
     public function delete(): bool
     {
@@ -258,6 +259,7 @@ class Language extends Model
      *
      * @param mixed $code
      * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function deleteContentFiles($code): bool
     {

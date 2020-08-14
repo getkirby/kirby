@@ -9,6 +9,25 @@ use PHPUnit\Framework\TestCase;
 
 class LanguageTest extends TestCase
 {
+    protected $app;
+    protected $fixtures;
+
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/LanguageTest',
+            ]
+        ]);
+
+        Dir::make($this->fixtures);
+    }
+
+    public function tearDown(): void
+    {
+        Dir::remove($this->fixtures);
+    }
+
     public function testCodeAndId()
     {
         $language = new Language([
@@ -448,5 +467,40 @@ class LanguageTest extends TestCase
         ]);
 
         $this->assertEquals($expected, $language->baseUrl());
+    }
+
+    public function testCreate()
+    {
+        $language = Language::create([
+            'code' => 'en'
+        ]);
+
+        $this->assertSame('en', $language->code());
+        $this->assertSame(true, $language->isDefault());
+        $this->assertSame('ltr', $language->direction());
+        $this->assertSame('en', $language->name());
+        $this->assertSame('/en', $language->url());
+    }
+
+    public function testDelete()
+    {
+        $language = Language::create([
+            'code' => 'en'
+        ]);
+
+        $this->assertTrue($language->delete());
+    }
+
+    public function testUpdate()
+    {
+        Dir::make($contentDir = $this->fixtures . '/content');
+
+        $language = Language::create([
+            'code' => 'en'
+        ]);
+
+        $language = $language->update(['name' => 'English']);
+
+        $this->assertSame('English', $language->name());
     }
 }

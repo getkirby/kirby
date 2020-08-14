@@ -4,16 +4,21 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Exception\DuplicateException;
+use Kirby\Toolkit\Dir;
 use PHPUnit\Framework\TestCase;
 
 class LanguagesTest extends TestCase
 {
     protected $app;
     protected $languages;
+    protected $fixtures;
 
     public function setUp(): void
     {
         $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/LanguagesTest',
+            ],
             'languages' => [
                 [
                     'code'    => 'en',
@@ -32,6 +37,11 @@ class LanguagesTest extends TestCase
         ]);
 
         $this->languages = $this->app->languages();
+    }
+
+    public function tearDown(): void
+    {
+        Dir::remove($this->fixtures);
     }
 
     public function testLoad()
@@ -94,5 +104,18 @@ class LanguagesTest extends TestCase
                 ],
             ]
         ]);
+    }
+
+    public function testCreate()
+    {
+        $language = $this->app->languages()->create([
+            'code' => 'tr'
+        ]);
+
+        $this->assertSame('tr', $language->code());
+        $this->assertSame(false, $language->isDefault());
+        $this->assertSame('ltr', $language->direction());
+        $this->assertSame('tr', $language->name());
+        $this->assertSame('/tr', $language->url());
     }
 }
