@@ -392,6 +392,7 @@ class File extends ModelWithContent
      * @deprecated 3.0.0 Use `File::content()` instead
      *
      * @return \Kirby\Cms\Content
+     * @codeCoverageIgnore
      */
     public function meta()
     {

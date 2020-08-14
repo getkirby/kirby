@@ -757,6 +757,7 @@ class Page extends ModelWithContent
     /**
      * @deprecated 3.0.0 Use `Page::isUnlisted()` instead
      * @return bool
+     * @codeCoverageIgnore
      */
     public function isInvisible(): bool
     {
@@ -848,6 +849,7 @@ class Page extends ModelWithContent
     /**
      * @deprecated 3.0.0 Use `Page::isListed()` instead
      * @return bool
+     * @codeCoverageIgnore
      */
     public function isVisible(): bool
     {

@@ -128,6 +128,7 @@ class Pagination
      *
      * @deprecated 3.3.0 Setter is no longer supported, use $pagination->clone()
      * @return int
+     * @codeCoverageIgnore
      */
     public function page(int $page = null): int
     {
@@ -143,6 +144,7 @@ class Pagination
      *
      * @deprecated 3.3.0 Setter is no longer supported, use $pagination->clone()
      * @return int
+     * @codeCoverageIgnore
      */
     public function total(int $total = null): int
     {
@@ -158,6 +160,7 @@ class Pagination
      *
      * @deprecated 3.3.0 Setter is no longer supported, use $pagination->clone()
      * @return int
+     * @codeCoverageIgnore
      */
     public function limit(int $limit = null): int
     {
