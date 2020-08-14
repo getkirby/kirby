@@ -39,6 +39,7 @@ class System
 
     /**
      * @param \Kirby\Cms\App $app
+     * @throws \Kirby\Exception\PermissionException
      */
     public function __construct(App $app)
     {
@@ -112,6 +113,7 @@ class System
      * index URL without scheme
      *
      * @return string
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function indexUrl(): string
     {
@@ -135,6 +137,7 @@ class System
      * if they don't exist yet
      *
      * @return void
+     * @throws PermissionException
      */
     public function init()
     {
@@ -246,6 +249,7 @@ class System
      *
      * @param string|null $url Input URL, by default the app's index URL
      * @return string Normalized URL
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function licenseUrl(string $url = null): string
     {
@@ -285,6 +289,7 @@ class System
      * @return string|bool License key or `false` if the current user has
      *                     permissions for access.settings, otherwise just a
      *                     boolean that tells whether a valid license is active
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function license()
     {
@@ -374,9 +379,11 @@ class System
      * and adds it to the .license file in the config
      * folder if possible.
      *
-     * @param string $license
-     * @param string $email
+     * @param string|null $license
+     * @param string|null $email
      * @return bool
+     * @throws \Kirby\Exception\Exception
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function register(string $license = null, string $email = null): bool
     {
@@ -474,6 +481,7 @@ class System
      *
      * @param string $root
      * @return void
+     * @throws \Exception
      */
     public static function upgradeContent(string $root)
     {
