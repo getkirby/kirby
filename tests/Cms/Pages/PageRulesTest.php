@@ -46,12 +46,25 @@ class PageRulesTest extends TestCase
 
     public function testChangeSlug()
     {
+        $app = $this->appWithAdmin()->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test-b'],
+                ]
+            ]
+        ]);
+
         $page = new Page([
             'slug'  => 'test',
-            'kirby' => $this->appWithAdmin(),
+            'kirby' => $app,
         ]);
 
         $this->assertTrue(PageRules::changeSlug($page, 'test-a'));
+
+        $this->expectException('\Kirby\Exception\DuplicateException');
+        $this->expectExceptionMessage('A page with the URL appendix "test-b" already exists');
+
+        PageRules::changeSlug($page, 'test-b');
     }
 
     public function testChangeSlugWithoutPermissions()
@@ -153,6 +166,48 @@ class PageRulesTest extends TestCase
         PageRules::changeStatusToDraft($page);
     }
 
+    public function testChangeStatusInvalid()
+    {
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionCode('error.page.changeStatus.toDraft.invalid');
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'home']
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        PageRules::changeStatusToDraft($app->page('home'));
+    }
+
+    /**
+     * @dataProvider statusActionProvider
+     */
+    public function testChangeStatus($status, $args = [])
+    {
+        $app = $this->appWithAdmin()->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test'],
+                ]
+            ]
+        ]);
+
+        $page = new Page([
+            'slug'  => 'test-' . $status,
+            'kirby' => $app,
+        ]);
+
+        $this->assertTrue(PageRules::changeStatus($page, $status, ...$args));
+    }
+
     public function testChangeTemplate()
     {
         $app = new App([
@@ -241,6 +296,42 @@ class PageRulesTest extends TestCase
 
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('You are not allowed to create "test"');
+
+        PageRules::create($page);
+    }
+
+    public function testCreateInvalidSlug()
+    {
+        $permissions = $this->createMock(PagePermissions::class);
+        $permissions->method('__call')->with('create')->willReturn(true);
+
+        $page = $this->createMock(Page::class);
+        $page->method('slug')->willReturn('');
+        $page->method('permissions')->willReturn($permissions);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionCode('error.page.slug.invalid');
+
+        PageRules::create($page);
+    }
+
+    public function testCreateDuplicateException()
+    {
+        $app = $this->appWithAdmin()->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test'],
+                ]
+            ]
+        ]);
+
+        $this->expectException('\Kirby\Exception\DuplicateException');
+        $this->expectExceptionCode('error.page.duplicate');
+
+        $page = new Page([
+            'slug'  => 'test',
+            'kirby' => $app,
+        ]);
 
         PageRules::create($page);
     }
