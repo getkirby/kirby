@@ -1,8 +1,6 @@
 <?php
 
-/**
- * @codeCoverageIgnore
- */
+// @codeCoverageIgnoreStart
 return [
     // cms classes
     'asset'      => 'Kirby\Cms\Asset',
@@ -61,3 +59,4 @@ return [
     'v'          => 'Kirby\Toolkit\V',
     'xml'        => 'Kirby\Toolkit\Xml'
 ];
+// @codeCoverageIgnoreEnd
