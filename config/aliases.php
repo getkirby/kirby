@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * @codeCoverageIgnore
+ */
 return [
     // cms classes
     'asset'      => 'Kirby\Cms\Asset',
