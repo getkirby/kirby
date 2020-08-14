@@ -199,5 +199,56 @@ class DatabaseTest extends TestCase
     {
         $dsn = Database::$types['mysql']['dsn'];
         $this->assertInstanceOf('Closure', $dsn);
+
+        // valid
+        $connectionString = $dsn([
+            'host' => 'localhost',
+            'database' => 'kirby',
+            'charset' => 'iso-8859-1',
+            'socket' => '/tmp/mysql.sock',
+            'port' => 3306,
+        ]);
+
+        $expected = 'mysql:host=localhost;port=3306;unix_socket=/tmp/mysql.sock;dbname=kirby;charset=iso-8859-1';
+        $this->assertSame($expected, $connectionString);
+    }
+
+    public function testMysqlConnectorNoSocketHost()
+    {
+        $dsn = Database::$types['mysql']['dsn'];
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The mysql connection requires either a "host" or a "socket" parameter');
+
+        $dsn([]);
+    }
+
+    public function testMysqlConnectorNoDatabase()
+    {
+        $dsn = Database::$types['mysql']['dsn'];
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The mysql connection requires a "database" parameter');
+
+        $dsn(['host' => 'localhost']);
+    }
+
+    public function testSqliteConnector()
+    {
+        $dsn = Database::$types['sqlite']['dsn'];
+        $this->assertInstanceOf('Closure', $dsn);
+
+        // valid
+        $connectionString = $dsn([
+            'database' => 'kirby'
+        ]);
+
+        $this->assertSame('sqlite:kirby', $connectionString);
+
+        // no database
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The sqlite connection requires a "database" parameter');
+
+        $dsn([]);
     }
 }
