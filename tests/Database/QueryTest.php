@@ -163,4 +163,54 @@ class QueryTest extends TestCase
 
         $this->assertSame(2, $count);
     }
+
+    public function testQuery()
+    {
+        $result = $this->database
+            ->query('SELECT * FROM users WHERE role_id = :role', ['role' => 3]);
+
+        $this->assertCount(2, $result->data());
+    }
+
+    public function testUpdate()
+    {
+        // update
+        $update = $this->database
+            ->table('users')
+            ->update(['balance' => 250], ['id' => 1]);
+
+        $this->assertTrue($update);
+
+        // check updated user value
+        $user = $this->database
+            ->table('users')
+            ->where(['id' => 1])
+            ->first();
+
+        $this->assertSame('250', $user->balance());
+    }
+
+    public function testDelete()
+    {
+        $delete = $this->database
+            ->table('users')
+            ->delete(['id' => 4]);
+
+        $this->assertTrue($delete);
+
+        $users = $this->database
+            ->table('users')
+            ->all();
+
+        $this->assertCount(3, $users);
+    }
+
+    public function testMagicCall()
+    {
+        $user = $this->database
+            ->table('users')
+            ->findByUsername('george');
+
+        $this->assertSame('george', $user->username());
+    }
 }

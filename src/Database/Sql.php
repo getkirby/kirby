@@ -461,6 +461,7 @@ abstract class Sql
      * @param string $type
      * @param string $on
      * @return array
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function join(string $type, string $table, string $on): array
     {
@@ -495,8 +496,9 @@ abstract class Sql
     /**
      * Create the syntax for multiple joins
      *
-     * @param array $joins
+     * @param array|null $joins
      * @return array
+     * @throws InvalidArgumentException
      */
     public function joins(array $joins = null): array
     {
@@ -809,7 +811,6 @@ abstract class Sql
      * @param string $table
      * @param string $column
      * @return bool
-     *
      * @throws \Kirby\Exception\InvalidArgumentException|\Throwable If the column is invalid
      */
     public function validateColumn(string $table, string $column): bool
