@@ -23,7 +23,8 @@ class Roles extends Collection
      * roles that can be created by the
      * current user
      *
-     * @return self
+     * @return \Kirby\Toolkit\Collection
+     * @throws \Exception
      */
     public function canBeChanged()
     {
@@ -46,7 +47,8 @@ class Roles extends Collection
      * roles that can be created by the
      * current user
      *
-     * @return self
+     * @return \Kirby\Toolkit\Collection
+     * @throws \Exception
      */
     public function canBeCreated()
     {
@@ -89,7 +91,7 @@ class Roles extends Collection
     }
 
     /**
-     * @param string $root
+     * @param string|null $root
      * @param array $inject
      * @return self
      */

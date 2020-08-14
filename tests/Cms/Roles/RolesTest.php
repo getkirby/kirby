@@ -54,4 +54,70 @@ class RolesTest extends TestCase
         $this->assertEquals('admin', $roles->first()->name());
         $this->assertEquals('editor', $roles->last()->name());
     }
+
+    public function testCanBeChanged()
+    {
+        new App([
+            'user'  => 'admin@getkirby.com',
+            'users' => [
+                [
+                    'email' => 'admin@getkirby.com',
+                    'role'  => 'admin'
+                ],
+                [
+                    'email' => 'editor@getkirby.com',
+                    'role'  => 'editor'
+                ]
+            ],
+            'blueprints' => [
+                'users/admin' => [
+                    'name'  => 'admin',
+                    'title' => 'Admin'
+                ],
+                'users/editor' => [
+                    'name'  => 'editor',
+                    'title' => 'Editor'
+                ],
+            ]
+        ]);
+
+        $roles = Roles::load();
+        $canBeChanged = $roles->canBeChanged();
+
+        $this->assertCount(2, $roles);
+        $this->assertCount(1, $canBeChanged);
+    }
+
+    public function testCanBeCreated()
+    {
+        new App([
+            'user'  => 'admin@getkirby.com',
+            'users' => [
+                [
+                    'email' => 'admin@getkirby.com',
+                    'role'  => 'admin'
+                ],
+                [
+                    'email' => 'editor@getkirby.com',
+                    'role'  => 'editor'
+                ]
+            ],
+            'blueprints' => [
+                'users/admin' => [
+                    'name'  => 'admin',
+                    'title' => 'Admin'
+                ],
+                'users/editor' => [
+                    'name'  => 'editor',
+                    'title' => 'Editor'
+                ],
+            ]
+        ]);
+
+        $roles = Roles::load();
+        $canBeCreated = $roles->canBeCreated();
+
+        $this->assertCount(2, $roles);
+        $this->assertCount(2, $canBeCreated);
+    }
 }
