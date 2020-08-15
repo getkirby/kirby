@@ -8,25 +8,33 @@ class ModelTest extends TestCase
 {
     public function testConstruct()
     {
-        // success
-        $api = new Api([]);
-        $model = new Model($api, [], []);
+        $model = new Model(new Api([]), [], []);
 
         $this->assertInstanceOf('Kirby\Api\Model', $model);
-
-        // invalid model
+    }
+    public function testConstructInvalidModel()
+    {
         $this->expectException('Exception');
         $this->expectExceptionMessage('Invalid model type "stdClass" expected: "nonexists"');
 
-        $api = new Api([]);
-        new Model($api, new \stdClass(), ['type' => 'nonexists']);
+        new Model( new Api([]), new \stdClass(), ['type' => 'nonexists']);
+    }
 
-        // missing model
+    public function testConstructMissingModel()
+    {
         $this->expectException('Exception');
         $this->expectExceptionMessage('Missing model data');
 
-        $api = new Api([]);
-        new Model($api, null, []);
+        new Model(new Api([]), null, []);
+    }
+
+    public function testSelectInvalidKeys()
+    {
+        $model = new Model(new Api([]), [], []);
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid select keys');
+        $model->select(0);
     }
 
     public function testSelection()
@@ -63,7 +71,7 @@ class ModelTest extends TestCase
             'select' => null
         ]], $selection);
 
-        // success
+        // string select
         $model = new Model($api, [
             'foo' => 'A',
             'bar' => 'B',
@@ -79,5 +87,37 @@ class ModelTest extends TestCase
             'view'   => 'value',
             'select' => null
         ]], $selection);
+
+        // array select
+        $model = new Model($api, [
+            'foo' => 'A',
+            'bar' => 'B',
+            'baz' => 'C',
+        ], [
+            'model'  => 'test',
+            'select' => ['key' => ['key', 'value']]
+        ]);
+
+        $selection = $model->selection();
+
+        $this->assertSame(['key' => [
+            'view'   => null,
+            'select' => ['key', 'value']
+        ]], $selection);
+
+        // invalid view select
+        $model = new Model($api, [
+            'foo' => 'A',
+            'bar' => 'B',
+            'baz' => 'C',
+        ], [
+            'model'  => 'test',
+            'select' => ['key' => 'any']
+        ]);
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid sub view: "any"');
+
+        $selection = $model->selection();
     }
 }
