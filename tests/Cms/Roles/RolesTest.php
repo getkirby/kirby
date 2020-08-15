@@ -84,6 +84,7 @@ class RolesTest extends TestCase
         $roles = Roles::load();
         $canBeChanged = $roles->canBeChanged();
 
+        $this->assertInstanceOf('\Kirby\Cms\Roles', $roles);
         $this->assertCount(2, $roles);
         $this->assertCount(1, $canBeChanged);
     }
@@ -117,6 +118,7 @@ class RolesTest extends TestCase
         $roles = Roles::load();
         $canBeCreated = $roles->canBeCreated();
 
+        $this->assertInstanceOf('\Kirby\Cms\Roles', $roles);
         $this->assertCount(2, $roles);
         $this->assertCount(2, $canBeCreated);
     }

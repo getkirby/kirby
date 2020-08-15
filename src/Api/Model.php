@@ -84,7 +84,7 @@ class Model
 
     /**
      * @param null $keys
-     * @return $this
+     * @return self
      * @throws Exception
      */
     public function select($keys = null)
@@ -225,7 +225,7 @@ class Model
 
     /**
      * @param string $name
-     * @return $this
+     * @return self
      * @throws Exception
      */
     public function view(string $name)

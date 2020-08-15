@@ -223,7 +223,7 @@ class Api extends BaseApi
 
     /**
      * @param \Kirby\Cms\App $kirby
-     * @return Api
+     * @return self
      */
     protected function setKirby(App $kirby)
     {

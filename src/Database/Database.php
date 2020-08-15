@@ -614,7 +614,7 @@ class Database
      *
      * @param mixed $method
      * @param mixed $arguments
-     * @return Query
+     * @return \Kirby\Database\Query
      */
     public function __call($method, $arguments = null)
     {

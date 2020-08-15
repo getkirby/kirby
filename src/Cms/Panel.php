@@ -28,7 +28,7 @@ class Panel
      * Returns custom css path for panel ui
      *
      * @param App $kirby
-     * @return false|string
+     * @return bool|string
      */
     public static function customCss(App $kirby)
     {

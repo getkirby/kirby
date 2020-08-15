@@ -77,7 +77,7 @@ class Collection
 
     /**
      * @param null $keys
-     * @return $this
+     * @return self
      * @throws Exception
      */
     public function select($keys = null)
@@ -168,7 +168,7 @@ class Collection
 
     /**
      * @param string $view
-     * @return Collection
+     * @return self
      */
     public function view(string $view)
     {
