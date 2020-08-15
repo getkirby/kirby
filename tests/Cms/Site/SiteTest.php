@@ -280,31 +280,41 @@ class SiteTest extends TestCase
 
     public function testBlueprints()
     {
-        $site = new Site([
-            'blueprint' => [
-                'name' => 'site',
-                'sections' => [
-                    'header' => [
-                        'type' => 'pages',
-                        'template' => [
-                            'header'
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'site' => [
+                    'name' => 'site',
+                    'sections' => [
+                        'header' => [
+                            'type' => 'pages',
+                            'template' => [
+                                'header'
+                            ]
+                        ],
+                        'footer' => [
+                            'type' => 'pages',
+                            'template' => [
+                                'footer'
+                            ]
+                        ],
+                        'files' => [
+                            'type' => 'files'
+                        ],
+                        'info' => [
+                            'type' => 'info'
                         ]
-                    ],
-                    'footer' => [
-                        'type' => 'pages',
-                        'template' => [
-                            'footer'
-                        ]
-                    ],
-                    'files' => [
-                        'type' => 'files'
-                    ],
-                    'info' => [
-                        'type' => 'info'
                     ]
-                ]
+                ],
+            ],
+            'site' => [
+                'title' => 'Test'
             ]
         ]);
+
+        $site = $app->site();
 
         $this->assertSame([
             [
