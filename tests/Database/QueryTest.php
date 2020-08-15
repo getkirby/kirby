@@ -303,7 +303,7 @@ class QueryTest extends TestCase
     {
         $users = $this->database
             ->table('users')
-            ->group('role_id')
+            ->group('id')
             ->having('balance', '>', 50)
             ->all();
 
@@ -311,11 +311,11 @@ class QueryTest extends TestCase
 
         $users = $this->database
             ->table('users')
-            ->group('role_id')
+            ->group('id')
             ->having('balance', '<=', 100)
             ->all();
 
-        $this->assertCount(1, $users);
+        $this->assertCount(2, $users);
     }
 
     public function testWhere()
