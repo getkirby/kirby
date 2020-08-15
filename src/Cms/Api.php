@@ -27,10 +27,11 @@ class Api extends BaseApi
      * Execute an API call for the given path,
      * request method and optional request data
      *
-     * @param string $path
+     * @param string|null $path
      * @param string $method
      * @param array $requestData
      * @return mixed
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function call(string $path = null, string $method = 'GET', array $requestData = [])
     {
@@ -50,8 +51,9 @@ class Api extends BaseApi
     /**
      * @param mixed $model
      * @param string $name
-     * @param string $path
+     * @param string|null $path
      * @return mixed
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function fieldApi($model, string $name, string $path = null)
     {
@@ -73,8 +75,9 @@ class Api extends BaseApi
             }
         }
 
+        // it can get this error only if $name is an empty string as $name = ''
         if ($field === null) {
-            throw new NotFoundException('The field "' . $fieldNames . '" could not be found');
+            throw new NotFoundException('No field could be loaded');
         }
 
         $fieldApi = $this->clone([
@@ -89,9 +92,11 @@ class Api extends BaseApi
      * Returns the file object for the given
      * parent path and filename
      *
-     * @param string $path Path to file's parent model
+     * @param string|null $path Path to file's parent model
      * @param string $filename Filename
      * @return \Kirby\Cms\File|null
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function file(string $path = null, string $filename)
     {
@@ -115,6 +120,8 @@ class Api extends BaseApi
      *
      * @param string $path Path to parent model
      * @return \Kirby\Cms\Model|null
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function parent(string $path)
     {
@@ -188,6 +195,7 @@ class Api extends BaseApi
      *
      * @param string $id Page's id
      * @return \Kirby\Cms\Page|null
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function page(string $id)
     {
@@ -215,6 +223,7 @@ class Api extends BaseApi
 
     /**
      * @param \Kirby\Cms\App $kirby
+     * @return Api
      */
     protected function setKirby(App $kirby)
     {
@@ -237,8 +246,10 @@ class Api extends BaseApi
      * returns the current authenticated user if no
      * id is passed
      *
-     * @param string $id User's id
+     * @param string|null $id User's id
      * @return \Kirby\Cms\User|null
+     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Throwable
      */
     public function user(string $id = null)
     {
