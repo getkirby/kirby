@@ -283,25 +283,24 @@ class SiteTest extends TestCase
         $site = new Site([
             'blueprint' => [
                 'name' => 'site',
-                'tabs' => [
-                    'content' => [
-                        'sections' => [
-                            'header' => [
-                                'type' => 'pages',
-                                'template' => [
-                                    'header'
-                                ]
-                            ],
-                            'footer' => [
-                                'type' => 'pages',
-                                'template' => [
-                                    'footer'
-                                ]
-                            ],
-                            'files' => [
-                                'type' => 'files'
-                            ]
+                'sections' => [
+                    'header' => [
+                        'type' => 'pages',
+                        'template' => [
+                            'header'
                         ]
+                    ],
+                    'footer' => [
+                        'type' => 'pages',
+                        'template' => [
+                            'footer'
+                        ]
+                    ],
+                    'files' => [
+                        'type' => 'files'
+                    ],
+                    'info' => [
+                        'type' => 'info'
                     ]
                 ]
             ]
