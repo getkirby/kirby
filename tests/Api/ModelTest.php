@@ -17,7 +17,7 @@ class ModelTest extends TestCase
         $this->expectException('Exception');
         $this->expectExceptionMessage('Invalid model type "stdClass" expected: "nonexists"');
 
-        new Model( new Api([]), new \stdClass(), ['type' => 'nonexists']);
+        new Model(new Api([]), new \stdClass(), ['type' => 'nonexists']);
     }
 
     public function testConstructMissingModel()
