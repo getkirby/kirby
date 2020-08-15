@@ -213,4 +213,170 @@ class QueryTest extends TestCase
 
         $this->assertSame('george', $user->username());
     }
+
+    public function testFind()
+    {
+        $user = $this->database
+            ->table('users')
+            ->find(2);
+
+        $this->assertSame('paul', $user->username());
+    }
+
+    public function testDistinct()
+    {
+        $users = $this->database
+            ->table('users')
+            ->distinct(true)
+            ->select('password')
+            ->all();
+
+        // all passwords is same, query result count should one with distinct
+        $this->assertCount(1, $users);
+    }
+
+    public function testMin()
+    {
+        $balance = $this->database
+            ->table('users')
+            ->min('balance');
+
+        $this->assertSame((float)50, $balance);
+    }
+
+    public function testMax()
+    {
+        $balance = $this->database
+            ->table('users')
+            ->max('balance');
+
+        $this->assertSame((float)200, $balance);
+    }
+
+    public function testPrimaryKeyName()
+    {
+        $user = $this->database
+            ->table('users')
+            ->primaryKeyName('username')
+            ->find('paul');
+
+        $this->assertSame('paul', $user->username());
+    }
+
+    public function testFirst()
+    {
+        $query = $this->database
+            ->table('users')
+            ->where([
+                'username' => 'john'
+            ]);
+
+        $this->assertSame('John', $query->first()->fname());
+        $this->assertSame('John', $query->row()->fname());
+        $this->assertSame('John', $query->One()->fname());
+    }
+
+    public function testColumn()
+    {
+        $users = $this->database
+            ->table('users')
+            ->where([
+                'role_id' => 3
+            ])
+            ->column('username');
+
+        $this->assertInstanceOf('\Kirby\Toolkit\Collection', $users);
+        $this->assertCount(2, $users->data());
+        $this->assertSame(['george', 'mark'], $users->data());
+    }
+
+    public function testBindings()
+    {
+        $query = $this->database
+            ->table('users')
+            ->where('role_id = :role', ['role' => 3]);
+
+        $this->assertSame(['role' => 3], $query->bindings());
+    }
+
+    public function testHaving()
+    {
+        $users = $this->database
+            ->table('users')
+            ->group('role_id')
+            ->having('balance', '>', 50)
+            ->all();
+
+        $this->assertCount(3, $users);
+
+        $users = $this->database
+            ->table('users')
+            ->group('role_id')
+            ->having('balance', '<=', 100)
+            ->all();
+
+        $this->assertCount(1, $users);
+    }
+
+    public function testWhere()
+    {
+        // like 1
+        $count = $this->database
+            ->table('users')
+            ->where('lname', 'like', '%Cart%')
+            ->count();
+
+        $this->assertSame(1, $count);
+
+        // like 2
+        $count = $this->database
+            ->table('users')
+            ->where('lname like ?', '%on')
+            ->count();
+
+        $this->assertSame(2, $count);
+
+        // in
+        $count = $this->database
+            ->table('users')
+            ->where('username', 'in', ['john', 'paul'])
+            ->count();
+
+        $this->assertSame(2, $count);
+
+        // invalid predicate
+        $this->expectException('InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid predicate INV');
+
+        $this->database
+            ->table('users')
+            ->where('username', 'INV', ['john', 'paul'])
+            ->count();
+    }
+
+    public function testAndWhere()
+    {
+        $count = $this->database
+            ->table('users')
+            ->where([
+                'role_id' => 3
+            ])
+            ->andWhere('balance > 50')
+            ->count();
+
+        $this->assertSame(1, $count);
+    }
+
+    public function testOrWhere()
+    {
+        $count = $this->database
+            ->table('users')
+            ->where([
+                'role_id' => 1
+            ])
+            ->orWhere('balance <= 100')
+            ->count();
+
+        $this->assertSame(3, $count);
+    }
 }
