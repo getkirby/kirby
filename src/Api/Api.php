@@ -67,7 +67,7 @@ class Api
     /**
      * The current route
      *
-     * @var Route
+     * @var \Kirby\Http\Route
      */
     protected $route;
 
@@ -107,6 +107,7 @@ class Api
      * @param string $method
      * @param array $args
      * @return mixed
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function __call(string $method, array $args = [])
     {
@@ -152,10 +153,12 @@ class Api
      * Execute an API call for the given path,
      * request method and optional request data
      *
-     * @param string $path
+     * @param string|null $path
      * @param string $method
      * @param array $requestData
      * @return mixed
+     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Exception
      */
     public function call(string $path = null, string $method = 'GET', array $requestData = [])
     {
@@ -209,7 +212,10 @@ class Api
         // restore old pagination validation mode
         Pagination::$validate = $validate;
 
-        if (is_object($output) === true && is_a($output, 'Kirby\\Http\\Response') !== true) {
+        if (
+            is_object($output) === true &&
+            is_a($output, 'Kirby\\Http\\Response') !== true
+        ) {
             return $this->resolve($output)->toResponse();
         }
 
@@ -222,8 +228,8 @@ class Api
      * @param string $name
      * @param array|null $collection
      * @return \Kirby\Api\Collection
-     *
      * @throws \Kirby\Exception\NotFoundException If no collection for `$name` exists
+     * @throws \Exception
      */
     public function collection(string $name, $collection = null)
     {
@@ -710,14 +716,17 @@ class Api
     /**
      * Upload helper method
      *
+     * move_uploaded_file() not working with unit test
+     * Added debug parameter for testing purposes as we did in the Email class
+     *
      * @param Closure $callback
      * @param bool $single
+     * @param bool $debug
      * @return array
      *
-     * @throws \Exception If request has no files
-     * @throws \Exception If there was an error with the upload
+     * @throws Exception If request has no files or there was an error with the upload
      */
-    public function upload(Closure $callback, $single = false): array
+    public function upload(Closure $callback, $single = false, $debug = false): array
     {
         $trials  = 0;
         $uploads = [];
@@ -776,7 +785,7 @@ class Api
 
                 // move the file to a location including the extension,
                 // for better mime detection
-                if (move_uploaded_file($upload['tmp_name'], $source) === false) {
+                if ($debug === false && move_uploaded_file($upload['tmp_name'], $source) === false) {
                     throw new Exception(t('upload.error.cantMove'));
                 }
 
