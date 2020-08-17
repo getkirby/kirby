@@ -13,7 +13,8 @@ return [
         'min',
         'max',
         'pagination',
-        'parent'
+        'parent',
+        'search'
     ],
     'props' => [
         /**
@@ -122,6 +123,11 @@ return [
                     unset($pages->data[$id]);
                     continue;
                 }
+            }
+
+            // search
+            if ($this->search === true && empty($this->query) === false) {
+                $pages = $pages->search($this->query);
             }
 
             // sort
@@ -235,6 +241,10 @@ return [
                 return false;
             }
 
+            if (empty($this->query) === false) {
+                return false;
+            }
+
             if ($this->sortBy !== null) {
                 return false;
             }
@@ -289,8 +299,10 @@ return [
                 'link'     => $this->link,
                 'max'      => $this->max,
                 'min'      => $this->min,
+                'search'   => $this->search,
                 'size'     => $this->size,
-                'sortable' => $this->sortable
+                'sortable' => $this->sortable,
+                'query'    => $this->query
             ],
             'pagination' => $this->pagination,
         ];

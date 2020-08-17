@@ -23,6 +23,16 @@
     </template>
 
     <template v-else>
+      <k-input
+          v-if="options.search"
+          :autofocus="true"
+          :placeholder="$t('search') + ' …'"
+          v-model="search"
+          type="text"
+          class="k-collection-search"
+          icon="search"
+      />
+
       <k-collection
         v-if="data.length"
         :layout="options.layout"

@@ -665,6 +665,7 @@ trait AppPlugins
             Section::$mixins['min']            = include $root . '/config/sections/mixins/min.php';
             Section::$mixins['pagination']     = include $root . '/config/sections/mixins/pagination.php';
             Section::$mixins['parent']         = include $root . '/config/sections/mixins/parent.php';
+            Section::$mixins['search']         = include $root . '/config/sections/mixins/search.php';
 
             // section types
             Section::$types['info']            = include $root . '/config/sections/info.php';

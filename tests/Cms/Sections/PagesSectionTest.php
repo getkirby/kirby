@@ -404,4 +404,71 @@ class PagesSectionTest extends TestCase
 
         $this->assertEquals('<p>Information</p>', $section->help());
     }
+
+    public function testSearch()
+    {
+        $model = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'Mount Bike']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'Mountain']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'Bike']]
+            ]
+        ]);
+
+        // no search option as default
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model
+        ]);
+
+        $this->assertCount(3, $section->data());
+
+        // enabled search with no query
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true
+        ]);
+
+        $this->assertCount(3, $section->data());
+
+        // search with query
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true,
+            'query'  => 'bike'
+
+        ]);
+
+        $this->assertCount(2, $section->data());
+        $this->assertSame('Bike', $section->data()[0]['text']);
+        $this->assertSame('Mount Bike', $section->data()[1]['text']);
+
+        // search with query alternative
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true,
+            'query'  => 'mount'
+
+        ]);
+
+        $this->assertCount(2, $section->data());
+        $this->assertSame('Mount Bike', $section->data()[0]['text']);
+        $this->assertSame('Mountain', $section->data()[1]['text']);
+
+        // search with query alternative
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $model,
+            'search' => true,
+            'query'  => 'mountain'
+
+        ]);
+
+        $this->assertCount(1, $section->data());
+        $this->assertSame('Mountain', $section->data()[0]['text']);
+    }
 }

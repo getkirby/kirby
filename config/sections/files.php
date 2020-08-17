@@ -13,6 +13,7 @@ return [
         'max',
         'pagination',
         'parent',
+        'search'
     ],
     'props' => [
         /**
@@ -86,6 +87,12 @@ return [
             // filter out all protected files
             $files = $files->filterBy('isReadable', true);
 
+            // search
+            if ($this->search === true && empty($this->query) === false) {
+                $files = $files->search($this->query);
+            }
+
+            // sort
             if ($this->sortBy) {
                 $files = $files->sortBy(...$files::sortArgs($this->sortBy));
             } elseif ($this->sortable === true) {
@@ -181,6 +188,10 @@ return [
                 return false;
             }
 
+            if (empty($this->query) === false) {
+                return false;
+            }
+
             if ($this->sortBy !== null) {
                 return false;
             }
@@ -231,8 +242,10 @@ return [
                 'link'     => $this->link,
                 'max'      => $this->max,
                 'min'      => $this->min,
+                'search'   => $this->search,
                 'size'     => $this->size,
                 'sortable' => $this->sortable,
+                'query'    => $this->query,
                 'upload'   => $this->upload
             ],
             'pagination' => $this->pagination

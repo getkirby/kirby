@@ -1,3 +1,5 @@
+import debounce from "@/helpers/debounce";
+
 export default {
   inheritAttrs: false,
   props: {
@@ -20,8 +22,10 @@ export default {
         max: null,
         min: null,
         size: null,
+        search: null,
         sortable: null
       },
+      search: null,
       pagination: {
         page: null
       }
@@ -55,7 +59,11 @@ export default {
   watch: {
     language() {
       this.reload();
-    }
+    },
+    search: debounce(function () {
+      this.pagination.page = 0;
+      this.reload();
+    }, 200),
   },
   methods: {
     items(data) {
@@ -73,7 +81,7 @@ export default {
       try {
         const response = await this.$api.get(
           this.parent + "/sections/" + this.name,
-          { page: this.pagination.page }
+          { page: this.pagination.page, query: this.search }
         );
 
         this.options = response.options;

@@ -22,6 +22,16 @@
 
     <template v-else>
       <k-dropzone :disabled="add === false" @drop="drop">
+        <k-input
+            v-if="options.search"
+            :autofocus="true"
+            :placeholder="$t('search') + ' …'"
+            v-model="search"
+            type="text"
+            class="k-collection-search"
+            icon="search"
+        />
+
         <k-collection
           v-if="data.length"
           :help="help"
