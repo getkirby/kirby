@@ -32,6 +32,7 @@ export default {
   height: 0.5rem;
   border-radius: 5rem;
   background: $color-border;
+  overflow: hidden;
   border: none;
 }
 
