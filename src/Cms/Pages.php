@@ -223,14 +223,8 @@ class Pages extends Collection
             return $page;
         }
 
-        $multiLang = App::instance()->multilang();
-
-        if ($multiLang === true && !App::instance()->language()->isDefault() && $page = $this->findBy('slug', $id)) {
-            return $page;
-        }
-
         $start = is_a($this->parent, 'Kirby\Cms\Page') === true ? $this->parent->id() : '';
-        $page  = $this->findByIdRecursive($id, $start, $multiLang);
+        $page  = $this->findByIdRecursive($id, $start, App::instance()->multilang());
 
         return $page;
     }
