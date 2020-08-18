@@ -483,6 +483,109 @@ class PagesTest extends TestCase
         $this->assertIsPage($pages->findById('kind'), 'grandma/mother/child');
     }
 
+    public function testFindByIdWithSwappedSlugsTranslated()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code' => 'en',
+                ],
+                [
+                    'code' => 'de',
+                ],
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'aaa',
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                            ],
+                            [
+                                'code' => 'de',
+                                'slug' => 'zzz',
+                            ],
+                        ],
+                        'children' => [
+                            [
+                                'slug' => 'bbb',
+                                'translations' => [
+                                    [
+                                        'code' => 'en',
+                                    ],
+                                    [
+                                        'code' => 'de',
+                                        'slug' => 'yyy'
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                    [
+                        'slug' => 'zzz',
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                            ],
+                            [
+                                'code' => 'de',
+                                'slug' => 'aaa',
+                            ],
+                        ],
+                        'children' => [
+                            [
+                                'slug' => 'yyy',
+                                'translations' => [
+                                    [
+                                        'code' => 'en',
+                                    ],
+                                    [
+                                        'code' => 'de',
+                                        'slug' => 'bbb'
+                                    ],
+                                ],
+                            ],
+                        ],
+                    ],
+                ],
+            ],
+        ]);
+
+        $site = $app->site();
+
+        $this->assertIsPage($site->children()->findById('aaa'), 'aaa');
+        $this->assertIsPage($site->children()->findById('aaa/bbb'), 'aaa/bbb');
+        $this->assertIsPage($site->children()->findById('aaa')->children()->findById('bbb'), 'aaa/bbb');
+        $this->assertIsPage($site->children()->findById('zzz'), 'zzz');
+        $this->assertIsPage($site->children()->findById('zzz/yyy'), 'zzz/yyy');
+        $this->assertIsPage($site->children()->findById('zzz')->children()->findById('yyy'), 'zzz/yyy');
+
+        $pages = new Pages($site->children()->find('aaa', 'aaa/bbb', 'zzz', 'zzz/yyy'));
+        $this->assertIsPage($pages->findById('aaa'), 'aaa');
+        $this->assertIsPage($pages->findById('aaa/bbb'), 'aaa/bbb');
+        $this->assertIsPage($pages->findById('zzz'), 'zzz');
+        $this->assertIsPage($pages->findById('zzz/yyy'), 'zzz/yyy');
+
+//         $app->setCurrentLanguage('de');
+
+//         $this->assertIsPage($site->children()->findById('aaa'), 'zzz');
+//         $this->assertIsPage($site->children()->findById('aaa/bbb'), 'zzz/yyy');
+//         $this->assertIsPage($site->children()->findById('aaa')->children()->findById('bbb'), 'zzz/yyy');
+//         $this->assertIsPage($site->children()->findById('zzz'), 'aaa');
+//         $this->assertIsPage($site->children()->findById('zzz/yyy'), 'aaa/bbb');
+//         $this->assertIsPage($site->children()->findById('zzz')->children()->findById('yyy'), 'aaa/bbb');
+
+//         $pages = new Pages($site->children()->find('aaa', 'aaa/bbb', 'zzz', 'zzz/yyy'));
+//         $this->assertIsPage($pages->findById('aaa'), 'zzz');
+//         $this->assertIsPage($pages->findById('aaa/bbb'), 'zzz/yyy');
+//         $this->assertIsPage($pages->findById('zzz'), 'aaa');
+//         $this->assertIsPage($pages->findById('zzz/yyy'), 'aaa/bbb');
+    }
+
     public function testFindMultiple()
     {
         $pages = Pages::factory([
