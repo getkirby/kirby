@@ -299,11 +299,141 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findByUri('grandma/mother'), 'grandma/mother');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/'), 'grandma/mother');
         $this->assertIsPage($site->children()->findById('grandma/mother.json'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma')->children()->findById('mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma')->children()->findById('grandma/mother'), 'grandma/mother');
         $this->assertIsPage($site->children()->findById('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findById('grandma/mother/child/'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child/'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child.json'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma/mother')->children()->findById('child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma/mother')->children()->findById('grandma/mother/child'), 'grandma/mother/child');
+    }
+
+    public function testFindByIdTranslated()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code' => 'en',
+                ],
+                [
+                    'code' => 'de',
+                ],
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'grandma',
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                            ],
+                            [
+                                'code' => 'de',
+                                'slug' => 'oma',
+                            ],
+                        ],
+                        'children' => [
+                            [
+                                'slug' => 'mother',
+                                'translations' => [
+                                    [
+                                        'code' => 'en',
+                                    ],
+                                    [
+                                        'code' => 'de',
+                                        'slug' => 'mutter'
+                                    ],
+                                ],
+                                'children' => [
+                                    [
+                                        'slug' => 'child',
+                                        'translations' => [
+                                            [
+                                                'code' => 'en',
+                                            ],
+                                            [
+                                                'code' => 'de',
+                                                'slug' => 'kind',
+                                            ],
+                                        ],
+                                    ]
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $site = $app->site();
+
+        $this->assertIsPage($site->children()->findById('grandma'), 'grandma');
+        $this->assertIsPage($site->children()->findById('grandma/'), 'grandma');
+        $this->assertIsPage($site->children()->findByUri('grandma'), 'grandma');
+        $this->assertIsPage($site->children()->findByUri('grandma/'), 'grandma');
+        $this->assertIsPage($site->children()->findByUri('grandma.json'), 'grandma');
+        $this->assertIsPage($site->children()->findById('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma/mother/'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother/'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma/mother.json'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma')->children()->findById('mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma')->children()->findById('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('grandma')->children()->findByUri('mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('grandma')->children()->findByUri('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma/mother/child/'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother/child/'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother/child.json'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma/mother')->children()->findById('child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma/mother')->children()->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother')->children()->findByUri('child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother')->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
+
+        $app->setCurrentLanguage('de');
+
+        $this->assertIsPage($site->children()->findById('oma'), 'grandma');
+        $this->assertIsPage($site->children()->findById('oma/'), 'grandma');
+        $this->assertIsPage($site->children()->findByUri('oma'), 'grandma');
+        $this->assertIsPage($site->children()->findByUri('oma/'), 'grandma');
+        $this->assertIsPage($site->children()->findByUri('oma.json'), 'grandma');
+        $this->assertIsPage($site->children()->findById('oma/mutter/'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('oma/mutter'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('oma/mutter/'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('oma/mutter.json'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('oma')->children()->findById('mutter'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('oma')->children()->findById('mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('oma')->children()->findById('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('oma')->children()->findByUri('mutter'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('oma')->children()->findByUri('mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('oma')->children()->findByUri('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('oma/mutter/kind'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('oma/mutter/kind/'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('oma/mutter/kind'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('oma/mutter/kind/'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('oma/mutter/kind.json'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('oma/mutter')->children()->findById('kind'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('oma/mutter')->children()->findById('child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('oma/mutter')->children()->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('oma/mutter')->children()->findById('kind'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('oma/mutter')->children()->findById('child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('oma/mutter')->children()->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma'), 'grandma');
+        $this->assertIsPage($site->children()->findById('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma/mutter'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findById('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma/mother/kind'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma'), 'grandma');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('grandma/mutter'), 'grandma/mother');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma/mother/kind'), 'grandma/mother/child');
     }
 
     public function testFindMultiple()
