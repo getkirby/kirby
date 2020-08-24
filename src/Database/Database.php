@@ -569,7 +569,7 @@ class Database
         }
 
         // update cache
-        if (in_array($table, $this->tableWhitelist) !== true) {
+        if (in_array($table, $this->tableWhitelist ?? []) !== true) {
             $this->tableWhitelist[] = $table;
         }
 
@@ -590,7 +590,7 @@ class Database
         }
 
         // update cache
-        $key = array_search($this->tableWhitelist, $table);
+        $key = array_search($table, $this->tableWhitelist ?? []);
         if ($key !== false) {
             unset($this->tableWhitelist[$key]);
         }
