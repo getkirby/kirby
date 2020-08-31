@@ -345,6 +345,7 @@
 
   "save": "Save",
   "search": "Search",
+  "search.similar": "Toggle similar search",
   "search.min": "Enter {min} characters to search",
   "search.all": "Show all",
   "search.results.none": "No results",

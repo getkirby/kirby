@@ -160,6 +160,7 @@ return [
             'fields'    => [],
             'minlength' => 2,
             'score'     => [],
+            'similar'   => false,
             'words'     => false,
         ];
 
@@ -230,6 +231,19 @@ return [
                 if ($matches = preg_match_all($preg, $value, $r)) {
                     $item->searchHits  += $matches;
                     $item->searchScore += $matches * $score;
+                }
+
+                // check for similar matches
+                if ($options['words'] === false && $options['similar'] === true) {
+                    $matches = Str::similarText($lowerQuery, $lowerValue, $similarPercent);
+
+                    if ($matches > 0) {
+                        // calculate score based on percentage
+                        // for example 66.6% result: (66.6 / 10) * $score, final result is (7 * $score)
+                        // the coefficient can be a value between 0 and 10
+                        $item->searchScore += round($similarPercent / 10) * $score;
+                        $item->searchHits  += 1;
+                    }
                 }
             }
 

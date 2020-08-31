@@ -114,7 +114,9 @@ return [
                 ->files();
 
             if ($this->requestMethod() === 'GET') {
-                return $files->search($this->requestQuery('q'));
+                return $files->search($this->requestQuery('q'), [
+                    'similar' => filter_var($this->requestQuery('similar'), FILTER_VALIDATE_BOOLEAN)
+                ]);
             } else {
                 return $files->query($this->requestBody());
             }

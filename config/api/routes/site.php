@@ -70,7 +70,9 @@ return [
                 ->filterBy('isReadable', true);
 
             if ($this->requestMethod() === 'GET') {
-                return $pages->search($this->requestQuery('q'));
+                return $pages->search($this->requestQuery('q'), [
+                    'similar' => filter_var($this->requestQuery('similar'), FILTER_VALIDATE_BOOLEAN)
+                ]);
             } else {
                 return $pages->query($this->requestBody());
             }

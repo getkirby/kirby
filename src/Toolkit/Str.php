@@ -800,6 +800,57 @@ class Str
     }
 
     /**
+     * Calculate the similarity between two strings with multibyte support
+     *
+     * @param string $first
+     * @param string $second
+     * @param float|null $percent
+     * @return int
+     */
+    public static function similarText(string $first, string $second, float &$percent = null): int
+    {
+        if (mb_strlen($first) + mb_strlen($second) === 0) {
+            $percent = 0.0;
+
+            return 0;
+        }
+
+        $pos1 = $pos2 = $max = 0;
+        $len1 = mb_strlen($first);
+        $len2 = mb_strlen($second);
+
+        for ($p = 0; $p < $len1; ++$p) {
+            for ($q = 0; $q < $len2; ++$q) {
+                for ($l = 0; ($p + $l < $len1) && ($q + $l < $len2) && mb_substr($first, $p + $l, 1) === mb_substr($second, $q + $l, 1); ++$l) {
+                    // nothing to do
+                }
+                if ($l > $max) {
+                    $max = $l;
+                    $pos1 = $p;
+                    $pos2 = $q;
+                }
+            }
+        }
+
+        $similarity = $max;
+        if ($similarity) {
+            if ($pos1 && $pos2) {
+                $similarity += static::similarText(mb_substr($first, 0, $pos1), mb_substr($second, 0, $pos2));
+            }
+            if (($pos1 + $max < $len1) && ($pos2 + $max < $len2)) {
+                $similarity += static::similarText(
+                    mb_substr($first, $pos1 + $max, $len1 - $pos1 - $max),
+                    mb_substr($second, $pos2 + $max, $len2 - $pos2 - $max)
+                );
+            }
+        }
+
+        $percent = ($similarity * 200.0) / ($len1 + $len2);
+
+        return $similarity;
+    }
+
+    /**
      * Convert a string to snake case.
      *
      * @param string $value

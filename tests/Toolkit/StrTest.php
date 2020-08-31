@@ -737,4 +737,28 @@ EOT;
         $this->assertEquals('ÖÄÜ', Str::upper('öäü'));
         $this->assertEquals('ÖÄÜ', Str::upper('Öäü'));
     }
+
+    public function testSimilarText()
+    {
+        $this->assertSame(0, Str::similarText('foo', 'bar', $percent));
+        $this->assertSame(0.0, $percent);
+
+        $this->assertSame(0, Str::similarText('foo', '', $percent));
+        $this->assertSame(0.0, $percent);
+
+        $this->assertSame(0, Str::similarText('', '', $percent));
+        $this->assertSame(0.0, $percent);
+
+        $this->assertSame(3, Str::similarText('foo', 'fooBar', $percent));
+        $this->assertSame(66.66666666666667, $percent);
+
+        $this->assertSame(3, Str::similarText('Tête', 'tête', $percent));
+        $this->assertSame(75.0, $percent);
+
+        $this->assertSame(3, Str::similarText('foo', 'foo', $percent));
+        $this->assertSame(100.0, $percent);
+
+        $this->assertSame(4, Str::similarText('tête', 'tête', $percent));
+        $this->assertSame(100.0, $percent);
+    }
 }

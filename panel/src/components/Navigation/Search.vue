@@ -19,7 +19,7 @@
           ref="input"
           v-model="q"
           :placeholder="$t('search') + ' …'"
-          aria-label="$t('search')"
+          :aria-label="$t('search')"
           type="text"
           @keydown.down.prevent="down"
           @keydown.up.prevent="up"
@@ -27,6 +27,13 @@
           @keydown.enter="enter"
           @keydown.esc="close"
         >
+        <k-button
+            :tooltip="$t('search.similar')"
+            :theme="similar ? 'positive' : 'negative'"
+            class="k-search-similar"
+            icon="wand"
+            @click="toggleSimilar"
+        />
         <k-button
           :tooltip="$t('close')"
           class="k-search-close"
@@ -60,6 +67,7 @@ export default {
     return {
       items: [],
       q: null,
+      similar: false,
       selected: -1,
       currentType: this.$store.state.view === "users" ? "users" : "pages"
     }
@@ -93,6 +101,9 @@ export default {
       this.search(q);
     }, 200),
     currentType() {
+      this.search(this.q);
+    },
+    similar() {
       this.search(this.q);
     }
   },
@@ -157,7 +168,11 @@ export default {
       try {
         const response = await this.$api.get(
           this.type.endpoint,
-          { q: query, limit: config.search.limit }
+          {
+            q: query,
+            limit: config.search.limit,
+            similar: this.similar
+          }
         );
         this.items = response.data.map(this['map_' + this.currentType]);
 
@@ -174,6 +189,9 @@ export default {
       if (item) {
         this.navigate(item);
       }
+    },
+    toggleSimilar() {
+      this.similar = !this.similar;
     },
     up() {
       if (this.selected >= 0) {
@@ -235,6 +253,10 @@ export default {
   height: 2.5rem;
 }
 .k-search-close {
+  width: 2.5rem;
+  line-height: 1;
+}
+.k-search-similar {
   width: 2.5rem;
   line-height: 1;
 }

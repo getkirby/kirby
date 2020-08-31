@@ -570,6 +570,46 @@ class PagesTest extends TestCase
         $this->assertCount(4, $result);
     }
 
+    public function testSearchSimilar()
+    {
+        $pages = Pages::factory([
+            [
+                'slug'    => 'a',
+                'content' => [
+                    'title' => 'Fors'
+                ]
+            ],
+            [
+                'slug'    => 'b',
+                'content' => [
+                    'title' => 'Têka'
+                ]
+            ],
+            [
+                'slug'    => 'c',
+                'content' => [
+                    'title' => 'Bart'
+                ]
+            ],
+            [
+                'slug'    => 'd',
+                'content' => [
+                    'title' => 'Tête'
+                ]
+            ]
+        ]);
+
+        $result = $pages->search('tete', ['similar' => false]);
+        $this->assertCount(0, $result);
+
+        $result = $pages->search('tete', ['similar' => true]);
+        $data = array_values($result->data());
+
+        $this->assertSame("Tête", $data[0]->title()->value());
+        $this->assertSame("Têka", $data[1]->title()->value());
+        $this->assertSame("Bart", $data[2]->title()->value());
+    }
+
     public function testCustomMethods()
     {
         Pages::$methods = [

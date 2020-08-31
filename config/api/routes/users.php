@@ -26,7 +26,9 @@ return [
         'method'  => 'GET|POST',
         'action'  => function () {
             if ($this->requestMethod() === 'GET') {
-                return $this->users()->search($this->requestQuery('q'));
+                return $this->users()->search($this->requestQuery('q'), [
+                    'similar' => filter_var($this->requestQuery('similar'), FILTER_VALIDATE_BOOLEAN)
+                ]);
             } else {
                 return $this->users()->query($this->requestBody());
             }
