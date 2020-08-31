@@ -605,9 +605,9 @@ class PagesTest extends TestCase
         $result = $pages->search('tete', ['similar' => true]);
         $data = array_values($result->data());
 
-        $this->assertSame("Tête", $data[0]->title()->value());
-        $this->assertSame("Têka", $data[1]->title()->value());
-        $this->assertSame("Bart", $data[2]->title()->value());
+        $this->assertSame('Tête', $data[0]->title()->value());
+        $this->assertSame('Têka', $data[1]->title()->value());
+        $this->assertSame('Bart', $data[2]->title()->value());
     }
 
     public function testCustomMethods()
