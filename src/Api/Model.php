@@ -3,13 +3,12 @@
 namespace Kirby\Api;
 
 use Exception;
-
 use Kirby\Toolkit\Str;
 
 /**
  * The API Model class can be wrapped around any
  * kind of object. Each model defines a set of properties that
- * are availabel in REST calls. Those properties are defined as
+ * are available in REST calls. Those properties are defined as
  * simple Closures which are resolved on demand. This is inspired
  * by GraphQLs architecture and makes it possible to load
  * only the model data that is needed for the current API call.
@@ -22,12 +21,39 @@ use Kirby\Toolkit\Str;
  */
 class Model
 {
+    /**
+     * @var \Kirby\Api\Api
+     */
     protected $api;
+
+    /**
+     * @var mixed|null
+     */
     protected $data;
+
+    /**
+     * @var array|mixed
+     */
     protected $fields;
+
+    /**
+     * @var mixed|null
+     */
     protected $select;
+
+    /**
+     * @var array|mixed
+     */
     protected $views;
 
+    /**
+     * Model constructor
+     *
+     * @param \Kirby\Api\Api $api
+     * @param null $data
+     * @param array $schema
+     * @throws \Exception
+     */
     public function __construct(Api $api, $data = null, array $schema)
     {
         $this->api    = $api;
@@ -56,6 +82,11 @@ class Model
         }
     }
 
+    /**
+     * @param null $keys
+     * @return self
+     * @throws \Exception
+     */
     public function select($keys = null)
     {
         if ($keys === false) {
@@ -74,6 +105,10 @@ class Model
         return $this;
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     */
     public function selection(): array
     {
         $select = $this->select;
@@ -117,6 +152,11 @@ class Model
         return $selection;
     }
 
+    /**
+     * @return array
+     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Exception
+     */
     public function toArray(): array
     {
         $select = $this->selection();
@@ -158,6 +198,11 @@ class Model
         return $result;
     }
 
+    /**
+     * @return array
+     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Exception
+     */
     public function toResponse(): array
     {
         $model = $this;
@@ -178,6 +223,11 @@ class Model
         ];
     }
 
+    /**
+     * @param string $name
+     * @return self
+     * @throws \Exception
+     */
     public function view(string $name)
     {
         if ($name === 'any') {

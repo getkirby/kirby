@@ -31,6 +31,9 @@ export default {
   width: 100%;
   height: 0.5rem;
   border-radius: 5rem;
+  background: $color-border;
+  overflow: hidden;
+  border: none;
 }
 
 .k-progress::-webkit-progress-bar {
@@ -41,7 +44,13 @@ export default {
 }
 
 .k-progress::-webkit-progress-value {
-  border-radius: 20px;
+  border-radius: inherit;
+  background: $color-focus;
+  transition: width 0.3s;
+}
+
+.k-progress::-moz-progress-bar {
+  border-radius: inherit;
   background: $color-focus;
   transition: width 0.3s;
 }

@@ -26,7 +26,7 @@ class Db
     /**
      * The singleton Database object
      *
-     * @var Database
+     * @var \Kirby\Database\Database
      */
     public static $connection = null;
 
@@ -76,7 +76,7 @@ class Db
      * @param string $table
      * @return \Kirby\Database\Query
      */
-    public static function table($table)
+    public static function table(string $table)
     {
         $db = static::connect();
         return $db->table($table);
@@ -117,8 +117,9 @@ class Db
      * @param string $method
      * @param mixed $arguments
      * @return mixed
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function __callStatic($method, $arguments)
+    public static function __callStatic(string $method, $arguments)
     {
         if (isset(static::$queries[$method])) {
             return static::$queries[$method](...$arguments);
