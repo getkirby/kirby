@@ -137,16 +137,16 @@ class ApiTest extends TestCase
         ]);
 
         $this->assertEquals('something', $api->call('foo'));
-        $this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
-        $this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
-        $this->assertTrue(in_array(setlocale(LC_TIME, 0), ['de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_TIME, 0), ['de', 'de_DE', 'de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.ISO8859-1']));
         $this->assertEquals($originalLocale, setlocale(LC_CTYPE, 0));
 
         $language = 'pt_BR';
         $this->assertEquals('something', $api->call('foo'));
-        $this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
-        $this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
-        $this->assertTrue(in_array(setlocale(LC_TIME, 0), ['pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_MONETARY, 0), ['pt', 'pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_NUMERIC, 0), ['pt', 'pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
+        $this->assertTrue(in_array(setlocale(LC_TIME, 0), ['pt', 'pt_BR', 'pt_BR.UTF-8', 'pt_BR.UTF8', 'pt_BR.ISO8859-1']));
         $this->assertEquals($originalLocale, setlocale(LC_CTYPE, 0));
     }
 
@@ -632,5 +632,131 @@ class ApiTest extends TestCase
         ]);
 
         $this->assertEquals($routes, $api->routes());
+    }
+
+    public function testUpload()
+    {
+        $api = new Api([
+            'requestMethod' => 'POST',
+            'requestData' => [
+                'files' => [
+                    [
+                        'name'     => 'test.txt',
+                        'tmp_name' => __DIR__ . '/fixtures/tmp/abc',
+                        'size'     => 123,
+                        'error'    => 0
+                    ]
+                ]
+            ],
+            'authentication' => function () {
+                return new User(['language' => 'en']);
+            }
+        ]);
+
+        $phpunit = $this;
+        $api->authenticate();
+
+        // move_uploaded_file error
+        $data = $api->upload(function ($source) {
+            // empty closure
+        });
+
+        $phpunit->assertSame([
+            'status' => 'error',
+            'message' => 'The uploaded file could not be moved'
+        ], $data);
+
+        // single
+        $uploads = [];
+        $data = $api->upload(function ($source, $filename) use ($phpunit, &$uploads) {
+            // can't test souce path with dynamic uniqid
+            // $phpunit->assertSame('uniqid.test.txt', $source);
+            $phpunit->assertSame('test.txt', $filename);
+
+            return $uploads = [
+                'filename' => $filename
+            ];
+        }, true, true);
+
+        $phpunit->assertSame([
+            'status' => 'ok',
+            'data' => $uploads
+        ], $data);
+
+        // multiple
+        $uploads = [];
+        $data = $api->upload(function ($source, $filename) use ($phpunit, &$uploads) {
+            // can't test souce path with dynamic uniqid
+            // $phpunit->assertSame('uniqid.test.txt', $source);
+            $phpunit->assertSame('test.txt', $filename);
+
+            return $uploads = [
+                'filename' => $filename
+            ];
+        }, false, true);
+
+        $phpunit->assertSame([
+            'status' => 'ok',
+            'data' => $uploads
+        ], $data);
+    }
+
+    public function testUploadMultiple()
+    {
+        $api = new Api([
+            'requestMethod' => 'POST',
+            'requestData' => [
+                'files' => [
+                    [
+                        'name'     => 'foo.txt',
+                        'tmp_name' => __DIR__ . '/fixtures/tmp/foo',
+                        'size'     => 123,
+                        'error'    => 0
+                    ],
+                    [
+                        'name'     => 'bar.txt',
+                        'tmp_name' => __DIR__ . '/fixtures/tmp/bar',
+                        'size'     => 123,
+                        'error'    => 0
+                    ]
+                ]
+            ],
+            'authentication' => function () {
+                return new User(['language' => 'en']);
+            }
+        ]);
+
+        $phpunit = $this;
+        $api->authenticate();
+
+        $uploads = [];
+        $data = $api->upload(function ($source, $filename) use ($phpunit, &$uploads) {
+            return [
+                'filename' => $filename
+            ];
+        }, false, true);
+
+        $phpunit->assertSame([
+            'status' => 'ok',
+            'data' => [
+                'foo.txt' => ['filename' => 'foo.txt'],
+                'bar.txt' => ['filename' => 'bar.txt'],
+            ]
+        ], $data);
+    }
+
+    public function testUploadFail()
+    {
+        $api = new Api([
+            'requestMethod' => 'POST',
+            'requestData' => [
+                'files' => [ ]
+            ]
+        ]);
+
+        $this->expectException('Exception');
+        $api->upload(function ($source) {
+            // empty closure
+        });
     }
 }

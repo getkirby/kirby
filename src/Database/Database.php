@@ -119,11 +119,11 @@ class Database
     protected $statement;
 
     /**
-     * Whitelists for table names
+     * List of existing tables in the database
      *
      * @var array|null
      */
-    protected $tableWhitelist;
+    protected $tables;
 
     /**
      * An array with all queries which are being made
@@ -504,19 +504,19 @@ class Database
      */
     public function validateTable(string $table): bool
     {
-        if ($this->tableWhitelist === null) {
-            // Get the table whitelist from the database
+        if ($this->tables === null) {
+            // Get the list of tables from the database
             $sql     = $this->sql()->tables($this->database);
             $results = $this->query($sql['query'], $sql['bindings']);
 
             if ($results) {
-                $this->tableWhitelist = $results->pluck('name');
+                $this->tables = $results->pluck('name');
             } else {
                 return false;
             }
         }
 
-        return in_array($table, $this->tableWhitelist) === true;
+        return in_array($table, $this->tables) === true;
     }
 
     /**
@@ -569,8 +569,8 @@ class Database
         }
 
         // update cache
-        if (in_array($table, $this->tableWhitelist) !== true) {
-            $this->tableWhitelist[] = $table;
+        if (in_array($table, $this->tables ?? []) !== true) {
+            $this->tables[] = $table;
         }
 
         return true;
@@ -590,9 +590,9 @@ class Database
         }
 
         // update cache
-        $key = array_search($this->tableWhitelist, $table);
+        $key = array_search($table, $this->tables ?? []);
         if ($key !== false) {
-            unset($this->tableWhitelist[$key]);
+            unset($this->tables[$key]);
         }
 
         return true;
