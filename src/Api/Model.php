@@ -22,7 +22,7 @@ use Kirby\Toolkit\Str;
 class Model
 {
     /**
-     * @var Api
+     * @var \Kirby\Api\Api
      */
     protected $api;
 
@@ -49,10 +49,10 @@ class Model
     /**
      * Model constructor
      *
-     * @param Api $api
+     * @param \Kirby\Api\Api $api
      * @param null $data
      * @param array $schema
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct(Api $api, $data = null, array $schema)
     {
@@ -85,7 +85,7 @@ class Model
     /**
      * @param null $keys
      * @return self
-     * @throws Exception
+     * @throws \Exception
      */
     public function select($keys = null)
     {
@@ -107,7 +107,7 @@ class Model
 
     /**
      * @return array
-     * @throws Exception
+     * @throws \Exception
      */
     public function selection(): array
     {
@@ -155,7 +155,7 @@ class Model
     /**
      * @return array
      * @throws \Kirby\Exception\NotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function toArray(): array
     {
@@ -201,7 +201,7 @@ class Model
     /**
      * @return array
      * @throws \Kirby\Exception\NotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function toResponse(): array
     {
@@ -226,7 +226,7 @@ class Model
     /**
      * @param string $name
      * @return self
-     * @throws Exception
+     * @throws \Exception
      */
     public function view(string $name)
     {
