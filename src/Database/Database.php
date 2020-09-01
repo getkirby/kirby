@@ -38,7 +38,7 @@ class Database
     /**
      * The established connection
      *
-     * @var PDO|null
+     * @var \PDO|null
      */
     protected $connection;
 
@@ -78,7 +78,7 @@ class Database
     /**
      * The last error
      *
-     * @var Exception|null
+     * @var \Exception|null
      */
     protected $lastError;
 
@@ -148,7 +148,6 @@ class Database
      *
      * @param array $params
      * @return void
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function __construct(array $params = [])
     {
@@ -156,10 +155,10 @@ class Database
     }
 
     /**
-     * Returns one of the started instance
+     * Returns one of the started instances
      *
      * @param string|null $id
-     * @return self
+     * @return self|null
      */
     public static function instance(string $id = null)
     {
@@ -361,7 +360,6 @@ class Database
      * @param string $query
      * @param array $bindings
      * @return bool
-     * @throws \Throwable
      */
     protected function hit(string $query, array $bindings = []): bool
     {
@@ -408,7 +406,6 @@ class Database
      * @param array $bindings
      * @param array $params
      * @return mixed
-     * @throws \Throwable
      */
     public function query(string $query, array $bindings = [], array $params = [])
     {
@@ -467,7 +464,6 @@ class Database
      * @param string $query
      * @param array $bindings
      * @return bool
-     * @throws \Throwable
      */
     public function execute(string $query, array $bindings = []): bool
     {
@@ -504,7 +500,6 @@ class Database
      *
      * @param string $table
      * @return bool
-     * @throws \Throwable
      */
     public function validateTable(string $table): bool
     {
@@ -529,7 +524,6 @@ class Database
      * @param string $table
      * @param string $column
      * @return bool
-     * @throws \Throwable
      */
     public function validateColumn(string $table, string $column): bool
     {
@@ -559,7 +553,6 @@ class Database
      * @param string $table
      * @param array $columns
      * @return bool
-     * @throws \Throwable
      */
     public function createTable($table, $columns = []): bool
     {
@@ -587,7 +580,6 @@ class Database
      *
      * @param string $table
      * @return bool
-     * @throws \Throwable
      */
     public function dropTable(string $table): bool
     {
