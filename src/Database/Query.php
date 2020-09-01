@@ -153,7 +153,6 @@ class Query
      *
      * @param \Kirby\Database\Database $database Database object
      * @param string $table Optional name of the table, which should be queried
-     * @throws \Throwable
      */
     public function __construct(Database $database, string $table)
     {
@@ -252,7 +251,7 @@ class Query
      *
      * @param string $table
      * @return \Kirby\Database\Query
-     * @throws \Throwable
+     * @throws \Kirby\Exception\InvalidArgumentException if the table does not exist
      */
     public function table(string $table)
     {
@@ -295,7 +294,7 @@ class Query
      * @param string $table Name of the table, which should be joined
      * @param string $on The on clause for this join
      * @param string $type The join type. Uses an inner join by default
-     * @return object
+     * @return self
      */
     public function join(string $table, string $on, string $type = 'JOIN')
     {
@@ -518,7 +517,6 @@ class Query
      *
      * @param string $type (select, update, insert)
      * @return array The final query
-     * @throws \Throwable
      */
     public function build(string $type)
     {
@@ -623,8 +621,6 @@ class Query
      * @param string $column
      * @param int $default An optional default value, which should be returned if the query fails
      * @return mixed
-     * @throws \Kirby\Exception\InvalidArgumentException
-     * @throws \Throwable
      */
     public function aggregate(string $method, string $column = '*', $default = 0)
     {
@@ -657,7 +653,6 @@ class Query
      * @param string|array $sql
      * @param array $params
      * @return mixed
-     * @throws \Throwable
      */
     protected function query($sql, array $params = [])
     {
@@ -693,7 +688,6 @@ class Query
      * @param string|array $sql
      * @param array $params
      * @return mixed
-     * @throws \Throwable
      */
     protected function execute($sql, array $params = [])
     {
@@ -727,7 +721,6 @@ class Query
      * Selects only one row from a table
      *
      * @return object
-     * @throws \Throwable
      */
     public function first()
     {
@@ -742,7 +735,6 @@ class Query
      * Selects only one row from a table
      *
      * @return object
-     * @throws \Throwable
      */
     public function row()
     {
@@ -753,7 +745,6 @@ class Query
      * Selects only one row from a table
      *
      * @return object
-     * @throws \Throwable
      */
     public function one()
     {
@@ -766,7 +757,6 @@ class Query
      * @param int $page
      * @param int $limit The number of rows, which should be returned for each page
      * @return object Collection iterator with attached pagination object
-     * @throws \Kirby\Exception\Exception
      */
     public function page(int $page, int $limit)
     {
@@ -808,7 +798,6 @@ class Query
      * Returns all matching rows from a table
      *
      * @return mixed
-     * @throws \Throwable
      */
     public function all()
     {
@@ -823,7 +812,6 @@ class Query
      *
      * @param string $column
      * @return mixed
-     * @throws \Throwable
      */
     public function column(string $column)
     {
@@ -862,7 +850,6 @@ class Query
      * @param string $column
      * @param mixed $value
      * @return mixed
-     * @throws \Throwable
      */
     public function findBy(string $column, $value)
     {
@@ -874,7 +861,6 @@ class Query
      *
      * @param mixed $id
      * @return mixed
-     * @throws \Throwable
      */
     public function find($id)
     {
@@ -886,7 +872,6 @@ class Query
      *
      * @param mixed $values You can pass values here or set them with ->values() before
      * @return mixed Returns the last inserted id on success or false.
-     * @throws \Throwable
      */
     public function insert($values = null)
     {
@@ -905,7 +890,6 @@ class Query
      * @param mixed $values You can pass values here or set them with ->values() before
      * @param mixed $where You can pass a where clause here or set it with ->where() before
      * @return bool
-     * @throws \Throwable
      */
     public function update($values = null, $where = null)
     {
@@ -917,7 +901,6 @@ class Query
      *
      * @param mixed $where You can pass a where clause here or set it with ->where() before
      * @return bool
-     * @throws \Throwable
      */
     public function delete($where = null)
     {
@@ -930,7 +913,6 @@ class Query
      * @param string $method
      * @param array $arguments
      * @return mixed
-     * @throws \Throwable
      */
     public function __call(string $method, array $arguments = [])
     {
