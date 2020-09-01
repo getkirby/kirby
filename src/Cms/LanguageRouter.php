@@ -50,6 +50,7 @@ class LanguageRouter
      * current language from the Kirby instance
      *
      * @return array
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function routes(): array
     {

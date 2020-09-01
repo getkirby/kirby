@@ -17,6 +17,13 @@ use Kirby\Toolkit\Str;
  */
 class SiteRules
 {
+    /**
+     * @param \Kirby\Cms\Site $site
+     * @param string $title
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function changeTitle(Site $site, string $title): bool
     {
         if ($site->permissions()->changeTitle() !== true) {
@@ -30,6 +37,12 @@ class SiteRules
         return true;
     }
 
+    /**
+     * @param \Kirby\Cms\Site $site
+     * @param array $content
+     * @return bool
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function update(Site $site, array $content = []): bool
     {
         if ($site->permissions()->update() !== true) {

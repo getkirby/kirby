@@ -80,7 +80,7 @@ trait HasFiles
     /**
      * Returns a specific file by filename or the first one
      *
-     * @param string $filename
+     * @param string|null $filename
      * @param string $in
      * @return \Kirby\Cms\File|null
      */
@@ -181,7 +181,7 @@ trait HasFiles
     /**
      * Returns a specific image by filename or the first one
      *
-     * @param string $filename
+     * @param string|null $filename
      * @return \Kirby\Cms\File|null
      */
     public function image(string $filename = null)

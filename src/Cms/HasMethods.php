@@ -30,6 +30,7 @@ trait HasMethods
      * @param string $method
      * @param array $args
      * @return mixed
+     * @throws \Kirby\Exception\BadMethodCallException
      */
     public function callMethod(string $method, array $args = [])
     {
@@ -60,7 +61,7 @@ trait HasMethods
      * inheritance order (top to bottom)
      *
      * @param string $method
-     * @return Closure|null
+     * @return \Closure|null
      */
     protected function getMethod(string $method)
     {
@@ -73,7 +74,7 @@ trait HasMethods
                 return $parent::$methods[$method];
             }
         }
-        
+
         return null;
     }
 }

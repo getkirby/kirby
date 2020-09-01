@@ -17,6 +17,12 @@ use Kirby\Toolkit\Str;
  */
 class LanguageRules
 {
+    /**
+     * @param \Kirby\Cms\Language $language
+     * @return bool
+     * @throws \Kirby\Exception\DuplicateException
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function create(Language $language): bool
     {
         static::validLanguageCode($language);
@@ -34,12 +40,21 @@ class LanguageRules
         return true;
     }
 
+    /**
+     * @param \Kirby\Cms\Language $language
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function update(Language $language)
     {
         static::validLanguageCode($language);
         static::validLanguageName($language);
     }
 
+    /**
+     * @param \Kirby\Cms\Language $language
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function validLanguageCode(Language $language): bool
     {
         if (Str::length($language->code()) < 2) {
@@ -55,6 +70,11 @@ class LanguageRules
         return true;
     }
 
+    /**
+     * @param \Kirby\Cms\Language $language
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function validLanguageName(Language $language): bool
     {
         if (Str::length($language->name()) < 1) {
