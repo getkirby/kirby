@@ -23,11 +23,22 @@ class Darkroom
 
     protected $settings = [];
 
+    /**
+     * Darkroom constructor
+     *
+     * @param array $settings
+     */
     public function __construct(array $settings = [])
     {
         $this->settings = array_merge($this->defaults(), $settings);
     }
 
+    /**
+     * @param string $type
+     * @param array $settings
+     * @return mixed
+     * @throws \Exception
+     */
     public static function factory(string $type, array $settings = [])
     {
         if (isset(static::$types[$type]) === false) {
@@ -38,6 +49,9 @@ class Darkroom
         return new $class($settings);
     }
 
+    /**
+     * @return array
+     */
     protected function defaults(): array
     {
         return [
@@ -51,6 +65,10 @@ class Darkroom
         ];
     }
 
+    /**
+     * @param array $options
+     * @return array
+     */
     protected function options(array $options = []): array
     {
         $options = array_merge($this->settings, $options);
@@ -84,6 +102,11 @@ class Darkroom
         return $options;
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return array
+     */
     public function preprocess(string $file, array $options = [])
     {
         $options    = $this->options($options);
@@ -96,6 +119,11 @@ class Darkroom
         return $options;
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return array
+     */
     public function process(string $file, array $options = []): array
     {
         return $this->preprocess($file, $options);
