@@ -22,10 +22,10 @@ class PageRules
     /**
      * Validation for changing page num
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @param int|null $num
      * @return bool
-     * @throws InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public static function changeNum(Page $page, int $num = null): bool
     {
@@ -39,12 +39,11 @@ class PageRules
     /**
      * Validation for changing page slug
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @param string $slug
      * @return bool
-     * @throws DuplicateException
-     * @throws InvalidArgumentException
-     * @throws PermissionException
+     * @throws \Kirby\Exception\DuplicateException
+     * @throws \Kirby\Exception\PermissionException
      */
     public static function changeSlug(Page $page, string $slug): bool
     {
@@ -90,12 +89,11 @@ class PageRules
     /**
      * Validation for changing page status
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @param string $status
      * @param int|null $position
      * @return bool
-     * @throws InvalidArgumentException
-     * @throws PermissionException
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public static function changeStatus(Page $page, string $status, int $position = null): bool
     {
@@ -118,9 +116,9 @@ class PageRules
     /**
      * Validation for changing page status to draft
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @return bool
-     * @throws PermissionException
+     * @throws \Kirby\Exception\PermissionException
      */
     public static function changeStatusToDraft(Page $page)
     {
@@ -148,11 +146,11 @@ class PageRules
     /**
      * Validation for changing page status to listed
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @param int $position
      * @return bool
-     * @throws InvalidArgumentException
-     * @throws PermissionException
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\PermissionException
      */
     public static function changeStatusToListed(Page $page, int $position)
     {
@@ -197,9 +195,9 @@ class PageRules
     /**
      * Validation for changing page status to unlisted
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @return bool
-     * @throws PermissionException
+     * @throws \Kirby\Exception\PermissionException
      */
     public static function changeStatusToUnlisted(Page $page)
     {
@@ -218,11 +216,11 @@ class PageRules
     /**
      * Validation for changing page template
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @param string $template
      * @return bool
-     * @throws LogicException
-     * @throws PermissionException
+     * @throws \Kirby\Exception\LogicException
+     * @throws \Kirby\Exception\PermissionException
      */
     public static function changeTemplate(Page $page, string $template): bool
     {
@@ -248,11 +246,11 @@ class PageRules
     /**
      * Validation for changing page title
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @param string $title
      * @return bool
-     * @throws InvalidArgumentException
-     * @throws PermissionException
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\PermissionException
      */
     public static function changeTitle(Page $page, string $title): bool
     {
@@ -277,11 +275,11 @@ class PageRules
     /**
      * Validation for page create
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @return bool
-     * @throws DuplicateException
-     * @throws InvalidArgumentException
-     * @throws PermissionException
+     * @throws \Kirby\Exception\DuplicateException
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\PermissionException
      */
     public static function create(Page $page): bool
     {
@@ -335,11 +333,11 @@ class PageRules
     /**
      * Validation for page delete
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @param bool $force
      * @return bool
-     * @throws LogicException
-     * @throws PermissionException
+     * @throws \Kirby\Exception\LogicException
+     * @throws \Kirby\Exception\PermissionException
      */
     public static function delete(Page $page, bool $force = false): bool
     {
@@ -362,11 +360,11 @@ class PageRules
     /**
      * Validation for page duplicate
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @param string $slug
      * @param array $options
      * @return bool
-     * @throws PermissionException
+     * @throws \Kirby\Exception\PermissionException
      */
     public static function duplicate(Page $page, string $slug, array $options = []): bool
     {
@@ -385,10 +383,10 @@ class PageRules
     /**
      * Validation for page update
      *
-     * @param Page $page
+     * @param \Kirby\Cms\Page $page
      * @param array $content
      * @return bool
-     * @throws PermissionException
+     * @throws \Kirby\Exception\PermissionException
      */
     public static function update(Page $page, array $content = []): bool
     {

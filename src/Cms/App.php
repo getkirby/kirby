@@ -136,7 +136,6 @@ class App
      * Improved `var_dump` output
      *
      * @return array
-     * @throws \Kirby\Exception\LogicException
      */
     public function __debugInfo(): array
     {
@@ -189,7 +188,6 @@ class App
      * @param string $modify Key in $args that is modified by the hooks
      * @param \Kirby\Cms\Event|null $originalEvent Event object (internal use)
      * @return mixed Resulting value as modified by the hooks
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function apply(string $name, array $args, string $modify, ?Event $originalEvent = null)
     {
@@ -612,7 +610,6 @@ class App
      * @internal
      * @param mixed $input
      * @return \Kirby\Http\Response
-     * @throws \Kirby\Exception\InvalidArgumentException|\Kirby\Exception\NotFoundException
      */
     public function io($input)
     {
@@ -706,8 +703,6 @@ class App
      * @param array $attr
      * @param array $data
      * @return string
-     * @throws InvalidArgumentException
-     * @throws \Kirby\Exception\BadMethodCallException
      */
     public function kirbytag(string $type, string $value = null, array $attr = [], array $data = []): string
     {
@@ -743,7 +738,6 @@ class App
      * @param array $data
      * @param bool $inline
      * @return string
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function kirbytext(string $text = null, array $data = [], bool $inline = false): string
     {
@@ -857,9 +851,9 @@ class App
     /**
      * Returns the nonce, which is used
      * in the panel for inline scripts
-     * @return string
-     * @throws \Exception
      * @since 3.3.0
+     *
+     * @return string
      */
     public function nonce(): string
     {
@@ -1041,7 +1035,7 @@ class App
      * @param string|null $path
      * @param string|null $language
      * @return mixed
-     * @throws NotFoundException
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function resolve(string $path = null, string $language = null)
     {
@@ -1224,7 +1218,6 @@ class App
      *
      * @param array|null $languages
      * @return self
-     * @throws \Kirby\Exception\DuplicateException
      */
     protected function setLanguages(array $languages = null)
     {
@@ -1289,7 +1282,7 @@ class App
     /**
      * Sets a custom Site object
      *
-     * @param null $site
+     * @param \Kirby\Cms\Site|array|null $site
      * @return self
      */
     protected function setSite($site = null)
