@@ -242,7 +242,7 @@ class Collection extends Iterator implements Countable
      *
      * @param array|\Closure $filter
      * @return self
-     * @throws \Exception
+     * @throws \Exception if $filter is neither a closure nor an array 
      */
     public function filter($filter)
     {
@@ -321,9 +321,9 @@ class Collection extends Iterator implements Countable
     }
 
     /**
-     * @param $validator
-     * @param $values
-     * @param $test
+     * @param string $validator
+     * @param mixed $values
+     * @param mixed $test
      * @return bool
      */
     protected function filterMatchesAny($validator, $values, $test): bool
@@ -338,9 +338,9 @@ class Collection extends Iterator implements Countable
     }
 
     /**
-     * @param $validator
-     * @param $values
-     * @param $test
+     * @param string $validator
+     * @param array $values
+     * @param mixed $test
      * @return bool
      */
     protected function filterMatchesAll($validator, $values, $test): bool
@@ -355,9 +355,9 @@ class Collection extends Iterator implements Countable
     }
 
     /**
-     * @param $validator
-     * @param $values
-     * @param $test
+     * @param string $validator
+     * @param array $values
+     * @param mixed $test
      * @return bool
      */
     protected function filterMatchesNone($validator, $values, $test): bool
@@ -508,7 +508,7 @@ class Collection extends Iterator implements Countable
     /**
      * @param object $object
      * @param string $attribute
-     * @return void
+     * @return mixed
      */
     protected function getAttributeFromObject($object, string $attribute)
     {
@@ -727,7 +727,6 @@ class Collection extends Iterator implements Countable
      *
      * @param array ...$arguments
      * @return \Kirby\Toolkit\Collection a sliced set of data
-     * @throws \Kirby\Exception\Exception
      */
     public function paginate(...$arguments)
     {
@@ -806,7 +805,6 @@ class Collection extends Iterator implements Countable
      *
      * @param array $arguments
      * @return \Kirby\Toolkit\Collection
-     * @throws \Kirby\Exception\Exception
      */
     public function query(array $arguments = [])
     {
@@ -1116,11 +1114,11 @@ class Collection extends Iterator implements Countable
      * You may pass another Closure as the third parameter to the when method.
      * This Closure will execute if the first parameter evaluates as false
      *
+     * @since 3.3.0
      * @param mixed $condition
      * @param \Closure $callback
      * @param \Closure|null $fallback
      * @return mixed
-     * @since 3.3.0
      */
     public function when($condition, Closure $callback, Closure $fallback = null)
     {
@@ -1150,9 +1148,9 @@ class Collection extends Iterator implements Countable
 /**
  * Equals Filter
  *
- * @param $collection
- * @param $field
- * @param $test
+ * @param \Kirby\Toolkit\Collection $collection
+ * @param mixed $field
+ * @param mixed $test
  * @param bool $split
  * @return mixed
  */
@@ -1175,9 +1173,9 @@ Collection::$filters['=='] = function ($collection, $field, $test, $split = fals
 /**
  * Not Equals Filter
  *
- * @param $collection
- * @param $field
- * @param $test
+ * @param \Kirby\Toolkit\Collection $collection
+ * @param mixed $field
+ * @param mixed $test
  * @param bool $split
  * @return mixed
  */
