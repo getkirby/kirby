@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use PDO;
-use PDOStatement;
 use Throwable;
 
 /**
