@@ -17,6 +17,11 @@ use Kirby\Toolkit\F;
  */
 class ImageMagick extends Darkroom
 {
+    /**
+     * @param string $file
+     * @param array $options
+     * @return string
+     */
     protected function autoOrient(string $file, array $options)
     {
         if ($options['autoOrient'] === true) {
@@ -24,6 +29,11 @@ class ImageMagick extends Darkroom
         }
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return string
+     */
     protected function blur(string $file, array $options)
     {
         if ($options['blur'] !== false) {
@@ -31,6 +41,11 @@ class ImageMagick extends Darkroom
         }
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return string
+     */
     protected function coalesce(string $file, array $options)
     {
         if (F::extension($file) === 'gif') {
@@ -38,11 +53,19 @@ class ImageMagick extends Darkroom
         }
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return string
+     */
     protected function convert(string $file, array $options): string
     {
         return sprintf($options['bin'] . ' "%s"', $file);
     }
 
+    /**
+     * @return array
+     */
     protected function defaults(): array
     {
         return parent::defaults() + [
@@ -51,6 +74,11 @@ class ImageMagick extends Darkroom
         ];
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return string
+     */
     protected function grayscale(string $file, array $options)
     {
         if ($options['grayscale'] === true) {
@@ -58,6 +86,11 @@ class ImageMagick extends Darkroom
         }
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return string
+     */
     protected function interlace(string $file, array $options)
     {
         if ($options['interlace'] === true) {
@@ -65,6 +98,12 @@ class ImageMagick extends Darkroom
         }
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return array
+     * @throws \Exception
+     */
     public function process(string $file, array $options = []): array
     {
         $options = $this->preprocess($file, $options);
@@ -95,11 +134,21 @@ class ImageMagick extends Darkroom
         return $options;
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return string
+     */
     protected function quality(string $file, array $options): string
     {
         return '-quality ' . $options['quality'];
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return string
+     */
     protected function resize(string $file, array $options): string
     {
         // simple resize
@@ -128,11 +177,21 @@ class ImageMagick extends Darkroom
         return $command;
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return string
+     */
     protected function save(string $file, array $options): string
     {
         return sprintf('-limit thread 1 "%s"', $file);
     }
 
+    /**
+     * @param string $file
+     * @param array $options
+     * @return string
+     */
     protected function strip(string $file, array $options): string
     {
         return '-strip';
