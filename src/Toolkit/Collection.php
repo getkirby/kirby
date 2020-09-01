@@ -242,7 +242,7 @@ class Collection extends Iterator implements Countable
      *
      * @param array|\Closure $filter
      * @return self
-     * @throws \Exception if $filter is neither a closure nor an array 
+     * @throws \Exception if $filter is neither a closure nor an array
      */
     public function filter($filter)
     {
