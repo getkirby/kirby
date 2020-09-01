@@ -36,6 +36,7 @@ class Db
      * @param array|null $params Pass `[]` to use the default params from the config,
      *                           don't pass any argument to get the current connection
      * @return \Kirby\Database\Database
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public static function connect(?array $params = null)
     {
@@ -75,8 +76,9 @@ class Db
      *
      * @param string $table
      * @return \Kirby\Database\Query
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function table($table)
+    public static function table(string $table)
     {
         $db = static::connect();
         return $db->table($table);
@@ -89,6 +91,8 @@ class Db
      * @param array $bindings
      * @param array $params
      * @return mixed
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Throwable
      */
     public static function query(string $query, array $bindings = [], array $params = [])
     {
@@ -102,6 +106,8 @@ class Db
      * @param string $query
      * @param array $bindings
      * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Throwable
      */
     public static function execute(string $query, array $bindings = []): bool
     {
@@ -117,8 +123,9 @@ class Db
      * @param string $method
      * @param mixed $arguments
      * @return mixed
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
-    public static function __callStatic($method, $arguments)
+    public static function __callStatic(string $method, $arguments)
     {
         if (isset(static::$queries[$method])) {
             return static::$queries[$method](...$arguments);
