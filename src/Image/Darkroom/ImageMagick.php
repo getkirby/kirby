@@ -18,9 +18,9 @@ use Kirby\Toolkit\F;
 class ImageMagick extends Darkroom
 {
     /**
-     * Activates imagemagick's auto-orient feature unless 
+     * Activates imagemagick's auto-orient feature unless
      * it is deactivated via the options
-     * 
+     *
      * @param string $file
      * @param array $options
      * @return string
@@ -34,7 +34,7 @@ class ImageMagick extends Darkroom
 
     /**
      * Applies the blur settings
-     * 
+     *
      * @param string $file
      * @param array $options
      * @return string
@@ -46,9 +46,9 @@ class ImageMagick extends Darkroom
         }
     }
 
-    /** 
+    /**
      * Keep animated gifs
-     * 
+     *
      * @param string $file
      * @param array $options
      * @return string
@@ -62,7 +62,7 @@ class ImageMagick extends Darkroom
 
     /**
      * Creates the convert command with the right path to the binary file
-     * 
+     *
      * @param string $file
      * @param array $options
      * @return string
@@ -74,7 +74,7 @@ class ImageMagick extends Darkroom
 
     /**
      * Returns additional default parameters for imagemagick
-     * 
+     *
      * @return array
      */
     protected function defaults(): array
@@ -85,9 +85,9 @@ class ImageMagick extends Darkroom
         ];
     }
 
-    /** 
+    /**
      * Applies the correct settings for grayscale images
-     * 
+     *
      * @param string $file
      * @param array $options
      * @return string
@@ -100,9 +100,9 @@ class ImageMagick extends Darkroom
     }
 
     /**
-     * Applies the correct settings for interlaced JPEGs if 
+     * Applies the correct settings for interlaced JPEGs if
      * activated via options
-     * 
+     *
      * @param string $file
      * @param array $options
      * @return string
@@ -115,9 +115,9 @@ class ImageMagick extends Darkroom
     }
 
     /**
-     * Creates and runs the full imagemagick command 
+     * Creates and runs the full imagemagick command
      * to process the image
-     * 
+     *
      * @param string $file
      * @param array $options
      * @return array
@@ -154,8 +154,8 @@ class ImageMagick extends Darkroom
     }
 
     /**
-     * Applies the correct JPEG compression quality settings 
-     * 
+     * Applies the correct JPEG compression quality settings
+     *
      * @param string $file
      * @param array $options
      * @return string
@@ -167,8 +167,8 @@ class ImageMagick extends Darkroom
 
     /**
      * Creates the correct options to crop or resize the image
-     * and translates the crop positions for imagemagick 
-     * 
+     * and translates the crop positions for imagemagick
+     *
      * @param string $file
      * @param array $options
      * @return string
@@ -216,7 +216,7 @@ class ImageMagick extends Darkroom
 
     /**
      * Removes all metadata from the image
-     * 
+     *
      * @param string $file
      * @param array $options
      * @return string
