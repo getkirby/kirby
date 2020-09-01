@@ -19,6 +19,8 @@ use Kirby\Image\Darkroom;
 class GdLib extends Darkroom
 {
     /**
+     * Processes the image with the SimpleImage library
+     * 
      * @param string $file
      * @param array $options
      * @return array
@@ -40,7 +42,10 @@ class GdLib extends Darkroom
         return $options;
     }
 
-    /**
+    /** 
+     * Activates the autoOrient option in SimpleImage
+     * unless this is deactivated
+     * 
      * @param SimpleImage $image
      * @param $options
      * @return SimpleImage
@@ -55,6 +60,8 @@ class GdLib extends Darkroom
     }
 
     /**
+     * Wrapper around SimpleImage's resize and crop methods
+     * 
      * @param SimpleImage $image
      * @param array $options
      * @return SimpleImage
@@ -69,6 +76,8 @@ class GdLib extends Darkroom
     }
 
     /**
+     * Applies the correct blur settings for SimpleImage
+     * 
      * @param SimpleImage $image
      * @param array $options
      * @return SimpleImage
@@ -83,6 +92,8 @@ class GdLib extends Darkroom
     }
 
     /**
+     * Applies grayscale conversion if activated in the options. 
+     * 
      * @param SimpleImage $image
      * @param array $options
      * @return SimpleImage
