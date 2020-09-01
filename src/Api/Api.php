@@ -674,10 +674,10 @@ class Api
      * an exception. Kirby exceptions will
      * have more information
      *
-     * @param \Exception $e
+     * @param \Throwable $e
      * @return array
      */
-    public function responseForException(Exception $e): array
+    public function responseForException(Throwable $e): array
     {
         // prepare the result array for all exception types
         $result = [
