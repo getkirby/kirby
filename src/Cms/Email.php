@@ -76,7 +76,6 @@ class Email
      *
      * @param string|array $preset Preset name or simple prop array
      * @return array
-     * @throws \Kirby\Exception\NotFoundException
      */
     protected function preset($preset): array
     {
@@ -101,7 +100,6 @@ class Email
      * to the result
      *
      * @return void
-     * @throws \Kirby\Exception\NotFoundException
      */
     protected function template(): void
     {
@@ -175,7 +173,6 @@ class Email
      * @param string|null $contentKey Optional model method that returns the array key;
      *                                returns a simple value-only array if not given
      * @return array Simple key-value or just value array with the transformed prop data
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function transformModel(string $prop, string $class, string $contentValue, string $contentKey = null): array
     {
