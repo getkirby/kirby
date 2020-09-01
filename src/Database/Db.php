@@ -26,7 +26,7 @@ class Db
     /**
      * The singleton Database object
      *
-     * @var Database
+     * @var \Kirby\Database\Database
      */
     public static $connection = null;
 
@@ -36,7 +36,6 @@ class Db
      * @param array|null $params Pass `[]` to use the default params from the config,
      *                           don't pass any argument to get the current connection
      * @return \Kirby\Database\Database
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public static function connect(?array $params = null)
     {
@@ -76,7 +75,6 @@ class Db
      *
      * @param string $table
      * @return \Kirby\Database\Query
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public static function table(string $table)
     {
@@ -91,8 +89,6 @@ class Db
      * @param array $bindings
      * @param array $params
      * @return mixed
-     * @throws \Kirby\Exception\InvalidArgumentException
-     * @throws \Throwable
      */
     public static function query(string $query, array $bindings = [], array $params = [])
     {
@@ -106,8 +102,6 @@ class Db
      * @param string $query
      * @param array $bindings
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException
-     * @throws \Throwable
      */
     public static function execute(string $query, array $bindings = []): bool
     {
