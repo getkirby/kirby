@@ -76,6 +76,7 @@ class Email
      *
      * @param string|array $preset Preset name or simple prop array
      * @return array
+     * @throws \Kirby\Exception\NotFoundException
      */
     protected function preset($preset): array
     {
@@ -100,6 +101,7 @@ class Email
      * to the result
      *
      * @return void
+     * @throws \Kirby\Exception\NotFoundException
      */
     protected function template(): void
     {

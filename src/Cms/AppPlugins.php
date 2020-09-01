@@ -92,7 +92,7 @@ trait AppPlugins
      *
      * @internal
      * @param array $extensions
-     * @param \Kirby\Cms\Plugin $plugin The plugin which defined those extensions
+     * @param \Kirby\Cms\Plugin $plugin|null The plugin which defined those extensions
      * @return array
      */
     public function extend(array $extensions, Plugin $plugin = null): array
@@ -361,7 +361,7 @@ trait AppPlugins
     /**
      * Registers additional routes
      *
-     * @param array|Closure $routes
+     * @param array|\Closure $routes
      * @return array
      */
     protected function extendRoutes($routes): array
@@ -398,8 +398,8 @@ trait AppPlugins
     /**
      * Registers SmartyPants component
      *
-     * @param Closure $smartypants
-     * @return Closure
+     * @param \Closure $smartypants
+     * @return \Closure
      */
     protected function extendSmartypants(Closure $smartypants)
     {
@@ -455,7 +455,6 @@ trait AppPlugins
      * so they can be used as plugins for plugins
      * for example.
      *
-     * @param string $type
      * @param array $extensions
      * @return array
      */
@@ -567,7 +566,7 @@ trait AppPlugins
      * the options array. I.e. hooks and routes can be
      * setup from the config.
      *
-     * @return array
+     * @return void
      */
     protected function extensionsFromOptions()
     {
@@ -582,7 +581,6 @@ trait AppPlugins
     /**
      * Apply all plugin extensions
      *
-     * @param array $plugins
      * @return void
      */
     protected function extensionsFromPlugins()
@@ -701,7 +699,7 @@ trait AppPlugins
      * of a core component
      *
      * @param string $component
-     * @return \Closure | false
+     * @return \Closure|false
      */
     public function nativeComponent(string $component)
     {
@@ -714,6 +712,7 @@ trait AppPlugins
      * @param string $name
      * @param array|null $extends If null is passed it will be used as getter. Otherwise as factory.
      * @return \Kirby\Cms\Plugin|null
+     * @throws \Kirby\Exception\DuplicateException
      */
     public static function plugin(string $name, array $extends = null)
     {
@@ -739,7 +738,7 @@ trait AppPlugins
      * Loading only happens on the first call.
      *
      * @internal
-     * @param array $plugins Can be used to overwrite the plugins registry
+     * @param array|null $plugins Can be used to overwrite the plugins registry
      * @return array
      */
     public function plugins(array $plugins = null): array

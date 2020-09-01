@@ -64,6 +64,8 @@ class Auth
      *
      * @param \Kirby\Http\Request\Auth\BasicAuth|null $auth
      * @return \Kirby\Cms\User|null
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\PermissionException
      */
     public function currentUserFromBasicAuth(BasicAuth $auth = null)
     {
@@ -137,6 +139,7 @@ class Auth
      *
      * @param string|null $who User ID or email address
      * @return \Kirby\Cms\User|null
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function impersonate(?string $who = null)
     {

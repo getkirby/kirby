@@ -24,6 +24,7 @@ class Roles extends Collection
      * current user
      *
      * @return self
+     * @throws \Exception
      */
     public function canBeChanged()
     {
@@ -47,6 +48,7 @@ class Roles extends Collection
      * current user
      *
      * @return self
+     * @throws \Exception
      */
     public function canBeCreated()
     {
@@ -89,7 +91,7 @@ class Roles extends Collection
     }
 
     /**
-     * @param string $root
+     * @param string|null $root
      * @param array $inject
      * @return self
      */

@@ -18,6 +18,11 @@ namespace Kirby\Cms;
  */
 class Nest
 {
+    /**
+     * @param $data
+     * @param null $parent
+     * @return mixed
+     */
     public static function create($data, $parent = null)
     {
         if (is_scalar($data) === true) {

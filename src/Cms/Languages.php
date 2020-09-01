@@ -20,7 +20,8 @@ class Languages extends Collection
      * Creates a new collection with the given language objects
      *
      * @param array $objects
-     * @param object $parent
+     * @param null $parent
+     * @throws \Kirby\Exception\DuplicateException
      */
     public function __construct($objects = [], $parent = null)
     {

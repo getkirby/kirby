@@ -170,7 +170,7 @@ class StructureObject extends Model
     /**
      * Sets the parent Structure collection
      *
-     * @param \Kirby\Cms\Structure $structure
+     * @param \Kirby\Cms\Structure|null $structure
      * @return self
      */
     protected function setStructure(Structure $structure = null)

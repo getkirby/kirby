@@ -27,6 +27,7 @@ trait FileFoundation
      * @param string $method
      * @param array $arguments
      * @return mixed
+     * @throws \Kirby\Exception\BadMethodCallException
      */
     public function __call(string $method, array $arguments = [])
     {
@@ -187,7 +188,7 @@ trait FileFoundation
     /**
      * Setter for the root
      *
-     * @param string $root
+     * @param string|null $root
      * @return self
      */
     protected function setRoot(string $root = null)
