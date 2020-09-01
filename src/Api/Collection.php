@@ -76,7 +76,7 @@ class Collection
     }
 
     /**
-     * @param null $keys
+     * @param string|array|null $keys
      * @return self
      * @throws \Exception
      */
