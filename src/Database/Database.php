@@ -114,7 +114,7 @@ class Database
     /**
      * The PDO query statement
      *
-     * @var PDOStatement|null
+     * @var \PDOStatement|null
      */
     protected $statement;
 
@@ -149,6 +149,7 @@ class Database
      *
      * @param array $params
      * @return void
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function __construct(array $params = [])
     {
@@ -158,7 +159,7 @@ class Database
     /**
      * Returns one of the started instance
      *
-     * @param string $id
+     * @param string|null $id
      * @return self
      */
     public static function instance(string $id = null)
@@ -180,7 +181,8 @@ class Database
      * Connects to a database
      *
      * @param array|null $params This can either be a config key or an array of parameters for the connection
-     * @return \Kirby\Database\Database
+     * @return \PDO|null
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function connect(array $params = null)
     {
@@ -223,9 +225,9 @@ class Database
     /**
      * Returns the currently active connection
      *
-     * @return \Kirby\Database\Database|null
+     * @return \PDO|null
      */
-    public function connection()
+    public function connection(): ?PDO
     {
         return $this->connection;
     }
@@ -277,10 +279,10 @@ class Database
     /**
      * Adds a value to the db trace and also returns the entire trace if nothing is specified
      *
-     * @param array $data
+     * @param array|null $data
      * @return array
      */
-    public function trace($data = null): array
+    public function trace(array $data = null): array
     {
         // return the full trace
         if ($data === null) {
@@ -336,7 +338,7 @@ class Database
     /**
      * Returns the last db error
      *
-     * @return Throwable
+     * @return \Throwable
      */
     public function lastError()
     {
@@ -360,10 +362,10 @@ class Database
      * @param string $query
      * @param array $bindings
      * @return bool
+     * @throws \Throwable
      */
     protected function hit(string $query, array $bindings = []): bool
     {
-
         // try to prepare and execute the sql
         try {
             $this->statement = $this->connection->prepare($query);
@@ -401,12 +403,13 @@ class Database
     }
 
     /**
-     * Exectues a sql query, which is expected to return a set of results
+     * Executes a sql query, which is expected to return a set of results
      *
      * @param string $query
      * @param array $bindings
      * @param array $params
      * @return mixed
+     * @throws \Throwable
      */
     public function query(string $query, array $bindings = [], array $params = [])
     {
@@ -465,6 +468,7 @@ class Database
      * @param string $query
      * @param array $bindings
      * @return bool
+     * @throws \Throwable
      */
     public function execute(string $query, array $bindings = []): bool
     {
@@ -501,6 +505,7 @@ class Database
      *
      * @param string $table
      * @return bool
+     * @throws \Throwable
      */
     public function validateTable(string $table): bool
     {
@@ -525,6 +530,7 @@ class Database
      * @param string $table
      * @param string $column
      * @return bool
+     * @throws \Throwable
      */
     public function validateColumn(string $table, string $column): bool
     {
@@ -554,6 +560,7 @@ class Database
      * @param string $table
      * @param array $columns
      * @return bool
+     * @throws \Throwable
      */
     public function createTable($table, $columns = []): bool
     {
@@ -581,8 +588,9 @@ class Database
      *
      * @param string $table
      * @return bool
+     * @throws \Throwable
      */
-    public function dropTable($table): bool
+    public function dropTable(string $table): bool
     {
         $sql = $this->sql()->dropTable($table);
         if ($this->execute($sql['query'], $sql['bindings']) !== true) {
@@ -605,6 +613,7 @@ class Database
      *
      * @param mixed $method
      * @param mixed $arguments
+     * @return \Kirby\Database\Query
      */
     public function __call($method, $arguments = null)
     {
