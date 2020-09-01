@@ -34,9 +34,9 @@ class Darkroom
     }
 
     /**
-     * Creates a new Darkroom instance for the given 
-     * type/driver 
-     * 
+     * Creates a new Darkroom instance for the given
+     * type/driver
+     *
      * @param string $type
      * @param array $settings
      * @return mixed
@@ -53,8 +53,8 @@ class Darkroom
     }
 
     /**
-     * Returns the default thumb settings 
-     * 
+     * Returns the default thumb settings
+     *
      * @return array
      */
     protected function defaults(): array
@@ -72,7 +72,7 @@ class Darkroom
 
     /**
      * Normalizes all thumb options
-     * 
+     *
      * @param array $options
      * @return array
      */
@@ -111,9 +111,9 @@ class Darkroom
 
     /**
      * Calculates the dimensions of the final thumb based
-     * on the given options and returns a full array with 
+     * on the given options and returns a full array with
      * all the final options to be used for the image generator
-     * 
+     *
      * @param string $file
      * @param array $options
      * @return array
@@ -131,9 +131,9 @@ class Darkroom
     }
 
     /**
-     * This method must be replaced by the driver to run the 
-     * actual image processing job. 
-     * 
+     * This method must be replaced by the driver to run the
+     * actual image processing job.
+     *
      * @param string $file
      * @param array $options
      * @return array
