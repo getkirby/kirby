@@ -31,12 +31,12 @@ class Image extends File
     protected $url;
 
     /**
-     * @var Exif|null
+     * @var \Kirby\Image\Exif|null
      */
     protected $exif;
 
     /**
-     * @var Dimensions|null
+     * @var \Kirby\Image\Dimensions|null
      */
     protected $dimensions;
 
