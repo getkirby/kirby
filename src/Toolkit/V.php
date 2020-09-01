@@ -35,7 +35,6 @@ class V
      * @param array $rules
      * @param array $messages
      * @return array
-     * @throws Exception
      */
     public static function errors($input, array $rules, $messages = []): array
     {
@@ -52,7 +51,6 @@ class V
      * @param string $validatorName
      * @param mixed ...$params
      * @return string|null
-     * @throws \ReflectionException
      */
     public static function message(string $validatorName, ...$params): ?string
     {
@@ -110,8 +108,6 @@ class V
      * @param array $messages
      * @param bool $fail
      * @return bool|array
-     * @throws \ReflectionException
-     * @throws Exception
      */
     public static function value($value, array $rules, array $messages = [], bool $fail = true)
     {
@@ -150,7 +146,6 @@ class V
      * @param array $input
      * @param array $rules
      * @return bool
-     * @throws Exception
      */
     public static function input(array $input, array $rules): bool
     {
@@ -188,7 +183,6 @@ class V
      * @param string $method
      * @param array $arguments
      * @return bool
-     * @throws Exception
      */
     public static function __callStatic(string $method, array $arguments): bool
     {
