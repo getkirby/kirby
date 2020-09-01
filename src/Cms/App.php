@@ -256,7 +256,7 @@ class App
     /**
      * Sets the directory structure
      *
-     * @param array|null $roots
+     * @param array $roots
      * @return self
      */
     protected function bakeRoots(array $roots = null)
@@ -269,7 +269,7 @@ class App
     /**
      * Sets the Url structure
      *
-     * @param array|null $urls
+     * @param array $urls
      * @return self
      */
     protected function bakeUrls(array $urls = null)
@@ -314,8 +314,8 @@ class App
     /**
      * Calls any Kirby route
      *
-     * @param string|null $path
-     * @param string|null $method
+     * @param string $path
+     * @param string $method
      * @return mixed
      */
     public function call(string $path = null, string $method = null)
@@ -504,7 +504,7 @@ class App
     }
 
     /**
-     * Detect the preferred language from the visitor object
+     * Detect the prefered language from the visitor object
      *
      * @return \Kirby\Cms\Language
      */
@@ -586,7 +586,7 @@ class App
     /**
      * Returns the current App instance
      *
-     * @param \Kirby\Cms\App|null $instance
+     * @param \Kirby\Cms\App $instance
      * @param bool $lazy If `true`, the instance is only returned if already existing
      * @return self|null
      */
@@ -699,7 +699,7 @@ class App
      *
      * @internal
      * @param string $type
-     * @param string|null $value
+     * @param string $value
      * @param array $attr
      * @param array $data
      * @return string
@@ -717,7 +717,7 @@ class App
      * KirbyTags Parser
      *
      * @internal
-     * @param string|null $text
+     * @param string $text
      * @param array $data
      * @return string
      */
@@ -734,7 +734,7 @@ class App
      * Parses KirbyTags first and Markdown afterwards
      *
      * @internal
-     * @param string|null $text
+     * @param string $text
      * @param array $data
      * @param bool $inline
      * @return string
@@ -825,7 +825,7 @@ class App
      * Parses Markdown
      *
      * @internal
-     * @param string|null $text
+     * @param string $text
      * @param bool $inline
      * @return string
      */
@@ -960,7 +960,7 @@ class App
     /**
      * Returns any page from the content folder
      *
-     * @param string|null $id
+     * @param string $id|null
      * @param \Kirby\Cms\Page|\Kirby\Cms\Site|null $parent
      * @param bool $drafts
      * @return \Kirby\Cms\Page|null
@@ -1032,10 +1032,9 @@ class App
      * Path resolver for the router
      *
      * @internal
-     * @param string|null $path
+     * @param string $path
      * @param string|null $language
      * @return mixed
-     * @throws \Kirby\Exception\NotFoundException
      */
     public function resolve(string $path = null, string $language = null)
     {
@@ -1216,7 +1215,7 @@ class App
     /**
      * Create your own set of languages
      *
-     * @param array|null $languages
+     * @param array $languages
      * @return self
      */
     protected function setLanguages(array $languages = null)
@@ -1238,7 +1237,7 @@ class App
      * Sets the request path that is
      * used for the router
      *
-     * @param string|null $path
+     * @param string $path
      * @return self
      */
     protected function setPath(string $path = null)
@@ -1250,7 +1249,7 @@ class App
     /**
      * Sets the request
      *
-     * @param array|null $request
+     * @param array $request
      * @return self
      */
     protected function setRequest(array $request = null)
@@ -1265,7 +1264,7 @@ class App
     /**
      * Create your own set of roles
      *
-     * @param array|null $roles
+     * @param array $roles
      * @return self
      */
     protected function setRoles(array $roles = null)
@@ -1282,15 +1281,15 @@ class App
     /**
      * Sets a custom Site object
      *
-     * @param \Kirby\Cms\Site|array|null $site
+     * @param \Kirby\Cms\Site|array $site
      * @return self
      */
     protected function setSite($site = null)
     {
         if (is_array($site) === true) {
             $site = new Site($site + [
-                'kirby' => $this
-            ]);
+                    'kirby' => $this
+                ]);
         }
 
         $this->site = $site;
@@ -1315,18 +1314,18 @@ class App
     public function site()
     {
         return $this->site = $this->site ?? new Site([
-            'errorPageId' => $this->options['error'] ?? 'error',
-            'homePageId'  => $this->options['home']  ?? 'home',
-            'kirby'       => $this,
-            'url'         => $this->url('index'),
-        ]);
+                'errorPageId' => $this->options['error'] ?? 'error',
+                'homePageId'  => $this->options['home']  ?? 'home',
+                'kirby'       => $this,
+                'url'         => $this->url('index'),
+            ]);
     }
 
     /**
      * Applies the smartypants rule on the text
      *
      * @internal
-     * @param string|null $text
+     * @param string $text
      * @return string
      */
     public function smartypants(string $text = null): string
@@ -1474,7 +1473,6 @@ class App
      * the composer.json (Keep that up to date! :))
      *
      * @return string|null
-     * @throws \Kirby\Exception\LogicException
      */
     public static function version(): ?string
     {
@@ -1489,7 +1487,6 @@ class App
      * Creates a hash of the version number
      *
      * @return string
-     * @throws \Kirby\Exception\LogicException
      */
     public static function versionHash(): string
     {
@@ -1499,7 +1496,7 @@ class App
     /**
      * Returns the visitor object
      *
-     * @return \Kirby\Http\Visitor
+     * @return \Kirby\Cms\Visitor
      */
     public function visitor()
     {
