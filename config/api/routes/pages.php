@@ -27,6 +27,24 @@ return [
         }
     ],
     [
+        'pattern' => 'pages/(:any)/blueprint',
+        'method'  => 'GET',
+        'action'  => function (string $id) {
+            return $this->page($id)->blueprint();
+        }
+    ],
+    [
+        'pattern' => [
+            'pages/(:any)/blueprints',
+            // Deprecated: remove in 3.6.0
+            'pages/(:any)/children/blueprints',
+        ],
+        'method'  => 'GET',
+        'action'  => function (string $id) {
+            return $this->page($id)->blueprints($this->requestQuery('section'));
+        }
+    ],
+    [
         'pattern' => 'pages/(:any)/children',
         'method'  => 'GET',
         'action'  => function (string $id) {
@@ -51,13 +69,6 @@ return [
             } else {
                 return $pages->query($this->requestBody());
             }
-        }
-    ],
-    [
-        'pattern' => 'pages/(:any)/blueprints',
-        'method'  => 'GET',
-        'action'  => function (string $id) {
-            return $this->page($id)->blueprints($this->requestQuery('section'));
         }
     ],
     [
