@@ -234,6 +234,21 @@ class CollectionTest extends TestCase
         $this->assertEquals('b', $result->first()->id());
     }
 
+    public function testNotWithArray()
+    {
+        $collection = new Collection([
+            $a = new MockObject(['id' => 'a']),
+            $b = new MockObject(['id' => 'b']),
+            $c = new MockObject(['id' => 'c'])
+        ]);
+
+        $not = ['a', 'c', 'non-exists'];
+
+        $result = $collection->not($not);
+        $this->assertCount(1, $result);
+        $this->assertSame('b', $result->first()->id());
+    }
+
     public function testNotWithString()
     {
         $collection = new Collection([
