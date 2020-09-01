@@ -303,7 +303,6 @@ class Collection extends BaseCollection
      * Removes an object
      *
      * @param mixed $key the name of the key
-     * @return \Kirby\Cms\Collection
      */
     public function remove($key)
     {
