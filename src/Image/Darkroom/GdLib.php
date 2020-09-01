@@ -48,7 +48,7 @@ class GdLib extends Darkroom
      * 
      * @param \claviska\SimpleImage $image
      * @param $options
-     * @return SimpleImage
+     * @return \claviska\SimpleImage
      */
     protected function autoOrient(SimpleImage $image, $options)
     {
@@ -64,7 +64,7 @@ class GdLib extends Darkroom
      * 
      * @param \claviska\SimpleImage $image
      * @param array $options
-     * @return SimpleImage
+     * @return \claviska\SimpleImage
      */
     protected function resize(SimpleImage $image, array $options)
     {
@@ -80,7 +80,7 @@ class GdLib extends Darkroom
      * 
      * @param \claviska\SimpleImage $image
      * @param array $options
-     * @return SimpleImage
+     * @return \claviska\SimpleImage
      */
     protected function blur(SimpleImage $image, array $options)
     {
@@ -96,7 +96,7 @@ class GdLib extends Darkroom
      * 
      * @param \claviska\SimpleImage $image
      * @param array $options
-     * @return SimpleImage
+     * @return \claviska\SimpleImage
      */
     protected function grayscale(SimpleImage $image, array $options)
     {
