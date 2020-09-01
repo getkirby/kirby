@@ -1288,8 +1288,8 @@ class App
     {
         if (is_array($site) === true) {
             $site = new Site($site + [
-                    'kirby' => $this
-                ]);
+                'kirby' => $this
+            ]);
         }
 
         $this->site = $site;
@@ -1314,11 +1314,11 @@ class App
     public function site()
     {
         return $this->site = $this->site ?? new Site([
-                'errorPageId' => $this->options['error'] ?? 'error',
-                'homePageId'  => $this->options['home']  ?? 'home',
-                'kirby'       => $this,
-                'url'         => $this->url('index'),
-            ]);
+            'errorPageId' => $this->options['error'] ?? 'error',
+            'homePageId'  => $this->options['home']  ?? 'home',
+            'kirby'       => $this,
+            'url'         => $this->url('index'),
+        ]);
     }
 
     /**
