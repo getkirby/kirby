@@ -43,7 +43,7 @@ class Image extends File
     /**
      * Constructor
      *
-     * @param string $root
+     * @param string|null $root
      * @param string|null $url
      */
     public function __construct(string $root = null, string $url = null)
@@ -133,7 +133,7 @@ class Image extends File
     public function header(bool $send = true)
     {
         $response = new Response();
-        $response->type($this->mime());
+        $response->type();
         return $send === true ? $response->send() : $response;
     }
 
@@ -201,6 +201,7 @@ class Image extends File
      *
      * @param array $rules
      * @return bool
+     * @throws \Exception
      */
     public function match(array $rules): bool
     {
