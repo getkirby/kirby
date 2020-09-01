@@ -132,8 +132,7 @@ class Image extends File
      */
     public function header(bool $send = true)
     {
-        $response = new Response();
-        $response->type();
+        $response = new Response('', $this->mime());
         return $send === true ? $response->send() : $response;
     }
 
