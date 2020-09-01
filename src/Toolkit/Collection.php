@@ -36,7 +36,7 @@ class Collection extends Iterator implements Countable
 
     /**
      * Pagination object
-     * @var Pagination
+     * @var \Kirby\Toolkit\Pagination
      */
     protected $pagination;
 
@@ -95,7 +95,7 @@ class Collection extends Iterator implements Countable
      *
      * @param string $key string or array
      * @param mixed $value
-     * @return Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function __set(string $key, $value)
     {
@@ -183,7 +183,7 @@ class Collection extends Iterator implements Countable
     /**
      * Returns a cloned instance of the collection
      *
-     * @return self
+     * @return \Kirby\Toolkit\Collection
      */
     public function clone()
     {
@@ -194,7 +194,7 @@ class Collection extends Iterator implements Countable
      * Getter and setter for the data
      *
      * @param array|null $data
-     * @return array|Collection
+     * @return array|\Kirby\Toolkit\Collection
      */
     public function data(array $data = null)
     {
@@ -228,7 +228,7 @@ class Collection extends Iterator implements Countable
      * Adds all elements to the collection
      *
      * @param mixed $items
-     * @return self
+     * @return \Kirby\Toolkit\Collection
      */
     public function extend($items)
     {
@@ -240,9 +240,9 @@ class Collection extends Iterator implements Countable
      * Filters elements by a custom
      * filter function or an array of filters
      *
-     * @param Closure $filter
+     * @param array|\Closure $filter
      * @return self
-     * @throws Exception
+     * @throws \Exception
      */
     public function filter($filter)
     {
@@ -270,7 +270,7 @@ class Collection extends Iterator implements Countable
      *
      * @param string $field
      * @param array ...$args
-     * @return self
+     * @return \Kirby\Toolkit\Collection
      */
     public function filterBy(string $field, ...$args)
     {
@@ -320,6 +320,12 @@ class Collection extends Iterator implements Countable
         return $filter(clone $this, $field, $test, $split);
     }
 
+    /**
+     * @param $validator
+     * @param $values
+     * @param $test
+     * @return bool
+     */
     protected function filterMatchesAny($validator, $values, $test): bool
     {
         foreach ($values as $value) {
@@ -331,6 +337,12 @@ class Collection extends Iterator implements Countable
         return false;
     }
 
+    /**
+     * @param $validator
+     * @param $values
+     * @param $test
+     * @return bool
+     */
     protected function filterMatchesAll($validator, $values, $test): bool
     {
         foreach ($values as $value) {
@@ -342,6 +354,12 @@ class Collection extends Iterator implements Countable
         return true;
     }
 
+    /**
+     * @param $validator
+     * @param $values
+     * @param $test
+     * @return bool
+     */
     protected function filterMatchesNone($validator, $values, $test): bool
     {
         $matches = 0;
@@ -500,9 +518,9 @@ class Collection extends Iterator implements Countable
     /**
      * Groups the elements by a given callback
      *
-     * @param Closure $callback
-     * @return self A new collection with an element for each group and a sub collection in each group
-     * @throws Exception
+     * @param \Closure $callback
+     * @return \Kirby\Toolkit\Collection A new collection with an element for each group and a sub collection in each group
+     * @throws \Exception
      */
     public function group(Closure $callback)
     {
@@ -547,7 +565,7 @@ class Collection extends Iterator implements Countable
      * @param string $field
      * @param bool $i
      * @return \Kirby\Toolkit\Collection A new collection with an element for each group and a sub collection in each group
-     * @throws Exception
+     * @throws \Exception
      */
     public function groupBy($field, bool $i = true)
     {
@@ -765,7 +783,7 @@ class Collection extends Iterator implements Countable
      * @param mixed $key
      * @param mixed $item
      * @param mixed ...$args
-     * @return self
+     * @return \Kirby\Toolkit\Collection
      */
     public function prepend(...$args)
     {
@@ -787,7 +805,7 @@ class Collection extends Iterator implements Countable
      * Any part of the query is optional.
      *
      * @param array $arguments
-     * @return self
+     * @return \Kirby\Toolkit\Collection
      * @throws \Kirby\Exception\Exception
      */
     public function query(array $arguments = [])
@@ -839,7 +857,7 @@ class Collection extends Iterator implements Countable
      * Removes an element from the array by key
      *
      * @param mixed $key the name of the key
-     * @return Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function remove($key)
     {
@@ -852,7 +870,7 @@ class Collection extends Iterator implements Countable
      *
      * @param mixed $key string or array
      * @param mixed $value
-     * @return self
+     * @return \Kirby\Toolkit\Collection
      */
     public function set($key, $value = null)
     {
@@ -936,7 +954,7 @@ class Collection extends Iterator implements Countable
      * @param string|callable $field Field name or value callback to sort by
      * @param string $direction asc or desc
      * @param int $method The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
-     * @return Collection
+     * @return \Kirby\Toolkit\Collection
      */
     public function sortBy()
     {
@@ -1049,7 +1067,7 @@ class Collection extends Iterator implements Countable
     /**
      * Converts the object into an array
      *
-     * @param Closure|null $map
+     * @param \Closure|null $map
      * @return array
      */
     public function toArray(Closure $map = null): array
@@ -1072,7 +1090,7 @@ class Collection extends Iterator implements Countable
     }
 
     /**
-     * Convertes the object to a string
+     * Converts the object to a string
      *
      * @return string
      */
@@ -1099,8 +1117,8 @@ class Collection extends Iterator implements Countable
      * This Closure will execute if the first parameter evaluates as false
      *
      * @param mixed $condition
-     * @param Closure $callback
-     * @param Closure|null $fallback
+     * @param \Closure $callback
+     * @param \Closure|null $fallback
      * @return mixed
      * @since 3.3.0
      */
