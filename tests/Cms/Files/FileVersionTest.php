@@ -18,7 +18,10 @@ class FileVersionTest extends TestCase
     public function testConstruct()
     {
         $original = new File([
-            'filename' => 'test.jpg'
+            'filename' => 'test.jpg',
+            'content' => [
+                'title' => 'Test Title'
+            ]
         ]);
 
         $version = new FileVersion([
@@ -30,9 +33,10 @@ class FileVersionTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals($url, $version->url());
-        $this->assertEquals($mods, $version->modifications());
-        $this->assertEquals($original, $version->original());
-        $this->assertEquals($original->kirby(), $version->kirby());
+        $this->assertSame($url, $version->url());
+        $this->assertSame('Test Title', $version->title()->value());
+        $this->assertSame($mods, $version->modifications());
+        $this->assertSame($original, $version->original());
+        $this->assertSame($original->kirby(), $version->kirby());
     }
 }

@@ -384,4 +384,80 @@ class ApiTest extends TestCase
         $this->expectExceptionMessage('The page cannot be found');
         $this->assertNull($api->parent('pages/does-not-exist'));
     }
+
+    public function testFieldApi()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'content' => [
+                            'title' => 'Test Title',
+                            'cover' => [
+                                'a.jpg'
+                            ]
+                        ],
+                        'files' => [
+                            ['filename' => 'a.jpg'],
+                            ['filename' => 'b.jpg'],
+                        ],
+                        'blueprint' => [
+                            'title' => 'Test',
+                            'name' => 'test',
+                            'fields' => [
+                                'cover' => [
+                                    'type' => 'files',
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $app->page('test');
+        $response = $app->api()->fieldApi($page, 'cover');
+
+        $this->assertCount(2, $response);
+        $this->assertArrayHasKey('data', $response);
+        $this->assertArrayHasKey('pagination', $response);
+        $this->assertCount(2, $response['data']);
+        $this->assertSame('a.jpg', $response['data'][0]['filename']);
+        $this->assertSame('b.jpg', $response['data'][1]['filename']);
+    }
+
+    public function testFieldApiInvalidField()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The field "nonexists" could not be found');
+
+        $page = $app->page('test');
+        $app->api()->fieldApi($page, 'nonexists');
+    }
+
+    public function testFieldApiEmptyField()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('No field could be loaded');
+
+        $page = $app->page('test');
+        $app->api()->fieldApi($page, '');
+    }
 }
