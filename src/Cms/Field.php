@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Closure;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
