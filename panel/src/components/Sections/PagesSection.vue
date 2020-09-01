@@ -91,7 +91,7 @@ export default {
       if (this.add) {
         this.$refs.create.open(
           this.options.link || this.parent,
-          this.parent + "/children/blueprints",
+          this.parent + "/blueprints",
           this.name
         );
       }

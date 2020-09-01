@@ -47,6 +47,31 @@ abstract class ModelWithContent extends Model
     abstract public function blueprint();
 
     /**
+     * Returns an array with all blueprints that are available
+     *
+     * @param string|null $inSection
+     * @return array
+     */
+    public function blueprints(string $inSection = null): array
+    {
+        $blueprints = [];
+        $blueprint  = $this->blueprint();
+        $sections   = $inSection !== null ? [$blueprint->section($inSection)] : $blueprint->sections();
+
+        foreach ($sections as $section) {
+            if ($section === null) {
+                continue;
+            }
+
+            foreach ((array)$section->blueprints() as $blueprint) {
+                $blueprints[$blueprint['name']] = $blueprint;
+            }
+        }
+
+        return array_values($blueprints);
+    }
+
+    /**
      * Executes any given model action
      *
      * @param string $action

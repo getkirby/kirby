@@ -24,7 +24,7 @@ class Query
     /**
      * Parent Database object
      *
-     * @var Database
+     * @var \Kirby\Database\Database
      */
     protected $database = null;
 
@@ -251,6 +251,7 @@ class Query
      *
      * @param string $table
      * @return \Kirby\Database\Query
+     * @throws \Kirby\Exception\InvalidArgumentException if the table does not exist
      */
     public function table(string $table)
     {
@@ -293,7 +294,7 @@ class Query
      * @param string $table Name of the table, which should be joined
      * @param string $on The on clause for this join
      * @param string $type The join type. Uses an inner join by default
-     * @return object
+     * @return self
      */
     public function join(string $table, string $on, string $type = 'JOIN')
     {
@@ -362,7 +363,7 @@ class Query
      * Also can be used as getter for all attached bindings by not passing an argument.
      *
      * @param mixed $bindings Array of bindings or null to use this method as getter
-     * @return array|Query
+     * @return array|\Kirby\Database\Query
      */
     public function bindings(array $bindings = null)
     {
@@ -445,7 +446,7 @@ class Query
     /**
      * Attaches a group by clause
      *
-     * @param string $group
+     * @param string|null $group
      * @return \Kirby\Database\Query
      */
     public function group(string $group = null)
@@ -477,7 +478,7 @@ class Query
     /**
      * Attaches an order clause
      *
-     * @param string $order
+     * @param string|null $order
      * @return \Kirby\Database\Query
      */
     public function order(string $order = null)
@@ -489,7 +490,7 @@ class Query
     /**
      * Sets the offset for select clauses
      *
-     * @param int $offset
+     * @param int|null $offset
      * @return \Kirby\Database\Query
      */
     public function offset(int $offset = null)
@@ -501,7 +502,7 @@ class Query
     /**
      * Sets the limit for select clauses
      *
-     * @param int $limit
+     * @param int|null $limit
      * @return \Kirby\Database\Query
      */
     public function limit(int $limit = null)
@@ -515,9 +516,9 @@ class Query
      * This uses the SQL class to build stuff.
      *
      * @param string $type (select, update, insert)
-     * @return string The final query
+     * @return array The final query
      */
-    public function build($type)
+    public function build(string $type)
     {
         $sql = $this->database->sql();
 
@@ -618,7 +619,7 @@ class Query
      *
      * @param string $method
      * @param string $column
-     * @param string $default An optional default value, which should be returned if the query fails
+     * @param int $default An optional default value, which should be returned if the query fails
      * @return mixed
      */
     public function aggregate(string $method, string $column = '*', $default = 0)
@@ -812,7 +813,7 @@ class Query
      * @param string $column
      * @return mixed
      */
-    public function column($column)
+    public function column(string $column)
     {
         // if there isn't already an explicit order, order by the primary key
         // instead of the column that was requested (which would be implied otherwise)
@@ -850,7 +851,7 @@ class Query
      * @param mixed $value
      * @return mixed
      */
-    public function findBy($column, $value)
+    public function findBy(string $column, $value)
     {
         return $this->where([$column => $value])->first();
     }
@@ -869,7 +870,7 @@ class Query
     /**
      * Fires an insert query
      *
-     * @param array $values You can pass values here or set them with ->values() before
+     * @param mixed $values You can pass values here or set them with ->values() before
      * @return mixed Returns the last inserted id on success or false.
      */
     public function insert($values = null)
@@ -886,7 +887,7 @@ class Query
     /**
      * Fires an update query
      *
-     * @param array $values You can pass values here or set them with ->values() before
+     * @param mixed $values You can pass values here or set them with ->values() before
      * @param mixed $where You can pass a where clause here or set it with ->where() before
      * @return bool
      */
@@ -927,10 +928,10 @@ class Query
      * Builder for where and having clauses
      *
      * @param array $args Arguments, see where() description
-     * @param string $current Current value (like $this->where)
+     * @param mixed $current Current value (like $this->where)
      * @return string
      */
-    protected function filterQuery($args, $current)
+    protected function filterQuery(array $args, $current)
     {
         $mode   = A::last($args);
         $result = '';
