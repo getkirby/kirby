@@ -171,32 +171,6 @@ class Site extends ModelWithContent
     }
 
     /**
-     * Returns an array with all blueprints that are available
-     * as subpages of the site
-     *
-     * @param string $inSection
-     * @return array
-     */
-    public function blueprints(string $inSection = null): array
-    {
-        $blueprints = [];
-        $blueprint  = $this->blueprint();
-        $sections   = $inSection !== null ? [$blueprint->section($inSection)] : $blueprint->sections();
-
-        foreach ($sections as $section) {
-            if ($section === null) {
-                continue;
-            }
-
-            foreach ((array)$section->blueprints() as $blueprint) {
-                $blueprints[$blueprint['name']] = $blueprint;
-            }
-        }
-
-        return array_values($blueprints);
-    }
-
-    /**
      * Builds a breadcrumb collection
      *
      * @return \Kirby\Cms\Pages
