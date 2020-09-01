@@ -20,7 +20,7 @@ use Kirby\Toolkit\Str;
 class Collection
 {
     /**
-     * @var Api
+     * @var \Kirby\Api\Api
      */
     protected $api;
 
@@ -47,10 +47,10 @@ class Collection
     /**
      * Collection constructor
      *
-     * @param Api $api
+     * @param \Kirby\Api\Api $api
      * @param mixed|null $data
      * @param array $schema
-     * @throws Exception
+     * @throws \Exception
      */
     public function __construct(Api $api, $data = null, array $schema)
     {
@@ -78,7 +78,7 @@ class Collection
     /**
      * @param null $keys
      * @return self
-     * @throws Exception
+     * @throws \Exception
      */
     public function select($keys = null)
     {
@@ -101,7 +101,7 @@ class Collection
     /**
      * @return array
      * @throws \Kirby\Exception\NotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function toArray(): array
     {
@@ -127,7 +127,7 @@ class Collection
     /**
      * @return array
      * @throws \Kirby\Exception\NotFoundException
-     * @throws Exception
+     * @throws \Exception
      */
     public function toResponse(): array
     {
