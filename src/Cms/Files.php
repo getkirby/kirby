@@ -76,7 +76,6 @@ class Files extends Collection
      *
      * @param array $files
      * @param \Kirby\Cms\Model $parent
-     * @param array $inject
      * @return self
      */
     public static function factory(array $files, Model $parent)

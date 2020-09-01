@@ -21,6 +21,11 @@ class Form extends BaseForm
     protected $fields;
     protected $values = [];
 
+    /**
+     * Form constructor.
+     *
+     * @param array $props
+     */
     public function __construct(array $props)
     {
         $kirby = App::instance();

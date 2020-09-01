@@ -185,6 +185,7 @@ class PagePicker extends Picker
      * Search for pages by query string
      *
      * @return \Kirby\Cms\Pages
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function itemsForQuery()
     {

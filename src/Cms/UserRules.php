@@ -20,6 +20,14 @@ use Kirby\Toolkit\V;
  */
 class UserRules
 {
+    /**
+     * Validation for changing user email
+     *
+     * @param \Kirby\Cms\User $user
+     * @param string $email
+     * @return bool
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function changeEmail(User $user, string $email): bool
     {
         if ($user->permissions()->changeEmail() !== true) {
@@ -32,6 +40,14 @@ class UserRules
         return static::validEmail($user, $email);
     }
 
+    /**
+     * Validation for changing user language
+     *
+     * @param \Kirby\Cms\User $user
+     * @param string $language
+     * @return bool
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function changeLanguage(User $user, string $language): bool
     {
         if ($user->permissions()->changeLanguage() !== true) {
@@ -44,6 +60,14 @@ class UserRules
         return static::validLanguage($user, $language);
     }
 
+    /**
+     * Validation for changing user name
+     *
+     * @param \Kirby\Cms\User $user
+     * @param string $name
+     * @return bool
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function changeName(User $user, string $name): bool
     {
         if ($user->permissions()->changeName() !== true) {
@@ -56,6 +80,14 @@ class UserRules
         return true;
     }
 
+    /**
+     * Validation for changing user password
+     *
+     * @param \Kirby\Cms\User $user
+     * @param string $password
+     * @return bool
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function changePassword(User $user, string $password): bool
     {
         if ($user->permissions()->changePassword() !== true) {
@@ -68,6 +100,15 @@ class UserRules
         return static::validPassword($user, $password);
     }
 
+    /**
+     * Validation for changing user role
+     *
+     * @param \Kirby\Cms\User $user
+     * @param string $role
+     * @return bool
+     * @throws \Kirby\Exception\LogicException
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function changeRole(User $user, string $role): bool
     {
         // protect admin from role changes by non-admin
@@ -110,19 +151,27 @@ class UserRules
         return true;
     }
 
+    /**
+     * Validation for user create
+     *
+     * @param \Kirby\Cms\User $user
+     * @param array $props
+     * @return bool
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function create(User $user, array $props = []): bool
     {
         static::validId($user, $user->id());
         static::validEmail($user, $user->email(), true);
         static::validLanguage($user, $user->language());
-        
+
         if (empty($props['password']) === false) {
             static::validPassword($user, $props['password']);
         }
 
         // get the current user if it exists
         $currentUser = $user->kirby()->user();
-        
+
         // admins are allowed everything
         if ($currentUser && $currentUser->isAdmin() === true) {
             return true;
@@ -136,7 +185,7 @@ class UserRules
                 'key' => 'user.create.permission'
             ]);
         }
-        
+
         // check user permissions (if not on install)
         if ($user->kirby()->users()->count() > 0) {
             if ($user->permissions()->create() !== true) {
@@ -149,6 +198,14 @@ class UserRules
         return true;
     }
 
+    /**
+     * Validation for user delete
+     *
+     * @param \Kirby\Cms\User $user
+     * @return bool
+     * @throws \Kirby\Exception\LogicException
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function delete(User $user): bool
     {
         if ($user->isLastAdmin() === true) {
@@ -171,6 +228,15 @@ class UserRules
         return true;
     }
 
+    /**
+     * Validation for user update
+     *
+     * @param \Kirby\Cms\User $user
+     * @param array $values
+     * @param array $strings
+     * @return bool
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function update(User $user, array $values = [], array $strings = []): bool
     {
         if ($user->permissions()->update() !== true) {
@@ -183,6 +249,16 @@ class UserRules
         return true;
     }
 
+    /**
+     * Validation for user email
+     *
+     * @param \Kirby\Cms\User $user
+     * @param string $email
+     * @param bool $strict
+     * @return bool
+     * @throws \Kirby\Exception\DuplicateException
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function validEmail(User $user, string $email, bool $strict = false): bool
     {
         if (V::email($email ?? null) === false) {
@@ -207,6 +283,14 @@ class UserRules
         return true;
     }
 
+    /**
+     * Validation for user id
+     *
+     * @param \Kirby\Cms\User $user
+     * @param string $id
+     * @return bool
+     * @throws \Kirby\Exception\DuplicateException
+     */
     public static function validId(User $user, string $id): bool
     {
         if ($user->kirby()->users()->find($id)) {
@@ -216,6 +300,14 @@ class UserRules
         return true;
     }
 
+    /**
+     * Validation for user language
+     *
+     * @param \Kirby\Cms\User $user
+     * @param string $language
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function validLanguage(User $user, string $language): bool
     {
         if (in_array($language, $user->kirby()->translations()->keys(), true) === false) {
@@ -227,6 +319,14 @@ class UserRules
         return true;
     }
 
+    /**
+     * Validation for user password
+     *
+     * @param \Kirby\Cms\User $user
+     * @param string $password
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function validPassword(User $user, string $password): bool
     {
         if (Str::length($password ?? null) < 8) {
@@ -238,6 +338,14 @@ class UserRules
         return true;
     }
 
+    /**
+     * Validation for user role
+     *
+     * @param \Kirby\Cms\User $user
+     * @param string $role
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function validRole(User $user, string $role): bool
     {
         if (is_a($user->kirby()->roles()->find($role), 'Kirby\Cms\Role') === true) {

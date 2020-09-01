@@ -28,8 +28,9 @@ trait PageActions
      * The sorting number must already be correct
      * when the method is called
      *
-     * @param int $num
+     * @param int|null $num
      * @return self
+     * @throws \Kirby\Exception\LogicException
      */
     public function changeNum(int $num = null)
     {
@@ -74,8 +75,9 @@ trait PageActions
      * Changes the slug/uid of the page
      *
      * @param string $slug
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return self
+     * @throws \Kirby\Exception\LogicException
      */
     public function changeSlug(string $slug, string $languageCode = null)
     {
@@ -137,8 +139,10 @@ trait PageActions
      * Change the slug for a specific language
      *
      * @param string $slug
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return self
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\NotFoundException
      */
     protected function changeSlugForLanguage(string $slug, string $languageCode = null)
     {
@@ -168,8 +172,9 @@ trait PageActions
      * to either draft, listed or unlisted
      *
      * @param string $status "draft", "listed" or "unlisted"
-     * @param int $position Optional sorting number
+     * @param int|null $position Optional sorting number
      * @return self
+     * @throws \Kirby\Exception\Exception
      */
     public function changeStatus(string $status, int $position = null)
     {
@@ -185,6 +190,9 @@ trait PageActions
         }
     }
 
+    /**
+     * @return self
+     */
     protected function changeStatusToDraft()
     {
         $arguments = ['page' => $this, 'status' => 'draft', 'position' => null];
@@ -245,6 +253,7 @@ trait PageActions
      *
      * @param string $template
      * @return self
+     * @throws \Kirby\Exception\LogicException
      */
     public function changeTemplate(string $template)
     {
@@ -346,6 +355,7 @@ trait PageActions
      *
      * @param array $options
      * @return \Kirby\Cms\Page
+     * @throws \Kirby\Exception\DuplicateException
      */
     public function copy(array $options = [])
     {
@@ -491,7 +501,7 @@ trait PageActions
      * Create the sorting number for the page
      * depending on the blueprint settings
      *
-     * @param int $num
+     * @param int|null $num
      * @return int
      */
     public function createNum(int $num = null): int
@@ -604,7 +614,7 @@ trait PageActions
      * Duplicates the page with the given
      * slug and optionally copies all files
      *
-     * @param string $slug
+     * @param string|null $slug
      * @param array $options
      * @return \Kirby\Cms\Page
      */
@@ -626,6 +636,10 @@ trait PageActions
         });
     }
 
+    /**
+     * @return self
+     * @throws \Kirby\Exception\LogicException
+     */
     public function publish()
     {
         if ($this->isDraft() === false) {
@@ -676,6 +690,11 @@ trait PageActions
         return $this;
     }
 
+    /**
+     * @param int|null $position
+     * @return bool
+     * @throws \Kirby\Exception\LogicException
+     */
     protected function resortSiblingsAfterListing(int $position = null): bool
     {
         // get all siblings including the current page
@@ -722,6 +741,9 @@ trait PageActions
         return true;
     }
 
+    /**
+     * @return bool
+     */
     public function resortSiblingsAfterUnlisting(): bool
     {
         $index    = 0;
@@ -746,6 +768,10 @@ trait PageActions
         return true;
     }
 
+    /**
+     * @param null $position
+     * @return self
+     */
     public function sort($position = null)
     {
         return $this->changeStatus('listed', $position);
@@ -756,6 +782,7 @@ trait PageActions
      * unlisted to draft.
      *
      * @return self
+     * @throws \Kirby\Exception\LogicException
      */
     public function unpublish()
     {
@@ -789,8 +816,8 @@ trait PageActions
     /**
      * Updates the page data
      *
-     * @param array $input
-     * @param string $language
+     * @param array|null $input
+     * @param string|null $language
      * @param bool $validate
      * @return self
      */

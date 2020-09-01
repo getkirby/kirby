@@ -21,6 +21,15 @@ use Kirby\Toolkit\V;
  */
 class FileRules
 {
+    /**
+     * Validation for changing file name
+     *
+     * @param \Kirby\Cms\File $file
+     * @param string $name
+     * @return bool
+     * @throws \Kirby\Exception\DuplicateException
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function changeName(File $file, string $name): bool
     {
         if ($file->permissions()->changeName() !== true) {
@@ -43,11 +52,28 @@ class FileRules
         return true;
     }
 
+    /**
+     * Validation for changing file sort
+     *
+     * @param \Kirby\Cms\File $file
+     * @param int $sort
+     * @return bool
+     */
     public static function changeSort(File $file, int $sort): bool
     {
         return true;
     }
 
+    /**
+     * Validation for file create
+     *
+     * @param \Kirby\Cms\File $file
+     * @param \Kirby\Image\Image $upload
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\LogicException
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function create(File $file, Image $upload): bool
     {
         if ($file->exists() === true) {
@@ -67,6 +93,13 @@ class FileRules
         return true;
     }
 
+    /**
+     * Validation for file delete
+     *
+     * @param \Kirby\Cms\File $file
+     * @return bool
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function delete(File $file): bool
     {
         if ($file->permissions()->delete() !== true) {
@@ -76,6 +109,15 @@ class FileRules
         return true;
     }
 
+    /**
+     * Validation for file replace
+     *
+     * @param \Kirby\Cms\File $file
+     * @param \Kirby\Image\Image $upload
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function replace(File $file, Image $upload): bool
     {
         if ($file->permissions()->replace() !== true) {
@@ -83,7 +125,6 @@ class FileRules
         }
 
         static::validMime($file, $upload->mime());
-
 
         if (
             (string)$upload->mime() !== (string)$file->mime() &&
@@ -100,6 +141,14 @@ class FileRules
         return true;
     }
 
+    /**
+     * Validation for file update
+     *
+     * @param \Kirby\Cms\File $file
+     * @param array $content
+     * @return bool
+     * @throws \Kirby\Exception\PermissionException
+     */
     public static function update(File $file, array $content = []): bool
     {
         if ($file->permissions()->update() !== true) {
@@ -109,6 +158,14 @@ class FileRules
         return true;
     }
 
+    /**
+     * Validation for file extension
+     *
+     * @param \Kirby\Cms\File $file
+     * @param string $extension
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function validExtension(File $file, string $extension): bool
     {
         // make it easier to compare the extension
@@ -145,9 +202,16 @@ class FileRules
         return true;
     }
 
+    /**
+     * Validation for file name
+     *
+     * @param \Kirby\Cms\File $file
+     * @param string $filename
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function validFilename(File $file, string $filename)
     {
-
         // make it easier to compare the filename
         $filename = strtolower($filename);
 
@@ -177,6 +241,14 @@ class FileRules
         return true;
     }
 
+    /**
+     * Validation for file mime
+     *
+     * @param \Kirby\Cms\File $file
+     * @param string|null $mime
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public static function validMime(File $file, string $mime = null)
     {
         // make it easier to compare the mime

@@ -52,6 +52,7 @@ class ContentLocks
      *
      * @param string $file
      * @return void
+     * @throws \Kirby\Exception\Exception
      */
     protected function closeHandle(string $file)
     {
@@ -123,6 +124,7 @@ class ContentLocks
      * @param string $file
      * @param bool $create Whether to create the file if it does not exist
      * @return resource|null File handle
+     * @throws \Kirby\Exception\Exception
      */
     protected function handle(string $file, bool $create = false)
     {
@@ -168,6 +170,7 @@ class ContentLocks
      * @param \Kirby\Cms\ModelWithContent $model
      * @param array $data
      * @return bool
+     * @throws \Kirby\Exception\Exception
      */
     public function set(ModelWithContent $model, array $data): bool
     {

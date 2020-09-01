@@ -23,6 +23,11 @@ class FileVersion
     protected $modifications;
     protected $original;
 
+    /**
+     * @param string $method
+     * @param array $arguments
+     * @return mixed
+     */
     public function __call(string $method, array $arguments = [])
     {
         // public property access
@@ -45,6 +50,9 @@ class FileVersion
         }
     }
 
+    /**
+     * @return string
+     */
     public function id(): string
     {
         return dirname($this->original()->id()) . '/' . $this->filename();
@@ -58,27 +66,42 @@ class FileVersion
         return $this->original()->kirby();
     }
 
+    /**
+     * @return array
+     */
     public function modifications(): array
     {
         return $this->modifications ?? [];
     }
 
+    /**
+     * @return mixed
+     */
     public function original()
     {
         return $this->original;
     }
 
+    /**
+     * @return $this
+     */
     public function save()
     {
         $this->kirby()->thumb($this->original()->root(), $this->root(), $this->modifications());
         return $this;
     }
 
+    /**
+     * @param array|null $modifications
+     */
     protected function setModifications(array $modifications = null)
     {
         $this->modifications = $modifications;
     }
 
+    /**
+     * @param $original
+     */
     protected function setOriginal($original)
     {
         $this->original = $original;

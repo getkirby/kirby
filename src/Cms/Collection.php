@@ -54,7 +54,7 @@ class Collection extends BaseCollection
      * Creates a new Collection with the given objects
      *
      * @param array $objects
-     * @param object $parent
+     * @param object|null $parent
      */
     public function __construct($objects = [], $parent = null)
     {
@@ -101,6 +101,7 @@ class Collection extends BaseCollection
     /**
      * Appends an element to the data array
      *
+     * @param mixed ...$args
      * @param mixed $key Optional collection key, will be determined from the item if not given
      * @param mixed $item
      * @return \Kirby\Cms\Collection
@@ -126,6 +127,7 @@ class Collection extends BaseCollection
      * @param string $field
      * @param bool $i Ignore upper/lowercase for group names
      * @return \Kirby\Cms\Collection
+     * @throws \Kirby\Exception\Exception
      */
     public function groupBy($field, bool $i = true)
     {
@@ -240,6 +242,7 @@ class Collection extends BaseCollection
     /**
      * Prepends an element to the data array
      *
+     * @param mixed ...$args
      * @param mixed $key Optional collection key, will be determined from the item if not given
      * @param mixed $item
      * @return \Kirby\Cms\Collection
@@ -307,7 +310,7 @@ class Collection extends BaseCollection
     /**
      * Searches the collection
      *
-     * @param string $query
+     * @param string|null $query
      * @param array $params
      * @return self
      */
@@ -321,7 +324,7 @@ class Collection extends BaseCollection
      * to an array. This can also take a callback
      * function to further modify the array result.
      *
-     * @param Closure $map
+     * @param \Closure|null $map
      * @return array
      */
     public function toArray(Closure $map = null): array

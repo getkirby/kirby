@@ -230,6 +230,7 @@ class Language extends Model
      *
      * @internal
      * @return bool
+     * @throws \Kirby\Exception\Exception
      */
     public function delete(): bool
     {

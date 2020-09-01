@@ -93,7 +93,7 @@ trait AppTranslations
      * Otherwise fall back to the default language
      *
      * @internal
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return \Kirby\Cms\Language|null
      */
     public function setCurrentLanguage(string $languageCode = null)
@@ -120,7 +120,7 @@ trait AppTranslations
      * Set the current translation
      *
      * @internal
-     * @param string $translationCode
+     * @param string|null $translationCode
      * @return void
      */
     public function setCurrentTranslation(string $translationCode = null): void
