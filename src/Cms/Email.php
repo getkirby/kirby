@@ -39,8 +39,6 @@ class Email
      *
      * @param string|array $preset Preset name from the config or a simple props array
      * @param array $props Props array to override the $preset
-     * @throws \Kirby\Exception\NotFoundException
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function __construct($preset = [], array $props = [])
     {
@@ -162,7 +160,6 @@ class Email
      *
      * @param string $prop Prop to transform
      * @return void
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function transformFile(string $prop): void
     {
@@ -222,7 +219,6 @@ class Email
      * @param string $addressProp Prop with the email address
      * @param string $nameProp Prop with the name corresponding to the $addressProp
      * @return void
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function transformUserSingle(string $addressProp, string $nameProp): void
     {
@@ -252,7 +248,6 @@ class Email
      *
      * @param string $prop Prop to transform
      * @return void
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function transformUserMultiple(string $prop): void
     {
