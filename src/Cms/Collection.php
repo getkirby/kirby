@@ -54,7 +54,7 @@ class Collection extends BaseCollection
      * Creates a new Collection with the given objects
      *
      * @param array $objects
-     * @param object|null $parent
+     * @param object $parent
      */
     public function __construct($objects = [], $parent = null)
     {
@@ -71,7 +71,7 @@ class Collection extends BaseCollection
      * the collection prop on each object correctly.
      *
      * @param string $id
-     * @param object|null $object
+     * @param object $object
      */
     public function __set(string $id, $object)
     {
@@ -84,7 +84,6 @@ class Collection extends BaseCollection
      * current collection
      *
      * @param mixed $object
-     * @return \Kirby\Cms\Collection
      */
     public function add($object)
     {
@@ -104,7 +103,6 @@ class Collection extends BaseCollection
      *
      * @param mixed $key Optional collection key, will be determined from the item if not given
      * @param mixed $item
-     * @param mixed ...$args
      * @return \Kirby\Cms\Collection
      */
     public function append(...$args)
@@ -128,7 +126,6 @@ class Collection extends BaseCollection
      * @param string $field
      * @param bool $i Ignore upper/lowercase for group names
      * @return \Kirby\Cms\Collection
-     * @throws \Exception
      */
     public function groupBy($field, bool $i = true)
     {
@@ -254,7 +251,6 @@ class Collection extends BaseCollection
      *
      * @param mixed $key Optional collection key, will be determined from the item if not given
      * @param mixed $item
-     * @param mixed ...$args
      * @return \Kirby\Cms\Collection
      */
     public function prepend(...$args)
@@ -321,7 +317,7 @@ class Collection extends BaseCollection
     /**
      * Searches the collection
      *
-     * @param string|null $query
+     * @param string $query
      * @param array $params
      * @return self
      */
@@ -335,7 +331,7 @@ class Collection extends BaseCollection
      * to an array. This can also take a callback
      * function to further modify the array result.
      *
-     * @param \Closure|null $map
+     * @param Closure $map
      * @return array
      */
     public function toArray(Closure $map = null): array
