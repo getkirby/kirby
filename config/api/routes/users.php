@@ -85,10 +85,33 @@ return [
         }
     ],
     [
+        'pattern' => 'users/(:any)/blueprint',
+        'method'  => 'GET',
+        'action'  => function (string $id) {
+            return $this->user($id)->blueprint();
+        }
+    ],
+    [
+        'pattern' => 'users/(:any)/blueprints',
+        'method'  => 'GET',
+        'action'  => function (string $id) {
+            return $this->user($id)->blueprints($this->requestQuery('section'));
+        }
+    ],
+    [
         'pattern' => 'users/(:any)/email',
         'method'  => 'PATCH',
         'action'  => function (string $id) {
             return $this->user($id)->changeEmail($this->requestBody('email'));
+        }
+    ],
+    [
+        'pattern' => 'users/(:any)/fields/(:any)/(:all?)',
+        'method'  => 'ALL',
+        'action'  => function (string $id, string $fieldName, string $path = null) {
+            if ($user = $this->user($id)) {
+                return $this->fieldApi($user, $fieldName, $path);
+            }
         }
     ],
     [
@@ -134,14 +157,4 @@ return [
             }
         }
     ],
-    [
-        'pattern' => 'users/(:any)/fields/(:any)/(:all?)',
-        'method'  => 'ALL',
-        'action'  => function (string $id, string $fieldName, string $path = null) {
-            if ($user = $this->user($id)) {
-                return $this->fieldApi($user, $fieldName, $path);
-            }
-        }
-    ]
-
 ];

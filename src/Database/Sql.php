@@ -175,6 +175,7 @@ abstract class Sql
      *                      - `unique`: Whether the index (or if not set the column itself) has a UNIQUE constraint
      *                      - `default`: Default value of this column
      * @return array Array with `query` and `key` strings, a `unique` boolean and a `bindings` array
+     * @throws \Kirby\Exception\InvalidArgumentException if no column type is given or the column type is not supported.
      */
     public function createColumn(string $name, array $column): array
     {
@@ -408,7 +409,7 @@ abstract class Sql
     /**
      * Creates the having syntax
      *
-     * @param string $having
+     * @param string|null $having
      * @return array
      */
     public function having(string $having = null): array
@@ -455,6 +456,7 @@ abstract class Sql
      * @param string $type
      * @param string $on
      * @return array
+     * @throws \Kirby\Exception\InvalidArgumentException if an invalid join type is given
      */
     public function join(string $type, string $table, string $on): array
     {
@@ -489,7 +491,7 @@ abstract class Sql
     /**
      * Create the syntax for multiple joins
      *
-     * @param array $joins
+     * @param array|null $joins
      * @return array
      */
     public function joins(array $joins = null): array
@@ -692,6 +694,7 @@ abstract class Sql
      * @param $table string Default table if the identifier is not qualified
      * @param $identifier string
      * @return array
+     * @throws \Kirby\Exception\InvalidArgumentException if an invalid identifier is given
      */
     public function splitIdentifier($table, $identifier): array
     {
@@ -726,6 +729,7 @@ abstract class Sql
      *
      * @param string $table
      * @return string
+     * @throws \Kirby\Exception\InvalidArgumentException if an invalid table name is given
      */
     public function tableName(string $table): string
     {
@@ -797,7 +801,6 @@ abstract class Sql
      * @param string $table
      * @param string $column
      * @return bool
-     *
      * @throws \Kirby\Exception\InvalidArgumentException If the column is invalid
      */
     public function validateColumn(string $table, string $column): bool
@@ -882,6 +885,7 @@ abstract class Sql
      * @param string $separator
      * @param bool $enforceQualified
      * @param array
+     * @return array
      */
     public function valueSet(string $table, $values, string $separator = ',', bool $enforceQualified = false): array
     {
