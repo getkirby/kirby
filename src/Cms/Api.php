@@ -52,7 +52,7 @@ class Api extends BaseApi
      * @param string $name
      * @param string|null $path
      * @return mixed
-     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Kirby\Exception\NotFoundException if the field type cannot be found or the field cannot be loaded
      */
     public function fieldApi($model, string $name, string $path = null)
     {
@@ -94,7 +94,7 @@ class Api extends BaseApi
      * @param string|null $path Path to file's parent model
      * @param string $filename Filename
      * @return \Kirby\Cms\File|null
-     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Kirby\Exception\NotFoundException if the file cannot be found
      */
     public function file(string $path = null, string $filename)
     {
@@ -118,8 +118,8 @@ class Api extends BaseApi
      *
      * @param string $path Path to parent model
      * @return \Kirby\Cms\Model|null
-     * @throws \Kirby\Exception\InvalidArgumentException
-     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Kirby\Exception\InvalidArgumentException if the model type is invalid
+     * @throws \Kirby\Exception\NotFoundException if the model cannot be found
      */
     public function parent(string $path)
     {
@@ -156,7 +156,7 @@ class Api extends BaseApi
                 $model = $kirby->user(basename($path));
                 break;
             default:
-                throw new InvalidArgumentException('Invalid file model type: ' . $modelType);
+                throw new InvalidArgumentException('Invalid model type: ' . $modelType);
         }
 
         if ($model) {
@@ -193,7 +193,7 @@ class Api extends BaseApi
      *
      * @param string $id Page's id
      * @return \Kirby\Cms\Page|null
-     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Kirby\Exception\NotFoundException if the page cannot be found
      */
     public function page(string $id)
     {
@@ -212,6 +212,12 @@ class Api extends BaseApi
         ]);
     }
 
+    /**
+     * Returns the current Session instance
+     * 
+     * @param array $options Additional options, see the session component
+     * @return \Kirby\Session\Session
+     */ 
     public function session(array $options = [])
     {
         return $this->kirby->session(array_merge([
@@ -220,6 +226,8 @@ class Api extends BaseApi
     }
 
     /**
+     * Setter for the parent Kirby instance
+     * 
      * @param \Kirby\Cms\App $kirby
      * @return self
      */
@@ -246,7 +254,7 @@ class Api extends BaseApi
      *
      * @param string|null $id User's id
      * @return \Kirby\Cms\User|null
-     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
      */
     public function user(string $id = null)
     {
