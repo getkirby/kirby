@@ -945,8 +945,12 @@ class App
                 $this->site = null;
             }
 
-            if (isset($options['slugs']) === true) {
-                $this->i18n();
+            // checks custom language definition for slugs
+            if ($slugsOption = $this->option('slugs')) {
+                // slugs option must be set to string or "slugs" => ["language" => "de"] as array
+                if (is_string($slugsOption) === true || isset($slugsOption['language']) === true) {
+                    $this->i18n();
+                }
             }
         }
 
