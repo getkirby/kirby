@@ -26,7 +26,7 @@ class FileVersion
     /**
      * Proxy for public properties, asset methods
      * and content field getters
-     * 
+     *
      * @param string $method
      * @param array $arguments
      * @return mixed
@@ -55,7 +55,7 @@ class FileVersion
 
     /**
      * Returns the unique ID
-     * 
+     *
      * @return string
      */
     public function id(): string
@@ -65,7 +65,7 @@ class FileVersion
 
     /**
      * Returns the parent Kirby App instance
-     * 
+     *
      * @return \Kirby\Cms\App
      */
     public function kirby()
@@ -75,7 +75,7 @@ class FileVersion
 
     /**
      * Returns an array with all applied modifications
-     * 
+     *
      * @return array
      */
     public function modifications(): array
@@ -83,9 +83,9 @@ class FileVersion
         return $this->modifications ?? [];
     }
 
-    /** 
+    /**
      * Returns the instance of the original File object
-     * 
+     *
      * @return mixed
      */
     public function original()
@@ -94,9 +94,9 @@ class FileVersion
     }
 
     /**
-     * Applies the stored modifications and 
+     * Applies the stored modifications and
      * saves the file on disk
-     * 
+     *
      * @return self
      */
     public function save()
@@ -107,7 +107,7 @@ class FileVersion
 
     /**
      * Setter for modifications
-     * 
+     *
      * @param array|null $modifications
      */
     protected function setModifications(array $modifications = null)
@@ -117,7 +117,7 @@ class FileVersion
 
     /**
      * Setter for the original File object
-     * 
+     *
      * @param $original
      */
     protected function setOriginal($original)

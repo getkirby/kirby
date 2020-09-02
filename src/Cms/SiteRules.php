@@ -19,7 +19,7 @@ class SiteRules
 {
     /**
      * Validates if the site title can be changed
-     * 
+     *
      * @param \Kirby\Cms\Site $site
      * @param string $title
      * @return bool
@@ -41,7 +41,7 @@ class SiteRules
 
     /**
      * Validates if the site can be updated
-     * 
+     *
      * @param \Kirby\Cms\Site $site
      * @param array $content
      * @return bool

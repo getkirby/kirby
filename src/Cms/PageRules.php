@@ -197,7 +197,7 @@ class PageRules
      *
      * @param \Kirby\Cms\Page $page
      * @return bool
-     * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status 
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the status
      */
     public static function changeStatusToUnlisted(Page $page)
     {
