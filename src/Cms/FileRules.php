@@ -22,13 +22,13 @@ use Kirby\Toolkit\V;
 class FileRules
 {
     /**
-     * Validation for changing file name
+     * Validates if the filename can be changed
      *
      * @param \Kirby\Cms\File $file
      * @param string $name
      * @return bool
-     * @throws \Kirby\Exception\DuplicateException
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\DuplicateException If a file with this name exists
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to rename the file
      */
     public static function changeName(File $file, string $name): bool
     {
@@ -53,7 +53,7 @@ class FileRules
     }
 
     /**
-     * Validation for changing file sort
+     * Validates if the file can be sorted
      *
      * @param \Kirby\Cms\File $file
      * @param int $sort
@@ -65,19 +65,18 @@ class FileRules
     }
 
     /**
-     * Validation for file create
+     * Validates if the file can be created
      *
      * @param \Kirby\Cms\File $file
      * @param \Kirby\Image\Image $upload
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException
-     * @throws \Kirby\Exception\LogicException
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\DuplicateException If a file with the same name exists
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to create the file
      */
     public static function create(File $file, Image $upload): bool
     {
         if ($file->exists() === true) {
-            throw new LogicException('The file exists and cannot be overwritten');
+            throw new DuplicateException('The file exists and cannot be overwritten');
         }
 
         if ($file->permissions()->create() !== true) {
@@ -94,11 +93,11 @@ class FileRules
     }
 
     /**
-     * Validation for file delete
+     * Validates if the file can be deleted
      *
      * @param \Kirby\Cms\File $file
      * @return bool
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to delete the file
      */
     public static function delete(File $file): bool
     {
@@ -110,13 +109,13 @@ class FileRules
     }
 
     /**
-     * Validation for file replace
+     * Validates if the file can be replaced
      *
      * @param \Kirby\Cms\File $file
      * @param \Kirby\Image\Image $upload
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to replace the file
+     * @throws \Kirby\Exception\InvalidArgumentException If the file type of the new file is different
      */
     public static function replace(File $file, Image $upload): bool
     {
@@ -142,12 +141,12 @@ class FileRules
     }
 
     /**
-     * Validation for file update
+     * Validates if the file can be updated
      *
      * @param \Kirby\Cms\File $file
      * @param array $content
      * @return bool
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to update the file
      */
     public static function update(File $file, array $content = []): bool
     {
@@ -159,12 +158,12 @@ class FileRules
     }
 
     /**
-     * Validation for file extension
+     * Validates the file extension
      *
      * @param \Kirby\Cms\File $file
      * @param string $extension
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the extension is missing or forbidden
      */
     public static function validExtension(File $file, string $extension): bool
     {
@@ -203,12 +202,12 @@ class FileRules
     }
 
     /**
-     * Validation for file name
+     * Validates the filename
      *
      * @param \Kirby\Cms\File $file
      * @param string $filename
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the filename is missing or forbidden
      */
     public static function validFilename(File $file, string $filename)
     {
@@ -242,12 +241,12 @@ class FileRules
     }
 
     /**
-     * Validation for file mime
+     * Validates the MIME type
      *
      * @param \Kirby\Cms\File $file
      * @param string|null $mime
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the MIME type is missing or forbidden
      */
     public static function validMime(File $file, string $mime = null)
     {
