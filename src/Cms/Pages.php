@@ -355,6 +355,7 @@ class Pages extends Collection
      * @deprecated 3.0.0 Use `Pages::unlisted()` instead
      *
      * @return self
+     * @codeCoverageIgnore
      */
     public function invisible()
     {
@@ -515,6 +516,7 @@ class Pages extends Collection
      * @deprecated 3.0.0 Use `Pages::listed()` instead
      *
      * @return \Kirby\Cms\Pages
+     * @codeCoverageIgnore
      */
     public function visible()
     {
