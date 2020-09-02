@@ -21,12 +21,12 @@ use Kirby\Toolkit\V;
 class UserRules
 {
     /**
-     * Validation for changing user email
+     * Validates if the email address can be changed
      *
      * @param \Kirby\Cms\User $user
      * @param string $email
      * @return bool
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the address
      */
     public static function changeEmail(User $user, string $email): bool
     {
@@ -41,12 +41,12 @@ class UserRules
     }
 
     /**
-     * Validation for changing user language
+     * Validates if the language can be changed
      *
      * @param \Kirby\Cms\User $user
      * @param string $language
      * @return bool
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the language
      */
     public static function changeLanguage(User $user, string $language): bool
     {
@@ -61,12 +61,12 @@ class UserRules
     }
 
     /**
-     * Validation for changing user name
+     * Validates if the name can be changed
      *
      * @param \Kirby\Cms\User $user
      * @param string $name
      * @return bool
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the name
      */
     public static function changeName(User $user, string $name): bool
     {
@@ -81,12 +81,12 @@ class UserRules
     }
 
     /**
-     * Validation for changing user password
+     * Validates if the password can be changed
      *
      * @param \Kirby\Cms\User $user
      * @param string $password
      * @return bool
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the password
      */
     public static function changePassword(User $user, string $password): bool
     {
@@ -101,13 +101,13 @@ class UserRules
     }
 
     /**
-     * Validation for changing user role
+     * Validates if the role can be changed
      *
      * @param \Kirby\Cms\User $user
      * @param string $role
      * @return bool
-     * @throws \Kirby\Exception\LogicException
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\LogicException If the user is the last admin
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to change the role
      */
     public static function changeRole(User $user, string $role): bool
     {
@@ -152,12 +152,12 @@ class UserRules
     }
 
     /**
-     * Validation for user create
+     * Validates if the user can be created
      *
      * @param \Kirby\Cms\User $user
      * @param array $props
      * @return bool
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to create a new user
      */
     public static function create(User $user, array $props = []): bool
     {
@@ -199,12 +199,12 @@ class UserRules
     }
 
     /**
-     * Validation for user delete
+     * Validates if the user can be deleted
      *
      * @param \Kirby\Cms\User $user
      * @return bool
-     * @throws \Kirby\Exception\LogicException
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\LogicException If this is the last user or last admin, which cannot be deleted
+     * @throws \Kirby\Exception\PermissionException If the user is not allowed to delete this user
      */
     public static function delete(User $user): bool
     {
@@ -229,13 +229,13 @@ class UserRules
     }
 
     /**
-     * Validation for user update
+     * Validates if the user can be updated
      *
      * @param \Kirby\Cms\User $user
      * @param array $values
      * @param array $strings
      * @return bool
-     * @throws \Kirby\Exception\PermissionException
+     * @throws \Kirby\Exception\PermissionException If the user it not allowed to update this user
      */
     public static function update(User $user, array $values = [], array $strings = []): bool
     {
@@ -250,14 +250,14 @@ class UserRules
     }
 
     /**
-     * Validation for user email
+     * Validates an email address
      *
      * @param \Kirby\Cms\User $user
      * @param string $email
      * @param bool $strict
      * @return bool
-     * @throws \Kirby\Exception\DuplicateException
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\DuplicateException If the email address already exists
+     * @throws \Kirby\Exception\InvalidArgumentException If the email address is invalid
      */
     public static function validEmail(User $user, string $email, bool $strict = false): bool
     {
@@ -284,12 +284,12 @@ class UserRules
     }
 
     /**
-     * Validation for user id
+     * Validates a user id
      *
      * @param \Kirby\Cms\User $user
      * @param string $id
      * @return bool
-     * @throws \Kirby\Exception\DuplicateException
+     * @throws \Kirby\Exception\DuplicateException If the user already exists
      */
     public static function validId(User $user, string $id): bool
     {
@@ -301,12 +301,12 @@ class UserRules
     }
 
     /**
-     * Validation for user language
+     * Validates a user language code
      *
      * @param \Kirby\Cms\User $user
      * @param string $language
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the language does not exist
      */
     public static function validLanguage(User $user, string $language): bool
     {
@@ -320,12 +320,12 @@ class UserRules
     }
 
     /**
-     * Validation for user password
+     * Validates a password
      *
      * @param \Kirby\Cms\User $user
      * @param string $password
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the password is too short
      */
     public static function validPassword(User $user, string $password): bool
     {
@@ -339,12 +339,12 @@ class UserRules
     }
 
     /**
-     * Validation for user role
+     * Validates a user role
      *
      * @param \Kirby\Cms\User $user
      * @param string $role
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the user role does not exist
      */
     public static function validRole(User $user, string $role): bool
     {
