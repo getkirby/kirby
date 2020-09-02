@@ -141,6 +141,7 @@ trait PageSiblings
     /**
      * @deprecated 3.0.0 Use `Page::hasNextUnlisted()` instead
      * @return bool
+     * @codeCoverageIgnore
      */
     public function hasNextInvisible(): bool
     {
@@ -152,6 +153,7 @@ trait PageSiblings
     /**
      * @deprecated 3.0.0 Use `Page::hasNextListed()` instead
      * @return bool
+     * @codeCoverageIgnore
      */
     public function hasNextVisible(): bool
     {
@@ -163,6 +165,7 @@ trait PageSiblings
     /**
      * @deprecated 3.0.0 Use `Page::hasPrevUnlisted()` instead
      * @return bool
+     * @codeCoverageIgnore
      */
     public function hasPrevInvisible(): bool
     {
@@ -174,6 +177,7 @@ trait PageSiblings
     /**
      * @deprecated 3.0.0 Use `Page::hasPrevListed()` instead
      * @return bool
+     * @codeCoverageIgnore
      */
     public function hasPrevVisible(): bool
     {
@@ -185,6 +189,7 @@ trait PageSiblings
     /**
      * @deprecated 3.0.0 Use `Page::nextUnlisted()` instead
      * @return self|null
+     * @codeCoverageIgnore
      */
     public function nextInvisible()
     {
@@ -197,6 +202,7 @@ trait PageSiblings
     /**
      * @deprecated 3.0.0 Use `Page::nextListed()` instead
      * @return self|null
+     * @codeCoverageIgnore
      */
     public function nextVisible()
     {
@@ -208,6 +214,7 @@ trait PageSiblings
     /**
      * @deprecated 3.0.0 Use `Page::prevUnlisted()` instead
      * @return self|null
+     * @codeCoverageIgnore
      */
     public function prevInvisible()
     {
@@ -219,6 +226,7 @@ trait PageSiblings
     /**
      * @deprecated 3.0.0 Use `Page::prevListed()` instead
      * @return self|null
+     * @codeCoverageIgnore
      */
     public function prevVisible()
     {
