@@ -1031,7 +1031,7 @@ class App
      * @param string|null $path
      * @param string|null $language
      * @return mixed
-     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Kirby\Exception\NotFoundException if the home page cannot be found
      */
     public function resolve(string $path = null, string $language = null)
     {
@@ -1470,7 +1470,7 @@ class App
      * the composer.json (Keep that up to date! :))
      *
      * @return string|null
-     * @throws \Kirby\Exception\LogicException
+     * @throws \Kirby\Exception\LogicException if the Kirby version cannot be detected
      */
     public static function version(): ?string
     {
@@ -1485,7 +1485,6 @@ class App
      * Creates a hash of the version number
      *
      * @return string
-     * @throws \Kirby\Exception\LogicException
      */
     public static function versionHash(): string
     {
