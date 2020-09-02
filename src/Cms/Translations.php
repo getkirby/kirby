@@ -19,11 +19,19 @@ use Kirby\Toolkit\F;
  */
 class Translations extends Collection
 {
+    /**
+     * @param string $code
+     * @return void
+     */
     public function start(string $code): void
     {
         F::move($this->parent->contentFile('', true), $this->parent->contentFile($code, true));
     }
 
+    /**
+     * @param string $code
+     * @return void
+     */
     public function stop(string $code): void
     {
         F::move($this->parent->contentFile($code, true), $this->parent->contentFile('', true));

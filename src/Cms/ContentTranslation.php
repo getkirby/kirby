@@ -172,7 +172,7 @@ class ContentTranslation
     }
 
     /**
-     * @param array $content
+     * @param array|null $content
      * @return self
      */
     protected function setContent(array $content = null)
@@ -192,7 +192,7 @@ class ContentTranslation
     }
 
     /**
-     * @param string $slug
+     * @param string|null $slug
      * @return self
      */
     protected function setSlug(string $slug = null)
@@ -225,7 +225,7 @@ class ContentTranslation
     }
 
     /**
-     * Converts the most imporant translation
+     * Converts the most important translation
      * props to an array
      *
      * @return array

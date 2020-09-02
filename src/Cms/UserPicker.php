@@ -34,6 +34,7 @@ class UserPicker extends Picker
      * Search all users for the picker
      *
      * @return \Kirby\Cms\Users|null
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function items()
     {

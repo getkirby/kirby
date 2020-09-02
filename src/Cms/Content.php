@@ -146,7 +146,7 @@ class Content
      * Returns either a single field object
      * or all registered fields
      *
-     * @param string $key
+     * @param string|null $key
      * @return \Kirby\Cms\Field|array
      */
     public function get(string $key = null)
@@ -250,7 +250,7 @@ class Content
      * Updates the content and returns
      * a cloned object
      *
-     * @param array $content
+     * @param array|null $content
      * @param bool $overwrite
      * @return self
      */

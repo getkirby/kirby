@@ -26,7 +26,7 @@ class Dir extends \Kirby\Toolkit\Dir
      *
      * @param string $dir
      * @param string $contentExtension
-     * @param array $contentIgnore
+     * @param array|null $contentIgnore
      * @param bool $multilang
      * @return array
      */

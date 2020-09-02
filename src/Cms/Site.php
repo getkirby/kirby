@@ -194,7 +194,7 @@ class Site extends ModelWithContent
      *
      * @internal
      * @param array $data
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return array
      */
     public function contentFileData(array $data, string $languageCode = null): array
@@ -365,7 +365,7 @@ class Site extends ModelWithContent
      * prop, the home page will be returned if
      * it can be found. (see `Site::homePage()`)
      *
-     * @param string $path
+     * @param string|null $path
      * @return \Kirby\Cms\Page|null
      */
     public function page(string $path = null)
@@ -481,7 +481,7 @@ class Site extends ModelWithContent
     /**
      * Search all pages in the site
      *
-     * @param string $query
+     * @param string|null $query
      * @param array $params
      * @return \Kirby\Cms\Pages
      */
@@ -552,7 +552,7 @@ class Site extends ModelWithContent
     /**
      * Sets the Url
      *
-     * @param string $url
+     * @param string|null $url
      * @return self
      */
     protected function setUrl($url = null)
@@ -600,8 +600,8 @@ class Site extends ModelWithContent
      * Returns the translated url
      *
      * @internal
-     * @param string $languageCode
-     * @param array $options
+     * @param string|null $languageCode
+     * @param array|null $options
      * @return string
      */
     public function urlForLanguage(string $languageCode = null, array $options = null): string

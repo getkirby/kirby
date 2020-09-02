@@ -82,7 +82,7 @@ class User extends ModelWithContent
     public static $models = [];
 
     /**
-     * @var Field
+     * @var \Kirby\Cms\Field
      */
     protected $name;
 
@@ -200,7 +200,7 @@ class User extends ModelWithContent
      *
      * @internal
      * @param array $data
-     * @param string|null $languageCode Not used so far
+     * @param string $languageCode|null Not used so far
      * @return array
      */
     public function contentFileData(array $data, string $languageCode = null): array
@@ -755,7 +755,7 @@ class User extends ModelWithContent
     /**
      * Sets the user email
      *
-     * @param string|null $email
+     * @param string $email|null
      * @return self
      */
     protected function setEmail(string $email = null)
@@ -769,7 +769,7 @@ class User extends ModelWithContent
     /**
      * Sets the user id
      *
-     * @param string|null $id
+     * @param string $id|null
      * @return self
      */
     protected function setId(string $id = null)
@@ -781,7 +781,7 @@ class User extends ModelWithContent
     /**
      * Sets the user language
      *
-     * @param string|null $language
+     * @param string $language|null
      * @return self
      */
     protected function setLanguage(string $language = null)
@@ -793,7 +793,7 @@ class User extends ModelWithContent
     /**
      * Sets the user name
      *
-     * @param string|null $name
+     * @param string $name|null
      * @return self
      */
     protected function setName(string $name = null)
@@ -805,7 +805,7 @@ class User extends ModelWithContent
     /**
      * Sets the user's password hash
      *
-     * @param string|null $password
+     * @param string $password|null
      * @return self
      */
     protected function setPassword(string $password = null)
@@ -817,7 +817,7 @@ class User extends ModelWithContent
     /**
      * Sets the user role
      *
-     * @param string|null $role
+     * @param string $role|null
      * @return self
      */
     protected function setRole(string $role = null)
@@ -905,10 +905,12 @@ class User extends ModelWithContent
     /**
      * Compares the given password with the stored one
      *
-     * @param string|null $password
+     * @param string $password|null
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException If the entered password does not match the user password
+     *
      * @throws \Kirby\Exception\NotFoundException If the user has no password
+     * @throws \Kirby\Exception\InvalidArgumentException If the entered password is not valid
+     *                                                   or does not match the user password
      */
     public function validatePassword(string $password = null): bool
     {

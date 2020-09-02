@@ -118,7 +118,7 @@ class Filename
      * to a string, that can be used in the
      * new filename
      *
-     * @param string $prefix The prefix will be used in the filename creation
+     * @param string|null $prefix The prefix will be used in the filename creation
      * @return string
      */
     public function attributesToString(string $prefix = null): string
