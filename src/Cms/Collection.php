@@ -205,18 +205,14 @@ class Collection extends BaseCollection
 
         foreach ($keys as $key) {
             if (is_array($key) === true) {
-                foreach ($key as $id) {
-                    unset($collection->{$id});
-                }
-            } else {
-                if (is_a($key, 'Kirby\Toolkit\Collection') === true) {
-                    $collection = $collection->not(...$key->keys());
-                } elseif (is_object($key) === true) {
-                    $key = $key->id();
-                }
-
-                unset($collection->{$key});
+                return $this->not(...$key);
+            } elseif (is_a($key, 'Kirby\Toolkit\Collection') === true) {
+                $collection = $collection->not(...$key->keys());
+            } elseif (is_object($key) === true) {
+                $key = $key->id();
             }
+
+            unset($collection->{$key});
         }
 
         return $collection;
