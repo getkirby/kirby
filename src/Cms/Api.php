@@ -214,10 +214,10 @@ class Api extends BaseApi
 
     /**
      * Returns the current Session instance
-     * 
+     *
      * @param array $options Additional options, see the session component
      * @return \Kirby\Session\Session
-     */ 
+     */
     public function session(array $options = [])
     {
         return $this->kirby->session(array_merge([
@@ -227,7 +227,7 @@ class Api extends BaseApi
 
     /**
      * Setter for the parent Kirby instance
-     * 
+     *
      * @param \Kirby\Cms\App $kirby
      * @return self
      */

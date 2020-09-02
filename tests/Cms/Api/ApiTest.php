@@ -376,7 +376,7 @@ class ApiTest extends TestCase
 
         // model type is not recognized
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Invalid file model type: something');
+        $this->expectExceptionMessage('Invalid model type: something');
         $this->assertNull($api->parent('something/something'));
 
         // model cannot be found

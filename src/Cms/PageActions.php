@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Exception\DuplicateException;
-use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
