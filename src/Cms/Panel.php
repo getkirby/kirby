@@ -60,7 +60,7 @@ class Panel
      *
      * @param \Kirby\Cms\App $kirby
      * @return bool
-     * @throws \Exception
+     * @throws \Exception If Panel assets could not be moved to the public directory
      */
     public static function link(App $kirby): bool
     {
@@ -93,7 +93,6 @@ class Panel
      *
      * @param \Kirby\Cms\App $kirby
      * @return \Kirby\Http\Response
-     * @throws \Throwable
      */
     public static function render(App $kirby)
     {
