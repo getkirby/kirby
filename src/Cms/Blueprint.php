@@ -50,7 +50,7 @@ class Blueprint
      * Creates a new blueprint object with the given props
      *
      * @param array $props
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the blueprint model is missing
      */
     public function __construct(array $props)
     {
@@ -264,7 +264,7 @@ class Blueprint
      *
      * @param string $name
      * @return array
-     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Kirby\Exception\NotFoundException If the blueprint cannot be found
      */
     public static function find(string $name): array
     {
@@ -420,7 +420,7 @@ class Blueprint
      *
      * @param array|string $props
      * @return array
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the filed name is missing or the field type is invalid
      */
     public static function fieldProps($props): array
     {
