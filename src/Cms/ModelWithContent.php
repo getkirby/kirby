@@ -86,7 +86,7 @@ abstract class ModelWithContent extends Model
      *
      * @param string|null $languageCode
      * @return \Kirby\Cms\Content
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
      */
     public function content(string $languageCode = null)
     {
@@ -130,7 +130,7 @@ abstract class ModelWithContent extends Model
      * @param string|null $languageCode
      * @param bool $force
      * @return string
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
      */
     public function contentFile(string $languageCode = null, bool $force = false): string
     {
@@ -566,7 +566,7 @@ abstract class ModelWithContent extends Model
      * @param string|null $languageCode
      * @param bool $overwrite
      * @return self
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
      */
     protected function saveTranslation(array $data = null, string $languageCode = null, bool $overwrite = false)
     {
@@ -711,7 +711,7 @@ abstract class ModelWithContent extends Model
      * @param string|null $languageCode
      * @param bool $validate
      * @return self
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
      */
     public function update(array $input = null, string $languageCode = null, bool $validate = false)
     {
@@ -751,7 +751,6 @@ abstract class ModelWithContent extends Model
      * @param array $data
      * @param string|null $languageCode
      * @return bool
-     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function writeContent(array $data, string $languageCode = null): bool
     {
