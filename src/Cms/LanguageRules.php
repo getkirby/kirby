@@ -19,7 +19,7 @@ class LanguageRules
 {
     /**
      * Validates if the language can be created
-     * 
+     *
      * @param \Kirby\Cms\Language $language
      * @return bool
      * @throws \Kirby\Exception\DuplicateException If the language already exists
@@ -43,7 +43,7 @@ class LanguageRules
 
     /**
      * Validates if the language can be updated
-     * 
+     *
      * @param \Kirby\Cms\Language $language
      */
     public static function update(Language $language)
@@ -74,9 +74,9 @@ class LanguageRules
         return true;
     }
 
-    /** 
+    /**
      * Validates if the language name is formatted correctly
-     * 
+     *
      * @param \Kirby\Cms\Language $language
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException If the language name is invalid
