@@ -267,6 +267,7 @@ trait FileActions
      * @param string $name
      * @param bool $sanitize
      * @return self
+     * @codeCoverageIgnore
      */
     public function rename(string $name, bool $sanitize = true)
     {
