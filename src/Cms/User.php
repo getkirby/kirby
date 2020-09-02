@@ -200,7 +200,7 @@ class User extends ModelWithContent
      *
      * @internal
      * @param array $data
-     * @param string $languageCode Not used so far
+     * @param string $languageCode|null Not used so far
      * @return array
      */
     public function contentFileData(array $data, string $languageCode = null): array
@@ -400,7 +400,7 @@ class User extends ModelWithContent
      * Logs the user in
      *
      * @param string $password
-     * @param \Kirby\Session\Session|array $session Session options or session object to set the user in
+     * @param \Kirby\Session\Session|array|null $session Session options or session object to set the user in
      * @return bool
      */
     public function login(string $password, $session = null): bool
@@ -414,7 +414,7 @@ class User extends ModelWithContent
     /**
      * Logs the user in without checking the password
      *
-     * @param \Kirby\Session\Session|array $session Session options or session object to set the user in
+     * @param \Kirby\Session\Session|array|null $session Session options or session object to set the user in
      * @return void
      */
     public function loginPasswordless($session = null): void
@@ -435,7 +435,7 @@ class User extends ModelWithContent
     /**
      * Logs the user out
      *
-     * @param \Kirby\Session\Session|array $session Session options or session object to unset the user in
+     * @param \Kirby\Session\Session|array|null $session Session options or session object to unset the user in
      * @return void
      */
     public function logout($session = null): void
@@ -755,7 +755,7 @@ class User extends ModelWithContent
     /**
      * Sets the user email
      *
-     * @param string $email
+     * @param string $email|null
      * @return self
      */
     protected function setEmail(string $email = null)
@@ -769,7 +769,7 @@ class User extends ModelWithContent
     /**
      * Sets the user id
      *
-     * @param string $id
+     * @param string $id|null
      * @return self
      */
     protected function setId(string $id = null)
@@ -781,7 +781,7 @@ class User extends ModelWithContent
     /**
      * Sets the user language
      *
-     * @param string $language
+     * @param string $language|null
      * @return self
      */
     protected function setLanguage(string $language = null)
@@ -793,7 +793,7 @@ class User extends ModelWithContent
     /**
      * Sets the user name
      *
-     * @param string $name
+     * @param string $name|null
      * @return self
      */
     protected function setName(string $name = null)
@@ -805,7 +805,7 @@ class User extends ModelWithContent
     /**
      * Sets the user's password hash
      *
-     * @param string $password
+     * @param string $password|null
      * @return self
      */
     protected function setPassword(string $password = null)
@@ -817,7 +817,7 @@ class User extends ModelWithContent
     /**
      * Sets the user role
      *
-     * @param string $role
+     * @param string $role|null
      * @return self
      */
     protected function setRole(string $role = null)
@@ -905,7 +905,7 @@ class User extends ModelWithContent
     /**
      * Compares the given password with the stored one
      *
-     * @param string $password
+     * @param string $password|null
      * @return bool
      *
      * @throws \Kirby\Exception\NotFoundException If the user has no password
