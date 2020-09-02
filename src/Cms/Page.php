@@ -333,7 +333,7 @@ class Page extends ModelWithContent
      * @param array $data
      * @param string $contentType
      * @return array
-     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\InvalidArgumentException If the controller returns invalid objects for `kirby`, `site`, `pages` or `page`
      */
     public function controller($data = [], $contentType = 'html'): array
     {
@@ -1160,7 +1160,7 @@ class Page extends ModelWithContent
      * @param array $data
      * @param string $contentType
      * @return string
-     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Kirby\Exception\NotFoundException If the default template cannot be found
      */
     public function render(array $data = [], $contentType = 'html'): string
     {
@@ -1219,7 +1219,7 @@ class Page extends ModelWithContent
      * @internal
      * @param mixed $type
      * @return \Kirby\Cms\Template
-     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Kirby\Exception\NotFoundException If the content representation cannot be found
      */
     public function representation($type)
     {
