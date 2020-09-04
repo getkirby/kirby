@@ -269,6 +269,6 @@ class EmailTest extends TestCase
         $beforeSend = $email->toArray()['beforeSend'];
 
         $this->assertInstanceOf('Closure', $beforeSend);
-        $this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $beforeSend(new Mailer));
+        $this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $beforeSend(new Mailer()));
     }
 }
