@@ -222,9 +222,9 @@ class CollectionTest extends TestCase
     public function testNotWithCollection()
     {
         $collection = new Collection([
-            $a = new MockObject(['id' => 'a']),
-            $b = new MockObject(['id' => 'b']),
-            $c = new MockObject(['id' => 'c'])
+            new MockObject(['id' => 'a']),
+            new MockObject(['id' => 'b']),
+            new MockObject(['id' => 'c'])
         ]);
 
         $not = $collection->find('a', 'c');
@@ -232,6 +232,63 @@ class CollectionTest extends TestCase
         $result = $collection->not($not);
         $this->assertCount(1, $result);
         $this->assertEquals('b', $result->first()->id());
+    }
+
+    public function testNotWithSimpleArray()
+    {
+        $collection = new Collection([
+            new MockObject(['id' => 'a']),
+            new MockObject(['id' => 'b']),
+            new MockObject(['id' => 'c'])
+        ]);
+
+        $not = ['a', 'c', 'non-exists'];
+
+        $result = $collection->not($not);
+        $this->assertCount(1, $result);
+        $this->assertSame('b', $result->first()->id());
+    }
+
+    public function testNotWithCollectionsArray()
+    {
+        $collection = new Collection([
+            new MockObject(['id' => 'a']),
+            new MockObject(['id' => 'b']),
+            new MockObject(['id' => 'c'])
+        ]);
+
+        $not = [
+            new Collection([
+                new MockObject(['id' => 'a']),
+                new MockObject(['id' => 'non-exists'])
+            ]),
+            new Collection([
+                new MockObject(['id' => 'b'])
+            ])
+        ];
+
+        $result = $collection->not($not);
+        $this->assertCount(1, $result);
+        $this->assertSame('c', $result->first()->id());
+    }
+
+    public function testNotWithObjectsArray()
+    {
+        $collection = new Collection([
+            new MockObject(['id' => 'a']),
+            new MockObject(['id' => 'b']),
+            new MockObject(['id' => 'c'])
+        ]);
+
+        $not = [
+            new MockObject(['id' => 'b']),
+            new MockObject(['id' => 'c']),
+            new MockObject(['id' => 'non-exists']),
+        ];
+
+        $result = $collection->not($not);
+        $this->assertCount(1, $result);
+        $this->assertSame('a', $result->first()->id());
     }
 
     public function testNotWithString()

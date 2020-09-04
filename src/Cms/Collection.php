@@ -202,14 +202,19 @@ class Collection extends BaseCollection
     public function not(...$keys)
     {
         $collection = $this->clone();
+
         foreach ($keys as $key) {
-            if (is_a($key, 'Kirby\Toolkit\Collection') === true) {
+            if (is_array($key) === true) {
+                return $this->not(...$key);
+            } elseif (is_a($key, 'Kirby\Toolkit\Collection') === true) {
                 $collection = $collection->not(...$key->keys());
             } elseif (is_object($key) === true) {
                 $key = $key->id();
             }
-            unset($collection->$key);
+
+            unset($collection->{$key});
         }
+
         return $collection;
     }
 
