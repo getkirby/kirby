@@ -116,28 +116,29 @@ class Email
             // - html template (.html.php extension)
             // - text template (.text.php extension)
             // - default php template (.php extension)
-            if ($kirbyTemplate->exists()) {
-                $html = Str::template($kirbyTemplate->render($data), array_merge($data, [
+            if ($kirbyTemplate->exists() === true) {
+                $render = $kirbyTemplate->render($data);
+                $html = Str::template($render, array_merge($data, [
                     'kirby' => App::instance(),
                     'site'  => App::instance()->site(),
-                ]), '');
+                ]), $render);
 
                 $this->props['body'] = [
                     'html' => $html
                 ];
 
-                if ($textTemplate->exists()) {
+                if ($textTemplate->exists() === true) {
                     $this->props['body']['text'] = $textTemplate->render($data);
                 }
-            } elseif ($htmlTemplate->exists()) {
+            } elseif ($htmlTemplate->exists() === true) {
                 $this->props['body'] = [
                     'html' => $htmlTemplate->render($data)
                 ];
 
-                if ($textTemplate->exists()) {
+                if ($textTemplate->exists() === true) {
                     $this->props['body']['text'] = $textTemplate->render($data);
                 }
-            } elseif ($textTemplate->exists()) {
+            } elseif ($textTemplate->exists() === true) {
                 $this->props['body'] = $textTemplate->render($data);
             } else {
                 throw new NotFoundException('The email template "' . $this->props['template'] . '" cannot be found');
