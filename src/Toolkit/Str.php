@@ -179,7 +179,7 @@ class Str
         $position = static::position($string, $needle, $caseInsensitive);
 
         if ($position === false) {
-            return false;
+            return '';
         } else {
             return static::substr($string, $position + static::length($needle));
         }
@@ -221,7 +221,7 @@ class Str
         $position = static::position($string, $needle, $caseInsensitive);
 
         if ($position === false) {
-            return false;
+            return '';
         } else {
             return static::substr($string, 0, $position);
         }
@@ -396,7 +396,7 @@ class Str
         $position = static::position($string, $needle, $caseInsensitive);
 
         if ($position === false) {
-            return false;
+            return '';
         } else {
             return static::substr($string, $position);
         }
@@ -748,8 +748,12 @@ class Str
      *                         string is too long. Ellipsis is the default.
      * @return string The shortened string
      */
-    public static function short(string $string = null, int $length = 0, string $appendix = '…'): ?string
+    public static function short(string $string = null, int $length = 0, string $appendix = '…'): string
     {
+        if ($string === null) {
+            return '';
+        }
+
         if ($length === 0) {
             return $string;
         }
@@ -1041,7 +1045,7 @@ class Str
         $position = static::position($string, $needle, $caseInsensitive);
 
         if ($position === false) {
-            return false;
+            return '';
         } else {
             return static::substr($string, 0, $position + static::length($needle));
         }

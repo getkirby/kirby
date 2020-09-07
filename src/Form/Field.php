@@ -24,6 +24,20 @@ use Kirby\Toolkit\V;
 class Field extends Component
 {
     /**
+     * An array of all found errors
+     *
+     * @var array|null
+     */
+    protected $errors;
+
+    /**
+     * Parent collection with all fields of the current form
+     *
+     * @var \Kirby\Form\Fields|null
+     */
+    protected $formFields;
+
+    /**
      * Registry for all component mixins
      *
      * @var array
@@ -37,14 +51,7 @@ class Field extends Component
      */
     public static $types = [];
 
-    /**
-     * An array of all found errors
-     *
-     * @var array
-     */
-    protected $errors = [];
-
-    public function __construct(string $type, array $attrs = [])
+    public function __construct(string $type, array $attrs = [], ?Fields $formFields = null)
     {
         if (isset(static::$types[$type]) === false) {
             throw new InvalidArgumentException('The field type "' . $type . '" does not exist');
@@ -54,13 +61,13 @@ class Field extends Component
             throw new InvalidArgumentException('Field requires a model');
         }
 
+        $this->formFields = $formFields;
+
         // use the type as fallback for the name
         $attrs['name'] = $attrs['name'] ?? $type;
         $attrs['type'] = $type;
 
         parent::__construct($type, $attrs);
-
-        $this->validate();
     }
 
     /**
@@ -225,8 +232,17 @@ class Field extends Component
         ];
     }
 
+    public function formFields(): ?Fields
+    {
+        return $this->formFields;
+    }
+
     public function errors(): array
     {
+        if ($this->errors === null) {
+            $this->validate();
+        }
+
         return $this->errors;
     }
 
@@ -247,7 +263,7 @@ class Field extends Component
 
     public function isInvalid(): bool
     {
-        return empty($this->errors) === false;
+        return empty($this->errors()) === false;
     }
 
     public function isRequired(): bool
@@ -257,7 +273,7 @@ class Field extends Component
 
     public function isValid(): bool
     {
-        return empty($this->errors) === true;
+        return empty($this->errors()) === true;
     }
 
     /**
@@ -271,6 +287,46 @@ class Field extends Component
     public function model()
     {
         return $this->model;
+    }
+
+    /**
+     * Checks if the field needs a value before being saved;
+     * this is the case if all of the following requirements are met:
+     * - The field is saveable
+     * - The field is required
+     * - The field is currently empty
+     * - The field is not currently inactive because of a `when` rule
+     *
+     * @return bool
+     */
+    protected function needsValue(): bool
+    {
+        // check simple conditions first
+        if ($this->save() === false || $this->isRequired() === false || $this->isEmpty() === false) {
+            return false;
+        }
+
+        // check the data of the relevant fields if there is a `when` option
+        if (empty($this->when) === false && is_array($this->when) === true) {
+            $formFields = $this->formFields();
+
+            if ($formFields !== null) {
+                foreach ($this->when as $field => $value) {
+                    $field      = $formFields->get($field);
+                    $inputValue = $field !== null ? $field->value() : '';
+
+                    // if the input data doesn't match the requested `when` value,
+                    // that means that this field is not required and can be saved
+                    // (*all* `when` conditions must be met for this field to be required)
+                    if ($inputValue !== $value) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        // either there was no `when` condition or all conditions matched
+        return true;
     }
 
     public function save(): bool
@@ -302,7 +358,7 @@ class Field extends Component
         $this->errors = [];
 
         // validate required values
-        if ($this->isRequired() === true && $this->save() === true && $this->isEmpty() === true) {
+        if ($this->needsValue() === true) {
             $this->errors['required'] = I18n::translate('error.validation.required');
         }
 
