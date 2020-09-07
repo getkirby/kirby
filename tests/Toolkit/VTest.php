@@ -200,7 +200,6 @@ class VTest extends TestCase
         $this->assertTrue(V::email('bastian-v3@getkirby.com'));
         $this->assertTrue(V::email('bastian.allgeier@getkirby.com'));
         $this->assertTrue(V::email('bastian@getkürby.com'));
-        $this->assertTrue(V::email('bastian@getkürby.com'));
 
         $this->assertFalse(V::email('bastian@getkirby'));
         $this->assertFalse(V::email('bastiangetkirby.com'));
