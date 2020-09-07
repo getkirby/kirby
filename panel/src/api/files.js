@@ -65,6 +65,8 @@ export default (api) => {
           text: Vue.i18n.translate("open"),
           click: "download"
         });
+
+        result.push("-");
       }
 
       result.push({
@@ -81,6 +83,7 @@ export default (api) => {
         disabled: !options.replace
       });
 
+      result.push("-");
       result.push({
         icon: "trash",
         text: Vue.i18n.translate("delete"),
