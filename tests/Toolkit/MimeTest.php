@@ -8,27 +8,33 @@ class MimeTest extends TestCase
 
     public function testFixCss()
     {
-        $this->assertEquals('text/css', Mime::fix('something.css', 'text/x-asm', 'css'));
-        $this->assertEquals('text/css', Mime::fix('something.css', 'text/plain', 'css'));
+        $this->assertSame('text/css', Mime::fix('something.css', 'text/x-asm', 'css'));
+        $this->assertSame('text/css', Mime::fix('something.css', 'text/plain', 'css'));
     }
 
     public function testFixSvg()
     {
-        $this->assertEquals('image/svg+xml', Mime::fix('something.svg', 'image/svg', 'svg'));
-        $this->assertEquals('image/svg+xml', Mime::fix(static::FIXTURES . '/optimized.svg', 'text/html', 'svg'));
-        $this->assertEquals('image/svg+xml', Mime::fix(static::FIXTURES . '/unoptimized.svg', 'text/html', 'svg'));
+        $this->assertSame('image/svg+xml', Mime::fix('something.svg', 'image/svg', 'svg'));
+        $this->assertSame('image/svg+xml', Mime::fix(static::FIXTURES . '/optimized.svg', 'text/html', 'svg'));
+        $this->assertSame('image/svg+xml', Mime::fix(static::FIXTURES . '/unoptimized.svg', 'text/html', 'svg'));
     }
 
     public function testFromExtension()
     {
         $mime = Mime::fromExtension('jpg');
-        $this->assertEquals('image/jpeg', $mime);
+        $this->assertSame('image/jpeg', $mime);
     }
 
     public function testFromMimeContentType()
     {
         $mime = Mime::fromMimeContentType(__FILE__);
-        $this->assertEquals('text/x-php', $mime);
+        $this->assertSame('text/x-php', $mime);
+    }
+
+    public function testFromSvgNonExistingFile()
+    {
+        $mime = Mime::fromSvg(__DIR__ . '/imaginary.svg');
+        $this->assertFalse($mime);
     }
 
     public function testIsAccepted()
@@ -61,38 +67,41 @@ class MimeTest extends TestCase
     public function testToExtension()
     {
         $extension = Mime::toExtension('image/jpeg');
-        $this->assertEquals('jpg', $extension);
+        $this->assertSame('jpg', $extension);
+
+        $extensions = Mime::toExtension('text/css');
+        $this->assertSame('css', $extensions);
     }
 
     public function testToExtensions()
     {
         $extensions = Mime::toExtensions('image/jpeg');
-        $this->assertEquals(['jpg', 'jpeg', 'jpe'], $extensions);
+        $this->assertSame(['jpg', 'jpeg', 'jpe'], $extensions);
 
         $extensions = Mime::toExtensions('text/css');
-        $this->assertEquals(['css'], $extensions);
+        $this->assertSame(['css'], $extensions);
     }
 
     public function testTypeWithOptimizedSvg()
     {
         $mime = Mime::type(static::FIXTURES . '/optimized.svg');
-        $this->assertEquals('image/svg+xml', $mime);
+        $this->assertSame('image/svg+xml', $mime);
     }
 
     public function testTypeWithUnoptimizedSvg()
     {
         $mime = Mime::type(static::FIXTURES . '/unoptimized.svg');
-        $this->assertEquals('image/svg+xml', $mime);
+        $this->assertSame('image/svg+xml', $mime);
     }
 
     public function testTypeWithJson()
     {
         $mime = Mime::type(static::FIXTURES . '/something.json');
-        $this->assertEquals('application/json', $mime);
+        $this->assertSame('application/json', $mime);
     }
 
     public function testTypes()
     {
-        $this->assertEquals(Mime::$types, Mime::types());
+        $this->assertSame(Mime::$types, Mime::types());
     }
 }

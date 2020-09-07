@@ -7,7 +7,7 @@ class TplTest extends TestCase
     public function testLoadWithGoodTemplate()
     {
         $tpl = Tpl::load(__DIR__ . '/fixtures/tpl/good.php', ['name' => 'Peter']);
-        $this->assertEquals('Hello Peter', $tpl);
+        $this->assertSame('Hello Peter', $tpl);
     }
 
     public function testLoadWithBadTemplate()
@@ -15,5 +15,11 @@ class TplTest extends TestCase
         $this->expectException('Error');
 
         $tpl = Tpl::load(__DIR__ . '/fixtures/tpl/bad.php');
+    }
+
+    public function testLoadWithNonExistingFile()
+    {
+        $tpl = Tpl::load(__DIR__ . '/fixtures/tpl/imaginary.php');
+        $this->assertSame('', $tpl);
     }
 }
