@@ -79,4 +79,43 @@ class SitePagesTest extends TestCase
         $this->assertIsPage($site->page(), 'test');
         $this->assertIsPage($site->page(), $page);
     }
+
+    public function testVisitInvalid()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid page object');
+
+        $site = new Site();
+        $site->visit('nonexists');
+    }
+
+    public function testSearch()
+    {
+        $site = new Site([
+            'children' => [
+                ['slug' => 'home'],
+                ['slug' => 'foo'],
+                ['slug' => 'bar'],
+                ['slug' => 'foo-a'],
+                ['slug' => 'bar-b'],
+            ]
+        ]);
+
+        $collection = $site->search('foo');
+        $this->assertCount(2, $collection);
+    }
+
+    public function testPages()
+    {
+        $site = new Site([
+            'children' => [
+                ['slug' => 'home'],
+                ['slug' => 'foo'],
+                ['slug' => 'bar']
+            ]
+        ]);
+
+        $collection = $site->pages();
+        $this->assertCount(3, $collection);
+    }
 }

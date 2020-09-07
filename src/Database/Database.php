@@ -8,7 +8,6 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use PDO;
-use PDOStatement;
 use Throwable;
 
 /**
@@ -39,7 +38,7 @@ class Database
     /**
      * The established connection
      *
-     * @var PDO|null
+     * @var \PDO|null
      */
     protected $connection;
 
@@ -79,7 +78,7 @@ class Database
     /**
      * The last error
      *
-     * @var Exception|null
+     * @var \Exception|null
      */
     protected $lastError;
 
@@ -114,16 +113,16 @@ class Database
     /**
      * The PDO query statement
      *
-     * @var PDOStatement|null
+     * @var \PDOStatement|null
      */
     protected $statement;
 
     /**
-     * Whitelists for table names
+     * List of existing tables in the database
      *
      * @var array|null
      */
-    protected $tableWhitelist;
+    protected $tables;
 
     /**
      * An array with all queries which are being made
@@ -156,10 +155,10 @@ class Database
     }
 
     /**
-     * Returns one of the started instance
+     * Returns one of the started instances
      *
-     * @param string $id
-     * @return self
+     * @param string|null $id
+     * @return self|null
      */
     public static function instance(string $id = null)
     {
@@ -180,7 +179,8 @@ class Database
      * Connects to a database
      *
      * @param array|null $params This can either be a config key or an array of parameters for the connection
-     * @return \Kirby\Database\Database
+     * @return \PDO|null
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function connect(array $params = null)
     {
@@ -223,9 +223,9 @@ class Database
     /**
      * Returns the currently active connection
      *
-     * @return \Kirby\Database\Database|null
+     * @return \PDO|null
      */
-    public function connection()
+    public function connection(): ?PDO
     {
         return $this->connection;
     }
@@ -277,10 +277,10 @@ class Database
     /**
      * Adds a value to the db trace and also returns the entire trace if nothing is specified
      *
-     * @param array $data
+     * @param array|null $data
      * @return array
      */
-    public function trace($data = null): array
+    public function trace(array $data = null): array
     {
         // return the full trace
         if ($data === null) {
@@ -336,7 +336,7 @@ class Database
     /**
      * Returns the last db error
      *
-     * @return Throwable
+     * @return \Throwable
      */
     public function lastError()
     {
@@ -363,7 +363,6 @@ class Database
      */
     protected function hit(string $query, array $bindings = []): bool
     {
-
         // try to prepare and execute the sql
         try {
             $this->statement = $this->connection->prepare($query);
@@ -401,7 +400,7 @@ class Database
     }
 
     /**
-     * Exectues a sql query, which is expected to return a set of results
+     * Executes a sql query, which is expected to return a set of results
      *
      * @param string $query
      * @param array $bindings
@@ -504,19 +503,19 @@ class Database
      */
     public function validateTable(string $table): bool
     {
-        if ($this->tableWhitelist === null) {
-            // Get the table whitelist from the database
+        if ($this->tables === null) {
+            // Get the list of tables from the database
             $sql     = $this->sql()->tables($this->database);
             $results = $this->query($sql['query'], $sql['bindings']);
 
             if ($results) {
-                $this->tableWhitelist = $results->pluck('name');
+                $this->tables = $results->pluck('name');
             } else {
                 return false;
             }
         }
 
-        return in_array($table, $this->tableWhitelist) === true;
+        return in_array($table, $this->tables) === true;
     }
 
     /**
@@ -569,8 +568,8 @@ class Database
         }
 
         // update cache
-        if (in_array($table, $this->tableWhitelist) !== true) {
-            $this->tableWhitelist[] = $table;
+        if (in_array($table, $this->tables ?? []) !== true) {
+            $this->tables[] = $table;
         }
 
         return true;
@@ -582,7 +581,7 @@ class Database
      * @param string $table
      * @return bool
      */
-    public function dropTable($table): bool
+    public function dropTable(string $table): bool
     {
         $sql = $this->sql()->dropTable($table);
         if ($this->execute($sql['query'], $sql['bindings']) !== true) {
@@ -590,9 +589,9 @@ class Database
         }
 
         // update cache
-        $key = array_search($this->tableWhitelist, $table);
+        $key = array_search($table, $this->tables ?? []);
         if ($key !== false) {
-            unset($this->tableWhitelist[$key]);
+            unset($this->tables[$key]);
         }
 
         return true;
@@ -605,6 +604,7 @@ class Database
      *
      * @param mixed $method
      * @param mixed $arguments
+     * @return \Kirby\Database\Query
      */
     public function __call($method, $arguments = null)
     {

@@ -4,6 +4,8 @@ namespace Kirby\Cache;
 
 use PHPUnit\Framework\TestCase;
 
+require_once __DIR__ . '/mocks.php';
+
 /**
  * @coversDefaultClass \Kirby\Cache\Value
  */

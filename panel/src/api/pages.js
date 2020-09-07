@@ -2,8 +2,11 @@ import Vue from "vue";
 
 export default (api) => {
   return {
+    async blueprint(parent) {
+      return api.get("pages/" + this.id(parent) + "/blueprint");
+    },
     async blueprints(parent, section) {
-      return api.get("pages/" + this.id(parent) + "/children/blueprints", {
+      return api.get("pages/" + this.id(parent) + "/blueprints", {
         section: section
       });
     },

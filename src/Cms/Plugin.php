@@ -24,11 +24,22 @@ class Plugin extends Model
     protected $name;
     protected $root;
 
+    /**
+     * @param string $key
+     * @param array|null $arguments
+     * @return mixed|null
+     */
     public function __call(string $key, array $arguments = null)
     {
         return $this->info()[$key] ?? null;
     }
 
+    /**
+     * Plugin constructor
+     *
+     * @param string $name
+     * @param array $extends
+     */
     public function __construct(string $name, array $extends = [])
     {
         $this->setName($name);
@@ -38,11 +49,17 @@ class Plugin extends Model
         unset($this->extends['root']);
     }
 
+    /**
+     * @return array
+     */
     public function extends(): array
     {
         return $this->extends;
     }
 
+    /**
+     * @return array
+     */
     public function info(): array
     {
         if (is_array($this->info) === true) {
@@ -59,36 +76,58 @@ class Plugin extends Model
         return $this->info = $info;
     }
 
+    /**
+     * @return string
+     */
     public function manifest(): string
     {
         return $this->root() . '/composer.json';
     }
 
+    /**
+     * @return string
+     */
     public function mediaRoot(): string
     {
         return App::instance()->root('media') . '/plugins/' . $this->name();
     }
 
+    /**
+     * @return string
+     */
     public function mediaUrl(): string
     {
         return App::instance()->url('media') . '/plugins/' . $this->name();
     }
 
+    /**
+     * @return string
+     */
     public function name(): string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $key
+     * @return mixed
+     */
     public function option(string $key)
     {
         return $this->kirby()->option($this->prefix() . '.' . $key);
     }
 
+    /**
+     * @return string
+     */
     public function prefix(): string
     {
         return str_replace('/', '.', $this->name());
     }
 
+    /**
+     * @return string
+     */
     public function root(): string
     {
         return $this->root;
@@ -97,6 +136,7 @@ class Plugin extends Model
     /**
      * @param string $name
      * @return self
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function setName(string $name)
     {
@@ -108,6 +148,9 @@ class Plugin extends Model
         return $this;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         return $this->propertiesToArray();

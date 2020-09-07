@@ -43,6 +43,7 @@ class Pages extends Collection
      *
      * @param mixed $object
      * @return self
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function add($object)
     {
@@ -136,7 +137,7 @@ class Pages extends Collection
      * Creates a pages collection from an array of props
      *
      * @param array $pages
-     * @param \Kirby\Cms\Model $model
+     * @param \Kirby\Cms\Model|null $model
      * @param bool $draft
      * @return self
      */
@@ -354,6 +355,7 @@ class Pages extends Collection
      * @deprecated 3.0.0 Use `Pages::unlisted()` instead
      *
      * @return self
+     * @codeCoverageIgnore
      */
     public function invisible()
     {
@@ -514,6 +516,7 @@ class Pages extends Collection
      * @deprecated 3.0.0 Use `Pages::listed()` instead
      *
      * @return \Kirby\Cms\Pages
+     * @codeCoverageIgnore
      */
     public function visible()
     {

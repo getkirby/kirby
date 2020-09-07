@@ -14,6 +14,12 @@ namespace Kirby\Cms;
  */
 class UserBlueprint extends Blueprint
 {
+    /**
+     * UserBlueprint constructor.
+     *
+     * @param array $props
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public function __construct(array $props)
     {
         // normalize and translate the description

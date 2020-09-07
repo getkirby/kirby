@@ -24,7 +24,7 @@ class Media
      * Tries to find a file by model and filename
      * and to copy it to the media folder.
      *
-     * @param \Kirby\Cms\Model $model
+     * @param \Kirby\Cms\Model|null $model
      * @param string $hash
      * @param string $filename
      * @return \Kirby\Cms\Response|false
@@ -137,7 +137,7 @@ class Media
      *
      * @param string $directory
      * @param \Kirby\Cms\File $file
-     * @param string $ignore
+     * @param string|null $ignore
      * @return bool
      */
     public static function unpublish(string $directory, File $file, string $ignore = null): bool

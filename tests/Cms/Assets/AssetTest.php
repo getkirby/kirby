@@ -30,5 +30,9 @@ class AssetTest extends TestCase
         $this->assertEquals($mediaPath, $asset->mediaPath());
         $this->assertEquals($this->app->root('media') . '/' . $mediaPath, $asset->mediaRoot());
         $this->assertEquals($this->app->url('media') . '/' . $mediaPath, $asset->mediaUrl());
+
+        $this->expectException('\Kirby\Exception\BadMethodCallException');
+        $this->expectExceptionMessage('The method: "nonexists" does not exist');
+        $asset->nonexists();
     }
 }

@@ -88,7 +88,7 @@ class RoleTest extends TestCase
         $this->assertEquals('Editor', $role->title());
     }
 
-    public function testToArrayAndDebuginfo()
+    public function testToArrayAndDebugInfo()
     {
         $role = new Role([
             'name'        => 'editor',
