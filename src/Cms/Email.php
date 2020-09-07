@@ -53,6 +53,11 @@ class Email
             $this->props['transport'] = $this->options['transport'] ?? [];
         }
 
+        // add predefined beforeSend option
+        if (isset($this->props['beforeSend']) === false) {
+            $this->props['beforeSend'] = $this->options['beforeSend'] ?? null;
+        }
+
         // transform model objects to values
         $this->transformUserSingle('from', 'fromName');
         $this->transformUserSingle('replyTo', 'replyToName');
