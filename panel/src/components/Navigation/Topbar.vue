@@ -283,6 +283,7 @@ export default {
 .k-topbar-crumbs {
   flex-grow: 1;
   display: flex;
+  overflow-y: hidden;
 }
 .k-topbar-crumbs a {
   position: relative;
