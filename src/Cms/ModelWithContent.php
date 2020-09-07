@@ -445,7 +445,6 @@ abstract class ModelWithContent extends Model
                         ],
                     ])
                 ];
-
             }
 
             unset($settings['query']);
