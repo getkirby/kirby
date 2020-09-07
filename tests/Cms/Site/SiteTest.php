@@ -12,7 +12,8 @@ class SiteTest extends TestCase
             'url' => $url = 'https://getkirby.com'
         ]);
 
-        $this->assertEquals($url, $site->url());
+        $this->assertSame($url, $site->url());
+        $this->assertSame($url, $site->__toString());
     }
 
     public function testToString()
