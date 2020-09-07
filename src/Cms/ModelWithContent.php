@@ -47,11 +47,36 @@ abstract class ModelWithContent extends Model
     abstract public function blueprint();
 
     /**
+     * Returns an array with all blueprints that are available
+     *
+     * @param string|null $inSection
+     * @return array
+     */
+    public function blueprints(string $inSection = null): array
+    {
+        $blueprints = [];
+        $blueprint  = $this->blueprint();
+        $sections   = $inSection !== null ? [$blueprint->section($inSection)] : $blueprint->sections();
+
+        foreach ($sections as $section) {
+            if ($section === null) {
+                continue;
+            }
+
+            foreach ((array)$section->blueprints() as $blueprint) {
+                $blueprints[$blueprint['name']] = $blueprint;
+            }
+        }
+
+        return array_values($blueprints);
+    }
+
+    /**
      * Executes any given model action
      *
      * @param string $action
      * @param array $arguments
-     * @param Closure $callback
+     * @param \Closure $callback
      * @return mixed
      */
     abstract protected function commit(string $action, array $arguments, Closure $callback);
@@ -59,8 +84,9 @@ abstract class ModelWithContent extends Model
     /**
      * Returns the content
      *
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return \Kirby\Cms\Content
+     * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
      */
     public function content(string $languageCode = null)
     {
@@ -104,6 +130,7 @@ abstract class ModelWithContent extends Model
      * @param string|null $languageCode
      * @param bool $force
      * @return string
+     * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
      */
     public function contentFile(string $languageCode = null, bool $force = false): string
     {
@@ -158,7 +185,7 @@ abstract class ModelWithContent extends Model
      *
      * @internal
      * @param array $data
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return array
      */
     public function contentFileData(array $data, string $languageCode = null): array
@@ -240,7 +267,7 @@ abstract class ModelWithContent extends Model
      *
      * @param string $field
      * @param int $by
-     * @param int $max
+     * @param int|null $max
      * @return self
      */
     public function increment(string $field, int $by = 1, int $max = null)
@@ -300,7 +327,7 @@ abstract class ModelWithContent extends Model
      * Returns the panel icon definition
      *
      * @internal
-     * @param array $params
+     * @param array|null $params
      * @return array
      */
     public function panelIcon(array $params = null): array
@@ -317,7 +344,7 @@ abstract class ModelWithContent extends Model
 
     /**
      * @internal
-     * @param string|array|false $settings
+     * @param string|array|false|null $settings
      * @return array|null
      */
     public function panelImage($settings = null): ?array
@@ -497,8 +524,8 @@ abstract class ModelWithContent extends Model
      * Stores the content on disk
      *
      * @internal
-     * @param string $languageCode
-     * @param array $data
+     * @param array|null $data
+     * @param string|null $languageCode
      * @param bool $overwrite
      * @return self
      */
@@ -539,6 +566,7 @@ abstract class ModelWithContent extends Model
      * @param string|null $languageCode
      * @param bool $overwrite
      * @return self
+     * @throws \Kirby\Exception\InvalidArgumentException If the language for the given code does not exist
      */
     protected function saveTranslation(array $data = null, string $languageCode = null, bool $overwrite = false)
     {
@@ -598,7 +626,7 @@ abstract class ModelWithContent extends Model
     /**
      * Create the translations collection from an array
      *
-     * @param array $translations
+     * @param array|null $translations
      * @return self
      */
     protected function setTranslations(array $translations = null)
@@ -679,10 +707,11 @@ abstract class ModelWithContent extends Model
     /**
      * Updates the model data
      *
-     * @param array $input
-     * @param string $languageCode
+     * @param array|null $input
+     * @param string|null $languageCode
      * @param bool $validate
      * @return self
+     * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
      */
     public function update(array $input = null, string $languageCode = null, bool $validate = false)
     {
@@ -720,7 +749,7 @@ abstract class ModelWithContent extends Model
      *
      * @internal
      * @param array $data
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return bool
      */
     public function writeContent(array $data, string $languageCode = null): bool

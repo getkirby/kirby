@@ -177,6 +177,7 @@ trait HasChildren
     /**
      * @deprecated 3.0.0 Use `Page::hasUnlistedChildren()` instead
      * @return bool
+     * @codeCoverageIgnore
      */
     public function hasInvisibleChildren(): bool
     {
@@ -208,6 +209,7 @@ trait HasChildren
     /**
      * @deprecated 3.0.0 Use `Page::hasListedChildren()` instead
      * @return bool
+     * @codeCoverageIgnore
      */
     public function hasVisibleChildren(): bool
     {

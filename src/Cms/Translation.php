@@ -113,8 +113,8 @@ class Translation
      * string by key
      *
      * @param string $key
-     * @param string $default
-     * @return void
+     * @param string|null $default
+     * @return string|null
      */
     public function get(string $key, string $default = null): ?string
     {

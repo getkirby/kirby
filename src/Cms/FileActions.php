@@ -26,6 +26,7 @@ trait FileActions
      * @param string $name
      * @param bool $sanitize
      * @return self
+     * @throws \Kirby\Exception\LogicException
      */
     public function changeName(string $name, bool $sanitize = true)
     {
@@ -161,6 +162,8 @@ trait FileActions
      *
      * @param array $props
      * @return self
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @throws \Kirby\Exception\LogicException
      */
     public static function create(array $props)
     {
@@ -264,6 +267,7 @@ trait FileActions
      * @param string $name
      * @param bool $sanitize
      * @return self
+     * @codeCoverageIgnore
      */
     public function rename(string $name, bool $sanitize = true)
     {
@@ -281,6 +285,7 @@ trait FileActions
      *
      * @param string $source
      * @return self
+     * @throws \Kirby\Exception\LogicException
      */
     public function replace(string $source)
     {

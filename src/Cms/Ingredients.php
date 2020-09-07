@@ -35,7 +35,7 @@ class Ingredients
      * Magic getter for single ingredients
      *
      * @param string $method
-     * @param array $args
+     * @param array|null $args
      * @return mixed
      */
     public function __call(string $method, array $args = null)

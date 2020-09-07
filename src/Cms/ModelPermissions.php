@@ -21,11 +21,21 @@ abstract class ModelPermissions
     protected $permissions;
     protected $user;
 
+    /**
+     * @param string $method
+     * @param array $arguments
+     * @return bool
+     */
     public function __call(string $method, array $arguments = []): bool
     {
         return $this->can($method);
     }
 
+    /**
+     * ModelPermissions constructor
+     *
+     * @param \Kirby\Cms\Model $model
+     */
     public function __construct(Model $model)
     {
         $this->model       = $model;
@@ -44,6 +54,10 @@ abstract class ModelPermissions
         return $this->toArray();
     }
 
+    /**
+     * @param string $action
+     * @return bool
+     */
     public function can(string $action): bool
     {
         $role = $this->user->role()->id();
@@ -77,11 +91,18 @@ abstract class ModelPermissions
         return $this->permissions->for($this->category, $action);
     }
 
+    /**
+     * @param string $action
+     * @return bool
+     */
     public function cannot(string $action): bool
     {
         return $this->can($action) === false;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         $array = [];

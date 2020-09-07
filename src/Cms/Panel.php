@@ -24,6 +24,12 @@ use Throwable;
  */
 class Panel
 {
+    /**
+     * Returns custom css path for panel ui
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @return bool|string
+     */
     public static function customCss(App $kirby)
     {
         if ($css = $kirby->option('panel.css')) {
@@ -37,6 +43,12 @@ class Panel
         return false;
     }
 
+    /**
+     * Returns predefined icons path as sprite svg file
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @return string
+     */
     public static function icons(App $kirby): string
     {
         return F::read($kirby->root('kirby') . '/panel/dist/img/icons.svg');
@@ -48,6 +60,7 @@ class Panel
      *
      * @param \Kirby\Cms\App $kirby
      * @return bool
+     * @throws \Exception If Panel assets could not be moved to the public directory
      */
     public static function link(App $kirby): bool
     {
@@ -79,7 +92,7 @@ class Panel
      * Renders the main panel view
      *
      * @param \Kirby\Cms\App $kirby
-     * @return \Kirby\Cms\Response
+     * @return \Kirby\Http\Response
      */
     public static function render(App $kirby)
     {
