@@ -416,32 +416,37 @@ abstract class ModelWithContent extends Model
             // main url
             $settings['url'] = $image->url();
 
-            // for cards
-            $settings['cards'] = [
-                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
-                'srcset' => $image->srcset([
-                    352,
-                    864,
-                    1408,
-                ])
-            ];
+            // only create srcsets for actual File objects
+            if (is_a($image, 'Kirby\Cms\File') === true) {
 
-            // for lists
-            $settings['list'] = [
-                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
-                'srcset' => $image->srcset([
-                    '1x' => [
-                        'width' => 38,
-                        'height' => 38,
-                        'crop' => 'center'
-                    ],
-                    '2x' => [
-                        'width' => 76,
-                        'height' => 76,
-                        'crop' => 'center'
-                    ],
-                ])
-            ];
+                // for cards
+                $settings['cards'] = [
+                    'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                    'srcset' => $image->srcset([
+                        352,
+                        864,
+                        1408,
+                    ])
+                ];
+
+                // for lists
+                $settings['list'] = [
+                    'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                    'srcset' => $image->srcset([
+                        '1x' => [
+                            'width' => 38,
+                            'height' => 38,
+                            'crop' => 'center'
+                        ],
+                        '2x' => [
+                            'width' => 76,
+                            'height' => 76,
+                            'crop' => 'center'
+                        ],
+                    ])
+                ];
+
+            }
 
             unset($settings['query']);
         }
