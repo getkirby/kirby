@@ -245,6 +245,46 @@ abstract class ModelWithContent extends Model
     }
 
     /**
+     * Returns the drag text from a custom callback
+     * if the callback is defined in the config
+     *
+     * @internal
+     * @param string $type markdown or kirbytext
+     * @param mixed ...$args
+     * @return string|null
+     */
+    public function dragTextFromCallback(string $type, ...$args): ?string
+    {
+        $dragTextCallback = option('panel.' . $type . '.' . static::CLASS_ALIAS . 'DragText');
+
+        if (empty($dragTextCallback) === false && is_a($dragTextCallback, 'Closure') === true && ($dragText = $dragTextCallback($this, ...$args)) !== null) {
+            return $dragText;
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the correct drag text type
+     * depending on the given type or the
+     * configuration
+     *
+     * @internal
+     * @param string $type (null|auto|kirbytext|markdown)
+     * @return string
+     */
+    public function dragTextType(string $type = null): string
+    {
+        $type = $type ?? 'auto';
+
+        if ($type === 'auto') {
+            $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
+        }
+
+        return $type === 'markdown' ? 'markdown' : 'kirbytext';
+    }
+
+    /**
      * Returns all content validation errors
      *
      * @return array
