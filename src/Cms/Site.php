@@ -141,6 +141,17 @@ class Site extends ModelWithContent
     }
 
     /**
+     * Makes it possible to convert the site model
+     * to a string. Mostly useful for debugging
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->url();
+    }
+
+    /**
      * Returns the url to the api endpoint
      *
      * @internal
