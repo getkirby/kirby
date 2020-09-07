@@ -29,6 +29,7 @@
         }"
         :data-font="font"
         :data-size="size"
+        :dir="direction"
         class="k-textarea-input-native"
         @click="onClick"
         @focus="onFocus"
@@ -54,6 +55,7 @@
 <script>
 import config from "@/config/config.js";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
+import direction from "@/helpers/direction.js";
 
 export default {
   inheritAttrs: false,
@@ -81,6 +83,11 @@ export default {
     theme: String,
     uploads: [Boolean, Object, Array],
     value: String
+  },
+  computed: {
+    direction() {
+      return direction(this);
+    }
   },
   data() {
     return {
