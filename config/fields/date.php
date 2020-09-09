@@ -99,7 +99,7 @@ return [
     ],
     'computed' => [
         'default' => function () {
-            return $this->toDatetime($this->default);
+            return $this->toDatetime($this->toString($this->default));
         },
         'display' => function () {
             if ($this->display) {

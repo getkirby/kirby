@@ -38,7 +38,7 @@ return [
     ],
     'computed' => [
         'default' => function () {
-            return $this->toBool($this->default);
+            return $this->toBool($this->toString($this->default));
         },
         'value' => function () {
             if ($this->props['value'] === null) {

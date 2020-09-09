@@ -47,8 +47,19 @@ class CheckboxesFieldTest extends TestCase
             ],
         ]);
 
-        $this->assertEquals(['a', 'b'], $field->default());
-        $this->assertEquals('a, b', $field->data(true));
+        $this->assertSame(['a', 'b'], $field->default());
+        $this->assertSame('a, b', $field->data(true));
+
+        // no default value
+        $field = $this->field('checkboxes', [
+            'options' => [
+                'a',
+                'b',
+                'c'
+            ],
+        ]);
+
+        $this->assertSame([], $field->default());
     }
 
     public function testStringConversion()

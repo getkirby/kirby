@@ -213,47 +213,43 @@ class Field extends Component
             'computed' => [
                 'after' => function () {
                     /** @var \Kirby\Form\Field $this */
-                    if ($this->after !== null) {
-                        return $this->model()->toString($this->after);
-                    }
+                    return $this->toString($this->after);
                 },
                 'before' => function () {
                     /** @var \Kirby\Form\Field $this */
-                    if ($this->before !== null) {
-                        return $this->model()->toString($this->before);
-                    }
+                    return $this->toString($this->before);
                 },
                 'default' => function () {
                     /** @var \Kirby\Form\Field $this */
-                    if ($this->default === null) {
-                        return;
-                    }
-
-                    if (is_string($this->default) === false) {
-                        return $this->default;
-                    }
-
-                    return $this->model()->toString($this->default);
+                    return $this->toString($this->default);
                 },
                 'help' => function () {
                     /** @var \Kirby\Form\Field $this */
-                    if ($this->help) {
-                        $help = $this->model()->toString($this->help);
-                        $help = $this->kirby()->kirbytext($help);
-                        return $help;
+                    if ($text = $this->toString($this->help)) {
+                        return $this->kirby()->kirbytext($text);
                     }
                 },
                 'label' => function () {
                     /** @var \Kirby\Form\Field $this */
-                    if ($this->label !== null) {
-                        return $this->model()->toString($this->label);
-                    }
+                    return $this->toString($this->label);
                 },
                 'placeholder' => function () {
                     /** @var \Kirby\Form\Field $this */
-                    if ($this->placeholder !== null) {
-                        return $this->model()->toString($this->placeholder);
+                    return $this->toString($this->placeholder);
+                }
+            ],
+            'methods' => [
+                'toString' => function ($value = null) {
+                    if ($value === null) {
+                        return;
                     }
+
+                    if (is_string($value) === false) {
+                        return $value;
+                    }
+
+                    /** @var \Kirby\Form\Field $this */
+                    return $this->model()->toString($value);
                 }
             ]
         ];

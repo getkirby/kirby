@@ -20,7 +20,7 @@ return [
     ],
     'computed' => [
         'default' => function () {
-            return $this->sanitizeOption($this->default);
+            return $this->sanitizeOption($this->toString($this->default));
         },
         'value' => function () {
             return $this->sanitizeOption($this->value) ?? '';

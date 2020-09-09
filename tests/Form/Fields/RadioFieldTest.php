@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Fields;
 
+use Kirby\Cms\Page;
+
 class RadioFieldTest extends TestCase
 {
     public function testDefaultProps()
@@ -41,5 +43,25 @@ class RadioFieldTest extends TestCase
         ]);
 
         $this->assertTrue($expected === $field->value());
+    }
+
+    public function testDefault()
+    {
+        $field = $this->field('radio', [
+            'options' => [
+                'a',
+                'b',
+                'c'
+            ],
+            'default' => '{{ page.slug }}',
+            'model' => new Page([
+                'slug' => 'a',
+                'content' => [
+                    'title' => 'A'
+                ]
+            ])
+        ]);
+
+        $this->assertSame('a', $field->default());
     }
 }

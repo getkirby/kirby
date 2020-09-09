@@ -77,4 +77,18 @@ class TextFieldTest extends TestCase
         $this->assertFalse($field->isValid());
         $this->assertArrayHasKey('maxlength', $field->errors());
     }
+
+    public function testDefault()
+    {
+        $field = $this->field('text', [
+            'default' => 'test'
+        ]);
+
+        $this->assertSame('test', $field->default());
+
+        // no default value
+        $field = $this->field('text');
+
+        $this->assertNull($field->default());
+    }
 }

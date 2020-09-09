@@ -86,7 +86,7 @@ return [
     ],
     'computed' => [
         'default' => function () {
-            return $this->toDatetime($this->default, 'H:i:s');
+            return $this->toDatetime($this->toString($this->default), 'H:i:s');
         },
         'display' => function () {
             if ($this->display) {

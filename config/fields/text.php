@@ -57,7 +57,7 @@ return [
     ],
     'computed' => [
         'default' => function () {
-            return $this->convert($this->default);
+            return $this->convert($this->toString($this->default));
         },
         'value' => function () {
             return (string)$this->convert($this->value);

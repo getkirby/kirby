@@ -24,7 +24,7 @@ return [
          * Default value for the field, which will be used when a page/file/user is created
          */
         'default' => function ($default = null) {
-            return Str::split($default, ',');
+            return $default;
         },
         /**
          * Maximum number of checked boxes
@@ -44,7 +44,9 @@ return [
     ],
     'computed' => [
         'default' => function () {
-            return $this->sanitizeOptions($this->default);
+            $default = Str::split($this->toString($this->default), ',');
+
+            return $this->sanitizeOptions($default);
         },
         'value' => function () {
             return $this->sanitizeOptions($this->value);
