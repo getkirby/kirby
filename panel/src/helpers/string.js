@@ -25,11 +25,19 @@ export default {
     }
     return result;
   },
-  template(string, values) {
+  template(string, values = {}) {
     Object.keys(values).forEach(key => {
+      // replace string template with value
       string = string.replace(`{{${key}}}`, values[key] || "…");
+
+      // for arrays, allow string templates for length/count
+      if (Array.isArray(values[key]) === true) {
+        string = string.replace(`{{${key}.count}}`, values[key].length || 0);
+        string = string.replace(`{{${key}.length}}`, values[key].length || 0);
+      }
     })
-    return string;
+
+    return string.replace(/{{.*}}/gi, "…");
   },
   ucfirst(string) {
     const str = String(string);
