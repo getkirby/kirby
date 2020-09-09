@@ -21,8 +21,13 @@
     </template>
 
     <template v-else>
-      <k-draggable :handle="true" :list="blocks" @end="sort">
-        <div v-for="(block, index) in blocks" :key="block._uid" class="k-builder-block">
+      <k-draggable :handle="true" :list="blocks" element="k-grid" @end="sort">
+        <k-column
+          v-for="(block, index) in blocks"
+          :key="block._uid"
+          :width="'1/' + columns"
+          class="k-builder-block"
+        >
           <k-sort-handle class="k-builder-block-handle" />
           <details :open="isOpen(block)">
             <summary class="k-builder-block-header" @click.prevent="toggle(block)">
@@ -46,7 +51,7 @@
               />
             </div>
           </details>
-        </div>
+        </k-column>
       </k-draggable>
     </template>
 
