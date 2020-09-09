@@ -26,15 +26,20 @@
           v-for="(block, index) in blocks"
           :key="block._uid"
           :width="'1/' + columns"
-          class="k-builder-block"
+
         >
-          <k-sort-handle class="k-builder-block-handle" />
-          <details :open="isOpen(block)">
+          <details class="k-builder-block" :open="isOpen(block)">
             <summary class="k-builder-block-header" @click.prevent="toggle(block)">
-              <span class="k-builder-block-label">{{ $helper.string.template(fieldsets[block._key].label, block) }}</span>
+              <k-sort-handle class="k-builder-block-handle" />
+              <span class="k-builder-block-label">
+                {{ $helper.string.template(fieldsets[block._key].label, block) }}
+              </span>
               <k-dropdown>
-                <k-button class="k-builder-block-options-toggle" icon="dots"
-                  @click="$refs['options-' + block._uid][0].toggle()" />
+                <k-button
+                  class="k-builder-block-options-toggle"
+                  icon="dots"
+                  @click="$refs['options-' + block._uid][0].toggle()"
+                />
                 <k-dropdown-content :ref="'options-' + block._uid" align="right">
                   <k-dropdown-item icon="edit" @click="open(block)">Edit</k-dropdown-item>
                   <k-dropdown-item icon="copy" @click="duplicate(block)">Duplicate</k-dropdown-item>
@@ -143,6 +148,10 @@ export default {
 </script>
 
 <style lang="scss">
+.k-builder-field .k-grid {
+  grid-row-gap: .25rem;
+  grid-column-gap: .5rem;
+}
 .k-builder-block {
   position: relative;
   background: #fff;
@@ -154,7 +163,6 @@ export default {
   height: 36px;
   display: flex;
   align-items: center;
-  padding: 0 0 0 .75rem;
   cursor: pointer;
   list-style: none;
 }
@@ -166,17 +174,15 @@ export default {
   outline: none;
 }
 .k-builder-block-handle.k-sort-handle {
-  position: absolute;
-  top: 0;
-  left: -1.5rem;
-  width: 1.5rem;
+  width: 2rem;
   height: 36px;
-  opacity: 0;
+  margin-right: .75rem;
+  border-right: 1px $color-background solid;
 }
-.k-builder-field:hover .k-builder-block-handle {
+.k-builder-block-handle.k-sort-handle > svg {
   opacity: .25;
 }
-.k-builder-block-handle.k-sort-handle:hover {
+.k-builder-block-handle.k-sort-handle:hover > svg {
   opacity: 1;
 }
 .k-builder-block-label {
