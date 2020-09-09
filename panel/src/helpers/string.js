@@ -15,6 +15,12 @@ export default {
     }
     return result;
   },
+  template(string, values) {
+    Object.keys(values).forEach(key => {
+      string = string.replace(`{{${key}}}`, values[key] || "…");
+    })
+    return string;
+  },
   ucfirst(string) {
     const str = String(string);
     return str.charAt(0).toUpperCase() + str.substr(1);

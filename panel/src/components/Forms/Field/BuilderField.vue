@@ -26,7 +26,7 @@
           <k-sort-handle class="k-builder-block-handle" />
           <details :open="isOpen(block)">
             <summary class="k-builder-block-header" @click.prevent="toggle(block)">
-              <span class="k-builder-block-label">{{ fieldsets[block._key].label }}</span>
+              <span class="k-builder-block-label">{{ $helper.string.template(fieldsets[block._key].label, block) }}</span>
               <k-dropdown>
                 <k-button class="k-builder-block-options-toggle" icon="dots"
                   @click="$refs['options-' + block._uid][0].toggle()" />
@@ -86,6 +86,7 @@ export default {
         _key: type,
         _uid: this.uid(type)
       });
+      this.onInput();
     },
     close(block) {
       this.opened = this.opened.filter(id => id !== block._uid);
@@ -94,10 +95,7 @@ export default {
       let copy = this.$helper.clone(block);
       copy["_uid"] = this.uid(block._key);
       this.blocks.push(copy);
-      this.emit();
-    },
-    emit() {
-      this.$emit("input", this.blocks);
+      this.onInput();
     },
     isOpen(block) {
       return this.opened.includes(block._uid);
@@ -107,11 +105,14 @@ export default {
 
       if (index !== -1) {
         this.$delete(this.blocks, index);
-        this.emit();
+        this.onInput();
       }
     },
     sort() {
-      this.emit();
+      this.onInput();
+    },
+    onInput() {
+      this.$emit("input", this.blocks);
     },
     open(block) {
       if (this.isOpen(block) === false) {
@@ -130,7 +131,7 @@ export default {
     },
     update(index, value) {
       this.$set(this.blocks[index], value);
-      this.emit();
+      this.onInput();
     }
   }
 };
