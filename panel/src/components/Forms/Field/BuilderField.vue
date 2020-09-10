@@ -216,6 +216,7 @@ export default {
   border: 2px solid #fff;
   border-top: 0;
   line-height: 0;
+  overflow-x: scroll;
 }
 .k-builder-block-form {
   padding: 1.5rem 2rem 2rem;
