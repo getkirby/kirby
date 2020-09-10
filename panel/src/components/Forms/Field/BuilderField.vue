@@ -43,7 +43,7 @@
                 <k-dropdown-content :ref="'options-' + block._uid" align="right">
                   <k-dropdown-item icon="edit" @click="open(block)">Edit</k-dropdown-item>
                   <k-dropdown-item icon="copy" @click="duplicate(block)">Duplicate</k-dropdown-item>
-                  <k-dropdown-item icon="trash" @click="remove(block)">Delete</k-dropdown-item>
+                  <k-dropdown-item icon="trash" @click="onRemove(block)">Delete</k-dropdown-item>
                 </k-dropdown-content>
               </k-dropdown>
             </summary>
@@ -60,6 +60,14 @@
       </k-draggable>
     </template>
 
+    <k-dialog
+        ref="remove"
+        :submit-button="$t('delete')"
+        theme="negative"
+        @submit="remove"
+      >
+      <k-text>{{ $t("field.builder.delete.confirm") }}</k-text>
+    </k-dialog>
   </k-field>
 </template>
 
@@ -82,7 +90,8 @@ export default {
   data() {
     return {
       blocks: this.value,
-      opened: []
+      opened: [],
+      trash: null
     };
   },
   watch: {
@@ -110,11 +119,16 @@ export default {
     isOpen(block) {
       return this.opened.includes(block._uid);
     },
-    remove(block) {
-      const index = this.blocks.findIndex(element => element._uid === block._uid);
+    remove() {
+      if (this.trash === null) {
+        return;
+      }
+
+      const index = this.blocks.findIndex(element => element._uid === this.trash._uid);
 
       if (index !== -1) {
         this.$delete(this.blocks, index);
+        this.$refs.remove.close();
         this.onInput();
       }
     },
@@ -123,6 +137,10 @@ export default {
     },
     onInput() {
       this.$emit("input", this.blocks);
+    },
+    onRemove(block) {
+      this.trash = block;
+      this.$refs.remove.open();
     },
     open(block) {
       if (this.isOpen(block) === false) {
