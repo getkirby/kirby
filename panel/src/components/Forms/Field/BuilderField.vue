@@ -245,7 +245,7 @@ export default {
   outline: none;
 }
 .k-builder-block-handle.k-sort-handle {
-  width: 2rem;
+  width: 2.25rem;
   height: 36px;
   margin-right: .75rem;
   border-right: 1px $color-background solid;
