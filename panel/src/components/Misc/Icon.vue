@@ -7,7 +7,7 @@
     :data-size="size"
     :class="'k-icon k-icon-' + type"
   >
-    <span v-if="emoji" class="k-icon-emoji">{{ type }}</span>
+    <span v-if="isEmoji" class="k-icon-emoji">{{ type }}</span>
     <svg v-else :style="{ color: color }" viewBox="0 0 16 16">
       <use :xlink:href="'#icon-' + type" />
     </svg>
@@ -20,9 +20,13 @@ export default {
     alt: String,
     color: String,
     back: String,
-    emoji: Boolean,
     size: String,
     type: String
+  },
+  computed: {
+    isEmoji() {
+      return this.$helper.string.isEmoji(this.type);
+    }
   }
 };
 </script>
