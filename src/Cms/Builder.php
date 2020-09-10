@@ -90,7 +90,7 @@ class Builder
         $fieldsets = [];
 
         foreach ($this->props['fieldsets'] ?? [] as $key => $fieldset) {
-            $fieldset = $this->fieldset($key, $fieldset);
+            $fieldset = $this->fieldset($key, Blueprint::extend($fieldset));
             $fieldsets[$fieldset['key']] = $fieldset;
         }
 
