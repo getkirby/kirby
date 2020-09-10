@@ -148,7 +148,7 @@ export default {
 </script>
 
 <style lang="scss">
-.k-builder-field .k-grid {
+.k-builder-field > .k-grid {
   grid-row-gap: .25rem;
   grid-column-gap: .5rem;
 }
