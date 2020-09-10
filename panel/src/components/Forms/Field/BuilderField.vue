@@ -69,7 +69,7 @@
       <k-headline>Please, select a block type …</k-headline>
       <ul class="k-builder-fieldsets">
         <li v-for="fieldset in fieldsets" :key="fieldset.name">
-          <k-button icon="add" @click="add(fieldset.key)">
+          <k-button :icon="fieldset.icon || 'add'" @click="add(fieldset.key)">
             {{ fieldset.name }}
           </k-button>
         </li>
