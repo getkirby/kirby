@@ -30,7 +30,7 @@ return [
          * @param array $fieldsets
          * @return array
          */
-        'fieldsets' => function (array $fieldsets = []) {
+        'fieldsets' => function (array $fieldsets) {
             return $fieldsets;
         },
     ],
