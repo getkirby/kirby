@@ -73,6 +73,7 @@ class Builder
             'key'    => $key,
             'name'   => $name = $fieldset['name'] ?? Str::ucfirst($key),
             'label'  => $fieldset['label'] ?? $name,
+            'icon'   => $fieldset['icon'] ?? null
         ];
     }
 

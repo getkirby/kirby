@@ -52,7 +52,8 @@ class BuilderTest extends TestCase
         $builder = new Builder($this->page, [
             'fieldsets' => [
                 'quote' => [
-                    'name' => 'Quote'
+                    'name' => 'Quote',
+                    'icon' => 'quote'
                 ],
                 'bodytext' => [
                     'name' => 'Text'
@@ -66,12 +67,14 @@ class BuilderTest extends TestCase
                 'key'   => 'quote',
                 'name'  => 'Quote',
                 'label' => 'Quote',
+                'icon'  => 'quote'
             ],
             'bodytext' => [
                 'fields' => [],
                 'key'   => 'bodytext',
                 'name'  => 'Text',
                 'label' => 'Text',
+                'icon'  => null
             ]
         ], $builder->fieldsets());
     }

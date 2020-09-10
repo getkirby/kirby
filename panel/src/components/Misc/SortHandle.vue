@@ -1,10 +1,21 @@
 <template>
-  <span class="k-sort-handle" aria-hidden="true">
-    <svg viewBox="0 0 16 16">
-      <use xlink:href="#icon-sort" />
-    </svg>
-  </span>
+  <k-icon
+    :type="icon"
+    class="k-sort-handle"
+    aria-hidden="true"
+  />
 </template>
+
+<script>
+export default {
+  props: {
+    icon: {
+      type: String,
+      default: "sort"
+    }
+  }
+}
+</script>
 
 <style lang="scss">
 .k-sort-handle {

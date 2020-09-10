@@ -1,5 +1,10 @@
 <template>
-  <k-field v-bind="$props" class="k-builder-field">
+  <k-field
+    v-bind="$props"
+    class="k-builder-field"
+    @mouseenter.native="isHovered = true"
+    @mouseleave.native="isHovered = false"
+  >
 
     <k-dropdown slot="options">
       <k-button icon="add" @click="$refs.fieldsets.toggle()">Add</k-button>
@@ -30,7 +35,7 @@
         >
           <details class="k-builder-block" :open="isOpen(block)">
             <summary class="k-builder-block-header" @click.prevent="toggle(block)">
-              <k-sort-handle class="k-builder-block-handle" />
+              <k-sort-handle :icon="isHovered ? 'sort' : fieldsets[block._key].icon || 'sort'" class="k-builder-block-handle" />
               <span class="k-builder-block-label">
                 {{ $helper.string.template(fieldsets[block._key].label, block) }}
               </span>
@@ -91,7 +96,8 @@ export default {
     return {
       blocks: this.value,
       opened: [],
-      trash: null
+      trash: null,
+      isHovered: false
     };
   },
   watch: {
