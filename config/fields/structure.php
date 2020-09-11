@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\Form;
-use Kirby\Data\Data;
+use Kirby\Cms\Structure;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -145,9 +145,9 @@ return [
     ],
     'methods' => [
         'rows' => function ($value) {
-            $rows  = Data::decode($value, 'yaml');
-            $value = [];
+            $rows = Structure::toData($this->name(), $value, $this->model);
 
+            $value = [];
             foreach ($rows as $index => $row) {
                 if (is_array($row) === false) {
                     continue;

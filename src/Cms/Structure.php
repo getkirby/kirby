@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -60,5 +61,36 @@ class Structure extends Collection
         }
 
         return parent::__set($object->id(), $object);
+    }
+
+    /**
+     * Converts structure value to array
+     * and merges default language data for all languages
+     * for non-translatable fields
+     *
+     * @param string $fieldName
+     * @param mixed $value
+     * @param object|null $parent
+     * @return array
+     */
+    public static function toData(string $fieldName, $value, $parent = null): array
+    {
+        $data  = Data::decode($value, 'yaml');
+        $kirby = is_a($parent, '\Kirby\Cms\Model') === true ? $parent->kirby() : App::instance();
+
+        // merge with the default content
+        if ($parent !== null && $kirby->multilang() === true) {
+            $language        = $kirby->language();
+            $defaultLanguage = $kirby->defaultLanguage();
+
+            if ($language->code() !== $defaultLanguage->code()) {
+                if ($content = $parent->content($defaultLanguage->code())->get($fieldName)) {
+                    $default = Data::decode($content->value(), 'yaml');
+                    $data    = array_replace_recursive($default, $data);
+                }
+            }
+        }
+
+        return $data;
     }
 }

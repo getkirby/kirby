@@ -360,6 +360,71 @@ class FieldMethodsTest extends TestCase
         $this->assertSame('b', $structure->last()->title()->value());
     }
 
+    public function testToStructureTranslate()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                'en' => [
+                    'code' => 'en',
+                    'default' => true
+                ],
+                'de' => [
+                    'code' => 'de'
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                                'content' => [
+                                    'address' => Yaml::encode([
+                                        [
+                                            'foo' => 'A',
+                                            'bar' => 'C'
+                                        ]
+                                    ])
+                                ]
+                            ],
+                            [
+                                'code' => 'de',
+                                'content' => [
+                                    'address' => Yaml::encode([
+                                        [
+                                            'foo' => 'B'
+                                        ]
+                                    ])
+                                ]
+                            ]
+                        ]
+                    ],
+                ]
+            ]
+        ]);
+
+        // default language
+        $app->setCurrentLanguage('en');
+        $page = $app->page('test');
+
+        $structure = $page->address()->toStructure()->first();
+        $this->assertSame('A', $structure->foo()->value());
+        $this->assertSame('C', $structure->bar()->value());
+
+        // secondary language
+        $app = $app->clone();
+        $app->setCurrentLanguage('de');
+        $page = $app->page('test');
+
+        $structure = $page->address()->toStructure()->first();
+        $this->assertSame('B', $structure->foo()->value());
+        $this->assertSame('C', $structure->bar()->value());
+    }
+
     public function testToStructureWithInvalidData()
     {
         $data = [

@@ -250,7 +250,8 @@ return function (App $app) {
          */
         'toStructure' => function (Field $field) {
             try {
-                return new Structure(Data::decode($field->value, 'yaml'), $field->parent());
+                $data = Structure::toData($field->key(), $field->value, $field->parent());
+                return new Structure($data, $field->parent());
             } catch (Exception $e) {
                 if ($field->parent() === null) {
                     $message = 'Invalid structure data for "' . $field->key() . '" field';
