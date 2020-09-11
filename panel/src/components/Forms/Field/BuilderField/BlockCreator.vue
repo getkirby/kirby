@@ -4,7 +4,7 @@
     :data-vertical="vertical"
     class="k-builder-block-creator"
   >
-    <button type="button" class="k-builder-block-creator-toggle" @click="$emit('select')"></button>
+    <button type="button" class="k-builder-block-creator-toggle" @click="$emit('select')">{{ $t('add') }}</button>
   </div>
 </template>
 
@@ -46,6 +46,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
+  text-indent: -4000px;
 }
 .k-builder-block-creator-toggle:focus {
   outline: none;

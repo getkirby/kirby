@@ -189,6 +189,8 @@
 
   "field.required": "The field is required",
   "field.builder.delete.confirm": "Do you really want to delete this block?",
+  "field.builder.empty": "No blocks yet",
+  "field.builder.fieldsets.label": "Please select a block type …",
   "field.files.empty": "No files selected yet",
   "field.pages.empty": "No pages selected yet",
   "field.structure.delete.confirm": "Do you really want to delete this row?",
