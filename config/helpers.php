@@ -144,10 +144,12 @@ function deprecated(string $message): bool
  * @param bool $echo
  * @return string
  */
-function dump($variable, bool $echo = true): string
-{
-    $kirby = App::instance();
-    return $kirby->component('dump')($kirby, $variable, $echo);
+if(!function_exists('dump')) {
+    function dump($variable, bool $echo = true): string
+    {
+        $kirby = App::instance();
+        return $kirby->component('dump')($kirby, $variable, $echo);
+    }
 }
 
 /**
