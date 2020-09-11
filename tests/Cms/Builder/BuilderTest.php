@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Form\Field;
 use PHPUnit\Framework\TestCase;
 
 class BuilderTest extends TestCase
@@ -64,11 +63,14 @@ class BuilderTest extends TestCase
 
         $this->assertEquals([
             'quote' => [
-                'fields' => [],
-                'key'   => 'quote',
-                'name'  => 'Quote',
-                'label' => 'Quote',
-                'icon'  => 'quote'
+                'fields'    => [],
+                'key'       => 'quote',
+                'name'      => 'Quote',
+                'label'     => 'Quote',
+                'icon'      => 'quote',
+                'disabled'  => false,
+                'translate' => null,
+                'unset'     => false
             ],
             'bodytext' => [
                 'fields'    => [],
