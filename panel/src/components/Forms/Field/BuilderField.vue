@@ -56,6 +56,15 @@
               />
             </div>
           </details>
+
+          <k-builder-block-creator
+            v-if="index === blocks.length - 1"
+            :fieldsets="fieldsets"
+            :last="true"
+            :vertical="columns > 1"
+            @select="select(blocks.length)"
+          />
+
         </k-column>
       </k-draggable>
     </template>
