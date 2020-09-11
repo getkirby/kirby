@@ -1,5 +1,9 @@
 <template>
-  <div class="k-builder-block-creator" :data-vertical="vertical">
+  <div
+    :data-last="last"
+    :data-vertical="vertical"
+    class="k-builder-block-creator"
+  >
     <button type="button" class="k-builder-block-creator-toggle" @click="$emit('select')"></button>
   </div>
 </template>
@@ -13,13 +17,13 @@ export default {
         return {}
       }
     },
+    last: Boolean,
     vertical: Boolean,
   }
 };
 </script>
 
 <style lang="scss">
-
 .k-builder-block-creator {
   position: absolute;
   left: 0;
@@ -76,10 +80,19 @@ export default {
   margin-top: auto;
   margin-left: -1px;
 }
-
 .k-builder-block-creator .k-dropdown-content {
   position: absolute;
   top: 0;
   left: 50%;
+}
+.k-builder-block-creator[data-last] {
+  top: auto;
+  bottom: -.5rem;
+}
+.k-builder-block-creator[data-last][data-vertical] {
+  top: 0;
+  left: auto;
+  right: -.5rem;
+  bottom: 0;
 }
 </style>
