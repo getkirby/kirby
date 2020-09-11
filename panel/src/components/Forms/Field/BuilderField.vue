@@ -7,7 +7,9 @@
   >
 
     <k-dropdown slot="options">
-      <k-button icon="add" @click="select(blocks.length)">{{ $t('add') }}</k-button>
+      <k-button icon="add" @click="select(blocks.length)">
+        {{ $t("add") }}
+      </k-button>
     </k-dropdown>
 
     <template v-if="blocks.length === 0">
@@ -29,7 +31,10 @@
             :vertical="columns > 1"
             @select="select(index)"
           />
-          <details class="k-builder-block" :open="isOpen(block)">
+          <details
+            :class="'k-builder-block k-builder-fieldset-' + block._key"
+            :open="isOpen(block)"
+          >
             <summary class="k-builder-block-header" @click.prevent="toggle(block)">
               <k-sort-handle :icon="isHovered ? 'sort' : fieldsets[block._key].icon || 'sort'" class="k-builder-block-handle" />
               <span class="k-builder-block-label">
