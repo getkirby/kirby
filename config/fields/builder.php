@@ -33,6 +33,16 @@ return [
         'fieldsets' => function (array $fieldsets) {
             return $fieldsets;
         },
+
+        /**
+         * Only allow the given maximum number of blocks
+         *
+         * @param int|null $max
+         * @return int
+         */
+        'max' => function (?int $max = null) {
+            return $max;
+        }
     ],
     'computed' => [
         'builder' => function () {
@@ -63,6 +73,7 @@ return [
             'fieldsets' => $this->fieldsets,
             'help'      => $this->help,
             'label'     => $this->label,
+            'max'       => $this->max,
             'name'      => $this->name,
             'required'  => $this->required,
             'type'      => 'builder',
