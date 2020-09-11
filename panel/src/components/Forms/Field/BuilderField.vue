@@ -7,12 +7,12 @@
   >
 
     <k-dropdown slot="options">
-      <k-button icon="add" @click="select(blocks.length)">Add</k-button>
+      <k-button icon="add" @click="select(blocks.length)">{{ $t('add') }}</k-button>
     </k-dropdown>
 
     <template v-if="blocks.length === 0">
       <k-empty icon="box" @click="select(blocks.length)">
-        No blocks yet
+        {{ $t("field.builder.empty") }}
       </k-empty>
     </template>
 
@@ -42,8 +42,8 @@
                   @click="$refs['options-' + block._uid][0].toggle()"
                 />
                 <k-dropdown-content :ref="'options-' + block._uid" align="right">
-                  <k-dropdown-item icon="copy" @click="duplicate(block)">Duplicate</k-dropdown-item>
-                  <k-dropdown-item icon="trash" @click="onRemove(block)">Delete</k-dropdown-item>
+                  <k-dropdown-item icon="copy" @click="duplicate(block)">{{ $t('duplicate') }}</k-dropdown-item>
+                  <k-dropdown-item icon="trash" @click="onRemove(block)">{{ $t('delete') }}</k-dropdown-item>
                 </k-dropdown-content>
               </k-dropdown>
             </summary>
@@ -74,8 +74,9 @@
       :cancel-button="false"
       :submit-button="false"
       class="k-builder-fieldsets-dialog"
+      size="medium"
     >
-      <k-headline>Please, select a block type …</k-headline>
+      <k-headline>{{ $t("field.builder.fieldsets.label") }}</k-headline>
       <ul class="k-builder-fieldsets">
         <li v-for="fieldset in fieldsets" :key="fieldset.name">
           <k-button :icon="fieldset.icon || 'box'" @click="add(fieldset.key)">
