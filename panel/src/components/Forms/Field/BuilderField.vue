@@ -26,6 +26,8 @@
           v-for="(block, index) in blocks"
           :key="block._uid"
           :width="'1/' + columns"
+          :data-disabled="fieldset(block).disabled"
+          :data-translate="fieldset(block).translate"
           class="k-builder-column"
         >
           <k-builder-block-creator
@@ -39,9 +41,9 @@
             :open="isOpen(block)"
           >
             <summary class="k-builder-block-header" @click.prevent="toggle(block)">
-              <k-sort-handle :icon="isHovered ? 'sort' : fieldsets[block._key].icon || 'sort'" class="k-builder-block-handle" />
+              <k-sort-handle :icon="isHovered ? 'sort' : fieldset(block).icon || 'sort'" class="k-builder-block-handle" />
               <span class="k-builder-block-label">
-                {{ $helper.string.template(fieldsets[block._key].label, block) }}
+                {{ $helper.string.template(fieldset(block).label, block) }}
               </span>
               <k-dropdown>
                 <k-button
@@ -180,7 +182,7 @@ export default {
       this.onInput();
     },
     fields(block) {
-      let fields = this.fieldsets[block._key].fields || {};
+      const fields = this.fieldset(block).fields || {};
 
       if (Object.keys(fields).length === 0) {
         return {
@@ -205,6 +207,9 @@ export default {
       });
 
       return fields;
+    },
+    fieldset(block) {
+      return this.fieldsets[block._key];
     },
     isOpen(block) {
       return this.opened.includes(block._uid);
