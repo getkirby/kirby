@@ -5,12 +5,14 @@
     @mouseenter.native="isHovered = true"
     @mouseleave.native="isHovered = false"
   >
-
-    <k-dropdown slot="options">
-      <k-button icon="add" @click="select(blocks.length)">
-        {{ $t("add") }}
-      </k-button>
-    </k-dropdown>
+    <k-button
+      v-if="!isFull"
+      slot="options"
+      icon="add"
+      @click="select(blocks.length)"
+    >
+      {{ $t('add') }}
+    </k-button>
 
     <template v-if="blocks.length === 0">
       <k-empty icon="box" @click="select(blocks.length)">
@@ -27,6 +29,7 @@
           class="k-builder-column"
         >
           <k-builder-block-creator
+            v-if="!isFull"
             :fieldsets="fieldsets"
             :vertical="columns > 1"
             @select="select(index)"
@@ -61,15 +64,13 @@
               />
             </div>
           </details>
-
           <k-builder-block-creator
-            v-if="index === blocks.length - 1"
+            v-if="index === blocks.length - 1 && !isFull"
             :fieldsets="fieldsets"
             :last="true"
             :vertical="columns > 1"
             @select="select(blocks.length)"
           />
-
         </k-column>
       </k-draggable>
     </template>
@@ -115,6 +116,10 @@ export default {
     ...Field.props,
     columns: Number,
     fieldsets: Object,
+    max: {
+      type: Number,
+      default: null,
+    },
     value: {
       type: Array,
       default() {
@@ -130,6 +135,15 @@ export default {
       opened: [],
       trash: null,
     };
+  },
+  computed: {
+    isFull() {
+      if (this.max === null) {
+        return false;
+      }
+
+      return this.blocks.length >= this.max;
+    }
   },
   watch: {
     value() {
