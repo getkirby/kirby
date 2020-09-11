@@ -69,11 +69,14 @@ class Builder
     public function fieldset(string $key, array $fieldset): array
     {
         return [
-            'fields' => $this->fields($fieldset['fields'] ?? []),
-            'key'    => $key,
-            'name'   => $name = $fieldset['name'] ?? Str::ucfirst($key),
-            'label'  => $fieldset['label'] ?? $name,
-            'icon'   => $fieldset['icon'] ?? null
+            'fields'    => $this->fields($fieldset['fields'] ?? []),
+            'key'       => $key,
+            'name'      => $name = $fieldset['name'] ?? Str::ucfirst($key),
+            'label'     => $fieldset['label'] ?? $name,
+            'icon'      => $fieldset['icon'] ?? null,
+            'disabled'  => $fieldset['disabled'] ?? false,
+            'translate' => $fieldset['translate'] ?? null,
+            'unset'     => $fieldset['unset'] ?? false,
         ];
     }
 
@@ -88,9 +91,22 @@ class Builder
         }
 
         $fieldsets = [];
+        $kirby = App::instance();
+
+        if ($kirby->multilang() === true) {
+            $languageCode      = $kirby->language()->code();
+            $isDefaultLanguage = $languageCode === $kirby->defaultLanguage()->code();
+        }
 
         foreach ($this->props['fieldsets'] ?? [] as $key => $fieldset) {
             $fieldset = $this->fieldset($key, Blueprint::extend($fieldset));
+
+            // switch untranslatable fieldset to readonly
+            if ($fieldset['translate'] === false && ($isDefaultLanguage ?? true) === false) {
+                $fieldset['unset']    = true;
+                $fieldset['disabled'] = true;
+            }
+
             $fieldsets[$fieldset['key']] = $fieldset;
         }
 
@@ -158,7 +174,7 @@ class Builder
             }
 
             $fieldset = $fieldsets[$type];
-            $values   = $this->form($fieldset['fields'] ?? [], $block)->values();
+            $values   = $this->form($fieldset['fields'] ?? [], $block)->content();
 
             // add private row values
             $values['_key'] = $type;
