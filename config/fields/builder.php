@@ -79,5 +79,8 @@ return [
             'type'      => 'builder',
             'value'     => $this->value,
         ];
-    }
+    },
+    'validations' => [
+        'max'
+    ]
 ];
