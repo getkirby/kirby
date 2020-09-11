@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Form\Field;
 use PHPUnit\Framework\TestCase;
 
 class BuilderTest extends TestCase
@@ -70,11 +71,14 @@ class BuilderTest extends TestCase
                 'icon'  => 'quote'
             ],
             'bodytext' => [
-                'fields' => [],
-                'key'   => 'bodytext',
-                'name'  => 'Text',
-                'label' => 'Text',
-                'icon'  => null
+                'fields'    => [],
+                'key'       => 'bodytext',
+                'name'      => 'Text',
+                'label'     => 'Text',
+                'icon'      => null,
+                'disabled'  => false,
+                'translate' => null,
+                'unset'     => false
             ]
         ], $builder->fieldsets());
     }
