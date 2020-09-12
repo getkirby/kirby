@@ -37,7 +37,8 @@ class BuilderFieldTest extends TestCase
                 'heading' => [
                     'fields' => [
                         'text' => [
-                            'type' => 'text'
+                            'type' => 'text',
+                            'translate' => false,
                         ]
                     ]
                 ]
