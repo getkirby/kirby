@@ -50,8 +50,16 @@
                   @click="$refs['options-' + block._uid][0].toggle()"
                 />
                 <k-dropdown-content :ref="'options-' + block._uid" align="right">
-                  <k-dropdown-item icon="copy" @click="duplicate(block)">{{ $t('duplicate') }}</k-dropdown-item>
-                  <k-dropdown-item icon="trash" @click="onRemove(block)">{{ $t('delete') }}</k-dropdown-item>
+                  <k-dropdown-item :disabled="isFull" icon="add" @click="select(index + 1)">
+                    {{ $t("insert") }}
+                  </k-dropdown-item>
+                  <k-dropdown-item :disabled="isFull" icon="copy" @click="duplicate(block)">
+                    {{ $t("duplicate") }}
+                  </k-dropdown-item>
+                  <hr>
+                  <k-dropdown-item icon="trash" @click="onRemove(block)">
+                    {{ $t("delete") }}
+                  </k-dropdown-item>
                 </k-dropdown-content>
               </k-dropdown>
             </summary>
