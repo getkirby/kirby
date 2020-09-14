@@ -179,7 +179,7 @@ export default {
       this.onInput();
     },
     fields(block) {
-      const fields = this.fieldsets[block._key].fields || {};
+      let fields = this.fieldsets[block._key].fields || {};
 
       if (Object.keys(fields).length === 0) {
         return {
@@ -189,6 +189,19 @@ export default {
           }
         };
       }
+
+      Object.keys(fields).forEach(name => {
+        let field = fields[name];
+
+        field.section = this.name;
+        field.endpoints = {
+          field: this.endpoints.field + "/fieldsets/" + block._key + "/fields/" + name,
+          section: this.endpoints.section,
+          model: this.endpoints.model
+        };
+
+        fields[name] = field;
+      });
 
       return fields;
     },

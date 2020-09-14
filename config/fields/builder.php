@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\Builder;
+use Kirby\Exception\NotFoundException;
 
 return [
     'props' => [
@@ -58,11 +59,32 @@ return [
     'api' => function () {
         return [
             [
-                'pattern' => 'preview',
+                'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
                 'method'  => 'ALL',
-                'action'  => function () {
-                    dump(get());
-                    exit;
+                'action'  => function (string $fieldsetName, string $fieldName, string $path = null) {
+
+                    $parent    = $this->field();
+                    $fieldsets = $parent->fieldsets();
+                    $builder   = $parent->builder();
+                    $fieldset  = $fieldsets[$fieldsetName] ?? [];
+
+                    if (empty($fieldset) === true) {
+                        throw new NotFoundException('The fieldset could not be found');
+                    }
+
+                    $form  = $builder->form($fieldset['fields'] ?? []);
+
+                    if (!$field = $form->fields()->$fieldName()) {
+                        throw new NotFoundException('The field could not be found');
+                    }
+
+                    $fieldApi = $this->clone([
+                        'routes' => $field->api(),
+                        'data'   => array_merge($this->data(), ['field' => $field])
+                    ]);
+
+                    return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
+
                 }
             ]
         ];
