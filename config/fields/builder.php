@@ -62,7 +62,6 @@ return [
                 'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
                 'method'  => 'ALL',
                 'action'  => function (string $fieldsetName, string $fieldName, string $path = null) {
-
                     $parent    = $this->field();
                     $fieldsets = $parent->fieldsets();
                     $builder   = $parent->builder();
@@ -84,7 +83,6 @@ return [
                     ]);
 
                     return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
-
                 }
             ]
         ];
