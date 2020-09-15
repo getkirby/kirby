@@ -92,7 +92,7 @@ class Field extends Component
     /**
      * Returns field data
      *
-     * @param boolean $default
+     * @param bool $default
      * @return mixed
      */
     public function data(bool $default = false)
