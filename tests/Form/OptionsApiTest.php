@@ -71,16 +71,16 @@ class OptionsApiTest extends TestCase
 
         $expected = [
             [
-                'value' => 'apple',
-                'text'  => 'Apple'
+                'text'  => 'Apple',
+                'value' => 'apple'
             ],
             [
-                'value' => 'intel',
-                'text'  => 'Intel'
+                'text'  => 'Intel',
+                'value' => 'intel'
             ],
             [
-                'value' => 'microsoft',
-                'text'  => 'Microsoft'
+                'text'  => 'Microsoft',
+                'value' => 'microsoft'
             ],
         ];
 
@@ -93,8 +93,8 @@ class OptionsApiTest extends TestCase
             'value' => '{{ item.name.slug }}'
         ]);
 
-        $this->assertEquals($expected, $api->options());
-        $this->assertEquals($expected, $api->toArray());
+        $this->assertSame($expected, $api->options());
+        $this->assertSame($expected, $api->toArray());
 
         // API from URL (using cURL)
         $api = new OptionsApi([
@@ -105,8 +105,31 @@ class OptionsApiTest extends TestCase
             'value' => '{{ item.name.slug }}'
         ]);
 
-        $this->assertEquals($expected, $api->options());
-        $this->assertEquals($expected, $api->toArray());
+        $this->assertSame($expected, $api->options());
+        $this->assertSame($expected, $api->toArray());
+
+
+        // API from file
+        $api = new OptionsApi([
+            'data'  => [],
+            'url'   => 'file://' . $source,
+            'options' => [
+                [
+                    'text'  => 'Apple',
+                    'value' => 'apple'
+                ],
+                [
+                    'text'  => 'Intel',
+                    'value' => 'intel'
+                ],
+                [
+                    'text'  => 'Microsoft',
+                    'value' => 'microsoft'
+                ],
+            ],
+        ]);
+
+        $this->assertSame($expected, $api->options());
     }
 
     public function testOptionsFileNotFound()
