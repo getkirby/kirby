@@ -63,7 +63,7 @@
                 </k-dropdown-content>
               </k-dropdown>
             </summary>
-            <div class="k-builder-block-body">
+            <div class="k-builder-block-body" v-if="isOpen(block)">
               <k-fieldset
                 :fields="fields(block)"
                 :value="block"
