@@ -41,24 +41,28 @@ class OptionsTest extends TestCase
 
         $expected = [
             [
-                'value' => 'apple',
-                'text'  => 'Apple'
+                'text'  => 'Apple',
+                'value' => 'apple'
             ],
             [
-                'value' => 'intel',
-                'text'  => 'Intel'
+                'text'  => 'Intel',
+                'value' => 'intel'
             ],
             [
-                'value' => 'microsoft',
-                'text'  => 'Microsoft'
+                'text'  => 'Microsoft',
+                'value' => 'microsoft'
             ],
         ];
 
         Data::write($source, $data);
 
+        // with api
         $options = Options::api($source);
+        $this->assertSame($expected, $options);
 
-        $this->assertEquals($expected, $options);
+        // with factory
+        $options = Options::factory('api', ['api' => $source]);
+        $this->assertSame($expected, $options);
     }
 
     public function testApiFromArray()
@@ -116,8 +120,6 @@ class OptionsTest extends TestCase
             ]
         ]);
 
-        $result = Options::query('site.children');
-
         $expected = [
             [
                 'text'  => 'Page A',
@@ -129,7 +131,38 @@ class OptionsTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($expected, $result);
+        // with query
+        $result = Options::query('site.children');
+
+        $this->assertSame($expected, $result);
+
+        // with array query
+        $result = Options::query([
+            'fetch' => 'site.children',
+            'text'  => '{{ page.title }}',
+            'value' => '{{ page.title }}',
+        ]);
+
+        $this->assertSame([
+            [
+                'text'  => 'Page A',
+                'value' => 'Page A'
+            ],
+            [
+                'text'  => 'b',
+                'value' => 'b'
+            ]
+        ], $result);
+
+        // with factory
+        $result = Options::factory('pages');
+
+        $this->assertSame($expected, $result);
+
+        // with invalid factory
+        $result = Options::factory([]);
+
+        $this->assertSame([], $result);
     }
 
     public function testUsers()
