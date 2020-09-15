@@ -3,7 +3,6 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\App;
-use Kirby\Data\Data;
 use Kirby\Toolkit\Dir;
 use PHPUnit\Framework\TestCase;
 

@@ -145,7 +145,7 @@ class Form
     }
 
     /**
-     *
+     * An array of all found errors
      *
      * @return array
      */

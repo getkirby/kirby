@@ -3,7 +3,6 @@
 namespace Kirby\Form;
 
 use Exception;
-use Kirby\Cms\Model;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Component;
