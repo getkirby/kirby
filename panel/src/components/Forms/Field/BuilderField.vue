@@ -288,17 +288,12 @@ export default {
   background: $color-white;
   box-shadow: $box-shadow-card;
 }
-
 .k-builder-field .k-sortable-ghost {
   outline: 2px solid $color-focus;
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
-.k-builder-column.k-sortable-fallback {
-  opacity: 0 !important;
-}
-
 .k-builder-block-header {
   height: 36px;
   display: flex;
@@ -316,8 +311,6 @@ export default {
 .k-builder-block-handle.k-sort-handle {
   width: 2.25rem;
   height: 36px;
-  margin-right: .75rem;
-  border-right: 1px $color-background solid;
 }
 .k-builder-block-handle.k-sort-handle > svg {
   opacity: .25;
