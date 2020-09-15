@@ -65,6 +65,7 @@
             </summary>
             <div class="k-builder-block-body" v-if="isOpen(block)">
               <k-fieldset
+                :ref="'fieldset-' + block._uid"
                 :fields="fields(block)"
                 :value="block"
                 class="k-builder-block-form"
@@ -234,6 +235,13 @@ export default {
     open(block) {
       if (this.isOpen(block) === false) {
         this.opened.push(block._uid);
+
+        this.$nextTick(() => {
+          const fieldset = this.$refs["fieldset-" + block._uid][0];
+          if (fieldset) {
+            fieldset.focus();
+          }
+        });
       }
     },
     select(index) {
