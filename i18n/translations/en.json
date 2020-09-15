@@ -6,6 +6,8 @@
   "change": "Change",
   "close": "Close",
   "confirm": "Ok",
+  "collapse": "Collapse",
+  "collapse.all": "Collapse All",
   "copy": "Copy",
   "create": "Create",
 
@@ -28,6 +30,8 @@
   "download": "Download",
   "duplicate": "Duplicate",
   "edit": "Edit",
+  "expand": "Expand",
+  "expand.all": "Expand All",
 
   "dialog.files.empty": "No files to select",
   "dialog.pages.empty": "No pages to select",
