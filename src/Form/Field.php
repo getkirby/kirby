@@ -51,6 +51,14 @@ class Field extends Component
      */
     public static $types = [];
 
+    /**
+     * Field constructor
+     *
+     * @param string $type
+     * @param array $attrs
+     * @param \Kirby\Form\Fields|null $formFields
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public function __construct(string $type, array $attrs = [], ?Fields $formFields = null)
     {
         if (isset(static::$types[$type]) === false) {
@@ -71,6 +79,8 @@ class Field extends Component
     }
 
     /**
+     * Returns field api call
+     *
      * @return mixed
      */
     public function api()
@@ -81,10 +91,12 @@ class Field extends Component
     }
 
     /**
-     * @param mixed $default
+     * Returns field data
+     *
+     * @param boolean $default
      * @return mixed
      */
-    public function data($default = false)
+    public function data(bool $default = false)
     {
         $save = $this->options['save'] ?? true;
 
@@ -103,6 +115,11 @@ class Field extends Component
         }
     }
 
+    /**
+     * Default props and computed of the field
+     *
+     * @return array
+     */
     public static function defaults(): array
     {
         return [
@@ -232,11 +249,21 @@ class Field extends Component
         ];
     }
 
+    /**
+     * Parent collection with all fields of the current form
+     *
+     * @return \Kirby\Form\Fields|null
+     */
     public function formFields(): ?Fields
     {
         return $this->formFields;
     }
 
+    /**
+     * Validates when run for the first time and returns any errors
+     *
+     * @return array
+     */
     public function errors(): array
     {
         if ($this->errors === null) {
@@ -246,6 +273,12 @@ class Field extends Component
         return $this->errors;
     }
 
+    /**
+     * Checks if the field is empty
+     *
+     * @param mixed ...$args
+     * @return bool
+     */
     public function isEmpty(...$args): bool
     {
         if (count($args) === 0) {
@@ -261,22 +294,39 @@ class Field extends Component
         return in_array($value, [null, '', []], true);
     }
 
+    /**
+     * Checks if the field is invalid
+     *
+     * @return bool
+     */
     public function isInvalid(): bool
     {
         return empty($this->errors()) === false;
     }
 
+    /**
+     * Checks if the field is required
+     *
+     * @return bool
+     */
     public function isRequired(): bool
     {
         return $this->required ?? false;
     }
 
+    /**
+     * Checks if the field is valid
+     *
+     * @return bool
+     */
     public function isValid(): bool
     {
         return empty($this->errors()) === true;
     }
 
     /**
+     * Returns the Kirby instance
+     *
      * @return \Kirby\Cms\App
      */
     public function kirby()
@@ -284,6 +334,11 @@ class Field extends Component
         return $this->model->kirby();
     }
 
+    /**
+     * Returns the parent model
+     *
+     * @return mixed|null
+     */
     public function model()
     {
         return $this->model;
@@ -329,11 +384,21 @@ class Field extends Component
         return true;
     }
 
+    /**
+     * Checks if the field is saveable
+     *
+     * @return bool
+     */
     public function save(): bool
     {
         return ($this->options['save'] ?? true) !== false;
     }
 
+    /**
+     * Converts the field to a plain array
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         $array = parent::toArray();
@@ -352,6 +417,11 @@ class Field extends Component
         });
     }
 
+    /**
+     * Runs the validations defined for the field
+     *
+     * @return void
+     */
     protected function validate(): void
     {
         $validations  = $this->options['validations'] ?? [];
@@ -395,6 +465,12 @@ class Field extends Component
         }
     }
 
+    /**
+     * Returns the value of the field if saveable
+     * otherwise it returns null
+     *
+     * @return mixed
+     */
     public function value()
     {
         return $this->save() ? $this->value : null;
