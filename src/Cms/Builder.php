@@ -174,7 +174,7 @@ class Builder
             }
 
             $fieldset = $fieldsets[$type];
-            $values   = $this->form($fieldset['fields'] ?? [], $block)->content();
+            $values   = $this->form($fieldset['fields'] ?? [], $block)->values();
 
             // add private row values
             $values['_key'] = $type;
