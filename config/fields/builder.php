@@ -87,19 +87,6 @@ return [
             ]
         ];
     },
-    'toArray' => function () {
-        return [
-            'columns'   => $this->columns,
-            'fieldsets' => $this->fieldsets,
-            'help'      => $this->help,
-            'label'     => $this->label,
-            'max'       => $this->max,
-            'name'      => $this->name,
-            'required'  => $this->required,
-            'type'      => 'builder',
-            'value'     => $this->value,
-        ];
-    },
     'validations' => [
         'max'
     ]

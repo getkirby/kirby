@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Fields;
 
+use Kirby\Cms\App;
+
 class BuilderFieldTest extends TestCase
 {
     public function testDefaultProps()
@@ -103,5 +105,103 @@ class BuilderFieldTest extends TestCase
         ]);
 
         $this->assertTrue($field->isValid());
+    }
+
+    public function testTranslateField()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        $props = [
+            'fieldsets' => [
+                'heading' => [
+                    'fields' => [
+                        'text' => [
+                            'type' => 'text',
+                            'translate' => false,
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        // default language
+        $app->setCurrentLanguage('en');
+        $field = $this->field('builder', $props);
+
+        $this->assertFalse($field->fieldsets['heading']['fields']['text']['translate']);
+        $this->assertFalse($field->fieldsets['heading']['fields']['text']['disabled']);
+
+        // secondary language
+        $app = $app->clone();
+        $app->setCurrentLanguage('de');
+
+        $field = $this->field('builder', $props);
+        $this->assertFalse($field->fieldsets['heading']['fields']['text']['translate']);
+        $this->assertTrue($field->fieldsets['heading']['fields']['text']['disabled']);
+    }
+
+    public function testTranslateFieldset()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                ]
+            ]
+        ]);
+
+        $props = [
+            'fieldsets' => [
+                'heading' => [
+                    'translate' => false,
+                    'fields' => [
+                        'text' => [
+                            'type' => 'text'
+                        ]
+                    ]
+                ]
+            ]
+        ];
+
+        // default language
+        $app->setCurrentLanguage('en');
+        $field = $this->field('builder', $props);
+
+        $this->assertFalse($field->fieldsets['heading']['translate']);
+        $this->assertFalse($field->fieldsets['heading']['disabled']);
+
+        // secondary language
+        $app = $app->clone();
+        $app->setCurrentLanguage('de');
+
+        $field = $this->field('builder', $props);
+        $this->assertFalse($field->fieldsets['heading']['translate']);
+        $this->assertTrue($field->fieldsets['heading']['disabled']);
     }
 }
