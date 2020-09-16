@@ -148,6 +148,7 @@ export default {
   data() {
     return {
       blocks: this.value,
+      hasOpened: false,
       isHovered: false,
       nextIndex: this.value.length,
       opened: [],
@@ -155,9 +156,6 @@ export default {
     };
   },
   computed: {
-    hasOpened() {
-      return this.opened.length > 0;
-    },
     isFull() {
       if (this.max === null) {
         return false;
@@ -167,6 +165,9 @@ export default {
     }
   },
   watch: {
+    opened(value) {
+      this.hasOpened = value.length > 0;
+    },
     value() {
       this.blocks = this.value;
     }
@@ -287,15 +288,7 @@ export default {
       }
     },
     toggleAll() {
-      let hasOpened = this.hasOpened;
-
-      Object.keys(this.blocks).forEach(key => {
-        if (hasOpened === true) {
-          this.close(this.blocks[key]);
-        } else {
-          this.open(this.blocks[key], false);
-        }
-      });
+      this.opened = this.hasOpened ? [] : this.blocks.map(block => block._uid);
     },
     uid(type) {
       return type + "_" + (+new Date) + "_" + this.$helper.string.random(6);
