@@ -69,5 +69,4 @@ class BuilderBlocks extends Collection
         }
         return $html;
     }
-
 }
