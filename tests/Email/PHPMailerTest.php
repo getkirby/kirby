@@ -2,8 +2,6 @@
 
 namespace Kirby\Email;
 
-use Kirby\Cms\App;
-
 class PHPMailerTest extends TestCase
 {
     protected function _email($props = [], $mailer = PHPMailer::class)
