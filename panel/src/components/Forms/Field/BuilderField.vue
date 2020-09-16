@@ -5,22 +5,21 @@
     @mouseenter.native="isHovered = true"
     @mouseleave.native="isHovered = false"
   >
-    <k-button-group slot="options">
-      <k-button
-          :icon="hasOpened() ? 'collapse' : 'expand'"
-          @click="expandCollapse()"
-      >
-        {{ hasOpened() ? $t('collapse.all') : $t('expand.all') }}
-      </k-button>
-
-      <k-button
-          v-if="!isFull"
-          icon="add"
-          @click="select(blocks.length)"
-      >
-        {{ $t('add') }}
-      </k-button>
-    </k-button-group>
+    <k-dropdown slot="options">
+      <k-button icon="cog" @click="$refs.options.toggle()" />
+      <k-dropdown-content ref="options" align="right">
+        <k-dropdown-item :disabled="isFull" icon="add" @click="select(blocks.length)">
+          {{ $t('add') }}
+        </k-dropdown-item>
+        <k-dropdown-item :icon="hasOpened ? 'collapse' : 'expand'" @click="toggleAll()">
+          {{ hasOpened ? $t('collapse.all') : $t('expand.all') }}
+        </k-dropdown-item>
+        <hr>
+        <k-dropdown-item icon="trash" @click="$refs.removeAll.open()">
+          {{ $t('delete.all') }}
+        </k-dropdown-item>
+      </k-dropdown-content>
+    </k-dropdown>
 
     <template v-if="blocks.length === 0">
       <k-empty icon="box" @click="select(blocks.length)">
@@ -111,14 +110,14 @@
       </ul>
     </k-dialog>
 
-    <k-dialog
-      ref="remove"
-      :submit-button="$t('delete')"
-      theme="negative"
-      @submit="remove"
-    >
-      <k-text>{{ $t("field.builder.delete.confirm") }}</k-text>
-    </k-dialog>
+    <k-remove-dialog ref="remove" @submit="remove">
+      {{ $t("field.builder.delete.confirm") }}
+    </k-remove-dialog>
+
+    <k-remove-dialog ref="removeAll" @submit="removeAll">
+      {{ $t("field.builder.delete.all.confirm") }}
+    </k-remove-dialog>
+
   </k-field>
 </template>
 
@@ -156,6 +155,9 @@ export default {
     };
   },
   computed: {
+    hasOpened() {
+      return this.opened.length > 0;
+    },
     isFull() {
       if (this.max === null) {
         return false;
@@ -189,17 +191,6 @@ export default {
       this.blocks.push(copy);
       this.onInput();
     },
-    expandCollapse() {
-      let hasOpened = this.hasOpened();
-
-      Object.keys(this.blocks).forEach(key => {
-        if (hasOpened === true) {
-          this.close(this.blocks[key]);
-        } else {
-          this.open(this.blocks[key]);
-        }
-      });
-    },
     fields(block) {
       const fields = this.fieldset(block).fields || {};
 
@@ -230,9 +221,6 @@ export default {
     fieldset(block) {
       return this.fieldsets[block._key];
     },
-    hasOpened() {
-      return this.opened.length > 0;
-    },
     isOpen(block) {
       return this.opened.includes(block._uid);
     },
@@ -249,6 +237,14 @@ export default {
         this.onInput();
       }
     },
+    removeAll() {
+      this.blocks = [];
+      this.opened = [];
+      this.nextIndex = null;
+      this.trash = null;
+      this.onInput();
+      this.$refs.removeAll.close();
+    },
     sort() {
       this.onInput();
     },
@@ -259,16 +255,18 @@ export default {
       this.trash = block;
       this.$refs.remove.open();
     },
-    open(block) {
+    open (block, focus = true) {
       if (this.isOpen(block) === false) {
         this.opened.push(block._uid);
 
-        this.$nextTick(() => {
-          const fieldset = this.$refs["fieldset-" + block._uid][0];
-          if (fieldset) {
-            fieldset.focus();
-          }
-        });
+        if (focus) {
+          this.$nextTick(() => {
+            const fieldset = this.$refs["fieldset-" + block._uid][0];
+            if (fieldset) {
+              fieldset.focus();
+            }
+          });
+        }
       }
     },
     select(index) {
@@ -287,6 +285,17 @@ export default {
       } else {
         this.open(block);
       }
+    },
+    toggleAll() {
+      let hasOpened = this.hasOpened;
+
+      Object.keys(this.blocks).forEach(key => {
+        if (hasOpened === true) {
+          this.close(this.blocks[key]);
+        } else {
+          this.open(this.blocks[key], false);
+        }
+      });
     },
     uid(type) {
       return type + "_" + (+new Date) + "_" + this.$helper.string.random(6);

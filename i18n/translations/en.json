@@ -24,6 +24,7 @@
   "days.wed": "Wed",
 
   "delete": "Delete",
+  "delete.all": "Delete all",
   "dimensions": "Dimensions",
   "disabled": "Disabled",
   "discard": "Discard",
@@ -193,6 +194,7 @@
 
   "field.required": "The field is required",
   "field.builder.delete.confirm": "Do you really want to delete this block?",
+  "field.builder.delete.all.confirm": "Do you really want to delete all blocks?",
   "field.builder.empty": "No blocks yet",
   "field.builder.fieldsets.label": "Please select a block type …",
   "field.files.empty": "No files selected yet",
