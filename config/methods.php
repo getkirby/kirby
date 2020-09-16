@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
+use Kirby\Cms\BuilderBlocks;
 use Kirby\Cms\Field;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
@@ -81,6 +82,26 @@ return function (App $app) {
         'toBool' => function (Field $field, $default = false): bool {
             $value = $field->isEmpty() ? $default : $field->value;
             return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+        },
+
+        /**
+         * Converts a yaml field to a BuilderBlocks object
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\BuilderBlocks
+         */
+        'toBuilderBlocks' => function (Field $field) {
+            try {
+                return new BuilderBlocks(Data::decode($field->value, 'yaml'), $field->parent());
+            } catch (Exception $e) {
+                if ($field->parent() === null) {
+                    $message = 'Invalid builder data for "' . $field->key() . '" field';
+                } else {
+                    $message = 'Invalid builder data for "' . $field->key() . '" field on parent "' . $field->parent()->title() . '"';
+                }
+
+                throw new InvalidArgumentException($message);
+            }
         },
 
         /**
