@@ -321,4 +321,25 @@ class FormTest extends TestCase
         $this->assertCount(1, $form->data());
         $this->assertArrayHasKey('info', $form->data());
     }
+
+    public function testStrings()
+    {
+        $form = new Form([
+            'fields' => [],
+            'values' => [
+                'a' => 'A',
+                'b' => 'B',
+                'c' => [
+                    'd' => 'D',
+                    'e' => 'E'
+                ]
+            ]
+        ]);
+
+        $this->assertSame([
+            'a' => 'A',
+            'b' => 'B',
+            'c' => "d: D\ne: E\n"
+        ], $form->strings());
+    }
 }

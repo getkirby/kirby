@@ -22,11 +22,12 @@ class Fields extends Collection
      * the collection prop on each object correctly.
      *
      * @param string $name
-     * @param object $field
+     * @param object|array $field
+     * @return self
      */
     public function __set(string $name, $field)
     {
-        if (is_array($field)) {
+        if (is_array($field) === true) {
             // use the array key as name if the name is not set
             $field['name'] = $field['name'] ?? $name;
             $field = new Field($field['type'], $field);
@@ -40,7 +41,7 @@ class Fields extends Collection
      * array and also does that for every
      * included field.
      *
-     * @param Closure $map
+     * @param \Closure|null $map
      * @return array
      */
     public function toArray(Closure $map = null): array
