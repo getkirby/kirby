@@ -40,7 +40,7 @@ class Body
     }
 
     /**
-     * Returns body html
+     * Returns the HTML content of the email body
      *
      * @return string|null
      */
@@ -50,7 +50,7 @@ class Body
     }
 
     /**
-     * Returns body text
+     * Returns the plain text content of the email body
      *
      * @return string|null
      */
@@ -60,7 +60,7 @@ class Body
     }
 
     /**
-     * Sets body as HTML
+     * Sets the HTML content for the email body
      *
      * @param string|null $html
      * @return self
@@ -72,7 +72,7 @@ class Body
     }
 
     /**
-     * Sets body as plain text
+     * Sets the plain text content for the email body
      *
      * @param string|null $text
      * @return self
