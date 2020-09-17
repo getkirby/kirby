@@ -122,7 +122,7 @@ class Email
     }
 
     /**
-     * Returns bcc receipts
+     * Returns "bcc" recipients
      *
      * @return array
      */
@@ -132,7 +132,8 @@ class Email
     }
 
     /**
-     * Returns PHPMailer instance
+     * Returns the beforeSend callback closure, 
+     * which has access to the PHPMailer instance
      *
      * @return \Closure|null
      */
@@ -142,7 +143,7 @@ class Email
     }
 
     /**
-     * Returns cc receipts
+     * Returns "cc" recipients
      *
      * @return array
      */
@@ -164,7 +165,7 @@ class Email
     }
 
     /**
-     * Returns from email
+     * Returns the "from" email address
      *
      * @return string
      */
@@ -174,7 +175,7 @@ class Email
     }
 
     /**
-     * Returns from name
+     * Returns the "from" name
      *
      * @return string|null
      */
@@ -184,7 +185,7 @@ class Email
     }
 
     /**
-     * Returns the email is HTML
+     * Checks if the email has an HTML body
      *
      * @return bool
      */
@@ -194,7 +195,7 @@ class Email
     }
 
     /**
-     * Returns the email is successfully sent
+     * Checks if the email has been sent successfully
      *
      * @return bool
      */
@@ -204,7 +205,7 @@ class Email
     }
 
     /**
-     * Returns reply email
+     * Returns the "reply to" email address
      *
      * @return string
      */
@@ -214,7 +215,7 @@ class Email
     }
 
     /**
-     * Returns reply name
+     * Returns the "reply to" name
      *
      * @return string|null
      */
@@ -224,7 +225,7 @@ class Email
     }
 
     /**
-     * Converts single and multiple emails to fixed format
+     * Converts single or multiple email addresses to a sanitized format
      *
      * @param string|array|null $email
      * @param bool $multiple
@@ -262,6 +263,8 @@ class Email
     }
 
     /**
+     * Sends the email
+     * 
      * @return bool
      */
     public function send(): bool
@@ -298,7 +301,7 @@ class Email
     }
 
     /**
-     * Sets bcc receipts
+     * Sets "bcc" recipients
      *
      * @param string|array|null $bcc
      * @return $this
@@ -310,7 +313,7 @@ class Email
     }
 
     /**
-     * Sets beforeSend callback
+     * Sets the "beforeSend" callback
      *
      * @param \Closure|null $beforeSend
      * @return self
@@ -322,7 +325,7 @@ class Email
     }
 
     /**
-     * Sets cc receipts
+     * Sets "cc" recipients
      *
      * @param string|array|null $cc
      * @return self
@@ -334,7 +337,7 @@ class Email
     }
 
     /**
-     * Sets who the email is sent from email
+     * Sets the "from" email address
      *
      * @param string $from
      * @return self
@@ -346,7 +349,7 @@ class Email
     }
 
     /**
-     * Sets who the email is sent from name
+     * Sets the "from" name
      *
      * @param string|null $fromName
      * @return self
@@ -358,7 +361,7 @@ class Email
     }
 
     /**
-     * Sets to which email address the reply will be sent
+     * Sets the "reply to" email address
      *
      * @param string|null $replyTo
      * @return self
@@ -370,7 +373,7 @@ class Email
     }
 
     /**
-     * Sets who the reply email belongs to
+     * Sets the "reply to" name
      *
      * @param string|null $replyToName
      * @return self
