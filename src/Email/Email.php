@@ -132,7 +132,7 @@ class Email
     }
 
     /**
-     * Returns the beforeSend callback closure, 
+     * Returns the beforeSend callback closure,
      * which has access to the PHPMailer instance
      *
      * @return \Closure|null
@@ -264,7 +264,7 @@ class Email
 
     /**
      * Sends the email
-     * 
+     *
      * @return bool
      */
     public function send(): bool

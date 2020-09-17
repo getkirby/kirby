@@ -136,15 +136,15 @@ function deprecated(string $message): bool
     return false;
 }
 
-/**
- * Simple object and variable dumper
- * to help with debugging.
- *
- * @param mixed $variable
- * @param bool $echo
- * @return string
- */
-if(!function_exists('dump')) {
+if (function_exists('dump') === false) {
+    /**
+     * Simple object and variable dumper
+     * to help with debugging.
+     *
+     * @param mixed $variable
+     * @param bool $echo
+     * @return string
+     */
     function dump($variable, bool $echo = true): string
     {
         $kirby = App::instance();
