@@ -12,7 +12,8 @@ class SiteTest extends TestCase
             'url' => $url = 'https://getkirby.com'
         ]);
 
-        $this->assertEquals($url, $site->url());
+        $this->assertSame($url, $site->url());
+        $this->assertSame($url, $site->__toString());
     }
 
     public function testToString()
@@ -228,5 +229,53 @@ class SiteTest extends TestCase
         ]);
 
         $this->assertEquals($expected, $site->previewUrl());
+    }
+
+    public function testToArray()
+    {
+        $site = new Site();
+        $data = $site->toArray();
+
+        $this->assertCount(8, $data);
+        $this->assertArrayHasKey('children', $data);
+        $this->assertArrayHasKey('content', $data);
+        $this->assertArrayHasKey('errorPage', $data);
+        $this->assertArrayHasKey('files', $data);
+        $this->assertArrayHasKey('homePage', $data);
+        $this->assertArrayHasKey('page', $data);
+        $this->assertArrayHasKey('title', $data);
+        $this->assertArrayHasKey('url', $data);
+
+        $this->assertSame([], $data['children']);
+        $this->assertSame([], $data['content']);
+        $this->assertFalse($data['errorPage']);
+        $this->assertSame([], $data['files']);
+        $this->assertFalse($data['homePage']);
+        $this->assertFalse($data['page']);
+        $this->assertNull($data['title']);
+        $this->assertSame('/', $data['url']);
+    }
+
+    public function testPanelPath()
+    {
+        $site = new Site();
+
+        $this->assertSame('site', $site->panelPath());
+    }
+
+    public function testPanelUrl()
+    {
+        $site = new Site();
+
+        $this->assertSame('/panel/site', $site->panelUrl());
+        $this->assertSame('/site', $site->panelUrl(true));
+    }
+
+    public function testApiUrl()
+    {
+        $site = new Site();
+
+        $this->assertSame('/api/site', $site->apiUrl());
+        $this->assertSame('site', $site->apiUrl(true));
     }
 }

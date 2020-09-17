@@ -309,7 +309,7 @@
   "page.duplicate.pages": "Salin halaman",
   "page.status": "Status",
   "page.status.draft": "Draf",
-  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
+  "page.status.draft.description": "Halaman ini ada pada mode draf dan hanya dapat dilihat oleh penyunting atau via tautan rahasia",
   "page.status.listed": "Publik",
   "page.status.listed.description": "Halaman publik untuk siapapun",
   "page.status.unlisted": "Tidak tercantum",
@@ -331,7 +331,7 @@
   "replace": "Ganti",
   "retry": "Coba lagi",
   "revert": "Kembalikan",
-  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
+  "revert.confirm": "Anda yakin <strong>menghapus semua perubahan yang belum tersimpan</strong>?",
 
   "role": "Peran",
   "role.admin.description": "Admin memiliki semua izin",

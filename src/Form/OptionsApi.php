@@ -25,34 +25,78 @@ class OptionsApi
 {
     use Properties;
 
+    /**
+     * @var
+     */
     protected $data;
+
+    /**
+     * @var
+     */
     protected $fetch;
+
+    /**
+     * @var
+     */
     protected $options;
+
+    /**
+     * @var string
+     */
     protected $text = '{{ item.value }}';
+
+    /**
+     * @var
+     */
     protected $url;
+
+    /**
+     * @var string
+     */
     protected $value = '{{ item.key }}';
 
+    /**
+     * OptionsApi constructor
+     *
+     * @param array $props
+     */
     public function __construct(array $props)
     {
         $this->setProperties($props);
     }
 
+    /**
+     * @return array
+     */
     public function data(): array
     {
         return $this->data;
     }
 
+    /**
+     * @return mixed
+     */
     public function fetch()
     {
         return $this->fetch;
     }
 
+    /**
+     * @param string $field
+     * @param array $data
+     * @return string
+     */
     protected function field(string $field, array $data)
     {
         $value = $this->$field();
         return Str::template($value, $data);
     }
 
+    /**
+     * @return array
+     * @throws \Exception
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public function options(): array
     {
         if (is_array($this->options) === true) {
@@ -103,51 +147,94 @@ class OptionsApi
         return $options;
     }
 
+    /**
+     * @param array $data
+     * @return self
+     */
     protected function setData(array $data)
     {
         $this->data = $data;
         return $this;
     }
 
+    /**
+     * @param string|null $fetch
+     * @return self
+     */
     protected function setFetch(string $fetch = null)
     {
         $this->fetch = $fetch;
         return $this;
     }
 
+    /**
+     * @param $options
+     * @return self
+     */
+    protected function setOptions($options = null)
+    {
+        $this->options = $options;
+        return $this;
+    }
+
+    /**
+     * @param $text
+     * @return self
+     */
     protected function setText($text = null)
     {
         $this->text = $text;
         return $this;
     }
 
+    /**
+     * @param $url
+     * @return self
+     */
     protected function setUrl($url)
     {
         $this->url = $url;
         return $this;
     }
 
+    /**
+     * @param null $value
+     * @return self
+     */
     protected function setValue($value = null)
     {
         $this->value = $value;
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function text()
     {
         return $this->text;
     }
 
+    /**
+     * @return array
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public function toArray(): array
     {
         return $this->options();
     }
 
+    /**
+     * @return string
+     */
     public function url(): string
     {
         return Str::template($this->url, $this->data());
     }
 
+    /**
+     * @return string
+     */
     public function value()
     {
         return $this->value;

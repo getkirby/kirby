@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use PHPMailer\PHPMailer\PHPMailer as Mailer;
+
 class EmailTest extends TestCase
 {
     public function testToArray()
@@ -22,7 +24,8 @@ class EmailTest extends TestCase
             'to'          => [],
             'cc'          => [],
             'bcc'         => [],
-            'attachments' => []
+            'attachments' => [],
+            'beforeSend'  => null
         ];
 
         $email = new Email($props);
@@ -238,5 +241,34 @@ class EmailTest extends TestCase
 
         $this->assertEquals(['ceo@company.com' => 'Mario'], $email->toArray()['to']);
         $this->assertEquals('Welcome, Mario!', trim($email->toArray()['body']));
+    }
+
+    public function testBeforeSend()
+    {
+        new App([
+            'options' => [
+                'email' => [
+                    'beforeSend' => function ($mailer) {
+                        $mailer->SMTPOptions = [
+                            'ssl' => [
+                                'verify_peer'       => false,
+                                'verify_peer_name'  => false,
+                                'allow_self_signed' => true
+                            ]
+                        ];
+
+                        return $mailer;
+                    }
+                ]
+            ]
+        ]);
+
+        $email = new Email([
+            'to' => 'ceo@company.com'
+        ]);
+        $beforeSend = $email->toArray()['beforeSend'];
+
+        $this->assertInstanceOf('Closure', $beforeSend);
+        $this->assertInstanceOf('PHPMailer\PHPMailer\PHPMailer', $beforeSend(new Mailer()));
     }
 }

@@ -112,6 +112,7 @@ class Collections
      *
      * @param string $name
      * @return mixed
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function load(string $name)
     {

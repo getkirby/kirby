@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Data\Data;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -64,17 +65,25 @@ trait AppTranslations
 
         I18n::$translations = [];
 
-        if (isset($this->options['slugs']) === true) {
-            $file = $this->root('i18n:rules') . '/' . $this->options['slugs'] . '.json';
+        // checks custom language definition for slugs
+        if ($slugsOption = $this->option('slugs')) {
+            // checks setting in two different ways
+            // "slugs" => "de" or "slugs" => ["language" => "de"]
+            $slugsLanguage = is_string($slugsOption) === true ? $slugsOption : ($slugsOption['language'] ?? null);
 
-            if (F::exists($file) === true) {
-                try {
-                    $data = Data::read($file);
-                } catch (\Exception $e) {
-                    $data = [];
+            // load custom slugs language if it's defined
+            if ($slugsLanguage !== null) {
+                $file = $this->root('i18n:rules') . '/' . $slugsLanguage . '.json';
+
+                if (F::exists($file) === true) {
+                    try {
+                        $data = Data::read($file);
+                    } catch (Exception $e) {
+                        $data = [];
+                    }
+
+                    Str::$language = $data;
                 }
-
-                Str::$language = $data;
             }
         }
     }
@@ -84,7 +93,7 @@ trait AppTranslations
      * Otherwise fall back to the default language
      *
      * @internal
-     * @param string $languageCode
+     * @param string|null $languageCode
      * @return \Kirby\Cms\Language|null
      */
     public function setCurrentLanguage(string $languageCode = null)
@@ -111,7 +120,7 @@ trait AppTranslations
      * Set the current translation
      *
      * @internal
-     * @param string $translationCode
+     * @param string|null $translationCode
      * @return void
      */
     public function setCurrentTranslation(string $translationCode = null): void

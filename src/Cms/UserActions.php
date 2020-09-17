@@ -136,8 +136,9 @@ trait UserActions
      *
      * @param string $action
      * @param array $arguments
-     * @param Closure $callback
+     * @param \Closure $callback
      * @return mixed
+     * @throws \Kirby\Exception\PermissionException
      */
     protected function commit(string $action, array $arguments = [], Closure $callback)
     {
@@ -170,7 +171,7 @@ trait UserActions
     /**
      * Creates a new User from the given props and returns a new User object
      *
-     * @param array $props
+     * @param array|null $props
      * @return self
      */
     public static function create(array $props = null)
@@ -245,6 +246,7 @@ trait UserActions
      * Deletes the user
      *
      * @return bool
+     * @throws \Kirby\Exception\LogicException
      */
     public function delete(): bool
     {
@@ -299,8 +301,8 @@ trait UserActions
     /**
      * Updates the user data
      *
-     * @param array $input
-     * @param string $language
+     * @param array|null $input
+     * @param string|null $language
      * @param bool $validate
      * @return self
      */
@@ -342,7 +344,7 @@ trait UserActions
     /**
      * Writes the password to disk
      *
-     * @param string $password
+     * @param string|null $password
      * @return bool
      */
     protected function writePassword(string $password = null): bool

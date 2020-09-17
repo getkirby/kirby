@@ -153,7 +153,10 @@ class V
             $fieldValue = $input[$fieldName] ?? null;
 
             // first check for required fields
-            if (($fieldRules['required'] ?? false) === true && $fieldValue === null) {
+            if (
+                ($fieldRules['required'] ?? false) === true &&
+                $fieldValue === null
+            ) {
                 throw new Exception(sprintf('The "%s" field is missing', $fieldName));
             }
 
@@ -166,12 +169,10 @@ class V
             }
 
             try {
-                V::value($fieldValue, $fieldRules);
+                static::value($fieldValue, $fieldRules);
             } catch (Exception $e) {
                 throw new Exception(sprintf($e->getMessage() . ' for field "%s"', $fieldName));
             }
-
-            static::value($fieldValue, $fieldRules);
         }
 
         return true;
@@ -213,15 +214,15 @@ V::$validators = [
     /**
      * Valid: `a-z | A-Z`
      */
-    'alpha' => function ($value): bool {
-        return V::match($value, '/^([a-z])+$/i') === true;
+    'alpha' => function ($value, bool $unicode = false): bool {
+        return V::match($value, ($unicode === true ? '/^([\pL])+$/u' : '/^([a-z])+$/i')) === true;
     },
 
     /**
      * Valid: `a-z | A-Z | 0-9`
      */
-    'alphanum' => function ($value): bool {
-        return V::match($value, '/^[a-z0-9]+$/i') === true;
+    'alphanum' => function ($value, bool $unicode = false): bool {
+        return V::match($value, ($unicode === true ? '/^[\pL\pN]+$/u' : '/^([a-z0-9])+$/i')) === true;
     },
 
     /**

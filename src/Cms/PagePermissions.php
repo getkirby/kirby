@@ -13,18 +13,30 @@ namespace Kirby\Cms;
  */
 class PagePermissions extends ModelPermissions
 {
+    /**
+     * @var string
+     */
     protected $category = 'pages';
 
+    /**
+     * @return bool
+     */
     protected function canChangeSlug(): bool
     {
         return $this->model->isHomeOrErrorPage() !== true;
     }
 
+    /**
+     * @return bool
+     */
     protected function canChangeStatus(): bool
     {
         return $this->model->isErrorPage() !== true;
     }
 
+    /**
+     * @return bool
+     */
     protected function canChangeTemplate(): bool
     {
         if ($this->model->isHomeOrErrorPage() === true) {
@@ -38,11 +50,17 @@ class PagePermissions extends ModelPermissions
         return true;
     }
 
+    /**
+     * @return bool
+     */
     protected function canDelete(): bool
     {
         return $this->model->isHomeOrErrorPage() !== true;
     }
 
+    /**
+     * @return bool
+     */
     protected function canSort(): bool
     {
         if ($this->model->isErrorPage() === true) {

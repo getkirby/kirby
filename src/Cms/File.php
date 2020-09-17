@@ -231,34 +231,31 @@ class File extends ModelWithContent
      * gets dragged onto a textarea
      *
      * @internal
-     * @param string $type (null|auto|kirbytext|markdown)
+     * @param string|null $type (null|auto|kirbytext|markdown)
      * @param bool $absolute
      * @return string
      */
     public function dragText(string $type = null, bool $absolute = false): string
     {
-        $type = $type ?? 'auto';
+        $type = $this->dragTextType($type);
+        $url  = $absolute ? $this->id() : $this->filename();
 
-        if ($type === 'auto') {
-            $type = option('panel.kirbytext', true) ? 'kirbytext' : 'markdown';
+        if ($dragTextFromCallback = $this->dragTextFromCallback($type, $url)) {
+            return $dragTextFromCallback;
         }
 
-        $url = $absolute ? $this->id() : $this->filename();
-
-        switch ($type) {
-            case 'markdown':
-                if ($this->type() === 'image') {
-                    return '![' . $this->alt() . '](' . $url . ')';
-                } else {
-                    return '[' . $this->filename() . '](' . $url . ')';
-                }
-                // no break
-            default:
-                if ($this->type() === 'image') {
-                    return '(image: ' . $url . ')';
-                } else {
-                    return '(file: ' . $url . ')';
-                }
+        if ($type === 'markdown') {
+            if ($this->type() === 'image') {
+                return '![' . $this->alt() . '](' . $url . ')';
+            } else {
+                return '[' . $this->filename() . '](' . $url . ')';
+            }
+        } else {
+            if ($this->type() === 'image') {
+                return '(image: ' . $url . ')';
+            } else {
+                return '(file: ' . $url . ')';
+            }
         }
     }
 
@@ -392,6 +389,7 @@ class File extends ModelWithContent
      * @deprecated 3.0.0 Use `File::content()` instead
      *
      * @return \Kirby\Cms\Content
+     * @codeCoverageIgnore
      */
     public function meta()
     {
@@ -403,7 +401,7 @@ class File extends ModelWithContent
     /**
      * Get the file's last modification time.
      *
-     * @param string $format
+     * @param string|null $format
      * @param string|null $handler date or strftime
      * @param string|null $languageCode
      * @return mixed
@@ -460,7 +458,7 @@ class File extends ModelWithContent
      * Panel icon definition
      *
      * @internal
-     * @param array $params
+     * @param array|null $params
      * @return array
      */
     public function panelIcon(array $params = null): array
@@ -677,7 +675,7 @@ class File extends ModelWithContent
     /**
      * Sets the parent model object
      *
-     * @param \Kirby\Cms\Model $parent
+     * @param \Kirby\Cms\Model|null $parent
      * @return self
      */
     protected function setParent(Model $parent = null)
@@ -700,7 +698,7 @@ class File extends ModelWithContent
     }
 
     /**
-     * @param string $template
+     * @param string|null $template
      * @return self
      */
     protected function setTemplate(string $template = null)
@@ -712,7 +710,7 @@ class File extends ModelWithContent
     /**
      * Sets the url
      *
-     * @param string $url
+     * @param string|null $url
      * @return self
      */
     protected function setUrl(string $url = null)

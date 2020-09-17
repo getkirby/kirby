@@ -309,7 +309,7 @@
   "page.duplicate.pages": "Kopírovat stránky",
   "page.status": "Stav",
   "page.status.draft": "Koncept",
-  "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",
+  "page.status.draft.description": "Stránka je ve stavu konceptu a je viditelná pouze pro přihlášené editory, nebo přes tajný odkaz",
   "page.status.listed": "Veřejná",
   "page.status.listed.description": "Stránka je zveřejněná pro všechny",
   "page.status.unlisted": "Neveřejná",
@@ -331,7 +331,7 @@
   "replace": "Nahradit",
   "retry": "Zkusit znovu",
   "revert": "Zahodit",
-  "revert.confirm": "Do you really want to <strong>delete all unsaved changes</strong>?",
+  "revert.confirm": "Opravdu chcete <strong>smazat všechny provedené změny</strong>?",
 
   "role": "Role",
   "role.admin.description": "Administrátor má všechna práva",

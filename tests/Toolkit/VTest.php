@@ -102,6 +102,11 @@ class VTest extends TestCase
         $this->assertFalse(V::alpha('äöüß'));
         $this->assertFalse(V::alpha('abc1234'));
         $this->assertFalse(V::alpha('abc"§$%&/()=?'));
+
+        $this->assertTrue(V::alpha('uñicode', true));
+        $this->assertTrue(V::alpha('nonunicode', true));
+        $this->assertFalse(V::alpha('uñicode', false));
+        $this->assertFalse(V::alpha('uñi-code', true));
     }
 
     public function testAlphanum()
@@ -116,6 +121,11 @@ class VTest extends TestCase
 
         $this->assertFalse(V::alphanum('äöüß'));
         $this->assertFalse(V::alphanum('abc"§$%&/()=?'));
+
+        $this->assertTrue(V::alphanum('uñicode1234', true));
+        $this->assertTrue(V::alphanum('nonunicode1234', true));
+        $this->assertFalse(V::alphanum('uñicode1234', false));
+        $this->assertFalse(V::alphanum('uñicode-1234', true));
     }
 
     public function testBetween()
@@ -194,6 +204,7 @@ class VTest extends TestCase
         $this->assertFalse(V::email('bastian@getkirby'));
         $this->assertFalse(V::email('bastiangetkirby.com'));
         $this->assertFalse(V::email('bastian[at]getkirby.com'));
+        $this->assertFalse(V::email('bastian@getkürby'));
         $this->assertFalse(V::email('@getkirby.com'));
     }
 
@@ -276,6 +287,12 @@ class VTest extends TestCase
         $this->assertFalse(V::ip('192.168'));
         $this->assertFalse(V::ip('192:168:255:12'));
         $this->assertFalse(V::ip('192.168.255.24.23'));
+    }
+
+    public function testLess()
+    {
+        $this->assertTrue(V::less(1, 2));
+        $this->assertFalse(V::less(2, 1));
     }
 
     public function testMaxLength()
@@ -527,6 +544,21 @@ class VTest extends TestCase
                 ],
                 false,
                 'The "email" field is missing',
+            ],
+            // skipping missing non-required field
+            [
+                [
+                ],
+                [
+                    'email' => [
+                        'email'
+                    ],
+                    'name' => [
+                        'required' => true
+                    ]
+                ],
+                false,
+                'The "name" field is missing',
             ],
         ];
     }

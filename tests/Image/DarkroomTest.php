@@ -6,8 +6,12 @@ use PHPUnit\Framework\TestCase;
 
 class DarkroomTest extends TestCase
 {
-    public function file()
+    public function file(string $driver = null)
     {
+        if ($driver !== null) {
+            return __DIR__ . '/fixtures/image/cat-' . $driver . '.jpg';
+        }
+
         return __DIR__ . '/fixtures/image/cat.jpg';
     }
 
@@ -138,5 +142,49 @@ class DarkroomTest extends TestCase
 
         $this->assertEquals(true, $options['grayscale']);
         $this->assertEquals(false, isset($options['bw']));
+    }
+
+    public function testGdProcess()
+    {
+        $instance = Darkroom::factory('gd');
+
+        // since the same file is used in other tests
+        // it is tested on a copy and deleted
+        copy($this->file(), $file = $this->file('gd'));
+
+        $this->assertSame([
+            'autoOrient' => true,
+            'crop' => false,
+            'blur' => false,
+            'grayscale' => false,
+            'height' => 500,
+            'quality' => 90,
+            'width' => 500,
+        ], $instance->process($file));
+
+        @unlink($file);
+    }
+
+    public function testImProcess()
+    {
+        $instance = Darkroom::factory('im');
+
+        // since the same file is used in other tests
+        // it is tested on a copy and deleted
+        copy($this->file(), $file = $this->file('im'));
+
+        $this->assertSame([
+            'autoOrient' => true,
+            'crop' => false,
+            'blur' => false,
+            'grayscale' => false,
+            'height' => 500,
+            'quality' => 90,
+            'width' => 500,
+            'bin' => 'convert',
+            'interlace' => false
+        ], $instance->process($file));
+
+        @unlink($file);
     }
 }
