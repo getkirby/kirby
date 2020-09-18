@@ -6,6 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 class BuilderTest extends TestCase
 {
+    protected $app;
     protected $page;
 
     public function setUp(): void
@@ -13,6 +14,68 @@ class BuilderTest extends TestCase
         $this->app = new App([
             'roots' => [
                 'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'fieldsets/seo' => [
+                    'title' => 'Seo',
+                    'model' => 'page',
+                    'fields' => [
+                        'metaTitle' => [
+                            'label' => 'Meta Title',
+                            'type' => 'text'
+                        ],
+                        'meta' => 'fields/meta'
+                    ]
+                ],
+                'fieldsets/heading' => [
+                    'title' => 'Heading',
+                    'model' => 'page',
+                    'fields' => [
+                        'text' => [
+                            'label' => 'Text',
+                            'type' => 'text'
+                        ],
+                    ]
+                ],
+                'fieldsets/events' => [
+                    'title' => 'Events',
+                    'model' => 'page',
+                    'fields' => [
+                        'eventList' => [
+                            'label' => 'Event List',
+                            'type' => 'builder',
+                            'fieldsets' => [
+                                'event' => 'fields/event',
+                                'speaker' => 'fields/speaker'
+                            ]
+                        ],
+                    ]
+                ],
+                'fields/meta' => [
+                    'type' => 'group',
+                    'fields' => [
+                        'metaDescription' => [
+                            'label' => 'Meta Description',
+                            'type' => 'textarea'
+                        ],
+                        'metaKeywords' => [
+                            'label' => 'Meta Keywords',
+                            'type' => 'text'
+                        ]
+                    ]
+                ],
+                'fields/event' => [
+                    'title' => [
+                        'label' => 'Event Title',
+                        'type' => 'text'
+                    ],
+                ],
+                'fields/speaker' => [
+                    'name' => [
+                        'label' => 'Speaker Name',
+                        'type' => 'text'
+                    ],
+                ]
             ]
         ]);
 
@@ -61,7 +124,7 @@ class BuilderTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals([
+        $this->assertSame([
             'quote' => [
                 'fields'    => [],
                 'key'       => 'quote',
@@ -160,5 +223,90 @@ class BuilderTest extends TestCase
         $this->assertSame('', $builder->value()[1]['text']);
         $this->assertArrayHasKey('_key', $builder->value()[1]);
         $this->assertArrayHasKey('_uid', $builder->value()[1]);
+    }
+
+    public function testExtend()
+    {
+        $builder = new Builder($this->page, ['fieldsets' => [
+            'seo' => 'fieldsets/seo',
+            'heading' => 'fieldsets/heading',
+        ]]);
+
+        $fieldsets = $builder->fieldsets();
+
+        $this->assertArrayHasKey('heading', $fieldsets);
+        $this->assertArrayHasKey('fields', $fieldsets['heading']);
+        $this->assertArrayHasKey('text', $fieldsets['heading']['fields']);
+
+        $this->assertArrayHasKey('seo', $fieldsets);
+        $this->assertArrayHasKey('fields', $fieldsets['seo']);
+        $this->assertArrayHasKey('metatitle', $fieldsets['seo']['fields']);
+        $this->assertArrayHasKey('metadescription', $fieldsets['seo']['fields']);
+        $this->assertArrayHasKey('metakeywords', $fieldsets['seo']['fields']);
+    }
+
+    public function testExtendNestedBuilder()
+    {
+        $builder = new Builder($this->page, ['fieldsets' => [
+            'events' => [
+                'extends' => 'fieldsets/events'
+            ]
+        ]]);
+
+        $fieldsets = $builder->fieldsets();
+
+        $this->assertArrayHasKey('events', $fieldsets);
+        $this->assertArrayHasKey('fields', $fieldsets['events']);
+        $this->assertArrayHasKey('eventlist', $fieldsets['events']['fields']);
+        $this->assertInstanceOf('\Kirby\Cms\Builder', $fieldsets['events']['fields']['eventlist']['builder']);
+    }
+
+    public function testExtendUnsetFieldsetFields()
+    {
+        $builder = new Builder($this->page, ['fieldsets' => [
+            'seo' => [
+                'extends' => 'fieldsets/seo',
+                'fields' => [
+                    'metaDescription' => false,
+                    'metaKeywords' => false
+                ],
+            ],
+        ]]);
+
+        $fieldsets = $builder->fieldsets();
+
+        $this->assertArrayHasKey('seo', $fieldsets);
+        $this->assertArrayHasKey('fields', $fieldsets['seo']);
+        $this->assertArrayHasKey('metatitle', $fieldsets['seo']['fields']);
+        $this->assertArrayNotHasKey('metadescription', $fieldsets['seo']['fields']);
+        $this->assertArrayNotHasKey('metakeywords', $fieldsets['seo']['fields']);
+    }
+
+    public function testExtendUnsetFields()
+    {
+        $builder = new Builder($this->page, ['fieldsets' => [
+            'seo' => [
+                'fields' => [
+                    'metaTitle' => [
+                        'label' => 'Meta Title',
+                        'type' => 'text'
+                    ],
+                    'meta' => [
+                        'extends' => 'fields/meta',
+                        'fields' => [
+                            'metaKeywords' => false
+                        ]
+                    ]
+                ]
+            ],
+        ]]);
+
+        $fieldsets = $builder->fieldsets();
+
+        $this->assertArrayHasKey('seo', $fieldsets);
+        $this->assertArrayHasKey('fields', $fieldsets['seo']);
+        $this->assertArrayHasKey('metatitle', $fieldsets['seo']['fields']);
+        $this->assertArrayHasKey('metadescription', $fieldsets['seo']['fields']);
+        $this->assertArrayNotHasKey('metakeywords', $fieldsets['seo']['fields']);
     }
 }
