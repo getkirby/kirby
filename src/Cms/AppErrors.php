@@ -113,7 +113,7 @@ trait AppErrors
                 $details  = $exception->getDetails();
             } else {
                 $httpCode = 500;
-                $code     = $exception->getCode();
+                $code     = 500;
                 $details  = null;
             }
 
