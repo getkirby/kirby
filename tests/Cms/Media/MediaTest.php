@@ -175,4 +175,86 @@ class MediaTest extends TestCase
 
         $this->assertTrue(Media::unpublish($directory, $file));
     }
+
+    public function testThumb()
+    {
+        Dir::make($this->fixtures . '/content');
+
+        // create test image
+        $im = imagecreatetruecolor(120, 20);
+        $text_color = imagecolorallocate($im, 233, 14, 91);
+        imagestring($im, 1, 5, 5,  'Kirby CMS', $text_color);
+        imagejpeg($im, $filepath = $this->fixtures . '/content/test.jpg');
+        imagedestroy($im);
+
+        // get file object
+        $file  = $this->app->file('test.jpg');
+        Dir::make(dirname($file->mediaRoot()));
+        $this->assertInstanceOf('\Kirby\Cms\File', $file);
+
+        // invalid with no job file
+        $thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
+        $this->assertFalse($thumb);
+
+        // invalid with empty job file
+        F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', '{}');
+        $thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
+        $this->assertFalse($thumb);
+
+        // create job file
+        $jobString = '{"width":60,"height":10,"quality":null,"crop":"center","filename":"test.jpg"}';
+        F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', $jobString);
+
+        // invalid with file not found
+        $thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
+        $this->assertInstanceOf('Kirby\Cms\Response', $thumb);
+        $this->assertSame('', $thumb->body());
+
+        // copy to media folder
+        $file->asset()->copy($mediaPath = dirname($file->mediaRoot()) . '/' . $file->filename());
+
+        $thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
+        $this->assertInstanceOf('Kirby\Cms\Response', $thumb);
+        $this->assertNotFalse($thumb->body());
+        $this->assertSame(200, $thumb->code());
+        $this->assertSame('image/jpeg', $thumb->type());
+
+        $thumbInfo = getimagesize($mediaPath);
+        $this->assertSame(60, $thumbInfo[0]);
+        $this->assertSame(10, $thumbInfo[1]);
+    }
+
+    public function testThumbStringModel()
+    {
+        Dir::make($this->fixtures . '/content');
+
+        // create test image
+        $im = imagecreatetruecolor(120, 20);
+        $text_color = imagecolorallocate($im, 233, 14, 91);
+        imagestring($im, 1, 5, 5,  'Kirby CMS', $text_color);
+        imagejpeg($im, $filepath = $this->fixtures . '/content/test.jpg');
+        imagedestroy($im);
+
+        // get file object
+        $file  = $this->app->file('test.jpg');
+        Dir::make($this->fixtures . '/media/assets/site/'. $file->mediaHash());
+        $this->assertInstanceOf('\Kirby\Cms\File', $file);
+
+        // create job file
+        $jobString = '{"width":60,"height":10,"quality":null,"crop":"center","filename":"test.jpg"}';
+        F::write($this->fixtures . '/media/assets/site/' . $file->mediaHash(). '/.jobs/' . $file->filename() . '.json', $jobString);
+
+        // copy to media folder
+        $file->asset()->copy($mediaPath = $this->fixtures . '/media/assets/site/' . $file->mediaHash(). '/' . $file->filename());
+
+        $thumb = Media::thumb('site', $file->mediaHash(), $file->filename());
+        $this->assertInstanceOf('Kirby\Cms\Response', $thumb);
+        $this->assertNotFalse($thumb->body());
+        $this->assertSame(200, $thumb->code());
+        $this->assertSame('image/jpeg', $thumb->type());
+
+        $thumbInfo = getimagesize($mediaPath);
+        $this->assertSame(60, $thumbInfo[0]);
+        $this->assertSame(10, $thumbInfo[1]);
+    }
 }
