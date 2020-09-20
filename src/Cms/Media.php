@@ -100,7 +100,7 @@ class Media
             $root = $kirby->root('media') . '/assets/' . $model . '/' . $hash;
         } else {
             // model files
-            $root = $model->mediaRoot() . '/' . $hash;
+            $root = dirname($model->mediaRoot());
         }
 
         try {
