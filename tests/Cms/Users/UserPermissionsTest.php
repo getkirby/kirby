@@ -48,7 +48,7 @@ class UserPermissionsTest extends TestCase
      */
     public function testWithNobody($action)
     {
-        $kirby = new App([
+        new App([
             'roots' => [
                 'index' => '/dev/null'
             ],
@@ -64,9 +64,65 @@ class UserPermissionsTest extends TestCase
         $this->assertFalse($perms->can($action));
     }
 
+    /**
+     * @dataProvider actionProvider
+     */
+    public function testWithNoAdmin($action)
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'roles' => [
+                ['name' => 'admin'],
+                [
+                    'name' => 'editor',
+                    'permissions' => [
+                       'user' => [
+                           'changeEmail'    => false,
+                           'changeLanguage' => false,
+                           'changeName'     => false,
+                           'changePassword' => false,
+                           'changeRole'     => false,
+                           'delete'         => false,
+                           'update'         => false
+                       ],
+                        'users' => [
+                           'changeEmail'    => false,
+                           'changeLanguage' => false,
+                           'changeName'     => false,
+                           'changePassword' => false,
+                           'changeRole'     => false,
+                           'create'         => false,
+                           'delete'         => false,
+                           'update'         => false
+                       ]
+                    ]
+                ]
+            ],
+            'user'  => 'editor@getkirby.com',
+            'users' => [
+                [
+                    'email' => 'admin@getkirby.com',
+                    'role'  => 'admin'
+                ],
+                [
+                    'email' => 'editor@getkirby.com',
+                    'role'  => 'editor'
+                ]
+            ],
+        ]);
+
+        $user  = $app->user();
+        $perms = $user->permissions();
+
+        $this->assertSame('editor', $user->role()->name());
+        $this->assertFalse($perms->can($action));
+    }
+
     public function testChangeSingleRole()
     {
-        $kirby = new App([
+        new App([
             'roots' => [
                 'index' => '/dev/null'
             ],
