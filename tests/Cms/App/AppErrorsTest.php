@@ -126,7 +126,7 @@ class AppErrorsTest extends TestCase
         $this->assertSame($this->_getBufferedContent($app->root('kirby') . '/views/fatal.php'), $this->_getBufferedContent($handlers[0]));
 
         // without fatal closure
-        $optionsMethod->invoke($app, ['fatal' => function () { 
+        $optionsMethod->invoke($app, ['fatal' => function () {
             return 'Fatal Error Test!';
         }]);
 
