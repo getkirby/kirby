@@ -38,8 +38,81 @@ class BrokenModelWithContent extends ExtendedModelWithContent
     }
 }
 
+class BlueprintsModelWithContent extends ExtendedModelWithContent
+{
+    protected $testModel;
+
+    public function __construct(Model $model)
+    {
+        $this->testModel = $model;
+    }
+
+    public function blueprint()
+    {
+        return new Blueprint([
+            'model'  => $this->testModel,
+            'name'   => 'model',
+            'title'  => 'Model',
+            'columns' => [
+                [
+                    'sections' => [
+                        'pages' => [
+                            'name' => 'pages',
+                            'type' => 'pages',
+                            'templates' => [
+                                'foo',
+                                'bar',
+                            ]
+                        ],
+                        'menu' => [
+                            'name' => 'menu',
+                            'type' => 'pages',
+                            'templates' => [
+                                'home',
+                                'default',
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+    }
+}
+
 class ModelWithContentTest extends TestCase
 {
+    public function modelsProvider(): array
+    {
+        $app = new App([
+            'site' => [
+                'children' => [
+                    [
+                        'slug'  => 'foo',
+                        'files' => [
+                            ['filename' => 'a.jpg'],
+                            ['filename' => 'b.jpg']
+                        ]
+                    ]
+                ],
+                'files' => [
+                    ['filename' => 'c.jpg']
+                ]
+            ],
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com'
+                ]
+            ]
+        ]);
+
+        return [
+            [$app->site()],
+            [$app->page('foo')],
+            // [$app->site()->files()->first()], // not testable yet but should be
+            // [$app->user('test@getkirby.com')] // not testable yet but should be
+        ];
+    }
+
     public function testContentLock()
     {
         $model = new ExtendedModelWithContent();
@@ -50,5 +123,43 @@ class ModelWithContentTest extends TestCase
     {
         $model = new BrokenModelWithContent();
         $this->assertNull($model->lock());
+    }
+
+    /**
+     * @dataProvider modelsProvider
+     * @param \Kirby\Cms\Model $model
+     */
+    public function testBlueprints($model)
+    {
+        $model = new BlueprintsModelWithContent($model);
+        $this->assertSame([
+            [
+                'name' => 'foo',
+                'title' => 'Foo'
+            ],
+            [
+                'name' => 'bar',
+                'title' => 'Bar'
+            ],
+            [
+                'name' => 'home',
+                'title' => 'Home'
+            ],
+            [
+                'name' => 'Page',
+                'title' => 'Page'
+            ]
+        ], $model->blueprints());
+
+        $this->assertSame([
+            [
+                'name' => 'home',
+                'title' => 'Home'
+            ],
+            [
+                'name' => 'Page',
+                'title' => 'Page'
+            ]
+        ], $model->blueprints('menu'));
     }
 }
