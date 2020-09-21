@@ -78,25 +78,25 @@ class UserPermissionsTest extends TestCase
                 [
                     'name' => 'editor',
                     'permissions' => [
-                       'user' => [
-                           'changeEmail'    => false,
-                           'changeLanguage' => false,
-                           'changeName'     => false,
-                           'changePassword' => false,
-                           'changeRole'     => false,
-                           'delete'         => false,
-                           'update'         => false
-                       ],
+                        'user' => [
+                            'changeEmail'    => false,
+                            'changeLanguage' => false,
+                            'changeName'     => false,
+                            'changePassword' => false,
+                            'changeRole'     => false,
+                            'delete'         => false,
+                            'update'         => false
+                        ],
                         'users' => [
-                           'changeEmail'    => false,
-                           'changeLanguage' => false,
-                           'changeName'     => false,
-                           'changePassword' => false,
-                           'changeRole'     => false,
-                           'create'         => false,
-                           'delete'         => false,
-                           'update'         => false
-                       ]
+                            'changeEmail'    => false,
+                            'changeLanguage' => false,
+                            'changeName'     => false,
+                            'changePassword' => false,
+                            'changeRole'     => false,
+                            'create'         => false,
+                            'delete'         => false,
+                            'update'         => false
+                        ]
                     ]
                 ]
             ],
