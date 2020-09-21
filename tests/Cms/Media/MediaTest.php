@@ -180,12 +180,8 @@ class MediaTest extends TestCase
     {
         Dir::make($this->fixtures . '/content');
 
-        // create test image
-        $im = imagecreatetruecolor(120, 20);
-        $text_color = imagecolorallocate($im, 233, 14, 91);
-        imagestring($im, 1, 5, 5,  'Kirby CMS', $text_color);
-        imagejpeg($im, $filepath = $this->fixtures . '/content/test.jpg');
-        imagedestroy($im);
+        // copy test image to content
+        F::copy($this->fixtures. '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
 
         // get file object
         $file  = $this->app->file('test.jpg');
@@ -202,7 +198,7 @@ class MediaTest extends TestCase
         $this->assertFalse($thumb);
 
         // create job file
-        $jobString = '{"width":60,"height":10,"quality":null,"crop":"center","filename":"test.jpg"}';
+        $jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
         F::write(dirname($file->mediaRoot()) . '/.jobs/' . $file->filename() . '.json', $jobString);
 
         // invalid with file not found
@@ -211,7 +207,7 @@ class MediaTest extends TestCase
         $this->assertSame('', $thumb->body());
 
         // copy to media folder
-        $file->asset()->copy($mediaPath = dirname($file->mediaRoot()) . '/' . $file->filename());
+        $file->asset()->copy($mediaPath = $file->mediaRoot());
 
         $thumb = Media::thumb($file, $file->mediaHash(), $file->filename());
         $this->assertInstanceOf('Kirby\Cms\Response', $thumb);
@@ -220,20 +216,16 @@ class MediaTest extends TestCase
         $this->assertSame('image/jpeg', $thumb->type());
 
         $thumbInfo = getimagesize($mediaPath);
-        $this->assertSame(60, $thumbInfo[0]);
-        $this->assertSame(10, $thumbInfo[1]);
+        $this->assertSame(64, $thumbInfo[0]);
+        $this->assertSame(64, $thumbInfo[1]);
     }
 
     public function testThumbStringModel()
     {
         Dir::make($this->fixtures . '/content');
 
-        // create test image
-        $im = imagecreatetruecolor(120, 20);
-        $text_color = imagecolorallocate($im, 233, 14, 91);
-        imagestring($im, 1, 5, 5,  'Kirby CMS', $text_color);
-        imagejpeg($im, $filepath = $this->fixtures . '/content/test.jpg');
-        imagedestroy($im);
+        // copy test image to content
+        F::copy($this->fixtures. '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
 
         // get file object
         $file  = $this->app->file('test.jpg');
@@ -241,7 +233,7 @@ class MediaTest extends TestCase
         $this->assertInstanceOf('\Kirby\Cms\File', $file);
 
         // create job file
-        $jobString = '{"width":60,"height":10,"quality":null,"crop":"center","filename":"test.jpg"}';
+        $jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
         F::write($this->fixtures . '/media/assets/site/' . $file->mediaHash(). '/.jobs/' . $file->filename() . '.json', $jobString);
 
         // copy to media folder
@@ -254,7 +246,7 @@ class MediaTest extends TestCase
         $this->assertSame('image/jpeg', $thumb->type());
 
         $thumbInfo = getimagesize($mediaPath);
-        $this->assertSame(60, $thumbInfo[0]);
-        $this->assertSame(10, $thumbInfo[1]);
+        $this->assertSame(64, $thumbInfo[0]);
+        $this->assertSame(64, $thumbInfo[1]);
     }
 }
