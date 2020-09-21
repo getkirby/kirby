@@ -181,7 +181,7 @@ class MediaTest extends TestCase
         Dir::make($this->fixtures . '/content');
 
         // copy test image to content
-        F::copy($this->fixtures. '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
+        F::copy($this->fixtures . '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
 
         // get file object
         $file  = $this->app->file('test.jpg');
@@ -225,19 +225,19 @@ class MediaTest extends TestCase
         Dir::make($this->fixtures . '/content');
 
         // copy test image to content
-        F::copy($this->fixtures. '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
+        F::copy($this->fixtures . '/../files/test.jpg', $this->fixtures . '/content/test.jpg');
 
         // get file object
         $file  = $this->app->file('test.jpg');
-        Dir::make($this->fixtures . '/media/assets/site/'. $file->mediaHash());
+        Dir::make($this->fixtures . '/media/assets/site/' . $file->mediaHash());
         $this->assertInstanceOf('\Kirby\Cms\File', $file);
 
         // create job file
         $jobString = '{"width":64,"height":64,"quality":null,"crop":"center","filename":"test.jpg"}';
-        F::write($this->fixtures . '/media/assets/site/' . $file->mediaHash(). '/.jobs/' . $file->filename() . '.json', $jobString);
+        F::write($this->fixtures . '/media/assets/site/' . $file->mediaHash() . '/.jobs/' . $file->filename() . '.json', $jobString);
 
         // copy to media folder
-        $file->asset()->copy($mediaPath = $this->fixtures . '/media/assets/site/' . $file->mediaHash(). '/' . $file->filename());
+        $file->asset()->copy($mediaPath = $this->fixtures . '/media/assets/site/' . $file->mediaHash() . '/' . $file->filename());
 
         $thumb = Media::thumb('site', $file->mediaHash(), $file->filename());
         $this->assertInstanceOf('Kirby\Cms\Response', $thumb);
