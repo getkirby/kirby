@@ -202,6 +202,17 @@ class AppErrorsTest extends TestCase
             'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
         ]), $this->_getBufferedContent($handlers[0]));
 
+        // test CallbackHandler with \Exception class
+        $exception = new \Exception('Some error message', 30);
+        $handlers[0]->setException($exception);
+
+        $this->assertSame(json_encode([
+            'status' => 'error',
+            'code' => 30,
+            'details' => null,
+            'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
+        ]), $this->_getBufferedContent($handlers[0]));
+
         // test CallbackHandler with \Kirby\Exception\Exception class
         $exception = new Exception([
             'data' => [],
