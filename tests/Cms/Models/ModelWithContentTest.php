@@ -59,6 +59,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
                         'pages' => [
                             'name' => 'pages',
                             'type' => 'pages',
+                            'parent' => 'site',
                             'templates' => [
                                 'foo',
                                 'bar',
@@ -67,6 +68,7 @@ class BlueprintsModelWithContent extends ExtendedModelWithContent
                         'menu' => [
                             'name' => 'menu',
                             'type' => 'pages',
+                            'parent' => 'site',
                             'templates' => [
                                 'home',
                                 'default',
@@ -108,8 +110,8 @@ class ModelWithContentTest extends TestCase
         return [
             [$app->site()],
             [$app->page('foo')],
-            // [$app->site()->files()->first()], // not testable yet but should be
-            // [$app->user('test@getkirby.com')] // not testable yet but should be
+            [$app->site()->files()->first()],
+            [$app->user('test@getkirby.com')]
         ];
     }
 
