@@ -85,7 +85,8 @@ return [
                         throw new NotFoundException('The fieldset type could not be found');
                     }
 
-                    $content = $field->builder->form($fieldset['fields'], [])->values();
+                    $defaults = $field->builder->form($fieldset['fields'], [])->data(true);
+                    $content  = $field->builder->form($fieldset['fields'], $defaults)->values();
 
                     return [
                         'attrs'   => [],
