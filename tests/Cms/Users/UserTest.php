@@ -72,6 +72,24 @@ class UserTest extends TestCase
         $user = new User(['email' => []]);
     }
 
+    public function testName()
+    {
+        $user = new User([
+            'name' => $name = 'Homer Simpson',
+        ]);
+
+        $this->assertEquals($name, $user->name());
+    }
+
+    public function testNameSanitized()
+    {
+        $user = new User([
+            'name' => '<strong>Homer</strong> Simpson',
+        ]);
+
+        $this->assertEquals('Homer Simpson', $user->name());
+    }
+
     public function testToString()
     {
         $user = new User([
