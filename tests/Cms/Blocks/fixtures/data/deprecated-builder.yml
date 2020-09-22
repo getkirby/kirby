@@ -1,0 +1,12 @@
+-
+    _uid: 1234
+    _key: heading
+    a: Attr A
+    b: Attr B
+    text: Heading
+-
+    _uid: 5678
+    _key: body
+    a: Attr A
+    b: Attr B
+    text: Body

@@ -830,6 +830,36 @@ function url(string $path = null, $options = null): string
 }
 
 /**
+ * Creates a compliant v4 UUID
+ * Taken from: https://github.com/symfony/polyfill
+ *
+ * @return string
+ */
+function uuid(): string
+{
+    $uuid = bin2hex(random_bytes(16));
+
+    return sprintf(
+        '%08s-%04s-4%03s-%04x-%012s',
+        // 32 bits for "time_low"
+        substr($uuid, 0, 8),
+        // 16 bits for "time_mid"
+        substr($uuid, 8, 4),
+        // 16 bits for "time_hi_and_version",
+        // four most significant bits holds version number 4
+        substr($uuid, 13, 3),
+        // 16 bits:
+        // * 8 bits for "clk_seq_hi_res",
+        // * 8 bits for "clk_seq_low",
+        // two most significant bits holds zero and one for variant DCE1.1
+        hexdec(substr($uuid, 16, 4)) & 0x3fff | 0x8000,
+        // 48 bits for "node"
+        substr($uuid, 20, 12)
+    );
+}
+
+
+/**
  * Creates a video embed via iframe for Youtube or Vimeo
  * videos. The embed Urls are automatically detected from
  * the given Url.
