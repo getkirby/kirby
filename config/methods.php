@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Cms\BuilderBlocks;
+use Kirby\Cms\Blocks;
 use Kirby\Cms\Field;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
@@ -56,19 +56,22 @@ return function (App $app) {
         // converters
 
         /**
-         * Parses the field value with the given method
+         * Converts a yaml field to a BuilderBlocks object
          *
          * @param \Kirby\Cms\Field $field
-         * @param string $method [',', 'yaml', 'json']
-         * @return array
+         * @return \Kirby\Cms\BuilderBlocks
          */
-        'toData' => function (Field $field, string $method = ',') {
-            switch ($method) {
-                case 'yaml':
-                case 'json':
-                    return Data::decode($field->value, $method);
-                default:
-                    return $field->split($method);
+        'toBlocks' => function (Field $field) {
+            try {
+                return Blocks::factory($field->value(), $field->parent());
+            } catch (Exception $e) {
+                if ($field->parent() === null) {
+                    $message = 'Invalid blocks data for "' . $field->key() . '" field';
+                } else {
+                    $message = 'Invalid blocks data for "' . $field->key() . '" field on parent "' . $field->parent()->title() . '"';
+                }
+
+                throw new InvalidArgumentException($message);
             }
         },
 
@@ -85,22 +88,19 @@ return function (App $app) {
         },
 
         /**
-         * Converts a yaml field to a BuilderBlocks object
+         * Parses the field value with the given method
          *
          * @param \Kirby\Cms\Field $field
-         * @return \Kirby\Cms\BuilderBlocks
+         * @param string $method [',', 'yaml', 'json']
+         * @return array
          */
-        'toBuilderBlocks' => function (Field $field) {
-            try {
-                return new BuilderBlocks(Data::decode($field->value, 'yaml'), $field->parent());
-            } catch (Exception $e) {
-                if ($field->parent() === null) {
-                    $message = 'Invalid builder data for "' . $field->key() . '" field';
-                } else {
-                    $message = 'Invalid builder data for "' . $field->key() . '" field on parent "' . $field->parent()->title() . '"';
-                }
-
-                throw new InvalidArgumentException($message);
+        'toData' => function (Field $field, string $method = ',') {
+            switch ($method) {
+                case 'yaml':
+                case 'json':
+                    return Data::decode($field->value, $method);
+                default:
+                    return $field->split($method);
             }
         },
 
