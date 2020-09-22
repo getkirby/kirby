@@ -11,11 +11,11 @@
         <k-dropdown-item :disabled="isFull" icon="add" @click="select(blocks.length)">
           {{ $t('add') }}
         </k-dropdown-item>
-        <k-dropdown-item :icon="hasOpened ? 'collapse' : 'expand'" @click="toggleAll()">
+        <k-dropdown-item :disabled="isEmpty" :icon="hasOpened ? 'collapse' : 'expand'" @click="toggleAll()">
           {{ hasOpened ? $t('collapse.all') : $t('expand.all') }}
         </k-dropdown-item>
         <hr>
-        <k-dropdown-item icon="trash" @click="$refs.removeAll.open()">
+        <k-dropdown-item :disabled="isEmpty" icon="trash" @click="$refs.removeAll.open()">
           {{ $t('delete.all') }}
         </k-dropdown-item>
       </k-dropdown-content>
@@ -156,6 +156,9 @@ export default {
     };
   },
   computed: {
+    isEmpty() {
+      return this.blocks.length === 0;
+    },
     isFull() {
       if (this.max === null) {
         return false;
