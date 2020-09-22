@@ -31,7 +31,7 @@
       <k-draggable :handle="true" :list="blocks" element="k-grid" @end="sort">
         <k-column
           v-for="(block, index) in blocks"
-          :key="block._uid"
+          :key="block.id"
           :width="'1/' + columns"
           :data-disabled="fieldset(block).disabled"
           :data-translate="fieldset(block).translate"
@@ -44,7 +44,7 @@
             @select="select(index)"
           />
           <details
-            :class="'k-builder-block k-builder-fieldset-' + block._key"
+            :class="'k-builder-block k-builder-fieldset-' + block.type"
             :open="isOpen(block)"
           >
             <summary class="k-builder-block-header" @click.prevent="toggle(block)">
@@ -56,9 +56,9 @@
                 <k-button
                   class="k-builder-block-options-toggle"
                   icon="dots"
-                  @click="$refs['options-' + block._uid][0].toggle()"
+                  @click="$refs['options-' + block.id][0].toggle()"
                 />
-                <k-dropdown-content :ref="'options-' + block._uid" align="right">
+                <k-dropdown-content :ref="'options-' + block.id" align="right">
                   <k-dropdown-item :disabled="isFull" icon="add" @click="select(index + 1)">
                     {{ $t("insert") }}
                   </k-dropdown-item>
@@ -74,9 +74,9 @@
             </summary>
             <div class="k-builder-block-body" v-if="isOpen(block)">
               <k-fieldset
-                :ref="'fieldset-' + block._uid"
+                :ref="'fieldset-' + block.id"
                 :fields="fields(block)"
-                :value="block"
+                :value="block.content"
                 class="k-builder-block-form"
                 @input="update(index, $event)"
               />
@@ -103,7 +103,7 @@
       <k-headline>{{ $t("field.builder.fieldsets.label") }}</k-headline>
       <ul class="k-builder-fieldsets">
         <li v-for="fieldset in fieldsets" :key="fieldset.name">
-          <k-button :icon="fieldset.icon || 'box'" @click="add(fieldset.key)">
+          <k-button :icon="fieldset.icon || 'box'" @click="add(fieldset.type)">
             {{ fieldset.name }}
           </k-button>
         </li>
@@ -173,22 +173,26 @@ export default {
     }
   },
   methods: {
-    add(type) {
-      this.blocks.splice(this.nextIndex, 0, {
-        _key: type,
-        _uid: this.uid(type)
-      });
-
-      this.open(this.blocks[this.nextIndex]);
-      this.$refs.fieldsets.close();
-      this.onInput();
+    async add(type) {
+      try {
+        const block = await this.$api.get(this.endpoints.field + "/fieldsets/" + type);
+        this.blocks.splice(this.nextIndex, 0, block);
+        this.open(this.blocks[this.nextIndex]);
+        this.$refs.fieldsets.close();
+        this.onInput();
+      } catch (e) {
+        this.$refs.fieldsets.error(e.message);
+      }
     },
     close(block) {
-      this.opened = this.opened.filter(id => id !== block._uid);
+      this.opened = this.opened.filter(id => id !== block.id);
     },
-    duplicate(block) {
-      let copy = this.$helper.clone(block);
-      copy["_uid"] = this.uid(block._key);
+    async duplicate(block) {
+      const response = await this.$api.get(this.endpoints.field + "/uuid");
+      const copy = {
+        ...this.$helper.clone(block),
+        id: response["uuid"]
+      };
       this.blocks.push(copy);
       this.onInput();
     },
@@ -209,7 +213,7 @@ export default {
 
         field.section = this.name;
         field.endpoints = {
-          field: this.endpoints.field + "/fieldsets/" + block._key + "/fields/" + name,
+          field: this.endpoints.field + "/fieldsets/" + block.type + "/fields/" + name,
           section: this.endpoints.section,
           model: this.endpoints.model
         };
@@ -220,17 +224,17 @@ export default {
       return fields;
     },
     fieldset(block) {
-      return this.fieldsets[block._key];
+      return this.fieldsets[block.type];
     },
     isOpen(block) {
-      return this.opened.includes(block._uid);
+      return this.opened.includes(block.id);
     },
     remove() {
       if (this.trash === null) {
         return;
       }
 
-      const index = this.blocks.findIndex(element => element._uid === this.trash._uid);
+      const index = this.blocks.findIndex(element => element.id === this.trash.id);
 
       if (index !== -1) {
         this.$delete(this.blocks, index);
@@ -250,19 +254,20 @@ export default {
       this.onInput();
     },
     onInput() {
+      console.log(this.blocks);
       this.$emit("input", this.blocks);
     },
     onRemove(block) {
       this.trash = block;
       this.$refs.remove.open();
     },
-    open (block, focus = true) {
+    open(block, focus = true) {
       if (this.isOpen(block) === false) {
-        this.opened.push(block._uid);
+        this.opened.push(block.id);
 
         if (focus) {
           this.$nextTick(() => {
-            const fieldset = this.$refs["fieldset-" + block._uid][0];
+            const fieldset = this.$refs["fieldset-" + block.id][0];
             if (fieldset) {
               fieldset.focus();
             }
@@ -274,7 +279,7 @@ export default {
       this.nextIndex = index;
 
       if (Object.keys(this.fieldsets).length === 1) {
-        const type = Object.values(this.fieldsets)[0].key;
+        const type = Object.values(this.fieldsets)[0].type;
         this.add(type);
       } else {
         this.$refs.fieldsets.open();
@@ -288,13 +293,13 @@ export default {
       }
     },
     toggleAll() {
-      this.opened = this.hasOpened ? [] : this.blocks.map(block => block._uid);
+      this.opened = this.hasOpened ? [] : this.blocks.map(block => block.id);
     },
     uid(type) {
       return type + "_" + (+new Date) + "_" + this.$helper.string.random(6);
     },
     update(index, value) {
-      this.$set(this.blocks[index], value);
+      this.$set(this.blocks[index].content, value);
       this.onInput();
     }
   }

@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Data;
 use Kirby\Toolkit\Str;
 
 /**
@@ -48,6 +47,16 @@ class Builder
     }
 
     /**
+     * @param array|string $blocks
+     * @return \Kirby\Cms\Blocks
+     */
+    public function blocks($blocks)
+    {
+        $blocks = Blocks::parse($blocks, 'builder');
+        return Blocks::factory($blocks['blocks'], ['type' => 'builder']);
+    }
+
+    /**
      * Returns all props for the fields
      * after being processed by the
      * form including all the heavy lifting
@@ -62,16 +71,16 @@ class Builder
     }
 
     /**
-     * @param string $key
+     * @param string $type
      * @param array $fieldset
      * @return array
      */
-    public function fieldset(string $key, array $fieldset): array
+    public function fieldset(string $type, array $fieldset): array
     {
         return [
             'fields'    => $this->fields($fieldset['fields'] ?? []),
-            'key'       => $key,
-            'name'      => $name = $fieldset['name'] ?? Str::ucfirst($key),
+            'type'      => $type,
+            'name'      => $name = $fieldset['name'] ?? Str::ucfirst($type),
             'label'     => $fieldset['label'] ?? $name,
             'icon'      => $fieldset['icon'] ?? null,
             'disabled'  => $fieldset['disabled'] ?? false,
@@ -98,8 +107,8 @@ class Builder
             $isDefaultLanguage = $languageCode === $kirby->defaultLanguage()->code();
         }
 
-        foreach ($this->props['fieldsets'] ?? [] as $key => $fieldset) {
-            $fieldset = $this->fieldset($key, Blueprint::extend($fieldset));
+        foreach ($this->props['fieldsets'] ?? [] as $type => $fieldset) {
+            $fieldset = $this->fieldset($type, Blueprint::extend($fieldset));
 
             // switch untranslatable fieldset to readonly
             if ($fieldset['translate'] === false && ($isDefaultLanguage ?? true) === false) {
@@ -107,7 +116,7 @@ class Builder
                 $fieldset['disabled'] = true;
             }
 
-            $fieldsets[$fieldset['key']] = $fieldset;
+            $fieldsets[$fieldset['type']] = $fieldset;
         }
 
         return $this->fieldsets = $fieldsets;
@@ -140,18 +149,6 @@ class Builder
     }
 
     /**
-     * Creates a unique ID for the block
-     * based on the block type
-     *
-     * @param string $type
-     * @return string
-     */
-    public function uid(string $type): string
-    {
-        return $type . '_' . time() . '_' . Str::random(6);
-    }
-
-    /**
      * @return array
      */
     public function value(): array
@@ -160,13 +157,14 @@ class Builder
             return $this->value;
         }
 
-        $value     = Data::decode($this->props['value'] ?? null, 'yaml');
+        $value     = $this->props['value'] ?? [];
+        $blocks    = $this->blocks($value)->toArray();
         $fieldsets = $this->fieldsets();
         $result    = [];
 
-        foreach ($value as $key => $block) {
-            $type = $block['_key'] ?? null;
-            $uid  = $block['_uid'] ?? $this->uid($type);
+        foreach ($blocks as $block) {
+            $type = $block['type'];
+            $id   = $block['id'];
 
             // ignore fieldsets that don't exist
             if ($type === null || isset($fieldsets[$type]) === false) {
@@ -174,15 +172,13 @@ class Builder
             }
 
             $fieldset = $fieldsets[$type];
-            $values   = $this->form($fieldset['fields'] ?? [], $block)->values();
 
-            // add private row values
-            $values['_key'] = $type;
-            $values['_uid'] = $uid;
+            // replace the block content with sanitized values
+            $block['content'] = $this->form($fieldset['fields'] ?? [], $block['content'])->values();
 
-            $result[] = $values;
+            $result[] = $block;
         }
 
-        return $result;
+        return $this->value = $result;
     }
 }

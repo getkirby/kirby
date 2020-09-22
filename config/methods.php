@@ -56,15 +56,20 @@ return function (App $app) {
         // converters
 
         /**
-         * Converts a yaml field to a BuilderBlocks object
+         * Converts a yaml or json field to a Blocks object
          *
          * @param \Kirby\Cms\Field $field
-         * @return \Kirby\Cms\BuilderBlocks
+         * @return \Kirby\Cms\Blocks
          */
         'toBlocks' => function (Field $field) {
             try {
-                return Blocks::factory($field->value(), $field->parent());
-            } catch (Exception $e) {
+                $blocks = Blocks::parse($field->value());
+
+                return Blocks::factory($blocks['blocks'], [
+                    'parent' => $field->parent(),
+                    'type'   => $blocks['type']
+                ]);
+            } catch (Throwable $e) {
                 if ($field->parent() === null) {
                     $message = 'Invalid blocks data for "' . $field->key() . '" field';
                 } else {
@@ -73,6 +78,16 @@ return function (App $app) {
 
                 throw new InvalidArgumentException($message);
             }
+        },
+
+        /**
+         * Deprecated alias for $field->toBlocks()
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Blocks
+         */
+        'toBuilderBlocks' => function (Field $field) {
+            return $field->toBlocks();
         },
 
         /**
