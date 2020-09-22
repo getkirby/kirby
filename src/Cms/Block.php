@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Throwable;
 
 /**
  * Represents a single block
@@ -84,6 +85,13 @@ class Block
      */
     public function __construct(array $params)
     {
+        // import old block format
+        if (isset($params['_key']) === true) {
+            $params['type']    = $params['_key'];
+            $params['content'] = $params;
+            unset($params['_uid']);
+        }
+
         if (isset($params['type']) === false) {
             throw new InvalidArgumentException('The block type is missing');
         }
@@ -154,6 +162,8 @@ class Block
             'attrs'   => $this->attrs(),
             'block'   => $this,
             'content' => $this->content(),
+            // deprecated block data
+            'data'    => $this,
             'id'      => $this->id(),
             'prev'    => $this->prev(),
             'next'    => $this->next()
@@ -313,6 +323,10 @@ class Block
      */
     public function toHtml(): string
     {
-        return (string)snippet([$this->snippet(), 'blocks/' . $this->type()], $this->controller(), true);
+        try {
+            return (string)snippet([$this->snippet(), 'blocks/' . $this->type()], $this->controller(), true);
+        } catch (Throwable $e) {
+            return '<p>Block error: "' . $e->getMessage() . '" in block type: "' . $this->type() . '"</p>';
+        }
     }
 }

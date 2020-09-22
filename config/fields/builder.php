@@ -43,7 +43,18 @@ return [
          */
         'max' => function (?int $max = null) {
             return $max;
-        }
+        },
+
+        /**
+         * Enables/disables pretty printed JSON
+         * in the content files
+         *
+         * @param bool $pretty
+         * @return bool
+         */
+        'pretty' => function (bool $pretty = true): bool {
+            return $pretty;
+        },
     ],
     'computed' => [
         'builder' => function () {
@@ -58,6 +69,32 @@ return [
     ],
     'api' => function () {
         return [
+            [
+                'pattern' => 'uuid',
+                'action'  => function () {
+                    return ['uuid' => uuid()];
+                }
+            ],
+            [
+                'pattern' => 'fieldsets/(:any)',
+                'method'  => 'GET',
+                'action'  => function ($type) {
+                    $field = $this->field();
+
+                    if (!$fieldset = $field->fieldsets()[$type] ?? null) {
+                        throw new NotFoundException('The fieldset type could not be found');
+                    }
+
+                    $content = $field->builder->form($fieldset['fields'], [])->values();
+
+                    return [
+                        'attrs'   => [],
+                        'content' => $content,
+                        'id'      => uuid(),
+                        'type'    => $type
+                    ];
+                }
+            ],
             [
                 'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
                 'method'  => 'ALL',
@@ -84,8 +121,20 @@ return [
 
                     return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
                 }
-            ]
+            ],
         ];
+    },
+    'save' => function ($blocks) {
+        $value = [
+            'type'   => 'builder',
+            'blocks' => $blocks
+        ];
+
+        if ($this->pretty === true) {
+            return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+
+        return json_encode($value);
     },
     'validations' => [
         'max'

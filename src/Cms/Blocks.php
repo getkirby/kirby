@@ -20,7 +20,6 @@ use Throwable;
  */
 class Blocks extends Collection
 {
-
     /**
      * structure | builder | editor
      * @var string
@@ -66,13 +65,13 @@ class Blocks extends Collection
 
     /**
      * Creates a new block collection from a
-     * JSON string
+     * an array of block props
      *
-     * @param string|array $value
+     * @param array $blocks
      * @param array $params
      * @return \Kirby\Cms\Blocks
      */
-    public static function factory($blocks, array $params = [])
+    public static function factory(array $blocks, array $params = [])
     {
         $options = array_merge([
             'options' => [],
@@ -80,33 +79,14 @@ class Blocks extends Collection
             'type'    => null
         ], $params);
 
-        if (empty($blocks) === true) {
+        if (empty($blocks) === true || is_array($blocks) === false) {
             return new static();
         }
-
-        if (is_array($blocks) === false) {
-            try {
-                $blocks = Json::decode((string)$blocks);
-            } catch (Throwable $e) {
-                // try to import the old YAML format
-                $blocks = Yaml::decode((string)$blocks);
-            }
-        }
-
-        if (!is_array($blocks) === true) {
-            return new static();
-        }
-
-        // import deprecated blocks
-        $blocks = static::import($blocks);
-
-        // pass the type to the options array if not given
-        $options['type'] = $options['type'] ?? $blocks['type'];
 
         // create a new collection of blocks
         $collection = new static([], $options);
 
-        foreach ($blocks['blocks'] as $params) {
+        foreach ($blocks as $params) {
             $params['field']    = $options['type'];
             $params['options']  = $options['options'];
             $params['parent']   = $options['parent'];
@@ -119,52 +99,47 @@ class Blocks extends Collection
     }
 
     /**
-     * Import deprecated block formats
+     * Parse and sanitize various block formats
      *
-     * @param array $blocks
+     * @param array|string $input
+     * @param string $type Expected field type
      * @return array
      */
-    public static function import(array $input = []): array
+    public static function parse($input, string $type = null): array
     {
+        if (is_array($input) === false) {
+            try {
+                $input = Json::decode((string)$input);
+            } catch (Throwable $e) {
+                // try to import the old YAML format
+                $input = Yaml::decode((string)$input);
+            }
+        }
+
         if (empty($input) === true) {
             return [
-                'type'   => null,
+                'type'   => $type,
                 'blocks' => []
             ];
         }
 
         // the format is already up-to-date
         if (isset($input['blocks']) === true) {
+            $input['type'] = $input['type'] ?? $type;
             return $input;
         }
 
-        $type   = null;
-        $blocks = $input;
-
         // check for builder blocks
-        if (isset($blocks[0]['_key']) === true) {
-            $type = 'builder';
-            $blocks = array_map(function ($block) {
-                $block['content'] = $block;
-                $block['id']      = uuid();
-                $block['type']    = $block['_key'];
-                return $block;
-            }, $blocks);
-
+        if (isset($input[0]['_key']) === true) {
+            $type = $type ?? 'builder';
         // import blocks as structure
         } else {
-            $type   = 'structure';
-            $blocks = array_map(function ($block) {
-                $block['content'] = $block;
-                $block['id']      = uuid();
-                $block['type']    = 'default';
-                return $block;
-            }, $blocks);
+            $type = $type ?? 'structure';
         }
 
         return [
             'type'   => $type,
-            'blocks' => $blocks
+            'blocks' => $input
         ];
     }
 

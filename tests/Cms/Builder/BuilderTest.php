@@ -104,7 +104,7 @@ class BuilderTest extends TestCase
         $builder  = new Builder($this->page);
         $fieldset = $builder->fieldset('quote', []);
 
-        $this->assertSame('quote', $fieldset['key']);
+        $this->assertSame('quote', $fieldset['type']);
         $this->assertSame('Quote', $fieldset['name']);
         $this->assertSame('Quote', $fieldset['label']);
         $this->assertSame([], $fieldset['fields']);
@@ -127,7 +127,7 @@ class BuilderTest extends TestCase
         $this->assertSame([
             'quote' => [
                 'fields'    => [],
-                'key'       => 'quote',
+                'type'      => 'quote',
                 'name'      => 'Quote',
                 'label'     => 'Quote',
                 'icon'      => 'quote',
@@ -137,7 +137,7 @@ class BuilderTest extends TestCase
             ],
             'bodytext' => [
                 'fields'    => [],
-                'key'       => 'bodytext',
+                'type'      => 'bodytext',
                 'name'      => 'Text',
                 'label'     => 'Text',
                 'icon'      => null,
@@ -198,31 +198,19 @@ class BuilderTest extends TestCase
         $builder = new Builder($this->page, [
             'fieldsets' => $fieldsets,
             'value' => [
-                ['_key' => 'quote'],
-                ['_key' => 'bodytext'],
+                ['type' => 'quote'],
+                ['type' => 'bodytext'],
             ]
         ]);
 
-        $expected = [
-            [
-                'quote' => '',
-                'citation' => '',
-                '_key' => 'quote'
-            ],
-            [
-                'text' => '',
-                '_key' => 'bodytext'
-            ]
-        ];
+        $this->assertSame('', $builder->value()[0]['content']['quote']);
+        $this->assertSame('', $builder->value()[0]['content']['citation']);
+        $this->assertArrayHasKey('type', $builder->value()[0]);
+        $this->assertArrayHasKey('id', $builder->value()[0]);
 
-        $this->assertSame('', $builder->value()[0]['quote']);
-        $this->assertSame('', $builder->value()[0]['citation']);
-        $this->assertArrayHasKey('_key', $builder->value()[0]);
-        $this->assertArrayHasKey('_uid', $builder->value()[0]);
-
-        $this->assertSame('', $builder->value()[1]['text']);
-        $this->assertArrayHasKey('_key', $builder->value()[1]);
-        $this->assertArrayHasKey('_uid', $builder->value()[1]);
+        $this->assertSame('', $builder->value()[1]['content']['text']);
+        $this->assertArrayHasKey('type', $builder->value()[1]);
+        $this->assertArrayHasKey('id', $builder->value()[1]);
     }
 
     public function testExtend()
