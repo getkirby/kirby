@@ -211,6 +211,8 @@
 
   "hour": "Hour",
   "insert": "Insert",
+  "insert.after": "Insert after",
+  "insert.before": "Insert before",
   "install": "Install",
 
   "installation": "Installation",

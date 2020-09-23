@@ -59,9 +59,13 @@
                   @click="$refs['options-' + block.id][0].toggle()"
                 />
                 <k-dropdown-content :ref="'options-' + block.id" align="right">
-                  <k-dropdown-item :disabled="isFull" icon="add" @click="select(index + 1)">
-                    {{ $t("insert") }}
+                  <k-dropdown-item :disabled="isFull" icon="angle-up" @click="select(index)">
+                    {{ $t("insert.before") }}
                   </k-dropdown-item>
+                  <k-dropdown-item :disabled="isFull" icon="angle-down" @click="select(index + 1)">
+                    {{ $t("insert.after") }}
+                  </k-dropdown-item>
+                  <hr>
                   <k-dropdown-item :disabled="isFull" icon="copy" @click="duplicate(block)">
                     {{ $t("duplicate") }}
                   </k-dropdown-item>
@@ -314,8 +318,7 @@ export default {
   position: relative;
 }
 .k-builder-field > .k-grid {
-  grid-row-gap: .5rem;
-  grid-column-gap: .5rem;
+  grid-gap: 2px;
 }
 .k-builder-column {
   position: relative;
