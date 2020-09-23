@@ -123,10 +123,15 @@ trait FileFoundation
     public function isResizable(): bool
     {
         $resizable = [
-            'jpg',
-            'jpeg',
+            'avif',
+            'bmp',
             'gif',
+            'j2k',
+            'jp2',
+            'jpeg',
+            'jpg',
             'png',
+            'tiff',
             'webp'
         ];
 

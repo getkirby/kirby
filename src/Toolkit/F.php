@@ -71,10 +71,13 @@ class F
         ],
         'image' => [
             'ai',
+            'avif',
             'bmp',
             'gif',
             'eps',
             'ico',
+            'j2k',
+            'jp2',
             'jpeg',
             'jpg',
             'jpe',
