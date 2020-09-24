@@ -12,6 +12,7 @@
     "test": "cypress run"
   },
   "dependencies": {
+    "@linusborg/vue-simple-portal": "^0.1.4",
     "autosize": "^4.0.2",
     "dayjs": "^1.8.22",
     "npm": "^6.14.7",
