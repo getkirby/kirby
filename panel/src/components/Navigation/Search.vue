@@ -128,6 +128,9 @@ export default {
   methods: {
     changeType(type) {
       this.currentType = this.getType(type);
+      this.$nextTick(() => {
+        this.$refs.input.focus();
+      });
     },
     close() {
       this.hasResults = true;
@@ -234,7 +237,7 @@ export default {
   display: flex;
 }
 .k-search-types > .k-button {
-  padding: 0 0 0 .7rem;
+  padding: 0 0 0 1rem;
   font-size: $font-size-medium;
   line-height: 1;
   height: 2.5rem;
@@ -251,12 +254,12 @@ export default {
   background: none;
   flex-grow: 1;
   font: inherit;
-  padding: .75rem;
+  padding: .75rem 1rem;
   border: 0;
   height: 2.5rem;
 }
 .k-search-close {
-  width: 2.5rem;
+  width: 3rem;
   line-height: 1;
 }
 .k-search-close .k-icon-loader {
@@ -267,7 +270,7 @@ export default {
 }
 
 .k-search-results {
-  padding: 1rem;
+  padding: .5rem 1rem 1rem;
   background: $color-light;
 }
 .k-search li {
