@@ -14,7 +14,11 @@
     </keep-alive>
     <header v-if="inside" class="k-panel-header">
       <k-topbar @register="$refs.registration.open()" />
-      <k-search v-if="$store.state.search" v-bind="$store.state.search" />
+      <k-search
+        v-if="$store.state.search"
+        :type="searchType"
+        :types="searchTypes"
+      />
     </header>
     <main class="k-panel-view">
       <router-view />
@@ -47,6 +51,7 @@
 import Icons from "@/components/Misc/Icons.vue";
 import Registration from "@/components/Dialogs/RegistrationDialog.vue";
 import config from "@/config/config.js";
+import search from "@/config/search.js"
 
 export default {
   name: "App",
@@ -69,6 +74,12 @@ export default {
     },
     defaultTranslation() {
       return this.$store.state.languages.current ? this.$store.state.languages.current === this.$store.state.languages.default : false;
+    },
+    searchType() {
+      return this.$store.state.view === 'users' ? 'users' : 'pages';
+    },
+    searchTypes() {
+      return search(this);
     },
     translation() {
       return this.$store.state.languages.current ? this.$store.state.languages.current.code : false;
