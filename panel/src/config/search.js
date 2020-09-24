@@ -11,7 +11,7 @@ export default (app) => {
       return {
         id:    item.id,
         icon:  {...item.panelIcon, back: "black", color: "#fff"},
-        image: item.panelImage,
+        image: {...item.panelImage, back: "pattern", cover: "true"},
         ...map(item)
       }
     });
