@@ -8,7 +8,6 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
 
 /**
  * The `$page` object is the heart and
