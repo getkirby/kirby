@@ -86,7 +86,7 @@ class Media
      * given filename and then calls the thumb
      * component to create a thumbnail accordingly
      *
-     * @param \Kirby\Cms\Model $model
+     * @param \Kirby\Cms\Model|string $model
      * @param string $hash
      * @param string $filename
      * @return \Kirby\Cms\Response|false
@@ -95,12 +95,15 @@ class Media
     {
         $kirby = App::instance();
 
+        // assets
         if (is_string($model) === true) {
-            // assets
             $root = $kirby->root('media') . '/assets/' . $model . '/' . $hash;
-        } else {
-            // model files
+        // parent files for file model that already included hash
+        } elseif (is_a($model, '\Kirby\Cms\File')) {
             $root = dirname($model->mediaRoot());
+        // model files
+        } else {
+            $root = $model->mediaRoot() . '/' . $hash;
         }
 
         try {
