@@ -137,7 +137,7 @@
             :tooltip="$t('search')"
             class="k-topbar-signals-button"
             icon="search"
-            @click="$store.dispatch('search', true)"
+            @click="$emit('search')"
           />
         </div>
       </div>

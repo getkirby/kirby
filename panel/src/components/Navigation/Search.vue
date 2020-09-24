@@ -1,85 +1,87 @@
 <template>
-  <div class="k-search" role="search" @click="close">
-    <div class="k-search-box" @click.stop>
-      <div class="k-search-input">
+  <portal v-if="isOpen">
+    <div class="k-search" role="search" @click="close">
+      <div class="k-search-box" @click.stop>
+        <div class="k-search-input">
 
-        <!-- Type select -->
-        <k-dropdown class="k-search-types">
-          <k-button :icon="currentType.icon" @click="$refs.types.toggle()">
-            {{ currentType.label }}
-          </k-button>
-          <k-dropdown-content ref="types">
-            <k-dropdown-item
-              v-for="(type, typeIndex) in types"
-              :key="typeIndex"
-              :icon="type.icon"
-              @click="changeType(typeIndex)"
-            >
-              {{ type.label }}
-            </k-dropdown-item>
-          </k-dropdown-content>
-        </k-dropdown>
+          <!-- Type select -->
+          <k-dropdown class="k-search-types">
+            <k-button :icon="currentType.icon" @click="$refs.types.toggle()">
+              {{ currentType.label }}
+            </k-button>
+            <k-dropdown-content ref="types">
+              <k-dropdown-item
+                v-for="(type, typeIndex) in types"
+                :key="typeIndex"
+                :icon="type.icon"
+                @click="changeType(typeIndex)"
+              >
+                {{ type.label }}
+              </k-dropdown-item>
+            </k-dropdown-content>
+          </k-dropdown>
 
-        <!-- Input -->
-        <input
-          ref="input"
-          v-model="q"
-          :placeholder="$t('search') + ' …'"
-          :aria-label="$t('search')"
-          type="text"
-          @input="hasResults = true"
-          @keydown.down.prevent="onDown"
-          @keydown.up.prevent="onUp"
-          @keydown.tab.prevent="onTab"
-          @keydown.enter="onEnter"
-          @keydown.esc="close"
-        >
-        <k-button
-          :tooltip="$t('close')"
-          class="k-search-close"
-          :icon="isLoading ? 'loader' : 'cancel'"
-          @click="close"
-        />
-      </div>
-
-      <div
-        v-if="q && (!hasResults || items.length)"
-        class="k-search-results"
-      >
-        <!-- Results -->
-        <ul v-if="items.length" @mouseout="selected = -1">
-          <li
-            v-for="(item, itemIndex) in items"
-            :key="item.id"
-            :data-selected="selected === itemIndex"
-            @mouseover="selected = itemIndex"
+          <!-- Input -->
+          <input
+            ref="input"
+            v-model="q"
+            :placeholder="$t('search') + ' …'"
+            :aria-label="$t('search')"
+            type="text"
+            @input="hasResults = true"
+            @keydown.down.prevent="onDown"
+            @keydown.up.prevent="onUp"
+            @keydown.tab.prevent="onTab"
+            @keydown.enter="onEnter"
+            @keydown.esc="close"
           >
-            <k-link :to="item.link" @click="close">
-              <span class="k-search-item-image">
-                <k-image
-                  v-if="imageOptions(item.image)"
-                  v-bind="imageOptions(item.image)"
-                />
-                <k-icon
-                  v-else
-                  v-bind="item.icon"
-                />
-              </span>
-              <span class="k-search-item-info">
-                <strong>{{ item.title }}</strong>
-                <small>{{ item.info }}</small>
-              </span>
-            </k-link>
-          </li>
-        </ul>
+          <k-button
+            :tooltip="$t('close')"
+            class="k-search-close"
+            :icon="isLoading ? 'loader' : 'cancel'"
+            @click="close"
+          />
+        </div>
 
-        <!-- No results -->
-        <p v-else-if="!hasResults" class="k-search-empty">
-          {{ $t("search.results.none") }}
-        </p>
+        <div
+          v-if="q && (!hasResults || items.length)"
+          class="k-search-results"
+        >
+          <!-- Results -->
+          <ul v-if="items.length" @mouseout="selected = -1">
+            <li
+              v-for="(item, itemIndex) in items"
+              :key="item.id"
+              :data-selected="selected === itemIndex"
+              @mouseover="selected = itemIndex"
+            >
+              <k-link :to="item.link" @click="close">
+                <span class="k-search-item-image">
+                  <k-image
+                    v-if="imageOptions(item.image)"
+                    v-bind="imageOptions(item.image)"
+                  />
+                  <k-icon
+                    v-else
+                    v-bind="item.icon"
+                  />
+                </span>
+                <span class="k-search-item-info">
+                  <strong>{{ item.title }}</strong>
+                  <small>{{ item.info }}</small>
+                </span>
+              </k-link>
+            </li>
+          </ul>
+
+          <!-- No results -->
+          <p v-else-if="!hasResults" class="k-search-empty">
+            {{ $t("search.results.none") }}
+          </p>
+        </div>
       </div>
     </div>
-  </div>
+  </portal>
 </template>
 
 <script>
@@ -101,17 +103,20 @@ export default {
   },
   data() {
     return {
-      currentType: this.getType(this.type),
+      isOpen: false,
       isLoading: false,
       hasResults: true,
       items: [],
+      currentType: this.getType(this.type),
       q: null,
       selected: -1,
     }
   },
   watch: {
     q: debounce(function (q) {
-      this.search(q);
+      if (this.isOpen) {
+        this.search(q);
+      }
     }, 200),
     currentType() {
       this.search(this.q);
@@ -119,11 +124,9 @@ export default {
     type() {
       this.currentType = this.getType(this.type);
     },
-  },
-  mounted() {
-    this.$nextTick(() => {
-      this.$refs.input.focus();
-    });
+    types() {
+      this.currentType = this.getType(this.type);
+    }
   },
   methods: {
     changeType(type) {
@@ -133,10 +136,10 @@ export default {
       });
     },
     close() {
+      this.isOpen = false;
       this.hasResults = true;
       this.items = [];
       this.q = null;
-      this.$store.dispatch("search", false);
     },
     getType(type) {
       return this.types[type] || this.types[Object.keys(this.types)[0]];
@@ -173,8 +176,10 @@ export default {
       }
     },
     open(event) {
-      event.preventDefault();
-      this.$store.dispatch("search", true);
+      this.isOpen = true;
+      setTimeout(() => {
+        this.$refs.input.focus();
+      }, 1);
     },
     async search(query) {
       this.isLoading = true;
