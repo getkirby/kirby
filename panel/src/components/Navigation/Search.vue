@@ -285,7 +285,6 @@ export default {
 }
 .k-search li[data-selected] {
   outline: 2px solid $color-focus;
-  background: $color-focus-outline;
 }
 .k-search li .k-link {
   display: flex;
