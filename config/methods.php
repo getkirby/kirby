@@ -64,11 +64,12 @@ return function (App $app) {
         'toBlocks' => function (Field $field) {
             try {
                 $blocks = Blocks::parse($field->value());
-
-                return Blocks::factory($blocks['blocks'], [
+                $blocks = Blocks::factory($blocks['blocks'], [
                     'parent' => $field->parent(),
                     'type'   => $blocks['type']
                 ]);
+
+                return $blocks->filterBy('isHidden', false);
             } catch (Throwable $e) {
                 if ($field->parent() === null) {
                     $message = 'Invalid blocks data for "' . $field->key() . '" field';

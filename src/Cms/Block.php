@@ -224,6 +224,16 @@ class Block
     }
 
     /**
+     * Checks the hide attribute
+     *
+     * @return bool
+     */
+    public function isHidden(): bool
+    {
+        return $this->attr('hide')->isTrue();
+    }
+
+    /**
      * Checks if the block is not empty
      *
      * @return bool
