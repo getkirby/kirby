@@ -25,7 +25,7 @@ export default {
   },
   computed: {
     isEmoji() {
-      return this.$helper.string.isEmoji(this.type);
+      return this.$helper.string.hasEmoji(this.type);
     }
   }
 };
