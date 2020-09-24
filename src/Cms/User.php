@@ -798,7 +798,7 @@ class User extends ModelWithContent
      */
     protected function setName(string $name = null)
     {
-        $this->name = $name !== null ? trim($name) : null;
+        $this->name = $name !== null ? trim(strip_tags($name)) : null;
         return $this;
     }
 
