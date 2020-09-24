@@ -7,7 +7,7 @@
           <!-- Type select -->
           <k-dropdown class="k-search-types">
             <k-button :icon="currentType.icon" @click="$refs.types.toggle()">
-              {{ currentType.label }}
+              {{ currentType.label }}:
             </k-button>
             <k-dropdown-content ref="types">
               <k-dropdown-item
@@ -259,7 +259,7 @@ export default {
   background: none;
   flex-grow: 1;
   font: inherit;
-  padding: .75rem 1rem;
+  padding: .75rem;
   border: 0;
   height: 2.5rem;
 }
