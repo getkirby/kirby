@@ -33,6 +33,7 @@
     <!-- Search dialog -->
     <k-search
       ref="search"
+      v-if="inside"
       :type="searchType"
       :types="searchTypes"
     />
