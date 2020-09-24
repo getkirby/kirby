@@ -5,7 +5,7 @@
 
         <!-- Type select -->
         <k-dropdown class="k-search-types">
-          <k-button :icon="type.icon" @click="$refs.types.toggle()">
+          <k-button :icon="currentType.icon" @click="$refs.types.toggle()">
             {{ currentType.label }}
           </k-button>
           <k-dropdown-content ref="types">
