@@ -2,8 +2,6 @@
   <k-field
     v-bind="$props"
     class="k-builder-field"
-    @mouseenter.native="isHovered = true"
-    @mouseleave.native="isHovered = false"
   >
     <k-dropdown slot="options">
       <k-button icon="cog" @click="$refs.options.toggle()" />
@@ -32,26 +30,37 @@
         <k-column
           v-for="(block, index) in blocks"
           :key="block.id"
-          :width="'1/' + columns"
-          :data-disabled="fieldset(block).disabled"
-          :data-translate="fieldset(block).translate"
+          :set="blockOptions = fieldset(block)"
+          :data-disabled="blockOptions.disabled"
+          :data-translate="blockOptions.translate"
           class="k-builder-column"
+          @mouseenter.native="isHovered = block.id"
+          @mouseleave.native="isHovered = false"
         >
-          <k-builder-block-creator
-            v-if="!isFull"
-            :fieldsets="fieldsets"
-            :vertical="columns > 1"
-            @select="select(index)"
-          />
           <details
             :class="'k-builder-block k-builder-fieldset-' + block.type"
+            :data-hidden="block.attrs.hide == true"
             :open="isOpen(block)"
           >
             <summary class="k-builder-block-header" @click.prevent="toggle(block)">
-              <k-sort-handle :icon="isHovered ? 'sort' : fieldset(block).icon || 'sort'" class="k-builder-block-handle" />
+              <k-sort-handle :icon="isHovered === block.id ? 'sort' : blockOptions.icon || 'sort'" class="k-builder-block-handle" />
               <span class="k-builder-block-label">
-                {{ $helper.string.template(fieldset(block).label, block) }}
+                {{ $helper.string.template(blockOptions.label, block) }} <k-icon v-if="block.attrs.hide" type="hidden" />
               </span>
+
+              <nav class="k-builder-block-tabs" v-if="Object.keys(blockOptions.tabs).length > 1">
+                <k-button
+                  v-for="(tab, tabId) in blockOptions.tabs"
+                  :key="tabId"
+                  :current="tabs[block.id] === tabId"
+                  :icon="tab.icon"
+                  class="k-builder-block-tab"
+                  @click.stop="open(block, tabId)"
+                >
+                  {{ tab.label }}
+                </k-button>
+              </nav>
+
               <k-dropdown>
                 <k-button
                   class="k-builder-block-options-toggle"
@@ -66,6 +75,9 @@
                     {{ $t("insert.after") }}
                   </k-dropdown-item>
                   <hr>
+                  <k-dropdown-item :icon="block.attrs.hide ? 'preview' : 'hidden'" @click="toggleVisibility(block)">
+                    {{ block.attrs.hide === true ? 'Show' : 'Hide' }}
+                  </k-dropdown-item>
                   <k-dropdown-item :disabled="isFull" icon="copy" @click="duplicate(block)">
                     {{ $t("duplicate") }}
                   </k-dropdown-item>
@@ -82,17 +94,10 @@
                 :fields="fields(block)"
                 :value="block.content"
                 class="k-builder-block-form"
-                @input="update(index, $event)"
+                @input="updateContent(block, $event)"
               />
             </div>
           </details>
-          <k-builder-block-creator
-            v-if="index === blocks.length - 1 && !isFull"
-            :fieldsets="fieldsets"
-            :last="true"
-            :vertical="columns > 1"
-            @select="select(blocks.length)"
-          />
         </k-column>
       </k-draggable>
     </template>
@@ -127,16 +132,15 @@
 
 <script>
 import Field from "../Field.vue";
-import BlockCreator from "./BuilderField/BlockCreator.vue";
+import SettingsDialog from "./BuilderField/SettingsDialog.vue";
 
 export default {
   inheritAttrs: false,
   components: {
-    "k-builder-block-creator": BlockCreator,
+    "k-builder-block-settings-dialog": SettingsDialog
   },
   props: {
     ...Field.props,
-    columns: Number,
     fieldsets: Object,
     max: {
       type: Number,
@@ -156,6 +160,7 @@ export default {
       isHovered: false,
       nextIndex: this.value.length,
       opened: [],
+      tabs: {},
       trash: null,
     };
   },
@@ -204,7 +209,10 @@ export default {
       this.onInput();
     },
     fields(block) {
-      const fields = this.fieldset(block).fields || {};
+      const tabId  = this.tabs[block.id] || null;
+      const tabs   = this.fieldset(block).tabs;
+      const tab    = tabs[tabId] || Object.values(tabs)[0];
+      const fields = tab.fields || {};
 
       if (Object.keys(fields).length === 0) {
         return {
@@ -236,6 +244,30 @@ export default {
     isOpen(block) {
       return this.opened.includes(block.id);
     },
+    onInput() {
+      this.$emit("input", this.blocks);
+    },
+    onRemove(block) {
+      this.trash = block;
+      this.$refs.remove.open();
+    },
+    open(block, tabId, focus = true) {
+      this.close(block);
+      this.opened.push(block.id);
+
+      // use the given tab id or the already selected tab or the first tab
+      tabId = tabId || this.tabs[block.id] || Object.keys(this.fieldset(block).tabs)[0];
+      this.tabs[block.id] = tabId;
+
+      if (focus) {
+        this.$nextTick(() => {
+          const fieldset = this.$refs["fieldset-" + block.id][0];
+          if (fieldset) {
+            fieldset.focus();
+          }
+        });
+      }
+    },
     remove() {
       if (this.trash === null) {
         return;
@@ -260,28 +292,6 @@ export default {
     sort() {
       this.onInput();
     },
-    onInput() {
-      console.log(this.blocks);
-      this.$emit("input", this.blocks);
-    },
-    onRemove(block) {
-      this.trash = block;
-      this.$refs.remove.open();
-    },
-    open(block, focus = true) {
-      if (this.isOpen(block) === false) {
-        this.opened.push(block.id);
-
-        if (focus) {
-          this.$nextTick(() => {
-            const fieldset = this.$refs["fieldset-" + block.id][0];
-            if (fieldset) {
-              fieldset.focus();
-            }
-          });
-        }
-      }
-    },
     select(index) {
       this.nextIndex = index;
 
@@ -302,11 +312,22 @@ export default {
     toggleAll() {
       this.opened = this.hasOpened ? [] : this.blocks.map(block => block.id);
     },
-    uid(type) {
-      return type + "_" + (+new Date) + "_" + this.$helper.string.random(6);
+    toggleVisibility(block) {
+      if (Array.isArray(block.attrs) === true) {
+        this.$set(block, "attrs", {});
+      }
+
+      if (block.attrs.hide === true) {
+        this.$set(block.attrs, "hide", false);
+      } else {
+        this.close(block);
+        this.$set(block.attrs, "hide", true);
+      }
+
+      this.onInput();
     },
-    update(index, value) {
-      this.$set(this.blocks[index].content, value);
+    updateContent(block, content) {
+      this.$set(block, "content", content);
       this.onInput();
     }
   }
@@ -359,9 +380,49 @@ export default {
   opacity: 1;
 }
 .k-builder-block-label {
+  display: flex;
   flex-grow: 1;
   font-size: $font-size-small;
 }
+.k-builder-block[data-hidden]:not([open]) {
+  background: rgba(#fff, .325);
+}
+.k-builder-block[data-hidden] .k-builder-block-label {
+  color: #ccc;
+}
+.k-builder-block-label .k-icon {
+  margin-left: .75rem;
+}
+
+.k-builder-block-tabs {
+  display: none;
+  align-items: center;
+  margin-right: .5rem;
+}
+.k-builder-block[open] .k-builder-block-tabs {
+  display: flex;
+}
+.k-builder-block-tab {
+  position: relative;
+  padding: .5rem .75rem;
+  height: 36px;
+}
+.k-builder-block-tab > * {
+  position: relative;
+  z-index: 1;
+}
+.k-builder-block-tab[aria-current]::before {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: $color-background;
+  border-top-left-radius: $border-radius;
+  border-top-right-radius: $border-radius;
+}
+
 .k-builder-block-options-toggle {
   display: flex;
   width: 2.5rem;

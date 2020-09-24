@@ -14,22 +14,10 @@ class BuilderFieldTest extends TestCase
 
         $this->assertSame('builder', $field->type());
         $this->assertSame('builder', $field->name());
-        $this->assertSame(1, $field->columns());
         $this->assertSame(null, $field->max());
         $this->assertTrue(is_array($field->fieldsets()));
         $this->assertSame([], $field->value());
         $this->assertTrue($field->save());
-    }
-
-    public function testColumns()
-    {
-        $field = $this->field('builder', [
-            'columns' => 2,
-            'fieldsets' => [],
-            'max' => 1
-        ]);
-
-        $this->assertSame(2, $field->columns());
     }
 
     public function testMax()
@@ -144,16 +132,16 @@ class BuilderFieldTest extends TestCase
         $app->setCurrentLanguage('en');
         $field = $this->field('builder', $props);
 
-        $this->assertFalse($field->fieldsets['heading']['fields']['text']['translate']);
-        $this->assertFalse($field->fieldsets['heading']['fields']['text']['disabled']);
+        $this->assertFalse($field->fieldsets['heading']['tabs']['content']['fields']['text']['translate']);
+        $this->assertFalse($field->fieldsets['heading']['tabs']['content']['fields']['text']['disabled']);
 
         // secondary language
         $app = $app->clone();
         $app->setCurrentLanguage('de');
 
         $field = $this->field('builder', $props);
-        $this->assertFalse($field->fieldsets['heading']['fields']['text']['translate']);
-        $this->assertTrue($field->fieldsets['heading']['fields']['text']['disabled']);
+        $this->assertFalse($field->fieldsets['heading']['tabs']['content']['fields']['text']['translate']);
+        $this->assertTrue($field->fieldsets['heading']['tabs']['content']['fields']['text']['disabled']);
     }
 
     public function testTranslateFieldset()

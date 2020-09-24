@@ -82,10 +82,10 @@ class BuilderTest extends TestCase
         $this->page = new Page(['slug' => 'test']);
     }
 
-    public function testFields()
+    public function testFieldsProps()
     {
         $builder = new Builder($this->page);
-        $result  = $builder->fields([
+        $result  = $builder->fieldsProps([
             'text' => [
                 'type'  => 'textarea'
             ],
@@ -97,17 +97,25 @@ class BuilderTest extends TestCase
 
         $this->assertArrayHasKey('signature', $result['text']);
         $this->assertArrayHasKey('signature', $result['citation']);
+
+        // check for a proper textarea with automatic label
+        $this->assertSame('text', $result['text']['name']);
+        $this->assertSame('Text', $result['text']['label']);
+
+        // check for a proper text input with custom label
+        $this->assertSame('citation', $result['citation']['name']);
+        $this->assertSame('Quote Citation', $result['citation']['label']);
     }
 
-    public function testFieldset()
+    public function testFieldsetProps()
     {
         $builder  = new Builder($this->page);
-        $fieldset = $builder->fieldset('quote', []);
+        $fieldset = $builder->fieldsetProps('quote', []);
 
         $this->assertSame('quote', $fieldset['type']);
         $this->assertSame('Quote', $fieldset['name']);
         $this->assertSame('Quote', $fieldset['label']);
-        $this->assertSame([], $fieldset['fields']);
+        $this->assertSame([], $fieldset['tabs']['content']['fields']);
     }
 
     public function testFieldsets()
@@ -126,48 +134,34 @@ class BuilderTest extends TestCase
 
         $this->assertSame([
             'quote' => [
-                'fields'    => [],
-                'type'      => 'quote',
-                'name'      => 'Quote',
-                'label'     => 'Quote',
-                'icon'      => 'quote',
                 'disabled'  => false,
+                'icon'      => 'quote',
+                'label'     => 'Quote',
+                'name'      => 'Quote',
+                'tabs' => [
+                    'content' => [
+                        'fields' => []
+                    ]
+                ],
                 'translate' => null,
+                'type'      => 'quote',
                 'unset'     => false
             ],
             'bodytext' => [
-                'fields'    => [],
-                'type'      => 'bodytext',
-                'name'      => 'Text',
-                'label'     => 'Text',
-                'icon'      => null,
                 'disabled'  => false,
+                'icon'      => null,
+                'label'     => 'Text',
+                'name'      => 'Text',
+                'tabs' => [
+                    'content' => [
+                        'fields' => []
+                    ]
+                ],
                 'translate' => null,
+                'type'      => 'bodytext',
                 'unset'     => false
             ]
         ], $builder->fieldsets());
-    }
-
-    public function testFieldsProps()
-    {
-        $builder = new Builder($this->page);
-        $result  = $builder->fieldsProps([
-            'text' => [
-                'type'  => 'textarea'
-            ],
-            'citation' => [
-                'label' => 'Quote Citation',
-                'type'  => 'text'
-            ]
-        ]);
-
-        // check for a proper textarea with automatic label
-        $this->assertSame('text', $result['text']['name']);
-        $this->assertSame('Text', $result['text']['label']);
-
-        // check for a proper text input with custom label
-        $this->assertSame('citation', $result['citation']['name']);
-        $this->assertSame('Quote Citation', $result['citation']['label']);
     }
 
     public function testValue()
@@ -223,14 +217,14 @@ class BuilderTest extends TestCase
         $fieldsets = $builder->fieldsets();
 
         $this->assertArrayHasKey('heading', $fieldsets);
-        $this->assertArrayHasKey('fields', $fieldsets['heading']);
-        $this->assertArrayHasKey('text', $fieldsets['heading']['fields']);
+        $this->assertArrayHasKey('tabs', $fieldsets['heading']);
+        $this->assertArrayHasKey('text', $fieldsets['heading']['tabs']['content']['fields']);
 
         $this->assertArrayHasKey('seo', $fieldsets);
-        $this->assertArrayHasKey('fields', $fieldsets['seo']);
-        $this->assertArrayHasKey('metatitle', $fieldsets['seo']['fields']);
-        $this->assertArrayHasKey('metadescription', $fieldsets['seo']['fields']);
-        $this->assertArrayHasKey('metakeywords', $fieldsets['seo']['fields']);
+        $this->assertArrayHasKey('tabs', $fieldsets['seo']);
+        $this->assertArrayHasKey('metatitle', $fieldsets['seo']['tabs']['content']['fields']);
+        $this->assertArrayHasKey('metadescription', $fieldsets['seo']['tabs']['content']['fields']);
+        $this->assertArrayHasKey('metakeywords', $fieldsets['seo']['tabs']['content']['fields']);
     }
 
     public function testExtendNestedBuilder()
@@ -244,9 +238,9 @@ class BuilderTest extends TestCase
         $fieldsets = $builder->fieldsets();
 
         $this->assertArrayHasKey('events', $fieldsets);
-        $this->assertArrayHasKey('fields', $fieldsets['events']);
-        $this->assertArrayHasKey('eventlist', $fieldsets['events']['fields']);
-        $this->assertInstanceOf('\Kirby\Cms\Builder', $fieldsets['events']['fields']['eventlist']['builder']);
+        $this->assertArrayHasKey('tabs', $fieldsets['events']);
+        $this->assertArrayHasKey('eventlist', $fieldsets['events']['tabs']['content']['fields']);
+        $this->assertInstanceOf('\Kirby\Cms\Builder', $fieldsets['events']['tabs']['content']['fields']['eventlist']['builder']);
     }
 
     public function testExtendUnsetFieldsetFields()
@@ -264,10 +258,10 @@ class BuilderTest extends TestCase
         $fieldsets = $builder->fieldsets();
 
         $this->assertArrayHasKey('seo', $fieldsets);
-        $this->assertArrayHasKey('fields', $fieldsets['seo']);
-        $this->assertArrayHasKey('metatitle', $fieldsets['seo']['fields']);
-        $this->assertArrayNotHasKey('metadescription', $fieldsets['seo']['fields']);
-        $this->assertArrayNotHasKey('metakeywords', $fieldsets['seo']['fields']);
+        $this->assertArrayHasKey('tabs', $fieldsets['seo']);
+        $this->assertArrayHasKey('metatitle', $fieldsets['seo']['tabs']['content']['fields']);
+        $this->assertArrayNotHasKey('metadescription', $fieldsets['seo']['tabs']['content']['fields']);
+        $this->assertArrayNotHasKey('metakeywords', $fieldsets['seo']['tabs']['content']['fields']);
     }
 
     public function testExtendUnsetFields()
@@ -292,9 +286,9 @@ class BuilderTest extends TestCase
         $fieldsets = $builder->fieldsets();
 
         $this->assertArrayHasKey('seo', $fieldsets);
-        $this->assertArrayHasKey('fields', $fieldsets['seo']);
-        $this->assertArrayHasKey('metatitle', $fieldsets['seo']['fields']);
-        $this->assertArrayHasKey('metadescription', $fieldsets['seo']['fields']);
-        $this->assertArrayNotHasKey('metakeywords', $fieldsets['seo']['fields']);
+        $this->assertArrayHasKey('tabs', $fieldsets['seo']);
+        $this->assertArrayHasKey('metatitle', $fieldsets['seo']['tabs']['content']['fields']);
+        $this->assertArrayHasKey('metadescription', $fieldsets['seo']['tabs']['content']['fields']);
+        $this->assertArrayNotHasKey('metakeywords', $fieldsets['seo']['tabs']['content']['fields']);
     }
 }

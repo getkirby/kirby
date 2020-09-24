@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\NotFoundException;
 use Kirby\Toolkit\Str;
 
 /**
@@ -57,39 +58,43 @@ class Builder
     }
 
     /**
-     * Returns all props for the fields
-     * after being processed by the
-     * form including all the heavy lifting
-     * of extensions, groups, nested fields etc.
+     * Return all fields in a fieldset
      *
-     * @param array $fieldsProps
-     * @return array
-     */
-    public function fields(array $fields): array
-    {
-        return $this->form($this->fieldsProps($fields))->fields()->toArray();
-    }
-
-    /**
      * @param string $type
-     * @param array $fieldset
      * @return array
      */
-    public function fieldset(string $type, array $fieldset): array
+    public function fields(string $type): array
     {
-        return [
-            'fields'    => $this->fields($fieldset['fields'] ?? []),
-            'type'      => $type,
-            'name'      => $name = $fieldset['name'] ?? Str::ucfirst($type),
-            'label'     => $fieldset['label'] ?? $name,
-            'icon'      => $fieldset['icon'] ?? null,
-            'disabled'  => $fieldset['disabled'] ?? false,
-            'translate' => $fieldset['translate'] ?? null,
-            'unset'     => $fieldset['unset'] ?? false,
-        ];
+        $fieldset = $this->fieldset($type);
+        $fields   = [];
+
+        foreach ($fieldset['tabs'] as $tab) {
+            $fields = array_merge($fields, $tab['fields']);
+        }
+
+        return $fields;
     }
 
     /**
+     * Return a fieldset by type
+     *
+     * @param string $type
+     * @return array
+     */
+    public function fieldset(string $type): array
+    {
+        $fieldsets = $this->fieldsets();
+
+        if (isset($fieldsets[$type]) === false) {
+            throw new NotFoundException('The fieldset type could not be found');
+        }
+
+        return $fieldsets[$type];
+    }
+
+    /**
+     * Expand and return all fieldsets for the builder
+     *
      * @param array $fieldsets
      * @return array
      */
@@ -108,7 +113,7 @@ class Builder
         }
 
         foreach ($this->props['fieldsets'] ?? [] as $type => $fieldset) {
-            $fieldset = $this->fieldset($type, Blueprint::extend($fieldset));
+            $fieldset = $this->fieldsetProps($type, Blueprint::extend($fieldset));
 
             // switch untranslatable fieldset to readonly
             if ($fieldset['translate'] === false && ($isDefaultLanguage ?? true) === false) {
@@ -123,12 +128,39 @@ class Builder
     }
 
     /**
-     * @param array $fields
+     * Returns all props for the fields
+     * after being processed by the
+     * form including all the heavy lifting
+     * of extensions, groups, nested fields etc.
+     *
+     * @param array $fieldsProps
      * @return array
      */
     public function fieldsProps(array $fields): array
     {
-        return Blueprint::fieldsProps($fields);
+        $fields = Blueprint::fieldsProps($fields);
+        return $this->form($fields)->fields()->toArray();
+    }
+
+    /**
+     * @param string $type
+     * @param array $fieldset
+     * @return array
+     */
+    public function fieldsetProps(string $type, array $fieldset): array
+    {
+        $fieldset['name'] = $fieldset['name'] ?? Str::ucfirst($type);
+
+        return [
+            'disabled'  => $fieldset['disabled'] ?? false,
+            'icon'      => $fieldset['icon'] ?? null,
+            'label'     => $fieldset['label'] ?? $fieldset['name'],
+            'name'      => $fieldset['name'],
+            'tabs'      => $this->tabsProps($fieldset),
+            'translate' => $fieldset['translate'] ?? null,
+            'type'      => $type,
+            'unset'     => $fieldset['unset'] ?? false,
+        ];
     }
 
     /**
@@ -146,6 +178,61 @@ class Builder
             'strict' => true,
             'values' => $input,
         ]);
+    }
+
+    /**
+     * @param array $fieldset
+     * @return array
+     */
+    public function tabsProps(array $fieldset): array
+    {
+        $tabs = $fieldset['tabs'] ?? [];
+
+        // return a single tab if there are only fields
+        if (empty($tabs) === true) {
+            return [
+                'content' => [
+                    'fields' => $this->fieldsProps($fieldset['fields'] ?? []),
+                ]
+            ];
+        }
+
+        return array_map(function ($tab) {
+            $tab['fields'] = $this->fieldsProps($tab['fields'] ?? []);
+            return $tab;
+        }, $tabs);
+    }
+
+    /**
+     * @param array $input
+     * @param bool $pretty
+     * @return void
+     */
+    public function toJson(array $blocks = [], bool $pretty = true)
+    {
+        $fields = [];
+
+        foreach ($blocks as $index => $block) {
+            $blockType   = $block['type'];
+            $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
+
+            // store the fields for the next round
+            $fields[$blockType] = $blockFields;
+
+            // overwrite the content with the serialized form
+            $blocks[$index]['content'] = $this->form($blockFields, $block['content'])->content();
+        }
+
+        $value = [
+            'type'   => 'builder',
+            'blocks' => $blocks
+        ];
+
+        if ($pretty === true) {
+            return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+        }
+
+        return json_encode($value);
     }
 
     /**
@@ -171,10 +258,8 @@ class Builder
                 continue;
             }
 
-            $fieldset = $fieldsets[$type];
-
             // replace the block content with sanitized values
-            $block['content'] = $this->form($fieldset['fields'] ?? [], $block['content'])->values();
+            $block['content'] = $this->form($this->fields($type), $block['content'])->values();
 
             $result[] = $block;
         }

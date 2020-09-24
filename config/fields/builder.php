@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\Block;
 use Kirby\Cms\Builder;
 use Kirby\Exception\NotFoundException;
 
@@ -14,16 +15,6 @@ return [
         'autofocus'   => null,
         'icon'        => null,
         'placeholder' => null,
-
-        /**
-         * Number of columns for builder blocks
-         *
-         * @param int $columns 1
-         * @return int
-         */
-        'columns' => function (int $columns = 1) {
-            return $columns;
-        },
 
         /**
          * Fieldset definitions
@@ -79,37 +70,24 @@ return [
                 'pattern' => 'fieldsets/(:any)',
                 'method'  => 'GET',
                 'action'  => function ($type) {
-                    $field = $this->field();
+                    $builder  = $this->field()->builder();
+                    $fields   = $builder->fields($type);
+                    $defaults = $builder->form($fields, [])->data(true);
+                    $content  = $builder->form($fields, $defaults)->values();
 
-                    if (!$fieldset = $field->fieldsets()[$type] ?? null) {
-                        throw new NotFoundException('The fieldset type could not be found');
-                    }
-
-                    $defaults = $field->builder->form($fieldset['fields'], [])->data(true);
-                    $content  = $field->builder->form($fieldset['fields'], $defaults)->values();
-
-                    return [
-                        'attrs'   => [],
+                    return Block::factory([
                         'content' => $content,
-                        'id'      => uuid(),
                         'type'    => $type
-                    ];
+                    ])->toArray();
                 }
             ],
             [
                 'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
                 'method'  => 'ALL',
-                'action'  => function (string $fieldsetName, string $fieldName, string $path = null) {
-                    $parent    = $this->field();
-                    $fieldsets = $parent->fieldsets();
-                    $builder   = $parent->builder();
-                    $fieldset  = $fieldsets[$fieldsetName] ?? [];
-
-                    if (empty($fieldset) === true) {
-                        throw new NotFoundException('The fieldset could not be found');
-                    }
-
-                    $form  = $builder->form($fieldset['fields'] ?? []);
+                'action'  => function (string $fieldsetType, string $fieldName, string $path = null) {
+                    $builder = $this->field()->builder();
+                    $fields  = $builder->fields($fieldsetType);
+                    $form    = $builder->form($fields);
 
                     if (!$field = $form->fields()->$fieldName()) {
                         throw new NotFoundException('The field could not be found');
@@ -126,16 +104,7 @@ return [
         ];
     },
     'save' => function ($blocks) {
-        $value = [
-            'type'   => 'builder',
-            'blocks' => $blocks
-        ];
-
-        if ($this->pretty === true) {
-            return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
-        }
-
-        return json_encode($value);
+        return $this->builder->toJson($blocks, $this->pretty);
     },
     'validations' => [
         'max'
