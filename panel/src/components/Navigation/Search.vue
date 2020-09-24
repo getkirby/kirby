@@ -28,10 +28,10 @@
           :aria-label="$t('search')"
           type="text"
           @input="hasResults = true"
-          @keydown.down.prevent="down"
-          @keydown.up.prevent="up"
-          @keydown.tab.prevent="tab"
-          @keydown.enter="enter"
+          @keydown.down.prevent="onDown"
+          @keydown.up.prevent="onUp"
+          @keydown.tab.prevent="onTab"
+          @keydown.enter="onEnter"
           @keydown.esc="close"
         >
         <k-button
@@ -54,7 +54,7 @@
             :data-selected="selected === itemIndex"
             @mouseover="selected = itemIndex"
           >
-            <k-link :to="item.link" @click="click(itemIndex)">
+            <k-link :to="item.link" @click="close">
               <span class="k-search-item-image">
                 <k-image
                   v-if="imageOptions(item.image)"
@@ -101,7 +101,7 @@ export default {
   },
   data() {
     return {
-      currentType: this.getCurrentType(this.type),
+      currentType: this.getType(this.type),
       isLoading: false,
       hasResults: true,
       items: [],
@@ -117,7 +117,7 @@ export default {
       this.search(this.q);
     },
     type() {
-      this.currentType = this.getCurrentType(this.type);
+      this.currentType = this.getType(this.type);
     },
   },
   mounted() {
@@ -127,11 +127,7 @@ export default {
   },
   methods: {
     changeType(type) {
-      this.currentType = this.getCurrentType(type);
-    },
-    click(index) {
-      this.selected = index;
-      this.tab();
+      this.currentType = this.getType(type);
     },
     close() {
       this.hasResults = true;
@@ -139,19 +135,7 @@ export default {
       this.q = null;
       this.$store.dispatch("search", false);
     },
-    down() {
-      if (this.selected < this.items.length - 1) {
-        this.selected++;
-      }
-    },
-    enter() {
-      let item = this.items[this.selected] || this.items[0];
-
-      if (item) {
-        this.navigate(item);
-      }
-    },
-    getCurrentType(type) {
+    getType(type) {
       return this.types[type] || this.types[Object.keys(this.types)[0]];
     },
     imageOptions(image) {
@@ -160,6 +144,30 @@ export default {
     navigate(item) {
       this.$go(item.link);
       this.close();
+    },
+    onDown() {
+      if (this.selected < this.items.length - 1) {
+        this.selected++;
+      }
+    },
+    onEnter() {
+      let item = this.items[this.selected] || this.items[0];
+
+      if (item) {
+        this.navigate(item);
+      }
+    },
+    onTab() {
+      const item = this.items[this.selected];
+
+      if (item) {
+        this.navigate(item);
+      }
+    },
+    onUp() {
+      if (this.selected >= 0) {
+        this.selected--;
+      }
     },
     open(event) {
       event.preventDefault();
@@ -191,18 +199,6 @@ export default {
         this.selected   = -1;
         this.isLoading  = false;
         this.hasResults = this.items.length > 0;
-      }
-    },
-    tab() {
-      const item = this.items[this.selected];
-
-      if (item) {
-        this.navigate(item);
-      }
-    },
-    up() {
-      if (this.selected >= 0) {
-        this.selected--;
       }
     }
   }
