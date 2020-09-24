@@ -10,7 +10,7 @@ export default (app) => {
     return response.data.map(item => {
       return {
         id:    item.id,
-        icon:  item.panelIcon,
+        icon:  {...item.panelIcon, back: "black", color: "#fff"},
         image: item.panelImage,
         ...map(item)
       }
