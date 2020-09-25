@@ -71,7 +71,7 @@ class Blocks extends Collection
      * @param array $params
      * @return \Kirby\Cms\Blocks
      */
-    public static function factory(array $blocks, array $params = [])
+    public static function factory(array $blocks = null, array $params = [])
     {
         $options = array_merge([
             'options' => [],
@@ -124,18 +124,19 @@ class Blocks extends Collection
         }
 
         // the format is already up-to-date
-        if (isset($input['blocks']) === true) {
+        if (array_key_exists('blocks', $input) === true) {
             $input['type'] = $input['type'] ?? $type;
             return $input;
         }
 
         // check for builder blocks
-        if (isset($input[0]['_key']) === true) {
+        if (array_key_exists('_key', $input[0]) === true) {
             $type = $type ?? 'builder';
         // import blocks as structure
         } else {
             $type = $type ?? 'structure';
         }
+
 
         return [
             'type'   => $type,
