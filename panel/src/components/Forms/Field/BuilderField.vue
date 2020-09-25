@@ -22,7 +22,7 @@
     <k-draggable
       v-bind="draggableOptions"
       element="k-grid"
-      @sort="sort"
+      @sort="onInput"
     >
       <k-column
         v-for="(block, index) in blocks"
@@ -211,6 +211,7 @@ export default {
         this.open(this.blocks[this.nextIndex]);
         this.$refs.fieldsets.close();
         this.onInput();
+
       } catch (e) {
         this.$refs.fieldsets.error(e.message);
       }
@@ -267,7 +268,7 @@ export default {
       // moving block between fields
       if (event.from !== event.to) {
         const block = event.draggedContext.element;
-        const to    = event.relatedContext.component.componentData;
+        const to    = event.relatedContext.component.componentData || event.relatedContext.component.$parent.componentData;
 
         // fieldset is not supported in target field
         const fieldsets   = Object.values(to.fieldsets || {});
@@ -330,9 +331,6 @@ export default {
       this.trash = null;
       this.onInput();
       this.$refs.removeAll.close();
-    },
-    sort() {
-      this.onInput();
     },
     select(index) {
       this.nextIndex = index;
