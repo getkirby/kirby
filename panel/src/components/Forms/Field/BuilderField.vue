@@ -172,7 +172,7 @@ export default {
   computed: {
     draggableOptions() {
       return {
-        id: Math.random(),
+        id: this._uid,
         handle: true,
         list: this.blocks,
         move: this.move,
