@@ -41,7 +41,7 @@ export default {
       this.fetch();
     }
   },
-  created: function() {
+  created() {
     this.fetch();
   },
   methods: {
@@ -51,27 +51,26 @@ export default {
         values[fieldName]
       ]);
     },
-    fetch() {
-      this.$api
-        .get(this.parent + "/sections/" + this.name)
-        .then(response => {
-          this.fields = response.fields;
+    async fetch() {
+      try {
+        const response = await this.load();
+        this.fields = response.fields;
 
-          Object.keys(this.fields).forEach(name => {
-            this.fields[name].section = this.name;
-            this.fields[name].endpoints = {
-              field: this.parent + "/fields/" + name,
-              section: this.parent + "/sections/" + this.name,
-              model: this.parent
-            };
-          });
-
-          this.isLoading = false;
-        })
-        .catch(error => {
-          this.issue = error;
-          this.isLoading = false;
+        Object.keys(this.fields).forEach(name => {
+          this.fields[name].section = this.name;
+          this.fields[name].endpoints = {
+            field: this.parent + "/fields/" + name,
+            section: this.parent + "/sections/" + this.name,
+            model: this.parent
+          };
         });
+
+      } catch (error) {
+        this.issue = error;
+
+      } finally {
+        this.isLoading = false;
+      }
     },
     onSubmit($event) {
       this.$events.$emit("keydown.cmd.s", $event);
