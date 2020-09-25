@@ -383,9 +383,6 @@ export default {
 .k-builder-field > .k-grid {
   grid-gap: 2px;
 }
-.k-builder-field > .k-grid > .k-builder-field-empty:not(:only-child) {
-  display: none;
-}
 .k-builder-column {
   position: relative;
 }
@@ -399,6 +396,13 @@ export default {
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
+}
+.k-builder-field > .k-grid > .k-builder-field-empty .k-empty[data-layout="list"] {
+  height: 36px;
+  min-height: 36px;
+}
+.k-builder-field > .k-grid > .k-builder-field-empty:not(:only-child) {
+  display: none;
 }
 .k-builder-block-header {
   height: 36px;
