@@ -392,15 +392,12 @@ export default {
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
-.k-builder-field > .k-grid > .k-builder-field-empty .k-empty[data-layout="list"] {
-  height: 36px;
-  min-height: 36px;
-}
+
 .k-builder-field > .k-grid > .k-builder-field-empty:not(:only-child) {
   display: none;
 }
 .k-builder-block-header {
-  height: 36px;
+  height: 38px;
   display: flex;
   align-items: center;
   cursor: pointer;
