@@ -146,6 +146,7 @@ export default {
   props: {
     ...Field.props,
     fieldsets: Object,
+    group: String,
     max: {
       type: Number,
       default: null,
@@ -180,7 +181,7 @@ export default {
           isFull: this.isFull
         },
         options: {
-          group: "k-builder-field"
+          group: this.group
         }
       };
     },
@@ -271,11 +272,7 @@ export default {
         const to    = event.relatedContext.component.componentData || event.relatedContext.component.$parent.componentData;
 
         // fieldset is not supported in target field
-        const fieldsets   = Object.values(to.fieldsets || {});
-        const fieldset    = JSON.stringify(this.fieldset(block));
-        const hasFieldset = fieldsets.some(x => JSON.stringify(x) === fieldset);
-
-        if (hasFieldset === false) {
+        if (Object.keys(to.fieldsets).includes(block.type) === false) {
           return false;
         }
 

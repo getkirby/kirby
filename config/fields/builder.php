@@ -27,6 +27,16 @@ return [
         },
 
         /**
+         * Groups fields to move blocks between fields in the same group
+         *
+         * @param string|null $group
+         * @return string|null
+         */
+        'group' => function (string $group = null) {
+            return $group;
+        },
+
+        /**
          * Only allow the given maximum number of blocks
          *
          * @param int|null $max
