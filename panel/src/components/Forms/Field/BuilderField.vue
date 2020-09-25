@@ -19,88 +19,92 @@
       </k-dropdown-content>
     </k-dropdown>
 
-    <template v-if="blocks.length === 0">
-      <k-empty icon="box" @click="select(blocks.length)">
-        {{ $t("field.builder.empty") }}
-      </k-empty>
-    </template>
-
-    <template v-else>
-      <k-draggable :handle="true" :list="blocks" element="k-grid" @end="sort">
-        <k-column
-          v-for="(block, index) in blocks"
-          :key="block.id"
-          :set="blockOptions = fieldset(block)"
-          :data-disabled="blockOptions.disabled"
-          :data-translate="blockOptions.translate"
-          class="k-builder-column"
-          @mouseenter.native="isHovered = block.id"
-          @mouseleave.native="isHovered = false"
+    <k-draggable
+      v-bind="draggableOptions"
+      element="k-grid"
+      @sort="sort"
+    >
+      <k-column
+        v-for="(block, index) in blocks"
+        :key="block.id"
+        :set="blockOptions = fieldset(block)"
+        :data-disabled="blockOptions.disabled"
+        :data-translate="blockOptions.translate"
+        class="k-builder-column"
+        @mouseenter.native="isHovered = block.id"
+        @mouseleave.native="isHovered = false"
+      >
+        <details
+          :class="'k-builder-block k-builder-fieldset-' + block.type"
+          :data-hidden="block.attrs.hide == true"
+          :open="isOpen(block)"
         >
-          <details
-            :class="'k-builder-block k-builder-fieldset-' + block.type"
-            :data-hidden="block.attrs.hide == true"
-            :open="isOpen(block)"
-          >
-            <summary class="k-builder-block-header" @click.prevent="toggle(block)">
-              <k-sort-handle :icon="isHovered === block.id ? 'sort' : blockOptions.icon || 'sort'" class="k-builder-block-handle" />
-              <span class="k-builder-block-label">
-                {{ $helper.string.template(blockOptions.label, block.content) }} <k-icon v-if="block.attrs.hide" type="hidden" />
-              </span>
+          <summary class="k-builder-block-header" @click.prevent="toggle(block)">
+            <k-sort-handle :icon="isHovered === block.id ? 'sort' : blockOptions.icon || 'sort'" class="k-builder-block-handle" />
+            <span class="k-builder-block-label">
+              {{ $helper.string.template(blockOptions.label, block.content) }} <k-icon v-if="block.attrs.hide" type="hidden" />
+            </span>
 
-              <nav class="k-builder-block-tabs" v-if="Object.keys(blockOptions.tabs).length > 1">
-                <k-button
-                  v-for="(tab, tabId) in blockOptions.tabs"
-                  :key="tabId"
-                  :current="tabs[block.id] === tabId"
-                  :icon="tab.icon"
-                  class="k-builder-block-tab"
-                  @click.stop="open(block, tabId)"
-                >
-                  {{ tab.label }}
-                </k-button>
-              </nav>
+            <nav class="k-builder-block-tabs" v-if="Object.keys(blockOptions.tabs).length > 1">
+              <k-button
+                v-for="(tab, tabId) in blockOptions.tabs"
+                :key="tabId"
+                :current="tabs[block.id] === tabId"
+                :icon="tab.icon"
+                class="k-builder-block-tab"
+                @click.stop="open(block, tabId)"
+              >
+                {{ tab.label }}
+              </k-button>
+            </nav>
 
-              <k-dropdown>
-                <k-button
-                  class="k-builder-block-options-toggle"
-                  icon="dots"
-                  @click="$refs['options-' + block.id][0].toggle()"
-                />
-                <k-dropdown-content :ref="'options-' + block.id" align="right">
-                  <k-dropdown-item :disabled="isFull" icon="angle-up" @click="select(index)">
-                    {{ $t("insert.before") }}
-                  </k-dropdown-item>
-                  <k-dropdown-item :disabled="isFull" icon="angle-down" @click="select(index + 1)">
-                    {{ $t("insert.after") }}
-                  </k-dropdown-item>
-                  <hr>
-                  <k-dropdown-item :icon="block.attrs.hide ? 'preview' : 'hidden'" @click="toggleVisibility(block)">
-                    {{ block.attrs.hide === true ? 'Show' : 'Hide' }}
-                  </k-dropdown-item>
-                  <k-dropdown-item :disabled="isFull" icon="copy" @click="duplicate(block)">
-                    {{ $t("duplicate") }}
-                  </k-dropdown-item>
-                  <hr>
-                  <k-dropdown-item icon="trash" @click="onRemove(block)">
-                    {{ $t("delete") }}
-                  </k-dropdown-item>
-                </k-dropdown-content>
-              </k-dropdown>
-            </summary>
-            <div class="k-builder-block-body" v-if="isOpen(block)">
-              <k-fieldset
-                :ref="'fieldset-' + block.id"
-                :fields="fields(block)"
-                :value="block.content"
-                class="k-builder-block-form"
-                @input="updateContent(block, $event)"
+            <k-dropdown>
+              <k-button
+                class="k-builder-block-options-toggle"
+                icon="dots"
+                @click="$refs['options-' + block.id][0].toggle()"
               />
-            </div>
-          </details>
+              <k-dropdown-content :ref="'options-' + block.id" align="right">
+                <k-dropdown-item :disabled="isFull" icon="angle-up" @click="select(index)">
+                  {{ $t("insert.before") }}
+                </k-dropdown-item>
+                <k-dropdown-item :disabled="isFull" icon="angle-down" @click="select(index + 1)">
+                  {{ $t("insert.after") }}
+                </k-dropdown-item>
+                <hr>
+                <k-dropdown-item :icon="block.attrs.hide ? 'preview' : 'hidden'" @click="toggleVisibility(block)">
+                  {{ block.attrs.hide === true ? 'Show' : 'Hide' }}
+                </k-dropdown-item>
+                <k-dropdown-item :disabled="isFull" icon="copy" @click="duplicate(block)">
+                  {{ $t("duplicate") }}
+                </k-dropdown-item>
+                <hr>
+                <k-dropdown-item icon="trash" @click="onRemove(block)">
+                  {{ $t("delete") }}
+                </k-dropdown-item>
+              </k-dropdown-content>
+            </k-dropdown>
+          </summary>
+          <div class="k-builder-block-body" v-if="isOpen(block)">
+            <k-fieldset
+              :ref="'fieldset-' + block.id"
+              :fields="fields(block)"
+              :value="block.content"
+              class="k-builder-block-form"
+              @input="updateContent(block, $event)"
+            />
+          </div>
+        </details>
+      </k-column>
+
+      <template #footer>
+        <k-column width="1/1" class="k-builder-field-empty">
+          <k-empty icon="box" @click="select(blocks.length)">
+            {{ $t("field.builder.empty") }}
+          </k-empty>
         </k-column>
-      </k-draggable>
-    </template>
+      </template>
+    </k-draggable>
 
     <k-dialog
       ref="fieldsets"
@@ -165,6 +169,21 @@ export default {
     };
   },
   computed: {
+    draggableOptions() {
+      return {
+        id: Math.random(),
+        handle: true,
+        list: this.blocks,
+        move: this.move,
+        data: {
+          fieldsets: this.fieldsets,
+          isFull: this.isFull
+        },
+        options: {
+          group: "k-builder-field"
+        }
+      };
+    },
     isEmpty() {
       return this.blocks.length === 0;
     },
@@ -243,6 +262,29 @@ export default {
     },
     isOpen(block) {
       return this.opened.includes(block.id);
+    },
+    move(event) {
+      // moving block between fields
+      if (event.from !== event.to) {
+        const block = event.draggedContext.element;
+        const to    = event.relatedContext.component.componentData;
+
+        // fieldset is not supported in target field
+        const fieldsets   = Object.values(to.fieldsets || {});
+        const fieldset    = JSON.stringify(this.fieldset(block));
+        const hasFieldset = fieldsets.some(x => JSON.stringify(x) === fieldset);
+
+        if (hasFieldset === false) {
+          return false;
+        }
+
+        // target field has already reached max number of blocks
+        if (to.isFull === true) {
+          return false;
+        }
+      }
+
+      return true;
     },
     onInput() {
       this.$emit("input", this.blocks);
@@ -340,6 +382,9 @@ export default {
 }
 .k-builder-field > .k-grid {
   grid-gap: 2px;
+}
+.k-builder-field > .k-grid > .k-builder-field-empty:not(:only-child) {
+  display: none;
 }
 .k-builder-column {
   position: relative;
