@@ -204,15 +204,15 @@ class Builder
     }
 
     /**
-     * @param array $input
+     * @param array|null $input
      * @param bool $pretty
      * @return void
      */
-    public function toJson(array $blocks = [], bool $pretty = true)
+    public function toJson(array $blocks = null, bool $pretty = true)
     {
         $fields = [];
 
-        foreach ($blocks as $index => $block) {
+        foreach ((array)$blocks as $index => $block) {
             $blockType   = $block['type'];
             $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
 
@@ -246,6 +246,7 @@ class Builder
 
         $value     = $this->props['value'] ?? [];
         $blocks    = $this->blocks($value)->toArray();
+
         $fieldsets = $this->fieldsets();
         $result    = [];
 
