@@ -446,7 +446,7 @@ export default {
 .k-builder-block-tab {
   position: relative;
   padding: .5rem .75rem;
-  height: 36px;
+  height: 38px;
 }
 .k-builder-block-tab > * {
   position: relative;
