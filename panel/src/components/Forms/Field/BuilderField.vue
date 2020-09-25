@@ -45,7 +45,7 @@
             <summary class="k-builder-block-header" @click.prevent="toggle(block)">
               <k-sort-handle :icon="isHovered === block.id ? 'sort' : blockOptions.icon || 'sort'" class="k-builder-block-handle" />
               <span class="k-builder-block-label">
-                {{ $helper.string.template(blockOptions.label, block) }} <k-icon v-if="block.attrs.hide" type="hidden" />
+                {{ $helper.string.template(blockOptions.label, block.content) }} <k-icon v-if="block.attrs.hide" type="hidden" />
               </span>
 
               <nav class="k-builder-block-tabs" v-if="Object.keys(blockOptions.tabs).length > 1">
