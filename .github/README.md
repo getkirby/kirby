@@ -20,7 +20,7 @@ Please post all bug reports in our [issue tracker](https://github.com/getkirby/k
 Read about how to contribute to the development in our [contributing guide](/.github/CONTRIBUTING.md).
 
 ### Feature suggestions
-If you want to suggest features or enhancements for Kirby, please use our [ideas repository](https://github.com/getkirby/ideas/issues).
+If you want to suggest features or enhancements for Kirby, please use our [feedback platform](https://feedback.getkirby.com).
 
 ### Translations
 We are really happy about any help with our translations. Please, do not translate directly in the JSON files though. We use a service called Transifex to handle all languages for the Panel: https://www.transifex.com/getkirby/panel/ Create an account there and send us a request to join our translator group. Please, also send us an email at <support@getkirby.com>. Unfortunately, we don't get notified properly about new translator requests and often miss them.
