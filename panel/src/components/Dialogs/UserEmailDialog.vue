@@ -62,10 +62,6 @@ export default {
           event: "user.changeEmail",
         };
 
-        if (this.$route.name === "User") {
-          payload.route = this.$api.users.link(user.id);
-        }
-
         this.success(payload);
 
       } catch (error) {
