@@ -26,14 +26,18 @@ export default {
     return result;
   },
   template(string, values = {}) {
+
+    const opening = "{{[ ]{0,}";
+    const closing = "[ ]{0,}}}";
+
     Object.keys(values).forEach(key => {
       // replace string template with value
-      string = string.replace(new RegExp(`{{${key}}}`, "gi"), values[key] || "…");
+      string = string.replace(new RegExp(`${opening}${key}${closing}`, "gi"), values[key] || "…");
 
       // for arrays, allow string templates for length/count
       if (Array.isArray(values[key]) === true) {
-        string = string.replace(new RegExp(`{{${key}.count}}`, "gi"), values[key].length || 0);
-        string = string.replace(new RegExp(`{{${key}.length}}`, "gi"), values[key].length || 0);
+        string = string.replace(new RegExp(`${opening}${key}.count${closing}`, "gi"), values[key].length || 0);
+        string = string.replace(new RegExp(`${opening}${key}.length${closing}`, "gi"), values[key].length || 0);
       }
     })
 
