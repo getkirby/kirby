@@ -122,11 +122,11 @@ export default {
           break;
         }
         case "rename": {
-          this.$refs.rename.open(page.id, "title");
+          this.$refs.rename.open(page.id, page.permissions, "title");
           break;
         }
         case "url": {
-          this.$refs.rename.open(page.id, "slug");
+          this.$refs.rename.open(page.id, page.permissions, "slug");
           break;
         }
         case "sort": {

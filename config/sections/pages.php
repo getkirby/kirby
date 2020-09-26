@@ -165,7 +165,9 @@ return [
                     'status'      => $item->status(),
                     'permissions' => [
                         'sort'         => $permissions->can('sort'),
-                        'changeStatus' => $permissions->can('changeStatus')
+                        'changeSlug'   => $permissions->can('changeSlug'),
+                        'changeStatus' => $permissions->can('changeStatus'),
+                        'changeTitle'  => $permissions->can('changeTitle')
                     ]
                 ];
             }
