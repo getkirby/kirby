@@ -1,13 +1,15 @@
 <template>
-  <div v-if="isOpen" class="k-dialog" @mousedown="cancel">
-    <div :data-size="size" class="k-dialog-box" @mousedown.stop>
+  <k-overlay ref="overlay" :centered="true" @mousedown="close">
+    <div :data-size="size" class="k-dialog" @mousedown.stop>
       <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
         <p>{{ notification.message }}</p>
         <k-button icon="cancel" @click="notification = null" />
       </div>
+
       <div class="k-dialog-body">
         <slot />
       </div>
+
       <footer v-if="$slots['footer'] || cancelButton || submitButton" class="k-dialog-footer">
         <slot name="footer">
           <k-button-group>
@@ -36,7 +38,7 @@
         </slot>
       </footer>
     </div>
-  </div>
+  </k-overlay>
 </template>
 
 <script>
@@ -63,9 +65,7 @@
     },
     data() {
       return {
-        notification: null,
-        isOpen: this.visible,
-        scrollTop: 0
+        notification: null
       };
     },
     computed: {
@@ -107,32 +107,15 @@
       this.$events.$off("keydown.esc", this.close, false);
     },
     mounted() {
-      if (this.isOpen === true) {
-        this.$emit("open");
+      if (this.visible) {
+        this.$nextTick(this.open);
       }
     },
     methods: {
-      storeScrollPosition() {
-        const view = document.querySelector(".k-panel-view");
-
-        if (view && view.scrollTop) {
-          this.scrollTop = view.scrollTop;
-        } else {
-          this.scrollTop = 0;
-        }
-      },
-      restoreScrollPosition() {
-        const view = document.querySelector(".k-panel-view");
-
-        if (view && view.scrollTop) {
-          view.scrollTop = this.scrollTop;
-        }
-      },
       open() {
-        this.storeScrollPosition();
         this.$store.dispatch("dialog", true);
         this.notification = null;
-        this.isOpen = true;
+        this.$refs.overlay.open();
         this.$emit("open");
         this.$events.$on("keydown.esc", this.close);
 
@@ -156,11 +139,10 @@
       },
       close() {
         this.notification = null;
-        this.isOpen = false;
+        this.$refs.overlay.close();
         this.$emit("close");
         this.$events.$off("keydown.esc", this.close);
         this.$store.dispatch("dialog", null);
-        this.restoreScrollPosition();
       },
       cancel() {
         this.$emit("cancel");
@@ -203,26 +185,6 @@
 
 <style lang="scss">
 .k-dialog {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  border: 0;
-
-  width: 100%;
-  height: 100%;
-
-  background: $color-backdrop;
-  z-index: z-index(dialog);
-  transform: translate3d(0, 0, 0);
-}
-
-.k-dialog-box {
   position: relative;
   background: $color-light;
   width: 100%;
@@ -236,25 +198,25 @@
 }
 
 @media screen and (min-width: 20rem) {
-  .k-dialog-box[data-size="small"] {
+  .k-dialog[data-size="small"] {
     width: 20rem;
   }
 }
 
 @media screen and (min-width: 22rem) {
-  .k-dialog-box[data-size="default"] {
+  .k-dialog[data-size="default"] {
     width: 22rem;
   }
 }
 
 @media screen and (min-width: 30rem) {
-  .k-dialog-box[data-size="medium"] {
+  .k-dialog[data-size="medium"] {
     width: 30rem;
   }
 }
 
 @media screen and (min-width: 40rem) {
-  .k-dialog-box[data-size="large"] {
+  .k-dialog[data-size="large"] {
     width: 40rem;
   }
 }
