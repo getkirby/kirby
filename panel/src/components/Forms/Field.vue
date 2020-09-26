@@ -2,6 +2,7 @@
   <div
     :data-disabled="disabled"
     :data-translate="translate"
+    :data-hasChanges="hasChanges"
     :class="'k-field k-field-name-' + name"
     @focusin="$emit('focus', $event)"
     @focusout="$emit('blur', $event)"
@@ -9,7 +10,11 @@
     <slot name="header">
       <header class="k-field-header">
         <slot name="label">
-          <label :for="input" class="k-field-label">{{ labelText }} <abbr v-if="required" :title="$t('field.required')">*</abbr></label>
+          <label :for="input" class="k-field-label">
+            {{ labelText }}
+            <abbr v-if="required" :title="$t('field.required')">*</abbr>
+            <k-icon v-if="hasChanges" :title="$t('lock.unsaved')" type="circle" class="k-field-label-changes" />
+          </label>
         </slot>
         <slot name="options" />
         <slot name="counter">
@@ -54,6 +59,9 @@ export default {
     type: String
   },
   computed: {
+    hasChanges() {
+      return Object.keys(this.$store.getters['content/changes']()).includes(this.name);
+    },
     labelText() {
       return this.label || " ";
     }
@@ -64,7 +72,8 @@ export default {
 <style lang="scss">
 .k-field-label {
   font-weight: $font-bold;
-  display: block;
+  display: flex;
+  align-items: center;
   padding: 0 0 0.75rem;
   flex-grow: 1;
   line-height: 1.25rem;
@@ -73,6 +82,11 @@ export default {
   text-decoration: none;
   color: $color-light-grey;
   padding-left: 0.25rem;
+}
+.k-field-label-changes {
+  margin-left: .2rem;
+  color: $color-notice;
+  transform: scale(0.5);
 }
 .k-field-header {
   position: relative;
