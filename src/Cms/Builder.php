@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 /**
@@ -197,10 +198,13 @@ class Builder
             ];
         }
 
-        return array_map(function ($tab) {
+        // normalize tabs props
+        array_walk($tabs, function (&$tab, $name) {
             $tab['fields'] = $this->fieldsProps($tab['fields'] ?? []);
-            return $tab;
-        }, $tabs);
+            $tab['label']  = I18n::translate($label = $tab['label'] ?? Str::ucfirst($name), $label);
+        });
+
+        return $tabs;
     }
 
     /**
