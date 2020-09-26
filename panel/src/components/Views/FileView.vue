@@ -3,7 +3,7 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <div v-else v-else-if="file.id !== null" class="k-file-view">
+  <div v-else-if="file.id !== null" class="k-file-view">
 
     <k-file-preview :file="file" />
 
@@ -12,7 +12,6 @@
       <k-header
         :editable="permissions.changeName && !isLocked"
         :tabs="tabs"
-        :tab="tab"
         @edit="action('rename')"
       >
 
@@ -44,14 +43,12 @@
         />
       </k-header>
 
-      <k-tabs
+      <k-sections
         v-if="file.id"
-        ref="tabs"
-        :key="tabsKey"
+        :blueprint="file.blueprint.name"
+        :empty="$t('file.blueprint', { template: file.blueprint.name })"
         :parent="parent"
         :tabs="tabs"
-        :blueprint="file.blueprint.name"
-        @tab="tab = $event"
       />
 
       <k-file-rename-dialog ref="rename" @success="renamed" />
@@ -105,7 +102,6 @@ export default {
       },
       issue: null,
       tabs: [],
-      tab: null,
       options: null
     };
   },
@@ -123,9 +119,6 @@ export default {
           tooltip: this.file.prev.filename
         };
       }
-    },
-    tabsKey() {
-      return "file-" + this.file.id + "-tabs";
     },
     language() {
       return this.$store.state.languages.current;

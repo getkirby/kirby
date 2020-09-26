@@ -1,67 +1,238 @@
 <template>
-  <k-box v-if="tabs.length === 0" text="This page has no blueprint setup yet" theme="info" />
-  <k-sections
-    v-else-if="tab"
-    :parent="parent"
-    :blueprint="blueprint"
-    :columns="tab.columns"
-    @submit="$emit('submit', $event)"
-  />
+  <div
+    v-if="tabs && tabs.length > 1"
+    class="k-tabs"
+  >
+    <nav>
+      <k-button
+        v-for="tabButton in visibleTabs"
+        :key="tabButton.name"
+        :link="'#' + tabButton.name"
+        :current="tab === tabButton.name"
+        :icon="tabButton.icon"
+        :tooltip="tabButton.label"
+        class="k-tab-button"
+      >
+        {{ tabButton.label || tabButton.text || tabButton.name }}
+
+        <span
+          v-if="tabButton.badge"
+          :class="'k-tabs-badge text-' + (tabButton.badge.color || 'orange')"
+        >
+          {{ tabButton.badge.count || tabButton.badge }}
+        </span>
+      </k-button>
+
+      <k-button
+        v-if="invisibleTabs.length"
+        :text="$t('more')"
+        class="k-tab-button k-tabs-dropdown-button"
+        icon="dots"
+        @click.stop="$refs.more.toggle()"
+      />
+    </nav>
+
+    <k-dropdown-content
+      v-if="invisibleTabs.length"
+      ref="more"
+      align="right"
+      class="k-tabs-dropdown"
+    >
+      <k-dropdown-item
+        v-for="tabButton in invisibleTabs"
+        :key="'more-' + tabButton.name"
+        :link="'#' + tabButton.name"
+        :current="tab === tabButton.name"
+        :icon="tabButton.icon"
+        :tooltip="tabButton.label"
+      >
+        {{ tabButton.label || tabButton.name }}
+      </k-dropdown-item>
+    </k-dropdown-content>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
-    parent: String,
-    blueprint: String,
-    tabs: Array
+    /**
+     * An array of tab definitions to add tabs to the header
+     */
+    tabs: Array,
   },
   data() {
     return {
-      tab: null
-    };
-  },
-  watch: {
-    '$route'() {
-      this.open();
-    },
-    blueprint() {
-      this.open();
+      size: null,
+      visibleTabs: this.tabs,
+      invisibleTabs: []
     }
   },
-  mounted() {
-    this.open();
+  computed: {
+    tab() {
+      const current = this.$route.hash.slice(1) || "main";
+      const tab = this.tabs.find(tab => tab.name === current) || this.tabs[0] || {};
+      return tab.name;
+    }
+  },
+  watch: {
+    tabs(tabs) {
+      this.visibleTabs = tabs,
+      this.invisibleTabs = [];
+      this.resize(true);
+    }
+  },
+  created() {
+    window.addEventListener("resize", this.resize);
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.resize);
   },
   methods: {
-    open(tabName) {
+    resize(force) {
 
-      if (this.tabs.length === 0) {
+      if (!this.tabs || this.tabs.length <= 1) {
         return;
       }
 
-      if (!tabName) {
-        tabName = this.$route.hash.replace('#', '');
+      if (this.tabs.length <= 3) {
+        this.visibleTabs = this.tabs;
+        this.invisibleTabs = [];
+        return;
       }
 
-      if (!tabName) {
-        tabName = this.tabs[0].name;
-      }
-
-      let nextTab = null;
-
-      this.tabs.forEach(tab => {
-        if (tab.name === tabName) {
-          nextTab = tab;
+      if (window.innerWidth >= 700) {
+        if (this.size === "large" && !force) {
+          return;
         }
-      });
 
-      if (!nextTab) {
-        nextTab = this.tabs[0];
+        this.visibleTabs = this.tabs;
+        this.invisibleTabs = [];
+        this.size = "large";
+      } else {
+        if (this.size === "small" && !force) {
+          return;
+        }
+
+        this.visibleTabs = this.tabs.slice(0, 2);
+        this.invisibleTabs = this.tabs.slice(2);
+        this.size = "small";
       }
 
-      this.tab = nextTab;
-      this.$emit("tab", this.tab);
     }
   }
 };
 </script>
+
+<style lang="scss">
+.k-tabs {
+  position: relative;
+  background: #e9e9e9;
+  border-top: 1px solid $color-border;
+  border-left: 1px solid $color-border;
+  border-right: 1px solid $color-border;
+}
+.k-tabs nav {
+  display: flex;
+  justify-content: center;
+  margin-left: -1px;
+  margin-right: -1px;
+}
+.k-tab-button.k-button {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  padding: .625rem .75rem;
+  font-size: $font-size-tiny;
+  text-transform: uppercase;
+  text-align: center;
+  font-weight: 500;
+  border-left: 1px solid transparent;
+  border-right: 1px solid $color-border;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-direction: column;
+  max-width: 15rem;
+
+  @media screen and (min-width: $breakpoint-small) {
+    flex-direction: row;
+  }
+}
+.k-tab-button.k-button .k-icon {
+  @media screen and (min-width: $breakpoint-small) {
+    margin-right: .5rem;
+  }
+}
+.k-tab-button.k-button > .k-button-text {
+  padding-top: .375rem;
+  font-size: 10px;
+  overflow: hidden;
+  max-width: 10rem;
+
+  [dir="ltr"] & {
+    padding-left: 0;
+  }
+
+  [dir="rtl"] & {
+    padding-right: 0;
+  }
+
+  text-overflow: ellipsis;
+
+  @media screen and (min-width: $breakpoint-small) {
+    font-size: $font-size-tiny;
+    padding-top: 0;
+  }
+
+}
+.k-tab-button:last-child {
+  border-right: 1px solid transparent;
+}
+.k-tab-button[aria-current] {
+  position: relative;
+  background: $color-background;
+  border-right: 1px solid $color-border;
+  pointer-events: none;
+
+  &:first-child {
+    border-left: 1px solid $color-border;
+  }
+
+  &::before,
+  &::after {
+    position: absolute;
+    content: "";
+  }
+
+  &::before {
+    left: -1px;
+    right: -1px;
+    height: 2px;
+    top: -1px;
+    background: $color-black;
+  }
+
+  &::after {
+    left: 0;
+    right: 0;
+    height: 1px;
+    bottom: -1px;
+    background: $color-background;
+  }
+
+}
+.k-tabs-dropdown {
+  top: 100%;
+  right: 0;
+}
+.k-tabs-badge {
+  [dir="ltr"] & {
+    padding-left: .25rem;
+  }
+
+  [dir="rtl"] & {
+    padding-right: .25rem;
+  }
+}
+</style>

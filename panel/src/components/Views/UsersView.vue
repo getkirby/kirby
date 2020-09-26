@@ -2,12 +2,15 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
+
   <k-view v-else class="k-users-view">
     <k-header>
       {{ $t('view.users') }}
+
       <k-button-group slot="left">
         <k-button :disabled="$permissions.users.create === false" icon="add" @click="$refs.create.open()">{{ $t('user.create') }}</k-button>
       </k-button-group>
+
       <k-button-group slot="right">
         <k-dropdown>
           <k-button :responsive="true" icon="funnel" @click="$refs.roles.toggle()">

@@ -5,9 +5,8 @@
   <k-view v-else :data-locked="isLocked" class="k-page-view">
 
     <k-header
-      :tabs="tabs"
-      :tab="tab"
       :editable="permissions.changeTitle && !isLocked"
+      :tabs="tabs"
       @edit="action('rename')"
     >
       {{ page.title }}
@@ -56,14 +55,12 @@
       />
     </k-header>
 
-    <k-tabs
+    <k-sections
       v-if="page.id"
-      ref="tabs"
-      :key="tabsKey"
-      :parent="$api.pages.url(page.id)"
       :blueprint="blueprint"
+      :empty="$t('page.blueprint', { template: blueprint })"
+      :parent="$api.pages.url(page.id)"
       :tabs="tabs"
-      @tab="onTab"
     />
 
     <k-page-rename-dialog ref="rename" @success="update" />
@@ -105,7 +102,6 @@ export default {
       },
       icon: "page",
       issue: null,
-      tab: null,
       tabs: [],
       options: null
     };
@@ -134,9 +130,6 @@ export default {
       return this.page.status !== null
         ? this.page.blueprint.status[this.page.status]
         : null;
-    },
-    tabsKey() {
-      return "page-" + this.page.id + "-tabs";
     }
   },
   watch: {
@@ -209,9 +202,6 @@ export default {
         .catch(error => {
           this.issue = error;
         });
-    },
-    onTab(tab) {
-      this.tab = tab;
     },
     update() {
       this.fetch();
