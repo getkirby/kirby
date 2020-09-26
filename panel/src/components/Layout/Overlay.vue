@@ -1,6 +1,7 @@
 <template>
   <portal v-if="isOpen">
     <div
+      :data-centered="loading || centered"
       :data-dimmed="dimmed"
       :data-loading="loading"
       class="k-overlay"
@@ -8,6 +9,7 @@
     >
       <k-loader
         v-if="loading"
+        class="k-overlay-loader"
       />
       <slot
         v-else
@@ -22,6 +24,10 @@
 export default {
   inheritAttrs: false,
   props: {
+    centered: {
+      type: Boolean,
+      default: false
+    },
     dimmed: {
       type: Boolean,
       default: true
@@ -88,13 +94,15 @@ export default {
   z-index: z-index(dialog);
   transform: translate3d(0, 0, 0);
 }
-.k-overlay[data-loading] {
-  color: $color-white;
+.k-overlay[data-centered] {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 .k-overlay[data-dimmed] {
   background: $color-backdrop;
+}
+.k-overlay-loader {
+  color: $color-white;
 }
 </style>
