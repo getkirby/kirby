@@ -119,7 +119,7 @@
       <ul class="k-builder-fieldsets">
         <li v-for="fieldset in fieldsets" :key="fieldset.name">
           <k-button :icon="fieldset.icon || 'box'" @click="add(fieldset.type)">
-            {{ fieldset.name }}
+            {{ fieldset.label }}
           </k-button>
         </li>
       </ul>
