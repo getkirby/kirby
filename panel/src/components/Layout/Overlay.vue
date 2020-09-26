@@ -1,11 +1,13 @@
 <template>
   <portal v-if="isOpen">
     <div
+      ref="overlay"
       :data-centered="loading || centered"
       :data-dimmed="dimmed"
       :data-loading="loading"
       class="k-overlay"
       v-on="$listeners"
+      @mousedown="close"
     >
       <k-loader
         v-if="loading"
@@ -71,6 +73,11 @@ export default {
       this.isOpen = true;
       this.$emit("open");
       this.$events.$on("keydown.esc", this.close);
+
+      // prevent that clicks on the overlay slot trigger close
+      setTimeout(() => {
+        document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
+      }, 10)
     },
     close() {
       this.isOpen = false;
