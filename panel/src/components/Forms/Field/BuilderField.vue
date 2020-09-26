@@ -98,11 +98,13 @@
       </k-column>
 
       <template #footer>
-        <k-column width="1/1" class="k-builder-field-empty">
-          <k-empty icon="box" @click="select(blocks.length)">
-            {{ $t("field.builder.empty") }}
-          </k-empty>
-        </k-column>
+        <k-empty
+          icon="box"
+          class="k-builder-field-empty"
+          @click="select(blocks.length)"
+        >
+          {{ $t("field.builder.empty") }}
+        </k-empty>
       </template>
     </k-draggable>
 
@@ -393,9 +395,15 @@ export default {
   cursor: -webkit-grabbing;
 }
 
-.k-builder-field > .k-grid > .k-builder-field-empty:not(:only-child) {
-  display: none;
+.k-builder-field-empty {
+  grid-column-start: span 12;
+  cursor: pointer;
+
+  .k-builder-field > .k-grid > &:not(:only-child) {
+    display: none;
+  }
 }
+
 .k-builder-block-header {
   height: 38px;
   display: flex;
