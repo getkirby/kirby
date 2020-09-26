@@ -36,10 +36,21 @@ export default {
       }
 
       if (payload.event) {
-        this.$events.$emit(payload.event);
+        if (typeof payload.event === "string") {
+          payload.event = [payload.event];
+        }
+
+        payload.event.forEach(event => {
+          this.$events.$emit(event);
+        })
       }
 
-      this.$emit("success");
+      if (
+        payload.hasOwnProperty("emit") === false ||
+        payload.emit !== false
+      ) {
+        this.$emit("success");
+      }
     }
   }
 };

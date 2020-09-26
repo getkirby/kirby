@@ -62,7 +62,6 @@
       <k-page-create-dialog ref="create" />
       <k-page-duplicate-dialog ref="duplicate" />
       <k-page-rename-dialog ref="rename" @success="update" />
-      <k-page-url-dialog ref="url" @success="update" />
       <k-page-sort-dialog ref="sort" @success="update" />
       <k-page-status-dialog ref="status" @success="update" />
       <k-page-template-dialog ref="template" @success="update" />
@@ -123,11 +122,11 @@ export default {
           break;
         }
         case "rename": {
-          this.$refs.rename.open(page.id);
+          this.$refs.rename.open(page.id, "title");
           break;
         }
         case "url": {
-          this.$refs.url.open(page.id);
+          this.$refs.rename.open(page.id, "slug");
           break;
         }
         case "sort": {
