@@ -80,6 +80,7 @@ class Builder
      *
      * @param string $type
      * @return array
+     * @throws \Kirby\Exception\NotFoundException
      */
     public function fieldset(string $type): array
     {
@@ -95,7 +96,6 @@ class Builder
     /**
      * Expand and return all fieldsets for the builder
      *
-     * @param array $fieldsets
      * @return array
      */
     public function fieldsets(): array
@@ -133,7 +133,7 @@ class Builder
      * form including all the heavy lifting
      * of extensions, groups, nested fields etc.
      *
-     * @param array $fieldsProps
+     * @param array $fields
      * @return array
      */
     public function fieldsProps(array $fields): array
@@ -204,7 +204,7 @@ class Builder
     }
 
     /**
-     * @param array|null $input
+     * @param array|null $blocks
      * @param bool $pretty
      * @return void
      */
