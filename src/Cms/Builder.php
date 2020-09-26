@@ -155,7 +155,7 @@ class Builder
         return [
             'disabled'  => $fieldset['disabled'] ?? false,
             'icon'      => $fieldset['icon'] ?? null,
-            'label'     => $fieldset['label'] ?? $fieldset['name'],
+            'label'     => I18n::translate($label = $fieldset['label'] ?? $fieldset['name'], $label),
             'name'      => $fieldset['name'],
             'tabs'      => $this->tabsProps($fieldset),
             'translate' => $fieldset['translate'] ?? null,
