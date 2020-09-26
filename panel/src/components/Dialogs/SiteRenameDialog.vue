@@ -1,13 +1,43 @@
+<template>
+  <k-form-dialog
+    ref="dialog"
+    v-model="site"
+    :fields="fields"
+    :submit-button="$t('rename')"
+    @submit="submit"
+  />
+</template>
 
 <script>
-import PageRename from "./PageRenameDialog.vue";
+import DialogMixin from "@/mixins/dialog.js";
 
 export default {
-  extends: PageRename,
+  mixins: [DialogMixin],
+  data() {
+    return {
+      site: {
+        id: null,
+        title: null
+      }
+    };
+  },
+  computed: {
+    fields() {
+      return {
+        title: {
+          label: this.$t("title"),
+          type: "text",
+          required: true,
+          icon: "title",
+          preselect: true
+        }
+      };
+    }
+  },
   methods: {
     async open() {
       try {
-        this.page = await this.$api.site.get({ select: ["title"] });
+        this.site = await this.$api.site.get({ select: ["title"] });
         this.$refs.dialog.open();
 
       } catch (error) {
@@ -16,16 +46,16 @@ export default {
     },
     async submit() {
       // prevent empty title with just spaces
-      this.page.title = this.page.title.trim();
+      this.site.title = this.site.title.trim();
 
-      if (this.page.title.length === 0) {
+      if (this.site.title.length === 0) {
         this.$refs.dialog.error(this.$t("error.site.changeTitle.empty"));
         return;
       }
 
       try {
-        await this.$api.site.changeTitle(this.page.title);
-        this.$store.dispatch("system/title", this.page.title);
+        await this.$api.site.changeTitle(this.site.title);
+        this.$store.dispatch("system/title", this.site.title);
         this.success({
           message: ":)",
           event: "site.changeTitle"

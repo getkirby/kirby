@@ -67,7 +67,6 @@
 
     <k-page-rename-dialog ref="rename" @success="update" />
     <k-page-duplicate-dialog ref="duplicate" />
-    <k-page-url-dialog ref="url" />
     <k-page-status-dialog ref="status" @success="update" />
     <k-page-template-dialog ref="template" @success="update" />
     <k-page-remove-dialog ref="remove" />
@@ -158,10 +157,10 @@ export default {
           this.$refs.duplicate.open(this.page.id);
           break;
         case "rename":
-          this.$refs.rename.open(this.page.id);
+          this.$refs.rename.open(this.page.id, "title");
           break;
         case "url":
-          this.$refs.url.open(this.page.id);
+          this.$refs.rename.open(this.page.id, "slug");
           break;
         case "status":
           this.$refs.status.open(this.page.id);
@@ -180,35 +179,32 @@ export default {
           break;
       }
     },
-    fetch() {
-      this.$api.pages
-        .get(this.path, { view: "panel" })
-        .then(page => {
-          this.page = page;
-          this.blueprint = page.blueprint.name;
-          this.permissions = page.options;
-          this.tabs = page.blueprint.tabs;
-          this.options = ready => {
-            this.$api.pages.options(this.page.id).then(options => {
-              ready(options);
-            });
-          };
+    async fetch() {
+      try {
+        this.page = await this.$api.pages.get(this.path, { view: "panel" });
+        this.blueprint = this.page.blueprint.name;
+        this.permissions = this.page.options;
+        this.tabs = this.page.blueprint.tabs;
+        this.options = async ready => {
+          const options = await this.$api.pages.options(this.page.id);
+          ready(options);
+        };
 
-          this.$store.dispatch("breadcrumb", this.$api.pages.breadcrumb(page));
-          this.$store.dispatch("title", this.page.title);
+        this.$store.dispatch("breadcrumb", this.$api.pages.breadcrumb(this.page));
+        this.$store.dispatch("title", this.page.title);
 
-          this.$store.dispatch("content/create", {
-            id: "pages/" + this.page.id,
-            api: this.$api.pages.link(this.page.id),
-            content: this.page.content
-          });
-
-        })
-        .catch(error => {
-          this.issue = error;
+        this.$store.dispatch("content/create", {
+          id: "pages/" + this.page.id,
+          api: this.$api.pages.link(this.page.id),
+          content: this.page.content
         });
+
+      } catch (error) {
+        this.issue = error;
+      }
     },
     update() {
+      console.log("updating!")
       this.fetch();
       this.$emit("model.update");
     }
