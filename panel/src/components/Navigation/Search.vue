@@ -1,11 +1,6 @@
 <template>
-  <k-overlay ref="overlay" @click="close">
-    <div
-      slot-scope="{ close }"
-      class="k-search"
-      role="search"
-      @click.stop
-    >
+  <k-overlay ref="overlay">
+    <div class="k-search" role="search">
       <div class="k-search-input">
         <!-- Type select -->
         <k-dropdown class="k-search-types">
