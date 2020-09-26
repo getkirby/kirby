@@ -9,9 +9,8 @@
     class="k-site-view"
   >
     <k-header
-      :tabs="tabs"
-      :tab="tab"
       :editable="permissions.changeTitle && !isLocked"
+      :tabs="tabs"
       @edit="action('rename')"
     >
       {{ site.title }}
@@ -28,13 +27,13 @@
       </k-button-group>
     </k-header>
 
-    <k-tabs
+    <k-sections
       v-if="site.url"
-      ref="tabs"
-      :tabs="tabs"
       :blueprint="site.blueprint.name"
+      :empty="$t('site.blueprint')"
       parent="site"
-      @tab="tab = $event"
+      :tabs="tabs"
+      @submit="$emit('submit', $event)"
     />
 
     <k-site-rename-dialog ref="rename" @success="fetch" />
@@ -51,7 +50,6 @@ export default {
         url: null
       },
       issue: null,
-      tab: null,
       tabs: [],
       options: null,
       permissions: {

@@ -194,6 +194,7 @@
   "field.structure.empty": "No entries yet",
   "field.users.empty": "No users selected yet",
 
+  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
   "file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
 
   "files": "Files",
@@ -296,6 +297,7 @@
   "orientation.portrait": "Portrait",
   "orientation.square": "Square",
 
+  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
   "page.changeSlug": "Change URL",
   "page.changeSlug.fromTitle": "Create from title",
   "page.changeStatus": "Change status",
@@ -360,6 +362,8 @@
   "title": "Title",
   "template": "Template",
   "today": "Today",
+
+  "site.blueprint": "The has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Code",
   "toolbar.button.bold": "Bold",
