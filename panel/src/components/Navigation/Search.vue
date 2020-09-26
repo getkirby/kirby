@@ -1,87 +1,89 @@
 <template>
-  <portal v-if="isOpen">
-    <div class="k-search" role="search" @click="close">
-      <div class="k-search-box" @click.stop>
-        <div class="k-search-input">
-
-          <!-- Type select -->
-          <k-dropdown class="k-search-types">
-            <k-button :icon="currentType.icon" @click="$refs.types.toggle()">
-              {{ currentType.label }}:
-            </k-button>
-            <k-dropdown-content ref="types">
-              <k-dropdown-item
-                v-for="(type, typeIndex) in types"
-                :key="typeIndex"
-                :icon="type.icon"
-                @click="changeType(typeIndex)"
-              >
-                {{ type.label }}
-              </k-dropdown-item>
-            </k-dropdown-content>
-          </k-dropdown>
-
-          <!-- Input -->
-          <input
-            ref="input"
-            v-model="q"
-            :placeholder="$t('search') + ' …'"
-            :aria-label="$t('search')"
-            type="text"
-            @input="hasResults = true"
-            @keydown.down.prevent="onDown"
-            @keydown.up.prevent="onUp"
-            @keydown.tab.prevent="onTab"
-            @keydown.enter="onEnter"
-            @keydown.esc="close"
-          >
-          <k-button
-            :tooltip="$t('close')"
-            class="k-search-close"
-            :icon="isLoading ? 'loader' : 'cancel'"
-            @click="close"
-          />
-        </div>
-
-        <div
-          v-if="q && (!hasResults || items.length)"
-          class="k-search-results"
-        >
-          <!-- Results -->
-          <ul v-if="items.length" @mouseout="selected = -1">
-            <li
-              v-for="(item, itemIndex) in items"
-              :key="item.id"
-              :data-selected="selected === itemIndex"
-              @mouseover="selected = itemIndex"
+  <k-overlay ref="overlay" @click="close">
+    <div
+      slot-scope="{ close }"
+      class="k-search"
+      role="search"
+      @click.stop
+    >
+      <div class="k-search-input">
+        <!-- Type select -->
+        <k-dropdown class="k-search-types">
+          <k-button :icon="currentType.icon" @click="$refs.types.toggle()">
+            {{ currentType.label }}:
+          </k-button>
+          <k-dropdown-content ref="types">
+            <k-dropdown-item
+              v-for="(type, typeIndex) in types"
+              :key="typeIndex"
+              :icon="type.icon"
+              @click="changeType(typeIndex)"
             >
-              <k-link :to="item.link" @click="close">
-                <span class="k-search-item-image">
-                  <k-image
-                    v-if="imageOptions(item.image)"
-                    v-bind="imageOptions(item.image)"
-                  />
-                  <k-icon
-                    v-else
-                    v-bind="item.icon"
-                  />
-                </span>
-                <span class="k-search-item-info">
-                  <strong>{{ item.title }}</strong>
-                  <small>{{ item.info }}</small>
-                </span>
-              </k-link>
-            </li>
-          </ul>
+              {{ type.label }}
+            </k-dropdown-item>
+          </k-dropdown-content>
+        </k-dropdown>
 
-          <!-- No results -->
-          <p v-else-if="!hasResults" class="k-search-empty">
-            {{ $t("search.results.none") }}
-          </p>
-        </div>
+        <!-- Input -->
+        <input
+          ref="input"
+          v-model="q"
+          :placeholder="$t('search') + ' …'"
+          :aria-label="$t('search')"
+          type="text"
+          @input="hasResults = true"
+          @keydown.down.prevent="onDown"
+          @keydown.up.prevent="onUp"
+          @keydown.tab.prevent="onTab"
+          @keydown.enter="onEnter"
+          @keydown.esc="close"
+        >
+        <k-button
+          :tooltip="$t('close')"
+          class="k-search-close"
+          :icon="isLoading ? 'loader' : 'cancel'"
+          @click="close"
+        />
+      </div>
+
+      <div
+        v-if="q && (!hasResults || items.length)"
+        class="k-search-results"
+      >
+        <!-- Results -->
+        <ul v-if="items.length" @mouseout="selected = -1">
+          <li
+            v-for="(item, itemIndex) in items"
+            :key="item.id"
+            :data-selected="selected === itemIndex"
+            @mouseover="selected = itemIndex"
+          >
+            <k-link :to="item.link" @click="close">
+              <span class="k-search-item-image">
+                <k-image
+                  v-if="imageOptions(item.image)"
+                  v-bind="imageOptions(item.image)"
+                />
+                <k-icon
+                  v-else
+                  v-bind="item.icon"
+                />
+              </span>
+              <span class="k-search-item-info">
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.info }}</small>
+              </span>
+            </k-link>
+          </li>
+        </ul>
+
+        <!-- No results -->
+        <p v-else-if="!hasResults" class="k-search-empty">
+          {{ $t("search.results.none") }}
+        </p>
       </div>
     </div>
-  </portal>
+  </k-overlay>
 </template>
 
 <script>
@@ -103,7 +105,6 @@ export default {
   },
   data() {
     return {
-      isOpen: false,
       isLoading: false,
       hasResults: true,
       items: [],
@@ -114,9 +115,7 @@ export default {
   },
   watch: {
     q: debounce(function (q) {
-      if (this.isOpen) {
-        this.search(q);
-      }
+      this.search(q);
     }, 200),
     currentType() {
       this.search(this.q);
@@ -136,7 +135,7 @@ export default {
       });
     },
     close() {
-      this.isOpen = false;
+      this.$refs.overlay.close();
       this.hasResults = true;
       this.items = [];
       this.q = null;
@@ -176,7 +175,7 @@ export default {
       }
     },
     open(event) {
-      this.isOpen = true;
+      this.$refs.overlay.open();
       setTimeout(() => {
         this.$refs.input.focus();
       }, 1);
@@ -215,16 +214,6 @@ export default {
 
 <style lang="scss">
 .k-search {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
-  overflow: auto;
-  background: $color-backdrop;
-}
-.k-search-box {
   max-width: 30rem;
   margin: 0 auto;
   box-shadow: $box-shadow;
