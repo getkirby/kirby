@@ -1,6 +1,7 @@
 <template>
   <div
     v-if="tabs && tabs.length > 1"
+    :data-theme="theme"
     class="k-tabs"
   >
     <nav>
@@ -17,9 +18,9 @@
 
         <span
           v-if="tabButton.badge"
-          :class="'k-tabs-badge text-' + (tabButton.badge.color || 'orange')"
+          class="k-tabs-badge"
         >
-          {{ tabButton.badge.count || tabButton.badge }}
+          {{ tabButton.badge }}
         </span>
       </k-button>
 
@@ -55,10 +56,8 @@
 <script>
 export default {
   props: {
-    /**
-     * An array of tab definitions to add tabs to the header
-     */
     tabs: Array,
+    theme: String
   },
   data() {
     return {
@@ -234,5 +233,8 @@ export default {
   [dir="rtl"] & {
     padding-right: .25rem;
   }
+}
+.k-tabs[data-theme="notice"] .k-tabs-badge {
+  color: $color-notice;
 }
 </style>
