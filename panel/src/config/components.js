@@ -213,6 +213,7 @@ import Grid from "@/components/Layout/Grid.vue";
 import Header from "@/components/Layout/Header.vue";
 import List from "@/components/Layout/List.vue";
 import ListItem from "@/components/Layout/ListItem.vue";
+import Overlay from "@/components/Layout/Overlay.vue";
 import Tabs from "@/components/Layout/Tabs.vue";
 import View from "@/components/Layout/View.vue";
 
@@ -229,6 +230,7 @@ Vue.component("k-grid", Grid);
 Vue.component("k-header", Header);
 Vue.component("k-list", List);
 Vue.component("k-list-item", ListItem);
+Vue.component("k-overlay", Overlay);
 Vue.component("k-tabs", Tabs);
 Vue.component("k-view", View);
 
