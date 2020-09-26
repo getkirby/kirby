@@ -45,7 +45,7 @@
             <summary class="k-builder-block-header" @click.prevent="toggle(block)">
               <k-sort-handle :icon="isHovered === block.id ? 'sort' : blockOptions.icon || 'sort'" class="k-builder-block-handle" />
               <span class="k-builder-block-label">
-                {{ $helper.string.template(blockOptions.label, block.content) }} <k-icon v-if="block.attrs.hide" type="hidden" />
+                {{ $helper.string.template(blockOptions.label, block.content) }}
               </span>
 
               <nav class="k-builder-block-tabs" v-if="Object.keys(blockOptions.tabs).length > 1">
@@ -60,6 +60,13 @@
                   {{ tab.label }}
                 </k-button>
               </nav>
+
+              <k-button
+                  v-if="block.attrs.hide"
+                  class="k-builder-block-status"
+                  icon="hidden"
+                  @click.stop="toggleVisibility(block)"
+              />
 
               <k-dropdown>
                 <k-button
@@ -386,6 +393,9 @@ export default {
 }
 .k-builder-block[data-hidden]:not([open]) {
   background: rgba(#fff, .325);
+}
+.k-builder-block[data-hidden] .k-builder-block-status  {
+  opacity: .325;
 }
 .k-builder-block[data-hidden] .k-builder-block-label {
   color: #ccc;
