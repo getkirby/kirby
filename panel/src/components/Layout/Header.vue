@@ -12,7 +12,7 @@
       <slot slot="right" name="right" class="k-header-right" />
     </k-bar>
 
-    <k-tabs :tabs="tabs" />
+    <k-tabs :tabs="tabsWithBadges" theme="notice" />
 
   </header>
 
@@ -24,6 +24,31 @@ export default {
   props: {
     editable: Boolean,
     tabs: Array
+  },
+  computed:  {
+    tabsWithBadges() {
+      const changed = Object.keys(this.$store.getters['content/changes']());
+
+      return this.tabs.map(tab => {
+
+        // collect all fields per tab
+        let fields = [];
+        tab.columns.forEach(column => {
+          Object.values(column.sections).forEach(section => {
+            if (section.type === "fields") {
+              Object.keys(section.fields).forEach(field => {
+                fields.push(field);
+              })
+            }
+          })
+        });
+
+        // get count of changed fields in this tab
+        tab.badge = fields.filter(field => changed.includes(field)).length;
+
+        return tab;
+      });
+    }
   }
 }
 </script>
