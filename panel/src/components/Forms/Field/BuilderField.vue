@@ -21,7 +21,7 @@
 
     <template v-if="blocks.length === 0">
       <k-empty icon="box" @click="select(blocks.length)">
-        {{ $t("field.builder.empty") }}
+        {{ empty || $t("field.builder.empty") }}
       </k-empty>
     </template>
 
@@ -148,6 +148,7 @@ export default {
   },
   props: {
     ...Field.props,
+    empty: String,
     fieldsets: Object,
     max: {
       type: Number,

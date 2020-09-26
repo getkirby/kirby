@@ -3,6 +3,7 @@
 use Kirby\Cms\Block;
 use Kirby\Cms\Builder;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\I18n;
 
 return [
     'props' => [
@@ -15,6 +16,13 @@ return [
         'autofocus'   => null,
         'icon'        => null,
         'placeholder' => null,
+
+        /**
+         * The placeholder text if no blocks have been added yet
+         */
+        'empty' => function ($empty = null) {
+            return I18n::translate($empty, $empty);
+        },
 
         /**
          * Fieldset definitions
