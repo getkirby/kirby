@@ -52,7 +52,7 @@
                 <k-button
                   v-for="(tab, tabId) in blockOptions.tabs"
                   :key="tabId"
-                  :current="tabs[block.id] === tabId"
+                  :current="(tabs[block.id] === undefined && (tabs[block.id] = tabId)) || tabs[block.id] === tabId"
                   :icon="tab.icon"
                   class="k-builder-block-tab"
                   @click.stop="open(block, tabId)"
