@@ -23,8 +23,8 @@
       >
         <k-button
           slot="options"
+          :disabled="fields.slug.disabled"
           icon="wand"
-          data-options
           @click="sluggify(title)"
         >
           {{ $t("page.changeSlug.fromTitle") }}
@@ -46,6 +46,7 @@ export default {
         parent: null,
         title: null
       },
+      permissions: {},
       select: "title",
       slug: null,
       title: null,
@@ -59,7 +60,8 @@ export default {
           label: this.$t("title"),
           type: "text",
           required: true,
-          icon: "title"
+          icon: "title",
+          disabled: this.permissions.changeTitle === false
         },
         slug: {
           name: "slug",
@@ -68,7 +70,8 @@ export default {
           required: true,
           icon: "url",
           help: "/" + this.url,
-          counter: false
+          counter: false,
+          disabled: this.permissions.changeSlug === false
         }
       };
     },
@@ -85,12 +88,13 @@ export default {
         this.$refs[this.select].select();
       }
     },
-    async open(id, select = "title") {
+    async open(id, permissions, select = "title") {
       try {
         this.page   = await this.$api.pages.get(id, { view: "panel" });
         this.select = select;
         this.title  = this.page.title;
         this.sluggify(this.page.slug);
+        this.permissions = permissions;
         this.$refs.dialog.open();
       } catch (error) {
         this.$store.dispatch('notification/error', error);

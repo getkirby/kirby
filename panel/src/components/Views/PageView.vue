@@ -157,10 +157,10 @@ export default {
           this.$refs.duplicate.open(this.page.id);
           break;
         case "rename":
-          this.$refs.rename.open(this.page.id, "title");
+          this.$refs.rename.open(this.page.id, this.permissions, "title");
           break;
         case "url":
-          this.$refs.rename.open(this.page.id, "slug");
+          this.$refs.rename.open(this.page.id, this.permissions, "slug");
           break;
         case "status":
           this.$refs.status.open(this.page.id);
@@ -204,7 +204,6 @@ export default {
       }
     },
     update() {
-      console.log("updating!")
       this.fetch();
       this.$emit("model.update");
     }
