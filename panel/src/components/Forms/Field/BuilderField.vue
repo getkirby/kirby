@@ -83,7 +83,7 @@
                   </k-dropdown-item>
                   <hr>
                   <k-dropdown-item :icon="block.attrs.hide ? 'preview' : 'hidden'" @click="toggleVisibility(block)">
-                    {{ block.attrs.hide === true ? 'Show' : 'Hide' }}
+                    {{ block.attrs.hide === true ? $t('show') : $t('hide') }}
                   </k-dropdown-item>
                   <k-dropdown-item :disabled="isFull" icon="copy" @click="duplicate(block)">
                     {{ $t("duplicate") }}

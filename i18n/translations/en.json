@@ -208,6 +208,7 @@
   "files": "Files",
   "files.empty": "No files yet",
 
+  "hide": "Hide",
   "hour": "Hour",
   "insert": "Insert",
   "insert.after": "Insert after",
@@ -365,6 +366,7 @@
 
   "select": "Select",
   "settings": "Settings",
+  "show": "Show",
   "size": "Size",
   "slug": "URL appendix",
   "sort": "Sort",
