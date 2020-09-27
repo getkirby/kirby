@@ -1079,10 +1079,15 @@ class App
         // when the page has been found
         if ($page) {
             try {
-                return $this
-                    ->response()
-                    ->body($page->render([], $extension))
-                    ->type($extension);
+                $response = $this->response();
+
+                // attach a MIME type based on the representation
+                // only if no custom MIME type was set
+                if ($response->type() === null) {
+                    $response->type($extension);
+                }
+
+                return $response->body($page->render([], $extension));
             } catch (NotFoundException $e) {
                 return null;
             }

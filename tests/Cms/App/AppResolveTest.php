@@ -88,6 +88,10 @@ class AppResolveTest extends TestCase
     {
         F::write($template = $this->fixtures . '/test.php', 'html');
         F::write($template = $this->fixtures . '/test.xml.php', 'xml');
+        F::write(
+            $template = $this->fixtures . '/test.png.php',
+            '<?php $kirby->response()->type("image/jpeg"); ?>png'
+        );
 
         $app = new App([
             'roots' => [
@@ -108,11 +112,17 @@ class AppResolveTest extends TestCase
         $result = $app->resolve('test.json');
         $this->assertNull($result);
 
-        // xml presentation
-        $result = $app->resolve('test.xml');
-
+        // xml representation
+        $result = $app->clone()->resolve('test.xml');
         $this->assertInstanceOf(Responder::class, $result);
-        $this->assertEquals('xml', $result->body());
+        $this->assertSame('text/xml', $result->type());
+        $this->assertSame('xml', $result->body());
+
+        // representation with custom MIME type
+        $result = $app->clone()->resolve('test.png');
+        $this->assertInstanceOf(Responder::class, $result);
+        $this->assertSame('image/jpeg', $result->type());
+        $this->assertSame('png', $result->body());
     }
 
     public function testResolveSiteFile()
