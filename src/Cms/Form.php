@@ -100,7 +100,8 @@ class Form extends BaseForm
      * @throws \Kirby\Exception\NotFoundException
      * @return \Kirby\Form\Field
      */
-    public static function fieldFromName(self $form, string $name) {
+    public static function fieldFromName(self $form, string $name)
+    {
         $fieldNames = Str::split($name, '+');
         $index      = 0;
         $count      = count($fieldNames);
