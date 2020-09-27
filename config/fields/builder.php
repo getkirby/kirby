@@ -2,7 +2,7 @@
 
 use Kirby\Cms\Block;
 use Kirby\Cms\Builder;
-use Kirby\Exception\NotFoundException;
+use Kirby\Cms\Form;
 
 return [
     'props' => [
@@ -88,10 +88,7 @@ return [
                     $builder = $this->field()->builder();
                     $fields  = $builder->fields($fieldsetType);
                     $form    = $builder->form($fields);
-
-                    if (!$field = $form->fields()->$fieldName()) {
-                        throw new NotFoundException('The field could not be found');
-                    }
+                    $field   = Form::fieldFromName($form, $fieldName);
 
                     $fieldApi = $this->clone([
                         'routes' => $field->api(),
