@@ -52,7 +52,7 @@
                 <k-button
                   v-for="(tab, tabId) in blockOptions.tabs"
                   :key="tabId"
-                  :current="(tabs[block.id] === undefined && (tabs[block.id] = tabId)) || tabs[block.id] === tabId"
+                  :current="isCurrentTab(block, tabId)"
                   :icon="tab.icon"
                   class="k-builder-block-tab"
                   @click.stop="open(block, tabId)"
@@ -248,6 +248,15 @@ export default {
     },
     fieldset(block) {
       return this.fieldsets[block.type];
+    },
+    isCurrentTab(block, tabId) {
+      if (this.tabs[block.id] === undefined) {
+        this.tabs[block.id] = tabId;
+
+        return true;
+      }
+
+      return this.tabs[block.id] === tabId;
     },
     isOpen(block) {
       return this.opened.includes(block.id);
