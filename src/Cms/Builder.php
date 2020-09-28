@@ -199,10 +199,14 @@ class Builder
         }
 
         // normalize tabs props
-        array_walk($tabs, function (&$tab, $name) {
+        foreach ($tabs as $name => $tab) {
+            $tab = Blueprint::extend($tab);
+
             $tab['fields'] = $this->fieldsProps($tab['fields'] ?? []);
             $tab['label']  = I18n::translate($label = $tab['label'] ?? Str::ucfirst($name), $label);
-        });
+
+            $tabs[$name] = $tab;
+        }
 
         return $tabs;
     }
