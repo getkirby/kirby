@@ -9,12 +9,16 @@ require_once __DIR__ . '/../mocks.php';
  */
 class AuthProtectionTest extends TestCase
 {
+    public $failedEmail;
+
     protected $app;
     protected $auth;
     protected $fixtures;
 
     public function setUp(): void
     {
+        $self = $this;
+
         $this->app = new App([
             'roots' => [
                 'index' => $this->fixtures = __DIR__ . '/fixtures/AuthTest'
@@ -32,6 +36,11 @@ class AuthProtectionTest extends TestCase
                     'email'    => 'test@exämple.com',
                     'password' => password_hash('springfield123', PASSWORD_DEFAULT)
                 ]
+            ],
+            'hooks' => [
+                'user.login:failed' => function ($email) use ($self) {
+                    $self->failedEmail = $email;
+                }
             ]
         ]);
         Dir::make($this->fixtures . '/site/accounts');
@@ -42,6 +51,7 @@ class AuthProtectionTest extends TestCase
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+        $this->failedEmail = null;
     }
 
     /**
@@ -140,6 +150,8 @@ class AuthProtectionTest extends TestCase
         $this->assertTrue($this->auth->track('marge@simpsons.com'));
         $this->assertTrue($this->auth->track('lisa@simpsons.com'));
 
+        $this->assertSame('lisa@simpsons.com', $this->failedEmail);
+
         $data = [
             'by-ip' => [
                 '87084f11690867b977a611dd2c943a918c3197f4c02b25ab59' => [
@@ -182,6 +194,7 @@ class AuthProtectionTest extends TestCase
 
         $this->assertInstanceOf(User::class, $user);
         $this->assertEquals('marge@simpsons.com', $user->email());
+        $this->assertNull($this->failedEmail);
     }
 
     /**
@@ -198,6 +211,7 @@ class AuthProtectionTest extends TestCase
         $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
 
         $this->assertEquals(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+        $this->assertSame('lisa@simpsons.com', $this->failedEmail);
     }
 
     /**
@@ -215,6 +229,7 @@ class AuthProtectionTest extends TestCase
 
         $this->assertEquals(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
         $this->assertEquals(10, $this->auth->log()['by-email']['marge@simpsons.com']['trials']);
+        $this->assertSame('marge@simpsons.com', $this->failedEmail);
     }
 
     /**
@@ -229,6 +244,7 @@ class AuthProtectionTest extends TestCase
 
         $this->app->visitor()->ip('10.2.123.234');
         $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+        $this->assertSame('homer@simpsons.com', $this->failedEmail);
     }
 
     /**
@@ -251,6 +267,7 @@ class AuthProtectionTest extends TestCase
         $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
 
         $this->assertEquals(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+        $this->assertSame('lisa@simpsons.com', $this->failedEmail);
     }
 
     /**
@@ -274,6 +291,7 @@ class AuthProtectionTest extends TestCase
 
         $this->assertEquals(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
         $this->assertEquals(10, $this->auth->log()['by-email']['marge@simpsons.com']['trials']);
+        $this->assertSame('marge@simpsons.com', $this->failedEmail);
     }
 
     /**
@@ -294,6 +312,7 @@ class AuthProtectionTest extends TestCase
 
         $this->app->visitor()->ip('10.2.123.234');
         $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+        $this->assertSame('homer@simpsons.com', $this->failedEmail);
     }
 
     /**
