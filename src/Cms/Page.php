@@ -8,7 +8,6 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
 
 /**
  * The `$page` object is the heart and
@@ -964,11 +963,6 @@ class Page extends ModelWithContent
     {
         if ($icon = $this->blueprint()->icon()) {
             $params['type'] = $icon;
-
-            // check for emojis
-            if (strlen($icon) !== Str::length($icon)) {
-                $params['emoji'] = true;
-            }
         }
 
         return parent::panelIcon($params);
