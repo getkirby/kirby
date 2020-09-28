@@ -42,14 +42,14 @@
           <summary class="k-builder-block-header" @click.prevent="toggle(block)">
             <k-sort-handle :icon="isHovered === block.id ? 'sort' : blockOptions.icon || 'sort'" class="k-builder-block-handle" />
             <span class="k-builder-block-label">
-              {{ $helper.string.template(blockOptions.label, block.content) }} <k-icon v-if="block.attrs.hide" type="hidden" />
+              {{ $helper.string.template(blockOptions.label, block.content) }}
             </span>
 
             <nav class="k-builder-block-tabs" v-if="Object.keys(blockOptions.tabs).length > 1">
               <k-button
                 v-for="(tab, tabId) in blockOptions.tabs"
                 :key="tabId"
-                :current="tabs[block.id] === tabId"
+                :current="isCurrentTab(block, tabId)"
                 :icon="tab.icon"
                 class="k-builder-block-tab"
                 @click.stop="open(block, tabId)"
@@ -57,6 +57,13 @@
                 {{ tab.label }}
               </k-button>
             </nav>
+
+            <k-button
+              v-if="block.attrs.hide"
+              class="k-builder-block-status"
+              icon="hidden"
+              @click.stop="toggleVisibility(block)"
+            />
 
             <k-dropdown>
               <k-button
@@ -73,7 +80,7 @@
                 </k-dropdown-item>
                 <hr>
                 <k-dropdown-item :icon="block.attrs.hide ? 'preview' : 'hidden'" @click="toggleVisibility(block)">
-                  {{ block.attrs.hide === true ? 'Show' : 'Hide' }}
+                  {{ block.attrs.hide === true ? $t('show') : $t('hide') }}
                 </k-dropdown-item>
                 <k-dropdown-item :disabled="isFull" icon="copy" @click="duplicate(block)">
                   {{ $t("duplicate") }}
@@ -103,7 +110,7 @@
           class="k-builder-field-empty"
           @click="select(blocks.length)"
         >
-          {{ $t("field.builder.empty") }}
+          {{ empty || $t("field.builder.empty") }}
         </k-empty>
       </template>
     </k-draggable>
@@ -119,7 +126,7 @@
       <ul class="k-builder-fieldsets">
         <li v-for="fieldset in fieldsets" :key="fieldset.name">
           <k-button :icon="fieldset.icon || 'box'" @click="add(fieldset.type)">
-            {{ fieldset.label }}
+            {{ $helper.string.template(fieldset.label) }}
           </k-button>
         </li>
       </ul>
@@ -147,6 +154,7 @@ export default {
   },
   props: {
     ...Field.props,
+    empty: String,
     fieldsets: Object,
     group: String,
     max: {
@@ -263,6 +271,13 @@ export default {
     },
     fieldset(block) {
       return this.fieldsets[block.type];
+    },
+    isCurrentTab(block, tabId) {
+      if (this.tabs[block.id] === undefined) {
+        this.tabs[block.id] = tabId;
+        return true;
+      }
+      return this.tabs[block.id] === tabId;
     },
     isOpen(block) {
       return this.opened.includes(block.id);
@@ -435,6 +450,9 @@ export default {
 }
 .k-builder-block[data-hidden]:not([open]) {
   background: rgba(#fff, .325);
+}
+.k-builder-block[data-hidden] .k-builder-block-status  {
+  opacity: .325;
 }
 .k-builder-block[data-hidden] .k-builder-block-label {
   color: #ccc;
