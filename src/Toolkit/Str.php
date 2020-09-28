@@ -802,6 +802,9 @@ class Str
     /**
      * Calculate the similarity between two strings with multibyte support
      *
+     * @author Antal Áron
+     * @copyright Copyright (c) 2017, Antal Áron
+     * @license https://github.com/antalaron/mb-similar-text/blob/master/LICENSE MIT License
      * @param string $first
      * @param string $second
      * @param float|null $percent
