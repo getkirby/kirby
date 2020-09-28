@@ -28,7 +28,7 @@ export default {
       this.$refs.dialog.close();
 
       if (payload.route) {
-        this.$router.push(payload.route);
+        this.$go(payload.route);
       }
 
       if (payload.message) {
