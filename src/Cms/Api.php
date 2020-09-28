@@ -56,8 +56,7 @@ class Api extends BaseApi
      */
     public function fieldApi($model, string $name, string $path = null)
     {
-        $form  = Form::for($model);
-        $field = Form::fieldFromName($form, $name);
+        $field = Form::for($model)->field($name);
 
         $fieldApi = $this->clone([
             'routes' => $field->api(),

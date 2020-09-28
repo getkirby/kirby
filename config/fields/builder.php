@@ -3,7 +3,6 @@
 use Kirby\Cms\Block;
 use Kirby\Cms\Builder;
 use Kirby\Toolkit\I18n;
-use Kirby\Cms\Form;
 
 return [
     'props' => [
@@ -105,8 +104,7 @@ return [
                 'action'  => function (string $fieldsetType, string $fieldName, string $path = null) {
                     $builder = $this->field()->builder();
                     $fields  = $builder->fields($fieldsetType);
-                    $form    = $builder->form($fields);
-                    $field   = Form::fieldFromName($form, $fieldName);
+                    $field   = $builder->form($fields)->field($fieldName);
 
                     $fieldApi = $this->clone([
                         'routes' => $field->api(),

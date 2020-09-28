@@ -52,6 +52,42 @@ class Form extends BaseForm
     }
 
     /**
+     * Get the field object by name
+     * and handle nested fields correctly
+     *
+     * @param string $name
+     * @throws \Kirby\Exception\NotFoundException
+     * @return \Kirby\Form\Field
+     */
+    public function field(string $name)
+    {
+        $form       = $this;
+        $fieldNames = Str::split($name, '+');
+        $index      = 0;
+        $count      = count($fieldNames);
+        $field      = null;
+
+        foreach ($fieldNames as $fieldName) {
+            $index++;
+
+            if ($field = $form->fields()->get($fieldName)) {
+                if ($count !== $index) {
+                    $form = $field->form();
+                }
+            } else {
+                throw new NotFoundException('The field "' . $fieldName . '" could not be found');
+            }
+        }
+
+        // it can get this error only if $name is an empty string as $name = ''
+        if ($field === null) {
+            throw new NotFoundException('No field could be loaded');
+        }
+
+        return $field;
+    }
+
+    /**
      * @param \Kirby\Cms\Model $model
      * @param array $props
      * @return self
@@ -90,40 +126,5 @@ class Form extends BaseForm
         }
 
         return new static($props);
-    }
-
-    /**
-     * Get last field object from name that nested fields
-     *
-     * @param \Kirby\Cms\Form $form
-     * @param string $name
-     * @throws \Kirby\Exception\NotFoundException
-     * @return \Kirby\Form\Field
-     */
-    public static function fieldFromName(self $form, string $name)
-    {
-        $fieldNames = Str::split($name, '+');
-        $index      = 0;
-        $count      = count($fieldNames);
-        $field      = null;
-
-        foreach ($fieldNames as $fieldName) {
-            $index++;
-
-            if ($field = $form->fields()->get($fieldName)) {
-                if ($count !== $index) {
-                    $form = $field->form();
-                }
-            } else {
-                throw new NotFoundException('The field "' . $fieldName . '" could not be found');
-            }
-        }
-
-        // it can get this error only if $name is an empty string as $name = ''
-        if ($field === null) {
-            throw new NotFoundException('No field could be loaded');
-        }
-
-        return $field;
     }
 }
