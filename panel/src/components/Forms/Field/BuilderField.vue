@@ -419,7 +419,7 @@ export default {
   pointer-events: none;
 }
 .k-builder-block-header {
-  height: 36px;
+  height: 38px;
   cursor: pointer;
   list-style: none;
 }
@@ -436,7 +436,7 @@ export default {
 }
 .k-builder-block-handle.k-sort-handle {
   width: 2.25rem;
-  height: 36px;
+  height: 38px;
 }
 .k-builder-block-handle.k-sort-handle > svg {
   opacity: .25;

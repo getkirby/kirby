@@ -120,6 +120,8 @@ return [
         return $this->builder->toJson($blocks, $this->pretty);
     },
     'validations' => [
-        'max'
+        'blocks' => function ($value) {
+            return $this->builder->validate($value);
+        }
     ]
 ];

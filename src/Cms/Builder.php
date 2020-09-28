@@ -2,7 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -241,6 +243,43 @@ class Builder
         }
 
         return json_encode($value);
+    }
+
+    /**
+     *
+     * @param array $value
+     * @return boolean
+     */
+    public function validate(array $value = null)
+    {
+        $blocks = $this->blocks($value);
+        $max    = $this->props['max'] ?? null;
+        $fields = [];
+
+        if ($max && $blocks->count() > $max) {
+            throw new InvalidArgumentException('Too many blocks');
+        }
+
+        foreach ($blocks as $block) {
+            $blockType   = $block->type();
+            $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
+
+            // store the fields for the next round
+            $fields[$blockType] = $blockFields;
+
+            // overwrite the content with the serialized form
+            foreach ($this->form($blockFields, $block->content()->toArray())->fields() as $field) {
+                $errors = $field->errors();
+
+                // rough first validation
+                if (empty($errors) === false) {
+                    throw new InvalidArgumentException('There\'s an error in block ' . ($block->indexOf() + 1));
+                }
+            }
+
+        }
+
+        return true;
     }
 
     /**
