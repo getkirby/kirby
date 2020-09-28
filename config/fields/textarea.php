@@ -99,6 +99,7 @@ return [
             ],
             [
                 'pattern' => 'upload',
+                'method' => 'POST',
                 'action' => function () {
                     $field   = $this->field();
                     $uploads = $field->uploads();
