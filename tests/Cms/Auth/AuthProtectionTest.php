@@ -2,6 +2,10 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
+
 require_once __DIR__ . '/../mocks.php';
 
 /**
@@ -202,14 +206,19 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordInvalid1()
     {
-        $this->expectException('Kirby\Exception\PermissionException');
-        $this->expectExceptionMessage('Invalid email or password');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
 
         $this->app->visitor()->ip('10.3.123.234');
-        $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
 
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
+        } catch (PermissionException $e) {
+            $this->assertSame('Invalid email or password', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
         $this->assertSame(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
         $this->assertSame('lisa@simpsons.com', $this->failedEmail);
     }
@@ -219,16 +228,21 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordInvalid2()
     {
-        $this->expectException('Kirby\Exception\PermissionException');
-        $this->expectExceptionMessage('Invalid email or password');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
 
         $this->app->visitor()->ip('10.3.123.234');
-        $this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
 
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
+        } catch (PermissionException $e) {
+            $this->assertSame('Invalid email or password', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
         $this->assertSame(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
-        $this->assertSame(10, $this->auth->log()['by-email']['marge@simpsons.com']['trials']);
+        $this->assertSame(1, $this->auth->log()['by-email']['marge@simpsons.com']['trials']);
         $this->assertSame('marge@simpsons.com', $this->failedEmail);
     }
 
@@ -237,13 +251,19 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordBlocked()
     {
-        $this->expectException('Kirby\Exception\PermissionException');
-        $this->expectExceptionMessage('Invalid email or password');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
 
         $this->app->visitor()->ip('10.2.123.234');
-        $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+        } catch (PermissionException $e) {
+            $this->assertSame('Invalid email or password', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
         $this->assertSame('homer@simpsons.com', $this->failedEmail);
     }
 
@@ -252,9 +272,6 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordDebugInvalid1()
     {
-        $this->expectException('Kirby\Exception\NotFoundException');
-        $this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
         $this->app = $this->app->clone([
             'options' => [
@@ -264,8 +281,16 @@ class AuthProtectionTest extends TestCase
         $this->auth = new Auth($this->app);
 
         $this->app->visitor()->ip('10.3.123.234');
-        $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
 
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
+        } catch (NotFoundException $e) {
+            $this->assertSame('The user "lisa@simpsons.com" cannot be found', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
         $this->assertSame(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
         $this->assertSame('lisa@simpsons.com', $this->failedEmail);
     }
@@ -275,9 +300,6 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordDebugInvalid2()
     {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The passwords do not match');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
         $this->app = $this->app->clone([
             'options' => [
@@ -287,10 +309,18 @@ class AuthProtectionTest extends TestCase
         $this->auth = new Auth($this->app);
 
         $this->app->visitor()->ip('10.3.123.234');
-        $this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
 
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
+        } catch (InvalidArgumentException $e) {
+            $this->assertSame('The passwords do not match', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
         $this->assertSame(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
-        $this->assertSame(10, $this->auth->log()['by-email']['marge@simpsons.com']['trials']);
+        $this->assertSame(1, $this->auth->log()['by-email']['marge@simpsons.com']['trials']);
         $this->assertSame('marge@simpsons.com', $this->failedEmail);
     }
 
@@ -299,9 +329,6 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordDebugBlocked()
     {
-        $this->expectException('Kirby\Exception\PermissionException');
-        $this->expectExceptionMessage('Rate limit exceeded');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
         $this->app = $this->app->clone([
             'options' => [
@@ -311,7 +338,16 @@ class AuthProtectionTest extends TestCase
         $this->auth = new Auth($this->app);
 
         $this->app->visitor()->ip('10.2.123.234');
-        $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+        } catch (PermissionException $e) {
+            $this->assertSame('Rate limit exceeded', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
         $this->assertSame('homer@simpsons.com', $this->failedEmail);
     }
 
