@@ -354,8 +354,8 @@ class Pagination
         }
 
         $middle = (int)floor($range/2);
-        $start  = $page - $middle;
-        $end    = $page + $middle;
+        $start  = $page - $middle + ($range % 2 === 0);
+        $end    = $start + $range - 1;
 
         if ($start <= 0) {
             $end   = $range;
@@ -363,7 +363,7 @@ class Pagination
         }
 
         if ($end > $pages) {
-            $start = $pages - $range;
+            $start = $pages - $range + 1;
             $end   = $pages;
         }
 
