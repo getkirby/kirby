@@ -28,11 +28,6 @@ class User extends ModelWithContent
     use UserActions;
 
     /**
-     * @var File
-     */
-    protected $avatar;
-
-    /**
      * @var UserBlueprint
      */
     protected $blueprint;

@@ -245,6 +245,9 @@ trait FileActions
 
             F::remove($file->root());
 
+            // remove the file from the sibling collection
+            $file->parent()->files()->remove($file);
+
             return true;
         });
     }
