@@ -258,10 +258,19 @@ class PaginationTest extends TestCase
             'limit' => 1
         ]);
 
+        // even range number
         $range = $pagination->range(10);
+
         $this->assertEquals(range(1, 10), $range);
         $this->assertEquals(1, $pagination->rangeStart(10));
         $this->assertEquals(10, $pagination->rangeEnd(10));
+
+        // odd range number
+        $range = $pagination->range(5);
+
+        $this->assertEquals(range(1, 5), $range);
+        $this->assertEquals(1, $pagination->rangeStart(5));
+        $this->assertEquals(5, $pagination->rangeEnd(5));
 
         // in the middle
         $pagination = new Pagination([
@@ -270,10 +279,17 @@ class PaginationTest extends TestCase
             'limit' => 1
         ]);
 
+        // even range number
         $range = $pagination->range(10);
         $this->assertEquals(range(45, 55), $range);
         $this->assertEquals(45, $pagination->rangeStart(10));
         $this->assertEquals(55, $pagination->rangeEnd(10));
+
+        // odd range number
+        $range = $pagination->range(5);
+        $this->assertEquals(range(48, 52), $range);
+        $this->assertEquals(48, $pagination->rangeStart(5));
+        $this->assertEquals(52, $pagination->rangeEnd(5));
 
         // at the end
         $pagination = new Pagination([
@@ -282,10 +298,17 @@ class PaginationTest extends TestCase
             'limit' => 1
         ]);
 
+        // even range number
         $range = $pagination->range(10);
         $this->assertEquals(range(90, 100), $range);
         $this->assertEquals(90, $pagination->rangeStart(10));
         $this->assertEquals(100, $pagination->rangeEnd(10));
+
+        // odd range number
+        $range = $pagination->range(5);
+        $this->assertEquals(range(95, 100), $range);
+        $this->assertEquals(95, $pagination->rangeStart(5));
+        $this->assertEquals(100, $pagination->rangeEnd(5));
 
         // higher range than pages
         $pagination = new Pagination([
@@ -294,10 +317,17 @@ class PaginationTest extends TestCase
             'limit' => 1
         ]);
 
+        // even range number
         $range = $pagination->range(12);
         $this->assertEquals(range(1, 10), $range);
         $this->assertEquals(1, $pagination->rangeStart(12));
         $this->assertEquals(10, $pagination->rangeEnd(12));
+
+        // odd range number
+        $range = $pagination->range(13);
+        $this->assertEquals(range(1, 10), $range);
+        $this->assertEquals(1, $pagination->rangeStart(13));
+        $this->assertEquals(10, $pagination->rangeEnd(13));
     }
 
     public function testClone()

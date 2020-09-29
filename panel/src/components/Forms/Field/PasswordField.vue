@@ -5,6 +5,7 @@
     v-bind="$props"
     class="k-password-field"
   >
+    <slot slot="options" name="options" />
     <k-input
       ref="input"
       :id="_uid"
