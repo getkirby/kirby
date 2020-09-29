@@ -94,7 +94,7 @@
             </k-dropdown>
           </div>
         </summary>
-        <div class="k-builder-block-body" v-if="isOpen(block)">
+        <div v-if="isOpen(block)" class="k-builder-block-body">
           <k-fieldset
             :ref="'fieldset-' + block.id"
             :fields="fields(block)"
@@ -146,13 +146,9 @@
 
 <script>
 import Field from "../Field.vue";
-import SettingsDialog from "./BuilderField/SettingsDialog.vue";
 
 export default {
   inheritAttrs: false,
-  components: {
-    "k-builder-block-settings-dialog": SettingsDialog
-  },
   props: {
     ...Field.props,
     empty: String,
