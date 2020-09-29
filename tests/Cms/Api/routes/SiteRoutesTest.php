@@ -58,6 +58,73 @@ class SiteRoutesTest extends TestCase
         $this->assertEquals('b', $response['data'][1]['id']);
     }
 
+    public function testChildrenWithStatusFilter()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'child-a',
+                        'num'  => 1
+                    ],
+                    [
+                        'slug' => 'child-b'
+                    ]
+                ],
+                'drafts' => [
+                    [
+                        'slug' => 'draft-a'
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        // all
+        $response = $app->api()->call('site/children', 'GET', [
+            'query' => ['status' => 'all']
+        ]);
+
+        $this->assertCount(3, $response['data']);
+        $this->assertEquals('child-a', $response['data'][0]['id']);
+        $this->assertEquals('child-b', $response['data'][1]['id']);
+        $this->assertEquals('draft-a', $response['data'][2]['id']);
+
+        // published
+        $response = $app->api()->call('site/children', 'GET', [
+            'query' => ['status' => 'published']
+        ]);
+
+        $this->assertCount(2, $response['data']);
+        $this->assertEquals('child-a', $response['data'][0]['id']);
+        $this->assertEquals('child-b', $response['data'][1]['id']);
+
+        // listed
+        $response = $app->api()->call('site/children', 'GET', [
+            'query' => ['status' => 'listed']
+        ]);
+
+        $this->assertCount(1, $response['data']);
+        $this->assertEquals('child-a', $response['data'][0]['id']);
+
+        // unlisted
+        $response = $app->api()->call('site/children', 'GET', [
+            'query' => ['status' => 'unlisted']
+        ]);
+
+        $this->assertCount(1, $response['data']);
+        $this->assertEquals('child-b', $response['data'][0]['id']);
+
+        // drafts
+        $response = $app->api()->call('site/children', 'GET', [
+            'query' => ['status' => 'drafts']
+        ]);
+
+        $this->assertCount(1, $response['data']);
+        $this->assertEquals('draft-a', $response['data'][0]['id']);
+    }
+
     public function testFiles()
     {
         $app = $this->app->clone([

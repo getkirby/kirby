@@ -213,6 +213,53 @@ class Api extends BaseApi
     }
 
     /**
+     * Returns the subpages for the given
+     * parent. The subpages can be filtered
+     * by status (draft, listed, unlisted, published, all)
+     *
+     * @param string|null $parentId
+     * @param string|null $status
+     * @return \Kirby\Cms\Pages
+     */
+    public function pages(string $parentId = null, string $status = null)
+    {
+        $parent = $parentId === null ? $this->site() : $this->page($parentId);
+
+        switch ($status) {
+            case 'all':
+                return $parent->childrenAndDrafts();
+            case 'draft':
+            case 'drafts':
+                return $parent->drafts();
+            case 'listed':
+                return $parent->children()->listed();
+            case 'unlisted':
+                return $parent->children()->unlisted();
+            case 'published':
+            default:
+                return $parent->children();
+        }
+    }
+
+    /**
+     * Search for direct subpages of the
+     * given parent
+     *
+     * @param string|null $parent
+     * @return \Kirby\Cms\Pages
+     */
+    public function searchPages(string $parent = null)
+    {
+        $pages = $this->pages($parent, $this->requestQuery('status'));
+
+        if ($this->requestMethod() === 'GET') {
+            return $pages->search($this->requestQuery('q'));
+        }
+
+        return $pages->query($this->requestBody());
+    }
+
+    /**
      * Returns the current Session instance
      *
      * @param array $options Additional options, see the session component
