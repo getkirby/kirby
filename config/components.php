@@ -75,10 +75,6 @@ return [
      * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion
      */
     'file::version' => function (App $kirby, $file, array $options = []) {
-        if ($file->isResizable() === false) {
-            return $file;
-        }
-
         // create url and root
         $mediaRoot = dirname($file->mediaRoot());
         $dst       = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';

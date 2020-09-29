@@ -90,10 +90,6 @@ return [
             return $file->template();
         },
         'thumbs' => function ($file) {
-            if ($file->isResizable() === false) {
-                return null;
-            }
-
             return [
                 'tiny'   => $file->resize(128)->url(),
                 'small'  => $file->resize(256)->url(),

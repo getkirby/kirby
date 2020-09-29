@@ -3,6 +3,7 @@
 namespace Kirby\Image;
 
 use Exception;
+use Kirby\Toolkit\F;
 
 /**
  * A wrapper around resizing and cropping
@@ -19,6 +20,14 @@ class Darkroom
     public static $types = [
         'gd' => 'Kirby\Image\Darkroom\GdLib',
         'im' => 'Kirby\Image\Darkroom\ImageMagick'
+    ];
+
+    public static $resizable = [
+        'jpg',
+        'jpeg',
+        'gif',
+        'png',
+        'webp'
     ];
 
     protected $settings = [];
@@ -137,9 +146,14 @@ class Darkroom
      * @param string $file
      * @param array $options
      * @return array
+     * @throws \Exception
      */
     public function process(string $file, array $options = []): array
     {
+        if (in_array(F::extension($file), static::$resizable) === false) {
+            throw new Exception('Image format not resizable');
+        }
+
         return $this->preprocess($file, $options);
     }
 }

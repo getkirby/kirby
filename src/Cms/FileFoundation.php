@@ -116,24 +116,6 @@ trait FileFoundation
     }
 
     /**
-     * Checks if the file is a resizable image
-     *
-     * @return bool
-     */
-    public function isResizable(): bool
-    {
-        $resizable = [
-            'jpg',
-            'jpeg',
-            'gif',
-            'png',
-            'webp'
-        ];
-
-        return in_array($this->extension(), $resizable) === true;
-    }
-
-    /**
      * Checks if a preview can be displayed for the file
      * in the panel or in the frontend
      *
@@ -217,7 +199,6 @@ trait FileFoundation
     public function toArray(): array
     {
         $array = array_merge($this->asset()->toArray(), [
-            'isResizable' => $this->isResizable(),
             'url'         => $this->url(),
         ]);
 
