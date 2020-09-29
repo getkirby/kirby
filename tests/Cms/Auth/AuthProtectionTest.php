@@ -2,6 +2,10 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
+use Kirby\Exception\PermissionException;
+
 require_once __DIR__ . '/../mocks.php';
 
 /**
@@ -9,12 +13,16 @@ require_once __DIR__ . '/../mocks.php';
  */
 class AuthProtectionTest extends TestCase
 {
+    public $failedEmail;
+
     protected $app;
     protected $auth;
     protected $fixtures;
 
     public function setUp(): void
     {
+        $self = $this;
+
         $this->app = new App([
             'roots' => [
                 'index' => $this->fixtures = __DIR__ . '/fixtures/AuthTest'
@@ -32,6 +40,11 @@ class AuthProtectionTest extends TestCase
                     'email'    => 'test@exämple.com',
                     'password' => password_hash('springfield123', PASSWORD_DEFAULT)
                 ]
+            ],
+            'hooks' => [
+                'user.login:failed' => function ($email) use ($self) {
+                    $self->failedEmail = $email;
+                }
             ]
         ]);
         Dir::make($this->fixtures . '/site/accounts');
@@ -42,6 +55,7 @@ class AuthProtectionTest extends TestCase
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+        $this->failedEmail = null;
     }
 
     /**
@@ -49,7 +63,7 @@ class AuthProtectionTest extends TestCase
      */
     public function testLogfile()
     {
-        $this->assertEquals($this->fixtures . '/site/accounts/.logins', $this->auth->logfile());
+        $this->assertSame($this->fixtures . '/site/accounts/.logins', $this->auth->logfile());
     }
 
     /**
@@ -60,10 +74,10 @@ class AuthProtectionTest extends TestCase
         copy(__DIR__ . '/fixtures/logins.cleanup.json', $this->fixtures . '/site/accounts/.logins');
 
         // should delete expired and old entries and add by-email array
-        $this->assertEquals([
+        $this->assertSame([
             'by-ip' => [
                 '38f0a08519792a17e18a251008f3a116977907f921b0b287c8' => [
-                    'time'   => '9999999999',
+                    'time'   => 9999999999,
                     'trials' => 5
                 ]
             ],
@@ -73,7 +87,7 @@ class AuthProtectionTest extends TestCase
 
         // should handle missing .logins file
         unlink($this->fixtures . '/site/accounts/.logins');
-        $this->assertEquals([
+        $this->assertSame([
             'by-ip'    => [],
             'by-email' => []
         ], $this->auth->log());
@@ -81,7 +95,7 @@ class AuthProtectionTest extends TestCase
 
         // should handle invalid .logins file
         file_put_contents($this->fixtures . '/site/accounts/.logins', 'some gibberish');
-        $this->assertEquals([
+        $this->assertSame([
             'by-ip'    => [],
             'by-email' => []
         ], $this->auth->log());
@@ -95,7 +109,7 @@ class AuthProtectionTest extends TestCase
     {
         $this->app->visitor()->ip('10.1.123.234');
 
-        $this->assertEquals('87084f11690867b977a611dd2c943a918c3197f4c02b25ab59', $this->auth->ipHash());
+        $this->assertSame('87084f11690867b977a611dd2c943a918c3197f4c02b25ab59', $this->auth->ipHash());
     }
 
     /**
@@ -140,6 +154,8 @@ class AuthProtectionTest extends TestCase
         $this->assertTrue($this->auth->track('marge@simpsons.com'));
         $this->assertTrue($this->auth->track('lisa@simpsons.com'));
 
+        $this->assertSame('lisa@simpsons.com', $this->failedEmail);
+
         $data = [
             'by-ip' => [
                 '87084f11690867b977a611dd2c943a918c3197f4c02b25ab59' => [
@@ -166,8 +182,8 @@ class AuthProtectionTest extends TestCase
                 ]
             ]
         ];
-        $this->assertEquals($data, $this->auth->log());
-        $this->assertEquals(json_encode($data), file_get_contents($this->fixtures . '/site/accounts/.logins'));
+        $this->assertSame($data, $this->auth->log());
+        $this->assertSame(json_encode($data), file_get_contents($this->fixtures . '/site/accounts/.logins'));
     }
 
     /**
@@ -181,7 +197,8 @@ class AuthProtectionTest extends TestCase
         $user = $this->auth->validatePassword('marge@simpsons.com', 'springfield123');
 
         $this->assertInstanceOf(User::class, $user);
-        $this->assertEquals('marge@simpsons.com', $user->email());
+        $this->assertSame('marge@simpsons.com', $user->email());
+        $this->assertNull($this->failedEmail);
     }
 
     /**
@@ -189,15 +206,21 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordInvalid1()
     {
-        $this->expectException('Kirby\Exception\PermissionException');
-        $this->expectExceptionMessage('Invalid email or password');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
 
         $this->app->visitor()->ip('10.3.123.234');
-        $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
 
-        $this->assertEquals(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
+        } catch (PermissionException $e) {
+            $this->assertSame('Invalid email or password', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+        $this->assertSame(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+        $this->assertSame('lisa@simpsons.com', $this->failedEmail);
     }
 
     /**
@@ -205,16 +228,22 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordInvalid2()
     {
-        $this->expectException('Kirby\Exception\PermissionException');
-        $this->expectExceptionMessage('Invalid email or password');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
 
         $this->app->visitor()->ip('10.3.123.234');
-        $this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
 
-        $this->assertEquals(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
-        $this->assertEquals(10, $this->auth->log()['by-email']['marge@simpsons.com']['trials']);
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
+        } catch (PermissionException $e) {
+            $this->assertSame('Invalid email or password', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+        $this->assertSame(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+        $this->assertSame(1, $this->auth->log()['by-email']['marge@simpsons.com']['trials']);
+        $this->assertSame('marge@simpsons.com', $this->failedEmail);
     }
 
     /**
@@ -222,13 +251,20 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordBlocked()
     {
-        $this->expectException('Kirby\Exception\PermissionException');
-        $this->expectExceptionMessage('Invalid email or password');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
 
         $this->app->visitor()->ip('10.2.123.234');
-        $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+        } catch (PermissionException $e) {
+            $this->assertSame('Invalid email or password', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+        $this->assertSame('homer@simpsons.com', $this->failedEmail);
     }
 
     /**
@@ -236,9 +272,6 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordDebugInvalid1()
     {
-        $this->expectException('Kirby\Exception\NotFoundException');
-        $this->expectExceptionMessage('The user "lisa@simpsons.com" cannot be found');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
         $this->app = $this->app->clone([
             'options' => [
@@ -248,9 +281,18 @@ class AuthProtectionTest extends TestCase
         $this->auth = new Auth($this->app);
 
         $this->app->visitor()->ip('10.3.123.234');
-        $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
 
-        $this->assertEquals(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
+        } catch (NotFoundException $e) {
+            $this->assertSame('The user "lisa@simpsons.com" cannot be found', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+        $this->assertSame(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+        $this->assertSame('lisa@simpsons.com', $this->failedEmail);
     }
 
     /**
@@ -258,9 +300,6 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordDebugInvalid2()
     {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The passwords do not match');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
         $this->app = $this->app->clone([
             'options' => [
@@ -270,10 +309,19 @@ class AuthProtectionTest extends TestCase
         $this->auth = new Auth($this->app);
 
         $this->app->visitor()->ip('10.3.123.234');
-        $this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
 
-        $this->assertEquals(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
-        $this->assertEquals(10, $this->auth->log()['by-email']['marge@simpsons.com']['trials']);
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
+        } catch (InvalidArgumentException $e) {
+            $this->assertSame('The passwords do not match', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+        $this->assertSame(1, $this->auth->log()['by-ip']['85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da']['trials']);
+        $this->assertSame(1, $this->auth->log()['by-email']['marge@simpsons.com']['trials']);
+        $this->assertSame('marge@simpsons.com', $this->failedEmail);
     }
 
     /**
@@ -281,9 +329,6 @@ class AuthProtectionTest extends TestCase
      */
     public function testValidatePasswordDebugBlocked()
     {
-        $this->expectException('Kirby\Exception\PermissionException');
-        $this->expectExceptionMessage('Rate limit exceeded');
-
         copy(__DIR__ . '/fixtures/logins.json', $this->fixtures . '/site/accounts/.logins');
         $this->app = $this->app->clone([
             'options' => [
@@ -293,7 +338,17 @@ class AuthProtectionTest extends TestCase
         $this->auth = new Auth($this->app);
 
         $this->app->visitor()->ip('10.2.123.234');
-        $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+
+        $thrown = false;
+        try {
+            $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
+        } catch (PermissionException $e) {
+            $this->assertSame('Rate limit exceeded', $e->getMessage());
+            $thrown = true;
+        }
+
+        $this->assertTrue($thrown);
+        $this->assertSame('homer@simpsons.com', $this->failedEmail);
     }
 
     /**

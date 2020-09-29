@@ -16,6 +16,7 @@
       value
     }"
     class="k-text-input"
+    :dir="direction"
     v-on="listeners"
   >
 </template>
@@ -28,6 +29,7 @@ import {
   email,
   url
 } from "vuelidate/lib/validators";
+import direction from "@/helpers/direction.js";
 
 export default {
   inheritAttrs: false,
@@ -56,6 +58,11 @@ export default {
       default: "text"
     },
     value: String
+  },
+  computed: {
+    direction() {
+      return direction(this);
+    }
   },
   data() {
     return {

@@ -19,6 +19,11 @@ use Kirby\Toolkit\I18n;
  */
 class Options
 {
+    /**
+     * Returns the classes of predefined Kirby objects
+     *
+     * @return array
+     */
     protected static function aliases(): array
     {
         return [
@@ -30,6 +35,13 @@ class Options
         ];
     }
 
+    /**
+     * Brings options through api
+     *
+     * @param $api
+     * @param $model
+     * @return array
+     */
     public static function api($api, $model = null): array
     {
         $model = $model ?? App::instance()->site();
@@ -57,6 +69,10 @@ class Options
         return $optionsApi->options();
     }
 
+    /**
+     * @param $model
+     * @return array
+     */
     protected static function data($model): array
     {
         $kirby = $model->kirby();
@@ -78,6 +94,14 @@ class Options
         return $data;
     }
 
+    /**
+     * Brings options by supporting both api and query
+     *
+     * @param $options
+     * @param array $props
+     * @param null $model
+     * @return array
+     */
     public static function factory($options, array $props = [], $model = null): array
     {
         switch ($options) {
@@ -131,6 +155,13 @@ class Options
         return $result;
     }
 
+    /**
+     * Brings options with query
+     *
+     * @param $query
+     * @param null $model
+     * @return array
+     */
     public static function query($query, $model = null): array
     {
         $model = $model ?? App::instance()->site();
