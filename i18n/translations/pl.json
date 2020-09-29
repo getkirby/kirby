@@ -102,6 +102,7 @@
   "error.page.notFound": "Nie można znaleźć strony \"{slug}\"",
   "error.page.num.invalid": "Wprowadź poprawny numer sortujący. Liczby nie mogą być ujemne.",
   "error.page.slug.invalid": "Wprowadź poprawną końcówkę adresu URL",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Nie można sortować strony \"{slug}\"",
   "error.page.status.invalid": "Ustaw prawidłowy status strony",
   "error.page.undefined": "Nie udało się znaleźć strony",
@@ -288,6 +289,7 @@
   "on": "włączone",
   "open": "Otwórz",
   "options": "Opcje",
+  "options.none": "No options",
 
   "orientation": "Orientacja",
   "orientation.landscape": "Pozioma",
@@ -344,6 +346,9 @@
 
   "save": "Zapisz",
   "search": "Szukaj",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "Sekcja jest wymagana",
 

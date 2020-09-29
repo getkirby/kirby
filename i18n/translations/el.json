@@ -102,6 +102,7 @@
   "error.page.notFound": "Δεν ήταν δυνατή η εύρεση της σελίδας \"{slug}\"",
   "error.page.num.invalid": "Παρακαλώ εισάγετε έναν έγκυρο αριθμό ταξινόμησης. Οι αριθμοί δεν μπορεί να είναι αρνητικοί.",
   "error.page.slug.invalid": "Παρακαλώ εισάγετε ένα έγκυρο πρόθεμα διεύθυνσης URL",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Δεν είναι δυνατή η ταξινόμηση της σελίδας \"{slug}\"",
   "error.page.status.invalid": "Ορίστε μια έγκυρη κατάσταση σελίδας",
   "error.page.undefined": "Δεν ήταν δυνατή η εύρεση της σελίδας",
@@ -288,6 +289,7 @@
   "on": "on",
   "open": "Άνοιγμα",
   "options": "Eπιλογές",
+  "options.none": "No options",
 
   "orientation": "Προσανατολισμός",
   "orientation.landscape": "Οριζόντιος",
@@ -344,6 +346,9 @@
 
   "save": "\u0391\u03c0\u03bf\u03b8\u03ae\u03ba\u03b5\u03c5\u03c3\u03b7",
   "search": "Αναζήτηση",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "The section is required",
 

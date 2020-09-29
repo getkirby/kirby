@@ -102,6 +102,7 @@
   "error.page.notFound": "Stránku \"{slug}\" nie je možné nájsť",
   "error.page.num.invalid": "Prosím, zadajte platné číslo pre radenie. Čísla nemôžu byť záporné.",
   "error.page.slug.invalid": "Prosím, zadajte platný URL prefix.",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Stránku \"{slug}\" nie je možné preradiť.",
   "error.page.status.invalid": "Prosím, nastavte platnú status pre stránku",
   "error.page.undefined": "Stránku nie je možné nájsť",
@@ -288,6 +289,7 @@
   "on": "on",
   "open": "Otvoriť",
   "options": "Nastavenia",
+  "options.none": "No options",
 
   "orientation": "Orientácia",
   "orientation.landscape": "Širokouhlá",
@@ -344,6 +346,9 @@
 
   "save": "Uložiť",
   "search": "Hľadať",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "The section is required",
 

@@ -102,6 +102,7 @@
   "error.page.notFound": "Puslapis \"{slug}\" nerastas",
   "error.page.num.invalid": "Įrašykite teisingą eiliškumo numerį. Numeris negali būti neigiamas.",
   "error.page.slug.invalid": "Įrašykite teisingą URL prefiksą",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Puslapiui \"{slug}\" negalima pakeisti eiliškumo",
   "error.page.status.invalid": "Nustatykite teisingą puslapio statusą",
   "error.page.undefined": "Puslapis nerastas",
@@ -288,6 +289,7 @@
   "on": "on",
   "open": "Atidaryti",
   "options": "Pasirinkimai",
+  "options.none": "No options",
 
   "orientation": "Orientacija",
   "orientation.landscape": "Horizontali",
@@ -344,6 +346,9 @@
 
   "save": "Išsaugoti",
   "search": "Ieškoti",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "Sekcija privaloma",
 
