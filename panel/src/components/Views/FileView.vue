@@ -188,7 +188,7 @@ export default {
         });
 
       } catch (error) {
-        console.error(error);
+        window.console.error(error);
         this.issue = error;
       }
     },

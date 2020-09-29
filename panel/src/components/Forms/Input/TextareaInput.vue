@@ -84,15 +84,15 @@ export default {
     uploads: [Boolean, Object, Array],
     value: String
   },
-  computed: {
-    direction() {
-      return direction(this);
-    }
-  },
   data() {
     return {
       over: false
     };
+  },
+  computed: {
+    direction() {
+      return direction(this);
+    }
   },
   watch: {
     value() {
