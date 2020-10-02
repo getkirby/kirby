@@ -5,6 +5,7 @@ use Kirby\Cms\Builder;
 use Kirby\Toolkit\I18n;
 
 return [
+    'mixins' => ['min'],
     'props' => [
 
         /**
@@ -51,6 +52,16 @@ return [
          */
         'max' => function (?int $max = null) {
             return $max;
+        },
+
+        /**
+         * Require at least the $min number of blocks
+         *
+         * @param int|null $min
+         * @return int
+         */
+        'min' => function (?int $min = null) {
+            return $min;
         },
 
         /**

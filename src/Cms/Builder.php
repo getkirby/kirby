@@ -254,10 +254,25 @@ class Builder
     {
         $blocks = $this->blocks($value);
         $max    = $this->props['max'] ?? null;
+        $min    = $this->props['min'] ?? null;
         $fields = [];
 
+        if ($min && $blocks->count() < $min) {
+            throw new InvalidArgumentException([
+                'key'  => 'builder.blocks.min.' . ($min === 1 ? 'singular' : 'plural'),
+                'data' => [
+                    'min' => $min
+                ]
+            ]);
+        }
+
         if ($max && $blocks->count() > $max) {
-            throw new InvalidArgumentException('Too many blocks');
+            throw new InvalidArgumentException([
+                'key'  => 'builder.blocks.max.' . ($max === 1 ? 'singular' : 'plural'),
+                'data' => [
+                    'max' => $max
+                ]
+            ]);
         }
 
         foreach ($blocks as $block) {
@@ -273,7 +288,12 @@ class Builder
 
                 // rough first validation
                 if (empty($errors) === false) {
-                    throw new InvalidArgumentException('There\'s an error in block ' . ($block->indexOf() + 1));
+                    throw new InvalidArgumentException([
+                        'key' => 'builder.validation',
+                        'data' => [
+                            'index' => $block->indexOf() + 1,
+                        ]
+                    ]);
                 }
             }
 
