@@ -164,6 +164,138 @@ class BuilderTest extends TestCase
         ], $builder->fieldsets());
     }
 
+    public function testValidation()
+    {
+        $fieldsets = [
+            'heading' => [
+                'fields' => [
+                    'text' => [
+                        'type' => 'text',
+                        'required' => true
+                    ]
+                ]
+            ]
+        ];
+
+        $builder = new Builder($this->page, ['fieldsets' => $fieldsets]);
+
+        // valid
+        $input = [
+            [
+                'type' => 'heading',
+                'content' => [
+                    'text' => 'awesome'
+                ]
+            ]
+        ];
+
+        $this->assertTrue($builder->validate($input));
+
+        // invalid
+        $input = [
+            [
+                'type' => 'heading',
+                'content' => [
+                    'text' => ''
+                ]
+            ]
+        ];
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('There\'s an error in block 1');
+
+        $builder->validate($input);
+    }
+
+    public function testValidationMax()
+    {
+        $fieldsets = [
+            'heading' => [
+                'fields' => [
+                    'text' => [
+                        'type' => 'text',
+                    ]
+                ]
+            ]
+        ];
+
+        $builder = new Builder($this->page, [
+            'fieldsets' => $fieldsets,
+            'max'       => 1
+        ]);
+
+        // valid
+        $input = [
+            [
+                'type' => 'heading',
+                'content' => [
+                    'text' => 'awesome'
+                ]
+            ]
+        ];
+
+        $this->assertTrue($builder->validate($input));
+
+        // invalid
+        $input = [
+            [
+                'type' => 'heading',
+                'content' => [
+                    'text' => 'Heading 1'
+                ]
+            ],
+            [
+                'type' => 'heading',
+                'content' => [
+                    'text' => 'Heading 2'
+                ]
+            ]
+        ];
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('You must not add more than one block');
+
+        $builder->validate($input);
+    }
+
+    public function testValidationMin()
+    {
+        $fieldsets = [
+            'heading' => [
+                'fields' => [
+                    'text' => [
+                        'type' => 'text',
+                    ]
+                ]
+            ]
+        ];
+
+        $builder = new Builder($this->page, [
+            'fieldsets' => $fieldsets,
+            'min'       => 1
+        ]);
+
+        // valid
+        $input = [
+            [
+                'type' => 'heading',
+                'content' => [
+                    'text' => 'awesome'
+                ]
+            ]
+        ];
+
+        $this->assertTrue($builder->validate($input));
+
+        // invalid
+        $input = [];
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('You must add at least one block');
+
+        $builder->validate($input);
+    }
+
     public function testValue()
     {
         $fieldsets = [

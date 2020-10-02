@@ -246,9 +246,8 @@ class Builder
     }
 
     /**
-     *
      * @param array $value
-     * @return boolean
+     * @return bool
      */
     public function validate(array $value = null)
     {
@@ -296,7 +295,6 @@ class Builder
                     ]);
                 }
             }
-
         }
 
         return true;

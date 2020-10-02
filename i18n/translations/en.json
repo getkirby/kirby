@@ -55,7 +55,7 @@
   "error.builder.blocks.max.plural": "You must not add more than {max} blocks",
   "error.builder.blocks.max.singular": "You must not add more than one block",
   "error.builder.blocks.min.plural": "You must add at least {min} blocks",
-  "error.builder.blocks.min.singular": "You must add at least one blocks",
+  "error.builder.blocks.min.singular": "You must add at least one block",
   "error.builder.validation": "There's an error in block {index}",
 
   "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
