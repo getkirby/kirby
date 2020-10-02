@@ -120,6 +120,26 @@ class Block
     }
 
     /**
+     * Deprecated method to return the block type
+     *
+     * @return string
+     */
+    public function _key(): string
+    {
+        return $this->type();
+    }
+
+    /**
+     * Deprecated method to return the block id
+     *
+     * @return string
+     */
+    public function _uid(): string
+    {
+        return $this->id();
+    }
+
+    /**
      * Returns a specific attribute
      *
      * @param string $name

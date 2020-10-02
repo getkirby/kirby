@@ -61,7 +61,7 @@ return function (App $app) {
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\Blocks
          */
-        'toBlocks' => function (Field $field) {
+        'toBuilderBlocks' => function (Field $field) {
             try {
                 $blocks = Blocks::parse($field->value());
                 $blocks = Blocks::factory($blocks['blocks'], [
@@ -79,16 +79,6 @@ return function (App $app) {
 
                 throw new InvalidArgumentException($message);
             }
-        },
-
-        /**
-         * Deprecated alias for $field->toBlocks()
-         *
-         * @param \Kirby\Cms\Field $field
-         * @return \Kirby\Cms\Blocks
-         */
-        'toBuilderBlocks' => function (Field $field) {
-            return $field->toBlocks();
         },
 
         /**
