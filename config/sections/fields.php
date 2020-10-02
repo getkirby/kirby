@@ -43,6 +43,11 @@ return [
             return $fields;
         }
     ],
+    'methods' => [
+        'errors' => function () {
+            return $this->form->errors();
+        }
+    ],
     'toArray' => function () {
         return [
             'fields' => $this->fields,

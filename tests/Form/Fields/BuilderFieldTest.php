@@ -35,12 +35,16 @@ class BuilderFieldTest extends TestCase
             ],
             'value' => [
                 [
-                    '_key' => 'heading',
-                    'text' => 'a'
+                    'type'    => 'heading',
+                    'content' => [
+                        'text' => 'a'
+                    ]
                 ],
                 [
-                    '_key'  => 'heading',
-                    'title' => 'b'
+                    'type'    => 'heading',
+                    'content' => [
+                        'text' => 'b'
+                    ]
                 ],
             ],
             'max' => 1
@@ -48,7 +52,34 @@ class BuilderFieldTest extends TestCase
 
         $this->assertSame(1, $field->max());
         $this->assertFalse($field->isValid());
-        $this->assertArrayHasKey('max', $field->errors());
+        $this->assertSame($field->errors()['blocks'], 'You must not add more than one block');
+    }
+
+    public function testMin()
+    {
+        $field = $this->field('builder', [
+            'fieldsets' => [
+                'heading' => [
+                    'fields' => [
+                        'text' => [
+                            'type' => 'text',
+                            'translate' => false,
+                        ]
+                    ]
+                ]
+            ],
+            'value' => [
+                [
+                    'type'    => 'heading',
+                    'content' => ['text' => 'a']
+                ],
+            ],
+            'min' => 2
+        ]);
+
+        $this->assertSame(2, $field->min());
+        $this->assertFalse($field->isValid());
+        $this->assertSame($field->errors()['blocks'], 'You must add at least 2 blocks');
     }
 
     public function testRequired()
@@ -85,8 +116,10 @@ class BuilderFieldTest extends TestCase
             ],
             'value' => [
                 [
-                    '_key' => 'heading',
-                    'text' => 'A nice heading'
+                    'type'    => 'heading',
+                    'content' => [
+                        'text' => 'A nice heading'
+                    ]
                 ],
             ],
             'required' => true

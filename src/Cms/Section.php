@@ -51,6 +51,15 @@ class Section extends Component
         parent::__construct($type, $attrs);
     }
 
+    public function errors(): array
+    {
+        if (array_key_exists('errors', $this->methods) === true) {
+            return $this->methods['errors']->call($this);
+        }
+
+        return $this->errors ?? [];
+    }
+
     /**
      * @return \Kirby\Cms\App
      */
