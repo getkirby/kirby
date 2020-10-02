@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Yaml;
 use PHPUnit\Framework\TestCase;
 
 class BuilderTest extends TestCase
@@ -164,6 +165,78 @@ class BuilderTest extends TestCase
         ], $builder->fieldsets());
     }
 
+    public function testNestedStructure()
+    {
+        $fieldsets = [
+            'table' => [
+                'fields' => [
+                    'rows' => [
+                        'type' => 'structure',
+                        'fields' => [
+                            'header' => [
+                                'type' => 'text'
+                            ],
+                            'value' => [
+                                'type' => 'text'
+                            ]
+                        ]
+                    ]
+                ]
+            ],
+        ];
+
+        $rows = [
+            [
+                'header' => 'Header A',
+                'value'  => 'Value A'
+            ],
+            [
+                'header' => 'Header B',
+                'value'  => 'Value B'
+            ]
+        ];
+
+        $builder = new Builder($this->page, ['fieldsets' => $fieldsets]);
+
+        // with yaml
+        $value = [
+            [
+                'type' => 'table',
+                'content' => [
+                    'rows' => Yaml::encode($rows)
+                ]
+            ]
+        ];
+
+        $blocks    = $builder->blocks($value);
+        $structure = $blocks->first()->rows()->toStructure();
+
+        $this->assertInstanceOf('Kirby\Cms\Structure', $structure);
+        $this->assertEquals('Header A', $structure->first()->header());
+        $this->assertEquals('Value A', $structure->first()->value());
+        $this->assertEquals('Header B', $structure->last()->header());
+        $this->assertEquals('Value B', $structure->last()->value());
+
+        // with an array
+        $value = [
+            [
+                'type' => 'table',
+                'content' => [
+                    'rows' => $rows
+                ]
+            ]
+        ];
+
+        $blocks    = $builder->blocks($value);
+        $structure = $blocks->first()->rows()->toStructure();
+
+        $this->assertInstanceOf('Kirby\Cms\Structure', $structure);
+        $this->assertEquals('Header A', $structure->first()->header());
+        $this->assertEquals('Value A', $structure->first()->value());
+        $this->assertEquals('Header B', $structure->last()->header());
+        $this->assertEquals('Value B', $structure->last()->value());
+    }
+
     public function testValidation()
     {
         $fieldsets = [
@@ -197,6 +270,69 @@ class BuilderTest extends TestCase
                 'type' => 'heading',
                 'content' => [
                     'text' => ''
+                ]
+            ]
+        ];
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('There\'s an error in block 1');
+
+        $builder->validate($input);
+    }
+
+    public function testValidationWithConditionalFields()
+    {
+        $fieldsets = [
+            'heading' => [
+                'fields' => [
+                    'text' => [
+                        'type' => 'text',
+                        'required' => true,
+                        'when' => [
+                            'toggle' => true
+                        ]
+                    ],
+                    'toggle' => [
+                        'type' => 'toggle'
+                    ]
+                ]
+            ]
+        ];
+
+        $builder = new Builder($this->page, ['fieldsets' => $fieldsets]);
+
+        // valid
+        $input = [
+            [
+                'type' => 'heading',
+                'content' => [
+                    'text' => ''
+                ]
+            ]
+        ];
+
+        $this->assertTrue($builder->validate($input));
+
+        // also valid when toggle is on an field is filled in
+        $input = [
+            [
+                'type' => 'heading',
+                'content' => [
+                    'text' => 'Some content',
+                    'toggle' => true
+                ]
+            ]
+        ];
+
+        $this->assertTrue($builder->validate($input));
+
+        // invalid when toggle is on an field is empty
+        $input = [
+            [
+                'type' => 'heading',
+                'content' => [
+                    'text' => '',
+                    'toggle' => true
                 ]
             ]
         ];
