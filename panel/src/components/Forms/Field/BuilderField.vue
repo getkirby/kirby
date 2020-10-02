@@ -44,14 +44,14 @@
             </span>
 
             <nav
-              v-if="isOpen(block) && Object.keys(blockOptions.tabs).length > 1"
+              v-if="isOpen(block) && hasTabs(blockOptions)"
               class="k-builder-block-tabs"
             >
               <k-button
                 v-for="(tab, tabId) in blockOptions.tabs"
                 :key="tabId"
                 :current="isCurrentTab(block, tabId)"
-                :icon="tab.icon"
+                :icon="tab.icon || 'settings'"
                 class="k-builder-block-tab"
                 @click.stop="open(block, tabId)"
               >
@@ -79,6 +79,18 @@
                 <k-dropdown-item :disabled="isFull" icon="angle-down" @click="select(index + 1)">
                   {{ $t("insert.after") }}
                 </k-dropdown-item>
+                <template v-if="hasTabs(blockOptions)">
+                  <hr>
+                  <k-dropdown-item
+                    v-for="(tab, tabId) in blockOptions.tabs"
+                    :key="tabId"
+                    :current="isCurrentTab(block, tabId)"
+                    :icon="tab.icon || 'settings'"
+                    @click="open(block, tabId)"
+                  >
+                    {{ tab.label }}
+                  </k-dropdown-item>
+                </template>
                 <hr>
                 <k-dropdown-item :icon="block.attrs.hide ? 'preview' : 'hidden'" @click="toggleVisibility(block)">
                   {{ block.attrs.hide === true ? $t('show') : $t('hide') }}
@@ -268,6 +280,9 @@ export default {
     },
     fieldset(block) {
       return this.fieldsets[block.type];
+    },
+    hasTabs(fieldset) {
+      return Object.keys(fieldset.tabs).length > 1
     },
     isCurrentTab(block, tabId) {
       if (this.tabs[block.id] === undefined) {
@@ -470,8 +485,10 @@ export default {
   align-items: center;
   margin-right: .5rem;
 }
-.k-builder-block[open] .k-builder-block-tabs {
-  display: flex;
+@media screen and (min-width: $breakpoint-menu) {
+  .k-builder-block[open] .k-builder-block-tabs {
+    display: flex;
+  }
 }
 .k-builder-block-tab {
   position: relative;
