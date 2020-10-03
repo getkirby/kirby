@@ -330,6 +330,7 @@
   "page.duplicate.appendix": "Copy",
   "page.duplicate.files": "Copy files",
   "page.duplicate.pages": "Copy pages",
+  "page.sort": "Change position",
   "page.status": "Status",
   "page.status.draft": "Draft",
   "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",

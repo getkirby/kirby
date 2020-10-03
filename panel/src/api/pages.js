@@ -80,7 +80,7 @@ export default (api) => {
     link(id) {
       return "/" + this.url(id);
     },
-    async options(id, view = "view") {
+    async options(id, view = "view", sortable = true) {
       const page    = await api.get(this.url(id), {select: "options"})
       const options = page.options;
       let result    = [];
@@ -126,6 +126,15 @@ export default (api) => {
         text: Vue.i18n.translate("page.changeStatus"),
         disabled: !options.changeStatus
       });
+
+      if (view === "list") {
+        result.push({
+          click: "sort",
+          icon: "sort",
+          text: Vue.i18n.translate("page.sort"),
+          disabled: !(options.sort  && sortable)
+        });
+      }
 
       result.push({
         click: "template",

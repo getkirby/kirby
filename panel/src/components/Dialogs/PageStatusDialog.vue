@@ -16,7 +16,8 @@ export default {
   data() {
     return {
       page: {
-        id: null
+        id: null,
+        siblings: []
       },
       isBlocked: false,
       isIncomplete: false,
@@ -55,14 +56,12 @@ export default {
           label: this.$t("page.changeStatus.position"),
           type: "select",
           empty: false,
-          options: this.sortingOptions()
+          options: this.sortingOptions
         };
       }
 
       return fields;
-    }
-  },
-  methods: {
+    },
     sortingOptions() {
       let options = [];
       let index = 0;
@@ -92,7 +91,9 @@ export default {
       });
 
       return options;
-    },
+    }
+  },
+  methods: {
     async open(id) {
       try {
         const page = await this.$api.pages.get(id, {
