@@ -1,6 +1,9 @@
 <template>
-  <section v-if="isLoading === false" class="k-pages-section">
-
+  <section
+    v-if="isLoading === false"
+    :data-processing="isProcessing"
+    class="k-pages-section"
+  >
     <header class="k-section-header">
       <k-headline :link="options.link">
         {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
@@ -29,7 +32,7 @@
         :help="help"
         :items="data"
         :pagination="pagination"
-        :sortable="options.sortable"
+        :sortable="!isProcessing && options.sortable"
         :size="options.size"
         :data-invalid="isInvalid"
         @change="sort"
@@ -184,7 +187,7 @@ export default {
         return page;
       });
     },
-    sort(event) {
+    async sort(event) {
       let type = null;
 
       if (event.added) {
@@ -196,22 +199,26 @@ export default {
       }
 
       if (type) {
+        this.isProcessing = true;
+
         const element = event[type].element;
         const position = event[type].newIndex + 1 + this.pagination.offset;
 
-        this.$api.pages
-          .status(element.id, "listed", position)
-          .then(() => {
-            this.$store.dispatch("notification/success", ":)");
-          })
-          .catch(response => {
-            this.$store.dispatch("notification/error", {
-              message: response.message,
-              details: response.details
-            });
+        try {
+          await this.$api.pages.status(element.id, "listed", position);
+          this.$store.dispatch("notification/success", ":)");
 
-            this.reload();
+        } catch (error) {
+          this.$store.dispatch("notification/error", {
+            message: error.message,
+            details: error.details
           });
+
+          await this.reload();
+
+        } finally {
+          this.isProcessing = false;
+        }
       }
     },
     update() {
@@ -221,3 +228,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.k-pages-section[data-processing] {
+  pointer-events: none;
+}
+</style>

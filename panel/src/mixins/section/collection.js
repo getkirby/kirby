@@ -11,6 +11,7 @@ export default {
       data: [],
       error: null,
       isLoading: false,
+      isProcessing: false,
       options: {
         empty: null,
         headline: null,
@@ -66,6 +67,8 @@ export default {
         this.isLoading = true;
       }
 
+      this.isProcessing = true;
+
       if (this.pagination.page === null) {
         this.pagination.page = localStorage.getItem(this.paginationId) || 1;
       }
@@ -84,6 +87,7 @@ export default {
         this.error = error.message;
 
       } finally {
+        this.isProcessing = false;
         this.isLoading = false;
       }
     },
@@ -92,8 +96,8 @@ export default {
       this.pagination = pagination;
       this.reload();
     },
-    reload() {
-      this.load(true);
+    async reload() {
+      await this.load(true);
     }
   }
 };
