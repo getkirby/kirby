@@ -2,6 +2,10 @@ import Vue from "vue";
 import auth from "./auth.js";
 import store from "@/store/store.js";
 
+// make sure custom components are loaded
+// to support overwriting route views
+import "./plugins.js";
+
 /* Routes */
 export default [
   {
