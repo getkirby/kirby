@@ -1,7 +1,10 @@
 <template>
 
-  <section v-if="isLoading === false" class="k-files-section">
-
+  <section
+    v-if="isLoading === false"
+    :data-processing="isProcessing"
+    class="k-files-section"
+  >
     <header class="k-section-header">
       <k-headline>
         {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
@@ -28,7 +31,7 @@
           :items="data"
           :layout="options.layout"
           :pagination="pagination"
-          :sortable="options.sortable"
+          :sortable="!isProcessing && options.sortable"
           :size="options.size"
           :data-invalid="isInvalid"
           @sort="sort"
@@ -162,6 +165,8 @@ export default {
         return false;
       }
 
+      this.isProcessing = true;
+
       items = items.map(item => {
         return item.id;
       });
@@ -176,6 +181,9 @@ export default {
       } catch (error) {
         this.reload();
         this.$store.dispatch("notification/error", error.message);
+
+      } finally {
+        this.isProcessing = false
       }
     },
     update() {
@@ -199,3 +207,9 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.k-files-section[data-processing] {
+  pointer-events: none;
+}
+</style>
