@@ -142,6 +142,7 @@ trait FileFoundation
     public function isViewable(): bool
     {
         $viewable = [
+            'avif',
             'jpg',
             'jpeg',
             'gif',
