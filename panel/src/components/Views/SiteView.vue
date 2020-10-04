@@ -10,6 +10,7 @@
   >
     <k-header
       :editable="permissions.changeTitle && !isLocked"
+      :tab="tab"
       :tabs="tabs"
       @edit="action('rename')"
     >
@@ -32,6 +33,7 @@
       :blueprint="site.blueprint.name"
       :empty="$t('site.blueprint')"
       parent="site"
+      :tab="tab"
       :tabs="tabs"
       @submit="$emit('submit', $event)"
     />
@@ -50,6 +52,7 @@ export default {
         url: null
       },
       issue: null,
+      tab: "main",
       tabs: [],
       options: null,
       permissions: {
@@ -79,6 +82,7 @@ export default {
         .get({ view: "panel" })
         .then(site => {
           this.site = site;
+          this.tab = this.$route.hash.slice(1) || "main";
           this.tabs = site.blueprint.tabs;
           this.permissions = site.options;
           this.options = ready => {
