@@ -240,51 +240,64 @@ class Collection extends Iterator implements Countable
      * Filters elements by a custom
      * filter function or an array of filters
      *
+     * @deprecated 3.5.0 Use `Kirby\Toolkit\Collection::filterBy` instead
+     *
      * @param array|\Closure $filter
      * @return self
      * @throws \Exception if $filter is neither a closure nor an array
      */
     public function filter($filter)
     {
-        if (is_callable($filter) === true) {
-            $collection = clone $this;
-            $collection->data = array_filter($this->data, $filter);
-
-            return $collection;
-        } elseif (is_array($filter) === true) {
-            $collection = $this;
-
-            foreach ($filter as $arguments) {
-                $collection = $collection->filterBy(...$arguments);
-            }
-
-            return $collection;
-        }
-
-        throw new Exception('The filter method needs either an array of filterBy rules or a closure function to be passed as parameter.');
+        return $this->filterBy($filter);
     }
 
     /**
      * Filters elements by one of the
-     * predefined filter methods.
+     * predefined filter methods, by a
+     * custom filter function or an array of filters
      *
-     * @param string $field
+     * @param string|Closure $field
      * @param array ...$args
      * @return \Kirby\Toolkit\Collection
      */
-    public function filterBy(string $field, ...$args)
+    public function filterBy($field, ...$args)
     {
         $operator = '==';
         $test     = $args[0] ?? null;
         $split    = $args[1] ?? false;
 
-        if (is_string($test) === true && isset(static::$filters[$test]) === true) {
+        // filter by custom filter function
+        if (is_callable($field) === true) {
+            $collection = clone $this;
+            $collection->data = array_filter($this->data, $field);
+
+            return $collection;
+        }
+
+        // array of filters
+        if (is_array($field) === true) {
+            $collection = $this;
+
+            foreach ($field as $filter) {
+                $collection = $collection->filterBy(...$filter);
+            }
+
+            return $collection;
+        }
+
+        if (
+            is_string($test) === true &&
+            isset(static::$filters[$test]) === true
+        ) {
             $operator = $test;
             $test     = $args[1] ?? null;
             $split    = $args[2] ?? false;
         }
 
-        if (is_object($test) === true && method_exists($test, '__toString') === true) {
+        if (
+            is_object($test) === true &&
+            method_exists($test, '__toString') === true
+        ) {
             $test = (string)$test;
         }
 
