@@ -41,20 +41,20 @@ class AppUsersTest extends TestCase
 
         // impersonate as kirby
         $user = $app->impersonate('kirby');
+        $this->assertSame($user, $app->user());
         $this->assertSame('kirby', $user->id());
         $this->assertSame('kirby@getkirby.com', $user->email());
         $this->assertSame('admin', $user->role()->name());
         $this->assertTrue($user->isKirby());
-        $this->assertSame($user, $app->user());
         $this->assertNull($app->user(null, false));
 
         // impersonate as existing user
         $user = $app->impersonate('homer@simpsons.com');
-        $this->assertSame('homer@simpsons.com', $user->email());
         $this->assertSame($user, $app->user());
+        $this->assertSame('homer@simpsons.com', $user->email());
         $user = $app->impersonate('testtest');
-        $this->assertSame('homer@simpsons.com', $user->email());
         $this->assertSame($user, $app->user());
+        $this->assertSame('homer@simpsons.com', $user->email());
         $this->assertNull($app->user(null, false));
 
         // impersonate as nobody
@@ -75,8 +75,8 @@ class AppUsersTest extends TestCase
         // with callback
         $result = $app->impersonate('homer@simpsons.com', function ($user) use ($app, $self) {
             $self->assertSame($app, $this);
-            $self->assertSame('homer@simpsons.com', $user->email());
             $self->assertSame($user, $this->user());
+            $self->assertSame('homer@simpsons.com', $user->email());
             $self->assertNull($app->user(null, false));
 
             return 'test1';
@@ -91,8 +91,8 @@ class AppUsersTest extends TestCase
         try {
             $app->impersonate('homer@simpsons.com', function ($user) use ($app, $self) {
                 $self->assertSame($app, $this);
-                $self->assertSame('homer@simpsons.com', $user->email());
                 $self->assertSame($user, $this->user());
+                $self->assertSame('homer@simpsons.com', $user->email());
                 $self->assertNull($app->user(null, false));
 
                 throw new Exception('Something bad happened');

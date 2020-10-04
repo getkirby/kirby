@@ -61,11 +61,11 @@ class AuthTest extends TestCase
         $this->assertSame(null, $this->auth->user());
 
         $user = $this->auth->impersonate('kirby');
+        $this->assertSame($user, $this->auth->user());
+        $this->assertSame($user, $this->auth->currentUserFromImpersonation());
         $this->assertSame('kirby', $user->id());
         $this->assertSame('kirby@getkirby.com', $user->email());
         $this->assertSame('admin', $user->role()->name());
-        $this->assertSame($user, $this->auth->user());
-        $this->assertSame($user, $this->auth->currentUserFromImpersonation());
         $this->assertNull($this->auth->user(null, false));
 
         $user = $this->auth->impersonate('homer@simpsons.com');
@@ -82,11 +82,11 @@ class AuthTest extends TestCase
         $this->auth->setUser($actual = $this->app->user('marge@simpsons.com'));
         $this->assertSame('marge@simpsons.com', $this->auth->user()->email());
         $impersonated = $this->auth->impersonate('nobody');
+        $this->assertSame($impersonated, $this->auth->user());
+        $this->assertSame($impersonated, $this->auth->currentUserFromImpersonation());
         $this->assertSame('nobody', $impersonated->id());
         $this->assertSame('nobody@getkirby.com', $impersonated->email());
         $this->assertSame('nobody', $impersonated->role()->name());
-        $this->assertSame($impersonated, $this->auth->user());
-        $this->assertSame($impersonated, $this->auth->currentUserFromImpersonation());
         $this->assertSame($actual, $this->auth->user(null, false));
 
         $this->auth->logout();
