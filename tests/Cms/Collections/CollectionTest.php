@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Exception;
+use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Obj;
 use stdClass;
 
@@ -21,9 +23,29 @@ class MockObject extends Model
         return $this->id;
     }
 
+    public function idIfNotLoggedIn()
+    {
+        $user = kirby()->user();
+        if ($user && $user->isNobody() !== true) {
+            return 9 - $this->id();
+        }
+
+        return $this->id();
+    }
+
     public function group()
     {
         return $this->group;
+    }
+
+    public function throw()
+    {
+        throw new Exception('Something bad happened');
+    }
+
+    public function throwPermission()
+    {
+        throw new PermissionException('Something bad happened');
     }
 
     public function toArray(): array
@@ -439,6 +461,103 @@ class CollectionTest extends TestCase
                 'id' => 'c'
             ]
         ]);
+    }
+
+    public function testSortBy()
+    {
+        $app = $this->kirby([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'users' => [
+                [
+                    'id'    => 'testtest',
+                    'email' => 'homer@simpsons.com',
+                    'role'  => 'admin'
+                ]
+            ]
+        ]);
+
+        $collection = new Collection([
+            $b = new MockObject(['id' => 2]),
+            $a = new MockObject(['id' => 1]),
+            $c = new MockObject(['id' => 3])
+        ]);
+
+        // without logged in user
+        $sorted = $collection->sortBy('idIfNotLoggedIn', 'asc');
+        $this->assertSame($a, $sorted->nth(0));
+        $this->assertSame($b, $sorted->nth(1));
+        $this->assertSame($c, $sorted->nth(2));
+
+        $sorted = $collection->sortBy('idIfNotLoggedIn', 'desc');
+        $this->assertSame($c, $sorted->nth(0));
+        $this->assertSame($b, $sorted->nth(1));
+        $this->assertSame($a, $sorted->nth(2));
+
+        // with a real logged-in user
+        $app->auth()->setUser($user = $app->user('homer@simpsons.com'));
+        $sorted = $collection->sortBy('idIfNotLoggedIn', 'asc');
+        $this->assertSame($a, $sorted->nth(0));
+        $this->assertSame($b, $sorted->nth(1));
+        $this->assertSame($c, $sorted->nth(2));
+        $this->assertSame($user, $app->user());
+
+        // with an impersonated user
+        $app = $app->clone();
+        $user = $app->impersonate('homer@simpsons.com');
+        $sorted = $collection->sortBy('idIfNotLoggedIn', 'asc');
+        $this->assertSame($a, $sorted->nth(0));
+        $this->assertSame($b, $sorted->nth(1));
+        $this->assertSame($c, $sorted->nth(2));
+        $this->assertSame($user, $app->user());
+
+        // with the Kirby user
+        $user = $app->impersonate('kirby');
+        $sorted = $collection->sortBy('idIfNotLoggedIn', 'asc');
+        $this->assertSame($a, $sorted->nth(0));
+        $this->assertSame($b, $sorted->nth(1));
+        $this->assertSame($c, $sorted->nth(2));
+        $this->assertSame('kirby', $app->user()->id());
+
+        // with the Nobody user
+        $user = $app->impersonate('nobody');
+        $sorted = $collection->sortBy('idIfNotLoggedIn', 'asc');
+        $this->assertSame($a, $sorted->nth(0));
+        $this->assertSame($b, $sorted->nth(1));
+        $this->assertSame($c, $sorted->nth(2));
+        $this->assertSame('nobody', $app->user()->id());
+
+        // with Exception in the sorting process
+        $app->impersonate('kirby');
+        $caught = false;
+        try {
+            $sorted = $collection->sortBy('throw', 'asc');
+        } catch (Exception $e) {
+            $caught = true;
+
+            $this->assertSame('Something bad happened', $e->getMessage());
+
+            // the previous user should be restored
+            $this->assertSame('kirby@getkirby.com', $app->user()->email());
+        }
+        $this->assertTrue($caught);
+
+        // with PermissionException in the sorting process
+        $app->impersonate('kirby');
+        $caught = false;
+        try {
+            $sorted = $collection->sortBy('throwPermission', 'asc');
+        } catch (Exception $e) {
+            $caught = true;
+
+            $this->assertSame('An internal operation was attempted while in protected mode', $e->getMessage());
+            $this->assertSame('Something bad happened', $e->getPrevious()->getMessage());
+
+            // the previous user should be restored
+            $this->assertSame('kirby@getkirby.com', $app->user()->email());
+        }
+        $this->assertTrue($caught);
     }
 
     public function testToArrayWithCallback()
