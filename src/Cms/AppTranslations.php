@@ -2,9 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Data;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -73,7 +71,6 @@ trait AppTranslations
                 Str::$language = Language::loadRules($slugs);
             }
         }
-
     }
 
     /**
