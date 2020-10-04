@@ -12,7 +12,7 @@
       <slot slot="right" name="right" class="k-header-right" />
     </k-bar>
 
-    <k-tabs :tabs="tabsWithBadges" theme="notice" />
+    <k-tabs :tab="tab" :tabs="tabsWithBadges" theme="notice" />
 
   </header>
 
@@ -23,6 +23,7 @@
 export default {
   props: {
     editable: Boolean,
+    tab: String,
     tabs: Array
   },
   computed:  {

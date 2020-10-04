@@ -11,6 +11,7 @@
 
       <k-header
         :editable="permissions.changeName && !isLocked"
+        :tab="tab"
         :tabs="tabs"
         @edit="action('rename')"
       >
@@ -48,6 +49,7 @@
         :blueprint="file.blueprint.name"
         :empty="$t('file.blueprint', { template: file.blueprint.name })"
         :parent="parent"
+        :tab="tab"
         :tabs="tabs"
       />
 
@@ -101,6 +103,7 @@ export default {
         delete: false
       },
       issue: null,
+      tab: "main",
       tabs: [],
       options: null
     };
@@ -160,6 +163,7 @@ export default {
         }
 
         this.parent = this.$api.files.url(this.path, file.filename);
+        this.tab = this.$route.hash.slice(1) || "main";
         this.tabs = file.blueprint.tabs;
         this.permissions = file.options;
 

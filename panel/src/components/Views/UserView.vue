@@ -49,6 +49,7 @@
 
       <k-header
         :editable="permissions.changeName && !isLocked"
+        :tab="tab"
         :tabs="tabs"
         @edit="action('rename')"
       >
@@ -78,6 +79,7 @@
         :blueprint="user.blueprint.name"
         :empty="$t('user.blueprint', { role: user.role.name })"
         :parent="'users/' + user.id"
+        :tab="tab"
         :tabs="tabs"
       />
 
@@ -114,6 +116,7 @@ export default {
   },
   data() {
     return {
+      tab: "main",
       tabs: [],
       ready: false,
       user: {
@@ -214,7 +217,8 @@ export default {
 
       try {
         this.user = await this.$api.users.get(this.id, { view: "panel" });
-        this.tabs = this.user.blueprint.tabs;
+        this.tab = this.$route.hash.slice(1) || "main";
+        this.tabs = user.blueprint.tabs;
         this.ready = true;
         this.permissions = this.user.options;
         this.options = async ready => {

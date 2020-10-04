@@ -9,7 +9,7 @@
         v-for="tabButton in visibleTabs"
         :key="tabButton.name"
         :link="'#' + tabButton.name"
-        :current="tab === tabButton.name"
+        :current="current === tabButton.name"
         :icon="tabButton.icon"
         :tooltip="tabButton.label"
         class="k-tab-button"
@@ -56,6 +56,7 @@
 <script>
 export default {
   props: {
+    tab: String,
     tabs: Array,
     theme: String
   },
@@ -67,9 +68,8 @@ export default {
     }
   },
   computed: {
-    tab() {
-      const current = this.$route.hash.slice(1) || "main";
-      const tab = this.tabs.find(tab => tab.name === current) || this.tabs[0] || {};
+    current() {
+      const tab = this.tabs.find(tab => tab.name === this.tab) || this.tabs[0] || {};
       return tab.name;
     }
   },

@@ -6,7 +6,7 @@
   />
   <k-grid v-else class="k-sections" gutter="large">
     <k-column
-      v-for="(column, columnIndex) in tab.columns"
+      v-for="(column, columnIndex) in currentTab.columns"
       :key="parent + '-column-' + columnIndex"
       :width="column.width"
       :sticky="column.sticky"
@@ -40,13 +40,12 @@ export default {
     empty: String,
     blueprint: String,
     parent: String,
+    tab: String,
     tabs: Array,
   },
   computed: {
-    tab() {
-      const current = this.$route.hash.slice(1) || "main";
-      const tab = this.tabs.find(tab => tab.name === current) || this.tabs[0] || {};
-      return tab;
+    currentTab() {
+      return this.tabs.find(tab => tab.name === this.tab) || this.tabs[0] || {};
     },
     content() {
       return this.$store.getters["content/values"]();
