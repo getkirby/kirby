@@ -229,9 +229,12 @@ class Auth
     }
 
     /**
-     * Become any existing user
+     * Become any existing user or disable the current user
      *
-     * @param string|null $who User ID or email address
+     * @param string|null $who User ID or email address,
+     *                         `null` to use the actual user again,
+     *                         `'kirby'` for a virtual admin user or
+     *                         `'nobody'` to disable the actual user
      * @return \Kirby\Cms\User|null
      * @throws \Kirby\Exception\NotFoundException if the given user cannot be found
      */
@@ -245,6 +248,12 @@ class Auth
                     'email' => 'kirby@getkirby.com',
                     'id'    => 'kirby',
                     'role'  => 'admin',
+                ]);
+            case 'nobody':
+                return $this->impersonate = new User([
+                    'email' => 'nobody@getkirby.com',
+                    'id'    => 'nobody',
+                    'role'  => 'nobody',
                 ]);
             default:
                 if ($user = $this->kirby->users()->find($who)) {
@@ -585,7 +594,7 @@ class Auth
      * @param \Kirby\Session\Session|array|null $session
      * @param bool $allowImpersonation If set to false, only the actually
      *                                 logged in user will be returned
-     * @return \Kirby\Cms\User
+     * @return \Kirby\Cms\User|null
      *
      * @throws \Throwable If an authentication error occured
      */

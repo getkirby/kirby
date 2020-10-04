@@ -57,6 +57,15 @@ class AppUsersTest extends TestCase
         $this->assertSame($user, $app->user());
         $this->assertNull($app->user(null, false));
 
+        // impersonate as nobody
+        $user = $app->impersonate('nobody');
+        $this->assertSame('nobody', $user->id());
+        $this->assertSame('nobody@getkirby.com', $user->email());
+        $this->assertSame('nobody', $user->role()->name());
+        $this->assertTrue($user->isNobody());
+        $this->assertSame($user, $app->user());
+        $this->assertNull($app->user(null, false));
+
         // unimpersonate
         $user = $app->impersonate();
         $this->assertNull($user);

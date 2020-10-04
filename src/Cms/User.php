@@ -383,6 +383,17 @@ class User extends ModelWithContent
     }
 
     /**
+     * Checks if the current user is the virtual
+     * Nobody user
+     *
+     * @return bool
+     */
+    public function isNobody(): bool
+    {
+        return $this->email() === 'nobody@getkirby.com';
+    }
+
+    /**
      * Returns the user language
      *
      * @return string
