@@ -8,7 +8,8 @@
 |--|--|--|
 | `master` | Latest released version | - |
 | `release/*` | Pre-releases in testing before they are merged into `master` when released | - |
-| `develop` | Working branch for next patch or feature version, e.g. `3.0.x` or `3.x` | send PRs here, we will review and, if decided, merge once appropriate version is upcoming |
+| `develop` | Working branch for next patch version, e.g. `3.0.x` | send bugfix PRs here, we will review and, if decided, merge once appropriate version is upcoming |
+| `features` | Working branch for next feature version, e.g. `3.x` | send feature PRs here, we will review and, if decided, merge once appropriate version is upcoming |
 | `fix/*` | Temporary branches for single patch | - |
 | `feature/*` | Temporary branches for single feature | - |
 
@@ -32,11 +33,11 @@ We are really happy about any help with our translations. Please, do not transla
 
 ## Features
 
-Create feature PRs on a new feature branch. Follow the branch name scheme: `feature/issue_number-feature-x`. Always send feature PRs to the `develop` branch––not `master`!
+Create feature PRs on a new feature branch. Follow the branch name scheme: `feature/issue_number-feature-x`. Always send feature PRs to the `features` branch––not `master`!
 
 We try to bundle features in our major releases, e.g. `3.x`. That is why we might only review and, if decided, merge your PR once an appropriate  release for your PR is upcoming.
 
-Have a look at the [ideas repository](https://github.com/getkirby/ideas/issues). Maybe your feature idea already exists and you can get valuable feedback from other Kirby users.
+Have a look at our [feedback platform](https://feedback.getkirby.com). Maybe your feature idea already exists and you can get valuable feedback from other Kirby users.
 
 ### Additional rules:
 

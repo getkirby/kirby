@@ -57,7 +57,7 @@ class Responder
     /**
      * Setter and getter for the response body
      *
-     * @param string $body
+     * @param string|null $body
      * @return string|self
      */
     public function body(string $body = null)
@@ -73,7 +73,7 @@ class Responder
     /**
      * Setter and getter for the status code
      *
-     * @param int $code
+     * @param int|null $code
      * @return int|self
      */
     public function code(int $code = null)
@@ -124,7 +124,7 @@ class Responder
     /**
      * Setter and getter for all headers
      *
-     * @param array $headers
+     * @param array|null $headers
      * @return array|self
      */
     public function headers(array $headers = null)
@@ -140,7 +140,7 @@ class Responder
     /**
      * Shortcut to configure a json response
      *
-     * @param array $json
+     * @param array|null $json
      * @return string|self
      */
     public function json(array $json = null)
@@ -203,7 +203,7 @@ class Responder
     /**
      * Setter and getter for the content type
      *
-     * @param string $type
+     * @param string|null $type
      * @return string|self
      */
     public function type(string $type = null)

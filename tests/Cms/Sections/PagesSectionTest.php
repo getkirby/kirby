@@ -220,6 +220,43 @@ class PagesSectionTest extends TestCase
         setlocale(LC_ALL, $locale);
     }
 
+    public function testSortByMultiple()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-3', 'content' => ['title' => 'B']],
+                ['slug' => 'subpage-4', 'content' => ['title' => 'A']],
+                ['slug' => 'subpage-1', 'content' => ['title' => 'A']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'B']]
+            ]
+        ]);
+
+        // simple multiple fields
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $page,
+            'sortBy' => 'title asc slug desc'
+        ]);
+
+        $this->assertSame('test/subpage-4', $section->data()[0]['id']);
+        $this->assertSame('test/subpage-1', $section->data()[1]['id']);
+        $this->assertSame('test/subpage-3', $section->data()[2]['id']);
+        $this->assertSame('test/subpage-2', $section->data()[3]['id']);
+
+        // multiple fields with comma
+        $section = new Section('pages', [
+            'name'   => 'test',
+            'model'  => $page,
+            'sortBy' => 'title desc, slug asc'
+        ]);
+
+        $this->assertSame('test/subpage-2', $section->data()[0]['id']);
+        $this->assertSame('test/subpage-3', $section->data()[1]['id']);
+        $this->assertSame('test/subpage-1', $section->data()[2]['id']);
+        $this->assertSame('test/subpage-4', $section->data()[3]['id']);
+    }
+
     public function testSortable()
     {
         $section = new Section('pages', [

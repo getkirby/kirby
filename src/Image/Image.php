@@ -31,19 +31,19 @@ class Image extends File
     protected $url;
 
     /**
-     * @var Exif|null
+     * @var \Kirby\Image\Exif|null
      */
     protected $exif;
 
     /**
-     * @var Dimensions|null
+     * @var \Kirby\Image\Dimensions|null
      */
     protected $dimensions;
 
     /**
      * Constructor
      *
-     * @param string $root
+     * @param string|null $root
      * @param string|null $url
      */
     public function __construct(string $root = null, string $url = null)
@@ -132,8 +132,7 @@ class Image extends File
      */
     public function header(bool $send = true)
     {
-        $response = new Response();
-        $response->type($this->mime());
+        $response = new Response('', $this->mime());
         return $send === true ? $response->send() : $response;
     }
 
@@ -201,6 +200,7 @@ class Image extends File
      *
      * @param array $rules
      * @return bool
+     * @throws \Exception
      */
     public function match(array $rules): bool
     {

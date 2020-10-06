@@ -185,7 +185,7 @@ export default {
     }
   },
   methods: {
-    action(action) {
+    async action(action) {
       switch (action) {
         case "email":
           this.$refs.email.open(this.user.id);
@@ -197,10 +197,9 @@ export default {
           this.$refs.password.open(this.user.id);
           break;
         case "picture.delete":
-          this.$api.users.deleteAvatar(this.id).then(() => {
-            this.$store.dispatch("notification/success", ":)");
-            this.avatar = null;
-          });
+          await this.$api.users.deleteAvatar(this.id)
+          this.avatar = null;
+          this.$store.dispatch("notification/success", ":)");
           break;
         case "remove":
           this.$refs.remove.open(this.user.id);
@@ -215,49 +214,45 @@ export default {
           this.$store.dispatch("notification/error", "Not yet implemented");
       }
     },
-    fetch() {
-
+    async fetch() {
+      // don't load a user if there's no id
       if (!this.id) {
-        // don't load a user if there's no id
         return;
       }
 
-      this.$api.users
-        .get(this.id, { view: "panel" })
-        .then(user => {
-          this.user = user;
-          this.tabs = user.blueprint.tabs;
-          this.ready = true;
-          this.permissions = user.options;
-          this.options = ready => {
-            this.$api.users.options(this.user.id).then(options => {
-              ready(options);
-            });
-          };
+      try {
+        this.user = await this.$api.users.get(this.id, { view: "panel" });
+        this.tabs = this.user.blueprint.tabs;
+        this.ready = true;
+        this.permissions = this.user.options;
+        this.options = async ready => {
+          const options = await this.$api.users.options(this.user.id);
+          ready(options);
+        };
 
-          if (user.avatar) {
-            this.avatar = user.avatar.url;
-          } else {
-            this.avatar = null;
-          }
+        if (this.user.avatar) {
+          this.avatar = this.user.avatar.url;
+        } else {
+          this.avatar = null;
+        }
 
-          if (this.$route.name === "User") {
-            this.$store.dispatch(
-              "breadcrumb",
-              this.$api.users.breadcrumb(user)
-            );
-          }
+        if (this.$route.name === "User") {
+          this.$store.dispatch(
+            "breadcrumb",
+            this.$api.users.breadcrumb(this.user)
+          );
+        }
 
-          this.$store.dispatch("title", this.user.name || this.user.email);
-          this.$store.dispatch("content/create", {
-            id: "users/" + user.id,
-            api: this.$api.users.link(user.id),
-            content: user.content
-          });
-        })
-        .catch(error => {
-          this.issue = error;
+        this.$store.dispatch("title", this.user.name || this.user.email);
+        this.$store.dispatch("content/create", {
+          id: "users/" + this.user.id,
+          api: this.$api.users.link(this.user.id),
+          content: this.user.content
         });
+
+      } catch (error) {
+        this.issue = error;
+      }
     },
     uploadedAvatar() {
       this.$store.dispatch("notification/success", ":)");

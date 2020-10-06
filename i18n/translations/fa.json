@@ -102,6 +102,7 @@
   "error.page.notFound": "صفحه مورد نظر با آدرس «{slug}» پیدا نشد.",
   "error.page.num.invalid": "لطفا شماره ترتیب را بدرستی وارد نمایید. اعداد نباید منفی باشند.",
   "error.page.slug.invalid": "لطفا یک پیشوند Url صحیح وارد کنید",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "امکان مرتب‌سازی «{slug}» نیست",
   "error.page.status.invalid": "لطفا وضعیت صحیحی برای صفحه انتخاب کنید",
   "error.page.undefined": "صفحه مورد نظر پیدا نشد",
@@ -288,6 +289,7 @@
   "on": "on",
   "open": "بازکردن",
   "options": "گزینه‌ها",
+  "options.none": "No options",
 
   "orientation": "جهت",
   "orientation.landscape": "افقی",
@@ -344,6 +346,9 @@
 
   "save": "\u0630\u062e\u06cc\u0631\u0647",
   "search": "جستجو",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "The section is required",
 

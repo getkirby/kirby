@@ -102,6 +102,7 @@
   "error.page.notFound": "\"{slug}\" uzantısındaki sayfa bulunamadı",
   "error.page.num.invalid": "Lütfen geçerli bir sıralama numarası girin. Sayılar negatif olmamalıdır.",
   "error.page.slug.invalid": "Lütfen geçerli bir adres öneki girin",
+  "error.page.slug.maxlength": "Adres uzantısı \"{length}\" karakterden az olmalıdır",
   "error.page.sort.permission": "\"{slug}\" sayfası sıralanamıyor",
   "error.page.status.invalid": "Lütfen geçerli bir sayfa durumu ayarlayın",
   "error.page.undefined": "Sayfa bulunamad\u0131",
@@ -288,6 +289,7 @@
   "on": "açık",
   "open": "Önizleme",
   "options": "Seçenekler",
+  "options.none": "Seçenek yok",
 
   "orientation": "Oryantasyon",
   "orientation.landscape": "Yatay",
@@ -344,6 +346,9 @@
 
   "save": "Kaydet",
   "search": "Arama",
+  "search.min": "Aramak için {min} karakter girin",
+  "search.all": "Tümünü göster",
+  "search.results.none": "Sonuç yok",
 
   "section.required": "Bölüm gereklidir",
 

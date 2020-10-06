@@ -25,7 +25,30 @@ class TranslationTest extends TestCase
     {
         $translation = Translation::load('de', __DIR__ . '/fixtures/translations/de.json');
 
-        $this->assertEquals('de', $translation->code());
-        $this->assertEquals('Deutsch', $translation->name());
+        $this->assertSame('de', $translation->code());
+        $this->assertSame('Deutsch', $translation->name());
+
+        // invalid
+        $translation = Translation::load('zz', __DIR__ . '/fixtures/translations/zz.json');
+
+        $this->assertSame('zz', $translation->code());
+        $this->assertSame([], $translation->data());
+    }
+
+    public function testToArray()
+    {
+        $translation = Translation::load('de', __DIR__ . '/fixtures/translations/de.json');
+
+        $this->assertSame([
+            'code' => 'de',
+            'data' => [
+                'translation.direction' => 'ltr',
+                'translation.name' => 'Deutsch',
+                'translation.author' => 'Kirby Team',
+                'error.test' => 'Dies ist ein Testfehler',
+            ],
+            'name' => 'Deutsch',
+            'author' => 'Kirby Team',
+        ], $translation->toArray());
     }
 }

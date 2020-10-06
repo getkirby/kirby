@@ -102,6 +102,7 @@
   "error.page.notFound": "La pagina \"{slug}\" non è stata trovata",
   "error.page.num.invalid": "Inserisci un numero di ordinamento valido. I numeri non devono essere negativi",
   "error.page.slug.invalid": "Inserisci un prefisso URL valido",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "La pagina \"{slug}\" non può essere ordinata",
   "error.page.status.invalid": "Imposta uno stato valido per la pagina",
   "error.page.undefined": "La pagina non \u00e8 stata trovata",
@@ -288,6 +289,7 @@
   "on": "on",
   "open": "Apri",
   "options": "Opzioni",
+  "options.none": "No options",
 
   "orientation": "Orientamento",
   "orientation.landscape": "Panorama",
@@ -344,6 +346,9 @@
 
   "save": "Salva",
   "search": "Cerca",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "The section is required",
 

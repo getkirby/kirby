@@ -276,6 +276,7 @@ class Event
      * @param string $name
      * @param mixed $value
      * @return void
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function updateArgument(string $name, $value): void
     {

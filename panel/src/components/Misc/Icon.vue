@@ -7,7 +7,7 @@
     :data-size="size"
     :class="'k-icon k-icon-' + type"
   >
-    <span v-if="emoji" class="k-icon-emoji">{{ type }}</span>
+    <span v-if="isEmoji" class="k-icon-emoji">{{ type }}</span>
     <svg v-else :style="{ color: color }" viewBox="0 0 16 16">
       <use :xlink:href="'#icon-' + type" />
     </svg>
@@ -20,9 +20,13 @@ export default {
     alt: String,
     color: String,
     back: String,
-    emoji: Boolean,
     size: String,
     type: String
+  },
+  computed: {
+    isEmoji() {
+      return this.$helper.string.hasEmoji(this.type);
+    }
   }
 };
 </script>
@@ -69,13 +73,14 @@ export default {
   line-height: 1;
   font-style: normal;
   font-size: 1rem;
+  margin-left: -.3rem;
 }
 
 /* fix emoji alignment on high-res screens */
 @media only screen and (-webkit-min-device-pixel-ratio: 2), not all, not all, not all, only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   .k-icon-emoji {
     font-size: 1.25rem;
-    margin-left: .2rem;
+    margin-left: -.15rem;
   }
 }
 

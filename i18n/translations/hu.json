@@ -102,6 +102,7 @@
   "error.page.notFound": "Az oldal nem tal\u00e1lhat\u00f3",
   "error.page.num.invalid": "Kérlek megfelelő oldalszámozást adj meg. Negatív szám itt nem használható.",
   "error.page.slug.invalid": "Kérlek megfelelő URL-előtagot adj meg",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "A(z) \"{slug}\" oldal nem illeszthető a sorrendbe",
   "error.page.status.invalid": "Kérlek add meg a megfelelő oldalstátuszt",
   "error.page.undefined": "Az oldal nem tal\u00e1lhat\u00f3",
@@ -288,6 +289,7 @@
   "on": "be",
   "open": "Megnyitás",
   "options": "Beállítások",
+  "options.none": "No options",
 
   "orientation": "Tájolás",
   "orientation.landscape": "Fekvő",
@@ -344,6 +346,9 @@
 
   "save": "Ment\u00e9s",
   "search": "Keresés",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "The section is required",
 

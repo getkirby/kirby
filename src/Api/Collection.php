@@ -19,12 +19,39 @@ use Kirby\Toolkit\Str;
  */
 class Collection
 {
+    /**
+     * @var \Kirby\Api\Api
+     */
     protected $api;
+
+    /**
+     * @var mixed|null
+     */
     protected $data;
+
+    /**
+     * @var mixed|null
+     */
     protected $model;
+
+    /**
+     * @var mixed|null
+     */
     protected $select;
+
+    /**
+     * @var mixed|null
+     */
     protected $view;
 
+    /**
+     * Collection constructor
+     *
+     * @param \Kirby\Api\Api $api
+     * @param mixed|null $data
+     * @param array $schema
+     * @throws \Exception
+     */
     public function __construct(Api $api, $data = null, array $schema)
     {
         $this->api   = $api;
@@ -48,6 +75,11 @@ class Collection
         }
     }
 
+    /**
+     * @param string|array|null $keys
+     * @return self
+     * @throws \Exception
+     */
     public function select($keys = null)
     {
         if ($keys === false) {
@@ -66,6 +98,11 @@ class Collection
         return $this;
     }
 
+    /**
+     * @return array
+     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Exception
+     */
     public function toArray(): array
     {
         $result = [];
@@ -87,6 +124,11 @@ class Collection
         return $result;
     }
 
+    /**
+     * @return array
+     * @throws \Kirby\Exception\NotFoundException
+     * @throws \Exception
+     */
     public function toResponse(): array
     {
         if ($query = $this->api->requestQuery('query')) {
@@ -124,6 +166,10 @@ class Collection
         ];
     }
 
+    /**
+     * @param string $view
+     * @return self
+     */
     public function view(string $view)
     {
         $this->view = $view;

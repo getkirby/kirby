@@ -2,7 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\Exception;
 use Kirby\Http\Server;
+use Kirby\Toolkit\F;
 use ReflectionMethod;
 use Whoops\Handler\PlainTextHandler;
 
@@ -29,7 +31,7 @@ class AppErrorsTest extends TestCase
     {
         $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
         $whoopsMethod->setAccessible(true);
-        
+
         $testMethod = new ReflectionMethod(App::class, 'handleCliErrors');
         $testMethod->setAccessible(true);
 
@@ -49,7 +51,7 @@ class AppErrorsTest extends TestCase
     {
         $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
         $whoopsMethod->setAccessible(true);
-        
+
         $testMethod = new ReflectionMethod(App::class, 'handleErrors');
         $testMethod->setAccessible(true);
 
@@ -75,7 +77,7 @@ class AppErrorsTest extends TestCase
         $handlers = $whoops->getHandlers();
         $this->assertCount(1, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
-        
+
         // HTML
         Server::$cli = false;
         $_SERVER['HTTP_ACCEPT'] = 'text/html';
@@ -106,7 +108,7 @@ class AppErrorsTest extends TestCase
     {
         $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
         $whoopsMethod->setAccessible(true);
-        
+
         $optionsMethod = new ReflectionMethod(App::class, 'optionsFromProps');
         $optionsMethod->setAccessible(true);
 
@@ -121,6 +123,18 @@ class AppErrorsTest extends TestCase
         $handlers = $whoops->getHandlers();
         $this->assertCount(1, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+        $this->assertSame($this->_getBufferedContent($app->root('kirby') . '/views/fatal.php'), $this->_getBufferedContent($handlers[0]));
+
+        // without fatal closure
+        $optionsMethod->invoke($app, ['fatal' => function () {
+            return 'Fatal Error Test!';
+        }]);
+
+        $testMethod->invoke($app);
+        $handlers = $whoops->getHandlers();
+        $this->assertCount(1, $handlers);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+        $this->assertSame('Fatal Error Test!', $this->_getBufferedContent($handlers[0]));
 
         // disabling Whoops without debugging doesn't matter
         $optionsMethod->invoke($app, ['debug' => false, 'whoops' => false]);
@@ -167,7 +181,10 @@ class AppErrorsTest extends TestCase
     {
         $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
         $whoopsMethod->setAccessible(true);
-        
+
+        $optionsMethod = new ReflectionMethod(App::class, 'optionsFromProps');
+        $optionsMethod->setAccessible(true);
+
         $testMethod = new ReflectionMethod(App::class, 'handleJsonErrors');
         $testMethod->setAccessible(true);
 
@@ -178,6 +195,62 @@ class AppErrorsTest extends TestCase
         $handlers = $whoops->getHandlers();
         $this->assertCount(1, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+
+        // test CallbackHandler with default
+        $this->assertSame(json_encode([
+            'status' => 'error',
+            'code' => 500,
+            'details' => null,
+            'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
+        ]), $this->_getBufferedContent($handlers[0]));
+
+        // test CallbackHandler with \Exception class
+        $exception = new \Exception('Some error message', 30);
+        $handlers[0]->setException($exception);
+
+        $this->assertSame(json_encode([
+            'status' => 'error',
+            'code' => 30,
+            'details' => null,
+            'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
+        ]), $this->_getBufferedContent($handlers[0]));
+
+        // test CallbackHandler with \Kirby\Exception\Exception class
+        $exception = new Exception([
+            'data' => [],
+            'details'  => [
+                'Some error message'
+            ]
+        ]);
+        $handlers[0]->setException($exception);
+
+        $this->assertSame(json_encode([
+            'status' => 'error',
+            'code' => 'error.general',
+            'details' => [
+                'Some error message'
+            ],
+            'message' => 'An unexpected error occurred! Enable debug mode for more info: https://getkirby.com/docs/reference/system/options/debug'
+        ]), $this->_getBufferedContent($handlers[0]));
+
+        // with debugging enabled
+        $optionsMethod->invoke($app, ['debug' => true, 'whoops' => true]);
+
+        $handlers = $whoops->getHandlers();
+        $this->assertCount(1, $handlers);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+
+        $this->assertSame(json_encode([
+            'status' => 'error',
+            'exception' => 'Kirby\Exception\Exception',
+            'code' => 'error.general',
+            'message' => 'An error occurred',
+            'details' => [
+                'Some error message'
+            ],
+            'file' => __FILE__,
+            'line' => $exception->getLine()
+        ]), $this->_getBufferedContent($handlers[0]));
     }
 
     /**
@@ -188,7 +261,7 @@ class AppErrorsTest extends TestCase
     {
         $whoopsMethod = new ReflectionMethod(App::class, 'whoops');
         $whoopsMethod->setAccessible(true);
-        
+
         $setMethod = new ReflectionMethod(App::class, 'setWhoopsHandler');
         $setMethod->setAccessible(true);
 
@@ -231,5 +304,26 @@ class AppErrorsTest extends TestCase
         $whoops2 = $whoopsMethod->invoke($app);
         $this->assertInstanceOf('Whoops\Run', $whoops2);
         $this->assertSame($whoops1, $whoops2);
+    }
+
+    /**
+     * Convert output to returned variable
+     *
+     * @param string|\Whoops\Handler\CallbackHandler $path
+     * @return false|string
+     */
+    protected function _getBufferedContent($path)
+    {
+        ob_start();
+
+        if (is_a($path, '\Whoops\Handler\CallbackHandler') === true) {
+            $path->handle();
+        } else {
+            F::load($path);
+        }
+
+        $response = ob_get_clean();
+
+        return $response;
     }
 }

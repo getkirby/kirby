@@ -33,7 +33,7 @@ use Throwable;
 class System
 {
     /**
-     * @var App
+     * @var \Kirby\Cms\App
      */
     protected $app;
 
@@ -135,6 +135,7 @@ class System
      * if they don't exist yet
      *
      * @return void
+     * @throws \Kirby\Exception\PermissionException
      */
     public function init()
     {
@@ -374,9 +375,11 @@ class System
      * and adds it to the .license file in the config
      * folder if possible.
      *
-     * @param string $license
-     * @param string $email
+     * @param string|null $license
+     * @param string|null $email
      * @return bool
+     * @throws \Kirby\Exception\Exception
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function register(string $license = null, string $email = null): bool
     {

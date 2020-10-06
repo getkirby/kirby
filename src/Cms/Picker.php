@@ -117,7 +117,7 @@ abstract class Picker
      * @param \Kirby\Cms\Collection $items
      * @return \Kirby\Cms\Collection
      */
-    public function paginate($items)
+    public function paginate(Collection $items)
     {
         return $items->paginate([
             'limit' => $this->options['limit'],
@@ -148,7 +148,7 @@ abstract class Picker
      * @param \Kirby\Cms\Collection $items
      * @return \Kirby\Cms\Collection
      */
-    public function search($items)
+    public function search(Collection $items)
     {
         if (empty($this->options['search']) === false) {
             return $items->search($this->options['search']);

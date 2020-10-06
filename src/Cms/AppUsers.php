@@ -43,6 +43,7 @@ trait AppUsers
      *                               impersonation will be reset afterwards
      * @return mixed If called without callback: User that was impersonated;
      *               if called with callback: Return value from the callback
+     * @throws \Throwable
      */
     public function impersonate(?string $who = null, ?Closure $callback = null)
     {
@@ -82,7 +83,7 @@ trait AppUsers
     /**
      * Create your own set of app users
      *
-     * @param array $users
+     * @param array|null $users
      * @return \Kirby\Cms\App
      */
     protected function setUsers(array $users = null)

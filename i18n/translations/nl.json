@@ -102,6 +102,7 @@
   "error.page.notFound": "De pagina \"{slug}\" kan niet worden gevonden",
   "error.page.num.invalid": "Vul een geldig sorteer-cijfer in. Het cijfer mag niet negatief zijn",
   "error.page.slug.invalid": "Vul een geldige URL-prefix in",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "De pagina \"{slug}\" kan niet worden gesorteerd",
   "error.page.status.invalid": "Zorg voor een geldige paginastatus",
   "error.page.undefined": "De pagina kan niet worden gevonden",
@@ -288,6 +289,7 @@
   "on": "aan",
   "open": "Open",
   "options": "Opties",
+  "options.none": "No options",
 
   "orientation": "Oriëntatie",
   "orientation.landscape": "Liggend",
@@ -344,6 +346,9 @@
 
   "save": "Opslaan",
   "search": "Zoeken",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "De sectie is verplicht",
 

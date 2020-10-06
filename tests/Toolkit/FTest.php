@@ -264,6 +264,7 @@ class FTest extends TestCase
     {
         F::write($this->tmp, 'test');
 
+        // simply move file
         $this->assertFalse(file_exists($this->moved));
         $this->assertTrue(file_exists($this->tmp));
 
@@ -271,6 +272,18 @@ class FTest extends TestCase
 
         $this->assertTrue(file_exists($this->moved));
         $this->assertFalse(file_exists($this->tmp));
+
+        // replace file via moving
+        F::copy($this->moved, $this->tmp);
+
+        $this->assertTrue(file_exists($this->moved));
+        $this->assertTrue(file_exists($this->tmp));
+
+        $this->assertFalse(F::move($this->moved, $this->tmp));
+        $this->assertTrue(F::move($this->moved, $this->tmp, true));
+
+        $this->assertFalse(file_exists($this->moved));
+        $this->assertTrue(file_exists($this->tmp));
     }
 
     public function testMime()

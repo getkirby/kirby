@@ -17,6 +17,13 @@ use PHPMailer\PHPMailer\PHPMailer as Mailer;
  */
 class PHPMailer extends Email
 {
+    /**
+     * Sends email via PHPMailer library
+     *
+     * @param bool $debug
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public function send(bool $debug = false): bool
     {
         $mailer = new Mailer(true);
@@ -83,6 +90,6 @@ class PHPMailer extends Email
             return $this->isSent = true;
         }
 
-        return $this->isSent = $mailer->send();
+        return $this->isSent = $mailer->send(); // @codeCoverageIgnore
     }
 }

@@ -102,6 +102,7 @@
   "error.page.notFound": "Siden kunne ikke findes",
   "error.page.num.invalid": "Indtast venligst et gyldigt sorteringsnummer. Nummeret kan ikke være negativt.",
   "error.page.slug.invalid": "Indtast venligst en gyldig URL prefix",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Siden \"{slug}\" kan ikke sorteres",
   "error.page.status.invalid": "Sæt venligst en gyldig status for siden",
   "error.page.undefined": "Siden kunne ikke findes",
@@ -288,6 +289,7 @@
   "on": "Tænd",
   "open": "Åben",
   "options": "Indstillinger",
+  "options.none": "No options",
 
   "orientation": "Orientering",
   "orientation.landscape": "Landskab",
@@ -344,6 +346,9 @@
 
   "save": "Gem",
   "search": "Søg",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "Sektionen er påkrævet",
 

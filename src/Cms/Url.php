@@ -54,7 +54,7 @@ class Url extends BaseUrl
     /**
      * Smart resolver for internal and external urls
      *
-     * @param string $path
+     * @param string|null $path
      * @param array|string|null $options Either an array of options for the Uri class or a language string
      * @return string
      */

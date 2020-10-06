@@ -630,6 +630,25 @@ class CollectionTest extends TestCase
         ])->first()['name']);
     }
 
+    public function testQuerySortByComma()
+    {
+        $collection = new Collection([
+            'one'   => ['key' => 'erei', 'value' => 'arsz'],
+            'two'   => ['key' => 'zwei', 'value' => 'fors'],
+            'three' => ['key' => 'erei', 'value' => 'beck'],
+            'four'  => ['key' => 'vier', 'value' => 'tars']
+        ]);
+
+        $results = $collection->query(['sortBy' => 'key asc, value desc'])->toArray();
+
+        $this->assertSame([
+            'three',
+            'one',
+            'four',
+            'two',
+        ], array_keys($results));
+    }
+
     public function testRemoveMultiple()
     {
         $collection = new Collection();

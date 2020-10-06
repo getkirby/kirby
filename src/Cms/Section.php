@@ -31,6 +31,13 @@ class Section extends Component
     public static $types = [];
 
 
+    /**
+     * Section constructor.
+     *
+     * @param string $type
+     * @param array $attrs
+     * @throws \Kirby\Exception\InvalidArgumentException
+     */
     public function __construct(string $type, array $attrs = [])
     {
         if (isset($attrs['model']) === false) {
@@ -60,6 +67,9 @@ class Section extends Component
         return $this->model;
     }
 
+    /**
+     * @return array
+     */
     public function toArray(): array
     {
         $array = parent::toArray();
@@ -69,6 +79,9 @@ class Section extends Component
         return $array;
     }
 
+    /**
+     * @return array
+     */
     public function toResponse(): array
     {
         return array_merge([

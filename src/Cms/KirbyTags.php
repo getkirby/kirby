@@ -22,10 +22,10 @@ class KirbyTags extends \Kirby\Text\KirbyTags
     protected static $tagClass = 'Kirby\Cms\KirbyTag';
 
     /**
-     * @param string $text
+     * @param string|null $text
      * @param array $data
      * @param array $options
-     * @param \Kirby\Cms\App $app
+     * @param \Kirby\Cms\App|null $app
      * @return string
      */
     public static function parse(string $text = null, array $data = [], array $options = [], ?App $app = null): string

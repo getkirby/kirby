@@ -50,6 +50,9 @@
       "plugin:vue/recommended",
       "eslint:recommended"
     ],
+    "parserOptions": {
+      "ecmaVersion": 2017
+    },
     "rules": {
       "vue/require-default-prop": "off",
       "vue/attributes-order": "error",

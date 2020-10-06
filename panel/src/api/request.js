@@ -13,7 +13,7 @@ export default (config) => {
         }
       });
 
-      // adapt headers for all non-GET and nob-POST methods
+      // adapt headers for all non-GET and non-POST methods
       if (
         config.methodOverwrite &&
         options.method !== 'GET' &&
@@ -33,7 +33,12 @@ export default (config) => {
       this.running++;
 
       // fetch the resquest's response
-      const response = await fetch(config.endpoint + "/" + path, options);
+      const response = await fetch(
+        [config.endpoint, path].join(
+          (config.endpoint.endsWith("/") || path.startsWith("/")) ? "" : "/"
+        ),
+        options
+      );
       const text     = await response.text();
 
       try {

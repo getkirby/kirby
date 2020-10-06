@@ -102,6 +102,7 @@
   "error.page.notFound": "La page «&nbsp;{slug}&nbsp;» n’a pu être trouvée",
   "error.page.num.invalid": "Veuillez saisir un numéro de position valide. Les numéros ne doivent pas être négatifs.",
   "error.page.slug.invalid": "Veuillez saisir un préfixe d’URL valide",
+  "error.page.slug.maxlength": "L’identifiant d’URL doit faire moins de \"{length}\" caractères",
   "error.page.sort.permission": "La page «&nbsp;{slug}&nbsp;» ne peut être réordonnée",
   "error.page.status.invalid": "Veuillez choisir un statut de page valide",
   "error.page.undefined": "La page n’a pu être trouvée",
@@ -288,6 +289,7 @@
   "on": "on",
   "open": "Ouvrir",
   "options": "Options",
+  "options.none": "Pas d’options",
 
   "orientation": "Orientation",
   "orientation.landscape": "Paysage",
@@ -344,6 +346,9 @@
 
   "save": "Enregistrer",
   "search": "Rechercher",
+  "search.min": "Entrez {min} caractères pour rechercher",
+  "search.all": "Tout afficher",
+  "search.results.none": "Pas de résultats",
 
   "section.required": "Cette section est obligatoire",
 

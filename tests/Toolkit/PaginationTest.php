@@ -249,55 +249,113 @@ class PaginationTest extends TestCase
         $this->assertTrue($pagination->isLastPage());
     }
 
-    public function testRange()
+    public function rangeProvider()
     {
-        // at the beginning
+        return [
+            // at the beginning - even
+            [[
+                'page'     => 1,
+                'total'    => 100,
+                'limit'    => 1,
+                'range'    => 10,
+                'expected' => range(1, 10)
+            ]],
+            // at the beginning - odd
+            [[
+                'page'     => 1,
+                'total'    => 100,
+                'limit'    => 1,
+                'range'    => 5,
+                'expected' => range(1, 5)
+            ]],
+            // in the middle - even
+            [[
+                'page'     => 50,
+                'total'    => 100,
+                'limit'    => 1,
+                'range'    => 10,
+                'expected' => range(46, 55)
+            ]],
+            // in the middle - odd
+            [[
+                'page'     => 50,
+                'total'    => 100,
+                'limit'    => 1,
+                'range'    => 5,
+                'expected' => range(48, 52)
+            ]],
+            // at the end - even
+            [[
+                'page'     => 100,
+                'total'    => 100,
+                'limit'    => 1,
+                'range'    => 10,
+                'expected' => range(91, 100)
+            ]],
+            // at the end - odd
+            [[
+                'page'     => 100,
+                'total'    => 100,
+                'limit'    => 1,
+                'range'    => 5,
+                'expected' => range(96, 100)
+            ]],
+            // higher range than pages - even
+            [[
+                'page'     => 1,
+                'total'    => 10,
+                'limit'    => 1,
+                'range'    => 12,
+                'count'    => 10,
+                'expected' => range(1, 10)
+            ]],
+            // higher range than pages - odd
+            [[
+                'page'     => 1,
+                'total'    => 10,
+                'limit'    => 1,
+                'range'    => 13,
+                'count'    => 10,
+                'expected' => range(1, 10)
+            ]],
+            // case from forum - 1
+            [[
+                'page'     => 10,
+                'total'    => 20,
+                'limit'    => 2,
+                'range'    => 5,
+                'expected' => range(6, 10)
+            ]],
+            // case from forum - 2
+            [[
+                'page'     => 3,
+                'total'    => 20,
+                'limit'    => 2,
+                'range'    => 4,
+                'expected' => range(2, 5)
+            ]]
+        ];
+    }
+
+    /**
+     * @dataProvider rangeProvider
+     */
+    public function testRange($case)
+    {
         $pagination = new Pagination([
-            'page'  => 1,
-            'total' => 100,
-            'limit' => 1
+            'page'  => $case['page'],
+            'total' => $case['total'],
+            'limit' => $case['limit']
         ]);
 
-        $range = $pagination->range(10);
-        $this->assertEquals(range(1, 10), $range);
-        $this->assertEquals(1, $pagination->rangeStart(10));
-        $this->assertEquals(10, $pagination->rangeEnd(10));
+        $range = $pagination->range($case['range']);
+        $start = A::first($case['expected']);
+        $end   = A::last($case['expected']);
 
-        // in the middle
-        $pagination = new Pagination([
-            'page'  => 50,
-            'total' => 100,
-            'limit' => 1
-        ]);
-
-        $range = $pagination->range(10);
-        $this->assertEquals(range(45, 55), $range);
-        $this->assertEquals(45, $pagination->rangeStart(10));
-        $this->assertEquals(55, $pagination->rangeEnd(10));
-
-        // at the end
-        $pagination = new Pagination([
-            'page'  => 100,
-            'total' => 100,
-            'limit' => 1
-        ]);
-
-        $range = $pagination->range(10);
-        $this->assertEquals(range(90, 100), $range);
-        $this->assertEquals(90, $pagination->rangeStart(10));
-        $this->assertEquals(100, $pagination->rangeEnd(10));
-
-        // higher range than pages
-        $pagination = new Pagination([
-            'page'  => 1,
-            'total' => 10,
-            'limit' => 1
-        ]);
-
-        $range = $pagination->range(12);
-        $this->assertEquals(range(1, 10), $range);
-        $this->assertEquals(1, $pagination->rangeStart(12));
-        $this->assertEquals(10, $pagination->rangeEnd(12));
+        $this->assertCount($case['count'] ?? $case['range'], $range);
+        $this->assertEquals($case['expected'], $range);
+        $this->assertEquals($start, $pagination->rangeStart($case['range']));
+        $this->assertEquals($end, $pagination->rangeEnd($case['range']));
     }
 
     public function testClone()

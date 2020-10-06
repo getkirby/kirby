@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Closure;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -93,7 +92,7 @@ class Field
     /**
      * Creates a new field object
      *
-     * @param object $parent
+     * @param object|null $parent
      * @param string $key
      * @param mixed $value
      */
@@ -108,7 +107,7 @@ class Field
      * Simplifies the var_dump result
      *
      * @see Field::toArray
-     * @return void
+     * @return array
      */
     public function __debugInfo()
     {
@@ -232,8 +231,9 @@ class Field
      * the modified field will be returned. Otherwise it
      * will return the field value.
      *
-     * @param string|Closure $value
+     * @param string|\Closure $value
      * @return mixed
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function value($value = null)
     {

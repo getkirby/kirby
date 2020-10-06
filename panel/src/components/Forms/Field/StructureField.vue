@@ -80,6 +80,7 @@
           :data-disabled="disabled"
           :options="dragOptions"
           :handle="true"
+          :dir="direction"
           element="tbody"
           @end="onInput"
         >
@@ -160,6 +161,7 @@
 
 <script>
 import Field from "../Field.vue";
+import direction from "@/helpers/direction.js";
 
 export default {
   inheritAttrs: false,
@@ -201,6 +203,9 @@ export default {
     };
   },
   computed: {
+    direction() {
+      return direction(this);
+    },
     dragOptions() {
       return {
         disabled: !this.isSortable,

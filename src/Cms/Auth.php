@@ -64,6 +64,8 @@ class Auth
      *
      * @param \Kirby\Http\Request\Auth\BasicAuth|null $auth
      * @return \Kirby\Cms\User|null
+     * @throws \Kirby\Exception\InvalidArgumentException if the authorization header is invalid
+     * @throws \Kirby\Exception\PermissionException if basic authentication is not allowed
      */
     public function currentUserFromBasicAuth(BasicAuth $auth = null)
     {
@@ -137,6 +139,7 @@ class Auth
      *
      * @param string|null $who User ID or email address
      * @return \Kirby\Cms\User|null
+     * @throws \Kirby\Exception\NotFoundException if the given user cannot be found
      */
     public function impersonate(?string $who = null)
     {
@@ -262,6 +265,8 @@ class Auth
 
         // check for blocked ips
         if ($this->isBlocked($email) === true) {
+            $this->kirby->trigger('user.login:failed', compact('email'));
+
             if ($this->kirby->option('debug') === true) {
                 $message = 'Rate limit exceeded';
             } else {
@@ -394,6 +399,8 @@ class Auth
      */
     public function track(string $email): bool
     {
+        $this->kirby->trigger('user.login:failed', compact('email'));
+
         $ip   = $this->ipHash();
         $log  = $this->log();
         $time = time();

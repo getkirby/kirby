@@ -102,6 +102,7 @@
   "error.page.notFound": "페이지({slug})가 없습니다.",
   "error.page.num.invalid": "올바른 정수를 입력하세요.",
   "error.page.slug.invalid": "올바른 접두사를 입력하세요.",
+  "error.page.slug.maxlength": "{length}자 이하로 지정하세요.",
   "error.page.sort.permission": "페이지({slug})를 정렬할 수 없습니다.",
   "error.page.status.invalid": "올바른 상태를 설정하세요.",
   "error.page.undefined": "\ud398\uc774\uc9c0\uac00 \uc5c6\uc2b5\ub2c8\ub2e4.",
@@ -179,7 +180,7 @@
   "error.validation.notin": "{notIn}에 포함된 값은 입력할 수 없습니다.",
   "error.validation.option": "올바른 옵션을 선택하세요.",
   "error.validation.num": "올바른 숫자를 입력하세요.",
-  "error.validation.required": "아무거나 입력하세요.",
+  "error.validation.required": "해당 항목을 확인하세요.",
   "error.validation.same": "다음을 입력하세요: {other}",
   "error.validation.size": "값의 크기는 다음과 같아야 합니다: {size}",
   "error.validation.startswith": "값은 다음으로 시작해야 합니다: {start}",
@@ -288,6 +289,7 @@
   "on": "켬",
   "open": "열기",
   "options": "옵션",
+  "options.none": "옵션이 없습니다.",
 
   "orientation": "비율",
   "orientation.landscape": "가로로 긴 사각형",
@@ -344,6 +346,9 @@
 
   "save": "\uc800\uc7a5",
   "search": "검색",
+  "search.min": "{min}자 이상 입력하세요.",
+  "search.all": "모두 보기",
+  "search.results.none": "해당하는 결과가 없습니다.",
 
   "section.required": "섹션이 필요합니다.",
 

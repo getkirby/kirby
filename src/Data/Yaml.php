@@ -6,7 +6,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Spyc;
 
 /**
- * Simple Wrapper around Symfony's Yaml Component
+ * Simple Wrapper around the Spyc YAML class
  *
  * @package   Kirby Data
  * @author    Bastian Allgeier <bastian@getkirby.com>

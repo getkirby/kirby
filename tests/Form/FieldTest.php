@@ -4,6 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class FieldTest extends TestCase
@@ -803,5 +804,182 @@ class FieldTest extends TestCase
         ];
 
         $this->assertEquals($expected, $field->errors());
+    }
+
+    public function testWhenRequired()
+    {
+        $page = new Page(['slug' => 'test']);
+
+        Field::$types = [
+            'foo' => [],
+            'bar' => [],
+            'baz' => [],
+        ];
+
+        $fields = new Fields([
+            'foo' => [
+                'type'  => 'foo',
+                'model' => $page,
+                'value' => 'a'
+            ],
+            'bar' => [
+                'type'  => 'bar',
+                'model' => $page,
+                'value' => 'b'
+            ],
+            'baz' => [
+                'type'  => 'baz',
+                'model' => $page,
+                'value' => 'c'
+            ]
+        ]);
+
+        // default
+        $field = new Field('foo', [
+            'model' => $page,
+        ]);
+
+        $this->assertSame([], $field->errors());
+
+        // passed (simple)
+        // 'bar' is required if 'foo' value is 'x'
+        $field = new Field('bar', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'x'
+            ]
+        ], $fields);
+
+        $this->assertSame([], $field->errors());
+
+        // passed (multiple conditions without any match)
+        // 'baz' is required if 'foo' value is 'x' and 'bar' value is 'y'
+        $field = new Field('baz', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'x',
+                'bar' => 'y'
+            ]
+        ], $fields);
+
+        $this->assertSame([], $field->errors());
+
+        // passed (multiple conditions with single match)
+        // 'baz' is required if 'foo' value is 'a' and 'bar' value is 'y'
+        $field = new Field('baz', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'a',
+                'bar' => 'y'
+            ]
+        ], $fields);
+
+        $this->assertSame([], $field->errors());
+
+        // failed (simple)
+        // 'bar' is required if 'foo' value is 'a'
+        $field = new Field('bar', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'a'
+            ]
+        ], $fields);
+
+        $expected = [
+            'required' => 'Please enter something',
+        ];
+
+        $this->assertSame($expected, $field->errors());
+
+        // failed (multiple conditions)
+        // 'baz' is required if 'foo' value is 'a' and 'bar' value is 'b'
+        $field = new Field('baz', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'a',
+                'bar' => 'b'
+            ]
+        ], $fields);
+
+        $this->assertSame($expected, $field->errors());
+    }
+
+    public function testCustomValidations()
+    {
+        Field::$types = [
+            'test' => [
+                'validations' => [
+                    'test' => function ($value) {
+                        throw new InvalidArgumentException('Invalid value: ' . $value);
+                    }
+                ]
+            ]
+        ];
+
+        $model = new Page(['slug' => 'test']);
+
+        $field = new Field('test', [
+            'model' => $model,
+            'value' => 'abc'
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertSame(['test' => 'Invalid value: abc'], $field->errors());
+    }
+
+    public function testApi()
+    {
+        // no defined as default
+        Field::$types = [
+            'test' => []
+        ];
+
+        $model = new Page(['slug' => 'test']);
+
+        $field = new Field('test', [
+            'model' => $model,
+        ]);
+
+        $this->assertNull($field->api());
+
+        // return simple string
+        Field::$types = [
+            'test' => [
+                'api' => function () {
+                    return 'Hello World';
+                }
+            ]
+        ];
+
+        $model = new Page(['slug' => 'test']);
+
+        $field = new Field('test', [
+            'model' => $model,
+        ]);
+
+        $this->assertSame('Hello World', $field->api());
+    }
+
+    public function testUnsaveable()
+    {
+        Field::$types = [
+            'test' => [
+                'save' => false
+            ]
+        ];
+
+        $model = new Page(['slug' => 'test']);
+
+        $field = new Field('test', [
+            'model' => $model,
+            'value' => 'something'
+        ]);
+
+        $this->assertNull($field->data());
     }
 }

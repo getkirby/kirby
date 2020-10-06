@@ -102,6 +102,7 @@
   "error.page.notFound": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430",
   "error.page.num.invalid": "Пожалуйста, впишите правильное число сортировки. Число не может быть отрицательным.",
   "error.page.slug.invalid": "Пожалуйста, впишите правильный префикс URL",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Невозможно сортировать страницу \"{slug}\"",
   "error.page.status.invalid": "Пожалуйста, установите верный статус страницы",
   "error.page.undefined": "\u0421\u0442\u0440\u0430\u043d\u0438\u0446\u0430 \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d\u0430",
@@ -288,6 +289,7 @@
   "on": "включено",
   "open": "Открыть",
   "options": "Опции",
+  "options.none": "No options",
 
   "orientation": "Ориентация",
   "orientation.landscape": "Горизонтальная",
@@ -344,6 +346,9 @@
 
   "save": "\u0421\u043e\u0445\u0440\u0430\u043d\u0438\u0442\u044c",
   "search": "Поиск",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "Секция обязательна",
 
