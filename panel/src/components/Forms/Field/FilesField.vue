@@ -9,7 +9,7 @@
               ref="pickerToggle"
               :icon="btnIcon"
               class="k-field-options-button"
-              @click="$refs.picker.toggle()"
+              @click="prompt"
             >
               {{ btnLabel }}
             </k-button>
@@ -60,7 +60,7 @@
       :layout="layout"
       :data-invalid="isInvalid"
       icon="image"
-      @click="open"
+      @click="prompt"
     >
       {{ empty || $t("field.files.empty") }}
     </k-empty>

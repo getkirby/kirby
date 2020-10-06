@@ -88,7 +88,7 @@ return [
 
             if ($this->sortBy) {
                 $files = $files->sortBy(...$files::sortArgs($this->sortBy));
-            } elseif ($this->sortable === true) {
+            } else {
                 $files = $files->sortBy('sort', 'asc', 'filename', 'asc');
             }
 

@@ -11,7 +11,7 @@ return [
         'pattern' => 'users',
         'method'  => 'GET',
         'action'  => function () {
-            return $this->users();
+            return $this->users()->sortBy('username', 'asc', 'email', 'asc');
         }
     ],
     [
