@@ -329,6 +329,28 @@ class Language extends Model
     }
 
     /**
+     * Loads the language rules for provided locale code
+     *
+     * @param string $code
+     */
+    public static function loadRules(string $code)
+    {
+        $kirby = kirby();
+        $code  = Str::contains($code, '.') ? Str::before($code, '.') : $code;
+        $file  = $kirby->root('i18n:rules') . '/' . $code . '.json';
+
+        if (F::exists($file) === false) {
+            $file = $kirby->root('i18n:rules') . '/' . Str::before($code, '_') . '.json';
+        }
+
+        try {
+            return Data::read($file);
+        } catch (\Exception $e) {
+            return [];
+        }
+    }
+
+    /**
      * Returns the PHP locale setting array
      *
      * @param int $category If passed, returns the locale for the specified category (e.g. LC_ALL) as string
@@ -454,19 +476,7 @@ class Language extends Model
     public function rules(): array
     {
         $code = $this->locale(LC_CTYPE);
-        $code = Str::contains($code, '.') ? Str::before($code, '.') : $code;
-        $file = $this->kirby()->root('i18n:rules') . '/' . $code . '.json';
-
-        if (F::exists($file) === false) {
-            $file = $this->kirby()->root('i18n:rules') . '/' . Str::before($code, '_') . '.json';
-        }
-
-        try {
-            $data = Data::read($file);
-        } catch (\Exception $e) {
-            $data = [];
-        }
-
+        $data = static::loadRules($code);
         return array_merge($data, $this->slugs());
     }
 

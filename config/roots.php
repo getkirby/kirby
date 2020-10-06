@@ -67,6 +67,9 @@ return [
     'languages' => function (array $roots) {
         return $roots['site'] . '/languages';
     },
+    'logs' => function (array $roots) {
+        return $roots['site'] . '/logs';
+    },
     'models' => function (array $roots) {
         return $roots['site'] . '/models';
     },

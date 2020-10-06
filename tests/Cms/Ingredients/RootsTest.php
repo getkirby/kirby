@@ -14,13 +14,14 @@ class RootsTest extends TestCase
             [$index . '/media', 'media'],
             [$index . '/content', 'content'],
             [$site = $index . '/site', 'site'],
+            [$site . '/accounts', 'accounts'],
+            [$site . '/blueprints', 'blueprints'],
             [$site . '/collections', 'collections'],
             [$site . '/controllers', 'controllers'],
-            [$site . '/accounts', 'accounts'],
+            [$site . '/logs', 'logs'],
+            [$site . '/plugins', 'plugins'],
             [$site . '/snippets', 'snippets'],
             [$site . '/templates', 'templates'],
-            [$site . '/plugins', 'plugins'],
-            [$site . '/blueprints', 'blueprints'],
         ];
     }
 
@@ -43,13 +44,14 @@ class RootsTest extends TestCase
             [$index . '/media', 'media'],
             [$index . '/content', 'content'],
             [$site = $index . '/site', 'site'],
+            [$site . '/accounts', 'accounts'],
+            [$site . '/blueprints', 'blueprints'],
             [$site . '/collections', 'collections'],
             [$site . '/controllers', 'controllers'],
-            [$site . '/accounts', 'accounts'],
+            [$site . '/logs', 'logs'],
+            [$site . '/plugins', 'plugins'],
             [$site . '/snippets', 'snippets'],
             [$site . '/templates', 'templates'],
-            [$site . '/plugins', 'plugins'],
-            [$site . '/blueprints', 'blueprints'],
         ];
     }
 
