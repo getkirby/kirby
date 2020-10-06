@@ -21,6 +21,9 @@ Vue.use(Events);
 Vue.use(Filters);
 Vue.use(Vuelidate);
 
+import VuePortal from "@linusborg/vue-simple-portal";
+Vue.use(VuePortal);
+
 import router from "./config/router.js";
 import store from "./store/store.js";
 

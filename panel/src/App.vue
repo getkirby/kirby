@@ -9,24 +9,47 @@
     :data-translation-default="defaultTranslation"
     class="k-panel"
   >
+    <!-- Icons -->
     <keep-alive>
       <k-icons />
     </keep-alive>
+
+    <!-- Header -->
     <header v-if="inside" class="k-panel-header">
-      <k-topbar @register="$refs.registration.open()" />
-      <k-search v-if="$store.state.search" v-bind="$store.state.search" />
+      <k-topbar
+        @register="$refs.registration.open()"
+        @search="$refs.search.open();"
+      />
     </header>
+
+    <!-- Main view -->
     <main class="k-panel-view">
       <router-view />
     </main>
+
+    <!-- Form buttons -->
     <k-form-buttons v-if="inside" />
+
+    <!-- Search dialog -->
+    <k-search
+      ref="search"
+      v-if="inside"
+      :type="searchType"
+      :types="searchTypes"
+    />
+
+    <!-- Error dialog -->
     <k-error-dialog />
+
+    <!-- Offline warning -->
     <div
       v-if="offline"
       class="k-offline-warning"
     >
       <p>The Panel is currently offline</p>
     </div>
+
+    <!-- Registration dialog -->
     <k-registration v-if="inside" ref="registration" />
   </div>
   <div v-else class="k-panel">
@@ -47,6 +70,7 @@
 import Icons from "@/components/Misc/Icons.vue";
 import Registration from "@/components/Dialogs/RegistrationDialog.vue";
 import config from "@/config/config.js";
+import search from "@/config/search.js"
 
 export default {
   name: "App",
@@ -69,6 +93,12 @@ export default {
     },
     defaultTranslation() {
       return this.$store.state.languages.current ? this.$store.state.languages.current === this.$store.state.languages.default : false;
+    },
+    searchType() {
+      return this.$store.state.view === 'users' ? 'users' : 'pages';
+    },
+    searchTypes() {
+      return search(this);
     },
     translation() {
       return this.$store.state.languages.current ? this.$store.state.languages.current.code : false;
@@ -98,10 +128,6 @@ export default {
       if (this.$store.state.system.info.isLocal === false) {
         this.offline = true;
       }
-    },
-    search(event) {
-      event.preventDefault();
-      this.$store.dispatch("search", true);
     }
   }
 };

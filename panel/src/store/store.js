@@ -20,7 +20,6 @@ export default new Vuex.Store({
     dialog: null,
     drag: null,
     isLoading: false,
-    search: false,
     title: null,
     view: null
   },
@@ -33,13 +32,6 @@ export default new Vuex.Store({
     },
     SET_DRAG(state, drag) {
       state.drag = drag;
-    },
-    SET_SEARCH(state, search) {
-      if (search === true) {
-        search = {};
-      }
-
-      state.search = search;
     },
     SET_TITLE(state, title) {
       state.title = title;
@@ -66,9 +58,6 @@ export default new Vuex.Store({
     },
     isLoading(context, loading) {
       context.commit(loading === true ? "START_LOADING" : "STOP_LOADING");
-    },
-    search(context, search) {
-      context.commit("SET_SEARCH", search);
     },
     title(context, title) {
       let site;
