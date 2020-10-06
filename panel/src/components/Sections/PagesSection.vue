@@ -6,8 +6,9 @@
         {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
 
-      <k-button-group v-if="add">
-        <k-button icon="add" @click="create">{{ $t("add") }}</k-button>
+      <k-button-group v-if="add || options.search">
+        <k-button v-if="options.search" icon="search" @click="toggleSearch"/>
+        <k-button v-if="add" icon="add" @click="create">{{ $t("add") }}</k-button>
       </k-button-group>
     </header>
 
@@ -23,15 +24,16 @@
     </template>
 
     <template v-else>
-      <k-input
-          v-if="options.search"
-          :autofocus="true"
-          :placeholder="$t('search') + ' …'"
-          v-model="search"
-          type="text"
-          class="k-collection-search"
-          icon="search"
-      />
+      <transition name="fade">
+        <k-input
+            v-if="searchable && options.search"
+            :autofocus="true"
+            :placeholder="$t('search') + ' …'"
+            v-model="search"
+            type="text"
+            class="k-collection-search"
+        />
+      </transition>
 
       <k-collection
         v-if="data.length"
@@ -84,6 +86,11 @@ import CollectionSectionMixin from "@/mixins/section/collection.js";
 
 export default {
   mixins: [CollectionSectionMixin],
+  data() {
+    return {
+      searchable: false,
+    }
+  },
   computed: {
     add() {
       return this.options.add && this.$permissions.pages.create;
@@ -223,6 +230,9 @@ export default {
             this.reload();
           });
       }
+    },
+    toggleSearch() {
+      this.searchable = !this.searchable;
     },
     update() {
       this.reload();
