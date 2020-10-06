@@ -1,6 +1,7 @@
 /* eslint-env node */
 const path = require("path");
 const fs = require("fs");
+const host = process.env.VUE_APP_DEV_SERVER || "http://sandbox.test";
 
 // vue.config.js
 module.exports = {
@@ -46,7 +47,13 @@ module.exports = {
   devServer: {
     proxy: {
       "/api": {
-        target: process.env.VUE_APP_DEV_SERVER || "http://kir.by"
+        target: host
+      },
+      "/env": {
+        target: host
+      },
+      "/media": {
+        target: host
       }
     }
   }
