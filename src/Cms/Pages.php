@@ -352,19 +352,6 @@ class Pages extends Collection
     }
 
     /**
-     * @deprecated 3.0.0 Use `Pages::unlisted()` instead
-     *
-     * @return self
-     * @codeCoverageIgnore
-     */
-    public function invisible()
-    {
-        deprecated('$pages->invisible() is deprecated, use $pages->unlisted() instead. $pages->invisible() will be removed in Kirby 3.5.0.');
-
-        return $this->unlisted();
-    }
-
-    /**
      * Returns all listed pages in the collection
      *
      * @return \Kirby\Cms\Pages
@@ -510,18 +497,5 @@ class Pages extends Collection
     public function videos()
     {
         return $this->files()->filterBy('type', 'video');
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Pages::listed()` instead
-     *
-     * @return \Kirby\Cms\Pages
-     * @codeCoverageIgnore
-     */
-    public function visible()
-    {
-        deprecated('$pages->visible() is deprecated, use $pages->listed() instead. $pages->visible() will be removed in Kirby 3.5.0.');
-
-        return $this->listed();
     }
 }

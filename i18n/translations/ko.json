@@ -180,7 +180,7 @@
   "error.validation.notin": "{notIn}에 포함된 값은 입력할 수 없습니다.",
   "error.validation.option": "올바른 옵션을 선택하세요.",
   "error.validation.num": "올바른 숫자를 입력하세요.",
-  "error.validation.required": "아무거나 입력하세요.",
+  "error.validation.required": "해당 항목을 확인하세요.",
   "error.validation.same": "다음을 입력하세요: {other}",
   "error.validation.size": "값의 크기는 다음과 같아야 합니다: {size}",
   "error.validation.startswith": "값은 다음으로 시작해야 합니다: {start}",

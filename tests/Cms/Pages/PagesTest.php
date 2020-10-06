@@ -476,16 +476,6 @@ class PagesTest extends TestCase
         $this->assertEquals([1, 2], $pages->nums());
     }
 
-    public function testInvisible()
-    {
-        $this->assertCount(1, $this->pages()->invisible());
-    }
-
-    public function testVisible()
-    {
-        $this->assertCount(2, $this->pages()->visible());
-    }
-
     public function testListed()
     {
         $this->assertCount(2, $this->pages()->listed());

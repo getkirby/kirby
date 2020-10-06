@@ -754,18 +754,6 @@ class Page extends ModelWithContent
     }
 
     /**
-     * @deprecated 3.0.0 Use `Page::isUnlisted()` instead
-     * @return bool
-     * @codeCoverageIgnore
-     */
-    public function isInvisible(): bool
-    {
-        deprecated('$page->isInvisible() is deprecated, use $page->isUnlisted() instead. $page->isInvisible() will be removed in Kirby 3.5.0.');
-
-        return $this->isUnlisted();
-    }
-
-    /**
      * Checks if the page has a sorting number
      *
      * @return bool
@@ -843,18 +831,6 @@ class Page extends ModelWithContent
     public function isUnlisted(): bool
     {
         return $this->isListed() === false;
-    }
-
-    /**
-     * @deprecated 3.0.0 Use `Page::isListed()` instead
-     * @return bool
-     * @codeCoverageIgnore
-     */
-    public function isVisible(): bool
-    {
-        deprecated('$page->isVisible() is deprecated, use $page->isListed() instead. $page->isVisible() will be removed in Kirby 3.5.0.');
-
-        return $this->isListed();
     }
 
     /**
