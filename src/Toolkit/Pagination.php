@@ -353,17 +353,18 @@ class Pagination
             return range($start, $end);
         }
 
-        $start = $page - (int)floor($range/2);
-        $end   = $page + (int)floor($range/2);
+        $middle = (int)floor($range/2);
+        $start  = $page - $middle + ($range % 2 === 0);
+        $end    = $start + $range - 1;
 
         if ($start <= 0) {
-            $end   += abs($start);
-            $start  = 1;
+            $end   = $range;
+            $start = 1;
         }
 
         if ($end > $pages) {
-            $start -= $end - $pages;
-            $end    = $pages;
+            $start = $pages - $range + 1;
+            $end   = $pages;
         }
 
         return range($start, $end);

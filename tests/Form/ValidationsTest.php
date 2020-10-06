@@ -297,4 +297,21 @@ class ValidationsTest extends TestCase
 
         Validations::options($field, ['a', 'c']);
     }
+
+    public function testTimeValid()
+    {
+        $page  = new Page(['slug' => 'test']);
+        $field = new Field('test', ['model' => $page]);
+        $this->assertTrue(Validations::time($field, '10:12'));
+    }
+
+    public function testTimeInvalid()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Please enter a valid time');
+
+        $page  = new Page(['slug' => 'test']);
+        $field = new Field('test', ['model' => $page]);
+        Validations::time($field, '99:99');
+    }
 }

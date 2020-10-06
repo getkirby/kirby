@@ -3,7 +3,7 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <div v-else class="k-file-view">
+  <div v-else v-else-if="file.id !== null" class="k-file-view">
 
     <k-file-preview :file="file" />
 
@@ -19,7 +19,7 @@
         {{ file.filename }}
 
         <k-button-group slot="left">
-          <k-button :responsive="true" icon="open" @click="action('download')">
+          <k-button :link="file.url" :responsive="true" icon="open" target="_blank">
             {{ $t("open") }}
           </k-button>
           <k-dropdown>
@@ -48,7 +48,7 @@
         v-if="file.id"
         ref="tabs"
         :key="tabsKey"
-        :parent="$api.files.url(path, file.filename)"
+        :parent="parent"
         :tabs="tabs"
         :blueprint="file.blueprint.name"
         @tab="tab = $event"
@@ -86,7 +86,6 @@ export default {
   },
   data() {
     return {
-      name: "",
       file: {
         id: null,
         parent: null,
@@ -99,6 +98,7 @@ export default {
         mime: null,
         content: {}
       },
+      parent: null,
       permissions: {
         changeName: false,
         delete: false
@@ -151,44 +151,49 @@ export default {
     }
   },
   methods: {
-    fetch() {
-      this.$api.files
-        .get(this.path, this.filename, { view: "panel" })
-        .then(file => {
-          this.file = file;
-          this.file.next = file.nextWithTemplate;
-          this.file.prev = file.prevWithTemplate;
-          this.file.url = file.url;
-          this.name = file.name;
-          this.tabs = file.blueprint.tabs;
-          this.permissions = file.options;
-          this.options = ready => {
-            this.$api.files
-              .options(this.path, this.file.filename)
-              .then(options => {
-                ready(options);
-              });
-          };
+    async fetch() {
+      try {
+        const file = await this.$api.files.get(
+          this.path,
+          this.filename,
+          { view: "panel" }
+        );
 
-          this.$store.dispatch("breadcrumb", this.$api.files.breadcrumb(this.file, this.$route.name));
-          this.$store.dispatch("title", this.filename);
-          this.$store.dispatch("content/create", {
-            id: "files/" + file.id,
-            api: this.$api.files.link(this.path, this.filename),
-            content: file.content
-          });
+        this.file = {
+          ...file,
+          next: file.nextWithTemplate,
+          prev: file.prevWithTemplate,
+          url:  file.url
+        }
 
-        })
-        .catch(error => {
-          window.console.error(error);
-          this.issue = error;
+        this.parent = this.$api.files.url(this.path, file.filename);
+        this.tabs = file.blueprint.tabs;
+        this.permissions = file.options;
+
+        this.options = async ready => {
+          const options = await this.$api.files.options(
+            this.path,
+            this.file.filename
+          );
+
+          ready(options);
+        };
+
+        this.$store.dispatch("breadcrumb", this.$api.files.breadcrumb(this.file, this.$route.name));
+        this.$store.dispatch("title", this.filename);
+        this.$store.dispatch("content/create", {
+          id: "files/" + file.id,
+          api: this.$api.files.link(this.path, this.filename),
+          content: file.content
         });
+
+      } catch (error) {
+        window.console.error(error);
+        this.issue = error;
+      }
     },
     action(action) {
       switch (action) {
-        case "download":
-          window.open(this.file.url);
-          break;
         case "rename":
           this.$refs.rename.open(this.path, this.file.filename);
           break;

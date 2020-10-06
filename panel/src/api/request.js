@@ -32,8 +32,13 @@ export default (config) => {
       config.onStart(id, silent);
       this.running++;
 
-      // fetch the request's response
-      const response = await fetch(config.endpoint + "/" + path, options);
+      // fetch the resquest's response
+      const response = await fetch(
+        [config.endpoint, path].join(
+          (config.endpoint.endsWith("/") || path.startsWith("/")) ? "" : "/"
+        ),
+        options
+      );
       const text     = await response.text();
 
       try {

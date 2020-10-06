@@ -102,6 +102,7 @@
   "error.page.notFound": "Sidan \"{slug}\" kan inte hittas",
   "error.page.num.invalid": "Ange ett giltigt nummer för sortering. Numret får inte vara negativt.",
   "error.page.slug.invalid": "Ange ett giltigt URL-prefix",
+  "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Sidan \"{slug}\" kan inte sorteras",
   "error.page.status.invalid": "Sätt en giltig status för sidan",
   "error.page.undefined": "Sidan kan inte hittas",
@@ -288,6 +289,7 @@
   "on": "på",
   "open": "Öppna",
   "options": "Alternativ",
+  "options.none": "No options",
 
   "orientation": "Orientering",
   "orientation.landscape": "Liggande",
@@ -344,6 +346,9 @@
 
   "save": "Spara",
   "search": "Sök",
+  "search.min": "Enter {min} characters to search",
+  "search.all": "Show all",
+  "search.results.none": "No results",
 
   "section.required": "Sektionen krävs",
 

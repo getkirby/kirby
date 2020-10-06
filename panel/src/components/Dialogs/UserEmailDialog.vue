@@ -47,7 +47,7 @@ export default {
     },
     async submit() {
       try {
-        const user = await this.$api.users.changeEmail(this.user.id, this.user.email);
+        await this.$api.users.changeEmail(this.user.id, this.user.email);
 
         // remove changes for the old user
         this.$store.dispatch("content/revert", "users/" + this.user.id);
@@ -61,10 +61,6 @@ export default {
           message: ":)",
           event: "user.changeEmail",
         };
-
-        if (this.$route.name === "User") {
-          payload.route = this.$api.users.link(user.id);
-        }
 
         this.success(payload);
 

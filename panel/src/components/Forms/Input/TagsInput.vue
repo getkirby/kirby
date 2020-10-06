@@ -4,6 +4,7 @@
     :list="tags"
     :data-layout="layout"
     :options="dragOptions"
+    :dir="direction"
     class="k-tags-input"
     @end="onInput"
   >
@@ -55,6 +56,7 @@
 
 <script>
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
+import direction from "@/helpers/direction.js";
 
 export default {
   inheritAttrs: false,
@@ -106,6 +108,9 @@ export default {
     };
   },
   computed: {
+    direction() {
+      return direction(this);
+    },
     dragOptions() {
       return {
         delay: 1,

@@ -134,13 +134,14 @@ export default {
     },
     items(data) {
       return data.map(file => {
-        file.options = ready => {
-          this.$api.files
-            .options(file.parent, file.filename, "list")
-            .then(options => ready(options))
-            .catch(error => {
-              this.$store.dispatch("notification/error", error);
-            });
+        file.options = async ready => {
+          try {
+            const options = await this.$api.files.options(file.parent, file.filename, "list");
+            ready(options)
+
+          } catch (error) {
+            this.$store.dispatch("notification/error", error);
+          }
         };
 
         file.sortable = this.options.sortable;
@@ -156,7 +157,7 @@ export default {
         multiple: false
       });
     },
-    sort(items) {
+    async sort(items) {
       if (this.options.sortable === false) {
         return false;
       }
@@ -165,18 +166,17 @@ export default {
         return item.id;
       });
 
-      this.$api
-        .patch(this.options.apiUrl + "/files/sort", {
+      try {
+        await this.$api.patch(this.options.apiUrl + "/files/sort", {
           files: items,
           index: this.pagination.offset
-        })
-        .then(() => {
-          this.$store.dispatch("notification/success", ":)");
-        })
-        .catch(response => {
-          this.reload();
-          this.$store.dispatch("notification/error", response.message);
         });
+        this.$store.dispatch("notification/success", ":)");
+
+      } catch (error) {
+        this.reload();
+        this.$store.dispatch("notification/error", error.message);
+      }
     },
     update() {
       this.$events.$emit("model.update");

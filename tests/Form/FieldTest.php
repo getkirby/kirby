@@ -4,6 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
+use Kirby\Exception\InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 class FieldTest extends TestCase
@@ -906,5 +907,79 @@ class FieldTest extends TestCase
         ], $fields);
 
         $this->assertSame($expected, $field->errors());
+    }
+
+    public function testCustomValidations()
+    {
+        Field::$types = [
+            'test' => [
+                'validations' => [
+                    'test' => function ($value) {
+                        throw new InvalidArgumentException('Invalid value: ' . $value);
+                    }
+                ]
+            ]
+        ];
+
+        $model = new Page(['slug' => 'test']);
+
+        $field = new Field('test', [
+            'model' => $model,
+            'value' => 'abc'
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertSame(['test' => 'Invalid value: abc'], $field->errors());
+    }
+
+    public function testApi()
+    {
+        // no defined as default
+        Field::$types = [
+            'test' => []
+        ];
+
+        $model = new Page(['slug' => 'test']);
+
+        $field = new Field('test', [
+            'model' => $model,
+        ]);
+
+        $this->assertNull($field->api());
+
+        // return simple string
+        Field::$types = [
+            'test' => [
+                'api' => function () {
+                    return 'Hello World';
+                }
+            ]
+        ];
+
+        $model = new Page(['slug' => 'test']);
+
+        $field = new Field('test', [
+            'model' => $model,
+        ]);
+
+        $this->assertSame('Hello World', $field->api());
+    }
+
+    public function testUnsaveable()
+    {
+        Field::$types = [
+            'test' => [
+                'save' => false
+            ]
+        ];
+
+        $model = new Page(['slug' => 'test']);
+
+        $field = new Field('test', [
+            'model' => $model,
+            'value' => 'something'
+        ]);
+
+        $this->assertNull($field->data());
     }
 }

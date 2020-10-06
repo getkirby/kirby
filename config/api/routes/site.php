@@ -22,7 +22,7 @@ return [
         'pattern' => 'site/children',
         'method'  => 'GET',
         'action'  => function () {
-            return $this->site()->children();
+            return $this->pages(null, $this->requestQuery('status'));
         }
     ],
     [
@@ -34,9 +34,9 @@ return [
     ],
     [
         'pattern' => 'site/children/search',
-        'method'  => 'POST',
+        'method'  => 'GET|POST',
         'action'  => function () {
-            return $this->site()->children()->query($this->requestBody());
+            return $this->searchPages();
         }
     ],
     [

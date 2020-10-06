@@ -19,10 +19,32 @@ use Throwable;
  */
 class Form
 {
+    /**
+     * An array of all found errors
+     *
+     * @var array|null
+     */
     protected $errors;
+
+    /**
+     * Fields in the form
+     *
+     * @var \Kirby\Form\Fields|null
+     */
     protected $fields;
+
+    /**
+     * All values of form
+     *
+     * @var array
+     */
     protected $values = [];
 
+    /**
+     * Form constructor
+     *
+     * @param array $props
+     */
     public function __construct(array $props)
     {
         $fields = $props['fields'] ?? [];
@@ -85,11 +107,24 @@ class Form
         }
     }
 
+    /**
+     * Returns the data required to write to the content file
+     * Doesn't include default and null values
+     *
+     * @return array
+     */
     public function content(): array
     {
         return $this->data(false, false);
     }
 
+    /**
+     * Returns data for all fields in the form
+     *
+     * @param false $defaults
+     * @param bool $includeNulls
+     * @return array
+     */
     public function data($defaults = false, bool $includeNulls = true): array
     {
         $data = $this->values;
@@ -109,6 +144,11 @@ class Form
         return $data;
     }
 
+    /**
+     * An array of all found errors
+     *
+     * @return array
+     */
     public function errors(): array
     {
         if ($this->errors !== null) {
@@ -129,6 +169,13 @@ class Form
         return $this->errors;
     }
 
+    /**
+     * Shows the error with the field
+     *
+     * @param \Throwable $exception
+     * @param array $props
+     * @return \Kirby\Form\Field
+     */
     public static function exceptionField(Throwable $exception, array $props = [])
     {
         $props = array_merge($props, [
@@ -140,21 +187,42 @@ class Form
         return new Field('info', $props);
     }
 
+    /**
+     * Returns form fields
+     *
+     * @return \Kirby\Form\Fields|null
+     */
     public function fields()
     {
         return $this->fields;
     }
 
+    /**
+     * Checks if the form is invalid
+     *
+     * @return bool
+     */
     public function isInvalid(): bool
     {
         return empty($this->errors()) === false;
     }
 
+    /**
+     * Checks if the form is valid
+     *
+     * @return bool
+     */
     public function isValid(): bool
     {
         return empty($this->errors()) === true;
     }
 
+    /**
+     * Converts the data of fields to strings
+     *
+     * @param false $defaults
+     * @return array
+     */
     public function strings($defaults = false): array
     {
         $strings = [];
@@ -172,6 +240,11 @@ class Form
         return $strings;
     }
 
+    /**
+     * Converts the form to a plain array
+     *
+     * @return array
+     */
     public function toArray(): array
     {
         $array = [
@@ -185,6 +258,11 @@ class Form
         return $array;
     }
 
+    /**
+     * Returns form values
+     *
+     * @return array
+     */
     public function values(): array
     {
         return $this->values;

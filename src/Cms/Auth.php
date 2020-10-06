@@ -265,6 +265,8 @@ class Auth
 
         // check for blocked ips
         if ($this->isBlocked($email) === true) {
+            $this->kirby->trigger('user.login:failed', compact('email'));
+
             if ($this->kirby->option('debug') === true) {
                 $message = 'Rate limit exceeded';
             } else {
@@ -397,6 +399,8 @@ class Auth
      */
     public function track(string $email): bool
     {
+        $this->kirby->trigger('user.login:failed', compact('email'));
+
         $ip   = $this->ipHash();
         $log  = $this->log();
         $time = time();

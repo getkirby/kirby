@@ -48,7 +48,7 @@ return [
         'pattern' => 'pages/(:any)/children',
         'method'  => 'GET',
         'action'  => function (string $id) {
-            return $this->page($id)->children();
+            return $this->pages($id, $this->requestQuery('status'));
         }
     ],
     [
@@ -62,13 +62,7 @@ return [
         'pattern' => 'pages/(:any)/children/search',
         'method'  => 'GET|POST',
         'action'  => function (string $id) {
-            $pages = $this->page($id)->children();
-
-            if ($this->requestMethod() === 'GET') {
-                return $pages->search($this->requestQuery('q'));
-            } else {
-                return $pages->query($this->requestBody());
-            }
+            return $this->searchPages($id);
         }
     ],
     [

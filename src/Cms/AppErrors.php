@@ -111,9 +111,13 @@ trait AppErrors
                 $httpCode = $exception->getHttpCode();
                 $code     = $exception->getCode();
                 $details  = $exception->getDetails();
-            } else {
+            } elseif (is_a($exception, '\Throwable') === true) {
                 $httpCode = 500;
                 $code     = $exception->getCode();
+                $details  = null;
+            } else {
+                $httpCode = 500;
+                $code     = 500;
                 $details  = null;
             }
 

@@ -1,0 +1,7 @@
+contact_links:
+  - name: Feature request
+    url: https://feedback.getkirby.com
+    about: Ask for a new feature or enhancement. Share an idea.
+  - name: Question
+    url: https://forum.getkirby.com
+    about: For support matters, head over to our forum.

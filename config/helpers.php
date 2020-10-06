@@ -136,30 +136,34 @@ function deprecated(string $message): bool
     return false;
 }
 
-/**
- * Simple object and variable dumper
- * to help with debugging.
- *
- * @param mixed $variable
- * @param bool $echo
- * @return string
- */
-function dump($variable, bool $echo = true): string
-{
-    $kirby = App::instance();
-    return $kirby->component('dump')($kirby, $variable, $echo);
+if (function_exists('dump') === false) {
+    /**
+     * Simple object and variable dumper
+     * to help with debugging.
+     *
+     * @param mixed $variable
+     * @param bool $echo
+     * @return string
+     */
+    function dump($variable, bool $echo = true): string
+    {
+        $kirby = App::instance();
+        return $kirby->component('dump')($kirby, $variable, $echo);
+    }
 }
 
-/**
- * Smart version of echo with an if condition as first argument
- *
- * @param mixed $condition
- * @param mixed $value The string to be echoed if the condition is true
- * @param mixed $alternative An alternative string which should be echoed when the condition is false
- */
-function e($condition, $value, $alternative = null)
-{
-    echo r($condition, $value, $alternative);
+if (function_exists('e') === false) {
+    /**
+     * Smart version of echo with an if condition as first argument
+     *
+     * @param mixed $condition
+     * @param mixed $value The string to be echoed if the condition is true
+     * @param mixed $alternative An alternative string which should be echoed when the condition is false
+     */
+    function e($condition, $value, $alternative = null)
+    {
+        echo r($condition, $value, $alternative);
+    }
 }
 
 /**

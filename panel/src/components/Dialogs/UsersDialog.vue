@@ -28,7 +28,8 @@
           <k-list-item
             v-for="user in models"
             :key="user.email"
-            :text="user.username"
+            :text="user.text"
+            :info="user.info !== user.text ? user.info : null"
             :image="user.image"
             :icon="user.icon"
             @click="toggle(user)"

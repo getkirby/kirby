@@ -45,12 +45,16 @@
           </li>
           <li>
             <h3>{{ $t("dimensions") }}</h3>
-            <p v-if="file.dimensions">{{ file.dimensions.width }}&times;{{ file.dimensions.height }} {{ $t("pixel") }}</p>
+            <p v-if="file.dimensions && (file.dimensions.width || file.dimensions.height)">
+              {{ file.dimensions.width }}&times;{{ file.dimensions.height }} {{ $t("pixel") }}
+            </p>
             <p v-else>—</p>
           </li>
           <li>
             <h3>{{ $t("orientation") }}</h3>
-            <p v-if="file.dimensions">{{ $t("orientation." + file.dimensions.orientation) }}</p>
+            <p v-if="file.dimensions && file.dimensions.orientation">
+              {{ $t("orientation." + file.dimensions.orientation) }}
+            </p>
             <p v-else>—</p>
           </li>
         </ul>
