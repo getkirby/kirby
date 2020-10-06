@@ -6,6 +6,11 @@ use PHPUnit\Framework\TestCase;
 
 class StrTest extends TestCase
 {
+    public static function setUpBeforeClass(): void
+    {
+        Str::$language = [];
+    }
+
     public function testAscii()
     {
         $this->assertSame('aouss', Str::ascii('äöüß'));
