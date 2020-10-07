@@ -25,6 +25,7 @@
           v-model="q"
           :placeholder="$t('search') + ' …'"
           :aria-label="$t('search')"
+          :autofocus="true"
           type="text"
           @input="hasResults = true"
           @keydown.down.prevent="onDown"
@@ -169,11 +170,8 @@ export default {
         this.selected--;
       }
     },
-    open(event) {
+    open() {
       this.$refs.overlay.open();
-      setTimeout(() => {
-        this.$refs.input.focus();
-      }, 1);
     },
     async search(query) {
       this.isLoading = true;
