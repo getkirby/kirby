@@ -85,6 +85,9 @@ export default {
     path: {
       type: String,
       required: true
+    },
+    tab: {
+      type: String
     }
   },
   data() {
@@ -104,7 +107,6 @@ export default {
       },
       icon: "page",
       issue: null,
-      tab: "main",
       tabs: [],
       options: null
     };
@@ -185,7 +187,6 @@ export default {
           this.page = page;
           this.blueprint = page.blueprint.name;
           this.permissions = page.options;
-          this.tab  = this.$route.hash.slice(1) || "main";
           this.tabs = page.blueprint.tabs;
           this.options = ready => {
             this.$api.pages.options(this.page.id).then(options => {

@@ -81,6 +81,10 @@ export default {
     filename: {
       type: String,
       required: true
+    },
+    tab: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -103,7 +107,6 @@ export default {
         delete: false
       },
       issue: null,
-      tab: "main",
       tabs: [],
       options: null
     };
@@ -163,7 +166,6 @@ export default {
         }
 
         this.parent = this.$api.files.url(this.path, file.filename);
-        this.tab = this.$route.hash.slice(1) || "main";
         this.tabs = file.blueprint.tabs;
         this.permissions = file.options;
 
