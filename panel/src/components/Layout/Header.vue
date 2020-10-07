@@ -50,7 +50,7 @@ export default {
         });
 
         // get count of changed fields in this tab
-        tab.badge = fields.filter(field => changed.includes(field)).length;
+        tab.badge = fields.filter(field => changed.includes(field.toLowerCase())).length;
 
         return tab;
       });
