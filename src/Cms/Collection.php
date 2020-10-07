@@ -121,45 +121,45 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Groups the items by a given field. Returns a collection
+     * Groups the items by a given field or callback. Returns a collection
      * with an item for each group and a collection for each group.
      *
-     * @param string $field
+     * @param string|Closure $field
      * @param bool $i Ignore upper/lowercase for group names
      * @return \Kirby\Cms\Collection
      * @throws \Kirby\Exception\Exception
      */
-    public function groupBy($field, bool $i = true)
+    public function group($field, bool $i = true)
     {
-        if (is_string($field) === false) {
-            throw new Exception('Cannot group by non-string values. Did you mean to call group()?');
+        if (is_string($field) === true) {
+            $groups = new Collection([], $this->parent());
+
+            foreach ($this->data as $key => $item) {
+                $value = $this->getAttribute($item, $field);
+
+                // make sure that there's always a proper value to group by
+                if (!$value) {
+                    throw new InvalidArgumentException('Invalid grouping value for key: ' . $key);
+                }
+
+                // ignore upper/lowercase for group names
+                if ($i) {
+                    $value = Str::lower($value);
+                }
+
+                if (isset($groups->data[$value]) === false) {
+                    // create a new entry for the group if it does not exist yet
+                    $groups->data[$value] = new static([$key => $item]);
+                } else {
+                    // add the item to an existing group
+                    $groups->data[$value]->set($key, $item);
+                }
+            }
+
+            return $groups;
         }
 
-        $groups = new Collection([], $this->parent());
-
-        foreach ($this->data as $key => $item) {
-            $value = $this->getAttribute($item, $field);
-
-            // make sure that there's always a proper value to group by
-            if (!$value) {
-                throw new InvalidArgumentException('Invalid grouping value for key: ' . $key);
-            }
-
-            // ignore upper/lowercase for group names
-            if ($i) {
-                $value = Str::lower($value);
-            }
-
-            if (isset($groups->data[$value]) === false) {
-                // create a new entry for the group if it does not exist yet
-                $groups->data[$value] = new static([$key => $item]);
-            } else {
-                // add the item to an existing group
-                $groups->data[$value]->set($key, $item);
-            }
-        }
-
-        return $groups;
+        return parent::group($field, $i);
     }
 
     /**
