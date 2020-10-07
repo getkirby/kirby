@@ -26,6 +26,10 @@
 export default {
   inheritAttrs: false,
   props: {
+    autofocus: {
+      type: Boolean,
+      default: true,
+    },
     centered: {
       type: Boolean,
       default: false
@@ -45,13 +49,22 @@ export default {
       scrollTop: 0
     };
   },
-  created() {
-    this.$events.$on("keydown.esc", this.close, false);
-  },
-  destroyed() {
-    this.$events.$off("keydown.esc", this.close, false);
-  },
   methods: {
+    focus() {
+      let target = this.$refs.overlay.querySelector(
+        "[autofocus], [data-autofocus], input, textarea, select, button"
+      );
+
+      if (target && typeof target.focus === "function") {
+        target.focus();
+        return;
+      }
+    },
+    focustrap(e) {
+      if (this.$refs.overlay && this.$refs.overlay.contains(e.target) === false) {
+        this.focus();
+      }
+    },
     storeScrollPosition() {
       const view = document.querySelector(".k-panel-view");
 
@@ -74,8 +87,19 @@ export default {
       this.$emit("open");
       this.$events.$on("keydown.esc", this.close);
 
-      // prevent that clicks on the overlay slot trigger close
+      // focus trap
+      document.addEventListener("focus", this.focustrap, true);
+
+      // esc
+      this.$events.$on("keydown.esc", this.close, false);
+
       setTimeout(() => {
+        // autofocus
+        if (this.autofocus === true) {
+          this.focus();
+        }
+
+        // prevent that clicks on the overlay slot trigger close
         document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
       }, 10)
     },
@@ -84,6 +108,12 @@ export default {
       this.$emit("close");
       this.$events.$off("keydown.esc", this.close);
       this.restoreScrollPosition();
+
+      // focus trap
+      document.removeEventListener("focus", this.focustrap);
+
+      // esc
+      this.$events.$off("keydown.esc", this.close, false);
     }
   }
 };
