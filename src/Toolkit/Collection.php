@@ -237,18 +237,15 @@ class Collection extends Iterator implements Countable
     }
 
     /**
-     * Filters elements by a custom
-     * filter function or an array of filters
+     * Shorthand/alias for static::filterBy()
      *
-     * @deprecated 3.5.0 Use `Kirby\Toolkit\Collection::filterBy` instead
-     *
-     * @param array|\Closure $filter
-     * @return self
-     * @throws \Exception if $filter is neither a closure nor an array
+     * @param string|array|\Closure $field
+     * @param array ...$args
+     * @return \Kirby\Toolkit\Collection
      */
-    public function filter($filter)
+    public function filter($field, ...$args)
     {
-        return $this->filterBy($filter);
+        return $this->filterBy($field, ...$args);
     }
 
     /**
