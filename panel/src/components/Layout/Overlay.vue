@@ -60,9 +60,19 @@ export default {
       document.removeEventListener("focus", this.focustrap);
     },
     focus() {
-      let target = this.$refs.overlay.querySelector(
-        "[autofocus], [data-autofocus], input, textarea, select, button"
-      );
+      let target = this.$refs.overlay.querySelector(`
+        [autofocus],
+        [data-autofocus]
+      `);
+
+      if (target === null) {
+        target = this.$refs.overlay.querySelector(`
+          input,
+          textarea,
+          select,
+          button
+        `);
+      }
 
       if (target && typeof target.focus === "function") {
         target.focus();
@@ -94,7 +104,7 @@ export default {
 
         // prevent that clicks on the overlay slot trigger close
         document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
-      }, 10)
+      }, 1)
     },
     restoreScrollPosition() {
       const view = document.querySelector(".k-panel-view");
