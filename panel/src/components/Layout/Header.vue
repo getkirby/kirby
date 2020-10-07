@@ -24,7 +24,12 @@ export default {
   props: {
     editable: Boolean,
     tab: String,
-    tabs: Array
+    tabs: {
+      type: Array,
+      default() {
+        return []
+      }
+    }
   },
   computed:  {
     tabsWithBadges() {

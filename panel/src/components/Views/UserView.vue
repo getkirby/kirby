@@ -112,11 +112,11 @@ export default {
     id: {
       type: [Boolean, String],
       required: true
-    }
+    },
+    tab: String
   },
   data() {
     return {
-      tab: "main",
       tabs: [],
       ready: false,
       user: {
@@ -217,8 +217,7 @@ export default {
 
       try {
         this.user = await this.$api.users.get(this.id, { view: "panel" });
-        this.tab = this.$route.hash.slice(1) || "main";
-        this.tabs = user.blueprint.tabs;
+        this.tabs = this.user.blueprint.tabs;
         this.ready = true;
         this.permissions = this.user.options;
         this.options = async ready => {
@@ -247,6 +246,7 @@ export default {
         });
 
       } catch (error) {
+        window.console.error(error);
         this.issue = error;
       }
     },

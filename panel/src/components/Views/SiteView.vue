@@ -45,6 +45,9 @@
 
 <script>
 export default {
+  props: {
+    tab: String
+  },
   data() {
     return {
       site: {
@@ -52,7 +55,6 @@ export default {
         url: null
       },
       issue: null,
-      tab: "main",
       tabs: [],
       options: null,
       permissions: {
@@ -82,7 +84,6 @@ export default {
         .get({ view: "panel" })
         .then(site => {
           this.site = site;
-          this.tab = this.$route.hash.slice(1) || "main";
           this.tabs = site.blueprint.tabs;
           this.permissions = site.options;
           this.options = ready => {

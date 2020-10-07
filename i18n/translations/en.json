@@ -363,7 +363,7 @@
   "template": "Template",
   "today": "Today",
 
-  "site.blueprint": "The has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
+  "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Code",
   "toolbar.button.bold": "Bold",
