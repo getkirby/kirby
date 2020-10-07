@@ -50,6 +50,15 @@ export default {
     };
   },
   methods: {
+    close() {
+      this.isOpen = false;
+      this.$emit("close");
+      this.restoreScrollPosition();
+
+      // unbind events
+      this.$events.$off("keydown.esc", this.close);
+      document.removeEventListener("focus", this.focustrap);
+    },
     focus() {
       let target = this.$refs.overlay.querySelector(
         "[autofocus], [data-autofocus], input, textarea, select, button"
@@ -61,37 +70,21 @@ export default {
       }
     },
     focustrap(e) {
-      if (this.$refs.overlay && this.$refs.overlay.contains(e.target) === false) {
+      if (
+        this.$refs.overlay &&
+        this.$refs.overlay.contains(e.target) === false
+      ) {
         this.focus();
-      }
-    },
-    storeScrollPosition() {
-      const view = document.querySelector(".k-panel-view");
-
-      if (view && view.scrollTop) {
-        this.scrollTop = view.scrollTop;
-      } else {
-        this.scrollTop = 0;
-      }
-    },
-    restoreScrollPosition() {
-      const view = document.querySelector(".k-panel-view");
-
-      if (view && view.scrollTop) {
-        view.scrollTop = this.scrollTop;
       }
     },
     open() {
       this.storeScrollPosition();
       this.isOpen = true;
       this.$emit("open");
+
+      // bind events
       this.$events.$on("keydown.esc", this.close);
-
-      // focus trap
       document.addEventListener("focus", this.focustrap, true);
-
-      // esc
-      this.$events.$on("keydown.esc", this.close, false);
 
       setTimeout(() => {
         // autofocus
@@ -103,18 +96,22 @@ export default {
         document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
       }, 10)
     },
-    close() {
-      this.isOpen = false;
-      this.$emit("close");
-      this.$events.$off("keydown.esc", this.close);
-      this.restoreScrollPosition();
+    restoreScrollPosition() {
+      const view = document.querySelector(".k-panel-view");
 
-      // focus trap
-      document.removeEventListener("focus", this.focustrap);
+      if (view && view.scrollTop) {
+        view.scrollTop = this.scrollTop;
+      }
+    },
+    storeScrollPosition() {
+      const view = document.querySelector(".k-panel-view");
 
-      // esc
-      this.$events.$off("keydown.esc", this.close, false);
-    }
+      if (view && view.scrollTop) {
+        this.scrollTop = view.scrollTop;
+      } else {
+        this.scrollTop = 0;
+      }
+    },
   }
 };
 </script>
