@@ -256,7 +256,7 @@ class Collection extends Iterator implements Countable
      * predefined filter methods, by a
      * custom filter function or an array of filters
      *
-     * @param string|Closure $field
+     * @param string|array|\Closure $field
      * @param array ...$args
      * @return \Kirby\Toolkit\Collection
      */
