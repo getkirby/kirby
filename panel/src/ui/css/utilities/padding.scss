@@ -1,0 +1,38 @@
+/* Paddings */
+@each $index, $size in $spacing {
+  .p-#{$index} {
+    padding: $size;
+  }
+}
+@each $index, $size in $spacing {
+  .px-#{$index} {
+    padding-right: $size;
+    padding-left: $size;
+  }
+}
+@each $index, $size in $spacing {
+  .py-#{$index} {
+    padding-top: $size;
+    padding-bottom: $size;
+  }
+}
+@each $index, $size in $spacing {
+  .pt-#{$index} {
+    padding-top: $size;
+  }
+}
+@each $index, $size in $spacing {
+  .pr-#{$index} {
+    padding-right: $size;
+  }
+}
+@each $index, $size in $spacing {
+  .pb-#{$index} {
+    padding-bottom: $size;
+  }
+}
+@each $index, $size in $spacing {
+  .pl-#{$index} {
+    padding-left: $size;
+  }
+}
