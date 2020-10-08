@@ -5,6 +5,7 @@
       :data-centered="loading || centered"
       :data-dimmed="dimmed"
       :data-loading="loading"
+      :class="$vnode.data.staticClass"
       class="k-overlay"
       v-on="$listeners"
       @mousedown="close"
@@ -24,7 +25,7 @@
 
 <script>
 export default {
-  inheritAttrs: false,
+  inheritAttrs: true,
   props: {
     autofocus: {
       type: Boolean,

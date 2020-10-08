@@ -3,7 +3,7 @@
     ref="overlay"
     :centered="true"
   >
-    <div :data-size="size" class="k-dialog">
+    <div :data-size="size" class="k-dialog" :class="$vnode.data.staticClass">
       <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
         <p>{{ notification.message }}</p>
         <k-button icon="cancel" @click="notification = null" />
