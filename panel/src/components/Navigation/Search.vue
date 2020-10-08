@@ -263,7 +263,7 @@ export default {
 .k-search li {
   background: $color-white;
   display: flex;
-  box-shadow: $box-shadow-card;
+  box-shadow: $shadow;
 
   &:not(:last-child) {
     margin-bottom: .25rem;
