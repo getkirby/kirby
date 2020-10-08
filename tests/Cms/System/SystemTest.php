@@ -285,7 +285,11 @@ class SystemTest extends TestCase
         $system = new System($this->app);
         $this->assertFalse($system->isInstalled());
 
-        $this->app->users()->create(['email' => 'test@getkirby.com']);
+        $this->app->users()->create([
+            'email'    => 'test@getkirby.com',
+            'password' => 'test123456'
+        ]);
+
         $this->assertTrue($system->isInstalled());
     }
 
