@@ -72,6 +72,7 @@ import FormIndicator from "@/components/Forms/FormIndicator.vue";
 import Field from "@/components/Forms/Field.vue";
 import Fieldset from "@/components/Forms/Fieldset.vue";
 import Input from "@/components/Forms/Input.vue";
+import Label from "@/components/Forms/Label.vue";
 import Upload from "@/components/Forms/Upload.vue";
 
 /** Form Inputs */
@@ -143,6 +144,7 @@ Vue.component("k-form-indicator", FormIndicator);
 Vue.component("k-field", Field);
 Vue.component("k-fieldset", Fieldset);
 Vue.component("k-input", Input);
+Vue.component("k-label", Label);
 Vue.component("k-upload", Upload);
 
 Vue.component("k-checkbox-input", CheckboxInput);
