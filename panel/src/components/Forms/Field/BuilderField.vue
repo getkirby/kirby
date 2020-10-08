@@ -420,7 +420,7 @@ export default {
 .k-builder-block {
   position: relative;
   background: $color-white;
-  box-shadow: $box-shadow-card;
+  box-shadow: $shadow;
   margin-bottom: 2px;
 }
 .k-builder-block:last-child {
@@ -465,16 +465,16 @@ export default {
   height: 36px;
   align-items: center;
   line-height: 1;
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-builder-block[data-hidden]:not([open]) {
-  background: rgba(#fff, .325);
+  background: rgba($color-white, .325);
 }
 .k-builder-block[data-hidden] .k-builder-block-status  {
   opacity: .325;
 }
 .k-builder-block[data-hidden] .k-builder-block-label {
-  color: #ccc;
+  color: $color-gray-400;
 }
 .k-builder-block-label .k-icon {
   margin-left: .75rem;
@@ -485,7 +485,7 @@ export default {
   align-items: center;
   margin-right: .5rem;
 }
-@media screen and (min-width: $breakpoint-menu) {
+@media screen and (min-width: $breakpoint-md) {
   .k-builder-block[open] .k-builder-block-tabs {
     display: flex;
   }
@@ -507,8 +507,8 @@ export default {
   bottom: 0;
   right: 0;
   background: $color-background;
-  border-top-left-radius: $border-radius;
-  border-top-right-radius: $border-radius;
+  border-top-left-radius: $rounded;
+  border-top-right-radius: $rounded;
 }
 
 .k-builder-block-options-toggle {
@@ -518,7 +518,7 @@ export default {
 }
 .k-builder-block-body {
   background: $color-background;
-  border: 2px solid #fff;
+  border: 2px solid $color-white;
   border-top: 0;
   line-height: 0;
 }
@@ -539,7 +539,7 @@ export default {
   background: $color-white;
   width: 100%;
   text-align: left;
-  box-shadow: $box-shadow-card;
+  box-shadow: $shadow;
   height: 36px;
   padding: 0 .75rem;
 }
