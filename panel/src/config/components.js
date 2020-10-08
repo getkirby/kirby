@@ -95,6 +95,7 @@ import ToggleInput from "@/components/Forms/Input/ToggleInput.vue";
 import UrlInput from "@/components/Forms/Input/UrlInput.vue";
 
 /** Form Fields */
+import BuilderField from "@/components/Forms/Field/BuilderField.vue";
 import CheckboxesField from "@/components/Forms/Field/CheckboxesField.vue";
 import DateField from "@/components/Forms/Field/DateField.vue";
 import EmailField from "@/components/Forms/Field/EmailField.vue";
@@ -163,6 +164,7 @@ Vue.component("k-time-input", TimeInput);
 Vue.component("k-toggle-input", ToggleInput);
 Vue.component("k-url-input", UrlInput);
 
+Vue.component("k-builder-field", BuilderField);
 Vue.component("k-checkboxes-field", CheckboxesField);
 Vue.component("k-date-field", DateField);
 Vue.component("k-email-field", EmailField);
@@ -213,6 +215,7 @@ import Grid from "@/components/Layout/Grid.vue";
 import Header from "@/components/Layout/Header.vue";
 import List from "@/components/Layout/List.vue";
 import ListItem from "@/components/Layout/ListItem.vue";
+import Overlay from "@/components/Layout/Overlay.vue";
 import Tabs from "@/components/Layout/Tabs.vue";
 import View from "@/components/Layout/View.vue";
 
@@ -229,6 +232,7 @@ Vue.component("k-grid", Grid);
 Vue.component("k-header", Header);
 Vue.component("k-list", List);
 Vue.component("k-list-item", ListItem);
+Vue.component("k-overlay", Overlay);
 Vue.component("k-tabs", Tabs);
 Vue.component("k-view", View);
 
@@ -238,6 +242,7 @@ import ErrorBoundary from "@/components/Misc/ErrorBoundary.vue";
 import Headline from "@/components/Misc/Headline.vue";
 import Icon from "@/components/Misc/Icon.vue";
 import Image from "@/components/Misc/Image.vue";
+import Loader from "@/components/Misc/Loader.vue";
 import Progress from "@/components/Misc/Progress.vue";
 import SortHandle from "@/components/Misc/SortHandle.vue";
 import Text from "@/components/Misc/Text.vue";
@@ -247,6 +252,7 @@ Vue.component("k-error-boundary", ErrorBoundary);
 Vue.component("k-headline", Headline);
 Vue.component("k-icon", Icon);
 Vue.component("k-image", Image);
+Vue.component("k-loader", Loader);
 Vue.component("k-progress", Progress);
 Vue.component("k-sort-handle", SortHandle);
 Vue.component("k-text", Text);

@@ -2,6 +2,10 @@ import Vue from "vue";
 import auth from "./auth.js";
 import store from "@/store/store.js";
 
+// make sure custom components are loaded
+// to support overwriting route views
+import "./plugins.js";
+
 /* Routes */
 export default [
   {
@@ -56,7 +60,10 @@ export default [
       view: "site"
     },
     component: Vue.component("k-site-view"),
-    beforeEnter: auth
+    beforeEnter: auth,
+    props: route => ({
+      tab: route.hash.slice(1) || "main",
+    })
   },
   {
     path: "/site/files/:filename",
@@ -67,8 +74,9 @@ export default [
     component: Vue.component("k-file-view"),
     beforeEnter: auth,
     props: route => ({
+      filename: route.params.filename,
       path: "site",
-      filename: route.params.filename
+      tab: route.hash.slice(1) || "main",
     })
   },
   {
@@ -80,8 +88,9 @@ export default [
     component: Vue.component("k-file-view"),
     beforeEnter: auth,
     props: route => ({
+      filename: route.params.filename,
       path: "pages/" + route.params.path,
-      filename: route.params.filename
+      tab: route.hash.slice(1) || "main",
     })
   },
   {
@@ -93,8 +102,9 @@ export default [
     component: Vue.component("k-file-view"),
     beforeEnter: auth,
     props: route => ({
+      filename: route.params.filename,
       path: "users/" + route.params.path,
-      filename: route.params.filename
+      tab: route.hash.slice(1) || "main",
     })
   },
   {
@@ -106,7 +116,8 @@ export default [
     component: Vue.component("k-page-view"),
     beforeEnter: auth,
     props: route => ({
-      path: route.params.path
+      path: route.params.path,
+      tab: route.hash.slice(1) || "main"
     })
   },
   {
@@ -148,7 +159,8 @@ export default [
     component: Vue.component("k-user-view"),
     beforeEnter: auth,
     props: route => ({
-      id: route.params.id
+      id: route.params.id,
+      tab: route.hash.slice(1) || "main",
     })
   },
   {

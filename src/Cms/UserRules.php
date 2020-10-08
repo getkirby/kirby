@@ -165,6 +165,12 @@ class UserRules
         static::validEmail($user, $user->email(), true);
         static::validLanguage($user, $user->language());
 
+        // the first user must have a password
+        if ($user->kirby()->users()->count() === 0 && empty($props['password'])) {
+            // trigger invalid password error
+            static::validPassword($user, ' ');
+        }
+
         if (empty($props['password']) === false) {
             static::validPassword($user, $props['password']);
         }

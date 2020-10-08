@@ -51,6 +51,10 @@ class CollectionFilterTest extends TestCase
             ['role', '==', 'developer'],
             ['color', '==', 'red']
         ]));
+        $this->assertEquals($result, $collection->filterBy([
+            ['role', '==', 'developer'],
+            ['color', '==', 'red']
+        ]));
     }
 
     public function testFilterClosure()
@@ -76,18 +80,9 @@ class CollectionFilterTest extends TestCase
         $this->assertEquals($result, $collection->filter(function ($item) {
             return $item['role'] === 'founder';
         }));
-    }
-
-    public function testFilterException()
-    {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('The filter method needs either an array of filterBy rules or a closure function to be passed as parameter.');
-
-        $collection = new Collection([
-            'one'   => 'eins'
-        ]);
-
-        $collection->filter('one');
+        $this->assertEquals($result, $collection->filterBy(function ($item) {
+            return $item['role'] === 'founder';
+        }));
     }
 
     public function filterDataProvider()

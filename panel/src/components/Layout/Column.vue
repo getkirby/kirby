@@ -25,7 +25,7 @@ export default {
   z-index: 2;
 }
 
-@media screen and (min-width: $breakpoint-medium) {
+@media screen and (min-width: $breakpoint-md) {
   .k-column[data-width="1/1"],
   .k-column[data-width="2/2"],
   .k-column[data-width="3/3"],
@@ -58,5 +58,16 @@ export default {
   .k-column[data-width="3/4"] {
     grid-column-start: span 9;
   }
+}
+
+.k-column[data-disabled] {
+  cursor: not-allowed;
+  opacity: .4;
+}
+.k-column[data-disabled] * {
+  pointer-events: none;
+}
+.k-column[data-disabled] .k-text[data-theme=help] * {
+  pointer-events: initial;
 }
 </style>

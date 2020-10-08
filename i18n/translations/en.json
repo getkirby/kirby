@@ -6,6 +6,8 @@
   "change": "Change",
   "close": "Close",
   "confirm": "Ok",
+  "collapse": "Collapse",
+  "collapse.all": "Collapse All",
   "copy": "Copy",
   "create": "Create",
 
@@ -22,12 +24,15 @@
   "days.wed": "Wed",
 
   "delete": "Delete",
+  "delete.all": "Delete all",
   "dimensions": "Dimensions",
   "disabled": "Disabled",
   "discard": "Discard",
   "download": "Download",
   "duplicate": "Duplicate",
   "edit": "Edit",
+  "expand": "Expand",
+  "expand.all": "Expand All",
 
   "dialog.files.empty": "No files to select",
   "dialog.pages.empty": "No pages to select",
@@ -46,6 +51,12 @@
   "error.avatar.mime.forbidden": "The profile picture must be JPEG or PNG files",
 
   "error.blueprint.notFound": "The blueprint \"{name}\" could not be loaded",
+
+  "error.builder.blocks.max.plural": "You must not add more than {max} blocks",
+  "error.builder.blocks.max.singular": "You must not add more than one block",
+  "error.builder.blocks.min.plural": "You must add at least {min} blocks",
+  "error.builder.blocks.min.singular": "You must add at least one block",
+  "error.builder.validation": "There's an error in block {index}",
 
   "error.email.preset.notFound": "The email preset \"{name}\" cannot be found",
 
@@ -188,19 +199,28 @@
   "error.validation.url": "Please enter a valid URL",
 
   "field.required": "The field is required",
+  "field.builder.delete.confirm": "Do you really want to delete this block?",
+  "field.builder.delete.all.confirm": "Do you really want to delete all blocks?",
+  "field.builder.empty": "No blocks yet",
+  "field.builder.fieldsets.label": "Please select a block type …",
+
   "field.files.empty": "No files selected yet",
   "field.pages.empty": "No pages selected yet",
   "field.structure.delete.confirm": "Do you really want to delete this row?",
   "field.structure.empty": "No entries yet",
   "field.users.empty": "No users selected yet",
 
+  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
   "file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
 
   "files": "Files",
   "files.empty": "No files yet",
 
+  "hide": "Hide",
   "hour": "Hour",
   "insert": "Insert",
+  "insert.after": "Insert after",
+  "insert.before": "Insert before",
   "install": "Install",
 
   "installation": "Installation",
@@ -296,6 +316,7 @@
   "orientation.portrait": "Portrait",
   "orientation.square": "Square",
 
+  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
   "page.changeSlug": "Change URL",
   "page.changeSlug.fromTitle": "Create from title",
   "page.changeStatus": "Change status",
@@ -354,12 +375,15 @@
 
   "select": "Select",
   "settings": "Settings",
+  "show": "Show",
   "size": "Size",
   "slug": "URL appendix",
   "sort": "Sort",
   "title": "Title",
   "template": "Template",
   "today": "Today",
+
+  "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Code",
   "toolbar.button.bold": "Bold",

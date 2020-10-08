@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\Exception;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 class AppTranslationsTest extends TestCase
 {
@@ -220,5 +221,76 @@ class AppTranslationsTest extends TestCase
 
         $this->assertEquals('error.no-real-key', $exception->getKey());
         $this->assertEquals('This would be the fallback error', $exception->getMessage());
+    }
+
+    public function testLanguageTranslationWithSlugs()
+    {
+        // create a dummy template
+        F::write($this->fixtures . '/test.php', '<?= t("button") ?>');
+
+        $app = new App([
+            'roots' => [
+                'index'     => '/dev/null',
+                'templates' => $this->fixtures
+            ],
+            'languages' => [
+                [
+                    'code'         => 'de',
+                    'default'      => true,
+                    'translations' => [
+                        'button' => 'Knopf'
+                    ]
+                ],
+                [
+                    'code'         => 'en',
+                    'default'      => false,
+                    'translations' => [
+                        'button' => 'Button'
+                    ]
+                ],
+                [
+                    'code'         => 'ru',
+                    'default'      => false,
+                    'translations' => [
+                        'button' => 'кнопка'
+                    ]
+                ]
+            ],
+            'options' => [
+                'languages' => true
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'test'
+                    ]
+                ]
+            ]
+        ]);
+
+        // making sure that Str slug rules are added on load
+        // and don't get altered by `t()` call
+        $result = $app->render('de/test');
+        $this->assertSame('Knopf', $result->body());
+        $this->assertSame('de', $app->language()->code());
+        $this->assertSame('kompanija', Str::slug('Компания'));
+        $this->assertSame('Knopf', t('button'));
+        $this->assertSame('kompanija', Str::slug('Компания'));
+
+
+        $result = $app->render('en/test');
+        $this->assertSame('Button', $result->body());
+        $this->assertSame('en', $app->language()->code());
+        $this->assertSame('kompanija', Str::slug('Компания'));
+        $this->assertSame('Button', t('button'));
+        $this->assertSame('kompanija', Str::slug('Компания'));
+
+        $result = $app->render('ru/test');
+        $this->assertSame('кнопка', $result->body());
+        $this->assertSame('ru', $app->language()->code());
+        $this->assertSame('kompaniya', Str::slug('Компания'));
+        $this->assertSame('кнопка', t('button'));
+        $this->assertSame('kompaniya', Str::slug('Компания'));
     }
 }

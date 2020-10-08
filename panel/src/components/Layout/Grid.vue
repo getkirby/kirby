@@ -21,7 +21,7 @@ export default {
   grid-template-columns: 1fr;
 }
 
-@media screen and (min-width: $breakpoint-small) {
+@media screen and (min-width: $breakpoint-sm) {
 
   .k-grid[data-gutter="small"] {
     grid-column-gap: 1rem;
@@ -37,7 +37,7 @@ export default {
 
 }
 
-@media screen and (min-width: $breakpoint-medium) {
+@media screen and (min-width: $breakpoint-md) {
   .k-grid {
     grid-template-columns: repeat(var(--columns), 1fr);
   }
@@ -49,7 +49,7 @@ export default {
   }
 }
 
-@media screen and (min-width: $breakpoint-large) {
+@media screen and (min-width: $breakpoint-lg) {
   .k-grid[data-gutter="large"] {
     grid-column-gap: 4.5rem;
   }
@@ -59,7 +59,7 @@ export default {
 
 }
 
-@media screen and (min-width: $breakpoint-huge) {
+@media screen and (min-width: $breakpoint-xl) {
   .k-grid[data-gutter="large"] {
     grid-column-gap: 6rem;
   }

@@ -2,7 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form as BaseForm;
+use Kirby\Toolkit\Str;
 
 /**
  * Extension of `Kirby\Form\Form` that introduces
@@ -47,6 +49,42 @@ class Form extends BaseForm
         }
 
         parent::__construct($props);
+    }
+
+    /**
+     * Get the field object by name
+     * and handle nested fields correctly
+     *
+     * @param string $name
+     * @throws \Kirby\Exception\NotFoundException
+     * @return \Kirby\Form\Field
+     */
+    public function field(string $name)
+    {
+        $form       = $this;
+        $fieldNames = Str::split($name, '+');
+        $index      = 0;
+        $count      = count($fieldNames);
+        $field      = null;
+
+        foreach ($fieldNames as $fieldName) {
+            $index++;
+
+            if ($field = $form->fields()->get($fieldName)) {
+                if ($count !== $index) {
+                    $form = $field->form();
+                }
+            } else {
+                throw new NotFoundException('The field "' . $fieldName . '" could not be found');
+            }
+        }
+
+        // it can get this error only if $name is an empty string as $name = ''
+        if ($field === null) {
+            throw new NotFoundException('No field could be loaded');
+        }
+
+        return $field;
     }
 
     /**

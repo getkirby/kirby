@@ -3,7 +3,7 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <div v-else class="k-file-view">
+  <div v-else-if="file.id !== null" class="k-file-view">
 
     <k-file-preview :file="file" />
 
@@ -11,15 +11,15 @@
 
       <k-header
         :editable="permissions.changeName && !isLocked"
-        :tabs="tabs"
         :tab="tab"
+        :tabs="tabs"
         @edit="action('rename')"
       >
 
         {{ file.filename }}
 
         <k-button-group slot="left">
-          <k-button :responsive="true" icon="open" @click="action('download')">
+          <k-button :link="file.url" :responsive="true" icon="open" target="_blank">
             {{ $t("open") }}
           </k-button>
           <k-dropdown>
@@ -44,14 +44,13 @@
         />
       </k-header>
 
-      <k-tabs
+      <k-sections
         v-if="file.id"
-        ref="tabs"
-        :key="tabsKey"
-        :parent="parent"
-        :tabs="tabs"
         :blueprint="file.blueprint.name"
-        @tab="tab = $event"
+        :empty="$t('file.blueprint', { template: file.blueprint.name })"
+        :parent="parent"
+        :tab="tab"
+        :tabs="tabs"
       />
 
       <k-file-rename-dialog ref="rename" @success="renamed" />
@@ -82,6 +81,10 @@ export default {
     filename: {
       type: String,
       required: true
+    },
+    tab: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -105,7 +108,6 @@ export default {
       },
       issue: null,
       tabs: [],
-      tab: null,
       options: null
     };
   },
@@ -123,9 +125,6 @@ export default {
           tooltip: this.file.prev.filename
         };
       }
-    },
-    tabsKey() {
-      return "file-" + this.file.id + "-tabs";
     },
     language() {
       return this.$store.state.languages.current;
@@ -194,9 +193,6 @@ export default {
     },
     action(action) {
       switch (action) {
-        case "download":
-          window.open(this.file.url);
-          break;
         case "rename":
           this.$refs.rename.open(this.path, this.file.filename);
           break;

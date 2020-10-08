@@ -1,91 +1,112 @@
 <template>
-  <div class="k-search" role="search" @click="close">
-    <div class="k-search-box" @click.stop>
+  <k-overlay ref="overlay">
+    <div class="k-search" role="search">
       <div class="k-search-input">
+        <!-- Type select -->
         <k-dropdown class="k-search-types">
-          <k-button :icon="type.icon" @click="$refs.types.toggle()">{{ type.label }}:</k-button>
+          <k-button :icon="currentType.icon" @click="$refs.types.toggle()">
+            {{ currentType.label }}:
+          </k-button>
           <k-dropdown-content ref="types">
             <k-dropdown-item
               v-for="(type, typeIndex) in types"
               :key="typeIndex"
               :icon="type.icon"
-              @click="currentType = typeIndex"
+              @click="changeType(typeIndex)"
             >
               {{ type.label }}
             </k-dropdown-item>
           </k-dropdown-content>
         </k-dropdown>
+
+        <!-- Input -->
         <input
           ref="input"
           v-model="q"
           :placeholder="$t('search') + ' …'"
-          aria-label="$t('search')"
+          :aria-label="$t('search')"
+          :autofocus="true"
           type="text"
-          @keydown.down.prevent="down"
-          @keydown.up.prevent="up"
-          @keydown.tab.prevent="tab"
-          @keydown.enter="enter"
+          @input="hasResults = true"
+          @keydown.down.prevent="onDown"
+          @keydown.up.prevent="onUp"
+          @keydown.tab.prevent="onTab"
+          @keydown.enter="onEnter"
           @keydown.esc="close"
         >
         <k-button
           :tooltip="$t('close')"
           class="k-search-close"
-          icon="cancel"
+          :icon="isLoading ? 'loader' : 'cancel'"
           @click="close"
         />
       </div>
-      <ul>
-        <li
-          v-for="(item, itemIndex) in items"
-          :key="item.id"
-          :data-selected="selected === itemIndex"
-          @mouseover="selected = itemIndex"
-        >
-          <k-link :to="item.link" @click="close">
-            <strong>{{ item.title }}</strong>
-            <small>{{ item.info }}</small>
-          </k-link>
-        </li>
-      </ul>
+
+      <div
+        v-if="q && (!hasResults || items.length)"
+        class="k-search-results"
+      >
+        <!-- Results -->
+        <ul v-if="items.length" @mouseout="selected = -1">
+          <li
+            v-for="(item, itemIndex) in items"
+            :key="item.id"
+            :data-selected="selected === itemIndex"
+            @mouseover="selected = itemIndex"
+          >
+            <k-link :to="item.link" @click="close">
+              <span class="k-search-item-image">
+                <k-image
+                  v-if="imageOptions(item.image)"
+                  v-bind="imageOptions(item.image)"
+                />
+                <k-icon
+                  v-else
+                  v-bind="item.icon"
+                />
+              </span>
+              <span class="k-search-item-info">
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.info }}</small>
+              </span>
+            </k-link>
+          </li>
+        </ul>
+
+        <!-- No results -->
+        <p v-else-if="!hasResults" class="k-search-empty">
+          {{ $t("search.results.none") }}
+        </p>
+      </div>
     </div>
-  </div>
+  </k-overlay>
 </template>
 
 <script>
 import config from "@/config/config.js";
 import debounce from "@/helpers/debounce.js";
+import previewThumb from "@/helpers/previewThumb.js";
 
 export default {
+  props: {
+    types: {
+      type: Object,
+      default() {
+        return {};
+      }
+    },
+    type: {
+      type: String
+    },
+  },
   data() {
     return {
+      isLoading: false,
+      hasResults: true,
       items: [],
+      currentType: this.getType(this.type),
       q: null,
       selected: -1,
-      currentType: this.$store.state.view === "users" ? "users" : "pages"
-    }
-  },
-  computed: {
-    type() {
-      return this.types[this.currentType] || this.types["pages"];
-    },
-    types() {
-      return {
-        pages: {
-          label: this.$t("pages"),
-          icon: "page",
-          endpoint: "site/search"
-        },
-        files: {
-          label: this.$t("files"),
-          icon: "image",
-          endpoint: "files/search"
-        },
-        users: {
-          label: this.$t("users"),
-          icon: "users",
-          endpoint: "users/search"
-        }
-      };
     }
   },
   watch: {
@@ -94,90 +115,90 @@ export default {
     }, 200),
     currentType() {
       this.search(this.q);
+    },
+    type() {
+      this.currentType = this.getType(this.type);
+    },
+    types() {
+      this.currentType = this.getType(this.type);
     }
   },
-  mounted() {
-    this.$nextTick(() => {
-      this.$refs.input.focus();
-    });
-  },
   methods: {
-    open(event) {
-      event.preventDefault();
-      this.$store.dispatch("search", true);
-    },
-    click(index) {
-      this.selected = index;
-      this.tab();
+    changeType(type) {
+      this.currentType = this.getType(type);
+      this.$nextTick(() => {
+        this.$refs.input.focus();
+      });
     },
     close() {
-      this.$store.dispatch("search", false);
+      this.$refs.overlay.close();
+      this.hasResults = true;
+      this.items = [];
+      this.q = null;
     },
-    down() {
+    getType(type) {
+      return this.types[type] || this.types[Object.keys(this.types)[0]];
+    },
+    imageOptions(image) {
+      return previewThumb(image);
+    },
+    navigate(item) {
+      this.$go(item.link);
+      this.close();
+    },
+    onDown() {
       if (this.selected < this.items.length - 1) {
         this.selected++;
       }
     },
-    enter() {
+    onEnter() {
       let item = this.items[this.selected] || this.items[0];
 
       if (item) {
         this.navigate(item);
       }
     },
-    map_files(item) {
-      return {
-        id: item.id,
-        title: item.filename,
-        link: item.link,
-        info: item.id
-      };
-    },
-    map_pages(item) {
-      return {
-        id: item.id,
-        title: item.title,
-        link: this.$api.pages.link(item.id),
-        info: item.id
-      };
-    },
-    map_users(item) {
-      return {
-        id: item.id,
-        title: item.name,
-        link: this.$api.users.link(item.id),
-        info: item.email
-      };
-    },
-    navigate(item) {
-      this.$go(item.link);
-      this.close();
-    },
-    async search(query) {
-      try {
-        const response = await this.$api.get(
-          this.type.endpoint,
-          { q: query, limit: config.search.limit }
-        );
-        this.items = response.data.map(this['map_' + this.currentType]);
-
-      } catch (error) {
-        this.items = [];
-
-      } finally {
-        this.selected = -1;
-      }
-    },
-    tab() {
+    onTab() {
       const item = this.items[this.selected];
 
       if (item) {
         this.navigate(item);
       }
     },
-    up() {
+    onUp() {
       if (this.selected >= 0) {
         this.selected--;
+      }
+    },
+    open() {
+      this.$refs.overlay.open();
+    },
+    async search(query) {
+      this.isLoading = true;
+
+      if (this.$refs.types) {
+        this.$refs.types.close();
+      }
+
+      try {
+        // Skip API call if query empty
+        if (query === "") {
+          throw new Error;
+        }
+
+        this.items = await this.currentType.search({
+          query: query,
+          limit: config.search.limit
+        });
+
+
+      } catch (error) {
+        this.items = [];
+
+      } finally {
+        this.selected   = -1;
+        this.isLoading  = false;
+        this.hasResults = this.items.length > 0;
       }
     }
   }
@@ -186,26 +207,16 @@ export default {
 
 <style lang="scss">
 .k-search {
-  position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1000;
-  overflow: auto;
-  background: $color-backdrop;
-}
-.k-search-box {
   max-width: 30rem;
   margin: 0 auto;
-  box-shadow: $box-shadow;
+  box-shadow: $shadow-lg;
 
-  @media screen and (min-width: $breakpoint-medium) {
+  @media screen and (min-width: $breakpoint-md) {
     margin: 2.5rem auto;
   }
 }
 .k-search-input {
-  background: #efefef;
+  background: $color-light;
   display: flex;
 }
 .k-search-types {
@@ -213,8 +224,8 @@ export default {
   display: flex;
 }
 .k-search-types > .k-button {
-  padding: 0 0 0 .7rem;
-  font-size: $font-size-medium;
+  padding: 0 0 0 1rem;
+  font-size: $text-base;
   line-height: 1;
   height: 2.5rem;
 
@@ -235,45 +246,61 @@ export default {
   height: 2.5rem;
 }
 .k-search-close {
-  width: 2.5rem;
+  width: 3rem;
   line-height: 1;
+}
+.k-search-close .k-icon-loader {
+  animation: Spin 2s linear infinite;
 }
 .k-search input:focus {
   outline: 0;
 }
-.k-search ul {
-  background: #fff;
+
+.k-search-results {
+  padding: .5rem 1rem 1rem;
+  background: $color-light;
 }
 .k-search li {
-  border-bottom: 1px solid $color-background;
-  line-height: 1.125;
+  background: $color-white;
   display: flex;
-}
-.k-search li .k-link {
-  display: block;
-  padding: .5rem .75rem;
-  flex-grow: 1;
-}
-.k-search li strong {
-  display: block;
-  font-size: $font-size-small;
-  font-weight: 400;
-}
-.k-search li small {
-  font-size: $font-size-tiny;
-  color: $color-dark-grey;
+  box-shadow: $shadow;
+
+  &:not(:last-child) {
+    margin-bottom: .25rem;
+  }
 }
 .k-search li[data-selected] {
   outline: 2px solid $color-focus;
-  background: $color-focus-outline;
-  border-bottom: 1px solid transparent;
 }
-.k-search-empty {
-  padding: .825rem .75rem;
-  font-size: $font-size-tiny;
-  background: $color-background;
-  border-top: 1px dashed $color-border;
-  color: $color-dark-grey;
+.k-search li .k-link {
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+.k-search-item-image,
+.k-search-item-image > * {
+  height: 50px;
+  width: 50px;
 }
 
+.k-search-item-info {
+  padding: .5rem .75rem;
+  line-height: 1.125;
+}
+
+.k-search li strong {
+  display: block;
+  font-size: $text-sm;
+  font-weight: 400;
+}
+.k-search li small {
+  font-size: $text-xs;
+  color: $color-gray-600;
+}
+
+.k-search-empty {
+  text-align: center;
+  font-size: $text-xs;
+  color: $color-gray-600;
+}
 </style>

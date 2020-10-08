@@ -1,5 +1,6 @@
 <template>
   <draggable
+    :component-data="data"
     :tag="element"
     :list="list"
     :move="move"
@@ -20,6 +21,7 @@ export default {
     draggable: Draggable
   },
   props: {
+    data: Object,
     element: String,
     handle: [String, Boolean],
     list: [Array, Object],

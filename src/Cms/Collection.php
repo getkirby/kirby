@@ -204,6 +204,7 @@ class Collection extends BaseCollection
     public function not(...$keys)
     {
         $collection = $this->clone();
+
         foreach ($keys as $key) {
             if (is_array($key) === true) {
                 return $this->not(...$key);
@@ -212,8 +213,10 @@ class Collection extends BaseCollection
             } elseif (is_object($key) === true) {
                 $key = $key->id();
             }
-            unset($collection->$key);
+
+            unset($collection->{$key});
         }
+
         return $collection;
     }
 

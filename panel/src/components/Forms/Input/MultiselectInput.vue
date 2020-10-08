@@ -311,7 +311,7 @@ export default {
   display: flex;
   flex-wrap: wrap;
   position: relative;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   min-height: 2.25rem;
   line-height: 1;
 }
@@ -326,7 +326,7 @@ export default {
 .k-multiselect-search {
   margin-top: 0 !important;
   color: $color-white;
-  background: $color-dark;
+  background: $color-gray-900;
   border-bottom: 1px dashed rgba($color-white, 0.2);
 
   > .k-button-text {

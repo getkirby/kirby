@@ -33,12 +33,12 @@ export default {
 <style lang="scss">
 .k-tag {
   position: relative;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   line-height: 1;
   cursor: pointer;
-  background-color: $color-dark;
+  background-color: $color-gray-900;
   color: $color-light;
-  border-radius: $border-radius;
+  border-radius: $rounded-xs;
   display: flex;
   align-items: center;
   justify-content: space-between;

@@ -9,24 +9,47 @@
     :data-translation-default="defaultTranslation"
     class="k-panel"
   >
+    <!-- Icons -->
     <keep-alive>
       <k-icons />
     </keep-alive>
+
+    <!-- Header -->
     <header v-if="inside" class="k-panel-header">
-      <k-topbar @register="$refs.registration.open()" />
-      <k-search v-if="$store.state.search" v-bind="$store.state.search" />
+      <k-topbar
+        @register="$refs.registration.open()"
+        @search="$refs.search.open();"
+      />
     </header>
+
+    <!-- Main view -->
     <main class="k-panel-view">
       <router-view />
     </main>
+
+    <!-- Form buttons -->
     <k-form-buttons v-if="inside" />
+
+    <!-- Search dialog -->
+    <k-search
+      ref="search"
+      v-if="inside"
+      :type="searchType"
+      :types="searchTypes"
+    />
+
+    <!-- Error dialog -->
     <k-error-dialog />
+
+    <!-- Offline warning -->
     <div
       v-if="offline"
       class="k-offline-warning"
     >
       <p>The Panel is currently offline</p>
     </div>
+
+    <!-- Registration dialog -->
     <k-registration v-if="inside" ref="registration" />
   </div>
   <div v-else class="k-panel">
@@ -47,6 +70,7 @@
 import Icons from "@/components/Misc/Icons.vue";
 import Registration from "@/components/Dialogs/RegistrationDialog.vue";
 import config from "@/config/config.js";
+import search from "@/config/search.js"
 
 export default {
   name: "App",
@@ -69,6 +93,12 @@ export default {
     },
     defaultTranslation() {
       return this.$store.state.languages.current ? this.$store.state.languages.current === this.$store.state.languages.default : false;
+    },
+    searchType() {
+      return this.$store.state.view === 'users' ? 'users' : 'pages';
+    },
+    searchTypes() {
+      return search(this);
     },
     translation() {
       return this.$store.state.languages.current ? this.$store.state.languages.current.code : false;
@@ -98,10 +128,6 @@ export default {
       if (this.$store.state.system.info.isLocal === false) {
         this.offline = true;
       }
-    },
-    search(event) {
-      event.preventDefault();
-      this.$store.dispatch("search", true);
     }
   }
 };
@@ -132,25 +158,25 @@ export default {
   --color-positive: #{$color-positive};
   --color-positive-light: #{$color-positive-on-dark};
   --color-positive-outline: #{$color-positive-outline};
-  --color-text: #{$color-dark};
-  --color-text-light: #{$color-dark-grey};
+  --color-text: #{$color-gray-900};
+  --color-text-light: #{$color-gray-600};
 
   /** Font families **/
-  --font-family-mono: #{$font-family-mono};
-  --font-family-sans: #{$font-family-sans};
+  --font-family-mono: #{$font-mono};
+  --font-family-sans: #{$font-sans};
 
   /** Font sizes **/
-  --font-size-tiny: #{$font-size-tiny};
-  --font-size-small: #{$font-size-small};
-  --font-size-medium: #{$font-size-medium};
-  --font-size-large: #{$font-size-large};
-  --font-size-huge: #{$font-size-huge};
-  --font-size-monster: #{$font-size-monster};
+  --font-size-tiny: #{$text-xs};
+  --font-size-small: #{$text-sm};
+  --font-size-medium: #{$text-base};
+  --font-size-large: #{$text-xl};
+  --font-size-huge: #{$text-2xl};
+  --font-size-monster: #{$text-3xl};
 
   /** Shadows **/
-  --box-shadow-dropdown: #{$box-shadow};
-  --box-shadow-item: #{$box-shadow-card};
-  --box-shadow-focus: #{$box-shadow-focus-full};
+  --box-shadow-dropdown: #{$shadow-lg};
+  --box-shadow-item: #{$shadow};
+  --box-shadow-focus: #{$shadow-xl};
 }
 
 noscript {
@@ -163,13 +189,13 @@ noscript {
 }
 
 html {
-  font-family: $font-family-sans;
+  font-family: $font-sans;
   background: $color-background;
 }
 
 html,
 body {
-  color: $color-dark;
+  color: $color-gray-900;
   overflow: hidden;
   height: 100%;
 }
@@ -185,7 +211,7 @@ li {
 
 strong,
 b {
-  font-weight: $font-weight-bold;
+  font-weight: $font-bold;
 }
 
 .fade-enter-active,
@@ -254,7 +280,7 @@ b {
   z-index: z-index(loader);
 }
 .k-offline-warning {
-  background: rgba($color-dark, 0.7);
+  background: rgba($color-gray-900, 0.7);
   content: "offline";
   display: flex;
   align-items: center;

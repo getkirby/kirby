@@ -41,25 +41,15 @@ return [
             }
 
             return $fields;
-        },
+        }
+    ],
+    'methods' => [
         'errors' => function () {
             return $this->form->errors();
-        },
-        'data' => function () {
-            $values = $this->form->values();
-
-            if (is_a($this->model, 'Kirby\Cms\Page') === true || is_a($this->model, 'Kirby\Cms\Site') === true) {
-                // the title should never be updated directly via
-                // fields section to avoid conflicts with the rename dialog
-                unset($values['title']);
-            }
-
-            return $values;
         }
     ],
     'toArray' => function () {
         return [
-            'errors' => $this->errors,
             'fields' => $this->fields,
         ];
     }

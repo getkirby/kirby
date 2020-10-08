@@ -1,8 +1,17 @@
 <template>
-  <div :data-layout="layout" class="k-empty" v-on="$listeners">
-    <k-icon v-if="icon" :type="icon" />
+  <component
+    :is="element"
+    :data-layout="layout"
+    :type="element === 'button' ? 'button' : false"
+    class="k-empty"
+    v-on="$listeners"
+  >
+    <k-icon
+      v-if="icon"
+      :type="icon"
+    />
     <p><slot /></p>
-  </div>
+  </component>
 </template>
 
 <script>
@@ -10,9 +19,17 @@ export default {
   props: {
     text: String,
     icon: String,
+    /**
+     * Available options: `list`|`cards`
+     */
     layout: {
       type: String,
       default: "list"
+    }
+  },
+  computed: {
+    element() {
+      return this.$listeners["click"] !== undefined ? "button" : "div";
     }
   }
 };
@@ -23,16 +40,22 @@ export default {
 .k-empty {
   display: flex;
   align-items: stretch;
-  border-radius: $border-radius;
-  color: $color-dark-grey;
+  border-radius: $rounded-xs;
+  color: $color-gray-600;
   border: 1px dashed $color-border;
 }
+button.k-empty {
+  width: 100%;
+}
+button.k-empty:focus {
+  outline: none;
+}
 .k-empty p {
-  font-size: $font-size-small;
-  color: $color-dark-grey;
+  font-size: $text-sm;
+  color: $color-gray-600;
 }
 .k-empty > .k-icon {
-  color: $color-light-grey;
+  color: $color-gray-500;
 }
 
 /* layout:cards */
@@ -59,7 +82,7 @@ export default {
   & > .k-icon {
     width: 36px;
     min-height: 36px;
-    border-right: 1px solid rgba(#000, 0.05);
+    border-right: 1px solid rgba($color-black, 0.05);
   }
 
   & > p {

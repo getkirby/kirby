@@ -81,7 +81,7 @@ export default {
   align-items: center;
   padding: 0.5rem 0;
   flex-grow: 1;
-  font-size: $font-size-small;
+  font-size: $text-sm;
   cursor: pointer;
 }
 
@@ -104,9 +104,9 @@ export default {
   margin-bottom: 2rem;
   background: $color-negative;
   color: #fff;
-  font-size: $font-size-small;
-  border-radius: $border-radius;
-  box-shadow: $box-shadow;
+  font-size: $text-sm;
+  border-radius: $rounded-xs;
+  box-shadow: $shadow-lg;
   cursor: pointer;
 }
 </style>

@@ -294,9 +294,7 @@ abstract class ModelWithContent extends Model
         $errors = [];
 
         foreach ($this->blueprint()->sections() as $section) {
-            if (method_exists($section, 'errors') === true || isset($section->errors)) {
-                $errors = array_merge($errors, $section->errors());
-            }
+            $errors = array_merge($errors, $section->errors());
         }
 
         return $errors;

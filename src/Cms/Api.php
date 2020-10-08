@@ -56,28 +56,7 @@ class Api extends BaseApi
      */
     public function fieldApi($model, string $name, string $path = null)
     {
-        $form       = Form::for($model);
-        $fieldNames = Str::split($name, '+');
-        $index      = 0;
-        $count      = count($fieldNames);
-        $field      = null;
-
-        foreach ($fieldNames as $fieldName) {
-            $index++;
-
-            if ($field = $form->fields()->get($fieldName)) {
-                if ($count !== $index) {
-                    $form = $field->form();
-                }
-            } else {
-                throw new NotFoundException('The field "' . $fieldName . '" could not be found');
-            }
-        }
-
-        // it can get this error only if $name is an empty string as $name = ''
-        if ($field === null) {
-            throw new NotFoundException('No field could be loaded');
-        }
+        $field = Form::for($model)->field($name);
 
         $fieldApi = $this->clone([
             'routes' => $field->api(),

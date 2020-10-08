@@ -2,9 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Exception;
 use Kirby\Data\Data;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -36,11 +34,11 @@ trait AppTranslations
             }
 
             // inject translations from the current language
-            if ($this->multilang() === true && $language = $this->languages()->find($locale)) {
+            if (
+                $this->multilang() === true &&
+                $language = $this->languages()->find($locale)
+            ) {
                 $data = array_merge($data, $language->translations());
-
-                // Add language slug rules to Str class
-                Str::$language = $language->rules();
             }
 
 
@@ -65,25 +63,12 @@ trait AppTranslations
 
         I18n::$translations = [];
 
-        // checks custom language definition for slugs
-        if ($slugsOption = $this->option('slugs')) {
-            // checks setting in two different ways
+        // add slug rules based on config option
+        if ($slugs = $this->option('slugs')) {
+            // two ways that the option can be defined:
             // "slugs" => "de" or "slugs" => ["language" => "de"]
-            $slugsLanguage = is_string($slugsOption) === true ? $slugsOption : ($slugsOption['language'] ?? null);
-
-            // load custom slugs language if it's defined
-            if ($slugsLanguage !== null) {
-                $file = $this->root('i18n:rules') . '/' . $slugsLanguage . '.json';
-
-                if (F::exists($file) === true) {
-                    try {
-                        $data = Data::read($file);
-                    } catch (Exception $e) {
-                        $data = [];
-                    }
-
-                    Str::$language = $data;
-                }
+            if ($slugs = $slugs['language'] ?? $slugs ?? null) {
+                Str::$language = Language::loadRules($slugs);
             }
         }
     }
@@ -112,6 +97,9 @@ trait AppTranslations
         if ($this->language) {
             $this->setLocale($this->language->locale());
         }
+
+        // add language slug rules to Str class
+        Str::$language = $this->language->rules();
 
         return $this->language;
     }

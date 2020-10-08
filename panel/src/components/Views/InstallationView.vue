@@ -181,7 +181,7 @@ export default {
 }
 .k-installation-issues {
   line-height: 1.5em;
-  font-size: $font-size-small;
+  font-size: $text-sm;
 }
 .k-installation-issues li {
   position: relative;

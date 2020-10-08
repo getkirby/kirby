@@ -1,7 +1,12 @@
 <template>
-  <k-grid class="k-sections" gutter="large">
+  <k-box
+    v-if="tabs.length === 0"
+    :text="empty"
+    theme="info"
+  />
+  <k-grid v-else class="k-sections" gutter="large">
     <k-column
-      v-for="(column, columnIndex) in columns"
+      v-for="(column, columnIndex) in currentTab.columns"
       :key="parent + '-column-' + columnIndex"
       :width="column.width"
       :sticky="column.sticky"
@@ -32,11 +37,16 @@
 <script>
 export default {
   props: {
-    parent: String,
+    empty: String,
     blueprint: String,
-    columns: [Array, Object]
+    parent: String,
+    tab: String,
+    tabs: Array,
   },
   computed: {
+    currentTab() {
+      return this.tabs.find(tab => tab.name === this.tab) || this.tabs[0] || {};
+    },
     content() {
       return this.$store.getters["content/values"]();
     }

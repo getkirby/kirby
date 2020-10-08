@@ -8,8 +8,17 @@ for (var key in Vue.options.components) {
   components[key] = Vue.options.components[key];
 }
 
-const registerComponent = (name, component) => {
-  if (!component.template && !component.render && !component.extends) {
+let mixins = {
+  section: section
+};
+
+/**
+ * Components
+ */
+Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
+
+  // make sure component has something to show
+  if (!options.template && !options.render && !options.extends) {
     store.dispatch(
       "notification/error",
       `Neither template or render method provided nor extending a component when loading plugin component "${name}". The component has not been registered.`
@@ -17,16 +26,24 @@ const registerComponent = (name, component) => {
     return;
   }
 
-  if (component.extends && typeof component.extends === "string") {
-    component.extends = components[component.extends];
-    if (component.template) {
-      component.render = null;
+  // resolve extending via component name
+  if (options.extends && typeof options.extends === "string") {
+    options.extends = components[options.extends].extend({
+      options,
+      components: {
+        ...components,
+        ...options.components || {}
+      }
+    });
+
+    if (options.template) {
+      options.render = null;
     }
   }
 
-  if (component.mixins) {
-    component.mixins = component.mixins.map(mixin => {
-      return typeof mixin === "string" ? components[mixin] : mixin;
+  if (options.mixins) {
+    options.mixins = options.mixins.map(mixin => {
+      return typeof mixin === "string" ? mixins[mixin] : mixin;
     });
   }
 
@@ -34,26 +51,13 @@ const registerComponent = (name, component) => {
     window.console.warn(`Plugin is replacing "${name}"`);
   }
 
-  Vue.component(name, component);
-};
-
-// Components
-Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
-  registerComponent(name, options);
+  Vue.component(name, options);
+  components[name] = Vue.options.components[name];
 });
 
-Object.entries(window.panel.plugins.fields).forEach(([name, options]) => {
-  registerComponent(name, options);
-});
-
-Object.entries(window.panel.plugins.sections).forEach(([name, options]) => {
-  registerComponent(name, {
-    ...options,
-    mixins: [section].concat(options.mixins || [])
-  });
-});
-
-// Views
+/**
+ * Views
+ */
 Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
   // Check for all required properties
   if (!options.component) {
@@ -79,6 +83,8 @@ Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
 
   // Update view
   window.panel.plugins.views[name] = {
+    id: name,
+    text: options.text || options.label,
     link: options.link,
     icon: options.icon,
     menu: options.menu
@@ -87,7 +93,9 @@ Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
   Vue.component("k-" + name + "-plugin-view", options.component);
 });
 
-// Vue.use
+/**
+ * Vue.use
+ */
 window.panel.plugins.use.forEach(plugin => {
   Vue.use(plugin);
 });

@@ -265,21 +265,6 @@ trait FileActions
     }
 
     /**
-     * @deprecated 3.0.0 Use `File::changeName()` instead
-     *
-     * @param string $name
-     * @param bool $sanitize
-     * @return self
-     * @codeCoverageIgnore
-     */
-    public function rename(string $name, bool $sanitize = true)
-    {
-        deprecated('$file->rename() is deprecated, use $file->changeName() instead. $file->rename() will be removed in Kirby 3.5.0.');
-
-        return $this->changeName($name, $sanitize);
-    }
-
-    /**
      * Replaces the file. The source must
      * be an absolute path to a file or a Url.
      * The store handles the replacement so it

@@ -2,8 +2,8 @@
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
-  <div v-else-if="ready" :data-locked="isLocked" class="k-user-view">
 
+  <div v-else-if="ready" :data-locked="isLocked" class="k-user-view">
     <div class="k-user-profile">
       <k-view>
         <template v-if="avatar">
@@ -49,12 +49,13 @@
 
       <k-header
         :editable="permissions.changeName && !isLocked"
-        :tabs="tabs"
         :tab="tab"
+        :tabs="tabs"
         @edit="action('rename')"
       >
         <span v-if="!user.name || user.name.length === 0" class="k-user-name-placeholder">{{ $t("name") }} …</span>
         <template v-else>{{ user.name }}</template>
+
         <k-button-group slot="left">
           <k-dropdown>
             <k-button :disabled="isLocked" icon="cog" @click="$refs.settings.toggle()">
@@ -73,17 +74,14 @@
         />
       </k-header>
 
-      <k-tabs
-        v-if="user && tabs.length"
-        ref="tabs"
-        :key="tabsKey"
-        :parent="'users/' + user.id"
+      <k-sections
+        v-if="user"
         :blueprint="user.blueprint.name"
+        :empty="$t('user.blueprint', { role: user.role.name })"
+        :parent="'users/' + user.id"
+        :tab="tab"
         :tabs="tabs"
-        @tab="tab = $event"
       />
-
-      <k-box v-else-if="ready" :text="$t('user.blueprint', { role: user.role.name })" theme="info" />
 
       <k-user-email-dialog ref="email" @success="fetch" />
       <k-user-language-dialog ref="language" @success="fetch" />
@@ -114,11 +112,11 @@ export default {
     id: {
       type: [Boolean, String],
       required: true
-    }
+    },
+    tab: String
   },
   data() {
     return {
-      tab: null,
       tabs: [],
       ready: false,
       user: {
@@ -160,9 +158,6 @@ export default {
           tooltip: this.user.prev.name
         };
       }
-    },
-    tabsKey() {
-      return "user-" + this.user.id + "-tabs";
     },
     uploadApi() {
       return config.api + "/users/" + this.user.id + "/avatar";
@@ -251,6 +246,7 @@ export default {
         });
 
       } catch (error) {
+        window.console.error(error);
         this.issue = error;
       }
     },
@@ -312,7 +308,7 @@ export default {
 .k-user-view-image .k-icon {
   width: 4rem;
   height: 4rem;
-  background: $color-dark;
+  background: $color-gray-900;
   color: $color-light-grey;
 }
 
@@ -321,6 +317,6 @@ export default {
   transition: color 0.3s;
 }
 .k-header[data-editable] .k-user-name-placeholder:hover {
-  color: $color-dark;
+  color: $color-gray-900;
 }
 </style>

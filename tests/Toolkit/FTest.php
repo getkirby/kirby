@@ -366,8 +366,12 @@ class FTest extends TestCase
         $this->assertFileNotExists($c);
     }
 
+
     public function testSafeName()
     {
+        // make sure no language rules are still set
+        Str::$language = [];
+
         // with extension
         $this->assertEquals('uber-genious.txt', F::safeName('über genious.txt'));
 

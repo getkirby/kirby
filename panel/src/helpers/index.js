@@ -1,13 +1,15 @@
-import clone from "@/helpers/clone.js";
-import debounce from "@/helpers/debounce.js";
-import isComponent from "@/helpers/isComponent.js";
-import isUploadEvent from "@/helpers/isUploadEvent.js";
-import pad from "@/helpers/pad.js";
-import ratio from "@/helpers/ratio.js";
-import slug from "@/helpers/slug.js";
-import sort from "@/helpers/sort.js";
-import string from "@/helpers/string.js";
-import upload from "@/helpers/upload.js";
+import clone from "./clone.js";
+import debounce from "./debounce.js";
+import isComponent from "./isComponent.js";
+import isUploadEvent from "./isUploadEvent.js";
+import pad from "./pad.js";
+import ratio from "./ratio.js";
+import slug from "./slug.js";
+import sort from "./sort.js";
+import string from "./string.js";
+import upload from "./upload.js";
+
+import "./regex.js";
 
 export default {
   install(Vue) {
@@ -33,12 +35,6 @@ export default {
       });
     };
 
-    /**
-     * RegExp.escape(string)
-     */
-    RegExp.escape = function (string) {
-      return string.replace(new RegExp("[-/\\\\^$*+?.()[\\]{}]", "gu"), '\\$&');
-    };
 
     Vue.prototype.$helper = {
       clone: clone,

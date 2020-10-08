@@ -44,9 +44,9 @@ export default {
 
 <style lang="scss">
 .k-counter {
-  font-size: $font-size-tiny;
-  color: $color-dark;
-  font-weight: $font-weight-bold;
+  font-size: $text-xs;
+  color: $color-gray-900;
+  font-weight: $font-bold;
 }
 .k-counter[data-invalid] {
   box-shadow: none;
@@ -54,8 +54,8 @@ export default {
   color: $color-negative;
 }
 .k-counter-rules {
-  color: $color-dark-grey;
-  font-weight: $font-weight-normal;
+  color: $color-gray-600;
+  font-weight: $font-normal;
 
   [dir="ltr"] & {
     padding-left: .5rem;

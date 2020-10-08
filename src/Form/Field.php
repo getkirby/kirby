@@ -404,8 +404,6 @@ class Field extends Component
 
         unset($array['model']);
 
-        $array['errors']    = $this->errors();
-        $array['invalid']   = $this->isInvalid();
         $array['saveable']  = $this->save();
         $array['signature'] = md5(json_encode($array));
 
