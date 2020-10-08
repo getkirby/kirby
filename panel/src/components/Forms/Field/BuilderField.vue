@@ -50,8 +50,8 @@
               <k-button
                 v-for="(tab, tabId) in blockOptions.tabs"
                 :key="tabId"
+                :icon="tab.icon"
                 :current="isCurrentTab(block, tabId)"
-                :icon="tab.icon || 'settings'"
                 class="k-builder-block-tab"
                 @click.stop="open(block, tabId)"
               >
@@ -66,7 +66,7 @@
               @click.stop="toggleVisibility(block)"
             />
 
-            <k-dropdown>
+            <k-dropdown class="k-builder-block-options">
               <k-button
                 class="k-builder-block-options-toggle"
                 icon="dots"
@@ -425,6 +425,7 @@ export default {
   background: $color-white;
   box-shadow: $shadow;
   margin-bottom: 2px;
+  border: 2px solid $color-white;
 }
 .k-builder-block:last-child {
   margin-bottom: 0;
@@ -437,9 +438,13 @@ export default {
   pointer-events: none;
 }
 .k-builder-block-header {
-  height: 38px;
   cursor: pointer;
   list-style: none;
+}
+.k-builder-block[open] > .k-builder-block-header {
+  background: $color-background;
+  padding-bottom: 2px;
+  border-bottom: 1px solid rgba(#000, .05);
 }
 .k-builder-block-header::-webkit-details-marker {
   display: none;
@@ -453,8 +458,8 @@ export default {
   align-items: center;
 }
 .k-builder-block-handle.k-sort-handle {
-  width: 2.25rem;
-  height: 38px;
+  width: 2rem;
+  height: 100%;
 }
 .k-builder-block-handle.k-sort-handle > svg {
   opacity: .25;
@@ -465,7 +470,6 @@ export default {
 .k-builder-block-label {
   display: flex;
   flex-grow: 1;
-  height: 36px;
   align-items: center;
   line-height: 1;
   font-size: $text-sm;
@@ -479,50 +483,59 @@ export default {
 .k-builder-block[data-hidden] .k-builder-block-label {
   color: $color-gray-400;
 }
-.k-builder-block-label .k-icon {
-  margin-left: .75rem;
-}
 
+.k-builder-block-status {
+  line-height: 1;
+  height: 32px;
+  width: 2.5rem;
+}
 .k-builder-block-tabs {
   display: none;
   align-items: center;
-  margin-right: .5rem;
+  height: 34px;
+  margin-right: .75rem;
 }
 @media screen and (min-width: $breakpoint-md) {
-  .k-builder-block[open] .k-builder-block-tabs {
+  .k-builder-block .k-builder-block-tabs {
     display: flex;
   }
 }
-.k-builder-block-tab {
+.k-button.k-builder-block-tab {
   position: relative;
-  padding: .5rem .75rem;
-  height: 38px;
-}
-.k-builder-block-tab > * {
-  position: relative;
-  z-index: 1;
-}
-.k-builder-block-tab[aria-current]::before {
-  content: "";
-  position: absolute;
-  top: 2px;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  background: $color-background;
-  border-top-left-radius: $rounded;
-  border-top-right-radius: $rounded;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+  font-size: $text-sm;
+  color: $color-gray-600;
+  padding: 0 .75rem;
+  height: 100%;
 }
 
+.k-builder-block-tab[aria-current] {
+  color: $color-black;
+}
+.k-builder-block-tab[aria-current]::after {
+  position: absolute;
+  bottom: -3px;
+  left: .75rem;
+  right: .75rem;
+  height: 2px;
+  background: $color-black;
+  content: "";
+}
+.k-builder-block-options {
+  width: 2.5rem;
+  height: 34px;
+}
 .k-builder-block-options-toggle {
   display: flex;
-  width: 2.5rem;
-  height: 36px;
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  line-height: 1;
 }
 .k-builder-block-body {
   background: $color-background;
-  border: 2px solid $color-white;
-  border-top: 0;
   line-height: 0;
 }
 .k-builder-block-form {
