@@ -380,7 +380,7 @@ export default {
     },
     confirmRemove(index) {
       this.close();
-      this.trash = index;
+      this.trash = index + this.pagination.offset;
       this.$refs.remove.open();
     },
     createForm(field) {
