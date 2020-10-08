@@ -41,7 +41,7 @@ class StructureTest extends TestCase
         $this->assertEquals($expected, $structure->toArray());
     }
 
-    public function testGroupBy()
+    public function testGroup()
     {
         $structure = new Structure([
             [
@@ -58,7 +58,7 @@ class StructureTest extends TestCase
             ]
         ]);
 
-        $grouped = $structure->groupBy('category');
+        $grouped = $structure->group('category');
 
         $this->assertCount(2, $grouped);
         $this->assertCount(2, $grouped->first());
@@ -91,7 +91,7 @@ class StructureTest extends TestCase
         $this->assertFalse($structure->last()->isFirst());
         $this->assertFalse($structure->first()->isLast());
     }
-    
+
     public function testWithInvalidData()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');

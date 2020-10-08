@@ -27,7 +27,7 @@ trait HasFiles
      */
     public function audio()
     {
-        return $this->files()->filterBy('type', '==', 'audio');
+        return $this->files()->filter('type', '==', 'audio');
     }
 
     /**
@@ -37,7 +37,7 @@ trait HasFiles
      */
     public function code()
     {
-        return $this->files()->filterBy('type', '==', 'code');
+        return $this->files()->filter('type', '==', 'code');
     }
 
     /**
@@ -74,7 +74,7 @@ trait HasFiles
      */
     public function documents()
     {
-        return $this->files()->filterBy('type', '==', 'document');
+        return $this->files()->filter('type', '==', 'document');
     }
 
     /**
@@ -196,7 +196,7 @@ trait HasFiles
      */
     public function images()
     {
-        return $this->files()->filterBy('type', '==', 'image');
+        return $this->files()->filter('type', '==', 'image');
     }
 
     /**
@@ -221,6 +221,6 @@ trait HasFiles
      */
     public function videos()
     {
-        return $this->files()->filterBy('type', '==', 'video');
+        return $this->files()->filter('type', '==', 'video');
     }
 }

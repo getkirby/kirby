@@ -236,7 +236,7 @@ return [
             return $item->searchHits > 0 ? true : false;
         });
 
-        return $results->sortBy('searchScore', 'desc');
+        return $results->sort('searchScore', 'desc');
     },
 
     /**

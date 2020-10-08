@@ -368,7 +368,8 @@ class User extends ModelWithContent
      */
     public function isLastAdmin(): bool
     {
-        return $this->role()->isAdmin() === true && $this->kirby()->users()->filterBy('role', 'admin')->count() <= 1;
+        return $this->role()->isAdmin() === true &&
+               $this->kirby()->users()->filter('role', 'admin')->count() <= 1;
     }
 
     /**
@@ -688,7 +689,7 @@ class User extends ModelWithContent
         $roles = $kirby->roles();
 
         // a collection with just the one role of the user
-        $myRole = $roles->filterBy('id', $this->role()->id());
+        $myRole = $roles->filter('id', $this->role()->id());
 
         // if there's an authenticated user …
         if ($user = $kirby->user()) {

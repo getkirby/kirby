@@ -84,12 +84,12 @@ return [
             $files = $this->parent->files()->template($this->template);
 
             // filter out all protected files
-            $files = $files->filterBy('isReadable', true);
+            $files = $files->filter('isReadable', true);
 
             if ($this->sortBy) {
-                $files = $files->sortBy(...$files::sortArgs($this->sortBy));
+                $files = $files->sort(...$files::sortArgs($this->sortBy));
             } else {
-                $files = $files->sortBy('sort', 'asc', 'filename', 'asc');
+                $files = $files->sort('sort', 'asc', 'filename', 'asc');
             }
 
             // flip

@@ -74,7 +74,7 @@ class Pages extends Collection
      */
     public function audio()
     {
-        return $this->files()->filterBy('type', 'audio');
+        return $this->files()->filter('type', 'audio');
     }
 
     /**
@@ -102,7 +102,7 @@ class Pages extends Collection
      */
     public function code()
     {
-        return $this->files()->filterBy('type', 'code');
+        return $this->files()->filter('type', 'code');
     }
 
     /**
@@ -112,7 +112,7 @@ class Pages extends Collection
      */
     public function documents()
     {
-        return $this->files()->filterBy('type', 'document');
+        return $this->files()->filter('type', 'document');
     }
 
     /**
@@ -319,7 +319,7 @@ class Pages extends Collection
      */
     public function images()
     {
-        return $this->files()->filterBy('type', 'image');
+        return $this->files()->filter('type', 'image');
     }
 
     /**
@@ -358,7 +358,7 @@ class Pages extends Collection
      */
     public function listed()
     {
-        return $this->filterBy('isListed', '==', true);
+        return $this->filter('isListed', '==', true);
     }
 
     /**
@@ -368,7 +368,7 @@ class Pages extends Collection
      */
     public function unlisted()
     {
-        return $this->filterBy('isUnlisted', '==', true);
+        return $this->filter('isUnlisted', '==', true);
     }
 
     /**
@@ -465,7 +465,7 @@ class Pages extends Collection
      */
     public function published()
     {
-        return $this->filterBy('isDraft', '==', false);
+        return $this->filter('isDraft', '==', false);
     }
 
     /**
@@ -496,6 +496,6 @@ class Pages extends Collection
      */
     public function videos()
     {
-        return $this->files()->filterBy('type', 'video');
+        return $this->files()->filter('type', 'video');
     }
 }

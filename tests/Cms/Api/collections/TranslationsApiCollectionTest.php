@@ -20,7 +20,7 @@ class TranslationsApiCollectionTest extends TestCase
 
     public function testCollection()
     {
-        $collection = $this->api->collection('translations', $this->app->translations()->filterBy('id', 'en'));
+        $collection = $this->api->collection('translations', $this->app->translations()->filter('id', 'en'));
         $result     = $collection->toArray();
 
         $this->assertCount(1, $result);

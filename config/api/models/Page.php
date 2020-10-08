@@ -27,7 +27,7 @@ return [
             return $page->errors();
         },
         'files' => function (Page $page) {
-            return $page->files()->sortBy('sort', 'asc', 'filename', 'asc');
+            return $page->files()->sort('sort', 'asc', 'filename', 'asc');
         },
         'hasChildren' => function (Page $page) {
             return $page->hasChildren();
@@ -47,9 +47,9 @@ return [
         'next' => function (Page $page) {
             return $page
                 ->nextAll()
-                ->filterBy('intendedTemplate', $page->intendedTemplate())
-                ->filterBy('status', $page->status())
-                ->filterBy('isReadable', true)
+                ->filter('intendedTemplate', $page->intendedTemplate())
+                ->filter('status', $page->status())
+                ->filter('isReadable', true)
                 ->first();
         },
         'num' => function (Page $page) {
@@ -73,9 +73,9 @@ return [
         'prev' => function (Page $page) {
             return $page
                 ->prevAll()
-                ->filterBy('intendedTemplate', $page->intendedTemplate())
-                ->filterBy('status', $page->status())
-                ->filterBy('isReadable', true)
+                ->filter('intendedTemplate', $page->intendedTemplate())
+                ->filter('status', $page->status())
+                ->filter('isReadable', true)
                 ->last();
         },
         'previewUrl' => function (Page $page) {

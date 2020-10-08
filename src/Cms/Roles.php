@@ -87,7 +87,7 @@ class Roles extends Collection
         }
 
         // return the collection sorted by name
-        return $collection->sortBy('name', 'asc');
+        return $collection->sort('name', 'asc');
     }
 
     /**
@@ -134,6 +134,6 @@ class Roles extends Collection
         }
 
         // return the collection sorted by name
-        return $roles->sortBy('name', 'asc');
+        return $roles->sort('name', 'asc');
     }
 }

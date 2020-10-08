@@ -24,7 +24,7 @@ return [
             return $user->email();
         },
         'files' => function (User $user) {
-            return $user->files()->sortBy('sort', 'asc', 'filename', 'asc');
+            return $user->files()->sort('sort', 'asc', 'filename', 'asc');
         },
         'id' => function (User $user) {
             return $user->id();

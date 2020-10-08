@@ -61,7 +61,7 @@ class UserPicker extends Picker
         $users = $this->search($users);
 
         // sort
-        $users = $users->sortBy('username', 'asc');
+        $users = $users->sort('username', 'asc');
 
         // paginate
         return $this->paginate($users);

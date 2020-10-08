@@ -126,7 +126,7 @@ return [
 
             // sort
             if ($this->sortBy) {
-                $pages = $pages->sortBy(...$pages::sortArgs($this->sortBy));
+                $pages = $pages->sort(...$pages::sortArgs($this->sortBy));
             }
 
             // flip

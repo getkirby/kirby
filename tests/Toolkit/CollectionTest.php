@@ -247,7 +247,7 @@ class CollectionTest extends TestCase
         });
     }
 
-    public function testGroupByArray()
+    public function testGroupArray()
     {
         $collection = new Collection(['a' => 'A']);
 
@@ -259,7 +259,7 @@ class CollectionTest extends TestCase
         });
     }
 
-    public function testGroupByObject()
+    public function testGroupObject()
     {
         $collection = new Collection(['a' => 'A']);
 
@@ -271,7 +271,7 @@ class CollectionTest extends TestCase
         });
     }
 
-    public function testGroupByStringObject()
+    public function testGroupStringObject()
     {
         $collection = new Collection();
 
@@ -320,7 +320,7 @@ class CollectionTest extends TestCase
             'group'    => 'client'
         ];
 
-        $groups = $collection->groupBy('group');
+        $groups = $collection->group('group');
 
         $this->assertEquals(2, $groups->admin()->count());
         $this->assertEquals(1, $groups->client()->count());
@@ -336,7 +336,7 @@ class CollectionTest extends TestCase
         $this->expectException('Exception');
         $this->expectExceptionMessage('Cannot group by non-string values. Did you mean to call group()?');
 
-        $collection->groupBy(1);
+        $collection->group(1);
     }
 
     public function testIndexOf()
@@ -580,7 +580,7 @@ class CollectionTest extends TestCase
         ])->toArray());
     }
 
-    public function testQueryFilterBy()
+    public function testQueryFilter()
     {
         $collection = new Collection([
             [
@@ -599,7 +599,7 @@ class CollectionTest extends TestCase
                 'role'  => 'founder'
             ]
         ], $collection->query([
-            'filterBy' => [
+            'filter' => [
                 [
                     'field'    => 'name',
                     'operator' => '*=',
