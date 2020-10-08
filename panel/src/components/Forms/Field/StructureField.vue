@@ -440,7 +440,7 @@ export default {
       return value.toString();
     },
     duplicateItem(index) {
-      this.addItem(this.items[index]);
+      this.addItem(this.items[index + this.pagination.offset]);
       this.onInput();
     },
     escape() {
