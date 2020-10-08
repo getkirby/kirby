@@ -264,7 +264,7 @@ class Collection extends Iterator implements Countable
             $collection = $this;
 
             foreach ($field as $filter) {
-                $collection = $collection->filterBy(...$filter);
+                $collection = $collection->filter(...$filter);
             }
 
             return $collection;
@@ -477,7 +477,7 @@ class Collection extends Iterator implements Countable
      * Extracts an attribute value from the given element
      * in the collection. This is useful if elements in the collection
      * might be objects, arrays or anything else and you need to
-     * get the value independently from that. We use it for filterBy.
+     * get the value independently from that. We use it for `filter`.
      *
      * @param array|object $item
      * @param string $attribute
@@ -809,7 +809,7 @@ class Collection extends Iterator implements Countable
     }
 
     /**
-     * Runs a combination of filterBy, sortBy, not
+     * Runs a combination of filter, sort, not,
      * offset, limit and paginate on the collection.
      * Any part of the query is optional.
      *
@@ -824,10 +824,17 @@ class Collection extends Iterator implements Countable
             $result = $result->not(...$arguments['not']);
         }
 
-        if (isset($arguments['filterBy']) === true) {
-            foreach ($arguments['filterBy'] as $filter) {
-                if (isset($filter['field']) === true && isset($filter['value']) === true) {
-                    $result = $result->filterBy($filter['field'], $filter['operator'] ?? '==', $filter['value']);
+        if ($filters = $arguments['filterBy'] ?? $arguments['filter'] ?? null) {
+            foreach ($filters as $filter) {
+                if (
+                    isset($filter['field']) === true &&
+                    isset($filter['value']) === true
+                ) {
+                    $result = $result->filter(
+                        $filter['field'],
+                        $filter['operator'] ?? '==',
+                        $filter['value']
+                    );
                 }
             }
         }
@@ -840,16 +847,16 @@ class Collection extends Iterator implements Countable
             $result = $result->limit($arguments['limit']);
         }
 
-        if (isset($arguments['sortBy']) === true) {
-            if (is_array($arguments['sortBy'])) {
-                $sort = explode(' ', implode(' ', $arguments['sortBy']));
+        if ($sort = $arguments['sortBy'] ?? $arguments['sort'] ?? null) {
+            if (is_array($sort)) {
+                $sort = explode(' ', implode(' ', $sort));
             } else {
-                // if there are commas in the sortBy argument, removes it
-                if (Str::contains($arguments['sortBy'], ',') === true) {
-                    $arguments['sortBy'] = Str::replace($arguments['sortBy'], ',', '');
+                // if there are commas in the sort argument, removes it
+                if (Str::contains($sort, ',') === true) {
+                    $sort = Str::replace($sort, ',', '');
                 }
 
-                $sort = explode(' ', $arguments['sortBy']);
+                $sort = explode(' ', $sort);
             }
             $result = $result->sortBy(...$sort);
         }
@@ -934,17 +941,17 @@ class Collection extends Iterator implements Countable
     /**
      * Get sort arguments from a string
      *
-     * @param string $sortBy
+     * @param string $sort
      * @return array
      */
-    public static function sortArgs(string $sortBy): array
+    public static function sortArgs(string $sort): array
     {
         // if there are commas in the sortBy argument, removes it
-        if (Str::contains($sortBy, ',') === true) {
-            $sortBy = Str::replace($sortBy, ',', '');
+        if (Str::contains($sort, ',') === true) {
+            $sort = Str::replace($sort, ',', '');
         }
 
-        $sortArgs = Str::split($sortBy, ' ');
+        $sortArgs = Str::split($sort, ' ');
 
         // fill in PHP constants
         array_walk($sortArgs, function (string &$value) {

@@ -650,7 +650,7 @@ class CollectionFilterTest extends TestCase
     /**
      * @dataProvider filterDataProvider
      */
-    public function testFilterBy($attributes, $operator, $test, $expected, $split)
+    public function testFilter($attributes, $operator, $test, $expected, $split)
     {
         $data = [];
 
@@ -661,7 +661,7 @@ class CollectionFilterTest extends TestCase
         }
 
         $collection = new Collection($data);
-        $result     = $collection->filterBy('attribute', $operator, $test, $split);
+        $result     = $collection->filter('attribute', $operator, $test, $split);
 
         $this->assertEquals($expected, $result->keys(), $operator);
     }

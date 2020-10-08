@@ -138,7 +138,7 @@ class CollectionTest extends TestCase
         $this->assertEquals([$a, $b, $c, $d, 'a simple string'], $collection->values());
     }
 
-    public function testGroupBy()
+    public function testGroup()
     {
         $collection = new Collection([
             $a = new MockObject(['id' => 'a', 'group' => 'a']),
@@ -146,7 +146,7 @@ class CollectionTest extends TestCase
             $c = new MockObject(['id' => 'c', 'group' => 'b']),
         ]);
 
-        $groups = $collection->groupBy('group');
+        $groups = $collection->group('group');
 
         $this->assertInstanceOf(Collection::class, $groups);
         $this->assertCount(2, $groups);
@@ -158,7 +158,7 @@ class CollectionTest extends TestCase
         $this->assertCount(1, $groupB);
     }
 
-    public function testGroupByWithInvalidKey()
+    public function testGroupWithInvalidKey()
     {
         $collection = new Collection([
             $a = new MockObject(['id' => 'a', 'group' => 'a']),
@@ -169,7 +169,7 @@ class CollectionTest extends TestCase
         $this->expectException('Exception');
         $this->expectExceptionMessage('Cannot group by non-string values. Did you mean to call group()?');
 
-        $collection->groupBy(1);
+        $collection->group(1);
     }
 
     public function testIndexOfWithObject()

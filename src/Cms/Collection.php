@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Closure;
-use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
@@ -267,7 +266,7 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Runs a combination of filterBy, sortBy, not
+     * Runs a combination of filter, sort, not,
      * offset, limit, search and paginate on the collection.
      * Any part of the query is optional.
      *

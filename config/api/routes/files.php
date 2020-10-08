@@ -27,7 +27,7 @@ return [
         'pattern' => '(:all)/files',
         'method'  => 'GET',
         'action'  => function (string $path) {
-            return $this->parent($path)->files()->sortBy('sort', 'asc', 'filename', 'asc');
+            return $this->parent($path)->files()->sort('sort', 'asc', 'filename', 'asc');
         }
     ],
     [
@@ -110,7 +110,7 @@ return [
             $files = $this
                 ->site()
                 ->index(true)
-                ->filterBy('isReadable', true)
+                ->filter('isReadable', true)
                 ->files();
 
             if ($this->requestMethod() === 'GET') {

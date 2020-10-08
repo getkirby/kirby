@@ -48,7 +48,7 @@ return [
             return $file->next();
         },
         'nextWithTemplate' => function (File $file) {
-            $files = $file->templateSiblings()->sortBy('sort', 'asc', 'filename', 'asc');
+            $files = $file->templateSiblings()->sort('sort', 'asc', 'filename', 'asc');
             $index = $files->indexOf($file);
 
             return $files->nth($index + 1);
@@ -72,7 +72,7 @@ return [
             return $file->prev();
         },
         'prevWithTemplate' => function (File $file) {
-            $files = $file->templateSiblings()->sortBy('sort', 'asc', 'filename', 'asc');
+            $files = $file->templateSiblings()->sort('sort', 'asc', 'filename', 'asc');
             $index = $files->indexOf($file);
 
             return $files->nth($index - 1);

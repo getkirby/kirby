@@ -752,7 +752,7 @@ trait PageActions
         }
 
         $parent = $this->parentModel();
-        $parent->children = $parent->children()->sortBy('num', 'asc');
+        $parent->children = $parent->children()->sort('num', 'asc');
 
         return true;
     }
@@ -778,7 +778,7 @@ trait PageActions
                 $sibling->changeNum($index);
             }
 
-            $parent->children = $siblings->sortBy('num', 'asc');
+            $parent->children = $siblings->sort('num', 'asc');
         }
 
         return true;

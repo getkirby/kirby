@@ -69,7 +69,7 @@ return function (App $app) {
                     'type'   => $blocks['type']
                 ]);
 
-                return $blocks->filterBy('isHidden', false);
+                return $blocks->filter('isHidden', false);
             } catch (Throwable $e) {
                 if ($field->parent() === null) {
                     $message = 'Invalid blocks data for "' . $field->key() . '" field';

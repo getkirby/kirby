@@ -745,7 +745,7 @@ class File extends ModelWithContent
      */
     public function templateSiblings(bool $self = true)
     {
-        return $this->siblings($self)->filterBy('template', $this->template());
+        return $this->siblings($self)->filter('template', $this->template());
     }
 
     /**

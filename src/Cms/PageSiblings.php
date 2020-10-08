@@ -135,6 +135,6 @@ trait PageSiblings
      */
     public function templateSiblings(bool $self = true)
     {
-        return $this->siblings($self)->filterBy('intendedTemplate', $this->intendedTemplate()->name());
+        return $this->siblings($self)->filter('intendedTemplate', $this->intendedTemplate()->name());
     }
 }
