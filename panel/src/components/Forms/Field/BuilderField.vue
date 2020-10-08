@@ -133,16 +133,19 @@
       :cancel-button="false"
       :submit-button="false"
       class="k-builder-fieldsets-dialog"
-      size="medium"
+      size="large"
     >
       <k-headline>{{ $t("field.builder.fieldsets.label") }}</k-headline>
-      <ul class="k-builder-fieldsets">
-        <li v-for="fieldset in fieldsets" :key="fieldset.name">
-          <k-button :icon="fieldset.icon || 'box'" @click="add(fieldset.type)">
-            {{ $helper.string.template(fieldset.label) }}
-          </k-button>
-        </li>
-      </ul>
+      <div class="k-builder-fieldsets">
+        <k-button
+          v-for="fieldset in fieldsets"
+          :key="fieldset.name"
+          :icon="fieldset.icon || 'box'"
+          @click="add(fieldset.type)"
+        >
+          {{ $helper.string.template(fieldset.label) }}
+        </k-button>
+      </div>
     </k-dialog>
 
     <k-remove-dialog ref="remove" @submit="remove">
@@ -536,12 +539,22 @@ export default {
   grid-template-columns: repeat(2, 1fr);
 }
 .k-builder-fieldsets .k-button {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  align-items: top;
   background: $color-white;
   width: 100%;
   text-align: left;
   box-shadow: $shadow;
-  height: 36px;
-  padding: 0 .75rem;
+  padding: 0 .75rem 0 0;
+  line-height: 1.5em;
+}
+.k-builder-fieldsets .k-button .k-button-text {
+  padding: .5rem 0;
+}
+.k-builder-fieldsets .k-button .k-icon {
+  width: 38px;
+  height: 38px;
 }
 
 </style>
