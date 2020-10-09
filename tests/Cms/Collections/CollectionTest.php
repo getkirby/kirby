@@ -167,7 +167,7 @@ class CollectionTest extends TestCase
         ]);
 
         $this->expectException('Exception');
-        $this->expectExceptionMessage('Cannot group by non-string values. Did you mean to call group()?');
+        $this->expectExceptionMessage('Can only group by string values or by providing a callback function');
 
         $collection->group(1);
     }
