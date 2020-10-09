@@ -576,6 +576,8 @@ class Collection extends Iterator implements Countable
 
             return new Collection($groups);
         }
+
+        throw new Exception('Can only group by string values or by providing a callback function');
     }
 
     /**
