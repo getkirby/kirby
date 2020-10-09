@@ -21,17 +21,14 @@
         >
           {{ $t('open') }}
         </k-button>
-        <k-button
+        <k-status-icon
           v-if="status"
-          :class="['k-status-flag', 'k-status-flag-' + page.status]"
+          :status="page.status"
           :disabled="!permissions.changeStatus || isLocked"
-          :icon="!permissions.changeStatus || isLocked ? 'protected' : 'circle'"
           :responsive="true"
-          :tooltip="status.label"
+          :text="status.label"
           @click="action('status')"
-        >
-          {{ status.label }}
-        </k-button>
+        />
         <k-dropdown>
           <k-button
             :responsive="true"
@@ -210,22 +207,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss">
-.k-status-flag svg {
-  width: 14px;
-  height: 14px;
-}
-.k-status-flag-listed .k-icon {
-  color: $color-positive-on-dark;
-}
-.k-status-flag-unlisted .k-icon {
-  color: $color-focus-on-dark;
-}
-.k-status-flag-draft .k-icon {
-  color: $color-negative-on-dark;
-}
-.k-status-flag[disabled] {
-  opacity: 1;
-}
-</style>

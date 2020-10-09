@@ -247,6 +247,7 @@ import Image from "@/components/Misc/Image.vue";
 import Loader from "@/components/Misc/Loader.vue";
 import Progress from "@/components/Misc/Progress.vue";
 import SortHandle from "@/components/Misc/SortHandle.vue";
+import StatusIcon from "@/components/Misc/StatusIcon.vue";
 import Text from "@/components/Misc/Text.vue";
 
 Vue.component("k-draggable", Draggable);
@@ -256,6 +257,7 @@ Vue.component("k-icon", Icon);
 Vue.component("k-image", Image);
 Vue.component("k-loader", Loader);
 Vue.component("k-progress", Progress);
+Vue.component("k-status-icon", StatusIcon);
 Vue.component("k-sort-handle", SortHandle);
 Vue.component("k-text", Text);
 
