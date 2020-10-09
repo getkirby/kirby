@@ -536,7 +536,6 @@ export default {
 }
 .k-builder-block-body {
   background: $color-background;
-  line-height: 0;
 }
 .k-builder-block-form {
   padding: 1.5rem 2rem 2rem;
