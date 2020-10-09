@@ -7,7 +7,7 @@ import store from "@/store/store.js";
 import "./plugins.js";
 
 /* Routes */
-export default [
+let routes = [
   {
     path: "/",
     name: "Home",
@@ -187,11 +187,32 @@ export default [
     beforeEnter: auth,
     component: Vue.component("k-custom-view")
   },
-  {
-    path: "*",
-    name: "NotFound",
-    beforeEnter: (to, from, next) => {
-      next("/");
-    }
-  }
 ];
+
+// UI Sandbox
+if (process.env.NODE_ENV !== "production") {
+
+  routes.push({
+    path: "/sandbox",
+    name: "Sandbox",
+    component: require("@/sandbox/Sandbox.vue").default,
+  });
+
+  routes.push({
+    path: "/sandbox/:component",
+    name: "SandboxComponent",
+    component: require("@/sandbox/Iframe.vue").default,
+  });
+
+}
+
+routes.push({
+  path: "*",
+  name: "NotFound",
+  beforeEnter: (to, from, next) => {
+    next("/");
+  }
+});
+
+
+export default routes;

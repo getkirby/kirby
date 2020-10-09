@@ -1,10 +1,11 @@
 <template>
   <div
     v-if="!$store.state.system.info.isBroken"
+    :data-dialog="$store.state.dialog"
     :data-dragging="$store.state.drag"
     :data-loading="$store.state.isLoading"
+    :data-route="$route.name"
     :data-topbar="inside"
-    :data-dialog="$store.state.dialog"
     :data-translation="translation"
     :data-translation-default="defaultTranslation"
     class="k-panel"
