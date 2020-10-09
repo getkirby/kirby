@@ -521,11 +521,12 @@ class Collection extends Iterator implements Countable
     }
 
     /**
-     * Groups the elements by a given field or callback
+     * Groups the elements by a given field or callback function
      *
      * @param string|Closure $field
      * @param bool $i
      * @return \Kirby\Toolkit\Collection A new collection with an element for each group and a subcollection in each group
+     * @throws \Exception if $field is not a string nor a callback function
      */
     public function group($field, bool $i = true)
     {
