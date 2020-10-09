@@ -1,5 +1,5 @@
 <template>
-  <p>Iframe</p>
+  <component :is="'sandbox-' + $route.params.component" />
 </template>
 
 <script>

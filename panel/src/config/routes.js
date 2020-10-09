@@ -193,14 +193,22 @@ let routes = [
 if (process.env.NODE_ENV !== "production") {
 
   routes.push({
-    path: "/sandbox",
+    path: "/sandbox/:component?",
     name: "Sandbox",
+    meta: {
+      outside: true,
+    },
+    beforeEnter: auth,
     component: require("@/sandbox/Sandbox.vue").default,
   });
 
   routes.push({
-    path: "/sandbox/:component",
+    path: "/sandbox/preview/:component",
     name: "SandboxComponent",
+    meta: {
+      outside: true,
+    },
+    beforeEnter: auth,
     component: require("@/sandbox/Iframe.vue").default,
   });
 
