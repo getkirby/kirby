@@ -167,9 +167,8 @@ export default {
         const isEnabled = page.permissions.changeStatus !== false;
 
         page.flag = {
-          class: "k-status-flag k-status-flag-" + page.status,
-          tooltip: isEnabled ? this.$t("page.status") : `${this.$t("page.status")} (${this.$t("disabled")})`,
-          icon: isEnabled ? "circle" : "protected",
+          status: page.status,
+          tooltip: this.$t("page.status"),
           disabled: !isEnabled,
           click: () => {
             this.action(page, "status");

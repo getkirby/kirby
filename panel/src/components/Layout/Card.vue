@@ -18,11 +18,10 @@
     </component>
 
     <nav class="k-card-options">
-      <k-button
+      <k-status-icon
         v-if="flag"
         v-bind="flag"
         class="k-card-options-button"
-        @click="flag.click"
       />
       <slot name="options">
         <k-button

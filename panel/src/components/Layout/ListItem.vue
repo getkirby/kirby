@@ -17,11 +17,10 @@
     </k-link>
     <nav class="k-list-item-options">
       <slot name="options">
-        <k-button
+        <k-status-icon
           v-if="flag"
           v-bind="flag"
           class="k-list-item-status"
-          @click="flag.click"
         />
         <k-button
           v-if="options"
