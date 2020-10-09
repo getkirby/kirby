@@ -861,7 +861,7 @@ class Collection extends Iterator implements Countable
 
                 $sort = explode(' ', $sort);
             }
-            $result = $result->sortBy(...$sort);
+            $result = $result->sort(...$sort);
         }
 
         if (isset($arguments['paginate']) === true) {
