@@ -747,10 +747,10 @@ function tc($key, int $count)
  * by the defined step
  *
  * @param string $date
- * @param int $step
+ * @param int $step array of `unit` and `size` to round to nearest
  * @return string|null
  */
-function timestamp(string $date = null, int $step = null): ?string
+function timestamp(string $date = null, $step = null): ?string
 {
     if (V::date($date) === false) {
         return null;
@@ -762,13 +762,46 @@ function timestamp(string $date = null, int $step = null): ?string
         return $date;
     }
 
-    $hours   = date('H', $date);
-    $minutes = date('i', $date);
-    $minutes = floor($minutes / $step) * $step;
-    $minutes = str_pad($minutes, 2, 0, STR_PAD_LEFT);
-    $date    = date('Y-m-d', $date) . ' ' . $hours . ':' . $minutes;
+    if (is_int($step) === true) {
+        $step = [
+            'unit' => 'minute',
+            'size' => 1
+        ];
+    }
 
-    return strtotime($date);
+    if (is_array($step) === false) {
+        return $date;
+    }
+
+    $parts = [
+        'second' => date('s', $date),
+        'minute' => date('i', $date),
+        'hour'   => date('H', $date),
+        'day'    => date('d', $date),
+        'month'  => date('m', $date),
+        'year'   => date('Y', $date),
+    ];
+
+    $current = $parts[$step['unit']];
+    $nearest = round($current / $step['size']) * $step['size'];
+    $parts[$step['unit']] = $nearest;
+
+    foreach ($parts as $part => $value) {
+        if ($part === $step['unit']) {
+            break;
+        }
+
+        $parts[$part] = 0;
+    }
+
+    return strtotime(
+        $parts['year'] . '-' .
+        str_pad($parts['month'], 2, 0, STR_PAD_LEFT) . '-' .
+        str_pad($parts['day'], 2, 0, STR_PAD_LEFT) . ' ' .
+        str_pad($parts['hour'], 2, 0, STR_PAD_LEFT) . ':' .
+        str_pad($parts['minute'], 2, 0, STR_PAD_LEFT) . ':' .
+        str_pad($parts['second'], 2, 0, STR_PAD_LEFT)
+    );
 }
 
 /**

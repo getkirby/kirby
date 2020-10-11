@@ -51,5 +51,9 @@ export default {
   ucfirst(string) {
     const str = String(string);
     return str.charAt(0).toUpperCase() + str.substr(1);
+  },
+  ucwords(string) {
+    const str = String(string);
+    return str.split(/ /g).map(word => `${word.substring(0,1).toUpperCase()}${word.substring(1)}`).join(" ");
   }
 };

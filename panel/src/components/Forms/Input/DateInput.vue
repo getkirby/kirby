@@ -1,43 +1,20 @@
 <template>
-  <div class="k-date-input">
-    <k-select-input
-      ref="years"
-      :aria-label="$t('year')"
-      :options="years"
-      :disabled="disabled"
-      :required="required"
-      :value="year"
-      placeholder="––––"
-      @input="setYear"
-      @invalid="onInvalid"
-    />
-    <span class="k-date-input-separator">-</span>
-    <k-select-input
-      ref="months"
-      :aria-label="$t('month')"
-      :options="months"
-      :disabled="disabled"
-      :required="required"
-      :value="month"
-      placeholder="––"
-      @input="setMonth"
-      @invalid="onInvalid"
-    />
-    <span class="k-date-input-separator">-</span>
-    <k-select-input
-      ref="days"
-      :aria-label="$t('day')"
-      :autofocus="autofocus"
-      :id="id"
-      :options="days"
-      :disabled="disabled"
-      :required="required"
-      :value="day"
-      placeholder="––"
-      @input="setDay"
-      @invalid="onInvalid"
-    />
-  </div>
+  <k-text-input
+    ref="input"
+    v-model="input"
+    v-bind="$props"
+    :class="`k-${type}-input`"
+    :placeholder="placeholder"
+    :spellcheck="false"
+    type="text"
+    @blur="onBlur"
+    @input="onInput"
+    @invalid="onInvalid"
+    @focus="$emit('focus')"
+    @keydown.down.stop.prevent="onKey('subtract')"
+    @keydown.up.stop.prevent="onKey('add')"
+    @keydown.enter.stop.prevent="onEnter"
+  />
 </template>
 
 <script>
@@ -46,145 +23,220 @@ export default {
   props: {
     autofocus: Boolean,
     disabled: Boolean,
+    display: {
+      type: String,
+      default: "DD.MM.YYYY"
+    },
     id: [String, Number],
     max: String,
     min: String,
     required: Boolean,
+    step: {
+      type: Object,
+      default() {
+        return {
+          size: 1,
+          unit: "day"
+        };
+      }
+    },
+    type: {
+      type: String,
+      default: "date"
+    },
     value: String
   },
   data() {
     return {
-      date: this.$library.dayjs(this.value),
-      minDate: this.calculate(this.min, "min"),
-      maxDate: this.calculate(this.max, "max")
+      input: this.toDatetime(this.value)
     };
   },
   computed: {
-    day() {
-      return isNaN(this.date.date()) ? "" : this.date.date();
+    /**
+     * Takes the display format and splits it into chunks
+     */
+    chunks() {
+      const parts = this.display.split(/[^A-Za-z]/);
+      return parts.map(part => part.charAt(0));
     },
-    days() {
-      return this.options(1, this.date.daysInMonth() || 31, "days");
-    },
-    month() {
-      return isNaN(this.date.date()) ? "" : this.date.month() + 1;
-    },
-    months() {
-      return this.options(1, 12, "months");
-    },
-    year() {
-      return isNaN(this.date.year()) ? "" : this.date.year();
-    },
-    years() {
-      const start = this.date.isBefore(this.minDate) ? this.date.year() : this.minDate.year();
-      const end   = this.date.isAfter(this.maxDate)  ? this.date.year() : this.maxDate.year();
+    /**
+     * Parsed dayjs object of current input
+     */
+    parsed() {
+      // fix lowercased month names
+      const input = this.input ? this.$helper.string.ucwords(this.input) : null;
 
-      return this.options(start, end);
-    }
+      // loop through parsing patterns to find
+      // first result where input is a valid date
+      for (let i = 0; i < this.patterns.length; i++) {
+        const dt = this.$library.dayjs.utc(input, this.patterns[i]);
+
+        if (dt.isValid()) {
+          return dt;
+        }
+      }
+    },
+    /**
+     *  Generate all possible dayjs parsing patterns
+     *  for all chunks of the provided display format
+     */
+    patterns() {
+      let patterns  = [];
+      let previous  = [];
+
+      // For each chunk…
+      for (let i = 0; i < this.chunks.length; i++) {
+        const tokens = this.tokens[this.chunks[i]];
+
+        if (tokens) {
+          // … generate all necessary patterns …
+          let forChunk = [];
+
+          // … by either just adding all the tokens, if the first chunk …
+          if (patterns.length === 0) {
+            forChunk = tokens.map(token => [token]);
+
+          // … or adding each token to all patterns from the previous chunk
+          } else {
+            tokens.forEach(token => {
+              forChunk = forChunk.concat(previous.map(prev => prev.concat([token])));
+            })
+          }
+          patterns  = patterns.concat(forChunk);
+          previous = forChunk;
+          forChunk = [];
+        }
+      }
+
+      // join components with some separator
+      // and make sure the more detailed patterns go first
+      return patterns.map(format => format.join(this.separator)).reverse();
+    },
+    /**
+     * How the display format should be displayed as input placeholder
+     */
+    placeholder() {
+      return this.display.toLowerCase();
+    },
+    /**
+     * Takes currently parsed date object ands rounds it to nearest step
+     */
+    result() {
+      return this.parsed ? this.toNearest(this.parsed) : null;
+    },
+    /**
+     * Separator for date format
+     */
+    separator() {
+      return this.display.match(/[^A-Za-z]/)[0];
+    },
+    /**
+     * Match display format chunks to dayjs tokens
+     */
+    tokens() {
+      let tokens = {
+        D: ["D", "DD"],
+        M: ["MMM", "M", "MM"],
+        Y: ["YYYY"]
+      };
+
+      // only if format starts with year, also add short year token
+      if (this.display.startsWith("Y")) {
+        tokens.Y.unshift("YY");
+      }
+
+      return tokens;
+    },
   },
   watch: {
-    value(value) {
-      this.date = this.$library.dayjs(value);
+    value() {
+      this.input = this.toDatetime(this.value);
+      this.onInvalid();
     }
   },
+  mounted() {
+    this.onInvalid();
+  },
   methods: {
-    calculate(value, what) {
-      const calc = {
-        min: {run: "subtract", take: "startOf"},
-        max: {run: "add", take: "endOf" },
-      }[what];
-
-      let date = value ? this.$library.dayjs(value) : null;
-      if (!date || date.isValid() === false) {
-        date = this.$library.dayjs()[calc.run](10, 'year')[calc.take]("year");
+    emit(event) {
+      if (this.result) {
+        this.$emit(event, this.result.format("YYYY-MM-DD HH:mm:ss"));
+      } else {
+        this.$emit(event, "");
       }
-      return date;
     },
     focus() {
-      this.$refs.years.focus();
+      this.$refs.input.focus();
+    },
+    onBlur() {
+      this.input = this.result ? this.toFormat(this.result) : null;
+      this.emit("blur");
+    },
+    onEnter() {
+      this.onBlur();
+      this.emit("enter");
     },
     onInput() {
-      if (this.date.isValid() === false) {
-        this.$emit("input", "");
-        return;
-      }
-
-      this.$emit("input", this.date.toISOString());
+      this.emit("input");
     },
     onInvalid($invalid, $v) {
-      this.$emit("invalid", $invalid, $v);
+      this.$emit("invalid", $invalid || this.$v.$invalid, $v || this.$v);
     },
-    options(start, end) {
-      let options = [];
+    onKey(operation) {
+      let dt;
 
-      for (var x = start; x <= end; x++) {
-        options.push({
-          value: x,
-          text: this.$helper.pad(x)
-        });
+      // if a result exists already, modify it one step
+      if (this.result) {
+        dt = this.result.clone()[operation](this.step.size, this.step.unit);
+
+      // otherwise fill with current datetime
+      } else {
+        dt = this.toNearest(this.$library.dayjs());
       }
 
-      return options;
+      this.input = this.toFormat(dt);
+      this.$refs.input.select();
+      this.onBlur();
     },
-    set(key, value) {
-
-      if (value === "" || value === null || value === false || value === -1) {
-        this.setInvalid();
-        this.onInput();
-        return;
+    toDatetime(value, format = true) {
+      if (!value) {
+        return null;
       }
 
-      if (this.date.isValid() === false) {
-        this.setInitialDate(key, value);
-        this.onInput();
-        return;
+      const dt = this.$library.dayjs.utc(value);
+
+      if (dt.isValid() === false) {
+        return null;
       }
 
-      let prev    = this.date;
-      let prevDay = this.date.date();
-
-      this.date = this.date.set(key, parseInt(value));
-
-      if (key === "month" && this.date.date() !== prevDay) {
-        this.date = prev.set("date", 1).set("month", value).endOf("month");
+      return format ? this.toFormat(dt) : dt;
+    },
+    toFormat(dt) {
+      return dt.format(this.display);
+    },
+    toNearest(dt) {
+      dt = dt.clone();
+      const unit    = this.step.unit === "day" ? "date" : this.step.unit;
+      const current = dt.get(unit);
+      const nearest = Math.round(current / this.step.size) * this.step.size;
+      return dt.set(unit, nearest).startOf(unit);
+    }
+  },
+  validations() {
+    return {
+      value: {
+        min: this.min ? (value) => {
+          const date = this.$library.dayjs.utc(value);
+          const min  = this.$library.dayjs.utc(this.min);
+          return date.isSame(min, "day") || date.isAfter(min, "day");
+        } : true,
+        max: this.max ? (value) => {
+          const date = this.$library.dayjs.utc(value);
+          const max  = this.$library.dayjs.utc(this.max);
+          return date.isSame(max, "day") || date.isBefore(max, "day");
+        } : true,
       }
-
-      this.onInput();
-    },
-    setInvalid() {
-      this.date = this.$library.dayjs("invalid");
-    },
-    setInitialDate(key, value) {
-      const current = this.$library.dayjs();
-
-      this.date = this.$library.dayjs().set(key, parseInt(value));
-
-      // if the inital day moved the month, let's move it back
-      if (key === "date" && current.month() !== this.date.month()) {
-        this.date = current.endOf("month");
-      }
-
-      return this.date;
-    },
-    setDay(day) {
-      this.set("date", day);
-    },
-    setMonth(month) {
-      this.set("month", month - 1);
-    },
-    setYear(year) {
-      this.set("year", year);
     }
   }
 };
 </script>
-
-<style lang="scss">
-.k-date-input {
-  display: flex;
-  align-items: center;
-}
-.k-date-input-separator {
-  padding: 0 $field-input-padding / 4;
-}
-</style>

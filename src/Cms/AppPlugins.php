@@ -618,6 +618,7 @@ trait AppPlugins
         // load static extensions only once
         if (static::$systemExtensions === null) {
             // Form Field Mixins
+            FormField::$mixins['datetime'] = include $root . '/config/fields/mixins/datetime.php';
             FormField::$mixins['filepicker'] = include $root . '/config/fields/mixins/filepicker.php';
             FormField::$mixins['min']        = include $root . '/config/fields/mixins/min.php';
             FormField::$mixins['options']    = include $root . '/config/fields/mixins/options.php';
