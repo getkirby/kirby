@@ -435,6 +435,10 @@ class AppTest extends TestCase
         $this->assertSame($instance2, App::instance());
         $this->assertSame($instance1, App::instance($instance1));
         $this->assertSame($instance1, App::instance());
+
+        $instance3 = new App([], false);
+        $this->assertSame($instance1, App::instance());
+        $this->assertNotSame($instance3, App::instance());
     }
 
     public function testFindPageFile()

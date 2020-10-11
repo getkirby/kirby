@@ -79,8 +79,9 @@ class App
      * Creates a new App instance
      *
      * @param array $props
+     * @param bool $setInstance If false, the instance won't be set globally
      */
-    public function __construct(array $props = [])
+    public function __construct(array $props = [], bool $setInstance = true)
     {
         // register all roots to be able to load stuff afterwards
         $this->bakeRoots($props['roots'] ?? []);
@@ -110,7 +111,9 @@ class App
         ]);
 
         // set the singleton
-        Model::$kirby = static::$instance = $this;
+        if (static::$instance === null || $setInstance === true) {
+            Model::$kirby = static::$instance = $this;
+        }
 
         // setup the I18n class with the translation loader
         $this->i18n();
