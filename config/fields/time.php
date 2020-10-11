@@ -1,11 +1,13 @@
 <?php
 
 return [
+    'mixins' => ['datetime'],
     'props' => [
         /**
          * Unset inherited props
          */
         'placeholder' => null,
+
 
         /**
          * Sets the default time when a new page/file/user is created
@@ -13,6 +15,15 @@ return [
         'default' => function ($default = null) {
             return $default;
         },
+
+        /**
+         * Custom format (dayjs tokens) that is used to display
+         * the field in the Panel
+         */
+        'display' => function (string $display = null) {
+            return $display;
+        },
+
         /**
          * Changes the clock icon
          */
@@ -26,10 +37,35 @@ return [
             return $value === 24 ? 24 : 12;
         },
         /**
-         * The interval between minutes in the minutes select dropdown.
+         * Round to the nearest: sub-options for `unit` (minute) and `size` (5)
          */
-        'step' => function (int $step = 5) {
-            return $step;
+        'step' => function ($step = null) {
+            if ($step === null) {
+                return [
+                    'size' => 5,
+                    'unit' => 'minute'
+                ];
+            }
+
+            if (is_array($step) === true) {
+                return $step;
+            }
+
+            if (is_int($step) === true) {
+                return [
+                    'size' => $step,
+                    'unit' => 'minute'
+                ];
+            }
+
+            if (is_string($step) === true) {
+                return [
+                    'size' => 1,
+                    'unit' => $step
+                ];
+            }
+
+            throw new Exception('step option has to be defined as array');
         },
         'value' => function ($value = null) {
             return $value;
@@ -37,27 +73,22 @@ return [
     ],
     'computed' => [
         'default' => function () {
-            return $this->toTime($this->default);
+            return $this->toDatetime($this->default);
         },
-        'format' => function () {
-            return $this->notation === 24 ? 'H:i' : 'h:i a';
-        },
-        'value' => function () {
-            return $this->toTime($this->value);
-        }
-    ],
-    'methods' => [
-        'toTime' => function ($value) {
-            if ($timestamp = timestamp($value, $this->step)) {
-                return date('H:i', $timestamp);
+        'display' => function () {
+            if ($this->display) {
+                return $this->display;
             }
 
-            return null;
+            return $this->notation === 24 ? 'HH:mm' : 'hh:mm a';
+        },
+        'value' => function () {
+            return $this->toDatetime($this->value);
         }
     ],
     'save' => function ($value): string {
-        if ($timestamp = strtotime($value)) {
-            return date($this->format, $timestamp);
+        if ($value != null && $timestamp = strtotime($value)) {
+            return date('H:i:s', $timestamp);
         }
 
         return '';

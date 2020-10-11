@@ -6,7 +6,7 @@
       v-bind="$props"
       theme="field"
       type="time"
-      v-on="$listeners"
+      v-on="listeners"
     />
   </k-field>
 </template>
@@ -25,6 +25,15 @@ export default {
     icon: {
       type: String,
       default: "clock"
+    }
+  },
+  computed: {
+    listeners() {
+      return {
+        ...this.$listeners,
+        blur: input => this.$emit("input", input),
+        input: () => {}
+      };
     }
   },
   methods: {

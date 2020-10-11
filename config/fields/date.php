@@ -1,21 +1,30 @@
 <?php
 
 use Kirby\Exception\Exception;
+use Kirby\Toolkit\Str;
 
 return [
+    'mixins' => ['datetime'],
     'props' => [
+        /**
+         * Unset inherited props
+         */
+        'placeholder' => null,
+
+
         /**
          * Default date when a new page/file/user gets created
          */
-        'default' => function ($default = null) {
+        'default' => function (string $default = null) {
             return $default;
         },
 
         /**
-         * Defines a custom format that is used when the field is saved
+         * Custom format (dayjs tokens) that is used to display
+         * the field in the Panel
          */
-        'format' => function (string $format = null) {
-            return $format;
+        'display' => function (string $display = 'YYYY-MM-DD') {
+            return $display;
         },
 
         /**
@@ -24,22 +33,52 @@ return [
         'icon' => function (string $icon = 'calendar') {
             return $icon;
         },
+
         /**
-         * Youngest date, which can be selected/saved
+         * Youngest date, which can be selected/saved (Y-m-d)
          */
         'max' => function (string $max = null) {
-            return $this->toDate($max);
+            return $this->toDatetime($max);
         },
         /**
-         * Oldest date, which can be selected/saved
+         * Oldest date, which can be selected/saved (Y-m-d)
          */
         'min' => function (string $min = null) {
-            return $this->toDate($min);
+            return $this->toDatetime($min);
         },
+
         /**
-         * The placeholder is not available
+         * Round to the nearest: sub-options for `unit` (day) and `size` (1)
          */
-        'placeholder' => null,
+        'step' => function ($step = null) {
+            if ($step === null) {
+                return [
+                    'size' => 1,
+                    'unit' => 'day'
+                ];
+            }
+
+            if (is_array($step) === true) {
+                return $step;
+            }
+
+            if (is_int($step) === true) {
+                return [
+                    'size' => $step,
+                    'unit' => 'day'
+                ];
+            }
+
+            if (is_string($step) === true) {
+                return [
+                    'size' => 1,
+                    'unit' => $step
+                ];
+            }
+
+            throw new Exception('step option has to be defined as array');
+        },
+
         /**
          * Pass `true` or an array of time field options to show the time selector.
          */
@@ -55,27 +94,26 @@ return [
     ],
     'computed' => [
         'default' => function () {
-            return $this->toDate($this->default);
+            return $this->toDatetime($this->default);
         },
-        'format' => function () {
-            return $this->props['format'] ?? ($this->time() === false ? 'Y-m-d' : 'Y-m-d H:i');
+        'display' => function () {
+            return Str::upper($this->display);
         },
-        'value' => function () {
-            return $this->toDate($this->value);
-        },
-    ],
-    'methods' => [
-        'toDate' => function ($value) {
-            if ($timestamp = timestamp($value, $this->time['step'] ?? 5)) {
-                return date('Y-m-d H:i:s', $timestamp);
+        'step' => function () {
+            if ($this->time !== false) {
+                $timeField = require __DIR__ . '/time.php';
+                return $timeField['props']['step']($this->time['step'] ?? null);
             }
 
-            return null;
-        }
+            return $this->step;
+        },
+        'value' => function () {
+            return $this->toDatetime($this->value);
+        },
     ],
     'save' => function ($value) {
-        if ($value !== null && $date = strtotime($value)) {
-            return date($this->format(), $date);
+        if ($value !== null && $timestamp = timestamp($value)) {
+            return $this->toISO($timestamp);
         }
 
         return '';

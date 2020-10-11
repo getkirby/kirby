@@ -2,23 +2,22 @@
   <div class="k-datetime-input">
     <k-date-input
       ref="dateInput"
-      :autofocus="autofocus"
-      :required="required"
-      :id="id"
-      :min="min"
-      :max="max"
-      :disabled="disabled"
-      :value="dateValue"
-      @input="setDate"
+      v-bind="dateOptions"
+      @input="onInput($event, 'date')"
+      @blur="onBlur($event, 'date')"
+      @enter="onEnter($event, 'date')"
+      @focus="$emit('focus')"
     />
-    <k-time-input
-      ref="timeInput"
-      :required="required"
-      :disabled="disabled"
-      :value="timeValue"
-      v-bind="timeOptions"
-      @input="setTime"
-    />
+    <template v-if="time">
+      <k-time-input
+        ref="timeInput"
+        v-bind="timeOptions"
+        @input="onInput($event, 'time')"
+        @blur="onBlur($event, 'time')"
+        @enter="onEnter($event, 'time')"
+        @focus="$emit('focus')"
+      />
+    </template>
   </div>
 </template>
 
@@ -40,15 +39,32 @@ export default {
   },
   data() {
     return {
-      dateValue: this.parseDate(this.value),
-      timeValue: this.parseTime(this.value),
-      timeOptions: this.setTimeOptions(),
+      input: this.toDatetime(this.value)
     };
   },
+  computed: {
+    dateOptions() {
+      return {
+        autofocus: this.autofocus,
+        disabled:  this.disabled,
+        display:   this.display,
+        id:        this.id,
+        required:  this.required,
+        value:     this.value
+      };
+    },
+    timeOptions() {
+      return {
+        ...this.time,
+        disabled: this.disabled,
+        required: this.required,
+        value:    this.value
+      }
+    }
+  },
   watch: {
-    value(value) {
-      this.dateValue = this.parseDate(value);
-      this.timeValue = this.parseTime(value);
+    value() {
+      this.input = this.toDatetime(this.value);
       this.onInvalid();
     }
   },
@@ -56,66 +72,82 @@ export default {
     this.onInvalid();
   },
   methods: {
+    emit(event) {
+      if (this.input) {
+        this.$emit(event, this.input.format("YYYY-MM-DD HH:mm:ss"));
+      } else {
+        this.$emit(event, "");
+      }
+    },
     focus() {
       this.$refs.dateInput.focus();
     },
-    onInput() {
-      if (!this.timeValue || !this.dateValue) {
-        this.$emit("input", "");
-        return;
-      }
-
-      let value = this.dateValue + "T" + this.timeValue + ":00";
-
-      this.$emit("input", value);
+    onBlur(value, component) {
+      const base  = this.toDatetime(this.value);
+      this.input  = this.toDatetime(value, component, base);
+      this.emit("blur");
+    },
+    onEnter(value, component) {
+      this.onBlur(component, value);
+      this.emit("enter");
+    },
+    onInput(value, component) {
+      this.input = this.toDatetime(value, component, this.input);
+      this.emit("input");
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
-    parseDate(value) {
-      const dt = this.$library.dayjs(value);
-      return dt.isValid() ? dt.format("YYYY-MM-DD") : null;
-    },
-    parseTime(value) {
-      const dt = this.$library.dayjs(value);
-      return dt.isValid() ? dt.format("HH:mm") : null;
-    },
-    setDate(value) {
-      if (value && !this.timeValue) {
-        this.timeValue = this.$library.dayjs().format("HH:mm");
-      }
+    toDatetime(value, component, base) {
+      // if only value is passed,
+      // parse value as dayjs date  and
+      // return object (or null if invalid)
 
       if (!value) {
-        this.dateValue = null;
-        this.timeValue = null;
-      } else {
-        this.dateValue = this.parseDate(value);
+        return null;
       }
 
-      this.onInput();
-    },
-    setTime(value) {
-      if (value && !this.dateValue) {
-        this.dateValue = this.$library.dayjs().format("YYYY-MM-DD");
+      let dt = this.$library.dayjs.utc(value);
+
+      if (dt.isValid() === false) {
+        return null;
       }
 
-      if (!value) {
-        this.dateValue = null;
-        this.timeValue = null;
-      } else {
-        this.timeValue = value;
+      // if also component and base are passed,
+      // take the component (date or time) values from value
+      // and merge these onto the base dayjs object
+
+      if (!component || !base) {
+        return dt;
       }
 
-      this.onInput();
-    },
-    setTimeOptions() {
-      return this.time === true ? {} : this.time;
+      if (component === "date") {
+        return base.clone().utc().set("year", dt.get("year"))
+                                 .set("month", dt.get("month"))
+                                 .set("date", dt.get("date"));
+      }
+
+      if (component === "time") {
+        return base.clone().utc().set("hour", dt.get("hour"))
+                                 .set("minute", dt.get("minute"))
+                                 .set("second", dt.get("second"));
+      }
     }
   },
   validations() {
     return {
       value: {
-        required: this.required ? required : true
+        min: this.min ? (value) => {
+          const date = this.$library.dayjs.utc(value);
+          const min  = this.$library.dayjs.utc(this.min);
+          return date.isSame(min) || date.isAfter(min);
+        } : true,
+        max: this.max ? (value) => {
+          const date = this.$library.dayjs.utc(value);
+          const max  = this.$library.dayjs.utc(this.max);
+          return date.isSame(max) || date.isBefore(max);
+        } : true,
+        required: this.required ? required : true,
       }
     };
   }

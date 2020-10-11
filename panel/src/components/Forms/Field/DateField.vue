@@ -4,12 +4,12 @@
       ref="input"
       :id="_uid"
       :type="inputType"
-      :value="date"
+      :value="value"
       v-bind="$props"
       theme="field"
       v-on="listeners"
     >
-      <template slot="icon">
+      <template #icon>
         <k-dropdown>
           <k-button
             :icon="icon"
@@ -20,8 +20,10 @@
           />
           <k-dropdown-content ref="dropdown" align="right">
             <k-calendar
-              :value="date"
-              @input="onInput($event); $refs.dropdown.close()"
+              :value="datetime"
+              :min="min"
+              :max="max"
+              @input="onSelect"
             />
           </k-dropdown-content>
         </k-dropdown>
@@ -49,30 +51,44 @@ export default {
   },
   data() {
     return {
-      date: this.value,
-      listeners: {
-        ...this.$listeners,
-        input: this.onInput
-      }
+      datetime: this.value
     };
   },
   computed: {
     inputType() {
       return this.time === false ? "date" : "datetime";
+    },
+    listeners() {
+      return {
+        ...this.$listeners,
+        blur: this.onBlur,
+        enter: this.onSelect,
+        focus: this.onFocus,
+        input: this.onInput
+      };
     }
   },
   watch: {
     value(value) {
-      this.date = value;
+      this.datetime = value;
     }
   },
   methods: {
     focus() {
       this.$refs.input.focus();
     },
-    onInput(date) {
-      this.date = date;
-      this.$emit("input", date);
+    onBlur(value) {
+      this.$emit("input", value);
+    },
+    onFocus() {
+      this.$refs.dropdown.open();
+    },
+    onInput(value) {
+      this.datetime = value;
+    },
+    onSelect(value) {
+      this.onBlur(value);
+      this.$refs.dropdown.close();
     }
   }
 }
