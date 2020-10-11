@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 
 /**
@@ -119,18 +120,13 @@ trait AppTranslations
     /**
      * Set locale settings
      *
-     * @internal
+     * @deprecated 3.5.0 Use \Kirby\Toolkit\Locale::set() instead
+     *
      * @param string|array $locale
      */
     public function setLocale($locale): void
     {
-        if (is_array($locale) === true) {
-            foreach ($locale as $key => $value) {
-                setlocale($key, $value);
-            }
-        } else {
-            setlocale(LC_ALL, $locale);
-        }
+        Locale::set($locale);
     }
 
     /**
