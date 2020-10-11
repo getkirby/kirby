@@ -85,7 +85,7 @@ trait AppTranslations
     public function setCurrentLanguage(string $languageCode = null)
     {
         if ($this->multilang() === false) {
-            $this->setLocale($this->option('locale', 'en_US.utf-8'));
+            Locale::set($this->option('locale', 'en_US.utf-8'));
             return $this->language = null;
         }
 
@@ -96,7 +96,7 @@ trait AppTranslations
         }
 
         if ($this->language) {
-            $this->setLocale($this->language->locale());
+            Locale::set($this->language->locale());
         }
 
         // add language slug rules to Str class
