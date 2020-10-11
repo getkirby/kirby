@@ -144,6 +144,32 @@ class AppTest extends TestCase
     }
 
     /**
+     * @covers ::clone
+     */
+    public function testClone()
+    {
+        $app = new App();
+        $app->data['test'] = 'testtest';
+        $this->assertSame($app, App::instance());
+
+        $clone = $app->clone([
+            'options' => ['test' => 123]
+        ]);
+        $this->assertNotSame($app, $clone);
+        $this->assertSame($clone, App::instance());
+        $this->assertSame(123, $clone->option('test'));
+        $this->assertSame('testtest', $clone->data['test']);
+
+        $clone = $app->clone([
+            'options' => ['test' => 123]
+        ], false);
+        $this->assertNotSame($app, $clone);
+        $this->assertNotSame($clone, App::instance());
+        $this->assertSame(123, $clone->option('test'));
+        $this->assertSame('testtest', $clone->data['test']);
+    }
+
+    /**
      * @covers ::contentToken
      */
     public function testContentToken()

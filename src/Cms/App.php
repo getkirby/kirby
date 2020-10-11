@@ -337,6 +337,24 @@ class App
     }
 
     /**
+     * Creates an instance with the same
+     * initial properties
+     *
+     * @param array $props
+     * @param bool $setInstance If false, the instance won't be set globally
+     * @return self
+     */
+    public function clone(array $props = [], bool $setInstance = true)
+    {
+        $props = array_replace_recursive($this->propertyData, $props);
+
+        $clone = new static($props, $setInstance);
+        $clone->data = $this->data;
+
+        return $clone;
+    }
+
+    /**
      * Returns a specific user-defined collection
      * by name. All relevant dependencies are
      * automatically injected
