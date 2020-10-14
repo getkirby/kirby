@@ -50,7 +50,7 @@
           :icon="fieldset.icon || 'box'"
           @click="add(fieldset.type)"
         >
-          {{ $helper.string.template(fieldset.label) }}
+          {{ fieldset.name }}
         </k-button>
       </div>
     </k-dialog>
@@ -136,8 +136,10 @@ export default {
         this.blocks.splice(this.nextIndex, 0, block);
         this.$refs.fieldsets.close();
         this.onInput();
-        this.open(block);
 
+        this.$nextTick(() => {
+          this.open(block);
+        });
       } catch (e) {
         this.$refs.fieldsets.error(e.message);
       }

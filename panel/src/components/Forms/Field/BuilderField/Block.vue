@@ -13,8 +13,11 @@
       <k-sort-handle :icon="isHovered ? 'sort' : fieldset.icon || 'sort'" class="k-builder-block-handle" />
 
       <div class="k-builder-block-preview">
-        <span class="k-builder-block-label">
-          {{ preview }}
+        <span class="k-builder-block-name">
+          {{ name }}
+        </span>
+        <span v-if="label && !isOpen" class="k-builder-block-label">
+          {{ label }}
         </span>
       </div>
 
@@ -158,8 +161,19 @@ export default {
     isHidden() {
       return this.attrs.hide === true;
     },
-    preview() {
+    label() {
+      if (this.fieldset.label.length === 0) {
+        return false;
+      }
+
+      if (this.fieldset.label === this.fieldset.name) {
+        return false;
+      }
+
       return this.$helper.string.template(this.fieldset.label, this.content);
+    },
+    name() {
+      return this.fieldset.name;
     }
   },
   methods: {
@@ -254,13 +268,21 @@ export default {
 .k-builder-block-preview {
   flex-grow: 1;
   min-width: 0;
+  display: flex;
+  align-items: center;
+  line-height: 36px;
+  font-size: $text-sm;
+  height: 36px;
+}
+.k-builder-block-name {
+  margin-right: .5rem;
 }
 .k-builder-block-label {
-  align-items: center;
-  line-height: 1;
-  font-size: $text-sm;
-  display: flex;
-  height: 36px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: $color-gray-500;
+  max-width: 50%;
 }
 
 .k-builder-block[data-hidden]:not([data-open]) {
