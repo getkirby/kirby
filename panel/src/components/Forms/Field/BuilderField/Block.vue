@@ -282,7 +282,8 @@ export default {
   overflow: hidden;
   text-overflow: ellipsis;
   color: $color-gray-500;
-  max-width: 50%;
+  width: 75%;
+  max-width: 45rem;
 }
 
 .k-builder-block[data-hidden]:not([data-open]) {
