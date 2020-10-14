@@ -2,14 +2,14 @@
   <div
     :data-compact="compact"
     :data-disabled="fieldset.disabled"
-    :data-hidden="attrs.hide == true"
+    :data-hidden="isHidden"
     :data-open="isOpen"
     :data-translate="fieldset.translate"
     :class="'k-builder-block k-builder-fieldset-' + type"
     @mouseenter="isHovered = true"
     @mouseleave="onMouseleave"
   >
-    <div class="k-builder-block-header" @click.prevent="toggle">
+    <div class="k-builder-block-header" @click.prevent="openOrClose">
       <k-sort-handle :icon="isHovered ? 'sort' : fieldset.icon || 'sort'" class="k-builder-block-handle" />
 
       <div class="k-builder-block-preview">
@@ -18,11 +18,27 @@
         </span>
       </div>
 
+      <nav
+        v-if="isOpen && hasTabs"
+        class="k-builder-block-tabs"
+      >
+        <k-button
+          v-for="(tab, tabId) in fieldset.tabs"
+          :key="tabId"
+          :icon="tab.icon"
+          :current="isCurrentTab(tabId)"
+          class="k-builder-block-tab"
+          @click.stop="open(tabId)"
+        >
+          {{ tab.label }}
+        </k-button>
+      </nav>
+
       <k-button
-        v-if="attrs.hide"
+        v-if="isHidden"
         class="k-builder-block-status"
         icon="hidden"
-        @click.stop="$emit('toggle')"
+        @click.stop="hideOrShow"
       />
 
       <k-dropdown class="k-builder-block-options">
@@ -50,8 +66,8 @@
             </k-dropdown-item>
           </template>
           <hr>
-          <k-dropdown-item :icon="attrs.hide ? 'preview' : 'hidden'" @click="$emit('toggle')">
-            {{ attrs.hide === true ? $t('show') : $t('hide') }}
+          <k-dropdown-item :icon="isHidden ? 'preview' : 'hidden'" @click="hideOrShow">
+            {{ isHidden === true ? $t('show') : $t('hide') }}
           </k-dropdown-item>
           <k-dropdown-item :disabled="isFull" icon="copy" @click="$emit('duplicate')">
             {{ $t("duplicate") }}
@@ -139,6 +155,9 @@ export default {
     hasTabs() {
       return Object.keys(this.fieldset.tabs).length > 1
     },
+    isHidden() {
+      return this.attrs.hide === true;
+    },
     preview() {
       return this.$helper.string.template(this.fieldset.label, this.content);
     }
@@ -146,6 +165,14 @@ export default {
   methods: {
     close() {
       this.isOpen = false;
+      this.$emit("close");
+    },
+    hideOrShow() {
+      if (this.isHidden === true) {
+        this.$emit("show");
+      } else {
+        this.$emit("hide");
+      }
     },
     isCurrentTab(tabId) {
       if (this.tab === undefined) {
@@ -158,30 +185,27 @@ export default {
       this.isHovered = false
       this.$refs.options.close();
     },
-    open(tab) {
+    open(tab, focus = true) {
       this.tab = tab;
       this.isOpen = true;
+      this.$emit("open");
 
-      setTimeout(() => {
-        this.$refs.fields.focus();
-      });
-    },
-    remove() {
-      this.$refs.remove.close();
-      this.$emit("remove", this.id);
-    },
-    toggle() {
-
-      if (this.compact === true) {
-        this.$emit("expand");
-        return;
+      if (focus !== false) {
+        setTimeout(() => {
+          this.$refs.fields.focus();
+        });
       }
-
+    },
+    openOrClose() {
       if (this.isOpen === false) {
         this.open();
       } else {
         this.close();
       }
+    },
+    remove() {
+      this.$refs.remove.close();
+      this.$emit("remove", this.id);
     }
   }
 };
@@ -205,17 +229,17 @@ export default {
 .k-builder-block[data-disabled] * {
   pointer-events: none;
 }
-.k-builder-block-header {
-  cursor: pointer;
-  list-style: none;
-}
 .k-builder-block[data-open] {
   background: $color-background;
   box-shadow: $shadow, #fff 0 0 0 2px inset;
 }
 .k-builder-block-header {
+  cursor: pointer;
   display: flex;
   align-items: stretch;
+}
+.k-builder-block[data-open] > .k-builder-block-header {
+  border-bottom: 1px solid $color-gray-300;
 }
 .k-builder-block-handle.k-sort-handle {
   width: 2.5rem;
@@ -257,7 +281,7 @@ export default {
 .k-builder-block-tabs {
   display: none;
   align-items: center;
-  height: 38px;
+  height: 36px;
   margin-right: .75rem;
 }
 @media screen and (min-width: $breakpoint-md) {
@@ -281,7 +305,7 @@ export default {
 }
 .k-builder-block-tab[aria-current]::after {
   position: absolute;
-  bottom: -3px;
+  bottom: -1px;
   left: .75rem;
   right: .75rem;
   height: 2px;

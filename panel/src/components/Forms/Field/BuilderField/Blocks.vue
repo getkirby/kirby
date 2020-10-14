@@ -14,11 +14,13 @@
         :fieldset="fieldsets[block.type]"
         :is-full="isFull"
         @append="select(index + 1)"
+        @close="onClose(block)"
         @duplicate="duplicate(block)"
-        @expand="edit(block)"
+        @hide="hide(block)"
+        @open="onOpen(block)"
         @prepend="select(index)"
         @remove="remove(block)"
-        @toggle="toggle(block)"
+        @show="show(block)"
         @update="updateContent(block, $event)"
         v-bind="block"
       />
@@ -56,6 +58,7 @@
     <k-remove-dialog ref="removeAll" @submit="removeAll">
       {{ $t("field.builder.delete.all.confirm") }}
     </k-remove-dialog>
+
   </div>
 </template>
 
@@ -91,7 +94,7 @@ export default {
     return {
       blocks: this.value,
       nextIndex: this.value.length,
-      tabs: {},
+      opened: [],
     };
   },
   computed: {
@@ -139,6 +142,17 @@ export default {
         this.$refs.fieldsets.error(e.message);
       }
     },
+    close(block) {
+      this.$refs["block-" + block.id][0].close();
+    },
+    closeAll() {
+      this.blocks.forEach(block => {
+        this.close(block);
+      });
+    },
+    confirmToRemoveAll() {
+      this.$refs.removeAll.open();
+    },
     async duplicate(block) {
       const response = await this.$api.get(this.endpoints.field + "/uuid");
       const copy = {
@@ -148,13 +162,13 @@ export default {
       this.blocks.push(copy);
       this.onInput();
     },
-    edit(block) {
-      this.$refs.editor.open();
-      this.$nextTick(() => {
-        this.$nextTick(() => {
-          this.$refs.editorBlocks.open(block);
-        });
-      });
+    hide(block) {
+      if (Array.isArray(block.attrs) === true) {
+        this.$set(block, "attrs", {});
+      }
+
+      this.$set(block.attrs, "hide", true);
+      this.onInput();
     },
     move(event) {
       // moving block between fields
@@ -175,17 +189,34 @@ export default {
 
       return true;
     },
+    onClose(block) {
+      const index = this.opened.indexOf(block.id);
+      this.$delete(this.opened, index);
+      this.$emit("close", this.opened);
+    },
     onInput() {
       this.$emit("input", this.blocks);
     },
-    open(block) {
-      this.$refs["block-" + block.id][0].open();
+    onOpen(block) {
+      if (this.opened.includes(block.id) === false) {
+        this.opened.push(block.id);
+        this.$emit("open", this.opened);
+      }
+    },
+    open(block, focus = true) {
+      this.$refs["block-" + block.id][0].open(null, focus);
+    },
+    openAll() {
+      this.blocks.forEach(block => {
+        this.open(block, false);
+      });
     },
     remove(block) {
       const index = this.blocks.findIndex(element => element.id === block.id);
 
       if (index !== -1) {
         this.$delete(this.blocks, index);
+        this.onClose(block);
         this.onInput();
       }
     },
@@ -205,18 +236,20 @@ export default {
         this.$refs.fieldsets.open();
       }
     },
-    toggle(block) {
+    show(block) {
       if (Array.isArray(block.attrs) === true) {
         this.$set(block, "attrs", {});
       }
 
-      if (block.attrs.hide === true) {
-        this.$set(block.attrs, "hide", false);
-      } else {
-        this.$set(block.attrs, "hide", true);
-      }
-
+      this.$set(block.attrs, "hide", false);
       this.onInput();
+    },
+    toggleAll() {
+      if (this.opened.length === 0) {
+        this.openAll();
+      } else {
+        this.closeAll();
+      }
     },
     updateContent(block, content) {
       this.$set(block, "content", content);

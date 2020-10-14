@@ -3,21 +3,21 @@
     v-bind="$props"
     class="k-builder-field"
   >
-    <!-- <k-dropdown slot="options">
+    <k-dropdown slot="options">
       <k-button icon="cog" @click="$refs.options.toggle()" />
       <k-dropdown-content ref="options" align="right">
-        <k-dropdown-item :disabled="isFull" icon="add" @click="select(blocks.length)">
+        <k-dropdown-item :disabled="isFull" icon="add" @click="$refs.blocks.select(value.length)">
           {{ $t('add') }}
         </k-dropdown-item>
-        <k-dropdown-item :disabled="isEmpty" :icon="hasOpened ? 'collapse' : 'expand'" @click="toggleAll()">
+        <k-dropdown-item :disabled="isEmpty" :icon="hasOpened ? 'collapse' : 'expand'" @click="$refs.blocks.toggleAll()">
           {{ hasOpened ? $t('collapse.all') : $t('expand.all') }}
         </k-dropdown-item>
         <hr>
-        <k-dropdown-item :disabled="isEmpty" icon="trash" @click="$refs.removeAll.open()">
+        <k-dropdown-item :disabled="isEmpty" icon="trash" @click="$refs.blocks.confirmToRemoveAll()">
           {{ $t('delete.all') }}
         </k-dropdown-item>
       </k-dropdown-content>
-    </k-dropdown> -->
+    </k-dropdown>
 
     <k-builder-blocks
       ref="blocks"
@@ -27,6 +27,8 @@
       :group="group"
       :max="max"
       :value="value"
+      @close="opened = $event"
+      @open="opened = $event"
       v-on="$listeners"
     />
 
@@ -62,6 +64,16 @@ export default {
       }
     }
   },
+  data() {
+    return {
+      opened: []
+    }
+  },
+  computed: {
+    hasOpened() {
+      return this.opened.length > 0;
+    }
+  }
 };
 </script>
 
