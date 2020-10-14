@@ -10,6 +10,7 @@
       :data-size="size"
       :class="$vnode.data.staticClass"
       class="k-dialog"
+      @mousedown.stop
     >
       <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
         <p>{{ notification.message }}</p>
