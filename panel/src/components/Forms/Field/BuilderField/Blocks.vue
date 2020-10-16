@@ -2,10 +2,10 @@
   <div>
     <k-draggable
       v-bind="draggableOptions"
-      class="k-builder-blocks"
+      class="k-blocks"
       @sort="onInput"
     >
-      <k-builder-block
+      <k-block
         v-for="(block, index) in blocks"
         :ref="'block-' + block.id"
         :key="block.id"
@@ -27,7 +27,7 @@
       <template #footer>
         <k-empty
           icon="box"
-          class="k-builder-field-empty"
+          class="k-blocks-empty"
           @click="select(blocks.length)"
         >
           {{ empty || $t("field.builder.empty") }}
@@ -35,25 +35,12 @@
       </template>
     </k-draggable>
 
-    <k-dialog
-      ref="fieldsets"
-      :cancel-button="false"
-      :submit-button="false"
-      class="k-builder-fieldsets-dialog"
-      size="large"
-    >
-      <k-headline>{{ $t("field.builder.fieldsets.label") }}</k-headline>
-      <div class="k-builder-fieldsets">
-        <k-button
-          v-for="fieldset in fieldsets"
-          :key="fieldset.name"
-          :icon="fieldset.icon || 'box'"
-          @click="add(fieldset.type)"
-        >
-          {{ fieldset.name }}
-        </k-button>
-      </div>
-    </k-dialog>
+    <k-block-selector
+      ref="selector"
+      :endpoint="endpoints.field + '/fieldsets'"
+      :fieldsets="fieldsets"
+      @add="add"
+    />
 
     <k-remove-dialog ref="removeAll" @submit="removeAll">
       {{ $t("field.builder.delete.all.confirm") }}
@@ -64,11 +51,13 @@
 
 <script>
 import Block from "./Block.vue";
+import BlockSelector from "./BlockSelector.vue";
 
 export default {
   inheritAttrs: false,
   components: {
-    "k-builder-block": Block,
+    "k-block": Block,
+    "k-block-selector": BlockSelector,
   },
   props: {
     compact: {
@@ -130,19 +119,12 @@ export default {
     }
   },
   methods: {
-    async add(type) {
-      try {
-        const block = await this.$api.get(this.endpoints.field + "/fieldsets/" + type);
-        this.blocks.splice(this.nextIndex, 0, block);
-        this.$refs.fieldsets.close();
-        this.onInput();
-
-        this.$nextTick(() => {
-          this.open(block);
-        });
-      } catch (e) {
-        this.$refs.fieldsets.error(e.message);
-      }
+    async add(block) {
+      this.blocks.splice(this.nextIndex, 0, block);
+      this.onInput();
+      this.$nextTick(() => {
+        this.open(block);
+      });
     },
     close(block) {
       this.$refs["block-" + block.id][0].close();
@@ -235,7 +217,7 @@ export default {
         const type = Object.values(this.fieldsets)[0].type;
         this.add(type);
       } else {
-        this.$refs.fieldsets.open();
+        this.$refs.selector.open();
       }
     },
     show(block) {
@@ -262,31 +244,22 @@ export default {
 </script>
 
 <style lang="scss">
-.k-builder-fieldsets-dialog .k-headline {
-  margin-bottom: .75rem;
-  margin-top: -.25rem;
-}
-.k-builder-fieldsets {
-  display: grid;
-  grid-gap: .5rem;
-  grid-template-columns: repeat(2, 1fr);
-}
-.k-builder-fieldsets .k-button {
-  display: grid;
-  grid-template-columns: 2rem 1fr;
-  align-items: top;
+.k-blocks {
   background: $color-white;
-  width: 100%;
-  text-align: left;
   box-shadow: $shadow;
-  padding: 0 .75rem 0 0;
-  line-height: 1.5em;
+  border-radius: $rounded;
+  padding: 1.5rem 0;
 }
-.k-builder-fieldsets .k-button .k-button-text {
-  padding: .5rem 0;
+.k-blocks .k-sortable-ghost {
+  outline: 2px solid $color-focus;
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
 }
-.k-builder-fieldsets .k-button .k-icon {
-  width: 38px;
-  height: 38px;
+.k-blocks-empty {
+  cursor: pointer;
+}
+.k-blocks > .k-blocks-empty:not(:only-child) {
+  display: none;
 }
 </style>

@@ -1,7 +1,6 @@
 <template>
   <div
     v-if="!$store.state.system.info.isBroken"
-    :data-dialog="$store.state.dialog"
     :data-dragging="$store.state.drag"
     :data-loading="$store.state.isLoading"
     :data-route="$route.name"
@@ -259,10 +258,6 @@ b {
   overflow-y: scroll;
   -webkit-overflow-scrolling: touch;
   transform: translate3d(0, 0, 0);
-}
-.k-panel[data-dialog] .k-panel-view {
-  overflow: hidden;
-  transform: none;
 }
 .k-panel[data-topbar] .k-panel-view {
   top: 2.5rem;

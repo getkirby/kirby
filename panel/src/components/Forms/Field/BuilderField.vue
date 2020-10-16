@@ -4,7 +4,7 @@
     class="k-builder-field"
   >
     <k-dropdown slot="options">
-      <k-button icon="cog" @click="$refs.options.toggle()" />
+      <k-button icon="dots" @click="$refs.options.toggle()" />
       <k-dropdown-content ref="options" align="right">
         <k-dropdown-item :disabled="isFull" icon="add" @click="$refs.blocks.select(value.length)">
           {{ $t('add') }}
@@ -72,6 +72,12 @@ export default {
   computed: {
     hasOpened() {
       return this.opened.length > 0;
+    },
+    isFull() {
+      return false;
+    },
+    isEmpty() {
+      return false;
     }
   }
 };
@@ -80,18 +86,5 @@ export default {
 <style lang="scss">
 .k-builder-field {
   position: relative;
-}
-.k-builder-field .k-sortable-ghost {
-  outline: 2px solid $color-focus;
-  cursor: grabbing;
-  cursor: -moz-grabbing;
-  cursor: -webkit-grabbing;
-}
-.k-builder-field-empty {
-  cursor: pointer;
-
-  .k-builder-blocks > &:not(:only-child) {
-    display: none;
-  }
 }
 </style>

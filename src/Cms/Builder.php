@@ -206,6 +206,7 @@ class Builder
 
             $tab['fields'] = $this->fieldsProps($tab['fields'] ?? []);
             $tab['label']  = I18n::translate($label = $tab['label'] ?? Str::ucfirst($name), $label);
+            $tab['name']   = $name;
 
             $tabs[$name] = $tab;
         }

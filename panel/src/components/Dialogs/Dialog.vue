@@ -139,7 +139,7 @@
         this.$refs.overlay.close();
         this.$emit("close");
         this.$events.$off("keydown.esc", this.close);
-        this.$store.dispatch("dialog", null);
+        this.$store.dispatch("dialog", false);
       },
       cancel() {
         this.$emit("cancel");
