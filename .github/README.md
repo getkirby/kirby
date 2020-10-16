@@ -19,14 +19,13 @@ Kirby is not free software. In order to run Kirby on a public server you must pu
 
 ## Contribute
 
-### Bug reports
+### Found a bug?
 Please post all bug reports in our [issue tracker](https://github.com/getkirby/kirby/issues).
 
-### Contributing guidelines
+### Suggest a feature
+If you have ideas for a feature or enhancement for Kirby, please use our [feedback platform](https://feedback.getkirby.com).
+
+### Translations, bug fixes, code contributions ...
 Read about how to contribute to the development in our [contributing guide](/.github/CONTRIBUTING.md).
 
-### Feature suggestions
-If you want to suggest features or enhancements for Kirby, please use our [feedback platform](https://feedback.getkirby.com).
 
-### Translations
-We are really happy about any help with our translations. Please, do not translate directly in the JSON files though. We use a service called Transifex to handle [all translations for the Panel](https://www.transifex.com/getkirby/panel/). Create an account there and send us a request to join our translator group. Please, also send us an email at <support@getkirby.com>. Unfortunately, we don't get notified properly about new translator requests and often miss them.
