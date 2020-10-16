@@ -1,12 +1,23 @@
 <template>
-  <k-headline :data-numbered="numbered" size="large" class="k-headline-field">
-    {{ label }}
-  </k-headline>
+  <div class="k-headline-field">
+    <k-headline :data-numbered="numbered" size="large">
+      {{ label }}
+    </k-headline>
+    <footer v-if="help" class="k-field-footer">
+      <k-text
+        v-if="help"
+        theme="help"
+        class="k-field-help"
+        v-html="help"
+      />
+    </footer>
+  </div>
 </template>
 
 <script>
 export default {
   props: {
+    help: String,
     label: String,
     numbered: Boolean
   }
@@ -20,9 +31,15 @@ body {
 .k-headline-field {
   position: relative;
   padding-top: 1.5rem;
+
+  // don't add the top padding,
+  // if the headline is the very first form element
+  .k-fieldset > .k-grid .k-column:first-child & {
+    padding-top: 0;
+  }
 }
 
-.k-headline-field[data-numbered]::before {
+.k-headline-field .k-headline[data-numbered]::before {
   counter-increment: headline-counter;
   content: counter(headline-counter, decimal-leading-zero);
   color: $color-focus;
@@ -30,8 +47,4 @@ body {
   padding-right: .25rem;
 }
 
-/* don't add the top padding, if the headline is the very first form element */
-.k-fieldset > .k-grid .k-column:first-child .k-headline-field {
-  padding-top: 0;
-}
 </style>
