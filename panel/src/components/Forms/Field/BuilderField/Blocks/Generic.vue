@@ -1,13 +1,13 @@
 <template>
-  <div class="k-block-generic">
+  <div class="k-block-generic-box">
     <k-block-header
-      :current-tab="tab"
       :icon="fieldset.icon"
       :is-hidden="isHidden"
       :is-open="isOpen"
       :label="previewLabel"
       :name="previewName"
       :tabs="tabs"
+      :tab="tab"
       @open="open"
       @show="$emit('show')"
       @toggle="openOrClose"
@@ -24,6 +24,7 @@
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     attrs: [Array, Object],
     compact: Boolean,
@@ -135,7 +136,7 @@ export default {
 </script>
 
 <style lang="scss">
-.k-block-generic {
+.k-block-generic-box {
   background: $color-white;
   box-shadow: $shadow;
   border: 1px solid $color-gray-300;

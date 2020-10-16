@@ -2,6 +2,7 @@
   <div>
     <k-draggable
       v-bind="draggableOptions"
+      :data-empty="blocks.length === 0"
       class="k-blocks"
       @sort="onInput"
     >
@@ -9,13 +10,12 @@
         v-for="(block, index) in blocks"
         :ref="'block-' + block.id"
         :key="block.id"
-        :compact="compact"
         :endpoints="endpoints"
         :fieldset="fieldsets[block.type]"
         :is-full="isFull"
         @append="select(index + 1)"
         @close="onClose(block)"
-        @duplicate="duplicate(block)"
+        @duplicate="duplicate(block, index)"
         @hide="hide(block)"
         @open="onOpen(block)"
         @prepend="select(index)"
@@ -60,10 +60,6 @@ export default {
     "k-block-selector": BlockSelector,
   },
   props: {
-    compact: {
-      type: Boolean,
-      default: false
-    },
     empty: String,
     endpoints: Object,
     fieldsets: Object,
@@ -137,13 +133,13 @@ export default {
     confirmToRemoveAll() {
       this.$refs.removeAll.open();
     },
-    async duplicate(block) {
+    async duplicate(block, index) {
       const response = await this.$api.get(this.endpoints.field + "/uuid");
       const copy = {
         ...this.$helper.clone(block),
         id: response["uuid"]
       };
-      this.blocks.push(copy);
+      this.blocks.splice(index + 1, 0, block);
       this.onInput();
     },
     hide(block) {
@@ -250,14 +246,22 @@ export default {
   border-radius: $rounded;
   padding: 1.5rem 0;
 }
+
+.k-blocks[data-empty] {
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
 .k-blocks .k-sortable-ghost {
   outline: 2px solid $color-focus;
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
-.k-blocks-empty {
+.k-blocks-empty.k-empty {
   cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 .k-blocks > .k-blocks-empty:not(:only-child) {
   display: none;

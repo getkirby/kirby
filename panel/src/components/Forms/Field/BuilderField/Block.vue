@@ -1,6 +1,6 @@
 <template>
   <div
-    :data-compact="compact"
+    :class="'k-block-container-' + type"
     :data-disabled="fieldset.disabled"
     :data-hidden="isHidden"
     :data-translate="fieldset.translate"
@@ -11,16 +11,20 @@
   >
     <k-block-options
       v-if="isHovered"
+      :is-editing="isEditing"
       :is-full="isFull"
       :is-hidden="isHidden"
+      :wysiwyg="wysiwyg"
       v-on="listeners"
     />
-    <component
-      :is="customComponentName"
-      v-bind="$props"
-      class="k-block"
-      v-on="listeners"
-    />
+    <div :class="'k-block-' + type" class="k-block">
+      <component
+        ref="editor"
+        :is="customComponent"
+        v-bind="$props"
+        v-on="listeners"
+      />
+    </div>
     <k-remove-dialog ref="removeDialog" @submit="remove">
       {{ $t("field.builder.delete.confirm") }}
     </k-remove-dialog>
@@ -31,7 +35,6 @@
 import Vue from "vue";
 import Editor from "./Editor.vue";
 import BlockForm from "./BlockForm.vue";
-import BlockSwitcher from "./BlockSwitcher.vue";
 import BlockHeader from "./BlockHeader.vue";
 import BlockOptions from "./BlockOptions.vue";
 
@@ -40,31 +43,33 @@ Vue.component("k-editor", Editor);
 Vue.component("k-block-form", BlockForm);
 Vue.component("k-block-header", BlockHeader);
 Vue.component("k-block-options", BlockOptions);
-Vue.component("k-block-switcher", BlockSwitcher);
 
+import Code from "./Blocks/Code.vue";
+import Cta from "./Blocks/Cta.vue";
 import Generic from "./Blocks/Generic.vue";
 import Heading from "./Blocks/Heading.vue";
+import Image from "./Blocks/Image.vue";
+import Images from "./Blocks/Images.vue";
 import Quote from "./Blocks/Quote.vue";
+import Table from "./Blocks/Table.vue";
 import Text from "./Blocks/Text.vue";
+import Video from "./Blocks/Video.vue";
 
+Vue.component("k-block-code", Code);
+Vue.component("k-block-cta", Cta);
 Vue.component("k-block-generic", Generic);
 Vue.component("k-block-heading", Heading);
+Vue.component("k-block-image", Image);
+Vue.component("k-block-images", Images);
 Vue.component("k-block-quote", Quote);
+Vue.component("k-block-table", Table);
 Vue.component("k-block-text", Text);
-
-import CtaPreview from "./Previews/Cta.vue";
-import ImagesPreview from "./Previews/Images.vue";
-import VideoPreview from "./Previews/Video.vue";
-
-Vue.component("k-block-cta-preview", CtaPreview);
-Vue.component("k-block-images-preview", ImagesPreview);
-Vue.component("k-block-video-preview", VideoPreview);
+Vue.component("k-block-video", Video);
 
 export default {
   inheritAttrs: false,
   props: {
     attrs: [Array, Object],
-    compact: Boolean,
     content: [Array, Object],
     endpoints: Object,
     fieldset: Object,
@@ -76,19 +81,18 @@ export default {
   },
   data() {
     return {
+      isEditing: false,
       isHovered: false
     };
   },
   computed: {
-    customComponentName() {
-      let customComponentName = "k-block-" + this.type;
-
-      if (this.$helper.isComponent(customComponentName)) {
-        return customComponentName;
+    customComponent() {
+      if (this.isEditing === true) {
+        return "k-block-generic";
       }
 
-      if (this.$helper.isComponent("k-block-" + this.type + "-preview")) {
-        return "k-block-switcher";
+      if (this.wysiwyg) {
+        return this.wysiwygComponent;
       }
 
       return "k-block-generic";
@@ -99,13 +103,30 @@ export default {
     listeners() {
       return {
         ...this.$listeners,
+        close: this.close,
+        edit: this.edit,
         remove: this.confirmToRemove
       }
-    }
+    },
+    wysiwyg() {
+      return this.$helper.isComponent(this.wysiwygComponent);
+    },
+    wysiwygComponent() {
+      return "k-block-" + this.type;
+    },
   },
   methods: {
+    close() {
+      this.isEditing = false;
+    },
     confirmToRemove() {
       this.$refs.removeDialog.open();
+    },
+    edit() {
+      this.isEditing = true;
+      this.$nextTick(() => {
+        this.$refs.editor.open();
+      });
     },
     open() {
 

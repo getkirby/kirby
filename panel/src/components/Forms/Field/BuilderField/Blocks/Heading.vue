@@ -1,14 +1,19 @@
 <template>
   <k-editor
-    class="k-block-heading"
-    placeholder="Heading …"
+    :data-level="content.level"
     :value="content.text"
-    @input="$emit('update', { text: $event })"
+    class="k-block-heading-editor"
+    placeholder="Heading …"
+    @input="$emit('update', {
+      ...content,
+      text: $event
+    })"
   />
 </template>
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     content: [Array, Object]
   }
@@ -17,8 +22,16 @@ export default {
 
 <style lang="scss">
 .k-block-heading {
+  padding: .75rem 0;
+}
+.k-block-heading-editor {
   font-weight: $font-bold;
   font-size: $text-3xl;
-  padding: .75rem 0;
+}
+.k-block-heading-editor[data-level="2"] {
+  font-size: $text-2xl;
+}
+.k-block-heading-editor[data-level="3"] {
+  font-size: $text-xl;
 }
 </style>

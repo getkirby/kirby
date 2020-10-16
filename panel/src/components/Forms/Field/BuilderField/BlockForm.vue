@@ -1,6 +1,7 @@
 <template>
   <div class="k-block-form">
     <k-fieldset ref="fields"
+      :autofocus="true"
       :fields="fields"
       :value="value"
       class="k-block-fields"

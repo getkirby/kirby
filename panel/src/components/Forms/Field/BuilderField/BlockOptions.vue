@@ -13,6 +13,15 @@
       <k-dropdown-item :disabled="isFull" icon="angle-down" @click="$emit('append')">
         {{ $t("insert.after") }}
       </k-dropdown-item>
+      <template v-if="wysiwyg">
+        <hr>
+        <k-dropdown-item v-if="isEditing" icon="preview" @click="$emit('close')">
+          {{ $t("preview") }}
+        </k-dropdown-item>
+        <k-dropdown-item v-else icon="settings" @click="$emit('edit')">
+          {{ $t("settings") }}
+        </k-dropdown-item>
+      </template>
       <hr>
       <k-dropdown-item :icon="isHidden ? 'preview' : 'hidden'" @click="$emit(isHidden ? 'show' : 'hide')">
         {{ isHidden === true ? $t('show') : $t('hide') }}
@@ -31,8 +40,10 @@
 <script>
 export default {
   props: {
+    isEditing: Boolean,
     isFull: Boolean,
     isHidden: Boolean,
+    wysiwyg: Boolean,
   }
 };
 </script>

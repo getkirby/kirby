@@ -1,5 +1,5 @@
 <template>
-  <div class="k-block-quote">
+  <div class="k-block-quote-editor">
     <k-editor
       :value="content.text"
       class="k-block-quote-text"
@@ -17,6 +17,7 @@
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     content: [Array, Object]
   },
@@ -33,7 +34,9 @@ export default {
 
 <style lang="scss">
 .k-block-quote {
-  margin: 1.5rem 0;
+  padding: 1.5rem 0;
+}
+.k-block-quote-editor {
   padding-left: 1rem;
   border-left: 3px solid #000;
 }

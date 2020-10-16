@@ -1,11 +1,15 @@
 <template>
-  <div class="k-block-video" @click="$emit('edit')">
-    <iframe v-if="embed" :src="embed"></iframe>
-  </div>
+  <figure v-if="embed" class="k-block-video-figure" @click="$emit('edit')">
+    <span class="k-block-video-frame">
+      <iframe :src="embed"></iframe>
+    </span>
+    <figcaption v-if="content.caption">{{ content.caption }}</figcaption>
+  </figure>
 </template>
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     content: Object
   },
@@ -46,12 +50,17 @@ export default {
 
 <style lang="scss">
 .k-block-video {
-  margin: 1.5rem 0;
-  position: relative;
-  padding-bottom: 56.25%;
+  padding: 1.5rem 0;
+}
+.k-block-video-figure {
   cursor: pointer;
 }
-.k-block-video iframe {
+.k-block-video-frame {
+  display: block;
+  position: relative;
+  padding-bottom: 56.25%;
+}
+.k-block-video-frame iframe {
   position: absolute;
   top: 0;
   left: 0;
@@ -62,5 +71,10 @@ export default {
   border: 0;
   pointer-events: none;
   background: $color-black;
+}
+.k-block-video-figure figcaption {
+  padding-top: .5rem;
+  color: $color-gray-500;
+  font-size: $text-sm;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <k-editor
-    class="k-block-text"
+    class="k-block-text-editor"
     placeholder="Text …"
     :value="content.text"
     @input="$emit('update', { text: $event })"
@@ -9,6 +9,7 @@
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     content: [Array, Object]
   }
@@ -16,11 +17,8 @@ export default {
 </script>
 
 <style lang="scss">
-.k-block-text {
+.k-block-text-editor {
   font-size: $text-base;
   line-height: 1.5em;
-}
-.k-block-text:focus {
-  outline: none;
 }
 </style>

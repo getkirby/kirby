@@ -1,22 +1,29 @@
 <template>
-  <div class="k-block-images" @click="$emit('edit')">
-    <ul class="k-block-images-preview">
-      <li v-for="image in content.images" :key="image.id">
-        <img :src="image.url" />
-      </li>
-    </ul>
-  </div>
+  <ul class="k-block-images-preview" @click="$emit('edit')">
+    <li v-for="image in content.images" :key="image.id">
+      <img :src="image.url" />
+    </li>
+  </ul>
 </template>
 
 <script>
 export default {
+  inheritAttrs: false,
   props: {
     content: Object
+  },
+  mounted() {
+    if (this.content.images.length === 0) {
+      this.$emit("edit");
+    }
   }
 };
 </script>
 
 <style lang="scss">
+.k-block-images {
+  padding: .75rem 0;
+}
 .k-block-images-preview {
   display: grid;
   grid-gap: .75rem;
@@ -24,7 +31,6 @@ export default {
   line-height: 0;
   justify-content: center;
   cursor: pointer;
-  padding: 1.5rem 0;
 }
 .k-block-images-preview li {
   padding-bottom: 100%;

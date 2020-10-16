@@ -17,7 +17,6 @@
       <k-button
         v-for="tab in tabs"
         :key="tab.name"
-        :icon="tab.icon"
         :current="currentTab == tab.name"
         class="k-block-header-tab"
         @click.stop="$emit('open', tab.name)"
@@ -38,15 +37,18 @@
 <script>
 export default {
   props: {
-    currentTab: String,
     icon: String,
     isHidden: Boolean,
     isOpen: Boolean,
     label: [String, Boolean],
     name: String,
+    tab: String,
     tabs: Array,
   },
   computed: {
+    currentTab() {
+      return this.tab || this.tabs[0].name;
+    },
     hasTabs() {
       return this.tabs.length > 1
     }
