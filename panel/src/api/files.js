@@ -54,40 +54,52 @@ export default (api) => {
     link(parent, filename, path) {
       return "/" + this.url(parent, filename, path);
     },
-    async options(parent, filename, view) {
+    async options(parent, filename, view, sortable = true) {
       const file    = await api.get(this.url(parent, filename), {select: "options"});
       const options = file.options;
       let result    = [];
 
       if (view === "list") {
         result.push({
+          click: "download",
           icon: "open",
           text: Vue.i18n.translate("open"),
-          click: "download"
         });
 
         result.push("-");
       }
 
       result.push({
+        click: "rename",
         icon: "title",
         text: Vue.i18n.translate("rename"),
-        click: "rename",
         disabled: !options.changeName
       });
 
       result.push({
+        click: "replace",
         icon: "upload",
         text: Vue.i18n.translate("replace"),
-        click: "replace",
         disabled: !options.replace
       });
 
+      if (view === "list") {
+        result.push("-");
+
+        result.push({
+          click: "sort",
+          icon: "sort",
+          text: Vue.i18n.translate("file.sort"),
+          disabled: !(options.update  && sortable)
+        });
+      }
+
       result.push("-");
+
       result.push({
+        click: "remove",
         icon: "trash",
         text: Vue.i18n.translate("delete"),
-        click: "remove",
         disabled: !options.delete
       });
 
