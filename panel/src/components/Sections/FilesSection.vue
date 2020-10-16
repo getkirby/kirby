@@ -60,6 +60,7 @@
 
       <k-file-rename-dialog ref="rename" @success="update" />
       <k-file-remove-dialog ref="remove" @success="update" />
+      <k-file-sort-dialog ref="sort" @success="reload" />
       <k-upload ref="upload" @success="uploaded" @error="reload" />
     </template>
 
@@ -122,6 +123,9 @@ export default {
 
           this.$refs.remove.open(file.parent, file.filename);
           break;
+        case "sort":
+          this.$refs.sort.open(file.parent, file, this.options.apiUrl);
+          break;
       }
 
     },
@@ -137,18 +141,22 @@ export default {
     },
     items(data) {
       return data.map(file => {
-        file.options = async ready => {
+        file.sortable = this.options.sortable;
+        file.column   = this.column;
+        file.options  = async ready => {
           try {
-            const options = await this.$api.files.options(file.parent, file.filename, "list");
-            ready(options)
+            const options = await this.$api.files.options(
+              file.parent,
+              file.filename,
+              "list",
+              this.options.sortable
+            );
+            ready(options);
 
           } catch (error) {
             this.$store.dispatch("notification/error", error);
           }
         };
-
-        file.sortable = this.options.sortable;
-        file.column   = this.column;
 
         return file;
       });

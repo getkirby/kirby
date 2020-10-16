@@ -212,6 +212,7 @@
 
   "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
   "file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
+  "file.sort": "Change position",
 
   "files": "Files",
   "files.empty": "No files yet",
