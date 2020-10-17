@@ -3,7 +3,12 @@
     ref="overlay"
     :centered="true"
   >
-    <div :data-size="size" class="k-dialog" :class="$vnode.data.staticClass">
+    <div
+      ref="dialog"
+      :data-size="size"
+      class="k-dialog"
+      :class="$vnode.data.staticClass"
+    >
       <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
         <p>{{ notification.message }}</p>
         <k-button icon="cancel" @click="notification = null" />
@@ -121,24 +126,6 @@
         this.$refs.overlay.open();
         this.$emit("open");
         this.$events.$on("keydown.esc", this.close);
-
-        this.$nextTick(() => {
-          if (this.$el) {
-            // focus on the first useful element
-            this.focus();
-
-            // blur trap
-            document.body.addEventListener(
-              "focus",
-              e => {
-                if (this.$el.contains(e.target) === false) {
-                  this.focus();
-                }
-              },
-              true
-            );
-          }
-        });
       },
       close() {
         this.notification = null;
@@ -152,18 +139,11 @@
         this.close();
       },
       focus() {
-        if (this.$el && this.$el.querySelector) {
-          let autofocus = this.$el.querySelector(
-            "[autofocus], [data-autofocus], input, textarea, select, .k-dialog-button-submit"
-          );
+        if (this.$refs.dialog && this.$refs.dialog.querySelector) {
+          const btn = this.$refs.dialog.querySelector(".k-dialog-button-cancel");
 
-          if (!autofocus) {
-            autofocus = this.$el.querySelector(".k-dialog-button-cancel");
-          }
-
-          if (autofocus) {
-            autofocus.focus();
-            return;
+          if (btn && typeof btn.focus === "function") {
+            btn.focus();
           }
         }
       },
