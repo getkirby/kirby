@@ -21,6 +21,7 @@
 
     <k-builder-blocks
       ref="blocks"
+      :compact="false"
       :empty="empty"
       :endpoints="endpoints"
       :fieldsets="fieldsets"

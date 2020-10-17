@@ -1,6 +1,7 @@
 <template>
   <div
     :class="'k-block-container-' + type"
+    :data-compact="compact"
     :data-disabled="fieldset.disabled"
     :data-hidden="isHidden"
     :data-translate="fieldset.translate"
@@ -10,14 +11,14 @@
     @mouseleave="isHovered = false"
   >
     <k-block-options
-      v-if="isHovered"
+      v-if="!compact && isHovered"
       :is-editing="isEditing"
       :is-full="isFull"
       :is-hidden="isHidden"
       :wysiwyg="wysiwyg"
       v-on="listeners"
     />
-    <div :class="'k-block-' + type" class="k-block">
+    <div :class="className" :data-compact="compact" class="k-block">
       <component
         ref="editor"
         :is="customComponent"
@@ -70,6 +71,7 @@ export default {
   inheritAttrs: false,
   props: {
     attrs: [Array, Object],
+    compact: Boolean,
     content: [Array, Object],
     endpoints: Object,
     fieldset: Object,
@@ -86,6 +88,15 @@ export default {
     };
   },
   computed: {
+    className() {
+      let className = ["k-block-" + this.type];
+
+      if (this.wysiwyg === false) {
+        className.push("k-block-generic");
+      }
+
+      return className;
+    },
     customComponent() {
       if (this.isEditing === true) {
         return "k-block-generic";
@@ -142,8 +153,21 @@ export default {
 <style lang="scss">
 .k-block-container {
   position: relative;
-  padding: .5rem 4rem;
+  padding: 0 4rem;
   border-radius: $rounded;
+}
+.k-block-container[data-compact] {
+  padding: 0;
+  cursor: pointer;
+}
+.k-block-container[data-compact] .k-block {
+  pointer-events: none;
+}
+.k-blocks .k-block-container:first-child .k-block {
+  padding-top: 0;
+}
+.k-blocks .k-block-container:last-of-type .k-block {
+  padding-bottom: 0;
 }
 .k-block-container:focus {
   outline: 0;

@@ -18,7 +18,7 @@ export default {
 
 <style lang="scss">
 .k-block-cta {
-  padding: .75rem 0;
+  padding: 1.5rem 0;
 }
 .k-block-cta-button {
   border: 2px solid #000;

@@ -2,6 +2,7 @@
   <div>
     <k-draggable
       v-bind="draggableOptions"
+      :data-compact="compact"
       :data-empty="blocks.length === 0"
       class="k-blocks"
       @sort="onInput"
@@ -10,6 +11,7 @@
         v-for="(block, index) in blocks"
         :ref="'block-' + block.id"
         :key="block.id"
+        :compact="compact"
         :endpoints="endpoints"
         :fieldset="fieldsets[block.type]"
         :is-full="isFull"
@@ -60,6 +62,7 @@ export default {
     "k-block-selector": BlockSelector,
   },
   props: {
+    compact: Boolean,
     empty: String,
     endpoints: Object,
     fieldsets: Object,
@@ -246,7 +249,9 @@ export default {
   border-radius: $rounded;
   padding: 1.5rem 0;
 }
-
+.k-blocks[data-compact] {
+  padding: .75rem;
+}
 .k-blocks[data-empty] {
   padding: 0;
   background: none;

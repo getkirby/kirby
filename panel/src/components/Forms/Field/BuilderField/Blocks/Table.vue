@@ -54,7 +54,7 @@ export default {
 
 <style lang="scss">
 .k-block-table {
-  padding: .75rem 0;
+  padding: 1.5rem 0;
 }
 .k-block-table-preview {
   cursor: pointer;

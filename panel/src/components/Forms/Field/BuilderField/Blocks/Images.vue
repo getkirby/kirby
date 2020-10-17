@@ -21,13 +21,13 @@ export default {
 </script>
 
 <style lang="scss">
-.k-block-images {
-  padding: .75rem 0;
+.k-block.k-block-images {
+  padding: 1.5rem 0;
 }
 .k-block-images-preview {
   display: grid;
   grid-gap: .75rem;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
   line-height: 0;
   justify-content: center;
   cursor: pointer;

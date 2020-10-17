@@ -17,6 +17,10 @@ export default {
 </script>
 
 <style lang="scss">
+.k-block-text {
+  padding: .5rem 0;
+}
+
 .k-block-text-editor {
   font-size: $text-base;
   line-height: 1.5em;

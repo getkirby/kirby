@@ -136,6 +136,9 @@ export default {
 </script>
 
 <style lang="scss">
+.k-block-generic {
+  padding: .75rem 0;
+}
 .k-block-generic-box {
   background: $color-white;
   box-shadow: $shadow;
