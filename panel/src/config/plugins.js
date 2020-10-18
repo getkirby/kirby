@@ -32,7 +32,7 @@ Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
       options,
       components: {
         ...components,
-        ...options.components || {}
+        ...options.components || {}
       }
     });
 

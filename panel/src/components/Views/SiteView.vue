@@ -32,9 +32,9 @@
       v-if="site.url"
       :blueprint="site.blueprint.name"
       :empty="$t('site.blueprint')"
-      parent="site"
       :tab="tab"
       :tabs="tabs"
+      parent="site"
       @submit="$emit('submit', $event)"
     />
 

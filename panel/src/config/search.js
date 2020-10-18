@@ -57,7 +57,7 @@ export default (app) => {
         endpoint: "users/search",
         fields: ["name", "email"],
         map: user => ({
-          title: user.name || user.email,
+          title: user.name || user.email,
           link:  app.$api.users.link(user.id),
           info:  user.email,
           icon:  {
