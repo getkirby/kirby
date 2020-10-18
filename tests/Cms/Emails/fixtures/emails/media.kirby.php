@@ -1,1 +1,0 @@
-<b>Image:</b> <img src="" alt="{{ site.title }}"/>

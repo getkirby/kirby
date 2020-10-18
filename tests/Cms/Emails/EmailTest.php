@@ -88,21 +88,56 @@ class EmailTest extends TestCase
         ], $email->toArray()['body']);
     }
 
-    public function testTemplateKirby()
+    public function testTemplateTextWithQueryLanguage()
     {
-        $app = new App([
+        new App([
             'templates' => [
-                'emails/media.kirby' => __DIR__ . '/fixtures/emails/media.kirby.php'
+                'emails/query.text' => __DIR__ . '/fixtures/emails/query.text.php'
             ],
             'site' => [
                 'content' => [
-                    'title' => 'Test Site'
+                    'title' => 'Kirby CMS'
                 ]
             ]
         ]);
-        $email = new Email(['template' => 'media']);
-        $this->assertEquals([
-            'html' => '<b>Image:</b> <img src="" alt="Test Site"/>'
+
+        $email = new Email([
+            'template' => 'query',
+            'data' => [
+                'name' => 'John Doe',
+                'message' => 'This is test message!',
+            ]
+        ]);
+
+        $expected = "Hey John Doe\r\n\r\nThis is test message!\r\n\r\nCheers\r\nKirby CMS";
+        $this->assertSame($expected, $email->toArray()['body']);
+    }
+
+    public function testTemplateHtmlWithQueryLanguage()
+    {
+        new App([
+            'templates' => [
+                'emails/query.html' => __DIR__ . '/fixtures/emails/query.html.php'
+            ],
+            'site' => [
+                'content' => [
+                    'title' => 'Kirby CMS'
+                ]
+            ]
+        ]);
+
+        $email = new Email([
+            'template' => 'query',
+            'data' => [
+                'name' => 'John Doe',
+                'message' => 'This is test message!',
+            ]
+        ]);
+
+        $expected = "<h2>Hey John Doe</h2>\r\n\r\n<p>This is test message!</p>\r\n\r\n<strong>Cheers</strong>\r\n<h5>Kirby CMS</h5>";
+        $this->assertSame([
+            'html' => $expected,
+            'text' => null,
         ], $email->toArray()['body']);
     }
 

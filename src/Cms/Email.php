@@ -104,42 +104,36 @@ class Email
             // prepare data to be passed to template
             $data = $this->props['data'] ?? [];
 
-            // check if html/kirby/text templates exist
-            $htmlTemplate  = $this->getTemplate($this->props['template'], 'html');
-            $kirbyTemplate = $this->getTemplate($this->props['template'], 'kirby');
-            $textTemplate  = $this->getTemplate($this->props['template'], 'text');
+            // check if html/text templates exist
+            $html = $this->getTemplate($this->props['template'], 'html');
+            $text = $this->getTemplate($this->props['template'], 'text');
 
-            // according to the following templates order
-            // whichever one finds first, that template works
-            // if none is found, throws an NotFoundException
-            // - kirby template (.kirby.php extension)
-            // - html template (.html.php extension)
-            // - text template (.text.php extension)
-            // - default php template (.php extension)
-            if ($kirbyTemplate->exists() === true) {
-                $render = $kirbyTemplate->render($data);
-                $html = Str::template($render, array_merge($data, [
-                    'kirby' => App::instance(),
-                    'site'  => App::instance()->site(),
-                ]), $render);
+            // merge kirby and site objects with passed data
+            $templateData = array_merge($data, [
+                'kirby' => App::instance(),
+                'site'  => App::instance()->site(),
+            ]);
+
+            // render text template first to use in html or text body
+            if ($text->exists() === true) {
+                $textRender = $text->render($data);
+
+                $textTemplate = Str::template($textRender, $templateData, $textRender);
+            }
+
+            if ($html->exists() === true) {
+                $htmlRender = $html->render($data);
+
+                $htmlTemplate = Str::template($htmlRender, $templateData, $htmlRender);
 
                 $this->props['body'] = [
-                    'html' => $html
+                    'html' => $htmlTemplate,
+                    'text' => $textTemplate ?? null
                 ];
 
-                if ($textTemplate->exists() === true) {
-                    $this->props['body']['text'] = $textTemplate->render($data);
-                }
-            } elseif ($htmlTemplate->exists() === true) {
-                $this->props['body'] = [
-                    'html' => $htmlTemplate->render($data)
-                ];
-
-                if ($textTemplate->exists() === true) {
-                    $this->props['body']['text'] = $textTemplate->render($data);
-                }
-            } elseif ($textTemplate->exists() === true) {
-                $this->props['body'] = $textTemplate->render($data);
+            // fallback to single email text template
+            } elseif ($text->exists() === true) {
+                $this->props['body'] = $textTemplate ?? null;
             } else {
                 throw new NotFoundException('The email template "' . $this->props['template'] . '" cannot be found');
             }
