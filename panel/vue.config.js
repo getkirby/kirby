@@ -1,6 +1,14 @@
 /* eslint-env node */
 const path = require("path");
 const fs = require("fs");
+
+let custom;
+try {
+  custom = require("./vue.config.custom.js");
+} catch (e) {
+  custom = {};
+}
+
 const host = process.env.VUE_APP_DEV_SERVER || "http://sandbox.test";
 
 // vue.config.js
@@ -44,7 +52,7 @@ module.exports = {
         ]);
     });
   },
-  devServer: {
+  devServer: Object.assign({
     proxy: {
       "/api": {
         target: host
@@ -56,5 +64,5 @@ module.exports = {
         target: host
       }
     }
-  }
+  }, custom)
 };
