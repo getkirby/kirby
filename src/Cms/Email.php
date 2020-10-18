@@ -116,20 +116,21 @@ class Email
 
             // render text template first to use in html or text body
             if ($text->exists() === true) {
-                $textRender = $text->render($data);
-
+                $textRender   = $text->render($data);
                 $textTemplate = Str::template($textRender, $templateData, $textRender);
             }
 
             if ($html->exists() === true) {
-                $htmlRender = $html->render($data);
-
+                $htmlRender   = $html->render($data);
                 $htmlTemplate = Str::template($htmlRender, $templateData, $htmlRender);
 
                 $this->props['body'] = [
-                    'html' => $htmlTemplate,
-                    'text' => $textTemplate ?? null
+                    'html' => $htmlTemplate
                 ];
+
+                if ($text->exists() === true) {
+                    $this->props['body']['text'] = $textTemplate ?? null;
+                }
 
             // fallback to single email text template
             } elseif ($text->exists() === true) {
