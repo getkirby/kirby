@@ -109,7 +109,7 @@ class EmailTest extends TestCase
             ]
         ]);
 
-        $expected = "Hey John Doe\r\n\r\nThis is test message!\r\n\r\nCheers\r\nKirby CMS";
+        $expected = "Hey John Doe\n\nThis is test message!\n\nCheers\nKirby CMS";
         $this->assertSame($expected, $email->toArray()['body']);
     }
 
