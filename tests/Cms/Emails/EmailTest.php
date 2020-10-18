@@ -134,7 +134,7 @@ class EmailTest extends TestCase
             ]
         ]);
 
-        $expected = "<h2>Hey John Doe</h2>\r\n\r\n<p>This is test message!</p>\r\n\r\n<strong>Cheers</strong>\r\n<h5>Kirby CMS</h5>";
+        $expected = "<h2>Hey John Doe</h2>\n\n<p>This is test message!</p>\n\n<strong>Cheers</strong>\n<h5>Kirby CMS</h5>";
         $this->assertSame([
             'html' => $expected
         ], $email->toArray()['body']);

@@ -132,7 +132,7 @@ class Email
                     $this->props['body']['text'] = $textTemplate ?? null;
                 }
 
-            // fallback to single email text template
+                // fallback to single email text template
             } elseif ($text->exists() === true) {
                 $this->props['body'] = $textTemplate ?? null;
             } else {
