@@ -79,6 +79,14 @@ export default {
         target.focus();
         return;
       }
+
+      if (
+        this.$slots.default[0] &&
+        this.$slots.default[0].context &&
+        typeof this.$slots.default[0].context.focus === "function") {
+        this.$slots.default[0].context.focus();
+        return;
+      }
     },
     focustrap(e) {
       if (

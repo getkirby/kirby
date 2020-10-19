@@ -6,27 +6,26 @@
 [![Downloads](https://flat.badgen.net/packagist/dt/getkirby/cms)](https://github.com/getkirby/kirby/releases/latest)
 [![Twitter](https://flat.badgen.net/twitter/follow/getkirby)](https://twitter.com/getkirby)
 
-This is Kirby's core application folder. Get started with one of the following repositories instead:
+This is [Kirby's](http://feedback.getkirby.com) core application folder. Get started with one of the following repositories instead:
 
 - [Starterkit](https://github.com/getkirby/starterkit)
 - [Plainkit](https://github.com/getkirby/plainkit)
-
-## Contribute
-
-### Bug reports
-Please post all bug reports in our [issue tracker](https://github.com/getkirby/kirby/issues).
-
-### Contributing guidelines
-Read about how to contribute to the development in our [contributing guide](/.github/CONTRIBUTING.md).
-
-### Feature suggestions
-If you want to suggest features or enhancements for Kirby, please use our [feedback platform](https://feedback.getkirby.com).
-
-### Translations
-We are really happy about any help with our translations. Please, do not translate directly in the JSON files though. We use a service called Transifex to handle all languages for the Panel: https://www.transifex.com/getkirby/panel/ Create an account there and send us a request to join our translator group. Please, also send us an email at <support@getkirby.com>. Unfortunately, we don't get notified properly about new translator requests and often miss them.
 
 ## License
 
 Kirby is not free software. In order to run Kirby on a public server you must purchase a valid license.
 - https://getkirby.com/buy
 - https://getkirby.com/license
+
+## Contribute
+
+### Found a bug?
+Please post all bug reports in our [issue tracker](https://github.com/getkirby/kirby/issues).
+
+### Suggest a feature
+If you have ideas for a feature or enhancement for Kirby, please use our [feedback platform](https://feedback.getkirby.com).
+
+### Translations, bug fixes, code contributions ...
+Read about how to contribute to the development in our [contributing guide](/.github/CONTRIBUTING.md).
+
+

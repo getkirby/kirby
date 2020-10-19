@@ -4,12 +4,21 @@
     <k-box :theme="theme">
       <k-text v-html="text" />
     </k-box>
+    <footer v-if="help" class="k-field-footer">
+      <k-text
+        v-if="help"
+        theme="help"
+        class="k-field-help"
+        v-html="help"
+      />
+    </footer>
   </div>
 </template>
 
 <script>
 export default {
   props: {
+    help: String,
     label: String,
     text: String,
     theme: {

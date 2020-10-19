@@ -15,8 +15,8 @@
       type,
       value
     }"
-    class="k-text-input"
     :dir="direction"
+    class="k-text-input"
     v-on="listeners"
   >
 </template>
@@ -59,11 +59,6 @@ export default {
     },
     value: String
   },
-  computed: {
-    direction() {
-      return direction(this);
-    }
-  },
   data() {
     return {
       listeners: {
@@ -71,6 +66,11 @@ export default {
         input: event => this.onInput(event.target.value)
       }
     };
+  },
+  computed: {
+    direction() {
+      return direction(this);
+    }
   },
   watch: {
     value() {

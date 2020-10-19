@@ -36,8 +36,8 @@
         >
         <k-button
           :tooltip="$t('close')"
-          class="k-search-close"
           :icon="isLoading ? 'loader' : 'cancel'"
+          class="k-search-close"
           @click="close"
         />
       </div>

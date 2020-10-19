@@ -5,6 +5,19 @@ use Kirby\Toolkit\I18n;
 return [
     'props' => [
         /**
+         * Unset inherited props
+         */
+        'after'       => null,
+        'autofocus'   => null,
+        'before'      => null,
+        'default'     => null,
+        'disabled'    => null,
+        'icon'        => null,
+        'placeholder' => null,
+        'required'    => null,
+        'translate'   => null,
+
+        /**
          * Text to be displayed
          */
         'text' => function ($value = null) {
