@@ -2,10 +2,11 @@
   <k-dialog
     v-if="notification"
     ref="dialog"
+    :cancel-button="false"
     :visible="true"
     class="k-error-dialog"
     @close="exit"
-    @open="enter"
+    @submit="$refs.dialog.close()"
   >
     <k-text>{{ notification.message }}</k-text>
     <dl v-if="notification.details && Object.keys(notification.details).length" class="k-error-details">
@@ -25,12 +26,6 @@
         </dd>
       </template>
     </dl>
-
-    <k-button-group slot="footer">
-      <k-button icon="check" @click="close">
-        {{ $t("confirm") }}
-      </k-button>
-    </k-button-group>
 
   </k-dialog>
 </template>
@@ -52,11 +47,6 @@ export default {
     }
   },
   methods: {
-    enter() {
-      this.$nextTick(() => {
-        this.$el.querySelector(".k-dialog-footer .k-button").focus();
-      });
-    },
     exit() {
       this.$store.dispatch("notification/close");
     }

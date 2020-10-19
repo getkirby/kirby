@@ -32,8 +32,8 @@
 
     <!-- Search dialog -->
     <k-search
-      ref="search"
       v-if="inside"
+      ref="search"
       :type="searchType"
       :types="searchTypes"
     />
