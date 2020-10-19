@@ -98,6 +98,20 @@ export default {
     "k-writer-link-dialog": LinkDialog
   },
   props: {
+    formats: {
+      type: Object,
+      default() {
+        return {
+          blockquote: true,
+          code: true,
+          heading: [1, 2, 3],
+          ol: true,
+          ul: true,
+          hr: true
+        }
+      }
+    },
+    inline: Boolean,
     placeholder: String,
     value: String,
   },
@@ -106,30 +120,7 @@ export default {
       keepInBounds: true,
       html: this.value,
       editor: new Editor({
-        extensions: [
-          new Blockquote(),
-          new BulletList(),
-          new CodeBlock(),
-          new HardBreak(),
-          new Heading({ levels: [1, 2, 3] }),
-          new HorizontalRule,
-          new ListItem(),
-          new OrderedList(),
-          new Placeholder({
-            emptyEditorClass: 'is-editor-empty',
-            emptyNodeClass: 'is-empty',
-            emptyNodeText: this.placeholder,
-            showOnlyWhenEditable: true,
-            showOnlyCurrent: true,
-          }),
-          new Link({ openOnClick: false }),
-          new Bold(),
-          new Code(),
-          new Italic(),
-          new Strike(),
-          new Underline(),
-          new History(),
-        ],
+        extensions: this.createExtensions(),
         content: this.value,
         onUpdate: ({ getHTML }) => {
           this.html = getHTML();
@@ -149,7 +140,72 @@ export default {
     this.editor.destroy()
   },
   methods: {
+    createExtensions() {
+      // default extensions
+      let extensions = [
+        new HardBreak(),
+        new History(),
+        new Placeholder({
+          emptyEditorClass: 'is-editor-empty',
+          emptyNodeClass: 'is-empty',
+          emptyNodeText: this.placeholder,
+          showOnlyWhenEditable: true,
+          showOnlyCurrent: true,
+        }),
+      ];
+
+      // inline formats
+      extensions.push(
+        new Bold(),
+        new Code(),
+        new Italic(),
+        new Link(),
+        new Strike(),
+        new Underline(),
+      );
+
+      if (this.inline) {
+        return extensions;
+      }
+
+      // block elements
+      if (this.formats.blockquote !== false) {
+        extensions.push(new Blockquote());
+      }
+
+      if (this.formats.codeBlock !== false) {
+        extensions.push(new CodeBlock());
+      }
+
+      if (this.formats.heading !== false) {
+        extensions.push(new Heading({
+          levels: this.formats.heading }
+        ));
+      }
+
+      if (this.formats.horizontalRule !== false) {
+        extensions.push(new HorizontalRule());
+      }
+
+      if (this.formats.orderedList !== false) {
+        extensions.push(new OrderedList());
+      }
+
+      if (this.formats.bulletList !== false) {
+        extensions.push(new BulletList());
+      }
+
+      if (this.formats.bulletList !== false || this.formats.orderedList !== false) {
+        extensions.push(new ListItem());
+      }
+
+      return extensions;
+    },
     menuIsActive(menu, isActive) {
+      if (this.inline || this.formats.horizontalRule === false) {
+        return menu.isActive;
+      }
+
       return menu.isActive && !isActive.horizontal_rule();
     }
   }

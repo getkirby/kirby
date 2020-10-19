@@ -1,6 +1,7 @@
 <template>
   <k-writer
     :data-level="content.level"
+    :inline="true"
     :value="content.text"
     class="k-block-heading-editor"
     placeholder="Heading …"
