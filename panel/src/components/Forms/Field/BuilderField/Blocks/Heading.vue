@@ -1,5 +1,5 @@
 <template>
-  <k-editor
+  <k-writer
     :data-level="content.level"
     :value="content.text"
     class="k-block-heading-editor"

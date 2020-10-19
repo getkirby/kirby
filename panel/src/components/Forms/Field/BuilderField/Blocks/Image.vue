@@ -1,7 +1,7 @@
 <template>
   <figure v-if="image" class="k-block-image-figure" @click="$emit('edit')">
     <img :src="image.url" />
-    <figcaption v-if="content.caption">{{ content.caption }}</figcaption>
+    <figcaption v-if="content.caption" v-html="content.caption"></figcaption>
   </figure>
 </template>
 

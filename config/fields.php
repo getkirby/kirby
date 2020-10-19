@@ -25,5 +25,6 @@ return [
     'time'        => __DIR__ . '/fields/time.php',
     'toggle'      => __DIR__ . '/fields/toggle.php',
     'url'         => __DIR__ . '/fields/url.php',
-    'users'       => __DIR__ . '/fields/users.php'
+    'users'       => __DIR__ . '/fields/users.php',
+    'writer'      => __DIR__ . '/fields/writer.php'
 ];

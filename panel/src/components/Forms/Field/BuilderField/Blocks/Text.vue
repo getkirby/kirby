@@ -1,5 +1,5 @@
 <template>
-  <k-editor
+  <k-writer
     class="k-block-text-editor"
     placeholder="Text …"
     :value="content.text"
