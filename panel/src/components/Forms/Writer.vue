@@ -3,10 +3,10 @@
     <editor-menu-bubble
       :editor="editor"
       :keep-in-bounds="keepInBounds"
-      v-slot="{ commands, isActive, menu }"
+      v-slot="{ commands, getMarkAttrs, isActive, menu }"
     >
       <div
-        :class="{'is-active': menu.isActive}"
+        :class="{'is-active': menuIsActive(menu, isActive)}"
         :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
         class="k-writer-menu"
       >
@@ -40,37 +40,62 @@
           icon="code"
           @click="commands.code"
         />
+        <k-button
+          :class="{'is-active': isActive.link()}"
+          class="k-writer-menu-button"
+          icon="url"
+          @click="$refs.link.open(getMarkAttrs('link'))"
+        />
+        <k-writer-link-dialog
+          ref="link"
+          @submit="commands.link($event)"
+          @close="editor.focus()"
+        />
       </div>
     </editor-menu-bubble>
     <editor-content :editor="editor" class="k-writer-content" />
+
   </div>
 </template>
 
 <script>
-import { Editor, EditorContent, EditorMenuBubble } from 'tiptap';
+// tiptap basics
+import {
+  Editor,
+  EditorContent,
+  EditorMenuBubble
+} from 'tiptap';
+
+// tiptap extensions
 import {
   Blockquote,
   BulletList,
   CodeBlock,
   HardBreak,
   Heading,
-  HorizontalRule,
   ListItem,
   OrderedList,
   Placeholder,
   Bold,
   Code,
   Italic,
-  Link,
   Strike,
   Underline,
   History,
 } from 'tiptap-extensions';
 
+// custom nodes
+import Link from "./Writer/Nodes/Link.js";
+import HorizontalRule from "./Writer/Nodes/HorizontalRule.js";
+
+// dialogs
+import LinkDialog from "./Writer/Dialogs/LinkDialog.vue";
+
 export default {
   components: {
-    EditorContent,
-    EditorMenuBubble
+    "editor-content": EditorContent,
+    "editor-menu-bubble": EditorMenuBubble,
+    "k-writer-link-dialog": LinkDialog
   },
   props: {
     placeholder: String,
@@ -97,7 +122,7 @@ export default {
             showOnlyWhenEditable: true,
             showOnlyCurrent: true,
           }),
-          new Link(),
+          new Link({ openOnClick: false }),
           new Bold(),
           new Code(),
           new Italic(),
@@ -123,6 +148,11 @@ export default {
   beforeDestroy() {
     this.editor.destroy()
   },
+  methods: {
+    menuIsActive(menu, isActive) {
+      return menu.isActive && !isActive.horizontal_rule();
+    }
+  }
 }
 </script>
 
