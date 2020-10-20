@@ -10,6 +10,7 @@
 </template>
 
 <script>
+import config from "@/config/config.js";
 import DialogMixin from "@/mixins/dialog.js";
 
 export default {
@@ -24,7 +25,7 @@ export default {
   },
   computed: {
     fields() {
-      return {
+      let fields = {
         title: {
           label: this.$t("title"),
           type: "text",
@@ -38,7 +39,10 @@ export default {
           counter: false,
           icon: "url"
         },
-        template: {
+      };
+
+      if (this.templates.length > 1 || config.debug) {
+        fields.template = {
           name: "template",
           label: this.$t("template"),
           type: "select",
@@ -47,8 +51,10 @@ export default {
           icon: "code",
           empty: false,
           options: this.templates
-        }
-      };
+        };
+      }
+
+      return fields;
     },
     slugs() {
       return this.$store.state.languages.default ? this.$store.state.languages.default.rules : this.system.slugs;
@@ -75,7 +81,7 @@ export default {
       this.section = section;
 
       try {
-        const response = await this.$api.get(blueprintApi, {section: section});
+        const response = await this.$api.get(blueprintApi, { section: section });
 
         this.templates = response.map(blueprint => ({
           value: blueprint.name,
