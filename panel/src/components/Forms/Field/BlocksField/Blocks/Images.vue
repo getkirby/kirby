@@ -1,8 +1,15 @@
 <template>
   <ul class="k-block-images-preview" @click="$emit('open')">
-    <li v-for="image in content.images" :key="image.id">
-      <img :src="image.url" />
-    </li>
+    <template v-if="content.images.length === 0">
+      <li></li>
+      <li></li>
+      <li></li>
+    </template>
+    <template v-else>
+      <li v-for="image in content.images" :key="image.id">
+        <img :src="image.url" />
+      </li>
+    </template>
   </ul>
 </template>
 
@@ -11,11 +18,6 @@ export default {
   inheritAttrs: false,
   props: {
     content: Object
-  },
-  mounted() {
-    if (this.content.images.length === 0) {
-      this.$emit("edit");
-    }
   }
 };
 </script>
@@ -36,6 +38,7 @@ export default {
   padding-bottom: 100%;
   position: relative;
   border-radius: $rounded-sm;
+  background: #efefef;
 }
 .k-block-images-preview img {
   position: absolute;

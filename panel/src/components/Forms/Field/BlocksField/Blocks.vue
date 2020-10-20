@@ -14,7 +14,7 @@
         :endpoints="endpoints"
         :fieldset="fieldsets[block.type]"
         :is-full="isFull"
-        :is-hidden="block.attrs.isHidden === true"
+        :is-hidden="block.isHidden === true"
         :is-open="isOpen(block)"
         v-bind="block"
         @append="add($event, index + 1)"
@@ -157,8 +157,13 @@ export default {
       this.blocks.splice(index + 1, 0, block);
       this.save();
     },
+    focus(block) {
+      if (this.$refs["block-" + block.id]) {
+        this.$refs["block-" + block.id][0].focus();
+      }
+    },
     hide(block) {
-      block.attrs.isHidden = true;
+      this.$set(block, "isHidden", true);
       this.save();
     },
     isOpen(block) {
@@ -187,6 +192,10 @@ export default {
       if (this.opened.includes(block.id) === false) {
         this.opened.push(block.id);
         this.$emit("open", this.opened);
+
+        this.$nextTick(() => {
+          this.focus(block);
+        });
       }
     },
     remove(block) {
@@ -207,7 +216,7 @@ export default {
       this.$emit("input", this.blocks);
     },
     show(block) {
-      block.attrs.isHidden = false;
+      this.$set(block, "isHidden", false);
       this.save();
     },
     update(block, content) {

@@ -3,7 +3,7 @@
     <k-block-header
       :icon="fieldset.icon"
       :is-hidden="isHidden"
-      :is-open="isOpen"
+      :is-open="isOpen || isSticky"
       :label="previewLabel"
       :name="previewName"
       :tabs="tabs"
@@ -33,15 +33,15 @@ export default {
     fieldset: Object,
     id: String,
     isFull: Boolean,
+    isHidden: Boolean,
+    isOpen: Boolean,
+    isSticky: Boolean,
     name: String,
-    sticky: Boolean,
     type: String,
   },
   data() {
     return {
-      isHovered: false,
-      isOpen: this.sticky,
-      tab: null,
+      tab: null
     };
   },
   computed: {
@@ -80,9 +80,6 @@ export default {
     firstTab() {
       return this.tabs[0];
     },
-    isHidden() {
-      return this.attrs.hide === true;
-    },
     previewLabel() {
       if (this.fieldset.label.length === 0) {
         return false;
@@ -103,20 +100,20 @@ export default {
   },
   methods: {
     close() {
-      if (this.sticky === false) {
-        this.isOpen = false;
-      }
-
       this.$emit("close");
+    },
+    focus() {
+      if (this.$refs.form && typeof this.$refs.form.focus === "function") {
+        this.$refs.form.focus();
+      }
     },
     open(tab, focus = true) {
       this.tab = tab || this.firstTab.name;
-      this.isOpen = true;
       this.$emit("open");
 
       if (focus !== false) {
         setTimeout(() => {
-          this.$refs.form.focus();
+          this.focus();
         }, 1);
       }
     },

@@ -21,7 +21,7 @@
       <component
         ref="editor"
         :is="customComponent"
-        :sticky="wysiwyg"
+        :is-sticky="wysiwyg"
         v-bind="$props"
         v-on="$listeners"
       />
@@ -116,6 +116,11 @@ export default {
     confirmToRemove() {
       this.$refs.removeDialog.open();
     },
+    focus() {
+      if (typeof this.$refs.editor.focus === "function") {
+        this.$refs.editor.focus();
+      }
+    },
     remove() {
       this.$refs.removeDialog.close();
       this.$emit("remove", this.id);
@@ -129,12 +134,6 @@ export default {
   position: relative;
   padding: 0 4rem;
   border-radius: $rounded;
-}
-.k-blocks .k-block-container:first-child .k-block {
-  padding-top: 0;
-}
-.k-blocks .k-block-container:last-of-type .k-block {
-  padding-bottom: 0;
 }
 .k-block-container:focus {
   outline: 0;

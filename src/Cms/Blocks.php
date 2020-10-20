@@ -10,7 +10,6 @@ use Throwable;
 
 /**
  * A collection of blocks
- * from the builder, structure field or editor
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -20,11 +19,6 @@ use Throwable;
  */
 class Blocks extends Collection
 {
-    /**
-     * structure | builder | editor
-     * @var string
-     */
-    protected $type = null;
 
     /**
      * Constructor
@@ -35,7 +29,6 @@ class Blocks extends Collection
     public function __construct($objects = [], array $options = [])
     {
         $this->parent = $options['parent'] ?? App::instance()->site();
-        $this->type   = $options['type']   ?? null;
         parent::__construct($objects, $this->parent);
     }
 
@@ -76,7 +69,6 @@ class Blocks extends Collection
         $options = array_merge([
             'options' => [],
             'parent'  => App::instance()->site(),
-            'type'    => null
         ], $params);
 
         if (empty($blocks) === true || is_array($blocks) === false) {
@@ -87,7 +79,6 @@ class Blocks extends Collection
         $collection = new static([], $options);
 
         foreach ($blocks as $params) {
-            $params['field']    = $options['type'];
             $params['options']  = $options['options'];
             $params['parent']   = $options['parent'];
             $params['siblings'] = $collection;
@@ -102,10 +93,9 @@ class Blocks extends Collection
      * Parse and sanitize various block formats
      *
      * @param array|string $input
-     * @param string $type Expected field type
      * @return array
      */
-    public static function parse($input, string $type = null): array
+    public static function parse($input): array
     {
         if (is_array($input) === false) {
             try {
@@ -117,31 +107,10 @@ class Blocks extends Collection
         }
 
         if (empty($input) === true) {
-            return [
-                'type'   => $type,
-                'blocks' => []
-            ];
+            return [];
         }
 
-        // the format is already up-to-date
-        if (array_key_exists('blocks', $input) === true) {
-            $input['type'] = $input['type'] ?? $type;
-            return $input;
-        }
-
-        // check for builder blocks
-        if (array_key_exists('_key', $input[0]) === true) {
-            $type = $type ?? 'builder';
-        // import blocks as structure
-        } else {
-            $type = $type ?? 'structure';
-        }
-
-
-        return [
-            'type'   => $type,
-            'blocks' => $input
-        ];
+        return $input;
     }
 
     /**
@@ -168,15 +137,5 @@ class Blocks extends Collection
         }
 
         return implode($html);
-    }
-
-    /**
-     * Returns the block type
-     *
-     * @return string|null
-     */
-    public function type(): ?string
-    {
-        return $this->type;
     }
 }

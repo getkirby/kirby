@@ -3,8 +3,6 @@
     ref="editor"
     :spellcheck="spellcheck"
     :class="{ 'k-writer': true, 'k-writer-text': !code, 'k-writer-code': code }"
-    @click="$emit('click', $event)"
-    @dblclick="$emit('dblclick', $event)"
     @focusin="onFocus"
     @focusout="onBlur"
   >

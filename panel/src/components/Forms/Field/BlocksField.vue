@@ -1,7 +1,7 @@
 <template>
   <k-field
     v-bind="$props"
-    class="k-builder-field"
+    class="k-blocks-field"
   >
     <k-dropdown slot="options">
       <k-button icon="dots" @click="$refs.options.toggle()" />
@@ -19,7 +19,7 @@
       </k-dropdown-content>
     </k-dropdown>
 
-    <k-builder-blocks
+    <k-blocks
       ref="blocks"
       :compact="false"
       :empty="empty"
@@ -40,14 +40,14 @@
 import Vue from "vue";
 
 import Field from "../Field.vue";
-import Blocks from "./BuilderField/Blocks.vue";
+import Blocks from "./BlocksField/Blocks.vue";
 
-Vue.component("k-builder-blocks", Blocks);
+Vue.component("k-blocks", Blocks);
 
 export default {
   inheritAttrs: false,
   components: {
-    "k-builder-blocks": Blocks,
+    "k-blocks": Blocks,
   },
   props: {
     ...Field.props,
@@ -85,7 +85,7 @@ export default {
 </script>
 
 <style lang="scss">
-.k-builder-field {
+.k-blocks-field {
   position: relative;
 }
 </style>

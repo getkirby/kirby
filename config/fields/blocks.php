@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\Block;
-use Kirby\Cms\Builder;
+use Kirby\Cms\BlocksField;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -76,14 +76,14 @@ return [
         },
     ],
     'computed' => [
-        'builder' => function () {
-            return new Builder($this->model, $this->props);
+        'blocksField' => function () {
+            return new BlocksField($this->model, $this->props);
         },
         'fieldsets' => function () {
-            return $this->builder->fieldsets();
+            return $this->blocksField->fieldsets();
         },
         'value' => function () {
-            return $this->builder->value();
+            return $this->blocksField->value();
         },
     ],
     'api' => function () {
@@ -98,10 +98,10 @@ return [
                 'pattern' => 'fieldsets/(:any)',
                 'method'  => 'GET',
                 'action'  => function ($type) {
-                    $builder  = $this->field()->builder();
-                    $fields   = $builder->fields($type);
-                    $defaults = $builder->form($fields, [])->data(true);
-                    $content  = $builder->form($fields, $defaults)->values();
+                    $blocksField = $this->field()->blocksField();
+                    $fields      = $blocksField->fields($type);
+                    $defaults    = $blocksField->form($fields, [])->data(true);
+                    $content     = $blocksField->form($fields, $defaults)->values();
 
                     return Block::factory([
                         'content' => $content,
@@ -113,9 +113,9 @@ return [
                 'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
                 'method'  => 'ALL',
                 'action'  => function (string $fieldsetType, string $fieldName, string $path = null) {
-                    $builder = $this->field()->builder();
-                    $fields  = $builder->fields($fieldsetType);
-                    $field   = $builder->form($fields)->field($fieldName);
+                    $blocksField = $this->field()->blocksField();
+                    $fields      = $blocksField->fields($fieldsetType);
+                    $field       = $blocksField->form($fields)->field($fieldName);
 
                     $fieldApi = $this->clone([
                         'routes' => $field->api(),
@@ -128,11 +128,11 @@ return [
         ];
     },
     'save' => function ($blocks) {
-        return $this->builder->toJson($blocks, $this->pretty);
+        return $this->blocksField->toJson($blocks, $this->pretty);
     },
     'validations' => [
         'blocks' => function ($value) {
-            return $this->builder->validate($value);
+            return $this->blocksField->validate($value);
         }
     ]
 ];

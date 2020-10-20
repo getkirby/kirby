@@ -98,7 +98,7 @@ import ToggleInput from "@/components/Forms/Input/ToggleInput.vue";
 import UrlInput from "@/components/Forms/Input/UrlInput.vue";
 
 /** Form Fields */
-import BuilderField from "@/components/Forms/Field/BuilderField.vue";
+import BlocksField from "@/components/Forms/Field/BlocksField.vue";
 import CheckboxesField from "@/components/Forms/Field/CheckboxesField.vue";
 import DateField from "@/components/Forms/Field/DateField.vue";
 import EmailField from "@/components/Forms/Field/EmailField.vue";
@@ -169,7 +169,7 @@ Vue.component("k-time-input", TimeInput);
 Vue.component("k-toggle-input", ToggleInput);
 Vue.component("k-url-input", UrlInput);
 
-Vue.component("k-builder-field", BuilderField);
+Vue.component("k-blocks-field", BlocksField);
 Vue.component("k-checkboxes-field", CheckboxesField);
 Vue.component("k-date-field", DateField);
 Vue.component("k-email-field", EmailField);

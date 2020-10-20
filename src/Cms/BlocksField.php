@@ -9,8 +9,8 @@ use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 /**
- * The Builder class is handling all the
- * complicated tasks for the builder field
+ * The BlocksField class is handling all the
+ * complicated tasks for the block field
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -18,7 +18,7 @@ use Kirby\Toolkit\Str;
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-class Builder
+class BlocksField
 {
     /**
      * @var null|array
@@ -56,8 +56,7 @@ class Builder
      */
     public function blocks($blocks)
     {
-        $blocks = Blocks::parse($blocks, 'builder');
-        return Blocks::factory($blocks['blocks'], ['type' => 'builder']);
+        return Blocks::factory(Blocks::parse($blocks));
     }
 
     /**
@@ -97,7 +96,7 @@ class Builder
     }
 
     /**
-     * Expand and return all fieldsets for the builder
+     * Expand and return all fieldsets for the blocks
      *
      * @return array
      */
@@ -234,16 +233,11 @@ class Builder
             $blocks[$index]['content'] = $this->form($blockFields, $block['content'])->content();
         }
 
-        $value = [
-            'type'   => 'builder',
-            'blocks' => $blocks
-        ];
-
         if ($pretty === true) {
-            return json_encode($value, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+            return json_encode($blocks, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         }
 
-        return json_encode($value);
+        return json_encode($blocks);
     }
 
     /**
@@ -259,7 +253,7 @@ class Builder
 
         if ($min && $blocks->count() < $min) {
             throw new InvalidArgumentException([
-                'key'  => 'builder.blocks.min.' . ($min === 1 ? 'singular' : 'plural'),
+                'key'  => 'blocks.min.' . ($min === 1 ? 'singular' : 'plural'),
                 'data' => [
                     'min' => $min
                 ]
@@ -268,7 +262,7 @@ class Builder
 
         if ($max && $blocks->count() > $max) {
             throw new InvalidArgumentException([
-                'key'  => 'builder.blocks.max.' . ($max === 1 ? 'singular' : 'plural'),
+                'key'  => 'blocks.max.' . ($max === 1 ? 'singular' : 'plural'),
                 'data' => [
                     'max' => $max
                 ]
@@ -289,7 +283,7 @@ class Builder
                 // rough first validation
                 if (empty($errors) === false) {
                     throw new InvalidArgumentException([
-                        'key' => 'builder.validation',
+                        'key' => 'blocks.validation',
                         'data' => [
                             'index' => $block->indexOf() + 1,
                         ]

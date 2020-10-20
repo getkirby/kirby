@@ -9,7 +9,12 @@
         {{ column.label }}
       </th>
     </tr>
-    <tr v-for="(row, rowIndex) in content.rows" :key="rowIndex">
+    <tr v-if="content.rows.length === 0">
+      <td :colspan="Object.keys(columns).length">
+        <small class="k-block-table-preview-empty">{{ $t('field.structure.empty') }}</small>
+      </td>
+    </tr>
+    <tr v-else v-for="(row, rowIndex) in content.rows" :key="rowIndex">
       <td
         v-for="(column, columnName) in columns"
         :key="rowIndex + '-' + columnName"
@@ -89,5 +94,9 @@ export default {
 }
 .k-block-table-preview [data-align="center"] {
   text-align: center;
+}
+.k-block-table-preview-empty {
+  color: $color-gray-600;
+  font-size: $text-sm;
 }
 </style>

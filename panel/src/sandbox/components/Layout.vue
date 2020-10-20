@@ -99,7 +99,7 @@
 
 <script>
 
-import Blocks from "@/components/Forms/Field/BuilderField/Blocks.vue";
+import Blocks from "@/components/Forms/Field/BlocksField/Blocks.vue";
 
 export default {
   components: {

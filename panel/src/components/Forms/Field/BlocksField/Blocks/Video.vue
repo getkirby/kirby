@@ -1,7 +1,7 @@
 <template>
-  <figure v-if="embed" class="k-block-video-figure" @click="$emit('open')">
+  <figure class="k-block-video-figure" @click="$emit('open')">
     <span class="k-block-video-frame">
-      <iframe :src="embed"></iframe>
+      <iframe v-if="embed" :src="embed"></iframe>
     </span>
     <figcaption v-if="content.caption" v-html="content.caption" />
   </figure>
@@ -59,6 +59,7 @@ export default {
   display: block;
   position: relative;
   padding-bottom: 56.25%;
+  background: $color-background;
 }
 .k-block-video-frame iframe {
   position: absolute;

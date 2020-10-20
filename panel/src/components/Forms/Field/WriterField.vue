@@ -5,6 +5,7 @@
     class="k-writer-field"
   >
     <k-writer
+      ref="input"
       :breaks="true"
       :value="value"
       class="k-writer-field-input"

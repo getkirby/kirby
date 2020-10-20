@@ -7,7 +7,6 @@ use Throwable;
 
 /**
  * Represents a single block
- * from the builder, structure field or editor,
  * which can be inspected further or
  * converted to HTML
  *
@@ -24,22 +23,17 @@ class Block
     /**
      * @var \Kirby\Cms\Content
      */
-    protected $attrs;
-
-    /**
-     * @var \Kirby\Cms\Content
-     */
     protected $content;
 
     /**
      * @var string
      */
-    protected $field;
+    protected $id;
 
     /**
-     * @var string
+     * @var boolean
      */
-    protected $id;
+    protected $isHidden;
 
     /**
      * @var array
@@ -70,11 +64,7 @@ class Block
      */
     public function __call(string $method, array $args = [])
     {
-        if ($this->content()->has($method)) {
-            return $this->content()->get($method);
-        }
-
-        return $this->attrs()->get($method);
+        return $this->content()->get($method);
     }
 
     /**
@@ -96,16 +86,14 @@ class Block
             throw new InvalidArgumentException('The block type is missing');
         }
 
-        $this->attrs    = $params['attrs']    ?? [];
         $this->content  = $params['content']  ?? [];
-        $this->field    = $params['field']    ?? 'blocks';
         $this->id       = $params['id']       ?? uuid();
+        $this->isHidden = $params['isHidden'] ?? false;
         $this->parent   = $params['parent']   ?? site();
         $this->siblings = $params['siblings'] ?? new Blocks();
         $this->type     = $params['type']     ?? null;
 
-        // create the content & attrs object
-        $this->attrs   = new Content($this->attrs, $this->parent);
+        // create the content object
         $this->content = new Content($this->content, $this->parent);
     }
 
@@ -140,28 +128,6 @@ class Block
     }
 
     /**
-     * Returns a specific attribute
-     *
-     * @param string $name
-     * @param mixed $default
-     * @return \Kirby\Cms\Field
-     */
-    public function attr(string $name, $default = null)
-    {
-        return $this->attrs()->get($name)->or($default);
-    }
-
-    /**
-     * Returns the attrs object
-     *
-     * @return \Kirby\Cms\Content
-     */
-    public function attrs()
-    {
-        return $this->attrs;
-    }
-
-    /**
      * Returns the content object
      *
      * @return \Kirby\Cms\Content
@@ -179,7 +145,6 @@ class Block
     public function controller(): array
     {
         return [
-            'attrs'   => $this->attrs(),
             'block'   => $this,
             'content' => $this->content(),
             // deprecated block data
@@ -199,17 +164,6 @@ class Block
     public static function factory(array $params)
     {
         return new static($params);
-    }
-
-    /**
-     * Returns the type of field this
-     * block belongs to (structure | builder | editor)
-     *
-     * @return string
-     */
-    public function field(): string
-    {
-        return $this->field;
     }
 
     /**
@@ -244,13 +198,14 @@ class Block
     }
 
     /**
-     * Checks the hide attribute
+     * Checks if the block is hidden
+     * from being rendered in the frontend
      *
      * @return bool
      */
     public function isHidden(): bool
     {
-        return $this->attr('hide')->isTrue();
+        return $this->isHidden;
     }
 
     /**
@@ -295,19 +250,6 @@ class Block
     }
 
     /**
-     * Returns the path to the rendered snippet
-     *
-     * @return string
-     */
-    public function snippet(): string
-    {
-        return implode('/', [
-            $this->field(),
-            $this->type()
-        ]);
-    }
-
-    /**
      * Returns the block type
      *
      * @return string
@@ -326,10 +268,10 @@ class Block
     public function toArray(): array
     {
         return [
-            'attrs'   => $this->attrs()->toArray(),
-            'content' => $this->content()->toArray(),
-            'id'      => $this->id(),
-            'type'    => $this->type(),
+            'content'  => $this->content()->toArray(),
+            'id'       => $this->id(),
+            'isHidden' => $this->isHidden(),
+            'type'     => $this->type(),
         ];
     }
 
@@ -354,7 +296,7 @@ class Block
     public function toHtml(): string
     {
         try {
-            return (string)snippet([$this->snippet(), 'blocks/' . $this->type()], $this->controller(), true);
+            return (string)snippet('blocks/' . $this->type(), $this->controller(), true);
         } catch (Throwable $e) {
             return '<p>Block error: "' . $e->getMessage() . '" in block type: "' . $this->type() . '"</p>';
         }

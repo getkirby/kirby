@@ -1,10 +1,10 @@
 <template>
   <k-writer
-    class="k-block-text-editor"
-    placeholder="Text …"
+    ref="editor"
     :breaks="true"
     :value="content.text"
-    @dblclick="$emit('open')"
+    class="k-block-text-editor"
+    placeholder="Text …"
     @enter="$emit('append', 'text')"
     @input="$emit('update', { text: $event })"
   />
@@ -15,6 +15,11 @@ export default {
   inheritAttrs: false,
   props: {
     content: [Array, Object]
+  },
+  methods: {
+    focus() {
+      this.$refs.editor.focus();
+    }
   }
 };
 </script>
