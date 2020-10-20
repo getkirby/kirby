@@ -1,8 +1,10 @@
 <template>
   <div>
   <div class="k-block-code-editor">
-    <k-editor
+    <k-writer
       placeholder="Your code …"
+      :breaks="true"
+      :code="true"
       :value="content.code"
       @input="update({ code: $event })"
     />

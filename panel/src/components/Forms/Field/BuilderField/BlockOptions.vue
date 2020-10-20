@@ -7,21 +7,16 @@
       @click="$refs.options.toggle()"
     />
     <k-dropdown-content ref="options" align="left">
-      <k-dropdown-item :disabled="isFull" icon="angle-up" @click="$emit('prepend')">
+      <k-dropdown-item :disabled="isFull" icon="angle-up" @click="$emit('chooseToPrepend')">
         {{ $t("insert.before") }}
       </k-dropdown-item>
-      <k-dropdown-item :disabled="isFull" icon="angle-down" @click="$emit('append')">
+      <k-dropdown-item :disabled="isFull" icon="angle-down" @click="$emit('chooseToAppend')">
         {{ $t("insert.after") }}
       </k-dropdown-item>
-      <template v-if="wysiwyg">
-        <hr>
-        <k-dropdown-item v-if="isEditing" icon="preview" @click="$emit('close')">
-          {{ $t("preview") }}
-        </k-dropdown-item>
-        <k-dropdown-item v-else icon="settings" @click="$emit('edit')">
-          {{ $t("settings") }}
-        </k-dropdown-item>
-      </template>
+      <hr>
+      <k-dropdown-item :icon="isOpen ? 'collapse' : 'expand'" @click="$emit(isOpen ? 'close' : 'open')">
+        {{ $t(isOpen ? "collapse" : "expand") }}
+      </k-dropdown-item>
       <hr>
       <k-dropdown-item :icon="isHidden ? 'preview' : 'hidden'" @click="$emit(isHidden ? 'show' : 'hide')">
         {{ isHidden === true ? $t('show') : $t('hide') }}
@@ -40,9 +35,9 @@
 <script>
 export default {
   props: {
-    isEditing: Boolean,
     isFull: Boolean,
     isHidden: Boolean,
+    isOpen: Boolean,
     wysiwyg: Boolean,
   }
 };

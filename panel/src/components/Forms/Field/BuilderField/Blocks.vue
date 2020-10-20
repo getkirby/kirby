@@ -5,32 +5,36 @@
       :data-compact="compact"
       :data-empty="blocks.length === 0"
       class="k-blocks"
-      @sort="onInput"
+      @sort="save"
     >
       <k-block
         v-for="(block, index) in blocks"
         :ref="'block-' + block.id"
         :key="block.id"
-        :compact="compact"
         :endpoints="endpoints"
         :fieldset="fieldsets[block.type]"
         :is-full="isFull"
-        @append="select(index + 1)"
-        @close="onClose(block)"
+        :is-hidden="block.attrs.isHidden === true"
+        :is-open="isOpen(block)"
+        v-bind="block"
+        @append="add($event, index + 1)"
+        @choose="choose($event)"
+        @chooseToAppend="choose(index + 1)"
+        @chooseToPrepend="choose(index)"
+        @close="close(block)"
         @duplicate="duplicate(block, index)"
         @hide="hide(block)"
-        @open="onOpen(block)"
-        @prepend="select(index)"
+        @open="open(block)"
+        @prepend="add($event, index)"
         @remove="remove(block)"
         @show="show(block)"
-        @update="updateContent(block, $event)"
-        v-bind="block"
+        @update="update(block, $event)"
       />
       <template #footer>
         <k-empty
           icon="box"
           class="k-blocks-empty"
-          @click="select(blocks.length)"
+          @click="choose(blocks.length)"
         >
           {{ empty || $t("field.builder.empty") }}
         </k-empty>
@@ -39,7 +43,6 @@
 
     <k-block-selector
       ref="selector"
-      :endpoint="endpoints.field + '/fieldsets'"
       :fieldsets="fieldsets"
       @add="add"
     />
@@ -54,6 +57,7 @@
 <script>
 import Block from "./Block.vue";
 import BlockSelector from "./BlockSelector.vue";
+import debounce from "@/helpers/debounce.js";
 
 export default {
   inheritAttrs: false,
@@ -78,10 +82,12 @@ export default {
       }
     }
   },
+  created() {
+    this.save = debounce(this.save, 250);
+  },
   data() {
     return {
       blocks: this.value,
-      nextIndex: this.value.length,
       opened: [],
     };
   },
@@ -118,20 +124,26 @@ export default {
     }
   },
   methods: {
-    async add(block) {
-      this.blocks.splice(this.nextIndex, 0, block);
-      this.onInput();
+    async add(type, index) {
+      const block = await this.$api.get(this.endpoints.field + "/fieldsets/" + type);
+      this.blocks.splice(index, 0, block);
+      this.save();
       this.$nextTick(() => {
         this.open(block);
       });
     },
-    close(block) {
-      this.$refs["block-" + block.id][0].close();
+    choose(index) {
+      if (Object.keys(this.fieldsets).length === 1) {
+        const type = Object.values(this.fieldsets)[0].type;
+        this.add(type, index);
+      } else {
+        this.$refs.selector.open(index);
+      }
     },
-    closeAll() {
-      this.blocks.forEach(block => {
-        this.close(block);
-      });
+    close(block) {
+      const index = this.opened.indexOf(block.id);
+      this.$delete(this.opened, index);
+      this.$emit("close", this.opened);
     },
     confirmToRemoveAll() {
       this.$refs.removeAll.open();
@@ -143,15 +155,14 @@ export default {
         id: response["uuid"]
       };
       this.blocks.splice(index + 1, 0, block);
-      this.onInput();
+      this.save();
     },
     hide(block) {
-      if (Array.isArray(block.attrs) === true) {
-        this.$set(block, "attrs", {});
-      }
-
-      this.$set(block.attrs, "hide", true);
-      this.onInput();
+      block.attrs.isHidden = true;
+      this.save();
+    },
+    isOpen(block) {
+      return this.opened.includes(block.id);
     },
     move(event) {
       // moving block between fields
@@ -172,71 +183,36 @@ export default {
 
       return true;
     },
-    onClose(block) {
-      const index = this.opened.indexOf(block.id);
-      this.$delete(this.opened, index);
-      this.$emit("close", this.opened);
-    },
-    onInput() {
-      this.$emit("input", this.blocks);
-    },
-    onOpen(block) {
+    open(block, focus = true) {
       if (this.opened.includes(block.id) === false) {
         this.opened.push(block.id);
         this.$emit("open", this.opened);
       }
-    },
-    open(block, focus = true) {
-      this.$refs["block-" + block.id][0].open(null, focus);
-    },
-    openAll() {
-      this.blocks.forEach(block => {
-        this.open(block, false);
-      });
     },
     remove(block) {
       const index = this.blocks.findIndex(element => element.id === block.id);
 
       if (index !== -1) {
         this.$delete(this.blocks, index);
-        this.onClose(block);
-        this.onInput();
+        this.close(block);
+        this.save();
       }
     },
     removeAll() {
       this.blocks = [];
-      this.nextIndex = null;
-      this.onInput();
+      this.save();
       this.$refs.removeAll.close();
     },
-    select(index) {
-      this.nextIndex = index;
-
-      if (Object.keys(this.fieldsets).length === 1) {
-        const type = Object.values(this.fieldsets)[0].type;
-        this.add(type);
-      } else {
-        this.$refs.selector.open();
-      }
+    save() {
+      this.$emit("input", this.blocks);
     },
     show(block) {
-      if (Array.isArray(block.attrs) === true) {
-        this.$set(block, "attrs", {});
-      }
-
-      this.$set(block.attrs, "hide", false);
-      this.onInput();
+      block.attrs.isHidden = false;
+      this.save();
     },
-    toggleAll() {
-      if (this.opened.length === 0) {
-        this.openAll();
-      } else {
-        this.closeAll();
-      }
-    },
-    updateContent(block, content) {
-      this.$set(block, "content", content);
-      this.onInput();
+    update(block, content) {
+      block.content = content;
+      this.save();
     }
   }
 };
@@ -247,7 +223,7 @@ export default {
   background: $color-white;
   box-shadow: $shadow;
   border-radius: $rounded;
-  padding: 1.5rem 0;
+  padding: 3rem 0;
 }
 .k-blocks[data-compact] {
   padding: .75rem;

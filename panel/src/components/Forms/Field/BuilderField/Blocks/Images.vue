@@ -1,5 +1,5 @@
 <template>
-  <ul class="k-block-images-preview" @click="$emit('edit')">
+  <ul class="k-block-images-preview" @click="$emit('open')">
     <li v-for="image in content.images" :key="image.id">
       <img :src="image.url" />
     </li>

@@ -2,7 +2,10 @@
   <k-writer
     class="k-block-text-editor"
     placeholder="Text …"
+    :breaks="true"
     :value="content.text"
+    @dblclick="$emit('open')"
+    @enter="$emit('append', 'text')"
     @input="$emit('update', { text: $event })"
   />
 </template>

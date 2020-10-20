@@ -1,9 +1,9 @@
 <template>
   <div
     :class="'k-block-container-' + type"
-    :data-compact="compact"
     :data-disabled="fieldset.disabled"
     :data-hidden="isHidden"
+    :data-open="isOpen"
     :data-translate="fieldset.translate"
     class="k-block-container"
     tabindex="0"
@@ -11,19 +11,19 @@
     @mouseleave="isHovered = false"
   >
     <k-block-options
-      v-if="!compact && isHovered"
-      :is-editing="isEditing"
+      v-if="isHovered"
       :is-full="isFull"
       :is-hidden="isHidden"
-      :wysiwyg="wysiwyg"
-      v-on="listeners"
+      :is-open="isOpen"
+      v-on="$listeners"
     />
-    <div :class="className" :data-compact="compact" class="k-block">
+    <div :class="className" class="k-block">
       <component
         ref="editor"
         :is="customComponent"
+        :sticky="wysiwyg"
         v-bind="$props"
-        v-on="listeners"
+        v-on="$listeners"
       />
     </div>
     <k-remove-dialog ref="removeDialog" @submit="remove">
@@ -34,12 +34,9 @@
 
 <script>
 import Vue from "vue";
-import Editor from "./Editor.vue";
 import BlockForm from "./BlockForm.vue";
 import BlockHeader from "./BlockHeader.vue";
 import BlockOptions from "./BlockOptions.vue";
-
-Vue.component("k-editor", Editor);
 
 Vue.component("k-block-form", BlockForm);
 Vue.component("k-block-header", BlockHeader);
@@ -71,19 +68,19 @@ export default {
   inheritAttrs: false,
   props: {
     attrs: [Array, Object],
-    compact: Boolean,
     content: [Array, Object],
     endpoints: Object,
     fieldset: Object,
     id: String,
     isFull: Boolean,
+    isHidden: Boolean,
+    isOpen: Boolean,
     name: String,
     tabs: Object,
     type: String,
   },
   data() {
     return {
-      isEditing: false,
       isHovered: false
     };
   },
@@ -98,7 +95,7 @@ export default {
       return className;
     },
     customComponent() {
-      if (this.isEditing === true) {
+      if (this.isOpen === true) {
         return "k-block-generic";
       }
 
@@ -108,17 +105,6 @@ export default {
 
       return "k-block-generic";
     },
-    isHidden() {
-      return this.attrs.hide === true;
-    },
-    listeners() {
-      return {
-        ...this.$listeners,
-        close: this.close,
-        edit: this.edit,
-        remove: this.confirmToRemove
-      }
-    },
     wysiwyg() {
       return this.$helper.isComponent(this.wysiwygComponent);
     },
@@ -127,20 +113,8 @@ export default {
     },
   },
   methods: {
-    close() {
-      this.isEditing = false;
-    },
     confirmToRemove() {
       this.$refs.removeDialog.open();
-    },
-    edit() {
-      this.isEditing = true;
-      this.$nextTick(() => {
-        this.$refs.editor.open();
-      });
-    },
-    open() {
-
     },
     remove() {
       this.$refs.removeDialog.close();
@@ -155,13 +129,6 @@ export default {
   position: relative;
   padding: 0 4rem;
   border-radius: $rounded;
-}
-.k-block-container[data-compact] {
-  padding: 0;
-  cursor: pointer;
-}
-.k-block-container[data-compact] .k-block {
-  pointer-events: none;
 }
 .k-blocks .k-block-container:first-child .k-block {
   padding-top: 0;

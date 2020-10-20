@@ -1,5 +1,5 @@
 <template>
-  <div @click="$emit('edit')" class="k-block-cta-button">{{ content.text }}</div>
+  <div @click="$emit('open')" class="k-block-cta-button">{{ content.text }}</div>
 </template>
 
 <script>
@@ -7,11 +7,6 @@ export default {
   inheritAttrs: false,
   props: {
     content: Object
-  },
-  mounted() {
-    if (this.content.text.length === 0) {
-      this.$emit("edit");
-    }
   }
 };
 </script>

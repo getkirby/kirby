@@ -1,9 +1,9 @@
 <template>
-  <figure v-if="embed" class="k-block-video-figure" @click="$emit('edit')">
+  <figure v-if="embed" class="k-block-video-figure" @click="$emit('open')">
     <span class="k-block-video-frame">
       <iframe :src="embed"></iframe>
     </span>
-    <figcaption v-if="content.caption">{{ content.caption }}</figcaption>
+    <figcaption v-if="content.caption" v-html="content.caption" />
   </figure>
 </template>
 
@@ -74,7 +74,7 @@ export default {
 }
 .k-block-video-figure figcaption {
   padding-top: .5rem;
-  color: $color-gray-500;
+  color: $color-gray-600;
   font-size: $text-sm;
 }
 </style>

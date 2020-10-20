@@ -1,5 +1,5 @@
 <template>
-  <figure v-if="image" class="k-block-image-figure" @click="$emit('edit')">
+  <figure v-if="image" class="k-block-image-figure" @click="$emit('open')">
     <img :src="image.url" />
     <figcaption v-if="content.caption" v-html="content.caption"></figcaption>
   </figure>
@@ -40,7 +40,7 @@ export default {
 }
 .k-block-image-figure figcaption {
   padding-top: .5rem;
-  color: $color-gray-500;
+  color: $color-gray-600;
   font-size: $text-sm;
 }
 </style>

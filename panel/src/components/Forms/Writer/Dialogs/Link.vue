@@ -1,12 +1,11 @@
 <template>
   <k-form-dialog
     ref="dialog"
-    :fields="fields"
-    :submit-button="$t('confirm')"
     v-model="link"
+    :fields="fields"
     size="medium"
-    @submit="submit"
     @close="$emit('close')"
+    @submit="submit"
   />
 </template>
 
@@ -44,9 +43,6 @@ export default {
   },
   methods: {
     open(link) {
-
-      console.log(link);
-
       this.link = {
         title: null,
         target: false,

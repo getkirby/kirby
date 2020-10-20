@@ -183,11 +183,11 @@ export default {
 
       value = clone(value);
 
-      // compare current field value with its original value
+      // // compare current field value with its original value
       const current  = JSON.stringify(value);
       const original = JSON.stringify(state.models[id].originals[field]);
 
-      if (original === current) {
+      if (original == current) {
         // if the same, there are no unsaved changes
         Vue.delete(state.models[id].changes, field);
       } else {

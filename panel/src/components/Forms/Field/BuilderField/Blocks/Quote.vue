@@ -1,12 +1,12 @@
 <template>
   <div class="k-block-quote-editor">
-    <k-editor
+    <k-writer
       :value="content.text"
       class="k-block-quote-text"
       placeholder="Quote …"
       @input="update({ text: $event })"
     />
-    <k-editor
+    <k-writer
       :value="content.citation"
       class="k-block-quote-citation"
       placeholder="by …"
@@ -48,6 +48,6 @@ export default {
 .k-block-quote-citation {
   font-style: italic;
   font-size: $text-sm;
-  color: $color-gray-500;
+  color: $color-gray-600;
 }
 </style>

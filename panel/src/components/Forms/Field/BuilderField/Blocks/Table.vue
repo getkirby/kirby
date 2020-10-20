@@ -1,5 +1,5 @@
 <template>
-  <table class="k-block-table-preview" @click="$emit('edit')">
+  <table class="k-block-table-preview" @click="$emit('open')">
     <tr>
       <th
         v-for="(column, columnName) in columns"

@@ -27,17 +27,18 @@ export default {
     endpoint: String,
     fieldsets: Object,
   },
+  data() {
+    return {
+      index: 0
+    }
+  },
   methods: {
-    async add(type) {
-      try {
-        const block = await this.$api.get(this.endpoint + "/" + type);
-        this.$emit("add", block);
-        this.$refs.dialog.close();
-      } catch (e) {
-        this.$refs.dialog.error(e.message);
-      }
+    add(type) {
+      this.$emit("add", type, this.index);
+      this.$refs.dialog.close();
     },
-    open() {
+    open(index) {
+      this.index = index;
       this.$refs.dialog.open();
     }
   }

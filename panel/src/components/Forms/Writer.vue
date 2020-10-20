@@ -1,374 +1,572 @@
 <template>
-  <div class="k-writer">
-    <editor-menu-bubble
-      :editor="editor"
-      :keep-in-bounds="keepInBounds"
-      v-slot="{ commands, getMarkAttrs, isActive, menu }"
-    >
-      <div
-        :class="{'is-active': menuIsActive(menu, isActive)}"
-        :style="`left: ${menu.left}px; bottom: ${menu.bottom}px;`"
-        class="k-writer-menu"
-      >
-        <k-button
-          :class="{'is-active': isActive.bold()}"
-          class="k-writer-menu-button"
-          icon="bold"
-          @click="commands.bold"
-        />
-        <k-button
-          :class="{'is-active': isActive.italic()}"
-          class="k-writer-menu-button"
-          icon="italic"
-          @click="commands.italic"
-        />
-        <k-button
-          :class="{'is-active': isActive.strike()}"
-          class="k-writer-menu-button"
-          icon="strikethrough"
-          @click="commands.strike"
-        />
-        <k-button
-          :class="{'is-active': isActive.underline()}"
-          class="k-writer-menu-button"
-          icon="underline"
-          @click="commands.underline"
-        />
-        <k-button
-          :class="{'is-active': isActive.code()}"
-          class="k-writer-menu-button"
-          icon="code"
-          @click="commands.code"
-        />
-        <k-button
-          :class="{'is-active': isActive.link()}"
-          class="k-writer-menu-button"
-          icon="url"
-          @click="$refs.link.open(getMarkAttrs('link'))"
-        />
-        <k-writer-link-dialog
-          ref="link"
-          @submit="commands.link($event)"
-          @close="editor.focus()"
-        />
-      </div>
-    </editor-menu-bubble>
-    <editor-content :editor="editor" class="k-writer-content" />
-
+  <div
+    ref="editor"
+    :spellcheck="spellcheck"
+    :class="{ 'k-writer': true, 'k-writer-text': !code, 'k-writer-code': code }"
+    @click="$emit('click', $event)"
+    @dblclick="$emit('dblclick', $event)"
+    @focusin="onFocus"
+    @focusout="onBlur"
+  >
+    <k-writer-toolbar
+      v-if="editor"
+      v-show="toolbar"
+      ref="toolbar"
+      :marks="toolbar.marks"
+      :options="editor.state.schema.marks"
+      :style="{bottom: toolbar.bottom + 'px', left: toolbar.left + 'px'}"
+      @option="onOption"
+    />
+    <span v-if="placeholder && editor && isEmpty()" class="k-writer-placeholder">{{ placeholder }}</span>
+    <k-writer-link-dialog
+      ref="link"
+      @close="focus()"
+      @submit="insertLink"
+    />
   </div>
 </template>
 
 <script>
-// tiptap basics
+/** ProseMirror */
+import { TextSelection, AllSelection } from "prosemirror-state";
+import { DOMSerializer, Slice, Fragment } from "prosemirror-model";
+import Doc from "./Writer/Editor/Document.js";
+
+/** Editor wrapper */
+import Editor from "./Writer/Editor/View.js";
+
+/** Commands */
+import { toggleMark } from "prosemirror-commands";
+
+/** Utils */
 import {
-  Editor,
-  EditorContent,
-  EditorMenuBubble
-} from 'tiptap';
+  getActiveMarks,
+  getMarkAttrs,
+  getHTML,
+} from "./Writer/Utils.js";
 
-// tiptap extensions
-import {
-  Blockquote,
-  BulletList,
-  CodeBlock,
-  HardBreak,
-  Heading,
-  ListItem,
-  OrderedList,
-  Placeholder,
-  Bold,
-  Code,
-  Italic,
-  Strike,
-  Underline,
-  History,
-} from 'tiptap-extensions';
+/** Dialogs */
+import LinkDialog from "./Writer/Dialogs/Link.vue";
 
-// custom nodes
-import Link from "./Writer/Nodes/Link.js";
-import HorizontalRule from "./Writer/Nodes/HorizontalRule.js";
-
-// dialogs
-import LinkDialog from "./Writer/Dialogs/LinkDialog.vue";
+/** Toolbar */
+import Toolbar from "./Writer/Toolbar.vue";
 
 export default {
   components: {
-    "editor-content": EditorContent,
-    "editor-menu-bubble": EditorMenuBubble,
-    "k-writer-link-dialog": LinkDialog
+    "k-writer-link-dialog": LinkDialog,
+    "k-writer-toolbar": Toolbar
   },
   props: {
-    formats: {
-      type: Object,
+    breaks: Boolean,
+    code: Boolean,
+    disabled: Boolean,
+    marks: {
+      type: Array,
       default() {
-        return {
-          blockquote: true,
-          code: true,
-          heading: [1, 2, 3],
-          ol: true,
-          ul: true,
-          hr: true
-        }
+        return [
+          'bold',
+          'italic',
+          'strikeThrough',
+          'underline',
+          'code',
+          'link'
+        ];
       }
     },
-    inline: Boolean,
+    paste: {
+      type: Function,
+      default() {
+        return function () {};
+      }
+    },
     placeholder: String,
-    value: String,
+    spellcheck: Boolean,
+    value: {
+      type: String,
+      default: ""
+    },
   },
   data() {
     return {
-      keepInBounds: true,
-      html: this.value,
-      editor: new Editor({
-        extensions: this.createExtensions(),
-        content: this.value,
-        onUpdate: ({ getHTML }) => {
-          this.html = getHTML();
-          this.$emit('input', this.html);
-        },
-      }),
-    }
+      editor: null,
+      toolbar: false
+    };
   },
-  watch: {
-    value(value) {
-      if (value !== this.html) {
-        this.editor.setContent(value);
+  mounted() {
+    this.editor = Editor({
+      breaks: this.breaks,
+      code: this.code,
+      content: this.value,
+      disabled: this.disabled,
+      element: this.$el,
+      marks: this.marks,
+      onBack: this.onBack,
+      onForward: this.onForward,
+      onBold: this.onBold,
+      onConvert: this.onConvert,
+      onItalic: this.onItalic,
+      onLink: this.onLink,
+      onNext: this.onNext,
+      onPaste: this.$listeners["paste"] ? this.onPaste : false,
+      onPrev: this.onPrev,
+      onEnter: this.onEnter,
+      onSelect: this.onSelect,
+      onShiftEnter: this.onShiftEnter,
+      onShiftTab: this.$listeners["shiftTab"] ? this.onShiftTab : false,
+      onSplit: this.onSplitBlock,
+      onStrikeThrough: this.onStrikeThrough,
+      onTab: this.$listeners["tab"] ? this.onTab : false,
+      onUnderline: this.onUnderline,
+      onUpdate: this.onUpdate,
+    });
+
+    this.onUpdate();
+  },
+  destroyed() {
+    this.editor.destroy();
+  },
+  computed: {
+    info() {
+      if (!this.editor) {
+        return {};
       }
+
+      return {
+        top: this.coordsAtStart().top,
+        bottom: this.coordsAtEnd().bottom
+      };
     }
-  },
-  beforeDestroy() {
-    this.editor.destroy()
   },
   methods: {
-    createExtensions() {
-      // default extensions
-      let extensions = [
-        new HardBreak(),
-        new History(),
-        new Placeholder({
-          emptyEditorClass: 'is-editor-empty',
-          emptyNodeClass: 'is-empty',
-          emptyNodeText: this.placeholder,
-          showOnlyWhenEditable: true,
-          showOnlyCurrent: true,
-        }),
-      ];
+    addMark(type, attrs) {
+      const { from, to } = this.selection();
+      const mark = this.mark(type);
 
-      // inline formats
-      extensions.push(
-        new Bold(),
-        new Code(),
-        new Italic(),
-        new Link(),
-        new Strike(),
-        new Underline(),
-      );
-
-      if (this.inline) {
-        return extensions;
+      if (mark) {
+        return this.dispatch(this.tr().addMark(from, to, mark.create(attrs)))
       }
-
-      // block elements
-      if (this.formats.blockquote !== false) {
-        extensions.push(new Blockquote());
-      }
-
-      if (this.formats.codeBlock !== false) {
-        extensions.push(new CodeBlock());
-      }
-
-      if (this.formats.heading !== false) {
-        extensions.push(new Heading({
-          levels: this.formats.heading }
-        ));
-      }
-
-      if (this.formats.horizontalRule !== false) {
-        extensions.push(new HorizontalRule());
-      }
-
-      if (this.formats.orderedList !== false) {
-        extensions.push(new OrderedList());
-      }
-
-      if (this.formats.bulletList !== false) {
-        extensions.push(new BulletList());
-      }
-
-      if (this.formats.bulletList !== false || this.formats.orderedList !== false) {
-        extensions.push(new ListItem());
-      }
-
-      return extensions;
     },
-    menuIsActive(menu, isActive) {
-      if (this.inline || this.formats.horizontalRule === false) {
-        return menu.isActive;
+    coordsAtPos(pos) {
+      return this.editor.coordsAtPos(pos);
+    },
+    coordsAtEnd() {
+      return this.editor.coordsAtPos(this.cursorPositionAtEnd());
+    },
+    coordsAtStart() {
+      return this.editor.coordsAtPos(0);
+    },
+    coordsAtCursor() {
+      return this.coordsAtPos(this.cursorPosition());
+    },
+    posAtCoords(coords) {
+      return this.editor.posAtCoords(coords);
+    },
+    cursor() {
+      let { $cursor } = this.selection();
+      return $cursor;
+    },
+    cursorAtEnd() {
+      let { $cursor } = this.selectionAtEnd();
+      return $cursor;
+    },
+    cursorAtStart() {
+      let { $cursor } = this.selectionAtStart();
+      return $cursor;
+    },
+    cursorPosition() {
+      const $cursor = this.cursor();
+      return $cursor ? $cursor.pos : 0;
+    },
+    cursorPositionAtEnd() {
+      const $cursor = this.cursorAtEnd();
+      return $cursor ? $cursor.pos : 0;
+    },
+    cursorPositionAtStart() {
+      return 0;
+    },
+    dispatch(tr) {
+      this.editor.dispatch(tr);
+    },
+    doc() {
+      return this.editor.state.doc;
+    },
+    focus(cursor) {
+
+      if (cursor) {
+
+        if (typeof cursor === "object") {
+
+          const at     = cursor.at || "start";
+          const coords = (at === "end") ? this.coordsAtEnd() : this.coordsAtStart();
+
+          const pos = this.posAtCoords({
+            top: coords.top + 1,
+            left: cursor.left || 0
+          });
+
+          if (pos && pos.pos) {
+            cursor = pos.pos;
+          } else {
+            cursor = at;
+          }
+
+        }
+
+        let selection = null;
+
+        switch (cursor) {
+          case "start":
+            selection = TextSelection.atStart(this.doc());
+            break;
+          case "end":
+            selection = TextSelection.atEnd(this.doc());
+            break;
+          default:
+
+            try {
+              selection = TextSelection.near(this.doc().resolve(cursor));
+            } catch (e) {
+              selection = TextSelection.atStart(this.doc());
+            }
+            break;
+        }
+
+        this.dispatch(this.tr().setSelection(selection));
+
       }
 
-      return menu.isActive && !isActive.horizontal_rule();
+      setTimeout(() => {
+        this.editor.focus();
+      }, 1);
+
+    },
+    getActiveMarks() {
+      return getActiveMarks(this.editor.state.schema, this.editor.state, this.marks);
+    },
+    getMarkAttrs(type) {
+      return getMarkAttrs(this.state(), type);
+    },
+    hasFocus() {
+      return this.editor.hasFocus;
+    },
+    hasMark(type) {
+      return this.editor.state.schema.marks[type] !== undefined;
+    },
+    htmlAtSelection(selection) {
+      return this.nodeToHtml(this.nodeAtSelection(selection));
+    },
+    htmlBeforeCursor() {
+      return this.htmlAtSelection(this.selectionBeforeCursor());
+    },
+    htmlAfterCursor() {
+      return this.htmlAtSelection(this.selectionAfterCursor());
+    },
+    insertBreak() {
+      if (this.breaks !== true) {
+        return false;
+      }
+
+      if (this.code) {
+        this.dispatch(
+            this.tr()
+              .insertText("\n")
+              .scrollIntoView()
+        );
+      } else {
+        this.dispatch(
+          this.tr()
+            .replaceSelectionWith(this.schema().nodes.hard_break.create())
+            .scrollIntoView()
+        );
+      }
+
+    },
+    insertHtml(html) {
+      const node = Doc(this.schema(), html);
+      this.dispatch(this.tr().replaceSelectionWith(node).scrollIntoView());
+    },
+    insertLink(link) {
+      if (!link.href) {
+        this.removeMark("link");
+      } else {
+        this.addMark("link", link);
+      }
+      this.focus();
+    },
+    insertText(text) {
+      this.dispatch(this.tr().insertText(text).scrollIntoView());
+    },
+    isEmpty() {
+      return this.doc().content.size === 0;
+    },
+    isSelected() {
+      const selection = this.selection();
+      const end       = this.cursorPositionAtEnd();
+
+      return selection.from === 0 && selection.to === end;
+    },
+    length() {
+      return this.cursorAtEnd().pos;
+    },
+    link() {
+      const attrs = this.getMarkAttrs("link");
+      this.$refs.link.open(attrs);
+    },
+    mark(type) {
+      return this.editor.state.schema.marks[type];
+    },
+    nodeAtSelection(selection) {
+      return this.doc().cut(selection.from, selection.to);
+    },
+    nodeToHtml(node) {
+      const result = DOMSerializer
+        .fromSchema(this.editor.state.schema)
+        .serializeFragment(node);
+
+      let dom = document.createElement("div");
+      dom.append(result);
+
+      return dom.innerHTML;
+    },
+    onBack() {
+      this.$emit("back", {
+        html: this.htmlAfterCursor()
+      });
+    },
+    onBold() {
+      this.toggleMark("bold");
+    },
+    onBlur() {
+      this.toolbar = false;
+      this.$emit("blur");
+    },
+    onConvert(type) {
+      this.$emit("convert", type);
+    },
+    onEnter() {
+      if (this.code) {
+        this.insertBreak();
+      }
+
+      this.$emit("enter", event);
+    },
+    onFocus() {
+      this.$emit("focus", event);
+    },
+    onForward() {
+      this.$emit("forward");
+    },
+    onInput(html) {
+      this.$emit("input", html);
+    },
+    onItalic() {
+      this.toggleMark("italic");
+    },
+    onLink() {
+      this.link();
+    },
+    onNext() {
+      let { left } = this.coordsAtCursor();
+      this.$emit("next", {
+        left: left,
+        at: "start",
+      });
+    },
+    onOption(option) {
+      if (!this[option.action]) {
+        return false;
+      }
+
+      const args = option.args || [];
+
+      this[option.action](...args);
+    },
+    onPaste(html, text) {
+      this.$emit("paste", { html, text });
+    },
+    onPrev() {
+      let { left } = this.coordsAtCursor();
+
+      this.$emit("prev", {
+        left: left,
+        at: "end"
+      });
+    },
+    onSelect() {
+
+      const selection = this.editor.state.selection;
+
+      if (selection.empty) {
+        this.toolbar = false;
+        this.$emit("deselect");
+      } else {
+
+        const toolbar = this.$refs.toolbar;
+
+        if (!toolbar) {
+          return false;
+        }
+
+        const { from, to } = selection;
+
+        const start = this.coordsAtPos(from);
+        const end   = this.coordsAtPos(to, true);
+
+        // The box in which the tooltip is positioned, to use as base
+        const box = this.$el.getBoundingClientRect();
+        const el  = toolbar.$el.getBoundingClientRect();
+
+        // Find a center-ish x position from the selection endpoints (when
+        // crossing lines, end may be more to the left)
+        let left   = ((start.left + end.left) / 2) - box.left
+        let bottom = Math.round(box.bottom - start.top);
+
+        this.toolbar = {
+          left: left,
+          bottom: bottom,
+          marks: this.getActiveMarks()
+        };
+
+        this.$emit("select");
+      }
+    },
+    onShiftEnter() {
+      this.$emit("shiftEnter");
+      this.insertBreak();
+    },
+    onShiftTab() {
+      this.$emit("shiftTab");
+    },
+    onStrikeThrough() {
+      this.toggleMark("strikeThrough");
+    },
+    onSplitBlock() {
+      this.$emit("split", {
+        cursor: this.cursorPosition(),
+        before: this.htmlBeforeCursor(),
+        after: this.htmlAfterCursor()
+      });
+    },
+    onTab() {
+      if (this.code) {
+        this.insertText("\t");
+      }
+
+      this.$emit("tab");
+    },
+    onUnderline() {
+      this.toggleMark("underline");
+    },
+    onUpdate() {
+      this.onInput(this.toHTML());
+    },
+    removeMark(type) {
+      const { from, to } = this.selection();
+      const mark = this.mark(type);
+
+      if (mark) {
+        return this.dispatch(this.tr().removeMark(from, to, mark));
+      }
+    },
+    schema() {
+      return this.editor.state.schema;
+    },
+    selection() {
+      return this.editor.state.selection;
+    },
+    selectionAtEnd() {
+      return TextSelection.atEnd(this.doc());
+    },
+    selectionAtStart() {
+      return TextSelection.atStart(this.doc());
+    },
+    selectionBeforeCursor() {
+      return new TextSelection(this.doc().resolve(0), this.selection().$from);
+    },
+    selectionAfterCursor() {
+      return new TextSelection(this.selection().$to, this.selectionAtEnd().$to);
+    },
+    state() {
+      return this.editor.state;
+    },
+    toggleMark(type, attrs) {
+      const mark = this.mark(type);
+
+      if (mark) {
+        toggleMark(mark, attrs)(this.editor.state, this.editor.dispatch);
+      }
+
+      this.editor.focus();
+    },
+    toHTML() {
+      return getHTML(this.editor.state, this.code);
+    },
+    toJSON() {
+      return this.doc().toJSON();
+    },
+    tr() {
+      return this.editor.state.tr;
+    },
+    view() {
+      return this.editor;
     }
   }
-}
+};
 </script>
 
 <style lang="scss">
-.k-writer-content {
-  line-height: 1.5em;
-}
-.k-writer * {
-  caret-color: currentColor;
+.k-writer {
+  position: relative;
+  width: 100%;
 }
 .k-writer .ProseMirror {
-  overflow-wrap: break-word;
   word-wrap: break-word;
-  word-break: break-word;
   white-space: pre-wrap;
   -webkit-font-variant-ligatures: none;
   font-variant-ligatures: none;
   line-height: 1.5em;
 }
-.k-writer .ProseMirror > p {
-  margin-bottom: .75rem;
-}
 .k-writer .ProseMirror:focus {
   outline: 0;
 }
 .k-writer .ProseMirror a {
-  color: $color-blue-600  ;
+  color: $color-focus;
   text-decoration: underline;
 }
-.k-writer .ProseMirror strong {
-  font-weight: $font-bold;
+.k-writer-text .ProseMirror strong {
+  font-weight: 600;
 }
-.k-writer .ProseMirror pre {
-  padding: 0.75rem 1rem;
-  border-radius: $rounded;
-  background: $color-black;
-  color: $color-white;
-  font-family: $font-mono;
-  overflow-x: auto;
-  margin-bottom: .75rem;
-}
-.k-writer .ProseMirror pre code {
-  display: block;
-  font-size: $text-lg;
-}
-.k-writer .ProseMirror p code {
+.k-writer-text .ProseMirror code {
   position: relative;
   font-size: .925em;
   display: inline-block;
   line-height: 1.325;
   padding: .05em .325em;
-  background: $color-aqua-200;
+  background: $color-gray-300;
   border-radius: $rounded;
   font-family: $font-mono;
 }
-.k-writer .ProseMirror ul,
-.k-writer .ProseMirror ol {
-  margin-left: 1.5rem;
-  margin-bottom: .75rem;
-}
-.k-writer .ProseMirror ol ol,
-.k-writer .ProseMirror ol ul,
-.k-writer .ProseMirror ul ul,
-.k-writer .ProseMirror ul ol {
-  margin-bottom: 0;
-}
-
-.k-writer .ProseMirror li {
-  list-style: disc;
-}
-.k-writer .ProseMirror ol > li {
-  list-style: decimal;
-}
-.k-writer .ProseMirror h1 {
-  font-size: $text-3xl;
-  font-weight: 600;
-  line-height: 1.25em;
-  margin-bottom: .75rem;
-}
-.k-writer .ProseMirror h2 {
-  font-size: $text-xl;
-  font-weight: 600;
-  line-height: 1.35em;
-  margin-bottom: .75rem;
-}
-.k-writer .ProseMirror h3 {
-  font-size: $text-base;
-  font-weight: 600;
-  line-height: 1.5em;
-  margin-bottom: .75rem;
-}
-.k-writer .ProseMirror blockquote {
-  font-size: 1.25rem;
-  line-height: 1.5em;
-  padding: 0 0 0 1rem;
-  border-left: 3px solid #000;
-  margin-bottom: .75rem;
-}
-.k-writer .ProseMirror hr {
-  position: relative;
-  height: 1.5rem;
-  margin-bottom: .75rem;
-  border: 0;
-  color: $color-gray-300;
-  cursor: pointer;
-}
-.k-writer .ProseMirror hr::after {
-  content: "";
+.k-writer-placeholder {
   position: absolute;
-  top: 50%;
+  top: 0;
   left: 0;
   right: 0;
-  height: 1px;
-  background: currentColor;
-}
-.k-writer .ProseMirror hr.ProseMirror-selectednode {
-  color: $color-blue-200;
-}
-.k-writer .ProseMirror hr.ProseMirror-selectednode::after {
-  outline: 1px solid $color-blue-200;
-}
-.k-writer .ProseMirror :last-child {
-  margin-bottom: 0;
-}
-.k-writer p.is-editor-empty:first-child::before {
-  content: attr(data-empty-text);
-  float: left;
   color: $color-gray-500;
   pointer-events: none;
-  height: 0;
+  font: inherit;
+  line-height: 1.5em;
+  -webkit-font-variant-ligatures: none;
+  font-variant-ligatures: none;
 }
-
-
-/** Toolbar **/
-.k-writer-menu {
-  position: absolute;
-  display: flex;
-  opacity: 0;
-  background: $color-black;
-  height: 36px;
-  visibility: hidden;
-  transform: translateX(-50%) translateY(-.75rem);
-  z-index: 1;
-  box-shadow: $shadow;
-  color: $color-white;
-  border-radius: $rounded;
-}
-.k-writer-menu.is-active {
-  visibility: visible;
-  opacity: 1;
-}
-.k-button.k-writer-menu-button {
-  display: flex;
-  align-items: center;
-  height: 36px;
-  padding: 0 .5rem;
+.k-writer-code pre {
+  tab-size: 2;
   font-size: $text-sm;
-  color: currentColor;
+  line-height: 2em;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: pre;
 }
-.k-button.k-writer-menu-button.is-active {
-  color: $color-blue-300 !important;
+.k-writer-code code {
+  font-family: $font-mono;
 }
 </style>

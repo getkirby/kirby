@@ -5,6 +5,7 @@
     class="k-writer-field"
   >
     <k-writer
+      :breaks="true"
       :value="value"
       class="k-writer-field-input"
       @input="$emit('input', $event)"
@@ -50,7 +51,7 @@ export default {
 .k-writer-field-input {
   line-height: 1.5em;
   background: #fff;
-  padding: .5rem;
+  padding: .325rem .5rem;
   border: 1px solid $color-border;
 }
 .k-writer-field-input:focus-within {
