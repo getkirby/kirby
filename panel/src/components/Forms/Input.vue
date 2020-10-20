@@ -73,34 +73,36 @@ export default {
   },
   methods: {
     blur(e) {
-      if (e.relatedTarget && this.$el.contains(e.relatedTarget) === false) {
-        // use dedicated blur method if provided
-        if (this.$refs.input.blur) {
-          this.$refs.input.blur();
-          return;
-        }
+      if (e && e.relatedTarget && this.$el.contains(e.relatedTarget) === false) {
+        this.trigger(null, "blur");
       }
     },
     focus(e) {
+      this.trigger(e, "focus");
+    },
+    select(e) {
+      this.trigger(e, "select");
+    },
+    trigger(e, method) {
       // prevent focussing on first input element,
       // if click is already targetting another input element
-      if (e && e.target && e.target.tagName === 'INPUT') {
-        e.target.focus();
+      if (e && e.target && e.target.tagName === 'INPUT' && typeof e.target[method] === "function") {
+        e.target[method]();
         return;
       }
 
       // use dedicated focus method if provided
-      if (this.$refs.input && this.$refs.input.focus) {
-        this.$refs.input.focus();
+      if (this.$refs.input && typeof this.$refs.input[method] === "function") {
+        this.$refs.input[method]();
         return;
       }
 
       const input = this.$el.querySelector("input, select, textarea");
 
-      if (input) {
-        input.focus();
+      if (input && typeof input[method] === "function") {
+        input[method]();
       }
-    }
+    },
   }
 }
 </script>

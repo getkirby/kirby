@@ -212,6 +212,7 @@
 
   "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
   "file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
+  "file.sort": "Change position",
 
   "files": "Files",
   "files.empty": "No files yet",
@@ -330,6 +331,7 @@
   "page.duplicate.appendix": "Copy",
   "page.duplicate.files": "Copy files",
   "page.duplicate.pages": "Copy pages",
+  "page.sort": "Change position",
   "page.status": "Status",
   "page.status.draft": "Draft",
   "page.status.draft.description": "The page is in draft mode and only visible for logged in editors or via secret link",

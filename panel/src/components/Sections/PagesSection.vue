@@ -62,7 +62,7 @@
       <k-page-create-dialog ref="create" />
       <k-page-duplicate-dialog ref="duplicate" />
       <k-page-rename-dialog ref="rename" @success="update" />
-      <k-page-url-dialog ref="url" @success="update" />
+      <k-page-sort-dialog ref="sort" @success="update" />
       <k-page-status-dialog ref="status" @success="update" />
       <k-page-template-dialog ref="template" @success="update" />
       <k-page-remove-dialog ref="remove" @success="update" />
@@ -122,11 +122,15 @@ export default {
           break;
         }
         case "rename": {
-          this.$refs.rename.open(page.id);
+          this.$refs.rename.open(page.id, page.permissions, "title");
           break;
         }
         case "url": {
-          this.$refs.url.open(page.id);
+          this.$refs.rename.open(page.id, page.permissions, "slug");
+          break;
+        }
+        case "sort": {
+          this.$refs.sort.open(page.id);
           break;
         }
         case "status": {
@@ -172,17 +176,21 @@ export default {
           }
         };
 
-        page.options = ready => {
-          this.$api.pages
-            .options(page.id, "list")
-            .then(options => ready(options))
-            .catch(error => {
-              this.$store.dispatch("notification/error", error);
-            });
-        };
-
         page.sortable = page.permissions.sort && this.options.sortable;
         page.column   = this.column;
+        page.options  = async ready => {
+          try {
+            const options = await this.$api.pages.options(
+              page.id,
+              "list",
+              page.sortable
+            );
+            ready(options);
+
+          } catch (error) {
+            this.$store.dispatch("notification/error", error);
+          }
+        };
 
         return page;
       });

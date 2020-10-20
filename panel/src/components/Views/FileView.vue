@@ -19,7 +19,12 @@
         {{ file.filename }}
 
         <k-button-group slot="left">
-          <k-button :link="file.url" :responsive="true" icon="open" target="_blank">
+          <k-button
+            :link="file.url"
+            :responsive="true"
+            icon="open"
+            target="_blank"
+          >
             {{ $t("open") }}
           </k-button>
           <k-dropdown>

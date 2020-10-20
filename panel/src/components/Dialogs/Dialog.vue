@@ -1,13 +1,15 @@
 <template>
   <k-overlay
     ref="overlay"
+    :autofocus="autofocus"
     :centered="true"
+    @ready="$emit('ready')"
   >
     <div
       ref="dialog"
       :data-size="size"
-      class="k-dialog"
       :class="$vnode.data.staticClass"
+      class="k-dialog"
     >
       <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
         <p>{{ notification.message }}</p>
@@ -52,6 +54,10 @@
 <script>
   export default {
     props: {
+      autofocus: {
+        type: Boolean,
+        default: true
+      },
       cancelButton: {
         type: [String, Boolean],
         default: true,

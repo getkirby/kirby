@@ -113,6 +113,8 @@ export default {
 
         // prevent that clicks on the overlay slot trigger close
         document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
+
+        this.$emit("ready");
       }, 1)
     },
     restoreScrollPosition() {
