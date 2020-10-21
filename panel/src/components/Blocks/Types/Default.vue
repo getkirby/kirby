@@ -1,5 +1,5 @@
 <template>
-  <div class="k-block-generic-box">
+  <div class="k-block-default-box">
     <k-block-header
       :icon="fieldset.icon"
       :is-hidden="isHidden"
@@ -133,10 +133,10 @@ export default {
 </script>
 
 <style lang="scss">
-.k-block-generic {
+.k-block-default {
   padding: .75rem 0;
 }
-.k-block-generic-box {
+.k-block-default-box {
   background: $color-white;
   box-shadow: $shadow;
   border: 1px solid $color-gray-300;

@@ -1,0 +1,11 @@
+name: Quote
+icon: quote
+label: by {{citation}}
+fields:
+  text:
+    label: Quote Text
+    type: writer
+  citation:
+    label: Citation
+    type: writer
+    placeholder: by …

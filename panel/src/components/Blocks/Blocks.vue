@@ -22,6 +22,7 @@
         @chooseToAppend="choose(index + 1)"
         @chooseToPrepend="choose(index)"
         @close="close(block)"
+        @convert="convert(block, $event)"
         @duplicate="duplicate(block, index)"
         @hide="hide(block)"
         @open="open(block)"
@@ -55,16 +56,10 @@
 </template>
 
 <script>
-import Block from "./Block.vue";
-import BlockSelector from "./BlockSelector.vue";
 import debounce from "@/helpers/debounce.js";
 
 export default {
   inheritAttrs: false,
-  components: {
-    "k-block": Block,
-    "k-block-selector": BlockSelector,
-  },
   props: {
     compact: Boolean,
     empty: String,
@@ -124,7 +119,7 @@ export default {
     }
   },
   methods: {
-    async add(type, index) {
+    async add(type = "paragraph", index) {
       const block = await this.$api.get(this.endpoints.field + "/fieldsets/" + type);
       this.blocks.splice(index, 0, block);
       this.save();
@@ -148,6 +143,13 @@ export default {
     confirmToRemoveAll() {
       this.$refs.removeAll.open();
     },
+    convert(block, type) {
+      if (type === "blockquote") {
+        type = "quote";
+      }
+
+      this.$set(block, "type", type);
+    },
     async duplicate(block, index) {
       const response = await this.$api.get(this.endpoints.field + "/uuid");
       const copy = {
@@ -156,6 +158,9 @@ export default {
       };
       this.blocks.splice(index + 1, 0, block);
       this.save();
+    },
+    fieldset(block) {
+      return this.fieldsets[block.type];
     },
     focus(block) {
       if (this.$refs["block-" + block.id]) {
@@ -220,7 +225,9 @@ export default {
       this.save();
     },
     update(block, content) {
-      block.content = content;
+      console.log(content);
+
+      this.$set(block, "content", content);
       this.save();
     }
   }
@@ -247,6 +254,7 @@ export default {
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
+  background: rgba($color-blue-200, .5);
 }
 .k-blocks-empty.k-empty {
   cursor: pointer;

@@ -1,0 +1,8 @@
+name: Video
+icon: video
+label: "{{ url }}"
+fields:
+  url:
+    type: url
+  caption:
+    type: writer

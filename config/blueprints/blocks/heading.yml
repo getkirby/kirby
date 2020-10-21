@@ -1,0 +1,21 @@
+icon: title
+fields:
+  text:
+    type: text
+  level:
+    type: select
+    width: 1/2
+    default: 1
+    empty: false
+    default: "2"
+    options:
+      - value: "1"
+        text: Heading 1
+      - value: "2"
+        text: Heading 2
+      - value: "3"
+        text: Heading 3
+  id:
+    type: text
+    label: ID
+    width: 1/2

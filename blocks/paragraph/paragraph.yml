@@ -1,0 +1,6 @@
+name: Text
+icon: text
+wysiwyg: true
+fields:
+  text:
+    type: writer

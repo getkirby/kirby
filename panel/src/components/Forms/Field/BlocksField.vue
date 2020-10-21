@@ -37,18 +37,10 @@
 </template>
 
 <script>
-import Vue from "vue";
-
 import Field from "../Field.vue";
-import Blocks from "./BlocksField/Blocks.vue";
-
-Vue.component("k-blocks", Blocks);
 
 export default {
   inheritAttrs: false,
-  components: {
-    "k-blocks": Blocks,
-  },
   props: {
     ...Field.props,
     empty: String,

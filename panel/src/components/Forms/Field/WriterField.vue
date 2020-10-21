@@ -1,6 +1,7 @@
 <template>
   <k-field
     :input="_uid"
+    :counter="false"
     v-bind="$props"
     class="k-writer-field"
   >
@@ -23,22 +24,6 @@ export default {
   props: {
     ...Field.props,
     ...Input.props,
-    counter: {
-      type: Boolean,
-      default: true
-    }
-  },
-  computed: {
-    counterOptions() {
-      if (this.value === null || this.disabled || this.counter === false) {
-        return false;
-      }
-      return {
-        count: this.value ? this.value.length : 0,
-        min: this.minlength,
-        max: this.maxlength
-      };
-    }
   },
   methods: {
     focus() {

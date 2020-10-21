@@ -28,6 +28,7 @@
 /** ProseMirror */
 import { TextSelection, AllSelection } from "prosemirror-state";
 import { DOMSerializer, Slice, Fragment } from "prosemirror-model";
+import { undo, redo } from "prosemirror-history";
 import Doc from "./Writer/Editor/Document.js";
 
 /** Editor wrapper */
@@ -97,28 +98,14 @@ export default {
       content: this.value,
       disabled: this.disabled,
       element: this.$el,
+      keymap: this.keymap(),
       marks: this.marks,
-      onBack: this.onBack,
-      onForward: this.onForward,
-      onBold: this.onBold,
-      onConvert: this.onConvert,
-      onItalic: this.onItalic,
-      onLink: this.onLink,
-      onNext: this.onNext,
-      onPaste: this.$listeners["paste"] ? this.onPaste : false,
-      onPrev: this.onPrev,
-      onEnter: this.onEnter,
+      onInput: this.onInput,
+      onPaste: this.onPaste,
       onSelect: this.onSelect,
-      onShiftEnter: this.onShiftEnter,
-      onShiftTab: this.$listeners["shiftTab"] ? this.onShiftTab : false,
-      onSplit: this.onSplitBlock,
-      onStrikeThrough: this.onStrikeThrough,
-      onTab: this.$listeners["tab"] ? this.onTab : false,
-      onUnderline: this.onUnderline,
-      onUpdate: this.onUpdate,
     });
 
-    this.onUpdate();
+    this.onInput();
   },
   destroyed() {
     this.editor.destroy();
@@ -135,7 +122,31 @@ export default {
       };
     }
   },
+  watch: {
+    value() {
+      this.doc().setContent(this.value);
+    }
+  },
   methods: {
+    keymap() {
+      return {
+        "ArrowDown": this.onArrowDown,
+        "ArrowUp": this.onArrowUp,
+        "Backspace": this.onBackspace,
+        "Cmd-b": () => this.toggleMark("bold"),
+        "Cmd-i": () => this.toggleMark("italic"),
+        "Cmd-k": () => this.link(),
+        "Cmd-u": () => this.toggleMark("underline"),
+        "Cmd-z": undo,
+        "Cmd-Shift-s": () => this.toggleMark("strikeThrough"),
+        "Cmd-Shift-z": redo,
+        "Delete": this.onForwardDelete,
+        "Enter": this.onEnter,
+        "Shift-Enter": this.onShiftEnter,
+        "Shift-Tab": this.onShiftTab,
+        "Tab": this.onTab,
+      };
+    },
     addMark(type, attrs) {
       const { from, to } = this.selection();
       const mark = this.mark(type);
@@ -326,49 +337,61 @@ export default {
 
       return dom.innerHTML;
     },
-    onBack() {
-      this.$emit("back", {
-        html: this.htmlAfterCursor()
-      });
+    onArrowDown(state, dispatch, view) {
+      this.$emit("arrowDown");
+      if (view.endOfTextblock("down", state)) {
+        this.$emit("blurDown", this.coordsAtCursor());
+        return true;
+      } else {
+        this.$emit("lineDown");
+      }
     },
-    onBold() {
-      this.toggleMark("bold");
+    onArrowUp(state, dispatch, view) {
+      this.$emit("arrowUp");
+      if (view.endOfTextblock("up", state)) {
+        this.$emit("blurUp", this.coordsAtCursor());
+        return true;
+      } else {
+        this.$emit("lineUp");
+      }
+    },
+    onBackspace(state) {
+      this.$emit("backspace");
+      if (state.selection.$cursor && state.selection.$cursor.pos === 0) {
+        if (this.isEmpty()) {
+          this.$emit("backspaceWhenEmpty");
+        } else {
+          this.$emit("backspaceAtStart");
+        }
+      }
     },
     onBlur() {
-      this.toolbar = false;
       this.$emit("blur");
     },
     onConvert(type) {
       this.$emit("convert", type);
     },
-    onEnter() {
-      if (this.code) {
-        this.insertBreak();
-      }
-
-      this.$emit("enter", event);
+    onEnter(state, dispatch, view) {
+      this.$emit("enter", {
+        before: this.htmlBeforeCursor(),
+        after: this.htmlAfterCursor()
+      });
     },
     onFocus() {
-      this.$emit("focus", event);
+      this.$emit("focus");
     },
-    onForward() {
-      this.$emit("forward");
+    onForwardDelete(state, dispatch, view) {
+      this.$emit("forwardDelete");
+      if (state.selection.$cursor && view.endOfTextblock("forward", state)) {
+        if (this.isEmpty()) {
+          this.$emit("forwardDeleteWhenEmpty");
+        } else {
+          this.$emit("forwardDeleteAtEnd");
+        }
+      }
     },
     onInput(html) {
-      this.$emit("input", html);
-    },
-    onItalic() {
-      this.toggleMark("italic");
-    },
-    onLink() {
-      this.link();
-    },
-    onNext() {
-      let { left } = this.coordsAtCursor();
-      this.$emit("next", {
-        left: left,
-        at: "start",
-      });
+      this.$emit("input", this.toHTML());
     },
     onOption(option) {
       if (!this[option.action]) {
@@ -381,14 +404,6 @@ export default {
     },
     onPaste(html, text) {
       this.$emit("paste", { html, text });
-    },
-    onPrev() {
-      let { left } = this.coordsAtCursor();
-
-      this.$emit("prev", {
-        left: left,
-        at: "end"
-      });
     },
     onSelect() {
 
@@ -408,15 +423,15 @@ export default {
         const { from, to } = selection;
 
         const start = this.coordsAtPos(from);
-        const end   = this.coordsAtPos(to, true);
+        const end = this.coordsAtPos(to, true);
 
         // The box in which the tooltip is positioned, to use as base
         const box = this.$el.getBoundingClientRect();
-        const el  = toolbar.$el.getBoundingClientRect();
+        const el = toolbar.$el.getBoundingClientRect();
 
         // Find a center-ish x position from the selection endpoints (when
         // crossing lines, end may be more to the left)
-        let left   = ((start.left + end.left) / 2) - box.left
+        let left = ((start.left + end.left) / 2) - box.left
         let bottom = Math.round(box.bottom - start.top);
 
         this.toolbar = {
@@ -434,29 +449,11 @@ export default {
     },
     onShiftTab() {
       this.$emit("shiftTab");
-    },
-    onStrikeThrough() {
-      this.toggleMark("strikeThrough");
-    },
-    onSplitBlock() {
-      this.$emit("split", {
-        cursor: this.cursorPosition(),
-        before: this.htmlBeforeCursor(),
-        after: this.htmlAfterCursor()
-      });
+      this.$emit("blurUp", this.coordsAtCursor());
     },
     onTab() {
-      if (this.code) {
-        this.insertText("\t");
-      }
-
       this.$emit("tab");
-    },
-    onUnderline() {
-      this.toggleMark("underline");
-    },
-    onUpdate() {
-      this.onInput(this.toHTML());
+      this.$emit("blurDown", this.coordsAtCursor());
     },
     removeMark(type) {
       const { from, to } = this.selection();
@@ -492,6 +489,7 @@ export default {
 
       if (mark) {
         toggleMark(mark, attrs)(this.editor.state, this.editor.dispatch);
+        this.$emit("toggleMark", mark, attrs);
       }
 
       this.editor.focus();

@@ -54,19 +54,16 @@ return function (App $app) {
         },
 
         // converters
-
         /**
          * Converts a yaml or json field to a Blocks object
          *
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\Blocks
          */
-        'toBuilderBlocks' => function (Field $field) {
+        'blocks' => function (Field $field) {
             try {
-                $blocks = Blocks::parse($field->value());
-                $blocks = Blocks::factory($blocks['blocks'], [
+                $blocks = Blocks::factory(Blocks::parse($field->value()), [
                     'parent' => $field->parent(),
-                    'type'   => $blocks['type']
                 ]);
 
                 return $blocks->filter('isHidden', false);

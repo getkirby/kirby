@@ -3,9 +3,10 @@
     ref="editor"
     :breaks="true"
     :value="content.text"
-    class="k-block-text-editor"
+    class="k-block-paragraph-editor"
     placeholder="Text …"
-    @enter="$emit('append', 'text')"
+    @backspaceWhenEmpty="$emit('remove')"
+    @enter="onEnter"
     @input="$emit('update', { text: $event })"
   />
 </template>
@@ -14,22 +15,25 @@
 export default {
   inheritAttrs: false,
   props: {
-    content: [Array, Object]
+    content: Object
   },
   methods: {
     focus() {
       this.$refs.editor.focus();
+    },
+    onEnter({ before, after }) {
+      this.$emit("update", { text: before });
+      this.$emit("append", "paragraph", { text: after });
     }
   }
 };
 </script>
 
 <style lang="scss">
-.k-block-text {
+.k-block-paragraph {
   padding: .5rem 0;
 }
-
-.k-block-text-editor {
+.k-block-paragraph-editor {
   font-size: $text-base;
   line-height: 1.5em;
 }

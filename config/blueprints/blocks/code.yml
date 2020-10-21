@@ -1,0 +1,56 @@
+name: Code
+icon: code
+fields:
+  code:
+    label: Code
+    type: textarea
+    buttons: false
+    font: monospace
+  language:
+    label: Language
+    type: select
+    default: text
+    options:
+      bash: Bash
+      basic: BASIC
+      c: C
+      clojure: Clojure
+      cpp: C++
+      csharp: C#
+      css: CSS
+      diff: Diff
+      elixir: Elixir
+      elm: Elm
+      erlang: Erlang
+      go: Go
+      graphql: GraphQL
+      haskell: Haskell
+      html: HTML
+      java: Java
+      js: JavaScript
+      json: JSON
+      latext: LaTeX
+      less: Less
+      lisp: Lisp
+      lua: Lua
+      makefile: Makefile
+      markdown: Markdown
+      markup: Markup
+      objectivec: Objective-C
+      pascal: Pascal
+      perl: Perl
+      php: PHP
+      text: Plain Text
+      python: Python
+      r: R
+      ruby: Ruby
+      rust: Rust
+      sass: Sass
+      scss: SCSS
+      shell: Shell
+      sql: SQL
+      swift: Swift
+      typescript: TypeScript
+      vbnet: VB.net
+      xml: XML
+      yaml: YAML

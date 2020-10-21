@@ -99,11 +99,11 @@
 
 <script>
 
-import Blocks from "@/components/Forms/Field/BlocksField/Blocks.vue";
+import Blocks from "@/components/Blocks/Blocks.vue";
 
 export default {
   components: {
-    "k-builder-blocks": Blocks
+    "k-blocks": Blocks
   },
   data() {
     return {

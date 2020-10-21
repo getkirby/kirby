@@ -1,26 +1,25 @@
 <template>
   <div>
-  <div class="k-block-code-editor">
-    <k-writer
-      placeholder="Your code …"
-      :breaks="true"
-      :code="true"
-      :value="content.code"
-      @input="update({ code: $event })"
-    />
-
-    <div class="k-block-code-editor-language">
-      <k-icon type="code" />
-      <k-input
-        :empty="false"
-        :options="languages"
-        :value="content.language"
-        type="select"
-        @input="update({ language: $event })"
+    <div class="k-block-code-editor">
+      <k-writer
+        placeholder="Your code …"
+        :breaks="true"
+        :code="true"
+        :value="content.code"
+        @input="update({ code: $event })"
       />
+      <div class="k-block-code-editor-language">
+        <k-icon type="code" />
+        <k-input
+          :empty="false"
+          :options="languages"
+          :value="content.language"
+          type="select"
+          @input="update({ language: $event })"
+        />
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>

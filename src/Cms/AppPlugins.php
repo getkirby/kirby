@@ -676,8 +676,10 @@ trait AppPlugins
                 'blueprints'   => include $root . '/config/blueprints.php',
                 'fields'       => include $root . '/config/fields.php',
                 'fieldMethods' => include $root . '/config/methods.php',
+                'snippets'     => include $root . '/config/snippets.php',
                 'tags'         => include $root . '/config/tags.php'
             ];
+
         }
 
         // default cache types
@@ -692,6 +694,7 @@ trait AppPlugins
         $this->extendBlueprints(static::$systemExtensions['blueprints']);
         $this->extendFields(static::$systemExtensions['fields']);
         $this->extendFieldMethods((static::$systemExtensions['fieldMethods'])($this));
+        $this->extendSnippets(static::$systemExtensions['snippets']);
         $this->extendTags(static::$systemExtensions['tags']);
     }
 
