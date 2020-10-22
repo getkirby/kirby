@@ -14,7 +14,7 @@ This is Kirby's core application folder. Get started with one of the following r
 - [Starterkit](https://github.com/getkirby/starterkit)
 - [Plainkit](https://github.com/getkirby/plainkit)
 
-<img src="https://getkirby.com/media/pages/press/108affc1db-1574510872/kirby-3-presskit-1.png" />
+<img src="http://getkirby.com/assets/images/github/kirby-screen.png" />
 
 ### Try Kirby for free  
 Kirby is not free software. However, you can try Kirby and the Starterkit on your local machine or on a test server as long as you need to make sure it is the right tool for your next project. … and when you’re convinced, [buy your license](https://getkirby.com/buy).
@@ -38,7 +38,7 @@ Read about how to contribute to the development in our [contributing guide](/.gi
 - **[Documentation](https://getkirby.com/docs/guide)** – Read the official guide, reference and cookbook recipes.
 - **[Issues](https://github.com/getkirby/kirby/issues)** – Report bugs and other problems.
 - **[Feedback](https://feedback.getkirby.com)** – You have an idea for Kirby? Share it.
-- **[Forum](https://forum.getkirby.com)** – The place for questions and support. Whenever you get stuck, don't hesitate to reach out.
+- **[Forum](https://forum.getkirby.com)** – Whenever you get stuck, don't hesitate to reach out for questions and support.
 - **[Discord](https://chat.getkirby.com)** – Hang out and meet the community.
 - **[Twitter](https://twitter.com/getkirby)** – Spread the word.
 - **[Instagram](https://www.instagram.com/getkirby/)** – Share your creations: #madewithkirby.
