@@ -75,7 +75,7 @@ import Field from "@/components/Forms/Field.vue";
 import Fieldset from "@/components/Forms/Fieldset.vue";
 import Input from "@/components/Forms/Input.vue";
 import Upload from "@/components/Forms/Upload.vue";
-import Writer from "@/components/Forms/Writer.vue";
+import Writer from "@/components/Writer/Writer.vue";
 
 /** Form Inputs */
 import CheckboxInput from "@/components/Forms/Input/CheckboxInput.vue";

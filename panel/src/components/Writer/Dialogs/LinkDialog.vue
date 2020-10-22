@@ -3,6 +3,7 @@
     ref="dialog"
     v-model="link"
     :fields="fields"
+    :submit-button="$t('confirm')"
     size="medium"
     @close="$emit('close')"
     @submit="submit"
@@ -48,6 +49,8 @@ export default {
         target: false,
         ...link
       };
+
+      this.link.target = Boolean(this.link.target);
       this.$refs.dialog.open();
     },
     submit() {

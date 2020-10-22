@@ -47,6 +47,13 @@ export default {
     }
   },
   methods: {
+    enter() {
+      this.$nextTick(() => {
+        if (this.$el && this.$el.querySelector) {
+          this.$el.querySelector(".k-dialog-footer .k-button").focus();
+        }
+      });
+    },
     exit() {
       this.$store.dispatch("notification/close");
     }

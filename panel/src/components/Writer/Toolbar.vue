@@ -1,11 +1,11 @@
 <template>
   <div class="k-writer-toolbar">
     <k-button
-      v-for="(mark, markType) in options"
+      v-for="(mark, markType) in sortedButtons"
       :key="markType"
       :class="{'k-writer-toolbar-button': true, 'k-writer-toolbar-button-active': marks.includes(markType)}"
-      :icon="mark.spec.toolbar.icon"
-      @mousedown.prevent="$emit('option', mark.spec.toolbar)"
+      :icon="mark.icon"
+      @mousedown.prevent="$emit('command', mark.command || markType)"
     />
   </div>
 </template>
@@ -13,14 +13,35 @@
 <script>
 export default {
   props: {
+    buttons: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
     marks: {
       type: Array,
       default() {
-        return []
+        return [];
       }
     },
-    options: Object
+    sorting: Array
   },
+  computed: {
+    sortedButtons() {
+      if (!this.sorting) {
+        return this.buttons;
+      }
+
+      let buttons = {};
+
+      this.sorting.forEach(buttonName => {
+        buttons[buttonName] = this.buttons[buttonName];
+      });
+
+      return buttons;
+    }
+  }
 };
 </script>
 
@@ -35,17 +56,17 @@ export default {
   box-shadow: $shadow;
   color: $color-white;
   border-radius: $rounded;
-  line-height: 1;
 }
 .k-writer-toolbar-button.k-button {
   display: flex;
   align-items: center;
   height: 36px;
   padding: 0 .5rem;
-  font-size: $text-sm;
+  font-size: $text-sm !important;
   color: currentColor;
+  line-height: 1;
 }
 .k-writer-toolbar-button.k-writer-toolbar-button-active {
-  color: $color-blue-200;
+  color: $color-blue-300;
 }
 </style>

@@ -124,7 +124,6 @@ export default {
   },
   watch: {
     value() {
-      this.doc().setContent(this.value);
     }
   },
   methods: {
