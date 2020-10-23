@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Exception;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 use Kirby\Toolkit\Str;
@@ -75,10 +76,18 @@ class Blocks extends Collection
             return new static();
         }
 
+        if (is_array($options) === false) {
+            throw new Exception('Invalid block options');
+        }
+
         // create a new collection of blocks
         $collection = new static([], $options);
 
         foreach ($blocks as $params) {
+            if (is_array($params) === false) {
+                continue;
+            }
+
             $params['options']  = $options['options'];
             $params['parent']   = $options['parent'];
             $params['siblings'] = $collection;

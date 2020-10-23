@@ -30,7 +30,18 @@ return [
          * @param array $fieldsets
          * @return array
          */
-        'fieldsets' => function (array $fieldsets) {
+        'fieldsets' => function (array $fieldsets = []) {
+            if (empty($fieldsets) === true) {
+                $fieldsets = [
+                    'heading' => 'blocks/heading',
+                    'quote'   => 'blocks/quote',
+                    'text'    => 'blocks/text',
+                    'video'   => 'blocks/video',
+                    'image'   => 'blocks/image',
+                    'code'    => 'blocks/code'
+                ];
+            }
+
             return $fieldsets;
         },
 
