@@ -31,18 +31,14 @@ return [
          * @return array
          */
         'fieldsets' => function (array $fieldsets = []) {
-            if (empty($fieldsets) === true) {
-                $fieldsets = [
-                    'heading' => 'blocks/heading',
-                    'quote'   => 'blocks/quote',
-                    'text'    => 'blocks/text',
-                    'video'   => 'blocks/video',
-                    'image'   => 'blocks/image',
-                    'code'    => 'blocks/code'
-                ];
-            }
-
-            return $fieldsets;
+            return array_merge([
+                'heading' => 'blocks/heading',
+                'quote'   => 'blocks/quote',
+                'text'    => 'blocks/text',
+                'video'   => 'blocks/video',
+                'image'   => 'blocks/image',
+                'code'    => 'blocks/code'
+            ], $fieldsets);
         },
 
         /**
