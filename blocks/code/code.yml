@@ -1,5 +1,7 @@
 name: Code
 icon: code
+wysiwyg: true
+preview: code
 fields:
   code:
     label: Code

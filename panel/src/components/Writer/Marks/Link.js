@@ -21,6 +21,13 @@ export default class Link extends Mark {
       },
       "removeLink": () => {
         return this.remove();
+      },
+      "toggleLink": (attrs = {}) => {
+        if (attrs.href && attrs.href.length > 0) {
+          this.editor.command("insertLink", attrs);
+        } else {
+          this.editor.command("removeLink");
+        }
       }
     };
   }

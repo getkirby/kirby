@@ -1,16 +1,18 @@
 <template>
   <div>
     <div class="k-block-code-editor">
-      <k-writer
-        placeholder="Your code …"
-        :breaks="true"
-        :code="true"
+      <k-input
+        ref="code"
+        :buttons="false"
         :value="content.code"
+        type="textarea"
+        placeholder="Your code …"
         @input="update({ code: $event })"
       />
       <div class="k-block-code-editor-language">
         <k-icon type="code" />
         <k-input
+          ref="language"
           :empty="false"
           :options="languages"
           :value="content.language"
@@ -43,6 +45,9 @@ export default {
     }
   },
   methods: {
+    focus() {
+      this.$refs.code.focus();
+    },
     update(value) {
       this.$emit("update", {
         ...this.content,

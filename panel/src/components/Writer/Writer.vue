@@ -1,34 +1,30 @@
 <template>
   <div
     ref="editor"
+    :data-empty="isEmpty"
+    :data-placeholder="placeholder"
     :spellcheck="spellcheck"
     class="k-writer"
   >
-    <k-writer-toolbar
-      v-if="editor"
-      v-show="toolbar"
-      ref="toolbar"
-      :buttons="editor.buttons"
-      :marks="toolbar.marks"
-      :sorting="[
-        'bold',
-        'italic',
-        'strike',
-        'underline',
-        'code',
-        'link'
-      ]"
-      :style="{
-        bottom: toolbar.bottom + 'px',
-        left: toolbar.left + 'px'
-      }"
-      @command="onCommand"
-    />
-    <k-writer-link-dialog
-      ref="linkDialog"
-      @close="editor.focus()"
-      @submit="toggleLink"
-    />
+    <template v-if="editor">
+      <k-writer-toolbar
+        v-if="toolbar.visible"
+        ref="toolbar"
+        :editor="editor"
+        :active-marks="toolbar.marks"
+        :active-node="false"
+        :style="{
+          bottom: toolbar.position.bottom + 'px',
+          left: toolbar.position.left + 'px'
+        }"
+        @command="editor.command($event)"
+      />
+      <k-writer-link-dialog
+        ref="linkDialog"
+        @close="editor.focus()"
+        @submit="editor.command('toggleLink', $event)"
+      />
+    </template>
   </div>
 </template>
 
@@ -47,21 +43,61 @@ import Strike from "./Marks/Strike";
 import Underline from "./Marks/Underline";
 
 // Nodes
+import BulletList from "./Nodes/BulletList";
 import HardBreak from "./Nodes/HardBreak";
+import Heading from "./Nodes/Heading";
+import HorizontalRule from "./Nodes/HorizontalRule";
+import ListItem from "./Nodes/ListItem";
+import OrderedList from "./Nodes/OrderedList";
+
+// Extensions
+import History from "./Extensions/History.js";
+import Toolbar from "./Extensions/Toolbar.js";
 
 // Toolbar
-import Toolbar from "./Toolbar.vue";
+import ToolbarComponent from "./Toolbar.vue";
 
 export default {
   components: {
     "k-writer-link-dialog": LinkDialog,
-    "k-writer-toolbar": Toolbar,
+    "k-writer-toolbar": ToolbarComponent,
   },
   props: {
     breaks: Boolean,
     code: Boolean,
     disabled: Boolean,
-    placeholder: String,
+    headings: [Array, Boolean],
+    inline: {
+      type: Boolean,
+      default: false,
+    },
+    marks: {
+      type: [Array, Boolean],
+      default() {
+        return [
+          "bold",
+          "italic",
+          "strike",
+          "underline",
+          "code",
+          "link"
+        ];
+      }
+    },
+    nodes: {
+      type: [Array, Boolean],
+      default() {
+        return [
+          "heading",
+          "bulletList",
+          "orderedList"
+        ];
+      }
+    },
+    placeholder: {
+      type: String,
+      default: "Write something …",
+    },
     spellcheck: Boolean,
     value: {
       type: String,
@@ -70,26 +106,34 @@ export default {
   },
   mounted() {
     this.editor = new Editor({
-      editable: !this.disabled,
       content: this.value,
+      editable: !this.disabled,
       element: this.$el,
       events: {
         link: () => {
           this.$refs.linkDialog.open(this.editor.getMarkAttrs("link"));
         },
-        update: this.onUpdate,
-        transaction: this.onTransaction
+        toolbar: (toolbar) => {
+          this.toolbar = toolbar;
+        },
+        update: () => {
+          this.html    = this.editor.getHTML();
+          this.isEmpty = this.editor.isEmpty();
+          this.$emit("input", this.html);
+        }
       },
       extensions: [
-        new Code,
-        new Bold,
-        new HardBreak,
-        new Italic,
-        new Link,
-        new Strike,
-        new Underline,
-      ]
+        ...this.createMarks(),
+        ...this.createNodes(),
+
+        // Extensions
+        new History,
+        new Toolbar,
+      ],
+      inline: this.inline
     });
+
+    this.isEmpty = this.editor.isEmpty();
   },
   beforeDestroy() {
     this.editor.destroy();
@@ -98,20 +142,9 @@ export default {
     return {
       editor: null,
       html: this.value,
+      isEmpty: true,
       toolbar: false
     };
-  },
-  computed: {
-    toolbarButtons() {
-      return {
-        bold: {
-          icon: "bold"
-        },
-        italic: {
-          icon: "italic"
-        }
-      }
-    }
   },
   watch: {
     value(newValue, oldValue) {
@@ -122,71 +155,73 @@ export default {
     }
   },
   methods: {
-    closeToolbar() {
-      this.toolbar = false;
-      this.$emit("toolbar", false);
-    },
-    onCommand(command) {
-      this.editor.command(command);
-    },
-    onTransaction({ state }) {
-      if (state.selection.empty) {
-        this.$emit("deselect");
-        this.closeToolbar();
-        return;
+    filterExtensions(available, allowed, postFilter) {
+      if (allowed === false) {
+        allowed = [];
+      } else if (allowed === true || Array.isArray(allowed) === false) {
+        allowed = Object.keys(available);
       }
 
-      if (this.editor.focused === false) {
-        this.closeToolbar();
-        return;
-      }
+      let installed = [];
 
-      const { from, to } = state.selection;
-
-      const start = this.editor.view.coordsAtPos(from);
-      const end   = this.editor.view.coordsAtPos(to, true);
-
-      // The box in which the tooltip is positioned, to use as base
-      const editorRect = this.$refs.editor.getBoundingClientRect();
-
-      // Find a center-ish x position from the selection endpoints (when
-      // crossing lines, end may be more to the left)
-      let left = ((start.left + end.left) / 2) - editorRect.left
-      let bottom = Math.round(editorRect.bottom - start.top);
-
-      this.openToolbar({
-        bottom,
-        from,
-        left,
-        to
+      allowed.forEach(allowed => {
+        if (available[allowed]) {
+          installed.push(available[allowed]);
+        }
       });
 
-      this.$emit("select", this.editor.selection);
-    },
-    onUpdate({ getHTML }) {
-      this.html = getHTML();
-      this.$emit("input", this.html);
-    },
-    openToolbar(attrs) {
-      this.toolbar = {
-        bottom: 0,
-        from: 0,
-        left: 0,
-        marks: this.editor.activeMarks,
-        to: 0,
-        ...attrs,
-      };
-
-      this.$emit("toolbar", this.toolbar);
-    },
-    toggleLink(attrs) {
-      if (attrs.href && attrs.href.length > 0) {
-        this.editor.command("insertLink", attrs);
-      } else {
-        this.editor.command("removeLink");
+      if (typeof postFilter === "function") {
+        installed = postFilter(allowed, installed);
       }
+
+      return installed;
     },
-  },
+    createMarks() {
+      return this.filterExtensions({
+        code: new Code,
+        bold: new Bold,
+        italic: new Italic,
+        link: new Link,
+        strike: new Strike,
+        underline: new Underline,
+      }, this.marks);
+    },
+    createNodes() {
+
+      const hardBreak = new HardBreak({
+        text: true,
+        enter: this.inline
+      });
+
+      // inline fields only get the hard break
+      if (this.inline === true) {
+        return [hardBreak];
+      }
+
+      return this.filterExtensions({
+        bulletList: new BulletList,
+        orderedList: new OrderedList,
+        heading: new Heading,
+        horizontalRule: new HorizontalRule,
+        listItem: new ListItem
+      }, this.nodes, (allowed, installed) => {
+
+        // install the list item when there's a list available
+        if (allowed.includes("bulletList") || allowed.includes("orderedList")) {
+          installed.push(new ListItem);
+        }
+
+        // always install the hard break
+        installed.push(hardBreak);
+
+        return installed;
+      });
+
+    },
+    focus() {
+      this.editor.focus();
+    }
+  }
 };
 </script>
 
@@ -196,7 +231,9 @@ export default {
   width: 100%;
 }
 .k-writer .ProseMirror {
+  overflow-wrap: break-word;
   word-wrap: break-word;
+  word-break: break-word;
   white-space: pre-wrap;
   -webkit-font-variant-ligatures: none;
   font-variant-ligatures: none;
@@ -205,10 +242,44 @@ export default {
 .k-writer .ProseMirror:focus {
   outline: 0;
 }
+.k-writer .ProseMirror * {
+  caret-color: currentColor;
+}
 .k-writer .ProseMirror a {
   color: $color-focus;
   text-decoration: underline;
 }
+.k-writer .ProseMirror > *:last-child {
+  margin-bottom: 0;
+}
+.k-writer .ProseMirror p,
+.k-writer .ProseMirror ul,
+.k-writer .ProseMirror ol,
+.k-writer .ProseMirror h1,
+.k-writer .ProseMirror h2,
+.k-writer .ProseMirror h3 {
+  margin-bottom: .75rem;
+}
+
+.k-writer .ProseMirror h1 {
+  font-size: $text-3xl;
+  line-height: 1.25em;
+}
+.k-writer .ProseMirror h2 {
+  font-size: $text-2xl;
+  line-height: 1.25em;
+}
+.k-writer .ProseMirror h3 {
+  font-size: $text-xl;
+  line-height: 1.25em;
+}
+.k-writer .ProseMirror h1 strong,
+.k-writer .ProseMirror h2 strong,
+.k-writer .ProseMirror h3 strong {
+  font-weight: 700;
+}
+
+
 .k-writer .ProseMirror strong {
   font-weight: 600;
 }
@@ -222,6 +293,22 @@ export default {
   border-radius: $rounded;
   font-family: $font-mono;
 }
+.k-writer .ProseMirror ul,
+.k-writer .ProseMirror ol {
+  padding-left: 1rem;
+}
+.k-writer .ProseMirror ul > li {
+  list-style: disc;
+}
+.k-writer .ProseMirror ol > li {
+  list-style: decimal;
+}
+.k-writer .ProseMirror li > p,
+.k-writer .ProseMirror li > ol,
+.k-writer .ProseMirror li > ul {
+  margin: 0;
+}
+
 .k-writer-placeholder {
   position: absolute;
   top: 0;
@@ -244,5 +331,13 @@ export default {
 }
 .k-writer-code code {
   font-family: $font-mono;
+}
+
+.k-writer[data-empty]::before {
+  content: attr(data-placeholder);
+  position: absolute;
+  line-height: 1.5em;
+  color: $color-gray-500;
+  pointer-events: none;
 }
 </style>

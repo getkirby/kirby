@@ -382,7 +382,7 @@ $layout-padding: .5rem;
   height: 100%;
   width: 20rem;
   pointer-events: none;
-  background: linear-gradient(left, rgba(#313740, 0), rgba(#313740, .3));
+  background: linear-gradient(to left, rgba(#313740, 0), rgba(#313740, .3));
 }
 .k-builder-editor-body .k-builder-block:not([data-compact]) {
   background: $color-background;

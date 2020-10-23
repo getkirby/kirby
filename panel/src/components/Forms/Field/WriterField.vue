@@ -7,7 +7,7 @@
   >
     <k-writer
       ref="input"
-      :breaks="true"
+      v-bind="$props"
       :value="value"
       class="k-writer-field-input"
       @input="$emit('input', $event)"
@@ -18,12 +18,14 @@
 <script>
 import Field from "../Field.vue";
 import Input from "../Input.vue";
+import Writer from "@/components/Writer/Writer.vue";
 
 export default {
   inheritAttrs: false,
   props: {
     ...Field.props,
     ...Input.props,
+    ...Writer.props,
   },
   methods: {
     focus() {

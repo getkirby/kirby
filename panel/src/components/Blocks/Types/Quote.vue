@@ -2,25 +2,19 @@
   <div class="k-block-quote-editor">
     <k-writer
       ref="text"
-      :breaks="true"
+      :inline="true"
       :value="content.text"
       class="k-block-quote-text"
       placeholder="Quote …"
-      @enter="$refs.citation.focus('start')"
-      @back="$emit('remove')"
       @input="update({ text: $event })"
-      @blurDown="$refs.citation.focus($event)"
-      @blurUp="$emit('prev', $event)"
     />
     <k-writer
       ref="citation"
+      :inline="true"
       :value="content.citation"
       class="k-block-quote-citation"
       placeholder="by …"
-      @back="$refs.text.focus('end')"
       @input="update({ citation: $event })"
-      @blurDown="$emit('next', $event)"
-      @blurUp="$refs.text.focus($event)"
     />
   </div>
 </template>
@@ -32,6 +26,9 @@ export default {
     content: [Array, Object]
   },
   methods: {
+    focus() {
+      this.$refs.text.focus();
+    },
     update(value) {
       this.$emit("update", {
         ...this.content,

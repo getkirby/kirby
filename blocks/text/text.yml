@@ -1,6 +1,8 @@
 name: Text
 icon: text
 wysiwyg: true
+preview: text
 fields:
   text:
     type: writer
+    nodes: false

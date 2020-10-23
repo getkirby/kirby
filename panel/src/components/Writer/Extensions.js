@@ -45,7 +45,13 @@ export default class Extensions {
 
             view.focus();
 
-            return commandCallback(attrs);
+            const result = commandCallback(attrs);
+
+            if (typeof result === "function") {
+              return result(view.state, view.dispatch, view);
+            }
+
+            return result;
           };
         }
 
@@ -73,13 +79,21 @@ export default class Extensions {
     {});
   }
 
-  get buttons() {
+  buttons(type = "mark") {
     const buttons = {};
 
     this.extensions
-      .filter(extension => extension.type === "mark")
+      .filter(extension => extension.type === type)
       .filter(extension => extension.button)
-      .forEach(extension => buttons[extension.name] = extension.button);
+      .forEach(extension => {
+        if (Array.isArray(extension.button)) {
+          extension.button.forEach((button, index) => {
+            buttons[extension.name + "-" + index] = button;
+          });
+        } else {
+          buttons[extension.name] = extension.button;
+        }
+      });
 
     return buttons;
   }
@@ -205,7 +219,13 @@ export default class Extensions {
         ...allPlugins,
         ...plugins,
       ]),
-    []).map(plugin => new Plugin(plugin));
+    []).map(plugin => {
+      if (plugin instanceof Plugin) {
+        return plugin;
+      }
+
+      return new Plugin(plugin);
+    });
   }
 
 }

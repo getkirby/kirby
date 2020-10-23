@@ -1,8 +1,9 @@
 name: Video
 icon: video
-label: "{{ url }}"
+preview: video
 fields:
   url:
     type: url
   caption:
     type: writer
+    inline: true

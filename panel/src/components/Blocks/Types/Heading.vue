@@ -1,16 +1,12 @@
 <template>
   <k-writer
-    :data-level="content.level"
+    ref="editor"
     :inline="true"
+    :nodes="false"
     :value="content.text"
     class="k-block-heading-editor"
     placeholder="Heading …"
-    @dblclick="$emit('open')"
-    @enter="$emit('append', 'paragraph')"
-    @input="$emit('update', {
-      ...content,
-      text: $event
-    })"
+    @input="$emit('update', { text: $event })"
   />
 </template>
 
@@ -19,6 +15,14 @@ export default {
   inheritAttrs: false,
   props: {
     content: Object
+  },
+  methods: {
+    focus() {
+      this.$refs.editor.focus();
+    },
+    append() {
+      alert("whohoow");
+    }
   }
 };
 </script>
@@ -38,6 +42,6 @@ export default {
   font-size: $text-xl;
 }
 .k-block-heading .ProseMirror strong {
-  font-weight: 900;
+  font-weight: 700;
 }
 </style>

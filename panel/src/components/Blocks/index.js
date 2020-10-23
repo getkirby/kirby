@@ -29,7 +29,7 @@ import Image from "./Types/Image.vue";
 import Images from "./Types/Images.vue";
 import Quote from "./Types/Quote.vue";
 import Table from "./Types/Table.vue";
-import Paragraph from "./Types/Paragraph.vue";
+import Text from "./Types/Text.vue";
 import Video from "./Types/Video.vue";
 
 Vue.component("k-block-code", Code);
@@ -40,5 +40,5 @@ Vue.component("k-block-image", Image);
 Vue.component("k-block-images", Images);
 Vue.component("k-block-quote", Quote);
 Vue.component("k-block-table", Table);
-Vue.component("k-block-paragraph", Paragraph);
+Vue.component("k-block-text", Text);
 Vue.component("k-block-video", Video);

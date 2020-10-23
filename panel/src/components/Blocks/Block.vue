@@ -6,7 +6,6 @@
     :data-open="isOpen"
     :data-translate="fieldset.translate"
     class="k-block-container"
-    tabindex="0"
     @mouseenter="isHovered = true"
     @mouseleave="isHovered = false"
   >
@@ -58,6 +57,10 @@ export default {
     className() {
       let className = ["k-block-" + this.type];
 
+      if (this.fieldset.preview) {
+        className.push("k-block-" + this.fieldset.preview);
+      }
+
       if (this.wysiwyg === false) {
         className.push("k-block-default");
       }
@@ -76,10 +79,24 @@ export default {
       return "k-block-default";
     },
     wysiwyg() {
-      return this.$helper.isComponent(this.wysiwygComponent);
+      return this.wysiwygComponent !== false;
     },
     wysiwygComponent() {
-      return "k-block-" + this.type;
+      let component = "k-block-" + this.type;
+
+      if (this.$helper.isComponent(component)) {
+        return component;
+      }
+
+      if (this.fieldset.preview) {
+        component = "k-block-" + this.fieldset.preview;
+
+        if (this.$helper.isComponent(component)) {
+          return component;
+        }
+      }
+
+      return false;
     },
   },
   methods: {

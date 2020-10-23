@@ -2,8 +2,17 @@ import Node from "../Node";
 
 export default class Paragraph extends Node {
 
-  get name() {
-    return "paragraph"
+  get button() {
+    return {
+      label: "Paragraph",
+      icon: "text"
+    };
+  }
+
+  commands({ utils, type }) {
+    return {
+      "paragraph": () => utils.setBlockType(type)
+    };
   }
 
   get schema() {
@@ -18,10 +27,8 @@ export default class Paragraph extends Node {
     }
   }
 
-  commands({ editor, type }) {
-    return {
-      "paragraph": () => editor.command("setBlockType", type)
-    };
+  get name() {
+    return "paragraph"
   }
 
 }

@@ -1,9 +1,7 @@
-import {
-  findParentNode,
-  findSelectedNodeOfType,
-} from "prosemirror-utils";
+import findParentNode from "./findParentNode";
+import findSelectedNodeOfType from "./findSelectedNodeOfType";
 
-export default function nodeIsActive(state, type, attrs = {}) {
+export default (state, type, attrs = {}) => {
   const predicate = node => node.type === type
   const node = findSelectedNodeOfType(type)(state.selection)
     || findParentNode(predicate)(state.selection)

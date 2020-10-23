@@ -153,7 +153,7 @@ class BlocksField
     {
         $fieldset['name'] = $fieldset['name'] ?? Str::ucfirst($type);
 
-        return [
+        return array_merge($fieldset, [
             'disabled'  => $fieldset['disabled'] ?? false,
             'icon'      => $fieldset['icon'] ?? null,
             'label'     => I18n::translate($label = $fieldset['label'] ?? $fieldset['name'], $label),
@@ -162,7 +162,7 @@ class BlocksField
             'translate' => $fieldset['translate'] ?? null,
             'type'      => $type,
             'unset'     => $fieldset['unset'] ?? false,
-        ];
+        ]);
     }
 
     /**

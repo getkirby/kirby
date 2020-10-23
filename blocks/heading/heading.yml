@@ -1,4 +1,6 @@
 icon: title
+wysiwyg: true
+preview: heading
 fields:
   text:
     type: text

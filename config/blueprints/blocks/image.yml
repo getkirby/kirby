@@ -9,6 +9,7 @@ fields:
     icon: title
   caption:
     type: writer
+    inline: true
     icon: text
   link:
     type: text

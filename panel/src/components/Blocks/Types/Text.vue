@@ -1,12 +1,10 @@
 <template>
   <k-writer
     ref="editor"
-    :breaks="true"
+    :nodes="false"
     :value="content.text"
-    class="k-block-paragraph-editor"
+    class="k-block-text-editor"
     placeholder="Text …"
-    @backspaceWhenEmpty="$emit('remove')"
-    @enter="onEnter"
     @input="$emit('update', { text: $event })"
   />
 </template>
@@ -20,20 +18,16 @@ export default {
   methods: {
     focus() {
       this.$refs.editor.focus();
-    },
-    onEnter({ before, after }) {
-      this.$emit("update", { text: before });
-      this.$emit("append", "paragraph", { text: after });
     }
   }
 };
 </script>
 
 <style lang="scss">
-.k-block-paragraph {
+.k-block-text {
   padding: .5rem 0;
 }
-.k-block-paragraph-editor {
+.k-block-text-editor {
   font-size: $text-base;
   line-height: 1.5em;
 }

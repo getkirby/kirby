@@ -5,17 +5,21 @@ import { keymap } from "prosemirror-keymap";
 import { baseKeymap } from "prosemirror-commands";
 import { inputRules, undoInputRule } from "prosemirror-inputrules";
 
+
 // Prosemirror utils
 import utils from "./Utils";
 
+import Emitter from "./Emitter";
 import Extensions from "./Extensions";
 
 // Built-in extensions
 import { Doc, Paragraph, Text } from "./Nodes";
 
-export default class Editor {
+export default class Editor extends Emitter {
 
   constructor(options = {}) {
+    super();
+
     this.defaults = {
       autofocus: false,
       content: "",
@@ -25,19 +29,11 @@ export default class Editor {
       element: null,
       extensions: [],
       emptyDocument: {
-        type: 'doc',
-        content: [{
-          type: 'paragraph'
-        }]
+        type: "doc",
+        content: [],
       },
-      events: {
-        blur: () => {},
-        focus: () => {},
-        init: () => {},
-        paste: () => {},
-        transaction: () => {},
-        update: () => {}
-      },
+      events: {},
+      inline: false,
       parseOptions: {},
       topNode: "doc",
       useBuiltInExtensions: true
@@ -56,10 +52,16 @@ export default class Editor {
     }
 
     return [
-      new Doc(),
+      new Doc({
+        inline: this.options.inline
+      }),
       new Text(),
       new Paragraph(),
     ];
+  }
+
+  buttons(type) {
+    return this.extensions.buttons(type);
   }
 
   clearContent(emitUpdate = false) {
@@ -77,10 +79,6 @@ export default class Editor {
       schema: this.schema,
       view: this.view,
     });
-  }
-
-  createButtons() {
-    return this.extensions.buttons;
   }
 
   createDocument(content, parseOptions = this.options.parseOptions) {
@@ -106,6 +104,16 @@ export default class Editor {
     }
 
     return false;
+  }
+
+  createEvents() {
+    const events = this.options.events || {};
+
+    Object.entries(events).forEach(([eventName, eventCallback]) => {
+      this.on(eventName, eventCallback);
+    });
+
+    return events;
   }
 
   createExtensions() {
@@ -231,6 +239,10 @@ export default class Editor {
   }
 
   dispatchTransaction(transaction) {
+
+    // keep the old state for comparison
+    const lastState = this.state;
+
     // create a new state with the transaction
     const newState = this.state.apply(transaction);
 
@@ -240,40 +252,38 @@ export default class Editor {
     // store the updated selection
     this.selection = {
       from: this.state.selection.from,
-      to: this.state.selection.to,
+      to:   this.state.selection.to,
     }
 
     // store active nodes and marks for the toolbar
     this.setActiveNodesAndMarks();
 
-    this.emit("transaction", {
+    // prepare event information for all following events
+    const payload = {
       getHTML: this.getHTML.bind(this),
       getJSON: this.getJSON.bind(this),
       state: this.state,
       transaction,
-    });
+    };
 
-    // don't emit an update if the doc has not changed or
-    // an update has been actively prevented
-    if (!transaction.docChanged || transaction.getMeta("preventUpdate")) {
-      return;
+    // emit details about the transaction
+    this.emit("transaction", payload);
+
+    // Only emit an update if the doc has changed and
+    // an update has not been actively prevented
+    if (transaction.docChanged || !transaction.getMeta("preventUpdate")) {
+      this.emit("update", payload);
     }
 
-    this.emitUpdate(transaction);
-  }
+    // Only emit a select event if the selection changed
+    const { from, to } = this.state.selection;
+    const hasChanged   = !lastState || !lastState.selection.eq(newState.selection);
 
-  emit(event, ...args) {
-    if (typeof this.events[event] === "function") {
-      this.events[event].apply(this, args);
-    }
-  }
-
-  emitUpdate(transaction) {
-    this.emit("update", {
-      getHTML: this.getHTML.bind(this),
-      getJSON: this.getJSON.bind(this),
-      state: this.state,
-      transaction,
+    this.emit(newState.selection.empty ? "deselect" : "select", {
+      ...payload,
+      from,
+      hasChanged,
+      to,
     });
   }
 
@@ -296,6 +306,10 @@ export default class Editor {
       .serializeFragment(this.state.doc.content);
 
     div.appendChild(fragment);
+
+    if (this.options.inline && div.querySelector("p")) {
+      return div.querySelector("p").innerHTML;
+    }
 
     return div.innerHTML;
   }
@@ -321,17 +335,12 @@ export default class Editor {
       ...options,
     };
 
-    this.events = {
-      ...this.defaults.events,
-      ...(options.events || {})
-    };
-
     this.element = this.options.element;
     this.focused = false;
     this.selection = { from: 0, to: 0};
 
+    this.events     = this.createEvents();
     this.extensions = this.createExtensions();
-    this.buttons    = this.createButtons();
     this.nodes      = this.createNodes();
     this.marks      = this.createMarks();
     this.schema     = this.createSchema();
@@ -355,6 +364,16 @@ export default class Editor {
 
     // give extensions access to our view
     this.extensions.view = this.view;
+  }
+
+  isEditable() {
+    return this.options.editable;
+  }
+
+  isEmpty() {
+    if (this.state) {
+      return this.state.doc.textContent.length === 0;
+    }
   }
 
   get isActive() {

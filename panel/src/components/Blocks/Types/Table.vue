@@ -9,12 +9,12 @@
         {{ column.label }}
       </th>
     </tr>
-    <tr v-if="content.rows.length === 0">
-      <td :colspan="Object.keys(columns).length">
+    <tr v-if="rows.length === 0">
+      <td :colspan="columnsCount">
         <small class="k-block-table-preview-empty">{{ $t('field.structure.empty') }}</small>
       </td>
     </tr>
-    <tr v-else v-for="(row, rowIndex) in content.rows" :key="rowIndex">
+    <tr v-else v-for="(row, rowIndex) in rows" :key="rowIndex">
       <td
         v-for="(column, columnName) in columns"
         :key="rowIndex + '-' + columnName"
@@ -33,14 +33,15 @@ export default {
     content: Object,
     fieldset: Object
   },
-  mounted() {
-    if (this.content.rows.length === 0) {
-      this.$emit("edit");
-    }
-  },
   computed: {
     columns() {
-      return this.table.columns || this.table.fields;
+      return this.table.columns || this.table.fields || {};
+    },
+    columnsCount() {
+      return Object.keys(this.columns).length;
+    },
+    rows() {
+      return this.content.rows || [];
     },
     table() {
       let table = null;
@@ -51,7 +52,7 @@ export default {
         }
       });
 
-      return table;
+      return table || {};
     }
   }
 };

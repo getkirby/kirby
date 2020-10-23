@@ -9,6 +9,7 @@
     >
       <k-block
         v-for="(block, index) in blocks"
+        v-if="fieldsets[block.type]"
         :ref="'block-' + block.id"
         :key="block.id"
         :endpoints="endpoints"
@@ -78,7 +79,7 @@ export default {
     }
   },
   created() {
-    this.save = debounce(this.save, 250);
+    this.save = debounce(this.save, 50);
   },
   data() {
     return {
@@ -119,12 +120,18 @@ export default {
     }
   },
   methods: {
-    async add(type = "paragraph", index) {
+    async add(type = "text", index) {
       const block = await this.$api.get(this.endpoints.field + "/fieldsets/" + type);
       this.blocks.splice(index, 0, block);
       this.save();
       this.$nextTick(() => {
-        this.open(block);
+
+        if (this.fieldsets[type].wysiwyg) {
+          this.focus(block);
+        } else {
+          this.open(block);
+        }
+
       });
     },
     choose(index) {
@@ -225,8 +232,6 @@ export default {
       this.save();
     },
     update(block, content) {
-      console.log(content);
-
       this.$set(block, "content", content);
       this.save();
     }
