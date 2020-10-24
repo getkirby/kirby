@@ -27,6 +27,60 @@ class DateFieldTest extends TestCase
         $this->assertEquals('', $field->toString());
     }
 
+    public function testMinMax()
+    {
+        // no limits
+        $field = $this->field('date', [
+            'value' => '2020-10-10'
+        ]);
+
+        $field->validate();
+        $this->assertTrue($field->isValid());
+        $this->assertFalse($field->isInvalid());
+
+        // valid
+        $field = $this->field('date', [
+            'min'   => '2020-10-01',
+            'value' => '2020-10-10',
+            'max'   => '2020-10-31'
+        ]);
+
+        $field->validate();
+        $this->assertTrue($field->isValid());
+        $this->assertFalse($field->isInvalid());
+
+        // same day valid
+        $field = $this->field('date', [
+            'min'   => '2020-10-10',
+            'value' => '2020-10-10',
+            'max'   => '2020-10-10'
+        ]);
+
+        $field->validate();
+        $this->assertTrue($field->isValid());
+        $this->assertFalse($field->isInvalid());
+
+        // min failed
+        $field = $this->field('date', [
+            'min'   => '2020-10-01',
+            'value' => '2020-09-10'
+        ]);
+
+        $field->validate();
+        $this->assertFalse($field->isValid());
+        $this->assertTrue($field->isInvalid());
+
+        // max failed
+        $field = $this->field('date', [
+            'value' => '2020-11-10',
+            'max'   => '2020-10-31'
+        ]);
+
+        $field->validate();
+        $this->assertFalse($field->isValid());
+        $this->assertTrue($field->isInvalid());
+    }
+
     public function valueProvider()
     {
         return [
