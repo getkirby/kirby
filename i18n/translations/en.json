@@ -196,6 +196,9 @@
   "error.validation.size": "The size of the value must be \"{size}\"",
   "error.validation.startswith": "The value must start with \"{start}\"",
   "error.validation.time": "Please enter a valid time",
+  "error.validation.time.after": "Please enter a time after {time}",
+  "error.validation.time.before": "Please enter a time before {time}",
+  "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Please enter a valid URL",
 
   "field.required": "The field is required",

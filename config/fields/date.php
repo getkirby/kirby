@@ -35,13 +35,13 @@ return [
         },
 
         /**
-         * Youngest date, which can be selected/saved (Y-m-d)
+         * Latest date, which can be selected/saved (Y-m-d)
          */
         'max' => function (string $max = null) {
             return $this->toDatetime($max);
         },
         /**
-         * Oldest date, which can be selected/saved (Y-m-d)
+         * Earliest date, which can be selected/saved (Y-m-d)
          */
         'min' => function (string $min = null) {
             return $this->toDatetime($min);

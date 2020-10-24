@@ -31,6 +31,19 @@ return [
             return $icon;
         },
         /**
+         * Latest time, which can be selected/saved (H:i or H:i:s)
+         */
+        'max' => function (string $max = null) {
+            return $max ? $this->toDatetime(date('Y-m-d ') . $max) : null;
+        },
+        /**
+         * Earliest time, which can be selected/saved (H:i or H:i:s)
+         */
+        'min' => function (string $min = null) {
+            return $min ? $this->toDatetime(date('Y-m-d ') . $min) : null;
+        },
+
+        /**
          * `12` or `24` hour notation. If `12`, an AM/PM selector will be shown.
          */
         'notation' => function (int $value = 24) {
@@ -95,5 +108,48 @@ return [
     },
     'validations' => [
         'time',
+        'minMax' => function ($value) {
+            $min    = $this->min ? strtotime($this->min) : null;
+            $max    = $this->max ? strtotime($this->max) : null;
+            $value  = strtotime($this->value());
+            $format = 'H:i:s';
+            $errors = [];
+
+            if ($value && $min && $value < $min) {
+                $errors['min'] = $min;
+            }
+
+            if ($value && $max && $value > $max) {
+                $errors['max'] = $max;
+            }
+
+            if (empty($errors) === false) {
+                if ($min && $max) {
+                    throw new Exception([
+                        'key' => 'validation.time.between',
+                        'data' => [
+                            'min' => date($format, $min),
+                            'max' => date($format, $max)
+                        ]
+                    ]);
+                } elseif ($min) {
+                    throw new Exception([
+                        'key' => 'validation.time.after',
+                        'data' => [
+                            'time' => date($format, $min),
+                        ]
+                    ]);
+                } else {
+                    throw new Exception([
+                        'key' => 'validation.time.before',
+                        'data' => [
+                            'time' => date($format, $max),
+                        ]
+                    ]);
+                }
+            }
+
+            return true;
+        },
     ]
 ];
