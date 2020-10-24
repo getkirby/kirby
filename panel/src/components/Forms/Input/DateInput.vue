@@ -225,16 +225,18 @@ export default {
   validations() {
     return {
       value: {
-        min: this.min ? (value) => {
-          const date = this.$library.dayjs.utc(value);
-          const min  = this.$library.dayjs.utc(this.min);
-          return date.isSame(min, "day") || date.isAfter(min, "day");
-        } : true,
-        max: this.max ? (value) => {
-          const date = this.$library.dayjs.utc(value);
-          const max  = this.$library.dayjs.utc(this.max);
-          return date.isSame(max, "day") || date.isBefore(max, "day");
-        } : true,
+        min: this.min ? value => this.$helper.validate.datetime(
+          this,
+          value,
+          this.min,
+          "isAfter"
+        ) : true,
+        max: this.max ? value => this.$helper.validate.datetime(
+          this,
+          value,
+          this.max,
+          "isBefore"
+        ) : true,
       }
     }
   }
