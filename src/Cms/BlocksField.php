@@ -237,8 +237,9 @@ class BlocksField
     public function toArray(array $blocks = null): array
     {
         $fields = [];
+        $blocks = (array)$blocks;
 
-        foreach ((array)$blocks as $index => $block) {
+        foreach ($blocks as $index => $block) {
             $blockType   = $block['type'];
             $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
 
