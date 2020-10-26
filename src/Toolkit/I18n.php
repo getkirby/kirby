@@ -45,7 +45,7 @@ class I18n
     public static $fallback = 'en';
 
     /**
-     * Decimal number formatters by locale
+     * Cache of `NumberFormatter` objects by locale
      *
      * @var array
      */
