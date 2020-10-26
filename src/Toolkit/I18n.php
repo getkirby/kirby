@@ -87,6 +87,25 @@ class I18n
     }
 
     /**
+     * Format a number
+     *
+     * @param int|float $number
+     * @param string $locale
+     * @return string
+     */
+    public static function formatNumber($number, string $locale = null): string
+    {
+        $locale = $locale ?? static::locale();
+
+        $formatter = static::decimalNumberFormatter($locale);
+        if ($formatter !== null) {
+            $number = $formatter->format($number);
+        }
+
+        return (string)$number;
+    }
+
+    /**
      * Returns the locale code
      *
      * @return string
@@ -256,10 +275,7 @@ class I18n
         }
 
         if ($formatNumber) {
-            $formatter = static::decimalNumberFormatter($locale);
-            if ($formatter !== null) {
-                $count = $formatter->format($count);
-            }
+            $count = static::formatNumber($count, $locale);
         }
 
         return str_replace('{{ count }}', $count, $message);
