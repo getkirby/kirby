@@ -233,6 +233,8 @@ class I18n
      */
     public static function translateCount(string $key, int $count, string $locale = null)
     {
+        $locale = $locale ?? static::locale();
+
         $translation = static::translate($key, null, $locale);
 
         if ($translation === null) {
@@ -251,10 +253,6 @@ class I18n
             } else {
                 $message = end($translation);
             }
-        }
-
-        if (!$locale) {
-            $locale = static::locale();
         }
 
         $formatter = static::decimalNumberFormatter($locale);
