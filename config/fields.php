@@ -10,6 +10,7 @@ return [
     'headline'    => __DIR__ . '/fields/headline.php',
     'hidden'      => __DIR__ . '/fields/hidden.php',
     'info'        => __DIR__ . '/fields/info.php',
+    'layout'      => __DIR__ . '/fields/layout.php',
     'line'        => __DIR__ . '/fields/line.php',
     'multiselect' => __DIR__ . '/fields/multiselect.php',
     'number'      => __DIR__ . '/fields/number.php',
