@@ -1,0 +1,10 @@
+name: Kirbytext
+icon: markdown
+preview: markdown
+wysiwyg: true
+fields:
+  text:
+    label: Text
+    type: textarea
+    buttons: false
+    font: monospace

@@ -1,10 +1,12 @@
 <template>
-  <div>
+  <div
+    :data-compact="compact"
+    :data-empty="blocks.length === 0"
+    class="k-blocks"
+  >
     <k-draggable
       v-bind="draggableOptions"
-      :data-compact="compact"
-      :data-empty="blocks.length === 0"
-      class="k-blocks"
+      class="k-blocks-list"
       @sort="save"
     >
       <k-block
@@ -17,11 +19,13 @@
         :is-full="isFull"
         :is-hidden="block.isHidden === true"
         :is-open="isOpen(block)"
+        :select="select"
         v-bind="block"
         @append="add($event, index + 1)"
         @choose="choose($event)"
         @chooseToAppend="choose(index + 1)"
         @chooseToPrepend="choose(index)"
+        @mousedown.native="click(block, $event)"
         @close="close(block)"
         @convert="convert(block, $event)"
         @duplicate="duplicate(block, index)"
@@ -42,6 +46,13 @@
         </k-empty>
       </template>
     </k-draggable>
+
+    <k-button
+      v-if="!compact && blocks.length"
+      class="k-blocks-add"
+      icon="add"
+      @click="choose(blocks.length)"
+    />
 
     <k-block-selector
       ref="selector"
@@ -71,6 +82,7 @@ export default {
       type: Number,
       default: null,
     },
+    select: Object,
     value: {
       type: Array,
       default() {
@@ -94,6 +106,7 @@ export default {
         handle: true,
         list: this.blocks,
         move: this.move,
+        delay: 10,
         data: {
           fieldsets: this.fieldsets,
           isFull: this.isFull
@@ -124,14 +137,14 @@ export default {
       const block = await this.$api.get(this.endpoints.field + "/fieldsets/" + type);
       this.blocks.splice(index, 0, block);
       this.save();
+
+      if (this.compact) {
+        this.$emit("click", block);
+        return;
+      }
+
       this.$nextTick(() => {
-
-        if (this.fieldsets[type].wysiwyg) {
-          this.focus(block);
-        } else {
-          this.open(block);
-        }
-
+        this.focusOrOpen(block);
       });
     },
     choose(index) {
@@ -141,6 +154,13 @@ export default {
       } else {
         this.$refs.selector.open(index);
       }
+    },
+    click(block, event) {
+      if (this.compact) {
+        event.preventDefault();
+      }
+
+      this.$emit("click", block);
     },
     close(block) {
       const index = this.opened.indexOf(block.id);
@@ -172,6 +192,13 @@ export default {
     focus(block) {
       if (this.$refs["block-" + block.id]) {
         this.$refs["block-" + block.id][0].focus();
+      }
+    },
+    focusOrOpen(block) {
+      if (this.fieldsets[block.type].wysiwyg) {
+        this.focus(block);
+      } else {
+        this.open(block);
       }
     },
     hide(block) {
@@ -244,10 +271,7 @@ export default {
   background: $color-white;
   box-shadow: $shadow;
   border-radius: $rounded;
-  padding: 3rem 0;
-}
-.k-blocks[data-compact] {
-  padding: .75rem;
+  padding: 2rem 0;
 }
 .k-blocks[data-empty] {
   padding: 0;
@@ -261,12 +285,34 @@ export default {
   cursor: -webkit-grabbing;
   background: rgba($color-blue-200, .5);
 }
+.k-blocks .k-sortable-ghost .k-block-options {
+  display: none;
+}
+.k-block-container.sortable-drag {
+  opacity: 0 !important;
+  display: none;
+  cursor: -webkit-grabbing;
+}
 .k-blocks-empty.k-empty {
   cursor: pointer;
   display: flex;
   align-items: center;
 }
-.k-blocks > .k-blocks-empty:not(:only-child) {
+.k-blocks-list > .k-blocks-empty:not(:only-child) {
   display: none;
+}
+
+
+.k-blocks[data-compact] .k-block * {
+  pointer-events: none;
+  user-select: none;
+}
+
+.k-blocks-add {
+  padding: .75rem 4rem;
+  color: $color-gray-500;
+}
+.k-blocks-add:hover {
+  color: $color-black;
 }
 </style>

@@ -14,6 +14,7 @@
       :isFull="isFull"
       :isHidden="isHidden"
       :isOpen="isOpen"
+      :select="select"
       v-on="$listeners"
     />
     <div :class="className" class="k-block">
@@ -45,6 +46,7 @@ export default {
     isOpen: Boolean,
     isSticky: Boolean,
     name: String,
+    select: Object,
     tabs: Object,
     type: String,
   },

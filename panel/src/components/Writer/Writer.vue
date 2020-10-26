@@ -237,7 +237,7 @@ export default {
   white-space: pre-wrap;
   -webkit-font-variant-ligatures: none;
   font-variant-ligatures: none;
-  line-height: 1.5em;
+  line-height: inherit;
 }
 .k-writer .ProseMirror:focus {
   outline: 0;
@@ -309,18 +309,6 @@ export default {
   margin: 0;
 }
 
-.k-writer-placeholder {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  color: $color-gray-500;
-  pointer-events: none;
-  font: inherit;
-  line-height: 1.5em;
-  -webkit-font-variant-ligatures: none;
-  font-variant-ligatures: none;
-}
 .k-writer-code pre {
   tab-size: 2;
   font-size: $text-sm;
@@ -336,7 +324,7 @@ export default {
 .k-writer[data-empty]::before {
   content: attr(data-placeholder);
   position: absolute;
-  line-height: 1.5em;
+  line-height: inherit;
   color: $color-gray-500;
   pointer-events: none;
 }

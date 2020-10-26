@@ -183,6 +183,10 @@ return function (App $app) {
             return (int)$value;
         },
 
+        'toLayout' => function (Field $field) {
+            return Data::decode($field->value, 'json');
+        },
+
         /**
          * Wraps a link tag around the field value. The field value is used as the link text
          *

@@ -2,7 +2,9 @@
 
 use Kirby\Cms\Block;
 use Kirby\Cms\BlocksField;
+use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 
 return [
     'props' => [
@@ -23,18 +25,37 @@ return [
         'fieldsets' => function (array $fieldsets = []) {
             return $fieldsets;
         },
+
+
+        'layouts' => function (array $layouts = []) {
+            return array_map(function ($layout) {
+                return Str::split($layout);
+            }, $layouts);
+        },
+        'value' => function ($value) {
+            return Data::decode($value, 'json');
+        },
     ],
     'computed' => [
         'blocksField' => function () {
-            return new BlocksField($this->model, $this->props);
+            return new BlocksField($this->model, [
+                'fieldsets' => $this->props['fieldsets'] ?? []
+            ]);
         },
         'fieldsets' => function () {
             return $this->blocksField->fieldsets();
         },
         'value' => function () {
-            return [];
-            return $this->blocksField->value();
-        },
+            $value = $this->value;
+
+            foreach ($value as $layoutIndex => $layout) {
+                foreach ($layout['columns'] as $columnIndex => $column) {
+                    $value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksField->value($column['blocks'], false);
+                }
+            }
+
+            return $value;
+        }
     ],
     'api' => function () {
         return [
@@ -77,13 +98,13 @@ return [
             ],
         ];
     },
-    'save' => function ($blocks) {
-        return json_encode($blocks);
-        return $this->blocksField->toJson($blocks, $this->pretty);
-    },
-    'validations' => [
-        'blocks' => function ($value) {
-            return $this->blocksField->validate($value);
+    'save' => function ($value) {
+        foreach ($value as $layoutIndex => $layout) {
+            foreach ($layout['columns'] as $columnIndex => $column) {
+                $value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksField->toArray($column['blocks'] ?? []);
+            }
         }
-    ]
+
+        return json_encode($value);
+    }
 ];

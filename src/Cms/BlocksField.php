@@ -115,12 +115,13 @@ class BlocksField
         }
 
         $fieldsets = array_merge([
-            'heading' => 'blocks/heading',
-            'quote'   => 'blocks/quote',
-            'text'    => 'blocks/text',
-            'video'   => 'blocks/video',
-            'image'   => 'blocks/image',
-            'code'    => 'blocks/code'
+            'code'      => 'blocks/code',
+            'heading'   => 'blocks/heading',
+            'image'     => 'blocks/image',
+            'kirbytext' => 'blocks/kirbytext',
+            'quote'     => 'blocks/quote',
+            'text'      => 'blocks/text',
+            'video'     => 'blocks/video',
         ], $this->props['fieldsets'] ?? []);
 
 
@@ -233,12 +234,7 @@ class BlocksField
         return $tabs;
     }
 
-    /**
-     * @param array|null $blocks
-     * @param bool $pretty
-     * @return void
-     */
-    public function toJson(array $blocks = null, bool $pretty = true)
+    public function toArray(array $blocks = null): array
     {
         $fields = [];
 
@@ -252,6 +248,18 @@ class BlocksField
             // overwrite the content with the serialized form
             $blocks[$index]['content'] = $this->form($blockFields, $block['content'])->content();
         }
+
+        return $blocks;
+    }
+
+    /**
+     * @param array|null $blocks
+     * @param bool $pretty
+     * @return void
+     */
+    public function toJson(array $blocks = null, bool $pretty = true)
+    {
+        $blocks = $this->toArray($blocks);
 
         if ($pretty === true) {
             return json_encode($blocks, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
@@ -318,13 +326,13 @@ class BlocksField
     /**
      * @return array
      */
-    public function value(): array
+    public function value(array $value = null, $cache = true): array
     {
-        if ($this->value !== null) {
+        if ($cache === true && $this->value !== null) {
             return $this->value;
         }
 
-        $value     = $this->props['value'] ?? [];
+        $value     = $value ?? $this->props['value'] ?? [];
         $blocks    = $this->blocks($value)->toArray();
 
         $fieldsets = $this->fieldsets();

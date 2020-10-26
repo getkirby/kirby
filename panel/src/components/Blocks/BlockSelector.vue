@@ -6,7 +6,9 @@
     class="k-block-selector"
     size="large"
   >
-    <k-headline>{{ $t("field.builder.fieldsets.label") }}</k-headline>
+
+    {{ select }}
+
     <div class="k-block-types">
       <k-button
         v-for="fieldset in fieldsets"
@@ -26,6 +28,7 @@ export default {
   props: {
     endpoint: String,
     fieldsets: Object,
+    select: Object
   },
   data() {
     return {

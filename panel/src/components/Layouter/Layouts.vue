@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-if="rows.length">
-      <k-draggable class="k-rows" :handle="true">
+      <k-draggable class="k-layouts" :handle="true">
         <section
           v-for="(layout, layoutIndex) in rows"
           :key="layout.id"
@@ -17,36 +17,21 @@
               :data-width="column.width"
               :id="column.id"
               class="k-column k-layout-column"
-              @click="$emit('edit', {
-                layout,
-                layoutIndex,
-                column,
-                columnIndex,
-                block: null,
-                tab: null
-              })"
             >
-              <k-block-layout
-                :blocks="column.blocks"
-                :current-block="currentBlock"
-                :fieldsets="fieldsets"
-                @edit="$emit('edit', {
-                  layout,
-                  layoutIndex,
-                  column,
-                  columnIndex,
-                  block: $event.block,
-                  tab: $event.tab
-                })"
-              />
-              <!-- <k-builder-blocks
+              <k-blocks
                 :compact="true"
                 :endpoints="endpoints"
                 :fieldsets="fieldsets"
                 :max="max"
                 :value="column.blocks"
                 group="layout"
-                @click.native.stop
+                @click="$emit('edit', {
+                  layout,
+                  layoutIndex,
+                  column,
+                  columnIndex,
+                  block: $event
+                })"
                 @input="updateBlocks({
                   layout,
                   layoutIndex,
@@ -54,20 +39,28 @@
                   columnIndex,
                   blocks: $event
                 })"
-              /> -->
+              />
             </div>
           </k-grid>
-          <k-dropdown class="k-layout-options">
-            <k-button icon="angle-down" @click="$refs['layout-' + layout.id][0].toggle()" />
-            <k-dropdown-content :ref="'layout-' + layout.id" align="right">
-              <k-dropdown-item icon="angle-up" @click="selectLayout(layoutIndex)">Insert before</k-dropdown-item>
-              <k-dropdown-item icon="angle-down" @click="selectLayout(layoutIndex + 1)">Insert after</k-dropdown-item>
-              <hr>
-              <k-dropdown-item icon="trash" @click="removeLayout(layout)">Delete layout</k-dropdown-item>
-            </k-dropdown-content>
-          </k-dropdown>
+          <nav class="k-layout-options">
+            <k-dropdown>
+              <k-button icon="angle-down" @click="$refs['layout-' + layout.id][0].toggle()" />
+              <k-dropdown-content :ref="'layout-' + layout.id" align="right">
+                <k-dropdown-item icon="angle-up" @click="selectLayout(layoutIndex)">Insert before</k-dropdown-item>
+                <k-dropdown-item icon="angle-down" @click="selectLayout(layoutIndex + 1)">Insert after</k-dropdown-item>
+                <hr>
+                <k-dropdown-item icon="trash" @click="removeLayout(layout)">Delete layout</k-dropdown-item>
+              </k-dropdown-content>
+            </k-dropdown>
+          </nav>
         </section>
       </k-draggable>
+
+      <k-button
+        class="k-layout-add-button"
+        icon="add"
+        @click="selectLayout(rows.length)"
+      />
 
     </template>
     <template v-else>
@@ -109,12 +102,7 @@
 </template>
 
 <script>
-import Layout from "./Layout.vue";
-
 export default {
-  components: {
-    "k-block-layout": Layout,
-  },
   props: {
     currentBlock: [String, Number],
     currentColumn: [String, Number],
@@ -207,7 +195,7 @@ $layout-padding: 0;
   height: calc(100% + 2px);
   width: 1.5rem;
   left: -1.5rem;
-  color: $color-gray-400;
+  color: $color-gray-500;
 }
 .k-layout .k-layout-options {
   left: auto;
@@ -238,7 +226,7 @@ $layout-padding: 0;
   height: 100%;
 }
 
-.k-layout-column .k-builder-block {
+.k-layout-column .k-block {
   box-shadow: none;
 }
 
@@ -284,16 +272,39 @@ $layout-padding: 0;
   z-index: 1;
   outline: 2px solid $color-blue-400;
 }
-.k-layout-column .k-builder-blocks-empty.k-empty {
+.k-layout-column .k-blocks {
+  background: none;
+  box-shadow: none;
+  padding: 0;
+  height: 100%;
+}
+.k-layout-column .k-block-options {
+  width: 2rem !important;
+  left: 0rem !important;
+  display: none;
+}
+.k-layout-column .k-block-options .k-sort-handle {
+  display: none;
+}
+.k-layout-column .k-block-container {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+.k-layout-column .k-blocks-empty.k-empty {
   border: 0;
   opacity: 1;
   min-height: 0;
-  height: 36px;
 }
-.k-layout-column .k-builder-blocks-empty > * {
+.k-layout-column .k-blocks:hover {
+  background: rgba($color-blue-200, .125);
+}
+.k-layout-column .k-blocks-empty.k-empty {
+  padding: 3rem 1.5rem;
+}
+.k-layout-column .k-blocks-empty.k-empty > * {
   display: none;
 }
-.k-layout-column .k-builder-blocks-empty.k-empty::after {
+.k-layout-column .k-blocks-empty.k-empty::after {
   position: absolute;
   top: 0;
   right: 0;
@@ -303,7 +314,14 @@ $layout-padding: 0;
 }
 
 .k-layout-add-button {
-  margin: .75rem auto;
-  display: block;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: $color-gray-500;
+  justify-content: center;
+  padding: .75rem 0;
+}
+.k-layout-add-button:hover {
+  color: $color-black;
 }
 </style>

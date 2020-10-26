@@ -45,12 +45,12 @@ export default {
 }
 .k-block-quote-editor {
   padding-left: 1rem;
-  border-left: 3px solid #000;
+  border-left: 2px solid #000;
 }
 .k-block-quote-text {
   font-size: $text-xl;
   margin-bottom: .25rem;
-  line-height: 1.35em;
+  line-height: 1.25em;
 }
 .k-block-quote-citation {
   font-style: italic;

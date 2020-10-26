@@ -136,7 +136,9 @@
       },
       close() {
         this.notification = null;
-        this.$refs.overlay.close();
+        if (this.$refs.overlay) {
+          this.$refs.overlay.close();
+        }
         this.$emit("close");
         this.$events.$off("keydown.esc", this.close);
         this.$store.dispatch("dialog", false);

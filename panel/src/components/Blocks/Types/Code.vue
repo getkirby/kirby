@@ -4,6 +4,7 @@
       <k-input
         ref="code"
         :buttons="false"
+        :spellcheck="false"
         :value="content.code"
         type="textarea"
         placeholder="Your code …"
@@ -68,7 +69,7 @@ export default {
   line-height: 1.5em;
   background: #000;
   border-radius: $rounded;
-  padding: 1.5rem;
+  padding: .5rem .75rem 3rem;
   color: #fff;
   font-family: $font-mono;
 }

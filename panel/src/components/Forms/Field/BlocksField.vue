@@ -23,6 +23,7 @@
       :fieldsets="fieldsets"
       :group="group"
       :max="max"
+      :select="select"
       :value="value"
       @close="opened = $event"
       @open="opened = $event"
@@ -46,6 +47,7 @@ export default {
       type: Number,
       default: null,
     },
+    select: Object,
     value: {
       type: Array,
       default() {
