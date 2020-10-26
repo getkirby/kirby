@@ -25,14 +25,12 @@ return [
         'fieldsets' => function (array $fieldsets = []) {
             return $fieldsets;
         },
-
-
         'layouts' => function (array $layouts = []) {
             return array_map(function ($layout) {
                 return Str::split($layout);
             }, $layouts);
         },
-        'value' => function ($value) {
+        'value' => function ($value = null) {
             return Data::decode($value, 'json');
         },
     ],
