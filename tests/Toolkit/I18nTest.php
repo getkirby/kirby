@@ -26,6 +26,21 @@ class I18nTest extends TestCase
         $this->assertEquals('none', I18n::form(0, true));
     }
 
+    public function testFormatNumber()
+    {
+        $this->assertEquals('2', I18n::formatNumber(2));
+        $this->assertEquals('2', I18n::formatNumber(2, 'en'));
+        $this->assertEquals('2', I18n::formatNumber(2, 'de'));
+
+        $this->assertEquals('1,234,567', I18n::formatNumber(1234567));
+        $this->assertEquals('1,234,567', I18n::formatNumber(1234567, 'en'));
+        $this->assertEquals('1.234.567', I18n::formatNumber(1234567, 'de'));
+
+        $this->assertEquals('1,234,567.89', I18n::formatNumber(1234567.89));
+        $this->assertEquals('1,234,567.89', I18n::formatNumber(1234567.89, 'en'));
+        $this->assertEquals('1.234.567,89', I18n::formatNumber(1234567.89, 'de'));
+    }
+
     public function testTemplate()
     {
         I18n::$translations = [
