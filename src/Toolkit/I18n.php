@@ -231,7 +231,7 @@ class I18n
      * @param bool $formatNumber
      * @return mixed
      */
-    public static function translateCount(string $key, int $count, string $locale = null)
+    public static function translateCount(string $key, int $count, string $locale = null, bool $formatNumber = true)
     {
         $locale = $locale ?? static::locale();
 
@@ -255,8 +255,12 @@ class I18n
             }
         }
 
-        $formatter = static::decimalNumberFormatter($locale);
-        $count = $formatter->format($count);
+        if ($formatNumber) {
+            $formatter = static::decimalNumberFormatter($locale);
+            if ($formatter !== null) {
+                $count = $formatter->format($count);
+            }
+        }
 
         return str_replace('{{ count }}', $count, $message);
     }

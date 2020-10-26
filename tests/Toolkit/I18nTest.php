@@ -179,7 +179,12 @@ class I18nTest extends TestCase
         $this->assertEquals('2 cars', I18n::translateCount('car', 2));
         $this->assertEquals('3 cars', I18n::translateCount('car', 3));
         $this->assertEquals('1,234,567 cars', I18n::translateCount('car', 1234567));
+        $this->assertEquals('1,234,567 cars', I18n::translateCount('car', 1234567, null));
+        $this->assertEquals('1,234,567 cars', I18n::translateCount('car', 1234567, null, true));
+        $this->assertEquals('1234567 cars', I18n::translateCount('car', 1234567, null, false));
         $this->assertEquals('1.234.567 Autos', I18n::translateCount('car', 1234567, 'de'));
+        $this->assertEquals('1.234.567 Autos', I18n::translateCount('car', 1234567, 'de', true));
+        $this->assertEquals('1234567 Autos', I18n::translateCount('car', 1234567, 'de', false));
     }
 
     public function testTranslateCountWithMissingTranslation()
