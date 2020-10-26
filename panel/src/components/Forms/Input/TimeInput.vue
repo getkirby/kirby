@@ -61,26 +61,6 @@ export default {
     separator() {
       return ":";
     }
-  },
-  validations() {
-    return {
-      value: {
-        min: this.min ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.min,
-          "isAfter",
-          this.step.unit
-        ) : true,
-        max: this.max ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.max,
-          "isBefore",
-          this.step.unit
-        ) : true,
-      }
-    }
   }
 };
 </script>

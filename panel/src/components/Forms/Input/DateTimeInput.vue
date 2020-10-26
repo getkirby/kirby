@@ -141,13 +141,15 @@ export default {
           this,
           value,
           this.min,
-          "isAfter"
+          "isAfter",
+          this.step.unit
         ) : true,
         max: this.max ? value => this.$helper.validate.datetime(
           this,
           value,
           this.max,
-          "isBefore"
+          "isBefore",
+          this.step.unit
         ) : true,
         required: this.required ? required : true,
       }
