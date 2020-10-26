@@ -114,7 +114,27 @@ class BlocksField
             $isDefaultLanguage = $languageCode === $kirby->defaultLanguage()->code();
         }
 
-        foreach ($this->props['fieldsets'] ?? [] as $type => $fieldset) {
+        $fieldsets = array_merge([
+            'heading' => 'blocks/heading',
+            'quote'   => 'blocks/quote',
+            'text'    => 'blocks/text',
+            'video'   => 'blocks/video',
+            'image'   => 'blocks/image',
+            'code'    => 'blocks/code'
+        ], $this->props['fieldsets'] ?? []);
+
+
+        foreach ($fieldsets as $type => $fieldset) {
+
+            if ($fieldset === false) {
+                unset($fieldsets[$type]);
+                continue;
+            }
+
+            if ($fieldset === true) {
+                $fieldsets[$type] = $fieldset = 'blocks/' . $type;
+            }
+
             $fieldset = $this->fieldsetProps($type, Blueprint::extend($fieldset));
 
             // switch untranslatable fieldset to readonly
