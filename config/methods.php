@@ -60,7 +60,7 @@ return function (App $app) {
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\Blocks
          */
-        'blocks' => function (Field $field) {
+        'toBlocks' => function (Field $field) {
             try {
                 $blocks = Blocks::factory(Blocks::parse($field->value()), [
                     'parent' => $field->parent(),
