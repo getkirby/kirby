@@ -43,12 +43,6 @@ export default {
       }
 
       return patterns;
-    },
-    /**
-     * Separator for time format
-     */
-    separator() {
-      return ":";
     }
   }
 };

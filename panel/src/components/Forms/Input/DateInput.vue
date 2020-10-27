@@ -136,10 +136,10 @@ export default {
       }
     },
     /**
-     * Separator for date format
+     * Separator from `display` format
      */
     separator() {
-      return this.display.match(/[^A-Za-z]/)[0];
+      return this.display.match(/[\W]/)[0];
     },
     /**
      * Array of used dayjs format tokens
