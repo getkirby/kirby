@@ -20,7 +20,6 @@ use Throwable;
  */
 class Blocks extends Collection
 {
-
     /**
      * Constructor
      *

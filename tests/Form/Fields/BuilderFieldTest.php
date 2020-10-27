@@ -4,16 +4,14 @@ namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
 
-class BuilderFieldTest extends TestCase
+class BlocksFieldTest extends TestCase
 {
     public function testDefaultProps()
     {
-        $field = $this->field('builder', [
-            'fieldsets' => []
-        ]);
+        $field = $this->field('blocks', []);
 
-        $this->assertSame('builder', $field->type());
-        $this->assertSame('builder', $field->name());
+        $this->assertSame('blocks', $field->type());
+        $this->assertSame('blocks', $field->name());
         $this->assertSame(null, $field->max());
         $this->assertTrue(is_array($field->fieldsets()));
         $this->assertSame([], $field->value());
@@ -22,17 +20,7 @@ class BuilderFieldTest extends TestCase
 
     public function testMax()
     {
-        $field = $this->field('builder', [
-            'fieldsets' => [
-                'heading' => [
-                    'fields' => [
-                        'text' => [
-                            'type' => 'text',
-                            'translate' => false,
-                        ]
-                    ]
-                ]
-            ],
+        $field = $this->field('blocks', [
             'value' => [
                 [
                     'type'    => 'heading',
@@ -57,17 +45,7 @@ class BuilderFieldTest extends TestCase
 
     public function testMin()
     {
-        $field = $this->field('builder', [
-            'fieldsets' => [
-                'heading' => [
-                    'fields' => [
-                        'text' => [
-                            'type' => 'text',
-                            'translate' => false,
-                        ]
-                    ]
-                ]
-            ],
+        $field = $this->field('blocks', [
             'value' => [
                 [
                     'type'    => 'heading',
@@ -84,8 +62,7 @@ class BuilderFieldTest extends TestCase
 
     public function testRequired()
     {
-        $field = $this->field('builder', [
-            'fieldsets' => [],
+        $field = $this->field('blocks', [
             'required' => true
         ]);
 
@@ -94,8 +71,7 @@ class BuilderFieldTest extends TestCase
 
     public function testRequiredInvalid()
     {
-        $field = $this->field('builder', [
-            'fieldsets' => [],
+        $field = $this->field('blocks', [
             'required' => true
         ]);
 
@@ -104,16 +80,7 @@ class BuilderFieldTest extends TestCase
 
     public function testRequiredValid()
     {
-        $field = $this->field('builder', [
-            'fieldsets' => [
-                'heading' => [
-                    'fields' => [
-                        'text' => [
-                            'type' => 'text'
-                        ]
-                    ]
-                ]
-            ],
+        $field = $this->field('blocks', [
             'value' => [
                 [
                     'type'    => 'heading',
@@ -163,7 +130,7 @@ class BuilderFieldTest extends TestCase
 
         // default language
         $app->setCurrentLanguage('en');
-        $field = $this->field('builder', $props);
+        $field = $this->field('blocks', $props);
 
         $this->assertFalse($field->fieldsets['heading']['tabs']['content']['fields']['text']['translate']);
         $this->assertFalse($field->fieldsets['heading']['tabs']['content']['fields']['text']['disabled']);
@@ -172,7 +139,7 @@ class BuilderFieldTest extends TestCase
         $app = $app->clone();
         $app->setCurrentLanguage('de');
 
-        $field = $this->field('builder', $props);
+        $field = $this->field('blocks', $props);
         $this->assertFalse($field->fieldsets['heading']['tabs']['content']['fields']['text']['translate']);
         $this->assertTrue($field->fieldsets['heading']['tabs']['content']['fields']['text']['disabled']);
     }
@@ -212,7 +179,7 @@ class BuilderFieldTest extends TestCase
 
         // default language
         $app->setCurrentLanguage('en');
-        $field = $this->field('builder', $props);
+        $field = $this->field('blocks', $props);
 
         $this->assertFalse($field->fieldsets['heading']['translate']);
         $this->assertFalse($field->fieldsets['heading']['disabled']);
@@ -221,7 +188,7 @@ class BuilderFieldTest extends TestCase
         $app = $app->clone();
         $app->setCurrentLanguage('de');
 
-        $field = $this->field('builder', $props);
+        $field = $this->field('blocks', $props);
         $this->assertFalse($field->fieldsets['heading']['translate']);
         $this->assertTrue($field->fieldsets['heading']['disabled']);
     }

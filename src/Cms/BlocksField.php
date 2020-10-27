@@ -126,7 +126,6 @@ class BlocksField
 
 
         foreach ($fieldsets as $type => $fieldset) {
-
             if ($fieldset === false) {
                 unset($fieldsets[$type]);
                 continue;

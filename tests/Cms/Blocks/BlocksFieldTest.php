@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Yaml;
 use PHPUnit\Framework\TestCase;
 
-class BuilderTest extends TestCase
+class BlocksFieldTest extends TestCase
 {
     protected $app;
     protected $page;
@@ -16,68 +16,68 @@ class BuilderTest extends TestCase
             'roots' => [
                 'index' => '/dev/null'
             ],
-            'blueprints' => [
-                'fieldsets/seo' => [
-                    'title' => 'Seo',
-                    'model' => 'page',
-                    'fields' => [
-                        'metaTitle' => [
-                            'label' => 'Meta Title',
-                            'type' => 'text'
-                        ],
-                        'meta' => 'fields/meta'
-                    ]
-                ],
-                'fieldsets/heading' => [
-                    'title' => 'Heading',
-                    'model' => 'page',
-                    'fields' => [
-                        'text' => [
-                            'label' => 'Text',
-                            'type' => 'text'
-                        ],
-                    ]
-                ],
-                'fieldsets/events' => [
-                    'title' => 'Events',
-                    'model' => 'page',
-                    'fields' => [
-                        'eventList' => [
-                            'label' => 'Event List',
-                            'type' => 'builder',
-                            'fieldsets' => [
-                                'event' => 'fields/event',
-                                'speaker' => 'fields/speaker'
-                            ]
-                        ],
-                    ]
-                ],
-                'fields/meta' => [
-                    'type' => 'group',
-                    'fields' => [
-                        'metaDescription' => [
-                            'label' => 'Meta Description',
-                            'type' => 'textarea'
-                        ],
-                        'metaKeywords' => [
-                            'label' => 'Meta Keywords',
-                            'type' => 'text'
-                        ]
-                    ]
-                ],
-                'fields/event' => [
-                    'title' => [
-                        'label' => 'Event Title',
-                        'type' => 'text'
-                    ],
-                ],
-                'fields/speaker' => [
-                    'name' => [
-                        'label' => 'Speaker Name',
-                        'type' => 'text'
-                    ],
-                ]
-            ]
+            // 'blueprints' => [
+            //     'fieldsets/seo' => [
+            //         'title' => 'Seo',
+            //         'model' => 'page',
+            //         'fields' => [
+            //             'metaTitle' => [
+            //                 'label' => 'Meta Title',
+            //                 'type' => 'text'
+            //             ],
+            //             'meta' => 'fields/meta'
+            //         ]
+            //     ],
+            //     'fieldsets/heading' => [
+            //         'title' => 'Heading',
+            //         'model' => 'page',
+            //         'fields' => [
+            //             'text' => [
+            //                 'label' => 'Text',
+            //                 'type' => 'text'
+            //             ],
+            //         ]
+            //     ],
+            //     'fieldsets/events' => [
+            //         'title' => 'Events',
+            //         'model' => 'page',
+            //         'fields' => [
+            //             'eventList' => [
+            //                 'label' => 'Event List',
+            //                 'type' => 'blocks',
+            //                 'fieldsets' => [
+            //                     'event' => 'fields/event',
+            //                     'speaker' => 'fields/speaker'
+            //                 ]
+            //             ],
+            //         ]
+            //     ],
+            //     'fields/meta' => [
+            //         'type' => 'group',
+            //         'fields' => [
+            //             'metaDescription' => [
+            //                 'label' => 'Meta Description',
+            //                 'type' => 'textarea'
+            //             ],
+            //             'metaKeywords' => [
+            //                 'label' => 'Meta Keywords',
+            //                 'type' => 'text'
+            //             ]
+            //         ]
+            //     ],
+            //     'fields/event' => [
+            //         'title' => [
+            //             'label' => 'Event Title',
+            //             'type' => 'text'
+            //         ],
+            //     ],
+            //     'fields/speaker' => [
+            //         'name' => [
+            //             'label' => 'Speaker Name',
+            //             'type' => 'text'
+            //         ],
+            //     ]
+            // ]
         ]);
 
         $this->page = new Page(['slug' => 'test']);
@@ -85,8 +85,8 @@ class BuilderTest extends TestCase
 
     public function testFieldsProps()
     {
-        $builder = new Builder($this->page);
-        $result  = $builder->fieldsProps([
+        $blocks = new BlocksField($this->page);
+        $result  = $blocks->fieldsProps([
             'text' => [
                 'type'  => 'textarea'
             ],
@@ -110,8 +110,8 @@ class BuilderTest extends TestCase
 
     public function testFieldsetProps()
     {
-        $builder  = new Builder($this->page);
-        $fieldset = $builder->fieldsetProps('quote', []);
+        $blocks = new BlocksField($this->page);
+        $fieldset = $blocks->fieldsetProps('quote', []);
 
         $this->assertSame('quote', $fieldset['type']);
         $this->assertSame('Quote', $fieldset['name']);
@@ -121,48 +121,16 @@ class BuilderTest extends TestCase
 
     public function testFieldsets()
     {
-        $builder = new Builder($this->page, [
-            'fieldsets' => [
-                'quote' => [
-                    'name' => 'Quote',
-                    'icon' => 'quote'
-                ],
-                'bodytext' => [
-                    'name' => 'Text'
-                ]
-            ]
-        ]);
+        $blocks = new BlocksField($this->page, []);
+        $fieldsets = $blocks->fieldsets();
 
-        $this->assertSame([
-            'quote' => [
-                'disabled'  => false,
-                'icon'      => 'quote',
-                'label'     => 'Quote',
-                'name'      => 'Quote',
-                'tabs' => [
-                    'content' => [
-                        'fields' => []
-                    ]
-                ],
-                'translate' => null,
-                'type'      => 'quote',
-                'unset'     => false
-            ],
-            'bodytext' => [
-                'disabled'  => false,
-                'icon'      => null,
-                'label'     => 'Text',
-                'name'      => 'Text',
-                'tabs' => [
-                    'content' => [
-                        'fields' => []
-                    ]
-                ],
-                'translate' => null,
-                'type'      => 'bodytext',
-                'unset'     => false
-            ]
-        ], $builder->fieldsets());
+        $this->assertArrayHasKey('code', $fieldsets);
+        $this->assertArrayHasKey('heading', $fieldsets);
+        $this->assertArrayHasKey('image', $fieldsets);
+        $this->assertArrayHasKey('kirbytext', $fieldsets);
+        $this->assertArrayHasKey('quote', $fieldsets);
+        $this->assertArrayHasKey('text', $fieldsets);
+        $this->assertArrayHasKey('video', $fieldsets);
     }
 
     public function testNestedStructure()
@@ -196,7 +164,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $builder = new Builder($this->page, ['fieldsets' => $fieldsets]);
+        $blocksField = new BlocksField($this->page, ['fieldsets' => $fieldsets]);
 
         // with yaml
         $value = [
@@ -208,7 +176,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $blocks    = $builder->blocks($value);
+        $blocks    = $blocksField->blocks($value);
         $structure = $blocks->first()->rows()->toStructure();
 
         $this->assertInstanceOf('Kirby\Cms\Structure', $structure);
@@ -227,7 +195,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $blocks    = $builder->blocks($value);
+        $blocks    = $blocksField->blocks($value);
         $structure = $blocks->first()->rows()->toStructure();
 
         $this->assertInstanceOf('Kirby\Cms\Structure', $structure);
@@ -250,7 +218,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $builder = new Builder($this->page, ['fieldsets' => $fieldsets]);
+        $blocks = new BlocksField($this->page, ['fieldsets' => $fieldsets]);
 
         // valid
         $input = [
@@ -262,7 +230,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $this->assertTrue($builder->validate($input));
+        $this->assertTrue($blocks->validate($input));
 
         // invalid
         $input = [
@@ -277,7 +245,7 @@ class BuilderTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('There\'s an error in block 1');
 
-        $builder->validate($input);
+        $blocks->validate($input);
     }
 
     public function testValidationWithConditionalFields()
@@ -299,7 +267,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $builder = new Builder($this->page, ['fieldsets' => $fieldsets]);
+        $blocks = new BlocksField($this->page, ['fieldsets' => $fieldsets]);
 
         // valid
         $input = [
@@ -311,7 +279,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $this->assertTrue($builder->validate($input));
+        $this->assertTrue($blocks->validate($input));
 
         // also valid when toggle is on an field is filled in
         $input = [
@@ -324,7 +292,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $this->assertTrue($builder->validate($input));
+        $this->assertTrue($blocks->validate($input));
 
         // invalid when toggle is on an field is empty
         $input = [
@@ -340,7 +308,7 @@ class BuilderTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('There\'s an error in block 1');
 
-        $builder->validate($input);
+        $blocks->validate($input);
     }
 
     public function testValidationMax()
@@ -355,7 +323,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $builder = new Builder($this->page, [
+        $blocks = new BlocksField($this->page, [
             'fieldsets' => $fieldsets,
             'max'       => 1
         ]);
@@ -370,7 +338,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $this->assertTrue($builder->validate($input));
+        $this->assertTrue($blocks->validate($input));
 
         // invalid
         $input = [
@@ -391,7 +359,7 @@ class BuilderTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('You must not add more than one block');
 
-        $builder->validate($input);
+        $blocks->validate($input);
     }
 
     public function testValidationMin()
@@ -406,7 +374,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $builder = new Builder($this->page, [
+        $blocks = new BlocksField($this->page, [
             'fieldsets' => $fieldsets,
             'min'       => 1
         ]);
@@ -421,7 +389,7 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        $this->assertTrue($builder->validate($input));
+        $this->assertTrue($blocks->validate($input));
 
         // invalid
         $input = [];
@@ -429,7 +397,7 @@ class BuilderTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('You must add at least one block');
 
-        $builder->validate($input);
+        $blocks->validate($input);
     }
 
     public function testValue()
@@ -452,12 +420,12 @@ class BuilderTest extends TestCase
             ]
         ];
 
-        // empty builder - no defaults
-        $builder = new Builder($this->page, ['fieldsets' => $fieldsets]);
-        $this->assertSame([], $builder->value());
+        // empty blocks - no defaults
+        $blocks = new BlocksField($this->page, ['fieldsets' => $fieldsets]);
+        $this->assertSame([], $blocks->value());
 
         // with empty input
-        $builder = new Builder($this->page, [
+        $blocks = new BlocksField($this->page, [
             'fieldsets' => $fieldsets,
             'value' => [
                 ['type' => 'quote'],
@@ -465,76 +433,171 @@ class BuilderTest extends TestCase
             ]
         ]);
 
-        $this->assertSame('', $builder->value()[0]['content']['quote']);
-        $this->assertSame('', $builder->value()[0]['content']['citation']);
-        $this->assertArrayHasKey('type', $builder->value()[0]);
-        $this->assertArrayHasKey('id', $builder->value()[0]);
+        $this->assertSame('', $blocks->value()[0]['content']['quote']);
+        $this->assertSame('', $blocks->value()[0]['content']['citation']);
+        $this->assertArrayHasKey('type', $blocks->value()[0]);
+        $this->assertArrayHasKey('id', $blocks->value()[0]);
 
-        $this->assertSame('', $builder->value()[1]['content']['text']);
-        $this->assertArrayHasKey('type', $builder->value()[1]);
-        $this->assertArrayHasKey('id', $builder->value()[1]);
+        $this->assertSame('', $blocks->value()[1]['content']['text']);
+        $this->assertArrayHasKey('type', $blocks->value()[1]);
+        $this->assertArrayHasKey('id', $blocks->value()[1]);
     }
 
-    public function testExtend()
+    public function testExtendDefaultFieldset()
     {
-        $builder = new Builder($this->page, ['fieldsets' => [
-            'seo' => 'fieldsets/seo',
-            'heading' => 'fieldsets/heading',
-        ]]);
+        $blocks = new BlocksField($this->page, [
+            'fieldsets' => [
+                'heading' => 'blocks/heading',
+            ]
+        ]);
 
-        $fieldsets = $builder->fieldsets();
+        $fieldsets = $blocks->fieldsets();
 
         $this->assertArrayHasKey('heading', $fieldsets);
         $this->assertArrayHasKey('tabs', $fieldsets['heading']);
         $this->assertArrayHasKey('text', $fieldsets['heading']['tabs']['content']['fields']);
+    }
+
+    public function testExtendCustomFieldset()
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'blocks/seo' => [
+                    'title' => 'Seo',
+                    'fields' => [
+                        'metaTitle' => [
+                            'label' => 'Meta Title',
+                            'type' => 'text'
+                        ]
+                    ]
+                ],
+            ]
+        ]);
+
+        $blocks = new BlocksField($this->page, [
+            'fieldsets' => [
+                'seo' => 'blocks/seo',
+            ]
+        ]);
+
+        $fieldsets = $blocks->fieldsets();
 
         $this->assertArrayHasKey('seo', $fieldsets);
         $this->assertArrayHasKey('tabs', $fieldsets['seo']);
         $this->assertArrayHasKey('metatitle', $fieldsets['seo']['tabs']['content']['fields']);
-        $this->assertArrayHasKey('metadescription', $fieldsets['seo']['tabs']['content']['fields']);
-        $this->assertArrayHasKey('metakeywords', $fieldsets['seo']['tabs']['content']['fields']);
     }
 
-    public function testExtendNestedBuilder()
+
+    public function testExtendNestedBlocks()
     {
-        $builder = new Builder($this->page, ['fieldsets' => [
+        $this->app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'blocks/events' => [
+                    'title' => 'Events',
+                    'model' => 'page',
+                    'fields' => [
+                        'eventList' => [
+                            'label' => 'Event List',
+                            'type' => 'blocks',
+                            'fieldsets' => [
+                                'event' => 'fields/event'
+                            ]
+                        ],
+                    ]
+                ],
+                'fields/event' => [
+                    'title' => [
+                        'label' => 'Event Title',
+                        'type' => 'text'
+                    ],
+                ],
+            ]
+        ]);
+
+        $blocks = new BlocksField($this->page, ['fieldsets' => [
             'events' => [
-                'extends' => 'fieldsets/events'
+                'extends' => 'blocks/events'
             ]
         ]]);
 
-        $fieldsets = $builder->fieldsets();
+        $fieldsets = $blocks->fieldsets();
 
         $this->assertArrayHasKey('events', $fieldsets);
         $this->assertArrayHasKey('tabs', $fieldsets['events']);
         $this->assertArrayHasKey('eventlist', $fieldsets['events']['tabs']['content']['fields']);
-        $this->assertInstanceOf('\Kirby\Cms\Builder', $fieldsets['events']['tabs']['content']['fields']['eventlist']['builder']);
+        $this->assertInstanceOf('\Kirby\Cms\BlocksField', $fieldsets['events']['tabs']['content']['fields']['eventlist']['blocksField']);
     }
 
     public function testExtendUnsetFieldsetFields()
     {
-        $builder = new Builder($this->page, ['fieldsets' => [
+        $this->app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'blocks/seo' => [
+                    'title' => 'Seo',
+                    'fields' => [
+                        'metaTitle' => [
+                            'label' => 'Meta Title',
+                            'type' => 'text'
+                        ],
+                        'metaDescription' => [
+                            'label' => 'Meta Description',
+                            'type' => 'text'
+                        ]
+                    ]
+                ],
+            ]
+        ]);
+
+        $blocks = new BlocksField($this->page, ['fieldsets' => [
             'seo' => [
-                'extends' => 'fieldsets/seo',
+                'extends' => 'blocks/seo',
                 'fields' => [
                     'metaDescription' => false,
-                    'metaKeywords' => false
                 ],
             ],
         ]]);
 
-        $fieldsets = $builder->fieldsets();
+        $fieldsets = $blocks->fieldsets();
 
         $this->assertArrayHasKey('seo', $fieldsets);
         $this->assertArrayHasKey('tabs', $fieldsets['seo']);
         $this->assertArrayHasKey('metatitle', $fieldsets['seo']['tabs']['content']['fields']);
         $this->assertArrayNotHasKey('metadescription', $fieldsets['seo']['tabs']['content']['fields']);
-        $this->assertArrayNotHasKey('metakeywords', $fieldsets['seo']['tabs']['content']['fields']);
     }
 
     public function testExtendUnsetFields()
     {
-        $builder = new Builder($this->page, ['fieldsets' => [
+        $this->app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'fields/meta' => [
+                    'type' => 'group',
+                    'fields' => [
+                        'metaDescription' => [
+                            'label' => 'Meta Description',
+                            'type' => 'textarea'
+                        ],
+                        'metaKeywords' => [
+                            'label' => 'Meta Keywords',
+                            'type' => 'text'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $blocks = new BlocksField($this->page, ['fieldsets' => [
             'seo' => [
                 'fields' => [
                     'metaTitle' => [
@@ -551,7 +614,7 @@ class BuilderTest extends TestCase
             ],
         ]]);
 
-        $fieldsets = $builder->fieldsets();
+        $fieldsets = $blocks->fieldsets();
 
         $this->assertArrayHasKey('seo', $fieldsets);
         $this->assertArrayHasKey('tabs', $fieldsets['seo']);

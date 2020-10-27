@@ -31,7 +31,7 @@ class Block
     protected $id;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $isHidden;
 

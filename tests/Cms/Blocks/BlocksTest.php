@@ -13,7 +13,6 @@ class BlocksTest extends TestCase
         $this->app = new App([
             'roots' => [
                 'index' => '/dev/null',
-                'snippets' => __DIR__ . '/fixtures/snippets'
             ],
         ]);
 
@@ -87,7 +86,7 @@ class BlocksTest extends TestCase
         $this->assertSame($expected, $blocks->toArray());
     }
 
-    public function testToHtmlForBuilder()
+    public function testToHtml()
     {
         $blocks = Blocks::factory([
             [
@@ -100,37 +99,41 @@ class BlocksTest extends TestCase
                 'content' => [
                     'text' => 'Nice blocks'
                 ],
-                'type' => 'body'
+                'type' => 'text'
             ],
-        ], [
-            'type' => 'builder'
         ]);
 
-        $expected = "<h1 class=\"builder-heading\">Hello world</h1>\n<p class=\"builder-body\">Nice blocks</p>\n";
+        $expected = "<h1>Hello world</h1>\n<p>Nice blocks</p>\n";
 
         $this->assertSame($expected, $blocks->toHtml());
     }
 
-    public function toHtmlWithoutSnippets()
+    public function testToHtmlWithCustomSnippets()
     {
+        $this->app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'snippets' => __DIR__ . '/fixtures/snippets'
+            ],
+        ]);
+
         $blocks = Blocks::factory([
-            ['type' => 'a'],
-            ['type' => 'b']
+            [
+                'content' => [
+                    'text' => 'Hello world'
+                ],
+                'type' => 'heading'
+            ],
+            [
+                'content' => [
+                    'text' => 'Nice blocks'
+                ],
+                'type' => 'text'
+            ],
         ]);
 
-        $this->assertSame('', $blocks->toHtml());
-    }
+        $expected = "<h1 class=\"custom-heading\">Hello world</h1>\n<p class=\"custom-text\">Nice blocks</p>\n";
 
-    public function testType()
-    {
-        $blocks = new Blocks([]);
-
-        $this->assertNull($blocks->type());
-
-        $blocks = new Blocks([], [
-            'type' => 'my-type'
-        ]);
-
-        $this->assertSame('my-type', $blocks->type());
+        $this->assertSame($expected, $blocks->toHtml());
     }
 }

@@ -1,1 +1,1 @@
-<h<?= $level = $block->level()->or(1) ?> id="<?= $block->id() ?>"><?= $block->text() ?></h<?= $level ?>>
+<h<?= $level = $block->level()->or(1) ?>><?= $block->text() ?></h<?= $level ?>>

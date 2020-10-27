@@ -122,7 +122,7 @@ class FormTest extends TestCase
 
         $this->assertEquals('info', $field->type());
         $this->assertEquals('negative', $field->theme());
-        $this->assertEquals('Error in "test" field', $field->label());
+        $this->assertEquals('Error in "test" field.', $field->label());
         $this->assertEquals('<p>The field type "does-not-exist" does not exist</p>', $field->text());
     }
 
