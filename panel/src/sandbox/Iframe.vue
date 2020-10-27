@@ -8,12 +8,12 @@ export default {
     const emit = this.$refs.el.$emit;
     this.$refs.el.$emit = (...args) => {
 
-      if (args[0] || null) {
-        console.log(`Event: ${args[0]}`);
+      if (args[0] || null) {
+        window.console.log(`Event: ${args[0]}`);
       }
 
       if (args[1] || null) {
-        console.log(args[1]);
+        window.console.log(args[1]);
       }
 
       emit.apply(this, args);

@@ -19,11 +19,11 @@ import Layouts from "@/components/Layouter/Layouts.vue";
 import Layouter from "@/components/Layouter/Layouter.vue";
 
 export default {
-  inheritAttrs: false,
   components: {
     "k-block-layouts": Layouts,
     "k-block-layouter": Layouter
   },
+  inheritAttrs: false,
   props: {
     ...Field.props,
     empty: String,

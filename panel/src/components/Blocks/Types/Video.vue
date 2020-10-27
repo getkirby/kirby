@@ -25,7 +25,7 @@ export default {
         return false;
       }
 
-      var youtubePattern = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+      var youtubePattern = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
       var youtubeMatch = url.match(youtubePattern);
 
       if (youtubeMatch) {

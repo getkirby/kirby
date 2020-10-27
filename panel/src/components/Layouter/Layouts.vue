@@ -1,7 +1,7 @@
 <template>
   <div>
     <template v-if="rows.length">
-      <k-draggable class="k-layouts" :handle="true">
+      <k-draggable :handle="true" class="k-layouts">
         <section
           v-for="(layout, layoutIndex) in rows"
           :key="layout.id"
@@ -92,8 +92,7 @@
               v-for="(column, columnIndex) in layoutOption"
               :key="columnIndex"
               :width="column"
-            >
-            </k-column>
+            />
           </k-grid>
         </li>
       </ul>
@@ -145,7 +144,7 @@ export default {
 
       this.$emit("input", this.rows);
     },
-    prependLayout(layout) {
+    prependLayout() {
       this.$refs.selector.open();
     },
     removeLayout(layout) {

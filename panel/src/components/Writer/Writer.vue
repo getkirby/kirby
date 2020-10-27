@@ -104,6 +104,22 @@ export default {
       default: ""
     },
   },
+  data() {
+    return {
+      editor: null,
+      html: this.value,
+      isEmpty: true,
+      toolbar: false
+    };
+  },
+  watch: {
+    value(newValue, oldValue) {
+      if (newValue !== oldValue && newValue !== this.html) {
+        this.html = newValue;
+        this.editor.setContent(this.html);
+      }
+    }
+  },
   mounted() {
     this.editor = new Editor({
       content: this.value,
@@ -137,22 +153,6 @@ export default {
   },
   beforeDestroy() {
     this.editor.destroy();
-  },
-  data() {
-    return {
-      editor: null,
-      html: this.value,
-      isEmpty: true,
-      toolbar: false
-    };
-  },
-  watch: {
-    value(newValue, oldValue) {
-      if (newValue !== oldValue && newValue !== this.html) {
-        this.html = newValue;
-        this.editor.setContent(this.html);
-      }
-    }
   },
   methods: {
     filterExtensions(available, allowed, postFilter) {

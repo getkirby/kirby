@@ -14,7 +14,7 @@
         <small class="k-block-table-preview-empty">{{ $t('field.structure.empty') }}</small>
       </td>
     </tr>
-    <tr v-else v-for="(row, rowIndex) in rows" :key="rowIndex">
+    <tr v-for="(row, rowIndex) in rows" v-else :key="rowIndex">
       <td
         v-for="(column, columnName) in columns"
         :key="rowIndex + '-' + columnName"

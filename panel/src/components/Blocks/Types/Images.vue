@@ -1,13 +1,13 @@
 <template>
   <ul class="k-block-images-preview" @click="$emit('open')">
     <template v-if="content.images.length === 0">
-      <li></li>
-      <li></li>
-      <li></li>
+      <li />
+      <li />
+      <li />
     </template>
     <template v-else>
       <li v-for="image in content.images" :key="image.id">
-        <img :src="image.url" />
+        <img :src="image.url">
       </li>
     </template>
   </ul>

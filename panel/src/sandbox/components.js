@@ -1,3 +1,5 @@
+/* global __dirname, require */
+
 import Vue from "vue";
 const req = require.context("./components", true, /\.vue$/i);
 let components = [];

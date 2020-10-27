@@ -1,5 +1,5 @@
 <template>
-  <header class="k-block-header" :data-is-open="isOpen" @click.prevent="$emit('toggle')">
+  <header :data-is-open="isOpen" class="k-block-header" @click.prevent="$emit('toggle')">
     <div class="k-block-header-title">
       <k-icon :type="icon || 'box'" class="k-block-header-icon" />
       <span class="k-block-header-name">

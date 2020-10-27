@@ -3,18 +3,18 @@
     <nav class="k-sandbox-menu">
       <k-headline>Kirby UI</k-headline>
       <ul>
-        <li v-for="(item, index) in menu">
+        <li v-for="(item, index) in menu" :key="index">
           <k-link
             :aria-current="component === item.slug"
             :to="'/sandbox/' + item.slug"
           >
-              <k-icon type="box" /> {{ item.title }}
+            <k-icon type="box" /> {{ item.title }}
           </k-link>
         </li>
       </ul>
     </nav>
     <div class="k-sandbox-preview">
-      <iframe class="k-sandbox-iframe" :src="'/sandbox/preview/' + component"></iframe>
+      <iframe :src="'/sandbox/preview/' + component" class="k-sandbox-iframe" />
     </div>
     <div class="k-sandbox-code">
       <pre>{{ code }}</pre>

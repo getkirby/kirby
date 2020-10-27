@@ -90,9 +90,6 @@ export default {
       }
     }
   },
-  created() {
-    this.save = debounce(this.save, 50);
-  },
   data() {
     return {
       blocks: this.value,
@@ -131,6 +128,9 @@ export default {
     value() {
       this.blocks = this.value;
     }
+  },
+  created() {
+    this.save = debounce(this.save, 50);
   },
   methods: {
     async add(type = "text", index) {
@@ -183,7 +183,7 @@ export default {
         ...this.$helper.clone(block),
         id: response["uuid"]
       };
-      this.blocks.splice(index + 1, 0, block);
+      this.blocks.splice(index + 1, 0, copy);
       this.save();
     },
     fieldset(block) {
@@ -227,7 +227,7 @@ export default {
 
       return true;
     },
-    open(block, focus = true) {
+    open(block) {
       if (this.opened.includes(block.id) === false) {
         this.opened.push(block.id);
         this.$emit("open", this.opened);

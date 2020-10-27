@@ -1,3 +1,5 @@
+/* global process, require */
+
 import Vue from "vue";
 import auth from "./auth.js";
 import store from "@/store/store.js";

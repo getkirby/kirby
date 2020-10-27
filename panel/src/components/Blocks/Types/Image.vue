@@ -6,7 +6,7 @@
     empty-text="Select an image …"
     v-on="$listeners"
   >
-    <img v-if="image" :src="image.url" />
+    <img v-if="image" :src="image.url">
   </k-block-figure>
 </template>
 

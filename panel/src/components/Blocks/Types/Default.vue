@@ -117,7 +117,7 @@ export default {
         }, 1);
       }
     },
-    openOrClose(tab, focus = true) {
+    openOrClose(tab) {
       if (this.isOpen === false) {
         this.open(tab);
       } else {
