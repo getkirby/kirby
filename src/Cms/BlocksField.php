@@ -114,7 +114,7 @@ class BlocksField
             $isDefaultLanguage = $languageCode === $kirby->defaultLanguage()->code();
         }
 
-        $fieldsets = array_merge([
+        $fieldsets = $this->props['fieldsets'] ?? option('blocks.fieldsets', [
             'code'      => 'blocks/code',
             'gallery'   => 'blocks/gallery',
             'heading'   => 'blocks/heading',
@@ -123,8 +123,7 @@ class BlocksField
             'quote'     => 'blocks/quote',
             'text'      => 'blocks/text',
             'video'     => 'blocks/video',
-        ], $this->props['fieldsets'] ?? []);
-
+        ]);
 
         foreach ($fieldsets as $type => $fieldset) {
             if ($fieldset === false) {

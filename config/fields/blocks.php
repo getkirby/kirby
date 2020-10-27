@@ -30,15 +30,15 @@ return [
          * @param array $fieldsets
          * @return array
          */
-        'fieldsets' => function (array $fieldsets = []) {
-            return array_merge([
-                'heading' => 'blocks/heading',
-                'quote'   => 'blocks/quote',
-                'text'    => 'blocks/text',
-                'video'   => 'blocks/video',
-                'image'   => 'blocks/image',
-                'code'    => 'blocks/code'
-            ], $fieldsets);
+        'fieldsets' => function (array $fieldsets = null) {
+            return $fieldsets;
+        },
+
+        /**
+         * Optional groups for the fieldset selector
+         */
+        'fieldsetGroups' => function (array $fieldsetGroups = null) {
+            return $fieldsetGroups ?? option('blocks.fieldsetGroups');
         },
 
         /**
