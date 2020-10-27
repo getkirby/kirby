@@ -124,7 +124,7 @@ return [
             $min    = $this->min ? strtotime($this->min) : null;
             $max    = $this->max ? strtotime($this->max) : null;
             $value  = strtotime($this->value());
-            $format = 'd.m.Y';
+            $format = $this->time === false ? 'd.m.Y' : 'd.m.Y H:i';
             $errors = [];
 
             if ($value && $min && $value < $min) {
