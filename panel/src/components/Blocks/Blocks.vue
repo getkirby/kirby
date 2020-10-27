@@ -19,7 +19,6 @@
         :is-full="isFull"
         :is-hidden="block.isHidden === true"
         :is-open="isOpen(block)"
-        :select="select"
         v-bind="block"
         @append="add($event, index + 1)"
         @choose="choose($event)"
@@ -42,7 +41,7 @@
           class="k-blocks-empty"
           @click="choose(blocks.length)"
         >
-          {{ empty || $t("field.builder.empty") }}
+          {{ empty || $t("field.blocks.empty") }}
         </k-empty>
       </template>
     </k-draggable>
@@ -57,11 +56,12 @@
     <k-block-selector
       ref="selector"
       :fieldsets="fieldsets"
+      :fieldset-groups="fieldsetGroups"
       @add="add"
     />
 
     <k-remove-dialog ref="removeAll" @submit="removeAll">
-      {{ $t("field.builder.delete.all.confirm") }}
+      {{ $t("field.blocks.delete.all.confirm") }}
     </k-remove-dialog>
 
   </div>
@@ -77,12 +77,12 @@ export default {
     empty: String,
     endpoints: Object,
     fieldsets: Object,
+    fieldsetGroups: Object,
     group: String,
     max: {
       type: Number,
       default: null,
     },
-    select: Object,
     value: {
       type: Array,
       default() {

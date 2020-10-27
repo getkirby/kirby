@@ -21,9 +21,9 @@
       :empty="empty"
       :endpoints="endpoints"
       :fieldsets="fieldsets"
+      :fieldset-groups="fieldsetGroups"
       :group="group"
       :max="max"
-      :select="select"
       :value="value"
       @close="opened = $event"
       @open="opened = $event"
@@ -42,12 +42,12 @@ export default {
     ...Field.props,
     empty: String,
     fieldsets: Object,
+    fieldsetGroups: Object,
     group: String,
     max: {
       type: Number,
       default: null,
     },
-    select: Object,
     value: {
       type: Array,
       default() {

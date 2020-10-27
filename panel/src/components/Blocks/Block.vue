@@ -11,23 +11,22 @@
   >
     <k-block-options
       v-if="isHovered"
-      :isFull="isFull"
-      :isHidden="isHidden"
-      :isOpen="isOpen"
-      :select="select"
+      :is-full="isFull"
+      :is-hidden="isHidden"
+      :is-open="isOpen"
       v-on="$listeners"
     />
     <div :class="className" class="k-block">
       <component
         ref="editor"
         :is="customComponent"
-        :isSticky="wysiwyg"
+        :is-sticky="wysiwyg"
         v-bind="$props"
         v-on="$listeners"
       />
     </div>
     <k-remove-dialog ref="removeDialog" @submit="remove">
-      {{ $t("field.builder.delete.confirm") }}
+      {{ $t("field.blocks.delete.confirm") }}
     </k-remove-dialog>
   </div>
 </template>
@@ -46,7 +45,6 @@ export default {
     isOpen: Boolean,
     isSticky: Boolean,
     name: String,
-    select: Object,
     tabs: Object,
     type: String,
   },
