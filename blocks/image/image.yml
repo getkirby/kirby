@@ -5,6 +5,8 @@ fields:
   image:
     type: files
     multiple: false
+    uploads:
+      template: blocks/image
   alt:
     type: text
     icon: title

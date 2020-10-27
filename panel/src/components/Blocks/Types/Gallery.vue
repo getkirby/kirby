@@ -1,5 +1,5 @@
 <template>
-  <ul class="k-block-images-preview" @click="$emit('open')">
+  <ul class="k-block-gallery-preview" @click="$emit('open')">
     <template v-if="content.images.length === 0">
       <li />
       <li />
@@ -23,10 +23,10 @@ export default {
 </script>
 
 <style lang="scss">
-.k-block.k-block-images {
+.k-block-gallery {
   padding: 1.5rem 0;
 }
-.k-block-images-preview {
+.k-block-gallery-preview {
   display: grid;
   grid-gap: .75rem;
   grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
@@ -34,13 +34,13 @@ export default {
   justify-content: center;
   cursor: pointer;
 }
-.k-block-images-preview li {
+.k-block-gallery-preview li {
   padding-bottom: 100%;
   position: relative;
   border-radius: $rounded-sm;
   background: #efefef;
 }
-.k-block-images-preview img {
+.k-block-gallery-preview img {
   position: absolute;
   top: 0;
   left: 0;

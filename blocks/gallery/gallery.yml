@@ -1,0 +1,13 @@
+name: Gallery
+icon: dashboard
+preview: gallery
+fields:
+  images:
+    type: files
+    multiple: true
+    layout: cards
+    size: tiny
+    uploads:
+      template: blocks/image
+    image:
+      ratio: 1/1

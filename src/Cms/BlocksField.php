@@ -116,6 +116,7 @@ class BlocksField
 
         $fieldsets = array_merge([
             'code'      => 'blocks/code',
+            'gallery'   => 'blocks/gallery',
             'heading'   => 'blocks/heading',
             'image'     => 'blocks/image',
             'kirbytext' => 'blocks/kirbytext',

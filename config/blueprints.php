@@ -5,6 +5,7 @@ $blocksRoot = dirname(__DIR__) . '/blocks';
 return [
     // blocks
     'blocks/code'      => $blocksRoot . '/code/code.yml',
+    'blocks/gallery'   => $blocksRoot . '/gallery/gallery.yml',
     'blocks/heading'   => $blocksRoot . '/heading/heading.yml',
     'blocks/image'     => $blocksRoot . '/image/image.yml',
     'blocks/kirbytext' => $blocksRoot . '/kirbytext/kirbytext.yml',
