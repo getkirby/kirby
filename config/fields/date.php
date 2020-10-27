@@ -11,6 +11,13 @@ return [
          */
         'placeholder' => null,
 
+        /**
+         * Activate/deactivate the dropdown calendar
+         */
+        'calendar' => function (bool $calendar = true) {
+            return $calendar;
+        },
+
 
         /**
          * Default date when a new page/file/user gets created

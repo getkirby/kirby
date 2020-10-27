@@ -9,16 +9,16 @@
       theme="field"
       v-on="listeners"
     >
-      <template #icon>
+      <template v-if="calendar" #icon>
         <k-dropdown>
           <k-button
             :icon="icon"
             :tooltip="$t('date.select')"
             class="k-input-icon-button"
             tabindex="-1"
-            @click="$refs.dropdown.toggle()"
+            @click="onFocus"
           />
-          <k-dropdown-content ref="dropdown" align="right">
+          <k-dropdown-content ref="calendar" align="right">
             <k-calendar
               :value="datetime"
               :min="min"
@@ -44,6 +44,10 @@ export default {
     ...Field.props,
     ...Input.props,
     ...DateTimeInput.props,
+    calendar: {
+      type: Boolean,
+      default: true
+    },
     icon: {
       type: String,
       default: "calendar"
@@ -81,14 +85,19 @@ export default {
       this.$emit("input", value);
     },
     onFocus() {
-      this.$refs.dropdown.open();
+      if (this.$refs.calendar) {
+        this.$refs.calendar.open();
+      }
     },
     onInput(value) {
       this.datetime = value;
     },
     onSelect(value) {
       this.onBlur(value);
-      this.$refs.dropdown.close();
+
+      if (this.$refs.calendar) {
+        this.$refs.calendar.close();
+      }
     }
   }
 }
