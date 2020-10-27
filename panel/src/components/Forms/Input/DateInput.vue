@@ -63,7 +63,7 @@ export default {
         minute: ["mm"],
         hour:   [this.notation === 12 ? "hh" : "HH"],
         day:    ["D", "DD"],
-        month:  ["M", "MM", "MMM"],
+        month:  ["M", "MM", "MMM", "MMMM"],
         year:   ["YY", "YYYY"]
       };
     },
