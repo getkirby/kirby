@@ -69,9 +69,6 @@ export default {
     return this.toData(this.value);
   },
   computed: {
-    today() {
-      return this.$library.dayjs.utc();
-    },
     numberOfDays() {
       return this.viewDt.daysInMonth();
     },
@@ -210,7 +207,7 @@ export default {
 
       } else {
         const date = this.toDate(day);
-        const reference = this.datetimes[0] || this.today;
+        const reference = this.datetimes[0] || this.toToday();
 
         if (this.multiple === false) {
           this.datetimes = [this.mergeTime(date, reference)];
@@ -230,13 +227,14 @@ export default {
       this.view.month = date.month();
     },
     toData(value) {
+      const today     = this.toToday();
       const datetimes = this.toDatetimes(value);
 
       return {
         datetimes: datetimes,
         view: {
-          month: (datetimes[0] || this.today).month(),
-          year: (datetimes[0] || this.today).year(),
+          month: (datetimes[0] || today).month(),
+          year: (datetimes[0] || today).year(),
           min: this.min ? this.$library.dayjs.utc(this.min) : null,
           max: this.max ? this.$library.dayjs.utc(this.max) : null,
         }
@@ -258,7 +256,10 @@ export default {
     },
     toISO(dt) {
       return dt.format("YYYY-MM-DD HH:mm:ss");
-    }
+    },
+    toToday() {
+      return this.$library.dayjs.utc();
+    },
   }
 };
 </script>
