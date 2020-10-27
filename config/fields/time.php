@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Exception\Exception;
+use Kirby\Toolkit\I18n;
 
 return [
     'mixins' => ['datetime'],
@@ -19,11 +20,11 @@ return [
         },
 
         /**
-         * Custom format (dayjs tokens) that is used to display
-         * the field in the Panel
+         * Custom format (dayjs tokens: `HH`, `hh`, `mm`, `ss`, `a`) that is
+         * used to display the field in the Panel
          */
-        'display' => function (string $display = null) {
-            return $display;
+        'display' => function ($display = null) {
+            return I18n::translate($display, $display);
         },
 
         /**

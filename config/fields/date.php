@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Exception\Exception;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 return [
@@ -27,11 +28,11 @@ return [
         },
 
         /**
-         * Custom format (dayjs tokens) that is used to display
-         * the field in the Panel
+         * Custom format (dayjs tokens: `DD`, `MM`, `YYYY`) that is
+         * used to display the field in the Panel
          */
-        'display' => function (string $display = 'YYYY-MM-DD') {
-            return $display;
+        'display' => function ($display = 'YYYY-MM-DD') {
+            return I18n::translate($display, $display);
         },
 
         /**
@@ -104,7 +105,9 @@ return [
             return $this->toDatetime($this->default);
         },
         'display' => function () {
-            return Str::upper($this->display);
+            if ($this->display) {
+                return Str::upper($this->display);
+            }
         },
         'step' => function () {
             if ($this->time !== false) {
