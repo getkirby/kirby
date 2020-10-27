@@ -30,19 +30,8 @@ export default {
   },
   computed: {
     /**
-     * Match format chunks to dayjs tokens
-     */
-    tokens() {
-      return{
-        H: ["HH"],
-        h: ["hh"],
-        m: ["mm"],
-        s: ["ss"]
-      };
-    },
-    /**
-     *  Generate all possible dayjs parsing patterns
-     *  for all chunks of the provided format
+     *  All variations of parsing patterns
+     *  for dayjs tokens included in `display`
      */
     patterns() {
       // get computed patterns prop from original DateInput component
@@ -56,7 +45,7 @@ export default {
       return patterns;
     },
     /**
-     * Separator for date format
+     * Separator for time format
      */
     separator() {
       return ":";

@@ -11,9 +11,10 @@
     @input="onInput"
     @invalid="onInvalid"
     @focus="$emit('focus')"
-    @keydown.down.stop.prevent="onKey('subtract')"
-    @keydown.up.stop.prevent="onKey('add')"
+    @keydown.down.stop.prevent="onDown"
+    @keydown.up.stop.prevent="onUp"
     @keydown.enter.stop.prevent="onEnter"
+    @keydown.tab="onTab"
   />
 </template>
 
@@ -48,63 +49,60 @@ export default {
   },
   data() {
     return {
-      input: this.toDatetime(this.value)
+      input: this.toFormat(this.value),
+      selected: null,
     };
   },
   computed: {
     /**
-     * Takes the display format and splits it into chunks
+     * Map for matching datetime unit with dayjs tokens
      */
-    chunks() {
-      const parts = this.display.split(/[^A-Za-z]/);
-      return parts.map(part => part.charAt(0));
+    map() {
+      return {
+        second: ["ss"],
+        minute: ["mm"],
+        hour:   [this.notation === 12 ? "hh" : "HH"],
+        day:    ["D", "DD"],
+        month:  ["M", "MM", "MMM"],
+        year:   ["YY", "YYYY"]
+      };
     },
     /**
-     * Parsed dayjs object of current input
+     * Array of the current input parts
      */
-    parsed() {
-      // fix lowercased month names
-      const input = this.input ? this.$helper.string.ucwords(this.input) : null;
-
-      // loop through parsing patterns to find
-      // first result where input is a valid date
-      for (let i = 0; i < this.patterns.length; i++) {
-        const dt = this.$library.dayjs.utc(input, this.patterns[i]);
-
-        if (dt.isValid()) {
-          return dt;
-        }
-      }
+    parts() {
+      return this.input.split(/\W/);
     },
     /**
-     *  Generate all possible dayjs parsing patterns
-     *  for all chunks of the provided display format
+     *  All variations of parsing patterns
+     *  for dayjs tokens included in `display`
      */
     patterns() {
-      let patterns  = [];
-      let previous  = [];
+      let patterns = [];
+      let previous = [];
 
-      // For each chunk…
-      for (let i = 0; i < this.chunks.length; i++) {
-        const tokens = this.tokens[this.chunks[i]];
+      // For each token present…
+      for (let i = 0; i < this.tokens.length; i++) {
+        // … get variants of the token …
+        const tokens = this.toTokens(this.tokens[i]);
 
         if (tokens) {
-          // … generate all necessary patterns …
-          let forChunk = [];
+          // … and generate all necessary patterns …
+          let current = [];
 
-          // … by either just adding all the tokens, if the first chunk …
+          // … by either just adding all variants, if the first chunk …
           if (patterns.length === 0) {
-            forChunk = tokens.map(token => [token]);
+            current = tokens.map(token => [token]);
 
-          // … or adding each token to all patterns from the previous chunk
+          // … or adding each variant to all patterns from the previous token
           } else {
             tokens.forEach(token => {
-              forChunk = forChunk.concat(previous.map(prev => prev.concat([token])));
+              current = current.concat(previous.map(prev => prev.concat([token])));
             })
           }
-          patterns  = patterns.concat(forChunk);
-          previous = forChunk;
-          forChunk = [];
+          patterns  = patterns.concat(current);
+          previous  = current;
+          current   = [];
         }
       }
 
@@ -113,16 +111,29 @@ export default {
       return patterns.map(format => format.join(this.separator)).reverse();
     },
     /**
-     * How the display format should be displayed as input placeholder
+     * Input placeholder based on `display`
      */
     placeholder() {
       return this.display.toLowerCase();
     },
     /**
-     * Takes currently parsed date object ands rounds it to nearest step
+     * Input parsed as dateime object rounded to nearest step
      */
     result() {
-      return this.parsed ? this.toNearest(this.parsed) : null;
+      if (this.input) {
+        // fix lowercased month names
+        const input = this.$helper.string.ucwords(this.input);
+
+        // loop through parsing patterns to find
+        // first result where input is a valid date
+        for (let i = 0; i < this.patterns.length; i++) {
+          const dt = this.$library.dayjs.utc(input, this.patterns[i]);
+
+          if (dt.isValid()) {
+            return this.toNearest(dt);
+          }
+        }
+      }
     },
     /**
      * Separator for date format
@@ -131,26 +142,15 @@ export default {
       return this.display.match(/[^A-Za-z]/)[0];
     },
     /**
-     * Match display format chunks to dayjs tokens
+     * Array of used dayjs format tokens
      */
     tokens() {
-      let tokens = {
-        D: ["D", "DD"],
-        M: ["MMM", "M", "MM"],
-        Y: ["YYYY"]
-      };
-
-      // only if format starts with year, also add short year token
-      if (this.display.startsWith("Y")) {
-        tokens.Y.unshift("YY");
-      }
-
-      return tokens;
-    },
+      return this.display.split(/\W/);
+    }
   },
   watch: {
     value() {
-      this.input = this.toDatetime(this.value);
+      this.input = this.toFormat(this.value);
       this.onInvalid();
     }
   },
@@ -168,9 +168,57 @@ export default {
     focus() {
       this.$refs.input.focus();
     },
+    manipulate(operator, ) {
+      let dt;
+
+      // if a result exists already, modify…
+      if (this.result) {
+        // as default use the step unit and size
+        let unit = this.step.unit;
+        let size = this.step.size;
+
+        // update selected based on cursor position
+        this.selected = this.toCursorIndex();
+
+        // if a part in the input is selected,
+        // resolve what unit that parts represent
+        // and set size to 1 (if not the step unit is selected)
+        if (this.selected !== null) {
+          unit = this.toUnit(this.tokens[this.selected]);
+
+          if (unit !== this.step.unit) {
+            size = 1;
+          }
+        }
+
+        // manipulate datetime by size and unit
+        // and mark part of unit that got altered as to be selected
+        dt = this.result.clone()[operator](size, unit);
+        this.selected = this.toIndex(unit);
+
+      // if not result exist, fill with current datetime
+      // and mark the part that represent the step unit to be selected
+      } else {
+        dt = this.toNearest(this.$library.dayjs());
+        this.selected = this.toIndex();
+      }
+
+      // update input and emit
+      this.input = this.toFormat(dt);
+      this.onInput();
+
+      // select modified part in input
+      this.$nextTick(() => {
+        this.select();
+      });
+    },
     onBlur() {
-      this.input = this.result ? this.toFormat(this.result) : null;
+      this.input    = this.result ? this.toFormat(this.result) : null;
+      this.selected = null;
       this.emit("blur");
+    },
+    onDown() {
+      this.manipulate("subtract");
     },
     onEnter() {
       this.onBlur();
@@ -182,44 +230,141 @@ export default {
     onInvalid($invalid, $v) {
       this.$emit("invalid", $invalid || this.$v.$invalid, $v || this.$v);
     },
-    onKey(operation) {
-      let dt;
+    onTab(event) {
+      const cursor = this.toCursorIndex();
 
-      // if a result exists already, modify it one step
-      if (this.result) {
-        dt = this.result.clone()[operation](this.step.size, this.step.unit);
+      // nothing has been selected so far,
+      // select at cursor position or from start
+      if (this.selected === null) {
+        this.selected = cursor || 0;
 
-      // otherwise fill with current datetime
+      // cursor position is not at currently selected,
+      // select at cursor position
+      } else if (cursor !== this.selected) {
+        this.selected = cursor;
+
+      // otherwise select next part
       } else {
-        dt = this.toNearest(this.$library.dayjs());
+        this.selected++;
       }
 
-      this.input = this.toFormat(dt);
-      this.$refs.input.select();
-      this.onBlur();
+      // if selected is beyong available parts, reset
+      if (this.selected >= this.parts.length) {
+        this.selected = null;
+
+      // otherwise, capture event and select
+      } else {
+        event.preventDefault();
+        event.stopPropagation();
+        this.select();
+      }
     },
-    toDatetime(value, format = true) {
+    onUp() {
+      this.manipulate("add");
+    },
+    select() {
+      if (this.selected !== null) {
+        // get selection range
+        const range = this.toRange(this.selected);
+
+        // make sure to not select leading separator
+        if (this.selected > 0) {
+          range.start++;
+        }
+
+        // select part in input
+        this.$refs.input.$refs.input.setSelectionRange(range.start, range.end);
+      }
+    },
+    toCursorIndex() {
+      // if whole input is selected, return
+      if (
+        this.$refs.input.$refs.input.selectionStart === 0 &&
+        this.$refs.input.$refs.input.selectionEnd === this.input.length
+      ) {
+        return null;
+      }
+
+      // based on the current cursor position,
+      // return the matching part's index
+      for (let i = 0; i < this.parts.length; i++) {
+        const range = this.toRange(i);
+        if (
+          range.start <= this.$refs.input.$refs.input.selectionStart &&
+          range.end >= this.$refs.input.$refs.input.selectionEnd
+        ) {
+          return i;
+        }
+      }
+    },
+    toFormat(value) {
       if (!value) {
         return null;
       }
 
+      // parse value as datetime object
       const dt = this.$library.dayjs.utc(value);
 
       if (dt.isValid() === false) {
         return null;
       }
 
-      return format ? this.toFormat(dt) : dt;
-    },
-    toFormat(dt) {
+      // formats datetime according to `display` prop
       return dt.format(this.display);
     },
-    toNearest(dt) {
+    toNearest(dt, unit = this.step.unit, size = this.step.size) {
+      // round datetime to nearest step
+      // based on step unit and size
       dt = dt.clone();
-      const unit    = this.step.unit === "day" ? "date" : this.step.unit;
+
+      if (unit === "day") {
+        unit = "date";
+      }
+
       const current = dt.get(unit);
-      const nearest = Math.round(current / this.step.size) * this.step.size;
+      const nearest = Math.round(current / size) * size;
       return dt.set(unit, nearest).startOf(unit);
+    },
+    toIndex(unit = this.step.unit) {
+      // get index/position of provided unit
+      // in input/display format
+      const tokens = this.map[unit];
+
+      for (let i = 0; i < tokens.length; i++) {
+        const index = this.tokens.indexOf(tokens[i]);
+
+        if (index !== -1) {
+          return index;
+        }
+      }
+
+    },
+    toRange(partIndex) {
+      // get an index/position range for the part at provided index
+      return {
+        start: this.parts.slice(0, partIndex).join(this.separator).length,
+        end:   this.parts.slice(0, partIndex + 1).join(this.separator).length
+      };
+    },
+    toTokens(token) {
+      // get all token variants for provided token
+      const values  = Object.values(this.map);
+      const matches = values.filter(tokens => tokens.includes(token));
+      return matches[0];
+    },
+    toUnit(token, nearest = true) {
+      // get unit for provided token
+      const keys   = Object.keys(this.map);
+      const values = Object.values(this.map);
+      let index    = values.findIndex(tokens => tokens.includes(token));
+
+      // if nearest unit is required,
+      // make sure no unit below the step unit is returned
+      if (nearest === true && index < keys.indexOf(this.step.unit)) {
+        return this.step.unit;
+      }
+
+      return keys[index];
     }
   },
   validations() {
