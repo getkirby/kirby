@@ -3,6 +3,7 @@
     :data-compact="compact"
     :data-empty="blocks.length === 0"
     class="k-blocks"
+    @click="$emit('click')"
   >
     <k-draggable
       v-bind="draggableOptions"

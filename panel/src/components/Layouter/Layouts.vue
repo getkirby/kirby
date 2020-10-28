@@ -5,7 +5,7 @@
         <section
           v-for="(layout, layoutIndex) in rows"
           :key="layout.id"
-          :data-current="layout.id === currentLayout"
+          :data-current="currentLayout && layout.id === currentLayout.id"
           class="k-layout"
         >
           <k-sort-handle class="k-layout-handle" />
@@ -13,7 +13,7 @@
             <div
               v-for="(column, columnIndex) in layout.columns"
               :key="columnIndex"
-              :data-current="column.id == currentColumn"
+              :data-current="currentColumn && column.id == currentColumn.id"
               :data-width="column.width"
               :id="column.id"
               class="k-column k-layout-column"
@@ -25,7 +25,7 @@
                 :max="max"
                 :value="column.blocks"
                 group="layout"
-                @click="$emit('edit', {
+                @click="editBlocks({
                   layout,
                   layoutIndex,
                   column,
@@ -103,9 +103,9 @@
 <script>
 export default {
   props: {
-    currentBlock: [String, Number],
-    currentColumn: [String, Number],
-    currentLayout: [String, Number],
+    currentBlock: Object,
+    currentColumn: Object,
+    currentLayout: Object,
     endpoints: Object,
     fieldsets: Object,
     layouts: Array,
@@ -143,6 +143,13 @@ export default {
       this.$refs.selector.close();
 
       this.$emit("input", this.rows);
+    },
+    editBlocks(args) {
+      if (args.column.blocks.length === 0) {
+        return;
+      }
+
+      this.$emit('edit', args);
     },
     prependLayout() {
       this.$refs.selector.open();

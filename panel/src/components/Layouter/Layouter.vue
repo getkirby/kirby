@@ -2,6 +2,9 @@
   <div class="k-layouter">
     <k-block-layouts
       v-bind="$props"
+      :current-block="currentBlock"
+      :current-column="currentColumn"
+      :current-layotu="currentLayout"
       @edit="editLayout"
       @input="$emit('input', $event)"
     />
