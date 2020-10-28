@@ -97,6 +97,7 @@ export default {
   width: 40rem;
   background: #fff;
   box-shadow: $shadow-xl;
+  overflow-x: auto;
 }
 .k-layouter-box .k-blocks {
   box-shadow: none;
