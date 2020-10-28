@@ -102,6 +102,16 @@ export default {
       return false;
     },
   },
+  mounted() {
+    this.$events.$on("click", this.outsideClick = (event) => {
+      if (this.$el.contains(event.target) === false) {
+        this.isHovered = false;
+      }
+    });
+  },
+  destroyed() {
+    this.$events.$off("click", this.outsideClick);
+  },
   methods: {
     confirmToRemove() {
       this.$refs.removeDialog.open();
