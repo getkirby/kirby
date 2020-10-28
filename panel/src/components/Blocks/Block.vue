@@ -6,14 +6,16 @@
     :data-open="isOpen"
     :data-translate="fieldset.translate"
     class="k-block-container"
-    @mouseenter="isHovered = true"
-    @mouseleave="isHovered = false"
+    @mouseenter="mouseenter()"
+    @mouseleave="mouseleave()"
   >
     <k-block-options
       v-if="isHovered"
       :is-full="isFull"
       :is-hidden="isHidden"
       :is-open="isOpen"
+      @openOptions="hasOpenOptions = true"
+      @closeOptions="hasOpenOptions = false"
       v-on="$listeners"
     />
     <div :class="className" class="k-block">
@@ -50,7 +52,8 @@ export default {
   },
   data() {
     return {
-      isHovered: false
+      isHovered: false,
+      hasOpenOptions: false,
     };
   },
   computed: {
@@ -106,6 +109,14 @@ export default {
     focus() {
       if (typeof this.$refs.editor.focus === "function") {
         this.$refs.editor.focus();
+      }
+    },
+    mouseenter() {
+      this.isHovered = true;
+    },
+    mouseleave() {
+      if (this.hasOpenOptions === false) {
+        this.isHovered = false;
       }
     },
     remove() {

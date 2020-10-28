@@ -6,7 +6,12 @@
       icon="angle-down"
       @click="$refs.options.toggle()"
     />
-    <k-dropdown-content ref="options" align="left">
+    <k-dropdown-content
+      ref="options"
+      align="left"
+      @close="$emit('closeOptions')"
+      @open="$emit('openOptions')"
+    >
       <k-dropdown-item :disabled="isFull" icon="angle-up" @click="$emit('chooseToPrepend')">
         {{ $t("insert.before") }}
       </k-dropdown-item>
