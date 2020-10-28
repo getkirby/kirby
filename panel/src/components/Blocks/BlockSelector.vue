@@ -7,7 +7,11 @@
     size="medium"
   >
 
-    <details open v-for="(group, groupName) in groups" :key="groupName">
+    <details
+      v-for="(group, groupName) in groups"
+      :key="groupName"
+      :open="group.open"
+    >
       <summary>{{ group.label }}</summary>
       <div class="k-block-types">
         <k-button
@@ -60,6 +64,7 @@ export default {
       Object.keys(fieldsetGroups).forEach(key => {
         let group = fieldsetGroups[key];
 
+        group.open = group.open === false ? false : true;
         group.fieldsets = group.fieldsets.filter(fieldsetName => this.fieldsets[fieldsetName]).map(fieldsetName => {
           index++;
 
@@ -68,6 +73,10 @@ export default {
             index
           };
         });
+
+        if (group.fieldsets.length === 0) {
+          return;
+        }
 
         groups[key] = group;
       });
