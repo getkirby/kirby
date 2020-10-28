@@ -22,7 +22,7 @@ return [
          * @param array $fieldsets
          * @return array
          */
-        'fieldsets' => function (array $fieldsets = []) {
+        'fieldsets' => function (array $fieldsets = null) {
             return $fieldsets;
         },
         'layouts' => function (array $layouts = []) {
@@ -37,7 +37,7 @@ return [
     'computed' => [
         'blocksField' => function () {
             return new BlocksField($this->model, [
-                'fieldsets' => $this->props['fieldsets'] ?? []
+                'fieldsets' => $this->props['fieldsets']
             ]);
         },
         'fieldsets' => function () {
