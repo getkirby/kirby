@@ -158,6 +158,12 @@ export default {
     },
     selectLayout(index) {
       this.nextIndex = index;
+
+      if (this.layouts.length === 1) {
+        this.addLayout(this.layouts[0]);
+        return;
+      }
+
       this.$refs.selector.open();
     },
     updateBlocks(args) {
