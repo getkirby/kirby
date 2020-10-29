@@ -24,10 +24,7 @@ class BlockTest extends TestCase
         $block = new Block(['type' => 'test']);
 
         $this->assertInstanceOf('Kirby\Cms\Content', $block->content());
-        $this->assertNotNull($block->id());
         $this->assertFalse($block->isHidden());
-        $this->assertSame($this->app, $block->kirby());
-        $this->assertInstanceOf('Kirby\Cms\Site', $block->parent());
         $this->assertInstanceOf('Kirby\Cms\Blocks', $block->siblings());
         $this->assertSame('test', $block->type());
     }
@@ -83,15 +80,6 @@ class BlockTest extends TestCase
         $this->assertInstanceOf('Kirby\Cms\Block', $block);
     }
 
-    public function testIs()
-    {
-        $a = new Block(['type' => 'a']);
-        $b = new Block(['type' => 'b']);
-
-        $this->assertTrue($a->is($a));
-        $this->assertFalse($a->is($b));
-    }
-
     public function testIsEmpty()
     {
         $block = new Block([
@@ -129,23 +117,7 @@ class BlockTest extends TestCase
             'type'   => 'heading'
         ]);
 
-        $this->assertSame($page, $block->parent());
         $this->assertSame($page, $block->content()->parent());
-    }
-
-    public function testSiblings()
-    {
-        $blocks = Blocks::factory([
-            ['type' => 'a'],
-            ['type' => 'b'],
-        ]);
-
-        $block = new Block([
-            'siblings' => $blocks,
-            'type'     => 'c'
-        ]);
-
-        $this->assertSame($blocks, $block->siblings());
     }
 
     public function testToArray()

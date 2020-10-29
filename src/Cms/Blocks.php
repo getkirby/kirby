@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Closure;
-use Exception;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 use Kirby\Toolkit\Str;
@@ -18,19 +16,9 @@ use Throwable;
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-class Blocks extends Collection
+class Blocks extends Items
 {
-    /**
-     * Constructor
-     *
-     * @param array $objects
-     * @param array $options
-     */
-    public function __construct($objects = [], array $options = [])
-    {
-        $this->parent = $options['parent'] ?? App::instance()->site();
-        parent::__construct($objects, $this->parent);
-    }
+    const ITEM_CLASS = '\Kirby\Cms\Block';
 
     /**
      * Return HTML when the collection is
@@ -57,47 +45,6 @@ class Blocks extends Collection
     }
 
     /**
-     * Creates a new block collection from a
-     * an array of block props
-     *
-     * @param array $blocks
-     * @param array $params
-     * @return \Kirby\Cms\Blocks
-     */
-    public static function factory(array $blocks = null, array $params = [])
-    {
-        $options = array_merge([
-            'options' => [],
-            'parent'  => App::instance()->site(),
-        ], $params);
-
-        if (empty($blocks) === true || is_array($blocks) === false) {
-            return new static();
-        }
-
-        if (is_array($options) === false) {
-            throw new Exception('Invalid block options');
-        }
-
-        // create a new collection of blocks
-        $collection = new static([], $options);
-
-        foreach ($blocks as $params) {
-            if (is_array($params) === false) {
-                continue;
-            }
-
-            $params['options']  = $options['options'];
-            $params['parent']   = $options['parent'];
-            $params['siblings'] = $collection;
-            $block = Block::factory($params);
-            $collection->append($block->id(), $block);
-        }
-
-        return $collection;
-    }
-
-    /**
      * Parse and sanitize various block formats
      *
      * @param array|string $input
@@ -119,16 +66,6 @@ class Blocks extends Collection
         }
 
         return $input;
-    }
-
-    /**
-     * Convert the blocks to an array
-     *
-     * @return array
-     */
-    public function toArray(Closure $map = null): array
-    {
-        return array_values(parent::toArray($map));
     }
 
     /**

@@ -16,7 +16,7 @@ use Throwable;
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-class Block
+class Block extends Item
 {
     use HasSiblings;
 
@@ -174,17 +174,6 @@ class Block
     public function id(): string
     {
         return $this->id;
-    }
-
-    /**
-     * Compares the block to another one
-     *
-     * @param \Kirby\Cms\Block $block
-     * @return bool
-     */
-    public function is(Block $block): bool
-    {
-        return $this->id() === $block->id();
     }
 
     /**

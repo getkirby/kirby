@@ -5,6 +5,7 @@ use Kirby\Cms\Blocks;
 use Kirby\Cms\Field;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
+use Kirby\Cms\Layouts;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Url;
 use Kirby\Data\Data;
@@ -183,8 +184,17 @@ return function (App $app) {
             return (int)$value;
         },
 
-        'toLayout' => function (Field $field) {
-            return Data::decode($field->value, 'json');
+        /**
+         * Parse layouts and turn them into
+         * Layout objects
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Layouts
+         */
+        'toLayouts' => function (Field $field) {
+            return Layouts::factory(Data::decode($field->value, 'json'), [
+                'parent' => $field->parent()
+            ]);
         },
 
         /**
