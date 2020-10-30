@@ -50,10 +50,10 @@
             <k-dropdown>
               <k-button icon="angle-down" @click="$refs['layout-' + layout.id][0].toggle()" />
               <k-dropdown-content :ref="'layout-' + layout.id" align="right">
-                <k-dropdown-item icon="angle-up" @click="selectLayout(layoutIndex)">Insert before</k-dropdown-item>
-                <k-dropdown-item icon="angle-down" @click="selectLayout(layoutIndex + 1)">Insert after</k-dropdown-item>
+                <k-dropdown-item icon="angle-up" @click="selectLayout(layoutIndex)">{{ $t("insert.before") }}</k-dropdown-item>
+                <k-dropdown-item icon="angle-down" @click="selectLayout(layoutIndex + 1)">{{ $t("insert.after") }}</k-dropdown-item>
                 <hr>
-                <k-dropdown-item icon="trash" @click="removeLayout(layout)">Delete layout</k-dropdown-item>
+                <k-dropdown-item icon="trash" @click="removeLayout(layout)">{{ $t("field.layout.delete") }}</k-dropdown-item>
               </k-dropdown-content>
             </k-dropdown>
           </nav>
@@ -73,7 +73,7 @@
         class="k-layout-empty"
         @click="selectLayout(0)"
       >
-        No rows yet
+        {{ $t("field.layout.empty") }}
       </k-empty>
     </template>
 
@@ -84,7 +84,7 @@
       size="medium"
       class="k-layout-selector"
     >
-      <k-headline>Select a layout</k-headline>
+      <k-headline>{{ $t("field.layout.select") }}</k-headline>
       <ul>
         <li
           v-for="(layoutOption, layoutOptionIndex) in layouts"

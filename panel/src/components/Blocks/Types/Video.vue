@@ -1,9 +1,9 @@
 <template>
   <k-block-figure
     :caption="content.caption"
+    :empty-text="$t('field.blocks.video.placeholder') + ' …'"
     :is-empty="!video"
     empty-icon="video"
-    empty-text="Enter a video URL …"
     v-on="$listeners"
   >
     <iframe v-if="video" :src="video" />

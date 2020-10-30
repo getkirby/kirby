@@ -4,10 +4,10 @@
       <k-input
         ref="code"
         :buttons="false"
+        :placeholder="$t('field.blocks.code.placeholder') + ' …'"
         :spellcheck="false"
         :value="content.code"
         type="textarea"
-        placeholder="Your code …"
         @input="update({ code: $event })"
       />
       <div class="k-block-code-editor-language">

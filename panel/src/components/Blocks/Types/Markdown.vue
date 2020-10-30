@@ -3,10 +3,10 @@
     <k-input
       ref="code"
       :buttons="false"
+      :placeholder="$t('field.blocks.markdown.placeholder') + ' …'"
       :spellcheck="false"
       :value="content.text"
       type="textarea"
-      placeholder="Markdown / Kirbytext …"
       @input="$emit('update', { ...content, text: $event })"
     />
   </div>

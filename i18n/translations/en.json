@@ -202,12 +202,25 @@
   "error.validation.url": "Please enter a valid URL",
 
   "field.required": "The field is required",
+  "field.blocks.code.placeholder": "Your code",
   "field.blocks.delete.confirm": "Do you really want to delete this block?",
   "field.blocks.delete.all.confirm": "Do you really want to delete all blocks?",
   "field.blocks.empty": "No blocks yet",
   "field.blocks.fieldsets.label": "Please select a block type …",
+  "field.blocks.heading.placeholder": "Heading",
+  "field.blocks.image.placeholder": "Select an image",
+  "field.blocks.markdown.placeholder": "Markdown / Kirbytext",
+  "field.blocks.quote.placeholder.text": "Quote",
+  "field.blocks.quote.placeholder.citation": "by",
+  "field.blocks.text.placeholder": "Text",
+  "field.blocks.video.placeholder": "Enter a video URL",
 
   "field.files.empty": "No files selected yet",
+
+  "field.layout.delete": "Delete layout",
+  "field.layout.empty": "No rows yet",
+  "field.layout.select": "Select a layout",
+
   "field.pages.empty": "No pages selected yet",
   "field.structure.delete.confirm": "Do you really want to delete this row?",
   "field.structure.empty": "No entries yet",

@@ -2,9 +2,9 @@
   <k-writer
     ref="editor"
     :nodes="false"
+    :placeholder="$t('field.blocks.text.placeholder') + ' …'"
     :value="content.text"
     class="k-block-text-editor"
-    placeholder="Text …"
     @input="$emit('update', { text: $event })"
   />
 </template>

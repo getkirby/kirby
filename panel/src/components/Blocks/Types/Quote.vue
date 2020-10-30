@@ -3,17 +3,17 @@
     <k-writer
       ref="text"
       :inline="true"
+      :placeholder="$t('field.blocks.quote.placeholder.text') + ' …'"
       :value="content.text"
       class="k-block-quote-text"
-      placeholder="Quote …"
       @input="update({ text: $event })"
     />
     <k-writer
       ref="citation"
       :inline="true"
+      :placeholder="$t('field.blocks.quote.placeholder.citation') + ' …'"
       :value="content.citation"
       class="k-block-quote-citation"
-      placeholder="by …"
       @input="update({ citation: $event })"
     />
   </div>

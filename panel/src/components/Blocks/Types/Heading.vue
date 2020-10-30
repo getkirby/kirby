@@ -4,9 +4,9 @@
     :data-level="content.level"
     :inline="true"
     :nodes="false"
+    :placeholder="$t('field.blocks.heading.placeholder') + ' …'"
     :value="content.text"
     class="k-block-heading-editor"
-    placeholder="Heading …"
     @input="$emit('update', {
       ...content,
       text: $event
