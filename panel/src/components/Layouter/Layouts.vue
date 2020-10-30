@@ -140,7 +140,10 @@ export default {
       });
 
       this.rows.splice(this.nextIndex, 0, layout);
-      this.$refs.selector.close();
+
+      if (this.layouts.length > 1) {
+        this.$refs.selector.close();
+      }
 
       this.$emit("input", this.rows);
     },
