@@ -96,7 +96,9 @@ return [
             ],
         ];
     },
-    'save' => function ($value) {
+    'save' => function (array $value = null) {
+        $value = (array)$value;
+
         foreach ($value as $layoutIndex => $layout) {
             foreach ($layout['columns'] as $columnIndex => $column) {
                 $value[$layoutIndex]['columns'][$columnIndex]['blocks'] = $this->blocksField->toArray($column['blocks'] ?? []);
