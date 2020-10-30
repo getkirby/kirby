@@ -1,7 +1,11 @@
 <template>
   <div>
     <template v-if="rows.length">
-      <k-draggable :handle="true" class="k-layouts">
+      <k-draggable
+          v-bind="draggableOptions"
+          class="k-layouts"
+          @sort="save"
+      >
         <section
           v-for="(layout, layoutIndex) in rows"
           :key="layout.id"
@@ -118,6 +122,16 @@ export default {
       nextIndex: null,
     };
   },
+  computed: {
+    draggableOptions() {
+      return {
+        id: this._uid,
+        handle: true,
+        list: this.rows,
+        delay: 10
+      };
+    }
+  },
   watch: {
     value() {
       this.rows = this.value;
@@ -145,7 +159,7 @@ export default {
         this.$refs.selector.close();
       }
 
-      this.$emit("input", this.rows);
+      this.save();
     },
     editBlocks(args) {
       if (args.column.blocks.length === 0) {
@@ -164,6 +178,9 @@ export default {
         this.$delete(this.rows, index);
       }
 
+      this.save();
+    },
+    save() {
       this.$emit("input", this.rows);
     },
     selectLayout(index) {
@@ -178,7 +195,7 @@ export default {
     },
     updateBlocks(args) {
       this.rows[args.layoutIndex].columns[args.columnIndex].blocks = args.blocks;
-      this.$emit("input", this.rows);
+      this.save();
     }
   }
 };
