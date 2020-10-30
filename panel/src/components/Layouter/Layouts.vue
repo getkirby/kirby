@@ -73,7 +73,7 @@
         class="k-layout-empty"
         @click="selectLayout(0)"
       >
-        {{ $t("field.layout.empty") }}
+        {{ empty || $t("field.layout.empty") }}
       </k-empty>
     </template>
 
@@ -110,6 +110,7 @@ export default {
     currentBlock: Object,
     currentColumn: Object,
     currentLayout: Object,
+    empty: String,
     endpoints: Object,
     fieldsets: Object,
     layouts: Array,

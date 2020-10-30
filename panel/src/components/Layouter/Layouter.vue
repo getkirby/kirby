@@ -40,6 +40,7 @@ export default {
     "k-block-layouts": Layouts,
   },
   props: {
+    empty: String,
     endpoints: Object,
     fieldsets: Object,
     layouts: Array,

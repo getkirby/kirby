@@ -4,6 +4,7 @@
     class="k-layout-field"
   >
     <k-block-layouter
+      :empty="empty"
       :endpoints="endpoints"
       :fieldsets="fieldsets"
       :layouts="layouts"
