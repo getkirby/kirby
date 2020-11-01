@@ -34,7 +34,7 @@ class AuthCsrfTest extends TestCase
      */
     public function testCsrfFromSession1()
     {
-        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->set('kirby.csrf', 'session-csrf');
 
         $_GET = [];
         $this->assertFalse($this->auth->csrf());
@@ -45,7 +45,7 @@ class AuthCsrfTest extends TestCase
      */
     public function testCsrfFromSession2()
     {
-        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->set('kirby.csrf', 'session-csrf');
 
         $_GET = ['csrf' => ''];
         $this->assertFalse($this->auth->csrf());
@@ -56,7 +56,7 @@ class AuthCsrfTest extends TestCase
      */
     public function testCsrfFromSession3()
     {
-        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->set('kirby.csrf', 'session-csrf');
 
         $_GET = ['csrf' => 'session-csrf'];
         $this->assertEquals('session-csrf', $this->auth->csrf());
@@ -67,7 +67,7 @@ class AuthCsrfTest extends TestCase
      */
     public function testCsrfFromSession4()
     {
-        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->set('kirby.csrf', 'session-csrf');
 
         $_GET = ['csrf' => 'invalid-csrf'];
         $this->assertFalse($this->auth->csrf());
@@ -85,7 +85,7 @@ class AuthCsrfTest extends TestCase
         ]);
         $this->auth = new Auth($this->app);
 
-        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->set('kirby.csrf', 'session-csrf');
 
         $_GET = [];
         $this->assertFalse($this->auth->csrf());
@@ -103,7 +103,7 @@ class AuthCsrfTest extends TestCase
         ]);
         $this->auth = new Auth($this->app);
 
-        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->set('kirby.csrf', 'session-csrf');
 
         $_GET = ['csrf' => 'option-csrf'];
         $this->assertEquals('option-csrf', $this->auth->csrf());
@@ -121,7 +121,7 @@ class AuthCsrfTest extends TestCase
         ]);
         $this->auth = new Auth($this->app);
 
-        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->set('kirby.csrf', 'session-csrf');
 
         $_GET = ['csrf' => 'session-csrf'];
         $this->assertFalse($this->auth->csrf());
@@ -139,7 +139,7 @@ class AuthCsrfTest extends TestCase
         ]);
         $this->auth = new Auth($this->app);
 
-        $this->app->session()->set('csrf', 'session-csrf');
+        $this->app->session()->set('kirby.csrf', 'session-csrf');
 
         $_GET = ['csrf' => 'invalid-csrf'];
         $this->assertFalse($this->auth->csrf());
