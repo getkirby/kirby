@@ -126,7 +126,7 @@ class Email
                 // fallback to single email text template
             } elseif ($text->exists()) {
                 $this->props['body'] = $text->render($data);
-            } else {
+            } elseif (isset($this->props['body']) !== true) {
                 throw new NotFoundException('The email template "' . $this->props['template'] . '" cannot be found');
             }
         }

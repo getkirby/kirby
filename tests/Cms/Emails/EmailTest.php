@@ -106,6 +106,33 @@ class EmailTest extends TestCase
         ], $email->toArray()['body']);
     }
 
+    public function testTemplateBody()
+    {
+        $app = new App([
+            'templates' => [
+                'emails/contact' => __DIR__ . '/fixtures/emails/contact.php'
+            ]
+        ]);
+
+        $email = new Email([
+            'body'     => 'Hi, Alex!',
+            'template' => 'contact',
+            'data' => [
+                'name' => 'Alex'
+            ]
+        ]);
+        $this->assertEquals('Cheers, Alex!', $email->toArray()['body']);
+
+        $email = new Email([
+            'body'     => 'Hi, Alex!',
+            'template' => 'invalid',
+            'data' => [
+                'name' => 'Alex'
+            ]
+        ]);
+        $this->assertEquals('Hi, Alex!', $email->toArray()['body']);
+    }
+
     public function testInvalidTemplate()
     {
         $this->expectException('Kirby\Exception\NotFoundException');
