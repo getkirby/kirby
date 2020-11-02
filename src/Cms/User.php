@@ -540,6 +540,18 @@ class User extends ModelWithContent
     }
 
     /**
+     * Returns the user's name or,
+     * if empty, the email address
+     *
+     * @return \Kirby\Cms\Field
+     */
+    public function nameOrEmail()
+    {
+        $name = $this->name();
+        return $name->isNotEmpty() ? $name : new Field($this, 'email', $this->email());
+    }
+
+    /**
      * Create a dummy nobody
      *
      * @internal

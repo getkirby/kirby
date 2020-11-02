@@ -90,6 +90,25 @@ class UserTest extends TestCase
         $this->assertEquals('Homer Simpson', $user->name());
     }
 
+    public function testNameOrEmail()
+    {
+        $user = new User([
+            'email' => $email = 'homer@simpsons.com',
+            'name'  => $name = 'Homer Simpson',
+        ]);
+
+        $this->assertSame($name, $user->nameOrEmail()->value());
+        $this->assertSame('name', $user->nameOrEmail()->key());
+
+        $user = new User([
+            'email' => $email = 'homer@simpsons.com',
+            'name'  => ''
+        ]);
+
+        $this->assertSame($email, $user->nameOrEmail()->value());
+        $this->assertSame('email', $user->nameOrEmail()->key());
+    }
+
     public function testToString()
     {
         $user = new User([
