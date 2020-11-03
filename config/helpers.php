@@ -66,16 +66,16 @@ function csrf(string $check = null)
     if (func_num_args() === 0) {
         // no arguments, generate/return a token
 
-        $token = $session->get('csrf');
+        $token = $session->get('kirby.csrf');
         if (is_string($token) !== true) {
             $token = bin2hex(random_bytes(32));
-            $session->set('csrf', $token);
+            $session->set('kirby.csrf', $token);
         }
 
         return $token;
-    } elseif (is_string($check) === true && is_string($session->get('csrf')) === true) {
+    } elseif (is_string($check) === true && is_string($session->get('kirby.csrf')) === true) {
         // argument has been passed, check the token
-        return hash_equals($session->get('csrf'), $check) === true;
+        return hash_equals($session->get('kirby.csrf'), $check) === true;
     }
 
     return false;

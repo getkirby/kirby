@@ -102,7 +102,7 @@ class AuthTest extends TestCase
     public function testUserSession1()
     {
         $session = $this->app->session();
-        $session->set('user.id', 'marge');
+        $session->set('kirby.userId', 'marge');
 
         $user = $this->auth->user();
         $this->assertSame('marge@simpsons.com', $user->email());
@@ -111,7 +111,7 @@ class AuthTest extends TestCase
         $this->assertNull($this->auth->currentUserFromImpersonation());
 
         // value is cached
-        $session->set('user.id', 'homer');
+        $session->set('kirby.userId', 'homer');
         $user = $this->auth->user();
         $this->assertSame('marge@simpsons.com', $user->email());
     }
@@ -122,7 +122,7 @@ class AuthTest extends TestCase
     public function testUserSession2()
     {
         $session = (new AutoSession($this->app->root('sessions')))->createManually();
-        $session->set('user.id', 'homer');
+        $session->set('kirby.userId', 'homer');
 
         $user = $this->auth->user($session);
         $this->assertSame('homer@simpsons.com', $user->email());

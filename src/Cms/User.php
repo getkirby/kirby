@@ -422,7 +422,7 @@ class User extends ModelWithContent
         $kirby->trigger('user.login:before', ['user' => $this, 'session' => $session]);
 
         $session->regenerateToken(); // privilege change
-        $session->data()->set('user.id', $this->id());
+        $session->data()->set('kirby.userId', $this->id());
         $this->kirby()->auth()->setUser($this);
 
         $kirby->trigger('user.login:after', ['user' => $this, 'session' => $session]);
@@ -442,7 +442,7 @@ class User extends ModelWithContent
         $kirby->trigger('user.logout:before', ['user' => $this, 'session' => $session]);
 
         // remove the user from the session for future requests
-        $session->data()->remove('user.id');
+        $session->data()->remove('kirby.userId');
 
         // clear the cached user object from the app state of the current request
         $this->kirby()->auth()->flush();

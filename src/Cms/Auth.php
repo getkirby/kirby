@@ -118,7 +118,7 @@ class Auth
             $session = $this->kirby->session(['detect' => true]);
         }
 
-        $id = $session->data()->get('user.id');
+        $id = $session->data()->get('kirby.userId');
 
         if (is_string($id) !== true) {
             return null;
