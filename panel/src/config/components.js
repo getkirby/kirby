@@ -249,6 +249,7 @@ import Progress from "@/components/Misc/Progress.vue";
 import SortHandle from "@/components/Misc/SortHandle.vue";
 import StatusIcon from "@/components/Misc/StatusIcon.vue";
 import Text from "@/components/Misc/Text.vue";
+import UserInfo from "@/components/Misc/UserInfo.vue";
 
 Vue.component("k-draggable", Draggable);
 Vue.component("k-error-boundary", ErrorBoundary);
@@ -260,6 +261,7 @@ Vue.component("k-progress", Progress);
 Vue.component("k-status-icon", StatusIcon);
 Vue.component("k-sort-handle", SortHandle);
 Vue.component("k-text", Text);
+Vue.component("k-user-info", UserInfo);
 
 /* Navigation */
 import Button from "@/components/Navigation/Button.vue";
