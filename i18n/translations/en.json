@@ -448,6 +448,7 @@
 
   "view.account": "Your account",
   "view.installation": "Installation",
+  "view.resetPassword": "Reset password",
   "view.settings": "Settings",
   "view.site": "Site",
   "view.users": "Users",
