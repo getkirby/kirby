@@ -1,5 +1,4 @@
 import Vue from "vue";
-import router from "@/config/router.js";
 
 export default {
   namespaced: true,
@@ -49,8 +48,8 @@ export default {
       const user = await  Vue.$api.auth.login(credentials);
       context.commit("SET_CURRENT", user);
       context.dispatch("translation/activate", user.language, { root: true });
-      return user;
       Vue.prototype.$go(context.state.path || "/");
+      return user;
     },
     async logout(context, force) {
 
