@@ -49,8 +49,8 @@ export default {
       const user = await  Vue.$api.auth.login(credentials);
       context.commit("SET_CURRENT", user);
       context.dispatch("translation/activate", user.language, { root: true });
-      router.push(context.state.path || "/");
       return user;
+      Vue.prototype.$go(context.state.path || "/");
     },
     async logout(context, force) {
 
@@ -65,7 +65,7 @@ export default {
         await Vue.$api.auth.logout();
 
       } finally {
-        router.push("/login");
+        Vue.prototype.$go("/login");
       }
     },
     name(context, name) {
