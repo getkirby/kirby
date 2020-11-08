@@ -22,6 +22,22 @@ class Email
     use Properties;
 
     /**
+     * If set to `true`, the debug mode is enabled
+     * for all emails
+     *
+     * @var bool
+     */
+    public static $debug = false;
+
+    /**
+     * Store for sent emails when `Email::$debug`
+     * is set to `true`
+     *
+     * @var array
+     */
+    public static $emails = [];
+
+    /**
      * @var array|null
      */
     protected $attachments;
@@ -96,9 +112,13 @@ class Email
     {
         $this->setProperties($props);
 
-        if ($debug === false) {
-            $this->send();  // @codeCoverageIgnore
+        // @codeCoverageIgnoreStart
+        if (static::$debug === false && $debug === false) {
+            $this->send();
+        } elseif (static::$debug === true) {
+            static::$emails[] = $this;
         }
+        // @codeCoverageIgnoreEnd
     }
 
     /**
