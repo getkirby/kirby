@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "Je hebt geen rechten om {type} bestanden up te loaden",
   "error.file.undefined": "Het bestand kan niet worden gevonden",
 
+  "error.form.field.required": "Dit veld is verplicht",
   "error.form.incomplete": "Verbeter alle fouten in het formulier",
   "error.form.notSaved": "Het formulier kon niet worden opgeslagen",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Vul een geldige tijd in",
   "error.validation.url": "Vul een geldige URL in",
 
-  "field.required": "Dit veld is verplicht",
   "field.files.empty": "Nog geen bestanden geselecteerd",
   "field.pages.empty": "Nog geen pagina's geselecteerd",
   "field.structure.delete.confirm": "Wil je deze entry verwijderen?",

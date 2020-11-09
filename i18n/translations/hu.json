@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "Nem tölthetsz fel \"{type}\" típusú fájlokat",
   "error.file.undefined": "A f\u00e1jl nem tal\u00e1lhat\u00f3",
 
+  "error.form.field.required": "The field is required",
   "error.form.incomplete": "Kérlek javítsd ki az összes hibát az űrlapon",
   "error.form.notSaved": "Az űrlap nem menthető",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Kérlek megfelelő időt adj meg",
   "error.validation.url": "Kérlek megfelelő URL-t adj meg",
 
-  "field.required": "The field is required",
   "field.files.empty": "Nincs fálj kiválasztva",
   "field.pages.empty": "Nincs oldal kiválasztva",
   "field.structure.delete.confirm": "Biztos t\u00f6r\u00f6lni szeretn\u00e9d ezt a bejegyz\u00e9st?",

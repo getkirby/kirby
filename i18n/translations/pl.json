@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "Nie możesz przesyłać plików {type}",
   "error.file.undefined": "Nie można znaleźć pliku",
 
+  "error.form.field.required": "Pole jest wymagane",
   "error.form.incomplete": "Popraw wszystkie błędy w formularzu…",
   "error.form.notSaved": "Nie udało się zapisać formularza",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Wprowadź poprawny czas",
   "error.validation.url": "Wprowadź poprawny adres URL",
 
-  "field.required": "Pole jest wymagane",
   "field.files.empty": "Nie wybrano jeszcze żadnych plików",
   "field.pages.empty": "Nie wybrano jeszcze żadnych stron",
   "field.structure.delete.confirm": "Czy na pewno chcesz usunąć ten wiersz?",

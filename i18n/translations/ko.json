@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "이 형식({type})의 파일을 업로드할 권한이 없습니다.",
   "error.file.undefined": "\ud30c\uc77c\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.",
 
+  "error.form.field.required": "필드를 채우세요.",
   "error.form.incomplete": "항목에 오류가 있습니다.",
   "error.form.notSaved": "항목을 저장할 수 없습니다.",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "올바른 시각을 입력하세요.",
   "error.validation.url": "올바른 URL을 입력하세요.",
 
-  "field.required": "필드를 채우세요.",
   "field.files.empty": "선택한 파일이 없습니다.",
   "field.pages.empty": "선택한 페이지가 없습니다.",
   "field.structure.delete.confirm": "이 항목을 삭제할까요?",

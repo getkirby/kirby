@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "Nemáte povolenie na nahrávanie súborov s typom {type}",
   "error.file.undefined": "Súbor nie je možné nájsť",
 
+  "error.form.field.required": "The field is required",
   "error.form.incomplete": "Prosím, opravte všetky chyby v rámci formuláru...",
   "error.form.notSaved": "Formulár sa nepodarilo uložiť",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Prosím, zadajte platný čas",
   "error.validation.url": "Prosím, zadajte platnú URL",
 
-  "field.required": "The field is required",
   "field.files.empty": "Žiadne súbory zatiaľ neboli zvolené",
   "field.pages.empty": "Žiadne stránky zatiaľ neboli zvolené",
   "field.structure.delete.confirm": "Ste si istý, že chcete zmazať tento riadok?",

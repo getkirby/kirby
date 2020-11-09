@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "У вас нет права загружать файлы {type}",
   "error.file.undefined": "\u0424\u0430\u0439\u043b \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
 
+  "error.form.field.required": "Поле обязательно",
   "error.form.incomplete": "Пожалуйста, исправьте все ошибки в форме",
   "error.form.notSaved": "Форма не может быть сохранена",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Пожалуйста, введите правильную дату",
   "error.validation.url": "Пожалуйста, введите правильный URL",
 
-  "field.required": "Поле обязательно",
   "field.files.empty": "Еще не выбраны файлы",
   "field.pages.empty": "Еще не выбраны страницы",
   "field.structure.delete.confirm": "Вы точно хотите удалить эту запись?",

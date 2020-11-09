@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "Você não tem permissão para enviar arquivos {type}",
   "error.file.undefined": "Arquivo n\u00e3o encontrado",
 
+  "error.formfield.required": "The field is required",
   "error.form.incomplete": "Por favor, corrija os erros do formulário…",
   "error.form.notSaved": "O formulário não pôde ser salvo",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Digite uma hora válida",
   "error.validation.url": "Digite uma URL válida",
 
-  "field.required": "The field is required",
   "field.files.empty": "Nenhum arquivo selecionado",
   "field.pages.empty": "Nenhuma página selecionada",
   "field.structure.delete.confirm": "Deseja realmente excluir este registro?",

@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "Du har ikke lov til å laste opp filer av typen {type}",
   "error.file.undefined": "Filen kunne ikke bli funnet",
 
+  "error.form.field.required": "The field is required",
   "error.form.incomplete": "Vennligst fiks alle feil…",
   "error.form.notSaved": "Skjemaet kunne ikke lagres",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Vennligst angi et gyldig tidspunkt",
   "error.validation.url": "Vennligst skriv inn en gyldig URL",
 
-  "field.required": "The field is required",
   "field.files.empty": "Ingen filer har blitt valgt",
   "field.pages.empty": "Ingen side har blitt valgt",
   "field.structure.delete.confirm": "\u00d8nsker du virkelig \u00e5 slette denne oppf\u00f8ringen?",

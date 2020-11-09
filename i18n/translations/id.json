@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "Anda tidak diizinkan mengunggah berkas dengan tipe {type}",
   "error.file.undefined": "Berkas tidak dapat ditemukan",
 
+  "error.form.field.required": "Bidang ini wajib",
   "error.form.incomplete": "Pastikan semua bidang telah diisi dengan benar…",
   "error.form.notSaved": "Formulir tidak dapat disimpan",
 
@@ -186,7 +187,6 @@
   "error.validation.time": "Masukkan waktu yang valid",
   "error.validation.url": "Masukkan URL yang valid",
 
-  "field.required": "Bidang ini wajib",
   "field.files.empty": "Belum ada berkas yang dipilih",
   "field.pages.empty": "Belum ada halaman yang dipilih",
   "field.structure.delete.confirm": "Anda yakin menghapus baris ini?",

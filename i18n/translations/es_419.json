@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "No está permitido subir archivos {type}.",
   "error.file.undefined": "El archivo no se puede encontrar.",
 
+  "error.form.field.required": "Este campo es requerido",
   "error.form.incomplete": "Por favor, corrige todos los errores del formulario...",
   "error.form.notSaved": "No se pudo guardar el formulario.",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Por favor ingresa una hora válida",
   "error.validation.url": "Por favor ingresa un URL válido",
 
-  "field.required": "Este campo es requerido",
   "field.files.empty": "Aún no ha seleccionado ningún archivo",
   "field.pages.empty": "Aún no ha seleccionado ningúna pagina",
   "field.structure.delete.confirm": "\u00bfEn realidad desea borrar esta entrada?",

@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "Δεν επιτρέπεται η μεταφόρτωση αρχείων {type}",
   "error.file.undefined": "Δεν ήταν δυνατή η εύρεση του αρχείου",
 
+  "error.form.field.required": "The field is required",
   "error.form.incomplete": "Παρακαλώ διορθώστε τα σφάλματα στη φόρμα...",
   "error.form.notSaved": "Δεν ήταν δυνατή η αποθήκευση της φόρμας",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Παρακαλώ εισάγετε μια έγκυρη ώρα",
   "error.validation.url": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση URL",
 
-  "field.required": "The field is required",
   "field.files.empty": "Δεν έχουν επιλεγεί αρχεία ακόμα",
   "field.pages.empty": "Δεν έχουν επιλεγεί ακόμη σελίδες",
   "field.structure.delete.confirm": "\u0395\u03af\u03c3\u03c4\u03b5 \u03c3\u03af\u03b3\u03bf\u03c5\u03c1\u03bf\u03c2 \u03cc\u03c4\u03b9 \u03b8\u03ad\u03bb\u03b5\u03c4\u03b5 \u03bd\u03b1 \u03b4\u03b9\u03b1\u03b3\u03c1\u03ac\u03c8\u03b5\u03c4\u03b5 \u03b1\u03c5\u03c4\u03ae\u03bd \u03c4\u03b7\u03bd \u03ba\u03b1\u03c4\u03b1\u03c7\u03ce\u03c1\u03b9\u03c3\u03b7;",

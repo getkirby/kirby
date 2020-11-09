@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "No tens permís per penjar fitxers {type}",
   "error.file.undefined": "L'arxiu no s'ha trobat",
 
+  "error.form.field.required": "El camp és obligatori",
   "error.form.incomplete": "Si us plau, corregeix els errors del formulari ...",
   "error.form.notSaved": "No s'ha pogut desar el formulari",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Si us plau, introduïu una hora vàlida",
   "error.validation.url": "Si us plau, introduïu una URL vàlida",
 
-  "field.required": "El camp és obligatori",
   "field.files.empty": "Encara no hi ha cap fitxer seleccionat",
   "field.pages.empty": "Encara no s'ha seleccionat cap pàgina",
   "field.structure.delete.confirm": "Segur que voleu eliminar aquesta fila?",

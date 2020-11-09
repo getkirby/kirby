@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "Non ti è permesso caricare file {type}",
   "error.file.undefined": "Il file non \u00e8 stato trovato",
 
+  "error.form.field.required": "The field is required",
   "error.form.incomplete": "Correggi tutti gli errori nel form...",
   "error.form.notSaved": "Non è stato possibile salvare il form",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Inserisci un orario valido",
   "error.validation.url": "Inserisci un URL valido",
 
-  "field.required": "The field is required",
   "field.files.empty": "Nessun file selezionato",
   "field.pages.empty": "Nessuna pagina selezionata",
   "field.structure.delete.confirm": "Vuoi veramente eliminare questo elemento?",

@@ -72,6 +72,7 @@
   "error.file.type.forbidden": "Jūs neturite teisės įkelti {type} tipo failų",
   "error.file.undefined": "Failas nerastas",
 
+  "error.form.field.required": "Laukas privalomas",
   "error.form.incomplete": "🙏 Prašome ištaisyti visas formos klaidas…",
   "error.form.notSaved": "Formos nepavyko išsaugoti",
 
@@ -187,7 +188,6 @@
   "error.validation.time": "Prašome įrašyti korektišką laiką",
   "error.validation.url": "Prašome įrašyti teisingą URL",
 
-  "field.required": "Laukas privalomas",
   "field.files.empty": "Pasirinkti",
   "field.pages.empty": "Dar nėra puslapių",
   "field.structure.delete.confirm": "Ar tikrai norite pašalinti šią eilutę?",
