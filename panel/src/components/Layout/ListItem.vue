@@ -162,6 +162,7 @@ $list-item-height: 38px;
 .k-list-item-text small {
   color: $color-light-grey;
   font-size: $font-size-tiny;
+  font-variant-numeric: tabular-nums;
   color: $list-item-info-color;
   display: none;
   min-width: 0;
