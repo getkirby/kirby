@@ -19,5 +19,10 @@ export default {
     icon: "users",
     menu: false
   },
+  resetPassword: {
+    link: "/reset-password",
+    icon: "key",
+    menu: false
+  },
   ...window.panel.plugins.views
 };

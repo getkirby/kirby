@@ -176,6 +176,15 @@ export default [
     })
   },
   {
+    path: "/reset-password",
+    name: "Reset password",
+    meta: {
+      view: "resetPassword"
+    },
+    component: Vue.component("k-reset-password-view"),
+    beforeEnter: auth
+  },
+  {
     path: "/plugins/:id",
     name: "Plugin",
     meta: {
