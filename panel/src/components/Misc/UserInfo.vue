@@ -7,7 +7,6 @@
       ratio="1/1"
     />
     <k-icon v-else type="user" />
-
     {{ user.name || user.email || user }}
   </div>
 </template>
@@ -20,19 +19,22 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .k-user-info {
   display: flex;
   align-items: center;
-  padding: 1.5rem 0 2rem;
+  line-height: 1;
+  font-size: $text-sm;
 }
-
 .k-user-info .k-image {
   width: 1.5rem;
-  margin-right: 0.7rem;
+  margin-right: 0.75rem;
 }
-
 .k-user-info .k-icon {
-  margin-right: 0.5rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  margin-right: 0.75rem;
+  background: $color-black;
+  color: $color-white;
 }
 </style>

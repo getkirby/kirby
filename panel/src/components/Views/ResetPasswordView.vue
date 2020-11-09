@@ -1,5 +1,5 @@
 <template>
-  <k-view align="center">
+  <k-view class="k-password-reset-view" align="center">
     <k-form
       v-model="values"
       :fields="fields"
@@ -93,3 +93,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+.k-password-reset-view .k-user-info {
+  height: 38px;
+  margin-bottom: 2.25rem;
+  padding: .5rem;
+  background: $color-white;
+  border-radius: $rounded-xs;
+  box-shadow: $shadow;
+}
+</style>
