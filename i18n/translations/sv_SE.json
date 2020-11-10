@@ -72,7 +72,6 @@
   "error.file.type.forbidden": "Du har inte behörighet att ladda upp filer av typen {type}",
   "error.file.undefined": "Filen kan inte hittas",
 
-  "error.form.field.required": "Fältet krävs",
   "error.form.incomplete": "Vänligen åtgärda alla formulärfel...",
   "error.form.notSaved": "Formuläret kunde inte sparas",
 
@@ -188,6 +187,7 @@
   "error.validation.time": "Ange en giltig tid",
   "error.validation.url": "Ange en giltig URL",
 
+  "field.required": "Fältet krävs",
   "field.files.empty": "Inga filer valda än",
   "field.pages.empty": "Inga sidor valda än",
   "field.structure.delete.confirm": "Vill du verkligen radera denna rad?",

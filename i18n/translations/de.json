@@ -72,7 +72,6 @@
   "error.file.type.forbidden": "Du kannst keinen {type}-Dateien hochladen",
   "error.file.undefined": "Die Datei konnte nicht gefunden werden",
 
-  "error.form.field.required": "Das Feld ist Pflicht",
   "error.form.incomplete": "Bitte behebe alle Fehler …",
   "error.form.notSaved": "Das Formular konnte nicht gespeichert werden",
 
@@ -187,6 +186,7 @@
   "error.validation.time": "Bitte gib eine gültige Uhrzeit ein",
   "error.validation.url": "Bitte gib eine gültige URL ein",
 
+  "field.required": "Das Feld ist Pflicht",
   "field.files.empty": "Keine Dateien ausgewählt",
   "field.pages.empty": "Keine Seiten ausgewählt",
   "field.structure.delete.confirm": "Willst du diesen Eintrag wirklich l\u00f6schen?",

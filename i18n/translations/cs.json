@@ -72,7 +72,6 @@
   "error.file.type.forbidden": "Nemáte povoleno nahrávat soubory typu {type} ",
   "error.file.undefined": "Soubor se nepoda\u0159ilo nal\u00e9zt",
 
-  "error.form.field.required": "Pole musí být vyplněno.",
   "error.form.incomplete": "Prosím opravte všechny chyby ve formuláři",
   "error.form.notSaved": "Formulář nemohl být uložen",
 
@@ -187,6 +186,7 @@
   "error.validation.time": "Zadejte prosím platný čas",
   "error.validation.url": "Zadejte prosím platnou adresu URL",
 
+  "field.required": "Pole musí být vyplněno.",
   "field.files.empty": "Nebyly zatím vybrány žádné soubory",
   "field.pages.empty": "Nebyly zatím vybrány žádné stránky",
   "field.structure.delete.confirm": "Opravdu chcete smazat tento z\u00e1znam?",

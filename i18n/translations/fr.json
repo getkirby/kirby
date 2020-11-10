@@ -72,7 +72,6 @@
   "error.file.type.forbidden": "Vous n’êtes pas autorisé à transférer des fichiers {type}",
   "error.file.undefined": "Le fichier n’a pu être trouvé",
 
-  "error.form.field.required": "Le champ est obligatoire",
   "error.form.incomplete": "Veuillez corriger toutes les erreurs du formulaire…",
   "error.form.notSaved": "Le formulaire n’a pu être enregistré",
 
@@ -188,6 +187,7 @@
   "error.validation.time": "Veuillez saisir une heure valide",
   "error.validation.url": "Veuillez saisir une URL valide",
 
+  "field.required": "Le champ est obligatoire",
   "field.files.empty": "Pas encore de fichier sélectionné",
   "field.pages.empty": "Pas encore de page sélectionnée",
   "field.structure.delete.confirm": "Voulez-vous vraiment supprimer cette ligne?",

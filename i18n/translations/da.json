@@ -72,7 +72,6 @@
   "error.file.type.forbidden": "Du har ikke tilladelse til at uploade {type} filer",
   "error.file.undefined": "Filen kunne ikke findes",
 
-  "error.form.field.required": "Feltet er påkrævet",
   "error.form.incomplete": "Ret venligst alle fejl i formularen...",
   "error.form.notSaved": "Formularen kunne ikke gemmes",
 
@@ -188,6 +187,7 @@
   "error.validation.time": "Indtast venligst et gyldigt tidspunkt",
   "error.validation.url": "Indtast venligst en gyldig URL",
 
+  "field.required": "Feltet er påkrævet",
   "field.files.empty": "Ingen filer valgt endnu",
   "field.pages.empty": "Ingen sider valgt endnu",
   "field.structure.delete.confirm": "\u00d8nsker du virkelig at slette denne indtastning?",

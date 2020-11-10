@@ -72,7 +72,6 @@
   "error.file.type.forbidden": "Sinulla ei ole oikeutta lähettää tiedostoja joiden tyyppi on {type}",
   "error.file.undefined": "Tiedostoa ei l\u00f6ytynyt",
 
-  "error.form.field.required": "Kenttä on pakollinen",
   "error.form.incomplete": "Korjaa kaikki lomakkeen virheet...",
   "error.form.notSaved": "Lomaketta ei voitu tallentaa",
 
@@ -188,6 +187,7 @@
   "error.validation.time": "Anna kelpaava aika",
   "error.validation.url": "Anna kelpaava URL",
 
+  "field.required": "Kenttä on pakollinen",
   "field.files.empty": "Tiedostoja ei ole vielä valittu",
   "field.pages.empty": " Sivuja ei ole vielä valittu",
   "field.structure.delete.confirm": "Haluatko varmasti poistaa tämän rivin?",

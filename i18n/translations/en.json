@@ -83,7 +83,6 @@
   "error.file.type.forbidden": "You are not allowed to upload {type} files",
   "error.file.undefined": "The file cannot be found",
 
-  "error.form.field.required": "The field is required",
   "error.form.incomplete": "Please fix all form errors…",
   "error.form.notSaved": "The form could not be saved",
 
@@ -202,6 +201,7 @@
   "error.validation.time.between": "Please enter a time between {min} and {max}",
   "error.validation.url": "Please enter a valid URL",
 
+  "field.required": "The field is required",
   "field.builder.delete.confirm": "Do you really want to delete this block?",
   "field.builder.delete.all.confirm": "Do you really want to delete all blocks?",
   "field.builder.empty": "No blocks yet",
