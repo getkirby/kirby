@@ -145,7 +145,7 @@ class AuthTest extends TestCase
     public function testUserBasicAuthInvalid1()
     {
         $this->expectException('Kirby\Exception\PermissionException');
-        $this->expectExceptionMessage('Invalid email or password');
+        $this->expectExceptionMessage('Invalid login');
 
         $_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode('homer@simpsons.com:invalid');
 
@@ -158,7 +158,7 @@ class AuthTest extends TestCase
     public function testUserBasicAuthInvalid2()
     {
         $this->expectException('Kirby\Exception\PermissionException');
-        $this->expectExceptionMessage('Invalid email or password');
+        $this->expectExceptionMessage('Invalid login');
 
         $_SERVER['HTTP_AUTHORIZATION'] = 'Basic ' . base64_encode('homer@simpsons.com:invalid');
 

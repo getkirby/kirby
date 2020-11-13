@@ -271,7 +271,7 @@ class Auth
                 $message = 'Rate limit exceeded';
             } else {
                 // avoid leaking security-relevant information
-                $message = 'Invalid email or password';
+                $message = ['key' => 'access.login'];
             }
 
             throw new PermissionException($message);
@@ -304,7 +304,7 @@ class Auth
             if ($this->kirby->option('debug') === true) {
                 throw $e;
             } else {
-                throw new PermissionException('Invalid email or password');
+                throw new PermissionException(['key' => 'access.login']);
             }
         }
     }

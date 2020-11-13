@@ -214,7 +214,7 @@ class AuthProtectionTest extends TestCase
         try {
             $this->auth->validatePassword('lisa@simpsons.com', 'springfield123');
         } catch (PermissionException $e) {
-            $this->assertSame('Invalid email or password', $e->getMessage());
+            $this->assertSame('Invalid login', $e->getMessage());
             $thrown = true;
         }
 
@@ -236,7 +236,7 @@ class AuthProtectionTest extends TestCase
         try {
             $this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
         } catch (PermissionException $e) {
-            $this->assertSame('Invalid email or password', $e->getMessage());
+            $this->assertSame('Invalid login', $e->getMessage());
             $thrown = true;
         }
 
@@ -259,7 +259,7 @@ class AuthProtectionTest extends TestCase
         try {
             $this->auth->validatePassword('homer@simpsons.com', 'springfield123');
         } catch (PermissionException $e) {
-            $this->assertSame('Invalid email or password', $e->getMessage());
+            $this->assertSame('Invalid login', $e->getMessage());
             $thrown = true;
         }
 
