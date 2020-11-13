@@ -4,6 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
 
 /**
@@ -84,7 +85,7 @@ trait AppTranslations
     public function setCurrentLanguage(string $languageCode = null)
     {
         if ($this->multilang() === false) {
-            $this->setLocale($this->option('locale', 'en_US.utf-8'));
+            Locale::set($this->option('locale', 'en_US.utf-8'));
             return $this->language = null;
         }
 
@@ -95,7 +96,7 @@ trait AppTranslations
         }
 
         if ($this->language) {
-            $this->setLocale($this->language->locale());
+            Locale::set($this->language->locale());
         }
 
         // add language slug rules to Str class
@@ -119,18 +120,13 @@ trait AppTranslations
     /**
      * Set locale settings
      *
-     * @internal
+     * @deprecated 3.5.0 Use \Kirby\Toolkit\Locale::set() instead
+     *
      * @param string|array $locale
      */
     public function setLocale($locale): void
     {
-        if (is_array($locale) === true) {
-            foreach ($locale as $key => $value) {
-                setlocale($key, $value);
-            }
-        } else {
-            setlocale(LC_ALL, $locale);
-        }
+        Locale::set($locale);
     }
 
     /**
