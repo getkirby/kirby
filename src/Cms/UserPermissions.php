@@ -50,7 +50,7 @@ class UserPermissions extends ModelPermissions
         }
 
         // users who are not admins cannot create admins
-        if ($this->model->isAdmin() === false) {
+        if ($this->model->isAdmin() === true) {
             return false;
         }
 

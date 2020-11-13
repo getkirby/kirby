@@ -59,9 +59,7 @@ return [
         'boolean',
         'required' => function ($value) {
             if ($this->isRequired() && ($value === false || $this->isEmpty($value))) {
-                throw new InvalidArgumentException([
-                    'key' => 'form.field.required'
-                ]);
+                throw new InvalidArgumentException(I18n::translate('field.required'));
             }
         },
     ]
