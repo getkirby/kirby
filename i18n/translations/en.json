@@ -283,6 +283,10 @@
   "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
 
   "login": "Login",
+  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Kirby Panel.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.login.subject": "Your login code",
+  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Kirby Panel.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
+  "login.email.password-reset.subject": "Your password reset code",
   "login.remember": "Keep me logged in",
 
   "logout": "Logout",
