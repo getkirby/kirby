@@ -41,6 +41,7 @@
   "email": "Email",
   "email.placeholder": "mail@example.com",
 
+  "error.access.code": "Invalid code",
   "error.access.login": "Invalid login",
   "error.access.panel": "You are not allowed to access the panel",
   "error.access.view": "You are not allowed to access this part of the panel",
