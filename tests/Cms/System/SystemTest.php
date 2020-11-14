@@ -356,4 +356,78 @@ class SystemTest extends TestCase
         F::write($this->fixtures . '/site/config/.license', json_encode($testLicense));
         $this->assertFalse($system->license());
     }
+
+    public function testLoginMethods()
+    {
+        $this->assertSame(['password' => []], $this->app->system()->loginMethods());
+    }
+
+    /**
+     * @dataProvider loginMethodsProvider
+     */
+    public function testLoginMethodsCustom($option, $expected)
+    {
+        $app = $this->app->clone([
+            'options' => [
+                'panel.login.methods' => $option
+            ]
+        ]);
+        $this->assertSame($expected, $app->system()->loginMethods());
+    }
+
+    public function loginMethodsProvider()
+    {
+        return [
+            [
+                'password',
+                ['password' => []]
+            ],
+            [
+                'password-reset',
+                ['password-reset' => []]
+            ],
+            [
+                ['password-reset'],
+                ['password-reset' => []]
+            ],
+            [
+                ['password-reset' => true],
+                ['password-reset' => []]
+            ],
+            [
+                ['password-reset' => []],
+                ['password-reset' => []]
+            ],
+            [
+                ['password-reset' => ['option' => 'test']],
+                ['password-reset' => ['option' => 'test']]
+            ],
+            [
+                ['password', 'password-reset'],
+                ['password' => [], 'password-reset' => []]
+            ],
+            [
+                ['code', 'password'],
+                ['code' => [], 'password' => []]
+            ],
+            [
+                ['code', 'password-reset'],
+                ['password-reset' => []]
+            ]
+        ];
+    }
+
+    public function testLoginMethodsDebug()
+    {
+        $app = $this->app->clone([
+            'options' => [
+                'debug' => true,
+                'panel.login.methods' => ['code', 'password-reset']
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The "code" and "password-reset" login methods cannot be enabled together');
+        $app->system()->loginMethods();
+    }
 }

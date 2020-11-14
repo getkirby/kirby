@@ -35,6 +35,21 @@ return [
         'license' => function (System $system) {
             return $system->license();
         },
+        'loginMethods' => function (System $system) {
+            return array_keys($system->loginMethods());
+        },
+        'pendingChallenge' => function () {
+            if ($this->session()->get('kirby.challenge.email') === null) {
+                return null;
+            }
+
+            // fake the email challenge if no challenge was created
+            // to avoid leaking whether the user exists
+            return $this->session()->get('kirby.challenge.type', 'email');
+        },
+        'pendingEmail' => function () {
+            return $this->session()->get('kirby.challenge.email');
+        },
         'requirements' => function (System $system) {
             return $system->toArray();
         },
@@ -86,6 +101,9 @@ return [
             'isOk',
             'isInstallable',
             'isInstalled',
+            'loginMethods',
+            'pendingChallenge',
+            'pendingEmail',
             'title',
             'translation'
         ],
