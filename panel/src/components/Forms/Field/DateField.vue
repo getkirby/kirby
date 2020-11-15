@@ -65,10 +65,10 @@ export default {
     listeners() {
       return {
         ...this.$listeners,
-        blur: this.onBlur,
         enter: this.onSelect,
         focus: this.onFocus,
-        input: this.onInput
+        input: this.onInput,
+        update: this.onUpdate
       };
     }
   },
@@ -81,7 +81,7 @@ export default {
     focus() {
       this.$refs.input.focus();
     },
-    onBlur(value) {
+    onUpdate(value) {
       this.$emit("input", value);
     },
     onFocus() {
@@ -93,7 +93,7 @@ export default {
       this.datetime = value;
     },
     onSelect(value) {
-      this.onBlur(value);
+      this.onUpdate(value);
 
       if (this.$refs.calendar) {
         this.$refs.calendar.close();

@@ -4,7 +4,7 @@
       ref="dateInput"
       v-bind="dateOptions"
       @input="onInput($event, 'date')"
-      @blur="onBlur($event, 'date')"
+      @update="onUpdate($event, 'date')"
       @enter="onEnter($event, 'date')"
       @focus="$emit('focus')"
     />
@@ -13,7 +13,7 @@
         ref="timeInput"
         v-bind="timeOptions"
         @input="onInput($event, 'time')"
-        @blur="onBlur($event, 'time')"
+        @update="onUpdate($event, 'time')"
         @enter="onEnter($event, 'time')"
         @focus="$emit('focus')"
       />
@@ -82,13 +82,13 @@ export default {
     focus() {
       this.$refs.dateInput.focus();
     },
-    onBlur(value, component) {
+    onUpdate(value, component) {
       const base  = this.toDatetime(this.value);
       this.input  = this.toDatetime(value, component, base);
-      this.emit("blur");
+      this.emit("update");
     },
     onEnter(value, component) {
-      this.onBlur(component, value);
+      this.onUpdate(component, value);
       this.emit("enter");
     },
     onInput(value, component) {

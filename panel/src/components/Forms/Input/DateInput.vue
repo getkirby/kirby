@@ -207,7 +207,7 @@ export default {
 
       // update input and emit
       this.input = this.toFormat(dt);
-      this.onInput();
+      this.emit("update");
 
       // select modified part in input
       this.$nextTick(() => {
@@ -217,7 +217,7 @@ export default {
     onBlur() {
       this.input    = this.result ? this.toFormat(this.result) : null;
       this.selected = null;
-      this.emit("blur");
+      this.emit("update");
     },
     onDown() {
       this.manipulate("subtract");

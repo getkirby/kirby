@@ -31,7 +31,7 @@ export default {
     listeners() {
       return {
         ...this.$listeners,
-        blur: input => this.$emit("input", input),
+        update: input => this.$emit("input", input),
         input: () => {}
       };
     }
