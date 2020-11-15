@@ -49,7 +49,7 @@ export default {
     toDatetime(string) {
       // support short and long (with date) format for
       // the value provided to the time input
-      const formats = ["H:mm:ss", "YYYY-MM-DD H:mm:ss"];
+      const formats = ["HH:mm:ss", "YYYY-MM-DD HH:mm:ss"];
       for (let i = 0; i < formats.length; i++) {
         const dt = this.$library.dayjs.utc(string, formats[i], true);
 
