@@ -122,6 +122,8 @@ export default {
       if (this.hasChanges === true) {
         return "changes";
       }
+
+      return null;
     }
   },
   watch: {

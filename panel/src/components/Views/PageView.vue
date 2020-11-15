@@ -118,6 +118,8 @@ export default {
           tooltip: this.page.next.title
         };
       }
+
+      return null;
     },
     prev() {
       if (this.page.prev) {
@@ -126,6 +128,8 @@ export default {
           tooltip: this.page.prev.title
         };
       }
+
+      return null;
     },
     status() {
       return this.page.status !== null

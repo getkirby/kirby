@@ -46,7 +46,7 @@ export default {
       }
 
       if (
-        payload.hasOwnProperty("emit") === false ||
+        Object.prototype.hasOwnProperty.call(payload, "emit") === false ||
         payload.emit !== false
       ) {
         this.$emit("success");
