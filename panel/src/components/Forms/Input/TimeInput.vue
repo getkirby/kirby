@@ -44,6 +44,11 @@ export default {
 
       return patterns;
     }
+  },
+  methods: {
+    toDatetime(string) {
+      return this.$library.dayjs.utc(string, ["YYYY-MM-DD H:mm:ss", "H:mm:ss"]);
+    },
   }
 };
 </script>

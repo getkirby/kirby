@@ -299,13 +299,16 @@ export default {
         }
       }
     },
+    toDatetime(string) {
+      return this.$library.dayjs.utc(string);
+    },
     toFormat(value) {
       if (!value) {
         return null;
       }
 
       // parse value as datetime object
-      const dt = this.$library.dayjs.utc(value);
+      const dt = this.toDatetime(value)
 
       if (dt.isValid() === false) {
         return null;
