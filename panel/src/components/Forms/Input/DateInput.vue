@@ -307,15 +307,18 @@ export default {
         return null;
       }
 
-      // parse value as datetime object
-      const dt = this.toDatetime(value)
+      // parse value as datetime object if string,
+      // otherwise expect dayjs object was provided as value
+      if (typeof value == "string") {
+        value = this.toDatetime(value)
+      }
 
-      if (dt.isValid() === false) {
+      if (value.isValid() === false) {
         return null;
       }
 
       // formats datetime according to `display` prop
-      return dt.format(this.display);
+      return value.format(this.display);
     },
     toNearest(dt, unit = this.step.unit, size = this.step.size) {
       // round datetime to nearest step
