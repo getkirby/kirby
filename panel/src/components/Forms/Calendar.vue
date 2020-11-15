@@ -32,6 +32,9 @@
             :key="'day_' + dayIndex"
             :aria-current="isToday(day) ? 'date' : false"
             :aria-selected="isSelected(day) ? 'date' : false"
+            :data-between="isBetween(day)"
+            :data-first="isFirst(day)"
+            :data-last="isLast(day)"
             class="k-calendar-day"
           >
             <k-button
@@ -60,9 +63,9 @@
 export default {
   props: {
     disabled: Boolean,
+    multiple: Boolean,
     max: String,
     min: String,
-    multiple: Boolean,
     value: [Array, String],
   },
   data() {
@@ -170,10 +173,52 @@ export default {
 
       return days;
     },
+    isBetween(day) {
+      if (
+        day === "" ||
+        this.multiple == false ||
+        this.datetimes.length < 2
+      ) {
+        return false;
+      }
+
+      const date = this.toDate(day);
+      return this.isFirst(day) ||
+            this.isLast(day) ||
+            (
+              date.isAfter(this.datetimes[0], "day") &&
+              date.isBefore(this.datetimes[1], "day")
+            );
+
+    },
     isDisabled(day) {
       const date = this.toDate(day);
       return date.isBefore(this.view.min, "day") ||
              date.isAfter(this.view.max, "day");
+    },
+    isFirst(day) {
+      if (
+        day === "" ||
+        this.multiple == false ||
+        this.datetimes.length < 2
+      ) {
+        return false;
+      }
+
+      const date = this.toDate(day);
+      return date.isSame(this.datetimes[0], "day");
+    },
+    isLast(day) {
+      if (
+        day === "" ||
+        this.multiple == false ||
+        this.datetimes.length < 2
+      ) {
+        return false;
+      }
+
+      const date = this.toDate(day);
+      return date.isSame(this.datetimes[1], "day");
     },
     isSelected(day) {
       if (day === "") {
@@ -206,13 +251,19 @@ export default {
         this.show(today);
 
       } else {
-        const date = this.toDate(day);
         const reference = this.datetimes[0] || this.toToday();
+        let date = this.toDate(day);
+        date = this.mergeTime(date, reference);
 
-        if (this.multiple === false) {
-          this.datetimes = [this.mergeTime(date, reference)];
+        if (
+          this.multiple === false ||
+          this.datetimes.length === 0 ||
+          this.datetimes.length === 2 ||
+          date.isBefore(this.datetimes[0])
+        ) {
+          this.datetimes = [date];
         } else {
-          this.datetimes.push(this.mergeTime(date, reference));
+          this.datetimes.push(date);
         }
       }
 
@@ -345,6 +396,17 @@ $cell-padding: 0.25rem 0.5rem;
 .k-calendar-day[aria-selected="date"] .k-button {
   border-color: $color-focus-on-dark;
   color: $color-focus-on-dark;
+}
+.k-calendar-day[data-between] {
+  background: #333;
+}
+.k-calendar-day[data-first] {
+  border-top-left-radius: 100%;
+  border-bottom-left-radius: 100%;
+}
+.k-calendar-day[data-last] {
+  border-top-right-radius: 100%;
+  border-bottom-right-radius: 100%;
 }
 .k-calendar-today {
   text-align: center;
