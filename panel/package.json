@@ -22,7 +22,7 @@
     "prosemirror-model": "^1.12.0",
     "prosemirror-schema-list": "^1.1.4",
     "prosemirror-view": "^1.16.0",
-    "vue": "2.6.11",
+    "vue": "^2.6.12",
     "vue-router": "3.1.6",
     "vuedraggable": "2.23.2",
     "vuelidate": "0.6.2",
@@ -30,19 +30,22 @@
     "vuex-i18n": "1.13.1"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^4.4.6",
-    "@vue/cli-plugin-eslint": "^3.12.1",
-    "@vue/cli-service": "^3.12.1",
-    "babel-core": "7.0.0-bridge.0",
-    "babel-plugin-wildcard": "^4.0.0",
-    "cypress": "^4.11.0",
-    "node-sass": "^4.14.1",
-    "prettier": "^1.19.1",
-    "pretty-quick": "^1.11.1",
-    "raw-loader": "^4.0.1",
-    "sass-loader": "^7.3.1",
-    "vue-template-compiler": "^2.6.11",
-    "wait-on": "^5.1.0"
+    "@babel/core": "^7.12.3",
+    "@vue/cli-plugin-babel": "^4.5.8",
+    "@vue/cli-plugin-eslint": "^4.5.8",
+    "@vue/cli-service": "^4.5.8",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-wildcard": "^6.0.0",
+    "cypress": "^4.12.1",
+    "eslint": "^6.7.2",
+    "eslint-plugin-vue": "^6.2.2",
+    "eslint-plugin-cypress": "^2.11.2",
+    "prettier": "^2.1.2",
+    "pretty-quick": "^3.1.0",
+    "sass": "^1.29.0",
+    "sass-loader": "^10.1.0",
+    "vue-template-compiler": "^2.6.12",
+    "wait-on": "^5.2.0"
   },
   "babel": {
     "presets": [
@@ -55,11 +58,13 @@
   "eslintConfig": {
     "root": true,
     "extends": [
-      "plugin:vue/recommended",
-      "eslint:recommended"
+      "eslint:recommended",
+      "plugin:cypress/recommended",
+      "plugin:vue/recommended"
     ],
     "parserOptions": {
-      "ecmaVersion": 2017
+      "ecmaVersion": 2017,
+      "parser": "babel-eslint"
     },
     "rules": {
       "vue/require-default-prop": "off",
@@ -82,6 +87,9 @@
           "multiline": "always"
         }
       ]
+    },
+    "env": {
+      "node": true
     }
   },
   "postcss": {
