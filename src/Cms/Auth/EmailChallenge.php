@@ -24,7 +24,7 @@ class EmailChallenge extends Challenge
      *
      * @param \Kirby\Cms\User $user User to generate the code for
      * @param array $options Details of the challenge request:
-     *                       - 'mode': Purpose of the code ('login' or 'reset')
+     *                       - 'mode': Purpose of the code ('login', 'reset' or '2fa')
      *                       - 'timeout': Number of seconds the code will be valid for
      * @return string The generated and sent code
      */
@@ -35,6 +35,12 @@ class EmailChallenge extends Challenge
         // insert a space in the middle for easier readability
         $formatted = substr($code, 0, 3) . ' ' . substr($code, 3, 3);
 
+        // use the login templates for 2FA
+        $mode = $options['mode'];
+        if ($mode === '2fa') {
+            $mode = 'login';
+        }
+
         $kirby = $user->kirby();
         $kirby->email([
             'from' => $kirby->option('panel.login.email.from', 'noreply@' . $kirby->system()->indexUrl()),
@@ -42,9 +48,9 @@ class EmailChallenge extends Challenge
             'to' => $user,
             'subject' => $kirby->option(
                 'panel.login.email.subject',
-                I18n::translate('login.email.' . $options['mode'] . '.subject')
+                I18n::translate('login.email.' . $mode . '.subject')
             ),
-            'template' => 'auth/' . $options['mode'],
+            'template' => 'auth/' . $mode,
             'data' => [
                 'user'    => $user,
                 'code'    => $formatted,

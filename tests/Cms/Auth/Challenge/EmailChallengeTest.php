@@ -83,6 +83,35 @@ class EmailChallengeTest extends TestCase
     /**
      * @covers ::create
      */
+    public function testCreate2FA()
+    {
+        $user = $this->app->user('homer@simpsons.com');
+        $options = ['mode' => '2fa', 'timeout' => 7.3 * 60];
+
+        $code1 = EmailChallenge::create($user, $options);
+        $this->assertStringMatchesFormat('%d', $code1);
+        $this->assertSame(6, strlen($code1));
+        $this->assertCount(1, Email::$emails);
+        $email = Email::$emails[0];
+        $this->assertSame('noreply@kirby.test', $email->from());
+        $this->assertSame('Test Site', $email->fromName());
+        $this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
+        $this->assertSame('Your login code', $email->subject());
+        $this->assertStringContainsString('login code', $email->body()->text());
+        $this->assertStringContainsString('Homer', $email->body()->text());
+        $this->assertStringContainsString('7 minutes', $email->body()->text());
+        $this->assertStringContainsString(
+            substr($code1, 0, 3) . ' ' . substr($code1, 3, 3),
+            $email->body()->text()
+        );
+
+        $code2 = EmailChallenge::create($user, $options);
+        $this->assertNotSame($code1, $code2);
+    }
+
+    /**
+     * @covers ::create
+     */
     public function testCreateReset()
     {
         $user = $this->app->user('marge@simpsons.com');

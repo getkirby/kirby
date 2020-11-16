@@ -313,6 +313,25 @@ class Auth
     }
 
     /**
+     * Login a user by email, password and auth challenge
+     *
+     * @param string $email
+     * @param string $password
+     * @param bool $long
+     * @return string|null Name of the challenge that was created;
+     *                     `null` if no challenge was available for the user
+     *
+     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
+     * @throws \Kirby\Exception\NotFoundException If the email was invalid
+     * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+     */
+    public function login2fa(string $email, string $password, bool $long = false)
+    {
+        $this->validatePassword($email, $password);
+        return $this->createChallenge($email, $long, '2fa');
+    }
+
+    /**
      * Sets a user object as the current user in the cache
      * @internal
      *

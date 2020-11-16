@@ -61,13 +61,14 @@ return [
                     throw new InvalidArgumentException('Login with password is not enabled');
                 }
 
-                $user = $this->kirby()->auth()->login($email, $password, $long);
-
-                return [
-                    'code'   => 200,
-                    'status' => 'ok',
-                    'user'   => $this->resolve($user)->view('auth')->toArray()
-                ];
+                if (
+                    isset($methods['password']['2fa']) === true &&
+                    $methods['password']['2fa'] === true
+                ) {
+                    $challenge = $auth->login2fa($email, $password, $long);
+                } else {
+                    $user = $auth->login($email, $password, $long);
+                }
             } else {
                 if (isset($methods['code']) === true) {
                     $mode = 'login';
@@ -78,7 +79,15 @@ return [
                 }
 
                 $challenge = $auth->createChallenge($email, $long, $mode);
+            }
 
+            if (isset($user)) {
+                return [
+                    'code'   => 200,
+                    'status' => 'ok',
+                    'user'   => $this->resolve($user)->view('auth')->toArray()
+                ];
+            } else {
                 return [
                     'code'   => 200,
                     'status' => 'ok',

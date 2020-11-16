@@ -356,6 +356,7 @@ class System
 
         // normalize the syntax variants
         $normalized = [];
+        $uses2fa = false;
         foreach ($methods as $key => $value) {
             if (is_int($key) === true) {
                 // ['password']
@@ -366,6 +367,22 @@ class System
             } else {
                 // ['password' => [...]]
                 $normalized[$key] = $value;
+
+                if (isset($value['2fa']) === true && $value['2fa'] === true) {
+                    $uses2fa = true;
+                }
+            }
+        }
+
+        // 2FA must not be circumvented by code-based modes
+        foreach (['code', 'password-reset'] as $method) {
+            if ($uses2fa === true && isset($normalized[$method]) === true) {
+                unset($normalized[$method]);
+
+                if ($this->app->option('debug') === true) {
+                    $message = 'The "' . $method . '" login method cannot be enabled when 2FA is required';
+                    throw new InvalidArgumentException($message);
+                }
             }
         }
 

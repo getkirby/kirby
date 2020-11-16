@@ -22,7 +22,7 @@ abstract class Challenge
      *
      * @param \Kirby\Cms\User $user User to generate the code for
      * @param array $options Details of the challenge request:
-     *                       - 'mode': Purpose of the code ('login' or 'reset')
+     *                       - 'mode': Purpose of the code ('login', 'reset' or '2fa')
      *                       - 'timeout': Number of seconds the code will be valid for
      * @return string|null The generated and sent code or `null` in case
      *                     there was no code to generate by this algorithm

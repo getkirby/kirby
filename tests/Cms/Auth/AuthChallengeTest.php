@@ -40,8 +40,9 @@ class AuthChallengeTest extends TestCase
             ],
             'users' => [
                 [
-                    'email' => 'marge@simpsons.com',
-                    'id'    => 'marge'
+                    'email'    => 'marge@simpsons.com',
+                    'id'       => 'marge',
+                    'password' => password_hash('springfield123', PASSWORD_DEFAULT)
                 ],
                 [
                     'email' => 'test@exämple.com'
@@ -187,6 +188,52 @@ class AuthChallengeTest extends TestCase
 
         $this->assertSame('email', $this->auth->createChallenge('test@xn--exmple-cua.com'));
         $this->assertSame('test@exämple.com', $session->get('kirby.challenge.email'));
+    }
+
+    public function testLogin2fa()
+    {
+        $session = $this->app->session();
+
+        $this->assertSame('email', $this->auth->login2fa('marge@simpsons.com', 'springfield123'));
+        $this->assertSame(1800, $session->timeout());
+        $this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+        $this->assertSame('email', $session->get('kirby.challenge.type'));
+        preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
+        $this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
+        $this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
+        $this->assertNull($this->failedEmail);
+    }
+
+    public function testLogin2faLong()
+    {
+        $session = $this->app->session();
+
+        $this->assertSame('email', $this->auth->login2fa('marge@simpsons.com', 'springfield123', true));
+        $this->assertFalse($session->timeout());
+        $this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
+        $this->assertSame('email', $session->get('kirby.challenge.type'));
+        preg_match('/^[0-9]{3} [0-9]{3}$/m', Email::$emails[0]->body()->text(), $codeMatches);
+        $this->assertTrue(password_verify(str_replace(' ', '', $codeMatches[0]), $session->get('kirby.challenge.code')));
+        $this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
+        $this->assertNull($this->failedEmail);
+    }
+
+    public function testLogin2faInvalidUser()
+    {
+        $session = $this->app->session();
+
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The user "invalid@example.com" cannot be found');
+        $this->auth->login2fa('invalid@example.com', 'springfield123');
+    }
+
+    public function testLogin2faInvalidPassword()
+    {
+        $session = $this->app->session();
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The passwords do not match');
+        $this->auth->login2fa('marge@simpsons.com', 'springfield456');
     }
 
     /**

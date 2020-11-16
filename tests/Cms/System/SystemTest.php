@@ -413,11 +413,23 @@ class SystemTest extends TestCase
             [
                 ['code', 'password-reset'],
                 ['password-reset' => []]
+            ],
+            [
+                ['password' => ['2fa' => true], 'code'],
+                ['password' => ['2fa' => true]]
+            ],
+            [
+                ['password' => ['2fa' => true], 'password-reset'],
+                ['password' => ['2fa' => true]]
+            ],
+            [
+                ['password' => ['2fa' => true], 'code', 'password-reset'],
+                ['password' => ['2fa' => true]]
             ]
         ];
     }
 
-    public function testLoginMethodsDebug()
+    public function testLoginMethodsDebug1()
     {
         $app = $this->app->clone([
             'options' => [
@@ -428,6 +440,40 @@ class SystemTest extends TestCase
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('The "code" and "password-reset" login methods cannot be enabled together');
+        $app->system()->loginMethods();
+    }
+
+    public function testLoginMethodsDebug2()
+    {
+        $app = $this->app->clone([
+            'options' => [
+                'debug' => true,
+                'panel.login.methods' => [
+                    'password' => ['2fa' => true],
+                    'code'
+                ]
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The "code" login method cannot be enabled when 2FA is required');
+        $app->system()->loginMethods();
+    }
+
+    public function testLoginMethodsDebug3()
+    {
+        $app = $this->app->clone([
+            'options' => [
+                'debug' => true,
+                'panel.login.methods' => [
+                    'password' => ['2fa' => true],
+                    'password-reset'
+                ]
+            ]
+        ]);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The "password-reset" login method cannot be enabled when 2FA is required');
         $app->system()->loginMethods();
     }
 }
