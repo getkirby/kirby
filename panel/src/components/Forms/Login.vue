@@ -74,7 +74,7 @@ export default {
         this.$store.dispatch("notification/success", this.$t("welcome"));
 
       } catch (error) {
-        this.issue = this.$t("error.access.login");
+        this.issue = error.message;
 
       } finally {
         this.isLoading = false;
