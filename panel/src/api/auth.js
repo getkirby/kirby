@@ -7,8 +7,7 @@ export default (api) => {
         password: user.password
       };
 
-      const auth = await api.post("auth/login", data);
-      return auth.user;
+      return await api.post("auth/login", data);
     },
     async logout() {
       return api.post("auth/logout");
@@ -16,5 +15,8 @@ export default (api) => {
     async user(params) {
       return api.get("auth", params);
     },
+    async verifyCode(code) {
+      return await api.post("auth/code", {code});
+    }
   }
 };

@@ -284,11 +284,20 @@
   "lock.isUnlocked": "Your unsaved changes have been overwritten by another user. You can download your changes to merge them manually.",
 
   "login": "Login",
+  "login.code.label.login": "Login code",
+  "login.code.label.password-reset": "Password reset code",
+  "login.code.placeholder.email": "000 000",
+  "login.code.text.email": "If your email address is registered, the requested code was sent via email.",
   "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Kirby Panel.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.login.subject": "Your login code",
   "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Kirby Panel.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
   "login.email.password-reset.subject": "Your password reset code",
   "login.remember": "Keep me logged in",
+  "login.reset": "Reset password",
+  "login.toggleText.code.email": "Login via email",
+  "login.toggleText.code.email-password": "Login with password",
+  "login.toggleText.password-reset.email": "Forgot your password?",
+  "login.toggleText.password-reset.email-password": "← Back to login",
 
   "logout": "Logout",
 
