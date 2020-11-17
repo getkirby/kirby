@@ -341,6 +341,68 @@ class System
     }
 
     /**
+     * Returns the configured UI modes for the login form
+     * with their respective options
+     *
+     * @return array
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the configuration is invalid
+     *                                                   (only in debug mode)
+     */
+    public function loginMethods(): array
+    {
+        $default = ['password' => []];
+        $methods = A::wrap($this->app->option('panel.login.methods', $default));
+
+        // normalize the syntax variants
+        $normalized = [];
+        $uses2fa = false;
+        foreach ($methods as $key => $value) {
+            if (is_int($key) === true) {
+                // ['password']
+                $normalized[$value] = [];
+            } elseif ($value === true) {
+                // ['password' => true]
+                $normalized[$key] = [];
+            } else {
+                // ['password' => [...]]
+                $normalized[$key] = $value;
+
+                if (isset($value['2fa']) === true && $value['2fa'] === true) {
+                    $uses2fa = true;
+                }
+            }
+        }
+
+        // 2FA must not be circumvented by code-based modes
+        foreach (['code', 'password-reset'] as $method) {
+            if ($uses2fa === true && isset($normalized[$method]) === true) {
+                unset($normalized[$method]);
+
+                if ($this->app->option('debug') === true) {
+                    $message = 'The "' . $method . '" login method cannot be enabled when 2FA is required';
+                    throw new InvalidArgumentException($message);
+                }
+            }
+        }
+
+        // only one code-based mode can be active at once
+        if (
+            isset($normalized['code']) === true &&
+            isset($normalized['password-reset']) === true
+        ) {
+            unset($normalized['code']);
+
+            if ($this->app->option('debug') === true) {
+                $message = 'The "code" and "password-reset" login methods cannot be enabled together';
+                throw new InvalidArgumentException($message);
+            }
+        }
+
+        return $normalized;
+    }
+
+    /**
      * Check for an existing mbstring extension
      *
      * @return bool

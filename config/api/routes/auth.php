@@ -19,7 +19,7 @@ return [
         }
     ],
     [
-        'pattern' => 'auth/login',
+        'pattern' => 'auth/code',
         'method'  => 'POST',
         'auth'    => false,
         'action'  => function () {
@@ -30,17 +30,72 @@ return [
                 throw new InvalidArgumentException('Invalid CSRF token');
             }
 
-            $email    = $this->requestBody('email');
-            $long     = $this->requestBody('long');
-            $password = $this->requestBody('password');
-
-            $user = $this->kirby()->auth()->login($email, $password, $long);
+            $user = $auth->verifyChallenge($this->requestBody('code'));
 
             return [
                 'code'   => 200,
                 'status' => 'ok',
                 'user'   => $this->resolve($user)->view('auth')->toArray()
             ];
+        }
+    ],
+    [
+        'pattern' => 'auth/login',
+        'method'  => 'POST',
+        'auth'    => false,
+        'action'  => function () {
+            $auth    = $this->kirby()->auth();
+            $methods = $this->kirby()->system()->loginMethods();
+
+            // csrf token check
+            if ($auth->type() === 'session' && $auth->csrf() === false) {
+                throw new InvalidArgumentException('Invalid CSRF token');
+            }
+
+            $email    = $this->requestBody('email');
+            $long     = $this->requestBody('long');
+            $password = $this->requestBody('password');
+
+            if ($password) {
+                if (isset($methods['password']) !== true) {
+                    throw new InvalidArgumentException('Login with password is not enabled');
+                }
+
+                if (
+                    isset($methods['password']['2fa']) === true &&
+                    $methods['password']['2fa'] === true
+                ) {
+                    $challenge = $auth->login2fa($email, $password, $long);
+                } else {
+                    $user = $auth->login($email, $password, $long);
+                }
+            } else {
+                if (isset($methods['code']) === true) {
+                    $mode = 'login';
+                } elseif (isset($methods['password-reset']) === true) {
+                    $mode = 'password-reset';
+                } else {
+                    throw new InvalidArgumentException('Login without password is not enabled');
+                }
+
+                $challenge = $auth->createChallenge($email, $long, $mode);
+            }
+
+            if (isset($user)) {
+                return [
+                    'code'   => 200,
+                    'status' => 'ok',
+                    'user'   => $this->resolve($user)->view('auth')->toArray()
+                ];
+            } else {
+                return [
+                    'code'   => 200,
+                    'status' => 'ok',
+
+                    // don't leak users that don't exist at this point
+                    'challenge' => $challenge ?? 'email'
+                ];
+            }
         }
     ],
     [

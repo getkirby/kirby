@@ -4,11 +4,15 @@ export default {
   namespaced: true,
   state: {
     current: null,
-    path: null
+    path: null,
+    pendingEmail: null,
+    pendingChallenge: null
   },
   mutations: {
     SET_CURRENT(state, user) {
       state.current = user;
+      state.pendingEmail = null;
+      state.pendingChallenge = null;
 
       if (user && user.permissions) {
         Vue.prototype.$user        = user;
@@ -20,6 +24,13 @@ export default {
     },
     SET_PATH(state, path) {
       state.path = path;
+    },
+    SET_PENDING(state, {email, challenge}) {
+      state.pendingEmail = email;
+      state.pendingChallenge = challenge;
+      state.user = null;
+      Vue.prototype.$user = null;
+      Vue.prototype.$permissions = null;
     }
   },
   actions: {
@@ -40,19 +51,17 @@ export default {
       });
     },
     async load(context) {
-      const user = await Vue.$api.auth.user()
+      const user = await Vue.$api.auth.user();
       context.commit("SET_CURRENT", user);
       return user;
     },
-    async login(context, credentials) {
-      const user = await  Vue.$api.auth.login(credentials);
+    login(context, user) {
       context.commit("SET_CURRENT", user);
       context.dispatch("translation/activate", user.language, { root: true });
       Vue.prototype.$go(context.state.path || "/");
       return user;
     },
     async logout(context, force) {
-
       context.commit("SET_CURRENT", null);
 
       if (force) {
@@ -72,6 +81,9 @@ export default {
         ...context.state.current,
         name: name
       });
+    },
+    pending(context, pending) {
+      context.commit("SET_PENDING", pending);
     },
     visit(context, path) {
       context.commit("SET_PATH", path);

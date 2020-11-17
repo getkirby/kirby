@@ -152,9 +152,11 @@ class AuthProtectionTest extends TestCase
         $this->app->visitor()->ip('10.3.123.234');
         $this->assertTrue($this->auth->track('homer@simpsons.com'));
         $this->assertTrue($this->auth->track('marge@simpsons.com'));
-        $this->assertTrue($this->auth->track('lisa@simpsons.com'));
+        $this->assertTrue($this->auth->track('lisa@simpsons.com', false));
+        $this->assertSame('marge@simpsons.com', $this->failedEmail);
 
-        $this->assertSame('lisa@simpsons.com', $this->failedEmail);
+        $this->assertTrue($this->auth->track(null));
+        $this->assertNull($this->failedEmail);
 
         $data = [
             'by-ip' => [
@@ -168,7 +170,7 @@ class AuthProtectionTest extends TestCase
                 ],
                 '85a06e36d926cb901f05d1167913ebd7ec3d8f5bce4551f5da' => [
                     'time'   => MockTime::$time,
-                    'trials' => 3
+                    'trials' => 4
                 ]
             ],
             'by-email' => [
