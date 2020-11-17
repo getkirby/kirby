@@ -80,7 +80,7 @@ class Auth
 
         $challenge = null;
         if ($user = $this->kirby->users()->find($email)) {
-            $timeout = $this->kirby->option('panel.login.timeout', 10 * 60);
+            $timeout = $this->kirby->option('auth.challenge.timeout', 10 * 60);
 
             $challenge = 'email';
             $code = EmailChallenge::create($user, compact('mode', 'timeout'));

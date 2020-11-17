@@ -158,7 +158,7 @@ class AuthChallengeTest extends TestCase
     {
         $this->app = $this->app->clone([
             'options' => [
-                'panel.login.timeout' => 10
+                'auth.challenge.timeout' => 10
             ]
         ]);
         $auth    = $this->app->auth();

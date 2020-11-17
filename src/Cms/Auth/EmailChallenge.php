@@ -43,11 +43,11 @@ class EmailChallenge extends Challenge
 
         $kirby = $user->kirby();
         $kirby->email([
-            'from' => $kirby->option('panel.login.email.from', 'noreply@' . $kirby->system()->indexUrl()),
-            'fromName' => $kirby->option('panel.login.email.fromName', $kirby->site()->title()),
+            'from' => $kirby->option('auth.challenge.email.from', 'noreply@' . $kirby->system()->indexUrl()),
+            'fromName' => $kirby->option('auth.challenge.email.fromName', $kirby->site()->title()),
             'to' => $user,
             'subject' => $kirby->option(
-                'panel.login.email.subject',
+                'auth.challenge.email.subject',
                 I18n::translate('login.email.' . $mode . '.subject')
             ),
             'template' => 'auth/' . $mode,
