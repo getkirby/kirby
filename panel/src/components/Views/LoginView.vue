@@ -159,4 +159,26 @@ export default {
   box-shadow: $shadow-lg;
   cursor: pointer;
 }
+
+.k-login-view-buttons {
+  margin-top: .5rem;
+  text-align: center;
+}
+
+.k-login-view-buttons .k-button {
+  border: 1px solid transparent;
+  color: $color-gray-700;
+  height: 2.5rem;
+  width: 2.5rem;
+
+  &:not(:last-child) {
+    margin-right: .7rem;
+  }
+
+  &[aria-current="true"] {
+    box-shadow: $shadow-inset;
+    border-color: $color-gray-400;
+    color: $color-black;
+  }
+}
 </style>

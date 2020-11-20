@@ -1,58 +1,84 @@
 <template>
-  <form class="k-login-form" @submit.prevent="login">
-    <h1 class="k-offscreen">{{ $t('login') }}</h1>
+  <div class="k-login-form">
+    <component :is="viewComponent" v-if="viewComponent" />
+    <form v-else @submit.prevent="login">
+      <h1 class="k-offscreen">{{ $t('login') }}</h1>
 
-    <div v-if="issue" class="k-login-alert" @click="issue = null">
-      <span>{{ issue }}</span>
-      <k-icon type="alert" />
-    </div>
+      <div v-if="issue" class="k-login-alert" @click="issue = null">
+        <span>{{ issue }}</span>
+        <k-icon type="alert" />
+      </div>
 
-    <div class="k-login-fields">
-      <button
-        v-if="canToggle === true"
-        class="k-login-toggler"
-        type="button"
-        @click="toggleForm"
-      >
-        {{ toggleText }}
-      </button>
+      <div class="k-login-fields">
+        <button
+          v-if="canToggle === true"
+          class="k-login-toggler"
+          type="button"
+          @click="toggleForm"
+        >
+          {{ toggleText }}
+        </button>
 
-      <k-fieldset
-        ref="fieldset"
-        v-model="user"
-        :novalidate="true"
-        :fields="fields"
+        <k-fieldset
+          ref="fieldset"
+          v-model="user"
+          :novalidate="true"
+          :fields="fields"
+        />
+      </div>
+
+      <div class="k-login-buttons">
+        <span
+          v-if="isResetForm === false"
+          class="k-login-checkbox"
+        >
+          <k-checkbox-input
+            :value="user.remember"
+            :label="$t('login.remember')"
+            @input="user.remember = $event"
+          />
+        </span>
+        <k-button
+          class="k-login-button"
+          icon="check"
+          type="submit"
+        >
+          {{ $t("login" + (isResetForm ? ".reset" : "")) }}
+          <template v-if="isLoading">…</template>
+        </k-button>
+      </div>
+    </form>
+
+    <div v-if="Object.keys(methods).length > 1" class="k-login-view-buttons">
+      <k-button
+        v-for="(method, methodName) in methods"
+        :key="methodName"
+        :current="view === methodName"
+        :icon="method.icon"
+        :tooltip="method.label"
+        @click="triggerMethod(methodName)"
       />
     </div>
-
-    <div class="k-login-buttons">
-      <span
-        v-if="isResetForm === false"
-        class="k-login-checkbox"
-      >
-        <k-checkbox-input
-          :value="user.remember"
-          :label="$t('login.remember')"
-          @input="user.remember = $event"
-        />
-      </span>
-      <k-button
-        class="k-login-button"
-        icon="check"
-        type="submit"
-      >
-        {{ $t("login" + (isResetForm ? ".reset" : "")) }}
-        <template v-if="isLoading">…</template>
-      </k-button>
-    </div>
-  </form>
+  </div>
 </template>
 
 <script>
+let pluginMethods = {}, plugins = {};
+for (const methodName in window.panel.plugins.loginMethods) {
+  pluginMethods[methodName] = window.panel.plugins.loginMethods[methodName];
+
+  if (pluginMethods[methodName].component) {
+    plugins["k-login-" + methodName + "-plugin"] = pluginMethods[methodName].component;
+    pluginMethods[methodName].component = "k-login-" + methodName + "-plugin";
+  }
+}
+
 export default {
+  components: plugins,
   data() {
     return {
       currentForm: null,
+      currentView: null,
       isLoading: false,
       issue: "",
       user: {
@@ -119,6 +145,22 @@ export default {
         return "email";
       }
     },
+    methods() {
+      let methods = {};
+
+      for (const method of this.$store.state.system.info.loginMethods) {
+        if (method === "password" || method === "password-reset" || method === "code") {
+          methods.__user = {
+            label: this.$t("user"),
+            icon: "account"
+          };
+        } else if (pluginMethods[method]) {
+          methods[method] = pluginMethods[method];
+        }
+      }
+
+      return methods;
+    },
     isResetForm() {
       return (
         this.codeMode === "password-reset" &&
@@ -131,6 +173,12 @@ export default {
         this.codeMode + "." +
         this.formOpposite(this.form)
       );
+    },
+    view() {
+      return this.currentView || Object.keys(this.methods)[0];
+    },
+    viewComponent() {
+      return this.methods[this.view].component;
     }
   },
   methods: {
@@ -179,6 +227,15 @@ export default {
     toggleForm() {
       this.currentForm = this.formOpposite(this.form);
       this.$refs.fieldset.focus("email");
+    },
+    triggerMethod(target) {
+      let method = this.methods[target];
+
+      if (target === "__user" || method.component) {
+        this.currentView = target;
+      } else if (method.action) {
+        method.action();
+      }
     }
   }
 };
