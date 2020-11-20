@@ -578,6 +578,43 @@ EOT;
         $this->assertTrue(Str::startsWith($string, 'hellö', true));
     }
 
+    public function testSimilarity()
+    {
+        $this->assertSame(0, Str::similarity('foo', 'bar', $percent));
+        $this->assertSame(0.0, $percent);
+
+        $this->assertSame(0, Str::similarity('foo', '', $percent));
+        $this->assertSame(0.0, $percent);
+
+        $this->assertSame(0, Str::similarity('', '', $percent));
+        $this->assertSame(0.0, $percent);
+
+        $this->assertSame(3, Str::similarity('foo', 'fooBar', $percent));
+        $this->assertSame(66.66666666666667, $percent);
+
+        $this->assertSame(3, Str::similarity('foo', 'foo', $percent));
+        $this->assertSame(100.0, $percent);
+
+        $this->assertSame(4, Str::similarity('tête', 'tête', $percent));
+        $this->assertSame(100.0, $percent);
+
+        $this->assertSame(4, Str::similarity('Tête', 'tête', $percent));
+        $this->assertSame(100.0, $percent);
+
+        $this->assertSame(5, Str::similarity('Kirby', 'KIRBY', $percent));
+        $this->assertSame(100.0, $percent);
+
+        // case sensitives
+        $this->assertSame(3, Str::similarity('Tête', 'tête', $percent, true));
+        $this->assertSame(75.0, $percent);
+
+        $this->assertSame(0, Str::similarity('foo', 'FOO', $percent, true));
+        $this->assertSame(0.0, $percent);
+
+        $this->assertSame(1, Str::similarity('Kirby', 'KIRBY', $percent, true));
+        $this->assertSame(20.0, $percent);
+    }
+
     public function testSubstr()
     {
         $string = 'äöü';
