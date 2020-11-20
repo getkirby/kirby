@@ -16,14 +16,13 @@ module.exports = {
   css: {
     loaderOptions: {
       sass: {
-        additionalData: fs.readFileSync(
+        data: fs.readFileSync(
           "./src/main.scss",
           "utf-8"
         )
       }
     }
   },
-  lintOnSave: 'error',
   productionSourceMap: false,
   configureWebpack: () => {
     let custom = {
