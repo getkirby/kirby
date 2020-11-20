@@ -369,7 +369,7 @@ class SystemTest extends TestCase
     {
         $app = $this->app->clone([
             'options' => [
-                'panel.login.methods' => $option
+                'auth.methods' => $option
             ]
         ]);
         $this->assertSame($expected, $app->system()->loginMethods());
@@ -434,7 +434,7 @@ class SystemTest extends TestCase
         $app = $this->app->clone([
             'options' => [
                 'debug' => true,
-                'panel.login.methods' => ['code', 'password-reset']
+                'auth.methods' => ['code', 'password-reset']
             ]
         ]);
 
@@ -448,7 +448,7 @@ class SystemTest extends TestCase
         $app = $this->app->clone([
             'options' => [
                 'debug' => true,
-                'panel.login.methods' => [
+                'auth.methods' => [
                     'password' => ['2fa' => true],
                     'code'
                 ]
@@ -465,7 +465,7 @@ class SystemTest extends TestCase
         $app = $this->app->clone([
             'options' => [
                 'debug' => true,
-                'panel.login.methods' => [
+                'auth.methods' => [
                     'password' => ['2fa' => true],
                     'password-reset'
                 ]

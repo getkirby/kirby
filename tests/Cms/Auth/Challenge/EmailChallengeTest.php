@@ -145,9 +145,9 @@ class EmailChallengeTest extends TestCase
     {
         $this->app = $this->app->clone([
             'options' => [
-                'panel.login.email.from' => 'test@example.com',
-                'panel.login.email.fromName' => 'Test',
-                'panel.login.email.subject' => 'Custom subject'
+                'auth.challenge.email.from' => 'test@example.com',
+                'auth.challenge.email.fromName' => 'Test',
+                'auth.challenge.email.subject' => 'Custom subject'
             ],
             'templates' => [
                 'emails/auth/login' => dirname(__DIR__) . '/fixtures/auth.email.text.php'

@@ -80,7 +80,7 @@ class Auth
 
         $challenge = null;
         if ($user = $this->kirby->users()->find($email)) {
-            $timeout = $this->kirby->option('panel.login.timeout', 10 * 60);
+            $timeout = $this->kirby->option('auth.challenge.timeout', 10 * 60);
 
             $challenge = 'email';
             $code = EmailChallenge::create($user, compact('mode', 'timeout'));
@@ -152,6 +152,19 @@ class Auth
     {
         if ($this->kirby->option('api.basicAuth', false) !== true) {
             throw new PermissionException('Basic authentication is not activated');
+        }
+
+        // if logging in with password is disabled, basic auth cannot be possible either
+        $loginMethods = $this->kirby->system()->loginMethods();
+        if (isset($loginMethods['password']) !== true) {
+            throw new PermissionException('Login with password is not enabled');
+        }
+
+        // if any login method requires 2FA, basic auth without 2FA would be a weakness
+        foreach ($loginMethods as $method) {
+            if (isset($method['2fa']) === true && $method['2fa'] === true) {
+                throw new PermissionException('Basic authentication cannot be used with 2FA');
+            }
         }
 
         $request = $this->kirby->request();

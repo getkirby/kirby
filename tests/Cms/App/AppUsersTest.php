@@ -134,10 +134,7 @@ class AppUsersTest extends TestCase
 
     public function basicAuthApp()
     {
-        return new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        return $this->app->clone([
             'options' => [
                 'api' => [
                     'basicAuth' => true

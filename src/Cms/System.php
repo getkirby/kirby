@@ -352,7 +352,7 @@ class System
     public function loginMethods(): array
     {
         $default = ['password' => []];
-        $methods = A::wrap($this->app->option('panel.login.methods', $default));
+        $methods = A::wrap($this->app->option('auth.methods', $default));
 
         // normalize the syntax variants
         $normalized = [];
