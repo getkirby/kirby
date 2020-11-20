@@ -130,6 +130,8 @@ export default {
           tooltip: this.file.prev.filename
         };
       }
+
+      return null;
     },
     language() {
       return this.$store.state.languages.current;
@@ -144,6 +146,8 @@ export default {
           tooltip: this.file.next.filename
         };
       }
+
+      return null;
     }
   },
   watch: {

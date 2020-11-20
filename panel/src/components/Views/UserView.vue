@@ -150,6 +150,8 @@ export default {
           tooltip: this.user.next.name
         };
       }
+
+      return null;
     },
     prev() {
       if (this.user.prev) {
@@ -158,6 +160,8 @@ export default {
           tooltip: this.user.prev.name
         };
       }
+
+      return null;
     },
     uploadApi() {
       return config.api + "/users/" + this.user.id + "/avatar";

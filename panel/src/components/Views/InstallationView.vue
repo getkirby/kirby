@@ -83,7 +83,6 @@ export default {
   },
   computed: {
     state() {
-
       if (this.system.isOk && this.system.isInstallable && !this.system.isInstalled) {
         return 'install';
       }
@@ -92,6 +91,7 @@ export default {
         return 'completed';
       }
 
+      return null;
     },
     translation() {
       return this.$store.state.translation.current;

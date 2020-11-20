@@ -29,13 +29,12 @@ describe('PageView', () => {
       cy.get('.k-topbar-crumbs a:last-child').should('contain', 'Photography');
 
       // Buttons
-      const openButton = cy.get('.k-header-buttons .k-button-group:first-child .k-button:first-child');
+      cy.get('.k-header-buttons .k-button-group:first-child .k-button:first-child').then((openButton) => {
+        openButton.should('have.attr', 'target', '_blank');
+        openButton.should('have.attr', 'href', 'http://sandbox.test/photography');
+      });
 
-      openButton.should('have.attr', 'target', '_blank');
-      openButton.should('have.attr', 'href', 'http://sandbox.test/photography');
-
-      const statusButton = cy.get('.k-header-buttons .k-button-group:first-child .k-status-flag');
-      statusButton.should('contain', 'Public');
+      cy.get('.k-header-buttons .k-button-group:first-child .k-status-flag').should('contain', 'Public');
 
       // Drafts
       cy.get('@drafts').find('.k-headline').should('contain', 'Drafts');

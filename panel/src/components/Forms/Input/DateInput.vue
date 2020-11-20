@@ -134,6 +134,8 @@ export default {
           }
         }
       }
+
+      return null;
     },
     /**
      * Separator from `display` format
