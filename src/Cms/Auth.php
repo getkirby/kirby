@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cms\Auth\EmailChallenge;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -10,6 +9,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Throwable;
 
@@ -24,6 +24,14 @@ use Throwable;
  */
 class Auth
 {
+    /**
+     * Available auth challenge classes
+     * from the core and plugins
+     *
+     * @var array
+     */
+    public static $challenges = [];
+
     protected $impersonate;
     protected $kirby;
     protected $user = false;
@@ -49,6 +57,7 @@ class Auth
      *                     `null` if the user does not exist or no
      *                     challenge was available for the user
      *
+     * @throws \Kirby\Exception\LogicException If there is no suitable authentication challenge (only in debug mode)
      * @throws \Kirby\Exception\NotFoundException If the user does not exist (only in debug mode)
      * @throws \Kirby\Exception\PermissionException If the rate limit is exceeded
      */
@@ -82,14 +91,33 @@ class Auth
         if ($user = $this->kirby->users()->find($email)) {
             $timeout = $this->kirby->option('auth.challenge.timeout', 10 * 60);
 
-            $challenge = 'email';
-            $code = EmailChallenge::create($user, compact('mode', 'timeout'));
+            $challenges = $this->kirby->option('auth.challenges', ['email']);
+            foreach (A::wrap($challenges) as $name) {
+                $class = static::$challenges[$name] ?? null;
+                if (
+                    $class &&
+                    class_exists($class) === true &&
+                    is_subclass_of($class, 'Kirby\Cms\Auth\Challenge') === true &&
+                    $class::isAvailable($user, $mode) === true
+                ) {
+                    $challenge = $name;
+                    $code = $class::create($user, compact('mode', 'timeout'));
 
-            $session->set('kirby.challenge.type', $challenge);
+                    $session->set('kirby.challenge.type', $challenge);
 
-            if ($code !== null) {
-                $session->set('kirby.challenge.code', password_hash($code, PASSWORD_DEFAULT));
-                $session->set('kirby.challenge.timeout', time() + $timeout);
+                    if ($code !== null) {
+                        $session->set('kirby.challenge.code', password_hash($code, PASSWORD_DEFAULT));
+                        $session->set('kirby.challenge.timeout', time() + $timeout);
+                    }
+
+                    break;
+                }
+            }
+
+            // if no suitable challenge was found, `$challenge === null` at this point;
+            // only leak this in debug mode, otherwise `null` is returned below
+            if ($challenge === null && $this->kirby->option('debug') === true) {
+                throw new LogicException('Could not find a suitable authentication challenge');
             }
         } else {
             $this->kirby->trigger('user.login:failed', compact('email'));
@@ -671,8 +699,13 @@ class Auth
                 throw new PermissionException('Authentication challenge timeout');
             }
 
-            if ($challenge === 'email') {
-                if (EmailChallenge::verify($user, $code) === true) {
+            if (
+                isset(static::$challenges[$challenge]) === true &&
+                class_exists(static::$challenges[$challenge]) === true &&
+                is_subclass_of(static::$challenges[$challenge], 'Kirby\Cms\Auth\Challenge') === true
+            ) {
+                $class = static::$challenges[$challenge];
+                if ($class::verify($user, $code) === true) {
                     $this->logout();
                     $user->loginPasswordless();
 

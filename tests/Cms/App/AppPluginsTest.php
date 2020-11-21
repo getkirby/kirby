@@ -3,10 +3,31 @@
 namespace Kirby\Cms;
 
 use Kirby\Cache\FileCache;
+use Kirby\Cms\Auth\Challenge;
 use Kirby\Form\Field as FormField;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\I18n;
+
+require_once __DIR__ . '/../mocks.php';
+
+class DummyAuthChallenge extends Challenge
+{
+    public static function isAvailable(User $user, string $mode): bool
+    {
+        return true;
+    }
+
+    public static function create(User $user, array $options): ?string
+    {
+        return 'test';
+    }
+
+    public static function verify(User $user, string $code): bool
+    {
+        return $code === 'test-verify';
+    }
+}
 
 class DummyCache extends FileCache
 {
@@ -214,6 +235,42 @@ class AppPluginsTest extends TestCase
 
         $app->impersonate('kirby');
         $this->assertEquals('Test', $app->api()->call('test'));
+    }
+
+    public function testAuthChallenge()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => $fixtures = __DIR__ . '/fixtures/AppPluginsTest/testAuthChallenge'
+            ],
+            'authChallenges' => [
+                'dummy' => 'Kirby\Cms\DummyAuthChallenge'
+            ],
+            'options' => [
+                'auth.challenges' => ['dummy']
+            ],
+            'users' => [
+                [
+                    'email' => 'homer@simpsons.com'
+                ]
+            ]
+        ]);
+        $auth    = $kirby->auth();
+        $session = $kirby->session();
+
+        $this->assertSame('dummy', $auth->createChallenge('homer@simpsons.com'));
+        $this->assertSame('homer@simpsons.com', $session->get('kirby.challenge.email'));
+        $this->assertSame('dummy', $session->get('kirby.challenge.type'));
+        $this->assertTrue(password_verify('test', $session->get('kirby.challenge.code')));
+        $this->assertSame(MockTime::$time + 600, $session->get('kirby.challenge.timeout'));
+
+        $this->assertSame(
+            $kirby->user('homer@simpsons.com'),
+            $auth->verifyChallenge('test-verify')
+        );
+
+        $kirby->session()->destroy();
+        Dir::remove($fixtures);
     }
 
     public function testBlueprint()

@@ -48,6 +48,7 @@ trait AppPlugins
 
         // other plugin types
         'api' => [],
+        'authChallenges' => [],
         'blueprints' => [],
         'cacheTypes' => [],
         'collections' => [],
@@ -123,6 +124,17 @@ trait AppPlugins
         } else {
             return $this->extensions['api'];
         }
+    }
+
+    /**
+     * Registers additional authentication challenges
+     *
+     * @param array $challenges
+     * @return array
+     */
+    protected function extendAuthChallenges(array $challenges): array
+    {
+        return $this->extensions['authChallenges'] = Auth::$challenges = array_merge(Auth::$challenges, $challenges);
     }
 
     /**
@@ -618,7 +630,7 @@ trait AppPlugins
         // load static extensions only once
         if (static::$systemExtensions === null) {
             // Form Field Mixins
-            FormField::$mixins['datetime'] = include $root . '/config/fields/mixins/datetime.php';
+            FormField::$mixins['datetime']   = include $root . '/config/fields/mixins/datetime.php';
             FormField::$mixins['filepicker'] = include $root . '/config/fields/mixins/filepicker.php';
             FormField::$mixins['min']        = include $root . '/config/fields/mixins/min.php';
             FormField::$mixins['options']    = include $root . '/config/fields/mixins/options.php';
@@ -680,6 +692,11 @@ trait AppPlugins
                 'templates'    => include $root . '/config/templates.php'
             ];
         }
+
+        // default auth challenges
+        $this->extendAuthChallenges([
+            'email' => 'Kirby\Cms\Auth\EmailChallenge'
+        ]);
 
         // default cache types
         $this->extendCacheTypes([

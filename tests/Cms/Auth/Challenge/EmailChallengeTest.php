@@ -51,6 +51,12 @@ class EmailChallengeTest extends TestCase
         unset($_SERVER['SERVER_NAME']);
     }
 
+    public function testIsAvailable()
+    {
+        $user = $this->app->user('homer@simpsons.com');
+        $this->assertTrue(EmailChallenge::isAvailable($user, 'login'));
+    }
+
     /**
      * @covers ::create
      */
