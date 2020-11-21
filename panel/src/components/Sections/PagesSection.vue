@@ -50,13 +50,14 @@
           {{ options.empty || $t('pages.empty') }}
         </k-empty>
         <footer class="k-collection-footer">
-          <!-- eslint-disable-next-line vue/no-v-html -->
+          <!-- eslint-disable vue/no-v-html -->
           <k-text
             v-if="help"
             theme="help"
             class="k-collection-help"
             v-html="help"
           />
+          <!-- eslint-enable vue/no-v-html -->
         </footer>
       </template>
 

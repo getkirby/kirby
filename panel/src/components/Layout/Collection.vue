@@ -21,13 +21,14 @@
     </k-draggable>
 
     <footer v-if="hasFooter" class="k-collection-footer">
-      <!-- eslint-disable-next-line vue/no-v-html -->
+      <!-- eslint-disable vue/no-v-html -->
       <k-text
         v-if="help"
         theme="help"
         class="k-collection-help"
         v-html="help"
       />
+      <!-- eslint-enable vue/no-v-html -->
       <div class="k-collection-pagination">
         <k-pagination
           v-if="hasPagination"
