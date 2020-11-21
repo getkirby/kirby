@@ -35,6 +35,19 @@ export default {
       // activate the translation
       Vue.i18n.set(id);
 
+      // load dayjs locale
+      const locales = [id.replace("_", "-"), id.split("_")[0]];
+      for (let i = 0; i < locales.length; i++) {
+        try {
+          await import(
+            /* webpackChunkName: "vendor/dayjs/[request]" */
+            `dayjs/locale/${locales[i]}.js`
+          );
+          Vue.$library.dayjs.locale(locales[i]);
+          break;
+        } catch (error) {}
+      }
+
       // store the current translation
       context.commit("SET_CURRENT", id);
 

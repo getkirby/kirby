@@ -13,6 +13,7 @@ const host = process.env.VUE_APP_DEV_SERVER || "http://sandbox.test";
 
 // vue.config.js
 module.exports = {
+  publicPath: "media/panel",
   css: {
     loaderOptions: {
       sass: {

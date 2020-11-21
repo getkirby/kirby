@@ -76,38 +76,18 @@ export default {
       return this.viewDt.daysInMonth();
     },
     numberOfWeeks() {
-      return Math.ceil((this.numberOfDays + this.firstWeekday - 1) / 7);
+      return Math.ceil((this.numberOfDays + this.firstWeekday) / 7);
     },
     firstWeekday() {
-      const weekday = this.viewDt.day();
-      return weekday > 0 ? weekday : 7;
+      return this.viewDt.weekday();
     },
     weekdays() {
-      return [
-        this.$t('days.mon'),
-        this.$t('days.tue'),
-        this.$t('days.wed'),
-        this.$t('days.thu'),
-        this.$t('days.fri'),
-        this.$t('days.sat'),
-        this.$t('days.sun'),
-      ];
+      const days  = this.$library.dayjs.weekdaysShort();
+      const first = this.$library.dayjs.localeData().firstDayOfWeek();
+      return days.slice(first, days.length).concat(days.slice(0, first));
     },
     monthnames() {
-      return [
-        this.$t('months.january'),
-        this.$t('months.february'),
-        this.$t('months.march'),
-        this.$t('months.april'),
-        this.$t('months.may'),
-        this.$t('months.june'),
-        this.$t('months.july'),
-        this.$t('months.august'),
-        this.$t('months.september'),
-        this.$t('months.october'),
-        this.$t('months.november'),
-        this.$t('months.december'),
-      ];
+      return this.$library.dayjs.months();
     },
     months() {
       var options = [];
@@ -163,7 +143,7 @@ export default {
       const start = (week - 1) * 7 + 1;
 
       for (let x = start; x < start + 7; x++) {
-        let day = x - (this.firstWeekday - 1);
+        let day = x - this.firstWeekday;
         if (day <= 0 || day > this.numberOfDays) {
           days.push("");
         } else {

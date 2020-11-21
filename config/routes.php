@@ -5,6 +5,7 @@ use Kirby\Cms\Media;
 use Kirby\Cms\Panel;
 use Kirby\Cms\PanelPlugins;
 use Kirby\Cms\PluginAssets;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
 return function ($kirby) {
@@ -74,6 +75,24 @@ return function ($kirby) {
                 }
 
                 return Panel::render($kirby);
+            }
+        ],
+        /**
+         * Route for webpack code splitting.
+         * Needed because webpack isn't aware of the versionHash itself.
+         * Since all webpack chunks have version hashes in their
+         * filenames, it is ok to bypass the hashed media folder via
+         * this route.
+         */
+        [
+            'pattern' => $media . '/panel/js/(:all).js',
+            'env'     => 'media',
+            'action'  => function ($path) use ($kirby) {
+                $file  = $kirby->root('media') . '/panel/' . $kirby->versionHash() . '/js/' . $path . '.js';
+                return $kirby
+                    ->response()
+                    ->type('js')
+                    ->body(F::read($file));
             }
         ],
         [
