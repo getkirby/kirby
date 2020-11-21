@@ -29,12 +29,11 @@ describe('PageView', () => {
       cy.get('.k-topbar-crumbs a:last-child').should('contain', 'Photography');
 
       // Buttons
-      cy.get('.k-header-buttons .k-button-group:first-child .k-button:first-child').then((openButton) => {
-        openButton.should('have.attr', 'target', '_blank');
-        openButton.should('have.attr', 'href', 'http://sandbox.test/photography');
-      });
+      cy.get('.k-header-buttons .k-button-group:first-child .k-button:first-child').as('button')
+      cy.get('@button').should('have.attr', 'target', '_blank');
+      cy.get('@button').should('have.attr', 'href', 'http://sandbox.test/photography');
 
-      cy.get('.k-header-buttons .k-button-group:first-child .k-status-flag').should('contain', 'Public');
+      cy.get('.k-header-buttons .k-button-group:first-child .k-status-icon').should('contain', 'Public');
 
       // Drafts
       cy.get('@drafts').find('.k-headline').should('contain', 'Drafts');
@@ -51,14 +50,14 @@ describe('PageView', () => {
 
       cy.url().should('contain', '/pages/photography+portraits');
       cy.get('.k-headline-editable').should('contain', 'Portraits');
-      cy.get('.k-status-flag').should('contain', 'Draft');
+      cy.get('.k-status-icon').should('contain', 'Draft');
     });
 
     it('should publish draft', () => {
       cy.get('@drafts').find('.k-card').should('have.length', 2);
       cy.get('@listed').find('.k-card').should('have.length', 8);
 
-      cy.get('@drafts').find('.k-card:first-child .k-status-flag').click();
+      cy.get('@drafts').find('.k-card:first-child .k-status-icon').click();
 
       dialog().find('.k-radio-input li:last-child label').click();
       dialog().find('form').submit();
