@@ -24,7 +24,7 @@
         />
       </svg>
     </span>
-    <span class="k-checkbox-input-label" v-html="label" />
+    <span class="k-checkbox-input-label" v-text="label" />
   </label>
 </template>
 

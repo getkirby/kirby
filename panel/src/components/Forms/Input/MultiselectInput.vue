@@ -56,7 +56,9 @@
           @keydown.native.enter.prevent.stop="select(option)"
           @keydown.native.space.prevent.stop="select(option)"
         >
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="option.display" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span class="k-multiselect-value" v-html="option.info" />
         </k-dropdown-item>
 
@@ -139,34 +141,28 @@ export default {
 
       return this.$t("options.none");
     },
-    visible() {
-      if (this.limit) {
-        return this.filtered.slice(0, this.search.display || this.filtered.length);
-      }
-
-      return this.filtered;
-    },
     filtered() {
       if (this.q && this.q.length >= (this.search.min || 0)) {
-        const regex = new RegExp(`(${RegExp.escape(this.q)})`, "ig");
-
-        return this.options.filter(option => {
-              return String(option.text).match(regex) ||
-                     String(option.value).match(regex);
-            }).map(option => {
-              return {
-                ...option,
-                display: String(option.text).replace(regex, "<b>$1</b>"),
-                info: String(option.value).replace(regex, "<b>$1</b>")
-              };
-            });
+        return this.options
+          .filter(option => this.isFiltered(option))
+          .map(option => ({
+            ...option,
+            display: this.toHighlightedString(option.text),
+            info: this.toHighlightedString(option.value)
+          }));
       }
 
       return this.options.map(option => ({
-              ...option,
-              display: option.text,
-              info: option.value
-            }));
+        ...option,
+        display: option.text,
+        info: option.value
+      }));
+    },
+    more() {
+      return !this.max || this.state.length < this.max;
+    },
+    regex() {
+      return new RegExp(`(${RegExp.escape(this.q)})`, "ig");
     },
     sorted() {
       if (this.sort === false) {
@@ -178,8 +174,12 @@ export default {
       const index = x => this.options.findIndex(y => y.value === x.value);
       return items.sort((a, b) => index(a) - index(b));
     },
-    more() {
-      return !this.max || this.state.length < this.max;
+    visible() {
+      if (this.limit) {
+        return this.filtered.slice(0, this.search.display || this.filtered.length);
+      }
+
+      return this.filtered;
     },
   },
   watch: {
@@ -226,6 +226,10 @@ export default {
     },
     index(option) {
       return this.state.findIndex(item => item.value === option.value);
+    },
+    isFiltered(option) {
+      return String(option.text).match(this.regex) ||
+             String(option.value).match(this.regex);
     },
     isSelected(option) {
       return this.index(option) !== -1;
@@ -292,7 +296,13 @@ export default {
       } else {
         this.add(option);
       }
-    }
+    },
+    toHighlightedString(string) {
+      // make sure that no HTML exists before in the string
+      // to avoid XSS when displaying via `v-html`
+      string = this.$helper.string.stripHTML(string);
+      return string.replace(this.regex, "<b>$1</b>")
+    },
   },
   validations() {
     return {

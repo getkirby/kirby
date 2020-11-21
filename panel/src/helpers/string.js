@@ -26,6 +26,10 @@ export default {
     }
     return result;
   },
+  stripHTML(string) {
+    const str = String(string);
+    return str.replace(/(<([^>]+)>)/gi, "");
+  },
   template(string, values = {}) {
 
     const opening = "{{[ ]{0,}";
@@ -55,6 +59,6 @@ export default {
   },
   ucwords(string) {
     const str = String(string);
-    return str.split(/ /g).map(word => `${word.substring(0,1).toUpperCase()}${word.substring(1)}`).join(" ");
+    return str.split(/ /g).map(word => this.ucfirst(word)).join(" ");
   }
 };
