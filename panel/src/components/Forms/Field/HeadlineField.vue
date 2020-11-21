@@ -4,6 +4,7 @@
       {{ label }}
     </k-headline>
     <footer v-if="help" class="k-field-footer">
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <k-text
         v-if="help"
         theme="help"

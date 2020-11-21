@@ -26,6 +26,7 @@
     <slot name="footer">
       <footer v-if="help || $slots.help" class="k-field-footer">
         <slot name="help">
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <k-text
             v-if="help"
             theme="help"

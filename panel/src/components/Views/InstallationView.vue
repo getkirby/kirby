@@ -15,52 +15,61 @@
       <ul class="k-installation-issues">
         <li v-if="system.isInstallable === false">
           <k-icon type="alert" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="$t('installation.disabled')" />
         </li>
 
         <li v-if="requirements.php === false">
           <k-icon type="alert" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="$t('installation.issues.php')" />
         </li>
 
         <li v-if="requirements.server === false">
           <k-icon type="alert" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="$t('installation.issues.server')" />
         </li>
 
         <li v-if="requirements.mbstring === false">
           <k-icon type="alert" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="$t('installation.issues.mbstring')" />
         </li>
 
         <li v-if="requirements.curl === false">
           <k-icon type="alert" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="$t('installation.issues.curl')" />
         </li>
 
         <li v-if="requirements.accounts === false">
           <k-icon type="alert" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="$t('installation.issues.accounts')" />
         </li>
 
         <li v-if="requirements.content === false">
           <k-icon type="alert" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="$t('installation.issues.content')" />
         </li>
 
         <li v-if="requirements.media === false">
           <k-icon type="alert" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="$t('installation.issues.media')" />
         </li>
 
         <li v-if="requirements.sessions === false">
           <k-icon type="alert" />
+          <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="$t('installation.issues.sessions')" />
         </li>
 
       </ul>
 
-      <k-button icon="refresh" @click="check"><span v-html="$t('retry')" /></k-button>
+      <k-button icon="refresh" @click="check">{{ $t('retry') }}</k-button>
 
     </div>
   </k-view>

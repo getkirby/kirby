@@ -48,6 +48,7 @@
             {{ options.empty || $t('files.empty') }}
           </k-empty>
           <footer class="k-collection-footer">
+            <!-- eslint-disable-next-line vue/no-v-html -->
             <k-text
               v-if="help"
               theme="help"

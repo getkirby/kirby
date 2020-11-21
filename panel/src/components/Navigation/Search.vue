@@ -9,12 +9,12 @@
           </k-button>
           <k-dropdown-content ref="types">
             <k-dropdown-item
-              v-for="(type, typeIndex) in types"
+              v-for="(typeItem, typeIndex) in types"
               :key="typeIndex"
-              :icon="type.icon"
+              :icon="typeItem.icon"
               @click="changeType(typeIndex)"
             >
-              {{ type.label }}
+              {{ typeItem.label }}
             </k-dropdown-item>
           </k-dropdown-content>
         </k-dropdown>

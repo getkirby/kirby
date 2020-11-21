@@ -26,6 +26,7 @@
     <k-view v-else-if="mode === 'lock'">
       <p class="k-form-lock-info">
         <k-icon type="lock" />
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <span v-html="$t('lock.isLocked', { email: form.lock.email })" />
       </p>
 
@@ -70,6 +71,7 @@
       theme="negative"
       @submit="onRevert"
     >
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <k-text v-html="$t('revert.confirm')" />
     </k-dialog>
   </nav>

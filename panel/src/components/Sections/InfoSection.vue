@@ -2,6 +2,7 @@
   <section class="k-info-section">
     <k-headline class="k-info-section-headline">{{ headline }}</k-headline>
     <k-box :theme="theme">
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <k-text v-html="text" />
     </k-box>
   </section>
@@ -40,4 +41,3 @@ export default {
 }
 
 </style>
-

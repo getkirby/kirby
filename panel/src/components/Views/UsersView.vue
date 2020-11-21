@@ -22,12 +22,12 @@
             </k-dropdown-item>
             <hr>
             <k-dropdown-item
-              v-for="role in roles"
-              :key="role.value"
+              v-for="roleItem in roles"
+              :key="roleItem.value"
               icon="bolt"
-              @click="filter(role)"
+              @click="filter(roleItem)"
             >
-              {{ role.text }}
+              {{ roleItem.text }}
             </k-dropdown-item>
           </k-dropdown-content>
         </k-dropdown>

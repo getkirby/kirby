@@ -21,6 +21,7 @@
     </k-draggable>
 
     <footer v-if="hasFooter" class="k-collection-footer">
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <k-text
         v-if="help"
         theme="help"
