@@ -87,7 +87,7 @@ class I18n
     }
 
     /**
-     * Format a number
+     * Formats a number
      *
      * @param int|float $number
      * @param string $locale
@@ -227,7 +227,7 @@ class I18n
             return static::$decimalNumberFormatters[$locale];
         }
 
-        if (!extension_loaded('intl') || !class_exists('NumberFormatter')) {
+        if (extension_loaded('intl') !== true || class_exists('NumberFormatter') !== true) {
             return null;
         }
 
@@ -247,7 +247,7 @@ class I18n
      * @param string $key
      * @param int $count
      * @param string $locale
-     * @param bool $formatNumber
+     * @param bool $formatNumber If set to `false`, the count is not formatted
      * @return mixed
      */
     public static function translateCount(string $key, int $count, string $locale = null, bool $formatNumber = true)
@@ -274,7 +274,7 @@ class I18n
             }
         }
 
-        if ($formatNumber) {
+        if ($formatNumber === true) {
             $count = static::formatNumber($count, $locale);
         }
 
