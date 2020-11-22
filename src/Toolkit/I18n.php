@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Closure;
+use NumberFormatter;
 
 /**
  * Localization class, roughly inspired by VueI18n
@@ -44,6 +45,13 @@ class I18n
     public static $fallback = 'en';
 
     /**
+     * Cache of `NumberFormatter` objects by locale
+     *
+     * @var array
+     */
+    protected static $decimalNumberFormatters = [];
+
+    /**
      * Returns the fallback code
      *
      * @return string
@@ -76,6 +84,25 @@ class I18n
         }
 
         return $count === 1 ? 'singular' : 'plural';
+    }
+
+    /**
+     * Formats a number
+     *
+     * @param int|float $number
+     * @param string $locale
+     * @return string
+     */
+    public static function formatNumber($number, string $locale = null): string
+    {
+        $locale = $locale ?? static::locale();
+
+        $formatter = static::decimalNumberFormatter($locale);
+        if ($formatter !== null) {
+            $number = $formatter->format($number);
+        }
+
+        return (string)$number;
     }
 
     /**
@@ -190,6 +217,24 @@ class I18n
     }
 
     /**
+     * Returns (and creates) a decimal number formatter for a given locale
+     *
+     * @return \NumberFormatter|null
+     */
+    protected static function decimalNumberFormatter(string $locale): ?NumberFormatter
+    {
+        if (isset(static::$decimalNumberFormatters[$locale])) {
+            return static::$decimalNumberFormatters[$locale];
+        }
+
+        if (extension_loaded('intl') !== true || class_exists('NumberFormatter') !== true) {
+            return null;
+        }
+
+        return static::$decimalNumberFormatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+    }
+
+    /**
      * Translates amounts
      *
      * Translation definition options:
@@ -202,10 +247,13 @@ class I18n
      * @param string $key
      * @param int $count
      * @param string $locale
+     * @param bool $formatNumber If set to `false`, the count is not formatted
      * @return mixed
      */
-    public static function translateCount(string $key, int $count, string $locale = null)
+    public static function translateCount(string $key, int $count, string $locale = null, bool $formatNumber = true)
     {
+        $locale = $locale ?? static::locale();
+
         $translation = static::translate($key, null, $locale);
 
         if ($translation === null) {
@@ -224,6 +272,10 @@ class I18n
             } else {
                 $message = end($translation);
             }
+        }
+
+        if ($formatNumber === true) {
+            $count = static::formatNumber($count, $locale);
         }
 
         return str_replace('{{ count }}', $count, $message);

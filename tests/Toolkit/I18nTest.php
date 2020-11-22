@@ -26,6 +26,21 @@ class I18nTest extends TestCase
         $this->assertEquals('none', I18n::form(0, true));
     }
 
+    public function testFormatNumber()
+    {
+        $this->assertEquals('2', I18n::formatNumber(2));
+        $this->assertEquals('2', I18n::formatNumber(2, 'en'));
+        $this->assertEquals('2', I18n::formatNumber(2, 'de'));
+
+        $this->assertEquals('1,234,567', I18n::formatNumber(1234567));
+        $this->assertEquals('1,234,567', I18n::formatNumber(1234567, 'en'));
+        $this->assertEquals('1.234.567', I18n::formatNumber(1234567, 'de'));
+
+        $this->assertEquals('1,234,567.89', I18n::formatNumber(1234567.89));
+        $this->assertEquals('1,234,567.89', I18n::formatNumber(1234567.89, 'en'));
+        $this->assertEquals('1.234.567,89', I18n::formatNumber(1234567.89, 'de'));
+    }
+
     public function testTemplate()
     {
         I18n::$translations = [
@@ -170,11 +185,21 @@ class I18nTest extends TestCase
         I18n::$translations = [
             'en' => [
                 'car' => ['No cars', 'One car', '{{ count }} cars']
+            ],
+            'de' => [
+                'car' => ['Keine Autos', 'Ein Auto', '{{ count }} Autos']
             ]
         ];
 
         $this->assertEquals('2 cars', I18n::translateCount('car', 2));
         $this->assertEquals('3 cars', I18n::translateCount('car', 3));
+        $this->assertEquals('1,234,567 cars', I18n::translateCount('car', 1234567));
+        $this->assertEquals('1,234,567 cars', I18n::translateCount('car', 1234567, null));
+        $this->assertEquals('1,234,567 cars', I18n::translateCount('car', 1234567, null, true));
+        $this->assertEquals('1234567 cars', I18n::translateCount('car', 1234567, null, false));
+        $this->assertEquals('1.234.567 Autos', I18n::translateCount('car', 1234567, 'de'));
+        $this->assertEquals('1.234.567 Autos', I18n::translateCount('car', 1234567, 'de', true));
+        $this->assertEquals('1234567 Autos', I18n::translateCount('car', 1234567, 'de', false));
     }
 
     public function testTranslateCountWithMissingTranslation()
