@@ -35,9 +35,12 @@ trait AppUsers
     }
 
     /**
-     * Become any existing user
+     * Become any existing user or disable the current user
      *
-     * @param string|null $who User ID or email address
+     * @param string|null $who User ID or email address,
+     *                         `null` to use the actual user again,
+     *                         `'kirby'` for a virtual admin user or
+     *                         `'nobody'` to disable the actual user
      * @param Closure|null $callback Optional action function that will be run with
      *                               the permissions of the impersonated user; the
      *                               impersonation will be reset afterwards

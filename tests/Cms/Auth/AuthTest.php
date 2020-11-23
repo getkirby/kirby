@@ -41,7 +41,7 @@ class AuthTest extends TestCase
         ]);
         Dir::make($this->fixtures . '/site/accounts');
 
-        $this->auth = new Auth($this->app);
+        $this->auth = $this->app->auth();
     }
 
     public function tearDown(): void
@@ -61,11 +61,11 @@ class AuthTest extends TestCase
         $this->assertSame(null, $this->auth->user());
 
         $user = $this->auth->impersonate('kirby');
+        $this->assertSame($user, $this->auth->user());
+        $this->assertSame($user, $this->auth->currentUserFromImpersonation());
         $this->assertSame('kirby', $user->id());
         $this->assertSame('kirby@getkirby.com', $user->email());
         $this->assertSame('admin', $user->role()->name());
-        $this->assertSame($user, $this->auth->user());
-        $this->assertSame($user, $this->auth->currentUserFromImpersonation());
         $this->assertNull($this->auth->user(null, false));
 
         $user = $this->auth->impersonate('homer@simpsons.com');
@@ -79,6 +79,17 @@ class AuthTest extends TestCase
         $this->assertNull($this->auth->currentUserFromImpersonation());
         $this->assertNull($this->auth->user(null, false));
 
+        $this->auth->setUser($actual = $this->app->user('marge@simpsons.com'));
+        $this->assertSame('marge@simpsons.com', $this->auth->user()->email());
+        $impersonated = $this->auth->impersonate('nobody');
+        $this->assertSame($impersonated, $this->auth->user());
+        $this->assertSame($impersonated, $this->auth->currentUserFromImpersonation());
+        $this->assertSame('nobody', $impersonated->id());
+        $this->assertSame('nobody@getkirby.com', $impersonated->email());
+        $this->assertSame('nobody', $impersonated->role()->name());
+        $this->assertSame($actual, $this->auth->user(null, false));
+
+        $this->auth->logout();
         $this->assertNull($this->auth->impersonate());
         $this->assertNull($this->auth->user());
         $this->assertNull($this->auth->currentUserFromImpersonation());

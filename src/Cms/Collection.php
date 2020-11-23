@@ -4,8 +4,10 @@ namespace Kirby\Cms;
 
 use Closure;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Toolkit\Collection as BaseCollection;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 /**
  * The Collection class serves as foundation
@@ -120,6 +122,32 @@ class Collection extends BaseCollection
     }
 
     /**
+     * Filters elements by one of the
+     * predefined filter methods, by a
+     * custom filter function or an array of filters
+     *
+     * @param string|array|\Closure $field
+     * @param array ...$args
+     * @return \Kirby\Cms\Collection
+     */
+    public function filter($field, ...$args)
+    {
+        return $this->callProtected('filter', func_get_args());
+    }
+
+    /**
+     * Find a single element by an attribute and its value
+     *
+     * @param string $attribute
+     * @param mixed $value
+     * @return mixed|null
+     */
+    public function findBy(string $attribute, $value)
+    {
+        return $this->callProtected('findBy', func_get_args());
+    }
+
+    /**
      * Groups the items by a given field or callback. Returns a collection
      * with an item for each group and a collection for each group.
      *
@@ -131,34 +159,36 @@ class Collection extends BaseCollection
     public function group($field, bool $i = true)
     {
         if (is_string($field) === true) {
-            $groups = new Collection([], $this->parent());
+            return $this->callProtected(function () use ($field, $i) {
+                $groups = new Collection([], $this->parent());
 
-            foreach ($this->data as $key => $item) {
-                $value = $this->getAttribute($item, $field);
+                foreach ($this->data as $key => $item) {
+                    $value = $this->getAttribute($item, $field);
 
-                // make sure that there's always a proper value to group by
-                if (!$value) {
-                    throw new InvalidArgumentException('Invalid grouping value for key: ' . $key);
+                    // make sure that there's always a proper value to group by
+                    if (!$value) {
+                        throw new InvalidArgumentException('Invalid grouping value for key: ' . $key);
+                    }
+
+                    // ignore upper/lowercase for group names
+                    if ($i) {
+                        $value = Str::lower($value);
+                    }
+
+                    if (isset($groups->data[$value]) === false) {
+                        // create a new entry for the group if it does not exist yet
+                        $groups->data[$value] = new static([$key => $item]);
+                    } else {
+                        // add the item to an existing group
+                        $groups->data[$value]->set($key, $item);
+                    }
                 }
 
-                // ignore upper/lowercase for group names
-                if ($i) {
-                    $value = Str::lower($value);
-                }
-
-                if (isset($groups->data[$value]) === false) {
-                    // create a new entry for the group if it does not exist yet
-                    $groups->data[$value] = new static([$key => $item]);
-                } else {
-                    // add the item to an existing group
-                    $groups->data[$value]->set($key, $item);
-                }
-            }
-
-            return $groups;
+                return $groups;
+            });
         }
 
-        return parent::group($field, $i);
+        return $this->callProtected('group', [$field, $i]);
     }
 
     /**
@@ -244,6 +274,20 @@ class Collection extends BaseCollection
     }
 
     /**
+     * Extracts all values for a single field into
+     * a new array
+     *
+     * @param string $field
+     * @param string|null $split
+     * @param bool $unique
+     * @return array
+     */
+    public function pluck(string $field, string $split = null, bool $unique = false): array
+    {
+        return $this->callProtected('pluck', func_get_args());
+    }
+
+    /**
      * Prepends an element to the data array
      *
      * @param mixed ...$args
@@ -324,6 +368,19 @@ class Collection extends BaseCollection
     }
 
     /**
+     * Sorts the elements by any number of fields
+     *
+     * @param string|callable $field Field name or value callback to sort by
+     * @param string $direction asc or desc
+     * @param int $method The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
+     * @return \Kirby\Cms\Collection
+     */
+    public function sort()
+    {
+        return $this->callProtected('sort', func_get_args());
+    }
+
+    /**
      * Converts all objects in the collection
      * to an array. This can also take a callback
      * function to further modify the array result.
@@ -336,5 +393,40 @@ class Collection extends BaseCollection
         return parent::toArray($map ?? function ($object) {
             return $object->toArray();
         });
+    }
+
+    /**
+     * Calls a method on the collection or a callback in protected
+     * mode without the permissions of the current user
+     *
+     * @param string|\Closure $method
+     * @param array $args Only if `$method` is a string
+     * @return mixed
+     */
+    protected function callProtected($method, array $args = [])
+    {
+        $auth = kirby()->auth();
+        $userBefore = $auth->currentUserFromImpersonation();
+
+        try {
+            $auth->impersonate('nobody');
+            
+            if (is_a($method, 'Closure') === true) {
+                return $method();
+            } else {
+                return parent::$method(...$args);
+            }
+        } catch (PermissionException $e) {
+            throw new PermissionException([
+                'fallback' => 'An internal operation was attempted while in protected mode',
+                'previous' => $e
+            ]);
+        } catch (Throwable $e) {
+            throw $e;
+        } finally {
+            // ensure that the impersonation is *always* reset
+            // to the original value, even if an error occurred
+            $auth->impersonate($userBefore !== null ? $userBefore->id() : null);
+        }
     }
 }
