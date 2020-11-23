@@ -90,7 +90,8 @@ abstract class ModelWithContent extends Model
                 return $this->content;
             }
 
-            return $this->setContent($this->readContent())->content;
+            // don't normalize field keys (already handled by the `Data` class)
+            return $this->content = new Content($this->readContent(), $this, false);
 
         // multi language support
         } else {
@@ -102,7 +103,8 @@ abstract class ModelWithContent extends Model
 
             // get the translation by code
             if ($translation = $this->translation($languageCode)) {
-                $content = new Content($translation->content(), $this);
+                // don't normalize field keys (already handled by the `ContentTranslation` class)
+                $content = new Content($translation->content(), $this, false);
             } else {
                 throw new InvalidArgumentException('Invalid language: ' . $languageCode);
             }
@@ -453,7 +455,7 @@ abstract class ModelWithContent extends Model
         if ($languageCode !== $kirby->defaultLanguage()->code()) {
             foreach ($this->blueprint()->fields() as $field) {
                 if (($field['translate'] ?? true) === false) {
-                    $content[$field['name']] = null;
+                    $content[strtolower($field['name'])] = null;
                 }
             }
 
