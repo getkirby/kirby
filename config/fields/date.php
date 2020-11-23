@@ -123,7 +123,8 @@ return [
     ],
     'save' => function ($value) {
         if ($value !== null && $timestamp = timestamp($value)) {
-            return $this->toISO($timestamp);
+            $format = $this->time === false ? 'Y-m-d' : 'Y-m-d H:i:s';
+            return $this->toISO($timestamp, $format);
         }
 
         return '';

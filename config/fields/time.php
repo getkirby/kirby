@@ -89,7 +89,7 @@ return [
     ],
     'computed' => [
         'default' => function () {
-            return $this->toDatetime($this->default);
+            return $this->toDatetime($this->default, 'H:i:s');
         },
         'display' => function () {
             if ($this->display) {
@@ -99,7 +99,7 @@ return [
             return $this->notation === 24 ? 'HH:mm' : 'hh:mm a';
         },
         'value' => function () {
-            return $this->toDatetime($this->value);
+            return $this->toDatetime($this->value, 'H:i:s');
         }
     ],
     'save' => function ($value): string {
