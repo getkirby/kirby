@@ -17,6 +17,16 @@ use Kirby\Cms\User;
 abstract class Challenge
 {
     /**
+     * Checks whether the challenge is available
+     * for the passed user and purpose
+     *
+     * @param \Kirby\Cms\User $user User the code will be generated for
+     * @param string $mode Purpose of the code ('login', 'reset' or '2fa')
+     * @return bool
+     */
+    abstract public static function isAvailable(User $user, string $mode): bool;
+
+    /**
      * Generates a random one-time auth code and returns that code
      * for later verification
      *

@@ -9,6 +9,10 @@ use Kirby\Toolkit\Dir;
 
 class MockChallenge extends Challenge
 {
+    public static function isAvailable(User $user, string $mode): bool
+    {
+    }
+
     public static function create(User $user, array $options): ?string
     {
     }

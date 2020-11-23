@@ -19,6 +19,19 @@ use Kirby\Toolkit\Str;
 class EmailChallenge extends Challenge
 {
     /**
+     * Checks whether the challenge is available
+     * for the passed user and purpose
+     *
+     * @param \Kirby\Cms\User $user User the code will be generated for
+     * @param string $mode Purpose of the code ('login', 'reset' or '2fa')
+     * @return bool
+     */
+    public static function isAvailable(User $user, string $mode): bool
+    {
+        return true;
+    }
+
+    /**
      * Generates a random one-time auth code and returns that code
      * for later verification
      *
