@@ -3,21 +3,19 @@
     {{ issue.message }}
   </k-error-view>
   <k-view v-else-if="ready && form === 'login'" align="center" class="k-login-view">
-    <k-login-form />
+    <k-login-plugin />
   </k-view>
   <k-view v-else-if="ready && form === 'code'" align="center" class="k-login-code-view">
-    <k-login-code-form />
+    <k-login-code />
   </k-view>
 </template>
 
 <script>
 import LoginForm from "../Forms/Login.vue";
-import LoginCodeForm from "../Forms/LoginCode.vue";
 
 export default {
   components: {
-    "k-login-form": window.panel.plugins.login || LoginForm,
-    "k-login-code-form": LoginCodeForm
+    "k-login-plugin": window.panel.plugins.login || LoginForm
   },
   data() {
     return {
