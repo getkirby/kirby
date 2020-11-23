@@ -30,6 +30,14 @@ import store from "./store/store.js";
 Vue.use(Api, store);
 
 Vue.prototype.$go = (path) => {
+
+  // support links with hash
+  path = path.split("#");
+  path = {
+    path: path[0],
+    hash: path[1] || null
+  };
+
   router.push(path).catch(e => {
     if (e && e.name && e.name === "NavigationDuplicated") {
       return true;

@@ -191,7 +191,8 @@ export default [
       view: "plugin"
     },
     props: route => ({
-      plugin: route.params.id
+      plugin: route.params.id,
+      hash: route.hash.slice(1)
     }),
     beforeEnter: auth,
     component: Vue.component("k-custom-view")

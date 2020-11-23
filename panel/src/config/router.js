@@ -23,16 +23,20 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.outside) {
     store.dispatch("user/visit", to.path);
   }
-  
+
   // store the current view
-  store.dispatch("view", to.meta.view);
-  
+  if (to.meta.view === "plugin") {
+    store.dispatch("view", to.params.id);
+  } else {
+    store.dispatch("view", to.meta.view);
+  }
+
   // reset the content locks
   store.dispatch("content/lock", null);
   store.dispatch("content/unlock", null);
-  
+
   // clear all heartbeats
-  store.dispatch("heartbeat/clear");  
+  store.dispatch("heartbeat/clear");
 
   next();
 });
