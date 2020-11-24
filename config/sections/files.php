@@ -206,13 +206,15 @@ return [
                 $multiple = true;
             }
 
+            $template = $this->template === 'default' ? null : $this->template;
+
             return [
                 'accept'     => $this->accept,
                 'multiple'   => $multiple,
                 'max'        => $max,
                 'api'        => $this->parent->apiUrl(true) . '/files',
                 'attributes' => array_filter([
-                    'template' => $this->template
+                    'template' => $template
                 ])
             ];
         }

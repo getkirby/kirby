@@ -132,6 +132,10 @@ class Files extends Collection
             return $this;
         }
 
+        if ($template === 'default') {
+            $template = ['default', ''];
+        }
+
         return $this->filter(
             'template',
             is_array($template) ? 'in' : '==',
