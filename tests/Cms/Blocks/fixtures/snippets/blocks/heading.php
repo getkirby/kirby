@@ -1,1 +1,1 @@
-<h1><?= $block->text() ?></h1>
+<h1 class="custom-heading"><?= $block->text() ?></h1>

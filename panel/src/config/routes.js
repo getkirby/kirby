@@ -1,3 +1,5 @@
+/* global process, require */
+
 import Vue from "vue";
 import auth from "./auth.js";
 import store from "@/store/store.js";
@@ -7,7 +9,7 @@ import store from "@/store/store.js";
 import "./plugins.js";
 
 /* Routes */
-export default [
+let routes = [
   {
     path: "/",
     name: "Home",
@@ -197,11 +199,40 @@ export default [
     beforeEnter: auth,
     component: Vue.component("k-custom-view")
   },
-  {
-    path: "*",
-    name: "NotFound",
-    beforeEnter: (to, from, next) => {
-      next("/");
-    }
-  }
 ];
+
+// UI Sandbox
+if (process.env.NODE_ENV !== "production") {
+
+  routes.push({
+    path: "/sandbox/:component?",
+    name: "Sandbox",
+    meta: {
+      outside: true,
+    },
+    beforeEnter: auth,
+    component: require("@/sandbox/Sandbox.vue").default,
+  });
+
+  routes.push({
+    path: "/sandbox/preview/:component",
+    name: "SandboxComponent",
+    meta: {
+      outside: true,
+    },
+    beforeEnter: auth,
+    component: require("@/sandbox/Iframe.vue").default,
+  });
+
+}
+
+routes.push({
+  path: "*",
+  name: "NotFound",
+  beforeEnter: (to, from, next) => {
+    next("/");
+  }
+});
+
+
+export default routes;

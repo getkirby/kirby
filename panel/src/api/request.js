@@ -39,7 +39,7 @@ export default (config) => {
         ),
         options
       );
-      const text     = await response.text();
+      const text = await response.text();
 
       try {
         // try to parse JSON
@@ -48,7 +48,8 @@ export default (config) => {
         try {
           json = JSON.parse(text);
         } catch (e) {
-          throw new Error("The JSON response from the API could not be parsed. Please check your API connection.");
+          config.onParserError(text);
+          return;
         }
 
         // check for the server response code

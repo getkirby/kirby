@@ -1,0 +1,12 @@
+name: Quote
+icon: quote
+fields:
+  text:
+    label: Quote Text
+    type: writer
+    inline: true
+  citation:
+    label: Citation
+    type: writer
+    inline: true
+    placeholder: by …

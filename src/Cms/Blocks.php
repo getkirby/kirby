@@ -2,15 +2,16 @@
 
 namespace Kirby\Cms;
 
-use Closure;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
+use Kirby\Parsley\Parsley;
+use Kirby\Parsley\Schema\Blocks as BlockSchema;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
  * A collection of blocks
- * from the builder, structure field or editor
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -18,26 +19,9 @@ use Throwable;
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-class Blocks extends Collection
+class Blocks extends Items
 {
-    /**
-     * structure | builder | editor
-     * @var string
-     */
-    protected $type = null;
-
-    /**
-     * Constructor
-     *
-     * @param array $objects
-     * @param array $options
-     */
-    public function __construct($objects = [], array $options = [])
-    {
-        $this->parent = $options['parent'] ?? App::instance()->site();
-        $this->type   = $options['type']   ?? null;
-        parent::__construct($objects, $this->parent);
-    }
+    const ITEM_CLASS = '\Kirby\Cms\Block';
 
     /**
      * Return HTML when the collection is
@@ -64,94 +48,83 @@ class Blocks extends Collection
     }
 
     /**
-     * Creates a new block collection from a
-     * an array of block props
+     * Wrapper around the factory to
+     * catch blocks from layouts
      *
-     * @param array $blocks
+     * @param array $items
      * @param array $params
      * @return \Kirby\Cms\Blocks
      */
     public static function factory(array $blocks = null, array $params = [])
     {
-        $options = array_merge([
-            'options' => [],
-            'parent'  => App::instance()->site(),
-            'type'    => null
-        ], $params);
+        $blocks = static::extractFromLayouts($blocks);
+        $blocks = BlockConverter::editorBlocks($blocks);
 
-        if (empty($blocks) === true || is_array($blocks) === false) {
-            return new static();
+        return parent::factory($blocks, $params);
+    }
+
+    /**
+     * Pull out blocks from layouts
+     *
+     * @param array $input
+     * @return array
+     */
+    protected static function extractFromLayouts(array $input): array
+    {
+        if (empty($input) === true) {
+            return [];
         }
 
-        // create a new collection of blocks
-        $collection = new static([], $options);
-
-        foreach ($blocks as $params) {
-            $params['field']    = $options['type'];
-            $params['options']  = $options['options'];
-            $params['parent']   = $options['parent'];
-            $params['siblings'] = $collection;
-            $block = Block::factory($params);
-            $collection->append($block->id(), $block);
+        // no layouts
+        if (array_key_exists('columns', $input[0]) === false) {
+            return $input;
         }
 
-        return $collection;
+        $blocks = [];
+
+        foreach ($input as $layout) {
+            foreach (($layout['columns'] ?? []) as $column) {
+                foreach (($column['blocks'] ?? []) as $block) {
+                    $blocks[] = $block;
+                }
+            }
+        }
+
+        return $blocks;
     }
 
     /**
      * Parse and sanitize various block formats
      *
      * @param array|string $input
-     * @param string $type Expected field type
      * @return array
      */
-    public static function parse($input, string $type = null): array
+    public static function parse($input): array
     {
         if (is_array($input) === false) {
             try {
                 $input = Json::decode((string)$input);
             } catch (Throwable $e) {
                 // try to import the old YAML format
-                $input = Yaml::decode((string)$input);
+                $yaml = Yaml::decode((string)$input);
+
+                // check for valid yaml
+                if (empty($yaml) === false && isset(A::first($yaml)['_key']) === true) {
+                    $input = $yaml;
+
+                // try to import HTML instead
+                } else {
+                    $parser = new Parsley($input, new BlockSchema());
+                    $input  = $parser->blocks();
+                }
             }
         }
 
         if (empty($input) === true) {
-            return [
-                'type'   => $type,
-                'blocks' => []
-            ];
+            return [];
         }
 
-        // the format is already up-to-date
-        if (array_key_exists('blocks', $input) === true) {
-            $input['type'] = $input['type'] ?? $type;
-            return $input;
-        }
-
-        // check for builder blocks
-        if (array_key_exists('_key', $input[0]) === true) {
-            $type = $type ?? 'builder';
-        // import blocks as structure
-        } else {
-            $type = $type ?? 'structure';
-        }
-
-
-        return [
-            'type'   => $type,
-            'blocks' => $input
-        ];
-    }
-
-    /**
-     * Convert the blocks to an array
-     *
-     * @return array
-     */
-    public function toArray(Closure $map = null): array
-    {
-        return array_values(parent::toArray($map));
+        return $input;
     }
 
     /**
@@ -168,15 +141,5 @@ class Blocks extends Collection
         }
 
         return implode($html);
-    }
-
-    /**
-     * Returns the block type
-     *
-     * @return string|null
-     */
-    public function type(): ?string
-    {
-        return $this->type;
     }
 }

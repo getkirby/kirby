@@ -1,0 +1,11 @@
+name: field.blocks.markdown.name
+icon: markdown
+preview: markdown
+wysiwyg: true
+fields:
+  text:
+    label: field.blocks.markdown.label
+    placeholder: field.blocks.markdown.placeholder
+    type: textarea
+    buttons: false
+    font: monospace

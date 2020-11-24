@@ -35,7 +35,7 @@ Vue.prototype.$go = (path) => {
   path = path.split("#");
   path = {
     path: path[0],
-    hash: path[1] || null
+    hash: path[1] || null
   };
 
   router.push(path).catch(e => {

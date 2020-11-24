@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 // store modules
+import blocks from "./modules/blocks.js";
 import content from "./modules/content.js";
 import heartbeat from "./modules/heartbeat.js";
 import languages from "./modules/languages.js";
@@ -19,6 +20,7 @@ export default new Vuex.Store({
     breadcrumb: [],
     dialog: null,
     drag: null,
+    fatal: null,
     isLoading: false,
     title: null,
     view: null
@@ -32,6 +34,9 @@ export default new Vuex.Store({
     },
     SET_DRAG(state, drag) {
       state.drag = drag;
+    },
+    SET_FATAL(state, html) {
+      state.fatal = html;
     },
     SET_TITLE(state, title) {
       state.title = title;
@@ -55,6 +60,9 @@ export default new Vuex.Store({
     },
     drag(context, drag) {
       context.commit("SET_DRAG", drag);
+    },
+    fatal(context, html) {
+      context.commit("SET_FATAL", html);
     },
     isLoading(context, loading) {
       context.commit(loading === true ? "START_LOADING" : "STOP_LOADING");
@@ -87,6 +95,7 @@ export default new Vuex.Store({
     }
   },
   modules: {
+    blocks: blocks,
     content: content,
     heartbeat: heartbeat,
     languages: languages,

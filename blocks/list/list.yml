@@ -1,0 +1,8 @@
+name: field.blocks.list.name
+icon: list-bullet
+wysiwyg: true
+preview: list
+fields:
+  text:
+    label: field.blocks.list.name
+    type: list

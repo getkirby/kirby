@@ -103,7 +103,7 @@ export default {
 
       // bind events
       this.$events.$on("keydown.esc", this.close);
-      document.addEventListener("focus", this.focustrap, true);
+      // document.addEventListener("focus", this.focustrap, true);
 
       setTimeout(() => {
         // autofocus

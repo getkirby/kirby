@@ -13,66 +13,19 @@ class BlockTest extends TestCase
         $this->app = new App([
             'roots' => [
                 'index' => '/dev/null',
-                'snippets' => __DIR__ . '/fixtures/snippets'
             ],
         ]);
 
         $this->page = new Page(['slug' => 'test']);
     }
 
-    public function testAttrs()
-    {
-        $block = new Block([
-            'type' => 'heading',
-            'attrs' => $attrs = [
-                'a' => 'Test Attr A',
-                'b' => 'Test Attr B'
-            ]
-        ]);
-
-        $this->assertEquals('Test Attr A', $block->attrs()->a());
-        $this->assertEquals('Test Attr A', $block->attr('a'));
-        $this->assertEquals('Test Attr A', $block->a());
-        $this->assertEquals('Test Attr B', $block->attrs()->b());
-        $this->assertEquals('Test Attr B', $block->attr('b'));
-        $this->assertEquals('Test Attr B', $block->b());
-        $this->assertSame($attrs, $block->attrs()->toArray());
-
-        // attr with fallback
-        $this->assertEquals('Test Attr C', $block->attr('c', 'Test Attr C'));
-    }
-
-    public function testAttrsAccess()
-    {
-        $block = new Block([
-            'type' => 'heading',
-            'attrs' => $attrs = [
-                'a' => 'Test Attr A',
-                'b' => 'Test Attr B'
-            ],
-            'content' => [
-                'a' => 'Test Content A',
-                'b' => 'Test Content B'
-            ]
-        ]);
-
-        $this->assertEquals('Test Attr A', $block->attrs()->a());
-        $this->assertEquals('Test Content A', $block->a());
-        $this->assertEquals('Test Attr B', $block->attrs()->b());
-        $this->assertEquals('Test Content B', $block->b());
-    }
-
     public function testConstruct()
     {
         $block = new Block(['type' => 'test']);
 
-        $this->assertInstanceOf('Kirby\Cms\Content', $block->attrs());
         $this->assertInstanceOf('Kirby\Cms\Content', $block->content());
-        $this->assertNotNull($block->id());
-        $this->assertSame($this->app, $block->kirby());
-        $this->assertInstanceOf('Kirby\Cms\Site', $block->parent());
+        $this->assertFalse($block->isHidden());
         $this->assertInstanceOf('Kirby\Cms\Blocks', $block->siblings());
-        $this->assertSame('blocks/test', $block->snippet());
         $this->assertSame('test', $block->type());
     }
 
@@ -105,17 +58,12 @@ class BlockTest extends TestCase
     {
         $block = new Block([
             'type' => 'heading',
-            'attrs' => [
-                'a' => 'Test Attr A',
-                'b' => 'Test Attr B'
-            ],
             'content' => [
                 'a' => 'Test Content A',
                 'b' => 'Test Content B'
             ]
         ]);
 
-        $this->assertSame($block->attrs(), $block->controller()['attrs']);
         $this->assertSame($block->content(), $block->controller()['content']);
         $this->assertSame($block, $block->controller()['block']);
         $this->assertSame($block->id(), $block->controller()['id']);
@@ -130,15 +78,6 @@ class BlockTest extends TestCase
         ]);
 
         $this->assertInstanceOf('Kirby\Cms\Block', $block);
-    }
-
-    public function testIs()
-    {
-        $a = new Block(['type' => 'a']);
-        $b = new Block(['type' => 'b']);
-
-        $this->assertTrue($a->is($a));
-        $this->assertFalse($a->is($b));
     }
 
     public function testIsEmpty()
@@ -161,6 +100,16 @@ class BlockTest extends TestCase
         $this->assertTrue($block->isNotEmpty());
     }
 
+    public function testIsHidden()
+    {
+        $block = new Block([
+            'type' => 'heading',
+            'isHidden' => true
+        ]);
+
+        $this->assertTrue($block->isHidden());
+    }
+
     public function testParent()
     {
         $block = new Block([
@@ -168,52 +117,13 @@ class BlockTest extends TestCase
             'type'   => 'heading'
         ]);
 
-        $this->assertSame($page, $block->parent());
-        $this->assertSame($page, $block->attrs()->parent());
         $this->assertSame($page, $block->content()->parent());
-    }
-
-    public function testSiblings()
-    {
-        $blocks = Blocks::factory([
-            ['type' => 'a'],
-            ['type' => 'b'],
-        ]);
-
-        $block = new Block([
-            'siblings' => $blocks,
-            'type'     => 'c'
-        ]);
-
-        $this->assertSame($blocks, $block->siblings());
-    }
-
-    public function testSnippet()
-    {
-        // without parent field type
-        $block = new Block([
-            'type' => 'heading',
-        ]);
-
-        $this->assertSame('blocks/heading', $block->snippet());
-
-        // with parent field type
-        $block = new Block([
-            'type'  => 'heading',
-            'field' => 'builder',
-        ]);
-
-        $this->assertSame('builder/heading', $block->snippet());
     }
 
     public function testToArray()
     {
         $block = new Block([
             'type' => 'heading',
-            'attrs' => $attrs = [
-                'a' => 'Test Attr A',
-                'b' => 'Test Attr B'
-            ],
             'content' => $content = [
                 'a' => 'Test Content A',
                 'b' => 'Test Content B'
@@ -221,10 +131,10 @@ class BlockTest extends TestCase
         ]);
 
         $this->assertSame([
-            'attrs'   => $attrs,
-            'content' => $content,
-            'id'      => $block->id(),
-            'type'    => 'heading'
+            'content'  => $content,
+            'id'       => $block->id(),
+            'isHidden' => false,
+            'type'     => 'heading'
         ], $block->toArray());
     }
 
@@ -237,7 +147,7 @@ class BlockTest extends TestCase
             'type' => 'heading',
         ]);
 
-        $expected = "<h1>Test</h1>\n";
+        $expected = "<h2>Test</h2>\n";
 
         $this->assertInstanceOf('Kirby\Cms\Field', $block->toField());
         $this->assertSame($block->parent(), $block->toField()->parent());
@@ -254,23 +164,30 @@ class BlockTest extends TestCase
             'type' => 'heading',
         ]);
 
-        $expected = "<h1>Test</h1>\n";
+        $expected = "<h2>Test</h2>\n";
 
         $this->assertSame($expected, $block->toHtml());
         $this->assertSame($expected, $block->__toString());
         $this->assertSame($expected, (string)$block);
     }
 
-    public function testToHtmlWithoutSnippet()
+    public function testToHtmlWithCustomSnippets()
     {
+        $this->app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'snippets' => __DIR__ . '/fixtures/snippets'
+            ],
+        ]);
+
         $block = new Block([
             'content' => [
                 'text' => 'Test'
             ],
-            'type' => 'does-not-exist',
+            'type' => 'text'
         ]);
 
-        $expected = '';
+        $expected = "<p class=\"custom-text\">Test</p>\n";
 
         $this->assertSame($expected, $block->toHtml());
         $this->assertSame($expected, $block->__toString());

@@ -71,7 +71,7 @@ export default {
      * Array of the current input parts
      */
     parts() {
-      return this.input.split(/\W/);
+      return String(this.input).split(/\W/);
     },
     /**
      *  All variations of parsing patterns
@@ -282,7 +282,7 @@ export default {
       // if whole input is selected, return
       if (
         this.$refs.input.$refs.input.selectionStart === 0 &&
-        this.$refs.input.$refs.input.selectionEnd === this.input.length
+        this.$refs.input.$refs.input.selectionEnd === String(this.input).length
       ) {
         return null;
       }

@@ -11,6 +11,18 @@ window.panel.plugins = {
 };
 
 window.panel.plugin = function (plugin, parts) {
+  // Blocks
+  resolve(parts, "blocks", function (name, options) {
+    if (typeof options === "string") {
+      options = { template: options };
+    }
+
+    window.panel.plugins["components"][`k-block-type-${name}`] = {
+      extends: "k-block-type",
+      ...options
+    };
+  });
+
   // Components
   resolve(parts, "components", function (name, options) {
     window.panel.plugins["components"][name] = options;

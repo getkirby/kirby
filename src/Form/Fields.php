@@ -30,7 +30,7 @@ class Fields extends Collection
         if (is_array($field) === true) {
             // use the array key as name if the name is not set
             $field['name'] = $field['name'] ?? $name;
-            $field = new Field($field['type'], $field);
+            $field = Field::factory($field['type'], $field, $this);
         }
 
         return parent::__set($field->name(), $field);

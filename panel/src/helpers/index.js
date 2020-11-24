@@ -8,6 +8,7 @@ import slug from "./slug.js";
 import sort from "./sort.js";
 import string from "./string.js";
 import upload from "./upload.js";
+import uuid from "./uuid.js";
 import validate from "./validate.js";
 
 import "./regex.js";
@@ -48,7 +49,8 @@ export default {
       sort: sort,
       string: string,
       upload: upload,
-      validate: validate
+      uuid: uuid,
+      validate: validate,
     };
 
   }

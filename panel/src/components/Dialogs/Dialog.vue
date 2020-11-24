@@ -10,6 +10,7 @@
       :data-size="size"
       :class="$vnode.data.staticClass"
       class="k-dialog"
+      @mousedown.stop
     >
       <div v-if="notification" :data-theme="notification.type" class="k-dialog-notification">
         <p>{{ notification.message }}</p>
@@ -135,10 +136,12 @@
       },
       close() {
         this.notification = null;
-        this.$refs.overlay.close();
+        if (this.$refs.overlay) {
+          this.$refs.overlay.close();
+        }
         this.$emit("close");
         this.$events.$off("keydown.esc", this.close);
-        this.$store.dispatch("dialog", null);
+        this.$store.dispatch("dialog", false);
       },
       cancel() {
         this.$emit("cancel");
@@ -253,7 +256,7 @@
 }
 
 .k-dialog-footer {
-  border-top: 1px solid $color-border;
+  border-top: 1px solid $color-gray-300;
   padding: 0;
   border-bottom-left-radius: $rounded-xs;
   border-bottom-right-radius: $rounded-xs;

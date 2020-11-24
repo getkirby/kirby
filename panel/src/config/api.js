@@ -29,6 +29,10 @@ export default {
             store.dispatch("user/logout", true);
           }
         },
+        onParserError: (result) => {
+          store.dispatch("fatal", result);
+          throw new Error("The JSON response from the API could not be parsed");
+        },
         onPrepare: (options) => {
           // if language set, add to headers
           if (store.state.languages.current) {

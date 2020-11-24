@@ -5,6 +5,7 @@ use Kirby\Cms\Blocks;
 use Kirby\Cms\Field;
 use Kirby\Cms\Files;
 use Kirby\Cms\Html;
+use Kirby\Cms\Layouts;
 use Kirby\Cms\Structure;
 use Kirby\Cms\Url;
 use Kirby\Data\Data;
@@ -54,19 +55,16 @@ return function (App $app) {
         },
 
         // converters
-
         /**
          * Converts a yaml or json field to a Blocks object
          *
          * @param \Kirby\Cms\Field $field
          * @return \Kirby\Cms\Blocks
          */
-        'toBuilderBlocks' => function (Field $field) {
+        'toBlocks' => function (Field $field) {
             try {
-                $blocks = Blocks::parse($field->value());
-                $blocks = Blocks::factory($blocks['blocks'], [
+                $blocks = Blocks::factory(Blocks::parse($field->value()), [
                     'parent' => $field->parent(),
-                    'type'   => $blocks['type']
                 ]);
 
                 return $blocks->filter('isHidden', false);
@@ -184,6 +182,19 @@ return function (App $app) {
         'toInt' => function (Field $field, int $default = 0) {
             $value = $field->isEmpty() ? $default : $field->value;
             return (int)$value;
+        },
+
+        /**
+         * Parse layouts and turn them into
+         * Layout objects
+         *
+         * @param \Kirby\Cms\Field $field
+         * @return \Kirby\Cms\Layouts
+         */
+        'toLayouts' => function (Field $field) {
+            return Layouts::factory(Data::decode($field->value, 'json'), [
+                'parent' => $field->parent()
+            ]);
         },
 
         /**

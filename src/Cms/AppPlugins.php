@@ -688,6 +688,7 @@ trait AppPlugins
                 'blueprints'   => include $root . '/config/blueprints.php',
                 'fields'       => include $root . '/config/fields.php',
                 'fieldMethods' => include $root . '/config/methods.php',
+                'snippets'     => include $root . '/config/snippets.php',
                 'tags'         => include $root . '/config/tags.php',
                 'templates'    => include $root . '/config/templates.php'
             ];
@@ -710,6 +711,7 @@ trait AppPlugins
         $this->extendBlueprints(static::$systemExtensions['blueprints']);
         $this->extendFields(static::$systemExtensions['fields']);
         $this->extendFieldMethods((static::$systemExtensions['fieldMethods'])($this));
+        $this->extendSnippets(static::$systemExtensions['snippets']);
         $this->extendTags(static::$systemExtensions['tags']);
         $this->extendTemplates(static::$systemExtensions['templates']);
     }

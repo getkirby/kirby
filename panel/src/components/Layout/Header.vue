@@ -39,7 +39,7 @@ export default {
 
         // collect all fields per tab
         let fields = [];
-        tab.columns.forEach(column => {
+        Object.values(tab.columns).forEach(column => {
           Object.values(column.sections).forEach(section => {
             if (section.type === "fields") {
               Object.keys(section.fields).forEach(field => {

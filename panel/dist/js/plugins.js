@@ -3,9 +3,7 @@ window.panel = window.panel || {};
 window.panel.plugins = {
   components: {},
   created: [],
-  fields: {},
   icons: {},
-  sections: {},
   routes: [],
   use: [],
   views: {},
@@ -13,6 +11,18 @@ window.panel.plugins = {
 };
 
 window.panel.plugin = function (plugin, parts) {
+  // Blocks
+  resolve(parts, "blocks", function (name, options) {
+    if (typeof options === "string") {
+      options = { template: options };
+    }
+
+    window.panel.plugins["components"][`k-block-type-${name}`] = {
+      extends: "k-block-type",
+      ...options
+    };
+  });
+
   // Components
   resolve(parts, "components", function (name, options) {
     window.panel.plugins["components"][name] = options;
@@ -20,7 +30,7 @@ window.panel.plugin = function (plugin, parts) {
 
   // Fields
   resolve(parts, "fields", function (name, options) {
-    window.panel.plugins["fields"][`k-${name}-field`] = options;
+    window.panel.plugins["components"][`k-${name}-field`] = options;
   });
 
   // Icons
@@ -30,7 +40,10 @@ window.panel.plugin = function (plugin, parts) {
 
   // Sections
   resolve(parts, "sections", function (name, options) {
-    window.panel.plugins["sections"][`k-${name}-section`] = options;
+    window.panel.plugins["components"][`k-${name}-section`] = {
+      ...options,
+      mixins: ["section"].concat(options.mixins || [])
+    };
   });
 
   // Vue.use

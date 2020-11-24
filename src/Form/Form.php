@@ -2,6 +2,7 @@
 
 namespace Kirby\Form;
 
+use Kirby\Cms\App;
 use Kirby\Data\Data;
 use Throwable;
 
@@ -81,7 +82,7 @@ class Form
             }
 
             try {
-                $field = new Field($props['type'], $props, $this->fields);
+                $field = Field::factory($props['type'], $props, $this->fields);
             } catch (Throwable $e) {
                 $field = static::exceptionField($e, $props);
             }
@@ -178,13 +179,19 @@ class Form
      */
     public static function exceptionField(Throwable $exception, array $props = [])
     {
+        $message = $exception->getMessage();
+
+        if (App::instance()->option('debug') === true) {
+            $message .= ' in file: ' . $exception->getFile() . ' line: ' . $exception->getLine();
+        }
+
         $props = array_merge($props, [
-            'label' => 'Error in "' . $props['name'] . '" field',
+            'label' => 'Error in "' . $props['name'] . '" field.',
             'theme' => 'negative',
-            'text'  => strip_tags($exception->getMessage()),
+            'text'  => strip_tags($message),
         ]);
 
-        return new Field('info', $props);
+        return Field::factory('info', $props);
     }
 
     /**
