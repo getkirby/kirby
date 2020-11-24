@@ -62,8 +62,6 @@
 </template>
 
 <script>
-import Vue from "vue";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -112,7 +110,7 @@ export default {
       let tabs = this.fieldset.tabs;
 
       Object.entries(tabs).forEach(([tabName, tab]) => {
-        Object.entries(tab.fields).forEach(([fieldName, field]) => {
+        Object.entries(tab.fields).forEach(([fieldName]) => {
 
           tabs[tabName].fields[fieldName].section = this.name;
           tabs[tabName].fields[fieldName].endpoints = {

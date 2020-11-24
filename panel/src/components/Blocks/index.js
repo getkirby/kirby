@@ -1,4 +1,3 @@
-/* global require */
 import Vue from "vue";
 
 // main components
@@ -10,14 +9,12 @@ Vue.component("k-blocks", Blocks);
 
 // helper components
 import BlockFigure from "./BlockFigure.vue";
-import BlockHeader from "./BlockHeader.vue";
 import BlockOptions from "./BlockOptions.vue";
 import BlockSelector from "./BlockSelector.vue";
 import BlockTitle from "./BlockTitle.vue";
 import BlockType from "./BlockType.vue";
 
 Vue.component("k-block-figure", BlockFigure);
-Vue.component("k-block-header", BlockHeader);
 Vue.component("k-block-options", BlockOptions);
 Vue.component("k-block-selector", BlockSelector);
 Vue.component("k-block-title", BlockTitle);

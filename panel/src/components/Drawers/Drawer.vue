@@ -68,7 +68,7 @@ export default {
     close() {
       this.$refs.overlay.close();
     },
-    mouseup(event) {
+    mouseup() {
       if (this.click === true) {
         this.close();
       }
