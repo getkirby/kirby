@@ -3,7 +3,7 @@
 return [
     [
         'content' => [
-            'text' => "<table><tr>\n<td>Test</td>\n  </tr></table>",
+            'text' => '<table><tr><td>Test</td></tr></table>',
         ],
         'type' => 'markdown',
     ],
