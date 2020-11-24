@@ -2,23 +2,23 @@
 
 namespace Kirby\ComposerInstaller;
 
-use InvalidArgumentException;
 use Composer\Config;
 use Composer\Package\PackageInterface;
+use InvalidArgumentException;
 
 /**
  * @package   Kirby Composer Installer
  * @author    Lukas Bestle <lukas@getkirby.com>
  * @link      https://getkirby.com
- * @copyright Bastian Allgeier
- * @license   MIT
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://opensource.org/licenses/MIT
  */
 class CmsInstaller extends Installer
 {
     /**
      * Decides if the installer supports the given type
      *
-     * @param  string $packageType
+     * @param string $packageType
      * @return bool
      */
     public function supports($packageType): bool
@@ -29,8 +29,8 @@ class CmsInstaller extends Installer
     /**
      * Returns the installation path of a package
      *
-     * @param  PackageInterface $package
-     * @return string           path
+     * @param PackageInterface $package
+     * @return string path
      */
     public function getInstallPath(PackageInterface $package): string
     {

@@ -23,7 +23,7 @@
     "php": ">=7.2.0 <7.5.0",
     "ext-mbstring": "*",
     "ext-ctype": "*",
-    "getkirby/composer-installer": "^1.0",
+    "getkirby/composer-installer": "^1.2.0",
     "mustangostang/spyc": "0.6.3",
     "michelf/php-smartypants": "1.8.1",
     "claviska/simpleimage": "3.3.4",

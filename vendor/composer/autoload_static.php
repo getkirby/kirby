@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
+class ComposerStaticInitc26333d865e0329b638bdc17afd29896
 {
     public static $files = array (
         '7e9bd612cc444b3eed788ebbe46263a0' => __DIR__ . '/..' . '/laminas/laminas-zendframework-bridge/src/autoload.php',
@@ -100,6 +100,7 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
     );
 
     public static $classMap = array (
+        'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'Kirby\\Api\\Api' => __DIR__ . '/../..' . '/src/Api/Api.php',
         'Kirby\\Api\\Collection' => __DIR__ . '/../..' . '/src/Api/Collection.php',
         'Kirby\\Api\\Model' => __DIR__ . '/../..' . '/src/Api/Model.php',
@@ -119,6 +120,11 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
         'Kirby\\Cms\\AppUsers' => __DIR__ . '/../..' . '/src/Cms/AppUsers.php',
         'Kirby\\Cms\\Asset' => __DIR__ . '/../..' . '/src/Cms/Asset.php',
         'Kirby\\Cms\\Auth' => __DIR__ . '/../..' . '/src/Cms/Auth.php',
+        'Kirby\\Cms\\Auth\\Challenge' => __DIR__ . '/../..' . '/src/Cms/Auth/Challenge.php',
+        'Kirby\\Cms\\Auth\\EmailChallenge' => __DIR__ . '/../..' . '/src/Cms/Auth/EmailChallenge.php',
+        'Kirby\\Cms\\Block' => __DIR__ . '/../..' . '/src/Cms/Block.php',
+        'Kirby\\Cms\\BlockConverter' => __DIR__ . '/../..' . '/src/Cms/BlockConverter.php',
+        'Kirby\\Cms\\Blocks' => __DIR__ . '/../..' . '/src/Cms/Blocks.php',
         'Kirby\\Cms\\Blueprint' => __DIR__ . '/../..' . '/src/Cms/Blueprint.php',
         'Kirby\\Cms\\Collection' => __DIR__ . '/../..' . '/src/Cms/Collection.php',
         'Kirby\\Cms\\Collections' => __DIR__ . '/../..' . '/src/Cms/Collections.php',
@@ -130,6 +136,8 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
         'Kirby\\Cms\\Email' => __DIR__ . '/../..' . '/src/Cms/Email.php',
         'Kirby\\Cms\\Event' => __DIR__ . '/../..' . '/src/Cms/Event.php',
         'Kirby\\Cms\\Field' => __DIR__ . '/../..' . '/src/Cms/Field.php',
+        'Kirby\\Cms\\Fieldset' => __DIR__ . '/../..' . '/src/Cms/Fieldset.php',
+        'Kirby\\Cms\\Fieldsets' => __DIR__ . '/../..' . '/src/Cms/Fieldsets.php',
         'Kirby\\Cms\\File' => __DIR__ . '/../..' . '/src/Cms/File.php',
         'Kirby\\Cms\\FileActions' => __DIR__ . '/../..' . '/src/Cms/FileActions.php',
         'Kirby\\Cms\\FileBlueprint' => __DIR__ . '/../..' . '/src/Cms/FileBlueprint.php',
@@ -148,6 +156,8 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
         'Kirby\\Cms\\HasSiblings' => __DIR__ . '/../..' . '/src/Cms/HasSiblings.php',
         'Kirby\\Cms\\Html' => __DIR__ . '/../..' . '/src/Cms/Html.php',
         'Kirby\\Cms\\Ingredients' => __DIR__ . '/../..' . '/src/Cms/Ingredients.php',
+        'Kirby\\Cms\\Item' => __DIR__ . '/../..' . '/src/Cms/Item.php',
+        'Kirby\\Cms\\Items' => __DIR__ . '/../..' . '/src/Cms/Items.php',
         'Kirby\\Cms\\KirbyTag' => __DIR__ . '/../..' . '/src/Cms/KirbyTag.php',
         'Kirby\\Cms\\KirbyTags' => __DIR__ . '/../..' . '/src/Cms/KirbyTags.php',
         'Kirby\\Cms\\Language' => __DIR__ . '/../..' . '/src/Cms/Language.php',
@@ -155,6 +165,10 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
         'Kirby\\Cms\\LanguageRoutes' => __DIR__ . '/../..' . '/src/Cms/LanguageRoutes.php',
         'Kirby\\Cms\\LanguageRules' => __DIR__ . '/../..' . '/src/Cms/LanguageRules.php',
         'Kirby\\Cms\\Languages' => __DIR__ . '/../..' . '/src/Cms/Languages.php',
+        'Kirby\\Cms\\Layout' => __DIR__ . '/../..' . '/src/Cms/Layout.php',
+        'Kirby\\Cms\\LayoutColumn' => __DIR__ . '/../..' . '/src/Cms/LayoutColumn.php',
+        'Kirby\\Cms\\LayoutColumns' => __DIR__ . '/../..' . '/src/Cms/LayoutColumns.php',
+        'Kirby\\Cms\\Layouts' => __DIR__ . '/../..' . '/src/Cms/Layouts.php',
         'Kirby\\Cms\\Media' => __DIR__ . '/../..' . '/src/Cms/Media.php',
         'Kirby\\Cms\\Model' => __DIR__ . '/../..' . '/src/Cms/Model.php',
         'Kirby\\Cms\\ModelPermissions' => __DIR__ . '/../..' . '/src/Cms/ModelPermissions.php',
@@ -234,8 +248,14 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
         'Kirby\\Exception\\NotFoundException' => __DIR__ . '/../..' . '/src/Exception/NotFoundException.php',
         'Kirby\\Exception\\PermissionException' => __DIR__ . '/../..' . '/src/Exception/PermissionException.php',
         'Kirby\\Form\\Field' => __DIR__ . '/../..' . '/src/Form/Field.php',
+        'Kirby\\Form\\FieldClass' => __DIR__ . '/../..' . '/src/Form/FieldClass.php',
+        'Kirby\\Form\\Field\\BlocksField' => __DIR__ . '/../..' . '/src/Form/Field/BlocksField.php',
+        'Kirby\\Form\\Field\\LayoutField' => __DIR__ . '/../..' . '/src/Form/Field/LayoutField.php',
         'Kirby\\Form\\Fields' => __DIR__ . '/../..' . '/src/Form/Fields.php',
         'Kirby\\Form\\Form' => __DIR__ . '/../..' . '/src/Form/Form.php',
+        'Kirby\\Form\\Mixin\\EmptyState' => __DIR__ . '/../..' . '/src/Form/Mixin/EmptyState.php',
+        'Kirby\\Form\\Mixin\\Max' => __DIR__ . '/../..' . '/src/Form/Mixin/Max.php',
+        'Kirby\\Form\\Mixin\\Min' => __DIR__ . '/../..' . '/src/Form/Mixin/Min.php',
         'Kirby\\Form\\Options' => __DIR__ . '/../..' . '/src/Form/Options.php',
         'Kirby\\Form\\OptionsApi' => __DIR__ . '/../..' . '/src/Form/OptionsApi.php',
         'Kirby\\Form\\OptionsQuery' => __DIR__ . '/../..' . '/src/Form/OptionsQuery.php',
@@ -270,6 +290,12 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
         'Kirby\\Image\\Exif' => __DIR__ . '/../..' . '/src/Image/Exif.php',
         'Kirby\\Image\\Image' => __DIR__ . '/../..' . '/src/Image/Image.php',
         'Kirby\\Image\\Location' => __DIR__ . '/../..' . '/src/Image/Location.php',
+        'Kirby\\Parsley\\Element' => __DIR__ . '/../..' . '/src/Parsley/Element.php',
+        'Kirby\\Parsley\\Inline' => __DIR__ . '/../..' . '/src/Parsley/Inline.php',
+        'Kirby\\Parsley\\Parsley' => __DIR__ . '/../..' . '/src/Parsley/Parsley.php',
+        'Kirby\\Parsley\\Schema' => __DIR__ . '/../..' . '/src/Parsley/Schema.php',
+        'Kirby\\Parsley\\Schema\\Blocks' => __DIR__ . '/../..' . '/src/Parsley/Schema/Blocks.php',
+        'Kirby\\Parsley\\Schema\\Plain' => __DIR__ . '/../..' . '/src/Parsley/Schema/Plain.php',
         'Kirby\\Session\\AutoSession' => __DIR__ . '/../..' . '/src/Session/AutoSession.php',
         'Kirby\\Session\\FileSessionStore' => __DIR__ . '/../..' . '/src/Session/FileSessionStore.php',
         'Kirby\\Session\\Session' => __DIR__ . '/../..' . '/src/Session/Session.php',
@@ -293,6 +319,7 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
         'Kirby\\Toolkit\\Html' => __DIR__ . '/../..' . '/src/Toolkit/Html.php',
         'Kirby\\Toolkit\\I18n' => __DIR__ . '/../..' . '/src/Toolkit/I18n.php',
         'Kirby\\Toolkit\\Iterator' => __DIR__ . '/../..' . '/src/Toolkit/Iterator.php',
+        'Kirby\\Toolkit\\Locale' => __DIR__ . '/../..' . '/src/Toolkit/Locale.php',
         'Kirby\\Toolkit\\Mime' => __DIR__ . '/../..' . '/src/Toolkit/Mime.php',
         'Kirby\\Toolkit\\Obj' => __DIR__ . '/../..' . '/src/Toolkit/Obj.php',
         'Kirby\\Toolkit\\Pagination' => __DIR__ . '/../..' . '/src/Toolkit/Pagination.php',
@@ -365,11 +392,11 @@ class ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7::$prefixDirsPsr4;
-            $loader->fallbackDirsPsr4 = ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7::$fallbackDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7::$prefixesPsr0;
-            $loader->classMap = ComposerStaticInit12091bebabd81c9aba88b2aeec22c8d7::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInitc26333d865e0329b638bdc17afd29896::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInitc26333d865e0329b638bdc17afd29896::$prefixDirsPsr4;
+            $loader->fallbackDirsPsr4 = ComposerStaticInitc26333d865e0329b638bdc17afd29896::$fallbackDirsPsr4;
+            $loader->prefixesPsr0 = ComposerStaticInitc26333d865e0329b638bdc17afd29896::$prefixesPsr0;
+            $loader->classMap = ComposerStaticInitc26333d865e0329b638bdc17afd29896::$classMap;
 
         }, null, ClassLoader::class);
     }
