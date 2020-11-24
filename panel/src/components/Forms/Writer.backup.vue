@@ -91,6 +91,22 @@ export default {
       toolbar: false
     };
   },
+  computed: {
+    info() {
+      if (!this.editor) {
+        return {};
+      }
+
+      return {
+        top: this.coordsAtStart().top,
+        bottom: this.coordsAtEnd().bottom
+      };
+    }
+  },
+  watch: {
+    value() {
+    }
+  },
   mounted() {
     this.editor = Editor({
       breaks: this.breaks,
@@ -109,22 +125,6 @@ export default {
   },
   destroyed() {
     this.editor.destroy();
-  },
-  computed: {
-    info() {
-      if (!this.editor) {
-        return {};
-      }
-
-      return {
-        top: this.coordsAtStart().top,
-        bottom: this.coordsAtEnd().bottom
-      };
-    }
-  },
-  watch: {
-    value() {
-    }
   },
   methods: {
     keymap() {

@@ -1,16 +1,24 @@
 <template>
   <k-view v-if="system" align="center" class="k-installation-view">
     <form v-if="state === 'install'" @submit.prevent="install">
-      <h1 class="k-offscreen">{{ $t("installation") }}</h1>
-      <k-fieldset :fields="fields" :novalidate="true" v-model="user" />
-      <k-button type="submit" icon="check">{{ $t("install") }}</k-button>
+      <h1 class="k-offscreen">
+        {{ $t("installation") }}
+      </h1>
+      <k-fieldset v-model="user" :fields="fields" :novalidate="true" />
+      <k-button type="submit" icon="check">
+        {{ $t("install") }}
+      </k-button>
     </form>
     <k-text v-else-if="state === 'completed'">
       <k-headline>{{ $t("installation.completed") }}</k-headline>
-      <k-link to="/login">{{ $t("login") }}</k-link>
+      <k-link to="/login">
+        {{ $t("login") }}
+      </k-link>
     </k-text>
     <div v-else>
-      <k-headline v-if="!system.isInstalled">{{ $t("installation.issues.headline") }}</k-headline>
+      <k-headline v-if="!system.isInstalled">
+        {{ $t("installation.issues.headline") }}
+      </k-headline>
 
       <ul class="k-installation-issues">
         <li v-if="system.isInstallable === false">
@@ -66,11 +74,11 @@
           <!-- eslint-disable-next-line vue/no-v-html -->
           <span v-html="$t('installation.issues.sessions')" />
         </li>
-
       </ul>
 
-      <k-button icon="refresh" @click="check">{{ $t('retry') }}</k-button>
-
+      <k-button icon="refresh" @click="check">
+        {{ $t('retry') }}
+      </k-button>
     </div>
   </k-view>
 </template>

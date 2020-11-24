@@ -1,6 +1,8 @@
 <template>
   <form class="k-login-form" @submit.prevent="login">
-    <h1 class="k-offscreen">{{ $t('login') }}</h1>
+    <h1 class="k-offscreen">
+      {{ $t('login') }}
+    </h1>
 
     <div v-if="issue" class="k-login-alert" @click="issue = null">
       <span>{{ issue }}</span>
@@ -42,7 +44,9 @@
         type="submit"
       >
         {{ $t("login" + (isResetForm ? ".reset" : "")) }}
-        <template v-if="isLoading">…</template>
+        <template v-if="isLoading">
+          …
+        </template>
       </k-button>
     </div>
   </form>

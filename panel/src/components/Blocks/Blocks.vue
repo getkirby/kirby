@@ -69,7 +69,6 @@
       :text="$t('field.blocks.delete.confirm.selected')"
       @submit="removeSelected"
     />
-
   </div>
 </template>
 

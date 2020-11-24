@@ -10,7 +10,9 @@
       </k-headline>
 
       <k-button-group v-if="add">
-        <k-button icon="add" @click="create">{{ $t("add") }}</k-button>
+        <k-button icon="add" @click="create">
+          {{ $t("add") }}
+        </k-button>
       </k-button-group>
     </header>
 
@@ -69,9 +71,7 @@
       <k-page-template-dialog ref="template" @success="update" />
       <k-page-remove-dialog ref="remove" @success="update" />
     </template>
-
   </section>
-
 </template>
 
 <script>

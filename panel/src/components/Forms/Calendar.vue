@@ -22,7 +22,9 @@
     <table class="k-calendar-table">
       <thead>
         <tr>
-          <th v-for="day in weekdays" :key="'weekday_' + day">{{ day }}</th>
+          <th v-for="day in weekdays" :key="'weekday_' + day">
+            {{ day }}
+          </th>
         </tr>
       </thead>
       <tbody>
@@ -50,7 +52,9 @@
       <tfoot>
         <tr>
           <td class="k-calendar-today" colspan="7">
-            <k-button @click="select('today')">{{ $t("today") }}</k-button>
+            <k-button @click="select('today')">
+              {{ $t("today") }}
+            </k-button>
           </td>
         </tr>
       </tfoot>

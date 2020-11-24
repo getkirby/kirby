@@ -1,5 +1,4 @@
 <template>
-
   <section
     v-if="isLoading === false"
     :data-processing="isProcessing"
@@ -10,7 +9,9 @@
         {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
       <k-button-group v-if="add">
-        <k-button icon="upload" @click="upload">{{ $t("add") }}</k-button>
+        <k-button icon="upload" @click="upload">
+          {{ $t("add") }}
+        </k-button>
       </k-button-group>
     </header>
 
@@ -65,7 +66,6 @@
       <k-file-sort-dialog ref="sort" @success="reload" />
       <k-upload ref="upload" @success="uploaded" @error="reload" />
     </template>
-
   </section>
 </template>
 

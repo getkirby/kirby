@@ -79,7 +79,6 @@
         {{ $t("search.all") }} ({{ filtered.length }})
       </k-button>
     </k-dropdown-content>
-
   </k-draggable>
 </template>
 

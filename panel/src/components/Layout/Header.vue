@@ -13,9 +13,7 @@
     </k-bar>
 
     <k-tabs :tab="tab" :tabs="tabsWithBadges" theme="notice" />
-
   </header>
-
 </template>
 
 <script>

@@ -10,10 +10,10 @@
       @end="onEnd"
     >
       <component
-        v-for="(item, index) in items"
         :is="elements.item"
-        :class="{'k-draggable-item': item.sortable}"
+        v-for="(item, index) in items"
         :key="index"
+        :class="{'k-draggable-item': item.sortable}"
         v-bind="item"
         @action="$emit('action', item, $event)"
         @dragstart="onDragStart($event, item.dragText)"
@@ -38,7 +38,6 @@
       </div>
     </footer>
   </div>
-
 </template>
 
 <script>

@@ -1,8 +1,8 @@
 <template>
   <button
+    :id="id"
     :aria-current="current"
     :autofocus="autofocus"
-    :id="id"
     :data-theme="theme"
     :data-responsive="responsive"
     :role="role"

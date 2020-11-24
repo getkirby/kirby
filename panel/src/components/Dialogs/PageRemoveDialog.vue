@@ -14,8 +14,8 @@
       </div>
       <k-form
         v-if="hasSubpages"
-        :fields="fields"
         v-model="model"
+        :fields="fields"
         @submit="submit"
       />
     </template>

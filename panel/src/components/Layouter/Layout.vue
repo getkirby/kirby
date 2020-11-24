@@ -24,13 +24,23 @@
       <k-dropdown>
         <k-button class="k-layout-toolbar-button" icon="angle-down" @click="$refs.options.toggle()" />
         <k-dropdown-content ref="options" align="right">
-          <k-dropdown-item icon="angle-up" @click="$emit('prepend')">{{ $t("insert.before") }}</k-dropdown-item>
-          <k-dropdown-item icon="angle-down" @click="$emit('append')">{{ $t("insert.after") }}</k-dropdown-item>
+          <k-dropdown-item icon="angle-up" @click="$emit('prepend')">
+            {{ $t("insert.before") }}
+          </k-dropdown-item>
+          <k-dropdown-item icon="angle-down" @click="$emit('append')">
+            {{ $t("insert.after") }}
+          </k-dropdown-item>
           <hr>
-          <k-dropdown-item v-if="settings" icon="settings" @click="$refs.drawer.open()">{{ $t("settings") }}</k-dropdown-item>
-          <k-dropdown-item icon="copy" @click="$emit('duplicate')">{{ $t("duplicate") }}</k-dropdown-item>
+          <k-dropdown-item v-if="settings" icon="settings" @click="$refs.drawer.open()">
+            {{ $t("settings") }}
+          </k-dropdown-item>
+          <k-dropdown-item icon="copy" @click="$emit('duplicate')">
+            {{ $t("duplicate") }}
+          </k-dropdown-item>
           <hr>
-          <k-dropdown-item icon="trash" @click="$refs.confirmRemoveDialog.open()">{{ $t("field.layout.delete") }}</k-dropdown-item>
+          <k-dropdown-item icon="trash" @click="$refs.confirmRemoveDialog.open()">
+            {{ $t("field.layout.delete") }}
+          </k-dropdown-item>
         </k-dropdown-content>
       </k-dropdown>
       <k-sort-handle />
@@ -52,7 +62,6 @@
       :text="$t('field.layout.delete.confirm')"
       @submit="$emit('remove')"
     />
-
   </section>
 </template>
 

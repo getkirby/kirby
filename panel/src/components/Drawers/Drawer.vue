@@ -10,7 +10,9 @@
         <header class="k-drawer-header">
           <k-icon :type="icon" class="k-drawer-icon" />
           <slot name="title">
-            <h2 class="k-drawer-title">{{ title }}</h2>
+            <h2 class="k-drawer-title">
+              {{ title }}
+            </h2>
           </slot>
           <nav
             v-if="hasTabs"

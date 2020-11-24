@@ -1,7 +1,7 @@
 <template>
   <div
-    :data-width="width"
     :id="id"
+    :data-width="width"
     tabindex="0"
     class="k-column k-layout-column"
     @dblclick="$refs.blocks.choose(blocks.length)"

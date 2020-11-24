@@ -48,7 +48,6 @@
     <k-toolbar-link-dialog ref="linkDialog" @cancel="cancel" @submit="insert($event)" />
     <k-files-dialog ref="fileDialog" @cancel="cancel" @submit="insertFile($event)" />
     <k-upload v-if="uploads" ref="fileUpload" @success="insertUpload" />
-
   </div>
 </template>
 

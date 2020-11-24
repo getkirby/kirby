@@ -12,8 +12,8 @@
     <span class="k-input-element" @click.stop="focus">
       <slot>
         <component
-          ref="input"
           :is="'k-' + type + '-input'"
+          ref="input"
           :value="value"
           v-bind="inputProps"
           v-on="listeners"

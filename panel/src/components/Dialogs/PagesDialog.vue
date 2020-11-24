@@ -10,7 +10,6 @@
       <k-box :text="issue" theme="negative" />
     </template>
     <template v-else>
-
       <header v-if="model" class="k-pages-dialog-navbar">
         <k-button
           :disabled="!model.id"
@@ -23,9 +22,9 @@
 
       <k-input
         v-if="options.search"
+        v-model="search"
         :autofocus="true"
         :placeholder="$t('search') + ' …'"
-        v-model="search"
         type="text"
         class="k-dialog-search"
         icon="search"

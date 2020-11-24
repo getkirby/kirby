@@ -41,7 +41,6 @@
         />
       </slot>
     </nav>
-
   </figure>
 </template>
 

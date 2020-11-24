@@ -17,8 +17,8 @@
   >
     <div :class="className" class="k-block">
       <component
-        ref="editor"
         :is="customComponent"
+        ref="editor"
         v-bind="$props"
         v-on="listeners"
       />

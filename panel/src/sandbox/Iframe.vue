@@ -1,5 +1,5 @@
 <template>
-  <component ref="el" :is="'sandbox-' + $route.params.component" />
+  <component :is="'sandbox-' + $route.params.component" ref="el" />
 </template>
 
 <script>

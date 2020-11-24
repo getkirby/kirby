@@ -29,7 +29,6 @@
       @open="opened = $event"
       v-on="$listeners"
     />
-
   </k-field>
 </template>
 
