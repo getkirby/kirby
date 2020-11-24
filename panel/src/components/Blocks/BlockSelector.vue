@@ -145,8 +145,7 @@ export default {
   grid-template-columns: repeat(1, 1fr);
 }
 .k-block-types .k-button {
-  display: grid;
-  grid-template-columns: 2rem 1fr;
+  display: flex;
   align-items: top;
   background: rgba(#000, .5);
   width: 100%;
