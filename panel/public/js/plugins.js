@@ -4,6 +4,7 @@ window.panel.plugins = {
   components: {},
   created: [],
   icons: {},
+  loginMethods: {},
   routes: [],
   use: [],
   views: {},
@@ -47,6 +48,11 @@ window.panel.plugin = function (plugin, parts) {
   // Views
   resolve(parts, "views", function (name, options) {
     window.panel.plugins["views"][name] = options;
+  });
+
+  // Login methods
+  resolve(parts, "loginMethods", function (name, options) {
+    window.panel.plugins["loginMethods"][name] = options;
   });
 
   // Login
