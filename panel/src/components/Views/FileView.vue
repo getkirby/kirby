@@ -1,21 +1,17 @@
 <template>
-
   <k-error-view v-if="issue">
     {{ issue.message }}
   </k-error-view>
   <div v-else-if="file.id !== null" class="k-file-view">
-
     <k-file-preview :file="file" />
 
     <k-view :data-locked="isLocked" class="k-file-content">
-
       <k-header
         :editable="permissions.changeName && !isLocked"
         :tab="tab"
         :tabs="tabs"
         @edit="action('rename')"
       >
-
         {{ file.filename }}
 
         <k-button-group slot="left">
@@ -67,10 +63,8 @@
         :multiple="false"
         @success="uploaded"
       />
-
     </k-view>
   </div>
-
 </template>
 
 <script>

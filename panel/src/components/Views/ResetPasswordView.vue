@@ -7,7 +7,9 @@
       @submit="submit"
     >
       <template slot="header">
-        <h1 class="k-offscreen">{{ $t('view.resetPassword') }}</h1>
+        <h1 class="k-offscreen">
+          {{ $t('view.resetPassword') }}
+        </h1>
 
         <div v-if="issue" class="k-login-alert" @click="issue = null">
           <span>{{ issue }}</span>
@@ -23,7 +25,9 @@
           icon="check"
           type="submit"
         >
-          {{ $t("change") }} <template v-if="isLoading">…</template>
+          {{ $t("change") }} <template v-if="isLoading">
+            …
+          </template>
         </k-button>
       </div>
     </k-form>

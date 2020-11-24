@@ -1,6 +1,7 @@
 <template>
   <div :data-theme="theme" class="k-box" v-on="$listeners">
     <slot>
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <k-text v-html="text" />
     </slot>
   </div>

@@ -39,9 +39,8 @@ describe('SiteView', () => {
 
   it('should have working preview button', () => {
     cy.visit(host + '/site');
-    cy.get('.k-header-buttons .k-button').then((button) => {
-      button.should('have.attr', 'target', '_blank');
-      button.should('have.attr', 'href', 'http://sandbox.test');
-    });
+    cy.get('.k-header-buttons .k-button').as('button')
+    cy.get('@button').should('have.attr', 'target', '_blank');
+    cy.get('@button').should('have.attr', 'href', 'http://sandbox.test');
   });
 });

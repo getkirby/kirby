@@ -12,6 +12,7 @@
       </span>
       <span class="k-list-item-text">
         <em>{{ text }}</em>
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <small v-if="info" v-html="info" />
       </span>
     </k-link>

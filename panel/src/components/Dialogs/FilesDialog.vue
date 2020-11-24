@@ -6,25 +6,22 @@
     @cancel="$emit('cancel')"
     @submit="submit"
   >
-
     <template v-if="issue">
       <k-box :text="issue" theme="negative" />
     </template>
 
     <template v-else>
-
       <k-input
         v-if="options.search"
+        v-model="search"
         :autofocus="true"
         :placeholder="$t('search') + ' …'"
-        v-model="search"
         type="text"
         class="k-dialog-search"
         icon="search"
       />
 
       <template v-if="models.length">
-
         <k-list>
           <k-list-item
             v-for="file in models"

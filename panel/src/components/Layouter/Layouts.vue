@@ -34,7 +34,6 @@
         icon="add"
         @click="selectLayout(rows.length)"
       />
-
     </template>
     <template v-else>
       <k-empty

@@ -10,7 +10,9 @@
       </k-headline>
 
       <k-button-group v-if="add">
-        <k-button icon="add" @click="create">{{ $t("add") }}</k-button>
+        <k-button icon="add" @click="create">
+          {{ $t("add") }}
+        </k-button>
       </k-button-group>
     </header>
 
@@ -50,12 +52,14 @@
           {{ options.empty || $t('pages.empty') }}
         </k-empty>
         <footer class="k-collection-footer">
+          <!-- eslint-disable vue/no-v-html -->
           <k-text
             v-if="help"
             theme="help"
             class="k-collection-help"
             v-html="help"
           />
+          <!-- eslint-enable vue/no-v-html -->
         </footer>
       </template>
 
@@ -67,9 +71,7 @@
       <k-page-template-dialog ref="template" @success="update" />
       <k-page-remove-dialog ref="remove" @success="update" />
     </template>
-
   </section>
-
 </template>
 
 <script>

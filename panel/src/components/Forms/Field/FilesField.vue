@@ -1,6 +1,5 @@
 <template>
   <k-field v-bind="$props" class="k-files-field">
-
     <template v-if="more && !disabled" slot="options">
       <k-button-group class="k-field-options">
         <template v-if="uploads">
@@ -14,13 +13,19 @@
               {{ btnLabel }}
             </k-button>
             <k-dropdown-content ref="picker" align="right">
-              <k-dropdown-item icon="check" @click="open">{{ $t('select') }}</k-dropdown-item>
-              <k-dropdown-item icon="upload" @click="upload">{{ $t('upload') }}</k-dropdown-item>
+              <k-dropdown-item icon="check" @click="open">
+                {{ $t('select') }}
+              </k-dropdown-item>
+              <k-dropdown-item icon="upload" @click="upload">
+                {{ $t('upload') }}
+              </k-dropdown-item>
             </k-dropdown-content>
           </k-dropdown>
         </template>
         <template v-else>
-          <k-button icon="add" class="k-field-options-button" @click="open">{{ $t('add') }}</k-button>
+          <k-button icon="add" class="k-field-options-button" @click="open">
+            {{ $t('add') }}
+          </k-button>
         </template>
       </k-button-group>
     </template>
@@ -35,8 +40,8 @@
         @end="onInput"
       >
         <component
-          v-for="(file, index) in selected"
           :is="elements.item"
+          v-for="(file, index) in selected"
           :key="file.id"
           :sortable="!disabled && selected.length > 1"
           :text="file.text"
@@ -67,7 +72,6 @@
 
     <k-files-dialog ref="selector" @submit="select" />
     <k-upload ref="fileUpload" @success="selectUpload" />
-
   </k-field>
 </template>
 

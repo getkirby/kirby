@@ -21,8 +21,12 @@
         <k-headline>{{ $t("upload.errors") }}</k-headline>
         <ul class="k-upload-error-list">
           <li v-for="(error, index) in errors" :key="'error-' + index">
-            <p class="k-upload-error-filename">{{ error.file.name }}</p>
-            <p class="k-upload-error-message">{{ error.message }}</p>
+            <p class="k-upload-error-filename">
+              {{ error.file.name }}
+            </p>
+            <p class="k-upload-error-message">
+              {{ error.message }}
+            </p>
           </li>
         </ul>
       </template>
@@ -30,8 +34,10 @@
         <k-headline>{{ $t("upload.progress") }}</k-headline>
         <ul class="k-upload-list">
           <li v-for="(file, index) in files" :key="'file-' + index">
-            <k-progress :ref="file.name"/>
-            <p class="k-upload-list-filename">{{ file.name }}</p>
+            <k-progress :ref="file.name" />
+            <p class="k-upload-list-filename">
+              {{ file.name }}
+            </p>
             <p>{{ errors[file.name] }}</p>
           </li>
         </ul>
@@ -46,7 +52,6 @@
         </template>
       </template>
     </k-dialog>
-
   </div>
 </template>
 

@@ -4,12 +4,14 @@
       {{ label }}
     </k-headline>
     <footer v-if="help" class="k-field-footer">
+      <!-- eslint-disable vue/no-v-html -->
       <k-text
         v-if="help"
         theme="help"
         class="k-field-help"
         v-html="help"
       />
+      <!-- eslint-enable vue/no-v-html -->
     </footer>
   </div>
 </template>

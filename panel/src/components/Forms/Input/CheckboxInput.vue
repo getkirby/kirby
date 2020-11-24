@@ -1,10 +1,10 @@
 <template>
   <label class="k-checkbox-input" @click.stop>
     <input
+      :id="id"
       ref="input"
       :checked="value"
       :disabled="disabled"
-      :id="id"
       class="k-checkbox-input-native"
       type="checkbox"
       @change="onChange($event.target.checked)"
@@ -24,7 +24,7 @@
         />
       </svg>
     </span>
-    <span class="k-checkbox-input-label" v-html="label" />
+    <span class="k-checkbox-input-label" v-text="label" />
   </label>
 </template>
 

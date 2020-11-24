@@ -1,7 +1,7 @@
 <template>
   <component
-    ref="button"
     :is="component"
+    ref="button"
     v-bind="$props"
     v-on="$listeners"
   >

@@ -14,8 +14,8 @@
       <template v-for="(section, sectionIndex) in column.sections">
         <template v-if="meetsCondition(section)">
           <component
-            v-if="exists(section.type)"
             :is="'k-' + section.type + '-section'"
+            v-if="exists(section.type)"
             :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex + '-' + blueprint"
             :name="section.name"
             :parent="parent"

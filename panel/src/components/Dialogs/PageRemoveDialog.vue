@@ -6,18 +6,21 @@
     @close="reset"
   >
     <template v-if="page.hasChildren || page.hasDrafts">
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <k-text v-html="$t('page.delete.confirm', { title: page.title })" />
       <div class="k-page-remove-warning">
+        <!-- eslint-disable-next-line vue/no-v-html -->
         <k-box theme="negative" v-html="$t('page.delete.confirm.subpages')" />
       </div>
       <k-form
         v-if="hasSubpages"
-        :fields="fields"
         v-model="model"
+        :fields="fields"
         @submit="submit"
       />
     </template>
     <template v-else>
+      <!-- eslint-disable-next-line vue/no-v-html -->
       <k-text @keydown.enter="submit" v-html="$t('page.delete.confirm', { title: page.title })" />
     </template>
   </k-remove-dialog>

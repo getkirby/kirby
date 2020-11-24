@@ -10,8 +10,7 @@
       @sort="save"
     >
       <k-block
-        v-for="(block, index) in blocks"
-        v-if="fieldsets[block.type]"
+        v-for="(block, index) in availableBlocks"
         :ref="'block-' + block.id"
         :key="block.id"
         :endpoints="endpoints"
@@ -69,7 +68,6 @@
       :text="$t('field.blocks.delete.confirm.selected')"
       @submit="removeSelected"
     />
-
   </div>
 </template>
 
@@ -103,6 +101,9 @@ export default {
     };
   },
   computed: {
+    availableBlocks() {
+      return this.blocks.filter(block => this.fieldsets[block.type]);
+    },
     draggableOptions() {
       return {
         id: this._uid,

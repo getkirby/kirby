@@ -12,8 +12,8 @@
     <k-form ref="form" @submit="submit">
       <k-text-field
         ref="title"
-        v-bind="fields.title"
         v-model="title"
+        v-bind="fields.title"
       />
       <k-text-field
         ref="slug"

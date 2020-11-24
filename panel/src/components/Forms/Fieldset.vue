@@ -9,8 +9,8 @@
         >
           <k-error-boundary>
             <component
-              v-if="hasFieldType(field.type)"
               :is="'k-' + field.type + '-field'"
+              v-if="hasFieldType(field.type)"
               :ref="fieldName"
               v-model="value[fieldName]"
               :name="fieldName"

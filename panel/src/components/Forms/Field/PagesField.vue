@@ -20,8 +20,8 @@
         @end="onInput"
       >
         <component
-          v-for="(page, index) in selected"
           :is="elements.item"
+          v-for="(page, index) in selected"
           :key="page.id"
           :sortable="!disabled && selected.length > 1"
           :text="page.text"

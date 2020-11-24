@@ -6,7 +6,9 @@
     class="k-block-selector"
     size="medium"
   >
-    <k-headline v-if="headline">{{ headline }}</k-headline>
+    <k-headline v-if="headline">
+      {{ headline }}
+    </k-headline>
     <details
       v-for="(group, groupName) in groups"
       :key="groupName"
@@ -28,7 +30,6 @@
         </k-button>
       </div>
     </details>
-
   </k-dialog>
 </template>
 

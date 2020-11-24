@@ -39,7 +39,6 @@
     />
 
     <k-site-rename-dialog ref="rename" @success="fetch" />
-
   </k-view>
 </template>
 

@@ -36,7 +36,9 @@
           <li>
             <h3>{{ $t("url") }}</h3>
             <p>
-              <k-link :to="file.url" tabindex="-1" target="_blank">/{{ file.id }}</k-link>
+              <k-link :to="file.url" tabindex="-1" target="_blank">
+                /{{ file.id }}
+              </k-link>
             </p>
           </li>
           <li>
@@ -48,14 +50,18 @@
             <p v-if="file.dimensions && (file.dimensions.width || file.dimensions.height)">
               {{ file.dimensions.width }}&times;{{ file.dimensions.height }} {{ $t("pixel") }}
             </p>
-            <p v-else>—</p>
+            <p v-else>
+              —
+            </p>
           </li>
           <li>
             <h3>{{ $t("orientation") }}</h3>
             <p v-if="file.dimensions && file.dimensions.orientation">
               {{ $t("orientation." + file.dimensions.orientation) }}
             </p>
-            <p v-else>—</p>
+            <p v-else>
+              —
+            </p>
           </li>
         </ul>
       </div>

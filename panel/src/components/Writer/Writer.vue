@@ -24,7 +24,6 @@
         @close="editor.focus()"
         @submit="editor.command('toggleLink', $event)"
       />
-
     </template>
   </div>
 </template>

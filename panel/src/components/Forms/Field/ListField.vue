@@ -6,8 +6,8 @@
     class="k-list-field"
   >
     <k-input
-      ref="input"
       :id="_uid"
+      ref="input"
       :marks="marks"
       :value="value"
       type="list"

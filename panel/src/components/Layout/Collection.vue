@@ -10,10 +10,10 @@
       @end="onEnd"
     >
       <component
-        v-for="(item, index) in items"
         :is="elements.item"
-        :class="{'k-draggable-item': item.sortable}"
+        v-for="(item, index) in items"
         :key="index"
+        :class="{'k-draggable-item': item.sortable}"
         v-bind="item"
         @action="$emit('action', item, $event)"
         @dragstart="onDragStart($event, item.dragText)"
@@ -21,12 +21,14 @@
     </k-draggable>
 
     <footer v-if="hasFooter" class="k-collection-footer">
+      <!-- eslint-disable vue/no-v-html -->
       <k-text
         v-if="help"
         theme="help"
         class="k-collection-help"
         v-html="help"
       />
+      <!-- eslint-enable vue/no-v-html -->
       <div class="k-collection-pagination">
         <k-pagination
           v-if="hasPagination"
@@ -36,7 +38,6 @@
       </div>
     </footer>
   </div>
-
 </template>
 
 <script>
