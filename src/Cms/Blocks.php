@@ -113,7 +113,7 @@ class Blocks extends Items
                     $input = $yaml;
 
                 // try to import HTML instead
-                } else if (empty($input) === false) {
+                } elseif (empty($input) === false) {
                     $parser = new Parsley((string)$input, new BlockSchema());
                     $input  = $parser->blocks();
                 }
