@@ -1,15 +1,13 @@
 describe('UsersView', () => {
 
-  const host = 'http://localhost:8080';
-
   before(() => {
-    cy.visit(host + '/env/install/roles');
-    cy.visit(host + '/env/user/test');
+    cy.visit('/env/install/roles');
+    cy.visit('/env/user/test');
   });
 
   beforeEach(() => {
-    cy.visit(host + '/env/auth/test');
-    cy.visit(host + '/users');
+    cy.visit('/env/auth/test');
+    cy.visit('/users');
     cy.get('.k-users-view .k-collection').as('users');
   });
 
