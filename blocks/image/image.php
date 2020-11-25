@@ -1,5 +1,5 @@
 <?php if ($image = $block->image()->toFile()): ?>
-<figure<?= attr(['class' => $block->class(), 'data-ratio' => $block->ratio(), 'data-crop' => $block->crop()->isTrue()], ' ') ?>>
+<figure<?= attr(['data-ratio' => $block->ratio(), 'data-crop' => $block->crop()->isTrue()], ' ') ?>>
   <?php if ($block->link()->isNotEmpty()): ?>
   <a href="<?= $block->link()->toUrl() ?>">
     <img src="<?= $image->url() ?>" alt="<?= $block->alt()->or($image->alt()) ?>">

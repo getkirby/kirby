@@ -1,1 +1,1 @@
-<p><?= $block->text() ?></p>
+<?= $block->text() ?>
