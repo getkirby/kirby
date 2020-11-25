@@ -70,7 +70,7 @@ class BlocksTest extends TestCase
             ],
         ]);
 
-        $expected = "<h2>Hello world</h2>\n<p>Nice blocks</p>\n";
+        $expected = "<h2>Hello world</h2>\nNice blocks";
 
         $this->assertSame($expected, $blocks->toHtml());
     }
