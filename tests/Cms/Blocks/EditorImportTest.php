@@ -12,6 +12,30 @@ class EditorImportTest extends TestCase
         $this->import = Data::read(__DIR__ . '/fixtures/editor.json');
     }
 
+    public function testImportExternalImage()
+    {
+        $blocks = [
+            [
+                'attrs' => [
+                    'src' => $src = 'https://www.external.com/external.jpg',
+                    'alt' => '',
+                    'link' => null,
+                    'caption' => 'Test caption',
+                    'ratio' => 1.041860465116279
+                ],
+                'content' => '',
+                'id' => '_v9mBq4Hg0',
+                'type' => 'image'
+            ]
+        ];
+
+        $blocks = BlockConverter::editorBlocks($blocks);
+        $block  = $blocks[0];
+
+        $this->assertSame('web', $block['content']['location']);
+        $this->assertSame($src, $block['content']['src']);
+    }
+
     public function testImportList()
     {
         $blocks = [

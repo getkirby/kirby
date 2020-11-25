@@ -81,6 +81,8 @@ class BlockConverter
                     $listStart = null;
                     $list = [];
                 }
+            } else {
+                $blocks[$index] = static::editorBlock($block);
             }
         }
 
@@ -151,12 +153,27 @@ class BlockConverter
 
     public static function editorImage(array $params)
     {
+        // internal image
+        if (isset($params['attrs']['id']) === true) {
+            return [
+                'content' => [
+                    'alt'      => $params['attrs']['alt'] ?? null,
+                    'caption'  => $params['attrs']['caption'] ?? null,
+                    'image'    => $params['attrs']['id'] ?? $params['attrs']['src'] ?? null,
+                    'location' => 'kirby',
+                    'ratio'    => $params['attrs']['ratio'] ?? null,
+                ],
+                'type' => 'image'
+            ];
+        }
+
         return [
             'content' => [
-                'alt'     => $params['attrs']['alt'] ?? null,
-                'caption' => $params['attrs']['caption'] ?? null,
-                'image'   => $params['attrs']['id'] ?? $params['attrs']['src'] ?? null,
-                'ratio'   => $params['attrs']['ratio'] ?? null,
+                'alt'      => $params['attrs']['alt'] ?? null,
+                'caption'  => $params['attrs']['caption'] ?? null,
+                'src'      => $params['attrs']['src'] ?? null,
+                'location' => 'web',
+                'ratio'    => $params['attrs']['ratio'] ?? null,
             ],
             'type' => 'image'
         ];
