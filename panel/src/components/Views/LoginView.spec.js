@@ -1,14 +1,12 @@
 describe('LoginView', () => {
 
-  const host = 'http://localhost:8080';
-
   before(() => {
-    cy.visit(host + '/env/install/minimal');
-    cy.visit(host + '/env/user/test');
+    cy.visit('/env/install/minimal');
+    cy.visit('/env/user/test');
   });
 
   beforeEach(() => {
-    cy.visit(host);
+    cy.visit('/');
   });
 
   it('should fail', () => {

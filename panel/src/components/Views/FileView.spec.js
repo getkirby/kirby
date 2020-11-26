@@ -4,18 +4,16 @@ const dialog = () => {
 
 describe('FileView', () => {
 
-  const host = 'http://localhost:8080';
-
   beforeEach(() => {
-    cy.visit(host + '/env/install/starterkit');
-    cy.visit(host + '/env/user/test');
-    cy.visit(host + '/env/auth/test');
+    cy.visit('/env/install/starterkit');
+    cy.visit('/env/user/test');
+    cy.visit('/env/auth/test');
   });
 
   describe('Page File', () => {
 
     beforeEach(() => {
-      cy.visit(host + '/pages/photography+trees/files/cheesy-autumn.jpg');
+      cy.visit('/pages/photography+trees/files/cheesy-autumn.jpg');
     });
 
     it('should display correctly', () => {
@@ -48,7 +46,7 @@ describe('FileView', () => {
       cy.get('.k-header [data-position="left"] > .k-button-group > :nth-child(1)').as('preview');
 
       cy.get('@preview').should('have.attr', 'target', '_blank');
-      cy.get('@preview').invoke('attr', 'href').should('contain', 'http://sandbox.test/media/pages/photography/trees');
+      cy.get('@preview').invoke('attr', 'href').should('contain', Cypress.env('host') + '/media/pages/photography/trees');
     });
 
     it('should be renamed', () => {
@@ -68,7 +66,7 @@ describe('FileView', () => {
       cy.get('.k-header [data-position=left] .k-dropdown-content .k-button:last-child').click();
 
       dialog().find('.k-dialog-button-submit').click();
-      cy.url().should('eq', host + '/pages/photography+trees');
+      cy.url().should('eq', Cypress.config().baseUrl + '/pages/photography+trees');
     });
 
   });

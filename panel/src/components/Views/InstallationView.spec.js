@@ -1,13 +1,11 @@
 describe('InstallationView', () => {
 
-  const host = 'http://localhost:8080';
-
   before(() => {
-    cy.visit(host + '/env/install/minimal');
+    cy.visit('/env/install/minimal');
   });
 
   beforeEach(() => {
-    cy.visit(host);
+    cy.visit('/');
   });
 
   it('should fail', () => {

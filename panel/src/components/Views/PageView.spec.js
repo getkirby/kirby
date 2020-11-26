@@ -4,21 +4,19 @@ const dialog = () => {
 
 describe('PageView', () => {
 
-  const host = 'http://localhost:8080';
-
   before(() => {
-    cy.visit(host + '/env/install/starterkit');
-    cy.visit(host + '/env/user/test');
+    cy.visit('/env/install/starterkit');
+    cy.visit('/env/user/test');
   });
 
   beforeEach(() => {
-    cy.visit(host + '/env/auth/test');
+    cy.visit('/env/auth/test');
   });
 
   describe('Photography', () => {
 
     beforeEach(() => {
-      cy.visit(host + '/pages/photography');
+      cy.visit('/pages/photography');
       cy.get('.k-section-name-drafts').as('drafts');
       cy.get('.k-section-name-listed').as('listed');
     });
@@ -31,7 +29,7 @@ describe('PageView', () => {
       // Buttons
       cy.get('.k-header-buttons .k-button-group:first-child .k-button:first-child').as('button')
       cy.get('@button').should('have.attr', 'target', '_blank');
-      cy.get('@button').should('have.attr', 'href', 'http://sandbox.test/photography');
+      cy.get('@button').should('have.attr', 'href', Cypress.env('host') + '/photography');
 
       cy.get('.k-header-buttons .k-button-group:first-child .k-status-icon').should('contain', 'Public');
 
