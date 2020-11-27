@@ -56,14 +56,8 @@ class Cookie
         $_COOKIE[$key] = $value;
 
         // store the cookie
-        // the array syntax is only supported by PHP 7.3+
-        // TODO: Always use the first alternative when support for PHP 7.2 is dropped
-        if (version_compare(PHP_VERSION, '7.3.0', '>=') === true) {
-            $options = compact('expires', 'path', 'domain', 'secure', 'httponly', 'samesite');
-            return setcookie($key, $value, $options);
-        } else {
-            return setcookie($key, $value, $expires, $path, $domain, $secure, $httponly);
-        }
+        $options = compact('expires', 'path', 'domain', 'secure', 'httponly', 'samesite');
+        return setcookie($key, $value, $options);
     }
 
     /**
