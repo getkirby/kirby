@@ -48,6 +48,7 @@
     "zip": "composer archive --format=zip --file=dist"
   },
   "config": {
-    "optimize-autoloader": true
+    "optimize-autoloader": true,
+    "platform-check": false
   }
 }
