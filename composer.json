@@ -20,17 +20,17 @@
     "source": "https://github.com/getkirby/kirby"
   },
   "require": {
-    "php": ">=7.2.0 <7.5.0",
+    "php": ">=7.3.0 <7.5.0",
     "ext-mbstring": "*",
     "ext-ctype": "*",
     "getkirby/composer-installer": "^1.2.0",
     "mustangostang/spyc": "0.6.3",
     "michelf/php-smartypants": "1.8.1",
-    "claviska/simpleimage": "3.3.4",
-    "phpmailer/phpmailer": "6.1.6",
-    "filp/whoops": "2.7.2",
+    "claviska/simpleimage": "3.5.1",
+    "phpmailer/phpmailer": "6.2.0",
+    "filp/whoops": "2.9.1",
     "true/punycode": "2.1.1",
-    "laminas/laminas-escaper": "2.6.1"
+    "laminas/laminas-escaper": "2.7.0"
   },
   "autoload": {
     "files": ["config/setup.php"],
