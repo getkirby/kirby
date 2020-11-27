@@ -6,7 +6,7 @@
     @open="$emit('open')"
   >
     <div class="k-drawer" @mousedown="click = true" @mouseup="mouseup">
-      <div class="k-drawer-box" @mousedown.stop="click = false" @mouseup.stop="click = false">
+      <div class="k-drawer-box" @mousedown.stop="click = false">
         <header class="k-drawer-header">
           <k-icon :type="icon" class="k-drawer-icon" />
           <slot name="title">
