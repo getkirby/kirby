@@ -6,8 +6,8 @@
   "change": "\u00c4ndra",
   "close": "St\u00e4ng",
   "confirm": "Spara",
-  "collapse": "Collapse",
-  "collapse.all": "Collapse All",
+  "collapse": "Kollapsa",
+  "collapse.all": "Kollapsa alla",
   "copy": "Kopiera",
   "create": "Skapa",
 
@@ -31,8 +31,8 @@
   "download": "Ladda ner",
   "duplicate": "Duplicera",
   "edit": "Redigera",
-  "expand": "Expand",
-  "expand.all": "Expand All",
+  "expand": "Expandera",
+  "expand.all": "Expandera alla",
 
   "dialog.files.empty": "Inga filer att välja",
   "dialog.pages.empty": "Inga sidor att välja",
@@ -41,7 +41,7 @@
   "email": "E-postadress",
   "email.placeholder": "namn@exempel.se",
 
-  "error.access.code": "Invalid code",
+  "error.access.code": "Ogiltig kod",
   "error.access.login": "Ogiltig inloggning",
   "error.access.panel": "Du saknar behörighet att nå panelen",
   "error.access.view": "Du saknar behörighet att nå denna del av panelen",
@@ -223,7 +223,7 @@
   "field.blocks.image.caption": "Rubrik",
   "field.blocks.image.crop": "Beskär",
   "field.blocks.image.link": "Länk",
-  "field.blocks.image.location": "Location",
+  "field.blocks.image.location": "Plats",
   "field.blocks.image.name": "Bild",
   "field.blocks.image.placeholder": "Välj en bild",
   "field.blocks.image.ratio": "Bildförhållande",
@@ -256,7 +256,7 @@
   "field.structure.empty": "Inga poster än",
   "field.users.empty": "Inga användare valda än",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "Denna fil har ingen blueprint än. Du kan skapa en i <strong>/site/blueprints/{template}.yml</strong>",
   "file.delete.confirm": "Vill du verkligen radera <br><strong>{filename}</strong>?",
   "file.sort": "Ändra position",
 
@@ -326,20 +326,20 @@
   "lock.isUnlocked": "Dina osparade ändringar har skrivits över av en annan användare. Du kan ladda ner dina ändringar för att slå ihop dem manuellt.",
 
   "login": "Logga in",
-  "login.code.label.login": "Login code",
-  "login.code.label.password-reset": "Password reset code",
+  "login.code.label.login": "Inloggningskod",
+  "login.code.label.password-reset": "Kod för återställning av lösenord",
   "login.code.placeholder.email": "000 000",
-  "login.code.text.email": "If your email address is registered, the requested code was sent via email.",
-  "login.email.login.body": "Hi {user.nameOrEmail},\n\nYou recently requested a login code for the Kirby Panel.\nThe following login code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a login code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
-  "login.email.login.subject": "Your login code",
-  "login.email.password-reset.body": "Hi {user.nameOrEmail},\n\nYou recently requested a password reset code for the Kirby Panel.\nThe following password reset code will be valid for {timeout} minutes:\n\n{code}\n\nIf you did not request a password reset code, please ignore this email or contact your administrator if you have questions.\nFor security, please DO NOT forward this email.",
-  "login.email.password-reset.subject": "Your password reset code",
+  "login.code.text.email": "Om din e-postadress är registrerad skickades den begärda koden via e-post.",
+  "login.email.login.body": "Hej {user.nameOrEmail},\n\nDu begärde nyligen en inloggningskod för Kirby-panelen.\nFöljande kod är giltig i {timeout} minuter:\n\n{code}\n\nOm du inte har begärt en inloggningskod kan du ignorera det här e-postmeddelandet eller kontakta din administratör om du har frågor.\nAv säkerhetsskäl ska du INTE vidarebefordra detta e-postmeddelande.",
+  "login.email.login.subject": "Din inloggningskod",
+  "login.email.password-reset.body": "Hej {user.nameOrEmail},\n\nDu begärde nyligen en kod för återställning av lösenordet för Kirby-panelen.\nFöljande kod är giltig i {timeout} minuter:\n\n{code}\n\nOm du inte har begärt en återställning av lösenordet, ignorera detta e-postmeddelande eller kontakta din administratör om du har frågor.\nAv säkerhetsskäl ska du INTE vidarebefordra detta e-postmeddelande.",
+  "login.email.password-reset.subject": "Din kod för återställning av lösenord",
   "login.remember": "Håll mig inloggad",
   "login.reset": "Återställ lösenord",
-  "login.toggleText.code.email": "Login via email",
-  "login.toggleText.code.email-password": "Login with password",
-  "login.toggleText.password-reset.email": "Forgot your password?",
-  "login.toggleText.password-reset.email-password": "← Back to login",
+  "login.toggleText.code.email": "Logga in via e-post",
+  "login.toggleText.code.email-password": "Logga in med lösenord",
+  "login.toggleText.password-reset.email": "Glömt ditt lösenord?",
+  "login.toggleText.password-reset.email-password": "← Tillbaka till inloggning",
 
   "logout": "Logga ut",
 
@@ -376,7 +376,7 @@
   "orientation.portrait": "Stående",
   "orientation.square": "Kvadrat",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "Denna sida har ingen blueprint än. Du kan skapa en i <strong>/site/blueprints/{template}.yml</strong>",
   "page.changeSlug": "Ändra URL",
   "page.changeSlug.fromTitle": "Skapa utifr\u00e5n titel",
   "page.changeStatus": "Ändra status",
@@ -445,7 +445,7 @@
   "template": "Mall",
   "today": "Idag",
 
-  "site.blueprint": "The site has no blueprint yet. You can define the setup in <strong>/site/blueprints/site.yml</strong>",
+  "site.blueprint": "Webbplatsen har ingen blueprint än. Du kan skapa en i <strong>/site/blueprints/site.yml</strong>",
 
   "toolbar.button.code": "Kod",
   "toolbar.button.bold": "Fet",
