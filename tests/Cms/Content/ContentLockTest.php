@@ -132,7 +132,7 @@ class ContentLockTest extends TestCase
 
         $app->users()->remove($app->user('test@getkirby.com'));
         $data = $page->lock()->get();
-        $this->assertFileNotExists($this->fixtures . '/content/test/.lock');
+        $this->assertFileDoesNotExist($this->fixtures . '/content/test/.lock');
         $this->assertFalse($data);
     }
 

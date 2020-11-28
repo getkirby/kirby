@@ -91,7 +91,7 @@ class AuthProtectionTest extends TestCase
             'by-ip'    => [],
             'by-email' => []
         ], $this->auth->log());
-        $this->assertFileNotExists($this->fixtures . '/site/accounts/.logins');
+        $this->assertFileDoesNotExist($this->fixtures . '/site/accounts/.logins');
 
         // should handle invalid .logins file
         file_put_contents($this->fixtures . '/site/accounts/.logins', 'some gibberish');
@@ -99,7 +99,7 @@ class AuthProtectionTest extends TestCase
             'by-ip'    => [],
             'by-email' => []
         ], $this->auth->log());
-        $this->assertFileNotExists($this->fixtures . '/site/accounts/.logins');
+        $this->assertFileDoesNotExist($this->fixtures . '/site/accounts/.logins');
     }
 
     /**

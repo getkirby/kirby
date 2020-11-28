@@ -35,13 +35,13 @@ class SqlTest extends TestCase
     public function testBindingName()
     {
         $result = $this->sql->bindingName('test_binding1');
-        $this->assertRegexp('/^:test_binding1_[a-zA-Z0-9]{8}$/', $result);
+        $this->assertMatchesRegularExpression('/^:test_binding1_[a-zA-Z0-9]{8}$/', $result);
 
         $result = $this->sql->bindingName('"; inject something');
-        $this->assertRegexp('/^:invalid_[a-zA-Z0-9]{8}$/', $result);
+        $this->assertMatchesRegularExpression('/^:invalid_[a-zA-Z0-9]{8}$/', $result);
 
         $result = $this->sql->bindingName('');
-        $this->assertRegexp('/^:invalid_[a-zA-Z0-9]{8}$/', $result);
+        $this->assertMatchesRegularExpression('/^:invalid_[a-zA-Z0-9]{8}$/', $result);
     }
 
     /**
@@ -55,7 +55,7 @@ class SqlTest extends TestCase
         ], $this->sql->columnDefault('test_col', []));
 
         $result = $this->sql->columnDefault('test_col', ['default' => 'amazing default']);
-        $this->assertRegexp('/^DEFAULT :test_col_default_[a-zA-Z0-9]{8}$/', $result['query']);
+        $this->assertMatchesRegularExpression('/^DEFAULT :test_col_default_[a-zA-Z0-9]{8}$/', $result['query']);
         $this->assertSame('amazing default', A::first($result['bindings']));
     }
 
@@ -245,7 +245,7 @@ class SqlTest extends TestCase
             'test'    => ['type' => 'varchar', 'default' => 'test default'],
             'another' => ['type' => 'varchar', 'default' => 'another default']
         ]);
-        $this->assertRegExp('/^`test` varchar\(255\) NULL DEFAULT :(.*?),' . PHP_EOL . '`another` varchar\(255\) NULL DEFAULT :(.*)$/m', $inner['query']);
+        $this->assertMatchesRegularExpression('/^`test` varchar\(255\) NULL DEFAULT :(.*?),' . PHP_EOL . '`another` varchar\(255\) NULL DEFAULT :(.*)$/m', $inner['query']);
         $this->assertSame(2, count($inner['bindings']));
         $this->assertSame('test default', A::first($inner['bindings']));
         $this->assertSame('another default', A::last($inner['bindings']));
@@ -304,7 +304,7 @@ class SqlTest extends TestCase
             'test'    => ['type' => 'varchar', 'default' => 'test default'],
             'another' => ['type' => 'varchar', 'default' => 'another default']
         ]);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/^CREATE TABLE `table` \(' . PHP_EOL .
             '`test` varchar\(255\) NULL DEFAULT :(.*?),' . PHP_EOL .
             '`another` varchar\(255\) NULL DEFAULT :(.*)' . PHP_EOL .

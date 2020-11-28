@@ -295,8 +295,8 @@ class FileActionsTest extends TestCase
 
         $this->assertTrue($result);
 
-        $this->assertFileNotExists($file->root());
-        $this->assertFileNotExists($file->contentFile());
+        $this->assertFileDoesNotExist($file->root());
+        $this->assertFileDoesNotExist($file->contentFile());
     }
 
     /**
@@ -307,7 +307,7 @@ class FileActionsTest extends TestCase
         // create an empty dummy file
         F::write($file->root(), '');
 
-        $this->assertFileNotExists($file->mediaRoot());
+        $this->assertFileDoesNotExist($file->mediaRoot());
 
         $file->publish();
 
@@ -348,7 +348,7 @@ class FileActionsTest extends TestCase
         F::write($file->root(), '');
 
         $this->assertFileExists($file->root());
-        $this->assertFileNotExists($file->contentFile());
+        $this->assertFileDoesNotExist($file->contentFile());
 
         $file = $file->clone(['content' => ['caption' => 'save']])->save();
 
@@ -363,11 +363,11 @@ class FileActionsTest extends TestCase
         // create an empty dummy file
         F::write($file->root(), '');
 
-        $this->assertFileNotExists($file->mediaRoot());
+        $this->assertFileDoesNotExist($file->mediaRoot());
         $file->publish();
         $this->assertFileExists($file->mediaRoot());
         $file->unpublish();
-        $this->assertFileNotExists($file->mediaRoot());
+        $this->assertFileDoesNotExist($file->mediaRoot());
     }
 
     /**
@@ -468,7 +468,7 @@ class FileActionsTest extends TestCase
                 },
                 'file.delete:after' => function ($status, File $file) use ($phpunit, &$calls) {
                     $phpunit->assertTrue($status);
-                    $phpunit->assertFileNotExists($file->root());
+                    $phpunit->assertFileDoesNotExist($file->root());
                     $phpunit->assertSame('test.md', $file->filename());
                     $calls++;
                 }
@@ -504,7 +504,7 @@ class FileActionsTest extends TestCase
                     $phpunit->assertInstanceOf('Kirby\Image\Image', $upload);
                     $phpunit->assertSame('site.js', $file->filename());
                     $phpunit->assertSame('replace.js', $upload->filename());
-                    $phpunit->assertFileNotExists($file->root());
+                    $phpunit->assertFileDoesNotExist($file->root());
                     $calls++;
                 },
                 'file.replace:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {

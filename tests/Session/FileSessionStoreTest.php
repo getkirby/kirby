@@ -264,7 +264,7 @@ class FileSessionStoreTest extends TestCase
 
         $this->store->destroy(1234567890, 'abcdefghijabcdefghij');
 
-        $this->assertFileNotExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
+        $this->assertFileDoesNotExist($this->root . '/1234567890.abcdefghijabcdefghij.sess');
         $this->assertNotLocked('1234567890.abcdefghijabcdefghij');
         $this->assertHandleNotExists('1234567890.abcdefghijabcdefghij');
     }
@@ -325,7 +325,7 @@ class FileSessionStoreTest extends TestCase
         $this->store->collectGarbage();
 
         $this->assertFileExists($this->root . '/.gitignore');
-        $this->assertFileNotExists($this->root . '/1234567890.abcdefghijabcdefghij.sess');
+        $this->assertFileDoesNotExist($this->root . '/1234567890.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/1357913579.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/7777777777.abcdefghijabcdefghij.sess');
         $this->assertFileExists($this->root . '/8888888888.abcdefghijabcdefghij.sess');

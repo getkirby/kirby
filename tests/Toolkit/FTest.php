@@ -346,7 +346,7 @@ class FTest extends TestCase
 
         F::remove($this->fixtures . '/a.jpg');
 
-        $this->assertFileNotExists($a);
+        $this->assertFileDoesNotExist($a);
     }
 
     public function testRemoveGlob()
@@ -361,9 +361,9 @@ class FTest extends TestCase
 
         F::remove($this->fixtures . '/a*.jpg');
 
-        $this->assertFileNotExists($a);
-        $this->assertFileNotExists($b);
-        $this->assertFileNotExists($c);
+        $this->assertFileDoesNotExist($a);
+        $this->assertFileDoesNotExist($b);
+        $this->assertFileDoesNotExist($c);
     }
 
 

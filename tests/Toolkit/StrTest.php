@@ -264,17 +264,17 @@ class StrTest extends TestCase
         // choose a high length for a high probability of occurrence of a character of any type
         $length = 200;
 
-        $this->assertRegexp('/^[[:alnum:]]+$/', Str::random());
+        $this->assertMatchesRegularExpression('/^[[:alnum:]]+$/', Str::random());
         $this->assertIsString(Str::random());
         $this->assertSame($length, strlen(Str::random($length)));
 
-        $this->assertRegexp('/^[[:alpha:]]+$/', Str::random($length, 'alpha'));
+        $this->assertMatchesRegularExpression('/^[[:alpha:]]+$/', Str::random($length, 'alpha'));
 
-        $this->assertRegexp('/^[[:upper:]]+$/', Str::random($length, 'alphaUpper'));
+        $this->assertMatchesRegularExpression('/^[[:upper:]]+$/', Str::random($length, 'alphaUpper'));
 
-        $this->assertRegexp('/^[[:lower:]]+$/', Str::random($length, 'alphaLower'));
+        $this->assertMatchesRegularExpression('/^[[:lower:]]+$/', Str::random($length, 'alphaLower'));
 
-        $this->assertRegexp('/^[[:digit:]]+$/', Str::random($length, 'num'));
+        $this->assertMatchesRegularExpression('/^[[:digit:]]+$/', Str::random($length, 'num'));
 
         $this->assertFalse(Str::random($length, 'something invalid'));
     }
