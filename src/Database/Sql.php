@@ -363,7 +363,7 @@ abstract class Sql
      * @param array $input
      * @return void
      */
-    public function extend(&$query, array &$bindings = [], $input)
+    public function extend(&$query, array &$bindings, $input)
     {
         if (empty($input['query']) === false) {
             $query[]  = $input['query'];

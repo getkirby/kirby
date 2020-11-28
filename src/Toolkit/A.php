@@ -141,13 +141,13 @@ class A
      *
      * @param array $array1
      * @param array $array2
-     * @param bool $mode Behavior for elements with numeric keys;
-     *                   A::MERGE_APPEND:    elements are appended, keys are reset;
-     *                   A::MERGE_OVERWRITE: elements are overwritten, keys are preserved
-     *                   A::MERGE_REPLACE:   non-associative arrays are completely replaced
+     * @param int $mode Behavior for elements with numeric keys;
+     *                  A::MERGE_APPEND:    elements are appended, keys are reset;
+     *                  A::MERGE_OVERWRITE: elements are overwritten, keys are preserved
+     *                  A::MERGE_REPLACE:   non-associative arrays are completely replaced
      * @return array
      */
-    public static function merge($array1, $array2, $mode = A::MERGE_APPEND)
+    public static function merge($array1, $array2, int $mode = A::MERGE_APPEND)
     {
         $merged = $array1;
 
@@ -158,7 +158,7 @@ class A
         foreach ($array2 as $key => $value) {
 
             // append to the merged array, don't overwrite numeric keys
-            if (is_int($key) === true && $mode == static::MERGE_APPEND) {
+            if (is_int($key) === true && $mode === static::MERGE_APPEND) {
                 $merged[] = $value;
 
             // recursively merge the two array values
@@ -171,7 +171,7 @@ class A
             }
         }
 
-        if ($mode == static::MERGE_APPEND) {
+        if ($mode === static::MERGE_APPEND) {
             // the keys don't make sense anymore, reset them
             // array_merge() is the simplest way to renumber
             // arrays that have both numeric and string keys;
@@ -553,7 +553,7 @@ class A
      */
     public static function sort(array $array, string $field, string $direction = 'desc', $method = SORT_REGULAR): array
     {
-        $direction = strtolower($direction) == 'desc' ? SORT_DESC : SORT_ASC;
+        $direction = strtolower($direction) === 'desc' ? SORT_DESC : SORT_ASC;
         $helper    = [];
         $result    = [];
 

@@ -88,7 +88,7 @@ class Collection extends BaseCollection
     {
         if (is_a($object, static::class) === true) {
             $this->data = array_merge($this->data, $object->data);
-        } elseif (method_exists($object, 'id') === true) {
+        } elseif (is_object($object) === true && method_exists($object, 'id') === true) {
             $this->__set($object->id(), $object);
         } else {
             $this->append($object);

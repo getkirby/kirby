@@ -131,7 +131,7 @@ class CollectionTest extends TestCase
     public function testFilter()
     {
         $func = function ($element) {
-            return ($element == 'My second element') ? true : false;
+            return ($element === 'My second element') ? true : false;
         };
 
         $filtered = $this->collection->filter($func);

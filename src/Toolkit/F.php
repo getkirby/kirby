@@ -554,6 +554,10 @@ class F
      */
     public static function read(string $file)
     {
+        if (is_file($file) !== true) {
+            return false;
+        }
+
         return @file_get_contents($file);
     }
 

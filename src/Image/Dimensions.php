@@ -114,7 +114,7 @@ class Dimensions
      */
     public function fit(int $box, bool $force = false)
     {
-        if ($this->width == 0 || $this->height == 0) {
+        if ($this->width === 0 || $this->height === 0) {
             $this->width  = $box;
             $this->height = $box;
             return $this;
@@ -379,7 +379,7 @@ class Dimensions
      */
     public function square(): bool
     {
-        return $this->width == $this->height;
+        return $this->width === $this->height;
     }
 
     /**
