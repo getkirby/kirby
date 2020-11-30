@@ -159,6 +159,7 @@ class LayoutField extends BlocksField
     {
         return [
             'layout' => function ($value) {
+                $fields      = [];
                 $layoutIndex = 0;
 
                 foreach ($value as $layout) {
@@ -180,7 +181,6 @@ class LayoutField extends BlocksField
 
                     // validate blocks in the layout
                     $blockIndex = 0;
-                    $fields     = [];
 
                     foreach ($layout['columns'] ?? [] as $column) {
                         foreach ($column['blocks'] ?? [] as $block) {
