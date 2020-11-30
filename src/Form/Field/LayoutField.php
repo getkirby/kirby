@@ -6,17 +6,20 @@ use Kirby\Cms\Fieldset;
 use Kirby\Cms\Form;
 use Kirby\Cms\Layout;
 use Kirby\Cms\Layouts;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
 class LayoutField extends BlocksField
 {
     protected $layouts;
+    protected $settings;
 
     public function __construct(array $params)
     {
         $this->setModel($params['model'] ?? site());
         $this->setLayouts($params['layouts'] ?? ['1/1']);
         $this->setSettings($params['settings'] ?? []);
+
         parent::__construct($params);
     }
 
@@ -154,6 +157,62 @@ class LayoutField extends BlocksField
 
     public function validations(): array
     {
-        return [];
+        return [
+            'layout' => function ($value) {
+                $layoutIndex = 0;
+
+                foreach ($value as $layout) {
+                    $layoutIndex++;
+
+                    // validate settings form
+                    foreach ($this->attrsForm($layout['attrs'] ?? [])->fields() as $field) {
+                        $errors = $field->errors();
+
+                        if (empty($errors) === false) {
+                            throw new InvalidArgumentException([
+                                'key' => 'layout.validation.settings',
+                                'data' => [
+                                    'index' => $layoutIndex
+                                ]
+                            ]);
+                        }
+                    }
+
+                    // validate blocks in the layout
+                    $blockIndex = 0;
+                    $fields     = [];
+
+                    foreach ($layout['columns'] ?? [] as $column) {
+                        foreach ($column['blocks'] ?? [] as $block) {
+                            $blockIndex++;
+
+                            $blockType   = $block['type'];
+                            $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
+
+                            // store the fields for the next round
+                            $fields[$blockType] = $blockFields;
+
+                            // overwrite the content with the serialized form
+                            foreach ($this->form($blockFields, $block['content'])->fields() as $field) {
+                                $errors = $field->errors();
+
+                                // rough first validation
+                                if (empty($errors) === false) {
+                                    throw new InvalidArgumentException([
+                                        'key' => 'layout.validation.block',
+                                        'data' => [
+                                            'blockIndex'  => $blockIndex,
+                                            'layoutIndex' => $layoutIndex
+                                        ]
+                                    ]);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
+        ];
     }
 }

@@ -91,6 +91,9 @@
   "error.language.duplicate": "The language already exists",
   "error.language.name": "Please enter a valid name for the language",
 
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
+
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "Please enter a valid email address",
   "error.license.verification": "The license could not be verified",
