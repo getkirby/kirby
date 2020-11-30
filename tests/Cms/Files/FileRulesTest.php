@@ -190,8 +190,10 @@ class FileRulesTest extends TestCase
             ['htm', false, 'The extension "htm" is not allowed'],
             ['html', false, 'The extension "html" is not allowed'],
             ['php', false, 'The extension "php" is not allowed'],
+            ['phar', false, 'The extension "phar" is not allowed'],
             ['exe', false, 'The extension "exe" is not allowed'],
             ['php4', false, 'You are not allowed to upload PHP files'],
+            ['1phar2', false, 'You are not allowed to upload PHP files'],
         ];
     }
 
@@ -225,8 +227,10 @@ class FileRulesTest extends TestCase
             ['test.htm', 'htm', 'text/plain', false, 'The extension "htm" is not allowed'],
             ['test.html', 'html', 'text/plain', false, 'The extension "html" is not allowed'],
             ['test.php', 'php', 'text/plain', false, 'The extension "php" is not allowed'],
+            ['test.phar', 'phar', 'text/plain', false, 'The extension "phar" is not allowed'],
             ['test.exe', 'exe', 'text/plain', false, 'The extension "exe" is not allowed'],
             ['test.php4', 'php4', 'text/plain', false, 'You are not allowed to upload PHP files'],
+            ['test.1phar2', '1phar2', 'text/plain', false, 'You are not allowed to upload PHP files'],
 
             // mime
             ['test', 'jpg', '', false, 'The media type for "test" cannot be detected'],

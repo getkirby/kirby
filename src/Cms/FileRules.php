@@ -174,14 +174,14 @@ class FileRules
             ]);
         }
 
-        if (V::in($extension, ['php', 'html', 'htm', 'exe', App::instance()->contentExtension()])) {
+        if (V::in($extension, ['php', 'phar', 'html', 'htm', 'exe', App::instance()->contentExtension()])) {
             throw new InvalidArgumentException([
                 'key'  => 'file.extension.forbidden',
                 'data' => ['extension' => $extension]
             ]);
         }
 
-        if (Str::contains($extension, 'php')) {
+        if (Str::contains($extension, 'php') || Str::contains($extension, 'phar')) {
             throw new InvalidArgumentException([
                 'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'PHP']
