@@ -213,6 +213,64 @@ class FileRulesTest extends TestCase
         $this->assertTrue($result);
     }
 
+    public function fileProvider()
+    {
+        return [
+            // valid examples
+            ['test.jpg', 'jpg', 'image/jpeg', true],
+            ['abc.png', 'png', 'image/png', true],
+
+            // extension
+            ['test', '', 'text/plain', false, 'The extensions for "test" is missing'],
+            ['test.htm', 'htm', 'text/plain', false, 'The extension "htm" is not allowed'],
+            ['test.html', 'html', 'text/plain', false, 'The extension "html" is not allowed'],
+            ['test.php', 'php', 'text/plain', false, 'The extension "php" is not allowed'],
+            ['test.exe', 'exe', 'text/plain', false, 'The extension "exe" is not allowed'],
+            ['test.php4', 'php4', 'text/plain', false, 'You are not allowed to upload PHP files'],
+
+            // mime
+            ['test', 'jpg', '', false, 'The media type for "test" cannot be detected'],
+            ['test.jpg', 'jpg', 'application/php', false, 'You are not allowed to upload PHP files'],
+            ['test.jpg', 'jpg', 'text/html', false, 'The media type "text/html" is not allowed'],
+            ['test.jpg', 'jpg', 'application/x-msdownload', false, 'The media type "application/x-msdownload" is not allowed'],
+
+            // filename
+            ['', 'jpg', 'image/jpg', false, 'The filename must not be empty'],
+            ['.htaccess', 'htaccess', 'application/x-apache', false, 'You are not allowed to upload Apache config files'],
+            ['.htpasswd', 'htpasswd', 'application/x-apache', false, 'You are not allowed to upload Apache config files'],
+            ['.gitignore', 'gitignore', 'application/x-git', false, 'You are not allowed to upload invisible files'],
+
+            // rule order
+            ['.test.htm', 'htm', 'application/php', false, 'The extension "htm" is not allowed'],
+            ['.test.htm', 'jpg', 'application/php', false, 'You are not allowed to upload PHP files'],
+            ['.test.htm', 'jpg', 'text/plain', false, 'You are not allowed to upload invisible files'],
+        ];
+    }
+
+    /**
+     * @dataProvider fileProvider
+     */
+    public function testValidFile($filename, $extension, $mime, $expected, $message = null)
+    {
+        $file = $this->getMockBuilder(File::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['filename', 'extension'])
+            ->addMethods(['mime'])
+            ->getMock();
+        $file->method('filename')->willReturn($filename);
+        $file->method('extension')->willReturn($extension);
+        $file->method('mime')->willReturn($mime);
+
+        if ($expected === false) {
+            $this->expectException('Kirby\Exception\InvalidArgumentException');
+            $this->expectExceptionMessage($message);
+        }
+
+        $result = FileRules::validFile($file);
+
+        $this->assertTrue($result);
+    }
+
     public function filenameProvider()
     {
         return [

@@ -82,9 +82,7 @@ class FileRules
             throw new PermissionException('The file cannot be created');
         }
 
-        static::validExtension($file, $file->extension());
-        static::validMime($file, $upload->mime());
-        static::validFilename($file, $file->filename());
+        static::validFile($file, $upload->mime());
 
         $upload->match($file->blueprint()->accept());
 
@@ -198,6 +196,22 @@ class FileRules
         }
 
         return true;
+    }
+
+    /**
+     * Validates the extension, MIME type and filename
+     *
+     * @param \Kirby\Cms\File $file
+     * @param string|null $mime If not passed, the MIME type is detected from the file
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException If the extension, MIME type or filename is missing or forbidden
+     */
+    public static function validFile(File $file, ?string $mime = null): bool
+    {
+        return
+            static::validExtension($file, $file->extension()) &&
+            static::validMime($file, $mime ?? $file->mime()) &&
+            static::validFilename($file, $file->filename());
     }
 
     /**
