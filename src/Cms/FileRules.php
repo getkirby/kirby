@@ -222,7 +222,7 @@ class FileRules
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException If the filename is missing or forbidden
      */
-    public static function validFilename(File $file, string $filename)
+    public static function validFilename(File $file, string $filename): bool
     {
         // make it easier to compare the filename
         $filename = strtolower($filename);
@@ -261,7 +261,7 @@ class FileRules
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException If the MIME type is missing or forbidden
      */
-    public static function validMime(File $file, string $mime = null)
+    public static function validMime(File $file, string $mime = null): bool
     {
         // make it easier to compare the mime
         $mime = strtolower($mime);
