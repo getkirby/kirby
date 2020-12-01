@@ -70,6 +70,9 @@ class Media
      */
     public static function publish(File $file, string $dest): bool
     {
+        // never publish risky files (e.g. HTML, PHP or Apache config files)
+        FileRules::validFile($file);
+
         $src       = $file->root();
         $version   = dirname($dest);
         $directory = dirname($version);
