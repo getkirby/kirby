@@ -82,9 +82,7 @@ class FileRules
             throw new PermissionException('The file cannot be created');
         }
 
-        static::validExtension($file, $file->extension());
-        static::validMime($file, $upload->mime());
-        static::validFilename($file, $file->filename());
+        static::validFile($file, $upload->mime());
 
         $upload->match($file->blueprint()->accept());
 
@@ -176,14 +174,14 @@ class FileRules
             ]);
         }
 
-        if (V::in($extension, ['php', 'html', 'htm', 'exe', App::instance()->contentExtension()])) {
+        if (V::in($extension, ['php', 'phar', 'html', 'htm', 'exe', App::instance()->contentExtension()])) {
             throw new InvalidArgumentException([
                 'key'  => 'file.extension.forbidden',
                 'data' => ['extension' => $extension]
             ]);
         }
 
-        if (Str::contains($extension, 'php')) {
+        if (Str::contains($extension, 'php') || Str::contains($extension, 'phar')) {
             throw new InvalidArgumentException([
                 'key'  => 'file.type.forbidden',
                 'data' => ['type' => 'PHP']
@@ -201,6 +199,22 @@ class FileRules
     }
 
     /**
+     * Validates the extension, MIME type and filename
+     *
+     * @param \Kirby\Cms\File $file
+     * @param string|null $mime If not passed, the MIME type is detected from the file
+     * @return bool
+     * @throws \Kirby\Exception\InvalidArgumentException If the extension, MIME type or filename is missing or forbidden
+     */
+    public static function validFile(File $file, ?string $mime = null): bool
+    {
+        return
+            static::validExtension($file, $file->extension()) &&
+            static::validMime($file, $mime ?? $file->mime()) &&
+            static::validFilename($file, $file->filename());
+    }
+
+    /**
      * Validates the filename
      *
      * @param \Kirby\Cms\File $file
@@ -208,7 +222,7 @@ class FileRules
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException If the filename is missing or forbidden
      */
-    public static function validFilename(File $file, string $filename)
+    public static function validFilename(File $file, string $filename): bool
     {
         // make it easier to compare the filename
         $filename = strtolower($filename);
@@ -247,7 +261,7 @@ class FileRules
      * @return bool
      * @throws \Kirby\Exception\InvalidArgumentException If the MIME type is missing or forbidden
      */
-    public static function validMime(File $file, string $mime = null)
+    public static function validMime(File $file, string $mime = null): bool
     {
         // make it easier to compare the mime
         $mime = strtolower($mime);
