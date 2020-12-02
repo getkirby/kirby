@@ -93,7 +93,7 @@ class Route
      * @param Closure $action
      * @param array $attributes
      */
-    public function __construct($pattern, $method = 'GET', Closure $action, array $attributes = [])
+    public function __construct($pattern, $method, Closure $action, array $attributes = [])
     {
         $this->action     = $action;
         $this->attributes = $attributes;

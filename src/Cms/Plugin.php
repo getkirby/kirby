@@ -140,7 +140,7 @@ class Plugin extends Model
      */
     protected function setName(string $name)
     {
-        if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) == false) {
+        if (preg_match('!^[a-z0-9-]+\/[a-z0-9-]+$!i', $name) !== 1) {
             throw new InvalidArgumentException('The plugin name must follow the format "a-z0-9-/a-z0-9-"');
         }
 

@@ -31,7 +31,7 @@ class HtmlTest extends TestCase
 
         $html = Html::a('mailto:mail@company.com');
         $expected = '!^<a href="mailto:(.*?)">(.*?)</a>$!';
-        $this->assertRegExp($expected, $html);
+        $this->assertMatchesRegularExpression($expected, $html);
         preg_match($expected, $html, $matches);
         $this->assertSame('mail@company.com', Html::decode($matches[1]));
         $this->assertSame('mail@company.com', Html::decode($matches[2]));
@@ -53,7 +53,7 @@ class HtmlTest extends TestCase
 
         $html = Html::a('mailto:mail@company.com', 'Kirby');
         $expected = '!^<a href="mailto:(.*?)">Kirby</a>$!';
-        $this->assertRegExp($expected, $html);
+        $this->assertMatchesRegularExpression($expected, $html);
         preg_match($expected, $html, $matches);
         $this->assertSame('mail@company.com', Html::decode($matches[1]));
 
@@ -74,7 +74,7 @@ class HtmlTest extends TestCase
 
         $html = Html::a('mailto:mail@company.com', 'Kirby', ['class' => 'test']);
         $expected = '!^<a class="test" href="mailto:(.*?)">Kirby</a>$!';
-        $this->assertRegExp($expected, $html);
+        $this->assertMatchesRegularExpression($expected, $html);
         preg_match($expected, $html, $matches);
         $this->assertSame('mail@company.com', Html::decode($matches[1]));
 
@@ -166,7 +166,7 @@ class HtmlTest extends TestCase
     {
         $html = Html::email('mail@company.com?subject=Test');
         $expected = '!^<a href="mailto:(.*?)">(.*?)</a>$!';
-        $this->assertRegExp($expected, $html);
+        $this->assertMatchesRegularExpression($expected, $html);
         preg_match($expected, $html, $matches);
         $this->assertSame('mail@company.com?subject=Test', Html::decode($matches[1]));
         $this->assertSame('mail@company.com', Html::decode($matches[2]));
@@ -179,7 +179,7 @@ class HtmlTest extends TestCase
     {
         $html = Html::email('mail@company.com', '<b>Email</b>');
         $expected = '!^<a href="mailto:(.*?)">&lt;b&gt;Email&lt;/b&gt;</a>$!';
-        $this->assertRegExp($expected, $html);
+        $this->assertMatchesRegularExpression($expected, $html);
         preg_match($expected, $html, $matches);
         $this->assertSame('mail@company.com', Html::decode($matches[1]));
     }
@@ -191,7 +191,7 @@ class HtmlTest extends TestCase
     {
         $html = Html::email('mail@company.com', ['<b>Email</b>']);
         $expected = '!^<a href="mailto:(.*?)"><b>Email</b></a>$!';
-        $this->assertRegExp($expected, $html);
+        $this->assertMatchesRegularExpression($expected, $html);
         preg_match($expected, $html, $matches);
         $this->assertSame('mail@company.com', Html::decode($matches[1]));
     }
@@ -212,7 +212,7 @@ class HtmlTest extends TestCase
     {
         $html = Html::email('mail@company.com', 'Email', ['class' => 'email']);
         $expected = '!^<a class="email" href="mailto:(.*?)">Email</a>$!';
-        $this->assertRegExp($expected, $html);
+        $this->assertMatchesRegularExpression($expected, $html);
         preg_match($expected, $html, $matches);
         $this->assertSame('mail@company.com', Html::decode($matches[1]));
     }
@@ -224,7 +224,7 @@ class HtmlTest extends TestCase
     {
         $html = Html::email('mail@company.com', 'Email', ['target' => '_blank']);
         $expected = '!^<a href="mailto:(.*?)" rel="noopener noreferrer" target="_blank">Email</a>$!';
-        $this->assertRegExp($expected, $html);
+        $this->assertMatchesRegularExpression($expected, $html);
         preg_match($expected, $html, $matches);
         $this->assertSame('mail@company.com', Html::decode($matches[1]));
     }

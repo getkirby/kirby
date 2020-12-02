@@ -83,7 +83,7 @@ class SqliteTest extends TestCase
             'test'    => ['type' => 'varchar', 'default' => 'test default'],
             'another' => ['type' => 'varchar', 'default' => 'another default']
         ]);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/^CREATE TABLE "table" \(' . PHP_EOL .
             '"test" TEXT NULL DEFAULT :(.*?),' . PHP_EOL .
             '"another" TEXT NULL DEFAULT :(.*)' . PHP_EOL .

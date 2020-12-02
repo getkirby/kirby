@@ -289,7 +289,7 @@ class Str
         for ($i = 0; $i < static::length($string); $i++) {
             $char = static::substr($string, $i, 1);
             list(, $code) = unpack('N', mb_convert_encoding($char, 'UCS-4BE', 'UTF-8'));
-            $encoded .= rand(1, 2) == 1 ? '&#' . $code . ';' : '&#x' . dechex($code) . ';';
+            $encoded .= rand(1, 2) === 1 ? '&#' . $code . ';' : '&#x' . dechex($code) . ';';
         }
 
         return $encoded;
@@ -957,7 +957,7 @@ class Str
      * @param mixed $type
      * @return mixed
      */
-    public static function toType($string = null, $type)
+    public static function toType($string, $type)
     {
         if (is_string($type) === false) {
             $type = gettype($type);

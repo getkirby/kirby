@@ -140,7 +140,7 @@ trait UserActions
      * @return mixed
      * @throws \Kirby\Exception\PermissionException
      */
-    protected function commit(string $action, array $arguments = [], Closure $callback)
+    protected function commit(string $action, array $arguments, Closure $callback)
     {
         if ($this->isKirby() === true) {
             throw new PermissionException('The Kirby user cannot be changed');

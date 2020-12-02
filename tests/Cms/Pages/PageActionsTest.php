@@ -461,7 +461,7 @@ class PageActionsTest extends TestCase
         $this->assertFileExists($app->locks()->file($page));
 
         $copy = $page->duplicate('test-copy');
-        $this->assertFileNotExists($this->fixtures . $copy->root() . '/.lock');
+        $this->assertFileDoesNotExist($this->fixtures . $copy->root() . '/.lock');
     }
 
     public function testDuplicateMultiLang()
@@ -494,7 +494,7 @@ class PageActionsTest extends TestCase
 
         $copy = $page->duplicate('test-copy');
         $this->assertFileExists($copy->contentFile('en'));
-        $this->assertFileNotExists($copy->contentFile('de'));
+        $this->assertFileDoesNotExist($copy->contentFile('de'));
     }
 
     public function testChangeSlugHooks()
@@ -611,7 +611,7 @@ class PageActionsTest extends TestCase
                 'page.delete:after' => function ($status, Page $page) use ($phpunit, &$calls) {
                     $phpunit->assertTrue($status);
                     $phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
-                    $phpunit->assertFileNotExists($page->root());
+                    $phpunit->assertFileDoesNotExist($page->root());
                     $calls++;
                 }
             ]

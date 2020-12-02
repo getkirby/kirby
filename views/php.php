@@ -5,7 +5,7 @@
   </p>
   <p class="admin-advice">
     Advice for developers and administrators:<br>
-    Change the PHP version to 7.2, 7.3 or 7.4 (PHP 7.3 or 7.4 are recommended)
+    Change the PHP version to 7.3, 7.4 or 8.0 (PHP 7.4 is recommended)
   </p>
 
 <?php include __DIR__ . '/snippets/footer.php' ?>

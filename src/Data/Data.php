@@ -79,7 +79,7 @@ class Data
      * @param string $type
      * @return array
      */
-    public static function decode($string = null, string $type): array
+    public static function decode($string, string $type): array
     {
         return static::handler($type)->decode($string);
     }
@@ -91,7 +91,7 @@ class Data
      * @param string $type
      * @return string
      */
-    public static function encode($data = null, string $type): string
+    public static function encode($data, string $type): string
     {
         return static::handler($type)->encode($data);
     }

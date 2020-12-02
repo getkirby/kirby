@@ -43,7 +43,7 @@ class PluginAssetsTest extends TestCase
 
         PluginAssets::clean('test/test');
 
-        $this->assertFileNotExists($orphan);
+        $this->assertFileDoesNotExist($orphan);
     }
 
     public function testResolve()

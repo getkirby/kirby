@@ -52,7 +52,7 @@ class Collection
      * @param array $schema
      * @throws \Exception
      */
-    public function __construct(Api $api, $data = null, array $schema)
+    public function __construct(Api $api, $data, array $schema)
     {
         $this->api   = $api;
         $this->data  = $data;

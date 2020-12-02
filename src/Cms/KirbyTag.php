@@ -27,7 +27,11 @@ class KirbyTag extends \Kirby\Text\KirbyTag
     {
         $parent = $this->parent();
 
-        if (method_exists($parent, 'file') === true && $file = $parent->file($path)) {
+        if (
+            is_object($parent) === true &&
+            method_exists($parent, 'file') === true &&
+            $file = $parent->file($path)
+        ) {
             return $file;
         }
 

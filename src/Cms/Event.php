@@ -157,7 +157,7 @@ class Event
      * @param \Closure $hook
      * @return mixed
      */
-    public function call($bind = null, Closure $hook)
+    public function call(?object $bind, Closure $hook)
     {
         // collect the list of possible hook arguments
         $data = $this->arguments();

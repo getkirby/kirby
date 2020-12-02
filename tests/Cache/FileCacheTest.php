@@ -103,7 +103,7 @@ class FileCacheTest extends TestCase
         $this->assertSame($time + 600, $cache->expires('foo'));
 
         $this->assertTrue($cache->remove('foo'));
-        $this->assertFileNotExists($root . '/foo');
+        $this->assertFileDoesNotExist($root . '/foo');
         $this->assertFalse($cache->exists('foo'));
         $this->assertNull($cache->retrieve('foo'));
 
@@ -134,7 +134,7 @@ class FileCacheTest extends TestCase
         $this->assertSame($time + 600, $cache->expires('foo'));
 
         $this->assertTrue($cache->remove('foo'));
-        $this->assertFileNotExists($root . '/foo.cache');
+        $this->assertFileDoesNotExist($root . '/foo.cache');
         $this->assertFalse($cache->exists('foo'));
         $this->assertNull($cache->retrieve('foo'));
     }
@@ -173,7 +173,7 @@ class FileCacheTest extends TestCase
 
         $this->assertSame('A basic value', $cache1->retrieve('foo')->value());
         $this->assertTrue($cache1->remove('foo'));
-        $this->assertFileNotExists($root . '/test1/foo');
+        $this->assertFileDoesNotExist($root . '/test1/foo');
         $this->assertFalse($cache1->exists('foo'));
         $this->assertNull($cache1->retrieve('foo'));
         $this->assertTrue($cache2->exists('foo'));
@@ -197,9 +197,9 @@ class FileCacheTest extends TestCase
         $this->assertFileExists($root . '/c');
 
         $this->assertTrue($cache->flush());
-        $this->assertFileNotExists($root . '/a');
-        $this->assertFileNotExists($root . '/b');
-        $this->assertFileNotExists($root . '/c');
+        $this->assertFileDoesNotExist($root . '/a');
+        $this->assertFileDoesNotExist($root . '/b');
+        $this->assertFileDoesNotExist($root . '/c');
     }
 
     /**
@@ -226,8 +226,8 @@ class FileCacheTest extends TestCase
         $this->assertFileExists($root . '/test2/b');
 
         $this->assertTrue($cache1->flush());
-        $this->assertFileNotExists($root . '/test1/a');
-        $this->assertFileNotExists($root . '/test1/b');
+        $this->assertFileDoesNotExist($root . '/test1/a');
+        $this->assertFileDoesNotExist($root . '/test1/b');
         $this->assertFileExists($root . '/test2/a');
         $this->assertFileExists($root . '/test2/b');
     }

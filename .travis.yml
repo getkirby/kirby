@@ -5,6 +5,7 @@ language: php
 php:
   - 7.3
   - 7.4
+  - 8.0snapshot
 services:
   - memcached
 before_install:
@@ -16,7 +17,7 @@ install:
   - composer validate
 
   # install Composer packages, will also trigger dump-autoload
-  - composer require -n --ignore-platform-reqs "phwoolcon/ci-pecl-cacher" "phpunit/phpunit:^8" "php-coveralls/php-coveralls"
+  - composer require -n --ignore-platform-reqs "phwoolcon/ci-pecl-cacher" "phpunit/phpunit:^9" "php-coveralls/php-coveralls"
   - composer install -n --ignore-platform-reqs --no-suggest
 
   # install and cache PHP extensions

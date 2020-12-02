@@ -248,7 +248,7 @@ class UserActionsTest extends TestCase
 
         $this->assertFileExists($user->root() . '/user.txt');
         $user->delete();
-        $this->assertFileNotExists($user->root() . '/user.txt');
+        $this->assertFileDoesNotExist($user->root() . '/user.txt');
     }
 
     public function testUpdate()
