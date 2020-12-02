@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Closure;
+use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
 /**
@@ -46,9 +47,10 @@ class Fieldsets extends Items
             if ($fieldset['type'] === 'group') {
                 $result    = static::createFieldsets($fieldset['fieldsets'] ?? []);
                 $fieldsets = array_merge($fieldsets, $result['fieldsets']);
+                $label     = $fieldset['label'] ?? Str::ucfirst($type);
 
                 $groups[$type] = [
-                    'label'     => $fieldset['label'] ?? Str::ucfirst($type),
+                    'label'     => I18n::translate($label, $label),
                     'name'      => $type,
                     'open'      => $fieldset['open'] ?? true,
                     'sets'      => array_column($result['fieldsets'], 'type'),
