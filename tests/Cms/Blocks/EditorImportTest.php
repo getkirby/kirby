@@ -88,6 +88,16 @@ class EditorImportTest extends TestCase
         $this->assertEquals('php', $block->language());
     }
 
+    public function importCustom($params)
+    {
+        $block = new Block($params);
+
+        $this->assertSame('custom', $block->type());
+        $this->assertEquals('Test content', $block->body());
+        $this->assertEquals('test attribute a', $block->a());
+        $this->assertEquals('test attribute b', $block->b());
+    }
+
     public function importH1($params)
     {
         $block = new Block($params);

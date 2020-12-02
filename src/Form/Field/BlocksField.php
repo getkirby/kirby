@@ -55,6 +55,8 @@ class BlocksField extends FieldClass
 
                 $result[] = $block;
             } catch (Throwable $e) {
+                $result[] = $block;
+
                 // skip invalid blocks
                 continue;
             }
@@ -217,13 +219,17 @@ class BlocksField extends FieldClass
                 $index  = 0;
 
                 foreach ($value as $block) {
-                    $blockType   = $block['type'];
+                    $index++;
+                    $blockType = $block['type'];
+
+                    if (isset($fields[$blockType]) === false) {
+                        continue;
+                    }
+
                     $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
 
                     // store the fields for the next round
                     $fields[$blockType] = $blockFields;
-
-                    $index++;
 
                     // overwrite the content with the serialized form
                     foreach ($this->form($blockFields, $block['content'])->fields() as $field) {

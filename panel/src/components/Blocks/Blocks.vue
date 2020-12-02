@@ -10,11 +10,11 @@
       @sort="save"
     >
       <k-block
-        v-for="(block, index) in availableBlocks"
+        v-for="(block, index) in blocks"
         :ref="'block-' + block.id"
         :key="block.id"
         :endpoints="endpoints"
-        :fieldset="fieldsets[block.type]"
+        :fieldset="fieldset(block)"
         :is-batched="isBatched(block)"
         :is-last-in-batch="isLastInBatch(block)"
         :is-full="isFull"
@@ -101,9 +101,6 @@ export default {
     };
   },
   computed: {
-    availableBlocks() {
-      return this.blocks.filter(block => this.fieldsets[block.type]);
-    },
     draggableOptions() {
       return {
         id: this._uid,
@@ -271,7 +268,16 @@ export default {
       this.save();
     },
     fieldset(block) {
-      return this.fieldsets[block.type];
+      return this.fieldsets[block.type] || {
+        icon: "box",
+        name: block.type,
+        tabs: {
+          content: {
+            fields: {}
+          }
+        },
+        type: block.type,
+      };
     },
     focus(block) {
       if (this.$refs["block-" + block.id]) {

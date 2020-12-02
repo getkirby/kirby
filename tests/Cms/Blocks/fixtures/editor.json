@@ -100,5 +100,14 @@
         "content": "Kirbytext",
         "id": "_jmfdz7z7p",
         "type": "kirbytext"
+    },
+    {
+        "attrs": {
+            "a": "test attribute a",
+            "b": "test attribute b"
+        },
+        "content": "Test content",
+        "id": "_jmfdz7z7p",
+        "type": "custom"
     }
 ]

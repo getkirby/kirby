@@ -14,7 +14,11 @@
       <slot name="options" />
     </template>
     <template #default>
+      <k-box v-if="Object.keys(fields).length === 0" theme="info">
+        {{ empty }}
+      </k-box>
       <k-form
+        v-else
         ref="form"
         :autofocus="true"
         :fields="fields"
@@ -29,6 +33,12 @@
 export default {
   inheritAttrs: false,
   props: {
+    empty: {
+      type: String,
+      default() {
+        return "Missing field setup"
+      }
+    },
     icon: String,
     tabs: Object,
     title: String,

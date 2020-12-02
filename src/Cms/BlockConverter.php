@@ -28,13 +28,13 @@ class BlockConverter
         if (method_exists(static::class, $method) === true) {
             $params = static::$method($params);
         } else {
-            $params = static::editorParagraph($params);
+            $params = static::editorCustom($params);
         }
 
         return $params;
     }
 
-    public static function editorBlocks(array $blocks = [])
+    public static function editorBlocks(array $blocks = []): array
     {
         if (empty($blocks) === true) {
             return $blocks;
@@ -75,7 +75,7 @@ class BlockConverter
                     ];
 
                     for ($x = $listStart+1; $x <= $listStart + count($list); $x++) {
-                        unset($blocks[$x]);
+                        $blocks[$x] = false;
                     }
 
                     $listStart = null;
@@ -86,10 +86,10 @@ class BlockConverter
             }
         }
 
-        return $blocks;
+        return array_filter($blocks);
     }
 
-    public static function editorBlockquote($params)
+    public static function editorBlockquote(array $params): array
     {
         return [
             'content' => [
@@ -99,7 +99,7 @@ class BlockConverter
         ];
     }
 
-    public static function editorCode($params)
+    public static function editorCode(array $params): array
     {
         return [
             'content' => [
@@ -110,32 +110,45 @@ class BlockConverter
         ];
     }
 
-    public static function editorH1(array $params)
+    public static function editorCustom(array $params): array
+    {
+        return [
+            'content' => array_merge(
+                $params['attrs'] ?? [],
+                [
+                    'body' => $params['content'] ?? null
+                ]
+            ),
+            'type' => $params['type'] ?? 'unknown'
+        ];
+    }
+
+    public static function editorH1(array $params): array
     {
         return static::editorHeading($params, 'h1');
     }
 
-    public static function editorH2(array $params)
+    public static function editorH2(array $params): array
     {
         return static::editorHeading($params, 'h2');
     }
 
-    public static function editorH3(array $params)
+    public static function editorH3(array $params): array
     {
         return static::editorHeading($params, 'h3');
     }
 
-    public static function editorH4(array $params)
+    public static function editorH4(array $params): array
     {
         return static::editorHeading($params, 'h4');
     }
 
-    public static function editorH5(array $params)
+    public static function editorH5(array $params): array
     {
         return static::editorHeading($params, 'h5');
     }
 
-    public static function editorH6(array $params)
+    public static function editorH6(array $params): array
     {
         return static::editorHeading($params, 'h6');
     }
@@ -151,7 +164,7 @@ class BlockConverter
         ];
     }
 
-    public static function editorImage(array $params)
+    public static function editorImage(array $params): array
     {
         // internal image
         if (isset($params['attrs']['id']) === true) {
@@ -179,7 +192,7 @@ class BlockConverter
         ];
     }
 
-    public static function editorKirbytext($params)
+    public static function editorKirbytext(array $params): array
     {
         return [
             'content' => [
@@ -189,7 +202,7 @@ class BlockConverter
         ];
     }
 
-    public static function editorOl($params)
+    public static function editorOl(array $params): array
     {
         return [
             'content' => [
@@ -199,7 +212,7 @@ class BlockConverter
         ];
     }
 
-    public static function editorParagraph($params)
+    public static function editorParagraph(array $params): array
     {
         return [
             'content' => [
@@ -209,7 +222,7 @@ class BlockConverter
         ];
     }
 
-    public static function editorUl($params)
+    public static function editorUl(array $params): array
     {
         return [
             'content' => [
@@ -219,7 +232,7 @@ class BlockConverter
         ];
     }
 
-    public static function editorVideo($params)
+    public static function editorVideo(array $params): array
     {
         return [
             'content' => [
