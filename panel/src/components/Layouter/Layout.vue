@@ -21,6 +21,14 @@
       />
     </k-grid>
     <nav class="k-layout-toolbar">
+      <k-button
+        v-if="settings"
+        :tooltip="$t('settings')"
+        class="k-layout-toolbar-button"
+        icon="settings"
+        @click="$refs.drawer.open()"
+      />
+
       <k-dropdown>
         <k-button class="k-layout-toolbar-button" icon="angle-down" @click="$refs.options.toggle()" />
         <k-dropdown-content ref="options" align="right">
@@ -53,7 +61,7 @@
       :title="$t('settings')"
       :value="attrs"
       class="k-layout-drawer"
-      icon="dashboard"
+      icon="settings"
       @input="$emit('updateAttrs', $event)"
     />
 
