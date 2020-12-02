@@ -35,7 +35,7 @@
     <k-form-drawer
       v-if="!isBatched"
       ref="drawer"
-      :icon="fieldset.icon || 'block'"
+      :icon="fieldset.icon || 'box'"
       :tabs="tabs"
       :title="fieldset.name"
       :value="content"
