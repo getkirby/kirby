@@ -5,6 +5,7 @@ language: php
 php:
   - 7.3
   - 7.4
+  - 8.0snapshot
 services:
   - memcached
 before_install:
