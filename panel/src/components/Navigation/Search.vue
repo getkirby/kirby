@@ -177,9 +177,6 @@ export default {
       this.$refs.overlay.open();
     },
     async search(query) {
-
-      console.log('yay');
-
       this.isLoading = true;
 
       if (this.$refs.types) {
