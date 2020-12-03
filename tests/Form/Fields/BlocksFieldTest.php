@@ -21,18 +21,19 @@ class BlocksFieldTest extends TestCase
     public function testGroups()
     {
         $field = $this->field('blocks', [
+            'group'     => 'test',
             'fieldsets' => [
                 'text' => [
-                    'label' => 'Text',
-                    'type' => 'group',
+                    'label'     => 'Text',
+                    'type'      => 'group',
                     'fieldsets' => [
-                        'text' => true,
+                        'text'    => true,
                         'heading' => true
                     ]
                 ],
                 'media' => [
                     'label' => 'Media',
-                    'type' => 'group',
+                    'type'  => 'group',
                     'fieldsets' => [
                         'image' => true,
                         'video' => true
@@ -41,7 +42,10 @@ class BlocksFieldTest extends TestCase
             ]
         ]);
 
+        $group  = $field->group();
         $groups = $field->fieldsets()->groups();
+
+        $this->assertSame('test', $group);
 
         $this->assertArrayHasKey('text', $groups);
         $this->assertArrayHasKey('media', $groups);
@@ -92,6 +96,71 @@ class BlocksFieldTest extends TestCase
         $this->assertSame($field->errors()['blocks'], 'You must add at least 2 blocks');
     }
 
+    public function testPretty()
+    {
+        $value = [
+            [
+                'type'    => 'heading',
+                'content' => [
+                    'text' => 'A nice heading'
+                ]
+            ],
+        ];
+
+        $expected = [
+            [
+                'type'    => 'heading',
+                'content' => [
+                    'level' => '',
+                    'text'  => 'A nice heading'
+                ]
+            ],
+        ];
+
+        $field = $this->field('blocks', [
+            'pretty' => true,
+            'value'  => $value
+        ]);
+
+        $pretty = json_encode($expected, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
+
+        $this->assertTrue($field->pretty());
+        $this->assertSame($pretty, $field->store($value));
+    }
+
+    public function testProps()
+    {
+        $field = $this->field('blocks');
+
+        $props     = $field->props();
+        $fieldsets = $props['fieldsets'];
+
+        $this->assertIsArray($props);
+        $this->assertNull($props['empty']);
+        $this->assertSame([
+            'code', 'gallery', 'heading', 'image', 'list', 'markdown', 'quote', 'text', 'video'
+        ], array_keys($fieldsets));
+        $this->assertNull($props['fieldsetGroups']);
+        $this->assertSame('blocks', $props['group']);
+        $this->assertNull($props['max']);
+        $this->assertNull($props['min']);
+        $this->assertNull($props['after']);
+        $this->assertFalse($props['autofocus']);
+        $this->assertNull($props['before']);
+        $this->assertNull($props['default']);
+        $this->assertFalse($props['disabled']);
+        $this->assertNull($props['help']);
+        $this->assertNull($props['icon']);
+        $this->assertSame('Blocks', $props['label']);
+        $this->assertSame('blocks', $props['name']);
+        $this->assertNull($props['placeholder']);
+        $this->assertFalse($props['required']);
+        $this->assertTrue($props['saveable']);
+        $this->assertTrue($props['translate']);
+        $this->assertSame('blocks', $props['type']);
+        $this->assertSame('1/1', $props['width']);
+    }
+
     public function testRequired()
     {
         $field = $this->field('blocks', [
@@ -127,6 +196,44 @@ class BlocksFieldTest extends TestCase
         $this->assertTrue($field->isValid());
     }
 
+    public function testRoutes()
+    {
+        $field = $this->field('blocks');
+
+        $routes = $field->routes();
+
+        $this->assertIsArray($routes);
+        $this->assertCount(3, $routes);
+    }
+
+    public function testStore()
+    {
+        $value = [
+            [
+                'type'    => 'heading',
+                'content' => [
+                    'text' => 'A nice heading'
+                ]
+            ],
+        ];
+
+        $expected = [
+            [
+                'type'    => 'heading',
+                'content' => [
+                    'level' => '',
+                    'text'  => 'A nice heading'
+                ]
+            ],
+        ];
+
+        $field = $this->field('blocks', [
+            'value' => $value
+        ]);
+
+        $this->assertSame(json_encode($expected), $field->store($value));
+    }
+
     public function testTranslateField()
     {
         $app = new App([
@@ -138,7 +245,7 @@ class BlocksFieldTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code' => 'en',
+                    'code'    => 'en',
                     'default' => true
                 ],
                 [
@@ -187,7 +294,7 @@ class BlocksFieldTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code' => 'en',
+                    'code'    => 'en',
                     'default' => true
                 ],
                 [
@@ -200,7 +307,7 @@ class BlocksFieldTest extends TestCase
             'fieldsets' => [
                 'heading' => [
                     'translate' => false,
-                    'fields' => [
+                    'fields'    => [
                         'text' => [
                             'type' => 'text'
                         ]
@@ -223,5 +330,58 @@ class BlocksFieldTest extends TestCase
         $field = $this->field('blocks', $props);
         $this->assertFalse($field->fieldset('heading')->translate());
         $this->assertTrue($field->fieldset('heading')->disabled());
+
+        // invalid fieldset calling
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The fieldset not-exists could not be found');
+
+        $field->fieldset('not-exists');
+    }
+
+    public function testValidations()
+    {
+        $field = $this->field('blocks', [
+            'value' => [
+                [
+                    'type'    => 'heading',
+                    'content' => [
+                        'text' => 'A nice heading',
+                    ]
+                ],
+                [
+                    'type'    => 'video',
+                    'content' => [
+                        'url' => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
+                    ]
+                ]
+            ],
+            'required' => true
+        ]);
+
+        $this->assertTrue($field->isValid());
+    }
+
+    public function testValidationsInvalid()
+    {
+        $field = $this->field('blocks', [
+            'value' => [
+                [
+                    'type'    => 'heading',
+                    'content' => [
+                        'text' => 'A nice heading',
+                    ]
+                ],
+                [
+                    'type'    => 'video',
+                    'content' => [
+                        'url' => 'Invalid URL',
+                    ]
+                ]
+            ],
+            'required' => true
+        ]);
+
+        $this->assertFalse($field->isValid());
+        $this->assertSame(['blocks' => 'There\'s an error in block 2'], $field->errors());
     }
 }

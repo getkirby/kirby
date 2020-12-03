@@ -222,10 +222,6 @@ class BlocksField extends FieldClass
                     $index++;
                     $blockType = $block['type'];
 
-                    if (isset($fields[$blockType]) === false) {
-                        continue;
-                    }
-
                     $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
 
                     // store the fields for the next round
