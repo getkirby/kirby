@@ -3,7 +3,7 @@
     v-bind="$props"
     class="k-blocks-field"
   >
-    <k-dropdown slot="options">
+    <k-dropdown v-if="hasFieldsets" slot="options">
       <k-button icon="dots" @click="$refs.options.toggle()" />
       <k-dropdown-content ref="options" align="right">
         <k-dropdown-item :disabled="isFull" icon="add" @click="$refs.blocks.choose(value.length)">
@@ -60,8 +60,8 @@ export default {
     }
   },
   computed: {
-    hasOpened() {
-      return this.opened.length > 0;
+    hasFieldsets() {
+      return Object.keys(this.fieldsets).length;
     },
     isFull() {
       return false;

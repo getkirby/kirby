@@ -4,70 +4,77 @@
     :data-alt="altKey"
     class="k-blocks"
   >
-    <k-draggable
-      v-bind="draggableOptions"
-      class="k-blocks-list"
-      @sort="save"
-    >
-      <k-block
-        v-for="(block, index) in blocks"
-        :ref="'block-' + block.id"
-        :key="block.id"
-        :endpoints="endpoints"
-        :fieldset="fieldset(block)"
-        :is-batched="isBatched(block)"
-        :is-last-in-batch="isLastInBatch(block)"
-        :is-full="isFull"
-        :is-hidden="block.isHidden === true"
-        :is-selected="isSelected(block)"
-        v-bind="block"
-        @append="add($event, index + 1)"
-        @blur="select(null)"
-        @choose="choose($event)"
-        @chooseToAppend="choose(index + 1)"
-        @chooseToConvert="chooseToConvert(block)"
-        @chooseToPrepend="choose(index)"
-        @confirmToRemoveSelected="confirmToRemoveSelected"
-        @duplicate="duplicate(block, index)"
-        @focus="select(block)"
-        @hide="hide(block)"
-        @prepend="add($event, index)"
-        @remove="remove(block)"
-        @sortDown="sort(block, index, index + 1)"
-        @sortUp="sort(block, index, index - 1)"
-        @show="show(block)"
-        @update="update(block, $event)"
+    <template v-if="hasFieldsets">
+      <k-draggable
+        v-bind="draggableOptions"
+        class="k-blocks-list"
+        @sort="save"
+      >
+        <k-block
+          v-for="(block, index) in blocks"
+          :ref="'block-' + block.id"
+          :key="block.id"
+          :endpoints="endpoints"
+          :fieldset="fieldset(block)"
+          :is-batched="isBatched(block)"
+          :is-last-in-batch="isLastInBatch(block)"
+          :is-full="isFull"
+          :is-hidden="block.isHidden === true"
+          :is-selected="isSelected(block)"
+          v-bind="block"
+          @append="add($event, index + 1)"
+          @blur="select(null)"
+          @choose="choose($event)"
+          @chooseToAppend="choose(index + 1)"
+          @chooseToConvert="chooseToConvert(block)"
+          @chooseToPrepend="choose(index)"
+          @confirmToRemoveSelected="confirmToRemoveSelected"
+          @duplicate="duplicate(block, index)"
+          @focus="select(block)"
+          @hide="hide(block)"
+          @prepend="add($event, index)"
+          @remove="remove(block)"
+          @sortDown="sort(block, index, index + 1)"
+          @sortUp="sort(block, index, index - 1)"
+          @show="show(block)"
+          @update="update(block, $event)"
+        />
+        <template #footer>
+          <k-empty
+            icon="box"
+            class="k-blocks-empty"
+            @click="choose(blocks.length)"
+          >
+            {{ empty || $t("field.blocks.empty") }}
+          </k-empty>
+        </template>
+      </k-draggable>
+
+      <k-block-selector
+        ref="selector"
+        :fieldsets="fieldsets"
+        :fieldset-groups="fieldsetGroups"
+        @add="add"
+        @convert="convert"
       />
-      <template #footer>
-        <k-empty
-          icon="box"
-          class="k-blocks-empty"
-          @click="choose(blocks.length)"
-        >
-          {{ empty || $t("field.blocks.empty") }}
-        </k-empty>
-      </template>
-    </k-draggable>
 
-    <k-block-selector
-      ref="selector"
-      :fieldsets="fieldsets"
-      :fieldset-groups="fieldsetGroups"
-      @add="add"
-      @convert="convert"
-    />
+      <k-remove-dialog
+        ref="removeAll"
+        :text="$t('field.blocks.delete.confirm.all')"
+        @submit="removeAll"
+      />
 
-    <k-remove-dialog
-      ref="removeAll"
-      :text="$t('field.blocks.delete.confirm.all')"
-      @submit="removeAll"
-    />
-
-    <k-remove-dialog
-      ref="removeSelected"
-      :text="$t('field.blocks.delete.confirm.selected')"
-      @submit="removeSelected"
-    />
+      <k-remove-dialog
+        ref="removeSelected"
+        :text="$t('field.blocks.delete.confirm.selected')"
+        @submit="removeSelected"
+      />
+    </template>
+    <template v-else>
+      <k-box theme="info">
+        No fieldsets yet
+      </k-box>
+    </template>
   </div>
 </template>
 
@@ -116,6 +123,9 @@ export default {
           group: this.group
         }
       };
+    },
+    hasFieldsets() {
+      return Object.keys(this.fieldsets).length;
     },
     isEmpty() {
       return this.blocks.length === 0;

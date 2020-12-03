@@ -26,9 +26,7 @@ class BlocksField extends FieldClass
 
     public function __construct(array $params = [])
     {
-        $this->fieldsets = Fieldsets::factory($params['fieldsets'] ?? null, [
-            'parent' => $params['model'] ?? site()
-        ]);
+        $this->setFieldsets($params['fieldsets'] ?? null, $params['model'] ?? site());
 
         parent::__construct($params);
 
@@ -181,6 +179,17 @@ class BlocksField extends FieldClass
     {
         $blocks = $this->blocksToValues((array)$value, 'content');
         return $this->valueToJson($blocks, $this->pretty());
+    }
+
+    protected function setFieldsets($fieldsets, $model)
+    {
+        if (is_array($fieldsets) === false) {
+            $fieldsets = [];
+        }
+
+        $this->fieldsets = Fieldsets::factory($fieldsets, [
+            'parent' => $model
+        ]);
     }
 
     protected function setGroup(string $group = null)
