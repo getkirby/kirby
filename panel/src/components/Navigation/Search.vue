@@ -110,9 +110,9 @@ export default {
     }
   },
   watch: {
-    q: debounce(function (q) {
-      this.search(q);
-    }, 200),
+    q() {
+      this.search(this.q);
+    },
     currentType() {
       this.search(this.q);
     },
@@ -122,6 +122,9 @@ export default {
     types() {
       this.currentType = this.getType(this.type);
     }
+  },
+  created() {
+    this.search = debounce(this.search, 250);
   },
   methods: {
     changeType(type) {
@@ -174,6 +177,9 @@ export default {
       this.$refs.overlay.open();
     },
     async search(query) {
+
+      console.log('yay');
+
       this.isLoading = true;
 
       if (this.$refs.types) {

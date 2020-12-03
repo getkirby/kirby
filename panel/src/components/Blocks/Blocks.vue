@@ -79,8 +79,6 @@
 </template>
 
 <script>
-import debounce from "@/helpers/debounce.js";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -147,7 +145,6 @@ export default {
     }
   },
   created() {
-    this.save = debounce(this.save, 50);
     this.outsideFocus = (event) => {
       const overlay = document.querySelector(".k-overlay:last-of-type");
       if (this.$el.contains(event.target) === false && (!overlay || overlay.contains(event.target) === false)) {
@@ -402,7 +399,11 @@ export default {
     update(block, content) {
       const index = this.blocks.findIndex(element => element.id === block.id);
       if (index !== -1) {
-        this.$set(this.blocks[index], "content", content);
+
+        Object.entries(content).forEach(([key, value]) => {
+          this.$set(this.blocks[index].content, key, value);
+        });
+
       }
       this.save();
     }

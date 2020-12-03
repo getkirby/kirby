@@ -183,7 +183,7 @@ class BlocksField extends FieldClass
 
     protected function setFieldsets($fieldsets, $model)
     {
-        if (is_array($fieldsets) === false) {
+        if (is_string($fieldsets) === true) {
             $fieldsets = [];
         }
 

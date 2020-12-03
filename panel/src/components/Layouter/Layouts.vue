@@ -73,7 +73,6 @@
 </template>
 
 <script>
-import debounce from "@/helpers/debounce.js";
 import Layout from "./Layout";
 
 export default {
@@ -111,9 +110,6 @@ export default {
     value() {
       this.rows = this.value;
     }
-  },
-  created() {
-    this.save = debounce(this.save, 50);
   },
   methods: {
     async addLayout(columns) {

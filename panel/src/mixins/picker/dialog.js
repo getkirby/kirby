@@ -31,10 +31,12 @@ export default {
     }
   },
   watch: {
-    search: debounce(function () {
-      this.pagination.page = 0;
-      this.fetch();
-    }, 200),
+    search() {
+      this.updateSearch();
+    }
+  },
+  created() {
+    this.updateSearch = debounce(this.updateSearch, 200);
   },
   methods: {
     fetch() {
@@ -125,6 +127,10 @@ export default {
       }
 
       this.$set(this.selected, item.id, item);
-    }
+    },
+    updateSearch() {
+      this.pagination.page = 0;
+      this.fetch();
+    },
   }
 };
