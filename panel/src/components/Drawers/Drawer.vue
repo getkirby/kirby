@@ -2,18 +2,24 @@
   <k-overlay
     ref="overlay"
     :dimmed="false"
-    @close="$emit('close')"
-    @open="$emit('open')"
+    @close="onClose"
+    @open="onOpen"
   >
-    <div class="k-drawer" @mousedown="click = true" @mouseup="mouseup">
+    <div
+      :data-nested="nested"
+      class="k-drawer"
+      @mousedown="click = true"
+      @mouseup="mouseup"
+    >
       <div class="k-drawer-box" @mousedown.stop="click = false">
         <header class="k-drawer-header">
-          <k-icon :type="icon" class="k-drawer-icon" />
-          <slot name="title">
-            <h2 class="k-drawer-title">
-              {{ title }}
-            </h2>
-          </slot>
+          <ul class="k-drawer-breadcrumb">
+            <li v-for="crumb in breadcrumb" :key="crumb.id">
+              <k-button :icon="crumb.icon" @click="goTo(crumb.id)">
+                {{ crumb.title }}
+              </k-button>
+            </li>
+          </ul>
           <nav
             v-if="hasTabs"
             class="k-drawer-tabs"
@@ -60,13 +66,35 @@ export default {
     };
   },
   computed: {
+    breadcrumb() {
+      return this.$store.state.drawers.open;
+    },
     hasTabs() {
       return this.tabs && Object.keys(this.tabs).length > 1;
+    },
+    index() {
+      return this.breadcrumb.findIndex(item => item.id === this._uid);
+    },
+    nested() {
+      return this.index > 0;
+    }
+  },
+  watch: {
+    index() {
+      if (this.index === -1) {
+        this.close();
+      }
     }
   },
   methods: {
     close() {
       this.$refs.overlay.close();
+    },
+    goTo(id) {
+      if (id === this._uid) {
+        return true;
+      }
+      this.$store.dispatch("drawers/goto", id);
     },
     mouseup() {
       if (this.click === true) {
@@ -74,6 +102,18 @@ export default {
       }
 
       this.click = false;
+    },
+    onClose() {
+      this.$store.dispatch("drawers/close", this._uid);
+      this.$emit("close");
+    },
+    onOpen() {
+      this.$store.dispatch("drawers/open", {
+        id: this._uid,
+        icon: this.icon,
+        title: this.title
+      });
+      this.$emit("open");
     },
     open() {
       this.$refs.overlay.open();
@@ -112,25 +152,29 @@ $drawer-header-padding: 1.5rem;
   padding-left: $drawer-header-padding;
   display: flex;
   align-items: center;
-  font-size: $text-xs;
   line-height: 1;
   justify-content: space-between;
   background: $color-white;
+  font-size: $text-sm;
 }
-.k-drawer-icon {
-  width: 1rem;
-  margin-right: .5rem;
-  color: $color-gray-500;
-}
-.k-drawer-title {
+.k-drawer-breadcrumb {
   display: flex;
   flex-grow: 1;
   align-items: center;
   min-width: 0;
   padding-right: .75rem;
-  font-size: $text-sm;
-  font-weight: $font-normal;
-  line-height: 1;
+}
+.k-drawer-breadcrumb li:not(:last-child)::after {
+  content: "›";
+  color: $color-gray-500;
+  padding: 0 .75rem;
+}
+.k-drawer-breadcrumb .k-icon {
+  width: 1rem;
+  color: $color-gray-500;
+}
+.k-drawer-breadcrumb .k-button .k-button-icon ~ .k-button-text {
+  padding-left: .25rem;
 }
 .k-drawer-tabs {
   display: flex;
@@ -174,5 +218,11 @@ $drawer-header-padding: 1.5rem;
   flex-grow: 1;
   overflow-y: auto;
   background: $color-background;
+}
+
+
+/* Nested drawers */
+.k-drawer[data-nested] {
+  background: none;
 }
 </style>
