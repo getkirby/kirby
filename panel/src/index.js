@@ -1,7 +1,6 @@
 import App from "./App.vue";
 import Api from "./config/api.js";
 import Events from "./config/events.js";
-import Filters from "./config/filters.js";
 import I18n from "./config/i18n.js";
 import Vue from "vue";
 import Vuelidate from "vuelidate";
@@ -18,7 +17,6 @@ import "./config/libraries.js";
 import "./config/plugins.js";
 
 Vue.use(Events);
-Vue.use(Filters);
 Vue.use(Vuelidate);
 
 import VuePortal from "@linusborg/vue-simple-portal";
