@@ -1,16 +1,33 @@
-<?php if ($image = $block->image()->toFile()): ?>
-<figure<?= attr(['data-ratio' => $block->ratio(), 'data-crop' => $block->crop()->isTrue()], ' ') ?>>
-  <?php if ($block->link()->isNotEmpty()): ?>
-  <a href="<?= $block->link()->toUrl() ?>">
-    <img src="<?= $image->url() ?>" alt="<?= $block->alt()->or($image->alt()) ?>">
+<?php
+
+$alt     = $block->alt();
+$caption = $block->caption();
+$crop    = $block->crop()->isTrue();
+$link    = $block->link();
+$ratio   = $block->ratio()->or('auto');
+$src     = null;
+
+if ($block->location() == 'web') {
+    $src = $block->src();
+} else if ($image = $block->image()->toFile()) {
+    $alt = $alt ?? $image->alt();
+    $src = $image->url();
+}
+
+?>
+<?php if ($src): ?>
+<figure<?= attr(['data-ratio' => $ratio, 'data-crop' => $crop], ' ') ?>>
+  <?php if ($link->isNotEmpty()): ?>
+  <a href="<?= $link->toUrl() ?>">
+    <img src="<?= $src ?>" alt="<?= $alt ?>">
   </a>
   <?php else: ?>
-  <img src="<?= $image->url() ?>" alt="<?= $block->alt()->or($image->alt()) ?>">
+  <img src="<?= $src ?>" alt="<?= $alt ?>">
   <?php endif ?>
 
-  <?php if ($block->caption()->isNotEmpty()): ?>
+  <?php if ($caption->isNotEmpty()): ?>
   <figcaption>
-    <?= $block->caption() ?>
+    <?= $caption ?>
   </figcaption>
   <?php endif ?>
 </figure>
