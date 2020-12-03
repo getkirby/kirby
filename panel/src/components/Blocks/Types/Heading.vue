@@ -32,16 +32,28 @@ export default {
 <style lang="scss">
 .k-block-type-heading-input {
   font-weight: $font-bold;
+  line-height: 1.25em;
+}
+.k-block-type-heading-input[data-level="h1"] {
   font-size: $text-3xl;
   line-height: 1.125em;
 }
 .k-block-type-heading-input[data-level="h2"] {
   font-size: $text-2xl;
-  line-height: 1.25em;
 }
 .k-block-type-heading-input[data-level="h3"] {
-  line-height: 1.25em;
   font-size: $text-xl;
+}
+.k-block-type-heading-input[data-level="h4"] {
+  font-size: $text-lg;
+}
+.k-block-type-heading-input[data-level="h5"] {
+  line-height: 1.5em;
+  font-size: $text-base;
+}
+.k-block-type-heading-input[data-level="h6"] {
+  line-height: 1.5em;
+  font-size: $text-sm;
 }
 .k-block-type-heading-input .ProseMirror strong {
   font-weight: 700;
