@@ -8,6 +8,7 @@ use Kirby\Cms\Layout;
 use Kirby\Cms\Layouts;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
+use Throwable;
 
 class LayoutField extends BlocksField
 {
@@ -185,9 +186,14 @@ class LayoutField extends BlocksField
                     foreach ($layout['columns'] ?? [] as $column) {
                         foreach ($column['blocks'] ?? [] as $block) {
                             $blockIndex++;
+                            $blockType = $block['type'];
 
-                            $blockType   = $block['type'];
-                            $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
+                            try {
+                                $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
+                            } catch (Throwable $e) {
+                                // skip invalid blocks
+                                continue;
+                            }
 
                             // store the fields for the next round
                             $fields[$blockType] = $blockFields;
