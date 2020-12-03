@@ -13,7 +13,10 @@
     >
       <div class="k-drawer-box" @mousedown.stop="click = false">
         <header class="k-drawer-header">
-          <ul class="k-drawer-breadcrumb">
+          <h2 v-if="breadcrumb.length === 1" class="k-drawer-title">
+            <k-icon :type="icon" /> {{ title }}
+          </h2>
+          <ul v-else class="k-drawer-breadcrumb">
             <li v-for="crumb in breadcrumb" :key="crumb.id">
               <k-button :icon="crumb.icon" @click="goTo(crumb.id)">
                 {{ crumb.title }}
@@ -38,7 +41,7 @@
             <slot name="options" />
             <k-button
               class="k-drawer-option"
-              icon="cancel"
+              icon="check"
               @click="close"
             />
           </nav>
@@ -157,24 +160,47 @@ $drawer-header-padding: 1.5rem;
   background: $color-white;
   font-size: $text-sm;
 }
+.k-drawer-title {
+  padding: 0 .75rem;
+}
+.k-drawer-title,
 .k-drawer-breadcrumb {
   display: flex;
   flex-grow: 1;
   align-items: center;
   min-width: 0;
-  padding-right: .75rem;
+  margin-left: -.75rem;
+  font-size: $text-sm;
+  font-weight: $font-normal;
 }
-.k-drawer-breadcrumb li:not(:last-child)::after {
+.k-drawer-breadcrumb li:not(:last-child) .k-button::after {
+  position: absolute;
+  display: inline-flex;
+  right: -.75rem;
+  width: 1.5rem;
+  justify-content: center;
+  align-items: center;
   content: "›";
   color: $color-gray-500;
-  padding: 0 .75rem;
+  height: $drawer-header-height;
 }
+.k-drawer-title .k-icon,
 .k-drawer-breadcrumb .k-icon {
   width: 1rem;
   color: $color-gray-500;
+  margin-right: .5rem;
+}
+.k-drawer-breadcrumb .k-button {
+  display: inline-flex;
+  align-items: center;
+  height: $drawer-header-height;
+  padding: 0 .75rem;
+}
+.k-drawer-breadcrumb .k-button-text {
+  opacity: 1;
 }
 .k-drawer-breadcrumb .k-button .k-button-icon ~ .k-button-text {
-  padding-left: .25rem;
+  padding-left: 0;
 }
 .k-drawer-tabs {
   display: flex;

@@ -9,7 +9,7 @@ $src     = null;
 
 if ($block->location() == 'web') {
     $src = $block->src();
-} else if ($image = $block->image()->toFile()) {
+} elseif ($image = $block->image()->toFile()) {
     $alt = $alt ?? $image->alt();
     $src = $image->url();
 }
