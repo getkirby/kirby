@@ -231,11 +231,12 @@ class BlocksField extends FieldClass
                     $index++;
                     $blockType = $block['type'];
 
-                    if (isset($fields[$blockType]) === false) {
+                    try {
+                        $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
+                    } catch (Throwable $e) {
+                        // skip invalid blocks
                         continue;
                     }
-
-                    $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
 
                     // store the fields for the next round
                     $fields[$blockType] = $blockFields;
