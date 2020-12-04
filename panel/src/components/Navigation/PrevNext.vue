@@ -1,7 +1,7 @@
 <template>
   <k-button-group class="k-prev-next">
-    <k-button v-bind="prev" icon="angle-left" />
-    <k-button v-bind="next" icon="angle-right" />
+    <k-button v-bind="button(prev)" icon="angle-left" />
+    <k-button v-bind="button(next)" icon="angle-right" />
   </k-button-group>
 </template>
 
@@ -9,24 +9,26 @@
 export default {
   props: {
     prev: {
-      type: Object,
-      default() {
+      type: [Boolean, Object],
+      default: false
+    },
+    next: {
+      type: [Boolean, Object],
+      default: false
+    }
+  },
+  methods: {
+    button(config) {
+      if (!config) {
         return {
           disabled: true,
           link: "#",
-        }
+        };
       }
-    },
-    next: {
-      type: Object,
-      default() {
-        return {
-          disabled: true,
-          link: "#"
-        }
-      }
+
+      return config;
     }
-  },
+  }
 };
 </script>
 
