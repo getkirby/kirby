@@ -38,8 +38,6 @@ cache:
 
 jobs:
   fast_finish: true
-  allow_failures:
-    - php: 8.0.0
   include:
   - name: Backend Coding Standards
     language: php
