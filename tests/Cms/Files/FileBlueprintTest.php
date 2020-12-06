@@ -117,6 +117,59 @@ class FileBlueprintTest extends TestCase
         ];
 
         $blueprint = new FileBlueprint([
+            'accept' => true,
+            'model'  => $file
+        ]);
+        $this->assertSame($expected, $blueprint->accept());
+
+        $blueprint = new FileBlueprint([
+            'accept' => [
+                'mime' => null
+            ],
+            'model' => $file
+        ]);
+        $this->assertSame($expected, $blueprint->accept());
+
+        $blueprint = new FileBlueprint([
+            'accept' => [
+                'extension' => null
+            ],
+            'model' => $file
+        ]);
+        $this->assertSame($expected, $blueprint->accept());
+
+        $blueprint = new FileBlueprint([
+            'accept' => [
+                'type' => null
+            ],
+            'model' => $file
+        ]);
+        $this->assertSame($expected, $blueprint->accept());
+
+        $blueprint = new FileBlueprint([
+            'accept' => [
+                'mime' => null,
+                'type' => null
+            ],
+            'model' => $file
+        ]);
+        $this->assertSame($expected, $blueprint->accept());
+
+        // no value = default type restriction
+        $expected = [
+            'extension'   => null,
+            'mime'        => null,
+            'maxheight'   => null,
+            'maxsize'     => null,
+            'maxwidth'    => null,
+            'minheight'   => null,
+            'minsize'     => null,
+            'minwidth'    => null,
+            'orientation' => null,
+            'type'        => ['image', 'document', 'archive', 'audio', 'video']
+        ];
+
+        $blueprint = new FileBlueprint([
             'model' => $file
         ]);
         $this->assertSame($expected, $blueprint->accept());
@@ -185,9 +238,16 @@ class FileBlueprintTest extends TestCase
             'filename' => 'test.jpg'
         ]);
 
+        // default restrictions
+        $blueprint = new FileBlueprint([
+            'model'  => $file
+        ]);
+        $this->assertSame('*', $blueprint->acceptMime());
+
         // no restrictions
         $blueprint = new FileBlueprint([
-            'model' => $file
+            'accept' => true,
+            'model'  => $file
         ]);
         $this->assertSame('*', $blueprint->acceptMime());
 

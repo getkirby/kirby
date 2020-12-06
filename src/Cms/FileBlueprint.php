@@ -17,6 +17,14 @@ use Kirby\Toolkit\Str;
  */
 class FileBlueprint extends Blueprint
 {
+    /**
+     * `true` if the default accepted
+     * types are being used
+     *
+     * @var bool
+     */
+    protected $defaultTypes = false;
+
     public function __construct(array $props)
     {
         parent::__construct($props);
@@ -55,6 +63,11 @@ class FileBlueprint extends Blueprint
      */
     public function acceptMime(): string
     {
+        // don't disclose the specific default types
+        if ($this->defaultTypes === true) {
+            return '*';
+        }
+
         $accept       = $this->accept();
         $restrictions = [];
 
@@ -110,10 +123,13 @@ class FileBlueprint extends Blueprint
             $accept = [
                 'mime' => $accept
             ];
-        }
-
-        // accept anything
-        if (empty($accept) === true) {
+        } elseif ($accept === true) {
+            // explicitly no restrictions at all
+            $accept = [
+                'mime' => null
+            ];
+        } elseif (empty($accept) === true) {
+            // no custom restrictions
             $accept = [];
         }
 
@@ -131,6 +147,17 @@ class FileBlueprint extends Blueprint
             'orientation' => null,
             'type'        => null
         ];
+
+        // default type restriction if none are configured;
+        // this ensures that no unexpected files are uploaded
+        if (
+            array_key_exists('mime', $accept) === false &&
+            array_key_exists('extension', $accept) === false &&
+            array_key_exists('type', $accept) === false
+        ) {
+            $defaults['type']   = ['image', 'document', 'archive', 'audio', 'video'];
+            $this->defaultTypes = true;
+        }
 
         $accept = array_merge($defaults, $accept);
 
