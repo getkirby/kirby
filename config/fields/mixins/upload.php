@@ -30,7 +30,7 @@ return [
                     'template' => $template
                 ]);
 
-                $uploads['accept'] = $file->blueprint()->accept()['mime'] ?? '*';
+                $uploads['accept'] = $file->blueprint()->acceptMime();
             } else {
                 $uploads['accept'] = '*';
             }

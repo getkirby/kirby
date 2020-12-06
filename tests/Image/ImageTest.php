@@ -11,6 +11,12 @@ class ImageTest extends TestCase
         return new Image(static::FIXTURES . '/image/' . $filename, $url);
     }
 
+    public function setUp(): void
+    {
+        // ensure the translations are loaded
+        kirby();
+    }
+
     public function testConstruct()
     {
         $image = $this->_image();
@@ -86,6 +92,56 @@ class ImageTest extends TestCase
 
         // cached object
         $this->assertInstanceOf(Dimensions::class, $image->dimensions());
+    }
+
+    public function testMatch()
+    {
+        $rules = [
+            'miMe'        => ['image/png', 'image/jpeg', 'application/pdf'],
+            'extensION'   => ['jpg', 'pdf'],
+            'tYPe'        => ['image', 'video'],
+            'MINsize'     => 20000,
+            'maxSIze'     => 25000,
+            'minheiGHt'   => 400,
+            'maxHeight'   => 600,
+            'minWIdth'    => 400,
+            'maxwiDth'    => 600,
+            'oriEntation' => 'square'
+        ];
+
+        $this->assertTrue($this->_image()->match($rules));
+    }
+
+    public function testMatchMimeException()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid mime type: image/jpeg');
+
+        $this->_image()->match(['mime' => ['image/png', 'application/pdf']]);
+    }
+
+    public function testMatchExtensionException()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid extension: jpg');
+
+        $this->_image()->match(['extension' => ['png', 'pdf']]);
+    }
+
+    public function testMatchTypeException()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid file type: image');
+
+        $this->_image()->match(['type' => ['document', 'video']]);
+    }
+
+    public function testMatchOrientationException()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('The orientation of the image must be "portrait"');
+
+        $this->_image()->match(['orientation' => 'portrait']);
     }
 
     public function testWidth()
