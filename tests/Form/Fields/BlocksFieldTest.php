@@ -384,4 +384,13 @@ class BlocksFieldTest extends TestCase
         $this->assertFalse($field->isValid());
         $this->assertSame(['blocks' => 'There\'s an error in block 2'], $field->errors());
     }
+
+    public function testEmpty()
+    {
+        $field = $this->field('blocks', [
+            'empty' => $value = 'Custom empty text'
+        ]);
+
+        $this->assertSame($value, $field->empty());
+    }
 }
