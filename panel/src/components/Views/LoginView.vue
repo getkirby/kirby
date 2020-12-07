@@ -27,9 +27,11 @@ export default {
     form() {
       if (this.$store.state.user.pendingEmail) {
         return "code";
-      } else {
+      } else if (!this.$store.state.user.current) {
         return "login";
       }
+
+      return null;
     }
   },
   created() {
