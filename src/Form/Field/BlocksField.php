@@ -30,6 +30,7 @@ class BlocksField extends FieldClass
 
         parent::__construct($params);
 
+        $this->setEmpty($params['empty'] ?? null);
         $this->setGroup($params['group'] ?? 'blocks');
         $this->setMax($params['max'] ?? null);
         $this->setMin($params['min'] ?? null);
