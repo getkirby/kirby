@@ -75,6 +75,9 @@ class Blocks extends Plain
                 'attrs' => ['href', 'target', 'title'],
             ],
             [
+                'tag' => 'abbr',
+            ],
+            [
                 'tag' => 'b'
             ],
             [
@@ -82,6 +85,9 @@ class Blocks extends Plain
             ],
             [
                 'tag' => 'del',
+            ],
+            [
+                'tag' => 'em',
             ],
             [
                 'tag' => 'i',
@@ -97,8 +103,6 @@ class Blocks extends Plain
             ],
             [
                 'tag' => 'strong',
-                'parse' => function () {
-                }
             ],
             [
                 'tag' => 'u',
