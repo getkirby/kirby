@@ -6,7 +6,7 @@
     :nodes="['bulletList', 'orderedList']"
     :value="value"
     class="k-list-input"
-    @input="$emit('input', $event)"
+    @input="onInput"
   />
 </template>
 
@@ -30,6 +30,22 @@ export default {
   methods: {
     focus() {
       this.$refs.input.focus();
+    },
+    onInput(html) {
+      let dom  = new DOMParser().parseFromString(html, "text/html");
+      let list = dom.querySelector('ul, ol');
+      if (!list) {
+        this.$emit("input", "");
+      }
+
+      let text = list.textContent.trim();
+
+      if (text.length === 0) {
+        this.$emit("input", "");
+        return;
+      }
+
+      this.$emit("input", html);
     }
   }
 };
