@@ -194,4 +194,13 @@ class LayoutFieldTest extends TestCase
         $this->assertFalse($field->isValid());
         $this->assertSame(['layout' => 'There\'s an error in layout 1 settings'], $field->errors());
     }
+
+    public function testEmpty()
+    {
+        $field = $this->field('layout', [
+            'empty' => $value = 'Custom empty text'
+        ]);
+
+        $this->assertSame($value, $field->empty());
+    }
 }
