@@ -769,6 +769,18 @@ class F
     }
 
     /**
+     * Returns all extensions of a given file type
+     * or `null` if the file type is unknown
+     *
+     * @param string $type
+     * @return array|null
+     */
+    public static function typeToExtensions(string $type): ?array
+    {
+        return static::$types[$type] ?? null;
+    }
+
+    /**
      * Unzips a zip file
      *
      * @param string $file

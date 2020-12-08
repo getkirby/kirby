@@ -72,7 +72,7 @@ return [
                     'template' => $this->template
                 ]);
 
-                return $file->blueprint()->accept()['mime'] ?? '*';
+                return $file->blueprint()->acceptMime();
             }
 
             return null;

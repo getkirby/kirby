@@ -23,14 +23,14 @@ class FileActionsTest extends TestCase
                         'slug'  => 'test',
                         'files' => [
                             [
-                                'filename' => 'page.js'
+                                'filename' => 'page.csv'
                             ]
                         ]
                     ]
                 ],
                 'files' => [
                     [
-                        'filename' => 'site.js'
+                        'filename' => 'site.csv'
                     ]
                 ],
             ],
@@ -108,7 +108,7 @@ class FileActionsTest extends TestCase
         $result = $file->changeName('test');
 
         $this->assertNotEquals($file->root(), $result->root());
-        $this->assertEquals('test.js', $result->filename());
+        $this->assertEquals('test.csv', $result->filename());
         $this->assertFileExists($result->root());
         $this->assertFileExists($result->contentFile());
     }
@@ -146,7 +146,7 @@ class FileActionsTest extends TestCase
         $result = $file->changeName('test');
 
         $this->assertNotEquals($file->root(), $result->root());
-        $this->assertEquals('test.js', $result->filename());
+        $this->assertEquals('test.csv', $result->filename());
         $this->assertFileExists($result->root());
         $this->assertFileExists($result->contentFile('en'));
         $this->assertFileExists($result->contentFile('de'));
@@ -392,14 +392,14 @@ class FileActionsTest extends TestCase
                 'file.changeName:before' => function (File $file, $name) use ($phpunit, &$calls) {
                     $phpunit->assertInstanceOf('Kirby\Cms\File', $file);
                     $phpunit->assertSame('test', $name);
-                    $phpunit->assertSame('site.js', $file->filename());
+                    $phpunit->assertSame('site.csv', $file->filename());
                     $calls++;
                 },
                 'file.changeName:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
                     $phpunit->assertInstanceOf('Kirby\Cms\File', $newFile);
                     $phpunit->assertInstanceOf('Kirby\Cms\File', $oldFile);
-                    $phpunit->assertSame('test.js', $newFile->filename());
-                    $phpunit->assertSame('site.js', $oldFile->filename());
+                    $phpunit->assertSame('test.csv', $newFile->filename());
+                    $phpunit->assertSame('site.csv', $oldFile->filename());
                     $calls++;
                 },
             ]
@@ -419,13 +419,13 @@ class FileActionsTest extends TestCase
             'site' => [
                 'files' => [
                     [
-                        'filename' => 'site-1.js'
+                        'filename' => 'site-1.csv'
                     ],
                     [
-                        'filename' => 'site-2.js'
+                        'filename' => 'site-2.csv'
                     ],
                     [
-                        'filename' => 'site-3.js'
+                        'filename' => 'site-3.csv'
                     ]
                 ],
             ],
@@ -502,27 +502,27 @@ class FileActionsTest extends TestCase
                 'file.replace:before' => function (File $file, $upload) use ($phpunit, &$calls) {
                     $phpunit->assertInstanceOf('Kirby\Cms\File', $file);
                     $phpunit->assertInstanceOf('Kirby\Image\Image', $upload);
-                    $phpunit->assertSame('site.js', $file->filename());
-                    $phpunit->assertSame('replace.js', $upload->filename());
+                    $phpunit->assertSame('site.csv', $file->filename());
+                    $phpunit->assertSame('replace.csv', $upload->filename());
                     $phpunit->assertFileDoesNotExist($file->root());
                     $calls++;
                 },
                 'file.replace:after' => function (File $newFile, File $oldFile) use ($phpunit, &$calls) {
                     $phpunit->assertInstanceOf('Kirby\Cms\File', $newFile);
                     $phpunit->assertInstanceOf('Kirby\Cms\File', $oldFile);
-                    $phpunit->assertSame('site.js', $newFile->filename());
+                    $phpunit->assertSame('site.csv', $newFile->filename());
                     $phpunit->assertSame('Replace', F::read($newFile->root()));
-                    $phpunit->assertSame('site.js', $oldFile->filename());
+                    $phpunit->assertSame('site.csv', $oldFile->filename());
                     $calls++;
                 },
             ]
         ]);
 
         // create the dummy source
-        F::write($source = $this->fixtures . '/replace.js', 'Replace');
+        F::write($source = $this->fixtures . '/replace.csv', 'Replace');
 
         File::create([
-            'filename' => 'replace.js',
+            'filename' => 'replace.csv',
             'source'   => $source,
             'parent'   => $parent
         ]);

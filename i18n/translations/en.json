@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "You are not allowed to change the name of \"{filename}\"",
   "error.file.duplicate": "A file with the name \"{filename}\" already exists",
   "error.file.extension.forbidden": "The extension \"{extension}\" is not allowed",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "The extensions for \"{filename}\" is missing",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
@@ -82,6 +83,7 @@
   "error.file.notFound": "The file \"{filename}\" cannot be found",
   "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "You are not allowed to upload {type} files",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "The file cannot be found",
 
   "error.form.incomplete": "Please fix all form errors…",

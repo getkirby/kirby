@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
+
 /**
  * Extension of the basic blueprint class
  * to handle all blueprints for files.
@@ -14,6 +17,14 @@ namespace Kirby\Cms;
  */
 class FileBlueprint extends Blueprint
 {
+    /**
+     * `true` if the default accepted
+     * types are being used
+     *
+     * @var bool
+     */
+    protected $defaultTypes = false;
+
     public function __construct(array $props)
     {
         parent::__construct($props);
@@ -45,6 +56,64 @@ class FileBlueprint extends Blueprint
     }
 
     /**
+     * Returns the list of all accepted MIME types for
+     * file upload or `*` if all MIME types are allowed
+     *
+     * @return string
+     */
+    public function acceptMime(): string
+    {
+        // don't disclose the specific default types
+        if ($this->defaultTypes === true) {
+            return '*';
+        }
+
+        $accept       = $this->accept();
+        $restrictions = [];
+
+        if (is_array($accept['mime']) === true) {
+            $restrictions[] = $accept['mime'];
+        } else {
+            // only fall back to the extension or type if
+            // no explicit MIME types were defined
+            // (allows to set custom MIME types for the frontend
+            // check but still restrict the extension and/or type)
+
+            if (is_array($accept['extension']) === true) {
+                // determine the main MIME type for each extension
+                $restrictions[] = array_map(['Kirby\Toolkit\Mime', 'fromExtension'], $accept['extension']);
+            }
+
+            if (is_array($accept['type']) === true) {
+                // determine the MIME types of each file type
+                $mimes = [];
+                foreach ($accept['type'] as $type) {
+                    if ($extensions = F::typeToExtensions($type)) {
+                        $mimes[] = array_map(['Kirby\Toolkit\Mime', 'fromExtension'], $extensions);
+                    }
+                }
+
+                $restrictions[] = array_merge(...$mimes);
+            }
+        }
+
+        if ($restrictions !== []) {
+            if (count($restrictions) > 1) {
+                // only return the MIME types that are allowed by all restrictions
+                $mimes = array_intersect(...$restrictions);
+            } else {
+                $mimes = $restrictions[0];
+            }
+
+            // filter out empty MIME types and duplicates
+            return implode(', ', array_filter(array_unique($mimes)));
+        }
+
+        // no restrictions, accept everything
+        return '*';
+    }
+
+    /**
      * @param mixed $accept
      * @return array
      */
@@ -54,16 +123,20 @@ class FileBlueprint extends Blueprint
             $accept = [
                 'mime' => $accept
             ];
-        }
-
-        // accept anything
-        if (empty($accept) === true) {
-            return [];
+        } elseif ($accept === true) {
+            // explicitly no restrictions at all
+            $accept = [
+                'mime' => null
+            ];
+        } elseif (empty($accept) === true) {
+            // no custom restrictions
+            $accept = [];
         }
 
         $accept = array_change_key_case($accept);
 
         $defaults = [
+            'extension'   => null,
             'mime'        => null,
             'maxheight'   => null,
             'maxsize'     => null,
@@ -71,9 +144,38 @@ class FileBlueprint extends Blueprint
             'minheight'   => null,
             'minsize'     => null,
             'minwidth'    => null,
-            'orientation' => null
+            'orientation' => null,
+            'type'        => null
         ];
 
-        return array_merge($defaults, $accept);
+        // default type restriction if none are configured;
+        // this ensures that no unexpected files are uploaded
+        if (
+            array_key_exists('mime', $accept) === false &&
+            array_key_exists('extension', $accept) === false &&
+            array_key_exists('type', $accept) === false
+        ) {
+            $defaults['type']   = ['image', 'document', 'archive', 'audio', 'video'];
+            $this->defaultTypes = true;
+        }
+
+        $accept = array_merge($defaults, $accept);
+
+        // normalize the MIME, extension and type from strings into arrays
+        if (is_string($accept['mime']) === true) {
+            $accept['mime'] = array_map(function ($mime) {
+                return $mime['value'];
+            }, Str::accepted($accept['mime']));
+        }
+
+        if (is_string($accept['extension']) === true) {
+            $accept['extension'] = array_map('trim', explode(',', $accept['extension']));
+        }
+
+        if (is_string($accept['type']) === true) {
+            $accept['type'] = array_map('trim', explode(',', $accept['type']));
+        }
+
+        return $accept;
     }
 }
