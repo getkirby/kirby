@@ -63,7 +63,7 @@ class BlocksTest extends TestCase
         ];
 
         $result = Blocks::parse(json_encode($input));
-        $this->assertSame($result, $input);
+        $this->assertSame($input, $result);
     }
 
     public function testParseYaml()
@@ -75,7 +75,7 @@ class BlocksTest extends TestCase
         ];
 
         $result = Blocks::parse(Yaml::encode($input));
-        $this->assertSame($result, $input);
+        $this->assertSame($input, $result);
     }
 
     public function testParseHtml()
@@ -92,7 +92,16 @@ class BlocksTest extends TestCase
         ];
 
         $result = Blocks::parse($input);
-        $this->assertSame($result, $expected);
+        $this->assertSame($expected, $result);
+    }
+
+    public function testParseEmpty()
+    {
+        $result = Blocks::parse(null);
+        $this->assertSame([], $result);
+
+        $result = Blocks::parse('');
+        $this->assertSame([], $result);
     }
 
     public function testToHtml()
