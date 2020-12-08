@@ -417,6 +417,13 @@ class FTest extends TestCase
         $this->assertEquals('code', F::type($file));
     }
 
+    public function testTypeToExtensions()
+    {
+        $this->assertSame(F::$types['audio'], F::typeToExtensions('audio'));
+        $this->assertSame(F::$types['document'], F::typeToExtensions('document'));
+        $this->assertNull(F::typeToExtensions('invalid'));
+    }
+
     public function testURI()
     {
         F::write($this->tmp, 'test');
