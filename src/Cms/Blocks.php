@@ -105,15 +105,18 @@ class Blocks extends Items
             try {
                 $input = Json::decode((string)$input);
             } catch (Throwable $e) {
-                // try to import the old YAML format
-                $yaml = Yaml::decode((string)$input);
+                try {
+                    // try to import the old YAML format
+                    $yaml  = Yaml::decode((string)$input);
+                    $first = A::first($yaml);
 
-                // check for valid yaml
-                if (empty($yaml) === false && isset(A::first($yaml)['_key']) === true) {
-                    $input = $yaml;
-
-                // try to import HTML instead
-                } elseif (empty($input) === false) {
+                    // check for valid yaml
+                    if (empty($yaml) === true || (isset($first['_key']) === false && isset($first['type']) === false)) {
+                        throw new Exception('Invalid YAML');
+                    } else {
+                        $input = $yaml;
+                    }
+                } catch (Throwable $e) {
                     $parser = new Parsley((string)$input, new BlockSchema());
                     $input  = $parser->blocks();
                 }

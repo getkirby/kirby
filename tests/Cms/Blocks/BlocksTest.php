@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Yaml;
 use PHPUnit\Framework\TestCase;
 
 class BlocksTest extends TestCase
@@ -51,6 +52,47 @@ class BlocksTest extends TestCase
         $this->assertCount(2, $blocks);
         $this->assertSame('heading', $blocks->first()->type());
         $this->assertSame('text', $blocks->last()->type());
+    }
+
+    public function testParseJson()
+    {
+        $input = [
+            [
+                'type' => 'heading'
+            ]
+        ];
+
+        $result = Blocks::parse(json_encode($input));
+        $this->assertSame($result, $input);
+    }
+
+    public function testParseYaml()
+    {
+        $input = [
+            [
+                'type' => 'heading'
+            ]
+        ];
+
+        $result = Blocks::parse(Yaml::encode($input));
+        $this->assertSame($result, $input);
+    }
+
+    public function testParseHtml()
+    {
+        $input = '<h1>Test</h1>';
+        $expected = [
+            [
+                'type' => 'heading',
+                'content' => [
+                    'level' => 'h1',
+                    'text' => 'Test'
+                ]
+            ]
+        ];
+
+        $result = Blocks::parse($input);
+        $this->assertSame($result, $expected);
     }
 
     public function testToHtml()
