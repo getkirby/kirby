@@ -8,6 +8,8 @@ use Kirby\Parsley\Schema\Plain;
 
 class Parsley
 {
+    public static $documentClass = 'DOMDocument';
+
     protected $blocks = [];
 
     protected $body;
@@ -19,6 +21,17 @@ class Parsley
 
     public function __construct(string $html, Schema $schema = null)
     {
+        // fail gracefully if the XML extension is not installed
+        if ($this->hasXmlExtension() === false) {
+            $this->blocks[] = [
+                'type' => 'markdown',
+                'content' => [
+                    'text' => $html,
+                ]
+            ];
+            return;
+        }
+
         libxml_use_internal_errors(true);
 
         $this->doc = new DOMDocument();
@@ -105,6 +118,11 @@ class Parsley
         }
 
         return false;
+    }
+
+    public function hasXmlExtension(): bool
+    {
+        return class_exists(static::$documentClass) === true;
     }
 
     public function isBlock($element): bool

@@ -19,7 +19,28 @@ class ParsleyTest extends TestCase
             $parser = new Parsley($input, new Blocks());
             $output = $parser->blocks();
 
-            $this->assertEquals($expected, $output, basename($example));
+            $this->assertEquals($output, $expected, basename($example));
         }
+    }
+
+    public function testMissingXmlExtension()
+    {
+        Parsley::$documentClass = 'DOMDocumentDoesNotExist';
+
+        $parser   = new Parsley('Test', new Blocks());
+        $output   = $parser->blocks();
+        $expected = [
+            [
+                'type' => 'markdown',
+                'content' => [
+                    'text' => 'Test'
+                ]
+            ]
+        ];
+
+        $this->assertEquals($output, $expected);
+
+        // revert the global change
+        Parsley::$documentClass = 'DOMDocument';
     }
 }
