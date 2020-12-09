@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Exception;
 use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 use Kirby\Parsley\Parsley;
@@ -101,7 +102,7 @@ class Blocks extends Items
      */
     public static function parse($input): array
     {
-        if (is_array($input) === false) {
+        if (empty($input) === false && is_array($input) === false) {
             try {
                 $input = Json::decode((string)$input);
             } catch (Throwable $e) {
