@@ -34,8 +34,10 @@ export default {
     onInput(html) {
       let dom  = new DOMParser().parseFromString(html, "text/html");
       let list = dom.querySelector('ul, ol');
+
       if (!list) {
         this.$emit("input", "");
+        return;
       }
 
       let text = list.textContent.trim();
