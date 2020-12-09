@@ -1,6 +1,6 @@
 <?php
 
-$blocksRoot = dirname(__DIR__) . '/blocks';
+$blocksRoot = __DIR__ . '/blocks';
 
 return [
     // blocks
