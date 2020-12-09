@@ -83,11 +83,11 @@ class BlocksTest extends TestCase
         $input = '<h1>Test</h1>';
         $expected = [
             [
-                'type' => 'heading',
                 'content' => [
                     'level' => 'h1',
                     'text' => 'Test'
-                ]
+                ],
+                'type' => 'heading',
             ]
         ];
 
@@ -108,10 +108,10 @@ class BlocksTest extends TestCase
     {
         $expected = [
             [
-                'type' => 'text',
                 'content' => [
                     'text' => '<p>This is test string</p>'
-                ]
+                ],
+                'type' => 'text',
             ]
         ];
 
@@ -123,10 +123,10 @@ class BlocksTest extends TestCase
     {
         $expected = [
             [
-                'type' => 'text',
                 'content' => [
                     'text' => '<p>test</p>'
-                ]
+                ],
+                'type' => 'text',
             ]
         ];
 
