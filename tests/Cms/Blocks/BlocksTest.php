@@ -104,6 +104,36 @@ class BlocksTest extends TestCase
         $this->assertSame([], $result);
     }
 
+    public function testParseString()
+    {
+        $expected = [
+            [
+                'type' => 'text',
+                'content' => [
+                    'text' => '<p>This is test string</p>'
+                ]
+            ]
+        ];
+
+        $result = Blocks::parse('This is test string');
+        $this->assertSame($expected, $result);
+    }
+
+    public function testParsePageObject()
+    {
+        $expected = [
+            [
+                'type' => 'text',
+                'content' => [
+                    'text' => '<p>test</p>'
+                ]
+            ]
+        ];
+
+        $result = Blocks::parse($this->page);
+        $this->assertSame($expected, $result);
+    }
+
     public function testToHtml()
     {
         $blocks = Blocks::factory([
