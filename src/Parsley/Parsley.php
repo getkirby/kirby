@@ -9,7 +9,6 @@ use Kirby\Parsley\Schema\Plain;
 class Parsley
 {
     protected $blocks = [];
-
     protected $body;
     protected $doc;
     protected $marks = [];
@@ -17,8 +16,22 @@ class Parsley
     protected $schema;
     protected $skip = [];
 
+    public static $useXmlExtension = true;
+
     public function __construct(string $html, Schema $schema = null)
     {
+        // fail gracefully if the XML extension is not installed
+        // or should be skipped
+        if ($this->useXmlExtension() === false) {
+            $this->blocks[] = [
+                'type' => 'markdown',
+                'content' => [
+                    'text' => $html,
+                ]
+            ];
+            return;
+        }
+
         libxml_use_internal_errors(true);
 
         $this->doc = new DOMDocument();
@@ -205,5 +218,14 @@ class Parsley
     public function query($element, $query)
     {
         return (new DOMXPath($element))->query($query);
+    }
+
+    public function useXmlExtension(): bool
+    {
+        if (static::$useXmlExtension !== true) {
+            return false;
+        }
+
+        return class_exists('DOMDocument') === true;
     }
 }

@@ -19,7 +19,28 @@ class ParsleyTest extends TestCase
             $parser = new Parsley($input, new Blocks());
             $output = $parser->blocks();
 
-            $this->assertEquals($expected, $output, basename($example));
+            $this->assertSame($expected, $output, basename($example));
         }
+    }
+
+    public function testSkipXmlExtension()
+    {
+        Parsley::$useXmlExtension = false;
+
+        $parser   = new Parsley('Test', new Blocks());
+        $output   = $parser->blocks();
+        $expected = [
+            [
+                'type' => 'markdown',
+                'content' => [
+                    'text' => 'Test'
+                ]
+            ]
+        ];
+
+        $this->assertSame($output, $expected);
+
+        // revert the global change
+        Parsley::$useXmlExtension = true;
     }
 }

@@ -3,11 +3,11 @@
 return [
     [
         'content' => [
-            'src'     => 'https://example.com/test.jpg',
-            'alt'     => 'Image',
-            'caption' => 'Caption',
-            'link'    => 'https://example.com',
-            'location' => 'web'
+            'alt'      => 'Image',
+            'caption'  => 'Caption',
+            'link'     => 'https://example.com',
+            'location' => 'web',
+            'src'      => 'https://example.com/test.jpg',
         ],
         'type' => 'image',
     ],
