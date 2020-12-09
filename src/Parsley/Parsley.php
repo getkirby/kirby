@@ -8,7 +8,6 @@ use Kirby\Parsley\Schema\Plain;
 
 class Parsley
 {
-
     protected $blocks = [];
     protected $body;
     protected $doc;
@@ -229,5 +228,4 @@ class Parsley
 
         return class_exists('DOMDocument') === true;
     }
-
 }
