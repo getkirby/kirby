@@ -23,9 +23,9 @@ class ParsleyTest extends TestCase
         }
     }
 
-    public function testMissingXmlExtension()
+    public function testSkipXmlExtension()
     {
-        Parsley::$documentClass = 'DOMDocumentDoesNotExist';
+        Parsley::$useXmlExtension = false;
 
         $parser   = new Parsley('Test', new Blocks());
         $output   = $parser->blocks();
@@ -41,6 +41,6 @@ class ParsleyTest extends TestCase
         $this->assertSame($output, $expected);
 
         // revert the global change
-        Parsley::$documentClass = 'DOMDocument';
+        Parsley::$useXmlExtension = true;
     }
 }
