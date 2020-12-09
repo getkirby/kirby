@@ -19,7 +19,7 @@ class ParsleyTest extends TestCase
             $parser = new Parsley($input, new Blocks());
             $output = $parser->blocks();
 
-            $this->assertEquals($output, $expected, basename($example));
+            $this->assertSame($expected, $output, basename($example));
         }
     }
 
@@ -38,7 +38,7 @@ class ParsleyTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($output, $expected);
+        $this->assertSame($output, $expected);
 
         // revert the global change
         Parsley::$documentClass = 'DOMDocument';

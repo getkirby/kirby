@@ -19,7 +19,11 @@ class Element
 
     public function attr(string $attr, $fallback = null)
     {
-        return $this->node->getAttribute($attr) ?? $fallback;
+        if ($this->node->hasAttribute($attr)) {
+            return $this->node->getAttribute($attr) ?? $fallback;
+        }
+
+        return $fallback;
     }
 
     public function children()

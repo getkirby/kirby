@@ -3,8 +3,8 @@
 return [
     [
         'content' => [
+            'caption' => 'Caption',
             'url'     => 'https://youtube.com/watch?v=LccqV6HPZrw',
-            'caption' => 'Caption'
         ],
         'type' => 'video'
     ],

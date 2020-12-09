@@ -16,10 +16,10 @@ class Blocks extends Plain
         }
 
         return [
-            'type' => 'text',
             'content' => [
                 'text' => '<p>' . $html . '</p>',
-            ]
+            ],
+            'type' => 'text',
         ];
     }
 
@@ -34,9 +34,11 @@ class Blocks extends Plain
             $content['id'] = $id;
         }
 
+        ksort($content);
+
         return [
-            'type' => 'heading',
-            'content' => $content
+            'content' => $content,
+            'type'    => 'heading',
         ];
     }
 
@@ -138,11 +140,11 @@ class Blocks extends Plain
                     }
 
                     return [
-                        'type' => 'quote',
                         'content' => [
                             'citation' => $citation,
                             'text'     => $text
-                        ]
+                        ],
+                        'type' => 'quote',
                     ];
                 }
             ],
@@ -209,19 +211,19 @@ class Blocks extends Plain
                     // correct video URL
                     if ($src) {
                         return [
-                            'type' => 'video',
                             'content' => [
                                 'caption' => $caption,
                                 'url'     => $src
-                            ]
+                            ],
+                            'type' => 'video',
                         ];
                     }
 
                     return [
-                        'type' => 'markdown',
                         'content' => [
                             'text' => $node->outerHTML()
-                        ]
+                        ],
+                        'type' => 'markdown',
                     ];
                 }
             ],
@@ -243,14 +245,14 @@ class Blocks extends Plain
                     }
 
                     return [
-                        'type' => 'image',
                         'content' => [
                             'alt'      => $node->attr('alt'),
                             'caption'  => $caption,
                             'link'     => $link,
                             'location' => 'web',
                             'src'      => $node->attr('src'),
-                        ]
+                        ],
+                        'type' => 'image',
                     ];
                 }
             ],
@@ -258,10 +260,10 @@ class Blocks extends Plain
                 'tag' => 'ol',
                 'parse' => function ($node) {
                     return [
-                        'type'    => 'list',
                         'content' => [
                             'text' => $this->list($node)
-                        ]
+                        ],
+                        'type' => 'list',
                     ];
                 }
             ],
@@ -280,11 +282,11 @@ class Blocks extends Plain
                     }
 
                     return [
-                        'type' => 'code',
                         'content' => [
                             'code'     => $node->innerText(),
                             'language' => $language
-                        ]
+                        ],
+                        'type' => 'code',
                     ];
                 }
             ],
@@ -292,10 +294,10 @@ class Blocks extends Plain
                 'tag' => 'table',
                 'parse' => function ($node) {
                     return [
-                        'type' => 'markdown',
                         'content' => [
                             'text' => $node->outerHTML(),
-                        ]
+                        ],
+                        'type' => 'markdown',
                     ];
                 }
             ],
@@ -303,10 +305,10 @@ class Blocks extends Plain
                 'tag' => 'ul',
                 'parse' => function ($node) {
                     return [
-                        'type'    => 'list',
                         'content' => [
                             'text' => $this->list($node)
-                        ]
+                        ],
+                        'type' => 'list',
                     ];
                 }
             ],

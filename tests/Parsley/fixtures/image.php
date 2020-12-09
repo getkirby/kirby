@@ -5,9 +5,9 @@ return [
         'content' => [
             'alt'      => 'Image',
             'caption'  => null,
-            'src'      => 'https://example.com/test.jpg',
             'link'     => null,
-            'location' => 'web'
+            'location' => 'web',
+            'src'      => 'https://example.com/test.jpg',
         ],
         'type' => 'image',
     ],

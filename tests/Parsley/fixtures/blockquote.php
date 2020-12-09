@@ -3,8 +3,8 @@
 return [
     [
         'content' => [
+            'citation' => null,
             'text' => 'Blockquote',
-            'citation' => null
         ],
         'type' => 'quote',
     ]
