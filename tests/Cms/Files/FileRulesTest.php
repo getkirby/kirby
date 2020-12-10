@@ -245,9 +245,9 @@ class FileRulesTest extends TestCase
             ['.gitignore', 'gitignore', 'application/x-git', false, 'You are not allowed to upload invisible files'],
 
             // rule order
-            ['.test.htm', 'htm', 'application/php', false, 'The extension "htm" is not allowed'],
-            ['.test.htm', 'jpg', 'application/php', false, 'You are not allowed to upload PHP files'],
-            ['.test.htm', 'jpg', 'text/plain', false, 'You are not allowed to upload invisible files'],
+            ['.test.jpg', 'jpg', 'application/php', false, 'You are not allowed to upload PHP files'],
+            ['.test.htm', 'htm', 'text/plain', false, 'The extension "htm" is not allowed'],
+            ['.test.jpg', 'jpg', 'text/plain', false, 'You are not allowed to upload invisible files'],
         ];
     }
 
@@ -273,6 +273,24 @@ class FileRulesTest extends TestCase
         $result = FileRules::validFile($file);
 
         $this->assertTrue($result);
+    }
+
+    public function testValidFileSkipMime()
+    {
+        $file = $this->getMockBuilder(File::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['filename', 'extension'])
+            ->addMethods(['mime'])
+            ->getMock();
+        $file->method('filename')->willReturn('test.jpg');
+        $file->method('extension')->willReturn('jpg');
+        $file->method('mime')->willReturn('text/html');
+
+        $this->assertTrue(FileRules::validFile($file, false));
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The media type "text/html" is not allowed');
+        $this->assertTrue(FileRules::validFile($file));
     }
 
     public function filenameProvider()
