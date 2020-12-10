@@ -54,6 +54,26 @@ class BlocksTest extends TestCase
         $this->assertSame('text', $blocks->last()->type());
     }
 
+    public function testFactoryFromBuilderWithColumns()
+    {
+        $builder = [
+            [
+                '_key' => 'heading',
+                'columns' => 1,
+            ],
+            [
+                '_key' => 'text',
+                'columns' => 2,
+            ]
+        ];
+
+        $blocks = Blocks::factory($builder);
+
+        $this->assertCount(2, $blocks);
+        $this->assertSame('heading', $blocks->first()->type());
+        $this->assertSame('text', $blocks->last()->type());
+    }
+
     public function testParseJson()
     {
         $input = [
