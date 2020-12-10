@@ -85,11 +85,6 @@ class Blocks extends Items
             return $input;
         }
 
-        // no layouts
-        if (array_key_exists('columns', $input[0]) === false) {
-            return $input;
-        }
-
         $blocks = [];
 
         foreach ($input as $layout) {
