@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Sinulla ei ole oikeutta muuttaa tiedoston \"{filename}\" nimeä",
   "error.file.duplicate": "Tiedosto nimellä \"{filename}\" on jo olemassa",
   "error.file.extension.forbidden": "Tiedostopääte \"{extension}\" ei ole sallittu",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Tiedoston \"{filename}\" tiedostopääte puuttuu",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
@@ -82,6 +83,7 @@
   "error.file.notFound": "Tiedostoa \"{filename}\" ei löytynyt",
   "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Sinulla ei ole oikeutta lähettää tiedostoja joiden tyyppi on {type}",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "Tiedostoa ei l\u00f6ytynyt",
 
   "error.form.incomplete": "Korjaa kaikki lomakkeen virheet...",
@@ -90,6 +92,9 @@
   "error.language.code": "Anna kielen lyhenne",
   "error.language.duplicate": "Kieli on jo olemassa",
   "error.language.name": "Anna kielen nimi",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Anna lisenssiavain",
   "error.license.email": "Anna kelpaava sähköpostiosoite",

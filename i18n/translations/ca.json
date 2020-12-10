@@ -6,8 +6,8 @@
   "change": "Canviar",
   "close": "Tancar",
   "confirm": "Ok",
-  "collapse": "Collapse",
-  "collapse.all": "Collapse All",
+  "collapse": "Col·lapsar",
+  "collapse.all": "Col·lapsar tot",
   "copy": "Copiar",
   "create": "Crear",
 
@@ -24,15 +24,15 @@
   "days.wed": "dc.",
 
   "delete": "Eliminar",
-  "delete.all": "Delete all",
+  "delete.all": "Eliminar tot",
   "dimensions": "Dimensions",
   "disabled": "Desactivat",
   "discard": "Descartar",
   "download": "Descarregar",
   "duplicate": "Duplicar",
   "edit": "Editar",
-  "expand": "Expand",
-  "expand.all": "Expand All",
+  "expand": "Expandir",
+  "expand.all": "Expandir tot",
 
   "dialog.files.empty": "No hi ha cap fitxer per seleccionar",
   "dialog.pages.empty": "No hi ha cap pàgina per seleccionar",
@@ -41,7 +41,7 @@
   "email": "Email",
   "email.placeholder": "mail@exemple.com",
 
-  "error.access.code": "Invalid code",
+  "error.access.code": "Codi invàlid",
   "error.access.login": "Inici de sessió no vàlid",
   "error.access.panel": "No tens permís per accedir al panell",
   "error.access.view": "No tens accés a aquesta part del tauler",
@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "No tens permís per canviar el nom de \"{filename}\"",
   "error.file.duplicate": "Ja existeix un fitxer amb el nom \"{filename}\"",
   "error.file.extension.forbidden": "L'extensió de l'arxiu \"{extension}\" no està permesa",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Falta l'extensió de l'arxiu \"{filename}\"",
   "error.file.maxheight": "L'alçada de la imatge no ha de ser superior a {height} píxels",
   "error.file.maxsize": "El fitxer és massa gran",
@@ -82,6 +83,7 @@
   "error.file.notFound": "L'arxiu \"{filename}\" no s'ha trobat",
   "error.file.orientation": "L’orientació de la imatge ha de ser \"{orientation}\"",
   "error.file.type.forbidden": "No tens permís per penjar fitxers {type}",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "L'arxiu no s'ha trobat",
 
   "error.form.incomplete": "Si us plau, corregeix els errors del formulari ...",
@@ -90,6 +92,9 @@
   "error.language.code": "Introdueix un codi vàlid per a l’idioma",
   "error.language.duplicate": "L'idioma ja existeix",
   "error.language.name": "Introdueix un nom vàlid per a l'idioma",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Introduïu una clau de llicència vàlida",
   "error.license.email": "Si us plau, introdueix una adreça de correu electrònic vàlida",

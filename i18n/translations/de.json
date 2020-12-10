@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Du darfst den Dateinamen von \"{filename}\" nicht ändern",
   "error.file.duplicate": "Eine Datei mit dem Dateinamen \"{filename}\" besteht bereits",
   "error.file.extension.forbidden": "Verbotene Dateiendung \"{extension}\"",
+  "error.file.extension.invalid": "Verbotene Dateiendung \"{extension}\"",
   "error.file.extension.missing": "Du kannst keine Dateien ohne Dateiendung hochladen",
   "error.file.maxheight": "Die Bildhöhe darf {height} Pixel nicht überschreiten",
   "error.file.maxsize": "Die Datei ist zu groß",
@@ -82,6 +83,7 @@
   "error.file.notFound": "Die Datei \"{filename}\" konnte nicht gefunden werden",
   "error.file.orientation": "Das Bildformat ist ungültig. Erwartetes Format: \"{orientation}\"",
   "error.file.type.forbidden": "Du kannst keinen {type}-Dateien hochladen",
+  "error.file.type.invalid": "Ungültiger Dateityp: {mime}",
   "error.file.undefined": "Die Datei konnte nicht gefunden werden",
 
   "error.form.incomplete": "Bitte behebe alle Fehler …",
@@ -90,6 +92,9 @@
   "error.language.code": "Bitte gib einen gültigen Code für die Sprache an",
   "error.language.duplicate": "Die Sprache besteht bereits",
   "error.language.name": "Bitte gib einen gültigen Namen für die Sprache an",
+
+  "error.layout.validation.block": "Fehler in Block {blockindex} in Layout {layoutIndex}",
+  "error.layout.validation.settings": "Fehler in den Einstellungen von Layout {index}",
 
   "error.license.format": "Bitte gib einen gültigen Lizenzschlüssel ein",
   "error.license.email": "Bitte gib eine gültige E-Mailadresse an",

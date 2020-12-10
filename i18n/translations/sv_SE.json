@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Du har inte behörighet att ändra namnet på \"{filename}\"",
   "error.file.duplicate": "En fil med namnet \"{filename}\" existerar redan",
   "error.file.extension.forbidden": "Filändelsen \"{extension}\" är inte tillåten",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Filen \"{filename}\" saknar filändelse",
   "error.file.maxheight": "Bildens höjd får inte överstiga {height} pixlar",
   "error.file.maxsize": "Filen är för stor",
@@ -82,6 +83,7 @@
   "error.file.notFound": "Filen  \"{filename}\" kan ej hittas",
   "error.file.orientation": "Bildens orientering måste vara \"{orientation}\"",
   "error.file.type.forbidden": "Du har inte behörighet att ladda upp filer av typen {type}",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "Filen kan inte hittas",
 
   "error.form.incomplete": "Vänligen åtgärda alla formulärfel...",
@@ -90,6 +92,9 @@
   "error.language.code": "Ange en giltig kod för språket",
   "error.language.duplicate": "Språket finns redan",
   "error.language.name": "Ange ett giltigt namn för språket",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Ange en giltig licensnyckel",
   "error.license.email": "Ange en giltig e-postadress",

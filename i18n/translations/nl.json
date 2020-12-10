@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Je hebt geen rechten om de naam te wijzigen van \"{filename}\"",
   "error.file.duplicate": "Er bestaat al een bestand met de naam \"{filename}\"",
   "error.file.extension.forbidden": "Bestandsextensie \"{extension}\" is niet toegestaan",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Je kunt geen bestanden uploaden zonder bestandsextensie",
   "error.file.maxheight": "De hoogte van de afbeelding mag niet groter zijn dan {height} pixels",
   "error.file.maxsize": "Het bestand is te groot",
@@ -82,6 +83,7 @@
   "error.file.notFound": "Het bestand kan niet worden gevonden",
   "error.file.orientation": "De oriëntatie van de afbeelding moet \"{orientation}\" zijn",
   "error.file.type.forbidden": "Je hebt geen rechten om {type} bestanden up te loaden",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "Het bestand kan niet worden gevonden",
 
   "error.form.incomplete": "Verbeter alle fouten in het formulier",
@@ -90,6 +92,9 @@
   "error.language.code": "Vul een geldige code voor deze taal in",
   "error.language.duplicate": "De taal bestaat al",
   "error.language.name": "Vul een geldige naam voor deze taal in",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Vul een gelidge licentie-key in",
   "error.license.email": "Gelieve een geldig emailadres in te voeren",

@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Neturite teisės pakeisti failo pavadinimo \"{filename}\"",
   "error.file.duplicate": "Failas su pavadinimu \"{filename}\" jau yra",
   "error.file.extension.forbidden": "Failo tipas (plėtinys) \"{extension}\" neleidžiamas",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Failui \"{filename}\" trūksta tipo (plėtinio)",
   "error.file.maxheight": "Failo aukštis neturi viršyti {height} px",
   "error.file.maxsize": "Failas per didelis",
@@ -82,6 +83,7 @@
   "error.file.notFound": "Failas \"{filename}\" nerastas",
   "error.file.orientation": "Failo orientacija turi būti \"{orientation}\"",
   "error.file.type.forbidden": "Jūs neturite teisės įkelti {type} tipo failų",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "Failas nerastas",
 
   "error.form.incomplete": "🙏 Prašome ištaisyti visas formos klaidas…",
@@ -90,6 +92,9 @@
   "error.language.code": "Prašome įrašyti teisingą kalbos kodą",
   "error.language.duplicate": "Tokia kalba jau yra",
   "error.language.name": "Prašome įrašyti teisingą kalbos pavadinimą",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Prašome įrašyti teisingą licenzijos kodą",
   "error.license.email": "Prašome įrašyti teisingą el. pašto adresą",

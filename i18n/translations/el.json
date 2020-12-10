@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Δεν επιτρέπεται να αλλάξετε το όνομα του \"{filename}\"",
   "error.file.duplicate": "Ένα αρχείο με το όνομα \"{filename}\" υπάρχει ήδη",
   "error.file.extension.forbidden": "\u039c\u03b7 \u03b1\u03c0\u03bf\u03b4\u03b5\u03ba\u03c4\u03ae \u03b5\u03c0\u03ad\u03ba\u03c4\u03b1\u03c3\u03b7 \u03b1\u03c1\u03c7\u03b5\u03af\u03bf\u03c5",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Λείπει η επέκταση για το \"{filename}\"",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
@@ -82,6 +83,7 @@
   "error.file.notFound": "Δεν είναι δυνατό να βρεθεί το αρχείο \"{filename}\"",
   "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Δεν επιτρέπεται η μεταφόρτωση αρχείων {type}",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "Δεν ήταν δυνατή η εύρεση του αρχείου",
 
   "error.form.incomplete": "Παρακαλώ διορθώστε τα σφάλματα στη φόρμα...",
@@ -90,6 +92,9 @@
   "error.language.code": "Please enter a valid code for the language",
   "error.language.duplicate": "The language already exists",
   "error.language.name": "Please enter a valid name for the language",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "Παρακαλώ εισάγετε μια έγκυρη διεύθυνση ηλεκτρονικού ταχυδρομείου",

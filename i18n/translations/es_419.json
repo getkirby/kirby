@@ -24,15 +24,15 @@
   "days.wed": "Mi\u00e9",
 
   "delete": "Eliminar",
-  "delete.all": "Delete all",
+  "delete.all": "Eliminar todos",
   "dimensions": "Dimensiones",
   "disabled": "Desabilitado",
   "discard": "Descartar",
   "download": "Descargar",
   "duplicate": "Duplicar",
   "edit": "Editar",
-  "expand": "Expand",
-  "expand.all": "Expand All",
+  "expand": "Expandir",
+  "expand.all": "Expandir todo",
 
   "dialog.files.empty": "No has seleccionado ningún archivo",
   "dialog.pages.empty": "No has seleccionado ninguna página",
@@ -41,15 +41,15 @@
   "email": "Correo Electrónico",
   "email.placeholder": "correo@ejemplo.com",
 
-  "error.access.code": "Invalid code",
+  "error.access.code": "Código inválido",
   "error.access.login": "Ingreso inválido",
-  "error.access.panel": "No tienes permitido acceder al panel.",
+  "error.access.panel": "No tienes permitido acceder al panel",
   "error.access.view": "No tienes permiso para acceder a esta parte del panel",
 
-  "error.avatar.create.fail": "No se pudo subir la foto de perfil.",
-  "error.avatar.delete.fail": "No se pudo eliminar la foto de perfil.",
-  "error.avatar.dimensions.invalid": "Por favor, mantén el ancho y la altura de la imagen de perfil por debajo de 3000 pixeles.",
-  "error.avatar.mime.forbidden": "La foto de perfil debe de ser un archivo JPG o PNG.",
+  "error.avatar.create.fail": "No se pudo subir la foto de perfil",
+  "error.avatar.delete.fail": "No se pudo eliminar la foto de perfil",
+  "error.avatar.dimensions.invalid": "Por favor, mantén el ancho y la altura de la imagen de perfil por debajo de 3000 pixeles",
+  "error.avatar.mime.forbidden": "La foto de perfil debe de ser un archivo JPG o PNG",
 
   "error.blueprint.notFound": "El blueprint \"{name}\" no se pudo cargar.",
 
@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "No tienes permitido cambiar el nombre de \"{filename}\"",
   "error.file.duplicate": "Ya existe un archivo con el nombre \"{filename}\".",
   "error.file.extension.forbidden": "La extensión \"{extension}\" no está permitida.",
+  "error.file.extension.invalid": "Extensión inválida: {extension}",
   "error.file.extension.missing": "Falta la extensión para \"{filename}\".",
   "error.file.maxheight": "La altura de la imagen no debe exceder {height} pixeles",
   "error.file.maxsize": "El archivo es muy grande",
@@ -82,14 +83,18 @@
   "error.file.notFound": "El archivo \"{filename}\" no pudo ser encontrado.",
   "error.file.orientation": "La orientación de la imagen debe ser \"{orientation}\"",
   "error.file.type.forbidden": "No está permitido subir archivos {type}.",
-  "error.file.undefined": "El archivo no se puede encontrar.",
+  "error.file.type.invalid": "Tipo de archivo inválido: {type}",
+  "error.file.undefined": "El archivo no se puede encontrar",
 
   "error.form.incomplete": "Por favor, corrige todos los errores del formulario...",
-  "error.form.notSaved": "No se pudo guardar el formulario.",
+  "error.form.notSaved": "No se pudo guardar el formulario",
 
-  "error.language.code": "Por favor introduce un código válido para el lenguaje",
-  "error.language.duplicate": "El lenguaje ya existe",
-  "error.language.name": "Por favor introduce un nombre válido para el lenguaje",
+  "error.language.code": "Por favor introduce un código válido para el idioma",
+  "error.language.duplicate": "El idioma ya existe",
+  "error.language.name": "Por favor introduce un nombre válido para el idioma",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Por favor introduce una llave de licencia válida",
   "error.license.email": "Por favor ingresa un correo electrónico valido",

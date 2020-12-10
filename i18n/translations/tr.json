@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "\"{filename}\" adını değiştiremezsiniz",
   "error.file.duplicate": "\"{filename}\" isimli bir dosya zaten var",
   "error.file.extension.forbidden": "\"{extension}\" dosya uzantısına izin verilmiyor",
+  "error.file.extension.invalid": "Geçersiz uzantı: {extension}",
   "error.file.extension.missing": "\"{filename}\" dosyasının uzantısı yok",
   "error.file.maxheight": "Resmin yüksekliği {height} pikselden büyük olmamalıdır",
   "error.file.maxsize": "Dosya çok büyük",
@@ -82,6 +83,7 @@
   "error.file.notFound": "\"{filename}\" dosyası bulunamadı",
   "error.file.orientation": "Resmin oryantasyonu \"{orientation}\" olmalıdır",
   "error.file.type.forbidden": "{type} dosya yükleme izni yok",
+  "error.file.type.invalid": "Geçersiz dosya türü: {type}",
   "error.file.undefined": "Dosya bulunamad\u0131",
 
   "error.form.incomplete": "Lütfen tüm form hatalarını düzeltin...",
@@ -90,6 +92,9 @@
   "error.language.code": "Lütfen dil için geçerli bir kod girin",
   "error.language.duplicate": "Bu dil zaten var",
   "error.language.name": "Lütfen dil için geçerli bir isim girin",
+
+  "error.layout.validation.block": "{layoutIndex}. düzenin {blockIndex}. bloğunda bir hata var",
+  "error.layout.validation.settings": "{index}. düzen ayarlarında bir hata var",
 
   "error.license.format": "Lütfen geçerli bir lisans anahtarı girin",
   "error.license.email": "Lütfen geçerli bir e-posta adresi girin",

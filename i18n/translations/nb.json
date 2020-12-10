@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Du er ikke tillatt å endre navnet til \"{filename}\"",
   "error.file.duplicate": "En fil med navnet \"{filename}\" eksisterer allerede",
   "error.file.extension.forbidden": "Ugyldig filtype",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Du kan ikke laste opp filer uten filtype",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
@@ -82,6 +83,7 @@
   "error.file.notFound": "Filen kunne ikke bli funnet",
   "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Du har ikke lov til å laste opp filer av typen {type}",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "Filen kunne ikke bli funnet",
 
   "error.form.incomplete": "Vennligst fiks alle feil…",
@@ -90,6 +92,9 @@
   "error.language.code": "Please enter a valid code for the language",
   "error.language.duplicate": "The language already exists",
   "error.language.name": "Please enter a valid name for the language",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "Vennligst skriv inn en gyldig e-postadresse",

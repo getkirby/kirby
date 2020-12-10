@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Nincs jogosultságod megváltoztatni a \"{filename}\" fájl nevét",
   "error.file.duplicate": "Már létezik \"{filename}\" nevű fájl",
   "error.file.extension.forbidden": "Tiltott kiterjeszt\u00e9s\u0171 f\u00e1jl",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Kiterjeszt\u00e9s n\u00e9lk\u00fcli f\u00e1jl nem t\u00f6lthet\u0151 fel",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
@@ -82,6 +83,7 @@
   "error.file.notFound": "A \"{filename}\" fájl nem található",
   "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Nem tölthetsz fel \"{type}\" típusú fájlokat",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "A f\u00e1jl nem tal\u00e1lhat\u00f3",
 
   "error.form.incomplete": "Kérlek javítsd ki az összes hibát az űrlapon",
@@ -90,6 +92,9 @@
   "error.language.code": "Kérlek, add meg a nyelv érvényes kódját",
   "error.language.duplicate": "A nyelv már létezik",
   "error.language.name": "Kérlek, add meg a nyelv érvényes nevét",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Kérlek, add meg az évényes lincensz kulcsot",
   "error.license.email": "Kérlek adj meg egy valós email-címet",

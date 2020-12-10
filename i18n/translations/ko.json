@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "파일명({filename})을 변경할 권한이 없습니다.",
   "error.file.duplicate": "파일명이 같은 파일({filename})이 있습니다.",
   "error.file.extension.forbidden": "이 확장자({extension})는 업로드할 수 없습니다.",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "파일({filename})에 확장자가 없습니다.",
   "error.file.maxheight": "이미지의 높이는 {height}픽셀을 초과할 수 없습니다.",
   "error.file.maxsize": "파일이 너무 큽니다.",
@@ -82,6 +83,7 @@
   "error.file.notFound": "파일({filename})이 없습니다.",
   "error.file.orientation": "이미지의 비율({orientation})을 확인하세요.",
   "error.file.type.forbidden": "이 형식({type})의 파일을 업로드할 권한이 없습니다.",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "\ud30c\uc77c\uc774 \uc5c6\uc2b5\ub2c8\ub2e4.",
 
   "error.form.incomplete": "항목에 오류가 있습니다.",
@@ -90,6 +92,9 @@
   "error.language.code": "올바른 언어 코드를 입력하세요.",
   "error.language.duplicate": "이미 등록한 언어입니다.",
   "error.language.name": "올바른 언어명을 입력하세요.",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "올바른 라이선스 키를 입력하세요.",
   "error.license.email": "올바른 이메일 주소를 입력하세요.",
@@ -473,8 +478,8 @@
   "upload.error.default": "파일을 업로드할 수 없습니다.",
   "upload.error.extension": "파일 확장자를 확인하세요.",
   "upload.error.formSize": "업로드한 파일이 허용된 크기(MAX_FILE_SIZE)를 초과했습니다.",
-  "upload.error.iniPostSize": "업로드한 파일이 허용된 크기(post_max_size)를 초과했습니다.",
-  "upload.error.iniSize": "업로드한 파일이 허용된 크기(upload_max_filesize)를 초과했습니다.",
+  "upload.error.iniPostSize": "업로드한 파일이 PHP 환경 설정 파일(php.ini)에서 허용된 크기(post_max_size)를 초과했습니다.",
+  "upload.error.iniSize": "업로드한 파일이 PHP 환경 설정 파일(php.ini)에서 허용된 허용된 크기(upload_max_filesize)를 초과했습니다.",
   "upload.error.noFile": "업로드한 파일이 없습니다.",
   "upload.error.noFiles": "업로드한 파일이 없습니다.",
   "upload.error.partial": "일부 파일을 업로드했습니다.",

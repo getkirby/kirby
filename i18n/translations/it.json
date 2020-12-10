@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Non ti è permesso modificare il nome di \"{filename}\"",
   "error.file.duplicate": "Un file con il nome \"{filename}\" esiste già",
   "error.file.extension.forbidden": "L'estensione \"{extension}\" non è consentita",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Il file \"{filename}\" non ha estensione",
   "error.file.maxheight": "L'immagine non dev'essere più alta di {height} pixel",
   "error.file.maxsize": "Il file è troppo pesante",
@@ -82,6 +83,7 @@
   "error.file.notFound": "Il file non \u00e8 stato trovato",
   "error.file.orientation": "L'imaggine dev'essere orientata in \"{orientation}\"",
   "error.file.type.forbidden": "Non ti è permesso caricare file {type}",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "Il file non \u00e8 stato trovato",
 
   "error.form.incomplete": "Correggi tutti gli errori nel form...",
@@ -90,6 +92,9 @@
   "error.language.code": "Inserisci un codice valido per la lingua",
   "error.language.duplicate": "La lingua esiste già",
   "error.language.name": "Inserisci un nome valido per la lingua",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Inserisci un codice di licenza valido",
   "error.license.email": "Inserisci un indirizzo email valido",

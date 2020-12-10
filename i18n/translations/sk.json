@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Nemáte povolenie na zmenu názvu pre \"{filename}\"",
   "error.file.duplicate": "Súbor s názvom \"{filename}\" už existuje",
   "error.file.extension.forbidden": "Prípona \"{extension}\" nie je povolená",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Prípona pre \"{filename}\" chýba",
   "error.file.maxheight": "The height of the image must not exceed {height} pixels",
   "error.file.maxsize": "The file is too large",
@@ -82,6 +83,7 @@
   "error.file.notFound": "Súbor \"{filename}\" sa nepodarilo nájsť",
   "error.file.orientation": "The orientation of the image must be \"{orientation}\"",
   "error.file.type.forbidden": "Nemáte povolenie na nahrávanie súborov s typom {type}",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "Súbor nie je možné nájsť",
 
   "error.form.incomplete": "Prosím, opravte všetky chyby v rámci formuláru...",
@@ -90,6 +92,9 @@
   "error.language.code": "Please enter a valid code for the language",
   "error.language.duplicate": "The language already exists",
   "error.language.name": "Please enter a valid name for the language",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Please enter a valid license key",
   "error.license.email": "Prosím, zadajte platnú e-mailovú adresu",

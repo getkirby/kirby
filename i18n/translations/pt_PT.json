@@ -67,6 +67,7 @@
   "error.file.changeName.permission": "Não tem permissões para alterar o nome de \"{filename}\"",
   "error.file.duplicate": "Um arquivo com o nome \"{filename}\" já existe",
   "error.file.extension.forbidden": "Extensão \"{extension}\" não permitida",
+  "error.file.extension.invalid": "Invalid extension: {extension}",
   "error.file.extension.missing": "Extensão de \"{filename}\" em falta",
   "error.file.maxheight": "A altura da imagem não deve exceder {height} pixels",
   "error.file.maxsize": "O arquivo é muito grande",
@@ -82,6 +83,7 @@
   "error.file.notFound": "Arquivo \"{filename}\" não encontrado",
   "error.file.orientation": "A orientação da imagem deve ser \"{orientation}\"",
   "error.file.type.forbidden": "Não tem permissões para enviar arquivos {type}",
+  "error.file.type.invalid": "Invalid file type: {type}",
   "error.file.undefined": "Arquivo n\u00e3o encontrado",
 
   "error.form.incomplete": "Por favor, corrija os erros do formulário…",
@@ -90,6 +92,9 @@
   "error.language.code": "Insira um código de idioma válido",
   "error.language.duplicate": "O idioma já existe",
   "error.language.name": "Insira um nome válido para o idioma",
+
+  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
+  "error.layout.validation.settings": "There's an error in layout {index} settings",
 
   "error.license.format": "Insira uma chave de licença válida",
   "error.license.email": "Digite um endereço de email válido",
