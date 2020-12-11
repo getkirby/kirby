@@ -232,7 +232,7 @@ class File
     /**
      * Reads the file content and returns it.
      *
-     * @return string
+     * @return string|false
      */
     public function read()
     {
