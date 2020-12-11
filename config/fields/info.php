@@ -23,6 +23,13 @@ return [
         'text' => function ($value = null) {
             return I18n::translate($value, $value);
         },
+
+        /**
+         * Change the design of the info box
+         */
+        'theme' => function (string $theme = null) {
+            return $theme;
+        }
     ],
     'computed' => [
         'text' => function () {
