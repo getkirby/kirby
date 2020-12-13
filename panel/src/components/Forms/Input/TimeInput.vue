@@ -10,10 +10,6 @@ export default {
     },
     max: String,
     min: String,
-    notation: {
-      type: Number,
-      default: 24
-    },
     step: {
       type: Object,
       default() {
@@ -29,6 +25,19 @@ export default {
     }
   },
   computed: {
+    is12HourFormat() {
+      return this.display.toLowerCase().includes("a")
+    },
+    /**
+     * Map for matching time units with dayjs tokens
+     */
+    map() {
+      return {
+        second: ["s", "ss"],
+        minute: ["m", "mm"],
+        hour:   this.is12HourFormat ? ["h", "hh"] : ["H", "HH"]
+      };
+    },
     /**
      *  All variations of parsing patterns
      *  for dayjs tokens included in `display`
@@ -38,7 +47,7 @@ export default {
       let patterns = DateInput.computed.patterns.apply(this);
 
       // add patterns for am/pm token
-      if (this.notation === 12) {
+      if (this.is12HourFormat) {
         patterns = patterns.map(pattern => pattern  + "a").concat(patterns);
       }
 

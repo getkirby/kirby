@@ -55,13 +55,10 @@ export default {
   },
   computed: {
     /**
-     * Map for matching datetime unit with dayjs tokens
+     * Map for matching date units with dayjs tokens
      */
     map() {
       return {
-        second: ["ss"],
-        minute: ["mm"],
-        hour:   [this.notation === 12 ? "hh" : "HH"],
         day:    ["D", "DD"],
         month:  ["M", "MM", "MMM", "MMMM"],
         year:   ["YY", "YYYY"]

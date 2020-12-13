@@ -48,6 +48,7 @@ return [
 
         /**
          * `12` or `24` hour notation. If `12`, an AM/PM selector will be shown.
+         * If `display` is defined, that option will take priority.
          */
         'notation' => function (int $value = 24) {
             return $value === 24 ? 24 : 12;
@@ -92,7 +93,7 @@ return [
                 return $this->display;
             }
 
-            return $this->notation === 24 ? 'HH:mm' : 'hh:mm a';
+            return $this->notation === 24 ? 'HH:mm' : 'h:mm a';
         },
         'value' => function () {
             return $this->toDatetime($this->value, 'H:i:s');
