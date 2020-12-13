@@ -103,11 +103,7 @@ return [
         }
     ],
     'save' => function ($value): string {
-        if ($value != null && $timestamp = strtotime($value)) {
-            return date('H:i:s', $timestamp);
-        }
-
-        return '';
+        return $this->toContent($value, 'H:i:s');
     },
     'validations' => [
         'time',

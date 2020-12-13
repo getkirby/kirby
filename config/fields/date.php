@@ -132,12 +132,8 @@ return [
         },
     ],
     'save' => function ($value) {
-        if ($value !== null && $timestamp = timestamp($value)) {
-            $format = $this->time === false ? 'Y-m-d' : 'Y-m-d H:i:s';
-            return $this->toISO($timestamp, $format);
-        }
-
-        return '';
+        $format = $this->time === false ? 'Y-m-d' : 'Y-m-d H:i:s';
+        return $this->toContent($value, $format);
     },
     'validations' => [
         'date',

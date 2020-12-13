@@ -4,13 +4,17 @@ return [
     'methods' => [
         'toDatetime' => function ($value, string $format = 'Y-m-d H:i:s') {
             if ($timestamp = timestamp($value, $this->step)) {
-                return $this->toISO($timestamp, $format);
+                return date($format, $timestamp);
             }
 
             return null;
         },
-        'toISO' => function (int $time, string $format = 'Y-m-d H:i:s') {
-            return date($format, $time);
+        'toContent' => function ($value, string $format = 'Y-m-d H:i:s') {
+            if ($value !== null && $timestamp = strtotime($value)) {
+                return date($format, $timestamp);
+            }
+
+            return '';
         }
     ]
 ];
