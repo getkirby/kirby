@@ -171,16 +171,30 @@ export default {
         // resolve what unit that parts represent
         // and set size to 1 (if not the step unit is selected)
         if (this.selected !== null) {
-          unit = this.toUnit(this.tokens[this.selected]);
+          const token = this.tokens[this.selected];
 
-          if (unit !== this.step.unit) {
-            size = 1;
-          }
+          // handle manipulation of am/pm
+          if (token.toLowerCase() === "a") {
+            unit = "hour";
+            size = 12;
+
+            if (this.parts[this.selected] === "pm") {
+              operator = "subtract";
+            } else {
+              operator = "add";
+            }
+
+          // handle manipulation of all other units
+          } else {
+            unit = this.toUnit(token);
+
+            if (unit !== this.step.unit) {
+              size = 1;
+            }
+          }          
         }
 
         // manipulate datetime by size and unit
-        // and mark part of unit that got altered as to be selected
-        this.selected = this.toIndex(unit);
         dt = this.parsed.clone()[operator](size, unit);
 
       // if no parsed result exist, fill with current datetime
