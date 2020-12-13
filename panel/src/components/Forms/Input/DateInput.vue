@@ -321,14 +321,13 @@ export default {
       return value.format(this.display);
     },
     toNearest(dt, unit = this.step.unit, size = this.step.size) {
-      // round datetime to nearest step
-      // based on step unit and size
-      dt = dt.clone();
-
+      // make sure it's dayjs syntax compatible
       if (unit === "day") {
         unit = "date";
       }
 
+      // round datetime to nearest step
+      // based on step unit and size
       const current = dt.get(unit);
       const nearest = Math.round(current / size) * size;
       return dt.set(unit, nearest).startOf(unit);
@@ -368,8 +367,9 @@ export default {
 
       // if nearest unit is required,
       // make sure no unit below the step unit is returned
-      if (nearest === true && index < keys.indexOf(this.step.unit)) {
-        return this.step.unit;
+      const step = this.step.unit;
+      if (nearest === true && index < keys.indexOf(step)) {
+        return step;
       }
 
       return keys[index];

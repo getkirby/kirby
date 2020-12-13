@@ -56,32 +56,28 @@ return [
          * Round to the nearest: sub-options for `unit` (minute) and `size` (5)
          */
         'step' => function ($step = null) {
+            $default = [
+                'size' => 5,
+                'unit' => 'minute'
+            ];
+
             if ($step === null) {
-                return [
-                    'size' => 5,
-                    'unit' => 'minute'
-                ];
+                return $default;
             }
 
             if (is_array($step) === true) {
+                $step = array_merge($default, $step);
+                $step['unit'] = strtolower($step['unit']);
                 return $step;
             }
 
             if (is_int($step) === true) {
-                return [
-                    'size' => $step,
-                    'unit' => 'minute'
-                ];
+                return array_merge($default, ['size' => $step]);
             }
 
             if (is_string($step) === true) {
-                return [
-                    'size' => 1,
-                    'unit' => $step
-                ];
+                return array_merge($default, ['unit' => strtolower($step)]);
             }
-
-            throw new Exception('step option has to be defined as array');
         },
         'value' => function ($value = null) {
             return $value;

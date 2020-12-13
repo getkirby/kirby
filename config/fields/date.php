@@ -60,32 +60,28 @@ return [
          * Round to the nearest: sub-options for `unit` (day) and `size` (1)
          */
         'step' => function ($step = null) {
+            $default = [
+                'size' => 1,
+                'unit' => 'day'
+            ];
+
             if ($step === null) {
-                return [
-                    'size' => 1,
-                    'unit' => 'day'
-                ];
+                return $default;
             }
 
             if (is_array($step) === true) {
+                $step = array_merge($default, $step);
+                $step['unit'] = strtolower($step['unit']);
                 return $step;
             }
 
             if (is_int($step) === true) {
-                return [
-                    'size' => $step,
-                    'unit' => 'day'
-                ];
+                return array_merge($default, ['size' => $step]);
             }
 
             if (is_string($step) === true) {
-                return [
-                    'size' => 1,
-                    'unit' => $step
-                ];
+                return array_merge($default, ['unit' => strtolower($step)]);
             }
-
-            throw new Exception('step option has to be defined as array');
         },
 
         /**
