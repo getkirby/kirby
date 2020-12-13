@@ -4,7 +4,7 @@
     v-model="input"
     v-bind="$props"
     :class="`k-${type}-input`"
-    :placeholder="placeholder"
+    :placeholder="display"
     :spellcheck="false"
     type="text"
     @blur="onBlur"
@@ -106,12 +106,6 @@ export default {
       // join components with some separator
       // and make sure the more detailed patterns go first
       return patterns.map(format => format.join(this.separator)).reverse();
-    },
-    /**
-     * Input placeholder based on `display`
-     */
-    placeholder() {
-      return this.display.toLowerCase();
     },
     /**
      * Input parsed as dateime object rounded to nearest step
