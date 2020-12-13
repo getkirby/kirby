@@ -44,11 +44,12 @@ abstract class Handler
      */
     public static function read(string $file): array
     {
-        if (is_file($file) !== true) {
+        $contents = F::read($file);
+        if ($contents === false) {
             throw new Exception('The file "' . $file . '" does not exist');
         }
 
-        return static::decode(F::read($file));
+        return static::decode($contents);
     }
 
     /**

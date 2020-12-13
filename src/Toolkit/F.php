@@ -547,14 +547,19 @@ class F
     }
 
     /**
-     * Reads the content of a file
+     * Reads the content of a file or requests the
+     * contents of a remote HTTP or HTTPS URL
      *
-     * @param string $file The path for the file
+     * @param string $file The path for the file or an absolute URL
      * @return string|false
      */
     public static function read(string $file)
     {
-        if (is_file($file) !== true) {
+        if (
+            is_file($file) !== true &&
+            Str::startsWith($file, 'https://') !== true &&
+            Str::startsWith($file, 'http://') !== true
+        ) {
             return false;
         }
 

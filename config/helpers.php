@@ -709,10 +709,6 @@ function svg($file)
     if (file_exists($file) === false) {
         $root = App::instance()->root();
         $file = realpath($root . '/' . $file);
-
-        if (file_exists($file) === false) {
-            return false;
-        }
     }
 
     return F::read($file);

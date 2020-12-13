@@ -291,9 +291,9 @@ trait UserActions
     /**
      * Reads the user password from disk
      *
-     * @return string|null
+     * @return string|false
      */
-    protected function readPassword(): ?string
+    protected function readPassword()
     {
         return F::read($this->root() . '/.htpasswd');
     }

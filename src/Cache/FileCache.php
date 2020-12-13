@@ -107,9 +107,10 @@ class FileCache extends Cache
      */
     public function retrieve(string $key)
     {
-        $file = $this->file($key);
+        $file  = $this->file($key);
+        $value = F::read($file);
 
-        return Value::fromJson(F::read($file));
+        return $value ? Value::fromJson($value) : null;
     }
 
     /**

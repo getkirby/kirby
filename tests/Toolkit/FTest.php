@@ -335,7 +335,9 @@ class FTest extends TestCase
     {
         file_put_contents($this->tmp, $content = 'my content is awesome');
 
-        $this->assertEquals($content, F::read($this->tmp));
+        $this->assertSame($content, F::read($this->tmp));
+        $this->assertFalse(F::read('invalid file'));
+        $this->assertStringContainsString('Example Domain', F::read('https://example.com'));
     }
 
     public function testRemove()
