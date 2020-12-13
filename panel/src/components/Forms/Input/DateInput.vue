@@ -13,7 +13,7 @@
     @focus="$emit('focus')"
     @keydown.down.stop.prevent="onDown"
     @keydown.up.stop.prevent="onUp"
-    @keydown.enter.stop.prevent="onEnter"
+    @keydown.enter="onEnter"
     @keydown.tab="onTab"
   />
 </template>
@@ -214,7 +214,10 @@ export default {
       });
     },
     onBlur() {
-      this.input    = this.result ? this.toFormat(this.result) : null;
+      if (!this.parsed) {
+        this.input = null;
+      }
+
       this.selected = null;
       this.emit("update");
     },
