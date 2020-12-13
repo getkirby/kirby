@@ -58,7 +58,7 @@ export default {
         ...this.time,
         disabled: this.disabled,
         required: this.required,
-        value:    this.value
+        value:    this.value ? this.toDatetime(this.value).format("HH:mm:ss") : null
       }
     }
   },
@@ -72,9 +72,9 @@ export default {
     this.onInvalid();
   },
   methods: {
-    emit(event) {
-      if (this.input) {
-        this.$emit(event, this.input.format("YYYY-MM-DD HH:mm:ss"));
+    emit(event, dt = this.input) {
+      if (dt) {
+        this.$emit(event, dt.format("YYYY-MM-DD HH:mm:ss"));
       } else {
         this.$emit(event, "");
       }
@@ -82,25 +82,25 @@ export default {
     focus() {
       this.$refs.dateInput.focus();
     },
-    onUpdate(value, component) {
+    onUpdate(value, input) {
       const base  = this.toDatetime(this.value);
-      this.input  = this.toDatetime(value, component, base);
-      this.emit("update");
+      input = this.toDatetime(value, input, base);
+      this.emit("update", input);
     },
-    onEnter(value, component) {
-      this.onUpdate(component, value);
+    onEnter(value, input) {
+      this.onUpdate(input, value);
       this.emit("enter");
     },
-    onInput(value, component) {
-      this.input = this.toDatetime(value, component, this.input);
+    onInput(value, input) {
+      this.input = this.toDatetime(value, input, this.input);
       this.emit("input");
     },
     onInvalid() {
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
-    toDatetime(value, component, base) {
+    toDatetime(value, input, base) {
       // if only value is passed,
-      // parse value as dayjs date  and
+      // parse value as dayjs date and
       // return object (or null if invalid)
 
       if (!value) {
@@ -109,25 +109,29 @@ export default {
 
       let dt = this.$library.dayjs.utc(value);
 
+      if (input === "time") {
+        dt = this.$library.dayjs.utc(value, "HH:mm:ss");
+      }
+
       if (dt.isValid() === false) {
         return null;
       }
 
-      // if also component and base are passed,
-      // take the component (date or time) values from value
+      // if also input and base are passed,
+      // take the input (date or time) values from value
       // and merge these onto the base dayjs object
 
-      if (!component || !base) {
+      if (!input || !base) {
         return dt;
       }
 
-      if (component === "date") {
+      if (input === "date") {
         return base.clone().utc().set("year", dt.get("year"))
                                  .set("month", dt.get("month"))
                                  .set("date", dt.get("date"));
       }
 
-      if (component === "time") {
+      if (input === "time") {
         return base.clone().utc().set("hour", dt.get("hour"))
                                  .set("minute", dt.get("minute"))
                                  .set("second", dt.get("second"));

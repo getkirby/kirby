@@ -65,6 +65,24 @@ export default {
       };
     },
     /**
+     * Input parsed as dateime object rounded to nearest step
+     */
+    parsed() {
+      if (this.input) {
+        // loop through parsing patterns to find
+        // first result where input is a valid date
+        for (let i = 0; i < this.patterns.length; i++) {
+          const dt = this.$library.dayjs.utc(this.input, this.patterns[i]);
+
+          if (dt.isValid()) {
+            return dt;
+          }
+        }
+      }
+
+      return null;
+    },
+    /**
      * Array of the current input parts
      */
     parts() {
@@ -108,27 +126,6 @@ export default {
       return patterns.map(format => format.join(this.separator)).reverse();
     },
     /**
-     * Input parsed as dateime object rounded to nearest step
-     */
-    result() {
-      if (this.input) {
-        // fix lowercased month names
-        const input = this.$helper.string.ucwords(this.input);
-
-        // loop through parsing patterns to find
-        // first result where input is a valid date
-        for (let i = 0; i < this.patterns.length; i++) {
-          const dt = this.$library.dayjs.utc(input, this.patterns[i]);
-
-          if (dt.isValid()) {
-            return this.toNearest(dt);
-          }
-        }
-      }
-
-      return null;
-    },
-    /**
      * Separator from `display` format
      */
     separator() {
@@ -142,8 +139,8 @@ export default {
     }
   },
   watch: {
-    value() {
-      this.input = this.toFormat(this.value);
+    value(value) {
+      this.input = this.toFormat(value);
       this.onInvalid();
     }
   },
@@ -152,20 +149,17 @@ export default {
   },
   methods: {
     emit(event) {
-      if (this.result) {
-        this.$emit(event, this.result.format("YYYY-MM-DD HH:mm:ss"));
-      } else {
-        this.$emit(event, "");
-      }
+      const value = this.toFormat(this.parsed, "YYYY-MM-DD HH:mm:ss") || "";
+      this.$emit(event, value);
     },
     focus() {
       this.$refs.input.focus();
     },
-    manipulate(operator, ) {
+    manipulate(operator) {
       let dt;
 
-      // if a result exists already, modify…
-      if (this.result) {
+      // if a parsed result exists already, modify…
+      if (this.parsed) {
         // as default use the step unit and size
         let unit = this.step.unit;
         let size = this.step.size;
@@ -186,10 +180,10 @@ export default {
 
         // manipulate datetime by size and unit
         // and mark part of unit that got altered as to be selected
-        dt = this.result.clone()[operator](size, unit);
         this.selected = this.toIndex(unit);
+        dt = this.parsed.clone()[operator](size, unit);
 
-      // if not result exist, fill with current datetime
+      // if no parsed result exist, fill with current datetime
       // and mark the part that represent the step unit to be selected
       } else {
         dt = this.toNearest(this.$library.dayjs());
@@ -293,7 +287,7 @@ export default {
     toDatetime(string) {
       return this.$library.dayjs.utc(string);
     },
-    toFormat(value) {
+    toFormat(value, format = this.display) {
       if (!value) {
         return null;
       }
@@ -309,7 +303,7 @@ export default {
       }
 
       // formats datetime according to `display` prop
-      return value.format(this.display);
+      return this.toNearest(value).format(format);
     },
     toNearest(dt, unit = this.step.unit, size = this.step.size) {
       // make sure it's dayjs syntax compatible
