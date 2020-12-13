@@ -19,6 +19,8 @@
 </template>
 
 <script>
+import { required } from "vuelidate/lib/validators";
+
 export default {
   inheritAttrs: false,
   props: {
@@ -394,6 +396,7 @@ export default {
           "isBefore",
           this.step.unit
         ) : true,
+        required: this.required ? required : true,
       }
     }
   }
