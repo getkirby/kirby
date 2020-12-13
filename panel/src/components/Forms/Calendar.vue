@@ -249,13 +249,14 @@ export default {
                         .set("hour", dt2.get("hour"));
     },
     select(day) {
+      const reference = this.datetimes[0] || this.toToday();
+
       if (day === "today") {
-        const today = this.$library.dayjs();
+        const today = this.mergeTime(this.$library.dayjs(), reference);
         this.datetimes = [today];
         this.show(today);
 
       } else {
-        const reference = this.datetimes[0] || this.toToday();
         let date = this.toDate(day);
         date = this.mergeTime(date, reference);
 
