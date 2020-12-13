@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Exception\Exception;
+use Kirby\Form\Field;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -109,13 +110,22 @@ return [
                 return Str::upper($this->display);
             }
         },
-        'step' => function () {
-            if ($this->time !== false) {
-                $timeField = require __DIR__ . '/time.php';
-                return $timeField['props']['step']($this->time['step'] ?? null);
+        'time' => function () {
+            if ($this->time === false) {
+                return false;
             }
 
-            return $this->step;
+            $props = is_array($this->time) ? $this->time : [];
+            $props['model'] = $this->model();
+            $field = new Field('time', $props);
+            return $field->toArray();
+        },
+        'step' => function () {
+            if ($this->time === false) {
+                return $this->step;
+            }
+
+            return $this->time['step'];
         },
         'value' => function () {
             return $this->toDatetime($this->value);
