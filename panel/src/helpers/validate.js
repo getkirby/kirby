@@ -1,17 +1,21 @@
 
 export default {
   datetime(app, value, limit, condition, base = "day") {
-    value = app.$library.dayjs.utc(value);
-
-    if (!limit) {
-      return value && value.isValid();
+    let dt = app.$library.dayjs.utc(value);
+    
+    if (!dt.isValid()) {
+      dt = app.$library.dayjs.utc(value, "HH:mm:ss");
     }
 
-    if (!value || !value.isValid()) {
+    if (!limit) {
+      return value && dt.isValid();
+    }
+
+    if (!value || !dt.isValid()) {
       return true;
     }
 
     limit = app.$library.dayjs.utc(limit);
-    return value.isSame(limit, base) || value[condition](limit, base);
+    return dt.isSame(limit, base) || dt[condition](limit, base);
   }
 }
