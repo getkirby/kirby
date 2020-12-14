@@ -89,6 +89,9 @@ export default {
       }
     }
   },
+  destroyed() {
+    this.$store.dispatch("drawers/close", this._uid);
+  },
   methods: {
     close() {
       this.$refs.overlay.close();
