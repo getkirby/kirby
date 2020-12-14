@@ -28,8 +28,8 @@
   "dimensions": "Διαστάσεις",
   "disabled": "Disabled",
   "discard": "Απόρριψη",
-  "download": "Download",
-  "duplicate": "Duplicate",
+  "download": "Λήψη",
+  "duplicate": "Αντίγραφο",
   "edit": "\u0395\u03c0\u03b5\u03be\u03b5\u03c1\u03b3\u03b1\u03c3\u03af\u03b1",
   "expand": "Expand",
   "expand.all": "Expand All",
@@ -41,10 +41,10 @@
   "email": "Διεύθυνση ηλεκτρονικού ταχυδρομείου",
   "email.placeholder": "mail@example.com",
 
-  "error.access.code": "Invalid code",
+  "error.access.code": "Mη έγκυρος κωδικός",
   "error.access.login": "Mη έγκυρη σύνδεση",
   "error.access.panel": "Δεν επιτρέπεται η πρόσβαση στον πίνακα ελέγχου",
-  "error.access.view": "You are not allowed to access this part of the panel",
+  "error.access.view": "Δεν επιτρέπεται η πρόσβαση σε αυτό το τμήμα του πίνακα ελέγχου",
 
   "error.avatar.create.fail": "Δεν ήταν δυνατή η μεταφόρτωση της εικόνας προφίλ",
   "error.avatar.delete.fail": "Δεν ήταν δυνατή η διαγραφή της εικόνας προφίλ",
