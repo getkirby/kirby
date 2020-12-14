@@ -10,10 +10,6 @@ export default {
     },
     max: String,
     min: String,
-    notation: {
-      type: Number,
-      default: 24
-    },
     step: {
       type: Object,
       default() {
@@ -29,6 +25,19 @@ export default {
     }
   },
   computed: {
+    is12HourFormat() {
+      return this.display.toLowerCase().includes("a")
+    },
+    /**
+     * Map for matching time units with dayjs tokens
+     */
+    map() {
+      return {
+        second: ["s", "ss"],
+        minute: ["m", "mm"],
+        hour:   this.is12HourFormat ? ["h", "hh"] : ["H", "HH"]
+      };
+    },
     /**
      *  All variations of parsing patterns
      *  for dayjs tokens included in `display`
@@ -38,7 +47,7 @@ export default {
       let patterns = DateInput.computed.patterns.apply(this);
 
       // add patterns for am/pm token
-      if (this.notation === 12) {
+      if (this.is12HourFormat) {
         patterns = patterns.map(pattern => pattern  + "a").concat(patterns);
       }
 
@@ -46,17 +55,12 @@ export default {
     }
   },
   methods: {
+    emit(event) {
+      const value = this.toFormat(this.parsed, "HH:mm:ss") || "";
+      this.$emit(event, value);
+    },
     toDatetime(string) {
-      // support short and long (with date) format for
-      // the value provided to the time input
-      const formats = ["HH:mm:ss", "YYYY-MM-DD HH:mm:ss"];
-      for (let i = 0; i < formats.length; i++) {
-        const dt = this.$library.dayjs.utc(string, formats[i], true);
-
-        if (dt.isValid()) {
-          return dt;
-        }
-      }
+      return this.$library.dayjs.utc(string, "HH:mm:ss");
     },
   }
 };

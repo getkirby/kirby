@@ -4,7 +4,7 @@
     v-model="input"
     v-bind="$props"
     :class="`k-${type}-input`"
-    :placeholder="placeholder"
+    :placeholder="display"
     :spellcheck="false"
     type="text"
     @blur="onBlur"
@@ -13,12 +13,14 @@
     @focus="$emit('focus')"
     @keydown.down.stop.prevent="onDown"
     @keydown.up.stop.prevent="onUp"
-    @keydown.enter.stop.prevent="onEnter"
+    @keydown.enter="onEnter"
     @keydown.tab="onTab"
   />
 </template>
 
 <script>
+import { required } from "vuelidate/lib/validators";
+
 export default {
   inheritAttrs: false,
   props: {
@@ -55,17 +57,32 @@ export default {
   },
   computed: {
     /**
-     * Map for matching datetime unit with dayjs tokens
+     * Map for matching date units with dayjs tokens
      */
     map() {
       return {
-        second: ["ss"],
-        minute: ["mm"],
-        hour:   [this.notation === 12 ? "hh" : "HH"],
         day:    ["D", "DD"],
         month:  ["M", "MM", "MMM", "MMMM"],
         year:   ["YY", "YYYY"]
       };
+    },
+    /**
+     * Input parsed as dateime object rounded to nearest step
+     */
+    parsed() {
+      if (this.input) {
+        // loop through parsing patterns to find
+        // first result where input is a valid date
+        for (let i = 0; i < this.patterns.length; i++) {
+          const dt = this.$library.dayjs.utc(this.input, this.patterns[i]);
+
+          if (dt.isValid()) {
+            return dt;
+          }
+        }
+      }
+
+      return null;
     },
     /**
      * Array of the current input parts
@@ -111,33 +128,6 @@ export default {
       return patterns.map(format => format.join(this.separator)).reverse();
     },
     /**
-     * Input placeholder based on `display`
-     */
-    placeholder() {
-      return this.display.toLowerCase();
-    },
-    /**
-     * Input parsed as dateime object rounded to nearest step
-     */
-    result() {
-      if (this.input) {
-        // fix lowercased month names
-        const input = this.$helper.string.ucwords(this.input);
-
-        // loop through parsing patterns to find
-        // first result where input is a valid date
-        for (let i = 0; i < this.patterns.length; i++) {
-          const dt = this.$library.dayjs.utc(input, this.patterns[i]);
-
-          if (dt.isValid()) {
-            return this.toNearest(dt);
-          }
-        }
-      }
-
-      return null;
-    },
-    /**
      * Separator from `display` format
      */
     separator() {
@@ -151,8 +141,8 @@ export default {
     }
   },
   watch: {
-    value() {
-      this.input = this.toFormat(this.value);
+    value(value) {
+      this.input = this.toFormat(value);
       this.onInvalid();
     }
   },
@@ -161,20 +151,17 @@ export default {
   },
   methods: {
     emit(event) {
-      if (this.result) {
-        this.$emit(event, this.result.format("YYYY-MM-DD HH:mm:ss"));
-      } else {
-        this.$emit(event, "");
-      }
+      const value = this.toFormat(this.parsed, "YYYY-MM-DD HH:mm:ss") || "";
+      this.$emit(event, value);
     },
     focus() {
       this.$refs.input.focus();
     },
-    manipulate(operator, ) {
+    manipulate(operator) {
       let dt;
 
-      // if a result exists already, modify…
-      if (this.result) {
+      // if a parsed result exists already, modify…
+      if (this.parsed) {
         // as default use the step unit and size
         let unit = this.step.unit;
         let size = this.step.size;
@@ -186,19 +173,33 @@ export default {
         // resolve what unit that parts represent
         // and set size to 1 (if not the step unit is selected)
         if (this.selected !== null) {
-          unit = this.toUnit(this.tokens[this.selected]);
+          const token = this.tokens[this.selected];
 
-          if (unit !== this.step.unit) {
-            size = 1;
-          }
+          // handle manipulation of am/pm
+          if (token.toLowerCase() === "a") {
+            unit = "hour";
+            size = 12;
+
+            if (this.parts[this.selected] === "pm") {
+              operator = "subtract";
+            } else {
+              operator = "add";
+            }
+
+          // handle manipulation of all other units
+          } else {
+            unit = this.toUnit(token);
+
+            if (unit !== this.step.unit) {
+              size = 1;
+            }
+          }          
         }
 
         // manipulate datetime by size and unit
-        // and mark part of unit that got altered as to be selected
-        dt = this.result.clone()[operator](size, unit);
-        this.selected = this.toIndex(unit);
+        dt = this.parsed.clone()[operator](size, unit);
 
-      // if not result exist, fill with current datetime
+      // if no parsed result exist, fill with current datetime
       // and mark the part that represent the step unit to be selected
       } else {
         dt = this.toNearest(this.$library.dayjs());
@@ -215,7 +216,10 @@ export default {
       });
     },
     onBlur() {
-      this.input    = this.result ? this.toFormat(this.result) : null;
+      if (!this.parsed) {
+        this.input = null;
+      }
+
       this.selected = null;
       this.emit("update");
     },
@@ -302,7 +306,7 @@ export default {
     toDatetime(string) {
       return this.$library.dayjs.utc(string);
     },
-    toFormat(value) {
+    toFormat(value, format = this.display) {
       if (!value) {
         return null;
       }
@@ -318,17 +322,16 @@ export default {
       }
 
       // formats datetime according to `display` prop
-      return value.format(this.display);
+      return this.toNearest(value).format(format);
     },
     toNearest(dt, unit = this.step.unit, size = this.step.size) {
-      // round datetime to nearest step
-      // based on step unit and size
-      dt = dt.clone();
-
+      // make sure it's dayjs syntax compatible
       if (unit === "day") {
         unit = "date";
       }
 
+      // round datetime to nearest step
+      // based on step unit and size
       const current = dt.get(unit);
       const nearest = Math.round(current / size) * size;
       return dt.set(unit, nearest).startOf(unit);
@@ -368,8 +371,9 @@ export default {
 
       // if nearest unit is required,
       // make sure no unit below the step unit is returned
-      if (nearest === true && index < keys.indexOf(this.step.unit)) {
-        return this.step.unit;
+      const step = this.step.unit;
+      if (nearest === true && index < keys.indexOf(step)) {
+        return step;
       }
 
       return keys[index];
@@ -392,6 +396,7 @@ export default {
           "isBefore",
           this.step.unit
         ) : true,
+        required: this.required ? required : true,
       }
     }
   }

@@ -48,6 +48,7 @@ return [
 
         /**
          * `12` or `24` hour notation. If `12`, an AM/PM selector will be shown.
+         * If `display` is defined, that option will take priority.
          */
         'notation' => function (int $value = 24) {
             return $value === 24 ? 24 : 12;
@@ -56,32 +57,28 @@ return [
          * Round to the nearest: sub-options for `unit` (minute) and `size` (5)
          */
         'step' => function ($step = null) {
+            $default = [
+                'size' => 5,
+                'unit' => 'minute'
+            ];
+
             if ($step === null) {
-                return [
-                    'size' => 5,
-                    'unit' => 'minute'
-                ];
+                return $default;
             }
 
             if (is_array($step) === true) {
+                $step = array_merge($default, $step);
+                $step['unit'] = strtolower($step['unit']);
                 return $step;
             }
 
             if (is_int($step) === true) {
-                return [
-                    'size' => $step,
-                    'unit' => 'minute'
-                ];
+                return array_merge($default, ['size' => $step]);
             }
 
             if (is_string($step) === true) {
-                return [
-                    'size' => 1,
-                    'unit' => $step
-                ];
+                return array_merge($default, ['unit' => strtolower($step)]);
             }
-
-            throw new Exception('step option has to be defined as array');
         },
         'value' => function ($value = null) {
             return $value;
@@ -96,18 +93,14 @@ return [
                 return $this->display;
             }
 
-            return $this->notation === 24 ? 'HH:mm' : 'hh:mm a';
+            return $this->notation === 24 ? 'HH:mm' : 'h:mm a';
         },
         'value' => function () {
             return $this->toDatetime($this->value, 'H:i:s');
         }
     ],
     'save' => function ($value): string {
-        if ($value != null && $timestamp = strtotime($value)) {
-            return date('H:i:s', $timestamp);
-        }
-
-        return '';
+        return $this->toContent($value, 'H:i:s');
     },
     'validations' => [
         'time',

@@ -758,10 +758,11 @@ function timestamp(string $date = null, $step = null): ?string
         return $date;
     }
 
+    // fallback for pre-3.5.0 usage
     if (is_int($step) === true) {
         $step = [
             'unit' => 'minute',
-            'size' => 1
+            'size' => $step
         ];
     }
 

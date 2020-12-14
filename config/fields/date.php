@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Exception\Exception;
+use Kirby\Form\Field;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -59,32 +60,28 @@ return [
          * Round to the nearest: sub-options for `unit` (day) and `size` (1)
          */
         'step' => function ($step = null) {
+            $default = [
+                'size' => 1,
+                'unit' => 'day'
+            ];
+
             if ($step === null) {
-                return [
-                    'size' => 1,
-                    'unit' => 'day'
-                ];
+                return $default;
             }
 
             if (is_array($step) === true) {
+                $step = array_merge($default, $step);
+                $step['unit'] = strtolower($step['unit']);
                 return $step;
             }
 
             if (is_int($step) === true) {
-                return [
-                    'size' => $step,
-                    'unit' => 'day'
-                ];
+                return array_merge($default, ['size' => $step]);
             }
 
             if (is_string($step) === true) {
-                return [
-                    'size' => 1,
-                    'unit' => $step
-                ];
+                return array_merge($default, ['unit' => strtolower($step)]);
             }
-
-            throw new Exception('step option has to be defined as array');
         },
 
         /**
@@ -109,25 +106,30 @@ return [
                 return Str::upper($this->display);
             }
         },
-        'step' => function () {
-            if ($this->time !== false) {
-                $timeField = require __DIR__ . '/time.php';
-                return $timeField['props']['step']($this->time['step'] ?? null);
+        'time' => function () {
+            if ($this->time === false) {
+                return false;
             }
 
-            return $this->step;
+            $props = is_array($this->time) ? $this->time : [];
+            $props['model'] = $this->model();
+            $field = new Field('time', $props);
+            return $field->toArray();
+        },
+        'step' => function () {
+            if ($this->time === false) {
+                return $this->step;
+            }
+
+            return $this->time['step'];
         },
         'value' => function () {
             return $this->toDatetime($this->value);
         },
     ],
     'save' => function ($value) {
-        if ($value !== null && $timestamp = timestamp($value)) {
-            $format = $this->time === false ? 'Y-m-d' : 'Y-m-d H:i:s';
-            return $this->toISO($timestamp, $format);
-        }
-
-        return '';
+        $format = $this->time === false ? 'Y-m-d' : 'Y-m-d H:i:s';
+        return $this->toContent($value, $format);
     },
     'validations' => [
         'date',
