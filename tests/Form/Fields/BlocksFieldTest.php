@@ -4,7 +4,6 @@ namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
-use Kirby\Form\Field;
 use Kirby\Form\Fields;
 
 class BlocksFieldTest extends TestCase
