@@ -431,8 +431,7 @@ class BlocksFieldTest extends TestCase
 
         $this->assertSame([], $field->errors());
 
-
-        // text
+        // failed
         $field = $this->field('blocks', [
             'model' => $page,
             'required' => true,
