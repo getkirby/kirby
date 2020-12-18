@@ -353,6 +353,7 @@ abstract class FieldClass
             'saveable'    => $this->isSaveable(),
             'translate'   => $this->translate(),
             'type'        => $this->type(),
+            'when'        => $this->when(),
             'width'       => $this->width(),
         ];
     }
@@ -612,6 +613,16 @@ abstract class FieldClass
     protected function valueToYaml(array $value = null): string
     {
         return Data::encode($value, 'yaml');
+    }
+
+    /**
+     * Conditions when the field will be shown
+     *
+     * @return array|null
+     */
+    public function when(): ?array
+    {
+        return $this->when;
     }
 
     /**

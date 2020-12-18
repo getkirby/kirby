@@ -3,6 +3,9 @@
 namespace Kirby\Form\Fields;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Page;
+use Kirby\Form\Field;
+use Kirby\Form\Fields;
 
 class BlocksFieldTest extends TestCase
 {
@@ -392,5 +395,57 @@ class BlocksFieldTest extends TestCase
         ]);
 
         $this->assertSame($value, $field->empty());
+    }
+
+    public function testWhen()
+    {
+        $page = new Page(['slug' => 'test']);
+
+        $fields = new Fields([
+            'foo' => [
+                'type'  => 'text',
+                'model' => $page,
+                'value' => 'a'
+            ],
+            'bar' => [
+                'type'  => 'blocks',
+                'model' => $page,
+                'value' => []
+            ]
+        ]);
+
+        // default
+        $field = $this->field('blocks', [
+            'model' => $page,
+        ], $fields);
+
+        $this->assertSame([], $field->errors());
+
+        // passed
+        $field = $this->field('blocks', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'x'
+            ]
+        ], $fields);
+
+        $this->assertSame([], $field->errors());
+
+
+        // text
+        $field = $this->field('blocks', [
+            'model' => $page,
+            'required' => true,
+            'when' => [
+                'foo' => 'a'
+            ]
+        ], $fields);
+
+        $expected = [
+            'required' => 'Please enter something',
+        ];
+
+        $this->assertSame($expected, $field->errors());
     }
 }

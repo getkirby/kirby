@@ -5,6 +5,7 @@ namespace Kirby\Form\Fields;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Form\Field;
+use Kirby\Form\Fields;
 use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
@@ -28,9 +29,9 @@ class TestCase extends BaseTestCase
         return $this->app;
     }
 
-    public function field(string $type, array $attr = [])
+    public function field(string $type, array $attr = [], ?Fields $formFields = null)
     {
         $page = new Page(['slug' => 'test']);
-        return Field::factory($type, array_merge(['model' => $page], $attr));
+        return Field::factory($type, array_merge(['model' => $page], $attr), $formFields);
     }
 }
