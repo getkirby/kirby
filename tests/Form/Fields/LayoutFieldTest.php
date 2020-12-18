@@ -18,6 +18,56 @@ class LayoutFieldTest extends TestCase
         $this->assertTrue($field->save());
     }
 
+    public function testExtends()
+    {
+        $this->app->clone([
+            'blueprints' => [
+                'fields/layout-settings' => [
+                    'fields' => [
+                        'id' => [
+                            'type' => 'text'
+                        ],
+                        'class' => [
+                            'type' => 'text'
+                        ],
+                        'background-color' => [
+                            'type' => 'text'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        // no settings
+        $field = $this->field('layout');
+
+        $this->assertNull($field->settings());
+
+        // extend with simple string
+        $field = $this->field('layout', [
+            'settings' => 'fields/layout-settings'
+        ]);
+
+        $fields = $field->settings()->fields();
+        $this->assertCount(3, $fields);
+        $this->assertArrayHasKey('id', $fields);
+        $this->assertArrayHasKey('class', $fields);
+        $this->assertArrayHasKey('background-color', $fields);
+
+        // extend with array
+        $field = $this->field('layout', [
+            'settings' => [
+                'extends' => 'fields/layout-settings'
+            ]
+        ]);
+
+        $fields = $field->settings()->fields();
+        $this->assertCount(3, $fields);
+        $this->assertArrayHasKey('id', $fields);
+        $this->assertArrayHasKey('class', $fields);
+        $this->assertArrayHasKey('background-color', $fields);
+    }
+
     public function testLayouts()
     {
         $field = $this->field('layout', [

@@ -2,6 +2,7 @@
 
 namespace Kirby\Form\Field;
 
+use Kirby\Cms\Blueprint;
 use Kirby\Cms\Fieldset;
 use Kirby\Cms\Form;
 use Kirby\Cms\Layout;
@@ -19,7 +20,7 @@ class LayoutField extends BlocksField
     {
         $this->setModel($params['model'] ?? site());
         $this->setLayouts($params['layouts'] ?? ['1/1']);
-        $this->setSettings($params['settings'] ?? []);
+        $this->setSettings($params['settings'] ?? null);
 
         parent::__construct($params);
     }
@@ -120,12 +121,14 @@ class LayoutField extends BlocksField
         }, $layouts);
     }
 
-    protected function setSettings(array $settings = [])
+    protected function setSettings($settings = null)
     {
         if (empty($settings) === true) {
             $this->settings = null;
             return;
         }
+
+        $settings = Blueprint::extend($settings);
 
         $settings['icon']   = 'dashboard';
         $settings['type']   = 'layout';
