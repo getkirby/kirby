@@ -322,26 +322,26 @@ class FTest extends TestCase
         $locale = I18n::$locale;
 
         F::write($this->tmp, 'test');
-        $this->assertSame('4 B', F::niceSize($this->tmp));
+        $this->assertSame('4 B', F::niceSize($this->tmp));
 
-        $this->assertSame('4 B', F::niceSize(4));
-        $this->assertSame('4 KB', F::niceSize(4096));
-        $this->assertSame('4 KB', F::niceSize(4100));
-        $this->assertSame('4.1 KB', F::niceSize(4200));
-        $this->assertSame('4 MB', F::niceSize(4194304));
-        $this->assertSame('4.29 MB', F::niceSize(4500000));
-        $this->assertSame('4 GB', F::niceSize(4294967296));
+        $this->assertSame('4 B', F::niceSize(4));
+        $this->assertSame('4 KB', F::niceSize(4096));
+        $this->assertSame('4 KB', F::niceSize(4100));
+        $this->assertSame('4.1 KB', F::niceSize(4200));
+        $this->assertSame('4 MB', F::niceSize(4194304));
+        $this->assertSame('4.29 MB', F::niceSize(4500000));
+        $this->assertSame('4 GB', F::niceSize(4294967296));
 
         // default locale
         I18n::$locale = 'de';
-        $this->assertSame('4,29 MB', F::niceSize(4500000));
+        $this->assertSame('4,29 MB', F::niceSize(4500000));
 
         // custom locale
-        $this->assertSame('4.29 MB', F::niceSize(4500000, 'en_US'));
-        $this->assertSame('4,29 MB', F::niceSize(4500000, 'fr_FR'));
+        $this->assertSame('4.29 MB', F::niceSize(4500000, 'en_US'));
+        $this->assertSame('4,29 MB', F::niceSize(4500000, 'fr_FR'));
 
         // disable locale formatting
-        $this->assertSame('4.29 MB', F::niceSize(4500000, false));
+        $this->assertSame('4.29 MB', F::niceSize(4500000, false));
 
         // reset locale
         I18n::$locale = $locale;

@@ -542,7 +542,7 @@ class F
 
         // avoid errors for invalid sizes
         if ($size <= 0) {
-            return '0 KB';
+            return '0 KB';
         }
 
         // the math magic
@@ -553,7 +553,7 @@ class F
             $size = I18n::formatNumber($size, $locale);
         }
 
-        return $size . ' ' . static::$units[$unit];
+        return $size . ' ' . static::$units[$unit];
     }
 
     /**
