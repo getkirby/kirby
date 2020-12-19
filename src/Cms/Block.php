@@ -194,7 +194,7 @@ class Block extends Item
      * object. This can be used further
      * with all available field methods
      *
-     * @return \Kirby\Cms\Field;
+     * @return \Kirby\Cms\Field
      */
     public function toField()
     {
