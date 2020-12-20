@@ -46,6 +46,7 @@ trait AppTranslations
             return $data;
         };
 
+        // the actual locale is set using $app->setCurrentTranslation()
         I18n::$locale = function (): string {
             if ($this->multilang() === true) {
                 return $this->defaultLanguage()->code();
@@ -54,11 +55,11 @@ trait AppTranslations
             }
         };
 
-        I18n::$fallback = function (): string {
+        I18n::$fallback = function (): array {
             if ($this->multilang() === true) {
-                return $this->defaultLanguage()->code();
+                return [$this->defaultLanguage()->code(), 'en'];
             } else {
-                return 'en';
+                return ['en'];
             }
         };
 
