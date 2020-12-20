@@ -32,9 +32,34 @@ class Auth
      */
     public static $challenges = [];
 
+    /**
+     * Currently impersonated user
+     *
+     * @var \Kirby\App\User|null
+     */
     protected $impersonate;
+
+    /**
+     * Kirby instance
+     *
+     * @var \Kirby\Cms\App
+     */
     protected $kirby;
+
+    /**
+     * Instance of the currently logged in user or
+     * `false` if the user was not yet determined
+     *
+     * @var \Kirby\Cms\User|null|false
+     */
     protected $user = false;
+
+    /**
+     * Exception that was thrown while
+     * determining the current user
+     *
+     * @var \Throwable
+     */
     protected $userException;
 
     /**
