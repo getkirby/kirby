@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Cms\Auth\Status;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -47,6 +48,13 @@ class Auth
     protected $kirby;
 
     /**
+     * Cache of the auth status object
+     *
+     * @var \Kirby\Cms\Auth\Status
+     */
+    protected $status;
+
+    /**
      * Instance of the currently logged in user or
      * `false` if the user was not yet determined
      *
@@ -78,15 +86,13 @@ class Auth
      * @param string $email
      * @param bool $long If `true`, a long session will be created
      * @param string $mode Either 'login' or 'password-reset'
-     * @return string|null Name of the challenge that was created;
-     *                     `null` if the user does not exist or no
-     *                     challenge was available for the user
+     * @return \Kirby\Cms\Auth\Status
      *
      * @throws \Kirby\Exception\LogicException If there is no suitable authentication challenge (only in debug mode)
      * @throws \Kirby\Exception\NotFoundException If the user does not exist (only in debug mode)
      * @throws \Kirby\Exception\PermissionException If the rate limit is exceeded
      */
-    public function createChallenge(string $email, bool $long = false, string $mode = 'login'): ?string
+    public function createChallenge(string $email, bool $long = false, string $mode = 'login')
     {
         // ensure that email addresses with IDN domains are in Unicode format
         $email = Idn::decodeEmail($email);
@@ -116,8 +122,7 @@ class Auth
         if ($user = $this->kirby->users()->find($email)) {
             $timeout = $this->kirby->option('auth.challenge.timeout', 10 * 60);
 
-            $challenges = $this->kirby->option('auth.challenges', ['email']);
-            foreach (A::wrap($challenges) as $name) {
+            foreach ($this->enabledChallenges() as $name) {
                 $class = static::$challenges[$name] ?? null;
                 if (
                     $class &&
@@ -140,7 +145,7 @@ class Auth
             }
 
             // if no suitable challenge was found, `$challenge === null` at this point;
-            // only leak this in debug mode, otherwise `null` is returned below
+            // only leak this in debug mode
             if ($challenge === null && $this->kirby->option('debug') === true) {
                 throw new LogicException('Could not find a suitable authentication challenge');
             }
@@ -167,7 +172,10 @@ class Auth
         // avoid leaking whether the user exists
         usleep(random_int(1000, 300000));
 
-        return $challenge;
+        // clear the status cache
+        $this->status = null;
+
+        return $this->status($session, false);
     }
 
     /**
@@ -255,15 +263,7 @@ class Auth
      */
     public function currentUserFromSession($session = null)
     {
-        // use passed session options or session object if set
-        if (is_array($session) === true) {
-            $session = $this->kirby->session($session);
-        }
-
-        // try session in header or cookie
-        if (is_a($session, 'Kirby\Session\Session') === false) {
-            $session = $this->kirby->session(['detect' => true]);
-        }
+        $session = $this->session($session);
 
         $id = $session->data()->get('kirby.userId');
 
@@ -282,6 +282,17 @@ class Auth
     }
 
     /**
+     * Returns the list of enabled challenges in the
+     * configured order
+     *
+     * @return array
+     */
+    public function enabledChallenges(): array
+    {
+        return A::wrap($this->kirby->option('auth.challenges', ['email']));
+    }
+
+    /**
      * Become any existing user or disable the current user
      *
      * @param string|null $who User ID or email address,
@@ -293,6 +304,9 @@ class Auth
      */
     public function impersonate(?string $who = null)
     {
+        // clear the status cache
+        $this->status = null;
+
         switch ($who) {
             case null:
                 return $this->impersonate = null;
@@ -384,6 +398,9 @@ class Auth
         $user = $this->validatePassword($email, $password);
         $user->loginPasswordless($options);
 
+        // clear the status cache
+        $this->status = null;
+
         return $user;
     }
 
@@ -393,8 +410,7 @@ class Auth
      * @param string $email
      * @param string $password
      * @param bool $long
-     * @return string|null Name of the challenge that was created;
-     *                     `null` if no challenge was available for the user
+     * @return \Kirby\Cms\Auth\Status
      *
      * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
      * @throws \Kirby\Exception\NotFoundException If the email was invalid
@@ -419,6 +435,57 @@ class Auth
         $this->impersonate = null;
 
         $this->user = $user;
+
+        // clear the status cache
+        $this->status = null;
+    }
+
+    /**
+     * Returns the authentication status object
+     *
+     * @param \Kirby\Session\Session|array|null $session
+     * @param bool $allowImpersonation If set to false, only the actually
+     *                                 logged in user will be returned
+     * @return \Kirby\Cms\Auth\Status
+     */
+    public function status($session = null, bool $allowImpersonation = true)
+    {
+        // try to return from cache
+        if ($this->status && $session === null && $allowImpersonation === true) {
+            return $this->status;
+        }
+
+        $sessionObj = $this->session($session);
+
+        $props = ['kirby' => $this->kirby];
+        if ($user = $this->user($sessionObj, $allowImpersonation)) {
+            // a user is currently logged in
+            if ($allowImpersonation === true && $this->impersonate !== null) {
+                $props['status'] = 'impersonated';
+            } else {
+                $props['status'] = 'active';
+            }
+
+            $props['email'] = $user->email();
+        } elseif ($email = $sessionObj->get('kirby.challenge.email')) {
+            // a challenge is currently pending
+            $props['status']            = 'pending';
+            $props['email']             = $email;
+            $props['challenge']         = $sessionObj->get('kirby.challenge.type');
+            $props['challengeFallback'] = A::last($this->enabledChallenges());
+        } else {
+            // no active authentication
+            $props['status'] = 'inactive';
+        }
+
+        $status = new Status($props);
+
+        // only cache the default object
+        if ($session === null && $allowImpersonation === true) {
+            $this->status = $status;
+        }
+
+        return $status;
     }
 
     /**
@@ -559,6 +626,9 @@ class Auth
         $session->remove('kirby.challenge.email');
         $session->remove('kirby.challenge.timeout');
         $session->remove('kirby.challenge.type');
+
+        // clear the status cache
+        $this->status = null;
     }
 
     /**
@@ -570,6 +640,7 @@ class Auth
     public function flush(): void
     {
         $this->impersonate = null;
+        $this->status = null;
         $this->user = null;
     }
 
@@ -743,6 +814,9 @@ class Auth
                     $this->logout();
                     $user->loginPasswordless();
 
+                    // clear the status cache
+                    $this->status = null;
+
                     return $user;
                 } else {
                     throw new PermissionException(['key' => 'access.code']);
@@ -768,5 +842,26 @@ class Auth
                 throw new PermissionException(['key' => 'access.code']);
             }
         }
+    }
+
+    /**
+     * Creates a session object from the passed options
+     *
+     * @param \Kirby\Session\Session|array|null $session
+     * @return \Kirby\Session\Session
+     */
+    protected function session($session = null)
+    {
+        // use passed session options or session object if set
+        if (is_array($session) === true) {
+            return $this->kirby->session($session);
+        }
+
+        // try session in header or cookie
+        if (is_a($session, 'Kirby\Session\Session') === false) {
+            return $this->kirby->session(['detect' => true]);
+        }
+
+        return $session;
     }
 }

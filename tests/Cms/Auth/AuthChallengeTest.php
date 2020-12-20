@@ -67,6 +67,7 @@ class AuthChallengeTest extends TestCase
 
     /**
      * @covers ::createChallenge
+     * @covers ::status
      */
     public function testCreateChallenge()
     {
@@ -81,7 +82,13 @@ class AuthChallengeTest extends TestCase
         $this->app->visitor()->ip('10.1.123.234');
 
         // existing user
-        $this->assertSame('email', $auth->createChallenge('marge@simpsons.com'));
+        $status = $auth->createChallenge('marge@simpsons.com');
+        $this->assertSame([
+            'challenge' => 'email',
+            'email'     => 'marge@simpsons.com',
+            'status'    => 'pending'
+        ], $status->toArray());
+        $this->assertSame('email', $status->challenge(false));
         $this->assertSame(1800, $session->timeout());
         $this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
         $this->assertSame('email', $session->get('kirby.challenge.type'));
@@ -92,7 +99,13 @@ class AuthChallengeTest extends TestCase
         $session->remove('kirby.challenge.type');
 
         // non-existing user
-        $this->assertNull($auth->createChallenge('invalid@example.com'));
+        $status = $auth->createChallenge('invalid@example.com');
+        $this->assertSame([
+            'challenge' => 'email',
+            'email'     => 'invalid@example.com',
+            'status'    => 'pending'
+        ], $status->toArray());
+        $this->assertNull($status->challenge(false));
         $this->assertSame('invalid@example.com', $session->get('kirby.challenge.email'));
         $this->assertNull($session->get('kirby.challenge.type'));
         $this->assertSame('invalid@example.com', $this->failedEmail);
@@ -153,6 +166,7 @@ class AuthChallengeTest extends TestCase
 
     /**
      * @covers ::createChallenge
+     * @covers ::status
      */
     public function testCreateChallengeCustomTimeout()
     {
@@ -164,37 +178,93 @@ class AuthChallengeTest extends TestCase
         $auth    = $this->app->auth();
         $session = $this->app->session();
 
-        $this->assertSame('email', $auth->createChallenge('marge@simpsons.com'));
+        $status = $auth->createChallenge('marge@simpsons.com');
+        $this->assertSame([
+            'challenge' => 'email',
+            'email'     => 'marge@simpsons.com',
+            'status'    => 'pending'
+        ], $status->toArray());
+        $this->assertSame('email', $status->challenge(false));
+
         $this->assertSame(MockTime::$time + 10, $session->get('kirby.challenge.timeout'));
     }
 
     /**
      * @covers ::createChallenge
+     * @covers ::status
      */
     public function testCreateChallengeLong()
     {
         $session = $this->app->session();
 
-        $this->assertSame('email', $this->auth->createChallenge('marge@simpsons.com', true));
+        $status = $this->auth->createChallenge('marge@simpsons.com', true);
+        $this->assertSame([
+            'challenge' => 'email',
+            'email'     => 'marge@simpsons.com',
+            'status'    => 'pending'
+        ], $status->toArray());
+        $this->assertSame('email', $status->challenge(false));
+
         $this->assertFalse($session->timeout());
     }
 
     /**
      * @covers ::createChallenge
+     * @covers ::status
      */
     public function testCreateChallengeWithPunycodeEmail()
     {
         $session = $this->app->session();
 
-        $this->assertSame('email', $this->auth->createChallenge('test@xn--exmple-cua.com'));
+        $status = $this->auth->createChallenge('test@xn--exmple-cua.com');
+        $this->assertSame([
+            'challenge' => 'email',
+            'email'     => 'test@exämple.com',
+            'status'    => 'pending'
+        ], $status->toArray());
+        $this->assertSame('email', $status->challenge(false));
         $this->assertSame('test@exämple.com', $session->get('kirby.challenge.email'));
     }
 
+    /**
+     * @covers ::enabledChallenges
+     */
+    public function testEnabledChallenges()
+    {
+        $this->assertSame(['email'], $this->auth->enabledChallenges());
+
+        // a single challenge
+        $app = $this->app->clone([
+            'options' => [
+                'auth.challenges' => 'totp'
+            ]
+        ]);
+        $this->assertSame(['totp'], $app->auth()->enabledChallenges());
+
+        // multiple challenges
+        $app = $this->app->clone([
+            'options' => [
+                'auth.challenges' => ['totp', 'sms']
+            ]
+        ]);
+        $this->assertSame(['totp', 'sms'], $app->auth()->enabledChallenges());
+    }
+
+    /**
+     * @covers ::login2fa
+     * @covers ::status
+     */
     public function testLogin2fa()
     {
         $session = $this->app->session();
 
-        $this->assertSame('email', $this->auth->login2fa('marge@simpsons.com', 'springfield123'));
+        $status = $this->auth->login2fa('marge@simpsons.com', 'springfield123');
+        $this->assertSame([
+            'challenge' => 'email',
+            'email'     => 'marge@simpsons.com',
+            'status'    => 'pending'
+        ], $status->toArray());
+        $this->assertSame('email', $status->challenge(false));
         $this->assertSame(1800, $session->timeout());
         $this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
         $this->assertSame('email', $session->get('kirby.challenge.type'));
@@ -204,11 +274,21 @@ class AuthChallengeTest extends TestCase
         $this->assertNull($this->failedEmail);
     }
 
+    /**
+     * @covers ::login2fa
+     * @covers ::status
+     */
     public function testLogin2faLong()
     {
         $session = $this->app->session();
 
-        $this->assertSame('email', $this->auth->login2fa('marge@simpsons.com', 'springfield123', true));
+        $status = $this->auth->login2fa('marge@simpsons.com', 'springfield123', true);
+        $this->assertSame([
+            'challenge' => 'email',
+            'email'     => 'marge@simpsons.com',
+            'status'    => 'pending'
+        ], $status->toArray());
+        $this->assertSame('email', $status->challenge(false));
         $this->assertFalse($session->timeout());
         $this->assertSame('marge@simpsons.com', $session->get('kirby.challenge.email'));
         $this->assertSame('email', $session->get('kirby.challenge.type'));
@@ -218,6 +298,9 @@ class AuthChallengeTest extends TestCase
         $this->assertNull($this->failedEmail);
     }
 
+    /**
+     * @covers ::login2fa
+     */
     public function testLogin2faInvalidUser()
     {
         $session = $this->app->session();
@@ -227,6 +310,9 @@ class AuthChallengeTest extends TestCase
         $this->auth->login2fa('invalid@example.com', 'springfield123');
     }
 
+    /**
+     * @covers ::login2fa
+     */
     public function testLogin2faInvalidPassword()
     {
         $session = $this->app->session();
@@ -288,7 +374,7 @@ class AuthChallengeTest extends TestCase
                 'debug' => false
             ]
         ]);
-        $auth    = $this->app->auth();
+        $auth = $this->app->auth();
 
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('Invalid code');
