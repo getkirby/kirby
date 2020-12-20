@@ -133,10 +133,10 @@ trait AppTranslations
     /**
      * Load a specific translation by locale
      *
-     * @param string|null $locale
+     * @param string|null $locale Locale name or `null` for the current locale
      * @return \Kirby\Cms\Translation|null
      */
-    public function translation(string $locale = null)
+    public function translation(?string $locale = null)
     {
         $locale = $locale ?? I18n::locale();
         $locale = basename($locale);
