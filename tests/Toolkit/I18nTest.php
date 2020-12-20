@@ -4,6 +4,9 @@ namespace Kirby\Toolkit;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass Kirby\Toolkit\I18n
+ */
 class I18nTest extends TestCase
 {
     public function setUp(): void
@@ -14,33 +17,77 @@ class I18nTest extends TestCase
         I18n::$translations = [];
     }
 
+    /**
+     * @covers ::fallback
+     */
+    public function testFallback()
+    {
+        I18n::$fallback = 'de';
+        $this->assertSame('de', I18n::fallback());
+
+        I18n::$fallback = function () {
+            return 'de';
+        };
+        $this->assertSame('de', I18n::fallback());
+
+        I18n::$fallback = null;
+        $this->assertSame('en', I18n::fallback());
+    }
+
+    /**
+     * @covers ::form
+     */
     public function testForm()
     {
-        $this->assertEquals('singular', I18n::form(1));
-        $this->assertEquals('plural', I18n::form(2));
+        $this->assertSame('singular', I18n::form(1));
+        $this->assertSame('plural', I18n::form(2));
 
         // simplified zero handling
-        $this->assertEquals('plural', I18n::form(0));
+        $this->assertSame('plural', I18n::form(0));
 
         // correct zero handling
-        $this->assertEquals('none', I18n::form(0, true));
+        $this->assertSame('none', I18n::form(0, true));
     }
 
+    /**
+     * @covers ::formatNumber
+     * @covers ::decimalNumberFormatter
+     */
     public function testFormatNumber()
     {
-        $this->assertEquals('2', I18n::formatNumber(2));
-        $this->assertEquals('2', I18n::formatNumber(2, 'en'));
-        $this->assertEquals('2', I18n::formatNumber(2, 'de'));
+        $this->assertSame('2', I18n::formatNumber(2));
+        $this->assertSame('2', I18n::formatNumber(2, 'en'));
+        $this->assertSame('2', I18n::formatNumber(2, 'de'));
 
-        $this->assertEquals('1,234,567', I18n::formatNumber(1234567));
-        $this->assertEquals('1,234,567', I18n::formatNumber(1234567, 'en'));
-        $this->assertEquals('1.234.567', I18n::formatNumber(1234567, 'de'));
+        $this->assertSame('1,234,567', I18n::formatNumber(1234567));
+        $this->assertSame('1,234,567', I18n::formatNumber(1234567, 'en'));
+        $this->assertSame('1.234.567', I18n::formatNumber(1234567, 'de'));
 
-        $this->assertEquals('1,234,567.89', I18n::formatNumber(1234567.89));
-        $this->assertEquals('1,234,567.89', I18n::formatNumber(1234567.89, 'en'));
-        $this->assertEquals('1.234.567,89', I18n::formatNumber(1234567.89, 'de'));
+        $this->assertSame('1,234,567.89', I18n::formatNumber(1234567.89));
+        $this->assertSame('1,234,567.89', I18n::formatNumber(1234567.89, 'en'));
+        $this->assertSame('1.234.567,89', I18n::formatNumber(1234567.89, 'de'));
     }
 
+    /**
+     * @covers ::locale
+     */
+    public function testLocale()
+    {
+        I18n::$locale = 'de';
+        $this->assertSame('de', I18n::locale());
+
+        I18n::$locale = function () {
+            return 'de';
+        };
+        $this->assertSame('de', I18n::locale());
+
+        I18n::$locale = null;
+        $this->assertSame('en', I18n::locale());
+    }
+
+    /**
+     * @covers ::template
+     */
     public function testTemplate()
     {
         I18n::$translations = [
@@ -48,31 +95,24 @@ class I18nTest extends TestCase
                 'template' => 'This is a {test}'
             ]
         ];
-
-        $this->assertEquals('This is a test template', I18n::template('template', [
+        $this->assertSame('This is a test template', I18n::template('template', [
             'test' => 'test template'
         ]));
-    }
 
-    public function testTemplateWithFallback()
-    {
+        // with fallback
         I18n::$translations = [
             'en' => [
                 'template' => 'This is a {test}'
             ]
         ];
-
-        $this->assertEquals('This is a fallback', I18n::template('does-not-exist', 'This is a fallback', [
+        $this->assertSame('This is a fallback', I18n::template('does-not-exist', 'This is a fallback', [
             'test' => 'test template'
         ]));
-
-        $this->assertEquals('This is a test fallback', I18n::template('does-not-exist', 'This is a {test}', [
+        $this->assertSame('This is a test fallback', I18n::template('does-not-exist', 'This is a {test}', [
             'test' => 'test fallback'
         ]));
-    }
 
-    public function testTemplateWithLocale()
-    {
+        // with locale
         I18n::$translations = [
             'en' => [
                 'template' => 'This is a {test}'
@@ -82,11 +122,14 @@ class I18nTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('Das ist ein test template', I18n::template('template', null, [
+        $this->assertSame('Das ist ein test template', I18n::template('template', null, [
             'test' => 'test template'
         ], 'de'));
     }
 
+    /**
+     * @covers ::translate
+     */
     public function testTranslate()
     {
         I18n::$translations = [
@@ -95,9 +138,13 @@ class I18nTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('Speichern', I18n::translate('save'));
+        $this->assertSame('Speichern', I18n::translate('save'));
+        $this->assertNull(I18n::translate('invalid'));
     }
 
+    /**
+     * @covers ::translate
+     */
     public function testTranslateWithFallback()
     {
         I18n::$translations = [
@@ -108,14 +155,20 @@ class I18nTest extends TestCase
 
         I18n::$locale = 'de';
 
-        $this->assertEquals('Save', I18n::translate('save'));
+        $this->assertSame('Save', I18n::translate('save'));
     }
 
+    /**
+     * @covers ::translate
+     */
     public function testTranslateWithFallbackArgument()
     {
-        $this->assertEquals('Save', I18n::translate('save', 'Save'));
+        $this->assertSame('Save', I18n::translate('save', 'Save'));
     }
 
+    /**
+     * @covers ::translate
+     */
     public function testTranslateWithArrayFallback()
     {
         I18n::$locale = 'de';
@@ -128,43 +181,57 @@ class I18nTest extends TestCase
             'de' => 'Speichern'
         ];
 
-        $this->assertEquals('Speichern', I18n::translate($input, $fallback));
+        $this->assertSame('Speichern', I18n::translate($input, $fallback));
     }
 
+    /**
+     * @covers ::translate
+     */
     public function testTranslateArray()
     {
-        $this->assertEquals('Save', I18n::translate([
+        $this->assertSame('Save', I18n::translate([
             'en' => 'Save',
         ]));
     }
 
+    /**
+     * @covers ::translate
+     */
     public function testTranslateArrayWithFallback()
     {
-        $this->assertEquals('fallback', I18n::translate([
+        $this->assertSame('fallback', I18n::translate([
             'de' => 'Save',
         ], 'fallback'));
     }
 
+    /**
+     * @covers ::translate
+     */
     public function testTranslateArrayWithArrayFallback()
     {
         // use the english translation as fallback if available
-        $this->assertEquals('Save', I18n::translate(['de' => 'Speichern'], ['en' => 'Save']));
+        $this->assertSame('Save', I18n::translate(['de' => 'Speichern'], ['en' => 'Save']));
 
         // use the first value if there's no english translation
-        $this->assertEquals('Fallback', I18n::translate(['de' => 'Speichern'], ['first' => 'Fallback']));
+        $this->assertSame('Fallback', I18n::translate(['de' => 'Speichern'], ['first' => 'Fallback']));
     }
 
-
+    /**
+     * @covers ::translate
+     */
     public function testTranslateArrayWithDifferentLocale()
     {
         I18n::$locale = 'de';
 
-        $this->assertEquals('Speichern', I18n::translate([
+        $this->assertSame('Speichern', I18n::translate([
             'en' => 'Save',
             'de' => 'Speichern'
         ]));
     }
 
+    /**
+     * @covers ::translateCount
+     */
     public function testTranslateCount()
     {
         I18n::$translations = [
@@ -173,13 +240,16 @@ class I18nTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('No cars', I18n::translateCount('car', 0));
-        $this->assertEquals('One car', I18n::translateCount('car', 1));
-        $this->assertEquals('Two cars', I18n::translateCount('car', 2));
-        $this->assertEquals('Many cars', I18n::translateCount('car', 3));
-        $this->assertEquals('Many cars', I18n::translateCount('car', 4));
+        $this->assertSame('No cars', I18n::translateCount('car', 0));
+        $this->assertSame('One car', I18n::translateCount('car', 1));
+        $this->assertSame('Two cars', I18n::translateCount('car', 2));
+        $this->assertSame('Many cars', I18n::translateCount('car', 3));
+        $this->assertSame('Many cars', I18n::translateCount('car', 4));
     }
 
+    /**
+     * @covers ::translateCount
+     */
     public function testTranslateCountWithPlaceholders()
     {
         I18n::$translations = [
@@ -191,17 +261,20 @@ class I18nTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('2 cars', I18n::translateCount('car', 2));
-        $this->assertEquals('3 cars', I18n::translateCount('car', 3));
-        $this->assertEquals('1,234,567 cars', I18n::translateCount('car', 1234567));
-        $this->assertEquals('1,234,567 cars', I18n::translateCount('car', 1234567, null));
-        $this->assertEquals('1,234,567 cars', I18n::translateCount('car', 1234567, null, true));
-        $this->assertEquals('1234567 cars', I18n::translateCount('car', 1234567, null, false));
-        $this->assertEquals('1.234.567 Autos', I18n::translateCount('car', 1234567, 'de'));
-        $this->assertEquals('1.234.567 Autos', I18n::translateCount('car', 1234567, 'de', true));
-        $this->assertEquals('1234567 Autos', I18n::translateCount('car', 1234567, 'de', false));
+        $this->assertSame('2 cars', I18n::translateCount('car', 2));
+        $this->assertSame('3 cars', I18n::translateCount('car', 3));
+        $this->assertSame('1,234,567 cars', I18n::translateCount('car', 1234567));
+        $this->assertSame('1,234,567 cars', I18n::translateCount('car', 1234567, null));
+        $this->assertSame('1,234,567 cars', I18n::translateCount('car', 1234567, null, true));
+        $this->assertSame('1234567 cars', I18n::translateCount('car', 1234567, null, false));
+        $this->assertSame('1.234.567 Autos', I18n::translateCount('car', 1234567, 'de'));
+        $this->assertSame('1.234.567 Autos', I18n::translateCount('car', 1234567, 'de', true));
+        $this->assertSame('1234567 Autos', I18n::translateCount('car', 1234567, 'de', false));
     }
 
+    /**
+     * @covers ::translateCount
+     */
     public function testTranslateCountWithMissingTranslation()
     {
         I18n::$translations = [
@@ -211,6 +284,9 @@ class I18nTest extends TestCase
         $this->assertNull(I18n::translateCount('car', 1));
     }
 
+    /**
+     * @covers ::translateCount
+     */
     public function testTranslateCountWithStringTranslation()
     {
         I18n::$translations = [
@@ -219,10 +295,13 @@ class I18nTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('1 car(s)', I18n::translateCount('car', 1));
-        $this->assertEquals('2 car(s)', I18n::translateCount('car', 2));
+        $this->assertSame('1 car(s)', I18n::translateCount('car', 1));
+        $this->assertSame('2 car(s)', I18n::translateCount('car', 2));
     }
 
+    /**
+     * @covers ::translateCount
+     */
     public function testTranslateCountWithCallback()
     {
         I18n::$translations = [
@@ -242,13 +321,41 @@ class I18nTest extends TestCase
             ]
         ];
 
-        $this->assertEquals('No car', I18n::translateCount('car', 0));
-        $this->assertEquals('One car', I18n::translateCount('car', 1));
-        $this->assertEquals('Few cars', I18n::translateCount('car', 2));
-        $this->assertEquals('Many cars', I18n::translateCount('car', 5));
+        $this->assertSame('No car', I18n::translateCount('car', 0));
+        $this->assertSame('One car', I18n::translateCount('car', 1));
+        $this->assertSame('Few cars', I18n::translateCount('car', 2));
+        $this->assertSame('Many cars', I18n::translateCount('car', 5));
     }
 
-    public function testLoadTranslation()
+    /**
+     * @covers ::translation
+     */
+    public function testTranslation()
+    {
+        I18n::$translations = [
+            'en' => [
+                'test' => 'yay'
+            ],
+            'de' => [
+                'test' => 'juhu'
+            ]
+        ];
+
+        I18n::$locale = 'en';
+        $this->assertSame('yay', I18n::translate('test'));
+
+        I18n::$locale = 'de';
+        $this->assertSame('juhu', I18n::translate('test'));
+
+        I18n::$locale = 'fr';
+        I18n::$fallback = 'fr';
+        $this->assertNull(I18n::translate('test'));
+    }
+
+    /**
+     * @covers ::translation
+     */
+    public function testTranslationLoad()
     {
         $translations = [
             'en' => [
@@ -264,40 +371,22 @@ class I18nTest extends TestCase
         };
 
         I18n::$locale = 'en';
-        $this->assertEquals('yay', I18n::translate('test'));
+        $this->assertSame('yay', I18n::translate('test'));
 
         I18n::$locale = 'de';
-        $this->assertEquals('juhu', I18n::translate('test'));
+        $this->assertSame('juhu', I18n::translate('test'));
+
+        I18n::$locale = 'fr';
+        I18n::$fallback = 'fr';
+        $this->assertNull(I18n::translate('test'));
     }
 
-    public function testLastResortFallback()
-    {
-        I18n::$fallback = null;
-
-        $this->assertEquals('en', I18n::fallback());
-    }
-
-    public function testLazyFallback()
-    {
-        I18n::$fallback = function () {
-            return 'de';
-        };
-
-        $this->assertEquals('de', I18n::fallback());
-    }
-
-    public function testLazyLocale()
-    {
-        I18n::$locale = function () {
-            return 'de';
-        };
-
-        $this->assertEquals('de', I18n::locale());
-    }
-
+    /**
+     * @covers ::translations
+     */
     public function testTranslations()
     {
-        $this->assertEquals([], I18n::translations());
+        $this->assertSame([], I18n::translations());
 
         I18n::$translations = $translations = [
             'en' => [
@@ -305,6 +394,6 @@ class I18nTest extends TestCase
             ]
         ];
 
-        $this->assertEquals($translations, I18n::translations());
+        $this->assertSame($translations, I18n::translations());
     }
 }

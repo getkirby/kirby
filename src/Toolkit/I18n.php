@@ -228,7 +228,7 @@ class I18n
         }
 
         if (extension_loaded('intl') !== true || class_exists('NumberFormatter') !== true) {
-            return null;
+            return null; // @codeCoverageIgnore
         }
 
         return static::$decimalNumberFormatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
