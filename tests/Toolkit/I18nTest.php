@@ -18,20 +18,36 @@ class I18nTest extends TestCase
     }
 
     /**
-     * @covers ::fallback
+     * @covers ::fallbacks
      */
-    public function testFallback()
+    public function testFallbacks()
     {
-        I18n::$fallback = 'de';
-        $this->assertSame('de', I18n::fallback());
+        I18n::$fallback = 'en';
+        $this->assertSame(['en'], I18n::fallbacks());
+
+        I18n::$fallback = ['en'];
+        $this->assertSame(['en'], I18n::fallbacks());
+
+        I18n::$fallback = ['en-us', 'en'];
+        $this->assertSame(['en-us', 'en'], I18n::fallbacks());
+
+        I18n::$fallback = null;
+        $this->assertSame(['en'], I18n::fallbacks());
 
         I18n::$fallback = function () {
             return 'de';
         };
-        $this->assertSame('de', I18n::fallback());
+        $this->assertSame(['de'], I18n::fallbacks());
 
-        I18n::$fallback = null;
-        $this->assertSame('en', I18n::fallback());
+        I18n::$fallback = function () {
+            return ['de'];
+        };
+        $this->assertSame(['de'], I18n::fallbacks());
+
+        I18n::$fallback = function () {
+            return ['de', 'en'];
+        };
+        $this->assertSame(['de', 'en'], I18n::fallbacks());
     }
 
     /**
@@ -149,13 +165,23 @@ class I18nTest extends TestCase
     {
         I18n::$translations = [
             'en' => [
-                'save' => 'Save'
+                'save1' => 'Save1',
+                'save2' => 'Save2'
+            ],
+            'de' => [
+                'save1' => 'Speichern1'
             ]
         ];
 
-        I18n::$locale = 'de';
+        I18n::$locale = 'fr';
 
-        $this->assertSame('Save', I18n::translate('save'));
+        I18n::$fallback = 'en';
+        $this->assertSame('Save1', I18n::translate('save1'));
+        $this->assertSame('Save2', I18n::translate('save2'));
+
+        I18n::$fallback = ['de', 'en'];
+        $this->assertSame('Speichern1', I18n::translate('save1'));
+        $this->assertSame('Save2', I18n::translate('save2'));
     }
 
     /**

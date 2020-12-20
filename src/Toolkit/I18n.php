@@ -38,11 +38,12 @@ class I18n
     public static $translations = [];
 
     /**
-     * The fallback locale
+     * The fallback locale or a
+     * list of fallback locales
      *
-     * @var string
+     * @var string|array
      */
-    public static $fallback = 'en';
+    public static $fallback = ['en'];
 
     /**
      * Cache of `NumberFormatter` objects by locale
@@ -52,21 +53,36 @@ class I18n
     protected static $decimalNumberFormatters = [];
 
     /**
-     * Returns the fallback code
+     * Returns the first fallback locale
+     *
+     * @deprecated 3.5.1 Use \Kirby\Toolkit\I18n::fallbacks() instead
      *
      * @return string
      */
     public static function fallback(): string
     {
-        if (is_string(static::$fallback) === true) {
-            return static::$fallback;
+        return static::fallbacks()[0];
+    }
+
+    /**
+     * Returns the list of fallback locales
+     *
+     * @return array
+     */
+    public static function fallbacks(): array
+    {
+        if (
+            is_array(static::$fallback) === true ||
+            is_string(static::$fallback) === true
+        ) {
+            return A::wrap(static::$fallback);
         }
 
         if (is_callable(static::$fallback) === true) {
-            return static::$fallback = (static::$fallback)();
+            return static::$fallback = A::wrap((static::$fallback)());
         }
 
-        return static::$fallback = 'en';
+        return static::$fallback = ['en'];
     }
 
     /**
@@ -154,8 +170,15 @@ class I18n
             return $fallback;
         }
 
-        if ($locale !== static::fallback()) {
-            return static::translation(static::fallback())[$key] ?? null;
+        foreach (static::fallbacks() as $fallback) {
+            // skip locales we have already tried
+            if ($locale === $fallback) {
+                continue;
+            }
+
+            if ($translation = static::translation($fallback)[$key] ?? null) {
+                return $translation;
+            }
         }
 
         return null;
