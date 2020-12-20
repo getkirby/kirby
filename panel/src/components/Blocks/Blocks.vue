@@ -21,6 +21,8 @@
           :is-full="isFull"
           :is-hidden="block.isHidden === true"
           :is-selected="isSelected(block)"
+          :next="prevNext(index + 1)"
+          :prev="prevNext(index - 1)"
           v-bind="block"
           @append="add($event, index + 1)"
           @blur="select(null)"
@@ -334,6 +336,15 @@ export default {
     open(block) {
       if (this.$refs["block-" + block.id]) {
         this.$refs["block-" + block.id][0].open();
+      }
+    },
+    prevNext(index) {
+      if (this.blocks[index]) {
+        let block = this.blocks[index];
+
+        if (this.$refs["block-" + block.id]) {
+          return this.$refs["block-" + block.id][0];
+        }
       }
     },
     remove(block) {
