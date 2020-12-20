@@ -47,11 +47,8 @@ export default {
           this.$go("/");
         }
 
-        if (system.pendingChallenge) {
-          this.$store.dispatch("user/pending", {
-            email: system.pendingEmail,
-            challenge: system.pendingChallenge
-          });
+        if (system.authStatus.status === "pending") {
+          this.$store.dispatch("user/pending", system.authStatus);
         }
 
         this.ready = true;

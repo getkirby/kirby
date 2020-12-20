@@ -11,6 +11,9 @@ return [
         'ascii' => function () {
             return Str::$ascii;
         },
+        'authStatus' => function () {
+            return $this->kirby()->auth()->status()->toArray();
+        },
         'defaultLanguage' => function () {
             return $this->kirby()->option('panel.language', 'en');
         },
@@ -37,18 +40,6 @@ return [
         },
         'loginMethods' => function (System $system) {
             return array_keys($system->loginMethods());
-        },
-        'pendingChallenge' => function () {
-            if ($this->session()->get('kirby.challenge.email') === null) {
-                return null;
-            }
-
-            // fake the email challenge if no challenge was created
-            // to avoid leaking whether the user exists
-            return $this->session()->get('kirby.challenge.type', 'email');
-        },
-        'pendingEmail' => function () {
-            return $this->session()->get('kirby.challenge.email');
         },
         'requirements' => function (System $system) {
             return $system->toArray();
@@ -98,12 +89,11 @@ return [
     'type'   => 'Kirby\Cms\System',
     'views'  => [
         'login' => [
+            'authStatus',
             'isOk',
             'isInstallable',
             'isInstalled',
             'loginMethods',
-            'pendingChallenge',
-            'pendingEmail',
             'title',
             'translation'
         ],
