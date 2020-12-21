@@ -57,7 +57,21 @@ trait AppTranslations
 
         I18n::$fallback = function (): array {
             if ($this->multilang() === true) {
-                return [$this->defaultLanguage()->code(), 'en'];
+                // first try to fall back to the configured default language
+                $defaultCode = $this->defaultLanguage()->code();
+                $fallback = [$defaultCode];
+
+                // if the default language is specified with a country code
+                // (e.g. `en-us`), also try with just the language code
+                if (preg_match('/^([a-z]+)-[a-z]+$/i', $defaultCode, $matches) === 1) {
+                    $fallback[] = $matches[1];
+                }
+
+                // fall back to the complete English translation
+                // as a last resort
+                $fallback[] = 'en';
+
+                return $fallback;
             } else {
                 return ['en'];
             }

@@ -135,21 +135,40 @@ class AppTranslationsTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'         => 'en-us',
+                    'code'         => 'de-de',
                     'default'      => true,
                     'translations' => [
-                        'button' => 'Button'
+                        'button1' => 'Knopf1 de-de'
+                    ]
+                ],
+                [
+                    'code'         => 'de-at',
+                    'translations' => [
+                        'button1' => 'Knopf1 de-at'
                     ]
                 ]
             ],
             'translations' => [
                 'de' => [
+                    'button1' => 'Knopf1',
+                    'button2' => 'Knopf2'
                 ]
             ]
         ]);
 
-        I18n::$locale = 'en-us';
-        $this->assertSame('Button', t('button'));
+        I18n::$locale = 'de-de';
+        $this->assertSame('Knopf1 de-de', t('button1'));
+        $this->assertSame('Knopf2', t('button2'));
+        $this->assertSame('Deutsch', t('translation.name'));
+
+        I18n::$locale = 'de-at';
+        $this->assertSame('Knopf1 de-at', t('button1'));
+        $this->assertSame('Knopf2', t('button2'));
+        $this->assertSame('Deutsch', t('translation.name'));
+
+        I18n::$locale = 'en';
+        $this->assertSame('Knopf1 de-de', t('button1'));
+        $this->assertSame('Knopf2', t('button2'));
         $this->assertSame('English', t('translation.name'));
     }
 
