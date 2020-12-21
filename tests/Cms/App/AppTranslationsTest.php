@@ -127,6 +127,32 @@ class AppTranslationsTest extends TestCase
         $this->assertEquals('Knopf', t('button'));
     }
 
+    public function testTranslationFallback()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code'         => 'en-us',
+                    'default'      => true,
+                    'translations' => [
+                        'button' => 'Button'
+                    ]
+                ]
+            ],
+            'translations' => [
+                'de' => [
+                ]
+            ]
+        ]);
+
+        I18n::$locale = 'en-us';
+        $this->assertSame('Button', t('button'));
+        $this->assertSame('English', t('translation.name'));
+    }
+
     public function testSetCurrentTranslation()
     {
         $app = $this->app();
