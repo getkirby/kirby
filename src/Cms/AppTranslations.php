@@ -90,6 +90,30 @@ trait AppTranslations
     }
 
     /**
+     * Returns the language code that will be used
+     * for the Panel if no user is logged in or if
+     * no language is configured for the user
+     *
+     * @return string
+     */
+    public function panelLanguage(): string
+    {
+        if ($this->multilang() === true) {
+            $defaultCode = $this->defaultLanguage()->code();
+
+            // extract the language code from a language that
+            // contains the country code (e.g. `en-us`)
+            if (preg_match('/^([a-z]+)-[a-z]+$/i', $defaultCode, $matches) === 1) {
+                $defaultCode = $matches[1];
+            }
+        } else {
+            $defaultCode = 'en';
+        }
+
+        return $this->option('panel.language', $defaultCode);
+    }
+
+    /**
      * Load and set the current language if it exists
      * Otherwise fall back to the default language
      *

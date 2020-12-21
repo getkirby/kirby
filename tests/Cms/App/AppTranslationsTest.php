@@ -405,4 +405,71 @@ class AppTranslationsTest extends TestCase
         $this->assertSame('de_CH.' . $this->localeSuffix, setlocale(LC_NUMERIC, '0'));
         $this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_COLLATE, '0'));
     }
+
+    public function testPanelLanguage()
+    {
+        // single-language setup
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+        $this->assertSame('en', $app->panelLanguage());
+
+        // override with the panel.language option
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'panel.language' => 'it'
+            ]
+        ]);
+        $this->assertSame('it', $app->panelLanguage());
+
+        // multi-language setup with a simple default language
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code'    => 'fr',
+                    'default' => true
+                ]
+            ]
+        ]);
+        $this->assertSame('fr', $app->panelLanguage());
+
+        // multi-language setup with a default language with country code
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code'    => 'de-ch',
+                    'default' => true
+                ]
+            ]
+        ]);
+        $this->assertSame('de', $app->panelLanguage());
+
+        // override with the panel.language option
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code'    => 'fr',
+                    'default' => true
+                ]
+            ],
+            'options' => [
+                'panel.language' => 'it'
+            ]
+        ]);
+        $this->assertSame('it', $app->panelLanguage());
+    }
 }

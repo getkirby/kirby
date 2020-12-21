@@ -15,7 +15,7 @@ return [
             return $this->kirby()->auth()->status()->toArray();
         },
         'defaultLanguage' => function () {
-            return $this->kirby()->option('panel.language', 'en');
+            return $this->kirby()->panelLanguage();
         },
         'isOk' => function (System $system) {
             return $system->isOk();
@@ -61,7 +61,7 @@ return [
             if ($user = $this->user()) {
                 $translationCode = $user->language();
             } else {
-                $translationCode = $this->kirby()->option('panel.language', 'en');
+                $translationCode = $this->kirby()->panelLanguage();
             }
 
             if ($translation = $this->kirby()->translation($translationCode)) {

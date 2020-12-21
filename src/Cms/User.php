@@ -400,7 +400,7 @@ class User extends ModelWithContent
      */
     public function language(): string
     {
-        return $this->language ?? $this->language = $this->credentials()['language'] ?? $this->kirby()->option('panel.language', 'en');
+        return $this->language ?? $this->language = $this->credentials()['language'] ?? $this->kirby()->panelLanguage();
     }
 
     /**
