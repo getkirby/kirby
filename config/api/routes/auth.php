@@ -65,7 +65,7 @@ return [
                     isset($methods['password']['2fa']) === true &&
                     $methods['password']['2fa'] === true
                 ) {
-                    $challenge = $auth->login2fa($email, $password, $long);
+                    $status = $auth->login2fa($email, $password, $long);
                 } else {
                     $user = $auth->login($email, $password, $long);
                 }
@@ -78,7 +78,7 @@ return [
                     throw new InvalidArgumentException('Login without password is not enabled');
                 }
 
-                $challenge = $auth->createChallenge($email, $long, $mode);
+                $status = $auth->createChallenge($email, $long, $mode);
             }
 
             if (isset($user)) {
@@ -89,11 +89,9 @@ return [
                 ];
             } else {
                 return [
-                    'code'   => 200,
-                    'status' => 'ok',
-
-                    // don't leak users that don't exist at this point
-                    'challenge' => $challenge ?? 'email'
+                    'code'      => 200,
+                    'status'    => 'ok',
+                    'challenge' => $status->challenge()
                 ];
             }
         }
