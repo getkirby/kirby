@@ -1,6 +1,14 @@
 <?php
 
 return [
+    'props' => [
+        /**
+         * Defines a custom format that is used when the field is saved
+         */
+        'format' => function (string $format = null) {
+            return $format;
+        }
+    ],
     'methods' => [
         'toDatetime' => function ($value, string $format = 'Y-m-d H:i:s') {
             if ($timestamp = timestamp($value, $this->step)) {
@@ -8,13 +16,13 @@ return [
             }
 
             return null;
-        },
-        'toContent' => function ($value, string $format = 'Y-m-d H:i:s') {
-            if ($value !== null && $timestamp = strtotime($value)) {
-                return date($format, $timestamp);
-            }
-
-            return '';
         }
-    ]
+    ],
+    'save' => function ($value) {
+        if ($value !== null && $timestamp = strtotime($value)) {
+            return date($this->format, $timestamp);
+        }
+
+        return '';
+    },
 ];
