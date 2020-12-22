@@ -63,7 +63,7 @@ trait AppTranslations
 
                 // if the default language is specified with a country code
                 // (e.g. `en-us`), also try with just the language code
-                if (preg_match('/^([a-z]+)-[a-z]+$/i', $defaultCode, $matches) === 1) {
+                if (preg_match('/^([a-z]{2})-[a-z]+$/i', $defaultCode, $matches) === 1) {
                     $fallback[] = $matches[1];
                 }
 
@@ -103,7 +103,7 @@ trait AppTranslations
 
             // extract the language code from a language that
             // contains the country code (e.g. `en-us`)
-            if (preg_match('/^([a-z]+)-[a-z]+$/i', $defaultCode, $matches) === 1) {
+            if (preg_match('/^([a-z]{2})-[a-z]+$/i', $defaultCode, $matches) === 1) {
                 $defaultCode = $matches[1];
             }
         } else {
