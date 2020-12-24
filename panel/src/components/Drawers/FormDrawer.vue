@@ -67,9 +67,9 @@ export default {
     close() {
       this.$refs.drawer.close();
     },
-    focus() {
+    focus(name) {
       if (this.$refs.form && typeof this.$refs.form.focus === "function") {
-        this.$refs.form.focus();
+        this.$refs.form.focus(name);
       }
     },
     open(tab, focus = true) {
@@ -78,7 +78,8 @@ export default {
 
       if (focus !== false) {
         setTimeout(() => {
-          this.focus();
+          let autofocus = Object.values(this.fields).filter(field => field.autofocus === true)[0] || null;
+          this.focus(autofocus);
         }, 1);
       }
     }
