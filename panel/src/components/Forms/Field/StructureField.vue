@@ -332,6 +332,7 @@ export default {
         return false;
       }
 
+      let autofocus;
       let data = {};
 
       Object.keys(this.fields).forEach(fieldName => {
@@ -341,12 +342,16 @@ export default {
         } else {
           data[fieldName] = null;
         }
+
+        if (field.autofocus === true) {
+          autofocus = field;
+        }
       });
 
       this.currentIndex = "new";
       this.currentModel = data;
 
-      this.createForm();
+      this.createForm(autofocus);
     },
     addItem(value) {
       if (this.prepend === true) {
