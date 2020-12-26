@@ -1,0 +1,222 @@
+name: CI
+on: [push, pull_request]
+
+jobs:
+  backend-tests:
+    name: PHP ${{ matrix.php }}
+
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [ "7.3", "7.4", "8.0" ]
+    env:
+      extensions: mbstring, ctype, curl, gd, apcu, memcached, pcov
+      ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., pcov.exclude=\"~(vendor|tests)~\"
+
+    steps:
+      - name: Checkout Kirby
+        uses: actions/checkout@v2
+
+      - name: Install memcached
+        uses: niden/actions-memcached@v7
+
+      - name: Install system locales
+        run: sudo apt-get update && sudo apt-get install -y locales-all
+
+      - name: Setup PHP cache environment
+        id: ext-cache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ env.extensions }}
+          key: php-v1
+
+      - name: Cache PHP extensions
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.ext-cache.outputs.dir }}
+          key: ${{ steps.ext-cache.outputs.key }}
+          restore-keys: ${{ steps.ext-cache.outputs.key }}
+
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: ${{ env.extensions }}
+          ini-values: ${{ env.ini }}
+          coverage: pcov
+          tools: phpunit:^9, composer:v2
+
+      - name: Setup problem matchers
+        run: |
+          echo "::add-matcher::${{ runner.tool_cache }}/php.json"
+          echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
+
+      - name: Validate Composer config
+        run: composer validate
+
+      - name: Run tests
+        run: phpunit --coverage-clover ${{ github.workspace }}/clover.xml
+
+      - name: Upload coverage results to Coveralls
+        env:
+          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          composer global require -n -q php-coveralls/php-coveralls
+          php-coveralls --coverage_clover=${{ github.workspace }}/clover.xml -o ${{ github.workspace }}/coveralls.json -v
+
+  backend-analysis:
+    name: Backend Analysis
+
+    runs-on: ubuntu-latest
+    env:
+      php: "7.4"
+
+    steps:
+      - name: Checkout Kirby
+        uses: actions/checkout@v2
+
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.php }}
+          coverage: none
+          tools: php-cs-fixer, cs2pr
+
+      - name: Cache analysis data
+        uses: actions/cache@v2
+        with:
+          path: ~/.php-cs-fixer
+          key: backend-analysis
+
+      - name: Run tests
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: 1
+        run: |
+          php-cs-fixer fix --dry-run --format=checkstyle | cs2pr
+
+  frontend-e2e:
+    name: Frontend E2E
+
+    runs-on: ubuntu-latest
+    env:
+      php: "7.4"
+      extensions: mbstring, ctype, curl, gd, apcu, memcached
+
+    steps:
+      - name: Checkout Kirby
+        uses: actions/checkout@v2
+        with:
+          path: kirby
+
+      - name: Checkout Sandbox
+        uses: actions/checkout@v2
+        with:
+          repository: getkirby/sandbox
+          path: sandbox
+          submodules: true
+
+      - name: Preparations
+        run: |
+          # set up log directory
+          mkdir -p ${{ github.workspace }}/_logs
+
+          # link Kirby to Sandbox
+          rm -rf ${{ github.workspace }}/sandbox/kirby
+          ln -s ${{ github.workspace }}/kirby ${{ github.workspace }}/sandbox/kirby
+
+      - name: Setup PHP cache environment
+        id: ext-cache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ env.php }}
+          extensions: ${{ env.extensions }}
+          key: e2e-v1
+
+      - name: Cache PHP extensions
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.ext-cache.outputs.dir }}
+          key: ${{ steps.ext-cache.outputs.key }}
+          restore-keys: ${{ steps.ext-cache.outputs.key }}
+
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.php }}
+          extensions: ${{ env.extensions }}
+          coverage: none
+
+      - name: Install dependencies
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: kirby/panel
+          runTests: false
+
+      - name: Start servers
+        env:
+          VUE_APP_DEV_SERVER: http://127.0.0.1:8000
+        run: |
+          # start the built-in PHP server
+          php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
+
+          # start the Vue CLI server
+          npm run dev -- --skip-plugins @vue/cli-plugin-eslint &> ${{ github.workspace }}/_logs/vue-cli.log &
+        working-directory: kirby/panel
+
+      - name: Run tests
+        uses: cypress-io/github-action@v2
+        env:
+          CYPRESS_host: "http://127.0.0.1:8000"
+        with:
+          working-directory: kirby/panel
+          install: false
+          wait-on: "http://127.0.0.1:8080"
+          command: npm run test
+
+      - name: Print log files
+        if: always()
+        run: |
+          for log in ${{ github.workspace }}/_logs/*; do
+            echo -e "\033[1m$(basename $log)\033[0m"
+            cat $log
+            echo
+          done
+
+      - name: Archive Cypress screenshots
+        if: failure()
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-screenshots
+          path: kirby/panel/cypress/screenshots
+
+      - name: Archive Cypress videos
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-videos
+          path: kirby/panel/cypress/videos
+
+  frontend-analysis:
+    name: Frontend Analysis
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Kirby
+        uses: actions/checkout@v2
+
+      - name: Cache npm dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.npm
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: ${{ runner.os }}-node-
+
+      - name: Install npm dependencies
+        run: npm ci
+        working-directory: panel
+
+      - name: Run tests
+        run: npm run lint -- --no-fix
+        working-directory: panel
