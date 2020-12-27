@@ -44,6 +44,10 @@ class Section extends Component
             throw new InvalidArgumentException('Undefined section model');
         }
 
+        if (is_a($attrs['model'], 'Kirby\Cms\Model') === false) {
+            throw new InvalidArgumentException('Invalid section model');
+        }
+
         // use the type as fallback for the name
         $attrs['name'] = $attrs['name'] ?? $type;
         $attrs['type'] = $type;
@@ -65,7 +69,7 @@ class Section extends Component
      */
     public function kirby()
     {
-        return $this->model->kirby();
+        return $this->model()->kirby();
     }
 
     /**

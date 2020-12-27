@@ -356,13 +356,13 @@ class Field extends Component
      */
     public function kirby()
     {
-        return $this->model->kirby();
+        return $this->model()->kirby();
     }
 
     /**
      * Returns the parent model
      *
-     * @return mixed|null
+     * @return mixed
      */
     public function model()
     {
