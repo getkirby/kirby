@@ -56,12 +56,12 @@ class Blocks extends Items
      * @param array $params
      * @return \Kirby\Cms\Blocks
      */
-    public static function factory(array $blocks = null, array $params = [])
+    public static function factory(array $items = null, array $params = [])
     {
-        $blocks = static::extractFromLayouts($blocks);
-        $blocks = BlockConverter::editorBlocks($blocks);
+        $items = static::extractFromLayouts($items);
+        $items = BlockConverter::editorBlocks($items);
 
-        return parent::factory($blocks, $params);
+        return parent::factory($items, $params);
     }
 
     /**

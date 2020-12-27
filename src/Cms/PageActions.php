@@ -837,17 +837,17 @@ trait PageActions
      * Updates the page data
      *
      * @param array|null $input
-     * @param string|null $language
+     * @param string|null $languageCode
      * @param bool $validate
      * @return self
      */
-    public function update(array $input = null, string $language = null, bool $validate = false)
+    public function update(array $input = null, string $languageCode = null, bool $validate = false)
     {
         if ($this->isDraft() === true) {
             $validate = false;
         }
 
-        $page = parent::update($input, $language, $validate);
+        $page = parent::update($input, $languageCode, $validate);
 
         // if num is created from page content, update num on content update
         if ($page->isListed() === true && in_array($page->blueprint()->num(), ['zero', 'default']) === false) {
