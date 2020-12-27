@@ -19,9 +19,15 @@
     </component>
 
     <nav class="k-card-options">
-      <k-status-icon
+      <k-button
         v-if="flag"
         v-bind="flag"
+        class="k-card-options-button"
+        @click="flag.click"
+      />
+      <k-status-icon
+        v-if="pageFlag"
+        v-bind="pageFlag"
         class="k-card-options-button"
       />
       <slot name="options">
@@ -52,6 +58,7 @@ export default {
   props: {
     column: String,
     flag: Object,
+    pageFlag: Object,
     icon: {
       type: Object,
       default() {
