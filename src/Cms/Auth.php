@@ -36,7 +36,7 @@ class Auth
     /**
      * Currently impersonated user
      *
-     * @var \Kirby\App\User|null
+     * @var \Kirby\Cms\User|null
      */
     protected $impersonate;
 

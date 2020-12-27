@@ -76,7 +76,7 @@ class Query
      * @param string $query
      * @return mixed
      *
-     * @throws Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
+     * @throws \Kirby\Exception\BadMethodCallException If an invalid method is accessed by the query
      */
     protected function resolve(string $query)
     {
@@ -227,7 +227,7 @@ class Query
      * @param string $label Type of the name (`method`, `property` or `method/property`)
      * @return void
      *
-     * @throws Kirby\Exception\BadMethodCallException
+     * @throws \Kirby\Exception\BadMethodCallException
      */
     protected static function accessError($data, string $name, string $label): void
     {

@@ -129,7 +129,7 @@ class Uri
     /**
      * Creates a new URI object
      *
-     * @param array $props
+     * @param array|string $props
      * @param array $inject
      */
     public function __construct($props = [], array $inject = [])
