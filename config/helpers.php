@@ -5,6 +5,7 @@ use Kirby\Cms\Asset;
 use Kirby\Cms\Html;
 use Kirby\Cms\Response;
 use Kirby\Cms\Url;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -623,7 +624,7 @@ function site()
 function size($value): int
 {
     if (is_numeric($value)) {
-        return $value;
+        return (int)$value;
     }
 
     if (is_string($value)) {
@@ -643,6 +644,8 @@ function size($value): int
             return $value->count();
         }
     }
+
+    throw new InvalidArgumentException('Could not determine the size of the given value');
 }
 
 /**
@@ -744,9 +747,9 @@ function tc($key, int $count)
  *
  * @param string $date
  * @param int $step array of `unit` and `size` to round to nearest
- * @return string|null
+ * @return int|null
  */
-function timestamp(string $date = null, $step = null): ?string
+function timestamp(string $date = null, $step = null): ?int
 {
     if (V::date($date) === false) {
         return null;
@@ -791,7 +794,7 @@ function timestamp(string $date = null, $step = null): ?string
         $parts[$part] = 0;
     }
 
-    return strtotime(
+    $timestamp = strtotime(
         $parts['year'] . '-' .
         str_pad($parts['month'], 2, 0, STR_PAD_LEFT) . '-' .
         str_pad($parts['day'], 2, 0, STR_PAD_LEFT) . ' ' .
@@ -799,6 +802,9 @@ function timestamp(string $date = null, $step = null): ?string
         str_pad($parts['minute'], 2, 0, STR_PAD_LEFT) . ':' .
         str_pad($parts['second'], 2, 0, STR_PAD_LEFT)
     );
+
+    // on error, convert `false` into `null`
+    return $timestamp ? $timestamp : null;
 }
 
 /**
