@@ -61,6 +61,8 @@ jobs:
       - name: Upload coverage results to Coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COVERALLS_PARALLEL: "true"
+          COVERALLS_FLAG_NAME: ${{ matrix.php }}
         run: |
           composer global require -n -q php-coveralls/php-coveralls
           php-coveralls --coverage_clover=${{ github.workspace }}/clover.xml -o ${{ github.workspace }}/coveralls.json -v
@@ -220,3 +222,16 @@ jobs:
       - name: Run tests
         run: npm run lint -- --no-fix
         working-directory: panel
+
+  coveralls-upload:
+    name: Coveralls Upload
+
+    needs: backend-tests
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Send the Coveralls Finished webhook
+      uses: coverallsapp/github-action@master
+      with:
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        parallel-finished: true
