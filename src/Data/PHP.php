@@ -38,7 +38,7 @@ class PHP extends Handler
                 return "[\n" . implode(",\n", $array) . "\n" . $indent . ']';
             case 'boolean':
                 return $data ? 'true' : 'false';
-            case 'int':
+            case 'integer':
             case 'double':
                 return $data;
             default:
