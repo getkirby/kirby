@@ -48,7 +48,7 @@ class Pages extends Collection
     public function add($object)
     {
         // add a page collection
-        if (is_a($object, static::class) === true) {
+        if (is_a($object, self::class) === true) {
             $this->data = array_merge($this->data, $object->data);
 
         // add a page by id
@@ -398,7 +398,7 @@ class Pages extends Collection
         }
 
         // merge an entire collection
-        if (is_a($args[0], static::class) === true) {
+        if (is_a($args[0], self::class) === true) {
             $collection = clone $this;
             $collection->data = array_merge($collection->data, $args[0]->data);
             return $collection;
