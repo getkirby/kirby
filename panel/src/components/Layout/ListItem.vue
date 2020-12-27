@@ -17,9 +17,15 @@
       </span>
     </k-link>
     <nav class="k-list-item-options">
-      <k-status-icon
+      <k-button
         v-if="flag"
         v-bind="flag"
+        class="k-list-item-status"
+        @click="flag.click"
+      />
+      <k-status-icon
+        v-if="pageFlag"
+        v-bind="pageFlag"
         class="k-list-item-status"
       />
       <slot name="options">
@@ -68,6 +74,7 @@ export default {
     info: String,
     link: [String, Function],
     flag: Object,
+    pageFlag: Object,
     options: [Array, Function]
   },
   computed: {
