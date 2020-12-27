@@ -1,7 +1,7 @@
 [<img src="http://getkirby.com/assets/images/github/kirby.jpg" width="300">](https://getkirby.com)   
 
 [![Release](https://flat.badgen.net/github/release/getkirby/kirby/stable?color=yellow)](https://github.com/getkirby/kirby/releases/latest)
-[![CI Status](https://flat.badgen.net/github/status/getkirby/kirby/master/ci)](https://github.com/getkirby/kirby/actions?query=workflow%3ACI)
+[![CI Status](https://flat.badgen.net/github/checks/getkirby/kirby/master)](https://github.com/getkirby/kirby/actions?query=workflow%3ACI)
 [![Coverage Status](https://flat.badgen.net/coveralls/c/github/getkirby/kirby)](https://coveralls.io/github/getkirby/kirby)
 [![Downloads](https://flat.badgen.net/packagist/dt/getkirby/cms?color=red)](https://github.com/getkirby/kirby/releases/latest)
 [![Twitter](https://flat.badgen.net/twitter/follow/getkirby?color=cyan)](https://twitter.com/getkirby)
