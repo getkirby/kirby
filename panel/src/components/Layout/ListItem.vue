@@ -17,12 +17,12 @@
       </span>
     </k-link>
     <nav class="k-list-item-options">
+      <k-status-icon
+        v-if="flag"
+        v-bind="flag"
+        class="k-list-item-status"
+      />
       <slot name="options">
-        <k-status-icon
-          v-if="flag"
-          v-bind="flag"
-          class="k-list-item-status"
-        />
         <k-button
           v-if="options"
           :tooltip="$t('options')"
