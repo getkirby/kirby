@@ -1,3 +1,4 @@
+<?php /** @var \Kirby\Cms\Block $block */ ?>
 <?php if ($block->url()->isNotEmpty()): ?>
 <figure>
   <?= video($block->url()) ?>

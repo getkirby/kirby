@@ -1,5 +1,6 @@
 <?php
 
+/** @var \Kirby\Cms\Block $block */
 $alt     = $block->alt();
 $caption = $block->caption();
 $crop    = $block->crop()->isTrue();
