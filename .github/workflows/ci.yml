@@ -48,14 +48,17 @@ jobs:
           tools: phpunit:^9, composer:v2
 
       - name: Setup problem matchers
+        id: finishPrepare
         run: |
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
       - name: Validate Composer config
+        if: always() && steps.finishPrepare.outcome == 'success'
         run: composer validate
 
       - name: Run tests
+        if: always() && steps.finishPrepare.outcome == 'success'
         run: phpunit --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Upload coverage results to Coveralls
