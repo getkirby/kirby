@@ -180,9 +180,9 @@ jobs:
         if: always()
         run: |
           for log in ${{ github.workspace }}/_logs/*; do
-            echo -e "\033[1m$(basename $log)\033[0m"
+            echo "::group::$(basename $log)"
             cat $log
-            echo
+            echo "::endgroup::"
           done
 
       - name: Archive Cypress screenshots
@@ -207,6 +207,9 @@ jobs:
     steps:
       - name: Checkout Kirby
         uses: actions/checkout@v2
+
+      - name: Set up Node.js problem matchers
+        uses: actions/setup-node@v2
 
       - name: Cache npm dependencies
         uses: actions/cache@v2

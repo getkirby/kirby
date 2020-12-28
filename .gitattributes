@@ -1,6 +1,6 @@
 # git
 .gitattributes export-ignore
-.github export-ignore
+.github/ export-ignore
 .gitignore export-ignore
 
 # scripts
@@ -8,7 +8,6 @@
 scripts/ export-ignore
 
 # tests
-.coveralls.yml export-ignore
 .php_cs export-ignore
 .travis.yml export-ignore
 phpstan.neon.dist export-ignore
