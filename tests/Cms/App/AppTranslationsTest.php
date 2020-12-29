@@ -135,21 +135,40 @@ class AppTranslationsTest extends TestCase
             ],
             'languages' => [
                 [
-                    'code'         => 'en-us',
+                    'code'         => 'de-de',
                     'default'      => true,
                     'translations' => [
-                        'button' => 'Button'
+                        'button1' => 'Knopf1 de-de'
+                    ]
+                ],
+                [
+                    'code'         => 'de-at',
+                    'translations' => [
+                        'button1' => 'Knopf1 de-at'
                     ]
                 ]
             ],
             'translations' => [
                 'de' => [
+                    'button1' => 'Knopf1',
+                    'button2' => 'Knopf2'
                 ]
             ]
         ]);
 
-        I18n::$locale = 'en-us';
-        $this->assertSame('Button', t('button'));
+        I18n::$locale = 'de-de';
+        $this->assertSame('Knopf1 de-de', t('button1'));
+        $this->assertSame('Knopf2', t('button2'));
+        $this->assertSame('Deutsch', t('translation.name'));
+
+        I18n::$locale = 'de-at';
+        $this->assertSame('Knopf1 de-at', t('button1'));
+        $this->assertSame('Knopf2', t('button2'));
+        $this->assertSame('Deutsch', t('translation.name'));
+
+        I18n::$locale = 'en';
+        $this->assertSame('Knopf1 de-de', t('button1'));
+        $this->assertSame('Knopf2', t('button2'));
         $this->assertSame('English', t('translation.name'));
     }
 
@@ -385,5 +404,72 @@ class AppTranslationsTest extends TestCase
         $this->assertSame('de_DE.' . $this->localeSuffix, setlocale(LC_CTYPE, '0'));
         $this->assertSame('de_CH.' . $this->localeSuffix, setlocale(LC_NUMERIC, '0'));
         $this->assertSame('de_AT.' . $this->localeSuffix, setlocale(LC_COLLATE, '0'));
+    }
+
+    public function testPanelLanguage()
+    {
+        // single-language setup
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ]
+        ]);
+        $this->assertSame('en', $app->panelLanguage());
+
+        // override with the panel.language option
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'panel.language' => 'it'
+            ]
+        ]);
+        $this->assertSame('it', $app->panelLanguage());
+
+        // multi-language setup with a simple default language
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code'    => 'fr',
+                    'default' => true
+                ]
+            ]
+        ]);
+        $this->assertSame('fr', $app->panelLanguage());
+
+        // multi-language setup with a default language with country code
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code'    => 'de-ch',
+                    'default' => true
+                ]
+            ]
+        ]);
+        $this->assertSame('de', $app->panelLanguage());
+
+        // override with the panel.language option
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'languages' => [
+                [
+                    'code'    => 'fr',
+                    'default' => true
+                ]
+            ],
+            'options' => [
+                'panel.language' => 'it'
+            ]
+        ]);
+        $this->assertSame('it', $app->panelLanguage());
     }
 }

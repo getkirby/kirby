@@ -41,8 +41,11 @@ class Api extends BaseApi
 
         $allowImpersonation = $this->kirby()->option('api.allowImpersonation', false);
         if ($user = $this->kirby->user(null, $allowImpersonation)) {
-            $this->kirby->setCurrentTranslation($user->language());
+            $translation = $user->language();
+        } else {
+            $translation = $this->kirby->panelLanguage();
         }
+        $this->kirby->setCurrentTranslation($translation);
 
         return parent::call($path, $method, $requestData);
     }

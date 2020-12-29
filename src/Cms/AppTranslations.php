@@ -57,7 +57,21 @@ trait AppTranslations
 
         I18n::$fallback = function (): array {
             if ($this->multilang() === true) {
-                return [$this->defaultLanguage()->code(), 'en'];
+                // first try to fall back to the configured default language
+                $defaultCode = $this->defaultLanguage()->code();
+                $fallback = [$defaultCode];
+
+                // if the default language is specified with a country code
+                // (e.g. `en-us`), also try with just the language code
+                if (preg_match('/^([a-z]{2})-[a-z]+$/i', $defaultCode, $matches) === 1) {
+                    $fallback[] = $matches[1];
+                }
+
+                // fall back to the complete English translation
+                // as a last resort
+                $fallback[] = 'en';
+
+                return $fallback;
             } else {
                 return ['en'];
             }
@@ -73,6 +87,30 @@ trait AppTranslations
                 Str::$language = Language::loadRules($slugs);
             }
         }
+    }
+
+    /**
+     * Returns the language code that will be used
+     * for the Panel if no user is logged in or if
+     * no language is configured for the user
+     *
+     * @return string
+     */
+    public function panelLanguage(): string
+    {
+        if ($this->multilang() === true) {
+            $defaultCode = $this->defaultLanguage()->code();
+
+            // extract the language code from a language that
+            // contains the country code (e.g. `en-us`)
+            if (preg_match('/^([a-z]{2})-[a-z]+$/i', $defaultCode, $matches) === 1) {
+                $defaultCode = $matches[1];
+            }
+        } else {
+            $defaultCode = 'en';
+        }
+
+        return $this->option('panel.language', $defaultCode);
     }
 
     /**

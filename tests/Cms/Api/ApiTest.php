@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\I18n;
 
 class ApiTest extends TestCase
 {
@@ -155,6 +156,118 @@ class ApiTest extends TestCase
         $this->assertSame('de_AT.UTF-8', setlocale(LC_ALL, 0));
 
         $_GET = [];
+    }
+
+    public function testCallTranslation()
+    {
+        // with logged in user with language
+        $app = $this->app->clone([
+            'users' => [
+                [
+                    'email'    => 'homer@simpsons.com',
+                    'language' => 'fr'
+                ]
+            ]
+        ]);
+        $app->impersonate('homer@simpsons.com');
+
+        $api = $app->api();
+        $this->assertSame('something', $api->call('foo'));
+        $this->assertSame('fr', I18n::$locale);
+
+        // with logged in user without language
+        $app = $this->app->clone([
+            'users' => [
+                [
+                    'email' => 'homer@simpsons.com'
+                ]
+            ],
+            'languages' => [
+                [
+                    'code'    => 'it-it',
+                    'default' => true,
+                ]
+            ],
+            'options' => [
+                'panel.language' => 'de'
+            ]
+        ]);
+        $app->impersonate('homer@simpsons.com');
+
+        $api = $app->api();
+        $this->assertSame('something', $api->call('foo'));
+        $this->assertSame('de', I18n::$locale);
+
+        // with logged in user without language without Panel language
+        $app = $this->app->clone([
+            'users' => [
+                [
+                    'email' => 'homer@simpsons.com'
+                ]
+            ],
+            'languages' => [
+                [
+                    'code'    => 'it-it',
+                    'default' => true,
+                ]
+            ]
+        ]);
+        $app->impersonate('homer@simpsons.com');
+
+        $api = $app->api();
+        $this->assertSame('something', $api->call('foo'));
+        $this->assertSame('it', I18n::$locale);
+
+        // with logged in user without any configuration
+        $app = $this->app->clone([
+            'users' => [
+                [
+                    'email' => 'homer@simpsons.com'
+                ]
+            ]
+        ]);
+        $app->impersonate('homer@simpsons.com');
+
+        $api = $app->api();
+        $this->assertSame('something', $api->call('foo'));
+        $this->assertSame('en', I18n::$locale);
+
+        // without logged in user
+        $app = $this->app->clone([
+            'languages' => [
+                [
+                    'code'    => 'it-it',
+                    'default' => true,
+                ]
+            ],
+            'options' => [
+                'panel.language' => 'de'
+            ]
+        ]);
+
+        $api = $app->api();
+        $this->assertSame('something', $api->call('foo'));
+        $this->assertSame('de', I18n::$locale);
+
+        // without logged in user without Panel language
+        $app = $this->app->clone([
+            'languages' => [
+                [
+                    'code'    => 'it-it',
+                    'default' => true,
+                ]
+            ]
+        ]);
+
+        $api = $app->api();
+        $this->assertSame('something', $api->call('foo'));
+        $this->assertSame('it', I18n::$locale);
+
+        // without logged in user without any configuration
+        $app = $this->app->clone();
+        $api = $app->api();
+        $this->assertSame('something', $api->call('foo'));
+        $this->assertSame('en', I18n::$locale);
     }
 
     public function testLanguage()
