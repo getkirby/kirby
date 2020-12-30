@@ -40,6 +40,7 @@ class LanguageRoutes
 
                     // jump through to the fallback if nothing
                     // can be found for this language
+                    /** @var \Kirby\Http\Route $this */
                     $this->next();
                 }
             ];
