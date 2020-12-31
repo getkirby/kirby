@@ -84,9 +84,6 @@ jobs:
           coverage: none
           tools: composer:v2, composer-normalize, composer-unused, phpcpd, php-cs-fixer, cs2pr
 
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
-
       - name: Cache analysis data
         id: finishPrepare
         uses: actions/cache@v2
@@ -101,6 +98,9 @@ jobs:
       - name: Run "composer-normalize"
         if: always() && steps.finishPrepare.outcome == 'success'
         run: composer-normalize --dry-run
+
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
 
       - name: Run "composer unused"
         if: always() && steps.finishPrepare.outcome == 'success'
