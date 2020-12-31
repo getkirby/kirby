@@ -1,11 +1,15 @@
 {
   "name": "getkirby/cms",
+  "type": "kirby-cms",
   "description": "The Kirby 3 core",
+  "keywords": [
+    "kirby",
+    "cms",
+    "core"
+  ],
+  "homepage": "https://getkirby.com",
   "version": "3.5.0",
   "license": "proprietary",
-  "keywords": ["kirby", "cms", "core"],
-  "homepage": "https://getkirby.com",
-  "type": "kirby-cms",
   "authors": [
     {
       "name": "Kirby Team",
@@ -13,42 +17,46 @@
       "homepage": "https://getkirby.com"
     }
   ],
+  "require": {
+    "php": ">=7.3.0 <8.1.0",
+    "ext-ctype": "*",
+    "ext-mbstring": "*",
+    "claviska/simpleimage": "3.5.1",
+    "filp/whoops": "2.9.1",
+    "getkirby/composer-installer": "^1.2.0",
+    "laminas/laminas-escaper": "2.7.0",
+    "michelf/php-smartypants": "1.8.1",
+    "mustangostang/spyc": "0.6.3",
+    "phpmailer/phpmailer": "6.2.0",
+    "true/punycode": "2.1.1"
+  },
+  "config": {
+    "optimize-autoloader": true,
+    "platform-check": false
+  },
+  "autoload": {
+    "psr-4": {
+      "Kirby\\": "src/"
+    },
+    "classmap": [
+      "dependencies/"
+    ],
+    "files": [
+      "config/setup.php"
+    ]
+  },
+  "scripts": {
+    "post-update-cmd": "curl -o cacert.pem https://curl.haxx.se/ca/cacert.pem",
+    "analyze": "phpstan analyse",
+    "build": "./scripts/build",
+    "fix": "php-cs-fixer fix --config .php_cs",
+    "test": "phpunit --stderr --coverage-html=tests/coverage",
+    "zip": "composer archive --format=zip --file=dist"
+  },
   "support": {
     "email": "support@getkirby.com",
     "issues": "https://github.com/getkirby/kirby/issues",
     "forum": "https://forum.getkirby.com",
     "source": "https://github.com/getkirby/kirby"
-  },
-  "require": {
-    "php": ">=7.3.0 <8.1.0",
-    "ext-mbstring": "*",
-    "ext-ctype": "*",
-    "getkirby/composer-installer": "^1.2.0",
-    "mustangostang/spyc": "0.6.3",
-    "michelf/php-smartypants": "1.8.1",
-    "claviska/simpleimage": "3.5.1",
-    "phpmailer/phpmailer": "6.2.0",
-    "filp/whoops": "2.9.1",
-    "true/punycode": "2.1.1",
-    "laminas/laminas-escaper": "2.7.0"
-  },
-  "autoload": {
-    "files": ["config/setup.php"],
-    "classmap": ["dependencies/"],
-    "psr-4": {
-      "Kirby\\": "src/"
-    }
-  },
-  "scripts": {
-    "analyze": "phpstan analyse",
-    "build": "./scripts/build",
-    "fix": "php-cs-fixer fix --config .php_cs",
-    "post-update-cmd": "curl -o cacert.pem https://curl.haxx.se/ca/cacert.pem",
-    "test": "phpunit --stderr --coverage-html=tests/coverage",
-    "zip": "composer archive --format=zip --file=dist"
-  },
-  "config": {
-    "optimize-autoloader": true,
-    "platform-check": false
   }
 }
