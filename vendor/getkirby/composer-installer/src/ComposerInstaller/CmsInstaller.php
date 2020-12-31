@@ -29,8 +29,8 @@ class CmsInstaller extends Installer
     /**
      * Returns the installation path of a package
      *
-     * @param PackageInterface $package
-     * @return string path
+     * @param \Composer\Package\PackageInterface $package
+     * @return string
      */
     public function getInstallPath(PackageInterface $package): string
     {
@@ -42,14 +42,14 @@ class CmsInstaller extends Installer
         }
 
         // use path from configuration, otherwise fall back to default
-        if (isset($extra['kirby-cms-path'])) {
+        if (isset($extra['kirby-cms-path']) === true) {
             $path = $extra['kirby-cms-path'];
         } else {
             $path = 'kirby';
         }
 
         // if explicitly set to something invalid (e.g. `false`), install to vendor dir
-        if (!is_string($path)) {
+        if (is_string($path) !== true) {
             return parent::getInstallPath($package);
         }
 

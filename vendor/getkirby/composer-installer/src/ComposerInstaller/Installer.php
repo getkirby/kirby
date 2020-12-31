@@ -29,10 +29,11 @@ class Installer extends LibraryInstaller
     }
 
     /**
-     * Installs specific package.
+     * Installs a specific package
      *
-     * @param InstalledRepositoryInterface $repo repository in which to check
-     * @param PackageInterface $package package instance
+     * @param \Composer\Repository\InstalledRepositoryInterface $repo Repository in which to check
+     * @param \Composer\Package\PackageInterface $package Package instance to install
+     * @return \React\Promise\PromiseInterface|null
      */
     public function install(InstalledRepositoryInterface $repo, PackageInterface $package)
     {
@@ -40,7 +41,7 @@ class Installer extends LibraryInstaller
         $promise = parent::install($repo, $package);
 
         // ...then run custom code
-        $postInstall = function () use ($package) {
+        $postInstall = function () use ($package): void {
             $this->postInstall($package);
         };
 
@@ -54,13 +55,14 @@ class Installer extends LibraryInstaller
     }
 
     /**
-     * Updates specific package.
+     * Updates a specific package
      *
-     * @param InstalledRepositoryInterface $repo repository in which to check
-     * @param PackageInterface $initial already installed package version
-     * @param PackageInterface $target updated version
+     * @param \Composer\Repository\InstalledRepositoryInterface $repo Repository in which to check
+     * @param \Composer\Package\PackageInterface $initial Already installed package version
+     * @param \Composer\Package\PackageInterface $target Updated version
+     * @return \React\Promise\PromiseInterface|null
      *
-     * @throws InvalidArgumentException if $initial package is not installed
+     * @throws \InvalidArgumentException if $initial package is not installed
      */
     public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
     {
@@ -68,7 +70,7 @@ class Installer extends LibraryInstaller
         $promise = parent::update($repo, $initial, $target);
 
         // ...then run custom code
-        $postInstall = function () use ($target) {
+        $postInstall = function () use ($target): void {
             $this->postInstall($target);
         };
 
@@ -85,16 +87,18 @@ class Installer extends LibraryInstaller
      * Custom handler that will be called after each package
      * installation or update
      *
-     * @param PackageInterface $package
+     * @param \Composer\Package\PackageInterface $package
+     * @return void
      */
     protected function postInstall(PackageInterface $package)
     {
         // remove the package's `vendor` directory to avoid duplicated autoloader and vendor code
         $packageVendorDir = $this->getInstallPath($package) . '/vendor';
-        if (is_dir($packageVendorDir)) {
+        if (is_dir($packageVendorDir) === true) {
             $success = $this->filesystem->removeDirectory($packageVendorDir);
-            if (!$success) {
-                throw new RuntimeException('Could not completely delete ' . $path . ', aborting.'); // @codeCoverageIgnore
+
+            if ($success !== true) {
+                throw new RuntimeException('Could not completely delete ' . $packageVendorDir . ', aborting.'); // @codeCoverageIgnore
             }
         }
     }

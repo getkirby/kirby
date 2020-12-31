@@ -18,10 +18,11 @@ class Plugin implements PluginInterface
     /**
      * Apply plugin modifications to Composer
      *
-     * @param Composer $composer
-     * @param IOInterface $io
+     * @param \Composer\Composer $composer
+     * @param \Composer\IO\IOInterface $io
+     * @return void
      */
-    public function activate(Composer $composer, IOInterface $io)
+    public function activate(Composer $composer, IOInterface $io): void
     {
         $installationManager = $composer->getInstallationManager();
         $installationManager->addInstaller(new CmsInstaller($io, $composer));
@@ -30,24 +31,28 @@ class Plugin implements PluginInterface
 
     /**
      * Remove any hooks from Composer
+     *
      * @codeCoverageIgnore
      *
-     * @param Composer $composer
-     * @param IOInterface $io
+     * @param \Composer\Composer $composer
+     * @param \Composer\IO\IOInterface $io
+     * @return void
      */
-    public function deactivate(Composer $composer, IOInterface $io)
+    public function deactivate(Composer $composer, IOInterface $io): void
     {
         // nothing to do
     }
 
     /**
      * Prepare the plugin to be uninstalled
+     *
      * @codeCoverageIgnore
      *
      * @param Composer $composer
      * @param IOInterface $io
+     * @return void
      */
-    public function uninstall(Composer $composer, IOInterface $io)
+    public function uninstall(Composer $composer, IOInterface $io): void
     {
         // nothing to do
     }

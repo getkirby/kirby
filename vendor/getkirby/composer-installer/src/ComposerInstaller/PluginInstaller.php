@@ -3,6 +3,7 @@
 namespace Kirby\ComposerInstaller;
 
 use Composer\Package\PackageInterface;
+use InvalidArgumentException;
 
 /**
  * @package   Kirby Composer Installer
@@ -27,7 +28,7 @@ class PluginInstaller extends Installer
     /**
      * Returns the installation path of a package
      *
-     * @param PackageInterface $package
+     * @param \Composer\Package\PackageInterface $package
      * @return string path
      */
     public function getInstallPath(PackageInterface $package): string
@@ -47,12 +48,20 @@ class PluginInstaller extends Installer
         // use base path from configuration, otherwise fall back to default
         $basePath = $extra['kirby-plugin-path'] ?? 'site/plugins';
 
+        if (is_string($basePath) !== true) {
+            throw new InvalidArgumentException('Invalid "kirby-plugin-path" option');
+        }
+
         // determine the plugin name from its package name;
         // can be overridden in the plugin's `composer.json`
         $prettyName = $package->getPrettyName();
         $pluginExtra = $package->getExtra();
-        if (!empty($pluginExtra['installer-name'])) {
+        if (empty($pluginExtra['installer-name']) === false) {
             $name = $pluginExtra['installer-name'];
+
+            if (is_string($name) !== true) {
+                throw new InvalidArgumentException('Invalid "installer-name" option in plugin ' . $prettyName);
+            }
         } elseif (strpos($prettyName, '/') !== false) {
             // use name after the slash
             $name = explode('/', $prettyName)[1];
@@ -68,9 +77,10 @@ class PluginInstaller extends Installer
      * Custom handler that will be called after each package
      * installation or update
      *
-     * @param PackageInterface $package
+     * @param \Composer\Package\PackageInterface $package
+     * @return void
      */
-    protected function postInstall(PackageInterface $package)
+    protected function postInstall(PackageInterface $package): void
     {
         // only continue if Pluginkit is supported
         if ($this->supportsPluginkit($package) !== true) {
@@ -85,7 +95,7 @@ class PluginInstaller extends Installer
      * otherwise (if the Pluginkit is not yet supported by the plugin)
      * the installer will fall back to the behavior of the LibraryInstaller
      *
-     * @param PackageInterface $package
+     * @param \Composer\Package\PackageInterface $package
      * @return bool
      */
     protected function supportsPluginkit(PackageInterface $package): bool
