@@ -84,6 +84,9 @@ jobs:
           coverage: none
           tools: composer:v2, composer-normalize, composer-unused, phpcpd, php-cs-fixer, cs2pr
 
+      - name: Install Composer dependencies
+        run: composer install --prefer-dist --no-progress
+
       - name: Cache analysis data
         id: finishPrepare
         uses: actions/cache@v2
@@ -91,23 +94,23 @@ jobs:
           path: ~/.php-cs-fixer
           key: backend-analysis
 
-      - name: Run composer validate
+      - name: Run "composer validate"
         if: always() && steps.finishPrepare.outcome == 'success'
         run: composer validate --strict --no-check-version --no-check-all
 
-      - name: Run composer normalize
+      - name: Run "composer-normalize"
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: composer normalize --dry-run
+        run: composer-normalize --dry-run
 
-      - name: Run composer unused
+      - name: Run "composer unused"
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: composer unused
+        run: composer unused --no-progress
 
-      - name: Run phpcpd
+      - name: Run "phpcpd"
         if: always() && steps.finishPrepare.outcome == 'success'
         run: phpcpd --fuzzy --exclude tests --exclude vendor .
 
-      - name: Run PHP-CS-Fixer
+      - name: Run "PHP-CS-Fixer"
         if: always() && steps.finishPrepare.outcome == 'success'
         env:
           PHP_CS_FIXER_IGNORE_ENV: 1
