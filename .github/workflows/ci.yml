@@ -99,9 +99,6 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         run: composer-normalize --dry-run
 
-      - name: Install Composer dependencies
-        run: composer install --prefer-dist --no-progress
-
       - name: Run "composer unused"
         if: always() && steps.finishPrepare.outcome == 'success'
         run: composer unused --no-progress
