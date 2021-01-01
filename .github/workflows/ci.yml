@@ -72,15 +72,32 @@ jobs:
     runs-on: ubuntu-latest
     env:
       php: "7.4"
+      extensions: mbstring, ctype, curl, gd, apcu, memcached
 
     steps:
       - name: Checkout Kirby
         uses: actions/checkout@v2
 
+      - name: Setup PHP cache environment
+        id: ext-cache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ env.php }}
+          extensions: ${{ env.extensions }}
+          key: php-analysis-v1
+
+      - name: Cache PHP extensions
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.ext-cache.outputs.dir }}
+          key: ${{ steps.ext-cache.outputs.key }}
+          restore-keys: ${{ steps.ext-cache.outputs.key }}
+
       - name: Setup PHP environment
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ env.php }}
+          extensions: ${{ env.extensions }}
           coverage: none
           tools: composer:v2, composer-normalize, composer-unused, phpcpd, php-cs-fixer, cs2pr
 
