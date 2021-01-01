@@ -21,21 +21,21 @@
 
 # ignore all the vendor cruft
 /vendor/**/.*
-/vendor/**/*.json
-/vendor/**/*.txt
-/vendor/**/*.md
-/vendor/**/*.yml
-/vendor/**/*.yaml
-/vendor/**/*.xml
-/vendor/**/*.dist
-/vendor/**/readme.php
-/vendor/**/LICENSE
-/vendor/**/COPYING
-/vendor/**/COMMITMENT
-/vendor/**/VERSION
-/vendor/**/docs/*
-/vendor/**/example/*
-/vendor/**/examples/*
 /vendor/**/test/*
 /vendor/**/tests/*
-/vendor/**/php4/*
+/vendor/*/*/*.md
+!/vendor/*/*/COPYRIGHT.md
+!/vendor/*/*/LICENSE.md
+/vendor/*/*/*.dist
+/vendor/*/*/*.txt
+/vendor/*/*/*.xml
+/vendor/*/*/*.yml
+/vendor/*/*/*.yaml
+/vendor/*/*/COMMITMENT
+/vendor/*/*/readme.php
+/vendor/*/*/VERSION
+/vendor/*/*/docs/*
+/vendor/*/*/example/*
+/vendor/*/*/examples/*
+/vendor/*/*/php4/*
+/vendor/getkirby/composer-installer
