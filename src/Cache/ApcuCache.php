@@ -2,7 +2,7 @@
 
 namespace Kirby\Cache;
 
-use APCuIterator;
+use APCUIterator;
 
 /**
  * APCu Cache Driver
@@ -35,7 +35,7 @@ class ApcuCache extends Cache
     public function flush(): bool
     {
         if (empty($this->options['prefix']) === false) {
-            return apcu_delete(new APCuIterator('!^' . preg_quote($this->options['prefix']) . '!'));
+            return apcu_delete(new APCUIterator('!^' . preg_quote($this->options['prefix']) . '!'));
         } else {
             return apcu_clear_cache();
         }

@@ -3,7 +3,7 @@
 namespace Kirby\Parsley;
 
 use DOMElement;
-use DOMXpath;
+use DOMXPath;
 use Kirby\Toolkit\Str;
 
 class Element
