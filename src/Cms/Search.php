@@ -37,7 +37,7 @@ class Search
     public static function collection(Collection $collection, string $query = null, $params = [])
     {
         $kirby = App::instance();
-        return $kirby->component('search')($kirby, $collection, $query, $params);
+        return ($kirby->component('search'))($kirby, $collection, $query, $params);
     }
 
     /**

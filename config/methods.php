@@ -127,7 +127,7 @@ return function (App $app) {
                 return $time;
             }
 
-            return $app->option('date.handler', 'date')($format, $time);
+            return ($app->option('date.handler', 'date'))($format, $time);
         },
 
         /**

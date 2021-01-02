@@ -110,7 +110,7 @@ function css($url, $options = null): ?string
         }
     }
 
-    $url  = $kirby->component('css')($kirby, $url, $options);
+    $url  = ($kirby->component('css'))($kirby, $url, $options);
     $url  = Url::to($url);
     $attr = array_merge((array)$options, [
         'href' => $url,
@@ -148,7 +148,7 @@ if (function_exists('dump') === false) {
     function dump($variable, bool $echo = true): string
     {
         $kirby = App::instance();
-        return $kirby->component('dump')($kirby, $variable, $echo);
+        return ($kirby->component('dump'))($kirby, $variable, $echo);
     }
 }
 
@@ -382,7 +382,7 @@ function js($url, $options = null): ?string
         }
     }
 
-    $url  = $kirby->component('js')($kirby, $url, $options);
+    $url  = ($kirby->component('js'))($kirby, $url, $options);
     $url  = Url::to($url);
     $attr = array_merge((array)$options, ['src' => $url]);
 

@@ -62,8 +62,8 @@ class Url extends BaseUrl
     {
         $kirby = App::instance();
 
-        return $kirby->component('url')($kirby, $path, $options, function (string $path = null, $options = null) use ($kirby) {
-            return $kirby->nativeComponent('url')($kirby, $path, $options);
+        return ($kirby->component('url'))($kirby, $path, $options, function (string $path = null, $options = null) use ($kirby) {
+            return ($kirby->nativeComponent('url'))($kirby, $path, $options);
         });
     }
 }

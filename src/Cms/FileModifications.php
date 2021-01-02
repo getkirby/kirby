@@ -191,7 +191,7 @@ trait FileModifications
             return $this;
         }
 
-        $result = $this->kirby()->component('file::version')($this->kirby(), $this, $options);
+        $result = ($this->kirby()->component('file::version'))($this->kirby(), $this, $options);
 
         if (is_a($result, 'Kirby\Cms\FileVersion') === false && is_a($result, 'Kirby\Cms\File') === false) {
             throw new InvalidArgumentException('The file::version component must return a File or FileVersion object');
