@@ -42,7 +42,8 @@
       "dependencies/"
     ],
     "files": [
-      "config/setup.php"
+      "config/setup.php",
+      "config/helpers.php"
     ]
   },
   "scripts": {

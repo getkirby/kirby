@@ -6,11 +6,6 @@
 define('DS', '/');
 
 /**
- * Load files that can't be autoloaded
- */
-require_once __DIR__ . '/helpers.php';
-
-/**
  * Class aliases
  */
 $aliases = require_once __DIR__ . '/aliases.php';
