@@ -54,9 +54,9 @@
       "@analyze:phpcpd",
       "@analyze:phpmd"
     ],
-    "analyze:phpstan": "phpstan analyse",
     "analyze:phpcpd": "phpcpd --fuzzy --exclude tests --exclude vendor .",
     "analyze:phpmd": "phpmd . ansi phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*'",
+    "analyze:phpstan": "phpstan analyse",
     "build": "./scripts/build",
     "fix": "php-cs-fixer fix --config .php_cs",
     "test": "phpunit --stderr --coverage-html=tests/coverage",
