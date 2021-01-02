@@ -10,8 +10,8 @@ scripts/ export-ignore
 # tests
 .php_cs export-ignore
 .travis.yml export-ignore
-phpstan.neon.dist export-ignore
 phpunit.xml.dist export-ignore
+psalm.xml.dist export-ignore
 tests/ export-ignore
 
 # panel
