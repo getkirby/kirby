@@ -336,7 +336,7 @@ class Session
     {
         // nothing to do if nothing changed or the session has been just created or destroyed
         /**
-         * @todo The $this->destroyed check gets flagged by Psalm for unknown reasons
+         * TODO: The $this->destroyed check gets flagged by Psalm for unknown reasons
          * @psalm-suppress ParadoxicalCondition
          */
         if ($this->writeMode !== true || $this->tokenExpiry === null || $this->destroyed === true) {
@@ -520,7 +520,7 @@ class Session
         // - destroyed sessions are never written to
         // - no need to lock and re-init if we are already in write mode
         /**
-         * @todo The $this->destroyed check gets flagged by Psalm for unknown reasons
+         * TODO: The $this->destroyed check gets flagged by Psalm for unknown reasons
          * @psalm-suppress ParadoxicalCondition
          */
         if ($this->tokenExpiry === null || $this->destroyed === true || $this->writeMode === true) {
@@ -530,7 +530,7 @@ class Session
         // don't allow writing for read-only sessions
         // (only the case for moved sessions)
         /**
-         * @todo This check gets flagged by Psalm for unknown reasons
+         * TODO: This check gets flagged by Psalm for unknown reasons
          * @psalm-suppress ParadoxicalCondition
          */
         if ($this->tokenKey === null) {
