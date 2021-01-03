@@ -45,7 +45,7 @@ jobs:
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.ini }}
           coverage: pcov
-          tools: phpunit:^9, composer:v2
+          tools: phpunit:^9
 
       - name: Setup problem matchers
         id: finishPrepare
@@ -57,14 +57,14 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         run: phpunit --coverage-clover ${{ github.workspace }}/clover.xml
 
-      - name: Upload coverage results to Coveralls
+      - name: Upload coverage results to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          file: ${{ github.workspace }}/clover.xml
+          flags: backend
+          env_vars: PHP
         env:
-          COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          COVERALLS_PARALLEL: "true"
-          COVERALLS_FLAG_NAME: ${{ matrix.php }}
-        run: |
-          composer global require -n -q php-coveralls/php-coveralls
-          php-coveralls --coverage_clover=${{ github.workspace }}/clover.xml -o ${{ github.workspace }}/coveralls.json -v
+          PHP: ${{ matrix.php }}
 
   backend-analysis:
     name: Backend Analysis
@@ -280,16 +280,3 @@ jobs:
       - name: Statically analyze using ESLint
         run: npm run lint -- --max-warnings 0 --no-fix --format stylish
         working-directory: panel
-
-  coveralls-upload:
-    name: Coveralls Upload
-
-    needs: backend-tests
-    runs-on: ubuntu-latest
-
-    steps:
-    - name: Send the Coveralls Finished webhook
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ secrets.GITHUB_TOKEN }}
-        parallel-finished: true
