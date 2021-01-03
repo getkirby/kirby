@@ -102,7 +102,9 @@ jobs:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
-          tools: composer:v2, composer-normalize, composer-unused, phpcpd, php-cs-fixer, cs2pr, psalm
+          tools: |
+            composer:v2, composer-normalize, composer-unused,
+            phpcpd, php-cs-fixer, cs2pr, psalm, phpmd
 
       - name: Cache analysis data
         id: finishPrepare
@@ -139,6 +141,10 @@ jobs:
       - name: Statically analyze using Psalm
         if: always() && steps.finishPrepare.outcome == 'success'
         run: psalm --output-format=github --report=sarif/psalm.sarif --report-show-info=false
+
+      - name: Statically analyze using PHPMD
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: phpmd . ansi phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*'
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
