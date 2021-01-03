@@ -26,7 +26,7 @@ class I18n
     /**
      * Current locale
      *
-     * @var string
+     * @var string|Closure
      */
     public static $locale = 'en';
 
@@ -41,7 +41,7 @@ class I18n
      * The fallback locale or a
      * list of fallback locales
      *
-     * @var string|array
+     * @var string|array|Closure
      */
     public static $fallback = ['en'];
 
@@ -189,9 +189,9 @@ class I18n
      * placeholders in the text
      *
      * @param string $key
-     * @param string $fallback
-     * @param array $replace
-     * @param string $locale
+     * @param string|array|null $fallback
+     * @param array|null $replace
+     * @param string|null $locale
      * @return string
      */
     public static function template(string $key, $fallback = null, array $replace = null, string $locale = null)

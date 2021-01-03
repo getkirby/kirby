@@ -31,6 +31,11 @@ class Block extends Item
     protected $isHidden;
 
     /**
+     * @var \Kirby\Cms\Model
+     */
+    protected $parent;
+
+    /**
      * @var string
      */
     protected $type;

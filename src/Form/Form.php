@@ -227,7 +227,7 @@ class Form
     /**
      * Converts the data of fields to strings
      *
-     * @param false $defaults
+     * @param bool $defaults
      * @return array
      */
     public function strings($defaults = false): array

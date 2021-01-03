@@ -548,7 +548,7 @@ function option(string $key, $default = null)
  * id or the current page when no id is specified
  *
  * @param string|array ...$id
- * @return \Kirby\Cms\Page|null
+ * @return \Kirby\Cms\Page|\Kirby\Cms\Pages|null
  */
 function page(...$id)
 {
@@ -560,14 +560,14 @@ function page(...$id)
 }
 
 /**
- * Helper to build page collections
+ * Shortcut for `page()` helper
  *
  * @param string|array ...$id
- * @return \Kirby\Cms\Pages
+ * @return \Kirby\Cms\Page|\Kirby\Cms\Pages|null
  */
 function pages(...$id)
 {
-    return App::instance()->site()->find(...$id);
+    return page(...$id);
 }
 
 /**

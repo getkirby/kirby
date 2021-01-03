@@ -112,6 +112,14 @@ trait HasSiblings
     }
 
     /**
+     * Returns the siblings collection for the correct model type
+     * @internal
+     *
+     * @return \Kirby\Cms\Collection
+     */
+    abstract protected function siblingsCollection();
+
+    /**
      * Checks if there's a next item in the collection
      *
      * @param \Kirby\Cms\Collection|null $collection

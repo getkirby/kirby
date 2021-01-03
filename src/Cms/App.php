@@ -984,7 +984,7 @@ class App
      * @param string|null $id
      * @param \Kirby\Cms\Page|\Kirby\Cms\Site|null $parent
      * @param bool $drafts
-     * @return \Kirby\Cms\Page|null
+     * @return \Kirby\Cms\Page|\Kirby\Cms\Pages|null
      */
     public function page(?string $id = null, $parent = null, bool $drafts = true)
     {

@@ -65,19 +65,6 @@ class Collection extends BaseCollection
     }
 
     /**
-     * Internal setter for each object in the Collection.
-     * This takes care of Component validation and of setting
-     * the collection prop on each object correctly.
-     *
-     * @param string $id
-     * @param object $object
-     */
-    public function __set(string $id, $object)
-    {
-        $this->data[$id] = $object;
-    }
-
-    /**
      * Adds a single object or
      * an entire second collection to the
      * current collection
@@ -316,7 +303,7 @@ class Collection extends BaseCollection
      *
      * @param string|null $query
      * @param array $params
-     * @return self
+     * @return self|bool
      */
     public function search(string $query = null, $params = [])
     {
