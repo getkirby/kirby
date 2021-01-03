@@ -66,9 +66,9 @@ class Fieldsets extends Items
         ];
     }
 
-    public static function factory(array $fieldsets = null, array $options = [])
+    public static function factory(array $items = null, array $params = [])
     {
-        $fieldsets = $fieldsets ?? option('blocks.fieldsets', [
+        $items = $items ?? option('blocks.fieldsets', [
             'code'     => 'blocks/code',
             'gallery'  => 'blocks/gallery',
             'heading'  => 'blocks/heading',
@@ -80,9 +80,9 @@ class Fieldsets extends Items
             'video'    => 'blocks/video',
         ]);
 
-        $result = static::createFieldsets($fieldsets);
+        $result = static::createFieldsets($items);
 
-        return parent::factory($result['fieldsets'], ['groups' => $result['groups']] + $options);
+        return parent::factory($result['fieldsets'], ['groups' => $result['groups']] + $params);
     }
 
     public function groups(): array

@@ -242,7 +242,7 @@ class Collection extends Iterator implements Countable
      * custom filter function or an array of filters
      *
      * @param string|array|\Closure $field
-     * @param array ...$args
+     * @param mixed ...$args
      * @return \Kirby\Toolkit\Collection
      */
     public function filter($field, ...$args)

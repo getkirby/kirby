@@ -1,3 +1,4 @@
+<?php /** @var \Kirby\Cms\Block $block */ ?>
 <blockquote>
   <?= $block->text() ?>
   <?php if ($block->citation()->isNotEmpty()): ?>

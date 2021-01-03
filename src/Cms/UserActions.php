@@ -302,13 +302,13 @@ trait UserActions
      * Updates the user data
      *
      * @param array|null $input
-     * @param string|null $language
+     * @param string|null $languageCode
      * @param bool $validate
      * @return self
      */
-    public function update(array $input = null, string $language = null, bool $validate = false)
+    public function update(array $input = null, string $languageCode = null, bool $validate = false)
     {
-        $user = parent::update($input, $language, $validate);
+        $user = parent::update($input, $languageCode, $validate);
 
         // set auth user data only if the current user is this user
         if ($user->isLoggedIn() === true) {

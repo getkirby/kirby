@@ -119,6 +119,12 @@ class Params extends Query
      * @param bool $leadingSlash
      * @param bool $trailingSlash
      * @return string|null
+     *
+     * @todo The argument $leadingSlash is incompatible with
+     *       Query::toString($questionMark = false); the Query class
+     *       should be extracted into a common parent class for both
+     *       Query and Params
+     * @psalm-suppress ParamNameMismatch
      */
     public function toString($leadingSlash = false, $trailingSlash = false): string
     {

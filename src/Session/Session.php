@@ -335,6 +335,10 @@ class Session
     public function commit()
     {
         // nothing to do if nothing changed or the session has been just created or destroyed
+        /**
+         * @todo The $this->destroyed check gets flagged by Psalm for unknown reasons
+         * @psalm-suppress ParadoxicalCondition
+         */
         if ($this->writeMode !== true || $this->tokenExpiry === null || $this->destroyed === true) {
             return;
         }
@@ -515,12 +519,20 @@ class Session
         //   using $session->ensureToken() -> lazy session creation
         // - destroyed sessions are never written to
         // - no need to lock and re-init if we are already in write mode
+        /**
+         * @todo The $this->destroyed check gets flagged by Psalm for unknown reasons
+         * @psalm-suppress ParadoxicalCondition
+         */
         if ($this->tokenExpiry === null || $this->destroyed === true || $this->writeMode === true) {
             return;
         }
 
         // don't allow writing for read-only sessions
         // (only the case for moved sessions)
+        /**
+         * @todo This check gets flagged by Psalm for unknown reasons
+         * @psalm-suppress ParadoxicalCondition
+         */
         if ($this->tokenKey === null) {
             throw new LogicException([
                 'key'       => 'session.readonly',

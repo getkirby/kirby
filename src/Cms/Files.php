@@ -36,7 +36,7 @@ class Files extends Collection
     public function add($object)
     {
         // add a page collection
-        if (is_a($object, static::class) === true) {
+        if (is_a($object, self::class) === true) {
             $this->data = array_merge($this->data, $object->data);
 
         // add a file by id

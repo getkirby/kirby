@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 class BlueprintTest extends TestCase
 {
     protected $app;
+    protected $model;
 
     public function setUp(): void
     {
@@ -15,6 +16,8 @@ class BlueprintTest extends TestCase
                 'index' => '/dev/null'
             ]
         ]);
+
+        $this->model = new Page(['slug' => 'a']);
     }
 
     public function testConvertColumnsToTabs()
@@ -31,7 +34,7 @@ class BlueprintTest extends TestCase
         ];
 
         $blueprint = new Blueprint([
-            'model'   => 'test',
+            'model'   => $this->model,
             'columns' => $columns
         ]);
 
@@ -84,7 +87,7 @@ class BlueprintTest extends TestCase
         ];
 
         $blueprint = new Blueprint([
-            'model'    => 'test',
+            'model'    => $this->model,
             'sections' => $sections
         ]);
 
@@ -117,7 +120,7 @@ class BlueprintTest extends TestCase
         ];
 
         $blueprint = new Blueprint([
-            'model'  => 'test',
+            'model'  => $this->model,
             'fields' => $fields
         ]);
 
@@ -148,7 +151,7 @@ class BlueprintTest extends TestCase
     {
         $blueprint = new Blueprint([
             'title' => 'Test',
-            'model' => 'test'
+            'model' => $this->model
         ]);
 
         $this->assertEquals('Test', $blueprint->title());
@@ -158,7 +161,7 @@ class BlueprintTest extends TestCase
     {
         $blueprint = new Blueprint([
             'title' => ['en' => 'Test'],
-            'model' => 'test'
+            'model' => $this->model
         ]);
 
         $this->assertEquals('Test', $blueprint->title());
@@ -167,13 +170,13 @@ class BlueprintTest extends TestCase
     public function testTitleFromName()
     {
         $blueprint = new Blueprint([
-            'model' => 'test'
+            'model' => $this->model
         ]);
 
         $this->assertEquals('Default', $blueprint->title());
 
         $blueprint = new Blueprint([
-            'model' => 'test',
+            'model' => $this->model,
             'name'  => 'test'
         ]);
 
@@ -201,7 +204,7 @@ class BlueprintTest extends TestCase
     public function testFields()
     {
         $blueprint = new Blueprint([
-            'model' => 'test',
+            'model' => $this->model,
             'fields' => $fields = [
                 'test' => [
                     'type'  => 'text',
@@ -219,7 +222,7 @@ class BlueprintTest extends TestCase
     public function testNestedFields()
     {
         $blueprint = new Blueprint([
-            'model' => 'test',
+            'model' => $this->model,
             'fields' => $fields = [
                 'test' => [
                     'type'   => 'structure',
@@ -240,7 +243,7 @@ class BlueprintTest extends TestCase
     public function testInvalidSectionType()
     {
         $blueprint = new Blueprint([
-            'model' => 'test',
+            'model' => $this->model,
             'sections' => [
                 'main' => [
                     'type' => [
@@ -272,7 +275,7 @@ class BlueprintTest extends TestCase
     {
         // with options
         $blueprint = new Blueprint([
-            'model' => 'test',
+            'model' => $this->model,
             'sections' => [
                 'info' => [
                 ]
@@ -283,7 +286,7 @@ class BlueprintTest extends TestCase
 
         // by just passing true
         $blueprint = new Blueprint([
-            'model' => 'test',
+            'model' => $this->model,
             'sections' => [
                 'info' => true
             ]

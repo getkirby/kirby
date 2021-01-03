@@ -109,7 +109,8 @@ class Item
      * Returns the sibling collection
      * This is required by the HasSiblings trait
      *
-     * @return \Kirby\Editor\Blocks
+     * @return \Kirby\Cms\Items
+     * @psalm-return self::ITEMS_CLASS
      */
     protected function siblingsCollection()
     {

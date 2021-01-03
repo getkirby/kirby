@@ -1,3 +1,16 @@
+<?php
+/**
+ * @var \Kirby\Cms\App $kirby
+ * @var array<string, mixed> $config
+ * @var string $assetUrl
+ * @var string|false $customCss
+ * @var string $icons
+ * @var string $pluginCss
+ * @var string $pluginJs
+ * @var string $panelUrl
+ * @var string $nonce
+ * @var array<string, mixed> $options
+ */ ?>
 <!DOCTYPE html>
 <html>
 <head>

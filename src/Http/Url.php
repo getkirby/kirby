@@ -161,7 +161,7 @@ class Url
      * @param string|array|null $url
      * @param bool $leadingSlash
      * @param bool $trailingSlash
-     * @return xtring
+     * @return string
      */
     public static function path($url = null, bool $leadingSlash = false, bool $trailingSlash = false): string
     {
