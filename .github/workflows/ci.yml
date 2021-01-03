@@ -277,8 +277,8 @@ jobs:
         run: npm ci
         working-directory: panel
 
-      - name: Run tests
-        run: npm run lint -- --no-fix
+      - name: Statically analyze using ESLint
+        run: npm run lint -- --max-warnings 0 --no-fix --format stylish
         working-directory: panel
 
   coveralls-upload:
