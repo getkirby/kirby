@@ -138,7 +138,7 @@ jobs:
 
       - name: Statically analyze using Psalm
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: psalm --output-format=github --report=sarif/psalm.sarif
+        run: psalm --output-format=github --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
