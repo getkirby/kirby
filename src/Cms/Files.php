@@ -115,8 +115,7 @@ class Files extends Collection
      * @param string $key
      * @return \Kirby\Cms\File|null
      */
-    public function findByKey(string $key)
-    {
+    public function findByKey(string $key) {
         return $this->findById($key);
     }
 
@@ -132,7 +131,7 @@ class Files extends Collection
             return $this;
         }
 
-        if ($template === 'default') {
+        if ($template === "default") {
             $template = ['default', ''];
         }
 

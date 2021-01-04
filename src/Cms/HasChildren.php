@@ -72,7 +72,7 @@ trait HasChildren
      */
     public function draft(string $path)
     {
-        $path = str_replace('_drafts/', '', $path);
+        $path = str_replace('_drafts/','', $path);
 
         if (Str::contains($path, '/') === false) {
             return $this->drafts()->find($path);

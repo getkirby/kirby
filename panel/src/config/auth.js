@@ -9,7 +9,7 @@ export default function(to, from, next) {
 
     // no user? logout!
     if (!user) {
-      store.dispatch("user/visit", to.path);
+      store.dispatch("user/visit", to.path);;
       store.dispatch("user/logout");
       return false;
     }
