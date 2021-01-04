@@ -5,6 +5,12 @@ jobs:
   backend-tests:
     name: PHP ${{ matrix.php }}
 
+    # if on pull request, only run if from a fork
+    # (our own repo is covered by the push event)
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
+
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -68,6 +74,12 @@ jobs:
 
   backend-analysis:
     name: Backend Analysis
+
+    # if on pull request, only run if from a fork
+    # (our own repo is covered by the push event)
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
 
     runs-on: ubuntu-latest
     env:
@@ -154,6 +166,12 @@ jobs:
 
   frontend-e2e:
     name: Frontend E2E
+
+    # if on pull request, only run if from a fork
+    # (our own repo is covered by the push event)
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
 
     runs-on: ubuntu-latest
     env:
@@ -256,6 +274,12 @@ jobs:
 
   frontend-analysis:
     name: Frontend Analysis
+
+    # if on pull request, only run if from a fork
+    # (our own repo is covered by the push event)
+    if: >
+      github.event_name != 'pull_request' ||
+      github.event.pull_request.head.repo.full_name != github.repository
 
     runs-on: ubuntu-latest
 
