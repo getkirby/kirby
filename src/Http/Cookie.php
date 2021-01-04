@@ -98,7 +98,8 @@ class Cookie
      */
     public static function forever(string $key, string $value, array $options = []): bool
     {
-        $options['lifetime'] = 253402214400; // 9999-12-31
+        // 9999-12-31 if supported (lower on 32-bit servers)
+        $options['lifetime'] = min(253402214400, PHP_INT_MAX);
         return static::set($key, $value, $options);
     }
 
