@@ -1,0 +1,40 @@
+coverage:
+  status:
+    default_rules:
+      # don't send status checks that don't have flag coverage uploaded
+      flag_coverage_not_uploaded_behavior: exclude
+
+    # rules for overall project-wide coverage
+    project:
+      backend:
+        flags: 
+          - backend
+        target: auto
+        threshold: 1%
+      frontend:
+        flags: 
+          - frontend
+        target: auto
+        informational: true # don't fail because of frontend tests for now
+
+    # rules based on the specific changes of the PR
+    patch:
+      backend:
+        flags: 
+          - backend
+        target: 100%
+        threshold: 2%
+      frontend:
+        flags: 
+          - frontend
+        target: auto
+        informational: true # don't fail because of frontend tests for now
+
+flags:
+  backend:
+    paths:
+      - config/
+      - src/
+  frontend:
+    paths:
+      - panel/src/
