@@ -115,16 +115,14 @@ jobs:
           extensions: ${{ env.extensions }}
           coverage: none
           tools: |
-            composer:v2, composer-normalize, composer-unused,
-            phpcpd, php-cs-fixer, cs2pr, psalm, phpmd
+            composer:v2, composer-normalize,
+            composer-unused, phpcpd, psalm, phpmd
 
       - name: Cache analysis data
         id: finishPrepare
         uses: actions/cache@v2
         with:
-          path: |
-            ~/.php-cs-fixer
-            ~/.cache/psalm
+          path: ~/.cache/psalm
           key: backend-analysis
 
       - name: Validate composer.json/composer.lock
@@ -142,13 +140,6 @@ jobs:
       - name: Check for duplicated code
         if: always() && steps.finishPrepare.outcome == 'success'
         run: phpcpd --fuzzy --exclude tests --exclude vendor .
-
-      - name: Check for PHP coding style violations
-        if: always() && steps.finishPrepare.outcome == 'success'
-        env:
-          PHP_CS_FIXER_IGNORE_ENV: 1
-        run: |
-          php-cs-fixer fix --dry-run --format=checkstyle | cs2pr
 
       - name: Statically analyze using Psalm
         if: always() && steps.finishPrepare.outcome == 'success'
@@ -272,16 +263,12 @@ jobs:
           name: cypress-videos
           path: kirby/panel/cypress/videos
 
-  frontend-analysis:
-    name: Frontend Analysis
-
-    # if on pull request, only run if from a fork
-    # (our own repo is covered by the push event)
-    if: >
-      github.event_name != 'pull_request' ||
-      github.event.pull_request.head.repo.full_name != github.repository
+  coding-style:
+    name: Coding Style & Frontend Analysis
 
     runs-on: ubuntu-latest
+    env:
+      php: "7.4"
 
     steps:
       - name: Checkout Kirby
@@ -301,6 +288,51 @@ jobs:
         run: npm ci
         working-directory: panel
 
-      - name: Statically analyze using ESLint
-        run: npm run lint -- --max-warnings 0 --no-fix --format stylish
+      - name: Setup PHP environment
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.php }}
+          coverage: none
+          tools: php-cs-fixer
+
+      - name: Cache analysis data
+        id: finishPrepare
+        uses: actions/cache@v2
+        with:
+          path: ~/.php-cs-fixer
+          key: coding-style
+
+      - name: Check for JavaScript coding style violations
+        if: always() && steps.finishPrepare.outcome == 'success'
+        # Use the --no-fix flag in push builds to get a failed CI status
+        run: >
+          npm run lint -- --max-warnings 0 --format stylish
+          ${{ github.event_name != 'pull_request' && '--no-fix' || '' }}
         working-directory: panel
+
+      - name: Create code suggestions from the coding style changes (on PR only)
+        if: >
+          always() && steps.finishPrepare.outcome == 'success' &&
+          github.event_name == 'pull_request'
+        uses: reviewdog/action-suggester@v1
+        with:
+          tool_name: ESLint
+          fail_on_error: 'true'
+
+      - name: Check for PHP coding style violations
+        if: always() && steps.finishPrepare.outcome == 'success'
+        env:
+          PHP_CS_FIXER_IGNORE_ENV: 1
+        # Use the --dry-run flag in push builds to get a failed CI status
+        run: >
+          php-cs-fixer fix --diff --diff-format=udiff
+          ${{ github.event_name != 'pull_request' && '--dry-run' || '' }}
+
+      - name: Create code suggestions from the coding style changes (on PR only)
+        if: >
+          always() && steps.finishPrepare.outcome == 'success' &&
+          github.event_name == 'pull_request'
+        uses: reviewdog/action-suggester@v1
+        with:
+          tool_name: PHP-CS-Fixer
+          fail_on_error: 'true'
