@@ -55,7 +55,6 @@
 
     <rule ref="rulesets/unusedcode.xml">
         <!-- Temporarily disabled for step-by-step refactoring/suppression -->
-        <exclude name="UnusedPrivateField" />
         <exclude name="UnusedLocalVariable" />
         <exclude name="UnusedPrivateMethod" />
         <exclude name="UnusedFormalParameter" />
