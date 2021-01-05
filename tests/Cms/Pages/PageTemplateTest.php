@@ -106,4 +106,27 @@ class PageTemplateTest extends TestCase
         $page = $this->app->page('with-template');
         $page->representation('xml');
     }
+
+    public function testRepresentationErrorType()
+    {
+        $this->app = new App([
+            'templates' => [
+                'blog' => __DIR__ . '/fixtures/PageTemplateTest/template.php',
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'blog',
+                        'template' => 'blog'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->app->resolve('blog.php');
+
+        // there must be no forced php response type if the
+        // represenation cannot be found
+        $this->assertNull($this->app->response()->type());
+    }
 }
