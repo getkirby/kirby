@@ -20,8 +20,10 @@ class BlocksField extends FieldClass
     use Max;
     use Min;
 
-    protected $fieldsets;
     protected $blocks;
+    protected $fieldsets;
+    protected $group;
+    protected $pretty;
     protected $value = [];
 
     public function __construct(array $params = [])
