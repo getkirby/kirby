@@ -49,7 +49,6 @@
 
         <!-- Temporarily disabled for step-by-step refactoring/suppression -->
         <exclude name="ShortVariable" />
-        <exclude name="LongVariable" />
         <exclude name="ShortMethodName" />
     </rule>
 
