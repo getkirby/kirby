@@ -189,12 +189,12 @@ class I18n
      * placeholders in the text
      *
      * @param string $key
-     * @param string $fallback
-     * @param array $replace
-     * @param string $locale
+     * @param string|array|null $fallback
+     * @param array|null $replace
+     * @param string|null $locale
      * @return string
      */
-    public static function template(string $key, $fallback = null, array $replace = null, string $locale = null)
+    public static function template(string $key, $fallback = null, ?array $replace = null, ?string $locale = null): string
     {
         if (is_array($fallback) === true) {
             $replace  = $fallback;
