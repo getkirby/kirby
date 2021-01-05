@@ -178,7 +178,7 @@ class Component
     protected function applyProps(array $props): void
     {
         foreach ($props as $propName => $propFunction) {
-            if (is_callable($propFunction) === true) {
+            if (is_a($propFunction, 'Closure') === true) {
                 if (isset($this->attrs[$propName]) === true) {
                     try {
                         $this->$propName = $this->props[$propName] = $propFunction->call($this, $this->attrs[$propName]);
@@ -208,7 +208,7 @@ class Component
     protected function applyComputed(array $computed): void
     {
         foreach ($computed as $computedName => $computedFunction) {
-            if (is_callable($computedFunction) === true) {
+            if (is_a($computedFunction, 'Closure') === true) {
                 $this->$computedName = $this->computed[$computedName] = $computedFunction->call($this);
             }
         }

@@ -84,7 +84,10 @@ class Field extends Component
      */
     public function api()
     {
-        if (isset($this->options['api']) === true && is_callable($this->options['api']) === true) {
+        if (
+            isset($this->options['api']) === true &&
+            is_a($this->options['api'], 'Closure') === true
+        ) {
             return $this->options['api']->call($this);
         }
     }
@@ -107,11 +110,13 @@ class Field extends Component
 
         if ($save === false) {
             return null;
-        } elseif (is_callable($save) === true) {
-            return $save->call($this, $value);
-        } else {
-            return $value;
         }
+
+        if (is_a($save, 'Closure') === true) {
+            return $save->call($this, $value);
+        }
+
+        return $value;
     }
 
     /**
