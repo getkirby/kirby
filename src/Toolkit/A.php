@@ -597,7 +597,7 @@ class A
      */
     public static function isAssociative(array $array): bool
     {
-        return ctype_digit(implode(null, array_keys($array))) === false;
+        return ctype_digit(implode('', array_keys($array))) === false;
     }
 
     /**
