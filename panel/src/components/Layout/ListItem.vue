@@ -24,8 +24,8 @@
         @click="flag.click"
       />
       <k-status-icon
-        v-if="pageFlag"
-        v-bind="pageFlag"
+        v-else-if="statusIcon"
+        v-bind="statusIcon"
         class="k-list-item-status"
       />
       <slot name="options">
@@ -74,8 +74,8 @@ export default {
     info: String,
     link: [String, Function],
     flag: Object,
-    pageFlag: Object,
-    options: [Array, Function]
+    options: [Array, Function],
+    statusIcon: Object,
   },
   computed: {
     imageOptions() {

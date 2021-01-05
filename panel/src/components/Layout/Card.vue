@@ -26,8 +26,8 @@
         @click="flag.click"
       />
       <k-status-icon
-        v-if="pageFlag"
-        v-bind="pageFlag"
+        v-else-if="statusIcon"
+        v-bind="statusIcon"
         class="k-card-options-button"
       />
       <slot name="options">
@@ -58,7 +58,6 @@ export default {
   props: {
     column: String,
     flag: Object,
-    pageFlag: Object,
     icon: {
       type: Object,
       default() {
@@ -73,6 +72,7 @@ export default {
     link: [String, Function],
     options: [Array, Function],
     sortable: Boolean,
+    statusIcon: Object,
     target: String,
     text: String
   },
