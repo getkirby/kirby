@@ -74,7 +74,10 @@ class BlockConverter
                         'type' => 'list'
                     ];
 
-                    for ($x = $listStart+1; $x <= $listStart + count($list); $x++) {
+                    $start = $listStart + 1;
+                    $end   = $listStart + count($list);
+
+                    for ($x = $start; $x <= $end; $x++) {
                         $blocks[$x] = false;
                     }
 
