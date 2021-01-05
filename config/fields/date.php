@@ -106,6 +106,9 @@ return [
                 return Str::upper($this->display);
             }
         },
+        'format' => function () {
+            return $this->props['format'] ?? ($this->time === false ? 'Y-m-d' : 'Y-m-d H:i:s');
+        },
         'time' => function () {
             if ($this->time === false) {
                 return false;
@@ -127,10 +130,6 @@ return [
             return $this->toDatetime($this->value);
         },
     ],
-    'save' => function ($value) {
-        $format = $this->time === false ? 'Y-m-d' : 'Y-m-d H:i:s';
-        return $this->toContent($value, $format);
-    },
     'validations' => [
         'date',
         'minMax' => function ($value) {

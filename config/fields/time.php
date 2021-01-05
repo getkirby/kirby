@@ -95,13 +95,13 @@ return [
 
             return $this->notation === 24 ? 'HH:mm' : 'h:mm a';
         },
+        'format' => function () {
+            return $this->props['format'] ?? 'H:i:s';
+        },
         'value' => function () {
             return $this->toDatetime($this->value, 'H:i:s');
         }
     ],
-    'save' => function ($value): string {
-        return $this->toContent($value, 'H:i:s');
-    },
     'validations' => [
         'time',
         'minMax' => function ($value) {
