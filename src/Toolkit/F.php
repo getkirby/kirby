@@ -525,7 +525,7 @@ class F
      * Converts an integer size into a human readable format
      *
      * @param mixed $size The file size or a file path
-     * @return string|int
+     * @return string
      */
     public static function niceSize($size): string
     {
