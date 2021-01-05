@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Cache\Cache;
 use Kirby\Cache\NullCache;
 use Kirby\Exception\InvalidArgumentException;
 

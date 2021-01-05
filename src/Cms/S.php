@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Session\Session;
 use Kirby\Toolkit\Facade;
 
 /**

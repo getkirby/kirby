@@ -3,7 +3,6 @@
 namespace Kirby\Database;
 
 use Closure;
-use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Str;
