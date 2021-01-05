@@ -115,7 +115,6 @@ class FileSessionStore extends SessionStore
     public function lock(int $expiryTime, string $id)
     {
         $name = $this->name($expiryTime, $id);
-        $path = $this->path($name);
 
         // check if the file is already locked
         if (isset($this->isLocked[$name])) {
@@ -153,7 +152,6 @@ class FileSessionStore extends SessionStore
     public function unlock(int $expiryTime, string $id)
     {
         $name = $this->name($expiryTime, $id);
-        $path = $this->path($name);
 
         // check if the file is already unlocked or doesn't exist
         if (!isset($this->isLocked[$name])) {
@@ -258,7 +256,6 @@ class FileSessionStore extends SessionStore
     public function set(int $expiryTime, string $id, string $data)
     {
         $name   = $this->name($expiryTime, $id);
-        $path   = $this->path($name);
         $handle = $this->handle($name);
 
         // validate that we have an exclusive lock already
