@@ -35,8 +35,6 @@ class Inline
 
     public function parseNode($node)
     {
-        $html = '';
-
         if (is_a($node, 'DOMText') === true) {
             return $node->textContent;
         }

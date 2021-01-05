@@ -313,14 +313,14 @@ class PageRules
         $drafts   = $page->parentModel()->drafts();
         $slug     = $page->slug();
 
-        if ($duplicate = $siblings->find($slug)) {
+        if ($siblings->find($slug)) {
             throw new DuplicateException([
                 'key'  => 'page.duplicate',
                 'data' => ['slug' => $slug]
             ]);
         }
 
-        if ($duplicate = $drafts->find($slug)) {
+        if ($drafts->find($slug)) {
             throw new DuplicateException([
                 'key'  => 'page.draft.duplicate',
                 'data' => ['slug' => $slug]
