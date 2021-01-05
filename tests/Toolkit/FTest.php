@@ -368,6 +368,42 @@ class FTest extends TestCase
         $this->assertFileDoesNotExist($c);
     }
 
+    public function testRename()
+    {
+        F::write($this->tmp, 'test');
+
+        // simply rename file
+        $this->assertFalse(file_exists($this->moved));
+        $this->assertTrue(file_exists($this->tmp));
+
+        $this->assertSame($this->moved, F::rename($this->tmp, 'moved'));
+
+        $this->assertTrue(file_exists($this->moved));
+        $this->assertFalse(file_exists($this->tmp));
+
+        // rename file with same name
+
+        $this->assertTrue(file_exists($this->moved));
+        $this->assertFalse(file_exists($this->tmp));
+
+        $this->assertSame($this->moved, F::rename($this->moved, 'moved'));
+        $this->assertSame($this->moved, F::rename($this->moved, 'moved', true));
+
+        $this->assertTrue(file_exists($this->moved));
+        $this->assertFalse(file_exists($this->tmp));
+
+        // replace file via renaming
+        F::copy($this->moved, $this->tmp);
+
+        $this->assertTrue(file_exists($this->moved));
+        $this->assertTrue(file_exists($this->tmp));
+
+        $this->assertFalse(F::rename($this->moved, 'test'));
+        $this->assertSame($this->tmp, F::rename($this->moved, 'test', true));
+
+        $this->assertFalse(file_exists($this->moved));
+        $this->assertTrue(file_exists($this->tmp));
+    }
 
     public function testSafeName()
     {
