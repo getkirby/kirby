@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Data\Data;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Locale;
 use Kirby\Toolkit\Str;
