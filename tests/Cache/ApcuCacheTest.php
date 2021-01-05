@@ -13,7 +13,10 @@ class ApcuCacheTest extends TestCase
 {
     public function setUp(): void
     {
-        if (function_exists('apcu_store') === false) {
+        if (
+            function_exists('apcu_enabled') === false ||
+            apcu_enabled() === false
+        ) {
             $this->markTestSkipped('APCu is not available.');
             return;
         }
