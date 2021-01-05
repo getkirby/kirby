@@ -588,7 +588,7 @@ class F
             return $newRoot;
         }
 
-        if (F::move($file, $newRoot) !== true) {
+        if (F::move($file, $newRoot, $overwrite) !== true) {
             return false;
         }
 
