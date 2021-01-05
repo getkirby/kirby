@@ -50,7 +50,7 @@ class I18n
      *
      * @var array
      */
-    protected static $decimalNumberFormatters = [];
+    protected static $decimalsFormatters = [];
 
     /**
      * Returns the first fallback locale
@@ -246,15 +246,15 @@ class I18n
      */
     protected static function decimalNumberFormatter(string $locale): ?NumberFormatter
     {
-        if (isset(static::$decimalNumberFormatters[$locale])) {
-            return static::$decimalNumberFormatters[$locale];
+        if (isset(static::$decimalsFormatters[$locale])) {
+            return static::$decimalsFormatters[$locale];
         }
 
         if (extension_loaded('intl') !== true || class_exists('NumberFormatter') !== true) {
             return null; // @codeCoverageIgnore
         }
 
-        return static::$decimalNumberFormatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
+        return static::$decimalsFormatters[$locale] = new NumberFormatter($locale, NumberFormatter::DECIMAL);
     }
 
     /**
