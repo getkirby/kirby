@@ -15,7 +15,6 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
-      languages: [],
       language: {
         name: "",
         code: "",
