@@ -15,6 +15,7 @@ export default {
   mixins: [DialogMixin],
   data() {
     return {
+      languages: [],
       language: {
         name: "",
         code: "",
@@ -53,8 +54,7 @@ export default {
         },
         locale: {
           label: this.$t("language.locale"),
-          type: "text",
-          placeholder: "en_US"
+          type: "text"
         },
       };
     },
@@ -68,9 +68,35 @@ export default {
     },
     "language.code"(code) {
       this.language.code = this.$helper.slug(code, [this.system.ascii]);
+      this.onCodeChanges(this.language.code);
     }
   },
   methods: {
+    onCodeChanges(code) {
+      if (!code) {
+        return this.language.locale = null;
+      }
+
+      if (code.length >= 2) {
+        // if the locale value entered has a hyphen
+        // it divides the text and capitalizes the hyphen after it
+        // code: en-us > locale: en_US
+        if (code.indexOf("-") !== -1) {
+          let segments = code.split("-");
+          let locale = [segments[0], segments[1].toUpperCase()];
+          this.language.locale = locale.join("_");
+        } else {
+          // if the entered language code exists
+          // matches the locale values in the languages defined in the system
+          let locales = this.$store.state.system.info.locales || [];
+          if (locales && locales[code]) {
+            this.language.locale = locales[code];
+          } else {
+            this.language.locale = null;
+          }
+        }
+      }
+    },
     onNameChanges(name) {
       this.language.code = this.$helper.slug(name, [this.language.rules, this.system.ascii]).substr(0, 2);
     },

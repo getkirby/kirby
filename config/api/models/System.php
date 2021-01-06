@@ -38,6 +38,14 @@ return [
         'license' => function (System $system) {
             return $system->license();
         },
+        'locales' => function () {
+            $locales = [];
+            $translations = $this->kirby()->translations();
+            foreach ($translations as $translation) {
+                $locales[$translation->code()] = $translation->locale();
+            }
+            return $locales;
+        },
         'loginMethods' => function (System $system) {
             return array_keys($system->loginMethods());
         },
@@ -114,6 +122,7 @@ return [
             'kirbytext',
             'languages',
             'license',
+            'locales',
             'multilang',
             'requirements',
             'site',
