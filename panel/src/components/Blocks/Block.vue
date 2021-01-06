@@ -52,11 +52,13 @@
         />
         <k-button
           :disabled="!prev"
+          class="k-drawer-option"
           icon="angle-left"
           @click.prevent.stop="goTo(prev)"
         />
         <k-button
           :disabled="!next"
+          class="k-drawer-option"
           icon="angle-right"
           @click.prevent.stop="goTo(next)"
         />
@@ -253,5 +255,9 @@ export default {
 }
 .k-block-container[data-hidden] .k-block {
   opacity: .25;
+}
+.k-drawer-options .k-button[data-disabled] {
+  vertical-align: middle;
+  display: inline-grid;
 }
 </style>
