@@ -1101,6 +1101,7 @@ class App
         if ($page) {
             try {
                 $response = $this->response();
+                $output   = $page->render([], $extension);
 
                 // attach a MIME type based on the representation
                 // only if no custom MIME type was set
@@ -1108,7 +1109,7 @@ class App
                     $response->type($extension);
                 }
 
-                return $response->body($page->render([], $extension));
+                return $response->body($output);
             } catch (NotFoundException $e) {
                 return null;
             }

@@ -259,4 +259,27 @@ class AppResolveTest extends TestCase
         $this->assertEquals('xml', $result->body());
         $this->assertEquals('en', $app->language()->code());
     }
+
+    public function testRepresentationErrorType()
+    {
+        $this->app = new App([
+            'templates' => [
+                'blog' => __DIR__ . '/fixtures/templates/test.php',
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'blog',
+                        'template' => 'blog'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertNull($this->app->resolve('blog.php'));
+
+        // there must be no forced php response type if the
+        // representation cannot be found
+        $this->assertNull($this->app->response()->type());
+    }
 }
