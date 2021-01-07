@@ -11,6 +11,7 @@ class Parsley
     protected $blocks = [];
     protected $body;
     protected $doc;
+    protected $inline;
     protected $marks = [];
     protected $nodes = [];
     protected $schema;
