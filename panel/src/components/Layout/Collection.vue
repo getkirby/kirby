@@ -159,6 +159,7 @@ export default {
 }
 .k-collection-pagination {
   line-height: 1.25rem;
+  flex-shrink: 0;
   min-height: 2.75rem;
 }
 .k-collection-pagination .k-pagination .k-button {
