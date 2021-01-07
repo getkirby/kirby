@@ -509,11 +509,8 @@ class File extends ModelWithContent
      * Returns an array of all actions
      * that can be performed in the Panel
      *
-     * This also checks for the lock status
-     * @since 3.3.0
-     *
-     * and matching accept settings
-     * @since 3.5.1
+     * @since 3.3.0 This also checks for the lock status
+     * @since 3.5.1 This also checks for matching accept settings
      *
      * @param array $unlock An array of options that will be force-unlocked
      * @return array
