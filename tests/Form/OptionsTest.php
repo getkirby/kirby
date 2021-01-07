@@ -102,6 +102,71 @@ class OptionsTest extends TestCase
         $this->assertEquals($expected, $options);
     }
 
+    public function testBlocks()
+    {
+        $app = new App([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'a',
+                        'content' => [
+                            'text' => json_encode([
+                                [
+                                    'id' => 'a',
+                                    'content' => [
+                                        'text' => 'Test Heading',
+                                    ],
+                                    'type' => 'heading',
+                                ],
+                                [
+                                    'id' => 'b',
+                                    'content' => [
+                                        'text' => 'Test Text',
+                                    ],
+                                    'type' => 'text',
+                                ]
+                            ])
+                        ]
+                    ],
+                ]
+            ]
+        ]);
+
+        // with query
+        $result = Options::query('site.find("a").text.toBlocks');
+
+        $expected = [
+            [
+                'text'  => 'heading: a',
+                'value' => 'a'
+            ],
+            [
+                'text'  => 'text: b',
+                'value' => 'b'
+            ]
+        ];
+
+        $this->assertSame($expected, $result);
+
+        // with array query
+        $result = Options::query([
+            'fetch' => 'site.find("a").text.toBlocks',
+            'text'  => '{{ block.text }}',
+            'value' => '{{ block.id }}',
+        ]);
+
+        $this->assertSame([
+            [
+                'text'  => 'Test Heading',
+                'value' => 'a'
+            ],
+            [
+                'text'  => 'Test Text',
+                'value' => 'b'
+            ]
+        ], $result);
+    }
+
     public function testPages()
     {
         $app = new App([

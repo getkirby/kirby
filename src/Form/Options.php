@@ -29,6 +29,7 @@ class Options
         return [
             'Kirby\Cms\File'            => 'file',
             'Kirby\Toolkit\Obj'         => 'arrayItem',
+            'Kirby\Cms\Block'           => 'block',
             'Kirby\Cms\Page'            => 'page',
             'Kirby\Cms\StructureObject' => 'structureItem',
             'Kirby\Cms\User'            => 'user',
@@ -169,6 +170,7 @@ class Options
         // default text setup
         $text = [
             'arrayItem'     => '{{ arrayItem.value }}',
+            'block'         => '{{ block.type }}: {{ block.id }}',
             'file'          => '{{ file.filename }}',
             'page'          => '{{ page.title }}',
             'structureItem' => '{{ structureItem.title }}',
@@ -178,6 +180,7 @@ class Options
         // default value setup
         $value = [
             'arrayItem'     => '{{ arrayItem.value }}',
+            'block'         => '{{ block.id }}',
             'file'          => '{{ file.id }}',
             'page'          => '{{ page.id }}',
             'structureItem' => '{{ structureItem.id }}',
