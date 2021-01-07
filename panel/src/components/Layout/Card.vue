@@ -19,18 +19,18 @@
     </component>
 
     <nav class="k-card-options">
-      <k-button
-        v-if="flag"
-        v-bind="flag"
-        class="k-card-options-button"
-        @click="flag.click"
-      />
-      <k-status-icon
-        v-else-if="statusIcon"
-        v-bind="statusIcon"
-        class="k-card-options-button"
-      />
       <slot name="options">
+        <k-button
+          v-if="flag"
+          v-bind="flag"
+          class="k-card-options-button"
+          @click="flag.click"
+        />
+        <k-status-icon
+          v-else-if="statusIcon"
+          v-bind="statusIcon"
+          class="k-card-options-button"
+        />
         <k-button
           v-if="options"
           :tooltip="$t('options')"
