@@ -1,5 +1,6 @@
 import clone from "./clone.js";
 import debounce from "./debounce.js";
+import embed from "./embed.js";
 import isComponent from "./isComponent.js";
 import isUploadEvent from "./isUploadEvent.js";
 import pad from "./pad.js";
@@ -40,6 +41,7 @@ export default {
 
     Vue.prototype.$helper = {
       clone: clone,
+      embed: embed,
       isComponent: isComponent,
       isUploadEvent: isUploadEvent,
       debounce: debounce,

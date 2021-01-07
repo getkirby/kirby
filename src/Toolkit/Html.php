@@ -3,7 +3,9 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use Kirby\Http\Uri;
 use Kirby\Http\Url;
+
 
 /**
  * HTML builder for the most common elements
@@ -355,7 +357,7 @@ class Html extends Xml
         if ($content === null) {
             $content = '';
         }
-        
+
         // force void elements to be self-closing
         if (static::isVoid($name) === true) {
             $content = null;
@@ -446,24 +448,33 @@ class Html extends Xml
      */
     public static function vimeo(string $url, array $options = [], array $attr = []): string
     {
-        if (preg_match('!vimeo.com\/([0-9]+)!i', $url, $array) === 1) {
-            $id = $array[1];
-        } elseif (preg_match('!player.vimeo.com\/video\/([0-9]+)!i', $url, $array) === 1) {
-            $id = $array[1];
-        } else {
+        $uri   = new Uri($url);
+        $path  = $uri->path();
+        $query = $uri->query();
+        $id    = null;
+
+        switch ($uri->host()) {
+            case 'vimeo.com':
+            case 'www.vimeo.com':
+                $id = $path->first();
+                break;
+            case 'player.vimeo.com':
+                $id = $path->nth(1);
+                break;
+        }
+
+        if (!preg_match('!^[0-9]*$!', $id)) {
             throw new Exception('Invalid Vimeo source');
         }
 
-        // build the options query
-        if (empty($options) === false) {
-            $query = '?' . http_build_query($options);
-        } else {
-            $query = '';
+        // append query params
+        foreach ($options as $key => $value) {
+            $query->$key = $value;
         }
 
-        $url = 'https://player.vimeo.com/video/' . $id . $query;
+        $src = 'https://player.vimeo.com/video/' . $id . $query->toString(true);
 
-        return static::iframe($url, array_merge(['allowfullscreen' => true], $attr));
+        return static::iframe($src, array_merge(['allowfullscreen' => true], $attr));
     }
 
     /**
@@ -471,103 +482,76 @@ class Html extends Xml
      *
      * @param string $url YouTube video URL
      * @param array $options Query params for the embed URL
-     * @param array $attr Additional attributes for the `<iframe>` tag
+     * @param array $attrs Additional attributes for the `<iframe>` tag
      * @return string The generated HTML
      */
-    public static function youtube(string $url, array $options = [], array $attr = []): string
+    public static function youtube(string $url, array $options = [], array $attrs = []): string
     {
-        // default YouTube embed domain
-        $domain     = 'youtube.com';
-        $uri        = 'embed/';
-        $id         = null;
-        $urlOptions = [];
-
-        $schemes = [
-            // https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
-            [
-                'pattern' => 'youtube.com\/embed\/videoseries\?list=([a-zA-Z0-9_-]+)',
-                'uri'     => 'embed/videoseries?list='
-            ],
-
-            // https://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
-            [
-                'pattern' => 'youtube-nocookie.com\/embed\/videoseries\?list=([a-zA-Z0-9_-]+)',
-                'domain'  => 'www.youtube-nocookie.com',
-                'uri'     => 'embed/videoseries?list='
-            ],
-
-            // https://www.youtube.com/embed/d9NF2edxy-M
-            // https://www.youtube.com/embed/d9NF2edxy-M?start=10
-            ['pattern' => 'youtube.com\/embed\/([a-zA-Z0-9_-]+)(?:\?(.+))?'],
-
-            // https://www.youtube-nocookie.com/embed/d9NF2edxy-M
-            // https://www.youtube-nocookie.com/embed/d9NF2edxy-M?start=10
-            [
-                'pattern' => 'youtube-nocookie.com\/embed\/([a-zA-Z0-9_-]+)(?:\?(.+))?',
-                'domain'  => 'www.youtube-nocookie.com'
-            ],
-
-            // https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M
-            // https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M&t=10
-            [
-                'pattern' => 'youtube-nocookie.com\/watch\?v=([a-zA-Z0-9_-]+)(?:&(.+))?',
-                'domain'  => 'www.youtube-nocookie.com'
-            ],
-
-            // https://www.youtube-nocookie.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
-            [
-                'pattern' => 'youtube-nocookie.com\/playlist\?list=([a-zA-Z0-9_-]+)',
-                'domain'  => 'www.youtube-nocookie.com',
-                'uri'     => 'embed/videoseries?list='
-            ],
-
-            // https://www.youtube.com/watch?v=d9NF2edxy-M
-            // https://www.youtube.com/watch?v=d9NF2edxy-M&t=10
-            ['pattern' => 'youtube.com\/watch\?v=([a-zA-Z0-9_-]+)(?:&(.+))?'],
-
-            // https://www.youtube.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys
-            [
-                'pattern' => 'youtube.com\/playlist\?list=([a-zA-Z0-9_-]+)',
-                'uri'     => 'embed/videoseries?list='
-            ],
-
-            // https://youtu.be/d9NF2edxy-M
-            // https://youtu.be/d9NF2edxy-M?t=10
-            ['pattern' => 'youtu.be\/([a-zA-Z0-9_-]+)(?:\?(.+))?']
-        ];
-
-        foreach ($schemes as $schema) {
-            if (preg_match('!' . $schema['pattern'] . '!i', $url, $array) === 1) {
-                $domain = $schema['domain'] ?? $domain;
-                $uri    = $schema['uri'] ?? $uri;
-                $id     = $array[1];
-                if (isset($array[2]) === true) {
-                    parse_str($array[2], $urlOptions);
-
-                    // convert video URL options to embed URL options
-                    if (isset($urlOptions['t']) === true) {
-                        $urlOptions['start'] = $urlOptions['t'];
-                        unset($urlOptions['t']);
-                    }
-                }
-                break;
-            }
-        }
-
-        // no match
-        if ($id === null) {
+        if (preg_match('!youtu!i', $url) !== 1) {
             throw new Exception('Invalid YouTube source');
         }
 
-        // build the options query
-        if (empty($options) === false || empty($urlOptions) === false) {
-            $query = (Str::contains($uri, '?') === true ? '&' : '?') . http_build_query(array_merge($urlOptions, $options));
-        } else {
-            $query = '';
+        $uri    = new Uri($url);
+        $path   = $uri->path();
+        $query  = $uri->query();
+        $first  = $path->first();
+        $second = $path->nth(1);
+        $host   = 'https://' . $uri->host() . '/embed';
+        $src    = null;
+
+        $isYoutubeId = function (string $id): bool {
+            return preg_match('!^[a-zA-Z0-9_-]+$!', $id);
+        };
+
+        switch ($path->toString()) {
+            // playlists
+            case 'embed/videoseries':
+            case 'playlist':
+                if ($isYoutubeId($query->list) === true) {
+                    $src = $host . '/videoseries';
+                }
+
+                break;
+
+            // regular video URLs
+            case 'watch':
+                if ($isYoutubeId($query->v) === true) {
+                    $src = $host . '/' . $query->v;
+
+                    $query->start = $query->t;
+
+                    unset($query->v, $query->t);
+                }
+
+                break;
+
+            default:
+                // short URLs
+                if (Str::contains($uri->host(), 'youtu.be') === true) {
+                    $src = 'https://www.youtube.com/embed/' . $first;
+
+                    $query->start = $query->t;
+                    unset($query->t);
+
+                // embedded video URLs
+                } elseif ($first === 'embed' && $isYoutubeId($second) === true) {
+                    $src = $host . '/' . $second;
+                }
         }
 
-        $url = 'https://' . $domain . '/' . $uri . $id . $query;
+        if (empty($src) === true) {
+            throw new Exception('Invalid YouTube source');
+        }
 
-        return static::iframe($url, array_merge(['allowfullscreen' => true], $attr));
+        // append all query parameters
+        foreach ($options as $key => $value) {
+            $query->$key = $value;
+        }
+
+        // allow fullscreen mode by default
+        $attrs = array_merge(['allowfullscreen' => true], $attrs);
+
+        // render the iframe
+        return static::iframe($src . $query->toString(true), $attrs);
     }
 }
