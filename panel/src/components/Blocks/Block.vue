@@ -50,6 +50,18 @@
           icon="hidden"
           @click="$emit('show')"
         />
+        <k-button
+          :disabled="!prev"
+          class="k-drawer-option"
+          icon="angle-left"
+          @click.prevent.stop="goTo(prev)"
+        />
+        <k-button
+          :disabled="!next"
+          class="k-drawer-option"
+          icon="angle-right"
+          @click.prevent.stop="goTo(next)"
+        />
       </template>
     </k-form-drawer>
 
@@ -76,7 +88,14 @@ export default {
     isLastInBatch: Boolean,
     isSelected: Boolean,
     name: String,
+    next: Object,
+    prev: Object,
     type: String,
+  },
+  data() {
+    return {
+      skipFocus: false
+    };
   },
   computed: {
     className() {
@@ -150,14 +169,31 @@ export default {
     },
   },
   methods: {
+    close() {
+      this.$refs.drawer.close();
+    },
     confirmToRemove() {
       this.$refs.removeDialog.open();
     },
     focus() {
-      if (typeof this.$refs.editor.focus === "function") {
-        this.$refs.editor.focus();
-      } else {
-        this.$refs.container.focus();
+      if (this.skipFocus !== true) {
+        if (typeof this.$refs.editor.focus === "function") {
+          this.$refs.editor.focus();
+        } else {
+          this.$refs.container.focus();
+        }
+      }
+    },
+    goTo(block) {
+      if (block) {
+        this.skipFocus = true;
+        this.close();
+
+        this.$nextTick(() => {
+          block.$refs.container.focus();
+          block.open();
+          this.skipFocus = false;
+        });
       }
     },
     open() {
@@ -166,7 +202,7 @@ export default {
     remove() {
       this.$refs.removeDialog.close();
       this.$emit("remove", this.id);
-    },
+    }
   }
 };
 </script>
@@ -219,5 +255,9 @@ export default {
 }
 .k-block-container[data-hidden] .k-block {
   opacity: .25;
+}
+.k-drawer-options .k-button[data-disabled] {
+  vertical-align: middle;
+  display: inline-grid;
 }
 </style>
