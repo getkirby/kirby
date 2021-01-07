@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Image\Image;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
+use Throwable;
 
 /**
  * The `$file` object provides a set
@@ -502,6 +503,37 @@ class File extends ModelWithContent
         }
 
         return parent::panelImageSource($query);
+    }
+
+    /**
+     * Returns an array of all actions
+     * that can be performed in the Panel
+     *
+     * This also checks for the lock status
+     * @since 3.3.0
+     *
+     * and matching accept settings
+     * @since 3.5.1
+     *
+     * @param array $unlock An array of options that will be force-unlocked
+     * @return array
+     */
+    public function panelOptions(array $unlock = []): array
+    {
+        $options = parent::panelOptions();
+
+        try {
+            /**
+             * check if the file type is allowed
+             * at all. Otherwise it cannot be
+             * replaced.
+             */
+            $this->match($this->blueprint()->accept());
+        } catch (Throwable $e) {
+            $options['replace'] = false;
+        }
+
+        return $options;
     }
 
     /**
