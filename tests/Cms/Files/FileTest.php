@@ -161,7 +161,7 @@ class FileTest extends TestCase
                             if ($file->extension() === 'heic') {
                                 return sprintf('![](%s)', $url);
                             }
-                    
+
                             return null;
                         },
                     ]
@@ -208,7 +208,7 @@ class FileTest extends TestCase
                             if ($file->extension() === 'heic') {
                                 return sprintf('(image: %s)', $url);
                             }
-                    
+
                             return null;
                         },
                     ]
@@ -544,6 +544,87 @@ class FileTest extends TestCase
         ];
 
         $this->assertEquals($expected, $file->panelOptions(['delete']));
+    }
+
+    public function testPanelOptionsDefaultReplaceOption()
+    {
+        $file = new File([
+            'filename' => 'test.js',
+        ]);
+        $file->kirby()->impersonate('kirby');
+
+        $expected = [
+            'changeName' => true,
+            'create'     => true,
+            'delete'     => true,
+            'read'       => true,
+            'replace'    => false,
+            'update'     => true,
+        ];
+
+        $this->assertSame($expected, $file->panelOptions());
+    }
+
+    public function testPanelOptionsAllowedReplaceOption()
+    {
+        new App([
+            'blueprints' => [
+                'files/test' => [
+                    'name'   => 'test',
+                    'accept' => true
+                ]
+            ]
+        ]);
+
+        $file = new File([
+            'filename' => 'test.js',
+            'template' => 'test',
+        ]);
+
+        $file->kirby()->impersonate('kirby');
+
+        $expected = [
+            'changeName' => true,
+            'create'     => true,
+            'delete'     => true,
+            'read'       => true,
+            'replace'    => true,
+            'update'     => true,
+        ];
+
+        $this->assertSame($expected, $file->panelOptions());
+    }
+
+    public function testPanelOptionsDisabledReplaceOption()
+    {
+        new App([
+            'blueprints' => [
+                'files/test' => [
+                    'name'   => 'test',
+                    'accept' => [
+                        'type' => 'image'
+                    ]
+                ]
+            ]
+        ]);
+
+        $file = new File([
+            'filename' => 'test.js',
+            'template' => 'test',
+        ]);
+
+        $file->kirby()->impersonate('kirby');
+
+        $expected = [
+            'changeName' => true,
+            'create'     => true,
+            'delete'     => true,
+            'read'       => true,
+            'replace'    => false,
+            'update'     => true,
+        ];
+
+        $this->assertSame($expected, $file->panelOptions());
     }
 
     public function testPanelUrl()
