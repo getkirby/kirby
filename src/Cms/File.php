@@ -520,11 +520,8 @@ class File extends ModelWithContent
         $options = parent::panelOptions($unlock);
 
         try {
-            /**
-             * check if the file type is allowed
-             * at all. Otherwise it cannot be
-             * replaced.
-             */
+            // check if the file type is allowed at all,
+            // otherwise it cannot be replaced
             $this->match($this->blueprint()->accept());
         } catch (Throwable $e) {
             $options['replace'] = false;
