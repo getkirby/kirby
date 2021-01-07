@@ -6,7 +6,6 @@ use Exception;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 
-
 /**
  * HTML builder for the most common elements
  *
