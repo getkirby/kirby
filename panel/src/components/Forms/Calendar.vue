@@ -314,7 +314,7 @@ export default {
       return dt.format("YYYY-MM-DD HH:mm:ss");
     },
     toToday() {
-      return this.$library.dayjs.utc();
+      return this.$library.dayjs.utc().local();
     },
   }
 };
