@@ -7,7 +7,9 @@
     :class="'k-status-icon k-status-icon-' + status"
     @click="onClick"
   >
-    {{ text }}
+    <template v-if="text">
+      {{ text }}
+    </template>
   </k-button>
 </template>
 

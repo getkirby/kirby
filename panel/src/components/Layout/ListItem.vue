@@ -18,9 +18,15 @@
     </k-link>
     <nav class="k-list-item-options">
       <slot name="options">
-        <k-status-icon
+        <k-button
           v-if="flag"
           v-bind="flag"
+          class="k-list-item-status"
+          @click="flag.click"
+        />
+        <k-status-icon
+          v-else-if="statusIcon"
+          v-bind="statusIcon"
           class="k-list-item-status"
         />
         <k-button
@@ -68,7 +74,8 @@ export default {
     info: String,
     link: [String, Function],
     flag: Object,
-    options: [Array, Function]
+    options: [Array, Function],
+    statusIcon: Object,
   },
   computed: {
     imageOptions() {
