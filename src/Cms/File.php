@@ -520,7 +520,7 @@ class File extends ModelWithContent
      */
     public function panelOptions(array $unlock = []): array
     {
-        $options = parent::panelOptions();
+        $options = parent::panelOptions($unlock);
 
         try {
             /**
