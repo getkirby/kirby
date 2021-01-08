@@ -125,6 +125,10 @@ export default {
   },
   created() {
     this.search = debounce(this.search, 250);
+    this.$events.$on("keydown.cmd.shift.f", this.open);
+  },
+  destroyed() {
+    this.$events.$off("keydown.cmd.shift.f", this.open);
   },
   methods: {
     changeType(type) {
