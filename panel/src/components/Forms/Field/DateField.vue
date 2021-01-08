@@ -76,12 +76,28 @@ export default {
       this.datetime = value;
     }
   },
+  created() {
+    // binds click event that clicking out of the calendar closes it
+    this.outsideClick = (event) => {
+      const calendarInput = this.$el.querySelector(".k-calendar-input");
+      if (calendarInput && this.$el.contains(event.target) === false) {
+        this.close();
+      }
+    };
+
+    document.addEventListener("click", this.outsideClick, true);
+  },
+  destroyed() {
+    document.removeEventListener("click", this.outsideClick);
+  },
   methods: {
+    close() {
+      if (this.$refs.calendar) {
+        this.$refs.calendar.close();
+      }
+    },
     focus() {
       this.$refs.input.focus();
-    },
-    onUpdate(value) {
-      this.$emit("input", value);
     },
     onFocus() {
       if (this.$refs.calendar) {
@@ -93,10 +109,10 @@ export default {
     },
     onSelect(value) {
       this.onUpdate(value);
-
-      if (this.$refs.calendar) {
-        this.$refs.calendar.close();
-      }
+      this.close();
+    },
+    onUpdate(value) {
+      this.$emit("input", value);
     }
   }
 }
