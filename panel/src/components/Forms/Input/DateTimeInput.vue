@@ -7,6 +7,7 @@
       @update="onUpdate($event, 'date')"
       @enter="onEnter($event, 'date')"
       @focus="$emit('focus')"
+      @blur="onBlur"
     />
     <template v-if="time">
       <k-time-input
@@ -16,6 +17,7 @@
         @update="onUpdate($event, 'time')"
         @enter="onEnter($event, 'time')"
         @focus="$emit('focus')"
+        @blur="onBlur"
       />
     </template>
   </div>
@@ -86,6 +88,13 @@ export default {
       const base  = this.toDatetime(this.value);
       input = this.toDatetime(value, input, base);
       this.emit("update", input);
+    },
+    onBlur(event) {
+      // only emit blur if the focus didn't switch between
+      // date and time input
+      if (this.$el.contains(event.relatedTarget) === false) {
+        this.$emit("blur", event);
+      }
     },
     onEnter(value, input) {
       this.onUpdate(input, value);

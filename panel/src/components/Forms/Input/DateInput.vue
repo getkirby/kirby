@@ -215,7 +215,9 @@ export default {
         this.select();
       });
     },
-    onBlur() {
+    onBlur(event) {
+      this.$emit("blur", event);
+
       if (!this.parsed) {
         this.input = null;
       }

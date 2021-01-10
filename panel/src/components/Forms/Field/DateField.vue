@@ -64,6 +64,7 @@ export default {
     listeners() {
       return {
         ...this.$listeners,
+        blur: this.onBlur,
         enter: this.onSelect,
         focus: this.onFocus,
         input: this.onInput,
@@ -79,6 +80,16 @@ export default {
   methods: {
     focus() {
       this.$refs.input.focus();
+    },
+    onBlur(event) {
+      // close the calendar dropdown on blur on the input
+      // but make sure the click target wasn't the calendar itself
+      if (
+        this.$refs.calendar &&
+        this.$el.contains(event.relatedTarget) === false
+      ) {
+        this.$refs.calendar.close();
+      }
     },
     onUpdate(value) {
       this.$emit("input", value);
