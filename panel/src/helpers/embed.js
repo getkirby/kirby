@@ -69,7 +69,7 @@ export default {
     const queryString = query.toString();
 
     if (queryString.length) {
-      src += "?" + queryString.replace("&", "&amp;");
+      src += "?" + queryString;
     }
 
     return src;
@@ -124,7 +124,7 @@ export default {
     const queryString = query.toString();
 
     if (queryString.length) {
-      src += "?" + queryString.replace("&", "&amp;");
+      src += "?" + queryString;
     }
 
     return src;

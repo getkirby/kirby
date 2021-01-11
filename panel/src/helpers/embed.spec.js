@@ -12,7 +12,7 @@ describe("$helper.embed()", () => {
       ],
       [
         'https://www.youtube.com/embed/videoseries?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
-        'https://www.youtube.com/embed/videoseries?test=value&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+        'https://www.youtube.com/embed/videoseries?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
       ],
       [
         'http://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
@@ -20,7 +20,7 @@ describe("$helper.embed()", () => {
       ],
       [
         'http://www.youtube-nocookie.com/embed/videoseries?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
-        'https://www.youtube-nocookie.com/embed/videoseries?test=value&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+        'https://www.youtube-nocookie.com/embed/videoseries?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
       ],
       [
         'http://www.youtube.com/embed/d9NF2edxy-M',
@@ -32,7 +32,7 @@ describe("$helper.embed()", () => {
       ],
       [
         'http://www.youtube.com/embed/d9NF2edxy-M?start=10&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
-        'https://www.youtube.com/embed/d9NF2edxy-M?start=10&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+        'https://www.youtube.com/embed/d9NF2edxy-M?start=10&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
       ],
       [
         'https://www.youtube-nocookie.com/embed/d9NF2edxy-M',
@@ -52,7 +52,7 @@ describe("$helper.embed()", () => {
       ],
       [
         'https://www.youtube-nocookie.com/watch?test=value&v=d9NF2edxy-M&t=10',
-        'https://www.youtube-nocookie.com/embed/d9NF2edxy-M?test=value&amp;start=10'
+        'https://www.youtube-nocookie.com/embed/d9NF2edxy-M?test=value&start=10'
       ],
       [
         'https://www.youtube-nocookie.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
@@ -60,7 +60,7 @@ describe("$helper.embed()", () => {
       ],
       [
         'https://www.youtube-nocookie.com/playlist?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
-        'https://www.youtube-nocookie.com/embed/videoseries?test=value&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+        'https://www.youtube-nocookie.com/embed/videoseries?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
       ],
       [
         'http://www.youtube.com/watch?v=d9NF2edxy-M',
@@ -80,7 +80,7 @@ describe("$helper.embed()", () => {
       ],
       [
         'https://www.youtube.com/playlist?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
-        'https://www.youtube.com/embed/videoseries?test=value&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+        'https://www.youtube.com/embed/videoseries?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
       ],
       [
         'https://www.youtu.be/d9NF2edxy-M',
@@ -96,7 +96,7 @@ describe("$helper.embed()", () => {
       ],
       [
         'https://www.youtu.be/d9NF2edxy-M?test=value&t=10',
-        'https://www.youtube.com/embed/d9NF2edxy-M?test=value&amp;start=10'
+        'https://www.youtube.com/embed/d9NF2edxy-M?test=value&start=10'
       ],
 
       // Vimeo
