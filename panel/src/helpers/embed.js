@@ -23,8 +23,10 @@ export default {
     };
 
     let query = uri.searchParams;
-    let src = null;
 
+    // build the correct base URL for the embed,
+    // the query params are appended below
+    let src = null;
     switch (path.join("/")) {
       case "embed/videos":
       case "playlist":
