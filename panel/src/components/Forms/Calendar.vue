@@ -233,7 +233,7 @@ export default {
       return this.datetimes.some(current => date.isSame(current, "day"));
     },
     isToday(day) {
-      return this.toDate(day).isSame(this.$library.dayjs.utc(), "day");
+      return this.toDate(day).local().isSame(this.toToday(), "day");
     },
     next() {
       let next = this.viewDt.clone().add(1, "month");
@@ -314,7 +314,7 @@ export default {
       return dt.format("YYYY-MM-DD HH:mm:ss");
     },
     toToday() {
-      return this.$library.dayjs.utc();
+      return this.$library.dayjs.utc().local();
     },
   }
 };
