@@ -522,7 +522,6 @@ class Html extends Xml
                     $src = $host . '/' . $query->v;
 
                     $query->start = $query->t;
-
                     unset($query->v, $query->t);
                 }
 
