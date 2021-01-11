@@ -471,9 +471,13 @@ class Html extends Xml
             $query->$key = $value;
         }
 
+        // allow fullscreen mode by default
+        $attr = array_merge(['allowfullscreen' => true], $attr);
+
+        // build the full video src URL
         $src = 'https://player.vimeo.com/video/' . $id . $query->toString(true);
 
-        return static::iframe($src, array_merge(['allowfullscreen' => true], $attr));
+        return static::iframe($src, $attr);
     }
 
     /**
@@ -481,10 +485,10 @@ class Html extends Xml
      *
      * @param string $url YouTube video URL
      * @param array $options Query params for the embed URL
-     * @param array $attrs Additional attributes for the `<iframe>` tag
+     * @param array $attr Additional attributes for the `<iframe>` tag
      * @return string The generated HTML
      */
-    public static function youtube(string $url, array $options = [], array $attrs = []): string
+    public static function youtube(string $url, array $options = [], array $attr = []): string
     {
         if (preg_match('!youtu!i', $url) !== 1) {
             throw new Exception('Invalid YouTube source');
@@ -548,9 +552,12 @@ class Html extends Xml
         }
 
         // allow fullscreen mode by default
-        $attrs = array_merge(['allowfullscreen' => true], $attrs);
+        $attr = array_merge(['allowfullscreen' => true], $attr);
+
+        // build the full video src URL
+        $src = $src . $query->toString(true);
 
         // render the iframe
-        return static::iframe($src . $query->toString(true), $attrs);
+        return static::iframe($src, $attr);
     }
 }
