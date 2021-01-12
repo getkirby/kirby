@@ -643,4 +643,14 @@ class HtmlTest extends TestCase
             ]
         ];
     }
+
+    public function testInvalidVimeoUrl()
+    {
+        $this->assertNull(Html::vimeo('https://getkirby.com'));
+    }
+
+    public function testInvalidYoutubeUrl()
+    {
+        $this->assertNull(Html::youtube('https://getkirby.com'));
+    }
 }
