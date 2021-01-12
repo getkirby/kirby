@@ -920,9 +920,9 @@ function uuid(): string
  * @param string $url
  * @param array $options
  * @param array $attr
- * @return string
+ * @return string|null
  */
-function video(string $url, array $options = [], array $attr = []): string
+function video(string $url, array $options = [], array $attr = []): ?string
 {
     return Html::video($url, $options, $attr);
 }
@@ -933,9 +933,9 @@ function video(string $url, array $options = [], array $attr = []): string
  * @param string $url
  * @param array $options
  * @param array $attr
- * @return string
+ * @return string|null
  */
-function vimeo(string $url, array $options = [], array $attr = []): string
+function vimeo(string $url, array $options = [], array $attr = []): ?string
 {
     return Html::vimeo($url, $options, $attr);
 }
@@ -959,9 +959,9 @@ function widont(string $string = null): string
  * @param string $url
  * @param array $options
  * @param array $attr
- * @return string
+ * @return string|null
  */
-function youtube(string $url, array $options = [], array $attr = []): string
+function youtube(string $url, array $options = [], array $attr = []): ?string
 {
     return Html::youtube($url, $options, $attr);
 }

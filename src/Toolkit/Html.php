@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Exception;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
 
@@ -420,9 +419,9 @@ class Html extends Xml
      * @param array $options Additional `vimeo` and `youtube` options
      *                       (will be used as query params in the embed URL)
      * @param array $attr Additional attributes for the `<iframe>` tag
-     * @return string The generated HTML
+     * @return string|null The generated HTML
      */
-    public static function video(string $url, array $options = [], array $attr = []): string
+    public static function video(string $url, array $options = [], array $attr = []): ?string
     {
         // YouTube video
         if (preg_match('!youtu!i', $url) === 1) {
@@ -434,7 +433,7 @@ class Html extends Xml
             return static::vimeo($url, $options['vimeo'] ?? [], $attr);
         }
 
-        throw new Exception('Unexpected video type');
+        return null;
     }
 
     /**
@@ -443,9 +442,9 @@ class Html extends Xml
      * @param string $url Vimeo video URL
      * @param array $options Query params for the embed URL
      * @param array $attr Additional attributes for the `<iframe>` tag
-     * @return string The generated HTML
+     * @return string|null The generated HTML
      */
-    public static function vimeo(string $url, array $options = [], array $attr = []): string
+    public static function vimeo(string $url, array $options = [], array $attr = []): ?string
     {
         $uri   = new Uri($url);
         $path  = $uri->path();
@@ -463,7 +462,7 @@ class Html extends Xml
         }
 
         if (empty($id) === true || preg_match('!^[0-9]*$!', $id) !== 1) {
-            throw new Exception('Invalid Vimeo source');
+            return null;
         }
 
         // append query params
@@ -486,12 +485,12 @@ class Html extends Xml
      * @param string $url YouTube video URL
      * @param array $options Query params for the embed URL
      * @param array $attr Additional attributes for the `<iframe>` tag
-     * @return string The generated HTML
+     * @return string|null The generated HTML
      */
-    public static function youtube(string $url, array $options = [], array $attr = []): string
+    public static function youtube(string $url, array $options = [], array $attr = []): ?string
     {
         if (preg_match('!youtu!i', $url) !== 1) {
-            throw new Exception('Invalid YouTube source');
+            return null;
         }
 
         $uri    = new Uri($url);
@@ -546,7 +545,7 @@ class Html extends Xml
         }
 
         if (empty($src) === true) {
-            throw new Exception('Invalid YouTube source');
+            return null;
         }
 
         // append all query parameters
