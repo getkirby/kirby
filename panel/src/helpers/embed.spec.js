@@ -127,6 +127,14 @@ describe("$helper.embed()", () => {
         false
       ],
       [
+        'https://www.youtu.be',
+        false
+      ],
+      [
+        'https://www.youtube.com/watch?list=zv=21HuwjmuS7A&index=1',
+        false
+      ],
+      [
         'https://youtube.com/watch?v=öööö',
         false
       ],

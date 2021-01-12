@@ -503,6 +503,10 @@ class Html extends Xml
         $src    = null;
 
         $isYoutubeId = function (string $id): bool {
+            if (empty($id) === true) {
+                return false;
+            }
+
             return preg_match('!^[a-zA-Z0-9_-]+$!', $id);
         };
 
@@ -529,7 +533,7 @@ class Html extends Xml
 
             default:
                 // short URLs
-                if (Str::contains($uri->host(), 'youtu.be') === true) {
+                if (Str::contains($uri->host(), 'youtu.be') === true && $isYoutubeId($first) === true) {
                     $src = 'https://www.youtube.com/embed/' . $first;
 
                     $query->start = $query->t;
