@@ -462,7 +462,7 @@ class Html extends Xml
                 break;
         }
 
-        if (preg_match('!^[0-9]*$!', $id) !== 1) {
+        if (empty($id) === true || preg_match('!^[0-9]*$!', $id) !== 1) {
             throw new Exception('Invalid Vimeo source');
         }
 
@@ -502,7 +502,7 @@ class Html extends Xml
         $host   = 'https://' . $uri->host() . '/embed';
         $src    = null;
 
-        $isYoutubeId = function (string $id): bool {
+        $isYoutubeId = function (?string $id = null): bool {
             if (empty($id) === true) {
                 return false;
             }

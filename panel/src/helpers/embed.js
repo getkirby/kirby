@@ -119,7 +119,7 @@ export default {
         break;
     }
 
-    if (!id.match(/^[0-9]*$/)) {
+    if (!id || !id.match(/^[0-9]*$/)) {
       return false;
     }
 

@@ -139,6 +139,10 @@ describe("$helper.embed()", () => {
         false
       ],
       [
+        'https://vimeo.com',
+        false
+      ],
+      [
         'https://vimeo.com/öööö',
         false
       ]

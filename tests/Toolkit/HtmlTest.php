@@ -619,25 +619,48 @@ class HtmlTest extends TestCase
         Html::video('https://somevideo.com');
     }
 
+    public function invalidYoutubeUrlProvider()
+    {
+        return [
+            ['https://youtube.com/imprint'],
+            ['https://www.youtu.be'],
+            ['https://www.youtube.com/watch?list=zv=21HuwjmuS7A&index=1'],
+            ['https://youtube.com/watch?v=öööö']
+        ];
+    }
+
     /**
+     * @covers ::video
      * @covers ::youtube
+     * @dataProvider invalidYoutubeUrlProvider
      */
-    public function testVideoWithInvalidYoutubeUrl()
+    public function testVideoWithInvalidYoutubeUrl($url)
     {
         $this->expectException('Exception');
         $this->expectExceptionMessage('Invalid YouTube source');
 
-        Html::video('https://youtube.com/asldjhaskjdhakjs');
+        Html::video($url);
+    }
+
+    public function invalidVimeoUrlProvider()
+    {
+        return [
+            ['https://vimeo.com/asldjhaskjdhakjs'],
+            ['https://vimeo.com'],
+            ['https://vimeo.com/öööö'],
+        ];
     }
 
     /**
+     * @covers ::video
      * @covers ::vimeo
+     * @dataProvider invalidVimeoUrlProvider
      */
-    public function testVideoWithInvalidVimeoUrl()
+    public function testVideoWithInvalidVimeoUrl($url)
     {
         $this->expectException('Exception');
         $this->expectExceptionMessage('Invalid Vimeo source');
 
-        Html::video('https://vimeo.com/asldjhaskjdhakjs');
+        Html::video($url);
     }
 }
