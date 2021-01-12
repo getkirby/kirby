@@ -19,6 +19,10 @@ export default {
     const host = "https://" + uri.host + "/embed";
 
     const isYoutubeId = (id) => {
+      if (!id) {
+        return false;
+      }
+
       return id.match(/^[a-zA-Z0-9_-]+$/) !== null;
     };
 
@@ -28,7 +32,7 @@ export default {
     // the query params are appended below
     let src = null;
     switch (path.join("/")) {
-      case "embed/videos":
+      case "embed/videoseries":
       case "playlist":
         if (isYoutubeId(query.get("list"))) {
           src = host + "/videoseries";
@@ -49,7 +53,7 @@ export default {
         break;
       default:
         // short URLs
-        if (uri.host.includes("youtu.be")) {
+        if (uri.host.includes("youtu.be") && isYoutubeId(first)) {
           src = 'https://www.youtube.com/embed/' + first;
 
           if (query.has("t")) {
