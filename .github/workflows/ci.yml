@@ -17,7 +17,7 @@ jobs:
         php: [ "7.3", "7.4", "8.0" ]
     env:
       extensions: mbstring, ctype, curl, gd, apcu, memcached, pcov
-      ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., pcov.exclude=\"~(vendor|tests)~\"
+      ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
 
     steps:
       - name: Checkout Kirby
@@ -224,7 +224,7 @@ jobs:
           coverage: none
           tools: |
             composer:v2, composer-normalize,
-            composer-unused, phpcpd, psalm, phpmd
+            composer-unused, phpcpd, psalm:4.3.1, phpmd
 
       - name: Cache analysis data
         id: finishPrepare
