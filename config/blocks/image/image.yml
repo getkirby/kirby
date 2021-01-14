@@ -21,7 +21,7 @@ fields:
     when:
       location: kirby
   src:
-    label: Image URL
+    label: field.blocks.image.url
     type: url
     when:
       location: web
