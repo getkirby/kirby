@@ -83,7 +83,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      php: "7.4"
+      php: "8.0"
       extensions: mbstring, ctype, curl, gd, apcu, memcached
 
     steps:
@@ -191,7 +191,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      php: "7.4"
+      php: "8.0"
       extensions: mbstring, ctype, curl, gd, apcu, memcached
 
     steps:
@@ -224,7 +224,7 @@ jobs:
           coverage: none
           tools: |
             composer:v2, composer-normalize,
-            composer-unused, phpcpd, psalm:4.3.1, phpmd
+            composer-unused, phpcpd, psalm, phpmd
 
       - name: Cache analysis data
         id: finishPrepare
@@ -268,7 +268,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      php: "7.4"
+      php: "8.0"
 
     steps:
       - name: Checkout Kirby
