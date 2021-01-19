@@ -203,6 +203,7 @@ export default {
   },
   data() {
     return {
+      autofocus: null,
       items: this.makeItems(this.value),
       currentIndex: null,
       currentModel: null,
@@ -232,6 +233,10 @@ export default {
           section: this.endpoints.section,
           model: this.endpoints.model
         };
+
+        if (this.autofocus === null && field.autofocus === true) {
+          this.autofocus = name;
+        }
 
         fields[name] = field;
       });
@@ -332,7 +337,6 @@ export default {
         return false;
       }
 
-      let autofocus;
       let data = {};
 
       Object.keys(this.fields).forEach(fieldName => {
@@ -342,16 +346,12 @@ export default {
         } else {
           data[fieldName] = null;
         }
-
-        if (field.autofocus === true) {
-          autofocus = field;
-        }
       });
 
       this.currentIndex = "new";
       this.currentModel = data;
 
-      this.createForm(autofocus);
+      this.createForm();
     },
     addItem(value) {
       if (this.prepend === true) {
@@ -403,7 +403,7 @@ export default {
 
       this.$nextTick(() => {
         if (this.$refs.form) {
-          this.$refs.form.focus(field);
+          this.$refs.form.focus(field || this.autofocus);
         }
       });
     },
