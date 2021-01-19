@@ -67,7 +67,7 @@
   "error.file.changeName.permission": "У вас нет права поменять название \"{filename}\"",
   "error.file.duplicate": "Файл с названием \"{filename}\" уже есть",
   "error.file.extension.forbidden": "Расширение файла \"{extension}\" неразрешено",
-  "error.file.extension.invalid": "Invalid extension: {extension}",
+  "error.file.extension.invalid": "Неверное разрешение:  {extension}",
   "error.file.extension.missing": "Файлу \"{filename}\" не хватает расширения",
   "error.file.maxheight": "Высота картинки не должна превышать {height} px",
   "error.file.maxsize": "Файл слишком большой",
@@ -83,7 +83,7 @@
   "error.file.notFound": "\u0424\u0430\u0439\u043b \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
   "error.file.orientation": "Ориентация картинки должна быть \"{orientation}\"",
   "error.file.type.forbidden": "У вас нет права загружать файлы {type}",
-  "error.file.type.invalid": "Invalid file type: {type}",
+  "error.file.type.invalid": "Неверный тип файла: {type}",
   "error.file.undefined": "\u0424\u0430\u0439\u043b \u043d\u0435 \u043d\u0430\u0439\u0434\u0435\u043d",
 
   "error.form.incomplete": "Пожалуйста, исправьте все ошибки в форме",
@@ -93,8 +93,8 @@
   "error.language.duplicate": "Язык уже есть",
   "error.language.name": "Пожалуйста, впишите правильное название языка",
 
-  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
-  "error.layout.validation.settings": "There's an error in layout {index} settings",
+  "error.layout.validation.block": "Ошибка в блоке {blockIndex} в макете {layoutIndex}",
+  "error.layout.validation.settings": "Ошибка в настройках макета {index}",
 
   "error.license.format": "Пожалуйста, введите правильный лицензионный код",
   "error.license.email": "Пожалуйста, введите правильный адрес эл. почты",
