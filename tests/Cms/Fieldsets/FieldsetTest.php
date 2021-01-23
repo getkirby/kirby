@@ -18,4 +18,21 @@ class FieldsetTest extends TestCase
         $this->assertNull($fieldset->icon());
         $this->assertTrue($fieldset->translate());
     }
+
+    public function testTabsNormalize()
+    {
+        $fieldset = new Fieldset([
+            'type' => 'test',
+            'fields' => [
+                'foo' => ['type' => 'text'],
+                'bar' => ['type' => 'text']
+            ]
+        ]);
+
+        $this->assertIsArray($fieldset->tabs());
+        $this->assertArrayHasKey('content', $fieldset->tabs());
+        $this->assertArrayHasKey('fields', $fieldset->tabs()['content']);
+        $this->assertIsArray($fieldset->tabs()['content']['fields']);
+        $this->assertCount(2, $fieldset->tabs()['content']['fields']);
+    }
 }
