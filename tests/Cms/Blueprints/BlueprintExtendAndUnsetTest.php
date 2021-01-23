@@ -29,6 +29,28 @@ class BlueprintExtendAndUnset extends TestCase
                                 ]
                             ]
                         ],
+                        'additional' => [
+                            'columns' => [
+                                'left' => [
+                                    'width'  => '1/2',
+                                    'fields' => [
+                                        'headline' => [
+                                            'label' => 'Headline',
+                                            'type' => 'text'
+                                        ],
+                                    ]
+                                ],
+                                'right' => [
+                                    'width'  => '1/2',
+                                    'fields' => [
+                                        'text' => [
+                                            'label' => 'Text',
+                                            'type' => 'text'
+                                        ]
+                                    ]
+                                ]
+                            ]
+                        ],
                         'seo' => [
                             'fields' => [
                                 'seoTitle' => [
@@ -58,10 +80,10 @@ class BlueprintExtendAndUnset extends TestCase
             ]
         ]);
 
-        $this->assertEquals('extended', $blueprint->title());
-        $this->assertEquals(1, sizeof($blueprint->tabs()));
-        $this->assertEquals(false, is_array($blueprint->tab('seo')));
-        $this->assertEquals(true, is_array($blueprint->tab('content')));
+        $this->assertSame('extended', $blueprint->title());
+        $this->assertCount(2, $blueprint->tabs());
+        $this->assertIsArray($blueprint->tab('content'));
+        $this->assertIsNotArray($blueprint->tab('seo'));
     }
 
     public function testExtendAndUnsetSection()
@@ -85,11 +107,11 @@ class BlueprintExtendAndUnset extends TestCase
             $this->assertNull($e->getMessage(), 'Failed to getg sections.');
         }
 
-        $this->assertEquals('extended', $blueprint->title());
-        $this->assertEquals(true, is_array($sections));
-        $this->assertEquals(1, sizeof($sections));
-        $this->assertEquals(true, array_key_exists('pages', $sections));
-        $this->assertEquals(false, array_key_exists('files', $sections));
+        $this->assertSame('extended', $blueprint->title());
+        $this->assertIsArray($sections);
+        $this->assertCount(1, $sections);
+        $this->assertArrayHasKey('pages', $sections);
+        $this->assertArrayNotHasKey('files', $sections);
     }
 
     public function testExtendAndUnsetFields()
@@ -113,10 +135,37 @@ class BlueprintExtendAndUnset extends TestCase
             $this->assertNull($e->getMessage(), 'Failed to get fields.');
         }
 
-        $this->assertEquals('extended', $blueprint->title());
-        $this->assertEquals(true, is_array($fields));
-        $this->assertEquals(1, sizeof($fields));
-        $this->assertEquals(true, array_key_exists('seoTitle', $fields));
-        $this->assertEquals(false, array_key_exists('seoDescription', $fields));
+        $this->assertSame('extended', $blueprint->title());
+        $this->assertIsArray($fields);
+        $this->assertCount(1, $fields);
+        $this->assertArrayHasKey('seoTitle', $fields);
+        $this->assertArrayNotHasKey('seoDescription', $fields);
+    }
+
+    public function testExtendAndUnsetColumns()
+    {
+        $blueprint = new Blueprint([
+            'title'   => 'extended',
+            'model'   => 'page',
+            'extends' => 'pages/base',
+            'tabs'    => [
+                'additional' => [
+                    'columns' => [
+                        'left' => [
+                            'width' => '1/1'
+                        ],
+                        'right' => false
+                    ]
+                ]
+            ]
+        ]);
+
+        $tab = $blueprint->tab('additional');
+
+        $this->assertIsArray($tab);
+        $this->assertCount(1, $tab['columns']);
+        $this->assertArrayHasKey('left', $tab['columns']);
+        $this->assertArrayNotHasKey('right', $tab['columns']);
+        $this->assertSame('1/1', $tab['columns']['left']['width']);
     }
 }

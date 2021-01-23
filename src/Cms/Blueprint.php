@@ -375,7 +375,9 @@ class Blueprint
     protected function normalizeColumns(string $tabName, array $columns): array
     {
         foreach ($columns as $columnKey => $columnProps) {
+            // unset/remove column if its property is not array
             if (is_array($columnProps) === false) {
+                unset($columns[$columnKey]);
                 continue;
             }
 
