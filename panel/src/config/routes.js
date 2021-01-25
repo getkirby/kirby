@@ -171,8 +171,9 @@ let routes = [
     },
     component: Vue.component("k-user-view"),
     beforeEnter: auth,
-    props: () => ({
-      id: store.state.user.current ? store.state.user.current.id : false
+    props: route => ({
+      id: store.state.user.current ? store.state.user.current.id : false,
+      tab: route.hash.slice(1) || "main"
     })
   },
   {
