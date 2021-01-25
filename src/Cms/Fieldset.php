@@ -105,6 +105,12 @@ class Fieldset extends Item
 
         // normalize tabs props
         foreach ($tabs as $name => $tab) {
+            // unset/remove tab if its property is false
+            if ($tab === false) {
+                unset($tabs[$name]);
+                continue;
+            }
+
             $tab = Blueprint::extend($tab);
 
             $tab['fields'] = $this->createFields($tab['fields'] ?? []);
