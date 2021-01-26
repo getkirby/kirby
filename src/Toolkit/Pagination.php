@@ -196,7 +196,7 @@ class Pagination
             return 0;
         }
 
-        return ceil($this->total() / $this->limit());
+        return (int)ceil($this->total() / $this->limit());
     }
 
     /**

@@ -95,7 +95,7 @@ class Location
         $parts = explode('/', $part);
 
         if (count($parts) === 1) {
-            return $parts[0];
+            return (float)$parts[0];
         }
 
         return (float)($parts[0]) / (float)($parts[1]);

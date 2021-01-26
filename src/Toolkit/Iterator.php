@@ -129,7 +129,7 @@ class Iterator implements IteratorAggregate
      * Tries to find the index number for the given element
      *
      * @param mixed $needle the element to search for
-     * @return string|false the name of the key or false
+     * @return int|false the index (int) of the element or false
      */
     public function indexOf($needle)
     {

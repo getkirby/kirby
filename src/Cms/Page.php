@@ -139,7 +139,7 @@ class Page extends ModelWithContent
     /**
      * The intended page template
      *
-     * @var string
+     * @var \Kirby\Cms\Template
      */
     protected $template;
 
