@@ -432,6 +432,75 @@ class PagesTest extends TestCase
         $this->assertEquals($expected, $pages->index(true)->keys());
     }
 
+    public function testIndexCacheMode()
+    {
+        $pages = Pages::factory([
+            [
+                'slug' => 'a',
+                'children' => [
+                    [
+                        'slug' => 'aa',
+                        'children' => [
+                            ['slug' => 'aaa'],
+                            ['slug' => 'aab'],
+                        ]
+                    ],
+                    [
+                        'slug' => 'ab'
+                    ]
+                ],
+                'drafts' => [
+                    [
+                        'slug' => 'ac'
+                    ]
+                ]
+            ],
+            [
+                'slug' => 'b',
+                'children' => [
+                    ['slug' => 'ba'],
+                    ['slug' => 'bb']
+                ],
+                'drafts' => [
+                    [
+                        'slug' => 'bc'
+                    ]
+                ]
+            ]
+        ]);
+
+        $expectedIndex = [
+            'a',
+            'a/aa',
+            'a/aa/aaa',
+            'a/aa/aab',
+            'a/ab',
+            'b',
+            'b/ba',
+            'b/bb',
+        ];
+
+        $expectedIndexWithDrafts = [
+            'a',
+            'a/aa',
+            'a/aa/aaa',
+            'a/aa/aab',
+            'a/ab',
+            'a/ac',
+            'b',
+            'b/ba',
+            'b/bb',
+            'b/bc',
+        ];
+
+        // first run index method to cache index and with drafts
+        $pages->index();
+        $pages->index(true);
+
+        $this->assertSame($expectedIndex, $pages->index()->keys());
+        $this->assertSame($expectedIndexWithDrafts, $pages->index(true)->keys());
+    }
+
     public function testNotTemplate()
     {
         $pages = Pages::factory([
