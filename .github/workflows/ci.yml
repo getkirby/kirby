@@ -268,7 +268,8 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      php: "8.0"
+      # TODO: update to PHP 8.0 when PHP-CS-Fixer fully supports it
+      php: "7.4"
 
     steps:
       - name: Checkout Kirby
@@ -321,8 +322,6 @@ jobs:
 
       - name: Check for PHP coding style violations
         if: always() && steps.finishPrepare.outcome == 'success'
-        env:
-          PHP_CS_FIXER_IGNORE_ENV: 1
         # Use the --dry-run flag in push builds to get a failed CI status
         run: >
           php-cs-fixer fix --diff --diff-format=udiff
