@@ -373,4 +373,52 @@ class FilesSectionTest extends TestCase
         $this->assertEquals('b.jpg', $section->data()[1]['filename']);
         $this->assertEquals('a.jpg', $section->data()[2]['filename']);
     }
+
+    public function testTranslatedInfo()
+    {
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'a.jpg'],
+                ['filename' => 'b.jpg']
+            ]
+        ]);
+
+        $section = new Section('files', [
+            'name'  => 'test',
+            'model' => $model,
+            'info'  => [
+                'en' => 'en: {{ file.page.title }}',
+                'de' => 'de: {{ file.page.title }}'
+            ]
+        ]);
+
+        $this->assertSame('en: {{ file.page.title }}', $section->info());
+        $this->assertSame('en: test', $section->data()[0]['info']);
+        $this->assertSame('en: test', $section->data()[1]['info']);
+    }
+
+    public function testTranslatedText()
+    {
+        $model = new Page([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'a.jpg'],
+                ['filename' => 'b.jpg']
+            ]
+        ]);
+
+        $section = new Section('files', [
+            'name'  => 'test',
+            'model' => $model,
+            'text'  => [
+                'en' => 'en: {{ file.filename }}',
+                'de' => 'de: {{ file.filename }}'
+            ]
+        ]);
+
+        $this->assertSame('en: {{ file.filename }}', $section->text());
+        $this->assertSame('en: a.jpg', $section->data()[0]['text']);
+        $this->assertSame('en: b.jpg', $section->data()[1]['text']);
+    }
 }

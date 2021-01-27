@@ -38,8 +38,8 @@ return [
         /**
          * Optional info text setup. Info text is shown on the right (lists) or below (cards) the page title.
          */
-        'info' => function (string $info = null) {
-            return $info;
+        'info' => function ($info = null) {
+            return I18n::translate($info, $info);
         },
         /**
          * The size option controls the size of cards. By default cards are auto-sized and the cards grid will always fill the full width. With a size you can disable auto-sizing. Available sizes: `tiny`, `small`, `medium`, `large`, `huge`
@@ -82,8 +82,8 @@ return [
         /**
          * Setup for the main text in the list or cards. By default this will display the page title.
          */
-        'text' => function (string $text = '{{ page.title }}') {
-            return $text;
+        'text' => function ($text = '{{ page.title }}') {
+            return I18n::translate($text, $text);
         }
     ],
     'computed' => [
@@ -157,7 +157,7 @@ return [
                     'id'          => $item->id(),
                     'dragText'    => $item->dragText(),
                     'text'        => $item->toString($this->text),
-                    'info'        => $item->toString($this->info ?? false),
+                    'info'        => $item->toString($this->info),
                     'parent'      => $item->parentId(),
                     'icon'        => $item->panelIcon($image),
                     'image'       => $image,
