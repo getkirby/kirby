@@ -441,4 +441,56 @@ class PagesSectionTest extends TestCase
 
         $this->assertEquals('<p>Information</p>', $section->help());
     }
+
+    public function testTranslatedInfo()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'C']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'A']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'B']]
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => $page,
+            'info' => [
+                'en' => 'en: {{ page.slug }}',
+                'de' => 'de: {{ page.slug }}'
+            ]
+        ]);
+
+        $this->assertSame('en: {{ page.slug }}', $section->info());
+        $this->assertSame('en: subpage-1', $section->data()[0]['info']);
+        $this->assertSame('en: subpage-2', $section->data()[1]['info']);
+        $this->assertSame('en: subpage-3', $section->data()[2]['info']);
+    }
+
+    public function testTranslatedText()
+    {
+        $page = new Page([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'subpage-1', 'content' => ['title' => 'C']],
+                ['slug' => 'subpage-2', 'content' => ['title' => 'A']],
+                ['slug' => 'subpage-3', 'content' => ['title' => 'B']]
+            ]
+        ]);
+
+        $section = new Section('pages', [
+            'name'  => 'test',
+            'model' => $page,
+            'text' => [
+                'en' => 'en: {{ page.title }}',
+                'de' => 'de: {{ page.title }}'
+            ]
+        ]);
+
+        $this->assertSame('en: {{ page.title }}', $section->text());
+        $this->assertSame('en: C', $section->data()[0]['text']);
+        $this->assertSame('en: A', $section->data()[1]['text']);
+        $this->assertSame('en: B', $section->data()[2]['text']);
+    }
 }
