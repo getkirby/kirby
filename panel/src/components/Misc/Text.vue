@@ -26,7 +26,6 @@ export default {
 .k-text ol,
 .k-text ul {
   margin-left: 1rem;
-  list-style-position: inside;
 }
 .k-text li {
   list-style: inherit;
