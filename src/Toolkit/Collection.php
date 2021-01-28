@@ -252,7 +252,7 @@ class Collection extends Iterator implements Countable
         $split    = $args[1] ?? false;
 
         // filter by custom filter function
-        if (is_callable($field) === true) {
+        if (is_string($field) === false && is_callable($field) === true) {
             $collection = clone $this;
             $collection->data = array_filter($this->data, $field);
 
