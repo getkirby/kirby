@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Json;
 use Kirby\Data\Yaml;
 
 class FieldMethodsTest extends TestCase
@@ -670,5 +671,85 @@ class FieldMethodsTest extends TestCase
 
         $yaml = Yaml::encode($data);
         $this->assertSame($data, $this->field($yaml)->yaml());
+    }
+
+    public function testToBlocks()
+    {
+        $data = [
+            [
+                'type' => 'code',
+                'content' => [
+                    'code' => '<?php echo "Hello World!"; ?>',
+                    'language' => 'php',
+                ]
+            ],
+            [
+                'type' => 'gallery',
+                'content' => [
+                    'images' => [
+                        'a.jpg',
+                        'b.jpg'
+                    ],
+                ]
+            ],
+            [
+                'type'    => 'image',
+                'content' => [
+                    'location' => 'web',
+                    'src'      => 'https://getkirby.com/favicon.png',
+                ]
+            ],
+            [
+                'type'    => 'heading',
+                'content' => [
+                    'text' => 'A nice heading',
+                ]
+            ],
+            [
+                'type'    => 'list',
+                'content' => [
+                    'text' => '<ul><li>list item 1<\/li><li>list item 2<\/li><\/ul>',
+                ]
+            ],
+            [
+                'type'    => 'markdown',
+                'content' => [
+                    'text' => '# Heading 1',
+                ]
+            ],
+            [
+                'type'    => 'quote',
+                'content' => [
+                    'text'     => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in ultricies lorem. Fusce vulputate placerat urna sed pellentesque.',
+                    'citation' => 'John Doe',
+                ]
+            ],
+            [
+                'type'    => 'text',
+                'content' => [
+                    'text' => 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus in ultricies lorem. Fusce vulputate placerat urna sed pellentesque.'
+                ]
+            ],
+            [
+                'type'    => 'video',
+                'content' => [
+                    'url' => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
+                ]
+            ]
+        ];
+
+        $json   = Json::encode($data);
+        $field  = $this->field($json);
+        $blocks = $field->toBlocks();
+
+        $this->assertCount(count($data), $blocks);
+
+        foreach ($data as $index => $row) {
+            $block = $blocks->nth($index);
+
+            $this->assertSame($row['type'], $block->type());
+            $this->assertSame($row['content'], $block->content()->data());
+            $this->assertNotEmpty($block->toHtml());
+        }
     }
 }
