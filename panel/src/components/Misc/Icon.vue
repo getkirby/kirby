@@ -60,6 +60,15 @@ export default {
   background: lighten($color-gray-900, 10%) url($pattern);
   color: $color-white;
 }
+[data-disabled] .k-icon[data-back="black"] {
+  background-color: $color-gray-600;
+}
+[data-disabled] .k-icon[data-back="pattern"] {
+  background: lighten($color-gray-600, 5%) url($pattern);
+  svg {
+    opacity: 1;
+  }
+}
 .k-icon[data-size="medium"] svg {
   width: 2rem;
   height: 2rem;

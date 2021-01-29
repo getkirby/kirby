@@ -129,12 +129,14 @@ export default {
 
 $range-thumb-size: 16px;
 $range-thumb-border: 4px solid $color-gray-900;
+$range-thumb-border-disabled: 4px solid $color-gray-600;
 $range-thumb-background: $color-background;
 $range-thumb-focus-border: 4px solid $color-focus;
 $range-thumb-focus-background: $color-background;
 $range-track-height: 4px;
 $range-track-background: $color-border;
 $range-track-color: $color-gray-900;
+$range-track-color-disabled: $color-gray-600;
 $range-track-focus-color: $color-focus;
 
 @mixin track($fill: 0) {
@@ -278,5 +280,35 @@ $range-track-focus-color: $color-focus;
 }
 .k-range-input-tooltip > * {
   padding: 4px;
+}
+[data-disabled] {
+  .k-range-input-native {
+    &::-webkit-slider-runnable-track {
+      @include track-background($range-track-color-disabled);
+    }
+    &::-moz-range-progress {
+      @include fill($range-track-color-disabled);
+    }
+    &::-ms-fill-lower {
+      @include fill($range-track-color-disabled);
+    }
+    &::-webkit-slider-thumb {
+      border: $range-thumb-border-disabled;
+    }
+    &::-moz-range-thumb {
+      border: $range-thumb-border-disabled;
+    }
+    &::-ms-thumb {
+      border: $range-thumb-border-disabled;
+    }
+  }
+
+  .k-range-input-tooltip {
+    background: $color-gray-600;
+
+    &::after {
+      border-right: 5px solid $color-gray-600;
+    }
+  }
 }
 </style>

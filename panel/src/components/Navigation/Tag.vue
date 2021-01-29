@@ -50,6 +50,9 @@ export default {
   border-color: $color-focus;
   color: #fff;
 }
+[data-disabled] .k-tag{
+  background-color: $color-gray-600;
+}
 .k-tag-text {
   padding: 0 .75rem;
 }
