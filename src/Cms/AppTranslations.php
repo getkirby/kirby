@@ -210,12 +210,17 @@ trait AppTranslations
 
         $translations = $this->extensions['translations'] ?? [];
 
-        // inject current language translations
-        if ($language = $this->language()) {
-            $translations = array_replace_recursive(
-                $translations,
-                [$language->code() => $language->translations()]
-            );
+        // injects languages translations
+        if ($languages = $this->languages()) {
+            foreach ($languages as $language) {
+                // merges language translations with extension translations
+                if ($language->translations()) {
+                    $translations[$language->code()] = array_merge(
+                        $translations[$language->code()],
+                        $language->translations()
+                    );
+                }
+            }
         }
 
         $this->translations = Translations::load($this->root('i18n:translations'), $translations);
