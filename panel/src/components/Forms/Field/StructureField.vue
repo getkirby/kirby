@@ -798,7 +798,23 @@ $structure-item-height: 38px;
     cursor: -webkit-grabbing;
   }
 }
+[data-disabled] .k-structure-table {
+  background: $color-background;
 
+  th,
+  td {
+    background: $color-background;
+    border-bottom: 1px solid $color-border;
+
+    [dir="ltr"] & {
+      border-right: 1px solid $color-border;
+    }
+
+    [dir="rtl"] & {
+      border-left: 1px solid $color-border;
+    }
+  }
+}
 .k-sortable-row-fallback {
   opacity: 0 !important;
 }

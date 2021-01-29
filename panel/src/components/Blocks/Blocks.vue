@@ -428,6 +428,9 @@ export default {
   box-shadow: $shadow;
   border-radius: $rounded;
 }
+[data-disabled] .k-blocks {
+  background: $color-background;
+}
 .k-blocks[data-alt] .k-block-container > * {
   pointer-events: none;
 }
