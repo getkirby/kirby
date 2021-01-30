@@ -55,6 +55,29 @@ class LayoutColumn extends Item
     }
 
     /**
+     * Checks if the column is empty
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return $this
+            ->blocks()
+            ->filter('isHidden', false)
+            ->count() === 0;
+    }
+
+    /**
+     * Checks if the column is not empty
+     *
+     * @return bool
+     */
+    public function isNotEmpty(): bool
+    {
+        return $this->isEmpty() === false;
+    }
+
+    /**
      * Returns the number of columns this column spans
      *
      * @param int $columns
