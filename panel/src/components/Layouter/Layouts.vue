@@ -9,6 +9,7 @@
         <k-layout
           v-for="(layout, layoutIndex) in rows"
           :key="layout.id"
+          :disabled="disabled"
           :endpoints="endpoints"
           :fieldset-groups="fieldsetGroups"
           :fieldsets="fieldsets"

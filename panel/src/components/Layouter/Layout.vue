@@ -20,7 +20,7 @@
         })"
       />
     </k-grid>
-    <nav class="k-layout-toolbar">
+    <nav v-if="!disabled" class="k-layout-toolbar">
       <k-button
         v-if="settings"
         :tooltip="$t('settings')"
@@ -83,6 +83,7 @@ export default {
   props: {
     attrs: [Array, Object],
     columns: Array,
+    disabled: Boolean,
     endpoints: Object,
     fieldsetGroups: Object,
     fieldsets: Object,
@@ -120,6 +121,9 @@ $layout-toolbar-width: 2rem;
   background: #fff;
   box-shadow: $shadow;
 }
+[data-disabled] .k-layout {
+  padding-right: 0;
+}
 .k-layout:not(:last-of-type) {
   margin-bottom: 1px;
 }
@@ -151,9 +155,6 @@ $layout-toolbar-width: 2rem;
 .k-layout-toolbar .k-sort-handle {
   margin-top: auto;
   color: currentColor;
-}
-[data-disabled] .k-layout-toolbar {
-  background: $color-gray-200;
 }
 
 /** Columns **/
