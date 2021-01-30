@@ -135,7 +135,7 @@ export default {
           this.html    = this.editor.getHTML();
           this.isEmpty = this.editor.isEmpty();
 
-          this.$emit("input", this.html);
+          this.$emit("input", this.isEmpty === false ? this.html : "");
         }
       },
       extensions: [
