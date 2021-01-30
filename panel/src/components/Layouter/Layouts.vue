@@ -30,6 +30,7 @@
       </k-draggable>
 
       <k-button
+        v-if="!disabled"
         class="k-layout-add-button"
         icon="add"
         @click="selectLayout(rows.length)"
@@ -80,6 +81,7 @@ export default {
     "k-layout": Layout
   },
   props: {
+    disabled: Boolean,
     empty: String,
     endpoints: Object,
     fieldsetGroups: Object,

@@ -152,6 +152,9 @@ $layout-toolbar-width: 2rem;
   margin-top: auto;
   color: currentColor;
 }
+[data-disabled] .k-layout-toolbar {
+  background: $color-gray-200;
+}
 
 /** Columns **/
 .k-layout-columns.k-grid {

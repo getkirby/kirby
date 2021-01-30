@@ -77,7 +77,7 @@
             >
               {{ column.label }}
             </th>
-            <th />
+            <th v-if="!disabled" />
           </tr>
         </thead>
         <k-draggable
@@ -123,7 +123,7 @@
                 </template>
               </template>
             </td>
-            <td class="k-structure-table-options">
+            <td v-if="!disabled" class="k-structure-table-options">
               <template v-if="duplicate && more && currentIndex === null">
                 <k-button
                   ref="actionsToggle"
@@ -749,6 +749,7 @@ $structure-item-height: 38px;
 
   .k-structure-table-index {
     width: $structure-item-height;
+    height: $structure-item-height;
     text-align: center;
   }
   .k-structure-table-index-number {
