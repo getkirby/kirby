@@ -55,4 +55,5 @@ return PhpCsFixer\Config::create()
         'whitespace_after_comma_in_array' => true
     ])
     ->setRiskyAllowed(true)
-    ->setFinder($finder);
+    ->setFinder($finder)
+    ->setLineEnding(PHP_EOL);
