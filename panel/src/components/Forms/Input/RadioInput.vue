@@ -111,6 +111,10 @@ export default {
   border-color: $color-gray-900;
   background: $color-gray-900;
 }
+[data-disabled] .k-radio-input input:checked + label::before {
+  border-color: $color-gray-600;
+  background: $color-gray-600;
+}
 .k-radio-input input:focus + label::before {
   border-color: $color-blue-600;
 }

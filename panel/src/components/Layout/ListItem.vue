@@ -96,6 +96,9 @@ $list-item-height: 38px;
   border-radius: $rounded-xs;
   box-shadow: $shadow;
 }
+[data-disabled] .k-list-item {
+  background: $color-background;
+}
 .k-list-item .k-sort-handle {
   position: absolute;
   left: -1.5rem;
