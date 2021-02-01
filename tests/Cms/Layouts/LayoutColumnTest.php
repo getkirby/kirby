@@ -45,4 +45,27 @@ class LayoutColumnTest extends TestCase
 
         $this->assertSame('1/2', $column->width());
     }
+
+    public function testIsEmpty()
+    {
+        $column = new LayoutColumn([
+            'blocks' => []
+        ]);
+
+        $this->assertTrue($column->isEmpty());
+        $this->assertFalse($column->isNotEmpty());
+    }
+
+    public function testIsNotEmpty()
+    {
+        $column = new LayoutColumn([
+            'blocks' => [
+                ['type' => 'heading'],
+                ['type' => 'text']
+            ]
+        ]);
+
+        $this->assertFalse($column->isEmpty());
+        $this->assertTrue($column->isNotEmpty());
+    }
 }
