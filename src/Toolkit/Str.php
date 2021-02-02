@@ -811,16 +811,16 @@ class Str
      * @license https://github.com/antalaron/mb-similar-text/blob/master/LICENSE MIT License
      * @param string $first
      * @param string $second
-     * @param bool $caseSensitive If true, compare strings with case sensitive
+     * @param bool $caseInsensitive If `true`, strings are compared case-insensitively
      * @return array matches: Number of matching chars in both strings
      *               percent: Similarity in percent
      */
-    public static function similarity(string $first, string $second, bool $caseSensitive = false): array
+    public static function similarity(string $first, string $second, bool $caseInsensitive = false): array
     {
         $matches = 0;
         $percent = 0.0;
 
-        if ($caseSensitive === false) {
+        if ($caseInsensitive === true) {
             $first  = static::lower($first);
             $second = static::lower($second);
         }
@@ -855,8 +855,7 @@ class Str
                 if ($pos1 && $pos2) {
                     $similarity = static::similarity(
                         static::substr($first, 0, $pos1),
-                        static::substr($second, 0, $pos2),
-                        $caseSensitive
+                        static::substr($second, 0, $pos2)
                     );
                     $matches += $similarity['matches'];
                 }
@@ -864,8 +863,7 @@ class Str
                 if (($pos1 + $max < $len1) && ($pos2 + $max < $len2)) {
                     $similarity = static::similarity(
                         static::substr($first, $pos1 + $max, $len1 - $pos1 - $max),
-                        static::substr($second, $pos2 + $max, $len2 - $pos2 - $max),
-                        $caseSensitive
+                        static::substr($second, $pos2 + $max, $len2 - $pos2 - $max)
                     );
                     $matches += $similarity['matches'];
                 }
