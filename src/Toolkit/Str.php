@@ -804,16 +804,16 @@ class Str
     }
 
     /**
-     * Calculate the similarity between two strings with multibyte support
+     * Calculates the similarity between two strings with multibyte support
      *
-     * @author Antal Áron
-     * @copyright Copyright (c) 2017, Antal Áron
+     * @author Based on the work of Antal Áron
+     * @copyright Original Copyright (c) 2017, Antal Áron
      * @license https://github.com/antalaron/mb-similar-text/blob/master/LICENSE MIT License
      * @param string $first
      * @param string $second
      * @param bool $caseSensitive If true, compare strings with case sensitive
      * @return array matches: Number of matching chars in both strings
-     *               percent: Optional variable passed by reference for the similarity in percent
+     *               percent: Similarity in percent
      */
     public static function similarity(string $first, string $second, bool $caseSensitive = false): array
     {
@@ -874,10 +874,7 @@ class Str
             $percent = ($matches * 200.0) / ($len1 + $len2);
         }
 
-        return [
-            'matches' => $matches,
-            'percent' => $percent
-        ];
+        return compact('matches', 'percent');
     }
 
     /**
