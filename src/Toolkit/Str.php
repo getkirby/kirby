@@ -804,78 +804,75 @@ class Str
     }
 
     /**
-     * Calculate the similarity between two strings with multibyte support
+     * Calculates the similarity between two strings with multibyte support
      *
-     * @author Antal Áron
-     * @copyright Copyright (c) 2017, Antal Áron
+     * @author Based on the work of Antal Áron
+     * @copyright Original Copyright (c) 2017, Antal Áron
      * @license https://github.com/antalaron/mb-similar-text/blob/master/LICENSE MIT License
      * @param string $first
      * @param string $second
-     * @param float|null $percent Optional variable passed by reference for the similarity in percent
-     * @param bool $caseSensitive If true, compare strings with case sensitive
-     * @return int Number of matching chars in both strings
+     * @param bool $caseInsensitive If `true`, strings are compared case-insensitively
+     * @return array matches: Number of matching chars in both strings
+     *               percent: Similarity in percent
      */
-    public static function similarity(string $first, string $second, float &$percent = null, bool $caseSensitive = false): int
+    public static function similarity(string $first, string $second, bool $caseInsensitive = false): array
     {
-        if ($caseSensitive === false) {
+        $matches = 0;
+        $percent = 0.0;
+
+        if ($caseInsensitive === true) {
             $first  = static::lower($first);
             $second = static::lower($second);
         }
 
-        if (static::length($first) + static::length($second) === 0) {
-            $percent = 0.0;
+        if (static::length($first) + static::length($second) > 0) {
+            $pos1 = $pos2 = $max = 0;
+            $len1 = static::length($first);
+            $len2 = static::length($second);
 
-            return 0;
-        }
+            for ($p = 0; $p < $len1; ++$p) {
+                for ($q = 0; $q < $len2; ++$q) {
+                    for (
+                        $l = 0;
+                        ($p + $l < $len1) && ($q + $l < $len2) &&
+                        static::substr($first, $p + $l, 1) === static::substr($second, $q + $l, 1);
+                        ++$l
+                    ) {
+                        // nothing to do
+                    }
 
-        $pos1 = $pos2 = $max = 0;
-        $len1 = static::length($first);
-        $len2 = static::length($second);
-
-        for ($p = 0; $p < $len1; ++$p) {
-            for ($q = 0; $q < $len2; ++$q) {
-                for (
-                    $l = 0;
-                    ($p + $l < $len1) && ($q + $l < $len2) &&
-                    static::substr($first, $p + $l, 1) === static::substr($second, $q + $l, 1);
-                    ++$l
-                ) {
-                    // nothing to do
-                }
-
-                if ($l > $max) {
-                    $max  = $l;
-                    $pos1 = $p;
-                    $pos2 = $q;
+                    if ($l > $max) {
+                        $max  = $l;
+                        $pos1 = $p;
+                        $pos2 = $q;
+                    }
                 }
             }
-        }
 
-        $similarity = $max;
+            $matches = $max;
 
-        if ($similarity) {
-            if ($pos1 && $pos2) {
-                $similarity += static::similarity(
-                    static::substr($first, 0, $pos1),
-                    static::substr($second, 0, $pos2),
-                    $percent,
-                    $caseSensitive
-                );
+            if ($matches) {
+                if ($pos1 && $pos2) {
+                    $similarity = static::similarity(
+                        static::substr($first, 0, $pos1),
+                        static::substr($second, 0, $pos2)
+                    );
+                    $matches += $similarity['matches'];
+                }
+
+                if (($pos1 + $max < $len1) && ($pos2 + $max < $len2)) {
+                    $similarity = static::similarity(
+                        static::substr($first, $pos1 + $max, $len1 - $pos1 - $max),
+                        static::substr($second, $pos2 + $max, $len2 - $pos2 - $max)
+                    );
+                    $matches += $similarity['matches'];
+                }
             }
 
-            if (($pos1 + $max < $len1) && ($pos2 + $max < $len2)) {
-                $similarity += static::similarity(
-                    static::substr($first, $pos1 + $max, $len1 - $pos1 - $max),
-                    static::substr($second, $pos2 + $max, $len2 - $pos2 - $max),
-                    $percent,
-                    $caseSensitive
-                );
-            }
+            $percent = ($matches * 200.0) / ($len1 + $len2);
         }
 
-        $percent = ($similarity * 200.0) / ($len1 + $len2);
-
-        return $similarity;
+        return compact('matches', 'percent');
     }
 
     /**
