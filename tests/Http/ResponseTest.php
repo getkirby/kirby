@@ -209,28 +209,33 @@ class ResponseTest extends TestCase
     public function testRedirect()
     {
         $response = Response::redirect();
-
-        $this->assertEquals('', $response->body());
-        $this->assertEquals(302, $response->code());
+        $this->assertSame('', $response->body());
+        $this->assertSame(302, $response->code());
         $this->assertEquals(['Location' => '/'], $response->headers());
     }
 
     public function testRedirectWithLocation()
     {
         $response = Response::redirect('https://getkirby.com');
+        $this->assertSame('', $response->body());
+        $this->assertSame(302, $response->code());
         $this->assertEquals(['Location' => 'https://getkirby.com'], $response->headers());
     }
 
     public function testRedirectWithInternationalLocation()
     {
-        $redirect = Response::redirect('https://täst.de');
-        $this->assertEquals(['Location' => 'https://xn--tst-qla.de'], $redirect->headers());
+        $response = Response::redirect('https://täst.de');
+        $this->assertSame('', $response->body());
+        $this->assertSame(302, $response->code());
+        $this->assertEquals(['Location' => 'https://xn--tst-qla.de'], $response->headers());
     }
 
     public function testRedirectWithResponseCode()
     {
-        $response = Response::redirect('/', 302);
-        $this->assertEquals(302, $response->code());
+        $response = Response::redirect('/', 301);
+        $this->assertSame('', $response->body());
+        $this->assertSame(301, $response->code());
+        $this->assertEquals(['Location' => '/'], $response->headers());
     }
 
     /**

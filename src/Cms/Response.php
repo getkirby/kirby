@@ -19,12 +19,12 @@ class Response extends \Kirby\Http\Response
      * parses locations with the Url::to method
      * first.
      *
-     * @param string|null $location
-     * @param int|null $code
+     * @param string $location
+     * @param int $code
      * @return self
      */
-    public static function redirect(?string $location = null, ?int $code = null)
+    public static function redirect(string $location = '/', int $code = 302)
     {
-        return parent::redirect(Url::to($location ?? '/'), $code);
+        return parent::redirect(Url::to($location), $code);
     }
 }
