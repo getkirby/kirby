@@ -78,6 +78,31 @@ class FileCacheTest extends TestCase
             'extension' => 'cache'
         ]);
         $this->assertSame($root . '/test1/test.cache', $method->invoke($cache, 'test'));
+
+        $cache = new FileCache([
+            'root'   => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame($root . '/test', $method->invoke($cache, '/test'));
+
+        $cache = new FileCache([
+            'root'   => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame($root . '/test', $method->invoke($cache, './../test'));
+
+        $cache = new FileCache([
+            'root'   => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame($root . '/hype-test', $method->invoke($cache, './../hype-test'));
+
+        $cache = new FileCache([
+            'root'   => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame($root . '/dash.test', $method->invoke($cache, './../dash.test'));
+
+        $cache = new FileCache([
+            'root'   => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame($root . '/sub-test', $method->invoke($cache, '/sub/test/'));
     }
 
     /**

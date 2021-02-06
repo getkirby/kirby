@@ -4,6 +4,7 @@ namespace Kirby\Cache;
 
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 
 /**
  * File System Cache Driver
@@ -68,6 +69,11 @@ class FileCache extends Cache
      */
     protected function file(string $key): string
     {
+        // sanitize the cache key to strip unwanted special characters
+        // and avoid relative paths
+        $key  = Str::replace($key, ['../', './'], '');
+        $key  = Str::slug($key, '-', 'a-z0-9._-');
+
         $file = $this->root . '/' . $key;
 
         if (isset($this->options['extension'])) {
