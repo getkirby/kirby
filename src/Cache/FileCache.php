@@ -4,7 +4,6 @@ namespace Kirby\Cache;
 
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
-use Kirby\Toolkit\Str;
 
 /**
  * File System Cache Driver
