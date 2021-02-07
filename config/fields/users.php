@@ -14,10 +14,6 @@ return [
         'before'      => null,
         'icon'        => null,
         'placeholder' => null,
-
-        'value' => function ($value = null) {
-            return $this->toUsers($value);
-        },
     ],
     'computed' => [
         'default' => function () {
@@ -32,6 +28,9 @@ return [
             }
 
             return $this->toUsers($this->default);
+        },
+        'value' => function () {
+            return $this->toUsers($this->value);
         }
     ],
     'methods' => [

@@ -81,13 +81,7 @@ return [
          */
         'time' => function ($time = false) {
             return $time;
-        },
-        /**
-         * Must be a parseable date string
-         */
-        'value' => function ($value = null) {
-            return $value;
-        },
+        }
     ],
     'computed' => [
         'default' => function () {

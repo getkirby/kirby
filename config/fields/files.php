@@ -32,10 +32,6 @@ return [
          */
         'size' => function (string $size = 'auto') {
             return $size;
-        },
-
-        'value' => function ($value = null) {
-            return $value;
         }
     ],
     'computed' => [

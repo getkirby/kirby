@@ -21,14 +21,14 @@ return [
          */
         'step' => function ($step = null) {
             return $this->toNumber($step);
-        },
-        'value' => function ($value = null) {
-            return $this->toNumber($value);
         }
     ],
     'computed' => [
         'default' => function () {
             return $this->toNumber($this->default);
+        },
+        'value' => function () {
+            return $this->toNumber($this->value);
         }
     ],
     'methods' => [

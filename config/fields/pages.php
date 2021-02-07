@@ -41,15 +41,14 @@ return [
          */
         'subpages' => function (bool $subpages = true) {
             return $subpages;
-        },
-
-        'value' => function ($value = null) {
-            return $this->toPages($value);
-        },
+        }
     ],
     'computed' => [
         'default' => function () {
             return $this->toPages($this->default);
+        },
+        'value' => function () {
+            return $this->toPages($this->value);
         }
     ],
     'methods' => [

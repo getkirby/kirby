@@ -71,9 +71,6 @@ return [
             if (is_string($step) === true) {
                 return array_merge($default, ['unit' => strtolower($step)]);
             }
-        },
-        'value' => function ($value = null) {
-            return $value;
         }
     ],
     'computed' => [

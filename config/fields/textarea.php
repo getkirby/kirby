@@ -71,15 +71,14 @@ return [
          */
         'spellcheck' => function (bool $spellcheck = true) {
             return $spellcheck;
-        },
-
-        'value' => function (string $value = null) {
-            return trim($value);
         }
     ],
     'computed' => [
         'default' => function () {
             return trim($this->default);
+        },
+        'value' => function () {
+            return trim($this->value);
         }
     ],
     'api' => function () {

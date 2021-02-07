@@ -31,10 +31,7 @@ return [
          */
         'min' => function (int $min = null) {
             return $min;
-        },
-        'value' => function ($value = null) {
-            return Str::split($value, ',');
-        },
+        }
     ],
     'computed' => [
         'default' => function () {
@@ -43,7 +40,7 @@ return [
             return $this->sanitizeOptions($default);
         },
         'value' => function () {
-            return $this->sanitizeOptions($this->value);
+            return $this->sanitizeOptions(Str::split($this->value, ','));
         },
     ],
     'save' => function ($value): string {
