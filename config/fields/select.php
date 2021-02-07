@@ -20,5 +20,10 @@ return [
         'placeholder' => function (string $placeholder = '—') {
             return $placeholder;
         },
-    ]
+    ],
+    'computed' => [
+        'placeholder' => function () {
+            return $this->toString($this->placeholder);
+        }
+    ],
 ];
