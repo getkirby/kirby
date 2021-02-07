@@ -69,12 +69,7 @@ class FileCache extends Cache
      */
     protected function file(string $key): string
     {
-        // sanitize the cache key to strip unwanted special characters
-        // and avoid relative paths
-        $key  = Str::replace($key, ['../', './'], '');
-        $key  = Str::slug($key, '-', 'a-z0-9._-');
-
-        $file = $this->root . '/' . $key;
+        $file = $this->root . '/' . basename($key);
 
         if (isset($this->options['extension'])) {
             return $file . '.' . $this->options['extension'];
