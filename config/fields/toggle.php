@@ -12,12 +12,6 @@ return [
         'placeholder' => null,
 
         /**
-         * Default value which will be saved when a new page/user/file is created
-         */
-        'default' => function ($default = null) {
-            return $this->default = $default;
-        },
-        /**
          * Sets the text next to the toggle. The text can be a string or an array of two options. The first one is the negative text and the second one the positive. The text will automatically switch when the toggle is triggered.
          */
         'text' => function ($value = null) {

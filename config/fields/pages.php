@@ -16,13 +16,6 @@ return [
         'placeholder' => null,
 
         /**
-         * Default selected page(s) when a new page/file/user is created
-         */
-        'default' => function ($default = null) {
-            return $this->toPages($default);
-        },
-
-        /**
          * Changes the layout of the selected files. Available layouts: `list`, `cards`
          */
         'layout' => function (string $layout = 'list') {
@@ -55,10 +48,9 @@ return [
         },
     ],
     'computed' => [
-        /**
-         * Unset inherited computed
-         */
-        'default' => null
+        'default' => function () {
+            return $this->toPages($this->default);
+        }
     ],
     'methods' => [
         'pageResponse' => function ($page) {

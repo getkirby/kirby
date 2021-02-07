@@ -21,12 +21,6 @@ return [
             return $columns;
         },
         /**
-         * Default value for the field, which will be used when a page/file/user is created
-         */
-        'default' => function ($default = null) {
-            return $default;
-        },
-        /**
          * Maximum number of checked boxes
          */
         'max' => function (int $max = null) {

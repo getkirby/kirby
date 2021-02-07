@@ -24,13 +24,6 @@ return [
         },
 
         /**
-         * Sets the default text when a new page/file/user is created
-         */
-        'default' => function (string $default = null) {
-            return trim($default);
-        },
-
-        /**
          * Sets the options for the files picker
          */
         'files' => function ($files = []) {
@@ -82,6 +75,11 @@ return [
 
         'value' => function (string $value = null) {
             return trim($value);
+        }
+    ],
+    'computed' => [
+        'default' => function () {
+            return trim($this->default);
         }
     ],
     'api' => function () {

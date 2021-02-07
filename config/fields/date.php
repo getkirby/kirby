@@ -20,14 +20,6 @@ return [
             return $calendar;
         },
 
-
-        /**
-         * Default date when a new page/file/user gets created
-         */
-        'default' => function (string $default = null) {
-            return $default;
-        },
-
         /**
          * Custom format (dayjs tokens: `DD`, `MM`, `YYYY`) that is
          * used to display the field in the Panel
