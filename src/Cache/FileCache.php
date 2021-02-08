@@ -68,7 +68,7 @@ class FileCache extends Cache
      */
     protected function file(string $key): string
     {
-        $file = $this->root . '/' . $key;
+        $file = $this->root . '/' . basename($key);
 
         if (isset($this->options['extension'])) {
             return $file . '.' . $this->options['extension'];
