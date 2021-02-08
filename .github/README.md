@@ -1,10 +1,10 @@
 [<img src="http://getkirby.com/assets/images/github/kirby.jpg" width="300">](https://getkirby.com)   
 
-[![Release](https://flat.badgen.net/github/release/getkirby/kirby/stable?color=yellow)](https://github.com/getkirby/kirby/releases/latest)
-[![CI Status](https://flat.badgen.net/github/checks/getkirby/kirby/master)](https://github.com/getkirby/kirby/actions?query=workflow%3ACI)
-[![Coverage Status](https://flat.badgen.net/codecov/c/gh/getkirby/kirby/master?label=coverage)](https://codecov.io/gh/getkirby/kirby)
-[![Downloads](https://flat.badgen.net/packagist/dt/getkirby/cms?color=red)](https://github.com/getkirby/kirby/releases/latest)
-[![Twitter](https://flat.badgen.net/twitter/follow/getkirby?color=cyan)](https://twitter.com/getkirby)
+[![Release](https://badgen.net/github/release/getkirby/kirby/stable?color=yellow)](https://github.com/getkirby/kirby/releases/latest)
+[![CI Status](https://github.com/getkirby/kirby/workflows/CI/badge.svg)](https://github.com/getkirby/kirby/actions?query=workflow%3ACI)
+[![Coverage Status](https://badgen.net/codecov/c/gh/getkirby/kirby/master?label=coverage)](https://codecov.io/gh/getkirby/kirby)
+[![Downloads](https://badgen.net/packagist/dt/getkirby/cms?color=red)](https://github.com/getkirby/kirby/releases/latest)
+[![Twitter](https://badgen.net/twitter/follow/getkirby?color=cyan)](https://twitter.com/getkirby)
 
 **Kirby: the CMS that adapts to any project, loved by developers and editors alike.**  
 With Kirby, you build your own ideal interface. Combine forms, galleries, articles, spreadsheets and more into an amazing editing experience. You can learn more about Kirby at [getkirby.com](https://getkirby.com).  
