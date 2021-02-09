@@ -6,5 +6,5 @@ contact_links:
     url: https://forum.getkirby.com
     about: For support matters, head over to our forum.
   - name: Translation
-    url: https://www.transifex.com/getkirby/panel
+    url: https://translation.getkirby.com
     about: Contribute to language translations for the Panel
