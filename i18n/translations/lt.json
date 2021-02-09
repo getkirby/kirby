@@ -232,6 +232,7 @@
   "field.blocks.image.name": "Nuotrauka",
   "field.blocks.image.placeholder": "Pasirinkite nuotrauką",
   "field.blocks.image.ratio": "Proporcijos",
+  "field.blocks.image.url": "Image URL",
   "field.blocks.list.name": "Sąrašas",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Tekstas",

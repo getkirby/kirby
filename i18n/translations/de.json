@@ -232,6 +232,7 @@
   "field.blocks.image.name": "Bild",
   "field.blocks.image.placeholder": "Bild auswählen",
   "field.blocks.image.ratio": "Seitenverhältnis",
+  "field.blocks.image.url": "Bild URL",
   "field.blocks.list.name": "Liste",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",

@@ -63,7 +63,7 @@
 
   "error.field.converter.invalid": "컨버터({converter})가 올바르지 않습니다.",
 
-  "error.file.changeName.empty": "파일명을 입력하세요.",
+  "error.file.changeName.empty": "이름을 입력하세요.",
   "error.file.changeName.permission": "파일명({filename})을 변경할 권한이 없습니다.",
   "error.file.duplicate": "파일명이 같은 파일({filename})이 있습니다.",
   "error.file.extension.forbidden": "이 확장자({extension})는 업로드할 수 없습니다.",
@@ -232,6 +232,7 @@
   "field.blocks.image.name": "이미지",
   "field.blocks.image.placeholder": "이미지 선택",
   "field.blocks.image.ratio": "비율",
+  "field.blocks.image.url": "Image URL",
   "field.blocks.list.name": "목록",
   "field.blocks.markdown.name": "마크다운",
   "field.blocks.markdown.label": "마크다운",
@@ -300,7 +301,7 @@
   "language.direction.rtl": "오른쪽에서 왼쪽",
   "language.locale": "PHP 로캘 문자열",
   "language.locale.warning": "사용자 지정 로캘을 사용 중입니다. 폴더(<code>/site/languages</code>)의 언어 파일을 수정하세요.",
-  "language.name": "언어명",
+  "language.name": "이름",
   "language.updated": "언어를 변경했습니다.",
 
   "languages": "언어",
@@ -368,7 +369,7 @@
   "months.september": "9\uc6d4",
 
   "more": "더 보기",
-  "name": "파일명",
+  "name": "이름",
   "next": "다음",
   "off": "끔",
   "on": "켬",
@@ -417,7 +418,7 @@
   "prev": "이전",
   "preview": "미리 보기",
   "remove": "삭제",
-  "rename": "파일명 변경",
+  "rename": "이름 변경",
   "replace": "\uad50\uccb4",
   "retry": "\ub2e4\uc2dc \uc2dc\ub3c4",
   "revert": "복원",

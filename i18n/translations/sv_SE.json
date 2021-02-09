@@ -232,6 +232,7 @@
   "field.blocks.image.name": "Bild",
   "field.blocks.image.placeholder": "Välj en bild",
   "field.blocks.image.ratio": "Bildförhållande",
+  "field.blocks.image.url": "Image URL",
   "field.blocks.list.name": "Punktlista",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",

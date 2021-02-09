@@ -232,6 +232,7 @@
   "field.blocks.image.name": "Immagine",
   "field.blocks.image.placeholder": "Seleziona un'immagine",
   "field.blocks.image.ratio": "Rapporto",
+  "field.blocks.image.url": "Image URL",
   "field.blocks.list.name": "Lista",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Testo",
