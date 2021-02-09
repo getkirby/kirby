@@ -232,6 +232,7 @@
   "field.blocks.image.name": "Görsel",
   "field.blocks.image.placeholder": "Bir görsel seçin",
   "field.blocks.image.ratio": "Oran",
+  "field.blocks.image.url": "Görsel URL",
   "field.blocks.list.name": "Liste",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Metin",
