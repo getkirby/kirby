@@ -30,6 +30,9 @@ export default {
     }
   },
   methods: {
+    onCodeChanges() {
+      return false;
+    },
     onNameChanges() {
       return false;
     },

@@ -93,7 +93,7 @@
   "error.language.duplicate": "Die Sprache besteht bereits",
   "error.language.name": "Bitte gib einen gültigen Namen für die Sprache an",
 
-  "error.layout.validation.block": "Fehler in Block {blockindex} in Layout {layoutIndex}",
+  "error.layout.validation.block": "Fehler in Block {blockIndex} in Layout {layoutIndex}",
   "error.layout.validation.settings": "Fehler in den Einstellungen von Layout {index}",
 
   "error.license.format": "Bitte gib einen gültigen Lizenzschlüssel ein",
@@ -232,6 +232,7 @@
   "field.blocks.image.name": "Bild",
   "field.blocks.image.placeholder": "Bild auswählen",
   "field.blocks.image.ratio": "Seitenverhältnis",
+  "field.blocks.image.url": "Bild URL",
   "field.blocks.list.name": "Liste",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Text",

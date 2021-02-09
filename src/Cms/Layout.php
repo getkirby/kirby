@@ -76,6 +76,31 @@ class Layout extends Item
     }
 
     /**
+     * Checks if the layout is empty
+     *
+     * @return bool
+     */
+    public function isEmpty(): bool
+    {
+        return $this
+            ->columns()
+            ->filter(function ($column) {
+                return $column->isNotEmpty();
+            })
+            ->count() === 0;
+    }
+
+    /**
+     * Checks if the layout is not empty
+     *
+     * @return bool
+     */
+    public function isNotEmpty(): bool
+    {
+        return $this->isEmpty() === false;
+    }
+
+    /**
      * The result is being sent to the editor
      * via the API in the panel
      *

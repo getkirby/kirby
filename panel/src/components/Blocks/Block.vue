@@ -260,4 +260,7 @@ export default {
   vertical-align: middle;
   display: inline-grid;
 }
+[data-disabled] .k-block-container {
+  background: $color-background;
+}
 </style>

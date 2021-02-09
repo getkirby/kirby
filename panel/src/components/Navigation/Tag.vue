@@ -66,4 +66,10 @@ export default {
   background: rgba(255, 255, 255, 0.2);
   color: #fff;
 }
+[data-disabled] .k-tag {
+  background-color: $color-gray-600;
+}
+[data-disabled] .k-tag .k-tag-toggle {
+  display: none;
+}
 </style>

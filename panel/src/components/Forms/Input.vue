@@ -134,6 +134,10 @@ export default {
   pointer-events: none;
 }
 
+[data-disabled] .k-input-icon {
+  color: $color-gray-600;
+}
+
 .k-input[data-theme="field"] {
   line-height: 1;
   border: $field-input-border;

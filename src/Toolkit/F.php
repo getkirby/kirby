@@ -525,9 +525,12 @@ class F
      * Converts an integer size into a human readable format
      *
      * @param mixed $size The file size or a file path
-     * @return string|int
+     * @param string|null|false $locale Locale for number formatting,
+     *                                  `null` for the current locale,
+     *                                  `false` to disable number formatting
+     * @return string
      */
-    public static function niceSize($size): string
+    public static function niceSize($size, $locale = null): string
     {
         // file mode
         if (is_string($size) === true && file_exists($size) === true) {
@@ -539,11 +542,18 @@ class F
 
         // avoid errors for invalid sizes
         if ($size <= 0) {
-            return '0 KB';
+            return '0 KB';
         }
 
         // the math magic
-        return round($size / pow(1024, ($i = floor(log($size, 1024)))), 2) . ' ' . static::$units[$i];
+        $size = round($size / pow(1024, ($unit = floor(log($size, 1024)))), 2);
+
+        // format the number if requested
+        if ($locale !== false) {
+            $size = I18n::formatNumber($size, $locale);
+        }
+
+        return $size . ' ' . static::$units[$unit];
     }
 
     /**

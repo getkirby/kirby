@@ -1,10 +1,9 @@
 <template>
   <k-writer
     ref="input"
+    v-bind="$props"
     :extensions="extensions"
-    :marks="marks"
     :nodes="['bulletList', 'orderedList']"
-    :value="value"
     class="k-list-input"
     @input="onInput"
   />
@@ -46,6 +45,9 @@ export default {
         this.$emit("input", "");
         return;
       }
+
+      // removes <p> tags from value
+      html = html.replace(/(<p>|<\/p>)/gi, "");
 
       this.$emit("input", html);
     }

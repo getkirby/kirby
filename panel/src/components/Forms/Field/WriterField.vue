@@ -6,6 +6,7 @@
     class="k-writer-field"
   >
     <k-input
+      v-bind="$props"
       :after="after"
       :before="before"
       :icon="icon"

@@ -8,7 +8,7 @@
     "core"
   ],
   "homepage": "https://getkirby.com",
-  "version": "3.5.1",
+  "version": "3.5.2",
   "license": "proprietary",
   "authors": [
     {
@@ -47,7 +47,7 @@
     ]
   },
   "scripts": {
-    "post-update-cmd": "curl -o cacert.pem https://curl.haxx.se/ca/cacert.pem",
+    "post-update-cmd": "curl -o cacert.pem https://curl.se/ca/cacert.pem",
     "analyze": [
       "@analyze:composer",
       "@analyze:psalm",

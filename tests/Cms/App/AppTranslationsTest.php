@@ -118,13 +118,36 @@ class AppTranslationsTest extends TestCase
             ],
             'translations' => [
                 'de' => [
+                    'hello' => 'Hallo'
                 ]
             ]
         ]);
 
         I18n::$locale = 'de';
 
-        $this->assertEquals('Knopf', t('button'));
+        // translation
+        $translation = $app->translation('de');
+
+        $this->assertInstanceOf('Kirby\Cms\Translation', $translation);
+        $this->assertIsArray($translation->data());
+        $this->assertArrayHasKey('button', $translation->data());
+        $this->assertArrayHasKey('hello', $translation->data());
+        $this->assertSame('Knopf', $translation->data()['button']);
+        $this->assertSame('Hallo', $translation->data()['hello']);
+        $this->assertSame('Knopf', t('button'));
+        $this->assertSame('Hallo', t('hello'));
+
+        // translations
+        $translation = $app->translations()->find('de');
+
+        $this->assertInstanceOf('Kirby\Cms\Translation', $translation);
+        $this->assertIsArray($translation->data());
+        $this->assertArrayHasKey('button', $translation->data());
+        $this->assertArrayHasKey('hello', $translation->data());
+        $this->assertSame('Knopf', $translation->data()['button']);
+        $this->assertSame('Hallo', $translation->data()['hello']);
+        $this->assertSame('Knopf', t('button'));
+        $this->assertSame('Hallo', t('hello'));
     }
 
     public function testTranslationFallback()

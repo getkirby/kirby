@@ -23,8 +23,8 @@
           </k-dropdown>
         </template>
         <template v-else>
-          <k-button icon="add" class="k-field-options-button" @click="open">
-            {{ $t('add') }}
+          <k-button icon="check" class="k-field-options-button" @click="open">
+            {{ $t('select') }}
           </k-button>
         </template>
       </k-button-group>

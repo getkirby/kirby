@@ -533,7 +533,9 @@ trait PageActions
                 $lang   = $this->kirby()->defaultLanguage() ?? null;
                 $field  = $this->content($lang)->get('date');
                 $date   = $field->isEmpty() ? 'now' : $field;
-                return date($format, strtotime($date));
+                // TODO: in 3.6.0 throw an error if date() doesn't
+                // return a number, see https://github.com/getkirby/kirby/pull/3061#discussion_r552783943
+                return (int)date($format, strtotime($date));
                 break;
             case 'default':
 

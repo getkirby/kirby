@@ -60,6 +60,15 @@ export default {
   background: lighten($color-gray-900, 10%) url($pattern);
   color: $color-white;
 }
+[data-disabled] .k-icon[data-back="black"] {
+  background-color: $color-gray-600;
+}
+[data-disabled] .k-icon[data-back="pattern"] {
+  background: lighten($color-gray-600, 5%) url($pattern);
+  svg {
+    opacity: 1;
+  }
+}
 .k-icon[data-size="medium"] svg {
   width: 2rem;
   height: 2rem;
@@ -73,14 +82,12 @@ export default {
   line-height: 1;
   font-style: normal;
   font-size: 1rem;
-  margin-left: -.3rem;
 }
 
 /* fix emoji alignment on high-res screens */
 @media only screen and (-webkit-min-device-pixel-ratio: 2), not all, not all, not all, only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   .k-icon-emoji {
     font-size: 1.25rem;
-    margin-left: -.15rem;
   }
 }
 

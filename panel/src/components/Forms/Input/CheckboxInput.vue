@@ -114,6 +114,10 @@ export default {
   border-color: $color-gray-900;
   background: $color-gray-900;
 }
+[data-disabled] .k-checkbox-input-native:checked + .k-checkbox-input-icon {
+  border-color: $color-gray-600;
+  background: $color-gray-600;
+}
 .k-checkbox-input-native:checked + .k-checkbox-input-icon svg {
   display: block;
 }

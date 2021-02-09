@@ -23,7 +23,16 @@ export default {
 .k-text {
   line-height: 1.5em;
 }
-.k-text p {
+.k-text ol,
+.k-text ul {
+  margin-left: 1rem;
+}
+.k-text li {
+  list-style: inherit;
+}
+.k-text p,
+.k-text > ol,
+.k-text > ul {
   margin-bottom: 1.5em;
 }
 .k-text a {

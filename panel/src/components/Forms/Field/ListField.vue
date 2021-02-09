@@ -8,6 +8,7 @@
     <k-input
       :id="_uid"
       ref="input"
+      v-bind="$props"
       :marks="marks"
       :value="value"
       type="list"

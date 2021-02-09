@@ -578,6 +578,75 @@ EOT;
         $this->assertTrue(Str::startsWith($string, 'hellö', true));
     }
 
+    public function testSimilarity()
+    {
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('foo', 'bar'));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('foo', ''));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('', 'foo'));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('', ''));
+
+        $this->assertSame([
+            'matches' => 3,
+            'percent' => 66.66666666666667
+        ], Str::similarity('foo', 'fooBar'));
+
+        $this->assertSame([
+            'matches' => 3,
+            'percent' => 100.0
+        ], Str::similarity('foo', 'foo'));
+
+        $this->assertSame([
+            'matches' => 4,
+            'percent' => 100.0
+        ], Str::similarity('tête', 'tête'));
+
+        $this->assertSame([
+            'matches' => 3,
+            'percent' => 75.0
+        ], Str::similarity('Tête', 'tête'));
+
+        $this->assertSame([
+            'matches' => 0,
+            'percent' => 0.0
+        ], Str::similarity('foo', 'FOO'));
+
+        $this->assertSame([
+            'matches' => 1,
+            'percent' => 20.0
+        ], Str::similarity('Kirby', 'KIRBY'));
+
+        // case-insensitive
+        $this->assertSame([
+            'matches' => 4,
+            'percent' => 100.0
+        ], Str::similarity('Tête', 'tête', true));
+
+        $this->assertSame([
+            'matches' => 2,
+            'percent' => 66.66666666666667
+        ], Str::similarity('foo', 'FOU', true));
+
+        $this->assertSame([
+            'matches' => 5,
+            'percent' => 100.0
+        ], Str::similarity('Kirby', 'KIRBY', true));
+    }
+
     public function testSubstr()
     {
         $string = 'äöü';
