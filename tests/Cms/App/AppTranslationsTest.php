@@ -114,6 +114,12 @@ class AppTranslationsTest extends TestCase
                     'translations' => [
                         'button' => 'Knopf'
                     ]
+                ],
+                [
+                    'code'         => 'en',
+                    'translations' => [
+                        'hello' => 'Hello'
+                    ]
                 ]
             ],
             'translations' => [

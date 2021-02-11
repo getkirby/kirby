@@ -213,11 +213,14 @@ trait AppTranslations
         // injects languages translations
         if ($languages = $this->languages()) {
             foreach ($languages as $language) {
-                // merges language translations with extension translations
-                if ($language->translations()) {
-                    $translations[$language->code()] = array_merge(
-                        $translations[$language->code()],
-                        $language->translations()
+                $languageCode         = $language->code();
+                $languageTranslations = $language->translations();
+
+                // merges language translations with extensions translations
+                if (empty($languageTranslations) === false) {
+                    $translations[$languageCode] = array_merge(
+                        $translations[$languageCode] ?? [],
+                        $languageTranslations
                     );
                 }
             }
