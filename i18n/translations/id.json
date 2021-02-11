@@ -232,7 +232,7 @@
   "field.blocks.image.name": "Gambar",
   "field.blocks.image.placeholder": "Pilih gambar",
   "field.blocks.image.ratio": "Rasio",
-  "field.blocks.image.url": "Image URL",
+  "field.blocks.image.url": "URL Gambar",
   "field.blocks.list.name": "Daftar",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Teks",
