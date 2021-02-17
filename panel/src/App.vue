@@ -122,10 +122,12 @@ export default {
     fatal(html) {
       if (html !== null) {
         this.$nextTick(() => {
-          let doc = this.$refs.fatal.contentWindow.document;
-          doc.open();
-          doc.write(html);
-          doc.close();
+          if (this.$refs.fatal && this.$refs.contentWindow) {
+            let doc = this.$refs.fatal.contentWindow.document;
+            doc.open();
+            doc.write(html);
+            doc.close();
+          }
         })
       }
     }
