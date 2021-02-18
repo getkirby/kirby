@@ -82,27 +82,104 @@ class FileCacheTest extends TestCase
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file',
         ]);
-        $this->assertSame($root . '/test', $method->invoke($cache, '/test'));
+        $this->assertSame($root . '/_empty/test', $method->invoke($cache, '/test'));
 
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file',
         ]);
-        $this->assertSame($root . '/test', $method->invoke($cache, '../../test'));
+        $this->assertSame($root . '/test/_empty', $method->invoke($cache, 'test/'));
 
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file',
         ]);
-        $this->assertSame($root . '/hype-test', $method->invoke($cache, './hype-test'));
+        $this->assertSame($root . '/test/_backslash/foo/bar', $method->invoke($cache, 'test\\foo/bar'));
 
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file',
         ]);
-        $this->assertSame($root . '/dash.test', $method->invoke($cache, './dash.test'));
+        $this->assertSame($root . '/test/_backslash/_empty/foo/_backslash/bar', $method->invoke($cache, 'test\\/foo\\bar'));
 
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file',
         ]);
-        $this->assertSame($root . '/test', $method->invoke($cache, '../sub/test/'));
+        $this->assertSame($root . '/_empty/test/_empty', $method->invoke($cache, '/test/'));
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame(
+            $root . '/_9d891e731f75deae56884d79e9816736b7488080/_9d891e731f75deae56884d79e9816736b7488080/test',
+            $method->invoke($cache, '../../test')
+        );
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame(
+            $root . '/_9d891e731f75deae56884d79e9816736b7488080/test-cache_4caff0c1d0c8eb128ed9896b4b0258ef2848816b',
+            $method->invoke($cache, '../test.cache')
+        );
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame($root . '/_3a52ce780950d4d969792a2559cd519d7ee8c727/test-page', $method->invoke($cache, './test-page'));
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame(
+            $root . '/_3a52ce780950d4d969792a2559cd519d7ee8c727/test-cache_4caff0c1d0c8eb128ed9896b4b0258ef2848816b',
+            $method->invoke($cache, './test.cache')
+        );
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame(
+            $root . '/_9d891e731f75deae56884d79e9816736b7488080/pages/test/_empty',
+            $method->invoke($cache, '../pages/test/')
+        );
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame(
+            $root . '/_9d891e731f75deae56884d79e9816736b7488080/pages/test-cache_4caff0c1d0c8eb128ed9896b4b0258ef2848816b',
+            $method->invoke($cache, '../pages/test.cache')
+        );
+
+        $cache = new FileCache([
+            'root'      => $root = __DIR__ . '/fixtures/file',
+            'extension' => 'cache'
+        ]);
+        $this->assertSame(
+            $root . '/_9d891e731f75deae56884d79e9816736b7488080/pages/test.cache',
+            $method->invoke($cache, '../pages/test')
+        );
+
+        $cache = new FileCache([
+            'root'   => $root = __DIR__ . '/fixtures/file',
+            'prefix' => 'prefix'
+        ]);
+        $this->assertSame(
+            $root . '/prefix/_9d891e731f75deae56884d79e9816736b7488080/pages/test',
+            $method->invoke($cache, '../pages/test')
+        );
+
+        $cache = new FileCache([
+            'root'      => $root = __DIR__ . '/fixtures/file',
+            'prefix'    => 'prefix',
+            'extension' => 'cache'
+        ]);
+        $this->assertSame(
+            $root . '/prefix/_9d891e731f75deae56884d79e9816736b7488080/pages/test.cache',
+            $method->invoke($cache, '../pages/test')
+        );
+        $this->assertSame(
+            $root . '/prefix/_9d891e731f75deae56884d79e9816736b7488080/pages/test-invalid_76a6bcc476cffdcb56321fbbb4edfd19fece82c6.cache',
+            $method->invoke($cache, '../pages/test.invalid')
+        );
     }
 
     /**
