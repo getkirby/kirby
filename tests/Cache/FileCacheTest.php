@@ -209,6 +209,11 @@ class FileCacheTest extends TestCase
         $this->assertFalse($cache->exists('foo'));
         $this->assertNull($cache->retrieve('foo'));
 
+        $this->assertDirectoryDoesNotExist($root . '/bar');
+        $this->assertTrue($cache->set('bar/baz', 'Another basic value', 10));
+        $this->assertFileExists($root . '/bar/baz');
+        $this->assertSame('Another basic value', $cache->retrieve('bar/baz')->value());
+
         $this->assertFalse($cache->remove('doesnotexist'));
     }
 
@@ -234,6 +239,11 @@ class FileCacheTest extends TestCase
         $this->assertSame('A basic value', $cache->retrieve('foo')->value());
         $this->assertSame($time, $cache->created('foo'));
         $this->assertSame($time + 600, $cache->expires('foo'));
+
+        $this->assertDirectoryDoesNotExist($root . '/bar');
+        $this->assertTrue($cache->set('bar/baz', 'Another basic value', 10));
+        $this->assertFileExists($root . '/bar/baz.cache');
+        $this->assertSame('Another basic value', $cache->retrieve('bar/baz')->value());
 
         $this->assertTrue($cache->remove('foo'));
         $this->assertFileDoesNotExist($root . '/foo.cache');
@@ -273,6 +283,11 @@ class FileCacheTest extends TestCase
         touch($root . '/test2/foo', $time);
         $this->assertTrue($cache2->exists('foo'));
 
+        $this->assertDirectoryDoesNotExist($root . '/test1/bar');
+        $this->assertTrue($cache1->set('bar/baz', 'Another basic value', 10));
+        $this->assertFileExists($root . '/test1/bar/baz');
+        $this->assertSame('Another basic value', $cache1->retrieve('bar/baz')->value());
+
         $this->assertSame('A basic value', $cache1->retrieve('foo')->value());
         $this->assertTrue($cache1->remove('foo'));
         $this->assertFileDoesNotExist($root . '/test1/foo');
@@ -294,14 +309,17 @@ class FileCacheTest extends TestCase
         $cache->set('a', 'A basic value');
         $cache->set('b', 'A basic value');
         $cache->set('c', 'A basic value');
+        $cache->set('d/a', 'A basic value');
         $this->assertFileExists($root . '/a');
         $this->assertFileExists($root . '/b');
         $this->assertFileExists($root . '/c');
+        $this->assertFileExists($root . '/d/a');
 
         $this->assertTrue($cache->flush());
         $this->assertFileDoesNotExist($root . '/a');
         $this->assertFileDoesNotExist($root . '/b');
         $this->assertFileDoesNotExist($root . '/c');
+        $this->assertDirectoryDoesNotExist($root . '/d');
     }
 
     /**
@@ -322,15 +340,21 @@ class FileCacheTest extends TestCase
         $cache1->set('b', 'A basic value');
         $cache2->set('a', 'A basic value');
         $cache2->set('b', 'A basic value');
+        $cache1->set('c/a', 'A basic value');
+        $cache2->set('c/a', 'A basic value');
         $this->assertFileExists($root . '/test1/a');
         $this->assertFileExists($root . '/test1/b');
         $this->assertFileExists($root . '/test2/a');
         $this->assertFileExists($root . '/test2/b');
+        $this->assertFileExists($root . '/test2/c/a');
+        $this->assertFileExists($root . '/test2/c/a');
 
         $this->assertTrue($cache1->flush());
         $this->assertFileDoesNotExist($root . '/test1/a');
         $this->assertFileDoesNotExist($root . '/test1/b');
+        $this->assertDirectoryDoesNotExist($root . '/test1/c');
         $this->assertFileExists($root . '/test2/a');
         $this->assertFileExists($root . '/test2/b');
+        $this->assertFileExists($root . '/test2/c/a');
     }
 }
