@@ -1,36 +1,32 @@
 import Mark from "../Mark";
-import Vue from "vue";
 
-export default class Link extends Mark {
+export default class Email extends Mark {
 
   get button() {
     return {
-      icon: "url",
-      /**
-       * @todo replace with `window.panel.$t()` after merging fiber
-       */
-      label: Vue.$t("toolbar.button.link")
+      icon: "email",
+      label: "Email"
     };
   }
 
   commands() {
     return {
-      "link": () => {
-        this.editor.emit("link");
+      "email": () => {
+        this.editor.emit("email");
       },
-      "insertLink": (attrs = {}) => {
+      "insertEmail": (attrs = {}) => {
         if (attrs.href) {
           return this.update(attrs);
         }
       },
-      "removeLink": () => {
+      "removeEmail": () => {
         return this.remove();
       },
-      "toggleLink": (attrs = {}) => {
+      "toggleEmail": (attrs = {}) => {
         if (attrs.href && attrs.href.length > 0) {
-          this.editor.command("insertLink", attrs);
+          this.editor.command("insertEmail", attrs);
         } else {
-          this.editor.command("removeLink");
+          this.editor.command("removeEmail");
         }
       }
     };
@@ -43,13 +39,13 @@ export default class Link extends Mark {
   }
 
   get name() {
-    return "link";
+    return "email";
   }
 
   pasteRules({ type, utils }) {
     return [
       utils.pasteRule(
-        /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z]{2,}\b([-a-zA-Z0-9@:%_+.~#?&//=,]*)/gi,
+        /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/gi,
         type,
         url => ({ href: url }),
       ),
@@ -61,11 +57,11 @@ export default class Link extends Mark {
       {
         props: {
           handleClick: (view, pos, event) => {
-            const attrs = this.editor.getMarkAttrs("link");
+            const attrs = this.editor.getMarkAttrs("email");
 
             if (attrs.href && event.altKey === true && event.target instanceof HTMLAnchorElement) {
               event.stopPropagation()
-              window.open(attrs.href, attrs.target)
+              window.open(attrs.href)
             }
           },
         },
@@ -79,9 +75,6 @@ export default class Link extends Mark {
         href: {
           default: null,
         },
-        target: {
-          default: null,
-        },
         title: {
           default: null
         }
@@ -89,17 +82,15 @@ export default class Link extends Mark {
       inclusive: false,
       parseDOM: [
         {
-          tag: "a[href]:not([href^='mailto:'])",
+          tag: "a[href^='mailto:']",
           getAttrs: dom => ({
-            href: dom.getAttribute("href"),
-            target: dom.getAttribute("target"),
-            title: dom.getAttribute("title")
+            href: dom.getAttribute("href").replace('mailto:', ''),
           }),
         },
       ],
       toDOM: node => ["a", {
         ...node.attrs,
-        rel: "noopener noreferrer nofollow",
+        href: 'mailto:'+ node.attrs.href,
       }, 0],
     }
   }
