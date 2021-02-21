@@ -265,7 +265,7 @@ class File extends ModelWithContent
      *
      * @internal
      * @param mixed $props
-     * @return self
+     * @return static
      */
     public static function factory($props)
     {
@@ -661,7 +661,7 @@ class File extends ModelWithContent
      * Sets the Blueprint object
      *
      * @param array|null $blueprint
-     * @return self
+     * @return $this
      */
     protected function setBlueprint(array $blueprint = null)
     {
@@ -677,7 +677,7 @@ class File extends ModelWithContent
      * Sets the filename
      *
      * @param string $filename
-     * @return self
+     * @return $this
      */
     protected function setFilename(string $filename)
     {
@@ -689,7 +689,7 @@ class File extends ModelWithContent
      * Sets the parent model object
      *
      * @param \Kirby\Cms\Model|null $parent
-     * @return self
+     * @return $this
      */
     protected function setParent(Model $parent = null)
     {
@@ -702,7 +702,7 @@ class File extends ModelWithContent
      * auto root detection
      *
      * @param string|null $root
-     * @return self
+     * @return $this
      */
     protected function setRoot(string $root = null)
     {
@@ -712,7 +712,7 @@ class File extends ModelWithContent
 
     /**
      * @param string|null $template
-     * @return self
+     * @return $this
      */
     protected function setTemplate(string $template = null)
     {
@@ -724,7 +724,7 @@ class File extends ModelWithContent
      * Sets the url
      *
      * @param string|null $url
-     * @return self
+     * @return $this
      */
     protected function setUrl(string $url = null)
     {

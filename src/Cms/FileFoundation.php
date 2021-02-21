@@ -189,7 +189,7 @@ trait FileFoundation
      * Setter for the root
      *
      * @param string|null $root
-     * @return self
+     * @return $this
      */
     protected function setRoot(string $root = null)
     {
@@ -201,7 +201,7 @@ trait FileFoundation
      * Setter for the file url
      *
      * @param string $url
-     * @return self
+     * @return $this
      */
     protected function setUrl(string $url)
     {

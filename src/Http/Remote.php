@@ -149,7 +149,7 @@ class Remote
     /**
      * Sets up all curl options and sends the request
      *
-     * @return self
+     * @return $this
      */
     public function fetch()
     {
@@ -291,7 +291,7 @@ class Remote
      *
      * @param string $url
      * @param array $params
-     * @return self
+     * @return static
      */
     public static function get(string $url, array $params = [])
     {
@@ -385,7 +385,7 @@ class Remote
      *
      * @param string $url
      * @param array $params
-     * @return self
+     * @return static
      */
     public static function request(string $url, array $params = [])
     {

@@ -190,7 +190,7 @@ class OptionsQuery
 
     /**
      * @param array|null $aliases
-     * @return self
+     * @return $this
      */
     protected function setAliases(array $aliases = null)
     {
@@ -200,7 +200,7 @@ class OptionsQuery
 
     /**
      * @param array $data
-     * @return self
+     * @return $this
      */
     protected function setData(array $data)
     {
@@ -210,7 +210,7 @@ class OptionsQuery
 
     /**
      * @param $options
-     * @return self
+     * @return $this
      */
     protected function setOptions($options = null)
     {
@@ -220,7 +220,7 @@ class OptionsQuery
 
     /**
      * @param string $query
-     * @return self
+     * @return $this
      */
     protected function setQuery(string $query)
     {
@@ -230,7 +230,7 @@ class OptionsQuery
 
     /**
      * @param $text
-     * @return self
+     * @return $this
      */
     protected function setText($text)
     {
@@ -240,7 +240,7 @@ class OptionsQuery
 
     /**
      * @param $value
-     * @return self
+     * @return $this
      */
     protected function setValue($value)
     {

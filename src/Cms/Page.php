@@ -466,7 +466,7 @@ class Page extends ModelWithContent
      *
      * @internal
      * @param mixed $props
-     * @return self
+     * @return static
      */
     public static function factory($props)
     {
@@ -885,7 +885,7 @@ class Page extends ModelWithContent
      * @internal
      * @param string $name
      * @param array $props
-     * @return self
+     * @return static
      */
     public static function model(string $name, array $props = [])
     {
@@ -1244,7 +1244,7 @@ class Page extends ModelWithContent
      * Sets the Blueprint object
      *
      * @param array|null $blueprint
-     * @return self
+     * @return $this
      */
     protected function setBlueprint(array $blueprint = null)
     {
@@ -1262,7 +1262,7 @@ class Page extends ModelWithContent
      * than computing the dirname afterwards
      *
      * @param string|null $dirname
-     * @return self
+     * @return $this
      */
     protected function setDirname(string $dirname = null)
     {
@@ -1274,7 +1274,7 @@ class Page extends ModelWithContent
      * Sets the draft flag
      *
      * @param bool $isDraft
-     * @return self
+     * @return $this
      */
     protected function setIsDraft(bool $isDraft = null)
     {
@@ -1286,7 +1286,7 @@ class Page extends ModelWithContent
      * Sets the sorting number
      *
      * @param int|null $num
-     * @return self
+     * @return $this
      */
     protected function setNum(int $num = null)
     {
@@ -1298,7 +1298,7 @@ class Page extends ModelWithContent
      * Sets the parent page object
      *
      * @param \Kirby\Cms\Page|null $parent
-     * @return self
+     * @return $this
      */
     protected function setParent(Page $parent = null)
     {
@@ -1310,7 +1310,7 @@ class Page extends ModelWithContent
      * Sets the absolute path to the page
      *
      * @param string|null $root
-     * @return self
+     * @return $this
      */
     protected function setRoot(string $root = null)
     {
@@ -1322,7 +1322,7 @@ class Page extends ModelWithContent
      * Sets the required Page slug
      *
      * @param string $slug
-     * @return self
+     * @return $this
      */
     protected function setSlug(string $slug)
     {
@@ -1334,7 +1334,7 @@ class Page extends ModelWithContent
      * Sets the intended template
      *
      * @param string|null $template
-     * @return self
+     * @return $this
      */
     protected function setTemplate(string $template = null)
     {
@@ -1349,7 +1349,7 @@ class Page extends ModelWithContent
      * Sets the Url
      *
      * @param string|null $url
-     * @return self
+     * @return $this
      */
     protected function setUrl(string $url = null)
     {

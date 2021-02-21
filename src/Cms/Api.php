@@ -258,7 +258,7 @@ class Api extends BaseApi
      * Setter for the parent Kirby instance
      *
      * @param \Kirby\Cms\App $kirby
-     * @return self
+     * @return $this
      */
     protected function setKirby(App $kirby)
     {

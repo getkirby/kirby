@@ -135,7 +135,7 @@ class Plugin extends Model
 
     /**
      * @param string $name
-     * @return self
+     * @return $this
      * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function setName(string $name)

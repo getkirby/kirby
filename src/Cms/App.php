@@ -224,7 +224,7 @@ class App
     /**
      * Normalizes and globally sets the configured options
      *
-     * @return self
+     * @return $this
      */
     protected function bakeOptions()
     {
@@ -260,7 +260,7 @@ class App
      * Sets the directory structure
      *
      * @param array|null $roots
-     * @return self
+     * @return $this
      */
     protected function bakeRoots(array $roots = null)
     {
@@ -273,7 +273,7 @@ class App
      * Sets the Url structure
      *
      * @param array|null $urls
-     * @return self
+     * @return $this
      */
     protected function bakeUrls(array $urls = null)
     {
@@ -342,7 +342,7 @@ class App
      *
      * @param array $props
      * @param bool $setInstance If false, the instance won't be set globally
-     * @return self
+     * @return static
      */
     public function clone(array $props = [], bool $setInstance = true)
     {
@@ -609,7 +609,7 @@ class App
      *
      * @param \Kirby\Cms\App|null $instance
      * @param bool $lazy If `true`, the instance is only returned if already existing
-     * @return self|null
+     * @return static|null
      */
     public static function instance(self $instance = null, bool $lazy = false)
     {
@@ -1244,7 +1244,7 @@ class App
      * Create your own set of languages
      *
      * @param array|null $languages
-     * @return self
+     * @return $this
      */
     protected function setLanguages(array $languages = null)
     {
@@ -1266,7 +1266,7 @@ class App
      * used for the router
      *
      * @param string|null $path
-     * @return self
+     * @return $this
      */
     protected function setPath(string $path = null)
     {
@@ -1278,7 +1278,7 @@ class App
      * Sets the request
      *
      * @param array|null $request
-     * @return self
+     * @return $this
      */
     protected function setRequest(array $request = null)
     {
@@ -1293,7 +1293,7 @@ class App
      * Create your own set of roles
      *
      * @param array|null $roles
-     * @return self
+     * @return $this
      */
     protected function setRoles(array $roles = null)
     {
@@ -1310,7 +1310,7 @@ class App
      * Sets a custom Site object
      *
      * @param \Kirby\Cms\Site|array|null $site
-     * @return self
+     * @return $this
      */
     protected function setSite($site = null)
     {

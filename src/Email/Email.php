@@ -296,7 +296,7 @@ class Email
      * Sets the email attachments
      *
      * @param array|null $attachments
-     * @return self
+     * @return $this
      */
     protected function setAttachments($attachments = null)
     {
@@ -308,7 +308,7 @@ class Email
      * Sets the email body
      *
      * @param string|array $body
-     * @return self
+     * @return $this
      */
     protected function setBody($body)
     {
@@ -336,7 +336,7 @@ class Email
      * Sets the "beforeSend" callback
      *
      * @param \Closure|null $beforeSend
-     * @return self
+     * @return $this
      */
     protected function setBeforeSend(?Closure $beforeSend = null)
     {
@@ -348,7 +348,7 @@ class Email
      * Sets "cc" recipients
      *
      * @param string|array|null $cc
-     * @return self
+     * @return $this
      */
     protected function setCc($cc = null)
     {
@@ -360,7 +360,7 @@ class Email
      * Sets the "from" email address
      *
      * @param string $from
-     * @return self
+     * @return $this
      */
     protected function setFrom(string $from)
     {
@@ -372,7 +372,7 @@ class Email
      * Sets the "from" name
      *
      * @param string|null $fromName
-     * @return self
+     * @return $this
      */
     protected function setFromName(string $fromName = null)
     {
@@ -384,7 +384,7 @@ class Email
      * Sets the "reply to" email address
      *
      * @param string|null $replyTo
-     * @return self
+     * @return $this
      */
     protected function setReplyTo(string $replyTo = null)
     {
@@ -396,7 +396,7 @@ class Email
      * Sets the "reply to" name
      *
      * @param string|null $replyToName
-     * @return self
+     * @return $this
      */
     protected function setReplyToName(string $replyToName = null)
     {
@@ -408,7 +408,7 @@ class Email
      * Sets the email subject
      *
      * @param string $subject
-     * @return self
+     * @return $this
      */
     protected function setSubject(string $subject)
     {
@@ -420,7 +420,7 @@ class Email
      * Sets the recipients of the email
      *
      * @param string|array $to
-     * @return self
+     * @return $this
      */
     protected function setTo($to)
     {
@@ -432,7 +432,7 @@ class Email
      * Sets the email transport settings
      *
      * @param array|null $transport
-     * @return self
+     * @return $this
      */
     protected function setTransport($transport = null)
     {

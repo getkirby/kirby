@@ -476,7 +476,7 @@ class Api
      * Setter for the authentication callback
      *
      * @param \Closure|null $authentication
-     * @return self
+     * @return $this
      */
     protected function setAuthentication(Closure $authentication = null)
     {
@@ -488,7 +488,7 @@ class Api
      * Setter for the collections definition
      *
      * @param array|null $collections
-     * @return self
+     * @return $this
      */
     protected function setCollections(array $collections = null)
     {
@@ -502,7 +502,7 @@ class Api
      * Setter for the injected data
      *
      * @param array|null $data
-     * @return self
+     * @return $this
      */
     protected function setData(array $data = null)
     {
@@ -514,7 +514,7 @@ class Api
      * Setter for the debug flag
      *
      * @param bool $debug
-     * @return self
+     * @return $this
      */
     protected function setDebug(bool $debug = false)
     {
@@ -526,7 +526,7 @@ class Api
      * Setter for the model definitions
      *
      * @param array|null $models
-     * @return self
+     * @return $this
      */
     protected function setModels(array $models = null)
     {
@@ -541,7 +541,7 @@ class Api
      * Setter for the request data
      *
      * @param array|null $requestData
-     * @return self
+     * @return $this
      */
     protected function setRequestData(array $requestData = null)
     {
@@ -559,7 +559,7 @@ class Api
      * Setter for the request method
      *
      * @param string|null $requestMethod
-     * @return self
+     * @return $this
      */
     protected function setRequestMethod(string $requestMethod = null)
     {
@@ -571,7 +571,7 @@ class Api
      * Setter for the route definitions
      *
      * @param array|null $routes
-     * @return self
+     * @return $this
      */
     protected function setRoutes(array $routes = null)
     {

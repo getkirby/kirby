@@ -76,7 +76,7 @@ class Languages extends Collection
      * Convert all defined languages to a collection
      *
      * @internal
-     * @return self
+     * @return static
      */
     public static function load()
     {

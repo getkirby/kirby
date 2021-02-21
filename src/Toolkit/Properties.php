@@ -23,7 +23,7 @@ trait Properties
      * initial properties.
      *
      * @param array $props
-     * @return self
+     * @return static
      */
     public function clone(array $props = [])
     {
@@ -34,7 +34,7 @@ trait Properties
      * Creates a clone and fetches all
      * lazy-loaded getters to get a full copy
      *
-     * @return self
+     * @return static
      */
     public function hardcopy()
     {
