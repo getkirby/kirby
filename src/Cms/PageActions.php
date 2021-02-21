@@ -788,6 +788,7 @@ trait PageActions
 
     /**
      * @deprecated 3.5.0 Use `Page::changeSort()` instead
+     * @todo Remove in 3.6.0
      *
      * @param null $position
      * @return self

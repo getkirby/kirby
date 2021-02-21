@@ -55,7 +55,9 @@ class I18n
     /**
      * Returns the first fallback locale
      *
-     * @deprecated 3.5.1 Use \Kirby\Toolkit\I18n::fallbacks() instead
+     * @deprecated 3.5.1 Use `\Kirby\Toolkit\I18n::fallbacks()` instead
+     * @todo Add deprecated() helper warning in 3.6.0
+     * @todo Remove in 3.7.0
      *
      * @return string
      */

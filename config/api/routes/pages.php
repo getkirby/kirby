@@ -36,7 +36,10 @@ return [
     [
         'pattern' => [
             'pages/(:any)/blueprints',
-            // Deprecated: remove in 3.6.0
+            /**
+             * @deprecated
+             * @todo remove in 3.6.0
+             */
             'pages/(:any)/children/blueprints',
         ],
         'method'  => 'GET',

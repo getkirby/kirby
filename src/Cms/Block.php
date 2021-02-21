@@ -86,6 +86,10 @@ class Block extends Item
     /**
      * Deprecated method to return the block type
      *
+     * @deprecated 3.5.0 Use `\Kirby\Cms\Block::type()` instead
+     * @todo Add deprecated() helper warning in 3.6.0
+     * @todo Remove in 3.7.0
+     *
      * @return string
      */
     public function _key(): string
@@ -95,6 +99,10 @@ class Block extends Item
 
     /**
      * Deprecated method to return the block id
+     *
+     * @deprecated 3.5.0 Use `\Kirby\Cms\Block::id()` instead
+     * @todo Add deprecated() helper warning in 3.6.0
+     * @todo Remove in 3.7.0
      *
      * @return string
      */

@@ -158,7 +158,8 @@ trait AppTranslations
     /**
      * Set locale settings
      *
-     * @deprecated 3.5.0 Use \Kirby\Toolkit\Locale::set() instead
+     * @deprecated 3.5.0 Use `\Kirby\Toolkit\Locale::set()` instead
+     * @todo Remove in 3.6.0
      *
      * @param string|array $locale
      */
