@@ -996,6 +996,10 @@ class App
         $parent = $parent ?? $this->site();
 
         if ($page = $parent->find($id)) {
+            /**
+             * We passed a single $id, we can be sure that the result is
+             * @var \Kirby\Cms\Page $page
+             */
             return $page;
         }
 
