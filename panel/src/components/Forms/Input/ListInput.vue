@@ -46,7 +46,10 @@ export default {
         return;
       }
 
-      this.$emit("input", html);
+      // emits only when there is a change
+      if (html !== this.value) {
+        this.$emit("input", html);
+      }
     }
   }
 };
