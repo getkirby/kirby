@@ -18,7 +18,7 @@ class ListFieldTest extends TestCase
 
     public function testSave()
     {
-        // default value
+        // sample value
         $field = $this->field('list', [
             'value' => $value = '<ul><li>List Item A</li><li>List Item B</li><li>List Item C</li></ul>'
         ]);
@@ -44,7 +44,7 @@ class ListFieldTest extends TestCase
 
         // null value
         $field = $this->field('list', [
-            'value' => ''
+            'value' => null
         ]);
 
         $this->assertSame('', $field->data());
