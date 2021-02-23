@@ -157,7 +157,7 @@ return [
                     'id'          => $item->id(),
                     'dragText'    => $item->dragText(),
                     'text'        => $item->toString($this->text),
-                    'info'        => $item->toString($this->info),
+                    'info'        => $item->toString($this->info ?? false),
                     'parent'      => $item->parentId(),
                     'icon'        => $item->panelIcon($image),
                     'image'       => $image,
