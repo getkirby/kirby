@@ -244,9 +244,10 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         run: composer-normalize --dry-run
 
-      - name: Check for unused Composer dependencies
-        if: always() && steps.finishPrepare.outcome == 'success'
-        run: composer unused --no-progress
+      # TODO: Re-enable when the fatal error in CI no longer appears
+      # - name: Check for unused Composer dependencies
+      #   if: always() && steps.finishPrepare.outcome == 'success'
+      #   run: composer unused --no-progress
 
       - name: Check for duplicated code
         if: always() && steps.finishPrepare.outcome == 'success'
