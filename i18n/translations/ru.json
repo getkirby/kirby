@@ -232,7 +232,7 @@
   "field.blocks.image.name": "Картинка",
   "field.blocks.image.placeholder": "Выберите изображение",
   "field.blocks.image.ratio": "Соотношение",
-  "field.blocks.image.url": "Image URL",
+  "field.blocks.image.url": "URL изображения",
   "field.blocks.list.name": "Список",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Текст",

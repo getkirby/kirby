@@ -123,7 +123,7 @@ return [
                     'id'       => $file->id(),
                     'icon'     => $file->panelIcon($image),
                     'image'    => $image,
-                    'info'     => $file->toString($this->info),
+                    'info'     => $file->toString($this->info ?? false),
                     'link'     => $file->panelUrl(true),
                     'mime'     => $file->mime(),
                     'parent'   => $file->parent()->panelPath(),

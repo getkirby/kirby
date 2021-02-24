@@ -220,7 +220,7 @@ function gist(string $url, string $file = null): string
  * @param int $code
  * @return void
  */
-function go(string $url = null, int $code = 302)
+function go(string $url = '/', int $code = 302)
 {
     die(Response::redirect($url, $code));
 }

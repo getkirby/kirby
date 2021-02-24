@@ -4,6 +4,7 @@ namespace Kirby\Cache;
 
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 
 /**
  * File System Cache Driver
@@ -68,7 +69,41 @@ class FileCache extends Cache
      */
     protected function file(string $key): string
     {
-        $file = $this->root . '/' . basename($key);
+        // strip out invalid characters in each path segment
+        // split by slash or backslash
+        $keyParts = [];
+        foreach (preg_split('#([\/\\\\])#', $key, 0, PREG_SPLIT_DELIM_CAPTURE) as $part) {
+            switch ($part) {
+                // forward slashes don't need special treatment
+                case '/':
+                    break;
+                
+                // backslashes get their own marker in the path
+                // to differentiate the cache key from one with forward slashes
+                case '\\':
+                    $keyParts[] = '_backslash';
+                    break;
+                
+                // empty part means two slashes in a row;
+                // special marker like for backslashes
+                case '':
+                    $keyParts[] = '_empty';
+                    break;
+                
+                // an actual path segment
+                default:
+                    // check if the segment only contains safe characters;
+                    // underscores are *not* safe to guarantee uniqueness
+                    // as they are used in the special cases
+                    if (preg_match('/^[a-zA-Z0-9-]+$/', $part) === 1) {
+                        $keyParts[] = $part;
+                    } else {
+                        $keyParts[] = Str::slug($part) . '_' . sha1($part);
+                    }
+            }
+        }
+
+        $file = $this->root . '/' . implode('/', $keyParts);
 
         if (isset($this->options['extension'])) {
             return $file . '.' . $this->options['extension'];

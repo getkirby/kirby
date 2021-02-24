@@ -232,7 +232,7 @@
   "field.blocks.image.name": "이미지",
   "field.blocks.image.placeholder": "이미지 선택",
   "field.blocks.image.ratio": "비율",
-  "field.blocks.image.url": "Image URL",
+  "field.blocks.image.url": "이미지 URL",
   "field.blocks.list.name": "목록",
   "field.blocks.markdown.name": "마크다운",
   "field.blocks.markdown.label": "마크다운",

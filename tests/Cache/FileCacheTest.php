@@ -82,27 +82,104 @@ class FileCacheTest extends TestCase
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file',
         ]);
-        $this->assertSame($root . '/test', $method->invoke($cache, '/test'));
+        $this->assertSame($root . '/_empty/test', $method->invoke($cache, '/test'));
 
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file',
         ]);
-        $this->assertSame($root . '/test', $method->invoke($cache, '../../test'));
+        $this->assertSame($root . '/test/_empty', $method->invoke($cache, 'test/'));
 
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file',
         ]);
-        $this->assertSame($root . '/hype-test', $method->invoke($cache, './hype-test'));
+        $this->assertSame($root . '/test/_backslash/foo/bar', $method->invoke($cache, 'test\\foo/bar'));
 
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file',
         ]);
-        $this->assertSame($root . '/dash.test', $method->invoke($cache, './dash.test'));
+        $this->assertSame($root . '/test/_backslash/_empty/foo/_backslash/bar', $method->invoke($cache, 'test\\/foo\\bar'));
 
         $cache = new FileCache([
             'root' => $root = __DIR__ . '/fixtures/file',
         ]);
-        $this->assertSame($root . '/test', $method->invoke($cache, '../sub/test/'));
+        $this->assertSame($root . '/_empty/test/_empty', $method->invoke($cache, '/test/'));
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame(
+            $root . '/_9d891e731f75deae56884d79e9816736b7488080/_9d891e731f75deae56884d79e9816736b7488080/test',
+            $method->invoke($cache, '../../test')
+        );
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame(
+            $root . '/_9d891e731f75deae56884d79e9816736b7488080/test-cache_4caff0c1d0c8eb128ed9896b4b0258ef2848816b',
+            $method->invoke($cache, '../test.cache')
+        );
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame($root . '/_3a52ce780950d4d969792a2559cd519d7ee8c727/test-page', $method->invoke($cache, './test-page'));
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame(
+            $root . '/_3a52ce780950d4d969792a2559cd519d7ee8c727/test-cache_4caff0c1d0c8eb128ed9896b4b0258ef2848816b',
+            $method->invoke($cache, './test.cache')
+        );
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame(
+            $root . '/_9d891e731f75deae56884d79e9816736b7488080/pages/test/_empty',
+            $method->invoke($cache, '../pages/test/')
+        );
+
+        $cache = new FileCache([
+            'root' => $root = __DIR__ . '/fixtures/file',
+        ]);
+        $this->assertSame(
+            $root . '/_9d891e731f75deae56884d79e9816736b7488080/pages/test-cache_4caff0c1d0c8eb128ed9896b4b0258ef2848816b',
+            $method->invoke($cache, '../pages/test.cache')
+        );
+
+        $cache = new FileCache([
+            'root'      => $root = __DIR__ . '/fixtures/file',
+            'extension' => 'cache'
+        ]);
+        $this->assertSame(
+            $root . '/_9d891e731f75deae56884d79e9816736b7488080/pages/test.cache',
+            $method->invoke($cache, '../pages/test')
+        );
+
+        $cache = new FileCache([
+            'root'   => $root = __DIR__ . '/fixtures/file',
+            'prefix' => 'prefix'
+        ]);
+        $this->assertSame(
+            $root . '/prefix/_9d891e731f75deae56884d79e9816736b7488080/pages/test',
+            $method->invoke($cache, '../pages/test')
+        );
+
+        $cache = new FileCache([
+            'root'      => $root = __DIR__ . '/fixtures/file',
+            'prefix'    => 'prefix',
+            'extension' => 'cache'
+        ]);
+        $this->assertSame(
+            $root . '/prefix/_9d891e731f75deae56884d79e9816736b7488080/pages/test.cache',
+            $method->invoke($cache, '../pages/test')
+        );
+        $this->assertSame(
+            $root . '/prefix/_9d891e731f75deae56884d79e9816736b7488080/pages/test-invalid_76a6bcc476cffdcb56321fbbb4edfd19fece82c6.cache',
+            $method->invoke($cache, '../pages/test.invalid')
+        );
     }
 
     /**
@@ -132,6 +209,11 @@ class FileCacheTest extends TestCase
         $this->assertFalse($cache->exists('foo'));
         $this->assertNull($cache->retrieve('foo'));
 
+        $this->assertDirectoryDoesNotExist($root . '/bar');
+        $this->assertTrue($cache->set('bar/baz', 'Another basic value', 10));
+        $this->assertFileExists($root . '/bar/baz');
+        $this->assertSame('Another basic value', $cache->retrieve('bar/baz')->value());
+
         $this->assertFalse($cache->remove('doesnotexist'));
     }
 
@@ -157,6 +239,11 @@ class FileCacheTest extends TestCase
         $this->assertSame('A basic value', $cache->retrieve('foo')->value());
         $this->assertSame($time, $cache->created('foo'));
         $this->assertSame($time + 600, $cache->expires('foo'));
+
+        $this->assertDirectoryDoesNotExist($root . '/bar');
+        $this->assertTrue($cache->set('bar/baz', 'Another basic value', 10));
+        $this->assertFileExists($root . '/bar/baz.cache');
+        $this->assertSame('Another basic value', $cache->retrieve('bar/baz')->value());
 
         $this->assertTrue($cache->remove('foo'));
         $this->assertFileDoesNotExist($root . '/foo.cache');
@@ -196,6 +283,11 @@ class FileCacheTest extends TestCase
         touch($root . '/test2/foo', $time);
         $this->assertTrue($cache2->exists('foo'));
 
+        $this->assertDirectoryDoesNotExist($root . '/test1/bar');
+        $this->assertTrue($cache1->set('bar/baz', 'Another basic value', 10));
+        $this->assertFileExists($root . '/test1/bar/baz');
+        $this->assertSame('Another basic value', $cache1->retrieve('bar/baz')->value());
+
         $this->assertSame('A basic value', $cache1->retrieve('foo')->value());
         $this->assertTrue($cache1->remove('foo'));
         $this->assertFileDoesNotExist($root . '/test1/foo');
@@ -217,14 +309,17 @@ class FileCacheTest extends TestCase
         $cache->set('a', 'A basic value');
         $cache->set('b', 'A basic value');
         $cache->set('c', 'A basic value');
+        $cache->set('d/a', 'A basic value');
         $this->assertFileExists($root . '/a');
         $this->assertFileExists($root . '/b');
         $this->assertFileExists($root . '/c');
+        $this->assertFileExists($root . '/d/a');
 
         $this->assertTrue($cache->flush());
         $this->assertFileDoesNotExist($root . '/a');
         $this->assertFileDoesNotExist($root . '/b');
         $this->assertFileDoesNotExist($root . '/c');
+        $this->assertDirectoryDoesNotExist($root . '/d');
     }
 
     /**
@@ -245,15 +340,21 @@ class FileCacheTest extends TestCase
         $cache1->set('b', 'A basic value');
         $cache2->set('a', 'A basic value');
         $cache2->set('b', 'A basic value');
+        $cache1->set('c/a', 'A basic value');
+        $cache2->set('c/a', 'A basic value');
         $this->assertFileExists($root . '/test1/a');
         $this->assertFileExists($root . '/test1/b');
         $this->assertFileExists($root . '/test2/a');
         $this->assertFileExists($root . '/test2/b');
+        $this->assertFileExists($root . '/test2/c/a');
+        $this->assertFileExists($root . '/test2/c/a');
 
         $this->assertTrue($cache1->flush());
         $this->assertFileDoesNotExist($root . '/test1/a');
         $this->assertFileDoesNotExist($root . '/test1/b');
+        $this->assertDirectoryDoesNotExist($root . '/test1/c');
         $this->assertFileExists($root . '/test2/a');
         $this->assertFileExists($root . '/test2/b');
+        $this->assertFileExists($root . '/test2/c/a');
     }
 }

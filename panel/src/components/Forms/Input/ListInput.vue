@@ -46,9 +46,6 @@ export default {
         return;
       }
 
-      // removes <p> tags from value
-      html = html.replace(/(<p>|<\/p>)/gi, "");
-
       this.$emit("input", html);
     }
   }
