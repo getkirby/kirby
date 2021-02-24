@@ -232,7 +232,7 @@
   "field.blocks.image.name": "Billede",
   "field.blocks.image.placeholder": "Vælg et billede",
   "field.blocks.image.ratio": "Størrelsesforhold",
-  "field.blocks.image.url": "Image URL",
+  "field.blocks.image.url": "Billede URL",
   "field.blocks.list.name": "Liste",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Tekst",
