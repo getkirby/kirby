@@ -194,7 +194,7 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      php: "8.0"
+      php: "7.4" # TODO: Update to PHP 8.0 when PHPMD supports it (https://github.com/phpmd/phpmd/issues/853)
       extensions: mbstring, ctype, curl, gd, apcu, memcached
 
     steps:
