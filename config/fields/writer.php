@@ -16,5 +16,10 @@ return [
         'marks' => function ($marks = true) {
             return $marks;
         }
-    ]
+    ],
+    'computed' => [
+        'value' => function () {
+            return trim($this->value);
+        }
+    ],
 ];
