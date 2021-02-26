@@ -16,6 +16,7 @@
         @click="$emit('open')"
       />
       <k-button
+        :disabled="isFull"
         :tooltip="$t('insert.after')"
         class="k-block-options-button"
         icon="add"
