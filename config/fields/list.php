@@ -8,9 +8,5 @@ return [
         'marks' => function ($marks = true) {
             return $marks;
         }
-    ],
-    'save' => function ($value): string {
-        // removes `<p>` and `</p>` tags from value
-        return str_replace(['<p>', '</p>'], '', $value);
-    }
+    ]
 ];

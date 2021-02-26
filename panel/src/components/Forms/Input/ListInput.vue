@@ -1,6 +1,7 @@
 <template>
   <k-writer
     ref="input"
+    v-model="list"
     v-bind="$props"
     :extensions="extensions"
     :nodes="['bulletList', 'orderedList']"
@@ -21,9 +22,16 @@ export default {
     },
     value: String
   },
+  data() {
+    return {
+      list: this.value
+    };
+  },
   computed: {
     extensions() {
-      return [new ListDoc()];
+      return [new ListDoc({
+        inline: true
+      })];
     }
   },
   methods: {
@@ -35,21 +43,22 @@ export default {
       let list = dom.querySelector('ul, ol');
 
       if (!list) {
-        this.$emit("input", "");
+        this.$emit("input", this.list = "");
         return;
       }
 
       let text = list.textContent.trim();
 
       if (text.length === 0) {
-        this.$emit("input", "");
+        this.$emit("input", this.list = "");
         return;
       }
 
-      // emits only when there is a change
-      if (html !== this.value) {
-        this.$emit("input", html);
-      }
+      // updates `list` data with raw html
+      this.list = html;
+
+      // emit value with removes `<p>` and `</p>` tags from html value
+      this.$emit("input", html.replace(/(<p>|<\/p>)/gi, ""));
     }
   }
 };
