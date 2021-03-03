@@ -49,7 +49,10 @@ return [
     [
         'pattern' => [
             'site/blueprints',
-            // Deprecated: remove in 3.6.0
+            /**
+             * @deprecated
+             * @todo remove in 3.6.0
+             */
             'site/children/blueprints',
         ],
         'method'  => 'GET',

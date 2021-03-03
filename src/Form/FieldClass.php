@@ -92,7 +92,7 @@ abstract class FieldClass
     }
 
     /**
-     * DEPRECATED!
+     * @deprecated
      *
      * Returns the field data
      * in a format to be stored
@@ -379,7 +379,7 @@ abstract class FieldClass
     }
 
     /**
-     * DEPRECATED
+     * @deprecated
      *
      * @return bool
      */
