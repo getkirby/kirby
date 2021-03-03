@@ -157,7 +157,7 @@ class Database
      * Returns one of the started instances
      *
      * @param string|null $id
-     * @return self|null
+     * @return static|null
      */
     public static function instance(string $id = null)
     {

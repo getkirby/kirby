@@ -74,7 +74,7 @@ class Responder
      * Setter and getter for the status code
      *
      * @param int|null $code
-     * @return int|self
+     * @return int|$this
      */
     public function code(int $code = null)
     {
@@ -157,7 +157,7 @@ class Responder
      *
      * @param string|null $location
      * @param int|null $code
-     * @return self
+     * @return $this
      */
     public function redirect(?string $location = null, ?int $code = null)
     {

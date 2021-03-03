@@ -203,7 +203,7 @@ trait HasFiles
      * Sets the Files collection
      *
      * @param \Kirby\Cms\Files|null $files
-     * @return self
+     * @return $this
      */
     protected function setFiles(array $files = null)
     {

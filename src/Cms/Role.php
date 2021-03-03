@@ -49,7 +49,7 @@ class Role extends Model
 
     /**
      * @param array $inject
-     * @return self
+     * @return static
      */
     public static function admin(array $inject = [])
     {
@@ -92,7 +92,7 @@ class Role extends Model
     /**
      * @param array $props
      * @param array $inject
-     * @return self
+     * @return static
      */
     public static function factory(array $props, array $inject = [])
     {
@@ -126,7 +126,7 @@ class Role extends Model
     /**
      * @param string $file
      * @param array $inject
-     * @return self
+     * @return static
      */
     public static function load(string $file, array $inject = [])
     {
@@ -146,7 +146,7 @@ class Role extends Model
 
     /**
      * @param array $inject
-     * @return self
+     * @return static
      */
     public static function nobody(array $inject = [])
     {
@@ -166,8 +166,8 @@ class Role extends Model
     }
 
     /**
-     * @param [type] $description
-     * @return self
+     * @param mixed $description
+     * @return $this
      */
     protected function setDescription($description = null)
     {
@@ -177,7 +177,7 @@ class Role extends Model
 
     /**
      * @param string $name
-     * @return self
+     * @return $this
      */
     protected function setName(string $name)
     {
@@ -186,8 +186,8 @@ class Role extends Model
     }
 
     /**
-     * @param [type] $permissions
-     * @return self
+     * @param mixed $permissions
+     * @return $this
      */
     protected function setPermissions($permissions = null)
     {
@@ -196,8 +196,8 @@ class Role extends Model
     }
 
     /**
-     * @param [type] $title
-     * @return self
+     * @param mixed $title
+     * @return $this
      */
     protected function setTitle($title = null)
     {

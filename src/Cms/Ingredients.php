@@ -70,7 +70,7 @@ class Ingredients
      *
      * @internal
      * @param array $ingredients
-     * @return self
+     * @return static
      */
     public static function bake(array $ingredients)
     {

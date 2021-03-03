@@ -79,7 +79,7 @@ class KirbyTag
      * @param string $string
      * @param array $data
      * @param array $options
-     * @return self
+     * @return static
      */
     public static function parse(string $string, array $data = [], array $options = [])
     {

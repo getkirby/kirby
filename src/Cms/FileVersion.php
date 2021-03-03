@@ -97,7 +97,7 @@ class FileVersion
      * Applies the stored modifications and
      * saves the file on disk
      *
-     * @return self
+     * @return $this
      */
     public function save()
     {

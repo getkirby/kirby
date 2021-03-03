@@ -271,7 +271,7 @@ class Collection extends BaseCollection
      * Any part of the query is optional.
      *
      * @param array $query
-     * @return self
+     * @return static
      */
     public function query(array $query = [])
     {

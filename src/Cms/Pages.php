@@ -49,7 +49,7 @@ class Pages extends Collection
      * current collection
      *
      * @param mixed $object
-     * @return self
+     * @return $this
      * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function add($object)
@@ -146,7 +146,7 @@ class Pages extends Collection
      * @param array $pages
      * @param \Kirby\Cms\Model|null $model
      * @param bool $draft
-     * @return self
+     * @return static
      */
     public static function factory(array $pages, Model $model = null, bool $draft = false)
     {
@@ -389,7 +389,7 @@ class Pages extends Collection
      * Include all given items in the collection
      *
      * @param mixed ...$args
-     * @return self
+     * @return $this|static
      */
     public function merge(...$args)
     {

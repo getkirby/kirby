@@ -23,7 +23,7 @@ class Fields extends Collection
      *
      * @param string $name
      * @param object|array $field
-     * @return self
+     * @return $this
      */
     public function __set(string $name, $field)
     {

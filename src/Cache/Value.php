@@ -79,7 +79,7 @@ class Value
      * Creates a value object from an array
      *
      * @param array $array
-     * @return self
+     * @return static
      */
     public static function fromArray(array $array)
     {
@@ -91,7 +91,7 @@ class Value
      * returns null on error
      *
      * @param string $json
-     * @return self|null
+     * @return static|null
      */
     public static function fromJson(string $json)
     {

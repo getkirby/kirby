@@ -131,7 +131,7 @@ class StructureObject extends Model
      * Sets the Content object with the given parent
      *
      * @param array|null $content
-     * @return self
+     * @return $this
      */
     protected function setContent(array $content = null)
     {
@@ -146,7 +146,7 @@ class StructureObject extends Model
      * specified.
      *
      * @param string $id
-     * @return self
+     * @return $this
      */
     protected function setId(string $id)
     {
@@ -159,7 +159,7 @@ class StructureObject extends Model
      * Page, Site, File or User object
      *
      * @param \Kirby\Cms\Model|null $parent
-     * @return self
+     * @return $this
      */
     protected function setParent(Model $parent = null)
     {
@@ -171,7 +171,7 @@ class StructureObject extends Model
      * Sets the parent Structure collection
      *
      * @param \Kirby\Cms\Structure|null $structure
-     * @return self
+     * @return $this
      */
     protected function setStructure(Structure $structure = null)
     {

@@ -219,7 +219,7 @@ class Blueprint
      * @param string $name
      * @param string|null $fallback
      * @param \Kirby\Cms\Model $model
-     * @return self
+     * @return static|null
      */
     public static function factory(string $name, string $fallback = null, Model $model)
     {

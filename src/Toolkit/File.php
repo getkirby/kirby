@@ -58,7 +58,7 @@ class File
      *
      * @param string $target
      * @param bool $force
-     * @return self
+     * @return static
      */
     public function copy(string $target, bool $force = false)
     {
@@ -196,7 +196,7 @@ class File
      *
      * @param string $newRoot
      * @param bool $overwrite Force overwriting any existing files
-     * @return self
+     * @return static
      */
     public function move(string $newRoot, bool $overwrite = false)
     {
@@ -255,7 +255,7 @@ class File
      *
      * @param string $newName
      * @param bool $overwrite Force overwrite existing files
-     * @return self
+     * @return static
      */
     public function rename(string $newName, bool $overwrite = false)
     {

@@ -139,15 +139,17 @@ class Translation
      * @param string $code
      * @param string $root
      * @param array $inject
-     * @return self
+     * @return static
      */
     public static function load(string $code, string $root, array $inject = [])
     {
         try {
-            return new Translation($code, array_merge(Data::read($root), $inject));
+            $data = array_merge(Data::read($root), $inject);
         } catch (Exception $e) {
-            return new Translation($code, []);
+            $data = [];
         }
+
+        return new static($code, $data);
     }
 
     /**

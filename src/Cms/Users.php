@@ -38,7 +38,7 @@ class Users extends Collection
      * current collection
      *
      * @param mixed $object
-     * @return self
+     * @return $this
      */
     public function add($object)
     {
@@ -63,7 +63,7 @@ class Users extends Collection
      *
      * @param array $users
      * @param array $inject
-     * @return self
+     * @return static
      */
     public static function factory(array $users, array $inject = [])
     {
@@ -98,7 +98,7 @@ class Users extends Collection
      *
      * @param string $root
      * @param array $inject
-     * @return self
+     * @return static
      */
     public static function load(string $root, array $inject = [])
     {
@@ -131,7 +131,7 @@ class Users extends Collection
      * Shortcut for `$users->filter('role', 'admin')`
      *
      * @param string $role
-     * @return self
+     * @return static
      */
     public function role(string $role)
     {

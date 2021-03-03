@@ -294,7 +294,7 @@ class Query
      * @param string $table Name of the table, which should be joined
      * @param string $on The on clause for this join
      * @param string $type The join type. Uses an inner join by default
-     * @return self
+     * @return $this
      */
     public function join(string $table, string $on, string $type = 'JOIN')
     {

@@ -197,7 +197,7 @@ class Language extends Model
      *
      * @internal
      * @param array $props
-     * @return self
+     * @return static
      */
     public static function create(array $props)
     {
@@ -445,7 +445,7 @@ class Language extends Model
      * Saves the language settings in the languages folder
      *
      * @internal
-     * @return self
+     * @return $this
      */
     public function save()
     {
@@ -476,7 +476,7 @@ class Language extends Model
 
     /**
      * @param string $code
-     * @return self
+     * @return $this
      */
     protected function setCode(string $code)
     {
@@ -486,7 +486,7 @@ class Language extends Model
 
     /**
      * @param bool $default
-     * @return self
+     * @return $this
      */
     protected function setDefault(bool $default = false)
     {
@@ -496,7 +496,7 @@ class Language extends Model
 
     /**
      * @param string $direction
-     * @return self
+     * @return $this
      */
     protected function setDirection(string $direction = 'ltr')
     {
@@ -506,7 +506,7 @@ class Language extends Model
 
     /**
      * @param string|array $locale
-     * @return self
+     * @return $this
      */
     protected function setLocale($locale = null)
     {
@@ -521,7 +521,7 @@ class Language extends Model
 
     /**
      * @param string $name
-     * @return self
+     * @return $this
      */
     protected function setName(string $name = null)
     {
@@ -531,7 +531,7 @@ class Language extends Model
 
     /**
      * @param array $slugs
-     * @return self
+     * @return $this
      */
     protected function setSlugs(array $slugs = null)
     {
@@ -541,7 +541,7 @@ class Language extends Model
 
     /**
      * @param array $smartypants
-     * @return self
+     * @return $this
      */
     protected function setSmartypants(array $smartypants = null)
     {
@@ -551,7 +551,7 @@ class Language extends Model
 
     /**
      * @param array $translations
-     * @return self
+     * @return $this
      */
     protected function setTranslations(array $translations = null)
     {
@@ -561,7 +561,7 @@ class Language extends Model
 
     /**
      * @param string $url
-     * @return self
+     * @return $this
      */
     protected function setUrl(string $url = null)
     {
@@ -639,7 +639,7 @@ class Language extends Model
      *
      * @internal
      * @param array $props
-     * @return self
+     * @return static
      */
     public function update(array $props = null)
     {

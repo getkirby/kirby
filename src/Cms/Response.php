@@ -21,7 +21,7 @@ class Response extends \Kirby\Http\Response
      *
      * @param string $location
      * @param int $code
-     * @return self
+     * @return static
      */
     public static function redirect(string $location = '/', int $code = 302)
     {

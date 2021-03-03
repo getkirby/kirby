@@ -153,7 +153,7 @@ class Permissions
      * @param string $category
      * @param string $action
      * @param $setting
-     * @return self
+     * @return $this
      */
     protected function setAction(string $category, string $action, $setting)
     {
@@ -169,7 +169,7 @@ class Permissions
 
     /**
      * @param bool $setting
-     * @return self
+     * @return $this
      */
     protected function setAll(bool $setting)
     {
@@ -182,7 +182,7 @@ class Permissions
 
     /**
      * @param array $settings
-     * @return self
+     * @return $this
      */
     protected function setCategories(array $settings)
     {
@@ -204,7 +204,7 @@ class Permissions
     /**
      * @param string $category
      * @param bool $setting
-     * @return self
+     * @return $this
      * @throws \Kirby\Exception\InvalidArgumentException
      */
     protected function setCategory(string $category, bool $setting)

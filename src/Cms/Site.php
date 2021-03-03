@@ -505,7 +505,7 @@ class Site extends ModelWithContent
      * Sets the Blueprint object
      *
      * @param array|null $blueprint
-     * @return self
+     * @return $this
      */
     protected function setBlueprint(array $blueprint = null)
     {
@@ -524,7 +524,7 @@ class Site extends ModelWithContent
      * else is set.
      *
      * @param string $id
-     * @return self
+     * @return $this
      */
     protected function setErrorPageId(string $id = 'error')
     {
@@ -539,7 +539,7 @@ class Site extends ModelWithContent
      * else is set.
      *
      * @param string $id
-     * @return self
+     * @return $this
      */
     protected function setHomePageId(string $id = 'home')
     {
@@ -552,7 +552,7 @@ class Site extends ModelWithContent
      *
      * @internal
      * @param \Kirby\Cms\Page|null $page
-     * @return self
+     * @return $this
      */
     public function setPage(Page $page = null)
     {
@@ -564,7 +564,7 @@ class Site extends ModelWithContent
      * Sets the Url
      *
      * @param string|null $url
-     * @return self
+     * @return $this
      */
     protected function setUrl($url = null)
     {

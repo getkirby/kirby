@@ -51,7 +51,7 @@ trait SiteActions
      *
      * @param string $title
      * @param string|null $languageCode
-     * @return self
+     * @return static
      */
     public function changeTitle(string $title, string $languageCode = null)
     {
@@ -82,7 +82,7 @@ trait SiteActions
     /**
      * Clean internal caches
      *
-     * @return self
+     * @return $this
      */
     public function purge()
     {
