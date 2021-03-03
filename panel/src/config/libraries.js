@@ -1,4 +1,3 @@
-import Vue from "vue";
 
 import autosize from "autosize";
 
@@ -8,7 +7,11 @@ import utc from 'dayjs/plugin/utc';
 dayjs.extend(customParseFormat);
 dayjs.extend(utc);
 
-Vue.prototype.$library = {
-  autosize: autosize,
-  dayjs: dayjs
-};
+export default {
+  install(app) {
+    app.prototype.$library = {
+      autosize: autosize,
+      dayjs: dayjs
+    };    
+  }
+}
