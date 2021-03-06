@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -81,6 +82,19 @@ class Block extends Item
     public function __toString(): string
     {
         return $this->toHtml();
+    }
+
+    /**
+     * Converts the block to HTML and then
+     * uses the Str::excerpt method to create
+     * a non-formatted, shortened excerpt from it
+     *
+     * @param mixed ...$args
+     * @return string
+     */
+    public function excerpt(...$args)
+    {
+        return Str::excerpt($this->toHtml(), ...$args);
     }
 
     /**
