@@ -1,18 +1,19 @@
 import Vue from "vue";
-let components = [];
 
 const files = import.meta.globEager('./components/*.vue');
 
-Object.keys(files).map((key) => {
+let components = Object.keys(files).map(async (key) => {
+
   const name = key.match(/\/([a-zA-Z]*)\.vue/)[1].toLowerCase();
+  const html = await import(key + "?raw");
  
-  components.push({
+  Vue.component("sandbox-" + name, files[key].default);
+
+  return {
     key: key,
     name: name,
-    // html: import('!raw-loader!' + key).default
-  });
-
-  Vue.component("Sandbox" + name, files[key].default);
+    html: html
+  };
 });
 
 export default components;

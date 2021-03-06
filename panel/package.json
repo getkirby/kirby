@@ -36,6 +36,7 @@
     "eslint-plugin-vue": "^7.7.0",
     "sass": "^1.32.8",
     "vite": "^2.0.5",
-    "vite-plugin-vue2": "^1.2.2"
+    "vite-plugin-vue2": "^1.2.2",
+    "wait-on": "^5.2.1"
   }
 }
