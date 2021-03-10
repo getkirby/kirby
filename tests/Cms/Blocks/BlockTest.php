@@ -193,4 +193,19 @@ class BlockTest extends TestCase
         $this->assertSame($expected, $block->__toString());
         $this->assertSame($expected, (string)$block);
     }
+
+    public function testToExcerpt()
+    {
+        $block = new Block([
+            'content' => [
+                'text' => $expected = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
+            ],
+            'type' => 'text',
+        ]);
+
+        $this->assertSame($expected, $block->toHtml());
+        $this->assertSame($expected, $block->excerpt());
+        $this->assertSame("Lorem ipsum dolor …", $block->excerpt(20));
+        $this->assertSame($expected, (string)$block);
+    }
 }

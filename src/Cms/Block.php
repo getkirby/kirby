@@ -85,19 +85,6 @@ class Block extends Item
     }
 
     /**
-     * Converts the block to HTML and then
-     * uses the Str::excerpt method to create
-     * a non-formatted, shortened excerpt from it
-     *
-     * @param mixed ...$args
-     * @return string
-     */
-    public function excerpt(...$args)
-    {
-        return Str::excerpt($this->toHtml(), ...$args);
-    }
-
-    /**
      * Deprecated method to return the block type
      *
      * @return string
@@ -143,6 +130,19 @@ class Block extends Item
             'prev'    => $this->prev(),
             'next'    => $this->next()
         ];
+    }
+
+    /**
+     * Converts the block to HTML and then
+     * uses the Str::excerpt method to create
+     * a non-formatted, shortened excerpt from it
+     *
+     * @param mixed ...$args
+     * @return string
+     */
+    public function excerpt(...$args)
+    {
+        return Str::excerpt($this->toHtml(), ...$args);
     }
 
     /**
