@@ -205,7 +205,7 @@ class BlocksTest extends TestCase
         $this->assertSame($expected, $blocks->toHtml());
     }
 
-    public function testToExcerpt()
+    public function testExcerpt()
     {
         $blocks = Blocks::factory([
             [
@@ -225,8 +225,8 @@ class BlocksTest extends TestCase
         $expected = "<h2>Hello world</h2>\nLorem ipsum dolor sit amet, consectetur adipiscing elit.";
 
         $this->assertSame($expected, $blocks->toHtml());
-        $this->assertSame("Hello world Lorem ipsum dolor sit amet, consectetur adipiscing elit.", $blocks->excerpt());
-        $this->assertSame("Hello world Lorem ipsum dolor sit amet, …", $blocks->excerpt(50));
+        $this->assertSame('Hello world Lorem ipsum dolor sit amet, consectetur adipiscing elit.', $blocks->excerpt());
+        $this->assertSame('Hello world Lorem ipsum dolor sit amet, …', $blocks->excerpt(50));
         $this->assertSame($expected, (string)$blocks);
     }
 }
