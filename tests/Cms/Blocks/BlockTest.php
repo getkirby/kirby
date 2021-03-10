@@ -198,7 +198,7 @@ class BlockTest extends TestCase
     {
         $block = new Block([
             'content' => [
-                'text' => $expected = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+                'text' => $expected = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
             ],
             'type' => 'text',
         ]);
