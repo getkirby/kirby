@@ -66,8 +66,7 @@ class MediaTest extends TestCase
         $file   = $this->app->file('projects/test.svg');
         $result = Media::link($this->app->page('projects'), 'abcde-12345', $file->filename());
 
-        $this->assertInstanceOf(Response::class, $result);
-        $this->assertEquals(404, $result->code());
+        $this->assertFalse($result);
     }
 
     public function testLinkWithoutModel()
