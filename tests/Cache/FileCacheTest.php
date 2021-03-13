@@ -379,5 +379,6 @@ class FileCacheTest extends TestCase
         $this->assertDirectoryDoesNotExist($root . '/foo/bar/baz');
         $this->assertDirectoryDoesNotExist($root . '/foo/bar');
         $this->assertDirectoryDoesNotExist($root . '/foo');
+        $this->assertDirectoryExists($root);
     }
 }

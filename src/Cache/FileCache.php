@@ -188,7 +188,7 @@ class FileCache extends Cache
     }
 
     /**
-     * Removes empty directories safely by moving to the root directory.
+     * Removes empty directories safely by checking each directory
      *
      * @param string $dir
      * @return void
@@ -196,13 +196,19 @@ class FileCache extends Cache
     protected function removeEmptyDirectories(string $dir): void
     {
         try {
-            if (is_dir($dir) === true && $dir !== $this->root()) {
+            // ensure the path doesn't end with a slash for the next comparison
+            $dir = rtrim($dir, '/\/');
+
+            // checks all directory segments until reaching the root directory
+            while (Str::startsWith($dir, $this->root()) === true && $dir !== $this->root()) {
                 $files = array_diff(scandir($dir) ?? [], ['.', '..']);
 
-                if (empty($files) === true) {
-                    if (Dir::remove($dir) === true) {
-                        $this->removeEmptyDirectories(dirname($dir));
-                    }
+                if (empty($files) === true && Dir::remove($dir) === true) {
+                    // continue with the next level up
+                    $dir = dirname($dir);
+                } else {
+                    // no need to continue with the next level up as `$dir` was not deleted
+                    break;
                 }
             }
         } catch (Exception $e) { // @codeCoverageIgnore
