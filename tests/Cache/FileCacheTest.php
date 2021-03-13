@@ -381,4 +381,31 @@ class FileCacheTest extends TestCase
         $this->assertDirectoryDoesNotExist($root . '/foo');
         $this->assertDirectoryExists($root);
     }
+
+    /**
+     * @covers ::removeEmptyDirectories
+     */
+    public function testRemoveEmptyDirectoriesWithNotEmptyDirs()
+    {
+        $cache = new FileCache([
+            'root'      => $root = __DIR__ . '/fixtures/file',
+            'extension' => 'cache'
+        ]);
+
+        // set & retrieve
+        $this->assertDirectoryDoesNotExist($root . '/foo/bar/baz');
+        $this->assertTrue($cache->set('foo/bar/baz/test', 'Value A', 10));
+        $this->assertTrue($cache->set('foo/test', 'Value B', 10));
+        $this->assertFileExists($root . '/foo/bar/baz/test.cache');
+        $this->assertFileExists($root . '/foo/test.cache');
+        $this->assertSame('Value A', $cache->retrieve('foo/bar/baz/test')->value());
+        $this->assertSame('Value B', $cache->retrieve('foo/test')->value());
+
+        // remove
+        $this->assertTrue($cache->remove('foo/bar/baz/test'));
+        $this->assertDirectoryDoesNotExist($root . '/foo/bar/baz');
+        $this->assertDirectoryDoesNotExist($root . '/foo/bar');
+        $this->assertDirectoryExists($root . '/foo');
+        $this->assertDirectoryExists($root);
+    }
 }
