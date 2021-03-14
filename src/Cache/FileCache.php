@@ -189,6 +189,7 @@ class FileCache extends Cache
 
     /**
      * Removes empty directories safely by checking each directory
+     * up to the root directory
      *
      * @param string $dir
      * @return void
