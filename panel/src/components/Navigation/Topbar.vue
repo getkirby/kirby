@@ -15,12 +15,12 @@
             <ul>
               <template v-for="(entry, entryName) in views">
                 <li
-                  v-if="entry.menu"
+                  v-if="viewEntryInMenu(entryName, entry) !== false"
                   :key="'menu-item-' + entryName"
                   :aria-current="$store.state.view === entryName"
                 >
                   <k-dropdown-item
-                    :disabled="$permissions.access[entryName] === false"
+                    :disabled="viewEntryInMenu(entryName, entry) === 'disabled'"
                     :icon="entry.icon"
                     :link="entry.link"
                   >
@@ -191,6 +191,24 @@ export default {
       }
 
       return title;
+    },
+    viewEntryInMenu(entryName, entry) {
+      let menu = entry.menu;
+      if (typeof menu === "function") {
+        menu = menu(this);
+      }
+
+      // explicit configuration with one of the possible three values
+      if ([true, false, "disabled"].indexOf(menu) >= 0) {
+        return menu;
+      }
+
+      // default/fallback: disable if no permissions, otherwise enable
+      if (this.$permissions.access[entryName] === false) {
+        return "disabled";
+      }
+
+      return true;
     }
   }
 };
