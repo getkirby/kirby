@@ -942,7 +942,7 @@ class User extends ModelWithContent
         }
 
         if (password_verify($password, $this->password()) !== true) {
-            throw new InvalidArgumentException(['key' => 'user.password.notSame']);
+            throw new InvalidArgumentException(['key' => 'user.password.wrong']);
         }
 
         return true;

@@ -140,7 +140,7 @@ class AuthChallengeTest extends TestCase
     {
         $this->expectException('Kirby\Exception\NotFoundException');
         $this->expectExceptionMessage('The user "invalid@example.com" cannot be found');
-        
+
         $this->auth->createChallenge('invalid@example.com');
     }
 
@@ -318,7 +318,7 @@ class AuthChallengeTest extends TestCase
         $session = $this->app->session();
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The passwords do not match');
+        $this->expectExceptionMessage('Wrong password');
         $this->auth->login2fa('marge@simpsons.com', 'springfield456');
     }
 
@@ -428,7 +428,7 @@ class AuthChallengeTest extends TestCase
         $session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
         $session->set('kirby.challenge.type', 'email');
         $session->set('kirby.challenge.timeout', MockTime::$time - 1);
-        
+
         $this->auth->verifyChallenge('123456');
     }
 
@@ -441,12 +441,12 @@ class AuthChallengeTest extends TestCase
         $this->expectExceptionMessage('Invalid code');
 
         $session = $this->app->session();
-        
+
         $session->set('kirby.challenge.email', 'marge@simpsons.com');
         $session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
         $session->set('kirby.challenge.type', 'email');
         $session->set('kirby.challenge.timeout', MockTime::$time + 1);
-        
+
         $this->auth->verifyChallenge('654321');
     }
 
@@ -459,7 +459,7 @@ class AuthChallengeTest extends TestCase
         $this->expectExceptionMessage('Invalid authentication challenge: test');
 
         $session = $this->app->session();
-        
+
         $session->set('kirby.challenge.email', 'marge@simpsons.com');
         $session->set('kirby.challenge.code', password_hash('123456', PASSWORD_DEFAULT));
         $session->set('kirby.challenge.type', 'test');
