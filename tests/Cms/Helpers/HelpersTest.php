@@ -250,6 +250,7 @@ class HelpersTest extends TestCase
             'email'    => 'homersimpson.com',
             'zip'      => 'abc',
             'website'  => '',
+            'created'  => '9999-99-99',
         ];
 
         $rules = [
@@ -257,26 +258,29 @@ class HelpersTest extends TestCase
             'email'    => ['required', 'email'],
             'zip'      => ['integer'],
             'website'  => ['url'],
+            'created'  => ['date']
         ];
 
         $messages = [
             'username' => 'The username must not contain numbers',
             'email'    => 'Invalid email',
             'zip'      => 'The ZIP must contain only numbers',
+            'created'  => 'Invalid date',
         ];
 
         $result = invalid($data, $rules, $messages);
-        $this->assertEquals($messages, $result);
+        $this->assertSame($messages, $result);
 
         $data = [
             'username' => 'homer',
             'email'    => 'homer@simpson.com',
             'zip'      => 123,
             'website'  => 'http://example.com',
+            'created'  => '2021-01-01',
         ];
 
         $result = invalid($data, $rules, $messages);
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 
     public function testInvalidSimple()
