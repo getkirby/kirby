@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Please enter a valid password. Passwords must be at least 8 characters long.",
   "error.user.password.notSame": "The passwords do not match",
   "error.user.password.undefined": "The user does not have a password",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Please enter a valid role",
   "error.user.update.permission": "You are not allowed to update the user \"{name}\"",
 
