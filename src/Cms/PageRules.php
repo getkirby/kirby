@@ -377,6 +377,14 @@ class PageRules
             ]);
         }
 
+        if (Str::length($slug) < 1) {
+            throw new InvalidArgumentException([
+                'key' => 'page.slug.invalid',
+            ]);
+        }
+
+        self::validateSlugLength($slug);
+
         return true;
     }
 

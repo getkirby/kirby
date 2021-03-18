@@ -482,6 +482,19 @@ class PageRulesTest extends TestCase
         $this->assertTrue(PageRules::duplicate($page, 'test-copy'));
     }
 
+    public function testDuplicateInvalid()
+    {
+        $page = new Page([
+            'slug'  => 'test',
+            'kirby' => $this->appWithAdmin(),
+        ]);
+
+        $this->expectException('\Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionCode('error.page.slug.invalid');
+
+        PageRules::duplicate($page, '');
+    }
+
     public function testDuplicateWithoutPermissions()
     {
         $permissions = $this->createMock(PagePermissions::class);
