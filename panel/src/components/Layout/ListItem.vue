@@ -7,13 +7,17 @@
       class="k-list-item-content"
     >
       <span v-if="image" class="k-list-item-image">
-        <k-image v-if="imageOptions" v-bind="imageOptions" />
-        <k-icon v-else v-bind="icon" />
+        <slot name="image">
+          <k-image v-if="imageOptions" v-bind="imageOptions" />
+          <k-icon v-else v-bind="icon" />
+        </slot>
       </span>
       <span class="k-list-item-text">
-        <em>{{ text }}</em>
-        <!-- eslint-disable-next-line vue/no-v-html -->
-        <small v-if="info" v-html="info" />
+        <slot>
+          <em>{{ text }}</em>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <small v-if="info" v-html="info" />
+        </slot>
       </span>
     </k-link>
     <nav class="k-list-item-options">
