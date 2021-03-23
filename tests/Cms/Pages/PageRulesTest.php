@@ -261,11 +261,13 @@ class PageRulesTest extends TestCase
 
     public function testChangeTitleWithEmptyValue()
     {
-        $page = $this->createMock(Page::class);
-        $page->method('slug')->willReturn('test');
+        $page = new Page([
+            'slug'  => 'test',
+            'kirby' => $this->appWithAdmin(),
+        ]);
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The title must not be empty');
+        $this->expectExceptionCode('error.page.changeTitle.empty');
 
         PageRules::changeTitle($page, '');
     }
