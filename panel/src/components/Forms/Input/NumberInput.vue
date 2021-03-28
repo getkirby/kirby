@@ -23,29 +23,42 @@
 
 <script>
 import {
-  required,
-  minValue,
-  maxValue
+  autofocus,
+  disabled,
+  id,
+  required
+} from "@/mixins/props.js";
+
+import {
+  required as validateRequired,
+  minValue as validateMinValue,
+  maxValue as validateMaxValue
 } from "vuelidate/lib/validators";
 
-export default {
-  inheritAttrs: false,
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    required
+  ],
   props: {
-    autofocus: Boolean,
-    disabled: Boolean,
-    id: [Number, String],
     max: Number,
     min: Number,
     name: [Number, String],
     placeholder: String,
     preselect: Boolean,
-    required: Boolean,
     step: Number,
     value: {
       type: [Number, String],
       default: null
     }
   },
+}
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       number: this.format(this.value),
@@ -144,9 +157,9 @@ export default {
   validations() {
     return {
       value: {
-        required: this.required ? required : true,
-        min: this.min ? minValue(this.min) : true,
-        max: this.max ? maxValue(this.max) : true
+        required: this.required ? validateRequired : true,
+        min: this.min ? validateMinValue(this.min) : true,
+        max: this.max ? validateMaxValue(this.max) : true
       }
     };
   }

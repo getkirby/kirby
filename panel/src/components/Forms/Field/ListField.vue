@@ -19,14 +19,16 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
 
 export default {
+  mixins: [
+    Field,
+    Input
+  ],
   inheritAttrs: false,
   props: {
-    ...Field.props,
-    ...Input.props,
     marks: [Array, Boolean],
     value: String,
   },

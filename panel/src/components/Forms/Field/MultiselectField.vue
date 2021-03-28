@@ -19,37 +19,23 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import MultiselectInput from "../Input/MultiselectInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as MultiselectInput } from "../Input/MultiselectInput.vue";
+import counter from "@/mixins/forms/counter.js";
 
 export default {
+  mixins: [
+    Field,
+    Input,
+    MultiselectInput,
+    counter
+  ],
   inheritAttrs: false,
   props: {
-    ...Field.props,
-    ...Input.props,
-    ...MultiselectInput.props,
-    counter: {
-      type: Boolean,
-      default: true
-    },
     icon: {
       type: String,
       default: "angle-down"
-    }
-  },
-  computed: {
-    // REFACTOR: DRY the following - same in TagsField
-    counterOptions() {
-      if (this.value === null || this.disabled || this.counter === false) {
-        return false;
-      }
-
-      return {
-        count: this.value && Array.isArray(this.value) ? this.value.length : 0,
-        min: this.min,
-        max: this.max
-      };
     }
   },
   mounted() {

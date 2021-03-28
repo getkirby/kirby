@@ -1,9 +1,10 @@
-import Field from "@/components/Forms/Field.vue";
+
+import { props as Field } from "@/components/Forms/Field.vue";
 
 export default {
+  mixins: [Field],
   inheritAttrs: false,
   props: {
-    ...Field.props,
     empty: String,
     info: String,
     link: Boolean,

@@ -19,21 +19,29 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import {
+  autofocus,
+  disabled,
+  id,
+  required
+} from "@/mixins/props.js";
 
-export default {
-  inheritAttrs: false,
+import { required as validateRequired } from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    required
+  ],
   props: {
-    autofocus: Boolean,
-    disabled: Boolean,
     display: {
       type: String,
       default: "DD.MM.YYYY"
     },
-    id: [String, Number],
     max: String,
     min: String,
-    required: Boolean,
     step: {
       type: Object,
       default() {
@@ -48,7 +56,12 @@ export default {
       default: "date"
     },
     value: String
-  },
+  }
+};
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       input: this.toFormat(this.value),
@@ -396,7 +409,7 @@ export default {
           "isBefore",
           this.step.unit
         ) : true,
-        required: this.required ? required : true,
+        required: this.required ? validateRequired : true,
       }
     }
   }

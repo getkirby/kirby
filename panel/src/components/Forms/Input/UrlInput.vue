@@ -1,10 +1,10 @@
 <script>
 import TextInput from "./TextInput.vue";
+import { props as TextInputProps } from "./TextInput.vue";
 
-export default {
-  extends: TextInput,
+export const props = {
+  mixins: [TextInputProps],
   props: {
-    ...TextInput.props,
     autocomplete: {
       type: String,
       default: "url"
@@ -14,5 +14,10 @@ export default {
       default: "url"
     }
   }
+}
+
+export default {
+  extends: TextInput,
+  mixins: [props]
 }
 </script>

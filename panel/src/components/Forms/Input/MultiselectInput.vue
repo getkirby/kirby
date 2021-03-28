@@ -83,13 +83,25 @@
 </template>
 
 <script>
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
+import {
+  disabled,
+  id,
+  required
+} from "@/mixins/props.js";
 
-export default {
-  inheritAttrs: false,
+import { 
+  required as validateRequired, 
+  minLength as validateMinLength, 
+  maxLength as validateMaxLength 
+} from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    disabled,
+    id,
+    required
+  ],
   props: {
-    id: [Number, String],
-    disabled: Boolean,
     max: Number,
     min: Number,
     layout: String,
@@ -99,7 +111,6 @@ export default {
         return [];
       }
     },
-    required: Boolean,
     search: [Object, Boolean],
     separator: {
       type: String,
@@ -113,7 +124,12 @@ export default {
         return [];
       }
     }
-  },
+  }
+};
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       state: this.value,
@@ -306,9 +322,9 @@ export default {
   validations() {
     return {
       state: {
-        required: this.required ? required : true,
-        minLength: this.min ? minLength(this.min) : true,
-        maxLength: this.max ? maxLength(this.max) : true
+        required: this.required ? validateRequired : true,
+        minLength: this.min ? validateMinLength(this.min) : true,
+        maxLength: this.max ? validateMaxLength(this.max) : true
       }
     };
   }

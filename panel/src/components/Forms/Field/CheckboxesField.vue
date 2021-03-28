@@ -16,33 +16,19 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import CheckboxesInput from "../Input/CheckboxesInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as CheckboxesInput } from "../Input/CheckboxesInput.vue";
+import counter from "@/mixins/forms/counter.js";
 
 export default {
+  mixins: [
+    Field,
+    Input,
+    CheckboxesInput,
+    counter
+  ],
   inheritAttrs: false,
-  props: {
-    ...Field.props,
-    ...Input.props,
-    ...CheckboxesInput.props,
-    counter: {
-      type: Boolean,
-      default: true
-    }
-  },
-  computed: {
-    counterOptions() {
-      if (this.value === null || this.disabled || this.counter === false) {
-        return false;
-      }
-      return {
-        count: this.value && Array.isArray(this.value) ? this.value.length : 0,
-        min: this.min,
-        max: this.max
-      };
-    }
-  },
   methods: {
     focus() {
       this.$refs.input.focus();

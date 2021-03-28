@@ -41,20 +41,34 @@
 </template>
 
 <script>
-export default {
-  inheritAttrs: false,
+import {
+  disabled,
+  help,
+  label,
+  name,
+  required
+} from "@/mixins/props.js";
+
+export const props = {
+  mixins: [
+    disabled,
+    help,
+    label,
+    name,
+    required,
+  ],
   props: {
     counter: [Boolean, Object],
-    disabled: Boolean,
     endpoints: Object,
-    help: String,
     input: [String, Number],
-    label: String,
-    name: [String, Number],
-    required: Boolean,
     translate: Boolean,
     type: String
-  },
+  }
+}
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   computed: {
     labelText() {
       return this.label || " ";

@@ -53,27 +53,41 @@
 
 <script>
 import config from "@/config/config.js";
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
 import direction from "@/helpers/direction.js";
 
-export default {
-  inheritAttrs: false,
+import {
+  autofocus,
+  disabled,
+  id,
+  name,
+  required
+} from "@/mixins/props.js"
+
+import { 
+  required as validateRequired, 
+  minLength as validateMinLength, 
+  maxLength as validateMaxLength 
+} from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    name,
+    required
+  ],
   props: {
-    autofocus: Boolean,
     buttons: {
       type: [Boolean, Array],
       default: true
     },
-    disabled: Boolean,
     endpoints: Object,
     font: String,
-    id: [Number, String],
-    name: [Number, String],
     maxlength: Number,
     minlength: Number,
     placeholder: String,
     preselect: Boolean,
-    required: Boolean,
     size: String,
     spellcheck: {
       type: [Boolean, String],
@@ -83,6 +97,11 @@ export default {
     uploads: [Boolean, Object, Array],
     value: String
   },
+}
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       over: false
@@ -274,9 +293,9 @@ export default {
   validations() {
     return {
       value: {
-        required: this.required ? required : true,
-        minLength: this.minlength ? minLength(this.minlength) : true,
-        maxLength: this.maxlength ? maxLength(this.maxlength) : true
+        required: this.required ? validateRequired : true,
+        minLength: this.minlength ? validateMinLength(this.minlength) : true,
+        maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true
       }
     };
   }

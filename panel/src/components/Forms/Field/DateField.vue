@@ -33,16 +33,18 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import DateTimeInput from "../Input/DateTimeInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as DateTimeInput } from "../Input/DateTimeInput.vue";
 
 export default {
+  mixins: [
+    Field,
+    Input,
+    DateTimeInput
+  ],
   inheritAttrs: false,
   props: {
-    ...Field.props,
-    ...Input.props,
-    ...DateTimeInput.props,
     calendar: {
       type: Boolean,
       default: true

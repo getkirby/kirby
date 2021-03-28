@@ -12,17 +12,17 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import ToggleInput from "../Input/ToggleInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as ToggleInput } from "../Input/ToggleInput.vue";
 
 export default {
+  mixins: [
+    Field,
+    Input,
+    ToggleInput
+  ],
   inheritAttrs: false,
-  props: {
-    ...Field.props,
-    ...Input.props,
-    ...ToggleInput.props
-  },
   methods: {
     focus() {
       this.$refs.input.focus();

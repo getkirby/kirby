@@ -19,10 +19,17 @@
 </template>
 
 <script>
+import {
+  help,
+  label
+} from "@/mixins/props.js";
+
 export default {
+  mixins: [
+    help,
+    label
+  ],
   props: {
-    help: String,
-    label: String,
     text: String,
     theme: {
       type: String,

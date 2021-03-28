@@ -32,15 +32,23 @@
 </template>
 
 <script>
-export default {
-  inheritAttrs: false,
+import {
+  after,
+  before,
+  disabled,
+  invalid
+} from "@/mixins/props.js";
+
+export const props = {
+  mixins: [
+    after,
+    before,
+    disabled,
+    invalid
+  ],
   props: {
-    after: String,
-    before: String,
-    disabled: Boolean,
     type: String,
     icon: [String, Boolean],
-    invalid: Boolean,
     theme: String,
     novalidate: {
       type: Boolean,
@@ -50,7 +58,12 @@ export default {
       type: [String, Boolean, Number, Object, Array],
       default: null
     }
-  },
+  }
+};
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       isInvalid: this.invalid,

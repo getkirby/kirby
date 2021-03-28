@@ -12,31 +12,43 @@
 </template>
 
 <script>
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
+import {
+  autofocus,
+  disabled,
+  id,
+  required
+} from "@/mixins/props.js";
 
-export default {
-  inheritAttrs: false,
+import { 
+  required as validateRequired, 
+  minLegth as validateMinLength, 
+  maxLength as validateMaxLength 
+} from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    required
+  ],
   props: {
-    autofocus: Boolean,
     columns: Number,
-    disabled: Boolean,
-    id: {
-      type: [Number, String],
-      default() {
-        return this._uid;
-      }
-    },
     max: Number,
     min: Number,
     options: Array,
-    required: Boolean,
     value: {
       type: [Array, Object],
       default() {
         return [];
       }
     }
-  },
+  }
+};
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       selected: this.valueToArray(this.value)
@@ -95,9 +107,9 @@ export default {
   validations() {
     return {
       selected: {
-        required: this.required ? required : true,
-        min: this.min ? minLength(this.min) : true,
-        max: this.max ? maxLength(this.max) : true,
+        required: this.required ? validateRequired : true,
+        min: this.min ? validateMinLength(this.min) : true,
+        max: this.max ? validateMaxLength(this.max) : true,
       }
     };
   }

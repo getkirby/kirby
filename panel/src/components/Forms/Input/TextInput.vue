@@ -22,33 +22,42 @@
 </template>
 
 <script>
-import {
-  required,
-  minLength,
-  maxLength,
-  email,
-  url
-} from "vuelidate/lib/validators";
 import direction from "@/helpers/direction.js";
 
-export default {
-  inheritAttrs: false,
-  class: "k-text-input",
+import {
+  autofocus,
+  disabled,
+  id,
+  name,
+  required
+} from "@/mixins/props.js"
+
+import {
+  required as validateRequired,
+  minLength as validateMinLength,
+  maxLength as validateMaxLength,
+  email as validateEmail,
+  url as validateUrl
+} from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    name,
+    required
+  ],
   props: {
     autocomplete: {
       type: [Boolean, String],
       default: "off"
     },
-    autofocus: Boolean,
-    disabled: Boolean,
-    id: [Number, String],
     maxlength: Number,
     minlength: Number,
-    name: [Number, String],
     pattern: String,
     placeholder: String,
     preselect: Boolean,
-    required: Boolean,
     spellcheck: {
       type: [Boolean, String],
       default: "off"
@@ -58,7 +67,12 @@ export default {
       default: "text"
     },
     value: String
-  },
+  }
+}
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       listeners: {
@@ -103,18 +117,18 @@ export default {
     }
   },
   validations() {
-    const match = (value) => {
+    const validateMatch = (value) => {
       return (!this.required && !value) || !this.$refs.input.validity.patternMismatch;
     };
 
     return {
       value: {
-        required: this.required ? required : true,
-        minLength: this.minlength ? minLength(this.minlength) : true,
-        maxLength: this.maxlength ? maxLength(this.maxlength) : true,
-        email: this.type === "email" ? email : true,
-        url: this.type === "url" ? url : true,
-        pattern: this.pattern ? match : true,
+        required: this.required ? validateRequired : true,
+        minLength: this.minlength ? validateMinLength(this.minlength) : true,
+        maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true,
+        email: this.type === "email" ? validateEmail : true,
+        url: this.type === "url" ? validateUrl : true,
+        pattern: this.pattern ? validateMatch : true,
       }
     };
   }

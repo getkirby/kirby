@@ -55,34 +55,48 @@
 </template>
 
 <script>
-import { required, minLength, maxLength } from "vuelidate/lib/validators";
 import direction from "@/helpers/direction.js";
 
-export default {
-  inheritAttrs: false,
+import {
+  autofocus,
+  disabled,
+  id,
+  name,
+  required
+} from "@/mixins/props.js";
+
+import { 
+  required as validateRequired, 
+  minLength as validateMinLength, 
+  maxLength as validateMaxLength 
+} from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    name,
+    required
+  ],
   props: {
-    autofocus: Boolean,
     accept: {
       type: String,
       default: "all"
     },
-    disabled: Boolean,
     icon: {
       type: [String, Boolean],
       default: "tag"
     },
-    id: [Number, String],
     layout: String,
     max: Number,
     min: Number,
-    name: [Number, String],
     options: {
       type: Array,
       default() {
         return [];
       }
     },
-    required: Boolean,
     separator: {
       type: String,
       default: ","
@@ -93,7 +107,12 @@ export default {
         return [];
       }
     }
-  },
+  }
+}
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       tags: this.prepareTags(this.value),
@@ -366,9 +385,9 @@ export default {
   validations() {
     return {
       tags: {
-        required: this.required ? required : true,
-        minLength: this.min ? minLength(this.min) : true,
-        maxLength: this.max ? maxLength(this.max) : true
+        required: this.required ? validateRequired : true,
+        minLength: this.min ? validateMinLength(this.min) : true,
+        maxLength: this.max ? validateMaxLength(this.max) : true
       }
     };
   }

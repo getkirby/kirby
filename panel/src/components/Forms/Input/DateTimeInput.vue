@@ -22,13 +22,12 @@
 </template>
 
 <script>
-import DateInput from "./DateInput.vue";
-import { required } from "vuelidate/lib/validators";
+import { props as DateInput } from "./DateInput.vue";
+import { required as validateRequired } from "vuelidate/lib/validators";
 
-export default {
-  inheritAttrs: false,
+export const props = {
+  mixins: [DateInput],
   props: {
-    ...DateInput.props,
     time: {
       type: [Boolean, Object],
       default() {
@@ -36,7 +35,12 @@ export default {
       }
     },
     value: String
-  },
+  }
+}
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       input: this.toDatetime(this.value)
@@ -155,7 +159,7 @@ export default {
           "isBefore",
           this.step.unit
         ) : true,
-        required: this.required ? required : true,
+        required: this.required ? validateRequired : true,
       }
     };
   }

@@ -17,33 +17,19 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import TextareaInput from "../Input/TextareaInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as TextareaInput } from "../Input/TextareaInput.vue";
+import counter from "@/mixins/forms/counter.js";
 
 export default {
+  mixins: [
+    Field,
+    Input,
+    TextareaInput,
+    counter
+  ],
   inheritAttrs: false,
-  props: {
-    ...Field.props,
-    ...Input.props,
-    ...TextareaInput.props,
-    counter: {
-      type: Boolean,
-      default: true
-    }
-  },
-  computed: {
-    counterOptions() {
-      if (this.value === null || this.disabled || this.counter === false) {
-        return false;
-      }
-      return {
-        count: this.value ? this.value.length : 0,
-        min: this.minlength,
-        max: this.maxlength
-      };
-    }
-  },
   methods: {
     focus() {
       this.$refs.input.focus();

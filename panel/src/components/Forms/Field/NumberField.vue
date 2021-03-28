@@ -12,17 +12,17 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import NumberInput from "../Input/NumberInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as NumberInput } from "../Input/NumberInput.vue";
 
 export default {
+  mixins: [
+    Field,
+    Input,
+    NumberInput
+  ],
   inheritAttrs: false,
-  props: {
-    ...Field.props,
-    ...Input.props,
-    ...NumberInput.props
-  },
   methods: {
     focus() {
       this.$refs.input.focus();
