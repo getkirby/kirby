@@ -75,12 +75,7 @@
 </template>
 
 <script>
-import Layout from "./Layout";
-
 export default {
-  components: {
-    "k-layout": Layout
-  },
   props: {
     disabled: Boolean,
     empty: String,

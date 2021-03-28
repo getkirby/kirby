@@ -24,6 +24,7 @@
 
 <script>
 export default {
+  extends: "k-block-type",
   computed: {
     captionMarks() {
       return this.field("caption", { marks: true }).marks;

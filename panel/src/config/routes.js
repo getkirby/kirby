@@ -2,9 +2,9 @@ import Vue from "vue";
 import auth from "./auth.js";
 import store from "@/store/store.js";
 
-// make sure custom components are loaded
-// to support overwriting route views
-import "./plugins.js";
+// Make sure components are loaded
+import Components from "@/components/index.js";
+Vue.use(Components);
 
 /* Routes */
 let routes = [

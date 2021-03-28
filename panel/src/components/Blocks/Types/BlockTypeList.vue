@@ -11,6 +11,7 @@
 
 <script>
 export default {
+  extends: "k-block-type",
   computed: {
     marks() {
       return this.field("text", {}).marks;

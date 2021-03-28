@@ -11,3 +11,9 @@
   line-height: 1.5em;
 }
 </style>
+
+<script>
+export default {
+  extends: "k-block-type"
+}
+</script>

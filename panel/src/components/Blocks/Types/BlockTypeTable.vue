@@ -28,6 +28,7 @@
 
 <script>
 export default {
+  extends: "k-block-type",
   inheritAttrs: false,
   computed: {
     columns() {

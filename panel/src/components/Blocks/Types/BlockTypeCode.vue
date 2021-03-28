@@ -25,6 +25,7 @@
 
 <script>
 export default {
+  extends: "k-block-type",
   computed: {
     placeholder() {
       return this.field("code", {}).placeholder;

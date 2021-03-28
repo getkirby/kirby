@@ -68,6 +68,7 @@
       "parser": "babel-eslint"
     },
     "rules": {
+      "no-control-regex": "off",
       "vue/require-default-prop": "off",
       "vue/attributes-order": "error",
       "vue/require-prop-types": "error",

@@ -84,7 +84,7 @@
 </template>
 
 <script>
-import picker from "@/mixins/picker/dialog.js";
+import picker from "@/mixins/dialogs/picker.js";
 
 export default {
   mixins: [picker],

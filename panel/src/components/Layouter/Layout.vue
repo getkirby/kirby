@@ -74,12 +74,7 @@
 </template>
 
 <script>
-import Column from "./Column";
-
 export default {
-  components: {
-    "k-layout-column": Column
-  },
   props: {
     attrs: [Array, Object],
     columns: Array,
