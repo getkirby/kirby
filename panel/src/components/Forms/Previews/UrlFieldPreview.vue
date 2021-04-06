@@ -31,15 +31,15 @@ export default {
 
 .k-url-field-preview {
   padding: 0 .75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .k-url-field-preview a {
   color: $color-focus;
   text-decoration: underline;
   transition: color .3s;
-  overflow: hidden;
   white-space: nowrap;
   max-width: 100%;
-  text-overflow: ellipsis;
 }
 .k-url-field-preview a:hover {
   color: $color-black;
