@@ -239,7 +239,7 @@ class Page extends ModelWithContent
      * @param string|null $inSection
      * @return array
      */
-    public function blueprints(string $inSection = null): array
+    public function blueprints(?string $inSection = null): array
     {
         if ($inSection !== null) {
             return $this->blueprint()->section($inSection)->blueprints();
@@ -304,7 +304,7 @@ class Page extends ModelWithContent
      * @param string|null $languageCode
      * @return array
      */
-    public function contentFileData(array $data, string $languageCode = null): array
+    public function contentFileData(array $data, ?string $languageCode = null): array
     {
         return A::prepend($data, [
             'title' => $data['title'] ?? null,
@@ -320,7 +320,7 @@ class Page extends ModelWithContent
      * @param string|null $languageCode
      * @return string
      */
-    public function contentFileName(string $languageCode = null): string
+    public function contentFileName(?string $languageCode = null): string
     {
         return $this->intendedTemplate()->name();
     }
