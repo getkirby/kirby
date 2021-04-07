@@ -842,10 +842,7 @@ trait PageActions
      * @param array|null $input
      * @param string|null $languageCode
      * @param bool $validate
-     * @return self
-     *
-     * @todo Change return type to `static` once
-     *       https://github.com/vimeo/psalm/issues/5264 has been fixed
+     * @return static
      */
     public function update(array $input = null, string $languageCode = null, bool $validate = false)
     {
