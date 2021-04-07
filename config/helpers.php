@@ -552,7 +552,7 @@ function option(string $key, $default = null)
  *
  * @param string|array ...$id
  * @return \Kirby\Cms\Page|\Kirby\Cms\Pages|null
- * @todo reduce to one parameter in 3.7.0 (also change return type)
+ * @todo reduce to one parameter in 3.7.0 (also change return and return type)
  */
 function page(...$id)
 {
@@ -561,7 +561,9 @@ function page(...$id)
     }
 
     if (count($id) > 1) {
+        // @codeCoverageIgnoreStart
         deprecated('Passing multiple parameters to the `page()` helper has been deprecated. Please use the `pages()` helper instead.');
+        // @codeCoverageIgnoreEnd
     }
 
     return App::instance()->site()->find(...$id);
@@ -572,9 +574,16 @@ function page(...$id)
  *
  * @param string|array ...$id
  * @return \Kirby\Cms\Page|\Kirby\Cms\Pages|null
+ * @todo return only Pages|null in 3.7.0, wrap in Pages for single passed id
  */
 function pages(...$id)
 {
+    if (count($id) === 1) {
+        // @codeCoverageIgnoreStart
+        deprecated('Passing a single id to the `pages()` helper will return a Kirby\Cms\Pages collection with a single element instead of the single Kirby\Cms\Page object itself - starting in 3.7.0.');
+        // @codeCoverageIgnoreEnd
+    }
+
     return App::instance()->site()->find(...$id);
 }
 
