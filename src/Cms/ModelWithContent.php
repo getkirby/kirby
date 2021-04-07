@@ -752,11 +752,8 @@ abstract class ModelWithContent extends Model
      * @param array|null $input
      * @param string|null $languageCode
      * @param bool $validate
-     * @return self
+     * @return static
      * @throws \Kirby\Exception\InvalidArgumentException If the input array contains invalid values
-     *
-     * @todo Change return type to `static` once
-     *       https://github.com/vimeo/psalm/issues/5264 has been fixed
      */
     public function update(array $input = null, string $languageCode = null, bool $validate = false)
     {
