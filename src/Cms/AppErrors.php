@@ -144,6 +144,7 @@ trait AppErrors
         });
 
         $this->setWhoopsHandler($handler);
+        $this->whoops()->sendHttpCode(false);
     }
 
     /**
