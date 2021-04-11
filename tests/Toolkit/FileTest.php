@@ -41,10 +41,11 @@ class FileTest extends TestCase
         $this->assertSame('data:image/svg+xml,' . $encoded, $file->dataUri(false));
     }
 
-    public function testRoot()
+    public function testDownload()
     {
         $file = $this->_file();
-        $this->assertEquals(static::FIXTURES . '/test.js', $file->root());
+        $this->assertIsString($file->download());
+        $this->assertIsString($file->download('meow.jpg'));
     }
 
     public function testExists()
@@ -54,6 +55,24 @@ class FileTest extends TestCase
 
         $file = new File('does-not-exist.jpg');
         $this->assertFalse($file->exists());
+    }
+
+    public function testHeader()
+    {
+        $file = $this->_file();
+        $this->assertInstanceOf('Kirby\Http\Response', $file->header(false));
+    }
+
+    public function testHeaderSend()
+    {
+        $file = $this->_file();
+        $this->assertSame('', $file->header());
+    }
+
+    public function testRoot()
+    {
+        $file = $this->_file();
+        $this->assertSame(static::FIXTURES . '/test.js', $file->root());
     }
 
     public function testWritable()
@@ -71,31 +90,31 @@ class FileTest extends TestCase
     public function testFilename()
     {
         $file = $this->_file();
-        $this->assertEquals('test.js', $file->filename());
+        $this->assertSame('test.js', $file->filename());
     }
 
     public function testName()
     {
         $file = $this->_file();
-        $this->assertEquals('test', $file->name());
+        $this->assertSame('test', $file->name());
     }
 
     public function testExtension()
     {
         $file = $this->_file();
-        $this->assertEquals('js', $file->extension());
+        $this->assertSame('js', $file->extension());
     }
 
     public function testMime()
     {
         $file = $this->_file();
-        $this->assertEquals('text/plain', $file->mime());
+        $this->assertSame('text/plain', $file->mime());
     }
 
     public function testType()
     {
         $file = $this->_file();
-        $this->assertEquals('code', $file->type());
+        $this->assertSame('code', $file->type());
     }
 
     public function testUnknownType()
@@ -107,27 +126,27 @@ class FileTest extends TestCase
     public function testSize()
     {
         $file = $this->_file('test.js');
-        $this->assertEquals(14, $file->size());
+        $this->assertSame(14, $file->size());
     }
 
     public function testNiceSize()
     {
         // existing file
         $file = $this->_file('test.js');
-        $this->assertEquals('14 B', $file->niceSize());
+        $this->assertSame('14 B', $file->niceSize());
 
         // non-existing file
         $file = $this->_file('does/not/exist.js');
-        $this->assertEquals('0 KB', $file->niceSize());
+        $this->assertSame('0 KB', $file->niceSize());
     }
 
     public function testModified()
     {
         // existing file
         $file = $this->_file('test.js');
-        $this->assertEquals(F::modified($file->root()), $file->modified());
+        $this->assertSame(F::modified($file->root()), $file->modified());
 
-        $this->assertEquals(strftime('%d.%m.%Y', F::modified($file->root())), $file->modified('%d.%m.%Y', 'strftime'));
+        $this->assertSame(strftime('%d.%m.%Y', F::modified($file->root())), $file->modified('%d.%m.%Y', 'strftime'));
 
         // non-existing file
         $file = $this->_file('does/not/exist.js');
@@ -148,7 +167,7 @@ class FileTest extends TestCase
         $file->write('test');
 
         $this->assertTrue($file->exists());
-        $this->assertEquals('test', file_get_contents($file->root()));
+        $this->assertSame('test', file_get_contents($file->root()));
     }
 
     public function testWriteUnwritable()
@@ -175,13 +194,13 @@ class FileTest extends TestCase
     public function testRead()
     {
         $file = $this->_file();
-        $this->assertEquals(file_get_contents($file->root()), $file->read());
+        $this->assertSame(file_get_contents($file->root()), $file->read());
     }
 
     public function testReadNotExist()
     {
         $file = $this->_file('missing.txt');
-        $this->assertEquals(null, $file->read());
+        $this->assertFalse($file->read());
     }
 
     public function testReadUnreadble()
@@ -189,7 +208,7 @@ class FileTest extends TestCase
         $file = new File(static::FIXTURES . '/tmp/unreadable.txt');
         $file->write('test');
         chmod($file->root(), 000);
-        $this->assertEquals(null, $file->read());
+        $this->assertFalse($file->read());
     }
 
     public function testMove()
@@ -205,13 +224,13 @@ class FileTest extends TestCase
 
         $this->assertTrue(file_exists($oldRoot));
         $this->assertFalse(file_exists($newRoot));
-        $this->assertEquals($oldRoot, $file->root());
+        $this->assertSame($oldRoot, $file->root());
 
         $moved = $file->move($newRoot);
 
         $this->assertFalse(file_exists($oldRoot));
         $this->assertTrue(file_exists($newRoot));
-        $this->assertEquals($newRoot, $moved->root());
+        $this->assertSame($newRoot, $moved->root());
     }
 
     public function testMoveToExisting()
@@ -255,14 +274,14 @@ class FileTest extends TestCase
 
         $this->assertTrue(file_exists($oldRoot));
         $this->assertFalse(file_exists($newRoot));
-        $this->assertEquals($oldRoot, $file->root());
+        $this->assertSame($oldRoot, $file->root());
 
         $new = $file->copy($newRoot);
 
         $this->assertTrue(file_exists($oldRoot));
         $this->assertTrue(file_exists($newRoot));
         $this->assertInstanceOf(File::class, $new);
-        $this->assertEquals($newRoot, $new->root());
+        $this->assertSame($newRoot, $new->root());
     }
 
     public function testCopyToExisting()
@@ -298,8 +317,8 @@ class FileTest extends TestCase
         $file = $this->_file();
         $renamed = $file->rename('awesome');
 
-        $this->assertEquals('awesome.js', $renamed->filename());
-        $this->assertEquals('awesome', $renamed->name());
+        $this->assertSame('awesome.js', $renamed->filename());
+        $this->assertSame('awesome', $renamed->name());
 
         $renamed->rename('test');
     }
@@ -310,8 +329,8 @@ class FileTest extends TestCase
         $file->write('test');
         $file->rename('test');
 
-        $this->assertEquals('test.txt', $file->filename());
-        $this->assertEquals(static::FIXTURES . '/tmp/test.txt', $file->root());
+        $this->assertSame('test.txt', $file->filename());
+        $this->assertSame(static::FIXTURES . '/tmp/test.txt', $file->root());
 
         // clean up
         @unlink($file->root());
@@ -380,6 +399,20 @@ class FileTest extends TestCase
         $this->expectExceptionMessage('Missing handler for type: "js"');
 
         $file->validateContents();
+    }
+
+    public function testToArray()
+    {
+        $file = $this->_file();
+        $this->assertSame('test.js', $file->toArray()['filename']);
+        $this->assertSame('js', $file->toArray()['extension']);
+    }
+
+    public function testToString()
+    {
+        $file = $this->_file();
+        $this->assertIsString($json = $file->toJson());
+        $this->assertSame('test.js', json_decode($json)->filename);
     }
 
     public static function tearDownAfterClass(): void

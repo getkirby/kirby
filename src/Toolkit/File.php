@@ -2,6 +2,8 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Http\Response;
+
 use Exception;
 use Kirby\Sane\Sane;
 
@@ -99,6 +101,18 @@ class File
         return true;
     }
 
+    /*
+     * Automatically sends all needed headers for the file to be downloaded
+     * and echos the file's content
+     *
+     * @param  string|null $filename  Optional filename for the download
+     * @return string
+     */
+    public function download($filename = null): string
+    {
+        return Response::download($this->root, $filename ?? $this->filename());
+    }
+
     /**
      * Checks if the file actually exists
      *
@@ -137,6 +151,18 @@ class File
     public function hash(): string
     {
         return md5($this->root);
+    }
+
+    /**
+     * Sends an appropriate header for the asset
+     *
+     * @param bool $send
+     * @return \Kirby\Http\Response|string
+     */
+    public function header(bool $send = true)
+    {
+        $response = new Response('', $this->mime());
+        return $send === true ? $response->send() : $response;
     }
 
     /**
@@ -315,11 +341,22 @@ class File
     }
 
     /**
+     * Converts the entire file array into
+     * a json string
+     *
+     * @return string
+     */
+    public function toJson(): string
+    {
+        return json_encode($this->toArray());
+    }
+
+    /**
      * Returns the file type.
      *
-     * @return string|false
+     * @return string|null
      */
-    public function type()
+    public function type(): ?string
     {
         return F::type($this->root);
     }
