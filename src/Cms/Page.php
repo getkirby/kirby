@@ -334,7 +334,7 @@ class Page extends ModelWithContent
      * @return array
      * @throws \Kirby\Exception\InvalidArgumentException If the controller returns invalid objects for `kirby`, `site`, `pages` or `page`
      */
-    public function controller($data = [], $contentType = 'html'): array
+    public function controller(array $data = [], string $contentType = 'html'): array
     {
         // create the template data
         $data = array_merge($data, [
