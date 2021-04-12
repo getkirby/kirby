@@ -572,7 +572,7 @@ class Site extends ModelWithContent
      * @param string|null $url
      * @return $this
      */
-    protected function setUrl($url = null)
+    protected function setUrl(?string $url = null)
     {
         $this->url = $url;
         return $this;
@@ -604,7 +604,7 @@ class Site extends ModelWithContent
      * @param string|null $language
      * @return string
      */
-    public function url($language = null): string
+    public function url(?string $language = null): string
     {
         if ($language !== null || $this->kirby()->multilang() === true) {
             return $this->urlForLanguage($language);
