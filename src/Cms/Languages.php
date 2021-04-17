@@ -19,7 +19,7 @@ class Languages extends Collection
     /**
      * Creates a new collection with the given language objects
      *
-     * @param array $objects
+     * @param array $objects `Kirby\Cms\Language` objects
      * @param null $parent
      * @throws \Kirby\Exception\DuplicateException
      */
