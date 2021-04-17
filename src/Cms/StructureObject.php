@@ -35,7 +35,7 @@ class StructureObject extends Model
     protected $id;
 
     /**
-     * @var Page|Site|File|User
+     * @var \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\File|\Kirby\Cms\User|null
      */
     protected $parent;
 
@@ -155,11 +155,10 @@ class StructureObject extends Model
     }
 
     /**
-     * Sets the parent Model. This can either be a
-     * Page, Site, File or User object
+     * Sets the parent Model
      *
-     * @param \Kirby\Cms\Model|null $parent
      * @return $this
+     * @param \Kirby\Cms\Site|\Kirby\Cms\Page|\Kirby\Cms\File|\Kirby\Cms\User|null $parent
      */
     protected function setParent(Model $parent = null)
     {
