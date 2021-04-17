@@ -101,7 +101,7 @@ class PagesTest extends TestCase
     public function testAddInvalidObject()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('You must pass a Page object to the Pages collection');
+        $this->expectExceptionMessage('You must pass a Pages or Page object or an ID of an existing page to the Pages collection');
 
         $site  = new Site();
         $pages = new Pages();
