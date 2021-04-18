@@ -2,13 +2,12 @@
 
 namespace Kirby\Http;
 
-use Kirby\Http\Request\Auth\BasicAuth;
-use Kirby\Http\Request\Auth\BearerAuth;
 use Kirby\Http\Request\Body;
 use Kirby\Http\Request\Files;
 use Kirby\Http\Request\Method;
 use Kirby\Http\Request\Query;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Str;
 
 /**
@@ -24,10 +23,12 @@ use Kirby\Toolkit\Str;
  */
 class Request
 {
+    use Properties;
+
     /**
      * The auth object if available
      *
-     * @var BearerAuth|BasicAuth|false|null
+     * @var \Kirby\Http\Request\Auth\BasicAuth|\Kirby\Http\Request\Auth\BearerAuth|false
      */
     protected $auth;
 
@@ -41,7 +42,7 @@ class Request
      *
      * `$request->body()->get('foo')`
      *
-     * @var Body
+     * @var \Kirby\Http\Request\Body
      */
     protected $body;
 
@@ -56,7 +57,7 @@ class Request
      * `$request->files()->get('upload')['size']`
      * `$request->file('upload')['size']`
      *
-     * @var Files
+     * @var \Kirby\Http\Request\Files
      */
     protected $files;
 
@@ -68,14 +69,6 @@ class Request
     protected $method;
 
     /**
-     * All options that have been passed to
-     * the request in the constructor
-     *
-     * @var array
-     */
-    protected $options;
-
-    /**
      * The Query object is a wrapper around
      * the URL query string, which parses the
      * string and provides a clean API to fetch
@@ -85,14 +78,14 @@ class Request
      *
      * `$request->query()->get('foo')`
      *
-     * @var Query
+     * @var \Kirby\Http\Request\Query
      */
     protected $query;
 
     /**
      * Request URL object
      *
-     * @var Uri
+     * @var \Kirby\Http\Uri
      */
     protected $url;
 
@@ -106,24 +99,7 @@ class Request
      */
     public function __construct(array $options = [])
     {
-        $this->options = $options;
-        $this->method  = $this->detectRequestMethod($options['method'] ?? null);
-
-        if (isset($options['body']) === true) {
-            $this->body = new Body($options['body']);
-        }
-
-        if (isset($options['files']) === true) {
-            $this->files = new Files($options['files']);
-        }
-
-        if (isset($options['query']) === true) {
-            $this->query = new Query($options['query']);
-        }
-
-        if (isset($options['url']) === true) {
-            $this->url = new Uri($options['url']);
-        }
+        $this->setProperties($options);
     }
 
     /**
@@ -145,27 +121,11 @@ class Request
     /**
      * Returns the Auth object if authentication is set
      *
-     * @return \Kirby\Http\Request\Auth\BasicAuth|\Kirby\Http\Request\Auth\BearerAuth|null
+     * @return \Kirby\Http\Request\Auth\BasicAuth|\Kirby\Http\Request\Auth\BearerAuth|false
      */
     public function auth()
     {
-        if ($this->auth !== null) {
-            return $this->auth;
-        }
-
-        if ($auth = $this->options['auth'] ?? $this->header('authorization')) {
-            $type  = Str::before($auth, ' ');
-            $token = Str::after($auth, ' ');
-            $class = 'Kirby\\Http\\Request\\Auth\\' . ucfirst($type) . 'Auth';
-
-            if (class_exists($class) === false) {
-                return $this->auth = false;
-            }
-
-            return $this->auth = new $class($token);
-        }
-
-        return $this->auth = false;
+        return $this->auth;
     }
 
     /**
@@ -175,7 +135,7 @@ class Request
      */
     public function body()
     {
-        return $this->body = $this->body ?? new Body();
+        return $this->body;
     }
 
     /**
@@ -270,7 +230,7 @@ class Request
      */
     public function files()
     {
-        return $this->files = $this->files ?? new Files();
+        return $this->files;
     }
 
     /**
@@ -380,7 +340,90 @@ class Request
      */
     public function query()
     {
-        return $this->query = $this->query ?? new Query();
+        return $this->query;
+    }
+
+    /**
+     * Sets the auth
+     *
+     * @param string|null $auth
+     * @return $this
+     */
+    protected function setAuth(?string $auth = null)
+    {
+        if ($auth = $auth ?? $this->header('authorization')) {
+            $type  = Str::before($auth, ' ');
+            $token = Str::after($auth, ' ');
+            $class = 'Kirby\\Http\\Request\\Auth\\' . ucfirst($type) . 'Auth';
+
+            if (class_exists($class) === true) {
+                $this->auth = new $class($token);
+                return $this;
+            }
+        }
+
+        $this->auth = false;
+        return $this;
+    }
+
+    /**
+     * Sets the body
+     *
+     * @param array|string|null $body
+     * @return $this
+     */
+    protected function setBody($body = null)
+    {
+        $this->body = new Body($body);
+        return $this;
+    }
+
+    /**
+     * Sets the files
+     *
+     * @param array|null $files
+     * @return $this
+     */
+    protected function setFiles(?array $files = null)
+    {
+        $this->files = new Files($files);
+        return $this;
+    }
+
+    /**
+     * Sets the method
+     *
+     * @param string|null $method
+     * @return $this
+     */
+    protected function setMethod(?string $method = null)
+    {
+        $this->method = $this->detectRequestMethod($method);
+        return $this;
+    }
+
+    /**
+     * Sets the query
+     *
+     * @param array|string|null $query
+     * @return $this
+     */
+    protected function setQuery($query = null)
+    {
+        $this->query = new Query($query);
+        return $this;
+    }
+
+    /**
+     * Sets the URl
+     *
+     * @param array|string|null $url
+     * @return $this
+     */
+    protected function setUrl($url = null)
+    {
+        $this->url = $url ? new Uri($url) : Uri::current();
+        return $this;
     }
 
     /**
@@ -408,6 +451,6 @@ class Request
             return $this->url()->clone($props);
         }
 
-        return $this->url = $this->url ?? Uri::current();
+        return $this->url;
     }
 }
