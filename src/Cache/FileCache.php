@@ -2,6 +2,7 @@
 
 namespace Kirby\Cache;
 
+use Kirby\Exception\Exception;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
@@ -77,19 +78,19 @@ class FileCache extends Cache
                 // forward slashes don't need special treatment
                 case '/':
                     break;
-                
+
                 // backslashes get their own marker in the path
                 // to differentiate the cache key from one with forward slashes
                 case '\\':
                     $keyParts[] = '_backslash';
                     break;
-                
+
                 // empty part means two slashes in a row;
                 // special marker like for backslashes
                 case '':
                     $keyParts[] = '_empty';
                     break;
-                
+
                 // an actual path segment
                 default:
                     // check if the segment only contains safe characters;
@@ -178,10 +179,41 @@ class FileCache extends Cache
     {
         $file = $this->file($key);
 
-        if (is_file($file) === true) {
-            return F::remove($file);
-        } else {
-            return false;
+        if (is_file($file) === true && F::remove($file) === true) {
+            $this->removeEmptyDirectories(dirname($file));
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Removes empty directories safely by checking each directory
+     * up to the root directory
+     *
+     * @param string $dir
+     * @return void
+     */
+    protected function removeEmptyDirectories(string $dir): void
+    {
+        try {
+            // ensure the path doesn't end with a slash for the next comparison
+            $dir = rtrim($dir, '/\/');
+
+            // checks all directory segments until reaching the root directory
+            while (Str::startsWith($dir, $this->root()) === true && $dir !== $this->root()) {
+                $files = array_diff(scandir($dir) ?? [], ['.', '..']);
+
+                if (empty($files) === true && Dir::remove($dir) === true) {
+                    // continue with the next level up
+                    $dir = dirname($dir);
+                } else {
+                    // no need to continue with the next level up as `$dir` was not deleted
+                    break;
+                }
+            }
+        } catch (Exception $e) { // @codeCoverageIgnore
+            // silently stops the process
         }
     }
 

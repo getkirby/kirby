@@ -94,7 +94,11 @@ export default {
     prompt(e) {
       e.stopPropagation();
 
-      if (this.uploads) {
+      if (this.disabled) {
+        return false;
+      }
+
+      if (this.more && this.uploads) {
         this.$refs.picker.toggle();
       } else {
         this.open();

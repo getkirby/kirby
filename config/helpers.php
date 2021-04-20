@@ -171,14 +171,13 @@ if (function_exists('e') === false) {
  * Escape context specific output
  *
  * @param string $string Untrusted data
- * @param string $context Location of output
- * @param bool $strict Whether to escape an extended set of characters (HTML attributes only)
+ * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
  * @return string Escaped data
  */
-function esc($string, $context = 'html', $strict = false)
+function esc($string, $context = 'html')
 {
     if (method_exists('Kirby\Toolkit\Escape', $context) === true) {
-        return Escape::$context($string, $strict);
+        return Escape::$context($string);
     }
 
     return $string;

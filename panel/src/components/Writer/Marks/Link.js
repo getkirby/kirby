@@ -89,6 +89,7 @@ export default class Link extends Mark {
           getAttrs: dom => ({
             href: dom.getAttribute("href"),
             target: dom.getAttribute("target"),
+            title: dom.getAttribute("title")
           }),
         },
       ],

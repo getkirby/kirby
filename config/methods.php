@@ -337,7 +337,7 @@ return function (App $app) {
          * templates without the risk of XSS attacks
          *
          * @param \Kirby\Cms\Field $field
-         * @param string $context html, attr, js or css
+         * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
          */
         'escape' => function (Field $field, string $context = 'html') {
             $field->value = esc($field->value, $context);
@@ -528,7 +528,7 @@ return function (App $app) {
          * Converts the field content to a slug
          *
          * @param \Kirby\Cms\Field $field
-         * @return \Kirby\cms\Field
+         * @return \Kirby\Cms\Field
          */
         'slug' => function (Field $field) {
             $field->value = Str::slug($field->value);
@@ -539,7 +539,7 @@ return function (App $app) {
          * Applies SmartyPants to the field
          *
          * @param \Kirby\Cms\Field $field
-         * @return \Kirby\cms\Field
+         * @return \Kirby\Cms\Field
          */
         'smartypants' => function (Field $field) use ($app) {
             $field->value = $app->smartypants($field->value);
@@ -560,7 +560,7 @@ return function (App $app) {
          * Converts the field content to uppercase
          *
          * @param \Kirby\Cms\Field $field
-         * @return \Kirby\cms\Field
+         * @return \Kirby\Cms\Field
          */
         'upper' => function (Field $field) {
             $field->value = Str::upper($field->value);
@@ -572,7 +572,7 @@ return function (App $app) {
          * the last space with `&nbsp;`
          *
          * @param \Kirby\Cms\Field $field
-         * @return \Kirby\cms\Field
+         * @return \Kirby\Cms\Field
          */
         'widont' => function (Field $field) {
             $field->value = Str::widont($field->value);
