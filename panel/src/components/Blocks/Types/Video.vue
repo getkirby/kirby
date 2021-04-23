@@ -1,6 +1,7 @@
 <template>
   <k-block-figure
     :caption="content.caption"
+    :caption-marks="captionMarks"
     :empty-text="$t('field.blocks.video.placeholder') + ' …'"
     :is-empty="!video"
     empty-icon="video"
@@ -16,6 +17,9 @@
 <script>
 export default {
   computed: {
+    captionMarks() {
+      return this.field("caption", { marks: true }).marks;
+    },
     video() {
 
       var url = this.content.url;
