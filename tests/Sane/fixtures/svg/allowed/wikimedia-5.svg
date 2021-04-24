@@ -1,0 +1,13 @@
+<!-- Test fixture adapted from the Wikimedia Commons SVG Testing Area
+     @link https://en.wikipedia.org/w/index.php?title=File:Test.svg#filehistory
+     @link https://upload.wikimedia.org/wikipedia/commons/archive/b/bd/20201107180323%21Test.svg
+     @date 7 November 2020 18:03
+     @author Leonel Sohns
+     @license https://creativecommons.org/licenses/by-sa/3.0/deed.en
+
+     Unlike other code in this directory, this file is published under the
+     terms of the Creative Commons Attribution-Share Alike 3.0 Unported license.
+-->
+<svg height="77" viewBox="0 0 81 77" width="81" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <image height="77" width="81" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAFEAAABNCAMAAADpRXjkAAAABGdBTUEAALGPC/xhBQAAACBjSFJN AAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAASFBMVEX25ub24uL32tr33t73 0tL31tb4xcX6qan5tbX5wcH7paX5vb35ubn4ycn4zs76ra36sbH31tb25ub24uL33t732tr30tL/ //84aNI2AAAABnRSTlMAAAAAqiLvLhIWAAAAAWJLR0QXC9aYjwAAAAlwSFlzAAAK8AAACvABQqw0 mAAAAAd0SU1FB+QBGwYOMTCpWxwAAAKiSURBVFjDrZjZloMgEESzDSCiGEz8/0+dI0ukoUEE6t17 LKurIbndkroTyh63nho457QrkvLOyBfXovduxNEQuegFvHOnqRNx/hH5Xx8i21ly6ZfOU7/de+yX zqRfUSn9knzpgJQ7aFBqXToF/tCcj1Lqqwedj63EQXtVu94m8LmRqF9s0kQ195gh08DVEJUNvGmG NEMoJz2bXDYEbho4/4g28KWeqL8cVYeaA9cuR+Uj25aGbaBPdIFXzpBrINDQErhrIJSoXxpHA4HW +qXhNRDoUx2430ClJsHICgInV4GggV/pv3Bl4KCBkoP6kJrAQQPtJuPMfYOaU8I0cE0QawKHDXQH 7DFDlwM3DdzgHvOIbmmUB05gA6eIeDnwoIGfmHgxcNPA7/H4EhOvBT6GDZwQ4qVrAWzgni1GXGVx 4K947QiEeCFwAc/AY8jDPbQVBh6egUe1o9U2lQUOGgiejYiFgS/RGehGMiYWBR400H8UIdqlkQ08 aKBvGyGWBI6fgdo2Rjy/B0YN9EYSJdqlkQ58xE3vD1KceBZ41MCfJEsQ7f5MBI400GmbU8Rs4AIc KKXKBI42sEDpwGf/4I+yEcM3hUwGjjbQOpNol5wGPPBEA3fZGxRdU0iBBq4biI8dsafXlCLawFlR A30iSaaD3QOTDTzSzM0Bcg9MNnDX2XdU2LWA5j6UzprmRzW8+GcaaJjbtqq8gqVR10Bf60b9wGsb aPSeB0bdtdD+LMs2MKPvRoTkUCbv+Hfgqck3GRnH9Dpp4KnJQEwDze9Aes7CTP4kGXk9QAOzptMm 93dhwwT/xMg18MTkMpK/Z7xrh0QDy02iZyBpMJk/A2tMhnJX73qTqGnZYBI33WISNd1kMpRsNRnp +ICszmSkfeVL0WAy1D/GhrZ3YP67gAAAACV0RVh0ZGF0ZTpjcmVhdGUAMjAyMC0wMS0yN1QxMzox NDo0OS0wNzowMEBH7JcAAAAldEVYdGRhdGU6bW9kaWZ5ADIwMjAtMDEtMjdUMTM6MTQ6NDktMDc6 MDAxGlQrAAAAAElFTkSuQmCC" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+</svg>

@@ -1,0 +1,7 @@
+<!-- Test fixture inspired by DOMPurify
+     @link https://github.com/cure53/DOMPurify
+     @copyright 2015 Mario Heiderich
+     @license https://www.apache.org/licenses/LICENSE-2.0
+-->
+<?xml-stylesheet href="javascript:alert(1)"?>
+<xml></xml>
