@@ -653,7 +653,7 @@ class F
         $in   = str_replace('\\', '/', $in);
 
         if (Str::contains($file, $in) === false) {
-            return basename($file);
+            return $file;
         }
 
         return Str::after($file, $in);
