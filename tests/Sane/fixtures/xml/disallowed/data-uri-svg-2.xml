@@ -1,0 +1,8 @@
+<!-- Test fixture taken from DOMPurify
+     @link https://github.com/cure53/DOMPurify
+     @copyright 2015 Mario Heiderich
+     @license https://www.apache.org/licenses/LICENSE-2.0
+-->
+<xml>
+  <image filter="url('data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%3Cscript%3Ealert%281%29%3C%2Fscript%3E%3C%2Fsvg%3E')" />
+</xml>

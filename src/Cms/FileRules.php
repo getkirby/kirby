@@ -85,6 +85,7 @@ class FileRules
         static::validFile($file, $upload->mime());
 
         $upload->match($file->blueprint()->accept());
+        $upload->validateContents(true);
 
         return true;
     }
@@ -133,6 +134,7 @@ class FileRules
         }
 
         $upload->match($file->blueprint()->accept());
+        $upload->validateContents(true);
 
         return true;
     }
