@@ -42,7 +42,7 @@ class EmailTest extends TestCase
         $this->assertEquals($expectedCc, $email->cc());
         $this->assertEquals($expectedCc, $email->bcc());
 
-        $this->assertInstanceOf(Body::class, $email->body());
+        $this->assertInstanceOf('Kirby\\Toolkit\\Obj', $email->body());
         $this->assertEquals($body, $email->body()->text());
         $this->assertEquals(null, $email->body()->html());
 
@@ -102,7 +102,7 @@ class EmailTest extends TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(Body::class, $email->body());
+        $this->assertInstanceOf('Kirby\\Toolkit\\Obj', $email->body());
         $this->assertEquals($body['text'], $email->body()->text());
         $this->assertEquals($body['html'], $email->body()->html());
 
@@ -117,7 +117,7 @@ class EmailTest extends TestCase
             ]
         ]);
 
-        $this->assertInstanceOf(Body::class, $email->body());
+        $this->assertInstanceOf('Kirby\\Toolkit\\Obj', $email->body());
         $this->assertEquals(null, $email->body()->text());
         $this->assertEquals($body['html'], $email->body()->html());
 

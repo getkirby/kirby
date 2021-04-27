@@ -4,6 +4,7 @@ namespace Kirby\Email;
 
 use Closure;
 use Exception;
+use Kirby\Toolkit\Obj;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\V;
 
@@ -43,7 +44,7 @@ class Email
     protected $attachments;
 
     /**
-     * @var \Kirby\Email\Body|null
+     * @var \Kirby\Toolkit\Obj|null
      */
     protected $body;
 
@@ -134,7 +135,7 @@ class Email
     /**
      * Returns the email body
      *
-     * @return \Kirby\Email\Body|null
+     * @return \Kirby\Toolkit\Obj|null
      */
     public function body()
     {
@@ -316,7 +317,7 @@ class Email
             $body = ['text' => $body];
         }
 
-        $this->body = new Body($body);
+        $this->body = new Obj($body);
         return $this;
     }
 
