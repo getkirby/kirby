@@ -1,0 +1,9 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg [
+  <!ENTITY lol "lol">
+  <!ENTITY lol2 "&lol;&lol;&lol;&lol;&lol;&lol;">
+  <!ENTITY lol3 "&lol2;&lol2;&lol2;&lol2;&lol2;&lol2;">
+]>
+<svg>
+  <text x="0" y="20">&lol3;</text>
+</svg>

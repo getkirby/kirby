@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+  <text x="10" y="25">Hello</text>
+  <style>
+  text {
+    background-image: url(/image.png), url("#image.png");
+  }
+  </style>
+</svg>

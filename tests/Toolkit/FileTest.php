@@ -351,6 +351,37 @@ class FileTest extends TestCase
         $file->delete();
     }
 
+    public function testValidateContentsValid()
+    {
+        $file = new File(static::FIXTURES . '/real.svg');
+        $this->assertNull($file->validateContents());
+        $this->assertNull($file->validateContents(true));
+        $this->assertNull($file->validateContents(false));
+    }
+
+    public function testValidateContentsWrongType()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The namespace is not allowed in XML files (around line 2)');
+
+        $file = new File(static::FIXTURES . '/real.svg');
+        $file->validateContents('xml');
+    }
+
+    public function testValidateContentsMissingHandler()
+    {
+        $file = new File(static::FIXTURES . '/test.js');
+
+        // lazy mode
+        $file->validateContents(true);
+
+        // default mode
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('Missing handler for type: "js"');
+
+        $file->validateContents();
+    }
+
     public static function tearDownAfterClass(): void
     {
         @chmod(static::FIXTURES . '/tmp/unreadable.txt', 755);

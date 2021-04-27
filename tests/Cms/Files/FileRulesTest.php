@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Image\Image;
+
 class FileRulesTest extends TestCase
 {
     protected $app;
@@ -94,7 +96,28 @@ class FileRulesTest extends TestCase
         $this->expectException('Kirby\Exception\DuplicateException');
         $this->expectExceptionMessage('The file exists and cannot be overwritten');
 
-        $upload = $this->createMock(\Kirby\Image\Image::class);
+        $upload = $this->createMock(Image::class);
+
+        FileRules::create($file, $upload);
+    }
+
+    public function testCreateHarmfulContents()
+    {
+        $blueprint = $this->createMock(FileBlueprint::class);
+
+        $permissions = $this->createMock(FilePermissions::class);
+        $permissions->method('__call')->with('create')->willReturn(true);
+
+        $file = $this->createMock(File::class);
+        $file->method('blueprint')->willReturn($blueprint);
+        $file->method('extension')->willReturn('svg');
+        $file->method('filename')->willReturn('test.svg');
+        $file->method('permissions')->willReturn($permissions);
+
+        $upload = new Image(__DIR__ . '/fixtures/files/test.svg');
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2)');
 
         FileRules::create($file, $upload);
     }
@@ -111,7 +134,7 @@ class FileRulesTest extends TestCase
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('The file cannot be created');
 
-        $upload = $this->createMock(\Kirby\Image\Image::class);
+        $upload = $this->createMock(Image::class);
 
         FileRules::create($file, $upload);
     }
@@ -141,7 +164,7 @@ class FileRulesTest extends TestCase
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('The file cannot be replaced');
 
-        $upload = $this->createMock(\Kirby\Image\Image::class);
+        $upload = $this->createMock(Image::class);
 
         FileRules::replace($file, $upload);
     }
@@ -157,12 +180,34 @@ class FileRulesTest extends TestCase
         $file->method('extension')->willReturn('jpg');
 
 
-        $upload = $this->createMock(\Kirby\Image\Image::class);
+        $upload = $this->createMock(Image::class);
         $upload->method('mime')->willReturn('image/png');
         $upload->method('extension')->willReturn('png');
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('The uploaded file must be of the same mime type "image/jpeg"');
+
+        FileRules::replace($file, $upload);
+    }
+
+    public function testReplaceHarmfulContents()
+    {
+        $blueprint = $this->createMock(FileBlueprint::class);
+
+        $permissions = $this->createMock(FilePermissions::class);
+        $permissions->method('__call')->with('replace')->willReturn(true);
+
+        $file = $this->createMock(File::class);
+        $file->method('__call')->with('mime')->willReturn('image/svg+xml');
+        $file->method('blueprint')->willReturn($blueprint);
+        $file->method('extension')->willReturn('svg');
+        $file->method('filename')->willReturn('test.svg');
+        $file->method('permissions')->willReturn($permissions);
+
+        $upload = new Image(__DIR__ . '/fixtures/files/test.svg');
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2)');
 
         FileRules::replace($file, $upload);
     }

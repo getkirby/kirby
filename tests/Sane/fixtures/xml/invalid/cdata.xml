@@ -1,0 +1,6 @@
+<!-- Test fixture taken from DOMPurify
+     @link https://github.com/cure53/DOMPurify
+     @copyright 2015 Mario Heiderich
+     @license https://www.apache.org/licenses/LICENSE-2.0
+-->
+<xml><![CDATA[><image xlink:href="]]><img src=x onerror=alert(2)//"></xml>

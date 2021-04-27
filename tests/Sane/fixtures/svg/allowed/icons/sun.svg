@@ -1,0 +1,4 @@
+<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+  <title>Light</title>
+  <rect data-color="color-2" x="7" width="2" height="2"/><rect x="11.9" y="2.1" transform="matrix(0.7069 0.7074 -0.7074 0.7069 5.9537 -8.2658)" width="2" height="2"/><rect x="14" y="7" width="2" height="2"/><rect x="11.9" y="11.9" transform="matrix(-0.7074 -0.7069 0.7069 -0.7074 12.956 31.2634)" width="2" height="2"/><rect x="7" y="14" width="2" height="2"/><rect x="2.1" y="11.9" transform="matrix(-0.7069 -0.7074 0.7074 -0.7069 -3.9536 24.261)" width="2" height="2"/><rect y="7" width="2" height="2"/><rect x="2.1" y="2.1" transform="matrix(0.7074 0.7069 -0.7069 0.7074 3.0488 -1.2635)" width="2" height="2"/><path d="M8,4C5.8,4,4,5.8,4,8s1.8,4,4,4s4-1.8,4-4S10.2,4,8,4z"/>
+</svg>
