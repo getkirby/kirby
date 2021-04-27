@@ -14,7 +14,8 @@
       </span>
       <span class="k-list-item-text">
         <slot>
-          <em>{{ text }}</em>
+          <!-- eslint-disable-next-line vue/no-v-html -->
+          <em v-html="text" />
           <!-- eslint-disable-next-line vue/no-v-html -->
           <small v-if="info" v-html="info" />
         </slot>
