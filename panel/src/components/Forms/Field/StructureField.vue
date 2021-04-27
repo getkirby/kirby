@@ -815,6 +815,11 @@ $structure-item-height: 38px;
       border-left: 1px solid $color-border;
     }
   }
+
+  td:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 }
 .k-sortable-row-fallback {
   opacity: 0 !important;
