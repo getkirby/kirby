@@ -34,6 +34,39 @@ class DirTest extends TestCase
         Dir::remove($target);
     }
 
+    public function testCopyNonRecursive()
+    {
+        $src    = static::FIXTURES . '/copy';
+        $target = static::FIXTURES . '/copy-target';
+
+        $result = Dir::copy($src, $target, false);
+
+        $this->assertTrue($result);
+
+        $this->assertTrue(file_exists($target . '/a.txt'));
+        $this->assertFalse(file_exists($target . '/subfolder/b.txt'));
+
+        // clean up
+        Dir::remove($target);
+    }
+
+    public function testCopyIgnore()
+    {
+        $src    = static::FIXTURES . '/copy';
+        $target = static::FIXTURES . '/copy-target';
+
+        $result = Dir::copy($src, $target, true, [$src . '/subfolder/b.txt']);
+
+        $this->assertTrue($result);
+
+        $this->assertTrue(file_exists($target . '/a.txt'));
+        $this->assertTrue(is_dir($target . '/subfolder'));
+        $this->assertFalse(file_exists($target . '/subfolder/b.txt'));
+
+        // clean up
+        Dir::remove($target);
+    }
+
     public function testCopyMissingSource()
     {
         $this->expectException('Exception');

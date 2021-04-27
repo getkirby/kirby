@@ -69,7 +69,7 @@ class Dir
 
             if (is_dir($root) === true) {
                 if ($recursive === true) {
-                    static::copy($root, $target . '/' . $name);
+                    static::copy($root, $target . '/' . $name, true, $ignore);
                 }
             } else {
                 F::copy($root, $target . '/' . $name);
