@@ -83,7 +83,7 @@ trait AppErrors
                 $fatal = $this->option('fatal');
 
                 if (is_a($fatal, 'Closure') === true) {
-                    echo $fatal($this);
+                    echo $fatal($this, $exception);
                 } else {
                     include $this->root('kirby') . '/views/fatal.php';
                 }
