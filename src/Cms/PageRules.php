@@ -292,6 +292,8 @@ class PageRules
             ]);
         }
 
+        self::validateSlugLength($page->slug());
+
         if ($page->exists() === true) {
             throw new DuplicateException([
                 'key'  => 'page.draft.duplicate',
@@ -300,8 +302,6 @@ class PageRules
                 ]
             ]);
         }
-
-        self::validateSlugLength($page->slug());
 
         $siblings = $page->parentModel()->children();
         $drafts   = $page->parentModel()->drafts();
