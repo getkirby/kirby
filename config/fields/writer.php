@@ -24,5 +24,10 @@ return [
         'nodes' => function ($nodes = null) {
             return $nodes;
         }
-    ]
+    ],
+    'computed' => [
+        'value' => function () {
+            return trim($this->value);
+        }
+    ],
 ];
