@@ -23,6 +23,12 @@
         @click="$emit('chooseToAppend')"
       />
       <k-button
+        :tooltip="$t('delete')"
+        class="k-block-options-button"
+        icon="trash"
+        @click="$emit('confirmToRemove')"
+      />
+      <k-button
         :tooltip="$t('more')"
         class="k-block-options-button"
         icon="dots"
@@ -58,10 +64,6 @@
         </k-dropdown-item>
         <k-dropdown-item :disabled="isFull" icon="copy" @click="$emit('duplicate')">
           {{ $t("duplicate") }}
-        </k-dropdown-item>
-        <hr>
-        <k-dropdown-item icon="trash" @click="$emit('confirmToRemove')">
-          {{ $t("delete") }}
         </k-dropdown-item>
       </k-dropdown-content>
     </template>
