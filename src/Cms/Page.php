@@ -1179,7 +1179,7 @@ class Page extends ModelWithContent
                 $cache->set($cacheId, [
                     'html'     => $html,
                     'response' => $response
-                ]);
+                ], $kirby->response()->expires() ?? 0);
             }
         }
 

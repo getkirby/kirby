@@ -40,6 +40,12 @@ class ValueTest extends TestCase
 
         $value = new Value('foo', 1000, 10000);
         $this->assertSame(10000 + 1000 * 60, $value->expires());
+
+        $value = new Value('foo', 1234567890, 0);
+        $this->assertSame(1234567890, $value->expires());
+
+        $value = new Value('foo', 1234567890, 10000);
+        $this->assertSame(1234567890, $value->expires());
     }
 
     /**
@@ -56,6 +62,17 @@ class ValueTest extends TestCase
         $value = Value::fromArray($data);
         $this->assertSame(10000, $value->created());
         $this->assertNull($value->expires());
+        $this->assertSame('foo', $value->value());
+        $this->assertSame($data, $value->toArray());
+
+        $data = [
+            'created' => 10000,
+            'minutes' => 1234567890,
+            'value'   => 'foo'
+        ];
+        $value = Value::fromArray($data);
+        $this->assertSame(10000, $value->created());
+        $this->assertSame(1234567890, $value->expires());
         $this->assertSame('foo', $value->value());
         $this->assertSame($data, $value->toArray());
 

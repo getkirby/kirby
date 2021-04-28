@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
 class PageCacheTest extends TestCase
@@ -21,7 +22,8 @@ class PageCacheTest extends TestCase
                         'slug' => 'a'
                     ],
                     [
-                        'slug' => 'b'
+                        'slug'     => 'b',
+                        'template' => 'expiry'
                     ]
                 ]
             ],
@@ -31,6 +33,14 @@ class PageCacheTest extends TestCase
         ]);
 
         Dir::make($this->fixtures);
+        F::write(
+            $this->fixtures . '/site/templates/default.php',
+            'This is a test: <?= uniqid() ?>'
+        );
+        F::write(
+            $this->fixtures . '/site/templates/expiry.php',
+            '<?php $time = random_int(1000000000, 2000000000); $kirby->response()->expires($time); echo $time;'
+        );
     }
 
     public function tearDown(): void
@@ -143,5 +153,39 @@ class PageCacheTest extends TestCase
         ]);
 
         $this->assertFalse($app->page('a')->isCacheable());
+    }
+
+    public function testRenderCache()
+    {
+        $cache = $this->app->cache('pages');
+        $page  = $this->app->page('a');
+
+        $this->assertNull($cache->retrieve('a.html'));
+
+        $html1 = $page->render();
+        $this->assertStringStartsWith('This is a test:', $html1);
+
+        $value = $cache->retrieve('a.html');
+        $this->assertInstanceOf('Kirby\Cache\Value', $value);
+        $this->assertSame($html1, $value->value()['html']);
+        $this->assertNull($value->expires());
+
+        $html2 = $page->render();
+        $this->assertSame($html1, $html2);
+    }
+
+    public function testRenderCacheCustomExpiry()
+    {
+        $cache = $this->app->cache('pages');
+        $page  = $this->app->page('b');
+
+        $this->assertNull($cache->retrieve('b.html'));
+
+        $time = $page->render();
+
+        $value = $cache->retrieve('b.html');
+        $this->assertInstanceOf('Kirby\Cache\Value', $value);
+        $this->assertSame($time, $value->value()['html']);
+        $this->assertSame((int)$time, $value->expires());
     }
 }
