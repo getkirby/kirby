@@ -40,7 +40,7 @@ class Options
      * Brings options through api
      *
      * @param $api
-     * @param $model
+     * @param \Kirby\Cms\Model|null $model
      * @return array
      */
     public static function api($api, $model = null): array
@@ -71,7 +71,7 @@ class Options
     }
 
     /**
-     * @param $model
+     * @param \Kirby\Cms\Model $model
      * @return array
      */
     protected static function data($model): array
@@ -100,14 +100,14 @@ class Options
      *
      * @param $options
      * @param array $props
-     * @param null $model
+     * @param \Kirby\Cms\Model|null $model
      * @return array
      */
     public static function factory($options, array $props = [], $model = null): array
     {
         switch ($options) {
             case 'api':
-                $options = static::api($props['api']);
+                $options = static::api($props['api'], $model);
                 break;
             case 'query':
                 $options = static::query($props['query'], $model);
@@ -160,7 +160,7 @@ class Options
      * Brings options with query
      *
      * @param $query
-     * @param null $model
+     * @param \Kirby\Cms\Model|null $model
      * @return array
      */
     public static function query($query, $model = null): array
