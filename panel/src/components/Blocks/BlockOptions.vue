@@ -23,6 +23,12 @@
         @click="$emit('chooseToAppend')"
       />
       <k-button
+        :tooltip="$t('delete')"
+        class="k-block-options-button"
+        icon="trash"
+        @click="$emit('confirmToRemove')"
+      />
+      <k-button
         :tooltip="$t('more')"
         class="k-block-options-button"
         icon="dots"
@@ -112,14 +118,14 @@ $block-options-button-size: 30px;
   border-top-right-radius: $rounded;
   border-bottom-right-radius: $rounded;
 }
+.k-block-options-button:last-of-type {
+  border-right: 0;
+}
 .k-block-options-button[aria-current] {
   color: $color-focus;
 }
 .k-block-options-button:hover {
   background: $color-gray-100;
-}
-.k-block-handle {
-  border-right: 0;
 }
 .k-block-options .k-dropdown-content {
   margin-top: .5rem;

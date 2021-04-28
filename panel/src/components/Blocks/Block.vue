@@ -62,6 +62,11 @@
           icon="angle-right"
           @click.prevent.stop="goTo(next)"
         />
+        <k-button
+          class="k-drawer-option"
+          icon="trash"
+          @click.prevent.stop="confirmToRemove"
+        />
       </template>
     </k-form-drawer>
 
