@@ -24,6 +24,13 @@ use Laminas\Escaper\Escaper;
 class Escape
 {
     /**
+     * The internal singleton escaper instance
+     *
+     * @var \Laminas\Escaper\Escaper
+     */
+    private static $escaper;
+
+    /**
      * Escape common HTML attributes data
      *
      * This can be used to put untrusted data into typical attribute values
@@ -43,7 +50,7 @@ class Escape
      */
     public static function attr($string)
     {
-        return (new Escaper('utf-8'))->escapeHtmlAttr($string);
+        return (self::$escaper ?? self::$escaper = new Escaper('utf-8'))->escapeHtmlAttr($string);
     }
 
     /**
@@ -64,7 +71,7 @@ class Escape
      */
     public static function css($string)
     {
-        return (new Escaper('utf-8'))->escapeCss($string);
+        return (self::$escaper ?? self::$escaper = new Escaper('utf-8'))->escapeCss($string);
     }
 
     /**
@@ -84,7 +91,7 @@ class Escape
      */
     public static function html($string)
     {
-        return (new Escaper('utf-8'))->escapeHtml($string);
+        return (self::$escaper ?? self::$escaper = new Escaper('utf-8'))->escapeHtml($string);
     }
 
     /**
@@ -102,7 +109,7 @@ class Escape
      */
     public static function js($string)
     {
-        return (new Escaper('utf-8'))->escapeJs($string);
+        return (self::$escaper ?? self::$escaper = new Escaper('utf-8'))->escapeJs($string);
     }
 
     /**
