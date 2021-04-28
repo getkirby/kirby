@@ -65,6 +65,10 @@
         <k-dropdown-item :disabled="isFull" icon="copy" @click="$emit('duplicate')">
           {{ $t("duplicate") }}
         </k-dropdown-item>
+        <hr>
+        <k-dropdown-item icon="trash" @click="$emit('confirmToRemove')">
+          {{ $t("delete") }}
+        </k-dropdown-item>
       </k-dropdown-content>
     </template>
   </k-dropdown>
@@ -114,14 +118,14 @@ $block-options-button-size: 30px;
   border-top-right-radius: $rounded;
   border-bottom-right-radius: $rounded;
 }
+.k-block-options-button:last-of-type {
+  border-right: 0;
+}
 .k-block-options-button[aria-current] {
   color: $color-focus;
 }
 .k-block-options-button:hover {
   background: $color-gray-100;
-}
-.k-block-handle {
-  border-right: 0;
 }
 .k-block-options .k-dropdown-content {
   margin-top: .5rem;

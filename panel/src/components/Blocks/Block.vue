@@ -51,11 +51,6 @@
           @click="$emit('show')"
         />
         <k-button
-          class="k-drawer-option"
-          icon="trash"
-          @click.prevent.stop="confirmToRemove"
-        />
-        <k-button
           :disabled="!prev"
           class="k-drawer-option"
           icon="angle-left"
@@ -66,6 +61,11 @@
           class="k-drawer-option"
           icon="angle-right"
           @click.prevent.stop="goTo(next)"
+        />
+        <k-button
+          class="k-drawer-option"
+          icon="trash"
+          @click.prevent.stop="confirmToRemove"
         />
       </template>
     </k-form-drawer>
