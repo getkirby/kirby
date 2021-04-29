@@ -63,14 +63,20 @@ class FileTest extends TestCase
         $page = new Page([
             'slug'  => 'test',
             'files' => [
-                [
-                    'filename' => 'test.pdf'
-                ]
+                ['filename' => 'test.jpg'],
+                ['filename' => 'test.mp4'],
+                ['filename' => 'test.pdf'],
             ]
         ]);
 
+        $file = $page->file('test.jpg');
+        $this->assertSame('(image: test.jpg)', $file->dragText());
+
+        $file = $page->file('test.mp4');
+        $this->assertSame('(video: test.mp4)', $file->dragText());
+
         $file = $page->file('test.pdf');
-        $this->assertEquals('(file: test.pdf)', $file->dragText());
+        $this->assertSame('(file: test.pdf)', $file->dragText());
     }
 
     public function testDragTextMarkdown()
@@ -89,17 +95,23 @@ class FileTest extends TestCase
                     [
                         'slug' => 'test',
                         'files' => [
-                            [
-                                'filename' => 'test.pdf'
-                            ]
+                            ['filename' => 'test.jpg'],
+                            ['filename' => 'test.mp4'],
+                            ['filename' => 'test.pdf'],
                         ]
                     ]
                 ]
             ]
         ]);
 
+        $file = $app->page('test')->file('test.jpg');
+        $this->assertSame('![](test.jpg)', $file->dragText());
+
+        $file = $app->page('test')->file('test.mp4');
+        $this->assertSame('[test.mp4](test.mp4)', $file->dragText());
+
         $file = $app->page('test')->file('test.pdf');
-        $this->assertEquals('[test.pdf](test.pdf)', $file->dragText());
+        $this->assertSame('[test.pdf](test.pdf)', $file->dragText());
     }
 
     public function testDragTextForImages()
