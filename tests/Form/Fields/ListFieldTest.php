@@ -10,7 +10,7 @@ class ListFieldTest extends TestCase
 
         $this->assertSame('list', $field->type());
         $this->assertSame('list', $field->name());
-        $this->assertSame(null, $field->value());
+        $this->assertSame('', $field->value());
         $this->assertSame(null, $field->label());
         $this->assertSame(null, $field->text());
         $this->assertTrue($field->save());
