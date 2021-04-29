@@ -24,7 +24,8 @@
         />
       </svg>
     </span>
-    <span class="k-checkbox-input-label" v-text="label" />
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <span class="k-checkbox-input-label" v-html="label" />
   </label>
 </template>
 
