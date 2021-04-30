@@ -33,27 +33,27 @@ class OptionsQuery
     protected $aliases = [];
 
     /**
-     * @var
+     * @var array
      */
     protected $data;
 
     /**
-     * @var
+     * @var array|string|null
      */
     protected $options;
 
     /**
-     * @var
+     * @var string
      */
     protected $query;
 
     /**
-     * @var
+     * @var mixed
      */
     protected $text;
 
     /**
-     * @var
+     * @var mixed
      */
     protected $value;
 
@@ -192,7 +192,7 @@ class OptionsQuery
      * @param array|null $aliases
      * @return $this
      */
-    protected function setAliases(array $aliases = null)
+    protected function setAliases(?array $aliases = null)
     {
         $this->aliases = $aliases;
         return $this;
@@ -209,7 +209,7 @@ class OptionsQuery
     }
 
     /**
-     * @param $options
+     * @param array|string|null $options
      * @return $this
      */
     protected function setOptions($options = null)
@@ -229,7 +229,7 @@ class OptionsQuery
     }
 
     /**
-     * @param $text
+     * @param mixed $text
      * @return $this
      */
     protected function setText($text)
@@ -239,7 +239,7 @@ class OptionsQuery
     }
 
     /**
-     * @param $value
+     * @param mixed $value
      * @return $this
      */
     protected function setValue($value)
