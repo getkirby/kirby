@@ -1,10 +1,18 @@
 <template>
-  <component :is="'sandbox-' + $route.params.component" ref="el" />
+  <component 
+    :is="'sandbox-' + $route.params.component"
+    ref="el"
+  />
 </template>
 
 <script>
+import { register } from "./components.js";
+
 export default {
-  mounted() {
+  async beforeMount() {
+     await register();
+  },
+  async mounted() {
     const emit = this.$refs.el.$emit;
     this.$refs.el.$emit = (...args) => {
 
