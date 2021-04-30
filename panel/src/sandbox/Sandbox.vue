@@ -23,7 +23,7 @@
 </template>
 
 <script>
-import components from "./components.js";
+import { meta } from "./components.js";
 
 export default {
   data() {
@@ -46,7 +46,6 @@ export default {
       return this.$route.params.component;
     },
     menu() {
-      console.log(this.components);
       return this.components.map(component => {
         return {
           title: component.key.replace(".vue", "").replace("./", ""),
@@ -57,7 +56,7 @@ export default {
     }
   },
   async created() {
-    this.components = await Promise.all(components);
+    this.components = await meta();
   }
 };
 

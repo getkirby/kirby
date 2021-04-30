@@ -7,7 +7,6 @@
     "cy:open": "cypress open",
     "dev": "vite",
     "lint": "eslint --ext .js,.vue src",
-    "serve": "vite preview",
     "test": "cypress run"
   },
   "dependencies": {
