@@ -275,35 +275,31 @@ return [
                 }
             }
 
-            // generates tag attributes helper inline function
-            // for ex: `autoplay` will not work if `false` is a `string` instead of a `boolean`
-            // this is why the type converter is used in function
-            $generateTagAttributes = function ($tag) {
-                // checks local poster file and handle
-                if (
-                    empty($tag->poster) === false &&
-                    Str::startsWith($tag->poster, 'http://') !== true &&
-                    Str::startsWith($tag->poster, 'https://') !== true
-                ) {
-                    if ($poster = $tag->file($tag->poster)) {
-                        $tag->poster = $poster->url();
-                    }
+            // checks and gets if poster is local file
+            if (
+                empty($tag->poster) === false &&
+                Str::startsWith($tag->poster, 'http://') !== true &&
+                Str::startsWith($tag->poster, 'https://') !== true
+            ) {
+                if ($poster = $tag->file($tag->poster)) {
+                    $tag->poster = $poster->url();
                 }
+            }
 
-                return [
-                    'autoplay' => $autoplay = Str::toType($tag->autoplay, 'bool'),
-                    'controls' => Str::toType($tag->controls ?? true, 'bool'),
-                    'height'   => $tag->height,
-                    'loop'     => Str::toType($tag->loop, 'bool'),
-                    'muted'    => Str::toType($tag->muted ?? $autoplay, 'bool'),
-                    'poster'   => $tag->poster,
-                    'preload'  => $tag->preload,
-                    'width'    => $tag->width
-                ];
-            };
-
-            // generate handled attributes
-            $attrs = $generateTagAttributes($tag);
+            // converts tag attributes to supported formats (listed below) to output correct html
+            // booleans: autoplay, controls, loop, muted
+            // strings : height, poster, preload, width
+            // for ex  : `autoplay` will not work if `false` is a `string` instead of a `boolean`
+            $attrs = [
+                'autoplay' => $autoplay = Str::toType($tag->autoplay, 'bool'),
+                'controls' => Str::toType($tag->controls ?? true, 'bool'),
+                'height'   => $tag->height,
+                'loop'     => Str::toType($tag->loop, 'bool'),
+                'muted'    => Str::toType($tag->muted ?? $autoplay, 'bool'),
+                'poster'   => $tag->poster,
+                'preload'  => $tag->preload,
+                'width'    => $tag->width
+            ];
 
             // handles local and remote video file
             if (
