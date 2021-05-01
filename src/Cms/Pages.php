@@ -252,8 +252,7 @@ class Pages extends Collection
                 if (count($path) > 1 || $collection->parent()) {
                     // either the desired path is definitely not a slug, or collection is the children of another collection
                     $item = $collection->findBy('slug', $key);
-                }
-                else {
+                } else {
                     // desired path _could_ be a slug or a "top level" uri
                     $item = $collection->findBy('uri', $key);
                 }
