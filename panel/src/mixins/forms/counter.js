@@ -12,8 +12,17 @@ export default {
         return false;
       }
 
+      let count = 0;
+
+      if (this.value) {
+        if (Array.isArray(this.value)) {
+          count = this.value.length;
+        } else {
+          count = String(this.value).length;
+        }
+      }
       return {
-        count: this.value && Array.isArray(this.value) ? this.value.length : 0,
+        count: count,
         min: this.min,
         max: this.max,
       };
