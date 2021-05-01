@@ -28,7 +28,7 @@ class Escape
      *
      * @var \Laminas\Escaper\Escaper
      */
-    private static $escaper;
+    protected static $escaper;
 
     /**
      * Escape common HTML attributes data
@@ -50,7 +50,7 @@ class Escape
      */
     public static function attr($string)
     {
-        return (self::$escaper ?? self::$escaper = new Escaper('utf-8'))->escapeHtmlAttr($string);
+        return static::escaper()->escapeHtmlAttr($string);
     }
 
     /**
@@ -71,7 +71,17 @@ class Escape
      */
     public static function css($string)
     {
-        return (self::$escaper ?? self::$escaper = new Escaper('utf-8'))->escapeCss($string);
+        return static::escaper()->escapeCss($string);
+    }
+
+    /**
+     * Get the escaper instance (and create if needed)
+     *
+     * @return \Laminas\Escaper\Escaper
+     */
+    protected static function escaper()
+    {
+        return static::$escaper = static::$escaper ?? new Escaper('utf-8');
     }
 
     /**
@@ -91,7 +101,7 @@ class Escape
      */
     public static function html($string)
     {
-        return (self::$escaper ?? self::$escaper = new Escaper('utf-8'))->escapeHtml($string);
+        return static::escaper()->escapeHtml($string);
     }
 
     /**
@@ -109,7 +119,7 @@ class Escape
      */
     public static function js($string)
     {
-        return (self::$escaper ?? self::$escaper = new Escaper('utf-8'))->escapeJs($string);
+        return static::escaper()->escapeJs($string);
     }
 
     /**
