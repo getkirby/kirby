@@ -249,7 +249,14 @@ class Pages extends Collection
             $item  = $collection->get($query) ?? null;
 
             if ($item === null && $multiLang === true && !App::instance()->language()->isDefault()) {
-                $item = $collection->findBy('slug', $key);
+                if (count($path) > 1 || $collection->parent()) {
+                    // either the desired path is definitely not a slug, or collection is the children of another collection
+                    $item = $collection->findBy('slug', $key);
+                }
+                else {
+                    // desired path _could_ be a slug or a "top level" uri
+                    $item = $collection->findBy('uri', $key);
+                }
             }
 
             if ($item === null) {

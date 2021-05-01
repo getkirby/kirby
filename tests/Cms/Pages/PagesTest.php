@@ -409,6 +409,7 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findById('grandma/mother')->children()->findById('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother')->children()->findByUri('child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother')->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma')->children()->findByUri('mother')->children()->findByUri('child'), 'grandma/mother/child');
         $this->assertNull($site->children()->findById('child'));
         $this->assertNull($site->children()->findByUri('child'));
 
@@ -457,6 +458,8 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findByUri('grandma/mutter'), 'grandma/mother');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/kind'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('grandma')->children()->findByUri('mother')->children()->findByUri('child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findByUri('oma')->children()->findByUri('mutter')->children()->findByUri('kind'), 'grandma/mother/child');
         $this->assertNull($site->children()->findById('child'));
         $this->assertNull($site->children()->findById('kind'));
         $this->assertNull($site->children()->findByUri('child'));
@@ -474,14 +477,14 @@ class PagesTest extends TestCase
         $this->assertIsPage($pages->findById('grandma/mutter'), 'grandma/mother');
         $this->assertIsPage($pages->findById('oma/mutter'), 'grandma/mother');
         $this->assertNull($pages->findById('mother'));
-        $this->assertIsPage($pages->findById('mutter'), 'grandma/mother'); // would expect null
+        $this->assertNull($pages->findById('mutter'));
         $this->assertIsPage($pages->findById('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($pages->findById('grandma/mother/kind'), 'grandma/mother/child');
         $this->assertIsPage($pages->findById('grandma/mutter/kind'), 'grandma/mother/child');
         $this->assertIsPage($pages->findById('oma/mutter/kind'), 'grandma/mother/child');
         $this->assertNull($pages->findById('oma/mother/kind'));
         $this->assertNull($pages->findById('child'));
-        $this->assertIsPage($pages->findById('kind'), 'grandma/mother/child'); // would expect null
+        $this->assertNull($pages->findById('kind'));
     }
 
     public function testFindByIdWithSwappedSlugsTranslated()
