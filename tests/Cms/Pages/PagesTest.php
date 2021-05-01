@@ -409,6 +409,7 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findById('grandma/mother')->children()->findById('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother')->children()->findByUri('child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother')->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma')->children()->findById('mother')->children()->findById('child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma')->children()->findByUri('mother')->children()->findByUri('child'), 'grandma/mother/child');
         $this->assertNull($site->children()->findById('child'));
         $this->assertNull($site->children()->findByUri('child'));
@@ -458,7 +459,9 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findByUri('grandma/mutter'), 'grandma/mother');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/kind'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('grandma')->children()->findById('mother')->children()->findById('child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma')->children()->findByUri('mother')->children()->findByUri('child'), 'grandma/mother/child');
+        $this->assertIsPage($site->children()->findById('oma')->children()->findById('mutter')->children()->findById('kind'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('oma')->children()->findByUri('mutter')->children()->findByUri('kind'), 'grandma/mother/child');
         $this->assertNull($site->children()->findById('child'));
         $this->assertNull($site->children()->findById('kind'));
