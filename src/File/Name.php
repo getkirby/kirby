@@ -1,16 +1,16 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\File;
 
 use Kirby\Toolkit\Str;
 
 /**
- * The Filename class handles complex
+ * The `Name` class handles complex
  * mapping of file attributes (i.e for thumbnails)
  * into human readable filenames.
  *
  * ```php
- * $filename = new Filename('some-file.jpg', '{{ name }}-{{ attributes }}.{{ extension }}', [
+ * $filename = new Name('some-file.jpg', '{{ name }}-{{ attributes }}.{{ extension }}', [
  *   'crop'    => 'top left',
  *   'width'   => 300,
  *   'height'  => 200
@@ -20,13 +20,13 @@ use Kirby\Toolkit\Str;
  * echo $filename->toString();
  * // result: some-file-300x200-crop-top-left-q80.jpg
  *
- * @package   Kirby Cms
+ * @package   Kirby File
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-class Filename
+class Name
 {
     /**
      * List of all applicable attributes
