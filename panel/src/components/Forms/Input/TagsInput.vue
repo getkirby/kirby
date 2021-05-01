@@ -72,10 +72,26 @@ export default {
       default: "tag"
     },
     id: [Number, String],
+    /**
+     * You can set the layout to `list` to extend the width of each tag 
+     * to 100% and show them in a list. This is handy in narrow columns 
+     * or when a list is a more appropriate design choice for the input 
+     * in general.
+     */
     layout: String,
+    /**
+     * The maximum number of accepted tags
+     */
     max: Number,
+    /**
+     * The minimum number of required tags
+     */
     min: Number,
     name: [Number, String],
+    /**
+     * Options will be shown in the autocomplete dropdown 
+     * as soon as you start typing.
+     */
     options: {
       type: Array,
       default() {

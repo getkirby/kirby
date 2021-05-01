@@ -23,6 +23,10 @@
 </template>
 
 <script>
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-email-input>` for additional information.
+ * @example <k-email-field v-model="email" name="email" label="Email" />
+ */
 import Field from "../Field.vue";
 import Input from "../Input.vue";
 import EmailInput from "../Input/EmailInput.vue";

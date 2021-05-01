@@ -31,6 +31,9 @@ import {
 } from "vuelidate/lib/validators";
 import direction from "@/helpers/direction.js";
 
+/**
+ * @example <k-input v-model="text" name="text" type="text" />
+ */
 export default {
   inheritAttrs: false,
   class: "k-text-input",

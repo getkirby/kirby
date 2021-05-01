@@ -5,8 +5,16 @@
 </template>
 
 <script>
+/**
+ * This is our custom style progress bar. We mostly use it in the upload dialog.
+ * @example <k-progress :value="10" />
+ */
 export default {
   props: {
+    /**
+     * Current value of the the progress bar
+     * @values 0-100
+     */
     value: {
       type: Number,
       default: 0

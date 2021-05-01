@@ -23,6 +23,10 @@
 </template>
 
 <script>
+/**
+ * @displayName BlockTypeImage
+ * @internal
+ */
 export default {
   computed: {
     captionMarks() {

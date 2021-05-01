@@ -77,6 +77,9 @@
 <script>
 import Layout from "./Layout";
 
+/**
+ * @internal
+ */
 export default {
   components: {
     "k-layout": Layout

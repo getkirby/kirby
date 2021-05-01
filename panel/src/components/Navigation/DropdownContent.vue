@@ -1,5 +1,6 @@
 <template>
   <div v-if="isOpen" :data-align="align" class="k-dropdown-content">
+    <!-- @slot Content of the dropdown -->
     <slot>
       <template v-for="(option, index) in items">
         <hr v-if="option === '-'" :key="_uid + '-item-' + index">
@@ -20,10 +21,21 @@
 <script>
 let OpenDropdown = null;
 
+/**
+ * See `<k-dropdown>` for how to use these components together.
+ * @internal
+ */
 export default {
   props: {
     options: [Array, Function],
-    align: String
+    /**
+     * Aligment of the dropdown items
+     * @values left, right
+     */
+    align: {
+      type: String,
+      default: "left"
+    }
   },
   data() {
     return {
@@ -50,6 +62,10 @@ export default {
         return ready(this.items);
       }
     },
+    /**
+     * Opens the dropdown
+     * @public
+     */
     open() {
 
       this.reset();
@@ -64,8 +80,12 @@ export default {
         this.$events.$on("click", this.close);
         this.items = items;
         this.isOpen = true;
-        this.$emit("open");
         OpenDropdown = this;
+        /**
+         * When the dropdown content is opened
+         * @event open
+         */
+        this.$emit("open");
       });
     },
     reset() {
@@ -73,11 +93,23 @@ export default {
       this.$events.$off("keydown", this.navigate);
       this.$events.$off("click", this.close);
     },
+    /**
+     * Closes the dropdown
+     * @public
+     */
     close() {
       this.reset();
       this.isOpen = OpenDropdown = false;
+      /**
+       * When the dropdown content is closed
+       * @event close
+       */
       this.$emit("close");
     },
+    /**
+     * Toggles the open state of the dropdown
+     * @public
+     */
     toggle() {
       this.isOpen ? this.close() : this.open();
     },
@@ -88,7 +120,6 @@ export default {
       }
     },
     navigate(e) {
-
       /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
       switch (e.code) {
         case "Escape":

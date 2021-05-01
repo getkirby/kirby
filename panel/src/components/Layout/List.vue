@@ -1,5 +1,6 @@
 <template>
   <ul class="k-list">
+    <!-- @slot If you need more control over each item, you can inject items manually -->
     <slot>
       <k-list-item
         v-for="(item, index) in items"
@@ -12,8 +13,20 @@
 </template>
 
 <script>
+/**
+ * @example <k-list
+ *   :items="[
+ *     {...},
+ *     {...},
+ *     {...},
+ *   ]"
+ * />
+ */
 export default {
   props: {
+    /**
+     * Check out the `<k-list-item>` component documentation for all available options for each item.
+     */
     items: Array
   }
 };

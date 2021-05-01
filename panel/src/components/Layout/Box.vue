@@ -1,5 +1,6 @@
 <template>
   <div :data-theme="theme" class="k-box" v-on="$listeners">
+    <!-- @slot Use instead of `text` prop -->
     <slot>
       <!-- eslint-disable-next-line vue/no-v-html -->
       <k-text v-html="text" />
@@ -8,9 +9,24 @@
 </template>
 
 <script>
+/**
+ * The box component is a multi-purpose box with text. You can use it as a foundation for empty state displays or anything else that needs to be displayed in a box. It comes with several pre-defined styles …
+ * 
+ * @example <k-box text="This is a nice box" theme="positive" />
+ */
 export default {
   props: {
-    theme: String,
+    /**
+     * Choose one of the pre-defined styles
+     * @values none, code, button, positive, negative, notice, info, empty
+     */
+    theme: {
+      type: String,
+      default: "none"
+    },
+    /**
+     * Text to display inside the box
+     */
     text: String
   }
 };

@@ -10,6 +10,10 @@
 </template>
 
 <script>
+/**
+ * @displayName BlockTypeText
+ * @internal
+ */
 export default {
   computed: {
     placeholder() {

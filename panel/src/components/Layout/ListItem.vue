@@ -22,6 +22,7 @@
       </span>
     </k-link>
     <nav class="k-list-item-options">
+      <!-- @slot You can overwrite the options button and dropdown with your own elements -->
       <slot name="options">
         <k-button
           v-if="flag"
@@ -56,6 +57,10 @@
 <script>
 import previewThumb from "@/helpers/previewThumb.js";
 
+/**
+ * The ListItem component is a very flexible tool to display an image together with a title (text) some meta information (info) and a dropdown with options in a line. It's the counter part to our cards.
+ * @internal
+ */
 export default {
   inheritAttrs: false,
   props: {
@@ -63,7 +68,15 @@ export default {
       type: String,
       default: "li"
     },
+    /**
+     * Defines the list item image
+     * @values See the props of `<k-image>`
+     */
     image: [Object, Boolean],
+    /**
+     * Defines the list item icon instead of an image. If an image is still defined, the image will be used instead of the icon and this setting will be ignored.
+     * @values See the props of `<k-icon>`
+     */
     icon: {
       type: Object,
       default() {
@@ -74,12 +87,33 @@ export default {
       }
     },
     sortable: Boolean,
+    /**
+     * Sets the list item text
+     */
     text: String,
+    /**
+     * Sets the link target
+     */
     target: String,
+    /**
+     * Sets the secondary info text
+     */
     info: String,
+    /**
+     * Sets the link for the list item
+     */
     link: [String, Function],
+    /**
+     * An additional button left next to the options toggle, which can be used to define any additional "flag" or option for the list item.
+     */
     flag: Object,
+    /**
+     * Defines the options dropdown.
+     */
     options: [Array, Function],
+    /**
+     * @ignore
+     */
     statusIcon: Object,
   },
   computed: {

@@ -20,6 +20,10 @@
 </template>
 
 <script>
+/**
+ * @displayName LayoutColumn
+ * @internal
+ */
 export default {
   props: {
     blocks: Array,

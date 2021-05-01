@@ -15,6 +15,14 @@
   </ul>
 </template>
 
+<script>
+/**
+ * @displayName BlockTypeGallery
+ * @internal
+ */
+export default {}
+</script>
+
 <style lang="scss">
 .k-block-type-gallery ul {
   display: grid;

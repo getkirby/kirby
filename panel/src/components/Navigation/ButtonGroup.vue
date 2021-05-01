@@ -4,6 +4,18 @@
   </div>
 </template>
 
+<script>
+/**
+ * The Button Group should always be used when two or more buttons are positioned next to each other. The Button Group takes care of consistent margins between buttons.
+ * 
+ * @example <k-button-group>
+  <k-button icon="edit">Edit</k-button>
+  <k-button icon="trash">Delete</k-button>
+</k-button-group>
+ */
+export default {}
+</script>
+
 <style lang="scss">
 $button-group-padding-horizontal: 0.75rem;
 $button-group-padding-vertical: 1rem;

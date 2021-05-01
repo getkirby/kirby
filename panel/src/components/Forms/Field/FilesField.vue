@@ -79,6 +79,9 @@
 import config from "@/config/config.js";
 import picker from "@/mixins/picker/field.js";
 
+/**
+ * @example <k-files-field v-model="files" name="files" label="Files" />
+ */
 export default {
   mixins: [picker],
   props: {

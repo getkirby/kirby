@@ -16,6 +16,11 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import ToggleInput from "../Input/ToggleInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-toggle-input>` 
+ * for additional information.
+ * @example <k-toggle-field v-model="toggle" label="Toggle" name="toggle" />
+ */
 export default {
   inheritAttrs: false,
   props: {

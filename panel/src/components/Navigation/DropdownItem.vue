@@ -5,11 +5,17 @@
     class="k-dropdown-item"
     v-on="listeners"
   >
+    <!-- @slot The item's content/text -->
     <slot />
   </k-button>
 </template>
 
 <script>
+/**
+ * Item to be used within `<k-dropdown-content>`
+ * @example <k-dropdown-item>Option A</k-dropdown-item>
+ * @internal
+ */
 export default {
   inheritAttrs: false,
   props: {

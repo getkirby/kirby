@@ -20,6 +20,9 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import CheckboxesInput from "../Input/CheckboxesInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-checkboxes-input>` for additional information.
+ */
 export default {
   inheritAttrs: false,
   props: {

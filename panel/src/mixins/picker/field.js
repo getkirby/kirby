@@ -7,8 +7,18 @@ export default {
     empty: String,
     info: String,
     link: Boolean,
-    layout: String,
+    /**
+     * Switches the layout of the items
+     * @values list, cards
+     */
+    layout: {
+      type: String,
+      default: "list"
+    },
     max: Number,
+    /**
+     * If false, only a single item can be selected
+     */
     multiple: Boolean,
     parent: String,
     search: Boolean,

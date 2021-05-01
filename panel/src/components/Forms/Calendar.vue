@@ -63,13 +63,19 @@
 </template>
 
 <script>
-
+/**
+ * The Calendar component is mainly used for our `DateInput` component, but it could be used as stand-alone calendar as well with a little CSS love.
+ * @example <k-calendar value="2012-12-12" @input="selectDate" />
+ */
 export default {
   props: {
     disabled: Boolean,
     multiple: Boolean,
     max: String,
     min: String,
+    /**
+     * ISO date string/s, i.e. `2012-12-12`
+     */
     value: [Array, String],
   },
   data() {
@@ -272,11 +278,15 @@ export default {
         }
       }
 
-      if (this.multiple) {
-        this.$emit("input", this.datetimes.map(date => this.toISO(date)));
-      } else {
-        this.$emit("input", this.toISO(this.datetimes[0]));
-      }
+      const iso = this.multiple ? 
+                  this.datetimes.map(date => this.toISO(date)) : 
+                  this.toISO(this.datetimes[0]);
+
+      /**
+       * The input event is fired when a date is selected. 
+       * @property {string} iso data as ISO date string
+       */
+      this.$emit("input", iso);
     },
     show(date) {
       this.view.year  = date.year();

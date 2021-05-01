@@ -19,11 +19,21 @@
 </template>
 
 <script>
+/**
+ * @example <k-info-field label="Info" text="This is a nice info text" />
+ */
 export default {
   props: {
     help: String,
     label: String,
+    /**
+     * Sets the info text. You can use HTML here to format the info.
+     */
     text: String,
+    /**
+     * The info box can have different styles/themes. 
+     * @values The themes are inherited from the `<k-box>` component.
+     */
     theme: {
       type: String,
       default: "info"

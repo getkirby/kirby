@@ -22,6 +22,9 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import PasswordInput from "../Input/PasswordInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-password-input>` for additional information.
+ */
 export default {
   inheritAttrs: false,
   props: {

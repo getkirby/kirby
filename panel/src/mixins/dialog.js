@@ -9,7 +9,13 @@ export default {
       type: [String, Boolean],
       default: true
     },
+    /**
+     * @values small, default, medium, large
+     */
     size: String,
+    /**
+     * @values success, error
+     */
     theme: String
   },
   methods: {

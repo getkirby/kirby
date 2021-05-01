@@ -2,13 +2,16 @@
   <header :data-editable="editable" class="k-header">
     <k-headline tag="h1" size="huge">
       <span v-if="editable && $listeners.edit" class="k-headline-editable" @click="$emit('edit')">
+        <!-- @slot headline -->
         <slot />
         <k-icon type="edit" />
       </span>
       <slot v-else />
     </k-headline>
     <k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
+      <!-- @slot buttons on the left -->
       <slot slot="left" name="left" class="k-header-left" />
+      <!-- @slot buttons on the right -->
       <slot slot="right" name="right" class="k-header-right" />
     </k-bar>
 
@@ -17,9 +20,15 @@
 </template>
 
 <script>
-
+/**
+ * The Header component is a composition of a big fat headline plus two optional slots for buttons — directly below the headline and on the right. The Header is a fundamental part of any main Panel view. While we use the left slot for option buttons, the right slot is mainly used for prev/next navigation between items such as pages or users.
+ * @internal
+ */
 export default {
   props: {
+    /**
+     * Whether the headline is editable
+     */
     editable: Boolean,
     tab: String,
     tabs: {

@@ -8,6 +8,9 @@
           :width="field.width"
         >
           <k-error-boundary>
+            <!-- @event input Triggered whenever any field value changes -->
+            <!-- @event focus Triggered whenever any field is focused -->
+            <!-- @event submit Triggered whenever any field triggers submit -->
             <component
               :is="'k-' + field.type + '-field'"
               v-if="hasFieldType(field.type)"
@@ -35,6 +38,9 @@
 </template>
 
 <script>
+/**
+ * The Fieldset component is a wrapper around manual field component creation. You simply pass it an fields object and a v-model and all field components will automatically be created including a nice field grid. This is the ideal starting point if you want an easy way to create fields without having to deal with a full form element.
+ */
 export default {
   props: {
     config: Object,
@@ -45,6 +51,9 @@ export default {
         return [];
       }
     },
+    /**
+     * If `true`, form fields won't show their validation status on the fly.
+     */
     novalidate: {
       type: Boolean,
       default: false
@@ -62,6 +71,11 @@ export default {
     };
   },
   methods: {
+    /**
+     * Focus a specific field in the fieldset or the first one if no name is given
+     * @public
+     * @param  {string} name field name to focus
+     */
     focus(name) {
       if (name) {
         if (
@@ -76,9 +90,19 @@ export default {
       const key = Object.keys(this.$refs)[0];
       this.focus(key);
     },
+    /**
+     * Check if a particular field type exists
+     * @public
+     * @param {string} type field type
+     */
     hasFieldType(type) {
       return this.$helper.isComponent(`k-${type}-field`);
     },
+    /**
+     * Check if a field with the given name exists in the fieldset
+     * @public
+     * @param {string} name field name
+     */
     hasField(name) {
       return this.$refs[name] && this.$refs[name][0];
     },

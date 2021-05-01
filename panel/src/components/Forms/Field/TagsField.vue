@@ -21,6 +21,9 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import TagsInput from "../Input/TagsInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-tags-input>` for additional information.
+ */
 export default {
   inheritAttrs: false,
   props: {

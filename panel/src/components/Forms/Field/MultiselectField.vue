@@ -23,6 +23,9 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import MultiselectInput from "../Input/MultiselectInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-multiselect-input>` for additional information.
+ */
 export default {
   inheritAttrs: false,
   props: {

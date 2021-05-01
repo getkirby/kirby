@@ -12,6 +12,9 @@
 </template>
 
 <script>
+/**
+ * The Cards component builds a very responsive grid of cards from the given cards option or by injecting cards into the default slot.
+ */
 export default {
   props: {
     cards: Array
