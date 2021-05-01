@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image;
+use Kirby\File\HasFile;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
 use Throwable;
@@ -15,11 +15,11 @@ use Throwable;
  * URL or resizing an image. It also
  * handles file meta data.
  *
- * The File class is a wrapper around
- * the Kirby\Image\Image class, which
- * is used to handle all file methods.
+ * The File class proxies the `Kirby\File\File`
+ * or `Kirby\File\Image` class, which
+ * is used to handle all asset file methods.
  * In addition the File class handles
- * File meta data via Kirby\Cms\Content.
+ * meta data via `Kirby\Cms\Content`.
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -31,20 +31,11 @@ class File extends ModelWithContent
 {
     const CLASS_ALIAS = 'file';
 
+    use HasFile;
     use FileActions;
-    use FileFoundation;
     use FileModifications;
     use HasMethods;
     use HasSiblings;
-
-    /**
-     * The parent asset object
-     * This is used to do actual file
-     * method calls, like size, mime, etc.
-     *
-     * @var \Kirby\Image\Image
-     */
-    protected $asset;
 
     /**
      * Cache for the initialized blueprint object
@@ -106,12 +97,12 @@ class File extends ModelWithContent
      */
     public function __call(string $method, array $arguments = [])
     {
-        // public property access
+        // Public property access
         if (isset($this->$method) === true) {
             return $this->$method;
         }
 
-        // asset method proxy
+        // Asset method proxy
         if (method_exists($this->asset(), $method)) {
             return $this->asset()->$method(...$arguments);
         }
@@ -159,17 +150,6 @@ class File extends ModelWithContent
     public function apiUrl(bool $relative = false): string
     {
         return $this->parent()->apiUrl($relative) . '/files/' . $this->filename();
-    }
-
-    /**
-     * Returns the Image object
-     *
-     * @internal
-     * @return \Kirby\Image\Image
-     */
-    public function asset()
-    {
-        return $this->asset = $this->asset ?? new Image($this->root());
     }
 
     /**
@@ -290,6 +270,20 @@ class File extends ModelWithContent
     public function files()
     {
         return $this->siblingsCollection();
+    }
+
+    /**
+     * Converts the file to html
+     *
+     * @param array $attr
+     * @return string
+     */
+    public function html(array $attr = []): string
+    {
+        return $this->asset()->html(array_merge(
+            ['alt' => $this->alt()],
+            $attr
+        ));
     }
 
     /**
@@ -494,7 +488,7 @@ class File extends ModelWithContent
      *
      * @internal
      * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
+     * @return \Kirby\Cms\File|\Kirby\File\Asset|null
      */
     protected function panelImageSource(string $query = null)
     {

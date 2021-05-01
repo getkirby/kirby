@@ -2,9 +2,9 @@
 
 namespace Kirby\Toolkit;
 
+use Exception;
 use Kirby\Http\Response;
 
-use Exception;
 use Kirby\Sane\Sane;
 
 /**

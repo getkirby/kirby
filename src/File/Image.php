@@ -1,0 +1,225 @@
+<?php
+
+namespace Kirby\File;
+
+use Kirby\Image\Dimensions;
+use Kirby\Image\Exif;
+use Kirby\Toolkit\Html;
+
+/**
+ * Extends the `Kirby\File\File` class with image-specific methods.
+ * @since 3.6.0
+ *
+ * @package   Kirby File
+ * @author    Nico Hoffmann <nico@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
+class Image extends File
+{
+    /**
+     * @var \Kirby\Image\Exif|null
+     */
+    protected $exif;
+
+    /**
+     * @var \Kirby\Image\Dimensions|null
+     */
+    protected $dimensions;
+
+    /**
+     * Returns the dimensions of the file if possible
+     *
+     * @return \Kirby\Image\Dimensions
+     */
+    public function dimensions()
+    {
+        if ($this->dimensions !== null) {
+            return $this->dimensions;
+        }
+
+        if (in_array($this->mime(), [
+            'image/jpeg',
+            'image/jp2',
+            'image/png',
+            'image/gif',
+            'image/webp'
+        ])) {
+            return $this->dimensions = Dimensions::forImage($this->root);
+        }
+
+        if ($this->extension() === 'svg') {
+            return $this->dimensions = Dimensions::forSvg($this->root);
+        }
+
+        return $this->dimensions = new Dimensions(0, 0);
+    }
+
+    /**
+     * Returns the exif object for this file (if image)
+     *
+     * @return \Kirby\Image\Exif
+     */
+    public function exif()
+    {
+        return $this->exif = $this->exif ?? new Exif($this);
+    }
+
+    /**
+     * Returns the height of the asset
+     *
+     * @return int
+     */
+    public function height(): int
+    {
+        return $this->dimensions()->height();
+    }
+
+    /**
+     * Converts the file to html
+     *
+     * @param array $attr
+     * @return string
+     */
+    public function html(array $attr = []): string
+    {
+        return Html::img($this->url(), $attr);
+    }
+
+    /**
+     * Returns the PHP imagesize array
+     *
+     * @return array
+     */
+    public function imagesize(): array
+    {
+        return getimagesize($this->root);
+    }
+
+    /**
+     * Checks if the dimensions of the asset are portrait
+     *
+     * @return bool
+     */
+    public function isPortrait(): bool
+    {
+        return $this->dimensions()->portrait();
+    }
+
+    /**
+     * Checks if the dimensions of the asset are landscape
+     *
+     * @return bool
+     */
+    public function isLandscape(): bool
+    {
+        return $this->dimensions()->landscape();
+    }
+
+    /**
+     * Checks if the dimensions of the asset are square
+     *
+     * @return bool
+     */
+    public function isSquare(): bool
+    {
+        return $this->dimensions()->square();
+    }
+
+    /**
+     * Checks if the file is a resizable image
+     *
+     * @return bool
+     */
+    public function isResizable(): bool
+    {
+        $resizable = [
+            'jpg',
+            'jpeg',
+            'gif',
+            'png',
+            'webp'
+        ];
+
+        return in_array($this->extension(), $resizable) === true;
+    }
+
+    /**
+     * Checks if a preview can be displayed for the file
+     * in the Panel or in the frontend
+     *
+     * @return bool
+     */
+    public function isViewable(): bool
+    {
+        $viewable = [
+            'jpg',
+            'jpeg',
+            'gif',
+            'png',
+            'svg',
+            'webp'
+        ];
+
+        return in_array($this->extension(), $viewable) === true;
+    }
+
+    /**
+     * Returns the ratio of the asset
+     *
+     * @return float
+     */
+    public function ratio(): float
+    {
+        return $this->dimensions()->ratio();
+    }
+
+    /**
+     * Returns the orientation as string
+     * landscape | portrait | square
+     *
+     * @return string
+     */
+    public function orientation(): string
+    {
+        return $this->dimensions()->orientation();
+    }
+
+    /**
+     * Convert the object to an array
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        $array = array_merge(parent::toArray(), [
+            'dimensions' => $this->dimensions()->toArray(),
+            'exif'       => $this->exif()->toArray(),
+        ]);
+
+        ksort($array);
+
+        return $array;
+    }
+
+    /**
+     * Return the url for the file object
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->html();
+    }
+
+    /**
+     * Returns the width of the asset
+     *
+     * @return int
+     */
+    public function width(): int
+    {
+        return $this->dimensions()->width();
+    }
+}
