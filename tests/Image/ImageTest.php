@@ -208,7 +208,7 @@ class ImageTest extends TestCase
     public function testToString()
     {
         $image  = $this->_image();
-        $this->assertEquals(__DIR__ . '/fixtures/image/cat.jpg', (string)$image);
+        $this->assertEquals('<img alt="" src="http://getkirby.com/cat.jpg">', (string)$image);
     }
 
     public function testDebuginfo()

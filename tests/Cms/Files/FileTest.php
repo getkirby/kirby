@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image;
 use Kirby\Toolkit\F;
 
 class FileTestModel extends File
@@ -35,9 +34,8 @@ class FileTest extends TestCase
     public function testAsset()
     {
         $file = $this->file();
-
-        $this->assertInstanceOf(Image::class, $file->asset());
-        $this->assertEquals(null, $file->asset()->url());
+        $this->assertInstanceOf('Kirby\File\File', $file->asset());
+        $this->assertEquals('https://getkirby.com/projects/project-a/cover.jpg', $file->asset()->url());
     }
 
     public function testContent()

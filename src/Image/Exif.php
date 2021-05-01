@@ -83,7 +83,7 @@ class Exif
     /**
      * Constructor
      *
-     * @param \Kirby\Image\Image $image
+     * @param \Kirby\File\Image $image
      */
     public function __construct(Image $image)
     {

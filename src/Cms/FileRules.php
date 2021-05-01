@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
-use Kirby\Image\Image;
+use Kirby\File\Image;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -67,7 +67,7 @@ class FileRules
      * Validates if the file can be created
      *
      * @param \Kirby\Cms\File $file
-     * @param \Kirby\Image\Image $upload
+     * @param \Kirby\File\Image $upload
      * @return bool
      * @throws \Kirby\Exception\DuplicateException If a file with the same name exists
      * @throws \Kirby\Exception\PermissionException If the user is not allowed to create the file
@@ -110,7 +110,7 @@ class FileRules
      * Validates if the file can be replaced
      *
      * @param \Kirby\Cms\File $file
-     * @param \Kirby\Image\Image $upload
+     * @param \Kirby\File\Image $upload
      * @return bool
      * @throws \Kirby\Exception\PermissionException If the user is not allowed to replace the file
      * @throws \Kirby\Exception\InvalidArgumentException If the file type of the new file is different

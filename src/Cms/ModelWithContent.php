@@ -456,14 +456,14 @@ abstract class ModelWithContent extends Model
      *
      * @internal
      * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
+     * @return \Kirby\Cms\File|\Kirby\File\Asset|null
      */
     protected function panelImageSource(string $query = null)
     {
         $image = $this->query($query ?? null);
 
         // validate the query result
-        if (is_a($image, 'Kirby\Cms\File') === false && is_a($image, 'Kirby\Cms\Asset') === false) {
+        if (is_a($image, 'Kirby\Cms\File') === false && is_a($image, 'Kirby\File\Asset') === false) {
             $image = null;
         }
 

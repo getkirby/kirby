@@ -961,7 +961,7 @@ class Page extends ModelWithContent
      *
      * @internal
      * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
+     * @return \Kirby\Cms\File|\Kirby\File\Asset|null
      */
     protected function panelImageSource(string $query = null)
     {

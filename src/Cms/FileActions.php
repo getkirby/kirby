@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
-use Kirby\Image\Image;
+use Kirby\File\Image;
 use Kirby\Toolkit\F;
 
 /**

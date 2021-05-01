@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image;
+use Kirby\File\Image;
 
 class FileRulesTest extends TestCase
 {
@@ -91,7 +91,7 @@ class FileRulesTest extends TestCase
     {
         $file = $this->createMock(File::class);
         $file->method('filename')->willReturn('test.jpg');
-        $file->method('exists')->willReturn(true);
+        $file->method('__call')->with('exists')->willReturn(true);
 
         $this->expectException('Kirby\Exception\DuplicateException');
         $this->expectExceptionMessage('The file exists and cannot be overwritten');
@@ -108,7 +108,11 @@ class FileRulesTest extends TestCase
         $permissions = $this->createMock(FilePermissions::class);
         $permissions->method('__call')->with('create')->willReturn(true);
 
-        $file = $this->createMock(File::class);
+        $file = $this->getMockBuilder(File::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['permissions', 'blueprint', 'filename'])
+            ->addMethods(['extension'])
+            ->getMock();
         $file->method('blueprint')->willReturn($blueprint);
         $file->method('extension')->willReturn('svg');
         $file->method('filename')->willReturn('test.svg');
@@ -174,11 +178,14 @@ class FileRulesTest extends TestCase
         $permissions = $this->createMock(FilePermissions::class);
         $permissions->method('__call')->with('replace')->willReturn(true);
 
-        $file = $this->createMock(File::class);
+        $file = $this->getMockBuilder(File::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['permissions'])
+            ->addMethods(['mime', 'extension'])
+            ->getMock();
         $file->method('permissions')->willReturn($permissions);
-        $file->method('__call')->with('mime')->willReturn('image/jpeg');
+        $file->method('mime')->willReturn('image/jpeg');
         $file->method('extension')->willReturn('jpg');
-
 
         $upload = $this->createMock(Image::class);
         $upload->method('mime')->willReturn('image/png');
@@ -197,7 +204,11 @@ class FileRulesTest extends TestCase
         $permissions = $this->createMock(FilePermissions::class);
         $permissions->method('__call')->with('replace')->willReturn(true);
 
-        $file = $this->createMock(File::class);
+        $file = $this->getMockBuilder(File::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__call', 'permissions', 'blueprint', 'filename'])
+            ->addMethods(['extension'])
+            ->getMock();
         $file->method('__call')->with('mime')->willReturn('image/svg+xml');
         $file->method('blueprint')->willReturn($blueprint);
         $file->method('extension')->willReturn('svg');
@@ -303,8 +314,8 @@ class FileRulesTest extends TestCase
     {
         $file = $this->getMockBuilder(File::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['filename', 'extension'])
-            ->addMethods(['mime'])
+            ->onlyMethods(['filename'])
+            ->addMethods(['mime', 'extension'])
             ->getMock();
         $file->method('filename')->willReturn($filename);
         $file->method('extension')->willReturn($extension);
@@ -324,8 +335,8 @@ class FileRulesTest extends TestCase
     {
         $file = $this->getMockBuilder(File::class)
             ->disableOriginalConstructor()
-            ->onlyMethods(['filename', 'extension'])
-            ->addMethods(['mime'])
+            ->onlyMethods(['filename'])
+            ->addMethods(['mime', 'extension'])
             ->getMock();
         $file->method('filename')->willReturn('test.jpg');
         $file->method('extension')->willReturn('jpg');
