@@ -1,16 +1,16 @@
 import { defineConfig } from 'vite'
 import { createVuePlugin } from 'vite-plugin-vue2'
+import pluginRewriteAll from 'vite-plugin-rewrite-all';
 
 const path = require('path');
-const host = process.env.VUE_APP_DEV_SERVER || "http://sandbox.test";
 const proxy = {
-  target: host,
+  target: process.env.VUE_APP_DEV_SERVER || "http://sandbox.test",
   changeOrigin: true,
   secure: false
 };
 
 export default defineConfig({
-  plugins: [createVuePlugin()],
+  plugins: [createVuePlugin(), pluginRewriteAll()],
   define: {
     // Fix vuelidate error
     'process.env.BUILD': JSON.stringify('production')
@@ -33,7 +33,10 @@ export default defineConfig({
   },
   resolve: {
     alias: [
-        {find: "@", replacement: path.resolve(__dirname, 'src')}
+        { 
+          find: "@", 
+          replacement: path.resolve(__dirname, 'src')
+        }
     ]
   },
   server: {
