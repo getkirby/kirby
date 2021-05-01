@@ -301,8 +301,8 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findById('grandma/mother.json'), 'grandma/mother');
         $this->assertIsPage($site->children()->findById('grandma')->children()->findById('mother'), 'grandma/mother');
         $this->assertIsPage($site->children()->findById('grandma')->children()->findById('grandma/mother'), 'grandma/mother');
-//         $this->assertIsPage($site->children()->findById('mother'), 'grandma/mother');
-//         $this->assertIsPage($site->children()->findByUri('mother'), 'grandma/mother');
+        $this->assertNull($site->children()->findById('mother'));
+        $this->assertNull($site->children()->findByUri('mother'));
         $this->assertIsPage($site->children()->findById('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findById('grandma/mother/child/'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
@@ -310,15 +310,15 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child.json'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findById('grandma/mother')->children()->findById('child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findById('grandma/mother')->children()->findById('grandma/mother/child'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findById('child'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findByUri('child'), 'grandma/mother/child');
+        $this->assertNull($site->children()->findById('child'));
+        $this->assertNull($site->children()->findByUri('child'));
 
         $pages = new Pages($site->children()->find('grandma', 'grandma/mother', 'grandma/mother/child'));
         $this->assertIsPage($pages->findById('grandma'), 'grandma');
         $this->assertIsPage($pages->findById('grandma/mother'), 'grandma/mother');
-//         $this->assertIsPage($pages->findById('mother'), 'grandma/mother');
+        $this->assertNull($pages->findById('mother'));
         $this->assertIsPage($pages->findById('grandma/mother/child'), 'grandma/mother/child');
-//         $this->assertIsPage($pages->findById('child'), 'grandma/mother/child');
+        $this->assertNull($pages->findById('child'));
     }
 
     public function testFindByIdAndUriTranslated()
@@ -398,8 +398,8 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findById('grandma')->children()->findById('grandma/mother'), 'grandma/mother');
         $this->assertIsPage($site->children()->findByUri('grandma')->children()->findByUri('mother'), 'grandma/mother');
         $this->assertIsPage($site->children()->findByUri('grandma')->children()->findByUri('grandma/mother'), 'grandma/mother');
-//         $this->assertIsPage($site->children()->findById('mother'), 'grandma/mother');
-//         $this->assertIsPage($site->children()->findByUri('mother'), 'grandma/mother');
+        $this->assertNull($site->children()->findById('mother'));
+        $this->assertNull($site->children()->findByUri('mother'));
         $this->assertIsPage($site->children()->findById('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findById('grandma/mother/child/'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
@@ -409,15 +409,15 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findById('grandma/mother')->children()->findById('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother')->children()->findByUri('child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother')->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findById('child'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findByUri('child'), 'grandma/mother/child');
+        $this->assertNull($site->children()->findById('child'));
+        $this->assertNull($site->children()->findByUri('child'));
 
         $pages = new Pages($site->children()->find('grandma', 'grandma/mother', 'grandma/mother/child'));
         $this->assertIsPage($pages->findById('grandma'), 'grandma');
         $this->assertIsPage($pages->findById('grandma/mother'), 'grandma/mother');
-        // $this->assertIsPage($pages->findById('mother'), 'grandma/mother');
+        $this->assertNull($pages->findById('mother'));
         $this->assertIsPage($pages->findById('grandma/mother/child'), 'grandma/mother/child');
-        // $this->assertIsPage($pages->findById('child'), 'grandma/mother/child');
+        $this->assertNull($pages->findById('child'));
 
         $app->setCurrentLanguage('de');
 
@@ -457,15 +457,15 @@ class PagesTest extends TestCase
         $this->assertIsPage($site->children()->findByUri('grandma/mutter'), 'grandma/mother');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($site->children()->findByUri('grandma/mother/kind'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findById('child'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findById('kind'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findByUri('child'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findByUri('kind'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findById('oma/mother'), 'grandma/mother');
-//         $this->assertIsPage($site->children()->findById('oma/mother/kind'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findById('oma/mutter/child'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findById('grandmother/mutter/child'), 'grandma/mother/child');
-//         $this->assertIsPage($site->children()->findById('grandmother/mutter/kind'), 'grandma/mother/child');
+        $this->assertNull($site->children()->findById('child'));
+        $this->assertNull($site->children()->findById('kind'));
+        $this->assertNull($site->children()->findByUri('child'));
+        $this->assertNull($site->children()->findByUri('kind'));
+        $this->assertNull($site->children()->findById('oma/mother'));
+        $this->assertNull($site->children()->findById('oma/mother/kind'));
+        $this->assertNull($site->children()->findById('oma/mutter/child'));
+        $this->assertNull($site->children()->findById('grandmother/mutter/child'));
+        $this->assertNull($site->children()->findById('grandmother/mutter/kind'));
 
         $pages = new Pages($site->children()->find('grandma', 'grandma/mother', 'grandma/mother/child'));
         $this->assertIsPage($pages->findById('grandma'), 'grandma');
@@ -473,15 +473,15 @@ class PagesTest extends TestCase
         $this->assertIsPage($pages->findById('grandma/mother'), 'grandma/mother');
         $this->assertIsPage($pages->findById('grandma/mutter'), 'grandma/mother');
         $this->assertIsPage($pages->findById('oma/mutter'), 'grandma/mother');
-//         $this->assertIsPage($pages->findById('mother'), 'grandma/mother');
-        $this->assertIsPage($pages->findById('mutter'), 'grandma/mother');
+        $this->assertNull($pages->findById('mother'));
+        $this->assertIsPage($pages->findById('mutter'), 'grandma/mother'); // would expect null
         $this->assertIsPage($pages->findById('grandma/mother/child'), 'grandma/mother/child');
         $this->assertIsPage($pages->findById('grandma/mother/kind'), 'grandma/mother/child');
         $this->assertIsPage($pages->findById('grandma/mutter/kind'), 'grandma/mother/child');
         $this->assertIsPage($pages->findById('oma/mutter/kind'), 'grandma/mother/child');
-//         $this->assertIsPage($pages->findById('oma/mother/kind'), 'grandma/mother/child');
-//         $this->assertIsPage($pages->findById('child'), 'grandma/mother/child');
-        $this->assertIsPage($pages->findById('kind'), 'grandma/mother/child');
+        $this->assertNull($pages->findById('oma/mother/kind'));
+        $this->assertNull($pages->findById('child'));
+        $this->assertIsPage($pages->findById('kind'), 'grandma/mother/child'); // would expect null
     }
 
     public function testFindByIdWithSwappedSlugsTranslated()
@@ -572,20 +572,20 @@ class PagesTest extends TestCase
         $this->assertIsPage($pages->findById('zzz'), 'zzz');
         $this->assertIsPage($pages->findById('zzz/yyy'), 'zzz/yyy');
 
-//         $app->setCurrentLanguage('de');
+        $app->setCurrentLanguage('de');
 
-//         $this->assertIsPage($site->children()->findById('aaa'), 'zzz');
-//         $this->assertIsPage($site->children()->findById('aaa/bbb'), 'zzz/yyy');
-//         $this->assertIsPage($site->children()->findById('aaa')->children()->findById('bbb'), 'zzz/yyy');
-//         $this->assertIsPage($site->children()->findById('zzz'), 'aaa');
-//         $this->assertIsPage($site->children()->findById('zzz/yyy'), 'aaa/bbb');
-//         $this->assertIsPage($site->children()->findById('zzz')->children()->findById('yyy'), 'aaa/bbb');
+        $this->assertIsPage($site->children()->findById('aaa'), 'aaa');
+        $this->assertIsPage($site->children()->findById('aaa/bbb'), 'aaa/bbb');
+        $this->assertIsPage($site->children()->findById('aaa')->children()->findById('bbb'), 'aaa/bbb');
+        $this->assertIsPage($site->children()->findById('zzz'), 'zzz');
+        $this->assertIsPage($site->children()->findById('zzz/yyy'), 'zzz/yyy');
+        $this->assertIsPage($site->children()->findById('zzz')->children()->findById('yyy'), 'zzz/yyy');
 
-//         $pages = new Pages($site->children()->find('aaa', 'aaa/bbb', 'zzz', 'zzz/yyy'));
-//         $this->assertIsPage($pages->findById('aaa'), 'zzz');
-//         $this->assertIsPage($pages->findById('aaa/bbb'), 'zzz/yyy');
-//         $this->assertIsPage($pages->findById('zzz'), 'aaa');
-//         $this->assertIsPage($pages->findById('zzz/yyy'), 'aaa/bbb');
+        $pages = new Pages($site->children()->find('aaa', 'aaa/bbb', 'zzz', 'zzz/yyy'));
+        $this->assertIsPage($pages->findById('aaa'), 'aaa');
+        $this->assertIsPage($pages->findById('aaa/bbb'), 'aaa/bbb');
+        $this->assertIsPage($pages->findById('zzz'), 'zzz');
+        $this->assertIsPage($pages->findById('zzz/yyy'), 'zzz/yyy');
     }
 
     public function testFindMultiple()
