@@ -5,10 +5,14 @@ We may use this for the changelog and/or documentation.
 -->
 
 ## Breaking changes
-<!-- If PR creates known breaking changes, please list them: -->
+<!-- 
+If PR creates known breaking changes, please list them: 
+-->
 
 ## Related issues/ideas
-<!-- PR relates to issues in the `kirby` repo or ideas on `feedback.getkirby.com`: -->
+<!-- 
+PR relates to issues in the `kirby` repo or ideas on `feedback.getkirby.com`: 
+-->
 
 - Fixes #
 
@@ -28,7 +32,7 @@ Running locally requires PHPUnit, PHP-CS-Fixer, Psalm, PHPCPD and PHPMD.
 -->
 
 ## When merging
-<!-- We will take care of the following TODO when reviewing and merging the PR -->
+<!-- We will take care of the following TODOs when reviewing and merging the PR -->
 
 - [ ] Add to [website docs release checklist](https://github.com/getkirby/getkirby.com/pulls) (if needed)
-- [ ] Add breaking changes to [release notes draft](https://github.com/getkirby/kirby/releases)
+- [ ] Add changes to release notes draft in Notion
