@@ -162,9 +162,10 @@ class Responder
      *
      * @param string $key
      * @param string|false|null $value
+     * @param bool $lazy If `true`, an existing header value is not overridden
      * @return string|$this
      */
-    public function header(string $key, $value = null)
+    public function header(string $key, $value = null, bool $lazy = false)
     {
         if ($value === null) {
             return $this->headers[$key] ?? null;
@@ -172,6 +173,10 @@ class Responder
 
         if ($value === false) {
             unset($this->headers[$key]);
+            return $this;
+        }
+
+        if ($lazy === true && isset($this->headers[$key]) === true) {
             return $this;
         }
 

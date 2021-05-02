@@ -98,4 +98,33 @@ class ResponderTest extends TestCase
         $this->assertSame(['Location' => 'https://example.com'], $responder->headers());
         $this->assertSame('text/plain', $responder->type());
     }
+
+    /**
+     * @covers ::header
+     */
+    public function testHeader()
+    {
+        $responder = new Responder();
+
+        // getter for non-existing header
+        $this->assertNull($responder->header('Cache-Control'));
+
+        // simple setter and getter
+        $this->assertSame($responder, $responder->header('Cache-Control', 'private'));
+        $this->assertSame('private', $responder->header('Cache-Control'));
+
+        // unset existing header
+        $this->assertSame($responder, $responder->header('Cache-Control', false));
+        $this->assertNull($responder->header('Cache-Control'));
+
+        // unset non-existing header
+        $this->assertSame($responder, $responder->header('Location', false));
+        $this->assertNull($responder->header('Location'));
+
+        // lazy setter
+        $this->assertSame($responder, $responder->header('Cache-Control', 'private', true));
+        $this->assertSame('private', $responder->header('Cache-Control'));
+        $this->assertSame($responder, $responder->header('Cache-Control', 'no-cache', true));
+        $this->assertSame('private', $responder->header('Cache-Control'));
+    }
 }
