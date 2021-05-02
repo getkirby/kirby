@@ -638,6 +638,8 @@ class F
      * Returns the relative path of the file
      * starting after $in
      *
+     * @SuppressWarnings(PHPMD.CountInLoopExpression)
+     *
      * @param string $file
      * @param string $in
      * @return string
