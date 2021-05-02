@@ -180,6 +180,15 @@ class FTest extends TestCase
         $path = F::relativepath(__DIR__ . '/fruits/apples/gala.txt', __DIR__ . '/vegetables');
         $this->assertEquals('../fruits/apples/gala.txt', $path);
         
+        $path = F::relativepath(__DIR__ . '/fruits/apples/granny-smith.txt', __DIR__ . '/vegetables/');
+        $this->assertEquals('../fruits/apples/granny-smith.txt', $path);
+        
+        $path = F::relativepath(__DIR__ . '/fruits/apples/', __DIR__ . '/vegetables/');
+        $this->assertEquals('../fruits/apples', $path);
+        
+        $path = F::relativepath(__DIR__ . '/fruits/oranges/', __DIR__ . '/vegetables');
+        $this->assertEquals('../fruits/oranges', $path);
+        
         $path = F::relativepath(__DIR__ . '/fruits/apples/honeycrisp.txt', __DIR__ . '/vegetables/squash');
         $this->assertEquals('../../fruits/apples/honeycrisp.txt', $path);
         
