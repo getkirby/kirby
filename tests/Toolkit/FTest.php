@@ -182,6 +182,9 @@ class FTest extends TestCase
         
         $path = F::relativepath(__DIR__ . '/fruits/apples/honeycrisp.txt', __DIR__ . '/vegetables/squash');
         $this->assertEquals('../../fruits/apples/honeycrisp.txt', $path);
+        
+        $path = F::relativepath(__DIR__ . '/test.txt', __DIR__ . '/foo/bar/baz');
+        $this->assertEquals('../../../test.txt', $path);
     }
 
     public function testRelativePathOnWindows()
