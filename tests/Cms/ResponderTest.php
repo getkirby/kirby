@@ -19,6 +19,21 @@ class ResponderTest extends TestCase
     }
 
     /**
+     * @covers ::cache
+     */
+    public function testCache()
+    {
+        $responder = new Responder();
+        $this->assertTrue($responder->cache());
+
+        $this->assertSame($responder, $responder->cache(true));
+        $this->assertTrue($responder->cache());
+
+        $this->assertSame($responder, $responder->cache(false));
+        $this->assertFalse($responder->cache());
+    }
+
+    /**
      * @covers ::expires
      */
     public function testExpires()

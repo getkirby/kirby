@@ -40,6 +40,14 @@ class Responder
     protected $body = null;
 
     /**
+     * Flag that defines whether the current
+     * response can be cached by Kirby's cache
+     *
+     * @var string
+     */
+    protected $cache = true;
+
+    /**
      * HTTP headers
      *
      * @var array
@@ -76,6 +84,24 @@ class Responder
         }
 
         $this->body = $body;
+        return $this;
+    }
+
+    /**
+     * Setter and getter for the flag that defines
+     * whether the current response can be cached
+     * by Kirby's cache
+     *
+     * @param bool|null $cache
+     * @return bool|$this
+     */
+    public function cache(?bool $cache = null)
+    {
+        if ($cache === null) {
+            return $this->cache;
+        }
+
+        $this->cache = $cache;
         return $this;
     }
 
