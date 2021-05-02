@@ -139,21 +139,31 @@ abstract class Model
                 ];
 
                 // for lists
-                $settings['list'] = [
-                    'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
-                    'srcset' => $image->srcset([
-                        '1x' => [
-                            'width' => 38,
-                            'height' => 38,
-                            'crop' => 'center'
-                        ],
-                        '2x' => [
-                            'width' => 76,
-                            'height' => 76,
-                            'crop' => 'center'
-                        ],
-                    ])
-                ];
+                if (($settings['cover'] ?? false) === false) {
+                    $settings['list'] = [
+                        'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                        'srcset' => $image->srcset([
+                            38,
+                            76
+                        ])
+                    ];
+                } else {
+                    $settings['list'] = [
+                        'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                        'srcset' => $image->srcset([
+                            '1x' => [
+                                'width' => 38,
+                                'height' => 38,
+                                'crop' => 'center'
+                            ],
+                            '2x' => [
+                                'width' => 76,
+                                'height' => 76,
+                                'crop' => 'center'
+                            ],
+                        ])
+                    ];
+                }
             }
 
             unset($settings['query']);

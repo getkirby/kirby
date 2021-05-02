@@ -277,6 +277,55 @@ class PageTest extends TestCase
     }
 
     /**
+     * @covers ::imageSource
+     * @covers \Kirby\Panel\Model::image
+     * @covers \Kirby\Panel\Model::imageSource
+     */
+    public function testImageCover()
+    {
+        $page = new ModelPage([
+            'slug' => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $hash = $page->image()->mediaHash();
+
+        // cover disabled as default
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => false,
+            'url' => '/media/pages/test/' . $hash . '/test.jpg',
+            'cards' => [
+                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                'srcset' => '/media/pages/test/' . $hash . '/test-352x.jpg 352w, /media/pages/test/' . $hash . '/test-864x.jpg 864w, /media/pages/test/' . $hash . '/test-1408x.jpg 1408w'
+            ],
+            'list' => [
+                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                'srcset' => '/media/pages/test/' . $hash . '/test-38x.jpg 38w, /media/pages/test/' . $hash . '/test-76x.jpg 76w'
+            ]
+        ], (new Page($page))->image());
+
+        // cover enabled
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => true,
+            'url' => '/media/pages/test/' . $hash . '/test.jpg',
+            'cards' => [
+                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                'srcset' => '/media/pages/test/' . $hash . '/test-352x.jpg 352w, /media/pages/test/' . $hash . '/test-864x.jpg 864w, /media/pages/test/' . $hash . '/test-1408x.jpg 1408w'
+            ],
+            'list' => [
+                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                'srcset' => '/media/pages/test/' . $hash . '/test-38x38.jpg 1x, /media/pages/test/' . $hash . '/test-76x76.jpg 2x'
+            ]
+        ], (new Page($page))->image(['cover' => true]));
+    }
+
+    /**
      * @covers \Kirby\Panel\Model::options
      */
     public function testOptions()
