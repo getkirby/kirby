@@ -174,8 +174,14 @@ class FTest extends TestCase
 
     public function testRelativePathWithUnrelatedBase()
     {
-        $path = F::relativepath(__FILE__, '/something/something');
-        $this->assertEquals(__FILE__, $path);
+        $path = F::relativepath(__DIR__ . '/fruits/apples/fuji.txt', __DIR__ . '/fruits/pineapples');
+        $this->assertEquals('../apples/fuji.txt', $path);
+        
+        $path = F::relativepath(__DIR__ . '/fruits/apples/gala.txt', __DIR__ . '/vegetables');
+        $this->assertEquals('../fruits/apples/gala.txt', $path);
+        
+        $path = F::relativepath(__DIR__ . '/fruits/apples/honeycrisp.txt', __DIR__ . '/vegetables/squash');
+        $this->assertEquals('../../fruits/apples/honeycrisp.txt', $path);
     }
 
     public function testRelativePathOnWindows()
