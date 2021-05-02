@@ -653,7 +653,15 @@ class F
         $in   = str_replace('\\', '/', $in);
 
         if (Str::contains($file, $in) === false) {
-            return $file;
+            $fileParts = explode('/', $file);
+            $inParts = explode('/', $in);
+            while (count($fileParts) && count($inParts) && ($fileParts[0] == $inParts[0])) {
+                array_shift($fileParts);
+                array_shift($inParts);
+            }
+            
+            $parentToken = '../';
+            return str_pad('', count($inParts) * strlen($parentToken), $parentToken) . implode('/', $fileParts);
         }
 
         return Str::after($file, $in);
