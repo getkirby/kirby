@@ -67,7 +67,7 @@ class Responder
      * Setter and getter for the response body
      *
      * @param string|null $body
-     * @return string|self
+     * @return string|$this
      */
     public function body(string $body = null)
     {
@@ -85,7 +85,7 @@ class Responder
      *
      * @param int|string|null $expires Timestamp, number of minutes or time string to parse
      * @param bool $override If `true`, the already defined timestamp will be overridden
-     * @return int|null|self
+     * @return int|null|$this
      */
     public function expires($expires = null, bool $override = false)
     {
@@ -162,7 +162,7 @@ class Responder
      *
      * @param string $key
      * @param string|false|null $value
-     * @return string|self
+     * @return string|$this
      */
     public function header(string $key, $value = null)
     {
@@ -183,7 +183,7 @@ class Responder
      * Setter and getter for all headers
      *
      * @param array|null $headers
-     * @return array|self
+     * @return array|$this
      */
     public function headers(array $headers = null)
     {
@@ -199,7 +199,7 @@ class Responder
      * Shortcut to configure a json response
      *
      * @param array|null $json
-     * @return string|self
+     * @return string|$this
      */
     public function json(array $json = null)
     {
@@ -262,7 +262,7 @@ class Responder
      * Setter and getter for the content type
      *
      * @param string|null $type
-     * @return string|self
+     * @return string|$this
      */
     public function type(string $type = null)
     {
