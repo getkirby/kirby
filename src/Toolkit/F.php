@@ -655,9 +655,11 @@ class F
         $in   = str_replace('\\', '/', $in);
 
         if (Str::contains($file, $in) === false) {
+            // make the paths relative by stripping what they have
+            // in common and adding `../` tokens at the start
             $fileParts = explode('/', $file);
             $inParts = explode('/', $in);
-            while (count($fileParts) && count($inParts) && ($fileParts[0] == $inParts[0])) {
+            while (count($fileParts) && count($inParts) && ($fileParts[0] === $inParts[0])) {
                 array_shift($fileParts);
                 array_shift($inParts);
             }
