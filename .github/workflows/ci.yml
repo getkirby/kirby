@@ -157,7 +157,7 @@ jobs:
         with:
           working-directory: kirby/panel
           install: false
-          wait-on: "http://127.0.0.1:8080"
+          wait-on: "http://127.0.0.1:3000"
           command: npm run test
 
       - name: Print log files
