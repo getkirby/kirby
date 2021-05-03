@@ -319,7 +319,8 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         # Use the --no-fix flag in push builds to get a failed CI status
         run: >
-          npm run lint -- --max-warnings 0
+          npm run lint -- --max-warnings 0 --format stylish
+          ${{ github.event_name != 'pull_request' && '--no-fix' || '' }}
         working-directory: panel
 
       - name: Create code suggestions from the coding style changes (on PR only)
