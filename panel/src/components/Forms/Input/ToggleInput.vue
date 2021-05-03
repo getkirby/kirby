@@ -16,12 +16,21 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 
+/**
+ * @example <k-input v-model="toggle" name="toggle" type="toggle" />
+ */
 export default {
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
     disabled: Boolean,
     id: [Number, String],
+    /**
+     * The text to display next to the toggle. This can either be a string 
+     * that doesn't change when the toggle switches. Or an array with the 
+     * first value for the `false` text and the second value for 
+     * the `true` text.
+     */
     text: {
       type: [Array, String],
       default() {

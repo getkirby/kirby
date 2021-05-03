@@ -6,6 +6,14 @@
   />
 </template>
 
+<script>
+/**
+ * @displayName BlockTypeDefault
+ * @internal
+ */
+export default {}
+</script>
+
 <style lang="scss">
 .k-block-type-default .k-block-title {
   line-height: 1.5em;

@@ -53,126 +53,186 @@
 </template>
 
 <script>
-  export default {
-    props: {
-      autofocus: {
-        type: Boolean,
-        default: true
-      },
-      cancelButton: {
-        type: [String, Boolean],
-        default: true,
-      },
-      icon: {
-        type: String,
-        default: "check"
-      },
-      size: {
-        type: String,
-        default: "default"
-      },
-      submitButton: {
-        type: [String, Boolean],
-        default: true
-      },
-      theme: String,
-      visible: Boolean
+/**
+ * Modal dialogs are used in Kirby's Panel in many places for quick actions like adding new pages, changing titles, etc. that don't necessarily need a full new view. You can create your own modals for your fields and other plugins or reuse our existing modals to invoke typical Panel actions.
+ */
+export default {
+  props: {
+    autofocus: {
+      type: Boolean,
+      default: true
     },
-    data() {
-      return {
-        notification: null
-      };
+    cancelButton: {
+      type: [String, Boolean],
+      default: true,
     },
-    computed: {
-      cancelButtonLabel() {
-        if (this.cancelButton === false) {
-          return false;
-        }
+    /**
+     * The icon type for the submit button
+     */
+    icon: {
+      type: String,
+      default: "check"
+    },
+    /**
+     * The modal size can be adjusted with the size prop
+     * @values small, medium, large
+     */
+    size: {
+      type: String,
+      default: "default"
+    },
+    /**
+     * The text for the submit button
+     */
+    submitButton: {
+      type: [String, Boolean],
+      default: true
+    },
+    /**
+     * The theme of the submit button
+     * @values positive, negative
+     */
+    theme: String,
+    /**
+     * Dialogs are only openend on demand with the `open()` method. If you need a dialog that's visible on creation, you can set the `visible` prop
+     */
+    visible: Boolean
+  },
+  data() {
+    return {
+      notification: null
+    };
+  },
+  computed: {
+    cancelButtonLabel() {
+      if (this.cancelButton === false) {
+        return false;
+      }
 
-        if (this.cancelButton === true || this.cancelButton.length === 0) {
-          return this.$t("cancel");
-        }
+      if (this.cancelButton === true || this.cancelButton.length === 0) {
+        return this.$t("cancel");
+      }
 
-        return this.cancelButton;
-      },
-      submitButtonConfig() {
+      return this.cancelButton;
+    },
+    submitButtonConfig() {
 
-        if (this.$attrs["button"] !== undefined) {
-          return this.$attrs["button"];
-        }
+      if (this.$attrs["button"] !== undefined) {
+        return this.$attrs["button"];
+      }
 
-        if (this.submitButton !== undefined) {
-          return this.submitButton;
-        }
-
-        return true;
-      },
-      submitButtonLabel() {
-        if (this.submitButton === true || this.submitButton.length === 0) {
-          return this.$t("confirm");
-        }
-
+      if (this.submitButton !== undefined) {
         return this.submitButton;
       }
-    },
-    created() {
-      this.$events.$on("keydown.esc", this.close, false);
-    },
-    destroyed() {
-      this.$events.$off("keydown.esc", this.close, false);
-    },
-    mounted() {
-      if (this.visible) {
-        this.$nextTick(this.open);
-      }
-    },
-    methods: {
-      open() {
-        this.$store.dispatch("dialog", true);
-        this.notification = null;
-        this.$refs.overlay.open();
-        this.$emit("open");
-        this.$events.$on("keydown.esc", this.close);
-      },
-      close() {
-        this.notification = null;
-        if (this.$refs.overlay) {
-          this.$refs.overlay.close();
-        }
-        this.$emit("close");
-        this.$events.$off("keydown.esc", this.close);
-        this.$store.dispatch("dialog", false);
-      },
-      cancel() {
-        this.$emit("cancel");
-        this.close();
-      },
-      focus() {
-        if (this.$refs.dialog && this.$refs.dialog.querySelector) {
-          const btn = this.$refs.dialog.querySelector(".k-dialog-button-cancel");
 
-          if (btn && typeof btn.focus === "function") {
-            btn.focus();
-          }
-        }
-      },
-      error(message) {
-        this.notification = {
-          message: message,
-          type: "error"
-        };
-      },
-      submit() {
-        this.$emit("submit");
-      },
-      success(message) {
-        this.notification = {
-          message: message,
-          type: "success"
-        };
+      return true;
+    },
+    submitButtonLabel() {
+      if (this.submitButton === true || this.submitButton.length === 0) {
+        return this.$t("confirm");
       }
+
+      return this.submitButton;
     }
-  };
+  },
+  created() {
+    this.$events.$on("keydown.esc", this.close, false);
+  },
+  destroyed() {
+    this.$events.$off("keydown.esc", this.close, false);
+  },
+  mounted() {
+    if (this.visible) {
+      this.$nextTick(this.open);
+    }
+  },
+  methods: {
+    /**
+     * Opens the dialog and triggers the `@open` event
+     * @public
+     */
+    open() {
+      this.$store.dispatch("dialog", true);
+      this.notification = null;
+      this.$refs.overlay.open();
+      /**
+       * This event is triggered as soon as the dialog opens.
+       * @event open
+       */
+      this.$emit("open");
+      this.$events.$on("keydown.esc", this.close);
+    },
+    /**
+     * Triggers the `@close` event and closes the dialog.
+     * @public
+     */
+    close() {
+      this.notification = null;
+      if (this.$refs.overlay) {
+        this.$refs.overlay.close();
+      }
+      /**
+       * This event is triggered when the dialog is being closed. 
+       * This happens independently from the cancel event.
+       * @event close
+       */
+      this.$emit("close");
+      this.$events.$off("keydown.esc", this.close);
+      this.$store.dispatch("dialog", false);
+    },
+    /**
+     * Triggers the `@cancel` event and closes the dialog.
+     * @public
+     */
+    cancel() {
+      /**
+       * This event is triggered whenever the cancel button or 
+       * the backdrop is clicked.
+       * @event cancel
+       */
+      this.$emit("cancel");
+      this.close();
+    },
+    focus() {
+      if (this.$refs.dialog && this.$refs.dialog.querySelector) {
+        const btn = this.$refs.dialog.querySelector(".k-dialog-button-cancel");
+
+        if (btn && typeof btn.focus === "function") {
+          btn.focus();
+        }
+      }
+    },
+    /**
+     * Shows the error notification bar in the dialog with the given message
+     * @public
+     * @param {string} message
+     */
+    error(message) {
+      this.notification = {
+        message: message,
+        type: "error"
+      };
+    },
+    submit() {
+      /**
+       * This event is triggered when the submit button is clicked.
+       * @event submit
+       */
+      this.$emit("submit");
+    },
+    /**
+     * Shows the success notification bar in the dialog with the given message
+     * @public
+     * @param {string} message
+     */
+    success(message) {
+      this.notification = {
+        message: message,
+        type: "success"
+      };
+    }
+  }
+};
 </script>
 
 <style lang="scss">

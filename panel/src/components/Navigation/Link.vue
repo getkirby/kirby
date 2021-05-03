@@ -25,14 +25,24 @@
 <script>
 import tab from "@/mixins/tab.js";
 
+/**
+ * Our Link component is a wrapper around a native HTML `a` element, but it is also used to swap this with a Vue `router-link` element in our application whenever it makes sense. It comes with a set of additional useful helpers.
+ * @example <k-link to="https://getkirby.com">Kirby Website</k-link>
+ */
 export default {
   mixins: [tab],
   props: {
+    /**
+     * Disabled links will have no pointer events and cannot be clicked or focused.
+     */
     disabled: Boolean,
     rel: String,
     tabindex: [String, Number],
     target: String,
     title: String,
+    /**
+     * The path or absolute URL for the link.
+     */
     to: [String, Function],
   },
   data() {

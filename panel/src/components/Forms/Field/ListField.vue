@@ -22,6 +22,9 @@
 import Field from "../Field.vue";
 import Input from "../Input.vue";
 
+/**
+ * Have a look at `<k-field>` and `<k-input>` for additional information.
+ */
 export default {
   inheritAttrs: false,
   props: {

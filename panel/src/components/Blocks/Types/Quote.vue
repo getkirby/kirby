@@ -20,6 +20,10 @@
 </template>
 
 <script>
+/**
+ * @displayName BlockTypeQuote
+ * @internal
+ */
 export default {
   computed: {
     citationField() {

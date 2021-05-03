@@ -1,7 +1,6 @@
 <template>
   <span
     ref="button"
-    :data-size="size"
     class="k-tag"
     tabindex="0"
     @keydown.delete.prevent="remove"
@@ -12,14 +11,23 @@
 </template>
 
 <script>
+/**
+ * The Tag Button is mostly used in the `<k-tags-input>` component
+ * @example <k-tag>Design</k-tag>
+ */
 export default {
   props: {
-    removable: Boolean,
-    size: String
+    /**
+     * Enables the remove button
+     */
+    removable: Boolean
   },
   methods: {
     remove() {
       if (this.removable) {
+        /**
+         * This event is emitted when the remove button is being clicked or the tag is focussed and the delete key is entered.
+         */
         this.$emit("remove");
       }
     },

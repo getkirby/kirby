@@ -31,14 +31,36 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 
+/**
+ * 
+ * @example <k-input v-model="checkbox" type="checkbox" />
+ */
 export default {
   inheritAttrs: false,
   props: {
-    autofocus: Boolean,
-    disabled: Boolean,
+    /**
+     * If true, the input will be instantly focused when the form is created
+     */
+    autofocus: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * If true, the input is disabled and cannot be filled in or edited
+     */
+    disabled: {
+      type: Boolean,
+      default: false
+    },
     id: [Number, String],
     label: String,
-    required: Boolean,
+    /**
+     * If true, the input must not be empty
+     */
+    required: {
+      type: Boolean,
+      default: false
+    },
     value: Boolean,
   },
   watch: {
@@ -58,9 +80,18 @@ export default {
       this.$refs.input.focus();
     },
     onChange(checked) {
+      /**
+       * The input event is triggered when the value changes.
+       * @event input
+       * @property {boolean} checked
+       */
       this.$emit("input", checked);
     },
     onInvalid() {
+      /**
+       * The invalid event is triggered when the input validation fails. This can be used to react on errors immediately.
+       * @event invalid
+       */
       this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     select() {

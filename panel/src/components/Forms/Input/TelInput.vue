@@ -1,6 +1,9 @@
 <script>
 import TextInput from "./TextInput.vue";
 
+/**
+ * @example <k-input v-model="tel" name="tel" type="tel" />
+ */
 export default {
   extends: TextInput,
   props: {

@@ -76,6 +76,9 @@
 <script>
 import Column from "./Column";
 
+/**
+ * @internal
+ */
 export default {
   components: {
     "k-layout-column": Column

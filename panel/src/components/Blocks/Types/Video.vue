@@ -15,6 +15,10 @@
 </template>
 
 <script>
+/**
+ * @displayName BlockTypeVideo
+ * @internal
+ */
 export default {
   computed: {
     captionMarks() {

@@ -21,6 +21,9 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 
+/**
+ * @example <k-input v-model="date" type="date" name="date" />
+ */
 export default {
   inheritAttrs: false,
   props: {
@@ -31,7 +34,13 @@ export default {
       default: "DD.MM.YYYY"
     },
     id: [String, Number],
+    /**
+     * The last allowed date
+     */
     max: String,
+    /**
+     * The first allowed date
+     */
     min: String,
     required: Boolean,
     step: {
@@ -47,6 +56,10 @@ export default {
       type: String,
       default: "date"
     },
+    /**
+     * The date must be provided as iso date string
+     * @example `2012-12-12 22:33:00`
+     */
     value: String
   },
   data() {

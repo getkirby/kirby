@@ -56,10 +56,16 @@ import config from "@/config/config.js";
 import { required, minLength, maxLength } from "vuelidate/lib/validators";
 import direction from "@/helpers/direction.js";
 
+/**
+ * @example <k-input v-model="text" name="text" type="textarea" />
+ */
 export default {
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
+    /**
+     * Enables or disables all or specific buttons in the toolbar.
+     */
     buttons: {
       type: [Boolean, Array],
       default: true
@@ -74,6 +80,11 @@ export default {
     placeholder: String,
     preselect: Boolean,
     required: Boolean,
+    /**
+     * Pre-selects the size before auto-sizing kicks in. 
+     * This can be useful to fill gaps in field layouts.
+     * @values small, medium, large, huge
+     */
     size: String,
     spellcheck: {
       type: [Boolean, String],

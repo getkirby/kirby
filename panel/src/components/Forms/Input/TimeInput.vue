@@ -1,6 +1,9 @@
 <script>
 import DateInput from "./DateInput.vue";
 
+/**
+ * @example <k-input v-model="time" name="time" type="time" />
+ */
 export default {
   extends: DateInput,
   props: {

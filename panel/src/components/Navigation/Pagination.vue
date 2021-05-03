@@ -59,12 +59,27 @@
 </template>
 
 <script>
+/**
+ * @example <k-pagination
+ *   align="center"
+ *   :details="true"
+ *   :page="5"
+ *   :total="125"
+ *   :limit="10" />
+ */
 export default {
   props: {
+    /**
+     * The align prop makes it possible to move the pagination component according to the wrapper component.
+     * @values left, centre, right
+     */
     align: {
       type: String,
       default: "left"
     },
+    /**
+     * Show/hide the details display with the page selector in the center of the two navigation buttons.
+     */
     details: {
       type: Boolean,
       default: false
@@ -73,46 +88,67 @@ export default {
       type: Boolean,
       default: true
     },
-    validate: {
-      type: Function,
-      default() {
-        return Promise.resolve();
-      }
-    },
-    page: {
-      type: Number,
-      default: 1
-    },
-    total: {
-      type: Number,
-      default: 0
-    },
-    limit: {
-      type: Number,
-      default: 10
-    },
+    /**
+     * Enable/disable keyboard navigation
+     */
     keys: {
       type: Boolean,
       default: false
     },
+    /**
+     * Sets the limit of items to be shown per page
+     */
+    limit: {
+      type: Number,
+      default: 10
+    },
+    /**
+     * Sets the current page
+     */
+    page: {
+      type: Number,
+      default: 1
+    },
+    /**
+     * Sets the label for the page selector
+     */
     pageLabel: {
       type: String,
       default() {
         return this.$t("pagination.page");
       }
     },
+    /**
+     * Sets the total number of items that are in the paginated list. This has to be set higher to 0 to activate pagination.
+     */
+    total: {
+      type: Number,
+      default: 0
+    },
+    /**
+     * Sets the label for the `prev` arrow button
+     */
     prevLabel: {
       type: String,
       default() {
         return this.$t("prev");
       }
     },
+    /**
+     * Sets the label for the `next` arrow button
+     */
     nextLabel: {
       type: String,
       default() {
         return this.$t("next");
       }
-    }
+    },
+    validate: {
+      type: Function,
+      default() {
+        return Promise.resolve();
+      }
+    },
   },
   data() {
     return {
@@ -172,6 +208,10 @@ export default {
     window.removeEventListener("keydown", this.navigate, false);
   },
   methods: {
+    /**
+     * Jump to the given page
+     * @public
+     */
     goTo(page) {
       this.validate(page)
         .then(() => {
@@ -201,9 +241,17 @@ export default {
           // pagination stopped
         });
     },
+    /**
+     * Jump to the previous page
+     * @public
+     */
     prev() {
       this.goTo(this.currentPage - 1);
     },
+    /**
+     * Jump to the next page
+     * @public
+     */
     next() {
       this.goTo(this.currentPage + 1);
     },

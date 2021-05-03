@@ -2,6 +2,13 @@
   <hr class="k-line-field">
 </template>
 
+<script>
+/**
+ * @example <k-line-field />
+ */
+export default {}
+</script>
+
 <style lang="scss">
 .k-line-field {
   position: relative;

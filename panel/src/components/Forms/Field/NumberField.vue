@@ -16,6 +16,10 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import NumberInput from "../Input/NumberInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-number-input>` for additional information.
+ * @example <k-number-field v-model="number" name="number" label="Number" />
+ */
 export default {
   inheritAttrs: false,
   props: {

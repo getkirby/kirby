@@ -28,18 +28,27 @@ import {
   maxValue
 } from "vuelidate/lib/validators";
 
+/**
+ * @example <k-input v-model="number" name="number" type="number" />
+ */
 export default {
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
     disabled: Boolean,
     id: [Number, String],
+    /**
+     * The highest accepted number
+     */
     max: Number,
     min: Number,
     name: [Number, String],
     placeholder: String,
     preselect: Boolean,
     required: Boolean,
+    /**
+     * The amount to increment with each input step. This can be a decimal.
+     */
     step: Number,
     value: {
       type: [Number, String],

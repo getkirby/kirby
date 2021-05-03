@@ -12,7 +12,10 @@
 </template>
 
 <script>
-
+/**
+ * @displayName BlockTypeHeading
+ * @internal
+ */
 export default {
   computed: {
     textField() {

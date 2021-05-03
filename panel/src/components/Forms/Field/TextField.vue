@@ -21,6 +21,11 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import TextInput from "../Input/TextInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-text-input>` 
+ * for additional information.
+ * @example <k-text-field v-model="text" name="text" label="Boring text" />
+ */
 export default {
   inheritAttrs: false,
   props: {

@@ -12,6 +12,20 @@
   </div>
 </template>
 
+<script>
+/**
+ * The `k-bar` can be used to create all sorts of toolbars with the option to have three different slots for buttons or other elements: left, center and right.
+ * 
+ * @example 
+ * <k-bar>
+ *   <template slot="left">...</template>
+ *   <template slot="center">...</template>
+ *   <template slot="right">...</template>
+ * </k-bar>
+ */
+export default {}
+</script>
+
 <style lang="scss">
 .k-bar {
   display: flex;

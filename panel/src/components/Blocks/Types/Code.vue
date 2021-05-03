@@ -24,6 +24,10 @@
 </template>
 
 <script>
+/**
+ * @displayName BlockTypeCode
+ * @internal
+ */
 export default {
   computed: {
     placeholder() {
