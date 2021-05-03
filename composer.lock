@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "458e45c8e9d72833e317a5a334826501",
+    "content-hash": "cfc3d1f85d0383961a65c7a75810a458",
     "packages": [
         {
             "name": "claviska/simpleimage",
-            "version": "3.5.1",
+            "version": "3.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/claviska/SimpleImage.git",
-                "reference": "ab2ab8a4672738ab77b39b00922ee4e79aeadb11"
+                "reference": "21b6f4bf4ef1927158b3e29bd0c2d99c6681c750"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/ab2ab8a4672738ab77b39b00922ee4e79aeadb11",
-                "reference": "ab2ab8a4672738ab77b39b00922ee4e79aeadb11",
+                "url": "https://api.github.com/repos/claviska/SimpleImage/zipball/21b6f4bf4ef1927158b3e29bd0c2d99c6681c750",
+                "reference": "21b6f4bf4ef1927158b3e29bd0c2d99c6681c750",
                 "shasum": ""
             },
             "require": {
@@ -45,7 +45,7 @@
             "description": "A PHP class that makes working with images as simple as possible.",
             "support": {
                 "issues": "https://github.com/claviska/SimpleImage/issues",
-                "source": "https://github.com/claviska/SimpleImage/tree/3.5.1"
+                "source": "https://github.com/claviska/SimpleImage/tree/3.6.3"
             },
             "funding": [
                 {
@@ -53,7 +53,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-10-30T20:47:26+00:00"
+            "time": "2021-04-20T12:18:18+00:00"
         },
         {
             "name": "filp/whoops",

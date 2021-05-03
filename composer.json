@@ -21,7 +21,7 @@
     "php": ">=7.3.0 <8.1.0",
     "ext-ctype": "*",
     "ext-mbstring": "*",
-    "claviska/simpleimage": "3.5.1",
+    "claviska/simpleimage": "3.6.3",
     "filp/whoops": "2.12.1",
     "getkirby/composer-installer": "1.2.1",
     "laminas/laminas-escaper": "2.7.0",

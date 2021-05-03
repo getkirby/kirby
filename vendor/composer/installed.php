@@ -13,12 +13,12 @@
   array (
     'claviska/simpleimage' => 
     array (
-      'pretty_version' => '3.5.1',
-      'version' => '3.5.1.0',
+      'pretty_version' => '3.6.3',
+      'version' => '3.6.3.0',
       'aliases' => 
       array (
       ),
-      'reference' => 'ab2ab8a4672738ab77b39b00922ee4e79aeadb11',
+      'reference' => '21b6f4bf4ef1927158b3e29bd0c2d99c6681c750',
     ),
     'filp/whoops' => 
     array (
