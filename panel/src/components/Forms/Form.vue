@@ -12,6 +12,7 @@
 
     <!-- @slot If you want to replace the default fieldset -->
     <slot>
+      <!-- eslint-disable vue/no-mutating-props -->
       <k-fieldset
         ref="fields"
         v-model="value"
