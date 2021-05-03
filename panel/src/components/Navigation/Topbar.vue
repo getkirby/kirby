@@ -128,9 +128,7 @@
           </template>
 
           <!-- unsaved changes indicator -->
-          <template>
-            <k-form-indicator />
-          </template>
+          <k-form-indicator />
 
           <!-- search -->
           <k-button

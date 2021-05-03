@@ -2,11 +2,11 @@
   "name": "kirby",
   "private": true,
   "scripts": {
+    "build": "vite build && rm dist/index.html",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
     "dev": "vite",
-    "build": "vite build && rm dist/index.html",
-    "build:docs": "node scripts/docs.js",
+    "lint": "eslint --ext .js,.vue src",
     "serve": "vite preview",
     "test": "cypress run"
   },
@@ -29,10 +29,13 @@
     "vuex-i18n": "^1.13.1"
   },
   "devDependencies": {
+    "babel-eslint": "^10.1.0",
     "cypress": "^5.6.0",
+    "eslint": "^7.21.0",
+    "eslint-plugin-cypress": "^2.11.2",
+    "eslint-plugin-vue": "^7.7.0",
     "sass": "^1.32.8",
     "vite": "^2.0.5",
-    "vite-plugin-vue2": "^1.2.2",
-    "vue-docgen-api": "^4.35.0"
+    "vite-plugin-vue2": "^1.2.2"
   }
 }
