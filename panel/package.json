@@ -3,6 +3,7 @@
   "private": true,
   "scripts": {
     "build": "vite build && rm dist/index.html",
+    "build:docs": "node scripts/docs.js",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
     "dev": "vite",
@@ -37,6 +38,7 @@
     "vite": "^2.0.5",
     "vite-plugin-rewrite-all": "^0.1.2",
     "vite-plugin-vue2": "^1.2.2",
+    "vue-docgen-api": "^4.35.0",
     "wait-on": "^5.2.1"
   }
 }
