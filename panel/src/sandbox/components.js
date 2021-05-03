@@ -7,7 +7,7 @@ export async function meta() {
   const components = paths.map(async (key) => {
 
     const name = key.match(/\/([a-zA-Z]*)\.vue/)[1].toLowerCase();
-    const html = await import(key + "?raw");
+    const html = await import(key + "?raw" /* @vite-ignore */);
   
     return { key: key, name: name, html: html };
   });

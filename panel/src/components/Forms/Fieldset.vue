@@ -11,6 +11,7 @@
             <!-- @event input Triggered whenever any field value changes -->
             <!-- @event focus Triggered whenever any field is focused -->
             <!-- @event submit Triggered whenever any field triggers submit -->
+            <!-- eslint-disable vue/no-mutating-props -->
             <component
               :is="'k-' + field.type + '-field'"
               v-if="hasFieldType(field.type)"
