@@ -14,6 +14,10 @@
             <directory>./config</directory>
             <directory>./src</directory>
         </include>
+
+        <exclude>
+            <directory suffix=".php">./config/templates</directory>
+        </exclude>
     </coverage>
 
     <testsuites>
