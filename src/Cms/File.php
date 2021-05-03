@@ -254,6 +254,8 @@ class File extends ModelWithContent
         } else {
             if ($this->type() === 'image') {
                 return '(image: ' . $url . ')';
+            } elseif ($this->type() === 'video') {
+                return '(video: ' . $url . ')';
             } else {
                 return '(file: ' . $url . ')';
             }
