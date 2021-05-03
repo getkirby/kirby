@@ -23,7 +23,7 @@
     "ext-mbstring": "*",
     "claviska/simpleimage": "3.6.3",
     "filp/whoops": "2.12.1",
-    "getkirby/composer-installer": "1.2.1",
+    "getkirby/composer-installer": "^1.2.0",
     "laminas/laminas-escaper": "2.7.0",
     "michelf/php-smartypants": "1.8.1",
     "mustangostang/spyc": "0.6.3",
