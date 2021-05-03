@@ -1175,7 +1175,7 @@ class Page extends ModelWithContent
             $response = $kirby->response()->toArray();
 
             // cache the result
-            if ($cache !== null) {
+            if ($cache !== null && $kirby->response()->cache() === true) {
                 $cache->set($cacheId, [
                     'html'     => $html,
                     'response' => $response

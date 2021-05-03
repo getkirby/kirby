@@ -1226,6 +1226,10 @@ class App
      */
     public function session(array $options = [])
     {
+        // never cache responses that depend on the session
+        $this->response()->cache(false);
+        $this->response()->header('Cache-Control', 'no-store', true);
+
         return $this->sessionHandler()->get($options);
     }
 

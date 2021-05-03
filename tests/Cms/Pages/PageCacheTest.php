@@ -24,6 +24,10 @@ class PageCacheTest extends TestCase
                     [
                         'slug'     => 'b',
                         'template' => 'expiry'
+                    ],
+                    [
+                        'slug'     => 'c',
+                        'template' => 'disabled'
                     ]
                 ]
             ],
@@ -36,6 +40,10 @@ class PageCacheTest extends TestCase
         F::write(
             $this->fixtures . '/site/templates/default.php',
             'This is a test: <?= uniqid() ?>'
+        );
+        F::write(
+            $this->fixtures . '/site/templates/disabled.php',
+            'This is a test: <?= uniqid() ?><?php $kirby->response()->cache(false); ?>'
         );
         F::write(
             $this->fixtures . '/site/templates/expiry.php',
@@ -187,5 +195,21 @@ class PageCacheTest extends TestCase
         $this->assertInstanceOf('Kirby\Cache\Value', $value);
         $this->assertSame($time, $value->value()['html']);
         $this->assertSame((int)$time, $value->expires());
+    }
+
+    public function testRenderCacheDisabled()
+    {
+        $cache = $this->app->cache('pages');
+        $page  = $this->app->page('c');
+
+        $this->assertNull($cache->retrieve('c.html'));
+
+        $html1 = $page->render();
+        $this->assertStringStartsWith('This is a test:', $html1);
+
+        $this->assertNull($cache->retrieve('c.html'));
+
+        $html2 = $page->render();
+        $this->assertNotSame($html1, $html2);
     }
 }

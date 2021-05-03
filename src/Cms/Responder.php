@@ -40,6 +40,14 @@ class Responder
     protected $body = null;
 
     /**
+     * Flag that defines whether the current
+     * response can be cached by Kirby's cache
+     *
+     * @var string
+     */
+    protected $cache = true;
+
+    /**
      * HTTP headers
      *
      * @var array
@@ -67,7 +75,7 @@ class Responder
      * Setter and getter for the response body
      *
      * @param string|null $body
-     * @return string|self
+     * @return string|$this
      */
     public function body(string $body = null)
     {
@@ -80,12 +88,30 @@ class Responder
     }
 
     /**
+     * Setter and getter for the flag that defines
+     * whether the current response can be cached
+     * by Kirby's cache
+     *
+     * @param bool|null $cache
+     * @return bool|$this
+     */
+    public function cache(?bool $cache = null)
+    {
+        if ($cache === null) {
+            return $this->cache;
+        }
+
+        $this->cache = $cache;
+        return $this;
+    }
+
+    /**
      * Setter and getter for the cache expiry
      * timestamp for Kirby's cache
      *
      * @param int|string|null $expires Timestamp, number of minutes or time string to parse
      * @param bool $override If `true`, the already defined timestamp will be overridden
-     * @return int|null|self
+     * @return int|null|$this
      */
     public function expires($expires = null, bool $override = false)
     {
@@ -162,9 +188,10 @@ class Responder
      *
      * @param string $key
      * @param string|false|null $value
-     * @return string|self
+     * @param bool $lazy If `true`, an existing header value is not overridden
+     * @return string|$this
      */
-    public function header(string $key, $value = null)
+    public function header(string $key, $value = null, bool $lazy = false)
     {
         if ($value === null) {
             return $this->headers[$key] ?? null;
@@ -172,6 +199,10 @@ class Responder
 
         if ($value === false) {
             unset($this->headers[$key]);
+            return $this;
+        }
+
+        if ($lazy === true && isset($this->headers[$key]) === true) {
             return $this;
         }
 
@@ -183,7 +214,7 @@ class Responder
      * Setter and getter for all headers
      *
      * @param array|null $headers
-     * @return array|self
+     * @return array|$this
      */
     public function headers(array $headers = null)
     {
@@ -199,7 +230,7 @@ class Responder
      * Shortcut to configure a json response
      *
      * @param array|null $json
-     * @return string|self
+     * @return string|$this
      */
     public function json(array $json = null)
     {
@@ -262,7 +293,7 @@ class Responder
      * Setter and getter for the content type
      *
      * @param string|null $type
-     * @return string|self
+     * @return string|$this
      */
     public function type(string $type = null)
     {

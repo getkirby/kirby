@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Http\Route;
 use Kirby\Http\Server;
+use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 use ReflectionMethod;
 
@@ -447,6 +448,30 @@ class AppTest extends TestCase
 
         $this->assertInstanceOf(Page::class, $response);
         $this->assertInstanceOf(Route::class, $route);
+    }
+
+    public function testSession()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'sessions' => $fixtures = __DIR__ . '/fixtures/AppTest/sessions',
+            ]
+        ]);
+
+        $this->assertTrue($app->response()->cache());
+        $this->assertSame([], $app->response()->headers());
+
+        $this->assertInstanceOf(Session::class, $app->session());
+
+        $this->assertFalse($app->response()->cache());
+        $this->assertSame(['Cache-Control' => 'no-store'], $app->response()->headers());
+
+        // test lazy header setter
+        $app->response()->header('Cache-Control', 'custom');
+        $this->assertInstanceOf(Session::class, $app->session());
+        $this->assertFalse($app->response()->cache());
+        $this->assertSame(['Cache-Control' => 'custom'], $app->response()->headers());
     }
 
     public function testInstance()
