@@ -130,6 +130,12 @@ export default {
         },
         toolbar: (toolbar) => {
           this.toolbar = toolbar;
+
+          if (this.toolbar.visible) {
+            this.$nextTick(() => {
+              this.onToolbarOpen();
+            });
+          }
         },
         update: () => {
           this.html    = this.editor.getHTML();
@@ -227,6 +233,28 @@ export default {
     },
     focus() {
       this.editor.focus();
+    },
+    onToolbarOpen() {
+      if (this.$refs.toolbar) {
+        const editorWidth = this.$el.clientWidth;
+        const toolbarWidth = this.$refs.toolbar.$el.clientWidth;
+
+        let left = this.toolbar.position.left;
+
+        // adjust left overflow
+        if (left - (toolbarWidth / 2) < 0) {
+          left = left + ((toolbarWidth / 2) - left) - 20;
+        }
+
+        // adjust right overflow
+        if (left + (toolbarWidth / 2) > editorWidth) {
+          left = left - (left + (toolbarWidth / 2) - editorWidth) + 20;
+        }
+
+        if (left !== this.toolbar.position.left) {
+          this.$refs.toolbar.$el.style.left = left + 'px';
+        }
+      }
     }
   }
 };
