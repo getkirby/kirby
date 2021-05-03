@@ -166,8 +166,8 @@ jobs:
           # start the built-in PHP server
           php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
 
-          # start the Vue CLI server
-          npm run dev -- --skip-plugins @vue/cli-plugin-eslint &> ${{ github.workspace }}/_logs/vue-cli.log &
+          # start vite
+          npm run dev &> ${{ github.workspace }}/_logs/vite.log &
         working-directory: kirby/panel
 
       - name: Run tests
@@ -319,8 +319,7 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         # Use the --no-fix flag in push builds to get a failed CI status
         run: >
-          npm run lint -- --max-warnings 0 --format stylish
-          ${{ github.event_name != 'pull_request' && '--no-fix' || '' }}
+          npm run lint -- --max-warnings 0
         working-directory: panel
 
       - name: Create code suggestions from the coding style changes (on PR only)
