@@ -37,6 +37,10 @@ class EmailChallengeTest extends TestCase
                 ],
                 [
                     'email' => 'marge@simpsons.com'
+                ],
+                [
+                    'email'    => 'bart@simpsons.com',
+                    'language' => 'de'
                 ]
             ]
         ]);
@@ -169,6 +173,35 @@ class EmailChallengeTest extends TestCase
         $this->assertStringContainsString('password reset code', $email->body()->text());
         $this->assertStringContainsString('marge@simpsons.com', $email->body()->text());
         $this->assertStringContainsString('7 minutes', $email->body()->text());
+        $this->assertStringContainsString(
+            substr($code1, 0, 3) . ' ' . substr($code1, 3, 3),
+            $email->body()->text()
+        );
+
+        $code2 = EmailChallenge::create($user, $options);
+        $this->assertNotSame($code1, $code2);
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreateResetUserLanguage()
+    {
+        $user = $this->app->user('bart@simpsons.com');
+        $options = ['mode' => 'password-reset', 'timeout' => 7.3 * 60];
+
+        $code1 = EmailChallenge::create($user, $options);
+        $this->assertStringMatchesFormat('%d', $code1);
+        $this->assertSame(6, strlen($code1));
+        $this->assertCount(1, Email::$emails);
+        $email = Email::$emails[0];
+        $this->assertSame('noreply@kirby.test', $email->from());
+        $this->assertSame('Test Site', $email->fromName());
+        $this->assertSame(['bart@simpsons.com' => ''], $email->to());
+        $this->assertSame('Dein Anmeldecode', $email->subject());
+        $this->assertStringContainsString('Anmeldecode für das Kirby Panel', $email->body()->text());
+        $this->assertStringContainsString('bart@simpsons.com', $email->body()->text());
+        $this->assertStringContainsString('7 Minuten', $email->body()->text());
         $this->assertStringContainsString(
             substr($code1, 0, 3) . ' ' . substr($code1, 3, 3),
             $email->body()->text()
