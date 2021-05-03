@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "Du har ikke mulighed for at duplikere \"{slug}\"",
   "error.page.notFound": "Siden kunne ikke findes",
   "error.page.num.invalid": "Indtast venligst et gyldigt sorteringsnummer. Nummeret kan ikke være negativt.",
-  "error.page.slug.invalid": "Indtast venligst en gyldig URL prefix",
+  "error.page.slug.invalid": "Please enter a valid URL appendix",
   "error.page.slug.maxlength": "Navnet skal være kortere end \"{length}\" tegn",
   "error.page.sort.permission": "Siden \"{slug}\" kan ikke sorteres",
   "error.page.status.invalid": "Sæt venligst en gyldig status for siden",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Indtast venligst en gyldig adgangskode. Adgangskoder skal minimum være 8 tegn lange.",
   "error.user.password.notSame": "Bekr\u00e6ft venligst adgangskoden",
   "error.user.password.undefined": "Brugeren har ikke en adgangskode",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Indtast venligst en gyldig rolle",
   "error.user.update.permission": "Du har ikke tilladelse til at opdatere brugeren \"{name}\"",
 

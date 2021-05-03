@@ -71,7 +71,7 @@
   "error.file.extension.missing": "Du kannst keine Dateien ohne Dateiendung hochladen",
   "error.file.maxheight": "Die Bildhöhe darf {height} Pixel nicht überschreiten",
   "error.file.maxsize": "Die Datei ist zu groß",
-  "error.file.maxwidth": "Die Bildbreite darf {height} Pixel nicht überschreiten",
+  "error.file.maxwidth": "Die Bildbreite darf {width} Pixel nicht überschreiten",
   "error.file.mime.differs": "Die Datei muss den Medientyp \"{mime}\" haben.",
   "error.file.mime.forbidden": "Der Medientyp \"{mime}\"  ist nicht erlaubt",
   "error.file.mime.invalid": "Ungültiger Dateityp: {mime}",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Bitte gib ein gültiges Passwort ein. Passwörter müssen mindestens 8 Zeichen lang sein.",
   "error.user.password.notSame": "Die Passwörter stimmen nicht überein",
   "error.user.password.undefined": "Der Account hat kein Passwort",
+  "error.user.password.wrong": "Falsches Passwort",
   "error.user.role.invalid": "Bitte gib eine gültige Rolle an",
   "error.user.update.permission": "Du darfst den den Account \"{name}\" nicht bearbeiten",
 

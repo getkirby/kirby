@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "Sinulla ei ole oikeutta kahdentaa sivua \"{slug}\"",
   "error.page.notFound": "Sivua \"{slug}\" ei löytynyt",
   "error.page.num.invalid": "Anna kelpaava järjestysnumero. Numero ei voi olla negatiivinen.",
-  "error.page.slug.invalid": "Anna kelpaava URL-etuliite",
+  "error.page.slug.invalid": "Please enter a valid URL appendix",
   "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Sivua \"{slug}\" ei voi järjestellä",
   "error.page.status.invalid": "Aseta kelvollinen sivun tila",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Anna kelpaava salasana. Salasanan täytyy olla ainakin 8 merkkiä pitkä.",
   "error.user.password.notSame": "Salasanat eivät täsmää",
   "error.user.password.undefined": "Käyttäjällä ei ole salasanaa",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Anna kelpaava käyttäjätaso",
   "error.user.update.permission": "Sinulla ei ole oikeutta päivittää käyttäjää \"{name}\"",
 
