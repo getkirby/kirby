@@ -752,6 +752,41 @@ class AppTest extends TestCase
         $this->assertSame(143, $count);
     }
 
+    public function urlProvider()
+    {
+        return [
+            ['http://getkirby.com', 'http://getkirby.com'],
+            ['https://getkirby.com', 'https://getkirby.com'],
+            ['https://getkirby.com/test', 'https://getkirby.com/test'],
+            ['/', 'http://example.com/'],
+            ['/test', 'http://example.com/test'],
+            ['getkirby.com/test', 'http://example.com/getkirby.com/test'],
+        ];
+    }
+
+    /**
+     * @dataProvider urlProvider
+     */
+    public function testUrl($url, $expected)
+    {
+        $_SERVER['SERVER_ADDR'] = 'example.com';
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'url' => $url
+            ]
+        ]);
+
+        $this->assertSame($url, $app->url('index'));
+        $this->assertSame($expected, $app->url('index', true)->toString());
+
+        // reset SERVER_ADDR
+        $_SERVER['SERVER_ADDR'] = null;
+    }
+
     public function testVersionHash()
     {
         $this->assertEquals(md5(App::version()), App::versionHash());
