@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\Dir;
 use PHPUnit\Framework\TestCase;
 
 class LanguagesRoutesTest extends TestCase

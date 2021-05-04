@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Email\Email;
+use Kirby\Toolkit\Dir;
 
 require_once __DIR__ . '/../mocks.php';
 

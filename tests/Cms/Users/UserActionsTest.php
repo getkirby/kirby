@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\Dir;
+
 class UserActionsTest extends TestCase
 {
     protected $app;

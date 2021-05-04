@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 
 class UserTestModel extends User
