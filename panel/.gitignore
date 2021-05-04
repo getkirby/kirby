@@ -5,6 +5,7 @@ node_modules
 .env
 .env.local
 .env.*.local
+vite.config.custom.js
 
 # Log files
 npm-debug.log*
