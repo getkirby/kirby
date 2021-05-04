@@ -298,7 +298,7 @@ jobs:
         with:
           php-version: ${{ env.php }}
           coverage: none
-          tools: php-cs-fixer
+          tools: php-cs-fixer:2.19.0
 
       - name: Cache analysis data
         id: finishPrepare
