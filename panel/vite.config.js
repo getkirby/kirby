@@ -3,6 +3,14 @@ import { createVuePlugin } from 'vite-plugin-vue2'
 import pluginRewriteAll from 'vite-plugin-rewrite-all';
 
 const path = require('path');
+
+let custom;
+try {
+  custom = require("./vite.config.custom.js");
+} catch (e) {
+  custom = {};
+}
+
 const proxy = {
   target: process.env.VUE_APP_DEV_SERVER || "http://sandbox.test",
   changeOrigin: true,
@@ -44,6 +52,7 @@ export default defineConfig({
       '/api': proxy,
       '/env': proxy,
       '/media': proxy
-    }
+    },
+    ...custom
   }
 })
