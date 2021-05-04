@@ -74,7 +74,7 @@
 </template>
 
 <script>
-import Column from "./Column";
+import Column from "./Column.vue";
 
 /**
  * @internal
