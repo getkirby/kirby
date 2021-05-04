@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "صفحه مورد نظر با آدرس «{slug}» پیدا نشد.",
   "error.page.num.invalid": "لطفا شماره ترتیب را بدرستی وارد نمایید. اعداد نباید منفی باشند.",
-  "error.page.slug.invalid": "لطفا یک پیشوند Url صحیح وارد کنید",
+  "error.page.slug.invalid": "Please enter a valid URL appendix",
   "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "امکان مرتب‌سازی «{slug}» نیست",
   "error.page.status.invalid": "لطفا وضعیت صحیحی برای صفحه انتخاب کنید",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "لطفا گذرواژه صحیحی با حداقل طول 8 حرف وارد کنید. ",
   "error.user.password.notSame": "\u0644\u0637\u0641\u0627 \u062a\u06a9\u0631\u0627\u0631 \u06af\u0630\u0631\u0648\u0627\u0698\u0647 \u0631\u0627 \u0648\u0627\u0631\u062f \u0646\u0645\u0627\u06cc\u06cc\u062f",
   "error.user.password.undefined": "کاربر فاقد گذرواژه است",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "لطفا نقش صحیحی وارد نمایید",
   "error.user.update.permission": "شما اجازه بروزرسانی کاربر «{name}» را ندارید",
 

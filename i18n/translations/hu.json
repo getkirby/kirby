@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "Nincs engedélyed a(z) \"{slug}\" másolat keszítéséhez",
   "error.page.notFound": "Az oldal nem tal\u00e1lhat\u00f3",
   "error.page.num.invalid": "Kérlek megfelelő oldalszámozást adj meg. Negatív szám itt nem használható.",
-  "error.page.slug.invalid": "Kérlek megfelelő URL-előtagot adj meg",
+  "error.page.slug.invalid": "Please enter a valid URL appendix",
   "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "A(z) \"{slug}\" oldal nem illeszthető a sorrendbe",
   "error.page.status.invalid": "Kérlek add meg a megfelelő oldalstátuszt",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Kérlek adj meg egy megfelelő jelszót. A jelszónak legalább 8 karakter hosszúságúnak kell lennie.",
   "error.user.password.notSame": "K\u00e9rlek er\u0151s\u00edtsd meg a jelsz\u00f3t",
   "error.user.password.undefined": "A felhasználónak nincs jelszó megadva",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Kérlek adj meg egy megfelelő szerepkört",
   "error.user.update.permission": "Nincs jogosultságod frissíteni \"{name}\" felhasználó adatait",
 

@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "Stránku \"{slug}\" nie je možné nájsť",
   "error.page.num.invalid": "Prosím, zadajte platné číslo pre radenie. Čísla nemôžu byť záporné.",
-  "error.page.slug.invalid": "Prosím, zadajte platný URL prefix.",
+  "error.page.slug.invalid": "Please enter a valid URL appendix",
   "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Stránku \"{slug}\" nie je možné preradiť.",
   "error.page.status.invalid": "Prosím, nastavte platnú status pre stránku",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Prosím, zadajte platné heslo. Dĺžka hesla musí byť aspoň 8 znakov.",
   "error.user.password.notSame": "Heslá nie sú rovnaké",
   "error.user.password.undefined": "Užívateľ nemá heslo",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Prosím, zadajte platnú rolu",
   "error.user.update.permission": "Nemáte povolenie na aktualizáciu užívateľa \"{name}\"",
 

@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "Δεν ήταν δυνατή η εύρεση της σελίδας \"{slug}\"",
   "error.page.num.invalid": "Παρακαλώ εισάγετε έναν έγκυρο αριθμό ταξινόμησης. Οι αριθμοί δεν μπορεί να είναι αρνητικοί.",
-  "error.page.slug.invalid": "Παρακαλώ εισάγετε ένα έγκυρο πρόθεμα διεύθυνσης URL",
+  "error.page.slug.invalid": "Please enter a valid URL appendix",
   "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Δεν είναι δυνατή η ταξινόμηση της σελίδας \"{slug}\"",
   "error.page.status.invalid": "Ορίστε μια έγκυρη κατάσταση σελίδας",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Παρακαλώ εισάγετε έναν έγκυρο κωδικό πρόσβασης. Οι κωδικοί πρόσβασης πρέπει να έχουν μήκος τουλάχιστον 8 χαρακτήρων.",
   "error.user.password.notSame": "\u03a0\u03b1\u03c1\u03b1\u03ba\u03b1\u03bb\u03bf\u03cd\u03bc\u03b5 \u03b5\u03c0\u03b9\u03b2\u03b5\u03b2\u03b1\u03b9\u03ce\u03c3\u03c4\u03b5 \u03c4\u03bf\u03bd \u039a\u03c9\u03b4\u03b9\u03ba\u03cc \u03a0\u03c1\u03cc\u03c3\u03b2\u03b1\u03c3\u03b7\u03c2",
   "error.user.password.undefined": "Ο χρήστης δεν έχει κωδικό πρόσβασης",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Παρακαλώ εισαγάγετε έναν έγκυρο ρόλο",
   "error.user.update.permission": "Δεν επιτρέπεται η ενημέρωση του χρήστη \"{name}\"",
 

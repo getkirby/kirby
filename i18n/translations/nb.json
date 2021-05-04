@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "Siden \"{slug}\" ble ikke funnet",
   "error.page.num.invalid": "Vennligst skriv inn et gyldig sorteringsnummer. Tallet må ikke være negativt.",
-  "error.page.slug.invalid": "Vennligst skriv inn en gyldig URL-prefiks",
+  "error.page.slug.invalid": "Please enter a valid URL appendix",
   "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Siden \"{slug}\" kan ikke sorteres",
   "error.page.status.invalid": "Vennligst angi en gyldig sidestatus",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Vennligst skriv inn et gyldig passord. Passordet må minst være 8 tegn langt.",
   "error.user.password.notSame": "Vennligst bekreft passordet",
   "error.user.password.undefined": "Brukeren har ikke et passord",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Vennligst skriv inn en gyldig rolle",
   "error.user.update.permission": "Du har ikke tillatelse til å oppdatere brukeren \"{name}\"",
 
