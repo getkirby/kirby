@@ -66,6 +66,35 @@ class UsersTest extends TestCase
         $this->assertEquals('c@getkirby.com', $users->nth(2)->email());
     }
 
+    public function testAddNull()
+    {
+        $users = new Users();
+        $this->assertCount(0, $users);
+
+        $users->add(null);
+
+        $this->assertCount(0, $users);
+    }
+
+    public function testAddFalse()
+    {
+        $users = new Users();
+        $this->assertCount(0, $users);
+
+        $users->add(false);
+
+        $this->assertCount(0, $users);
+    }
+
+    public function testAddInvalidObject()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('You must pass a Users or User object or an ID of an existing user to the Users collection');
+
+        $site  = new Site();
+        $users = new Users();
+        $users->add($site);
+    }
 
     public function testFind()
     {

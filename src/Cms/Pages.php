@@ -48,13 +48,13 @@ class Pages extends Collection
      * an entire second collection to the
      * current collection
      *
-     * @param mixed $object
+     * @param \Kirby\Cms\Pages|\Kirby\Cms\Page|string $object
      * @return $this
      * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function add($object)
     {
-        // add a page collection
+        // add a pages collection
         if (is_a($object, self::class) === true) {
             $this->data = array_merge($this->data, $object->data);
 
@@ -66,9 +66,10 @@ class Pages extends Collection
         } elseif (is_a($object, 'Kirby\Cms\Page') === true) {
             $this->__set($object->id(), $object);
 
-        // give a useful error message on invalid input
+        // give a useful error message on invalid input;
+        // silently ignore "empty" values for compatibility with existing setups
         } elseif (in_array($object, [null, false, true], true) !== true) {
-            throw new InvalidArgumentException('You must pass a Page object to the Pages collection');
+            throw new InvalidArgumentException('You must pass a Pages or Page object or an ID of an existing page to the Pages collection');
         }
 
         return $this;

@@ -76,4 +76,34 @@ class FilesTest extends TestCase
         $this->assertEquals('a/b.jpg', $files->nth(1)->id());
         $this->assertEquals('b/a.jpg', $files->nth(2)->id());
     }
+
+    public function testAddNull()
+    {
+        $files = new Files();
+        $this->assertCount(0, $files);
+
+        $files->add(null);
+
+        $this->assertCount(0, $files);
+    }
+
+    public function testAddFalse()
+    {
+        $files = new Files();
+        $this->assertCount(0, $files);
+
+        $files->add(false);
+
+        $this->assertCount(0, $files);
+    }
+
+    public function testAddInvalidObject()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('You must pass a Files or File object or an ID of an existing file to the Files collection');
+
+        $site  = new Site();
+        $files = new Files();
+        $files->add($site);
+    }
 }
