@@ -5,7 +5,6 @@ return [
     // cms classes
     'asset'      => 'Kirby\Cms\Asset',
     'collection' => 'Kirby\Cms\Collection',
-    'dir'        => 'Kirby\Cms\Dir',
     'field'      => 'Kirby\Cms\Field',
     'file'       => 'Kirby\Cms\File',
     'files'      => 'Kirby\Cms\Files',
@@ -49,6 +48,7 @@ return [
     'a'          => 'Kirby\Toolkit\A',
     'c'          => 'Kirby\Toolkit\Config',
     'config'     => 'Kirby\Toolkit\Config',
+    'dir'        => 'Kirby\Toolkit\Dir',
     'escape'     => 'Kirby\Toolkit\Escape',
     'f'          => 'Kirby\Toolkit\F',
     'i18n'       => 'Kirby\Toolkit\I18n',

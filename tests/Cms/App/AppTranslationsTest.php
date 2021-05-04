@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Locale;

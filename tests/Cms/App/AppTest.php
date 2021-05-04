@@ -6,6 +6,7 @@ use Kirby\Data\Data;
 use Kirby\Http\Route;
 use Kirby\Http\Server;
 use Kirby\Session\Session;
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;
 use ReflectionMethod;
 
