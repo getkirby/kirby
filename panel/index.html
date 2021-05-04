@@ -3,10 +3,10 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <link rel="apple-touch-icon" href="<%= webpackConfig.output.publicPath %>apple-touch-icon.png" />
-    <link rel="icon" href="<%= webpackConfig.output.publicPath %>favicon.svg" type="image/svg+xml">
-    <link rel="alternate icon" href="<%= webpackConfig.output.publicPath %>favicon.png" type="image/png">
-    <link rel="stylesheet" href="<%= process.env.VUE_APP_DEV_SERVER %>/media/plugins/index.css">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+    <link rel="alternate icon" href="/favicon.png" type="image/png">
+    <link rel="stylesheet" href="/media/plugins/index.css">
 
     <title>Kirby Panel</title>
   </head>
@@ -560,8 +560,8 @@
         csrf: "dev",
       };
     </script>
-    <script src="<%= webpackConfig.output.publicPath %>js/plugins.js"></script>
-    <script src="<%= process.env.VUE_APP_DEV_SERVER %>/media/plugins/index.js"></script>
-    <!-- built files will be auto injected -->
+    <script src="/js/plugins.js"></script>
+    <script type="module" src="/src/index.js"></script>
+    <script src="/media/plugins/index.js"></script>
   </body>
 </html>

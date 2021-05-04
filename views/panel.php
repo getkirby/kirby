@@ -21,7 +21,7 @@
 
   <title>Kirby Panel</title>
 
-  <link nonce="<?= $nonce ?>" rel="stylesheet" href="<?= $assetUrl ?>/css/app.css">
+  <link nonce="<?= $nonce ?>" rel="stylesheet" href="<?= $assetUrl ?>/css/index.css">
   <link nonce="<?= $nonce ?>" rel="stylesheet" href="<?= $pluginCss ?>">
 
   <?php if ($customCss) : ?>
@@ -49,12 +49,12 @@
 
   <script nonce="<?= $nonce ?>">window.panel = <?= json_encode($options, JSON_UNESCAPED_SLASHES) ?></script>
   <script nonce="<?= $nonce ?>" src="<?= $assetUrl ?>/js/plugins.js" defer></script>
-  <script nonce="<?= $nonce ?>" src="<?= $assetUrl ?>/js/vendor.js" defer></script>
+  <script nonce="<?= $nonce ?>" type="module" src="<?= $assetUrl ?>/js/vendor.js"></script>
   <script nonce="<?= $nonce ?>" src="<?= $pluginJs ?>" defer></script>
   <?php if (isset($config['js'])) : ?>
     <script nonce="<?= $nonce ?>" src="<?= Url::to($config['js']) ?>" defer></script>
   <?php endif ?>
-  <script nonce="<?= $nonce ?>" src="<?= $assetUrl ?>/js/app.js" defer></script>
+  <script nonce="<?= $nonce ?>" type="module" src="<?= $assetUrl ?>/js/index.js"></script>
 
 </body>
 </html>
