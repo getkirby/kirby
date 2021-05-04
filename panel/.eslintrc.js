@@ -4,10 +4,6 @@ module.exports = {
     "plugin:cypress/recommended",
     "plugin:vue/recommended"
   ],
-  parserOptions: {
-    "ecmaVersion": 2017,
-    "parser": "babel-eslint"
-  },
   rules: {
     "vue/component-definition-name-casing": "off",
     "vue/require-default-prop": "off",
