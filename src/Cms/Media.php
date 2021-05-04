@@ -48,8 +48,8 @@ class Media
                 if (Str::startsWith($hash, $file->mediaToken() . '-') === true) {
                     return Response::redirect($file->mediaUrl(), 307);
                 } else {
-                    // don't leak the correct token
-                    return new Response('Not Found', 'text/plain', 404);
+                    // don't leak the correct token, render the error page
+                    return false;
                 }
             }
 
