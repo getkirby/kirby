@@ -50,7 +50,8 @@ class Files extends Collection
         } elseif (is_a($object, 'Kirby\Cms\File') === true) {
             $this->__set($object->id(), $object);
 
-        // give a useful error message on invalid input
+        // give a useful error message on invalid input;
+        // silently ignore "empty" values for compatibility with existing setups
         } elseif (in_array($object, [null, false, true], true) !== true) {
             throw new InvalidArgumentException('You must pass a Files or File object or an ID of an existing file to the Files collection');
         }
