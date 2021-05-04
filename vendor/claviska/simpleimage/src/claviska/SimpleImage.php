@@ -69,7 +69,10 @@ class SimpleImage {
    * Destroys the image resource.
    */
   public function __destruct() {
-    if($this->image !== null && is_resource($this->image) && get_resource_type($this->image) === 'gd') {
+    //Check for a valid GDimage instance
+    $type_check = (gettype($this->image) == "object" && get_class($this->image) == "GdImage");
+
+    if($this->image !== null && is_resource($this->image) && $type_check) {
       imagedestroy($this->image);
     }
   }
@@ -128,7 +131,7 @@ class SimpleImage {
     fclose($handle);
 
     // Get image info
-    $info = getimagesize($file);
+    $info = @getimagesize($file);
     if($info === false) {
       throw new \Exception("Invalid image file: $file", self::ERR_INVALID_IMAGE);
     }
@@ -587,13 +590,27 @@ class SimpleImage {
     $y1 = self::keepWithin($y1, 0, $this->getHeight());
     $y2 = self::keepWithin($y2, 0, $this->getHeight());
 
+    // Avoid using native imagecrop() because of a bug with PNG transparency
+    $dstW = abs($x2 - $x1);
+    $dstH = abs($y2 - $y1);
+    $newImage = imagecreatetruecolor($dstW, $dstH);
+    $transparentColor = imagecolorallocatealpha($newImage, 0, 0, 0, 127);
+    imagecolortransparent($newImage, $transparentColor);
+    imagefill($newImage, 0, 0, $transparentColor);
+
     // Crop it
-    $this->image = imagecrop($this->image, [
-      'x' => min($x1, $x2),
-      'y' => min($y1, $y2),
-      'width' => abs($x2 - $x1),
-      'height' => abs($y2 - $y1)
-    ]);
+    imagecopyresampled(
+      $newImage,
+      $this->image,
+      0, 0, min($x1, $x2), min($y1, $y2),
+      $dstW,
+      $dstH,
+      $dstW,
+      $dstH
+    );
+
+    // Swap out the new image
+    $this->image = $newImage;
 
     return $this;
   }
@@ -708,10 +725,10 @@ class SimpleImage {
    * @param float $opacity The opacity level of the overlay 0-1 (default 1).
    * @param integer $xOffset Horizontal offset in pixels (default 0).
    * @param integer $yOffset Vertical offset in pixels (default 0).
-   * @param bool $calcuateOffsetFromEdge Calculate Offset referring to the edges of the image (default false).
+   * @param bool $calculateOffsetFromEdge Calculate Offset referring to the edges of the image (default false).
    * @return \claviska\SimpleImage
    */
-  public function overlay($overlay, $anchor = 'center', $opacity = 1, $xOffset = 0, $yOffset = 0, $calcuateOffsetFromEdge = false) {
+  public function overlay($overlay, $anchor = 'center', $opacity = 1, $xOffset = 0, $yOffset = 0, $calculateOffsetFromEdge = false) {
     // Load overlay image
     if(!($overlay instanceof SimpleImage)) $overlay = new SimpleImage($overlay);
 
@@ -723,21 +740,21 @@ class SimpleImage {
     $spaceY = $this->getHeight() - $overlay->getHeight();
 
     // Set default center
-    $x = ($spaceX / 2) + ($calcuateOffsetFromEdge ? 0 : $xOffset);
-    $y = ($spaceY / 2) + ($calcuateOffsetFromEdge ? 0 : $yOffset);
+    $x = ($spaceX / 2) + ($calculateOffsetFromEdge ? 0 : $xOffset);
+    $y = ($spaceY / 2) + ($calculateOffsetFromEdge ? 0 : $yOffset);
 
     // Determine if top|bottom
     if (strpos($anchor, 'top') !== false) {
       $y = $yOffset;
     } elseif (strpos($anchor, 'bottom') !== false) {
-      $y = $spaceY + ($calcuateOffsetFromEdge ? -$yOffset : $yOffset);
+      $y = $spaceY + ($calculateOffsetFromEdge ? -$yOffset : $yOffset);
     }
 
     // Determine if left|right
     if (strpos($anchor, 'left') !== false) {
       $x = $xOffset;
     } elseif (strpos($anchor, 'right') !== false) {
-      $x = $spaceX + ($calcuateOffsetFromEdge ? -$xOffset : $xOffset);
+      $x = $spaceX + ($calculateOffsetFromEdge ? -$xOffset : $xOffset);
     }
 
     // Perform the overlay
@@ -859,7 +876,7 @@ class SimpleImage {
    *          - x* (integer) - Horizontal offset in pixels.
    *          - y* (integer) - Vertical offset in pixels.
    *          - color* (string|array) - The text shadow color.
-   *       - $calcuateOffsetFromEdge (bool) - Calculate Offset referring to the edges of the image (default false).
+   *       - $calculateOffsetFromEdge (bool) - Calculate offsets from the edge of the image (default false).
    *       - $baselineAlign (bool) - Align the text font with the baseline. (default true).
    * @param array $boundary
    *    If passed, this variable will contain an array with coordinates that surround the text: [x1, y1, x2, y2, width, height].
@@ -885,7 +902,7 @@ class SimpleImage {
       'xOffset' => 0,
       'yOffset' => 0,
       'shadow' => null,
-      'calcuateOffsetFromEdge' => false,
+      'calculateOffsetFromEdge' => false,
       'baselineAlign' => true
     ], $options);
 
@@ -896,7 +913,7 @@ class SimpleImage {
     $anchor = $options['anchor'];
     $xOffset = $options['xOffset'];
     $yOffset = $options['yOffset'];
-    $calcuateOffsetFromEdge = $options['calcuateOffsetFromEdge'];
+    $calculateOffsetFromEdge = $options['calculateOffsetFromEdge'];
     $baselineAlign = $options['baselineAlign'];
     $angle = 0;
 
@@ -921,31 +938,31 @@ class SimpleImage {
 
     // Calculate Offset referring to the edges of the image.
     // Just invert the value for bottom|right;
-    if ($calcuateOffsetFromEdge == true):
+    if ($calculateOffsetFromEdge == true) {
       if (strpos($anchor, 'bottom') !== false) $yOffset *= -1;
       if (strpos($anchor, 'right') !== false) $xOffset *= -1;
-    endif;
+    }
 
     // Align the text font with the baseline.
     // I use $yOffset to inject the vertical alignment correction value.
-    if ($baselineAlign == true):
+    if ($baselineAlign == true) {
       // Create a temporary box to obtain the maximum height that this font can use.
       $boxFull = imagettfbbox($size, $angle, $fontFile, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890');
       // Based on the maximum height, the text is aligned.
-      if (strpos($anchor, 'bottom') !== false):
+      if (strpos($anchor, 'bottom') !== false) {
         $yOffset -= $boxFull[1];
-      elseif (strpos($anchor, 'top') !== false):
+      } elseif (strpos($anchor, 'top') !== false) {
         $yOffset += abs($boxFull[5]) - $boxHeight;
-      else: // center
+      } else { // center
         $boxFullHeight = abs($boxFull[1]) + abs($boxFull[5]);
         $yOffset += ($boxFullHeight/2) - ($boxHeight/2) - abs($boxFull[1]);
-      endif;
+      }
 
-    else:
+    } else {
       // Prevents fonts rendered outside the box boundary from being cut.
       // Example: 'Scriptina' font, some letters invade the space of the previous or subsequent letter.
       $yOffset -= $boxText[1];
-    endif;
+    }
 
     // Prevents fonts rendered outside the box boundary from being cut.
     // Example: 'Scriptina' font, some letters invade the space of the previous or subsequent letter.
@@ -953,42 +970,42 @@ class SimpleImage {
 
     // Determine position
     switch($anchor) {
-    case 'top left':
-      $x = $xOffset;
-      $y = $yOffset + $boxHeight;
-      break;
-    case 'top right':
-      $x = $this->getWidth() - $boxWidth + $xOffset;
-      $y = $yOffset + $boxHeight;
-      break;
-    case 'top':
-      $x = ($this->getWidth() / 2) - ($boxWidth / 2) + $xOffset;
-      $y = $yOffset + $boxHeight;
-      break;
-    case 'bottom left':
-      $x = $xOffset;
-      $y = $this->getHeight() + $yOffset ;
-      break;
-    case 'bottom right':
-      $x = $this->getWidth() - $boxWidth + $xOffset;
-      $y = $this->getHeight() + $yOffset;
-      break;
-    case 'bottom':
-      $x = ($this->getWidth() / 2) - ($boxWidth / 2) + $xOffset;
-      $y = $this->getHeight() + $yOffset;
-      break;
-    case 'left':
-      $x = $xOffset;
-      $y = ($this->getHeight() / 2) - (($boxHeight / 2) - $boxHeight) + $yOffset;
-      break;
-    case 'right';
-      $x = $this->getWidth() - $boxWidth + $xOffset;
-      $y = ($this->getHeight() / 2) - (($boxHeight / 2) - $boxHeight) + $yOffset;
-      break;
-    default: // center
-      $x = ($this->getWidth() / 2) - ($boxWidth / 2) + $xOffset;
-      $y = ($this->getHeight() / 2) - (($boxHeight / 2) - $boxHeight) + $yOffset;
-      break;
+      case 'top left':
+        $x = $xOffset;
+        $y = $yOffset + $boxHeight;
+        break;
+      case 'top right':
+        $x = $this->getWidth() - $boxWidth + $xOffset;
+        $y = $yOffset + $boxHeight;
+        break;
+      case 'top':
+        $x = ($this->getWidth() / 2) - ($boxWidth / 2) + $xOffset;
+        $y = $yOffset + $boxHeight;
+        break;
+      case 'bottom left':
+        $x = $xOffset;
+        $y = $this->getHeight() + $yOffset ;
+        break;
+      case 'bottom right':
+        $x = $this->getWidth() - $boxWidth + $xOffset;
+        $y = $this->getHeight() + $yOffset;
+        break;
+      case 'bottom':
+        $x = ($this->getWidth() / 2) - ($boxWidth / 2) + $xOffset;
+        $y = $this->getHeight() + $yOffset;
+        break;
+      case 'left':
+        $x = $xOffset;
+        $y = ($this->getHeight() / 2) - (($boxHeight / 2) - $boxHeight) + $yOffset;
+        break;
+      case 'right';
+        $x = $this->getWidth() - $boxWidth + $xOffset;
+        $y = ($this->getHeight() / 2) - (($boxHeight / 2) - $boxHeight) + $yOffset;
+        break;
+      default: // center
+        $x = ($this->getWidth() / 2) - ($boxWidth / 2) + $xOffset;
+        $y = ($this->getHeight() / 2) - (($boxHeight / 2) - $boxHeight) + $yOffset;
+        break;
     }
     $x = (int) round($x);
     $y = (int) round($y);
@@ -1021,6 +1038,222 @@ class SimpleImage {
     imagettftext($this->image, $size, $angle, $x, $y, $color, $fontFile, $text);
 
     return $this;
+  }
+
+  /**
+  * Adds text with a line break to the image.
+  *
+  * @param string $text The desired text.
+  * @param array $options
+  *  An array of options.
+  *     - fontFile* (string) - The TrueType (or compatible) font file to use.
+  *     - size (integer) - The size of the font in pixels (default 12).
+  *     - color (string|array) - The text color (default black).
+  *     - anchor (string) - The anchor point: 'center', 'top', 'bottom', 'left', 'right', 'top left', 'top right', 'bottom left', 'bottom right' (default 'center').
+  *     - xOffset (integer) - The horizontal offset in pixels (default 0). Has no effect when anchor is 'center'.
+  *     - yOffset (integer) - The vertical offset in pixels (default 0). Has no effect when anchor is 'center'.
+  *     - shadow (array) - Text shadow params.
+  *       - x* (integer) - Horizontal offset in pixels.
+  *       - y* (integer) - Vertical offset in pixels.
+  *       - color* (string|array) - The text shadow color.
+  *     - $calculateOffsetFromEdge (bool) - Calculate offsets from the edge of the image (default false).
+  *     - width (int) - Width of text box (default image width).
+  *     - align (string) - How to align text: 'left', 'right', 'center', 'justify' (default 'left').
+  *     - leading (float) - Increase/decrease spacing between lines of text (default 0).
+  *     - opacity (float) - The opacity level of the text 0-1 (default 1).
+  * @throws \Exception
+  * @return \claviska\SimpleImage
+  */
+  public function textBox($text, $options) {
+    // default width of image
+    $maxWidth = $this->getWidth();
+    // Default options
+    $options = array_merge([
+      'fontFile' => null,
+      'size' => 12,
+      'color' => 'black',
+      'anchor' => 'center',
+      'xOffset' => 0,
+      'yOffset' => 0,
+      'shadow' => null,
+      'calculateOffsetFromEdge' => false,
+      'width' => $maxWidth,
+      'align' => 'left',
+      'leading' => 0,
+      'opacity' => 1
+    ], $options);
+
+    // Extract and normalize options
+    $fontFile = $options['fontFile'];
+    $fontSize = $fontSizePx = $options['size'];
+    $fontSize = ($fontSize / 96) * 72; // Convert px to pt (72pt per inch, 96px per inch)
+    $color = $options['color'];
+    $anchor = $options['anchor'];
+    $xOffset = $options['xOffset'];
+    $yOffset = $options['yOffset'];
+    $shadow = $options['shadow'];
+    $calculateOffsetFromEdge = $options['calculateOffsetFromEdge'];
+    $angle = 0;
+    $maxWidth = $options['width'];
+    $leading = $options['leading'];
+    $leading = self::keepWithin($leading, ($fontSizePx * -1), $leading);
+    $opacity = $options['opacity'];
+
+    $align = $options['align'];
+    if ($align == 'right') {
+      $align = 'top right';
+    } elseif ($align == 'center') {
+      $align = 'top';
+    } elseif ($align == 'justify') {
+      $align = 'justify';
+    } else {
+      $align = 'top left';
+    }
+
+    list($lines, $isLastLine, $lastLineHeight) = self::textSeparateLines($text, $fontFile, $fontSize, $maxWidth);
+
+    $maxHeight = (count($lines) - 1) * ($fontSizePx * 1.2 + $leading) + $lastLineHeight;
+
+    $imageText = new SimpleImage();
+    $imageText->fromNew($maxWidth, $maxHeight);
+
+    // Align left/center/right
+    if ($align <> 'justify') {
+      foreach ($lines as $key => $line) {
+        if( $align == 'top' ) $line = trim($line); // If is justify = 'center'
+        $imageText->text($line, array(
+          'fontFile' => $fontFile,
+          'size' => $fontSizePx,
+          'color' => $color,
+          'anchor' => $align,
+          'xOffset' => 0,
+          'yOffset' => $key * ($fontSizePx * 1.2 + $leading),
+          'shadow' => $shadow,
+          'calculateOffsetFromEdge' => true
+        ));
+      }
+
+    // Justify
+    } else {
+      foreach ($lines as $keyLine => $line) {
+        // Check if there are spaces at the beginning of the sentence
+        $spaces = 0;
+        if (preg_match("/^\s+/", $line, $match)) {
+          // Count spaces
+          $spaces = strlen($match[0]);
+          $line = ltrim($line);
+        }
+
+        // Separate words
+        $words = preg_split("/\s+/", $line);
+        // Include spaces with the first word
+        $words[0] = str_repeat(' ', $spaces) . $words[0];
+
+        // Calculates the space occupied by all words
+        $wordsSize = array();
+        foreach ($words as $key => $word) {
+          $wordBox = imagettfbbox($fontSize, 0, $fontFile, $word);
+          $wordWidth = abs($wordBox[4] - $wordBox[0]);
+          $wordsSize[$key] = $wordWidth;
+        }
+        $wordsSizeTotal = array_sum($wordsSize);
+
+        // Calculates the required space between words
+        $countWords = count($words);
+        $wordSpacing = 0;
+        if ($countWords > 1) {
+          $wordSpacing = ($maxWidth - $wordsSizeTotal) / ($countWords - 1);
+          $wordSpacing = round($wordSpacing, 3);
+        }
+
+        $xOffsetJustify = 0;
+        foreach ($words as $key => $word) {
+          if ($isLastLine[$keyLine] == true) {
+            if ($key < (count($words) - 1)) continue;
+            $word = $line;
+          }
+          $imageText->text($word, array(
+            'fontFile' => $fontFile,
+            'size' => $fontSizePx,
+            'color' => $color,
+            'anchor' => 'top left',
+            'xOffset' => $xOffsetJustify,
+            'yOffset' => $keyLine * ($fontSizePx * 1.2 + $leading),
+            'shadow' => $shadow,
+            'calculateOffsetFromEdge' => true,
+            )
+          );
+          // Calculate offset for next word
+          $xOffsetJustify += $wordsSize[$key] + $wordSpacing;
+        }
+      }
+    }
+
+    $this->overlay($imageText, $anchor, $opacity, $xOffset, $yOffset, $calculateOffsetFromEdge);
+
+    return $this;
+  }
+
+  /**
+  * Receives a text and breaks into LINES.
+  *
+  * @param integer $text
+  * @param string $fontFile
+  * @param int $fontSize
+  * @param int $maxWidth
+  * @return array
+  */
+  private function textSeparateLines($text, $fontFile, $fontSize, $maxWidth) {
+    $words = self::textSeparateWords($text);
+    $countWords = count($words) - 1;
+    $lines[0] = '';
+    $lineKey = 0;
+    $isLastLine = [];
+    for ($i = 0; $i < $countWords; $i++) {
+      $word = $words[$i];
+      $isLastLine[$lineKey] = false;
+      if ($word === PHP_EOL) {
+        $isLastLine[$lineKey] = true;
+        $lineKey++;
+        $lines[$lineKey] = '';
+        continue;
+      }
+      $lineBox = imagettfbbox($fontSize, 0, $fontFile, $lines[$lineKey] . $word);
+      if (abs($lineBox[4] - $lineBox[0]) < $maxWidth) {
+        $lines[$lineKey] .= $word . ' ';
+      } else {
+        $lineKey++;
+        $lines[$lineKey] = $word . ' ';
+      }
+    }
+    $isLastLine[$lineKey] = true;
+    // Exclude space of right
+    $lines = array_map('rtrim', $lines);
+    // Calculate height of last line
+    $boxFull = imagettfbbox($fontSize, 0, $fontFile, 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890');
+    $lineBox = imagettfbbox($fontSize, 0, $fontFile, $lines[$lineKey]);
+    // Height of last line = ascender of $boxFull + descender of $lineBox
+    $lastLineHeight = abs($lineBox[1]) + abs($boxFull[5]);
+
+    return array($lines, $isLastLine, $lastLineHeight);
+  }
+
+  /**
+  * Receives a text and breaks into WORD / SPACE / NEW LINE.
+  *
+  * @param integer $text
+  * @return array
+  */
+  private function textSeparateWords($text) {
+    // Normalizes line break
+    $text = preg_replace('/(\r\n|\n|\r)/', PHP_EOL, $text);
+    $text = explode(PHP_EOL, $text);
+    $newText = array();
+    foreach ($text as $key => $line) {
+      $newText = array_merge($newText, explode(' ', $line), [PHP_EOL]);
+    }
+
+    return $newText;
   }
 
   /**
@@ -1125,15 +1358,35 @@ class SimpleImage {
    */
   public function arc($x, $y, $width, $height, $start, $end, $color, $thickness = 1) {
     // Allocate the color
-    $color = $this->allocateColor($color);
+    $tempColor = $this->allocateColor($color);
+    imagesetthickness($this->image, 1);
 
     // Draw an arc
     if($thickness === 'filled') {
-      imagesetthickness($this->image, 1);
-      imagefilledarc($this->image, $x, $y, $width, $height, $start, $end, $color, IMG_ARC_PIE);
+      imagefilledarc($this->image, $x, $y, $width, $height, $start, $end, $tempColor, IMG_ARC_PIE);
+
+    } else if ($thickness === 1) {
+      imagearc($this->image, $x, $y, $width, $height, $start, $end, $tempColor);
+
     } else {
-      imagesetthickness($this->image, $thickness);
-      imagearc($this->image, $x, $y, $width, $height, $start, $end, $color);
+      // New temp image
+      $tempImage = new SimpleImage();
+      $tempImage->fromNew($this->getWidth(), $this->getHeight(), 'transparent');
+
+      // Draw a large ellipse filled with $color (+$thickness pixels)
+      $tempColor = $tempImage->allocateColor($color);
+      imagefilledarc($tempImage->image, $x, $y, $width+$thickness, $height+$thickness, $start, $end, $tempColor, IMG_ARC_PIE);
+
+      // Draw a smaller ellipse filled with red|blue (-$thickness pixels)
+      $tempColor = (self::normalizeColor($color)['red'] == 255) ? 'blue' : 'red';
+      $tempColor = $tempImage->allocateColor($tempColor);
+      imagefilledarc($tempImage->image, $x, $y, $width-$thickness, $height-$thickness, $start, $end, $tempColor, IMG_ARC_PIE);
+
+      // Replace the color of the smaller ellipse with 'transparent'
+      $tempImage->excludeInsideColor($x, $y, $color);
+
+      // Apply the temp image
+      $this->overlay($tempImage);
     }
 
     return $this;
@@ -1147,15 +1400,14 @@ class SimpleImage {
    * @return \claviska\SimpleImage
    */
   public function border($color, $thickness = 1) {
-    $x1 = 0;
+    $x1 = -1;
     $y1 = 0;
-    $x2 = $this->getWidth() - 1;
-    $y2 = $this->getHeight() - 1;
+    $x2 = $this->getWidth();
+    $y2 = $this->getHeight()-1;
 
-    // Draw a border rectangle until it reaches the correct width
-    for($i = 0; $i < $thickness; $i++) {
-      $this->rectangle($x1++, $y1++, $x2--, $y2--, $color);
-    }
+    $color = $this->allocateColor($color);
+    imagesetthickness($this->image, $thickness*2);
+    imagerectangle($this->image, $x1, $y1, $x2, $y2, $color);
 
     return $this;
   }
@@ -1188,19 +1440,35 @@ class SimpleImage {
    */
   public function ellipse($x, $y, $width, $height, $color, $thickness = 1) {
     // Allocate the color
-    $color = $this->allocateColor($color);
+    $tempColor = $this->allocateColor($color);
+    imagesetthickness($this->image, 1);
 
     // Draw an ellipse
     if($thickness === 'filled') {
-      imagesetthickness($this->image, 1);
-      imagefilledellipse($this->image, $x, $y, $width, $height, $color);
+      imagefilledellipse($this->image, $x, $y, $width, $height, $tempColor);
+
+    } else if ($thickness === 1) {
+      imageellipse($this->image, $x, $y, $width, $height, $tempColor);
+
     } else {
-      // imagesetthickness doesn't appear to work with imageellipse, so we work around it.
-      imagesetthickness($this->image, 1);
-      $i = 0;
-      while($i++ < $thickness * 2 - 1) {
-        imageellipse($this->image, $x, $y, --$width, $height--, $color);
-      }
+      // New temp image
+      $tempImage = new SimpleImage();
+      $tempImage->fromNew($this->getWidth(), $this->getHeight(), 'transparent');
+
+      // Draw a large ellipse filled with $color (+$thickness pixels)
+      $tempColor = $tempImage->allocateColor($color);
+      imagefilledellipse($tempImage->image, $x, $y, $width+$thickness, $height+$thickness, $tempColor);
+
+      // Draw a smaller ellipse filled with red|blue (-$thickness pixels)
+      $tempColor = (self::normalizeColor($color)['red'] == 255) ? 'blue' : 'red';
+      $tempColor = $tempImage->allocateColor($tempColor);
+      imagefilledellipse($tempImage->image, $x, $y, $width-$thickness, $height-$thickness, $tempColor);
+
+      // Replace the color of the smaller ellipse with 'transparent'
+      $tempImage->excludeInsideColor($x, $y, $color);
+
+      // Apply the temp image
+      $this->overlay($tempImage);
     }
 
     return $this;
@@ -1352,7 +1620,7 @@ class SimpleImage {
       $tempImage->roundedRectangle($x1, $y1, $x2, $y2, $radius, $color,'filled');
 
       // Draw a smaller rectangle filled with red|blue (-$thickness pixels on each side)
-      $tempColor = ($color == 'red') ? 'blue' : 'red';
+      $tempColor = (self::normalizeColor($color)['red'] == 255) ? 'blue' : 'red';
       $radius = $radius - $thickness;
       $radius = self::keepWithin($radius, 0, $radius);
       $tempImage->roundedRectangle(
@@ -1377,7 +1645,7 @@ class SimpleImage {
 
   /**
    * Exclude inside color.
-   * Used only for roundedRectangle()
+   * Used for roundedRectangle(), ellipse() and arc()
    *
    * @param number $x certer x of rectangle.
    * @param number $y certer y of rectangle.

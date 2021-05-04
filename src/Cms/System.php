@@ -7,8 +7,6 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Remote;
-use Kirby\Http\Uri;
-use Kirby\Http\Url;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
@@ -115,19 +113,7 @@ class System
      */
     public function indexUrl(): string
     {
-        $url = $this->app->url('index');
-
-        if (Url::isAbsolute($url)) {
-            $uri = Url::toObject($url);
-        } else {
-            // index URL was configured without host, use the current host
-            $uri = Uri::current([
-                'path'   => $url,
-                'query'  => null
-            ]);
-        }
-
-        return $uri->setScheme(null)->setSlash(false)->toString();
+        return $this->app->url('index', true)->setScheme(null)->setSlash(false)->toString();
     }
 
     /**

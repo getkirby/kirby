@@ -175,6 +175,8 @@ class PrettyPageHandler extends Handler
 
     /**
      * @return int|null
+     *
+     * @throws \Exception
      */
     public function handle()
     {
@@ -349,11 +351,12 @@ class PrettyPageHandler extends Handler
      * @param string $label
      * @param array  $data
      *
-     * @return void
+     * @return static
      */
     public function addDataTable($label, array $data)
     {
         $this->extraTables[$label] = $data;
+        return $this;
     }
 
     /**
@@ -368,7 +371,7 @@ class PrettyPageHandler extends Handler
      *
      * @throws InvalidArgumentException If $callback is not callable
      *
-     * @return void
+     * @return static
      */
     public function addDataTableCallback($label, /* callable */ $callback)
     {
@@ -387,6 +390,8 @@ class PrettyPageHandler extends Handler
                 return [];
             }
         };
+
+        return $this;
     }
 
     /**
@@ -418,7 +423,7 @@ class PrettyPageHandler extends Handler
      *
      * @param bool|null $value
      *
-     * @return bool|null
+     * @return bool|static
      */
     public function handleUnconditionally($value = null)
     {
@@ -427,6 +432,7 @@ class PrettyPageHandler extends Handler
         }
 
         $this->handleUnconditionally = (bool) $value;
+        return $this;
     }
 
     /**
@@ -447,11 +453,12 @@ class PrettyPageHandler extends Handler
      * @param string          $identifier
      * @param string|callable $resolver
      *
-     * @return void
+     * @return static
      */
     public function addEditor($identifier, $resolver)
     {
         $this->editors[$identifier] = $resolver;
+        return $this;
     }
 
     /**
@@ -469,7 +476,7 @@ class PrettyPageHandler extends Handler
      *
      * @throws InvalidArgumentException If invalid argument identifier provided
      *
-     * @return void
+     * @return static
      */
     public function setEditor($editor)
     {
@@ -481,6 +488,7 @@ class PrettyPageHandler extends Handler
         }
 
         $this->editor = $editor;
+        return $this;
     }
 
     /**
@@ -591,11 +599,12 @@ class PrettyPageHandler extends Handler
      *
      * @param string $title
      *
-     * @return void
+     * @return static
      */
     public function setPageTitle($title)
     {
         $this->pageTitle = (string) $title;
+        return $this;
     }
 
     /**
@@ -615,7 +624,7 @@ class PrettyPageHandler extends Handler
      *
      * @throws InvalidArgumentException If $path is not a valid directory
      *
-     * @return void
+     * @return static
      */
     public function addResourcePath($path)
     {
@@ -626,6 +635,7 @@ class PrettyPageHandler extends Handler
         }
 
         array_unshift($this->searchPaths, $path);
+        return $this;
     }
 
     /**
@@ -633,11 +643,12 @@ class PrettyPageHandler extends Handler
      *
      * @param string|null $name
      *
-     * @return void
+     * @return static
      */
     public function addCustomCss($name)
     {
         $this->customCss = $name;
+        return $this;
     }
 
     /**
@@ -645,11 +656,12 @@ class PrettyPageHandler extends Handler
      *
      * @param string|null $name
      *
-     * @return void
+     * @return static
      */
     public function addCustomJs($name)
     {
         $this->customJs = $name;
+        return $this;
     }
 
     /**
@@ -718,11 +730,12 @@ class PrettyPageHandler extends Handler
      *
      * @param string $resourcesPath
      *
-     * @return void
+     * @return static
      */
     public function setResourcesPath($resourcesPath)
     {
         $this->addResourcePath($resourcesPath);
+        return $this;
     }
 
     /**
@@ -767,11 +780,12 @@ class PrettyPageHandler extends Handler
      * @param string $key             The key within the superglobal
      * @see hideSuperglobalKey
      *
-     * @return void
+     * @return static
      */
     public function blacklist($superGlobalName, $key)
     {
         $this->blacklist[$superGlobalName][] = $key;
+        return $this;
     }
 
     /**
@@ -779,7 +793,7 @@ class PrettyPageHandler extends Handler
      *
      * @param string $superGlobalName The name of the superglobal array, e.g. '_GET'
      * @param string $key             The key within the superglobal
-     * @return void
+     * @return static
      */
     public function hideSuperglobalKey($superGlobalName, $key)
     {
@@ -789,9 +803,10 @@ class PrettyPageHandler extends Handler
     /**
      * Checks all values within the given superGlobal array.
      *
-     * Blacklisted values will be replaced by a equal length string cointaining
-     * only '*' characters. We intentionally dont rely on $GLOBALS as it
-     * depends on the 'auto_globals_jit' php.ini setting.
+     * Blacklisted values will be replaced by a equal length string containing
+     * only '*' characters for string values.
+     * Non-string values will be replaced with a fixed asterisk count.
+     * We intentionally dont rely on $GLOBALS as it depends on the 'auto_globals_jit' php.ini setting.
      *
      * @param array  $superGlobal     One of the superglobal arrays
      * @param string $superGlobalName The name of the superglobal array, e.g. '_GET'
@@ -805,8 +820,8 @@ class PrettyPageHandler extends Handler
         $values = $superGlobal;
 
         foreach ($blacklisted as $key) {
-            if (isset($superGlobal[$key]) && is_string($superGlobal[$key])) {
-                $values[$key] = str_repeat('*', strlen($superGlobal[$key]));
+            if (isset($superGlobal[$key])) {
+                $values[$key] = str_repeat('*', is_string($superGlobal[$key]) ? strlen($superGlobal[$key]) : 3);
             }
         }
 

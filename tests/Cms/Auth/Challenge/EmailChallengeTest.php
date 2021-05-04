@@ -37,6 +37,10 @@ class EmailChallengeTest extends TestCase
                 ],
                 [
                     'email' => 'marge@simpsons.com'
+                ],
+                [
+                    'email'    => 'bart@simpsons.com',
+                    'language' => 'de'
                 ]
             ]
         ]);
@@ -51,6 +55,9 @@ class EmailChallengeTest extends TestCase
         unset($_SERVER['SERVER_NAME']);
     }
 
+    /**
+     * @covers ::isAvailable
+     */
     public function testIsAvailable()
     {
         $user = $this->app->user('homer@simpsons.com');
@@ -84,6 +91,37 @@ class EmailChallengeTest extends TestCase
 
         $code2 = EmailChallenge::create($user, $options);
         $this->assertNotSame($code1, $code2);
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreatePathUrl()
+    {
+        $app = $this->app->clone([
+            'options' => [
+                'url' => 'https://example.com/test'
+            ]
+        ]);
+        $user = $app->user('homer@simpsons.com');
+        $options = ['mode' => 'login', 'timeout' => 7.3 * 60];
+
+        $code = EmailChallenge::create($user, $options);
+        $this->assertStringMatchesFormat('%d', $code);
+        $this->assertSame(6, strlen($code));
+        $this->assertCount(1, Email::$emails);
+        $email = Email::$emails[0];
+        $this->assertSame('noreply@example.com', $email->from());
+        $this->assertSame('Test Site', $email->fromName());
+        $this->assertSame(['homer@simpsons.com' => 'Homer'], $email->to());
+        $this->assertSame('Your login code', $email->subject());
+        $this->assertStringContainsString('login code', $email->body()->text());
+        $this->assertStringContainsString('Homer', $email->body()->text());
+        $this->assertStringContainsString('7 minutes', $email->body()->text());
+        $this->assertStringContainsString(
+            substr($code, 0, 3) . ' ' . substr($code, 3, 3),
+            $email->body()->text()
+        );
     }
 
     /**
@@ -135,6 +173,35 @@ class EmailChallengeTest extends TestCase
         $this->assertStringContainsString('password reset code', $email->body()->text());
         $this->assertStringContainsString('marge@simpsons.com', $email->body()->text());
         $this->assertStringContainsString('7 minutes', $email->body()->text());
+        $this->assertStringContainsString(
+            substr($code1, 0, 3) . ' ' . substr($code1, 3, 3),
+            $email->body()->text()
+        );
+
+        $code2 = EmailChallenge::create($user, $options);
+        $this->assertNotSame($code1, $code2);
+    }
+
+    /**
+     * @covers ::create
+     */
+    public function testCreateResetUserLanguage()
+    {
+        $user = $this->app->user('bart@simpsons.com');
+        $options = ['mode' => 'password-reset', 'timeout' => 7.3 * 60];
+
+        $code1 = EmailChallenge::create($user, $options);
+        $this->assertStringMatchesFormat('%d', $code1);
+        $this->assertSame(6, strlen($code1));
+        $this->assertCount(1, Email::$emails);
+        $email = Email::$emails[0];
+        $this->assertSame('noreply@kirby.test', $email->from());
+        $this->assertSame('Test Site', $email->fromName());
+        $this->assertSame(['bart@simpsons.com' => ''], $email->to());
+        $this->assertSame('Dein Anmeldecode', $email->subject());
+        $this->assertStringContainsString('Anmeldecode für das Kirby Panel', $email->body()->text());
+        $this->assertStringContainsString('bart@simpsons.com', $email->body()->text());
+        $this->assertStringContainsString('7 Minuten', $email->body()->text());
         $this->assertStringContainsString(
             substr($code1, 0, 3) . ' ' . substr($code1, 3, 3),
             $email->body()->text()
