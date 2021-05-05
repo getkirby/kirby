@@ -13,15 +13,12 @@ return [
     'page'       => 'Kirby\Cms\Page',
     'pages'      => 'Kirby\Cms\Pages',
     'pagination' => 'Kirby\Cms\Pagination',
-    'r'          => 'Kirby\Cms\R',
     'response'   => 'Kirby\Cms\Response',
-    's'          => 'Kirby\Cms\S',
     'site'       => 'Kirby\Cms\Site',
     'structure'  => 'Kirby\Cms\Structure',
     'url'        => 'Kirby\Cms\Url',
     'user'       => 'Kirby\Cms\User',
     'users'      => 'Kirby\Cms\Users',
-    'visitor'    => 'Kirby\Cms\Visitor',
 
     // data handler
     'data'      => 'Kirby\Data\Data',
