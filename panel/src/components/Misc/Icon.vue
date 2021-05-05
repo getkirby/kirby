@@ -52,7 +52,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-icon {
   position: relative;
   line-height: 0;
@@ -70,25 +70,25 @@ export default {
   fill: currentColor;
 }
 .k-icon[data-back="black"] {
-  background: $color-gray-900;
-  color: $color-white;
+  background: var(--color-gray-900);
+  color: var(--color-white);
 }
 .k-icon[data-back="white"] {
-  background: $color-white;
-  color: $color-gray-900;
+  background: var(--color-white);
+  color: var(--color-gray-900);
 }
 .k-icon[data-back="pattern"] {
-  background: lighten($color-gray-900, 10%) url($pattern);
-  color: $color-white;
+  background: var(--color-gray-800) var(--bg-pattern);
+  color: var(--color-white);
 }
 [data-disabled] .k-icon[data-back="black"] {
-  background-color: $color-gray-600;
+  background-color: var(--color-gray-600);
 }
 [data-disabled] .k-icon[data-back="pattern"] {
-  background: lighten($color-gray-600, 5%) url($pattern);
-  svg {
-    opacity: 1;
-  }
+  background: var(--color-gray-500) var(--bg-pattern);
+}
+[data-disabled] .k-icon[data-back="pattern"] svg {
+  opacity: 1;
 }
 .k-icon[data-size="medium"] svg {
   width: 2rem;

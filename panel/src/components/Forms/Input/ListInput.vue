@@ -78,12 +78,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-list-input .ProseMirror {
   line-height: 1.5em;
 }
 .k-list-input .ProseMirror ol > li::marker {
-  font-size: $text-sm;
-  color: $color-gray-500;
+  font-size: var(--text-sm);
+  color: var(--color-gray-500);
 }
 </style>

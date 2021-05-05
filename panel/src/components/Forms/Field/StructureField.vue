@@ -622,220 +622,215 @@ export default {
 };
 </script>
 
-<style lang="scss">
-$structure-item-height: 38px;
+<style>
+.k-structure-field {
+  --structure-item-height: 38px;
+}
 
 .k-structure-table {
   position: relative;
   table-layout: fixed;
   width: 100%;
   background: #fff;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   border-spacing: 0;
-  box-shadow: $shadow;
+  box-shadow: var(--shadow);
+}
+.k-structure-table th,
+.k-structure-table td {
+  border-bottom: 1px solid var(--color-background);
+  line-height: 1.25em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+[dir="ltr"] .k-structure-table th,
+[dir="ltr"] .k-structure-table td {
+  border-right: 1px solid var(--color-background);
+}
+[dir="rtl"] .k-structure-table th,
+[dir="rtl"] .k-structure-table td {
+  border-left: 1px solid var(--color-background);
+}
 
-  th,
-  td {
-    border-bottom: 1px solid $color-background;
-    line-height: 1.25em;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.k-structure-table td:last-child {
+  overflow: visible;
+}
 
-    [dir="ltr"] & {
-      border-right: 1px solid $color-background;
-    }
+.k-structure-table th {
+  position: sticky;
+  top: 0;
+  right: 0;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  font-weight: 400;
+  z-index: 1;
+  color: var(--color-gray-600);
+  padding: 0 .75rem;
+  height: var(--structure-item-height);
+}
+[dir="ltr"] .k-structure-table th {
+  text-align: left;
+}
+[dir="rtl"] .k-structure-table th {
+  text-align: right;
+}
 
-    [dir="rtl"] & {
-      border-left: 1px solid $color-background;
-    }
-  }
+.k-structure-table th:last-child,
+.k-structure-table td:last-child {
+  width: var(--structure-item-height);
+}
+[dir="ltr"] .k-structure-table th:last-child,
+[dir="ltr"] .k-structure-table td:last-child {
+  border-right: 0;
+}
+[dir="rtl"] .k-structure-table th:last-child,
+[dir="rtl"] .k-structure-table td:last-child {
+  border-left: 0;
+}
 
-  td:last-child {
-    overflow: visible;
-  }
+.k-structure-table tr:last-child td {
+  border-bottom: 0;
+}
 
-  th {
-    position: sticky;
-    top: 0;
-    right: 0;
-    left: 0;
-    width: 100%;
-    background: #fff;
-    font-weight: 400;
-    z-index: 1;
-    color: $color-gray-600;
-    padding: 0 0.75rem;
-    height: $structure-item-height;
+.k-structure-table tbody tr:hover td {
+  background: rgba(239, 239, 239, .25);
+}
 
-    [dir="ltr"] & {
-      text-align: left;
-    }
-
-    [dir="rtl"] & {
-      text-align: right;
-    }
-  }
-
-  th:last-child,
-  td:last-child {
-    width: $structure-item-height;
-
-    [dir="ltr"] & {
-      border-right: 0;
-    }
-
-    [dir="rtl"] & {
-      border-left: 0;
-    }
-  }
-
-  tr:last-child td {
-    border-bottom: 0;
-  }
-
-  tbody tr:hover td {
-    background: rgba($color-background, 0.25);
-  }
-
-  /* mobile */
-  @media screen and (max-width: $breakpoint-md) {
-    td,
-    th {
-      display: none;
-    }
-
-    th:first-child,
-    th:nth-child(2),
-    th:last-child,
-    td:first-child,
-    td:nth-child(2),
-    td:last-child {
-      display: table-cell;
-    }
-  }
-
-  /* alignment */
-  .k-structure-table-column[data-align="center"] {
-    text-align: center;
-  }
-  .k-structure-table-column[data-align="right"] {
-    [dir="ltr"] & {
-      text-align: right;
-    }
-
-    [dir="rtl"] & {
-      text-align: left;
-    }
-  }
-  .k-structure-table-column[data-align="right"] > .k-input {
-    flex-direction: column;
-    align-items: flex-end;
-  }
-
-  /* column widths */
-  .k-structure-table-column[data-width="1/2"] {
-    width: 50%;
-  }
-  .k-structure-table-column[data-width="1/3"] {
-    width: 33.33%;
-  }
-  .k-structure-table-column[data-width="1/4"] {
-    width: 25%;
-  }
-  .k-structure-table-column[data-width="1/5"] {
-    width: 20%;
-  }
-  .k-structure-table-column[data-width="1/6"] {
-    width: 16.66%;
-  }
-  .k-structure-table-column[data-width="1/8"] {
-    width: 12.5%;
-  }
-  .k-structure-table-column[data-width="1/9"] {
-    width: 11.11%;
-  }
-  .k-structure-table-column[data-width="2/3"] {
-    width: 66.66%;
-  }
-  .k-structure-table-column[data-width="3/4"] {
-    width: 75%;
-  }
-
-  .k-structure-table-index {
-    width: $structure-item-height;
-    height: $structure-item-height;
-    text-align: center;
-  }
-  .k-structure-table-index-number {
-    font-size: $text-xs;
-    color: $color-light-grey;
-    padding-top: 0.15rem;
-  }
-
-  .k-sort-handle {
-    width: $structure-item-height;
-    height: $structure-item-height;
+/* mobile */
+@media screen and (max-width: 65em) {
+  .k-structure-table td,
+  .k-structure-table th {
     display: none;
   }
 
-  &[data-sortable] tr:hover .k-structure-table-index-number {
-    display: none;
-  }
-  &[data-sortable] tr:hover .k-sort-handle {
-    display: flex !important;
-  }
-
-  .k-structure-table-options {
-    position: relative;
-    width: $structure-item-height;
-    text-align: center;
-    height: $structure-item-height;
-  }
-  .k-structure-table-options-button {
-    width: $structure-item-height;
-    height: $structure-item-height;
-  }
-
-  .k-structure-table-text {
-    padding: 0 0.75rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .k-sortable-ghost {
-    background: $color-white;
-    box-shadow: rgba($color-gray-900, 0.25) 0 5px 10px;
-    outline: 2px solid $color-focus;
-    margin-bottom: 2px;
-    cursor: grabbing;
-    cursor: -moz-grabbing;
-    cursor: -webkit-grabbing;
+  .k-structure-table th:first-child,
+  .k-structure-table th:nth-child(2),
+  .k-structure-table th:last-child,
+  .k-structure-table td:first-child,
+  .k-structure-table td:nth-child(2),
+  .k-structure-table td:last-child {
+    display: table-cell;
   }
 }
+
+/* alignment */
+.k-structure-table .k-structure-table-column[data-align="center"] {
+  text-align: center;
+}
+[dir="ltr"] .k-structure-table .k-structure-table-column[data-align="right"] {
+  text-align: right;
+}
+[dir="rtl"] .k-structure-table .k-structure-table-column[data-align="right"] {
+  text-align: left;
+}
+.k-structure-table .k-structure-table-column[data-align="right"] > .k-input {
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* column widths */
+.k-structure-table .k-structure-table-column[data-width="1/2"] {
+  width: 50%;
+}
+.k-structure-table .k-structure-table-column[data-width="1/3"] {
+  width: 33.33%;
+}
+.k-structure-table .k-structure-table-column[data-width="1/4"] {
+  width: 25%;
+}
+.k-structure-table .k-structure-table-column[data-width="1/5"] {
+  width: 20%;
+}
+.k-structure-table .k-structure-table-column[data-width="1/6"] {
+  width: 16.66%;
+}
+.k-structure-table .k-structure-table-column[data-width="1/8"] {
+  width: 12.5%;
+}
+.k-structure-table .k-structure-table-column[data-width="1/9"] {
+  width: 11.11%;
+}
+.k-structure-table .k-structure-table-column[data-width="2/3"] {
+  width: 66.66%;
+}
+.k-structure-table .k-structure-table-column[data-width="3/4"] {
+  width: 75%;
+}
+
+.k-structure-table .k-structure-table-index {
+  width: var(--structure-item-height);
+  height: var(--structure-item-height);
+  text-align: center;
+}
+.k-structure-table .k-structure-table-index-number {
+  font-size: var(--text-xs);
+  color: var(--color-gray-500);
+  padding-top: .15rem;
+}
+
+.k-structure-table .k-sort-handle {
+  width: var(--structure-item-height);
+  height: var(--structure-item-height);
+  display: none;
+}
+
+.k-structure-table[data-sortable] tr:hover .k-structure-table-index-number {
+  display: none;
+}
+.k-structure-table[data-sortable] tr:hover .k-sort-handle {
+  display: flex !important;
+}
+
+.k-structure-table .k-structure-table-options {
+  position: relative;
+  width: var(--structure-item-height);
+  text-align: center;
+  height: var(--structure-item-height);
+}
+.k-structure-table .k-structure-table-options-button {
+  width: var(--structure-item-height);
+  height: var(--structure-item-height);
+}
+
+.k-structure-table .k-structure-table-text {
+  padding: 0 .75rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.k-structure-table .k-sortable-ghost {
+  background: var(--color-white);
+  box-shadow: rgba(17, 17, 17, .25) 0 5px 10px;
+  outline: 2px solid var(--color-focus);
+  margin-bottom: 2px;
+  cursor: grabbing;
+  cursor: -moz-grabbing;
+  cursor: -webkit-grabbing;
+}
+
 [data-disabled] .k-structure-table {
-  background: $color-background;
-
-  th,
-  td {
-    background: $color-background;
-    border-bottom: 1px solid $color-border;
-
-    [dir="ltr"] & {
-      border-right: 1px solid $color-border;
-    }
-
-    [dir="rtl"] & {
-      border-left: 1px solid $color-border;
-    }
-  }
-
-  td:last-child {
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
+  background: var(--color-background);
 }
-.k-sortable-row-fallback {
+[data-disabled] .k-structure-table th,
+[data-disabled] .k-structure-table td {
+  background: var(--color-background);
+  border-bottom: 1px solid var(--color-border);
+}
+[data-disabled] .k-structure-table td:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+[dir="ltr"] [data-disabled] .k-structure-table th,
+[dir="ltr"] [data-disabled] .k-structure-table td {
+  border-right: 1px solid var(--color-border);
+}
+[dir="rtl"] [data-disabled] .k-structure-table th,
+[dir="rtl"] [data-disabled] .k-structure-table td {
+  border-left: 1px solid var(--color-border);
+}
+.k-structure-table .k-sortable-row-fallback {
   opacity: 0 !important;
 }
 
@@ -851,11 +846,11 @@ $structure-item-height: 38px;
 .k-structure-form {
   position: relative;
   z-index: 3;
-  border-radius: $rounded-xs;
+  border-radius: var(--rounded-xs);
   margin-bottom: 1px;
-  box-shadow: rgba($color-gray-900, 0.05) 0 0 0 3px;
-  border: 1px solid $color-border;
-  background: $color-background;
+  box-shadow: rgba(17, 17, 17, .05) 0 0 0 3px;
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
 }
 
 .k-structure-form-fields {
@@ -863,26 +858,28 @@ $structure-item-height: 38px;
 }
 
 .k-structure-form-buttons {
-  border-top: 1px solid $color-border;
+  border-top: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
 }
 
 .k-structure-form-buttons .k-pagination {
   display: none;
-  @media screen and (min-width: $breakpoint-md) {
+}
+@media screen and (min-width: 65em) {
+  .k-structure-form-buttons .k-pagination {
     display: flex;
   }
 }
 
 .k-structure-form-buttons .k-pagination > .k-button,
 .k-structure-form-buttons .k-pagination > span {
-  padding: 0.875rem 1rem !important;
+  padding: .875rem 1rem !important;
 }
 
 .k-structure-form-cancel-button,
 .k-structure-form-submit-button {
-  padding: 0.875rem 1.5rem;
+  padding: .875rem 1.5rem;
   line-height: 1rem;
   display: flex;
 }

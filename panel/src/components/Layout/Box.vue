@@ -32,32 +32,31 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-box {
   word-wrap: break-word;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
 .k-box:not([data-theme="none"]) {
-  background: lighten($color-light-grey, 25%);
-  border-radius: $rounded-xs;
-  padding: 0.375rem 0.75rem;
+  background: var(--color-gray-300);
+  border-radius: var(--rounded-xs);
   line-height: 1.25rem;
-  border-left: 2px solid $color-light-grey;
-  padding: 0.5rem 1.5rem;
+  border-left: 2px solid var(--color-gray-500);
+  padding: .5rem 1.5rem;
 }
 .k-box[data-theme="code"] {
-  background: $color-gray-900;
-  border: 1px solid $color-black;
-  color: $color-light;
+  background: var(--color-gray-900);
+  border: 1px solid var(--color-black);
+  color: var(--color-light);
   font-family: "Input", "Menlo", monospace;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   line-height: 1.5;
 }
 .k-box[data-theme="button"] {
   padding: 0;
 }
 .k-box[data-theme="button"] .k-button {
-  padding: 0 0.75rem;
+  padding: 0 .75rem;
   height: 2.25rem;
   width: 100%;
   display: flex;
@@ -67,28 +66,28 @@ export default {
 }
 
 .k-box[data-theme="positive"] {
-  background: lighten($color-positive-on-dark, 25%);
+  background: var(--color-green-300);
   border: 0;
-  border-left: 2px solid $color-positive-on-dark;
-  padding: 0.5rem 1.5rem;
+  border-left: 2px solid var(--color-positive-light);
+  padding: .5rem 1.5rem;
 }
 .k-box[data-theme="negative"] {
-  background: lighten($color-negative-on-dark, 25%);
+  background: var(--color-red-300);
   border: 0;
-  border-left: 2px solid $color-negative-on-dark;
-  padding: 0.5rem 1.5rem;
+  border-left: 2px solid var(--color-negative-light);
+  padding: .5rem 1.5rem;
 }
 .k-box[data-theme="notice"] {
-  background: lighten($color-notice-on-dark, 25%);
+  background: var(--color-orange-300);
   border: 0;
-  border-left: 2px solid $color-notice-on-dark;
-  padding: 0.5rem 1.5rem;
+  border-left: 2px solid var(--color-notice-light);
+  padding: .5rem 1.5rem;
 }
 .k-box[data-theme="info"] {
-  background: lighten($color-focus-on-dark, 25%);
+  background: var(--color-focus-300);
   border: 0;
-  border-left: 2px solid $color-focus-on-dark;
-  padding: 0.5rem 1.5rem;
+  border-left: 2px solid var(--color-focus-light);
+  padding: .5rem 1.5rem;
 }
 
 .k-box[data-theme="empty"] {
@@ -99,16 +98,15 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  background: $color-background;
-  border-radius: $rounded-xs;
-  color: $color-gray-600;
-  border: 1px dashed $color-border;
+  background: var(--color-background);
+  color: var(--color-gray-600);
+  border: 1px dashed var(--color-border);
 }
 .k-box[data-theme="empty"] .k-icon {
-  margin-bottom: 0.5rem;
-  color: $color-light-grey;
+  margin-bottom: .5rem;
+  color: var(--color-gray-500);
 }
 .k-box[data-theme="empty"] p {
-  color: $color-gray-600;
+  color: var(--color-gray-600);
 }
 </style>

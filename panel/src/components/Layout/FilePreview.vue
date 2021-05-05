@@ -76,21 +76,25 @@ export default {
   },
 };
 </script>
-<style lang="scss">
+<style>
 .k-file-preview {
-  background: lighten($color-gray-900, 10%);
+  background: var(--color-gray-800);
 }
 .k-file-preview-layout {
   display: grid;
-
-  @media screen and (max-width: $breakpoint-md) {
+}
+@media screen and (max-width: 65em) {
+  .k-file-preview-layout {
     padding: 0 !important;
   }
-
-  @media screen and (min-width: $breakpoint-sm) {
+}
+@media screen and (min-width: 30em) {
+  .k-file-preview-layout {
     grid-template-columns: 50% auto;
   }
-  @media screen and (min-width: $breakpoint-md) {
+}
+@media screen and (min-width: 65em) {
+  .k-file-preview-layout {
     display: flex;
     align-items: center;
   }
@@ -100,12 +104,15 @@ export default {
 }
 .k-file-preview-image {
   position: relative;
-  background: url($pattern);
-
-  @media screen and (min-width: $breakpoint-md) {
+  background: var(--bg-pattern);
+}
+@media screen and (min-width: 65em) {
+  .k-file-preview-image {
     width: 33.33%;
   }
-  @media screen and (min-width: $breakpoint-lg) {
+}
+@media screen and (min-width: 90em) {
+  .k-file-preview-image {
     width: 25%;
   }
 }
@@ -113,8 +120,9 @@ export default {
 .k-file-preview-image .k-image span {
   overflow: hidden;
   padding-bottom: 66.66%;
-
-  @media screen and (min-width: $breakpoint-sm) and (max-width: $breakpoint-md) {
+}
+@media screen and (min-width: 30em) and (max-width: 65em) {
+  .k-file-preview-image .k-image span {
     position: absolute;
     top: 0;
     left: 0;
@@ -122,8 +130,10 @@ export default {
     right: 0;
     padding-bottom: 0 !important;
   }
+}
 
-  @media screen and (min-width: $breakpoint-md) {
+@media screen and (min-width: 65em) {
+  .k-file-preview-image .k-image span {
     padding-bottom: 100%;
   }
 }
@@ -141,7 +151,7 @@ export default {
 }
 .k-file-preview-image-link.k-link[data-tabbed] {
   box-shadow: none;
-  outline: 2px solid $color-focus;
+  outline: 2px solid var(--color-focus);
   outline-offset: -2px;
 }
 
@@ -150,7 +160,7 @@ export default {
   display: block;
   padding-bottom: 100%;
   overflow: hidden;
-  color: rgba($color-white, 0.5);
+  color: rgba(255, 255, 255, .5);
 }
 .k-file-preview-icon svg {
   position: absolute;
@@ -161,8 +171,9 @@ export default {
 .k-file-preview-details {
   padding: 1.5rem;
   flex-grow: 1;
-
-  @media screen and (min-width: $breakpoint-md) {
+}
+@media screen and (min-width: 65em) {
+  .k-file-preview-details {
     padding: 3rem;
   }
 }
@@ -173,21 +184,21 @@ export default {
   grid-gap: 1.5rem 3rem;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 
-  @media screen and (min-width: $breakpoint-sm) {
+  @media screen and (min-width: 30em) {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 }
 .k-file-preview-details h3 {
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   font-weight: 500;
-  color: $color-light-grey;
+  color: var(--color-gray-500);
 }
 .k-file-preview-details p {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  color: rgba($color-white, 0.75);
-  font-size: $text-sm;
+  color: rgba(255, 255, 255, .75);
+  font-size: var(--text-sm);
 }
 .k-file-preview-details p a {
   display: block;

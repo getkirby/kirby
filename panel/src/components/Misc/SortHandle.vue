@@ -17,14 +17,14 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-sort-handle {
   cursor: move;
   cursor: grab;
   cursor: -moz-grab;
   cursor: -webkit-grab;
   line-height: 0;
-  color: $color-gray-900;
+  color: var(--color-gray-900);
   justify-content: center;
   align-items: center;
   line-height: 0;
@@ -32,7 +32,7 @@ export default {
   height: 2rem;
   display: flex;
   will-change: opacity, color;
-  transition: opacity 0.3s;
+  transition: opacity .3s;
   z-index: 1;
 }
 .k-sort-handle svg {

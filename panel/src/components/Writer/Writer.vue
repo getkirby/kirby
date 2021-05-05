@@ -260,7 +260,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-writer {
   position: relative;
   width: 100%;
@@ -281,7 +281,7 @@ export default {
   caret-color: currentColor;
 }
 .k-writer .ProseMirror a {
-  color: $color-focus;
+  color: var(--color-focus);
   text-decoration: underline;
 }
 .k-writer .ProseMirror > *:last-child {
@@ -297,15 +297,15 @@ export default {
 }
 
 .k-writer .ProseMirror h1 {
-  font-size: $text-3xl;
+  font-size: var(--text-3xl);
   line-height: 1.25em;
 }
 .k-writer .ProseMirror h2 {
-  font-size: $text-2xl;
+  font-size: var(--text-2xl);
   line-height: 1.25em;
 }
 .k-writer .ProseMirror h3 {
-  font-size: $text-xl;
+  font-size: var(--text-xl);
   line-height: 1.25em;
 }
 .k-writer .ProseMirror h1 strong,
@@ -324,9 +324,9 @@ export default {
   display: inline-block;
   line-height: 1.325;
   padding: .05em .325em;
-  background: $color-gray-300;
-  border-radius: $rounded;
-  font-family: $font-mono;
+  background: var(--color-gray-300);
+  border-radius: var(--rounded);
+  font-family: var(--font-mono);
 }
 .k-writer .ProseMirror ul,
 .k-writer .ProseMirror ol {
@@ -352,21 +352,21 @@ export default {
 
 .k-writer-code pre {
   tab-size: 2;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   line-height: 2em;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: pre;
 }
 .k-writer-code code {
-  font-family: $font-mono;
+  font-family: var(--font-mono);
 }
 
 .k-writer[data-placeholder][data-empty]::before {
   content: attr(data-placeholder);
   position: absolute;
   line-height: inherit;
-  color: $color-gray-500;
+  color: var(--color-gray-500);
   pointer-events: none;
 }
 </style>

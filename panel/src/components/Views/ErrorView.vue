@@ -13,7 +13,7 @@
   </k-view>
 </template>
 
-<style lang="scss">
+<style>
 .k-error-view {
   position: absolute;
   top: 0;
@@ -30,10 +30,10 @@
   text-align: center;
 }
 .k-error-view-icon {
-  color: $color-negative;
+  color: var(--color-negative);
   display: inline-block;
 }
 .k-error-view-content p:not(:last-child) {
-  margin-bottom: 0.75rem;
+  margin-bottom: .75rem;
 }
 </style>

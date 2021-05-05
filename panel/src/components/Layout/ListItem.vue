@@ -124,58 +124,58 @@ export default {
 };
 </script>
 
-<style lang="scss">
-$list-item-height: 38px;
-
+<style>
 .k-list-item {
+  --list-item-height: 38px;
+
   position: relative;
   display: flex;
   align-items: center;
-  background: $color-white;
-  border-radius: $rounded-xs;
-  box-shadow: $shadow;
+  background: var(--color-white);
+  border-radius: var(--rounded-xs);
+  box-shadow: var(--shadow);
 }
 [data-disabled] .k-list-item {
-  background: $color-background;
+  background: var(--color-background);
 }
 .k-list-item .k-sort-handle {
   position: absolute;
   left: -1.5rem;
   width: 1.5rem;
-  height: $list-item-height;
+  height: var(--list-item-height);
   opacity: 0;
 }
 .k-list:hover .k-sort-handle {
-  opacity: 0.25;
+  opacity: .25;
 }
 .k-list-item:hover .k-sort-handle {
   opacity: 1;
 }
 .k-list-item.k-sortable-ghost {
   position: relative;
-  outline: 2px solid $color-focus;
+  outline: 2px solid var(--color-focus);
   z-index: 1;
-  box-shadow: rgba($color-gray-900, 0.25) 0 5px 10px;
+  box-shadow: rgba(17, 17, 17, .25) 0 5px 10px);
 }
 .k-list-item.k-sortable-fallback {
-  opacity: 0.25 !important;
+  opacity: .25 !important;
   overflow: hidden;
 }
 .k-list-item-image {
-  width: $list-item-height;
-  height: $list-item-height;
+  width: var(--list-item-height);
+  height: var(--list-item-height);
   overflow: hidden;
   flex-shrink: 0;
   line-height: 0;
 }
 .k-list-item-image .k-image {
-  width: $list-item-height;
-  height: $list-item-height;
+  width: var(--list-item-height);
+  height: var(--list-item-height);
   object-fit: contain;
 }
 .k-list-item-image .k-icon {
-  width: $list-item-height;
-  height: $list-item-height;
+  width: var(--list-item-height);
+  height: var(--list-item-height);
 }
 .k-list-item-image .k-icon svg {
   opacity: .5;
@@ -186,7 +186,10 @@ $list-item-height: 38px;
   flex-grow: 1;
   flex-shrink: 1;
   overflow: hidden;
-  @include highlight-tabbed;
+  outline: none;
+}
+.k-list-item-content[data-tabbed] {
+  box-shadow: var(--shadow-outline);
 }
 .k-list-item-text {
   display: flex;
@@ -196,7 +199,7 @@ $list-item-height: 38px;
   align-items: baseline;
   width: 100%;
   line-height: 1.25rem;
-  padding: 0.5rem 0.75rem;
+  padding: .5rem .75rem;
 }
 .k-list-item-text em {
   font-style: normal;
@@ -205,20 +208,21 @@ $list-item-height: 38px;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: $text-sm;
-  color: $color-gray-900;
+  font-size: var(--text-sm);
+  color: var(--color-gray-900);
 }
 .k-list-item-text small {
-  color: $color-light-grey;
-  font-size: $text-xs;
+  color: var(--color-gray-500);
+  font-size: var(--text-xs);
   font-variant-numeric: tabular-nums;
-  color: $color-gray-600;
+  color: var(--color-gray-600);
   display: none;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
-
-  @media screen and (min-width: $breakpoint-sm) {
+}
+@media screen and (min-width: 30em) {
+  .k-list-item-text small {
     display: block;
   }
 }
@@ -230,13 +234,13 @@ $list-item-height: 38px;
   flex-shrink: 0;
 }
 .k-list-item-options .k-dropdown-content {
-  top: $list-item-height;
+  top: var(--list-item-height);
 }
 .k-list-item-options > .k-button {
-  height: $list-item-height;
+  height: var(--list-item-height);
   padding: 0 12px;
 }
 .k-list-item-options > .k-button > .k-button-icon {
-  height: $list-item-height;
+  height: var(--list-item-height);
 }
 </style>

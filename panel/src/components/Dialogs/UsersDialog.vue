@@ -73,7 +73,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-users-dialog .k-list-item {
   cursor: pointer;
 }

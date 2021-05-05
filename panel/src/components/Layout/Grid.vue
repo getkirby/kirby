@@ -18,7 +18,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-grid {
   --columns: 12;
   display: grid;
@@ -27,8 +27,7 @@ export default {
   grid-template-columns: 1fr;
 }
 
-@media screen and (min-width: $breakpoint-sm) {
-
+@media screen and (min-width: 30em) {
   .k-grid[data-gutter="small"] {
     grid-column-gap: 1rem;
     grid-row-gap: 1rem;
@@ -40,10 +39,9 @@ export default {
     grid-column-gap: 1.5rem;
     grid-row-gap: 1.5rem;
   }
-
 }
 
-@media screen and (min-width: $breakpoint-md) {
+@media screen and (min-width: 65em) {
   .k-grid {
     grid-template-columns: repeat(var(--columns), 1fr);
   }
@@ -55,7 +53,7 @@ export default {
   }
 }
 
-@media screen and (min-width: $breakpoint-lg) {
+@media screen and (min-width: 90em) {
   .k-grid[data-gutter="large"] {
     grid-column-gap: 4.5rem;
   }
@@ -65,7 +63,7 @@ export default {
 
 }
 
-@media screen and (min-width: $breakpoint-xl) {
+@media screen and (min-width: 120em) {
   .k-grid[data-gutter="large"] {
     grid-column-gap: 6rem;
   }
@@ -73,5 +71,4 @@ export default {
     grid-column-gap: 7.5rem;
   }
 }
-
 </style>

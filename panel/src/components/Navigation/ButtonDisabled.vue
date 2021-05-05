@@ -30,9 +30,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-button[data-disabled] {
-  opacity: 0.5;
+  opacity: .5;
   cursor: default;
 }
 .k-card-options > .k-button[data-disabled] {
@@ -40,6 +40,6 @@ export default {
 }
 .k-button[data-disabled]:focus .k-button-text,
 .k-button[data-disabled]:hover .k-button-text {
-  opacity: 0.75;
+  opacity: .75;
 }
 </style>

@@ -38,8 +38,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
-
+<style>
 .k-files-field-preview {
   display: grid;
   grid-gap: .5rem;

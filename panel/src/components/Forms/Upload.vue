@@ -185,18 +185,17 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-upload input {
   position: absolute;
   top: 0;
+}
+[dir="ltr"] .k-upload input {
+  left: -3000px;
+}
 
-  [dir="ltr"] & {
-    left: -3000px;
-  }
-
-  [dir="rtl"] & {
-    right: -3000px;
-  }
+[dir="rtl"] .k-upload input {
+  right: -3000px;
 }
 
 .k-upload .k-headline {
@@ -206,25 +205,25 @@ export default {
 .k-upload-list,
 .k-upload-error-list {
   line-height: 1.5em;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
 .k-upload-list-filename {
-  color: $color-gray-600;
+  color: var(--color-gray-600);
 }
 
 .k-upload-error-list li {
-  padding: 0.75rem;
-  background: $color-white;
-  border-radius: $rounded-xs;
+  padding: .75rem;
+  background: var(--color-white);
+  border-radius: var(--rounded-xs);
 }
 .k-upload-error-list li:not(:last-child) {
   margin-bottom: 2px;
 }
 .k-upload-error-filename {
-  color: $color-negative;
-  font-weight: $font-bold;
+  color: var(--color-negative);
+  font-weight: var(--font-bold);
 }
 .k-upload-error-message {
-  color: $color-gray-600;
+  color: var(--color-gray-600);
 }
 </style>

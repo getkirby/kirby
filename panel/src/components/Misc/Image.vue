@@ -96,7 +96,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-image span {
   position: relative;
   display: block;
@@ -118,27 +118,27 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  color: $color-white;
-  font-size: 0.9em;
+  color: var(--color-white);
+  font-size: .9em;
 }
 .k-image-error svg * {
-  fill: rgba($color-white, 0.3);
+  fill: rgba(255, 255, 255, .3));
 }
 .k-image[data-cover] img {
   object-fit: cover;
 }
 .k-image[data-back="black"] span {
-  background: $color-gray-900;
+  background: var(--color-gray-900);
 }
 .k-image[data-back="white"] span {
-  background: $color-white;
-  color: $color-gray-900;
+  background: var(--color-white);
+  color: var(--color-gray-900);
 }
 .k-image[data-back="white"] .k-image-error {
-  background: $color-gray-900;
-  color: $color-white;
+  background: var(--color-gray-900);
+  color: var(--color-white);
 }
 .k-image[data-back="pattern"] span {
-  background: lighten($color-gray-900, 10%) url($pattern);
+  background: var(--color-gray-800) var(--bg-pattern);
 }
 </style>

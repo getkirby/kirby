@@ -95,17 +95,17 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-writer-toolbar {
   position: absolute;
   display: flex;
-  background: $color-black;
+  background: var(--color-black);
   height: 30px;
   transform: translateX(-50%) translateY(-.75rem);
-  z-index: z-index(dropdown) + 1;
-  box-shadow: $shadow;
-  color: $color-white;
-  border-radius: $rounded;
+  z-index: var(--z-dropdown) + 1;
+  box-shadow: var(--shadow);
+  color: var(--color-white);
+  border-radius: var(--rounded);
 }
 .k-writer-toolbar-button.k-button {
   display: flex;
@@ -113,34 +113,33 @@ export default {
   justify-content: center;
   height: 30px;
   width: 30px;
-  font-size: $text-sm !important;
+  font-size: var(--text-sm) !important;
   color: currentColor;
   line-height: 1;
 }
 .k-writer-toolbar-button.k-button:hover {
-  background: rgba(#fff, .15);
+  background: rgba(255, 255, 255, .15);
 }
 .k-writer-toolbar-button.k-writer-toolbar-button-active {
-  color: $color-blue-300;
+  color: var(--color-blue-300);
 }
 .k-writer-toolbar-button.k-writer-toolbar-nodes {
   width: auto;
   padding: 0 .75rem;
 }
 .k-writer-toolbar .k-dropdown + .k-writer-toolbar-button {
-  border-left: 1px solid $color-gray-700;
+  border-left: 1px solid var(--color-gray-700);
 }
 .k-writer-toolbar-button.k-writer-toolbar-nodes::after {
   content: "";
   margin-left: .5rem;
-  border-top: 4px solid $color-white;
+  border-top: 4px solid var(--color-white);
   border-left: 4px solid transparent;
   border-right: 4px solid transparent;
 }
 .k-writer-toolbar .k-dropdown-content {
-  color: $color-black;
-  background: $color-white;
+  color: var(--color-black);
+  background: var(--color-white);
   margin-top: .5rem;
 }
-
 </style>

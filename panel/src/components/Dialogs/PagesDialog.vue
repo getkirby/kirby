@@ -127,12 +127,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-pages-dialog-navbar {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: .5rem;
   padding-right: 38px;
 }
 .k-pages-dialog-navbar .k-button {
@@ -150,7 +150,7 @@ export default {
 }
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"],
 .k-pages-dialog .k-list-item .k-button[disabled] {
-  opacity: 0.25;
+  opacity: .25;
 }
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"]:hover {
   opacity: 1;

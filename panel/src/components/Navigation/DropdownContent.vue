@@ -196,40 +196,32 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-dropdown-content {
   position: absolute;
   top: 100%;
-  background: $color-gray-900;
-  color: $color-white;
-  z-index: z-index(dropdown);
-  box-shadow: $shadow-lg;
-  border-radius: $rounded-xs;
+  background: var(--color-gray-900);
+  color: var(--color-white);
+  z-index: var(--z-dropdown);
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--rounded-xs);
   text-align: left;
   margin-bottom: 6rem;
-
-  [dir="ltr"] & {
-    left: 0;
-  }
-
-  [dir="rtl"] & {
-    right: 0;
-  }
-
+}
+[dir="ltr"] .k-dropdown-content {
+  left: 0;
 }
 
-.k-dropdown-content[data-align="right"] {
-
-  [dir="ltr"] & {
-    left: auto;
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-    right: auto;
-  }
-
+[dir="rtl"] .k-dropdown-content {
+  right: 0;
+}
+[dir="ltr"] .k-dropdown-content[data-align="right"] {
+  left: auto;
+  right: 0;
+}
+[dir="rtl"] .k-dropdown-content[data-align="right"] {
+  left: 0;
+  right: auto;
 }
 .k-dropdown-content > .k-dropdown-item:first-child {
   margin-top: .5rem;
@@ -239,18 +231,17 @@ export default {
 }
 .k-dropdown-content hr {
   position: relative;
-  padding: 0.5rem 0;
+  padding: .5rem 0;
   border: 0;
-
-  &::after {
-    position: absolute;
-    top: 0.5rem;
-    left: 1rem;
-    right: 1rem;
-    content: "";
-    height: 1px;
-    background: currentColor;
-    opacity: 0.2;
-  }
+}
+.k-dropdown-content hr::after {
+  position: absolute;
+  top: .5rem;
+  left: 1rem;
+  right: 1rem;
+  content: "";
+  height: 1px;
+  background: currentColor;
+  opacity: .2;
 }
 </style>

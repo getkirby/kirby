@@ -24,7 +24,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-toggle-field-preview label {
   padding: 0 .25rem 0 .75rem;
   display: flex;
@@ -33,43 +33,39 @@ export default {
   overflow: hidden;
   white-space: nowrap;
 }
-.k-toggle-field-preview .k-toggle-input-label {
-  [dir="ltr"] & {
-    padding-left: .5rem;
-  }
-
-  [dir="rtl"] & {
-    padding-right: .5rem;
-  }
-
-  [dir="ltr"] [data-align="right"] & {
-    padding-right: .5rem;
-  }
-
-  [dir="rtl"] [data-align="right"] & {
-    padding-left: .5rem;
-  }
+[dir="ltr"] .k-toggle-field-preview .k-toggle-input-label {
+  padding-left: .5rem;
 }
 
-.k-toggle-field-preview .k-toggle-input {
-  [dir="ltr"] & {
-    padding: 0 .25rem 0 .75rem;
-  }
+[dir="rtl"] .k-toggle-field-preview .k-toggle-input-label {
+  padding-right: .5rem;
+}
 
-  [dir="rtl"] & {
-    padding: 0 .75rem 0 .25rem;
-  }
+[dir="ltr"] [data-align="right"] .k-toggle-field-preview .k-toggle-input-label {
+  padding-right: .5rem;
+}
 
-  [data-align="right"] & {
-    flex-direction: row-reverse;
-  }
+[dir="rtl"] [data-align="right"] .k-toggle-field-preview .k-toggle-input-label {
+  padding-left: .5rem;
+}
 
-  [dir="ltr"] [data-align="right"] & {
-    padding: 0 .75rem 0 .25rem;
-  }
+[dir="ltr"] .k-toggle-field-preview .k-toggle-input {
+  padding: 0 .25rem 0 .75rem;
+}
 
-  [dir="rtl"] [data-align="right"] & {
-    padding: 0 .25rem 0 .75rem;
-  }
+[dir="rtl"] .k-toggle-field-preview .k-toggle-input {
+  padding: 0 .75rem 0 .25rem;
+}
+
+[data-align="right"] .k-toggle-field-preview .k-toggle-input {
+  flex-direction: row-reverse;
+}
+
+[dir="ltr"] [data-align="right"] .k-toggle-field-preview .k-toggle-input {
+  padding: 0 .75rem 0 .25rem;
+}
+
+[dir="rtl"] [data-align="right"] .k-toggle-field-preview .k-toggle-input {
+  padding: 0 .25rem 0 .75rem;
 }
 </style>
