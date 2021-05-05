@@ -14,6 +14,8 @@ use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
 use Kirby\Session\AutoSession;
+use Kirby\Text\KirbyTag;
+use Kirby\Text\KirbyTags;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Config;
 use Kirby\Toolkit\Controller;
@@ -748,8 +750,13 @@ class App
         $data['kirby']  = $data['kirby']  ?? $this;
         $data['site']   = $data['site']   ?? $data['kirby']->site();
         $data['parent'] = $data['parent'] ?? $data['site']->page();
+        $options        = $this->options;
 
-        return KirbyTags::parse($text, $data, $this->options, $this);
+        $text = $this->apply('kirbytags:before', compact('text', 'data', 'options'), 'text');
+        $text = KirbyTags::parse($text, $data, $options);
+        $text = $this->apply('kirbytags:after', compact('text', 'data', 'options'), 'text');
+
+        return $text;
     }
 
     /**
