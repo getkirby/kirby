@@ -30,7 +30,7 @@ class File extends BaseFile
     /**
      * Absolute file URL
      *
-     * @var string
+     * @var string|null
      */
     protected $url;
 
@@ -218,9 +218,9 @@ class File extends BaseFile
     /**
      * Returns the absolute url for the file
      *
-     * @return string
+     * @return string|null
      */
-    public function url(): string
+    public function url(): ?string
     {
         return $this->url;
     }
