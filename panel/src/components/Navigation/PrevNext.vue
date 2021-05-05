@@ -32,7 +32,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-prev-next {
   direction: ltr;
 }

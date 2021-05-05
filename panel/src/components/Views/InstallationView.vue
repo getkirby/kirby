@@ -188,7 +188,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-installation-view .k-button {
   display: block;
   margin-top: 1.5rem;
@@ -198,55 +198,51 @@ export default {
 }
 .k-installation-issues {
   line-height: 1.5em;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
 .k-installation-issues li {
   position: relative;
   padding: 1.5rem;
-  background: $color-white;
-
-  [dir="ltr"] & {
-    padding-left: 3.5rem;
-  }
-
-  [dir="rtl"] & {
-    padding-right: 3.5rem;
-  }
-
+  background: var(--color-white);
 }
+[dir="ltr"] .k-installation-issues li {
+  padding-left: 3.5rem;
+}
+
+[dir="rtl"] .k-installation-issues li {
+  padding-right: 3.5rem;
+}
+
 .k-installation-issues .k-icon {
   position: absolute;
   top: calc(1.5rem + 2px);
+}
+[dir="ltr"] .k-installation-issues .k-icon {
+  left: 1.5rem;
+}
 
-  [dir="ltr"] & {
-    left: 1.5rem;
-  }
-
-  [dir="rtl"] & {
-    right: 1.5rem;
-  }
+[dir="rtl"] .k-installation-issues .k-icon {
+  right: 1.5rem;
 }
 
 .k-installation-issues .k-icon svg * {
-  fill: $color-negative;
+  fill: var(--color-negative);
 }
 .k-installation-issues li:not(:last-child) {
   margin-bottom: 2px;
 }
 .k-installation-issues li code {
   font: inherit;
-  color: $color-negative;
+  color: var(--color-negative);
 }
 
 .k-installation-view .k-button[type="submit"] {
   padding: 1rem;
-
-  [dir="ltr"] & {
-    margin-left: -1rem;
-  }
-
-  [dir="rtl"] & {
-    margin-right: -1rem;
-  }
+}
+[dir="ltr"] .k-installation-view .k-button[type="submit"]  {
+  margin-left: -1rem;
+}
+[dir="rtl"] .k-installation-view .k-button[type="submit"]  {
+  margin-right: -1rem;
 }
 </style>

@@ -161,50 +161,71 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
+@import url('./variables.css');
+
+:root {
+
+  /** Colors **/
+  --color-background: var(--color-light);
+  --color-border: var(--color-gray-400);
+  --color-focus: var(--color-blue-600);
+  --color-focus-light: var(--color-blue-500);
+  --color-focus-outline: rgba(113, 143, 183, .25);
+  --color-negative: var(--color-red-700);
+  --color-negative-light: var(--color-red-500);
+  --color-negative-outline: rgba(212, 110, 110, .25);
+  --color-notice: var(--color-orange-600);
+  --color-notice-light: var(--color-orange-500);
+  --color-positive: var(--color-green-600);
+  --color-positive-light: var(--color-green-500);
+  --color-positive-outline: rgba(128, 149, 65, .25);
+  --color-text: var(--color-gray-900);
+  --color-text-light: var(--color-gray-600);
+
+  --z-loader: 1000;
+  --z-notification: 900;
+  --z-dropdown: 800;
+  --z-dialog: 700;
+  --z-drawer: 600;
+  --z-dropzone: 500;
+  --z-toolbar: 400;
+  --z-navigation: 300;
+  --z-content: 200;
+  --z-background: 100;
+
+  --bg-pattern: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXR0ZXJuIGlkPSJhIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4yKSIgZD0iTTAgMGgxMHYxMEgwem0xMCAxMGgxMHYxMEgxMHoiLz48L3BhdHRlcm4+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==");
+
+  --shadow-sticky: rgba(0, 0, 0, .05) 0 2px 5px;
+  --shadow-dropdown: var(--shadow-lg);
+  --shadow-item: var(--shadow);
+  --shadow-focus:var(--shadow-focus);
+
+  --field-input-padding: .5rem;
+  --field-input-height: 2.25rem;
+  --field-input-line-height: 1.25rem;
+  --field-input-font-size: var(--text-base);
+  --field-input-color-before: var(--color-gray-700);
+  --field-input-color-after: var(--color-gray-700);
+  --field-input-border: 1px solid var(--color-border);
+  --field-input-focus-border: 1px solid var(--color-focus);
+  --field-input-focus-outline: 2px solid var(--color-focus-outline);
+  --field-input-invalid-border: 1px solid var(--color-negative-outline);
+  --field-input-invalid-outline: 0;
+  --field-input-invalid-focus-border: 1px solid var(--color-negative);
+  --field-input-invalid-focus-outline: 2px solid var(--color-negative-outline);
+  --field-input-background: var(--color-white);
+  --field-input-disabled-color: var(--color-gray-500);
+  --field-input-disabled-background: var(--color-white);
+  --field-input-disabled-border: 1px solid var(--color-gray-300);
+}
+
 *,
 *::before,
 *::after {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-}
-
-:root {
-  /** Colors **/
-  --color-backdrop: #{$color-backdrop};
-  --color-background: #{$color-background};
-  --color-border: #{$color-border};
-  --color-focus: #{$color-focus};
-  --color-focus-light: #{$color-focus-on-dark};
-  --color-focus-outline: #{$color-focus-outline};
-  --color-negative: #{$color-negative};
-  --color-negative-light: #{$color-negative-on-dark};
-  --color-negative-outline: #{$color-negative-outline};
-  --color-notice: #{$color-notice};
-  --color-notice-light: #{$color-notice-on-dark};
-  --color-positive: #{$color-positive};
-  --color-positive-light: #{$color-positive-on-dark};
-  --color-positive-outline: #{$color-positive-outline};
-  --color-text: #{$color-gray-900};
-  --color-text-light: #{$color-gray-600};
-
-  /** Font families **/
-  --font-family-mono: #{$font-mono};
-  --font-family-sans: #{$font-sans};
-
-  /** Font sizes **/
-  --font-size-tiny: #{$text-xs};
-  --font-size-small: #{$text-sm};
-  --font-size-medium: #{$text-base};
-  --font-size-large: #{$text-xl};
-  --font-size-huge: #{$text-2xl};
-  --font-size-monster: #{$text-3xl};
-
-  /** Shadows **/
-  --box-shadow-dropdown: #{$shadow-lg};
-  --box-shadow-item: #{$shadow};
-  --box-shadow-focus: #{$shadow-xl};
 }
 
 noscript {
@@ -217,13 +238,13 @@ noscript {
 }
 
 html {
-  font-family: $font-sans;
-  background: $color-background;
+  font-family: var(--font-sans);
+  background: var(--color-background);
 }
 
 html,
 body {
-  color: $color-gray-900;
+  color: var(--color-gray-900);
   overflow: hidden;
   height: 100%;
 }
@@ -239,12 +260,12 @@ li {
 
 strong,
 b {
-  font-weight: $font-bold;
+  font-weight: var(--font-bold);
 }
 
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s;
+  transition: opacity .5s;
 }
 .fade-enter,
 .fade-leave-to {
@@ -257,27 +278,27 @@ b {
   right: 0;
   bottom: 0;
   left: 0;
-  background: $color-background;
+  background: var(--color-background);
 }
 .k-panel:focus {
   outline: 0;
 }
 .k-panel[data-loading] {
-  animation: LoadingCursor 0.5s;
+  animation: LoadingCursor .5s;
 }
 .k-panel-header {
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  z-index: z-index(navigation);
+  z-index: var(--z-navigation);
 }
 .k-panel .k-form-buttons {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: z-index(navigation);
+  z-index: var(--z-navigation);
 }
 .k-panel-view {
   position: absolute;
@@ -304,15 +325,13 @@ b {
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: z-index(loader);
-}
-.k-offline-warning {
-  background: rgba($color-gray-900, 0.7);
+  z-index: var(--z-loader);
+  background: rgba(17, 17, 17, .7);
   content: "offline";
   display: flex;
   align-items: center;
   justify-content: center;
-  color: $color-white;
+  color: var(--color-white);
 }
 
 @keyframes LoadingCursor {
@@ -349,9 +368,9 @@ b {
   left: 0;
   right: 0;
   bottom: 0;
-  background: $color-backdrop;
+  background: var(--color-backdrop);
   display: flex;
-  z-index: z-index(dialog);
+  z-index: var(--z-dialog);
   align-items: center;
   justify-content: center;
   padding: 1.5rem;
@@ -363,8 +382,8 @@ b {
   flex-direction: column;
   background: #fff;
   padding: .75rem 1.5rem 1.5rem;
-  box-shadow: $shadow-xl;
-  border-radius: $rounded;
+  box-shadow: var(--shadow-xl);
+  border-radius: var(--rounded);
 }
 .k-fatal-box .k-headline {
   margin-bottom: .75rem;
@@ -373,6 +392,6 @@ b {
   border: 0;
   width: 100%;
   flex-grow: 1;
-  border: 2px solid $color-border;
+  border: 2px solid var(--color-border);
 }
 </style>

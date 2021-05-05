@@ -48,29 +48,29 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-block-figure {
   cursor: pointer;
 }
 .k-block-figure iframe {
   border: 0;
   pointer-events: none;
-  background: $color-black;
+  background: var(--color-black);
 }
 .k-block-figure figcaption {
   padding-top: .5rem;
-  color: $color-gray-600;
-  font-size: $text-sm;
+  color: var(--color-gray-600);
+  font-size: var(--text-sm);
   text-align: center;
 }
 .k-block-figure-empty.k-button {
   display: flex;
   width: 100%;
   height: 6rem;
-  border-radius: $rounded-sm;
+  border-radius: var(--rounded-sm);
   align-items: center;
   justify-content: center;
-  color: $color-gray-600;
-  background: $color-background;
+  color: var(--color-gray-600);
+  background: var(--color-background);
 }
 </style>

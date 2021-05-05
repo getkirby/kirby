@@ -268,9 +268,9 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-user-profile {
-  background: $color-white;
+  background: var(--color-white);
 }
 .k-user-profile > .k-view {
   padding-top: 3rem;
@@ -281,19 +281,18 @@ export default {
 }
 .k-user-profile .k-button-group {
   overflow: hidden;
+}
+[dir="ltr"] .k-user-profile .k-button-group {
+  margin-left: .75rem;
+}
 
-  [dir="ltr"] & {
-    margin-left: 0.75rem;
-  }
-
-  [dir="rtl"] & {
-    margin-right: 0.75rem;
-  }
+[dir="rtl"] .k-user-profile .k-button-group {
+  margin-right: .75rem;
 }
 .k-user-profile .k-button-group .k-button {
   display: block;
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
+  padding-top: .25rem;
+  padding-bottom: .25rem;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -302,7 +301,7 @@ export default {
 }
 
 .k-user-profile .k-dropdown-content {
-  margin-top: 0.5rem;
+  margin-top: .5rem;
   left: 50%;
   transform: translateX(-50%);
 }
@@ -318,15 +317,14 @@ export default {
 .k-user-view-image .k-icon {
   width: 4rem;
   height: 4rem;
-  background: $color-gray-900;
-  color: $color-light-grey;
+  background: var(--color-gray-900);
+  color: var(--color-gray-500);
 }
-
 .k-user-name-placeholder {
-  color: $color-light-grey;
-  transition: color 0.3s;
+  color: var(--color-gray-500);
+  transition: color .3s;
 }
 .k-header[data-editable] .k-user-name-placeholder:hover {
-  color: $color-gray-900;
+  color: var(--color-gray-900);
 }
 </style>

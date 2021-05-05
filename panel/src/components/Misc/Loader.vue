@@ -2,7 +2,7 @@
   <k-icon class="k-loader" type="loader" />
 </template>
 
-<style lang="scss">
+<style>
 .k-loader {
   z-index: 1;
 }

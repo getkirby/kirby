@@ -43,7 +43,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-writer-field-input {
   line-height: 1.5em;
   padding: .375rem .5rem;

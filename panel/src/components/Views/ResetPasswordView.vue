@@ -98,13 +98,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-password-reset-view .k-user-info {
   height: 38px;
   margin-bottom: 2.25rem;
   padding: .5rem;
-  background: $color-white;
-  border-radius: $rounded-xs;
-  box-shadow: $shadow;
+  background: var(--color-white);
+  border-radius: var(--rounded-xs);
+  box-shadow: var(--shadow);
 }
 </style>

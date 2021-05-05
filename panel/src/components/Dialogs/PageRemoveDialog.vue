@@ -114,7 +114,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-page-remove-warning {
   margin: 1.5rem 0;
 }

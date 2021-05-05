@@ -128,40 +128,40 @@ export default {
 }
 </script>
 
-<style lang="scss">
-$drawer-header-height: 2.5rem;
-$drawer-header-padding: 1.5rem;
-
+<style>
 .k-drawer {
+  --drawer-header-height: 2.5rem;
+  --drawer-header-padding: 1.5rem;
+
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   left: 0;
-  z-index: z-index(toolbar);
+  z-index: var(--z-toolbar);
   display: flex;
   align-items: stretch;
   justify-content: flex-end;
-  background: rgba(#000, .2);
+  background: rgba(0, 0, 0, .2);
 }
 .k-drawer-box {
   position: relative;
   flex-basis: 50rem;
   display: flex;
   flex-direction: column;
-  background: $color-background;
-  box-shadow: $shadow-xl;
+  background: var(--color-background);
+  box-shadow: var(--shadow-xl);
 }
 .k-drawer-header {
   flex-shrink: 0;
-  height: $drawer-header-height;
-  padding-left: $drawer-header-padding;
+  height: var(--drawer-header-height);
+  padding-left: var(--drawer-header-padding);
   display: flex;
   align-items: center;
   line-height: 1;
   justify-content: space-between;
-  background: $color-white;
-  font-size: $text-sm;
+  background: var(--color-white);
+  font-size: var(--text-sm);
 }
 .k-drawer-title {
   padding: 0 .75rem;
@@ -173,8 +173,8 @@ $drawer-header-padding: 1.5rem;
   align-items: center;
   min-width: 0;
   margin-left: -.75rem;
-  font-size: $text-sm;
-  font-weight: $font-normal;
+  font-size: var(--text-sm);
+  font-weight: var(--font-normal);
 }
 .k-drawer-breadcrumb li:not(:last-child) .k-button::after {
   position: absolute;
@@ -184,19 +184,19 @@ $drawer-header-padding: 1.5rem;
   justify-content: center;
   align-items: center;
   content: "›";
-  color: $color-gray-500;
-  height: $drawer-header-height;
+  color: var(--color-gray-500);
+  height: var(--drawer-header-height);
 }
 .k-drawer-title .k-icon,
 .k-drawer-breadcrumb .k-icon {
   width: 1rem;
-  color: $color-gray-500;
+  color: var(--color-gray-500);
   margin-right: .5rem;
 }
 .k-drawer-breadcrumb .k-button {
   display: inline-flex;
   align-items: center;
-  height: $drawer-header-height;
+  height: var(--drawer-header-height);
   padding: 0 .75rem;
 }
 .k-drawer-breadcrumb .k-button-text {
@@ -212,11 +212,11 @@ $drawer-header-padding: 1.5rem;
   margin-right: .75rem;
 }
 .k-drawer-tab.k-button {
-  height: $drawer-header-height;
+  height: var(--drawer-header-height);
   padding: 0 .75rem;
   display: flex;
   align-items: center;
-  font-size: $text-xs;
+  font-size: var(--text-xs);
 }
 .k-drawer-tab.k-button[aria-current]::after {
   position: absolute;
@@ -224,7 +224,7 @@ $drawer-header-padding: 1.5rem;
   left: .75rem;
   right: .75rem;
   content: "";
-  background: $color-black;
+  background: var(--color-black);
   height: 2px;
 }
 
@@ -232,23 +232,22 @@ $drawer-header-padding: 1.5rem;
   padding-right: .75rem;
 }
 .k-drawer-option.k-button {
-  width: $drawer-header-height;
-  height: $drawer-header-height;
-  color: $color-gray-500;
+  width: var(--drawer-header-height);
+  height: var(--drawer-header-height);
+  color: var(--color-gray-500);
   line-height: 1;
 }
 .k-drawer-option.k-button:focus,
 .k-drawer-option.k-button:hover {
-  color: $color-black;
+  color: var(--color-black);
 }
 
 .k-drawer-body {
   padding: 1.5rem;
   flex-grow: 1;
   overflow-y: auto;
-  background: $color-background;
+  background: var(--color-background);
 }
-
 
 /* Nested drawers */
 .k-drawer[data-nested] {

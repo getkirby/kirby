@@ -130,20 +130,20 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-card {
   position: relative;
   min-width: 0;
-  background: $color-white;
-  border-radius: $rounded-xs;
-  box-shadow: $shadow;
+  background: var(--color-white);
+  border-radius: var(--rounded-xs);
+  box-shadow: var(--shadow);
 }
 .k-card a {
   min-width: 0;
-  background: $color-white;
+  background: var(--color-white);
 }
 .k-card:focus-within {
-  box-shadow: $color-focus 0 0 0 2px;
+  box-shadow: var(--color-focus) 0 0 0 2px;
 }
 .k-card a:focus {
   outline: 0;
@@ -151,40 +151,39 @@ export default {
 
 .k-card .k-sort-handle {
   position: absolute;
-  top: 0.75rem;
+  top: .75rem;
   width: 2rem;
   height: 2rem;
-  border-radius: $rounded-xs;
-  background: $color-white;
+  border-radius: var(--rounded-xs);
+  background: var(--color-white);
   opacity: 0;
-  color: $color-gray-900;
+  color: var(--color-gray-900);
   z-index: 1;
   will-change: opacity;
-  transition: opacity 0.3s;
-
-  [dir="ltr"] & {
-    right: 0.75rem;
-  }
-  [dir="rtl"] & {
-    left: 0.75rem;
-  }
+  transition: opacity .3s;
+}
+[dir="ltr"] .k-card .k-sort-handle {
+  right: .75rem;
+}
+[dir="rtl"] .k-card .k-sort-handle {
+  left: .75rem;
 }
 .k-cards:hover .k-sort-handle {
-  opacity: 0.25;
+  opacity: .25;
 }
 .k-card:hover .k-sort-handle {
   opacity: 1;
 }
 
 .k-card.k-sortable-ghost {
-  outline: 2px solid $color-focus;
+  outline: 2px solid var(--color-focus);
   border-radius: 0;
 }
 
 .k-card-image,
 .k-card-icon {
-  border-top-left-radius: $rounded-xs;
-  border-top-right-radius: $rounded-xs;
+  border-top-left-radius: var(--rounded-xs);
+  border-top-right-radius: var(--rounded-xs);
   overflow: hidden;
 }
 .k-card-icon {
@@ -208,19 +207,19 @@ export default {
 
 .k-card-content {
   line-height: 1.25rem;
-  border-bottom-left-radius: $rounded-xs;
-  border-bottom-right-radius: $rounded-xs;
+  border-bottom-left-radius: var(--rounded-xs);
+  border-bottom-right-radius: var(--rounded-xs);
   min-height: 2.25rem;
-  padding: 0.5rem 0.75rem;
+  padding: .5rem .75rem;
   overflow-wrap: break-word;
   word-wrap: break-word;
 }
 
 .k-card-text {
   display: block;
-  font-weight: $font-normal;
+  font-weight: var(--font-normal);
   text-overflow: ellipsis;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
 .k-card-text[data-noinfo]:after {
   content: " ";
@@ -229,38 +228,34 @@ export default {
   display: inline-block;
 }
 .k-card-info {
-  color: $color-gray-600;
+  color: var(--color-gray-600);
   display: block;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   text-overflow: ellipsis;
   overflow: hidden;
-
-  [dir="ltr"] & {
-    margin-right: 4rem;
-  }
-
-  [dir="rtl"] & {
-    margin-left: 4rem;
-  }
+}
+[dir="ltr"] .k-card-info {
+  margin-right: 4rem;
+}
+[dir="rtl"] .k-card-info {
+  margin-left: 4rem;
 }
 
 .k-card-options {
   position: absolute;
   bottom: 0;
-
-  [dir="ltr"] & {
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-  }
+}
+[dir="ltr"] .k-card-options {
+  right: 0;
+}
+[dir="rtl"] .k-card-options {
+  left: 0;
 }
 .k-card-options > .k-button {
   position: relative;
   float: left;
   height: 2.25rem;
-  padding: 0 0.75rem;
+  padding: 0 .75rem;
   line-height: 1;
 }
 .k-card-options-dropdown {

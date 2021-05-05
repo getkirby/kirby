@@ -79,7 +79,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-radio-input li {
   position: relative;
   line-height: 1.5rem;
@@ -104,22 +104,22 @@ export default {
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  border: 2px solid $color-light-grey;
-  box-shadow: $color-white 0 0 0 2px inset;
+  border: 2px solid var(--color-gray-500);
+  box-shadow: var(--color-white) 0 0 0 2px inset;
 }
 .k-radio-input input:checked + label::before {
-  border-color: $color-gray-900;
-  background: $color-gray-900;
+  border-color: var(--color-gray-900);
+  background: var(--color-gray-900);
 }
 [data-disabled] .k-radio-input input:checked + label::before {
-  border-color: $color-gray-600;
-  background: $color-gray-600;
+  border-color: var(--color-gray-600);
+  background: var(--color-gray-600);
 }
 .k-radio-input input:focus + label::before {
-  border-color: $color-blue-600;
+  border-color: var(--color-blue-600);
 }
 .k-radio-input input:focus:checked + label::before {
-  background: $color-focus;
+  background: var(--color-focus);
 }
 
 .k-radio-input-text {

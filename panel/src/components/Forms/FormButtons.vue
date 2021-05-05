@@ -345,21 +345,16 @@ export default {
 };
 </script>
 
-<style lang="scss">
-.k-form-buttons {
-  &[data-theme="changes"] {
-      background: $color-notice-on-dark;
-  }
-
-  &[data-theme="lock"] {
-      background: $color-negative-on-dark;
-  }
-
-  &[data-theme="unlock"] {
-      background: $color-focus-on-dark;
-  }
+<style>
+.k-form-buttons[data-theme="changes"] {
+    background: var(--color-notice-light);
 }
-
+.k-form-buttons[data-theme="lock"] {
+    background: var(--color-negative-light);
+}
+.k-form-buttons[data-theme="unlock"] {
+    background: var(--color-focus-light);
+}
 .k-form-buttons .k-view {
   display: flex;
   justify-content: space-between;
@@ -383,15 +378,15 @@ export default {
 
 .k-form-lock-info {
   display: flex;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   align-items: center;
   line-height: 1.5em;
   padding: .625rem 0;
   margin-right: 3rem;
 
-  > .k-icon {
-    margin-right: .5rem;
-  }
+}
+.k-form-lock-info > .k-icon {
+  margin-right: .5rem;
 }
 .k-form-lock-buttons {
   display: flex;

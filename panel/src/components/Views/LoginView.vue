@@ -61,7 +61,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-login-fields {
   position: relative;
 }
@@ -73,7 +73,7 @@ export default {
   z-index: 1;
 
   text-decoration: underline;
-  font-size: 0.875rem;
+  font-size: .875rem;
 }
 
 .k-login-form label abbr {
@@ -88,17 +88,16 @@ export default {
 }
 
 .k-login-button {
-  padding: 0.5rem 1rem;
+  padding: .5rem 1rem;
   font-weight: 500;
-  transition: opacity 0.3s;
+  transition: opacity .3s;
+}
+[dir="ltr"] .k-login-button {
+  margin-right: -1rem;
+}
 
-  [dir="ltr"] & {
-    margin-right: -1rem;
-  }
-
-  [dir="rtl"] & {
-    margin-left: -1rem;
-  }
+[dir="rtl"] .k-login-button {
+  margin-left: -1rem;
 }
 
 .k-login-button span {
@@ -106,7 +105,7 @@ export default {
 }
 
 .k-login-button[disabled] {
-  opacity: 0.25;
+  opacity: .25;
 }
 
 .k-login-back-button,
@@ -116,25 +115,22 @@ export default {
   flex-grow: 1;
 }
 
-.k-login-back-button {
-  [dir="ltr"] & {
-    margin-left: -1rem;
-  }
-
-  [dir="rtl"] & {
-    margin-right: -1rem;
-  }
+[dir="ltr"] .k-login-back-button {
+  margin-left: -1rem;
+}
+[dir="rtl"] .k-login-back-button {
+  margin-right: -1rem;
 }
 
 .k-login-checkbox {
-  padding: 0.5rem 0;
-  font-size: $text-sm;
+  padding: .5rem 0;
+  font-size: var(--text-sm);
   cursor: pointer;
 }
 
 .k-login-checkbox .k-checkbox-text {
-  opacity: 0.75;
-  transition: opacity 0.3s;
+  opacity: .75;
+  transition: opacity .3s;
 }
 
 .k-login-checkbox:hover span,
@@ -149,11 +145,11 @@ export default {
   align-items: center;
   min-height: 38px;
   margin-bottom: 2rem;
-  background: $color-negative;
+  background: var(--color-negative);
   color: #fff;
-  font-size: $text-sm;
-  border-radius: $rounded-xs;
-  box-shadow: $shadow-lg;
+  font-size: var(--text-sm);
+  border-radius: var(--rounded-xs);
+  box-shadow: var(--shadow-lg);
   cursor: pointer;
 }
 </style>

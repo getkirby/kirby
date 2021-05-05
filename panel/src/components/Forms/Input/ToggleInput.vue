@@ -93,55 +93,54 @@ export default {
 }
 </script>
 
-<style lang="scss">
-$toggle-background: $color-white;
-$toggle-color: $color-light-grey;
-$toggle-active-color: $color-gray-900;
-$toggle-focus-color: $color-focus;
-$toggle-height: 16px;
-
+<style>
 .k-toggle-input {
+  --toggle-background: var(--color-white);
+  --toggle-color: var(--color-gray-500);
+  --toggle-active-color: var(--color-gray-900);
+  --toggle-focus-color: var(--color-focus);
+  --toggle-height: 16px;
+
   display: flex;
   align-items: center;
 }
 .k-toggle-input-native {
   position: relative;
-  height: $toggle-height;
-  width: $toggle-height * 2;
-  border-radius: $toggle-height;
-  border: 2px solid $toggle-color;
-  box-shadow: inset 0 0 0 2px $toggle-background, inset $toggle-height*-1 0px 0px 2px $toggle-background;
-  background-color: $toggle-color;
+  height: var(--toggle-height);
+  width: calc(var(--toggle-height) * 2);
+  border-radius: var(--toggle-height);
+  border: 2px solid var(--toggle-color);
+  box-shadow: inset 0 0 0 2px var(--toggle-background), inset calc(var(--toggle-height) * -1) 0px 0px 2px var(--toggle-background);
+  background-color: var(--toggle-color);
   outline: 0;
-  transition: all ease-in-out 0.1s;
+  transition: all ease-in-out .1s;
   appearance: none;
   cursor: pointer;
   flex-shrink: 0;
+}
+.k-toggle-input-native:checked {
+  border-color: var(--toggle-active-color);
+  box-shadow: inset 0 0 0 2px var(--toggle-background), inset var(--toggle-height) 0px 0px 2px var(--toggle-background);
+  background-color: var(--toggle-active-color);
+}
 
-  &:checked {
-    border-color: $toggle-active-color;
-    box-shadow: inset 0 0 0 2px $toggle-background, inset $toggle-height 0px 0px 2px $toggle-background;
-    background-color: $toggle-active-color;
-  }
+.k-toggle-input-native[disabled] {
+  border-color: var(--color-border);
+  box-shadow: inset 0 0 0 2px var(--color-background), inset calc(var(--toggle-height) * -1) 0px 0px 2px var(--color-background);
+  background-color: var(--color-border);
+}
 
-  &[disabled] {
-    border-color: $color-border;
-    box-shadow: inset 0 0 0 2px $color-background, inset $toggle-height*-1 0px 0px 2px $color-background;
-    background-color: $color-border;
-  }
+.k-toggle-input-native[disabled]:checked {
+  box-shadow: inset 0 0 0 2px var(--color-background), inset var(--toggle-height) 0px 0px 2px var(--color-background);
+}
 
-  &[disabled]:checked {
-    box-shadow: inset 0 0 0 2px $color-background, inset $toggle-height 0px 0px 2px $color-background;
-  }
+.k-toggle-input-native:focus:checked {
+  border: 2px solid var(--color-focus);
+  background-color: var(--toggle-focus-color);
+}
 
-  &:focus:checked {
-    border: 2px solid $color-focus;
-    background-color: $toggle-focus-color;
-  }
-
-  &::-ms-check {
-    opacity: 0;
-  }
+.k-toggle-input-native::-ms-check {
+  opacity: 0;
 }
 
 .k-toggle-input-label {

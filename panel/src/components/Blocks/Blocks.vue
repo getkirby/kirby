@@ -422,14 +422,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-blocks {
-  background: $color-white;
-  box-shadow: $shadow;
-  border-radius: $rounded;
+  background: var(--color-white);
+  box-shadow: var(--shadow);
+  border-radius: var(--rounded);
 }
 [data-disabled] .k-blocks {
-  background: $color-background;
+  background: var(--color-background);
 }
 .k-blocks[data-alt] .k-block-container > * {
   pointer-events: none;
@@ -440,8 +440,8 @@ export default {
   box-shadow: none;
 }
 .k-blocks .k-sortable-ghost {
-  outline: 2px solid $color-focus;
-  box-shadow: rgba($color-gray-900, 0.25) 0 5px 10px;
+  outline: 2px solid var(--color-focus);
+  box-shadow: rgba(17, 17, 17, .25) 0 5px 10px;
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;

@@ -269,7 +269,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-pagination {
   user-select: none;
   direction: ltr;
@@ -281,7 +281,7 @@ export default {
   white-space: nowrap;
 }
 .k-pagination > span {
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
 .k-pagination[data-align="center"] {
   text-align: center;
@@ -295,15 +295,13 @@ export default {
   top: 100%;
   left: 50%;
   transform: translateX(-50%);
-  background: $color-black;
-
-  [dir="ltr"] & {
-    direction: ltr;
-  }
-
-  [dir="rtl"] & {
-    direction: rtl;
-  }
+  background: var(--color-black);
+}
+[dir="ltr"] .k-dropdown-content.k-pagination-selector {
+  direction: ltr;
+}
+[dir="rtl"] .k-dropdown-content.k-pagination-selector {
+  direction: rtl;
 }
 
 .k-pagination-settings {
@@ -316,10 +314,10 @@ export default {
 }
 .k-pagination-settings label {
   display: flex;
-  border-right: 1px solid rgba(#fff, .35);
+  border-right: 1px solid rgba(255, 255, 255, .35);
   align-items: center;
   padding: .625rem 1rem;
-  font-size: $text-xs;
+  font-size: var(--text-xs);
 }
 .k-pagination-settings label span {
   margin-right: .5rem;

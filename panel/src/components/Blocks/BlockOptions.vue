@@ -92,43 +92,44 @@ export default {
 };
 </script>
 
-<style lang="scss">
-$block-options-button-size: 30px;
+<style>
 
 .k-block-options {
   display: flex;
   align-items: center;
-  background: $color-white;
-  z-index: z-index(dropdown);
-  box-shadow: rgba(#000, .1) -2px 0 5px, $shadow, $shadow-xl;
-  color: $color-black;
-  border-radius: $rounded;
+  background: var(--color-white);
+  z-index: var(----z-dropdown);
+  box-shadow: rgba(0, 0, 0, .1) -2px 0 5px, var(--shadow), var(--shadow-xl);
+  color: var(--color-black);
+  border-radius: var(--rounded);
 }
 .k-block-options-button {
-  width: $block-options-button-size;
-  height: $block-options-button-size;
+  --block-options-button-size: 30px;
+
+  width: var(--block-options-button-size);
+  height: var(--block-options-button-size);
   line-height: 1;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid $color-background;
+  border-right: 1px solid var(--color-background);
 }
 .k-block-options-button:first-child {
-  border-top-left-radius: $rounded;
-  border-bottom-left-radius: $rounded;
+  border-top-left-radius: var(--rounded);
+  border-bottom-left-radius: var(--rounded);
 }
 .k-block-options-button:last-child {
-  border-top-right-radius: $rounded;
-  border-bottom-right-radius: $rounded;
+  border-top-right-radius: var(--rounded);
+  border-bottom-right-radius: var(--rounded);
 }
 .k-block-options-button:last-of-type {
   border-right: 0;
 }
 .k-block-options-button[aria-current] {
-  color: $color-focus;
+  color: var(--color-focus);
 }
 .k-block-options-button:hover {
-  background: $color-gray-100;
+  background: var(--color-gray-100);
 }
 .k-block-options .k-dropdown-content {
   margin-top: .5rem;

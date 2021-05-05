@@ -122,13 +122,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-tabs {
   position: relative;
   background: #e9e9e9;
-  border-top: 1px solid $color-border;
-  border-left: 1px solid $color-border;
-  border-right: 1px solid $color-border;
+  border-top: 1px solid var(--color-border);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
 }
 .k-tabs nav {
   display: flex;
@@ -143,23 +143,23 @@ export default {
   justify-content: center;
   align-items: center;
   padding: .625rem .75rem;
-  font-size: $text-xs;
+  font-size: var(--text-xs);
   text-transform: uppercase;
   text-align: center;
   font-weight: 500;
   border-left: 1px solid transparent;
-  border-right: 1px solid $color-border;
+  border-right: 1px solid var(--color-border);
   flex-grow: 1;
   flex-shrink: 1;
   flex-direction: column;
   max-width: 15rem;
 
-  @media screen and (min-width: $breakpoint-sm) {
+  @media screen and (min-width: 30em) {
     flex-direction: row;
   }
 }
-.k-tab-button.k-button .k-icon {
-  @media screen and (min-width: $breakpoint-sm) {
+@media screen and (min-width: 30em) {
+  .k-tab-button.k-button .k-icon {
     margin-right: .5rem;
   }
 }
@@ -168,73 +168,68 @@ export default {
   font-size: 10px;
   overflow: hidden;
   max-width: 10rem;
-
-  [dir="ltr"] & {
-    padding-left: 0;
-  }
-
-  [dir="rtl"] & {
-    padding-right: 0;
-  }
-
   text-overflow: ellipsis;
+}
+[dir="ltr"] .k-tab-button.k-button > .k-button-text {
+  padding-left: 0;
+}
 
-  @media screen and (min-width: $breakpoint-sm) {
-    font-size: $text-xs;
+[dir="rtl"] .k-tab-button.k-button > .k-button-text {
+  padding-right: 0;
+}
+
+@media screen and (min-width: 30em) {
+  .k-tab-button.k-button > .k-button-text {
+    font-size: var(--text-xs);
     padding-top: 0;
   }
-
 }
 .k-tab-button:last-child {
   border-right: 1px solid transparent;
 }
 .k-tab-button[aria-current] {
   position: relative;
-  background: $color-background;
-  border-right: 1px solid $color-border;
+  background: var(--color-background);
+  border-right: 1px solid var(--color-border);
   pointer-events: none;
+}
+.k-tab-button[aria-current]:first-child {
+  border-left: 1px solid var(--color-border);
+}
 
-  &:first-child {
-    border-left: 1px solid $color-border;
-  }
+.k-tab-button[aria-current]::before,
+.k-tab-button[aria-current]::after {
+  position: absolute;
+  content: "";
+}
 
-  &::before,
-  &::after {
-    position: absolute;
-    content: "";
-  }
+.k-tab-button[aria-current]::before {
+  left: -1px;
+  right: -1px;
+  height: 2px;
+  top: -1px;
+  background: var(--color-black);
+}
 
-  &::before {
-    left: -1px;
-    right: -1px;
-    height: 2px;
-    top: -1px;
-    background: $color-black;
-  }
-
-  &::after {
-    left: 0;
-    right: 0;
-    height: 1px;
-    bottom: -1px;
-    background: $color-background;
-  }
-
+.k-tab-button[aria-current]::after {
+  left: 0;
+  right: 0;
+  height: 1px;
+  bottom: -1px;
+  background: var(--color-background);
 }
 .k-tabs-dropdown {
   top: 100%;
   right: 0;
 }
-.k-tabs-badge {
-  [dir="ltr"] & {
-    padding-left: .25rem;
-  }
+[dir="ltr"] .k-tabs-badge {
+  padding-left: .25rem;
+}
 
-  [dir="rtl"] & {
-    padding-right: .25rem;
-  }
+[dir="rtl"] .k-tabs-badge {
+  padding-right: .25rem;
 }
 .k-tabs[data-theme="notice"] .k-tabs-badge {
-  color: $color-orange-600;
+  color: var(--color-orange-600);
 }
 </style>

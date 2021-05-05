@@ -1,0 +1,141 @@
+:root {
+  --color-backdrop: rgba(0,0,0, .6);
+  --color-black: #000;
+  --color-light: var(--color-gray-200);
+  --color-white: #fff;
+
+  /* http://sitehero.nl/uicolors/ */
+  --color-aqua-100: #f2f8f7;
+  --color-aqua-200: #ebf4f3;
+  --color-aqua-300: #d5e7e4;
+  --color-aqua-400: #add1cc;
+  --color-aqua-500: #83b9b1;
+  --color-aqua-600: #56998f;
+  --color-aqua-700: #467c74;
+  --color-aqua-800: #355f58;
+  --color-aqua-900: #2c4e49;
+
+  --color-blue-100: #f5f7fa;
+  --color-blue-200: #eef2f6;
+  --color-blue-300: #dde4ee;
+  --color-blue-400: #bfccdf;
+  --color-blue-500: #99afcc;
+  --color-blue-600: #718fb7;
+  --color-blue-700: #50739f;
+  --color-blue-800: #3f5a7d;
+  --color-blue-900: #334966;
+
+  --color-gray-100: #f7f7f7;
+  --color-gray-200: #efefef;
+  --color-gray-300: #ddd;
+  --color-gray-400: #ccc;
+  --color-gray-500: #999;
+  --color-gray-600: #777;
+  --color-gray-700: #444;
+  --color-gray-800: #222;
+  --color-gray-900: #111;
+
+  --color-green-100: #f7f9f1;
+  --color-green-200: #eff3e3;
+  --color-green-300: #dee6c6;
+  --color-green-400: #c1d095;
+  --color-green-500: #a1b75c;
+  --color-green-600: #809541;
+  --color-green-700: #657533;
+  --color-green-800: #4f5c28;
+  --color-green-900: #434e22;
+
+  --color-orange-100: #fcf6f2;
+  --color-orange-200: #fbf1ea;
+  --color-orange-300: #f5dfd1;
+  --color-orange-400: #ebc0a2;
+  --color-orange-500: #e19d70;
+  --color-orange-600: #d37231;
+  --color-orange-700: #a85924;
+  --color-orange-800: #82451c;
+  --color-orange-900: #6d3a17;
+
+  --color-purple-100: #f8f6f9;
+  --color-purple-200: #f4eff5;
+  --color-purple-300: #e8e0eb;
+  --color-purple-400: #d4c4d9;
+  --color-purple-500: #bea5c5;
+  --color-purple-600: #a37fad;
+  --color-purple-700: #8c6198;
+  --color-purple-800: #694a73;
+  --color-purple-900: #583e60;
+
+  --color-red-100: #fdf7f7;
+  --color-red-200: #faefef;
+  --color-red-300: #f4dcdc;
+  --color-red-400: #ebbcbc;
+  --color-red-500: #e19999;
+  --color-red-600: #d46e6e;
+  --color-red-700: #c63f3f;
+  --color-red-800: #9d2f2f;
+  --color-red-900: #7e2626;
+
+  --color-yellow-100: #fdf7ed;
+  --color-yellow-200: #fbf1df;
+  --color-yellow-300: #f7e0b6;
+  --color-yellow-400: #efc16c;
+  --color-yellow-500: #e69e19;
+  --color-yellow-600: #bc8215;
+  --color-yellow-700: #936510;
+  --color-yellow-800: #734f0d;
+  --color-yellow-900: #60420b;
+
+  --container: 80rem;
+
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --font-mono: "SFMono-Regular", Consolas, Liberation Mono, Menlo, Courier, monospace;
+
+  --font-normal: 400;
+  --font-bold: 600;
+
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
+  --leading-loose: 2;
+
+  --rounded-xs: 1px;
+  --rounded-sm: 0.125rem;
+  --rounded: 0.25rem;
+
+  --shadow: 0 1px 3px 0 rgba(0,0,0, 0.1), 0 1px 2px 0 rgba(0,0,0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0,0,0, 0.1), 0 2px 4px -1px rgba(0,0,0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0,0,0, 0.1), 0 4px 6px -2px rgba(0,0,0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0,0,0, 0.1), 0 10px 10px -5px rgba(0,0,0, 0.04);
+  --shadow-outline: currentColor 0 0 0 2px;
+  --shadow-inset: inset 0 2px 4px 0 rgba(0,0,0, 0.06);
+
+  --spacing-0: 0;
+  --spacing-px: 1px;
+  --spacing-2px: 2px;
+  --spacing-1: .25rem;
+  --spacing-2: .5rem;
+  --spacing-3: .75rem;
+  --spacing-4: 1rem;
+  --spacing-5: 1.25rem;
+  --spacing-6: 1.5rem;
+  --spacing-8: 2rem;
+  --spacing-10: 2.5rem;
+  --spacing-12: 3rem;
+  --spacing-16: 4rem;
+  --spacing-20: 5rem;
+  --spacing-24: 6rem;
+  --spacing-36: 9rem;
+
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.75rem;
+  --text-4xl: 2.5rem;
+  --text-5xl: 3rem;
+  --text-6xl: 4rem;
+}

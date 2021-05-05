@@ -77,7 +77,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-blocks-field {
   position: relative;
 }

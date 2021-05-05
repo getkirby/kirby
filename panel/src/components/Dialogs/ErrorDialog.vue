@@ -62,19 +62,19 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-error-details {
-  background: $color-white;
+  background: var(--color-white);
   display: block;
   overflow: auto;
   padding: 1rem;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   line-height: 1.25em;
-  margin-top: 0.75rem;
+  margin-top: .75rem;
 }
 .k-error-details dt {
-  color: $color-negative-on-dark;
-  margin-bottom: 0.25rem;
+  color: var(--color-negative-light);
+  margin-bottom: .25rem;
 }
 .k-error-details dd {
   overflow: hidden;
@@ -85,8 +85,8 @@ export default {
   margin-bottom: 1.5em;
 }
 .k-error-details li:not(:last-child) {
-  border-bottom: 1px solid $color-background;
-  padding-bottom: 0.25rem;
-  margin-bottom: 0.25rem;
+  border-bottom: 1px solid var(--color-background);
+  padding-bottom: .25rem;
+  margin-bottom: .25rem;
 }
 </style>

@@ -46,14 +46,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 /* global styles */
 .k-empty {
   display: flex;
   align-items: stretch;
-  border-radius: $rounded-xs;
-  color: $color-gray-600;
-  border: 1px dashed $color-border;
+  border-radius: var(--rounded-xs);
+  color: var(--color-gray-600);
+  border: 1px dashed var(--color-border);
 }
 button.k-empty {
   width: 100%;
@@ -62,11 +62,11 @@ button.k-empty:focus {
   outline: none;
 }
 .k-empty p {
-  font-size: $text-sm;
-  color: $color-gray-600;
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
 }
 .k-empty > .k-icon {
-  color: $color-gray-500;
+  color: var(--color-gray-500);
 }
 
 /* layout:cards */
@@ -75,30 +75,26 @@ button.k-empty:focus {
   padding: 1.5rem;
   justify-content: center;
   flex-direction: column;
-
-  .k-icon {
-    margin-bottom: 1rem;
-  }
-
-  .k-icon svg {
-    width: 2rem;
-    height: 2rem;
-  }
+}
+.k-empty[data-layout="cards"] .k-icon {
+  margin-bottom: 1rem;
+}
+.k-empty[data-layout="cards"] .k-icon svg {
+  width: 2rem;
+  height: 2rem;
 }
 
 /* layout:list */
 .k-empty[data-layout="list"] {
   min-height: 38px;
-
-  & > .k-icon {
-    width: 36px;
-    min-height: 36px;
-    border-right: 1px solid rgba($color-black, 0.05);
-  }
-
-  & > p {
-    line-height: 1.25rem;
-    padding: 0.5rem 0.75rem;
-  }
+}
+.k-empty[data-layout="list"] > .k-icon {
+  width: 36px;
+  min-height: 36px;
+  border-right: 1px solid rgba(0, 0, 0, .05);
+}
+.k-empty[data-layout="list"] > p {
+  line-height: 1.25rem;
+  padding: .5rem .75rem;
 }
 </style>

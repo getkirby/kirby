@@ -9,22 +9,21 @@
 export default {}
 </script>
 
-<style lang="scss">
+<style>
 .k-line-field {
   position: relative;
   border: 0;
   height: 3rem;
   width: auto;
-
-  &::after {
-    position: absolute;
-    content: "";
-    top: 50%;
-    margin-top: -1px;
-    left: 0;
-    right: 0;
-    height: 1px;
-    background: $color-border;
-  }
+}
+.k-line-field::after {
+  position: absolute;
+  content: "";
+  top: 50%;
+  margin-top: -1px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--color-border);
 }
 </style>

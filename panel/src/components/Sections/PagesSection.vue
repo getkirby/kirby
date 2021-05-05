@@ -238,7 +238,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-pages-section[data-processing] {
   pointer-events: none;
 }

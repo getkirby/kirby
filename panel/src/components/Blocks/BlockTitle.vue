@@ -43,25 +43,25 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-block-title {
   display: flex;
   align-items: center;
   min-width: 0;
   padding-right: .75rem;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   line-height: 1;
 }
 .k-block-icon {
   width: 1rem;
   margin-right: .5rem;
-  color: $color-gray-500;
+  color: var(--color-gray-500);
 }
 .k-block-name {
   margin-right: .5rem;
 }
 .k-block-label {
-  color: $color-gray-600;
+  color: var(--color-gray-600);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

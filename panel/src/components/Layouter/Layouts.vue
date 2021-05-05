@@ -185,11 +185,11 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-layouts .k-sortable-ghost {
   position: relative;
-  box-shadow: rgba($color-gray-900, 0.25) 0 5px 10px;
-  outline: 2px solid $color-focus;
+  box-shadow: rgba(17, 17, 17, .25) 0 5px 10px;
+  outline: 2px solid var(--color-focus);
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
@@ -199,7 +199,7 @@ export default {
 /** Selector **/
 .k-layout-selector.k-dialog {
   background: #313740;
-  color: $color-white;
+  color: var(--color-white);
 }
 .k-layout-selector .k-headline {
   margin-bottom: 1.5rem;
@@ -214,11 +214,11 @@ export default {
 .k-layout-selector-option .k-grid {
   height: 5rem;
   grid-gap: 2px;
-  box-shadow: $shadow;
+  box-shadow: var(--shadow);
   cursor: pointer;
 }
 .k-layout-selector-option:hover {
-  outline: 2px solid $color-green-300;
+  outline: 2px solid var(--color-green-300);
   outline-offset: 2px;
 }
 .k-layout-selector-option:last-child {
@@ -226,9 +226,9 @@ export default {
 }
 .k-layout-selector-option .k-column {
   display: flex;
-  background: rgba(#fff, .2);
+  background: rgba(255, 255, 255, .2);
   justify-content: center;
-  font-size: $text-xs;
+  font-size: var(--text-xs);
   align-items: center;
 }
 
@@ -237,11 +237,11 @@ export default {
   display: flex;
   align-items: center;
   width: 100%;
-  color: $color-gray-500;
+  color: var(--color-gray-500);
   justify-content: center;
   padding: .75rem 0;
 }
 .k-layout-add-button:hover {
-  color: $color-black;
+  color: var(--color-black);
 }
 </style>

@@ -37,7 +37,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-text {
   line-height: 1.5em;
 }
@@ -68,21 +68,21 @@ export default {
 }
 
 .k-text[data-size="tiny"] {
-  font-size: $text-xs;
+  font-size: var(--text-xs);
 }
 .k-text[data-size="small"] {
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
 .k-text[data-size="medium"] {
-  font-size: $text-base;
+  font-size: var(--text-base);
 }
 .k-text[data-size="large"] {
-  font-size: $text-xl;
+  font-size: var(--text-xl);
 }
 
 .k-text[data-theme="help"] {
-  font-size: $text-sm;
-  color: $color-gray-600;
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
   line-height: 1.25rem;
 }
 

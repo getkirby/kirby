@@ -57,26 +57,25 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-status-icon svg {
   width: 14px;
   height: 14px;
 }
 .k-status-icon-listed .k-icon {
-  color: $color-positive-on-dark;
+  color: var(--color-positive-light);
 }
 .k-status-icon-unlisted .k-icon {
-  color: $color-focus-on-dark;
+  color: var(--color-focus-light);
 }
 .k-status-icon-draft  .k-icon {
-  color: $color-negative-on-dark;
+  color: var(--color-negative-light);
 }
 .k-status-icon[data-disabled] {
   opacity: 1 !important;
-
-  .k-icon {
-    color: $color-gray-400;
-    opacity: .5;
-  }
+}
+.k-status-icon[data-disabled] .k-icon {
+  color: var(--color-gray-400);
+  opacity: .5;
 }
 </style>
