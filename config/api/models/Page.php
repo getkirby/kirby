@@ -56,13 +56,13 @@ return [
             return $page->num();
         },
         'options' => function (Page $page) {
-            return $page->panelOptions(['preview']);
+            return $page->panel()->options(['preview']);
         },
         'panelIcon' => function (Page $page) {
-            return $page->panelIcon();
+            return $page->panel()->icon();
         },
         'panelImage' => function (Page $page) {
-            return $page->panelImage();
+            return $page->panel()->image();
         },
         'parent' => function (Page $page) {
             return $page->parent();

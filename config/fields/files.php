@@ -68,7 +68,7 @@ return [
     ],
     'methods' => [
         'fileResponse' => function ($file) {
-            return $file->panelPickerData([
+            return $file->panel()->pickerData([
                 'image' => $this->image,
                 'info'  => $this->info ?? false,
                 'model' => $this->model(),
@@ -117,7 +117,7 @@ return [
                     $uploads = $field->uploads();
 
                     return $field->upload($this, $uploads, function ($file, $parent) use ($field) {
-                        return $file->panelPickerData([
+                        return $file->panel()->pickerData([
                             'image' => $field->image(),
                             'info'  => $field->info(),
                             'model' => $field->model(),

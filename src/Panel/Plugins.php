@@ -1,22 +1,23 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
 /**
- * The PanelPlugins class takes care of collecting
+ * The Plugins class takes care of collecting
  * js and css plugin files for the panel and caches
  * them in the media folder
  *
- * @package   Kirby Cms
+ * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-class PanelPlugins
+class Plugins
 {
     /**
      * Cache of all collected plugin files
