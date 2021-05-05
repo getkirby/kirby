@@ -3,6 +3,7 @@
 namespace Kirby\Text;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
@@ -20,23 +21,25 @@ use Kirby\Toolkit\Str;
  */
 class KirbyTags
 {
-    protected static $tagClass = 'Kirby\Text\KirbyTag';
-
-    public static function parse(string $text = null, array $data = [], array $options = []): string
+    public static function parse(string $text = null, array $data = [], array $options = [], ?App $app = null): string
     {
+        if ($app !== null) {
+            $text = $app->apply('kirbytags:before', compact('text', 'data', 'options'), 'text');
+        }
+
         $regex = '!
             (?=[^\]])               # positive lookahead that matches a group after the main expression without including ] in the result
             (?=\([a-z0-9_-]+:)      # positive lookahead that requires starts with ( and lowercase ASCII letters, digits, underscores or hyphens followed with : immediately to the right of the current location
             (\(                     # capturing group 1
                 (?:[^()]+|(?1))*+   # repetitions of any chars other than ( and ) or the whole group 1 pattern (recursed)
-            \))                     # end of capturing group 1 
+            \))                     # end of capturing group 1
         !isx';
 
-        return preg_replace_callback($regex, function ($match) use ($data, $options) {
+        $text = preg_replace_callback($regex, function ($match) use ($data, $options) {
             $debug = $options['debug'] ?? false;
 
             try {
-                return static::$tagClass::parse($match[0], $data, $options)->render();
+                return KirbyTag::parse($match[0], $data, $options)->render();
             } catch (InvalidArgumentException $e) {
                 // stay silent in production and ignore non-existing tags
                 if ($debug !== true || Str::startsWith($e->getMessage(), 'Undefined tag type:') === true) {
@@ -52,5 +55,11 @@ class KirbyTags
                 return $match[0];
             }
         }, $text);
+
+        if ($app !== null) {
+            $text = $app->apply('kirbytags:after', compact('text', 'data', 'options'), 'text');
+        }
+
+        return $text;
     }
 }
