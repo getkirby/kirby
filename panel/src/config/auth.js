@@ -25,7 +25,7 @@ export default function(to, from, next) {
     // no access to view? redirect to the panel index
     if (access[to.meta.view] === false) {
       store.dispatch("notification/error", {
-        message: Vue.i18n.translate("error.access.view")
+        message: Vue.$t("error.access.view")
       });
 
       return next(access.site === false ? "/account" : "/");

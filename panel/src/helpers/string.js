@@ -32,8 +32,8 @@ export default {
   },
   template(string, values = {}) {
 
-    const opening = "{{[ ]{0,}";
-    const closing = "[ ]{0,}}}";
+    const opening = "[{]{1,2}[ ]{0,}";
+    const closing = "[ ]{0,}[}]{1,2}";
 
     Object.keys(values).forEach(key => {
       // replace string template with value

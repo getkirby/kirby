@@ -4,7 +4,12 @@ export default {
   namespaced: true,
   state: {
     current: null,
-    installed: []
+    installed: {}
+  },
+  getters: {
+    string: state => key => {
+      return state.installed[state.current].data[key] || key;
+    }
   },
   mutations: {
     SET_CURRENT(state, id) {
@@ -15,13 +20,6 @@ export default {
     }
   },
   actions: {
-    load(context, id) {
-      return Vue.$api.translations.get(id);
-    },
-    install(context, translation) {
-      context.commit("INSTALL", translation);
-      Vue.i18n.add(translation.id, translation.data);
-    },
     async activate(context, id) {
       const translation = context.state.installed[id];
 
@@ -32,9 +30,6 @@ export default {
         return;
       }
 
-      // activate the translation
-      Vue.i18n.set(id);
-
       // store the current translation
       context.commit("SET_CURRENT", id);
 
@@ -43,6 +38,12 @@ export default {
 
       // change the lang attribute on the html element
       document.documentElement.lang = id;
+    },
+    install(context, translation) {
+      context.commit("INSTALL", translation);
+    },
+    load(context, id) {
+      return Vue.$api.translations.get(id);
     }
   }
 };
