@@ -77,7 +77,7 @@
 
 <script>
 import config from "@/config/config.js";
-import picker from "@/mixins/picker/field.js";
+import picker from "@/mixins/forms/picker.js";
 
 /**
  * @example <k-files-field v-model="files" name="files" label="Files" />

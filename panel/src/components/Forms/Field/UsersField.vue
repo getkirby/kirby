@@ -52,7 +52,7 @@
 </template>
 
 <script>
-import picker from "@/mixins/picker/field.js";
+import picker from "@/mixins/forms/picker.js";
 
 export default {
   mixins: [picker],

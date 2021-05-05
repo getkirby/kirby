@@ -19,17 +19,19 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
 
 /**
  * Have a look at `<k-field>` and `<k-input>` for additional information.
  */
 export default {
+  mixins: [
+    Field,
+    Input
+  ],
   inheritAttrs: false,
   props: {
-    ...Field.props,
-    ...Input.props,
     marks: [Array, Boolean],
     value: String,
   },

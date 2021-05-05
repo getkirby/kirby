@@ -12,19 +12,21 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import SelectInput from "../Input/SelectInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as SelectInput } from "../Input/SelectInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-select-input>` for additional information.
  */
 export default {
+  mixins: [
+    Field,
+    Input,
+    SelectInput
+  ],
   inheritAttrs: false,
   props: {
-    ...Field.props,
-    ...Input.props,
-    ...SelectInput.props,
     icon: {
       type: String,
       default: "angle-down"
