@@ -63,7 +63,7 @@ export default (api) => {
         result.push({
           click: "download",
           icon: "open",
-          text: Vue.i18n.translate("open"),
+          text: Vue.$t("open"),
         });
 
         result.push("-");
@@ -72,14 +72,14 @@ export default (api) => {
       result.push({
         click: "rename",
         icon: "title",
-        text: Vue.i18n.translate("rename"),
+        text: Vue.$t("rename"),
         disabled: !options.changeName
       });
 
       result.push({
         click: "replace",
         icon: "upload",
-        text: Vue.i18n.translate("replace"),
+        text: Vue.$t("replace"),
         disabled: !options.replace
       });
 
@@ -89,7 +89,7 @@ export default (api) => {
         result.push({
           click: "sort",
           icon: "sort",
-          text: Vue.i18n.translate("file.sort"),
+          text: Vue.$t("file.sort"),
           disabled: !(options.update  && sortable)
         });
       }
@@ -99,7 +99,7 @@ export default (api) => {
       result.push({
         click: "remove",
         icon: "trash",
-        text: Vue.i18n.translate("delete"),
+        text: Vue.$t("delete"),
         disabled: !options.delete
       });
 

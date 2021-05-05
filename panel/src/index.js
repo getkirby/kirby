@@ -1,7 +1,8 @@
 import App from "./App.vue";
 import Api from "./config/api.js";
-import Filters from "./config/filters.js";
 import Events from "./config/events.js";
+import Filters from "./config/filters.js";
+import I18n from "./config/i18n.js";
 import Vue from "vue";
 import Vuelidate from "vuelidate";
 import Helpers from "./helpers/index.js";
@@ -13,7 +14,6 @@ Vue.use(Helpers);
 
 import "./config/components.js";
 import "./config/errors.js";
-import "./config/i18n.js";
 import "./config/libraries.js";
 import "./config/plugins.js";
 
@@ -28,6 +28,7 @@ import router from "./config/router.js";
 import store from "./store/store.js";
 
 Vue.use(Api, store);
+Vue.use(I18n, store);
 
 Vue.prototype.$go = (path) => {
 
