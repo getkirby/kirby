@@ -114,19 +114,19 @@ return [
             $dragTextAbsolute = $this->model->is($this->parent) === false;
 
             foreach ($this->files as $file) {
-                $image = $file->panelImage($this->image);
+                $panel = $file->panel();
 
                 $data[] = [
-                    'dragText' => $file->dragText('auto', $dragTextAbsolute),
+                    'dragText' => $panel->dragText('auto', $dragTextAbsolute),
                     'extension' => $file->extension(),
                     'filename' => $file->filename(),
                     'id'       => $file->id(),
-                    'icon'     => $file->panelIcon($image),
-                    'image'    => $image,
+                    'image'    => $image = $panel->image($this->image),
+                    'icon'     => $panel->icon($image),
                     'info'     => $file->toString($this->info ?? false),
-                    'link'     => $file->panelUrl(true),
+                    'link'     => $panel->url(true),
                     'mime'     => $file->mime(),
-                    'parent'   => $file->parent()->panelPath(),
+                    'parent'   => $file->parent()->panel()->path(),
                     'text'     => $file->toString($this->text),
                     'url'      => $file->url(),
                 ];
@@ -166,8 +166,8 @@ return [
             ];
         },
         'link' => function () {
-            $modelLink  = $this->model->panelUrl(true);
-            $parentLink = $this->parent->panelUrl(true);
+            $modelLink  = $this->model->panel()->url(true);
+            $parentLink = $this->parent->panel()->url(true);
 
             if ($modelLink !== $parentLink) {
                 return $parentLink;

@@ -62,7 +62,7 @@ return [
     ],
     'methods' => [
         'pageResponse' => function ($page) {
-            return $page->panelPickerData([
+            return $page->panel()->pickerData([
                 'image' => $this->image,
                 'info'  => $this->info,
                 'text'  => $this->text,

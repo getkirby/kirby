@@ -150,18 +150,18 @@ return [
             $data = [];
 
             foreach ($this->pages as $item) {
+                $panel       = $item->panel();
                 $permissions = $item->permissions();
-                $image       = $item->panelImage($this->image);
 
                 $data[] = [
                     'id'          => $item->id(),
-                    'dragText'    => $item->dragText(),
+                    'dragText'    => $panel->dragText(),
                     'text'        => $item->toString($this->text),
                     'info'        => $item->toString($this->info ?? false),
                     'parent'      => $item->parentId(),
-                    'icon'        => $item->panelIcon($image),
-                    'image'       => $image,
-                    'link'        => $item->panelUrl(true),
+                    'image'       => $image = $panel->image($this->image),
+                    'icon'        => $panel->icon($image),
+                    'link'        => $panel->url(true),
                     'status'      => $item->status(),
                     'permissions' => [
                         'sort'         => $permissions->can('sort'),
@@ -218,8 +218,8 @@ return [
             return true;
         },
         'link' => function () {
-            $modelLink  = $this->model->panelUrl(true);
-            $parentLink = $this->parent->panelUrl(true);
+            $modelLink  = $this->model->panel()->url(true);
+            $parentLink = $this->parent->panel()->url(true);
 
             if ($modelLink !== $parentLink) {
                 return $parentLink;

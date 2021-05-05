@@ -257,19 +257,10 @@ class SiteTest extends TestCase
         $this->assertSame('/', $data['url']);
     }
 
-    public function testPanelPath()
+    public function testPanel()
     {
         $site = new Site();
-
-        $this->assertSame('site', $site->panelPath());
-    }
-
-    public function testPanelUrl()
-    {
-        $site = new Site();
-
-        $this->assertSame('/panel/site', $site->panelUrl());
-        $this->assertSame('/site', $site->panelUrl(true));
+        $this->assertInstanceOf('Kirby\Panel\Site', $site->panel());
     }
 
     public function testApiUrl()

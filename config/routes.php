@@ -2,9 +2,9 @@
 
 use Kirby\Cms\LanguageRoutes;
 use Kirby\Cms\Media;
-use Kirby\Cms\Panel;
-use Kirby\Cms\PanelPlugins;
 use Kirby\Cms\PluginAssets;
+use Kirby\Panel\Panel;
+use Kirby\Panel\Plugins;
 use Kirby\Toolkit\Str;
 
 return function ($kirby) {
@@ -50,7 +50,7 @@ return function ($kirby) {
             'pattern' => $media . '/plugins/index.(css|js)',
             'env'     => 'media',
             'action'  => function (string $type) use ($kirby) {
-                $plugins = new PanelPlugins();
+                $plugins = new Plugins();
 
                 return $kirby
                     ->response()

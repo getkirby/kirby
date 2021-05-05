@@ -3,9 +3,9 @@
 namespace Kirby\Cms;
 
 use Kirby\Image\Image;
+use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
-use Throwable;
 
 /**
  * The `$file` object provides a set
@@ -226,43 +226,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Provides a kirbytag or markdown
-     * tag for the file, which will be
-     * used in the panel, when the file
-     * gets dragged onto a textarea
-     *
-     * @internal
-     * @param string|null $type (null|auto|kirbytext|markdown)
-     * @param bool $absolute
-     * @return string
-     */
-    public function dragText(string $type = null, bool $absolute = false): string
-    {
-        $type = $this->dragTextType($type);
-        $url  = $absolute ? $this->id() : $this->filename();
-
-        if ($dragTextFromCallback = $this->dragTextFromCallback($type, $url)) {
-            return $dragTextFromCallback;
-        }
-
-        if ($type === 'markdown') {
-            if ($this->type() === 'image') {
-                return '![' . $this->alt() . '](' . $url . ')';
-            } else {
-                return '[' . $this->filename() . '](' . $url . ')';
-            }
-        } else {
-            if ($this->type() === 'image') {
-                return '(image: ' . $url . ')';
-            } elseif ($this->type() === 'video') {
-                return '(video: ' . $url . ')';
-            } else {
-                return '(file: ' . $url . ')';
-            }
-        }
-    }
-
-    /**
      * Constructs a File object
      *
      * @internal
@@ -445,148 +408,13 @@ class File extends ModelWithContent
     }
 
     /**
-     * Panel icon definition
+     * Returns the panel info object
      *
-     * @internal
-     * @param array|null $params
-     * @return array
+     * @return \Kirby\Panel\File
      */
-    public function panelIcon(array $params = null): array
+    public function panel()
     {
-        $colorBlue   = '#81a2be';
-        $colorPurple = '#b294bb';
-        $colorOrange = '#de935f';
-        $colorGreen  = '#a7bd68';
-        $colorAqua   = '#8abeb7';
-        $colorYellow = '#f0c674';
-        $colorRed    = '#d16464';
-        $colorWhite  = '#c5c9c6';
-
-        $types = [
-            'image'    => ['color' => $colorOrange, 'type' => 'file-image'],
-            'video'    => ['color' => $colorYellow, 'type' => 'file-video'],
-            'document' => ['color' => $colorRed, 'type' => 'file-document'],
-            'audio'    => ['color' => $colorAqua, 'type' => 'file-audio'],
-            'code'     => ['color' => $colorBlue, 'type' => 'file-code'],
-            'archive'  => ['color' => $colorWhite, 'type' => 'file-zip'],
-        ];
-
-        $extensions = [
-            'indd'  => ['color' => $colorPurple],
-            'xls'   => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
-            'xlsx'  => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
-            'csv'   => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
-            'docx'  => ['color' => $colorBlue, 'type' => 'file-word'],
-            'doc'   => ['color' => $colorBlue, 'type' => 'file-word'],
-            'rtf'   => ['color' => $colorBlue, 'type' => 'file-word'],
-            'mdown' => ['type' => 'file-text'],
-            'md'    => ['type' => 'file-text']
-        ];
-
-        $definition = array_merge($types[$this->type()] ?? [], $extensions[$this->extension()] ?? []);
-
-        $params['type']  = $definition['type']  ?? 'file';
-        $params['color'] = $definition['color'] ?? $colorWhite;
-
-        return parent::panelIcon($params);
-    }
-
-    /**
-     * Returns the image file object based on provided query
-     *
-     * @internal
-     * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
-     */
-    protected function panelImageSource(string $query = null)
-    {
-        if ($query === null && $this->isViewable()) {
-            return $this;
-        }
-
-        return parent::panelImageSource($query);
-    }
-
-    /**
-     * Returns an array of all actions
-     * that can be performed in the Panel
-     *
-     * @since 3.3.0 This also checks for the lock status
-     * @since 3.5.1 This also checks for matching accept settings
-     *
-     * @param array $unlock An array of options that will be force-unlocked
-     * @return array
-     */
-    public function panelOptions(array $unlock = []): array
-    {
-        $options = parent::panelOptions($unlock);
-
-        try {
-            // check if the file type is allowed at all,
-            // otherwise it cannot be replaced
-            $this->match($this->blueprint()->accept());
-        } catch (Throwable $e) {
-            $options['replace'] = false;
-        }
-
-        return $options;
-    }
-
-    /**
-     * Returns the full path without leading slash
-     *
-     * @internal
-     * @return string
-     */
-    public function panelPath(): string
-    {
-        return 'files/' . $this->filename();
-    }
-
-    /**
-     * Prepares the response data for file pickers
-     * and file fields
-     *
-     * @param array|null $params
-     * @return array
-     */
-    public function panelPickerData(array $params = []): array
-    {
-        $image = $this->panelImage($params['image'] ?? []);
-        $icon  = $this->panelIcon($image);
-        $uuid  = $this->id();
-
-        if (empty($params['model']) === false) {
-            $uuid = $this->parent() === $params['model'] ? $this->filename() : $this->id();
-            $absolute = $this->parent() !== $params['model'];
-        }
-
-        return [
-            'filename' => $this->filename(),
-            'dragText' => $this->dragText('auto', $absolute ?? false),
-            'icon'     => $icon,
-            'id'       => $this->id(),
-            'image'    => $image,
-            'info'     => $this->toString($params['info'] ?? false),
-            'link'     => $this->panelUrl(true),
-            'text'     => $this->toString($params['text'] ?? '{{ file.filename }}'),
-            'type'     => $this->type(),
-            'url'      => $this->url(),
-            'uuid'     => $uuid,
-        ];
-    }
-
-    /**
-     * Returns the url to the editing view
-     * in the panel
-     *
-     * @internal
-     * @param bool $relative
-     * @return string
-     */
-    public function panelUrl(bool $relative = false): string
-    {
-        return $this->parent()->panelUrl($relative) . '/' . $this->panelPath();
+        return new Panel($this);
     }
 
     /**
@@ -796,5 +624,113 @@ class File extends ModelWithContent
     public function url(): string
     {
         return $this->url ?? $this->url = ($this->kirby()->component('file::url'))($this->kirby(), $this);
+    }
+
+
+    /**
+     * Deprecated!
+     */
+
+    /**
+     * Provides a kirbytag or markdown
+     * tag for the file, which will be
+     * used in the panel, when the file
+     * gets dragged onto a textarea
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param string|null $type (null|auto|kirbytext|markdown)
+     * @param bool $absolute
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function dragText(string $type = null, bool $absolute = false): string
+    {
+        return $this->panel()->dragText($type, $absolute);
+    }
+
+    /**
+     * Panel icon definition
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param array|null $params
+     * @return array
+     * @codeCoverageIgnore
+     */
+    public function panelIcon(array $params = null): array
+    {
+        return $this->panel()->icon($params);
+    }
+
+    /**
+     * Returns an array of all actions
+     * that can be performed in the Panel
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @since 3.3.0 This also checks for the lock status
+     * @since 3.5.1 This also checks for matching accept settings
+     *
+     * @param array $unlock An array of options that will be force-unlocked
+     * @return array
+     * @codeCoverageIgnore
+     */
+    public function panelOptions(array $unlock = []): array
+    {
+        return $this->panel()->options($unlock);
+    }
+
+    /**
+     * Returns the full path without leading slash
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function panelPath(): string
+    {
+        return $this->panel()->path();
+    }
+
+    /**
+     * Prepares the response data for file pickers
+     * and file fields
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @param array|null $params
+     * @return array
+     * @codeCoverageIgnore
+     */
+    public function panelPickerData(array $params = []): array
+    {
+        return $this->panel()->pickerData($params);
+    }
+
+    /**
+     * Returns the url to the editing view
+     * in the panel
+     *
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param bool $relative
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function panelUrl(bool $relative = false): string
+    {
+        return $this->panel()->url($relative);
     }
 }

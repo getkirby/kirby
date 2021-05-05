@@ -44,7 +44,7 @@ return [
     ],
     'methods' => [
         'userResponse' => function ($user) {
-            return $user->panelPickerData([
+            return $user->panel()->pickerData([
                 'info'  => $this->info,
                 'image' => $this->image,
                 'text'  => $this->text,

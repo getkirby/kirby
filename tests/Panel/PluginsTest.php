@@ -1,12 +1,13 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
-class PanelPluginsTest extends TestCase
+class PluginsTest extends TestCase
 {
     protected $app;
     protected $fixtures;
@@ -19,7 +20,7 @@ class PanelPluginsTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/fixtures/PanelPluginsTest'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/PluginsTest'
             ]
         ]);
     }
@@ -57,7 +58,7 @@ class PanelPluginsTest extends TestCase
         // app must be created again to load the new plugins
         $app = $this->app->clone();
 
-        $plugins  = new PanelPlugins();
+        $plugins  = new Plugins();
         $expected = [$this->cssA, $this->jsA, $this->cssB, $this->jsB];
 
         $this->assertEquals($expected, $plugins->files());
@@ -65,7 +66,7 @@ class PanelPluginsTest extends TestCase
 
     public function testModifiedWithoutFiles()
     {
-        $plugins = new PanelPlugins();
+        $plugins = new Plugins();
         $this->assertEquals(0, $plugins->modified());
     }
 
@@ -73,7 +74,7 @@ class PanelPluginsTest extends TestCase
     {
         $time = $this->createPlugins();
 
-        $plugins = new PanelPlugins();
+        $plugins = new Plugins();
         $this->assertEquals($time, $plugins->modified());
     }
 
@@ -84,7 +85,7 @@ class PanelPluginsTest extends TestCase
         // app must be created again to load the new plugins
         $app = $this->app->clone();
 
-        $plugins = new PanelPlugins();
+        $plugins = new Plugins();
 
         // css
         $expected = "a\n\nb";
@@ -98,13 +99,13 @@ class PanelPluginsTest extends TestCase
     public function testUrl()
     {
         // css
-        $plugins  = new PanelPlugins();
+        $plugins  = new Plugins();
         $expected = $this->app->url('media') . '/plugins/index.css?0';
 
         $this->assertEquals($expected, $plugins->url('css'));
 
         // js
-        $plugins  = new PanelPlugins();
+        $plugins  = new Plugins();
         $expected = $this->app->url('media') . '/plugins/index.js?0';
 
         $this->assertEquals($expected, $plugins->url('js'));
