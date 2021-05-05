@@ -35,7 +35,7 @@ trait IsFile
     /**
      * Absolute file path
      *
-     * @var string
+     * @var string|null
      */
     protected $root;
 
@@ -43,7 +43,7 @@ trait IsFile
     /**
      * Absolute file URL
      *
-     * @var string
+     * @var string|null
      */
     protected $url;
 
@@ -150,9 +150,9 @@ trait IsFile
     /**
      * Returns the absolute url for the file
      *
-     * @return string
+     * @return string|null
      */
-    public function url(): string
+    public function url(): ?string
     {
         return $this->url;
     }

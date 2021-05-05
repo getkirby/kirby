@@ -39,4 +39,22 @@ class FileVersionTest extends TestCase
         $this->assertSame($original, $version->original());
         $this->assertSame($original->kirby(), $version->kirby());
     }
+
+    public function testToArray()
+    {
+        $original = new File([
+            'filename' => 'test.jpg',
+            'content' => [
+                'title' => 'Test Title'
+            ]
+        ]);
+
+        $version = new FileVersion([
+            'original'      => $original,
+            'root'          => __DIR__ . '/fixtures/files/test.jpg'
+        ]);
+
+        $this->assertSame('jpg', $version->toArray()['extension']);
+        $this->assertSame(1192, $version->toArray()['size']);
+    }
 }

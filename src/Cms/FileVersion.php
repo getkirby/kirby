@@ -98,11 +98,7 @@ class FileVersion
      */
     public function save()
     {
-        $this->kirby()->thumb(
-            $this->original()->root(),
-            $this->root(),
-            $this->modifications()
-        );
+        $this->kirby()->thumb($this->original()->root(), $this->root(), $this->modifications());
         return $this;
     }
 

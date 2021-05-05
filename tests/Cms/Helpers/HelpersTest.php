@@ -663,7 +663,11 @@ class HelpersTest extends TestCase
 
     public function testSvgWithFileObject()
     {
-        $file = $this->createMock(File::class);
+        $file = $this->getMockBuilder(File::class)
+            ->disableOriginalConstructor()
+            ->onlyMethods(['__call'])
+            ->addMethods(['extension'])
+            ->getMock();
         $file->method('__call')->willReturn('test');
         $file->method('extension')->willReturn('svg');
 

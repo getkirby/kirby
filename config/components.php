@@ -305,15 +305,15 @@ return [
      * Add your own thumb generator
      *
      * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string $src The root of the original file
-     * @param string $template The template for the root to the desired destination
+     * @param string $src root of the original file
+     * @param string $dst template string for the root to the desired destination
      * @param array $options All thumb options that should be applied: `width`, `height`, `crop`, `blur`, `grayscale`
      * @return string
      */
-    'thumb' => function (App $kirby, string $src, string $template, array $options): string {
+    'thumb' => function (App $kirby, string $src, string $dst, array $options): string {
         $darkroom = Darkroom::factory(option('thumbs.driver', 'gd'), option('thumbs', []));
         $options  = $darkroom->preprocess($src, $options);
-        $root     = (new Name($src, $template, $options))->toString();
+        $root     = (new Name($src, $dst, $options))->toString();
 
         F::copy($src, $root, true);
         $darkroom->process($root, $options);
