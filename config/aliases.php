@@ -57,6 +57,9 @@ return [
     'str'        => 'Kirby\Toolkit\Str',
     'tpl'        => 'Kirby\Toolkit\Tpl',
     'v'          => 'Kirby\Toolkit\V',
-    'xml'        => 'Kirby\Toolkit\Xml'
+    'xml'        => 'Kirby\Toolkit\Xml',
+
+    // TODO: remove in 4.0.0
+    'Kirby\Cms\Dir' => 'Kirby\Toolkit\Dir'
 ];
 // @codeCoverageIgnoreEnd
