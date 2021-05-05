@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Http\Route;
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 

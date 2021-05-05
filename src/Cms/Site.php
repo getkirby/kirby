@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Dir;
 
 /**
  * The `$site` object is the root element
