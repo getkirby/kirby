@@ -25,24 +25,32 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import {
+  autofocus,
+  disabled,
+  id,
+  required
+} from "@/mixins/props.js";
 
-export default {
-  inheritAttrs: false,
+import { required as validateRequired } from "vuelidate/lib/validators";
+
+export const props = {
+    mixins: [
+    autofocus,
+    disabled,
+    id,
+    required
+  ],
   props: {
-    autofocus: Boolean,
     columns: Number,
-    disabled: Boolean,
-    id: {
-      type: [Number, String],
-      default() {
-        return this._uid;
-      }
-    },
     options: Array,
-    required: Boolean,
     value: [String, Number, Boolean]
   },
+};
+
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   watch: {
     value() {
       this.onInvalid();
@@ -72,7 +80,7 @@ export default {
   validations() {
     return {
       value: {
-        required: this.required ? required : true
+        required: this.required ? validateRequired : true
       }
     };
   }

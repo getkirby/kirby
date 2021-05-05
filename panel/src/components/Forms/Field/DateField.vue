@@ -33,20 +33,22 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import DateTimeInput from "../Input/DateTimeInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as DateTimeInput } from "../Input/DateTimeInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-datetime-input>` for additional information.
  * @example <k-date-field v-model="date" name="date" label="Date" />
  */
 export default {
+  mixins: [
+    Field,
+    Input,
+    DateTimeInput
+  ],
   inheritAttrs: false,
   props: {
-    ...Field.props,
-    ...Input.props,
-    ...DateTimeInput.props,
     /**
      * Deactivate the dropdown calendar or not
      */

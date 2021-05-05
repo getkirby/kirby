@@ -23,9 +23,9 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import UrlInput from "../Input/UrlInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as UrlInput } from "../Input/UrlInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-url-input>` 
@@ -33,11 +33,13 @@ import UrlInput from "../Input/UrlInput.vue";
  * @example <k-url-field v-model="url" name="url" label="Url" />
  */
 export default {
+  mixins: [
+    Field,
+    Input,
+    UrlInput
+  ],
   inheritAttrs: false,
   props: {
-    ...Field.props,
-    ...Input.props,
-    ...UrlInput.props,
     link: {
       type: Boolean,
       default: true

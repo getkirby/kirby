@@ -57,11 +57,7 @@ import Toolbar from "./Extensions/Toolbar.js";
 // Toolbar
 import ToolbarComponent from "./Toolbar.vue";
 
-export default {
-  components: {
-    "k-writer-link-dialog": LinkDialog,
-    "k-writer-toolbar": ToolbarComponent,
-  },
+export const props = {
   props: {
     breaks: Boolean,
     code: Boolean,
@@ -101,7 +97,15 @@ export default {
       type: String,
       default: ""
     },
+  }
+}
+
+export default {
+  components: {
+    "k-writer-link-dialog": LinkDialog,
+    "k-writer-toolbar": ToolbarComponent,
   },
+  mixins: [props],
   data() {
     return {
       editor: null,

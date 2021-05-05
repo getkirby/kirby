@@ -19,13 +19,20 @@
 </template>
 
 <script>
+import {
+  help,
+  label
+} from "@/mixins/props.js";
+
 /**
  * @example <k-info-field label="Info" text="This is a nice info text" />
  */
 export default {
+  mixins: [
+    help,
+    label
+  ],
   props: {
-    help: String,
-    label: String,
     /**
      * Sets the info text. You can use HTML here to format the info.
      */

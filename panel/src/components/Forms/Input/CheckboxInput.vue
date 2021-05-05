@@ -29,38 +29,30 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import {
+  autofocus,
+  disabled,
+  id,
+  label,
+  required
+} from "@/mixins/props.js";
+
+import { required as validateRequired } from "vuelidate/lib/validators";
 
 /**
  * 
  * @example <k-input v-model="checkbox" type="checkbox" />
  */
 export default {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    label,
+    required
+  ],
   inheritAttrs: false,
   props: {
-    /**
-     * If true, the input will be instantly focused when the form is created
-     */
-    autofocus: {
-      type: Boolean,
-      default: false
-    },
-    /**
-     * If true, the input is disabled and cannot be filled in or edited
-     */
-    disabled: {
-      type: Boolean,
-      default: false
-    },
-    id: [Number, String],
-    label: String,
-    /**
-     * If true, the input must not be empty
-     */
-    required: {
-      type: Boolean,
-      default: false
-    },
     value: Boolean,
   },
   watch: {
@@ -101,7 +93,7 @@ export default {
   validations() {
     return {
       value: {
-        required: this.required ? required : true,
+        required: this.required ? validateRequired : true,
       }
     }
   }

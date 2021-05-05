@@ -33,12 +33,12 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
+import { props as Field } from "../Field.vue";
 
 export default {
+  mixins: [Field],
   inheritAttrs: false,
   props: {
-    ...Field.props,
     empty: String,
     fieldsets: Object,
     fieldsetGroups: Object,

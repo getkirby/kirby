@@ -24,17 +24,17 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import Writer from "@/components/Writer/Writer.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as Writer } from "@/components/Writer/Writer.vue";
 
 export default {
+  mixins: [
+    Field,
+    Input,
+    Writer
+  ],
   inheritAttrs: false,
-  props: {
-    ...Field.props,
-    ...Input.props,
-    ...Writer.props,
-  },
   methods: {
     focus() {
       this.$refs.input.focus();

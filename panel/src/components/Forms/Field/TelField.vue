@@ -12,9 +12,9 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import TelInput from "../Input/TelInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as TelInput } from "../Input/TelInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-tel-input>` 
@@ -22,11 +22,13 @@ import TelInput from "../Input/TelInput.vue";
  * @example <k-tel-field v-model="tel" name="tel" label="Phone number" />
  */
 export default {
+  mixins: [
+    Field,
+    Input,
+    TelInput
+  ],
   inheritAttrs: false,
   props: {
-    ...Field.props,
-    ...Input.props,
-    ...TelInput.props,
     icon: {
       type: String,
       default: "phone"

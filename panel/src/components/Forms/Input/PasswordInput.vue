@@ -1,13 +1,10 @@
 <script>
 import TextInput from "./TextInput.vue";
+import { props as TextInputProps } from "./TextInput.vue";
 
-/**
- * @example <k-input v-model="password" name="password" type="password" />
- */
-export default {
-  extends: TextInput,
+export const props = {
+  mixins: [TextInputProps],
   props: {
-    ...TextInput.props,
     autocomplete: {
       type: String,
       default: "new-password"
@@ -17,5 +14,13 @@ export default {
       default: "password"
     }
   }
+}
+
+/**
+ * @example <k-input v-model="password" name="password" type="password" />
+ */
+export default {
+  extends: TextInput,
+  mixins: [props]
 }
 </script>

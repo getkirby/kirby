@@ -17,22 +17,20 @@
 </template>
 
 <script>
+import {
+  help,
+  label
+} from "@/mixins/props.js";
+
 /**
  * @example <k-headline-field label="This is a headline" />
  */
 export default {
+  mixins: [
+    help,
+    label
+  ],
   props: {
-    /**
-     * Help text for below the field
-     */
-    help: String,
-    /**
-     * Label of the field
-     */
-    label: String,
-    /**
-     * Enables or hides the index numbers left next to the headline
-     */
     numbered: Boolean
   }
 };
