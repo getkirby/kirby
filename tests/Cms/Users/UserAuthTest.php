@@ -39,19 +39,19 @@ class UserAuthTest extends TestCase
             'hooks' => [
                 'user.login:before' => function ($user, $session) use ($phpunit, &$calls) {
                     $phpunit->assertSame('test@getkirby.com', $user->email());
-                    $phpunit->assertSame($session, S::instance());
+                    $phpunit->assertSame($session, App::instance()->session());
 
                     $calls += 1;
                 },
                 'user.login:after' => function ($user, $session) use ($phpunit, &$calls) {
                     $phpunit->assertSame('test@getkirby.com', $user->email());
-                    $phpunit->assertSame($session, S::instance());
+                    $phpunit->assertSame($session, App::instance()->session());
 
                     $calls += 2;
                 },
                 'user.logout:before' => function ($user, $session) use ($phpunit, &$calls) {
                     $phpunit->assertSame('test@getkirby.com', $user->email());
-                    $phpunit->assertSame($session, S::instance());
+                    $phpunit->assertSame($session, App::instance()->session());
 
                     $calls += 4;
                 },
@@ -59,8 +59,8 @@ class UserAuthTest extends TestCase
                     $phpunit->assertSame('test@getkirby.com', $user->email());
 
                     if ($logoutSession === true) {
-                        $phpunit->assertSame($session, S::instance());
-                        $phpunit->assertSame('value', S::instance()->get('some'));
+                        $phpunit->assertSame($session, App::instance()->session());
+                        $phpunit->assertSame('value', App::instance()->session()->get('some'));
                     } else {
                         $phpunit->assertNull($session);
                     }
@@ -76,7 +76,7 @@ class UserAuthTest extends TestCase
         $user->logout();
 
         // with a session with another value
-        S::instance()->set('some', 'value');
+        App::instance()->session()->set('some', 'value');
         $logoutSession = true;
         $user->loginPasswordless();
         $user->logout();
