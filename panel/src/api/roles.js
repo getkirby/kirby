@@ -12,7 +12,7 @@ export default (api) => {
       const roles = await this.list(params);
       return roles.data.map(role => {
         return {
-          info: role.description || `(${Vue.i18n.translate("role.description.placeholder")})`,
+          info: role.description || `(${Vue.$t("role.description.placeholder")})`,
           text: role.title,
           value: role.name
         };
