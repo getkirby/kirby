@@ -17,7 +17,6 @@ return array(
     'Kirby\\Cache\\MemoryCache' => $baseDir . '/src/Cache/MemoryCache.php',
     'Kirby\\Cache\\NullCache' => $baseDir . '/src/Cache/NullCache.php',
     'Kirby\\Cache\\Value' => $baseDir . '/src/Cache/Value.php',
-    'Kirby\\Cms\\Api' => $baseDir . '/src/Cms/Api.php',
     'Kirby\\Cms\\App' => $baseDir . '/src/Cms/App.php',
     'Kirby\\Cms\\AppCaches' => $baseDir . '/src/Cms/AppCaches.php',
     'Kirby\\Cms\\AppErrors' => $baseDir . '/src/Cms/AppErrors.php',

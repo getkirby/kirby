@@ -1,7 +1,8 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
+use Kirby\Cms\App;
 use PHPUnit\Framework\TestCase;
 
 class UsersRoutesTest extends TestCase
@@ -78,7 +79,7 @@ class UsersRoutesTest extends TestCase
         $this->assertCount(1, $response['data']);
         $this->assertEquals('editor@getkirby.com', $response['data'][0]['email']);
     }
-    
+
     public function testSearchName()
     {
         $app = $this->app;

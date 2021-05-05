@@ -1,12 +1,17 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-class UserBlueprintApiModelTest extends TestCase
+use Kirby\Cms\App;
+use Kirby\Cms\File;
+use Kirby\Cms\FileBlueprint;
+use PHPUnit\Framework\TestCase;
+
+class FileBlueprintApiModelTest extends TestCase
 {
     protected $api;
     protected $app;
-    protected $user;
+    protected $file;
 
     public function attr($object, $attr)
     {
@@ -27,14 +32,14 @@ class UserBlueprintApiModelTest extends TestCase
         ]);
 
         $this->api  = $this->app->api();
-        $this->user = new User(['email' => 'test@getkirby.com']);
+        $this->file = new File(['filename' => 'test.jpg']);
     }
 
     public function testName()
     {
-        $blueprint = new UserBlueprint([
+        $blueprint = new FileBlueprint([
             'name'  => 'test',
-            'model' => $this->user
+            'model' => $this->file
         ]);
 
         $this->assertAttr($blueprint, 'name', 'test');
@@ -42,28 +47,25 @@ class UserBlueprintApiModelTest extends TestCase
 
     public function testOptions()
     {
-        $blueprint = new UserBlueprint([
+        $blueprint = new FileBlueprint([
             'name'  => 'test',
-            'model' => $this->user
+            'model' => $this->file
         ]);
 
         $options = $this->attr($blueprint, 'options');
 
-        $this->assertArrayHasKey('changeEmail', $options);
-        $this->assertArrayHasKey('changeLanguage', $options);
         $this->assertArrayHasKey('changeName', $options);
-        $this->assertArrayHasKey('changePassword', $options);
-        $this->assertArrayHasKey('changeRole', $options);
         $this->assertArrayHasKey('create', $options);
         $this->assertArrayHasKey('delete', $options);
+        $this->assertArrayHasKey('replace', $options);
         $this->assertArrayHasKey('update', $options);
     }
 
     public function testTabs()
     {
-        $blueprint = new UserBlueprint([
+        $blueprint = new FileBlueprint([
             'name'  => 'test',
-            'model' => $this->user
+            'model' => $this->file
         ]);
 
         $this->assertAttr($blueprint, 'tabs', []);
@@ -71,10 +73,10 @@ class UserBlueprintApiModelTest extends TestCase
 
     public function testTitle()
     {
-        $blueprint = new UserBlueprint([
+        $blueprint = new FileBlueprint([
             'name'  => 'test',
             'title' => 'Test',
-            'model' => $this->user
+            'model' => $this->file
         ]);
 
         $this->assertAttr($blueprint, 'title', 'Test');

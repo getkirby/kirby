@@ -112,7 +112,6 @@ class ComposerStaticInitc26333d865e0329b638bdc17afd29896
         'Kirby\\Cache\\MemoryCache' => __DIR__ . '/../..' . '/src/Cache/MemoryCache.php',
         'Kirby\\Cache\\NullCache' => __DIR__ . '/../..' . '/src/Cache/NullCache.php',
         'Kirby\\Cache\\Value' => __DIR__ . '/../..' . '/src/Cache/Value.php',
-        'Kirby\\Cms\\Api' => __DIR__ . '/../..' . '/src/Cms/Api.php',
         'Kirby\\Cms\\App' => __DIR__ . '/../..' . '/src/Cms/App.php',
         'Kirby\\Cms\\AppCaches' => __DIR__ . '/../..' . '/src/Cms/AppCaches.php',
         'Kirby\\Cms\\AppErrors' => __DIR__ . '/../..' . '/src/Cms/AppErrors.php',

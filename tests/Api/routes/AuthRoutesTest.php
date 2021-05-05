@@ -1,7 +1,8 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
+use Kirby\Cms\App;
 use Kirby\Toolkit\Dir;
 use PHPUnit\Framework\TestCase;
 

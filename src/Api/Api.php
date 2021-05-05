@@ -4,6 +4,9 @@ namespace Kirby\Api;
 
 use Closure;
 use Exception;
+use Kirby\Cms\App;
+use Kirby\Cms\Form;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Response;
 use Kirby\Http\Router;
@@ -56,6 +59,12 @@ class Api
      * @var array
      */
     protected $data = [];
+
+    /**
+     * Kirby app instance
+     * @var \Kirby\Cms\App
+     */
+    protected $kirby;
 
     /**
      * Model definitions
@@ -169,7 +178,19 @@ class Api
 
         $this->router = new Router($this->routes());
         $this->route  = $this->router->find($path, $method);
-        $auth   = $this->route->attributes()['auth'] ?? true;
+
+        // Set current language and translation
+        $this->kirby->setCurrentLanguage($this->language());
+
+        $impersonation = $this->kirby()->option('api.allowImpersonation', false);
+        if ($user = $this->kirby->user(null, $impersonation)) {
+            $language = $user->language();
+        } else {
+            $language = $this->kirby->panelLanguage();
+        }
+        $this->kirby->setCurrentTranslation($language);
+
+        $auth = $this->route->attributes()['auth'] ?? true;
 
         if ($auth !== false) {
             $user = $this->authenticate();
@@ -289,6 +310,51 @@ class Api
     }
 
     /**
+     * @param mixed $model
+     * @param string $name
+     * @param string|null $path
+     * @return mixed
+     * @throws \Kirby\Exception\NotFoundException if the field type cannot be found or the field cannot be loaded
+     */
+    public function fieldApi($model, string $name, string $path = null)
+    {
+        $field = Form::for($model)->field($name);
+
+        $fieldApi = $this->clone([
+            'routes' => $field->api(),
+            'data'   => array_merge($this->data(), ['field' => $field])
+        ]);
+
+        return $fieldApi->call($path, $this->requestMethod(), $this->requestData());
+    }
+
+    /**
+     * Returns the file object for the given
+     * parent path and filename
+     *
+     * @param string|null $path Path to file's parent model
+     * @param string $filename Filename
+     * @return \Kirby\Cms\File|null
+     * @throws \Kirby\Exception\NotFoundException if the file cannot be found
+     */
+    public function file(string $path = null, string $filename)
+    {
+        $filename = urldecode($filename);
+        $file     = $this->parent($path)->file($filename);
+
+        if ($file && $file->isReadable() === true) {
+            return $file;
+        }
+
+        throw new NotFoundException([
+            'key'  => 'file.notFound',
+            'data' => [
+                'filename' => $filename
+            ]
+        ]);
+    }
+
+    /**
      * Checks if injected data exists for the given key
      *
      * @param string $key
@@ -297,6 +363,26 @@ class Api
     public function hasData(string $key): bool
     {
         return isset($this->data[$key]) === true;
+    }
+
+    /**
+     * Returns the Kirby instance
+     *
+     * @return \Kirby\Cms\App
+     */
+    public function kirby()
+    {
+        return $this->kirby;
+    }
+
+    /**
+     * Returns the language request header
+     *
+     * @return string|null
+     */
+    public function language(): ?string
+    {
+        return get('language') ?? $this->requestHeaders('x-language');
     }
 
     /**
@@ -350,6 +436,157 @@ class Api
     public function models(): array
     {
         return $this->models;
+    }
+
+    /**
+     * Returns the page object for the given id
+     *
+     * @param string $id Page's id
+     * @return \Kirby\Cms\Page|null
+     * @throws \Kirby\Exception\NotFoundException if the page cannot be found
+     */
+    public function page(string $id)
+    {
+        $id   = str_replace('+', '/', $id);
+        $page = $this->kirby->page($id);
+
+        if ($page && $page->isReadable() === true) {
+            return $page;
+        }
+
+        throw new NotFoundException([
+            'key'  => 'page.notFound',
+            'data' => [
+                'slug' => $id
+            ]
+        ]);
+    }
+
+    /**
+     * Returns the subpages for the given
+     * parent. The subpages can be filtered
+     * by status (draft, listed, unlisted, published, all)
+     *
+     * @param string|null $parentId
+     * @param string|null $status
+     * @return \Kirby\Cms\Pages
+     */
+    public function pages(string $parentId = null, string $status = null)
+    {
+        $parent = $parentId === null ? $this->site() : $this->page($parentId);
+
+        switch ($status) {
+            case 'all':
+                return $parent->childrenAndDrafts();
+            case 'draft':
+            case 'drafts':
+                return $parent->drafts();
+            case 'listed':
+                return $parent->children()->listed();
+            case 'unlisted':
+                return $parent->children()->unlisted();
+            case 'published':
+            default:
+                return $parent->children();
+        }
+    }
+
+    /**
+     * Returns the model's object for the given path
+     *
+     * @param string $path Path to parent model
+     * @return \Kirby\Cms\Model|null
+     * @throws \Kirby\Exception\InvalidArgumentException if the model type is invalid
+     * @throws \Kirby\Exception\NotFoundException if the model cannot be found
+     */
+    public function parent(string $path)
+    {
+        $type  = in_array($path, ['site', 'account']) ? $path : trim(dirname($path), '/');
+        $types = [
+            'site'    => 'site',
+            'users'   => 'user',
+            'pages'   => 'page',
+            'account' => 'account'
+        ];
+        $name = $types[$type] ?? null;
+
+        if (Str::endsWith($type, '/files') === true) {
+            $name = 'file';
+        }
+
+        $kirby = $this->kirby();
+
+        switch ($name) {
+            case 'site':
+                $model = $kirby->site();
+                break;
+            case 'account':
+                $model = $kirby->user(null, $kirby->option('api.allowImpersonation', false));
+                break;
+            case 'page':
+                $id    = str_replace(['+', ' '], '/', basename($path));
+                $model = $kirby->page($id);
+                break;
+            case 'file':
+                $model = $this->file(...explode('/files/', $path));
+                break;
+            case 'user':
+                $model = $kirby->user(basename($path));
+                break;
+            default:
+                throw new InvalidArgumentException('Invalid model type: ' . $type);
+        }
+
+        if ($model) {
+            return $model;
+        }
+
+        throw new NotFoundException(['key' => $name . '.undefined']);
+    }
+
+    /**
+     * Renders the API call
+     *
+     * @param string $path
+     * @param string $method
+     * @param array $requestData
+     * @return mixed
+     */
+    public function render(string $path, $method = 'GET', array $requestData = [])
+    {
+        try {
+            $result = $this->call($path, $method, $requestData);
+        } catch (Throwable $e) {
+            $result = $this->responseForException($e);
+        }
+
+        if ($result === null) {
+            $result = $this->responseFor404();
+        } elseif ($result === false) {
+            $result = $this->responseFor400();
+        } elseif ($result === true) {
+            $result = $this->responseFor200();
+        }
+
+        if (is_array($result) === false) {
+            return $result;
+        }
+
+        // pretty print json data
+        $pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
+
+        if (($result['status'] ?? 'ok') === 'error') {
+            $code = $result['code'] ?? 400;
+
+            // sanitize the error code
+            if ($code < 400 || $code > 599) {
+                $code = 500;
+            }
+
+            return Response::json($result, $code, $pretty);
+        }
+
+        return Response::json($result, 200, $pretty);
     }
 
     /**
@@ -463,168 +700,6 @@ class Api
     }
 
     /**
-     * Returns all defined routes
-     *
-     * @return array
-     */
-    public function routes(): array
-    {
-        return $this->routes;
-    }
-
-    /**
-     * Setter for the authentication callback
-     *
-     * @param \Closure|null $authentication
-     * @return $this
-     */
-    protected function setAuthentication(Closure $authentication = null)
-    {
-        $this->authentication = $authentication;
-        return $this;
-    }
-
-    /**
-     * Setter for the collections definition
-     *
-     * @param array|null $collections
-     * @return $this
-     */
-    protected function setCollections(array $collections = null)
-    {
-        if ($collections !== null) {
-            $this->collections = array_change_key_case($collections);
-        }
-        return $this;
-    }
-
-    /**
-     * Setter for the injected data
-     *
-     * @param array|null $data
-     * @return $this
-     */
-    protected function setData(array $data = null)
-    {
-        $this->data = $data ?? [];
-        return $this;
-    }
-
-    /**
-     * Setter for the debug flag
-     *
-     * @param bool $debug
-     * @return $this
-     */
-    protected function setDebug(bool $debug = false)
-    {
-        $this->debug = $debug;
-        return $this;
-    }
-
-    /**
-     * Setter for the model definitions
-     *
-     * @param array|null $models
-     * @return $this
-     */
-    protected function setModels(array $models = null)
-    {
-        if ($models !== null) {
-            $this->models = array_change_key_case($models);
-        }
-
-        return $this;
-    }
-
-    /**
-     * Setter for the request data
-     *
-     * @param array|null $requestData
-     * @return $this
-     */
-    protected function setRequestData(array $requestData = null)
-    {
-        $defaults = [
-            'query' => [],
-            'body'  => [],
-            'files' => []
-        ];
-
-        $this->requestData = array_merge($defaults, (array)$requestData);
-        return $this;
-    }
-
-    /**
-     * Setter for the request method
-     *
-     * @param string|null $requestMethod
-     * @return $this
-     */
-    protected function setRequestMethod(string $requestMethod = null)
-    {
-        $this->requestMethod = $requestMethod ?? 'GET';
-        return $this;
-    }
-
-    /**
-     * Setter for the route definitions
-     *
-     * @param array|null $routes
-     * @return $this
-     */
-    protected function setRoutes(array $routes = null)
-    {
-        $this->routes = $routes ?? [];
-        return $this;
-    }
-
-    /**
-     * Renders the API call
-     *
-     * @param string $path
-     * @param string $method
-     * @param array $requestData
-     * @return mixed
-     */
-    public function render(string $path, $method = 'GET', array $requestData = [])
-    {
-        try {
-            $result = $this->call($path, $method, $requestData);
-        } catch (Throwable $e) {
-            $result = $this->responseForException($e);
-        }
-
-        if ($result === null) {
-            $result = $this->responseFor404();
-        } elseif ($result === false) {
-            $result = $this->responseFor400();
-        } elseif ($result === true) {
-            $result = $this->responseFor200();
-        }
-
-        if (is_array($result) === false) {
-            return $result;
-        }
-
-        // pretty print json data
-        $pretty = (bool)($requestData['query']['pretty'] ?? false) === true;
-
-        if (($result['status'] ?? 'ok') === 'error') {
-            $code = $result['code'] ?? 400;
-
-            // sanitize the error code
-            if ($code < 400 || $code > 599) {
-                $code = 500;
-            }
-
-            return Response::json($result, $code, $pretty);
-        }
-
-        return Response::json($result, 200, $pretty);
-    }
-
-    /**
      * Returns a 200 - ok
      * response array.
      *
@@ -711,6 +786,176 @@ class Api
         }
 
         return $result;
+    }
+
+    /**
+     * Returns all defined routes
+     *
+     * @return array
+     */
+    public function routes(): array
+    {
+        return $this->routes;
+    }
+
+    /**
+     * Search for direct subpages of the
+     * given parent
+     *
+     * @param string|null $parent
+     * @return \Kirby\Cms\Pages
+     */
+    public function searchPages(string $parent = null)
+    {
+        $pages = $this->pages($parent, $this->requestQuery('status'));
+
+        if ($this->requestMethod() === 'GET') {
+            return $pages->search($this->requestQuery('q'));
+        }
+
+        return $pages->query($this->requestBody());
+    }
+
+    /**
+     * Returns the current Session instance
+     *
+     * @param array $options Additional options, see the session component
+     * @return \Kirby\Session\Session
+     */
+    public function session(array $options = [])
+    {
+        return $this->kirby->session(array_merge([
+            'detect' => true
+        ], $options));
+    }
+
+    /**
+     * Setter for the authentication callback
+     *
+     * @param \Closure|null $authentication
+     * @return $this
+     */
+    protected function setAuthentication(Closure $authentication = null)
+    {
+        $this->authentication = $authentication;
+        return $this;
+    }
+
+    /**
+     * Setter for the collections definition
+     *
+     * @param array|null $collections
+     * @return $this
+     */
+    protected function setCollections(array $collections = null)
+    {
+        if ($collections !== null) {
+            $this->collections = array_change_key_case($collections);
+        }
+        return $this;
+    }
+
+    /**
+     * Setter for the injected data
+     *
+     * @param array|null $data
+     * @return $this
+     */
+    protected function setData(array $data = null)
+    {
+        $this->data = $data ?? [];
+        return $this;
+    }
+
+    /**
+     * Setter for the debug flag
+     *
+     * @param bool $debug
+     * @return $this
+     */
+    protected function setDebug(bool $debug = false)
+    {
+        $this->debug = $debug;
+        return $this;
+    }
+
+    /**
+     * Setter for the parent Kirby instance
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @return $this
+     */
+    protected function setKirby(?App $kirby = null)
+    {
+        $this->kirby = $kirby ?? App::instance();
+        return $this;
+    }
+
+    /**
+     * Setter for the model definitions
+     *
+     * @param array|null $models
+     * @return $this
+     */
+    protected function setModels(array $models = null)
+    {
+        if ($models !== null) {
+            $this->models = array_change_key_case($models);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Setter for the request data
+     *
+     * @param array|null $requestData
+     * @return $this
+     */
+    protected function setRequestData(array $requestData = null)
+    {
+        $defaults = [
+            'query' => [],
+            'body'  => [],
+            'files' => []
+        ];
+
+        $this->requestData = array_merge($defaults, (array)$requestData);
+        return $this;
+    }
+
+    /**
+     * Setter for the request method
+     *
+     * @param string|null $requestMethod
+     * @return $this
+     */
+    protected function setRequestMethod(string $requestMethod = null)
+    {
+        $this->requestMethod = $requestMethod ?? 'GET';
+        return $this;
+    }
+
+    /**
+     * Setter for the route definitions
+     *
+     * @param array|null $routes
+     * @return $this
+     */
+    protected function setRoutes(array $routes = null)
+    {
+        $this->routes = $routes ?? [];
+        return $this;
+    }
+
+    /**
+     * Returns the site object
+     *
+     * @return \Kirby\Cms\Site
+     */
+    public function site()
+    {
+        return $this->kirby->site();
     }
 
     /**
@@ -831,5 +1076,44 @@ class Api
             'status' => 'ok',
             'data'   => $uploads
         ];
+    }
+
+    /**
+     * Returns the user object for the given id or
+     * returns the current authenticated user if no
+     * id is passed
+     *
+     * @param string|null $id User's id
+     * @return \Kirby\Cms\User|null
+     * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
+     */
+    public function user(string $id = null)
+    {
+        // get the authenticated user
+        if ($id === null) {
+            return $this->kirby->auth()->user(null, $this->kirby()->option('api.allowImpersonation', false));
+        }
+
+        // get a specific user by id
+        if ($user = $this->kirby->users()->find($id)) {
+            return $user;
+        }
+
+        throw new NotFoundException([
+            'key'  => 'user.notFound',
+            'data' => [
+                'name' => $id
+            ]
+        ]);
+    }
+
+    /**
+     * Returns the users collection
+     *
+     * @return \Kirby\Cms\Users
+     */
+    public function users()
+    {
+        return $this->kirby->users();
     }
 }

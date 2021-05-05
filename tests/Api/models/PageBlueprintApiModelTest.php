@@ -1,6 +1,11 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
+
+use Kirby\Cms\App;
+use Kirby\Cms\Page;
+use Kirby\Cms\PageBlueprint;
+use PHPUnit\Framework\TestCase;
 
 class PageBlueprintApiModelTest extends TestCase
 {

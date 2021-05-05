@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Cms\Api;
+use Kirby\Api\Api;
 use Kirby\Cms\File;
 use Kirby\Exception\Exception;
 

@@ -1,6 +1,10 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
+
+use Kirby\Cms\App;
+use Kirby\Cms\Site;
+use PHPUnit\Framework\TestCase;
 
 class SiteApiModelTest extends TestCase
 {

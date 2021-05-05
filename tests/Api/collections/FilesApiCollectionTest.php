@@ -1,6 +1,11 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
+
+use Kirby\Cms\App;
+use Kirby\Cms\File;
+use Kirby\Cms\Files;
+use PHPUnit\Framework\TestCase;
 
 class FilesApiCollectionTest extends TestCase
 {

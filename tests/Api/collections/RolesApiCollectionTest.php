@@ -1,6 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
+
+use Kirby\Cms\App;
+use PHPUnit\Framework\TestCase;
 
 class RolesApiCollectionTest extends TestCase
 {

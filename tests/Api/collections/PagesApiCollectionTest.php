@@ -1,8 +1,13 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Api;
 
-class ChildrenApiCollectionTest extends TestCase
+use Kirby\Cms\App;
+use Kirby\Cms\Page;
+use Kirby\Cms\Pages;
+use PHPUnit\Framework\TestCase;
+
+class PagesApiCollectionTest extends TestCase
 {
     protected $api;
     protected $app;
@@ -20,15 +25,12 @@ class ChildrenApiCollectionTest extends TestCase
 
     public function testCollection()
     {
-        $site = new Site([
-            'children' => [
-                ['slug' => 'a'],
-                ['slug' => 'b'],
-            ]
-        ]);
+        $collection = $this->api->collection('pages', new Pages([
+            new Page(['slug' => 'a']),
+            new Page(['slug' => 'b'])
+        ]));
 
-        $collection = $this->api->collection('children', $site->children());
-        $result     = $collection->toArray();
+        $result = $collection->toArray();
 
         $this->assertCount(2, $result);
         $this->assertEquals('a', $result[0]['id']);

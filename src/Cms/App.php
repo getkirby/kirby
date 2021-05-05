@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Api\Api;
 use Kirby\Data\Data;
 use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\ErrorPageException;
@@ -160,7 +161,7 @@ class App
      * Returns the Api instance
      *
      * @internal
-     * @return \Kirby\Cms\Api
+     * @return \Kirby\Api\Api
      */
     public function api()
     {
