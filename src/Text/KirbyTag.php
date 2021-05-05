@@ -2,6 +2,7 @@
 
 namespace Kirby\Text;
 
+use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\InvalidArgumentException;
 
@@ -76,6 +77,51 @@ class KirbyTag
     }
 
     /**
+     * Finds a file for the given path.
+     * The method first searches the file
+     * in the current parent, if it's a page.
+     * Afterwards it uses Kirby's global file finder.
+     *
+     * @param string $path
+     * @return \Kirby\Cms\File|null
+     */
+    public function file(string $path)
+    {
+        $parent = $this->parent();
+
+        if (
+            is_object($parent) === true &&
+            method_exists($parent, 'file') === true &&
+            $file = $parent->file($path)
+        ) {
+            return $file;
+        }
+
+        if (
+            is_a($parent, 'Kirby\Cms\File') === true &&
+            $file = $parent->page()->file($path)
+        ) {
+            return $file;
+        }
+
+        return $this->kirby()->file($path, null, true);
+    }
+    /**
+     * Returns the current Kirby instance
+     *
+     * @return \Kirby\Cms\App
+     */
+    public function kirby()
+    {
+        return $this->data['kirby'] ?? App::instance();
+    }
+
+    public function option(string $key, $default = null)
+    {
+        return $this->options[$key] ?? $default;
+    }
+
+    /**
      * @param string $string
      * @param array $data
      * @param array $options
@@ -126,9 +172,14 @@ class KirbyTag
         return new static($type, $value, $attributes, $data, $options);
     }
 
-    public function option(string $key, $default = null)
+    /**
+     * Returns the parent model
+     *
+     * @return \Kirby\Cms\Model|null
+     */
+    public function parent()
     {
-        return $this->options[$key] ?? $default;
+        return $this->data['parent'];
     }
 
     public function render(): string
