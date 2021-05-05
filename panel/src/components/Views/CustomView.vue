@@ -12,15 +12,15 @@
 
 <script>
 export default {
-  props: {
-    plugin: String,
-    hash: String
-  },
   beforeRouteEnter(to, from, next) {
     next(vm => {
       vm.$store.dispatch("breadcrumb", []);
       vm.$store.dispatch("content/current", null);
     })
+  },
+  props: {
+    plugin: String,
+    hash: String
   }
 };
 </script>

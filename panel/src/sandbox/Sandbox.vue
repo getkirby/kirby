@@ -23,12 +23,12 @@
 </template>
 
 <script>
-import components from "./components.js";
+import { meta } from "./components.js";
 
 export default {
   data() {
     return {
-      components
+      components: []
     }
   },
   computed: {
@@ -36,7 +36,7 @@ export default {
       let code = null;
       this.menu.forEach(component => {
         if (component.slug === this.component) {
-          code = component.html;
+          code = component.html.default
         }
       })
 
@@ -46,7 +46,7 @@ export default {
       return this.$route.params.component;
     },
     menu() {
-      return components.map(component => {
+      return this.components.map(component => {
         return {
           title: component.key.replace(".vue", "").replace("./", ""),
           slug: this.$helper.string.camelToKebab(component.name),
@@ -54,6 +54,9 @@ export default {
         }
       });
     }
+  },
+  async created() {
+    this.components = await meta();
   }
 };
 

@@ -4,6 +4,7 @@
     v-bind="$props"
     v-on="$listeners"
   >
+    <!-- eslint-disable vue/no-mutating-props -->
     <k-form
       ref="form"
       v-model="value"

@@ -146,8 +146,8 @@ jobs:
           # start the built-in PHP server
           php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
 
-          # start the Vue CLI server
-          npm run dev -- --skip-plugins @vue/cli-plugin-eslint &> ${{ github.workspace }}/_logs/vue-cli.log &
+          # start vite
+          npm run dev &> ${{ github.workspace }}/_logs/vite.log &
         working-directory: kirby/panel
 
       - name: Run tests
@@ -157,7 +157,7 @@ jobs:
         with:
           working-directory: kirby/panel
           install: false
-          wait-on: "http://127.0.0.1:8080"
+          wait-on: "http://127.0.0.1:3000"
           command: npm run test
 
       - name: Print log files

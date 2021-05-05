@@ -1,15 +1,25 @@
 import Vue from "vue";
-const req = require.context("./components", true, /\.vue$/i);
-let components = [];
 
-req.keys().map((key) => {
-  let name = key.match(/\w+/)[0];
-  components.push({
-    key: key,
-    name: name,
-    html: require("!!raw-loader!" + __dirname + "/components/" + key.replace("./", "")).default
+const files = import.meta.globEager('./components/*.vue');
+const paths = Object.keys(files);
+
+export async function meta() {
+  const components = paths.map(async (key) => {
+
+    const name = key.match(/\/([a-zA-Z]*)\.vue/)[1].toLowerCase();
+    const html = await import(key + "?raw" /* @vite-ignore */);
+  
+    return { key: key, name: name, html: html };
   });
-  Vue.component("Sandbox" + name, req(key).default);
-});
 
-export default components;
+  return Promise.all(components);
+}
+
+export async function register() {
+  const components = paths.map(async (key) => {
+    const name = key.match(/\/([a-zA-Z]*)\.vue/)[1].toLowerCase();
+    Vue.component("sandbox-" + name, files[key].default);
+  });
+
+  Promise.all(components);
+}

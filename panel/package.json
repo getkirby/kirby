@@ -2,14 +2,12 @@
   "name": "kirby",
   "private": true,
   "scripts": {
-    "build": "vue-cli-service build && mv dist/js/chunk*.js dist/js/vendor.js && rm dist/index.html && npm run build:docs",
+    "build": "vite build && rm dist/index.html",
     "build:docs": "node scripts/docs.js",
     "cy:run": "cypress run",
     "cy:open": "cypress open",
-    "dev": "vue-cli-service serve --open",
-    "lint": "vue-cli-service lint",
-    "pre-commit": "pretty-quick --staged",
-    "serve": "vue-cli-service serve --open",
+    "dev": "vite",
+    "lint": "eslint --ext .js,.vue src",
     "test": "cypress run"
   },
   "dependencies": {
@@ -31,89 +29,15 @@
     "vuex-i18n": "^1.13.1"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.8",
-    "@vue/cli-plugin-babel": "^4.5.9",
-    "@vue/cli-plugin-eslint": "^4.5.8",
-    "@vue/cli-service": "^4.5.8",
-    "babel-eslint": "^10.1.0",
-    "babel-plugin-wildcard": "^6.0.0",
-    "cypress": "^5.6.0",
-    "eslint": "^6.7.2",
+    "cypress": "^7.2.0",
+    "eslint": "^7.25.0",
     "eslint-plugin-cypress": "^2.11.2",
-    "eslint-plugin-vue": "^6.2.2",
-    "glob": "^7.1.6",
-    "prettier": "^2.1.2",
-    "pretty-quick": "^3.1.0",
-    "raw-loader": "^4.0.2",
-    "sass": "^1.29.0",
-    "sass-loader": "^10.1.0",
+    "eslint-plugin-vue": "^7.7.0",
+    "sass": "^1.32.8",
+    "vite": "^2.0.5",
+    "vite-plugin-rewrite-all": "^0.1.2",
+    "vite-plugin-vue2": "^1.2.2",
     "vue-docgen-api": "^4.35.0",
-    "vue-template-compiler": "^2.6.12",
-    "wait-on": "^5.3.0"
-  },
-  "babel": {
-    "presets": [
-      "@vue/app"
-    ],
-    "plugins": [
-      "wildcard"
-    ]
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "eslint:recommended",
-      "plugin:cypress/recommended",
-      "plugin:vue/recommended"
-    ],
-    "parserOptions": {
-      "ecmaVersion": 2017,
-      "parser": "babel-eslint"
-    },
-    "rules": {
-      "vue/require-default-prop": "off",
-      "vue/attributes-order": "error",
-      "vue/require-prop-types": "error",
-      "vue/max-attributes-per-line": [
-        "error",
-        {
-          "singleline": 3,
-          "multiline": {
-            "max": 1,
-            "allowFirstLine": false
-          }
-        }
-      ],
-      "vue/html-closing-bracket-newline": [
-        "error",
-        {
-          "singleline": "never",
-          "multiline": "always"
-        }
-      ]
-    },
-    "env": {
-      "node": true
-    }
-  },
-  "postcss": {
-    "plugins": {
-      "autoprefixer": {}
-    }
-  },
-  "browserslist": [
-    "last 2 Android versions",
-    "last 2 Chrome versions",
-    "last 2 ChromeAndroid versions",
-    "last 2 Edge versions",
-    "last 2 Firefox versions",
-    "last 2 FirefoxAndroid versions",
-    "last 2 iOS versions",
-    "last 2 KaiOS versions",
-    "last 2 Safari versions",
-    "last 2 Samsung versions",
-    "last 2 Opera versions",
-    "last 2 OperaMobile versions",
-    "last 2 UCAndroid versions"
-  ]
+    "wait-on": "^5.2.1"
+  }
 }

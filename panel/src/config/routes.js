@@ -201,8 +201,7 @@ let routes = [
 ];
 
 // UI Sandbox
-if (process.env.NODE_ENV !== "production") {
-
+if (import.meta.env.MODE !== "production") {
   routes.push({
     path: "/sandbox/:component?",
     name: "Sandbox",
@@ -210,7 +209,7 @@ if (process.env.NODE_ENV !== "production") {
       outside: true,
     },
     beforeEnter: auth,
-    component: require("@/sandbox/Sandbox.vue").default,
+    component: () => import("@/sandbox/Sandbox.vue"),
   });
 
   routes.push({
@@ -220,9 +219,8 @@ if (process.env.NODE_ENV !== "production") {
       outside: true,
     },
     beforeEnter: auth,
-    component: require("@/sandbox/Iframe.vue").default,
+    component: () => import("@/sandbox/Iframe.vue"),
   });
-
 }
 
 routes.push({
