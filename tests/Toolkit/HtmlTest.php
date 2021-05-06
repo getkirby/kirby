@@ -497,6 +497,27 @@ class HtmlTest extends TestCase
         $this->assertSame($expected, $html);
     }
 
+    public function testVideoFile()
+    {
+        $html = Html::video('https://getkirby.com/myvideo.mp4');
+        $expected = '<video><source src="https://getkirby.com/myvideo.mp4" type="video/mp4"></video>';
+        $this->assertSame($expected, $html);
+
+        // with attributes
+        $html = Html::video('https://getkirby.com/myvideo.mp4', [], ['controls' => true, 'autoplay' => true]);
+        $expected = '<video autoplay controls><source src="https://getkirby.com/myvideo.mp4" type="video/mp4"></video>';
+        $this->assertSame($expected, $html);
+
+        // relative path
+        $html = Html::video('../myvideo.mp4');
+        $expected = '<video><source src="../myvideo.mp4" type="video/mp4"></video>';
+        $this->assertSame($expected, $html);
+
+        // invalid file type
+        $html = Html::video('https://getkirby.com/myvideo.mp3');
+        $this->assertNull($html);
+    }
+
     public function videoProvider()
     {
         return [
