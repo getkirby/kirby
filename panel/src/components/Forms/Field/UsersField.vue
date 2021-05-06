@@ -74,7 +74,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-users-field[data-disabled] * {
   pointer-events: all !important;
 }

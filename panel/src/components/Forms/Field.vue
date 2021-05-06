@@ -63,18 +63,18 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-field-label {
-  font-weight: $font-bold;
+  font-weight: var(--font-bold);
   display: block;
-  padding: 0 0 0.75rem;
+  padding: 0 0 .75rem;
   flex-grow: 1;
   line-height: 1.25rem;
 }
 .k-field-label abbr {
   text-decoration: none;
-  color: $color-light-grey;
-  padding-left: 0.25rem;
+  color: var(--color-gray-500);
+  padding-left: .25rem;
 }
 .k-field-header {
   position: relative;
@@ -84,14 +84,12 @@ export default {
 .k-field-options {
   position: absolute;
   top: calc(-.5rem - 1px);
-
-  [dir="ltr"] & {
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-  }
+}
+[dir="ltr"] .k-field-options {
+  right: 0;
+}
+[dir="rtl"] .k-field-options {
+  left: 0;
 }
 .k-field-options.k-button-group .k-dropdown {
   height: auto;
@@ -116,6 +114,6 @@ export default {
   display: block;
 }
 .k-field-help {
-  padding-top: 0.5rem;
+  padding-top: .5rem;
 }
 </style>

@@ -124,7 +124,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style >
 .k-text-input {
   width: 100%;
   border: 0;
@@ -133,7 +133,7 @@ export default {
   color: inherit;
 }
 .k-text-input::placeholder {
-  color: $color-light-grey;
+  color: var(--color-gray-500);
 }
 .k-text-input:focus {
   outline: 0;

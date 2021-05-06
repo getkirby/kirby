@@ -32,31 +32,31 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-block-type-heading-input {
-  font-weight: $font-bold;
   line-height: 1.25em;
+  font-weight: var(--font-bold);
 }
 .k-block-type-heading-input[data-level="h1"] {
-  font-size: $text-3xl;
+  font-size: var(--text-3xl);
   line-height: 1.125em;
 }
 .k-block-type-heading-input[data-level="h2"] {
-  font-size: $text-2xl;
+  font-size: var(--text-2xl);
 }
 .k-block-type-heading-input[data-level="h3"] {
-  font-size: $text-xl;
+  font-size: var(--text-xl);
 }
 .k-block-type-heading-input[data-level="h4"] {
-  font-size: $text-lg;
+  font-size: var(--text-lg);
 }
 .k-block-type-heading-input[data-level="h5"] {
   line-height: 1.5em;
-  font-size: $text-base;
+  font-size: var(--text-base);
 }
 .k-block-type-heading-input[data-level="h6"] {
   line-height: 1.5em;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
 .k-block-type-heading-input .ProseMirror strong {
   font-weight: 700;

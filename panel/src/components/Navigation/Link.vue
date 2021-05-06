@@ -118,8 +118,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-link {
-  @include highlight-tabbed;
+  outline: none;
+}
+.k-link [data-tabbed] {
+  outline: none;
+  box-shadow: var(--shadow-outline);
 }
 </style>

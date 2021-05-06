@@ -79,7 +79,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-sections {
   padding-bottom: 3rem;
 }
@@ -94,19 +94,18 @@ export default {
 }
 .k-section-header .k-headline {
   line-height: 1.25rem;
-  padding-bottom: 0.75rem;
+  padding-bottom: .75rem;
   min-height: 2rem;
 }
 .k-section-header .k-button-group {
   position: absolute;
   top: -.875rem;
+}
+[dir="ltr"] .k-section-header .k-button-group {
+  right: 0;
+}
 
-  [dir="ltr"] & {
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-  }
+[dir="rtl"] .k-section-header .k-button-group {
+  left: 0;
 }
 </style>

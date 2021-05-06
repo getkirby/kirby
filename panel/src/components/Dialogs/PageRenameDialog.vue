@@ -182,7 +182,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-page-rename-dialog .k-form .k-field + .k-field {
   margin-top: 2.25rem;
 }

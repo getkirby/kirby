@@ -172,7 +172,7 @@ export default {
   color: inherit;
 }
 .k-number-input::placeholder {
-  color: $color-light-grey;
+  color: var(--color-gray-500);
 }
 .k-number-input:focus {
   outline: 0;

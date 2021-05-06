@@ -212,14 +212,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-topbar {
   position: relative;
-  color: $color-white;
+  color: var(--color-white);
   flex-shrink: 0;
   height: 2.5rem;
   line-height: 1;
-  background: $color-gray-900;
+  background: var(--color-gray-900);
 }
 .k-topbar-wrapper {
   position: relative;
@@ -236,7 +236,7 @@ export default {
   height: 2.5rem;
   width: 2.5rem;
   padding: .75rem;
-  background: $color-gray-900;
+  background: var(--color-gray-900);
   z-index: 1;
   display: flex;
   align-items: center;
@@ -252,7 +252,7 @@ export default {
   flex-shrink: 0;
 }
 .k-topbar-menu ul {
-  padding: 0.5rem 0;
+  padding: .5rem 0;
 }
 .k-topbar-menu-button {
   display: flex;
@@ -263,9 +263,9 @@ export default {
 }
 .k-topbar-signals-button,
 .k-topbar-button {
-  padding: 0.75rem;
+  padding: .75rem;
   line-height: 1;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
 .k-topbar-signals .k-button .k-button-text {
   opacity: 1;
@@ -278,23 +278,20 @@ export default {
   flex-shrink: 0;
   display: flex;
   align-items: center;
-
-  [dir="ltr"] & {
-    padding-right: 0;
-  }
-
-  [dir="rtl"] & {
-    padding-left: 0;
-  }
 }
-.k-topbar-view-button .k-icon {
-  [dir="ltr"] & {
-    margin-right: 0.5rem;
-  }
+[dir="ltr"] .k-topbar-view-button {
+  padding-right: 0;
+}
+[dir="rtl"] .k-topbar-view-button {
+  padding-left: 0;
+}
 
-  [dir="rtl"] & {
-    margin-left: 0.5rem;
-  }
+[dir="ltr"] .k-topbar-view-button .k-icon {
+  margin-right: .5rem;
+}
+
+[dir="rtl"] .k-topbar-view-button .k-icon {
+  margin-left: .5rem;
 }
 .k-topbar-crumbs {
   flex-grow: 1;
@@ -303,27 +300,30 @@ export default {
 }
 .k-topbar-crumbs a {
   position: relative;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   display: none;
-  padding-top: 0.75rem;
-  padding-bottom: 0.75rem;
+  padding-top: .75rem;
+  padding-bottom: .75rem;
   line-height: 1;
-  transition: opacity 0.3s;
+  transition: opacity .3s;
+  outline: none;
+}
+.k-topbar-crumbs a::before {
+  content: "/";
+  padding: 0 .5rem;
+  opacity: .25;
+}
+.k-topbar-crumbs a:focus,
+.k-topbar-crumbs a:hover {
+  opacity: 1;
+}
 
-  &::before {
-    content: "/";
-    padding: 0 0.5rem;
-    opacity: 0.25;
-  }
-  &:focus,
-  &:hover {
-    opacity: 1;
-  }
-
-  @include highlight-tabbed;
+.k-topbar-crumbs a[data-tabbed] {
+  outline: none;
+  box-shadow: var(--shadow-outline);
 }
 .k-topbar-crumbs a:not(:last-child) {
   max-width: 15vw;
@@ -331,7 +331,7 @@ export default {
 .k-topbar-breadcrumb-menu {
   flex-shrink: 0;
 }
-@media screen and (min-width: $breakpoint-sm) {
+@media screen and (min-width: 30em) {
   .k-topbar-crumbs a {
     display: block;
   }
@@ -342,78 +342,79 @@ export default {
 .k-topbar-signals {
   position: absolute;
   top: 0;
-  background: $color-gray-900;
+  background: var(--color-gray-900);
   height: 2.5rem;
   display: flex;
   align-items: center;
+}
+[dir="ltr"] .k-topbar-signals {
+  right: 0;
+}
 
-  [dir="ltr"] & {
-    right: 0;
-  }
-
-  [dir="rtl"] & {
-    left: 0;
-  }
+[dir="rtl"] .k-topbar-signals {
+  left: 0;
 }
 .k-topbar-signals::before {
   position: absolute;
   content: "";
   top: 0;
   bottom: 0;
-  width: 0.5rem;
+  width: .5rem;
+}
+[dir="ltr"] .k-topbar-signals::before {
+  left: -0.5rem;
+  background: -webkit-linear-gradient(
+    left,
+    rgba(17, 17, 17, 0),
+    rgba(17, 17, 17, 1)
+  );
+}
 
-  [dir="ltr"] & {
-    left: -0.5rem;
-    background: -webkit-linear-gradient(
-      left,
-      rgba($color-gray-900, 0),
-      rgba($color-gray-900, 1)
-    );
-  }
-
-  [dir="rtl"] & {
-    right: -0.5rem;
-    background: -webkit-linear-gradient(
-      right,
-      rgba($color-gray-900, 0),
-      rgba($color-gray-900, 1)
-    );
-  }
+[dir="rtl"] .k-topbar-signals::before {
+  right: -0.5rem;
+  background: -webkit-linear-gradient(
+    right,
+    rgba(17, 17, 17, 0),
+    rgba(17, 17, 17, 1)
+  );
 }
 .k-topbar-signals .k-button {
   line-height: 1;
 }
 
 .k-topbar-notification {
-  font-weight: $font-bold;
+  font-weight: var(--font-bold);
   line-height: 1;
   display: flex;
 }
 .k-topbar .k-button[data-theme="positive"] {
-  color: $color-positive-on-dark;
+  color: var(--color-positive-light);
 }
 .k-topbar .k-button[data-theme="negative"] {
-  color: $color-negative-on-dark;
+  color: var(--color-negative-light);
 }
 .k-topbar .k-button[data-theme="negative"] .k-button-text {
   display: none;
+}
 
-  @media screen and (min-width: $breakpoint-sm) {
+@media screen and (min-width: 30em){
+  .k-topbar .k-button[data-theme="negative"] .k-button-text {
     display: inline;
   }
 }
+
 .k-topbar .k-button[data-theme] .k-button-text {
   opacity: 1;
 }
 .k-topbar .k-dropdown-content {
-  color: $color-gray-900;
-  background: $color-white;
+  color: var(--color-gray-900);
+  background: var(--color-white);
 }
 .k-topbar .k-dropdown-content hr:after {
-  opacity: 0.1;
+  opacity: .1;
 }
 .k-topbar-menu [aria-current] .k-link {
-  color: $color-focus;
+  color: var(--color-focus);
   font-weight: 500;
 }
 
@@ -424,17 +425,18 @@ export default {
   align-items: center;
 }
 .k-registration p {
-  color: $color-negative-on-dark;
-  font-size: $text-sm;
+  color: var(--color-negative-light);
+  font-size: var(--text-sm);
   margin-right: 1rem;
   font-weight: 600;
   display: none;
-
-  @media screen and (min-width: $breakpoint-lg) {
+}
+@media screen and (min-width: 90em) {
+  .k-registration p {
     display: block;
   }
 }
 .k-registration .k-button {
-  color: $color-white;
+  color: var(--color-white);
 }
 </style>

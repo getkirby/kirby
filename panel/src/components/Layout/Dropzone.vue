@@ -81,7 +81,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-dropzone {
   position: relative;
 }
@@ -98,8 +98,7 @@ export default {
 }
 .k-dropzone[data-over]::after {
   display: block;
-  outline: 1px solid $color-focus;
-  box-shadow: $color-focus-outline 0 0 0 3px;
+  outline: 1px solid var(--color-focus);
+  box-shadow: var(--color-focus-outline) 0 0 0 3px;
 }
-
 </style>

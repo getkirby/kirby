@@ -12,7 +12,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-list-field-preview {
   padding: .325rem .75rem;
   line-height: 1.5em;
@@ -32,7 +32,7 @@ export default {
   list-style: decimal;
 }
 .k-list-field-preview ol > li::marker {
-  color: $color-gray-500;
-  font-size: $text-xs;
+  color: var(--color-gray-500);
+  font-size: var(--text-xs);
 }
 </style>

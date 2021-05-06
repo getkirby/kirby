@@ -62,7 +62,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style>
 .k-sandbox {
   position: absolute;
   top: 0;
@@ -77,7 +77,7 @@ export default {
   height: 100%;
 }
 .k-sandbox-menu {
-  background: $color-white;
+  background: var(--color-white);
   grid-area: menu;
 }
 .k-sandbox-preview {
@@ -102,23 +102,23 @@ export default {
   align-items: center;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   padding: .325rem .75rem;
 }
 .k-sandbox-menu a .k-icon {
   margin-right: .5rem;
 }
 .k-sandbox-menu a[aria-current] {
-  background: $color-blue-200;
+  background: var(--color-blue-200);
 }
 .k-sandbox-code {
   padding: 1.5rem;
   grid-area: code;
-  background: $color-gray-900;
-  color: $color-white;
+  background: var(--color-gray-900);
+  color: var(--color-white);
   font-size: 1.25em;
   line-height: 1.25em;
-  font-family: $font-mono;
+  font-family: var(--font-mono);
   overflow: auto;
 }
 </style>

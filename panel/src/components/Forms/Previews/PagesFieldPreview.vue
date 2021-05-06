@@ -21,33 +21,33 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-pages-field-preview {
-  padding: 0 0.25rem 0 0.75rem;
+  padding: 0 .25rem 0 .75rem;
   display: flex;
 }
 .k-pages-field-preview li {
   line-height: 0;
-  margin-right: 0.5rem;
+  margin-right: .5rem;
 }
 .k-pages-field-preview .k-link {
   display: flex;
   align-items: stretch;
-  background: $color-background;
-  box-shadow: $shadow;
+  background: var(--color-background);
+  box-shadow: var(--shadow);
 }
 .k-pages-field-preview-image {
   width: 1.525rem;
   height: 1.525rem;
-  color: $color-light-grey !important;
+  color: var(--color-gray-500) !important;
 }
 .k-pages-field-preview figcaption {
   flex-grow: 1;
   line-height: 1.5em;
-  padding: 0 0.5rem;
-  border: 1px solid $color-border;
+  padding: 0 .5rem;
+  border: 1px solid var(--color-border);
   border-left: 0;
-  border-radius: $rounded-xs;
+  border-radius: var(--rounded-xs);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

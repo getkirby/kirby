@@ -23,19 +23,22 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-view {
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   margin: 0 auto;
   max-width: 100rem;
-
-  @media screen and (min-width: $breakpoint-sm) {
+}
+@media screen and (min-width: 30em) {
+  .k-view {
     padding-left: 3rem;
     padding-right: 3rem;
   }
+}
 
-  @media screen and (min-width: $breakpoint-lg) {
+@media screen and (min-width: 90em) {
+  .k-view {
     padding-left: 6rem;
     padding-right: 6rem;
   }

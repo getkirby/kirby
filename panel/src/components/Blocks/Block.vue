@@ -212,12 +212,12 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-block-container {
   position: relative;
   padding: .75rem;
-  border-bottom: 1px dashed rgba(#000, .1);
-  background: $color-white;
+  border-bottom: 1px dashed rgba(0, 0, 0, .1);
+  background: var(--color-white);
 }
 .k-block-container:last-of-type {
   border-bottom: 0;
@@ -237,14 +237,14 @@ export default {
   right: 0;
   bottom: 0;
   left: 0;
-  background: rgba($color-blue-200, .375);
+  background: rgba(238, 242, 246, .375);
   mix-blend-mode: multiply;
-  border: 1px solid $color-focus;
+  border: 1px solid var(--color-focus);
 }
 
 .k-block-container[data-selected] {
   z-index: 2;
-  box-shadow: $color-focus 0 0 0 1px, $color-focus-outline 0 0 0 3px;
+  box-shadow: var(--color-focus) 0 0 0 1px, var(--color-focus-outline) 0 0 0 3px;
   border-bottom-color: transparent;
 }
 .k-block-container .k-block-options {
@@ -266,6 +266,6 @@ export default {
   display: inline-grid;
 }
 [data-disabled] .k-block-container {
-  background: $color-background;
+  background: var(--color-background);
 }
 </style>

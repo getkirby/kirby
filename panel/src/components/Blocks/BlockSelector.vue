@@ -116,10 +116,10 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-block-selector.k-dialog {
   background: #313740;
-  color: $color-white;
+  color: var(--color-white);
 }
 .k-block-selector .k-headline {
   margin-bottom: 1rem;
@@ -128,9 +128,9 @@ export default {
   margin-bottom: 1.5rem;
 }
 .k-block-selector summary {
-  font-size: $text-xs;
+  font-size: var(--text-xs);
   cursor: pointer;
-  color: $color-gray-400;
+  color: var(--color-gray-400);
 }
 .k-block-selector details:only-child summary {
   pointer-events: none;
@@ -139,7 +139,7 @@ export default {
   outline: 0;
 }
 .k-block-selector summary:focus-visible {
-  color: $color-green-400;
+  color: var(--color-green-400);
 }
 .k-block-types {
   display: grid;
@@ -150,14 +150,14 @@ export default {
 .k-block-types .k-button {
   display: flex;
   align-items: top;
-  background: rgba(#000, .5);
+  background: rgba(0, 0, 0, .5);
   width: 100%;
   text-align: left;
   padding: 0 .75rem 0 0;
   line-height: 1.5em;
 }
 .k-block-types .k-button:focus {
-  outline: 2px solid $color-green-300;
+  outline: 2px solid var(--color-green-300);
 }
 .k-block-types .k-button .k-button-text {
   padding: .5rem 0 .5rem .5rem;

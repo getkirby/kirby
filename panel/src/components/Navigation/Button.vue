@@ -93,11 +93,11 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 button {
   line-height: inherit;
   border: 0;
-  font-family: $font-sans;
+  font-family: var(--font-sans);
   font-size: 1rem;
   color: currentColor;
   background: none;
@@ -111,36 +111,40 @@ button::-moz-focus-inner {
 .k-button {
   display: inline-block;
   position: relative;
-  font-size: $text-sm;
-  transition: color 0.3s;
+  font-size: var(--text-sm);
+  transition: color .3s;
+  outline: none;
 
-  &:focus,
-  &:hover {
-    outline: none;
-  }
+}
+.k-button:focus,
+.k-button:hover {
+  outline: none;
+}
 
-  @include highlight-tabbed;
+.k-button[data-tabbed] {
+  box-shadow: var(--shadow-outline);
+}
 
-  * {
-    vertical-align: middle;
-  }
+.k-button * {
+  vertical-align: middle;
 }
 
 /* hide button text on small screens */
 .k-button[data-responsive] .k-button-text {
   display: none;
-
-  @media screen and (min-width: $breakpoint-sm) {
+}
+@media screen and (min-width: 30em) {
+  .k-button[data-responsive] .k-button-text {
     display: inline;
   }
 }
 
 .k-button[data-theme="positive"] {
-  color: $color-positive;
+  color: var(--color-positive);
 }
 
 .k-button[data-theme="negative"] {
-  color: $color-negative;
+  color: var(--color-negative);
 }
 
 .k-button-icon {
@@ -149,18 +153,16 @@ button::-moz-focus-inner {
   line-height: 0;
 }
 
-.k-button-icon ~ .k-button-text {
-  [dir="ltr"] & {
-    padding-left: 0.5rem;
-  }
+[dir="ltr"] .k-button-icon ~ .k-button-text {
+  padding-left: .5rem;
+}
 
-  [dir="rtl"] & {
-    padding-right: 0.5rem;
-  }
+[dir="rtl"] .k-button-icon ~ .k-button-text {
+  padding-right: .5rem;
 }
 
 .k-button-text {
-  opacity: 0.75;
+  opacity: .75;
 }
 .k-button:focus .k-button-text,
 .k-button:hover .k-button-text {

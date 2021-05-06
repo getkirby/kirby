@@ -26,7 +26,7 @@
 export default {}
 </script>
 
-<style lang="scss">
+<style>
 .k-bar {
   display: flex;
   align-items: center;
@@ -39,13 +39,10 @@ export default {}
 .k-bar-slot[data-position="center"] {
   text-align: center;
 }
-.k-bar-slot[data-position="right"] {
-  [dir="ltr"] & {
-    text-align: right;
-  }
-
-  [dir="rtl"] & {
-    text-align: left;
-  }
+[dir="ltr"] .k-bar-slot[data-position="right"] {
+  text-align: right;
+}
+[dir="rtl"] .k-bar-slot[data-position="right"] {
+  text-align: left;
 }
 </style>

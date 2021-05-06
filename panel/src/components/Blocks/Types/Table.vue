@@ -57,13 +57,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-block-type-table-preview {
   cursor: pointer;
   width: 100%;
-  border: 1px solid $color-gray-300;
+  border: 1px solid var(--color-gray-300);
   border-spacing: 0;
-  border-radius: $rounded-sm;
+  border-radius: var(--rounded-sm);
   overflow: hidden;
   table-layout: fixed;
 }
@@ -72,13 +72,13 @@ export default {
   text-align: left;
   line-height: 1.5em;
   padding: .5rem .75rem;
-  font-size: $text-sm;
-  border-bottom: 1px solid $color-gray-300;
+  font-size: var(--text-sm);
+  border-bottom: 1px solid var(--color-gray-300);
 }
 .k-block-type-table-preview th {
-  background: $color-gray-100;
-  font-family: $font-mono;
-  font-size: $text-xs;
+  background: var(--color-gray-100);
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
 }
 .k-block-type-table-preview tr:last-child td {
   border-bottom: 0;
@@ -93,7 +93,7 @@ export default {
   text-align: center;
 }
 .k-block-type-table-preview-empty {
-  color: $color-gray-600;
-  font-size: $text-sm;
+  color: var(--color-gray-600);
+  font-size: var(--text-sm);
 }
 </style>

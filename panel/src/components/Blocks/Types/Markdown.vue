@@ -30,14 +30,14 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-block-type-markdown-input {
   position: relative;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   line-height: 1.5em;
-  background: $color-background;
-  border-radius: $rounded;
+  background: var(--color-background);
+  border-radius: var(--rounded);
   padding: .5rem .5rem 0;
-  font-family: $font-mono;
+  font-family: var(--font-mono);
 }
 </style>

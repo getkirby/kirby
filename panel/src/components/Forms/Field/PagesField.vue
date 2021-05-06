@@ -75,7 +75,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-pages-field[data-disabled] * {
   pointer-events: all !important;
 }

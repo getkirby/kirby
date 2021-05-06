@@ -315,17 +315,17 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-multiselect-input {
   display: flex;
   flex-wrap: wrap;
   position: relative;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   min-height: 2.25rem;
   line-height: 1;
 }
 .k-multiselect-input .k-sortable-ghost {
-  background: $color-focus;
+  background: var(--color-focus);
 }
 
 .k-multiselect-input .k-dropdown-content {
@@ -334,60 +334,56 @@ export default {
 
 .k-multiselect-search {
   margin-top: 0 !important;
-  color: $color-white;
-  background: $color-gray-900;
-  border-bottom: 1px dashed rgba($color-white, 0.2);
+  color: var(--color-white);
+  background: var(--color-gray-900);
+  border-bottom: 1px dashed rgba(255, 255, 255, .2);
+}
+.k-multiselect-search > .k-button-text {
+  flex: 1;
+  opacity: 1 !important;
+}
 
-  > .k-button-text {
-    flex: 1;
-    opacity: 1 !important;
-  }
-
-  input {
-    width: 100%;
-    color: $color-white;
-    background: none;
-    border: none;
-    outline: none;
-    padding: 0.25rem 0;
-    font: inherit;
-  }
+.k-multiselect-search input {
+  width: 100%;
+  color: var(--color-white);
+  background: none;
+  border: none;
+  outline: none;
+  padding: .25rem 0;
+  font: inherit;
 }
 
 .k-multiselect-options {
   position: relative;
   max-height: 275px;
   overflow-y: auto;
-  padding: 0.5rem 0;
+  padding: .5rem 0;
 }
 
 .k-multiselect-option {
   position: relative;
+}
+.k-multiselect-option.selected {
+  color: var(--color-positive-light);
+}
 
-  &.selected {
-    color: $color-positive-on-dark;
-  }
-
-  &.disabled:not(.selected) .k-icon {
-    opacity: 0;
-  }
-
-  b {
-    color: $color-focus-on-dark;
-    font-weight: 700;
-  }
+.k-multiselect-option.disabled:not(.selected) .k-icon {
+  opacity: 0;
+}
+.k-multiselect-option b {
+  color: var(--color-focus-light);
+  font-weight: 700;
 }
 
 .k-multiselect-value {
-  color: $color-light-grey;
-  margin-left: 0.25rem;
-
-  &::before {
-    content: " (";
-  }
-  &::after {
-    content: ")";
-  }
+  color: var(--color-gray-500);
+  margin-left: .25rem;
+}
+.k-multiselect-value::before {
+  content: " (";
+}
+.k-multiselect-value::after {
+  content: ")";
 }
 
 .k-multiselect-input[data-layout="list"] .k-tag {
@@ -398,12 +394,11 @@ export default {
 .k-multiselect-more {
   width: 100%;
   padding: .75rem;
-  color: rgba($color-white, .8);
+  color: rgba(255, 255, 255, .8);
   text-align: center;
-  border-top: 1px dashed rgba($color-white, 0.2);
-
-  &:hover {
-    color: $color-white;
-  }
+  border-top: 1px dashed rgba(255, 255, 255, .2);
+}
+.k-multiselect-more:hover {
+  color: var(--color-white);
 }
 </style>

@@ -146,18 +146,15 @@ export default {
 };
 </script>
 
-<style lang="scss">
-
+<style>
 .k-form-indicator-icon {
-  color: $color-notice-on-dark;
+  color: var(--color-notice-light);
 }
-
 .k-form-indicator-info {
-  font-size: $text-sm;
-  font-weight: $font-bold;
+  font-size: var(--text-sm);
+  font-weight: var(--font-bold);
   padding: .75rem 1rem .25rem;
   line-height: 1.25em;
   width: 15rem;
 }
-
 </style>

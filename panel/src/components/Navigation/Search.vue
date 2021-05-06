@@ -212,18 +212,19 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-search {
   max-width: 30rem;
   margin: 0 auto;
-  box-shadow: $shadow-lg;
-
-  @media screen and (min-width: $breakpoint-md) {
+  box-shadow: var(--shadow-lg);
+}
+@media screen and (min-width: 65em) {
+  .k-search {
     margin: 2.5rem auto;
   }
 }
 .k-search-input {
-  background: $color-light;
+  background: var(--color-light);
   display: flex;
 }
 .k-search-types {
@@ -232,17 +233,16 @@ export default {
 }
 .k-search-types > .k-button {
   padding: 0 0 0 1rem;
-  font-size: $text-base;
+  font-size: var(--text-base);
   line-height: 1;
   height: 2.5rem;
-
-  .k-icon {
-    height: 2.5rem;
-  }
-  .k-button-text {
-    opacity: 1;
-    font-weight: 500;
-  }
+}
+.k-search-types > .k-button .k-icon {
+  height: 2.5rem;
+}
+.k-search-types > .k-button .k-button-text {
+  opacity: 1;
+  font-weight: 500;
 }
 .k-search-input input {
   background: none;
@@ -265,19 +265,18 @@ export default {
 
 .k-search-results {
   padding: .5rem 1rem 1rem;
-  background: $color-light;
+  background: var(--color-light);
 }
 .k-search li {
-  background: $color-white;
+  background: var(--color-white);
   display: flex;
-  box-shadow: $shadow;
-
-  &:not(:last-child) {
-    margin-bottom: .25rem;
-  }
+  box-shadow: var(--shadow);
+}
+.k-search li:not(:last-child) {
+  margin-bottom: .25rem;
 }
 .k-search li[data-selected] {
-  outline: 2px solid $color-focus;
+  outline: 2px solid var(--color-focus);
 }
 .k-search li .k-link {
   display: flex;
@@ -297,17 +296,17 @@ export default {
 
 .k-search li strong {
   display: block;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   font-weight: 400;
 }
 .k-search li small {
-  font-size: $text-xs;
-  color: $color-gray-600;
+  font-size: var(--text-xs);
+  color: var(--color-gray-600);
 }
 
 .k-search-empty {
   text-align: center;
-  font-size: $text-xs;
-  color: $color-gray-600;
+  font-size: var(--text-xs);
+  color: var(--color-gray-600);
 }
 </style>

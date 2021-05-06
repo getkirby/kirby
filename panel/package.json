@@ -33,7 +33,6 @@
     "eslint": "^7.25.0",
     "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-vue": "^7.7.0",
-    "sass": "^1.32.8",
     "vite": "^2.0.5",
     "vite-plugin-rewrite-all": "^0.1.2",
     "vite-plugin-vue2": "^1.2.2",

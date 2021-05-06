@@ -45,23 +45,23 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-block-type-code-editor {
   position: relative;
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   line-height: 1.5em;
   background: #000;
-  border-radius: $rounded;
+  border-radius: var(--rounded);
   padding: .5rem .75rem 3rem;
   color: #fff;
-  font-family: $font-mono;
+  font-family: var(--font-mono);
 }
 .k-block-type-code-editor .k-editor {
   white-space: pre-wrap;
   line-height: 1.75em;
 }
 .k-block-type-code-editor-language {
-  font-size: $text-sm;
+  font-size: var(--text-sm);
   position: absolute;
   right: 0;
   bottom: 0;
@@ -79,6 +79,6 @@ export default {
   position: relative;
   padding: .325rem .75rem .5rem 2rem;
   z-index: 1;
-  font-size: $text-xs;
+  font-size: var(--text-xs);
 }
 </style>

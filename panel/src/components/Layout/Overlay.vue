@@ -137,7 +137,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-overlay {
   position: fixed;
   top: 0;
@@ -146,7 +146,7 @@ export default {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: z-index(dialog);
+  z-index: var(--z-dialog);
   transform: translate3d(0, 0, 0);
 }
 .k-overlay[data-centered] {
@@ -155,9 +155,9 @@ export default {
   justify-content: center;
 }
 .k-overlay[data-dimmed] {
-  background: $color-backdrop;
+  background: var(--color-backdrop);
 }
 .k-overlay-loader {
-  color: $color-white;
+  color: var(--color-white);
 }
 </style>

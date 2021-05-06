@@ -53,7 +53,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-block-type-image .k-block-figure-container {
   display: block;
   text-align: center;

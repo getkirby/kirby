@@ -155,7 +155,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 
 .k-settings-view section {
   margin-bottom: 3rem;
@@ -170,7 +170,7 @@ export default {
 }
 
 .k-system-info-box {
-  background: $color-white;
+  background: var(--color-white);
   padding: .75rem;
   display: flex;
 }
@@ -180,12 +180,12 @@ export default {
   flex-basis: 0;
 }
 .k-system-info-box dt {
-  font-size: $text-sm;
-  color: $color-gray-600;
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
   margin-bottom: .25rem;
 }
 .k-system-unregistered {
-  color: $color-negative;
+  color: var(--color-negative);
 }
 
 .k-languages-section {

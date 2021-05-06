@@ -41,19 +41,19 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-block-type-quote-editor {
   padding-left: 1rem;
-  border-left: 2px solid #000;
+  border-left: 2px solid var(--color-black);
 }
 .k-block-type-quote-text {
-  font-size: $text-xl;
+  font-size: var(--text-xl);
   margin-bottom: .25rem;
   line-height: 1.25em;
 }
 .k-block-type-quote-citation {
   font-style: italic;
-  font-size: $text-sm;
-  color: $color-gray-600;
+  font-size: var(--text-sm);
+  color: var(--color-gray-600);
 }
 </style>

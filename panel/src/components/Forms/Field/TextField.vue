@@ -60,7 +60,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 .k-field-counter {
   display: none;
 }

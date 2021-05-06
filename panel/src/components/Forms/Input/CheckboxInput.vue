@@ -108,7 +108,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style>
 
 .k-checkbox-input {
   position: relative;
@@ -130,7 +130,7 @@ export default {
   left: 0;
   width: 1rem;
   height: 1rem;
-  border: 2px solid $color-light-grey;
+  border: 2px solid var(--color-gray-500);
 }
 .k-checkbox-input-icon svg {
   position: absolute;
@@ -139,24 +139,24 @@ export default {
   display: none;
 }
 .k-checkbox-input-icon path {
-  stroke: $color-white;
+  stroke: var(--color-white);
 }
 .k-checkbox-input-native:checked + .k-checkbox-input-icon {
-  border-color: $color-gray-900;
-  background: $color-gray-900;
+  border-color: var(--color-gray-900);
+  background: var(--color-gray-900);
 }
 [data-disabled] .k-checkbox-input-native:checked + .k-checkbox-input-icon {
-  border-color: $color-gray-600;
-  background: $color-gray-600;
+  border-color: var(--color-gray-600);
+  background: var(--color-gray-600);
 }
 .k-checkbox-input-native:checked + .k-checkbox-input-icon svg {
   display: block;
 }
 .k-checkbox-input-native:focus + .k-checkbox-input-icon {
-  border-color: $color-blue-600;
+  border-color: var(--color-blue-600);
 }
 .k-checkbox-input-native:focus:checked + .k-checkbox-input-icon {
-  background: $color-focus;
+  background: var(--color-focus);
 }
 
 </style>

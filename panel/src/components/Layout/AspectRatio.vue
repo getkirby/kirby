@@ -22,7 +22,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-aspect-ratio {
   position: relative;
   display: block;

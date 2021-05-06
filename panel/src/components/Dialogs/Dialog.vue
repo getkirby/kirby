@@ -235,13 +235,13 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-dialog {
   position: relative;
-  background: $color-light;
+  background: var(--color-background);
   width: 100%;
-  box-shadow: $shadow-lg;
-  border-radius: $rounded-xs;
+  box-shadow: var(--shadow-lg);
+  border-radius: var(--rounded-xs);
   line-height: 1;
   max-height: calc(100vh - 3rem);
   margin: 1.5rem;
@@ -274,24 +274,24 @@ export default {
 }
 
 .k-dialog-notification {
-  padding: 0.75rem 1.5rem;
-  background: $color-gray-900;
+  padding: .75rem 1.5rem;
+  background: var(--color-gray-900);
   width: 100%;
   line-height: 1.25rem;
-  color: $color-white;
+  color: var(--color-white);
   display: flex;
   flex-shrink: 0;
   align-items: center;
 }
 
 .k-dialog-notification[data-theme="error"] {
-  background: $color-negative-on-dark;
-  color: $color-black;
+  background: var(--color-negative-light);
+  color: var(--color-black);
 }
 
 .k-dialog-notification[data-theme="success"] {
-  background: $color-positive-on-dark;
-  color: $color-black;
+  background: var(--color-positive-light);
+  color: var(--color-black);
 }
 
 .k-dialog-notification p {
@@ -312,14 +312,14 @@ export default {
 }
 
 .k-dialog-body .k-fieldset {
-  padding-bottom: 0.5rem;
+  padding-bottom: .5rem;
 }
 
 .k-dialog-footer {
-  border-top: 1px solid $color-gray-300;
+  border-top: 1px solid var(--color-gray-300);
   padding: 0;
-  border-bottom-left-radius: $rounded-xs;
-  border-bottom-right-radius: $rounded-xs;
+  border-bottom-left-radius: var(--rounded-xs);
+  border-bottom-right-radius: var(--rounded-xs);
   line-height: 1;
   flex-shrink: 0;
 }
@@ -329,20 +329,19 @@ export default {
   margin: 0;
   justify-content: space-between;
 
-  .k-button {
-    padding: 0.75rem 1rem;
-    line-height: 1.25rem;
-  }
+}
+.k-dialog-footer .k-button-group .k-button {
+  padding: .75rem 1rem;
+  line-height: 1.25rem;
+}
 
-  .k-button:first-child {
-    text-align: left;
-    padding-left: 1.5rem;
-  }
-
-  .k-button:last-child {
-    text-align: right;
-    padding-right: 1.5rem;
-  }
+.k-dialog-footer .k-button-group .k-button:first-child {
+  text-align: left;
+  padding-left: 1.5rem;
+}
+.k-dialog-footer .k-button-group .k-button:last-child {
+  text-align: right;
+  padding-right: 1.5rem;
 }
 
 /** Pagination **/
@@ -359,9 +358,9 @@ export default {
 }
 
 .k-dialog-search.k-input {
-  background: rgba(#000, .075);
+  background: rgba(0, 0, 0, .075);
   padding: 0 1rem;
   height: 36px;
-  border-radius: $rounded-xs;
+  border-radius: var(--rounded-xs);
 }
 </style>

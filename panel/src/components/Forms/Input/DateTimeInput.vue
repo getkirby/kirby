@@ -163,11 +163,11 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style>
 .k-datetime-input {
   display: flex;
 }
 .k-datetime-input .k-time-input {
-  padding-left: $field-input-padding;
+  padding-left: var(--field-input-padding);
 }
 </style>

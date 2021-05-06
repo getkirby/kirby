@@ -47,40 +47,41 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-headline {
-  font-size: $text-base;
-  font-weight: $font-bold;
+  font-size: var(--text-base);
+  font-weight: var(--font-bold);
   line-height: 1.5em;
 }
 .k-headline[data-size="small"] {
-  font-size: $text-sm;
+  font-size: var(--text-sm);
 }
 .k-headline[data-size="large"] {
-  font-size: $text-xl;
-  font-weight: $font-normal;
-
-  @media screen and (min-width: $breakpoint-md) {
-    font-size: $text-2xl;
+  font-size: var(--text-xl);
+  font-weight: var(--font-normal);
+}
+@media screen and (min-width: 65em) {
+  .k-headline[data-size="large"] {
+    font-size: var(--text-2xl);
   }
 }
 .k-headline[data-size="huge"] {
-  font-size: $text-2xl;
+  font-size: var(--text-2xl);
   line-height: 1.15em;
-
-  @media screen and (min-width: $breakpoint-md) {
-    font-size: $text-3xl;
+}
+@media screen and (min-width: 65em) {
+  .k-headline[data-size="huge"] {
+    font-size: var(--text-3xl);
   }
 }
 .k-headline[data-theme="negative"] {
-  color: $color-negative;
+  color: var(--color-negative);
 }
 .k-headline[data-theme="positive"] {
-  color: $color-positive;
+  color: var(--color-positive);
 }
-
 .k-headline abbr {
-  color: $color-light-grey;
+  color: var(--color-gray-500);
   padding-left: .25rem;
   text-decoration: none;
 }

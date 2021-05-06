@@ -23,13 +23,6 @@ export default defineConfig({
     // Fix vuelidate error
     'process.env.BUILD': JSON.stringify('production')
   },
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: `@import "./src/index.scss";` 
-     },
-    },
-  },
   build: {
     rollupOptions: {
       output: {

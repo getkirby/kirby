@@ -44,7 +44,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style>
 .k-browser-view .k-error-view-content {
   text-align: left;
 }
