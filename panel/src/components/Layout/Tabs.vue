@@ -154,11 +154,13 @@ export default {
   flex-direction: column;
   max-width: 15rem;
 
-  @media screen and (min-width: 30em) {
+}
+
+
+@media screen and (min-width: 30em) {
+  .k-tab-button.k-button {
     flex-direction: row;
   }
-}
-@media screen and (min-width: 30em) {
   .k-tab-button.k-button .k-icon {
     margin-right: .5rem;
   }
