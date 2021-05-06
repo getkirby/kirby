@@ -51,7 +51,8 @@ class Db
             'user'     => Config::get('db.user', 'root'),
             'password' => Config::get('db.password', ''),
             'database' => Config::get('db.database', ''),
-            'prefix'   => Config::get('db.prefix', '')
+            'prefix'   => Config::get('db.prefix', ''),
+            'port'     => Config::get('db.port', '')
         ];
         $params = $params ?? $defaults;
 
