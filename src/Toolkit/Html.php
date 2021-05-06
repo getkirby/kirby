@@ -423,6 +423,7 @@ class Html extends Xml
      */
     public static function video(string $url, array $options = [], array $attr = []): ?string
     {
+
         // YouTube video
         if (preg_match('!youtu!i', $url) === 1) {
             return static::youtube($url, $options['youtube'] ?? [], $attr);
@@ -433,7 +434,40 @@ class Html extends Xml
             return static::vimeo($url, $options['vimeo'] ?? [], $attr);
         }
 
-        return null;
+        // Self-hosted video file
+        $extension = F::extension($url);
+        $type      = F::extensionToType($extension);
+        $mime      = F::extensionToMime($extension);
+
+        // ignore unknown file types
+        if ($type !== 'video') {
+            return null;
+        }
+
+        return static::tag('video', [
+            static::tag('source', null, [
+                'src'  => $url,
+                'type' => $mime
+            ])
+        ], $attr);
+    }
+
+    /**
+     * Generates a list of allowed attributes
+     * for video iframes
+     *
+     * @param array $attr
+     * @return array
+     */
+    public static function videoAttr($attr): array
+    {
+        return [
+            // allow fullscreen mode by default
+            'allowfullscreen' => $attr['allowfullscreen'] ?? true,
+            'class'           => $attr['class'] ?? null,
+            'height'          => $attr['height'] ?? null,
+            'width'           => $attr['width'] ?? null,
+        ];
     }
 
     /**
@@ -470,13 +504,10 @@ class Html extends Xml
             $query->$key = $value;
         }
 
-        // allow fullscreen mode by default
-        $attr = array_merge(['allowfullscreen' => true], $attr);
-
         // build the full video src URL
         $src = 'https://player.vimeo.com/video/' . $id . $query->toString(true);
 
-        return static::iframe($src, $attr);
+        return static::iframe($src, static::videoAttr($attr));
     }
 
     /**
@@ -553,13 +584,10 @@ class Html extends Xml
             $query->$key = $value;
         }
 
-        // allow fullscreen mode by default
-        $attr = array_merge(['allowfullscreen' => true], $attr);
-
         // build the full video src URL
         $src = $src . $query->toString(true);
 
         // render the iframe
-        return static::iframe($src, $attr);
+        return static::iframe($src, static::videoAttr($attr));
     }
 }
