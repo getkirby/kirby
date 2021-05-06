@@ -173,7 +173,7 @@ export default {
   --color-focus-light: var(--color-blue-500);
   --color-focus-outline: rgba(113, 143, 183, .25);
   --color-negative: var(--color-red-700);
-  --color-negative-light: var(--color-red-500);
+  --color-negative-light: var(--color-red-600);
   --color-negative-outline: rgba(212, 110, 110, .25);
   --color-notice: var(--color-orange-600);
   --color-notice-light: var(--color-orange-500);
@@ -194,7 +194,7 @@ export default {
   --z-content: 200;
   --z-background: 100;
 
-  --bg-pattern: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXR0ZXJuIGlkPSJhIiB3aWR0aD0iMjAiIGhlaWdodD0iMjAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGZpbGw9InJnYmEoMCwgMCwgMCwgMC4yKSIgZD0iTTAgMGgxMHYxMEgwem0xMCAxMGgxMHYxMEgxMHoiLz48L3BhdHRlcm4+PHJlY3QgZmlsbD0idXJsKCNhKSIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIvPjwvc3ZnPg==");
+  --bg-pattern: repeating-conic-gradient(rgba(0,0,0, 0) 0% 25%, rgba(0,0,0, .2) 0% 50%) 50% / 20px 20px;
 
   --shadow-sticky: rgba(0, 0, 0, .05) 0 2px 5px;
   --shadow-dropdown: var(--shadow-lg);
