@@ -183,11 +183,14 @@ export default {
   display: grid;
   grid-gap: 1.5rem 3rem;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+}
 
-  @media screen and (min-width: 30em) {
+@media screen and (min-width: 30em) {
+  .k-file-preview-details ul {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   }
 }
+
 .k-file-preview-details h3 {
   font-size: var(--text-sm);
   font-weight: 500;

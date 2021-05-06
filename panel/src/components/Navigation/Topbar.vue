@@ -395,11 +395,14 @@ export default {
 }
 .k-topbar .k-button[data-theme="negative"] .k-button-text {
   display: none;
+}
 
-  @media screen and (min-width: var(--breakpoint-sm) ){
+@media screen and (min-width: 30em){
+  .k-topbar .k-button[data-theme="negative"] .k-button-text {
     display: inline;
   }
 }
+
 .k-topbar .k-button[data-theme] .k-button-text {
   opacity: 1;
 }
