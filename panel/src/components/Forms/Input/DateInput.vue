@@ -19,21 +19,27 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import {
+  autofocus,
+  disabled,
+  id,
+  required
+} from "@/mixins/props.js";
 
-/**
- * @example <k-input v-model="date" type="date" name="date" />
- */
-export default {
-  inheritAttrs: false,
+import { required as validateRequired } from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    required
+  ],
   props: {
-    autofocus: Boolean,
-    disabled: Boolean,
     display: {
       type: String,
       default: "DD.MM.YYYY"
     },
-    id: [String, Number],
     /**
      * The last allowed date
      */
@@ -42,7 +48,6 @@ export default {
      * The first allowed date
      */
     min: String,
-    required: Boolean,
     step: {
       type: Object,
       default() {
@@ -61,7 +66,15 @@ export default {
      * @example `2012-12-12 22:33:00`
      */
     value: String
-  },
+  }
+};
+
+/**
+ * @example <k-input v-model="date" type="date" name="date" />
+ */
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       input: this.toFormat(this.value),
@@ -409,7 +422,7 @@ export default {
           "isBefore",
           this.step.unit
         ) : true,
-        required: this.required ? required : true,
+        required: this.required ? validateRequired : true,
       }
     }
   }

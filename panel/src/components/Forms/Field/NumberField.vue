@@ -12,21 +12,21 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import NumberInput from "../Input/NumberInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as NumberInput } from "../Input/NumberInput.vue";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-number-input>` for additional information.
  * @example <k-number-field v-model="number" name="number" label="Number" />
  */
 export default {
+  mixins: [
+    Field,
+    Input,
+    NumberInput
+  ],
   inheritAttrs: false,
-  props: {
-    ...Field.props,
-    ...Input.props,
-    ...NumberInput.props
-  },
   methods: {
     focus() {
       this.$refs.input.focus();

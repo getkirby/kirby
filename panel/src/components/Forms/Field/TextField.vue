@@ -17,9 +17,10 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
-import Input from "../Input.vue";
-import TextInput from "../Input/TextInput.vue";
+import { props as Field } from "../Field.vue";
+import { props as Input } from "../Input.vue";
+import { props as TextInput } from "../Input/TextInput.vue";
+import counter from "@/mixins/forms/counter.js";
 
 /**
  * Have a look at `<k-field>`, `<k-input>` and `<k-text-input>` 
@@ -27,28 +28,13 @@ import TextInput from "../Input/TextInput.vue";
  * @example <k-text-field v-model="text" name="text" label="Boring text" />
  */
 export default {
+  mixins: [
+    Field,
+    Input,
+    TextInput,
+    counter
+  ],
   inheritAttrs: false,
-  props: {
-    ...Field.props,
-    ...Input.props,
-    ...TextInput.props,
-    counter: {
-      type: Boolean,
-      default: true
-    }
-  },
-  computed: {
-    counterOptions() {
-      if (this.value === null || this.disabled || this.counter === false) {
-        return false;
-      }
-      return {
-        count: this.value ? String(this.value).length : 0,
-        min: this.minlength,
-        max: this.maxlength
-      };
-    }
-  },
   methods: {
     focus() {
       this.$refs.input.focus();

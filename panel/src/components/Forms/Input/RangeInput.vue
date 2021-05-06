@@ -27,17 +27,29 @@
 </template>
 
 <script>
-import { required, minValue, maxValue } from "vuelidate/lib/validators";
+import { 
+  autofocus,
+  disabled,
+  id,
+  name,
+  required
+} from "@/mixins/props.js";
 
-/**
- * @example <k-input v-model="range" name="range" type="range" />
- */
-export default {
-  inheritAttrs: false,
+import { 
+  required as validateRequired,
+  minValue as validateMinValue,
+  maxValue as validateMaxValue
+} from "vuelidate/lib/validators";
+
+export const props = {
+  mixins: [
+    autofocus,
+    disabled,
+    id,
+    name,
+    required
+  ],
   props: {
-    autofocus: Boolean,
-    disabled: Boolean,
-    id: [String, Number],
     default: [Number, String],
     /**
      * The highest accepted number
@@ -53,8 +65,6 @@ export default {
       type: Number,
       default: 0
     },
-    name: [String, Number],
-    required: Boolean,
     /**
      * The amount to increment when dragging the slider. This can be a decimal.
      */
@@ -75,7 +85,15 @@ export default {
       }
     },
     value: [Number, String]
-  },
+  }
+}
+
+/**
+ * @example <k-input v-model="range" name="range" type="range" />
+ */
+export default {
+  mixins: [props],
+  inheritAttrs: false,
   data() {
     return {
       listeners: {
@@ -131,9 +149,9 @@ export default {
   validations() {
     return {
       position: {
-        required: this.required ? required : true,
-        min: this.min ? minValue(this.min) : true,
-        max: this.max ? maxValue(this.max) : true
+        required: this.required ? validateRequired : true,
+        min: this.min ? validateMinValue(this.min) : true,
+        max: this.max ? validateMaxValue(this.max) : true
       }
     };
   }

@@ -168,13 +168,13 @@
 </template>
 
 <script>
-import Field from "../Field.vue";
 import direction from "@/helpers/direction.js";
+import { props as Field } from "../Field.vue";
 
 export default {
+  mixins: [Field],
   inheritAttrs: false,
   props: {
-    ...Field.props,
     columns: Object,
     duplicate: {
       type: Boolean,
