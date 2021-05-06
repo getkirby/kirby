@@ -199,7 +199,6 @@ export default {
   --shadow-sticky: rgba(0, 0, 0, .05) 0 2px 5px;
   --shadow-dropdown: var(--shadow-lg);
   --shadow-item: var(--shadow);
-  --shadow-focus:var(--shadow-focus);
 
   --field-input-padding: .5rem;
   --field-input-height: 2.25rem;
