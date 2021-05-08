@@ -30,7 +30,10 @@ trait UserActions
      */
     public function changeEmail(string $email)
     {
-        return $this->commit('changeEmail', ['user' => $this, 'email' => Idn::decodeEmail($email)], function ($user, $email) {
+        $email = Str::lower(trim($email));
+        $email = Idn::decodeEmail($email);
+
+        return $this->commit('changeEmail', ['user' => $this, 'email' => $email], function ($user, $email) {
             $user = $user->clone([
                 'email' => $email
             ]);
