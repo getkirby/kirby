@@ -66,6 +66,14 @@ class UserActionsTest extends TestCase
         $this->assertSame('test@täst.com', $user->email());
     }
 
+    public function testChangeEmailWithUppercase()
+    {
+        $user = $this->app->user('editor@domain.com');
+        $user = $user->changeEmail('ANOTHER@domain.com');
+
+        $this->assertSame('another@domain.com', $user->email());
+    }
+
     public function testChangeLanguage()
     {
         $user = $this->app->user('editor@domain.com');
