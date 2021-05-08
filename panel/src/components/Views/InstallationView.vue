@@ -204,25 +204,13 @@ export default {
   position: relative;
   padding: 1.5rem;
   background: var(--color-white);
-}
-[dir="ltr"] .k-installation-issues li {
-  padding-left: 3.5rem;
-}
-
-[dir="rtl"] .k-installation-issues li {
-  padding-right: 3.5rem;
+  padding-inline-start: 3.5rem;
 }
 
 .k-installation-issues .k-icon {
   position: absolute;
   top: calc(1.5rem + 2px);
-}
-[dir="ltr"] .k-installation-issues .k-icon {
-  left: 1.5rem;
-}
-
-[dir="rtl"] .k-installation-issues .k-icon {
-  right: 1.5rem;
+  inset-inline-start: 1.5rem;
 }
 
 .k-installation-issues .k-icon svg * {
@@ -238,11 +226,6 @@ export default {
 
 .k-installation-view .k-button[type="submit"] {
   padding: 1rem;
-}
-[dir="ltr"] .k-installation-view .k-button[type="submit"]  {
-  margin-left: -1rem;
-}
-[dir="rtl"] .k-installation-view .k-button[type="submit"]  {
-  margin-right: -1rem;
+  margin-inline-start: -1rem;
 }
 </style>

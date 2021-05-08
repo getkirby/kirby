@@ -91,13 +91,7 @@ export default {
   padding: .5rem 1rem;
   font-weight: 500;
   transition: opacity .3s;
-}
-[dir="ltr"] .k-login-button {
-  margin-right: -1rem;
-}
-
-[dir="rtl"] .k-login-button {
-  margin-left: -1rem;
+  margin-inline-end: -1rem
 }
 
 .k-login-button span {
@@ -115,11 +109,8 @@ export default {
   flex-grow: 1;
 }
 
-[dir="ltr"] .k-login-back-button {
-  margin-left: -1rem;
-}
-[dir="rtl"] .k-login-back-button {
-  margin-right: -1rem;
+.k-login-back-button {
+  margin-inline-start: -1rem;
 }
 
 .k-login-checkbox {

@@ -39,10 +39,7 @@ export default {}
 .k-bar-slot[data-position="center"] {
   text-align: center;
 }
-[dir="ltr"] .k-bar-slot[data-position="right"] {
-  text-align: right;
-}
-[dir="rtl"] .k-bar-slot[data-position="right"] {
-  text-align: left;
+.k-bar-slot[data-position="right"] {
+  text-align: end;
 }
 </style>

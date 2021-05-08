@@ -284,13 +284,7 @@ export default {
 }
 .k-user-profile .k-button-group {
   overflow: hidden;
-}
-[dir="ltr"] .k-user-profile .k-button-group {
-  margin-left: .75rem;
-}
-
-[dir="rtl"] .k-user-profile .k-button-group {
-  margin-right: .75rem;
+  margin-inline-start: .75rem
 }
 .k-user-profile .k-button-group .k-button {
   display: block;
