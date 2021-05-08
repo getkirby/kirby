@@ -278,21 +278,12 @@ export default {
   flex-shrink: 0;
   display: flex;
   align-items: center;
+  padding-inline-end: 0;
 }
-[dir="ltr"] .k-topbar-view-button {
-  padding-right: 0;
-}
-[dir="rtl"] .k-topbar-view-button {
-  padding-left: 0;
+.k-topbar-view-button .k-icon {
+  margin-inline-end: .5rem;
 }
 
-[dir="ltr"] .k-topbar-view-button .k-icon {
-  margin-right: .5rem;
-}
-
-[dir="rtl"] .k-topbar-view-button .k-icon {
-  margin-left: .5rem;
-}
 .k-topbar-crumbs {
   flex-grow: 1;
   display: flex;
@@ -342,38 +333,21 @@ export default {
 .k-topbar-signals {
   position: absolute;
   top: 0;
+  inset-inline-end: 0;
   background: var(--color-gray-900);
   height: 2.5rem;
   display: flex;
   align-items: center;
 }
-[dir="ltr"] .k-topbar-signals {
-  right: 0;
-}
-
-[dir="rtl"] .k-topbar-signals {
-  left: 0;
-}
 .k-topbar-signals::before {
   position: absolute;
   content: "";
   top: 0;
+  inset-block-start: -0.5rem;
   bottom: 0;
   width: .5rem;
-}
-[dir="ltr"] .k-topbar-signals::before {
-  left: -0.5rem;
   background: -webkit-linear-gradient(
-    left,
-    rgba(17, 17, 17, 0),
-    rgba(17, 17, 17, 1)
-  );
-}
-
-[dir="rtl"] .k-topbar-signals::before {
-  right: -0.5rem;
-  background: -webkit-linear-gradient(
-    right,
+    inline-start,
     rgba(17, 17, 17, 0),
     rgba(17, 17, 17, 1)
   );

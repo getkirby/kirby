@@ -89,13 +89,7 @@ export default {
   opacity: 0;
   transition: opacity .3s;
   display: inline-block;
-}
-[dir="ltr"] .k-header .k-headline-editable .k-icon {
-  margin-left: .5rem;
-}
-
-[dir="rtl"] .k-header .k-headline-editable .k-icon {
-  margin-right: .5rem;
+  margin-inline-start: .5rem
 }
 .k-header .k-headline-editable:hover .k-icon {
   opacity: 1;

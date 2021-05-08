@@ -189,13 +189,7 @@ export default {
 .k-upload input {
   position: absolute;
   top: 0;
-}
-[dir="ltr"] .k-upload input {
-  left: -3000px;
-}
-
-[dir="rtl"] .k-upload input {
-  right: -3000px;
+  inset-inline-start: -3000px;
 }
 
 .k-upload .k-headline {

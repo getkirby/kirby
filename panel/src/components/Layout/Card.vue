@@ -152,6 +152,7 @@ export default {
 .k-card .k-sort-handle {
   position: absolute;
   top: .75rem;
+  inset-inline-end: .75rem;
   width: 2rem;
   height: 2rem;
   border-radius: var(--rounded-xs);
@@ -161,12 +162,6 @@ export default {
   z-index: 1;
   will-change: opacity;
   transition: opacity .3s;
-}
-[dir="ltr"] .k-card .k-sort-handle {
-  right: .75rem;
-}
-[dir="rtl"] .k-card .k-sort-handle {
-  left: .75rem;
 }
 .k-cards:hover .k-sort-handle {
   opacity: .25;
@@ -230,26 +225,16 @@ export default {
 .k-card-info {
   color: var(--color-gray-600);
   display: block;
+  margin-inline-end: 4rem;
   font-size: var(--text-sm);
   text-overflow: ellipsis;
   overflow: hidden;
-}
-[dir="ltr"] .k-card-info {
-  margin-right: 4rem;
-}
-[dir="rtl"] .k-card-info {
-  margin-left: 4rem;
 }
 
 .k-card-options {
   position: absolute;
   bottom: 0;
-}
-[dir="ltr"] .k-card-options {
-  right: 0;
-}
-[dir="rtl"] .k-card-options {
-  left: 0;
+  inset-inline-end: 0;
 }
 .k-card-options > .k-button {
   position: relative;

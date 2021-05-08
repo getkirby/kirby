@@ -639,17 +639,10 @@ export default {
 .k-structure-table th,
 .k-structure-table td {
   border-bottom: 1px solid var(--color-background);
+  border-inline-end: 1px solid var(--color-background);
   line-height: 1.25em;
   overflow: hidden;
   text-overflow: ellipsis;
-}
-[dir="ltr"] .k-structure-table th,
-[dir="ltr"] .k-structure-table td {
-  border-right: 1px solid var(--color-background);
-}
-[dir="rtl"] .k-structure-table th,
-[dir="rtl"] .k-structure-table td {
-  border-left: 1px solid var(--color-background);
 }
 
 .k-structure-table td:last-child {
@@ -662,31 +655,19 @@ export default {
   right: 0;
   left: 0;
   width: 100%;
-  background: #fff;
-  font-weight: 400;
-  z-index: 1;
-  color: var(--color-gray-600);
-  padding: 0 .75rem;
   height: var(--structure-item-height);
-}
-[dir="ltr"] .k-structure-table th {
-  text-align: left;
-}
-[dir="rtl"] .k-structure-table th {
-  text-align: right;
+  padding: 0 .75rem;
+  background: #fff;
+  color: var(--color-gray-600);
+  font-weight: 400;
+  text-align: start;
+  z-index: 1;
 }
 
 .k-structure-table th:last-child,
 .k-structure-table td:last-child {
   width: var(--structure-item-height);
-}
-[dir="ltr"] .k-structure-table th:last-child,
-[dir="ltr"] .k-structure-table td:last-child {
-  border-right: 0;
-}
-[dir="rtl"] .k-structure-table th:last-child,
-[dir="rtl"] .k-structure-table td:last-child {
-  border-left: 0;
+  border-inline-end: 0;
 }
 
 .k-structure-table tr:last-child td {
@@ -718,11 +699,8 @@ export default {
 .k-structure-table .k-structure-table-column[data-align="center"] {
   text-align: center;
 }
-[dir="ltr"] .k-structure-table .k-structure-table-column[data-align="right"] {
-  text-align: right;
-}
-[dir="rtl"] .k-structure-table .k-structure-table-column[data-align="right"] {
-  text-align: left;
+.k-structure-table .k-structure-table-column[data-align="right"] {
+  text-align: end;
 }
 .k-structure-table .k-structure-table-column[data-align="right"] > .k-input {
   flex-direction: column;
@@ -817,18 +795,11 @@ export default {
 [data-disabled] .k-structure-table td {
   background: var(--color-background);
   border-bottom: 1px solid var(--color-border);
+  border-inline-end: 1px solid var(--color-border);
 }
 [data-disabled] .k-structure-table td:last-child {
   overflow: hidden;
   text-overflow: ellipsis;
-}
-[dir="ltr"] [data-disabled] .k-structure-table th,
-[dir="ltr"] [data-disabled] .k-structure-table td {
-  border-right: 1px solid var(--color-border);
-}
-[dir="rtl"] [data-disabled] .k-structure-table th,
-[dir="rtl"] [data-disabled] .k-structure-table td {
-  border-left: 1px solid var(--color-border);
 }
 .k-structure-table .k-sortable-row-fallback {
   opacity: 0 !important;

@@ -33,39 +33,21 @@ export default {
   overflow: hidden;
   white-space: nowrap;
 }
-[dir="ltr"] .k-toggle-field-preview .k-toggle-input-label {
-  padding-left: .5rem;
+.k-toggle-field-preview .k-toggle-input-label {
+  padding-inline-start: .5rem;
 }
 
-[dir="rtl"] .k-toggle-field-preview .k-toggle-input-label {
-  padding-right: .5rem;
+[data-align="right"] .k-toggle-field-preview .k-toggle-input-label {
+  padding-inline-end: .5rem;
 }
 
-[dir="ltr"] [data-align="right"] .k-toggle-field-preview .k-toggle-input-label {
-  padding-right: .5rem;
-}
-
-[dir="rtl"] [data-align="right"] .k-toggle-field-preview .k-toggle-input-label {
-  padding-left: .5rem;
-}
-
-[dir="ltr"] .k-toggle-field-preview .k-toggle-input {
-  padding: 0 .25rem 0 .75rem;
-}
-
-[dir="rtl"] .k-toggle-field-preview .k-toggle-input {
-  padding: 0 .75rem 0 .25rem;
+.k-toggle-field-preview .k-toggle-input {
+  padding-block: 0;
+  padding-inline: .75rem .25rem;
 }
 
 [data-align="right"] .k-toggle-field-preview .k-toggle-input {
   flex-direction: row-reverse;
-}
-
-[dir="ltr"] [data-align="right"] .k-toggle-field-preview .k-toggle-input {
-  padding: 0 .75rem 0 .25rem;
-}
-
-[dir="rtl"] [data-align="right"] .k-toggle-field-preview .k-toggle-input {
-  padding: 0 .25rem 0 .75rem;
+  padding-inline: .25rem .75rem ;
 }
 </style>
