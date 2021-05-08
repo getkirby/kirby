@@ -448,7 +448,7 @@ class System
         $response = Remote::get('https://licenses.getkirby.com/register', [
             'data' => [
                 'license' => $license,
-                'email'   => $email,
+                'email'   => Str::lower(trim($email)),
                 'domain'  => $this->indexUrl()
             ]
         ]);
