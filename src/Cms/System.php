@@ -445,6 +445,7 @@ class System
             ]);
         }
 
+        // @codeCoverageIgnoreStart
         $response = Remote::get('https://licenses.getkirby.com/register', [
             'data' => [
                 'license' => $license,
@@ -474,6 +475,7 @@ class System
                 'key' => 'license.verification'
             ]);
         }
+        // @codeCoverageIgnoreEnd
 
         return true;
     }
