@@ -1,7 +1,7 @@
 import Vue from "vue";
 
 export default (name) => {
-  if (Vue.options.components[name] !== undefined) {
+  if (Vue.component(name) !== undefined) {
     return true;
   }
 
