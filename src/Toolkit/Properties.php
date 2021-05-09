@@ -13,6 +13,12 @@ namespace Kirby\Toolkit;
  */
 trait Properties
 {
+    /**
+     * Original or default values for properties
+     * before sett methods have been called
+     *
+     * @var array
+     */
     protected $propertyData = [];
 
     /**
@@ -37,20 +43,41 @@ trait Properties
     public function hardcopy()
     {
         $clone = $this->clone();
-        $clone->toArray();
+        foreach (array_keys($this->propertyData) as $prop) {
+            $this->{$prop}();
+        }
         return $clone;
     }
 
-    protected function setProperties(array $data, array $names)
+    /**
+     * Sets the data for all named properties
+     * by calling the dedicated prop setter method
+     *
+     * @param array $data
+     * @param array $props
+     * @return $this
+     */
+    protected function setProperties(array $data, array $props)
     {
-        foreach ($names as $name) {
-            $this->propertyData[$name] = $data[$name] ?? $this->$name ?? null;
+        // loop through all the prop names
+        // that have been passed to be se
+        foreach ($props as $prop) {
 
-            if (isset($data[$name]) === true) {
-                $this->{'set' . $name}($this->propertyData[$name]);
+            // store the data value for the property;
+            // if none has been passed, use the property
+            // default and `null` as fallbacks
+            $this->propertyData[$prop] = $data[$prop] ?? $this->$prop ?? null;
+
+            // call the setter method for the prop:
+            // if a data value for the prop has been passed,
+            // pass this value to the setter method
+            if (isset($data[$prop]) === true) {
+                $this->{'set' . $prop}($data[$prop]);
             } else {
-                $this->{'set' . $name}();
+                $this->{'set' . $prop}();
             }
         }
+
+        return $this;
     }
 }
