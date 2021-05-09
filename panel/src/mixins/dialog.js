@@ -1,3 +1,5 @@
+import { TranslationString } from '@/config/i18n.js'
+
 export default {
   props: {
     cancelButton: {
@@ -6,7 +8,7 @@ export default {
     },
     icon: String,
     submitButton: {
-      type: [String, Boolean],
+      type: [String, TranslationString, Boolean],
       default: true
     },
     /**

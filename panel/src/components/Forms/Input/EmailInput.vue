@@ -1,4 +1,5 @@
 <script>
+import { TranslationString } from '@/config/i18n.js'
 import TextInput from "./TextInput.vue";
 import { props as TextInputProps } from "./TextInput.vue";
 
@@ -10,9 +11,9 @@ export const props = {
       default: "email"
     },
     placeholder: {
-      type: String,
+      type: [String, TranslationString],
       default() {
-        return this.$t("email.placeholder");
+        return new TranslationString("email.placeholder")
       }
     },
     type: {

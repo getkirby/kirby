@@ -18,6 +18,7 @@
 
 <script>
 import DialogMixin from "@/mixins/dialog.js";
+import { TranslationString } from '@/config/i18n.js'
 
 export default {
   mixins: [DialogMixin],
@@ -37,9 +38,9 @@ export default {
       default: "medium",
     },
     submitButton: {
-      type: [String, Boolean],
+      type: [String, TranslationString, Boolean],
       default() {
-        return this.$t('save');
+        return new TranslationString("save")
       }
     },
     theme: {
