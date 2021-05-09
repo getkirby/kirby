@@ -2,7 +2,7 @@
 
 namespace Kirby\Toolkit;
 
-use Exception;
+use Kirby\Exception\Exception;
 use Kirby\Http\Response;
 use Kirby\Sane\Sane;
 
@@ -24,6 +24,16 @@ class File
      * @var string
      */
     protected $root;
+
+    /**
+     * Validation rules to be used for `::match()`
+     *
+     * @var array
+     */
+    public static $validations = [
+        'maxsize' => ['size', 'max'],
+        'minsize' => ['size', 'min']
+    ];
 
     /**
      * Constructs a new File object by absolute path
@@ -104,7 +114,7 @@ class File
      * Automatically sends all needed headers for the file to be downloaded
      * and echos the file's content
      *
-     * @param  string|null $filename  Optional filename for the download
+     * @param string|null $filename Optional filename for the download
      * @return string
      */
     public function download($filename = null): string
@@ -193,6 +203,74 @@ class File
     public function isWritable(): bool
     {
         return F::isWritable($this->root);
+    }
+
+    /**
+     * Runs a set of validations on the file object
+     * (mainly for images).
+     *
+     * @param array $rules
+     * @return bool
+     * @throws \Kirby\Exception\Exception
+     */
+    public function match(array $rules): bool
+    {
+        $rules = array_change_key_case($rules);
+
+        if (is_array($rules['mime'] ?? null) === true) {
+            $mime = $this->mime();
+
+            // determine if any pattern matches the MIME type;
+            // once any pattern matches, `$carry` is `true` and the rest is skipped
+            $matches = array_reduce($rules['mime'], function ($carry, $pattern) use ($mime) {
+                return $carry || Mime::matches($mime, $pattern);
+            }, false);
+
+            if ($matches !== true) {
+                throw new Exception([
+                    'key'  => 'file.mime.invalid',
+                    'data' => compact('mime')
+                ]);
+            }
+        }
+
+        if (is_array($rules['extension'] ?? null) === true) {
+            $extension = $this->extension();
+            if (in_array($extension, $rules['extension']) !== true) {
+                throw new Exception([
+                    'key'  => 'file.extension.invalid',
+                    'data' => compact('extension')
+                ]);
+            }
+        }
+
+        if (is_array($rules['type'] ?? null) === true) {
+            $type = $this->type();
+            if (in_array($type, $rules['type']) !== true) {
+                throw new Exception([
+                    'key'  => 'file.type.invalid',
+                    'data' => compact('type')
+                ]);
+            }
+        }
+
+        foreach (static::$validations as $key => $arguments) {
+            $rule = $rules[$key] ?? null;
+
+            if ($rule !== null) {
+                $property  = $arguments[0];
+                $validator = $arguments[1];
+
+                if (V::$validator($this->$property(), $rule) === false) {
+                    throw new Exception([
+                        'key'  => 'file.' . $key,
+                        'data' => [$property => $rule]
+                    ]);
+                }
+            }
+        }
+
+        return true;
     }
 
     /**

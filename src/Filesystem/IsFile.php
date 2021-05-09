@@ -39,7 +39,6 @@ trait IsFile
      */
     protected $root;
 
-
     /**
      * Absolute file URL
      *
@@ -67,12 +66,12 @@ trait IsFile
      */
     public function __call(string $method, array $arguments = [])
     {
-        // Public property access
+        // public property access
         if (isset($this->$method) === true) {
             return $this->$method;
         }
 
-        // Asset method proxy
+        // asset method proxy
         if (method_exists($this->asset(), $method)) {
             return $this->asset()->$method(...$arguments);
         }

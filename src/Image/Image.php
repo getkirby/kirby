@@ -18,7 +18,7 @@ use Kirby\Toolkit\Html;
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
- * @license   https://getkirby.com/license
+ * @license   https://opensource.org/licenses/MIT
  */
 class Image extends File
 {
@@ -31,6 +31,21 @@ class Image extends File
      * @var \Kirby\Image\Dimensions|null
      */
     protected $dimensions;
+
+    /**
+     * Validation rules to be used for `::match()`
+     *
+     * @var array
+     */
+    public static $validations = [
+        'maxsize'     => ['size',   'max'],
+        'minsize'     => ['size',   'min'],
+        'maxwidth'    => ['width',  'max'],
+        'minwidth'    => ['width',  'min'],
+        'maxheight'   => ['height', 'max'],
+        'minheight'   => ['height', 'min'],
+        'orientation' => ['orientation', 'same']
+    ];
 
     /**
      * Returns the dimensions of the file if possible
@@ -191,7 +206,7 @@ class Image extends File
     }
 
     /**
-     * Convert the object to an array
+     * Converts the object to an array
      *
      * @return array
      */
@@ -208,7 +223,7 @@ class Image extends File
     }
 
     /**
-     * Return the url for the file object
+     * Returns the URL for the file object
      *
      * @return string
      */

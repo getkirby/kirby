@@ -3,15 +3,12 @@
 namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
-use Kirby\Exception\Exception;
 use Kirby\Toolkit\File as BaseFile;
 use Kirby\Toolkit\Html;
-use Kirby\Toolkit\Mime;
 use Kirby\Toolkit\Properties;
-use Kirby\Toolkit\V;
 
 /**
- * A representation of an file in the filesystem.
+ * A representation of a file in the filesystem.
  * Extends the `Kirby\Toolkit\File` class with
  * Cms-specific properties and methods.
  *
@@ -37,8 +34,8 @@ class File extends BaseFile
     /**
      * Constructor sets all file properties
      *
-     * @param string|array|null $props
-     * @param string|null $url
+     * @param array|string|null $props Properties or deprecated `$root` string
+     * @param string|null $url Deprecated argument, use `$props['url']` instead
      */
     public function __construct($props = null, string $url = null)
     {
@@ -98,86 +95,7 @@ class File extends BaseFile
     }
 
     /**
-     * Runs a set of validations on the file object
-     * (mainly for images).
-     *
-     * @param array $rules
-     * @return bool
-     * @throws \Kirby\Exception\Exception
-     */
-    public function match(array $rules): bool
-    {
-        $rules = array_change_key_case($rules);
-
-
-        if (is_array($rules['mime'] ?? null) === true) {
-            $mime = $this->mime();
-
-            // determine if any pattern matches the MIME type;
-            // once any pattern matches, `$carry` is `true` and the rest is skipped
-            $matches = array_reduce($rules['mime'], function ($carry, $pattern) use ($mime) {
-                return $carry || Mime::matches($mime, $pattern);
-            }, false);
-
-            if ($matches !== true) {
-                throw new Exception([
-                    'key'  => 'file.mime.invalid',
-                    'data' => compact('mime')
-                ]);
-            }
-        }
-
-        if (is_array($rules['extension'] ?? null) === true) {
-            $extension = $this->extension();
-            if (in_array($extension, $rules['extension']) !== true) {
-                throw new Exception([
-                    'key'  => 'file.extension.invalid',
-                    'data' => compact('extension')
-                ]);
-            }
-        }
-
-        if (is_array($rules['type'] ?? null) === true) {
-            $type = $this->type();
-            if (in_array($type, $rules['type']) !== true) {
-                throw new Exception([
-                    'key'  => 'file.type.invalid',
-                    'data' => compact('type')
-                ]);
-            }
-        }
-
-        $validations = [
-            'maxsize'     => ['size',   'max'],
-            'minsize'     => ['size',   'min'],
-            'maxwidth'    => ['width',  'max'],
-            'minwidth'    => ['width',  'min'],
-            'maxheight'   => ['height', 'max'],
-            'minheight'   => ['height', 'min'],
-            'orientation' => ['orientation', 'same']
-        ];
-
-        foreach ($validations as $key => $arguments) {
-            $rule = $rules[$key] ?? null;
-
-            if ($rule !== null) {
-                $property  = $arguments[0];
-                $validator = $arguments[1];
-
-                if (V::$validator($this->$property(), $rule) === false) {
-                    throw new Exception([
-                        'key'  => 'file.' . $key,
-                        'data' => [$property => $rule]
-                    ]);
-                }
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Get the file's last modification time.
+     * Returns the file's last modification time
      *
      * @param string $format
      * @param string|null $handler date or strftime
@@ -226,7 +144,7 @@ class File extends BaseFile
     }
 
     /**
-     * Convert the object to an array
+     * Converts the object to an array
      *
      * @return array
      */
@@ -244,7 +162,7 @@ class File extends BaseFile
 
 
     /**
-     * Return the url for the file object
+     * Returns the URL for the file object
      *
      * @return string
      */

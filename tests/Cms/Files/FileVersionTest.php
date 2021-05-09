@@ -50,8 +50,8 @@ class FileVersionTest extends TestCase
         ]);
 
         $version = new FileVersion([
-            'original'      => $original,
-            'root'          => __DIR__ . '/fixtures/files/test.jpg'
+            'original' => $original,
+            'root'     => __DIR__ . '/fixtures/files/test.jpg'
         ]);
 
         $this->assertSame('jpg', $version->toArray()['extension']);

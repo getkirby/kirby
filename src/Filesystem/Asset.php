@@ -25,7 +25,6 @@ class Asset
      */
     protected $path;
 
-
     /**
      * Creates a new Asset object for the given path.
      *

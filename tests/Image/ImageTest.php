@@ -145,7 +145,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @covers \Kirby\Filesystem\File::match
+     * @covers ::match
      */
     public function testMatch()
     {
@@ -166,40 +166,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @covers \Kirby\Filesystem\File::match
-     */
-    public function testMatchMimeException()
-    {
-        $this->expectException('Kirby\Exception\Exception');
-        $this->expectExceptionMessage('Invalid mime type: image/jpeg');
-
-        $this->_image()->match(['mime' => ['image/png', 'application/pdf']]);
-    }
-
-    /**
-     * @covers \Kirby\Filesystem\File::match
-     */
-    public function testMatchExtensionException()
-    {
-        $this->expectException('Kirby\Exception\Exception');
-        $this->expectExceptionMessage('Invalid extension: jpg');
-
-        $this->_image()->match(['extension' => ['png', 'pdf']]);
-    }
-
-    /**
-     * @covers \Kirby\Filesystem\File::match
-     */
-    public function testMatchTypeException()
-    {
-        $this->expectException('Kirby\Exception\Exception');
-        $this->expectExceptionMessage('Invalid file type: image');
-
-        $this->_image()->match(['type' => ['document', 'video']]);
-    }
-
-    /**
-     * @covers \Kirby\Filesystem\File::match
+     * @covers ::match
      */
     public function testMatchOrientationException()
     {
