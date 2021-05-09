@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import { TranslationString } from '@/config/i18n.js'
 import DialogMixin from "@/mixins/dialog.js";
 
 export default {
@@ -15,9 +16,9 @@ export default {
       default: "trash"
     },
     submitButton: {
-      type: [String, Boolean],
-      default() {
-        return this.$t("delete");
+      type: [String, TranslationString, Boolean],
+      default() { 
+        return new TranslationString("delete")
       }
     },
     text: String,

@@ -3,7 +3,7 @@
     <k-button
       v-if="show"
       :disabled="!hasPrev"
-      :tooltip="prevLabel"
+      :tooltip="label(prevLabel)"
       icon="angle-left"
       @click="prev"
     />
@@ -24,7 +24,7 @@
           >
             <div class="k-pagination-settings">
               <label for="k-pagination-page">
-                <span>{{ pageLabel }}:</span>
+                <span>{{ label(pageLabel) }}:</span>
                 <select id="k-pagination-page" ref="page">
                   <option
                     v-for="p in pages"
@@ -51,7 +51,7 @@
     <k-button
       v-if="show"
       :disabled="!hasNext"
-      :tooltip="nextLabel"
+      :tooltip="label(nextLabel)"
       icon="angle-right"
       @click="next"
     />
@@ -59,6 +59,8 @@
 </template>
 
 <script>
+import { TranslationString } from '@/config/i18n.js'
+
 /**
  * @example <k-pagination
  *   align="center"
@@ -113,9 +115,9 @@ export default {
      * Sets the label for the page selector
      */
     pageLabel: {
-      type: String,
+      type: [String, TranslationString],
       default() {
-        return this.$t("pagination.page");
+        return new TranslationString("pagination.page")
       }
     },
     /**
@@ -129,18 +131,18 @@ export default {
      * Sets the label for the `prev` arrow button
      */
     prevLabel: {
-      type: String,
+      type: [String, TranslationString],
       default() {
-        return this.$t("prev");
+        return new TranslationString("prev")
       }
     },
     /**
      * Sets the label for the `next` arrow button
      */
     nextLabel: {
-      type: String,
+      type: [String, TranslationString],
       default() {
-        return this.$t("next");
+        return new TranslationString("next")
       }
     },
     validate: {
@@ -254,6 +256,9 @@ export default {
      */
     next() {
       this.goTo(this.currentPage + 1);
+    },
+    label(label) {
+      return label.toString(this);
     },
     navigate(e) {
       switch (e.code) {

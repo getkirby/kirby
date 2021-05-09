@@ -9,13 +9,13 @@
       minlength,
       name,
       pattern,
-      placeholder,
       required,
       spellcheck,
       type,
       value
     }"
     :dir="direction"
+    :placeholder="placeholderLabel"
     class="k-text-input"
     v-on="listeners"
   >
@@ -87,6 +87,9 @@ export default {
   computed: {
     direction() {
       return direction(this);
+    },
+    placeholderLabel() {
+      return this.placeholder ? this.placeholder.toString(this) : null;
     }
   },
   watch: {
