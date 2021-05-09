@@ -1,7 +1,7 @@
 <template>
   <div
     :data-disabled="disabled"
-    :data-invalid="!novalidate && isInvalid"
+    :data-invalid="!novalidate && invalid"
     :data-theme="theme"
     :data-type="type"
     class="k-input"
@@ -66,13 +66,8 @@ export default {
   inheritAttrs: false,
   data() {
     return {
-      isInvalid: this.invalid,
       listeners: {
-        ...this.$listeners,
-        invalid: ($invalid, $v) => {
-          this.isInvalid = $invalid;
-          this.$emit("invalid", $invalid, $v);
-        }
+        ...this.$listeners
       }
     };
   },

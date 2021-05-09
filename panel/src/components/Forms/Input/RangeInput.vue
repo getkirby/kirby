@@ -35,12 +35,6 @@ import {
   required
 } from "@/mixins/props.js";
 
-import { 
-  required as validateRequired,
-  minValue as validateMinValue,
-  maxValue as validateMaxValue
-} from "vuelidate/lib/validators";
-
 export const props = {
   mixins: [
     autofocus,
@@ -115,14 +109,7 @@ export default {
       return (this.value || this.value === 0) ? this.value : this.default || this.baseline;
     }
   },
-  watch: {
-    position() {
-      this.onInvalid();
-    }
-  },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -139,21 +126,9 @@ export default {
         minimumFractionDigits: digits
       }).format(value);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     onInput(value) {
       this.$emit("input", value);
     },
-  },
-  validations() {
-    return {
-      position: {
-        required: this.required ? validateRequired : true,
-        min: this.min ? validateMinValue(this.min) : true,
-        max: this.max ? validateMaxValue(this.max) : true
-      }
-    };
   }
 }
 </script>

@@ -37,8 +37,6 @@ import {
   required
 } from "@/mixins/props.js";
 
-import { required as validateRequired } from "vuelidate/lib/validators";
-
 /**
  * 
  * @example <k-input v-model="checkbox" type="checkbox" />
@@ -55,14 +53,7 @@ export default {
   props: {
     value: Boolean,
   },
-  watch: {
-    value() {
-      this.onInvalid();
-    }
-  },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -79,22 +70,8 @@ export default {
        */
       this.$emit("input", checked);
     },
-    onInvalid() {
-      /**
-       * The invalid event is triggered when the input validation fails. This can be used to react on errors immediately.
-       * @event invalid
-       */
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     select() {
       this.focus();
-    }
-  },
-  validations() {
-    return {
-      value: {
-        required: this.required ? validateRequired : true,
-      }
     }
   }
 }

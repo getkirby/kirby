@@ -18,10 +18,6 @@ const proxy = {
 };
 
 export default defineConfig({
-  define: {
-    // Fix vuelidate error
-    'process.env.BUILD': JSON.stringify('production')
-  },
   plugins: [createVuePlugin({
     template: {
       compilerOptions: {

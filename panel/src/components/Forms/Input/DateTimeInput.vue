@@ -23,7 +23,6 @@
 
 <script>
 import { props as DateInput } from "./DateInput.vue";
-import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
   mixins: [DateInput],
@@ -69,11 +68,7 @@ export default {
   watch: {
     value() {
       this.input = this.toDatetime(this.value);
-      this.onInvalid();
     }
-  },
-  mounted() {
-    this.onInvalid();
   },
   methods: {
     emit(event, dt = this.input) {
@@ -98,9 +93,6 @@ export default {
     onInput(value, input) {
       this.input = this.toDatetime(value, input, this.input);
       this.emit("input");
-    },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     toDatetime(value, input, base) {
       // if only value is passed,
@@ -141,27 +133,6 @@ export default {
                                  .set("second", dt.get("second"));
       }
     }
-  },
-  validations() {
-    return {
-      value: {
-        min: this.min ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.min,
-          "isAfter",
-          this.step.unit
-        ) : true,
-        max: this.max ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.max,
-          "isBefore",
-          this.step.unit
-        ) : true,
-        required: this.required ? validateRequired : true,
-      }
-    };
   }
 }
 

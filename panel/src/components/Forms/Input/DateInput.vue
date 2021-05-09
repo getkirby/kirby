@@ -9,7 +9,6 @@
     type="text"
     @blur="onBlur"
     @input="onInput"
-    @invalid="onInvalid"
     @focus="$emit('focus')"
     @keydown.down.stop.prevent="onDown"
     @keydown.up.stop.prevent="onUp"
@@ -25,8 +24,6 @@ import {
   id,
   required
 } from "@/mixins/props.js";
-
-import { required as validateRequired } from "vuelidate/lib/validators";
 
 export const props = {
   mixins: [
@@ -169,11 +166,7 @@ export default {
   watch: {
     value(value) {
       this.input = this.toFormat(value);
-      this.onInvalid();
     }
-  },
-  mounted() {
-    this.onInvalid();
   },
   methods: {
     emit(event) {
@@ -258,9 +251,6 @@ export default {
     },
     onInput() {
       this.emit("input");
-    },
-    onInvalid($invalid, $v) {
-      this.$emit("invalid", $invalid || this.$v.$invalid, $v || this.$v);
     },
     onTab(event) {
       const cursor = this.toCursorIndex();
@@ -403,27 +393,6 @@ export default {
       }
 
       return keys[index];
-    }
-  },
-  validations() {
-    return {
-      value: {
-        min: this.min ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.min,
-          "isAfter",
-          this.step.unit
-        ) : true,
-        max: this.max ? value => this.$helper.validate.datetime(
-          this,
-          value,
-          this.max,
-          "isBefore",
-          this.step.unit
-        ) : true,
-        required: this.required ? validateRequired : true,
-      }
     }
   }
 };

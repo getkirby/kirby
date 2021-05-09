@@ -90,12 +90,6 @@ import {
   required
 } from "@/mixins/props.js";
 
-import { 
-  required as validateRequired, 
-  minLength as validateMinLength, 
-  maxLength as validateMaxLength 
-} from "vuelidate/lib/validators";
-
 export const props = {
   mixins: [
     disabled,
@@ -201,11 +195,9 @@ export default {
   watch: {
     value(value) {
       this.state = value;
-      this.onInvalid();
     }
   },
   mounted() {
-    this.onInvalid();
     this.$events.$on("click", this.close);
     this.$events.$on("keydown.cmd.s", this.close);
   },
@@ -286,9 +278,6 @@ export default {
     onInput() {
       this.$emit("input", this.sorted);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     onOpen() {
       this.$nextTick(() => {
         if (this.$refs.search && this.$refs.search.focus) {
@@ -319,15 +308,6 @@ export default {
       string = this.$helper.string.stripHTML(string);
       return string.replace(this.regex, "<b>$1</b>")
     },
-  },
-  validations() {
-    return {
-      state: {
-        required: this.required ? validateRequired : true,
-        minLength: this.min ? validateMinLength(this.min) : true,
-        maxLength: this.max ? validateMaxLength(this.max) : true
-      }
-    };
   }
 };
 </script>

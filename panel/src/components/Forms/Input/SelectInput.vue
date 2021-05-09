@@ -41,8 +41,6 @@ import {
   required
 } from "@/mixins/props.js"
 
-import { required as validateRequired } from "vuelidate/lib/validators";
-
 export const props = {
   mixins: [
     autofocus,
@@ -116,12 +114,9 @@ export default {
   watch: {
     value(value) {
       this.selected = value;
-      this.onInvalid();
     }
   },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -133,9 +128,6 @@ export default {
     onClick(event) {
       event.stopPropagation();
       this.$emit("click", event);
-    },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
     },
     onInput(value) {
       this.selected = value;
@@ -153,13 +145,6 @@ export default {
       });
       return text;
     }
-  },
-  validations() {
-    return {
-      selected: {
-        required: this.required ? validateRequired : true,
-      }
-    };
   }
 }
 </script>
