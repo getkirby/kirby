@@ -4,9 +4,11 @@
       :is="'k-' + plugin + '-plugin-view'"
       v-bind="$props"
     />
-    <k-error-view slot="error" slot-scope="{ error }">
-      {{ error.message || error }}
-    </k-error-view>
+    <template #error="{ error }">
+      <k-error-view>
+        {{ error.message || error }}
+      </k-error-view>
+    </template>
   </k-error-boundary>
 </template>
 

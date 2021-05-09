@@ -1,7 +1,7 @@
 <template>
   <k-field v-bind="$props" class="k-structure-field" @click.native.stop>
     <!-- Add button -->
-    <template slot="options">
+    <template #options>
       <k-button
         v-if="more && currentIndex === null"
         :id="_uid"

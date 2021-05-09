@@ -9,10 +9,14 @@
       <slot v-else />
     </k-headline>
     <k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
-      <!-- @slot buttons on the left -->
-      <slot slot="left" name="left" class="k-header-left" />
-      <!-- @slot buttons on the right -->
-      <slot slot="right" name="right" class="k-header-right" />
+      <template #left>
+        <!-- @slot buttons on the left -->
+        <slot name="left" class="k-header-left" />
+      </template>
+      <template #right>
+        <!-- @slot buttons on the right -->
+        <slot name="right" class="k-header-right" />
+      </template>
     </k-bar>
 
     <k-tabs :tab="tab" :tabs="tabsWithBadges" theme="notice" />

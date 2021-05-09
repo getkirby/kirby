@@ -15,17 +15,19 @@
       @edit="action('rename')"
     >
       {{ site.title }}
-      <k-button-group slot="left">
-        <k-button
-          :responsive="true"
-          :link="site.previewUrl"
-          target="_blank"
-          icon="open"
-        >
-          {{ $t('open') }}
-        </k-button>
-        <k-languages-dropdown />
-      </k-button-group>
+      <template #left>
+        <k-button-group>
+          <k-button
+            :responsive="true"
+            :link="site.previewUrl"
+            target="_blank"
+            icon="open"
+          >
+            {{ $t('open') }}
+          </k-button>
+          <k-languages-dropdown />
+        </k-button-group>
+      </template>
     </k-header>
 
     <k-sections
