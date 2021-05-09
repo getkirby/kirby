@@ -166,12 +166,17 @@ class File
      * Sends an appropriate header for the asset
      *
      * @param bool $send
-     * @return \Kirby\Http\Response|string
+     * @return \Kirby\Http\Response|void
      */
     public function header(bool $send = true)
     {
         $response = new Response('', $this->mime());
-        return $send === true ? $response->send() : $response;
+
+        if ($send !== true) {
+            return $response;
+        }
+
+        $response->send();
     }
 
     /**

@@ -99,7 +99,7 @@ class FileTest extends TestCase
     public function testHeaderSend()
     {
         $file = $this->_file();
-        $this->assertSame('', $file->header());
+        $this->assertNull($file->header());
     }
 
     /**
