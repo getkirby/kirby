@@ -9,7 +9,9 @@
     v-on="listeners"
   >
     <slot />
-    <slot slot="footer" name="footer" />
+    <template #footer>
+      <slot name="footer" />
+    </template>
   </draggable>
 </template>
 

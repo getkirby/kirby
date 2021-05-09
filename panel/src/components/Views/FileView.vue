@@ -14,35 +14,38 @@
       >
         {{ file.filename }}
 
-        <k-button-group slot="left">
-          <k-button
-            :link="file.url"
-            :responsive="true"
-            icon="open"
-            target="_blank"
-          >
-            {{ $t("open") }}
-          </k-button>
-          <k-dropdown>
+        <template #left>
+          <k-button-group>
             <k-button
+              :link="file.url"
               :responsive="true"
-              :disabled="isLocked"
-              icon="cog"
-              @click="$refs.settings.toggle()"
+              icon="open"
+              target="_blank"
             >
-              {{ $t('settings') }}
+              {{ $t("open") }}
             </k-button>
-            <k-dropdown-content ref="settings" :options="options" @action="action" />
-          </k-dropdown>
-          <k-languages-dropdown />
-        </k-button-group>
+            <k-dropdown>
+              <k-button
+                :responsive="true"
+                :disabled="isLocked"
+                icon="cog"
+                @click="$refs.settings.toggle()"
+              >
+                {{ $t('settings') }}
+              </k-button>
+              <k-dropdown-content ref="settings" :options="options" @action="action" />
+            </k-dropdown>
+            <k-languages-dropdown />
+          </k-button-group>
+        </template>
 
-        <k-prev-next
-          v-if="file.id"
-          slot="right"
-          :prev="prev"
-          :next="next"
-        />
+        <template #right>
+          <k-prev-next
+            v-if="file.id"
+            :prev="prev"
+            :next="next"
+          />
+        </template>
       </k-header>
 
       <k-sections

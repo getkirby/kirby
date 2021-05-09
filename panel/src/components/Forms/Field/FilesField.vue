@@ -1,6 +1,6 @@
 <template>
   <k-field v-bind="$props" class="k-files-field">
-    <template v-if="more && !disabled" slot="options">
+    <template v-if="more && !disabled" #options>
       <k-button-group class="k-field-options">
         <template v-if="uploads">
           <k-dropdown>
@@ -50,13 +50,14 @@
           :image="file.image"
           :icon="file.icon"
         >
-          <k-button
-            v-if="!disabled"
-            slot="options"
-            :tooltip="$t('remove')"
-            icon="remove"
-            @click="remove(index)"
-          />
+          <template #options>
+            <k-button
+              v-if="!disabled"
+              :tooltip="$t('remove')"
+              icon="remove"
+              @click="remove(index)"
+            />
+          </template>
         </component>
       </k-draggable>
     </template>

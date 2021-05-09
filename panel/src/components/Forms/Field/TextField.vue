@@ -5,7 +5,9 @@
     v-bind="$props"
     class="k-text-field"
   >
-    <slot slot="options" name="options" />
+    <template #options>
+      <slot name="options" />
+    </template>
     <k-input
       :id="_uid"
       ref="input"
