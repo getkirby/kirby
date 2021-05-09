@@ -32,21 +32,21 @@
             :icon="file.icon"
             @click="toggle(file)"
           >
-            <k-button
-              v-if="isSelected(file)"
-              slot="options"
-              :autofocus="true"
-              :icon="checkedIcon"
-              :tooltip="$t('remove')"
-              theme="positive"
-            />
-            <k-button
-              v-else
-              slot="options"
-              :autofocus="true"
-              :tooltip="$t('select')"
-              icon="circle-outline"
-            />
+            <template #options>
+              <k-button
+                v-if="isSelected(file)"
+                :autofocus="true"
+                :icon="checkedIcon"
+                :tooltip="$t('remove')"
+                theme="positive"
+              />
+              <k-button
+                v-else
+                :autofocus="true"
+                :tooltip="$t('select')"
+                icon="circle-outline"
+              />
+            </template>
           </k-list-item>
         </k-list>
         <k-pagination

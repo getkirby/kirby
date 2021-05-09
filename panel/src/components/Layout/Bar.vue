@@ -18,9 +18,9 @@
  * 
  * @example 
  * <k-bar>
- *   <template slot="left">...</template>
- *   <template slot="center">...</template>
- *   <template slot="right">...</template>
+ *   <template #left>...</template>
+ *   <template #center>...</template>
+ *   <template #right>...</template>
  * </k-bar>
  */
 export default {}

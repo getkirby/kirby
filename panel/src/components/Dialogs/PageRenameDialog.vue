@@ -21,14 +21,15 @@
         :value="slug"
         @input="sluggify($event)"
       >
-        <k-button
-          slot="options"
-          :disabled="fields.slug.disabled"
-          icon="wand"
-          @click="sluggify(title)"
-        >
-          {{ $t("page.changeSlug.fromTitle") }}
-        </k-button>
+        <template #options>
+          <k-button
+            :disabled="fields.slug.disabled"
+            icon="wand"
+            @click="sluggify(title)"
+          >
+            {{ $t("page.changeSlug.fromTitle") }}
+          </k-button>
+        </template>
       </k-text-field>
     </k-form>
   </k-dialog>

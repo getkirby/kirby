@@ -63,22 +63,25 @@
           {{ user.name }}
         </template>
 
-        <k-button-group slot="left">
-          <k-dropdown>
-            <k-button :disabled="isLocked" icon="cog" @click="$refs.settings.toggle()">
-              {{ $t('settings') }}
-            </k-button>
-            <k-dropdown-content ref="settings" :options="options" @action="action" />
-          </k-dropdown>
-          <k-languages-dropdown />
-        </k-button-group>
+        <template #left>
+          <k-button-group>
+            <k-dropdown>
+              <k-button :disabled="isLocked" icon="cog" @click="$refs.settings.toggle()">
+                {{ $t('settings') }}
+              </k-button>
+              <k-dropdown-content ref="settings" :options="options" @action="action" />
+            </k-dropdown>
+            <k-languages-dropdown />
+          </k-button-group>
+        </template>
 
-        <k-prev-next
-          v-if="user.id && $route.name === 'User'"
-          slot="right"
-          :prev="prev"
-          :next="next"
-        />
+        <template #right>
+          <k-prev-next
+            v-if="user.id && $route.name === 'User'"
+            :prev="prev"
+            :next="next"
+          />
+        </template>
       </k-header>
 
       <k-sections

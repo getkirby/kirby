@@ -6,7 +6,7 @@
       :submit-button="$t('change')"
       @submit="submit"
     >
-      <template slot="header">
+      <template #header>
         <h1 class="k-offscreen">
           {{ $t('view.resetPassword') }}
         </h1>
@@ -19,17 +19,19 @@
         <k-user-info :user="$user" />
       </template>
 
-      <div slot="footer" class="k-login-buttons">
-        <k-button
-          class="k-login-button"
-          icon="check"
-          type="submit"
-        >
-          {{ $t("change") }} <template v-if="isLoading">
-            …
-          </template>
-        </k-button>
-      </div>
+      <template #footer>
+        <div class="k-login-buttons">
+          <k-button
+            class="k-login-button"
+            icon="check"
+            type="submit"
+          >
+            {{ $t("change") }} <template v-if="isLoading">
+              …
+            </template>
+          </k-button>
+        </div>
+      </template>
     </k-form>
   </k-view>
 </template>

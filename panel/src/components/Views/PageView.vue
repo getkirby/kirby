@@ -10,45 +10,48 @@
       @edit="action('rename')"
     >
       {{ page.title }}
-      <k-button-group slot="left">
-        <k-button
-          v-if="permissions.preview && page.previewUrl"
-          :responsive="true"
-          :link="page.previewUrl"
-          target="_blank"
-          icon="open"
-        >
-          {{ $t('open') }}
-        </k-button>
-        <k-status-icon
-          v-if="status"
-          :status="page.status"
-          :disabled="!permissions.changeStatus || isLocked"
-          :responsive="true"
-          :text="status.label"
-          @click="action('status')"
-        />
-        <k-dropdown>
+      <template #left>
+        <k-button-group>
           <k-button
+            v-if="permissions.preview && page.previewUrl"
             :responsive="true"
-            :disabled="isLocked === true"
-            icon="cog"
-            @click="$refs.settings.toggle()"
+            :link="page.previewUrl"
+            target="_blank"
+            icon="open"
           >
-            {{ $t('settings') }}
+            {{ $t('open') }}
           </k-button>
-          <k-dropdown-content ref="settings" :options="options" @action="action" />
-        </k-dropdown>
+          <k-status-icon
+            v-if="status"
+            :status="page.status"
+            :disabled="!permissions.changeStatus || isLocked"
+            :responsive="true"
+            :text="status.label"
+            @click="action('status')"
+          />
+          <k-dropdown>
+            <k-button
+              :responsive="true"
+              :disabled="isLocked === true"
+              icon="cog"
+              @click="$refs.settings.toggle()"
+            >
+              {{ $t('settings') }}
+            </k-button>
+            <k-dropdown-content ref="settings" :options="options" @action="action" />
+          </k-dropdown>
 
-        <k-languages-dropdown />
-      </k-button-group>
+          <k-languages-dropdown />
+        </k-button-group>
+      </template>
 
-      <k-prev-next
-        v-if="page.id"
-        slot="right"
-        :prev="prev"
-        :next="next"
-      />
+      <template #right>
+        <k-prev-next
+          v-if="page.id"
+          :prev="prev"
+          :next="next"
+        />
+      </template>
     </k-header>
 
     <k-sections
