@@ -4,12 +4,11 @@ import str from "../helpers/string.js";
 /**
  * TranslationString prop type
  */
-export class TranslationString {
-  constructor(key) {
-    this.key = key;
-  }
-  toString(app) {
-    return app.$t(this.key);
+ export class TranslationString extends String {
+  toString() {
+    const app   = window.panel.app;
+    const value = this.valueOf();
+    return app ? app.$t(value) : value;
   }
 }
 
