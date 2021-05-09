@@ -134,7 +134,7 @@ export default {
         return this.$t("confirm");
       }
 
-      return this.submitButton.toString(this);
+      return this.submitButton;
     }
   },
   created() {

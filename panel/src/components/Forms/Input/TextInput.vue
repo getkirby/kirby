@@ -9,19 +9,20 @@
       minlength,
       name,
       pattern,
+      placeholder,
       required,
       spellcheck,
       type,
       value
     }"
     :dir="direction"
-    :placeholder="placeholderLabel"
     class="k-text-input"
     v-on="listeners"
   >
 </template>
 
 <script>
+import { TranslationString } from '@/config/i18n.js'
 import direction from "@/helpers/direction.js";
 
 import {
@@ -56,7 +57,7 @@ export const props = {
     maxlength: Number,
     minlength: Number,
     pattern: String,
-    placeholder: String,
+    placeholder: [String, TranslationString],
     preselect: Boolean,
     spellcheck: {
       type: [Boolean, String],
@@ -87,9 +88,6 @@ export default {
   computed: {
     direction() {
       return direction(this);
-    },
-    placeholderLabel() {
-      return this.placeholder ? this.placeholder.toString(this) : null;
     }
   },
   watch: {

@@ -3,7 +3,7 @@
     <k-button
       v-if="show"
       :disabled="!hasPrev"
-      :tooltip="label(prevLabel)"
+      :tooltip="prevLabel"
       icon="angle-left"
       @click="prev"
     />
@@ -24,7 +24,7 @@
           >
             <div class="k-pagination-settings">
               <label for="k-pagination-page">
-                <span>{{ label(pageLabel) }}:</span>
+                <span>{{ pageLabel }}:</span>
                 <select id="k-pagination-page" ref="page">
                   <option
                     v-for="p in pages"
@@ -51,7 +51,7 @@
     <k-button
       v-if="show"
       :disabled="!hasNext"
-      :tooltip="label(nextLabel)"
+      :tooltip="nextLabel"
       icon="angle-right"
       @click="next"
     />
@@ -256,9 +256,6 @@ export default {
      */
     next() {
       this.goTo(this.currentPage + 1);
-    },
-    label(label) {
-      return label.toString(this);
     },
     navigate(e) {
       switch (e.code) {
