@@ -44,7 +44,7 @@
             :layout="options.layout"
             :data-invalid="isInvalid"
             icon="image"
-            @clik="upload"
+            @click="upload"
           >
             {{ options.empty || $t('files.empty') }}
           </k-empty>
