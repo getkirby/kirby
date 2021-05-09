@@ -30,10 +30,7 @@ trait UserActions
      */
     public function changeEmail(string $email)
     {
-        $email = Str::lower(trim($email));
-        $email = Idn::decodeEmail($email);
-
-        return $this->commit('changeEmail', ['user' => $this, 'email' => $email], function ($user, $email) {
+        return $this->commit('changeEmail', ['user' => $this, 'email' => Idn::decodeEmail($email)], function ($user, $email) {
             $user = $user->clone([
                 'email' => $email
             ]);
@@ -330,6 +327,11 @@ trait UserActions
      */
     protected function updateCredentials(array $credentials): bool
     {
+        // normalize the email address
+        if (isset($credentials['email']) === true) {
+            $credentials['email'] = Str::lower(trim($credentials['email']));
+        }
+
         return $this->writeCredentials(array_merge($this->credentials(), $credentials));
     }
 
