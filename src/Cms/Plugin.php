@@ -153,6 +153,11 @@ class Plugin extends Model
      */
     public function toArray(): array
     {
-        return $this->propertiesToArray();
+        return array_merge(parent::toArray(), [
+            'extends' => $this->extends(),
+            'info'    => $this->info(),
+            'name'    => $this->name(),
+            'root'    => $this->root()
+        ]);
     }
 }

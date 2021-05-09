@@ -25,7 +25,7 @@ class StructureObject extends Model
     /**
      * The content
      *
-     * @var Content
+     * @var \Kirby\Cms\Content
      */
     protected $content;
 
@@ -71,7 +71,14 @@ class StructureObject extends Model
      */
     public function __construct(array $props)
     {
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'content',
+            'id',
+            'kirby',
+            'parent',
+            'site',
+            'structure'
+        ]);
     }
 
     /**

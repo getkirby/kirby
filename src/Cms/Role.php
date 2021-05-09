@@ -26,7 +26,12 @@ class Role extends Model
 
     public function __construct(array $props)
     {
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'description',
+            'name',
+            'permissions',
+            'title'
+        ]);
     }
 
     /**

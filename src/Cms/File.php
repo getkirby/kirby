@@ -133,7 +133,16 @@ class File extends ModelWithContent
     public function __construct(array $props)
     {
         // properties
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'blueprint',
+            'filename',
+            'kirby',
+            'parent',
+            'root',
+            'site',
+            'template',
+            'url'
+        ]);
     }
 
     /**
@@ -785,7 +794,14 @@ class File extends ModelWithContent
      */
     public function toArray(): array
     {
-        return array_merge($this->asset()->toArray(), parent::toArray());
+        return array_merge($this->asset()->toArray(), parent::toArray(), [
+            'blueprint' => $this->blueprint(),
+            'filename'  => $this->filename(),
+            'parent'    => $this->parent(),
+            'root'      => $this->root(),
+            'template'  => $this->template(),
+            'url'       => $this->url()
+        ]);
     }
 
     /**

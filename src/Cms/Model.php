@@ -104,6 +104,9 @@ abstract class Model
      */
     public function toArray(): array
     {
-        return $this->propertiesToArray();
+        return [
+            'kirby' => $this->kirby(),
+            'site'  => $this->site()
+        ];
     }
 }

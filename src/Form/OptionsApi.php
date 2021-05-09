@@ -62,7 +62,14 @@ class OptionsApi
      */
     public function __construct(array $props)
     {
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'data',
+            'fetch',
+            'options',
+            'text',
+            'url',
+            'value'
+        ]);
     }
 
     /**

@@ -2,8 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Properties;
-
 /**
  * Anything in your public path can be converted
  * to an Asset object to use the same handy file
@@ -21,7 +19,6 @@ class Asset
 {
     use FileFoundation;
     use FileModifications;
-    use Properties;
 
     /**
      * @var string

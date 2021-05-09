@@ -80,11 +80,8 @@ class Language extends Model
      */
     public function __construct(array $props)
     {
-        $this->setRequiredProperties($props, [
-            'code'
-        ]);
-
-        $this->setOptionalProperties($props, [
+        $this->setProperties($props, [
+            'code',
             'default',
             'direction',
             'locale',

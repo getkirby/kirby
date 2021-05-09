@@ -51,8 +51,12 @@ class ContentTranslation
      */
     public function __construct(array $props)
     {
-        $this->setRequiredProperties($props, ['parent', 'code']);
-        $this->setOptionalProperties($props, ['slug', 'content']);
+        $this->setroperties($props, [
+            'code',
+            'content',
+            'parent',
+            'slug'
+        ]);
     }
 
     /**

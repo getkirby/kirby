@@ -8,8 +8,11 @@ class MyModel extends Model
 
     public function __construct(array $props = [])
     {
-        $this->setProperties($props);
-        $this->setKirby($props['kirby'] ?? null);
+        $this->setProperties($props, [
+            'id',
+            'kirby',
+            'site'
+        ]);
     }
 
     protected function setId($id = null)

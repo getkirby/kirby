@@ -185,7 +185,19 @@ class Page extends ModelWithContent
         $this->slug = $props['slug'] ?? null;
 
         // add all other properties
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'blueprint',
+            'dirname',
+            'isDraft',
+            'kirby',
+            'num',
+            'parent',
+            'root',
+            'site',
+            'slug',
+            'template',
+            'url'
+        ]);
     }
 
     /**

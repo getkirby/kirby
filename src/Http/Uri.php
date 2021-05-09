@@ -22,7 +22,7 @@ class Uri
     /**
      * Cache for the current Uri object
      *
-     * @var Uri|null
+     * @var \Kirby\Http\Uri|null
      */
     public static $current;
 
@@ -50,14 +50,14 @@ class Uri
     /**
      * The optional list of params
      *
-     * @var Params
+     * @var \Kirby\Http\Params
      */
     protected $params;
 
     /**
      * The optional path
      *
-     * @var Path
+     * @var \Kirby\Http\Path
      */
     protected $path;
 
@@ -78,7 +78,7 @@ class Uri
     /**
      * The optional query string without leading ?
      *
-     * @var Query
+     * @var \Kirby\Http\Query
      */
     protected $query;
 
@@ -150,7 +150,18 @@ class Uri
             $props['slash']  = $props['slash'] ?? $extract['slash'];
         }
 
-        $this->setProperties($this->props = $props);
+        $this->setProperties($this->props = $props, [
+            'fragment',
+            'host',
+            'params',
+            'password',
+            'path',
+            'port',
+            'query',
+            'scheme',
+            'slash',
+            'username'
+        ]);
     }
 
     /**
