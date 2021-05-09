@@ -30,9 +30,10 @@ export const props = {
     text: {
       type: [Array, String],
       default() {
+        // TODO: [$t('off'), $t('on')]
         return [
-          this.$t("off"),
-          this.$t("on"),
+          "off",
+          "on",
         ];
       }
     },

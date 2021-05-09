@@ -39,7 +39,8 @@ export default {
     submitButton: {
       type: [String, Boolean],
       default() {
-        return this.$t('save');
+        // TODO: $t('save')
+        return 'save';
       }
     },
     theme: {

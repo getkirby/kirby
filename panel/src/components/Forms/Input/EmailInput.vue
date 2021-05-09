@@ -12,7 +12,8 @@ export const props = {
     placeholder: {
       type: String,
       default() {
-        return this.$t("email.placeholder");
+        // TODO: $t('email.placeholer')
+        return 'email.placeholer';
       }
     },
     type: {

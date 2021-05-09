@@ -115,7 +115,8 @@ export default {
     pageLabel: {
       type: String,
       default() {
-        return this.$t("pagination.page");
+        // TODO: $t('pagination.page')
+        return 'pagination.page';
       }
     },
     /**
@@ -131,7 +132,8 @@ export default {
     prevLabel: {
       type: String,
       default() {
-        return this.$t("prev");
+        // TODO: $t('prev')
+        return 'prev';
       }
     },
     /**
@@ -140,7 +142,8 @@ export default {
     nextLabel: {
       type: String,
       default() {
-        return this.$t("next");
+        // TODO: $t('next')
+        return 'next';
       }
     },
     validate: {
