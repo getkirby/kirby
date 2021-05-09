@@ -14,8 +14,6 @@
 </template>
 
 <script>
-import { required as validateRequired } from "vuelidate/lib/validators";
-
 export const props = {
   props: {
     autofocus: Boolean,
@@ -56,14 +54,7 @@ export default {
       return this.text;
     }
   },
-  watch: {
-    value() {
-      this.onInvalid();
-    }
-  },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -80,18 +71,8 @@ export default {
     onInput(checked) {
       this.$emit("input", checked);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     select() {
       this.$refs.input.focus();
-    }
-  },
-  validations() {
-    return {
-      value: {
-        required: this.required ? validateRequired : true,
-      }
     }
   }
 }

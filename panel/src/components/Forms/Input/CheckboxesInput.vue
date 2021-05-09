@@ -19,12 +19,6 @@ import {
   required
 } from "@/mixins/props.js";
 
-import { 
-  required as validateRequired, 
-  minLegth as validateMinLength, 
-  maxLength as validateMaxLength 
-} from "vuelidate/lib/validators";
-
 export const props = {
   mixins: [
     autofocus,
@@ -60,14 +54,9 @@ export default {
   watch: {
     value(value) {
       this.selected = this.valueToArray(value);
-    },
-    selected() {
-      this.onInvalid();
     }
   },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -87,9 +76,6 @@ export default {
       }
       this.$emit("input", this.selected);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     select() {
       this.focus();
     },
@@ -106,15 +92,6 @@ export default {
         return Object.values(value);
       }
     },
-  },
-  validations() {
-    return {
-      selected: {
-        required: this.required ? validateRequired : true,
-        min: this.min ? validateMinLength(this.min) : true,
-        max: this.max ? validateMaxLength(this.max) : true,
-      }
-    };
   }
 }
 

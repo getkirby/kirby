@@ -19,10 +19,6 @@ const proxy = {
 
 export default defineConfig({
   plugins: [createVuePlugin(), pluginRewriteAll()],
-  define: {
-    // Fix vuelidate error
-    'process.env.BUILD': JSON.stringify('production')
-  },
   build: {
     rollupOptions: {
       output: {

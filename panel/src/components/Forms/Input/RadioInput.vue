@@ -32,8 +32,6 @@ import {
   required
 } from "@/mixins/props.js";
 
-import { required as validateRequired } from "vuelidate/lib/validators";
-
 export const props = {
     mixins: [
     autofocus,
@@ -51,14 +49,7 @@ export const props = {
 export default {
   mixins: [props],
   inheritAttrs: false,
-  watch: {
-    value() {
-      this.onInvalid();
-    }
-  },
   mounted() {
-    this.onInvalid();
-
     if (this.$props.autofocus) {
       this.focus();
     }
@@ -70,19 +61,9 @@ export default {
     onInput(value) {
       this.$emit("input", value);
     },
-    onInvalid() {
-      this.$emit("invalid", this.$v.$invalid, this.$v);
-    },
     select() {
       this.focus();
     }
-  },
-  validations() {
-    return {
-      value: {
-        required: this.required ? validateRequired : true
-      }
-    };
   }
 }
 </script>
