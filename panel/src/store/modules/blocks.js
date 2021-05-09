@@ -1,7 +1,9 @@
 export default {
   namespaced: true,
-  state: {
-    current: null,
+  state() {
+    return {
+      current: null
+    }
   },
   mutations: {
     CURRENT(state, current) {

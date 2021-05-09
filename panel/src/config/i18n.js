@@ -2,8 +2,9 @@
 import str from "../helpers/string.js";
 
 export default {
-  install(Vue, store) {
-    Vue.$t = Vue.prototype.$t = (key, data) => {
+  install(app) {
+    app.config.globalProperties.$t = (key, data) => {
+      const store  = app.config.globalProperties.$store;
       const string = store.getters["translation/string"](key);
       return str.template(string, data);
     }

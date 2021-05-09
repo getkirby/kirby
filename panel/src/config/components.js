@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 /* Style-only components */
 import "@/components/Misc/Invalid.vue";
 
@@ -34,43 +32,9 @@ import UserRenameDialog from "@/components/Dialogs/UserRenameDialog.vue";
 import UserRoleDialog from "@/components/Dialogs/UserRoleDialog.vue";
 import UsersDialog from "@/components/Dialogs/UsersDialog.vue";
 
-Vue.component("k-dialog", Dialog);
-Vue.component("k-error-dialog", ErrorDialog);
-Vue.component("k-file-rename-dialog", FileRenameDialog);
-Vue.component("k-file-remove-dialog", FileRemoveDialog);
-Vue.component("k-file-sort-dialog", FileSortDialog);
-Vue.component("k-files-dialog", FilesDialog);
-Vue.component("k-form-dialog", FormDialog);
-Vue.component("k-language-create-dialog", LanguageCreateDialog);
-Vue.component("k-language-remove-dialog", LanguageRemoveDialog);
-Vue.component("k-language-update-dialog", LanguageUpdateDialog);
-Vue.component("k-page-create-dialog", PageCreateDialog);
-Vue.component("k-page-duplicate-dialog", PageDuplicateDialog);
-Vue.component("k-page-remove-dialog", PageRemoveDialog);
-Vue.component("k-page-sort-dialog", PageSortDialog);
-Vue.component("k-page-rename-dialog", PageRenameDialog);
-Vue.component("k-page-status-dialog", PageStatusDialog);
-Vue.component("k-page-template-dialog", PageTemplateDialog);
-Vue.component("k-pages-dialog", PagesDialog);
-Vue.component("k-remove-dialog", RemoveDialog);
-Vue.component("k-site-rename-dialog", SiteRenameDialog);
-Vue.component("k-text-dialog", TextDialog);
-Vue.component("k-user-create-dialog", UserCreateDialog);
-Vue.component("k-user-email-dialog", UserEmailDialog);
-Vue.component("k-user-language-dialog", UserLanguageDialog);
-Vue.component("k-user-password-dialog", UserPasswordDialog);
-Vue.component("k-user-remove-dialog", UserRemoveDialog);
-Vue.component("k-user-rename-dialog", UserRenameDialog);
-Vue.component("k-user-role-dialog", UserRoleDialog);
-Vue.component("k-users-dialog", UsersDialog);
-
 /* Drawers */
 import Drawer from "@/components/Drawers/Drawer.vue";
 import FormDrawer from "@/components/Drawers/FormDrawer.vue";
-
-Vue.component("k-drawer", Drawer);
-Vue.component("k-form-drawer", FormDrawer);
-
 
 /* Form */
 import Autocomplete from "@/components/Forms/Autocomplete.vue";
@@ -155,84 +119,6 @@ import UrlFieldPreview from "@/components/Forms/Previews/UrlFieldPreview.vue";
 import UsersFieldPreview from "@/components/Forms/Previews/UsersFieldPreview.vue";
 import WriterFieldPreview from "@/components/Forms/Previews/WriterFieldPreview.vue";
 
-Vue.component("k-calendar", Calendar);
-Vue.component("k-counter", Counter);
-Vue.component("k-autocomplete", Autocomplete);
-Vue.component("k-form", Form);
-Vue.component("k-form-buttons", FormButtons);
-Vue.component("k-form-indicator", FormIndicator);
-Vue.component("k-field", Field);
-Vue.component("k-fieldset", Fieldset);
-Vue.component("k-input", Input);
-Vue.component("k-login", Login);
-Vue.component("k-login-code", LoginCode);
-Vue.component("k-upload", Upload);
-Vue.component("k-writer", Writer);
-
-Vue.component("k-checkbox-input", CheckboxInput);
-Vue.component("k-checkboxes-input", CheckboxesInput);
-Vue.component("k-date-input", DateInput);
-Vue.component("k-datetime-input", DateTimeInput);
-Vue.component("k-email-input", EmailInput);
-Vue.component("k-list-input", ListInput);
-Vue.component("k-multiselect-input", MultiselectInput);
-Vue.component("k-number-input", NumberInput);
-Vue.component("k-password-input", PasswordInput);
-Vue.component("k-radio-input", RadioInput);
-Vue.component("k-range-input", RangeInput);
-Vue.component("k-select-input", SelectInput);
-Vue.component("k-tags-input", TagsInput);
-Vue.component("k-tel-input", TelInput);
-Vue.component("k-text-input", TextInput);
-Vue.component("k-textarea-input", TextareaInput);
-Vue.component("k-time-input", TimeInput);
-Vue.component("k-toggle-input", ToggleInput);
-Vue.component("k-url-input", UrlInput);
-
-Vue.component("k-blocks-field", BlocksField);
-Vue.component("k-checkboxes-field", CheckboxesField);
-Vue.component("k-date-field", DateField);
-Vue.component("k-email-field", EmailField);
-Vue.component("k-files-field", FilesField);
-Vue.component("k-gap-field", GapField);
-Vue.component("k-headline-field", HeadlineField);
-Vue.component("k-info-field", InfoField);
-Vue.component("k-layout-field", LayoutField);
-Vue.component("k-line-field", LineField);
-Vue.component("k-list-field", ListField);
-Vue.component("k-multiselect-field", MultiselectField);
-Vue.component("k-number-field", NumberField);
-Vue.component("k-pages-field", PagesField);
-Vue.component("k-password-field", PasswordField);
-Vue.component("k-radio-field", RadioField);
-Vue.component("k-range-field", RangeField);
-Vue.component("k-select-field", SelectField);
-Vue.component("k-structure-field", StructureField);
-Vue.component("k-tags-field", TagsField);
-Vue.component("k-text-field", TextField);
-Vue.component("k-textarea-field", TextareaField);
-Vue.component("k-tel-field", TelField);
-Vue.component("k-time-field", TimeField);
-Vue.component("k-toggle-field", ToggleField);
-Vue.component("k-url-field", UrlField);
-Vue.component("k-users-field", UsersField);
-Vue.component("k-writer-field", WriterField);
-
-Vue.component("k-toolbar", Toolbar);
-Vue.component("k-toolbar-email-dialog", ToolbarEmailDialog);
-Vue.component("k-toolbar-link-dialog", ToolbarLinkDialog);
-
-Vue.component("k-date-field-preview", DateFieldPreview);
-Vue.component("k-email-field-preview", EmailFieldPreview);
-Vue.component("k-files-field-preview", FilesFieldPreview);
-Vue.component("k-list-field-preview", ListFieldPreview);
-Vue.component("k-pages-field-preview", PagesFieldPreview);
-Vue.component("k-toggle-field-preview", ToggleFieldPreview);
-Vue.component("k-time-field-preview", TimeFieldPreview);
-Vue.component("k-url-field-preview", UrlFieldPreview);
-Vue.component("k-users-field-preview", UsersFieldPreview);
-Vue.component("k-writer-field-preview", WriterFieldPreview);
-
 /* Layout */
 import AspectRatio from "@/components/Layout/AspectRatio.vue";
 import Bar from "@/components/Layout/Bar.vue";
@@ -252,24 +138,6 @@ import Overlay from "@/components/Layout/Overlay.vue";
 import Tabs from "@/components/Layout/Tabs.vue";
 import View from "@/components/Layout/View.vue";
 
-Vue.component("k-aspect-ratio", AspectRatio);
-Vue.component("k-bar", Bar);
-Vue.component("k-box", Box);
-Vue.component("k-card", Card);
-Vue.component("k-cards", Cards);
-Vue.component("k-collection", Collection);
-Vue.component("k-column", Column);
-Vue.component("k-dropzone", Dropzone);
-Vue.component("k-empty", Empty);
-Vue.component("k-file-preview", FilePreview);
-Vue.component("k-grid", Grid);
-Vue.component("k-header", Header);
-Vue.component("k-list", List);
-Vue.component("k-list-item", ListItem);
-Vue.component("k-overlay", Overlay);
-Vue.component("k-tabs", Tabs);
-Vue.component("k-view", View);
-
 /* Misc */
 import Draggable from "@/components/Misc/Draggable.vue";
 import ErrorBoundary from "@/components/Misc/ErrorBoundary.vue";
@@ -282,18 +150,6 @@ import SortHandle from "@/components/Misc/SortHandle.vue";
 import StatusIcon from "@/components/Misc/StatusIcon.vue";
 import Text from "@/components/Misc/Text.vue";
 import UserInfo from "@/components/Misc/UserInfo.vue";
-
-Vue.component("k-draggable", Draggable);
-Vue.component("k-error-boundary", ErrorBoundary);
-Vue.component("k-headline", Headline);
-Vue.component("k-icon", Icon);
-Vue.component("k-image", Image);
-Vue.component("k-loader", Loader);
-Vue.component("k-progress", Progress);
-Vue.component("k-status-icon", StatusIcon);
-Vue.component("k-sort-handle", SortHandle);
-Vue.component("k-text", Text);
-Vue.component("k-user-info", UserInfo);
 
 /* Navigation */
 import Button from "@/components/Navigation/Button.vue";
@@ -312,34 +168,12 @@ import Search from "@/components/Navigation/Search.vue";
 import Tag from "@/components/Navigation/Tag.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
 
-Vue.component("k-button", Button);
-Vue.component("k-button-disabled", ButtonDisabled);
-Vue.component("k-button-group", ButtonGroup);
-Vue.component("k-button-link", ButtonLink);
-Vue.component("k-button-native", ButtonNative);
-Vue.component("k-dropdown", Dropdown);
-Vue.component("k-dropdown-content", DropdownContent);
-Vue.component("k-dropdown-item", DropdownItem);
-Vue.component("k-languages-dropdown", Languages);
-Vue.component("k-link", Link);
-Vue.component("k-pagination", Pagination);
-Vue.component("k-prev-next", PrevNext);
-Vue.component("k-search", Search);
-Vue.component("k-tag", Tag);
-Vue.component("k-topbar", Topbar);
-
 /* Sections */
 import Sections from "@/components/Sections/Sections.vue";
 import InfoSection from "@/components/Sections/InfoSection.vue";
 import PagesSection from "@/components/Sections/PagesSection.vue";
 import FilesSection from "@/components/Sections/FilesSection.vue";
 import FieldsSection from "@/components/Sections/FieldsSection.vue";
-
-Vue.component("k-sections", Sections);
-Vue.component("k-info-section", InfoSection);
-Vue.component("k-pages-section", PagesSection);
-Vue.component("k-files-section", FilesSection);
-Vue.component("k-fields-section", FieldsSection);
 
 /* Views */
 import BrowserView from "@/components/Views/BrowserView.vue";
@@ -355,18 +189,186 @@ import SiteView from "@/components/Views/SiteView.vue";
 import UsersView from "@/components/Views/UsersView.vue";
 import UserView from "@/components/Views/UserView.vue";
 
-Vue.component("k-browser-view", BrowserView);
-Vue.component("k-custom-view", CustomView);
-Vue.component("k-error-view", ErrorView);
-Vue.component("k-file-view", FileView);
-Vue.component("k-installation-view", InstallationView);
-Vue.component("k-login-view", LoginView);
-Vue.component("k-page-view", PageView);
-Vue.component("k-reset-password-view", ResetPasswordView);
-Vue.component("k-settings-view", SettingsView);
-Vue.component("k-site-view", SiteView);
-Vue.component("k-users-view", UsersView);
-Vue.component("k-user-view", UserView);
-
 /* Blocks */
 import "@/components/Blocks/index.js";
+
+export default {
+  install(app) {
+    app.component("k-dialog", Dialog);
+    app.component("k-error-dialog", ErrorDialog);
+    app.component("k-file-rename-dialog", FileRenameDialog);
+    app.component("k-file-remove-dialog", FileRemoveDialog);
+    app.component("k-file-sort-dialog", FileSortDialog);
+    app.component("k-files-dialog", FilesDialog);
+    app.component("k-form-dialog", FormDialog);
+    app.component("k-language-create-dialog", LanguageCreateDialog);
+    app.component("k-language-remove-dialog", LanguageRemoveDialog);
+    app.component("k-language-update-dialog", LanguageUpdateDialog);
+    app.component("k-page-create-dialog", PageCreateDialog);
+    app.component("k-page-duplicate-dialog", PageDuplicateDialog);
+    app.component("k-page-remove-dialog", PageRemoveDialog);
+    app.component("k-page-sort-dialog", PageSortDialog);
+    app.component("k-page-rename-dialog", PageRenameDialog);
+    app.component("k-page-status-dialog", PageStatusDialog);
+    app.component("k-page-template-dialog", PageTemplateDialog);
+    app.component("k-pages-dialog", PagesDialog);
+    app.component("k-remove-dialog", RemoveDialog);
+    app.component("k-site-rename-dialog", SiteRenameDialog);
+    app.component("k-text-dialog", TextDialog);
+    app.component("k-user-create-dialog", UserCreateDialog);
+    app.component("k-user-email-dialog", UserEmailDialog);
+    app.component("k-user-language-dialog", UserLanguageDialog);
+    app.component("k-user-password-dialog", UserPasswordDialog);
+    app.component("k-user-remove-dialog", UserRemoveDialog);
+    app.component("k-user-rename-dialog", UserRenameDialog);
+    app.component("k-user-role-dialog", UserRoleDialog);
+    app.component("k-users-dialog", UsersDialog);
+
+    app.component("k-drawer", Drawer);
+    app.component("k-form-drawer", FormDrawer);
+
+    app.component("k-calendar", Calendar);
+    app.component("k-counter", Counter);
+    app.component("k-autocomplete", Autocomplete);
+    app.component("k-form", Form);
+    app.component("k-form-buttons", FormButtons);
+    app.component("k-form-indicator", FormIndicator);
+    app.component("k-field", Field);
+    app.component("k-fieldset", Fieldset);
+    app.component("k-input", Input);
+    app.component("k-login", Login);
+    app.component("k-login-code", LoginCode);
+    app.component("k-upload", Upload);
+    app.component("k-writer", Writer);
+
+    app.component("k-checkbox-input", CheckboxInput);
+    app.component("k-checkboxes-input", CheckboxesInput);
+    app.component("k-date-input", DateInput);
+    app.component("k-datetime-input", DateTimeInput);
+    app.component("k-email-input", EmailInput);
+    app.component("k-list-input", ListInput);
+    app.component("k-multiselect-input", MultiselectInput);
+    app.component("k-number-input", NumberInput);
+    app.component("k-password-input", PasswordInput);
+    app.component("k-radio-input", RadioInput);
+    app.component("k-range-input", RangeInput);
+    app.component("k-select-input", SelectInput);
+    app.component("k-tags-input", TagsInput);
+    app.component("k-tel-input", TelInput);
+    app.component("k-text-input", TextInput);
+    app.component("k-textarea-input", TextareaInput);
+    app.component("k-time-input", TimeInput);
+    app.component("k-toggle-input", ToggleInput);
+    app.component("k-url-input", UrlInput);
+
+    app.component("k-blocks-field", BlocksField);
+    app.component("k-checkboxes-field", CheckboxesField);
+    app.component("k-date-field", DateField);
+    app.component("k-email-field", EmailField);
+    app.component("k-files-field", FilesField);
+    app.component("k-gap-field", GapField);
+    app.component("k-headline-field", HeadlineField);
+    app.component("k-info-field", InfoField);
+    app.component("k-layout-field", LayoutField);
+    app.component("k-line-field", LineField);
+    app.component("k-list-field", ListField);
+    app.component("k-multiselect-field", MultiselectField);
+    app.component("k-number-field", NumberField);
+    app.component("k-pages-field", PagesField);
+    app.component("k-password-field", PasswordField);
+    app.component("k-radio-field", RadioField);
+    app.component("k-range-field", RangeField);
+    app.component("k-select-field", SelectField);
+    app.component("k-structure-field", StructureField);
+    app.component("k-tags-field", TagsField);
+    app.component("k-text-field", TextField);
+    app.component("k-textarea-field", TextareaField);
+    app.component("k-tel-field", TelField);
+    app.component("k-time-field", TimeField);
+    app.component("k-toggle-field", ToggleField);
+    app.component("k-url-field", UrlField);
+    app.component("k-users-field", UsersField);
+    app.component("k-writer-field", WriterField);
+
+    app.component("k-toolbar", Toolbar);
+    app.component("k-toolbar-email-dialog", ToolbarEmailDialog);
+    app.component("k-toolbar-link-dialog", ToolbarLinkDialog);
+
+    app.component("k-date-field-preview", DateFieldPreview);
+    app.component("k-email-field-preview", EmailFieldPreview);
+    app.component("k-files-field-preview", FilesFieldPreview);
+    app.component("k-list-field-preview", ListFieldPreview);
+    app.component("k-pages-field-preview", PagesFieldPreview);
+    app.component("k-toggle-field-preview", ToggleFieldPreview);
+    app.component("k-time-field-preview", TimeFieldPreview);
+    app.component("k-url-field-preview", UrlFieldPreview);
+    app.component("k-users-field-preview", UsersFieldPreview);
+    app.component("k-writer-field-preview", WriterFieldPreview);
+
+    app.component("k-aspect-ratio", AspectRatio);
+    app.component("k-bar", Bar);
+    app.component("k-box", Box);
+    app.component("k-card", Card);
+    app.component("k-cards", Cards);
+    app.component("k-collection", Collection);
+    app.component("k-column", Column);
+    app.component("k-dropzone", Dropzone);
+    app.component("k-empty", Empty);
+    app.component("k-file-preview", FilePreview);
+    app.component("k-grid", Grid);
+    app.component("k-header", Header);
+    app.component("k-list", List);
+    app.component("k-list-item", ListItem);
+    app.component("k-overlay", Overlay);
+    app.component("k-tabs", Tabs);
+    app.component("k-view", View);
+
+    app.component("k-draggable", Draggable);
+    app.component("k-error-boundary", ErrorBoundary);
+    app.component("k-headline", Headline);
+    app.component("k-icon", Icon);
+    app.component("k-image", Image);
+    app.component("k-loader", Loader);
+    app.component("k-progress", Progress);
+    app.component("k-status-icon", StatusIcon);
+    app.component("k-sort-handle", SortHandle);
+    app.component("k-text", Text);
+    app.component("k-user-info", UserInfo);
+
+    app.component("k-button", Button);
+    app.component("k-button-disabled", ButtonDisabled);
+    app.component("k-button-group", ButtonGroup);
+    app.component("k-button-link", ButtonLink);
+    app.component("k-button-native", ButtonNative);
+    app.component("k-dropdown", Dropdown);
+    app.component("k-dropdown-content", DropdownContent);
+    app.component("k-dropdown-item", DropdownItem);
+    app.component("k-languages-dropdown", Languages);
+    app.component("k-link", Link);
+    app.component("k-pagination", Pagination);
+    app.component("k-prev-next", PrevNext);
+    app.component("k-search", Search);
+    app.component("k-tag", Tag);
+    app.component("k-topbar", Topbar);
+
+    app.component("k-sections", Sections);
+    app.component("k-info-section", InfoSection);
+    app.component("k-pages-section", PagesSection);
+    app.component("k-files-section", FilesSection);
+    app.component("k-fields-section", FieldsSection);
+
+    app.component("k-browser-view", BrowserView);
+    app.component("k-custom-view", CustomView);
+    app.component("k-error-view", ErrorView);
+    app.component("k-file-view", FileView);
+    app.component("k-installation-view", InstallationView);
+    app.component("k-login-view", LoginView);
+    app.component("k-page-view", PageView);
+    app.component("k-reset-password-view", ResetPasswordView);
+    app.component("k-settings-view", SettingsView);
+    app.component("k-site-view", SiteView);
+    app.component("k-users-view", UsersView);
+    app.component("k-user-view", UserView);
+  }
+};
+

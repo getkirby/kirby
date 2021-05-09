@@ -6,7 +6,7 @@
     />
     <template #error="{ error }">
       <k-error-view>
-        {{ error.message || error }}
+        {{ error || error }}
       </k-error-view>
     </template>
   </k-error-boundary>

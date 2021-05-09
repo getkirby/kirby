@@ -1,7 +1,9 @@
 export default {
   namespaced: true,
-  state: {
-    open: [],
+  state() {
+    return {
+      open: []
+    }
   },
   mutations: {
     CLOSE(state, id) {

@@ -1,11 +1,13 @@
 export default {
   timer: null,
   namespaced: true,
-  state: {
-    type: null,
-    message: null,
-    details: null,
-    timeout: null
+  state() {
+    return {
+      type: null,
+      message: null,
+      details: null,
+      timeout: null
+    }
   },
   mutations: {
     SET(state, notification) {

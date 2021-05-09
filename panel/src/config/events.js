@@ -50,7 +50,7 @@ export default {
         parts.push('shift');
       }
 
-      let key = app.prototype.$helper.string.lcfirst(e.key);
+      let key = app.config.globalProperties.string.lcfirst(e.key);
 
       // key replacements
       const keys = {
@@ -93,6 +93,6 @@ export default {
     window.addEventListener("keyup", bus.keyup, false);
     document.addEventListener("click", bus.click, false);
 
-    app.prototype.$events = bus;
+    app.config.globalProperties.$events = bus;
   }
 };

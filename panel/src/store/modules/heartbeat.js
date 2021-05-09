@@ -1,12 +1,12 @@
-import Vue from "vue";
-
 export default {
   namespaced: true,
-  state: {
-    instance: null,
-    clock: 0,
-    step: 5,
-    beats: []
+  state() {
+    return {
+      instance: null,
+      clock: 0,
+      step: 5,
+      beats: []
+    }
   },
   mutations: {
     ADD(state, beat) {
@@ -25,7 +25,7 @@ export default {
     REMOVE(state, handler) {
       const index = state.beats.map(b => b.handler).indexOf(handler);
       if (index !== -1) {
-        Vue.delete(state.beats, index);
+        state.beats = state.beats.splice(index, 1);
       }
     }
   },

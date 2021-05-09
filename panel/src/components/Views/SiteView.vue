@@ -1,6 +1,6 @@
 <template>
   <k-error-view v-if="issue">
-    {{ issue.message }}
+    {{ issue }}
   </k-error-view>
   <k-view
     v-else

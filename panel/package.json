@@ -24,9 +24,9 @@
     "prosemirror-schema-list": "^1.1.4",
     "prosemirror-view": "^1.16.3",
     "vue": "^3.1.0-0",
-    "vue-router": "^3.4.9",
+    "vue-router": "^4.0.6",
     "vuedraggable": "^4.0.1",
-    "vuex": "^3.5.1"
+    "vuex": "^4.0.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^1.2.2-0",

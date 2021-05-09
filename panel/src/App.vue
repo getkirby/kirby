@@ -134,12 +134,12 @@ export default {
       }
     }
   },
-  created() {
+  mounted() {
     this.$events.$on("offline", this.isOffline);
     this.$events.$on("online", this.isOnline);
     this.$events.$on("drop", this.drop);
   },
-  destroyed() {
+  unmounted() {
     this.$events.$off("offline", this.isOffline);
     this.$events.$off("online", this.isOnline);
     this.$events.$off("drop", this.drop);

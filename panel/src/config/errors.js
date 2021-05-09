@@ -1,25 +1,29 @@
-import Vue from "vue";
-import store from "@/store/store.js";
 import config from "./config.js";
 
-Vue.config.errorHandler = error => {
-  if (config.debug) {
-    window.console.error(error);
+export default {
+  install(app) {
+    app.config.errorHandler = error => {
+      if (config.debug) {
+        window.console.error(error);
+      }
+      
+      app.config.globalProperties.$store.dispatch("notification/error", {
+        message: error.message || "An error occurred. Please reload the Panel."
+      });
+    };
+    
+    window.panel = window.panel || {};
+    window.panel.error = (notification, msg) => {
+      if (config.debug) {
+        window.console.error(notification + ": " + msg);
+      }
+    
+      app.config.globalProperties.$store.dispatch(
+        "error",
+        notification + ". See the console for more information."
+      );
+    };
   }
-
-  store.dispatch("notification/error", {
-    message: error.message || "An error occurred. Please reload the Panel."
-  });
 };
 
-window.panel = window.panel || {};
-window.panel.error = (notification, msg) => {
-  if (config.debug) {
-    window.console.error(notification + ": " + msg);
-  }
 
-  store.dispatch(
-    "error",
-    notification + ". See the console for more information."
-  );
-};

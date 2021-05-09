@@ -14,13 +14,12 @@ import validate from "./validate.js";
 import "./regex.js";
 
 export default {
-  install(Vue) {
+  install(app) {
 
     /**
      * Array.sortBy()
      */
-    Array.prototype.sortBy = function (sortBy) {
-      const sort = Vue.prototype.$helper.sort();
+    Array.prototype.sortBy = (sortBy) => {
       const options = sortBy.split(" ");
       const field = options[0];
       const direction = options[1] || "asc";
@@ -37,8 +36,7 @@ export default {
       });
     };
 
-
-    Vue.prototype.$helper = {
+    app.config.globalProperties.$helper = {
       clone: clone,
       isComponent: isComponent,
       isUploadEvent: isUploadEvent,

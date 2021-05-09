@@ -1,6 +1,6 @@
 <template>
   <k-error-view v-if="issue">
-    {{ issue.message }}
+    {{ issue }}
   </k-error-view>
   <k-view v-else-if="ready && form === 'login'" align="center" class="k-login-view">
     <k-login-plugin />
