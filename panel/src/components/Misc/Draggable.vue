@@ -8,7 +8,9 @@
     class="k-draggable"
     v-on="listeners"
   >
-    <slot />
+    <template #item>
+      <slot />
+    </template>
     <template #footer>
       <slot name="footer" />
     </template>
