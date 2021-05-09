@@ -6,7 +6,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
-use Kirby\Filesystem\Name;
+use Kirby\Filesystem\Filename;
 use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
@@ -82,7 +82,7 @@ return [
         // create url and root
         $mediaRoot = dirname($file->mediaRoot());
         $template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
-        $thumbRoot = (new Name($file->root(), $template, $options))->toString();
+        $thumbRoot = (new Filename($file->root(), $template, $options))->toString();
         $thumbName = basename($thumbRoot);
         $job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
@@ -305,15 +305,15 @@ return [
      * Add your own thumb generator
      *
      * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param string $src root of the original file
-     * @param string $dst template string for the root to the desired destination
+     * @param string $src Root of the original file
+     * @param string $dst Template string for the root to the desired destination
      * @param array $options All thumb options that should be applied: `width`, `height`, `crop`, `blur`, `grayscale`
      * @return string
      */
     'thumb' => function (App $kirby, string $src, string $dst, array $options): string {
         $darkroom = Darkroom::factory(option('thumbs.driver', 'gd'), option('thumbs', []));
         $options  = $darkroom->preprocess($src, $options);
-        $root     = (new Name($src, $dst, $options))->toString();
+        $root     = (new Filename($src, $dst, $options))->toString();
 
         F::copy($src, $root, true);
         $darkroom->process($root, $options);

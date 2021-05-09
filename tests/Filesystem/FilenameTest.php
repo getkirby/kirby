@@ -8,7 +8,7 @@ class NameTest extends TestCase
 {
     public function testAttributesToArray()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'width'     => 300,
             'height'    => 200,
             'crop'      => 'top left',
@@ -69,7 +69,7 @@ class NameTest extends TestCase
      */
     public function testAttributesToString($expected, $options)
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}', $options);
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', $options);
 
         $this->assertSame($expected, $name->attributesToString('-'));
     }
@@ -90,7 +90,7 @@ class NameTest extends TestCase
      */
     public function testBlur($value, $expected)
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'blur' => $value
         ]);
 
@@ -117,7 +117,7 @@ class NameTest extends TestCase
      */
     public function testCrop($anchor, $expected)
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'crop' => $anchor
         ]);
 
@@ -126,13 +126,13 @@ class NameTest extends TestCase
 
     public function testEmptyCrop()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}');
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
         $this->assertFalse($name->crop());
     }
 
     public function testDisabledCrop()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'crop' => false
         ]);
 
@@ -141,7 +141,7 @@ class NameTest extends TestCase
 
     public function testCustomCrop()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'crop' => 'something'
         ]);
 
@@ -150,7 +150,7 @@ class NameTest extends TestCase
 
     public function testDimensions()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}', $dimensions = [
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', $dimensions = [
             'width'  => 300,
             'height' => 200
         ]);
@@ -160,14 +160,14 @@ class NameTest extends TestCase
 
     public function testEmptyDimensions()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}');
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
 
         $this->assertSame([], $name->dimensions());
     }
 
     public function testDimensionsWithoutWidth()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'height' => 300
         ]);
 
@@ -179,7 +179,7 @@ class NameTest extends TestCase
 
     public function testDimensionsWithoutHeight()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             'width' => 300
         ]);
 
@@ -191,19 +191,19 @@ class NameTest extends TestCase
 
     public function testExtension()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}');
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
         $this->assertSame('jpg', $name->extension());
     }
 
     public function testUppercaseExtension()
     {
-        $name = new Name('/test/some-file.JPG', '{{ name }}.{{ extension }}');
+        $name = new Filename('/test/some-file.JPG', '{{ name }}.{{ extension }}');
         $this->assertSame('jpg', $name->extension());
     }
 
     public function testJpegExtension()
     {
-        $name = new Name('/test/some-file.jpeg', '{{ name }}.{{ extension }}');
+        $name = new Filename('/test/some-file.jpeg', '{{ name }}.{{ extension }}');
         $this->assertSame('jpg', $name->extension());
     }
 
@@ -224,7 +224,7 @@ class NameTest extends TestCase
      */
     public function testGrayscale($prop, $value, $expected)
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}', [
             $prop => $value
         ]);
 
@@ -233,13 +233,13 @@ class NameTest extends TestCase
 
     public function testName()
     {
-        $name = new Name('/var/www/some-file.jpg', '{{ name }}.{{ extension }}');
+        $name = new Filename('/var/www/some-file.jpg', '{{ name }}.{{ extension }}');
         $this->assertSame('some-file', $name->name());
     }
 
     public function testNameSanitization()
     {
-        $name = new Name('/var/www/söme file.jpg', '{{ name }}.{{ extension }}');
+        $name = new Filename('/var/www/söme file.jpg', '{{ name }}.{{ extension }}');
         $this->assertSame('some-file', $name->name());
     }
 
@@ -259,7 +259,7 @@ class NameTest extends TestCase
      */
     public function testQuality($value, $expected)
     {
-        $name = new Name('/test/some-file.jpg', 'some-file.jpg', [
+        $name = new Filename('/test/some-file.jpg', 'some-file.jpg', [
             'quality' => $value
         ]);
 
@@ -271,7 +271,7 @@ class NameTest extends TestCase
      */
     public function testToString($expected, $attributes)
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}{{ attributes }}.{{ extension }}', $attributes);
+        $name = new Filename('/test/some-file.jpg', '{{ name }}{{ attributes }}.{{ extension }}', $attributes);
 
         $this->assertSame('some-file' . $expected . '.jpg', $name->toString());
         $this->assertSame('some-file' . $expected . '.jpg', (string)$name);
@@ -279,7 +279,7 @@ class NameTest extends TestCase
 
     public function testToStringWithFalsyAttributes()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}{{ attributes }}.{{ extension }}', [
+        $name = new Filename('/test/some-file.jpg', '{{ name }}{{ attributes }}.{{ extension }}', [
             'width'     => false,
             'height'    => false,
             'crop'      => false,
@@ -294,7 +294,7 @@ class NameTest extends TestCase
 
     public function testToStringWithoutAttributes()
     {
-        $name = new Name('/test/some-file.jpg', '{{ name }}.{{ extension }}');
+        $name = new Filename('/test/some-file.jpg', '{{ name }}.{{ extension }}');
         $this->assertSame('some-file.jpg', $name->toString());
         $this->assertSame('some-file.jpg', (string)$name);
     }

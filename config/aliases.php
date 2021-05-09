@@ -66,7 +66,7 @@ return [
     'kirby\cms\kirbytag'       => 'Kirby\Text\KirbyTag',
     'kirby\cms\kirbytags'      => 'Kirby\Text\KirbyTags',
     'kirby\cms\dir'            => 'Kirby\Toolkit\Dir',
-    'kirby\cms\filename'       => 'Kirby\Filesystem\Name',
+    'kirby\cms\filename'       => 'Kirby\Filesystem\Filename',
     'kirby\cms\filefoundation' => 'Kirby\Filesystem\IsFile'
 ];
 // @codeCoverageIgnoreEnd

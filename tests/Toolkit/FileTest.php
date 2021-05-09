@@ -103,6 +103,55 @@ class FileTest extends TestCase
     }
 
     /**
+     * @covers ::match
+     */
+    public function testMatch()
+    {
+        $rules = [
+            'miMe'        => ['image/png', 'image/jpeg', 'application/pdf'],
+            'extensION'   => ['jpg', 'pdf'],
+            'tYPe'        => ['image', 'video'],
+            'MINsize'     => 20000,
+            'maxSIze'     => 25000
+        ];
+
+        $this->assertTrue($this->_file('cat.jpg')->match($rules));
+    }
+
+    /**
+     * @covers \Kirby\Filesystem\File::match
+     */
+    public function testMatchMimeException()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid mime type: text/plain');
+
+        $this->_file()->match(['mime' => ['image/png', 'application/pdf']]);
+    }
+
+    /**
+     * @covers \Kirby\Filesystem\File::match
+     */
+    public function testMatchExtensionException()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid extension: js');
+
+        $this->_file()->match(['extension' => ['png', 'pdf']]);
+    }
+
+    /**
+     * @covers \Kirby\Filesystem\File::match
+     */
+    public function testMatchTypeException()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Invalid file type: code');
+
+        $this->_file()->match(['type' => ['document', 'video']]);
+    }
+
+    /**
      * @covers ::root
      * @covers ::realpath
      */
