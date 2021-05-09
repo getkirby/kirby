@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import { createVuePlugin } from 'vite-plugin-vue2'
+import createVuePlugin from '@vitejs/plugin-vue'
 import pluginRewriteAll from 'vite-plugin-rewrite-all';
 
 const path = require('path');
@@ -18,11 +18,19 @@ const proxy = {
 };
 
 export default defineConfig({
-  plugins: [createVuePlugin(), pluginRewriteAll()],
   define: {
     // Fix vuelidate error
     'process.env.BUILD': JSON.stringify('production')
   },
+  plugins: [createVuePlugin({
+    template: {
+      compilerOptions: {
+        compatConfig: {
+          MODE: 2
+        }
+      }
+    }
+  }), pluginRewriteAll()],
   build: {
     rollupOptions: {
       output: {
@@ -33,12 +41,10 @@ export default defineConfig({
     },
   },
   resolve: {
-    alias: [
-        { 
-          find: "@", 
-          replacement: path.resolve(__dirname, 'src')
-        }
-    ]
+    alias: {
+      '@': path.resolve(__dirname, 'src'),
+      vue: '@vue/compat'
+    }
   },
   server: {
     proxy: {

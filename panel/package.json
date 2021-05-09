@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@linusborg/vue-simple-portal": "^0.1.4",
+    "@vue/compat": "^3.1.0-0",
     "autosize": "^4.0.2",
     "dayjs": "^1.9.6",
     "mitt": "^2.1.0",
@@ -22,20 +23,21 @@
     "prosemirror-model": "^1.12.0",
     "prosemirror-schema-list": "^1.1.4",
     "prosemirror-view": "^1.16.3",
-    "vue": "^2.6.12",
+    "vue": "^3.1.0-0",
     "vue-router": "^3.4.9",
     "vuedraggable": "^2.24.3",
     "vuelidate": "^0.7.6",
     "vuex": "^3.5.1"
   },
   "devDependencies": {
+    "@vitejs/plugin-vue": "^1.2.2-0",
+    "@vue/compiler-sfc": "^3.1.0-0",
     "cypress": "^7.2.0",
     "eslint": "^7.25.0",
     "eslint-plugin-cypress": "^2.11.2",
     "eslint-plugin-vue": "^7.7.0",
     "vite": "^2.0.5",
     "vite-plugin-rewrite-all": "^0.1.2",
-    "vite-plugin-vue2": "^1.2.2",
     "vue-docgen-api": "^4.35.0",
     "wait-on": "^5.2.1"
   }
