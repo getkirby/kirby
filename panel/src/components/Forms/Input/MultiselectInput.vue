@@ -22,63 +22,64 @@
       {{ tag.text }}
     </k-tag>
 
-    <k-dropdown-content
-      slot="footer"
-      ref="dropdown"
-      @open="onOpen"
-      @close="onClose"
-      @keydown.native.esc.stop="close"
-    >
-      <k-dropdown-item
-        v-if="search"
-        icon="search"
-        class="k-multiselect-search"
+    <template #footer>
+      <k-dropdown-content
+        ref="dropdown"
+        @open="onOpen"
+        @close="onClose"
+        @keydown.native.esc.stop="close"
       >
-        <input
-          ref="search"
-          v-model="q"
-          :placeholder="search.min ? $t('search.min', { min: search.min }) : $t('search') + ' …'"
-          @keydown.esc.stop="escape"
-        >
-      </k-dropdown-item>
-
-      <div class="k-multiselect-options">
         <k-dropdown-item
-          v-for="option in visible"
-          :key="option.value"
-          :icon="isSelected(option) ? 'check' : 'circle-outline'"
-          :class="{
-            'k-multiselect-option': true,
-            'selected': isSelected(option),
-            'disabled': !more
-          }"
-          @click.prevent="select(option)"
-          @keydown.native.enter.prevent.stop="select(option)"
-          @keydown.native.space.prevent.stop="select(option)"
+          v-if="search"
+          icon="search"
+          class="k-multiselect-search"
         >
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="option.display" />
-          <!-- eslint-disable-next-line vue/no-v-html -->
-          <span class="k-multiselect-value" v-html="option.info" />
+          <input
+            ref="search"
+            v-model="q"
+            :placeholder="search.min ? $t('search.min', { min: search.min }) : $t('search') + ' …'"
+            @keydown.esc.stop="escape"
+          >
         </k-dropdown-item>
 
-        <k-dropdown-item
-          v-if="filtered.length === 0"
-          :disabled="true"
-          class="k-multiselect-option"
-        >
-          {{ emptyLabel }}
-        </k-dropdown-item>
-      </div>
+        <div class="k-multiselect-options">
+          <k-dropdown-item
+            v-for="option in visible"
+            :key="option.value"
+            :icon="isSelected(option) ? 'check' : 'circle-outline'"
+            :class="{
+              'k-multiselect-option': true,
+              'selected': isSelected(option),
+              'disabled': !more
+            }"
+            @click.prevent="select(option)"
+            @keydown.native.enter.prevent.stop="select(option)"
+            @keydown.native.space.prevent.stop="select(option)"
+          >
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="option.display" />
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span class="k-multiselect-value" v-html="option.info" />
+          </k-dropdown-item>
 
-      <k-button
-        v-if="visible.length < filtered.length"
-        class="k-multiselect-more"
-        @click.stop="limit = false"
-      >
-        {{ $t("search.all") }} ({{ filtered.length }})
-      </k-button>
-    </k-dropdown-content>
+          <k-dropdown-item
+            v-if="filtered.length === 0"
+            :disabled="true"
+            class="k-multiselect-option"
+          >
+            {{ emptyLabel }}
+          </k-dropdown-item>
+        </div>
+
+        <k-button
+          v-if="visible.length < filtered.length"
+          class="k-multiselect-more"
+          @click.stop="limit = false"
+        >
+          {{ $t("search.all") }} ({{ filtered.length }})
+        </k-button>
+      </k-dropdown-content>
+    </template>
   </k-draggable>
 </template>
 

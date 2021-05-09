@@ -24,33 +24,35 @@
     >
       {{ tag.text }}
     </k-tag>
-    <span slot="footer" class="k-tags-input-element">
-      <k-autocomplete
-        ref="autocomplete"
-        :options="options"
-        :skip="skip"
-        @select="addTag"
-        @leave="$refs.input.focus()"
-      >
-        <input
-          :id="id"
-          ref="input"
-          v-model.trim="newTag"
-          :autofocus="autofocus"
-          :disabled="disabled || (max && tags.length >= max)"
-          :name="name"
-          autocomplete="off"
-          type="text"
-          @input="type($event.target.value)"
-          @blur="blurInput"
-          @keydown.meta.s="blurInput"
-          @keydown.left.exact="leaveInput"
-          @keydown.enter.exact="enter"
-          @keydown.tab.exact="tab"
-          @keydown.backspace.exact="leaveInput"
+    <template #footer>
+      <span class="k-tags-input-element">
+        <k-autocomplete
+          ref="autocomplete"
+          :options="options"
+          :skip="skip"
+          @select="addTag"
+          @leave="$refs.input.focus()"
         >
-      </k-autocomplete>
-    </span>
+          <input
+            :id="id"
+            ref="input"
+            v-model.trim="newTag"
+            :autofocus="autofocus"
+            :disabled="disabled || (max && tags.length >= max)"
+            :name="name"
+            autocomplete="off"
+            type="text"
+            @input="type($event.target.value)"
+            @blur="blurInput"
+            @keydown.meta.s="blurInput"
+            @keydown.left.exact="leaveInput"
+            @keydown.enter.exact="enter"
+            @keydown.tab.exact="tab"
+            @keydown.backspace.exact="leaveInput"
+          >
+        </k-autocomplete>
+      </span>
+    </template>
   </k-draggable>
 </template>
 

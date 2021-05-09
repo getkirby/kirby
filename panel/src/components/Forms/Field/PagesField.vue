@@ -1,15 +1,18 @@
 <template>
   <k-field v-bind="$props" class="k-pages-field">
-    <k-button-group slot="options" class="k-field-options">
-      <k-button
-        v-if="more && !disabled"
-        :icon="btnIcon"
-        class="k-field-options-button"
-        @click="open"
-      >
-        {{ btnLabel }}
-      </k-button>
-    </k-button-group>
+    <template #options>
+      <k-button-group class="k-field-options">
+        <k-button
+          v-if="more && !disabled"
+          :icon="btnIcon"
+          class="k-field-options-button"
+          @click="open"
+        >
+          {{ btnLabel }}
+        </k-button>
+      </k-button-group>
+    </template>
+
     <template v-if="selected.length">
       <k-draggable
         :element="elements.list"
@@ -30,12 +33,13 @@
           :icon="page.icon"
           :image="page.image"
         >
-          <k-button
-            v-if="!disabled"
-            slot="options"
-            icon="remove"
-            @click="remove(index)"
-          />
+          <template #options>
+            <k-button
+              v-if="!disabled"
+              icon="remove"
+              @click="remove(index)"
+            />
+          </template>
         </component>
       </k-draggable>
     </template>

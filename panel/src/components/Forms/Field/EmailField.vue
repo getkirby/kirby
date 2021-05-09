@@ -8,16 +8,17 @@
       type="email"
       v-on="$listeners"
     >
-      <k-button
-        v-if="link"
-        slot="icon"
-        :icon="icon"
-        :link="mailto"
-        :tooltip="$t('open')"
-        class="k-input-icon-button"
-        tabindex="-1"
-        target="_blank"
-      />
+      <template #icon>
+        <k-button
+          v-if="link"
+          :icon="icon"
+          :link="mailto"
+          :tooltip="$t('open')"
+          class="k-input-icon-button"
+          tabindex="-1"
+          target="_blank"
+        />
+      </template>
     </k-input>
   </k-field>
 </template>
