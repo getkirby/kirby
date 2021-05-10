@@ -11,11 +11,11 @@
     <k-bar v-if="$slots.left || $slots.right" class="k-header-buttons">
       <template #left>
         <!-- @slot buttons on the left -->
-        <slot name="left" class="k-header-left" />
+        <slot name="left" />
       </template>
       <template #right>
         <!-- @slot buttons on the right -->
-        <slot name="right" class="k-header-right" />
+        <slot name="right" />
       </template>
     </k-bar>
 
