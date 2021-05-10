@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import { TranslationString } from '@/config/i18n.js'
 import direction from "@/helpers/direction.js";
 
 import {
@@ -57,7 +56,7 @@ export const props = {
     maxlength: Number,
     minlength: Number,
     pattern: String,
-    placeholder: [String, TranslationString],
+    placeholder: String,
     preselect: Boolean,
     spellcheck: {
       type: [Boolean, String],

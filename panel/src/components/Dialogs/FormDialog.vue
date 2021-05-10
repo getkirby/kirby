@@ -38,7 +38,7 @@ export default {
       default: "medium",
     },
     submitButton: {
-      type: [String, TranslationString, Boolean],
+      type: [String, Boolean],
       default() {
         return new TranslationString("save")
       }

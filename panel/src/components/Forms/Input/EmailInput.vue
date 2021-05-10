@@ -11,7 +11,7 @@ export const props = {
       default: "email"
     },
     placeholder: {
-      type: [String, TranslationString],
+      type: String,
       default() {
         return new TranslationString("email.placeholder")
       }
