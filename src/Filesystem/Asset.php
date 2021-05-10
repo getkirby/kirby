@@ -2,6 +2,8 @@
 
 namespace Kirby\Filesystem;
 
+use Kirby\Cms\FileModifications;
+
 /**
  * Anything in your public path can be converted
  * to an Asset object to use the same handy file
@@ -17,6 +19,7 @@ namespace Kirby\Filesystem;
 class Asset
 {
     use IsFile;
+    use FileModifications;
 
     /**
      * Relative file path
