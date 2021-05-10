@@ -16,8 +16,8 @@ export default {
       default: "trash"
     },
     submitButton: {
-      type: [String, TranslationString, Boolean],
-      default() { 
+      type: [String, Boolean],
+      default() {
         return new TranslationString("delete")
       }
     },

@@ -53,8 +53,6 @@
 </template>
 
 <script>
-import { TranslationString } from '@/config/i18n.js'
-
 /**
  * Modal dialogs are used in Kirby's Panel in many places for quick actions like adding new pages, changing titles, etc. that don't necessarily need a full new view. You can create your own modals for your fields and other plugins or reuse our existing modals to invoke typical Panel actions.
  */
@@ -87,7 +85,7 @@ export default {
      * The text for the submit button
      */
     submitButton: {
-      type: [String, TranslationString, Boolean],
+      type: [String, Boolean],
       default: true
     },
     /**

@@ -115,7 +115,7 @@ export default {
      * Sets the label for the page selector
      */
     pageLabel: {
-      type: [String, TranslationString],
+      type: String,
       default() {
         return new TranslationString("pagination.page")
       }
@@ -131,7 +131,7 @@ export default {
      * Sets the label for the `prev` arrow button
      */
     prevLabel: {
-      type: [String, TranslationString],
+      type: String,
       default() {
         return new TranslationString("prev")
       }
@@ -140,7 +140,7 @@ export default {
      * Sets the label for the `next` arrow button
      */
     nextLabel: {
-      type: [String, TranslationString],
+      type: String,
       default() {
         return new TranslationString("next")
       }
