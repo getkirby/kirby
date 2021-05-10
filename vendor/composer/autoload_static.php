@@ -133,7 +133,6 @@ class ComposerStaticInitc26333d865e0329b638bdc17afd29896
         'Kirby\\Cms\\ContentLock' => __DIR__ . '/../..' . '/src/Cms/ContentLock.php',
         'Kirby\\Cms\\ContentLocks' => __DIR__ . '/../..' . '/src/Cms/ContentLocks.php',
         'Kirby\\Cms\\ContentTranslation' => __DIR__ . '/../..' . '/src/Cms/ContentTranslation.php',
-        'Kirby\\Cms\\Dir' => __DIR__ . '/../..' . '/src/Cms/Dir.php',
         'Kirby\\Cms\\Email' => __DIR__ . '/../..' . '/src/Cms/Email.php',
         'Kirby\\Cms\\Event' => __DIR__ . '/../..' . '/src/Cms/Event.php',
         'Kirby\\Cms\\Field' => __DIR__ . '/../..' . '/src/Cms/Field.php',

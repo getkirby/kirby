@@ -60,6 +60,7 @@ return [
     'xml'        => 'Kirby\Toolkit\Xml',
 
     // TODO: remove in 4.0.0
+    'kirby\cms\api'       => 'Kirby\Api\Api',
     'kirby\cms\dir'       => 'Kirby\Toolkit\Dir',
     'kirby\cms\kirbytag'  => 'Kirby\Text\KirbyTag',
     'kirby\cms\kirbytags' => 'Kirby\Text\KirbyTags'

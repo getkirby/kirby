@@ -38,7 +38,6 @@ return array(
     'Kirby\\Cms\\ContentLock' => $baseDir . '/src/Cms/ContentLock.php',
     'Kirby\\Cms\\ContentLocks' => $baseDir . '/src/Cms/ContentLocks.php',
     'Kirby\\Cms\\ContentTranslation' => $baseDir . '/src/Cms/ContentTranslation.php',
-    'Kirby\\Cms\\Dir' => $baseDir . '/src/Cms/Dir.php',
     'Kirby\\Cms\\Email' => $baseDir . '/src/Cms/Email.php',
     'Kirby\\Cms\\Event' => $baseDir . '/src/Cms/Event.php',
     'Kirby\\Cms\\Field' => $baseDir . '/src/Cms/Field.php',
