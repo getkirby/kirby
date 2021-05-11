@@ -115,7 +115,7 @@ class LocaleTest extends TestCase
      */
     public function testGetInvalid2()
     {
-        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectException('Kirby\Exception\Exception');
         $this->expectExceptionMessage('Could not determine locale for category "987654321"');
 
         Locale::get(987654321);

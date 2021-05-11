@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -56,6 +57,9 @@ class Locale
      *
      * @param int|string $category Locale category constant or constant name
      * @return array|string Associative array if `LC_ALL` was passed (default), otherwise string
+     *
+     * @throws \Kirby\Exception\Exception If the locale cannot be determined
+     * @throws \Kirby\Exception\InvalidArgumentException If the provided locale category is invalid
      */
     public static function get($category = LC_ALL)
     {
@@ -70,7 +74,7 @@ class Locale
             $locale = setlocale($normalizedCategory, 0);
 
             if (is_string($locale) !== true) {
-                throw new InvalidArgumentException('Could not determine locale for category "' . $category . '"');
+                throw new Exception('Could not determine locale for category "' . $category . '"');
             }
 
             return $locale;
