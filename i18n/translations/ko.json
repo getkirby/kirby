@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "페이지({slug})를 복제할 권한이 없습니다.",
   "error.page.notFound": "페이지({slug})가 없습니다.",
   "error.page.num.invalid": "올바른 정수를 입력하세요.",
-  "error.page.slug.invalid": "Please enter a valid URL appendix",
+  "error.page.slug.invalid": "올바른 URL을 입력하세요.",
   "error.page.slug.maxlength": "{length}자 이하로 고유 주소를 입력하세요.",
   "error.page.sort.permission": "페이지({slug})를 정렬할 수 없습니다.",
   "error.page.status.invalid": "올바른 상태를 설정하세요.",
@@ -163,7 +163,7 @@
   "error.user.password.invalid": "암호를 8자 이상으로 설정하세요.",
   "error.user.password.notSame": "\uc554\ud638\ub97c \ud655\uc778\ud558\uc138\uc694.",
   "error.user.password.undefined": "암호가 설정되지 않았습니다.",
-  "error.user.password.wrong": "Wrong password",
+  "error.user.password.wrong": "암호가 올바르지 않습니다.",
   "error.user.role.invalid": "올바른 역할을 지정하세요.",
   "error.user.update.permission": "사용자({name})의 정보를 변경할 권한이 없습니다.",
 
