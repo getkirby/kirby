@@ -28,13 +28,7 @@ export const props = {
      * the `true` text.
      */
     text: {
-      type: [Array, String],
-      default() {
-        return [
-          this.$t("off"),
-          this.$t("on"),
-        ];
-      }
+      type: [Array, String]
     },
     required: Boolean,
     value: Boolean,
@@ -49,11 +43,15 @@ export default {
   inheritAttrs: false,
   computed: {
     label() {
-      if (Array.isArray(this.text)) {
-        return this.value ? this.text[1] : this.text[0];
+      // Add fallback for text
+      const text = this.text || [this.$t("off"), this.$t("on")];
+
+      // If text differentiates between toggle state
+      if (Array.isArray(text)) {
+        return this.value ? text[1] : text[0];
       }
 
-      return this.text;
+      return text;
     }
   },
   watch: {
