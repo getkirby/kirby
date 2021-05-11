@@ -25,19 +25,22 @@ export default {
     fields() {
       return {
         href: {
-          label: "URL",
+          label: this.$t("url"),
           type: "text",
           icon: "url"
         },
         title: {
-          label: "Title",
+          label: this.$t("title"),
           type: "text",
           icon: "title"
         },
         target: {
-          label: "Open in new window",
+          label: this.$t("open.newWindow"),
           type: "toggle",
-          text: ["no", "yes"]
+          text: [
+            this.$t("no"),
+            this.$t("yes")
+          ]
         }
       };
     }

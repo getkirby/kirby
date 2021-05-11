@@ -1,11 +1,12 @@
 import Mark from "../Mark"
+import Vue from "vue";
 
 export default class Strike extends Mark {
 
   get button() {
     return {
       icon: "strikethrough",
-      label: "Strike-through"
+      label: Vue.$t("toolbar.button.strike")
     };
   }
 

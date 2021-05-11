@@ -1,11 +1,12 @@
 import Node from "../Node";
+import Vue from "vue";
 
 export default class BulletList extends Node {
 
   get button() {
     return {
-      label: "Bullet list",
       icon: "list-bullet",
+      label: Vue.$t("toolbar.button.ul")
     };
   }
 

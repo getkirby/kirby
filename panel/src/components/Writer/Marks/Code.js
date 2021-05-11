@@ -1,11 +1,12 @@
 import Mark from "../Mark";
+import Vue from "vue";
 
 export default class Code extends Mark {
 
   get button() {
     return {
       icon: "code",
-      label: "Code"
+      label: Vue.$t("toolbar.button.code")
     };
   }
 

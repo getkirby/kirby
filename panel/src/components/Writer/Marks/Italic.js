@@ -1,11 +1,12 @@
 import Mark from "../Mark";
+import Vue from "vue";
 
 export default class Italic extends Mark {
 
   get button() {
     return {
       icon: "italic",
-      label: "Italic"
+      label: Vue.$t("toolbar.button.italic")
     };
   }
 
