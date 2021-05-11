@@ -9,20 +9,13 @@ use PHPUnit\Framework\TestCase;
  */
 class LocaleTest extends TestCase
 {
-    protected $locale = [];
+    protected $locales = [];
     protected $localeSuffix;
 
     public function setUp(): void
     {
-        $constants = [
-            LC_ALL, LC_COLLATE, LC_CTYPE, LC_MONETARY,
-            LC_NUMERIC, LC_TIME, LC_MESSAGES
-        ];
-
-        // make a backup of the current locale
-        foreach ($constants as $constant) {
-            $this->locale[$constant] = setlocale($constant, '0');
-        }
+        // make a backup of the current locales
+        $this->locales = Locale::get();
 
         // test which locale suffix the system supports
         setlocale(LC_ALL, 'de_DE.' . $this->localeSuffix);
@@ -38,8 +31,7 @@ class LocaleTest extends TestCase
 
     public function tearDown(): void
     {
-        Locale::set($this->locale);
-        $this->locale = [];
+        Locale::set($this->locales);
     }
 
     /**
