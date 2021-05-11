@@ -116,7 +116,7 @@ class Asset
      * Setter for the path
      *
      * @param string $path
-     * @return self
+     * @return $this
      */
     protected function setPath(string $path)
     {

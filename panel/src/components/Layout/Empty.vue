@@ -15,12 +15,23 @@
 </template>
 
 <script>
+/**
+ * Whenever you have to deal with an "empty" state, such as an empty list or a search without results, you can use the `k-empty` component to make it a bit nicer. The component combines an icon with text in a wrapper box.
+ * @example <k-empty icon="image">No images yet</k-empty>
+ */
 export default {
   props: {
+    /**
+     * Text to show inside the box
+     */
     text: String,
+    /**
+     * Icon to show inside the box
+     */
     icon: String,
     /**
-     * Available options: `list`|`cards`
+     * Layout for the box
+     * @types list, cards
      */
     layout: {
       type: String,

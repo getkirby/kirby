@@ -76,7 +76,7 @@ abstract class Model
      * Setter for the parent Kirby object
      *
      * @param \Kirby\Cms\App|null $kirby
-     * @return self
+     * @return $this
      */
     protected function setKirby(App $kirby = null)
     {
@@ -89,7 +89,7 @@ abstract class Model
      *
      * @internal
      * @param \Kirby\Cms\Site|null $site
-     * @return self
+     * @return $this
      */
     public function setSite(Site $site = null)
     {

@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "Nie masz uprawnień, by zduplikować \"{slug}\"",
   "error.page.notFound": "Nie można znaleźć strony \"{slug}\"",
   "error.page.num.invalid": "Wprowadź poprawny numer sortujący. Liczby nie mogą być ujemne.",
-  "error.page.slug.invalid": "Wprowadź poprawną końcówkę adresu URL",
+  "error.page.slug.invalid": "Please enter a valid URL appendix",
   "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "Nie można sortować strony \"{slug}\"",
   "error.page.status.invalid": "Ustaw prawidłowy status strony",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Wprowadź prawidłowe hasło. Hasła muszą mieć co najmniej 8 znaków.",
   "error.user.password.notSame": "Hasła nie są takie same",
   "error.user.password.undefined": "Użytkownik nie ma hasła",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Wprowadź poprawną rolę",
   "error.user.update.permission": "Nie masz uprawnień, by zaktualizować użytkownika \"{name}\"",
 

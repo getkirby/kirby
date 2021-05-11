@@ -179,7 +179,7 @@ class Field
      * Provides a fallback if the field value is empty
      *
      * @param mixed $fallback
-     * @return self
+     * @return $this|static
      */
     public function or($fallback = null)
     {

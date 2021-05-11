@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "\"{slug}\" öğesini çoğaltmanıza izin verilmiyor",
   "error.page.notFound": "\"{slug}\" uzantısındaki sayfa bulunamadı",
   "error.page.num.invalid": "Lütfen geçerli bir sıralama numarası girin. Sayılar negatif olmamalıdır.",
-  "error.page.slug.invalid": "Lütfen geçerli bir adres öneki girin",
+  "error.page.slug.invalid": "Lütfen geçerli bir URL eki girin",
   "error.page.slug.maxlength": "Adres uzantısı \"{length}\" karakterden az olmalıdır",
   "error.page.sort.permission": "\"{slug}\" sayfası sıralanamıyor",
   "error.page.status.invalid": "Lütfen geçerli bir sayfa durumu ayarlayın",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Lütfen geçerli bir şifre giriniz. Şifreler en az 8 karakter uzunluğunda olmalıdır.",
   "error.user.password.notSame": "L\u00fctfen \u015fifreyi do\u011frulay\u0131n",
   "error.user.password.undefined": "Bu kullanıcının şifresi yok",
+  "error.user.password.wrong": "Yanlış şifre",
   "error.user.role.invalid": "Lütfen geçerli bir rol girin",
   "error.user.update.permission": "\"{name}\" kullanıcısını güncellemenize izin verilmiyor",
 
@@ -286,7 +287,7 @@
   "installation.issues.mbstring": "<code>MB String</code> eklentisi gerekli",
   "installation.issues.media": "<code>/media</code> klasörü yok yada yazılamaz",
   "installation.issues.php": "<code>PHP 7+</code> kullandığınızdan emin olun. ",
-  "installation.issues.server": "Kirby <code>Apache</code>, <code>Nginx</code> or <code>Caddy</code> gerektirir",
+  "installation.issues.server": "Kirby <code>Apache</code>, <code>Nginx</code> veya <code>Caddy</code> gerektirir",
   "installation.issues.sessions": "<code>/site/sessions</code> klasörü mevcut değil veya yazılabilir değil",
 
   "language": "Dil",

@@ -42,12 +42,18 @@ export default {
     ariaLabel: String,
     default: String,
     disabled: Boolean,
+    /**
+     * The text, that is shown as the first empty option, when the field is not required.
+     */
     empty: {
       type: [Boolean, String],
       default: true
     },
     id: [Number, String],
     name: [Number, String],
+    /**
+     * The text, that is shown when no option is selected yet.
+     */
     placeholder: String,
     options: {
       type: Array,

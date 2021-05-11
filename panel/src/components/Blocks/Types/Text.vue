@@ -1,8 +1,10 @@
 <template>
   <k-writer
     ref="input"
-    :nodes="false"
-    :placeholder="placeholder"
+    :inline="textField.inline"
+    :marks="textField.marks"
+    :nodes="textField.nodes"
+    :placeholder="textField.placeholder"
     :value="content.text"
     class="k-block-type-text-input"
     @input="update({ text: $event })"
@@ -10,10 +12,14 @@
 </template>
 
 <script>
+/**
+ * @displayName BlockTypeText
+ * @internal
+ */
 export default {
   computed: {
-    placeholder() {
-      return this.field("text", {}).placeholder;
+    textField() {
+      return this.field("text", {});
     }
   },
   methods: {

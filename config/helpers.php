@@ -171,14 +171,13 @@ if (function_exists('e') === false) {
  * Escape context specific output
  *
  * @param string $string Untrusted data
- * @param string $context Location of output
- * @param bool $strict Whether to escape an extended set of characters (HTML attributes only)
+ * @param string $context Location of output (`html`, `attr`, `js`, `css`, `url` or `xml`)
  * @return string Escaped data
  */
-function esc($string, $context = 'html', $strict = false)
+function esc($string, $context = 'html')
 {
     if (method_exists('Kirby\Toolkit\Escape', $context) === true) {
-        return Escape::$context($string, $strict);
+        return Escape::$context($string);
     }
 
     return $string;
@@ -308,15 +307,25 @@ function invalid(array $data = [], array $rules = [], array $messages = [])
 
         // See: http://php.net/manual/en/types.comparisons.php
         // only false for: null, undefined variable, '', []
-        $filled  = isset($data[$field]) && $data[$field] !== '' && $data[$field] !== [];
+        $value   = $data[$field] ?? null;
+        $filled  = $value !== null && $value !== '' && $value !== [];
         $message = $messages[$field] ?? $field;
 
         // True if there is an error message for each validation method.
         $messageArray = is_array($message);
 
         foreach ($validations as $method => $options) {
+            // If the index is numeric, there is no option
+            // and `$value` is sent directly as a `$options` parameter
             if (is_numeric($method) === true) {
-                $method = $options;
+                $method  = $options;
+                $options = [$value];
+            } else {
+                if (is_array($options) === false) {
+                    $options = [$options];
+                }
+
+                array_unshift($options, $value);
             }
 
             $validationIndex++;
@@ -327,12 +336,6 @@ function invalid(array $data = [], array $rules = [], array $messages = [])
                     continue;
                 }
             } elseif ($filled) {
-                if (is_array($options) === false) {
-                    $options = [$options];
-                }
-
-                array_unshift($options, $data[$field] ?? null);
-
                 if (V::$method(...$options) === true) {
                     // Field is filled and passes validation method.
                     continue;

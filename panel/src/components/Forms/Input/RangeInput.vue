@@ -29,6 +29,9 @@
 <script>
 import { required, minValue, maxValue } from "vuelidate/lib/validators";
 
+/**
+ * @example <k-input v-model="range" name="range" type="range" />
+ */
 export default {
   inheritAttrs: false,
   props: {
@@ -36,20 +39,32 @@ export default {
     disabled: Boolean,
     id: [String, Number],
     default: [Number, String],
+    /**
+     * The highest accepted number
+     */
     max: {
       type: Number,
       default: 100
     },
+    /**
+     * The lowest required number
+     */
     min: {
       type: Number,
       default: 0
     },
     name: [String, Number],
     required: Boolean,
+    /**
+     * The amount to increment when dragging the slider. This can be a decimal.
+     */
     step: {
       type: Number,
       default: 1
     },
+    /**
+     * The slider tooltip can have text before and after the value.
+     */
     tooltip: {
       type: [Boolean, Object],
       default() {

@@ -10,10 +10,28 @@
 </template>
 
 <script>
+/**
+ * The Text component is a container for all multi-line text with additional formats.
+ * @example <k-text>
+  <b>Lorem</b> <a href="#">ipsum</a> <i>dolor</i> …
+</k-text>
+ */
 export default {
   props: {
+    /**
+     * Changes the text alignment
+     * @values left, centre, right 
+     */
     align: String,
+    /**
+     * Changes the font size of the text
+     * @values tiny, small, medium, large, huge
+     */
     size: String,
+    /**
+     * Changes the layout/design of the text
+     * @values help
+     */
     theme: String
   }
 }

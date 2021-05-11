@@ -69,7 +69,7 @@ class Dir
 
             if (is_dir($root) === true) {
                 if ($recursive === true) {
-                    static::copy($root, $target . '/' . $name);
+                    static::copy($root, $target . '/' . $name, true, $ignore);
                 }
             } else {
                 F::copy($root, $target . '/' . $name);
@@ -254,7 +254,7 @@ class Dir
      * @param string $dir The path of the directory
      * @param string $format
      * @param string $handler
-     * @return int
+     * @return int|string
      */
     public static function modified(string $dir, string $format = null, string $handler = 'date')
     {

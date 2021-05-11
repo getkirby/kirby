@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+
+##########
+## Pre-commit hook script for Git
+## Runs static analysis on all staged files before they are committed
+##
+## ------
+## Usage:
+## Create an executable file `.git/hooks/pre-commit` with the following contents:
+##
+##   #!/bin/sh
+##   exec scripts/pre-commit
+##
+## You may need to modify the `$PATH` variable so Git can find your tools;
+## if the script above triggers an error, use a line like this above `exec`:
+##
+##   export PATH=$HOME/.composer/vendor/bin:$PATH
+##########
+
+# exit on the first error
+set -e
+
+# enable extended globbing
+shopt -s extglob
+
+# loop over all files that are currently staged
+git diff-index --cached --name-only HEAD | while read -r file; do
+    case "$file" in
+        bootstrap.php | router.php | @(config|src|tests|views)/**.php)
+            echo "### PHP-CS-Fixer on $file"
+            php-cs-fixer fix --config .php_cs --dry-run --diff --diff-format=udiff "$file"
+            echo
+
+            if [[ "$file" != tests/** ]]; then
+                echo "### Psalm on $file"
+                psalm "$file"
+                echo
+
+                echo "### PHPMD on $file"
+                phpmd "$file" ansi phpmd.xml.dist
+                echo
+            fi
+        ;;
+
+        *.js | *.vue)
+            echo "### ESLint on $file"
+            npm --prefix panel run lint -- --no-fix "../$file"
+            echo
+        ;;
+
+        composer.json | composer.lock)
+            echo "### composer validate"
+            composer run analyze:composer
+            echo
+        ;;
+    esac
+done

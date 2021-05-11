@@ -95,7 +95,7 @@ class Collection extends Iterator implements Countable
      *
      * @param string $key string or array
      * @param mixed $value
-     * @return \Kirby\Toolkit\Collection
+     * @return $this
      */
     public function __set(string $key, $value)
     {
@@ -134,7 +134,7 @@ class Collection extends Iterator implements Countable
      * @param mixed $key
      * @param mixed $item
      * @param mixed ...$args
-     * @return \Kirby\Toolkit\Collection
+     * @return $this
      */
     public function append(...$args)
     {
@@ -152,8 +152,8 @@ class Collection extends Iterator implements Countable
      * The last chunk may be smaller
      *
      * @param int $size Number of elements per chunk
-     * @return \Kirby\Toolkit\Collection A new collection with an element for each chunk and
-     *                                   a sub collection in each chunk
+     * @return static A new collection with an element for each chunk and
+     *                a sub collection in each chunk
      */
     public function chunk(int $size)
     {
@@ -183,7 +183,7 @@ class Collection extends Iterator implements Countable
     /**
      * Returns a cloned instance of the collection
      *
-     * @return \Kirby\Toolkit\Collection
+     * @return $this
      */
     public function clone()
     {
@@ -194,7 +194,7 @@ class Collection extends Iterator implements Countable
      * Getter and setter for the data
      *
      * @param array|null $data
-     * @return array|\Kirby\Toolkit\Collection
+     * @return array|$this
      */
     public function data(array $data = null)
     {
@@ -214,7 +214,7 @@ class Collection extends Iterator implements Countable
     /**
      * Clone and remove all elements from the collection
      *
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function empty()
     {
@@ -228,7 +228,7 @@ class Collection extends Iterator implements Countable
      * Adds all elements to the collection
      *
      * @param mixed $items
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function extend($items)
     {
@@ -243,7 +243,7 @@ class Collection extends Iterator implements Countable
      *
      * @param string|array|\Closure $field
      * @param mixed ...$args
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function filter($field, ...$args)
     {
@@ -323,7 +323,7 @@ class Collection extends Iterator implements Countable
      *
      * @param string|Closure $field
      * @param array ...$args
-     * @return self
+     * @return static
      */
     public function filterBy(...$args)
     {
@@ -452,7 +452,7 @@ class Collection extends Iterator implements Countable
     /**
      * Returns the elements in reverse order
      *
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function flip()
     {
@@ -525,7 +525,9 @@ class Collection extends Iterator implements Countable
      *
      * @param string|Closure $field
      * @param bool $i
-     * @return \Kirby\Toolkit\Collection A new collection with an element for each group and a subcollection in each group
+     * @return \Kirby\Toolkit\Collection A new collection with an element for
+     *                                   each group and a subcollection in
+     *                                   each group
      * @throws \Exception if $field is not a string nor a callback function
      */
     public function group($field, bool $i = true)
@@ -586,7 +588,9 @@ class Collection extends Iterator implements Countable
      *
      * @param string|Closure $field
      * @param bool $i
-     * @return \Kirby\Toolkit\Collection A new collection with an element for each group and a sub collection in each group
+     * @return \Kirby\Toolkit\Collection A new collection with an element for
+     *                                   each group and a sub collection in
+     *                                   each group
      * @throws \Exception
      */
     public function groupBy(...$args)
@@ -599,7 +603,7 @@ class Collection extends Iterator implements Countable
      * @since 3.3.0
      *
      * @param \Kirby\Toolkit\Collection $other
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function intersection($other)
     {
@@ -679,7 +683,7 @@ class Collection extends Iterator implements Countable
      * Returns a new object with a limited number of elements
      *
      * @param int $limit The number of elements to return
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function limit(int $limit)
     {
@@ -690,7 +694,7 @@ class Collection extends Iterator implements Countable
      * Map a function to each element
      *
      * @param callable $callback
-     * @return \Kirby\Toolkit\Collection
+     * @return $this
      */
     public function map(callable $callback)
     {
@@ -713,7 +717,7 @@ class Collection extends Iterator implements Countable
      * Returns a Collection without the given element(s)
      *
      * @param string ...$keys any number of keys, passed as individual arguments
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function not(...$keys)
     {
@@ -728,7 +732,7 @@ class Collection extends Iterator implements Countable
      * Returns a new object starting from the given offset
      *
      * @param int $offset The index to start from
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function offset(int $offset)
     {
@@ -739,7 +743,7 @@ class Collection extends Iterator implements Countable
      * Add pagination
      *
      * @param array ...$arguments
-     * @return \Kirby\Toolkit\Collection a sliced set of data
+     * @return static a sliced set of data
      */
     public function paginate(...$arguments)
     {
@@ -795,7 +799,7 @@ class Collection extends Iterator implements Countable
      * @param mixed $key
      * @param mixed $item
      * @param mixed ...$args
-     * @return \Kirby\Toolkit\Collection
+     * @return $this
      */
     public function prepend(...$args)
     {
@@ -817,7 +821,7 @@ class Collection extends Iterator implements Countable
      * Any part of the query is optional.
      *
      * @param array $arguments
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function query(array $arguments = [])
     {
@@ -875,7 +879,7 @@ class Collection extends Iterator implements Countable
      * Removes an element from the array by key
      *
      * @param mixed $key the name of the key
-     * @return \Kirby\Toolkit\Collection
+     * @return $this
      */
     public function remove($key)
     {
@@ -888,7 +892,7 @@ class Collection extends Iterator implements Countable
      *
      * @param mixed $key string or array
      * @param mixed $value
-     * @return \Kirby\Toolkit\Collection
+     * @return $this
      */
     public function set($key, $value = null)
     {
@@ -905,7 +909,7 @@ class Collection extends Iterator implements Countable
     /**
      * Shuffle all elements
      *
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function shuffle()
     {
@@ -928,7 +932,7 @@ class Collection extends Iterator implements Countable
      *
      * @param int $offset The optional index to start the slice from
      * @param int|null $limit The optional number of elements to return
-     * @return \Kirby\Toolkit\Collection
+     * @return $this|static
      */
     public function slice(int $offset = 0, int $limit = null)
     {
@@ -972,7 +976,7 @@ class Collection extends Iterator implements Countable
      * @param string|callable $field Field name or value callback to sort by
      * @param string $direction asc or desc
      * @param int $method The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
-     * @return \Kirby\Toolkit\Collection
+     * @return $this|static
      */
     public function sort()
     {
@@ -1088,7 +1092,7 @@ class Collection extends Iterator implements Countable
      * @param string|callable $field Field name or value callback to sort by
      * @param string $direction asc or desc
      * @param int $method The sort flag, SORT_REGULAR, SORT_NUMERIC etc.
-     * @return Collection
+     * @return $this|static
      */
     public function sortBy(...$args)
     {
@@ -1170,7 +1174,7 @@ class Collection extends Iterator implements Countable
      * Alias for $this->not()
      *
      * @param string ...$keys any number of keys, passed as individual arguments
-     * @return \Kirby\Toolkit\Collection
+     * @return static
      */
     public function without(...$keys)
     {

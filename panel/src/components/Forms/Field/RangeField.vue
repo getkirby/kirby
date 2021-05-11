@@ -16,6 +16,10 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import RangeInput from "../Input/RangeInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-range-input>` for additional information.
+ * @example <k-range-field v-model="range" name="range" label="Slider" />
+ */
 export default {
   inheritAttrs: false,
   props: {

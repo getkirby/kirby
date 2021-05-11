@@ -12,6 +12,10 @@
 </template>
 
 <script>
+/**
+ * @displayName BlockTypeMarkdown
+ * @internal
+ */
 export default {
   computed: {
     placeholder() {

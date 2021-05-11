@@ -30,7 +30,7 @@ trait PageActions
      * siblings will not be resorted.
      *
      * @param int|null $num
-     * @return self
+     * @return $this|static
      * @throws \Kirby\Exception\LogicException If a draft is being sorted or the directory cannot be moved
      */
     public function changeNum(int $num = null)
@@ -77,7 +77,7 @@ trait PageActions
      *
      * @param string $slug
      * @param string|null $languageCode
-     * @return self
+     * @return $this|static
      * @throws \Kirby\Exception\LogicException If the directory cannot be moved
      */
     public function changeSlug(string $slug, string $languageCode = null)
@@ -141,7 +141,7 @@ trait PageActions
      *
      * @param string $slug
      * @param string|null $languageCode
-     * @return self
+     * @return static
      * @throws \Kirby\Exception\NotFoundException If the language for the given language code cannot be found
      * @throws \Kirby\Exception\InvalidArgumentException If the slug for the default language is being changed
      */
@@ -176,7 +176,7 @@ trait PageActions
      *
      * @param string $status "draft", "listed" or "unlisted"
      * @param int|null $position Optional sorting number
-     * @return self
+     * @return static
      * @throws \Kirby\Exception\InvalidArgumentException If an invalid status is being passed
      */
     public function changeStatus(string $status, int $position = null)
@@ -194,7 +194,7 @@ trait PageActions
     }
 
     /**
-     * @return self
+     * @return static
      */
     protected function changeStatusToDraft()
     {
@@ -208,7 +208,7 @@ trait PageActions
 
     /**
      * @param int|null $position
-     * @return self
+     * @return $this|static
      */
     protected function changeStatusToListed(int $position = null)
     {
@@ -233,7 +233,7 @@ trait PageActions
     }
 
     /**
-     * @return self
+     * @return $this|static
      */
     protected function changeStatusToUnlisted()
     {
@@ -257,7 +257,7 @@ trait PageActions
      * status isn't yet `listed`, it will be changed to it.
      *
      * @param int|null $position
-     * @return self
+     * @return $this|static
      */
     public function changeSort(int $position = null)
     {
@@ -268,7 +268,7 @@ trait PageActions
      * Changes the page template
      *
      * @param string $template
-     * @return self
+     * @return $this|static
      * @throws \Kirby\Exception\LogicException If the textfile cannot be renamed/moved
      */
     public function changeTemplate(string $template)
@@ -316,7 +316,7 @@ trait PageActions
      *
      * @param string $title
      * @param string|null $languageCode
-     * @return self
+     * @return static
      */
     public function changeTitle(string $title, string $languageCode = null)
     {
@@ -443,7 +443,7 @@ trait PageActions
      * Creates and stores a new page
      *
      * @param array $props
-     * @return self
+     * @return static
      */
     public static function create(array $props)
     {
@@ -498,7 +498,7 @@ trait PageActions
      * Creates a child of the current page
      *
      * @param array $props
-     * @return self
+     * @return static
      */
     public function createChild(array $props)
     {
@@ -655,7 +655,7 @@ trait PageActions
     }
 
     /**
-     * @return self
+     * @return $this|static
      * @throws \Kirby\Exception\LogicException If the folder cannot be moved
      */
     public function publish()
@@ -693,7 +693,7 @@ trait PageActions
 
     /**
      * Clean internal caches
-     * @return self
+     * @return $this
      */
     public function purge()
     {
@@ -788,9 +788,10 @@ trait PageActions
 
     /**
      * @deprecated 3.5.0 Use `Page::changeSort()` instead
+     * @todo Remove in 3.6.0
      *
      * @param null $position
-     * @return self
+     * @return $this|static
      */
     public function sort($position = null)
     {
@@ -803,7 +804,7 @@ trait PageActions
      * Convert a page from listed or
      * unlisted to draft.
      *
-     * @return self
+     * @return $this|static
      * @throws \Kirby\Exception\LogicException If the folder cannot be moved
      */
     public function unpublish()
@@ -841,7 +842,7 @@ trait PageActions
      * @param array|null $input
      * @param string|null $languageCode
      * @param bool $validate
-     * @return self
+     * @return static
      */
     public function update(array $input = null, string $languageCode = null, bool $validate = false)
     {

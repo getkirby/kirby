@@ -21,6 +21,11 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import TextareaInput from "../Input/TextareaInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-textarea-input>` 
+ * for additional information.
+ * @example <k-textarea-field v-model="text" name="text" label="Text" />
+ */
 export default {
   inheritAttrs: false,
   props: {

@@ -152,7 +152,7 @@ class Response
      * @param string $file
      * @param string $filename
      * @param array $props Custom overrides for response props (e.g. headers)
-     * @return self
+     * @return static
      */
     public static function download(string $file, string $filename = null, array $props = [])
     {
@@ -188,7 +188,7 @@ class Response
      *
      * @param string $file
      * @param array $props Custom overrides for response props (e.g. headers)
-     * @return self
+     * @return static
      */
     public static function file(string $file, array $props = [])
     {
@@ -229,7 +229,7 @@ class Response
      * @param int $code
      * @param bool $pretty
      * @param array $headers
-     * @return self
+     * @return static
      */
     public static function json($body = '', ?int $code = null, ?bool $pretty = null, array $headers = [])
     {
@@ -252,7 +252,7 @@ class Response
      *
      * @param string $location
      * @param int $code
-     * @return self
+     * @return static
      */
     public static function redirect(string $location = '/', int $code = 302)
     {

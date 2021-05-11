@@ -26,7 +26,7 @@ trait UserActions
      * Changes the user email address
      *
      * @param string $email
-     * @return self
+     * @return static
      */
     public function changeEmail(string $email)
     {
@@ -47,7 +47,7 @@ trait UserActions
      * Changes the user language
      *
      * @param string $language
-     * @return self
+     * @return static
      */
     public function changeLanguage(string $language)
     {
@@ -68,7 +68,7 @@ trait UserActions
      * Changes the screen name of the user
      *
      * @param string $name
-     * @return self
+     * @return static
      */
     public function changeName(string $name)
     {
@@ -89,7 +89,7 @@ trait UserActions
      * Changes the user password
      *
      * @param string $password
-     * @return self
+     * @return static
      */
     public function changePassword(string $password)
     {
@@ -108,7 +108,7 @@ trait UserActions
      * Changes the user role
      *
      * @param string $role
-     * @return self
+     * @return static
      */
     public function changeRole(string $role)
     {
@@ -172,7 +172,7 @@ trait UserActions
      * Creates a new User from the given props and returns a new User object
      *
      * @param array|null $props
-     * @return self
+     * @return static
      */
     public static function create(array $props = null)
     {
@@ -304,7 +304,7 @@ trait UserActions
      * @param array|null $input
      * @param string|null $languageCode
      * @param bool $validate
-     * @return self
+     * @return static
      */
     public function update(array $input = null, string $languageCode = null, bool $validate = false)
     {

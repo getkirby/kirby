@@ -27,6 +27,10 @@
 </template>
 
 <script>
+/**
+ * @displayName BlockTypeTable
+ * @internal
+ */
 export default {
   inheritAttrs: false,
   computed: {

@@ -316,7 +316,7 @@ class AuthProtectionTest extends TestCase
         try {
             $this->auth->validatePassword('marge@simpsons.com', 'invalid-password');
         } catch (InvalidArgumentException $e) {
-            $this->assertSame('The passwords do not match', $e->getMessage());
+            $this->assertSame('Wrong password', $e->getMessage());
             $thrown = true;
         }
 

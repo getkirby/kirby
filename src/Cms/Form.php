@@ -90,7 +90,7 @@ class Form extends BaseForm
     /**
      * @param \Kirby\Cms\Model $model
      * @param array $props
-     * @return self
+     * @return static
      */
     public static function for(Model $model, array $props = [])
     {

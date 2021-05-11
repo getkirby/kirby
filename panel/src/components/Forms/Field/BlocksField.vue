@@ -63,11 +63,15 @@ export default {
     hasFieldsets() {
       return Object.keys(this.fieldsets).length;
     },
-    isFull() {
-      return false;
-    },
     isEmpty() {
-      return false;
+      return this.value.length === 0;
+    },
+    isFull() {
+      if (this.max === null) {
+        return false;
+      }
+
+      return this.value.length >= this.max;
     }
   }
 };

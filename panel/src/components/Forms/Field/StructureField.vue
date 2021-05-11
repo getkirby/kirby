@@ -180,6 +180,9 @@ export default {
       type: Boolean,
       default: true
     },
+    /**
+     * The text, that is shown when the field has no entries.
+     */
     empty: String,
     fields: Object,
     limit: Number,
@@ -363,6 +366,10 @@ export default {
     beforePaginate() {
       return this.save(this.currentModel);
     },
+    /**
+     * Close the current structure field entry.
+     * @public
+     */
     close() {
       this.currentIndex = null;
       this.currentModel = null;
@@ -503,6 +510,13 @@ export default {
     onInput() {
       this.$emit("input", this.items);
     },
+    /**
+     * Edit the structure field entry at `index` position 
+     * with field `field` focused.
+     * @public
+     * @param {number} index
+     * @param {string} field
+     */
     open(index, field) {
       this.currentIndex = index;
       this.currentModel = this.$helper.clone(this.items[index]);
@@ -814,6 +828,11 @@ $structure-item-height: 38px;
     [dir="rtl"] & {
       border-left: 1px solid $color-border;
     }
+  }
+
+  td:last-child {
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 }
 .k-sortable-row-fallback {

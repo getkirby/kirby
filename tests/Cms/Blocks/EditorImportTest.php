@@ -156,7 +156,7 @@ class EditorImportTest extends TestCase
         $block = new Block($params);
 
         $this->assertSame('text', $block->type());
-        $this->assertEquals($params['content'], $block->text());
+        $this->assertSame('<p>' . $params['content'] . '</p>', $block->text()->value());
     }
 
     public function importUl($params)

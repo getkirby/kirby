@@ -16,6 +16,9 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import RadioInput from "../Input/RadioInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-radio-input>` for additional information.
+ */
 export default {
   inheritAttrs: false,
   props: {

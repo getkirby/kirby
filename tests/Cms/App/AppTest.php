@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Data\Data;
 use Kirby\Http\Route;
 use Kirby\Http\Server;
+use Kirby\Session\Session;
 use Kirby\Toolkit\Str;
 use ReflectionMethod;
 
@@ -449,6 +450,30 @@ class AppTest extends TestCase
         $this->assertInstanceOf(Route::class, $route);
     }
 
+    public function testSession()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'sessions' => $fixtures = __DIR__ . '/fixtures/AppTest/sessions',
+            ]
+        ]);
+
+        $this->assertTrue($app->response()->cache());
+        $this->assertSame([], $app->response()->headers());
+
+        $this->assertInstanceOf(Session::class, $app->session());
+
+        $this->assertFalse($app->response()->cache());
+        $this->assertSame(['Cache-Control' => 'no-store'], $app->response()->headers());
+
+        // test lazy header setter
+        $app->response()->header('Cache-Control', 'custom');
+        $this->assertInstanceOf(Session::class, $app->session());
+        $this->assertFalse($app->response()->cache());
+        $this->assertSame(['Cache-Control' => 'custom'], $app->response()->headers());
+    }
+
     public function testInstance()
     {
         App::destroy();
@@ -750,6 +775,41 @@ class AppTest extends TestCase
         $count = 2;
         $app->trigger('test.event:after');
         $this->assertSame(143, $count);
+    }
+
+    public function urlProvider()
+    {
+        return [
+            ['http://getkirby.com', 'http://getkirby.com'],
+            ['https://getkirby.com', 'https://getkirby.com'],
+            ['https://getkirby.com/test', 'https://getkirby.com/test'],
+            ['/', 'http://example.com/'],
+            ['/test', 'http://example.com/test'],
+            ['getkirby.com/test', 'http://example.com/getkirby.com/test'],
+        ];
+    }
+
+    /**
+     * @dataProvider urlProvider
+     */
+    public function testUrl($url, $expected)
+    {
+        $_SERVER['SERVER_ADDR'] = 'example.com';
+
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => [
+                'url' => $url
+            ]
+        ]);
+
+        $this->assertSame($url, $app->url('index'));
+        $this->assertSame($expected, $app->url('index', true)->toString());
+
+        // reset SERVER_ADDR
+        $_SERVER['SERVER_ADDR'] = null;
     }
 
     public function testVersionHash()

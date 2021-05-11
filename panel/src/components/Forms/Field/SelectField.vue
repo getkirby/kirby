@@ -16,6 +16,9 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import SelectInput from "../Input/SelectInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-select-input>` for additional information.
+ */
 export default {
   inheritAttrs: false,
   props: {

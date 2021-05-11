@@ -254,7 +254,7 @@ class User extends ModelWithContent
      *
      * @internal
      * @param mixed $props
-     * @return self
+     * @return static
      */
     public static function factory($props)
     {
@@ -566,7 +566,7 @@ class User extends ModelWithContent
      * Create a dummy nobody
      *
      * @internal
-     * @return self
+     * @return static
      */
     public static function nobody()
     {
@@ -759,7 +759,7 @@ class User extends ModelWithContent
      * Sets the Blueprint object
      *
      * @param array|null $blueprint
-     * @return self
+     * @return $this
      */
     protected function setBlueprint(array $blueprint = null)
     {
@@ -775,7 +775,7 @@ class User extends ModelWithContent
      * Sets the user email
      *
      * @param string $email|null
-     * @return self
+     * @return $this
      */
     protected function setEmail(string $email = null)
     {
@@ -789,7 +789,7 @@ class User extends ModelWithContent
      * Sets the user id
      *
      * @param string $id|null
-     * @return self
+     * @return $this
      */
     protected function setId(string $id = null)
     {
@@ -801,7 +801,7 @@ class User extends ModelWithContent
      * Sets the user language
      *
      * @param string $language|null
-     * @return self
+     * @return $this
      */
     protected function setLanguage(string $language = null)
     {
@@ -813,7 +813,7 @@ class User extends ModelWithContent
      * Sets the user name
      *
      * @param string $name|null
-     * @return self
+     * @return $this
      */
     protected function setName(string $name = null)
     {
@@ -825,7 +825,7 @@ class User extends ModelWithContent
      * Sets the user's password hash
      *
      * @param string $password|null
-     * @return self
+     * @return $this
      */
     protected function setPassword(string $password = null)
     {
@@ -837,7 +837,7 @@ class User extends ModelWithContent
      * Sets the user role
      *
      * @param string $role|null
-     * @return self
+     * @return $this
      */
     protected function setRole(string $role = null)
     {
@@ -942,7 +942,7 @@ class User extends ModelWithContent
         }
 
         if (password_verify($password, $this->password()) !== true) {
-            throw new InvalidArgumentException(['key' => 'user.password.notSame']);
+            throw new InvalidArgumentException(['key' => 'user.password.wrong']);
         }
 
         return true;

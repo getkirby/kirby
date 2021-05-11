@@ -219,7 +219,7 @@ class BlockConverter
     {
         return [
             'content' => [
-                'text' => $params['content']
+                'text' => '<p>' . $params['content'] . '</p>'
             ],
             'type' => 'text'
         ];

@@ -16,6 +16,11 @@ import Field from "../Field.vue";
 import Input from "../Input.vue";
 import TimeInput from "../Input/TimeInput.vue";
 
+/**
+ * Have a look at `<k-field>`, `<k-input>` and `<k-time-input>` 
+ * for additional information.
+ * @example <k-time-field v-model="time" name="time" label="Time" />
+ */
 export default {
   inheritAttrs: false,
   props: {

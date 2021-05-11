@@ -19,6 +19,7 @@
     </component>
 
     <nav class="k-card-options">
+      <!-- @slot You can overwrite the options button and dropdown with your own elements -->
       <slot name="options">
         <k-button
           v-if="flag"
@@ -38,6 +39,12 @@
           class="k-card-options-button"
           @click.stop="$refs.dropdown.toggle()"
         />
+        <!--
+          If you've defined the options dropdown, each click on a dropdown item will emmit the `action` event with the option's object's `click` value.
+          @event action
+          @example {icon: "edit", text: "Edit", click: "edit"} => "edit"
+          @property {object} click
+        -->
         <k-dropdown-content
           ref="dropdown"
           :options="options"
@@ -53,11 +60,22 @@
 <script>
 import previewThumb from "@/helpers/previewThumb.js";
 
+/**
+ * The Card component is a very flexible tool to display an image together with a title (text) some meta information (info) and a dropdown with options.
+ */
 export default {
   inheritAttrs: false,
   props: {
     column: String,
+    /**
+     * An additional button left next to the options toggle, which can be used to define any additional "flag" or option for the card.
+     * @example { icon: 'trash', click: someClickHandler }
+     */
     flag: Object,
+    /**
+     * Defines the card icon instead of an image. If an image is still defined, the image will be used instead of the icon and this setting will be ignored.
+     * @example { type: 'file', back: 'black' }
+     */
     icon: {
       type: Object,
       default() {
@@ -67,13 +85,33 @@ export default {
         };
       }
     },
+    /**
+     * Defines the card image
+     * @example { url: 'https://picsum.photos/400/400?random', ratio: '1/1', back: 'pattern', cover: true }
+     */
     image: [Object, Boolean],
+    /**
+     * Sets the secondary info text
+     */
     info: String,
+    /** 
+     * Sets the link for the entire card
+     */
     link: [String, Function],
+    /** 
+     * Defines the options dropdown
+     * @example [ {icon: 'edit', text: 'Edit'}, {icon: 'trash', text: 'Delete'} ]
+     */
     options: [Array, Function],
     sortable: Boolean,
     statusIcon: Object,
+    /**
+     * Sets the link target
+     */
     target: String,
+    /**
+     * Sets the primary card text
+     */
     text: String
   },
   computed: {

@@ -47,8 +47,10 @@ export default (extensions = {}) => {
   api.translations = translations(api);
   api.users = users(api);
 
-  // @deprecated aliases
-  // TODO: remove in 3.6.0
+  /**
+   * @deprecated
+   * @todo remove in 3.7.0
+   */
   api.files.rename = api.files.changeName;
   api.pages.slug = api.pages.changeSlug;
   api.pages.status = api.pages.changeStatus;

@@ -30,6 +30,9 @@ export default {
     min: Number,
     options: Array,
     required: Boolean,
+    /**
+     * The value for the input should be provided as array. Each value in the array corresponds with the value in the options. If you provide a string, the string will be split by comma.
+     */
     value: {
       type: [Array, Object],
       default() {

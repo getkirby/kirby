@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -86,6 +87,10 @@ class Block extends Item
     /**
      * Deprecated method to return the block type
      *
+     * @deprecated 3.5.0 Use `\Kirby\Cms\Block::type()` instead
+     * @todo Add deprecated() helper warning in 3.6.0
+     * @todo Remove in 3.7.0
+     *
      * @return string
      */
     public function _key(): string
@@ -95,6 +100,10 @@ class Block extends Item
 
     /**
      * Deprecated method to return the block id
+     *
+     * @deprecated 3.5.0 Use `\Kirby\Cms\Block::id()` instead
+     * @todo Add deprecated() helper warning in 3.6.0
+     * @todo Remove in 3.7.0
      *
      * @return string
      */
@@ -129,6 +138,19 @@ class Block extends Item
             'prev'    => $this->prev(),
             'next'    => $this->next()
         ];
+    }
+
+    /**
+     * Converts the block to HTML and then
+     * uses the Str::excerpt method to create
+     * a non-formatted, shortened excerpt from it
+     *
+     * @param mixed ...$args
+     * @return string
+     */
+    public function excerpt(...$args)
+    {
+        return Str::excerpt($this->toHtml(), ...$args);
     }
 
     /**

@@ -63,7 +63,7 @@ class Body
      * Sets the HTML content for the email body
      *
      * @param string|null $html
-     * @return self
+     * @return $this
      */
     protected function setHtml(string $html = null)
     {
@@ -75,7 +75,7 @@ class Body
      * Sets the plain text content for the email body
      *
      * @param string|null $text
-     * @return self
+     * @return $this
      */
     protected function setText(string $text = null)
     {

@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "You are not allowed to duplicate \"{slug}\"",
   "error.page.notFound": "La página \"{slug}\" no puede ser encontrada",
   "error.page.num.invalid": "Por favor, introduzca un número válido. Estos no deben ser negativos.",
-  "error.page.slug.invalid": "Por favor ingrese un prefijo de URL válido",
+  "error.page.slug.invalid": "Please enter a valid URL appendix",
   "error.page.slug.maxlength": "Slug length must be less than \"{length}\" characters",
   "error.page.sort.permission": "La página \"{slug}\" no se puede ordenar",
   "error.page.status.invalid": "Por favor, establezca un estado de página válido",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Por favor introduce una contraseña válida. Las contraseñas deben tener al menos 8 caracteres de largo.",
   "error.user.password.notSame": "Las contraseñas no coinciden",
   "error.user.password.undefined": "El usuario no tiene contraseña",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Por favor ingrese un rol válido",
   "error.user.update.permission": "No tienes permitido actualizar al usuario \"{name}\"",
 

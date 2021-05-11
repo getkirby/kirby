@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Mime;
 use Kirby\Toolkit\Str;
 
@@ -17,6 +18,14 @@ use Kirby\Toolkit\Str;
 class Responder
 {
     /**
+     * Timestamp when the response expires
+     * in Kirby's cache
+     *
+     * @var int|null
+     */
+    protected $expires = null;
+
+    /**
      * HTTP status code
      *
      * @var int
@@ -29,6 +38,14 @@ class Responder
      * @var string
      */
     protected $body = null;
+
+    /**
+     * Flag that defines whether the current
+     * response can be cached by Kirby's cache
+     *
+     * @var string
+     */
+    protected $cache = true;
 
     /**
      * HTTP headers
@@ -58,7 +75,7 @@ class Responder
      * Setter and getter for the response body
      *
      * @param string|null $body
-     * @return string|self
+     * @return string|$this
      */
     public function body(string $body = null)
     {
@@ -71,10 +88,76 @@ class Responder
     }
 
     /**
+     * Setter and getter for the flag that defines
+     * whether the current response can be cached
+     * by Kirby's cache
+     *
+     * @param bool|null $cache
+     * @return bool|$this
+     */
+    public function cache(?bool $cache = null)
+    {
+        if ($cache === null) {
+            return $this->cache;
+        }
+
+        $this->cache = $cache;
+        return $this;
+    }
+
+    /**
+     * Setter and getter for the cache expiry
+     * timestamp for Kirby's cache
+     *
+     * @param int|string|null $expires Timestamp, number of minutes or time string to parse
+     * @param bool $override If `true`, the already defined timestamp will be overridden
+     * @return int|null|$this
+     */
+    public function expires($expires = null, bool $override = false)
+    {
+        // getter
+        if ($expires === null && $override === false) {
+            return $this->expires;
+        }
+
+        // explicit un-setter
+        if ($expires === null) {
+            $this->expires = null;
+            return $this;
+        }
+
+        // normalize the value to an integer timestamp
+        if (is_int($expires) === true && $expires < 1000000000) {
+            // number of minutes
+            $expires = time() + ($expires * 60);
+        } elseif (is_int($expires) !== true) {
+            // time string
+            $parsedExpires = strtotime($expires);
+
+            if (is_int($parsedExpires) !== true) {
+                throw new InvalidArgumentException('Invalid time string "' . $expires . '"');
+            }
+
+            $expires = $parsedExpires;
+        }
+
+        // by default only ever *reduce* the cache expiry time
+        if (
+            $override === true ||
+            $this->expires === null ||
+            $expires < $this->expires
+        ) {
+            $this->expires = $expires;
+        }
+
+        return $this;
+    }
+
+    /**
      * Setter and getter for the status code
      *
      * @param int|null $code
-     * @return int|self
+     * @return int|$this
      */
     public function code(int $code = null)
     {
@@ -94,6 +177,7 @@ class Responder
     public function fromArray(array $response): void
     {
         $this->body($response['body'] ?? null);
+        $this->expires($response['expires'] ?? null);
         $this->code($response['code'] ?? null);
         $this->headers($response['headers'] ?? null);
         $this->type($response['type'] ?? null);
@@ -104,9 +188,10 @@ class Responder
      *
      * @param string $key
      * @param string|false|null $value
-     * @return string|self
+     * @param bool $lazy If `true`, an existing header value is not overridden
+     * @return string|$this
      */
-    public function header(string $key, $value = null)
+    public function header(string $key, $value = null, bool $lazy = false)
     {
         if ($value === null) {
             return $this->headers[$key] ?? null;
@@ -114,6 +199,10 @@ class Responder
 
         if ($value === false) {
             unset($this->headers[$key]);
+            return $this;
+        }
+
+        if ($lazy === true && isset($this->headers[$key]) === true) {
             return $this;
         }
 
@@ -125,7 +214,7 @@ class Responder
      * Setter and getter for all headers
      *
      * @param array|null $headers
-     * @return array|self
+     * @return array|$this
      */
     public function headers(array $headers = null)
     {
@@ -141,7 +230,7 @@ class Responder
      * Shortcut to configure a json response
      *
      * @param array|null $json
-     * @return string|self
+     * @return string|$this
      */
     public function json(array $json = null)
     {
@@ -157,7 +246,7 @@ class Responder
      *
      * @param string|null $location
      * @param int|null $code
-     * @return self
+     * @return $this
      */
     public function redirect(?string $location = null, ?int $code = null)
     {
@@ -204,7 +293,7 @@ class Responder
      * Setter and getter for the content type
      *
      * @param string|null $type
-     * @return string|self
+     * @return string|$this
      */
     public function type(string $type = null)
     {

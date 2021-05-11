@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "No tens permís per duplicar \"{slug}\"",
   "error.page.notFound": "La pàgina \"{slug}\" no s'ha trobat",
   "error.page.num.invalid": "Si us plau, introdueix un número d 'ordenació vàlid. Els números no poden ser negatius.",
-  "error.page.slug.invalid": "Introduïu un prefix d'URL vàlid",
+  "error.page.slug.invalid": "Please enter a valid URL appendix",
   "error.page.slug.maxlength": "La longitud del nom ha de tenir menys de caràcters \"{length}\"",
   "error.page.sort.permission": "La pàgina \"{slug}\" no es pot ordenar",
   "error.page.status.invalid": "Si us plau, estableix un estat de pàgina vàlid",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "Introduïu una contrasenya vàlida. Les contrasenyes han de tenir com a mínim 8 caràcters.",
   "error.user.password.notSame": "Les contrasenyes no coincideixen",
   "error.user.password.undefined": "L'usuari no té una contrasenya",
+  "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Si us plau, introdueix un rol vàlid",
   "error.user.update.permission": "No tens permís per actualitzar l'usuari \"{name}\"",
 

@@ -213,7 +213,7 @@ trait HasChildren
      * Sets the Children collection
      *
      * @param array|null $children
-     * @return self
+     * @return $this
      */
     protected function setChildren(array $children = null)
     {
@@ -228,7 +228,7 @@ trait HasChildren
      * Sets the Drafts collection
      *
      * @param array|null $drafts
-     * @return self
+     * @return $this
      */
     protected function setDrafts(array $drafts = null)
     {

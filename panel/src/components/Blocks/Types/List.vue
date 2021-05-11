@@ -10,6 +10,10 @@
 </template>
 
 <script>
+/**
+ * @displayName BlockTypeList
+ * @internal
+ */
 export default {
   computed: {
     marks() {

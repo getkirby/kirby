@@ -25,7 +25,7 @@ trait FileActions
      *
      * @param string $name
      * @param bool $sanitize
-     * @return self
+     * @return $this|static
      * @throws \Kirby\Exception\LogicException
      */
     public function changeName(string $name, bool $sanitize = true)
@@ -84,7 +84,7 @@ trait FileActions
      * Changes the file's sorting number in the meta file
      *
      * @param int $sort
-     * @return self
+     * @return static
      */
     public function changeSort(int $sort)
     {
@@ -161,7 +161,7 @@ trait FileActions
      * way of generating files.
      *
      * @param array $props
-     * @return self
+     * @return static
      * @throws \Kirby\Exception\InvalidArgumentException
      * @throws \Kirby\Exception\LogicException
      */
@@ -256,7 +256,7 @@ trait FileActions
      * Move the file to the public media folder
      * if it's not already there.
      *
-     * @return self
+     * @return $this
      */
     public function publish()
     {
@@ -272,7 +272,7 @@ trait FileActions
      * source.
      *
      * @param string $source
-     * @return self
+     * @return static
      * @throws \Kirby\Exception\LogicException
      */
     public function replace(string $source)
@@ -295,7 +295,7 @@ trait FileActions
     /**
      * Remove all public versions of this file
      *
-     * @return self
+     * @return $this
      */
     public function unpublish()
     {

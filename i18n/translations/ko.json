@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "페이지({slug})를 복제할 권한이 없습니다.",
   "error.page.notFound": "페이지({slug})가 없습니다.",
   "error.page.num.invalid": "올바른 정수를 입력하세요.",
-  "error.page.slug.invalid": "올바른 접두어를 입력하세요.",
+  "error.page.slug.invalid": "올바른 URL을 입력하세요.",
   "error.page.slug.maxlength": "{length}자 이하로 고유 주소를 입력하세요.",
   "error.page.sort.permission": "페이지({slug})를 정렬할 수 없습니다.",
   "error.page.status.invalid": "올바른 상태를 설정하세요.",
@@ -163,6 +163,7 @@
   "error.user.password.invalid": "암호를 8자 이상으로 설정하세요.",
   "error.user.password.notSame": "\uc554\ud638\ub97c \ud655\uc778\ud558\uc138\uc694.",
   "error.user.password.undefined": "암호가 설정되지 않았습니다.",
+  "error.user.password.wrong": "암호가 올바르지 않습니다.",
   "error.user.role.invalid": "올바른 역할을 지정하세요.",
   "error.user.update.permission": "사용자({name})의 정보를 변경할 권한이 없습니다.",
 
@@ -301,7 +302,7 @@
   "language.direction.rtl": "오른쪽에서 왼쪽",
   "language.locale": "PHP 로캘 문자열",
   "language.locale.warning": "사용자 지정 로캘을 사용 중입니다. 폴더(<code>/site/languages</code>)의 언어 파일을 수정하세요.",
-  "language.name": "이름",
+  "language.name": "언어명",
   "language.updated": "언어를 변경했습니다.",
 
   "languages": "언어",
@@ -328,7 +329,7 @@
   "lock.isLocked": "다른 사용자(<strong>{email}</strong>)가 수정한 사항이 저장되지 않았습니다.",
   "lock.file.isLocked": "파일을 편집할 수 없습니다. 다른 사용자({email})가 편집 중입니다.",
   "lock.page.isLocked": "페이지를 편집할 수 없습니다. 다른 사용자({email})가 편집 중입니다.",
-  "lock.unlock": "잠금",
+  "lock.unlock": "잠금 해제",
   "lock.isUnlocked": "다른 사용자가 이미 내용을 수정했으므로 현재 내용이 올바르게 저장되지 않았습니다. 저장되지 않은 내용은 다운로드해 수동으로 대치할 수 있습니다.",
 
   "login": "\ub85c\uadf8\uc778",
@@ -405,7 +406,7 @@
   "page.status.unlisted": "비공개",
   "page.status.unlisted.description": "URL을 통해 접근할 수 있습니다.",
 
-  "pages": "하위 페이지",
+  "pages": "페이지",
   "pages.empty": "페이지가 없습니다.",
   "pages.status.draft": "초안",
   "pages.status.listed": "발행",

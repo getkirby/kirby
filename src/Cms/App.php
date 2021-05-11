@@ -11,6 +11,7 @@ use Kirby\Exception\NotFoundException;
 use Kirby\Http\Request;
 use Kirby\Http\Router;
 use Kirby\Http\Server;
+use Kirby\Http\Uri;
 use Kirby\Http\Visitor;
 use Kirby\Session\AutoSession;
 use Kirby\Toolkit\A;
@@ -224,7 +225,7 @@ class App
     /**
      * Normalizes and globally sets the configured options
      *
-     * @return self
+     * @return $this
      */
     protected function bakeOptions()
     {
@@ -260,7 +261,7 @@ class App
      * Sets the directory structure
      *
      * @param array|null $roots
-     * @return self
+     * @return $this
      */
     protected function bakeRoots(array $roots = null)
     {
@@ -273,7 +274,7 @@ class App
      * Sets the Url structure
      *
      * @param array|null $urls
-     * @return self
+     * @return $this
      */
     protected function bakeUrls(array $urls = null)
     {
@@ -342,7 +343,7 @@ class App
      *
      * @param array $props
      * @param bool $setInstance If false, the instance won't be set globally
-     * @return self
+     * @return static
      */
     public function clone(array $props = [], bool $setInstance = true)
     {
@@ -609,7 +610,7 @@ class App
      *
      * @param \Kirby\Cms\App|null $instance
      * @param bool $lazy If `true`, the instance is only returned if already existing
-     * @return self|null
+     * @return static|null
      */
     public static function instance(self $instance = null, bool $lazy = false)
     {
@@ -1226,6 +1227,10 @@ class App
      */
     public function session(array $options = [])
     {
+        // never cache responses that depend on the session
+        $this->response()->cache(false);
+        $this->response()->header('Cache-Control', 'no-store', true);
+
         return $this->sessionHandler()->get($options);
     }
 
@@ -1244,7 +1249,7 @@ class App
      * Create your own set of languages
      *
      * @param array|null $languages
-     * @return self
+     * @return $this
      */
     protected function setLanguages(array $languages = null)
     {
@@ -1266,7 +1271,7 @@ class App
      * used for the router
      *
      * @param string|null $path
-     * @return self
+     * @return $this
      */
     protected function setPath(string $path = null)
     {
@@ -1278,7 +1283,7 @@ class App
      * Sets the request
      *
      * @param array|null $request
-     * @return self
+     * @return $this
      */
     protected function setRequest(array $request = null)
     {
@@ -1293,7 +1298,7 @@ class App
      * Create your own set of roles
      *
      * @param array|null $roles
-     * @return self
+     * @return $this
      */
     protected function setRoles(array $roles = null)
     {
@@ -1310,7 +1315,7 @@ class App
      * Sets a custom Site object
      *
      * @param \Kirby\Cms\Site|array|null $site
-     * @return self
+     * @return $this
      */
     protected function setSite($site = null)
     {
@@ -1479,11 +1484,26 @@ class App
      * Returns a system url
      *
      * @param string $type
-     * @return string
+     * @param bool $object If set to `true`, the URL is converted to an object
+     * @return string|\Kirby\Http\Uri
      */
-    public function url(string $type = 'index'): string
+    public function url(string $type = 'index', bool $object = false)
     {
-        return $this->urls->__get($type);
+        $url = $this->urls->__get($type);
+
+        if ($object === true) {
+            if (Url::isAbsolute($url)) {
+                return Url::toObject($url);
+            }
+
+            // index URL was configured without host, use the current host
+            return Uri::current([
+                'path'   => $url,
+                'query'  => null
+            ]);
+        }
+
+        return $url;
     }
 
     /**
