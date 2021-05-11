@@ -36,6 +36,7 @@ class LocaleTest extends TestCase
 
     /**
      * @covers ::export
+     * @covers ::supportedConstants
      */
     public function testExport()
     {
@@ -66,6 +67,7 @@ class LocaleTest extends TestCase
     /**
      * @covers ::get
      * @covers ::normalizeConstant
+     * @covers ::supportedConstants
      */
     public function testGet()
     {
@@ -96,6 +98,7 @@ class LocaleTest extends TestCase
     /**
      * @covers ::get
      * @covers ::normalizeConstant
+     * @covers ::supportedConstants
      */
     public function testGetInvalid1()
     {
@@ -108,6 +111,7 @@ class LocaleTest extends TestCase
     /**
      * @covers ::get
      * @covers ::normalizeConstant
+     * @covers ::supportedConstants
      */
     public function testGetInvalid2()
     {

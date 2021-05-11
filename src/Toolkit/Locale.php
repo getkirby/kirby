@@ -19,8 +19,8 @@ class Locale
      * List of all locale constants supported by PHP
      */
     const LOCALE_CONSTANTS = [
-        LC_COLLATE, LC_CTYPE, LC_MONETARY,
-        LC_NUMERIC, LC_TIME, LC_MESSAGES
+        'LC_COLLATE', 'LC_CTYPE', 'LC_MONETARY',
+        'LC_NUMERIC', 'LC_TIME', 'LC_MESSAGES'
     ];
 
     /**
@@ -32,20 +32,7 @@ class Locale
      */
     public static function export(array $locale): array
     {
-        // list of all possible constant names
-        $constantNames = [
-            'LC_ALL', 'LC_COLLATE', 'LC_CTYPE', 'LC_MONETARY',
-            'LC_NUMERIC', 'LC_TIME', 'LC_MESSAGES'
-        ];
-
-        // build an associative array with the locales
-        // that are actually supported on this system
-        $constants = [];
-        foreach ($constantNames as $name) {
-            if (defined($name) === true) {
-                $constants[constant($name)] = $name;
-            }
-        }
+        $constants = static::supportedConstants(true);
 
         // replace the keys in the locale data array with the locale names
         $return = [];
@@ -91,7 +78,7 @@ class Locale
 
         // no specific `$category` was passed, make a list of all locales
         $array = [];
-        foreach (static::LOCALE_CONSTANTS as $constant) {
+        foreach (static::supportedConstants() as $constant => $name) {
             // `setlocale(..., 0)` actually *gets* the locale
             $array[$constant] = setlocale($constant, '0');
         }
@@ -162,5 +149,29 @@ class Locale
 
         // already an int or we cannot convert it safely
         return $constant;
+    }
+
+    /**
+     * Builds an associative array with the locales
+     * that are actually supported on this system
+     *
+     * @param bool $withAll If set to `true`, `LC_ALL` is returned as well
+     * @return array
+     */
+    protected static function supportedConstants(bool $withAll = false): array
+    {
+        $names = static::LOCALE_CONSTANTS;
+        if ($withAll === true) {
+            array_unshift($names, 'LC_ALL');
+        }
+
+        $constants = [];
+        foreach ($names as $name) {
+            if (defined($name) === true) {
+                $constants[constant($name)] = $name;
+            }
+        }
+
+        return $constants;
     }
 }
