@@ -100,12 +100,6 @@ export default {
 .k-section-header .k-button-group {
   position: absolute;
   top: -.875rem;
-}
-[dir="ltr"] .k-section-header .k-button-group {
-  right: 0;
-}
-
-[dir="rtl"] .k-section-header .k-button-group {
-  left: 0;
+  inset-inline-end: 0;
 }
 </style>

@@ -200,6 +200,7 @@ export default {
 .k-dropdown-content {
   position: absolute;
   top: 100%;
+  inset-inline-start: 0;
   background: var(--color-gray-900);
   color: var(--color-white);
   z-index: var(--z-dropdown);
@@ -208,20 +209,9 @@ export default {
   text-align: left;
   margin-bottom: 6rem;
 }
-[dir="ltr"] .k-dropdown-content {
-  left: 0;
-}
-
-[dir="rtl"] .k-dropdown-content {
-  right: 0;
-}
-[dir="ltr"] .k-dropdown-content[data-align="right"] {
-  left: auto;
-  right: 0;
-}
-[dir="rtl"] .k-dropdown-content[data-align="right"] {
-  left: 0;
-  right: auto;
+.k-dropdown-content[data-align="right"] {
+  inset-inline-start: auto;
+  inset-block-end: 0;
 }
 .k-dropdown-content > .k-dropdown-item:first-child {
   margin-top: .5rem;

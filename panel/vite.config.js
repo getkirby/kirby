@@ -1,8 +1,10 @@
-import { defineConfig } from 'vite'
-import { createVuePlugin } from 'vite-plugin-vue2'
-import pluginRewriteAll from 'vite-plugin-rewrite-all';
+import { defineConfig } from "vite";
+import { createVuePlugin } from "vite-plugin-vue2";
+import pluginRewriteAll from "vite-plugin-rewrite-all";
+import postcssLogical from "postcss-logical";
+import postcssDirPseudoClass from "postcss-dir-pseudo-class";
 
-const path = require('path');
+const path = require("path");
 
 let custom;
 try {
@@ -21,7 +23,7 @@ export default defineConfig({
   plugins: [createVuePlugin(), pluginRewriteAll()],
   define: {
     // Fix vuelidate error
-    'process.env.BUILD': JSON.stringify('production')
+    "process.env.BUILD": JSON.stringify("production")
   },
   build: {
     rollupOptions: {
@@ -32,19 +34,27 @@ export default defineConfig({
       }
     },
   },
+  css: {
+    postcss: {
+      plugins: [
+        postcssLogical({ preserve: true }),
+        postcssDirPseudoClass()
+      ]
+    }
+  },
   resolve: {
     alias: [
         { 
           find: "@", 
-          replacement: path.resolve(__dirname, 'src')
+          replacement: path.resolve(__dirname, "src")
         }
     ]
   },
   server: {
     proxy: {
-      '/api': proxy,
-      '/env': proxy,
-      '/media': proxy
+      "/api": proxy,
+      "/env": proxy,
+      "/media": proxy
     },
     ...custom
   }

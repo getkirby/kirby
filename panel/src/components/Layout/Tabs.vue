@@ -167,17 +167,11 @@ export default {
 }
 .k-tab-button.k-button > .k-button-text {
   padding-top: .375rem;
+  padding-inline-start: 0;
   font-size: 10px;
   overflow: hidden;
   max-width: 10rem;
   text-overflow: ellipsis;
-}
-[dir="ltr"] .k-tab-button.k-button > .k-button-text {
-  padding-left: 0;
-}
-
-[dir="rtl"] .k-tab-button.k-button > .k-button-text {
-  padding-right: 0;
 }
 
 @media screen and (min-width: 30em) {
@@ -224,12 +218,8 @@ export default {
   top: 100%;
   right: 0;
 }
-[dir="ltr"] .k-tabs-badge {
-  padding-left: .25rem;
-}
-
-[dir="rtl"] .k-tabs-badge {
-  padding-right: .25rem;
+.k-tabs-badge {
+  padding-inline-start: .25rem;
 }
 .k-tabs[data-theme="notice"] .k-tabs-badge {
   color: var(--color-orange-600);

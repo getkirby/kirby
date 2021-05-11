@@ -153,12 +153,8 @@ button::-moz-focus-inner {
   line-height: 0;
 }
 
-[dir="ltr"] .k-button-icon ~ .k-button-text {
-  padding-left: .5rem;
-}
-
-[dir="rtl"] .k-button-icon ~ .k-button-text {
-  padding-right: .5rem;
+.k-button-icon ~ .k-button-text {
+  padding-inline-start: .5rem;
 }
 
 .k-button-text {

@@ -98,12 +98,7 @@ export default {
 .k-field-options {
   position: absolute;
   top: calc(-.5rem - 1px);
-}
-[dir="ltr"] .k-field-options {
-  right: 0;
-}
-[dir="rtl"] .k-field-options {
-  left: 0;
+  inset-inline-end: 0;
 }
 .k-field-options.k-button-group .k-dropdown {
   height: auto;
