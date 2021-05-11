@@ -15,8 +15,15 @@ class ModelFileTestForceLocked extends ModelFile
     }
 }
 
+/**
+ * @coversDefaultClass \Kirby\Panel\File
+ */
 class FileTest extends TestCase
 {
+    /**
+     * @covers ::dragText
+     * @covers \Kirby\Panel\Model::dragTextType
+     */
     public function testDragText()
     {
         $page = new ModelPage([
@@ -29,28 +36,19 @@ class FileTest extends TestCase
         ]);
 
         $panel = new File($page->file('test.pdf'));
-        $this->assertEquals('(file: test.pdf)', $panel->dragText());
+        $this->assertSame('(file: test.pdf)', $panel->dragText());
 
         $panel = new File($page->file('test.mp4'));
         $this->assertSame('(video: test.mp4)', $panel->dragText());
 
         $panel = new File($page->file('test.jpg'));
-        $this->assertEquals('(image: test.jpg)', $panel->dragText());
+        $this->assertSame('(image: test.jpg)', $panel->dragText());
     }
 
-    public function testDragTextForImages()
-    {
-        $page = new ModelPage([
-            'slug'  => 'test',
-            'files' => [
-                ['filename' => 'test.jpg']
-            ]
-        ]);
-
-        $file = $page->file('test.jpg');
-        $this->assertEquals('(image: test.jpg)', $file->dragText());
-    }
-
+    /**
+     * @covers ::dragText
+     * @covers \Kirby\Panel\Model::dragTextType
+     */
     public function testDragTextMarkdown()
     {
         $app = new App([
@@ -86,33 +84,10 @@ class FileTest extends TestCase
         $this->assertSame('[test.pdf](test.pdf)', $file->dragText());
     }
 
-    public function testDragTextForImagesMarkdown()
-    {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-            'options' => [
-                'panel' => [
-                    'kirbytext' => false
-                ]
-            ],
-            'site' => [
-                'children' => [
-                    [
-                        'slug' => 'test',
-                        'files' => [
-                            ['filename' => 'test.jpg']
-                        ]
-                    ]
-                ]
-            ]
-        ]);
-
-        $panel = new File($app->page('test')->file('test.jpg'));
-        $this->assertEquals('![](test.jpg)', $panel->dragText());
-    }
-
+    /**
+     * @covers ::dragText
+     * @covers \Kirby\Panel\Model::dragTextFromCallback
+     */
     public function testDragTextCustomMarkdown()
     {
         $app = new App([
@@ -150,13 +125,17 @@ class FileTest extends TestCase
 
         // Custom function does not match and returns null, default case
         $panel = new File($app->page('test')->file('test.jpg'));
-        $this->assertEquals('![](test.jpg)', $panel->dragText());
+        $this->assertSame('![](test.jpg)', $panel->dragText());
 
         // Custom function should return image tag for heic
         $panel = new File($app->page('test')->file('test.heic'));
-        $this->assertEquals('![](test.heic)', $panel->dragText());
+        $this->assertSame('![](test.heic)', $panel->dragText());
     }
 
+    /**
+     * @covers ::dragText
+     * @covers \Kirby\Panel\Model::dragTextFromCallback
+     */
     public function testDragTextCustomKirbytext()
     {
         $app = new App([
@@ -193,13 +172,17 @@ class FileTest extends TestCase
 
         // Custom function does not match and returns null, default case
         $panel = new File($app->page('test')->file('test.jpg'));
-        $this->assertEquals('(image: test.jpg)', $panel->dragText());
+        $this->assertSame('(image: test.jpg)', $panel->dragText());
 
         // Custom function should return image tag for heic
         $panel = new File($app->page('test')->file('test.heic'));
-        $this->assertEquals('(image: test.heic)', $panel->dragText());
+        $this->assertSame('(image: test.heic)', $panel->dragText());
     }
 
+    /**
+     * @covers ::icon
+     * @covers \Kirby\Panel\Model::icon
+     */
     public function testIconDefault()
     {
         $file = new ModelFile([
@@ -208,14 +191,18 @@ class FileTest extends TestCase
 
         $icon = (new File($file))->icon();
 
-        $this->assertEquals([
+        $this->assertSame([
             'type'  => 'file-image',
+            'ratio' => null,
             'back'  => 'pattern',
-            'color' => '#de935f',
-            'ratio' => null
+            'color' => '#de935f'
         ], $icon);
     }
 
+    /**
+     * @covers ::icon
+     * @covers \Kirby\Panel\Model::icon
+     */
     public function testIconWithRatio()
     {
         $file = new ModelFile([
@@ -224,14 +211,83 @@ class FileTest extends TestCase
 
         $icon = (new File($file))->icon(['ratio' => '3/2']);
 
-        $this->assertEquals([
+        $this->assertSame([
             'type'  => 'file-image',
+            'ratio' => '3/2',
             'back'  => 'pattern',
-            'color' => '#de935f',
-            'ratio' => '3/2'
+            'color' => '#de935f'
         ], $icon);
     }
 
+    /**
+     * @covers ::imageSource
+     * @covers \Kirby\Panel\Model::image
+     */
+    public function testImage()
+    {
+        $file = new ModelFile([
+            'filename' => 'something.jpg'
+        ]);
+
+        $image = (new File($file))->image();
+
+        $this->assertSame('3/2', $image['ratio']);
+        $this->assertSame('pattern', $image['back']);
+        $this->assertTrue(array_key_exists('url', $image));
+    }
+
+    /**
+     * @covers \Kirby\Panel\Model::image
+     */
+    public function testImageDeactivated()
+    {
+        $file = new ModelFile([
+            'filename' => 'something.jpg'
+        ]);
+
+        $image = (new File($file))->image(false);
+
+        $this->assertNull($image);
+    }
+
+    /**
+     * @covers \Kirby\Panel\Model::image
+     */
+    public function testImageStringIcon()
+    {
+        $file = new ModelFile([
+            'filename' => 'something.jpg'
+        ]);
+
+        $image = (new File($file))->image('icon');
+
+        $this->assertSame([], $image);
+    }
+
+    /**
+     * @covers ::imageSource
+     * @covers \Kirby\Panel\Model::image
+     * @covers \Kirby\Panel\Model::imageSource
+     */
+    public function testImageStringQuery()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'test.jpg'],
+                ['filename' => 'foo.pdf']
+            ]
+        ]);
+
+        // fallback to model itself
+        $image = (new File($page->file()))->image('foo.bar');
+        $this->assertFalse(empty($image));
+    }
+
+    /**
+     * @covers ::options
+     * @covers \Kirby\Panel\Model::options
+     */
     public function testOptions()
     {
         $file = new ModelFile([
@@ -250,9 +306,13 @@ class FileTest extends TestCase
         ];
 
         $panel = new File($file);
-        $this->assertEquals($expected, $panel->options());
+        $this->assertSame($expected, $panel->options());
     }
 
+    /**
+     * @covers ::options
+     * @covers \Kirby\Panel\Model::options
+     */
     public function testOptionsWithLockedFile()
     {
         $file = new ModelFileTestForceLocked([
@@ -272,7 +332,7 @@ class FileTest extends TestCase
         ];
 
         $panel = new File($file);
-        $this->assertEquals($expected, $panel->options());
+        $this->assertSame($expected, $panel->options());
 
         // with override
         $expected = [
@@ -285,9 +345,13 @@ class FileTest extends TestCase
         ];
 
         $panel = new File($file);
-        $this->assertEquals($expected, $panel->options(['delete']));
+        $this->assertSame($expected, $panel->options(['delete']));
     }
 
+    /**
+     * @covers ::options
+     * @covers \Kirby\Panel\Model::options
+     */
     public function testOptionsDefaultReplaceOption()
     {
         $file = new ModelFile([
@@ -308,6 +372,10 @@ class FileTest extends TestCase
         $this->assertSame($expected, $panel->options());
     }
 
+    /**
+     * @covers ::options
+     * @covers \Kirby\Panel\Model::options
+     */
     public function testOptionsAllowedReplaceOption()
     {
         new App([
@@ -339,6 +407,10 @@ class FileTest extends TestCase
         $this->assertSame($expected, $panel->options());
     }
 
+    /**
+     * @covers ::options
+     * @covers \Kirby\Panel\Model::options
+     */
     public function testOptionsDisabledReplaceOption()
     {
         new App([
@@ -372,6 +444,120 @@ class FileTest extends TestCase
         $this->assertSame($expected, $panel->options());
     }
 
+    /**
+     * @covers ::path
+     * @covers \Kirby\Panel\Model::__construct
+     */
+    public function testPath()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $panel = new File($page->file('test.jpg'));
+        $this->assertSame('files/test.jpg', $panel->path());
+    }
+
+    /**
+     * @covers ::pickerData
+     */
+    public function testPickerDataDefault()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $panel = new File($page->file('test.jpg'));
+        $data  = $panel->pickerData();
+        $this->assertSame('test.jpg', $data['filename']);
+        $this->assertSame('(image: test.jpg)', $data['dragText']);
+        $this->assertSame('test/test.jpg', $data['id']);
+        $this->assertSame('3/2', $data['image']['ratio']);
+        $this->assertSame('file-image', $data['icon']['type']);
+        $this->assertSame('/pages/test/files/test.jpg', $data['link']);
+        $this->assertSame('test.jpg', $data['text']);
+    }
+
+    /**
+     * @covers ::pickerData
+     */
+    public function testPickerDataWithParams()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                [
+                    'filename' => 'test.jpg',
+                    'content' => [
+                        'alt' => 'From foo to the bar'
+                    ]
+                ]
+            ]
+        ]);
+
+        $panel = new File($page->file('test.jpg'));
+        $data  = $panel->pickerData([
+            'image' => [
+                'ratio' => '1/1'
+            ],
+            'text' => '{{ file.alt }}'
+        ]);
+
+        $this->assertSame('test/test.jpg', $data['id']);
+        $this->assertSame('1/1', $data['image']['ratio']);
+        $this->assertSame('From foo to the bar', $data['text']);
+    }
+
+    /**
+     * @covers ::pickerData
+     */
+    public function testPickerDataSameModel()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $panel = new File($page->file('test.jpg'));
+        $data  = $panel->pickerData(['model' => $page]);
+
+        $this->assertSame('(image: test.jpg)', $data['dragText']);
+    }
+
+    /**
+     * @covers ::pickerData
+     */
+    public function testPickerDataDifferentModel()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $model = new ModelPage([
+            'slug'  => 'foo'
+        ]);
+
+        $panel = new File($page->file('test.jpg'));
+        $data  = $panel->pickerData(['model' => $model]);
+
+        $this->assertSame('(image: test/test.jpg)', $data['dragText']);
+    }
+
+    /**
+     * @covers ::url
+     * @covers \Kirby\Panel\Model::url
+     */
     public function testUrl()
     {
         $app = new App([
@@ -414,22 +600,22 @@ class FileTest extends TestCase
         $file = $app->file('site-file.jpg');
         $panel = new File($file);
 
-        $this->assertEquals('https://getkirby.com/panel/site/files/site-file.jpg', $panel->url());
-        $this->assertEquals('/site/files/site-file.jpg', $panel->url(true));
+        $this->assertSame('https://getkirby.com/panel/site/files/site-file.jpg', $panel->url());
+        $this->assertSame('/site/files/site-file.jpg', $panel->url(true));
 
         // page file
         $file = $app->file('mother/child/page-file.jpg');
         $panel = new File($file);
 
-        $this->assertEquals('https://getkirby.com/panel/pages/mother+child/files/page-file.jpg', $panel->url());
-        $this->assertEquals('/pages/mother+child/files/page-file.jpg', $panel->url(true));
+        $this->assertSame('https://getkirby.com/panel/pages/mother+child/files/page-file.jpg', $panel->url());
+        $this->assertSame('/pages/mother+child/files/page-file.jpg', $panel->url(true));
 
         // user file
         $user = $app->user('test@getkirby.com');
         $file = $user->file('user-file.jpg');
         $panel = new File($file);
 
-        $this->assertEquals('https://getkirby.com/panel/users/test/files/user-file.jpg', $panel->url());
-        $this->assertEquals('/users/test/files/user-file.jpg', $panel->url(true));
+        $this->assertSame('https://getkirby.com/panel/users/test/files/user-file.jpg', $panel->url());
+        $this->assertSame('/users/test/files/user-file.jpg', $panel->url(true));
     }
 }
