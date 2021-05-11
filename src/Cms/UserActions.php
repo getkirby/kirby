@@ -327,6 +327,11 @@ trait UserActions
      */
     protected function updateCredentials(array $credentials): bool
     {
+        // normalize the email address
+        if (isset($credentials['email']) === true) {
+            $credentials['email'] = Str::lower(trim($credentials['email']));
+        }
+
         return $this->writeCredentials(array_merge($this->credentials(), $credentials));
     }
 

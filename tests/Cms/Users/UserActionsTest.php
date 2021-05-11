@@ -2,15 +2,26 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
 use Kirby\Toolkit\Dir;
 
 class UserActionsTest extends TestCase
 {
     protected $app;
-    protected $fixtures;
+    protected $fixtures = __DIR__ . '/fixtures/UserActionsTest';
 
     public function setUp(): void
     {
+        Dir::remove($this->fixtures);
+        Data::write($this->fixtures . '/admin/index.php', [
+            'email' => 'admin@domain.com',
+            'role' => 'admin'
+        ]);
+        Data::write($this->fixtures . '/editor/index.php', [
+            'email' => 'editor@domain.com',
+            'role' => 'editor'
+        ]);
+
         $this->app = new App([
             'roles' => [
                 [
@@ -22,22 +33,10 @@ class UserActionsTest extends TestCase
             ],
             'roots' => [
                 'index'    => '/dev/null',
-                'accounts' => $this->fixtures = __DIR__ . '/fixtures/UserActionsTest',
+                'accounts' => $this->fixtures,
             ],
-            'user'  => 'admin@domain.com',
-            'users' => [
-                [
-                    'email' => 'admin@domain.com',
-                    'role'  => 'admin'
-                ],
-                [
-                    'email' => 'editor@domain.com',
-                    'role'  => 'editor'
-                ]
-            ],
+            'user'  => 'admin@domain.com'
         ]);
-
-        Dir::remove($this->fixtures);
     }
 
     public function tearDown(): void
@@ -50,7 +49,10 @@ class UserActionsTest extends TestCase
         $user = $this->app->user('editor@domain.com');
         $user = $user->changeEmail('another@domain.com');
 
-        $this->assertEquals('another@domain.com', $user->email());
+        $this->assertSame('another@domain.com', $user->email());
+
+        // verify the value stored on disk
+        $this->assertSame('another@domain.com', $this->app->clone()->user($user->id())->email());
     }
 
     public function testChangeEmailWithUnicode()
@@ -61,9 +63,26 @@ class UserActionsTest extends TestCase
         $user = $user->changeEmail('test@exämple.com');
         $this->assertSame('test@exämple.com', $user->email());
 
+        // verify the value stored on disk
+        $this->assertSame('test@exämple.com', $this->app->clone()->user($user->id())->email());
+
         // with Punycode email
         $user = $user->changeEmail('test@xn--tst-qla.com');
         $this->assertSame('test@täst.com', $user->email());
+
+        // verify the value stored on disk
+        $this->assertSame('test@täst.com', $this->app->clone()->user($user->id())->email());
+    }
+
+    public function testChangeEmailWithUppercase()
+    {
+        $user = $this->app->user('editor@domain.com');
+        $user = $user->changeEmail('ANOTHER@domain.com');
+
+        $this->assertSame('another@domain.com', $user->email());
+
+        // verify the value stored on disk
+        $this->assertSame('another@domain.com', $this->app->clone()->user($user->id())->email());
     }
 
     public function testChangeLanguage()
