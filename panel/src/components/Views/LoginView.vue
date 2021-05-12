@@ -1,13 +1,12 @@
 <template>
-  <k-error-view v-if="issue">
-    {{ issue.message }}
-  </k-error-view>
-  <k-view v-else-if="ready && form === 'login'" align="center" class="k-login-view">
-    <k-login-plugin />
-  </k-view>
-  <k-view v-else-if="ready && form === 'code'" align="center" class="k-login-code-view">
-    <k-login-code />
-  </k-view>
+  <k-outside>
+    <k-view v-if="form === 'login'" align="center" class="k-login-view">
+      <k-login-plugin />
+    </k-view>
+    <k-view v-else-if="form === 'code'" align="center" class="k-login-code-view">
+      <k-login-code />
+    </k-view>
+  </k-outside>
 </template>
 
 <script>
@@ -17,46 +16,19 @@ export default {
   components: {
     "k-login-plugin": window.panel.plugins.login || LoginForm
   },
-  data() {
-    return {
-      ready: false,
-      issue: null
-    };
-  },
   computed: {
     form() {
-      if (this.$store.state.user.pendingEmail) {
-        return "code";
-      } else if (!this.$store.state.user.current) {
+      // TODO: fix this
+      // if (this.$user.pendingEmail) {
+      //   return "code";
+      // }
+      
+      if (!this.$user) {
         return "login";
       }
 
       return null;
     }
-  },
-  created() {
-    this.$store.dispatch("content/current", null);
-    this.$store
-      .dispatch("system/load")
-      .then(system => {
-        if (!system.isReady) {
-          this.$go("/installation");
-        }
-
-        if (system.user && system.user.id) {
-          this.$go("/");
-        }
-
-        if (system.authStatus.status === "pending") {
-          this.$store.dispatch("user/pending", system.authStatus);
-        }
-
-        this.ready = true;
-        this.$store.dispatch("title", this.$t("login"));
-      })
-      .catch(error => {
-        this.issue = error;
-      });
   }
 };
 </script>
