@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import { TranslationString } from '@/config/i18n.js'
+import { TranslationString } from '@/helpers/string.js'
 import DialogMixin from "@/mixins/dialog.js";
 
 export default {

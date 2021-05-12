@@ -32,16 +32,8 @@ export default {
     };
   },
   computed: {
-    language() {
-      return this.$store.state.languages.current;
-    },
     values() {
       return this.$store.getters["content/values"]();
-    }
-  },
-  watch: {
-    language() {
-      this.fetch();
     }
   },
   created() {

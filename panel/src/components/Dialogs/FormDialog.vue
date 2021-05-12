@@ -18,7 +18,7 @@
 
 <script>
 import DialogMixin from "@/mixins/dialog.js";
-import { TranslationString } from '@/config/i18n.js'
+import { TranslationString } from '@/helpers/string.js'
 
 export default {
   mixins: [DialogMixin],

@@ -67,7 +67,6 @@ export default {
           locale: this.language.locale
         });
 
-        this.$store.dispatch("languages/load");
         this.success({
           message: this.$t("language.updated"),
           event: "language.update"

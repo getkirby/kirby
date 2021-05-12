@@ -59,7 +59,7 @@
 </template>
 
 <script>
-import { TranslationString } from '@/config/i18n.js'
+import { TranslationString } from '@/helpers/string.js'
 
 /**
  * @example <k-pagination

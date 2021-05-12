@@ -32,7 +32,6 @@ export default {
       try {
         await this.$api.languages.delete(this.language.code);
 
-        this.$store.dispatch("languages/load");
         this.success({
           message: this.$t("language.deleted"),
           event: "language.delete"

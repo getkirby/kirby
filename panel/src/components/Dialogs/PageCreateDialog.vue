@@ -10,7 +10,6 @@
 </template>
 
 <script>
-import config from "@/config/config.js";
 import DialogMixin from "@/mixins/dialog.js";
 
 export default {
@@ -41,7 +40,7 @@ export default {
         },
       };
 
-      if (this.templates.length > 1 || config.debug) {
+      if (this.templates.length > 1 || this.$config.debug) {
         fields.template = {
           name: "template",
           label: this.$t("template"),
@@ -55,17 +54,11 @@ export default {
       }
 
       return fields;
-    },
-    slugs() {
-      return this.$store.state.languages.default ? this.$store.state.languages.default.rules : this.system.slugs;
-    },
-    system() {
-      return this.$store.state.system.info;
     }
   },
   watch: {
     "page.title"(title) {
-      this.page.slug = this.$helper.slug(title, [this.slugs, this.system.ascii]);
+      this.page.slug = this.$helper.slug(title, [this.$system.slugs, this.$system.ascii]);
     }
   },
   methods: {

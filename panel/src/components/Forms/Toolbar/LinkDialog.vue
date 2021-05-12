@@ -38,7 +38,7 @@ export default {
   },
   computed: {
     kirbytext() {
-      return this.$store.state.system.info.kirbytext;
+      return this.$config.kirbytext;
     }
   },
   methods: {

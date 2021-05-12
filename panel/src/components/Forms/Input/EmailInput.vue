@@ -1,5 +1,5 @@
 <script>
-import { TranslationString } from '@/config/i18n.js'
+import { TranslationString } from '@/helpers/string.js'
 import TextInput from "./TextInput.vue";
 import { props as TextInputProps } from "./TextInput.vue";
 

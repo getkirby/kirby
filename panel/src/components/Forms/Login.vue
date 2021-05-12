@@ -68,7 +68,7 @@ export default {
   },
   computed: {
     canToggle() {
-      let loginMethods = this.$store.state.system.info.loginMethods;
+      let loginMethods = this.$system.info.loginMethods;
 
       return (
         this.codeMode !== null &&
@@ -80,7 +80,7 @@ export default {
       );
     },
     codeMode() {
-      let loginMethods = this.$store.state.system.info.loginMethods;
+      let loginMethods = this.$system.info.loginMethods;
 
       if (loginMethods.includes("password-reset") === true) {
         return "password-reset";
@@ -159,6 +159,8 @@ export default {
       if (this.isResetForm === true) {
         user.remember = false;
       }
+
+      // TODO: this likely needs to be rewritten to work with inertia
 
       try {
         const result = await this.$api.auth.login(user);
