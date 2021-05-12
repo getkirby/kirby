@@ -461,6 +461,12 @@ class HtmlTest extends TestCase
      */
     public function testVideo($url, $src)
     {
+        // invalid URLs
+        if ($src === false) {
+            $this->assertNull(Html::video($url));
+            return;
+        }
+
         // plain
         $html = Html::video($url);
         $expected = '<iframe allowfullscreen src="' . $src . '"></iframe>';
@@ -491,62 +497,181 @@ class HtmlTest extends TestCase
         $this->assertSame($expected, $html);
     }
 
+    public function testVideoFile()
+    {
+        $html = Html::video('https://getkirby.com/myvideo.mp4');
+        $expected = '<video><source src="https://getkirby.com/myvideo.mp4" type="video/mp4"></video>';
+        $this->assertSame($expected, $html);
+
+        // with attributes
+        $html = Html::video('https://getkirby.com/myvideo.mp4', [], ['controls' => true, 'autoplay' => true]);
+        $expected = '<video autoplay controls><source src="https://getkirby.com/myvideo.mp4" type="video/mp4"></video>';
+        $this->assertSame($expected, $html);
+
+        // relative path
+        $html = Html::video('../myvideo.mp4');
+        $expected = '<video><source src="../myvideo.mp4" type="video/mp4"></video>';
+        $this->assertSame($expected, $html);
+
+        // invalid file type
+        $html = Html::video('https://getkirby.com/myvideo.mp3');
+        $this->assertNull($html);
+    }
+
     public function videoProvider()
     {
         return [
             // YouTube
-            ['https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys', 'https://youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'],
-            ['http://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys', 'https://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'],
-            ['http://www.youtube.com/embed/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
-            ['http://www.youtube.com/embed/d9NF2edxy-M?start=10', 'https://youtube.com/embed/d9NF2edxy-M?start=10'],
-            ['http://www.youtube.com/embed/d9NF2edxy-M?start=10&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys', 'https://youtube.com/embed/d9NF2edxy-M?start=10&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'],
-            ['https://www.youtube-nocookie.com/embed/d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
-            ['https://www.youtube-nocookie.com/embed/d9NF2edxy-M?start=10', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M?start=10'],
-            ['https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'],
-            ['https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M&t=10', 'https://www.youtube-nocookie.com/embed/d9NF2edxy-M?start=10'],
-            ['https://www.youtube-nocookie.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys', 'https://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'],
-            ['http://www.youtube.com/watch?v=d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
-            ['http://www.youtube.com/watch?v=d9NF2edxy-M&t=10', 'https://youtube.com/embed/d9NF2edxy-M?start=10'],
-            ['https://www.youtube.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys', 'https://youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'],
-            ['https://youtu.be/d9NF2edxy-M', 'https://youtube.com/embed/d9NF2edxy-M'],
-            ['https://youtu.be/d9NF2edxy-M?t=10', 'https://youtube.com/embed/d9NF2edxy-M?start=10'],
+            [
+                'https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
+                'https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+            ],
+            [
+                'https://www.youtube.com/embed/videoseries?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
+                'https://www.youtube.com/embed/videoseries?test=value&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+            ],
+            [
+                'http://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
+                'https://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+            ],
+            [
+                'http://www.youtube-nocookie.com/embed/videoseries?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
+                'https://www.youtube-nocookie.com/embed/videoseries?test=value&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+            ],
+            [
+                'http://www.youtube.com/embed/d9NF2edxy-M',
+                'https://www.youtube.com/embed/d9NF2edxy-M'
+            ],
+            [
+                'http://www.youtube.com/embed/d9NF2edxy-M?start=10',
+                'https://www.youtube.com/embed/d9NF2edxy-M?start=10'
+            ],
+            [
+                'http://www.youtube.com/embed/d9NF2edxy-M?start=10&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
+                'https://www.youtube.com/embed/d9NF2edxy-M?start=10&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+            ],
+            [
+                'https://www.youtube-nocookie.com/embed/d9NF2edxy-M',
+                'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'
+            ],
+            [
+                'https://www.youtube-nocookie.com/embed/d9NF2edxy-M?start=10',
+                'https://www.youtube-nocookie.com/embed/d9NF2edxy-M?start=10'
+            ],
+            [
+                'https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M',
+                'https://www.youtube-nocookie.com/embed/d9NF2edxy-M'
+            ],
+            [
+                'https://www.youtube-nocookie.com/watch?v=d9NF2edxy-M&t=10',
+                'https://www.youtube-nocookie.com/embed/d9NF2edxy-M?start=10'
+            ],
+            [
+                'https://www.youtube-nocookie.com/watch?test=value&v=d9NF2edxy-M&t=10',
+                'https://www.youtube-nocookie.com/embed/d9NF2edxy-M?test=value&amp;start=10'
+            ],
+            [
+                'https://www.youtube-nocookie.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
+                'https://www.youtube-nocookie.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+            ],
+            [
+                'https://www.youtube-nocookie.com/playlist?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
+                'https://www.youtube-nocookie.com/embed/videoseries?test=value&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+            ],
+            [
+                'http://www.youtube.com/watch?v=d9NF2edxy-M',
+                'https://www.youtube.com/embed/d9NF2edxy-M'
+            ],
+            [
+                'http://www.youtube.com/watch?test=value&v=d9NF2edxy-M',
+                'https://www.youtube.com/embed/d9NF2edxy-M?test=value'
+            ],
+            [
+                'http://www.youtube.com/watch?v=d9NF2edxy-M&t=10',
+                'https://www.youtube.com/embed/d9NF2edxy-M?start=10'
+            ],
+            [
+                'https://www.youtube.com/playlist?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
+                'https://www.youtube.com/embed/videoseries?list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+            ],
+            [
+                'https://www.youtube.com/playlist?test=value&list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys',
+                'https://www.youtube.com/embed/videoseries?test=value&amp;list=PLj8e95eaxiB9goOAvINIy4Vt3mlWQJxys'
+            ],
+            [
+                'https://www.youtu.be/d9NF2edxy-M',
+                'https://www.youtube.com/embed/d9NF2edxy-M'
+            ],
+            [
+                'https://www.youtu.be/d9NF2edxy-M?t=10',
+                'https://www.youtube.com/embed/d9NF2edxy-M?start=10'
+            ],
+            [
+                'https://youtu.be/d9NF2edxy-M?t=10',
+                'https://www.youtube.com/embed/d9NF2edxy-M?start=10'
+            ],
+            [
+                'https://www.youtu.be/d9NF2edxy-M?test=value&t=10',
+                'https://www.youtube.com/embed/d9NF2edxy-M?test=value&amp;start=10'
+            ],
 
             // Vimeo
-            ['https://vimeo.com/239882943', 'https://player.vimeo.com/video/239882943'],
-            ['https://player.vimeo.com/video/239882943', 'https://player.vimeo.com/video/239882943'],
+            [
+                'https://vimeo.com/239882943',
+                'https://player.vimeo.com/video/239882943'
+            ],
+            [
+                'https://vimeo.com/239882943?test=value',
+                'https://player.vimeo.com/video/239882943?test=value'
+            ],
+            [
+                'https://player.vimeo.com/video/239882943',
+                'https://player.vimeo.com/video/239882943'
+            ],
+            [
+                'https://player.vimeo.com/video/239882943?test=value',
+                'https://player.vimeo.com/video/239882943?test=value'
+            ],
+
+            // invalid URLs
+            [
+                'https://getkirby.com',
+                false
+            ],
+            [
+                'https://youtube.com/imprint',
+                false
+            ],
+            [
+                'https://www.youtu.be',
+                false
+            ],
+            [
+                'https://www.youtube.com/watch?list=zv=21HuwjmuS7A&index=1',
+                false
+            ],
+            [
+                'https://youtube.com/watch?v=öööö',
+                false
+            ],
+            [
+                'https://vimeo.com',
+                false
+            ],
+            [
+                'https://vimeo.com/öööö',
+                false
+            ]
         ];
     }
 
-    /**
-     * @covers ::video
-     */
-    public function testVideoWithInvalidUrl()
+    public function testInvalidVimeoUrl()
     {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('Unexpected video type');
-
-        Html::video('https://somevideo.com');
+        $this->assertNull(Html::vimeo('https://getkirby.com'));
     }
 
-    /**
-     * @covers ::youtube
-     */
-    public function testVideoWithInvalidYoutubeUrl()
+    public function testInvalidYoutubeUrl()
     {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('Invalid YouTube source');
-
-        Html::video('https://youtube.com/asldjhaskjdhakjs');
-    }
-
-    /**
-     * @covers ::vimeo
-     */
-    public function testVideoWithInvalidVimeoUrl()
-    {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('Invalid Vimeo source');
-
-        Html::video('https://vimeo.com/asldjhaskjdhakjs');
+        $this->assertNull(Html::youtube('https://getkirby.com'));
     }
 }

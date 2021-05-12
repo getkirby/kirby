@@ -3,7 +3,6 @@
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
 use Kirby\Text\KirbyTag;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
 /**
@@ -315,32 +314,11 @@ return [
                     $video = Html::tag('video', [$source], $attrs);
                 }
             } else {
-                // firstly handles supported video providers as youtube, vimeo, etc
-                try {
-                    $video = Html::video(
-                        $tag->value,
-                        $options,
-                        // providers only support width and height attributes
-                        [
-                            'height' => $tag->height,
-                            'width'  => $tag->width
-                        ]
-                    );
-                } catch (Exception $e) {
-                    // if not one of the supported video providers
-                    // it checks if there is a valid remote video file
-                    $extension = F::extension($tag->value);
-                    $type      = F::extensionToType($extension);
-                    $mime      = F::extensionToMime($extension);
-
-                    if ($type === 'video') {
-                        $source = Html::tag('source', null, [
-                            'src'  => $tag->value,
-                            'type' => $mime
-                        ]);
-                        $video = Html::tag('video', [$source], $attrs);
-                    }
-                }
+                $video = Html::video(
+                    $tag->value,
+                    $options,
+                    $attrs
+                );
             }
 
             return Html::figure([$video ?? ''], $tag->caption, [

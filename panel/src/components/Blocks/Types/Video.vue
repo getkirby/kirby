@@ -25,29 +25,7 @@ export default {
       return this.field("caption", { marks: true }).marks;
     },
     video() {
-
-      var url = this.content.url;
-
-      if (!url) {
-        return false;
-      }
-
-      var youtubePattern = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-      var youtubeMatch = url.match(youtubePattern);
-
-      if (youtubeMatch) {
-        return "https://www.youtube.com/embed/" + youtubeMatch[2];
-      }
-
-      var vimeoPattern = /vimeo\.com\/([0-9]+)/;
-      var vimeoMatch = url.match(vimeoPattern);
-
-      if (vimeoMatch) {
-        return "https://player.vimeo.com/video/" + vimeoMatch[1];
-      }
-
-      return false;
-
+      return this.$helper.embed.video(this.content.url);
     }
   }
 };
