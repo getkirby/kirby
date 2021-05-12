@@ -69,25 +69,27 @@ Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
     return;
   }
 
-  options.link = "/plugins/" + name;
 
-  // Fallback for icon
+  // Fallbacks
   if (options.icon === undefined) {
     options.icon = "page";
   }
 
-  // Fallback for menu
   if (options.menu === undefined) {
     options.menu = true;
+  }
+
+  if (options.search === undefined) {
+    options.menu = "pages";
   }
 
   // Update view
   window.panel.plugins.views[name] = {
     id: name,
-    text: options.text || options.label,
-    link: options.link,
+    label: options.text || options.label,
     icon: options.icon,
-    menu: options.menu
+    link: "/plugins/" + name,
+    menu: options.menu,
   };
 
   Vue.component("k-" + name + "-plugin-view", options.component);

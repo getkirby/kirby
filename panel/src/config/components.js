@@ -246,9 +246,11 @@ import Empty from "@/components/Layout/Empty.vue";
 import FilePreview from "@/components/Layout/FilePreview.vue";
 import Grid from "@/components/Layout/Grid.vue";
 import Header from "@/components/Layout/Header.vue";
+import Inside from "@/components/Layout/Inside.vue";
 import List from "@/components/Layout/List.vue";
 import ListItem from "@/components/Layout/ListItem.vue";
 import Overlay from "@/components/Layout/Overlay.vue";
+import Outside from "@/components/Layout/Outside.vue";
 import Tabs from "@/components/Layout/Tabs.vue";
 import View from "@/components/Layout/View.vue";
 
@@ -264,9 +266,11 @@ Vue.component("k-empty", Empty);
 Vue.component("k-file-preview", FilePreview);
 Vue.component("k-grid", Grid);
 Vue.component("k-header", Header);
+Vue.component("k-inside", Inside);
 Vue.component("k-list", List);
 Vue.component("k-list-item", ListItem);
 Vue.component("k-overlay", Overlay);
+Vue.component("k-outside", Outside);
 Vue.component("k-tabs", Tabs);
 Vue.component("k-view", View);
 
@@ -342,31 +346,8 @@ Vue.component("k-files-section", FilesSection);
 Vue.component("k-fields-section", FieldsSection);
 
 /* Views */
-import BrowserView from "@/components/Views/BrowserView.vue";
-import CustomView from "@/components/Views/CustomView.vue";
 import ErrorView from "@/components/Views/ErrorView.vue";
-import FileView from "@/components/Views/FileView.vue";
-import InstallationView from "@/components/Views/InstallationView.vue";
-import LoginView from "@/components/Views/LoginView.vue";
-import PageView from "@/components/Views/PageView.vue";
-import ResetPasswordView from "@/components/Views/ResetPasswordView.vue";
-import SettingsView from "@/components/Views/SettingsView.vue";
-import SiteView from "@/components/Views/SiteView.vue";
-import UsersView from "@/components/Views/UsersView.vue";
-import UserView from "@/components/Views/UserView.vue";
-
-Vue.component("k-browser-view", BrowserView);
-Vue.component("k-custom-view", CustomView);
 Vue.component("k-error-view", ErrorView);
-Vue.component("k-file-view", FileView);
-Vue.component("k-installation-view", InstallationView);
-Vue.component("k-login-view", LoginView);
-Vue.component("k-page-view", PageView);
-Vue.component("k-reset-password-view", ResetPasswordView);
-Vue.component("k-settings-view", SettingsView);
-Vue.component("k-site-view", SiteView);
-Vue.component("k-users-view", UsersView);
-Vue.component("k-user-view", UserView);
 
 /* Blocks */
 import "@/components/Blocks/index.js";
