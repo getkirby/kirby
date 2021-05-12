@@ -1,11 +1,11 @@
 <?php
 
 use Kirby\Cms\App;
-use Kirby\Cms\Asset;
 use Kirby\Cms\Html;
 use Kirby\Cms\Response;
 use Kirby\Cms\Url;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\File\Asset;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -16,7 +16,7 @@ use Kirby\Toolkit\V;
  * Helper to create an asset object
  *
  * @param string $path
- * @return \Kirby\Cms\Asset
+ * @return \Kirby\File\Asset
  */
 function asset(string $path)
 {

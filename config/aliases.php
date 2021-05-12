@@ -3,7 +3,6 @@
 // @codeCoverageIgnoreStart
 return [
     // cms classes
-    'asset'      => 'Kirby\Cms\Asset',
     'collection' => 'Kirby\Cms\Collection',
     'field'      => 'Kirby\Cms\Field',
     'file'       => 'Kirby\Cms\File',
@@ -27,6 +26,9 @@ return [
     'data'      => 'Kirby\Data\Data',
     'json'      => 'Kirby\Data\Json',
     'yaml'      => 'Kirby\Data\Yaml',
+
+    // file classes
+    'asset'      => 'Kirby\File\Asset',
 
     // data classes
     'database'  => 'Kirby\Database\Database',
@@ -60,8 +62,11 @@ return [
     'xml'        => 'Kirby\Toolkit\Xml',
 
     // TODO: remove in 4.0.0
-    'kirby\cms\dir'       => 'Kirby\Toolkit\Dir',
-    'kirby\cms\kirbytag'  => 'Kirby\Text\KirbyTag',
-    'kirby\cms\kirbytags' => 'Kirby\Text\KirbyTags'
+    'kirby\cms\asset'          => 'Kirby\File\Asset',
+    'kirby\cms\kirbytag'       => 'Kirby\Text\KirbyTag',
+    'kirby\cms\kirbytags'      => 'Kirby\Text\KirbyTags',
+    'kirby\cms\dir'            => 'Kirby\Toolkit\Dir',
+    'kirby\cms\filename'       => 'Kirby\File\Name',
+    'kirby\cms\filefoundation' => 'Kirby\File\IsFile'
 ];
 // @codeCoverageIgnoreEnd

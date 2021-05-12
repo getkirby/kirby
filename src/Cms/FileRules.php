@@ -5,7 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Exception\DuplicateException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
-use Kirby\Image\Image;
+use Kirby\File\File as BaseFile;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\V;
 
@@ -67,12 +67,12 @@ class FileRules
      * Validates if the file can be created
      *
      * @param \Kirby\Cms\File $file
-     * @param \Kirby\Image\Image $upload
+     * @param \Kirby\File\File $upload
      * @return bool
      * @throws \Kirby\Exception\DuplicateException If a file with the same name exists
      * @throws \Kirby\Exception\PermissionException If the user is not allowed to create the file
      */
-    public static function create(File $file, Image $upload): bool
+    public static function create(File $file, BaseFile $upload): bool
     {
         if ($file->exists() === true) {
             throw new DuplicateException('The file exists and cannot be overwritten');
@@ -110,12 +110,12 @@ class FileRules
      * Validates if the file can be replaced
      *
      * @param \Kirby\Cms\File $file
-     * @param \Kirby\Image\Image $upload
+     * @param \Kirby\File\File $upload
      * @return bool
      * @throws \Kirby\Exception\PermissionException If the user is not allowed to replace the file
      * @throws \Kirby\Exception\InvalidArgumentException If the file type of the new file is different
      */
-    public static function replace(File $file, Image $upload): bool
+    public static function replace(File $file, BaseFile $upload): bool
     {
         if ($file->permissions()->replace() !== true) {
             throw new PermissionException('The file cannot be replaced');
