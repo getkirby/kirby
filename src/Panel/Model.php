@@ -167,7 +167,7 @@ abstract class Model
      *
      * @internal
      * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
+     * @return \Kirby\Cms\File|\Kirby\Filesystem\Asset|null
      */
     protected function imageSource(?string $query = null)
     {
@@ -176,7 +176,7 @@ abstract class Model
         // validate the query result
         if (
             is_a($image, 'Kirby\Cms\File') === false &&
-            is_a($image, 'Kirby\Cms\Asset') === false
+            is_a($image, 'Kirby\Filesystem\Asset') === false
         ) {
             $image = null;
         }
