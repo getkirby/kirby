@@ -70,4 +70,15 @@ class User extends Model
             'username' => $this->model->username(),
         ];
     }
+
+    /**
+     * Returns the Translation object
+     * for the selected Panel language
+     *
+     * @return \Kirby\Cms\Translation
+     */
+    public function translation()
+    {
+        return $this->kirby()->translation($this->language()) ?? $this->kirby()->translation('en');
+    }
 }
