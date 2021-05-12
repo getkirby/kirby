@@ -223,16 +223,6 @@ class Image extends File
     }
 
     /**
-     * Returns the URL for the file object
-     *
-     * @return string
-     */
-    public function __toString(): string
-    {
-        return $this->html();
-    }
-
-    /**
      * Returns the width of the asset
      *
      * @return int

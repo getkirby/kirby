@@ -72,15 +72,11 @@ class ImageTest extends TestCase
 
     /**
      * @covers ::html
-     * @covers ::__toString
      */
     public function testHtml()
     {
         $file = $this->_image();
-        $expected = '<img alt="" src="https://foo.bar/cat.jpg">';
-        $this->assertSame($expected, $file->html());
-        $this->assertSame($expected, $file->__toString());
-        $this->assertSame($expected, (string)$file);
+        $this->assertSame('<img alt="" src="https://foo.bar/cat.jpg">', $file->html());
     }
 
     /**
@@ -203,6 +199,17 @@ class ImageTest extends TestCase
         $this->assertSame('cat.jpg', $file->toArray()['filename']);
         $this->assertIsArray($file->toArray()['exif']);
         $this->assertIsArray($file->toArray()['dimensions']);
+    }
+
+    /**
+     * @covers ::__toString
+     */
+    public function testToString()
+    {
+        $file = $this->_image();
+        $expected = 'https://foo.bar/cat.jpg';
+        $this->assertSame($expected, $file->__toString());
+        $this->assertSame($expected, (string)$file);
     }
 
     /**
