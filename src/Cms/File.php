@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image;
+use Kirby\File\IsFile;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
@@ -15,11 +15,11 @@ use Kirby\Toolkit\F;
  * URL or resizing an image. It also
  * handles file meta data.
  *
- * The File class is a wrapper around
- * the Kirby\Image\Image class, which
- * is used to handle all file methods.
+ * The File class proxies the `Kirby\File\File`
+ * or `Kirby\Image\Image` class, which
+ * is used to handle all asset file methods.
  * In addition the File class handles
- * File meta data via Kirby\Cms\Content.
+ * meta data via `Kirby\Cms\Content`.
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -32,19 +32,10 @@ class File extends ModelWithContent
     const CLASS_ALIAS = 'file';
 
     use FileActions;
-    use FileFoundation;
     use FileModifications;
     use HasMethods;
     use HasSiblings;
-
-    /**
-     * The parent asset object
-     * This is used to do actual file
-     * method calls, like size, mime, etc.
-     *
-     * @var \Kirby\Image\Image
-     */
-    protected $asset;
+    use IsFile;
 
     /**
      * Cache for the initialized blueprint object
@@ -162,17 +153,6 @@ class File extends ModelWithContent
     }
 
     /**
-     * Returns the Image object
-     *
-     * @internal
-     * @return \Kirby\Image\Image
-     */
-    public function asset()
-    {
-        return $this->asset = $this->asset ?? new Image($this->root());
-    }
-
-    /**
      * Returns the FileBlueprint object for the file
      *
      * @return \Kirby\Cms\FileBlueprint
@@ -255,6 +235,20 @@ class File extends ModelWithContent
     public function files()
     {
         return $this->siblingsCollection();
+    }
+
+    /**
+     * Converts the file to html
+     *
+     * @param array $attr
+     * @return string
+     */
+    public function html(array $attr = []): string
+    {
+        return $this->asset()->html(array_merge(
+            ['alt' => $this->alt()],
+            $attr
+        ));
     }
 
     /**

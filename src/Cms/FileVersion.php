@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Properties;
+use Kirby\File\IsFile;
 
 /**
  * FileVersion
@@ -15,10 +15,7 @@ use Kirby\Toolkit\Properties;
  */
 class FileVersion
 {
-    use FileFoundation {
-        toArray as parentToArray;
-    }
-    use Properties;
+    use IsFile;
 
     protected $modifications;
     protected $original;
@@ -101,7 +98,11 @@ class FileVersion
      */
     public function save()
     {
-        $this->kirby()->thumb($this->original()->root(), $this->root(), $this->modifications());
+        $this->kirby()->thumb(
+            $this->original()->root(),
+            $this->root(),
+            $this->modifications()
+        );
         return $this;
     }
 
@@ -132,7 +133,7 @@ class FileVersion
      */
     public function toArray(): array
     {
-        $array = array_merge($this->parentToArray(), [
+        $array = array_merge($this->asset()->toArray(), [
             'modifications' => $this->modifications(),
         ]);
 
