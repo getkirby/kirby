@@ -4,7 +4,7 @@ namespace Kirby\Filesystem;
 
 use PHPUnit\Framework\TestCase as TestCase;
 
-class NameTest extends TestCase
+class FilenameTest extends TestCase
 {
     public function testAttributesToArray()
     {
