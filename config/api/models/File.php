@@ -18,7 +18,7 @@ return [
             return $file->dimensions()->toArray();
         },
         'dragText' => function (File $file) {
-            return $file->dragText();
+            return $file->panel()->dragText();
         },
         'exists' => function (File $file) {
             return $file->exists();
@@ -33,7 +33,7 @@ return [
             return $file->id();
         },
         'link' => function (File $file) {
-            return $file->panelUrl(true);
+            return $file->panel()->url(true);
         },
         'mime' => function (File $file) {
             return $file->mime();
@@ -57,16 +57,16 @@ return [
             return $file->niceSize();
         },
         'options' => function (File $file) {
-            return $file->panelOptions();
+            return $file->panel()->options();
         },
         'panelIcon' => function (File $file) {
-            return $file->panelIcon();
+            return $file->panel()->icon();
         },
         'panelImage' => function (File $file) {
-            return $file->panelImage();
+            return $file->panel()->image();
         },
         'panelUrl' => function (File $file) {
-            return $file->panelUrl(true);
+            return $file->panel()->url(true);
         },
         'prev' => function (File $file) {
             return $file->prev();

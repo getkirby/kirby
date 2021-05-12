@@ -1,8 +1,9 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Panel;
 
 use Exception;
+use Kirby\Cms\App;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Dir;
@@ -16,7 +17,7 @@ use Throwable;
  * and other panel options. The view template is
  * located in `kirby/views/panel.php`
  *
- * @package   Kirby Cms
+ * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
@@ -109,7 +110,7 @@ class Panel
         $uri = new Uri($url = $kirby->url('panel'));
 
         // fetch all plugins
-        $plugins = new PanelPlugins();
+        $plugins = new Plugins();
 
         $view = new View($kirby->root('kirby') . '/views/panel.php', [
             'kirby'     => $kirby,

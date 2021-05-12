@@ -19,6 +19,11 @@ class ExtendedModelWithContent extends ModelWithContent
         return 'test.txt';
     }
 
+    public function panel()
+    {
+        return new PageForPanel($this);
+    }
+
     public function permissions()
     {
         return null;

@@ -6,6 +6,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Uri;
+use Kirby\Panel\Page as Panel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
@@ -423,31 +424,6 @@ class Page extends ModelWithContent
             return $this->diruri = $parent->diruri() . '/' . $dirname;
         } else {
             return $this->diruri = $dirname;
-        }
-    }
-
-    /**
-     * Provides a kirbytag or markdown
-     * tag for the page, which will be
-     * used in the panel, when the page
-     * gets dragged onto a textarea
-     *
-     * @internal
-     * @param string|null $type (null|auto|kirbytext|markdown)
-     * @return string
-     */
-    public function dragText(string $type = null): string
-    {
-        $type = $this->dragTextType($type);
-
-        if ($dragTextFromCallback = $this->dragTextFromCallback($type)) {
-            return $dragTextFromCallback;
-        }
-
-        if ($type === 'markdown') {
-            return '[' . $this->title() . '](' . $this->url() . ')';
-        } else {
-            return '(link: ' . $this->id() . ' text: ' . $this->title() . ')';
         }
     }
 
@@ -929,101 +905,13 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Returns the panel icon definition
-     * according to the blueprint settings
+     * Returns the panel info object
      *
-     * @internal
-     * @param array|null $params
-     * @return array
+     * @return \Kirby\Panel\Page
      */
-    public function panelIcon(array $params = null): array
+    public function panel()
     {
-        if ($icon = $this->blueprint()->icon()) {
-            $params['type'] = $icon;
-        }
-
-        return parent::panelIcon($params);
-    }
-
-    /**
-     * Returns the escaped Id, which is
-     * used in the panel to make routing work properly
-     *
-     * @internal
-     * @return string
-     */
-    public function panelId(): string
-    {
-        return str_replace('/', '+', $this->id());
-    }
-
-    /**
-     * Returns the image file object based on provided query
-     *
-     * @internal
-     * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
-     */
-    protected function panelImageSource(string $query = null)
-    {
-        if ($query === null) {
-            $query = 'page.image';
-        }
-
-        return parent::panelImageSource($query);
-    }
-
-    /**
-     * Returns the full path without leading slash
-     *
-     * @internal
-     * @return string
-     */
-    public function panelPath(): string
-    {
-        return 'pages/' . $this->panelId();
-    }
-
-    /**
-     * Prepares the response data for page pickers
-     * and page fields
-     *
-     * @param array|null $params
-     * @return array
-     */
-    public function panelPickerData(array $params = []): array
-    {
-        $image = $this->panelImage($params['image'] ?? []);
-        $icon  = $this->panelIcon($image);
-
-        return [
-            'dragText'    => $this->dragText(),
-            'hasChildren' => $this->hasChildren(),
-            'icon'        => $icon,
-            'id'          => $this->id(),
-            'image'       => $image,
-            'info'        => $this->toString($params['info'] ?? false),
-            'link'        => $this->panelUrl(true),
-            'text'        => $this->toString($params['text'] ?? '{{ page.title }}'),
-            'url'         => $this->url(),
-        ];
-    }
-
-    /**
-     * Returns the url to the editing view
-     * in the panel
-     *
-     * @internal
-     * @param bool $relative
-     * @return string
-     */
-    public function panelUrl(bool $relative = false): string
-    {
-        if ($relative === true) {
-            return '/' . $this->panelPath();
-        } else {
-            return $this->kirby()->url('panel') . '/' . $this->panelPath();
-        }
+        return new Panel($this);
     }
 
     /**
@@ -1567,5 +1455,116 @@ class Page extends ModelWithContent
         }
 
         return $this->url = $this->site()->urlForLanguage($language) . '/' . $this->slug($language);
+    }
+
+
+    /**
+     * Deprecated!
+     */
+
+    /**
+     * Provides a kirbytag or markdown
+     * tag for the page, which will be
+     * used in the panel, when the page
+     * gets dragged onto a textarea
+     *
+     * @deprecated 3.6.0 Use `->panel()->dragText()` instead
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param string|null $type (null|auto|kirbytext|markdown)
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function dragText(string $type = null): string
+    {
+        return $this->panel()->dragText($type);
+    }
+
+    /**
+     * Returns the panel icon definition
+     * according to the blueprint settings
+     *
+     * @deprecated 3.6.0 Use `->panel()->icon()` instead
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param array|null $params
+     * @return array
+     * @codeCoverageIgnore
+     */
+    public function panelIcon(array $params = null): array
+    {
+        return $this->panel()->icon($params);
+    }
+
+    /**
+     * Returns the escaped Id, which is
+     * used in the panel to make routing work properly
+     *
+     * @deprecated 3.6.0 Use `->panel()->id()` instead
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function panelId(): string
+    {
+        return $this->panel()->id();
+    }
+
+    /**
+     * Returns the full path without leading slash
+     *
+     * @deprecated 3.6.0 Use `->panel()->path()` instead
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function panelPath(): string
+    {
+        return $this->panel()->path();
+    }
+
+    /**
+     * Prepares the response data for page pickers
+     * and page fields
+     *
+     * @deprecated 3.6.0 Use `->panel()->pickerData()` instead
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @param array|null $params
+     * @return array
+     * @codeCoverageIgnore
+     */
+    public function panelPickerData(array $params = []): array
+    {
+        return $this->panel()->pickerData($params);
+    }
+
+    /**
+     * Returns the url to the editing view
+     * in the panel
+     *
+     * @deprecated 3.6.0 Use `->panel()->url()` instead
+     * @todo Add `deprecated()` helper warning in 3.7.0
+     * @todo Remove in 3.8.0
+     *
+     * @internal
+     * @param bool $relative
+     * @return string
+     * @codeCoverageIgnore
+     */
+    public function panelUrl(bool $relative = false): string
+    {
+        return $this->panel()->url($relative);
     }
 }
