@@ -66,17 +66,6 @@ return function ($kirby) {
             }
         ],
         [
-            'pattern' => $panel . '/(:all?)',
-            'env'     => 'panel',
-            'action'  => function () use ($kirby) {
-                if ($kirby->option('panel') === false) {
-                    return null;
-                }
-
-                return Panel::render($kirby);
-            }
-        ],
-        [
             'pattern' => $media . '/pages/(:all)/(:any)/(:any)',
             'env'     => 'media',
             'action'  => function ($path, $hash, $filename) use ($kirby) {
@@ -103,7 +92,18 @@ return function ($kirby) {
             'action'  => function ($path, $hash, $filename) {
                 return Media::thumb($path, $hash, $filename);
             }
-        ]
+        ],
+        [
+            'pattern' => $panel . '/(:all?)',
+            'env'     => 'panel',
+            'action'  => function () use ($kirby) {
+                if ($kirby->option('panel') === false) {
+                    return null;
+                }
+
+                return Panel::render($kirby);
+            }
+        ],
     ];
 
     // Multi-language setup

@@ -44,6 +44,9 @@ return [
     // image classes
     'dimensions' => 'Kirby\Image\Dimensions',
 
+    // panel classes
+    'inertia'    => 'Kirby\Panel\Inertia',
+
     // toolkit classes
     'a'          => 'Kirby\Toolkit\A',
     'c'          => 'Kirby\Toolkit\Config',
