@@ -28,7 +28,7 @@ class FileTest extends TestCase
     public function testAsset()
     {
         $file = $this->file();
-        $this->assertInstanceOf('Kirby\File\File', $file->asset());
+        $this->assertInstanceOf('Kirby\Filesystem\File', $file->asset());
         $this->assertEquals('https://getkirby.com/projects/project-a/cover.jpg', $file->asset()->url());
     }
 

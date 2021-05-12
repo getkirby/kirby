@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Cms\App as Kirby;
+use Kirby\Filesystem\Asset;
 use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Collection;

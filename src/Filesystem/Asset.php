@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\File;
+namespace Kirby\Filesystem;
 
 /**
  * Anything in your public path can be converted
@@ -8,7 +8,7 @@ namespace Kirby\File;
  * methods as for any other Kirby files. Pass a
  * relative path to the class to create the asset.
  *
- * @package   Kirby File
+ * @package   Kirby Filesystem
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH

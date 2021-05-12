@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\File;
+namespace Kirby\Filesystem;
 
 use Kirby\Toolkit\Str;
 
@@ -20,7 +20,7 @@ use Kirby\Toolkit\Str;
  * echo $filename->toString();
  * // result: some-file-300x200-crop-top-left-q80.jpg
  *
- * @package   Kirby File
+ * @package   Kirby Filesystem
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH

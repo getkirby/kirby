@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\File\File as BaseFile;
+use Kirby\Filesystem\File as BaseFile;
 
 class FileRulesTest extends TestCase
 {

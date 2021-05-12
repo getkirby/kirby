@@ -5,7 +5,7 @@ use Kirby\Cms\Html;
 use Kirby\Cms\Response;
 use Kirby\Cms\Url;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\File\Asset;
+use Kirby\Filesystem\Asset;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -16,7 +16,7 @@ use Kirby\Toolkit\V;
  * Helper to create an asset object
  *
  * @param string $path
- * @return \Kirby\File\Asset
+ * @return \Kirby\Filesystem\Asset
  */
 function asset(string $path)
 {

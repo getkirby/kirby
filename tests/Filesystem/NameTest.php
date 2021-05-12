@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\File;
+namespace Kirby\Filesystem;
 
 use PHPUnit\Framework\TestCase as TestCase;
 

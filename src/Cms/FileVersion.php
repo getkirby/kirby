@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\File\IsFile;
+use Kirby\Filesystem\IsFile;
 
 /**
  * FileVersion

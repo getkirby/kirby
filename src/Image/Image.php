@@ -2,7 +2,7 @@
 
 namespace Kirby\Image;
 
-use Kirby\File\File;
+use Kirby\Filesystem\File;
 use Kirby\Toolkit\Html;
 
 /**
@@ -11,7 +11,7 @@ use Kirby\Toolkit\Html;
  * a connection to our darkroom classes to resize/crop
  * images.
  *
- * Extends the `Kirby\File\File` class with
+ * Extends the `Kirby\Filesystem\File` class with
  * those image-specific methods.
  *
  * @package   Kirby Image
