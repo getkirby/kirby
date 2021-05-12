@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\File\File as BaseFile;
+use Kirby\Filesystem\File as BaseFile;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 
@@ -501,7 +501,7 @@ class FileActionsTest extends TestCase
             'hooks' => [
                 'file.replace:before' => function (File $file, BaseFile $upload) use ($phpunit, &$calls) {
                     $phpunit->assertInstanceOf('Kirby\Cms\File', $file);
-                    $phpunit->assertInstanceOf('Kirby\File\File', $upload);
+                    $phpunit->assertInstanceOf('Kirby\Filesystem\File', $upload);
                     $phpunit->assertSame('site.csv', $file->filename());
                     $phpunit->assertSame('replace.csv', $upload->filename());
                     $phpunit->assertFileDoesNotExist($file->root());

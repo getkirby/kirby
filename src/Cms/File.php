@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\File\IsFile;
+use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\F;
@@ -15,7 +15,7 @@ use Kirby\Toolkit\F;
  * URL or resizing an image. It also
  * handles file meta data.
  *
- * The File class proxies the `Kirby\File\File`
+ * The File class proxies the `Kirby\Filesystem\File`
  * or `Kirby\Image\Image` class, which
  * is used to handle all asset file methods.
  * In addition the File class handles

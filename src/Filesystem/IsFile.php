@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\File;
+namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
@@ -11,11 +11,11 @@ use Kirby\Toolkit\Properties;
 /**
  * Trait for all objects that represent an asset file.
  * Adds `::asset()` method which returns either a
- * `Kirby\File\File` or `Kirby\Image\Image` object.
+ * `Kirby\Filesystem\File` or `Kirby\Image\Image` object.
  * Proxies method calls to this object.
  * @since 3.6.0
  *
- * @package   Kirby File
+ * @package   Kirby Filesystem
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
@@ -28,7 +28,7 @@ trait IsFile
     /**
      * File asset object
      *
-     * @var \Kirby\File\File
+     * @var \Kirby\Filesystem\File
      */
     protected $asset;
 
@@ -83,7 +83,7 @@ trait IsFile
     /**
      * Returns the file asset object
      *
-     * @return \Kirby\File\File
+     * @return \Kirby\Filesystem\File
      */
     public function asset()
     {

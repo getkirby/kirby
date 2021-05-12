@@ -1,12 +1,12 @@
 <?php
 
-namespace Kirby\File;
+namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
 use PHPUnit\Framework\TestCase as TestCase;
 
 /**
- * @coversDefaultClass \Kirby\File\Asset
+ * @coversDefaultClass \Kirby\Filesystem\Asset
  */
 class AssetTest extends TestCase
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\File;
+namespace Kirby\Filesystem;
 
 use PHPUnit\Framework\TestCase as TestCase;
 
@@ -12,7 +12,7 @@ class AFile
 }
 
 /**
- * @coversDefaultClass \Kirby\File\IsFile
+ * @coversDefaultClass \Kirby\Filesystem\IsFile
  */
 class IsFileTest extends TestCase
 {
@@ -43,7 +43,7 @@ class IsFileTest extends TestCase
     public function testAsset()
     {
         $asset = $this->_asset();
-        $this->assertInstanceOf('Kirby\File\File', $asset->asset());
+        $this->assertInstanceOf('Kirby\Filesystem\File', $asset->asset());
     }
 
     /**

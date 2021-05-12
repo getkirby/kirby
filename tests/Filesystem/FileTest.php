@@ -1,11 +1,11 @@
 <?php
 
-namespace Kirby\File;
+namespace Kirby\Filesystem;
 
 use PHPUnit\Framework\TestCase as TestCase;
 
 /**
- * @coversDefaultClass \Kirby\File\File
+ * @coversDefaultClass \Kirby\Filesystem\File
  */
 class FileTest extends TestCase
 {

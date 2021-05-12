@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\File;
+namespace Kirby\Filesystem;
 
 use Kirby\Cms\App;
 use Kirby\Exception\Exception;
@@ -17,7 +17,7 @@ use Kirby\Toolkit\V;
  *
  * @since 3.6.0
  *
- * @package   Kirby File
+ * @package   Kirby Filesystem
  * @author    Nico Hoffmann <nico@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH

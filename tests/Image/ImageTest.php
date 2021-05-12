@@ -145,7 +145,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @covers \Kirby\File\File::match
+     * @covers \Kirby\Filesystem\File::match
      */
     public function testMatch()
     {
@@ -166,7 +166,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @covers \Kirby\File\File::match
+     * @covers \Kirby\Filesystem\File::match
      */
     public function testMatchMimeException()
     {
@@ -177,7 +177,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @covers \Kirby\File\File::match
+     * @covers \Kirby\Filesystem\File::match
      */
     public function testMatchExtensionException()
     {
@@ -188,7 +188,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @covers \Kirby\File\File::match
+     * @covers \Kirby\Filesystem\File::match
      */
     public function testMatchTypeException()
     {
@@ -199,7 +199,7 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @covers \Kirby\File\File::match
+     * @covers \Kirby\Filesystem\File::match
      */
     public function testMatchOrientationException()
     {

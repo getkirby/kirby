@@ -28,7 +28,7 @@ return [
     'yaml'      => 'Kirby\Data\Yaml',
 
     // file classes
-    'asset'      => 'Kirby\File\Asset',
+    'asset'      => 'Kirby\Filesystem\Asset',
 
     // data classes
     'database'  => 'Kirby\Database\Database',
@@ -66,7 +66,7 @@ return [
     'kirby\cms\kirbytag'       => 'Kirby\Text\KirbyTag',
     'kirby\cms\kirbytags'      => 'Kirby\Text\KirbyTags',
     'kirby\cms\dir'            => 'Kirby\Toolkit\Dir',
-    'kirby\cms\filename'       => 'Kirby\File\Name',
-    'kirby\cms\filefoundation' => 'Kirby\File\IsFile'
+    'kirby\cms\filename'       => 'Kirby\Filesystem\Name',
+    'kirby\cms\filefoundation' => 'Kirby\Filesystem\IsFile'
 ];
 // @codeCoverageIgnoreEnd
