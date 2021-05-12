@@ -27,6 +27,7 @@ export default defineConfig({
   },
   build: {
     rollupOptions: {
+      input: '/src/index.js',
       output: {
         entryFileNames: `js/[name].js`,
         chunkFileNames: `js/[name].js`,

@@ -11,6 +11,8 @@
     "test": "cypress run"
   },
   "dependencies": {
+    "@inertiajs/inertia": "^0.8.7",
+    "@inertiajs/inertia-vue": "^0.5.12",
     "@linusborg/vue-simple-portal": "^0.1.4",
     "autosize": "^4.0.2",
     "dayjs": "^1.9.6",
