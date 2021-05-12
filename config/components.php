@@ -3,10 +3,10 @@
 use Kirby\Cms\App;
 use Kirby\Cms\Collection;
 use Kirby\Cms\File;
-use Kirby\Cms\Filename;
 use Kirby\Cms\FileVersion;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
+use Kirby\File\Name;
 use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
@@ -82,7 +82,7 @@ return [
         // create url and root
         $mediaRoot = dirname($file->mediaRoot());
         $template  = $mediaRoot . '/{{ name }}{{ attributes }}.{{ extension }}';
-        $thumbRoot = (new Filename($file->root(), $template, $options))->toString();
+        $thumbRoot = (new Name($file->root(), $template, $options))->toString();
         $thumbName = basename($thumbRoot);
         $job       = $mediaRoot . '/.jobs/' . $thumbName . '.json';
 
@@ -313,7 +313,7 @@ return [
     'thumb' => function (App $kirby, string $src, string $template, array $options): string {
         $darkroom = Darkroom::factory(option('thumbs.driver', 'gd'), option('thumbs', []));
         $options  = $darkroom->preprocess($src, $options);
-        $root     = (new Filename($src, $template, $options))->toString();
+        $root     = (new Name($src, $template, $options))->toString();
 
         F::copy($src, $root, true);
         $darkroom->process($root, $options);

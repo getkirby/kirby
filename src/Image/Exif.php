@@ -17,7 +17,7 @@ class Exif
 {
     /**
      * the parent image object
-     * @var Image
+     * @var \Kirby\Image\Image
      */
     protected $image;
 
