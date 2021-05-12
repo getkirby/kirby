@@ -72,7 +72,7 @@ class Page extends Model
      *
      * @internal
      * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
+     * @return \Kirby\Cms\File|\Kirby\Filesystem\Asset|null
      */
     protected function imageSource(string $query = null)
     {
