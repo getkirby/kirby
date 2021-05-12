@@ -632,10 +632,10 @@ function r($condition, $value, $alternative = null)
  * @param string $method
  * @param array $routes
  * @return void
-*/
+ */
 function router(string $path = null, string $method = 'GET', array $routes = [])
 {
-   return (new Router($routes))->call($path, $method);
+    return (new Router($routes))->call($path, $method);
 }
 
 /**

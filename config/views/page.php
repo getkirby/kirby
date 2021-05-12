@@ -1,9 +1,7 @@
 <?php
 
-use Kirby\Cms\Form;
 
 return function ($path) use ($kirby) {
-
     if (!$page = $kirby->page(str_replace('+', '/', $path))) {
         return t('error.page.undefined');
     }
@@ -58,5 +56,4 @@ return function ($path) use ($kirby) {
             'title' => $page->title()->toString(),
         ]
     ];
-
 };

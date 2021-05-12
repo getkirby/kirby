@@ -1,7 +1,6 @@
 <?php
 
 return function ($roleId = null) use ($kirby) {
-
     $roles = $kirby->roles();
 
     return [
@@ -22,7 +21,6 @@ return function ($roleId = null) use ($kirby) {
                 ];
             }),
             'users' => function () use ($kirby, $roleId) {
-
                 $users = $kirby->users();
 
                 if (empty($roleId) === false) {
@@ -45,10 +43,8 @@ return function ($roleId = null) use ($kirby) {
                     'limit' => 20,
                     'page'  => get('page')
                 ]);
-
             },
         ],
         'view' => 'users'
     ];
-
 };

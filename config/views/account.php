@@ -1,9 +1,7 @@
 <?php
 
-use Kirby\Cms\Form;
 
 return function () use ($kirby) {
-
     return [
         'component' => 'AccountView',
         'props' => Inertia::model($user = $kirby->user(), [
@@ -20,5 +18,4 @@ return function () use ($kirby) {
         ]),
         'view' => 'account'
     ];
-
 };

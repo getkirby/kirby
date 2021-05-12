@@ -1,10 +1,7 @@
 <?php
 
-use Kirby\Toolkit\Str;
-use Kirby\Toolkit\Pagination;
 
 return function ($kirby) {
-
     Inertia::setup($kirby);
 
     // Panel is not installed yet
@@ -137,5 +134,4 @@ return function ($kirby) {
             }
         ],
     ];
-
 };

@@ -26,8 +26,7 @@ use Throwable;
  */
 class Panel
 {
-
-     /**
+    /**
      * Generates an array with all assets
      * that need to be loaded for the panel (js, css, icons)
      *
@@ -36,7 +35,6 @@ class Panel
      */
     public static function assets(App $kirby): array
     {
-
         $dev = $kirby->option('panel.dev', false);
 
         if ($dev) {
@@ -244,7 +242,7 @@ class Panel
 
         // only expect arrays from here on
         if (is_array($result) === false) {
-            throw new InvalidArgumentException("Invalid Panel response");
+            throw new InvalidArgumentException('Invalid Panel response');
         }
 
         $view = $result['view'] ?? 'site';

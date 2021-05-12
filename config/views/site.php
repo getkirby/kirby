@@ -13,5 +13,4 @@ return function () use ($kirby) {
         ]),
         'view' => 'site'
     ];
-
 };

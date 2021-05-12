@@ -1,7 +1,6 @@
 <?php
 
 return function () use ($kirby) {
-
     return [
         'component' => 'SettingsView',
         'props' => [
@@ -22,5 +21,4 @@ return function () use ($kirby) {
         ],
         'view' => 'settings'
     ];
-
 };

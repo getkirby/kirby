@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\Form;
 
 return function ($pageId, $filename) use ($kirby) {
     $pageId   = str_replace('+', '/', $pageId);

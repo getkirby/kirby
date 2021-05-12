@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\Form;
 
 return function ($filename) use ($kirby) {
     $filename = urldecode($filename);

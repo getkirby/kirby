@@ -11,7 +11,6 @@ use Kirby\Http\Url;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Pagination;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\Tpl;
 
 /**
  * Custom Inertia implementation, providing
@@ -155,12 +154,11 @@ class Inertia
             ]),
             'view' => [
                 'breadcrumb' => function () use ($file, $parent, $type) {
-
                     switch ($type) {
-                        case "site":
+                        case 'site':
                             $breadcrumb = [];
                             break;
-                        case "user":
+                        case 'user':
                             $breadcrumb = [
                                 [
                                     'label' => $parent->username(),
@@ -168,7 +166,7 @@ class Inertia
                                 ]
                             ];
                             break;
-                        case "page":
+                        case 'page':
                             $breadcrumb = static::collect($file->parents()->flip(), function ($parent) {
                                 return [
                                     'label' => $parent->title()->toString(),
@@ -360,7 +358,6 @@ class Inertia
         ];
 
         static::$shared = function () use ($kirby) {
-
             return [
                 '$config' => [
                     'debug'     => $kirby->option('debug'),
@@ -448,7 +445,6 @@ class Inertia
                 '$views' => static::$views
             ];
         };
-
     }
 
     public static function view(string $id, array $props = []): array
@@ -470,5 +466,4 @@ class Inertia
 
         return array_replace_recursive($defaults, $props);
     }
-
 }

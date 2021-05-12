@@ -19,5 +19,4 @@ return function () use ($kirby) {
         ],
         'view' => 'installation'
     ];
-
 };
