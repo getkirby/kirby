@@ -1,7 +1,16 @@
 <template>
   <k-outside>
     <k-view align="center" class="k-installation-view">
-      <form v-if="state === 'install'" @submit.prevent="install">
+      <!-- installation complete -->
+      <k-text v-if="isComplete">
+        <k-headline>{{ $t("installation.completed") }}</k-headline>
+        <k-link to="/login">
+          {{ $t("login") }}
+        </k-link>
+      </k-text>
+
+      <!-- ready to be installed -->
+      <form v-else-if="isReady" @submit.prevent="install">
         <h1 class="k-offscreen">
           {{ $t("installation") }}
         </h1>
@@ -10,14 +19,10 @@
           {{ $t("install") }}
         </k-button>
       </form>
-      <k-text v-else-if="state === 'completed'">
-        <k-headline>{{ $t("installation.completed") }}</k-headline>
-        <k-link to="/login">
-          {{ $t("login") }}
-        </k-link>
-      </k-text>
+
+      <!-- not meeting requirements -->
       <div v-else>
-        <k-headline v-if="!isInstalled">
+        <k-headline>
           {{ $t("installation.issues.headline") }}
         </k-headline>
 
@@ -131,12 +136,11 @@ export default {
         }
       };
     },
-    state() {
-      if (this.isOk && this.isInstallable && !this.isInstalled) {
-        return "install";
-      }
-
-      return "requirements";
+    isReady() {
+      return this.isOk && this.isInstallable;
+    },
+    isComplete() {
+      return this.isOk && this.isInstalled;
     }
   },
   methods: {
