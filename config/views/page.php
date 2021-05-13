@@ -1,7 +1,8 @@
 <?php
 
+/** @var \Kirby\Cms\App $kirby */
 
-return function ($path) use ($kirby) {
+return function (string $path) use ($kirby) {
     if (!$page = $kirby->page(str_replace('+', '/', $path))) {
         return t('error.page.undefined');
     }

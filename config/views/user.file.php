@@ -1,10 +1,11 @@
 <?php
 
+/** @var \Kirby\Cms\App $kirby */
 
-return function ($userId, $filename) use ($kirby) {
+return function (string $id, string $filename) use ($kirby) {
     $filename = urldecode($filename);
 
-    if (!$user = $kirby->user($userId)) {
+    if (!$user = $kirby->user($id)) {
         return t('error.user.undefined');
     }
 

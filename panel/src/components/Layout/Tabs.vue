@@ -8,7 +8,7 @@
       <k-button
         v-for="tabButton in visibleTabs"
         :key="tabButton.name"
-        :link="'#' + tabButton.name"
+        :link="tabButton.link"
         :current="current === tabButton.name"
         :icon="tabButton.icon"
         :tooltip="tabButton.label"
@@ -42,7 +42,7 @@
       <k-dropdown-item
         v-for="tabButton in invisibleTabs"
         :key="'more-' + tabButton.name"
-        :link="'#' + tabButton.name"
+        :link="tabButton.link"
         :current="tab === tabButton.name"
         :icon="tabButton.icon"
         :tooltip="tabButton.label"

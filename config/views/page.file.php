@@ -1,11 +1,12 @@
 <?php
 
+/** @var \Kirby\Cms\App $kirby */
 
-return function ($pageId, $filename) use ($kirby) {
-    $pageId   = str_replace('+', '/', $pageId);
+return function (string $id, string $filename) use ($kirby) {
+    $id       = str_replace('+', '/', $id);
     $filename = urldecode($filename);
 
-    if (!$page = $kirby->page($pageId)) {
+    if (!$page = $kirby->page($id)) {
         return t('error.page.undefined');
     }
 

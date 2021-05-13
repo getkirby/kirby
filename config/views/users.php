@@ -1,13 +1,15 @@
 <?php
 
-return function ($roleId = null) use ($kirby) {
+/** @var \Kirby\Cms\App $kirby */
+
+return function (string $role = null) use ($kirby) {
     $roles = $kirby->roles();
 
     return [
         'component' => 'UsersView',
         'props' => [
-            'role' => function () use ($kirby, $roles, $roleId) {
-                if ($roleId && $role = $roles->find($roleId)) {
+            'role' => function () use ($kirby, $roles, $role) {
+                if ($role && $role = $roles->find($role)) {
                     return [
                         'id'    => $role->id(),
                         'title' => $role->title()
@@ -20,11 +22,11 @@ return function ($roleId = null) use ($kirby) {
                     'title' => $role->title(),
                 ];
             }),
-            'users' => function () use ($kirby, $roleId) {
+            'users' => function () use ($kirby, $role) {
                 $users = $kirby->users();
 
-                if (empty($roleId) === false) {
-                    $users = $users->role($roleId);
+                if (empty($role) === false) {
+                    $users = $users->role($role);
                 }
 
                 return Inertia::collection($users, function ($user) {

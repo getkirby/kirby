@@ -1,5 +1,7 @@
 <?php
 
+/** @var \Kirby\Cms\App $kirby */
+
 use Kirby\Http\Response;
 use Kirby\Toolkit\View;
 

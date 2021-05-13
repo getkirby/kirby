@@ -1,6 +1,6 @@
 <template>
   <k-inside>
-    <div v-if="ready" :data-locked="isLocked" class="k-user-view">
+    <div :data-locked="isLocked" class="k-user-view">
       <div class="k-user-profile">
         <k-view>
           <template v-if="user.avatar">
@@ -67,7 +67,7 @@
       <k-view>
         <k-header
           :editable="permissions.changeName && !isLocked"
-          :tab="tab"
+          :tab="tab.name"
           :tabs="tabs"
           @edit="action('rename')"
         >
@@ -98,18 +98,10 @@
         </k-header>
 
         <k-sections
-          v-if="tab.columns"
           :blueprint="blueprint"
           :empty="$t('user.blueprint', { role: user.role.name })"
           :parent="'users/' + user.id"
           :tab="tab"
-          :tabs="tabs"
-        />
-
-        <k-box
-          v-else
-          :text="$t('user.blueprint', { role: user.role.name })"
-          theme="info"
         />
 
         <k-user-email-dialog ref="email" @success="$reload" />
@@ -132,7 +124,7 @@
 </template>
 
 <script>
-import ModelView from "./ModelView";
+import ModelView from "./ModelView.vue";
 
 export default {
   extends: ModelView,

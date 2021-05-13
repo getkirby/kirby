@@ -1,7 +1,8 @@
 <?php
 
+/** @var \Kirby\Cms\App $kirby */
 
-return function ($filename) use ($kirby) {
+return function (string $filename) use ($kirby) {
     $filename = urldecode($filename);
     $file     = $kirby->site()->file($filename);
 

@@ -6,7 +6,7 @@
       <k-view :data-locked="isLocked" class="k-file-content">
         <k-header
           :editable="permissions.changeName && !isLocked"
-          :tab="tab"
+          :tab="tab.name"
           :tabs="tabs"
           @edit="action('rename')"
         >
@@ -51,7 +51,6 @@
           :empty="$t('file.blueprint', { template: file.blueprint.name })"
           :parent="parent"
           :tab="tab"
-          :tabs="tabs"
         />
 
         <k-file-rename-dialog ref="rename" @success="onRename" />
@@ -69,7 +68,7 @@
 </template>
 
 <script>
-import ModelView from "./ModelView";
+import ModelView from "./ModelView.vue";
 
 export default {
   extends: ModelView,

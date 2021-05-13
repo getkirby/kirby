@@ -3,7 +3,7 @@
     <k-view :data-locked="isLocked" class="k-page-view">
       <k-header
         :editable="permissions.changeTitle && !isLocked"
-        :tab="tab"
+        :tab="tab.name"
         :tabs="tabs"
         @edit="action('rename')"
       >
@@ -57,7 +57,6 @@
         :empty="$t('page.blueprint', { template: blueprint })"
         :parent="$api.pages.url(page.id)"
         :tab="tab"
-        :tabs="tabs"
       />
 
       <k-page-rename-dialog ref="rename" @success="$reload" />
@@ -71,7 +70,7 @@
 
 <script>
 // TODO: can we delete mixins/view/prevnext ?
-import ModelView from "./ModelView";
+import ModelView from "./ModelView.vue";
 
 export default {
   extends: ModelView,

@@ -1,5 +1,7 @@
 <?php
 
+/** @var \Kirby\Cms\App $kirby */
+
 return function () use ($kirby) {
     return [
         'component' => 'SettingsView',

@@ -1,12 +1,12 @@
 <template>
   <k-box
-    v-if="tabs.length === 0"
+    v-if="tab.columns.length === 0"
     :text="empty"
     theme="info"
   />
   <k-grid v-else class="k-sections" gutter="large">
     <k-column
-      v-for="(column, columnIndex) in currentTab.columns"
+      v-for="(column, columnIndex) in tab.columns"
       :key="parent + '-column-' + columnIndex"
       :width="column.width"
       :sticky="column.sticky"
@@ -40,13 +40,9 @@ export default {
     empty: String,
     blueprint: String,
     parent: String,
-    tab: String,
-    tabs: Array,
+    tab: Object
   },
   computed: {
-    currentTab() {
-      return this.tabs.find(tab => tab.name === this.tab) || this.tabs[0] || {};
-    },
     content() {
       return this.$store.getters["content/values"]();
     }

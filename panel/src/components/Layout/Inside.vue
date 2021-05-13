@@ -2,7 +2,6 @@
   <div
     :data-dragging="$store.state.drag"
     :data-loading="$store.state.isLoading"
-    :data-route="$route.name"
     :data-translation="translation"
     :data-translation-default="defaultTranslation"
     :dir="$translation.direction"
@@ -12,12 +11,15 @@
     <!-- Header -->
     <header class="k-panel-header">
       <k-topbar
+        :breadcrumb="$view.breadcrumb"
+        :license="$system.license"
+        :views="$views"
+        :view="$view"
         @register="$refs.registration.open()"
         @search="$refs.search.open();"
       />
 
       <k-search
-        v-if="inside"
         ref="search"
         :types="searchTypes"
       />
@@ -76,6 +78,12 @@ export default {
     },
     searchTypes() {
       return search(this);
+    },
+    translation() {
+      return this.$language ? this.$language.code : null;
+    },
+    defaultTranslation() {
+      return this.$language ? this.$language.default : false;
     }
   },
   watch: {

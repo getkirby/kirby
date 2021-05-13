@@ -17,12 +17,12 @@
         </k-link>
       </k-text>
       <div v-else>
-        <k-headline v-if="!system.isInstalled">
+        <k-headline v-if="!isInstalled">
           {{ $t("installation.issues.headline") }}
         </k-headline>
 
         <ul class="k-installation-issues">
-          <li v-if="system.isInstallable === false">
+          <li v-if="isInstallable === false">
             <k-icon type="alert" />
             <!-- eslint-disable-next-line vue/no-v-html -->
             <span v-html="$t('installation.disabled')" />
@@ -77,7 +77,7 @@
           </li>
         </ul>
 
-        <k-button icon="refresh" @click="check">
+        <k-button icon="refresh" @click="$reload">
           {{ $t('retry') }}
         </k-button>
       </div>

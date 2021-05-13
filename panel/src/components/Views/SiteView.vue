@@ -6,6 +6,8 @@
     >
       <k-header
         :editable="permissions.changeTitle && !isLocked"
+        :tabs="tabs"
+        :tab="tab.name"
         @edit="$refs.rename.open()"
       >
         {{ site.title }}
@@ -25,10 +27,9 @@
       </k-header>
 
       <k-sections
-        :blueprint="site.blueprint.name"
+        :blueprint="blueprint"
         :empty="$t('site.blueprint')"
         :tab="tab"
-        :tabs="tabs"
         parent="site"
         @submit="$emit('submit', $event)"
       />
@@ -39,7 +40,7 @@
 </template>
 
 <script>
-import ModelView from "./ModelView";
+import ModelView from "./ModelView.vue";
 
 export default {
   extends: ModelView,

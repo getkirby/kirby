@@ -45,7 +45,7 @@
         </template>
       </k-header>
 
-      <template v-if="users.length > 0">
+      <template v-if="users.data.length > 0">
         <k-collection
           :items="items"
           :pagination="users.pagination"
@@ -53,7 +53,7 @@
           @action="action"
         />
       </template>
-      <template v-else-if="total === 0">
+      <template v-else-if="users.pagination.total === 0">
         <k-empty icon="users">
           {{ $t("role.empty") }}
         </k-empty>
