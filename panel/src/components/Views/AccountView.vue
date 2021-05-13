@@ -1,5 +1,5 @@
 <script>
-import UserView from "./UserView";
+import UserView from "./UserView.vue";
 
 export default {
   extends: UserView,

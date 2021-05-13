@@ -79,6 +79,8 @@ class User extends Model
      */
     public function translation()
     {
-        return $this->kirby()->translation($this->language()) ?? $this->kirby()->translation('en');
+        $kirby = $this->model->kirby();
+        $lang  = $this->model->language();
+        return $kirby->translation($lang) ?? $kirby->translation('en');
     }
 }
