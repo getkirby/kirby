@@ -1,12 +1,4 @@
 
-export class TranslationString extends String {
-  toString() {
-    const app   = window.panel.app;
-    const value = this.valueOf();
-    return app ? app.$t(value) : value;
-  }
-}
-
 export default {
   camelToKebab(string) {
     return string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();

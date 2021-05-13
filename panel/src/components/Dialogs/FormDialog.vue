@@ -18,7 +18,6 @@
 
 <script>
 import DialogMixin from "@/mixins/dialog.js";
-import { TranslationString } from '@/helpers/string.js'
 
 export default {
   mixins: [DialogMixin],
@@ -40,7 +39,7 @@ export default {
     submitButton: {
       type: [String, Boolean],
       default() {
-        return new TranslationString("save")
+        return window.panel.$t("save")
       }
     },
     theme: {

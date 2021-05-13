@@ -3,11 +3,11 @@ import { App, plugin } from '@inertiajs/inertia-vue'
 import Api from "./config/api.js";
 import Events from "./config/events.js";
 import Helpers from "./helpers/index.js";
+import { TranslationString } from "./helpers/i18n";
 import Vuelidate from "vuelidate";
 import VuePortal from "@linusborg/vue-simple-portal";
 
 import store from "./store/store.js";
-import str from "./helpers/string.js";
 
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
@@ -77,14 +77,7 @@ new Vue({
           Vue.prototype.$permissions = window.panel.$permissions = props.$permissions;
           Vue.prototype.$system      = window.panel.$system      = props.$system;
           Vue.prototype.$translation = window.panel.$translation = props.$translation;
-          Vue.prototype.$t            = window.panel.$views      = (key, data) => {
-            if (typeof key !== 'string') {
-              return;
-            }
-          
-            const string = window.panel.$translation.data[key];
-            return str.template(string, data);
-          }
+          Vue.prototype.$t            = window.panel.$t          = (key, data) => TranslationString.create(key, data);
           Vue.prototype.$urls        = window.panel.$urls        = props.$urls;
           Vue.prototype.$user        = window.panel.$user        = props.$user;
           Vue.prototype.$view        = window.panel.$view        = props.$view;
