@@ -1,9 +1,9 @@
 
-export default function ($this) {
-  const defaultLanguage = $this.$store.state.languages.default || null;
-  const language = $this.$store.state.languages.current || null;
-  const multilang = $this.$store.state.system.info.multilang || false;
-  const userLanguage = $this.$store.state.system.info.user ? $this.$store.state.system.info.user.language : null;
+export default function (app) {
+  const defaultLanguage = app.$languages.default || null;
+  const language = app.$languages.current || null;
+  const multilang = app.$system.multilang || false;
+  const userLanguage = app.$user ? app.$user.language : null;
   const direction = language ? language.direction : null;
 
   /**
@@ -18,7 +18,7 @@ export default function ($this) {
   if (
       multilang &&
       language &&
-      $this.disabled === false &&
+      app.disabled === false &&
       (
           language.direction !== defaultLanguage.direction ||
           userLanguage !== language.code
