@@ -40,6 +40,12 @@ document.addEventListener("inertia:start", () => {
   store.dispatch("isLoading", true);
 });
 
+document.addEventListener("inertia:finish", () => {
+  if (Vue.$api.requests.length === 0) {
+    store.dispatch("isLoading", false);
+  }
+});
+
 new Vue({
   store,
   created() {
