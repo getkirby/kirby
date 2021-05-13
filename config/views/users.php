@@ -16,7 +16,7 @@ return function (string $role = null) use ($kirby) {
                     ];
                 }
             },
-            'roles' => Inertia::collect($roles, function ($role) {
+            'roles' => Inertia::toValues($roles, function ($role) {
                 return [
                     'id'    => $role->id(),
                     'title' => $role->title(),

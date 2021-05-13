@@ -6,7 +6,7 @@ return function () use ($kirby) {
     return [
         'component' => 'SettingsView',
         'props' => [
-            'languages' => Inertia::collect($kirby->languages(), function ($language) {
+            'languages' => Inertia::toValues($kirby->languages(), function ($language) {
                 return [
                     'default' => $language->isDefault(),
                     'icon' => [

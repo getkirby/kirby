@@ -2,8 +2,6 @@
 
 
 return function ($kirby) {
-    Inertia::setup($kirby);
-
     // Panel is not installed yet
     if (
         $kirby->system()->isOk() === false ||

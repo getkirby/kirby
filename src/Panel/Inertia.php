@@ -4,12 +4,13 @@ namespace Kirby\Panel;
 
 use Closure;
 use Kirby\Cms\App;
+use Kirby\Cms\File;
 use Kirby\Cms\Form;
+use Kirby\Cms\Pagination;
 use Kirby\Cms\User;
 use Kirby\Http\Response;
 use Kirby\Http\Url;
 use Kirby\Toolkit\Collection;
-use Kirby\Toolkit\Pagination;
 use Kirby\Toolkit\Str;
 
 /**
@@ -25,14 +26,43 @@ use Kirby\Toolkit\Str;
  */
 class Inertia
 {
+    /**
+     * Kirby app instance
+     *
+     * @var \Kirby\Cms\App
+     */
+    public static $kirby;
+
+    /**
+     * Current request
+     *
+     * @var \Kirby\Http\Request
+     */
     public static $request;
+
+    /**
+     * Callback function to lazily return
+     * information shared across the Panel
+     * app
+     *
+     * @var \Closure
+     */
     public static $shared;
+
+    /**
+     * Version hash of Kirby installation
+     *
+     * @var string
+     */
     public static $version;
 
-    public static $view;
+    /**
+     * General views definitions
+     *
+     * @var array
+     */
     public static $views;
 
-    public static $kirby;
 
     /**
      * Returns the avatar URL for a user
@@ -51,37 +81,24 @@ class Inertia
     }
 
     /**
-     * Returns all Collection values after applying a Clouse
-     * to each Collection item
-     *
-     * @param \Kirby\Toolkit\Collection $collection
-     * @param Closure $map
-     * @return array
-     */
-    public static function collect(Collection $collection, Closure $map): array
-    {
-        return array_values($collection->toArray($map));
-    }
-
-    /**
-     * Retrieve an array from a provided Collection -
-     * either directly the values or paginated
+     * Retrieve a data array for the Collection -
+     * either directly as array of values or paginated
      *
      * @param \Kirby\Toolkit\Collection $collection
      * @param Closure $map
      * @param array|null $pagination
-     * @return araay
+     * @return array
      */
     public static function collection(Collection $collection, Closure $map, ?array $pagination = null): array
     {
         if (empty($pagination) === true) {
-            return static::collect($collection, $map);
+            return static::toValues($collection, $map);
         }
 
         $collection = $collection->paginate($pagination);
 
         return [
-            'data'       => static::collect($collection, $map),
+            'data'       => static::toValues($collection, $map),
             'pagination' => static::pagination($collection->pagination())
         ];
     }
@@ -101,8 +118,7 @@ class Inertia
      * Renders the error view with provided message
      *
      * @param string|array $message
-     * @todo: actual return type
-     * @return void
+     * @return \Kirby\Http\Response
      */
     public static function error($message)
     {
@@ -115,6 +131,14 @@ class Inertia
         ]);
     }
 
+    /**
+     * Returns array of view information for
+     * the file. If file does not exist, returns
+     * erro string
+     *
+     * @param mixed $file
+     * @return array|string
+     */
     public static function file($file)
     {
         if (!$file) {
@@ -143,17 +167,17 @@ class Inertia
                     'template'   => $file->template(),
                     'type'       => $file->type(),
                 ],
-                'next' => function () use ($file, $siblings) {
+                'next' => function () use ($file, $siblings): ?array {
                     $next = $siblings->nth($siblings->indexOf($file) + 1);
                     return Inertia::prevnext($next, 'filename');
                 },
-                'prev' => function () use ($file, $siblings) {
+                'prev' => function () use ($file, $siblings): ?array {
                     $prev = $siblings->nth($siblings->indexOf($file) - 1);
                     return Inertia::prevnext($prev, 'filename');
                 },
             ]),
             'view' => [
-                'breadcrumb' => function () use ($file, $parent, $type) {
+                'breadcrumb' => function () use ($file, $parent, $type): array {
                     switch ($type) {
                         case 'site':
                             $breadcrumb = [];
@@ -167,7 +191,7 @@ class Inertia
                             ];
                             break;
                         case 'page':
-                            $breadcrumb = static::collect($file->parents()->flip(), function ($parent) {
+                            $breadcrumb = static::toValues($file->parents()->flip(), function ($parent) {
                                 return [
                                     'label' => $parent->title()->toString(),
                                     'link'  => $parent->panelUrl(true),
@@ -189,6 +213,12 @@ class Inertia
         ];
     }
 
+    /**
+     * Creates json response for Inertia
+     *
+     * @param array $response
+     * @return \Kirby\Http\Response
+     */
     public static function json(array $response = [])
     {
         return Response::json($response, null, null, [
@@ -197,7 +227,32 @@ class Inertia
         ]);
     }
 
-    public static function model($model, array $merge = [])
+    /**
+     * Resolves lazy props
+     *
+     * @param array $props
+     * @return array
+     */
+    public static function lazy(array $props): array
+    {
+        array_walk_recursive($props, function (&$prop) {
+            if (is_a($prop, Closure::class)) {
+                $prop = $prop();
+            }
+        });
+
+        return $props;
+    }
+
+    /**
+     * Merges blueprint and tab information
+     * for the model into the array
+     *
+     * @param \Kirby\Cms\ModelWithContent $model
+     * @param array $merge
+     * @return array
+     */
+    public static function model($model, array $merge = []): array
     {
         $blueprint = $model->blueprint();
         $tabs      = $blueprint->tabs();
@@ -214,6 +269,13 @@ class Inertia
         ], $merge);
     }
 
+    /**
+     * Creates pagination array for
+     * API response
+     *
+     * @param \Kirby\Toolkit\Pagination $pagination
+     * @return array
+     */
     public static function pagination(Pagination $pagination): array
     {
         return [
@@ -223,11 +285,19 @@ class Inertia
         ];
     }
 
+    /**
+     * Returns prevnext information
+     * for model
+     *
+     * @param \Kirby\Cms\ModelWithContent|null $model
+     * @param string $tooltip
+     * @return array|null
+     */
     public static function prevnext($model = null, $tooltip = 'title'): ?array
     {
         if ($model) {
             return [
-                'link'    => $model->panelUrl(true),
+                'link'    => $model->panel()->url(true),
                 'tooltip' => (string)$model->$tooltip()
             ];
         }
@@ -235,15 +305,115 @@ class Inertia
         return null;
     }
 
-    public static function props(string $component, array $props = [])
+    /**
+     * Creates props array for the component
+     *
+     * @param string $component
+     * @param array $props
+     * @return array
+     */
+    public static function props(string $component, array $props = []): array
     {
-        // Merge with shared props
-        $props = array_merge(call_user_func(static::$shared), $props);
+        $kirby = static::$kirby;
 
-        // Partial request
+        // merge with shared props
+        $shared = [
+            '$config' => [
+                'debug'     => $kirby->option('debug'),
+                'kirbytext' => $kirby->option('panel.kirbytext', true),
+                'search'    => [
+                    'limit' => $kirby->option('panel.search.limit', 10),
+                    'type'  => $kirby->option('panel.search.type', 'pages')
+                ],
+                'translation' => $kirby->option('panel.language', 'en'),
+            ],
+            '$language' => function () use ($kirby) {
+                if (
+                    $kirby->option('languages') === true &&
+                    $language = $kirby->language()
+                ) {
+                    return [
+                        'code' => $language->code(),
+                        'name' => $language->name(),
+                    ];
+                }
+            },
+            '$languages' => function () use ($kirby): array {
+                if ($kirby->option('languages') === true) {
+                    return static::toValues($kirby->languages(), function ($language) {
+                        return [
+                            'code'    => $language->code(),
+                            'default' => $language->isDefault(),
+                            'name'    => $language->name(),
+                        ];
+                    });
+                }
+
+                return [];
+            },
+            '$permissions' => function () use ($kirby) {
+                if ($user = $kirby->user()) {
+                    return $user->role()->permissions()->toArray();
+                }
+            },
+            '$props' => [],
+            '$system' => [
+                'ascii'     => Str::$ascii,
+                'csrf'      => $kirby->option('api.csrf') ?? csrf(),
+                'isLocal'   => $kirby->system()->isLocal(),
+                'license'   => $kirby->system()->license(),
+                'multilang' => $kirby->option('languages', false) !== false,
+                'slugs'     => Str::$language,
+            ],
+            '$translation' => function () use ($kirby) {
+                if ($user = $kirby->user()) {
+                    $translation = $kirby->translation($user->language());
+                } else {
+                    $translation = $kirby->translation($kirby->option('panel.language', 'en'));
+                }
+
+                if (!$translation) {
+                    $translation = $kirby->translation('en');
+                }
+
+                return [
+                    'code'      => $translation->code(),
+                    'data'      => $translation->dataWithFallback(),
+                    'direction' => $translation->direction(),
+                    'name'      => $translation->name(),
+                ];
+            },
+            '$urls' => [
+                'api'  => $kirby->url('api'),
+                'site' => $kirby->url('index')
+            ],
+            '$user' => function () use ($kirby) {
+                if ($user = $kirby->user()) {
+                    return [
+                        'email'       => $user->email(),
+                        'id'          => $user->id(),
+                        'language'    => $user->language(),
+                        'permissions' => $user->role()->permissions()->toArray(),
+                        'role'        => $user->role()->id(),
+                        'username'    => $user->username(),
+                    ];
+                }
+
+                return null;
+            },
+            '$views' => static::$views
+        ];
+
+        $props = array_merge($shared, $props);
+
+        // is it a partial request?
         $only = Str::split(static::$request->header('X-Inertia-Partial-Data'));
 
-        if (empty($only) === false && static::$request->header('X-Inertia-Partial-Component') === $component) {
+        // only include new props in array, if partial request
+        if (
+            empty($only) === false &&
+            static::$request->header('X-Inertia-Partial-Component') === $component
+        ) {
             foreach ($props as $key => $value) {
                 if (in_array($key, $only) === false) {
                     unset($props[$key]);
@@ -251,30 +421,47 @@ class Inertia
             }
         }
 
-        // Call Lazy Props
-        array_walk_recursive($props, function (&$prop) {
-            if (is_a($prop, Closure::class)) {
-                $prop = $prop();
-            }
-        });
-
-        return $props;
+        // resolve lazy props
+        return static::lazy($props);
     }
 
+    /**
+     * Render the request
+     *
+     * @param string $component
+     * @param array $props
+     * @return \Kirby\Http\Response
+     */
     public static function render(string $component, array $props = [])
     {
+        // prepare props
         $props    = static::props($component, $props);
-        $response = static::response($component, $props);
-        $json     = static::$request->header('X-Inertia') || static::$request->get('json');
 
-        if (static::$request->method() === 'GET' && $json) {
+        // prepare response
+        $response = static::response($component, $props);
+
+        // is JSON required?
+        if (
+            static::$request->method() === 'GET' &&
+            (
+                static::$request->header('X-Inertia') ||
+                static::$request->get('json')
+            )
+        ) {
             return static::json($response);
         }
 
-        return call_user_func(static::$view, $response);
+        return Panel::render(static::$kirby, $response);
     }
 
-    public static function response(string $component, array $props = [])
+    /**
+     * Creates $inertia response array
+     *
+     * @param string $component
+     * @param array $props
+     * @return array
+     */
+    public static function response(string $component, array $props = []): array
     {
         // inject the inertia config as props
         $props['$component'] = $component;
@@ -289,168 +476,32 @@ class Inertia
         ];
     }
 
-    public static function setup(App $kirby)
+    /**
+     * Returns all values of a Collection
+     * by applying a Closure to each item
+     *
+     * @param \Kirby\Toolkit\Collection $collection
+     * @param Closure $map
+     * @return array
+     */
+    public static function toValues(Collection $collection, Closure $map): array
     {
-        Pagination::$validate = false;
-
-        static::$kirby   = $kirby;
-        static::$request = $kirby->request();
-        static::$version = $kirby->versionHash();
-
-        static::$view = function ($inertia) use ($kirby) {
-            return Panel::render($kirby, $inertia);
-        };
-
-        static::$views = [
-            'site' => [
-                'breadcrumbLabel' => $kirby->site()->title()->or(t('view.site'))->toString(),
-                'icon'            => 'home',
-                'id'              => 'site',
-                'label'           => t('view.site'),
-                'link'            => 'site',
-                'menu'            => true,
-                'search'          => 'pages'
-            ],
-            'users' => [
-                'icon'   => 'users',
-                'id'     => 'users',
-                'label'  => t('view.users'),
-                'link'   => 'users',
-                'menu'   => true,
-                'search' => 'users'
-            ],
-            'settings' => [
-                'icon'  => 'settings',
-                'id'    => 'settings',
-                'label' => t('view.settings'),
-                'menu'  => true,
-                'link'  => 'settings'
-            ],
-            'account' => [
-                'icon'   => 'account',
-                'id'     => 'account',
-                'label'  => t('view.account'),
-                'link'   => 'account',
-                'menu'   => false,
-                'search' => 'users'
-            ],
-            'error' => [
-                'icon'  => 'alert',
-                'id'    => 'error',
-                'label' => 'Error',
-                'menu'  => false,
-                'link'  => 'error'
-            ],
-            'installation' => [
-                'icon'  => 'settings',
-                'id'    => 'installation',
-                'label' => t('view.installation'),
-                'menu'  => false,
-                'link'  => 'installation'
-            ],
-            'login' => [
-                'icon'  => 'user',
-                'id'    => 'login',
-                'label' => t('login'),
-                'menu'  => false,
-                'link'  => 'login'
-            ]
-        ];
-
-        static::$shared = function () use ($kirby) {
-            return [
-                '$config' => [
-                    'debug'     => $kirby->option('debug'),
-                    'kirbytext' => $kirby->option('panel.kirbytext', true),
-                    'search'    => [
-                        'limit' => $kirby->option('panel.search.limit', 10),
-                        'type'  => $kirby->option('panel.search.type', 'pages')
-                    ],
-                    'translation' => $kirby->option('panel.language', 'en'),
-                ],
-                '$language' => function () use ($kirby) {
-                    if (
-                        $kirby->option('languages') === true &&
-                        $language = $kirby->language()
-                    ) {
-                        return [
-                            'code' => $language->code(),
-                            'name' => $language->name(),
-                        ];
-                    }
-                },
-                '$languages' => function () use ($kirby): array {
-                    if ($kirby->option('languages') === true) {
-                        return static::collect($kirby->languages(), function ($language) {
-                            return [
-                                'code'    => $language->code(),
-                                'default' => $language->isDefault(),
-                                'name'    => $language->name(),
-                            ];
-                        });
-                    }
-
-                    return [];
-                },
-                '$permissions' => function () use ($kirby) {
-                    if ($user = $kirby->user()) {
-                        return $user->role()->permissions()->toArray();
-                    }
-                },
-                '$props' => [],
-                '$system' => [
-                    'ascii'     => Str::$ascii,
-                    'csrf'      => $kirby->option('api.csrf') ?? csrf(),
-                    'isLocal'   => $kirby->system()->isLocal(),
-                    'license'   => $kirby->system()->license(),
-                    'multilang' => $kirby->option('languages', false) !== false,
-                    'slugs'     => Str::$language,
-                ],
-                '$translation' => function () use ($kirby) {
-                    if ($user = $kirby->user()) {
-                        $translation = $kirby->translation($user->language());
-                    } else {
-                        $translation = $kirby->translation($kirby->option('panel.language', 'en'));
-                    }
-
-                    if (!$translation) {
-                        $translation = $kirby->translation('en');
-                    }
-
-                    return [
-                        'code'      => $translation->code(),
-                        'data'      => $translation->dataWithFallback(),
-                        'direction' => $translation->direction(),
-                        'name'      => $translation->name(),
-                    ];
-                },
-                '$urls' => [
-                    'api'  => $kirby->url('api'),
-                    'site' => $kirby->url('index')
-                ],
-                '$user' => function () use ($kirby) {
-                    if ($user = $kirby->user()) {
-                        return [
-                            'email'       => $user->email(),
-                            'id'          => $user->id(),
-                            'language'    => $user->language(),
-                            'permissions' => $user->role()->permissions()->toArray(),
-                            'role'        => $user->role()->id(),
-                            'username'    => $user->username(),
-                        ];
-                    }
-
-                    return null;
-                },
-                '$views' => static::$views
-            ];
-        };
+        return array_values($collection->toArray($map));
     }
 
+    /**
+     * Creates view array
+     *
+     * @param string $id
+     * @param array $props
+     * @return array
+     */
     public static function view(string $id, array $props = []): array
     {
+        // get view-specific defaults
         $view = static::$views[$id] ?? static::$views['site'];
 
+        // create default array
         $defaults = [
             'breadcrumb'      => $props['breadcrumb'] ?? [],
             'breadcrumbLabel' => $view['breadcrumbLabel'] ?? $view['label'],
@@ -458,12 +509,71 @@ class Inertia
             'id'              => $view['id'],
             'label'           => $view['label'],
             'link'            => $view['link'],
-            'menu'            => $view['menu'],
+            'menu'            => $view['menu'] ?? true,
             'path'            => static::$kirby->request()->path()->slice(1)->toString(),
-            'search'          => static::$kirby->option('panel.search.type', 'pages'),
+            'search'          => $view['search'] ?? static::$kirby->option('panel.search.type', 'pages'),
             'title'           => $view['label'],
         ];
 
-        return array_replace_recursive($defaults, $props);
+        // merge props with defaults
+        $props = array_replace_recursive($defaults, $props);
+
+        // resolve lazy props
+        return static::lazy($props);
     }
 }
+
+Inertia::$views = [
+    'site' => [
+        'breadcrumbLabel' => function () {
+            return Inertia::$kirby->site()->title()->or(t('view.site'))->toString();
+        },
+        'icon'            => 'home',
+        'id'              => 'site',
+        'label'           => t('view.site'),
+        'link'            => 'site',
+        'search'          => 'pages'
+    ],
+    'users' => [
+        'icon'   => 'users',
+        'id'     => 'users',
+        'label'  => t('view.users'),
+        'link'   => 'users',
+        'search' => 'users'
+    ],
+    'settings' => [
+        'icon'  => 'settings',
+        'id'    => 'settings',
+        'label' => t('view.settings'),
+        'link'  => 'settings'
+    ],
+    'account' => [
+        'icon'   => 'account',
+        'id'     => 'account',
+        'label'  => t('view.account'),
+        'link'   => 'account',
+        'menu'   => false,
+        'search' => 'users'
+    ],
+    'error' => [
+        'icon'  => 'alert',
+        'id'    => 'error',
+        'label' => 'Error',
+        'menu'  => false,
+        'link'  => 'error'
+    ],
+    'installation' => [
+        'icon'  => 'settings',
+        'id'    => 'installation',
+        'label' => t('view.installation'),
+        'menu'  => false,
+        'link'  => 'installation'
+    ],
+    'login' => [
+        'icon'  => 'user',
+        'id'    => 'login',
+        'label' => t('login'),
+        'menu'  => false,
+        'link'  => 'login'
+    ]
+];

@@ -12,7 +12,7 @@ return function () use ($kirby) {
             'isInstalled'   => $system->isInstalled(),
             'isOk'          => $system->isOk(),
             'requirements'  => $system->status(),
-            'translations'  => Inertia::collect($kirby->translations(), function ($translation) {
+            'translations'  => Inertia::toValues($kirby->translations(), function ($translation) {
                 return [
                     'text'  => $translation->name(),
                     'value' => $translation->code(),

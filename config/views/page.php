@@ -46,7 +46,7 @@ return function (string $path) use ($kirby) {
         ]),
         'view' => [
             'breadcrumb' => function () use ($page) {
-                return Inertia::collect($page->parents()->flip()->merge($page), function ($parent) {
+                return Inertia::toValues($page->parents()->flip()->merge($page), function ($parent) {
                     return [
                         'label' => $parent->title()->toString(),
                         'link'  => $parent->panel()->url(true),

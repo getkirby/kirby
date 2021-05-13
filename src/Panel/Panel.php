@@ -9,6 +9,7 @@ use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Pagination;
 use Kirby\Toolkit\View;
 use Throwable;
 
@@ -223,6 +224,13 @@ class Panel
         if ($kirby->option('panel') === false) {
             return false;
         }
+
+        // set up Inertia
+        Pagination::$validate = false;
+
+        Inertia::$kirby   = $kirby;
+        Inertia::$request = $kirby->request();
+        Inertia::$version = $kirby->versionHash();
 
         // load all Panel routes
         $routes = (require $kirby->root('kirby') . '/config/panel.php')($kirby);
