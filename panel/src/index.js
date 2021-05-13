@@ -1,3 +1,5 @@
+import "vite/dynamic-import-polyfill"
+
 import Vue from "vue";
 import { App, plugin } from '@inertiajs/inertia-vue'
 import Api from "./config/api.js";
@@ -31,20 +33,11 @@ Vue.prototype.$go = function (path, options) {
   this.$inertia.visit(this.$url(path), options);
 };
 
-Vue.prototype.$reload = function(options) {
-  Vue.prototype.$inertia.reload(options);
-};
+Vue.prototype.$reload = (options)   =>  Vue.prototype.$inertia.reload(options);
+Vue.prototype.$url    = (path = "") => base.href + path.replace(/^\//, "");
 
-Vue.prototype.$url = function (path = "") {
-  return base.href + path.replace(/^\//, "");
-};
-
-document.addEventListener("inertia:visit", function () {
+document.addEventListener("inertia:start", () => {
   store.dispatch("isLoading", true);
-});
-
-document.addEventListener("inertia:load", function () {
-  store.dispatch("isLoading", false);
 });
 
 new Vue({

@@ -26,6 +26,7 @@ export default defineConfig({
     "process.env.BUILD": JSON.stringify("production")
   },
   build: {
+    cssCodeSplit: false,
     rollupOptions: {
       input: '/src/index.js',
       output: {
