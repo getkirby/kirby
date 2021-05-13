@@ -39,7 +39,6 @@
 
           <template #right>
             <k-prev-next
-              v-if="file.id"
               :prev="prev"
               :next="next"
             />
@@ -47,9 +46,9 @@
         </k-header>
 
         <k-sections
-          :blueprint="file.blueprint.name"
-          :empty="$t('file.blueprint', { template: file.blueprint.name })"
-          :parent="parent"
+          :blueprint="blueprint"
+          :empty="$t('file.blueprint', { template: blueprint.name })"
+          :parent="path"
           :tab="tab"
         />
 
@@ -90,8 +89,11 @@ export default {
         ready(options);
       };
     },
+    path() {
+      return this.file.parent + "/files/" + this.file.filename;
+    },
     uploadApi() {
-      return this.$urls.api + "/" + this.file.parent + "/files/" + this.file.filename;
+      return this.$urls.api + "/" + this.path;
     },
   },
   watch: {
@@ -123,14 +125,14 @@ export default {
           break;
       }
     },
-    onDeleted() {
+    onDelete() {
       if (this.file.parent) {
         this.$go('/' + this.file.parent);
       } else {
         this.$go('/site');
       }
     },
-    onRenam(file) {
+    onRename(file) {
       if (file.filename !== this.file.filename) {
         this.$go(this.$api.files.link(this.file.parent, file.filename));
       }
