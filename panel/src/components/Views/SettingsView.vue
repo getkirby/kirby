@@ -15,8 +15,8 @@
             <dl>
               <dt>{{ $t('license') }}</dt>
               <dd>
-                <template v-if="license">
-                  {{ license }}
+                <template v-if="$system.license">
+                  {{ $system.license }}
                 </template>
                 <p v-else>
                   <strong class="k-system-unregistered">{{ $t('license.unregistered') }}</strong>
@@ -27,19 +27,19 @@
           <li>
             <dl>
               <dt>{{ $t('version') }}</dt>
-              <dd>{{ $store.state.system.info.version }}</dd>
+              <dd>{{ version }}</dd>
             </dl>
           </li>
         </ul>
       </section>
 
-      <section v-if="multilang" class="k-languages">
+      <section v-if="$system.multilang" class="k-languages">
         <template v-if="languages.length > 0">
           <section class="k-languages-section">
             <header>
               <k-headline>{{ $t('languages.default') }}</k-headline>
             </header>
-            <k-collection :items="defaultLanguage" @action="action" />
+            <k-collection :items="primaryLanguage" @action="action" />
           </section>
 
           <section class="k-languages-section">
@@ -49,7 +49,11 @@
                 {{ $t('language.create') }}
               </k-button>
             </header>
-            <k-collection v-if="translations.length" :items="translations" @action="action" />
+            <k-collection 
+              v-if="secondaryLanguages.length" 
+              :items="secondaryLanguages" 
+              @action="action"
+            />
             <k-empty v-else icon="globe" @click="$refs.create.open()">
               {{ $t('languages.secondary.empty') }}
             </k-empty>
