@@ -2,10 +2,7 @@
 
 /** @var \Kirby\Cms\App $kirby */
 
-use Kirby\Cms\Form;
-
 return function (string $id) use ($kirby) {
-
     if (!$user = $kirby->user($id)) {
         return t('error.user.undefined');
     }
@@ -37,5 +34,4 @@ return function (string $id) use ($kirby) {
             'title' => $user->username(),
         ]
     ];
-
 };
