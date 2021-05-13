@@ -23,7 +23,7 @@ return function (string $path) use ($kirby) {
             'page' => [
                 'content'    => Inertia::content($page),
                 'id'         => $page->id(),
-                'parent'     => $page->parentModel()->panelUrl(true),
+                'parent'     => $page->parentModel()->panel()->url(true),
                 'previewUrl' => $page->previewUrl(),
                 'status'     => $page->status(),
                 'title'      => $page->title()->toString(),
@@ -49,7 +49,7 @@ return function (string $path) use ($kirby) {
                 return Inertia::collect($page->parents()->flip()->merge($page), function ($parent) {
                     return [
                         'label' => $parent->title()->toString(),
-                        'link'  => $parent->panelUrl(true),
+                        'link'  => $parent->panel()->url(true),
                     ];
                 });
             },
