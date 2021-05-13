@@ -9,16 +9,16 @@
       <k-icon type="alert" />
     </div>
 
-    <k-user-info :user="$store.state.user.pendingEmail" />
+    <k-user-info :user="pending.email" />
 
     <k-text-field
       v-model="code"
       :autofocus="true"
       :counter="false"
-      :help="$t('login.code.text.' + $store.state.user.pendingChallenge)"
+      :help="$t('login.code.text.' + pending.challenge)"
       :label="$t('login.code.label.' + mode)"
       :novalidate="true"
-      :placeholder="$t('login.code.placeholder.' + $store.state.user.pendingChallenge)"
+      :placeholder="$t('login.code.placeholder.' + pending.challenge)"
       :required="true"
       autocomplete="one-time-code"
       icon="unlock"
@@ -52,6 +52,10 @@
 
 <script>
 export default {
+  props: {
+    methods: Array,
+    pending: Object
+  },
   data() {
     return {
       code: "",
@@ -62,18 +66,18 @@ export default {
   },
   computed: {
     mode() {
-      if (this.$store.state.system.info.loginMethods.includes("password-reset") === true) {
+      if (this.methods.includes("password-reset") === true) {
         return "password-reset";
-      } else {
-        return "login";
       }
+
+      return "login";
     }
   },
   methods: {
     async back() {
       this.isLoadingBack = true;
       await this.$store.dispatch("user/logout");
-      this.isLoadingBack = false;
+      this.$reload();
     },
     async login() {
       this.issue          = null;
@@ -87,9 +91,9 @@ export default {
         }
 
         this.$store.dispatch("user/login", result.user);
-        await this.$store.dispatch("system/load", true);
-
         this.$store.dispatch("notification/success", this.$t("welcome"));
+        this.$reload();
+
       } catch (error) {
         this.issue = error.message;
       } finally {

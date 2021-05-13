@@ -1,10 +1,10 @@
 <template>
   <k-outside>
     <k-view v-if="form === 'login'" align="center" class="k-login-view">
-      <k-login-plugin />
+      <k-login-plugin :methods="methods" />
     </k-view>
     <k-view v-else-if="form === 'code'" align="center" class="k-login-code-view">
-      <k-login-code />
+      <k-login-code v-bind="$props" />
     </k-view>
   </k-outside>
 </template>
@@ -16,12 +16,15 @@ export default {
   components: {
     "k-login-plugin": window.panel.plugins.login || LoginForm
   },
+  props: {
+    methods: Array,
+    pending: Object
+  },
   computed: {
     form() {
-      // TODO: fix this
-      // if (this.$user.pendingEmail) {
-      //   return "code";
-      // }
+      if (this.pending.email) {
+        return "code";
+      }
       
       if (!this.$user) {
         return "login";
