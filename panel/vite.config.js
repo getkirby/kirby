@@ -35,6 +35,9 @@ export default defineConfig({
       }
     },
   },
+  optimizeDeps: {
+    entries: "src/**/*.{js,vue}"
+  },
   css: {
     postcss: {
       plugins: [
