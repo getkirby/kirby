@@ -311,9 +311,8 @@ class Form
     }
 
     /**
-     * Updates the field props of fields that must no be
-     * translated to be disabled when in multilang setup
-     * and not in the default language
+     * Disables fields in secondary languages when
+     * they are configured to be untranslatable
      *
      * @param array $fields
      * @param string|null $language
@@ -321,9 +320,10 @@ class Form
      */
     protected static function prepareFieldsForLanguage(array $fields, ?string $language = null): array
     {
-        $kirby = App::instance();
+        $kirby = App::instance(null, true);
 
-        if ($kirby->multilang() === false) {
+        // only modify the fields if we have a valid Kirby multilang instance
+        if (!$kirby || $kirby->multilang() === false) {
             return $fields;
         }
 
