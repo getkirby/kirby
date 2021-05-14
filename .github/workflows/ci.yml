@@ -1,5 +1,5 @@
 name: CI
-on: [push, pull_request]
+on: [ push, pull_request ]
 
 jobs:
   backend-tests:
@@ -21,39 +21,39 @@ jobs:
 
     steps:
       - name: Checkout Kirby
-        uses: actions/checkout@v2
+        uses: actions/checkout@f1d3225b5376a0791fdee5a0e8eac5289355e43a # pin@v2
         with:
           fetch-depth: 2
 
       - name: Install memcached
-        uses: niden/actions-memcached@v7
+        uses: niden/actions-memcached@3b3ecd9d0d035ea92db716dc1540a7dbe9e56349 # pin@v7
 
       - name: Install system locales
         run: sudo apt-get update && sudo apt-get install -y locales-all
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@v1
+        uses: shivammathur/cache-extensions@fd2695d35c6a2d131a586986d11f1e390c33c77d # pin@v1
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           key: php-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@v2
+        uses: actions/cache@1c6fb82ebbd610035c324e764e5e74d0e82f8a60 # pin@v2
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@27fc7bb418e73a1462a5604e3ea30e58ec1a6e1f # pin@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.ini }}
           coverage: pcov
-          tools: phpunit:^9
+          tools: phpunit:9.5.4
 
       - name: Setup problem matchers
         id: finishPrepare
@@ -66,7 +66,7 @@ jobs:
         run: phpunit --coverage-clover ${{ github.workspace }}/clover.xml
 
       - name: Upload coverage results to Codecov
-        uses: codecov/codecov-action@v1
+        uses: codecov/codecov-action@a1ed4b322b4b38cb846afb5a0ebfa17086917d27 # pin@v1
         with:
           fail_ci_if_error: true
           file: ${{ github.workspace }}/clover.xml
@@ -91,12 +91,12 @@ jobs:
 
     steps:
       - name: Checkout Kirby
-        uses: actions/checkout@v2
+        uses: actions/checkout@f1d3225b5376a0791fdee5a0e8eac5289355e43a # pin@v2
         with:
           path: kirby
 
       - name: Checkout Sandbox
-        uses: actions/checkout@v2
+        uses: actions/checkout@f1d3225b5376a0791fdee5a0e8eac5289355e43a # pin@v2
         with:
           repository: getkirby/sandbox
           path: sandbox
@@ -113,28 +113,28 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@v1
+        uses: shivammathur/cache-extensions@fd2695d35c6a2d131a586986d11f1e390c33c77d # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           key: e2e-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@v2
+        uses: actions/cache@1c6fb82ebbd610035c324e764e5e74d0e82f8a60 # pin@v2
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@27fc7bb418e73a1462a5604e3ea30e58ec1a6e1f # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
 
       - name: Install dependencies
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@1db146275576798796bc39ef83d739924145298a # pin@v2
         with:
           working-directory: kirby/panel
           runTests: false
@@ -151,7 +151,7 @@ jobs:
         working-directory: kirby/panel
 
       - name: Run tests
-        uses: cypress-io/github-action@v2
+        uses: cypress-io/github-action@1db146275576798796bc39ef83d739924145298a # pin@v2
         env:
           CYPRESS_host: "http://127.0.0.1:8000"
         with:
@@ -171,14 +171,14 @@ jobs:
 
       - name: Archive Cypress screenshots
         if: failure()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@11830c9f4d30053679cb8904e3b3ce1b8c00bf40 # pin@v2
         with:
           name: cypress-screenshots
           path: kirby/panel/cypress/screenshots
 
       - name: Archive Cypress videos
         if: always()
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@11830c9f4d30053679cb8904e3b3ce1b8c00bf40 # pin@v2
         with:
           name: cypress-videos
           path: kirby/panel/cypress/videos
@@ -194,44 +194,44 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      php: "7.4" # TODO: Update to PHP 8.0 when PHPMD supports it (https://github.com/phpmd/phpmd/issues/853)
+      php: "8.0"
       extensions: mbstring, ctype, curl, gd, apcu, memcached
 
     steps:
       - name: Checkout Kirby
-        uses: actions/checkout@v2
+        uses: actions/checkout@f1d3225b5376a0791fdee5a0e8eac5289355e43a # pin@v2
 
       - name: Preparations
         run: mkdir sarif
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@v1
+        uses: shivammathur/cache-extensions@fd2695d35c6a2d131a586986d11f1e390c33c77d # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           key: php-analysis-v1
 
       - name: Cache PHP extensions
-        uses: actions/cache@v2
+        uses: actions/cache@1c6fb82ebbd610035c324e764e5e74d0e82f8a60 # pin@v2
         with:
           path: ${{ steps.ext-cache.outputs.dir }}
           key: ${{ steps.ext-cache.outputs.key }}
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@27fc7bb418e73a1462a5604e3ea30e58ec1a6e1f # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
           tools: |
-            composer:v2, composer-normalize,
-            composer-unused, phpcpd, psalm, phpmd
+            composer:2.0.13, composer-normalize:2.13.3, composer-require-checker:3.2.0,
+            composer-unused:0.7.5, phpcpd:6.0.3, psalm:4.7.1, phpmd:2.10.0
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@v2
+        uses: actions/cache@1c6fb82ebbd610035c324e764e5e74d0e82f8a60 # pin@v2
         with:
           path: ~/.cache/psalm
           key: backend-analysis
@@ -244,10 +244,9 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         run: composer-normalize --dry-run
 
-      # TODO: Re-enable when the fatal error in CI no longer appears
-      # - name: Check for unused Composer dependencies
-      #   if: always() && steps.finishPrepare.outcome == 'success'
-      #   run: composer unused --no-progress
+      - name: Check for unused Composer dependencies
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: composer unused --no-progress
 
       - name: Check for duplicated code
         if: always() && steps.finishPrepare.outcome == 'success'
@@ -263,7 +262,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@v1
+        uses: github/codeql-action/upload-sarif@4a083a45c246fee5483920bffe98a6e15c3fef32 # pin@v1
         with:
           sarif_file: sarif
 
@@ -272,18 +271,17 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      # TODO: update to PHP 8.0 when PHP-CS-Fixer fully supports it
-      php: "7.4"
+      php: "8.0"
 
     steps:
       - name: Checkout Kirby
-        uses: actions/checkout@v2
+        uses: actions/checkout@f1d3225b5376a0791fdee5a0e8eac5289355e43a # pin@v2
 
       - name: Set up Node.js problem matchers
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@0696555e99b7a8260864ca027af4b004eea59379 # pin@v2
 
       - name: Cache npm dependencies
-        uses: actions/cache@v2
+        uses: actions/cache@1c6fb82ebbd610035c324e764e5e74d0e82f8a60 # pin@v2
         with:
           path: ~/.npm
           key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
@@ -294,7 +292,7 @@ jobs:
         working-directory: panel
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@27fc7bb418e73a1462a5604e3ea30e58ec1a6e1f # pin@v2
         with:
           php-version: ${{ env.php }}
           coverage: none
@@ -302,7 +300,7 @@ jobs:
 
       - name: Cache analysis data
         id: finishPrepare
-        uses: actions/cache@v2
+        uses: actions/cache@1c6fb82ebbd610035c324e764e5e74d0e82f8a60 # pin@v2
         with:
           path: ~/.php-cs-fixer
           key: coding-style
@@ -319,7 +317,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@v1
+        uses: reviewdog/action-suggester@5d5b9f8c693e036796f828e47886bd10d368c273 # pin@v1
         with:
           tool_name: ESLint
           fail_on_error: 'true'
@@ -335,7 +333,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@v1
+        uses: reviewdog/action-suggester@5d5b9f8c693e036796f828e47886bd10d368c273 # pin@v1
         with:
           tool_name: PHP-CS-Fixer
           fail_on_error: 'true'
