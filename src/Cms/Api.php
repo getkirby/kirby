@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Kirby\Api\Api as BaseApi;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Form\Form;
 use Kirby\Toolkit\Str;
 
 /**

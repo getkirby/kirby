@@ -52,7 +52,6 @@ return array(
     'Kirby\\Cms\\FileRules' => $baseDir . '/src/Cms/FileRules.php',
     'Kirby\\Cms\\FileVersion' => $baseDir . '/src/Cms/FileVersion.php',
     'Kirby\\Cms\\Files' => $baseDir . '/src/Cms/Files.php',
-    'Kirby\\Cms\\Form' => $baseDir . '/src/Cms/Form.php',
     'Kirby\\Cms\\HasChildren' => $baseDir . '/src/Cms/HasChildren.php',
     'Kirby\\Cms\\HasFiles' => $baseDir . '/src/Cms/HasFiles.php',
     'Kirby\\Cms\\HasMethods' => $baseDir . '/src/Cms/HasMethods.php',

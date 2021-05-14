@@ -147,7 +147,6 @@ class ComposerStaticInitc26333d865e0329b638bdc17afd29896
         'Kirby\\Cms\\FileRules' => __DIR__ . '/../..' . '/src/Cms/FileRules.php',
         'Kirby\\Cms\\FileVersion' => __DIR__ . '/../..' . '/src/Cms/FileVersion.php',
         'Kirby\\Cms\\Files' => __DIR__ . '/../..' . '/src/Cms/Files.php',
-        'Kirby\\Cms\\Form' => __DIR__ . '/../..' . '/src/Cms/Form.php',
         'Kirby\\Cms\\HasChildren' => __DIR__ . '/../..' . '/src/Cms/HasChildren.php',
         'Kirby\\Cms\\HasFiles' => __DIR__ . '/../..' . '/src/Cms/HasFiles.php',
         'Kirby\\Cms\\HasMethods' => __DIR__ . '/../..' . '/src/Cms/HasMethods.php',

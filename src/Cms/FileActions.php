@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Filesystem\File as BaseFile;
+use Kirby\Form\Form;
 use Kirby\Toolkit\F;
 
 /**
