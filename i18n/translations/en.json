@@ -372,9 +372,11 @@
   "more": "More",
   "name": "Name",
   "next": "Next",
+  "no": "no",
   "off": "off",
   "on": "on",
   "open": "Open",
+  "open.newWindow": "Open in new window",
   "options": "Options",
   "options.none": "No options",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Select a file",
   "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Link",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Ordered list",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Bullet list",
 
   "translation.author": "Kirby Team",
@@ -518,5 +522,6 @@
   "view.users": "Users",
 
   "welcome": "Welcome",
-  "year": "Year"
+  "year": "Year",
+  "yes": "yes"
 }
