@@ -63,10 +63,11 @@ return [
 
     // TODO: remove in 4.0.0
     'kirby\cms\asset'          => 'Kirby\Filesystem\Asset',
-    'kirby\cms\kirbytag'       => 'Kirby\Text\KirbyTag',
-    'kirby\cms\kirbytags'      => 'Kirby\Text\KirbyTags',
     'kirby\cms\dir'            => 'Kirby\Toolkit\Dir',
     'kirby\cms\filename'       => 'Kirby\Filesystem\Filename',
-    'kirby\cms\filefoundation' => 'Kirby\Filesystem\IsFile'
+    'kirby\cms\filefoundation' => 'Kirby\Filesystem\IsFile',
+    'kirby\cms\form'           => 'Kirby\Form\Form',
+    'kirby\cms\kirbytag'       => 'Kirby\Text\KirbyTag',
+    'kirby\cms\kirbytags'      => 'Kirby\Text\KirbyTags'
 ];
 // @codeCoverageIgnoreEnd
