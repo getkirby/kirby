@@ -112,6 +112,12 @@ class FileModificationsTest extends TestCase
         $file->thumb(['width' => 100]);
     }
 
+    public function testThumbWithNoOptions()
+    {
+        $file = $this->app->file('test.jpg');
+        $this->assertSame($file, $file->thumb([]));
+    }
+
     public function testBlur()
     {
         $app = $this->app->clone([

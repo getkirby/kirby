@@ -423,18 +423,17 @@ class Html extends Xml
      */
     public static function video(string $url, array $options = [], array $attr = []): ?string
     {
-
         // YouTube video
-        if (preg_match('!youtu!i', $url) === 1) {
+        if (Str::contains($url, 'youtu', true) === true) {
             return static::youtube($url, $options['youtube'] ?? [], $attr);
         }
 
         // Vimeo video
-        if (preg_match('!vimeo!i', $url) === 1) {
+        if (Str::contains($url, 'vimeo', true) === true) {
             return static::vimeo($url, $options['vimeo'] ?? [], $attr);
         }
 
-        // Self-hosted video file
+        // self-hosted video file
         $extension = F::extension($url);
         $type      = F::extensionToType($extension);
         $mime      = F::extensionToMime($extension);

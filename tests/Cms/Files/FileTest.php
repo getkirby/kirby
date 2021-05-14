@@ -2,7 +2,6 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Image\Image;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 
@@ -28,9 +27,8 @@ class FileTest extends TestCase
     public function testAsset()
     {
         $file = $this->file();
-
-        $this->assertInstanceOf(Image::class, $file->asset());
-        $this->assertEquals(null, $file->asset()->url());
+        $this->assertInstanceOf('Kirby\Filesystem\File', $file->asset());
+        $this->assertEquals('https://getkirby.com/projects/project-a/cover.jpg', $file->asset()->url());
     }
 
     public function testContent()
@@ -84,6 +82,17 @@ class FileTest extends TestCase
     public function testDefaultPage()
     {
         $this->assertNull($this->file()->page());
+    }
+
+    public function testHtml()
+    {
+        $file = new File([
+            'filename' => 'test.jpg',
+            'content' => [
+                'alt' => 'This is the alt text'
+            ]
+        ]);
+        $this->assertSame('<img alt="This is the alt text" src="/media/site/f563e6e59b-0/test.jpg">', $file->html());
     }
 
     public function testUrl()

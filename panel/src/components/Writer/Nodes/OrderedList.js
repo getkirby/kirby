@@ -1,11 +1,15 @@
 import Node from "../Node";
+import Vue from "vue";
 
 export default class OrderedList extends Node {
 
   get button() {
     return {
-      label: "Ordered list",
       icon: "list-numbers",
+      /**
+       * @todo replace with `window.panel.$t()` after merging Inertia
+       */
+      label: Vue.$t("toolbar.button.ol")
     };
   }
 
