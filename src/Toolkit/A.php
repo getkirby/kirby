@@ -3,6 +3,7 @@
 namespace Kirby\Toolkit;
 
 use Exception;
+use Closure;
 
 /**
  * The `A` class provides a set of handy methods
@@ -29,6 +30,31 @@ class A
     public static function append(array $array, array $append): array
     {
         return $array + $append;
+    }
+
+
+    /**
+     * Loops through the array and resolves
+     * any item defined as Closure, applying
+     * the passed parameters
+     *
+     * @param array $array
+     * @param mixed $params parameters to pass to the Closure
+     * @return array
+     */
+    public static function apply(array $array, $params = []): array
+    {
+        if (is_array($params) === false) {
+            $params = A::wrap($params);
+        }
+
+        array_walk_recursive($array, function (&$item) use ($params) {
+            if (is_a($item, Closure::class)) {
+                $item = call_user_func_array($item, $params);
+            }
+        });
+
+        return $array;
     }
 
     /**

@@ -7,9 +7,12 @@ use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
+use Kirby\Http\Url;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Pagination;
+use Kirby\Toolkit\Str;
 use Kirby\Toolkit\View;
 use Throwable;
 
@@ -27,6 +30,13 @@ use Throwable;
  */
 class Panel
 {
+    /**
+     * General views definitions
+     *
+     * @var array
+     */
+    public static $views;
+
     /**
      * Generates an array with all assets
      * that need to be loaded for the panel (js, css, icons)
@@ -131,6 +141,24 @@ class Panel
     }
 
     /**
+     * Renders the error view with provided message
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @param string $message
+     * @return \Kirby\Http\Response
+     */
+    public static function error(App $kirby, string $message)
+    {
+        return static::render($kirby, 'ErrorView', [
+            '$props' => [
+                'error'  => $message,
+                'layout' => $kirby->user() ? 'inside' : 'outside',
+            ],
+            '$view' => static::view($kirby, 'error'),
+        ]);
+    }
+
+    /**
      * Load the SVG icon sprite
      * This will be injected in the
      * initial HTML document for the Panel
@@ -141,6 +169,31 @@ class Panel
     public static function icons(App $kirby): string
     {
         return F::read($kirby->root('kirby') . '/panel/dist/img/icons.svg');
+    }
+
+    /**
+     * Creates $inertia response array
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @param string $component
+     * @param array $props
+     * @return array
+     */
+    public static function inertia(App $kirby, string $component, array $props = []): array
+    {
+        $props = static::props($kirby, $component, $props);
+
+        // inject the inertia config as props
+        $props['$component'] = $component;
+        $props['$url']       = Url::current();
+        $props['$version']   = $kirby->versionHash();
+
+        return [
+            'component' => $props['$component'],
+            'props'     => $props,
+            'url'       => $props['$url'],
+            'version'   => $props['$version']
+        ];
     }
 
     /**
@@ -178,14 +231,150 @@ class Panel
     }
 
     /**
+     * Creates props array for the component
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @param string $component
+     * @param array $props
+     * @return array
+     */
+    public static function props(App $kirby, string $component, array $props = []): array
+    {
+        // merge with shared props
+        $shared = [
+            '$config' => [
+                'debug'     => $kirby->option('debug'),
+                'kirbytext' => $kirby->option('panel.kirbytext', true),
+                'search'    => [
+                    'limit' => $kirby->option('panel.search.limit', 10),
+                    'type'  => $kirby->option('panel.search.type', 'pages')
+                ],
+                'translation' => $kirby->option('panel.language', 'en'),
+            ],
+            '$language' => function () use ($kirby) {
+                if (
+                    $kirby->option('languages') === true &&
+                    $language = $kirby->language()
+                ) {
+                    return [
+                        'code' => $language->code(),
+                        'name' => $language->name(),
+                    ];
+                }
+            },
+            '$languages' => function () use ($kirby): array {
+                if ($kirby->option('languages') === true) {
+                    return $kirby->languages()->values(function ($language) {
+                        return [
+                            'code'    => $language->code(),
+                            'default' => $language->isDefault(),
+                            'name'    => $language->name(),
+                        ];
+                    });
+                }
+
+                return [];
+            },
+            '$permissions' => function () use ($kirby) {
+                if ($user = $kirby->user()) {
+                    return $user->role()->permissions()->toArray();
+                }
+            },
+            '$props' => [],
+            '$system' => [
+                'ascii'     => Str::$ascii,
+                'csrf'      => $kirby->option('api.csrf') ?? csrf(),
+                'isLocal'   => $kirby->system()->isLocal(),
+                'license'   => $kirby->system()->license(),
+                'multilang' => $kirby->option('languages', false) !== false,
+                'slugs'     => Str::$language,
+            ],
+            '$translation' => function () use ($kirby) {
+                if ($user = $kirby->user()) {
+                    $translation = $kirby->translation($user->language());
+                } else {
+                    $translation = $kirby->translation($kirby->option('panel.language', 'en'));
+                }
+
+                if (!$translation) {
+                    $translation = $kirby->translation('en');
+                }
+
+                return [
+                    'code'      => $translation->code(),
+                    'data'      => $translation->dataWithFallback(),
+                    'direction' => $translation->direction(),
+                    'name'      => $translation->name(),
+                ];
+            },
+            '$urls' => [
+                'api'  => $kirby->url('api'),
+                'site' => $kirby->url('index')
+            ],
+            '$user' => function () use ($kirby) {
+                if ($user = $kirby->user()) {
+                    return [
+                        'email'       => $user->email(),
+                        'id'          => $user->id(),
+                        'language'    => $user->language(),
+                        'permissions' => $user->role()->permissions()->toArray(),
+                        'role'        => $user->role()->id(),
+                        'username'    => $user->username(),
+                    ];
+                }
+
+                return null;
+            },
+            '$views' => static::$views
+        ];
+
+        $props = array_merge($shared, $props);
+
+        // is it a partial request?
+        $request = $kirby->request();
+        $only    = Str::split($request->header('X-Inertia-Partial-Data'));
+
+        // only include new props in array, if partial request
+        if (
+            empty($only) === false &&
+            $request->header('X-Inertia-Partial-Component') === $component
+        ) {
+            foreach ($props as $key => $value) {
+                if (in_array($key, $only) === false) {
+                    unset($props[$key]);
+                }
+            }
+        }
+
+        // resolve lazy props
+        return A::apply($props);
+    }
+
+    /**
      * Renders the main panel view
      *
      * @param \Kirby\Cms\App $kirby
-     * @param array $inertia
+     * @param string $component
+     * @param array $props
      * @return \Kirby\Http\Response
      */
-    public static function render(App $kirby, array $inertia = [])
+    public static function render(App $kirby, string $component, array $props)
     {
+        // get $inertia response array
+        $inertia = static::inertia($kirby, $component, $props);
+
+        // if requested, send $inertia data as JSON
+        $request = $kirby->request();
+        if (
+            $request->method() === 'GET' &&
+            ($request->header('X-Inertia') || $request->get('json'))
+        ) {
+            return Response::json($inertia, null, null, [
+                'Vary'      => 'Accept',
+                'X-Inertia' => 'true'
+            ]);
+        }
+
         try {
             if (static::link($kirby) === true) {
                 usleep(1);
@@ -225,12 +414,7 @@ class Panel
             return false;
         }
 
-        // set up Inertia
         Pagination::$validate = false;
-
-        Inertia::$kirby   = $kirby;
-        Inertia::$request = $kirby->request();
-        Inertia::$version = $kirby->versionHash();
 
         // load all Panel routes
         $routes = (require $kirby->root('kirby') . '/config/panel.php')($kirby);
@@ -245,7 +429,7 @@ class Panel
 
         // interpret strings as errors
         if (is_string($result) === true) {
-            return Inertia::error($result);
+            return static::error($kirby, $result);
         }
 
         // only expect arrays from here on
@@ -256,14 +440,104 @@ class Panel
         $view = $result['view'] ?? 'site';
 
         if (is_string($view) === true) {
-            $view = Inertia::view($view);
+            $view = static::view($kirby, $view);
         } else {
-            $view = Inertia::view($view['id'] ?? 'site', $view);
+            $view = static::view($kirby, $view['id'] ?? 'site', $view);
         }
 
-        return Inertia::render($result['component'], [
+        return static::render($kirby, $result['component'], [
             '$props' => $result['props'] ?? [],
             '$view'  => $view,
         ]);
     }
+
+    /**
+     * Returns data array for view
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @param string $id
+     * @param array $props
+     * @return array
+     */
+    public static function view(App $kirby, string $id, array $props = []): array
+    {
+        // get view-specific defaults
+        $view = static::$views[$id] ?? static::$views['site'];
+
+        // create default array
+        $defaults = [
+            'breadcrumb'      => $props['breadcrumb'] ?? [],
+            'breadcrumbLabel' => $view['breadcrumbLabel'] ?? $view['label'],
+            'icon'            => $view['icon'],
+            'id'              => $view['id'],
+            'label'           => $view['label'],
+            'link'            => $view['link'],
+            'menu'            => $view['menu'] ?? true,
+            'path'            => $kirby->request()->path()->slice(1)->toString(),
+            'search'          => $view['search'] ?? $kirby->option('panel.search.type', 'pages'),
+            'title'           => $view['label'],
+        ];
+
+        // merge props with defaults
+        $props = array_replace_recursive($defaults, $props);
+
+        // resolve lazy props
+        return A::apply($props);
+    }
 }
+
+
+Panel::$views = [
+    'site' => [
+        'breadcrumbLabel' => function () {
+            return kirby()->site()->title()->or(t('view.site'))->toString();
+        },
+        'icon'            => 'home',
+        'id'              => 'site',
+        'label'           => t('view.site'),
+        'link'            => 'site',
+        'search'          => 'pages'
+    ],
+    'users' => [
+        'icon'   => 'users',
+        'id'     => 'users',
+        'label'  => t('view.users'),
+        'link'   => 'users',
+        'search' => 'users'
+    ],
+    'settings' => [
+        'icon'  => 'settings',
+        'id'    => 'settings',
+        'label' => t('view.settings'),
+        'link'  => 'settings'
+    ],
+    'account' => [
+        'icon'   => 'account',
+        'id'     => 'account',
+        'label'  => t('view.account'),
+        'link'   => 'account',
+        'menu'   => false,
+        'search' => 'users'
+    ],
+    'error' => [
+        'icon'  => 'alert',
+        'id'    => 'error',
+        'label' => 'Error',
+        'menu'  => false,
+        'link'  => 'error'
+    ],
+    'installation' => [
+        'icon'  => 'settings',
+        'id'    => 'installation',
+        'label' => t('view.installation'),
+        'menu'  => false,
+        'link'  => 'installation'
+    ],
+    'login' => [
+        'icon'  => 'user',
+        'id'    => 'login',
+        'label' => t('login'),
+        'menu'  => false,
+        'link'  => 'login'
+    ]
+];

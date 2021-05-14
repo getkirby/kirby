@@ -16,6 +16,40 @@ use Throwable;
  */
 class File extends Model
 {
+    public function breadcrumb(): array
+    {
+        $parent = $this->model->parent();
+
+        switch ($parent::CLASS_ALIAS) {
+            case 'site':
+                $breadcrumb = [];
+                break;
+            case 'user':
+                $breadcrumb = [
+                    [
+                        'label' => $parent->username(),
+                        'link'  => $parent->panel()->url(true)
+                    ]
+                ];
+                break;
+            case 'page':
+                $breadcrumb = $this->model->parents()->flip()->values(function ($parent) {
+                    return [
+                        'label' => $parent->title()->toString(),
+                        'link'  => $parent->panel()->url(true),
+                    ];
+                });
+        }
+
+        // add the file
+        $breadcrumb[] = [
+            'label' => $this->model->filename(),
+            'link'  => $this->url(true),
+        ];
+
+        return $breadcrumb;
+    }
+
     /**
      * Provides a kirbytag or markdown
      * tag for the file, which will be
@@ -182,6 +216,67 @@ class File extends Model
             'type'     => $this->model->type(),
             'url'      => $this->model->url(),
             'uuid'     => $uuid ?? $id,
+        ];
+    }
+
+    /**
+     * @param array $props
+     * @return array
+     */
+    public function props(array $props = []): array
+    {
+        $file     = $this->model;
+        $siblings = $file->templateSiblings()->sortBy(
+            'sort',
+            'asc',
+            'filename',
+            'asc'
+        );
+
+        $defaults = [
+            'file' => [
+                'content'    => $this->content(),
+                'dimensions' => $file->dimensions()->toArray(),
+                'extension'  => $file->extension(),
+                'filename'   => $file->filename(),
+                'id'         => $file->id(),
+                'mime'       => $file->mime(),
+                'niceSize'   => $file->niceSize(),
+                'parent'     => $file->parent()->panel()->path(),
+                'panelImage' => $this->image(),
+                'previewUrl' => $file->previewUrl(),
+                'url'        => $file->url(),
+                'template'   => $file->template(),
+                'type'       => $file->type(),
+            ],
+            'next' => function () use ($file, $siblings): ?array {
+                $next = $siblings->nth($siblings->indexOf($file) + 1);
+                return $next->panel()->prevnext('filename');
+            },
+            'prev' => function () use ($file, $siblings): ?array {
+                $prev = $siblings->nth($siblings->indexOf($file) - 1);
+                return $prev->panel()->prevnext('filename');
+            }
+        ];
+
+        return parent::props(array_merge_recursive($defaults, $props));
+    }
+
+    public function route(): array
+    {
+        $file = $this->model;
+        $type = $file->parent()::CLASS_ALIAS;
+
+        return [
+            'component' => 'FileView',
+            'props'     => $this->props(),
+            'view'      => [
+                'breadcrumb' => function () use ($file): array {
+                    return $file->panel()->breadcrumb();
+                },
+                'id'    => $type === 'user' ? 'users' : 'site',
+                'title' => $file->filename(),
+            ]
         ];
     }
 

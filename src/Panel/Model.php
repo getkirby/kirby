@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Form\Form;
+
 /**
  * Provides information about the model for the Panel
  * @since 3.6.0
@@ -25,6 +27,16 @@ abstract class Model
     public function __construct($model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Get the content values
+     *
+     * @return array
+     */
+    public function content(): array
+    {
+        return Form::for($this->model)->values();
     }
 
     /**
@@ -224,6 +236,41 @@ abstract class Model
      * @return string
      */
     abstract public function path(): string;
+
+    /**
+     * @param string $tooltip
+     * @return array|null
+     */
+    public function prevnext($tooltip = 'title'): ?array
+    {
+        return [
+            'link'    => $this->model->panel()->url(true),
+            'tooltip' => (string)$this->model->$tooltip()
+        ];
+    }
+
+    /**
+     * @param array $props
+     * @return array
+     */
+    public function props(array $props = []): array
+    {
+        $blueprint = $this->model->blueprint();
+        $tabs      = $blueprint->tabs();
+
+        if (!$tab = $blueprint->tab(param('tab'))) {
+            $tab = $tabs[0] ?? [];
+        }
+
+        return array_merge([
+            'blueprint'   => $blueprint->name(),
+            'permissions' => $this->model->permissions()->toArray(),
+            'tab'         => $tab,
+            'tabs'        => $tabs,
+        ], $props);
+    }
+
+    abstract public function route(): array;
 
     /**
      * Returns the url to the editing view

@@ -23,4 +23,29 @@ class Site extends Model
     {
         return 'site';
     }
+
+    /**
+     * @param array $props
+     * @return array
+     */
+    public function props(array $props = []): array
+    {
+        $defaults = [
+            'site' => [
+                'previewUrl' => $this->model->previewUrl(),
+                'title'      => $this->model->title()->toString()
+            ]
+        ];
+
+        return parent::props(array_merge_recursive($defaults, $props));
+    }
+
+    public function route(): array
+    {
+        return [
+            'component' => 'SiteView',
+            'props'     => $this->props(),
+            'view'      => 'site'
+        ];
+    }
 }

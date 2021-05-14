@@ -15,6 +15,32 @@ class ATest extends TestCase
         ];
     }
 
+    public function testApply()
+    {
+        $array = [
+            'level' => [
+                'foo' => 'bar',
+                'homer' => function () {
+                    return 'simpson';
+                }
+            ],
+            'a' => function ($b) {
+                return $b;
+            }
+        ];
+
+        $expected = [
+            'level' => [
+                'foo' => 'bar',
+                'homer' => 'simpson'
+            ],
+            'a' => 'b'
+        ];
+
+        $this->assertSame($expected, A::apply($array, 'b'));
+        $this->assertSame($expected, A::apply($array, ['b', 'c']));
+    }
+
     public function testGet()
     {
         $array = $this->_array();

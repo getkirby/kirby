@@ -14,6 +14,17 @@ namespace Kirby\Panel;
  */
 class Page extends Model
 {
+    public function breadcrumb(): array
+    {
+        $parents = $this->model->parents()->flip()->merge($this->model);
+        return $parents->values(function ($parent) {
+            return [
+                'label' => $parent->title()->toString(),
+                'link'  => $parent->panel()->url(true),
+            ];
+        });
+    }
+
     /**
      * Provides a kirbytag or markdown
      * tag for the page, which will be
@@ -113,6 +124,70 @@ class Page extends Model
             'link'        => $this->url(true),
             'text'        => $this->model->toString($params['text'] ?? '{{ page.title }}'),
             'url'         => $this->model->url(),
+        ];
+    }
+
+    /**
+     * @param array $props
+     * @return array
+     */
+    public function props(array $props = []): array
+    {
+        $page = $this->model;
+
+        $defaults = [
+            'page' => [
+                'content'    => $this->content(),
+                'id'         => $page->id(),
+                'parent'     => $page->parentModel()->panel()->url(true),
+                'previewUrl' => $page->previewUrl(),
+                'status'     => $page->status(),
+                'title'      => $page->title()->toString(),
+            ],
+            'next' => function () use ($page) {
+                $next = $page
+                    ->nextAll()
+                    ->filterBy('intendedTemplate', $page->intendedTemplate())
+                    ->filterBy('status', $page->status())
+                    ->filterBy('isReadable', true)
+                    ->first();
+
+                return $next->panel()->prevnext('title');
+            },
+            'prev'   => function () use ($page) {
+                $prev = $page
+                    ->prevAll()
+                    ->filterBy('intendedTemplate', $page->intendedTemplate())
+                    ->filterBy('status', $page->status())
+                    ->filterBy('isReadable', true)
+                    ->last();
+
+                return $prev->panel()->prevnext('title');
+            },
+            'status' => function () use ($page) {
+                if ($status = $page->status()) {
+                    return $page->blueprint()->status()[$status] ?? null;
+                }
+            },
+        ];
+
+        return parent::props(array_merge_recursive($defaults, $props));
+    }
+
+    public function route(): array
+    {
+        $page = $this->model;
+
+        return [
+            'component' => 'PageView',
+            'props'     => $this->props(),
+            'view' => [
+                'breadcrumb' => function () use ($page) {
+                    return $page->panel()->breadcrumb();
+                },
+                'id'    => 'site',
+                'title' => $page->title()->toString(),
+            ]
         ];
     }
 }

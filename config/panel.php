@@ -1,20 +1,54 @@
 <?php
 
+use Kirby\Http\Response;
+use Kirby\Toolkit\View;
 
 return function ($kirby) {
-    // Panel is not installed yet
+
+    /**
+     * Route for browser compatibility check
+     */
+    $routes = [
+        [
+            'pattern' => 'browser',
+            'action'  => function () use ($kirby) {
+                $view = new View($kirby->root('kirby') . '/views/browser.php');
+                return new Response($view->render());
+            }
+        ]
+    ];
+
+
+    /**
+     * Panel isn't installed yet
+     */
     if (
         $kirby->system()->isOk() === false ||
         $kirby->system()->isInstalled() === false
     ) {
-        return [
-            [
-                'pattern' => 'browser',
-                'action'  => require __DIR__ . '/views/browser.php'
-            ],
+        return array_merge($routes, [
             [
                 'pattern' => 'installation',
-                'action'  => require __DIR__ . '/views/installation.php'
+                'action'  => function () use ($kirby) {
+                    $system = $kirby->system();
+
+                    return [
+                        'component' => 'InstallationView',
+                        'props' => [
+                            'isInstallable' => $system->isInstallable(),
+                            'isInstalled'   => $system->isInstalled(),
+                            'isOk'          => $system->isOk(),
+                            'requirements'  => $system->status(),
+                            'translations'  => $kirby->translations()->values(function ($translation) {
+                                return [
+                                    'text'  => $translation->name(),
+                                    'value' => $translation->code(),
+                                ];
+                            }),
+                        ],
+                        'view' => 'installation'
+                    ];
+                }
             ],
             [
                 'pattern' => '(:all)',
@@ -22,19 +56,31 @@ return function ($kirby) {
                     go('panel/installation');
                 }
             ]
-        ];
+        ]);
     }
 
-    // No session yet
+    /**
+     * User is not logged in
+     */
     if (!$kirby->user()) {
-        return [
-            [
-                'pattern' => 'browser',
-                'action'  => require __DIR__ . '/views/browser.php'
-            ],
+        return array_merge($routes, [
             [
                 'pattern' => 'login',
-                'action'  => require __DIR__ . '/views/login.php'
+                'action'  => function () use ($kirby) {
+                    $status = $kirby->auth()->status();
+
+                    return [
+                        'component' => 'LoginView',
+                        'view'      => 'login',
+                        'props'     => [
+                            'methods' => array_keys($kirby->system()->loginMethods()),
+                            'pending' => [
+                                'email'     => $status->email(),
+                                'challenge' => $status->challenge()
+                            ]
+                        ],
+                    ];
+                }
             ],
             [
                 'pattern' => '(:all)',
@@ -42,8 +88,12 @@ return function ($kirby) {
                     go('panel/login');
                 }
             ]
-        ];
+        ]);
     }
+
+    /**
+     * Installed and authenticates
+     */
 
     // Language switcher
     if ($kirby->options('languages')) {
@@ -54,8 +104,7 @@ return function ($kirby) {
         $kirby->setCurrentLanguage($kirby->session()->get('language', 'en'));
     }
 
-    // Installed and logged in
-    return [
+    return array_merge($routes, [
         [
             'pattern' => [
                 '/',
@@ -68,11 +117,13 @@ return function ($kirby) {
         ],
         [
             'pattern' => 'account',
-            'action'  => require __DIR__ . '/views/account.php',
-        ],
-        [
-            'pattern' => 'browser',
-            'action'  => require __DIR__ . '/views/browser.php',
+            'action'  => function () use ($kirby) {
+                return [
+                    'component' => 'AccountView',
+                    'props'     => $kirby->user()->panel()->props(),
+                    'view'      => 'account'
+                ];
+            },
         ],
         [
             'pattern' => 'logout',
@@ -84,52 +135,180 @@ return function ($kirby) {
         ],
         [
             'pattern' => 'pages/(:any)',
-            'action'  => require __DIR__ . '/views/page.php'
+            'action'  => function (string $path) use ($kirby) {
+                if (!$page = $kirby->page(str_replace('+', '/', $path))) {
+                    return t('error.page.undefined');
+                }
+
+                return $page->panel()->route();
+            }
         ],
         [
             'pattern' => 'pages/(:any)/files/(:any)',
-            'action'  => require __DIR__ . '/views/page.file.php'
+            'action'  => function (string $id, string $filename) use ($kirby) {
+                $id       = str_replace('+', '/', $id);
+                $filename = urldecode($filename);
+
+                if (!$page = $kirby->page($id)) {
+                    return t('error.page.undefined');
+                }
+
+                if (!$file = $page->file($filename)) {
+                    return t('error.file.undefined');
+                }
+
+                return $file->panel()->route();
+            }
         ],
         [
             'pattern' => 'settings',
-            'action'  => require __DIR__ . '/views/settings.php'
+            'action'  => function () use ($kirby) {
+                return [
+                    'component' => 'SettingsView',
+                    'props' => [
+                        'languages' => $kirby->languages()->values(function ($language) {
+                            return [
+                                'default' => $language->isDefault(),
+                                'icon' => [
+                                    'back' => 'black',
+                                    'type' => 'globe',
+                                ],
+                                'id' => $language->code(),
+                                'image' => true,
+                                'info' => $language->code(),
+                                'text' => $language->name(),
+                            ];
+                        }),
+                        'version' => $kirby->version(),
+                    ],
+                    'view' => 'settings'
+                ];
+            }
         ],
         [
             'pattern' => 'site',
-            'action'  => require __DIR__ . '/views/site.php'
+            'action'  => function () use ($kirby) {
+                return $kirby->site()->panel()->route();
+            }
         ],
         [
             'pattern' => 'site/files/(:any)',
-            'action'  => require __DIR__ . '/views/site.file.php'
+            'action'  => function (string $filename) use ($kirby) {
+                $filename = urldecode($filename);
+
+                if (!$file = $kirby->site()->file($filename)) {
+                    return t('error.file.undefined');
+                }
+
+                return $file->panel()->route();
+            }
         ],
         [
             'pattern' => [
                 'users',
                 'users/role/(:any)'
             ],
-            'action'  => require __DIR__ . '/views/users.php'
+            'action'  => function (string $role = null) use ($kirby) {
+                $roles = $kirby->roles();
+
+                return [
+                    'component' => 'UsersView',
+                    'props' => [
+                        'role' => function () use ($kirby, $roles, $role) {
+                            if ($role && $role = $roles->find($role)) {
+                                return [
+                                    'id'    => $role->id(),
+                                    'title' => $role->title()
+                                ];
+                            }
+                        },
+                        'roles' => $roles->values(function ($role) {
+                            return [
+                                'id'    => $role->id(),
+                                'title' => $role->title(),
+                            ];
+                        }),
+                        'users' => function () use ($kirby, $role) {
+                            $users = $kirby->users();
+
+                            if (empty($role) === false) {
+                                $users = $users->role($role);
+                            }
+
+                            return $users->values(function ($user) {
+                                return [
+                                    'id'   => $user->id(),
+                                    'icon' => [
+                                        'type' => 'user',
+                                        'back' => 'black'
+                                    ],
+                                    'text'  => $user->username(),
+                                    'info'  => $user->role()->title(),
+                                    'link'  => 'users/' . $user->id(),
+                                    'image' => true
+                                ];
+                            }, [
+                                'limit' => 20,
+                                'page'  => get('page')
+                            ]);
+                        },
+                    ],
+                    'view' => 'users'
+                ];
+            }
         ],
         [
             'pattern' => 'users/(:any)',
-            'action'  => require __DIR__ . '/views/user.php'
+            'action'  => function (string $id) use ($kirby) {
+                if (!$user = $kirby->user($id)) {
+                    return t('error.user.undefined');
+                }
+
+                return $user->panel()->route();
+            }
         ],
         [
             'pattern' => 'users/(:any)/files/(:any)',
-            'action'  => require __DIR__ . '/views/user.file.php'
+            'action'  => function (string $id, string $filename) use ($kirby) {
+                $filename = urldecode($filename);
+
+                if (!$user = $kirby->user($id)) {
+                    return t('error.user.undefined');
+                }
+
+                if (!$file = $user->file($filename)) {
+                    return t('error.file.undefined');
+                }
+
+                return $file->panel()->route();
+            }
         ],
         [
             'pattern' => 'reset-password',
-            'action'  => require __DIR__ . '/views/password.reset.php'
+            'action'  => function () {
+                return [
+                    'component' => 'ResetPasswordView',
+                    'view'      => 'reset-password'
+                ];
+            }
         ],
         [
             'pattern' => 'plugins/(:any)',
-            'action'  => require __DIR__ . '/views/plugin.php'
+            'action'  => function (string $id) {
+                return [
+                    'component' => 'PluginView',
+                    'view'      => $id,
+                    'props' => [
+                        'id' => $id
+                    ]
+                ];
+            }
         ],
         [
             'pattern' => '(:all)',
-            'action'  => function () use ($kirby) {
+            'action'  => function () {
                 return 'The view could not be found';
             }
         ],
-    ];
+    ]);
 };

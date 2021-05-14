@@ -15,6 +15,31 @@ namespace Kirby\Panel;
 class User extends Model
 {
     /**
+     * Returns the avatar URL for a user
+     * if the user has one
+     *
+     * @return string|null
+     */
+    public function avatar(): ?string
+    {
+        if ($avatar = $this->model->avatar()) {
+            return $avatar->url();
+        }
+
+        return null;
+    }
+
+    public function breadcrumb(): array
+    {
+        return [
+            [
+                'label' => $this->model->username(),
+                'link'  => $this->url(true),
+            ]
+        ];
+    }
+
+    /**
      * Panel icon definition
      *
      * @param array $params
@@ -68,6 +93,43 @@ class User extends Model
             'link'     => $this->url(true),
             'text'     => $this->model->toString($params['text'] ?? '{{ user.username }}'),
             'username' => $this->model->username(),
+        ];
+    }
+
+    /**
+     * @param array $props
+     * @return array
+     */
+    public function props(array $props = []): array
+    {
+        $defaults = [
+            'user' => [
+                'avatar'   => $this->avatar(),
+                'content'  => $this->content(),
+                'email'    => $this->model->email(),
+                'id'       => $this->model->id(),
+                'language' => $this->translation()->name(),
+                'name'     => $this->model->name()->toString(),
+                'role'     => $this->model->role()->title(),
+                'username' => $this->model->username(),
+            ],
+            'next' => $this->model->panel()->next('username'),
+            'prev' => $this->model->panel()->prev('username'),
+        ];
+
+        return parent::props(array_merge_recursive($defaults, $props));
+    }
+
+    public function route(): array
+    {
+        return [
+            'component' => 'UserView',
+            'props' => $this->props(),
+            'view' => [
+                'breadcrumb' => $this->breadcrumb(),
+                'id'    => 'user',
+                'title' => $this->model->username(),
+            ]
         ];
     }
 
