@@ -497,6 +497,9 @@ class HtmlTest extends TestCase
         $this->assertSame($expected, $html);
     }
 
+    /**
+     * @covers ::video
+     */
     public function testVideoFile()
     {
         $html = Html::video('https://getkirby.com/myvideo.mp4');
@@ -665,12 +668,18 @@ class HtmlTest extends TestCase
         ];
     }
 
-    public function testInvalidVimeoUrl()
+    /**
+     * @covers ::vimeo
+     */
+    public function testVimeoInvalidUrl()
     {
         $this->assertNull(Html::vimeo('https://getkirby.com'));
     }
 
-    public function testInvalidYoutubeUrl()
+    /**
+     * @covers ::youtube
+     */
+    public function testYoutubeInvalidUrl()
     {
         $this->assertNull(Html::youtube('https://getkirby.com'));
     }
