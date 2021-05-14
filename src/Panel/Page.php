@@ -14,6 +14,11 @@ namespace Kirby\Panel;
  */
 class Page extends Model
 {
+    /**
+     * Breadcrumb array
+     *
+     * @return array
+     */
     public function breadcrumb(): array
     {
         $parents = $this->model->parents()->flip()->merge($this->model);
@@ -128,14 +133,18 @@ class Page extends Model
     }
 
     /**
-     * @param array $props
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
      * @return array
      */
-    public function props(array $props = []): array
+    public function props(): array
     {
         $page = $this->model;
 
-        $defaults = [
+        return array_merge(parent::props(), [
             'page' => [
                 'content'    => $this->content(),
                 'id'         => $page->id(),
@@ -151,8 +160,7 @@ class Page extends Model
                     ->filterBy('status', $page->status())
                     ->filterBy('isReadable', true)
                     ->first();
-
-                return $next->panel()->prevnext('title');
+                return $next ? $next->panel()->prevnext('title') : null;
             },
             'prev'   => function () use ($page) {
                 $prev = $page
@@ -161,19 +169,24 @@ class Page extends Model
                     ->filterBy('status', $page->status())
                     ->filterBy('isReadable', true)
                     ->last();
-
-                return $prev->panel()->prevnext('title');
+                return $prev ? $prev->panel()->prevnext('title') : null;
             },
             'status' => function () use ($page) {
                 if ($status = $page->status()) {
                     return $page->blueprint()->status()[$status] ?? null;
                 }
             },
-        ];
-
-        return parent::props(array_merge_recursive($defaults, $props));
+        ]);
     }
 
+    /**
+     * Returns the data array for
+     * this model's Panel routes
+     *
+     * @internal
+     *
+     * @return array
+     */
     public function route(): array
     {
         $page = $this->model;
@@ -185,7 +198,6 @@ class Page extends Model
                 'breadcrumb' => function () use ($page) {
                     return $page->panel()->breadcrumb();
                 },
-                'id'    => 'site',
                 'title' => $page->title()->toString(),
             ]
         ];

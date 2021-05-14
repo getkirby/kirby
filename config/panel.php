@@ -34,7 +34,8 @@ return function ($kirby) {
 
                     return [
                         'component' => 'InstallationView',
-                        'props' => [
+                        'view'      => 'installation',
+                        'props'     => [
                             'isInstallable' => $system->isInstallable(),
                             'isInstalled'   => $system->isInstalled(),
                             'isOk'          => $system->isOk(),
@@ -45,8 +46,7 @@ return function ($kirby) {
                                     'value' => $translation->code(),
                                 ];
                             }),
-                        ],
-                        'view' => 'installation'
+                        ]
                     ];
                 }
             ],
@@ -165,7 +165,8 @@ return function ($kirby) {
             'action'  => function () use ($kirby) {
                 return [
                     'component' => 'SettingsView',
-                    'props' => [
+                    'view'      => 'settings',
+                    'props'     => [
                         'languages' => $kirby->languages()->values(function ($language) {
                             return [
                                 'default' => $language->isDefault(),
@@ -180,8 +181,7 @@ return function ($kirby) {
                             ];
                         }),
                         'version' => $kirby->version(),
-                    ],
-                    'view' => 'settings'
+                    ]
                 ];
             }
         ],
@@ -213,7 +213,8 @@ return function ($kirby) {
 
                 return [
                     'component' => 'UsersView',
-                    'props' => [
+                    'view'      => 'users',
+                    'props'     => [
                         'role' => function () use ($kirby, $roles, $role) {
                             if ($role && $role = $roles->find($role)) {
                                 return [
@@ -252,8 +253,7 @@ return function ($kirby) {
                                 'page'  => get('page')
                             ]);
                         },
-                    ],
-                    'view' => 'users'
+                    ]
                 ];
             }
         ],

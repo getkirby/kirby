@@ -25,27 +25,36 @@ class Site extends Model
     }
 
     /**
-     * @param array $props
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
      * @return array
      */
-    public function props(array $props = []): array
+    public function props(): array
     {
-        $defaults = [
+        return array_merge(parent::props(), [
             'site' => [
                 'previewUrl' => $this->model->previewUrl(),
                 'title'      => $this->model->title()->toString()
             ]
-        ];
-
-        return parent::props(array_merge_recursive($defaults, $props));
+        ]);
     }
 
+    /**
+     * Returns the data array for
+     * this model's Panel routes
+     *
+     * @internal
+     *
+     * @return array
+     */
     public function route(): array
     {
         return [
             'component' => 'SiteView',
-            'props'     => $this->props(),
-            'view'      => 'site'
+            'props'     => $this->props()
         ];
     }
 }

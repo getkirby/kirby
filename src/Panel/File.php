@@ -16,6 +16,11 @@ use Throwable;
  */
 class File extends Model
 {
+    /**
+     * Breadcrumb array
+     *
+     * @return array
+     */
     public function breadcrumb(): array
     {
         $parent = $this->model->parent();
@@ -220,10 +225,14 @@ class File extends Model
     }
 
     /**
-     * @param array $props
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
      * @return array
      */
-    public function props(array $props = []): array
+    public function props(): array
     {
         $file     = $this->model;
         $siblings = $file->templateSiblings()->sortBy(
@@ -233,7 +242,7 @@ class File extends Model
             'asc'
         );
 
-        $defaults = [
+        return array_merge(parent::props(), [
             'file' => [
                 'content'    => $this->content(),
                 'dimensions' => $file->dimensions()->toArray(),
@@ -251,17 +260,23 @@ class File extends Model
             ],
             'next' => function () use ($file, $siblings): ?array {
                 $next = $siblings->nth($siblings->indexOf($file) + 1);
-                return $next->panel()->prevnext('filename');
+                return $next ? $next->panel()->prevnext('filename') : null;
             },
             'prev' => function () use ($file, $siblings): ?array {
                 $prev = $siblings->nth($siblings->indexOf($file) - 1);
-                return $prev->panel()->prevnext('filename');
+                return $prev ? $prev->panel()->prevnext('filename') : null;
             }
-        ];
-
-        return parent::props(array_merge_recursive($defaults, $props));
+        ]);
     }
 
+    /**
+     * Returns the data array for
+     * this model's Panel routes
+     *
+     * @internal
+     *
+     * @return array
+     */
     public function route(): array
     {
         $file = $this->model;

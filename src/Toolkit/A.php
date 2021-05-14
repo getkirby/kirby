@@ -2,8 +2,8 @@
 
 namespace Kirby\Toolkit;
 
-use Exception;
 use Closure;
+use Exception;
 
 /**
  * The `A` class provides a set of handy methods

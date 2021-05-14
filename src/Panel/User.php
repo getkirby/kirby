@@ -15,20 +15,10 @@ namespace Kirby\Panel;
 class User extends Model
 {
     /**
-     * Returns the avatar URL for a user
-     * if the user has one
+     * Breadcrumb array
      *
-     * @return string|null
+     * @return array
      */
-    public function avatar(): ?string
-    {
-        if ($avatar = $this->model->avatar()) {
-            return $avatar->url();
-        }
-
-        return null;
-    }
-
     public function breadcrumb(): array
     {
         return [
@@ -97,38 +87,56 @@ class User extends Model
     }
 
     /**
-     * @param array $props
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
      * @return array
      */
-    public function props(array $props = []): array
+    public function props(): array
     {
-        $defaults = [
-            'user' => [
-                'avatar'   => $this->avatar(),
-                'content'  => $this->content(),
-                'email'    => $this->model->email(),
-                'id'       => $this->model->id(),
-                'language' => $this->translation()->name(),
-                'name'     => $this->model->name()->toString(),
-                'role'     => $this->model->role()->title(),
-                'username' => $this->model->username(),
-            ],
-            'next' => $this->model->panel()->next('username'),
-            'prev' => $this->model->panel()->prev('username'),
-        ];
+        $user = $this->model;
 
-        return parent::props(array_merge_recursive($defaults, $props));
+        return array_merge(parent::props(), [
+            'user' => [
+                'avatar'   => $avatar = $user->avatar() ? $avatar->url() : null,
+                'content'  => $this->content(),
+                'email'    => $user->email(),
+                'id'       => $user->id(),
+                'language' => $this->translation()->name(),
+                'name'     => $user->name()->toString(),
+                'role'     => $user->role()->title(),
+                'username' => $user->username(),
+            ],
+            'next' => function () use ($user) {
+                $next = $user->next();
+                return $next ? $next->panel()->prevnext('username') : null;
+            },
+            'prev' => function () use ($user) {
+                $prev = $user->prev();
+                return $prev ? $prev->panel()->prevnext('username') : null;
+            }
+        ]);
     }
 
+    /**
+     * Returns the data array for
+     * this model's Panel routes
+     *
+     * @internal
+     *
+     * @return array
+     */
     public function route(): array
     {
         return [
             'component' => 'UserView',
-            'props' => $this->props(),
-            'view' => [
+            'props'     => $this->props(),
+            'view'      => [
                 'breadcrumb' => $this->breadcrumb(),
-                'id'    => 'user',
-                'title' => $this->model->username(),
+                'id'         => 'user',
+                'title'      => $this->model->username(),
             ]
         ];
     }

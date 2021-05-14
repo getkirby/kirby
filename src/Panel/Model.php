@@ -30,7 +30,7 @@ abstract class Model
     }
 
     /**
-     * Get the content values
+     * Get the content values for the model
      *
      * @return array
      */
@@ -68,6 +68,7 @@ abstract class Model
      * Returns the correct drag text type
      * depending on the given type or the
      * configuration
+     *
      * @internal
      *
      * @param string $type (null|auto|kirbytext|markdown)
@@ -85,9 +86,10 @@ abstract class Model
     }
 
     /**
-     * Returns the panel icon definition
+     * Returns the Panel icon definition
      *
      * @internal
+     *
      * @param array|null $params
      * @return array
      */
@@ -104,7 +106,10 @@ abstract class Model
     }
 
     /**
+     * Returns the Panel image definition
+     *
      * @internal
+     *
      * @param string|array|false|null $settings
      * @return array|null
      */
@@ -178,6 +183,7 @@ abstract class Model
      * Returns the image file object based on provided query
      *
      * @internal
+     *
      * @param string|null $query
      * @return \Kirby\Cms\File|\Kirby\Filesystem\Asset|null
      */
@@ -238,6 +244,11 @@ abstract class Model
     abstract public function path(): string;
 
     /**
+     * Returns link and tooltip
+     * used for prev/next navigation
+     *
+     * @internal
+     *
      * @param string $tooltip
      * @return array|null
      */
@@ -250,10 +261,14 @@ abstract class Model
     }
 
     /**
-     * @param array $props
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
      * @return array
      */
-    public function props(array $props = []): array
+    public function props(): array
     {
         $blueprint = $this->model->blueprint();
         $tabs      = $blueprint->tabs();
@@ -262,21 +277,30 @@ abstract class Model
             $tab = $tabs[0] ?? [];
         }
 
-        return array_merge([
+        return [
             'blueprint'   => $blueprint->name(),
             'permissions' => $this->model->permissions()->toArray(),
             'tab'         => $tab,
             'tabs'        => $tabs,
-        ], $props);
+        ];
     }
 
+    /**
+     * Returns the data array for
+     * this model's Panel routes
+     *
+     * @internal
+     *
+     * @return array
+     */
     abstract public function route(): array;
 
     /**
      * Returns the url to the editing view
-     * in the panel
+     * in the Panel
      *
      * @internal
+     *
      * @param bool $relative
      * @return string
      */
