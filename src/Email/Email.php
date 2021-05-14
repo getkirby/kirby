@@ -110,7 +110,20 @@ class Email
      */
     public function __construct(array $props = [], bool $debug = false)
     {
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'attachments',
+            'body',
+            'bcc',
+            'beforeSend',
+            'cc',
+            'from',
+            'fromName',
+            'replyTo',
+            'replyToName',
+            'subject',
+            'to',
+            'transport'
+        ]);
 
         // @codeCoverageIgnoreStart
         if (static::$debug === false && $debug === false) {
@@ -170,18 +183,6 @@ class Email
     public function cc(): array
     {
         return $this->cc;
-    }
-
-    /**
-     * Returns default transport settings
-     *
-     * @return array
-     */
-    protected function defaultTransport(): array
-    {
-        return [
-            'type' => 'mail'
-        ];
     }
 
     /**
@@ -436,7 +437,7 @@ class Email
      */
     protected function setTransport($transport = null)
     {
-        $this->transport = $transport;
+        $this->transport = $transport ?? ['type' => 'mail'];
         return $this;
     }
 
@@ -467,6 +468,6 @@ class Email
      */
     public function transport(): array
     {
-        return $this->transport ?? $this->defaultTransport();
+        return $this->transport;
     }
 }

@@ -125,7 +125,15 @@ class Site extends ModelWithContent
      */
     public function __construct(array $props = [])
     {
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'blueprint',
+            'errorPageId',
+            'homePageId',
+            'kirby',
+            'page',
+            'site',
+            'url'
+        ]);
     }
 
     /**

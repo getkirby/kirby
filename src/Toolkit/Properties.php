@@ -2,9 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Exception;
-use ReflectionMethod;
-
 /**
  * Properties
  *
@@ -16,6 +13,12 @@ use ReflectionMethod;
  */
 trait Properties
 {
+    /**
+     * Original or default values for properties
+     * before sett methods have been called
+     *
+     * @var array
+     */
     protected $propertyData = [];
 
     /**
@@ -31,121 +34,50 @@ trait Properties
     }
 
     /**
-     * Creates a clone and fetches all
-     * lazy-loaded getters to get a full copy
+     * Creates a clone and fetches
+     * lazy-loaded getters to get a
+     * full copy
      *
      * @return static
      */
     public function hardcopy()
     {
         $clone = $this->clone();
-        $clone->propertiesToArray();
+        foreach (array_keys($this->propertyData) as $prop) {
+            $this->{$prop}();
+        }
         return $clone;
     }
 
-    protected function isRequiredProperty(string $name): bool
+    /**
+     * Sets the data for all named properties
+     * by calling the dedicated prop setter method
+     *
+     * @param array $data
+     * @param array $props
+     * @return $this
+     */
+    protected function setProperties(array $data, array $props)
     {
-        $method = new ReflectionMethod($this, 'set' . $name);
-        return $method->getNumberOfRequiredParameters() > 0;
-    }
+        // loop through all the prop names
+        // that have been passed to be se
+        foreach ($props as $prop) {
 
-    protected function propertiesToArray()
-    {
-        $array = [];
+            // store the data value for the property;
+            // if none has been passed, use the property
+            // default and `null` as fallbacks
+            $this->propertyData[$prop] = $data[$prop] ?? $this->$prop ?? null;
 
-        foreach (get_object_vars($this) as $name => $default) {
-            if ($name === 'propertyData') {
-                continue;
-            }
-
-            if (method_exists($this, 'convert' . $name . 'ToArray') === true) {
-                $array[$name] = $this->{'convert' . $name . 'ToArray'}();
-                continue;
-            }
-
-            if (method_exists($this, $name) === true) {
-                $method = new ReflectionMethod($this, $name);
-
-                if ($method->isPublic() === true) {
-                    $value = $this->$name();
-
-                    if (is_object($value) === false) {
-                        $array[$name] = $value;
-                    }
-                }
-            }
-        }
-
-        ksort($array);
-
-        return $array;
-    }
-
-    protected function setOptionalProperties(array $props, array $optional)
-    {
-        $this->propertyData = array_merge($this->propertyData, $props);
-
-        foreach ($optional as $propertyName) {
-            if (isset($props[$propertyName]) === true) {
-                $this->{'set' . $propertyName}($props[$propertyName]);
+            // call the setter method for the prop:
+            // if a data value for the prop has been passed,
+            // pass this value to the setter method
+            if (isset($data[$prop]) === true) {
+                $this->{'set' . $prop}($data[$prop]);
             } else {
-                $this->{'set' . $propertyName}();
+                $this->{'set' . $prop}();
             }
-        }
-    }
-
-    protected function setProperties($props, array $keys = null)
-    {
-        foreach (get_object_vars($this) as $name => $default) {
-            if ($name === 'propertyData') {
-                continue;
-            }
-
-            $this->setProperty($name, $props[$name] ?? $default);
         }
 
         return $this;
-    }
-
-    protected function setProperty($name, $value, $required = null)
-    {
-        // use a setter if it exists
-        if (method_exists($this, 'set' . $name) === false) {
-            return $this;
-        }
-
-        // fetch the default value from the property
-        $value = $value ?? $this->$name ?? null;
-
-        // store all original properties, to be able to clone them later
-        $this->propertyData[$name] = $value;
-
-        // handle empty values
-        if ($value === null) {
-
-            // replace null with a default value, if a default handler exists
-            if (method_exists($this, 'default' . $name) === true) {
-                $value = $this->{'default' . $name}();
-            }
-
-            // check for required properties
-            if ($value === null && ($required ?? $this->isRequiredProperty($name)) === true) {
-                throw new Exception(sprintf('The property "%s" is required', $name));
-            }
-        }
-
-        // call the setter with the final value
-        return $this->{'set' . $name}($value);
-    }
-
-    protected function setRequiredProperties(array $props, array $required)
-    {
-        foreach ($required as $propertyName) {
-            if (isset($props[$propertyName]) !== true) {
-                throw new Exception(sprintf('The property "%s" is required', $propertyName));
-            }
-
-            $this->{'set' . $propertyName}($props[$propertyName]);
-        }
     }
 }

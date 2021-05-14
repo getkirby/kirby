@@ -54,6 +54,19 @@ class FileVersion
     }
 
     /**
+     * FileVersion constructor
+     *
+     * @param array $props
+     */
+    public function __construct(array $props)
+    {
+        $this->setProperties($props, [
+            'modifications',
+            'original'
+        ]);
+    }
+
+    /**
      * Returns the unique ID
      *
      * @return string

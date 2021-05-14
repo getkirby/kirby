@@ -64,7 +64,13 @@ class Status
      */
     public function __construct(array $props)
     {
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'challenge',
+            'challengeFallback',
+            'email',
+            'kirby',
+            'status'
+        ]);
     }
 
     /**

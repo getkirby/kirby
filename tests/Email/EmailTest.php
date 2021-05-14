@@ -51,8 +51,8 @@ class EmailTest extends TestCase
 
     public function testRequiredProperty()
     {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('The property "from" is required');
+        $this->expectException('TypeError');
+        $this->expectExceptionMessage('Too few arguments to function Kirby\Email\Email::setFrom(), 0 passed');
 
         $email = $this->_email([
             'from' => null

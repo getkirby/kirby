@@ -64,7 +64,14 @@ class OptionsQuery
      */
     public function __construct(array $props)
     {
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'aliases',
+            'data',
+            'options',
+            'query',
+            'text',
+            'value'
+        ]);
     }
 
     /**

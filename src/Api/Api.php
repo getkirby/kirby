@@ -32,7 +32,7 @@ class Api
     /**
      * Authentication callback
      *
-     * @var \Closure
+     * @var \Closure|null
      */
     protected $authentication;
 
@@ -121,7 +121,16 @@ class Api
      */
     public function __construct(array $props)
     {
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'authentication',
+            'collections',
+            'data',
+            'debug',
+            'models',
+            'requestData',
+            'requestMethod',
+            'routes'
+        ]);
     }
 
     /**

@@ -127,7 +127,17 @@ class User extends ModelWithContent
     public function __construct(array $props)
     {
         $props['id'] = $props['id'] ?? $this->createId();
-        $this->setProperties($props);
+        $this->setProperties($props, [
+            'blueprint',
+            'email',
+            'id',
+            'kirby',
+            'language',
+            'name',
+            'password',
+            'role',
+            'site'
+        ]);
     }
 
     /**

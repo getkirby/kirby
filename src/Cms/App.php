@@ -104,7 +104,7 @@ class App
         $this->bakeUrls($props['urls'] ?? []);
 
         // configurable properties
-        $this->setOptionalProperties($props, [
+        $this->setProperties($props, [
             'languages',
             'request',
             'roles',
