@@ -1,11 +1,11 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Filesystem;
 
 use Kirby\Toolkit\Str;
 
 /**
- * The Filename class handles complex
+ * The `Filename` class handles complex
  * mapping of file attributes (i.e for thumbnails)
  * into human readable filenames.
  *
@@ -20,7 +20,7 @@ use Kirby\Toolkit\Str;
  * echo $filename->toString();
  * // result: some-file-300x200-crop-top-left-q80.jpg
  *
- * @package   Kirby Cms
+ * @package   Kirby Filesystem
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH

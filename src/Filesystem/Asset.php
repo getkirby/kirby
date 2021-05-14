@@ -1,17 +1,16 @@
 <?php
 
-namespace Kirby\Cms;
+namespace Kirby\Filesystem;
 
-use Kirby\Toolkit\Properties;
+use Kirby\Cms\FileModifications;
 
 /**
  * Anything in your public path can be converted
  * to an Asset object to use the same handy file
- * methods and thumbnail generation as for any other
- * Kirby files. Pass a relative path to the Asset
- * object to create the asset.
+ * methods as for any other Kirby files. Pass a
+ * relative path to the class to create the asset.
  *
- * @package   Kirby Cms
+ * @package   Kirby Filesystem
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
@@ -19,36 +18,28 @@ use Kirby\Toolkit\Properties;
  */
 class Asset
 {
-    use FileFoundation;
+    use IsFile;
     use FileModifications;
-    use Properties;
 
     /**
+     * Relative file path
+     *
      * @var string
      */
     protected $path;
 
     /**
-     * Creates a new Asset object
-     * for the given path.
+     * Creates a new Asset object for the given path.
      *
      * @param string $path
      */
     public function __construct(string $path)
     {
-        $this->setPath(dirname($path));
-        $this->setRoot($this->kirby()->root('index') . '/' . $path);
-        $this->setUrl($this->kirby()->url('index') . '/' . $path);
-    }
-
-    /**
-     * Returns the alternative text for the asset
-     *
-     * @return null
-     */
-    public function alt()
-    {
-        return null;
+        $this->setProperties([
+            'path' => dirname($path),
+            'root' => $this->kirby()->root('index') . '/' . $path,
+            'url'  => $this->kirby()->url('index') . '/' . $path
+        ]);
     }
 
     /**

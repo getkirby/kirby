@@ -30,7 +30,7 @@ class User extends Model
      * Returns the image file object based on provided query
      *
      * @param string|null $query
-     * @return \Kirby\Cms\File|\Kirby\Cms\Asset|null
+     * @return \Kirby\Cms\File|\Kirby\Filesystem\Asset|null
      */
     protected function imageSource(string $query = null)
     {
