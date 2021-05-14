@@ -6,6 +6,9 @@ export default class Strike extends Mark {
   get button() {
     return {
       icon: "strikethrough",
+      /**
+       * @todo replace with `window.panel.$t()` after merging Inertia
+       */
       label: Vue.$t("toolbar.button.strike")
     };
   }

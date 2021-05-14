@@ -6,6 +6,9 @@ export default class Link extends Mark {
   get button() {
     return {
       icon: "url",
+      /**
+       * @todo replace with `window.panel.$t()` after merging Inertia
+       */
       label: Vue.$t("toolbar.button.link")
     };
   }

@@ -6,6 +6,9 @@ export default class Code extends Mark {
   get button() {
     return {
       icon: "code",
+      /**
+       * @todo replace with `window.panel.$t()` after merging Inertia
+       */
       label: Vue.$t("toolbar.button.code")
     };
   }

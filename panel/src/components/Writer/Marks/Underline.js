@@ -6,6 +6,9 @@ export default class Underline extends Mark {
   get button() {
     return {
       icon: "underline",
+      /**
+       * @todo replace with `window.panel.$t()` after merging Inertia
+       */
       label: Vue.$t("toolbar.button.underline")
     };
   }

@@ -6,6 +6,9 @@ export default class OrderedList extends Node {
   get button() {
     return {
       icon: "list-numbers",
+      /**
+       * @todo replace with `window.panel.$t()` after merging Inertia
+       */
       label: Vue.$t("toolbar.button.ol")
     };
   }

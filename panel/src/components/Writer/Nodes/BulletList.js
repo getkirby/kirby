@@ -6,6 +6,9 @@ export default class BulletList extends Node {
   get button() {
     return {
       icon: "list-bullet",
+      /**
+       * @todo replace with `window.panel.$t()` after merging Inertia
+       */
       label: Vue.$t("toolbar.button.ul")
     };
   }
