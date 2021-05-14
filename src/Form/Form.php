@@ -3,7 +3,10 @@
 namespace Kirby\Form;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Model;
 use Kirby\Data\Data;
+use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\Str;
 use Throwable;
 
 /**
@@ -53,6 +56,12 @@ class Form
         $input  = $props['input']  ?? [];
         $strict = $props['strict'] ?? false;
         $inject = $props;
+
+        // prepare field properties for multilang setups
+        $fields = static::prepareFieldsForLanguage(
+            $fields,
+            $props['language'] ?? null
+        );
 
         // lowercase all value names
         $values = array_change_key_case($values);
@@ -195,6 +204,42 @@ class Form
     }
 
     /**
+     * Get the field object by name
+     * and handle nested fields correctly
+     *
+     * @param string $name
+     * @throws \Kirby\Exception\NotFoundException
+     * @return \Kirby\Form\Field
+     */
+    public function field(string $name)
+    {
+        $form       = $this;
+        $fieldNames = Str::split($name, '+');
+        $index      = 0;
+        $count      = count($fieldNames);
+        $field      = null;
+
+        foreach ($fieldNames as $fieldName) {
+            $index++;
+
+            if ($field = $form->fields()->get($fieldName)) {
+                if ($count !== $index) {
+                    $form = $field->form();
+                }
+            } else {
+                throw new NotFoundException('The field "' . $fieldName . '" could not be found');
+            }
+        }
+
+        // it can get this error only if $name is an empty string as $name = ''
+        if ($field === null) {
+            throw new NotFoundException('No field could be loaded');
+        }
+
+        return $field;
+    }
+
+    /**
      * Returns form fields
      *
      * @return \Kirby\Form\Fields|null
@@ -202,6 +247,47 @@ class Form
     public function fields()
     {
         return $this->fields;
+    }
+
+    /**
+     * @param \Kirby\Cms\Model $model
+     * @param array $props
+     * @return static
+     */
+    public static function for(Model $model, array $props = [])
+    {
+        // get the original model data
+        $original = $model->content($props['language'] ?? null)->toArray();
+        $values   = $props['values'] ?? [];
+
+        // convert closures to values
+        foreach ($values as $key => $value) {
+            if (is_a($value, 'Closure') === true) {
+                $values[$key] = $value($original[$key] ?? null);
+            }
+        }
+
+        // set a few defaults
+        $props['values'] = array_merge($original, $values);
+        $props['fields'] = $props['fields'] ?? [];
+        $props['model']  = $model;
+
+        // search for the blueprint
+        if (method_exists($model, 'blueprint') === true && $blueprint = $model->blueprint()) {
+            $props['fields'] = $blueprint->fields();
+        }
+
+        $ignoreDisabled = $props['ignoreDisabled'] ?? false;
+
+        // REFACTOR: this could be more elegant
+        if ($ignoreDisabled === true) {
+            $props['fields'] = array_map(function ($field) {
+                $field['disabled'] = false;
+                return $field;
+            }, $props['fields']);
+        }
+
+        return new static($props);
     }
 
     /**
@@ -222,6 +308,40 @@ class Form
     public function isValid(): bool
     {
         return empty($this->errors()) === true;
+    }
+
+    /**
+     * Disables fields in secondary languages when
+     * they are configured to be untranslatable
+     *
+     * @param array $fields
+     * @param string|null $language
+     * @return array
+     */
+    protected static function prepareFieldsForLanguage(array $fields, ?string $language = null): array
+    {
+        $kirby = App::instance(null, true);
+
+        // only modify the fields if we have a valid Kirby multilang instance
+        if (!$kirby || $kirby->multilang() === false) {
+            return $fields;
+        }
+
+        if ($language === null) {
+            $language = $kirby->language()->code();
+        }
+
+        if ($language !== $kirby->defaultLanguage()->code()) {
+            foreach ($fields as $fieldName => $fieldProps) {
+                // switch untranslatable fields to readonly
+                if (($fieldProps['translate'] ?? true) === false) {
+                    $fields[$fieldName]['unset']    = true;
+                    $fields[$fieldName]['disabled'] = true;
+                }
+            }
+        }
+
+        return $fields;
     }
 
     /**

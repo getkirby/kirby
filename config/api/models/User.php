@@ -1,7 +1,7 @@
 <?php
 
-use Kirby\Cms\Form;
 use Kirby\Cms\User;
+use Kirby\Form\Form;
 
 /**
  * User

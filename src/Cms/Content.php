@@ -2,6 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Form\Form;
+
 /**
  * The Content class handles all fields
  * for content from pages, the site and users
