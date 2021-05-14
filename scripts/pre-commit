@@ -28,7 +28,7 @@ git diff-index --cached --name-only HEAD | while read -r file; do
     case "$file" in
         bootstrap.php | router.php | @(config|src|tests|views)/**.php)
             echo "### PHP-CS-Fixer on $file"
-            php-cs-fixer fix --config .php_cs --dry-run --diff --diff-format=udiff "$file"
+            php-cs-fixer fix --dry-run --diff "$file"
             echo
 
             if [[ "$file" != tests/** ]]; then

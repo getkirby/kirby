@@ -298,7 +298,7 @@ jobs:
         with:
           php-version: ${{ env.php }}
           coverage: none
-          tools: php-cs-fixer:2.19.0
+          tools: php-cs-fixer:3.0.0
 
       - name: Cache analysis data
         id: finishPrepare
@@ -328,7 +328,7 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         # Use the --dry-run flag in push builds to get a failed CI status
         run: >
-          php-cs-fixer fix --diff --diff-format=udiff
+          php-cs-fixer fix --diff
           ${{ github.event_name != 'pull_request' && '--dry-run' || '' }}
 
       - name: Create code suggestions from the coding style changes (on PR only)
