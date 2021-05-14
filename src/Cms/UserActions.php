@@ -6,6 +6,7 @@ use Closure;
 use Kirby\Data\Data;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\PermissionException;
+use Kirby\Form\Form;
 use Kirby\Http\Idn;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;

@@ -1,7 +1,7 @@
 <?php
 
 use Kirby\Cms\File;
-use Kirby\Cms\Form;
+use Kirby\Form\Form;
 
 /**
  * File

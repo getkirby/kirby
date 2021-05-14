@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Form\Form;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
 
@@ -139,7 +140,7 @@ class Fieldset extends Item
      *
      * @param array $fields
      * @param array $input
-     * @return \Kirby\Cms\Form
+     * @return \Kirby\Form\Form
      */
     public function form(array $fields, array $input = [])
     {
