@@ -76,7 +76,7 @@ new Vue({
           Vue.prototype.$permissions = window.panel.$permissions = props.$permissions;
           Vue.prototype.$system      = window.panel.$system      = props.$system;
           Vue.prototype.$translation = window.panel.$translation = props.$translation;
-          Vue.prototype.$t            = window.panel.$t          = (key, data) => TranslationString.create(key, data);
+          Vue.prototype.$t            = window.panel.$t          = (key, data) => new TranslationString(key, data);
           Vue.prototype.$urls        = window.panel.$urls        = props.$urls;
           Vue.prototype.$user        = window.panel.$user        = props.$user;
           Vue.prototype.$view        = window.panel.$view        = props.$view;

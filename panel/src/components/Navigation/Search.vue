@@ -107,7 +107,7 @@ export default {
   },
   computed: {
     type() {
-      return this.$view.search;
+      return this.$view.search || "pages";
     }
   },
   watch: {
