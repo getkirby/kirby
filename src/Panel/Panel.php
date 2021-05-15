@@ -286,6 +286,14 @@ class Panel
                 'csrf'      => $kirby->option('api.csrf') ?? csrf(),
                 'isLocal'   => $kirby->system()->isLocal(),
                 'license'   => $kirby->system()->license(),
+                'locales'   => function () use ($kirby) {
+                    $locales = [];
+                    $translations = $kirby->translations();
+                    foreach ($translations as $translation) {
+                        $locales[$translation->code()] = $translation->locale();
+                    }
+                    return $locales;
+                },
                 'multilang' => $kirby->option('languages', false) !== false,
                 'slugs'     => Str::$language,
             ],

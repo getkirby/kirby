@@ -76,21 +76,14 @@ export default {
   methods: {
     async back() {
       this.isLoadingBack = true;
-      await this.$store.dispatch("user/logout");
-      this.$reload();
+      this.$go("/logout");
     },
     async login() {
       this.issue          = null;
       this.isLoadingLogin = true;
 
       try {
-        const result = await this.$api.auth.verifyCode(this.code);
-
-        if (this.mode === "password-reset") {
-          this.$store.dispatch("user/visit", "/reset-password");
-        }
-
-        this.$store.dispatch("user/login", result.user);
+        await this.$api.auth.verifyCode(this.code);
         this.$store.dispatch("notification/success", this.$t("welcome"));
         this.$reload();
 

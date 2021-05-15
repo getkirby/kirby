@@ -84,7 +84,7 @@ export default {
         } else {
           // if the entered language code exists
           // matches the locale values in the languages defined in the system
-          let locales = this.$store.state.system.info.locales || [];
+          let locales = this.$system.locales || [];
           if (locales && locales[code]) {
             this.language.locale = locales[code];
           } else {

@@ -189,7 +189,7 @@ export default {
           // the content needs to be reloaded to reflect changes
           if (
             this.isLocked &&
-            this.form.lock.user !== this.$store.state.user.current.id
+            this.form.lock.user !== this.$user.id
           ) {
             this.$events.$emit("model.reload");
           }

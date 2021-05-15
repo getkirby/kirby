@@ -49,11 +49,6 @@ export default {
       try {
         await this.$api.users.changeName(this.user.id, this.user.name);
 
-        // If current panel user, update store
-        if (this.$user.id === this.user.id) {
-          this.$store.dispatch("user/name", this.user.name);
-        }
-
         this.success({
           message: ":)",
           event: "user.changeName"
