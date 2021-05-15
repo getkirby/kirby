@@ -48,16 +48,15 @@ class Panel
     {
         // get the assets from the Vite dev server in dev mode;
         // dev mode = explicitly enabled in the config AND Vite is running
-        $dev = $kirby->option('panel.dev', false);
-        if ($dev !== false && is_file($kirby->roots()->panel() . '/.vite-running') === true) {
-            // explicitly enable the dev mode for the other check below
-            $dev = true;
+        $dev   = $kirby->option('panel.dev', false);
+        $isDev = $dev !== false && is_file($kirby->roots()->panel() . '/.vite-running') === true;
 
-            // Vite on explicitly configured base URL or port 3000 of the current Kirby domain
+        if ($isDev === true) {
+            // vite on explicitly configured base URL or port 3000
+            // of the current Kirby domain
             $url = is_string($dev) === true ? $dev : $kirby->request()->url(['port' => 3000, 'path' => null])->toString();
         } else {
-            // dev mode is not enabled or Vite is not running, use production assets
-            $dev = false;
+            // vite is not running, use production assets
             $url = $kirby->url('media') . '/panel/' . $kirby->versionHash();
         }
 
@@ -93,7 +92,10 @@ class Panel
             ]
         ];
 
-        if ($dev === true) {
+        // during dev mode, add vite client and adapt
+        // path to `index.js` - vendor and stylesheet
+        // don't need to be loaded in dev mode
+        if ($isDev === true) {
             $assets['js']['vite']   = $url . '/@vite/client';
             $assets['js']['index']  = $url . '/src/index.js';
             $assets['js']['vendor'] = null;
