@@ -4,6 +4,9 @@ namespace Kirby\Toolkit;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\A
+ */
 class ATest extends TestCase
 {
     protected function _array()
@@ -15,40 +18,81 @@ class ATest extends TestCase
         ];
     }
 
+    /**
+     * @covers ::apply
+     */
+    public function testApply()
+    {
+        $array = [
+            'level' => [
+                'foo' => 'bar',
+                'homer' => function () {
+                    return 'simpson';
+                }
+            ],
+            'a' => function ($b) {
+                return $b;
+            }
+        ];
+
+        $expected = [
+            'level' => [
+                'foo' => 'bar',
+                'homer' => 'simpson'
+            ],
+            'a' => 'b'
+        ];
+
+        $this->assertSame($expected, A::apply($array, 'b'));
+        $this->assertSame($expected, A::apply($array, 'b', 'c'));
+
+        $array['a'] = function ($b, $c) {
+            return $b . ' or ' . $c;
+        };
+        $expected['a'] = 'b or c';
+        $this->assertSame($expected, A::apply($array, 'b', 'c'));
+    }
+
+    /**
+     * @covers ::get
+     */
     public function testGet()
     {
         $array = $this->_array();
 
         // non-array
-        $this->assertEquals('test', A::get('test', 'test'));
+        $this->assertSame('test', A::get('test', 'test'));
 
         // single key
-        $this->assertEquals('miao', A::get($array, 'cat'));
+        $this->assertSame('miao', A::get($array, 'cat'));
 
         // multiple keys
-        $this->assertEquals([
+        $this->assertSame([
             'cat'  => 'miao',
             'dog'  => 'wuff',
         ], A::get($array, ['cat', 'dog']));
 
         // null key
-        $this->assertEquals($array, A::get($array, null));
+        $this->assertSame($array, A::get($array, null));
 
         // fallback value
-        $this->assertEquals(null, A::get($array, 'elephant'));
-        $this->assertEquals('toot', A::get($array, 'elephant', 'toot'));
+        $this->assertSame(null, A::get($array, 'elephant'));
+        $this->assertSame('toot', A::get($array, 'elephant', 'toot'));
 
-        $this->assertEquals([
+        $this->assertSame([
             'cat' => 'miao',
             'elephant'  => null,
         ], A::get($array, ['cat', 'elephant']));
 
-        $this->assertEquals([
+        $this->assertSame([
             'cat' => 'miao',
             'elephant'  => 'toot',
         ], A::get($array, ['cat', 'elephant'], 'toot'));
     }
 
+    /**
+     * @covers ::get
+     */
     public function testGetWithDotNotation()
     {
         $data = [
@@ -62,22 +106,25 @@ class ATest extends TestCase
             'grand.ma.mother' => $anotherMother = 'another mother'
         ];
 
-        $this->assertEquals($grandma, A::get($data, 'grand.ma'));
-        $this->assertEquals($uncle, A::get($data, 'grand.ma.uncle.dot'));
-        $this->assertEquals($anotherMother, A::get($data, 'grand.ma.mother'));
-        $this->assertEquals($child, A::get($data, 'grand.ma.mother.child'));
-        $this->assertEquals($anotherChild, A::get($data, 'grand.ma.mother.another.nested.child'));
+        $this->assertSame($grandma, A::get($data, 'grand.ma'));
+        $this->assertSame($uncle, A::get($data, 'grand.ma.uncle.dot'));
+        $this->assertSame($anotherMother, A::get($data, 'grand.ma.mother'));
+        $this->assertSame($child, A::get($data, 'grand.ma.mother.child'));
+        $this->assertSame($anotherChild, A::get($data, 'grand.ma.mother.another.nested.child'));
 
         // with default
-        $this->assertEquals('default', A::get($data, 'grand', 'default'));
-        $this->assertEquals('default', A::get($data, 'grand.grandaunt', 'default'));
-        $this->assertEquals('default', A::get($data, 'grand.ma.aunt', 'default'));
-        $this->assertEquals('default', A::get($data, 'grand.ma.uncle.dot.cousin', 'default'));
-        $this->assertEquals('default', A::get($data, 'grand.ma.mother.sister', 'default'));
-        $this->assertEquals('default', A::get($data, 'grand.ma.mother.child.grandchild', 'default'));
-        $this->assertEquals('default', A::get($data, 'grand.ma.mother.child.another.nested.sister', 'default'));
+        $this->assertSame('default', A::get($data, 'grand', 'default'));
+        $this->assertSame('default', A::get($data, 'grand.grandaunt', 'default'));
+        $this->assertSame('default', A::get($data, 'grand.ma.aunt', 'default'));
+        $this->assertSame('default', A::get($data, 'grand.ma.uncle.dot.cousin', 'default'));
+        $this->assertSame('default', A::get($data, 'grand.ma.mother.sister', 'default'));
+        $this->assertSame('default', A::get($data, 'grand.ma.mother.child.grandchild', 'default'));
+        $this->assertSame('default', A::get($data, 'grand.ma.mother.child.another.nested.sister', 'default'));
     }
 
+    /**
+     * @covers ::get
+     */
     public function testGetWithNonexistingOptions()
     {
         $data = [
@@ -86,32 +133,35 @@ class ATest extends TestCase
         ];
 
         $this->assertNull(A::get($data, 'alexander.the.greate'));
-        $this->assertEquals('not great yet', A::get($data, 'alexander'));
+        $this->assertSame('not great yet', A::get($data, 'alexander'));
     }
 
+    /**
+     * @covers ::merge
+     */
     public function testMerge()
     {
 
         // simple non-associative arrays
-        $this->assertEquals(['a', 'b', 'c', 'd'], A::merge(['a', 'b'], ['c', 'd']));
-        $this->assertEquals(['a', 'b', 'c', 'd', 'a'], A::merge(['a', 'b'], ['c', 'd', 'a']));
+        $this->assertSame(['a', 'b', 'c', 'd'], A::merge(['a', 'b'], ['c', 'd']));
+        $this->assertSame(['a', 'b', 'c', 'd', 'a'], A::merge(['a', 'b'], ['c', 'd', 'a']));
 
         // simple associative arrays
-        $this->assertEquals(['a' => 'b', 'c' => 'd'], A::merge(['a' => 'b'], ['c' => 'd']));
-        $this->assertEquals(['a' => 'c'], A::merge(['a' => 'b'], ['a' => 'c']));
+        $this->assertSame(['a' => 'b', 'c' => 'd'], A::merge(['a' => 'b'], ['c' => 'd']));
+        $this->assertSame(['a' => 'c'], A::merge(['a' => 'b'], ['a' => 'c']));
 
         // recursive merging
-        $this->assertEquals(['a' => ['b', 'c', 'b', 'd']], A::merge(['a' => ['b', 'c']], ['a' => ['b', 'd']]));
-        $this->assertEquals(['a' => ['b' => 'd', 'd' => 'e']], A::merge(['a' => ['b' => 'c', 'd' => 'e']], ['a' => ['b' => 'd']]));
-        $this->assertEquals(['a' => ['b', 'c']], A::merge(['a' => 'b'], ['a' => ['b', 'c']]));
-        $this->assertEquals(['a' => 'b'], A::merge(['a' => ['b', 'c']], ['a' => 'b']));
+        $this->assertSame(['a' => ['b', 'c', 'b', 'd']], A::merge(['a' => ['b', 'c']], ['a' => ['b', 'd']]));
+        $this->assertSame(['a' => ['b' => 'd', 'd' => 'e']], A::merge(['a' => ['b' => 'c', 'd' => 'e']], ['a' => ['b' => 'd']]));
+        $this->assertSame(['a' => ['b', 'c']], A::merge(['a' => 'b'], ['a' => ['b', 'c']]));
+        $this->assertSame(['a' => 'b'], A::merge(['a' => ['b', 'c']], ['a' => 'b']));
 
         // append feature
-        $this->assertEquals(['a', 'b', 'c', 'd', 'a'], A::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a']));
-        $this->assertEquals(['a', 'b', 'c', 'd', 'a'], A::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a'], true));
-        $this->assertEquals([1 => 'c', 3 => 'd', 4 => 'b', 5 => 'a'], A::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a'], false));
-        $this->assertEquals(['a' => ['b', 'c', 'e', 'd']], A::merge(['a' => [1 => 'b', 4 => 'c']], ['a' => [1 => 'e', 3 => 'd']], true));
-        $this->assertEquals(['a' => [1 => 'c', 3 => 'd', 4 => 'b', 5 => 'a']], A::merge(['a' => [1 => 'a', 4 => 'b']], ['a' => [1 => 'c', 3 => 'd', 5 => 'a']], false));
+        $this->assertSame(['a', 'b', 'c', 'd', 'a'], A::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a']));
+        $this->assertSame(['a', 'b', 'c', 'd', 'a'], A::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a'], true));
+        $this->assertSame([1 => 'c', 4 => 'b', 3 => 'd', 5 => 'a'], A::merge([1 => 'a', 4 => 'b'], [1 => 'c', 3 => 'd', 5 => 'a'], false));
+        $this->assertSame(['a' => ['b', 'c', 'e', 'd']], A::merge(['a' => [1 => 'b', 4 => 'c']], ['a' => [1 => 'e', 3 => 'd']], true));
+        $this->assertSame(['a' => [1 => 'c', 4 => 'b', 3 => 'd', 5 => 'a']], A::merge(['a' => [1 => 'a', 4 => 'b']], ['a' => [1 => 'c', 3 => 'd', 5 => 'a']], false));
 
         // replace feature
         $a = [
@@ -122,9 +172,12 @@ class ATest extends TestCase
             'a' => ['d', 'e', 'f']
         ];
 
-        $this->assertEquals($b, A::merge($a, $b, A::MERGE_REPLACE));
+        $this->assertSame($b, A::merge($a, $b, A::MERGE_REPLACE));
     }
 
+    /**
+     * @covers ::pluck
+     */
     public function testPluck()
     {
         $array = [
@@ -133,33 +186,45 @@ class ATest extends TestCase
             [ 'id' => 3, 'username' => 'lukas']
         ];
 
-        $this->assertEquals([
+        $this->assertSame([
             'bastian',
             'sonja',
             'lukas'
         ], A::pluck($array, 'username'));
     }
 
+    /**
+     * @covers ::shuffle
+     */
     public function testShuffle()
     {
         $array = $this->_array();
         $shuffled = A::shuffle($array);
 
-        $this->assertEquals($array['cat'], $shuffled['cat']);
-        $this->assertEquals($array['dog'], $shuffled['dog']);
-        $this->assertEquals($array['bird'], $shuffled['bird']);
+        $this->assertSame($array['cat'], $shuffled['cat']);
+        $this->assertSame($array['dog'], $shuffled['dog']);
+        $this->assertSame($array['bird'], $shuffled['bird']);
     }
 
+    /**
+     * @covers ::first
+     */
     public function testFirst()
     {
-        $this->assertEquals('miao', A::first($this->_array()));
+        $this->assertSame('miao', A::first($this->_array()));
     }
 
+    /**
+     * @covers ::last
+     */
     public function testLast()
     {
-        $this->assertEquals('tweet', A::last($this->_array()));
+        $this->assertSame('tweet', A::last($this->_array()));
     }
 
+    /**
+     * @covers ::fill
+     */
     public function testFill()
     {
         $array = [
@@ -169,7 +234,7 @@ class ATest extends TestCase
         ];
 
         // placholder
-        $this->assertEquals([
+        $this->assertSame([
             'miao',
             'wuff',
             'tweet',
@@ -177,7 +242,7 @@ class ATest extends TestCase
         ], A::fill($array, 4));
 
         // custom value
-        $this->assertEquals([
+        $this->assertSame([
             'miao',
             'wuff',
             'tweet',
@@ -186,6 +251,9 @@ class ATest extends TestCase
         ], A::fill($array, 5, 'elephant'));
     }
 
+    /**
+     * @covers ::move
+     */
     public function testMove()
     {
         $input = [
@@ -195,16 +263,19 @@ class ATest extends TestCase
             'd'
         ];
 
-        $this->assertEquals(['a', 'b', 'c', 'd'], A::move($input, 0, 0));
-        $this->assertEquals(['b', 'a', 'c', 'd'], A::move($input, 0, 1));
-        $this->assertEquals(['b', 'c', 'a', 'd'], A::move($input, 0, 2));
-        $this->assertEquals(['b', 'c', 'd', 'a'], A::move($input, 0, 3));
+        $this->assertSame(['a', 'b', 'c', 'd'], A::move($input, 0, 0));
+        $this->assertSame(['b', 'a', 'c', 'd'], A::move($input, 0, 1));
+        $this->assertSame(['b', 'c', 'a', 'd'], A::move($input, 0, 2));
+        $this->assertSame(['b', 'c', 'd', 'a'], A::move($input, 0, 3));
 
-        $this->assertEquals(['d', 'a', 'b', 'c'], A::move($input, 3, 0));
-        $this->assertEquals(['c', 'a', 'b', 'd'], A::move($input, 2, 0));
-        $this->assertEquals(['b', 'a', 'c', 'd'], A::move($input, 1, 0));
+        $this->assertSame(['d', 'a', 'b', 'c'], A::move($input, 3, 0));
+        $this->assertSame(['c', 'a', 'b', 'd'], A::move($input, 2, 0));
+        $this->assertSame(['b', 'a', 'c', 'd'], A::move($input, 1, 0));
     }
 
+    /**
+     * @covers ::move
+     */
     public function testMoveWithInvalidFrom()
     {
         $this->expectException('Exception');
@@ -213,6 +284,9 @@ class ATest extends TestCase
         A::move(['a', 'b', 'c'], -1, 2);
     }
 
+    /**
+     * @covers ::move
+     */
     public function testMoveWithInvalidTo()
     {
         $this->expectException('Exception');
@@ -221,14 +295,20 @@ class ATest extends TestCase
         A::move(['a', 'b', 'c'], 0, 4);
     }
 
+    /**
+     * @covers ::missing
+     */
     public function testMissing()
     {
         $required = ['cat', 'elephant'];
 
-        $this->assertEquals(['elephant'], A::missing($this->_array(), $required));
-        $this->assertEquals([], A::missing($this->_array(), ['cat']));
+        $this->assertSame(['elephant'], A::missing($this->_array(), $required));
+        $this->assertSame([], A::missing($this->_array(), ['cat']));
     }
 
+    /**
+     * @covers ::nest
+     */
     public function testNest()
     {
         // simple example
@@ -385,6 +465,9 @@ class ATest extends TestCase
         $this->assertSame($expected, A::nest(A::merge($input1, $input2, A::MERGE_REPLACE), ['l.m', 'l.o']));
     }
 
+    /**
+     * @covers ::nestByKeys
+     */
     public function testNestByKeys()
     {
         $this->assertSame('test', A::nestByKeys('test', []));
@@ -392,6 +475,9 @@ class ATest extends TestCase
         $this->assertSame(['a' => ['b' => 'test']], A::nestByKeys('test', ['a', 'b']));
     }
 
+    /**
+     * @covers ::sort
+     */
     public function testSort()
     {
         $array = [
@@ -403,16 +489,16 @@ class ATest extends TestCase
         // ASC
         $sorted = A::sort($array, 'username', 'asc');
 
-        $this->assertEquals(0, array_search('bastian', array_column($sorted, 'username')));
-        $this->assertEquals(2, array_search('sonja', array_column($sorted, 'username')));
-        $this->assertEquals(1, array_search('lukas', array_column($sorted, 'username')));
+        $this->assertSame(0, array_search('bastian', array_column($sorted, 'username')));
+        $this->assertSame(2, array_search('sonja', array_column($sorted, 'username')));
+        $this->assertSame(1, array_search('lukas', array_column($sorted, 'username')));
 
         // DESC
         $sorted = A::sort($array, 'username', 'desc');
 
-        $this->assertEquals(2, array_search('bastian', array_column($sorted, 'username')));
-        $this->assertEquals(0, array_search('sonja', array_column($sorted, 'username')));
-        $this->assertEquals(1, array_search('lukas', array_column($sorted, 'username')));
+        $this->assertSame(2, array_search('bastian', array_column($sorted, 'username')));
+        $this->assertSame(0, array_search('sonja', array_column($sorted, 'username')));
+        $this->assertSame(1, array_search('lukas', array_column($sorted, 'username')));
 
         //SORT_NATURAL
         $array = [
@@ -425,17 +511,20 @@ class ATest extends TestCase
         $regular = A::sort($array, 'file', 'asc');
         $natural = A::sort($array, 'file', 'asc', SORT_NATURAL);
 
-        $this->assertEquals(0, array_search('img1.png', array_column($regular, 'file')));
-        $this->assertEquals(1, array_search('img10.png', array_column($regular, 'file')));
-        $this->assertEquals(2, array_search('img12.png', array_column($regular, 'file')));
-        $this->assertEquals(3, array_search('img2.png', array_column($regular, 'file')));
+        $this->assertSame(0, array_search('img1.png', array_column($regular, 'file')));
+        $this->assertSame(1, array_search('img10.png', array_column($regular, 'file')));
+        $this->assertSame(2, array_search('img12.png', array_column($regular, 'file')));
+        $this->assertSame(3, array_search('img2.png', array_column($regular, 'file')));
 
-        $this->assertEquals(0, array_search('img1.png', array_column($natural, 'file')));
-        $this->assertEquals(1, array_search('img2.png', array_column($natural, 'file')));
-        $this->assertEquals(2, array_search('img10.png', array_column($natural, 'file')));
-        $this->assertEquals(3, array_search('img12.png', array_column($natural, 'file')));
+        $this->assertSame(0, array_search('img1.png', array_column($natural, 'file')));
+        $this->assertSame(1, array_search('img2.png', array_column($natural, 'file')));
+        $this->assertSame(2, array_search('img10.png', array_column($natural, 'file')));
+        $this->assertSame(3, array_search('img12.png', array_column($natural, 'file')));
     }
 
+    /**
+     * @covers ::isAssociative
+     */
     public function testIsAssociative()
     {
         $yes = $this->_array();
@@ -445,15 +534,21 @@ class ATest extends TestCase
         $this->assertFalse(A::isAssociative($no));
     }
 
+    /**
+     * @covers ::average
+     */
     public function testAverage()
     {
         $array = [5, 2, 4, 7, 9.7];
 
-        $this->assertEquals(6, A::average($array));
-        $this->assertEquals(5.5, A::average($array, 1));
-        $this->assertEquals(5.54, A::average($array, 2));
+        $this->assertSame(6.0, A::average($array));
+        $this->assertSame(5.5, A::average($array, 1));
+        $this->assertSame(5.54, A::average($array, 2));
     }
 
+    /**
+     * @covers ::extend
+     */
     public function testExtend()
     {
         // simple
@@ -473,7 +568,7 @@ class ATest extends TestCase
             'fox'      => 'what does the fox say?'
         ];
 
-        $this->assertEquals($merged, A::extend($a, $b));
+        $this->assertSame($merged, A::extend($a, $b));
 
         // complex
         $a = [
@@ -491,20 +586,26 @@ class ATest extends TestCase
             'object'       => 'others'
         ];
 
-        $this->assertEquals($merged, A::extend($a, $b));
+        $this->assertSame($merged, A::extend($a, $b));
     }
 
+    /**
+     * @covers ::join
+     */
     public function testJoin()
     {
         $array = ['a', 'b', 'c'];
-        $this->assertEquals('a, b, c', A::join($array));
+        $this->assertSame('a, b, c', A::join($array));
 
         $array = ['a', 'b', 'c'];
-        $this->assertEquals('a/b/c', A::join($array, '/'));
+        $this->assertSame('a/b/c', A::join($array, '/'));
 
-        $this->assertEquals('a/b/c', A::join('a/b/c'));
+        $this->assertSame('a/b/c', A::join('a/b/c'));
     }
 
+    /**
+     * @covers ::update
+     */
     public function testUpdate()
     {
         $array = $this->_array();
@@ -515,23 +616,26 @@ class ATest extends TestCase
         ];
 
         // value
-        $this->assertEquals($updated, A::update($array, ['cat' => 'meow']));
+        $this->assertSame($updated, A::update($array, ['cat' => 'meow']));
 
         // callback
-        $this->assertEquals($updated, A::update($array, ['cat' => function ($value) {
+        $this->assertSame($updated, A::update($array, ['cat' => function ($value) {
             return 'meow';
         }]));
     }
 
+    /**
+     * @covers ::wrap
+     */
     public function testWrap()
     {
         $result = A::wrap($expected = ['a', 'b']);
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
 
         $result = A::wrap('a');
-        $this->assertEquals(['a'], $result);
+        $this->assertSame(['a'], $result);
 
         $result = A::wrap(null);
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 }
