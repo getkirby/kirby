@@ -15,6 +15,22 @@ namespace Kirby\Panel;
 class Site extends Model
 {
     /**
+     * Returns the image file object based on provided query
+     *
+     * @internal
+     * @param string|null $query
+     * @return \Kirby\Cms\File|\Kirby\Filesystem\Asset|null
+     */
+    protected function imageSource(string $query = null)
+    {
+        if ($query === null) {
+            $query = 'site.image';
+        }
+
+        return parent::imageSource($query);
+    }
+
+    /**
      * Returns the full path without leading slash
      *
      * @return string
