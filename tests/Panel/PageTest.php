@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
 
@@ -20,6 +21,11 @@ class ModelPageTestForceLocked extends ModelPage
  */
 class PageTest extends TestCase
 {
+    public function tearDown(): void
+    {
+        Dir::remove(__DIR__ . '/tmp');
+    }
+
     /**
      * @covers ::dragText
      * @covers \Kirby\Panel\Model::dragTextType
@@ -283,12 +289,25 @@ class PageTest extends TestCase
      */
     public function testImageCover()
     {
-        $page = new ModelPage([
-            'slug' => 'test',
-            'files' => [
-                ['filename' => 'test.jpg']
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'media' => __DIR__ . '/tmp'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            ['filename' => 'test.jpg']
+                        ]
+                    ]
+                ]
             ]
         ]);
+
+        $page  = $app->page('test');
+        $panel = new Page($page);
 
         $hash = $page->image()->mediaHash();
 
@@ -306,7 +325,7 @@ class PageTest extends TestCase
                 'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
                 'srcset' => '/media/pages/test/' . $hash . '/test-38x.jpg 38w, /media/pages/test/' . $hash . '/test-76x.jpg 76w'
             ]
-        ], (new Page($page))->image());
+        ], $panel->image());
 
         // cover enabled
         $this->assertSame([
@@ -322,7 +341,7 @@ class PageTest extends TestCase
                 'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
                 'srcset' => '/media/pages/test/' . $hash . '/test-38x38.jpg 1x, /media/pages/test/' . $hash . '/test-76x76.jpg 2x'
             ]
-        ], (new Page($page))->image(['cover' => true]));
+        ], $panel->image(['cover' => true]));
     }
 
     /**
@@ -422,16 +441,19 @@ class PageTest extends TestCase
     public function testPickerDataDefault()
     {
         $page = new ModelPage([
-            'slug'  => 'test'
+            'slug' => 'test',
+            'content' => [
+                'title' => 'Test Title'
+            ]
         ]);
 
         $panel = new Page($page);
         $data  = $panel->pickerData();
 
-        $this->assertSame('Links sind toll: /test', $data['dragText']);
+        $this->assertSame('(link: test text: Test Title)', $data['dragText']);
         $this->assertSame('test', $data['id']);
         $this->assertSame('/pages/test', $data['link']);
-        $this->assertSame('test', $data['text']);
+        $this->assertSame('Test Title', $data['text']);
     }
 
     /**
