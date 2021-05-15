@@ -44,7 +44,13 @@ class ATest extends TestCase
         ];
 
         $this->assertSame($expected, A::apply($array, 'b'));
-        $this->assertSame($expected, A::apply($array, ['b', 'c']));
+        $this->assertSame($expected, A::apply($array, 'b', 'c'));
+
+        $array['a'] = function ($b, $c) {
+            return $b . ' or ' . $c;
+        };
+        $expected['a'] = 'b or c';
+        $this->assertSame($expected, A::apply($array, 'b', 'c'));
     }
 
     /**
