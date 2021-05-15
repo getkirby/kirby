@@ -34,23 +34,19 @@ class A
 
 
     /**
-     * Loops through the array and resolves
-     * any item defined as Closure, applying
-     * the passed parameters
+     * Recursively loops through the array and
+     * resolves any item defined as `Closure`,
+     * applying the passed parameters
      *
      * @param array $array
-     * @param mixed $params parameters to pass to the Closure
+     * @param mixed ...$args Parameters to pass to the closures
      * @return array
      */
-    public static function apply(array $array, $params = []): array
+    public static function apply(array $array, ...$args): array
     {
-        if (is_array($params) === false) {
-            $params = A::wrap($params);
-        }
-
-        array_walk_recursive($array, function (&$item) use ($params) {
-            if (is_a($item, Closure::class)) {
-                $item = call_user_func_array($item, $params);
+        array_walk_recursive($array, function (&$item) use ($args) {
+            if (is_a($item, 'Closure')) {
+                $item = $item(...$args);
             }
         });
 
