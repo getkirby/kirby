@@ -17,6 +17,9 @@ class StringObject
     }
 }
 
+/**
+ * @coversDefaultClass \Kirby\Toolkit\Collection
+ */
 class CollectionTest extends TestCase
 {
     protected $collection;
@@ -33,18 +36,24 @@ class CollectionTest extends TestCase
         $this->collection = new Collection($this->sampleData);
     }
 
+    protected function assertIsUntouched()
+    {
+        // the original collection must to be untouched
+        $this->assertSame($this->sampleData, $this->collection->toArray());
+    }
+
+    /**
+     * @covers ::__debuginfo
+     */
     public function test__debuginfo()
     {
         $collection = new Collection(['a' => 'A', 'b' => 'B']);
-        $this->assertEquals(['a', 'b'], $collection->__debugInfo());
+        $this->assertSame(['a', 'b'], $collection->__debugInfo());
     }
 
-    public function assertIsUntouched()
-    {
-        // the original collection must to be untouched
-        $this->assertEquals($this->sampleData, $this->collection->toArray());
-    }
-
+    /**
+     * @covers ::append
+     */
     public function testAppend()
     {
         // simple
@@ -53,8 +62,8 @@ class CollectionTest extends TestCase
         $collection = $collection->append('b');
         $collection = $collection->append('c');
 
-        $this->assertEquals([0, 1, 2], $collection->keys());
-        $this->assertEquals(['a', 'b', 'c'], $collection->values());
+        $this->assertSame([0, 1, 2], $collection->keys());
+        $this->assertSame(['a', 'b', 'c'], $collection->values());
 
         // with key
         $collection = new Collection();
@@ -62,8 +71,8 @@ class CollectionTest extends TestCase
         $collection = $collection->append('b', 'B');
         $collection = $collection->append('c', 'C');
 
-        $this->assertEquals(['a', 'b', 'c'], $collection->keys());
-        $this->assertEquals(['A', 'B', 'C'], $collection->values());
+        $this->assertSame(['a', 'b', 'c'], $collection->keys());
+        $this->assertSame(['A', 'B', 'C'], $collection->values());
 
         // with too many params
         $collection = new Collection();
@@ -71,10 +80,14 @@ class CollectionTest extends TestCase
         $collection = $collection->append('b', 'B', 'ignore this');
         $collection = $collection->append('c', 'C', 'ignore this');
 
-        $this->assertEquals(['a', 'b', 'c'], $collection->keys());
-        $this->assertEquals(['A', 'B', 'C'], $collection->values());
+        $this->assertSame(['a', 'b', 'c'], $collection->keys());
+        $this->assertSame(['A', 'B', 'C'], $collection->values());
     }
 
+    /**
+     * @covers ::get
+     * @covers ::set
+     */
     public function testCaseSensitive()
     {
         $normalCollection = new Collection([
@@ -122,12 +135,18 @@ class CollectionTest extends TestCase
         $this->assertNull($sensitiveCollection->get('another'));
     }
 
+    /**
+     * @covers ::count
+     */
     public function testCount()
     {
-        $this->assertEquals(3, $this->collection->count());
-        $this->assertEquals(3, count($this->collection));
+        $this->assertSame(3, $this->collection->count());
+        $this->assertSame(3, count($this->collection));
     }
 
+    /**
+     * @covers ::filter
+     */
     public function testFilter()
     {
         $func = function ($element) {
@@ -136,24 +155,33 @@ class CollectionTest extends TestCase
 
         $filtered = $this->collection->filter($func);
 
-        $this->assertEquals('My second element', $filtered->first());
-        $this->assertEquals('My second element', $filtered->last());
-        $this->assertEquals(1, $filtered->count());
+        $this->assertSame('My second element', $filtered->first());
+        $this->assertSame('My second element', $filtered->last());
+        $this->assertSame(1, $filtered->count());
         $this->assertIsUntouched();
     }
 
+    /**
+     * @covers ::first
+     */
     public function testFirst()
     {
-        $this->assertEquals('My first element', $this->collection->first());
+        $this->assertSame('My first element', $this->collection->first());
     }
 
+    /**
+     * @covers ::flip
+     */
     public function testFlip()
     {
-        $this->assertEquals(array_reverse($this->sampleData, true), $this->collection->flip()->toArray());
-        $this->assertEquals($this->sampleData, $this->collection->flip()->flip()->toArray());
+        $this->assertSame(array_reverse($this->sampleData, true), $this->collection->flip()->toArray());
+        $this->assertSame($this->sampleData, $this->collection->flip()->flip()->toArray());
         $this->assertIsUntouched();
     }
 
+    /**
+     * @covers ::getAttribute
+     */
     public function testGetAttributeFromArray()
     {
         $collection = new Collection([
@@ -167,14 +195,17 @@ class CollectionTest extends TestCase
             ],
         ]);
 
-        $this->assertEquals('Homer', $collection->getAttribute($collection->first(), 'username'));
-        $this->assertEquals('Marge', $collection->getAttribute($collection->last(), 'username'));
+        $this->assertSame('Homer', $collection->getAttribute($collection->first(), 'username'));
+        $this->assertSame('Marge', $collection->getAttribute($collection->last(), 'username'));
 
         // split
-        $this->assertEquals(['simpson', 'male'], $collection->getAttribute($collection->first(), 'tags', true));
-        $this->assertEquals(['simpson', 'female'], $collection->getAttribute($collection->last(), 'tags', true));
+        $this->assertSame(['simpson', 'male'], $collection->getAttribute($collection->first(), 'tags', true));
+        $this->assertSame(['simpson', 'female'], $collection->getAttribute($collection->last(), 'tags', true));
     }
 
+    /**
+     * @covers ::getAttribute
+     */
     public function testGetAttributeFromObject()
     {
         $collection = new Collection([
@@ -186,25 +217,33 @@ class CollectionTest extends TestCase
             ]),
         ]);
 
-        $this->assertEquals('Homer', $collection->getAttribute($collection->first(), 'username'));
-        $this->assertEquals('Marge', $collection->getAttribute($collection->last(), 'username'));
+        $this->assertSame('Homer', $collection->getAttribute($collection->first(), 'username'));
+        $this->assertSame('Marge', $collection->getAttribute($collection->last(), 'username'));
     }
 
+    /**
+     * @covers ::__get
+     * @covers ::__call
+     * @covers ::get
+     */
     public function testGetters()
     {
-        $this->assertEquals('My first element', $this->collection->first);
-        $this->assertEquals('My second element', $this->collection->second);
-        $this->assertEquals('My third element', $this->collection->third);
+        $this->assertSame('My first element', $this->collection->first);
+        $this->assertSame('My second element', $this->collection->second);
+        $this->assertSame('My third element', $this->collection->third);
 
-        $this->assertEquals('My first element', $this->collection->first());
-        $this->assertEquals('My second element', $this->collection->second());
-        $this->assertEquals('My third element', $this->collection->third());
+        $this->assertSame('My first element', $this->collection->first());
+        $this->assertSame('My second element', $this->collection->second());
+        $this->assertSame('My third element', $this->collection->third());
 
-        $this->assertEquals('My first element', $this->collection->get('first'));
-        $this->assertEquals('My second element', $this->collection->get('second'));
-        $this->assertEquals('My third element', $this->collection->get('third'));
+        $this->assertSame('My first element', $this->collection->get('first'));
+        $this->assertSame('My second element', $this->collection->get('second'));
+        $this->assertSame('My third element', $this->collection->get('third'));
     }
 
+    /**
+     * @covers ::group
+     */
     public function testGroup()
     {
         $collection = new Collection();
@@ -228,13 +267,16 @@ class CollectionTest extends TestCase
             return $item['group'];
         });
 
-        $this->assertEquals(2, $groups->admin()->count());
-        $this->assertEquals(1, $groups->client()->count());
+        $this->assertSame(2, $groups->admin()->count());
+        $this->assertSame(1, $groups->client()->count());
 
         $firstAdmin = $groups->admin()->first();
-        $this->assertEquals('peter', $firstAdmin['username']);
+        $this->assertSame('peter', $firstAdmin['username']);
     }
 
+    /**
+     * @covers ::group
+     */
     public function testGroupWithInvalidKey()
     {
         $collection = new Collection(['a' => 'A']);
@@ -247,6 +289,9 @@ class CollectionTest extends TestCase
         });
     }
 
+    /**
+     * @covers ::group
+     */
     public function testGroupArray()
     {
         $collection = new Collection(['a' => 'A']);
@@ -259,6 +304,9 @@ class CollectionTest extends TestCase
         });
     }
 
+    /**
+     * @covers ::group
+     */
     public function testGroupObject()
     {
         $collection = new Collection(['a' => 'A']);
@@ -271,6 +319,9 @@ class CollectionTest extends TestCase
         });
     }
 
+    /**
+     * @covers ::group
+     */
     public function testGroupStringObject()
     {
         $collection = new Collection();
@@ -294,13 +345,16 @@ class CollectionTest extends TestCase
             return $item['group'];
         });
 
-        $this->assertEquals(2, $groups->admin()->count());
-        $this->assertEquals(1, $groups->client()->count());
+        $this->assertSame(2, $groups->admin()->count());
+        $this->assertSame(1, $groups->client()->count());
 
         $firstAdmin = $groups->admin()->first();
-        $this->assertEquals('peter', $firstAdmin['username']);
+        $this->assertSame('peter', $firstAdmin['username']);
     }
 
+    /**
+     * @covers ::group
+     */
     public function testGroupBy()
     {
         $collection = new Collection();
@@ -322,13 +376,16 @@ class CollectionTest extends TestCase
 
         $groups = $collection->group('group');
 
-        $this->assertEquals(2, $groups->admin()->count());
-        $this->assertEquals(1, $groups->client()->count());
+        $this->assertSame(2, $groups->admin()->count());
+        $this->assertSame(1, $groups->client()->count());
 
         $firstAdmin = $groups->admin()->first();
-        $this->assertEquals('peter', $firstAdmin['username']);
+        $this->assertSame('peter', $firstAdmin['username']);
     }
 
+    /**
+     * @covers ::group
+     */
     public function testGroupByWithInvalidKey()
     {
         $collection = new Collection(['a' => 'A']);
@@ -339,11 +396,17 @@ class CollectionTest extends TestCase
         $collection->group(1);
     }
 
+    /**
+     * @covers ::indexOf
+     */
     public function testIndexOf()
     {
-        $this->assertEquals(1, $this->collection->indexOf('My second element'));
+        $this->assertSame(1, $this->collection->indexOf('My second element'));
     }
 
+    /**
+     * @covers ::intersection
+     */
     public function testIntersection()
     {
         $collection1 = new Collection([
@@ -367,15 +430,15 @@ class CollectionTest extends TestCase
         $result = $collection1->intersection($collection2);
 
         $this->assertCount(2, $result);
-        $this->assertEquals($b, $result->first());
-        $this->assertEquals($c, $result->last());
+        $this->assertSame($b, $result->first());
+        $this->assertSame($c, $result->last());
 
         // 2 with 1
         $result = $collection2->intersection($collection1);
 
         $this->assertCount(2, $result);
-        $this->assertEquals($c, $result->first());
-        $this->assertEquals($b, $result->last());
+        $this->assertSame($c, $result->first());
+        $this->assertSame($b, $result->last());
 
         // 1 with 3
         $result = $collection1->intersection($collection3);
@@ -386,9 +449,12 @@ class CollectionTest extends TestCase
         $result = $collection3->intersection($collection2);
 
         $this->assertCount(1, $result);
-        $this->assertEquals($d, $result->first());
+        $this->assertSame($d, $result->first());
     }
 
+    /**
+     * @covers ::intersects
+     */
     public function testIntersects()
     {
         $collection1 = new Collection([
@@ -421,6 +487,9 @@ class CollectionTest extends TestCase
         $this->assertTrue($collection3->intersects($collection2));
     }
 
+    /**
+     * @covers ::isEmpty
+     */
     public function testIsEmpty()
     {
         $collection = new Collection([
@@ -432,6 +501,9 @@ class CollectionTest extends TestCase
         $this->assertFalse($collection->isEmpty());
     }
 
+    /**
+     * @covers ::isEven
+     */
     public function testIsEven()
     {
         $collection = new Collection(['a' => 'a']);
@@ -441,6 +513,9 @@ class CollectionTest extends TestCase
         $this->assertTrue($collection->isEven());
     }
 
+    /**
+     * @covers ::isNotEmpty
+     */
     public function testIsNotEmpty()
     {
         $collection = new Collection([]);
@@ -449,6 +524,9 @@ class CollectionTest extends TestCase
         $this->assertFalse($collection->isNotEmpty());
     }
 
+    /**
+     * @covers ::isOdd
+     */
     public function testIsOdd()
     {
         $collection = new Collection(['a' => 'a']);
@@ -458,89 +536,122 @@ class CollectionTest extends TestCase
         $this->assertFalse($collection->isOdd());
     }
 
+    /**
+     * @covers ::__get
+     */
     public function testIsset()
     {
         $this->assertTrue(isset($this->collection->first));
         $this->assertFalse(isset($this->collection->super));
     }
 
+    /**
+     * @covers ::keyOf
+     */
     public function testKeyOf()
     {
-        $this->assertEquals('second', $this->collection->keyOf('My second element'));
+        $this->assertSame('second', $this->collection->keyOf('My second element'));
     }
 
+    /**
+     * @covers ::keys
+     */
     public function testKeys()
     {
-        $this->assertEquals(['first', 'second', 'third'], $this->collection->keys());
+        $this->assertSame(['first', 'second', 'third'], $this->collection->keys());
     }
 
+    /**
+     * @covers ::last
+     */
     public function testLast()
     {
-        $this->assertEquals('My third element', $this->collection->last());
+        $this->assertSame('My third element', $this->collection->last());
     }
 
+    /**
+     * @covers ::next
+     * @covers ::prev
+     */
     public function testNextAndPrev()
     {
-        $this->assertEquals('My second element', $this->collection->next());
-        $this->assertEquals('My third element', $this->collection->next());
-        $this->assertEquals('My second element', $this->collection->prev());
+        $this->assertSame('My second element', $this->collection->next());
+        $this->assertSame('My third element', $this->collection->next());
+        $this->assertSame('My second element', $this->collection->prev());
     }
 
+    /**
+     * @covers ::not
+     * @covers ::without
+     */
     public function testNotAndWithout()
     {
         // remove elements
-        $this->assertEquals('My second element', $this->collection->not('first')->first());
-        $this->assertEquals(1, $this->collection->not('second')->not('third')->count());
-        $this->assertEquals(0, $this->collection->not('first', 'second', 'third')->count());
+        $this->assertSame('My second element', $this->collection->not('first')->first());
+        $this->assertSame(1, $this->collection->not('second')->not('third')->count());
+        $this->assertSame(0, $this->collection->not('first', 'second', 'third')->count());
 
         // also check the alternative
-        $this->assertEquals('My second element', $this->collection->without('first')->first());
-        $this->assertEquals(1, $this->collection->without('second')->not('third')->count());
-        $this->assertEquals(0, $this->collection->without('first', 'second', 'third')->count());
+        $this->assertSame('My second element', $this->collection->without('first')->first());
+        $this->assertSame(1, $this->collection->without('second')->not('third')->count());
+        $this->assertSame(0, $this->collection->without('first', 'second', 'third')->count());
 
         $this->assertIsUntouched();
     }
 
+    /**
+     * @covers ::nth
+     */
     public function testNth()
     {
-        $this->assertEquals('My first element', $this->collection->nth(0));
-        $this->assertEquals('My second element', $this->collection->nth(1));
-        $this->assertEquals('My third element', $this->collection->nth(2));
+        $this->assertSame('My first element', $this->collection->nth(0));
+        $this->assertSame('My second element', $this->collection->nth(1));
+        $this->assertSame('My third element', $this->collection->nth(2));
         $this->assertNull($this->collection->nth(3));
     }
 
+    /**
+     * @covers ::offset
+     * @covers ::limit
+     */
     public function testOffsetAndLimit()
     {
-        $this->assertEquals(array_slice($this->sampleData, 1), $this->collection->offset(1)->toArray());
-        $this->assertEquals(array_slice($this->sampleData, 0, 1), $this->collection->limit(1)->toArray());
-        $this->assertEquals(array_slice($this->sampleData, 1, 1), $this->collection->offset(1)->limit(1)->toArray());
+        $this->assertSame(array_slice($this->sampleData, 1), $this->collection->offset(1)->toArray());
+        $this->assertSame(array_slice($this->sampleData, 0, 1), $this->collection->limit(1)->toArray());
+        $this->assertSame(array_slice($this->sampleData, 1, 1), $this->collection->offset(1)->limit(1)->toArray());
         $this->assertIsUntouched();
     }
 
+    /**
+     * @covers ::prepend
+     */
     public function testPrepend()
     {
         // simple
         $collection = new Collection(['b', 'c']);
         $collection = $collection->prepend('a');
 
-        $this->assertEquals([0, 1, 2], $collection->keys());
-        $this->assertEquals(['a', 'b', 'c'], $collection->values());
+        $this->assertSame([0, 1, 2], $collection->keys());
+        $this->assertSame(['a', 'b', 'c'], $collection->values());
 
         // with key
         $collection = new Collection(['b' => 'B', 'c' => 'C']);
         $collection = $collection->prepend('a', 'A');
 
-        $this->assertEquals(['a', 'b', 'c'], $collection->keys());
-        $this->assertEquals(['A', 'B', 'C'], $collection->values());
+        $this->assertSame(['a', 'b', 'c'], $collection->keys());
+        $this->assertSame(['A', 'B', 'C'], $collection->values());
 
         // with too many params
         $collection = new Collection(['b' => 'B', 'c' => 'C']);
         $collection = $collection->prepend('a', 'A', 'ignore this');
 
-        $this->assertEquals(['a', 'b', 'c'], $collection->keys());
-        $this->assertEquals(['A', 'B', 'C'], $collection->values());
+        $this->assertSame(['a', 'b', 'c'], $collection->keys());
+        $this->assertSame(['A', 'B', 'C'], $collection->values());
     }
 
+    /**
+     * @covers ::query
+     */
     public function testQuery()
     {
         $collection = new Collection([
@@ -550,7 +661,7 @@ class CollectionTest extends TestCase
             'four'  => 'vier'
         ]);
 
-        $this->assertEquals([
+        $this->assertSame([
             'two'   => 'zwei',
             'four'  => 'vier'
         ], $collection->query([
@@ -560,6 +671,9 @@ class CollectionTest extends TestCase
         ])->toArray());
     }
 
+    /**
+     * @covers ::paginate
+     */
     public function testQueryPaginate()
     {
         $collection = new Collection([
@@ -569,7 +683,7 @@ class CollectionTest extends TestCase
             'four'  => 'vier'
         ]);
 
-        $this->assertEquals([
+        $this->assertSame([
             'three' => 'drei',
             'four'  => 'vier'
         ], $collection->query([
@@ -580,6 +694,9 @@ class CollectionTest extends TestCase
         ])->toArray());
     }
 
+    /**
+     * @covers ::query
+     */
     public function testQueryFilter()
     {
         $collection = new Collection([
@@ -593,7 +710,7 @@ class CollectionTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals([
+        $this->assertSame([
             [
                 'name'  => 'Bastian',
                 'role'  => 'founder'
@@ -609,6 +726,9 @@ class CollectionTest extends TestCase
         ])->toArray());
     }
 
+    /**
+     * @covers ::query
+     */
     public function testQuerySortBy()
     {
         $collection = new Collection([
@@ -622,14 +742,17 @@ class CollectionTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('Nico', $collection->query([
+        $this->assertSame('Nico', $collection->query([
             'sortBy' => 'name desc'
         ])->first()['name']);
-        $this->assertEquals('Bastian', $collection->query([
+        $this->assertSame('Bastian', $collection->query([
             'sortBy' => ['name', 'asc']
         ])->first()['name']);
     }
 
+    /**
+     * @covers ::query
+     */
     public function testQuerySortByComma()
     {
         $collection = new Collection([
@@ -649,6 +772,9 @@ class CollectionTest extends TestCase
         ], array_keys($results));
     }
 
+    /**
+     * @covers ::__unset
+     */
     public function testRemoveMultiple()
     {
         $collection = new Collection();
@@ -666,47 +792,110 @@ class CollectionTest extends TestCase
         $this->assertCount(0, $collection);
     }
 
+    /**
+     * @covers ::__set
+     */
     public function testSetters()
     {
         $this->collection->fourth = 'My fourth element';
         $this->collection->fifth  = 'My fifth element';
 
-        $this->assertEquals('My fourth element', $this->collection->fourth);
-        $this->assertEquals('My fifth element', $this->collection->fifth);
+        $this->assertSame('My fourth element', $this->collection->fourth);
+        $this->assertSame('My fifth element', $this->collection->fifth);
 
-        $this->assertEquals('My fourth element', $this->collection->fourth());
-        $this->assertEquals('My fifth element', $this->collection->fifth());
+        $this->assertSame('My fourth element', $this->collection->fourth());
+        $this->assertSame('My fifth element', $this->collection->fifth());
 
-        $this->assertEquals('My fourth element', $this->collection->get('fourth'));
-        $this->assertEquals('My fifth element', $this->collection->get('fifth'));
+        $this->assertSame('My fourth element', $this->collection->get('fourth'));
+        $this->assertSame('My fifth element', $this->collection->get('fifth'));
     }
 
+    /**
+     * @covers ::shuffle
+     */
     public function testShuffle()
     {
         $this->assertInstanceOf('Kirby\Toolkit\Collection', $this->collection->shuffle());
         $this->assertIsUntouched();
     }
 
+    /**
+     * @covers ::slice
+     */
     public function testSlice()
     {
-        $this->assertEquals(array_slice($this->sampleData, 1), $this->collection->slice(1)->toArray());
-        $this->assertEquals(2, $this->collection->slice(1)->count());
-        $this->assertEquals(array_slice($this->sampleData, 0, 1), $this->collection->slice(0, 1)->toArray());
-        $this->assertEquals(1, $this->collection->slice(0, 1)->count());
+        $this->assertSame(array_slice($this->sampleData, 1), $this->collection->slice(1)->toArray());
+        $this->assertSame(2, $this->collection->slice(1)->count());
+        $this->assertSame(array_slice($this->sampleData, 0, 1), $this->collection->slice(0, 1)->toArray());
+        $this->assertSame(1, $this->collection->slice(0, 1)->count());
         $this->assertIsUntouched();
     }
 
+    /**
+     * @covers ::toArray
+     */
     public function testToArray()
     {
         // associative
         $collection = new Collection($input = ['a' => 'value A', 'b' => 'value B']);
-        $this->assertEquals($input, $collection->toArray());
+        $this->assertSame($input, $collection->toArray());
 
         // non-associative
         $collection = new Collection($input = ['a', 'b', 'c']);
-        $this->assertEquals($input, $collection->toArray());
+        $this->assertSame($input, $collection->toArray());
     }
 
+    /**
+     * @covers ::values
+     */
+    public function testValues()
+    {
+        $this->assertSame([
+            'My first element',
+            'My second element',
+            'My third element'
+        ], $this->collection->values());
+    }
+
+    /**
+     * @covers ::values
+     */
+    public function testValuesMap()
+    {
+        $values = $this->collection->values(function ($item) {
+            return Str::after($item, 'My ');
+        });
+
+        $this->assertSame([
+            'first element',
+            'second element',
+            'third element'
+        ], $values);
+    }
+
+    /**
+     * @covers ::values
+     */
+    public function testValuesPaginate()
+    {
+        $values = $this->collection->values(function ($item) {
+            return Str::after($item, 'My ');
+        }, ['limit' => 2]);
+
+        $this->assertSame([
+            'first element',
+            'second element'
+        ], $values['data']);
+
+        $this->assertSame(1, $values['pagination']['page']);
+        $this->assertSame(2, $values['pagination']['pages']);
+        $this->assertSame(2, $values['pagination']['limit']);
+        $this->assertSame(3, $values['pagination']['total']);
+    }
+
+    /**
+     * @covers ::when
+     */
     public function testWhen()
     {
         $collection = new Collection([
