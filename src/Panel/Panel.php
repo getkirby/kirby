@@ -48,8 +48,8 @@ class Panel
     {
         $dev = $kirby->option('panel.dev', false);
 
-        if ($dev) {
-            $url = 'http://localhost:3000';
+        if ($dev !== false) {
+            $url = is_string($dev) === true ? $dev : $kirby->request()->url(['port' => 3000, 'path' => null])->toString();
         } else {
             $url = $kirby->url('media') . '/panel/' . $kirby->versionHash();
         }
