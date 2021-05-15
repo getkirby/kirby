@@ -310,20 +310,21 @@ class PageTest extends TestCase
         $panel = new Page($page);
 
         $hash = $page->image()->mediaHash();
+        $mediaUrl = $page->mediaUrl() . '/' . $hash;
 
         // cover disabled as default
         $this->assertSame([
             'ratio' => '3/2',
             'back' => 'pattern',
             'cover' => false,
-            'url' => '/media/pages/test/' . $hash . '/test.jpg',
+            'url' => $mediaUrl . '/test.jpg',
             'cards' => [
                 'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
-                'srcset' => '/media/pages/test/' . $hash . '/test-352x.jpg 352w, /media/pages/test/' . $hash . '/test-864x.jpg 864w, /media/pages/test/' . $hash . '/test-1408x.jpg 1408w'
+                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
             ],
             'list' => [
                 'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
-                'srcset' => '/media/pages/test/' . $hash . '/test-38x.jpg 38w, /media/pages/test/' . $hash . '/test-76x.jpg 76w'
+                'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
             ]
         ], $panel->image());
 
@@ -332,14 +333,14 @@ class PageTest extends TestCase
             'ratio' => '3/2',
             'back' => 'pattern',
             'cover' => true,
-            'url' => '/media/pages/test/' . $hash . '/test.jpg',
+            'url' => $mediaUrl . '/test.jpg',
             'cards' => [
                 'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
-                'srcset' => '/media/pages/test/' . $hash . '/test-352x.jpg 352w, /media/pages/test/' . $hash . '/test-864x.jpg 864w, /media/pages/test/' . $hash . '/test-1408x.jpg 1408w'
+                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
             ],
             'list' => [
                 'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
-                'srcset' => '/media/pages/test/' . $hash . '/test-38x38.jpg 1x, /media/pages/test/' . $hash . '/test-76x76.jpg 2x'
+                'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
             ]
         ], $panel->image(['cover' => true]));
     }
