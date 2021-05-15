@@ -16,14 +16,17 @@ jobs:
       matrix:
         php: [ "7.3", "7.4", "8.0" ]
     env:
-      extensions: mbstring, ctype, curl, gd, apcu, memcached, pcov
+      extensions: mbstring, ctype, curl, gd, apcu, memcached
       ini: apc.enabled=1, apc.enable_cli=1, pcov.directory=., "pcov.exclude=\"~(vendor|tests)~\""
 
     steps:
-      - name: Checkout Kirby
+      - name: Checkout
         uses: actions/checkout@f1d3225b5376a0791fdee5a0e8eac5289355e43a # pin@v2
         with:
           fetch-depth: 2
+
+      - name: Preparations
+        run: mkdir sarif
 
       - name: Install memcached
         uses: niden/actions-memcached@3b3ecd9d0d035ea92db716dc1540a7dbe9e56349 # pin@v7
@@ -53,17 +56,27 @@ jobs:
           extensions: ${{ env.extensions }}
           ini-values: ${{ env.ini }}
           coverage: pcov
-          tools: phpunit:9.5.4
+          tools: phpunit:9.5.4, psalm:4.7.1
 
       - name: Setup problem matchers
-        id: finishPrepare
         run: |
           echo "::add-matcher::${{ runner.tool_cache }}/php.json"
           echo "::add-matcher::${{ runner.tool_cache }}/phpunit.json"
 
+      - name: Cache analysis data
+        id: finishPrepare
+        uses: actions/cache@1c6fb82ebbd610035c324e764e5e74d0e82f8a60 # pin@v2
+        with:
+          path: ~/.cache/psalm
+          key: backend-analysis-${{ matrix.php }}
+
       - name: Run tests
         if: always() && steps.finishPrepare.outcome == 'success'
         run: phpunit --coverage-clover ${{ github.workspace }}/clover.xml
+
+      - name: Statically analyze using Psalm
+        if: always() && steps.finishPrepare.outcome == 'success'
+        run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload coverage results to Codecov
         uses: codecov/codecov-action@a1ed4b322b4b38cb846afb5a0ebfa17086917d27 # pin@v1
@@ -74,6 +87,12 @@ jobs:
           env_vars: PHP
         env:
           PHP: ${{ matrix.php }}
+
+      - name: Upload code scanning results to GitHub
+        if: always() && steps.finishPrepare.outcome == 'success'
+        uses: github/codeql-action/upload-sarif@4a083a45c246fee5483920bffe98a6e15c3fef32 # pin@v1
+        with:
+          sarif_file: sarif
 
   frontend-e2e:
     name: Frontend E2E
@@ -90,7 +109,7 @@ jobs:
       extensions: mbstring, ctype, curl, gd, apcu, memcached
 
     steps:
-      - name: Checkout Kirby
+      - name: Checkout
         uses: actions/checkout@f1d3225b5376a0791fdee5a0e8eac5289355e43a # pin@v2
         with:
           path: kirby
@@ -198,7 +217,7 @@ jobs:
       extensions: mbstring, ctype, curl, gd, apcu, memcached
 
     steps:
-      - name: Checkout Kirby
+      - name: Checkout
         uses: actions/checkout@f1d3225b5376a0791fdee5a0e8eac5289355e43a # pin@v2
 
       - name: Preparations
@@ -220,6 +239,7 @@ jobs:
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
+        id: finishPrepare
         uses: shivammathur/setup-php@27fc7bb418e73a1462a5604e3ea30e58ec1a6e1f # pin@v2
         with:
           php-version: ${{ env.php }}
@@ -227,14 +247,7 @@ jobs:
           coverage: none
           tools: |
             composer:2.0.13, composer-normalize:2.13.3, composer-require-checker:3.2.0,
-            composer-unused:0.7.5, phpcpd:6.0.3, psalm:4.7.1, phpmd:2.10.0
-
-      - name: Cache analysis data
-        id: finishPrepare
-        uses: actions/cache@1c6fb82ebbd610035c324e764e5e74d0e82f8a60 # pin@v2
-        with:
-          path: ~/.cache/psalm
-          key: backend-analysis
+            composer-unused:0.7.5, phpcpd:6.0.3, phpmd:2.10.0
 
       - name: Validate composer.json/composer.lock
         if: always() && steps.finishPrepare.outcome == 'success'
@@ -252,13 +265,9 @@ jobs:
         if: always() && steps.finishPrepare.outcome == 'success'
         run: phpcpd --fuzzy --exclude tests --exclude vendor .
 
-      - name: Statically analyze using Psalm
-        if: always() && steps.finishPrepare.outcome == 'success'
-        run: psalm --output-format=github --report=sarif/psalm.sarif --report-show-info=false
-
       - name: Statically analyze using PHPMD
         if: always() && steps.finishPrepare.outcome == 'success'
-        run: phpmd . ansi phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*'
+        run: phpmd . github phpmd.xml.dist --exclude 'dependencies/*,tests/*,vendor/*' --reportfile-sarif sarif/phpmd.sarif
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
@@ -274,7 +283,7 @@ jobs:
       php: "8.0"
 
     steps:
-      - name: Checkout Kirby
+      - name: Checkout
         uses: actions/checkout@f1d3225b5376a0791fdee5a0e8eac5289355e43a # pin@v2
 
       - name: Set up Node.js problem matchers
