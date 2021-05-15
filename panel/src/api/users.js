@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export default (api) => {
   return {
     async blueprint(id) {
@@ -57,42 +59,42 @@ export default (api) => {
       result.push({
         click: "rename",
         icon: "title",
-        text: window.panel.$t("user.changeName"),
+        text: Vue.$t("user.changeName"),
         disabled: !options.changeName
       });
 
       result.push({
         click: "email",
         icon: "email",
-        text: window.panel.$t("user.changeEmail"),
+        text: Vue.$t("user.changeEmail"),
         disabled: !options.changeEmail
       });
 
       result.push({
         click: "role",
         icon: "bolt",
-        text: window.panel.$t("user.changeRole"),
+        text: Vue.$t("user.changeRole"),
         disabled: !options.changeRole
       });
 
       result.push({
         click: "password",
         icon: "key",
-        text: window.panel.$t("user.changePassword"),
+        text: Vue.$t("user.changePassword"),
         disabled: !options.changePassword
       });
 
       result.push({
         click: "language",
         icon: "globe",
-        text: window.panel.$t("user.changeLanguage"),
+        text: Vue.$t("user.changeLanguage"),
         disabled: !options.changeLanguage
       });
 
       result.push({
         click: "remove",
         icon: "trash",
-        text: window.panel.$t("user.delete"),
+        text: Vue.$t("user.delete"),
         disabled: !options.delete
       });
 
@@ -101,7 +103,7 @@ export default (api) => {
     async roles(id) {
       const roles = await api.get(this.url(id, "roles"));
       return roles.data.map(role => ({
-        info: role.description || `(${window.panel.$t("role.description.placeholder")})`,
+        info: role.description || `(${Vue.$t("role.description.placeholder")})`,
         text: role.title,
         value: role.name
       }));

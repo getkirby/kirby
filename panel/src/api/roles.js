@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export default (api) => {
   return {
     async list(params) {
@@ -10,7 +12,7 @@ export default (api) => {
       const roles = await this.list(params);
       return roles.data.map(role => {
         return {
-          info: role.description || `(${window.panel.$t("role.description.placeholder")})`,
+          info: role.description || `(${Vue.$t("role.description.placeholder")})`,
           text: role.title,
           value: role.name
         };

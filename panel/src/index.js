@@ -5,7 +5,7 @@ import { App, plugin } from '@inertiajs/inertia-vue'
 import Api from "./config/api.js";
 import Events from "./config/events.js";
 import Helpers from "./helpers/index.js";
-import { TranslationString } from "./helpers/i18n";
+import I18n from "./config/i18n.js";
 import Vuelidate from "vuelidate";
 import VuePortal from "@linusborg/vue-simple-portal";
 
@@ -22,6 +22,7 @@ import "./config/libraries.js";
 import "./config/plugins.js";
 
 Vue.use(Events);
+Vue.use(I18n);
 Vue.use(Vuelidate);
 Vue.use(VuePortal);
 Vue.use(plugin)
@@ -76,7 +77,6 @@ new Vue({
           Vue.prototype.$permissions = window.panel.$permissions = props.$permissions;
           Vue.prototype.$system      = window.panel.$system      = props.$system;
           Vue.prototype.$translation = window.panel.$translation = props.$translation;
-          Vue.prototype.$t            = window.panel.$t          = (key, data) => new TranslationString(key, data);
           Vue.prototype.$urls        = window.panel.$urls        = props.$urls;
           Vue.prototype.$user        = window.panel.$user        = props.$user;
           Vue.prototype.$view        = window.panel.$view        = props.$view;

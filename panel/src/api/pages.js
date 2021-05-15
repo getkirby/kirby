@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export default (api) => {
   return {
     async blueprint(parent) {
@@ -87,7 +89,7 @@ export default (api) => {
         result.push({
           click: "preview",
           icon: "open",
-          text: window.panel.$t("open"),
+          text: Vue.$t("open"),
           disabled: options.preview === false
         });
 
@@ -98,14 +100,14 @@ export default (api) => {
       result.push({
         click: "rename",
         icon: "title",
-        text: window.panel.$t("rename"),
+        text: Vue.$t("rename"),
         disabled: !options.changeTitle
       });
 
       result.push({
         click: "duplicate",
         icon: "copy",
-        text: window.panel.$t("duplicate"),
+        text: Vue.$t("duplicate"),
         disabled: !options.duplicate
       });
 
@@ -114,14 +116,14 @@ export default (api) => {
       result.push({
         click: "url",
         icon: "url",
-        text: window.panel.$t("page.changeSlug"),
+        text: Vue.$t("page.changeSlug"),
         disabled: !options.changeSlug
       });
 
       result.push({
         click: "status",
         icon: "preview",
-        text: window.panel.$t("page.changeStatus"),
+        text: Vue.$t("page.changeStatus"),
         disabled: !options.changeStatus
       });
 
@@ -129,7 +131,7 @@ export default (api) => {
         result.push({
           click: "sort",
           icon: "sort",
-          text: window.panel.$t("page.sort"),
+          text: Vue.$t("page.sort"),
           disabled: !(options.sort  && sortable)
         });
       }
@@ -137,7 +139,7 @@ export default (api) => {
       result.push({
         click: "template",
         icon: "template",
-        text: window.panel.$t("page.changeTemplate"),
+        text: Vue.$t("page.changeTemplate"),
         disabled: !options.changeTemplate
       });
 
@@ -146,7 +148,7 @@ export default (api) => {
       result.push({
         click: "remove",
         icon: "trash",
-        text: window.panel.$t("delete"),
+        text: Vue.$t("delete"),
         disabled: !options.delete
       });
 

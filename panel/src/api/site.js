@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 export default (api) => {
   return {
     async blueprint() {
@@ -23,7 +25,7 @@ export default (api) => {
       result.push({
         click: "rename",
         icon: "title",
-        text: window.panel.$t("rename"),
+        text: Vue.$t("rename"),
         disabled: !options.changeTitle
       });
 
