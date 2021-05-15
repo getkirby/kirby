@@ -631,7 +631,7 @@ function r($condition, $value, $alternative = null)
  * @param string $path
  * @param string $method
  * @param array $routes
- * @return void
+ * @return mixed
  */
 function router(string $path = null, string $method = 'GET', array $routes = [])
 {
