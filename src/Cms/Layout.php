@@ -77,6 +77,7 @@ class Layout extends Item
 
     /**
      * Checks if the layout is empty
+     * @since 3.5.2
      *
      * @return bool
      */
@@ -92,6 +93,7 @@ class Layout extends Item
 
     /**
      * Checks if the layout is not empty
+     * @since 3.5.2
      *
      * @return bool
      */

@@ -82,6 +82,7 @@ class Auth
     /**
      * Creates an authentication challenge
      * (one-time auth code)
+     * @since 3.5.1
      *
      * @param string $email
      * @param bool $long If `true`, a long session will be created
@@ -822,7 +823,7 @@ class Auth
                     throw new PermissionException(['key' => 'access.code']);
                 }
             }
-            
+
             throw new LogicException('Invalid authentication challenge: ' . $challenge);
         } catch (Throwable $e) {
             if ($e->getMessage() !== 'Rate limit exceeded') {

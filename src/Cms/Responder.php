@@ -91,6 +91,7 @@ class Responder
      * Setter and getter for the flag that defines
      * whether the current response can be cached
      * by Kirby's cache
+     * @since 3.5.5
      *
      * @param bool|null $cache
      * @return bool|$this
@@ -108,6 +109,7 @@ class Responder
     /**
      * Setter and getter for the cache expiry
      * timestamp for Kirby's cache
+     * @since 3.5.5
      *
      * @param int|string|null $expires Timestamp, number of minutes or time string to parse
      * @param bool $override If `true`, the already defined timestamp will be overridden

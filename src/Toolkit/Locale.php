@@ -55,6 +55,8 @@ class Locale
      * Returns the current locale value for
      * a specified or for all locale categories
      *
+     * @since 3.6.0
+     *
      * @param int|string $category Locale category constant or constant name
      * @return array|string Associative array if `LC_ALL` was passed (default), otherwise string
      *
