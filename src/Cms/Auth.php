@@ -82,7 +82,7 @@ class Auth
     /**
      * Creates an authentication challenge
      * (one-time auth code)
-     * @since 3.5.1
+     * @since 3.5.0
      *
      * @param string $email
      * @param bool $long If `true`, a long session will be created
@@ -285,6 +285,7 @@ class Auth
     /**
      * Returns the list of enabled challenges in the
      * configured order
+     * @since 3.5.1
      *
      * @return array
      */
@@ -407,6 +408,7 @@ class Auth
 
     /**
      * Login a user by email, password and auth challenge
+     * @since 3.5.0
      *
      * @param string $email
      * @param string $password
@@ -443,6 +445,7 @@ class Auth
 
     /**
      * Returns the authentication status object
+     * @since 3.5.1
      *
      * @param \Kirby\Session\Session|array|null $session
      * @param bool $allowImpersonation If set to false, only the actually
@@ -761,6 +764,7 @@ class Auth
      * Verifies an authentication code that was
      * requested with the `createChallenge()` method;
      * if successful, the user is automatically logged in
+     * @since 3.5.0
      *
      * @param string $code User-provided auth code to verify
      * @return \Kirby\Cms\User User object of the logged-in user

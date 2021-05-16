@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 /**
  * Represents a single Layout with
  * multiple columns
+ * @since 3.5.0
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>

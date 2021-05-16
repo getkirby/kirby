@@ -12,6 +12,7 @@ use Kirby\Toolkit\Str;
 
 /**
  * Sane handler for XML files
+ * @since 3.5.4
  *
  * @package   Kirby Sane
  * @author    Bastian Allgeier <bastian@getkirby.com>,

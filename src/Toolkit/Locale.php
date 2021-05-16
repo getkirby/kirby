@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 
 /**
  * PHP locale handling
+ * @since 3.5.0
  *
  * @package   Kirby Toolkit
  * @author    Lukas Bestle <lukas@getkirby.com>
@@ -54,7 +55,6 @@ class Locale
     /**
      * Returns the current locale value for
      * a specified or for all locale categories
-     *
      * @since 3.6.0
      *
      * @param int|string $category Locale category constant or constant name
