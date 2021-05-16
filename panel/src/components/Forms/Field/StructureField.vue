@@ -511,7 +511,7 @@ export default {
       this.$emit("input", this.items);
     },
     /**
-     * Edit the structure field entry at `index` position 
+     * Edit the structure field entry at `index` position
      * with field `field` focused.
      * @public
      * @param {number} index
@@ -612,7 +612,7 @@ export default {
       const a = Number(parts[0]);
       const b = Number(parts[1]);
 
-      return parseFloat(100 / b * a, 2).toFixed(2) + "%";
+      return parseFloat(String(100 / b * a)).toFixed(2) + "%";
     },
     update(index, column, value) {
       this.items[index][column] = value;

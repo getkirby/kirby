@@ -4,6 +4,7 @@
       <th
         v-for="(column, columnName) in columns"
         :key="columnName"
+        :style="'width:' + width(column.width)"
         :data-align="column.align"
       >
         {{ column.label }}
@@ -18,6 +19,7 @@
       <td
         v-for="(column, columnName) in columns"
         :key="rowIndex + '-' + columnName"
+        :style="'width:' + width(column.width)"
         :data-align="column.align"
       >
         {{ column.before }} {{ row[columnName] }} {{ column.after }}
@@ -52,6 +54,23 @@ export default {
       });
 
       return table || {};
+    }
+  },
+  methods: {
+    width(fraction) {
+      if (!fraction) {
+        return "auto";
+      }
+      const parts = fraction.toString().split("/");
+
+      if (parts.length !== 2) {
+        return "auto";
+      }
+
+      const a = Number(parts[0]);
+      const b = Number(parts[1]);
+
+      return parseFloat(String(100 / b * a)).toFixed(2) + "%";
     }
   }
 };
