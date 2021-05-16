@@ -169,10 +169,10 @@
 
 <script>
 import direction from "@/helpers/direction.js";
-import { props as Field } from "../Field.vue";
+import structure from "@/mixins/forms/structure.js";
 
 export default {
-  mixins: [Field],
+  mixins: [structure],
   inheritAttrs: false,
   props: {
     columns: Object,
@@ -414,51 +414,6 @@ export default {
         }
       });
     },
-    displayText(field, value) {
-      switch (field.type) {
-        case "user": {
-          return value.email;
-        }
-        case "date": {
-          const date = this.$library.dayjs(value);
-          const format = field.time === true ? "YYYY-MM-DD HH:mm" : "YYYY-MM-DD";
-          return date.isValid() ? date.format(format) : "";
-        }
-        case "tags":
-        case "multiselect":
-          return value
-            .map(item => {
-              return item.text;
-            })
-            .join(", ");
-        case "checkboxes": {
-          return value
-            .map(item => {
-              let text = item;
-
-              field.options.forEach(option => {
-                if (option.value === item) {
-                  text = option.text;
-                }
-              });
-
-              return text;
-            })
-            .join(", ");
-        }
-        case "radio":
-        case "select": {
-          const option = field.options.filter(item => item.value === value)[0];
-          return option ? option.text : null;
-        }
-      }
-
-      if (typeof value === "object" && value !== null) {
-        return "…";
-      }
-
-      return value.toString();
-    },
     duplicateItem(index) {
       this.addItem(this.items[index + this.pagination.offset]);
       this.onInput();
@@ -511,7 +466,7 @@ export default {
       this.$emit("input", this.items);
     },
     /**
-     * Edit the structure field entry at `index` position 
+     * Edit the structure field entry at `index` position
      * with field `field` focused.
      * @public
      * @param {number} index
@@ -527,9 +482,6 @@ export default {
     },
     paginateItems(pagination) {
       this.page = pagination.page;
-    },
-    previewExists(type) {
-      return this.$helper.isComponent(`k-${type}-field-preview`);
     },
     remove() {
       if (this.trash === null) {
@@ -598,21 +550,6 @@ export default {
             return true;
           }
         });
-    },
-    width(fraction) {
-      if (!fraction) {
-        return "auto";
-      }
-      const parts = fraction.toString().split("/");
-
-      if (parts.length !== 2) {
-        return "auto";
-      }
-
-      const a = Number(parts[0]);
-      const b = Number(parts[1]);
-
-      return parseFloat(100 / b * a, 2).toFixed(2) + "%";
     },
     update(index, column, value) {
       this.items[index][column] = value;
