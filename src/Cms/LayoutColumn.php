@@ -7,6 +7,7 @@ use Kirby\Toolkit\Str;
 /**
  * Represents a single layout column with
  * multiple blocks
+ * @since 3.5.0
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -56,6 +57,7 @@ class LayoutColumn extends Item
 
     /**
      * Checks if the column is empty
+     * @since 3.5.2
      *
      * @return bool
      */
@@ -69,6 +71,7 @@ class LayoutColumn extends Item
 
     /**
      * Checks if the column is not empty
+     * @since 3.5.2
      *
      * @return bool
      */

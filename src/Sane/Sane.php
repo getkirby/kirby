@@ -10,6 +10,7 @@ use Kirby\Toolkit\F;
  * don't contain potentially harmful contents.
  * The class comes with handlers for `svg`, `svgz` and `xml`
  * files for now, but can be extended and customized.
+ * @since 3.5.4
  *
  * @package   Kirby Sane
  * @author    Lukas Bestle <lukas@getkirby.com>
