@@ -8,6 +8,7 @@ use Kirby\Toolkit\Str;
 
 /**
  * Represents a single Fieldset
+ * @since 3.5.0
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>

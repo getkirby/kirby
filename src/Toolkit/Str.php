@@ -805,6 +805,7 @@ class Str
 
     /**
      * Calculates the similarity between two strings with multibyte support
+     * @since 3.5.2
      *
      * @author Based on the work of Antal Áron
      * @copyright Original Copyright (c) 2017, Antal Áron

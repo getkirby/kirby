@@ -9,6 +9,7 @@ use Kirby\Toolkit\Properties;
 /**
  * Information container for the
  * authentication status
+ * @since 3.5.1
  *
  * @package   Kirby Cms
  * @author    Lukas Bestle <lukas@getkirby.com>

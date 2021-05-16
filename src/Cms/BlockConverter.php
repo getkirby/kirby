@@ -2,6 +2,17 @@
 
 namespace Kirby\Cms;
 
+/**
+ * Converts the data from the old builder and editor fields
+ * to the format supported by the new block field.
+ * @since 3.5.0
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 class BlockConverter
 {
     public static function builderBlock(array $params): array
