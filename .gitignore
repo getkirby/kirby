@@ -6,7 +6,7 @@
 /kirby.zip
 
 # cs fixer
-.php_cs.cache
+.php-cs-fixer.cache
 
 # editors
 *.sublime-project
