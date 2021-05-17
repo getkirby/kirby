@@ -86,10 +86,12 @@ class OptionsApi
      * @param array $data
      * @return string
      */
-    protected function field(string $field, array $data)
+    protected function field(string $field, array $data): string
     {
         $value = $this->$field();
-        return Str::template($value, $data);
+        return Str::template($value, $data, null, '{{', '}}', function ($result) {
+            return strip_tags($result);
+        });
     }
 
     /**

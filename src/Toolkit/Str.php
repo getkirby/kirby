@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use Exception;
 
 /**
@@ -964,17 +965,18 @@ class Str
      *
      * </code>
      *
-     * @param string $string The string with placeholders
+     * @param string|null $string The string with placeholders
      * @param array $data Associative array with placeholders as
      *                    keys and replacements as values
-     * @param string $fallback A fallback if a token does not have any matches
+     * @param string|null $fallback A fallback if a token does not have any matches
      * @param string $start Placeholder start characters
      * @param string $end Placeholder end characters
+     * @param \Closure|null $callback A callback to be able to modify each matching result
      * @return string The filled-in string
      */
-    public static function template(string $string = null, array $data = [], string $fallback = null, string $start = '{{', string $end = '}}'): string
+    public static function template(string $string = null, array $data = [], string $fallback = null, string $start = '{{', string $end = '}}', Closure $callback = null): string
     {
-        return preg_replace_callback('!' . $start . '(.*?)' . $end . '!', function ($match) use ($data, $fallback) {
+        return preg_replace_callback('!' . $start . '(.*?)' . $end . '!', function ($match) use ($data, $fallback, $callback) {
             $query = trim($match[1]);
 
             // if the placeholder contains a dot, it is a query
@@ -991,6 +993,11 @@ class Str
             // if we don't have a result, use the fallback if given
             if ($result === null && $fallback !== null) {
                 $result = $fallback;
+            }
+
+            // callback on result if given
+            if ($callback !== null) {
+                $result = $callback((string)$result, $data);
             }
 
             // if we still don't have a result, keep the original placeholder
