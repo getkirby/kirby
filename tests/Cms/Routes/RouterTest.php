@@ -294,8 +294,8 @@ class RouterTest extends TestCase
             ]
         ]);
 
-        $this->assertNull($app->call('panel'));
-        $this->assertNull($app->call('panel/something'));
+        $this->assertFalse($app->call('panel'));
+        $this->assertFalse($app->call('panel/something'));
     }
 
     public function customRouteProvider()

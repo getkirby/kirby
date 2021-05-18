@@ -1151,13 +1151,13 @@ class Collection extends Iterator implements Countable
     public function values(Closure $map = null, ?array $pagination = null): array
     {
         if (empty($pagination) === true) {
-            return array_values($this->toArray($map));
+            return array_values(array_map($map, $this->data));
         }
 
         $collection = $this->paginate($pagination);
 
         return [
-            'data'       => array_values($collection->toArray($map)),
+            'data'       => array_values(array_map($map, $this->data)),
             'pagination' => $collection->pagination()->toArray()
         ];
     }

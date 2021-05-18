@@ -66,7 +66,8 @@ class BlueprintTest extends TestCase
                         ]
                     ]
                 ],
-                'icon'    => null
+                'icon'    => null,
+                'link'    => '/pages/a/tab:main'
             ]
         ];
 
@@ -101,7 +102,8 @@ class BlueprintTest extends TestCase
                         'sections' => $sections
                     ]
                 ],
-                'icon'    => null
+                'icon'    => null,
+                'link'    => '/pages/a/tab:main'
             ]
         ];
 
@@ -140,7 +142,8 @@ class BlueprintTest extends TestCase
                         ]
                     ]
                 ],
-                'icon'    => null
+                'icon'    => null,
+                'link'    => '/pages/a/tab:main'
             ]
         ];
 
