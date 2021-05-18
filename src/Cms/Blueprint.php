@@ -58,6 +58,10 @@ class Blueprint
             throw new InvalidArgumentException('A blueprint model is required');
         }
 
+        if (is_a($props['model'], ModelWithContent::class) === false) {
+            throw new InvalidArgumentException('Invalid blueprint model');
+        }
+
         $this->model = $props['model'];
 
         // the model should not be included in the props array

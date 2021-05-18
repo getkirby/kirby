@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use PHPUnit\Framework\TestCase;
 
-class BlueprintExtendAndUnset extends TestCase
+class BlueprintExtendAndUnsetTest extends TestCase
 {
     protected $app;
 

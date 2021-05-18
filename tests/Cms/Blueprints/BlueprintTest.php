@@ -198,7 +198,7 @@ class BlueprintTest extends TestCase
 
         $blueprint = new Blueprint([
             'extends' => 'test',
-            'model'   => 'test'
+            'model'   => new Page(['slug' => 'test'])
         ]);
 
         $this->assertEquals('Extension Test', $blueprint->title());
