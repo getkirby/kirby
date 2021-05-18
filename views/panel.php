@@ -48,12 +48,14 @@
 
   <script nonce="<?= $nonce ?>">
     // Panel state
-    window.panel = <?= json_encode($inertia['props'], JSON_UNESCAPED_SLASHES) ?>;
+    const json = <?= json_encode($inertia['props'], JSON_UNESCAPED_SLASHES) ?>;
+
+    window.panel = JSON.parse(JSON.stringify(json));
 
     // Inertia setup
     window.inertia = {
         component: '<?= $inertia['component'] ?>',
-        props: JSON.parse(JSON.stringify(window.panel)),
+        props: json,
         url: '<?= $inertia['url'] ?>',
         version: '<?= $inertia['version'] ?>',
     };
