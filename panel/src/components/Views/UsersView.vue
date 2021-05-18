@@ -6,9 +6,9 @@
 
         <template #left>
           <k-button-group>
-            <k-button 
-              :disabled="$permissions.users.create === false" 
-              icon="add" 
+            <k-button
+              :disabled="$permissions.users.create === false"
+              icon="add"
               @click="$refs.create.open()"
             >
               {{ $t('user.create') }}
@@ -19,9 +19,9 @@
         <template #right>
           <k-button-group>
             <k-dropdown>
-              <k-button 
-                :responsive="true" 
-                icon="funnel" 
+              <k-button
+                :responsive="true"
+                icon="funnel"
                 @click="$refs.roles.toggle()"
               >
                 {{ $t("role") }}: {{ role ? role.title : $t("role.all") }}
@@ -32,12 +32,12 @@
                 </k-dropdown-item>
                 <hr>
                 <k-dropdown-item
-                  v-for="role in roles"
-                  :key="role.id"
+                  v-for="roleFilter in roles"
+                  :key="roleFilter.id"
                   icon="bolt"
-                  @click="filter(role)"
+                  @click="filter(roleFilter)"
                 >
-                  {{ role.title }}
+                  {{ roleFilter.title }}
                 </k-dropdown-item>
               </k-dropdown-content>
             </k-dropdown>

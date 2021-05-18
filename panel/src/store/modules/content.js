@@ -71,7 +71,7 @@ export default {
     /**
      * Returns ID (current or provided) with correct language suffix
      */
-    id: (state, getters, rootState) => id => {
+    id: (state) => id => {
       id = id || state.current;
 
       if (window.panel.$language) {
