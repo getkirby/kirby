@@ -311,6 +311,7 @@ class PageTest extends TestCase
 
         $hash = $page->image()->mediaHash();
         $mediaUrl = $page->mediaUrl() . '/' . $hash;
+        $imagePlaceholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw';
 
         // cover disabled as default
         $this->assertSame([
@@ -319,11 +320,11 @@ class PageTest extends TestCase
             'cover' => false,
             'url' => $mediaUrl . '/test.jpg',
             'cards' => [
-                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                'url' => $imagePlaceholder,
                 'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
             ],
             'list' => [
-                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                'url' => $imagePlaceholder,
                 'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
             ]
         ], $panel->image());
@@ -335,11 +336,11 @@ class PageTest extends TestCase
             'cover' => true,
             'url' => $mediaUrl . '/test.jpg',
             'cards' => [
-                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                'url' => $imagePlaceholder,
                 'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
             ],
             'list' => [
-                'url' => 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw',
+                'url' => $imagePlaceholder,
                 'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
             ]
         ], $panel->image(['cover' => true]));
