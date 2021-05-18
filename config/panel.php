@@ -5,6 +5,8 @@ use Kirby\Toolkit\View;
 
 return function ($kirby) {
 
+    $system = $kirby->system();
+
     /**
      * Route for browser compatibility check
      */
@@ -18,19 +20,17 @@ return function ($kirby) {
         ]
     ];
 
-
     /**
      * Panel isn't installed yet
      */
     if (
-        $kirby->system()->isOk() === false ||
-        $kirby->system()->isInstalled() === false
+        $system->isOk() === false ||
+        $system->isInstalled() === false
     ) {
         return array_merge($routes, [
             [
                 'pattern' => 'installation',
-                'action'  => function () use ($kirby) {
-                    $system = $kirby->system();
+                'action'  => function () use ($kirby, $system) {
 
                     return [
                         'component' => 'InstallationView',
@@ -66,14 +66,14 @@ return function ($kirby) {
         return array_merge($routes, [
             [
                 'pattern' => 'login',
-                'action'  => function () use ($kirby) {
+                'action'  => function () use ($kirby, $system) {
                     $status = $kirby->auth()->status();
 
                     return [
                         'component' => 'LoginView',
                         'view'      => 'login',
                         'props'     => [
-                            'methods' => array_keys($kirby->system()->loginMethods()),
+                            'methods' => array_keys($system->loginMethods()),
                             'pending' => [
                                 'email'     => $status->email(),
                                 'challenge' => $status->challenge()
