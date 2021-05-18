@@ -1136,9 +1136,10 @@ class Collection extends Iterator implements Countable
 
     /**
      * Returns a non-associative array
-     * with all values. If a mapping
-     * Closure is passed, all values
-     * are processed by the Closure.
+     * with all values.
+     *
+     * @since 3.6.0 If a mapping Closure is passed,
+     * all values are processed by the Closure.
      *
      * @param Closure|null $map
      * @return array
