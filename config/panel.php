@@ -253,22 +253,27 @@ return function ($kirby) {
                                 $users = $users->role($role);
                             }
 
-                            return $users->values(function ($user) {
-                                return [
-                                    'id'   => $user->id(),
-                                    'icon' => [
-                                        'type' => 'user',
-                                        'back' => 'black'
-                                    ],
-                                    'text'  => $user->username(),
-                                    'info'  => $user->role()->title(),
-                                    'link'  => 'users/' . $user->id(),
-                                    'image' => true
-                                ];
-                            }, [
+                            $users = $users->paginate([
                                 'limit' => 20,
                                 'page'  => get('page')
                             ]);
+
+                            return [
+                                'data' => $users->values(function ($user) {
+                                    return [
+                                        'id'   => $user->id(),
+                                        'icon' => [
+                                            'type' => 'user',
+                                            'back' => 'black'
+                                        ],
+                                        'text'  => $user->username(),
+                                        'info'  => $user->role()->title(),
+                                        'link'  => 'users/' . $user->id(),
+                                        'image' => true
+                                    ];
+                                }),
+                                'pagination' => $users->pagination()->toArray()
+                            ];
                         },
                     ]
                 ];
