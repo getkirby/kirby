@@ -201,7 +201,7 @@ export default {
   position: absolute;
   top: 100%;
   inset-inline-start: 0;
-  background: var(--color-gray-900);
+  background: var(--color-black);
   color: var(--color-white);
   z-index: var(--z-dropdown);
   box-shadow: var(--shadow-lg);
@@ -211,7 +211,7 @@ export default {
 }
 .k-dropdown-content[data-align="right"] {
   inset-inline-start: auto;
-  inset-block-end: 0;
+  inset-inline-end: 0;
 }
 .k-dropdown-content > .k-dropdown-item:first-child {
   margin-top: .5rem;
