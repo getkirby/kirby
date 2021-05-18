@@ -122,7 +122,13 @@ return function ($kirby) {
                  * If the last path has been stored in the
                  * session, redirect the user to it
                  */
-                $path = $kirby->session()->get('panel.path') ?? 'site';
+                $path = trim($kirby->session()->get('panel.path'), '/');
+
+                // ignore various paths when redirecting
+                if (in_array($path, ['', 'login', 'logout', 'installation'])) {
+                    $path = 'site';
+                }
+
                 go('panel/' . $path);
             }
         ],
