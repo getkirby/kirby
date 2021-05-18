@@ -5,7 +5,10 @@ use Kirby\Toolkit\View;
 
 return function ($kirby) {
 
-    $system = $kirby->system();
+    $session = $kirby->session();
+    $system  = $kirby->system();
+    $user    = $kirby->user();
+
 
     /**
      * Route for browser compatibility check
@@ -19,6 +22,7 @@ return function ($kirby) {
             }
         ]
     ];
+
 
     /**
      * Panel isn't installed yet
@@ -59,10 +63,11 @@ return function ($kirby) {
         ]);
     }
 
+
     /**
      * User is not logged in
      */
-    if (!$kirby->user()) {
+    if (!$user) {
         return array_merge($routes, [
             [
                 'pattern' => 'login',
@@ -84,32 +89,50 @@ return function ($kirby) {
             ],
             [
                 'pattern' => '(:all)',
-                'action'  => function ($path) use ($kirby) {
+                'action'  => function ($path) use ($kirby, $session) {
                     /**
                      * Store the current path in the session
                      * Once the user is logged in, the path will
                      * be used to redirect to that view again
                      */
-                    $kirby->session()->set('panel.path', $path);
+                    $session->set('panel.path', $path);
                     go('panel/login');
                 }
             ]
         ]);
     }
 
+
     /**
-     * Installed and authenticates
+     * No panel access
      */
-
-    // Language switcher
-    if ($kirby->options('languages')) {
-        if ($lang = get('language')) {
-            $kirby->session()->set('panel.language', $lang);
-        }
-
-        $kirby->setCurrentLanguage($kirby->session()->get('panel.language', 'en'));
+    if ($user->role()->permissions()->for('access', 'panel') === false) {
+        return array_merge($routes, [
+            [
+                'pattern' => '(:all)',
+                'action'  => function () {
+                    go();
+                }
+            ]
+        ]);
     }
 
+
+    /**
+     * Language switcher
+     */
+    if ($kirby->options('languages')) {
+        if ($lang = get('language')) {
+            $session->set('panel.language', $lang);
+        }
+
+        $kirby->setCurrentLanguage($session->get('panel.language', 'en'));
+    }
+
+
+    /**
+     * Installed and authenticated
+     */
     return array_merge($routes, [
         [
             'pattern' => [
@@ -117,12 +140,12 @@ return function ($kirby) {
                 'installation',
                 'login',
             ],
-            'action' => function () use ($kirby) {
+            'action' => function () use ($kirby, $session) {
                 /**
                  * If the last path has been stored in the
                  * session, redirect the user to it
                  */
-                $path = trim($kirby->session()->get('panel.path'), '/');
+                $path = trim($session->get('panel.path'), '/');
 
                 // ignore various paths when redirecting
                 if (in_array($path, ['', 'login', 'logout', 'installation'])) {
@@ -134,24 +157,25 @@ return function ($kirby) {
         ],
         [
             'pattern' => 'account',
-            'action'  => function () use ($kirby) {
+            'action'  => function () use ($kirby, $user) {
                 return [
                     'component' => 'AccountView',
-                    'props'     => $kirby->user()->panel()->props(),
+                    'props'     => $user->panel()->props(),
                     'view'      => 'account'
                 ];
             },
         ],
         [
             'pattern' => 'logout',
-            'action'  => function () use ($kirby) {
+            'action'  => function () use ($kirby, $user) {
                 //TODO: localStorage doesn't get cleared anymore
-                $kirby->user()->logout();
+                $user->logout();
                 go('panel/login');
             }
         ],
         [
             'pattern' => 'pages/(:any)',
+            'access'  => 'site',
             'action'  => function (string $path) use ($kirby) {
                 if (!$page = $kirby->page(str_replace('+', '/', $path))) {
                     return t('error.page.undefined');
@@ -162,6 +186,7 @@ return function ($kirby) {
         ],
         [
             'pattern' => 'pages/(:any)/files/(:any)',
+            'access'  => 'site',
             'action'  => function (string $id, string $filename) use ($kirby) {
                 $id       = str_replace('+', '/', $id);
                 $filename = urldecode($filename);
@@ -179,6 +204,7 @@ return function ($kirby) {
         ],
         [
             'pattern' => 'settings',
+            'access'  => 'settings',
             'action'  => function () use ($kirby) {
                 return [
                     'component' => 'SettingsView',
@@ -204,12 +230,14 @@ return function ($kirby) {
         ],
         [
             'pattern' => 'site',
+            'access'  => 'site',
             'action'  => function () use ($kirby) {
                 return $kirby->site()->panel()->route();
             }
         ],
         [
             'pattern' => 'site/files/(:any)',
+            'access'  => 'site',
             'action'  => function (string $filename) use ($kirby) {
                 $filename = urldecode($filename);
 
@@ -225,6 +253,7 @@ return function ($kirby) {
                 'users',
                 'users/role/(:any)'
             ],
+            'access'  => 'users',
             'action'  => function (string $role = null) use ($kirby) {
                 $roles = $kirby->roles();
 
@@ -281,6 +310,7 @@ return function ($kirby) {
         ],
         [
             'pattern' => 'users/(:any)',
+            'access'  => 'users',
             'action'  => function (string $id) use ($kirby) {
                 if (!$user = $kirby->user($id)) {
                     return t('error.user.undefined');
@@ -291,6 +321,7 @@ return function ($kirby) {
         ],
         [
             'pattern' => 'users/(:any)/files/(:any)',
+            'access'  => 'users',
             'action'  => function (string $id, string $filename) use ($kirby) {
                 $filename = urldecode($filename);
 

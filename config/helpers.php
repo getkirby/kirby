@@ -633,9 +633,9 @@ function r($condition, $value, $alternative = null)
  * @param array $routes
  * @return mixed
  */
-function router(string $path = null, string $method = 'GET', array $routes = [])
+function router(string $path = null, string $method = 'GET', array $routes = [], ?Closure $callback = null)
 {
-    return (new Router($routes))->call($path, $method);
+    return (new Router($routes))->call($path, $method, $callback);
 }
 
 /**

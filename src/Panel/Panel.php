@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
@@ -437,7 +438,16 @@ class Panel
         $routes = (require $kirby->root('kirby') . '/config/panel.php')($kirby);
 
         // create a micro-router for the Panel
-        $result = router($path, $kirby->request()->method(), $routes);
+        $result = router($path, $kirby->request()->method(), $routes, function ($route) use ($kirby) {
+            // check for access before executing the route
+            if ($access = $route->attributes()['access'] ?? null) {
+                if ($kirby->user()->role()->permissions()->for('access', $access) !== true) {
+                    return t('error.access.view');
+                }
+            }
+
+            return $route->action()->call($route, ...$route->arguments());
+        });
 
         // pass responses directly down to the Kirby router
         if (is_a($result, 'Kirby\Http\Response') === true) {
