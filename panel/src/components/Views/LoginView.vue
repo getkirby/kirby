@@ -25,7 +25,7 @@ export default {
       if (this.pending.email) {
         return "code";
       }
-      
+
       if (!this.$user) {
         return "login";
       }

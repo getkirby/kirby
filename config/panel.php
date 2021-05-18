@@ -84,7 +84,13 @@ return function ($kirby) {
             ],
             [
                 'pattern' => '(:all)',
-                'action'  => function () {
+                'action'  => function ($path) use ($kirby) {
+                    /**
+                     * Store the current path in the session
+                     * Once the user is logged in, the path will
+                     * be used to redirect to that view again
+                     */
+                    $kirby->session()->set('panel.path', $path);
                     go('panel/login');
                 }
             ]
@@ -98,10 +104,10 @@ return function ($kirby) {
     // Language switcher
     if ($kirby->options('languages')) {
         if ($lang = get('language')) {
-            $kirby->session()->set('language', $lang);
+            $kirby->session()->set('panel.language', $lang);
         }
 
-        $kirby->setCurrentLanguage($kirby->session()->get('language', 'en'));
+        $kirby->setCurrentLanguage($kirby->session()->get('panel.language', 'en'));
     }
 
     return array_merge($routes, [
@@ -111,8 +117,13 @@ return function ($kirby) {
                 'installation',
                 'login',
             ],
-            'action'  => function () {
-                go('panel/site');
+            'action' => function () use ($kirby) {
+                /**
+                 * If the last path has been stored in the
+                 * session, redirect the user to it
+                 */
+                $path = $kirby->session()->get('panel.path') ?? 'site';
+                go('panel/' . $path);
             }
         ],
         [
