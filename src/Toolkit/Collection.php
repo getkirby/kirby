@@ -1135,14 +1135,17 @@ class Collection extends Iterator implements Countable
     }
 
     /**
-     * Returns an non-associative array
-     * with all values
+     * Returns a non-associative array
+     * with all values. If a mapping Closure is passed,
+     * all values are processed by the Closure.
      *
+     * @param Closure|null $map
      * @return array
      */
-    public function values(): array
+    public function values(Closure $map = null): array
     {
-        return array_values($this->data);
+        $data = $map === null ? $this->data : array_map($map, $this->data);
+        return array_values($data);
     }
 
     /**
