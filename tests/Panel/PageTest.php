@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
+use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
 
@@ -20,6 +21,11 @@ class ModelPageTestForceLocked extends ModelPage
  */
 class PageTest extends TestCase
 {
+    public function tearDown(): void
+    {
+        Dir::remove(__DIR__ . '/tmp');
+    }
+
     /**
      * @covers ::dragText
      * @covers \Kirby\Panel\Model::dragTextType
@@ -277,6 +283,70 @@ class PageTest extends TestCase
     }
 
     /**
+     * @covers ::imageSource
+     * @covers \Kirby\Panel\Model::image
+     * @covers \Kirby\Panel\Model::imageSource
+     */
+    public function testImageCover()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'media' => __DIR__ . '/tmp'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            ['filename' => 'test.jpg']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page  = $app->page('test');
+        $panel = new Page($page);
+
+        $hash = $page->image()->mediaHash();
+        $mediaUrl = $page->mediaUrl() . '/' . $hash;
+        $imagePlaceholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw';
+
+        // cover disabled as default
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => false,
+            'url' => $mediaUrl . '/test.jpg',
+            'cards' => [
+                'url' => $imagePlaceholder,
+                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
+            ],
+            'list' => [
+                'url' => $imagePlaceholder,
+                'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
+            ]
+        ], $panel->image());
+
+        // cover enabled
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => true,
+            'url' => $mediaUrl . '/test.jpg',
+            'cards' => [
+                'url' => $imagePlaceholder,
+                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
+            ],
+            'list' => [
+                'url' => $imagePlaceholder,
+                'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
+            ]
+        ], $panel->image(['cover' => true]));
+    }
+
+    /**
      * @covers \Kirby\Panel\Model::options
      */
     public function testOptions()
@@ -373,16 +443,19 @@ class PageTest extends TestCase
     public function testPickerDataDefault()
     {
         $page = new ModelPage([
-            'slug'  => 'test'
+            'slug' => 'test',
+            'content' => [
+                'title' => 'Test Title'
+            ]
         ]);
 
         $panel = new Page($page);
         $data  = $panel->pickerData();
 
-        $this->assertSame('Links sind toll: /test', $data['dragText']);
+        $this->assertSame('(link: test text: Test Title)', $data['dragText']);
         $this->assertSame('test', $data['id']);
         $this->assertSame('/pages/test', $data['link']);
-        $this->assertSame('test', $data['text']);
+        $this->assertSame('Test Title', $data['text']);
     }
 
     /**
