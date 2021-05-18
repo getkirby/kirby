@@ -9,7 +9,7 @@ scripts/ export-ignore
 
 # tests
 .codecov.yml export-ignore
-.php_cs export-ignore
+.php-cs-fixer.dist.php export-ignore
 phpmd.xml.dist export-ignore
 phpunit.xml.dist export-ignore
 psalm.xml.dist export-ignore

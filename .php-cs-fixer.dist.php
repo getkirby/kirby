@@ -5,7 +5,8 @@ $finder = PhpCsFixer\Finder::create()
     ->exclude('panel/node_modules')
     ->in(__DIR__);
 
-return PhpCsFixer\Config::create()
+$config = new PhpCsFixer\Config();
+return $config
     ->setRules([
         '@PSR1' => true,
         '@PSR2' => true,

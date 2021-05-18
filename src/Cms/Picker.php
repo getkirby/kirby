@@ -98,7 +98,7 @@ abstract class Picker
             if (empty($this->options['map']) === false) {
                 $result[] = $this->options['map']($item);
             } else {
-                $result[] = $item->panelPickerData([
+                $result[] = $item->panel()->pickerData([
                     'image' => $this->options['image'],
                     'info'  => $this->options['info'],
                     'model' => $this->options['model'],

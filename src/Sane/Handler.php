@@ -9,6 +9,7 @@ use Kirby\Toolkit\F;
  * Base handler abstract,
  * which needs to be extended to
  * create valid sane handlers
+ * @since 3.5.4
  *
  * @package   Kirby Sane
  * @author    Lukas Bestle <lukas@getkirby.com>

@@ -215,9 +215,9 @@ class Page extends ModelWithContent
     public function apiUrl(bool $relative = false): string
     {
         if ($relative === true) {
-            return 'pages/' . $this->panelId();
+            return 'pages/' . $this->panel()->id();
         } else {
-            return $this->kirby()->url('api') . '/pages/' . $this->panelId();
+            return $this->kirby()->url('api') . '/pages/' . $this->panel()->id();
         }
     }
 

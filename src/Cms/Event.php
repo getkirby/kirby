@@ -10,6 +10,7 @@ use Kirby\Toolkit\Controller;
  * The Event object is created whenever the `$kirby->trigger()`
  * or `$kirby->apply()` methods are called. It collects all
  * event information and handles calling the individual hooks.
+ * @since 3.4.0
  *
  * @package   Kirby Cms
  * @author    Lukas Bestle <lukas@getkirby.com>,
