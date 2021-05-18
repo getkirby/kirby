@@ -1140,27 +1140,12 @@ class Collection extends Iterator implements Countable
      * Closure is passed, all values
      * are processed by the Closure.
      *
-     * If pagination options are passed,
-     * the values are paginated and wrapped
-     * in an array as `data` key, with the
-     * pagination info as `pagination` key.
-     *
      * @param Closure|null $map
-     * @param array|null $paginate
      * @return array
      */
-    public function values(Closure $map = null, ?array $paginate = null): array
+    public function values(Closure $map = null): array
     {
-        if (empty($paginate) === false) {
-            $collection = $this->paginate($paginate);
-
-            return [
-                'data'       => $collection->values($map),
-                'pagination' => $collection->pagination()->toArray()
-            ];
-        }
-
-        $data = $map === null ? $this->data : $this->toArray($map);
+        $data = $map === null ? $this->data : array_map($map, $this->data);
         return array_values($data);
     }
 

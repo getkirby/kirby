@@ -874,26 +874,6 @@ class CollectionTest extends TestCase
     }
 
     /**
-     * @covers ::values
-     */
-    public function testValuesPaginate()
-    {
-        $values = $this->collection->values(function ($item) {
-            return Str::after($item, 'My ');
-        }, ['limit' => 2]);
-
-        $this->assertSame([
-            'first element',
-            'second element'
-        ], $values['data']);
-
-        $this->assertSame(1, $values['pagination']['page']);
-        $this->assertSame(2, $values['pagination']['pages']);
-        $this->assertSame(2, $values['pagination']['limit']);
-        $this->assertSame(3, $values['pagination']['total']);
-    }
-
-    /**
      * @covers ::when
      */
     public function testWhen()
