@@ -1,11 +1,10 @@
 <?php
 
-use Kirby\Panel\Panel;
 use Kirby\Http\Response;
+use Kirby\Panel\Panel;
 use Kirby\Toolkit\View;
 
 return function ($kirby) {
-
     $session = $kirby->session();
     $system  = $kirby->system();
     $user    = $kirby->user();
@@ -36,7 +35,6 @@ return function ($kirby) {
             [
                 'pattern' => 'installation',
                 'action'  => function () use ($kirby, $system) {
-
                     return [
                         'component' => 'InstallationView',
                         'view'      => 'installation',
