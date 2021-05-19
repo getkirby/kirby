@@ -93,7 +93,8 @@ export default {
       default() {
         return {};
       }
-    }
+    },
+    type: String
   },
   data() {
     return {
@@ -103,11 +104,6 @@ export default {
       currentType: this.getType(this.type),
       q: null,
       selected: -1,
-    }
-  },
-  computed: {
-    type() {
-      return this.$view.search || "pages";
     }
   },
   watch: {

@@ -21,6 +21,7 @@
 
       <k-search
         ref="search"
+        :type="$view.search || 'pages'"
         :types="searchTypes"
       />
     </header>

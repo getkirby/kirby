@@ -289,8 +289,9 @@ class File extends Model
                 'breadcrumb' => function () use ($file): array {
                     return $file->panel()->breadcrumb();
                 },
-                'id'    => $type === 'user' ? 'users' : 'site',
-                'title' => $file->filename(),
+                'id'     => $type === 'user' ? 'users' : 'site',
+                'search' => 'files',
+                'title'  => $file->filename(),
             ]
         ];
     }
