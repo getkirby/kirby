@@ -1,7 +1,7 @@
 import "vite/dynamic-import-polyfill"
 
 import Vue from "vue";
-import { App, plugin } from '@inertiajs/inertia-vue'
+import { App, plugin } from "@inertiajs/inertia-vue";
 import Api from "./config/api.js";
 import Events from "./config/events.js";
 import Helpers from "./helpers/index.js";
