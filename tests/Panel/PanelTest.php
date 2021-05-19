@@ -81,7 +81,7 @@ class PanelTest extends TestCase
 
         // get panel response
         $response = Panel::render($this->app, 'PageView', [
-           'test' => 'Test'
+            'test' => 'Test'
         ]);
 
         $this->assertInstanceOf('\Kirby\Http\Response', $response);
