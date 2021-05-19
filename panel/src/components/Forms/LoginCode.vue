@@ -4,10 +4,9 @@
       {{ $t('login') }}
     </h1>
 
-    <div v-if="issue" class="k-login-alert" @click="issue = null">
-      <span>{{ issue }}</span>
-      <k-icon type="alert" />
-    </div>
+    <k-login-alert v-if="issue" @click="issue = null">
+      {{ issue }}
+    </k-login-alert>
 
     <k-user-info :user="pending.email" />
 

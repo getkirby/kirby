@@ -87,6 +87,9 @@ import LoginCode from "@/components/Forms/LoginCode.vue";
 import Upload from "@/components/Forms/Upload.vue";
 import Writer from "@/components/Writer/Writer.vue";
 
+/** Form Helpers */
+import LoginAlert from "@/components/Forms/LoginAlert.vue";
+
 /** Form Inputs */
 import CheckboxInput from "@/components/Forms/Input/CheckboxInput.vue";
 import CheckboxesInput from "@/components/Forms/Input/CheckboxesInput.vue";
@@ -168,6 +171,8 @@ Vue.component("k-login", Login);
 Vue.component("k-login-code", LoginCode);
 Vue.component("k-upload", Upload);
 Vue.component("k-writer", Writer);
+
+Vue.component("k-login-alert", LoginAlert);
 
 Vue.component("k-checkbox-input", CheckboxInput);
 Vue.component("k-checkboxes-input", CheckboxesInput);

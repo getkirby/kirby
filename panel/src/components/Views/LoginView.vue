@@ -103,19 +103,4 @@ export default {
 .k-login-checkbox:focus span {
   opacity: 1;
 }
-
-.k-login-alert {
-  padding: .5rem .75rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 38px;
-  margin-bottom: 2rem;
-  background: var(--color-negative);
-  color: #fff;
-  font-size: var(--text-sm);
-  border-radius: var(--rounded-xs);
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
-}
 </style>
