@@ -76,8 +76,12 @@ export default ({ command }) => {
     },
     resolve: {
       alias: [
-          { 
-            find: "@", 
+          {
+            find: "vue",
+            replacement: "vue/dist/vue.esm.js"
+          },
+          {
+            find: "@",
             replacement: path.resolve(__dirname, "src")
           }
       ]
