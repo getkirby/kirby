@@ -124,6 +124,7 @@ class File extends ModelWithContent
     public function __construct(array $props)
     {
         // set filename as the most important prop first
+        // TODO: refactor later to avoid redundant prop setting
         $this->setProperty('filename', $props['filename'] ?? null, true);
 
         // set other properties
