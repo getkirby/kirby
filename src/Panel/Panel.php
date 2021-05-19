@@ -169,6 +169,17 @@ class Panel
     }
 
     /**
+     * Redirect to a Panel url
+     *
+     * @param string|null $path
+     * @return void
+     */
+    public static function go(?string $path = null)
+    {
+        go(option('panel.slug', 'panel') . '/' . trim($path, '/'));
+    }
+
+    /**
      * Load the SVG icon sprite
      * This will be injected in the
      * initial HTML document for the Panel

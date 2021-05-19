@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Panel\Panel;
 use Kirby\Http\Response;
 use Kirby\Toolkit\View;
 
@@ -57,7 +58,7 @@ return function ($kirby) {
             [
                 'pattern' => '(:all)',
                 'action'  => function () {
-                    go('panel/installation');
+                    Panel::go('installation');
                 }
             ]
         ]);
@@ -96,7 +97,7 @@ return function ($kirby) {
                      * be used to redirect to that view again
                      */
                     $session->set('panel.path', $path);
-                    go('panel/login');
+                    Panel::go('login');
                 }
             ]
         ]);
@@ -152,7 +153,7 @@ return function ($kirby) {
                     $path = 'site';
                 }
 
-                go('panel/' . $path);
+                Panel::go($path);
             }
         ],
         [
@@ -170,7 +171,7 @@ return function ($kirby) {
             'action'  => function () use ($kirby, $user) {
                 //TODO: localStorage doesn't get cleared anymore
                 $user->logout();
-                go('panel/login');
+                Panel::go('login');
             }
         ],
         [
