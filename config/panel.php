@@ -36,7 +36,7 @@ return function ($kirby) {
                 'pattern' => 'installation',
                 'action'  => function () use ($kirby, $system) {
                     return [
-                        'component' => 'InstallationView',
+                        'component' => 'k-installation-view',
                         'view'      => 'installation',
                         'props'     => [
                             'isInstallable' => $system->isInstallable(),
@@ -74,7 +74,7 @@ return function ($kirby) {
                     $status = $kirby->auth()->status();
 
                     return [
-                        'component' => 'LoginView',
+                        'component' => 'k-login-view',
                         'view'      => 'login',
                         'props'     => [
                             'methods' => array_keys($system->loginMethods()),
@@ -158,7 +158,7 @@ return function ($kirby) {
             'pattern' => 'account',
             'action'  => function () use ($kirby, $user) {
                 return [
-                    'component' => 'AccountView',
+                    'component' => 'k-account-view',
                     'props'     => $user->panel()->props(),
                     'view'      => 'account'
                 ];
@@ -167,7 +167,6 @@ return function ($kirby) {
         [
             'pattern' => 'logout',
             'action'  => function () use ($kirby, $user) {
-                //TODO: localStorage doesn't get cleared anymore
                 $user->logout();
                 Panel::go('login');
             }
@@ -206,7 +205,7 @@ return function ($kirby) {
             'access'  => 'settings',
             'action'  => function () use ($kirby) {
                 return [
-                    'component' => 'SettingsView',
+                    'component' => 'k-settings-view',
                     'view'      => 'settings',
                     'props'     => [
                         'languages' => $kirby->languages()->values(function ($language) {
@@ -257,7 +256,7 @@ return function ($kirby) {
                 $roles = $kirby->roles();
 
                 return [
-                    'component' => 'UsersView',
+                    'component' => 'k-users-view',
                     'view'      => 'users',
                     'props'     => [
                         'role' => function () use ($kirby, $roles, $role) {
@@ -339,7 +338,7 @@ return function ($kirby) {
             'pattern' => 'reset-password',
             'action'  => function () {
                 return [
-                    'component' => 'ResetPasswordView',
+                    'component' => 'k-reset-password-view',
                     'view'      => 'reset-password'
                 ];
             }
@@ -348,7 +347,7 @@ return function ($kirby) {
             'pattern' => 'plugins/(:any)',
             'action'  => function (string $id) {
                 return [
-                    'component' => 'PluginView',
+                    'component' => 'k-plugin-view',
                     'view'      => $id,
                     'props' => [
                         'id' => $id

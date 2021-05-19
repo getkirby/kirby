@@ -61,10 +61,7 @@ new Vue({
     return h(App, {
       props: {
         initialPage: window.inertia,
-        resolveComponent: async (name) =>  {
-          const module = await import(`./components/Views/${name}.vue`);
-          return module.default;
-        },
+        resolveComponent: (name) => Vue.component(name),
         transformProps: (props) => {
 
           /** Set translation */

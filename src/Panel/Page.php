@@ -192,7 +192,7 @@ class Page extends Model
         $page = $this->model;
 
         return [
-            'component' => 'PageView',
+            'component' => 'k-page-view',
             'props'     => $this->props(),
             'view' => [
                 'breadcrumb' => function () use ($page) {

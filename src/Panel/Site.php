@@ -69,7 +69,7 @@ class Site extends Model
     public function route(): array
     {
         return [
-            'component' => 'SiteView',
+            'component' => 'k-site-view',
             'props'     => $this->props()
         ];
     }

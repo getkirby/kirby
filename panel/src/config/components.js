@@ -352,7 +352,28 @@ Vue.component("k-fields-section", FieldsSection);
 
 /* Views */
 import ErrorView from "@/components/Views/ErrorView.vue";
+import FileView from "@/components/Views/FileView.vue";
+import InstallationView from "@/components/Views/InstallationView.vue";
+import LoginView from "@/components/Views/LoginView.vue";
+import PageView from "@/components/Views/PageView.vue";
+import PluginView from "@/components/Views/PluginView.vue";
+import ResetPasswordView from "@/components/Views/ResetPasswordView.vue";
+import SettingsView from "@/components/Views/SettingsView.vue";
+import SiteView from "@/components/Views/SiteView.vue";
+import UsersView from "@/components/Views/UsersView.vue";
+import UserView from "@/components/Views/UserView.vue";
+
 Vue.component("k-error-view", ErrorView);
+Vue.component("k-file-view", FileView);
+Vue.component("k-installation-view", InstallationView);
+Vue.component("k-login-view", LoginView);
+Vue.component("k-page-view", PageView);
+Vue.component("k-plugin-view", PluginView);
+Vue.component("k-reset-password-view", ResetPasswordView);
+Vue.component("k-settings-view", SettingsView);
+Vue.component("k-site-view", SiteView);
+Vue.component("k-users-view", UsersView);
+Vue.component("k-user-view", UserView);
 
 /* Blocks */
 import "@/components/Blocks/index.js";

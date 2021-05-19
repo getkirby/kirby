@@ -283,7 +283,7 @@ class File extends Model
         $type = $file->parent()::CLASS_ALIAS;
 
         return [
-            'component' => 'FileView',
+            'component' => 'k-file-view',
             'props'     => $this->props(),
             'view'      => [
                 'breadcrumb' => function () use ($file): array {
