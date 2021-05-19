@@ -80,7 +80,10 @@ class PanelTest extends TestCase
         Panel::link($this->app);
 
         // get panel response
-        $response = Panel::render($this->app);
+        $response = Panel::render($this->app, 'PageView', [
+           'test' => 'Test'
+        ]);
+
         $this->assertInstanceOf('\Kirby\Http\Response', $response);
         $this->assertSame(200, $response->code());
         $this->assertSame('text/html', $response->type());
