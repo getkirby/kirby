@@ -36,7 +36,7 @@
               </li>
               <li><hr></li>
               <li>
-                <k-dropdown-item icon="logout" link="/logout">
+                <k-dropdown-item icon="logout" @click="logout">
                   {{ $t("logout") }}
                 </k-dropdown-item>
               </li>
@@ -168,6 +168,10 @@ export default {
     }
   },
   methods: {
+    logout() {
+      this.$store.dispatch("content/clear");
+      this.$go("/logout");
+    },
     viewEntryInMenu(entryName, entry) {
       let menu = entry.menu;
       if (typeof menu === "function") {

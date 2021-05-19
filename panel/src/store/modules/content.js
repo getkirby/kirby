@@ -122,6 +122,18 @@ export default {
 
 
   mutations: {
+    CLEAR(state) {
+      Object.keys(state.models).forEach(key => {
+        state.models[key].changes = {};
+      });
+
+      // remove all form changes from localStorage
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith("kirby$content$")) {
+          localStorage.removeItem(key);
+        }
+      });
+    },
     CREATE(state, [id, model]) {
       if (!model) {
         return false;
@@ -250,6 +262,9 @@ export default {
           // remove the old entry
           localStorage.removeItem("kirby$form$" + id);
         });
+    },
+    clear(context) {
+      context.commit("CLEAR");
     },
     create(context, model) {
       // attach the language to the id
