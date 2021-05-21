@@ -1,47 +1,47 @@
 import debounce from '../helpers/debounce.js'
 
 export default {
-  id: null,
   page: null,
   props: null,
   swap: null,
   component: null,
 
   init({ page, component, swap, props }) {
+    // callback function that receives the
+    // component name and returns the Vue component
     this.component = component
-    this.props     = props
-    this.swap      = swap
+
+    // callback function that resolves the props;
+    // we use this to set our globals
+    this.props = props
+
+    // callback function which handles
+    // swapping components
+    this.swap = swap
 
     // set initial page
-    if (this.isBackForwardVisit()) {
-      this.setBackForwardVisit(page)
-    } else {
-      page.url += window.location.hash
-      this.setPage(page)
-    }
+    page.url += window.location.hash
+    this.setPage(page)
     
     // set up event listeners
     window.addEventListener('popstate', this.onPopstateEvent.bind(this))
     document.addEventListener('scroll', debounce(this.onScrollEvent.bind(this), 100), true)
   },
 
-  isBackForwardVisit() {
-    return window.history.state
-      && window.performance
-      && window.performance.getEntriesByType('navigation').length
-      && window.performance.getEntriesByType('navigation')[0].type === 'back_forward'
-  },
-
   async onPopstateEvent(event) {
+    // if a state is included, set the page
+    // based on this state (which will cause
+    // a swap of components)
     if (event.state !== null) {
-      this.setPage(event.state, { preserveState: false })
-
-    } else {
-      const url = this.toUrl(this.page.url)
-      url.hash  = window.location.hash
-      this.state({ ...this.page, url: url.href })
-      this.resetScroll()
+      return this.setPage(event.state, { preserveState: false })
     }
+
+    // otherwise, just make sure to update
+    // the state properly
+    const url = this.toUrl(this.page.url)
+    url.hash  = window.location.hash
+    this.state({ ...this.page, url: url.href })
+    this.resetScroll()
   },
 
   onScrollEvent(event) {
@@ -90,49 +90,6 @@ export default {
       })
     }
   },
-
-  async setBackForwardVisit(page) {
-    window.history.state.version = page.version
-    await this.setPage(window.history.state, { preserveScroll: true });
-    this.restoreScroll();
-  },
-
-  setId() {
-    this.id = {}
-    return this.id
-  },
-
-  resolve(value, page) {
-    if (typeof value === 'function') {
-      return value(page)
-    }
-    if (value === 'errors') {
-      return Object.keys(page.props.errors || {}).length > 0
-    }
-    return value
-  },
-
-  async setPage(page, { id = this.setId(), replace = false, preserveScroll = false, preserveState = false } = {}) {
-    const component = await this.component(page.component)
-
-    if (id === this.id) {
-      page.scrollRegions = page.scrollRegions || []
-
-      if (replace || this.toUrl(page.url).href === window.location.href) {
-        this.state(page)
-      } else {
-        this.state(page, "push")
-      }
-
-      const clone = JSON.parse(JSON.stringify(page))
-      clone.props = this.props(clone.props)
-      await this.swap({ component, page: clone, preserveState })
-
-      if (!preserveScroll) {
-        this.resetScroll()
-      }
-    }
-  },
  
   reload(options = {}) {
     return this.visit(window.location.href, {
@@ -140,6 +97,29 @@ export default {
       preserveScroll: true, 
       preserveState: true
     })
+  },
+
+  async setPage(page, { replace = false, preserveScroll = false, preserveState = false } = {}) {
+    // resolve component
+    const component = await this.component(page.component)
+    page.scrollRegions = page.scrollRegions || []
+
+    // either replacing the whole state 
+    // or pushing onto it
+    if (replace || this.toUrl(page.url).href === window.location.href) {
+      this.state(page)
+    } else {
+      this.state(page, "push")
+    }
+
+    // swap component
+    const clone = JSON.parse(JSON.stringify(page))
+    clone.props = this.props(clone.props)
+    await this.swap({ component, page: clone, preserveState })
+
+    if (!preserveScroll) {
+      this.resetScroll()
+    }
   },
 
   state(page, action = "replace") {
@@ -154,11 +134,11 @@ export default {
     only = [],
     headers = {},
   } = {}) {
-
     this.saveScroll()
     document.dispatchEvent(new Event('inertia:start'))
 
     try {
+      // fetch the response (only GET request supported)
       const response = await fetch(this.toUrl(url, false), {
         method: "get",
         headers: {
@@ -174,14 +154,13 @@ export default {
         }
       })
 
+      // turn into data
       const data = await response.json()
 
+      // add exisiting data to partial requests
       if (only.length && data.component === this.page.component) {
         data.props = { ...this.page.props, ...data.props }
       }
-
-      preserveScroll = this.resolve(preserveScroll, data)
-      preserveState  = this.resolve(preserveState, data)
 
       const responseUrl = this.toUrl(data.url)
 
