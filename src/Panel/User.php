@@ -96,11 +96,12 @@ class User extends Model
      */
     public function props(): array
     {
-        $user = $this->model;
+        $user   = $this->model;
+        $avatar = $user->avatar();
 
         return array_merge(parent::props(), [
             'user' => [
-                'avatar'   => $avatar = $user->avatar() ? $avatar->url() : null,
+                'avatar'   => $avatar ? $avatar->url() : null,
                 'content'  => $this->content(),
                 'email'    => $user->email(),
                 'id'       => $user->id(),
