@@ -68,6 +68,7 @@ new Vue({
           document.querySelector("html").setAttribute("lang", props.$translation.code);
 
           /** Set globals */
+          Vue.prototype.$areas       = window.panel.$areas       = props.$areas;
           Vue.prototype.$config      = window.panel.$config      = props.$config;
           Vue.prototype.$language    = window.panel.$language    = props.$language;
           Vue.prototype.$languages   = window.panel.$languages   = props.$languages;
@@ -77,10 +78,6 @@ new Vue({
           Vue.prototype.$urls        = window.panel.$urls        = props.$urls;
           Vue.prototype.$user        = window.panel.$user        = props.$user;
           Vue.prototype.$view        = window.panel.$view        = props.$view;
-          Vue.prototype.$views       = window.panel.$views       = {
-            ...props.$views,
-            ...window.panel.plugins.views
-          };
 
           return props.$props;
         }

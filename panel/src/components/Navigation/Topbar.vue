@@ -13,18 +13,18 @@
           </k-button>
           <k-dropdown-content ref="menu" class="k-topbar-menu">
             <ul>
-              <template v-for="(entry, entryName) in views">
+              <template v-for="area in areas">
                 <li
-                  v-if="viewEntryInMenu(entryName, entry) !== false"
-                  :key="'menu-item-' + entryName"
-                  :aria-current="view.id === entryName"
+                  v-if="areaInMenu(area) !== false"
+                  :key="'menu-item-' + area.id"
+                  :aria-current="view.id === area.id"
                 >
                   <k-dropdown-item
-                    :disabled="viewEntryInMenu(entryName, entry) === 'disabled'"
-                    :icon="entry.icon"
-                    :link="entry.link"
+                    :disabled="areaInMenu(area) === 'disabled'"
+                    :icon="area.icon"
+                    :link="area.link"
                   >
-                    {{ entry.label }}
+                    {{ area.label }}
                   </k-dropdown-item>
                 </li>
               </template>
@@ -146,11 +146,11 @@
 <script>
 export default {
   props: {
+    areas: Object,
     breadcrumb: Array,
     license: [Boolean, String],
     title: String,
     view: Object,
-    views: Object,
   },
   computed: {
     notification() {
@@ -172,8 +172,8 @@ export default {
       this.$store.dispatch("content/clear");
       this.$go("/logout");
     },
-    viewEntryInMenu(entryName, entry) {
-      let menu = entry.menu;
+    areaInMenu(area) {
+      let menu = area.menu;
       if (typeof menu === "function") {
         menu = menu(this);
       }
@@ -184,7 +184,7 @@ export default {
       }
 
       // default/fallback: disable if no permissions, otherwise enable
-      if (this.$permissions.access[entryName] === false) {
+      if (this.$permissions.access[area.id] === false) {
         return "disabled";
       }
 

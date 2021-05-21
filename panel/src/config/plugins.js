@@ -56,46 +56,6 @@ Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
 });
 
 /**
- * Views
- */
-Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
-  // Check for all required properties
-  if (!options.component) {
-    store.dispatch(
-      "notification/error",
-      `No view component provided when loading view "${name}". The view has not been registered.`
-    );
-    delete window.panel.plugins.views[name];
-    return;
-  }
-
-
-  // Fallbacks
-  if (options.icon === undefined) {
-    options.icon = "page";
-  }
-
-  if (options.menu === undefined) {
-    options.menu = true;
-  }
-
-  if (options.search === undefined) {
-    options.menu = "pages";
-  }
-
-  // Update view
-  window.panel.plugins.views[name] = {
-    id: name,
-    label: options.text || options.label,
-    icon: options.icon,
-    link: "/plugins/" + name,
-    menu: options.menu,
-  };
-
-  Vue.component("k-" + name + "-plugin-view", options.component);
-});
-
-/**
  * Vue.use
  */
 window.panel.plugins.use.forEach(plugin => {
