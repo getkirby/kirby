@@ -34,15 +34,7 @@ export default {
 
   async onPopstateEvent(event) {
     if (event.state !== null) {
-      const page      = event.state
-      const id        = this.setId()
-      const component = await this.component(page.component)
-
-      if (id === this.id) {
-        this.page = page
-        await this.swap({ component, page, preserveState: false })
-        this.restoreScroll()
-      }
+      this.setPage(event.state, { preserveState: false })
 
     } else {
       const url = this.toUrl(this.page.url)
@@ -124,7 +116,7 @@ export default {
     const component = await this.component(page.component)
 
     if (id === this.id) {
-      page.scrollRegions   = page.scrollRegions || []
+      page.scrollRegions = page.scrollRegions || []
 
       if (replace || this.toUrl(page.url).href === window.location.href) {
         this.state(page)
