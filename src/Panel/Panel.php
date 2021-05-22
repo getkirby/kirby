@@ -363,16 +363,19 @@ class Panel
         $request = $kirby->request();
         $only    = Str::split($request->header('X-Inertia-Partial-Data'));
 
-        // only include new props in array, if partial request
+        // only include new props in array, if partial request,
+        // partial requests are made via dot notation, e.g.
+        // $props.tab.columns
         if (
             empty($only) === false &&
             $request->header('X-Inertia-Partial-Component') === $component
         ) {
-            foreach ($props as $key => $value) {
-                if (in_array($key, $only) === false) {
-                    unset($props[$key]);
-                }
+            $partials = [];
+            foreach ($only as $partial) {
+                $partials[$partial] = A::get($props, $partial);
+
             }
+            $props = A::nest($partials);
         }
 
         // resolve lazy props
