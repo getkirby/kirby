@@ -91,7 +91,7 @@ class FileRulesTest extends TestCase
     {
         $file = $this->createMock(File::class);
         $file->method('filename')->willReturn('test.jpg');
-        $file->method('__call')->with('exists')->willReturn(true);
+        $file->method('exists')->willReturn(true);
 
         $this->expectException('Kirby\Exception\DuplicateException');
         $this->expectExceptionMessage('The file exists and cannot be overwritten');
