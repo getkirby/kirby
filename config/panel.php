@@ -339,7 +339,7 @@ return function ($kirby) {
             'action'  => function () {
                 return [
                     'component' => 'k-reset-password-view',
-                    'view'      => 'reset-password'
+                    'view'      => 'account'
                 ];
             }
         ],
