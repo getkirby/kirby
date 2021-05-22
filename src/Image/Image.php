@@ -48,6 +48,16 @@ class Image extends File
     ];
 
     /**
+     * Returns the `<img>` tag for the image object
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return $this->html();
+    }
+
+    /**
      * Returns the dimensions of the file if possible
      *
      * @return \Kirby\Image\Dimensions

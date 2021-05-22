@@ -207,7 +207,7 @@ class ImageTest extends TestCase
     public function testToString()
     {
         $file = $this->_image();
-        $expected = 'https://foo.bar/cat.jpg';
+        $expected = '<img alt="" src="https://foo.bar/cat.jpg">';
         $this->assertSame($expected, $file->__toString());
         $this->assertSame($expected, (string)$file);
     }
