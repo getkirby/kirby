@@ -5,7 +5,6 @@ namespace Kirby\Panel;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
@@ -373,7 +372,6 @@ class Panel
             $partials = [];
             foreach ($only as $partial) {
                 $partials[$partial] = A::get($props, $partial);
-
             }
             $props = A::nest($partials);
         }
