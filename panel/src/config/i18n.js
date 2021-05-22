@@ -1,5 +1,5 @@
 
-import str from "../helpers/string.js";
+import { template } from "../helpers/string.js";
 
 /**
  * TranslationString prop type
@@ -24,7 +24,7 @@ export default {
       }
 
       const string = store.getters["translation/string"](key);
-      return str.template(string, data);
+      return template(string, data);
     }
   }
 };
