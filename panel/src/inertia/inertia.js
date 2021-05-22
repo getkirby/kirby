@@ -1,5 +1,6 @@
 import debounce from '../helpers/debounce.js'
 import { merge } from '../helpers/object.js'
+import { toJson } from '../api/request.js'
 
 export default {
   page: null,
@@ -164,7 +165,7 @@ export default {
       })
 
       // turn into data
-      const data = await response.json()
+      const data = await toJson(response)
 
       // add exisiting data to partial requests
       if (only.length && data.component === this.page.component) {
