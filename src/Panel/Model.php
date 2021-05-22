@@ -239,6 +239,26 @@ abstract class Model
     abstract public function path(): string;
 
     /**
+     * Prepares the response data for page pickers
+     * and page fields
+     *
+     * @param array|null $params
+     * @return array
+     */
+    public function pickerData(array $params = []): array
+    {
+        return [
+            'id'          => $this->model->id(),
+            'image'       => $image = $this->image($params['image'] ?? []),
+            'icon'        => $this->icon($image),
+            'info'        => $this->model->toString($params['info'] ?? false),
+            'link'        => $this->url(true),
+            'url'         => $this->model->url(),
+            'text'        => $this->model->toString($params['text'] ?? false),
+        ];
+    }
+
+    /**
      * Returns the url to the editing view
      * in the panel
      *
