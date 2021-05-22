@@ -221,23 +221,20 @@ return [
     ],
     'toArray' => function () {
         return [
-            'data'    => $this->data,
-            'errors'  => $this->errors,
-            'options' => [
-                'accept'   => $this->accept,
-                'apiUrl'   => $this->parent->apiUrl(true),
-                'empty'    => $this->empty,
-                'headline' => $this->headline,
-                'help'     => $this->help,
-                'layout'   => $this->layout,
-                'link'     => $this->link,
-                'max'      => $this->max,
-                'min'      => $this->min,
-                'size'     => $this->size,
-                'sortable' => $this->sortable,
-                'upload'   => $this->upload
-            ],
-            'pagination' => $this->pagination
+            'accept'     => $this->accept,
+            'apiUrl'     => $this->parent->apiUrl(true),
+            'empty'      => $this->empty,
+            'files'      => $this->data,
+            'headline'   => $this->headline,
+            'help'       => $this->help,
+            'layout'     => $this->layout,
+            'link'       => $this->link,
+            'max'        => $this->max,
+            'min'        => $this->min,
+            'pagination' => $this->pagination,
+            'size'       => $this->size,
+            'sortable'   => $this->sortable,
+            'upload'     => $this->upload
         ];
     }
 ];

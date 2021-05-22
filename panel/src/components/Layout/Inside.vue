@@ -361,4 +361,11 @@ b {
   flex-grow: 1;
   border: 2px solid var(--color-border);
 }
+
+[data-loading] .k-panel-view {
+  opacity: .5;
+  cursor: wait;
+  transition: opacity 1s;
+  transition-delay: .25s;
+}
 </style>

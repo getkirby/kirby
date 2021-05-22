@@ -17,7 +17,7 @@ export default {
       props: (props) => {
 
         /** Set translation */
-        document.querySelector("html").setAttribute("lang", props.$translation.code);
+        document.documentElement.setAttribute("lang", props.$translation.code);
 
         /** Set globals */
         Vue.prototype.$config      = window.panel.$config      = props.$config;

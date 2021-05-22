@@ -1,16 +1,11 @@
 import Vue from "vue";
 import store from "@/store/store.js";
-import section from "../mixins/section/section.js";
 
 let components = {};
 
 for (var key in Vue.options.components) {
   components[key] = Vue.options.components[key];
 }
-
-let mixins = {
-  section: section
-};
 
 /**
  * Components
@@ -39,12 +34,6 @@ Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
     if (options.template) {
       options.render = null;
     }
-  }
-
-  if (options.mixins) {
-    options.mixins = options.mixins.map(mixin => {
-      return typeof mixin === "string" ? mixins[mixin] : mixin;
-    });
   }
 
   if (components[name]) {

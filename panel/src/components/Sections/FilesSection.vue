@@ -1,90 +1,91 @@
 <template>
   <section
-    v-if="isLoading === false"
-    :data-processing="isProcessing"
     class="k-files-section"
   >
     <header class="k-section-header">
       <k-headline>
-        {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
+        {{ headline }} <abbr v-if="min" :title="$t('section.required')">*</abbr>
       </k-headline>
       <k-button-group v-if="add">
-        <k-button icon="upload" @click="upload">
+        <k-button icon="upload" @click="uploading">
           {{ $t("add") }}
         </k-button>
       </k-button-group>
     </header>
 
-    <template v-if="error">
-      <k-box theme="negative">
-        <k-text size="small">
-          <strong>{{ $t("error.section.notLoaded", {name: name}) }}:</strong>
-          {{ error }}
-        </k-text>
-      </k-box>
-    </template>
-
-    <template v-else>
-      <k-dropzone :disabled="add === false" @drop="drop">
-        <k-collection
-          v-if="data.length"
-          :help="help"
-          :items="data"
-          :layout="options.layout"
-          :pagination="pagination"
-          :sortable="!isProcessing && options.sortable"
-          :size="options.size"
+    <k-dropzone :disabled="add === false" @drop="drop">
+      <k-collection
+        v-if="files.length"
+        :help="help"
+        :items="items(files)"
+        :layout="layout"
+        :pagination="pagination"
+        :sortable="!isProcessing && sortable"
+        :size="size"
+        :data-invalid="isInvalid"
+        @sort="sort"
+        @paginate="paginate"
+        @action="action"
+      />
+      <template v-else>
+        <k-empty
+          :layout="layout"
           :data-invalid="isInvalid"
-          @sort="sort"
-          @paginate="paginate"
-          @action="action"
-        />
-        <template v-else>
-          <k-empty
-            :layout="options.layout"
-            :data-invalid="isInvalid"
-            icon="image"
-            @click="upload"
-          >
-            {{ options.empty || $t('files.empty') }}
-          </k-empty>
-          <footer class="k-collection-footer">
-            <!-- eslint-disable vue/no-v-html -->
-            <k-text
-              v-if="help"
-              theme="help"
-              class="k-collection-help"
-              v-html="help"
-            />
-            <!-- eslint-enable vue/no-v-html -->
-          </footer>
-        </template>
-      </k-dropzone>
+          icon="image"
+          @click="uploading"
+        >
+          {{ empty || $t('files.empty') }}
+        </k-empty>
+        <footer class="k-collection-footer">
+          <!-- eslint-disable vue/no-v-html -->
+          <k-text
+            v-if="help"
+            theme="help"
+            class="k-collection-help"
+            v-html="help"
+          />
+          <!-- eslint-enable vue/no-v-html -->
+        </footer>
+      </template>
+    </k-dropzone>
 
-      <k-file-rename-dialog ref="rename" @success="update" />
-      <k-file-remove-dialog ref="remove" @success="update" />
-      <k-file-sort-dialog ref="sort" @success="reload" />
-      <k-upload ref="upload" @success="uploaded" @error="reload" />
-    </template>
+    <k-file-rename-dialog ref="rename" @success="update" />
+    <k-file-remove-dialog ref="remove" @success="update" />
+    <k-file-sort-dialog ref="sort" @success="reload" />
+    <k-upload ref="upload" @success="uploaded" @error="reload" />
+
   </section>
 </template>
 
 <script>
-import CollectionSectionMixin from "@/mixins/section/collection.js";
 
 export default {
-  mixins: [CollectionSectionMixin],
+  props: {
+    accept: String,
+    apiUrl: String,
+    empty: String,
+    files: Array,
+    headline: String,
+    help: String,
+    layout: String,
+    link: String,
+    max: Number,
+    min: Number,
+    pagination: Object,
+    size: String,
+    sortable: Boolean,
+    upload: Object
+  },
   computed: {
     add() {
-      if (this.$permissions.files.create && this.options.upload !== false) {
-        return this.options.upload;
+      if (this.$permissions.files.create && this.upload !== false) {
+        return this.upload;
       } else {
         return false;
       }
     },
   },
   created() {
-    this.load();
     this.$events.$on("model.update", this.reload);
   },
   destroyed() {
@@ -111,12 +112,12 @@ export default {
           });
           break;
         case "remove":
-          if (this.data.length <= this.options.min) {
-            const number = this.options.min > 1 ? "plural" : "singular";
+          if (this.data.length <= this.min) {
+            const number = this.min > 1 ? "plural" : "singular";
             this.$store.dispatch("notification/error", {
               message: this.$t("error.section.files.min." + number, {
-                section: this.options.headline || this.name,
-                min: this.options.min
+                section: this.headline || this.name,
+                min: this.min
               })
             });
             break;
@@ -125,7 +126,7 @@ export default {
           this.$refs.remove.open(file.parent, file.filename);
           break;
         case "sort":
-          this.$refs.sort.open(file.parent, file, this.options.apiUrl);
+          this.$refs.sort.open(file.parent, file, this.apiUrl);
           break;
       }
 
@@ -142,7 +143,7 @@ export default {
     },
     items(data) {
       return data.map(file => {
-        file.sortable = this.options.sortable;
+        file.sortable = this.sortable;
         file.column   = this.column;
         file.options  = async ready => {
           try {
@@ -150,7 +151,7 @@ export default {
               file.parent,
               file.filename,
               "list",
-              this.options.sortable
+              this.sortable
             );
             ready(options);
 
@@ -170,7 +171,7 @@ export default {
       });
     },
     async sort(items) {
-      if (this.options.sortable === false) {
+      if (this.sortable === false) {
         return false;
       }
 
@@ -181,7 +182,7 @@ export default {
       });
 
       try {
-        await this.$api.patch(this.options.apiUrl + "/files/sort", {
+        await this.$api.patch(this.apiUrl + "/files/sort", {
           files: items,
           index: this.pagination.offset
         });
@@ -198,7 +199,7 @@ export default {
     update() {
       this.$events.$emit("model.update");
     },
-    upload() {
+    uploading() {
       if (this.add === false) {
         return false;
       }

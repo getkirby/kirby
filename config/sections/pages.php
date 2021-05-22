@@ -280,21 +280,18 @@ return [
     ],
     'toArray' => function () {
         return [
-            'data'    => $this->data,
-            'errors'  => $this->errors,
-            'options' => [
-                'add'      => $this->add,
-                'empty'    => $this->empty,
-                'headline' => $this->headline,
-                'help'     => $this->help,
-                'layout'   => $this->layout,
-                'link'     => $this->link,
-                'max'      => $this->max,
-                'min'      => $this->min,
-                'size'     => $this->size,
-                'sortable' => $this->sortable
-            ],
+            'add'        => $this->add,
+            'empty'      => $this->empty,
+            'headline'   => $this->headline,
+            'help'       => $this->help,
+            'layout'     => $this->layout,
+            'link'       => $this->link,
+            'max'        => $this->max,
+            'min'        => $this->min,
+            'pages'      => $this->data,
             'pagination' => $this->pagination,
+            'size'       => $this->size,
+            'sortable'   => $this->sortable
         ];
     }
 ];
