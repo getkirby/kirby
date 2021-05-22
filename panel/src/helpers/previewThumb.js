@@ -1,5 +1,5 @@
 
-export default function (image, type = "list", column = "1/1") {
+export default (image, type = "list", column = "1/1") => {
   if (!image || image.length === 0) {
     return false;
   }
