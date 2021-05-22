@@ -1,4 +1,5 @@
-import str from "../helpers/string.js";
+
+import { template } from "../helpers/string.js";
 
 export class TranslationString extends String {
   toString() {
@@ -16,7 +17,7 @@ export default {
       }
 
       const string = window.panel.$translation.data[key];
-      return str.template(string, data);
+      return template(string, data);
     }
   }
 };

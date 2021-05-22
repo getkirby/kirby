@@ -101,7 +101,12 @@ class ATest extends TestCase
                     'child' => $child = 'a',
                     'another.nested.child' => $anotherChild = 'b',
                 ],
-                'uncle.dot' => $uncle = 'uncle'
+                'uncle.dot' => $uncle = 'uncle',
+                'cousins' => [
+                    ['name' => $cousinA = 'tick'],
+                    ['name' => $cousinB = 'trick'],
+                    ['name' => $cousinC = 'track'],
+                ]
             ],
             'grand.ma.mother' => $anotherMother = 'another mother'
         ];
@@ -111,6 +116,7 @@ class ATest extends TestCase
         $this->assertSame($anotherMother, A::get($data, 'grand.ma.mother'));
         $this->assertSame($child, A::get($data, 'grand.ma.mother.child'));
         $this->assertSame($anotherChild, A::get($data, 'grand.ma.mother.another.nested.child'));
+        $this->assertSame($cousinC, A::get($data, 'grand.ma.cousins.2.name'));
 
         // with default
         $this->assertSame('default', A::get($data, 'grand', 'default'));
@@ -120,6 +126,7 @@ class ATest extends TestCase
         $this->assertSame('default', A::get($data, 'grand.ma.mother.sister', 'default'));
         $this->assertSame('default', A::get($data, 'grand.ma.mother.child.grandchild', 'default'));
         $this->assertSame('default', A::get($data, 'grand.ma.mother.child.another.nested.sister', 'default'));
+        $this->assertSame('default', A::get($data, 'grand.ma.cousins.4.name', 'default'));
     }
 
     /**
@@ -463,6 +470,23 @@ class ATest extends TestCase
         ];
         $this->assertSame($expected, A::nest(array_replace_recursive($input1, $input2), ['l.m', 'l.o']));
         $this->assertSame($expected, A::nest(A::merge($input1, $input2, A::MERGE_REPLACE), ['l.m', 'l.o']));
+
+        // with numeric keys
+        $input = [
+            'a' => 'a value',
+            'b.2.e.f' => 'another value'
+        ];
+        $expected = [
+            'a' => 'a value',
+            'b' => [
+                2 => [
+                    'e' => [
+                        'f' => 'another value'
+                    ]
+                ]
+            ]
+        ];
+        $this->assertSame($expected, A::nest($input));
     }
 
     /**

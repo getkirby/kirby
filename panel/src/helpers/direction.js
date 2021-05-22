@@ -1,5 +1,5 @@
 
-export default function (app) {
+export default (app) => {
   const defaultLanguage = app.$languages.default || null;
   const language = app.$languages.current || null;
   const multilang = app.$system.multilang || false;
