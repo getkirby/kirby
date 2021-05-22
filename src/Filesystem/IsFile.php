@@ -80,6 +80,16 @@ trait IsFile
     }
 
     /**
+     * Converts the asset to a string
+     *
+     * @return string
+     */
+    public function __toString(): string
+    {
+        return (string)$this->asset();
+    }
+
+    /**
      * Returns the file asset object
      *
      * @return \Kirby\Filesystem\File
