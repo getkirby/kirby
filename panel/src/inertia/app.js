@@ -56,8 +56,17 @@ export default {
 
 export const plugin = {
   install(Vue) {
-    Vue.prototype.$url    = (path = "") => document.querySelector("base").href + path.replace(/^\//, "");
-    Vue.prototype.$go     = (path, options) => Inertia.visit(Vue.prototype.$url(path), options)
-    Vue.prototype.$reload = (options)   =>  Inertia.reload(options);
+    Vue.prototype.$url = function (path = "") {
+      return document.querySelector("base").href + path.replace(/^\//, "")
+    }
+    Vue.prototype.$go = function (path, options) {
+      return Inertia.visit(this.$url(path), options)
+    }
+    Vue.prototype.$reload = function (options) {
+      if (typeof options === "string") {
+        options = { only: options};
+      }
+      return Inertia.reload(options)
+    }
   },
 }
