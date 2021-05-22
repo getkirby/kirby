@@ -351,6 +351,7 @@ Vue.component("k-files-section", FilesSection);
 Vue.component("k-fields-section", FieldsSection);
 
 /* Views */
+import AccountView from "@/components/Views/AccountView.vue";
 import ErrorView from "@/components/Views/ErrorView.vue";
 import FileView from "@/components/Views/FileView.vue";
 import InstallationView from "@/components/Views/InstallationView.vue";
@@ -363,6 +364,7 @@ import SiteView from "@/components/Views/SiteView.vue";
 import UsersView from "@/components/Views/UsersView.vue";
 import UserView from "@/components/Views/UserView.vue";
 
+Vue.component("k-account-view", AccountView);
 Vue.component("k-error-view", ErrorView);
 Vue.component("k-file-view", FileView);
 Vue.component("k-installation-view", InstallationView);
