@@ -103,6 +103,17 @@ trait IsFile
     }
 
     /**
+     * Checks if the file exists on disk
+     *
+     * @return bool
+     */
+    public function exists(): bool
+    {
+        return file_exists($this->root()) === true;
+    }
+
+
+    /**
      * Returns the app instance
      *
      * @return \Kirby\Cms\App
