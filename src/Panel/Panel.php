@@ -66,7 +66,7 @@ class Panel
 
         $assets = [
             'css' => [
-                'index'   => $url . '/css/index.css',
+                'index'   => $url . '/css/style.css',
                 'plugins' => $plugins->url('css'),
                 'custom'  => static::customCss($kirby),
             ],

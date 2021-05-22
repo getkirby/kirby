@@ -2,7 +2,7 @@
   "name": "kirby",
   "private": true,
   "scripts": {
-    "build": "vite build && mv dist/css/style.css dist/css/index.css",
+    "build": "vite build",
     "build:docs": "node scripts/docs.js",
     "cy:run": "cypress run",
     "cy:open": "cypress open",

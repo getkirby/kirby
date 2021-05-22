@@ -20,9 +20,6 @@ export default {
     methods: Array,
     pending: Object
   },
-  created() {
-    this.$store.dispatch("content/clear");
-  },
   computed: {
     form() {
       if (this.pending.email) {
@@ -35,6 +32,9 @@ export default {
 
       return null;
     }
+  },
+  created() {
+    this.$store.dispatch("content/clear");
   }
 };
 </script>
