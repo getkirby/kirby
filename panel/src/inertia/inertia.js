@@ -1,4 +1,5 @@
 import debounce from '../helpers/debounce.js'
+import { merge } from '../helpers/object.js'
 
 export default {
   page: null,
@@ -159,7 +160,7 @@ export default {
 
       // add exisiting data to partial requests
       if (only.length && data.component === this.page.component) {
-        data.props = { ...this.page.props, ...data.props }
+        data.props = merge(this.page.props, data.props)
       }
 
       const responseUrl = this.toUrl(data.url)
