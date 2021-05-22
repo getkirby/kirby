@@ -159,7 +159,7 @@ class Panel
      */
     public static function error(App $kirby, string $message)
     {
-        return static::render($kirby, 'ErrorView', [
+        return static::render($kirby, 'k-error-view', [
             '$props' => [
                 'error'  => $message,
                 'layout' => $kirby->user() ? 'inside' : 'outside',
