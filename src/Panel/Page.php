@@ -108,6 +108,7 @@ class Page extends Model
         return array_merge(parent::pickerData($params), [
             'dragText'    => $this->dragText(),
             'hasChildren' => $this->model->hasChildren(),
+            'url'         => $this->model->url()
         ]);
     }
 }
