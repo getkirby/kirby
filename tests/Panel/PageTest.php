@@ -439,6 +439,7 @@ class PageTest extends TestCase
 
     /**
      * @covers ::pickerData
+     * @covers \Kirby\Panel\Model::pickerData
      */
     public function testPickerDataDefault()
     {

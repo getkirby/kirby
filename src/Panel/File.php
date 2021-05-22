@@ -176,6 +176,7 @@ class File extends Model
             'filename' => $name,
             'dragText' => $this->dragText('auto', $absolute ?? false),
             'type'     => $this->model->type(),
+            'url'      => $this->model->url(),
             'uuid'     => $uuid ?? $id,
         ]);
     }
