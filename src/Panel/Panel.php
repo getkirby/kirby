@@ -511,7 +511,7 @@ class Panel
             'label'           => $view['label'],
             'link'            => $view['link'],
             'menu'            => $view['menu'] ?? true,
-            'path'            => $kirby->request()->path()->slice(1)->toString(),
+            'path'            => Str::after($kirby->path(), '/'),
             'search'          => $view['search'] ?? $kirby->option('panel.search.type', 'pages'),
             'title'           => $view['label'],
         ];
