@@ -1,5 +1,6 @@
 <template>
   <section
+    :data-processing="isProcessing"
     class="k-files-section"
   >
     <header class="k-section-header">
@@ -7,7 +8,7 @@
         {{ headline }} <abbr v-if="min" :title="$t('section.required')">*</abbr>
       </k-headline>
       <k-button-group v-if="add">
-        <k-button icon="upload" @click="uploading">
+        <k-button icon="upload" @click="onUpload">
           {{ $t("add") }}
         </k-button>
       </k-button-group>
@@ -15,9 +16,9 @@
 
     <k-dropzone :disabled="add === false" @drop="drop">
       <k-collection
-        v-if="files.length"
+        v-if="data.length"
         :help="help"
-        :items="items(files)"
+        :items="items"
         :layout="layout"
         :pagination="pagination"
         :sortable="!isProcessing && sortable"
@@ -32,7 +33,7 @@
           :layout="layout"
           :data-invalid="isInvalid"
           icon="image"
-          @click="uploading"
+          @click="onUpload"
         >
           {{ empty || $t('files.empty') }}
         </k-empty>
@@ -53,42 +54,56 @@
     <k-file-remove-dialog ref="remove" @success="update" />
     <k-file-sort-dialog ref="sort" @success="reload" />
     <k-upload ref="upload" @success="uploaded" @error="reload" />
-
   </section>
 </template>
 
 <script>
+import CollectionSection from "@/mixins/section/collection.js";
 
 export default {
+  mixins: [CollectionSection],
   props: {
     accept: String,
-    apiUrl: String,
-    empty: String,
-    files: Array,
-    headline: String,
-    help: String,
-    layout: String,
-    link: String,
-    max: Number,
-    min: Number,
-    pagination: Object,
-    size: String,
-    sortable: Boolean,
+    api: String,
     upload: Object
   },
   computed: {
     add() {
       if (this.$permissions.files.create && this.upload !== false) {
         return this.upload;
-      } else {
-        return false;
       }
+
+      return false;
+    },
+    items() {
+      return this.data.map(file => {
+        file.sortable = this.sortable;
+        file.column   = this.width;
+        file.options  = async ready => {
+          try {
+            const options = await this.$api.files.options(
+              file.parent,
+              file.filename,
+              "list",
+              this.sortable
+            );
+            ready(options);
+
+          } catch (error) {
+            this.$store.dispatch("notification/error", error);
+          }
+        };
+
+        return file;
+      });
     },
   },
   created() {
+    // TODO: fix
     this.$events.$on("model.update", this.reload);
   },
   destroyed() {
+    // TODO: fix
     this.$events.$off("model.update", this.reload);
   },
   methods: {
@@ -126,7 +141,7 @@ export default {
           this.$refs.remove.open(file.parent, file.filename);
           break;
         case "sort":
-          this.$refs.sort.open(file.parent, file, this.apiUrl);
+          this.$refs.sort.open(file.parent, file, this.api);
           break;
       }
 
@@ -141,26 +156,14 @@ export default {
         url: this.$urls.api + "/" + this.add.api
       });
     },
-    items(data) {
-      return data.map(file => {
-        file.sortable = this.sortable;
-        file.column   = this.column;
-        file.options  = async ready => {
-          try {
-            const options = await this.$api.files.options(
-              file.parent,
-              file.filename,
-              "list",
-              this.sortable
-            );
-            ready(options);
+    onUpload() {
+      if (this.add === false) {
+        return false;
+      }
 
-          } catch (error) {
-            this.$store.dispatch("notification/error", error);
-          }
-        };
-
-        return file;
+      this.$refs.upload.open({
+        ...this.add,
+        url: this.$urls.api + "/" + this.add.api
       });
     },
     replace(file) {
@@ -182,7 +185,7 @@ export default {
       });
 
       try {
-        await this.$api.patch(this.apiUrl + "/files/sort", {
+        await this.$api.patch(this.api + "/files/sort", {
           files: items,
           index: this.pagination.offset
         });
@@ -198,16 +201,6 @@ export default {
     },
     update() {
       this.$events.$emit("model.update");
-    },
-    uploading() {
-      if (this.add === false) {
-        return false;
-      }
-
-      this.$refs.upload.open({
-        ...this.add,
-        url: this.$urls.api + "/" + this.add.api
-      });
     },
     uploaded() {
       this.$events.$emit("file.create");

@@ -129,6 +129,7 @@ export default {
   },
 
   async visit(url, {
+    data = {},
     replace = false,
     preserveScroll = false,
     preserveState = false,
@@ -138,9 +139,16 @@ export default {
     this.saveScroll()
     document.dispatchEvent(new Event('inertia:start'))
 
+    // create proper URL
+    url = this.toUrl(url, { data: data, hash: false })
+    console.log(url);
+
+    // make sure only is an array
+    only = [...only]
+
     try {
       // fetch the response (only GET request supported)
-      const response = await fetch(this.toUrl(url, false), {
+      const response = await fetch(url, {
         method: "get",
         headers: {
           ...headers,
@@ -168,7 +176,7 @@ export default {
       if (
         url.hash && 
         !responseUrl.hash && 
-        this.toUrl(data.url, false).href === responseUrl.href
+        this.toUrl(data.url, { hash: false }).href === responseUrl.href
       ) {
         responseUrl.hash = url.hash
         data.url = responseUrl.href
@@ -184,14 +192,21 @@ export default {
     }
   },
 
-  toUrl(href, hash = true) {
+  toUrl(href, {
+    data = {},
+    hash = true
+  } = {}) {
 
-    if (hash === true) {
-      return new URL(href, window.location)
+    const url = new URL(href, window.location);
+
+    if (hash === false) {
+      url.hash = ''
     }
 
-    const url = new URL(href)
-    url.hash = ''
+    Object.keys(data).forEach(key => {
+      url.searchParams.set(key, data[key])
+    })
+
     return url
   }
 }

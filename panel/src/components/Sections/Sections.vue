@@ -19,9 +19,9 @@
             :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex + '-' + blueprint"
             :name="section.name"
             :parent="parent"
-            :blueprint="blueprint"
-            :column="column.width"
+            :column="columnIndex"
             :class="'k-section k-section-name-' + section.name"
+            :width="column.width"
             v-bind="section"
             @submit="$emit('submit', $event)"
           />

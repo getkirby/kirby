@@ -281,6 +281,7 @@ return [
     'toArray' => function () {
         return [
             'add'        => $this->add,
+            'data'       => $this->data,
             'empty'      => $this->empty,
             'headline'   => $this->headline,
             'help'       => $this->help,
@@ -288,7 +289,6 @@ return [
             'link'       => $this->link,
             'max'        => $this->max,
             'min'        => $this->min,
-            'pages'      => $this->data,
             'pagination' => $this->pagination,
             'size'       => $this->size,
             'sortable'   => $this->sortable

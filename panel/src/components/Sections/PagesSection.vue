@@ -1,5 +1,6 @@
 <template>
   <section
+    :data-processing="isProcessing"
     class="k-pages-section"
   >
     <header class="k-section-header">
@@ -7,7 +8,7 @@
         {{ headline }} <abbr v-if="min" :title="$t('section.required')">*</abbr>
       </k-headline>
 
-      <k-button-group v-if="add">
+      <k-button-group v-if="canAdd">
         <k-button icon="add" @click="create">
           {{ $t("add") }}
         </k-button>
@@ -15,10 +16,10 @@
     </header>
 
     <k-collection
-      v-if="pages.length"
+      v-if="data.length"
       :layout="layout"
       :help="help"
-      :items="items(pages)"
+      :items="items"
       :pagination="pagination"
       :sortable="!isProcessing && sortable"
       :size="size"
@@ -60,26 +61,62 @@
 </template>
 
 <script>
+import CollectionSection from "@/mixins/section/collection.js";
 
 export default {
+  mixins: [CollectionSection],
   props: {
-    empty: String,
-    headline: String,
-    help: String,
-    layout: String,
-    link: String,
-    max: Number,
-    min: Number,
-    name: String,
-    pages: Array,
-    pagination: Object,
+    add: Boolean,
     parent: String,
-    size: String,
-    sortable: Boolean
+  },
+  computed: {
+    canAdd() {
+      return this.add && this.$permissions.pages.create;
+    },
+    items() {
+      return this.data.map(page => {
+        const isEnabled = page.permissions.changeStatus !== false;
+
+        page.statusIcon = {
+          status: page.status,
+          tooltip: this.$t("page.status"),
+          disabled: !isEnabled,
+          click: () => {
+            this.action(page, "status");
+          }
+        };
+
+        page.sortable = page.permissions.sort && this.sortable;
+        page.column   = this.width;
+        page.options  = async ready => {
+          try {
+            const options = await this.$api.pages.options(
+              page.id,
+              "list",
+              page.sortable
+            );
+            ready(options);
+
+          } catch (error) {
+            this.$store.dispatch("notification/error", error);
+          }
+        };
+
+        return page;
+      });
+    },
+  },
+  created() {
+    // TODO: fix
+    this.$events.$on("page.changeStatus", this.reload);
+  },
+  destroyed() {
+    // TODO: fix
+    this.$events.$off("page.changeStatus", this.reload);
   },
   methods: {
     create() {
-      if (this.add) {
+      if (this.canAdd) {
         this.$refs.create.open(
           this.link || this.parent,
           this.parent + "/blueprints",
@@ -149,38 +186,6 @@ export default {
         }
       }
 
-    },
-    items(data) {
-      return data.map(page => {
-        const isEnabled = page.permissions.changeStatus !== false;
-
-        page.statusIcon = {
-          status: page.status,
-          tooltip: this.$t("page.status"),
-          disabled: !isEnabled,
-          click: () => {
-            this.action(page, "status");
-          }
-        };
-
-        page.sortable = page.permissions.sort && this.sortable;
-        page.column   = this.column;
-        page.options  = async ready => {
-          try {
-            const options = await this.$api.pages.options(
-              page.id,
-              "list",
-              page.sortable
-            );
-            ready(options);
-
-          } catch (error) {
-            this.$store.dispatch("notification/error", error);
-          }
-        };
-
-        return page;
-      });
     },
     async sort(event) {
       let type = null;

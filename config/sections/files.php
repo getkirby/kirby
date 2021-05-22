@@ -222,9 +222,9 @@ return [
     'toArray' => function () {
         return [
             'accept'     => $this->accept,
-            'apiUrl'     => $this->parent->apiUrl(true),
+            'api'        => $this->parent->apiUrl(true),
+            'data'       => $this->data,
             'empty'      => $this->empty,
-            'files'      => $this->data,
             'headline'   => $this->headline,
             'help'       => $this->help,
             'layout'     => $this->layout,
