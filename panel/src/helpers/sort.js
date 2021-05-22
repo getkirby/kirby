@@ -1,7 +1,6 @@
 /* eslint-disable */
 // https://github.com/bubkoo/natsort
-export default options => {
-
+export default (options) => {
   options = options || {};
 
   var GREATER = options.desc ? -1 : 1;
@@ -135,5 +134,4 @@ export default options => {
 
     return 0;
   };
-
 };

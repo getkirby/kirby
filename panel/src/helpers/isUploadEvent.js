@@ -1,5 +1,4 @@
 export default (event) => {
-
   if (!event.dataTransfer) {
     return false;
   }
@@ -17,5 +16,4 @@ export default (event) => {
   }
 
   return true;
-
 };
