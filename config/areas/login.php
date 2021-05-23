@@ -12,7 +12,7 @@ return function ($kirby) {
                     $system = $kirby->system();
                     $status = $kirby->auth()->status();
                     return [
-                        'component' => 'k-Login-view',
+                        'component' => 'k-login-view',
                         'props'     => [
                             'methods' => array_keys($system->loginMethods()),
                             'pending' => [
