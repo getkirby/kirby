@@ -164,8 +164,9 @@ export default {
         data.props = merge(this.page.props, data.props)
       }
 
+      // add hash to response URL if current
+      // window URL has hash included
       const responseUrl = this.toUrl(data.url)
-
       if (
         url.hash && 
         !responseUrl.hash && 
