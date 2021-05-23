@@ -138,7 +138,7 @@ export default {
       return this.blocks.length >= this.max;
     },
     selected() {
-      return this.$store.state.blocks.current;
+      return this.$store.state.blocks;
     }
   },
   watch: {
@@ -187,7 +187,7 @@ export default {
       // move the selected block to the batch first
       if (this.selected !== null && this.batch.includes(this.selected) === false) {
         this.batch.push(this.selected);
-        this.$store.dispatch("blocks/current", null);
+        this.$store.dispatch("blocks", null);
       }
 
       if (this.batch.includes(block.id) === false) {
@@ -374,7 +374,7 @@ export default {
       });
 
       this.batch = [];
-      this.$store.dispatch("blocks/current", null);
+      this.$store.dispatch("blocks", null);
       this.save();
       this.$refs.removeSelected.close();
     },
@@ -388,7 +388,7 @@ export default {
       }
 
       this.batch = [];
-      this.$store.dispatch("blocks/current", block ? block.id : null);
+      this.$store.dispatch("blocks", block ? block.id : null);
     },
     show(block) {
       this.$set(block, "isHidden", false);
