@@ -58,7 +58,7 @@ class Panel
         return $area;
     }
 
-    
+
     public static function areas(App $kirby): array
     {
         $root   = $kirby->root('kirby') . '/config/areas';
@@ -519,17 +519,31 @@ class Panel
 
         Pagination::$validate = false;
 
+        $user = $kirby->user();
+
+        // set translation for Panel UI before gathering
+        // areas and routes, so that the `t()` helper
+        // can already be used
+        $kirby->setCurrentTranslation($user ? $user->language() : $kirby->panelLanguage());
+
         $areas  = static::areas($kirby);
         $routes = static::routes($kirby, $areas);
 
         // create a micro-router for the Panel
-        return router($path, $kirby->request()->method(), $routes, function ($route) use ($kirby, $areas) {
+        return router($path, $kirby->request()->method(), $routes, function ($route) use ($kirby, $user, $areas) {
 
             // route needs authentication?
             $auth    = $route->attributes()['auth'] ?? true;
             $areaId  = $route->attributes()['area'] ?? null;
             $area    = $areas[$areaId] ?? null;
             $session = $kirby->session();
+
+            // check for a valid area
+            if (empty($areaId) === true || empty($area) === true) {
+                // routes that don't belong to an area get rendered
+                // without special treatment
+                return $route->action()->call($route, ...$route->arguments());
+            }
 
             // language switcher
             if ($kirby->options('languages')) {
@@ -540,16 +554,9 @@ class Panel
                 $kirby->setCurrentLanguage($session->get('panel.language', 'en'));
             }
 
-            // check for a valid area
-            if (empty($areaId) === true || empty($area) === true) {
-                // routes that don't belong to an area get rendered
-                // without special treatment
-                return $route->action()->call($route, ...$route->arguments());
-            }
-
             // check for access before executing the route
             if ($auth !== false) {
-                if ($kirby->user()->role()->permissions()->for('access', $areaId) !== true) {
+                if ($user->role()->permissions()->for('access', $areaId) !== true) {
                     return t('error.access.view');
                 }
             }
