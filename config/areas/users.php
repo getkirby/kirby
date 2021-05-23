@@ -13,25 +13,22 @@ return function ($kirby) {
                     'users/role/(:any)'
                 ],
                 'action'  => function (string $role = null) use ($kirby) {
-                    $roles = $kirby->roles();
+                    $roles = $kirby->roles()->toArray(function ($role) {
+                        return [
+                            'id'    => $role->id(),
+                            'title' => $role->title(),
+                        ];
+                    });
 
                     return [
                         'component' => 'k-users-view',
                         'props'     => [
                             'role' => function () use ($kirby, $roles, $role) {
-                                if ($role && $role = $roles->find($role)) {
-                                    return [
-                                        'id'    => $role->id(),
-                                        'title' => $role->title()
-                                    ];
+                                if ($role) {
+                                    return $roles[$role] ?? null;
                                 }
                             },
-                            'roles' => $roles->values(function ($role) {
-                                return [
-                                    'id'    => $role->id(),
-                                    'title' => $role->title(),
-                                ];
-                            }),
+                            'roles' => array_values($roles),
                             'users' => function () use ($kirby, $role) {
                                 $users = $kirby->users();
 
