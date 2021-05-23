@@ -2,7 +2,6 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 // store modules
-import blocks from "./modules/blocks.js";
 import content from "./modules/content.js";
 import drawers from "./modules/drawers.js";
 import heartbeat from "./modules/heartbeat.js";
@@ -18,6 +17,7 @@ export default new Vuex.Store({
   // eslint-disable-next-line
   strict: process.env.NODE_ENV !== "production",
   state: {
+    block: null,
     breadcrumb: [],
     dialog: null,
     drag: null,
@@ -27,6 +27,9 @@ export default new Vuex.Store({
     view: null
   },
   mutations: {
+    SET_BLOCK(state, block) {
+      state.block = block;
+    },
     SET_BREADCRUMB(state, breadcrumb) {
       state.breadcrumb = breadcrumb;
     },
@@ -45,14 +48,14 @@ export default new Vuex.Store({
     SET_VIEW(state, view) {
       state.view = view;
     },
-    START_LOADING(state) {
-      state.isLoading = true;
+    SET_LOADING(state, loading) {
+      state.isLoading = loading;
     },
-    STOP_LOADING(state) {
-      state.isLoading = false;
-    }
   },
   actions: {
+    block(context, block) {
+      context.commit("SET_BLOCK", block);
+    },
     breadcrumb(context, breadcrumb) {
       context.commit("SET_BREADCRUMB", breadcrumb);
     },
@@ -66,7 +69,7 @@ export default new Vuex.Store({
       context.commit("SET_FATAL", html);
     },
     isLoading(context, loading) {
-      context.commit(loading === true ? "START_LOADING" : "STOP_LOADING");
+      context.commit("SET_LOADING", loading === true);
     },
     title(context, title) {
       let site;
@@ -96,7 +99,6 @@ export default new Vuex.Store({
     }
   },
   modules: {
-    blocks: blocks,
     content: content,
     drawers: drawers,
     heartbeat: heartbeat,
