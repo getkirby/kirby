@@ -58,9 +58,7 @@ class Panel
         return $area;
     }
 
-    /**
-     *
-     */
+    
     public static function areas(App $kirby): array
     {
         $root   = $kirby->root('kirby') . '/config/areas';
@@ -586,9 +584,7 @@ class Panel
                     return $area;
                 }, $areas)
             ]);
-
         });
-
     }
 
     /**
@@ -678,5 +674,3 @@ class Panel
         return A::apply($view);
     }
 }
-
-

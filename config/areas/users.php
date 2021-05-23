@@ -94,4 +94,3 @@ return function ($kirby) {
         ]
     ];
 };
-
