@@ -7,6 +7,9 @@ use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Panel\Plugins
+ */
 class PluginsTest extends TestCase
 {
     protected $app;
@@ -51,6 +54,9 @@ class PluginsTest extends TestCase
         Dir::remove($this->fixtures);
     }
 
+    /**
+     * @covers ::files
+     */
     public function testFiles()
     {
         $this->createPlugins();
@@ -61,23 +67,34 @@ class PluginsTest extends TestCase
         $plugins  = new Plugins();
         $expected = [$this->cssA, $this->jsA, $this->cssB, $this->jsB];
 
-        $this->assertEquals($expected, $plugins->files());
+        $this->assertSame($expected, $plugins->files());
+        // from cached property
+        $this->assertSame($expected, $plugins->files());
     }
 
+    /**
+     * @covers ::modified
+     */
     public function testModifiedWithoutFiles()
     {
         $plugins = new Plugins();
-        $this->assertEquals(0, $plugins->modified());
+        $this->assertSame(0, $plugins->modified());
     }
 
+    /**
+     * @covers ::modified
+     */
     public function testModifiedWithFiles()
     {
         $time = $this->createPlugins();
 
         $plugins = new Plugins();
-        $this->assertEquals($time, $plugins->modified());
+        $this->assertSame($time, $plugins->modified());
     }
 
+    /**
+     * @covers ::read
+     */
     public function testRead()
     {
         $this->createPlugins();
@@ -89,25 +106,28 @@ class PluginsTest extends TestCase
 
         // css
         $expected = "a\n\nb";
-        $this->assertEquals($expected, $plugins->read('css'));
+        $this->assertSame($expected, $plugins->read('css'));
 
         // js
         $expected = "a;\n\nb;";
-        $this->assertEquals($expected, $plugins->read('js'));
+        $this->assertSame($expected, $plugins->read('js'));
     }
 
+    /**
+     * @covers ::url
+     */
     public function testUrl()
     {
         // css
         $plugins  = new Plugins();
         $expected = $this->app->url('media') . '/plugins/index.css?0';
 
-        $this->assertEquals($expected, $plugins->url('css'));
+        $this->assertSame($expected, $plugins->url('css'));
 
         // js
         $plugins  = new Plugins();
         $expected = $this->app->url('media') . '/plugins/index.js?0';
 
-        $this->assertEquals($expected, $plugins->url('js'));
+        $this->assertSame($expected, $plugins->url('js'));
     }
 }
