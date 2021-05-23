@@ -27,6 +27,7 @@ class Permissions
      */
     protected $actions = [
         'access' => [
+            'account'  => true,
             'panel'    => true,
             'settings' => true,
             'site'     => true,

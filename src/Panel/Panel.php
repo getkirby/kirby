@@ -13,7 +13,7 @@ use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Pagination;
 use Kirby\Toolkit\Str;
-use Kirby\Toolkit\View;
+use Kirby\Toolkit\Tpl;
 use Throwable;
 
 /**
@@ -31,11 +31,87 @@ use Throwable;
 class Panel
 {
     /**
-     * General views definitions
+     * General area definitions
      *
      * @var array
      */
-    public static $views;
+    public static $areas;
+
+    /**
+     * Normalize a panel area
+     *
+     * @param string $id
+     * @param array $area
+     * @return array
+     */
+    public static function area(string $id, array $area): array
+    {
+        $area['id']              = $id;
+        $area['label']           = $area['label'] ?? $id;
+        $area['breadcrumb']      = $area['breadcrumb'] ?? [];
+        $area['breadcrumbLabel'] = $area['breadcrumbLabel'] ?? $area['label'];
+        $area['title']           = $area['label'];
+        $area['menu']            = $area['menu'] ?? false;
+        $area['link']            = $area['link'] ?? $id;
+        $area['search']          = $area['search'] ?? null;
+
+        return $area;
+    }
+
+    /**
+     *
+     */
+    public static function areas(App $kirby): array
+    {
+        $root   = $kirby->root('kirby') . '/config/areas';
+        $system = $kirby->system();
+        $user   = $kirby->user();
+
+        // the system is not ready
+        if ($system->isOk() === false || $system->isInstalled() === false) {
+            return [
+                'installation' => static::area('installation', (require $root . '/installation.php')($kirby)),
+            ];
+        }
+
+        // not yet authenticated
+        if (!$user) {
+            return [
+                'login' => static::area('login', (require $root . '/login.php')($kirby)),
+            ];
+        }
+
+        // no panel access
+        if ($user->role()->permissions()->for('access', 'panel') === false) {
+            return [
+                'noaccess' => [
+                    'routes' => [
+                        [
+                            'pattern' => '(:all)',
+                            'action'  => function () {
+                                go();
+                            }
+                        ]
+                    ]
+                ]
+            ];
+        }
+
+        // load default areas
+        $areas = [
+            'site'     => static::area('site', (require $root . '/site.php')($kirby)),
+            'settings' => static::area('settings', (require $root . '/settings.php')($kirby)),
+            'users'    => static::area('users', (require $root . '/users.php')($kirby)),
+            'account'  => static::area('account', (require $root . '/account.php')($kirby)),
+        ];
+
+        // load plugins
+        foreach ($kirby->extensions('areas') as $id => $area) {
+            $areas[] = static::area($id, $area($kirby));
+        }
+
+        return $areas;
+    }
 
     /**
      * Generates an array with all assets
@@ -352,8 +428,7 @@ class Panel
                 }
 
                 return null;
-            },
-            '$views' => static::$views
+            }
         ];
 
         $props = array_merge($shared, $props);
@@ -420,15 +495,15 @@ class Panel
         // fetch all plugins
         $plugins = new Plugins();
 
-        $view = new View($kirby->root('kirby') . '/views/panel.php', [
-            'assets'   => static::assets($kirby),
-            'icons'    => static::icons($kirby),
-            'nonce'    => $kirby->nonce(),
-            'inertia'  => $inertia,
-            'panelUrl' => $uri->path()->toString(true) . '/',
-        ]);
-
-        return new Response($view->render());
+        return new Response(
+            Tpl::load($kirby->root('kirby') . '/views/panel.php', [
+                'assets'   => static::assets($kirby),
+                'icons'    => static::icons($kirby),
+                'nonce'    => $kirby->nonce(),
+                'inertia'  => $inertia,
+                'panelUrl' => $uri->path()->toString(true) . '/',
+            ])
+        );
     }
 
     /**
@@ -446,137 +521,162 @@ class Panel
 
         Pagination::$validate = false;
 
-        // load all Panel routes
-        $routes = (require $kirby->root('kirby') . '/config/panel.php')($kirby);
+        $areas  = static::areas($kirby);
+        $routes = static::routes($kirby, $areas);
 
         // create a micro-router for the Panel
-        $result = router($path, $kirby->request()->method(), $routes, function ($route) use ($kirby) {
+        return router($path, $kirby->request()->method(), $routes, function ($route) use ($kirby, $areas) {
+
+            // route needs authentication?
+            $auth    = $route->attributes()['auth'] ?? true;
+            $areaId  = $route->attributes()['area'] ?? null;
+            $area    = $areas[$areaId] ?? null;
+            $session = $kirby->session();
+
+            // language switcher
+            if ($kirby->options('languages')) {
+                if ($lang = get('language')) {
+                    $session->set('panel.language', $lang);
+                }
+
+                $kirby->setCurrentLanguage($session->get('panel.language', 'en'));
+            }
+
+            // check for a valid area
+            if (empty($areaId) === true || empty($area) === true) {
+                // routes that don't belong to an area get rendered
+                // without special treatment
+                return $route->action()->call($route, ...$route->arguments());
+            }
+
             // check for access before executing the route
-            if ($access = $route->attributes()['access'] ?? null) {
-                if ($kirby->user()->role()->permissions()->for('access', $access) !== true) {
+            if ($auth !== false) {
+                if ($kirby->user()->role()->permissions()->for('access', $areaId) !== true) {
                     return t('error.access.view');
                 }
             }
 
-            return $route->action()->call($route, ...$route->arguments());
+            // call the route action to check the result
+            $result = $route->action()->call($route, ...$route->arguments());
+
+            // pass responses directly down to the Kirby router
+            if (is_a($result, 'Kirby\Http\Response') === true) {
+                return $result;
+            }
+
+            // interpret strings as errors
+            if (is_string($result) === true) {
+                return static::error($kirby, $result);
+            }
+
+            // only expect arrays from here on
+            if (is_array($result) === false) {
+                throw new InvalidArgumentException('Invalid Panel response');
+            }
+
+            // create the view based on the current area
+            $view = static::view($kirby, $area, $result['view'] ?? []);
+
+            return static::render($kirby, $result['component'], [
+                '$props' => $result['props'] ?? [],
+                '$view'  => $view,
+                '$areas' => array_map(function ($area) {
+                    // routes should not be included in the frontend object
+                    unset($area['routes']);
+                    return $area;
+                }, $areas)
+            ]);
+
         });
 
-        // pass responses directly down to the Kirby router
-        if (is_a($result, 'Kirby\Http\Response') === true) {
-            return $result;
-        }
-
-        // interpret strings as errors
-        if (is_string($result) === true) {
-            return static::error($kirby, $result);
-        }
-
-        // only expect arrays from here on
-        if (is_array($result) === false) {
-            throw new InvalidArgumentException('Invalid Panel response');
-        }
-
-        $view = $result['view'] ?? 'site';
-
-        if (is_string($view) === true) {
-            $view = static::view($kirby, $view);
-        } else {
-            $view = static::view($kirby, $view['id'] ?? 'site', $view);
-        }
-
-        return static::render($kirby, $result['component'], [
-            '$props' => $result['props'] ?? [],
-            '$view'  => $view,
-        ]);
     }
+
+    /**
+     * Exract the routes from the given array
+     * of active areas.
+     *
+     * @return array
+     */
+    public static function routes(App $kirby, array $areas): array
+    {
+        // the browser incompatibility
+        // warning is always needed
+        $routes = [
+            [
+                'pattern' => 'browser',
+                'action'  => function () use ($kirby) {
+                    return new Response(
+                        Tpl::load($kirby->root('kirby') . '/views/browser.php')
+                    );
+                },
+            ]
+        ];
+
+        // register all routes from areas
+        foreach ($areas as $areaId => $area) {
+            foreach ($area['routes'] as $route) {
+                $route['area'] = $areaId;
+                $routes[] = $route;
+            }
+        }
+
+        // redirect routes
+        $routes[] = [
+            'pattern' => [
+                '/',
+                'installation',
+                'login',
+            ],
+            'action' => function () use ($kirby) {
+                /**
+                 * If the last path has been stored in the
+                 * session, redirect the user to it
+                 */
+                $path = trim($kirby->session()->get('panel.path'), '/');
+
+                // ignore various paths when redirecting
+                if (in_array($path, ['', 'login', 'logout', 'installation'])) {
+                    $path = 'site';
+                }
+
+                Panel::go($path);
+            }
+        ];
+
+        // catch all route
+        $routes[] = [
+            'pattern' => '(:all)',
+            'action'  => function () use ($kirby) {
+                return 'The view could not be found';
+            }
+        ];
+
+        return $routes;
+    }
+
 
     /**
      * Returns data array for view
      *
      * @param \Kirby\Cms\App $kirby
-     * @param string $id
-     * @param array $props
+     * @param array $area
+     * @param array $view
      * @return array
      */
-    public static function view(App $kirby, string $id, array $props = []): array
+    public static function view(App $kirby, array $area, array $view = []): array
     {
-        // get view-specific defaults
-        $view = static::$views[$id] ?? static::$views['site'];
+        // merge view with area defaults
+        $view = array_replace_recursive($area, $view);
 
-        // create default array
-        $defaults = [
-            'breadcrumb'      => $props['breadcrumb'] ?? [],
-            'breadcrumbLabel' => $view['breadcrumbLabel'] ?? $view['label'],
-            'icon'            => $view['icon'],
-            'id'              => $view['id'],
-            'label'           => $view['label'],
-            'link'            => $view['link'],
-            'menu'            => $view['menu'] ?? true,
-            'path'            => Str::after($kirby->path(), '/'),
-            'search'          => $view['search'] ?? $kirby->option('panel.search.type', 'pages'),
-            'title'           => $view['label'],
-        ];
+        $view['path']   = Str::after($kirby->path(), '/');
+        $view['search'] = $view['search'] ?? $kirby->option('panel.search.type', 'pages');
 
-        // merge props with defaults
-        $props = array_replace_recursive($defaults, $props);
+        // make sure that routes are gone
+        unset($view['routes']);
 
         // resolve lazy props
-        return A::apply($props);
+        return A::apply($view);
     }
 }
 
 
-Panel::$views = [
-    'site' => [
-        'breadcrumbLabel' => function () {
-            return kirby()->site()->title()->or(t('view.site'))->toString();
-        },
-        'icon'            => 'home',
-        'id'              => 'site',
-        'label'           => t('view.site'),
-        'link'            => 'site',
-        'search'          => 'pages'
-    ],
-    'users' => [
-        'icon'   => 'users',
-        'id'     => 'users',
-        'label'  => t('view.users'),
-        'link'   => 'users',
-        'search' => 'users'
-    ],
-    'settings' => [
-        'icon'  => 'settings',
-        'id'    => 'settings',
-        'label' => t('view.settings'),
-        'link'  => 'settings'
-    ],
-    'account' => [
-        'icon'   => 'account',
-        'id'     => 'account',
-        'label'  => t('view.account'),
-        'link'   => 'account',
-        'menu'   => false,
-        'search' => 'users'
-    ],
-    'error' => [
-        'icon'  => 'alert',
-        'id'    => 'error',
-        'label' => 'Error',
-        'menu'  => false,
-        'link'  => 'error'
-    ],
-    'installation' => [
-        'icon'  => 'settings',
-        'id'    => 'installation',
-        'label' => t('view.installation'),
-        'menu'  => false,
-        'link'  => 'installation'
-    ],
-    'login' => [
-        'icon'  => 'user',
-        'id'    => 'login',
-        'label' => t('login'),
-        'menu'  => false,
-        'link'  => 'login'
-    ]
-];
