@@ -37,7 +37,7 @@ class Page extends Model
      * gets dragged onto a textarea
      *
      * @internal
-     * @param string|null $type (null|auto|kirbytext|markdown)
+     * @param string|null $type (`auto`|`kirbytext`|`markdown`)
      * @return string
      */
     public function dragText(string $type = null): string

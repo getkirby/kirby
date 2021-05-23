@@ -28,7 +28,6 @@ class PageTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextType
      */
     public function testDragText()
     {
@@ -53,7 +52,6 @@ class PageTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextType
      */
     public function testDragTextMarkdown()
     {
@@ -90,7 +88,6 @@ class PageTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextFromCallback
      */
     public function testDragTextCustomMarkdown()
     {
@@ -128,7 +125,6 @@ class PageTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextFromCallback
      */
     public function testDragTextCustomKirbytext()
     {
@@ -165,27 +161,6 @@ class PageTest extends TestCase
 
     /**
      * @covers ::icon
-     * @covers \Kirby\Panel\Model::icon
-     */
-    public function testIconDefault()
-    {
-        $page = new ModelPage([
-            'slug' => 'test'
-        ]);
-
-        $icon = (new Page($page))->icon();
-
-        $this->assertSame([
-            'type'  => 'page',
-            'ratio' => null,
-            'back'  => 'pattern',
-            'color' => '#c5c9c6'
-        ], $icon);
-    }
-
-    /**
-     * @covers ::icon
-     * @covers \Kirby\Panel\Model::icon
      */
     public function testIconFromBlueprint()
     {
@@ -209,7 +184,6 @@ class PageTest extends TestCase
 
     /**
      * @covers ::icon
-     * @covers \Kirby\Panel\Model::icon
      */
     public function testIconWithRatio()
     {
@@ -229,7 +203,6 @@ class PageTest extends TestCase
 
     /**
      * @covers ::icon
-     * @covers \Kirby\Panel\Model::icon
      */
     public function testIconWithEmoji()
     {
@@ -265,8 +238,6 @@ class PageTest extends TestCase
 
     /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
-     * @covers \Kirby\Panel\Model::imageSource
      */
     public function testImage()
     {
@@ -284,8 +255,6 @@ class PageTest extends TestCase
 
     /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
-     * @covers \Kirby\Panel\Model::imageSource
      */
     public function testImageCover()
     {
@@ -425,7 +394,6 @@ class PageTest extends TestCase
 
     /**
      * @covers ::path
-     * @covers \Kirby\Panel\Model::__construct
      */
     public function testPath()
     {
@@ -458,9 +426,7 @@ class PageTest extends TestCase
         $this->assertSame('Test Title', $data['text']);
     }
 
-    /**
-     * @covers \Kirby\Panel\Model::url
-     */
+    
     public function testUrl()
     {
         $app = new App([

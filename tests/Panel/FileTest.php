@@ -28,7 +28,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextType
      */
     public function testDragText()
     {
@@ -53,7 +52,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextType
      */
     public function testDragTextMarkdown()
     {
@@ -92,7 +90,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextFromCallback
      */
     public function testDragTextCustomMarkdown()
     {
@@ -140,7 +137,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextFromCallback
      */
     public function testDragTextCustomKirbytext()
     {
@@ -187,7 +183,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::icon
-     * @covers \Kirby\Panel\Model::icon
      */
     public function testIconDefault()
     {
@@ -207,7 +202,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::icon
-     * @covers \Kirby\Panel\Model::icon
      */
     public function testIconWithRatio()
     {
@@ -227,7 +221,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
      */
     public function testImage()
     {
@@ -244,8 +237,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
-     * @covers \Kirby\Panel\Model::imageSource
      */
     public function testImageCover()
     {
@@ -301,37 +292,7 @@ class FileTest extends TestCase
     }
 
     /**
-     * @covers \Kirby\Panel\Model::image
-     */
-    public function testImageDeactivated()
-    {
-        $file = new ModelFile([
-            'filename' => 'something.jpg'
-        ]);
-
-        $image = (new File($file))->image(false);
-
-        $this->assertNull($image);
-    }
-
-    /**
-     * @covers \Kirby\Panel\Model::image
-     */
-    public function testImageStringIcon()
-    {
-        $file = new ModelFile([
-            'filename' => 'something.jpg'
-        ]);
-
-        $image = (new File($file))->image('icon');
-
-        $this->assertSame([], $image);
-    }
-
-    /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
-     * @covers \Kirby\Panel\Model::imageSource
      */
     public function testImageStringQuery()
     {
@@ -350,7 +311,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::options
-     * @covers \Kirby\Panel\Model::options
      */
     public function testOptions()
     {
@@ -375,7 +335,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::options
-     * @covers \Kirby\Panel\Model::options
      */
     public function testOptionsWithLockedFile()
     {
@@ -414,7 +373,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::options
-     * @covers \Kirby\Panel\Model::options
      */
     public function testOptionsDefaultReplaceOption()
     {
@@ -438,7 +396,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::options
-     * @covers \Kirby\Panel\Model::options
      */
     public function testOptionsAllowedReplaceOption()
     {
@@ -473,7 +430,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::options
-     * @covers \Kirby\Panel\Model::options
      */
     public function testOptionsDisabledReplaceOption()
     {
@@ -510,7 +466,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::path
-     * @covers \Kirby\Panel\Model::__construct
      */
     public function testPath()
     {
@@ -620,7 +575,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::url
-     * @covers \Kirby\Panel\Model::url
      */
     public function testUrl()
     {

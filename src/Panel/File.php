@@ -62,7 +62,7 @@ class File extends Model
      * gets dragged onto a textarea
      *
      * @internal
-     * @param string|null $type (null|auto|kirbytext|markdown)
+     * @param string|null $type (`auto`|`kirbytext`|`markdown`)
      * @param bool $absolute
      * @return string
      */

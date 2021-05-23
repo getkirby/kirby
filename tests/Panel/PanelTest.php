@@ -7,6 +7,9 @@ use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Panel\Panel
+ */
 class PanelTest extends TestCase
 {
     protected $app;
@@ -28,6 +31,9 @@ class PanelTest extends TestCase
         Dir::remove($this->fixtures);
     }
 
+    /**
+     * @covers ::customCss
+     */
     public function testCustomCss(): void
     {
         // invalid
@@ -55,6 +61,9 @@ class PanelTest extends TestCase
         $this->assertTrue(strpos(Panel::customCss($app), '//panel.css', 0) !== false);
     }
 
+    /**
+     * @covers ::icons
+     */
     public function testIcons(): void
     {
         $icons = Panel::icons($this->app);
@@ -63,6 +72,9 @@ class PanelTest extends TestCase
         $this->assertTrue(strpos($icons, '<svg', 0) !== false);
     }
 
+    /**
+     * @covers ::link
+     */
     public function testLink(): void
     {
         // create links
@@ -74,13 +86,16 @@ class PanelTest extends TestCase
         $this->assertFalse($link);
     }
 
+    /**
+     * @covers ::render
+     */
     public function testRender(): void
     {
         // create panel dist files first to avoid redirect
         Panel::link($this->app);
 
         // get panel response
-        $response = Panel::render($this->app, 'PageView', [
+        $response = Panel::render($this->app, 'k-page-view', [
             'test' => 'Test'
         ]);
 

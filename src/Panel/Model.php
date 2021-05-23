@@ -71,7 +71,7 @@ abstract class Model
      *
      * @internal
      *
-     * @param string $type (null|auto|kirbytext|markdown)
+     * @param string|null $type (`auto`|`kirbytext`|`markdown`)
      * @return string
      */
     public function dragTextType(string $type = null): string
@@ -185,9 +185,8 @@ abstract class Model
                     ];
                 }
             }
-
-            unset($settings['query']);
         }
+        unset($settings['query']);
 
         return array_merge($defaults, (array)$settings);
     }
@@ -206,22 +205,13 @@ abstract class Model
 
         // validate the query result
         if (
-            is_a($image, 'Kirby\Cms\File') === false &&
-            is_a($image, 'Kirby\Filesystem\Asset') === false
+            is_a($image, 'Kirby\Cms\File') === true ||
+            is_a($image, 'Kirby\Filesystem\Asset') === true
         ) {
-            $image = null;
+            return $image;
         }
 
-        // fallback for files
-        if (
-            $image === null &&
-            is_a($this->model, 'Kirby\Cms\File') === true &&
-            $this->model->isViewable() === true
-        ) {
-            $image = $this->model;
-        }
-
-        return $image;
+        return null;
     }
 
     /**
@@ -268,7 +258,7 @@ abstract class Model
     public function prevnext($tooltip = 'title'): ?array
     {
         return [
-            'link'    => $this->model->panel()->url(true),
+            'link'    => $this->url(true),
             'tooltip' => (string)$this->model->$tooltip()
         ];
     }
