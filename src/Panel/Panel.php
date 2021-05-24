@@ -127,8 +127,17 @@ class Panel
 
         if ($isDev === true) {
             // vite on explicitly configured base URL or port 3000
-            // of the current Kirby domain
-            $url = is_string($dev) === true ? $dev : $kirby->request()->url(['port' => 3000, 'path' => null])->toString();
+            // of the current Kirby request
+            if (is_string($dev) === true) {
+                $url = $dev;
+            } else {
+                $url = $kirby->request()->url([
+                    'port'   => 3000,
+                    'path'   => null,
+                    'params' => null,
+                    'query'  => null
+                ])->toString();
+            }
         } else {
             // vite is not running, use production assets
             $url = $kirby->url('media') . '/panel/' . $kirby->versionHash();
