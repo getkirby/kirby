@@ -15,6 +15,11 @@ class FileVersionTest extends TestCase
         ]);
     }
 
+    public function tearDown(): void
+    {
+        Dir::remove(__DIR__ . '/tmp');
+    }
+
     public function testConstruct()
     {
         $original = new File([
@@ -38,6 +43,36 @@ class FileVersionTest extends TestCase
         $this->assertSame($mods, $version->modifications());
         $this->assertSame($original, $version->original());
         $this->assertSame($original->kirby(), $version->kirby());
+    }
+
+    public function testExists()
+    {
+        $page = new Page([
+            'root' => __DIR__ . '/fixtures/files',
+            'slug' => 'files'
+        ]);
+
+        $original = new File([
+            'filename' => 'test.jpg',
+            'parent'   => $page
+        ]);
+
+        $version = new FileVersion([
+            'original' => $original,
+            'root'     => __DIR__ . '/tmp/test-version.jpg',
+            'modifications' => [
+                'width' => 50,
+            ]
+        ]);
+
+        $this->assertFalse($version->exists());
+
+        // calling an asset method will trigger
+        // `FileVersion::save()` if it doesn't
+        // exist yet
+        $this->assertSame(50, $version->width());
+
+        $this->assertTrue($version->exists());
     }
 
     public function testToArray()
