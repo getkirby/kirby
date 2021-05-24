@@ -265,7 +265,6 @@ class FileTest extends TestCase
         $panel = new File($file);
 
         $hash = $file->mediaHash();
-        $imagePlaceholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw';
 
         // cover disabled as default
         $this->assertSame([
@@ -274,11 +273,11 @@ class FileTest extends TestCase
             'cover' => false,
             'url' => '/media/site/' . $hash . '/test.jpg',
             'cards' => [
-                'url' => $imagePlaceholder,
+                'url' => Model::imagePlaceholder(),
                 'srcset' => '/media/site/' . $hash . '/test-352x.jpg 352w, /media/site/' . $hash . '/test-864x.jpg 864w, /media/site/' . $hash . '/test-1408x.jpg 1408w'
             ],
             'list' => [
-                'url' => $imagePlaceholder,
+                'url' => Model::imagePlaceholder(),
                 'srcset' => '/media/site/' . $hash . '/test-38x.jpg 38w, /media/site/' . $hash . '/test-76x.jpg 76w'
             ]
         ], $panel->image());
@@ -290,11 +289,11 @@ class FileTest extends TestCase
             'cover' => true,
             'url' => '/media/site/' . $hash . '/test.jpg',
             'cards' => [
-                'url' => $imagePlaceholder,
+                'url' => Model::imagePlaceholder(),
                 'srcset' => '/media/site/' . $hash . '/test-352x.jpg 352w, /media/site/' . $hash . '/test-864x.jpg 864w, /media/site/' . $hash . '/test-1408x.jpg 1408w'
             ],
             'list' => [
-                'url' => $imagePlaceholder,
+                'url' => Model::imagePlaceholder(),
                 'srcset' => '/media/site/' . $hash . '/test-38x38.jpg 1x, /media/site/' . $hash . '/test-76x76.jpg 2x'
             ]
         ], $panel->image(['cover' => true]));

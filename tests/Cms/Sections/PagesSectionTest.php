@@ -2,6 +2,7 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Panel\Model;
 use PHPUnit\Framework\TestCase;
 
 class PagesSectionTest extends TestCase
@@ -359,7 +360,7 @@ class PagesSectionTest extends TestCase
         $data = $section->data();
 
         // existing covers
-        $this->assertStringContainsString('data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw', $data[0]['image']['cards']['url']);
+        $this->assertStringContainsString(Model::imagePlaceholder(), $data[0]['image']['cards']['url']);
 
         // non-existing covers
         $this->assertNull($data[2]['image']['cards']['url'] ?? null);
