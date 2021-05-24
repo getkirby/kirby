@@ -161,6 +161,9 @@ class FTest extends TestCase
     {
         $path = F::relativepath(__FILE__, __DIR__);
         $this->assertEquals('/' . basename(__FILE__), $path);
+        
+        $path = F::relativepath(__FILE__, __DIR__ . '/');
+        $this->assertEquals('/' . basename(__FILE__), $path);
     }
 
     public function testRelativePathWithEmptyBase()
@@ -194,6 +197,9 @@ class FTest extends TestCase
         
         $path = F::relativepath(__DIR__ . '/test.txt', __DIR__ . '/foo/bar/baz');
         $this->assertEquals('../../../test.txt', $path);
+        
+        $path = F::relativepath('foo/path-extra/file.txt', 'foo/path');
+        $this->assertEquals('../path-extra/file.txt', $path);
     }
 
     public function testRelativePathOnWindows()
