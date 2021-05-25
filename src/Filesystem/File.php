@@ -168,6 +168,6 @@ class File extends BaseFile
      */
     public function __toString(): string
     {
-        return $this->url();
+        return $this->url() ?? '';
     }
 }
