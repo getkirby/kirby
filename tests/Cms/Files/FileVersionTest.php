@@ -92,4 +92,24 @@ class FileVersionTest extends TestCase
         $this->assertSame('jpg', $version->toArray()['extension']);
         $this->assertSame(1192, $version->toArray()['size']);
     }
+
+    public function testToString()
+    {
+        $original = new File(['filename' => 'test.jpg']);
+        $version  = new FileVersion([
+            'original' => $original,
+            'root'     => __DIR__ . '/fixtures/files/test.txt',
+            'url'      => $url = 'https://assets.getkirby.com/test-200x200.txt',
+        ]);
+
+        $this->assertSame($url, (string)$version);
+
+        $version  = new FileVersion([
+            'original' => $original,
+            'root'     => __DIR__ . '/fixtures/files/test.jpg',
+            'url'      => $url = 'https://assets.getkirby.com/test-200x200.jpg',
+        ]);
+
+        $this->assertSame('<img alt="" src="' . $url . '">', (string)$version);
+    }
 }
