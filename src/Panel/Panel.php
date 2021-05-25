@@ -60,7 +60,12 @@ class Panel
         return $area;
     }
 
-
+    /**
+     * Collect all registered areas
+     *
+     * @param App $kirby
+     * @return array
+     */
     public static function areas(App $kirby): array
     {
         $root   = $kirby->root('kirby') . '/config/areas';
@@ -91,7 +96,7 @@ class Panel
 
         // load plugins
         foreach ($kirby->extensions('areas') as $id => $area) {
-            $areas[] = static::area($id, $area($kirby));
+            $areas[$id] = static::area($id, $area($kirby));
         }
 
         return $areas;
@@ -237,6 +242,46 @@ class Panel
                 'title' => 'Error'
             ]
         ];
+    }
+
+    /**
+     * Check for access permissions
+     *
+     * @param User|null $user
+     * @param string|null $areaId
+     * @return bool
+     */
+    public static function firewall(?User $user = null, ?string $areaId = null): bool
+    {
+        // a user has to be logged in
+        if ($user === null) {
+            throw new PermissionException(t('error.access.panel'));
+        }
+
+        // get all access permissions for the user role
+        $permissions = $user->role()->permissions()->toArray()['access'];
+
+        // check for general panel access
+        if (($permissions['panel'] ?? false) !== true) {
+            throw new PermissionException(t('error.access.panel'));
+        }
+
+        // don't check if the area is not defined
+        if (empty($areaId) === true) {
+            return true;
+        }
+
+        // undefined area permissions means access
+        if (isset($permissions[$areaId]) === false) {
+            return true;
+        }
+
+        // no access
+        if ($permissions[$areaId] !== true) {
+            throw new PermissionException(t('error.access.view'));
+        }
+
+        return true;
     }
 
     /**
@@ -554,10 +599,8 @@ class Panel
         // areas and routes, so that the `t()` helper
         // can already be used
         if ($user) {
-            $permissions = $user->role()->permissions();
             $kirby->setCurrentTranslation($user->language());
         } else {
-            $permissions = null;
             $kirby->setCurrentTranslation($kirby->panelLanguage());
         }
 
@@ -574,7 +617,7 @@ class Panel
         $routes = static::routes($kirby, $areas);
 
         // create a micro-router for the Panel
-        return router($path, $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $permissions, $session, $user) {
+        return router($path, $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $session, $user) {
 
             // route needs authentication?
             $auth   = $route->attributes()['auth'] ?? true;
@@ -583,18 +626,9 @@ class Panel
 
             // call the route action to check the result
             try {
-
                 // check for access before executing area routes
-                if ($user && $auth !== false) {
-                    // check for general panel access
-                    if ($permissions->for('access', 'panel') !== true) {
-                        throw new PermissionException(t('error.access.panel'));
-                    }
-
-                    // check for area access
-                    if (empty($areaId) === false && $permissions->for('access', $areaId) !== true) {
-                        throw new PermissionException(t('error.access.view'));
-                    }
+                if ($auth !== false) {
+                    static::firewall($user, $areaId);
                 }
 
                 $result = $route->action()->call($route, ...$route->arguments());
