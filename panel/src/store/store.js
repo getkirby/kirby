@@ -2,6 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 
 // store modules
+import blocks from "./modules/blocks.js";
 import content from "./modules/content.js";
 import drawers from "./modules/drawers.js";
 import heartbeat from "./modules/heartbeat.js";
@@ -13,16 +14,12 @@ export default new Vuex.Store({
   // eslint-disable-next-line
   strict: process.env.NODE_ENV !== "production",
   state: {
-    blocks: null,
     dialog: null,
     drag: null,
     fatal: null,
     isLoading: false
   },
   mutations: {
-    SET_BLOCKS(state, blocks) {
-      state.blocks = blocks;
-    },
     SET_DIALOG(state, dialog) {
       state.dialog = dialog;
     },
@@ -32,14 +29,14 @@ export default new Vuex.Store({
     SET_FATAL(state, html) {
       state.fatal = html;
     },
-   SET_LOADING(state, loading) {
-      state.isLoading = loading;
+    START_LOADING(state) {
+      state.isLoading = true;
+    },
+    STOP_LOADING(state) {
+      state.isLoading = false;
     }
   },
   actions: {
-    blocks(context, blocks) {
-      context.commit("SET_BLOCKS", blocks)
-    },
     dialog(context, dialog) {
       context.commit("SET_DIALOG", dialog);
     },
@@ -50,10 +47,11 @@ export default new Vuex.Store({
       context.commit("SET_FATAL", html);
     },
     isLoading(context, loading) {
-      context.commit("SET_LOADING", loading === true);
+      context.commit(loading === true ? "START_LOADING" : "STOP_LOADING");
     }
   },
   modules: {
+    blocks: blocks,
     content: content,
     drawers: drawers,
     heartbeat: heartbeat,
