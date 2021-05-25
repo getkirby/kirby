@@ -142,6 +142,14 @@ export default {
 
     url = this.toUrl(url, { data: data });
 
+    // create proper URL
+    url = this.toUrl(url, false)
+
+    // make sure only is an array
+    if (Array.isArray(only) === false) {
+      only = [only]
+    }
+
     try {
       // fetch the response (only GET request supported)
       const response = await fetch(url, {

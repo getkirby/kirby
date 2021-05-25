@@ -66,7 +66,7 @@ export const plugin = {
     }
     Vue.prototype.$reload = function (options) {
       if (typeof options === "string") {
-        options = { only: options};
+        options = { only: [options] };
       }
       return Fiber.reload(options)
     }
