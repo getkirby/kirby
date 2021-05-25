@@ -4,7 +4,9 @@ namespace Kirby\Panel;
 
 use Exception;
 use Kirby\Cms\App;
+use Kirby\Cms\User;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
@@ -76,22 +78,6 @@ class Panel
         if (!$user) {
             return [
                 'login' => static::area('login', (require $root . '/login.php')($kirby)),
-            ];
-        }
-
-        // no panel access
-        if ($user->role()->permissions()->for('access', 'panel') === false) {
-            return [
-                'noaccess' => [
-                    'routes' => [
-                        [
-                            'pattern' => '(:all)',
-                            'action'  => function () {
-                                go();
-                            }
-                        ]
-                    ]
-                ]
             ];
         }
 
@@ -245,7 +231,7 @@ class Panel
             'component' => 'k-error-view',
             'props'     => [
                 'error'  => $message,
-                'layout' => $kirby->user() ? 'inside' : 'outside'
+                'layout' => Panel::hasAccess($kirby->user()) ? 'inside' : 'outside'
             ],
             'view' => [
                 'title' => 'Error'
@@ -262,6 +248,33 @@ class Panel
     public static function go(?string $path = null)
     {
         go(option('panel.slug', 'panel') . '/' . trim($path, '/'));
+    }
+
+    /**
+     * Check if the given user has access to the panel
+     * or to a given area
+     *
+     * @param User|null $user
+     * @param string|null $area
+     * @return boolean
+     */
+    public static function hasAccess(?User $user = null, string $area = null): bool
+    {
+        if (!$user) {
+            return false;
+        }
+
+        $permissions = $user->role()->permissions();
+
+        if ($permissions->for('access', 'panel') !== true) {
+            return false;
+        }
+
+        if ($area !== null && $permissions->for('access', $area) !== true) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -490,6 +503,7 @@ class Panel
             ]);
         }
 
+        // Full HTML response
         try {
             if (static::link($kirby) === true) {
                 usleep(1);
@@ -529,15 +543,23 @@ class Panel
             return false;
         }
 
+        // switch off pagination exceptions
         Pagination::$validate = false;
 
         $user    = $kirby->user();
         $session = $kirby->session();
 
+        // check for an existing user with panel access.
         // set translation for Panel UI before gathering
         // areas and routes, so that the `t()` helper
         // can already be used
-        $kirby->setCurrentTranslation($user ? $user->language() : $kirby->panelLanguage());
+        if ($user) {
+            $permissions = $user->role()->permissions();
+            $kirby->setCurrentTranslation($user->language());
+        } else {
+            $permissions = null;
+            $kirby->setCurrentTranslation($kirby->panelLanguage());
+        }
 
         // language switcher
         if ($kirby->options('languages')) {
@@ -552,22 +574,29 @@ class Panel
         $routes = static::routes($kirby, $areas);
 
         // create a micro-router for the Panel
-        return router($path, $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $session, $user) {
+        return router($path, $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $permissions, $session, $user) {
 
             // route needs authentication?
             $auth   = $route->attributes()['auth'] ?? true;
             $areaId = $route->attributes()['area'] ?? null;
             $area   = $areas[$areaId] ?? null;
 
-            // check for access before executing area routes
-            if ($auth !== false && empty($areaId) === false) {
-                if ($user->role()->permissions()->for('access', $areaId) !== true) {
-                    return t('error.access.view');
-                }
-            }
-
             // call the route action to check the result
             try {
+
+                // check for access before executing area routes
+                if ($user && $auth !== false) {
+                    // check for general panel access
+                    if ($permissions->for('access', 'panel') !== true) {
+                        throw new PermissionException(t('error.access.panel'));
+                    }
+
+                    // check for area access
+                    if (empty($areaId) === false && $permissions->for('access', $areaId) !== true) {
+                        throw new PermissionException(t('error.access.view'));
+                    }
+                }
+
                 $result = $route->action()->call($route, ...$route->arguments());
             } catch (Throwable $e) {
                 $result = static::error($kirby, $e->getMessage());
@@ -585,7 +614,7 @@ class Panel
 
             // only expect arrays from here on
             if (is_array($result) === false) {
-                throw new InvalidArgumentException('Invalid Panel response');
+                $result = static::error($kirby, 'Invalid Panel response');
             }
 
             // create the view based on the current area
@@ -604,7 +633,7 @@ class Panel
     }
 
     /**
-     * Exract the routes from the given array
+     * Extract the routes from the given array
      * of active areas.
      *
      * @return array
