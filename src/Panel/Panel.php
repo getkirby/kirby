@@ -63,7 +63,7 @@ class Panel
     /**
      * Collect all registered areas
      *
-     * @param App $kirby
+     * @param \Kirby\Cms\App $kirby
      * @return array
      */
     public static function areas(App $kirby): array
@@ -247,7 +247,7 @@ class Panel
     /**
      * Check for access permissions
      *
-     * @param User|null $user
+     * @param \Kirby\Cms\User|null $user
      * @param string|null $areaId
      * @return bool
      */
@@ -299,7 +299,7 @@ class Panel
      * Check if the given user has access to the panel
      * or to a given area
      *
-     * @param User|null $user
+     * @param \Kirby\Cms\User|null $user
      * @param string|null $area
      * @return boolean
      */
