@@ -241,13 +241,16 @@ class Panel
      */
     public static function error(App $kirby, string $message)
     {
-        return static::render($kirby, 'k-error-view', [
-            '$props' => [
+        return [
+            'component' => 'k-error-view',
+            'props'     => [
                 'error'  => $message,
-                'layout' => $kirby->user() ? 'inside' : 'outside',
+                'layout' => $kirby->user() ? 'inside' : 'outside'
             ],
-            '$view' => static::view($kirby, 'error'),
-        ]);
+            'view' => [
+                'title' => 'Error'
+            ]
+        ];
     }
 
     /**
@@ -528,50 +531,47 @@ class Panel
 
         Pagination::$validate = false;
 
-        $user = $kirby->user();
+        $user    = $kirby->user();
+        $session = $kirby->session();
 
         // set translation for Panel UI before gathering
         // areas and routes, so that the `t()` helper
         // can already be used
         $kirby->setCurrentTranslation($user ? $user->language() : $kirby->panelLanguage());
 
+        // language switcher
+        if ($kirby->options('languages')) {
+            if ($lang = get('language')) {
+                $session->set('panel.language', $lang);
+            }
+
+            $kirby->setCurrentLanguage($session->get('panel.language', 'en'));
+        }
+
         $areas  = static::areas($kirby);
         $routes = static::routes($kirby, $areas);
 
         // create a micro-router for the Panel
-        return router($path, $kirby->request()->method(), $routes, function ($route) use ($kirby, $user, $areas) {
+        return router($path, $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $session, $user) {
 
             // route needs authentication?
-            $auth    = $route->attributes()['auth'] ?? true;
-            $areaId  = $route->attributes()['area'] ?? null;
-            $area    = $areas[$areaId] ?? null;
-            $session = $kirby->session();
+            $auth   = $route->attributes()['auth'] ?? true;
+            $areaId = $route->attributes()['area'] ?? null;
+            $area   = $areas[$areaId] ?? null;
 
-            // check for a valid area
-            if (empty($areaId) === true || empty($area) === true) {
-                // routes that don't belong to an area get rendered
-                // without special treatment
-                return $route->action()->call($route, ...$route->arguments());
-            }
-
-            // language switcher
-            if ($kirby->options('languages')) {
-                if ($lang = get('language')) {
-                    $session->set('panel.language', $lang);
-                }
-
-                $kirby->setCurrentLanguage($session->get('panel.language', 'en'));
-            }
-
-            // check for access before executing the route
-            if ($auth !== false) {
+            // check for access before executing area routes
+            if ($auth !== false && empty($areaId) === false) {
                 if ($user->role()->permissions()->for('access', $areaId) !== true) {
                     return t('error.access.view');
                 }
             }
 
             // call the route action to check the result
-            $result = $route->action()->call($route, ...$route->arguments());
+            try {
+                $result = $route->action()->call($route, ...$route->arguments());
+            } catch (Throwable $e) {
+                $result = static::error($kirby, $e->getMessage());
+            }
 
             // pass responses directly down to the Kirby router
             if (is_a($result, 'Kirby\Http\Response') === true) {
@@ -580,7 +580,7 @@ class Panel
 
             // interpret strings as errors
             if (is_string($result) === true) {
-                return static::error($kirby, $result);
+                $result = static::error($kirby, $result);
             }
 
             // only expect arrays from here on
@@ -675,13 +675,14 @@ class Panel
      * @param array $view
      * @return array
      */
-    public static function view(App $kirby, array $area, array $view = []): array
+    public static function view(App $kirby, ?array $area = null, array $view = []): array
     {
         // merge view with area defaults
-        $view = array_replace_recursive($area, $view);
+        $view = array_replace_recursive($area ?? [], $view);
 
-        $view['path']   = Str::after($kirby->path(), '/');
-        $view['search'] = $view['search'] ?? $kirby->option('panel.search.type', 'pages');
+        $view['breadcrumb'] = $view['breadcrumb'] ?? [];
+        $view['path']       = Str::after($kirby->path(), '/');
+        $view['search']     = $view['search'] ?? $kirby->option('panel.search.type', 'pages');
 
         // make sure that routes are gone
         unset($view['routes']);
