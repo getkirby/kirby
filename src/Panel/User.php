@@ -59,15 +59,11 @@ class User extends Model
      */
     public function pickerData(array $params = null): array
     {
-        return [
-            'id'       => $this->model->id(),
-            'image'    => $image = $this->image($params['image'] ?? []),
-            'icon'     => $this->icon($image),
+        $params['text'] = $params['text'] ?? '{{ user.username }}';
+
+        return array_merge(parent::pickerData($params), [
             'email'    => $this->model->email(),
-            'info'     => $this->model->toString($params['info'] ?? false),
-            'link'     => $this->url(true),
-            'text'     => $this->model->toString($params['text'] ?? '{{ user.username }}'),
             'username' => $this->model->username(),
-        ];
+        ]);
     }
 }

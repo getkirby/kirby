@@ -170,19 +170,15 @@ class File extends Model
             $absolute = $parent !== $params['model'];
         }
 
-        return [
+        $params['text'] = $params['text'] ?? '{{ file.filename }}';
+
+        return array_merge(parent::pickerData($params), [
             'filename' => $name,
             'dragText' => $this->dragText('auto', $absolute ?? false),
-            'id'       => $id,
-            'image'    => $image = $this->image($params['image'] ?? []),
-            'icon'     => $this->icon($image),
-            'info'     => $this->model->toString($params['info'] ?? false),
-            'link'     => $this->url(true),
-            'text'     => $this->model->toString($params['text'] ?? '{{ file.filename }}'),
             'type'     => $this->model->type(),
             'url'      => $this->model->url(),
             'uuid'     => $uuid ?? $id,
-        ];
+        ]);
     }
 
     /**

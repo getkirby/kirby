@@ -103,16 +103,12 @@ class Page extends Model
      */
     public function pickerData(array $params = []): array
     {
-        return [
+        $params['text'] = $params['text'] ?? '{{ page.title }}';
+
+        return array_merge(parent::pickerData($params), [
             'dragText'    => $this->dragText(),
             'hasChildren' => $this->model->hasChildren(),
-            'image'       => $image = $this->image($params['image'] ?? []),
-            'icon'        => $this->icon($image),
-            'id'          => $this->model->id(),
-            'info'        => $this->model->toString($params['info'] ?? false),
-            'link'        => $this->url(true),
-            'text'        => $this->model->toString($params['text'] ?? '{{ page.title }}'),
-            'url'         => $this->model->url(),
-        ];
+            'url'         => $this->model->url()
+        ]);
     }
 }
