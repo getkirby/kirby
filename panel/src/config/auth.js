@@ -19,7 +19,7 @@ export default function(to, from, next) {
     // no access? redirect to website
     if (access.panel === false) {
       window.location.href = config.site;
-      return false;
+      return next(false);
     }
 
     // no access to view? redirect to the panel index
