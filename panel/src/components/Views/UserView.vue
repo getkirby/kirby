@@ -1,5 +1,5 @@
 <template>
-  <k-inside>
+  <k-inside :lock="lock">
     <div :data-locked="isLocked" class="k-user-view">
       <div class="k-user-profile">
         <k-view>
@@ -119,8 +119,6 @@
           accept="image/*"
           @success="uploadedAvatar"
         />
-
-        <k-form-buttons :lock="lock" />
       </k-view>
     </div>
   </k-inside>

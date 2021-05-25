@@ -1,5 +1,5 @@
 <template>
-  <k-inside>
+  <k-inside :lock="lock">
     <div class="k-file-view">
       <k-file-preview :file="model" />
 
@@ -67,8 +67,6 @@
           :multiple="false"
           @success="onUpload"
         />
-
-        <k-form-buttons :lock="lock" />
       </k-view>
     </div>
   </k-inside>

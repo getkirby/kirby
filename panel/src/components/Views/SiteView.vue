@@ -1,5 +1,5 @@
 <template>
-  <k-inside>
+  <k-inside :lock="lock">
     <k-view
       :data-locked="isLocked"
       class="k-site-view"
@@ -36,8 +36,6 @@
       />
 
       <k-site-rename-dialog ref="rename" @success="$reload" />
-
-      <k-form-buttons :lock="lock" />
     </k-view>
   </k-inside>
 </template>

@@ -1,5 +1,5 @@
 <template>
-  <k-inside>
+  <k-inside :lock="lock">
     <k-view :data-locked="isLocked" class="k-page-view">
       <k-header
         :editable="permissions.changeTitle && !isLocked"
@@ -69,8 +69,6 @@
       <k-page-status-dialog ref="status" @success="$reload" />
       <k-page-template-dialog ref="template" @success="$reload" />
       <k-page-remove-dialog ref="remove" @success="onRemove" />
-
-      <k-form-buttons :lock="lock" />
     </k-view>
   </k-inside>
 </template>

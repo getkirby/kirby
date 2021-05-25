@@ -34,6 +34,9 @@
     <!-- Registration dialog -->
     <k-registration ref="registration" @success="$reload" />
 
+    <!-- Form buttons -->
+    <k-form-buttons />
+
     <!-- Error dialog -->
     <k-error-dialog />
 
@@ -63,6 +66,9 @@ export default {
     "k-registration": Registration
   },
   inheritAttrs: false,
+  props: {
+    lock: [Boolean, Object]
+  },
   data() {
     return {
       offline: false,
