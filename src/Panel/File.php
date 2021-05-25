@@ -239,7 +239,7 @@ class File extends Model
         );
 
         return array_merge(parent::props(), [
-            'file' => [
+            'model' => [
                 'content'    => $this->content(),
                 'dimensions' => $file->dimensions()->toArray(),
                 'extension'  => $file->extension(),

@@ -51,7 +51,8 @@ class Site extends Model
     public function props(): array
     {
         return array_merge(parent::props(), [
-            'site' => [
+            'model' => [
+                'content'    => $this->content(),
                 'previewUrl' => $this->model->previewUrl(),
                 'title'      => $this->model->title()->toString()
             ]

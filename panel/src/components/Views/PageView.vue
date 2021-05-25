@@ -11,9 +11,9 @@
         <template #left>
           <k-button-group>
             <k-button
-              v-if="permissions.preview && page.previewUrl"
+              v-if="permissions.preview && model.previewUrl"
               :responsive="true"
-              :link="page.previewUrl"
+              :link="model.previewUrl"
               target="_blank"
               icon="open"
             >
@@ -21,7 +21,7 @@
             </k-button>
             <k-status-icon
               v-if="status"
-              :status="page.status"
+              :status="model.status"
               :disabled="!permissions.changeStatus || isLocked"
               :responsive="true"
               :text="status.label"
@@ -36,7 +36,11 @@
               >
                 {{ $t('settings') }}
               </k-button>
-              <k-dropdown-content ref="settings" :options="options" @action="action" />
+              <k-dropdown-content 
+                ref="settings" 
+                :options="options" 
+                @action="action"
+              />
             </k-dropdown>
 
             <k-languages-dropdown />
@@ -45,7 +49,7 @@
 
         <template #right>
           <k-prev-next
-            v-if="page.id"
+            v-if="model.id"
             :prev="prev"
             :next="next"
           />
@@ -55,7 +59,7 @@
       <k-sections
         :blueprint="blueprint"
         :empty="$t('page.blueprint', { template: blueprint })"
-        :parent="$api.pages.url(page.id)"
+        :parent="$api.pages.url(model.id)"
         :tab="tab"
       />
 

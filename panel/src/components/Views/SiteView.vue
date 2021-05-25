@@ -10,12 +10,12 @@
         :tab="tab.name"
         @edit="$refs.rename.open()"
       >
-        {{ site.title }}
+        {{ model.title }}
         <template #left>
           <k-button-group>
             <k-button
               :responsive="true"
-              :link="site.previewUrl"
+              :link="model.previewUrl"
               target="_blank"
               icon="open"
             >
@@ -44,12 +44,9 @@ import ModelView from "./ModelView.vue";
 
 export default {
   extends: ModelView,
-  props: {
-    site: {
-      type: Object,
-      default() {
-        return {};
-      }
+  computed: {
+    id() {
+      return "site"
     }
   }
 };
