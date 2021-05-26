@@ -116,12 +116,12 @@ class Panel
             if (is_string($dev) === true) {
                 $url = $dev;
             } else {
-                $url = $kirby->request()->url([
+                $url = rtrim($kirby->request()->url([
                     'port'   => 3000,
                     'path'   => null,
                     'params' => null,
                     'query'  => null
-                ])->toString();
+                ])->toString(), '/');
             }
         } else {
             // vite is not running, use production assets
