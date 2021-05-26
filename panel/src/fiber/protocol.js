@@ -140,8 +140,7 @@ export default {
     this.saveScroll()
     document.dispatchEvent(new Event('fiber:start'))
 
-    url        = this.toUrl(url);
-    url.search = this.toQuery(url.search, data);
+    url = this.toUrl(url, { data: data });
 
     try {
       // fetch the response (only GET request supported)
@@ -174,7 +173,7 @@ export default {
       if (
         url.hash &&
         !responseUrl.hash &&
-        this.toUrl(data.url, false).href === responseUrl.href
+        this.toUrl(data.url, { hash: false }).href === responseUrl.href
       ) {
         responseUrl.hash = url.hash
         data.url = responseUrl.href
@@ -207,14 +206,21 @@ export default {
     return params;
   },
 
-  toUrl(href, hash = true) {
+  toUrl(href, {
+    data = {},
+    hash = true
+  } = {}) {
+    let url
 
     if (hash === true) {
-      return new URL(href, window.location)
+      url = new URL(href, window.location)
+    } else {
+      url = new URL(href)
+      url.hash = ''
     }
 
-    const url = new URL(href)
-    url.hash = ''
+    url.search = this.toQuery(url.search, data)
+
     return url
   }
 }
