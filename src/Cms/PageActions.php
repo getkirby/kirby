@@ -531,12 +531,12 @@ trait PageActions
                 return 0;
             case 'date':
             case 'datetime':
+                // the $format needs to produce only digits,
+                // so it can be converted to integer below
                 $format = $mode === 'date' ? 'Ymd' : 'YmdHi';
                 $lang   = $this->kirby()->defaultLanguage() ?? null;
                 $field  = $this->content($lang)->get('date');
                 $date   = $field->isEmpty() ? 'now' : $field;
-                // TODO: in 3.6.0 throw an error if date() doesn't
-                // return a number, see https://github.com/getkirby/kirby/pull/3061#discussion_r552783943
                 return (int)date($format, strtotime($date));
                 break;
             case 'default':
@@ -786,20 +786,6 @@ trait PageActions
         }
 
         return true;
-    }
-
-    /**
-     * @deprecated 3.5.0 Use `Page::changeSort()` instead
-     * @todo Remove in 3.6.0
-     *
-     * @param null $position
-     * @return $this|static
-     */
-    public function sort($position = null)
-    {
-        deprecated('$page->sort() is deprecated, use $page->changeSort() instead. $page->sort() will be removed in Kirby 3.6.0.');
-
-        return $this->changeStatus('listed', $position);
     }
 
     /**
