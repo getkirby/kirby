@@ -48,7 +48,7 @@ export default (extensions = {}) => {
   api.users = users(api);
 
   /**
-   * @deprecated
+   * @deprecated 3.5.0
    * @todo remove in 3.7.0
    */
   api.files.rename = api.files.changeName;
