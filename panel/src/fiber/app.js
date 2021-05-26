@@ -54,6 +54,11 @@ export default {
 export const plugin = {
   install(Vue) {
     Vue.prototype.$url = function (path = "") {
+      // pass window.location objects without modification
+      if (typeof path === "object") {
+        return path;
+      }
+
       return document.querySelector("base").href + path.replace(/^\//, "")
     }
     Vue.prototype.$go = function (path, options) {
