@@ -135,18 +135,9 @@ export default {
       immediate: true
     },
     isLocked(locked) {
-      // in the case of a race condition (two users are
-      // making unsaved changes at the same time, both
-      // setting the lock before isLocked status has been 
-      // received) throw away changes of the loser of the race
-      // condition - should be minimal changes
-      if (locked === true) {
-        this.$store.dispatch("content/revert");
-      }
-
-      // model was locked by another user, lock has
-      // been lifted, so refresh data
-      else {
+      // model used to be locked by another user, 
+      // lock has been lifted, so refresh data
+      if (locked === false) {
         this.$events.$emit("model.reload");
       }
     }
@@ -163,16 +154,9 @@ export default {
     this.$events.$off("keydown.cmd.s", this.onSave);
   },
   methods: {
-    /**
-     * Partial reload of lock status
-     */
     check() {
       this.$reload("$props.lock");
     },
-    /**
-     * Write or remove the content lock
-     * @param {boolean} lock 
-     */
     async onLock(lock = true) {
       const api = [this.$view.path + "/lock", null, null, true];
 
@@ -216,17 +200,11 @@ export default {
       link.click();
       document.body.removeChild(link);
     },
-    /**
-     * Resolve unlock warning
-     */
     async onResolve() {
       // remove content unlock and throw away unsaved changes
       await this.onUnlock(false);
       this.$store.dispatch("content/revert");
     },
-    /**
-     * When reverting unsaved changes, first open confirm dialog
-     */
     onRevert() {
       this.$refs.revert.open();
     },
