@@ -78,6 +78,9 @@ import ModelView from "./ModelView.vue";
 
 export default {
   extends: ModelView,
+  props: {
+    status: Object
+  },
   computed: {
     id() {
       return "pages/" + this.model.id;
