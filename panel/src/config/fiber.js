@@ -198,13 +198,13 @@ const Fiber = {
     this.saveScroll()
     document.dispatchEvent(new Event('fiber:start'))
 
-    // create proper URL
-    url = this.toUrl(url, { data: data, hash: false });
-
     // make sure only is an array
     if (Array.isArray(only) === false) {
       only = [only]
     }
+
+    // create proper URL
+    url = this.toUrl(url, { data: data || {}, hash: false });
 
     try {
       // fetch the response (only GET request supported)
@@ -217,7 +217,7 @@ const Fiber = {
           'X-Fiber': true,
           ...(only.length ? {
             'X-Fiber-Component': this.page.component,
-            'X-Fiber-Partial': only.join(','),
+            'X-Fiber-Include': only.join(','),
           } : {}),
           ...(this.page.version ? { 'X-Fiber-Version': this.page.version } : {}),
         }

@@ -338,7 +338,7 @@ class PanelTest extends TestCase
     public function testRenderJson()
     {
         // fake request data
-        $_GET['json'] = true;
+        $_GET['_json'] = true;
 
         // get panel response
         $response = Panel::render($this->app, 'k-page-view', [
@@ -347,7 +347,7 @@ class PanelTest extends TestCase
 
         $this->assertSame('application/json', $response->type());
         $this->assertSame('Accept', $response->header('Vary'));
-        $this->assertSame('true', $response->header('X-Inertia'));
+        $this->assertSame('true', $response->header('X-Fiber'));
     }
 
     /**

@@ -379,34 +379,37 @@ class Panel
      * view via the script tag.
      *
      * @param \Kirby\Cms\App $kirby
-     * @param string $component
      * @return array
      */
-    public static function globals(App $kirby, string $component): array
+    public static function globals(App $kirby): array
     {
-        $globals = [
-            '$config' => [
-                'debug'     => $kirby->option('debug'),
-                'kirbytext' => $kirby->option('panel.kirbytext', true),
-                'search'    => [
-                    'limit' => $kirby->option('panel.search.limit', 10),
-                    'type'  => $kirby->option('panel.search.type', 'pages')
-                ],
-                'translation' => $kirby->option('panel.language', 'en'),
-            ],
-            '$system' => [
-                'ascii'   => Str::$ascii,
-                'csrf'    => $kirby->option('api.csrf') ?? csrf(),
-                'isLocal' => $kirby->system()->isLocal(),
-                'locales' => function () use ($kirby) {
-                    $locales = [];
-                    foreach ($kirby->translations() as $translation) {
-                        $locales[$translation->code()] = $translation->locale();
-                    }
-                    return $locales;
-                },
-                'slugs'   => Str::$language,
-            ],
+        return [
+            '$config' => function () use ($kirby) {
+                return [
+                    'debug'     => $kirby->option('debug'),
+                    'kirbytext' => $kirby->option('panel.kirbytext', true),
+                    'search'    => [
+                        'limit' => $kirby->option('panel.search.limit', 10),
+                        'type'  => $kirby->option('panel.search.type', 'pages')
+                    ],
+                    'translation' => $kirby->option('panel.language', 'en'),
+                ];
+            },
+            '$system' => function () use ($kirby) {
+                return [
+                    'ascii'   => Str::$ascii,
+                    'csrf'    => $kirby->option('api.csrf') ?? csrf(),
+                    'isLocal' => $kirby->system()->isLocal(),
+                    'locales' => function () use ($kirby) {
+                        $locales = [];
+                        foreach ($kirby->translations() as $translation) {
+                            $locales[$translation->code()] = $translation->locale();
+                        }
+                        return $locales;
+                    },
+                    'slugs'   => Str::$language,
+                ];
+            },
             '$translation' => function () use ($kirby) {
                 if ($user = $kirby->user()) {
                     $translation = $kirby->translation($user->language());
@@ -425,16 +428,13 @@ class Panel
                     'name'      => $translation->name(),
                 ];
             },
-            '$urls' => [
-                'api'  => $kirby->url('api'),
-                'site' => $kirby->url('index')
-            ],
+            '$urls' => function () use ($kirby) {
+                return [
+                    'api'  => $kirby->url('api'),
+                    'site' => $kirby->url('index')
+                ];
+            }
         ];
-
-        // filter globals, if it's a partial request
-        $globals = static::partial($kirby, $component, $globals);
-
-        return A::apply($globals);
     }
 
     /**
@@ -526,16 +526,21 @@ class Panel
     public static function partial(App $kirby, string $component, array $data): array
     {
         // is it a partial request?
-        $request = $kirby->request();
-        $only    = Str::split($request->header('X-Fiber-Partial'));
+        $request          = $kirby->request();
+        $include          = $request->header('X-Fiber-Include')   ?? get('_include');
+        $requestComponent = $request->header('X-Fiber-Component') ?? get('_component');
 
-        // if a full request is made or the
-        // receiving component differs,
-        // return full data
-        if (
-            empty($only) === true ||
-            $request->header('X-Fiber-Component') !== $component
-        ) {
+        // split include string into an array of fields
+        $include = Str::split($include);
+
+        // if a full request is made, return all data
+        if (empty($include) === true) {
+            return $data;
+        }
+
+        // if a new component is requested, the include
+        // parameter must be ignored and all data returned
+        if (empty($requestComponent) === false && $requestComponent !== $component) {
             return $data;
         }
 
@@ -543,7 +548,17 @@ class Panel
         // dot notation, e.g. `$props.tab.columns`
         $partial = [];
 
-        foreach ($only as $partial) {
+        // get all unresolved globals and their keys
+        $globals    = static::globals($kirby);
+        $globalKeys = array_keys($globals);
+
+        // check if globals are requested and need to be merged
+        if (empty(array_intersect($globalKeys, $include)) === false) {
+            $data = array_merge_recursive($globals, $data);
+        }
+
+        // build a new array with all requested data
+        foreach ($include as $partial) {
             $partials[$partial] = A::get($data, $partial);
         }
 
@@ -567,9 +582,9 @@ class Panel
         $request = $kirby->request();
         if (
             $request->method() === 'GET' &&
-            ($request->header('X-Fiber') || $request->get('json'))
+            ($request->header('X-Fiber') || get('_json'))
         ) {
-            return Response::json($fiber, null, null, [
+            return Response::json($fiber, null, get('_pretty'), [
                 'Vary'      => 'Accept',
                 'X-Fiber' => 'true'
             ]);
@@ -589,8 +604,8 @@ class Panel
         $uri = new Uri($url = $kirby->url('panel'));
 
         // inject globals
-        $globals = static::globals($kirby, $component);
-        $fiber['data'] = array_merge_recursive($globals, $fiber['data']);
+        $globals = static::globals($kirby);
+        $fiber['data'] = array_merge_recursive(A::apply($globals), $fiber['data']);
 
         // fetch all plugins
         $plugins = new Plugins();

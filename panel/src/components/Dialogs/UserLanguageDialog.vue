@@ -54,6 +54,10 @@ export default {
           this.user.language
         );
 
+        this.$reload({
+          only: "$translation"
+        });
+
         this.success({
           message: ":)",
           event: "user.changeLanguage"
