@@ -650,7 +650,10 @@ class Panel
         $routes = static::routes($kirby, $areas);
 
         // create a micro-router for the Panel
-        return router($path, $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby) {
+        return router($path, $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $path) {
+
+            // trigger hook
+            $route = $kirby->apply('panel.route:before', compact('route', 'path'), 'route');
 
             // route needs authentication?
             $auth   = $route->attributes()['auth'] ?? true;
