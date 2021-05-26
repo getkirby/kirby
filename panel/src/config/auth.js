@@ -11,7 +11,7 @@ export default function(to, from, next) {
     if (!user) {
       store.dispatch("user/visit", to.path);
       store.dispatch("user/logout");
-      return false;
+      return next(false);
     }
 
     const access = user.permissions.access;
@@ -19,7 +19,7 @@ export default function(to, from, next) {
     // no access? redirect to website
     if (access.panel === false) {
       window.location.href = config.site;
-      return false;
+      return next(false);
     }
 
     // no access to view? redirect to the panel index
