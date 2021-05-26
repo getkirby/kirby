@@ -45,7 +45,7 @@ return [
         'method'  => 'GET',
         'action'  => function (string $id) {
             // @codeCoverageIgnoreStart
-            if ($this->pattern() === 'pages/(:any)/children/blueprints') {
+            if ($this->route->pattern() === 'pages/(:any)/children/blueprints') {
                 deprecated('`GET pages/(:any)/children/blueprints` API endpoint has been deprecated and will be removed in 3.7.0. Use `GET pages/(:any)/blueprints` instead');
             }
             // @codeCoverageIgnoreEnd
