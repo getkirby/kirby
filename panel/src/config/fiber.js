@@ -139,7 +139,7 @@ const Fiber = {
 
     // swap component
     const clone = JSON.parse(JSON.stringify(page))
-    clone.props = this.props(clone.props)
+    clone.props = this.props(clone.data)
     await this.swap({ component, page: clone, preserveState })
 
     if (!preserveScroll) {
@@ -198,10 +198,8 @@ const Fiber = {
     this.saveScroll()
     document.dispatchEvent(new Event('fiber:start'))
 
-    url = this.toUrl(url, { data: data });
-
     // create proper URL
-    url = this.toUrl(url, false)
+    url = this.toUrl(url, { data: data, hash: false });
 
     // make sure only is an array
     if (Array.isArray(only) === false) {
@@ -225,27 +223,27 @@ const Fiber = {
         }
       })
 
-      // turn into data
-      const data = await toJson(response)
+      // turn into json data
+      const json = await toJson(response)
 
       // add exisiting data to partial requests
-      if (only.length && data.component === this.page.component) {
-        data.props = merge(this.page.props, data.props)
+      if (only.length && json.component === this.page.component) {
+        json.data = merge(this.page.data, json.data)
       }
 
       // add hash to response URL if current
       // window URL has hash included
-      const responseUrl = this.toUrl(data.url)
+      const responseUrl = this.toUrl(json.url)
       if (
         url.hash &&
         !responseUrl.hash &&
-        this.toUrl(data.url, { hash: false }).href === responseUrl.href
+        this.toUrl(json.url, { hash: false }).href === responseUrl.href
       ) {
         responseUrl.hash = url.hash
-        data.url = responseUrl.href
+        json.url = responseUrl.href
       }
 
-      return this.setPage(data, { replace, preserveScroll, preserveState })
+      return this.setPage(json, { replace, preserveScroll, preserveState })
 
     } catch (error) {
       console.error(error)
