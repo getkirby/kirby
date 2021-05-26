@@ -8,11 +8,10 @@ return function ($kirby) {
         'menu'   => true,
         'routes' => [
             [
-                'pattern' => [
-                    'users',
-                    'users/role/(:any)'
-                ],
-                'action'  => function (string $role = null) use ($kirby) {
+                'pattern' => 'users',
+                'action'  => function () use ($kirby) {
+
+                    $role  = get('role');
                     $roles = $kirby->roles()->toArray(function ($role) {
                         return [
                             'id'    => $role->id(),

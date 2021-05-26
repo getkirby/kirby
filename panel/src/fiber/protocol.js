@@ -24,7 +24,7 @@ export default {
     // set initial page
     page.url += window.location.hash
     this.setPage(page)
-    
+
     // set up event listeners
     window.addEventListener('popstate', this.onPopstateEvent.bind(this))
     document.addEventListener('scroll', debounce(this.onScrollEvent.bind(this), 100), true)
@@ -48,7 +48,7 @@ export default {
 
   onScrollEvent(event) {
     if (
-      typeof event.target.hasAttribute === 'function' && 
+      typeof event.target.hasAttribute === 'function' &&
       event.target.hasAttribute('scroll-region')
     ) {
       this.saveScroll()
@@ -92,11 +92,11 @@ export default {
       })
     }
   },
- 
+
   reload(options = {}) {
     return this.visit(window.location.href, {
-      ...options, 
-      preserveScroll: true, 
+      ...options,
+      preserveScroll: true,
       preserveState: true
     })
   },
@@ -106,7 +106,7 @@ export default {
     const component = await this.component(page.component)
     page.scrollRegions = page.scrollRegions || []
 
-    // either replacing the whole state 
+    // either replacing the whole state
     // or pushing onto it
     if (replace || this.toUrl(page.url).href === window.location.href) {
       this.state(page)
@@ -135,13 +135,17 @@ export default {
     preserveState = false,
     only = [],
     headers = {},
+    data = {}
   } = {}) {
     this.saveScroll()
     document.dispatchEvent(new Event('fiber:start'))
 
+    url        = this.toUrl(url);
+    url.search = this.toQuery(url.search, data);
+
     try {
       // fetch the response (only GET request supported)
-      const response = await fetch(this.toUrl(url, false), {
+      const response = await fetch(url, {
         method: "get",
         headers: {
           ...headers,
@@ -168,8 +172,8 @@ export default {
       // window URL has hash included
       const responseUrl = this.toUrl(data.url)
       if (
-        url.hash && 
-        !responseUrl.hash && 
+        url.hash &&
+        !responseUrl.hash &&
         this.toUrl(data.url, false).href === responseUrl.href
       ) {
         responseUrl.hash = url.hash
@@ -184,6 +188,23 @@ export default {
     } finally {
       document.dispatchEvent(new Event('fiber:finish'))
     }
+  },
+
+  toQuery(search, data) {
+    let params = new URLSearchParams(search);
+
+    if (typeof data !== "object") {
+      data = {};
+    }
+
+    // add all data params unless they are empty/null
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== null) {
+        params.set(key, value);
+      }
+    });
+
+    return params;
   },
 
   toUrl(href, hash = true) {
