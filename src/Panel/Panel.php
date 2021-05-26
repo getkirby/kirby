@@ -228,10 +228,11 @@ class Panel
     public static function data(App $kirby, string $component, array $data = []): array
     {
         // shared default data
+        $multilang = $kirby->option('languages', false) !== false;
         $shared = [
-            '$language' => function () use ($kirby) {
+            '$language' => function () use ($kirby, $multilang) {
                 if (
-                    $kirby->option('languages') === true &&
+                    $multilang === true &&
                     $language = $kirby->language()
                 ) {
                     return [
@@ -240,8 +241,8 @@ class Panel
                     ];
                 }
             },
-            '$languages' => function () use ($kirby): array {
-                if ($kirby->option('languages') === true) {
+            '$languages' => function () use ($kirby, $multilang): array {
+                if ($multilang === true) {
                     return $kirby->languages()->values(function ($language) {
                         return [
                             'code'    => $language->code(),
@@ -260,7 +261,7 @@ class Panel
             },
             '$props' => [],
             '$license' => $kirby->system()->license(),
-            '$multilang' => $kirby->option('languages', false) !== false,
+            '$multilang' => $multilang,
             '$user' => function () use ($kirby) {
                 if ($user = $kirby->user()) {
                     return [
