@@ -15,14 +15,9 @@ return function ($kirby) {
                             'languages' => $kirby->languages()->values(function ($language) {
                                 return [
                                     'default' => $language->isDefault(),
-                                    'icon' => [
-                                        'back' => 'black',
-                                        'type' => 'globe',
-                                    ],
-                                    'id' => $language->code(),
-                                    'image' => true,
-                                    'info' => $language->code(),
-                                    'text' => $language->name(),
+                                    'id'      => $language->code(),
+                                    'info'    => $language->code(),
+                                    'text'    => $language->name(),
                                 ];
                             }),
                             'version' => $kirby->version(),

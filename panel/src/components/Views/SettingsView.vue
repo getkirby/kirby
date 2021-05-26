@@ -93,13 +93,17 @@ export default {
   },
   computed: {
     languagesCollection() {
-      return this.languages.map(language => {
-
-        language.link = () => {
+      return this.languages.map(language => ({
+        ...language,
+        image: true,
+        icon: {
+          back: "black",
+          type: "globe"
+        },
+        link: () => {
           this.$refs.update.open(language.id);
-        };
-
-        language.options = [
+        },
+        options: [
           {
             icon: "edit",
             text: this.$t("edit"),
@@ -111,11 +115,8 @@ export default {
             disabled: language.default && this.languages.length !== 1,
             click: "remove"
           }
-        ];
-
-        return language;
-
-      });
+        ]
+      }));
     },
     primaryLanguage() {
       return this.languagesCollection.filter(language => language.default);
