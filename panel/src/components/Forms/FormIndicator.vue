@@ -66,8 +66,9 @@ export default {
     },
     load() {
       // create an API request promise for each model with changes
-      const promises = this.models.map(model => {
-        return this.$api.get(model.api, { view: "compact" }, null, true).then(response => {
+      const promises = this.models.map(async model => {
+        try {
+          const response = await this.$api.get(model.api, { view: "compact" }, null, true);
 
           // populate entry depending on model type
           let entry;
@@ -116,10 +117,11 @@ export default {
           }
 
           return entry;
-        }).catch(() => {
+
+        } catch (error) {
           this.$store.dispatch("content/remove", model.id);
           return null;
-        });
+        }
       });
 
       return Promise.all(promises).then(entries => {

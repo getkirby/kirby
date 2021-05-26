@@ -141,7 +141,7 @@ class Page extends Model
         $page = $this->model;
 
         return array_merge(parent::props(), [
-            'page' => [
+            'model' => [
                 'content'    => $this->content(),
                 'id'         => $page->id(),
                 'parent'     => $page->parentModel()->panel()->url(true),

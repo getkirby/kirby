@@ -96,7 +96,7 @@ class User extends Model
         $avatar = $user->avatar();
 
         return array_merge(parent::props(), [
-            'user' => [
+            'model' => [
                 'avatar'   => $avatar ? $avatar->url() : null,
                 'content'  => $this->content(),
                 'email'    => $user->email(),

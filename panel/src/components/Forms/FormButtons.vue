@@ -26,11 +26,11 @@
       <p class="k-form-lock-info">
         <k-icon type="lock" />
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <span v-html="$t('lock.isLocked', { email: form.lock.email })" />
+        <span v-html="$t('lock.isLocked', { email: lock.data.email })" />
       </p>
 
       <k-icon
-        v-if="!form.lock.unlockable"
+        v-if="!lock.data.unlockable"
         type="loader"
         class="k-form-lock-loader"
       />
@@ -38,7 +38,7 @@
         v-else
         icon="unlock"
         class="k-form-button"
-        @click="setUnlock"
+        @click="onUnlock()"
       >
         {{ $t('lock.unlock') }}
       </k-button>
@@ -49,7 +49,7 @@
         :disabled="isDisabled"
         icon="undo"
         class="k-form-button"
-        @click="$refs.revert.open()"
+        @click="onRevert"
       >
         {{ $t("revert") }}
       </k-button>
@@ -68,7 +68,7 @@
       :submit-button="$t('revert')"
       icon="undo"
       theme="negative"
-      @submit="onRevert"
+      @submit="revert"
     >
       <!-- eslint-disable-next-line vue/no-v-html -->
       <k-text v-html="$t('revert.confirm')" />
@@ -78,46 +78,31 @@
 
 <script>
 export default {
+  props: {
+    lock: [Boolean, Object]
+  },
   data() {
     return {
-      supportsLocking: true
+      isRefreshing: null,
+      isLocking: null
     }
   },
   computed: {
-    api() {
-      return {
-        lock: [this.$view.path + "/lock", null, null, true],
-        unlock: [this.$view.path + "/unlock", null, null, true]
-      }
-    },
     hasChanges() {
       return this.$store.getters["content/hasChanges"]();
     },
-    form() {
-      return {
-        lock: this.$store.state.content.status.lock,
-        unlock: this.$store.state.content.status.unlock
-      };
-    },
-    id() {
-      return this.$store.state.content.current;
-    },
     isDisabled() {
-      return this.$store.state.content.status.enabled === false;
+      return this.$store.state.content.enabled === false;
     },
     isLocked() {
-      return this.form.lock !== null;
+      return this.supportsLocking && this.lock.state === "lock";
     },
     isUnlocked() {
-      return this.form.unlock !== null;
+      return this.supportsLocking && this.lock.state === "unlock";
     },
     mode() {
-      if (this.isUnlocked === true) {
-        return "unlock";
-      }
-
-      if (this.isLocked === true) {
-        return "lock";
+      if (this.supportsLocking && this.lock.state !== null) {
+        return this.lock.state;
       }
 
       if (this.hasChanges === true) {
@@ -125,183 +110,105 @@ export default {
       }
 
       return null;
-    }
+    },
+    supportsLocking() {
+      return this.lock !== false;
+    },
   },
   watch: {
-    hasChanges(current, previous) {
-      // if user started to make changes,
-      // start setting lock on each heartbeat
-      if (previous === false && current === true) {
-        // console.log("watch: hasChanges new -> setLock:30");
-        this.$store.dispatch("heartbeat/remove", this.getLock);
-        this.$store.dispatch("heartbeat/add", [this.setLock, 30]);
-        return;
-      }
-
-      // if user reversed changes manually,
-      // remove lock and listen to lock from other users again
-      if (this.id && previous === true && current === false) {
-        // console.log("watch: noChanges new -> removeLock");
-        this.removeLock();
-        return;
-      }
+    hasChanges: {
+      handler(changes) {
+        if (this.supportsLocking === true) {
+          if (this.isLocked === false && this.isUnlocked === false) {
+            if (changes === true) {
+              // unsaved changes, write lock every 30 seconds
+              this.onLock();
+              this.isLocking = setInterval(this.onLock, 30000);
+            } else {
+              // no more unsaved changes, stop writing lock, remove lock
+              clearInterval(this.isLocking);
+              this.onLock(false);
+            }
+          }
+        }
+      },
+      immediate: true
     },
-    id() {
-      // start listening for content lock, when no changes exist
-      if (this.id && this.hasChanges === false) {
-        // console.log("watch: id and noChanges -> getLock:30");
-        this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
+    isLocked(locked) {
+      // model used to be locked by another user, 
+      // lock has been lifted, so refresh data
+      if (locked === false) {
+        this.$events.$emit("model.reload");
       }
     }
   },
   created() {
+    // refresh lock data every 10 seconds
+    this.isRefreshing = setInterval(this.check, 10000);
     this.$events.$on("keydown.cmd.s", this.onSave);
   },
   destroyed() {
+    // make sure to clear all intervals
+    clearInterval(this.isRefreshing);
+    clearInterval(this.isLocking);
     this.$events.$off("keydown.cmd.s", this.onSave);
   },
   methods: {
-    /**
-     *  Locking API
-     */
-
-    getLock() {
-      return this.$api
-        .get(...this.api.lock)
-        .then(response => {
-
-          // if content locking is not supported by model,
-          // set flag and stop listening
-          if (response.supported === false) {
-            this.supportsLocking = false;
-            this.$store.dispatch("heartbeat/remove", this.getLock);
-            return;
-          }
-
-          // if content is locked, dispatch info to store
-          if (response.locked !== false) {
-            this.$store.dispatch("content/lock", response.locked);
-            return;
-          }
-
-          // if content is not locked but store still holds a lock
-          // from another user, that lock has been lifted and thus
-          // the content needs to be reloaded to reflect changes
-          if (
-            this.isLocked &&
-            this.form.lock.user !== this.$user.id
-          ) {
-            this.$events.$emit("model.reload");
-          }
-
-          this.$store.dispatch("content/lock", null);
-        })
-        .catch(() => {
-          // fail silently
-        });
+    check() {
+      this.$reload("$props.lock");
     },
+    async onLock(lock = true) {
+      const api = [this.$view.path + "/lock", null, null, true];
 
-    setLock() {
-      if (this.supportsLocking === true) {
-        this.$api.patch(...this.api.lock).catch(error => {
-          // turns out: locking is not supported
-          if (error.key === "error.lock.notImplemented") {
-            this.supportsLocking = false;
-            this.$store.dispatch("heartbeat/remove", this.setLock);
-            return false;
-          }
+      // writing lock
+      if (lock === true) {
+        try {
+          await this.$api.patch(...api)
 
+        } catch (error) {
           // If setting lock failed, a competing lock has been set between
-          // API calls. In that case, discard changes, stop setting lock and
-          // listen to concurrent lock
-          this.$store.dispatch("content/revert", this.id);
-          this.$store.dispatch("heartbeat/remove", this.setLock);
-          this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-        });
+          // API calls. In that case, discard changes, stop setting lock
+          clearInterval(this.isLocking);
+          this.$store.dispatch("content/revert");
+        }
+      } 
+      
+      // removing lock
+      else {
+        clearInterval(this.isLocking);
+        await this.$api.delete(...api)
       }
     },
-
-    removeLock() {
-      if (this.supportsLocking === true) {
-        this.$store.dispatch("heartbeat/remove", this.setLock);
-
-        this.$api
-          .delete(...this.api.lock)
-          .then(() => {
-            this.$store.dispatch("content/lock", null);
-            this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-          })
-          .catch(() => {
-            // fail silently
-          });
-      }
-    },
-
-    setUnlock() {
-      if (this.supportsLocking === true) {
-        this.$store.dispatch("heartbeat/remove", this.setLock);
-
-        this.$api
-          .patch(...this.api.unlock)
-          .then(() => {
-            this.$store.dispatch("content/lock", null);
-            this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-          })
-          .catch(() => {
-            // fail silently
-          });
-      }
-    },
-
-    removeUnlock() {
-      if (this.supportsLocking === true) {
-        this.$store.dispatch("heartbeat/remove", this.setLock);
-
-        this.$api
-          .delete(...this.api.unlock)
-          .then(() => {
-            this.$store.dispatch("content/unlock", null);
-            this.$store.dispatch("heartbeat/add", [this.getLock, 10]);
-          })
-          .catch(() => {
-            // fail silently
-          });
-      }
-    },
-
     /**
-     *  User actions
+     * Download unsaved changes after model got unlocked
      */
-
     onDownload() {
       let content = "";
+      const changes = this.$store.getters["content/changes"]();
 
-      Object.keys(this.form.unlock).forEach(key => {
-        content += key + ": \n\n" + this.form.unlock[key];
+      Object.keys(changes).forEach(key => {
+        content += key + ": \n\n" + changes[key];
         content += "\n\n----\n\n";
       });
 
       let link = document.createElement('a');
       link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
-      link.setAttribute('download', this.id + ".txt");
+      link.setAttribute('download', this.$view.path + ".txt");
       link.style.display = 'none';
 
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     },
-
-    onResolve() {
+    async onResolve() {
+      // remove content unlock and throw away unsaved changes
+      await this.onUnlock(false);
       this.$store.dispatch("content/revert");
-      this.removeUnlock();
     },
-
     onRevert() {
-      this.$store.dispatch("content/revert");
-      this.$refs.revert.close();
+      this.$refs.revert.open();
     },
-
-    onSave(e) {
+    async onSave(e) {
       if (!e) {
         return false;
       }
@@ -314,32 +221,48 @@ export default {
         return true;
       }
 
-      this.$store
-        .dispatch("content/save")
-        .then(() => {
-          this.$events.$emit("model.update");
-          this.$store.dispatch("notification/success", ":)");
-        })
-        .catch(response => {
-          if (response.code === 403) {
-            return;
-          }
+      try {
+        this.$store.dispatch("content/save");
+        this.$events.$emit("model.update");
+        this.$store.dispatch("notification/success", ":)");
 
-          if (response.details && Object.keys(response.details).length > 0) {
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.form.incomplete"),
-              details: response.details
-            });
-          } else {
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.form.notSaved"),
-              details: [{
-                label: "Exception: " + response.exception,
-                message: response.message
-              }]
-            });
-          }
-        });
+      } catch (response) {
+        if (response.code === 403) {
+          return;
+        }
+
+        if (response.details && Object.keys(response.details).length > 0) {
+          this.$store.dispatch("notification/error", {
+            message: this.$t("error.form.incomplete"),
+            details: response.details
+          });
+        } else {
+          this.$store.dispatch("notification/error", {
+            message: this.$t("error.form.notSaved"),
+            details: [{
+              label: "Exception: " + response.exception,
+              message: response.message
+            }]
+          });
+        }
+      }
+    },
+    async onUnlock(unlock = true) {
+      const api = [this.$view.path + "/unlock", null, null, true];
+      
+      if (unlock === true) {
+        // unlocking (writing unlock)
+        await this.$api.patch(...api)
+      } else {
+        // resolving unlock (removing unlock)
+        await this.$api.delete(...api)
+      }
+
+      this.$reload();
+    },
+    revert() {
+      this.$store.dispatch("content/revert");
+      this.$refs.revert.close();
     }
   },
 };

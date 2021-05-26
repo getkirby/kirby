@@ -1,9 +1,9 @@
 <template>
-  <k-inside>
+  <k-inside :lock="lock">
     <div :data-locked="isLocked" class="k-user-view">
       <div class="k-user-profile">
         <k-view>
-          <template v-if="user.avatar">
+          <template v-if="model.avatar">
             <k-dropdown>
               <k-button
                 :tooltip="$t('avatar')"
@@ -12,9 +12,9 @@
                 @click="$refs.picture.toggle()"
               >
                 <k-image
-                  v-if="user.avatar"
+                  v-if="model.avatar"
                   :cover="true"
-                  :src="user.avatar"
+                  :src="model.avatar"
                   ratio="1/1"
                 />
               </k-button>
@@ -44,21 +44,21 @@
               icon="email"
               @click="action('email')"
             >
-              {{ $t("email") }}: {{ user.email }}
+              {{ $t("email") }}: {{ model.email }}
             </k-button>
             <k-button
               :disabled="!permissions.changeRole || isLocked"
               icon="bolt"
               @click="action('role')"
             >
-              {{ $t("role") }}: {{ user.role }}
+              {{ $t("role") }}: {{ model.role }}
             </k-button>
             <k-button
               :disabled="!permissions.changeLanguage || isLocked"
               icon="globe"
               @click="action('language')"
             >
-              {{ $t("language") }}: {{ user.language }}
+              {{ $t("language") }}: {{ model.language }}
             </k-button>
           </k-button-group>
         </k-view>
@@ -71,9 +71,9 @@
           :tabs="tabs"
           @edit="action('rename')"
         >
-          <span v-if="!user.name || user.name.length === 0" class="k-user-name-placeholder">{{ $t("name") }} …</span>
+          <span v-if="!model.name || model.name.length === 0" class="k-user-name-placeholder">{{ $t("name") }} …</span>
           <template v-else>
-            {{ user.name }}
+            {{ model.name }}
           </template>
 
           <template #left>
@@ -99,8 +99,9 @@
 
         <k-sections
           :blueprint="blueprint"
-          :empty="$t('user.blueprint', { role: user.role.name })"
-          :parent="'users/' + user.id"
+          :empty="$t('user.blueprint', { role: model.role.name })"
+          :lock="lock"
+          :parent="'users/' + model.id"
           :tab="tab"
         />
 
@@ -129,43 +130,31 @@ import ModelView from "./ModelView.vue";
 export default {
   extends: ModelView,
   prevnext: true,
-  props: {
-    user: Object
-  },
   computed: {
+    id() {
+      return "users/" + this.model.id;
+    },
     options() {
       return async ready => {
-        const options = await this.$api.users.options(this.user.id);
+        const options = await this.$api.users.options(this.model.id);
         ready(options);
       };
     },
     uploadApi() {
-      return this.$urls.api + "/users/" + this.user.id + "/avatar";
-    }
-  },
-  watch: {
-    "user.id": {
-      handler() {
-        this.$store.dispatch("content/create", {
-          id: "users/" + this.user.id,
-          api: this.$api.users.link(this.user.id),
-          content: this.user.content
-        });
-      },
-      immediate: true
+      return this.$urls.api + "/users/" + this.model.id + "/avatar";
     }
   },
   methods: {
     async action(action) {
       switch (action) {
         case "email":
-          this.$refs.email.open(this.user.id);
+          this.$refs.email.open(this.model.id);
           break;
         case "language":
-          this.$refs.language.open(this.user.id);
+          this.$refs.language.open(this.model.id);
           break;
         case "password":
-          this.$refs.password.open(this.user.id);
+          this.$refs.password.open(this.model.id);
           break;
         case "picture.delete":
           await this.$api.users.deleteAvatar(this.id)
@@ -174,13 +163,13 @@ export default {
           this.$reload();
           break;
         case "remove":
-          this.$refs.remove.open(this.user.id);
+          this.$refs.remove.open(this.model.id);
           break;
         case "rename":
-          this.$refs.rename.open(this.user.id);
+          this.$refs.rename.open(this.model.id);
           break;
         case "role":
-          this.$refs.role.open(this.user.id);
+          this.$refs.role.open(this.model.id);
           break;
         default:
           this.$store.dispatch("notification/error", "Not yet implemented");
