@@ -7,7 +7,7 @@
         :tabs="tabs"
         @edit="action('rename')"
       >
-        {{ page.title }}
+        {{ model.title }}
         <template #left>
           <k-button-group>
             <k-button
@@ -36,9 +36,9 @@
               >
                 {{ $t('settings') }}
               </k-button>
-              <k-dropdown-content 
-                ref="settings" 
-                :options="options" 
+              <k-dropdown-content
+                ref="settings"
+                :options="options"
                 @action="action"
               />
             </k-dropdown>
@@ -78,15 +78,6 @@ import ModelView from "./ModelView.vue";
 
 export default {
   extends: ModelView,
-  props: {
-    page: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
-    status: Object
-  },
   computed: {
     id() {
       return "pages/" + this.model.id;
