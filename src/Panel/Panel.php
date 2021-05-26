@@ -690,6 +690,8 @@ class Panel
             // create the view based on the current area
             $view = static::view($kirby, $area, $result['view'] ?? []);
 
+            $kirby->trigger('panel.route:after', compact('route', 'path', 'result', 'view'));
+
             return static::render($kirby, $result['component'], [
                 '$props' => $result['props'] ?? [],
                 '$view'  => $view,
