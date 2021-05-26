@@ -28,6 +28,12 @@ return [
             return $icon;
         },
         /**
+         * Set to `list` to show each tag as 100% width
+         */
+        'layout' => function (?string $layout = null) {
+            return $layout;
+        },
+        /**
          * Minimum number of required entries/tags
          */
         'min' => function (int $min = null) {
