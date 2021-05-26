@@ -50,24 +50,32 @@ const Fiber = {
     }
   },
 
-  props(props) {
-
-    /** Set translation */
-    document.querySelector("html").setAttribute("lang", props.$translation.code);
+  props(data) {
 
     /** Set globals */
-    Vue.prototype.$areas       = window.panel.$areas       = props.$areas;
-    Vue.prototype.$config      = window.panel.$config      = props.$config;
-    Vue.prototype.$language    = window.panel.$language    = props.$language;
-    Vue.prototype.$languages   = window.panel.$languages   = props.$languages;
-    Vue.prototype.$permissions = window.panel.$permissions = props.$permissions;
-    Vue.prototype.$system      = window.panel.$system      = props.$system;
-    Vue.prototype.$translation = window.panel.$translation = props.$translation;
-    Vue.prototype.$urls        = window.panel.$urls        = props.$urls;
-    Vue.prototype.$user        = window.panel.$user        = props.$user;
-    Vue.prototype.$view        = window.panel.$view        = props.$view;
+    ["$config", "$system", "$translation", "$urls"].forEach(key => {
+      if (data[key]) {
+        Vue.prototype[key] = window.panel[key] = data[key];
+      } else {
+        Vue.prototype[key] = window.panel[key];
+      }
+    });
 
-    return props.$props;
+    /** Set translation */
+    if (data.$translation) {
+      document.querySelector("html").setAttribute("lang", data.$translation.code);
+    }
+
+    Vue.prototype.$areas       = window.panel.$areas       = data.$areas;
+    Vue.prototype.$language    = window.panel.$language    = data.$language;
+    Vue.prototype.$languages   = window.panel.$languages   = data.$languages;
+    Vue.prototype.$license     = window.panel.$license     = data.$license;
+    Vue.prototype.$multilang   = window.panel.$multilang   = data.$multilang;
+    Vue.prototype.$permissions = window.panel.$permissions = data.$permissions;
+    Vue.prototype.$user        = window.panel.$user        = data.$user;
+    Vue.prototype.$view        = window.panel.$view        = data.$view;
+
+    return data.$props;
   },
 
   reload(options = {}) {

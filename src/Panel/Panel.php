@@ -304,6 +304,66 @@ class Panel
     }
 
     /**
+     * Creates global data for the Panel.
+     * This will be injected in the full Panel
+     * view via the script tag.
+     *
+     * @param Kirby\Cms\App $kirby
+     * @return array
+     */
+    public static function globals(App $kirby): array
+    {
+        $globals = [
+            '$config' => [
+                'debug'     => $kirby->option('debug'),
+                'kirbytext' => $kirby->option('panel.kirbytext', true),
+                'search'    => [
+                    'limit' => $kirby->option('panel.search.limit', 10),
+                    'type'  => $kirby->option('panel.search.type', 'pages')
+                ],
+                'translation' => $kirby->option('panel.language', 'en'),
+            ],
+            '$system' => [
+                'ascii'   => Str::$ascii,
+                'csrf'    => $kirby->option('api.csrf') ?? csrf(),
+                'isLocal' => $kirby->system()->isLocal(),
+                'locales' => function () use ($kirby) {
+                    $locales = [];
+                    foreach ($kirby->translations() as $translation) {
+                        $locales[$translation->code()] = $translation->locale();
+                    }
+                    return $locales;
+                },
+                'slugs'   => Str::$language,
+            ],
+            '$translation' => function () use ($kirby) {
+                if ($user = $kirby->user()) {
+                    $translation = $kirby->translation($user->language());
+                } else {
+                    $translation = $kirby->translation($kirby->option('panel.language', 'en'));
+                }
+
+                if (!$translation) {
+                    $translation = $kirby->translation('en');
+                }
+
+                return [
+                    'code'      => $translation->code(),
+                    'data'      => $translation->dataWithFallback(),
+                    'direction' => $translation->direction(),
+                    'name'      => $translation->name(),
+                ];
+            },
+            '$urls' => [
+                'api'  => $kirby->url('api'),
+                'site' => $kirby->url('index')
+            ],
+        ];
+
+        return A::apply($globals);
+    }
+
+    /**
      * Redirect to a Panel url
      *
      * @param string|null $path
@@ -391,15 +451,6 @@ class Panel
     {
         // merge with shared props
         $shared = [
-            '$config' => [
-                'debug'     => $kirby->option('debug'),
-                'kirbytext' => $kirby->option('panel.kirbytext', true),
-                'search'    => [
-                    'limit' => $kirby->option('panel.search.limit', 10),
-                    'type'  => $kirby->option('panel.search.type', 'pages')
-                ],
-                'translation' => $kirby->option('panel.language', 'en'),
-            ],
             '$language' => function () use ($kirby) {
                 if (
                     $kirby->option('languages') === true &&
@@ -430,44 +481,8 @@ class Panel
                 }
             },
             '$props' => [],
-            '$system' => [
-                'ascii'     => Str::$ascii,
-                'csrf'      => $kirby->option('api.csrf') ?? csrf(),
-                'isLocal'   => $kirby->system()->isLocal(),
-                'license'   => $kirby->system()->license(),
-                'locales'   => function () use ($kirby) {
-                    $locales = [];
-                    $translations = $kirby->translations();
-                    foreach ($translations as $translation) {
-                        $locales[$translation->code()] = $translation->locale();
-                    }
-                    return $locales;
-                },
-                'multilang' => $kirby->option('languages', false) !== false,
-                'slugs'     => Str::$language,
-            ],
-            '$translation' => function () use ($kirby) {
-                if ($user = $kirby->user()) {
-                    $translation = $kirby->translation($user->language());
-                } else {
-                    $translation = $kirby->translation($kirby->option('panel.language', 'en'));
-                }
-
-                if (!$translation) {
-                    $translation = $kirby->translation('en');
-                }
-
-                return [
-                    'code'      => $translation->code(),
-                    'data'      => $translation->dataWithFallback(),
-                    'direction' => $translation->direction(),
-                    'name'      => $translation->name(),
-                ];
-            },
-            '$urls' => [
-                'api'  => $kirby->url('api'),
-                'site' => $kirby->url('index')
-            ],
+            '$license' => $kirby->system()->license(),
+            '$multilang' => $kirby->option('languages', false) !== false,
             '$user' => function () use ($kirby) {
                 if ($user = $kirby->user()) {
                     return [
@@ -545,6 +560,9 @@ class Panel
 
         // get the uri object for the panel url
         $uri = new Uri($url = $kirby->url('panel'));
+
+        // inject globals
+        $fiber['props'] = array_merge_recursive(static::globals($kirby), $fiber['props']);
 
         // fetch all plugins
         $plugins = new Plugins();
