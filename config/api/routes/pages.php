@@ -38,12 +38,16 @@ return [
             'pages/(:any)/blueprints',
             /**
              * @deprecated
-             * @todo remove in 3.6.0
+             * @todo remove in 3.7.0
              */
             'pages/(:any)/children/blueprints',
         ],
         'method'  => 'GET',
         'action'  => function (string $id) {
+            if ($this->pattern() === 'pages/(:any)/children/blueprints') {
+                deprecated('`GET pages/(:any)/children/blueprints` API endpoint has been deprecated and will be removed in 3.7.0. Use `GET pages/(:any)/blueprints` instead');
+            }
+
             return $this->page($id)->blueprints($this->requestQuery('section'));
         }
     ],
