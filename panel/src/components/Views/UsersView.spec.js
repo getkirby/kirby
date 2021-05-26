@@ -50,8 +50,8 @@ describe('UsersView', () => {
       cy.get('@dialog').find('form').submit();
 
       cy.get('@users').find('li').should('have.length', 3);
-      cy.get('@users').find('li:nth-child(2)').should('contain', 'Grace');
-      cy.get('@users').find('li:nth-child(2)').should('contain', 'Editor');
+      cy.get('@users').find('li:nth-child(1)').should('contain', 'Grace');
+      cy.get('@users').find('li:nth-child(1)').should('contain', 'Editor');
     });
 
   });

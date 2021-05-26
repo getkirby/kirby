@@ -77,7 +77,7 @@ export default {
         email: "",
         password: "",
         language: this.$config.translation || "en",
-        role: this.$user.role.name
+        role: this.$user.role
       };
     },
     async open() {
@@ -87,7 +87,7 @@ export default {
         this.roles = await this.$api.roles.options({ canBe: "created" });
 
         // don't let non-admins create admins
-        if (this.$user.role.name !== "admin") {
+        if (this.$user.role !== "admin") {
           this.roles = this.roles.filter(role => role.value !== "admin");
         }
 
