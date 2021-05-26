@@ -48,14 +48,14 @@
 
   <script nonce="<?= $nonce ?>">
     // Panel state
-    const json = <?= json_encode($fiber['props'], JSON_UNESCAPED_SLASHES) ?>;
+    const json = <?= json_encode($fiber['data'], JSON_UNESCAPED_SLASHES) ?>;
 
     window.panel = JSON.parse(JSON.stringify(json));
 
     // Fiber setup
     window.fiber = {
         component: '<?= $fiber['component'] ?>',
-        props: json,
+        data: json,
         url: '<?= $fiber['url'] ?>',
         version: '<?= $fiber['version'] ?>',
     };

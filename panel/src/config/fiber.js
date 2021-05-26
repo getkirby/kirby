@@ -50,24 +50,32 @@ const Fiber = {
     }
   },
 
-  props(props) {
-
-    /** Set translation */
-    document.querySelector("html").setAttribute("lang", props.$translation.code);
+  props(data) {
 
     /** Set globals */
-    Vue.prototype.$areas       = window.panel.$areas       = props.$areas;
-    Vue.prototype.$config      = window.panel.$config      = props.$config;
-    Vue.prototype.$language    = window.panel.$language    = props.$language;
-    Vue.prototype.$languages   = window.panel.$languages   = props.$languages;
-    Vue.prototype.$permissions = window.panel.$permissions = props.$permissions;
-    Vue.prototype.$system      = window.panel.$system      = props.$system;
-    Vue.prototype.$translation = window.panel.$translation = props.$translation;
-    Vue.prototype.$urls        = window.panel.$urls        = props.$urls;
-    Vue.prototype.$user        = window.panel.$user        = props.$user;
-    Vue.prototype.$view        = window.panel.$view        = props.$view;
+    ["$config", "$system", "$translation", "$urls"].forEach(key => {
+      if (data[key]) {
+        Vue.prototype[key] = window.panel[key] = data[key];
+      } else {
+        Vue.prototype[key] = window.panel[key];
+      }
+    });
 
-    return props.$props;
+    /** Set translation */
+    if (data.$translation) {
+      document.querySelector("html").setAttribute("lang", data.$translation.code);
+    }
+
+    Vue.prototype.$areas       = window.panel.$areas       = data.$areas;
+    Vue.prototype.$language    = window.panel.$language    = data.$language;
+    Vue.prototype.$languages   = window.panel.$languages   = data.$languages;
+    Vue.prototype.$license     = window.panel.$license     = data.$license;
+    Vue.prototype.$multilang   = window.panel.$multilang   = data.$multilang;
+    Vue.prototype.$permissions = window.panel.$permissions = data.$permissions;
+    Vue.prototype.$user        = window.panel.$user        = data.$user;
+    Vue.prototype.$view        = window.panel.$view        = data.$view;
+
+    return data.$props;
   },
 
   reload(options = {}) {
@@ -131,7 +139,7 @@ const Fiber = {
 
     // swap component
     const clone = JSON.parse(JSON.stringify(page))
-    clone.props = this.props(clone.props)
+    clone.props = this.props(clone.data)
     await this.swap({ component, page: clone, preserveState })
 
     if (!preserveScroll) {
@@ -190,15 +198,13 @@ const Fiber = {
     this.saveScroll()
     document.dispatchEvent(new Event('fiber:start'))
 
-    url = this.toUrl(url, { data: data });
-
-    // create proper URL
-    url = this.toUrl(url, false)
-
     // make sure only is an array
     if (Array.isArray(only) === false) {
       only = [only]
     }
+
+    // create proper URL
+    url = this.toUrl(url, { data: data || {}, hash: false });
 
     try {
       // fetch the response (only GET request supported)
@@ -211,33 +217,33 @@ const Fiber = {
           'X-Fiber': true,
           ...(only.length ? {
             'X-Fiber-Component': this.page.component,
-            'X-Fiber-Partial': only.join(','),
+            'X-Fiber-Include': only.join(','),
           } : {}),
           ...(this.page.version ? { 'X-Fiber-Version': this.page.version } : {}),
         }
       })
 
-      // turn into data
-      const data = await toJson(response)
+      // turn into json data
+      const json = await toJson(response)
 
       // add exisiting data to partial requests
-      if (only.length && data.component === this.page.component) {
-        data.props = merge(this.page.props, data.props)
+      if (only.length && json.component === this.page.component) {
+        json.data = merge(this.page.data, json.data)
       }
 
       // add hash to response URL if current
       // window URL has hash included
-      const responseUrl = this.toUrl(data.url)
+      const responseUrl = this.toUrl(json.url)
       if (
         url.hash &&
         !responseUrl.hash &&
-        this.toUrl(data.url, { hash: false }).href === responseUrl.href
+        this.toUrl(json.url, { hash: false }).href === responseUrl.href
       ) {
         responseUrl.hash = url.hash
-        data.url = responseUrl.href
+        json.url = responseUrl.href
       }
 
-      return this.setPage(data, { replace, preserveScroll, preserveState })
+      return this.setPage(json, { replace, preserveScroll, preserveState })
 
     } catch (error) {
       console.error(error)

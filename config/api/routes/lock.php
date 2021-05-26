@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Exception\Exception;
 
 /**
  * Content Lock Routes

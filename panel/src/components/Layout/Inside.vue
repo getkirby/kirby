@@ -12,7 +12,7 @@
     <header class="k-panel-header">
       <k-topbar
         :breadcrumb="$view.breadcrumb"
-        :license="$system.license"
+        :license="$license"
         :areas="$areas"
         :view="$view"
         @register="$refs.registration.open()"

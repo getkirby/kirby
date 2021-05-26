@@ -218,6 +218,77 @@ class Panel
     }
 
     /**
+     * Creates data array for Fiber and the component
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @param string $component
+     * @param array $data
+     * @return array
+     */
+    public static function data(App $kirby, string $component, array $data = []): array
+    {
+        // shared default data
+        $multilang = $kirby->option('languages', false) !== false;
+        $shared = [
+            '$language' => function () use ($kirby, $multilang) {
+                if (
+                    $multilang === true &&
+                    $language = $kirby->language()
+                ) {
+                    return [
+                        'code' => $language->code(),
+                        'name' => $language->name(),
+                    ];
+                }
+            },
+            '$languages' => function () use ($kirby, $multilang): array {
+                if ($multilang === true) {
+                    return $kirby->languages()->values(function ($language) {
+                        return [
+                            'code'    => $language->code(),
+                            'default' => $language->isDefault(),
+                            'name'    => $language->name(),
+                        ];
+                    });
+                }
+
+                return [];
+            },
+            '$permissions' => function () use ($kirby) {
+                if ($user = $kirby->user()) {
+                    return $user->role()->permissions()->toArray();
+                }
+            },
+            '$props' => [],
+            '$license' => $kirby->system()->license(),
+            '$multilang' => $multilang,
+            '$user' => function () use ($kirby) {
+                if ($user = $kirby->user()) {
+                    return [
+                        'email'       => $user->email(),
+                        'id'          => $user->id(),
+                        'language'    => $user->language(),
+                        'permissions' => $user->role()->permissions()->toArray(),
+                        'role'        => $user->role()->id(),
+                        'username'    => $user->username(),
+                    ];
+                }
+
+                return null;
+            }
+        ];
+
+        // merge with shared data
+        $data = array_merge($shared, $data);
+
+        // filter data, if it's a partial request
+        $data = static::partial($kirby, $component, $data);
+
+        // resolve lazy data entries
+        return A::apply($data);
+    }
+
+    /**
      * Renders the error view with provided message
      *
      * @param \Kirby\Cms\App $kirby
@@ -243,23 +314,23 @@ class Panel
      *
      * @param \Kirby\Cms\App $kirby
      * @param string $component
-     * @param array $props
+     * @param array $data
      * @return array
      */
-    public static function fiber(App $kirby, string $component, array $props = []): array
+    public static function fiber(App $kirby, string $component, array $data = []): array
     {
-        $props = static::props($kirby, $component, $props);
+        $data = static::data($kirby, $component, $data);
 
         // inject the Fiber config as props
-        $props['$component'] = $component;
-        $props['$url']       = Url::current();
-        $props['$version']   = $kirby->versionHash();
+        $data['$component'] = $component;
+        $data['$url']       = Url::current();
+        $data['$version']   = $kirby->versionHash();
 
         return [
-            'component' => $props['$component'],
-            'props'     => $props,
-            'url'       => $props['$url'],
-            'version'   => $props['$version']
+            'component' => $data['$component'],
+            'data'      => $data,
+            'url'       => $data['$url'],
+            'version'   => $data['$version']
         ];
     }
 
@@ -301,6 +372,70 @@ class Panel
         }
 
         return true;
+    }
+
+    /**
+     * Creates global data for the Panel.
+     * This will be injected in the full Panel
+     * view via the script tag.
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @return array
+     */
+    public static function globals(App $kirby): array
+    {
+        return [
+            '$config' => function () use ($kirby) {
+                return [
+                    'debug'     => $kirby->option('debug'),
+                    'kirbytext' => $kirby->option('panel.kirbytext', true),
+                    'search'    => [
+                        'limit' => $kirby->option('panel.search.limit', 10),
+                        'type'  => $kirby->option('panel.search.type', 'pages')
+                    ],
+                    'translation' => $kirby->option('panel.language', 'en'),
+                ];
+            },
+            '$system' => function () use ($kirby) {
+                return [
+                    'ascii'   => Str::$ascii,
+                    'csrf'    => $kirby->option('api.csrf') ?? csrf(),
+                    'isLocal' => $kirby->system()->isLocal(),
+                    'locales' => function () use ($kirby) {
+                        $locales = [];
+                        foreach ($kirby->translations() as $translation) {
+                            $locales[$translation->code()] = $translation->locale();
+                        }
+                        return $locales;
+                    },
+                    'slugs'   => Str::$language,
+                ];
+            },
+            '$translation' => function () use ($kirby) {
+                if ($user = $kirby->user()) {
+                    $translation = $kirby->translation($user->language());
+                } else {
+                    $translation = $kirby->translation($kirby->option('panel.language', 'en'));
+                }
+
+                if (!$translation) {
+                    $translation = $kirby->translation('en');
+                }
+
+                return [
+                    'code'      => $translation->code(),
+                    'data'      => $translation->dataWithFallback(),
+                    'direction' => $translation->direction(),
+                    'name'      => $translation->name(),
+                ];
+            },
+            '$urls' => function () use ($kirby) {
+                return [
+                    'api'  => $kirby->url('api'),
+                    'site' => $kirby->url('index')
+                ];
+            }
+        ];
     }
 
     /**
@@ -380,132 +515,55 @@ class Panel
     }
 
     /**
-     * Creates props array for the component
+     * Filters the data array and returns only
+     * entries requested via a Fiber partial
+     * request (or the whole array if full request).
      *
      * @param \Kirby\Cms\App $kirby
      * @param string $component
-     * @param array $props
+     * @param array $data
      * @return array
      */
-    public static function props(App $kirby, string $component, array $props = []): array
+    public static function partial(App $kirby, string $component, array $data): array
     {
-        // merge with shared props
-        $shared = [
-            '$config' => [
-                'debug'     => $kirby->option('debug'),
-                'kirbytext' => $kirby->option('panel.kirbytext', true),
-                'search'    => [
-                    'limit' => $kirby->option('panel.search.limit', 10),
-                    'type'  => $kirby->option('panel.search.type', 'pages')
-                ],
-                'translation' => $kirby->option('panel.language', 'en'),
-            ],
-            '$language' => function () use ($kirby) {
-                if (
-                    $kirby->option('languages') === true &&
-                    $language = $kirby->language()
-                ) {
-                    return [
-                        'code' => $language->code(),
-                        'name' => $language->name(),
-                    ];
-                }
-            },
-            '$languages' => function () use ($kirby): array {
-                if ($kirby->option('languages') === true) {
-                    return $kirby->languages()->values(function ($language) {
-                        return [
-                            'code'    => $language->code(),
-                            'default' => $language->isDefault(),
-                            'name'    => $language->name(),
-                        ];
-                    });
-                }
-
-                return [];
-            },
-            '$permissions' => function () use ($kirby) {
-                if ($user = $kirby->user()) {
-                    return $user->role()->permissions()->toArray();
-                }
-            },
-            '$props' => [],
-            '$system' => [
-                'ascii'     => Str::$ascii,
-                'csrf'      => $kirby->option('api.csrf') ?? csrf(),
-                'isLocal'   => $kirby->system()->isLocal(),
-                'license'   => $kirby->system()->license(),
-                'locales'   => function () use ($kirby) {
-                    $locales = [];
-                    $translations = $kirby->translations();
-                    foreach ($translations as $translation) {
-                        $locales[$translation->code()] = $translation->locale();
-                    }
-                    return $locales;
-                },
-                'multilang' => $kirby->option('languages', false) !== false,
-                'slugs'     => Str::$language,
-            ],
-            '$translation' => function () use ($kirby) {
-                if ($user = $kirby->user()) {
-                    $translation = $kirby->translation($user->language());
-                } else {
-                    $translation = $kirby->translation($kirby->option('panel.language', 'en'));
-                }
-
-                if (!$translation) {
-                    $translation = $kirby->translation('en');
-                }
-
-                return [
-                    'code'      => $translation->code(),
-                    'data'      => $translation->dataWithFallback(),
-                    'direction' => $translation->direction(),
-                    'name'      => $translation->name(),
-                ];
-            },
-            '$urls' => [
-                'api'  => $kirby->url('api'),
-                'site' => $kirby->url('index')
-            ],
-            '$user' => function () use ($kirby) {
-                if ($user = $kirby->user()) {
-                    return [
-                        'email'       => $user->email(),
-                        'id'          => $user->id(),
-                        'language'    => $user->language(),
-                        'permissions' => $user->role()->permissions()->toArray(),
-                        'role'        => $user->role()->id(),
-                        'username'    => $user->username(),
-                    ];
-                }
-
-                return null;
-            }
-        ];
-
-        $props = array_merge($shared, $props);
-
         // is it a partial request?
-        $request = $kirby->request();
-        $only    = Str::split($request->header('X-Fiber-Partial'));
+        $request          = $kirby->request();
+        $include          = $request->header('X-Fiber-Include')   ?? get('_include');
+        $requestComponent = $request->header('X-Fiber-Component') ?? get('_component');
 
-        // only include new props in array, if partial request,
-        // partial requests are made via dot notation, e.g.
-        // $props.tab.columns
-        if (
-            empty($only) === false &&
-            $request->header('X-Fiber-Component') === $component
-        ) {
-            $partials = [];
-            foreach ($only as $partial) {
-                $partials[$partial] = A::get($props, $partial);
-            }
-            $props = A::nest($partials);
+        // split include string into an array of fields
+        $include = Str::split($include);
+
+        // if a full request is made, return all data
+        if (empty($include) === true) {
+            return $data;
         }
 
-        // resolve lazy props
-        return A::apply($props);
+        // if a new component is requested, the include
+        // parameter must be ignored and all data returned
+        if (empty($requestComponent) === false && $requestComponent !== $component) {
+            return $data;
+        }
+
+        // otherwise filter data based on
+        // dot notation, e.g. `$props.tab.columns`
+        $partial = [];
+
+        // get all unresolved globals and their keys
+        $globals    = static::globals($kirby);
+        $globalKeys = array_keys($globals);
+
+        // check if globals are requested and need to be merged
+        if (empty(array_intersect($globalKeys, $include)) === false) {
+            $data = array_merge_recursive($globals, $data);
+        }
+
+        // build a new array with all requested data
+        foreach ($include as $partial) {
+            $partials[$partial] = A::get($data, $partial);
+        }
+
+        return A::nest($partials);
     }
 
     /**
@@ -513,21 +571,21 @@ class Panel
      *
      * @param \Kirby\Cms\App $kirby
      * @param string $component
-     * @param array $props
+     * @param array $data
      * @return \Kirby\Http\Response
      */
-    public static function render(App $kirby, string $component, array $props)
+    public static function render(App $kirby, string $component, array $data)
     {
         // get $fiber response array
-        $fiber = static::fiber($kirby, $component, $props);
+        $fiber = static::fiber($kirby, $component, $data);
 
         // if requested, send $fiber data as JSON
         $request = $kirby->request();
         if (
             $request->method() === 'GET' &&
-            ($request->header('X-Fiber') || $request->get('json'))
+            ($request->header('X-Fiber') || get('_json'))
         ) {
-            return Response::json($fiber, null, null, [
+            return Response::json($fiber, null, get('_pretty'), [
                 'Vary'      => 'Accept',
                 'X-Fiber' => 'true'
             ]);
@@ -545,6 +603,10 @@ class Panel
 
         // get the uri object for the panel url
         $uri = new Uri($url = $kirby->url('panel'));
+
+        // inject globals
+        $globals = static::globals($kirby);
+        $fiber['data'] = array_merge_recursive(A::apply($globals), $fiber['data']);
 
         // fetch all plugins
         $plugins = new Plugins();
@@ -706,7 +768,7 @@ class Panel
      * installations based on the session or the
      * query language query parameter
      *
-     * @param Kirby\Cms\App $kirby
+     * @param \Kirby\Cms\App $kirby
      * @return string|null
      */
     public static function setLanguage(App $kirby): ?string
@@ -732,7 +794,7 @@ class Panel
      * Set the currently active Panel translation
      * based on the current user or config
      *
-     * @param App $kirby
+     * @param \Kirby\Cms\App $kirby
      * @return string
      */
     public static function setTranslation(App $kirby): string
