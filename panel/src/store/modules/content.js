@@ -282,7 +282,7 @@ export default {
       };
 
       // check if content was previously unlocked
-      // TODO: handle this in inertia
+      // TODO: handle this in fiber
       Vue.$api
         .get(model.api + "/unlock")
         .then(response => {

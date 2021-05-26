@@ -1,7 +1,7 @@
 import "vite/dynamic-import-polyfill"
 
 import Vue from "vue";
-import { default as App, plugin as Inertia } from "./inertia/app.js";
+import { default as App, plugin as Fiber } from "./fiber/app.js";
 import Api from "./config/api.js";
 import Events from "./config/events.js";
 import Helpers from "./helpers/index.js";
@@ -25,14 +25,14 @@ Vue.use(Events);
 Vue.use(I18n);
 Vue.use(Vuelidate);
 Vue.use(VuePortal);
-Vue.use(Inertia)
+Vue.use(Fiber)
 Vue.use(Api, store);
 
-document.addEventListener("inertia:start", () => {
+document.addEventListener("fiber:start", () => {
   store.dispatch("isLoading", true);
 });
 
-document.addEventListener("inertia:finish", () => {
+document.addEventListener("fiber:finish", () => {
   if (Vue.$api.requests.length === 0) {
     store.dispatch("isLoading", false);
   }
