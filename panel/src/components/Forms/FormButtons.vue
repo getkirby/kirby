@@ -117,14 +117,14 @@ export default {
   },
   watch: {
     hasChanges: {
-      handler(changes) {
+      handler(changes, before) {
         if (this.supportsLocking === true) {
           if (this.isLocked === false && this.isUnlocked === false) {
             if (changes === true) {
               // unsaved changes, write lock every 30 seconds
               this.onLock();
               this.isLocking = setInterval(this.onLock, 30000);
-            } else {
+            } else if (before) {
               // no more unsaved changes, stop writing lock, remove lock
               clearInterval(this.isLocking);
               this.onLock(false);
