@@ -1,22 +1,13 @@
+import Vue from 'vue'
 import debounce from '../helpers/debounce.js'
 import { merge } from '../helpers/object.js'
 import { toJson } from '../api/request.js'
 
-export default {
+const Fiber = {
   page: null,
-  props: null,
   swap: null,
-  component: null,
 
-  init({ page, component, swap, props }) {
-    // callback function that receives the
-    // component name and returns the Vue component
-    this.component = component
-
-    // callback function that resolves the props;
-    // we use this to set our globals
-    this.props = props
-
+  init({ page, swap }) {
     // callback function which handles
     // swapping components
     this.swap = swap
@@ -28,6 +19,10 @@ export default {
     // set up event listeners
     window.addEventListener('popstate', this.onPopstateEvent.bind(this))
     document.addEventListener('scroll', debounce(this.onScrollEvent.bind(this), 100), true)
+  },
+
+  component(name) {
+    return Vue.component(name)
   },
 
   async onPopstateEvent(event) {
@@ -55,18 +50,31 @@ export default {
     }
   },
 
-  scrollRegions() {
-    return document.querySelectorAll('[scroll-region]')
+  props(props) {
+
+    /** Set translation */
+    document.querySelector("html").setAttribute("lang", props.$translation.code);
+
+    /** Set globals */
+    Vue.prototype.$areas       = window.panel.$areas       = props.$areas;
+    Vue.prototype.$config      = window.panel.$config      = props.$config;
+    Vue.prototype.$language    = window.panel.$language    = props.$language;
+    Vue.prototype.$languages   = window.panel.$languages   = props.$languages;
+    Vue.prototype.$permissions = window.panel.$permissions = props.$permissions;
+    Vue.prototype.$system      = window.panel.$system      = props.$system;
+    Vue.prototype.$translation = window.panel.$translation = props.$translation;
+    Vue.prototype.$urls        = window.panel.$urls        = props.$urls;
+    Vue.prototype.$user        = window.panel.$user        = props.$user;
+    Vue.prototype.$view        = window.panel.$view        = props.$view;
+
+    return props.$props;
   },
 
-  saveScroll() {
-    const regions = Array.prototype.slice.call(this.scrollRegions());
-    this.state({
-      ...this.page,
-      scrollRegions: regions.map(region => ({
-        top:  region.scrollTop,
-        left: region.scrollLeft,
-      })),
+  reload(options = {}) {
+    return this.visit(window.location.href, {
+      ...options,
+      preserveScroll: true,
+      preserveState: true
     })
   },
 
@@ -93,12 +101,19 @@ export default {
     }
   },
 
-  reload(options = {}) {
-    return this.visit(window.location.href, {
-      ...options,
-      preserveScroll: true,
-      preserveState: true
+  saveScroll() {
+    const regions = Array.prototype.slice.call(this.scrollRegions());
+    this.state({
+      ...this.page,
+      scrollRegions: regions.map(region => ({
+        top:  region.scrollTop,
+        left: region.scrollLeft,
+      })),
     })
+  },
+
+  scrollRegions() {
+    return document.querySelectorAll('[scroll-region]')
   },
 
   async setPage(page, { replace = false, preserveScroll = false, preserveState = false } = {}) {
@@ -127,6 +142,41 @@ export default {
   state(page, action = "replace") {
     this.page = page
     window.history[action + "State"](page, '', page.url)
+  },
+
+  toQuery(search, data) {
+    let params = new URLSearchParams(search);
+
+    if (typeof data !== "object") {
+      data = {};
+    }
+
+    // add all data params unless they are empty/null
+    Object.entries(data).forEach(([key, value]) => {
+      if (value !== null) {
+        params.set(key, value);
+      }
+    });
+
+    return params;
+  },
+
+  toUrl(href, {
+    data = {},
+    hash = true
+  } = {}) {
+    let url
+
+    if (hash === true) {
+      url = new URL(href, window.location)
+    } else {
+      url = new URL(href)
+      url.hash = ''
+    }
+
+    url.search = this.toQuery(url.search, data)
+
+    return url
   },
 
   async visit(url, {
@@ -195,40 +245,56 @@ export default {
     } finally {
       document.dispatchEvent(new Event('fiber:finish'))
     }
-  },
+  }
+}
 
-  toQuery(search, data) {
-    let params = new URLSearchParams(search);
-
-    if (typeof data !== "object") {
-      data = {};
-    }
-
-    // add all data params unless they are empty/null
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== null) {
-        params.set(key, value);
+export const plugin = {
+  install(Vue) {
+    Vue.prototype.$url = function (path = "") {
+      // pass window.location objects without modification
+      if (typeof path === "object") {
+        return path;
       }
-    });
 
-    return params;
-  },
-
-  toUrl(href, {
-    data = {},
-    hash = true
-  } = {}) {
-    let url
-
-    if (hash === true) {
-      url = new URL(href, window.location)
-    } else {
-      url = new URL(href)
-      url.hash = ''
+      return document.querySelector("base").href + path.replace(/^\//, "")
     }
+    Vue.prototype.$go = function (path, options) {
+      return Fiber.visit(this.$url(path), options)
+    }
+    Vue.prototype.$reload = function (options) {
+      if (typeof options === "string") {
+        options = { only: [options] };
+      }
+      return Fiber.reload(options)
+    }
+  },
+}
 
-    url.search = this.toQuery(url.search, data)
-
-    return url
+export const component = {
+  name: 'Fiber',
+  data() {
+    return {
+      component: null,
+      page: window.fiber,
+      key: null,
+    }
+  },
+  created() {
+    Fiber.init({
+      page: window.fiber,
+      swap: async ({ component, page, preserveState }) => {
+        this.component = component
+        this.page = page
+        this.key = preserveState ? this.key : Date.now()
+      },
+    })
+  },
+  render(h) {
+    if (this.component) {
+      return h(this.component, {
+        key: this.key,
+        props: this.page.props
+      })
+    }
   }
 }

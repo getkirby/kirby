@@ -1,7 +1,7 @@
 import "vite/dynamic-import-polyfill"
 
 import Vue from "vue";
-import { default as App, plugin as Fiber } from "./fiber/app.js";
+import { component as App, plugin as Fiber } from "./config/fiber.js";
 import Api from "./config/api.js";
 import Events from "./config/events.js";
 import Helpers from "./helpers/index.js";
