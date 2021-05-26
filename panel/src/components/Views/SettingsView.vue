@@ -33,7 +33,7 @@
         </ul>
       </section>
 
-      <section v-if="$system.multilang" class="k-languages">
+      <section v-if="$multilang" class="k-languages">
         <template v-if="languages.length > 0">
           <section class="k-languages-section">
             <header>
