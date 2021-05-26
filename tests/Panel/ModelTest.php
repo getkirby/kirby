@@ -67,7 +67,7 @@ class ModelTest extends TestCase
                     'markdown' => [
                         'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
                             if ($file->extension() === 'heic') {
-                                return sprintf('![](%s)', $url);
+                                return sprintf('![](%s)', $file->id());
                             }
 
                             return null;
@@ -114,7 +114,7 @@ class ModelTest extends TestCase
                     'kirbytext' => [
                         'fileDragText' => function (\Kirby\Cms\File $file, string $url) {
                             if ($file->extension() === 'heic') {
-                                return sprintf('(image: %s)', $url);
+                                return sprintf('(image: %s)', $file->id());
                             }
 
                             return null;
