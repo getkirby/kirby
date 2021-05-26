@@ -6,7 +6,7 @@ describe('LoginView', () => {
   });
 
   beforeEach(() => {
-    cy.visit('/');
+    cy.visit('/panel/');
   });
 
   it('should fail', () => {

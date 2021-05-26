@@ -24,7 +24,7 @@ describe('Blocks', () => {
   describe('List block', () => {
 
     beforeEach(() => {
-      cy.visit('/pages/home');
+      cy.visit('/panel/pages/home');
     });
 
     it('should be creatable', () => {

@@ -7,13 +7,13 @@ describe('UsersView', () => {
 
   beforeEach(() => {
     cy.visit('/env/auth/test');
-    cy.visit('/users');
+    cy.visit('/panel/users');
     cy.get('.k-users-view .k-collection').as('users');
   });
 
   it('should display correctly', () => {
     cy.get('.k-topbar-menu-button').click();
-    cy.get('.k-topbar-menu li:nth-child(2)').should('have.attr', 'aria-current', 'true');
+    cy.get('.k-topbar-menu li:nth-child(3)').should('have.attr', 'aria-current', 'true');
 
     cy.get('.k-headline').should('contain', 'Users');
     cy.get('.k-topbar-view-button').should('contain', 'Users');

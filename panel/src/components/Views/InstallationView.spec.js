@@ -5,13 +5,13 @@ describe('InstallationView', () => {
   });
 
   beforeEach(() => {
-    cy.visit('/');
+    cy.visit('/panel/');
   });
 
   it('should fail', () => {
     cy.get('input[type="email"]').type("test@getkirby.com");
     cy.get('form').submit();
-    cy.get('.k-dialog').should('contain', 'Please enter a valid password');
+    cy.get('input[type="password"]').then($el => $el[0].checkValidity()).should('be.false')
   });
 
   it('should install and redirect to SiteView', () => {
