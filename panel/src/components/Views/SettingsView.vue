@@ -15,8 +15,8 @@
             <dl>
               <dt>{{ $t('license') }}</dt>
               <dd>
-                <template v-if="$system.license">
-                  {{ $system.license }}
+                <template v-if="$license">
+                  {{ $license }}
                 </template>
                 <p v-else>
                   <strong class="k-system-unregistered">{{ $t('license.unregistered') }}</strong>
@@ -49,9 +49,9 @@
                 {{ $t('language.create') }}
               </k-button>
             </header>
-            <k-collection 
-              v-if="secondaryLanguages.length" 
-              :items="secondaryLanguages" 
+            <k-collection
+              v-if="secondaryLanguages.length"
+              :items="secondaryLanguages"
               @action="action"
             />
             <k-empty v-else icon="globe" @click="$refs.create.open()">
