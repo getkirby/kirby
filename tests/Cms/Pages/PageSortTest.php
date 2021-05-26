@@ -549,7 +549,7 @@ class PageSortTest extends TestCase
         ]);
 
         $page = $site->find($id);
-        $page = $page->sort($position);
+        $page = $page->changeSort($position);
 
         $this->assertEquals($expected, implode(',', $site->children()->keys()));
     }
@@ -595,7 +595,7 @@ class PageSortTest extends TestCase
         ]);
 
         $page = $site->find('b');
-        $page = $page->sort(3);
+        $page = $page->changeSort(3);
 
         $this->assertEquals(1, $site->find('a')->num());
         $this->assertEquals(2, $site->find('d')->num());
@@ -621,7 +621,7 @@ class PageSortTest extends TestCase
         $this->assertEquals($chars, $this->site()->children()->keys());
 
         foreach ($this->site()->children()->flip()->values() as $index => $page) {
-            $page = $page->sort($index + 1);
+            $page = $page->changeSort($index + 1);
         }
 
         $this->assertEquals(array_reverse($chars), $this->site()->children()->keys());
