@@ -35,7 +35,7 @@ class A
      * Recursively loops through the array and
      * resolves any item defined as `Closure`,
      * applying the passed parameters
-     * @since 3.6.0
+     * @since 3.5.6
      *
      * @param array $array
      * @param mixed ...$args Parameters to pass to the closures
