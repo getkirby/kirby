@@ -32,6 +32,95 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::area
+     */
+    public function testArea()
+    {
+        // defaults
+        $result = Panel::area('test', []);
+        $expected = [
+            'id' => 'test',
+            'label' => 'test',
+            'breadcrumb' => [],
+            'breadcrumbLabel' => 'test',
+            'title' => 'test',
+            'menu' => false,
+            'link' => 'test',
+            'search' => null
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * @covers ::areas
+     */
+    public function testAreas()
+    {
+        // unauthenticated / uninstalled
+        $areas = Panel::areas($this->app);
+
+        $this->assertArrayHasKey('installation', $areas);
+        $this->assertCount(1, $areas);
+
+        // fix installation issues by creating directories
+        Dir::make($this->fixtures . '/content');
+        Dir::make($this->fixtures . '/media');
+        Dir::make($this->fixtures . '/site/accounts');
+        Dir::make($this->fixtures . '/site/sessions');
+
+        // create the first admin
+        $this->app = $this->app->clone([
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'role'  => 'admin'
+                ]
+            ]
+        ]);
+
+        // let's pretend we are on a supported server
+        $_SERVER['SERVER_SOFTWARE'] = 'php';
+
+        // unauthenticated / installed
+        $areas = Panel::areas($this->app);
+
+        $this->assertArrayHasKey('login', $areas);
+        $this->assertCount(1, $areas);
+
+        // simulate a logged in user
+        $this->app->impersonate('test@getkirby.com');
+
+        // authenticated
+        $areas = Panel::areas($this->app);
+
+        $this->assertArrayHasKey('site', $areas);
+        $this->assertArrayHasKey('settings', $areas);
+        $this->assertArrayHasKey('users', $areas);
+        $this->assertArrayHasKey('account', $areas);
+        $this->assertCount(4, $areas);
+
+        // authenticated with plugins
+        $app = $this->app->clone([
+            'areas' => [
+                'todos' => function () {
+                    return [];
+                }
+            ]
+        ]);
+
+        $app->impersonate('test@getkirby.com');
+
+        $areas = Panel::areas($app);
+
+        $this->assertArrayHasKey('todos', $areas);
+        $this->assertCount(5, $areas);
+
+        // clean up
+        unset($_SERVER['SERVER_SOFTWARE']);
+    }
+
+    /**
      * @covers ::customCss
      */
     public function testCustomCss(): void
@@ -59,6 +148,137 @@ class PanelTest extends TestCase
         ]);
 
         $this->assertTrue(strpos(Panel::customCss($app), '//panel.css', 0) !== false);
+    }
+
+    /**
+     * @covers ::error
+     */
+    public function testError()
+    {
+        // without user
+        $error = Panel::error($this->app, 'Test');
+
+        $expected = [
+            'component' => 'k-error-view',
+            'props' => [
+                'error' => 'Test',
+                'layout' => 'outside'
+            ],
+            'view' => [
+                'title' => 'Error'
+            ]
+        ];
+
+        $this->assertSame($expected, $error);
+
+        // with user
+        $this->app->impersonate('kirby');
+        $error = Panel::error($this->app, 'Test');
+
+        $this->assertSame('inside', $error['props']['layout']);
+
+        // user without panel access
+        $this->app->impersonate('nobody');
+        $error = Panel::error($this->app, 'Test');
+
+        $this->assertSame('outside', $error['props']['layout']);
+    }
+
+    /**
+     * @covers ::firewall
+     * @covers ::hasAccess
+     */
+    public function testFirewallWithoutUser()
+    {
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('You are not allowed to access the panel');
+
+        // no user
+        $this->assertFalse(Panel::hasAccess());
+        Panel::firewall();
+    }
+
+    /**
+     * @covers ::firewall
+     * @covers ::hasAccess
+     */
+    public function testFirewallWithoutAcceptedUser()
+    {
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('You are not allowed to access the panel');
+
+        // user without panel access
+        $this->app->impersonate('nobody');
+
+        $this->assertFalse(Panel::hasAccess($this->app->user()));
+        Panel::firewall($this->app->user());
+    }
+
+    /**
+     * @covers ::firewall
+     */
+    public function testFirewallWithAcceptedUser()
+    {
+        // accepted user
+        $this->app->impersonate('kirby');
+
+        // general access
+        $result = Panel::firewall($this->app->user());
+        $this->assertTrue($result);
+
+        $result = Panel::hasAccess($this->app->user());
+        $this->assertTrue($result);
+
+        // area access
+        $result = Panel::firewall($this->app->user(), 'site');
+        $this->assertTrue($result);
+
+        $result = Panel::hasAccess($this->app->user(), 'site');
+        $this->assertTrue($result);
+    }
+
+    /**
+     * @covers ::firewall
+     * @covers ::hasAccess
+     */
+    public function testFirewallWithoutAreaAccess()
+    {
+        $app = $this->app->clone([
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'role'  => 'editor'
+                ]
+            ],
+            'blueprints' => [
+                'users/editor' => [
+                    'name' => 'editor',
+                    'title' => 'Editor',
+                    'permissions' => [
+                        'access' => [
+                            'settings' => false
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        // accepted user
+        $app->impersonate('test@getkirby.com');
+
+        // general access
+        $result = Panel::firewall($app->user());
+        $this->assertTrue($result);
+
+        $result = Panel::hasAccess($app->user());
+        $this->assertTrue($result);
+
+        $this->expectException('Kirby\Exception\PermissionException');
+        $this->expectExceptionMessage('You are not allowed to access this part of the panel');
+
+        // no area access
+        $this->assertFalse(Panel::hasAccess($app->user(), 'settings'));
+        Panel::firewall($app->user(), 'settings');
     }
 
     /**

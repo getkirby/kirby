@@ -32,13 +32,6 @@ use Throwable;
 class Panel
 {
     /**
-     * General area definitions
-     *
-     * @var array
-     */
-    public static $areas;
-
-    /**
      * Normalize a panel area
      *
      * @param string $id
@@ -95,7 +88,9 @@ class Panel
 
         // load plugins
         foreach ($kirby->extensions('areas') as $id => $area) {
-            $areas[$id] = static::area($id, $area($kirby));
+            if (is_a($area, 'Closure') === true) {
+                $areas[$id] = static::area($id, (array)$area($kirby));
+            }
         }
 
         return $areas;
@@ -304,21 +299,12 @@ class Panel
      */
     public static function hasAccess(?User $user = null, string $area = null): bool
     {
-        if (!$user) {
+        try {
+            static::firewall($user, $area);
+            return true;
+        } catch (Throwable $e) {
             return false;
         }
-
-        $permissions = $user->role()->permissions();
-
-        if ($permissions->for('access', 'panel') !== true) {
-            return false;
-        }
-
-        if ($area !== null && $permissions->for('access', $area) !== true) {
-            return false;
-        }
-
-        return true;
     }
 
     /**
