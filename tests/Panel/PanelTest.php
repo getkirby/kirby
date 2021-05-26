@@ -29,6 +29,12 @@ class PanelTest extends TestCase
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+
+        // clear session file
+        $this->app->session()->destroy();
+
+        // clear fake json requests
+        $_GET = [];
     }
 
     /**
@@ -324,8 +330,145 @@ class PanelTest extends TestCase
         $this->assertSame('text/html', $response->type());
         $this->assertSame('UTF-8', $response->charset());
         $this->assertNotNull($response->body());
+    }
 
-        // clear session file
-        $this->app->session()->destroy();
+    /**
+     * @covers ::render
+     */
+    public function testRenderJson()
+    {
+        // fake request data
+        $_GET['json'] = true;
+
+        // get panel response
+        $response = Panel::render($this->app, 'k-page-view', [
+            'test' => 'Test'
+        ]);
+
+        $this->assertSame('application/json', $response->type());
+        $this->assertSame('Accept', $response->header('Vary'));
+        $this->assertSame('true', $response->header('X-Inertia'));
+    }
+
+    /**
+     * @covers ::router
+     */
+    public function testRouterWithDisabledPanel()
+    {
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => false
+            ]
+        ]);
+
+        $result = Panel::router($app, '/');
+
+        $this->assertFalse($result);
+    }
+
+    /**
+     * @covers ::setLanguage
+     */
+    public function testSetLanguage()
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'languages' => true,
+            ],
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'name' => 'English',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                    'name' => 'Deutsch',
+                ]
+            ]
+        ]);
+
+        // set for the first time
+        $language = Panel::setLanguage($this->app);
+
+        $this->assertSame('en', $language);
+        $this->assertSame('en', $this->app->session()->get('panel.language'));
+        $this->assertSame('en', $this->app->language()->code());
+    }
+
+    /**
+     * @covers ::setLanguage
+     */
+    public function testSetLanguageViaGet()
+    {
+        // switch via get request
+        // needs to come first before the app is cloned
+        $_GET['language'] = 'de';
+
+        $this->app = $this->app->clone([
+            'options' => [
+                'languages' => true,
+            ],
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'name' => 'English',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                    'name' => 'Deutsch',
+                ]
+            ]
+        ]);
+
+        // set for the first time
+        $language = Panel::setLanguage($this->app);
+
+        $this->assertSame('de', $language);
+        $this->assertSame('de', $this->app->session()->get('panel.language'));
+        $this->assertSame('de', $this->app->language()->code());
+    }
+
+    /**
+     * @covers ::setLanguage
+     */
+    public function testSetLanguageInSingleLanugageSite()
+    {
+        $language = Panel::setLanguage($this->app);
+
+        $this->assertNull($language);
+        $this->assertNull($this->app->language());
+    }
+
+    /**
+     * @covers ::setTranslation
+     */
+    public function testSetTranslation()
+    {
+        $translation = Panel::setTranslation($this->app);
+
+        $this->assertSame('en', $translation);
+        $this->assertSame('en', $this->app->translation()->code());
+    }
+
+    public function testSetTranslationViaUser()
+    {
+        $this->app = $this->app->clone([
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'language' => 'de',
+                    'role' => 'admin'
+                ]
+            ]
+        ]);
+
+        $this->app->impersonate('test@getkirby.com');
+
+        $translation = Panel::setTranslation($this->app);
+
+        $this->assertSame('de', $translation);
+        $this->assertSame('de', $this->app->translation()->code());
     }
 }

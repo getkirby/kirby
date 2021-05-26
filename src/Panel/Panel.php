@@ -576,33 +576,19 @@ class Panel
         // switch off pagination exceptions
         Pagination::$validate = false;
 
-        $user    = $kirby->user();
-        $session = $kirby->session();
+        // set the translation for Panel UI before
+        // gathering areas and routes, so that the
+        // `t()` helper can already be used
+        static::setTranslation($kirby);
 
-        // check for an existing user with panel access.
-        // set translation for Panel UI before gathering
-        // areas and routes, so that the `t()` helper
-        // can already be used
-        if ($user) {
-            $kirby->setCurrentTranslation($user->language());
-        } else {
-            $kirby->setCurrentTranslation($kirby->panelLanguage());
-        }
-
-        // language switcher
-        if ($kirby->options('languages')) {
-            if ($lang = get('language')) {
-                $session->set('panel.language', $lang);
-            }
-
-            $kirby->setCurrentLanguage($session->get('panel.language', 'en'));
-        }
+        // set the language in multi-lang installations
+        static::setLanguage($kirby);
 
         $areas  = static::areas($kirby);
         $routes = static::routes($kirby, $areas);
 
         // create a micro-router for the Panel
-        return router($path, $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $session, $user) {
+        return router($path, $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby) {
 
             // route needs authentication?
             $auth   = $route->attributes()['auth'] ?? true;
@@ -613,7 +599,7 @@ class Panel
             try {
                 // check for access before executing area routes
                 if ($auth !== false) {
-                    static::firewall($user, $areaId);
+                    static::firewall($kirby->user(), $areaId);
                 }
 
                 $result = $route->action()->call($route, ...$route->arguments());
@@ -714,6 +700,55 @@ class Panel
         return $routes;
     }
 
+
+    /**
+     * Set the current language in multi-lang
+     * installations based on the session or the
+     * query language query parameter
+     *
+     * @param Kirby\Cms\App $kirby
+     * @return string|null
+     */
+    public static function setLanguage(App $kirby): ?string
+    {
+        // language switcher
+        if ($kirby->options('languages')) {
+            $session  = $kirby->session();
+            $language = get('language') ?? $session->get('panel.language', 'en');
+
+            // keep the language for the next visit
+            $session->set('panel.language', $language);
+
+            // activate the current language in Kirby
+            $kirby->setCurrentLanguage($language);
+
+            return $language;
+        }
+
+        return null;
+    }
+
+    /**
+     * Set the currently active Panel translation
+     * based on the current user or config
+     *
+     * @param App $kirby
+     * @return string
+     */
+    public static function setTranslation(App $kirby): string
+    {
+        if ($user = $kirby->user()) {
+            // use the user language for the default translation
+            $translation = $user->language();
+        } else {
+            // fall back to the language from the config
+            $translation = $kirby->panelLanguage();
+        }
+
+        $kirby->setCurrentTranslation($translation);
+
+        return $translation;
+    }
 
     /**
      * Returns data array for view
