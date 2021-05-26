@@ -10,7 +10,6 @@ return function ($kirby) {
             [
                 'pattern' => 'users',
                 'action'  => function () use ($kirby) {
-
                     $role  = get('role');
                     $roles = $kirby->roles()->toArray(function ($role) {
                         return [
