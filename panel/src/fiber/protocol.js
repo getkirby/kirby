@@ -137,7 +137,7 @@ export default {
     headers = {},
   } = {}) {
     this.saveScroll()
-    document.dispatchEvent(new Event('inertia:start'))
+    document.dispatchEvent(new Event('fiber:start'))
 
     try {
       // fetch the response (only GET request supported)
@@ -147,12 +147,12 @@ export default {
           ...headers,
           Accept: 'text/html, application/xhtml+xml',
           'X-Requested-With': 'XMLHttpRequest',
-          'X-Inertia': true,
+          'X-Fiber': true,
           ...(only.length ? {
-            'X-Inertia-Partial-Component': this.page.component,
-            'X-Inertia-Partial-Data': only.join(','),
+            'X-Fiber-Component': this.page.component,
+            'X-Fiber-Partial': only.join(','),
           } : {}),
-          ...(this.page.version ? { 'X-Inertia-Version': this.page.version } : {}),
+          ...(this.page.version ? { 'X-Fiber-Version': this.page.version } : {}),
         }
       })
 
@@ -182,7 +182,7 @@ export default {
       console.error(error)
 
     } finally {
-      document.dispatchEvent(new Event('inertia:finish'))
+      document.dispatchEvent(new Event('fiber:finish'))
     }
   },
 

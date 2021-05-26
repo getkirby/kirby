@@ -239,6 +239,31 @@ class Panel
     }
 
     /**
+     * Creates $fiber response array
+     *
+     * @param \Kirby\Cms\App $kirby
+     * @param string $component
+     * @param array $props
+     * @return array
+     */
+    public static function fiber(App $kirby, string $component, array $props = []): array
+    {
+        $props = static::props($kirby, $component, $props);
+
+        // inject the Fiber config as props
+        $props['$component'] = $component;
+        $props['$url']       = Url::current();
+        $props['$version']   = $kirby->versionHash();
+
+        return [
+            'component' => $props['$component'],
+            'props'     => $props,
+            'url'       => $props['$url'],
+            'version'   => $props['$version']
+        ];
+    }
+
+    /**
      * Check for access permissions
      *
      * @param \Kirby\Cms\User|null $user
@@ -318,31 +343,6 @@ class Panel
     public static function icons(App $kirby): string
     {
         return F::read($kirby->root('kirby') . '/panel/dist/img/icons.svg');
-    }
-
-    /**
-     * Creates $inertia response array
-     *
-     * @param \Kirby\Cms\App $kirby
-     * @param string $component
-     * @param array $props
-     * @return array
-     */
-    public static function inertia(App $kirby, string $component, array $props = []): array
-    {
-        $props = static::props($kirby, $component, $props);
-
-        // inject the inertia config as props
-        $props['$component'] = $component;
-        $props['$url']       = Url::current();
-        $props['$version']   = $kirby->versionHash();
-
-        return [
-            'component' => $props['$component'],
-            'props'     => $props,
-            'url'       => $props['$url'],
-            'version'   => $props['$version']
-        ];
     }
 
     /**
@@ -488,14 +488,14 @@ class Panel
 
         // is it a partial request?
         $request = $kirby->request();
-        $only    = Str::split($request->header('X-Inertia-Partial-Data'));
+        $only    = Str::split($request->header('X-Fiber-Partial'));
 
         // only include new props in array, if partial request,
         // partial requests are made via dot notation, e.g.
         // $props.tab.columns
         if (
             empty($only) === false &&
-            $request->header('X-Inertia-Partial-Component') === $component
+            $request->header('X-Fiber-Component') === $component
         ) {
             $partials = [];
             foreach ($only as $partial) {
@@ -518,18 +518,18 @@ class Panel
      */
     public static function render(App $kirby, string $component, array $props)
     {
-        // get $inertia response array
-        $inertia = static::inertia($kirby, $component, $props);
+        // get $fiber response array
+        $fiber = static::fiber($kirby, $component, $props);
 
-        // if requested, send $inertia data as JSON
+        // if requested, send $fiber data as JSON
         $request = $kirby->request();
         if (
             $request->method() === 'GET' &&
-            ($request->header('X-Inertia') || $request->get('json'))
+            ($request->header('X-Fiber') || $request->get('json'))
         ) {
-            return Response::json($inertia, null, null, [
+            return Response::json($fiber, null, null, [
                 'Vary'      => 'Accept',
-                'X-Inertia' => 'true'
+                'X-Fiber' => 'true'
             ]);
         }
 
@@ -554,7 +554,7 @@ class Panel
                 'assets'   => static::assets($kirby),
                 'icons'    => static::icons($kirby),
                 'nonce'    => $kirby->nonce(),
-                'inertia'  => $inertia,
+                'fiber'    => $fiber,
                 'panelUrl' => $uri->path()->toString(true) . '/',
             ])
         );

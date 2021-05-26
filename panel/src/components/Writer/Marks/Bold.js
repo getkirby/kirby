@@ -7,7 +7,7 @@ export default class Bold extends Mark {
     return {
       icon: "bold",
       /**
-       * @todo replace with `window.panel.$t()` after merging Inertia
+       * @todo replace with `window.panel.$t()` after merging fiber
        */
       label: Vue.$t("toolbar.button.bold")
     };

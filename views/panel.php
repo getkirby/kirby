@@ -3,7 +3,7 @@
  * @var \Kirby\Cms\App $kirby
  * @var string $icons
  * @var array<string, mixed> $assets
- * @var array<string, mixed> $inertia
+ * @var array<string, mixed> $fiber
  * @var string $panelUrl
  * @var string $nonce
  */ ?>
@@ -48,16 +48,16 @@
 
   <script nonce="<?= $nonce ?>">
     // Panel state
-    const json = <?= json_encode($inertia['props'], JSON_UNESCAPED_SLASHES) ?>;
+    const json = <?= json_encode($fiber['props'], JSON_UNESCAPED_SLASHES) ?>;
 
     window.panel = JSON.parse(JSON.stringify(json));
 
-    // Inertia setup
-    window.inertia = {
-        component: '<?= $inertia['component'] ?>',
+    // Fiber setup
+    window.fiber = {
+        component: '<?= $fiber['component'] ?>',
         props: json,
-        url: '<?= $inertia['url'] ?>',
-        version: '<?= $inertia['version'] ?>',
+        url: '<?= $fiber['url'] ?>',
+        version: '<?= $fiber['version'] ?>',
     };
   </script>
 

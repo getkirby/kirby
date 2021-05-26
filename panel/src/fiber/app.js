@@ -1,18 +1,18 @@
 import Vue from 'vue'
-import Inertia from './inertia.js'
+import Fiber from './protocol.js'
 
 export default {
-  name: 'Inertia',
+  name: 'Fiber',
   data() {
     return {
       component: null,
-      page: window.inertia,
+      page: window.fiber,
       key: null,
     }
   },
   created() {
-    Inertia.init({
-      page: window.inertia,
+    Fiber.init({
+      page: window.fiber,
       component: (name) => Vue.component(name),
       props: (props) => {
 
@@ -57,13 +57,13 @@ export const plugin = {
       return document.querySelector("base").href + path.replace(/^\//, "")
     }
     Vue.prototype.$go = function (path, options) {
-      return Inertia.visit(this.$url(path), options)
+      return Fiber.visit(this.$url(path), options)
     }
     Vue.prototype.$reload = function (options) {
       if (typeof options === "string") {
         options = { only: options};
       }
-      return Inertia.reload(options)
+      return Fiber.reload(options)
     }
   },
 }
