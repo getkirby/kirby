@@ -5,7 +5,6 @@ namespace Kirby\Panel;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
@@ -301,7 +300,7 @@ class Panel
      *
      * @param \Kirby\Cms\User|null $user
      * @param string|null $area
-     * @return boolean
+     * @return bool
      */
     public static function hasAccess(?User $user = null, string $area = null): bool
     {
