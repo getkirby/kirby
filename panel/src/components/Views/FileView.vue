@@ -52,6 +52,7 @@
         <k-sections
           :blueprint="blueprint"
           :empty="$t('file.blueprint', { template: blueprint })"
+          :lock="lock"
           :parent="path"
           :tab="tab"
         />
@@ -66,6 +67,8 @@
           :multiple="false"
           @success="onUpload"
         />
+
+        <k-form-buttons :lock="lock" />
       </k-view>
     </div>
   </k-inside>

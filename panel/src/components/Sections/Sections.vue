@@ -17,10 +17,11 @@
             :is="'k-' + section.type + '-section'"
             v-if="exists(section.type)"
             :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex + '-' + blueprint"
-            :name="section.name"
-            :parent="parent"
             :blueprint="blueprint"
             :column="column.width"
+            :lock="lock"
+            :name="section.name"
+            :parent="parent"
             :class="'k-section k-section-name-' + section.name"
             v-bind="section"
             @submit="$emit('submit', $event)"
@@ -39,6 +40,7 @@ export default {
   props: {
     empty: String,
     blueprint: String,
+    lock: [Boolean, Object],
     parent: String,
     tab: Object
   },

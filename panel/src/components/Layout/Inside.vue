@@ -34,9 +34,6 @@
     <!-- Registration dialog -->
     <k-registration ref="registration" @success="$reload" />
 
-    <!-- Form buttons -->
-    <k-form-buttons />
-
     <!-- Error dialog -->
     <k-error-dialog />
 

@@ -10,7 +10,7 @@
       :fields="fields"
       :validate="true"
       :value="values"
-      :disabled="$store.state.content.status.lock !== null"
+      :disabled="lock !== false && lock.state === 'lock'"
       @input="input"
       @submit="onSubmit"
     />

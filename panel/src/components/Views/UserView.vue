@@ -100,6 +100,7 @@
         <k-sections
           :blueprint="blueprint"
           :empty="$t('user.blueprint', { role: model.role.name })"
+          :lock="lock"
           :parent="'users/' + model.id"
           :tab="tab"
         />
@@ -118,6 +119,8 @@
           accept="image/*"
           @success="uploadedAvatar"
         />
+
+        <k-form-buttons :lock="lock" />
       </k-view>
     </div>
   </k-inside>

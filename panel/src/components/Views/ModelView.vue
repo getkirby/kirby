@@ -10,6 +10,9 @@ export default {
         return {}
       }
     },
+    lock: {
+      type: [Boolean, Object]
+    },
     model: {
       type: Object,
       default() {
@@ -34,7 +37,7 @@ export default {
       return this.model.id;
     },
     isLocked() {
-      return this.$store.state.content.status.lock !== null;
+      return this.lock !== false && this.lock.state === "lock";
     }
   },
   watch: {

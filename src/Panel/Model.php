@@ -215,6 +215,36 @@ abstract class Model
     }
 
     /**
+     * Returns lock info for the Panel
+     *
+     * @return array|false array with lock info,
+     *                     false if locking is not supported
+     */
+    public function lock()
+    {
+        // return [
+        //     'state' => null
+        // ];
+
+        if ($lock = $this->model->lock()) {
+            if ($lock->isUnlocked() == true) {
+                return ['state' => 'unlock'];
+            }
+
+            if ($lock->isLocked() == true) {
+                return [
+                    'state' => 'lock',
+                    'data'  => $lock->get()
+                ];
+            }
+
+            return ['state' => null];
+        }
+
+        return false;
+    }
+
+    /**
      * Returns an array of all actions
      * that can be performed in the Panel
      * This also checks for the lock status
@@ -301,6 +331,7 @@ abstract class Model
 
         return [
             'blueprint'   => $blueprint->name(),
+            'lock'        => $this->lock(),
             'permissions' => $this->model->permissions()->toArray(),
             'tab'         => $tab,
             'tabs'        => $tabs,

@@ -27,19 +27,8 @@ export default {
      */
     models: {},
 
-    /**
-     * Object of status flags/info
-     */
-    status: {
-      // whether form shall be disabled (e.g. for structure fields)
-      enabled: true,
-
-      // content lock info
-      lock: null,
-
-      // content unlock info
-      unlock: null
-    }
+    // whether form shall be disabled (e.g. for structure fields)
+    enabled: true,
   },
 
 
@@ -152,9 +141,6 @@ export default {
     CURRENT(state, id) {
       state.current = id;
     },
-    LOCK(state, lock) {
-      Vue.set(state.status, "lock", lock);
-    },
     MOVE(state, [from, to]) {
       // move state
       const model = clone(state.models[from]);
@@ -177,15 +163,7 @@ export default {
       }
     },
     STATUS(state, enabled) {
-      Vue.set(state.status, "enabled", enabled);
-    },
-    UNLOCK(state, unlock) {
-      if (unlock) {
-        // reset unsaved changes if content has been unlocked by another user
-        Vue.set(state.models[state.current], "changes", {});
-      }
-
-      Vue.set(state.status, "unlock", unlock);
+      state.enabled = enabled;
     },
     UPDATE(state, [id, field, value]) {
       // avoid updating without a valid model
@@ -281,22 +259,6 @@ export default {
         changes: {}
       };
 
-      // check if content was previously unlocked
-      // TODO: handle this in fiber
-      Vue.$api
-        .get(model.api + "/unlock")
-        .then(response => {
-          if (
-            response.supported === true &&
-            response.unlocked === true
-          ) {
-            context.commit("UNLOCK", context.state.models[model.id].changes);
-          }
-        })
-        .catch(() => {
-          // fail silently
-        });
-
       context.commit("CREATE", [model.id, data]);
       context.dispatch("current", model.id);
     },
@@ -308,9 +270,6 @@ export default {
     },
     enable(context) {
       context.commit("STATUS", true);
-    },
-    lock(context, lock) {
-      context.commit("LOCK", lock);
     },
     move(context, [from, to]) {
       from = context.getters.id(from);
@@ -328,14 +287,14 @@ export default {
       id = id || context.state.current;
       context.commit("REVERT", id);
     },
-    save(context, id) {
+    async save(context, id) {
       id = id || context.state.current;
 
       // don't allow save if model is not current
       // or the form is currently disabled
       if (
         context.getters.isCurrent(id) &&
-        context.state.status.enabled === false
+        context.state.enabled === false
       ) {
         return false;
       }
@@ -347,26 +306,22 @@ export default {
       const data  = {...model.originals, ...model.changes};
 
       // Send updated values to API
-      return Vue.$api
-        .patch(model.api, data)
-        .then(() => {
-          // re-create model with updated values as originals
-          context.commit("CREATE", [id, {
-            ...model,
-            originals: data
-          }]);
+      try {
+        await Vue.$api.patch(model.api, data)
 
-          // revert unsaved changes (which also removes localStorage entry)
-          context.dispatch("revert", id);
-          context.dispatch("enable");
-        })
-        .catch(error => {
-          context.dispatch("enable");
-          throw error;
-        });
-    },
-    unlock(context, unlock) {
-      context.commit("UNLOCK", unlock);
+        // re-create model with updated values as originals
+        context.commit("CREATE", [id, {
+          ...model,
+          originals: data
+        }]);
+
+        // revert unsaved changes (which also removes localStorage entry)
+        context.dispatch("revert", id);
+
+      } finally {
+        context.dispatch("enable");
+      }
+
     },
     update(context, [field, value, id]) {
       id = id || context.state.current;

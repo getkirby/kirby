@@ -59,6 +59,7 @@
       <k-sections
         :blueprint="blueprint"
         :empty="$t('page.blueprint', { template: blueprint })"
+        :lock="lock"
         :parent="$api.pages.url(model.id)"
         :tab="tab"
       />
@@ -68,12 +69,13 @@
       <k-page-status-dialog ref="status" @success="$reload" />
       <k-page-template-dialog ref="template" @success="$reload" />
       <k-page-remove-dialog ref="remove" @success="onRemove" />
+
+      <k-form-buttons :lock="lock" />
     </k-view>
   </k-inside>
 </template>
 
 <script>
-// TODO: can we delete mixins/view/prevnext ?
 import ModelView from "./ModelView.vue";
 
 export default {
@@ -88,45 +90,36 @@ export default {
     status: Object
   },
   computed: {
+    id() {
+      return "pages/" + this.model.id;
+    },
     options() {
       return async ready => {
-        const options = await this.$api.pages.options(this.page.id);
+        const options = await this.$api.pages.options(this.model.id);
         ready(options);
       };
-    }
-  },
-  watch: {
-    "page.id": {
-      handler() {
-        this.$store.dispatch("content/create", {
-          id: "pages/" + this.page.id,
-          api: this.$api.pages.link(this.page.id),
-          content: this.page.content
-        });
-      },
-      immediate: true
     }
   },
   methods: {
     action(action) {
       switch (action) {
         case "duplicate":
-          this.$refs.duplicate.open(this.page.id);
+          this.$refs.duplicate.open(this.model.id);
           break;
         case "rename":
-          this.$refs.rename.open(this.page.id, this.permissions, "title");
+          this.$refs.rename.open(this.model.id, this.permissions, "title");
           break;
         case "url":
-          this.$refs.rename.open(this.page.id, this.permissions, "slug");
+          this.$refs.rename.open(this.model.id, this.permissions, "slug");
           break;
         case "status":
-          this.$refs.status.open(this.page.id);
+          this.$refs.status.open(this.model.id);
           break;
         case "template":
-          this.$refs.template.open(this.page.id);
+          this.$refs.template.open(this.model.id);
           break;
         case "remove":
-          this.$refs.remove.open(this.page.id);
+          this.$refs.remove.open(this.model.id);
           break;
         default:
           this.$store.dispatch(
@@ -137,7 +130,7 @@ export default {
       }
     },
     onRemove() {
-      this.$go(this.page.parent);
+      this.$go(this.model.parent);
     }
   }
 };

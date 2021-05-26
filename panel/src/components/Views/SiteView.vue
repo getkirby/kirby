@@ -29,12 +29,15 @@
       <k-sections
         :blueprint="blueprint"
         :empty="$t('site.blueprint')"
+        :lock="lock"
         :tab="tab"
         parent="site"
         @submit="$emit('submit', $event)"
       />
 
       <k-site-rename-dialog ref="rename" @success="$reload" />
+
+      <k-form-buttons :lock="lock" />
     </k-view>
   </k-inside>
 </template>
