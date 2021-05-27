@@ -701,7 +701,7 @@ class Blueprint
                 'columns' => $this->normalizeColumns($tabName, $tabProps['columns'] ?? []),
                 'icon'    => $tabProps['icon']  ?? null,
                 'label'   => $this->i18n($tabProps['label'] ?? ucfirst($tabName)),
-                'link'    => $this->model->panel()->url(true) . '/tab:' . $tabName,
+                'link'    => $this->model->panel()->url(true) . '/?tab=' . $tabName,
                 'name'    => $tabName,
             ]);
         }

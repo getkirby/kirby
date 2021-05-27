@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\App;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;

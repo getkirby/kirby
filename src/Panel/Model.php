@@ -332,7 +332,7 @@ abstract class Model
         $blueprint = $this->model->blueprint();
         $tabs      = $blueprint->tabs();
 
-        if (!$tab = $blueprint->tab(param('tab'))) {
+        if (!$tab = $blueprint->tab(get('tab'))) {
             $tab = $tabs[0] ?? [];
         }
 

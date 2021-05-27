@@ -294,14 +294,12 @@ class ModelTest extends TestCase
 
         new App([
             'request' => [
-                'url' => [
-                    'params' => 'tab:foo'
-                ]
+                'query' => 'tab=foo'
             ]
         ]);
 
         $props = $this->panel($site)->props();
-        $this->assertSame('foo', param('tab'));
+        $this->assertSame('foo', get('tab'));
         $this->assertSame('main', $props['tab']['name']);
     }
 
