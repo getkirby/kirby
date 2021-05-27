@@ -372,9 +372,11 @@
   "more": "Więcej",
   "name": "Nazwa",
   "next": "Następne",
+  "no": "no",
   "off": "wyłączone",
   "on": "włączone",
   "open": "Otwórz",
+  "open.newWindow": "Open in new window",
   "options": "Opcje",
   "options.none": "No options",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Wybierz plik",
   "toolbar.button.file.upload": "Prześlij plik",
   "toolbar.button.link": "Link",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Lista numerowana",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Lista wypunktowana",
 
   "translation.author": "Zespół Kirby",
@@ -518,5 +522,6 @@
   "view.users": "U\u017cytkownicy",
 
   "welcome": "Witaj",
-  "year": "Rok"
+  "year": "Rok",
+  "yes": "yes"
 }

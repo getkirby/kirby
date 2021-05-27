@@ -372,9 +372,11 @@
   "more": "Подробнее",
   "name": "Название",
   "next": "Дальше",
+  "no": "no",
   "off": "выключено",
   "on": "включено",
   "open": "Открыть",
+  "open.newWindow": "Open in new window",
   "options": "Опции",
   "options.none": "Нет параметров",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Выбрать файл",
   "toolbar.button.file.upload": "Закачать файл",
   "toolbar.button.link": "\u0421\u0441\u044b\u043b\u043a\u0430",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Нумерованный список",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Маркированный список",
 
   "translation.author": "Команда Kirby",
@@ -518,5 +522,6 @@
   "view.users": "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u0438",
 
   "welcome": "Добро пожаловать",
-  "year": "Год"
+  "year": "Год",
+  "yes": "yes"
 }
