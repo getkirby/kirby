@@ -372,9 +372,11 @@
   "more": "Mer",
   "name": "Namn",
   "next": "Nästa",
+  "no": "no",
   "off": "av",
   "on": "på",
   "open": "Öppna",
+  "open.newWindow": "Open in new window",
   "options": "Alternativ",
   "options.none": "Inga alternativ",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Välj en fil",
   "toolbar.button.file.upload": "Ladda upp en fil",
   "toolbar.button.link": "L\u00e4nk",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Sorterad lista",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Punktlista",
 
   "translation.author": "Kirby-teamet, Ola Christensson",
@@ -518,5 +522,6 @@
   "view.users": "Anv\u00e4ndare",
 
   "welcome": "Välkommen",
-  "year": "År"
+  "year": "År",
+  "yes": "yes"
 }

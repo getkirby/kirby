@@ -372,9 +372,11 @@
   "more": "Més",
   "name": "Nom",
   "next": "Següent",
+  "no": "no",
   "off": "apagat",
   "on": "encès",
   "open": "Obrir",
+  "open.newWindow": "Open in new window",
   "options": "Opcions",
   "options.none": "Sense opcions",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Selecciona un fitxer",
   "toolbar.button.file.upload": "Carrega un fitxer",
   "toolbar.button.link": "Enlla\u00e7",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Llista ordenada",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Llista de vinyetes",
 
   "translation.author": "Equip Kirby",
@@ -518,5 +522,6 @@
   "view.users": "Usuaris",
 
   "welcome": "Benvinguda",
-  "year": "Any"
+  "year": "Any",
+  "yes": "yes"
 }
