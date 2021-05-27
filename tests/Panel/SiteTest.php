@@ -46,4 +46,62 @@ class SiteTest extends TestCase
         $image = $panel->image();
         $this->assertTrue(Str::endsWith($image['url'], '/test.jpg'));
     }
+
+    /**
+     * @covers ::imageSource
+     * @covers \Kirby\Panel\Model::image
+     * @covers \Kirby\Panel\Model::imageSource
+     */
+    public function testImageCover()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'media' => __DIR__ . '/tmp'
+            ],
+            'site' => [
+                'files' => [
+                    ['filename' => 'test.jpg']
+                ]
+            ]
+        ]);
+
+        $site  = $app->site();
+        $panel = new Site($site);
+
+        $hash = $site->image()->mediaHash();
+        $mediaUrl = $site->mediaUrl() . '/' . $hash;
+
+        // cover disabled as default
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => false,
+            'url' => $mediaUrl . '/test.jpg',
+            'cards' => [
+                'url' => Model::imagePlaceholder(),
+                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
+            ],
+            'list' => [
+                'url' => Model::imagePlaceholder(),
+                'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
+            ]
+        ], $panel->image());
+
+        // cover enabled
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => true,
+            'url' => $mediaUrl . '/test.jpg',
+            'cards' => [
+                'url' => Model::imagePlaceholder(),
+                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
+            ],
+            'list' => [
+                'url' => Model::imagePlaceholder(),
+                'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
+            ]
+        ], $panel->image(['cover' => true]));
+    }
 }

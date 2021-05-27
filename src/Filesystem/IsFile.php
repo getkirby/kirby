@@ -105,7 +105,7 @@ trait IsFile
             'url'  => $this->url()
         ];
 
-        if (F::type($this->root() ?? $this->url()) === 'image') {
+        if ($this->type() === 'image') {
             return $this->asset = new Image($props);
         }
 
@@ -119,6 +119,9 @@ trait IsFile
      */
     public function exists(): bool
     {
+        // Important to include this in the trait
+        // to avoid infinite loops when trying
+        // to proxy the method from the asset object
         return file_exists($this->root()) === true;
     }
 
@@ -165,6 +168,19 @@ trait IsFile
     {
         $this->url = $url;
         return $this;
+    }
+
+    /**
+     * Returns the file type
+     *
+     * @return string|null
+     */
+    public function type(): ?string
+    {
+        // Important to include this in the trait
+        // to avoid infinite loops when trying
+        // to proxy the method from the asset object
+        return F::type($this->root() ?? $this->url());
     }
 
     /**

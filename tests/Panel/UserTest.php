@@ -72,6 +72,70 @@ class UserTest extends TestCase
     }
 
     /**
+     * @covers ::imageSource
+     * @covers \Kirby\Panel\Model::image
+     * @covers \Kirby\Panel\Model::imageSource
+     */
+    public function testImageCover()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'media' => __DIR__ . '/tmp'
+            ],
+            'users' => [
+                [
+                    'email' => 'test@getkirby.com',
+                    'files' => [
+                        [
+                            'filename' => 'test.jpg',
+                            'template' => 'avatar'
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $user  = $app->user('test@getkirby.com');
+        $panel = new User($user);
+
+        $hash = $user->image()->mediaHash();
+        $mediaUrl = $user->mediaUrl() . '/' . $hash;
+
+        // cover disabled as default
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => false,
+            'url' => $mediaUrl . '/test.jpg',
+            'cards' => [
+                'url' => Model::imagePlaceholder(),
+                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
+            ],
+            'list' => [
+                'url' => Model::imagePlaceholder(),
+                'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
+            ]
+        ], $panel->image());
+
+        // cover enabled
+        $this->assertSame([
+            'ratio' => '3/2',
+            'back' => 'pattern',
+            'cover' => true,
+            'url' => $mediaUrl . '/test.jpg',
+            'cards' => [
+                'url' => Model::imagePlaceholder(),
+                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
+            ],
+            'list' => [
+                'url' => Model::imagePlaceholder(),
+                'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
+            ]
+        ], $panel->image(['cover' => true]));
+    }
+
+    /**
      * @covers \Kirby\Panel\Model::options
      */
     public function testOptions()

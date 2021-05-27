@@ -145,12 +145,9 @@ abstract class Model
             // only create srcsets for actual File objects
             if (is_a($image, 'Kirby\Cms\File') === true) {
 
-                // pixelated transparent image placeholder
-                $placeholder = 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw';
-
                 // for cards
                 $settings['cards'] = [
-                    'url' => $placeholder,
+                    'url' => static::imagePlaceholder(),
                     'srcset' => $image->srcset([
                         352,
                         864,
@@ -161,7 +158,7 @@ abstract class Model
                 // for lists
                 if (($settings['cover'] ?? false) === false) {
                     $settings['list'] = [
-                        'url' => $placeholder,
+                        'url' => static::imagePlaceholder(),
                         'srcset' => $image->srcset([
                             38,
                             76
@@ -169,7 +166,7 @@ abstract class Model
                     ];
                 } else {
                     $settings['list'] = [
-                        'url' => $placeholder,
+                        'url' => static::imagePlaceholder(),
                         'srcset' => $image->srcset([
                             '1x' => [
                                 'width' => 38,
@@ -189,6 +186,16 @@ abstract class Model
         unset($settings['query']);
 
         return array_merge($defaults, (array)$settings);
+    }
+
+    /**
+     * Data URI placeholder string for Panel image
+     *
+     * @return string
+     */
+    public static function imagePlaceholder(): string
+    {
+        return 'data:image/gif;base64,R0lGODlhAQABAIAAAP///wAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw';
     }
 
     /**
