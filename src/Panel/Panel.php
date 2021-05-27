@@ -650,7 +650,10 @@ class Panel
         $routes = static::routes($kirby, $areas);
 
         // create a micro-router for the Panel
-        return router($path, $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby) {
+        return router($path, $method = $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $method, $path) {
+
+            // trigger hook
+            $route = $kirby->apply('panel.route:before', compact('route', 'path', 'method'), 'route');
 
             // route needs authentication?
             $auth   = $route->attributes()['auth'] ?? true;
@@ -686,6 +689,8 @@ class Panel
 
             // create the view based on the current area
             $view = static::view($kirby, $area, $result['view'] ?? []);
+
+            $kirby->trigger('panel.route:after', compact('route', 'path', 'method', 'result', 'view'));
 
             return static::render($kirby, $result['component'], [
                 '$props' => $result['props'] ?? [],
