@@ -92,7 +92,8 @@ abstract class FieldClass
     }
 
     /**
-     * @deprecated
+     * @deprecated 3.5.0
+     * @todo remove when the general field class setup has been refactored
      *
      * Returns the field data
      * in a format to be stored
@@ -379,8 +380,8 @@ abstract class FieldClass
     }
 
     /**
-     * @deprecated
-     *
+     * @deprecated 3.5.0
+     * @todo remove when the general field class setup has been refactored
      * @return bool
      */
     public function save()
