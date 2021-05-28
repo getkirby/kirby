@@ -470,7 +470,7 @@ class Panel
      * Checks for a Fiber request
      * via get parameters or headers
      *
-     * @param Kirby\Http\Request $request
+     * @param \Kirby\Http\Request $request
      * @return bool
      */
     public static function isFiberRequest(Request $request): bool

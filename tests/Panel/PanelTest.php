@@ -165,6 +165,9 @@ class PanelTest extends TestCase
             ]
         ]);
 
+        // add vite file
+        F::write($viteFile = $this->app->roots()->panel() . '/.vite-running', '');
+
         $assets = Panel::assets($this->app);
         $base   = 'http://sandbox.test:3000';
 
@@ -235,6 +238,9 @@ class PanelTest extends TestCase
 
         $this->assertTrue(Str::contains($assets['css']['custom'], 'assets/panel.css'));
         $this->assertTrue(Str::contains($assets['js']['custom'], 'assets/panel.js'));
+
+        // clean up vite file
+        F::remove($viteFile);
     }
 
     /**
