@@ -29,6 +29,9 @@ import store from "./store/store.js";
 
 Vue.use(Api, store);
 
+// @todo: remove in 3.6.0
+Vue.$t = Vue.prototype.$t;
+
 Vue.prototype.$go = (path) => {
 
   // support links with hash
