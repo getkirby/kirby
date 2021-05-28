@@ -221,23 +221,22 @@ class Panel
      * Creates data array for Fiber and the component
      *
      * @param \Kirby\Cms\App $kirby
-     * @param string $component
      * @param array $data
      * @return array
      */
-    public static function data(App $kirby, string $component, array $data = []): array
+    public static function data(App $kirby, array $data = []): array
     {
-        // shared default data
+        // multilang setup check
         $multilang = $kirby->option('languages', false) !== false;
+
+        // shared data for all requests
         $shared = [
             '$language' => function () use ($kirby, $multilang) {
-                if (
-                    $multilang === true &&
-                    $language = $kirby->language()
-                ) {
+                if ($multilang === true && $language = $kirby->language()) {
                     return [
-                        'code' => $language->code(),
-                        'name' => $language->name(),
+                        'code'    => $language->code(),
+                        'default' => $language->isDefault(),
+                        'name'    => $language->name(),
                     ];
                 }
             },
@@ -259,16 +258,15 @@ class Panel
                     return $user->role()->permissions()->toArray();
                 }
             },
-            '$props' => [],
             '$license' => $kirby->system()->license(),
             '$multilang' => $multilang,
+            '$url' => Url::current(),
             '$user' => function () use ($kirby) {
                 if ($user = $kirby->user()) {
                     return [
                         'email'       => $user->email(),
                         'id'          => $user->id(),
                         'language'    => $user->language(),
-                        'permissions' => $user->role()->permissions()->toArray(),
                         'role'        => $user->role()->id(),
                         'username'    => $user->username(),
                     ];
@@ -279,13 +277,7 @@ class Panel
         ];
 
         // merge with shared data
-        $data = array_merge($shared, $data);
-
-        // filter data, if it's a partial request
-        $data = static::partial($kirby, $component, $data);
-
-        // resolve lazy data entries
-        return A::apply($data);
+        return array_merge($shared, $data);
     }
 
     /**
@@ -303,9 +295,7 @@ class Panel
                 'error'  => $message,
                 'layout' => Panel::hasAccess($kirby->user()) ? 'inside' : 'outside'
             ],
-            'view' => [
-                'title' => 'Error'
-            ]
+            'title' => 'Error'
         ];
     }
 
@@ -319,19 +309,14 @@ class Panel
      */
     public static function fiber(App $kirby, string $component, array $data = []): array
     {
-        $data = static::data($kirby, $component, $data);
+        // get all data for the request
+        $data = static::data($kirby, $data);
 
-        // inject the Fiber config as props
-        $data['$component'] = $component;
-        $data['$url']       = Url::current();
-        $data['$version']   = $kirby->versionHash();
+        // filter data, if it's a partial request
+        $data = static::partial($kirby, $component, $data);
 
-        return [
-            'component' => $data['$component'],
-            'data'      => $data,
-            'url'       => $data['$url'],
-            'version'   => $data['$version']
-        ];
+        // resolve lazy data entries
+        return A::apply($data);
     }
 
     /**
@@ -606,7 +591,7 @@ class Panel
 
         // inject globals
         $globals = static::globals($kirby);
-        $fiber['data'] = array_merge_recursive(A::apply($globals), $fiber['data']);
+        $fiber   = array_merge_recursive(A::apply($globals), $fiber);
 
         // fetch all plugins
         $plugins = new Plugins();
@@ -688,12 +673,11 @@ class Panel
             }
 
             // create the view based on the current area
-            $view = static::view($kirby, $area, $result['view'] ?? []);
+            $view = static::view($kirby, $area, $result ?? []);
 
             $kirby->trigger('panel.route:after', compact('route', 'path', 'method', 'result', 'view'));
 
-            return static::render($kirby, $result['component'], [
-                '$props' => $result['props'] ?? [],
+            return static::render($kirby, $view['component'], [
                 '$view'  => $view,
                 '$areas' => array_map(function ($area) {
                     // routes should not be included in the frontend object
@@ -832,12 +816,13 @@ class Panel
 
         $view['breadcrumb'] = $view['breadcrumb'] ?? [];
         $view['path']       = Str::after($kirby->path(), '/');
+        $view['props']      = $view['props'] ?? [];
         $view['search']     = $view['search'] ?? $kirby->option('panel.search.type', 'pages');
 
         // make sure that routes are gone
         unset($view['routes']);
 
         // resolve lazy props
-        return A::apply($view);
+        return $view;
     }
 }

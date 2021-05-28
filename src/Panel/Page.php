@@ -188,14 +188,12 @@ class Page extends Model
         $page = $this->model;
 
         return [
+            'breadcrumb' => function () use ($page) {
+                return $page->panel()->breadcrumb();
+            },
             'component' => 'k-page-view',
             'props'     => $this->props(),
-            'view' => [
-                'breadcrumb' => function () use ($page) {
-                    return $page->panel()->breadcrumb();
-                },
-                'title' => $page->title()->toString(),
-            ]
+            'title'     => $page->title()->toString(),
         ];
     }
 }

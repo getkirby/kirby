@@ -128,13 +128,10 @@ class User extends Model
     public function route(): array
     {
         return [
-            'component' => 'k-user-view',
-            'props'     => $this->props(),
-            'view'      => [
-                'breadcrumb' => $this->breadcrumb(),
-                'id'         => 'user',
-                'title'      => $this->model->username(),
-            ]
+            'breadcrumb' => $this->breadcrumb(),
+            'component'  => 'k-user-view',
+            'props'      => $this->props(),
+            'title'      => $this->model->username(),
         ];
     }
 

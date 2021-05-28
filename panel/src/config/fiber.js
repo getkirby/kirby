@@ -13,7 +13,7 @@ const Fiber = {
     this.swap = swap
 
     // set initial page
-    page.url += window.location.hash
+    page.$url += window.location.hash
     this.setPage(page)
 
     // set up event listeners
@@ -35,7 +35,7 @@ const Fiber = {
 
     // otherwise, just make sure to update
     // the state properly
-    const url = this.toUrl(this.page.url)
+    const url = this.toUrl(this.page.$url)
     url.hash  = window.location.hash
     this.state({ ...this.page, url: url.href })
     this.resetScroll()
@@ -75,7 +75,7 @@ const Fiber = {
     Vue.prototype.$user        = window.panel.$user        = data.$user;
     Vue.prototype.$view        = window.panel.$view        = data.$view;
 
-    return data.$props;
+    return data;
   },
 
   reload(options = {}) {
@@ -126,20 +126,20 @@ const Fiber = {
 
   async setPage(page, { replace = false, preserveScroll = false, preserveState = false } = {}) {
     // resolve component
-    const component = await this.component(page.component)
+    const component = await this.component(page.$view.component)
     page.scrollRegions = page.scrollRegions || []
 
     // either replacing the whole state
     // or pushing onto it
-    if (replace || this.toUrl(page.url).href === window.location.href) {
+    if (replace || this.toUrl(page.$url).href === window.location.href) {
       this.state(page)
     } else {
       this.state(page, "push")
     }
 
     // swap component
-    const clone = JSON.parse(JSON.stringify(page))
-    clone.props = this.props(clone.data)
+    let clone = JSON.parse(JSON.stringify(page))
+    clone = this.props(clone)
     await this.swap({ component, page: clone, preserveState })
 
     if (!preserveScroll) {
@@ -149,7 +149,7 @@ const Fiber = {
 
   state(page, action = "replace") {
     this.page = page
-    window.history[action + "State"](page, '', page.url)
+    window.history[action + "State"](page, '', page.$url)
   },
 
   toQuery(search, data) {
@@ -216,31 +216,30 @@ const Fiber = {
           'X-Requested-With': 'XMLHttpRequest',
           'X-Fiber': true,
           ...(only.length ? {
-            'X-Fiber-Component': this.page.component,
+            'X-Fiber-Component': this.page.$view.component,
             'X-Fiber-Include': only.join(','),
           } : {}),
-          ...(this.page.version ? { 'X-Fiber-Version': this.page.version } : {}),
         }
       })
 
       // turn into json data
-      const json = await toJson(response)
+      let json = await toJson(response)
 
       // add exisiting data to partial requests
-      if (only.length && json.component === this.page.component) {
-        json.data = merge(this.page.data, json.data)
+      if (only.length) {
+        json = merge(this.page, json)
       }
 
       // add hash to response URL if current
       // window URL has hash included
-      const responseUrl = this.toUrl(json.url)
+      const responseUrl = this.toUrl(json.$url)
       if (
         url.hash &&
         !responseUrl.hash &&
-        this.toUrl(json.url, { hash: false }).href === responseUrl.href
+        this.toUrl(json.$url, { hash: false }).href === responseUrl.href
       ) {
         responseUrl.hash = url.hash
-        json.url = responseUrl.href
+        json.$url = responseUrl.href
       }
 
       return this.setPage(json, { replace, preserveScroll, preserveState })
@@ -299,7 +298,7 @@ export const component = {
     if (this.component) {
       return h(this.component, {
         key: this.key,
-        props: this.page.props
+        props: this.page.$view.props
       })
     }
   }

@@ -135,7 +135,7 @@ export default {
       immediate: true
     },
     isLocked(locked) {
-      // model used to be locked by another user, 
+      // model used to be locked by another user,
       // lock has been lifted, so refresh data
       if (locked === false) {
         this.$events.$emit("model.reload");
@@ -155,7 +155,7 @@ export default {
   },
   methods: {
     check() {
-      this.$reload("$props.lock");
+      this.$reload("$view.props.lock");
     },
     async onLock(lock = true) {
       const api = [this.$view.path + "/lock", null, null, true];
@@ -171,8 +171,8 @@ export default {
           clearInterval(this.isLocking);
           this.$store.dispatch("content/revert");
         }
-      } 
-      
+      }
+
       // removing lock
       else {
         clearInterval(this.isLocking);
@@ -249,7 +249,7 @@ export default {
     },
     async onUnlock(unlock = true) {
       const api = [this.$view.path + "/unlock", null, null, true];
-      
+
       if (unlock === true) {
         // unlocking (writing unlock)
         await this.$api.patch(...api)

@@ -279,16 +279,13 @@ class File extends Model
         $type = $file->parent()::CLASS_ALIAS;
 
         return [
+            'breadcrumb' => function () use ($file): array {
+                return $file->panel()->breadcrumb();
+            },
             'component' => 'k-file-view',
             'props'     => $this->props(),
-            'view'      => [
-                'breadcrumb' => function () use ($file): array {
-                    return $file->panel()->breadcrumb();
-                },
-                'id'     => $type === 'user' ? 'users' : 'site',
-                'search' => 'files',
-                'title'  => $file->filename(),
-            ]
+            'search'    => 'files',
+            'title'     => $file->filename(),
         ];
     }
 

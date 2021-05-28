@@ -3,8 +3,10 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -40,7 +42,7 @@ class PanelTest extends TestCase
     /**
      * @covers ::area
      */
-    public function testArea()
+    public function testArea(): void
     {
         // defaults
         $result = Panel::area('test', []);
@@ -61,7 +63,7 @@ class PanelTest extends TestCase
     /**
      * @covers ::areas
      */
-    public function testAreas()
+    public function testAreas(): void
     {
         // unauthenticated / uninstalled
         $areas = Panel::areas($this->app);
@@ -127,6 +129,115 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::assets
+     */
+    public function testAssets(): void
+    {
+        // default asset setup
+        $assets  = Panel::assets($this->app);
+        $base    = '/media/panel/' . $this->app->versionHash();
+
+        // css
+        $this->assertSame($base . '/css/style.css', $assets['css']['index']);
+        $this->assertSame('/media/plugins/index.css?0', $assets['css']['plugins']);
+
+        // icons
+        $this->assertSame($base . '/apple-touch-icon.png', $assets['icons']['apple-touch-icon']['url']);
+        $this->assertSame($base . '/favicon.svg', $assets['icons']['shortcut icon']['url']);
+        $this->assertSame($base . '/favicon.png', $assets['icons']['alternate icon']['url']);
+
+        // js
+        $this->assertSame($base . '/js/vendor.js', $assets['js']['vendor']);
+        $this->assertSame($base . '/js/plugins.js', $assets['js']['pluginloader']);
+        $this->assertSame('/media/plugins/index.js?0', $assets['js']['plugins']);
+        $this->assertSame($base . '/js/index.js', $assets['js']['index']);
+
+
+        // dev mode
+        $this->app = $this->app->clone([
+            'request' => [
+                'url' => 'http://sandbox.test'
+            ],
+            'options' => [
+                'panel' => [
+                    'dev' => true
+                ]
+            ]
+        ]);
+
+        $assets = Panel::assets($this->app);
+        $base   = 'http://sandbox.test:3000';
+
+        // css
+        $this->assertSame(['plugins' => '/media/plugins/index.css?0'], $assets['css']);
+
+        // icons
+        $this->assertSame($base . '/apple-touch-icon.png', $assets['icons']['apple-touch-icon']['url']);
+        $this->assertSame($base . '/favicon.svg', $assets['icons']['shortcut icon']['url']);
+        $this->assertSame($base . '/favicon.png', $assets['icons']['alternate icon']['url']);
+
+        // js
+        $this->assertSame([
+            'pluginloader' => $base . '/js/plugins.js',
+            'plugins' => '/media/plugins/index.js?0',
+            'index' => $base . '/src/index.js',
+            'vite' => $base . '/@vite/client'
+        ], $assets['js']);
+
+
+        // dev mode with custom url
+        $this->app = $this->app->clone([
+            'request' => [
+                'url' => 'http://sandbox.test'
+            ],
+            'options' => [
+                'panel' => [
+                    'dev' => 'http://localhost:3000'
+                ]
+            ]
+        ]);
+
+        $assets = Panel::assets($this->app);
+        $base   = 'http://localhost:3000';
+
+        // css
+        $this->assertSame(['plugins' => '/media/plugins/index.css?0'], $assets['css']);
+
+        // icons
+        $this->assertSame($base . '/apple-touch-icon.png', $assets['icons']['apple-touch-icon']['url']);
+        $this->assertSame($base . '/favicon.svg', $assets['icons']['shortcut icon']['url']);
+        $this->assertSame($base . '/favicon.png', $assets['icons']['alternate icon']['url']);
+
+        // js
+        $this->assertSame([
+            'pluginloader' => $base . '/js/plugins.js',
+            'plugins' => '/media/plugins/index.js?0',
+            'index' => $base . '/src/index.js',
+            'vite' => $base . '/@vite/client'
+        ], $assets['js']);
+
+
+        // custom panel css and js
+        $this->app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'css' => '/assets/panel.css',
+                    'js'  => '/assets/panel.js',
+                ]
+            ]
+        ]);
+
+        // create dummy assets
+        F::write($this->fixtures . '/assets/panel.css', 'test');
+        F::write($this->fixtures . '/assets/panel.js', 'test');
+
+        $assets = Panel::assets($this->app);
+
+        $this->assertTrue(Str::contains($assets['css']['custom'], 'assets/panel.css'));
+        $this->assertTrue(Str::contains($assets['js']['custom'], 'assets/panel.js'));
+    }
+
+    /**
      * @covers ::customCss
      */
     public function testCustomCss(): void
@@ -153,13 +264,141 @@ class PanelTest extends TestCase
             ]
         ]);
 
-        $this->assertTrue(strpos(Panel::customCss($app), '//panel.css', 0) !== false);
+        $this->assertTrue(Str::contains(Panel::customCss($app), '/panel.css'));
+    }
+
+    /**
+     * @covers ::customJs
+     */
+    public function testCustomJs(): void
+    {
+        // invalid
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'js' => 'nonexists.js'
+                ]
+            ]
+        ]);
+
+        $this->assertFalse(Panel::customJs($app));
+
+        // valid
+        F::write($this->fixtures . '/panel.js', '');
+
+        $app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'js' => 'panel.js'
+                ]
+            ]
+        ]);
+
+        $this->assertTrue(Str::contains(Panel::customJs($app), '/panel.js'));
+    }
+
+    /**
+     * @covers ::data
+     */
+    public function testData(): void
+    {
+        // without custom data
+        $data = Panel::data($this->app);
+
+        $this->assertInstanceOf('Closure', $data['$language']);
+        $this->assertInstanceOf('Closure', $data['$languages']);
+        $this->assertInstanceOf('Closure', $data['$permissions']);
+        $this->assertFalse($data['$license']);
+        $this->assertFalse($data['$multilang']);
+        $this->assertSame('/', $data['$url']);
+        $this->assertInstanceOf('Closure', $data['$user']);
+    }
+
+    /**
+     * @covers ::data
+     */
+    public function testDataWithCustomProps(): void
+    {
+        $data = Panel::data($this->app, [
+            '$props' => $props = [
+                'foo' => 'bar'
+            ]
+        ]);
+
+        $this->assertSame($props, $data['$props']);
+    }
+
+    /**
+     * @covers ::data
+     */
+    public function testDataWithLanguages(): void
+    {
+        $this->app = $this->app->clone([
+            'languages' => [
+                [ 'code' => 'en', 'name' => 'English', 'default' => true ],
+                [ 'code' => 'de', 'name' => 'Deutsch'],
+            ],
+            'options' => [
+                'languages' => true
+            ]
+        ]);
+
+        // without custom data
+        $data = Panel::data($this->app);
+
+        // resolve lazy data
+        $data = A::apply($data);
+
+        $this->assertTrue($data['$multilang']);
+
+        $expected = [
+            [
+                'code'    => 'en',
+                'default' => true,
+                'name'    => 'English'
+            ],
+            [
+                'code'    => 'de',
+                'default' => false,
+                'name'    => 'Deutsch'
+            ]
+        ];
+
+        $this->assertSame($expected, $data['$languages']);
+        $this->assertSame($expected[0], $data['$language']);
+    }
+
+    /**
+     * @covers ::data
+     */
+    public function testDataWithAuthenticatedUser(): void
+    {
+        // authenticate pseudo user
+        $this->app->impersonate('kirby');
+
+        // without custom data
+        $data = Panel::data($this->app);
+
+        // resolve lazy data
+        $data = A::apply($data);
+
+        // user
+        $expected = [
+            'email'    => 'kirby@getkirby.com',
+            'id'       => 'kirby',
+            'language' => 'en',
+            'role'     => 'admin',
+            'username' => 'kirby@getkirby.com'
+        ];
+
+        $this->assertSame($expected, $data['$user']);
+        $this->assertSame($this->app->user()->role()->permissions()->toArray(), $data['$permissions']);
     }
 
     /**
      * @covers ::error
      */
-    public function testError()
+    public function testError(): void
     {
         // without user
         $error = Panel::error($this->app, 'Test');
@@ -170,9 +409,7 @@ class PanelTest extends TestCase
                 'error' => 'Test',
                 'layout' => 'outside'
             ],
-            'view' => [
-                'title' => 'Error'
-            ]
+            'title' => 'Error'
         ];
 
         $this->assertSame($expected, $error);
@@ -191,10 +428,31 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::fiber
+     */
+    public function testFiber(): void
+    {
+        // default
+        $fiber = Panel::fiber($this->app, 'k-page-view');
+
+        $expected = [
+            '$language' => null,
+            '$languages' => [],
+            '$permissions' => null,
+            '$license' => false,
+            '$multilang' => false,
+            '$url' => '/',
+            '$user' => null
+        ];
+
+        $this->assertSame($expected, $fiber);
+    }
+
+    /**
      * @covers ::firewall
      * @covers ::hasAccess
      */
-    public function testFirewallWithoutUser()
+    public function testFirewallWithoutUser(): void
     {
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('You are not allowed to access the panel');
@@ -208,7 +466,7 @@ class PanelTest extends TestCase
      * @covers ::firewall
      * @covers ::hasAccess
      */
-    public function testFirewallWithoutAcceptedUser()
+    public function testFirewallWithoutAcceptedUser(): void
     {
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('You are not allowed to access the panel');
@@ -223,7 +481,7 @@ class PanelTest extends TestCase
     /**
      * @covers ::firewall
      */
-    public function testFirewallWithAcceptedUser()
+    public function testFirewallWithAcceptedUser(): void
     {
         // accepted user
         $this->app->impersonate('kirby');
@@ -247,7 +505,7 @@ class PanelTest extends TestCase
      * @covers ::firewall
      * @covers ::hasAccess
      */
-    public function testFirewallWithoutAreaAccess()
+    public function testFirewallWithoutAreaAccess(): void
     {
         $app = $this->app->clone([
             'users' => [
@@ -335,7 +593,7 @@ class PanelTest extends TestCase
     /**
      * @covers ::render
      */
-    public function testRenderJson()
+    public function testRenderJson(): void
     {
         // fake request data
         $_GET['_json'] = true;
@@ -353,7 +611,7 @@ class PanelTest extends TestCase
     /**
      * @covers ::router
      */
-    public function testRouterWithDisabledPanel()
+    public function testRouterWithDisabledPanel(): void
     {
         $app = $this->app->clone([
             'options' => [
@@ -369,7 +627,7 @@ class PanelTest extends TestCase
     /**
      * @covers ::setLanguage
      */
-    public function testSetLanguage()
+    public function testSetLanguage(): void
     {
         $this->app = $this->app->clone([
             'options' => [
@@ -399,7 +657,7 @@ class PanelTest extends TestCase
     /**
      * @covers ::setLanguage
      */
-    public function testSetLanguageViaGet()
+    public function testSetLanguageViaGet(): void
     {
         // switch via get request
         // needs to come first before the app is cloned
@@ -433,7 +691,7 @@ class PanelTest extends TestCase
     /**
      * @covers ::setLanguage
      */
-    public function testSetLanguageInSingleLanugageSite()
+    public function testSetLanguageInSingleLanugageSite(): void
     {
         $language = Panel::setLanguage($this->app);
 
@@ -444,7 +702,7 @@ class PanelTest extends TestCase
     /**
      * @covers ::setTranslation
      */
-    public function testSetTranslation()
+    public function testSetTranslation(): void
     {
         $translation = Panel::setTranslation($this->app);
 
@@ -452,7 +710,7 @@ class PanelTest extends TestCase
         $this->assertSame('en', $this->app->translation()->code());
     }
 
-    public function testSetTranslationViaUser()
+    public function testSetTranslationViaUser(): void
     {
         $this->app = $this->app->clone([
             'users' => [

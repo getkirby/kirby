@@ -29,9 +29,9 @@
             </k-dropdown>
           </template>
           <template v-else>
-            <k-button 
-              :tooltip="$t('avatar')" 
-              class="k-user-view-image" 
+            <k-button
+              :tooltip="$t('avatar')"
+              class="k-user-view-image"
               @click="$refs.upload.open()"
             >
               <k-icon type="user" />
@@ -157,7 +157,7 @@ export default {
           this.$refs.password.open(this.model.id);
           break;
         case "picture.delete":
-          await this.$api.users.deleteAvatar(this.id)
+          await this.$api.users.deleteAvatar(this.model.id)
           this.avatar = null;
           this.$store.dispatch("notification/success", ":)");
           this.$reload();
