@@ -5,6 +5,8 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
+use Kirby\Cms\Site as ModelSite;
+use Kirby\Cms\User as ModelUser;
 use Kirby\Toolkit\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -24,6 +26,80 @@ class FileTest extends TestCase
     public function tearDown(): void
     {
         Dir::remove(__DIR__ . '/tmp');
+    }
+
+    /**
+     * @covers ::breadcrumb
+     */
+    public function testBreadcrumbForSiteFile(): void
+    {
+        $site = new ModelSite([
+            'files' => [
+                ['filename' => 'test.jpg'],
+            ]
+        ]);
+
+        $file = new File($site->file('test.jpg'));
+        $this->assertSame([
+            [
+                'label' => 'test.jpg',
+                'link'  => '/site/files/test.jpg'
+            ]
+        ], $file->breadcrumb());
+    }
+
+    /**
+     * @covers ::breadcrumb
+     */
+    public function testBreadcrumbForPageFile(): void
+    {
+        $page = new ModelPage([
+            'slug' => 'test',
+            'content' => [
+                'title' => 'Test'
+            ],
+            'files' => [
+                ['filename' => 'test.jpg'],
+            ]
+        ]);
+
+        $file = new File($page->file('test.jpg'));
+        $this->assertSame([
+            [
+                'label' => 'Test',
+                'link'  => '/pages/test'
+            ],
+            [
+                'label' => 'test.jpg',
+                'link'  => '/pages/test/files/test.jpg'
+            ]
+        ], $file->breadcrumb());
+    }
+
+    /**
+     * @covers ::breadcrumb
+     */
+    public function testBreadcrumbForUserFile(): void
+    {
+        $user = new ModelUser([
+            'id'    => 'test',
+            'email' => 'test@getkirby.com',
+            'files' => [
+                ['filename' => 'test.jpg'],
+            ]
+        ]);
+
+        $file = new File($user->file('test.jpg'));
+        $this->assertSame([
+            [
+                'label' => 'test@getkirby.com',
+                'link'  => '/users/test'
+            ],
+            [
+                'label' => 'test.jpg',
+                'link'  => '/users/test/files/test.jpg'
+            ]
+        ], $file->breadcrumb());
     }
 
     /**
