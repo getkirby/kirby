@@ -546,6 +546,53 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::globals
+     */
+    public function testGlobals(): void
+    {
+        // defaults
+        $globals = Panel::globals($this->app);
+
+        $this->assertInstanceOf('Closure', $globals['$config']);
+        $this->assertInstanceOf('Closure', $globals['$system']);
+        $this->assertInstanceOf('Closure', $globals['$system']);
+        $this->assertInstanceOf('Closure', $globals['$translation']);
+        $this->assertInstanceOf('Closure', $globals['$urls']);
+
+        // defaults after apply
+        $globals     = A::apply($globals);
+        $config      = $globals['$config'];
+        $system      = $globals['$system'];
+        $translation = $globals['$translation'];
+        $urls        = $globals['$urls'];
+
+        // $config
+        $this->assertFalse($config['debug']);
+        $this->assertTrue($config['kirbytext']);
+        $this->assertSame(['limit' => 10, 'type'  => 'pages'], $config['search']);
+        $this->assertSame('en', $config['translation']);
+
+        // $system
+        $this->assertSame(Str::$ascii, $system['ascii']);
+        $this->assertSame(csrf(), $system['csrf']);
+        $this->assertFalse($system['isLocal']);
+        $this->assertArrayHasKey('de', $system['locales']);
+        $this->assertArrayHasKey('en', $system['locales']);
+        $this->assertSame('en_US', $system['locales']['en']);
+        $this->assertSame('de_DE', $system['locales']['de']);
+
+        // $translation
+        $this->assertSame('en', $translation['code']);
+        $this->assertSame($this->app->translation('en')->dataWithFallback(), $translation['data']);
+        $this->assertSame('ltr', $translation['direction']);
+        $this->assertSame('English', $translation['name']);
+
+        // $urls
+        $this->assertSame('/api', $urls['api']);
+        $this->assertSame('/', $urls['site']);
+    }
+
+    /**
      * @covers ::icons
      */
     public function testIcons(): void
@@ -554,6 +601,40 @@ class PanelTest extends TestCase
 
         $this->assertNotNull($icons);
         $this->assertTrue(strpos($icons, '<svg', 0) !== false);
+    }
+
+    /**
+     * @covers ::isFiberRequest
+     */
+    public function testIsFiberRequest(): void
+    {
+        // standard request
+        $result = Panel::isFiberRequest($this->app->request());
+        $this->assertFalse($result);
+
+        // fiber request via get
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_json' => true
+                ]
+            ]
+        ]);
+
+        $result = Panel::isFiberRequest($this->app->request());
+        $this->assertTrue($result);
+
+        // fiber request via header
+        $this->app = $this->app->clone([
+            'request' => [
+                'headers' => [
+                    'X-Fiber' => true
+                ]
+            ]
+        ]);
+
+        $result = Panel::isFiberRequest($this->app->request());
+        $this->assertTrue($result);
     }
 
     /**
@@ -568,6 +649,249 @@ class PanelTest extends TestCase
         // try again to create links, should be return false
         $link = Panel::link($this->app);
         $this->assertFalse($link);
+    }
+
+    /**
+     * @covers ::partial
+     */
+    public function testPartial()
+    {
+        $data = [
+            'a' => 'A',
+            'b' => 'B'
+        ];
+
+        // default (no partial request)
+        $result = Panel::partial($this->app, 'k-test-view', $data);
+
+        $this->assertSame($data, $result);
+    }
+
+    /**
+     * @covers ::partial
+     */
+    public function testPartialWithInclude(): void
+    {
+        // via get
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_include' => 'a',
+                ]
+            ]
+        ]);
+
+        $data = [
+            'a' => 'A',
+            'b' => 'B'
+        ];
+
+        $result = Panel::partial($this->app, 'k-test-view', $data);
+
+        $this->assertSame(['a' => 'A'], $result);
+
+        // via headers
+        $this->app = $this->app->clone([
+            'request' => [
+                'headers' => [
+                    'X-Fiber-Include' => 'a',
+                ]
+            ]
+        ]);
+
+        $data = [
+            'a' => 'A',
+            'b' => 'B'
+        ];
+
+        $result = Panel::partial($this->app, 'k-test-view', $data);
+
+        $this->assertSame(['a' => 'A'], $result);
+    }
+
+    /**
+     * @covers ::partial
+     */
+    public function testPartialWithComponentComparison(): void
+    {
+        // via get
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_include' => 'a',
+                    '_component' => 'k-test-view'
+                ]
+            ]
+        ]);
+
+        $data = [
+            'a' => 'A',
+            'b' => 'B'
+        ];
+
+        $result = Panel::partial($this->app, 'k-test-view', $data);
+
+        $this->assertSame(['a' => 'A'], $result);
+
+        // via headers
+        $this->app = $this->app->clone([
+            'request' => [
+                'headers' => [
+                    'X-Fiber-Include' => 'a',
+                    'X-Fiber-Component' => 'k-test-view'
+                ]
+            ]
+        ]);
+
+        $data = [
+            'a' => 'A',
+            'b' => 'B'
+        ];
+
+        $result = Panel::partial($this->app, 'k-test-view', $data);
+
+        $this->assertSame(['a' => 'A'], $result);
+    }
+
+    /**
+     * @covers ::partial
+     */
+    public function testPartialWithFailingComponentComparison(): void
+    {
+        // via get
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_include' => 'a',
+                    '_component' => 'k-other-view'
+                ]
+            ]
+        ]);
+
+        $data = [
+            'a' => 'A',
+            'b' => 'B'
+        ];
+
+        $result = Panel::partial($this->app, 'k-test-view', $data);
+
+        $this->assertSame($data, $result);
+
+
+        // via headers
+        $this->app = $this->app->clone([
+            'request' => [
+                'headers' => [
+                    'X-Fiber-Include' => 'a',
+                    'X-Fiber-Component' => 'k-other-view'
+                ]
+            ]
+        ]);
+
+        $data = [
+            'a' => 'A',
+            'b' => 'B'
+        ];
+
+        $result = Panel::partial($this->app, 'k-test-view', $data);
+
+        $this->assertSame($data, $result);
+    }
+
+    /**
+     * @covers ::partial
+     */
+    public function testPartialWithGlobal(): void
+    {
+        // simulate a simple partial request
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_include' => 'a,$urls',
+                ]
+            ]
+        ]);
+
+        $data = [
+            'a' => 'A',
+            'b' => 'B'
+        ];
+
+        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = A::apply($result);
+
+        $expected = [
+            'a' => 'A',
+            '$urls' => [
+                'api' => '/api',
+                'site' => '/'
+            ]
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * @covers ::partial
+     */
+    public function testPartialWithNestedData(): void
+    {
+        // simulate a simple partial request
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_include' => 'b.c',
+                ]
+            ]
+        ]);
+
+        $data = [
+            'a' => 'A',
+            'b' => [
+                'c' => 'C'
+            ]
+        ];
+
+        $result = Panel::partial($this->app, 'k-test-view', $data);
+
+        $expected = [
+            'b' => [
+                'c' => 'C'
+            ]
+        ];
+
+        $this->assertSame($expected, $result);
+    }
+
+    /**
+     * @covers ::partial
+     */
+    public function testPartialWithNestedGlobal(): void
+    {
+        // simulate a simple partial request
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_include' => 'a,$urls.site',
+                ]
+            ]
+        ]);
+
+        $data = [
+            'a' => 'A',
+            'b' => 'B'
+        ];
+
+        $result = Panel::partial($this->app, 'k-test-view', $data);
+
+        $expected = [
+            'a' => 'A',
+            '$urls' => [
+                'site' => '/'
+            ]
+        ];
+
+        $this->assertSame($expected, $result);
     }
 
     /**
@@ -595,8 +919,13 @@ class PanelTest extends TestCase
      */
     public function testRenderJson(): void
     {
-        // fake request data
-        $_GET['_json'] = true;
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_json' => true
+                ]
+            ]
+        ]);
 
         // get panel response
         $response = Panel::render($this->app, 'k-page-view', [

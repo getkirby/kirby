@@ -6,6 +6,7 @@ use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\PermissionException;
+use Kirby\Http\Request;
 use Kirby\Http\Response;
 use Kirby\Http\Uri;
 use Kirby\Http\Url;
@@ -372,7 +373,7 @@ class Panel
         return [
             '$config' => function () use ($kirby) {
                 return [
-                    'debug'     => $kirby->option('debug'),
+                    'debug'     => $kirby->option('debug', false),
                     'kirbytext' => $kirby->option('panel.kirbytext', true),
                     'search'    => [
                         'limit' => $kirby->option('panel.search.limit', 10),
@@ -382,17 +383,17 @@ class Panel
                 ];
             },
             '$system' => function () use ($kirby) {
+                $locales = [];
+
+                foreach ($kirby->translations() as $translation) {
+                    $locales[$translation->code()] = $translation->locale();
+                }
+
                 return [
                     'ascii'   => Str::$ascii,
                     'csrf'    => $kirby->option('api.csrf') ?? csrf(),
                     'isLocal' => $kirby->system()->isLocal(),
-                    'locales' => function () use ($kirby) {
-                        $locales = [];
-                        foreach ($kirby->translations() as $translation) {
-                            $locales[$translation->code()] = $translation->locale();
-                        }
-                        return $locales;
-                    },
+                    'locales' => $locales,
                     'slugs'   => Str::$language,
                 ];
             },
@@ -466,6 +467,22 @@ class Panel
     }
 
     /**
+     * Checks for a Fiber request
+     * via get parameters or headers
+     *
+     * @param Kirby\Http\Request $request
+     * @return bool
+     */
+    public static function isFiberRequest(Request $request): bool
+    {
+        if ($request->method() === 'GET') {
+            return (bool)($request->get('_json') ?? $request->header('X-Fiber'));
+        }
+
+        return false;
+    }
+
+    /**
      * Links all dist files in the media folder
      * and returns the link to the requested asset
      *
@@ -534,14 +551,14 @@ class Panel
         // dot notation, e.g. `$props.tab.columns`
         $partial = [];
 
-        // get all unresolved globals and their keys
-        $globals    = static::globals($kirby);
-        $globalKeys = array_keys($globals);
-
         // check if globals are requested and need to be merged
-        if (empty(array_intersect($globalKeys, $include)) === false) {
-            $data = array_merge_recursive($globals, $data);
+        if (Str::contains(implode($include), '$')) {
+            $data = array_merge_recursive(static::globals($kirby), $data);
         }
+
+        // make sure the data is already resolved to make
+        // nested data fetching work
+        $data = A::apply($data);
 
         // build a new array with all requested data
         foreach ($include as $partial) {
@@ -565,11 +582,7 @@ class Panel
         $fiber = static::fiber($kirby, $component, $data);
 
         // if requested, send $fiber data as JSON
-        $request = $kirby->request();
-        if (
-            $request->method() === 'GET' &&
-            ($request->header('X-Fiber') || get('_json'))
-        ) {
+        if (static::isFiberRequest($kirby->request()) === true) {
             return Response::json($fiber, null, get('_pretty'), [
                 'Vary'      => 'Accept',
                 'X-Fiber' => 'true'
