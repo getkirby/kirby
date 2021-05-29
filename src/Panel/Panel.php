@@ -404,10 +404,6 @@ class Panel
                     $translation = $kirby->translation($kirby->option('panel.language', 'en'));
                 }
 
-                if (!$translation) {
-                    $translation = $kirby->translation('en');
-                }
-
                 return [
                     'code'      => $translation->code(),
                     'data'      => $translation->dataWithFallback(),
@@ -429,6 +425,7 @@ class Panel
      *
      * @param string|null $path
      * @return void
+     * @codeCoverageIgnore
      */
     public static function go(?string $path = null)
     {

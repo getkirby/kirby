@@ -511,7 +511,7 @@ class PanelTest extends TestCase
      * @covers ::firewall
      * @covers ::hasAccess
      */
-    public function testFirewallWithoutAreaAccess(): void
+    public function testFirewallAreaAccess(): void
     {
         $app = $this->app->clone([
             'users' => [
@@ -543,6 +543,10 @@ class PanelTest extends TestCase
         $result = Panel::hasAccess($app->user());
         $this->assertTrue($result);
 
+        // no defined area permissions means access
+        $this->assertTrue(Panel::hasAccess($app->user(), 'foo'));
+        Panel::firewall($app->user(), 'foo');
+
         $this->expectException('Kirby\Exception\PermissionException');
         $this->expectExceptionMessage('You are not allowed to access this part of the panel');
 
@@ -550,6 +554,7 @@ class PanelTest extends TestCase
         $this->assertFalse(Panel::hasAccess($app->user(), 'settings'));
         Panel::firewall($app->user(), 'settings');
     }
+
 
     /**
      * @covers ::globals
@@ -599,6 +604,30 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::globals
+     */
+    public function testGlobalsWithUser(): void
+    {
+        $app = $this->app->clone([
+            'users' => [
+                [
+                    'email'    => 'test@getkirby.com',
+                    'language' => 'de'
+                ],
+                [
+                    'email'    => 'imposter@getkirby.com',
+                    'language' => 'foo'
+                ]
+            ]
+        ]);
+
+        $app->impersonate('test@getkirby.com');
+        $globals = Panel::globals($app);
+        $globals = A::apply($globals);
+        $this->assertSame('de', $globals['$translation']['code']);
+    }
+
+    /**
      * @covers ::icons
      */
     public function testIcons(): void
@@ -641,6 +670,16 @@ class PanelTest extends TestCase
 
         $result = Panel::isFiberRequest($this->app->request());
         $this->assertTrue($result);
+
+        // other request than GET
+        $this->app = $this->app->clone([
+            'request' => [
+                'method' => 'POST'
+            ]
+        ]);
+
+        $result = Panel::isFiberRequest($this->app->request());
+        $this->assertFalse($result);
     }
 
     /**
@@ -1063,5 +1102,35 @@ class PanelTest extends TestCase
 
         $this->assertSame('de', $translation);
         $this->assertSame('de', $this->app->translation()->code());
+    }
+
+    /**
+     * @covers ::view
+     */
+    public function testView(): void
+    {
+        // defaults
+        $result = Panel::view($this->app);
+        $expected = [
+            'breadcrumb' => [],
+            'path' => '',
+            'props' => [],
+            'search' => 'pages'
+        ];
+        $this->assertSame($expected, $result);
+
+        // with $area
+        $result = Panel::view($this->app, ['search' => 'users']);
+        $expected['search'] = 'users';
+        $this->assertEquals($expected, $result);
+
+        // with $view
+        $result = Panel::view($this->app, null, ['search' => 'files']);
+        $expected['search'] = 'files';
+        $this->assertEquals($expected, $result);
+
+        // wmake sure routes are unset
+        $result = Panel::view($this->app, ['search' => 'files'], ['routes' => ['foo' => 'bar']]);
+        $this->assertEquals($expected, $result);
     }
 }
