@@ -13,7 +13,7 @@
           </k-button>
           <k-dropdown-content ref="menu" class="k-topbar-menu">
             <ul>
-              <template v-for="area in areas">
+              <template v-for="area in areasWithLegacy">
                 <li
                   v-if="areaInMenu(area) !== false"
                   :key="'menu-item-' + area.id"
@@ -153,6 +153,10 @@ export default {
     view: Object,
   },
   computed: {
+    areasWithLegacy() {
+      // @todo remove in 3.7.0
+      return { ...this.areas, ...window.panel.plugins.views };
+    },
     notification() {
       if (
         this.$store.state.notification.type &&

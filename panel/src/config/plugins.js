@@ -56,6 +56,51 @@ Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
 });
 
 /**
+  * Views
+  * @todo Remove in 3.7.0
+  */
+ Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
+   window.panel.deprecated("Register custom Panel views via the new Panel area functionality in your index.php file. Registering via panel.plugin() in JavaScript will be removed in 3.7.0");
+
+  // Check for all required properties
+  if (!options.component) {
+    store.dispatch(
+      "notification/error",
+      `No view component provided when loading view "${name}". The view has not been registered.`
+    );
+    delete window.panel.plugins.views[name];
+    return;
+  }
+
+  options.link = "/plugins/" + name;
+
+  // Fallback for icon
+  if (options.icon === undefined) {
+    options.icon = "page";
+  }
+
+  // Fallback for menu
+  if (options.menu === undefined) {
+    options.menu = true;
+  }
+
+  // Update view
+  window.panel.plugins.views[name] = {
+    id: name,
+    label: options.text || options.label,
+    breadcrumb: [],
+    breadcrumbLabel: options.text || options.label,
+    link: options.link,
+    icon: options.icon,
+    menu: options.menu,
+    search: "pages",
+    title: options.text || options.label
+  };
+
+  Vue.component("k-" + name + "-plugin-view", options.component);
+});
+
+/**
  * Vue.use
  */
 window.panel.plugins.use.forEach(plugin => {

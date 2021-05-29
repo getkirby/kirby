@@ -1,12 +1,12 @@
 <template>
-  <component :is="view" v-bind="props" />
+  <k-inside>
+    <component :is="view" />
+  </k-inside>
 </template>
 
 <script>
-
 export default {
   props: {
-    props: Object,
     id: String,
   },
   computed: {
