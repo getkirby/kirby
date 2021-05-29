@@ -28,7 +28,9 @@ export default {
     models: {},
 
     // whether form shall be disabled (e.g. for structure fields)
-    enabled: true,
+    status: {
+      enabled: true
+    }
   },
 
 
@@ -163,7 +165,7 @@ export default {
       }
     },
     STATUS(state, enabled) {
-      state.enabled = enabled;
+      Vue.set(state.status, "enabled", enabled);
     },
     UPDATE(state, [id, field, value]) {
       // avoid updating without a valid model
@@ -294,7 +296,7 @@ export default {
       // or the form is currently disabled
       if (
         context.getters.isCurrent(id) &&
-        context.state.enabled === false
+        context.state.status.enabled === false
       ) {
         return false;
       }

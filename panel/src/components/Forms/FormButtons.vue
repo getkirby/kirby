@@ -92,7 +92,7 @@ export default {
       return this.$store.getters["content/hasChanges"]();
     },
     isDisabled() {
-      return this.$store.state.content.enabled === false;
+      return this.$store.state.content.status.enabled === false;
     },
     isLocked() {
       return this.supportsLocking && this.lock.state === "lock";
