@@ -85,16 +85,17 @@ Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
   }
 
   // Update view
+  const label = options.text || options.label || name;
   window.panel.plugins.views[name] = {
     id: name,
-    label: options.text || options.label,
+    label: label,
     breadcrumb: [],
-    breadcrumbLabel: options.text || options.label,
+    breadcrumbLabel: label,
     link: options.link,
     icon: options.icon,
     menu: options.menu,
     search: "pages",
-    title: options.text || options.label
+    title: label
   };
 
   Vue.component("k-" + name + "-plugin-view", options.component);
