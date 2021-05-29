@@ -175,7 +175,7 @@ trait AppTranslations
      * Load a specific translation by locale
      *
      * @param string|null $locale Locale name or `null` for the current locale
-     * @return \Kirby\Cms\Translation|null
+     * @return \Kirby\Cms\Translation
      */
     public function translation(?string $locale = null)
     {
