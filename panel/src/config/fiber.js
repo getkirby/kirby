@@ -305,10 +305,10 @@ export const plugin = {
 
       return document.querySelector("base").href + path.replace(/^\//, "")
     }
-    Vue.prototype.$go = function (path, options) {
+    Vue.prototype.$go = window.panel.$go = function (path, options) {
       return Fiber.visit(this.$url(path), options)
     }
-    Vue.prototype.$reload = function (options) {
+    Vue.prototype.$reload = window.panel.$reload = function (options) {
       if (typeof options === "string") {
         options = { only: [options] };
       }

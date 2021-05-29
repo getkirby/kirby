@@ -1,5 +1,8 @@
 import Vue from "vue";
 
+/**
+ * @todo Remove in 3.7.0
+ */
 export default {
   namespaced: true,
   state: {
@@ -31,6 +34,8 @@ export default {
   },
   actions: {
     add(context, beat) {
+      window.panel.deprecated("The $store.heartbeat module has been deprecated and will be removed in 3.7.0.");
+
       beat = {
         handler: beat[0] || beat,
         interval: beat[1] || context.state.step
@@ -44,9 +49,13 @@ export default {
       }
     },
     clear(context) {
+      window.panel.deprecated("The $store.heartbeat module has been deprecated and will be removed in 3.7.0.");
+
       context.commit("CLEAR");
     },
     remove(context, beat) {
+      window.panel.deprecated("The $store.heartbeat module has been deprecated and will be removed in 3.7.0.");
+
       context.commit("REMOVE", beat);
 
       if (context.state.beats.length < 1) {
@@ -54,6 +63,8 @@ export default {
       }
     },
     run(context) {
+      window.panel.deprecated("The $store.heartbeat module has been deprecated and will be removed in 3.7.0.");
+
       context.commit("CLEAR");
       context.commit("INITIALIZE", setInterval(() => {
         context.commit("CLOCK");
