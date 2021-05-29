@@ -22,3 +22,7 @@ window.panel.error = (notification, msg) => {
     notification + ". See the console for more information."
   );
 };
+
+window.panel.deprecated = (msg) => {
+  console.warn("Deprecated: " + msg);
+}
