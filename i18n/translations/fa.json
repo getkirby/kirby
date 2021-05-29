@@ -372,9 +372,11 @@
   "more": "بیشتر",
   "name": "نام",
   "next": "بعدی",
+  "no": "no",
   "off": "off",
   "on": "on",
   "open": "بازکردن",
+  "open.newWindow": "Open in new window",
   "options": "گزینه‌ها",
   "options.none": "No options",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Select a file",
   "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "\u067e\u06cc\u0648\u0646\u062f",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "لیست مرتب",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "لیست معمولی",
 
   "translation.author": "تیم کربی",
@@ -518,5 +522,6 @@
   "view.users": "\u06a9\u0627\u0631\u0628\u0631\u0627\u0646",
 
   "welcome": "خوش آمدید",
-  "year": "سال"
+  "year": "سال",
+  "yes": "yes"
 }

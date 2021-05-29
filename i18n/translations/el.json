@@ -372,9 +372,11 @@
   "more": "Περισσότερα",
   "name": "Ονομασία",
   "next": "Επόμενο",
+  "no": "no",
   "off": "off",
   "on": "on",
   "open": "Άνοιγμα",
+  "open.newWindow": "Open in new window",
   "options": "Eπιλογές",
   "options.none": "No options",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Select a file",
   "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "\u03a3\u03cd\u03bd\u03b4\u03b5\u03c3\u03bc\u03bf\u03c2",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Ταξινομημένη λίστα",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Λίστα κουκκίδων",
 
   "translation.author": "Ομάδα Kirby",
@@ -518,5 +522,6 @@
   "view.users": "\u03a7\u03c1\u03ae\u03c3\u03c4\u03b5\u03c2",
 
   "welcome": "Καλώς ήρθατε",
-  "year": "Έτος"
+  "year": "Έτος",
+  "yes": "yes"
 }
