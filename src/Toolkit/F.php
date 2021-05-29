@@ -669,7 +669,7 @@ class F
             }
             
             $parentToken = '../';
-            return str_pad('', count($inParts) * strlen($parentToken), $parentToken) . implode('/', $fileParts);
+            return str_repeat($parentToken, count($inParts)) . implode('/', $fileParts);
         }
 
         return '/' . Str::after($file, $in . '/');
