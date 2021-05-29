@@ -54,6 +54,9 @@
     <div v-if="offline" class="k-offline-warning">
       <p>The Panel is currently offline</p>
     </div>
+
+    <!-- Icons -->
+    <k-icons />
   </div>
 </template>
 
