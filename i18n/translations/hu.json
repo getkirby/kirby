@@ -372,9 +372,11 @@
   "more": "Több",
   "name": "Név",
   "next": "Következő",
+  "no": "no",
   "off": "ki",
   "on": "be",
   "open": "Megnyitás",
+  "open.newWindow": "Open in new window",
   "options": "Beállítások",
   "options.none": "No options",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Válassz egy fájlt",
   "toolbar.button.file.upload": "Fájl feltöltése",
   "toolbar.button.link": "Link",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Rendezett lista",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Rendezetlen lista",
 
   "translation.author": "A Kirby csapata",
@@ -518,5 +522,6 @@
   "view.users": "Felhaszn\u00e1l\u00f3k",
 
   "welcome": "Üdvözlünk",
-  "year": "Év"
+  "year": "Év",
+  "yes": "yes"
 }

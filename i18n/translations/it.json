@@ -372,9 +372,11 @@
   "more": "Di più",
   "name": "Nome",
   "next": "Prossimo",
+  "no": "no",
   "off": "off",
   "on": "on",
   "open": "Apri",
+  "open.newWindow": "Open in new window",
   "options": "Opzioni",
   "options.none": "Nessuna opzione",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Seleziona un file",
   "toolbar.button.file.upload": "Carica un file",
   "toolbar.button.link": "Link",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Elenco numerato",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Elenco puntato",
 
   "translation.author": "Kirby Team, Roman Steiner, Manu Moreale",
@@ -518,5 +522,6 @@
   "view.users": "Utenti",
 
   "welcome": "Benvenuto",
-  "year": "Anno"
+  "year": "Anno",
+  "yes": "yes"
 }
