@@ -667,9 +667,8 @@ class F
                 array_shift($fileParts);
                 array_shift($inParts);
             }
-            
-            $parentToken = '../';
-            return str_repeat($parentToken, count($inParts)) . implode('/', $fileParts);
+
+            return str_repeat('../', count($inParts)) . implode('/', $fileParts);
         }
 
         return '/' . Str::after($file, $in . '/');
