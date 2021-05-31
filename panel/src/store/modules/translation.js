@@ -5,7 +5,7 @@
 export default {
   namespaced: true,
   getters: {
-    string: state => key => {
+    string: () => key => {
       window.panel.deprecated("The $store.translation module has been deprecated and removed. Use this.$translation instead.");
       return window.panel.$translation.data[key] || key;
     }
