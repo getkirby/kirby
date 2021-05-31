@@ -180,9 +180,10 @@ class ModelTest extends TestCase
         $panel = $this->panel();
 
         $icon  = $panel->icon();
-        $this->assertTrue(isset($icon['type']));
-        $this->assertTrue(isset($icon['back']));
-        $this->assertTrue(isset($icon['color']));
+        $this->assertArrayHasKey('type', $icon);
+        $this->assertArrayHasKey('ratio', $icon);
+        $this->assertArrayHasKey('color', $icon);
+        $this->assertArrayHasKey('back', $icon);
         $this->assertSame('page', $icon['type']);
         $this->assertSame('pattern', $icon['back']);
 
@@ -208,9 +209,9 @@ class ModelTest extends TestCase
 
         // defaults
         $image = $panel->image();
-        $this->assertTrue(isset($image['ratio']));
-        $this->assertTrue(isset($image['back']));
-        $this->assertTrue(isset($image['cover']));
+        $this->assertArrayHasKey('ratio', $image);
+        $this->assertArrayHasKey('back', $image);
+        $this->assertArrayHasKey('cover', $image);
         $this->assertSame('3/2', $image['ratio']);
         $this->assertSame(false, $image['cover']);
 
@@ -222,15 +223,15 @@ class ModelTest extends TestCase
 
         // invalid query
         $image = $panel->image('site.foo');
-        $this->assertFalse(isset($image['url']));
-        $this->assertFalse(isset($image['query']));
+        $this->assertArrayNotHasKey('url', $image);
+        $this->assertArrayNotHasKey('query', $image);
 
         // valid query
         $image = $panel->image('site.image');
-        $this->assertTrue(isset($image['url']));
-        $this->assertTrue(isset($image['cards']));
-        $this->assertTrue(isset($image['list']));
-        $this->assertFalse(isset($image['query']));
+        $this->assertArrayHasKey('url', $image);
+        $this->assertArrayHasKey('cards', $image);
+        $this->assertArrayHasKey('list', $image);
+        $this->assertArrayNotHasKey('query', $image);
 
         // full options
         $image = $panel->image([
@@ -238,9 +239,9 @@ class ModelTest extends TestCase
             'query' => 'site.image',
             'cover' => true
         ]);
-        $this->assertTrue(isset($image['url']));
-        $this->assertTrue(isset($image['cards']));
-        $this->assertTrue(isset($image['list']));
+        $this->assertArrayHasKey('url', $image);
+        $this->assertArrayHasKey('cards', $image);
+        $this->assertArrayHasKey('list', $image);
         $this->assertSame('16/9', $image['ratio']);
     }
 
@@ -286,17 +287,21 @@ class ModelTest extends TestCase
             ]
         ];
 
+        $app = new App();
+        $app->impersonate('kirby');
+
         $props = $this->panel($site)->props();
         $this->assertSame('site', $props['blueprint']);
         $this->assertSame('main', $props['tabs'][0]['name']);
         $this->assertSame('main', $props['tab']['name']);
-        $this->assertFalse($props['permissions']['update']);
+        $this->assertTrue($props['permissions']['update']);
 
-        new App([
+        $app = new App([
             'request' => [
                 'query' => 'tab=foo'
             ]
         ]);
+        $app->impersonate('kirby');
 
         $props = $this->panel($site)->props();
         $this->assertSame('foo', get('tab'));
