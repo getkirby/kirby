@@ -608,21 +608,18 @@ class PanelTest extends TestCase
      */
     public function testGlobalsWithUser(): void
     {
-        $app = $this->app->clone([
+        $this->app = $this->app->clone([
             'users' => [
                 [
-                    'email'    => 'test@getkirby.com',
-                    'language' => 'de'
-                ],
-                [
-                    'email'    => 'imposter@getkirby.com',
-                    'language' => 'foo'
+                    'email' => 'test@getkirby.com',
+                    'language' => 'de',
+                    'role' => 'admin'
                 ]
             ]
         ]);
 
-        $app->impersonate('test@getkirby.com');
-        $globals = Panel::globals($app);
+        $this->app->impersonate('test@getkirby.com');
+        $globals = Panel::globals($this->app);
         $globals = A::apply($globals);
         $this->assertSame('de', $globals['$translation']['code']);
     }
