@@ -372,9 +372,11 @@
   "more": "Lisää",
   "name": "Nimi",
   "next": "Seuraava",
+  "no": "no",
   "off": "off",
   "on": "on",
   "open": "Avaa",
+  "open.newWindow": "Open in new window",
   "options": "Asetukset",
   "options.none": "No options",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Valitse tiedosto",
   "toolbar.button.file.upload": "Lähetä tiedosto",
   "toolbar.button.link": "Linkki",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Järjestetty lista",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Järjestämätön lista",
 
   "translation.author": "Kirby-tiimi",
@@ -518,5 +522,6 @@
   "view.users": "K\u00e4ytt\u00e4j\u00e4t",
 
   "welcome": "Tervetuloa",
-  "year": "Vuosi"
+  "year": "Vuosi",
+  "yes": "yes"
 }

@@ -161,6 +161,9 @@ class FTest extends TestCase
     {
         $path = F::relativepath(__FILE__, __DIR__);
         $this->assertEquals('/' . basename(__FILE__), $path);
+        
+        $path = F::relativepath(__FILE__, __DIR__ . '/');
+        $this->assertEquals('/' . basename(__FILE__), $path);
     }
 
     public function testRelativePathWithEmptyBase()
@@ -174,8 +177,29 @@ class FTest extends TestCase
 
     public function testRelativePathWithUnrelatedBase()
     {
-        $path = F::relativepath(__FILE__, '/something/something');
-        $this->assertEquals(basename(__FILE__), $path);
+        $path = F::relativepath(__DIR__ . '/fruits/apples/fuji.txt', __DIR__ . '/fruits/pineapples');
+        $this->assertEquals('../apples/fuji.txt', $path);
+        
+        $path = F::relativepath(__DIR__ . '/fruits/apples/gala.txt', __DIR__ . '/vegetables');
+        $this->assertEquals('../fruits/apples/gala.txt', $path);
+        
+        $path = F::relativepath(__DIR__ . '/fruits/apples/granny-smith.txt', __DIR__ . '/vegetables/');
+        $this->assertEquals('../fruits/apples/granny-smith.txt', $path);
+        
+        $path = F::relativepath(__DIR__ . '/fruits/apples/', __DIR__ . '/vegetables/');
+        $this->assertEquals('../fruits/apples', $path);
+        
+        $path = F::relativepath(__DIR__ . '/fruits/oranges/', __DIR__ . '/vegetables');
+        $this->assertEquals('../fruits/oranges', $path);
+        
+        $path = F::relativepath(__DIR__ . '/fruits/apples/honeycrisp.txt', __DIR__ . '/vegetables/squash');
+        $this->assertEquals('../../fruits/apples/honeycrisp.txt', $path);
+        
+        $path = F::relativepath(__DIR__ . '/test.txt', __DIR__ . '/foo/bar/baz');
+        $this->assertEquals('../../../test.txt', $path);
+        
+        $path = F::relativepath('foo/path-extra/file.txt', 'foo/path');
+        $this->assertEquals('../path-extra/file.txt', $path);
     }
 
     public function testRelativePathOnWindows()

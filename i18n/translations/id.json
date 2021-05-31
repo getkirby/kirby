@@ -372,9 +372,11 @@
   "more": "Lebih lanjut",
   "name": "Nama",
   "next": "Selanjutnya",
+  "no": "no",
   "off": "mati",
   "on": "hidup",
   "open": "Buka",
+  "open.newWindow": "Open in new window",
   "options": "Opsi",
   "options.none": "Tidak ada opsi",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Pilih berkas",
   "toolbar.button.file.upload": "Unggah berkas",
   "toolbar.button.link": "Tautan",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Daftar berurut",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Daftar tidak berurut",
 
   "translation.author": "Tim Kirby",
@@ -518,5 +522,6 @@
   "view.users": "Pengguna",
 
   "welcome": "Selamat datang",
-  "year": "Tahun"
+  "year": "Tahun",
+  "yes": "yes"
 }

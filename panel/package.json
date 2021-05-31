@@ -37,7 +37,7 @@
     "vite": "^2.0.5",
     "vite-plugin-rewrite-all": "^0.1.2",
     "vite-plugin-vue2": "^1.2.2",
-    "vue-docgen-api": "^4.35.0",
+    "vue-docgen-api": "^4.39.0",
     "wait-on": "^5.2.1"
   }
 }

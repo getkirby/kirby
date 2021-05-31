@@ -638,6 +638,8 @@ class F
      * Returns the relative path of the file
      * starting after $in
      *
+     * @SuppressWarnings(PHPMD.CountInLoopExpression)
+     *
      * @param string $file
      * @param string $in
      * @return string
@@ -652,11 +654,24 @@ class F
         $file = str_replace('\\', '/', $file);
         $in   = str_replace('\\', '/', $in);
 
-        if (Str::contains($file, $in) === false) {
-            return basename($file);
+        // trim trailing slashes
+        $file = rtrim($file, '/');
+        $in   = rtrim($in, '/');
+
+        if (Str::contains($file, $in . '/') === false) {
+            // make the paths relative by stripping what they have
+            // in common and adding `../` tokens at the start
+            $fileParts = explode('/', $file);
+            $inParts = explode('/', $in);
+            while (count($fileParts) && count($inParts) && ($fileParts[0] === $inParts[0])) {
+                array_shift($fileParts);
+                array_shift($inParts);
+            }
+
+            return str_repeat('../', count($inParts)) . implode('/', $fileParts);
         }
 
-        return Str::after($file, $in);
+        return '/' . Str::after($file, $in . '/');
     }
 
     /**

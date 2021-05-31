@@ -372,9 +372,11 @@
   "more": "Více",
   "name": "Jméno",
   "next": "Další",
+  "no": "no",
   "off": "vypnuto",
   "on": "zapnuto",
   "open": "Otevřít",
+  "open.newWindow": "Open in new window",
   "options": "Možnosti",
   "options.none": "Žádné možnosti",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Vyberte soubor",
   "toolbar.button.file.upload": "Nahrajte soubor",
   "toolbar.button.link": "Odkaz",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Číslovaný seznam",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Odrážkový seznam",
 
   "translation.author": "Kirby tým",
@@ -518,5 +522,6 @@
   "view.users": "U\u017eivatel\u00e9",
 
   "welcome": "Vítejte",
-  "year": "Rok"
+  "year": "Rok",
+  "yes": "yes"
 }

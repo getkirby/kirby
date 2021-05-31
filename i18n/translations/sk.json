@@ -372,9 +372,11 @@
   "more": "Viac",
   "name": "Meno",
   "next": "Ďalej",
+  "no": "no",
   "off": "off",
   "on": "on",
   "open": "Otvoriť",
+  "open.newWindow": "Open in new window",
   "options": "Nastavenia",
   "options.none": "No options",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Select a file",
   "toolbar.button.file.upload": "Upload a file",
   "toolbar.button.link": "Odkaz",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Číslovaný zoznam",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Odrážkový zoznam",
 
   "translation.author": "Tím Kirby",
@@ -518,5 +522,6 @@
   "view.users": "Užívatelia",
 
   "welcome": "Vitajte",
-  "year": "Rok"
+  "year": "Rok",
+  "yes": "yes"
 }

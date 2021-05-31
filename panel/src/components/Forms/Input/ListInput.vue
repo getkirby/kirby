@@ -1,10 +1,10 @@
 <template>
   <k-writer
     ref="input"
-    v-model="list"
     v-bind="$props"
     :extensions="extensions"
     :nodes="['bulletList', 'orderedList']"
+    :value="list"
     class="k-list-input"
     @input="onInput"
   />
@@ -24,7 +24,8 @@ export default {
   },
   data() {
     return {
-      list: this.value
+      list: this.value,
+      html: this.value
     };
   },
   computed: {
@@ -32,6 +33,18 @@ export default {
       return [new ListDoc({
         inline: true
       })];
+    }
+  },
+  watch: {
+    value(html) {
+      // if we don't compare the passed html
+      // the writer stops from working properly
+      // the list is updated with trimmed spaces
+      // which leads to unwanted side-effects
+      if (html !== this.html) {
+        this.list = html;
+        this.html = html;
+      }
     }
   },
   methods: {
@@ -56,9 +69,10 @@ export default {
 
       // updates `list` data with raw html
       this.list = html;
+      this.html = html.replace(/(<p>|<\/p>)/gi, "");
 
-      // emit value with removes `<p>` and `</p>` tags from html value
-      this.$emit("input", html.replace(/(<p>|<\/p>)/gi, ""));
+      // emit value with removed `<p>` and `</p>` tags from html value
+      this.$emit("input", this.html);
     }
   }
 };

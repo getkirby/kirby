@@ -372,9 +372,11 @@
   "more": "Daugiau",
   "name": "Pavadinimas",
   "next": "Toliau",
+  "no": "no",
   "off": "off",
   "on": "on",
   "open": "Atidaryti",
+  "open.newWindow": "Open in new window",
   "options": "Pasirinkimai",
   "options.none": "Nėra pasirinkimų",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Pasirinkite failą",
   "toolbar.button.file.upload": "Įkelti failą",
   "toolbar.button.link": "Nuoroda",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Sąrašas su skaičiais",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Sąrašas su taškais",
 
   "translation.author": "Roman U",
@@ -518,5 +522,6 @@
   "view.users": "Vartotojai",
 
   "welcome": "Sveiki",
-  "year": "Metai"
+  "year": "Metai",
+  "yes": "yes"
 }

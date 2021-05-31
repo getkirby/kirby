@@ -372,9 +372,11 @@
   "more": "Daha Fazla",
   "name": "İsim",
   "next": "Sonraki",
+  "no": "no",
   "off": "kapalı",
   "on": "açık",
   "open": "Önizleme",
+  "open.newWindow": "Open in new window",
   "options": "Seçenekler",
   "options.none": "Seçenek yok",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Bir dosya seçin",
   "toolbar.button.file.upload": "Bir dosya yükleyin",
   "toolbar.button.link": "Ba\u011flant\u0131",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Sıralı liste",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Madde listesi",
 
   "translation.author": "Kirby Takımı",
@@ -518,5 +522,6 @@
   "view.users": "Kullan\u0131c\u0131lar",
 
   "welcome": "Hoşgeldiniz",
-  "year": "Yıl"
+  "year": "Yıl",
+  "yes": "yes"
 }
