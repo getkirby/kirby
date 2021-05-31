@@ -34,7 +34,7 @@
     "eslint-plugin-vue": "^7.7.0",
     "postcss-dir-pseudo-class": "^5.0.0",
     "postcss-logical": "^4.0.2",
-    "vite": "^2.0.5",
+    "vite": "^2.2.3",
     "vite-plugin-rewrite-all": "^0.1.2",
     "vite-plugin-vue2": "^1.2.2",
     "vue-docgen-api": "^4.39.0",
