@@ -171,12 +171,10 @@ jobs:
 
       - name: Run tests
         uses: cypress-io/github-action@1db146275576798796bc39ef83d739924145298a # pin@v2
-        env:
-          CYPRESS_host: "http://127.0.0.1:8000"
         with:
           working-directory: kirby/panel
           install: false
-          wait-on: "http://127.0.0.1:3000"
+          wait-on: "http://127.0.0.1:8000"
           command: npm run test
 
       - name: Print log files
