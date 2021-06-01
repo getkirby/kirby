@@ -172,7 +172,7 @@ jobs:
         with:
           working-directory: kirby/panel
           install: false
-          wait-on: "http://127.0.0.1:8000"
+          wait-on: "http://127.0.0.1:8000/panel/login"
           config: baseUrl=http://127.0.0.1:8000/panel
 
       - name: Print log files
