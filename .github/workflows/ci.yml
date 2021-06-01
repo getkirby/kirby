@@ -159,8 +159,6 @@ jobs:
           runTests: false
 
       - name: Start servers
-        env:
-          VUE_APP_DEV_SERVER: http://127.0.0.1:8000
         run: |
           # start the built-in PHP server
           php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
@@ -174,8 +172,8 @@ jobs:
         with:
           working-directory: kirby/panel
           install: false
+          wait-on: "http://127.0.0.1:8000"
           config: baseUrl=http://127.0.0.1:8000/panel
-          command: npm run test
 
       - name: Print log files
         if: always()
