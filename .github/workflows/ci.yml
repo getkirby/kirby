@@ -174,7 +174,7 @@ jobs:
           install: false
           wait-on: "http://127.0.0.1:8000/panel/login, http://127.0.0.1:3000"
           wait-on-timeout: 15
-          config: baseUrl=http://127.0.0.1:8000/panel
+          config: baseUrl=http://127.0.0.1:8000
 
       - name: Print log files
         if: always()
