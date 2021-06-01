@@ -158,13 +158,12 @@ jobs:
           working-directory: kirby/panel
           runTests: false
 
-      - name: Start servers
-        run: |
-          # start the built-in PHP server
-          php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
+      - name: Build Panel dist files
+        run: npm run build
+        working-directory: kirby/panel
 
-          # start vite
-          npm run dev &> ${{ github.workspace }}/_logs/vite.log &
+      - name: Start the PHP server
+        run: php -S 127.0.0.1:8000 -t ${{ github.workspace }}/sandbox/public ${{ github.workspace }}/sandbox/router.php &> ${{ github.workspace }}/_logs/php.log &
         working-directory: kirby/panel
 
       - name: Run tests
@@ -172,8 +171,8 @@ jobs:
         with:
           working-directory: kirby/panel
           install: false
-          wait-on: "http://127.0.0.1:8000/panel/login, http://127.0.0.1:3000/src/index.js"
-          wait-on-timeout: 15
+          wait-on: "http://127.0.0.1:8000/panel/login"
+          wait-on-timeout: 5
           config: baseUrl=http://127.0.0.1:8000
 
       - name: Print log files
