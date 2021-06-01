@@ -38,6 +38,8 @@ describe('UsersView', () => {
       cy.get('@dialog').find('form').submit();
 
       cy.get('@users').find('li').should('have.length', 2);
+      // @todo the order of the users in the list is non-deterministic;
+      // cannot reliably test the order and if the role is in the same line as the name
       cy.get('@users').find('li.k-list-item').should('contain', 'Ada');
       cy.get('@users').find('li.k-list-item').should('contain', 'Admin');
     });
@@ -50,6 +52,8 @@ describe('UsersView', () => {
       cy.get('@dialog').find('form').submit();
 
       cy.get('@users').find('li').should('have.length', 3);
+      // @todo the order of the users in the list is non-deterministic;
+      // cannot reliably test the order and if the role is in the same line as the name
       cy.get('@users').find('li.k-list-item').should('contain', 'Grace');
       cy.get('@users').find('li.k-list-item').should('contain', 'Editor');
     });
