@@ -229,10 +229,6 @@ abstract class Model
      */
     public function lock()
     {
-        // return [
-        //     'state' => null
-        // ];
-
         if ($lock = $this->model->lock()) {
             if ($lock->isUnlocked() == true) {
                 return ['state' => 'unlock'];

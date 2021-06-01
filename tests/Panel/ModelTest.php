@@ -6,6 +6,51 @@ use Kirby\Cms\App;
 use Kirby\Cms\Site as ModelSite;
 use PHPUnit\Framework\TestCase;
 
+class CustomContentLockIsLocked
+{
+    public function get(): array
+    {
+        return ['email' => 'foo@bar.com'];
+    }
+
+    public function isLocked(): bool
+    {
+        return true;
+    }
+}
+
+class CustomContentLockIsUnlocked
+{
+    public function isUnlocked(): bool
+    {
+        return true;
+    }
+}
+
+class ModelSiteNoLocking extends ModelSite
+{
+    public function lock()
+    {
+        return;
+    }
+}
+
+class ModelSiteTestForceLocked extends ModelSite
+{
+    public function lock()
+    {
+        return new CustomContentLockIsLocked;
+    }
+}
+
+class ModelSiteTestForceUnlocked extends ModelSite
+{
+    public function lock()
+    {
+        return new CustomContentLockIsUnlocked;
+    }
+}
+
 class CustomPanelModel extends Model
 {
     public function path(): string
@@ -16,14 +61,6 @@ class CustomPanelModel extends Model
     public function route(): array
     {
         return [];
-    }
-}
-
-class ModelSiteTestForceLocked extends ModelSite
-{
-    public function isLocked(): bool
-    {
-        return true;
     }
 }
 
@@ -264,6 +301,43 @@ class ModelTest extends TestCase
         $prevnext = $panel->prevnext('author');
         $this->assertSame('/custom', $prevnext['link']);
         $this->assertSame($author, $prevnext['tooltip']);
+    }
+
+    /**
+     * @covers ::imagePlaceholder
+     */
+    public function testImagePlaceholder()
+    {
+        $this->assertIsString(Model::imagePlaceholder());
+        $this->assertStringStartsWith('data:image/gif;base64,', Model::imagePlaceholder());
+    }
+
+    /**
+     * @covers ::lock
+     */
+    public function testLock()
+    {
+        // content locking not supported
+        $site = new ModelSiteNoLocking();
+        $this->assertFalse($site->panel()->lock());
+
+        $app = new App();
+        $app->impersonate('kirby');
+
+        // no lock or unlock
+        $site = new ModelSite();
+        $this->assertSame(['state' => null], $site->panel()->lock());
+
+        // lock
+        $site = new ModelSiteTestForceLocked();
+        $lock =  $site->panel()->lock();
+        $this->assertSame('lock', $lock['state']);
+        $this->assertSame('foo@bar.com', $lock['data']['email']);
+
+        // unlock
+        $site = new ModelSiteTestForceUnlocked();
+        $lock =  $site->panel()->lock();
+        $this->assertSame('unlock', $lock['state']);
     }
 
     /**
