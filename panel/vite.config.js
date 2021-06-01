@@ -21,9 +21,6 @@ export default ({ command }) => {
     const runningPath = __dirname + "/.vite-running";
     fs.closeSync(fs.openSync(runningPath, "w"));
 
-    // Don't exit automatically
-    process.stdin.resume();
-
     // Delete the flag file on any kind of exit
     for (let eventType of ["exit", "SIGINT", "uncaughtException"]) {
       process.on(eventType, function(err) {
