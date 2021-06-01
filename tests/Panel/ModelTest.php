@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Site as ModelSite;
+use Kirby\Toolkit\Dir;
 use PHPUnit\Framework\TestCase;
 
 class CustomContentLockIsLocked
@@ -16,6 +17,11 @@ class CustomContentLockIsLocked
     public function isLocked(): bool
     {
         return true;
+    }
+
+    public function isUnlocked(): bool
+    {
+        return false;
     }
 }
 
@@ -31,7 +37,6 @@ class ModelSiteNoLocking extends ModelSite
 {
     public function lock()
     {
-        return;
     }
 }
 
@@ -39,7 +44,7 @@ class ModelSiteTestForceLocked extends ModelSite
 {
     public function lock()
     {
-        return new CustomContentLockIsLocked;
+        return new CustomContentLockIsLocked();
     }
 }
 
@@ -47,7 +52,7 @@ class ModelSiteTestForceUnlocked extends ModelSite
 {
     public function lock()
     {
-        return new CustomContentLockIsUnlocked;
+        return new CustomContentLockIsUnlocked();
     }
 }
 
@@ -69,6 +74,11 @@ class CustomPanelModel extends Model
  */
 class ModelTest extends TestCase
 {
+    public function tearDown(): void
+    {
+        Dir::remove(__DIR__ . '/tmp');
+    }
+
     protected function panel(array $props = [])
     {
         $site = new ModelSite($props);
@@ -321,7 +331,12 @@ class ModelTest extends TestCase
         $site = new ModelSiteNoLocking();
         $this->assertFalse($site->panel()->lock());
 
-        $app = new App();
+        Dir::make(__DIR__ . '/tmp/content');
+        $app = new App([
+            'roots' => [
+                'index' => __DIR__ . '/tmp'
+            ]
+        ]);
         $app->impersonate('kirby');
 
         // no lock or unlock
@@ -330,14 +345,13 @@ class ModelTest extends TestCase
 
         // lock
         $site = new ModelSiteTestForceLocked();
-        $lock =  $site->panel()->lock();
+        $lock = $site->panel()->lock();
         $this->assertSame('lock', $lock['state']);
         $this->assertSame('foo@bar.com', $lock['data']['email']);
 
         // unlock
         $site = new ModelSiteTestForceUnlocked();
-        $lock =  $site->panel()->lock();
-        $this->assertSame('unlock', $lock['state']);
+        $this->assertSame(['state' => 'unlock'], $site->panel()->lock());
     }
 
     /**

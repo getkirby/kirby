@@ -230,11 +230,11 @@ abstract class Model
     public function lock()
     {
         if ($lock = $this->model->lock()) {
-            if ($lock->isUnlocked() == true) {
+            if ($lock->isUnlocked() === true) {
                 return ['state' => 'unlock'];
             }
 
-            if ($lock->isLocked() == true) {
+            if ($lock->isLocked() === true) {
                 return [
                     'state' => 'lock',
                     'data'  => $lock->get()
