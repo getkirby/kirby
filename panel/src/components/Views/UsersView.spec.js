@@ -38,8 +38,8 @@ describe('UsersView', () => {
       cy.get('@dialog').find('form').submit();
 
       cy.get('@users').find('li').should('have.length', 2);
-      cy.get('@users').find('li:nth-child(1)').should('contain', 'Ada');
-      cy.get('@users').find('li:nth-child(1)').should('contain', 'Admin');
+      cy.get('@users').find('li.k-list-item').should('contain', 'Ada');
+      cy.get('@users').find('li.k-list-item').should('contain', 'Admin');
     });
 
     it('should create editor', () => {
@@ -50,8 +50,8 @@ describe('UsersView', () => {
       cy.get('@dialog').find('form').submit();
 
       cy.get('@users').find('li').should('have.length', 3);
-      cy.get('@users').find('li:nth-child(1)').should('contain', 'Grace');
-      cy.get('@users').find('li:nth-child(1)').should('contain', 'Editor');
+      cy.get('@users').find('li.k-list-item').should('contain', 'Grace');
+      cy.get('@users').find('li.k-list-item').should('contain', 'Editor');
     });
 
   });
