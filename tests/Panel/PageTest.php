@@ -516,6 +516,9 @@ class PageTest extends TestCase
         $this->assertSame('test', $route['breadcrumb']()[0]['label']);
     }
 
+    /**
+     * @covers ::url
+     */
     public function testUrl()
     {
         $app = $this->app->clone([

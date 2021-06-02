@@ -41,6 +41,20 @@ class UserTest extends TestCase
     }
 
     /**
+     * @covers ::breadcrumb
+     */
+    public function testBreadcrumb(): void
+    {
+        $model = new ModelUser([
+            'email' => 'test@getkirby.com',
+        ]);
+
+        $breadcrumb = (new User($model))->breadcrumb();
+        $this->assertSame('test@getkirby.com', $breadcrumb[0]['label']);
+        $this->assertStringStartsWith('/users/', $breadcrumb[0]['link']);
+    }
+
+    /**
      * @covers ::icon
      */
     public function testIconDefault()
@@ -242,5 +256,82 @@ class UserTest extends TestCase
         $this->assertSame('test@getkirby.com', $data['email']);
         $this->assertTrue(Str::startsWith($data['link'], '/users/'));
         $this->assertSame('test@getkirby.com', $data['text']);
+    }
+
+    /**
+     * @covers ::route
+     */
+    public function testRoute()
+    {
+        $user = new ModelUser([
+            'email' => 'test@getkirby.com',
+        ]);
+
+        $panel = new User($user);
+        $route = $panel->route();
+
+        $this->assertArrayHasKey('props', $route);
+        $this->assertSame('k-user-view', $route['component']);
+        $this->assertSame('test@getkirby.com', $route['title']);
+        $this->assertSame('test@getkirby.com', $route['breadcrumb'][0]['label']);
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testProps()
+    {
+        $user = new ModelUser([
+            'email'    => 'test@getkirby.com',
+            'language' => 'de'
+        ]);
+
+        $panel = new User($user);
+        $props = $panel->props();
+
+        $this->assertArrayHasKey('model', $props);
+        $this->assertArrayHasKey('avatar', $props['model']);
+        $this->assertArrayHasKey('content', $props['model']);
+        $this->assertArrayHasKey('email', $props['model']);
+        $this->assertArrayHasKey('id', $props['model']);
+        $this->assertArrayHasKey('language', $props['model']);
+        $this->assertArrayHasKey('name', $props['model']);
+        $this->assertArrayHasKey('role', $props['model']);
+        $this->assertArrayHasKey('username', $props['model']);
+
+        // inherited props
+        $this->assertArrayHasKey('blueprint', $props);
+        $this->assertArrayHasKey('lock', $props);
+        $this->assertArrayHasKey('permissions', $props);
+        $this->assertArrayHasKey('tab', $props);
+        $this->assertArrayHasKey('tabs', $props);
+    }
+
+    /**
+     * @covers ::translation
+     */
+    public function testTranslation()
+    {
+        // existing
+        $user = new ModelUser([
+            'email'    => 'test@getkirby.com',
+            'language' => 'de'
+        ]);
+
+        $panel = new User($user);
+        $translations = $panel->translation();
+        $this->assertSame('de', $translations->code());
+        $this->assertSame('Deutsch', $translations->get('translation.name'));
+
+        // non-existing
+        $user = new ModelUser([
+            'email'    => 'test@getkirby.com',
+            'language' => 'foo'
+        ]);
+
+        $panel = new User($user);
+        $translations = $panel->translation();
+        $this->assertSame('foo', $translations->code());
+        $this->assertSame(null, $translations->get('translation.name'));
     }
 }
