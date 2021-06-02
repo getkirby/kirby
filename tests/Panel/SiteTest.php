@@ -13,7 +13,6 @@ use PHPUnit\Framework\TestCase;
  */
 class SiteTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 

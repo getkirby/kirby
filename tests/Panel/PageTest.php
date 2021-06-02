@@ -21,11 +21,10 @@ class ModelPageTestForceLocked extends ModelPage
  */
 class PageTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 
-        public function setUp(): void
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [

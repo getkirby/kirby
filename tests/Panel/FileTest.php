@@ -23,7 +23,6 @@ class ModelFileTestForceLocked extends ModelFile
  */
 class FileTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 

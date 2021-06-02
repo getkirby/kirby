@@ -74,7 +74,6 @@ class CustomPanelModel extends Model
  */
 class ModelTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 

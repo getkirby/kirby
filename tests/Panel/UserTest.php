@@ -21,11 +21,10 @@ class ModelUserTestForceLocked extends ModelUser
  */
 class UserTest extends TestCase
 {
-
     protected $app;
     protected $fixtures;
 
-        public function setUp(): void
+    public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
