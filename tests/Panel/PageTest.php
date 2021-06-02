@@ -496,6 +496,44 @@ class PageTest extends TestCase
         $this->assertArrayHasKey('permissions', $props);
         $this->assertArrayHasKey('tab', $props);
         $this->assertArrayHasKey('tabs', $props);
+
+        $this->assertNull($props['next']());
+        $this->assertNull($props['prev']());
+        $this->assertSame([
+            'label' => 'Unlisted',
+            'text'  => 'The page is only accessible via URL'
+        ], $props['status']());
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNext()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'foo'],
+                    ['slug' => 'bar'],
+                    ['slug' => 'baz']
+                ]
+            ],
+        ]);
+        $app->impersonate('kirby');
+
+        $page  = $app->page('bar');
+        $panel = new Page($page);
+        $props = $panel->props();
+
+        $this->assertSame([
+            'link'    => '/pages/foo',
+            'tooltip' => 'foo'
+        ], $props['prev']());
+
+        $this->assertSame([
+            'link'    => '/pages/baz',
+            'tooltip' => 'baz'
+        ], $props['next']());
     }
 
     /**
