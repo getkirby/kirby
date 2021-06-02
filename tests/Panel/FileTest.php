@@ -647,6 +647,122 @@ class FileTest extends TestCase
     }
 
     /**
+     * @covers ::props
+     */
+    public function testProps()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $panel = new File($page->file('test.jpg'));
+        $props = $panel->props();
+
+        $this->assertArrayHasKey('model', $props);
+        $this->assertArrayHasKey('content', $props['model']);
+        $this->assertArrayHasKey('dimensions', $props['model']);
+        $this->assertArrayHasKey('extension', $props['model']);
+        $this->assertArrayHasKey('filename', $props['model']);
+        $this->assertArrayHasKey('id', $props['model']);
+        $this->assertArrayHasKey('mime', $props['model']);
+        $this->assertArrayHasKey('niceSize', $props['model']);
+        $this->assertArrayHasKey('parent', $props['model']);
+        $this->assertArrayHasKey('panelImage', $props['model']);
+        $this->assertArrayHasKey('previewUrl', $props['model']);
+        $this->assertArrayHasKey('url', $props['model']);
+        $this->assertArrayHasKey('template', $props['model']);
+        $this->assertArrayHasKey('type', $props['model']);
+
+        // inherited props
+        $this->assertArrayHasKey('blueprint', $props);
+        $this->assertArrayHasKey('lock', $props);
+        $this->assertArrayHasKey('permissions', $props);
+        $this->assertArrayHasKey('tab', $props);
+        $this->assertArrayHasKey('tabs', $props);
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNext()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'a.jpg'],
+                ['filename' => 'b.jpg'],
+                ['filename' => 'c.jpg']
+            ]
+        ]);
+
+        $props = (new File($page->file('a.jpg')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertSame('/pages/test/files/b.jpg', $props['next']()['link']);
+
+        $props = (new File($page->file('b.jpg')))->props();
+        $this->assertSame('/pages/test/files/a.jpg', $props['prev']()['link']);
+        $this->assertSame('/pages/test/files/c.jpg', $props['next']()['link']);
+
+        $props = (new File($page->file('c.jpg')))->props();
+        $this->assertSame('/pages/test/files/b.jpg', $props['prev']()['link']);
+        $this->assertNull($props['next']());
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNextWithSort()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'a.jpg', 'content' => ['sort' => 2]],
+                ['filename' => 'b.jpg', 'content' => ['sort' => 1]],
+                ['filename' => 'c.jpg', 'content' => ['sort' => 3]]
+            ]
+        ]);
+
+        $props = (new File($page->file('a.jpg')))->props();
+        $this->assertSame('/pages/test/files/b.jpg', $props['prev']()['link']);
+        $this->assertSame('/pages/test/files/c.jpg', $props['next']()['link']);
+
+        $props = (new File($page->file('b.jpg')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertSame('/pages/test/files/a.jpg', $props['next']()['link']);
+
+        $props = (new File($page->file('c.jpg')))->props();
+        $this->assertSame('/pages/test/files/a.jpg', $props['prev']()['link']);
+        $this->assertNull($props['next']());
+    }
+
+    /**
+     * @covers ::route
+     */
+    public function testRoute()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $panel = new File($page->file('test.jpg'));
+        $route = $panel->route();
+
+        $this->assertArrayHasKey('props', $route);
+        $this->assertSame('k-file-view', $route['component']);
+        $this->assertSame('test.jpg', $route['title']);
+        $this->assertSame('files', $route['search']);
+        $breadcrumb = $route['breadcrumb']();
+        $this->assertSame('test', $breadcrumb[0]['label']);
+        $this->assertSame('test.jpg', $breadcrumb[1]['label']);
+    }
+
+    /**
      * @covers ::url
      */
     public function testUrl()
