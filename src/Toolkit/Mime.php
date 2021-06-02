@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Kirby\Cms\App;
 use SimpleXMLElement;
 
 /**
@@ -20,18 +19,11 @@ use SimpleXMLElement;
 class Mime
 {
     /**
-     * Custom extension to MIME type map
-     *
-     * @var array
-     */
-    protected static $customTypes = [];
-
-    /**
      * Extension to MIME type map
      *
      * @var array
      */
-    protected static $types = [
+    public static $types = [
         'ai'    => 'application/postscript',
         'aif'   => 'audio/x-aiff',
         'aifc'  => 'audio/x-aiff',
@@ -126,8 +118,8 @@ class Mime
      * Fixes an invalid MIME type guess for the given file
      *
      * @param string $file
-     * @param string|null $mime
-     * @param string|null $extension
+     * @param string $mime
+     * @param string $extension
      * @return string|null
      */
     public static function fix(string $file, string $mime = null, string $extension = null)
@@ -171,8 +163,7 @@ class Mime
      */
     public static function fromExtension(string $extension)
     {
-        $types = static::types();
-        $mime  = $types[$extension] ?? null;
+        $mime = static::$types[$extension] ?? null;
         return is_array($mime) === true ? array_shift($mime) : $mime;
     }
 
@@ -273,7 +264,7 @@ class Mime
      */
     public static function toExtension(string $mime = null)
     {
-        foreach (static::types() as $key => $value) {
+        foreach (static::$types as $key => $value) {
             if (is_array($value) === true && in_array($mime, $value) === true) {
                 return $key;
             }
@@ -296,7 +287,7 @@ class Mime
     {
         $extensions = [];
 
-        foreach (static::types() as $key => $value) {
+        foreach (static::$types as $key => $value) {
             if (is_array($value) === true && in_array($mime, $value) === true) {
                 $extensions[] = $key;
                 continue;
@@ -315,7 +306,7 @@ class Mime
      * Returns the MIME type of a file
      *
      * @param string $file
-     * @param string|null $extension
+     * @param string $extension
      * @return string|false
      */
     public static function type(string $file, string $extension = null)
@@ -347,16 +338,6 @@ class Mime
      */
     public static function types(): array
     {
-        $optionMimeTypes = App::instance()->option('mime.types', []);
-
-        if (
-            empty($optionMimeTypes) === false &&
-            empty(static::$customTypes) === true
-        ) {
-            static::$customTypes = $optionMimeTypes;
-            static::$types       = A::merge(static::$types, $optionMimeTypes);
-        }
-
         return static::$types;
     }
 }

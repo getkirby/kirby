@@ -3,7 +3,6 @@
 namespace Kirby\Toolkit;
 
 use Exception;
-use Kirby\Cms\App;
 use Throwable;
 use ZipArchive;
 
@@ -11,7 +10,7 @@ use ZipArchive;
  * The `F` class provides methods for
  * dealing with files on the file system
  * level, like creating, reading,
- * deleting, copying or validating files.
+ * deleting, copying or validatings files.
  *
  * @package   Kirby Toolkit
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -21,19 +20,7 @@ use ZipArchive;
  */
 class F
 {
-    /**
-     * Custom categorized file types
-     *
-     * @var array
-     */
-    protected static $customTypes = [];
-
-    /**
-     * All available categorized file types
-     *
-     * @var array
-     */
-    protected static $types = [
+    public static $types = [
         'archive' => [
             'gz',
             'gzip',
@@ -189,7 +176,7 @@ class F
      * Checks if the file exists on disk
      *
      * @param string $file
-     * @param string|null $in
+     * @param string $in
      * @return bool
      */
     public static function exists(string $file, string $in = null): bool
@@ -205,8 +192,8 @@ class F
     /**
      * Gets the extension of a file
      *
-     * @param string|null $file The filename or path
-     * @param string|null $extension Set an optional extension to overwrite the current one
+     * @param string $file The filename or path
+     * @param string $extension Set an optional extension to overwrite the current one
      * @return string
      */
     public static function extension(string $file = null, string $extension = null): string
@@ -239,7 +226,7 @@ class F
      */
     public static function extensionToType(string $extension)
     {
-        foreach (static::types() as $type => $extensions) {
+        foreach (static::$types as $type => $extensions) {
             if (in_array($extension, $extensions) === true) {
                 return $type;
             }
@@ -251,7 +238,7 @@ class F
     /**
      * Returns all extensions for a certain file type
      *
-     * @param string|null $type
+     * @param string $type
      * @return array
      */
     public static function extensions(string $type = null)
@@ -260,9 +247,7 @@ class F
             return array_keys(Mime::types());
         }
 
-        $types = static::types();
-
-        return $types[$type] ?? [];
+        return static::$types[$type] ?? [];
     }
 
     /**
@@ -353,7 +338,6 @@ class F
      * @param string $link
      * @param string $method
      * @return bool
-     * @throws \Exception
      */
     public static function link(string $source, string $link, string $method = 'link'): bool
     {
@@ -448,7 +432,7 @@ class F
     /**
      * Converts a mime type to a file extension
      *
-     * @param string|null $mime
+     * @param string $mime
      * @return string|false
      */
     public static function mimeToExtension(string $mime = null)
@@ -471,7 +455,7 @@ class F
      * Get the file's last modification time.
      *
      * @param string $file
-     * @param string|null $format
+     * @param string $format
      * @param string $handler date or strftime
      * @return mixed
      */
@@ -624,9 +608,8 @@ class F
      * Returns the absolute path to the file if the file can be found.
      *
      * @param string $file
-     * @param string|null $in
+     * @param string $in
      * @return string|null
-     * @throws \Exception
      */
     public static function realpath(string $file, string $in = null)
     {
@@ -658,7 +641,7 @@ class F
      * @SuppressWarnings(PHPMD.CountInLoopExpression)
      *
      * @param string $file
-     * @param string|null $in
+     * @param string $in
      * @return string
      */
     public static function relativepath(string $file, string $in = null): string
@@ -805,33 +788,13 @@ class F
         // sanitize extension
         $extension = strtolower($extension);
 
-        foreach (static::types() as $type => $extensions) {
+        foreach (static::$types as $type => $extensions) {
             if (in_array($extension, $extensions) === true) {
                 return $type;
             }
         }
 
         return null;
-    }
-
-    /**
-     * Returns all available file types
-     *
-     * @return array
-     */
-    public static function types(): array
-    {
-        $optionFileTypes = App::instance()->option('file.types', []);
-
-        if (
-            empty($optionFileTypes) === false &&
-            empty(static::$customTypes) === true
-        ) {
-            static::$customTypes = $optionFileTypes;
-            static::$types       = A::merge(static::$types, $optionFileTypes);
-        }
-
-        return static::$types;
     }
 
     /**
@@ -852,7 +815,6 @@ class F
      * @param string $file
      * @param string $to
      * @return bool
-     * @throws \Exception
      */
     public static function unzip(string $file, string $to): bool
     {
@@ -891,9 +853,8 @@ class F
      *
      * @param string $file The path for the new file
      * @param mixed $content Either a string, an object or an array. Arrays and objects will be serialized.
-     * @param bool $append true: append the content to an existing file if available. false: overwrite.
+     * @param bool $append true: append the content to an exisiting file if available. false: overwrite.
      * @return bool
-     * @throws \Exception
      */
     public static function write(string $file, $content, bool $append = false): bool
     {
