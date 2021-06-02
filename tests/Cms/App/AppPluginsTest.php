@@ -7,7 +7,9 @@ use Kirby\Cms\Auth\Challenge;
 use Kirby\Form\Field as FormField;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Mime;
 
 require_once __DIR__ . '/../mocks.php';
 
@@ -981,5 +983,52 @@ class AppPluginsTest extends TestCase
 
         $this->assertEquals('https://rewritten.getkirby.com/test', $kirby->component('url')($kirby, 'test'));
         $this->assertEquals('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
+    }
+
+    public function testFileTypes()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'fileTypes' => [
+                'm4p' => [
+                    'mime' => 'video/m4p',
+                    'type' => 'video',
+                ],
+                'heif' => [
+                    'mime' => ['image/heic', 'image/heif'],
+                    'type' => 'image',
+                    'resizable' => true,
+                    'viewable' => true,
+                ],
+                'test' => [
+                    'extension' => 'kql',
+                    'type' => 'code'
+                ]
+            ]
+        ]);
+
+        $fileTypes = $kirby->extensions('fileTypes');
+        $this->assertSame($fileTypes['type'], F::$types);
+        $this->assertSame($fileTypes['mime'], Mime::$types);
+        $this->assertSame($fileTypes['resizable'], F::$resizable);
+        $this->assertSame($fileTypes['viewable'], F::$viewable);
+
+        $this->assertContains('m4p', F::$types['video']);
+        $this->assertArrayHasKey('m4p', Mime::$types);
+        $this->assertSame('video/m4p', Mime::$types['m4p']);
+        $this->assertNotContains('m4p', F::$resizable);
+        $this->assertNotContains('m4p', F::$viewable);
+
+        $this->assertContains('heif', F::$types['image']);
+        $this->assertArrayHasKey('heif', Mime::$types);
+        $this->assertSame(['image/heic', 'image/heif'], Mime::$types['heif']);
+        $this->assertContains('heif', F::$resizable);
+        $this->assertContains('heif', F::$viewable);
+
+        $this->assertContains('kql', F::$types['code']);
+        $this->assertNotContains('kql', F::$resizable);
+        $this->assertNotContains('kql', F::$viewable);
     }
 }

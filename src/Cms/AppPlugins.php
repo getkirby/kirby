@@ -10,6 +10,7 @@ use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection as ToolkitCollection;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Mime;
 use Kirby\Toolkit\V;
 
 /**
@@ -58,6 +59,7 @@ trait AppPlugins
         'collectionMethods' => [],
         'fieldMethods' => [],
         'fileMethods' => [],
+        'fileTypes' => [],
         'filesMethods' => [],
         'fields' => [],
         'hooks' => [],
@@ -223,6 +225,63 @@ trait AppPlugins
     protected function extendFileMethods(array $methods): array
     {
         return $this->extensions['fileMethods'] = File::$methods = array_merge(File::$methods, $methods);
+    }
+
+    /**
+     * Registers additional custom file types and mimes
+     *
+     * @param array $fileTypes
+     * @return array
+     */
+    protected function extendFileTypes(array $fileTypes): array
+    {
+        $extends = [
+            'type' => [],
+            'mime' => [],
+            'resizable' => [],
+            'viewable' => []
+        ];
+
+        // normalize array
+        foreach ($fileTypes as $ext => $file) {
+            $extension = $file['extension'] ?? $ext;
+
+            if (isset($file['type']) === true) {
+                $extends['type'][$file['type']][] = $extension;
+            }
+
+            if (isset($file['mime']) === true) {
+                $extends['mime'][$extension] = $file['mime'];
+            }
+
+            if (($file['resizable'] ?? false) === true) {
+                $extends['resizable'][] = $extension;
+            }
+
+            if (($file['viewable'] ?? false) === true) {
+                $extends['viewable'][] = $extension;
+            }
+        }
+
+        // inject extended extensions
+        foreach ($extends as $type => &$values) {
+            switch ($type) {
+                case 'type':
+                    $values = F::$types = array_merge_recursive(F::$types, $values);
+                    break;
+                case 'mime':
+                    $values = Mime::$types = array_merge(Mime::$types, $values);
+                    break;
+                case 'resizable':
+                    $values = F::$resizable = array_merge(F::$resizable, $values);
+                    break;
+                case 'viewable':
+                    $values = F::$viewable = array_merge(F::$viewable, $values);
+                    break;
+            }
+        }
+
+        return $this->extensions['fileTypes'] = $extends;
     }
 
     /**
