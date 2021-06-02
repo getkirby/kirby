@@ -13,9 +13,24 @@ use PHPUnit\Framework\TestCase;
  */
 class SiteTest extends TestCase
 {
+
+    protected $app;
+    protected $fixtures;
+
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/SiteTest',
+            ]
+        ]);
+
+        Dir::make($this->fixtures);
+    }
+
     public function tearDown(): void
     {
-        Dir::remove(__DIR__ . '/tmp');
+        Dir::remove($this->fixtures);
     }
 
     protected function panel(array $props = [])
@@ -55,11 +70,7 @@ class SiteTest extends TestCase
      */
     public function testImageCover()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null',
-                'media' => __DIR__ . '/tmp'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'files' => [
                     ['filename' => 'test.jpg']

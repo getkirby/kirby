@@ -23,9 +23,24 @@ class ModelFileTestForceLocked extends ModelFile
  */
 class FileTest extends TestCase
 {
+
+    protected $app;
+    protected $fixtures;
+
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/FileTest',
+            ]
+        ]);
+
+        Dir::make($this->fixtures);
+    }
+
     public function tearDown(): void
     {
-        Dir::remove(__DIR__ . '/tmp');
+        Dir::remove($this->fixtures);
     }
 
     /**
@@ -131,10 +146,7 @@ class FileTest extends TestCase
      */
     public function testDragTextMarkdown()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => false
@@ -169,11 +181,7 @@ class FileTest extends TestCase
      */
     public function testDragTextCustomMarkdown()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => false,
@@ -188,7 +196,6 @@ class FileTest extends TestCase
                     ]
                 ]
             ],
-
             'site' => [
                 'children' => [
                     [
@@ -216,11 +223,7 @@ class FileTest extends TestCase
      */
     public function testDragTextCustomKirbytext()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => [
@@ -234,7 +237,6 @@ class FileTest extends TestCase
                     ]
                 ]
             ],
-
             'site' => [
                 'children' => [
                     [
@@ -316,11 +318,7 @@ class FileTest extends TestCase
      */
     public function testImageCover()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null',
-                'media' => __DIR__ . '/tmp'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'files' => [
                     ['filename' => 'test.jpg']
@@ -474,7 +472,7 @@ class FileTest extends TestCase
      */
     public function testOptionsAllowedReplaceOption()
     {
-        new App([
+        $this->app->clone([
             'blueprints' => [
                 'files/test' => [
                     'name'   => 'test',
@@ -508,7 +506,7 @@ class FileTest extends TestCase
      */
     public function testOptionsDisabledReplaceOption()
     {
-        new App([
+        $this->app->clone([
             'blueprints' => [
                 'files/restricted' => [
                     'name'   => 'restricted',
@@ -654,10 +652,7 @@ class FileTest extends TestCase
      */
     public function testUrl()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'urls' => [
                 'index' => 'https://getkirby.com'
             ],

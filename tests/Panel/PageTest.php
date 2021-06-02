@@ -21,9 +21,24 @@ class ModelPageTestForceLocked extends ModelPage
  */
 class PageTest extends TestCase
 {
+
+    protected $app;
+    protected $fixtures;
+
+        public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/PageTest',
+            ]
+        ]);
+
+        Dir::make($this->fixtures);
+    }
+
     public function tearDown(): void
     {
-        Dir::remove(__DIR__ . '/tmp');
+        Dir::remove($this->fixtures);
     }
 
     /**
@@ -55,10 +70,7 @@ class PageTest extends TestCase
      */
     public function testDragTextMarkdown()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => false
@@ -91,11 +103,7 @@ class PageTest extends TestCase
      */
     public function testDragTextCustomMarkdown()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => false,
@@ -106,7 +114,6 @@ class PageTest extends TestCase
                     ]
                 ]
             ],
-
             'site' => [
                 'children' => [
                     [
@@ -128,11 +135,7 @@ class PageTest extends TestCase
      */
     public function testDragTextCustomKirbytext()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => [
@@ -142,7 +145,6 @@ class PageTest extends TestCase
                     ]
                 ]
             ],
-
             'site' => [
                 'children' => [
                     [
@@ -258,11 +260,7 @@ class PageTest extends TestCase
      */
     public function testImageCover()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null',
-                'media' => __DIR__ . '/tmp'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'children' => [
                     [
@@ -426,13 +424,10 @@ class PageTest extends TestCase
         $this->assertSame('Test Title', $data['text']);
     }
 
-    
+
     public function testUrl()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'urls' => [
                 'index' => 'https://getkirby.com'
             ],

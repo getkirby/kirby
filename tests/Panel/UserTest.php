@@ -21,9 +21,24 @@ class ModelUserTestForceLocked extends ModelUser
  */
 class UserTest extends TestCase
 {
+
+    protected $app;
+    protected $fixtures;
+
+        public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/SiteTest',
+            ]
+        ]);
+
+        Dir::make($this->fixtures);
+    }
+
     public function tearDown(): void
     {
-        Dir::remove(__DIR__ . '/tmp');
+        Dir::remove($this->fixtures);
     }
 
     /**
@@ -79,11 +94,7 @@ class UserTest extends TestCase
      */
     public function testImageCover()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null',
-                'media' => __DIR__ . '/tmp'
-            ],
+        $app = $this->app->clone([
             'users' => [
                 [
                     'email' => 'test@getkirby.com',
