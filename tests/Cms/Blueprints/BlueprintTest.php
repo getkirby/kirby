@@ -42,7 +42,7 @@ class BlueprintTest extends TestCase
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Invalid blueprint model');
 
-        new Blueprint(['model' => new \stdClass]);
+        new Blueprint(['model' => new \stdClass()]);
     }
 
     public function testConvertColumnsToTabs()
