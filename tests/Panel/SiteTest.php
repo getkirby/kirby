@@ -115,4 +115,34 @@ class SiteTest extends TestCase
             ]
         ], $panel->image(['cover' => true]));
     }
+
+    /**
+     * @covers ::props
+     */
+    public function testProps()
+    {
+        $props = $this->panel()->props();
+
+        $this->assertArrayHasKey('model', $props);
+        $this->assertArrayHasKey('content', $props['model']);
+        $this->assertArrayHasKey('previewUrl', $props['model']);
+        $this->assertArrayHasKey('title', $props['model']);
+
+        // inherited props
+        $this->assertArrayHasKey('blueprint', $props);
+        $this->assertArrayHasKey('lock', $props);
+        $this->assertArrayHasKey('permissions', $props);
+        $this->assertArrayHasKey('tab', $props);
+        $this->assertArrayHasKey('tabs', $props);
+    }
+
+    /**
+     * @covers ::route
+     */
+    public function testRoute()
+    {
+        $route = $this->panel()->route();
+        $this->assertArrayHasKey('props', $route);
+        $this->assertSame('k-site-view', $route['component']);
+    }
 }
