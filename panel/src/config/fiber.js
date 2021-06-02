@@ -118,9 +118,9 @@ const Fiber = {
 
     // set the document title according to $view.title
     if (data.$view.title) {
-      document.title = data.$view.title + " | Kirby Panel";
+      document.title = data.$view.title + " | " + data.$system.title;
     } else {
-      document.title = "Kirby Panel";
+      document.title = data.$system.title;
     }
 
     // return the full data object
