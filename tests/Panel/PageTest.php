@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
+use Kirby\Cms\Site as ModelSite;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
@@ -38,6 +39,52 @@ class PageTest extends TestCase
     public function tearDown(): void
     {
         Dir::remove($this->fixtures);
+    }
+
+    /**
+     * @covers ::breadcrumb
+     */
+    public function testBreadcrumb(): void
+    {
+        $site = new ModelSite([
+            'children' => [
+                [
+                    'slug' => 'a',
+                    'children' => [
+                        [
+                            'slug' => 'b',
+                            'children' => [
+                                ['slug' => 'c'],
+                            ]
+                        ],
+                    ]
+                ],
+            ]
+        ]);
+
+        $page = new Page($site->page('a'));
+        $this->assertSame([
+            [
+                'label' => 'a',
+                'link'  => '/pages/a'
+            ]
+        ], $page->breadcrumb());
+
+        $page = new Page($site->page('a/b/c'));
+        $this->assertSame([
+            [
+                'label' => 'a',
+                'link'  => '/pages/a'
+            ],
+            [
+                'label' => 'b',
+                'link'  => '/pages/a+b'
+            ],
+            [
+                'label' => 'c',
+                'link'  => '/pages/a+b+c'
+            ]
+        ], $page->breadcrumb());
     }
 
     /**
@@ -423,6 +470,51 @@ class PageTest extends TestCase
         $this->assertSame('Test Title', $data['text']);
     }
 
+    /**
+     * @covers ::props
+     */
+    public function testProps()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test'
+        ]);
+
+        $panel = new Page($page);
+        $props = $panel->props();
+
+        $this->assertArrayHasKey('model', $props);
+        $this->assertArrayHasKey('content', $props['model']);
+        $this->assertArrayHasKey('id', $props['model']);
+        $this->assertArrayHasKey('parent', $props['model']);
+        $this->assertArrayHasKey('previewUrl', $props['model']);
+        $this->assertArrayHasKey('status', $props['model']);
+        $this->assertArrayHasKey('title', $props['model']);
+
+        // inherited props
+        $this->assertArrayHasKey('blueprint', $props);
+        $this->assertArrayHasKey('lock', $props);
+        $this->assertArrayHasKey('permissions', $props);
+        $this->assertArrayHasKey('tab', $props);
+        $this->assertArrayHasKey('tabs', $props);
+    }
+
+    /**
+     * @covers ::route
+     */
+    public function testRoute()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+        ]);
+
+        $panel = new Page($page);
+        $route = $panel->route();
+
+        $this->assertArrayHasKey('props', $route);
+        $this->assertSame('k-page-view', $route['component']);
+        $this->assertSame('test', $route['title']);
+        $this->assertSame('test', $route['breadcrumb']()[0]['label']);
+    }
 
     public function testUrl()
     {
