@@ -4,6 +4,9 @@ namespace Kirby\Cms;
 
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\Blueprint
+ */
 class BlueprintTest extends TestCase
 {
     protected $app;
@@ -18,6 +21,28 @@ class BlueprintTest extends TestCase
         ]);
 
         $this->model = new Page(['slug' => 'a']);
+    }
+
+    /**
+     * @covers ::__construct
+     */
+    public function testConstructWithoutModel()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('A blueprint model is required');
+
+        new Blueprint([]);
+    }
+
+    /**
+     * @covers ::__construct
+     */
+    public function testConstructInvalidModel()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid blueprint model');
+
+        new Blueprint(['model' => new \stdClass]);
     }
 
     public function testConvertColumnsToTabs()
@@ -40,8 +65,6 @@ class BlueprintTest extends TestCase
 
         $expected = [
             'main' => [
-                'name'    => 'main',
-                'label'   => 'Main',
                 'columns' => [
                     [
                         'width' => '1/3',
@@ -67,11 +90,14 @@ class BlueprintTest extends TestCase
                     ]
                 ],
                 'icon'    => null,
-                'link'    => '/pages/a/?tab=main'
+                'label'   => 'Main',
+                'link'    => '/pages/a/?tab=main',
+                'name'    => 'main'
             ]
         ];
 
-        $this->assertEquals($expected, $blueprint->toArray()['tabs']);
+        $this->assertSame($expected, $blueprint->toArray()['tabs']);
+        $this->assertSame($expected['main'], $blueprint->tab());
     }
 
     public function testSectionsToColumns()
