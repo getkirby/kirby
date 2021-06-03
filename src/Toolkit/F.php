@@ -20,6 +20,9 @@ use ZipArchive;
  */
 class F
 {
+    /**
+     * @var array
+     */
     public static $types = [
         'archive' => [
             'gz',
@@ -105,6 +108,9 @@ class F
         ],
     ];
 
+    /**
+     * @var array
+     */
     public static $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
     /**
