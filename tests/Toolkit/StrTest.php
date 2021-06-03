@@ -15,6 +15,17 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::accepted
+     */
+    public function testAccepted()
+    {
+        $this->assertSame([
+            ['quality' => 1.0, 'value' => 'image/jpeg'],
+            ['quality' => 0.7, 'value' => 'image/png']
+        ], Str::accepted('image/jpeg,  image/png;q=0.7'));
+    }
+
+    /**
      * @covers ::ascii
      */
     public function testAscii()
@@ -92,6 +103,33 @@ class StrTest extends TestCase
         $this->assertTrue(Str::contains($string, 'Wörld', true));
         $this->assertTrue(Str::contains($string, 'hellö', true));
         $this->assertTrue(Str::contains($string, 'wörld', true));
+    }
+
+    /**
+     * @covers ::convert
+     */
+    public function testConvert()
+    {
+        $source = 'ÖÄÜ';
+
+        // same encoding
+        $result = Str::convert($source, 'UTF-8');
+        $this->assertSame('UTF-8', Str::encoding($source));
+        $this->assertSame('UTF-8', Str::encoding($result));
+
+        // different  encoding
+        $result = Str::convert($source, 'ISO-8859-1');
+        $this->assertSame('UTF-8', Str::encoding($source));
+        $this->assertSame('ISO-8859-1', Str::encoding($result));
+    }
+
+    /**
+     * @covers ::encode
+     */
+    public function testEncode()
+    {
+        $email = 'test@getkirby.com';
+        $this->assertSame($email, Html::decode(Str::encode($email)));
     }
 
     /**
@@ -309,6 +347,46 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::pool
+     */
+    public function testPool()
+    {
+        // alpha
+        $string = Str::pool('alpha', false);
+        $this->assertTrue(V::alpha($string));
+        $this->assertSame(52, strlen($string));
+
+        // alphaLower
+        $string = Str::pool('alphaLower', false);
+        $this->assertTrue(V::alpha($string));
+        $this->assertSame(26, strlen($string));
+
+        // alphaUpper
+        $string = Str::pool('alphaUpper', false);
+        $this->assertTrue(V::alpha($string));
+        $this->assertSame(26, strlen($string));
+
+        // num
+        $string = Str::pool('num', false);
+        $this->assertTrue(V::num($string));
+        $this->assertSame(10, strlen($string));
+
+        // alphaNum
+        $string = Str::pool('alphaNum', false);
+        $this->assertTrue(V::alphanum($string));
+        $this->assertSame(62, strlen($string));
+
+        // [alphaLower, num]
+        $string = Str::pool(['alphaLower', 'num'], false);
+        $this->assertTrue(V::alphanum($string));
+        $this->assertSame(36, strlen($string));
+
+        // string vs. array
+        $this->assertIsString(Str::pool('alpha', false));
+        $this->assertIsArray(Str::pool('alpha'));
+    }
+
+    /**
      * @covers ::position
      */
     public function testPosition()
@@ -326,6 +404,15 @@ class StrTest extends TestCase
         $this->assertTrue(Str::position($string, 'h', true) === 0);
         $this->assertTrue(Str::position($string, 'ö', true) === 4);
         $this->assertTrue(Str::position($string, 'Ö', true) === 4);
+    }
+
+    /**
+     * @covers ::query
+     */
+    public function testQuery()
+    {
+        $result = Str::query('data.1', ['data' => ['foo', 'bar']]);
+        $this->assertSame('bar', $result);
     }
 
     /**
@@ -511,7 +598,7 @@ class StrTest extends TestCase
         );
 
         $this->assertSame(
-            'other interesting string',
+            'other interesting story',
             Str::replaceReplacements('some some string', [
                 [
                     'search'  => 'some',
@@ -522,6 +609,11 @@ class StrTest extends TestCase
                     'search'  => 'other string',
                     'replace' => 'interesting string',
                     'limit'   => 1
+                ],
+                [
+                    'search'  => 'string',
+                    'replace' => 'story',
+                    'limit'   => 5
                 ]
             ])
         );
@@ -965,5 +1057,15 @@ EOT;
     {
         $this->assertSame('ÖÄÜ', Str::upper('öäü'));
         $this->assertSame('ÖÄÜ', Str::upper('Öäü'));
+    }
+
+    /**
+     * @covers ::widont
+     */
+    public function testWidont()
+    {
+        $this->assertSame('Test&nbsp;Headline', Str::widont('Test Headline'));
+        $this->assertSame('Test Headline&nbsp;With&#8209;Dash', Str::widont('Test Headline With-Dash'));
+        $this->assertSame('', Str::widont());
     }
 }
