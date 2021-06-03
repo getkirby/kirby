@@ -424,12 +424,14 @@ class Panel
      * Redirect to a Panel url
      *
      * @param string|null $path
+     * @throws \Kirby\Panel\Redirect
      * @return void
      * @codeCoverageIgnore
      */
-    public static function go(?string $path = null)
+    public static function go(?string $path = null): void
     {
-        go(option('panel.slug', 'panel') . '/' . trim($path, '/'));
+        $url = option('panel.slug', 'panel') . '/' . trim($path, '/');
+        throw new Redirect($url);
     }
 
     /**
@@ -663,6 +665,8 @@ class Panel
                 }
 
                 $result = $route->action()->call($route, ...$route->arguments());
+            } catch (Redirect $e) {
+                $result = Response::redirect($e->location());
             } catch (Throwable $e) {
                 $result = static::error($kirby, $e->getMessage());
             }
