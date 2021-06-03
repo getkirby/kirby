@@ -1043,8 +1043,6 @@ class AppPluginsTest extends TestCase
         $this->assertContains('kql', F::$types['code']);
         $this->assertNotContains('kql', Image::$resizableTypes);
         $this->assertNotContains('kql', Image::$viewableTypes);
-        $this->assertNotContains('kql', Image::$resizableTypes);
-        $this->assertNotContains('kql', Image::$viewableTypes);
 
         $this->assertArrayHasKey('midi', Mime::$types);
         $this->assertSame(['audio/midi', 'audio/x-midi'], Mime::$types['midi']);

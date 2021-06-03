@@ -244,7 +244,7 @@ trait AppPlugins
             $resizable = $file['resizable'] ?? false;
             $viewable  = $file['viewable'] ?? false;
 
-            if ($type !== null) {
+            if (is_string($type) === true) {
                 if (isset(F::$types[$type]) === false) {
                     F::$types[$type] = [];
                 }
@@ -256,6 +256,8 @@ trait AppPlugins
 
             if ($mime !== null) {
                 if (array_key_exists($extension, Mime::$types) === true) {
+                    // if `Mime::$types[$extension]` is not already an array, make it one
+                    // and append the new MIME type unless it's already in the list
                     Mime::$types[$extension] = array_unique(array_merge((array)Mime::$types[$extension], (array)$mime));
                 } else {
                     Mime::$types[$extension] = $mime;
