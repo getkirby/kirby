@@ -521,19 +521,113 @@ class PageTest extends TestCase
         ]);
         $app->impersonate('kirby');
 
-        $page  = $app->page('bar');
-        $panel = new Page($page);
-        $props = $panel->props();
+        $props = (new Page($app->page('foo')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertSame('/pages/bar', $props['next']()['link']);
 
-        $this->assertSame([
-            'link'    => '/pages/foo',
-            'tooltip' => 'foo'
-        ], $props['prev']());
+        $props = (new Page($app->page('bar')))->props();
+        $this->assertSame('/pages/foo', $props['prev']()['link']);
+        $this->assertSame('/pages/baz', $props['next']()['link']);
 
+        $props = (new Page($app->page('baz')))->props();
+        $this->assertSame('/pages/bar', $props['prev']()['link']);
+        $this->assertNull($props['next']());
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNextWithSameTemplate()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'foo', 'template' => 'note'],
+                    ['slug' => 'bar', 'template' => 'album'],
+                    ['slug' => 'baz', 'template' => 'note']
+                ]
+            ],
+        ]);
+        $app->impersonate('kirby');
+
+        $props = (new Page($app->page('foo')))->props();
+        $this->assertSame('/pages/baz', $props['next']()['link']);
+
+        $props = (new Page($app->page('bar')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertNull($props['next']());
+
+        $props = (new Page($app->page('baz')))->props();
+        $this->assertSame('/pages/foo', $props['prev']()['link']);
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNextWithSameStatus()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'foo', 'num' => 0],
+                    ['slug' => 'bar', 'num' => null],
+                    ['slug' => 'baz', 'num' => 0]
+                ]
+            ],
+        ]);
+        $app->impersonate('kirby');
+
+        $props = (new Page($app->page('foo')))->props();
+        $this->assertSame('/pages/baz', $props['next']()['link']);
+
+        $props = (new Page($app->page('bar')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertNull($props['next']());
+
+        $props = (new Page($app->page('baz')))->props();
+        $this->assertSame('/pages/foo', $props['prev']()['link']);
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsStatus()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'num'   => 0
+        ]);
+
+        $props = (new Page($page))->props();
         $this->assertSame([
-            'link'    => '/pages/baz',
-            'tooltip' => 'baz'
-        ], $props['next']());
+            'label' => 'Public',
+            'text'  => 'The page is public for anyone'
+        ], $props['status']());
+
+
+        $app = $this->app->clone([
+            'blueprints' => [
+                'pages/note' => [
+                    'status' => [
+                        'unlisted' => 'Foo',
+                    ]
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'template' => 'note'
+                    ]
+                ]
+            ]
+        ]);
+
+        $props = (new Page($app->page('test')))->props();
+        $this->assertSame([
+            'label' => 'Foo',
+            'text'  => null
+        ], $props['status']());
     }
 
     /**

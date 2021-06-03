@@ -323,12 +323,17 @@ class UserTest extends TestCase
             ]
         ]);
 
-        $user  = $app->user('b@getkirby.com');
-        $panel = new User($user);
-        $props = $panel->props();
+        $props = (new User($app->user('a@getkirby.com')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertSame('b@getkirby.com', $props['next']()['tooltip']);
 
+        $props = (new User($app->user('b@getkirby.com')))->props();
         $this->assertSame('a@getkirby.com', $props['prev']()['tooltip']);
         $this->assertSame('c@getkirby.com', $props['next']()['tooltip']);
+
+        $props = (new User($app->user('c@getkirby.com')))->props();
+        $this->assertSame('b@getkirby.com', $props['prev']()['tooltip']);
+        $this->assertNull($props['next']());
     }
 
     /**
