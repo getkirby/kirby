@@ -111,31 +111,7 @@ class F
     /**
      * @var array
      */
-    public static $resizable = [
-        'jpg',
-        'jpeg',
-        'gif',
-        'png',
-        'webp'
-    ];
-
-    /**
-     * @var array
-     */
     public static $units = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-    /**
-     * @var array
-     */
-    public static $viewable = [
-        'avif',
-        'jpg',
-        'jpeg',
-        'gif',
-        'png',
-        'svg',
-        'webp'
-    ];
 
     /**
      * Appends new content to an existing file

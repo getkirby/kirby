@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\DuplicateException;
 use Kirby\Form\Field as FormField;
+use Kirby\Image\Image;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection as ToolkitCollection;
@@ -235,53 +236,41 @@ trait AppPlugins
      */
     protected function extendFileTypes(array $fileTypes): array
     {
-        $extends = [
-            'type' => [],
-            'mime' => [],
-            'resizable' => [],
-            'viewable' => []
-        ];
-
         // normalize array
         foreach ($fileTypes as $ext => $file) {
             $extension = $file['extension'] ?? $ext;
+            $type      = $file['type'] ?? null;
+            $mime      = $file['mime'] ?? null;
+            $resizable = $file['resizable'] ?? false;
+            $viewable  = $file['viewable'] ?? false;
 
-            if (isset($file['type']) === true) {
-                $extends['type'][$file['type']][] = $extension;
+            if ($type !== null && in_array($extension, F::$types[$type]) === false) {
+                F::$types[$type][] = $extension;
             }
 
-            if (isset($file['mime']) === true) {
-                $extends['mime'][$extension] = $file['mime'];
+            if ($mime !== null) {
+                if (array_key_exists($extension, Mime::$types) == true) {
+                    Mime::$types[$extension] = array_merge((array)Mime::$types[$extension], (array)$mime);
+                } else {
+                    Mime::$types[$extension] = $mime;
+                }
             }
 
-            if (($file['resizable'] ?? false) === true) {
-                $extends['resizable'][] = $extension;
+            if ($resizable === true && in_array($extension, Image::$resizable) === false) {
+                Image::$resizable[] = $extension;
             }
 
-            if (($file['viewable'] ?? false) === true) {
-                $extends['viewable'][] = $extension;
-            }
-        }
-
-        // inject extended extensions
-        foreach ($extends as $type => &$values) {
-            switch ($type) {
-                case 'type':
-                    $values = F::$types = array_merge_recursive(F::$types, $values);
-                    break;
-                case 'mime':
-                    $values = Mime::$types = array_merge(Mime::$types, $values);
-                    break;
-                case 'resizable':
-                    $values = F::$resizable = array_merge(F::$resizable, $values);
-                    break;
-                case 'viewable':
-                    $values = F::$viewable = array_merge(F::$viewable, $values);
-                    break;
+            if ($viewable === true && in_array($extension, Image::$viewable) === false) {
+                Image::$viewable[] = $extension;
             }
         }
 
-        return $this->extensions['fileTypes'] = $extends;
+        return $this->extensions['fileTypes'] = [
+            'type' => F::$types,
+            'mime' => Mime::$types,
+            'resizable' => Image::$resizable,
+            'viewable' => Image::$viewable
+        ];
     }
 
     /**

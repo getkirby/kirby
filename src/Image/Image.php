@@ -3,7 +3,6 @@
 namespace Kirby\Image;
 
 use Kirby\Filesystem\File;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Html;
 
 /**
@@ -32,6 +31,30 @@ class Image extends File
      * @var \Kirby\Image\Dimensions|null
      */
     protected $dimensions;
+
+    /**
+     * @var array
+     */
+    public static $resizable = [
+        'jpg',
+        'jpeg',
+        'gif',
+        'png',
+        'webp'
+    ];
+
+    /**
+     * @var array
+     */
+    public static $viewable = [
+        'avif',
+        'jpg',
+        'jpeg',
+        'gif',
+        'png',
+        'svg',
+        'webp'
+    ];
 
     /**
      * Validation rules to be used for `::match()`
@@ -164,7 +187,7 @@ class Image extends File
      */
     public function isResizable(): bool
     {
-        return in_array($this->extension(), F::$resizable) === true;
+        return in_array($this->extension(), static::$resizable) === true;
     }
 
     /**
@@ -175,7 +198,7 @@ class Image extends File
      */
     public function isViewable(): bool
     {
-        return in_array($this->extension(), F::$viewable) === true;
+        return in_array($this->extension(), static::$viewable) === true;
     }
 
     /**
