@@ -157,7 +157,7 @@ class Str
         foreach ($items as $quality => $values) {
             foreach ($values as $value) {
                 $result[] = [
-                    'quality' => $quality,
+                    'quality' => (float)$quality,
                     'value'   => $value
                 ];
             }
@@ -474,14 +474,12 @@ class Str
             foreach ($type as $t) {
                 $pool = array_merge($pool, static::pool($t));
             }
-
-            return $pool;
         } else {
-            switch ($type) {
-                case 'alphaLower':
+            switch (strtolower($type)) {
+                case 'alphalower':
                     $pool = range('a', 'z');
                     break;
-                case 'alphaUpper':
+                case 'alphaupper':
                     $pool = range('A', 'Z');
                     break;
                 case 'alpha':
@@ -490,7 +488,7 @@ class Str
                 case 'num':
                     $pool = range(0, 9);
                     break;
-                case 'alphaNum':
+                case 'alphanum':
                     $pool = static::pool(['alpha', 'num']);
                     break;
             }
