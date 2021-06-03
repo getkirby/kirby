@@ -414,7 +414,7 @@ class Str
      */
     public static function isURL(?string $string = null): bool
     {
-        return $string !== null ? V::url($string) : false;
+        return filter_var($string, FILTER_VALIDATE_URL) !== false;
     }
 
     /**
