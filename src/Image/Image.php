@@ -35,7 +35,7 @@ class Image extends File
     /**
      * @var array
      */
-    public static $resizable = [
+    public static $resizableTypes = [
         'jpg',
         'jpeg',
         'gif',
@@ -46,7 +46,7 @@ class Image extends File
     /**
      * @var array
      */
-    public static $viewable = [
+    public static $viewableTypes = [
         'avif',
         'jpg',
         'jpeg',
@@ -187,7 +187,7 @@ class Image extends File
      */
     public function isResizable(): bool
     {
-        return in_array($this->extension(), static::$resizable) === true;
+        return in_array($this->extension(), static::$resizableTypes) === true;
     }
 
     /**
@@ -198,7 +198,7 @@ class Image extends File
      */
     public function isViewable(): bool
     {
-        return in_array($this->extension(), static::$viewable) === true;
+        return in_array($this->extension(), static::$viewableTypes) === true;
     }
 
     /**

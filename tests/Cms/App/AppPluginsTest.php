@@ -1015,6 +1015,9 @@ class AppPluginsTest extends TestCase
                 ],
                 'midi' => [
                     'mime' => 'audio/x-midi'
+                ],
+                'ttf' => [
+                    'type' => 'font'
                 ]
             ]
         ]);
@@ -1022,26 +1025,35 @@ class AppPluginsTest extends TestCase
         $fileTypes = $kirby->extensions('fileTypes');
         $this->assertSame($fileTypes['type'], F::$types);
         $this->assertSame($fileTypes['mime'], Mime::$types);
-        $this->assertSame($fileTypes['resizable'], Image::$resizable);
-        $this->assertSame($fileTypes['viewable'], Image::$viewable);
+        $this->assertSame($fileTypes['resizable'], Image::$resizableTypes);
+        $this->assertSame($fileTypes['viewable'], Image::$viewableTypes);
 
         $this->assertContains('m4p', F::$types['video']);
         $this->assertArrayHasKey('m4p', Mime::$types);
         $this->assertSame('video/m4p', Mime::$types['m4p']);
-        $this->assertNotContains('m4p', Image::$resizable);
-        $this->assertNotContains('m4p', Image::$viewable);
+        $this->assertNotContains('m4p', Image::$resizableTypes);
+        $this->assertNotContains('m4p', Image::$viewableTypes);
 
         $this->assertContains('heif', F::$types['image']);
         $this->assertArrayHasKey('heif', Mime::$types);
         $this->assertSame(['image/heic', 'image/heif'], Mime::$types['heif']);
-        $this->assertContains('heif', Image::$resizable);
-        $this->assertContains('heif', Image::$viewable);
+        $this->assertContains('heif', Image::$resizableTypes);
+        $this->assertContains('heif', Image::$viewableTypes);
 
         $this->assertContains('kql', F::$types['code']);
-        $this->assertNotContains('kql', Image::$resizable);
-        $this->assertNotContains('kql', Image::$viewable);
+        $this->assertNotContains('kql', Image::$resizableTypes);
+        $this->assertNotContains('kql', Image::$viewableTypes);
+        $this->assertNotContains('kql', Image::$resizableTypes);
+        $this->assertNotContains('kql', Image::$viewableTypes);
 
         $this->assertArrayHasKey('midi', Mime::$types);
         $this->assertSame(['audio/midi', 'audio/x-midi'], Mime::$types['midi']);
+        $this->assertNotContains('midi', Image::$resizableTypes);
+        $this->assertNotContains('midi', Image::$viewableTypes);
+
+        $this->assertArrayHasKey('font', F::$types);
+        $this->assertContains('ttf', F::$types['font']);
+        $this->assertNotContains('ttf', Image::$resizableTypes);
+        $this->assertNotContains('ttf', Image::$viewableTypes);
     }
 }

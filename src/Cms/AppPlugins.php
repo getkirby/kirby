@@ -244,32 +244,38 @@ trait AppPlugins
             $resizable = $file['resizable'] ?? false;
             $viewable  = $file['viewable'] ?? false;
 
-            if ($type !== null && in_array($extension, F::$types[$type]) === false) {
-                F::$types[$type][] = $extension;
+            if ($type !== null) {
+                if (isset(F::$types[$type]) === false) {
+                    F::$types[$type] = [];
+                }
+
+                if (in_array($extension, F::$types[$type]) === false) {
+                    F::$types[$type][] = $extension;
+                }
             }
 
             if ($mime !== null) {
-                if (array_key_exists($extension, Mime::$types) == true) {
-                    Mime::$types[$extension] = array_merge((array)Mime::$types[$extension], (array)$mime);
+                if (array_key_exists($extension, Mime::$types) === true) {
+                    Mime::$types[$extension] = array_unique(array_merge((array)Mime::$types[$extension], (array)$mime));
                 } else {
                     Mime::$types[$extension] = $mime;
                 }
             }
 
-            if ($resizable === true && in_array($extension, Image::$resizable) === false) {
-                Image::$resizable[] = $extension;
+            if ($resizable === true && in_array($extension, Image::$resizableTypes) === false) {
+                Image::$resizableTypes[] = $extension;
             }
 
-            if ($viewable === true && in_array($extension, Image::$viewable) === false) {
-                Image::$viewable[] = $extension;
+            if ($viewable === true && in_array($extension, Image::$viewableTypes) === false) {
+                Image::$viewableTypes[] = $extension;
             }
         }
 
         return $this->extensions['fileTypes'] = [
-            'type' => F::$types,
-            'mime' => Mime::$types,
-            'resizable' => Image::$resizable,
-            'viewable' => Image::$viewable
+            'type'      => F::$types,
+            'mime'      => Mime::$types,
+            'resizable' => Image::$resizableTypes,
+            'viewable'  => Image::$viewableTypes
         ];
     }
 
