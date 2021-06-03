@@ -305,6 +305,35 @@ class UserTest extends TestCase
         $this->assertArrayHasKey('permissions', $props);
         $this->assertArrayHasKey('tab', $props);
         $this->assertArrayHasKey('tabs', $props);
+
+        $this->assertNull($props['next']());
+        $this->assertNull($props['prev']());
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNext()
+    {
+        $app = $this->app->clone([
+            'users' => [
+                ['email' => 'a@getkirby.com'],
+                ['email' => 'b@getkirby.com'],
+                ['email' => 'c@getkirby.com']
+            ]
+        ]);
+
+        $props = (new User($app->user('a@getkirby.com')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertSame('b@getkirby.com', $props['next']()['tooltip']);
+
+        $props = (new User($app->user('b@getkirby.com')))->props();
+        $this->assertSame('a@getkirby.com', $props['prev']()['tooltip']);
+        $this->assertSame('c@getkirby.com', $props['next']()['tooltip']);
+
+        $props = (new User($app->user('c@getkirby.com')))->props();
+        $this->assertSame('b@getkirby.com', $props['prev']()['tooltip']);
+        $this->assertNull($props['next']());
     }
 
     /**

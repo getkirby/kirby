@@ -45,6 +45,9 @@ class DummyUser extends User
 {
 }
 
+/**
+ * @coversDefaultClass \Kirby\Cms\AppPlugins
+ */
 class AppPluginsTest extends TestCase
 {
     public $fixtures;
@@ -981,5 +984,28 @@ class AppPluginsTest extends TestCase
 
         $this->assertEquals('https://rewritten.getkirby.com/test', $kirby->component('url')($kirby, 'test'));
         $this->assertEquals('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
+    }
+
+    /**
+     * @covers ::extendAreas
+     */
+    public function testAreas()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'areas' => [
+                'todos' => function () {
+                    return [];
+                }
+            ]
+        ]);
+
+        $areas = $kirby->extensions('areas');
+
+        $this->assertCount(1, $areas);
+        $this->assertArrayHasKey('todos', $areas);
+        $this->assertInstanceOf('Closure', $areas['todos']);
     }
 }

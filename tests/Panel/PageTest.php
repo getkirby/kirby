@@ -496,6 +496,138 @@ class PageTest extends TestCase
         $this->assertArrayHasKey('permissions', $props);
         $this->assertArrayHasKey('tab', $props);
         $this->assertArrayHasKey('tabs', $props);
+
+        $this->assertNull($props['next']());
+        $this->assertNull($props['prev']());
+        $this->assertSame([
+            'label' => 'Unlisted',
+            'text'  => 'The page is only accessible via URL'
+        ], $props['status']());
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNext()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'foo'],
+                    ['slug' => 'bar'],
+                    ['slug' => 'baz']
+                ]
+            ],
+        ]);
+        $app->impersonate('kirby');
+
+        $props = (new Page($app->page('foo')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertSame('/pages/bar', $props['next']()['link']);
+
+        $props = (new Page($app->page('bar')))->props();
+        $this->assertSame('/pages/foo', $props['prev']()['link']);
+        $this->assertSame('/pages/baz', $props['next']()['link']);
+
+        $props = (new Page($app->page('baz')))->props();
+        $this->assertSame('/pages/bar', $props['prev']()['link']);
+        $this->assertNull($props['next']());
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNextWithSameTemplate()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'foo', 'template' => 'note'],
+                    ['slug' => 'bar', 'template' => 'album'],
+                    ['slug' => 'baz', 'template' => 'note']
+                ]
+            ],
+        ]);
+        $app->impersonate('kirby');
+
+        $props = (new Page($app->page('foo')))->props();
+        $this->assertSame('/pages/baz', $props['next']()['link']);
+
+        $props = (new Page($app->page('bar')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertNull($props['next']());
+
+        $props = (new Page($app->page('baz')))->props();
+        $this->assertSame('/pages/foo', $props['prev']()['link']);
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNextWithSameStatus()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'foo', 'num' => 0],
+                    ['slug' => 'bar', 'num' => null],
+                    ['slug' => 'baz', 'num' => 0]
+                ]
+            ],
+        ]);
+        $app->impersonate('kirby');
+
+        $props = (new Page($app->page('foo')))->props();
+        $this->assertSame('/pages/baz', $props['next']()['link']);
+
+        $props = (new Page($app->page('bar')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertNull($props['next']());
+
+        $props = (new Page($app->page('baz')))->props();
+        $this->assertSame('/pages/foo', $props['prev']()['link']);
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsStatus()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'num'   => 0
+        ]);
+
+        $props = (new Page($page))->props();
+        $this->assertSame([
+            'label' => 'Public',
+            'text'  => 'The page is public for anyone'
+        ], $props['status']());
+
+
+        $app = $this->app->clone([
+            'blueprints' => [
+                'pages/note' => [
+                    'status' => [
+                        'unlisted' => 'Foo',
+                    ]
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'template' => 'note'
+                    ]
+                ]
+            ]
+        ]);
+
+        $props = (new Page($app->page('test')))->props();
+        $this->assertSame([
+            'label' => 'Foo',
+            'text'  => null
+        ], $props['status']());
     }
 
     /**
