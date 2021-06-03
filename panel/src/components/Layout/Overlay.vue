@@ -52,6 +52,11 @@ export default {
   },
   methods: {
     close() {
+      // it makes it run once
+      if (this.isOpen === false) {
+        return;
+      }
+
       this.isOpen = false;
       this.$emit("close");
       this.restoreScrollPosition();
@@ -97,6 +102,11 @@ export default {
       }
     },
     open() {
+      // it makes it run once
+      if (this.isOpen === true) {
+        return;
+      }
+
       this.storeScrollPosition();
       this.isOpen = true;
       this.$emit("open");

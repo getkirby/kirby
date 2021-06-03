@@ -74,9 +74,23 @@ class CustomPanelModel extends Model
  */
 class ModelTest extends TestCase
 {
+    protected $app;
+    protected $fixtures;
+
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/ModelTest',
+            ]
+        ]);
+
+        Dir::make($this->fixtures);
+    }
+
     public function tearDown(): void
     {
-        Dir::remove(__DIR__ . '/tmp');
+        Dir::remove($this->fixtures);
     }
 
     protected function panel(array $props = [])
@@ -104,11 +118,7 @@ class ModelTest extends TestCase
      */
     public function testDragTextFromCallbackMarkdown()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'markdown' => [
@@ -151,11 +161,7 @@ class ModelTest extends TestCase
      */
     public function testDragTextFromCallbackKirbytext()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => [
@@ -169,7 +175,6 @@ class ModelTest extends TestCase
                     ]
                 ]
             ],
-
             'site' => [
                 'children' => [
                     [
@@ -209,8 +214,7 @@ class ModelTest extends TestCase
         // auto
         $this->assertSame('kirbytext', $panel->dragTextType());
 
-        $app = new App([
-            'roots'   => ['index' => '/dev/null'],
+        $app = $this->app->clone([
             'options' => ['panel' => ['kirbytext' => false]]
         ]);
         $this->assertSame('markdown', $panel->dragTextType());
@@ -331,12 +335,8 @@ class ModelTest extends TestCase
         $site = new ModelSiteNoLocking();
         $this->assertFalse($site->panel()->lock());
 
-        Dir::make(__DIR__ . '/tmp/content');
-        $app = new App([
-            'roots' => [
-                'index' => __DIR__ . '/tmp'
-            ]
-        ]);
+        Dir::make($this->fixtures . '/content');
+        $app = $this->app->clone();
         $app->impersonate('kirby');
 
         // no lock or unlock
@@ -375,7 +375,7 @@ class ModelTest extends TestCase
             ]
         ];
 
-        $app = new App();
+        $app = $this->app->clone();
         $app->impersonate('kirby');
 
         $props = $this->panel($site)->props();
@@ -384,7 +384,7 @@ class ModelTest extends TestCase
         $this->assertSame('main', $props['tab']['name']);
         $this->assertTrue($props['permissions']['update']);
 
-        $app = new App([
+        $app = $this->app->clone([
             'request' => [
                 'query' => 'tab=foo'
             ]

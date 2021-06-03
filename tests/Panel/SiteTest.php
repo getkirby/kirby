@@ -13,9 +13,23 @@ use PHPUnit\Framework\TestCase;
  */
 class SiteTest extends TestCase
 {
+    protected $app;
+    protected $fixtures;
+
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/SiteTest',
+            ]
+        ]);
+
+        Dir::make($this->fixtures);
+    }
+
     public function tearDown(): void
     {
-        Dir::remove(__DIR__ . '/tmp');
+        Dir::remove($this->fixtures);
     }
 
     protected function panel(array $props = [])
@@ -55,11 +69,7 @@ class SiteTest extends TestCase
      */
     public function testImageCover()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null',
-                'media' => __DIR__ . '/tmp'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'files' => [
                     ['filename' => 'test.jpg']
@@ -104,5 +114,35 @@ class SiteTest extends TestCase
                 'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
             ]
         ], $panel->image(['cover' => true]));
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testProps()
+    {
+        $props = $this->panel()->props();
+
+        $this->assertArrayHasKey('model', $props);
+        $this->assertArrayHasKey('content', $props['model']);
+        $this->assertArrayHasKey('previewUrl', $props['model']);
+        $this->assertArrayHasKey('title', $props['model']);
+
+        // inherited props
+        $this->assertArrayHasKey('blueprint', $props);
+        $this->assertArrayHasKey('lock', $props);
+        $this->assertArrayHasKey('permissions', $props);
+        $this->assertArrayHasKey('tab', $props);
+        $this->assertArrayHasKey('tabs', $props);
+    }
+
+    /**
+     * @covers ::route
+     */
+    public function testRoute()
+    {
+        $route = $this->panel()->route();
+        $this->assertArrayHasKey('props', $route);
+        $this->assertSame('k-site-view', $route['component']);
     }
 }

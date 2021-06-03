@@ -5,11 +5,13 @@ namespace Kirby\Cms;
 use Closure;
 use Kirby\Exception\DuplicateException;
 use Kirby\Form\Field as FormField;
+use Kirby\Image\Image;
 use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Collection as ToolkitCollection;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
+use Kirby\Toolkit\Mime;
 use Kirby\Toolkit\V;
 
 /**
@@ -59,6 +61,7 @@ trait AppPlugins
         'collectionMethods' => [],
         'fieldMethods' => [],
         'fileMethods' => [],
+        'fileTypes' => [],
         'filesMethods' => [],
         'fields' => [],
         'hooks' => [],
@@ -235,6 +238,59 @@ trait AppPlugins
     protected function extendFileMethods(array $methods): array
     {
         return $this->extensions['fileMethods'] = File::$methods = array_merge(File::$methods, $methods);
+    }
+
+    /**
+     * Registers additional custom file types and mimes
+     *
+     * @param array $fileTypes
+     * @return array
+     */
+    protected function extendFileTypes(array $fileTypes): array
+    {
+        // normalize array
+        foreach ($fileTypes as $ext => $file) {
+            $extension = $file['extension'] ?? $ext;
+            $type      = $file['type'] ?? null;
+            $mime      = $file['mime'] ?? null;
+            $resizable = $file['resizable'] ?? false;
+            $viewable  = $file['viewable'] ?? false;
+
+            if (is_string($type) === true) {
+                if (isset(F::$types[$type]) === false) {
+                    F::$types[$type] = [];
+                }
+
+                if (in_array($extension, F::$types[$type]) === false) {
+                    F::$types[$type][] = $extension;
+                }
+            }
+
+            if ($mime !== null) {
+                if (array_key_exists($extension, Mime::$types) === true) {
+                    // if `Mime::$types[$extension]` is not already an array, make it one
+                    // and append the new MIME type unless it's already in the list
+                    Mime::$types[$extension] = array_unique(array_merge((array)Mime::$types[$extension], (array)$mime));
+                } else {
+                    Mime::$types[$extension] = $mime;
+                }
+            }
+
+            if ($resizable === true && in_array($extension, Image::$resizableTypes) === false) {
+                Image::$resizableTypes[] = $extension;
+            }
+
+            if ($viewable === true && in_array($extension, Image::$viewableTypes) === false) {
+                Image::$viewableTypes[] = $extension;
+            }
+        }
+
+        return $this->extensions['fileTypes'] = [
+            'type'      => F::$types,
+            'mime'      => Mime::$types,
+            'resizable' => Image::$resizableTypes,
+            'viewable'  => Image::$viewableTypes
+        ];
     }
 
     /**

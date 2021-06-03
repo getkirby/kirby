@@ -5,9 +5,12 @@ namespace Kirby\Cms;
 use Kirby\Cache\FileCache;
 use Kirby\Cms\Auth\Challenge;
 use Kirby\Form\Field as FormField;
+use Kirby\Image\Image;
 use Kirby\Toolkit\Collection;
 use Kirby\Toolkit\Dir;
+use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Mime;
 
 require_once __DIR__ . '/../mocks.php';
 
@@ -45,6 +48,9 @@ class DummyUser extends User
 {
 }
 
+/**
+ * @coversDefaultClass \Kirby\Cms\AppPlugins
+ */
 class AppPluginsTest extends TestCase
 {
     public $fixtures;
@@ -981,5 +987,94 @@ class AppPluginsTest extends TestCase
 
         $this->assertEquals('https://rewritten.getkirby.com/test', $kirby->component('url')($kirby, 'test'));
         $this->assertEquals('https://getkirby.com/test', $kirby->nativeComponent('url')($kirby, 'test'));
+    }
+
+    /**
+     * @covers ::extendAreas
+     */
+    public function testAreas()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'areas' => [
+                'todos' => function () {
+                    return [];
+                }
+            ]
+        ]);
+
+        $areas = $kirby->extensions('areas');
+
+        $this->assertCount(1, $areas);
+        $this->assertArrayHasKey('todos', $areas);
+        $this->assertInstanceOf('Closure', $areas['todos']);
+    }
+
+    /**
+     * @covers ::extendFileTypes
+     */
+    public function testFileTypes()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'fileTypes' => [
+                'm4p' => [
+                    'mime' => 'video/m4p',
+                    'type' => 'video',
+                ],
+                'heif' => [
+                    'mime' => ['image/heic', 'image/heif'],
+                    'type' => 'image',
+                    'resizable' => true,
+                    'viewable' => true,
+                ],
+                'test' => [
+                    'extension' => 'kql',
+                    'type' => 'code'
+                ],
+                'midi' => [
+                    'mime' => 'audio/x-midi'
+                ],
+                'ttf' => [
+                    'type' => 'font'
+                ]
+            ]
+        ]);
+
+        $fileTypes = $kirby->extensions('fileTypes');
+        $this->assertSame($fileTypes['type'], F::$types);
+        $this->assertSame($fileTypes['mime'], Mime::$types);
+        $this->assertSame($fileTypes['resizable'], Image::$resizableTypes);
+        $this->assertSame($fileTypes['viewable'], Image::$viewableTypes);
+
+        $this->assertContains('m4p', F::$types['video']);
+        $this->assertArrayHasKey('m4p', Mime::$types);
+        $this->assertSame('video/m4p', Mime::$types['m4p']);
+        $this->assertNotContains('m4p', Image::$resizableTypes);
+        $this->assertNotContains('m4p', Image::$viewableTypes);
+
+        $this->assertContains('heif', F::$types['image']);
+        $this->assertArrayHasKey('heif', Mime::$types);
+        $this->assertSame(['image/heic', 'image/heif'], Mime::$types['heif']);
+        $this->assertContains('heif', Image::$resizableTypes);
+        $this->assertContains('heif', Image::$viewableTypes);
+
+        $this->assertContains('kql', F::$types['code']);
+        $this->assertNotContains('kql', Image::$resizableTypes);
+        $this->assertNotContains('kql', Image::$viewableTypes);
+
+        $this->assertArrayHasKey('midi', Mime::$types);
+        $this->assertSame(['audio/midi', 'audio/x-midi'], Mime::$types['midi']);
+        $this->assertNotContains('midi', Image::$resizableTypes);
+        $this->assertNotContains('midi', Image::$viewableTypes);
+
+        $this->assertArrayHasKey('font', F::$types);
+        $this->assertContains('ttf', F::$types['font']);
+        $this->assertNotContains('ttf', Image::$resizableTypes);
+        $this->assertNotContains('ttf', Image::$viewableTypes);
     }
 }

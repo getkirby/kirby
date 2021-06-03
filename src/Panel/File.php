@@ -276,7 +276,6 @@ class File extends Model
     public function route(): array
     {
         $file = $this->model;
-        $type = $file->parent()::CLASS_ALIAS;
 
         return [
             'breadcrumb' => function () use ($file): array {

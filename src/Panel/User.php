@@ -145,6 +145,6 @@ class User extends Model
     {
         $kirby = $this->model->kirby();
         $lang  = $this->model->language();
-        return $kirby->translation($lang) ?? $kirby->translation('en');
+        return $kirby->translation($lang);
     }
 }

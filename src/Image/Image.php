@@ -33,6 +33,30 @@ class Image extends File
     protected $dimensions;
 
     /**
+     * @var array
+     */
+    public static $resizableTypes = [
+        'jpg',
+        'jpeg',
+        'gif',
+        'png',
+        'webp'
+    ];
+
+    /**
+     * @var array
+     */
+    public static $viewableTypes = [
+        'avif',
+        'jpg',
+        'jpeg',
+        'gif',
+        'png',
+        'svg',
+        'webp'
+    ];
+
+    /**
      * Validation rules to be used for `::match()`
      *
      * @var array
@@ -163,15 +187,7 @@ class Image extends File
      */
     public function isResizable(): bool
     {
-        $resizable = [
-            'jpg',
-            'jpeg',
-            'gif',
-            'png',
-            'webp'
-        ];
-
-        return in_array($this->extension(), $resizable) === true;
+        return in_array($this->extension(), static::$resizableTypes) === true;
     }
 
     /**
@@ -182,16 +198,7 @@ class Image extends File
      */
     public function isViewable(): bool
     {
-        $viewable = [
-            'jpg',
-            'jpeg',
-            'gif',
-            'png',
-            'svg',
-            'webp'
-        ];
-
-        return in_array($this->extension(), $viewable) === true;
+        return in_array($this->extension(), static::$viewableTypes) === true;
     }
 
     /**

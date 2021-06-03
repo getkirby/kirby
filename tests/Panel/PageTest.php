@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
+use Kirby\Cms\Site as ModelSite;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
@@ -21,9 +22,69 @@ class ModelPageTestForceLocked extends ModelPage
  */
 class PageTest extends TestCase
 {
+    protected $app;
+    protected $fixtures;
+
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->fixtures = __DIR__ . '/fixtures/PageTest',
+            ]
+        ]);
+
+        Dir::make($this->fixtures);
+    }
+
     public function tearDown(): void
     {
-        Dir::remove(__DIR__ . '/tmp');
+        Dir::remove($this->fixtures);
+    }
+
+    /**
+     * @covers ::breadcrumb
+     */
+    public function testBreadcrumb(): void
+    {
+        $site = new ModelSite([
+            'children' => [
+                [
+                    'slug' => 'a',
+                    'children' => [
+                        [
+                            'slug' => 'b',
+                            'children' => [
+                                ['slug' => 'c'],
+                            ]
+                        ],
+                    ]
+                ],
+            ]
+        ]);
+
+        $page = new Page($site->page('a'));
+        $this->assertSame([
+            [
+                'label' => 'a',
+                'link'  => '/pages/a'
+            ]
+        ], $page->breadcrumb());
+
+        $page = new Page($site->page('a/b/c'));
+        $this->assertSame([
+            [
+                'label' => 'a',
+                'link'  => '/pages/a'
+            ],
+            [
+                'label' => 'b',
+                'link'  => '/pages/a+b'
+            ],
+            [
+                'label' => 'c',
+                'link'  => '/pages/a+b+c'
+            ]
+        ], $page->breadcrumb());
     }
 
     /**
@@ -55,10 +116,7 @@ class PageTest extends TestCase
      */
     public function testDragTextMarkdown()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => false
@@ -91,11 +149,7 @@ class PageTest extends TestCase
      */
     public function testDragTextCustomMarkdown()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => false,
@@ -106,7 +160,6 @@ class PageTest extends TestCase
                     ]
                 ]
             ],
-
             'site' => [
                 'children' => [
                     [
@@ -128,11 +181,7 @@ class PageTest extends TestCase
      */
     public function testDragTextCustomKirbytext()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => [
@@ -142,7 +191,6 @@ class PageTest extends TestCase
                     ]
                 ]
             ],
-
             'site' => [
                 'children' => [
                     [
@@ -258,11 +306,7 @@ class PageTest extends TestCase
      */
     public function testImageCover()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null',
-                'media' => __DIR__ . '/tmp'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'children' => [
                     [
@@ -426,13 +470,190 @@ class PageTest extends TestCase
         $this->assertSame('Test Title', $data['text']);
     }
 
-    
+    /**
+     * @covers ::props
+     */
+    public function testProps()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test'
+        ]);
+
+        $panel = new Page($page);
+        $props = $panel->props();
+
+        $this->assertArrayHasKey('model', $props);
+        $this->assertArrayHasKey('content', $props['model']);
+        $this->assertArrayHasKey('id', $props['model']);
+        $this->assertArrayHasKey('parent', $props['model']);
+        $this->assertArrayHasKey('previewUrl', $props['model']);
+        $this->assertArrayHasKey('status', $props['model']);
+        $this->assertArrayHasKey('title', $props['model']);
+
+        // inherited props
+        $this->assertArrayHasKey('blueprint', $props);
+        $this->assertArrayHasKey('lock', $props);
+        $this->assertArrayHasKey('permissions', $props);
+        $this->assertArrayHasKey('tab', $props);
+        $this->assertArrayHasKey('tabs', $props);
+
+        $this->assertNull($props['next']());
+        $this->assertNull($props['prev']());
+        $this->assertSame([
+            'label' => 'Unlisted',
+            'text'  => 'The page is only accessible via URL'
+        ], $props['status']());
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNext()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'foo'],
+                    ['slug' => 'bar'],
+                    ['slug' => 'baz']
+                ]
+            ],
+        ]);
+        $app->impersonate('kirby');
+
+        $props = (new Page($app->page('foo')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertSame('/pages/bar', $props['next']()['link']);
+
+        $props = (new Page($app->page('bar')))->props();
+        $this->assertSame('/pages/foo', $props['prev']()['link']);
+        $this->assertSame('/pages/baz', $props['next']()['link']);
+
+        $props = (new Page($app->page('baz')))->props();
+        $this->assertSame('/pages/bar', $props['prev']()['link']);
+        $this->assertNull($props['next']());
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNextWithSameTemplate()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'foo', 'template' => 'note'],
+                    ['slug' => 'bar', 'template' => 'album'],
+                    ['slug' => 'baz', 'template' => 'note']
+                ]
+            ],
+        ]);
+        $app->impersonate('kirby');
+
+        $props = (new Page($app->page('foo')))->props();
+        $this->assertSame('/pages/baz', $props['next']()['link']);
+
+        $props = (new Page($app->page('bar')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertNull($props['next']());
+
+        $props = (new Page($app->page('baz')))->props();
+        $this->assertSame('/pages/foo', $props['prev']()['link']);
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNextWithSameStatus()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'foo', 'num' => 0],
+                    ['slug' => 'bar', 'num' => null],
+                    ['slug' => 'baz', 'num' => 0]
+                ]
+            ],
+        ]);
+        $app->impersonate('kirby');
+
+        $props = (new Page($app->page('foo')))->props();
+        $this->assertSame('/pages/baz', $props['next']()['link']);
+
+        $props = (new Page($app->page('bar')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertNull($props['next']());
+
+        $props = (new Page($app->page('baz')))->props();
+        $this->assertSame('/pages/foo', $props['prev']()['link']);
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsStatus()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'num'   => 0
+        ]);
+
+        $props = (new Page($page))->props();
+        $this->assertSame([
+            'label' => 'Public',
+            'text'  => 'The page is public for anyone'
+        ], $props['status']());
+
+
+        $app = $this->app->clone([
+            'blueprints' => [
+                'pages/note' => [
+                    'status' => [
+                        'unlisted' => 'Foo',
+                    ]
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'template' => 'note'
+                    ]
+                ]
+            ]
+        ]);
+
+        $props = (new Page($app->page('test')))->props();
+        $this->assertSame([
+            'label' => 'Foo',
+            'text'  => null
+        ], $props['status']());
+    }
+
+    /**
+     * @covers ::route
+     */
+    public function testRoute()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+        ]);
+
+        $panel = new Page($page);
+        $route = $panel->route();
+
+        $this->assertArrayHasKey('props', $route);
+        $this->assertSame('k-page-view', $route['component']);
+        $this->assertSame('test', $route['title']);
+        $this->assertSame('test', $route['breadcrumb']()[0]['label']);
+    }
+
+    /**
+     * @covers ::url
+     */
     public function testUrl()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'urls' => [
                 'index' => 'https://getkirby.com'
             ],

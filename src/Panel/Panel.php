@@ -395,6 +395,7 @@ class Panel
                     'isLocal' => $kirby->system()->isLocal(),
                     'locales' => $locales,
                     'slugs'   => Str::$language,
+                    'title'   => $kirby->site()->title()->or('Kirby Panel')->toString()
                 ];
             },
             '$translation' => function () use ($kirby) {
