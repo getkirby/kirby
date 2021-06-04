@@ -63,21 +63,14 @@ return function ($kirby) {
             [
                 'pattern' => 'users/(:any)',
                 'action'  => function (string $id) use ($kirby) {
-                    if (!$user = $kirby->user($id)) {
-                        return t('error.user.undefined');
-                    }
-
-                    return $user->panel()->route();
+                    return Panel::user($id)->panel()->route();
                 }
             ],
             [
                 'pattern' => 'users/(:any)/files/(:any)',
                 'action'  => function (string $id, string $filename) use ($kirby) {
+                    $user     = Panel::user($id);
                     $filename = urldecode($filename);
-
-                    if (!$user = $kirby->user($id)) {
-                        return t('error.user.undefined');
-                    }
 
                     if (!$file = $user->file($filename)) {
                         return t('error.file.undefined');

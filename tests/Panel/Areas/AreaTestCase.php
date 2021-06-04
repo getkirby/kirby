@@ -18,6 +18,13 @@ abstract class AreaTestCase extends TestCase
         return $this->app = $this->app->clone($params);
     }
 
+    public function assertErrorView(string $path, string $message)
+    {
+        $view = $this->view($path);
+        $this->assertSame('k-error-view', $view['component']);
+        $this->assertSame($message, $view['props']['error']);
+    }
+
     public function assertRedirect(string $source, string $dest = '/', int $code = 302): void
     {
         $response = $this->response($source);

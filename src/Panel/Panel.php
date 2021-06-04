@@ -5,6 +5,8 @@ namespace Kirby\Panel;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Cms\User;
+use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
@@ -321,6 +323,32 @@ class Panel
     }
 
     /**
+     * Returns the file object for the given
+     * parent path and filename
+     *
+     * @param string|null $path Path to file's parent model
+     * @param string $filename Filename
+     * @return \Kirby\Cms\File|null
+     * @throws \Kirby\Exception\NotFoundException if the file cannot be found
+     */
+    public static function file(string $path = null, string $filename)
+    {
+        $filename = urldecode($filename);
+        $file     = static::parent($path)->file($filename);
+
+        if ($file && $file->isReadable() === true) {
+            return $file;
+        }
+
+        throw new NotFoundException([
+            'key'  => 'file.notFound',
+            'data' => [
+                'filename' => $filename
+            ]
+        ]);
+    }
+
+    /**
      * Check for access permissions
      *
      * @param \Kirby\Cms\User|null $user
@@ -514,6 +542,86 @@ class Panel
         }
 
         return true;
+    }
+
+    /**
+     * Returns the page object for the given id
+     *
+     * @param string $id Page's id
+     * @return \Kirby\Cms\Page|null
+     * @throws \Kirby\Exception\NotFoundException if the page cannot be found
+     */
+    public static function page(string $id)
+    {
+        $id   = str_replace('+', '/', $id);
+        $page = kirby()->page($id);
+
+        if ($page && $page->isReadable() === true) {
+            return $page;
+        }
+
+        throw new NotFoundException([
+            'key'  => 'page.notFound',
+            'data' => [
+                'slug' => $id
+            ]
+        ]);
+    }
+
+    /**
+     * Returns the model's object for the given path
+     *
+     * @param string $path Path to parent model
+     * @return \Kirby\Cms\Model|null
+     * @throws \Kirby\Exception\InvalidArgumentException if the model type is invalid
+     * @throws \Kirby\Exception\NotFoundException if the model cannot be found
+     */
+    public static function parent(string $path)
+    {
+        $modelType  = in_array($path, ['site', 'account']) ? $path : trim(dirname($path), '/');
+        $modelTypes = [
+            'site'    => 'site',
+            'users'   => 'user',
+            'pages'   => 'page',
+            'account' => 'account'
+        ];
+
+        $modelName = $modelTypes[$modelType] ?? null;
+
+        if (Str::endsWith($modelType, '/files') === true) {
+            $modelName = 'file';
+        }
+
+        $kirby = kirby();
+
+        switch ($modelName) {
+            case 'site':
+                $model = $kirby->site();
+                break;
+            case 'account':
+                $model = $kirby->user(null, $kirby->option('api.allowImpersonation', false));
+                break;
+            case 'page':
+                $id    = str_replace(['+', ' '], '/', basename($path));
+                $model = $kirby->page($id);
+                break;
+            case 'file':
+                $model = static::file(...explode('/files/', $path));
+                break;
+            case 'user':
+                $model = $kirby->user(basename($path));
+                break;
+            default:
+                throw new InvalidArgumentException('Invalid model type: ' . $modelType);
+        }
+
+        if ($model) {
+            return $model;
+        }
+
+        throw new NotFoundException([
+            'key' => $modelName . '.undefined'
+        ]);
     }
 
     /**
@@ -832,6 +940,37 @@ class Panel
         $kirby->setCurrentTranslation($translation);
 
         return $translation;
+    }
+
+    /**
+     * Returns the user object for the given id or
+     * returns the current authenticated user if no
+     * id is passed
+     *
+     * @param string|null $id User's id
+     * @return \Kirby\Cms\User|null
+     * @throws \Kirby\Exception\NotFoundException if the user for the given id cannot be found
+     */
+    public static function user(string $id = null)
+    {
+        $kirby = kirby();
+
+        // get the authenticated user
+        if ($id === null) {
+            return $kirby->user(null, $kirby->option('api.allowImpersonation', false));
+        }
+
+        // get a specific user by id
+        if ($user = $kirby->user($id)) {
+            return $user;
+        }
+
+        throw new NotFoundException([
+            'key'  => 'user.notFound',
+            'data' => [
+                'name' => $id
+            ]
+        ]);
     }
 
     /**

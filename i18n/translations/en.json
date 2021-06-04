@@ -165,6 +165,7 @@
   "error.user.password.undefined": "The user does not have a password",
   "error.user.password.wrong": "Wrong password",
   "error.user.role.invalid": "Please enter a valid role",
+  "error.user.undefined": "The user cannot be found",
   "error.user.update.permission": "You are not allowed to update the user \"{name}\"",
 
   "error.validation.accepted": "Please confirm",

@@ -645,7 +645,7 @@ class PageTest extends TestCase
         $this->assertArrayHasKey('props', $route);
         $this->assertSame('k-page-view', $route['component']);
         $this->assertSame('test', $route['title']);
-        $this->assertSame('test', $route['breadcrumb']()[0]['label']);
+        $this->assertSame('test', $route['breadcrumb'][0]['label']);
     }
 
     /**

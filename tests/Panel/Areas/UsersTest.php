@@ -40,4 +40,10 @@ class UsersTest extends AreaTestCase
         $this->assertSame('k-user-view', $view['component']);
         $this->assertSame('test@getkirby.com', $view['title']);
     }
+
+    public function testUserWithMissingModel(): void
+    {
+        $this->login();
+        $this->assertErrorView('users/does-not-exist', 'The user "does-not-exist" cannot be found');
+    }
 }
