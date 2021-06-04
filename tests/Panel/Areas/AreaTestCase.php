@@ -102,10 +102,10 @@ abstract class AreaTestCase extends TestCase
 
     public function tearDown(): void
     {
-        Dir::remove($this->fixtures);
-
-        // clear session file
+        // clear session file first
         $this->app->session()->destroy();
+
+        Dir::remove($this->fixtures);
 
         // clean up server software fakes
         unset($_SERVER['SERVER_SOFTWARE']);

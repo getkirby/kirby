@@ -30,10 +30,10 @@ class PanelTest extends TestCase
 
     public function tearDown(): void
     {
-        Dir::remove($this->fixtures);
-
-        // clear session file
+        // clear session file first
         $this->app->session()->destroy();
+
+        Dir::remove($this->fixtures);
 
         // clear fake json requests
         $_GET = [];
