@@ -28,6 +28,15 @@ abstract class AreaTestCase extends TestCase
         $this->assertSame($dest, ltrim(Str::after($location, '/panel'), '/'));
     }
 
+    public function enableMultilang(): void
+    {
+        $this->app([
+            'options' => [
+                'languages' => true
+            ]
+        ]);
+    }
+
     /**
      * Fake a ready setup and install
      * the first admin user
@@ -63,6 +72,48 @@ abstract class AreaTestCase extends TestCase
             'options' => [
                 'panel' => [
                     'install' => true
+                ]
+            ]
+        ]);
+    }
+
+    public function installEditor(): void
+    {
+        $this->app([
+            'blueprints' => [
+                'users/editor' => [
+                    'name' => 'editor',
+                    'title' => 'Editor',
+                ]
+            ],
+            'users' => [
+                [
+                    'id'    => 'test',
+                    'email' => 'test@getkirby.com',
+                    'role'  => 'admin',
+                ],
+                [
+                    'id'    => 'editor',
+                    'email' => 'editor@getkirby.com',
+                    'role'  => 'editor',
+                ]
+            ]
+        ]);
+    }
+
+    public function installLanguages(): void
+    {
+        $this->app([
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'default' => true,
+                    'name'    => 'English'
+                ],
+                [
+                    'code'    => 'de',
+                    'default' => false,
+                    'name'    => 'Deutsch'
                 ]
             ]
         ]);

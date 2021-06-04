@@ -20,6 +20,7 @@ return function ($kirby) {
                                     'text'    => $language->name(),
                                 ];
                             }),
+                            'license' => $kirby->user()->isAdmin() ? $kirby->system()->license() : 'Kirby 3',
                             'version' => $kirby->version(),
                         ]
                     ];

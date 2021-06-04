@@ -16,7 +16,7 @@
               <dt>{{ $t('license') }}</dt>
               <dd>
                 <template v-if="$license">
-                  {{ $license }}
+                  {{ license }}
                 </template>
                 <p v-else>
                   <strong class="k-system-unregistered">{{ $t('license.unregistered') }}</strong>
@@ -89,6 +89,7 @@ export default {
         return []
       }
     },
+    license: String,
     version: String
   },
   computed: {

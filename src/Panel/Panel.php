@@ -259,7 +259,7 @@ class Panel
                     return $user->role()->permissions()->toArray();
                 }
             },
-            '$license' => $kirby->system()->license(),
+            '$license' => (bool)$kirby->system()->license(),
             '$multilang' => $multilang,
             '$url' => Url::current(),
             '$user' => function () use ($kirby) {

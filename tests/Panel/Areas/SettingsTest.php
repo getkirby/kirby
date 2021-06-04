@@ -25,7 +25,50 @@ class SettingsTest extends AreaTestCase
         $this->assertSame('settings', $view['id']);
         $this->assertSame('Settings', $view['title']);
         $this->assertSame('k-settings-view', $view['component']);
-
-        // TODO: add more props tests
+        $this->assertSame([], $props['languages']);
+        $this->assertFalse($props['license']);
+        $this->assertSame($this->app->version(), $props['version']);
     }
+
+    public function testSettingsWithMultilangSetup(): void
+    {
+        $this->enableMultilang();
+        $this->login();
+
+        $response = $this->response('settings', true);
+        $view     = $response['$view'];
+        $props    = $view['props'];
+
+        $this->assertTrue($response['$multilang']);
+    }
+
+    public function testSettingsWithMultilangSetupAndLanguages(): void
+    {
+        $this->enableMultilang();
+        $this->installLanguages();
+        $this->login();
+
+        $response = $this->response('settings', true);
+        $view     = $response['$view'];
+        $props    = $view['props'];
+
+        $languages = [
+            [
+                'default' => true,
+                'id' => 'en',
+                'info' => 'en',
+                'text' => 'English'
+            ],
+            [
+                'default' => false,
+                'id' => 'de',
+                'info' => 'de',
+                'text' => 'Deutsch'
+            ]
+        ];
+
+        $this->assertTrue($response['$multilang']);
+        $this->assertSame($languages, $props['languages']);
+    }
+
 }
