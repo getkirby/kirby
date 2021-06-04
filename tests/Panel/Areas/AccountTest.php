@@ -25,4 +25,28 @@ class AccountTest extends AreaTestCase
         $this->assertSame('k-account-view', $view['component']);
         $this->assertSame('test@getkirby.com', $view['props']['model']['email']);
     }
+
+    public function testLogout(): void
+    {
+        $this->install();
+        $this->login();
+
+        $this->assertRedirect('logout', 'login');
+    }
+
+    public function testLogoutGuestAccess(): void
+    {
+        $this->install();
+
+        $this->assertRedirect('logout', 'login');
+    }
+
+    public function testResetPassword(): void
+    {
+        $this->install();
+        $this->login();
+
+        $view = $this->view('reset-password');
+        $this->assertSame('k-reset-password-view', $view['component']);
+    }
 }
