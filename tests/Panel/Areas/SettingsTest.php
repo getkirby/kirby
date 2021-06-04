@@ -70,5 +70,4 @@ class SettingsTest extends AreaTestCase
         $this->assertTrue($response['$multilang']);
         $this->assertSame($languages, $props['languages']);
     }
-
 }
