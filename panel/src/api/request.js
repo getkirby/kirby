@@ -6,8 +6,7 @@ export async function toJson(response) {
   try {
     data = JSON.parse(text);
   } catch (e) {
-    window.panel.$vue.$store.dispatch("fatal", text);
-    throw new Error("The JSON response of the API could not be parsed");
+    window.panel.$vue.$api.onParserError(text);
   }
 
   return data;
