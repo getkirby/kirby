@@ -89,7 +89,7 @@ export default {
         return []
       }
     },
-    license: String,
+    license: [Boolean, String],
     version: String
   },
   computed: {
