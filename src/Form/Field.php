@@ -237,20 +237,6 @@ class Field extends Component
                     /** @var \Kirby\Form\Field $this */
                     return $this->toString($this->placeholder);
                 }
-            ],
-            'methods' => [
-                'toString' => function ($value = null) {
-                    if ($value === null) {
-                        return;
-                    }
-
-                    if (is_string($value) === false) {
-                        return $value;
-                    }
-
-                    /** @var \Kirby\Form\Field $this */
-                    return $this->model()->toString($value);
-                }
             ]
         ];
     }
@@ -439,6 +425,29 @@ class Field extends Component
         return array_filter($array, function ($item) {
             return $item !== null && is_object($item) === false;
         });
+    }
+
+    /**
+     * String template builder
+     *
+     * @param mixed $template
+     * @param array $data
+     * @param string $fallback Fallback for tokens in the template that cannot be replaced
+     * @return mixed
+     */
+    protected function toString($template = null, array $data = [], string $fallback = '')
+    {
+        if ($template === null) {
+            // if the input template prop is not defined, the output
+            // of the prop should also be `null` and not an empty string
+            return null;
+        }
+
+        if (is_string($template) === false) {
+            return $template;
+        }
+
+        return $this->model()->toString($template, $data, $fallback);
     }
 
     /**
