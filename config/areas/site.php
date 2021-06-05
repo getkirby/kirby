@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Panel\Panel;
+
 return function ($kirby) {
     return [
         'breadcrumbLabel' => function () use ($kirby) {
