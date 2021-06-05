@@ -15,7 +15,6 @@ use Kirby\Http\Url;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
-use Kirby\Toolkit\Pagination;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl;
 use Throwable;
@@ -740,9 +739,6 @@ class Panel
         if ($kirby->option('panel') === false) {
             return false;
         }
-
-        // switch off pagination exceptions
-        Pagination::$validate = false;
 
         // set the translation for Panel UI before
         // gathering areas and routes, so that the
