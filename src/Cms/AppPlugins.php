@@ -131,7 +131,7 @@ trait AppPlugins
     }
 
     /**
-     * Registers additional custom panel areas
+     * Registers additional custom Panel areas
      *
      * @param array $areas
      * @return array

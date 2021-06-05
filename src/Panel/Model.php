@@ -279,7 +279,7 @@ abstract class Model
      */
     abstract public function path(): string;
 
-    /*
+    /**
      * Prepares the response data for page pickers
      * and page fields
      *

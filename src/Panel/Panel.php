@@ -638,11 +638,11 @@ class Panel
     {
         // is it a partial request?
         $request          = $kirby->request();
-        $include          = $request->header('X-Fiber-Include')   ?? get('_include');
+        $requestInclude   = $request->header('X-Fiber-Include')   ?? get('_include');
         $requestComponent = $request->header('X-Fiber-Component') ?? get('_component');
 
         // split include string into an array of fields
-        $include = Str::split($include);
+        $include = Str::split($requestInclude, ',');
 
         // if a full request is made, return all data
         if (empty($include) === true) {
@@ -657,10 +657,10 @@ class Panel
 
         // otherwise filter data based on
         // dot notation, e.g. `$props.tab.columns`
-        $partial = [];
+        $partials = [];
 
         // check if globals are requested and need to be merged
-        if (Str::contains(implode($include), '$')) {
+        if (Str::contains($requestInclude, '$')) {
             $data = array_merge_recursive(static::globals($kirby), $data);
         }
 
@@ -692,7 +692,7 @@ class Panel
         // if requested, send $fiber data as JSON
         if (static::isFiberRequest($kirby->request()) === true) {
             return Response::json($fiber, null, get('_pretty'), [
-                'Vary'      => 'Accept',
+                'Vary'    => 'Accept',
                 'X-Fiber' => 'true'
             ]);
         }
@@ -840,7 +840,10 @@ class Panel
             }
         }
 
-        // redirect routes
+        // if the Panel is already installed and/or the
+        // user is authenticated, those areas won't be
+        // included, which is why we add redirect routes
+        // to main Panel view as fallbacks
         $routes[] = [
             'pattern' => [
                 '/',
@@ -848,10 +851,9 @@ class Panel
                 'login',
             ],
             'action' => function () use ($kirby) {
-                /**
-                 * If the last path has been stored in the
-                 * session, redirect the user to it
-                 */
+                // if the last path has been stored in the
+                // session, redirect the user to it
+                // (used after successful login)
                 $path = trim($kirby->session()->get('panel.path'), '/');
 
                 // ignore various paths when redirecting
@@ -994,7 +996,6 @@ class Panel
         // make sure that routes are gone
         unset($view['routes']);
 
-        // resolve lazy props
         return $view;
     }
 }
