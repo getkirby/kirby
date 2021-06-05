@@ -520,7 +520,7 @@ class File extends ModelWithContent
     {
         // @codeCoverageIgnoreStart
         if ($parent === null) {
-            deprecated('You are creating a `Kirby\Cms\File` object without passing a `parent` prop. Whule unsupported, this hasn\'t thrown any direct errors so far. to fix inconsistencies, the `parent` property will be required for creating a `Kirby\Cms\File` object with 3.7.0 and higher. Not passing one will start throwing a breaking error');
+            deprecated('You are creating a `Kirby\Cms\File` object without passing the `parent` property. While unsupported, this hasn\'t caused any direct errors so far. To fix inconsistencies, the `parent` property will be required when creating a `Kirby\Cms\File` object in Kirby 3.7.0 and higher. Not passing this property will start throwing a breaking error.');
         }
         // @codeCoverageIgnoreEnd
 
