@@ -2,6 +2,7 @@
   <div class="k-topbar">
     <k-view>
       <div class="k-topbar-wrapper">
+        <!-- Main Menu -->
         <k-dropdown class="k-topbar-menu">
           <k-button
             :tooltip="$t('menu')"
@@ -11,86 +12,22 @@
           >
             <k-icon type="angle-down" />
           </k-button>
-          <k-dropdown-content ref="menu" class="k-topbar-menu">
-            <ul>
-              <template v-for="area in areasWithLegacy">
-                <li
-                  v-if="areaInMenu(area) !== false"
-                  :key="'menu-item-' + area.id"
-                  :aria-current="view.id === area.id"
-                >
-                  <k-dropdown-item
-                    :disabled="areaInMenu(area) === 'disabled'"
-                    :icon="area.icon"
-                    :link="area.link"
-                  >
-                    {{ area.label }}
-                  </k-dropdown-item>
-                </li>
-              </template>
-              <li><hr></li>
-              <li :aria-current="view.id === 'account'">
-                <k-dropdown-item icon="account" link="/account">
-                  {{ $t("view.account") }}
-                </k-dropdown-item>
-              </li>
-              <li><hr></li>
-              <li>
-                <k-dropdown-item icon="logout" @click="logout">
-                  {{ $t("logout") }}
-                </k-dropdown-item>
-              </li>
-            </ul>
-          </k-dropdown-content>
+          <k-dropdown-content
+            ref="menu"
+            :options="menu"
+            class="k-topbar-menu"
+            @action="onMenu"
+          />
         </k-dropdown>
 
-        <k-link
-          v-if="view"
-          :to="view.link"
-          class="k-topbar-button k-topbar-view-button"
-        >
-          <k-icon :type="view.icon" /> {{ view.breadcrumbLabel }}
-        </k-link>
-
-        <k-dropdown v-if="breadcrumb.length > 1" class="k-topbar-breadcrumb-menu">
-          <k-button class="k-topbar-button" @click="$refs.crumb.toggle()">
-            …
-            <k-icon type="angle-down" />
-          </k-button>
-
-          <k-dropdown-content ref="crumb">
-            <k-dropdown-item :icon="view.icon" :link="view.link">
-              {{ view.title }}
-            </k-dropdown-item>
-            <k-dropdown-item
-              v-for="(crumb, index) in breadcrumb"
-              :key="'crumb-' + index + '-dropdown'"
-              :icon="view.icon"
-              :link="crumb.link"
-            >
-              {{ crumb.label }}
-            </k-dropdown-item>
-          </k-dropdown-content>
-        </k-dropdown>
-
-        <nav class="k-topbar-crumbs">
-          <k-link
-            v-for="(crumb, index) in breadcrumb"
-            :key="'crumb-' + index"
-            :to="crumb.link"
-          >
-            {{ crumb.label }}
-          </k-link>
-        </nav>
+        <!-- Breadcrumb -->
+        <k-breadcrumb
+          :crumbs="breadcrumb"
+          :view="view"
+          class="k-topbar-breadcrumb"
+        />
 
         <div class="k-topbar-signals">
-          <!-- loader -->
-          <span v-show="$store.state.isLoading" class="k-topbar-loader">
-            <svg viewBox="0 0 16 18">
-              <path fill="white" d="M8,0 L16,4.50265232 L16,13.5112142 L8,18.0138665 L0,13.5112142 L0,4.50265232 L8,0 Z M2.10648757,5.69852516 L2.10648757,12.3153414 L8,15.632396 L13.8935124,12.3153414 L13.8935124,5.69852516 L8,2.38147048 L2.10648757,5.69852516 Z" />
-            </svg>
-          </span>
-
           <!-- notifications -->
           <template v-if="notification">
             <k-button
@@ -157,6 +94,35 @@ export default {
       // @todo remove in 3.7.0
       return { ...this.areas, ...window.panel.plugins.views };
     },
+    menu() {
+      let menu = Object.values(this.areasWithLegacy)
+      menu = menu.filter(area => this.areaInMenu(area) !== false)
+      menu = menu.map(area => ({
+        ...area,
+        text: area.label,
+        current: this.view.id === area.id,
+        disabled: this.areaInMenu(area) === 'disabled'
+      }));
+
+      menu.push("-");
+
+      menu.push({
+        icon: "account",
+        link: "/account",
+        text: this.$t("view.account"),
+        current: this.view.id === "account"
+      });
+
+      menu.push("-");
+
+      menu.push({
+        icon: "logout",
+        click: "logout",
+        text: this.$t("logout")
+      });
+
+      return menu;
+    },
     notification() {
       if (
         this.$store.state.notification.type &&
@@ -190,6 +156,13 @@ export default {
       }
 
       return true;
+    },
+    onMenu(action) {
+      switch (action) {
+        case "logout":
+          this.logout();
+          break;
+      }
     }
   }
 };
@@ -211,25 +184,6 @@ export default {
   margin-left: -0.75rem;
   margin-right: -0.75rem;
 }
-.k-topbar-loader {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  height: 2.5rem;
-  width: 2.5rem;
-  padding: .75rem;
-  background: var(--color-gray-900);
-  z-index: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.k-topbar-loader svg {
-  height: 18px;
-  width: 18px;
-  animation: Spin .9s linear infinite;
-}
 
 .k-topbar-menu {
   flex-shrink: 0;
@@ -243,6 +197,17 @@ export default {
 }
 .k-topbar-menu-button .k-button-text {
   opacity: 1;
+}
+.k-topbar .k-dropdown-content {
+  color: var(--color-gray-900);
+  background: var(--color-white);
+}
+.k-topbar .k-dropdown-content hr:after {
+  opacity: .1;
+}
+.k-topbar-menu .k-link[aria-current] {
+  color: var(--color-focus);
+  font-weight: 500;
 }
 .k-topbar-signals-button,
 .k-topbar-button {
@@ -267,52 +232,6 @@ export default {
   margin-inline-end: .5rem;
 }
 
-.k-topbar-crumbs {
-  flex-grow: 1;
-  display: flex;
-  overflow-y: hidden;
-}
-.k-topbar-crumbs a {
-  position: relative;
-  font-size: var(--text-sm);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: none;
-  padding-top: .75rem;
-  padding-bottom: .75rem;
-  line-height: 1;
-  transition: opacity .3s;
-  outline: none;
-}
-.k-topbar-crumbs a::before {
-  content: "/";
-  padding: 0 .5rem;
-  opacity: .25;
-}
-.k-topbar-crumbs a:focus,
-.k-topbar-crumbs a:hover {
-  opacity: 1;
-}
-
-.k-topbar-crumbs a[data-tabbed] {
-  outline: none;
-  box-shadow: var(--shadow-outline);
-}
-.k-topbar-crumbs a:not(:last-child) {
-  max-width: 15vw;
-}
-.k-topbar-breadcrumb-menu {
-  flex-shrink: 0;
-}
-@media screen and (min-width: 30em) {
-  .k-topbar-crumbs a {
-    display: block;
-  }
-  .k-topbar-breadcrumb-menu {
-    display: none;
-  }
-}
 .k-topbar-signals {
   position: absolute;
   top: 0;
@@ -344,6 +263,9 @@ export default {
   line-height: 1;
   display: flex;
 }
+.k-topbar .k-button[data-theme] .k-button-text {
+  opacity: 1;
+}
 .k-topbar .k-button[data-theme="positive"] {
   color: var(--color-positive-light);
 }
@@ -358,21 +280,6 @@ export default {
   .k-topbar .k-button[data-theme="negative"] .k-button-text {
     display: inline;
   }
-}
-
-.k-topbar .k-button[data-theme] .k-button-text {
-  opacity: 1;
-}
-.k-topbar .k-dropdown-content {
-  color: var(--color-gray-900);
-  background: var(--color-white);
-}
-.k-topbar .k-dropdown-content hr:after {
-  opacity: .1;
-}
-.k-topbar-menu [aria-current] .k-link {
-  color: var(--color-focus);
-  font-weight: 500;
 }
 
 .k-registration {
