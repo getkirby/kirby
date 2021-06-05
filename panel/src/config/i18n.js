@@ -1,9 +1,8 @@
-
 import { template } from "../helpers/string.js";
 
 export class TranslationString extends String {
   toString() {
-    const Vue   = window.panel.$vue;
+    const Vue = window.panel.$vue;
     const value = this.valueOf();
     return Vue ? Vue.$t(value) : value;
   }
@@ -12,12 +11,12 @@ export class TranslationString extends String {
 export default {
   install(app) {
     app.$t = app.prototype.$t = (key, data) => {
-      if (typeof key !== 'string') {
+      if (typeof key !== "string") {
         return;
       }
 
-      const string = window.panel.$translation.data[key];
+      const string = window.panel.$translation.data[key] || key;
       return template(string, data);
-    }
+    };
   }
 };
