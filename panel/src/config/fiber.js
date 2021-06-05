@@ -1,21 +1,21 @@
 /**
- * The code in this file is inspired by and partly based on Inertia.js 
+ * The code in this file is inspired by and partly based on Inertia.js
  * (https://github.com/inertiajs/inertia) which has been released under
  * the following MIT License:
- * 
+ *
  * Copyright (c) Jonathan Reinink <jonathan@reinink.ca>
- * 
+ *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * 
- * The above copyright notice and this permission notice shall be included 
+ *
+ * The above copyright notice and this permission notice shall be included
  * in all copies or substantial portions of the Software.
- * 
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR 
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -49,7 +49,11 @@ const Fiber = {
     window.addEventListener("popstate", this.onPopstateEvent.bind(this));
 
     // remember scroll position
-    document.addEventListener("scroll", debounce(this.onScrollEvent.bind(this), 100), true);
+    document.addEventListener(
+      "scroll",
+      debounce(this.onScrollEvent.bind(this), 100),
+      true
+    );
   },
 
   component(name) {
@@ -85,7 +89,6 @@ const Fiber = {
   },
 
   data(data) {
-
     // Add data to the Vue prototype
     // and window.panel object if the
     // key exists. Otherwise take from
@@ -102,8 +105,8 @@ const Fiber = {
       "$translation",
       "$urls",
       "$user",
-      "$view"
-    ].forEach(key => {
+      "$view",
+    ].forEach((key) => {
       if (data[key] !== undefined) {
         Vue.prototype[key] = window.panel[key] = data[key];
       } else {
@@ -113,7 +116,9 @@ const Fiber = {
 
     // set the lang attribute according to the current translation
     if (data.$translation) {
-      document.querySelector("html").setAttribute("lang", data.$translation.code);
+      document
+        .querySelector("html")
+        .setAttribute("lang", data.$translation.code);
     }
 
     // set the document title according to $view.title
@@ -131,7 +136,7 @@ const Fiber = {
     return this.visit(window.location.href, {
       ...options,
       preserveScroll: true,
-      preserveState: true
+      preserveState: true,
     });
   },
 
@@ -141,10 +146,10 @@ const Fiber = {
     document.documentElement.scrollLeft = 0;
 
     // update the scroll position of each region
-    this.scrollRegions().forEach(region => {
-      region.scrollTop  = 0;
+    this.scrollRegions().forEach((region) => {
+      region.scrollTop = 0;
       region.scrollLeft = 0;
-    })
+    });
 
     // resave the restored scroll position
     this.saveScroll();
@@ -158,9 +163,9 @@ const Fiber = {
   restoreScroll() {
     if (this.page.scrollRegions) {
       this.scrollRegions().forEach((region, index) => {
-        region.scrollTop  = this.page.scrollRegions[index].top;
+        region.scrollTop = this.page.scrollRegions[index].top;
         region.scrollLeft = this.page.scrollRegions[index].left;
-      })
+      });
     }
   },
 
@@ -168,8 +173,8 @@ const Fiber = {
     const regions = Array.from(this.scrollRegions());
     this.state({
       ...this.page,
-      scrollRegions: regions.map(region => ({
-        top:  region.scrollTop,
+      scrollRegions: regions.map((region) => ({
+        top: region.scrollTop,
         left: region.scrollLeft,
       })),
     });
@@ -179,7 +184,10 @@ const Fiber = {
     return document.querySelectorAll("[scroll-region]");
   },
 
-  async setPage(page, { replace = false, preserveScroll = false, preserveState = false } = {}) {
+  async setPage(
+    page,
+    { replace = false, preserveScroll = false, preserveState = false } = {}
+  ) {
     // resolve component
     const component = await this.component(page.$view.component);
 
@@ -232,11 +240,8 @@ const Fiber = {
     return params;
   },
 
-  toUrl(href, {
-    data = {},
-    hash = true
-  } = {}) {
-    let url
+  toUrl(href, { data = {}, hash = true } = {}) {
+    let url;
 
     if (hash === true) {
       url = new URL(href, window.location);
@@ -247,18 +252,20 @@ const Fiber = {
 
     url.search = this.toQuery(url.search, data);
 
-    return url
+    return url;
   },
 
-  async visit(url, {
-    replace = false,
-    preserveScroll = false,
-    preserveState = false,
-    only = [],
-    headers = {},
-    data = {}
-  } = {}) {
-
+  async visit(
+    url,
+    {
+      replace = false,
+      preserveScroll = false,
+      preserveState = false,
+      only = [],
+      headers = {},
+      data = {},
+    } = {}
+  ) {
     // save the current scrolling positions
     // for all scroll regions
     this.saveScroll();
@@ -267,7 +274,7 @@ const Fiber = {
 
     // make sure only is an array
     if (Array.isArray(only) === false) {
-      only = [only]
+      only = [only];
     }
 
     // create proper URL
@@ -279,14 +286,14 @@ const Fiber = {
         method: "get",
         headers: {
           ...headers,
-          "Accept": "text/html, application/xhtml+xml",
-          "X-Requested-With": "XMLHttpRequest",
           "X-Fiber": true,
-          ...(only.length ? {
-            "X-Fiber-Component": this.page.$view.component,
-            "X-Fiber-Include": only.join(","),
-          } : {}),
-        }
+          ...(only.length
+            ? {
+                "X-Fiber-Component": this.page.$view.component,
+                "X-Fiber-Include": only.join(","),
+              }
+            : {}),
+        },
       });
 
       // turn into json data
@@ -311,15 +318,13 @@ const Fiber = {
       }
 
       return this.setPage(json, { replace, preserveScroll, preserveState });
-
     } catch (error) {
       console.error(error);
-
     } finally {
       document.dispatchEvent(new Event("fiber:finish"));
     }
-  }
-}
+  },
+};
 
 export const plugin = {
   install(Vue) {
@@ -329,19 +334,19 @@ export const plugin = {
         return path;
       }
 
-      return document.querySelector("base").href + path.replace(/^\//, "")
-    }
+      return document.querySelector("base").href + path.replace(/^\//, "");
+    };
     Vue.prototype.$go = window.panel.$go = function (path, options) {
-      return Fiber.visit(this.$url(path), options)
-    }
+      return Fiber.visit(this.$url(path), options);
+    };
     Vue.prototype.$reload = window.panel.$reload = function (options) {
       if (typeof options === "string") {
         options = { only: [options] };
       }
-      return Fiber.reload(options)
-    }
+      return Fiber.reload(options);
+    };
   },
-}
+};
 
 export const component = {
   name: "Fiber",
@@ -360,14 +365,14 @@ export const component = {
         this.page = page;
         this.key = preserveState ? this.key : Date.now();
       },
-    })
+    });
   },
   render(h) {
     if (this.component) {
       return h(this.component, {
         key: this.key,
-        props: this.page.$view.props
+        props: this.page.$view.props,
       });
     }
-  }
-}
+  },
+};

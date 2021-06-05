@@ -624,9 +624,8 @@ function r($condition, $value, $alternative = null)
 }
 
 /**
- * Create a micro-router
- * and execute the routing action
- * immediately
+ * Creates a micro-router and executes
+ * the routing action immediately
  *
  * @param string $path
  * @param string $method

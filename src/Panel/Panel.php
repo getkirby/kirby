@@ -430,7 +430,7 @@ class Panel
                 if ($user = $kirby->user()) {
                     $translation = $kirby->translation($user->language());
                 } else {
-                    $translation = $kirby->translation($kirby->option('panel.language', 'en'));
+                    $translation = $kirby->translation($kirby->panelLanguage());
                 }
 
                 return [
