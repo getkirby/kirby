@@ -778,6 +778,8 @@ class Panel
 
             // pass responses directly down to the Kirby router
             if (is_a($result, 'Kirby\Http\Response') === true) {
+                $view = null;
+                $kirby->trigger('panel.route:after', compact('route', 'path', 'method', 'result', 'view'));
                 return $result;
             }
 
