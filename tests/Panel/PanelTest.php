@@ -257,7 +257,7 @@ class PanelTest extends TestCase
             ]
         ]);
 
-        $this->assertFalse(Panel::customCss($app));
+        $this->assertNull(Panel::customCss($app));
 
         // valid
         F::write($this->fixtures . '/panel.css', '');
@@ -287,7 +287,7 @@ class PanelTest extends TestCase
             ]
         ]);
 
-        $this->assertFalse(Panel::customJs($app));
+        $this->assertNull(Panel::customJs($app));
 
         // valid
         F::write($this->fixtures . '/panel.js', '');

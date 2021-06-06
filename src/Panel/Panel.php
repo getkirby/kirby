@@ -184,9 +184,9 @@ class Panel
      * config (panel.css)
      *
      * @param \Kirby\Cms\App $kirby
-     * @return string|false
+     * @return string|null
      */
-    public static function customCss(App $kirby)
+    public static function customCss(App $kirby): ?string
     {
         if ($css = $kirby->option('panel.css')) {
             $asset = asset($css);
@@ -196,7 +196,7 @@ class Panel
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
@@ -204,9 +204,9 @@ class Panel
      * config (panel.js)
      *
      * @param \Kirby\Cms\App $kirby
-     * @return string|false
+     * @return string|null
      */
-    public static function customJs(App $kirby)
+    public static function customJs(App $kirby): ?string
     {
         if ($js = $kirby->option('panel.js')) {
             $asset = asset($js);
@@ -216,7 +216,7 @@ class Panel
             }
         }
 
-        return false;
+        return null;
     }
 
     /**
