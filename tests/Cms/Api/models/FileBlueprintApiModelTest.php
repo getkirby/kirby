@@ -26,8 +26,12 @@ class FileBlueprintApiModelTest extends TestCase
             ],
         ]);
 
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $this->api  = $this->app->api();
-        $this->file = new File(['filename' => 'test.jpg']);
+        $this->file = new File(['filename' => 'test.jpg', 'parent' => $page]);
     }
 
     public function testName()

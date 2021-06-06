@@ -20,9 +20,13 @@ class FilesApiCollectionTest extends TestCase
 
     public function testCollection()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $collection = $this->api->collection('files', new Files([
-            new File(['filename' => 'a.jpg']),
-            new File(['filename' => 'b.jpg'])
+            new File(['filename' => 'a.jpg', 'parent' => $page]),
+            new File(['filename' => 'b.jpg', 'parent' => $page])
         ]));
 
         $result = $collection->toArray();

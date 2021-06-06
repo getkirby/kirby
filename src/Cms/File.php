@@ -425,6 +425,7 @@ class File extends ModelWithContent
      * Returns the parent id if a parent exists
      *
      * @internal
+     * @todo 3.7.0 When setParent() is changed, the if check is not needed anymore
      * @return string|null
      */
     public function parentId(): ?string

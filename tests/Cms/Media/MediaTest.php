@@ -76,9 +76,12 @@ class MediaTest extends TestCase
 
     public function testPublish()
     {
+        $site = new Site();
+
         F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
         $file = new File([
             'kirby'    => $this->app,
+            'parent'   => $site,
             'filename' => $filename = 'test.jpg'
         ]);
 
@@ -105,9 +108,14 @@ class MediaTest extends TestCase
 
     public function testUnpublish()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
         $file = new File([
             'kirby'    => $this->app,
+            'parent'   => $page,
             'filename' => $filename = 'test.jpg'
         ]);
 
@@ -135,9 +143,14 @@ class MediaTest extends TestCase
 
     public function testUnpublishAndIgnore()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         F::write($src = $this->fixtures . '/content/test.jpg', 'nice jpg');
         $file = new File([
             'kirby'    => $this->app,
+            'parent'   => $page,
             'filename' => $filename = 'test.jpg'
         ]);
 
@@ -167,8 +180,13 @@ class MediaTest extends TestCase
     {
         $directory = $this->fixtures . '/does-not-exist';
 
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $file = new File([
             'kirby'    => $this->app,
+            'parent'   => $page,
             'filename' => 'does-not-exist.jpg'
         ]);
 
