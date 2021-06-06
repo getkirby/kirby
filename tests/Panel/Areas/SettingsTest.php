@@ -26,7 +26,7 @@ class SettingsTest extends AreaTestCase
         $this->assertSame('Settings', $view['title']);
         $this->assertSame('k-settings-view', $view['component']);
         $this->assertSame([], $props['languages']);
-        $this->assertFalse($props['license']);
+        $this->assertNull($props['license']);
         $this->assertSame($this->app->version(), $props['version']);
     }
 

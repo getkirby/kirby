@@ -9,6 +9,15 @@ return function ($kirby) {
             [
                 'pattern' => 'settings',
                 'action'  => function () use ($kirby) {
+                    $license = $kirby->system()->license();
+                    if ($license === true) {
+                        // valid license, but user is not admin
+                        $license = 'Kirby 3';
+                    } elseif ($license === false) {
+                        // no valid license
+                        $license = null;
+                    }
+
                     return [
                         'component' => 'k-settings-view',
                         'props'     => [
@@ -20,7 +29,7 @@ return function ($kirby) {
                                     'text'    => $language->name(),
                                 ];
                             }),
-                            'license' => $kirby->user()->isAdmin() ? $kirby->system()->license() : 'Kirby 3',
+                            'license' => $license,
                             'version' => $kirby->version(),
                         ]
                     ];
