@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 class PluginsTest extends TestCase
 {
     protected $app;
-    protected $fixtures;
+    protected $tmp;
     protected $cssA;
     protected $cssB;
     protected $jsA;
@@ -23,7 +23,7 @@ class PluginsTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/tmp/PluginsTest'
+                'index' => $this->tmp = __DIR__ . '/tmp/PluginsTest'
             ]
         ]);
     }
@@ -32,18 +32,18 @@ class PluginsTest extends TestCase
     {
         $time = \time() + 2;
 
-        F::write($this->fixtures . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
-        touch($this->fixtures . '/site/plugins/a/index.php', $time);
-        F::write($this->cssA = $this->fixtures . '/site/plugins/a/index.css', 'a');
+        F::write($this->tmp . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
+        touch($this->tmp . '/site/plugins/a/index.php', $time);
+        F::write($this->cssA = $this->tmp . '/site/plugins/a/index.css', 'a');
         touch($this->cssA, $time);
-        F::write($this->jsA = $this->fixtures . '/site/plugins/a/index.js', 'a');
+        F::write($this->jsA = $this->tmp . '/site/plugins/a/index.js', 'a');
         touch($this->jsA, $time);
 
-        F::write($this->fixtures . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
-        touch($this->fixtures . '/site/plugins/b/index.php', $time);
-        F::write($this->cssB = $this->fixtures . '/site/plugins/b/index.css', 'b');
+        F::write($this->tmp . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
+        touch($this->tmp . '/site/plugins/b/index.php', $time);
+        F::write($this->cssB = $this->tmp . '/site/plugins/b/index.css', 'b');
         touch($this->cssB, $time);
-        F::write($this->jsB = $this->fixtures . '/site/plugins/b/index.js', 'b');
+        F::write($this->jsB = $this->tmp . '/site/plugins/b/index.js', 'b');
         touch($this->jsB, $time);
 
         return $time;
@@ -51,7 +51,7 @@ class PluginsTest extends TestCase
 
     public function tearDown(): void
     {
-        Dir::remove($this->fixtures);
+        Dir::remove($this->tmp);
     }
 
     /**

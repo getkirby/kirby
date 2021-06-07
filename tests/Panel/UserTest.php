@@ -22,22 +22,22 @@ class ModelUserTestForceLocked extends ModelUser
 class UserTest extends TestCase
 {
     protected $app;
-    protected $fixtures;
+    protected $tmp;
 
     public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/tmp/SiteTest',
+                'index' => $this->tmp = __DIR__ . '/tmp/SiteTest',
             ]
         ]);
 
-        Dir::make($this->fixtures);
+        Dir::make($this->tmp);
     }
 
     public function tearDown(): void
     {
-        Dir::remove($this->fixtures);
+        Dir::remove($this->tmp);
     }
 
     /**

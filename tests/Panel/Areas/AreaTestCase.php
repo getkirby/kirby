@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 abstract class AreaTestCase extends TestCase
 {
     protected $app;
-    protected $fixtures;
+    protected $tmp;
 
     public function app(array $params)
     {
@@ -146,7 +146,7 @@ abstract class AreaTestCase extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/tmp',
+                'index' => $this->tmp = __DIR__ . '/tmp',
             ],
             'request' => [
                 'query' => [
@@ -155,7 +155,7 @@ abstract class AreaTestCase extends TestCase
             ]
         ]);
 
-        Dir::make($this->fixtures);
+        Dir::make($this->tmp);
     }
 
     public function tearDown(): void
@@ -163,7 +163,7 @@ abstract class AreaTestCase extends TestCase
         // clear session file first
         $this->app->session()->destroy();
 
-        Dir::remove($this->fixtures);
+        Dir::remove($this->tmp);
 
         // clean up server software fakes
         unset($_SERVER['SERVER_SOFTWARE']);

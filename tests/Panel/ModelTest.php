@@ -75,22 +75,22 @@ class CustomPanelModel extends Model
 class ModelTest extends TestCase
 {
     protected $app;
-    protected $fixtures;
+    protected $tmp;
 
     public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/tmp/ModelTest',
+                'index' => $this->tmp = __DIR__ . '/tmp/ModelTest',
             ]
         ]);
 
-        Dir::make($this->fixtures);
+        Dir::make($this->tmp);
     }
 
     public function tearDown(): void
     {
-        Dir::remove($this->fixtures);
+        Dir::remove($this->tmp);
     }
 
     protected function panel(array $props = [])
@@ -335,7 +335,7 @@ class ModelTest extends TestCase
         $site = new ModelSiteNoLocking();
         $this->assertFalse($site->panel()->lock());
 
-        Dir::make($this->fixtures . '/content');
+        Dir::make($this->tmp . '/content');
         $app = $this->app->clone();
         $app->impersonate('kirby');
 

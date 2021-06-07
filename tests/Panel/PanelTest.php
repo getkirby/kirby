@@ -15,17 +15,17 @@ use PHPUnit\Framework\TestCase;
 class PanelTest extends TestCase
 {
     protected $app;
-    protected $fixtures;
+    protected $tmp;
 
     public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/tmp/PanelTest',
+                'index' => $this->tmp = __DIR__ . '/tmp/PanelTest',
             ]
         ]);
 
-        Dir::make($this->fixtures);
+        Dir::make($this->tmp);
     }
 
     public function tearDown(): void
@@ -33,7 +33,7 @@ class PanelTest extends TestCase
         // clear session file first
         $this->app->session()->destroy();
 
-        Dir::remove($this->fixtures);
+        Dir::remove($this->tmp);
 
         // clear fake json requests
         $_GET = [];
@@ -72,10 +72,10 @@ class PanelTest extends TestCase
         $this->assertCount(1, $areas);
 
         // fix installation issues by creating directories
-        Dir::make($this->fixtures . '/content');
-        Dir::make($this->fixtures . '/media');
-        Dir::make($this->fixtures . '/site/accounts');
-        Dir::make($this->fixtures . '/site/sessions');
+        Dir::make($this->tmp . '/content');
+        Dir::make($this->tmp . '/media');
+        Dir::make($this->tmp . '/site/accounts');
+        Dir::make($this->tmp . '/site/sessions');
 
         // create the first admin
         $this->app = $this->app->clone([
@@ -231,8 +231,8 @@ class PanelTest extends TestCase
         ]);
 
         // create dummy assets
-        F::write($this->fixtures . '/assets/panel.css', 'test');
-        F::write($this->fixtures . '/assets/panel.js', 'test');
+        F::write($this->tmp . '/assets/panel.css', 'test');
+        F::write($this->tmp . '/assets/panel.js', 'test');
 
         $assets = Panel::assets($this->app);
 
@@ -260,7 +260,7 @@ class PanelTest extends TestCase
         $this->assertNull(Panel::customCss($app));
 
         // valid
-        F::write($this->fixtures . '/panel.css', '');
+        F::write($this->tmp . '/panel.css', '');
 
         $app = $this->app->clone([
             'options' => [
@@ -290,7 +290,7 @@ class PanelTest extends TestCase
         $this->assertNull(Panel::customJs($app));
 
         // valid
-        F::write($this->fixtures . '/panel.js', '');
+        F::write($this->tmp . '/panel.js', '');
 
         $app = $this->app->clone([
             'options' => [
