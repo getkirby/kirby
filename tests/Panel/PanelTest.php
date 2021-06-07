@@ -992,13 +992,13 @@ class PanelTest extends TestCase
 
         $result = Panel::router($app, '/');
 
-        $this->assertFalse($result);
+        $this->assertNull($result);
     }
 
     /**
      * @covers ::setLanguage
      */
-    public function testSetLanguage(): void
+    public function testSetLanguageWithoutRequest(): void
     {
         $this->app = $this->app->clone([
             'options' => [
@@ -1021,8 +1021,47 @@ class PanelTest extends TestCase
         $language = Panel::setLanguage($this->app);
 
         $this->assertSame('en', $language);
-        $this->assertSame('en', $this->app->session()->get('panel.language'));
         $this->assertSame('en', $this->app->language()->code());
+
+        // language is not stored in the session yet
+        $this->assertNull($this->app->session()->get('panel.language'));
+    }
+
+    /**
+     * @covers ::setLanguage
+     */
+    public function testSetLanguage(): void
+    {
+        $this->app = $this->app->clone([
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'name' => 'English',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                    'name' => 'Deutsch',
+                ]
+            ],
+            'options' => [
+                'languages' => true,
+            ],
+            'request' => [
+                'query' => [
+                    'language' => 'de'
+                ]
+            ]
+        ]);
+
+        // set for the first time
+        $language = Panel::setLanguage($this->app);
+
+        $this->assertSame('de', $language);
+        $this->assertSame('de', $this->app->language()->code());
+
+        // language is now stored in the session after request query
+        $this->assertSame('de', $this->app->session()->get('panel.language'));
     }
 
     /**

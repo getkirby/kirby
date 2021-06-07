@@ -739,7 +739,7 @@ class Panel
     public static function router(App $kirby, string $path = null)
     {
         if ($kirby->option('panel') === false) {
-            return false;
+            return null;
         }
 
         // set the translation for Panel UI before
