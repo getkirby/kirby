@@ -103,7 +103,7 @@
           </template>
 
           <!-- registration -->
-          <template v-else-if="unregistered">
+          <template v-else-if="!license">
             <div class="k-registration">
               <p>{{ $t('license.unregistered') }}</p>
               <k-button
@@ -148,7 +148,7 @@ export default {
   props: {
     areas: Object,
     breadcrumb: Array,
-    license: [Boolean, String],
+    license: Boolean,
     title: String,
     view: Object,
   },
@@ -166,9 +166,6 @@ export default {
       } else {
         return null;
       }
-    },
-    unregistered() {
-      return !this.license ? true : false;
     }
   },
   methods: {
