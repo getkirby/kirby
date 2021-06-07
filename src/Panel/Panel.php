@@ -390,7 +390,10 @@ class Panel
     /**
      * Creates global data for the Panel.
      * This will be injected in the full Panel
-     * view via the script tag.
+     * view via the script tag. Global data
+     * is only requested once on the first page load.
+     * It can be loaded partially later if needed,
+     * but is otherwise not included in Fiber calls.
      *
      * @param \Kirby\Cms\App $kirby
      * @return array
