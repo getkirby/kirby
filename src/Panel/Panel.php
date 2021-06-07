@@ -601,7 +601,7 @@ class Panel
                 $model = $kirby->site();
                 break;
             case 'account':
-                $model = $kirby->user(null, $kirby->option('api.allowImpersonation', false));
+                $model = static::user();
                 break;
             case 'page':
                 $model = static::page(basename($path));
