@@ -511,7 +511,9 @@ class File extends ModelWithContent
     }
 
     /**
-     * Sets the parent model object
+     * Sets the parent model object;
+     * this property is required for `File::create()` and
+     * will be generally required starting with Kirby 3.7.0
      *
      * @param \Kirby\Cms\Model|null $parent
      * @return $this
