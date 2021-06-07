@@ -19,6 +19,17 @@ class FilesSectionTest extends TestCase
         ]);
     }
 
+    public function testAccept()
+    {
+        $section = new Section('files', [
+            'name'     => 'test',
+            'model'    => new Page(['slug' => 'test']),
+            'template' => 'note'
+        ]);
+
+        $this->assertSame('*', $section->accept());
+    }
+
     public function testHeadline()
     {
 

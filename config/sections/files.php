@@ -69,6 +69,7 @@ return [
             if ($this->template) {
                 $file = new File([
                     'filename' => 'tmp',
+                    'parent'   => $this->model(),
                     'template' => $this->template
                 ]);
 

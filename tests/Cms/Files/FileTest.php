@@ -11,17 +11,23 @@ class FileTestModel extends File
 
 class FileTest extends TestCase
 {
-    protected function defaults(): array
+    protected function defaults(?App $kirby = null): array
     {
+        $page = new Page([
+            'kirby' => $kirby,
+            'slug'  => 'test'
+        ]);
+
         return [
             'filename' => 'cover.jpg',
+            'parent'   => $page,
             'url'      => 'https://getkirby.com/projects/project-a/cover.jpg'
         ];
     }
 
     protected function file(array $props = [])
     {
-        return new File(array_merge($this->defaults(), $props));
+        return new File(array_merge($this->defaults($props['kirby'] ?? null), $props));
     }
 
     public function testAsset()
@@ -60,34 +66,30 @@ class FileTest extends TestCase
             'parent' => $page = new Page(['slug' => 'test'])
         ]);
 
-        $this->assertEquals($page, $file->page());
+        $this->assertSame($page, $file->page());
+
+        $file = $this->file([
+            'parent' => new User([])
+        ]);
+
+        $this->assertNull($file->page());
     }
 
     public function testParentId()
     {
-        $file = new File([
-            'filename' => 'test.jpg',
-            'parent'   => $page = new Page(['slug' => 'test'])
+        $file = $this->file([
+            'parent' => $page = new Page(['slug' => 'test'])
         ]);
 
-        $this->assertEquals('test', $file->parentId());
-
-        $file = new File([
-            'filename' => 'test.jpg',
-        ]);
-
-        $this->assertNull($file->parentId());
-    }
-
-    public function testDefaultPage()
-    {
-        $this->assertNull($this->file()->page());
+        $this->assertSame('test', $file->parentId());
     }
 
     public function testHtml()
     {
-        $file = new File([
+        $file = $this->file([
             'filename' => 'test.jpg',
+            'url' => null,
+            'parent' => new Site(),
             'content' => [
                 'alt' => 'This is the alt text'
             ]
@@ -102,7 +104,7 @@ class FileTest extends TestCase
 
     public function testToString()
     {
-        $file = new File(['filename' => 'super.jpg']);
+        $file = $this->file(['filename' => 'super.jpg']);
         $this->assertEquals('super.jpg', $file->toString('{{ file.filename }}'));
     }
 
@@ -127,14 +129,14 @@ class FileTest extends TestCase
             'user' => 'admin'
         ]);
 
-        $file = new File([
+        $file = $this->file([
             'kirby'    => $app,
             'filename' => 'test.jpg'
         ]);
         $this->assertTrue($file->isReadable());
         $this->assertTrue($file->isReadable()); // test caching
 
-        $file = new File([
+        $file = $this->file([
             'kirby'    => $app,
             'filename' => 'test.jpg',
             'template' => 'test'
@@ -157,8 +159,9 @@ class FileTest extends TestCase
 
         F::write($index . '/test.jpg', 'test');
         touch($index . '/test.jpg', 5432112345);
-        $file = new File([
+        $file = $this->file([
             'kirby'    => $app,
+            'parent'   => $app->site(),
             'filename' => 'test.jpg'
         ]);
 
@@ -179,8 +182,9 @@ class FileTest extends TestCase
             ]
         ]);
 
-        $file = new File([
+        $file = $this->file([
             'kirby'    => $app,
+            'parent'   => $app->site(),
             'filename' => 'test.jpg'
         ]);
 

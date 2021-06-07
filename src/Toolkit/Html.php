@@ -305,7 +305,7 @@ class Html extends Xml
             $text = $attr['href'];
         }
 
-        if (is_string($text) === true && Str::isUrl($text) === true) {
+        if (is_string($text) === true && V::url($text) === true) {
             $text = Url::short($text);
         }
 

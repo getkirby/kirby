@@ -263,8 +263,13 @@ class FileTest extends TestCase
      */
     public function testIconDefault()
     {
+        $page = new ModelPage([
+            'slug' => 'test'
+        ]);
+
         $file = new ModelFile([
-            'filename' => 'something.jpg'
+            'filename' => 'something.jpg',
+            'parent'   => $page
         ]);
 
         $icon = (new File($file))->icon();
@@ -282,8 +287,13 @@ class FileTest extends TestCase
      */
     public function testIconWithRatio()
     {
+        $page = new ModelPage([
+            'slug' => 'test'
+        ]);
+
         $file = new ModelFile([
-            'filename' => 'something.jpg'
+            'filename' => 'something.jpg',
+            'parent'   => $page
         ]);
 
         $icon = (new File($file))->icon(['ratio' => '3/2']);
@@ -301,8 +311,13 @@ class FileTest extends TestCase
      */
     public function testImage()
     {
+        $page = new ModelPage([
+            'slug' => 'test'
+        ]);
+
         $file = new ModelFile([
-            'filename' => 'something.jpg'
+            'filename' => 'something.jpg',
+            'parent'   => $page
         ]);
 
         $image = (new File($file))->image();
@@ -386,8 +401,13 @@ class FileTest extends TestCase
      */
     public function testOptions()
     {
+        $page = new ModelPage([
+            'slug' => 'test'
+        ]);
+
         $file = new ModelFile([
             'filename' => 'test.jpg',
+            'parent'   => $page
         ]);
 
         $file->kirby()->impersonate('kirby');
@@ -410,8 +430,13 @@ class FileTest extends TestCase
      */
     public function testOptionsWithLockedFile()
     {
+        $page = new ModelPage([
+            'slug' => 'test'
+        ]);
+
         $file = new ModelFileTestForceLocked([
             'filename' => 'test.jpg',
+            'parent'   => $page
         ]);
 
         $file->kirby()->impersonate('kirby');
@@ -448,8 +473,13 @@ class FileTest extends TestCase
      */
     public function testOptionsDefaultReplaceOption()
     {
+        $page = new ModelPage([
+            'slug' => 'test'
+        ]);
+
         $file = new ModelFile([
             'filename' => 'test.js',
+            'parent'   => $page
         ]);
         $file->kirby()->impersonate('kirby');
 
@@ -480,8 +510,13 @@ class FileTest extends TestCase
             ]
         ]);
 
+        $page = new ModelPage([
+            'slug' => 'test'
+        ]);
+
         $file = new ModelFile([
             'filename' => 'test.js',
+            'parent'   => $page,
             'template' => 'test',
         ]);
 
@@ -516,8 +551,13 @@ class FileTest extends TestCase
             ]
         ]);
 
+        $page = new ModelPage([
+            'slug' => 'test'
+        ]);
+
         $file = new ModelFile([
             'filename' => 'test.js',
+            'parent'   => $page,
             'template' => 'restricted',
         ]);
 

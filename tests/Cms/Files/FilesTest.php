@@ -13,7 +13,8 @@ class FilesTest extends TestCase
         ], $parent);
 
         $file = new File([
-            'filename' => 'b.jpg'
+            'filename' => 'b.jpg',
+            'parent'   => $parent
         ]);
 
         $result = $files->add($file);

@@ -407,8 +407,12 @@ class Str
      *
      * @param string|null $string
      * @return bool
+     * @deprecated 3.6.0 use `Kirby\Toolkit\V::url()` instead
+     * @todo Throw deprecation warning in 3.7.0
+     * @todo Remove in 3.8.0
+     * @codeCoverageIgnore
      */
-    public static function isURL(string $string = null): bool
+    public static function isURL(?string $string = null): bool
     {
         return filter_var($string, FILTER_VALIDATE_URL) !== false;
     }
