@@ -81,6 +81,7 @@ jobs:
       - name: Upload coverage results to Codecov
         uses: codecov/codecov-action@a1ed4b322b4b38cb846afb5a0ebfa17086917d27 # pin@v1
         with:
+          token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
           fail_ci_if_error: true
           file: ${{ github.workspace }}/clover.xml
           flags: backend
