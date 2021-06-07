@@ -29,7 +29,7 @@ class PageTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/fixtures/PageTest',
+                'index' => $this->fixtures = __DIR__ . '/tmp/PageTest',
             ]
         ]);
 

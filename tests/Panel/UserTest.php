@@ -28,7 +28,7 @@ class UserTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/fixtures/SiteTest',
+                'index' => $this->fixtures = __DIR__ . '/tmp/SiteTest',
             ]
         ]);
 

@@ -81,7 +81,7 @@ class ModelTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/fixtures/ModelTest',
+                'index' => $this->fixtures = __DIR__ . '/tmp/ModelTest',
             ]
         ]);
 

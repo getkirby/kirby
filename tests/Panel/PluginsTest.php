@@ -23,7 +23,7 @@ class PluginsTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/fixtures/PluginsTest'
+                'index' => $this->fixtures = __DIR__ . '/tmp/PluginsTest'
             ]
         ]);
     }

@@ -30,7 +30,7 @@ class FileTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/fixtures/FileTest',
+                'index' => $this->fixtures = __DIR__ . '/tmp/FileTest',
             ]
         ]);
 

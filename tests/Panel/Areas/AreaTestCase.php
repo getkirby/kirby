@@ -146,7 +146,7 @@ abstract class AreaTestCase extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/fixtures',
+                'index' => $this->fixtures = __DIR__ . '/tmp',
             ],
             'request' => [
                 'query' => [
