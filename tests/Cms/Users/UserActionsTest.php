@@ -8,16 +8,16 @@ use Kirby\Toolkit\Dir;
 class UserActionsTest extends TestCase
 {
     protected $app;
-    protected $fixtures = __DIR__ . '/fixtures/UserActionsTest';
+    protected $tmp = __DIR__ . '/tmp';
 
     public function setUp(): void
     {
-        Dir::remove($this->fixtures);
-        Data::write($this->fixtures . '/admin/index.php', [
+        Dir::remove($this->tmp);
+        Data::write($this->tmp . '/accounts/admin/index.php', [
             'email' => 'admin@domain.com',
             'role' => 'admin'
         ]);
-        Data::write($this->fixtures . '/editor/index.php', [
+        Data::write($this->tmp . '/accounts/editor/index.php', [
             'email' => 'editor@domain.com',
             'role' => 'editor'
         ]);
@@ -33,7 +33,8 @@ class UserActionsTest extends TestCase
             ],
             'roots' => [
                 'index'    => '/dev/null',
-                'accounts' => $this->fixtures,
+                'accounts' => $this->tmp . '/accounts',
+                'sessions' => $this->tmp . '/sessions'
             ],
             'user'  => 'admin@domain.com'
         ]);
@@ -41,7 +42,7 @@ class UserActionsTest extends TestCase
 
     public function tearDown(): void
     {
-        Dir::remove($this->fixtures);
+        Dir::remove($this->tmp);
     }
 
     public function testChangeEmail()
@@ -284,21 +285,12 @@ class UserActionsTest extends TestCase
 
     public function testUpdateWithAuthUser()
     {
-        $app = new App([
-            'users' => [
-                [
-                    'email' => 'admin@getkirby.com',
-                    'role'  => 'admin'
-                ]
-            ]
-        ]);
-
-        $user = $app->user('admin@getkirby.com');
+        $user = $this->app->user('admin@domain.com');
         $user->loginPasswordless();
         $user->update([
             'website' => $url = 'https://getkirby.com'
         ]);
-        $this->assertEquals($url, $app->user()->website()->value());
+        $this->assertEquals($url, $this->app->user()->website()->value());
         $user->logout();
     }
 

@@ -21,6 +21,16 @@ class ModelFileTestForceLocked extends ModelFile
  */
 class FileTest extends TestCase
 {
+    public function setUp(): void
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'media' => __DIR__ . '/tmp'
+            ]
+        ]);
+    }
+
     public function tearDown(): void
     {
         Dir::remove(__DIR__ . '/tmp');
