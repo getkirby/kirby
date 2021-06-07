@@ -72,8 +72,12 @@ class HasFilesTest extends TestCase
      */
     public function testTypes($filename, $type, $expected)
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $parent = new HasFileTraitUser([
-            new File(['filename' => $filename])
+            new File(['filename' => $filename, 'parent' => $page])
         ]);
 
         if ($expected === true) {
@@ -88,8 +92,12 @@ class HasFilesTest extends TestCase
      */
     public function testHas($filename, $type, $expected)
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $parent = new HasFileTraitUser([
-            new File(['filename' => $filename])
+            new File(['filename' => $filename, 'parent' => $page])
         ]);
 
         $this->assertEquals($expected, $parent->{'has' . $type}());
@@ -97,6 +105,10 @@ class HasFilesTest extends TestCase
 
     public function testHasFiles()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         // no files
         $parent = new HasFileTraitUser([
         ]);
@@ -105,7 +117,7 @@ class HasFilesTest extends TestCase
 
         // files
         $parent = new HasFileTraitUser([
-            new File(['filename' => 'test.jpg'])
+            new File(['filename' => 'test.jpg', 'parent' => $page])
         ]);
 
         $this->assertTrue($parent->hasFiles());

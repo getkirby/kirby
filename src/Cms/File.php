@@ -425,6 +425,7 @@ class File extends ModelWithContent
      * Returns the parent id if a parent exists
      *
      * @internal
+     * @todo 3.7.0 When setParent() is changed, the if check is not needed anymore
      * @return string|null
      */
     public function parentId(): ?string
@@ -510,13 +511,22 @@ class File extends ModelWithContent
     }
 
     /**
-     * Sets the parent model object
+     * Sets the parent model object;
+     * this property is required for `File::create()` and
+     * will be generally required starting with Kirby 3.7.0
      *
      * @param \Kirby\Cms\Model|null $parent
      * @return $this
+     * @todo make property required in 3.7.0
      */
     protected function setParent(Model $parent = null)
     {
+        // @codeCoverageIgnoreStart
+        if ($parent === null) {
+            deprecated('You are creating a `Kirby\Cms\File` object without passing the `parent` property. While unsupported, this hasn\'t caused any direct errors so far. To fix inconsistencies, the `parent` property will be required when creating a `Kirby\Cms\File` object in Kirby 3.7.0 and higher. Not passing this property will start throwing a breaking error.');
+        }
+        // @codeCoverageIgnoreEnd
+
         $this->parent = $parent;
         return $this;
     }

@@ -413,8 +413,13 @@ class FormTest extends TestCase
             ]
         ]);
 
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $file = new File([
             'filename' => 'test.jpg',
+            'parent'   => $page,
             'content'  => []
         ]);
 

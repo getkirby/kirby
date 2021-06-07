@@ -22,8 +22,13 @@ class FileVersionTest extends TestCase
 
     public function testConstruct()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $original = new File([
             'filename' => 'test.jpg',
+            'parent' => $page,
             'content' => [
                 'title' => 'Test Title'
             ]
@@ -77,8 +82,13 @@ class FileVersionTest extends TestCase
 
     public function testToArray()
     {
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
         $original = new File([
             'filename' => 'test.jpg',
+            'parent' => $page,
             'content' => [
                 'title' => 'Test Title'
             ]
@@ -95,7 +105,11 @@ class FileVersionTest extends TestCase
 
     public function testToString()
     {
-        $original = new File(['filename' => 'test.jpg']);
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $original = new File(['filename' => 'test.jpg', 'parent' => $page]);
         $version  = new FileVersion([
             'original' => $original,
             'root'     => __DIR__ . '/fixtures/files/test.txt',
