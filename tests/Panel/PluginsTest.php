@@ -7,10 +7,13 @@ use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @coversDefaultClass \Kirby\Panel\Plugins
+ */
 class PluginsTest extends TestCase
 {
     protected $app;
-    protected $fixtures;
+    protected $tmp = __DIR__ . '/tmp';
     protected $cssA;
     protected $cssB;
     protected $jsA;
@@ -20,7 +23,7 @@ class PluginsTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->fixtures = __DIR__ . '/fixtures/PluginsTest'
+                'index' => $this->tmp
             ]
         ]);
     }
@@ -29,18 +32,18 @@ class PluginsTest extends TestCase
     {
         $time = \time() + 2;
 
-        F::write($this->fixtures . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
-        touch($this->fixtures . '/site/plugins/a/index.php', $time);
-        F::write($this->cssA = $this->fixtures . '/site/plugins/a/index.css', 'a');
+        F::write($this->tmp . '/site/plugins/a/index.php', '<?php Kirby::plugin("test/a", []);');
+        touch($this->tmp . '/site/plugins/a/index.php', $time);
+        F::write($this->cssA = $this->tmp . '/site/plugins/a/index.css', 'a');
         touch($this->cssA, $time);
-        F::write($this->jsA = $this->fixtures . '/site/plugins/a/index.js', 'a');
+        F::write($this->jsA = $this->tmp . '/site/plugins/a/index.js', 'a');
         touch($this->jsA, $time);
 
-        F::write($this->fixtures . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
-        touch($this->fixtures . '/site/plugins/b/index.php', $time);
-        F::write($this->cssB = $this->fixtures . '/site/plugins/b/index.css', 'b');
+        F::write($this->tmp . '/site/plugins/b/index.php', '<?php Kirby::plugin("test/b", []);');
+        touch($this->tmp . '/site/plugins/b/index.php', $time);
+        F::write($this->cssB = $this->tmp . '/site/plugins/b/index.css', 'b');
         touch($this->cssB, $time);
-        F::write($this->jsB = $this->fixtures . '/site/plugins/b/index.js', 'b');
+        F::write($this->jsB = $this->tmp . '/site/plugins/b/index.js', 'b');
         touch($this->jsB, $time);
 
         return $time;
@@ -48,9 +51,12 @@ class PluginsTest extends TestCase
 
     public function tearDown(): void
     {
-        Dir::remove($this->fixtures);
+        Dir::remove($this->tmp);
     }
 
+    /**
+     * @covers ::files
+     */
     public function testFiles()
     {
         $this->createPlugins();
@@ -61,23 +67,34 @@ class PluginsTest extends TestCase
         $plugins  = new Plugins();
         $expected = [$this->cssA, $this->jsA, $this->cssB, $this->jsB];
 
-        $this->assertEquals($expected, $plugins->files());
+        $this->assertSame($expected, $plugins->files());
+        // from cached property
+        $this->assertSame($expected, $plugins->files());
     }
 
+    /**
+     * @covers ::modified
+     */
     public function testModifiedWithoutFiles()
     {
         $plugins = new Plugins();
-        $this->assertEquals(0, $plugins->modified());
+        $this->assertSame(0, $plugins->modified());
     }
 
+    /**
+     * @covers ::modified
+     */
     public function testModifiedWithFiles()
     {
         $time = $this->createPlugins();
 
         $plugins = new Plugins();
-        $this->assertEquals($time, $plugins->modified());
+        $this->assertSame($time, $plugins->modified());
     }
 
+    /**
+     * @covers ::read
+     */
     public function testRead()
     {
         $this->createPlugins();
@@ -89,25 +106,28 @@ class PluginsTest extends TestCase
 
         // css
         $expected = "a\n\nb";
-        $this->assertEquals($expected, $plugins->read('css'));
+        $this->assertSame($expected, $plugins->read('css'));
 
         // js
         $expected = "a;\n\nb;";
-        $this->assertEquals($expected, $plugins->read('js'));
+        $this->assertSame($expected, $plugins->read('js'));
     }
 
+    /**
+     * @covers ::url
+     */
     public function testUrl()
     {
         // css
         $plugins  = new Plugins();
         $expected = $this->app->url('media') . '/plugins/index.css?0';
 
-        $this->assertEquals($expected, $plugins->url('css'));
+        $this->assertSame($expected, $plugins->url('css'));
 
         // js
         $plugins  = new Plugins();
         $expected = $this->app->url('media') . '/plugins/index.js?0';
 
-        $this->assertEquals($expected, $plugins->url('js'));
+        $this->assertSame($expected, $plugins->url('js'));
     }
 }

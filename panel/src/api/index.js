@@ -20,6 +20,7 @@ export default (extensions = {}) => {
     onStart() { },
     onComplete() { },
     onSuccess() { },
+    onParserError() { },
     onError(error) {
       window.console.log(error.message);
       throw error;

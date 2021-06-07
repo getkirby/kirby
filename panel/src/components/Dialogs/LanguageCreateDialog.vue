@@ -56,9 +56,6 @@ export default {
           type: "text"
         },
       };
-    },
-    system() {
-      return this.$store.state.system.info;
     }
   },
   watch: {
@@ -66,7 +63,7 @@ export default {
       this.onNameChanges(name);
     },
     "language.code"(code) {
-      this.language.code = this.$helper.slug(code, [this.system.ascii]);
+      this.language.code = this.$helper.slug(code, [this.$system.ascii]);
       this.onCodeChanges(this.language.code);
     }
   },
@@ -87,7 +84,7 @@ export default {
         } else {
           // if the entered language code exists
           // matches the locale values in the languages defined in the system
-          let locales = this.$store.state.system.info.locales || [];
+          let locales = this.$system.locales || [];
           if (locales && locales[code]) {
             this.language.locale = locales[code];
           } else {
@@ -97,7 +94,7 @@ export default {
       }
     },
     onNameChanges(name) {
-      this.language.code = this.$helper.slug(name, [this.language.rules, this.system.ascii]).substr(0, 2);
+      this.language.code = this.$helper.slug(name, [this.language.rules, this.$system.ascii]).substr(0, 2);
     },
     open() {
       this.language = {
@@ -121,7 +118,6 @@ export default {
           locale: this.language.locale
         });
 
-        this.$store.dispatch("languages/load");
         this.success({
           message: ":)",
           event: "language.create"

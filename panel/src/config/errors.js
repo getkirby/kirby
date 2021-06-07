@@ -1,9 +1,8 @@
 import Vue from "vue";
 import store from "@/store/store.js";
-import config from "./config.js";
 
 Vue.config.errorHandler = error => {
-  if (config.debug) {
+  if (window.panel.$config.debug) {
     window.console.error(error);
   }
 
@@ -14,7 +13,7 @@ Vue.config.errorHandler = error => {
 
 window.panel = window.panel || {};
 window.panel.error = (notification, msg) => {
-  if (config.debug) {
+  if (window.panel.$config.debug) {
     window.console.error(notification + ": " + msg);
   }
 
@@ -23,3 +22,7 @@ window.panel.error = (notification, msg) => {
     notification + ". See the console for more information."
   );
 };
+
+window.panel.deprecated = (msg) => {
+  console.warn("Deprecated: " + msg);
+}

@@ -52,21 +52,23 @@ export default {
   },
   methods: {
     go(target) {
+      let data = {};
+
       // if a target language is set and it is not the current language,
       // switch to it before routing to target view
       if (target.language) {
-        if (this.$store.state.languages.current.code !== target.language) {
-          const language = this.$store.state.languages.all.filter(l => l.code === target.language)[0];
-          this.$store.dispatch("languages/current", language);
-        }
+        data.language = target.language;
       }
 
-      this.$go(target.link);
+      this.$go(target.link, {
+        data: data
+      });
     },
     load() {
       // create an API request promise for each model with changes
-      const promises = this.models.map(model => {
-        return this.$api.get(model.api, { view: "compact" }, null, true).then(response => {
+      const promises = this.models.map(async model => {
+        try {
+          const response = await this.$api.get(model.api, { view: "compact" }, null, true);
 
           // populate entry depending on model type
           let entry;
@@ -108,17 +110,18 @@ export default {
           }
 
           // add language indicator if in multilang
-          if (this.$store.state.languages.current) {
+          if (this.$language) {
             const language = model.id.split("/").pop();
             entry.label = entry.label + " (" + language + ")";
             entry.target.language = language;
           }
 
           return entry;
-        }).catch(() => {
+
+        } catch (error) {
           this.$store.dispatch("content/remove", model.id);
           return null;
-        });
+        }
       });
 
       return Promise.all(promises).then(entries => {

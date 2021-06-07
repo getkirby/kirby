@@ -47,7 +47,7 @@ export default {
       return false;
     },
     language() {
-      return this.$store.state.languages.current;
+      return this.$system.language;
     },
     paginationId() {
       return "kirby$pagination$" + this.parent + "/" + this.name;

@@ -854,4 +854,117 @@ class AppTest extends TestCase
         $this->assertSame(['language' => 'de'], $app->option('slugs'));
         $this->assertSame('ss', Str::$language['ß']);
     }
+
+    /**
+     * @covers ::controller
+     * @covers ::controllerLookup
+     */
+    public function testController()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'controllers' => __DIR__ . '/fixtures/controllers'
+            ]
+        ]);
+
+        Page::factory([
+            'slug' => 'test',
+            'template' => 'test'
+        ]);
+
+        $this->assertSame(['foo' => 'bar'], $app->controller('test'));
+    }
+
+    /**
+     * @covers ::controller
+     * @covers ::controllerLookup
+     */
+    public function testControllerCallback()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'controllers' => [
+                'test' => function () {
+                    return ['foo' => 'bar'];
+                }
+            ]
+        ]);
+
+        Page::factory([
+            'slug' => 'test',
+            'template' => 'test'
+        ]);
+
+        $this->assertSame(['foo' => 'bar'], $app->controller('test'));
+    }
+
+    /**
+     * @covers ::controller
+     * @covers ::controllerLookup
+     */
+    public function testControllerRepresentation()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'controllers' => __DIR__ . '/fixtures/controllers'
+            ]
+        ]);
+
+        Page::factory([
+            'slug' => 'test',
+            'template' => 'another'
+        ]);
+
+        ob_start();
+        $app->controller('another.json', [], 'json');
+        $response = ob_get_clean();
+
+        $this->assertSame('{"foo":"bar"}', $response);
+    }
+
+    /**
+     * @covers ::controller
+     * @covers ::controllerLookup
+     */
+    public function testControllerHtmlRepresentation()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'controllers' => __DIR__ . '/fixtures/controllers'
+            ]
+        ]);
+
+        Page::factory([
+            'slug' => 'test',
+            'template' => 'foo'
+        ]);
+
+        $this->assertSame(['foo' => 'bar'], $app->controller('test', [], 'json'));
+    }
+
+    /**
+     * @covers ::controller
+     * @covers ::controllerLookup
+     */
+    public function testControllerFallbackRepresentation()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null',
+                'controllers' => __DIR__ . '/fixtures/controllers'
+            ]
+        ]);
+
+        Page::factory([
+            'slug' => 'test',
+            'template' => 'none'
+        ]);
+
+        $this->assertSame(['title' => 'Site'], $app->controller('none', [], 'json'));
+    }
 }

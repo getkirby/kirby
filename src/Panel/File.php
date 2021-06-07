@@ -17,13 +17,52 @@ use Throwable;
 class File extends Model
 {
     /**
+     * Breadcrumb array
+     *
+     * @return array
+     */
+    public function breadcrumb(): array
+    {
+        $parent = $this->model->parent();
+
+        switch ($parent::CLASS_ALIAS) {
+            case 'site':
+                $breadcrumb = [];
+                break;
+            case 'user':
+                $breadcrumb = [
+                    [
+                        'label' => $parent->username(),
+                        'link'  => $parent->panel()->url(true)
+                    ]
+                ];
+                break;
+            case 'page':
+                $breadcrumb = $this->model->parents()->flip()->values(function ($parent) {
+                    return [
+                        'label' => $parent->title()->toString(),
+                        'link'  => $parent->panel()->url(true),
+                    ];
+                });
+        }
+
+        // add the file
+        $breadcrumb[] = [
+            'label' => $this->model->filename(),
+            'link'  => $this->url(true),
+        ];
+
+        return $breadcrumb;
+    }
+
+    /**
      * Provides a kirbytag or markdown
      * tag for the file, which will be
      * used in the panel, when the file
      * gets dragged onto a textarea
      *
      * @internal
-     * @param string|null $type (null|auto|kirbytext|markdown)
+     * @param string|null $type (`auto`|`kirbytext`|`markdown`)
      * @param bool $absolute
      * @return string
      */
@@ -179,6 +218,74 @@ class File extends Model
             'url'      => $this->model->url(),
             'uuid'     => $uuid ?? $id,
         ]);
+    }
+
+    /**
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function props(): array
+    {
+        $file     = $this->model;
+        $siblings = $file->templateSiblings()->sortBy(
+            'sort',
+            'asc',
+            'filename',
+            'asc'
+        );
+
+        return array_merge(parent::props(), [
+            'model' => [
+                'content'    => $this->content(),
+                'dimensions' => $file->dimensions()->toArray(),
+                'extension'  => $file->extension(),
+                'filename'   => $file->filename(),
+                'id'         => $file->id(),
+                'mime'       => $file->mime(),
+                'niceSize'   => $file->niceSize(),
+                'parent'     => $file->parent()->panel()->path(),
+                'panelImage' => $this->image(),
+                'previewUrl' => $file->previewUrl(),
+                'url'        => $file->url(),
+                'template'   => $file->template(),
+                'type'       => $file->type(),
+            ],
+            'next' => function () use ($file, $siblings): ?array {
+                $next = $siblings->nth($siblings->indexOf($file) + 1);
+                return $next ? $next->panel()->prevnext('filename') : null;
+            },
+            'prev' => function () use ($file, $siblings): ?array {
+                $prev = $siblings->nth($siblings->indexOf($file) - 1);
+                return $prev ? $prev->panel()->prevnext('filename') : null;
+            }
+        ]);
+    }
+
+    /**
+     * Returns the data array for
+     * this model's Panel routes
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function route(): array
+    {
+        $file = $this->model;
+
+        return [
+            'breadcrumb' => function () use ($file): array {
+                return $file->panel()->breadcrumb();
+            },
+            'component' => 'k-file-view',
+            'props'     => $this->props(),
+            'search'    => 'files',
+            'title'     => $file->filename(),
+        ];
     }
 
     /**

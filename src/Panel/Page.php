@@ -15,13 +15,29 @@ namespace Kirby\Panel;
 class Page extends Model
 {
     /**
+     * Breadcrumb array
+     *
+     * @return array
+     */
+    public function breadcrumb(): array
+    {
+        $parents = $this->model->parents()->flip()->merge($this->model);
+        return $parents->values(function ($parent) {
+            return [
+                'label' => $parent->title()->toString(),
+                'link'  => $parent->panel()->url(true),
+            ];
+        });
+    }
+
+    /**
      * Provides a kirbytag or markdown
      * tag for the page, which will be
      * used in the panel, when the page
      * gets dragged onto a textarea
      *
      * @internal
-     * @param string|null $type (null|auto|kirbytext|markdown)
+     * @param string|null $type (`auto`|`kirbytext`|`markdown`)
      * @return string
      */
     public function dragText(string $type = null): string
@@ -110,5 +126,72 @@ class Page extends Model
             'hasChildren' => $this->model->hasChildren(),
             'url'         => $this->model->url()
         ]);
+    }
+
+    /**
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function props(): array
+    {
+        $page = $this->model;
+
+        return array_merge(parent::props(), [
+            'model' => [
+                'content'    => $this->content(),
+                'id'         => $page->id(),
+                'parent'     => $page->parentModel()->panel()->url(true),
+                'previewUrl' => $page->previewUrl(),
+                'status'     => $page->status(),
+                'title'      => $page->title()->toString(),
+            ],
+            'next' => function () use ($page) {
+                $next = $page
+                    ->nextAll()
+                    ->filterBy('intendedTemplate', $page->intendedTemplate())
+                    ->filterBy('status', $page->status())
+                    ->filterBy('isReadable', true)
+                    ->first();
+                return $next ? $next->panel()->prevnext('title') : null;
+            },
+            'prev'   => function () use ($page) {
+                $prev = $page
+                    ->prevAll()
+                    ->filterBy('intendedTemplate', $page->intendedTemplate())
+                    ->filterBy('status', $page->status())
+                    ->filterBy('isReadable', true)
+                    ->last();
+                return $prev ? $prev->panel()->prevnext('title') : null;
+            },
+            'status' => function () use ($page) {
+                if ($status = $page->status()) {
+                    return $page->blueprint()->status()[$status] ?? null;
+                }
+            },
+        ]);
+    }
+
+    /**
+     * Returns the data array for
+     * this model's Panel routes
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function route(): array
+    {
+        $page = $this->model;
+
+        return [
+            'breadcrumb' => $page->panel()->breadcrumb(),
+            'component'  => 'k-page-view',
+            'props'      => $this->props(),
+            'title'      => $page->title()->toString(),
+        ];
     }
 }

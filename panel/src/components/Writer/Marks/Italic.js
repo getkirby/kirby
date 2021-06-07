@@ -7,7 +7,7 @@ export default class Italic extends Mark {
     return {
       icon: "italic",
       /**
-       * @todo replace with `window.panel.$t()` after merging Inertia
+       * @todo replace with `window.panel.$t()` after merging fiber
        */
       label: Vue.$t("toolbar.button.italic")
     };

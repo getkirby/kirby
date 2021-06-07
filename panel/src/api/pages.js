@@ -169,7 +169,7 @@ export default (api) => {
       return api.patch("pages/" + this.id(id), data);
     },
     url(id, path) {
-      let url = id === null ? "pages" : "pages/" + id.replace(/\//g, "+");
+      let url = id === null ? "pages" : "pages/" + String(id).replace(/\//g, "+");
 
       if (path) {
         url += "/" + path;

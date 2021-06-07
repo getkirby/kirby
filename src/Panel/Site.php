@@ -39,4 +39,39 @@ class Site extends Model
     {
         return 'site';
     }
+
+    /**
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function props(): array
+    {
+        return array_merge(parent::props(), [
+            'model' => [
+                'content'    => $this->content(),
+                'previewUrl' => $this->model->previewUrl(),
+                'title'      => $this->model->title()->toString()
+            ]
+        ]);
+    }
+
+    /**
+     * Returns the data array for
+     * this model's Panel routes
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function route(): array
+    {
+        return [
+            'component' => 'k-site-view',
+            'props'     => $this->props()
+        ];
+    }
 }

@@ -4,10 +4,9 @@
       {{ $t('login') }}
     </h1>
 
-    <div v-if="issue" class="k-login-alert" @click="issue = null">
-      <span>{{ issue }}</span>
-      <k-icon type="alert" />
-    </div>
+    <k-login-alert v-if="issue" @click="issue = null">
+      {{ issue }}
+    </k-login-alert>
 
     <div class="k-login-fields">
       <button
@@ -54,6 +53,9 @@
 
 <script>
 export default {
+  props: {
+    methods: Array
+  },
   data() {
     return {
       currentForm: null,
@@ -68,27 +70,23 @@ export default {
   },
   computed: {
     canToggle() {
-      let loginMethods = this.$store.state.system.info.loginMethods;
-
       return (
         this.codeMode !== null &&
-        loginMethods.includes("password") === true &&
+        this.methods.includes("password") === true &&
         (
-          loginMethods.includes("password-reset") === true ||
-          loginMethods.includes("code") === true
+          this.methods.includes("password-reset") === true ||
+          this.methods.includes("code") === true
         )
       );
     },
     codeMode() {
-      let loginMethods = this.$store.state.system.info.loginMethods;
-
-      if (loginMethods.includes("password-reset") === true) {
+      if (this.methods.includes("password-reset") === true) {
         return "password-reset";
-      } else if (loginMethods.includes("code") === true) {
-        return "code";
-      } else {
-        return null;
       }
+      if (this.methods.includes("code") === true) {
+        return "code";
+      }
+      return null;
     },
     fields() {
       let fields = {
@@ -117,11 +115,11 @@ export default {
     form() {
       if (this.currentForm) {
         return this.currentForm;
-      } else if (this.$store.state.system.info.loginMethods[0] === "password") {
-        return "email-password";
-      } else {
-        return "email";
       }
+      if (this.methods[0] === "password") {
+        return "email-password";
+      }
+      return "email";
     },
     isResetForm() {
       return (
@@ -161,19 +159,9 @@ export default {
       }
 
       try {
-        const result = await this.$api.auth.login(user);
+        await this.$api.auth.login(user);
+        this.$reload();
 
-        if (result.challenge) {
-          this.$store.dispatch("user/pending", {
-            email: user.email,
-            challenge: result.challenge
-          });
-        } else {
-          this.$store.dispatch("user/login", result.user);
-          await this.$store.dispatch("system/load", true);
-
-          this.$store.dispatch("notification/success", this.$t("welcome"));
-        }
       } catch (error) {
         this.issue = error.message;
       } finally {

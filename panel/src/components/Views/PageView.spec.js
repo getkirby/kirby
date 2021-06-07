@@ -16,7 +16,7 @@ describe('PageView', () => {
   describe('Photography', () => {
 
     beforeEach(() => {
-      cy.visit('/pages/photography');
+      cy.visit('/panel/pages/photography');
       cy.get('.k-section-name-drafts').as('drafts');
       cy.get('.k-section-name-listed').as('listed');
     });
@@ -29,7 +29,7 @@ describe('PageView', () => {
       // Buttons
       cy.get('.k-header-buttons .k-button-group:first-child .k-button:first-child').as('button')
       cy.get('@button').should('have.attr', 'target', '_blank');
-      cy.get('@button').should('have.attr', 'href', Cypress.env('host') + '/photography');
+      cy.get('@button').should('have.attr', 'href', Cypress.config().baseUrl + '/photography');
 
       cy.get('.k-header-buttons .k-button-group:first-child .k-status-icon').should('contain', 'Public');
 

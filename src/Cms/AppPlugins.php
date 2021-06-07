@@ -50,6 +50,7 @@ trait AppPlugins
 
         // other plugin types
         'api' => [],
+        'areas' => [],
         'authChallenges' => [],
         'blueprints' => [],
         'cacheTypes' => [],
@@ -80,7 +81,7 @@ trait AppPlugins
         'userMethods' => [],
         'userModels' => [],
         'usersMethods' => [],
-        'validators' => []
+        'validators' => [],
     ];
 
     /**
@@ -127,6 +128,17 @@ trait AppPlugins
         } else {
             return $this->extensions['api'];
         }
+    }
+
+    /**
+     * Registers additional custom Panel areas
+     *
+     * @param array $areas
+     * @return array
+     */
+    protected function extendAreas(array $areas): array
+    {
+        return $this->extensions['areas'] = array_merge($this->extensions['areas'], $areas);
     }
 
     /**

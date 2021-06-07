@@ -21,14 +21,41 @@ class ModelUserTestForceLocked extends ModelUser
  */
 class UserTest extends TestCase
 {
+    protected $app;
+    protected $tmp = __DIR__ . '/tmp';
+
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->tmp,
+            ]
+        ]);
+
+        Dir::make($this->tmp);
+    }
+
     public function tearDown(): void
     {
-        Dir::remove(__DIR__ . '/tmp');
+        Dir::remove($this->tmp);
+    }
+
+    /**
+     * @covers ::breadcrumb
+     */
+    public function testBreadcrumb(): void
+    {
+        $model = new ModelUser([
+            'email' => 'test@getkirby.com',
+        ]);
+
+        $breadcrumb = (new User($model))->breadcrumb();
+        $this->assertSame('test@getkirby.com', $breadcrumb[0]['label']);
+        $this->assertStringStartsWith('/users/', $breadcrumb[0]['link']);
     }
 
     /**
      * @covers ::icon
-     * @covers \Kirby\Panel\Model::icon
      */
     public function testIconDefault()
     {
@@ -48,8 +75,6 @@ class UserTest extends TestCase
 
     /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
-     * @covers \Kirby\Panel\Model::imageSource
      */
     public function testImage()
     {
@@ -63,8 +88,6 @@ class UserTest extends TestCase
 
     /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
-     * @covers \Kirby\Panel\Model::imageSource
      */
     public function testImageStringQuery()
     {
@@ -84,11 +107,7 @@ class UserTest extends TestCase
      */
     public function testImageCover()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null',
-                'media' => __DIR__ . '/tmp'
-            ],
+        $app = $this->app->clone([
             'users' => [
                 [
                     'email' => 'test@getkirby.com',
@@ -210,7 +229,6 @@ class UserTest extends TestCase
 
     /**
      * @covers ::path
-     * @covers \Kirby\Panel\Model::__construct
      */
     public function testPath()
     {
@@ -238,5 +256,111 @@ class UserTest extends TestCase
         $this->assertSame('test@getkirby.com', $data['email']);
         $this->assertTrue(Str::startsWith($data['link'], '/users/'));
         $this->assertSame('test@getkirby.com', $data['text']);
+    }
+
+    /**
+     * @covers ::route
+     */
+    public function testRoute()
+    {
+        $user = new ModelUser([
+            'email' => 'test@getkirby.com',
+        ]);
+
+        $panel = new User($user);
+        $route = $panel->route();
+
+        $this->assertArrayHasKey('props', $route);
+        $this->assertSame('k-user-view', $route['component']);
+        $this->assertSame('test@getkirby.com', $route['title']);
+        $this->assertSame('test@getkirby.com', $route['breadcrumb'][0]['label']);
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testProps()
+    {
+        $user = new ModelUser([
+            'email'    => 'test@getkirby.com',
+            'language' => 'de'
+        ]);
+
+        $panel = new User($user);
+        $props = $panel->props();
+
+        $this->assertArrayHasKey('model', $props);
+        $this->assertArrayHasKey('avatar', $props['model']);
+        $this->assertArrayHasKey('content', $props['model']);
+        $this->assertArrayHasKey('email', $props['model']);
+        $this->assertArrayHasKey('id', $props['model']);
+        $this->assertArrayHasKey('language', $props['model']);
+        $this->assertArrayHasKey('name', $props['model']);
+        $this->assertArrayHasKey('role', $props['model']);
+        $this->assertArrayHasKey('username', $props['model']);
+
+        // inherited props
+        $this->assertArrayHasKey('blueprint', $props);
+        $this->assertArrayHasKey('lock', $props);
+        $this->assertArrayHasKey('permissions', $props);
+        $this->assertArrayHasKey('tab', $props);
+        $this->assertArrayHasKey('tabs', $props);
+
+        $this->assertNull($props['next']());
+        $this->assertNull($props['prev']());
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNext()
+    {
+        $app = $this->app->clone([
+            'users' => [
+                ['email' => 'a@getkirby.com'],
+                ['email' => 'b@getkirby.com'],
+                ['email' => 'c@getkirby.com']
+            ]
+        ]);
+
+        $props = (new User($app->user('a@getkirby.com')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertSame('b@getkirby.com', $props['next']()['tooltip']);
+
+        $props = (new User($app->user('b@getkirby.com')))->props();
+        $this->assertSame('a@getkirby.com', $props['prev']()['tooltip']);
+        $this->assertSame('c@getkirby.com', $props['next']()['tooltip']);
+
+        $props = (new User($app->user('c@getkirby.com')))->props();
+        $this->assertSame('b@getkirby.com', $props['prev']()['tooltip']);
+        $this->assertNull($props['next']());
+    }
+
+    /**
+     * @covers ::translation
+     */
+    public function testTranslation()
+    {
+        // existing
+        $user = new ModelUser([
+            'email'    => 'test@getkirby.com',
+            'language' => 'de'
+        ]);
+
+        $panel = new User($user);
+        $translations = $panel->translation();
+        $this->assertSame('de', $translations->code());
+        $this->assertSame('Deutsch', $translations->get('translation.name'));
+
+        // non-existing
+        $user = new ModelUser([
+            'email'    => 'test@getkirby.com',
+            'language' => 'foo'
+        ]);
+
+        $panel = new User($user);
+        $translations = $panel->translation();
+        $this->assertSame('foo', $translations->code());
+        $this->assertSame(null, $translations->get('translation.name'));
     }
 }

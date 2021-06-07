@@ -13,54 +13,52 @@ use PHPUnit\Framework\TestCase;
  */
 class SiteTest extends TestCase
 {
+    protected $app;
+    protected $tmp = __DIR__ . '/tmp';
+
+    public function setUp(): void
+    {
+        $this->app = new App([
+            'roots' => [
+                'index' => $this->tmp,
+            ]
+        ]);
+
+        Dir::make($this->tmp);
+    }
+
     public function tearDown(): void
     {
-        Dir::remove(__DIR__ . '/tmp');
+        Dir::remove($this->tmp);
+    }
+
+    protected function panel(array $props = [])
+    {
+        $site = new ModelSite($props);
+        return new Site($site);
     }
 
     /**
      * @covers ::path
-     * @covers \Kirby\Panel\Model::path
      */
     public function testPath()
     {
-        $site  = new ModelSite();
-        $panel = new Site($site);
-        $this->assertSame('site', $panel->path());
-    }
-
-    /**
-     * @covers \Kirby\Panel\Model::url
-     */
-    public function testUrl()
-    {
-        new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ]
-        ]);
-
-        $site  = new ModelSite();
-        $panel = new Site($site);
-        $this->assertSame('/panel/site', $panel->url());
-        $this->assertSame('/site', $panel->url(true));
+        $this->assertSame('site', $this->panel()->path());
     }
 
     /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
-     * @covers \Kirby\Panel\Model::imageSource
      */
     public function testImage()
     {
-        $site = new ModelSite([
+        $panel = $this->panel([
             'files' => [
                 ['filename' => 'test.jpg']
             ]
         ]);
 
         // fallback to model itself
-        $image = (new Site($site))->image();
+        $image = $panel->image();
         $this->assertTrue(Str::endsWith($image['url'], '/test.jpg'));
     }
 
@@ -71,11 +69,7 @@ class SiteTest extends TestCase
      */
     public function testImageCover()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null',
-                'media' => __DIR__ . '/tmp'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'files' => [
                     ['filename' => 'test.jpg']
@@ -120,5 +114,35 @@ class SiteTest extends TestCase
                 'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
             ]
         ], $panel->image(['cover' => true]));
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testProps()
+    {
+        $props = $this->panel()->props();
+
+        $this->assertArrayHasKey('model', $props);
+        $this->assertArrayHasKey('content', $props['model']);
+        $this->assertArrayHasKey('previewUrl', $props['model']);
+        $this->assertArrayHasKey('title', $props['model']);
+
+        // inherited props
+        $this->assertArrayHasKey('blueprint', $props);
+        $this->assertArrayHasKey('lock', $props);
+        $this->assertArrayHasKey('permissions', $props);
+        $this->assertArrayHasKey('tab', $props);
+        $this->assertArrayHasKey('tabs', $props);
+    }
+
+    /**
+     * @covers ::route
+     */
+    public function testRoute()
+    {
+        $route = $this->panel()->route();
+        $this->assertArrayHasKey('props', $route);
+        $this->assertSame('k-site-view', $route['component']);
     }
 }

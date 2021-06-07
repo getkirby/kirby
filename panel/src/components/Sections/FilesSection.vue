@@ -70,7 +70,6 @@
 </template>
 
 <script>
-import config from "@/config/config.js";
 import CollectionSectionMixin from "@/mixins/section/collection.js";
 
 export default {
@@ -106,7 +105,7 @@ export default {
           break;
         case "replace":
           this.$refs.upload.open({
-            url: config.api + "/" + this.$api.files.url(file.parent, file.filename),
+            url: this.$urls.api + "/" + this.$api.files.url(file.parent, file.filename),
             accept: "." + file.extension + "," + file.mime,
             multiple: false
           });
@@ -138,7 +137,7 @@ export default {
 
       this.$refs.upload.drop(files, {
         ...this.add,
-        url: config.api + "/" + this.add.api
+        url: this.$urls.api + "/" + this.add.api
       });
     },
     items(data) {
@@ -165,7 +164,7 @@ export default {
     },
     replace(file) {
       this.$refs.upload.open({
-        url: config.api + "/" + this.$api.files.url(file.parent, file.filename),
+        url: this.$urls.api + "/" + this.$api.files.url(file.parent, file.filename),
         accept: file.mime,
         multiple: false
       });
@@ -206,7 +205,7 @@ export default {
 
       this.$refs.upload.open({
         ...this.add,
-        url: config.api + "/" + this.add.api
+        url: this.$urls.api + "/" + this.add.api
       });
     },
     uploaded() {

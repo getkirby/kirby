@@ -6,6 +6,7 @@ use Kirby\Cms\Response;
 use Kirby\Cms\Url;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Filesystem\Asset;
+use Kirby\Http\Router;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
@@ -620,6 +621,20 @@ function params(): array
 function r($condition, $value, $alternative = null)
 {
     return $condition ? $value : $alternative;
+}
+
+/**
+ * Creates a micro-router and executes
+ * the routing action immediately
+ *
+ * @param string $path
+ * @param string $method
+ * @param array $routes
+ * @return mixed
+ */
+function router(string $path = null, string $method = 'GET', array $routes = [], ?Closure $callback = null)
+{
+    return (new Router($routes))->call($path, $method, $callback);
 }
 
 /**

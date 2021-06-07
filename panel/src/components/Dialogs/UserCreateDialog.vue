@@ -51,7 +51,7 @@ export default {
         },
         role: {
           label: this.$t("role"),
-          type: this.roles.length === 1 ? "hidden" : "radio",
+          type: this.roles.length <= 1 ? "hidden" : "radio",
           required: true,
           options: this.roles
         }
@@ -76,8 +76,8 @@ export default {
         name: "",
         email: "",
         password: "",
-        language: this.$store.state.system.info.defaultLanguage || "en",
-        role: this.$user.role.name
+        language: this.$config.translation || "en",
+        role: this.$user.role
       };
     },
     async open() {
@@ -87,7 +87,7 @@ export default {
         this.roles = await this.$api.roles.options({ canBe: "created" });
 
         // don't let non-admins create admins
-        if (this.$user.role.name !== "admin") {
+        if (this.$user.role !== "admin") {
           this.roles = this.roles.filter(role => role.value !== "admin");
         }
 

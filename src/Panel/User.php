@@ -15,6 +15,21 @@ namespace Kirby\Panel;
 class User extends Model
 {
     /**
+     * Breadcrumb array
+     *
+     * @return array
+     */
+    public function breadcrumb(): array
+    {
+        return [
+            [
+                'label' => $this->model->username(),
+                'link'  => $this->url(true),
+            ]
+        ];
+    }
+
+    /**
      * Panel icon definition
      *
      * @param array $params
@@ -65,5 +80,71 @@ class User extends Model
             'email'    => $this->model->email(),
             'username' => $this->model->username(),
         ]);
+    }
+
+    /**
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function props(): array
+    {
+        $user   = $this->model;
+        $avatar = $user->avatar();
+
+        return array_merge(parent::props(), [
+            'model' => [
+                'avatar'   => $avatar ? $avatar->url() : null,
+                'content'  => $this->content(),
+                'email'    => $user->email(),
+                'id'       => $user->id(),
+                'language' => $this->translation()->name(),
+                'name'     => $user->name()->toString(),
+                'role'     => $user->role()->title(),
+                'username' => $user->username(),
+            ],
+            'next' => function () use ($user) {
+                $next = $user->next();
+                return $next ? $next->panel()->prevnext('username') : null;
+            },
+            'prev' => function () use ($user) {
+                $prev = $user->prev();
+                return $prev ? $prev->panel()->prevnext('username') : null;
+            }
+        ]);
+    }
+
+    /**
+     * Returns the data array for
+     * this model's Panel routes
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function route(): array
+    {
+        return [
+            'breadcrumb' => $this->breadcrumb(),
+            'component'  => 'k-user-view',
+            'props'      => $this->props(),
+            'title'      => $this->model->username(),
+        ];
+    }
+
+    /**
+     * Returns the Translation object
+     * for the selected Panel language
+     *
+     * @return \Kirby\Cms\Translation
+     */
+    public function translation()
+    {
+        $kirby = $this->model->kirby();
+        $lang  = $this->model->language();
+        return $kirby->translation($lang);
     }
 }

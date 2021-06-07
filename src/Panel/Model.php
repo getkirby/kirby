@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Form\Form;
+
 /**
  * Provides information about the model for the Panel
  * @since 3.6.0
@@ -25,6 +27,16 @@ abstract class Model
     public function __construct($model)
     {
         $this->model = $model;
+    }
+
+    /**
+     * Get the content values for the model
+     *
+     * @return array
+     */
+    public function content(): array
+    {
+        return Form::for($this->model)->values();
     }
 
     /**
@@ -56,9 +68,10 @@ abstract class Model
      * Returns the correct drag text type
      * depending on the given type or the
      * configuration
+     *
      * @internal
      *
-     * @param string $type (null|auto|kirbytext|markdown)
+     * @param string|null $type (`auto`|`kirbytext`|`markdown`)
      * @return string
      */
     public function dragTextType(string $type = null): string
@@ -73,9 +86,10 @@ abstract class Model
     }
 
     /**
-     * Returns the panel icon definition
+     * Returns the Panel icon definition
      *
      * @internal
+     *
      * @param array|null $params
      * @return array
      */
@@ -92,7 +106,10 @@ abstract class Model
     }
 
     /**
+     * Returns the Panel image definition
+     *
      * @internal
+     *
      * @param string|array|false|null $settings
      * @return array|null
      */
@@ -165,9 +182,8 @@ abstract class Model
                     ];
                 }
             }
-
-            unset($settings['query']);
         }
+        unset($settings['query']);
 
         return array_merge($defaults, (array)$settings);
     }
@@ -186,6 +202,7 @@ abstract class Model
      * Returns the image file object based on provided query
      *
      * @internal
+     *
      * @param string|null $query
      * @return \Kirby\Cms\File|\Kirby\Filesystem\Asset|null
      */
@@ -195,22 +212,39 @@ abstract class Model
 
         // validate the query result
         if (
-            is_a($image, 'Kirby\Cms\File') === false &&
-            is_a($image, 'Kirby\Filesystem\Asset') === false
+            is_a($image, 'Kirby\Cms\File') === true ||
+            is_a($image, 'Kirby\Filesystem\Asset') === true
         ) {
-            $image = null;
+            return $image;
         }
 
-        // fallback for files
-        if (
-            $image === null &&
-            is_a($this->model, 'Kirby\Cms\File') === true &&
-            $this->model->isViewable() === true
-        ) {
-            $image = $this->model;
+        return null;
+    }
+
+    /**
+     * Returns lock info for the Panel
+     *
+     * @return array|false array with lock info,
+     *                     false if locking is not supported
+     */
+    public function lock()
+    {
+        if ($lock = $this->model->lock()) {
+            if ($lock->isUnlocked() === true) {
+                return ['state' => 'unlock'];
+            }
+
+            if ($lock->isLocked() === true) {
+                return [
+                    'state' => 'lock',
+                    'data'  => $lock->get()
+                ];
+            }
+
+            return ['state' => null];
         }
 
-        return $image;
+        return false;
     }
 
     /**
@@ -265,10 +299,64 @@ abstract class Model
     }
 
     /**
-     * Returns the url to the editing view
-     * in the panel
+     * Returns link and tooltip
+     * used for prev/next navigation
      *
      * @internal
+     *
+     * @param string $tooltip
+     * @return array|null
+     */
+    public function prevnext($tooltip = 'title'): ?array
+    {
+        return [
+            'link'    => $this->url(true),
+            'tooltip' => (string)$this->model->$tooltip()
+        ];
+    }
+
+    /**
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function props(): array
+    {
+        $blueprint = $this->model->blueprint();
+        $tabs      = $blueprint->tabs();
+
+        if (!$tab = $blueprint->tab(get('tab'))) {
+            $tab = $tabs[0] ?? [];
+        }
+
+        return [
+            'blueprint'   => $blueprint->name(),
+            'lock'        => $this->lock(),
+            'permissions' => $this->model->permissions()->toArray(),
+            'tab'         => $tab,
+            'tabs'        => $tabs,
+        ];
+    }
+
+    /**
+     * Returns the data array for
+     * this model's Panel routes
+     *
+     * @internal
+     *
+     * @return array
+     */
+    abstract public function route(): array;
+
+    /**
+     * Returns the url to the editing view
+     * in the Panel
+     *
+     * @internal
+     *
      * @param bool $relative
      * @return string
      */

@@ -1,30 +1,22 @@
-
 import { template } from "../helpers/string.js";
 
-/**
- * TranslationString prop type
- */
 export class TranslationString extends String {
   toString() {
-    const app   = window.panel.app;
+    const Vue = window.panel.$vue;
     const value = this.valueOf();
-    return app ? app.$t(value) : value;
+    return Vue ? Vue.$t(value) : value;
   }
 }
 
-/**
- * Vue plugin
- */
-
 export default {
-  install(app, store) {
+  install(app) {
     app.$t = app.prototype.$t = (key, data) => {
-      if (typeof key !== 'string') {
+      if (typeof key !== "string") {
         return;
       }
 
-      const string = store.getters["translation/string"](key);
+      const string = window.panel.$translation.data[key] || key;
       return template(string, data);
-    }
+    };
   }
 };

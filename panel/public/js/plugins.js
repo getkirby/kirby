@@ -57,6 +57,7 @@ window.panel.plugin = function (plugin, parts) {
   }
 
   // Views
+  // @todo Remove in 3.7.0
   resolve(parts, "views", function (name, options) {
     window.panel.plugins["views"][name] = options;
   });
@@ -67,6 +68,7 @@ window.panel.plugin = function (plugin, parts) {
   }
 
   // Third-party plugins
+  // @todo is this ever used anywhere?
   resolve(parts, "thirdParty", function(name, options) {
     window.panel.plugins["thirdParty"][name] = options;
   });

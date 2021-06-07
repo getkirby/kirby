@@ -56,9 +56,12 @@ Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
 });
 
 /**
- * Views
- */
-Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
+  * Views
+  * @todo Remove in 3.7.0
+  */
+ Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
+   window.panel.deprecated("Register custom Panel views via the new Panel area functionality in your index.php file. Registering via panel.plugin() in JavaScript will be removed in 3.7.0");
+
   // Check for all required properties
   if (!options.component) {
     store.dispatch(
@@ -82,12 +85,17 @@ Object.entries(window.panel.plugins.views).forEach(([name, options]) => {
   }
 
   // Update view
+  const label = options.text || options.label || name;
   window.panel.plugins.views[name] = {
     id: name,
-    text: options.text || options.label,
+    label: label,
+    breadcrumb: [],
+    breadcrumbLabel: label,
     link: options.link,
     icon: options.icon,
-    menu: options.menu
+    menu: options.menu,
+    search: "pages",
+    title: label
   };
 
   Vue.component("k-" + name + "-plugin-view", options.component);

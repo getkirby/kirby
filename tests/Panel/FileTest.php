@@ -5,6 +5,8 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
+use Kirby\Cms\Site as ModelSite;
+use Kirby\Cms\User as ModelUser;
 use Kirby\Toolkit\Dir;
 use PHPUnit\Framework\TestCase;
 
@@ -21,24 +23,101 @@ class ModelFileTestForceLocked extends ModelFile
  */
 class FileTest extends TestCase
 {
+    protected $app;
+    protected $tmp = __DIR__ . '/tmp';
+
     public function setUp(): void
     {
-        new App([
+        $this->app = new App([
             'roots' => [
-                'index' => '/dev/null',
-                'media' => __DIR__ . '/tmp'
+                'index' => $this->tmp,
             ]
         ]);
+
+        Dir::make($this->tmp);
     }
 
     public function tearDown(): void
     {
-        Dir::remove(__DIR__ . '/tmp');
+        Dir::remove($this->tmp);
+    }
+
+    /**
+     * @covers ::breadcrumb
+     */
+    public function testBreadcrumbForSiteFile(): void
+    {
+        $site = new ModelSite([
+            'files' => [
+                ['filename' => 'test.jpg'],
+            ]
+        ]);
+
+        $file = new File($site->file('test.jpg'));
+        $this->assertSame([
+            [
+                'label' => 'test.jpg',
+                'link'  => '/site/files/test.jpg'
+            ]
+        ], $file->breadcrumb());
+    }
+
+    /**
+     * @covers ::breadcrumb
+     */
+    public function testBreadcrumbForPageFile(): void
+    {
+        $page = new ModelPage([
+            'slug' => 'test',
+            'content' => [
+                'title' => 'Test'
+            ],
+            'files' => [
+                ['filename' => 'test.jpg'],
+            ]
+        ]);
+
+        $file = new File($page->file('test.jpg'));
+        $this->assertSame([
+            [
+                'label' => 'Test',
+                'link'  => '/pages/test'
+            ],
+            [
+                'label' => 'test.jpg',
+                'link'  => '/pages/test/files/test.jpg'
+            ]
+        ], $file->breadcrumb());
+    }
+
+    /**
+     * @covers ::breadcrumb
+     */
+    public function testBreadcrumbForUserFile(): void
+    {
+        $user = new ModelUser([
+            'id'    => 'test',
+            'email' => 'test@getkirby.com',
+            'files' => [
+                ['filename' => 'test.jpg'],
+            ]
+        ]);
+
+        $file = new File($user->file('test.jpg'));
+        $this->assertSame([
+            [
+                'label' => 'test@getkirby.com',
+                'link'  => '/users/test'
+            ],
+            [
+                'label' => 'test.jpg',
+                'link'  => '/users/test/files/test.jpg'
+            ]
+        ], $file->breadcrumb());
     }
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextType
      */
     public function testDragText()
     {
@@ -63,14 +142,10 @@ class FileTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextType
      */
     public function testDragTextMarkdown()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => false
@@ -102,15 +177,10 @@ class FileTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextFromCallback
      */
     public function testDragTextCustomMarkdown()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => false,
@@ -125,7 +195,6 @@ class FileTest extends TestCase
                     ]
                 ]
             ],
-
             'site' => [
                 'children' => [
                     [
@@ -150,15 +219,10 @@ class FileTest extends TestCase
 
     /**
      * @covers ::dragText
-     * @covers \Kirby\Panel\Model::dragTextFromCallback
      */
     public function testDragTextCustomKirbytext()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-
+        $app = $this->app->clone([
             'options' => [
                 'panel' => [
                     'kirbytext' => [
@@ -172,7 +236,6 @@ class FileTest extends TestCase
                     ]
                 ]
             ],
-
             'site' => [
                 'children' => [
                     [
@@ -197,7 +260,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::icon
-     * @covers \Kirby\Panel\Model::icon
      */
     public function testIconDefault()
     {
@@ -222,7 +284,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::icon
-     * @covers \Kirby\Panel\Model::icon
      */
     public function testIconWithRatio()
     {
@@ -247,7 +308,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
      */
     public function testImage()
     {
@@ -269,16 +329,10 @@ class FileTest extends TestCase
 
     /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
-     * @covers \Kirby\Panel\Model::imageSource
      */
     public function testImageCover()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null',
-                'media' => __DIR__ . '/tmp'
-            ],
+        $app = $this->app->clone([
             'site' => [
                 'files' => [
                     ['filename' => 'test.jpg']
@@ -325,47 +379,7 @@ class FileTest extends TestCase
     }
 
     /**
-     * @covers \Kirby\Panel\Model::image
-     */
-    public function testImageDeactivated()
-    {
-        $page = new ModelPage([
-            'slug' => 'test'
-        ]);
-
-        $file = new ModelFile([
-            'filename' => 'something.jpg',
-            'parent'   => $page
-        ]);
-
-        $image = (new File($file))->image(false);
-
-        $this->assertNull($image);
-    }
-
-    /**
-     * @covers \Kirby\Panel\Model::image
-     */
-    public function testImageStringIcon()
-    {
-        $page = new ModelPage([
-            'slug' => 'test'
-        ]);
-
-        $file = new ModelFile([
-            'filename' => 'something.jpg',
-            'parent'   => $page
-        ]);
-
-        $image = (new File($file))->image('icon');
-
-        $this->assertSame([], $image);
-    }
-
-    /**
      * @covers ::imageSource
-     * @covers \Kirby\Panel\Model::image
-     * @covers \Kirby\Panel\Model::imageSource
      */
     public function testImageStringQuery()
     {
@@ -384,7 +398,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::options
-     * @covers \Kirby\Panel\Model::options
      */
     public function testOptions()
     {
@@ -414,7 +427,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::options
-     * @covers \Kirby\Panel\Model::options
      */
     public function testOptionsWithLockedFile()
     {
@@ -458,7 +470,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::options
-     * @covers \Kirby\Panel\Model::options
      */
     public function testOptionsDefaultReplaceOption()
     {
@@ -487,11 +498,10 @@ class FileTest extends TestCase
 
     /**
      * @covers ::options
-     * @covers \Kirby\Panel\Model::options
      */
     public function testOptionsAllowedReplaceOption()
     {
-        new App([
+        $this->app->clone([
             'blueprints' => [
                 'files/test' => [
                     'name'   => 'test',
@@ -527,11 +537,10 @@ class FileTest extends TestCase
 
     /**
      * @covers ::options
-     * @covers \Kirby\Panel\Model::options
      */
     public function testOptionsDisabledReplaceOption()
     {
-        new App([
+        $this->app->clone([
             'blueprints' => [
                 'files/restricted' => [
                     'name'   => 'restricted',
@@ -569,7 +578,6 @@ class FileTest extends TestCase
 
     /**
      * @covers ::path
-     * @covers \Kirby\Panel\Model::__construct
      */
     public function testPath()
     {
@@ -679,15 +687,127 @@ class FileTest extends TestCase
     }
 
     /**
+     * @covers ::props
+     */
+    public function testProps()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $panel = new File($page->file('test.jpg'));
+        $props = $panel->props();
+
+        $this->assertArrayHasKey('model', $props);
+        $this->assertArrayHasKey('content', $props['model']);
+        $this->assertArrayHasKey('dimensions', $props['model']);
+        $this->assertArrayHasKey('extension', $props['model']);
+        $this->assertArrayHasKey('filename', $props['model']);
+        $this->assertArrayHasKey('id', $props['model']);
+        $this->assertArrayHasKey('mime', $props['model']);
+        $this->assertArrayHasKey('niceSize', $props['model']);
+        $this->assertArrayHasKey('parent', $props['model']);
+        $this->assertArrayHasKey('panelImage', $props['model']);
+        $this->assertArrayHasKey('previewUrl', $props['model']);
+        $this->assertArrayHasKey('url', $props['model']);
+        $this->assertArrayHasKey('template', $props['model']);
+        $this->assertArrayHasKey('type', $props['model']);
+
+        // inherited props
+        $this->assertArrayHasKey('blueprint', $props);
+        $this->assertArrayHasKey('lock', $props);
+        $this->assertArrayHasKey('permissions', $props);
+        $this->assertArrayHasKey('tab', $props);
+        $this->assertArrayHasKey('tabs', $props);
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNext()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'a.jpg'],
+                ['filename' => 'b.jpg'],
+                ['filename' => 'c.jpg']
+            ]
+        ]);
+
+        $props = (new File($page->file('a.jpg')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertSame('/pages/test/files/b.jpg', $props['next']()['link']);
+
+        $props = (new File($page->file('b.jpg')))->props();
+        $this->assertSame('/pages/test/files/a.jpg', $props['prev']()['link']);
+        $this->assertSame('/pages/test/files/c.jpg', $props['next']()['link']);
+
+        $props = (new File($page->file('c.jpg')))->props();
+        $this->assertSame('/pages/test/files/b.jpg', $props['prev']()['link']);
+        $this->assertNull($props['next']());
+    }
+
+    /**
+     * @covers ::props
+     */
+    public function testPropsPrevNextWithSort()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'a.jpg', 'content' => ['sort' => 2]],
+                ['filename' => 'b.jpg', 'content' => ['sort' => 1]],
+                ['filename' => 'c.jpg', 'content' => ['sort' => 3]]
+            ]
+        ]);
+
+        $props = (new File($page->file('a.jpg')))->props();
+        $this->assertSame('/pages/test/files/b.jpg', $props['prev']()['link']);
+        $this->assertSame('/pages/test/files/c.jpg', $props['next']()['link']);
+
+        $props = (new File($page->file('b.jpg')))->props();
+        $this->assertNull($props['prev']());
+        $this->assertSame('/pages/test/files/a.jpg', $props['next']()['link']);
+
+        $props = (new File($page->file('c.jpg')))->props();
+        $this->assertSame('/pages/test/files/a.jpg', $props['prev']()['link']);
+        $this->assertNull($props['next']());
+    }
+
+    /**
+     * @covers ::route
+     */
+    public function testRoute()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $panel = new File($page->file('test.jpg'));
+        $route = $panel->route();
+
+        $this->assertArrayHasKey('props', $route);
+        $this->assertSame('k-file-view', $route['component']);
+        $this->assertSame('test.jpg', $route['title']);
+        $this->assertSame('files', $route['search']);
+        $breadcrumb = $route['breadcrumb']();
+        $this->assertSame('test', $breadcrumb[0]['label']);
+        $this->assertSame('test.jpg', $breadcrumb[1]['label']);
+    }
+
+    /**
      * @covers ::url
-     * @covers \Kirby\Panel\Model::url
      */
     public function testUrl()
     {
-        $app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
+        $app = $this->app->clone([
             'urls' => [
                 'index' => 'https://getkirby.com'
             ],

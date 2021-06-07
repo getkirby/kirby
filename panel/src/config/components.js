@@ -87,6 +87,9 @@ import LoginCode from "@/components/Forms/LoginCode.vue";
 import Upload from "@/components/Forms/Upload.vue";
 import Writer from "@/components/Writer/Writer.vue";
 
+/** Form Helpers */
+import LoginAlert from "@/components/Forms/LoginAlert.vue";
+
 /** Form Inputs */
 import CheckboxInput from "@/components/Forms/Input/CheckboxInput.vue";
 import CheckboxesInput from "@/components/Forms/Input/CheckboxesInput.vue";
@@ -169,6 +172,8 @@ Vue.component("k-login-code", LoginCode);
 Vue.component("k-upload", Upload);
 Vue.component("k-writer", Writer);
 
+Vue.component("k-login-alert", LoginAlert);
+
 Vue.component("k-checkbox-input", CheckboxInput);
 Vue.component("k-checkboxes-input", CheckboxesInput);
 Vue.component("k-date-input", DateInput);
@@ -246,9 +251,11 @@ import Empty from "@/components/Layout/Empty.vue";
 import FilePreview from "@/components/Layout/FilePreview.vue";
 import Grid from "@/components/Layout/Grid.vue";
 import Header from "@/components/Layout/Header.vue";
+import Inside from "@/components/Layout/Inside.vue";
 import List from "@/components/Layout/List.vue";
 import ListItem from "@/components/Layout/ListItem.vue";
 import Overlay from "@/components/Layout/Overlay.vue";
+import Outside from "@/components/Layout/Outside.vue";
 import Tabs from "@/components/Layout/Tabs.vue";
 import View from "@/components/Layout/View.vue";
 
@@ -264,9 +271,11 @@ Vue.component("k-empty", Empty);
 Vue.component("k-file-preview", FilePreview);
 Vue.component("k-grid", Grid);
 Vue.component("k-header", Header);
+Vue.component("k-inside", Inside);
 Vue.component("k-list", List);
 Vue.component("k-list-item", ListItem);
 Vue.component("k-overlay", Overlay);
+Vue.component("k-outside", Outside);
 Vue.component("k-tabs", Tabs);
 Vue.component("k-view", View);
 
@@ -275,6 +284,7 @@ import Draggable from "@/components/Misc/Draggable.vue";
 import ErrorBoundary from "@/components/Misc/ErrorBoundary.vue";
 import Headline from "@/components/Misc/Headline.vue";
 import Icon from "@/components/Misc/Icon.vue";
+import Icons from "@/components/Misc/Icons.vue";
 import Image from "@/components/Misc/Image.vue";
 import Loader from "@/components/Misc/Loader.vue";
 import Progress from "@/components/Misc/Progress.vue";
@@ -287,6 +297,7 @@ Vue.component("k-draggable", Draggable);
 Vue.component("k-error-boundary", ErrorBoundary);
 Vue.component("k-headline", Headline);
 Vue.component("k-icon", Icon);
+Vue.component("k-icons", Icons);
 Vue.component("k-image", Image);
 Vue.component("k-loader", Loader);
 Vue.component("k-progress", Progress);
@@ -342,26 +353,26 @@ Vue.component("k-files-section", FilesSection);
 Vue.component("k-fields-section", FieldsSection);
 
 /* Views */
-import BrowserView from "@/components/Views/BrowserView.vue";
-import CustomView from "@/components/Views/CustomView.vue";
+import AccountView from "@/components/Views/AccountView.vue";
 import ErrorView from "@/components/Views/ErrorView.vue";
 import FileView from "@/components/Views/FileView.vue";
 import InstallationView from "@/components/Views/InstallationView.vue";
 import LoginView from "@/components/Views/LoginView.vue";
 import PageView from "@/components/Views/PageView.vue";
+import PluginView from "@/components/Views/PluginView.vue";
 import ResetPasswordView from "@/components/Views/ResetPasswordView.vue";
 import SettingsView from "@/components/Views/SettingsView.vue";
 import SiteView from "@/components/Views/SiteView.vue";
 import UsersView from "@/components/Views/UsersView.vue";
 import UserView from "@/components/Views/UserView.vue";
 
-Vue.component("k-browser-view", BrowserView);
-Vue.component("k-custom-view", CustomView);
+Vue.component("k-account-view", AccountView);
 Vue.component("k-error-view", ErrorView);
 Vue.component("k-file-view", FileView);
 Vue.component("k-installation-view", InstallationView);
 Vue.component("k-login-view", LoginView);
 Vue.component("k-page-view", PageView);
+Vue.component("k-plugin-view", PluginView);
 Vue.component("k-reset-password-view", ResetPasswordView);
 Vue.component("k-settings-view", SettingsView);
 Vue.component("k-site-view", SiteView);

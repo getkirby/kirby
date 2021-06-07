@@ -10,7 +10,7 @@
       :fields="fields"
       :validate="true"
       :value="values"
-      :disabled="$store.state.content.status.lock !== null"
+      :disabled="lock !== false && lock.state === 'lock'"
       @input="input"
       @submit="onSubmit"
     />
@@ -32,16 +32,8 @@ export default {
     };
   },
   computed: {
-    language() {
-      return this.$store.state.languages.current;
-    },
     values() {
       return this.$store.getters["content/values"]();
-    }
-  },
-  watch: {
-    language() {
-      this.fetch();
     }
   },
   created() {

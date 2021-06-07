@@ -1,92 +1,55 @@
-import Vue from "vue";
-
+/**
+ * @todo Remove in 3.7.0
+ */
 export default {
   namespaced: true,
-  state: {
-    current: null,
-    path: null,
-    pendingEmail: null,
-    pendingChallenge: null
-  },
-  mutations: {
-    SET_CURRENT(state, user) {
-      state.current = user;
-      state.pendingEmail = null;
-      state.pendingChallenge = null;
-
-      if (user && user.permissions) {
-        Vue.prototype.$user        = user;
-        Vue.prototype.$permissions = user.permissions;
-      } else {
-        Vue.prototype.$user = null;
-        Vue.prototype.$permissions = null;
-      }
-    },
-    SET_PATH(state, path) {
-      state.path = path;
-    },
-    SET_PENDING(state, {email, challenge}) {
-      state.pendingEmail = email;
-      state.pendingChallenge = challenge;
-      state.user = null;
-      Vue.prototype.$user = null;
-      Vue.prototype.$permissions = null;
-    }
-  },
   actions: {
-    current(context, user) {
-      context.commit("SET_CURRENT", user);
+    current() {
+      window.panel.deprecated(
+        "The $store.user module has been deprecated and removed. Use this.$user instead."
+      );
     },
-    email(context, email) {
-      context.commit("SET_CURRENT", {
-        ...context.state.current,
-        email: email
-      });
+    email() {
+      window.panel.deprecated(
+        "The $store.user module has been deprecated and removed. Use this.$user instead."
+      );
     },
-    language(context, language) {
-      context.dispatch("translation/activate", language, { root: true });
-      context.commit("SET_CURRENT", {
-        ...context.state.current,
-        language: language,
-      });
+    language() {
+      window.panel.deprecated(
+        "The $store.user module has been deprecated and removed. Use this.$user and this.$language instead."
+      );
     },
-    async load(context) {
-      const user = await Vue.$api.auth.user();
-      context.commit("SET_CURRENT", user);
-      return user;
+    async load() {
+      window.panel.deprecated(
+        "The $store.user module has been deprecated and removed. Use this.$reload('$user') instead."
+      );
+      window.panel.$reload("$user");
     },
-    login(context, user) {
-      context.commit("SET_CURRENT", user);
-      context.dispatch("translation/activate", user.language, { root: true });
-      Vue.prototype.$go(context.state.path || "/");
-      return user;
+    login() {
+      window.panel.deprecated(
+        "The $store.user module has been deprecated and removed. Use this.$user instead."
+      );
     },
-    async logout(context, force) {
-      context.commit("SET_CURRENT", null);
-
-      if (force) {
-        window.location.href = (window.panel.url || "") + "/login";
-        return;
-      }
-
-      try {
-        await Vue.$api.auth.logout();
-
-      } finally {
-        Vue.prototype.$go("/login");
-      }
+    async logout() {
+      window.panel.deprecated(
+        "The $store.user module has been deprecated and removed. Use this.$go('logout') instead."
+      );
+      window.panel.$go("logout");
     },
-    name(context, name) {
-      context.commit("SET_CURRENT", {
-        ...context.state.current,
-        name: name
-      });
+    name() {
+      window.panel.deprecated(
+        "The $store.user module has been deprecated and removed. Use this.$user instead."
+      );
     },
-    pending(context, pending) {
-      context.commit("SET_PENDING", pending);
+    pending() {
+      window.panel.deprecated(
+        "The $store.user module has been deprecated and removed. Use this.$user instead."
+      );
     },
-    visit(context, path) {
-      context.commit("SET_PATH", path);
-    }
-  }
+    visit() {
+      window.panel.deprecated(
+        "The $store.user module has been deprecated and removed. Use this.$user instead."
+      );
+    },
+  },
 };

@@ -1,3 +1,17 @@
+
+export async function toJson(response) {
+  const text = await response.text();
+  let data;
+
+  try {
+    data = JSON.parse(text);
+  } catch (e) {
+    window.panel.$vue.$api.onParserError(text);
+  }
+
+  return data;
+}
+
 export default (config) => {
   return {
     running: 0,
@@ -39,18 +53,10 @@ export default (config) => {
         ),
         options
       );
-      const text = await response.text();
 
       try {
         // try to parse JSON
-        let json;
-
-        try {
-          json = JSON.parse(text);
-        } catch (e) {
-          config.onParserError(text);
-          return;
-        }
+        const json = await toJson(response)
 
         // check for the server response code
         if (response.status < 200 || response.status > 299) {

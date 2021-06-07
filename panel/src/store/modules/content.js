@@ -27,18 +27,9 @@ export default {
      */
     models: {},
 
-    /**
-     * Object of status flags/info
-     */
+    // whether form shall be disabled (e.g. for structure fields)
     status: {
-      // whether form shall be disabled (e.g. for structure fields)
-      enabled: true,
-
-      // content lock info
-      lock: null,
-
-      // content unlock info
-      unlock: null
+      enabled: true
     }
   },
 
@@ -71,14 +62,14 @@ export default {
     /**
      * Returns ID (current or provided) with correct language suffix
      */
-    id: (state, getters, rootState) => id => {
+    id: (state) => id => {
       id = id || state.current;
 
-      if (rootState.languages.current) {
-        return id + "/" + rootState.languages.current.code;
-      } else {
-        return id;
+      if (window.panel.$language) {
+        return id + "/" + window.panel.$language.code;
       }
+
+      return id;
     },
     /**
      * Return the full model object for passed ID
@@ -122,6 +113,18 @@ export default {
 
 
   mutations: {
+    CLEAR(state) {
+      Object.keys(state.models).forEach(key => {
+        state.models[key].changes = {};
+      });
+
+      // remove all form changes from localStorage
+      Object.keys(localStorage).forEach(key => {
+        if (key.startsWith("kirby$content$")) {
+          localStorage.removeItem(key);
+        }
+      });
+    },
     CREATE(state, [id, model]) {
       if (!model) {
         return false;
@@ -139,9 +142,6 @@ export default {
     },
     CURRENT(state, id) {
       state.current = id;
-    },
-    LOCK(state, lock) {
-      Vue.set(state.status, "lock", lock);
     },
     MOVE(state, [from, to]) {
       // move state
@@ -166,14 +166,6 @@ export default {
     },
     STATUS(state, enabled) {
       Vue.set(state.status, "enabled", enabled);
-    },
-    UNLOCK(state, unlock) {
-      if (unlock) {
-        // reset unsaved changes if content has been unlocked by another user
-        Vue.set(state.models[state.current], "changes", {});
-      }
-
-      Vue.set(state.status, "unlock", unlock);
     },
     UPDATE(state, [id, field, value]) {
       // avoid updating without a valid model
@@ -251,6 +243,9 @@ export default {
           localStorage.removeItem("kirby$form$" + id);
         });
     },
+    clear(context) {
+      context.commit("CLEAR");
+    },
     create(context, model) {
       // attach the language to the id
       model.id = context.getters.id(model.id);
@@ -266,21 +261,6 @@ export default {
         changes: {}
       };
 
-      // check if content was previously unlocked
-      Vue.$api
-        .get(model.api + "/unlock")
-        .then(response => {
-          if (
-            response.supported === true &&
-            response.unlocked === true
-          ) {
-            context.commit("UNLOCK", context.state.models[model.id].changes);
-          }
-        })
-        .catch(() => {
-          // fail silently
-        });
-
       context.commit("CREATE", [model.id, data]);
       context.dispatch("current", model.id);
     },
@@ -292,9 +272,6 @@ export default {
     },
     enable(context) {
       context.commit("STATUS", true);
-    },
-    lock(context, lock) {
-      context.commit("LOCK", lock);
     },
     move(context, [from, to]) {
       from = context.getters.id(from);
@@ -312,7 +289,7 @@ export default {
       id = id || context.state.current;
       context.commit("REVERT", id);
     },
-    save(context, id) {
+    async save(context, id) {
       id = id || context.state.current;
 
       // don't allow save if model is not current
@@ -331,26 +308,22 @@ export default {
       const data  = {...model.originals, ...model.changes};
 
       // Send updated values to API
-      return Vue.$api
-        .patch(model.api, data)
-        .then(() => {
-          // re-create model with updated values as originals
-          context.commit("CREATE", [id, {
-            ...model,
-            originals: data
-          }]);
+      try {
+        await Vue.$api.patch(model.api, data)
 
-          // revert unsaved changes (which also removes localStorage entry)
-          context.dispatch("revert", id);
-          context.dispatch("enable");
-        })
-        .catch(error => {
-          context.dispatch("enable");
-          throw error;
-        });
-    },
-    unlock(context, unlock) {
-      context.commit("UNLOCK", unlock);
+        // re-create model with updated values as originals
+        context.commit("CREATE", [id, {
+          ...model,
+          originals: data
+        }]);
+
+        // revert unsaved changes (which also removes localStorage entry)
+        context.dispatch("revert", id);
+
+      } finally {
+        context.dispatch("enable");
+      }
+
     },
     update(context, [field, value, id]) {
       id = id || context.state.current;

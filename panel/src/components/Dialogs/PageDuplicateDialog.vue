@@ -61,17 +61,11 @@ export default {
       }
 
       return fields;
-    },
-    slugs() {
-      return this.$store.state.languages.default ? this.$store.state.languages.default.rules : this.system.slugs;
-    },
-    system() {
-      return this.$store.state.system.info;
     }
   },
   watch: {
     "page.slug"(value) {
-      this.page.slug = this.$helper.slug(value, [this.slugs, this.system.ascii]);
+      this.page.slug = this.$helper.slug(value, [this.$system.slugs, this.$system.ascii]);
     }
   },
   methods: {

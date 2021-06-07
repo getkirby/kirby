@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import Draggable from "vuedraggable";
+import Draggable from "vuedraggable/src/vuedraggable";
 
 /**
  * The Draggable component implements the [Vue.Draggable](https://github.com/SortableJS/Vue.Draggable) library which is a wrapper for the widespread [Sortable.js](https://github.com/RubaXa/Sortable) library.

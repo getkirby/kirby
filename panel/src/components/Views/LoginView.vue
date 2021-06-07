@@ -1,13 +1,12 @@
 <template>
-  <k-error-view v-if="issue">
-    {{ issue.message }}
-  </k-error-view>
-  <k-view v-else-if="ready && form === 'login'" align="center" class="k-login-view">
-    <k-login-plugin />
-  </k-view>
-  <k-view v-else-if="ready && form === 'code'" align="center" class="k-login-code-view">
-    <k-login-code />
-  </k-view>
+  <k-outside>
+    <k-view v-if="form === 'login'" align="center" class="k-login-view">
+      <k-login-plugin :methods="methods" />
+    </k-view>
+    <k-view v-else-if="form === 'code'" align="center" class="k-login-code-view">
+      <k-login-code v-bind="$props" />
+    </k-view>
+  </k-outside>
 </template>
 
 <script>
@@ -17,17 +16,17 @@ export default {
   components: {
     "k-login-plugin": window.panel.plugins.login || LoginForm
   },
-  data() {
-    return {
-      ready: false,
-      issue: null
-    };
+  props: {
+    methods: Array,
+    pending: Object
   },
   computed: {
     form() {
-      if (this.$store.state.user.pendingEmail) {
+      if (this.pending.email) {
         return "code";
-      } else if (!this.$store.state.user.current) {
+      }
+
+      if (!this.$user) {
         return "login";
       }
 
@@ -35,28 +34,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("content/current", null);
-    this.$store
-      .dispatch("system/load")
-      .then(system => {
-        if (!system.isReady) {
-          this.$go("/installation");
-        }
-
-        if (system.user && system.user.id) {
-          this.$go("/");
-        }
-
-        if (system.authStatus.status === "pending") {
-          this.$store.dispatch("user/pending", system.authStatus);
-        }
-
-        this.ready = true;
-        this.$store.dispatch("title", this.$t("login"));
-      })
-      .catch(error => {
-        this.issue = error;
-      });
+    this.$store.dispatch("content/clear");
   }
 };
 </script>
@@ -127,20 +105,5 @@ export default {
 .k-login-checkbox:hover span,
 .k-login-checkbox:focus span {
   opacity: 1;
-}
-
-.k-login-alert {
-  padding: .5rem .75rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  min-height: 38px;
-  margin-bottom: 2rem;
-  background: var(--color-negative);
-  color: #fff;
-  font-size: var(--text-sm);
-  border-radius: var(--rounded-xs);
-  box-shadow: var(--shadow-lg);
-  cursor: pointer;
 }
 </style>

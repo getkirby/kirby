@@ -83,7 +83,6 @@
 </template>
 
 <script>
-import config from "@/config/config.js";
 import debounce from "@/helpers/debounce.js";
 import previewThumb from "@/helpers/previewThumb.js";
 
@@ -95,9 +94,7 @@ export default {
         return {};
       }
     },
-    type: {
-      type: String
-    },
+    type: String
   },
   data() {
     return {
@@ -195,7 +192,7 @@ export default {
 
         this.items = await this.currentType.search({
           query: query,
-          limit: config.search.limit
+          limit: this.$config.search.limit
         });
 
 

@@ -990,6 +990,29 @@ class AppPluginsTest extends TestCase
     }
 
     /**
+     * @covers ::extendAreas
+     */
+    public function testAreas()
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'areas' => [
+                'todos' => function () {
+                    return [];
+                }
+            ]
+        ]);
+
+        $areas = $kirby->extensions('areas');
+
+        $this->assertCount(1, $areas);
+        $this->assertArrayHasKey('todos', $areas);
+        $this->assertInstanceOf('Closure', $areas['todos']);
+    }
+
+    /**
      * @covers ::extendFileTypes
      */
     public function testFileTypes()

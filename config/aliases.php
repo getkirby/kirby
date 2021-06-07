@@ -46,6 +46,9 @@ return [
     // image classes
     'dimensions' => 'Kirby\Image\Dimensions',
 
+    // panel classes
+    'panel'      => 'Kirby\Panel\Panel',
+
     // toolkit classes
     'a'          => 'Kirby\Toolkit\A',
     'c'          => 'Kirby\Toolkit\Config',

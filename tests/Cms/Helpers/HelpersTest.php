@@ -36,13 +36,13 @@ class HelpersTest extends TestCase
     public function testAttrWithBeforeValue()
     {
         $attr = attr(['test' => 'test'], ' ');
-        $this->assertEquals(' test="test"', $attr);
+        $this->assertSame(' test="test"', $attr);
     }
 
     public function testAttrWithAfterValue()
     {
         $attr = attr(['test' => 'test'], null, ' ');
-        $this->assertEquals('test="test" ', $attr);
+        $this->assertSame('test="test" ', $attr);
     }
 
     public function testAttrWithoutValues()
@@ -75,7 +75,7 @@ class HelpersTest extends TestCase
         $collection = collection('test');
 
         $this->assertCount(1, $collection);
-        $this->assertEquals('test', $collection->first()->slug());
+        $this->assertSame('test', $collection->first()->slug());
     }
 
     public function testCsrfHelper()
@@ -87,26 +87,26 @@ class HelpersTest extends TestCase
         $token = csrf();
         $this->assertIsString($token);
         $this->assertStringMatchesFormat('%x', $token);
-        $this->assertEquals(64, strlen($token));
-        $this->assertEquals($session->get('kirby.csrf'), $token);
+        $this->assertSame(64, strlen($token));
+        $this->assertSame($session->get('kirby.csrf'), $token);
 
         // should not regenerate when a param is passed
         $this->assertFalse(csrf(null));
         $this->assertFalse(csrf(false));
         $this->assertFalse(csrf(123));
         $this->assertFalse(csrf('some invalid string'));
-        $this->assertEquals($token, $session->get('kirby.csrf'));
+        $this->assertSame($token, $session->get('kirby.csrf'));
 
         // should not regenerate if there is already a token
         $token2 = csrf();
-        $this->assertEquals($token, $token2);
+        $this->assertSame($token, $token2);
 
         // should regenerate if there is an invalid token
         $session->set('kirby.csrf', 123);
         $token3 = csrf();
         $this->assertNotEquals($token, $token3);
-        $this->assertEquals(64, strlen($token3));
-        $this->assertEquals($session->get('kirby.csrf'), $token3);
+        $this->assertSame(64, strlen($token3));
+        $this->assertSame($session->get('kirby.csrf'), $token3);
 
         // should verify token
         $this->assertTrue(csrf($token3));
@@ -124,7 +124,7 @@ class HelpersTest extends TestCase
         $result   = css('assets/css/index.css');
         $expected = '<link href="https://getkirby.com/assets/css/index.css" rel="stylesheet">';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testCssHelperWithMediaOption()
@@ -132,7 +132,7 @@ class HelpersTest extends TestCase
         $result   = css('assets/css/index.css', 'print');
         $expected = '<link href="https://getkirby.com/assets/css/index.css" media="print" rel="stylesheet">';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testCssHelperWithAttrs()
@@ -140,7 +140,7 @@ class HelpersTest extends TestCase
         $result   = css('assets/css/index.css', ['integrity' => 'nope']);
         $expected = '<link href="https://getkirby.com/assets/css/index.css" integrity="nope" rel="stylesheet">';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testCssHelperWithArray()
@@ -153,7 +153,7 @@ class HelpersTest extends TestCase
         $expected  = '<link href="https://getkirby.com/assets/css/a.css" rel="stylesheet">' . PHP_EOL;
         $expected .= '<link href="https://getkirby.com/assets/css/b.css" rel="stylesheet">';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testDeprecated()
@@ -175,20 +175,20 @@ class HelpersTest extends TestCase
 
     public function testDumpHelperOnCli()
     {
-        $this->assertEquals("test\n", dump('test', false));
+        $this->assertSame("test\n", dump('test', false));
     }
 
     public function testDumpHelperOnServer()
     {
         Server::$cli = false;
-        $this->assertEquals('<pre>test</pre>', dump('test', false));
+        $this->assertSame('<pre>test</pre>', dump('test', false));
         Server::$cli = null;
     }
 
     public function testEscWithInvalidContext()
     {
         $escaped = esc('test', 'does-not-exist');
-        $this->assertEquals('test', $escaped);
+        $this->assertSame('test', $escaped);
     }
 
     public function testGist()
@@ -196,19 +196,19 @@ class HelpersTest extends TestCase
         $gist     = gist('https://gist.github.com/bastianallgeier/d61ab782cd5c2cc02b6f6fec54fd1985', 'static.php');
         $expected = '<script src="https://gist.github.com/bastianallgeier/d61ab782cd5c2cc02b6f6fec54fd1985.js?file=static.php"></script>';
 
-        $this->assertEquals($gist, $expected);
+        $this->assertSame($gist, $expected);
     }
 
     public function testH()
     {
         $html = h('Guns & Roses');
-        $this->assertEquals('Guns &amp; Roses', $html);
+        $this->assertSame('Guns &amp; Roses', $html);
     }
 
     public function testHtml()
     {
         $html = html('Guns & Roses');
-        $this->assertEquals('Guns &amp; Roses', $html);
+        $this->assertSame('Guns &amp; Roses', $html);
     }
 
     public function testImageHelper()
@@ -289,7 +289,7 @@ class HelpersTest extends TestCase
         $data   = ['homer', null];
         $rules  = [['alpha'], ['required']];
         $result = invalid($data, $rules);
-        $this->assertEquals(1, $result[1]);
+        $this->assertSame(1, $result[1]);
     }
 
     public function testInvalidRequired()
@@ -298,28 +298,28 @@ class HelpersTest extends TestCase
         $messages = ['email' => ''];
 
         $result = invalid(['email' => null], $rules, $messages);
-        $this->assertEquals($messages, $result);
+        $this->assertSame($messages, $result);
 
         $result = invalid(['name' => 'homer'], $rules, $messages);
-        $this->assertEquals($messages, $result);
+        $this->assertSame($messages, $result);
 
         $result = invalid(['email' => ''], $rules, $messages);
-        $this->assertEquals($messages, $result);
+        $this->assertSame($messages, $result);
 
         $result = invalid(['email' => []], $rules, $messages);
-        $this->assertEquals($messages, $result);
+        $this->assertSame($messages, $result);
 
         $result = invalid(['email' => '0'], $rules, $messages);
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
 
         $result = invalid(['email' => 0], $rules, $messages);
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
 
         $result = invalid(['email' => false], $rules, $messages);
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
 
         $result = invalid(['email' => 'homer@simpson.com'], $rules, $messages);
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 
     public function testInvalidOptions()
@@ -333,23 +333,23 @@ class HelpersTest extends TestCase
         ];
 
         $result = invalid(['username' => 'homer'], $rules, $messages);
-        $this->assertEquals($messages, $result);
+        $this->assertSame($messages, $result);
 
         $result = invalid(['username' => 'homersimpson'], $rules, $messages);
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
 
         $rules = [
             'username' => ['between' => [3, 6]]
         ];
 
         $result = invalid(['username' => 'ho'], $rules, $messages);
-        $this->assertEquals($messages, $result);
+        $this->assertSame($messages, $result);
 
         $result = invalid(['username' => 'homersimpson'], $rules, $messages);
-        $this->assertEquals($messages, $result);
+        $this->assertSame($messages, $result);
 
         $result = invalid(['username' => 'homer'], $rules, $messages);
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 
     public function testInvalidWithMultipleMessages()
@@ -368,7 +368,7 @@ class HelpersTest extends TestCase
                 'The username is required',
             ]
         ];
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
 
         $result   = invalid(['username' => 'a1'], $rules, $messages);
         $expected = [
@@ -377,7 +377,7 @@ class HelpersTest extends TestCase
                 'The username must be at least 4 characters long',
             ]
         ];
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
 
         $result   = invalid(['username' => 'ab'], $rules, $messages);
         $expected = [
@@ -385,10 +385,10 @@ class HelpersTest extends TestCase
                 'The username must be at least 4 characters long',
             ]
         ];
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
 
         $result = invalid(['username' => 'abcd'], $rules, $messages);
-        $this->assertEquals([], $result);
+        $this->assertSame([], $result);
     }
 
     public function testJsHelper()
@@ -396,7 +396,7 @@ class HelpersTest extends TestCase
         $result   = js('assets/js/index.js');
         $expected = '<script src="https://getkirby.com/assets/js/index.js"></script>';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testJsHelperWithAsyncOption()
@@ -404,7 +404,7 @@ class HelpersTest extends TestCase
         $result   = js('assets/js/index.js', true);
         $expected = '<script async src="https://getkirby.com/assets/js/index.js"></script>';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testJsHelperWithAttrs()
@@ -412,7 +412,7 @@ class HelpersTest extends TestCase
         $result   = js('assets/js/index.js', ['integrity' => 'nope']);
         $expected = '<script integrity="nope" src="https://getkirby.com/assets/js/index.js"></script>';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testJsHelperWithArray()
@@ -425,12 +425,12 @@ class HelpersTest extends TestCase
         $expected  = '<script src="https://getkirby.com/assets/js/a.js"></script>' . PHP_EOL;
         $expected .= '<script src="https://getkirby.com/assets/js/b.js"></script>';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testKirbyHelper()
     {
-        $this->assertEquals($this->kirby, kirby());
+        $this->assertSame($this->kirby, kirby());
     }
 
     public function testKirbyTagHelper()
@@ -438,7 +438,7 @@ class HelpersTest extends TestCase
         $tag = kirbytag('link', 'https://getkirby.com', ['text' => 'Kirby']);
         $expected = '<a href="https://getkirby.com">Kirby</a>';
 
-        $this->assertEquals($expected, $tag);
+        $this->assertSame($expected, $tag);
     }
 
     public function testKirbyTagsHelper()
@@ -446,7 +446,7 @@ class HelpersTest extends TestCase
         $tag = kirbytags('(link: https://getkirby.com text: Kirby)');
         $expected = '<a href="https://getkirby.com">Kirby</a>';
 
-        $this->assertEquals($expected, $tag);
+        $this->assertSame($expected, $tag);
     }
 
     public function testKirbyTextHelper()
@@ -455,10 +455,10 @@ class HelpersTest extends TestCase
         $normal = '<p>This is <strong>just</strong> a text.</p>';
         $inline = 'This is <strong>just</strong> a text.';
 
-        $this->assertEquals($normal, kirbytext($text));
-        $this->assertEquals($normal, kt($text));
-        $this->assertEquals($inline, kirbytextinline($text));
-        $this->assertEquals($inline, kti($text));
+        $this->assertSame($normal, kirbytext($text));
+        $this->assertSame($normal, kt($text));
+        $this->assertSame($inline, kirbytextinline($text));
+        $this->assertSame($inline, kti($text));
     }
 
     public function testLoad()
@@ -477,7 +477,7 @@ class HelpersTest extends TestCase
         $tag = markdown('# Kirby');
         $expected = '<h1>Kirby</h1>';
 
-        $this->assertEquals($expected, $tag);
+        $this->assertSame($expected, $tag);
     }
 
     public function testOptionHelper()
@@ -488,8 +488,8 @@ class HelpersTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals('bar', option('foo'));
-        $this->assertEquals('fallback', option('does-not-exist', 'fallback'));
+        $this->assertSame('bar', option('foo'));
+        $this->assertSame('fallback', option('does-not-exist', 'fallback'));
     }
 
     public function testPageHelper()
@@ -509,16 +509,16 @@ class HelpersTest extends TestCase
 
         // get the current page without browsing
         $page = page();
-        $this->assertEquals('home', $page->slug());
+        $this->assertSame('home', $page->slug());
 
         // get the current page after changing the current page
         $app->site()->visit('test');
         $page = page();
-        $this->assertEquals('test', $page->slug());
+        $this->assertSame('test', $page->slug());
 
         // get a specific page
         $page = page('test');
-        $this->assertEquals('test', $page->slug());
+        $this->assertSame('test', $page->slug());
     }
 
     public function testPagesHelper()
@@ -546,7 +546,7 @@ class HelpersTest extends TestCase
 
         $app = $this->kirby->clone();
 
-        $this->assertEquals('current', param('filter'));
+        $this->assertSame('current', param('filter'));
 
         Uri::$current = null;
     }
@@ -557,36 +557,66 @@ class HelpersTest extends TestCase
 
         $app = $this->kirby->clone();
 
-        $this->assertEquals(['a' => 'value-a', 'b' => 'value-b'], params());
+        $this->assertSame(['a' => 'value-a', 'b' => 'value-b'], params());
 
         Uri::$current = null;
     }
 
-    public function testRHelper()
+    public function testR()
     {
-        $this->assertEquals('a', r(1 === 1, 'a', 'b'));
-        $this->assertEquals('b', r(1 === 2, 'a', 'b'));
-        $this->assertEquals(null, r(1 === 2, 'a'));
+        $this->assertSame('a', r(1 === 1, 'a', 'b'));
+        $this->assertSame('b', r(1 === 2, 'a', 'b'));
+        $this->assertSame(null, r(1 === 2, 'a'));
     }
 
-    public function testSiteHelper()
+    public function testRouter()
     {
-        $this->assertEquals($this->kirby->site(), site());
+        $routes = [
+            [
+                'pattern' => 'a/(:any)',
+                'method'  => 'POST',
+                'action'  => function () {
+                    return 'nonono';
+                }
+            ],
+            [
+                'pattern' => 'b/(:any)',
+                'method'  => 'ALL',
+                'action'  => function () {
+                    return 'nonono';
+                }
+            ],
+            [
+                'pattern' => 'a/(:any)',
+                'method'  => 'GET',
+                'action'  => function ($path) {
+                    return 'yes: ' . $path;
+                }
+            ]
+        ];
+
+        $result = router('a/foo', 'GET', $routes);
+        $this->assertSame('yes: foo', $result);
+    }
+
+    public function testSite()
+    {
+        $this->assertSame($this->kirby->site(), site());
     }
 
     public function testSize()
     {
         // number
-        $this->assertEquals(3, size(3));
+        $this->assertSame(3, size(3));
 
         // string
-        $this->assertEquals(3, size('abc'));
+        $this->assertSame(3, size('abc'));
 
         // array
-        $this->assertEquals(3, size(['a', 'b', 'c']));
+        $this->assertSame(3, size(['a', 'b', 'c']));
 
         // collection
-        $this->assertEquals(3, size(new Collection(['a', 'b', 'c'])));
+        $this->assertSame(3, size(new Collection(['a', 'b', 'c'])));
     }
 
     public function testSmartypants()
@@ -594,7 +624,7 @@ class HelpersTest extends TestCase
         $text     = smartypants('"Test"');
         $expected = '&#8220;Test&#8221;';
 
-        $this->assertEquals($expected, $text);
+        $this->assertSame($expected, $text);
     }
 
     public function testSmartypantsWithKirbytext()
@@ -611,7 +641,7 @@ class HelpersTest extends TestCase
         $text     = kirbytextinline('"Test"');
         $expected = '&#8220;Test&#8221;';
 
-        $this->assertEquals($expected, $text);
+        $this->assertSame($expected, $text);
     }
 
     public function testSnippet()
@@ -624,7 +654,7 @@ class HelpersTest extends TestCase
         ]);
 
         $result = snippet('snippet', ['message' => 'world'], true);
-        $this->assertEquals('Hello world', $result);
+        $this->assertSame('Hello world', $result);
     }
 
     public function testSnippetAlternatives()
@@ -637,19 +667,19 @@ class HelpersTest extends TestCase
         ]);
 
         $result = snippet(['does-not-exist', 'does-not-exist-either', 'snippet'], ['message' => 'world'], true);
-        $this->assertEquals('Hello world', $result);
+        $this->assertSame('Hello world', $result);
     }
 
     public function testSvg()
     {
         $result = svg('test.svg');
-        $this->assertEquals('<svg>test</svg>', trim($result));
+        $this->assertSame('<svg>test</svg>', trim($result));
     }
 
     public function testSvgWithAbsolutePath()
     {
         $result = svg(__DIR__ . '/fixtures/HelpersTest/test.svg');
-        $this->assertEquals('<svg>test</svg>', trim($result));
+        $this->assertSame('<svg>test</svg>', trim($result));
     }
 
     public function testSvgWithInvalidFileType()
@@ -672,7 +702,7 @@ class HelpersTest extends TestCase
         $file->method('__call')->willReturn('test');
         $file->method('extension')->willReturn('svg');
 
-        $this->assertEquals('test', svg($file));
+        $this->assertSame('test', svg($file));
     }
 
     public function testTwitter()
@@ -681,13 +711,13 @@ class HelpersTest extends TestCase
         $result   = twitter('getkirby');
         $expected = '<a href="https://twitter.com/getkirby">@getkirby</a>';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
 
         // with attributes
         $result   = twitter('getkirby', 'Follow us', 'Kirby on Twitter', 'twitter');
         $expected = '<a class="twitter" href="https://twitter.com/getkirby" title="Kirby on Twitter">Follow us</a>';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testUrlHelper()
@@ -698,8 +728,8 @@ class HelpersTest extends TestCase
             ]
         ]);
 
-        $this->assertEquals($url . '/test', url('test'));
-        $this->assertEquals($url . '/test', u('test'));
+        $this->assertSame($url . '/test', url('test'));
+        $this->assertSame($url . '/test', u('test'));
     }
 
     public function testUrlHelperWithOptions()
@@ -717,8 +747,8 @@ class HelpersTest extends TestCase
 
         $expected = $url . '/test/foo:bar?q=search';
 
-        $this->assertEquals($expected, url('test', $options));
-        $this->assertEquals($expected, u('test', $options));
+        $this->assertSame($expected, url('test', $options));
+        $this->assertSame($expected, u('test', $options));
     }
 
     public function testVideo()
@@ -726,7 +756,7 @@ class HelpersTest extends TestCase
         $video    = video('https://youtube.com/watch?v=xB3s_f7PzYk');
         $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk"></iframe>';
 
-        $this->assertEquals($expected, $video);
+        $this->assertSame($expected, $video);
     }
 
     public function testYoutubeVideoWithOptions()
@@ -739,7 +769,7 @@ class HelpersTest extends TestCase
 
         $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';
 
-        $this->assertEquals($expected, $video);
+        $this->assertSame($expected, $video);
     }
 
     public function testVimeoVideoWithOptions()
@@ -752,7 +782,7 @@ class HelpersTest extends TestCase
 
         $expected = '<iframe allowfullscreen src="https://player.vimeo.com/video/335292911?controls=0"></iframe>';
 
-        $this->assertEquals($expected, $video);
+        $this->assertSame($expected, $video);
     }
 
     public function testVimeo()
@@ -760,7 +790,7 @@ class HelpersTest extends TestCase
         $video    = vimeo('https://vimeo.com/335292911');
         $expected = '<iframe allowfullscreen src="https://player.vimeo.com/video/335292911"></iframe>';
 
-        $this->assertEquals($expected, $video);
+        $this->assertSame($expected, $video);
     }
 
     public function testVimeoWithOptions()
@@ -768,7 +798,7 @@ class HelpersTest extends TestCase
         $video    = vimeo('https://vimeo.com/335292911', ['controls' => 0]);
         $expected = '<iframe allowfullscreen src="https://player.vimeo.com/video/335292911?controls=0"></iframe>';
 
-        $this->assertEquals($expected, $video);
+        $this->assertSame($expected, $video);
     }
 
     public function testWidont()
@@ -776,7 +806,7 @@ class HelpersTest extends TestCase
         $result   = widont('This is a headline');
         $expected = 'This is a&nbsp;headline';
 
-        $this->assertEquals($expected, $result);
+        $this->assertSame($expected, $result);
     }
 
     public function testYoutube()
@@ -784,7 +814,7 @@ class HelpersTest extends TestCase
         $video    = youtube('https://youtube.com/watch?v=xB3s_f7PzYk');
         $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk"></iframe>';
 
-        $this->assertEquals($expected, $video);
+        $this->assertSame($expected, $video);
     }
 
     public function testYoutubeWithOptions()
@@ -792,6 +822,6 @@ class HelpersTest extends TestCase
         $video    = youtube('https://youtube.com/watch?v=xB3s_f7PzYk', ['controls' => 0]);
         $expected = '<iframe allowfullscreen src="https://youtube.com/embed/xB3s_f7PzYk?controls=0"></iframe>';
 
-        $this->assertEquals($expected, $video);
+        $this->assertSame($expected, $video);
     }
 }

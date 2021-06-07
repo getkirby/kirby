@@ -18,18 +18,12 @@ export default new Vuex.Store({
   // eslint-disable-next-line
   strict: process.env.NODE_ENV !== "production",
   state: {
-    breadcrumb: [],
     dialog: null,
     drag: null,
     fatal: null,
-    isLoading: false,
-    title: null,
-    view: null
+    isLoading: false
   },
   mutations: {
-    SET_BREADCRUMB(state, breadcrumb) {
-      state.breadcrumb = breadcrumb;
-    },
     SET_DIALOG(state, dialog) {
       state.dialog = dialog;
     },
@@ -39,12 +33,6 @@ export default new Vuex.Store({
     SET_FATAL(state, html) {
       state.fatal = html;
     },
-    SET_TITLE(state, title) {
-      state.title = title;
-    },
-    SET_VIEW(state, view) {
-      state.view = view;
-    },
     START_LOADING(state) {
       state.isLoading = true;
     },
@@ -53,8 +41,9 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    breadcrumb(context, breadcrumb) {
-      context.commit("SET_BREADCRUMB", breadcrumb);
+    breadcrumb() {
+      // TODO: Remove in 3.7.0
+      window.panel.deprecated("$store.disptach('breadcrumb') has been deprecated and removed.");
     },
     dialog(context, dialog) {
       context.commit("SET_DIALOG", dialog);
@@ -68,32 +57,14 @@ export default new Vuex.Store({
     isLoading(context, loading) {
       context.commit(loading === true ? "START_LOADING" : "STOP_LOADING");
     },
-    title(context, title) {
-      let site;
-
-      if (context.state.user.current) {
-        site = Vue.$api.site.get(["title"]);
-      } else {
-        site = new Promise(resolve => {
-          resolve(context.state.system.info);
-        });
-      }
-
-      site.then(site => {
-        context.commit("SET_TITLE", title);
-        context.dispatch("system/title", site.title);
-        document.title = title || "";
-
-        if (title !== null) {
-          document.title += " | " + site.title;
-        } else {
-          document.title += site.title;
-        }
-      });
+    title() {
+      // TODO: Remove in 3.7.0
+      window.panel.deprecated("$store.disptach('title') has been deprecated and removed.");
     },
-    view(context, view) {
-      context.commit("SET_VIEW", view);
-    }
+    view() {
+      // TODO: Remove in 3.7.0
+      window.panel.deprecated("$store.disptach('view') has been deprecated and removed.");
+    },
   },
   modules: {
     blocks: blocks,

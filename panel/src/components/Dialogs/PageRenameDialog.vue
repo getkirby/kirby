@@ -77,10 +77,7 @@ export default {
       };
     },
     slugs() {
-      return this.$store.state.languages.current ? this.$store.state.languages.current.rules : this.system.slugs;
-    },
-    system() {
-      return this.$store.state.system.info;
+      return this.$languages.current ? this.$languages.current.rules : this.$system.slugs;
     }
   },
   methods: {
@@ -103,7 +100,7 @@ export default {
     },
     sluggify(input) {
       input = input.trim();
-      this.slug = this.$helper.slug(input, [this.slugs, this.system.ascii]);
+      this.slug = this.$helper.slug(input, [this.slugs, this.$system.ascii]);
 
       if (this.page.parents) {
         this.url = this.page.parents.map(p => p.slug).

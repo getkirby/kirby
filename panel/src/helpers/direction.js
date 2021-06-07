@@ -1,9 +1,9 @@
 
 export default (app) => {
-  const defaultLanguage = app.$store.state.languages.default || null;
-  const language = app.$store.state.languages.current || null;
-  const multilang = app.$store.state.system.info.multilang || false;
-  const userLanguage = app.$store.state.system.info.user ? app.$store.state.system.info.user.language : null;
+  const defaultLanguage = app.$languages.default || null;
+  const language = app.$languages.current || null;
+  const multilang = app.$system.multilang || false;
+  const userLanguage = app.$user ? app.$user.language : null;
   const direction = language ? language.direction : null;
 
   /**

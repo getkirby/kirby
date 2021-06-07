@@ -37,12 +37,6 @@ export default {
           preselect: true
         }
       };
-    },
-    slugs() {
-      return this.$store.state.languages.default ? this.$store.state.languages.default.rules : this.system.slugs;
-    },
-    system() {
-      return this.$store.state.system.info;
     }
   },
   methods: {
@@ -61,7 +55,7 @@ export default {
     sluggify(input) {
       return this.$helper.slug(
         input,
-        [this.slugs, this.system.ascii],
+        [this.$system.slugs, this.$system.ascii],
         "@._-"
       );
     },
