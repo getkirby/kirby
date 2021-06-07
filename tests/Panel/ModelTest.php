@@ -75,13 +75,13 @@ class CustomPanelModel extends Model
 class ModelTest extends TestCase
 {
     protected $app;
-    protected $tmp;
+    protected $tmp = __DIR__ . '/tmp';
 
     public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->tmp = __DIR__ . '/tmp/ModelTest',
+                'index' => $this->tmp,
             ]
         ]);
 

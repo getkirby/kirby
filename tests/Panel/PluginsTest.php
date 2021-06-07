@@ -13,7 +13,7 @@ use PHPUnit\Framework\TestCase;
 class PluginsTest extends TestCase
 {
     protected $app;
-    protected $tmp;
+    protected $tmp = __DIR__ . '/tmp';
     protected $cssA;
     protected $cssB;
     protected $jsA;
@@ -23,7 +23,7 @@ class PluginsTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->tmp = __DIR__ . '/tmp/PluginsTest'
+                'index' => $this->tmp
             ]
         ]);
     }

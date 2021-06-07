@@ -14,13 +14,13 @@ use PHPUnit\Framework\TestCase;
 class SiteTest extends TestCase
 {
     protected $app;
-    protected $tmp;
+    protected $tmp = __DIR__ . '/tmp';
 
     public function setUp(): void
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->tmp = __DIR__ . '/tmp/SiteTest',
+                'index' => $this->tmp,
             ]
         ]);
 

@@ -11,7 +11,7 @@ use PHPUnit\Framework\TestCase;
 abstract class AreaTestCase extends TestCase
 {
     protected $app;
-    protected $tmp;
+    protected $tmp = __DIR__ . '/tmp';
 
     public function app(array $params)
     {
@@ -146,7 +146,7 @@ abstract class AreaTestCase extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => $this->tmp = __DIR__ . '/tmp',
+                'index' => $this->tmp,
             ],
             'request' => [
                 'query' => [
