@@ -604,8 +604,7 @@ class Panel
                 $model = $kirby->user(null, $kirby->option('api.allowImpersonation', false));
                 break;
             case 'page':
-                $id    = str_replace(['+', ' '], '/', basename($path));
-                $model = $kirby->page($id);
+                $model = static::page(basename($path));
                 break;
             case 'file':
                 $model = static::file(...explode('/files/', $path));
