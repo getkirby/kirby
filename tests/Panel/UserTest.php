@@ -67,8 +67,8 @@ class UserTest extends TestCase
 
         $this->assertSame([
             'type'  => 'user',
-            'ratio' => null,
-            'back'  => 'pattern',
+            'ratio' => '1/1',
+            'back'  => 'black',
             'color' => '#c5c9c6'
         ], $icon);
     }
@@ -127,26 +127,10 @@ class UserTest extends TestCase
         $hash = $user->image()->mediaHash();
         $mediaUrl = $user->mediaUrl() . '/' . $hash;
 
-        // cover disabled as default
+        // cover enabled by default
         $this->assertSame([
-            'ratio' => '3/2',
-            'back' => 'pattern',
-            'cover' => false,
-            'url' => $mediaUrl . '/test.jpg',
-            'cards' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
-            ],
-            'list' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
-            ]
-        ], $panel->image());
-
-        // cover enabled
-        $this->assertSame([
-            'ratio' => '3/2',
-            'back' => 'pattern',
+            'ratio' => '1/1',
+            'back' => 'black',
             'cover' => true,
             'url' => $mediaUrl . '/test.jpg',
             'cards' => [
@@ -157,7 +141,23 @@ class UserTest extends TestCase
                 'url' => Model::imagePlaceholder(),
                 'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
             ]
-        ], $panel->image(['cover' => true]));
+        ], $panel->image());
+
+        // cover disabled
+        $this->assertSame([
+            'ratio' => '1/1',
+            'back' => 'black',
+            'cover' => false,
+            'url' => $mediaUrl . '/test.jpg',
+            'cards' => [
+                'url' => Model::imagePlaceholder(),
+                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
+            ],
+            'list' => [
+                'url' => Model::imagePlaceholder(),
+                'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
+            ]
+        ], $panel->image(['cover' => false]));
     }
 
     /**

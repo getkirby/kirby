@@ -30,15 +30,32 @@ class User extends Model
     }
 
     /**
-     * Panel icon definition
+     * Panel icon defaults
      *
-     * @param array $params
      * @return array
      */
-    public function icon(array $params = null): array
+    public function iconDefaults(): array
     {
-        $params['type'] = 'user';
-        return parent::icon($params);
+        return [
+            'type'  => 'user',
+            'ratio' => '1/1',
+            'back'  => 'black',
+            'color' => '#c5c9c6',
+        ];
+    }
+
+    /**
+     * Panel image defaults
+     *
+     * @return array
+     */
+    public function imageDefaults(): array
+    {
+        return [
+            'ratio' => '1/1',
+            'back'  => 'black',
+            'cover' => true
+        ];
     }
 
     /**
