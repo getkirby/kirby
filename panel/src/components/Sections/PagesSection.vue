@@ -217,8 +217,8 @@ export default {
 
         try {
           await this.$api.pages.status(element.id, "listed", position);
-          this.$events.$emit("page.sort", element);
           this.$store.dispatch("notification/success", ":)");
+          this.$events.$emit("page.sort", element);
 
         } catch (error) {
           this.$store.dispatch("notification/error", {
