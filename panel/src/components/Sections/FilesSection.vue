@@ -87,9 +87,11 @@ export default {
   created() {
     this.load();
     this.$events.$on("model.update", this.reload);
+    this.$events.$on("file.sort", this.reload);
   },
   destroyed() {
     this.$events.$off("model.update", this.reload);
+    this.$events.$off("file.sort", this.reload);
   },
   methods: {
     action(file, action) {
@@ -187,6 +189,7 @@ export default {
           index: this.pagination.offset
         });
         this.$store.dispatch("notification/success", ":)");
+        this.$events.$emit("file.sort");
 
       } catch (error) {
         this.reload();
