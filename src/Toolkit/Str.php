@@ -968,14 +968,31 @@ class Str
      * @param string|null $string The string with placeholders
      * @param array $data Associative array with placeholders as
      *                    keys and replacements as values
-     * @param string|null $fallback A fallback if a token does not have any matches
+     * @param string|array|\Closure|null $fallback A fallback if a token does not have any matches
      * @param string $start Placeholder start characters
      * @param string $end Placeholder end characters
-     * @param \Closure|null $callback A callback to be able to modify each matching result
      * @return string The filled-in string
      */
-    public static function template(string $string = null, array $data = [], string $fallback = null, string $start = '{{', string $end = '}}', Closure $callback = null): string
+    public static function template(string $string = null, array $data = [], $fallback = null, string $start = '{{', string $end = '}}'): string
     {
+        // handle fallback that can be string, closure, array or null
+        if ($fallback !== null) {
+            if (is_array($fallback) === true) {
+                $callback = $fallback['callback'] ?? null;
+                $fallback = $fallback['fallback'] ?? null;
+            } elseif (is_a($fallback, 'Closure') === true) {
+                $callback = $fallback;
+                $fallback = null;
+            } elseif (is_string($fallback) === true) {
+                $callback = null;
+            } else {
+                $callback = null;
+                $fallback = null;
+            }
+        } else {
+            $callback = null;
+        }
+
         return preg_replace_callback('!' . $start . '(.*?)' . $end . '!', function ($match) use ($data, $fallback, $callback) {
             $query = trim($match[1]);
 

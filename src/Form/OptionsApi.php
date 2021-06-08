@@ -7,6 +7,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Http\Remote;
 use Kirby\Http\Url;
+use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Properties;
 use Kirby\Toolkit\Query;
 use Kirby\Toolkit\Str;
@@ -89,8 +90,8 @@ class OptionsApi
     protected function field(string $field, array $data): string
     {
         $value = $this->$field();
-        return Str::template($value, $data, null, '{{', '}}', function ($result) {
-            return strip_tags($result);
+        return Str::template($value, $data, function ($result) {
+            return Escape::html($result);
         });
     }
 
