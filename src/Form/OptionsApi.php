@@ -90,9 +90,11 @@ class OptionsApi
     protected function field(string $field, array $data): string
     {
         $value = $this->$field();
-        return Str::template($value, $data, function ($result) {
-            return Escape::html($result);
-        });
+        return Str::template($value, $data, [
+            'callback' => function ($result) {
+                return Escape::html($result);
+            }
+        ]);
     }
 
     /**

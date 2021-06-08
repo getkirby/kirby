@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Closure;
 use Exception;
 
 /**
@@ -968,30 +967,25 @@ class Str
      * @param string|null $string The string with placeholders
      * @param array $data Associative array with placeholders as
      *                    keys and replacements as values
-     * @param string|array|\Closure|null $fallback A fallback if a token does not have any matches
+     * @param string|array|null $options An options that contains:
+     *                                   - fallback: if a token does not have any matches
+     *                                   - callback: to be able to handle each matching result
+     *                                   - start: start placeholder
+     *                                   - end: end placeholder
      * @param string $start Placeholder start characters
      * @param string $end Placeholder end characters
+     *
+     * @todo Remove stringable type for `$options` param in 3.7.0, will only array supports
+     * @todo Remove `$start` and `$end` parameters in 3.8.0
+     *
      * @return string The filled-in string
      */
-    public static function template(string $string = null, array $data = [], $fallback = null, string $start = '{{', string $end = '}}'): string
+    public static function template(string $string = null, array $data = [], $options = null, string $start = '{{', string $end = '}}'): string
     {
-        // handle fallback that can be string, closure, array or null
-        if ($fallback !== null) {
-            if (is_array($fallback) === true) {
-                $callback = $fallback['callback'] ?? null;
-                $fallback = $fallback['fallback'] ?? null;
-            } elseif (is_a($fallback, 'Closure') === true) {
-                $callback = $fallback;
-                $fallback = null;
-            } elseif (is_string($fallback) === true) {
-                $callback = null;
-            } else {
-                $callback = null;
-                $fallback = null;
-            }
-        } else {
-            $callback = null;
-        }
+        $fallback = is_string($options) === true ? $options : ($options['fallback'] ?? null);
+        $callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
+        $start    = (string)($options['start'] ?? $start);
+        $end      = (string)($options['end'] ?? $end);
 
         return preg_replace_callback('!' . $start . '(.*?)' . $end . '!', function ($match) use ($data, $fallback, $callback) {
             $query = trim($match[1]);
