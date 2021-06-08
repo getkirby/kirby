@@ -193,6 +193,7 @@ return array(
     'Kirby\\Panel\\Page' => $baseDir . '/src/Panel/Page.php',
     'Kirby\\Panel\\Panel' => $baseDir . '/src/Panel/Panel.php',
     'Kirby\\Panel\\Plugins' => $baseDir . '/src/Panel/Plugins.php',
+    'Kirby\\Panel\\Redirect' => $baseDir . '/src/Panel/Redirect.php',
     'Kirby\\Panel\\Site' => $baseDir . '/src/Panel/Site.php',
     'Kirby\\Panel\\User' => $baseDir . '/src/Panel/User.php',
     'Kirby\\Parsley\\Element' => $baseDir . '/src/Parsley/Element.php',

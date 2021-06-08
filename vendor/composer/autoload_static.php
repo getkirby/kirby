@@ -288,6 +288,7 @@ class ComposerStaticInitc26333d865e0329b638bdc17afd29896
         'Kirby\\Panel\\Page' => __DIR__ . '/../..' . '/src/Panel/Page.php',
         'Kirby\\Panel\\Panel' => __DIR__ . '/../..' . '/src/Panel/Panel.php',
         'Kirby\\Panel\\Plugins' => __DIR__ . '/../..' . '/src/Panel/Plugins.php',
+        'Kirby\\Panel\\Redirect' => __DIR__ . '/../..' . '/src/Panel/Redirect.php',
         'Kirby\\Panel\\Site' => __DIR__ . '/../..' . '/src/Panel/Site.php',
         'Kirby\\Panel\\User' => __DIR__ . '/../..' . '/src/Panel/User.php',
         'Kirby\\Parsley\\Element' => __DIR__ . '/../..' . '/src/Parsley/Element.php',

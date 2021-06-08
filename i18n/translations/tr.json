@@ -263,7 +263,7 @@
   "field.structure.empty": "Hen\u00fcz bir girdi yok",
   "field.users.empty": "Henüz kullanıcı seçilmedi",
 
-  "file.blueprint": "Bu dosyanın henüz bir planı yok. Kurulumu <strong>/site/blueprints/{template}.yml</strong>'de tanımlayabilirsiniz.",
+  "file.blueprint": "Bu dosyanın henüz bir planı yok. Kurulumu <strong>/site/blueprints/file/{template}.yml</strong>'de tanımlayabilirsiniz.",
   "file.delete.confirm": "<strong>{filename}</strong> dosyasını silmek istediğinizden emin misiniz?",
   "file.sort": "Pozisyon değiştir",
 
@@ -372,11 +372,11 @@
   "more": "Daha Fazla",
   "name": "İsim",
   "next": "Sonraki",
-  "no": "no",
+  "no": "hayır",
   "off": "kapalı",
   "on": "açık",
   "open": "Önizleme",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "Yeni pencerede aç",
   "options": "Seçenekler",
   "options.none": "Seçenek yok",
 
@@ -468,9 +468,9 @@
   "toolbar.button.file.select": "Bir dosya seçin",
   "toolbar.button.file.upload": "Bir dosya yükleyin",
   "toolbar.button.link": "Ba\u011flant\u0131",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.strike": "Üstü çizili",
   "toolbar.button.ol": "Sıralı liste",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "Altı çizili",
   "toolbar.button.ul": "Madde listesi",
 
   "translation.author": "Kirby Takımı",
@@ -523,5 +523,5 @@
 
   "welcome": "Hoşgeldiniz",
   "year": "Yıl",
-  "yes": "yes"
+  "yes": "evet"
 }
