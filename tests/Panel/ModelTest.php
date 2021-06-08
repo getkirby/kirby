@@ -247,6 +247,24 @@ class ModelTest extends TestCase
     }
 
     /**
+     * @covers ::iconDefaults
+     */
+    public function testIconDefaults()
+    {
+        $panel    = $this->panel();
+        $defaults = $panel->iconDefaults();
+
+        $expected = [
+            'type'  => 'page',
+            'ratio' => null,
+            'back'  => 'pattern',
+            'color' => '#c5c9c6',
+        ];
+
+        $this->assertSame($expected, $defaults);
+    }
+
+    /**
      * @covers ::image
      * @covers ::imageSource
      */

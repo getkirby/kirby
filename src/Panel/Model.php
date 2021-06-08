@@ -95,14 +95,22 @@ abstract class Model
      */
     public function icon(array $params = null): array
     {
-        $defaults = [
+        return array_merge($this->iconDefaults(), $params ?? []);
+    }
+
+    /**
+     * Default settings for icons
+     *
+     * @return array
+     */
+    public function iconDefaults(): array
+    {
+        return [
             'type'  => 'page',
             'ratio' => null,
             'back'  => 'pattern',
             'color' => '#c5c9c6',
         ];
-
-        return array_merge($defaults, $params ?? []);
     }
 
     /**
@@ -115,17 +123,14 @@ abstract class Model
      */
     public function image($settings = null): ?array
     {
-        $defaults = [
-            'ratio' => '3/2',
-            'back'  => 'pattern',
-            'cover' => false
-        ];
+        $defaults = $this->imageDefaults();
 
         // switch the image off
         if ($settings === false) {
             return null;
         }
 
+        // convert string settings to proper array
         if (is_string($settings) === true) {
             // use defined icon in blueprint
             if ($settings === 'icon') {
@@ -136,6 +141,9 @@ abstract class Model
                 'query' => $settings
             ];
         }
+
+        // merge defaults with given settings
+        $settings = array_merge($defaults, (array)$settings);
 
         if ($image = $this->imageSource($settings['query'] ?? null)) {
 
@@ -183,9 +191,24 @@ abstract class Model
                 }
             }
         }
+
         unset($settings['query']);
 
-        return array_merge($defaults, (array)$settings);
+        return $settings;
+    }
+
+    /**
+     * Default settings for images
+     *
+     * @return array
+     */
+    public function imageDefaults(): array
+    {
+        return [
+            'ratio' => '3/2',
+            'back'  => 'pattern',
+            'cover' => false
+        ];
     }
 
     /**
