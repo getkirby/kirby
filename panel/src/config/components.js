@@ -71,7 +71,6 @@ import FormDrawer from "@/components/Drawers/FormDrawer.vue";
 Vue.component("k-drawer", Drawer);
 Vue.component("k-form-drawer", FormDrawer);
 
-
 /* Form */
 import Autocomplete from "@/components/Forms/Autocomplete.vue";
 import Calendar from "@/components/Forms/Calendar.vue";
@@ -307,6 +306,7 @@ Vue.component("k-text", Text);
 Vue.component("k-user-info", UserInfo);
 
 /* Navigation */
+import Breadcrumb from "@/components/Navigation/Breadcrumb.vue";
 import Button from "@/components/Navigation/Button.vue";
 import ButtonDisabled from "@/components/Navigation/ButtonDisabled.vue";
 import ButtonGroup from "@/components/Navigation/ButtonGroup.vue";
@@ -323,6 +323,7 @@ import Search from "@/components/Navigation/Search.vue";
 import Tag from "@/components/Navigation/Tag.vue";
 import Topbar from "@/components/Navigation/Topbar.vue";
 
+Vue.component("k-breadcrumb", Breadcrumb);
 Vue.component("k-button", Button);
 Vue.component("k-button-disabled", ButtonDisabled);
 Vue.component("k-button-group", ButtonGroup);
