@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Kirby\Cms\Page;
 use PHPUnit\Framework\TestCase;
 
 class CanBeCounted implements \Countable
@@ -388,6 +389,20 @@ class VTest extends TestCase
         $this->assertFalse(V::size(new HasCount(), 8));
         $this->assertFalse(V::size(5, 7, '>'));
         $this->assertFalse(V::size(7, 5, '<'));
+
+        $page = new Page(['slug' => 'a', 'content' => ['foo' => 2]]);
+        $this->assertTrue(V::size($page->foo(), 2));
+        $this->assertTrue(V::size($page->foo(), 3, '<'));
+        $this->assertTrue(V::size($page->foo(), 1, '>'));
+        $this->assertFalse(V::size($page->foo(), 1, '<'));
+        $this->assertFalse(V::size($page->foo(), 3, '>'));
+
+        $page = new Page(['slug' => 'a', 'content' => ['foo' => 'hello']]);
+        $this->assertTrue(V::size($page->foo(), 5));
+        $this->assertTrue(V::size($page->foo(), 6, '<'));
+        $this->assertTrue(V::size($page->foo(), 4, '>'));
+        $this->assertFalse(V::size($page->foo(), 4, '<'));
+        $this->assertFalse(V::size($page->foo(), 6, '>'));
     }
 
     public function testSizeInvalid()
