@@ -8,7 +8,7 @@
     "core"
   ],
   "homepage": "https://getkirby.com",
-  "version": "3.5.5",
+  "version": "3.5.6",
   "license": "proprietary",
   "authors": [
     {
@@ -64,7 +64,7 @@
       "@analyze",
       "@test"
     ],
-    "fix": "php-cs-fixer fix --config .php_cs",
+    "fix": "php-cs-fixer fix",
     "test": "phpunit --stderr --coverage-html=tests/coverage",
     "zip": "composer archive --format=zip --file=dist"
   },

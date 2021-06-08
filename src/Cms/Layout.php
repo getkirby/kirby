@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 /**
  * Represents a single Layout with
  * multiple columns
+ * @since 3.5.0
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -77,6 +78,7 @@ class Layout extends Item
 
     /**
      * Checks if the layout is empty
+     * @since 3.5.2
      *
      * @return bool
      */
@@ -92,6 +94,7 @@ class Layout extends Item
 
     /**
      * Checks if the layout is not empty
+     * @since 3.5.2
      *
      * @return bool
      */

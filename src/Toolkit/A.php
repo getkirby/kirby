@@ -32,6 +32,27 @@ class A
     }
 
     /**
+     * Recursively loops through the array and
+     * resolves any item defined as `Closure`,
+     * applying the passed parameters
+     * @since 3.5.6
+     *
+     * @param array $array
+     * @param mixed ...$args Parameters to pass to the closures
+     * @return array
+     */
+    public static function apply(array $array, ...$args): array
+    {
+        array_walk_recursive($array, function (&$item) use ($args) {
+            if (is_a($item, 'Closure')) {
+                $item = $item(...$args);
+            }
+        });
+
+        return $array;
+    }
+
+    /**
      * Gets an element of an array by key
      *
      * <code>

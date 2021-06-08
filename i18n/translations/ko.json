@@ -372,9 +372,11 @@
   "more": "더 보기",
   "name": "이름",
   "next": "다음",
+  "no": "no",
   "off": "끔",
   "on": "켬",
   "open": "열기",
+  "open.newWindow": "Open in new window",
   "options": "옵션",
   "options.none": "옵션이 없습니다.",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "파일 선택",
   "toolbar.button.file.upload": "파일 업로드",
   "toolbar.button.link": "링크",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "숫자 목록",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "기호 목록",
 
   "translation.author": "Kirby 팀",
@@ -518,5 +522,6 @@
   "view.users": "\uc0ac\uc6a9\uc790",
 
   "welcome": "반갑습니다.",
-  "year": "년"
+  "year": "년",
+  "yes": "yes"
 }

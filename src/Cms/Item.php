@@ -10,6 +10,7 @@ namespace Kirby\Cms;
  * - a Block in a collection of Blocks
  * - a Layout in a collection of Layouts
  * - a Column in a collection of Columns
+ * @since 3.5.0
  *
  * @package   Kirby Cms
  * @author    Bastian Allgeier <bastian@getkirby.com>

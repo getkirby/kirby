@@ -372,9 +372,11 @@
   "more": "Màs",
   "name": "Nombre",
   "next": "Siguiente",
+  "no": "no",
   "off": "Apagado",
   "on": "Encendido",
   "open": "Abrir",
+  "open.newWindow": "Open in new window",
   "options": "Opciones",
   "options.none": "No options",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Selecciona un archivo",
   "toolbar.button.file.upload": "Sube un archivo",
   "toolbar.button.link": "Enlace",
+  "toolbar.button.strike": "Strike-through",
   "toolbar.button.ol": "Lista en orden",
+  "toolbar.button.underline": "Underline",
   "toolbar.button.ul": "Lista de viñetas",
 
   "translation.author": "Equipo Kirby",
@@ -518,5 +522,6 @@
   "view.users": "Usuarios",
 
   "welcome": "Bienvenido",
-  "year": "Año"
+  "year": "Año",
+  "yes": "yes"
 }

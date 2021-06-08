@@ -9,20 +9,13 @@ use PHPUnit\Framework\TestCase;
  */
 class LocaleTest extends TestCase
 {
-    protected $locale = [];
+    protected $locales = [];
     protected $localeSuffix;
 
     public function setUp(): void
     {
-        $constants = [
-            LC_ALL, LC_COLLATE, LC_CTYPE, LC_MONETARY,
-            LC_NUMERIC, LC_TIME, LC_MESSAGES
-        ];
-
-        // make a backup of the current locale
-        foreach ($constants as $constant) {
-            $this->locale[$constant] = setlocale($constant, '0');
-        }
+        // make a backup of the current locales
+        $this->locales = Locale::get();
 
         // test which locale suffix the system supports
         setlocale(LC_ALL, 'de_DE.' . $this->localeSuffix);
@@ -38,12 +31,12 @@ class LocaleTest extends TestCase
 
     public function tearDown(): void
     {
-        Locale::set($this->locale);
-        $this->locale = [];
+        Locale::set($this->locales);
     }
 
     /**
      * @covers ::export
+     * @covers ::supportedConstants
      */
     public function testExport()
     {
@@ -72,7 +65,65 @@ class LocaleTest extends TestCase
     }
 
     /**
+     * @covers ::get
+     * @covers ::normalizeConstant
+     * @covers ::supportedConstants
+     */
+    public function testGet()
+    {
+        // default case (all locales are set to the same value)
+        $this->assertSame([LC_ALL => 'C'], Locale::get());
+        $this->assertSame([LC_ALL => 'C'], Locale::get(LC_ALL));
+        $this->assertSame([LC_ALL => 'C'], Locale::get('LC_ALL'));
+        $this->assertSame('C', Locale::get(LC_NUMERIC));
+        $this->assertSame('C', Locale::get('LC_NUMERIC'));
+
+        // different locale values
+        Locale::set([LC_NUMERIC => 'de_DE.' . $this->localeSuffix]);
+        $this->assertSame($expected = [
+            LC_COLLATE  => 'C',
+            LC_CTYPE    => 'C',
+            LC_MONETARY => 'C',
+            LC_NUMERIC  => 'de_DE.' . $this->localeSuffix,
+            LC_TIME     => 'C',
+            LC_MESSAGES => 'C'
+        ], Locale::get());
+        $this->assertSame($expected, Locale::get(LC_ALL));
+        $this->assertSame($expected, Locale::get('LC_ALL'));
+        $this->assertSame('de_DE.' . $this->localeSuffix, Locale::get(LC_NUMERIC));
+        $this->assertSame('C', Locale::get(LC_CTYPE));
+        $this->assertSame('C', Locale::get('LC_CTYPE'));
+    }
+
+    /**
+     * @covers ::get
+     * @covers ::normalizeConstant
+     * @covers ::supportedConstants
+     */
+    public function testGetInvalid1()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('Invalid locale category "KIRBY_AWESOME_LOCALE"');
+
+        Locale::get('KIRBY_AWESOME_LOCALE');
+    }
+
+    /**
+     * @covers ::get
+     * @covers ::normalizeConstant
+     * @covers ::supportedConstants
+     */
+    public function testGetInvalid2()
+    {
+        $this->expectException('Kirby\Exception\Exception');
+        $this->expectExceptionMessage('Could not determine locale for category "987654321"');
+
+        Locale::get(987654321);
+    }
+
+    /**
      * @covers ::normalize
+     * @covers ::normalizeConstant
      */
     public function testNormalize()
     {

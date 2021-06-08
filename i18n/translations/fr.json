@@ -372,9 +372,11 @@
   "more": "Plus",
   "name": "Nom",
   "next": "Suivant",
+  "no": "non",
   "off": "off",
   "on": "on",
   "open": "Ouvrir",
+  "open.newWindow": "Ouvrir dans une nouvelle fenêtre",
   "options": "Options",
   "options.none": "Pas d’options",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Sélectionner un fichier",
   "toolbar.button.file.upload": "Transférer un fichier",
   "toolbar.button.link": "Lien",
+  "toolbar.button.strike": "Barré",
   "toolbar.button.ol": "Liste ordonnée",
+  "toolbar.button.underline": "Souligné",
   "toolbar.button.ul": "Liste non-ordonnée",
 
   "translation.author": "Kirby Team",
@@ -518,5 +522,6 @@
   "view.users": "Utilisateurs",
 
   "welcome": "Bienvenue",
-  "year": "Année"
+  "year": "Année",
+  "yes": "oui"
 }

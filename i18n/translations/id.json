@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "Anda tidak diizinkan menduplikasi \"{slug}\"",
   "error.page.notFound": "Halaman \"{slug}\" tidak dapat ditemukan",
   "error.page.num.invalid": "Masukkan nomor urut yang valid. Nomor tidak boleh negatif.",
-  "error.page.slug.invalid": "Please enter a valid URL appendix",
+  "error.page.slug.invalid": "Masukkan akhiran URL yang valid",
   "error.page.slug.maxlength": "Panjang slug harus kurang dari \"{length}\" karakter",
   "error.page.sort.permission": "Halaman \"{slug}\" tidak dapat diurutkan",
   "error.page.status.invalid": "Atur status halaman yang valid",
@@ -163,7 +163,7 @@
   "error.user.password.invalid": "Masukkan sandi yang valid. Sandi setidaknya mengandung 8 karakter.",
   "error.user.password.notSame": "Sandi tidak cocok",
   "error.user.password.undefined": "Pengguna tidak memiliki sandi",
-  "error.user.password.wrong": "Wrong password",
+  "error.user.password.wrong": "Kata sandi salah",
   "error.user.role.invalid": "Masukkan peran yang valid",
   "error.user.update.permission": "Anda tidak diizinkan memperbaharui pengguna \"{name}\"",
 
@@ -372,9 +372,11 @@
   "more": "Lebih lanjut",
   "name": "Nama",
   "next": "Selanjutnya",
+  "no": "tidak",
   "off": "mati",
   "on": "hidup",
   "open": "Buka",
+  "open.newWindow": "Buka di jendela baru",
   "options": "Opsi",
   "options.none": "Tidak ada opsi",
 
@@ -466,7 +468,9 @@
   "toolbar.button.file.select": "Pilih berkas",
   "toolbar.button.file.upload": "Unggah berkas",
   "toolbar.button.link": "Tautan",
+  "toolbar.button.strike": "Coret",
   "toolbar.button.ol": "Daftar berurut",
+  "toolbar.button.underline": "Garis bawah",
   "toolbar.button.ul": "Daftar tidak berurut",
 
   "translation.author": "Tim Kirby",
@@ -518,5 +522,6 @@
   "view.users": "Pengguna",
 
   "welcome": "Selamat datang",
-  "year": "Tahun"
+  "year": "Tahun",
+  "yes": "ya"
 }
