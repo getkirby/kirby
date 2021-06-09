@@ -498,7 +498,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "User",
-  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{role}.yml</strong>",
+  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/{blueprint}.yml</strong>",
   "user.changeEmail": "Change email",
   "user.changeLanguage": "Change language",
   "user.changeName": "Rename this user",
