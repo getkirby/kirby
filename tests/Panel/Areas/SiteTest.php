@@ -39,7 +39,7 @@ class SiteTest extends AreaTestCase
         $this->assertSame('Page', $props['blueprint']);
         $this->assertSame(['state' => null], $props['lock']);
 
-        $this->assertSame([], $props['tab']);
+        $this->assertArrayNotHasKey('tab', $props);
         $this->assertSame([], $props['tabs']);
 
         // model
@@ -92,7 +92,7 @@ class SiteTest extends AreaTestCase
         $this->assertSame('File', $props['blueprint']);
         $this->assertSame(['state' => null], $props['lock']);
 
-        $this->assertSame([], $props['tab']);
+        $this->assertArrayNotHasKey('tab', $props);
         $this->assertSame([], $props['tabs']);
 
         // model
@@ -155,7 +155,7 @@ class SiteTest extends AreaTestCase
         $this->assertSame('File', $props['blueprint']);
         $this->assertSame(['state' => null], $props['lock']);
 
-        $this->assertSame([], $props['tab']);
+        $this->assertArrayNotHasKey('tab', $props);
         $this->assertSame([], $props['tabs']);
 
         // model

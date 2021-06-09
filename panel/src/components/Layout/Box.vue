@@ -11,7 +11,7 @@
 <script>
 /**
  * The box component is a multi-purpose box with text. You can use it as a foundation for empty state displays or anything else that needs to be displayed in a box. It comes with several pre-defined styles …
- * 
+ *
  * @example <k-box text="This is a nice box" theme="positive" />
  */
 export default {
@@ -84,7 +84,7 @@ export default {
   padding: .5rem 1.5rem;
 }
 .k-box[data-theme="info"] {
-  background: var(--color-focus-300);
+  background: var(--color-blue-200);
   border: 0;
   border-left: 2px solid var(--color-focus-light);
   padding: .5rem 1.5rem;
