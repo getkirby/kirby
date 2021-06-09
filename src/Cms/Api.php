@@ -3,6 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Api\Api as BaseApi;
+use Kirby\Exception\NotFoundException;
 use Kirby\Form\Form;
 
 /**
@@ -219,7 +220,15 @@ class Api extends BaseApi
      */
     public function user(string $id = null)
     {
-        return Find::user($id);
+        try {
+            return Find::user($id);
+        } catch (NotFoundException $e) {
+            if ($id === null) {
+                return null;
+            }
+
+            throw $e;
+        }
     }
 
     /**

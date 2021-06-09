@@ -149,7 +149,13 @@ class Find
 
         // get the authenticated user
         if ($id === null) {
-            return $kirby->user(null, $kirby->option('api.allowImpersonation', false));
+            if ($user = $kirby->user(null, $kirby->option('api.allowImpersonation', false))) {
+                return $user;
+            }
+
+            throw new NotFoundException([
+                'key' => 'user.undefined'
+            ]);
         }
 
         // get a specific user by id

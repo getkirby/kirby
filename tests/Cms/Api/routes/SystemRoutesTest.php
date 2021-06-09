@@ -14,7 +14,7 @@ class SystemRoutesTest extends TestCase
         $this->app = new App([
             'roots' => [
                 'index' => $fixtures = __DIR__ . '/fixtures/SystemRoutesTest'
-            ],
+            ]
         ]);
 
         Dir::remove($fixtures);
