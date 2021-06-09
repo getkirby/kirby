@@ -461,7 +461,7 @@ class Panel
      */
     public static function go(?string $path = null): void
     {
-        $url = option('panel.slug', 'panel') . '/' . trim($path, '/');
+        $url = url(option('panel.slug', 'panel') . '/' . trim($path, '/'));
         throw new Redirect($url);
     }
 
