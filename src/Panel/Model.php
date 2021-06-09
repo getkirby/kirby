@@ -329,7 +329,11 @@ abstract class Model
         $tabs      = $blueprint->tabs();
 
         if (!$tab = $blueprint->tab(get('tab'))) {
-            $tab = $tabs[0] ?? [];
+            $tab = $tabs[0] ?? [
+                // A missing blueprint should still
+                // be returned as a valid object
+                'columns' => []
+            ];
         }
 
         return [
