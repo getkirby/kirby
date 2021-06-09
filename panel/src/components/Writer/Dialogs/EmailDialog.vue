@@ -24,12 +24,12 @@ export default {
     fields() {
       return {
         href: {
-          label: "Email",
+          label: this.$t("email"),
           type: "email",
           icon: "email"
         },
         title: {
-          label: "Title",
+          label: this.$t("title"),
           type: "text",
           icon: "title"
         },
