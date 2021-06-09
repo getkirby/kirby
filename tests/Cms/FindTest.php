@@ -260,6 +260,16 @@ class FindTest extends TestCase
     }
 
     /**
+     * @covers ::parent
+     */
+    public function testParentUndefined()
+    {
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The user cannot be found');
+        $this->assertNull(Find::parent('users/does-not-exist'));
+    }
+
+    /**
      * @covers ::site
      */
     public function testSite()
