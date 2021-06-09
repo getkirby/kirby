@@ -1263,7 +1263,9 @@ class Page extends ModelWithContent
                 $languageCode = $this->kirby()->languageCode();
             }
 
-            if ($translation = $this->translations()->find($languageCode)) {
+            $defaultLanguageCode = $this->kirby()->defaultLanguage()->code();
+
+            if ($languageCode !== $defaultLanguageCode && $translation = $this->translations()->find($languageCode)) {
                 return $translation->slug() ?? $this->slug;
             }
         }

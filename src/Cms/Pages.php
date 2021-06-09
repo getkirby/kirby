@@ -224,14 +224,8 @@ class Pages extends Collection
             return $page;
         }
 
-        $multiLang = App::instance()->multilang();
-
-        if ($multiLang === true && $page = $this->findBy('slug', $id)) {
-            return $page;
-        }
-
         $start = is_a($this->parent, 'Kirby\Cms\Page') === true ? $this->parent->id() : '';
-        $page  = $this->findByIdRecursive($id, $start, $multiLang);
+        $page  = $this->findByIdRecursive($id, $start, App::instance()->multilang());
 
         return $page;
     }
@@ -255,8 +249,14 @@ class Pages extends Collection
             $query = ltrim($query . '/' . $key, '/');
             $item  = $collection->get($query) ?? null;
 
-            if ($item === null && $multiLang === true) {
-                $item = $collection->findBy('slug', $key);
+            if ($item === null && $multiLang === true && !App::instance()->language()->isDefault()) {
+                if (count($path) > 1 || $collection->parent()) {
+                    // either the desired path is definitely not a slug, or collection is the children of another collection
+                    $item = $collection->findBy('slug', $key);
+                } else {
+                    // desired path _could_ be a slug or a "top level" uri
+                    $item = $collection->findBy('uri', $key);
+                }
             }
 
             if ($item === null) {
