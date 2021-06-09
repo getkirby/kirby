@@ -24,6 +24,11 @@
         @close="editor.focus()"
         @submit="editor.command('toggleLink', $event)"
       />
+      <k-writer-email-dialog
+        ref="emailDialog"
+        @close="editor.focus()"
+        @submit="editor.command('toggleEmail', $event)"
+      />
     </template>
   </div>
 </template>
@@ -33,12 +38,14 @@ import Editor from "./Editor";
 
 // Dialogs
 import LinkDialog from "./Dialogs/LinkDialog.vue";
+import EmailDialog from "./Dialogs/EmailDialog.vue";
 
 // Marks
 import Code from "./Marks/Code";
 import Bold from "./Marks/Bold";
 import Italic from "./Marks/Italic";
 import Link from "./Marks/Link";
+import Email from "./Marks/Email";
 import Strike from "./Marks/Strike";
 import Underline from "./Marks/Underline";
 
@@ -102,6 +109,7 @@ export const props = {
 
 export default {
   components: {
+    "k-writer-email-dialog": EmailDialog,
     "k-writer-link-dialog": LinkDialog,
     "k-writer-toolbar": ToolbarComponent,
   },
@@ -131,6 +139,9 @@ export default {
       events: {
         link: () => {
           this.$refs.linkDialog.open(this.editor.getMarkAttrs("link"));
+        },
+        email: () => {
+          this.$refs.emailDialog.open(this.editor.getMarkAttrs("email"));
         },
         toolbar: (toolbar) => {
           this.toolbar = toolbar;
@@ -198,6 +209,7 @@ export default {
         underline: new Underline,
         code: new Code,
         link: new Link,
+        email: new Email,
       }, this.marks);
     },
     createNodes() {
