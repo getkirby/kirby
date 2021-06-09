@@ -65,11 +65,6 @@ import Toolbar from "./Extensions/Toolbar.js";
 import ToolbarComponent from "./Toolbar.vue";
 
 export const props = {
-  components: {
-    "k-writer-link-dialog": LinkDialog,
-    "k-writer-email-dialog": EmailDialog,
-    "k-writer-toolbar": ToolbarComponent,
-  },
   props: {
     breaks: Boolean,
     code: Boolean,
@@ -114,6 +109,7 @@ export const props = {
 
 export default {
   components: {
+    "k-writer-email-dialog": EmailDialog,
     "k-writer-link-dialog": LinkDialog,
     "k-writer-toolbar": ToolbarComponent,
   },
