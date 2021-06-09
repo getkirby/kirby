@@ -61,7 +61,8 @@ export default {
   padding: 6px 16px;
 }
 .k-dropdown-item:focus{
-  /* TODO: @include focus-ring; */
+  outline: none;
+  box-shadow: var(--shadow-outline);
 }
 .k-dropdown-item .k-button-figure {
   text-align: center;
