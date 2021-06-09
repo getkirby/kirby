@@ -4,7 +4,6 @@ namespace Kirby\Cms;
 
 use Kirby\Api\Api as BaseApi;
 use Kirby\Form\Form;
-use Kirby\Panel\Panel;
 
 /**
  * Api
@@ -79,7 +78,7 @@ class Api extends BaseApi
      */
     public function file(string $path = null, string $filename)
     {
-        return Panel::file($path, $filename);
+        return Find::file($path, $filename);
     }
 
     /**
@@ -92,7 +91,7 @@ class Api extends BaseApi
      */
     public function parent(string $path)
     {
-        return Panel::parent($path);
+        return Find::parent($path);
     }
 
     /**
@@ -124,7 +123,7 @@ class Api extends BaseApi
      */
     public function page(string $id)
     {
-        return Panel::page($id);
+        return Find::page($id);
     }
 
     /**
@@ -220,7 +219,7 @@ class Api extends BaseApi
      */
     public function user(string $id = null)
     {
-        return Panel::user($id);
+        return Find::user($id);
     }
 
     /**

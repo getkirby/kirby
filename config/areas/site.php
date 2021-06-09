@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Panel\Panel;
+use Kirby\Cms\Find;
 
 return function ($kirby) {
     return [
@@ -13,26 +13,26 @@ return function ($kirby) {
         'routes' => [
             [
                 'pattern' => 'pages/(:any)',
-                'action'  => function (string $path) use ($kirby) {
-                    return Panel::page($path)->panel()->route();
+                'action'  => function (string $path) {
+                    return Find::page($path)->panel()->route();
                 }
             ],
             [
                 'pattern' => 'pages/(:any)/files/(:any)',
-                'action'  => function (string $id, string $filename) use ($kirby) {
-                    return Panel::file('pages/' . $id, $filename)->panel()->route();
+                'action'  => function (string $id, string $filename) {
+                    return Find::file('pages/' . $id, $filename)->panel()->route();
                 }
             ],
             [
                 'pattern' => 'site',
-                'action'  => function () use ($kirby) {
-                    return $kirby->site()->panel()->route();
+                'action'  => function () {
+                    return Find::site()->panel()->route();
                 }
             ],
             [
                 'pattern' => 'site/files/(:any)',
-                'action'  => function (string $filename) use ($kirby) {
-                    return Panel::file('site', $filename)->panel()->route();
+                'action'  => function (string $filename) {
+                    return Find::file('site', $filename)->panel()->route();
                 }
             ],
 
