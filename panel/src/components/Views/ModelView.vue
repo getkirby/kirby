@@ -22,7 +22,9 @@ export default {
     tab: {
       type: Object,
       default() {
-        return {}
+        return {
+          columns: []
+        };
       }
     },
     tabs: {

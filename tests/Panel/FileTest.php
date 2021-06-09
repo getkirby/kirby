@@ -720,7 +720,7 @@ class FileTest extends TestCase
         $this->assertArrayHasKey('blueprint', $props);
         $this->assertArrayHasKey('lock', $props);
         $this->assertArrayHasKey('permissions', $props);
-        $this->assertArrayHasKey('tab', $props);
+        $this->assertArrayNotHasKey('tab', $props);
         $this->assertArrayHasKey('tabs', $props);
     }
 

@@ -327,22 +327,23 @@ abstract class Model
     {
         $blueprint = $this->model->blueprint();
         $tabs      = $blueprint->tabs();
+        $tab       = $blueprint->tab(get('tab')) ?? $tabs[0] ?? null;
 
-        if (!$tab = $blueprint->tab(get('tab'))) {
-            $tab = $tabs[0] ?? [
-                // A missing blueprint should still
-                // be returned as a valid object
-                'columns' => []
-            ];
-        }
-
-        return [
+        $props = [
             'blueprint'   => $blueprint->name(),
             'lock'        => $this->lock(),
             'permissions' => $this->model->permissions()->toArray(),
-            'tab'         => $tab,
             'tabs'        => $tabs,
         ];
+
+        // only send the tab if it exists
+        // this will let the vue component define
+        // a proper default value
+        if ($tab) {
+            $props['tab'] = $tab;
+        }
+
+        return $props;
     }
 
     /**
