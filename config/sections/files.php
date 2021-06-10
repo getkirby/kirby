@@ -122,7 +122,7 @@ return [
                     'extension' => $file->extension(),
                     'filename' => $file->filename(),
                     'id'       => $file->id(),
-                    'image'    => $panel->image($this->image),
+                    'image'    => $panel->image($this->image, $this->layout),
                     'info'     => $file->toString($this->info ?? false),
                     'link'     => $panel->url(true),
                     'mime'     => $file->mime(),

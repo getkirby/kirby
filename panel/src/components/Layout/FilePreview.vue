@@ -9,15 +9,15 @@
           target="_blank"
         >
           <k-image
-            v-if="file.panelImage && file.panelImage.cards && file.panelImage.cards.url"
-            :src="file.panelImage.cards.url"
-            :srcset="file.panelImage.cards.srcset"
+            v-if="file.panelImage && file.panelImage.src"
+            :src="file.panelImage.src"
+            :srcset="file.panelImage.srcset"
             back="none"
           />
           <k-icon
-            v-else-if="file.panelIcon"
-            :type="file.panelIcon.type"
-            :style="{ color: file.panelIcon.color }"
+            v-else-if="file.panelImage"
+            :type="file.panelImage.icon"
+            :style="{ color: file.panelImage.color }"
             class="k-file-preview-icon"
           />
           <span v-else class="k-file-preview-placeholder" />

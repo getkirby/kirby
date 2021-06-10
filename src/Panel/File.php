@@ -261,7 +261,7 @@ class File extends Model
                 'mime'       => $file->mime(),
                 'niceSize'   => $file->niceSize(),
                 'parent'     => $file->parent()->panel()->path(),
-                'panelImage' => $this->image(),
+                'panelImage' => $this->image([], 'cards'),
                 'previewUrl' => $file->previewUrl(),
                 'url'        => $file->url(),
                 'template'   => $file->template(),
