@@ -93,7 +93,7 @@ abstract class Model
      * @param string|array|false|null $settings
      * @return array|null
      */
-    public function image($settings = [], string $layout = 'cards'): ?array
+    public function image($settings = [], string $layout = 'list'): ?array
     {
         // completely switched off
         if ($settings === false) {
