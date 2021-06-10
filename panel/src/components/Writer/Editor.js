@@ -372,7 +372,10 @@ export default class Editor extends Emitter {
 
   isEmpty() {
     if (this.state) {
-      return this.state.doc.textContent.length === 0;
+      // when a new list item or heading is created, textContent length returns 0
+      // checking active nodes to prevent this
+      // empty input means just the paragraph node and its length 0
+      return this.state.doc.textContent.length === 0 && this.activeNodes === ["paragraph"];
     }
   }
 
