@@ -1,5 +1,10 @@
 <template>
-  <div v-if="isOpen" :data-align="align" class="k-dropdown-content">
+  <div
+    v-if="isOpen"
+    :data-align="align"
+    :data-theme="theme"
+    class="k-dropdown-content"
+  >
     <!-- @slot Content of the dropdown -->
     <slot>
       <template v-for="(option, index) in items">
@@ -27,7 +32,6 @@ let OpenDropdown = null;
  */
 export default {
   props: {
-    options: [Array, Function],
     /**
      * Aligment of the dropdown items
      * @values left, right
@@ -35,6 +39,15 @@ export default {
     align: {
       type: String,
       default: "left"
+    },
+    options: [Array, Function],
+    /**
+     * Visual theme of the dropdown
+     * @values dark, light
+     */
+    theme: {
+      type: String,
+      default: "dark"
     }
   },
   data() {
@@ -220,18 +233,12 @@ export default {
   margin-bottom: .5rem;
 }
 .k-dropdown-content hr {
-  position: relative;
-  padding: .5rem 0;
-  border: 0;
+  border-color: currentColor;
+  opacity: 0.2;
+  margin: .5rem 1rem;
 }
-.k-dropdown-content hr::after {
-  position: absolute;
-  top: .5rem;
-  left: 1rem;
-  right: 1rem;
-  content: "";
-  height: 1px;
-  background: currentColor;
-  opacity: .2;
+.k-dropdown-content[data-theme="light"] {
+  background: var(--color-white);
+  color: var(--color-black);
 }
 </style>
