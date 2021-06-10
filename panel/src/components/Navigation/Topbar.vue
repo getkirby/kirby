@@ -15,6 +15,7 @@
           <k-dropdown-content
             ref="menu"
             :options="menu"
+            theme="light"
             class="k-topbar-menu"
             @action="onMenu"
           />
@@ -197,13 +198,6 @@ export default {
 }
 .k-topbar-menu-button .k-button-text {
   opacity: 1;
-}
-.k-topbar .k-dropdown-content {
-  color: var(--color-gray-900);
-  background: var(--color-white);
-}
-.k-topbar .k-dropdown-content hr:after {
-  opacity: .1;
 }
 .k-topbar-menu .k-link[aria-current] {
   color: var(--color-focus);

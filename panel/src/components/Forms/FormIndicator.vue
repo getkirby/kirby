@@ -4,7 +4,11 @@
       <k-icon type="edit" class="k-form-indicator-icon" />
     </k-button>
 
-    <k-dropdown-content ref="list" align="right">
+    <k-dropdown-content
+      ref="list"
+      align="right"
+      theme="light"
+    >
       <p class="k-form-indicator-info">
         {{ $t("lock.unsaved") }}:
       </p>
