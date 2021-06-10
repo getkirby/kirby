@@ -1,15 +1,18 @@
 <template>
   <!-- Single option = button -->
   <k-button
-    v-if="single && options[0]"
-    :icon="options[0].icon"
-    :tooltip="options[0].text"
-    :disabled="options[0].disabled"
+    v-if="hasSingleOption"
+    v-bind="options[0]"
+    :icon="options[0].icon || icon"
+    :tooltip="options[0].tooltip || options[0].text"
     class="k-options-dropdown-toggle"
     @click="onOption(options[0].option || options[0].click, options[0], 0)"
   >
-    <template v-if="label">
-      {{ label }}
+    <template v-if="text === true">
+      {{ options[0].text }}
+    </template>
+    <template v-else-if="text !== false">
+      {{ text }}
     </template>
   </k-button>
 
@@ -19,7 +22,7 @@
     class="k-options-dropdown"
   >
     <k-button
-      :icon="icon || 'dots'"
+      :icon="icon"
       :tooltip="$t('options')"
       class="k-options-dropdown-toggle"
       @click="$refs.options.toggle()"
@@ -33,7 +36,7 @@
       :align="align"
       :options="options"
       class="k-options-dropdown-content"
-      @option="onOption"
+      @action="onAction"
     />
   </k-dropdown>
 </template>
@@ -41,10 +44,17 @@
 <script>
 export default {
   props: {
+    /**
+     * Aligment of the dropdown items
+     * @values left, right
+     */
     align: {
       type: String,
       default: "right"
     },
+    /**
+     * Icon for the dropdown button
+     */
     icon: {
       type: String,
       default: "dots",
@@ -55,26 +65,34 @@ export default {
         return []
       }
     },
+    /**
+     * Whether or which text to show
+     * for the dropdown button
+     */
     text: {
       type: [Boolean, String],
-      default: false
+      default: true
     },
+    /**
+     * Visual theme of the dropdown
+     * @values dark, light
+     */
+    theme: {
+      type: String,
+      default: "dark"
+    }
   },
   computed: {
-    label() {
-      if (this.text !== true) {
-        return this.text;
-      }
-
-      return this.options[0].text;
-    },
-    single() {
+    hasSingleOption() {
       return Array.isArray(this.options) && this.options.length === 1;
     }
   },
   methods: {
-    onOption(option, item, itemIndex) {
-      this.$emit("option", option, item, itemIndex);
+    onAction(action, item, itemIndex) {
+      this.$emit("action", action, item, itemIndex);
+    },
+    toggle() {
+      this.$refs.options.toggle();
     }
   }
 }
