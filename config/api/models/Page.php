@@ -59,7 +59,11 @@ return [
             return $page->panel()->options(['preview']);
         },
         'panelIcon' => function (Page $page) {
-            return $page->panel()->icon();
+            // TODO: remove in 3.7.0
+            // @codeCoverageIgnoreStart
+            deprecated('The API field page.panelIcon has been deprecated and will be removed in 3.7.0. Use page.panelImage instead');
+            return $file->panel()->image();
+        // @codeCoverageIgnoreEnd
         },
         'panelImage' => function (Page $page) {
             return $page->panel()->image();

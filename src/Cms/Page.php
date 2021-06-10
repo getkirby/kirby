@@ -1485,24 +1485,6 @@ class Page extends ModelWithContent
     }
 
     /**
-     * Returns the panel icon definition
-     * according to the blueprint settings
-     *
-     * @deprecated 3.6.0 Use `->panel()->icon()` instead
-     * @todo Add `deprecated()` helper warning in 3.7.0
-     * @todo Remove in 3.8.0
-     *
-     * @internal
-     * @param array|null $params
-     * @return array
-     * @codeCoverageIgnore
-     */
-    public function panelIcon(array $params = null): array
-    {
-        return $this->panel()->icon($params);
-    }
-
-    /**
      * Returns the escaped Id, which is
      * used in the panel to make routing work properly
      *

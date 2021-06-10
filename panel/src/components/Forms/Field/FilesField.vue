@@ -28,7 +28,6 @@
           :link="link ? file.link : null"
           :info="file.info"
           :image="file.image"
-          :icon="file.icon"
         >
           <template #options>
             <k-button

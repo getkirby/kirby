@@ -60,7 +60,11 @@ return [
             return $file->panel()->options();
         },
         'panelIcon' => function (File $file) {
-            return $file->panel()->icon();
+            // TODO: remove in 3.7.0
+            // @codeCoverageIgnoreStart
+            deprecated('The API field file.panelIcon has been deprecated and will be removed in 3.7.0. Use file.panelImage instead');
+            return $file->panel()->image();
+        // @codeCoverageIgnoreEnd
         },
         'panelImage' => function (File $file) {
             return $file->panel()->image();

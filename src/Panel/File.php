@@ -93,54 +93,67 @@ class File extends Model
         return '(file: ' . $url . ')';
     }
 
-
     /**
-     * Panel icon definition
+     * Returns the Panel icon color
      *
-     * @param array|null $params
-     * @return array
+     * @return string
      */
-    public function icon(array $params = null): array
+    protected function imageColor(): string
     {
-        $colorBlue   = '#81a2be';
-        $colorPurple = '#b294bb';
-        $colorOrange = '#de935f';
-        $colorGreen  = '#a7bd68';
-        $colorAqua   = '#8abeb7';
-        $colorYellow = '#f0c674';
-        $colorRed    = '#d16464';
-        $colorWhite  = '#c5c9c6';
-
         $types = [
-            'image'    => ['color' => $colorOrange, 'type' => 'file-image'],
-            'video'    => ['color' => $colorYellow, 'type' => 'file-video'],
-            'document' => ['color' => $colorRed, 'type' => 'file-document'],
-            'audio'    => ['color' => $colorAqua, 'type' => 'file-audio'],
-            'code'     => ['color' => $colorBlue, 'type' => 'file-code'],
-            'archive'  => ['color' => $colorWhite, 'type' => 'file-zip'],
+            'image'    => 'orange-400',
+            'video'    => 'yellow-400',
+            'document' => 'red-400',
+            'audio'    => 'aqua-400',
+            'code'     => 'blue-400',
+            'archive'  => 'white'
         ];
 
         $extensions = [
-            'indd'  => ['color' => $colorPurple],
-            'xls'   => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
-            'xlsx'  => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
-            'csv'   => ['color' => $colorGreen, 'type' => 'file-spreadsheet'],
-            'docx'  => ['color' => $colorBlue, 'type' => 'file-word'],
-            'doc'   => ['color' => $colorBlue, 'type' => 'file-word'],
-            'rtf'   => ['color' => $colorBlue, 'type' => 'file-word'],
-            'mdown' => ['type' => 'file-text'],
-            'md'    => ['type' => 'file-text']
+            'indd'  => 'purple-400',
+            'xls'   => 'green-400',
+            'xlsx'  => 'green-400',
+            'csv'   => 'green-400',
+            'docx'  => 'blue-400',
+            'doc'   => 'blue-400',
+            'rtf'   => 'blue-400'
         ];
 
-        $definition = array_merge(
-            $types[$this->model->type()] ?? [],
-            $extensions[$this->model->extension()] ?? []
-        );
+        return $extensions[$this->model->extension()] ??
+               $types[$this->model->type()] ??
+               parent::imageColor();
+    }
 
-        $params['type']  = $definition['type']  ?? 'file';
-        $params['color'] = $definition['color'] ?? $colorWhite;
+    /**
+     * Returns the Panel icon type
+     *
+     * @return string
+     */
+    protected function imageIcon(): string
+    {
+        $types = [
+            'image'    => 'file-image',
+            'video'    => 'file-video',
+            'document' => 'file-document',
+            'audio'    => 'file-audio',
+            'code'     => 'file-code',
+            'archive'  => 'file-zip'
+        ];
 
-        return parent::icon($params);
+        $extensions = [
+            'xls'   => 'file-spreadsheet',
+            'xlsx'  => 'file-spreadsheet',
+            'csv'   => 'file-spreadsheet',
+            'docx'  => 'file-word',
+            'doc'   => 'file-word',
+            'rtf'   => 'file-word',
+            'mdown' => 'file-text',
+            'md'    => 'file-text'
+        ];
+
+        return $extensions[$this->model->extension()] ??
+               $types[$this->model->type()] ??
+               parent::imageIcon();
     }
 
     /**

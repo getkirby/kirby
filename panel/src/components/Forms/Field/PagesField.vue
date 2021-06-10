@@ -30,7 +30,6 @@
           :text="page.text"
           :info="page.info"
           :link="link ? page.link : null"
-          :icon="page.icon"
           :image="page.image"
         >
           <template #options>

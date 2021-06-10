@@ -159,8 +159,7 @@ return [
                     'text'        => $item->toString($this->text),
                     'info'        => $item->toString($this->info ?? false),
                     'parent'      => $item->parentId(),
-                    'image'       => $image = $panel->image($this->image),
-                    'icon'        => $panel->icon($image),
+                    'image'       => $panel->image($this->image),
                     'link'        => $panel->url(true),
                     'status'      => $item->status(),
                     'permissions' => [
