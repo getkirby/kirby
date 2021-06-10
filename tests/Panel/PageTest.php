@@ -220,37 +220,12 @@ class PageTest extends TestCase
             ]
         ]);
 
-        $icon = (new Page($page))->icon();
-
-        $this->assertSame([
-            'type'  => 'test',
-            'ratio' => null,
-            'back'  => 'pattern',
-            'color' => '#c5c9c6'
-        ], $icon);
+        $image = (new Page($page))->image();
+        $this->assertSame('test', $image['icon']);
     }
 
     /**
-     * @covers ::icon
-     */
-    public function testIconWithRatio()
-    {
-        $page = new ModelPage([
-            'slug' => 'test'
-        ]);
-
-        $icon = (new Page($page))->icon(['ratio' => '3/2']);
-
-        $this->assertSame([
-            'type'  => 'page',
-            'ratio' => '3/2',
-            'back'  => 'pattern',
-            'color' => '#c5c9c6'
-        ], $icon);
-    }
-
-    /**
-     * @covers ::icon
+     * @covers ::imageIcon
      */
     public function testIconWithEmoji()
     {
@@ -262,11 +237,8 @@ class PageTest extends TestCase
             ]
         ]);
 
-        $icon = (new Page($page))->icon();
-
-        $this->assertSame($emoji, $icon['type']);
-        $this->assertSame('pattern', $icon['back']);
-        $this->assertSame(null, $icon['ratio']);
+        $image = (new Page($page))->image();
+        $this->assertSame($emoji, $image['icon']);
     }
 
     /**
@@ -327,35 +299,27 @@ class PageTest extends TestCase
 
         // cover disabled as default
         $this->assertSame([
-            'ratio' => '3/2',
             'back' => 'pattern',
             'cover' => false,
+            'ratio' => '3/2',
+            'color' => 'light',
+            'icon' => 'page',
             'url' => $mediaUrl . '/test.jpg',
-            'cards' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
-            ],
-            'list' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
-            ]
+            'src' => Model::imagePlaceholder(),
+            'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
         ], $panel->image());
 
         // cover enabled
         $this->assertSame([
-            'ratio' => '3/2',
             'back' => 'pattern',
             'cover' => true,
+            'ratio' => '3/2',
+            'color' => 'light',
+            'icon' => 'page',
             'url' => $mediaUrl . '/test.jpg',
-            'cards' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
-            ],
-            'list' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
-            ]
-        ], $panel->image(['cover' => true]));
+            'src' => Model::imagePlaceholder(),
+            'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
+        ], $panel->image(['cover' => true], 'list'));
     }
 
     /**

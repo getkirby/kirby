@@ -102,8 +102,9 @@ abstract class Model
 
         // skip image thumbnail if option
         // is explicitly set to show the icon
-        if ($settings !== 'icon') {
-
+        if ($settings === 'icon') {
+            $settings = [];
+        } else {
             // convert string settings to proper array
             if (is_string($settings) === true) {
                 $settings = [

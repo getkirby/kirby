@@ -55,7 +55,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @covers ::icon
+     * @covers ::imageIcon
      */
     public function testIconDefault()
     {
@@ -63,14 +63,8 @@ class UserTest extends TestCase
             'email' => 'test@getkirby.com',
         ]);
 
-        $icon = (new User($user))->icon();
-
-        $this->assertSame([
-            'type'  => 'user',
-            'ratio' => null,
-            'back'  => 'pattern',
-            'color' => '#c5c9c6'
-        ], $icon);
+        $image = (new User($user))->image();
+        $this->assertSame('user', $image['icon']);
     }
 
     /**
@@ -129,34 +123,26 @@ class UserTest extends TestCase
 
         // cover disabled as default
         $this->assertSame([
-            'ratio' => '3/2',
-            'back' => 'pattern',
+            'back' => 'black',
             'cover' => false,
+            'ratio' => '1/1',
+            'color' => 'light',
+            'icon' => 'user',
             'url' => $mediaUrl . '/test.jpg',
-            'cards' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
-            ],
-            'list' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
-            ]
+            'src' => Model::imagePlaceholder(),
+            'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
         ], $panel->image());
 
         // cover enabled
         $this->assertSame([
-            'ratio' => '3/2',
-            'back' => 'pattern',
+            'back' => 'black',
             'cover' => true,
+            'ratio' => '1/1',
+            'color' => 'light',
+            'icon' => 'user',
             'url' => $mediaUrl . '/test.jpg',
-            'cards' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
-            ],
-            'list' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
-            ]
+            'src' => Model::imagePlaceholder(),
+            'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
         ], $panel->image(['cover' => true]));
     }
 

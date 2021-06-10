@@ -62,7 +62,7 @@ return [
             // TODO: remove in 3.7.0
             // @codeCoverageIgnoreStart
             deprecated('The API field page.panelIcon has been deprecated and will be removed in 3.7.0. Use page.panelImage instead');
-            return $file->panel()->image();
+            return $page->panel()->image();
         // @codeCoverageIgnoreEnd
         },
         'panelImage' => function (Page $page) {

@@ -360,10 +360,10 @@ class PagesSectionTest extends TestCase
         $data = $section->data();
 
         // existing covers
-        $this->assertStringContainsString(Model::imagePlaceholder(), $data[0]['image']['cards']['url']);
+        $this->assertStringContainsString(Model::imagePlaceholder(), $data[0]['image']['src']);
 
         // non-existing covers
-        $this->assertNull($data[2]['image']['cards']['url'] ?? null);
+        $this->assertArrayNotHasKey('src', $data[2]['image']);
     }
 
     public function testTemplates()
