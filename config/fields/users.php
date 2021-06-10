@@ -76,7 +76,7 @@ return [
                     $field = $this->field();
 
                     return $field->userpicker([
-                        'image'  => $field->image([], $this->layout),
+                        'image'  => $field->image([], $field->layout),
                         'info'   => $field->info(),
                         'limit'  => $field->limit(),
                         'page'   => $this->requestQuery('page'),

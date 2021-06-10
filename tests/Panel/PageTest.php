@@ -208,7 +208,7 @@ class PageTest extends TestCase
     }
 
     /**
-     * @covers ::icon
+     * @covers ::imageIcon
      */
     public function testIconFromBlueprint()
     {
@@ -306,7 +306,7 @@ class PageTest extends TestCase
             'icon' => 'page',
             'url' => $mediaUrl . '/test.jpg',
             'src' => Model::imagePlaceholder(),
-            'srcset' => $mediaUrl . '/test-352x.jpg 352w, ' . $mediaUrl . '/test-864x.jpg 864w, ' . $mediaUrl . '/test-1408x.jpg 1408w'
+            'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
         ], $panel->image());
 
         // cover enabled
@@ -319,7 +319,7 @@ class PageTest extends TestCase
             'url' => $mediaUrl . '/test.jpg',
             'src' => Model::imagePlaceholder(),
             'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
-        ], $panel->image(['cover' => true], 'list'));
+        ], $panel->image(['cover' => true]));
     }
 
     /**

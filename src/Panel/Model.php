@@ -307,7 +307,7 @@ abstract class Model
             'id'    => $this->model->id(),
             'image' => $this->image(
                 $params['image'] ?? [],
-                $params['layout'] ?? null
+                $params['layout'] ?? 'list'
             ),
             'info'  => $this->model->toString($params['info'] ?? false),
             'link'  => $this->url(true),
