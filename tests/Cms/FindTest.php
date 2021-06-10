@@ -270,14 +270,6 @@ class FindTest extends TestCase
     }
 
     /**
-     * @covers ::site
-     */
-    public function testSite()
-    {
-        $this->assertSame($this->app->site(), Find::site());
-    }
-
-    /**
      * @covers ::user
      */
     public function testUser()

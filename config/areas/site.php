@@ -26,7 +26,7 @@ return function ($kirby) {
             [
                 'pattern' => 'site',
                 'action'  => function () {
-                    return Find::site()->panel()->route();
+                    return site()->panel()->route();
                 }
             ],
             [

@@ -125,16 +125,6 @@ class Find
     }
 
     /**
-     * Matching quick access to the site object
-     *
-     * @return \Kirby\Cms\Site
-     */
-    public static function site()
-    {
-        return App::instance()->site();
-    }
-
-    /**
      * Returns the user object for the given id or
      * returns the current authenticated user if no
      * id is passed
