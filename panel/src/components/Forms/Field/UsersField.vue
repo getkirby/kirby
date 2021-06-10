@@ -42,10 +42,10 @@
         </component>
       </k-draggable>
     </template>
-    <k-empty 
-      v-else 
-      :data-invalid="isInvalid" 
-      icon="users" 
+    <k-empty
+      v-else
+      :data-invalid="isInvalid"
+      icon="users"
       @click="open"
     >
       {{ empty || $t("field.users.empty") }}
@@ -58,22 +58,7 @@
 import picker from "@/mixins/forms/picker.js";
 
 export default {
-  mixins: [picker],
-  methods: {
-    open() {
-      if (this.disabled) {
-        return false;
-      }
-
-      this.$refs.selector.open({
-        endpoint: this.endpoints.field,
-        max: this.max,
-        multiple: this.multiple,
-        search: this.search,
-        selected: this.selected.map(user => user.id)
-      });
-    }
-  }
+  mixins: [picker]
 };
 </script>
 

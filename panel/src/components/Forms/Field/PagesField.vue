@@ -60,22 +60,7 @@
 import picker from "@/mixins/forms/picker.js";
 
 export default {
-  mixins: [picker],
-  methods: {
-    open() {
-      if (this.disabled) {
-        return false;
-      }
-
-      this.$refs.selector.open({
-        endpoint: this.endpoints.field,
-        max: this.max,
-        multiple: this.multiple,
-        search: this.search,
-        selected: this.selected.map(page => page.id)
-      });
-    }
-  }
+  mixins: [picker]
 };
 </script>
 

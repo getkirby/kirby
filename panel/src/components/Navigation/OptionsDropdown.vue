@@ -6,7 +6,7 @@
     :icon="options[0].icon || icon"
     :tooltip="options[0].tooltip || options[0].text"
     class="k-options-dropdown-toggle"
-    @click="onOption(options[0].option || options[0].click, options[0], 0)"
+    @click="onAction(options[0].option || options[0].click, options[0], 0)"
   >
     <template v-if="text === true">
       {{ options[0].text }}
