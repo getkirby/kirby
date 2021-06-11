@@ -155,7 +155,7 @@ export default {
   },
   methods: {
     check() {
-      this.$reload("$view.props.lock");
+      this.$reload({ only: "$view.props.lock", silent: true });
     },
     async onLock(lock = true) {
       const api = [this.$view.path + "/lock", null, null, true];
@@ -258,7 +258,7 @@ export default {
         await this.$api.delete(...api)
       }
 
-      this.$reload();
+      this.$reload({ silent: true });
     },
     revert() {
       this.$store.dispatch("content/revert");
