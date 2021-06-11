@@ -2,31 +2,11 @@
   <k-field v-bind="$props" class="k-files-field">
     <template v-if="more && !disabled" #options>
       <k-button-group class="k-field-options">
-        <template v-if="uploads">
-          <k-dropdown>
-            <k-button
-              ref="pickerToggle"
-              :icon="btnIcon"
-              class="k-field-options-button"
-              @click="prompt"
-            >
-              {{ btnLabel }}
-            </k-button>
-            <k-dropdown-content ref="picker" align="right">
-              <k-dropdown-item icon="check" @click="open">
-                {{ $t('select') }}
-              </k-dropdown-item>
-              <k-dropdown-item icon="upload" @click="upload">
-                {{ $t('upload') }}
-              </k-dropdown-item>
-            </k-dropdown-content>
-          </k-dropdown>
-        </template>
-        <template v-else>
-          <k-button icon="check" class="k-field-options-button" @click="open">
-            {{ $t('select') }}
-          </k-button>
-        </template>
+        <k-options-dropdown
+          ref="options"
+          v-bind="options"
+          @action="onAction"
+        />
       </k-button-group>
     </template>
 
@@ -72,7 +52,7 @@
     </k-empty>
 
     <k-files-dialog ref="selector" @submit="select" />
-    <k-upload ref="fileUpload" @success="selectUpload" />
+    <k-upload ref="fileUpload" @success="upload" />
   </k-field>
 </template>
 
@@ -86,6 +66,24 @@ export default {
   mixins: [picker],
   props: {
     uploads: [Boolean, Object, Array]
+  },
+ computed: {
+    options() {
+      if (this.uploads) {
+        return {
+          icon: this.btnIcon,
+          text: this.btnLabel,
+          options: [
+            { icon: "check", text: this.$t("select"), click: "open" },
+            { icon: "upload", text: this.$t("upload"), click: "upload" }
+          ]
+        };
+      }
+
+      return {
+        options: [{ icon: "check", text: this.$t("select"), click: "open" }]
+      };
+    }
   },
   created() {
     this.$events.$on("file.delete", this.removeById);
@@ -102,25 +100,24 @@ export default {
       }
 
       if (this.more && this.uploads) {
-        this.$refs.picker.toggle();
+        this.$refs.dropdown.toggle();
       } else {
         this.open();
       }
     },
-    open() {
-      if (this.disabled) {
-        return false;
+    onAction(action) {
+      switch (action) {
+        case "open":
+          return this.open();
+        case "upload":
+          return this.$refs.fileUpload.open({
+            url: this.$urls.api + "/" + this.endpoints.field + "/upload",
+            multiple: this.multiple,
+            accept: this.uploads.accept
+          });
       }
-
-      this.$refs.selector.open({
-        endpoint: this.endpoints.field,
-        max: this.max,
-        multiple: this.multiple,
-        search: this.search,
-        selected: this.selected.map(file => file.id)
-      });
     },
-    selectUpload(upload, files) {
+    upload(upload, files) {
       if (this.multiple === false) {
         this.selected = [];
       }
@@ -131,13 +128,6 @@ export default {
 
       this.onInput();
       this.$events.$emit("model.update");
-    },
-    upload() {
-      this.$refs.fileUpload.open({
-        url: this.$urls.api + "/" + this.endpoints.field + "/upload",
-        multiple: this.multiple,
-        accept: this.uploads.accept
-      });
     }
   }
 };

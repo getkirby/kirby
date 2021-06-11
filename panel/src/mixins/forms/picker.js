@@ -1,4 +1,3 @@
-
 import { props as Field } from "@/components/Forms/Field.vue";
 
 export default {
@@ -103,6 +102,19 @@ export default {
     onInput() {
       this.$emit("input", this.selected);
     },
+    open() {
+      if (this.disabled) {
+        return false;
+      }
+
+      this.$refs.selector.open({
+        endpoint: this.endpoints.field,
+        max: this.max,
+        multiple: this.multiple,
+        search: this.search,
+        selected: this.selected.map(model => model.id)
+      });
+    },
     remove(index) {
       this.selected.splice(index, 1);
       this.onInput();
@@ -124,7 +136,9 @@ export default {
 
       // add items that are not yet in the selected list
       items.forEach(item => {
-        if (this.selected.filter(selected => item.id === selected.id).length === 0) {
+        if (
+          this.selected.filter(selected => item.id === selected.id).length === 0
+        ) {
           this.selected.push(item);
         }
       });
