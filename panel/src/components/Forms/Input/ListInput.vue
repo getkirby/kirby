@@ -16,6 +16,7 @@ import ListDoc from "@/components/Writer/Nodes/ListDoc";
 export default {
   inheritAttrs: false,
   props: {
+    autofocus: Boolean,
     marks: {
       type: [Array, Boolean],
       default: true

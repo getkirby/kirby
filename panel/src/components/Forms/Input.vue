@@ -36,6 +36,7 @@ export default {
   inheritAttrs: false,
   props: {
     after: String,
+    autofocus: Boolean,
     before: String,
     disabled: Boolean,
     type: String,
