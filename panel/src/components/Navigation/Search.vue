@@ -62,7 +62,9 @@
                 />
                 <k-icon
                   v-else
-                  v-bind="item.icon"
+                  :type="item.image.icon"
+                  :color="item.image.color"
+                  :back="item.image.back"
                 />
               </span>
               <span class="k-search-item-info">

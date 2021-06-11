@@ -41,6 +41,9 @@ return [
         'options' => function (User $user) {
             return $user->panel()->options();
         },
+        'panelImage' => function (User $user) {
+            return $user->panel()->image();
+        },
         'permissions' => function (User $user) {
             return $user->role()->permissions()->toArray();
         },
