@@ -77,7 +77,7 @@ class UsersTest extends AreaTestCase
         $this->assertSame('users', $view['id']);
         $this->assertSame('k-error-view', $view['component']);
         $this->assertSame('Error', $view['title']);
-        $this->assertSame(t('error.file.undefined'), $props['error']);
+        $this->assertSame('The file "no-exist.jpg" cannot be found', $props['error']);
     }
 
     public function testUsersWithRole(): void
