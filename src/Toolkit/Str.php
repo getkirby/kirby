@@ -250,7 +250,7 @@ class Str
      */
     public static function contains(string $string = null, string $needle, bool $caseInsensitive = false): bool
     {
-        return call_user_func($caseInsensitive === true ? 'stristr' : 'strstr', $string, $needle) !== false;
+        return call_user_func($caseInsensitive === true ? 'stripos' : 'strpos', $string, $needle) !== false;
     }
 
     /**
