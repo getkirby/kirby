@@ -192,7 +192,7 @@ class FileTest extends TestCase
         $this->expectExceptionMessage('could not be deleted');
 
         static::$block[] = 'unlink';
-        $file = new File($this->tmp . '/awesome.txt');
+    $file = new File($this->fixtures . '/test.js');
         $file->delete();
     }
 
@@ -520,13 +520,12 @@ class FileTest extends TestCase
      */
     public function testRename()
     {
-        $file = $this->_file();
-        $renamed = $file->rename('awesome');
+        $file = new File($this->tmp . '/test.js');
+        $file->write('test');
 
+        $renamed = $file->rename('awesome');
         $this->assertSame('awesome.js', $renamed->filename());
         $this->assertSame('awesome', $renamed->name());
-
-        $renamed->rename('test');
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Filesystem\Facade;
+use Kirby\Toolkit\Facade;
 
 /**
  * Shortcut to the session object

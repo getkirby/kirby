@@ -34,7 +34,7 @@ class FilenameTest extends TestCase
         $this->assertSame($expected, $name->attributesToArray());
     }
 
-    protected function attributesToStringProvider()
+    public function attributesToStringProvider()
     {
         return [
             [
@@ -81,7 +81,7 @@ class FilenameTest extends TestCase
         $this->assertSame($expected, $name->attributesToString('-'));
     }
 
-    protected function blurOptionProvider()
+    public function blurOptionProvider()
     {
         return [
             [false, false],
@@ -105,7 +105,7 @@ class FilenameTest extends TestCase
         $this->assertSame($expected, $name->blur());
     }
 
-    protected function cropAnchorProvider(): array
+    public function cropAnchorProvider(): array
     {
         return [
             ['center', 'center'],
@@ -246,7 +246,7 @@ class FilenameTest extends TestCase
         $this->assertSame('jpg', $name->extension());
     }
 
-    protected function grayscaleOptionProvider()
+    public function grayscaleOptionProvider()
     {
         return [
             ['grayscale', true, true],
@@ -289,7 +289,7 @@ class FilenameTest extends TestCase
         $this->assertSame('some-file', $name->name());
     }
 
-    protected function qualityOptionProvider()
+    public function qualityOptionProvider()
     {
         return [
             [false, false],
