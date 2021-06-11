@@ -30,12 +30,6 @@ use Throwable;
  */
 class Panel
 {
-    /**
-     * Kirby singleton
-     *
-     * @var \Kirby\Cms\App
-     */
-    public static $kirby;
 
     /**
      * Normalize a panel area
