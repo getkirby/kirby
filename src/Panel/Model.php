@@ -176,7 +176,7 @@ abstract class Model
      */
     protected function imageColor(): string
     {
-        return 'light';
+        return 'white';
     }
 
     /**
