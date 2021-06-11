@@ -1,6 +1,6 @@
 <?php
 
-use Kirby\Panel\Panel;
+use Kirby\Cms\Find;
 
 return function ($kirby) {
     return [
@@ -64,21 +64,14 @@ return function ($kirby) {
             ],
             [
                 'pattern' => 'users/(:any)',
-                'action'  => function (string $id) use ($kirby) {
-                    return Panel::user($id)->panel()->route();
+                'action'  => function (string $id) {
+                    return Find::user($id)->panel()->route();
                 }
             ],
             [
                 'pattern' => 'users/(:any)/files/(:any)',
-                'action'  => function (string $id, string $filename) use ($kirby) {
-                    $user     = Panel::user($id);
-                    $filename = urldecode($filename);
-
-                    if (!$file = $user->file($filename)) {
-                        return t('error.file.undefined');
-                    }
-
-                    return $file->panel()->route();
+                'action'  => function (string $id, string $filename) {
+                    return Find::file('users/' . $id, $filename)->panel()->route();
                 }
             ],
         ]
