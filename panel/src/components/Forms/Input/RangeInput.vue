@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import { 
+import {
   autofocus,
   disabled,
   id,
@@ -35,7 +35,7 @@ import {
   required
 } from "@/mixins/props.js";
 
-import { 
+import {
   required as validateRequired,
   minValue as validateMinValue,
   maxValue as validateMaxValue
@@ -182,7 +182,7 @@ export default {
   --value: 0;
   --range: calc(var(--max) - var(--min));
   --ratio: calc((var(--value) - var(--min)) / var(--range));
-  --position: calc(0.5 * var(--range-thumb-size) + var(--ratio) * (100% - var(--range-thumb-size)));
+  --position: calc(0.5 * var(--range-thumb-size) + var(--ratio) * calc(100% - var(--range-thumb-size)));
 
   appearance: none;
   width: 100%;
@@ -221,12 +221,12 @@ export default {
 
 .k-range-input-native::-webkit-slider-runnable-track {
   background: linear-gradient(
-      var(--range-track-color), 
+      var(--range-track-color),
       var(--range-track-color)
     )
-    0 / var(--position) 
-    100% 
-    no-repeat 
+    0 / var(--position)
+    100%
+    no-repeat
     var(--range-track-background);
 }
 
