@@ -10,6 +10,8 @@ return function ($kirby) {
                 'pattern' => 'settings',
                 'action'  => function () use ($kirby) {
                     $license = $kirby->system()->license();
+
+                    // @codeCoverageIgnoreStart
                     if ($license === true) {
                         // valid license, but user is not admin
                         $license = 'Kirby 3';
@@ -17,6 +19,7 @@ return function ($kirby) {
                         // no valid license
                         $license = null;
                     }
+                    // @codeCoverageIgnoreEnd
 
                     return [
                         'component' => 'k-settings-view',
