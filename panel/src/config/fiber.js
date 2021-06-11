@@ -272,7 +272,11 @@ const Fiber = {
     this.saveScroll();
 
     if (!silent) {
-      document.dispatchEvent(new Event("fiber:start"));
+      document.dispatchEvent(
+        new CustomEvent("fiber:start", {
+          detail: { silent }
+        })
+      );
     }
 
     // make sure only is an array

@@ -1,4 +1,4 @@
-import "vite/dynamic-import-polyfill"
+import "vite/dynamic-import-polyfill";
 
 import Vue from "vue";
 import { component as App, plugin as Fiber } from "./config/fiber.js";
@@ -25,11 +25,13 @@ Vue.use(Events);
 Vue.use(I18n);
 Vue.use(Vuelidate);
 Vue.use(VuePortal);
-Vue.use(Fiber)
+Vue.use(Fiber);
 Vue.use(Api, store);
 
-document.addEventListener("fiber:start", () => {
-  store.dispatch("isLoading", true);
+document.addEventListener("fiber:start", (e) => {
+  if (e.detail.silent !== true) {
+    store.dispatch("isLoading", true);
+  }
 });
 
 document.addEventListener("fiber:finish", () => {
@@ -42,8 +44,8 @@ new Vue({
   store,
   created() {
     window.panel.$vue = window.panel.app = this;
-    window.panel.plugins.created.forEach(plugin => plugin(this));
+    window.panel.plugins.created.forEach((plugin) => plugin(this));
     this.$store.dispatch("content/init");
   },
-  render: (h) => h(App)  
+  render: (h) => h(App)
 }).$mount("#app");
