@@ -96,6 +96,12 @@ export default {
   font-style: normal;
   font-size: 1rem;
 }
+.k-icon[data-size="medium"] .k-icon-emoji {
+  font-size: 2rem;
+}
+.k-icon[data-size="large"] .k-icon-emoji {
+  font-size: 3rem;
+}
 
 /* fix emoji alignment on high-res screens */
 @media only screen and (-webkit-min-device-pixel-ratio: 2), not all, not all, not all, only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {

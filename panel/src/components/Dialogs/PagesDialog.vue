@@ -30,41 +30,28 @@
         icon="search"
       />
 
-      <template v-if="models.length">
-        <k-list>
-          <k-list-item
-            v-for="page in models"
-            :key="page.id"
-            :text="page.text"
-            :info="page.info"
-            :image="page.image"
-            :icon="page.icon"
-            @click="toggle(page)"
-          >
-            <template #options>
-              <k-button
-                v-if="isSelected(page)"
-                :autofocus="true"
-                :icon="checkedIcon"
-                :tooltip="$t('remove')"
-                theme="positive"
-              />
-              <k-button
-                v-else
-                :autofocus="true"
-                :tooltip="$t('select')"
-                icon="circle-outline"
-              />
-              <k-button
-                v-if="model"
-                :disabled="!page.hasChildren"
-                :tooltip="$t('open')"
-                icon="angle-right"
-                @click.stop="go(page)"
-              />
-            </template>
-          </k-list-item>
-        </k-list>
+      <template v-if="items.length">
+        <k-items
+          :items="items"
+          layout="list"
+          :sortable="false"
+          @item="toggle"
+        >
+          <template #options="{ item: page }">
+            <k-button
+              v-bind="toggleBtn(page)"
+              @click="toggle(page)"
+            />
+            <k-button
+              v-if="page"
+              :disabled="!page.hasChildren"
+              :tooltip="$t('open')"
+              icon="angle-right"
+              @click.stop="go(page)"
+            />
+          </template>
+        </k-items>
+
         <k-pagination
           :details="true"
           :dropdown="false"
@@ -120,7 +107,7 @@ export default {
     },
     onFetched(response) {
       this.model = response.model;
-    },
+    }
   }
 };
 </script>

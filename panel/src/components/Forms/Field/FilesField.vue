@@ -11,34 +11,23 @@
     </template>
 
     <template v-if="selected.length">
-      <k-draggable
-        :element="elements.list"
-        :list="selected"
-        :data-size="size"
-        :handle="true"
-        :data-invalid="isInvalid"
-        @end="onInput"
+      <k-items
+        :items="selected"
+        :layout="layout"
+        :size="size"
+        :sortable="!disabled && selected.length > 1"
+        @sort="onInput"
+        @sortChange="$emit('change', $event)"
       >
-        <component
-          :is="elements.item"
-          v-for="(file, index) in selected"
-          :key="file.id"
-          :sortable="!disabled && selected.length > 1"
-          :text="file.text"
-          :link="link ? file.link : null"
-          :info="file.info"
-          :image="file.image"
-        >
-          <template #options>
-            <k-button
-              v-if="!disabled"
-              :tooltip="$t('remove')"
-              icon="remove"
-              @click="remove(index)"
-            />
-          </template>
-        </component>
-      </k-draggable>
+        <template #options="{ index }">
+          <k-button
+            v-if="!disabled"
+            :tooltip="$t('remove')"
+            icon="remove"
+            @click="remove(index)"
+          />
+        </template>
+      </k-items>
     </template>
     <k-empty
       v-else

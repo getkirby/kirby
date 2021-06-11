@@ -51,24 +51,6 @@ export default {
 
       return this.$t("add");
     },
-    elements() {
-      const layouts = {
-        cards: {
-          list: "k-cards",
-          item: "k-card"
-        },
-        list: {
-          list: "k-list",
-          item: "k-list-item"
-        }
-      };
-
-      if (layouts[this.layout]) {
-        return layouts[this.layout];
-      }
-
-      return layouts["list"];
-    },
     isInvalid() {
       if (this.required && this.selected.length === 0) {
         return true;
@@ -83,6 +65,9 @@ export default {
       }
 
       return false;
+    },
+    items() {
+      return this.models.map(this.item);
     },
     more() {
       if (!this.max) {
@@ -99,6 +84,10 @@ export default {
   },
   methods: {
     focus() {},
+    item(item) {
+      item.link = this.link ? item.link : null;
+      return item;
+    },
     onInput() {
       this.$emit("input", this.selected);
     },

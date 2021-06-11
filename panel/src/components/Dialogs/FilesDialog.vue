@@ -21,34 +21,21 @@
         icon="search"
       />
 
-      <template v-if="models.length">
-        <k-list>
-          <k-list-item
-            v-for="file in models"
-            :key="file.id"
-            :text="file.text"
-            :info="file.info"
-            :image="file.image"
-            :icon="file.icon"
-            @click="toggle(file)"
-          >
-            <template #options>
-              <k-button
-                v-if="isSelected(file)"
-                :autofocus="true"
-                :icon="checkedIcon"
-                :tooltip="$t('remove')"
-                theme="positive"
-              />
-              <k-button
-                v-else
-                :autofocus="true"
-                :tooltip="$t('select')"
-                icon="circle-outline"
-              />
-            </template>
-          </k-list-item>
-        </k-list>
+      <template v-if="items.length">
+        <k-items
+          :items="items"
+          layout="list"
+          :sortable="false"
+          @item="toggle"
+        >
+          <template #options="{ item: file }">
+            <k-button
+              v-bind="toggleBtn(file)"
+              @click="toggle(file)"
+            />
+          </template>
+        </k-items>
+
         <k-pagination
           :details="true"
           :dropdown="false"
