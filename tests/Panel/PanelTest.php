@@ -66,7 +66,7 @@ class PanelTest extends TestCase
     public function testAreas(): void
     {
         // unauthenticated / uninstalled
-        $areas = Panel::areas($this->app);
+        $areas = Panel::areas();
 
         $this->assertArrayHasKey('installation', $areas);
         $this->assertCount(1, $areas);
@@ -134,7 +134,7 @@ class PanelTest extends TestCase
     public function testAssets(): void
     {
         // default asset setup
-        $assets  = Panel::assets($this->app);
+        $assets  = Panel::assets();
         $base    = '/media/panel/' . $this->app->versionHash();
 
         // css
@@ -257,7 +257,7 @@ class PanelTest extends TestCase
             ]
         ]);
 
-        $this->assertNull(Panel::customCss($app));
+        $this->assertNull(Panel::customCss());
 
         // valid
         F::write($this->tmp . '/panel.css', '');
@@ -270,7 +270,7 @@ class PanelTest extends TestCase
             ]
         ]);
 
-        $this->assertTrue(Str::contains(Panel::customCss($app), '/panel.css'));
+        $this->assertTrue(Str::contains(Panel::customCss(), '/panel.css'));
     }
 
     /**
@@ -287,7 +287,7 @@ class PanelTest extends TestCase
             ]
         ]);
 
-        $this->assertNull(Panel::customJs($app));
+        $this->assertNull(Panel::customJs());
 
         // valid
         F::write($this->tmp . '/panel.js', '');
@@ -300,7 +300,7 @@ class PanelTest extends TestCase
             ]
         ]);
 
-        $this->assertTrue(Str::contains(Panel::customJs($app), '/panel.js'));
+        $this->assertTrue(Str::contains(Panel::customJs(), '/panel.js'));
     }
 
     /**
@@ -309,7 +309,7 @@ class PanelTest extends TestCase
     public function testData(): void
     {
         // without custom data
-        $data = Panel::data($this->app);
+        $data = Panel::data();
 
         $this->assertInstanceOf('Closure', $data['$language']);
         $this->assertInstanceOf('Closure', $data['$languages']);
@@ -325,7 +325,7 @@ class PanelTest extends TestCase
      */
     public function testDataWithCustomProps(): void
     {
-        $data = Panel::data($this->app, [
+        $data = Panel::data([
             '$props' => $props = [
                 'foo' => 'bar'
             ]
@@ -350,7 +350,7 @@ class PanelTest extends TestCase
         ]);
 
         // without custom data
-        $data = Panel::data($this->app);
+        $data = Panel::data();
 
         // resolve lazy data
         $data = A::apply($data);
@@ -383,7 +383,7 @@ class PanelTest extends TestCase
         $this->app->impersonate('kirby');
 
         // without custom data
-        $data = Panel::data($this->app);
+        $data = Panel::data();
 
         // resolve lazy data
         $data = A::apply($data);
@@ -407,7 +407,7 @@ class PanelTest extends TestCase
     public function testError(): void
     {
         // without user
-        $error = Panel::error($this->app, 'Test');
+        $error = Panel::error('Test');
 
         $expected = [
             'component' => 'k-error-view',
@@ -422,13 +422,13 @@ class PanelTest extends TestCase
 
         // with user
         $this->app->impersonate('kirby');
-        $error = Panel::error($this->app, 'Test');
+        $error = Panel::error('Test');
 
         $this->assertSame('inside', $error['props']['layout']);
 
         // user without panel access
         $this->app->impersonate('nobody');
-        $error = Panel::error($this->app, 'Test');
+        $error = Panel::error('Test');
 
         $this->assertSame('outside', $error['props']['layout']);
     }
@@ -439,7 +439,7 @@ class PanelTest extends TestCase
     public function testFiber(): void
     {
         // default
-        $fiber = Panel::fiber($this->app, 'k-page-view');
+        $fiber = Panel::fiber('k-page-view');
 
         $expected = [
             '$language' => null,
@@ -562,7 +562,7 @@ class PanelTest extends TestCase
     public function testGlobals(): void
     {
         // defaults
-        $globals = Panel::globals($this->app);
+        $globals = Panel::globals();
 
         $this->assertInstanceOf('Closure', $globals['$config']);
         $this->assertInstanceOf('Closure', $globals['$system']);
@@ -619,7 +619,7 @@ class PanelTest extends TestCase
         ]);
 
         $this->app->impersonate('test@getkirby.com');
-        $globals = Panel::globals($this->app);
+        $globals = Panel::globals();
         $globals = A::apply($globals);
         $this->assertSame('de', $globals['$translation']['code']);
     }
@@ -629,7 +629,7 @@ class PanelTest extends TestCase
      */
     public function testIcons(): void
     {
-        $icons = Panel::icons($this->app);
+        $icons = Panel::icons();
 
         $this->assertNotNull($icons);
         $this->assertTrue(strpos($icons, '<svg', 0) !== false);
@@ -704,7 +704,7 @@ class PanelTest extends TestCase
         ];
 
         // default (no partial request)
-        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = Panel::partial('k-test-view', $data);
 
         $this->assertSame($data, $result);
     }
@@ -728,7 +728,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = Panel::partial('k-test-view', $data);
 
         $this->assertSame(['a' => 'A'], $result);
 
@@ -746,7 +746,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = Panel::partial('k-test-view', $data);
 
         $this->assertSame(['a' => 'A'], $result);
     }
@@ -771,7 +771,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = Panel::partial('k-test-view', $data);
 
         $this->assertSame(['a' => 'A'], $result);
 
@@ -790,7 +790,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = Panel::partial('k-test-view', $data);
 
         $this->assertSame(['a' => 'A'], $result);
     }
@@ -815,7 +815,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = Panel::partial('k-test-view', $data);
 
         $this->assertSame($data, $result);
 
@@ -835,7 +835,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = Panel::partial('k-test-view', $data);
 
         $this->assertSame($data, $result);
     }
@@ -859,7 +859,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = Panel::partial('k-test-view', $data);
         $result = A::apply($result);
 
         $expected = [
@@ -894,7 +894,7 @@ class PanelTest extends TestCase
             ]
         ];
 
-        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = Panel::partial('k-test-view', $data);
 
         $expected = [
             'b' => [
@@ -924,7 +924,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial($this->app, 'k-test-view', $data);
+        $result = Panel::partial('k-test-view', $data);
 
         $expected = [
             'a' => 'A',
@@ -945,7 +945,7 @@ class PanelTest extends TestCase
         Panel::link($this->app);
 
         // get panel response
-        $response = Panel::render($this->app, 'k-page-view', [
+        $response = Panel::render('k-page-view', [
             'test' => 'Test'
         ]);
 
@@ -970,7 +970,7 @@ class PanelTest extends TestCase
         ]);
 
         // get panel response
-        $response = Panel::render($this->app, 'k-page-view', [
+        $response = Panel::render('k-page-view', [
             'test' => 'Test'
         ]);
 
@@ -990,7 +990,7 @@ class PanelTest extends TestCase
             ]
         ]);
 
-        $result = Panel::router($app, '/');
+        $result = Panel::router('/');
 
         $this->assertNull($result);
     }
@@ -1146,7 +1146,7 @@ class PanelTest extends TestCase
     public function testView(): void
     {
         // defaults
-        $result = Panel::view($this->app);
+        $result = Panel::view();
         $expected = [
             'breadcrumb' => [],
             'path' => '',
@@ -1156,17 +1156,17 @@ class PanelTest extends TestCase
         $this->assertSame($expected, $result);
 
         // with $area
-        $result = Panel::view($this->app, ['search' => 'users']);
+        $result = Panel::view(['search' => 'users']);
         $expected['search'] = 'users';
         $this->assertEquals($expected, $result);
 
         // with $view
-        $result = Panel::view($this->app, null, ['search' => 'files']);
+        $result = Panel::view(null, ['search' => 'files']);
         $expected['search'] = 'files';
         $this->assertEquals($expected, $result);
 
         // wmake sure routes are unset
-        $result = Panel::view($this->app, ['search' => 'files'], ['routes' => ['foo' => 'bar']]);
+        $result = Panel::view(['search' => 'files'], ['routes' => ['foo' => 'bar']]);
         $this->assertEquals($expected, $result);
     }
 }

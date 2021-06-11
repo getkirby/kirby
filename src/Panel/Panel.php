@@ -3,7 +3,6 @@
 namespace Kirby\Panel;
 
 use Exception;
-use Kirby\Cms\App;
 use Kirby\Cms\User;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Request;
@@ -32,6 +31,13 @@ use Throwable;
 class Panel
 {
     /**
+     * Kirby singleton
+     *
+     * @var \Kirby\Cms\App
+     */
+    public static $kirby;
+
+    /**
      * Normalize a panel area
      *
      * @param string $id
@@ -55,11 +61,11 @@ class Panel
     /**
      * Collect all registered areas
      *
-     * @param \Kirby\Cms\App $kirby
      * @return array
      */
-    public static function areas(App $kirby): array
+    public static function areas(): array
     {
+        $kirby  = kirby();
         $root   = $kirby->root('kirby') . '/config/areas';
         $system = $kirby->system();
         $user   = $kirby->user();
@@ -100,11 +106,12 @@ class Panel
      * Generates an array with all assets
      * that need to be loaded for the panel (js, css, icons)
      *
-     * @param \Kirby\Cms\App $kirby
      * @return array
      */
-    public static function assets(App $kirby): array
+    public static function assets(): array
     {
+        $kirby = kirby();
+
         // get the assets from the Vite dev server in dev mode;
         // dev mode = explicitly enabled in the config AND Vite is running
         $dev   = $kirby->option('panel.dev', false);
@@ -181,12 +188,11 @@ class Panel
      * Check for a custom css file from the
      * config (panel.css)
      *
-     * @param \Kirby\Cms\App $kirby
      * @return string|null
      */
-    public static function customCss(App $kirby): ?string
+    public static function customCss(): ?string
     {
-        if ($css = $kirby->option('panel.css')) {
+        if ($css = kirby()->option('panel.css')) {
             $asset = asset($css);
 
             if ($asset->exists() === true) {
@@ -201,12 +207,11 @@ class Panel
      * Check for a custom js file from the
      * config (panel.js)
      *
-     * @param \Kirby\Cms\App $kirby
      * @return string|null
      */
-    public static function customJs(App $kirby): ?string
+    public static function customJs(): ?string
     {
-        if ($js = $kirby->option('panel.js')) {
+        if ($js = kirby()->option('panel.js')) {
             $asset = asset($js);
 
             if ($asset->exists() === true) {
@@ -220,12 +225,13 @@ class Panel
     /**
      * Creates data array for Fiber and the component
      *
-     * @param \Kirby\Cms\App $kirby
      * @param array $data
      * @return array
      */
-    public static function data(App $kirby, array $data = []): array
+    public static function data(array $data = []): array
     {
+        $kirby = kirby();
+
         // multilang setup check
         $multilang = $kirby->option('languages', false) !== false;
 
@@ -283,17 +289,16 @@ class Panel
     /**
      * Renders the error view with provided message
      *
-     * @param \Kirby\Cms\App $kirby
      * @param string $message
      * @return \Kirby\Http\Response
      */
-    public static function error(App $kirby, string $message)
+    public static function error(string $message)
     {
         return [
             'component' => 'k-error-view',
             'props'     => [
                 'error'  => $message,
-                'layout' => Panel::hasAccess($kirby->user()) ? 'inside' : 'outside'
+                'layout' => static::hasAccess(kirby()->user()) ? 'inside' : 'outside'
             ],
             'title' => 'Error'
         ];
@@ -302,18 +307,17 @@ class Panel
     /**
      * Creates $fiber response array
      *
-     * @param \Kirby\Cms\App $kirby
      * @param string $component
      * @param array $data
      * @return array
      */
-    public static function fiber(App $kirby, string $component, array $data = []): array
+    public static function fiber(string $component, array $data = []): array
     {
         // get all data for the request
-        $data = static::data($kirby, $data);
+        $data = static::data($data);
 
         // filter data, if it's a partial request
-        $data = static::partial($kirby, $component, $data);
+        $data = static::partial($component, $data);
 
         // resolve lazy data entries
         return A::apply($data);
@@ -368,11 +372,12 @@ class Panel
      * It can be loaded partially later if needed,
      * but is otherwise not included in Fiber calls.
      *
-     * @param \Kirby\Cms\App $kirby
      * @return array
      */
-    public static function globals(App $kirby): array
+    public static function globals(): array
     {
+        $kirby = kirby();
+
         return [
             '$config' => function () use ($kirby) {
                 return [
@@ -434,7 +439,8 @@ class Panel
      */
     public static function go(?string $path = null): void
     {
-        $url = url(option('panel.slug', 'panel') . '/' . trim($path, '/'));
+        $slug = kirby()->option('panel.slug', 'panel');
+        $url  = url($slug . '/' . trim($path, '/'));
         throw new Redirect($url);
     }
 
@@ -461,23 +467,23 @@ class Panel
      * This will be injected in the
      * initial HTML document for the Panel
      *
-     * @param \Kirby\Cms\App $kirby
      * @return string
      */
-    public static function icons(App $kirby): string
+    public static function icons(): string
     {
-        return F::read($kirby->root('kirby') . '/panel/dist/img/icons.svg');
+        return F::read(kirby()->root('kirby') . '/panel/dist/img/icons.svg');
     }
 
     /**
      * Checks for a Fiber request
      * via get parameters or headers
      *
-     * @param \Kirby\Http\Request $request
      * @return bool
      */
-    public static function isFiberRequest(Request $request): bool
+    public static function isFiberRequest(): bool
     {
+        $request = kirby()->request();
+
         if ($request->method() === 'GET') {
             return (bool)($request->get('_json') ?? $request->header('X-Fiber'));
         }
@@ -489,12 +495,12 @@ class Panel
      * Links all dist files in the media folder
      * and returns the link to the requested asset
      *
-     * @param \Kirby\Cms\App $kirby
      * @return bool
      * @throws \Exception If Panel assets could not be moved to the public directory
      */
-    public static function link(App $kirby): bool
+    public static function link(): bool
     {
+        $kirby       = kirby();
         $mediaRoot   = $kirby->root('media') . '/panel';
         $panelRoot   = $kirby->root('panel') . '/dist';
         $versionHash = $kirby->versionHash();
@@ -524,14 +530,14 @@ class Panel
      * entries requested via a Fiber partial
      * request (or the whole array if full request).
      *
-     * @param \Kirby\Cms\App $kirby
      * @param string $component
      * @param array $data
      * @return array
      */
-    public static function partial(App $kirby, string $component, array $data): array
+    public static function partial(string $component, array $data): array
     {
         // is it a partial request?
+        $kirby            = kirby();
         $request          = $kirby->request();
         $requestInclude   = $request->header('X-Fiber-Include')   ?? get('_include');
         $requestComponent = $request->header('X-Fiber-Component') ?? get('_component');
@@ -556,7 +562,7 @@ class Panel
 
         // check if globals are requested and need to be merged
         if (Str::contains($requestInclude, '$')) {
-            $data = array_merge_recursive(static::globals($kirby), $data);
+            $data = array_merge_recursive(static::globals(), $data);
         }
 
         // make sure the data is already resolved to make
@@ -574,18 +580,19 @@ class Panel
     /**
      * Renders the main panel view
      *
-     * @param \Kirby\Cms\App $kirby
      * @param string $component
      * @param array $data
      * @return \Kirby\Http\Response
      */
-    public static function render(App $kirby, string $component, array $data)
+    public static function render(string $component, array $data)
     {
+        $kirby = kirby();
+
         // get $fiber response array
-        $fiber = static::fiber($kirby, $component, $data);
+        $fiber = static::fiber($component, $data);
 
         // if requested, send $fiber data as JSON
-        if (static::isFiberRequest($kirby->request()) === true) {
+        if (static::isFiberRequest() === true) {
             return Response::json($fiber, null, get('_pretty'), [
                 'Vary'    => 'Accept',
                 'X-Fiber' => 'true'
@@ -594,7 +601,7 @@ class Panel
 
         // Full HTML response
         try {
-            if (static::link($kirby) === true) {
+            if (static::link() === true) {
                 usleep(1);
                 go($kirby->url('index') . '/' . $kirby->path());
             }
@@ -606,7 +613,7 @@ class Panel
         $uri = new Uri($url = $kirby->url('panel'));
 
         // inject globals
-        $globals = static::globals($kirby);
+        $globals = static::globals();
         $fiber   = array_merge_recursive(A::apply($globals), $fiber);
 
         // fetch all plugins
@@ -614,8 +621,8 @@ class Panel
 
         return new Response(
             Tpl::load($kirby->root('kirby') . '/views/panel.php', [
-                'assets'   => static::assets($kirby),
-                'icons'    => static::icons($kirby),
+                'assets'   => static::assets(),
+                'icons'    => static::icons(),
                 'nonce'    => $kirby->nonce(),
                 'fiber'    => $fiber,
                 'panelUrl' => $uri->path()->toString(true) . '/',
@@ -626,12 +633,13 @@ class Panel
     /**
      * Router for the Panel views
      *
-     * @param \Kirby\Cms\App $kirby
      * @param string $path
      * @return \Kirby\Http\Response|false
      */
-    public static function router(App $kirby, string $path = null)
+    public static function router(string $path = null)
     {
+        $kirby = kirby();
+
         if ($kirby->option('panel') === false) {
             return null;
         }
@@ -639,13 +647,13 @@ class Panel
         // set the translation for Panel UI before
         // gathering areas and routes, so that the
         // `t()` helper can already be used
-        static::setTranslation($kirby);
+        static::setTranslation();
 
         // set the language in multi-lang installations
-        static::setLanguage($kirby);
+        static::setLanguage();
 
-        $areas  = static::areas($kirby);
-        $routes = static::routes($kirby, $areas);
+        $areas  = static::areas();
+        $routes = static::routes($areas);
 
         // create a micro-router for the Panel
         return router($path, $method = $kirby->request()->method(), $routes, function ($route) use ($areas, $kirby, $method, $path) {
@@ -669,7 +677,7 @@ class Panel
             } catch (Redirect $e) {
                 $result = Response::redirect($e->location());
             } catch (Throwable $e) {
-                $result = static::error($kirby, $e->getMessage());
+                $result = static::error($e->getMessage());
             }
 
             // pass responses directly down to the Kirby router
@@ -681,20 +689,20 @@ class Panel
 
             // interpret strings as errors
             if (is_string($result) === true) {
-                $result = static::error($kirby, $result);
+                $result = static::error($result);
             }
 
             // only expect arrays from here on
             if (is_array($result) === false) {
-                $result = static::error($kirby, 'Invalid Panel response');
+                $result = static::error('Invalid Panel response');
             }
 
             // create the view based on the current area
-            $view = static::view($kirby, $area, $result ?? []);
+            $view = static::view($area, $result ?? []);
 
             $kirby->trigger('panel.route:after', compact('route', 'path', 'method', 'result', 'view'));
 
-            return static::render($kirby, $view['component'], [
+            return static::render($view['component'], [
                 '$view'  => $view,
                 '$areas' => array_map(function ($area) {
                     // routes should not be included in the frontend object
@@ -711,8 +719,10 @@ class Panel
      *
      * @return array
      */
-    public static function routes(App $kirby, array $areas): array
+    public static function routes(array $areas): array
     {
+        $kirby = kirby();
+
         // the browser incompatibility
         // warning is always needed
         $routes = [
@@ -794,11 +804,12 @@ class Panel
      * installations based on the session or the
      * query language query parameter
      *
-     * @param \Kirby\Cms\App $kirby
      * @return string|null
      */
-    public static function setLanguage(App $kirby): ?string
+    public static function setLanguage(): ?string
     {
+        $kirby = kirby();
+
         // language switcher
         if ($kirby->options('languages')) {
             $session  = $kirby->session();
@@ -823,11 +834,12 @@ class Panel
      * Set the currently active Panel translation
      * based on the current user or config
      *
-     * @param \Kirby\Cms\App $kirby
      * @return string
      */
-    public static function setTranslation(App $kirby): string
+    public static function setTranslation(): string
     {
+        $kirby = kirby();
+
         if ($user = $kirby->user()) {
             // use the user language for the default translation
             $translation = $user->language();
@@ -845,13 +857,14 @@ class Panel
     /**
      * Returns data array for view
      *
-     * @param \Kirby\Cms\App $kirby
      * @param array $area
      * @param array $view
      * @return array
      */
-    public static function view(App $kirby, ?array $area = null, array $view = []): array
+    public static function view(?array $area = null, array $view = []): array
     {
+        $kirby = kirby();
+
         // merge view with area defaults
         $view = array_replace_recursive($area ?? [], $view);
 

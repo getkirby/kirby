@@ -97,8 +97,8 @@ return function ($kirby) {
             'pattern' => $panel . '/(:all?)',
             'method'  => 'ALL',
             'env'     => 'panel',
-            'action'  => function ($path = null) use ($kirby) {
-                return Panel::router($kirby, $path);
+            'action'  => function ($path = null) {
+                return Panel::router($path);
             }
         ],
     ];
