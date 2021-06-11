@@ -1,4 +1,4 @@
-import { color } from "./css.js";
+import color from "./color.js";
 
 describe("$helper.css.color()", () => {
   it("should return HEX", () => {

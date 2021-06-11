@@ -6,18 +6,16 @@
     :data-back="back"
     :data-size="size"
     :class="'k-icon k-icon-' + type"
-    :style="{ background: toColor(back) }"
+    :style="{ background: $helper.color(back) }"
   >
     <span v-if="isEmoji" class="k-icon-emoji">{{ type }}</span>
-    <svg v-else :style="{ color: toColor(color) }" viewBox="0 0 16 16">
+    <svg v-else :style="{ color: $helper.color(color) }" viewBox="0 0 16 16">
       <use :xlink:href="'#icon-' + type" />
     </svg>
   </span>
 </template>
 
 <script>
-import { color } from "@/helpers/css.js";
-
 /**
  * The icon component can be used to display any icon from our own icon set.
  * @example <k-icon type="pencil" />
@@ -50,11 +48,6 @@ export default {
   computed: {
     isEmoji() {
       return this.$helper.string.hasEmoji(this.type);
-    }
-  },
-  methods: {
-    toColor(string) {
-      return color(string);
     }
   }
 };

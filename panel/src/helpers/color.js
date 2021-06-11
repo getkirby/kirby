@@ -1,4 +1,4 @@
-export function color(string) {
+export default function (string) {
   if (typeof string !== "string") {
     return;
   }
@@ -15,7 +15,3 @@ export function color(string) {
 
   return `var(--color-${string})`;
 }
-
-export default {
-  color
-};

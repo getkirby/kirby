@@ -1,4 +1,5 @@
 import clone from "./clone.js";
+import color from "./color.js";
 import debounce from "./debounce.js";
 import embed from "./embed.js";
 import isComponent from "./isComponent.js";
@@ -16,7 +17,6 @@ import "./regex.js";
 
 export default {
   install(Vue) {
-
     /**
      * Array.sortBy()
      */
@@ -38,23 +38,21 @@ export default {
       });
     };
 
-
     Vue.prototype.$helper = {
-      clone: clone,
-      embed: embed,
-      isComponent: isComponent,
-      isUploadEvent: isUploadEvent,
-      debounce: debounce,
-      pad: pad,
-      ratio: ratio,
-      slug: slug,
-      sort: sort,
-      string: string,
-      upload: upload,
-      uuid: uuid,
-      validate: validate,
+      clone,
+      color,
+      embed,
+      isComponent,
+      isUploadEvent,
+      debounce,
+      pad,
+      ratio,
+      slug,
+      sort,
+      string,
+      upload,
+      uuid,
+      validate
     };
-
   }
-
 };
