@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
+use Kirby\Http\Response;
 use Kirby\Toolkit\A;
 use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\F;
@@ -410,6 +411,7 @@ class PanelTest extends TestCase
         $error = Panel::error('Test');
 
         $expected = [
+            'code' => 404,
             'component' => 'k-error-view',
             'props' => [
                 'error' => 'Test',
@@ -434,12 +436,21 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::error
+     */
+    public function testErrorWithCustomCode(): void
+    {
+        $error = Panel::error('Test', 403);
+        $this->assertSame(403, $error['code']);
+    }
+
+    /**
      * @covers ::fiber
      */
     public function testFiber(): void
     {
         // default
-        $fiber = Panel::fiber('k-page-view');
+        $fiber = Panel::fiber();
 
         $expected = [
             '$language' => null,
@@ -680,6 +691,19 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::json
+     */
+    public function testJson(): void
+    {
+        $response = Panel::json($data = ['foo' => 'bar']);
+
+        $this->assertSame('application/json', $response->type());
+        $this->assertSame('true', $response->header('X-Fiber'));
+        $this->assertSame($data, json_decode($response->body(), true));
+    }
+
+
+    /**
      * @covers ::link
      */
     public function testLink(): void
@@ -704,7 +728,7 @@ class PanelTest extends TestCase
         ];
 
         // default (no partial request)
-        $result = Panel::partial('k-test-view', $data);
+        $result = Panel::partial($data);
 
         $this->assertSame($data, $result);
     }
@@ -728,7 +752,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial('k-test-view', $data);
+        $result = Panel::partial($data);
 
         $this->assertSame(['a' => 'A'], $result);
 
@@ -746,98 +770,9 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial('k-test-view', $data);
+        $result = Panel::partial($data);
 
         $this->assertSame(['a' => 'A'], $result);
-    }
-
-    /**
-     * @covers ::partial
-     */
-    public function testPartialWithComponentComparison(): void
-    {
-        // via get
-        $this->app = $this->app->clone([
-            'request' => [
-                'query' => [
-                    '_include' => 'a',
-                    '_component' => 'k-test-view'
-                ]
-            ]
-        ]);
-
-        $data = [
-            'a' => 'A',
-            'b' => 'B'
-        ];
-
-        $result = Panel::partial('k-test-view', $data);
-
-        $this->assertSame(['a' => 'A'], $result);
-
-        // via headers
-        $this->app = $this->app->clone([
-            'request' => [
-                'headers' => [
-                    'X-Fiber-Include' => 'a',
-                    'X-Fiber-Component' => 'k-test-view'
-                ]
-            ]
-        ]);
-
-        $data = [
-            'a' => 'A',
-            'b' => 'B'
-        ];
-
-        $result = Panel::partial('k-test-view', $data);
-
-        $this->assertSame(['a' => 'A'], $result);
-    }
-
-    /**
-     * @covers ::partial
-     */
-    public function testPartialWithFailingComponentComparison(): void
-    {
-        // via get
-        $this->app = $this->app->clone([
-            'request' => [
-                'query' => [
-                    '_include' => 'a',
-                    '_component' => 'k-other-view'
-                ]
-            ]
-        ]);
-
-        $data = [
-            'a' => 'A',
-            'b' => 'B'
-        ];
-
-        $result = Panel::partial('k-test-view', $data);
-
-        $this->assertSame($data, $result);
-
-
-        // via headers
-        $this->app = $this->app->clone([
-            'request' => [
-                'headers' => [
-                    'X-Fiber-Include' => 'a',
-                    'X-Fiber-Component' => 'k-other-view'
-                ]
-            ]
-        ]);
-
-        $data = [
-            'a' => 'A',
-            'b' => 'B'
-        ];
-
-        $result = Panel::partial('k-test-view', $data);
-
-        $this->assertSame($data, $result);
     }
 
     /**
@@ -859,7 +794,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial('k-test-view', $data);
+        $result = Panel::partial($data);
         $result = A::apply($result);
 
         $expected = [
@@ -894,7 +829,7 @@ class PanelTest extends TestCase
             ]
         ];
 
-        $result = Panel::partial('k-test-view', $data);
+        $result = Panel::partial($data);
 
         $expected = [
             'b' => [
@@ -924,7 +859,7 @@ class PanelTest extends TestCase
             'b' => 'B'
         ];
 
-        $result = Panel::partial('k-test-view', $data);
+        $result = Panel::partial($data);
 
         $expected = [
             'a' => 'A',
@@ -937,15 +872,71 @@ class PanelTest extends TestCase
     }
 
     /**
-     * @covers ::render
+     * @covers ::response
      */
-    public function testRender(): void
+    public function testResponse()
+    {
+        $response = new Response('Test');
+
+        // response objects should not be modified
+        $this->assertSame($response, Panel::response($response));
+    }
+
+    /**
+     * @covers ::response
+     */
+    public function testResponseFromString()
+    {
+        // fake json request for easier assertions
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_json' => true,
+                ]
+            ]
+        ]);
+
+        // strings are interpreted as errors
+        $response = Panel::response('Not found');
+        $json     = json_decode($response->body(), true);
+
+        $this->assertSame(404, $response->code());
+        $this->assertSame('k-error-view', $json['$view']['component']);
+        $this->assertSame('Not found', $json['$view']['props']['error']);
+    }
+
+    /**
+     * @covers ::response
+     */
+    public function testResponseFromUnsupportedResult()
+    {
+        // fake json request for easier assertions
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_json' => true,
+                ]
+            ]
+        ]);
+
+        $response = Panel::response(1234);
+        $json     = json_decode($response->body(), true);
+
+        $this->assertSame(500, $response->code());
+        $this->assertSame('k-error-view', $json['$view']['component']);
+        $this->assertSame('Invalid Panel response', $json['$view']['props']['error']);
+    }
+
+    /**
+     * @covers ::responseForView
+     */
+    public function testResponseForViewAsHTML(): void
     {
         // create panel dist files first to avoid redirect
         Panel::link($this->app);
 
         // get panel response
-        $response = Panel::render('k-page-view', [
+        $response = Panel::responseForView([
             'test' => 'Test'
         ]);
 
@@ -957,9 +948,9 @@ class PanelTest extends TestCase
     }
 
     /**
-     * @covers ::render
+     * @covers ::responseForView
      */
-    public function testRenderJson(): void
+    public function testResponseForViewAsJson(): void
     {
         $this->app = $this->app->clone([
             'request' => [
@@ -970,12 +961,11 @@ class PanelTest extends TestCase
         ]);
 
         // get panel response
-        $response = Panel::render('k-page-view', [
+        $response = Panel::responseForView([
             'test' => 'Test'
         ]);
 
         $this->assertSame('application/json', $response->type());
-        $this->assertSame('Accept', $response->header('Vary'));
         $this->assertSame('true', $response->header('X-Fiber'));
     }
 
@@ -1155,18 +1145,19 @@ class PanelTest extends TestCase
         ];
         $this->assertSame($expected, $result);
 
-        // with $area
-        $result = Panel::view(['search' => 'users']);
-        $expected['search'] = 'users';
-        $this->assertEquals($expected, $result);
-
         // with $view
-        $result = Panel::view(null, ['search' => 'files']);
+        $result = Panel::view(['search' => 'files']);
         $expected['search'] = 'files';
         $this->assertEquals($expected, $result);
 
-        // wmake sure routes are unset
-        $result = Panel::view(['search' => 'files'], ['routes' => ['foo' => 'bar']]);
+        // with $area
+        $result = Panel::view(['search' => 'users'], ['title' => 'Users']);
+        $expected['search'] = 'users';
+        $expected['title']  = 'Users';
+        $this->assertEquals($expected, $result);
+
+        // make sure routes are unset
+        $result = Panel::view(['search' => 'users'], ['title' => 'Users', 'routes' => ['foo' => 'bar']]);
         $this->assertEquals($expected, $result);
     }
 }

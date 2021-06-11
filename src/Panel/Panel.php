@@ -4,6 +4,7 @@ namespace Kirby\Panel;
 
 use Exception;
 use Kirby\Cms\User;
+use Kirby\Exception\Exception as KirbyException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
@@ -30,7 +31,6 @@ use Throwable;
  */
 class Panel
 {
-
     /**
      * Normalize a panel area
      *
@@ -284,11 +284,13 @@ class Panel
      * Renders the error view with provided message
      *
      * @param string $message
+     * @param int $code
      * @return \Kirby\Http\Response
      */
-    public static function error(string $message)
+    public static function error(string $message, int $code = 404)
     {
         return [
+            'code'      => $code,
             'component' => 'k-error-view',
             'props'     => [
                 'error'  => $message,
@@ -301,17 +303,16 @@ class Panel
     /**
      * Creates $fiber response array
      *
-     * @param string $component
      * @param array $data
      * @return array
      */
-    public static function fiber(string $component, array $data = []): array
+    public static function fiber(array $data = []): array
     {
         // get all data for the request
         $data = static::data($data);
 
         // filter data, if it's a partial request
-        $data = static::partial($component, $data);
+        $data = static::partial($data);
 
         // resolve lazy data entries
         return A::apply($data);
@@ -435,7 +436,7 @@ class Panel
     {
         $slug = kirby()->option('panel.slug', 'panel');
         $url  = url($slug . '/' . trim($path, '/'));
-        throw new Redirect($url);
+        throw new Redirect($url, 302);
     }
 
     /**
@@ -486,6 +487,20 @@ class Panel
     }
 
     /**
+     * Returns a JSON response
+     * for Fiber calls
+     *
+     * @param array $data
+     * @return \Kirby\Http\Response
+     */
+    public static function json(array $data)
+    {
+        return Response::json($data, $data['$view']['code'] ?? 200, get('_pretty'), [
+            'X-Fiber' => 'true'
+        ]);
+    }
+
+    /**
      * Links all dist files in the media folder
      * and returns the link to the requested asset
      *
@@ -524,29 +539,21 @@ class Panel
      * entries requested via a Fiber partial
      * request (or the whole array if full request).
      *
-     * @param string $component
      * @param array $data
      * @return array
      */
-    public static function partial(string $component, array $data): array
+    public static function partial(array $data): array
     {
         // is it a partial request?
-        $kirby            = kirby();
-        $request          = $kirby->request();
-        $requestInclude   = $request->header('X-Fiber-Include')   ?? get('_include');
-        $requestComponent = $request->header('X-Fiber-Component') ?? get('_component');
+        $kirby          = kirby();
+        $request        = $kirby->request();
+        $requestInclude = $request->header('X-Fiber-Include') ?? get('_include');
 
         // split include string into an array of fields
         $include = Str::split($requestInclude, ',');
 
         // if a full request is made, return all data
         if (empty($include) === true) {
-            return $data;
-        }
-
-        // if a new component is requested, the include
-        // parameter must be ignored and all data returned
-        if (empty($requestComponent) === false && $requestComponent !== $component) {
             return $data;
         }
 
@@ -572,25 +579,62 @@ class Panel
     }
 
     /**
-     * Renders the main panel view
+     * Creates a Response object from the result of
+     * a Panel route call
      *
-     * @param string $component
-     * @param array $data
+     * @params mixed $result
+     * @params array $options
      * @return \Kirby\Http\Response
      */
-    public static function render(string $component, array $data)
+    public static function response($result, array $options = [])
+    {
+        // pass responses directly down to the Kirby router
+        if (is_a($result, 'Kirby\Http\Response') === true) {
+            return $result;
+        }
+
+        // interpret strings as errors
+        if (is_string($result) === true) {
+            $result = static::error($result);
+        }
+
+        // only expect arrays from here on
+        if (is_array($result) === false) {
+            $result = static::error('Invalid Panel response', 500);
+        }
+
+        return static::responseForView($result, $options);
+    }
+
+    /**
+     * Renders the main panel view
+     *
+     * @param array $data
+     * @param array $options
+     * @return \Kirby\Http\Response
+     */
+    public static function responseForView(array $data, array $options = [])
     {
         $kirby = kirby();
+        $area  = $options['area']  ?? null;
+        $areas = $options['areas'] ?? [];
+
+        // create the view based on the current area
+        $view = static::view($data, $area);
 
         // get $fiber response array
-        $fiber = static::fiber($component, $data);
+        $fiber = static::fiber([
+            '$view'  => $view,
+            '$areas' => array_map(function ($area) {
+                // routes should not be included in the frontend object
+                unset($area['routes']);
+                return $area;
+            }, $areas)
+        ]);
 
         // if requested, send $fiber data as JSON
         if (static::isFiberRequest() === true) {
-            return Response::json($fiber, null, get('_pretty'), [
-                'Vary'    => 'Accept',
-                'X-Fiber' => 'true'
-            ]);
+            return static::json($fiber);
         }
 
         // Full HTML response
@@ -609,19 +653,18 @@ class Panel
         // inject globals
         $globals = static::globals();
         $fiber   = array_merge_recursive(A::apply($globals), $fiber);
+        $code    = $view['code'] ?? 200;
 
-        // fetch all plugins
-        $plugins = new Plugins();
+        // load the main Panel view template
+        $body = Tpl::load($kirby->root('kirby') . '/views/panel.php', [
+            'assets'   => static::assets(),
+            'icons'    => static::icons(),
+            'nonce'    => $kirby->nonce(),
+            'fiber'    => $fiber,
+            'panelUrl' => $uri->path()->toString(true) . '/',
+        ]);
 
-        return new Response(
-            Tpl::load($kirby->root('kirby') . '/views/panel.php', [
-                'assets'   => static::assets(),
-                'icons'    => static::icons(),
-                'nonce'    => $kirby->nonce(),
-                'fiber'    => $fiber,
-                'panelUrl' => $uri->path()->toString(true) . '/',
-            ])
-        );
+        return new Response($body, 'text/html', $code);
     }
 
     /**
@@ -669,40 +712,16 @@ class Panel
 
                 $result = $route->action()->call($route, ...$route->arguments());
             } catch (Redirect $e) {
-                $result = Response::redirect($e->location());
+                $result = Response::redirect($e->location(), $e->getCode());
+            } catch (KirbyException $e) {
+                $result = static::error($e->getMessage(), $e->getHttpCode());
             } catch (Throwable $e) {
-                $result = static::error($e->getMessage());
+                $result = static::error($e->getMessage(), 500);
             }
 
-            // pass responses directly down to the Kirby router
-            if (is_a($result, 'Kirby\Http\Response') === true) {
-                $view = null;
-                $kirby->trigger('panel.route:after', compact('route', 'path', 'method', 'result', 'view'));
-                return $result;
-            }
-
-            // interpret strings as errors
-            if (is_string($result) === true) {
-                $result = static::error($result);
-            }
-
-            // only expect arrays from here on
-            if (is_array($result) === false) {
-                $result = static::error('Invalid Panel response');
-            }
-
-            // create the view based on the current area
-            $view = static::view($area, $result ?? []);
-
-            $kirby->trigger('panel.route:after', compact('route', 'path', 'method', 'result', 'view'));
-
-            return static::render($view['component'], [
-                '$view'  => $view,
-                '$areas' => array_map(function ($area) {
-                    // routes should not be included in the frontend object
-                    unset($area['routes']);
-                    return $area;
-                }, $areas)
+            return static::response($result, [
+                'area'  => $area,
+                'areas' => $areas
             ]);
         });
     }
@@ -851,11 +870,11 @@ class Panel
     /**
      * Returns data array for view
      *
-     * @param array $area
      * @param array $view
+     * @param array $area
      * @return array
      */
-    public static function view(?array $area = null, array $view = []): array
+    public static function view(array $view = [], ?array $area = null): array
     {
         $kirby = kirby();
 
