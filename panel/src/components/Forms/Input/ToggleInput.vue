@@ -9,7 +9,8 @@
       type="checkbox"
       @change="onInput($event.target.checked)"
     >
-    <span class="k-toggle-input-label" v-text="label" />
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <span class="k-toggle-input-label" v-html="label" />
   </label>
 </template>
 
