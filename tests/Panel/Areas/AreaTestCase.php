@@ -133,7 +133,7 @@ abstract class AreaTestCase extends TestCase
 
     public function response(string $path = null, bool $toJson = false)
     {
-        $response = Panel::router($this->app, $path);
+        $response = Panel::router($path);
 
         if ($toJson === true) {
             return json_decode($response->body(), true);
