@@ -376,6 +376,19 @@ class A
     }
 
     /**
+     * A simple wrapper around array_map
+     * with a sane argument order
+     *
+     * @param array $array
+     * @param \Closure $map
+     * @return array
+     */
+    public static function map(array $array, Closure $map): array
+    {
+        return array_map($map, $array);
+    }
+
+    /**
      * Move an array item to a new index
      *
      * @param array $array
