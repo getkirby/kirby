@@ -380,10 +380,10 @@ class A
      * with a sane argument order
      *
      * @param array $array
-     * @param \Closure $map
+     * @param callable $map
      * @return array
      */
-    public static function map(array $array, Closure $map): array
+    public static function map(array $array, callable $map): array
     {
         return array_map($map, $array);
     }

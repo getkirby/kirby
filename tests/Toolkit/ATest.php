@@ -163,6 +163,22 @@ class ATest extends TestCase
         }));
     }
 
+    public function testMapWithFunction()
+    {
+        $array    = [' A ', 'B ', ' C'];
+        $expected = ['A', 'B', 'C'];
+
+        $this->assertSame($expected, A::map($array, 'trim'));
+    }
+
+    public function testMapWithClassMethod()
+    {
+        $array    = ['a', 'b', 'c'];
+        $expected = ['A', 'B', 'C'];
+
+        $this->assertSame($expected, A::map($array, 'Str::upper'));
+    }
+
     /**
      * @covers ::merge
      */
