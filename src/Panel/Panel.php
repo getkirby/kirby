@@ -741,6 +741,7 @@ class Panel
         $routes = [
             [
                 'pattern' => 'browser',
+                'auth'    => false,
                 'action'  => function () use ($kirby) {
                     return new Response(
                         Tpl::load($kirby->root('kirby') . '/views/browser.php')
