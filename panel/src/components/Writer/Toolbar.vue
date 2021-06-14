@@ -102,7 +102,7 @@ export default {
   background: var(--color-black);
   height: 30px;
   transform: translateX(-50%) translateY(-.75rem);
-  z-index: var(--z-dropdown) + 1;
+  z-index: calc(var(--z-dropdown) + 1);
   box-shadow: var(--shadow);
   color: var(--color-white);
   border-radius: var(--rounded);
