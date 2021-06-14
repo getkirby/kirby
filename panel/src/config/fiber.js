@@ -105,7 +105,7 @@ const Fiber = {
       "$translation",
       "$urls",
       "$user",
-      "$view",
+      "$view"
     ].forEach((key) => {
       if (data[key] !== undefined) {
         Vue.prototype[key] = window.panel[key] = data[key];
@@ -136,7 +136,7 @@ const Fiber = {
     return this.visit(window.location.href, {
       ...options,
       preserveScroll: true,
-      preserveState: true,
+      preserveState: true
     });
   },
 
@@ -175,8 +175,8 @@ const Fiber = {
       ...this.page,
       scrollRegions: regions.map((region) => ({
         top: region.scrollTop,
-        left: region.scrollLeft,
-      })),
+        left: region.scrollLeft
+      }))
     });
   },
 
@@ -258,19 +258,26 @@ const Fiber = {
   async visit(
     url,
     {
-      replace = false,
+      data = {},
+      headers = {},
+      only = [],
       preserveScroll = false,
       preserveState = false,
-      only = [],
-      headers = {},
-      data = {},
+      replace = false,
+      silent = false
     } = {}
   ) {
     // save the current scrolling positions
     // for all scroll regions
     this.saveScroll();
 
-    document.dispatchEvent(new Event("fiber:start"));
+    if (!silent) {
+      document.dispatchEvent(
+        new CustomEvent("fiber:start", {
+          detail: { silent }
+        })
+      );
+    }
 
     // make sure only is an array
     if (Array.isArray(only) === false) {
@@ -290,10 +297,10 @@ const Fiber = {
           ...(only.length
             ? {
                 "X-Fiber-Component": this.page.$view.component,
-                "X-Fiber-Include": only.join(","),
+                "X-Fiber-Include": only.join(",")
               }
-            : {}),
-        },
+            : {})
+        }
       });
 
       // turn into json data
@@ -323,7 +330,7 @@ const Fiber = {
     } finally {
       document.dispatchEvent(new Event("fiber:finish"));
     }
-  },
+  }
 };
 
 export const plugin = {
@@ -345,7 +352,7 @@ export const plugin = {
       }
       return Fiber.reload(options);
     };
-  },
+  }
 };
 
 export const component = {
@@ -354,7 +361,7 @@ export const component = {
     return {
       component: null,
       page: window.fiber,
-      key: null,
+      key: null
     };
   },
   created() {
@@ -364,15 +371,15 @@ export const component = {
         this.component = component;
         this.page = page;
         this.key = preserveState ? this.key : Date.now();
-      },
+      }
     });
   },
   render(h) {
     if (this.component) {
       return h(this.component, {
         key: this.key,
-        props: this.page.$view.props,
+        props: this.page.$view.props
       });
     }
-  },
+  }
 };
