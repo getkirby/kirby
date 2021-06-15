@@ -11,6 +11,33 @@ class UsersDialogsTest extends AreaTestCase
         $this->login();
     }
 
+    public function testChangeEmail(): void
+    {
+        $dialog = $this->dialog('users/test/changeEmail');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('Email', $props['fields']['email']['label']);
+        $this->assertSame('Change', $props['submitButton']);
+        $this->assertSame('test@getkirby.com', $props['value']['email']);
+    }
+
+    public function testChangeEmailOnSubmit(): void
+    {
+        $this->submit([
+            'email' => 'test2@getkirby.com'
+        ]);
+
+        $dialog = $this->dialog('users/test/changeEmail');
+
+        $this->assertSame('user.changeEmail', $dialog['event']);
+        $this->assertSame(['users/test'], $dialog['dispatch']['content/revert']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertSame('test2@getkirby.com', $this->app->user('test')->email());
+    }
+
     public function testChangeName(): void
     {
         $dialog = $this->dialog('users/test/changeName');
@@ -36,4 +63,5 @@ class UsersDialogsTest extends AreaTestCase
 
         $this->assertSame('Peter', $this->app->user('test')->username());
     }
+
 }

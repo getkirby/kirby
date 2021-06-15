@@ -3,6 +3,43 @@
 use Kirby\Cms\Find;
 
 return [
+
+    // change email
+    'users/(:any)/changeEmail' => [
+        'load' => function (string $id) {
+            $user = Find::user($id);
+
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => [
+                        'email' => [
+                            'label'     => t('email'),
+                            'required'  => true,
+                            'type'      => 'email',
+                            'preselect' => true
+                        ]
+                    ],
+                    'submitButton' => t('change'),
+                    'value' => [
+                        'email' => $user->email()
+                    ]
+                ]
+            ];
+        },
+        'submit' => function (string $id) {
+            Find::user($id)->changeEmail(get('email'));
+
+            return [
+                'event'    => 'user.changeEmail',
+                'dispatch' => [
+                    'content/revert' => ['users/' . $id]
+                ]
+            ];
+        }
+    ],
+
+    // change name
     'users/(:any)/changeName' => [
         'load' => function (string $id) {
             $user = Find::user($id);
