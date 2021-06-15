@@ -11,6 +11,49 @@ class UsersDialogsTest extends AreaTestCase
         $this->login();
     }
 
+    public function testCreate(): void
+    {
+        $dialog = $this->dialog('users/create');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        // check for all fields
+        $this->assertSame('Name', $props['fields']['name']['label']);
+        $this->assertSame('Email', $props['fields']['email']['label']);
+        $this->assertSame('Password', $props['fields']['password']['label']);
+        $this->assertSame('Language', $props['fields']['language']['label']);
+        $this->assertSame('Role', $props['fields']['role']['label']);
+
+        $this->assertSame('Create', $props['submitButton']);
+
+        // check values
+        $this->assertSame('', $props['value']['name']);
+        $this->assertSame('', $props['value']['email']);
+        $this->assertSame('', $props['value']['password']);
+        $this->assertSame('en', $props['value']['language']);
+        $this->assertSame('admin', $props['value']['role']);
+    }
+
+    public function testCreateOnSubmit(): void
+    {
+        $this->submit([
+            'name'  => 'Peter',
+            'email' => 'test2@getkirby.com',
+            'role'  => 'admin'
+        ]);
+
+        $dialog = $this->dialog('users/create');
+
+        $this->assertSame('user.create', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+
+        $user = $this->app->user('test2@getkirby.com');
+
+        $this->assertSame('Peter', $user->name()->value());
+        $this->assertSame('admin', $user->role()->name());
+    }
+
     public function testChangeEmail(): void
     {
         $dialog = $this->dialog('users/test/changeEmail');
@@ -42,6 +85,7 @@ class UsersDialogsTest extends AreaTestCase
     {
         $dialog = $this->dialog('users/test/changeLanguage');
         $props  = $dialog['props'];
+
 
         $this->assertFormDialog($dialog);
 

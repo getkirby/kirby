@@ -3,8 +3,44 @@
 use Kirby\Cms\Find;
 use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Panel\Field;
 
 return [
+
+    // create
+    'users/create' => [
+        'load' => function () use ($kirby) {
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => [
+                        'name'  => Field::username(),
+                        'email' => Field::email([
+                            'link'     => false,
+                            'required' => true
+                        ]),
+                        'password' => Field::password(),
+                        'language' => Field::translation(),
+                        'role'     => Field::role()
+                    ],
+                    'submitButton' => t('create'),
+                    'value' => [
+                        'name'     => '',
+                        'email'    => '',
+                        'password' => '',
+                        'language' => $kirby->panelLanguage(),
+                        'role'     => $kirby->user()->role()->name()
+                    ]
+                ]
+            ];
+        },
+        'submit' => function () use ($kirby) {
+            $kirby->users()->create(get());
+            return [
+                'event' => 'user.create'
+            ];
+        }
+    ],
 
     // change email
     'users/(:any)/changeEmail' => [
@@ -44,28 +80,13 @@ return [
     // change language
     'users/(:any)/changeLanguage' => [
         'load' => function (string $id) {
-            $user    = Find::user($id);
-            $options = [];
-
-            foreach (kirby()->translations() as $translation) {
-                $options[] = [
-                    'text'  => $translation->name(),
-                    'value' => $translation->code()
-                ];
-            }
+            $user = Find::user($id);
 
             return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => [
-                        'language' => [
-                            'label'     => t('language'),
-                            'type'      => 'select',
-                            'icon'      => 'globe',
-                            'options'   => $options,
-                            'required'  => true,
-                            'empty'     => false
-                        ]
+                        'language' => Field::translation()
                     ],
                     'submitButton' => t('change'),
                     'value' => [
@@ -95,12 +116,9 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => [
-                        'name' => [
-                            'label'     => t('name'),
-                            'type'      => 'text',
-                            'icon'      => 'user',
+                        'name' => Field::username([
                             'preselect' => true
-                        ]
+                        ])
                     ],
                     'submitButton' => t('rename'),
                     'value' => [
@@ -127,16 +145,12 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => [
-                        'password' => [
+                        'password' => Field::password([
                             'label' => t('user.changePassword.new'),
-                            'type'  => 'password',
-                            'icon'  => 'key',
-                        ],
-                        'passwordConfirmation' => [
+                        ]),
+                        'passwordConfirmation' => Field::password([
                             'label' => t('user.changePassword.new.confirm'),
-                            'type'  => 'password',
-                            'icon'  => 'key',
-                        ]
+                        ])
                     ],
                     'submitButton' => t('change'),
                 ]
