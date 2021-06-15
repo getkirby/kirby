@@ -25,6 +25,11 @@ abstract class AreaTestCase extends TestCase
         $this->assertSame($message, $view['props']['error']);
     }
 
+    public function assertFormDialog(array $dialog)
+    {
+        $this->assertSame('k-form-dialog', $dialog['component']);
+    }
+
     public function assertRedirect(string $source, string $dest = '/', int $code = 302): void
     {
         $response = $this->response($source);
@@ -33,6 +38,21 @@ abstract class AreaTestCase extends TestCase
         $this->assertInstanceOf('Kirby\Http\Response', $response);
         $this->assertSame($code, $response->code());
         $this->assertSame($dest, ltrim(Str::after($location, '/panel'), '/'));
+    }
+
+    public function assertRemoveDialog(array $dialog)
+    {
+        $this->assertSame('k-remove-dialog', $dialog['component']);
+    }
+
+    public function assertTextDialog(array $dialog)
+    {
+        $this->assertSame('k-text-dialog', $dialog['component']);
+    }
+
+    public function dialog(string $path)
+    {
+        return $this->response('dialogs/' . $path, true)['$dialog'];
     }
 
     public function enableMultilang(): void

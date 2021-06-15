@@ -403,12 +403,30 @@ class PanelTest extends TestCase
     }
 
     /**
-     * @covers ::error
+     * @covers ::errorDialog
      */
-    public function testError(): void
+    public function testErrorDialog(): void
+    {
+        // default
+        $error = Panel::errorDialog('Test');
+
+        $this->assertSame(404, $error['code']);
+        $this->assertSame('Test', $error['error']);
+
+        // custom code
+        $error = Panel::errorDialog('Test', 500);
+
+        $this->assertSame(500, $error['code']);
+        $this->assertSame('Test', $error['error']);
+    }
+
+    /**
+     * @covers ::errorView
+     */
+    public function testErrorView(): void
     {
         // without user
-        $error = Panel::error('Test');
+        $error = Panel::errorView('Test');
 
         $expected = [
             'code' => 404,
@@ -424,23 +442,23 @@ class PanelTest extends TestCase
 
         // with user
         $this->app->impersonate('kirby');
-        $error = Panel::error('Test');
+        $error = Panel::errorView('Test');
 
         $this->assertSame('inside', $error['props']['layout']);
 
         // user without panel access
         $this->app->impersonate('nobody');
-        $error = Panel::error('Test');
+        $error = Panel::errorView('Test');
 
         $this->assertSame('outside', $error['props']['layout']);
     }
 
     /**
-     * @covers ::error
+     * @covers ::errorView
      */
-    public function testErrorWithCustomCode(): void
+    public function testErrorViewWithCustomCode(): void
     {
-        $error = Panel::error('Test', 403);
+        $error = Panel::errorView('Test', 403);
         $this->assertSame(403, $error['code']);
     }
 
@@ -636,6 +654,52 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::go
+     */
+    public function testGo()
+    {
+        try {
+            Panel::go('test');
+        } catch (Redirect $r) {
+            $this->assertSame('/panel/test', $r->getMessage());
+            $this->assertSame(302, $r->getCode());
+        }
+    }
+
+    /**
+     * @covers ::go
+     */
+    public function testGoWithCustomCode()
+    {
+        try {
+            Panel::go('test', 301);
+        } catch (Redirect $r) {
+            $this->assertSame(301, $r->getCode());
+        }
+    }
+
+    /**
+     * @covers ::go
+     */
+    public function testGoWithCustomSlug()
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'slug' => 'foo'
+                ]
+            ]
+        ]);
+
+        try {
+            Panel::go('test');
+        } catch (Redirect $r) {
+            $this->assertSame('/foo/test', $r->getMessage());
+            $this->assertSame(302, $r->getCode());
+        }
+    }
+
+    /**
      * @covers ::icons
      */
     public function testIcons(): void
@@ -701,7 +765,6 @@ class PanelTest extends TestCase
         $this->assertSame('true', $response->header('X-Fiber'));
         $this->assertSame($data, json_decode($response->body(), true));
     }
-
 
     /**
      * @covers ::link
@@ -885,6 +948,37 @@ class PanelTest extends TestCase
     /**
      * @covers ::response
      */
+    public function testResponseFromNullOrFalse()
+    {
+        // fake json request for easier assertions
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_json' => true,
+                ]
+            ]
+        ]);
+
+        // null is interpreted as 404
+        $response = Panel::response(null);
+        $json     = json_decode($response->body(), true);
+
+        $this->assertSame(404, $response->code());
+        $this->assertSame('k-error-view', $json['$view']['component']);
+        $this->assertSame('The data could not be found', $json['$view']['props']['error']);
+
+        // false is interpreted as 404
+        $response = Panel::response(false);
+        $json     = json_decode($response->body(), true);
+
+        $this->assertSame(404, $response->code());
+        $this->assertSame('k-error-view', $json['$view']['component']);
+        $this->assertSame('The data could not be found', $json['$view']['props']['error']);
+    }
+
+    /**
+     * @covers ::response
+     */
     public function testResponseFromString()
     {
         // fake json request for easier assertions
@@ -897,34 +991,103 @@ class PanelTest extends TestCase
         ]);
 
         // strings are interpreted as errors
-        $response = Panel::response('Not found');
-        $json     = json_decode($response->body(), true);
-
-        $this->assertSame(404, $response->code());
-        $this->assertSame('k-error-view', $json['$view']['component']);
-        $this->assertSame('Not found', $json['$view']['props']['error']);
-    }
-
-    /**
-     * @covers ::response
-     */
-    public function testResponseFromUnsupportedResult()
-    {
-        // fake json request for easier assertions
-        $this->app = $this->app->clone([
-            'request' => [
-                'query' => [
-                    '_json' => true,
-                ]
-            ]
-        ]);
-
-        $response = Panel::response(1234);
+        $response = Panel::response('Test');
         $json     = json_decode($response->body(), true);
 
         $this->assertSame(500, $response->code());
         $this->assertSame('k-error-view', $json['$view']['component']);
-        $this->assertSame('Invalid Panel response', $json['$view']['props']['error']);
+        $this->assertSame('Test', $json['$view']['props']['error']);
+    }
+
+    /**
+     * @covers ::responseForDialog
+     */
+    public function testResponseForDialog(): void
+    {
+        $response = Panel::responseForDialog([
+            'test' => 'Test'
+        ]);
+
+        $expected = [
+            '$dialog' => [
+                'test' => 'Test',
+                'code' => 200,
+                'path' => null,
+            ]
+        ];
+
+        $this->assertSame('application/json', $response->type());
+        $this->assertSame('true', $response->header('X-Fiber'));
+        $this->assertSame($expected, json_decode($response->body(), true));
+    }
+
+    /**
+     * @covers ::responseForDialog
+     */
+    public function testResponseForDialogFromTrue(): void
+    {
+        $response = Panel::responseForDialog(true);
+        $expected = [
+            '$dialog' => [
+                'code' => 200,
+                'path' => null,
+            ]
+        ];
+
+        $this->assertSame($expected, json_decode($response->body(), true));
+    }
+
+    /**
+     * @covers ::responseForDialog
+     */
+    public function testResponseForDialogFromInvalidData(): void
+    {
+        $response = Panel::responseForDialog(1234);
+        $expected = [
+            '$dialog' => [
+                'code'  => 500,
+                'error' => 'Invalid dialog response',
+                'path'  => null,
+            ]
+        ];
+
+        $this->assertSame($expected, json_decode($response->body(), true));
+    }
+
+    /**
+     * @covers ::responseForDialog
+     */
+    public function testResponseForDialogFromException(): void
+    {
+        $exception = new \Exception('Test');
+        $response  = Panel::responseForDialog($exception);
+        $expected  = [
+            '$dialog' => [
+                'code'  => 500,
+                'error' => 'Test',
+                'path'  => null,
+            ]
+        ];
+
+        $this->assertSame($expected, json_decode($response->body(), true));
+    }
+
+    /**
+     * @covers ::responseForDialog
+     */
+    public function testResponseForDialogFromKirbyException(): void
+    {
+        $exception = new \Kirby\Exception\NotFoundException('Test');
+        $response  = Panel::responseForDialog($exception);
+        $expected  = [
+            '$dialog' => [
+                'code'  => 404,
+                'error' => 'Test',
+                'path'  => null,
+            ]
+        ];
+
+        $this->assertSame($expected, json_decode($response->body(), true));
     }
 
     /**
@@ -970,6 +1133,74 @@ class PanelTest extends TestCase
     }
 
     /**
+     * @covers ::responseForView
+     */
+    public function testResponseForViewFromKirbyException()
+    {
+        // fake json request for easier assertions
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_json' => true,
+                ]
+            ]
+        ]);
+
+        $exception = new \Kirby\Exception\NotFoundException('Test');
+        $response  = Panel::responseForView($exception);
+        $json      = json_decode($response->body(), true);
+
+        $this->assertSame(404, $response->code());
+        $this->assertSame('k-error-view', $json['$view']['component']);
+        $this->assertSame('Test', $json['$view']['props']['error']);
+    }
+
+    /**
+     * @covers ::responseForView
+     */
+    public function testResponseForViewFromException()
+    {
+        // fake json request for easier assertions
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_json' => true,
+                ]
+            ]
+        ]);
+
+        $exception = new \Exception('Test');
+        $response  = Panel::responseForView($exception);
+        $json      = json_decode($response->body(), true);
+
+        $this->assertSame(500, $response->code());
+        $this->assertSame('k-error-view', $json['$view']['component']);
+        $this->assertSame('Test', $json['$view']['props']['error']);
+    }
+
+    /**
+     * @covers ::responseForView
+     */
+    public function testResponseForViewFromUnsupportedResult()
+    {
+        // fake json request for easier assertions
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_json' => true,
+                ]
+            ]
+        ]);
+
+        $response = Panel::responseForView(1234);
+        $json     = json_decode($response->body(), true);
+
+        $this->assertSame(500, $response->code());
+        $this->assertSame('k-error-view', $json['$view']['component']);
+        $this->assertSame('Invalid Panel response', $json['$view']['props']['error']);
+    }
+
+    /**
      * @covers ::router
      */
     public function testRouterWithDisabledPanel(): void
@@ -983,6 +1214,72 @@ class PanelTest extends TestCase
         $result = Panel::router('/');
 
         $this->assertNull($result);
+    }
+
+    /**
+     * @covers ::routesForDialogs
+     */
+    public function testRoutesForDialogs(): void
+    {
+        $area = [
+            'dialogs' => [
+                'test' => [
+                    'load'   => $load   = function () {
+                    },
+                    'submit' => $submit = function () {
+                    },
+                ]
+            ]
+        ];
+
+        $routes = Panel::routesForDialogs('test', $area);
+
+        $expected = [
+            [
+                'pattern' => 'dialogs/test',
+                'type'    => 'dialog',
+                'area'    => 'test',
+                'action'  => $load,
+            ],
+            [
+                'pattern' => 'dialogs/test',
+                'type'    => 'dialog',
+                'area'    => 'test',
+                'method'  => 'POST',
+                'action'  => $submit,
+            ]
+        ];
+
+        $this->assertSame($expected, $routes);
+    }
+
+    /**
+     * @covers ::routesForViews
+     */
+    public function testRoutesForViews(): void
+    {
+        $area = [
+            'routes' => [
+                [
+                    'pattern' => 'test',
+                    'action'  => $callback = function () {
+                    }
+                ]
+            ]
+        ];
+
+        $routes = Panel::routesForViews('test', $area);
+
+        $expected = [
+            [
+                'pattern' => 'test',
+                'action'  => $callback,
+                'area'    => 'test',
+                'type'    => 'view'
+            ]
+        ];
+
+        $this->assertSame($expected, $routes);
     }
 
     /**
@@ -1139,6 +1436,7 @@ class PanelTest extends TestCase
         $result = Panel::view();
         $expected = [
             'breadcrumb' => [],
+            'code' => 200,
             'path' => '',
             'props' => [],
             'search' => 'pages'

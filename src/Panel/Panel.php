@@ -5,6 +5,7 @@ namespace Kirby\Panel;
 use Exception;
 use Kirby\Cms\User;
 use Kirby\Exception\Exception as KirbyException;
+use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
@@ -89,7 +90,9 @@ class Panel
         // load plugins
         foreach ($kirby->extensions('areas') as $id => $area) {
             if (is_a($area, 'Closure') === true) {
-                $areas[$id] = static::area($id, (array)$area($kirby));
+                if (isset($areas[$id]) === false) {
+                    $areas[$id] = static::area($id, (array)$area($kirby));
+                }
             }
         }
 
@@ -281,13 +284,28 @@ class Panel
     }
 
     /**
+     * Renders the error dialog response with provided message
+     *
+     * @param string $message
+     * @param int $code
+     * @return array
+     */
+    public static function errorDialog(string $message, int $code = 404)
+    {
+        return [
+            'code'  => $code,
+            'error' => $message
+        ];
+    }
+
+    /**
      * Renders the error view with provided message
      *
      * @param string $message
      * @param int $code
-     * @return \Kirby\Http\Response
+     * @return array
      */
-    public static function error(string $message, int $code = 404)
+    public static function errorView(string $message, int $code = 404)
     {
         return [
             'code'      => $code,
@@ -428,15 +446,16 @@ class Panel
      * Redirect to a Panel url
      *
      * @param string|null $path
+     * @param int $code
      * @throws \Kirby\Panel\Redirect
      * @return void
      * @codeCoverageIgnore
      */
-    public static function go(?string $path = null): void
+    public static function go(?string $path = null, int $code = 302): void
     {
         $slug = kirby()->option('panel.slug', 'panel');
         $url  = url($slug . '/' . trim($path, '/'));
-        throw new Redirect($url, 302);
+        throw new Redirect($url, $code);
     }
 
     /**
@@ -491,11 +510,12 @@ class Panel
      * for Fiber calls
      *
      * @param array $data
+     * @param int $code
      * @return \Kirby\Http\Response
      */
-    public static function json(array $data)
+    public static function json(array $data, int $code = 200)
     {
-        return Response::json($data, $data['$view']['code'] ?? 200, get('_pretty'), [
+        return Response::json($data, $code, get('_pretty'), [
             'X-Fiber' => 'true'
         ]);
     }
@@ -526,7 +546,7 @@ class Panel
         // recreate the panel folder
         Dir::make($mediaRoot, true);
 
-        // create a symlink to the dist folder
+        // copy assets to the dist folder
         if (Dir::copy($panelRoot, $versionRoot) !== true) {
             throw new Exception('Panel assets could not be linked');
         }
@@ -593,31 +613,84 @@ class Panel
             return $result;
         }
 
+        // interpret missing/empty results as not found
+        if ($result === null || $result === false) {
+            $result = new NotFoundException('The data could not be found');
+
         // interpret strings as errors
-        if (is_string($result) === true) {
-            $result = static::error($result);
+        } elseif (is_string($result) === true) {
+            $result = new KirbyException($result);
         }
+
+        // handle different response types (view, dialog, ...)
+        switch ($options['type'] ?? 'view') {
+            case 'dialog':
+                return static::responseForDialog($result, $options);
+            default:
+                return static::responseForView($result, $options);
+        }
+    }
+
+    /**
+     * Renders dialogs
+     *
+     * @param mixed $data
+     * @param array $options
+     * @return \Kirby\Http\Response
+     */
+    public static function responseForDialog($data, array $options = [])
+    {
+        // handle Kirby exceptions
+        if (is_a($data, 'Kirby\Exception\Exception') === true) {
+            $data = static::errorDialog($data->getMessage(), $data->getHttpCode());
+
+        // handle exceptions
+        } elseif (is_a($data, 'Throwable') === true) {
+            $data = static::errorDialog($data->getMessage(), 500);
+
+        // interpret true as success
+        } elseif ($data === true) {
+            $data = [
+                'code' => 200
+            ];
 
         // only expect arrays from here on
-        if (is_array($result) === false) {
-            $result = static::error('Invalid Panel response', 500);
+        } elseif (is_array($data) === false) {
+            $data = static::errorDialog('Invalid dialog response', 500);
         }
 
-        return static::responseForView($result, $options);
+        // always inject the response code
+        $data['code'] = $data['code']    ?? 200;
+        $data['path'] = $options['path'] ?? null;
+
+        return static::json(['$dialog' => $data], $data['code']);
     }
 
     /**
      * Renders the main panel view
      *
-     * @param array $data
+     * @param mixed $data
      * @param array $options
      * @return \Kirby\Http\Response
      */
-    public static function responseForView(array $data, array $options = [])
+    public static function responseForView($data, array $options = [])
     {
         $kirby = kirby();
         $area  = $options['area']  ?? null;
         $areas = $options['areas'] ?? [];
+
+        // handle Kirby exceptions
+        if (is_a($data, 'Kirby\Exception\Exception') === true) {
+            $data = static::errorView($data->getMessage(), $data->getHttpCode());
+
+        // handle regular exceptions
+        } elseif (is_a($data, 'Throwable') === true) {
+            $data = static::errorView($data->getMessage(), 500);
+
+        // only expect arrays from here on
+        } elseif (is_array($data) === false) {
+            $data = static::errorView('Invalid Panel response', 500);
+        }
 
         // create the view based on the current area
         $view = static::view($data, $area);
@@ -626,15 +699,17 @@ class Panel
         $fiber = static::fiber([
             '$view'  => $view,
             '$areas' => array_map(function ($area) {
-                // routes should not be included in the frontend object
-                unset($area['routes']);
+                // routes and dialogs should not be included
+                // in the frontend object
+                unset($area['routes'], $area['dialogs']);
+                
                 return $area;
             }, $areas)
         ]);
 
         // if requested, send $fiber data as JSON
         if (static::isFiberRequest() === true) {
-            return static::json($fiber);
+            return static::json($fiber, $view['code'] ?? 200);
         }
 
         // Full HTML response
@@ -701,6 +776,7 @@ class Panel
             // route needs authentication?
             $auth   = $route->attributes()['auth'] ?? true;
             $areaId = $route->attributes()['area'] ?? null;
+            $type   = $route->attributes()['type'] ?? 'view';
             $area   = $areas[$areaId] ?? null;
 
             // call the route action to check the result
@@ -713,16 +789,18 @@ class Panel
                 $result = $route->action()->call($route, ...$route->arguments());
             } catch (Redirect $e) {
                 $result = Response::redirect($e->location(), $e->getCode());
-            } catch (KirbyException $e) {
-                $result = static::error($e->getMessage(), $e->getHttpCode());
             } catch (Throwable $e) {
-                $result = static::error($e->getMessage(), 500);
+                $result = $e;
             }
 
-            return static::response($result, [
+            $response = static::response($result, [
                 'area'  => $area,
-                'areas' => $areas
+                'areas' => $areas,
+                'path'  => $path,
+                'type'  => $type
             ]);
+
+            return $kirby->apply('panel.route:after', compact('route', 'path', 'method', 'response'), 'response');
         });
     }
 
@@ -752,10 +830,11 @@ class Panel
 
         // register all routes from areas
         foreach ($areas as $areaId => $area) {
-            foreach ($area['routes'] as $route) {
-                $route['area'] = $areaId;
-                $routes[] = $route;
-            }
+            $routes = array_merge(
+                $routes,
+                static::routesForViews($areaId, $area),
+                static::routesForDialogs($areaId, $area)
+            );
         }
 
         // if the Panel is already installed and/or the
@@ -794,6 +873,68 @@ class Panel
         return $routes;
     }
 
+    /**
+     * Extract all routes from an area
+     *
+     * @param string $areaId
+     * @param array $area
+     * @return array
+     */
+    public static function routesForDialogs(string $areaId, array $area): array
+    {
+        $dialogs = $area['dialogs'] ?? [];
+        $routes  = [];
+
+        foreach ($dialogs as $pattern => $dialog) {
+
+            // create the full pattern with dialogs prefix
+            $pattern = 'dialogs/' . trim($pattern, '/');
+
+            // load event
+            $routes[] = [
+                'pattern' => $pattern,
+                'type'    => 'dialog',
+                'area'    => $areaId,
+                'action'  => $dialog['load'] ?? function () {
+                    return false;
+                },
+            ];
+
+            // submit event
+            $routes[] = [
+                'pattern' => $pattern,
+                'type'    => 'dialog',
+                'area'    => $areaId,
+                'method'  => 'POST',
+                'action'  => $dialog['submit'] ?? function () {
+                    return false;
+                }
+            ];
+        }
+
+        return $routes;
+    }
+
+    /**
+     * Extract all views from an area
+     *
+     * @param string $areaId
+     * @param array $area
+     * @return array
+     */
+    public static function routesForViews(string $areaId, array $area): array
+    {
+        $views  = $area['routes'] ?? [];
+        $routes = [];
+
+        foreach ($views as $view) {
+            $view['area'] = $areaId;
+            $view['type'] = 'view';
+            $routes[] = $view;
+        }
+
+        return $routes;
+    }
 
     /**
      * Set the current language in multi-lang
@@ -865,12 +1006,14 @@ class Panel
         $view = array_replace_recursive($area ?? [], $view);
 
         $view['breadcrumb'] = $view['breadcrumb'] ?? [];
+        $view['code']       = $view['code'] ?? 200;
         $view['path']       = Str::after($kirby->path(), '/');
         $view['props']      = $view['props'] ?? [];
         $view['search']     = $view['search'] ?? $kirby->option('panel.search.type', 'pages');
 
         // make sure that routes are gone
-        unset($view['routes']);
+        unset($view['routes'], $view['dialogs']);
+        
 
         return $view;
     }
