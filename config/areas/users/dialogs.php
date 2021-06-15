@@ -1,6 +1,8 @@
 <?php
 
 use Kirby\Cms\Find;
+use Kirby\Cms\UserRules;
+use Kirby\Exception\InvalidArgumentException;
 
 return [
 
@@ -69,5 +71,54 @@ return [
                 'event' => 'user.changeName'
             ];
         }
+    ],
+
+    // change password
+    'users/(:any)/changePassword' => [
+        'load' => function (string $id) {
+            $user = Find::user($id);
+
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => [
+                        'password' => [
+                            'label' => t('user.changePassword.new'),
+                            'type'  => 'password',
+                            'icon'  => 'key',
+                        ],
+                        'passwordConfirmation' => [
+                            'label' => t('user.changePassword.new.confirm'),
+                            'type'  => 'password',
+                            'icon'  => 'key',
+                        ]
+                    ],
+                    'submitButton' => t('change'),
+                ]
+            ];
+        },
+        'submit' => function (string $id) {
+            $user                 = Find::user($id);
+            $password             = get('password');
+            $passwordConfirmation = get('passwordConfirmation');
+
+            // validate the password
+            UserRules::validPassword($user, $password);
+
+            // compare passwords
+            if ($password !== $passwordConfirmation) {
+                throw new InvalidArgumentException([
+                    'key' => 'user.password.notSame'
+                ]);
+            }
+
+            // change password if everything's fine
+            $user->changePassword($password);
+
+            return [
+                'event' => 'user.changePassword'
+            ];
+        }
     ]
+
 ];

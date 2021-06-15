@@ -64,4 +64,56 @@ class UsersDialogsTest extends AreaTestCase
         $this->assertSame('Peter', $this->app->user('test')->username());
     }
 
+    public function testChangePassword(): void
+    {
+        $dialog = $this->dialog('users/test/changePassword');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('New password', $props['fields']['password']['label']);
+        $this->assertSame('Confirm the new password…', $props['fields']['passwordConfirmation']['label']);
+        $this->assertSame('Change', $props['submitButton']);
+    }
+
+    public function testChangePasswordOnSubmit(): void
+    {
+        $this->submit([
+            'password'             => '12345678',
+            'passwordConfirmation' => '12345678'
+        ]);
+
+        $dialog = $this->dialog('users/test/changePassword');
+
+        $this->assertSame('user.changePassword', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertTrue($this->app->user('test')->validatePassword(12345678));
+    }
+
+    public function testChangePasswordOnSubmitWithInvalidPassword(): void
+    {
+        $this->submit([
+            'password'             => '1234567',
+            'passwordConfirmation' => '1234567'
+        ]);
+
+        $dialog = $this->dialog('users/test/changePassword');
+
+        $this->assertSame(400, $dialog['code']);
+        $this->assertSame('Please enter a valid password. Passwords must be at least 8 characters long.', $dialog['error']);
+    }
+
+    public function testChangePasswordOnSubmitWithInvalidConfirmation(): void
+    {
+        $this->submit([
+            'password'             => '12345678',
+            'passwordConfirmation' => '1234567'
+        ]);
+
+        $dialog = $this->dialog('users/test/changePassword');
+
+        $this->assertSame(400, $dialog['code']);
+        $this->assertSame('The passwords do not match', $dialog['error']);
+    }
 }
