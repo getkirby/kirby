@@ -71,6 +71,21 @@ class Field
     }
 
     /**
+     * @param array $props
+     * @return array
+     */
+    public static function title(array $props = []): array
+    {
+        return array_merge([
+            'label'     => t('title'),
+            'type'      => 'text',
+            'icon'      => 'title',
+            'required'  => true,
+            'preselect' => true
+        ], $props);
+    }
+
+    /**
      * Panel translation select box
      *
      * @param array $props
