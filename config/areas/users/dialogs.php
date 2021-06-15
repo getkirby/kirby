@@ -166,5 +166,30 @@ return [
         }
     ],
 
+    // delete
+    'users/(:any)/delete' => [
+        'load' => function (string $id) {
+            $user = Find::user($id);
+
+            return [
+                'component' => 'k-remove-dialog',
+                'props' => [
+                    'text' => tt('user.delete.confirm', [
+                        'email' => $user->email()
+                    ])
+                ]
+            ];
+        },
+        'submit' => function (string $id) {
+            Find::user($id)->delete();
+
+            return [
+                'event'    => 'user.delete',
+                'dispatch' => [
+                    'content/remove' => ['users/' . $id]
+                ]
+            ];
+        }
+    ],
 
 ];

@@ -143,4 +143,41 @@ class UsersDialogsTest extends AreaTestCase
         $this->assertSame(400, $dialog['code']);
         $this->assertSame('The passwords do not match', $dialog['error']);
     }
+
+    public function testDelete(): void
+    {
+        // create a second user to be deleted
+        $this->app->users()->create([
+            'id'    => 'editor',
+            'email' => 'editor@getkirby.com',
+            'role'  => 'editor'
+        ]);
+
+        $dialog = $this->dialog('users/editor/delete');
+        $props  = $dialog['props'];
+
+        $this->assertRemoveDialog($dialog);
+        $this->assertSame('Do you really want to delete <br><strong>editor@getkirby.com</strong>?', $props['text']);
+    }
+
+    public function testDeleteOnSubmit(): void
+    {
+        $this->submit([]);
+
+        // create a second user to be deleted
+        $this->app->users()->create([
+            'id'    => 'editor',
+            'email' => 'editor@getkirby.com',
+            'role'  => 'editor'
+        ]);
+
+        $this->assertCount(2, $this->app->users());
+
+        $dialog = $this->dialog('users/editor/delete');
+
+        $this->assertSame('user.delete', $dialog['event']);
+        $this->assertSame(['users/editor'], $dialog['dispatch']['content/remove']);
+        $this->assertSame(200, $dialog['code']);
+        $this->assertCount(1, $this->app->users());
+    }
 }
