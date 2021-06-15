@@ -41,6 +41,51 @@ return [
         }
     ],
 
+    // change language
+    'users/(:any)/changeLanguage' => [
+        'load' => function (string $id) {
+            $user    = Find::user($id);
+            $options = [];
+
+            foreach (kirby()->translations() as $translation) {
+                $options[] = [
+                    'text'  => $translation->name(),
+                    'value' => $translation->code()
+                ];
+            }
+
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => [
+                        'language' => [
+                            'label'     => t('language'),
+                            'type'      => 'select',
+                            'icon'      => 'globe',
+                            'options'   => $options,
+                            'required'  => true,
+                            'empty'     => false
+                        ]
+                    ],
+                    'submitButton' => t('change'),
+                    'value' => [
+                        'language' => $user->language()
+                    ]
+                ]
+            ];
+        },
+        'submit' => function (string $id) {
+            Find::user($id)->changeLanguage(get('language'));
+
+            return [
+                'event'  => 'user.changeLanguage',
+                'reload' => [
+                    'only' => '$translation'
+                ]
+            ];
+        }
+    ],
+
     // change name
     'users/(:any)/changeName' => [
         'load' => function (string $id) {
@@ -119,6 +164,7 @@ return [
                 'event' => 'user.changePassword'
             ];
         }
-    ]
+    ],
+
 
 ];

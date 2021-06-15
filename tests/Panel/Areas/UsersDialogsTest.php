@@ -38,6 +38,33 @@ class UsersDialogsTest extends AreaTestCase
         $this->assertSame('test2@getkirby.com', $this->app->user('test')->email());
     }
 
+    public function testChangeLanguage(): void
+    {
+        $dialog = $this->dialog('users/test/changeLanguage');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('Language', $props['fields']['language']['label']);
+        $this->assertSame('Change', $props['submitButton']);
+        $this->assertSame('en', $props['value']['language']);
+    }
+
+    public function testChangeLanguageOnSubmit(): void
+    {
+        $this->submit([
+            'language' => 'de'
+        ]);
+
+        $dialog = $this->dialog('users/test/changeLanguage');
+
+        $this->assertSame('user.changeLanguage', $dialog['event']);
+        $this->assertSame(['only' => '$translation'], $dialog['reload']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertSame('de', $this->app->user('test')->language());
+    }
+
     public function testChangeName(): void
     {
         $dialog = $this->dialog('users/test/changeName');
