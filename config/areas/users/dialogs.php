@@ -180,6 +180,37 @@ return [
         }
     ],
 
+    // change role
+    'users/(:any)/changeRole' => [
+        'load' => function (string $id) {
+            $user = Find::user($id);
+
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => [
+                        'role' => Field::role([
+                            'label' => t('user.changeRole.select'),
+                            'type'  => 'radio'
+                        ])
+                    ],
+                    'submitButton' => t('user.changeRole'),
+                    'value' => [
+                        'role' => $user->role()->name()
+                    ]
+                ]
+            ];
+        },
+        'submit' => function (string $id) {
+            $user = Find::user($id)->changeRole(get('role'));
+
+            return [
+                'event' => 'user.changeRole',
+                'user' => $user->toArray()
+            ];
+        }
+    ],
+
     // delete
     'users/(:any)/delete' => [
         'load' => function (string $id) {

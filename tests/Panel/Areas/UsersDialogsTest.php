@@ -86,7 +86,6 @@ class UsersDialogsTest extends AreaTestCase
         $dialog = $this->dialog('users/test/changeLanguage');
         $props  = $dialog['props'];
 
-
         $this->assertFormDialog($dialog);
 
         $this->assertSame('Language', $props['fields']['language']['label']);
@@ -186,6 +185,37 @@ class UsersDialogsTest extends AreaTestCase
 
         $this->assertSame(400, $dialog['code']);
         $this->assertSame('The passwords do not match', $dialog['error']);
+    }
+
+    public function testChangeRole(): void
+    {
+        $this->installEditor();
+        $this->login();
+
+        $dialog = $this->dialog('users/editor/changeRole');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('Select a new role', $props['fields']['role']['label']);
+        $this->assertSame('Change role', $props['submitButton']);
+        $this->assertSame('editor', $props['value']['role']);
+    }
+
+    public function testChangeRoleOnSubmit(): void
+    {
+        $this->installEditor();
+        $this->login();
+
+        $this->submit([
+            'role' => 'admin'
+        ]);
+
+        $dialog = $this->dialog('users/editor/changeRole');
+
+        $this->assertSame('user.changeRole', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+        $this->assertSame('admin', $this->app->user('editor')->role()->name());
     }
 
     public function testDelete(): void
