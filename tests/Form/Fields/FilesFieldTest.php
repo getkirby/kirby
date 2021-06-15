@@ -230,4 +230,46 @@ class FilesFieldTest extends TestCase
 
         $this->assertTrue($field->isValid());
     }
+
+    public function testApi()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => ['api.allowImpersonation' => true],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            ['filename' => 'a.jpg'],
+                            ['filename' => 'b.jpg'],
+                            ['filename' => 'c.jpg'],
+                        ],
+                        'blueprint' => [
+                            'title' => 'Test',
+                            'name' => 'test',
+                            'fields' => [
+                                'gallery' => [
+                                    'type' => 'files',
+                                ]
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+        $api = $app->api()->call('pages/test/fields/gallery');
+
+        $this->assertCount(2, $api);
+        $this->assertArrayHasKey('data', $api);
+        $this->assertArrayHasKey('pagination', $api);
+        $this->assertCount(3, $api['data']);
+        $this->assertSame('test/a.jpg', $api['data'][0]['id']);
+        $this->assertSame('test/b.jpg', $api['data'][1]['id']);
+        $this->assertSame('test/c.jpg', $api['data'][2]['id']);
+    }
 }

@@ -162,4 +162,65 @@ class PagesFieldTest extends TestCase
 
         $this->assertTrue($field->isValid());
     }
+
+    public function testApi()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'options' => ['api.allowImpersonation' => true],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'content' => [
+                            'title' => 'Test Title',
+                        ],
+                        'blueprint' => [
+                            'title' => 'Test',
+                            'name' => 'test',
+                            'fields' => [
+                                'related' => [
+                                    'type' => 'pages',
+                                ]
+                            ]
+                        ]
+                    ],
+                    ['slug' => 'a'],
+                    ['slug' => 'b'],
+                    ['slug' => 'c'],
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+        $api = $app->api()->call('pages/test/fields/related');
+
+        $this->assertCount(3, $api);
+        $this->assertArrayHasKey('data', $api);
+        $this->assertArrayHasKey('pagination', $api);
+        $this->assertArrayHasKey('model', $api);
+        $this->assertCount(4, $api['data']);
+        $this->assertSame('test', $api['data'][0]['id']);
+        $this->assertSame([
+            'id' => 'test',
+            'image' => [
+                'back' => 'pattern',
+                'cover' => false,
+                'ratio' => '3/2',
+                'color' => 'white',
+                'icon' => 'page',
+            ],
+            'info' => '',
+            'link' => '/pages/test',
+            'text' => 'Test Title',
+            'dragText' => '(link: test text: Test Title)',
+            'hasChildren' => false,
+            'url' => '/test',
+        ], $api['data'][0]);
+        $this->assertSame('a', $api['data'][1]['id']);
+        $this->assertSame('b', $api['data'][2]['id']);
+        $this->assertSame('c', $api['data'][3]['id']);
+    }
 }
