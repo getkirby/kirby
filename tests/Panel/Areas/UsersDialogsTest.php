@@ -13,9 +13,27 @@ class UsersDialogsTest extends AreaTestCase
 
     public function testChangeName(): void
     {
-        $dialog = $this->dialog('users/test@getkirby.com/changeName');
+        $dialog = $this->dialog('users/test/changeName');
+        $props  = $dialog['props'];
 
         $this->assertFormDialog($dialog);
-        $this->assertSame(['name' => 'test@getkirby.com'], $dialog['props']);
+
+        $this->assertSame('Name', $props['fields']['name']['label']);
+        $this->assertSame('Rename', $props['submitButton']);
+        $this->assertNull($props['value']['name']);
+    }
+
+    public function testChangeNameOnSubmit(): void
+    {
+        $this->submit([
+            'name' => 'Peter'
+        ]);
+
+        $dialog = $this->dialog('users/test/changeName');
+
+        $this->assertSame('user.changeName', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertSame('Peter', $this->app->user('test')->username());
     }
 }

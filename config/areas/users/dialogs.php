@@ -10,11 +10,27 @@ return [
             return [
                 'component' => 'k-form-dialog',
                 'props' => [
-                    'name' => $user->username()
+                    'fields' => [
+                        'name' => [
+                            'label'     => t('name'),
+                            'type'      => 'text',
+                            'icon'      => 'user',
+                            'preselect' => true
+                        ]
+                    ],
+                    'submitButton' => t('rename'),
+                    'value' => [
+                        'name' => $user->name()->value()
+                    ]
                 ]
             ];
         },
         'submit' => function (string $id) {
+            Find::user($id)->changeName(get('name'));
+
+            return [
+                'event' => 'user.changeName'
+            ];
         }
     ]
 ];

@@ -178,6 +178,19 @@ abstract class AreaTestCase extends TestCase
         Dir::make($this->tmp);
     }
 
+    public function submit(array $data)
+    {
+        $this->app([
+            'request' => [
+                'method' => 'POST',
+                'body'   => $data
+            ]
+        ]);
+
+        // re-authenticate after cloning the app
+        $this->login();
+    }
+
     public function tearDown(): void
     {
         // clear session file first
