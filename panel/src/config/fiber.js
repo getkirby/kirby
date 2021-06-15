@@ -331,6 +331,32 @@ const Fiber = {
 
 export const plugin = {
   install(Vue) {
+
+    Vue.prototype.$dialog = async function (path) {
+      try {
+        const response = await fetch(this.$url("dialogs/" + path), {
+          headers: {
+            "X-Fiber": true,
+          }
+        });
+
+        const data = await toJson(response);
+
+        if (data.$dialog) {
+          if (data.$dialog.error) {
+            throw data.$dialog.error;
+          }
+
+          this.$store.dispatch("dialog", data.$dialog);
+          return;
+        }
+
+        throw `The dialog at "${path}" could not be loaded`;
+      } catch (e) {
+        this.$store.dispatch("notification/error", e);
+      }
+    };
+
     Vue.prototype.$url = function (path = "") {
       // pass window.location objects without modification
       if (typeof path === "object") {

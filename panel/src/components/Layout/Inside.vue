@@ -40,6 +40,11 @@
     <!-- Error dialog -->
     <k-error-dialog />
 
+    <!-- Fiber dialogs -->
+    <template v-if="$store.state.dialog && $store.state.dialog.props">
+      <k-fiber-dialog v-bind="dialog" />
+    </template>
+
     <!-- Fatal iframe -->
     <template v-if="fatal">
       <div class="k-fatal">
@@ -79,6 +84,12 @@ export default {
     };
   },
   computed: {
+    defaultTranslation() {
+      return this.$language ? this.$language.default : false;
+    },
+    dialog() {
+      return this.$helper.clone(this.$store.state.dialog);
+    },
     fatal() {
       return this.$store.state.fatal;
     },
@@ -88,9 +99,6 @@ export default {
     translation() {
       return this.$language ? this.$language.code : null;
     },
-    defaultTranslation() {
-      return this.$language ? this.$language.default : false;
-    }
   },
   watch: {
     fatal(html) {

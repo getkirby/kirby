@@ -9,7 +9,7 @@
             <k-button
               :disabled="$permissions.users.create === false"
               icon="add"
-              @click="$refs.create.open()"
+              @click="$dialog('users/create')"
             >
               {{ $t('user.create') }}
             </k-button>
@@ -58,14 +58,6 @@
           {{ $t("role.empty") }}
         </k-empty>
       </template>
-
-      <k-user-create-dialog ref="create" @success="$reload" />
-      <k-user-email-dialog ref="email" @success="$reload" />
-      <k-user-language-dialog ref="language" @success="$reload" />
-      <k-user-password-dialog ref="password" />
-      <k-user-remove-dialog ref="remove" @success="$reload" />
-      <k-user-rename-dialog ref="rename" @success="$reload" />
-      <k-user-role-dialog ref="role" @success="$reload" />
     </k-view>
   </k-inside>
 </template>
@@ -103,22 +95,22 @@ export default {
           this.$go("/users/" + user.id);
           break;
         case "email":
-          this.$refs.email.open(user.id);
+          this.$dialog(`users/${user.id}/changeEmail`);
           break;
         case "role":
-          this.$refs.role.open(user.id);
+          this.$dialog(`users/${user.id}/changeRole`);
           break;
         case "rename":
-          this.$refs.rename.open(user.id);
+          this.$dialog(`users/${user.id}/changeName`);
           break;
         case "password":
-          this.$refs.password.open(user.id);
+          this.$dialog(`users/${user.id}/changePassword`);
           break;
         case "language":
-          this.$refs.language.open(user.id);
+          this.$dialog(`users/${user.id}/changeLanguage`);
           break;
         case "remove":
-          this.$refs.remove.open(user.id);
+          this.$dialog(`users/${user.id}/delete`);
           break;
       }
     },

@@ -2,12 +2,12 @@
   <k-dialog
     ref="dialog"
     v-bind="$props"
-    v-on="$listeners"
+    v-on="listeners"
   >
     <!-- eslint-disable vue/no-mutating-props -->
     <k-form
       ref="form"
-      v-model="value"
+      :value="value"
       :fields="fields"
       :novalidate="novalidate"
       @input="$emit('input', $event)"
@@ -51,6 +51,28 @@ export default {
       type: Object,
       default() {
         return {};
+      }
+    }
+  },
+  data() {
+    return {
+      model: this.value
+    }
+  },
+  computed: {
+    listeners() {
+      return {
+        ...this.$listeners,
+        submit: () => {
+          this.$refs.form.submit();
+        }
+      };
+    }
+  },
+  watch: {
+    value(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.model = newValue;
       }
     }
   }
