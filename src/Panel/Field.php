@@ -25,8 +25,9 @@ class Field
     public static function email(array $props = []): array
     {
         return array_merge([
-            'label' => t('email'),
-            'type'  => 'email',
+            'label'   => t('email'),
+            'type'    => 'email',
+            'counter' => false,
         ], $props);
     }
 
