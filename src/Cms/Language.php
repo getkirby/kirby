@@ -234,19 +234,19 @@ class Language extends Model
      */
     public function delete(): bool
     {
-        if ($this->exists() === false) {
-            return true;
-        }
-
         $kirby     = App::instance();
         $languages = $kirby->languages();
         $code      = $this->code();
+        $isLast    = $languages->count() === 1;
 
         if (F::remove($this->root()) !== true) {
             throw new Exception('The language could not be deleted');
         }
 
-        if ($languages->count() === 1) {
+        // get the original language collection and remove the current language
+        $kirby->languages(false)->remove($code);
+
+        if ($isLast === true) {
             return $this->converter($code, '');
         } else {
             return $this->deleteContentFiles($code);

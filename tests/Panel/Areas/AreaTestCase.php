@@ -132,12 +132,12 @@ abstract class AreaTestCase extends TestCase
     {
         $this->app([
             'languages' => [
-                [
+                'en' => [
                     'code'    => 'en',
                     'default' => true,
                     'name'    => 'English'
                 ],
-                [
+                'de' => [
                     'code'    => 'de',
                     'default' => false,
                     'name'    => 'Deutsch'

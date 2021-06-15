@@ -825,12 +825,13 @@ class App
     /**
      * Returns all available site languages
      *
+     * @param bool
      * @return \Kirby\Cms\Languages
      */
-    public function languages()
+    public function languages(bool $clone = true)
     {
         if ($this->languages !== null) {
-            return clone $this->languages;
+            return $clone === true ? clone $this->languages : $this->languages;
         }
 
         return $this->languages = Languages::load();

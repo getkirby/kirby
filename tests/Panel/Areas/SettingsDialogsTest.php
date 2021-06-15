@@ -11,6 +11,33 @@ class SettingsDialogsTest extends AreaTestCase
         $this->login();
     }
 
+    public function testDeleteLanguage(): void
+    {
+        $this->installLanguages();
+        $this->login();
+
+        $dialog = $this->dialog('languages/de/delete');
+        $props  = $dialog['props'];
+
+        $this->assertRemoveDialog($dialog);
+        $this->assertSame('Do you really want to delete the language <strong>Deutsch</strong> including all translations? This cannot be undone!', $props['text']);
+    }
+
+    public function testDeleteOnSubmit(): void
+    {
+        $this->installLanguages();
+        $this->login();
+        $this->submit([]);
+
+        $this->assertCount(2, $this->app->languages());
+
+        $dialog = $this->dialog('languages/de/delete');
+
+        $this->assertSame('language.delete', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+        $this->assertCount(1, $this->app->languages());
+    }
+
     public function testRegistration(): void
     {
         $dialog = $this->dialog('registration');

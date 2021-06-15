@@ -1,8 +1,30 @@
 <?php
 
+use Kirby\Cms\Find;
 use Kirby\Panel\Field;
 
 return [
+    // delete language
+    'languages/(:any)/delete' => [
+        'load' => function (string $id) {
+            $language = Find::language($id);
+            return [
+                'component' => 'k-remove-dialog',
+                'props' => [
+                    'text' => tt('language.delete.confirm', [
+                        'name' => $language->name()
+                    ])
+                ]
+            ];
+        },
+        'submit' => function (string $id) {
+            Find::language($id)->delete();
+            return [
+                'event' => 'language.delete',
+            ];
+        }
+    ],
+
     // license registration
     'registration' => [
         'load' => function () {

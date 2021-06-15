@@ -3,7 +3,8 @@
 use Kirby\Panel\Field;
 
 return [
-    // change title
+
+    // change site title
     'site/changeTitle' => [
         'load' => function () {
             return [
