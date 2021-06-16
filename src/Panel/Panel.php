@@ -279,6 +279,23 @@ class Panel
             }
         ];
 
+        // check for explicitly requested globals to be included
+        $requestInclude = $kirby->request()->header('X-Fiber-Include') ?? get('_include');
+
+        // split include string into an array of fields
+        $include = Str::split($requestInclude, ',');
+
+        // add requested globals
+        if (empty($include) === false) {
+            $globals = static::globals();
+
+            foreach ($include as $includeKey) {
+                if (isset($globals[$includeKey]) === true) {
+                    $shared[$includeKey] = $globals[$includeKey];
+                }
+            }
+        }
+
         // merge with shared data
         return array_merge($shared, $data);
     }
@@ -565,15 +582,15 @@ class Panel
     public static function partial(array $data): array
     {
         // is it a partial request?
-        $kirby          = kirby();
-        $request        = $kirby->request();
-        $requestInclude = $request->header('X-Fiber-Include') ?? get('_include');
+        $kirby       = kirby();
+        $request     = $kirby->request();
+        $requestOnly = $request->header('X-Fiber-Only') ?? get('_only');
 
         // split include string into an array of fields
-        $include = Str::split($requestInclude, ',');
+        $only = Str::split($requestOnly, ',');
 
         // if a full request is made, return all data
-        if (empty($include) === true) {
+        if (empty($only) === true) {
             return $data;
         }
 
@@ -582,7 +599,7 @@ class Panel
         $partials = [];
 
         // check if globals are requested and need to be merged
-        if (Str::contains($requestInclude, '$')) {
+        if (Str::contains($requestOnly, '$')) {
             $data = array_merge_recursive(static::globals(), $data);
         }
 
@@ -591,11 +608,13 @@ class Panel
         $data = A::apply($data);
 
         // build a new array with all requested data
-        foreach ($include as $partial) {
+        foreach ($only as $partial) {
             $partials[$partial] = A::get($data, $partial);
         }
 
-        return A::nest($partials);
+        return A::nest($partials, [
+            '$translation'
+        ]);
     }
 
     /**
@@ -702,7 +721,7 @@ class Panel
                 // routes and dialogs should not be included
                 // in the frontend object
                 unset($area['routes'], $area['dialogs']);
-                
+
                 return $area;
             }, $areas)
         ]);
@@ -1013,7 +1032,7 @@ class Panel
 
         // make sure that routes are gone
         unset($view['routes'], $view['dialogs']);
-        
+
 
         return $view;
     }

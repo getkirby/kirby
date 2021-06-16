@@ -28,33 +28,40 @@ export default {
         }
       });
 
-      const data = await toJson(response);
+      const data   = await toJson(response);
+      const dialog = data.$dialog;
 
-      if (data.$dialog) {
+      if (dialog) {
 
-        if (data.$dialog.error) {
-          this.$refs.dialog.error(data.$dialog.error);
+        if (dialog.error) {
+          this.$refs.dialog.error(dialog.error);
           return;
         }
 
-        if (data.$dialog.code === 200) {
+        if (dialog.code === 200) {
           this.$refs.dialog.close();
           this.$store.dispatch("notification/success", ":)");
 
-          if (data.$dialog.event) {
-            if (typeof data.$dialog.event === "string") {
-              data.$dialog.event = [data.$dialog.event];
+          if (dialog.event) {
+            if (typeof dialog.event === "string") {
+              dialog.event = [dialog.event];
             }
 
-            data.$dialog.event.forEach(event => {
-              this.$events.$emit(data.$dialog.event, data.$dialog);
+            dialog.event.forEach(event => {
+              this.$events.$emit(dialog.event, dialog);
             });
           }
 
-          if (data.$dialog.redirect) {
-            this.$go(data.$dialog.redirect);
+          if (dialog.dispatch) {
+            Object.keys(dialog.dispatch).forEach((event) => {
+              this.$store.dispatch(event, ...dialog.dispatch[event]);
+            });
+          }
+
+          if (dialog.redirect) {
+            this.$go(dialog.redirect);
           } else {
-            this.$reload();
+            this.$reload(dialog.reload || {});
           }
           return;
         }

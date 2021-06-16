@@ -102,7 +102,7 @@ return [
             return [
                 'event'  => 'user.changeLanguage',
                 'reload' => [
-                    'only' => '$translation'
+                    'include' => '$translation'
                 ]
             ];
         }

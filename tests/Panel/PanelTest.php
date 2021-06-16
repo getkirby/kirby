@@ -324,6 +324,40 @@ class PanelTest extends TestCase
     /**
      * @covers ::data
      */
+    public function testDataWithIncludedGlobal(): void
+    {
+        // not included
+        $data = Panel::data();
+        $this->assertArrayNotHasKey('$translation', $data);
+
+        // via query
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_include' => '$translation'
+                ]
+            ]
+        ]);
+
+        $data = Panel::data();
+        $this->assertArrayHasKey('$translation', $data);
+
+        // via header
+        $this->app = $this->app->clone([
+            'request' => [
+                'headers' => [
+                    'X-Fiber-Include' => '$translation'
+                ]
+            ]
+        ]);
+
+        $data = Panel::data();
+        $this->assertArrayHasKey('$translation', $data);
+    }
+
+    /**
+     * @covers ::data
+     */
     public function testDataWithCustomProps(): void
     {
         $data = Panel::data([
@@ -799,13 +833,13 @@ class PanelTest extends TestCase
     /**
      * @covers ::partial
      */
-    public function testPartialWithInclude(): void
+    public function testPartialWithOnly(): void
     {
         // via get
         $this->app = $this->app->clone([
             'request' => [
                 'query' => [
-                    '_include' => 'a',
+                    '_only' => 'a',
                 ]
             ]
         ]);
@@ -823,7 +857,7 @@ class PanelTest extends TestCase
         $this->app = $this->app->clone([
             'request' => [
                 'headers' => [
-                    'X-Fiber-Include' => 'a',
+                    'X-Fiber-Only' => 'a',
                 ]
             ]
         ]);
@@ -847,7 +881,7 @@ class PanelTest extends TestCase
         $this->app = $this->app->clone([
             'request' => [
                 'query' => [
-                    '_include' => 'a,$urls',
+                    '_only' => 'a,$urls',
                 ]
             ]
         ]);
@@ -880,7 +914,7 @@ class PanelTest extends TestCase
         $this->app = $this->app->clone([
             'request' => [
                 'query' => [
-                    '_include' => 'b.c',
+                    '_only' => 'b.c',
                 ]
             ]
         ]);
@@ -912,7 +946,7 @@ class PanelTest extends TestCase
         $this->app = $this->app->clone([
             'request' => [
                 'query' => [
-                    '_include' => 'a,$urls.site',
+                    '_only' => 'a,$urls.site',
                 ]
             ]
         ]);
