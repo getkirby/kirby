@@ -2,6 +2,7 @@
 
 use Kirby\Cms\Find;
 use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 
 return [
@@ -90,6 +91,94 @@ return [
             Find::page($id)->changeStatus(get('status'), get('position'));
             return [
                 'event' => 'page.changeStatus',
+            ];
+        }
+    ],
+
+    // change page position
+    'pages/(:any)/changeSort' => [
+        'load' => function (string $id) {
+            $page     = Find::page($id);
+            $position = null;
+
+            if ($page->blueprint()->num() !== 'default') {
+                // TODO: make translatable
+                throw new Exception('You cannot change the position of this page manually');
+            }
+
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => [
+                        'position' => Field::position($page),
+                    ],
+                    'submitButton' => t('change'),
+                    'value' => [
+                        'position' => $page->num() ?? $page->siblings(false)->count() + 1
+                    ]
+                ]
+            ];
+        },
+        'submit' => function (string $id) {
+            Find::page($id)->changeStatus('listed', get('position'));
+            return [
+                'event' => 'page.sort',
+            ];
+        }
+    ],
+
+    // delete page
+    'pages/(:any)/delete' => [
+        'load' => function (string $id) {
+            $page        = Find::page($id);
+            $hasSubpages = $page->childrenAndDrafts()->count();
+            $text        = tt('page.delete.confirm', ['title' => $page->title()->value()]);
+
+            if ($hasSubpages) {
+                return [
+                    'component' => 'k-form-dialog',
+                    'props' => [
+                        'fields' => [
+                            'info' => [
+                                'type'  => 'info',
+                                'theme' => 'negative',
+                                'text'  => t('page.delete.confirm.subpages')
+                            ],
+                            'check' => [
+                                'label'   => t('page.delete.confirm.title'),
+                                'type'    => 'text',
+                                'counter' => false
+                            ]
+                        ],
+                        'size'         => 'medium',
+                        'submitButton' => t('delete'),
+                        'text'         => $text,
+                        'theme'        => 'negative',
+                    ]
+                ];
+            } else {
+                return [
+                    'component' => 'k-remove-dialog',
+                    'props' => [
+                        'text' => $text
+                    ]
+                ];
+            }
+        },
+        'submit' => function (string $id) {
+            $page = Find::page($id);
+
+            if ($page->childrenAndDrafts()->count() > 0 && get('check') !== $page->title()->value()) {
+                throw new InvalidArgumentException(['key' => 'page.delete.confirm']);
+            }
+
+            $page->delete(true);
+
+            return [
+                'event' => 'page.delete',
+                'dispatch' => [
+                    'content/remove' => ['pages/' . $page->panel()->id()]
+                ]
             ];
         }
     ],

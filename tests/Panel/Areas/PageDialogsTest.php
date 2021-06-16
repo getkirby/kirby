@@ -115,6 +115,122 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame(1, $this->app->page('test')->num());
     }
 
+    public function testDelete(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/delete');
+        $props  = $dialog['props'];
+
+        $this->assertRemoveDialog($dialog);
+        $this->assertSame('Do you really want to delete <strong>test</strong>?', $props['text']);
+    }
+
+    public function testDeleteWithChildren(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'children' => [
+                            ['slug' => 'test-child']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/delete');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+        $this->assertSame('info', $props['fields']['info']['type']);
+        $this->assertSame('text', $props['fields']['check']['type']);
+        $this->assertSame('Do you really want to delete <strong>test</strong>?', $props['text']);
+        $this->assertSame('Delete', $props['submitButton']);
+        $this->assertSame('medium', $props['size']);
+    }
+
+    public function testDeleteOnSubmit(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->submit([]);
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/delete');
+
+        $this->assertSame('page.delete', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+        $this->assertCount(0, $this->app->site()->children());
+    }
+
+    public function testDeleteOnSubmitWithChildrenWithoutCheck(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'children' => [
+                            ['slug' => 'test-child']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->submit([]);
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/delete');
+
+        $this->assertSame(400, $dialog['code']);
+        $this->assertSame('Please enter the page title to confirm', $dialog['error']);
+    }
+
+    public function testDeleteOnSubmitWithChildren(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'children' => [
+                            ['slug' => 'test-child']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->submit(['check' => 'test']);
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/delete');
+
+        $this->assertSame('page.delete', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+        $this->assertCount(0, $this->app->site()->children());
+    }
+
     public function testDuplicate(): void
     {
         $this->app([

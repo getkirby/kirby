@@ -155,7 +155,7 @@ export default {
             break;
           }
 
-          this.$refs.remove.open(page.id);
+          this.$dialog(`${page.link}/delete`);
           break;
         }
         default: {

@@ -4,7 +4,10 @@
     v-bind="$props"
     v-on="listeners"
   >
-    <!-- eslint-disable vue/no-mutating-props -->
+    <template v-if="text">
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <k-text v-html="text" />
+    </template>
     <k-form
       ref="form"
       :value="value"
@@ -42,6 +45,9 @@ export default {
       default() {
         return new TranslationString("save")
       }
+    },
+    text: {
+      type: String,
     },
     theme: {
       type: String,
