@@ -95,23 +95,14 @@ export default {
   methods: {
     action(action) {
       switch (action) {
-        case "duplicate":
-          this.$refs.duplicate.open(this.model.id);
-          break;
         case "rename":
           this.$refs.rename.open(this.model.id, this.permissions, "title");
           break;
         case "url":
           this.$refs.rename.open(this.model.id, this.permissions, "slug");
           break;
-        case "status":
-          this.$refs.status.open(this.model.id);
-          break;
         case "template":
           this.$refs.template.open(this.model.id);
-          break;
-        case "remove":
-          this.$refs.remove.open(this.model.id);
           break;
         default:
           this.$store.dispatch(

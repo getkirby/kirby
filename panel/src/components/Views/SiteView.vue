@@ -5,7 +5,7 @@
         :editable="permissions.changeTitle && !isLocked"
         :tabs="tabs"
         :tab="tab.name"
-        @edit="$refs.rename.open()"
+        @edit="$dialog('site/changeTitle')"
       >
         {{ model.title }}
         <template #left>
@@ -31,8 +31,6 @@
         parent="site"
         @submit="$emit('submit', $event)"
       />
-
-      <k-site-rename-dialog ref="rename" @success="$reload" />
     </k-view>
   </k-inside>
 </template>

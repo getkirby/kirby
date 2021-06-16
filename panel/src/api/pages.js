@@ -81,7 +81,8 @@ export default (api) => {
       return "/" + this.url(id);
     },
     async options(id, view = "view", sortable = true) {
-      const page    = await api.get(this.url(id), {select: "options"})
+      const pageUrl = this.url(id);
+      const page    = await api.get(pageUrl, {select: "options"})
       const options = page.options;
       let result    = [];
 
@@ -105,7 +106,9 @@ export default (api) => {
       });
 
       result.push({
-        click: "duplicate",
+        click() {
+          this.$dialog(pageUrl + '/duplicate');
+        },
         icon: "copy",
         text: Vue.$t("duplicate"),
         disabled: !options.duplicate
@@ -121,7 +124,9 @@ export default (api) => {
       });
 
       result.push({
-        click: "status",
+        click() {
+          this.$dialog(pageUrl + '/changeStatus');
+        },
         icon: "preview",
         text: Vue.$t("page.changeStatus"),
         disabled: !options.changeStatus
@@ -129,7 +134,9 @@ export default (api) => {
 
       if (view === "list") {
         result.push({
-          click: "sort",
+          click() {
+            this.$dialog(pageUrl + '/changeSort');
+          },
           icon: "sort",
           text: Vue.$t("page.sort"),
           disabled: !(options.sort  && sortable)
@@ -146,7 +153,9 @@ export default (api) => {
       result.push("-");
 
       result.push({
-        click: "remove",
+        click() {
+          this.$dialog(pageUrl + '/delete');
+        },
         icon: "trash",
         text: Vue.$t("delete"),
         disabled: !options.delete

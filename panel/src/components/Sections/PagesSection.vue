@@ -64,12 +64,8 @@
       </template>
 
       <k-page-create-dialog ref="create" />
-      <k-page-duplicate-dialog ref="duplicate" />
       <k-page-rename-dialog ref="rename" @success="update" />
-      <k-page-sort-dialog ref="sort" @success="update" />
-      <k-page-status-dialog ref="status" @success="update" />
       <k-page-template-dialog ref="template" @success="update" />
-      <k-page-remove-dialog ref="remove" @success="update" />
     </template>
   </section>
 </template>
@@ -104,10 +100,6 @@ export default {
     action(action, page) {
 
       switch (action) {
-        case "duplicate": {
-          this.$refs.duplicate.open(page.id);
-          break;
-        }
         case "preview": {
           let preview = window.open("", "_blank");
           preview.document.write = "...";
@@ -131,19 +123,15 @@ export default {
           this.$refs.rename.open(page.id, page.permissions, "slug");
           break;
         }
-        case "sort": {
-          this.$refs.sort.open(page.id);
-          break;
-        }
-        case "status": {
-          this.$refs.status.open(page.id);
-          break;
-        }
         case "template": {
           this.$refs.template.open(page.id);
           break;
         }
         case "remove": {
+          // TODO: this will never be called
+          // with the new options menu. Should
+          // probably be possible to filter
+          // the options menu from the outside instead.
           if (this.data.length <= this.options.min) {
             const number = this.options.min > 1 ? "plural" : "singular";
             this.$store.dispatch("notification/error", {
