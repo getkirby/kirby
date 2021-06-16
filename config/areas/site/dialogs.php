@@ -183,30 +183,6 @@ return [
         }
     ],
 
-    // change site title
-    'site/changeTitle' => [
-        'load' => function () {
-            return [
-                'component' => 'k-form-dialog',
-                'props' => [
-                    'fields' => [
-                        'title' => Field::title()
-                    ],
-                    'submitButton' => t('rename'),
-                    'value' => [
-                        'title' => site()->title()->value()
-                    ]
-                ]
-            ];
-        },
-        'submit' => function () {
-            site()->changeTitle(get('title'));
-            return [
-                'event' => 'site.changeTitle',
-            ];
-        }
-    ],
-
     // duplicate page
     'pages/(:any)/duplicate' => [
         'load' => function (string $id) {
@@ -216,7 +192,8 @@ return [
 
             $fields = [
                 'slug' => Field::slug([
-                    'required' => true
+                    'required' => true,
+                    'path'     => $page->parent() ? '/' . $page->parent()->id() . '/' : '/'
                 ])
             ];
 
@@ -260,6 +237,30 @@ return [
             return [
                 'event'    => 'page.duplicate',
                 'redirect' => $newPage->panel()->url(true)
+            ];
+        }
+    ],
+
+    // change site title
+    'site/changeTitle' => [
+        'load' => function () {
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => [
+                        'title' => Field::title()
+                    ],
+                    'submitButton' => t('rename'),
+                    'value' => [
+                        'title' => site()->title()->value()
+                    ]
+                ]
+            ];
+        },
+        'submit' => function () {
+            site()->changeTitle(get('title'));
+            return [
+                'event' => 'site.changeTitle',
             ];
         }
     ],

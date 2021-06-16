@@ -250,6 +250,7 @@ class PageDialogsTest extends AreaTestCase
 
         $this->assertSame('URL appendix', $props['fields']['slug']['label']);
         $this->assertSame('slug', $props['fields']['slug']['type']);
+        $this->assertSame('/', $props['fields']['slug']['path']);
 
         $this->assertSame('Duplicate', $props['submitButton']);
 
