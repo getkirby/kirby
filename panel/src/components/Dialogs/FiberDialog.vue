@@ -1,7 +1,7 @@
 <template>
   <component
-    ref="dialog"
     :is="component"
+    ref="dialog"
     :visible="true"
     v-bind="props"
     @submit="onSubmit"
