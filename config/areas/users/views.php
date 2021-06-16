@@ -5,7 +5,8 @@ use Kirby\Cms\Find;
 return [
     [
         'pattern' => 'users',
-        'action'  => function () use ($kirby) {
+        'action'  => function () {
+            $kirby = kirby();
             $role  = get('role');
             $roles = $kirby->roles()->toArray(function ($role) {
                 return [

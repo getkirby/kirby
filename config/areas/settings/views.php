@@ -3,7 +3,8 @@
 return [
     [
         'pattern' => 'settings',
-        'action'  => function () use ($kirby) {
+        'action'  => function () {
+            $kirby   = kirby();
             $license = $kirby->system()->license();
 
             // @codeCoverageIgnoreStart

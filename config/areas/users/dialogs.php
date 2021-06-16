@@ -9,7 +9,8 @@ return [
 
     // create
     'users/create' => [
-        'load' => function () use ($kirby) {
+        'load' => function () {
+            $kirby = kirby();
             return [
                 'component' => 'k-form-dialog',
                 'props' => [
@@ -34,8 +35,8 @@ return [
                 ]
             ];
         },
-        'submit' => function () use ($kirby) {
-            $kirby->users()->create(get());
+        'submit' => function () {
+            kirby()->users()->create(get());
             return [
                 'event' => 'user.create'
             ];

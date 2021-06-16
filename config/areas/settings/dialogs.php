@@ -52,8 +52,8 @@ return [
                 ]
             ];
         },
-        'submit' => function () use ($kirby) {
-            $kirby->system()->register(get('license'), get('email'));
+        'submit' => function () {
+            kirby()->system()->register(get('license'), get('email'));
             return [
                 'event'   => 'system.register',
                 'message' => t('license.register.success')
