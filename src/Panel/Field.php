@@ -2,6 +2,8 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\Page;
+
 /**
  * Provides common field prop definitons
  * for dialogs and other places
@@ -42,6 +44,48 @@ class Field
         return array_merge([
             'label' => t('password'),
             'type'  => 'password'
+        ], $props);
+    }
+
+    /**
+     * Page position
+     *
+     * @param \Kirby\Cms\Page
+     * @param array $props
+     * @return array
+     */
+    public static function position(Page $page, array $props = []): array
+    {
+        $index   = 0;
+        $options = [];
+
+        foreach ($page->siblings(false) as $sibling) {
+            $index++;
+
+            $options[] = [
+                'value' => $index,
+                'text'  => $index
+            ];
+
+            $options[] = [
+                'value'    => $sibling->id(),
+                'text'     => $sibling->title()->value(),
+                'disabled' => true
+            ];
+        }
+
+        $index++;
+
+        $options[] = [
+            'value' => $index,
+            'text'  => $index
+        ];
+
+        return array_merge([
+            'label'   => t('page.changeStatus.position'),
+            'type'    => 'select',
+            'empty'   => false,
+            'options' => $options
         ], $props);
     }
 
