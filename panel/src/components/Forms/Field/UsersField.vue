@@ -30,7 +30,6 @@
           :info="user.info"
           :link="link ? $api.users.link(user.id) : null"
           :image="user.image"
-          :icon="user.icon"
         >
           <template #options>
             <k-button

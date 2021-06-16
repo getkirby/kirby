@@ -259,7 +259,7 @@ class FileTest extends TestCase
     }
 
     /**
-     * @covers ::icon
+     * @covers ::imageIcon
      */
     public function testIconDefault()
     {
@@ -272,38 +272,9 @@ class FileTest extends TestCase
             'parent'   => $page
         ]);
 
-        $icon = (new File($file))->icon();
-
-        $this->assertSame([
-            'type'  => 'file-image',
-            'ratio' => null,
-            'back'  => 'pattern',
-            'color' => '#de935f'
-        ], $icon);
-    }
-
-    /**
-     * @covers ::icon
-     */
-    public function testIconWithRatio()
-    {
-        $page = new ModelPage([
-            'slug' => 'test'
-        ]);
-
-        $file = new ModelFile([
-            'filename' => 'something.jpg',
-            'parent'   => $page
-        ]);
-
-        $icon = (new File($file))->icon(['ratio' => '3/2']);
-
-        $this->assertSame([
-            'type'  => 'file-image',
-            'ratio' => '3/2',
-            'back'  => 'pattern',
-            'color' => '#de935f'
-        ], $icon);
+        $image = (new File($file))->image();
+        $this->assertSame('file-image', $image['icon']);
+        $this->assertSame('orange-400', $image['color']);
     }
 
     /**
@@ -347,34 +318,26 @@ class FileTest extends TestCase
 
         // cover disabled as default
         $this->assertSame([
-            'ratio' => '3/2',
             'back' => 'pattern',
             'cover' => false,
+            'ratio' => '3/2',
+            'color' => 'orange-400',
+            'icon' => 'file-image',
             'url' => '/media/site/' . $hash . '/test.jpg',
-            'cards' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => '/media/site/' . $hash . '/test-352x.jpg 352w, /media/site/' . $hash . '/test-864x.jpg 864w, /media/site/' . $hash . '/test-1408x.jpg 1408w'
-            ],
-            'list' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => '/media/site/' . $hash . '/test-38x.jpg 38w, /media/site/' . $hash . '/test-76x.jpg 76w'
-            ]
+            'src' => Model::imagePlaceholder(),
+            'srcset' => '/media/site/' . $hash . '/test-38x.jpg 38w, /media/site/' . $hash . '/test-76x.jpg 76w'
         ], $panel->image());
 
         // cover enabled
         $this->assertSame([
-            'ratio' => '3/2',
             'back' => 'pattern',
             'cover' => true,
+            'ratio' => '3/2',
+            'color' => 'orange-400',
+            'icon' => 'file-image',
             'url' => '/media/site/' . $hash . '/test.jpg',
-            'cards' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => '/media/site/' . $hash . '/test-352x.jpg 352w, /media/site/' . $hash . '/test-864x.jpg 864w, /media/site/' . $hash . '/test-1408x.jpg 1408w'
-            ],
-            'list' => [
-                'url' => Model::imagePlaceholder(),
-                'srcset' => '/media/site/' . $hash . '/test-38x38.jpg 1x, /media/site/' . $hash . '/test-76x76.jpg 2x'
-            ]
+            'src' => Model::imagePlaceholder(),
+            'srcset' => '/media/site/' . $hash . '/test-38x38.jpg 1x, /media/site/' . $hash . '/test-76x76.jpg 2x'
         ], $panel->image(['cover' => true]));
     }
 
@@ -611,7 +574,7 @@ class FileTest extends TestCase
         $this->assertSame('(image: test.jpg)', $data['dragText']);
         $this->assertSame('test/test.jpg', $data['id']);
         $this->assertSame('3/2', $data['image']['ratio']);
-        $this->assertSame('file-image', $data['icon']['type']);
+        $this->assertSame('file-image', $data['image']['icon']);
         $this->assertSame('/pages/test/files/test.jpg', $data['link']);
         $this->assertSame('test.jpg', $data['text']);
     }

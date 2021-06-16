@@ -224,26 +224,26 @@ class ModelTest extends TestCase
     }
 
     /**
-     * @covers ::icon
+     * @covers ::imageIcon
      */
     public function testIcon()
     {
         $panel = $this->panel();
 
-        $icon  = $panel->icon();
-        $this->assertArrayHasKey('type', $icon);
-        $this->assertArrayHasKey('ratio', $icon);
-        $this->assertArrayHasKey('color', $icon);
-        $this->assertArrayHasKey('back', $icon);
-        $this->assertSame('page', $icon['type']);
-        $this->assertSame('pattern', $icon['back']);
+        $image  = $panel->image();
+        $this->assertArrayHasKey('icon', $image);
+        $this->assertArrayHasKey('ratio', $image);
+        $this->assertArrayHasKey('color', $image);
+        $this->assertArrayHasKey('back', $image);
+        $this->assertSame('page', $image['icon']);
+        $this->assertSame('pattern', $image['back']);
 
-        $icon  = $panel->icon([
-            'type'  => $type = 'heart',
+        $image  = $panel->image([
+            'icon'  => $type = 'heart',
             'ratio' => $ratio = '16/9'
         ]);
-        $this->assertSame($type, $icon['type']);
-        $this->assertSame($ratio, $icon['ratio']);
+        $this->assertSame($type, $image['icon']);
+        $this->assertSame($ratio, $image['ratio']);
     }
 
     /**
@@ -270,7 +270,10 @@ class ModelTest extends TestCase
         $this->assertNull($panel->image(false));
 
         // icon
-        $this->assertSame([], $panel->image('icon'));
+        $image = $panel->image('icon');
+        $this->assertSame('page', $image['icon']);
+        $this->assertArrayNotHasKey('src', $image);
+        $this->assertArrayNotHasKey('url', $image);
 
         // invalid query
         $image = $panel->image('site.foo');
@@ -280,9 +283,17 @@ class ModelTest extends TestCase
         // valid query
         $image = $panel->image('site.image');
         $this->assertArrayHasKey('url', $image);
-        $this->assertArrayHasKey('cards', $image);
-        $this->assertArrayHasKey('list', $image);
+        $this->assertArrayHasKey('src', $image);
+        $this->assertArrayHasKey('srcset', $image);
         $this->assertArrayNotHasKey('query', $image);
+        $this->assertStringContainsString('test-38x.jpg 38w', $image['srcset']);
+        $this->assertStringContainsString('test-76x.jpg 76w', $image['srcset']);
+
+        // different layouts
+        $image = $panel->image('site.image', 'cards');
+        $this->assertStringContainsString('test-352x.jpg 352w', $image['srcset']);
+        $this->assertStringContainsString('test-864x.jpg 864w', $image['srcset']);
+        $this->assertStringContainsString('test-1408x.jpg 1408w', $image['srcset']);
 
         // full options
         $image = $panel->image([
@@ -291,9 +302,11 @@ class ModelTest extends TestCase
             'cover' => true
         ]);
         $this->assertArrayHasKey('url', $image);
-        $this->assertArrayHasKey('cards', $image);
-        $this->assertArrayHasKey('list', $image);
+        $this->assertArrayHasKey('src', $image);
+        $this->assertArrayHasKey('srcset', $image);
         $this->assertSame('16/9', $image['ratio']);
+        $this->assertStringContainsString('test-38x38.jpg 1x', $image['srcset']);
+        $this->assertStringContainsString('test-76x76.jpg 2x', $image['srcset']);
     }
 
     /**

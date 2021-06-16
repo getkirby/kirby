@@ -86,26 +86,6 @@ abstract class Model
     }
 
     /**
-     * Returns the Panel icon definition
-     *
-     * @internal
-     *
-     * @param array|null $params
-     * @return array
-     */
-    public function icon(array $params = null): array
-    {
-        $defaults = [
-            'type'  => 'page',
-            'ratio' => null,
-            'back'  => 'pattern',
-            'color' => '#c5c9c6',
-        ];
-
-        return array_merge($defaults, $params ?? []);
-    }
-
-    /**
      * Returns the Panel image definition
      *
      * @internal
@@ -113,79 +93,114 @@ abstract class Model
      * @param string|array|false|null $settings
      * @return array|null
      */
-    public function image($settings = null): ?array
+    public function image($settings = [], string $layout = 'list'): ?array
     {
-        $defaults = [
-            'ratio' => '3/2',
-            'back'  => 'pattern',
-            'cover' => false
-        ];
-
-        // switch the image off
+        // completely switched off
         if ($settings === false) {
             return null;
         }
 
-        if (is_string($settings) === true) {
-            // use defined icon in blueprint
-            if ($settings === 'icon') {
-                return [];
+        // skip image thumbnail if option
+        // is explicitly set to show the icon
+        if ($settings === 'icon') {
+            $settings = [];
+        } else {
+            // convert string settings to proper array
+            if (is_string($settings) === true) {
+                $settings = [
+                    'query' => $settings
+                ];
             }
 
-            $settings = [
-                'query' => $settings
-            ];
-        }
+            if ($image = $this->imageSource($settings['query'] ?? null)) {
 
-        if ($image = $this->imageSource($settings['query'] ?? null)) {
+                // main url
+                $settings['url'] = $image->url();
 
-            // main url
-            $settings['url'] = $image->url();
+                // only create srcsets for actual File objects
+                if (is_a($image, 'Kirby\Cms\File') === true) {
+                    $settings['src'] = static::imagePlaceholder();
 
-            // only create srcsets for actual File objects
-            if (is_a($image, 'Kirby\Cms\File') === true) {
+                    switch ($layout) {
+                        case 'cards':
+                            $settings['srcset'] = $image->srcset([
+                                352,
+                                864,
+                                1408,
+                            ]);
+                            break;
 
-                // for cards
-                $settings['cards'] = [
-                    'url' => static::imagePlaceholder(),
-                    'srcset' => $image->srcset([
-                        352,
-                        864,
-                        1408,
-                    ])
-                ];
+                        case 'list':
+                            $sizes = [38, 76];
 
-                // for lists
-                if (($settings['cover'] ?? false) === false) {
-                    $settings['list'] = [
-                        'url' => static::imagePlaceholder(),
-                        'srcset' => $image->srcset([
-                            38,
-                            76
-                        ])
-                    ];
-                } else {
-                    $settings['list'] = [
-                        'url' => static::imagePlaceholder(),
-                        'srcset' => $image->srcset([
-                            '1x' => [
-                                'width' => 38,
-                                'height' => 38,
-                                'crop' => 'center'
-                            ],
-                            '2x' => [
-                                'width' => 76,
-                                'height' => 76,
-                                'crop' => 'center'
-                            ],
-                        ])
-                    ];
+                            // no break
+                        default:
+                            if (($settings['cover'] ?? false) === false) {
+                                $settings['srcset'] = $image->srcset($sizes);
+                            } else {
+                                $settings['srcset'] = $image->srcset([
+                                    '1x' => [
+                                        'width'  => $sizes[0],
+                                        'height' => $sizes[0],
+                                        'crop'   => 'center'
+                                    ],
+                                    '2x' => [
+                                        'width'  => $sizes[1],
+                                        'height' => $sizes[1],
+                                        'crop'   => 'center'
+                                    ]
+                                ]);
+                            }
+                            break;
+                    }
                 }
             }
-        }
-        unset($settings['query']);
 
-        return array_merge($defaults, (array)$settings);
+            unset($settings['query']);
+        }
+
+        return array_merge(
+            $this->imageDefaults(),
+            [
+                'color' => $this->imageColor(),
+                'icon'  => $this->imageIcon()
+            ],
+            $settings
+        );
+    }
+
+    /**
+     * Returns the Panel icon color
+     *
+     * @return string
+     */
+    protected function imageColor(): string
+    {
+        return 'white';
+    }
+
+    /**
+     * Default settings for Panel image
+     *
+     * @return array
+     */
+    public function imageDefaults(): array
+    {
+        return [
+            'back'  => 'pattern',
+            'cover' => false,
+            'ratio' => '3/2',
+        ];
+    }
+
+    /**
+     * Returns the Panel icon type
+     *
+     * @return string
+     */
+    protected function imageIcon(): string
+    {
+        return 'page';
     }
 
     /**
@@ -290,8 +305,10 @@ abstract class Model
     {
         return [
             'id'    => $this->model->id(),
-            'image' => $image = $this->image($params['image'] ?? []),
-            'icon'  => $this->icon($image),
+            'image' => $this->image(
+                $params['image'] ?? [],
+                $params['layout'] ?? 'list'
+            ),
             'info'  => $this->model->toString($params['info'] ?? false),
             'link'  => $this->url(true),
             'text'  => $this->model->toString($params['text'] ?? false),

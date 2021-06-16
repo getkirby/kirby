@@ -63,9 +63,10 @@ return [
     'methods' => [
         'pageResponse' => function ($page) {
             return $page->panel()->pickerData([
-                'image' => $this->image,
-                'info'  => $this->info,
-                'text'  => $this->text,
+                'image'  => $this->image,
+                'info'   => $this->info,
+                'layout' => $this->layout,
+                'text'   => $this->text,
             ]);
         },
         'toPages' => function ($value = null) {
@@ -93,7 +94,7 @@ return [
                     $field = $this->field();
 
                     return $field->pagepicker([
-                        'image'    => $field->image(),
+                        'image'    => $field->image([], $field->layout),
                         'info'     => $field->info(),
                         'limit'    => $field->limit(),
                         'page'     => $this->requestQuery('page'),

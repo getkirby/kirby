@@ -9,7 +9,12 @@
       <span v-if="image" class="k-list-item-image">
         <slot name="image">
           <k-image v-if="imageOptions" v-bind="imageOptions" />
-          <k-icon v-else v-bind="icon" />
+          <k-icon
+            v-else
+            :type="image.icon"
+            :color="image.color"
+            :back="image.back"
+          />
         </slot>
       </span>
       <span class="k-list-item-text">
@@ -73,19 +78,6 @@ export default {
      * @values See the props of `<k-image>`
      */
     image: [Object, Boolean],
-    /**
-     * Defines the list item icon instead of an image. If an image is still defined, the image will be used instead of the icon and this setting will be ignored.
-     * @values See the props of `<k-icon>`
-     */
-    icon: {
-      type: Object,
-      default() {
-        return {
-          type: "file",
-          back: "black"
-        };
-      }
-    },
     sortable: Boolean,
     /**
      * Sets the list item text

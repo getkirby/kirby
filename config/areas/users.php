@@ -44,15 +44,11 @@ return function ($kirby) {
                                 return [
                                     'data' => $users->values(function ($user) {
                                         return [
-                                            'id'   => $user->id(),
-                                            'icon' => [
-                                                'type' => 'user',
-                                                'back' => 'black'
-                                            ],
-                                            'text'  => $user->username(),
+                                            'id'    => $user->id(),
+                                            'image' => $user->panel()->image(),
                                             'info'  => $user->role()->title(),
-                                            'link'  => 'users/' . $user->id(),
-                                            'image' => true
+                                            'link'  => $user->panel()->url(true),
+                                            'text'  => $user->username()
                                         ];
                                     }),
                                     'pagination' => $users->pagination()->toArray()

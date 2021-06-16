@@ -9,7 +9,7 @@
         class="k-card-image"
       />
       <span v-else :style="'padding-bottom:' + ratioPadding" class="k-card-icon">
-        <k-icon v-bind="icon" />
+        <k-icon :type="image.icon" :color="image.color" :back="image.back" />
       </span>
       <figcaption class="k-card-content">
         <span :data-noinfo="!info" class="k-card-text">{{ text }}</span>
@@ -73,19 +73,6 @@ export default {
      */
     flag: Object,
     /**
-     * Defines the card icon instead of an image. If an image is still defined, the image will be used instead of the icon and this setting will be ignored.
-     * @example { type: 'file', back: 'black' }
-     */
-    icon: {
-      type: Object,
-      default() {
-        return {
-          type: "file",
-          back: "black"
-        };
-      }
-    },
-    /**
      * Defines the card image
      * @example { url: 'https://picsum.photos/400/400?random', ratio: '1/1', back: 'pattern', cover: true }
      */
@@ -94,11 +81,11 @@ export default {
      * Sets the secondary info text
      */
     info: String,
-    /** 
+    /**
      * Sets the link for the entire card
      */
     link: [String, Function],
-    /** 
+    /**
      * Defines the options dropdown
      * @example [ {icon: 'edit', text: 'Edit'}, {icon: 'trash', text: 'Delete'} ]
      */

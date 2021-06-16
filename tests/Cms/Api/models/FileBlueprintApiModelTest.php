@@ -2,35 +2,20 @@
 
 namespace Kirby\Cms;
 
-class FileBlueprintApiModelTest extends TestCase
+use Kirby\Cms\Api\ApiModelTestCase;
+
+class FileBlueprintApiModelTest extends ApiModelTestCase
 {
-    protected $api;
-    protected $app;
     protected $file;
-
-    public function attr($object, $attr)
-    {
-        return $this->api->resolve($object)->select($attr)->toArray()[$attr];
-    }
-
-    public function assertAttr($object, $attr, $value)
-    {
-        $this->assertEquals($this->attr($object, $attr), $value);
-    }
 
     public function setUp(): void
     {
-        $this->app = new App([
-            'roots' => [
-                'index' => '/dev/null'
-            ],
-        ]);
+        parent::setUp();
 
         $page = new Page([
             'slug' => 'test'
         ]);
 
-        $this->api  = $this->app->api();
         $this->file = new File(['filename' => 'test.jpg', 'parent' => $page]);
     }
 

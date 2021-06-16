@@ -639,7 +639,7 @@ abstract class ModelWithContent extends Model
     /**
      * Returns the panel icon definition
      *
-     * @deprecated 3.6.0 Use `->panel()->icon()` instead
+     * @deprecated 3.6.0 Use `->panel()->image()` instead
      * @todo Add `deprecated()` helper warning in 3.7.0
      * @todo Remove in 3.8.0
      *
@@ -650,7 +650,7 @@ abstract class ModelWithContent extends Model
      */
     public function panelIcon(array $params = null): array
     {
-        return $this->panel()->icon($params);
+        return $this->panel()->image($params);
     }
 
     /**

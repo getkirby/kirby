@@ -55,21 +55,19 @@ class Page extends Model
         return '(link: ' . $this->model->id() . ' text: ' . $this->model->title() . ')';
     }
 
-
     /**
-     * Returns the Panel icon definition
+     * Returns the Panel icon type
      * according to the blueprint settings
      *
-     * @param array|null $params
-     * @return array
+     * @return string
      */
-    public function icon(array $params = null): array
+    protected function imageIcon(): string
     {
         if ($icon = $this->model->blueprint()->icon()) {
-            $params['type'] = $icon;
+            return $icon;
         }
 
-        return parent::icon($params);
+        return parent::imageIcon();
     }
 
     /**
