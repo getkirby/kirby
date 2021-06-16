@@ -18,9 +18,7 @@
                 <template v-if="$license">
                   {{ license }}
                 </template>
-                <p v-else>
-                  <strong class="k-system-unregistered">{{ $t('license.unregistered') }}</strong>
-                </p>
+                <button v-else class="k-system-unregistered" @click="$dialog('registration')">{{ $t('license.unregistered') }}</button>
               </dd>
             </dl>
           </li>
@@ -171,6 +169,7 @@ export default {
 }
 .k-system-unregistered {
   color: var(--color-negative);
+  font-weight: var(--font-bold);
 }
 
 .k-languages-section {

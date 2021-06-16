@@ -15,7 +15,6 @@
         :license="$license"
         :areas="$areas"
         :view="$view"
-        @register="$refs.registration.open()"
         @search="$refs.search.open();"
       />
 
@@ -30,9 +29,6 @@
     <main class="k-panel-view">
       <slot />
     </main>
-
-    <!-- Registration dialog -->
-    <k-registration ref="registration" @success="$reload" />
 
     <!-- Form buttons -->
     <k-form-buttons :lock="lock" />
@@ -66,13 +62,9 @@
 </template>
 
 <script>
-import search from "@/config/search.js"
-import Registration from "@/components/Dialogs/RegistrationDialog.vue";
+import search from "@/config/search.js";
 
 export default {
-  components: {
-    "k-registration": Registration
-  },
   inheritAttrs: false,
   props: {
     lock: [Boolean, Object]

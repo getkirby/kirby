@@ -49,7 +49,7 @@
                 :tooltip="$t('license.unregistered')"
                 class="k-topbar-signals-button"
                 icon="key"
-                @click="$emit('register')"
+                @click="$dialog('registration')"
               >
                 {{ $t('license.register') }}
               </k-button>
