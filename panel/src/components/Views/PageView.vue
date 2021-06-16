@@ -65,10 +65,7 @@
       />
 
       <k-page-rename-dialog ref="rename" @success="$reload" />
-      <k-page-duplicate-dialog ref="duplicate" />
-      <k-page-status-dialog ref="status" @success="$reload" />
       <k-page-template-dialog ref="template" @success="$reload" />
-      <k-page-remove-dialog ref="remove" @success="onRemove" />
     </k-view>
   </k-inside>
 </template>
@@ -111,9 +108,6 @@ export default {
           );
           break;
       }
-    },
-    onRemove() {
-      this.$go(this.model.parent);
     }
   }
 };
