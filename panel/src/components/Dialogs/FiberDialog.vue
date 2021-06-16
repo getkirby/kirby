@@ -40,13 +40,28 @@ export default {
         if (data.$dialog.code === 200) {
           this.$refs.dialog.close();
           this.$store.dispatch("notification/success", ":)");
-          this.$reload();
+
+          if (data.$dialog.event) {
+            if (typeof data.$dialog.event === "string") {
+              data.$dialog.event = [data.$dialog.event];
+            }
+
+            data.$dialog.event.forEach(event => {
+              this.$events.$emit(data.$dialog.event, data.$dialog);
+            });
+          }
+
+          if (data.$dialog.redirect) {
+            this.$go(data.$dialog.redirect);
+          } else {
+            this.$reload();
+          }
           return;
         }
 
       } else {
         this.$refs.dialog.close();
-        this.$go(data.$path);
+        this.$reload();
       }
 
     }
