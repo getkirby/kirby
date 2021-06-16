@@ -100,7 +100,7 @@ export default {
       }
 
       if (this.more && this.uploads) {
-        this.$refs.dropdown.toggle();
+        this.$refs.options.toggle();
       } else {
         this.open();
       }
