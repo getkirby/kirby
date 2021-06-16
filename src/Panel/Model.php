@@ -130,6 +130,9 @@ abstract class Model
                             ]);
                             break;
 
+                        case 'cardlets':
+                            $sizes = [96, 192];
+
                         case 'list':
                             $sizes = [38, 76];
 
