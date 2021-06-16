@@ -11,6 +11,53 @@ class PageDialogsTest extends AreaTestCase
         $this->login();
     }
 
+    public function testChangeSort(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeSort');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('Please select a position', $props['fields']['position']['label']);
+        $this->assertSame('Change', $props['submitButton']);
+        $this->assertSame(1, $props['value']['position']);
+    }
+
+    public function testChangeSortOnSubmit(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->submit([
+            'status' => 'listed'
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeSort');
+
+        $this->assertSame('page.sort', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertSame('listed', $this->app->page('test')->status());
+        $this->assertSame(1, $this->app->page('test')->num());
+    }
+
     public function testChangeStatus(): void
     {
         $this->app([
