@@ -95,38 +95,6 @@ return [
         }
     ],
 
-    // change page position
-    'pages/(:any)/changeSort' => [
-        'load' => function (string $id) {
-            $page     = Find::page($id);
-            $position = null;
-
-            if ($page->blueprint()->num() !== 'default') {
-                // TODO: make translatable
-                throw new Exception('You cannot change the position of this page manually');
-            }
-
-            return [
-                'component' => 'k-form-dialog',
-                'props' => [
-                    'fields' => [
-                        'position' => Field::position($page),
-                    ],
-                    'submitButton' => t('change'),
-                    'value' => [
-                        'position' => $page->num() ?? $page->siblings(false)->count() + 1
-                    ]
-                ]
-            ];
-        },
-        'submit' => function (string $id) {
-            Find::page($id)->changeStatus('listed', get('position'));
-            return [
-                'event' => 'page.sort',
-            ];
-        }
-    ],
-
     // delete page
     'pages/(:any)/delete' => [
         'load' => function (string $id) {

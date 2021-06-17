@@ -102,7 +102,7 @@ class UsersDialogsTest extends AreaTestCase
         $dialog = $this->dialog('users/test/changeLanguage');
 
         $this->assertSame('user.changeLanguage', $dialog['event']);
-        $this->assertSame(['only' => '$translation'], $dialog['reload']);
+        $this->assertSame(['include' => '$translation'], $dialog['reload']);
         $this->assertSame(200, $dialog['code']);
 
         $this->assertSame('de', $this->app->user('test')->language());
