@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Areas;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\Str;
@@ -197,6 +198,9 @@ abstract class AreaTestCase extends TestCase
         $this->app->session()->destroy();
 
         Dir::remove($this->tmp);
+
+        // clear blueprint cache
+        Blueprint::$loaded = [];
 
         // clean up server software fakes
         unset($_SERVER['SERVER_SOFTWARE']);

@@ -95,6 +95,56 @@ return [
         }
     ],
 
+    // change template
+    'pages/(:any)/changeTemplate' => [
+        'load' => function (string $id) {
+            $page       = Find::page($id);
+            $blueprints = [];
+
+            foreach ($page->blueprints() as $blueprint) {
+                $blueprints[] = [
+                    'text'  => $blueprint['title'],
+                    'value' => $blueprint['name'],
+                ];
+            }
+
+            if (count($blueprints) <= 1) {
+                throw new Exception([
+                    'key'  => 'page.changeTemplate.invalid',
+                    'data' => [
+                        'slug' => $id
+                    ]
+                ]);
+            }
+
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => [
+                        'template' => [
+                            'label'    => t('template'),
+                            'type'     => 'select',
+                            'required' => true,
+                            'empty'    => false,
+                            'options'  => $blueprints,
+                            'icon'     => 'template'
+                        ]
+                    ],
+                    'submitButton' => t('change'),
+                    'value' => [
+                        'template' => $page->intendedTemplate()->name()
+                    ]
+                ]
+            ];
+        },
+        'submit' => function (string $id) {
+            Find::page($id)->changeTemplate(get('template'));
+            return [
+                'event' => 'page.changeTemplate',
+            ];
+        }
+    ],
+
     // delete page
     'pages/(:any)/delete' => [
         'load' => function (string $id) {

@@ -297,7 +297,7 @@ trait PageActions
                 }
 
                 // return a fresh copy of the object
-                return $newPage->clone();
+                $page = $newPage->clone();
             } else {
                 $newPage = $this->clone([
                     'content'  => $this->content()->convertTo($template),
@@ -308,8 +308,17 @@ trait PageActions
                     throw new LogicException('The old text file could not be removed');
                 }
 
-                return $newPage->save();
+                $page = $newPage->save();
             }
+
+            // update the parent collection
+            if ($page->isDraft() === true) {
+                $page->parentModel()->drafts()->set($page->id(), $page);
+            } else {
+                $page->parentModel()->children()->set($page->id(), $page);
+            }
+
+            return $page;
         });
     }
 

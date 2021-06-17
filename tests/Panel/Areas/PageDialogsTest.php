@@ -115,6 +115,114 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame(1, $this->app->page('test')->num());
     }
 
+    public function testChangeTemplate(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'a'
+                    ]
+                ]
+            ],
+            'blueprints' => [
+                'pages/a' => [
+                    'title' => 'A',
+                    'options' => [
+                        'changeTemplate' => [
+                            'b'
+                        ]
+                    ]
+                ],
+                'pages/b' => [
+                    'title' => 'B',
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeTemplate');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('Template', $props['fields']['template']['label']);
+
+        $this->assertSame('A', $props['fields']['template']['options'][0]['text']);
+        $this->assertSame('a', $props['fields']['template']['options'][0]['value']);
+        $this->assertSame('B', $props['fields']['template']['options'][1]['text']);
+        $this->assertSame('b', $props['fields']['template']['options'][1]['value']);
+
+        $this->assertSame('Change', $props['submitButton']);
+        $this->assertSame('a', $props['value']['template']);
+    }
+
+    public function testChangeTemplateWithoutAlternatives(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'a'
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeTemplate');
+
+        $this->assertSame(500, $dialog['code']);
+        $this->assertSame('The template for the page "test" cannot be changed', $dialog['error']);
+    }
+
+    public function testChangeTemplateOnSubmit(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'a'
+                    ]
+                ]
+            ],
+            'blueprints' => [
+                'pages/a' => [
+                    'title' => 'A',
+                    'options' => [
+                        'changeTemplate' => [
+                            'b'
+                        ]
+                    ]
+                ],
+                'pages/b' => [
+                    'title' => 'B',
+                ]
+            ]
+        ]);
+
+        $this->submit([
+            'template' => 'b'
+        ]);
+
+        $this->login();
+
+        // store page first to be able to change the template
+        $this->app->page('test')->update();
+
+        $dialog = $this->dialog('pages/test/changeTemplate');
+
+        $this->assertSame('page.changeTemplate', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertSame('b', $this->app->page('test')->intendedTemplate()->name());
+    }
+
     public function testDelete(): void
     {
         $this->app([
