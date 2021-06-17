@@ -10,7 +10,10 @@
     <k-input
       :id="_uid"
       ref="input"
-      v-bind="$props"
+      v-bind="{
+        ...$props,
+        value: slug
+      }"
       theme="field"
       type="slug"
       v-on="$listeners"
@@ -36,12 +39,26 @@ export default {
   ],
   inheritAttrs: false,
   props: {
+    formData: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
     icon: {
       type: String,
       default: "url"
     },
+    sync: {
+      type: String,
+    },
     path: {
       type: String
+    }
+  },
+  data() {
+    return {
+      slug: this.value
     }
   },
   computed: {
@@ -53,6 +70,21 @@ export default {
       if (this.path !== undefined) {
         return this.path + this.value;
       }
+    }
+  },
+  watch: {
+    formData: {
+      handler(newValue, oldValue) {
+        if (!this.sync || newValue[this.sync] === undefined) {
+          return false;
+        }
+
+        this.slug = newValue[this.sync];
+      },
+      deep: true,
+    },
+    value() {
+      this.slug = this.value;
     }
   },
   methods: {
