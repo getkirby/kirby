@@ -36,6 +36,11 @@ export default {
       return this.$store.getters["content/values"]();
     }
   },
+  watch: {
+    timestamp() {
+      this.fetch();
+    }
+  },
   created() {
     this.input = debounce(this.input, 50);
     this.fetch();

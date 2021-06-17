@@ -4,7 +4,8 @@ export default {
     lock: [Boolean, Object],
     help: String,
     name: String,
-    parent: String
+    parent: String,
+    timestamp: Number
   },
   methods: {
     load() {
