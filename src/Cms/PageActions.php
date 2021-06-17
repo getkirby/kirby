@@ -333,7 +333,14 @@ trait PageActions
     {
         $arguments = ['page' => $this, 'title' => $title, 'languageCode' => $languageCode];
         return $this->commit('changeTitle', $arguments, function ($page, $title, $languageCode) {
-            return $page->save(['title' => $title], $languageCode);
+            $page = $page->save(['title' => $title], $languageCode);
+
+            // flush the parent cache to get children and drafts right
+            if ($page->isDraft() === true) {
+                $page->parentModel()->drafts()->set($page->id(), $page);
+            } else {
+                $page->parentModel()->children()->set($page->id(), $page);
+            }
         });
     }
 

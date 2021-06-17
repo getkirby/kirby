@@ -131,6 +131,86 @@ return [
         }
     ],
 
+    // change title
+    'pages/(:any)/changeTitle' => [
+        'load' => function (string $id) {
+            $page        = Find::page($id);
+            $permissions = $page->permissions();
+            $select      = get('select', 'title');
+
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => [
+                        'title' => Field::title([
+                            'required'  => true,
+                            'preselect' => $select === 'title',
+                            'disabled'  => $permissions->can('changeTitle') === false
+                        ]),
+                        'slug' => Field::slug([
+                            'required'  => true,
+                            'preselect' => $select === 'slug',
+                            'path'      => $page->parent() ? '/' . $page->parent()->id() . '/' : '/',
+                            'disabled'  => $permissions->can('changeSlug') === false
+                        ])
+                    ],
+                    'autofocus' => false,
+                    'submitButton' => t('change'),
+                    'value' => [
+                        'title' => $page->title()->value(),
+                        'slug'  => $page->slug(),
+                    ]
+                ]
+            ];
+        },
+        'submit' => function (string $id) {
+            $page  = Find::page($id);
+            $title = trim(get('title'));
+            $slug  = trim(get('slug'));
+
+            // basic input validation before we move on
+            if (Str::length($title) === 0) {
+                throw new InvalidArgumentException(['key' => 'page.changeTitle.empty']);
+            }
+
+            if (Str::length($slug) === 0) {
+                throw new InvalidArgumentException(['key' => 'page.slug.invalid']);
+            }
+
+            // nothing changed
+            if ($page->title()->value() === $title && $page->slug() === $slug) {
+                return true;
+            }
+
+            // prepare the response
+            $response = [
+                'event' => []
+            ];
+
+            // the page title changed
+            if ($page->title()->value() !== $title) {
+                $page->changeTitle($title);
+                $response['event'][] = 'page.changeTitle';
+            }
+
+            // the slug changed
+            if ($page->slug() !== $slug) {
+                $newPage = $page->changeSlug($slug);
+                $response['event'][] = 'page.changeSlug';
+                $response['dispatch'] = [
+                    'content/move' => [
+                        $page->panel()->url(true),
+                        $newPage->panel()->url(true)
+                    ]
+                ];
+
+                // TODO: redirect if in page view
+            }
+
+            return $response;
+        }
+    ],
+
     // change create
     'pages/create' => [
         'load' => function () {

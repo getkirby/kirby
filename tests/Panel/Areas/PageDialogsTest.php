@@ -223,6 +223,175 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame('b', $this->app->page('test')->intendedTemplate()->name());
     }
 
+    public function testChangeTitle(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeTitle');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('Title', $props['fields']['title']['label']);
+        $this->assertFalse($props['fields']['title']['disabled']);
+        $this->assertSame('URL appendix', $props['fields']['slug']['label']);
+        $this->assertFalse($props['fields']['slug']['disabled']);
+
+        $this->assertSame('test', $props['value']['title']);
+        $this->assertSame('test', $props['value']['slug']);
+
+        $this->assertSame('Change', $props['submitButton']);
+    }
+
+    public function testChangeTitleOnSubmit(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->submit([
+            'title' => 'New title',
+            'slug' => 'test'
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeTitle');
+
+        $this->assertSame(['page.changeTitle'], $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertSame('New title', $this->app->page('test')->title()->value());
+    }
+
+    public function testChangeTitleOnSubmitWithoutChanges(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->submit([
+            'title' => 'test',
+            'slug'  => 'test'
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeTitle');
+
+        $this->assertSame(200, $dialog['code']);
+        $this->assertArrayNotHasKey('event', $dialog);
+    }
+
+    public function testChangeTitleOnSubmitWithoutTitle(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->submit([]);
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeTitle');
+
+        $this->assertSame(400, $dialog['code']);
+        $this->assertSame('The title must not be empty', $dialog['error']);
+    }
+
+    public function testChangeTitleOnSubmitWithoutSlug(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->submit(['title' => 'Test']);
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeTitle');
+
+        $this->assertSame(400, $dialog['code']);
+        $this->assertSame('Please enter a valid URL appendix', $dialog['error']);
+    }
+
+    public function testChangeTitleOnSubmitWithSlugOnly(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->submit(['title' => 'test', 'slug' => 'new-slug']);
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeTitle');
+
+        $this->assertSame(['page.changeSlug'], $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+        $this->assertSame([
+            'content/move' => [
+                '/pages/test',
+                '/pages/new-slug'
+            ]
+        ], $dialog['dispatch']);
+
+        $this->assertSame('new-slug', $this->app->page('new-slug')->slug());
+    }
+
+    public function testChangeTitleOnSubmitWithSlugAndTitle(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->submit(['title' => 'New title', 'slug' => 'new-slug']);
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeTitle');
+
+        $this->assertSame(['page.changeTitle', 'page.changeSlug'], $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+        $this->assertSame([
+            'content/move' => [
+                '/pages/test',
+                '/pages/new-slug'
+            ]
+        ], $dialog['dispatch']);
+
+        $this->assertSame('New title', $this->app->page('new-slug')->title()->value());
+        $this->assertSame('new-slug', $this->app->page('new-slug')->slug());
+    }
+
     public function testCreate(): void
     {
         $dialog = $this->dialog('pages/create');
