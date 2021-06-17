@@ -18,6 +18,7 @@ use Kirby\Cms\Page;
  */
 class Field
 {
+
     /**
      * A standard email field
      *
@@ -30,6 +31,17 @@ class Field
             'label'   => t('email'),
             'type'    => 'email',
             'counter' => false,
+        ], $props);
+    }
+
+    /**
+     * @param array $props
+     * @return array
+     */
+    public static function hidden(array $props = []): array
+    {
+        return array_merge([
+            'type' => 'hidden',
         ], $props);
     }
 
@@ -124,6 +136,33 @@ class Field
         return array_merge([
             'label' => t('slug'),
             'type'  => 'slug',
+        ], $props);
+    }
+
+    /**
+     * @param array $blueprints
+     * @param array $props
+     * @return array
+     */
+    public static function template(array $blueprints, array $props = []): array
+    {
+        $options = [];
+
+        foreach ($blueprints as $blueprint) {
+            $options[] = [
+                'text'  => $blueprint['title'],
+                'value' => $blueprint['name'],
+            ];
+        }
+
+        return array_merge([
+            'label'    => t('template'),
+            'type'     => 'select',
+            'required' => true,
+            'empty'    => false,
+            'options'  => $options,
+            'icon'     => 'template',
+            'disabled' => count($options) <= 1
         ], $props);
     }
 
