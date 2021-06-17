@@ -5,6 +5,7 @@ export default {
     column: String,
     parent: String,
     name: String,
+    timestamp: Number
   },
   data() {
     return {
@@ -55,6 +56,9 @@ export default {
   },
   watch: {
     language() {
+      this.reload();
+    },
+    timestamp() {
       this.reload();
     }
   },

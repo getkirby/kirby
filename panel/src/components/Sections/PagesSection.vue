@@ -114,18 +114,6 @@ export default {
 
           break;
         }
-        case "rename": {
-          this.$refs.rename.open(page.id, page.permissions, "title");
-          break;
-        }
-        case "url": {
-          this.$refs.rename.open(page.id, page.permissions, "slug");
-          break;
-        }
-        case "template": {
-          this.$refs.template.open(page.id);
-          break;
-        }
         case "remove": {
           // TODO: this will never be called
           // with the new options menu. Should
@@ -160,7 +148,7 @@ export default {
           tooltip: this.$t("page.status"),
           disabled: !isEnabled,
           click: () => {
-            this.action("status", page);
+            this.$dialog(this.$api.pages.url(page.id) + "/changeStatus");
           }
         };
 
