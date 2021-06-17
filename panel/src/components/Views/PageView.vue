@@ -25,7 +25,7 @@
               :disabled="!permissions.changeStatus || isLocked"
               :responsive="true"
               :text="status.label"
-              @click="action('status')"
+              @click="$dialog($view.path + '/changeStatus')"
             />
             <k-dropdown>
               <k-button
@@ -96,9 +96,6 @@ export default {
           break;
         case "url":
           this.$refs.rename.open(this.model.id, this.permissions, "slug");
-          break;
-        case "template":
-          this.$refs.template.open(this.model.id);
           break;
         default:
           this.$store.dispatch(
