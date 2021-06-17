@@ -65,7 +65,6 @@
       />
 
       <k-page-rename-dialog ref="rename" @success="$reload" />
-      <k-page-template-dialog ref="template" @success="$reload" />
     </k-view>
   </k-inside>
 </template>

@@ -65,7 +65,6 @@
 
       <k-page-create-dialog ref="create" />
       <k-page-rename-dialog ref="rename" @success="update" />
-      <k-page-template-dialog ref="template" @success="update" />
     </template>
   </section>
 </template>

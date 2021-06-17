@@ -144,7 +144,9 @@ export default (api) => {
       }
 
       result.push({
-        click: "template",
+        click() {
+          this.$dialog(pageUrl + '/changeTemplate');
+        },
         icon: "template",
         text: Vue.$t("page.changeTemplate"),
         disabled: !options.changeTemplate
