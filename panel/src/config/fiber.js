@@ -334,9 +334,12 @@ const Fiber = {
 export const plugin = {
   install(Vue) {
 
-    Vue.prototype.$dialog = async function (path) {
+    Vue.prototype.$dialog = async function (path, options = {}) {
       try {
-        const response = await fetch(this.$url("dialogs/" + path), {
+        let url    = new URL(this.$url("dialogs/" + path));
+        url.search = new URLSearchParams(options || {});
+
+        const response = await fetch(url, {
           headers: {
             "X-Fiber": true,
           }
