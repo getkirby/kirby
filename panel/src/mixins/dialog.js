@@ -1,5 +1,9 @@
 export default {
   props: {
+    autofocus: {
+      type: Boolean,
+      default: true
+    },
     cancelButton: {
       type: [String, Boolean],
       default: true,
