@@ -170,6 +170,10 @@ class LayoutFieldTest extends TestCase
         $this->assertIsArray($expected[0]['columns']);
         $this->assertSame('heading', $expected[0]['columns'][0]['blocks'][0]['type']);
         $this->assertSame('A nice heading', $expected[0]['columns'][0]['blocks'][0]['content']['text']);
+
+        // empty tests
+        $this->assertSame('', $field->store(null));
+        $this->assertSame('', $field->store([]));
     }
 
     public function testValidations()

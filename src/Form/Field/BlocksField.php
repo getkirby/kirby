@@ -181,6 +181,13 @@ class BlocksField extends FieldClass
     public function store($value)
     {
         $blocks = $this->blocksToValues((array)$value, 'content');
+
+        // returns empty string to avoid storing empty array as string `[]`
+        // and to consistency work with `$field->isEmpty()`
+        if (empty($blocks) === true) {
+            return '';
+        }
+
         return $this->valueToJson($blocks, $this->pretty());
     }
 
