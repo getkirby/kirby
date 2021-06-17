@@ -223,6 +223,124 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame('b', $this->app->page('test')->intendedTemplate()->name());
     }
 
+    public function testCreate(): void
+    {
+        $dialog = $this->dialog('pages/create');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('hidden', $props['fields']['parent']['type']);
+        $this->assertSame('Title', $props['fields']['title']['label']);
+        $this->assertSame('URL appendix', $props['fields']['slug']['label']);
+        $this->assertSame('title', $props['fields']['slug']['sync']);
+
+        // there's only the default template for now
+        $this->assertArrayNotHasKey('template', $props['fields']);
+
+        $this->assertSame('Create draft', $props['submitButton']);
+
+        $this->assertSame('site', $props['value']['parent']);
+        $this->assertSame('', $props['value']['slug']);
+        $this->assertNull($props['value']['template']);
+        $this->assertSame('', $props['value']['title']);
+    }
+
+    public function testCreateWithParent(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ],
+            'request' => [
+                'query' => [
+                    'parent' => 'pages/test'
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/create');
+        $props  = $dialog['props'];
+
+        $this->assertSame('pages/test', $props['value']['parent']);
+    }
+
+    public function testCreateWithMultipleBlueprints(): void
+    {
+        $this->app([
+            'blueprints' => [
+                'pages/a' => ['title' => 'A'],
+                'pages/b' => ['title' => 'B'],
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/create');
+        $props  = $dialog['props'];
+
+        // a + b + default
+        $this->assertCount(3, $props['fields']['template']['options']);
+    }
+
+    public function testCreateOnSubmit(): void
+    {
+        $this->submit([
+            'title' => 'Test',
+            'slug'  => 'test'
+        ]);
+
+        $dialog = $this->dialog('pages/create');
+
+        $this->assertSame('page.create', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertSame('test', $this->app->page('test')->slug());
+        $this->assertSame('Test', $this->app->page('test')->title()->value());
+    }
+
+    public function testCreateOnSubmitWithParent(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ],
+            'request' => [
+                'query' => [
+                    'parent' => 'pages/test'
+                ]
+            ]
+        ]);
+
+        $this->submit([
+            'title' => 'Test',
+            'slug'  => 'test-child'
+        ]);
+
+        $dialog = $this->dialog('pages/create');
+
+        $this->assertSame('test-child', $this->app->page('test/test-child')->slug());
+        $this->assertSame('Test', $this->app->page('test/test-child')->title()->value());
+    }
+
+    public function testCreateOnSubmitWithoutTitle(): void
+    {
+        $this->submit([
+            'slug' => 'test'
+        ]);
+
+        $dialog = $this->dialog('pages/create');
+
+        $this->assertSame(400, $dialog['code']);
+        $this->assertSame('The title must not be empty', $dialog['error']);
+    }
+
     public function testDelete(): void
     {
         $this->app([

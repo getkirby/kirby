@@ -99,14 +99,7 @@ return [
     'pages/(:any)/changeTemplate' => [
         'load' => function (string $id) {
             $page       = Find::page($id);
-            $blueprints = [];
-
-            foreach ($page->blueprints() as $blueprint) {
-                $blueprints[] = [
-                    'text'  => $blueprint['title'],
-                    'value' => $blueprint['name'],
-                ];
-            }
+            $blueprints = $page->blueprints();
 
             if (count($blueprints) <= 1) {
                 throw new Exception([
@@ -121,14 +114,7 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => [
-                        'template' => [
-                            'label'    => t('template'),
-                            'type'     => 'select',
-                            'required' => true,
-                            'empty'    => false,
-                            'options'  => $blueprints,
-                            'icon'     => 'template'
-                        ]
+                        'template' => Field::template($blueprints)
                     ],
                     'submitButton' => t('change'),
                     'value' => [
@@ -141,6 +127,68 @@ return [
             Find::page($id)->changeTemplate(get('template'));
             return [
                 'event' => 'page.changeTemplate',
+            ];
+        }
+    ],
+
+    // change create
+    'pages/create' => [
+        'load' => function () {
+            $parent     = get('parent', 'site');
+            $section    = get('section');
+            $model      = Find::parent($parent);
+            $blueprints = $model->blueprints($section);
+            $template   = null;
+
+            $fields = [
+                'parent' => Field::hidden(),
+                'title'  => Field::title(),
+                'slug'   => Field::slug([
+                    'required' => true,
+                    'sync'     => 'title',
+                    'path'     => empty($model->id()) === false ? '/' . $model->id() . '/' : '/'
+                ])
+            ];
+
+            if (count($blueprints) > 1 || option('debug') === true) {
+                $fields['template'] = Field::template($blueprints);
+
+                // preselect the first available template
+                $template = $fields['template']['options'][0]['value'];
+            }
+
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => $fields,
+                    'submitButton' => t('page.draft.create'),
+                    'value' => [
+                        'parent'   => $parent,
+                        'slug'     => '',
+                        'template' => $template,
+                        'title'    => '',
+                    ]
+                ]
+            ];
+        },
+        'submit' => function () {
+            $title = trim(get('title'));
+
+            if (Str::length($title) === 0) {
+                throw new InvalidArgumentException([
+                    'key' => 'page.changeTitle.empty'
+                ]);
+            }
+
+            $page = Find::parent(get('parent', 'site'))->createChild([
+                'content'  => ['title' => $title],
+                'slug'     => get('slug'),
+                'template' => get('template'),
+            ]);
+
+            return [
+                'event'    => 'page.create',
+                'redirect' => $page->panel()->url(true)
             ];
         }
     ],

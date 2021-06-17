@@ -18,7 +18,6 @@ use Kirby\Cms\Page;
  */
 class Field
 {
-
     /**
      * A standard email field
      *
