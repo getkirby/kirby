@@ -75,6 +75,10 @@ export default {
   watch: {
     formData: {
       handler(newValue, oldValue) {
+        if (this.disabled) {
+          return false;
+        }
+
         if (!this.sync || newValue[this.sync] === undefined) {
           return false;
         }
