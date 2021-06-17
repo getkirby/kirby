@@ -99,7 +99,11 @@ export default (api) => {
       }
 
       result.push({
-        click: "rename",
+        click() {
+          this.$dialog(pageUrl + "/changeTitle", {
+            select: "title"
+          });
+        },
         icon: "title",
         text: Vue.$t("rename"),
         disabled: !options.changeTitle
@@ -107,7 +111,7 @@ export default (api) => {
 
       result.push({
         click() {
-          this.$dialog(pageUrl + '/duplicate');
+          this.$dialog(pageUrl + "/duplicate");
         },
         icon: "copy",
         text: Vue.$t("duplicate"),
@@ -117,7 +121,11 @@ export default (api) => {
       result.push("-");
 
       result.push({
-        click: "url",
+        click() {
+          this.$dialog(pageUrl + "/changeTitle", {
+            select: "slug"
+          });
+        },
         icon: "url",
         text: Vue.$t("page.changeSlug"),
         disabled: !options.changeSlug

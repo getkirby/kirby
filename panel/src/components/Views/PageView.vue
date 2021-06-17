@@ -5,7 +5,7 @@
         :editable="permissions.changeTitle && !isLocked"
         :tab="tab.name"
         :tabs="tabs"
-        @edit="action('rename')"
+        @edit="$dialog($view.path + '/changeTitle')"
       >
         {{ model.title }}
         <template #left>
@@ -39,7 +39,6 @@
               <k-dropdown-content
                 ref="settings"
                 :options="options"
-                @action="action"
               />
             </k-dropdown>
 
@@ -63,8 +62,6 @@
         :parent="$api.pages.url(model.id)"
         :tab="tab"
       />
-
-      <k-page-rename-dialog ref="rename" @success="$reload" />
     </k-view>
   </k-inside>
 </template>
@@ -86,24 +83,6 @@ export default {
         const options = await this.$api.pages.options(this.model.id);
         ready(options);
       };
-    }
-  },
-  methods: {
-    action(action) {
-      switch (action) {
-        case "rename":
-          this.$refs.rename.open(this.model.id, this.permissions, "title");
-          break;
-        case "url":
-          this.$refs.rename.open(this.model.id, this.permissions, "slug");
-          break;
-        default:
-          this.$store.dispatch(
-            "notification/error",
-            this.$t("notification.notImplemented")
-          );
-          break;
-      }
     }
   }
 };

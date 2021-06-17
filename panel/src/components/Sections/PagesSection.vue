@@ -62,8 +62,6 @@
           <!-- eslint-enable vue/no-v-html -->
         </footer>
       </template>
-
-      <k-page-rename-dialog ref="rename" @success="update" />
     </template>
   </section>
 </template>
