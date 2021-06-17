@@ -63,7 +63,6 @@
         </footer>
       </template>
 
-      <k-page-create-dialog ref="create" />
       <k-page-rename-dialog ref="rename" @success="update" />
     </template>
   </section>
@@ -89,11 +88,10 @@ export default {
   methods: {
     create() {
       if (this.add) {
-        this.$refs.create.open(
-          this.options.link || this.parent,
-          this.parent + "/blueprints",
-          this.name
-        );
+        this.$dialog('pages/create', {
+          parent: this.parent,
+          section: this.name
+        });
       }
     },
     action(action, page) {
