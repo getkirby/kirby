@@ -5,6 +5,8 @@ use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 
+$files = require __DIR__ . '/../files/dialogs.php';
+
 return [
 
     // create
@@ -237,5 +239,7 @@ return [
             ];
         }
     ],
+
+    '(users/.*?)/files/(:any)/delete' => $files['delete'],
 
 ];

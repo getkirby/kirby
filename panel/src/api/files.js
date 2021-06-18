@@ -55,7 +55,8 @@ export default (api) => {
       return "/" + this.url(parent, filename, path);
     },
     async options(parent, filename, view, sortable = true) {
-      const file    = await api.get(this.url(parent, filename), {select: "options"});
+      const url     = this.url(parent, filename);
+      const file    = await api.get(url, {select: "options"});
       const options = file.options;
       let result    = [];
 
@@ -97,7 +98,9 @@ export default (api) => {
       result.push("-");
 
       result.push({
-        click: "remove",
+        click() {
+          this.$dialog(url + '/delete');
+        },
         icon: "trash",
         text: Vue.$t("delete"),
         disabled: !options.delete

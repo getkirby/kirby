@@ -5,6 +5,8 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
 
+$files = require __DIR__ . '/../files/dialogs.php';
+
 return [
 
     // change page position
@@ -386,6 +388,9 @@ return [
             ];
         }
     ],
+
+    // delete site or page file
+    '(site|pages/.*?)/files/(:any)/delete' => $files['delete'],
 
     // change site title
     'site/changeTitle' => [
