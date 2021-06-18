@@ -61,9 +61,6 @@
         </template>
       </k-dropzone>
 
-      <k-file-rename-dialog ref="rename" @success="update" />
-      <k-file-remove-dialog ref="remove" @success="update" />
-      <k-file-sort-dialog ref="sort" @success="reload" />
       <k-upload ref="upload" @success="uploaded" @error="reload" />
     </template>
   </section>
@@ -100,9 +97,6 @@ export default {
         case "download":
           window.open(file.url);
           break;
-        case "rename":
-          this.$refs.rename.open(file.parent, file.filename);
-          break;
         case "replace":
           this.$refs.upload.open({
             url: this.$urls.api + "/" + this.$api.files.url(file.parent, file.filename),
@@ -127,9 +121,6 @@ export default {
           }
 
           this.$dialog(`${file.link}/delete`);
-          break;
-        case "sort":
-          this.$refs.sort.open(file.parent, file, this.options.apiUrl);
           break;
       }
 
