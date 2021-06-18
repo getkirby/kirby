@@ -341,6 +341,8 @@ trait PageActions
             } else {
                 $page->parentModel()->children()->set($page->id(), $page);
             }
+
+            return $page;
         });
     }
 

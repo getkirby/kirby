@@ -18,7 +18,9 @@
                 <template v-if="$license">
                   {{ license }}
                 </template>
-                <button v-else class="k-system-unregistered" @click="$dialog('registration')">{{ $t('license.unregistered') }}</button>
+                <button v-else class="k-system-unregistered" @click="$dialog('registration')">
+                  {{ $t('license.unregistered') }}
+                </button>
               </dd>
             </dl>
           </li>

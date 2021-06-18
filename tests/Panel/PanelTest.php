@@ -1472,6 +1472,7 @@ class PanelTest extends TestCase
             'breadcrumb' => [],
             'code' => 200,
             'path' => '',
+            'timestamp' => $result['timestamp'],
             'props' => [],
             'search' => 'pages'
         ];

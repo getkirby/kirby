@@ -70,11 +70,13 @@ export default {
       if (this.path !== undefined) {
         return this.path + this.value;
       }
+
+      return null;
     }
   },
   watch: {
     formData: {
-      handler(newValue, oldValue) {
+      handler(newValue) {
         if (this.disabled) {
           return false;
         }

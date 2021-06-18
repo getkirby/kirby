@@ -47,7 +47,7 @@ export default {
               dialog.event = [dialog.event];
             }
 
-            dialog.event.forEach(event => {
+            dialog.event.forEach(() => {
               this.$events.$emit(dialog.event, dialog);
             });
           }
