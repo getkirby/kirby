@@ -13,7 +13,6 @@ import LanguageCreateDialog from "@/components/Dialogs/LanguageCreateDialog.vue"
 import LanguageUpdateDialog from "@/components/Dialogs/LanguageUpdateDialog.vue";
 import PagesDialog from "@/components/Dialogs/PagesDialog.vue";
 import RemoveDialog from "@/components/Dialogs/RemoveDialog.vue";
-import SiteRenameDialog from "@/components/Dialogs/SiteRenameDialog.vue";
 import TextDialog from "@/components/Dialogs/TextDialog.vue";
 import UsersDialog from "@/components/Dialogs/UsersDialog.vue";
 
@@ -26,7 +25,6 @@ Vue.component("k-language-create-dialog", LanguageCreateDialog);
 Vue.component("k-language-update-dialog", LanguageUpdateDialog);
 Vue.component("k-pages-dialog", PagesDialog);
 Vue.component("k-remove-dialog", RemoveDialog);
-Vue.component("k-site-rename-dialog", SiteRenameDialog);
 Vue.component("k-text-dialog", TextDialog);
 Vue.component("k-users-dialog", UsersDialog);
 
