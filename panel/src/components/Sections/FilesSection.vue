@@ -111,6 +111,10 @@ export default {
           });
           break;
         case "remove":
+          // TODO: this will never be called
+          // with the new options menu. Should
+          // probably be possible to filter
+          // the options menu from the outside instead.
           if (this.data.length <= this.options.min) {
             const number = this.options.min > 1 ? "plural" : "singular";
             this.$store.dispatch("notification/error", {
@@ -122,7 +126,7 @@ export default {
             break;
           }
 
-          this.$refs.remove.open(file.parent, file.filename);
+          this.$dialog(`${file.link}/delete`);
           break;
         case "sort":
           this.$refs.sort.open(file.parent, file, this.options.apiUrl);

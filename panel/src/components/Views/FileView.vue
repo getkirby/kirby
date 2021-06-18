@@ -31,9 +31,9 @@
                 >
                   {{ $t('settings') }}
                 </k-button>
-                <k-dropdown-content 
-                  ref="settings" 
-                  :options="options" 
+                <k-dropdown-content
+                  ref="settings"
+                  :options="options"
                   @action="action"
                 />
               </k-dropdown>
@@ -58,8 +58,7 @@
         />
 
         <k-file-rename-dialog ref="rename" @success="onRename" />
-        <k-file-remove-dialog ref="remove" @success="onDelete" />
-        
+
         <k-upload
           ref="upload"
           :url="uploadApi"
@@ -108,9 +107,6 @@ export default {
             url: this.$urls.api + "/" + this.$api.files.url(this.model.parent, this.model.filename),
             accept: "." + this.model.extension + "," + this.model.mime
           });
-          break;
-        case "remove":
-          this.$refs.remove.open(this.model.parent, this.model.filename);
           break;
       }
     },
