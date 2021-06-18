@@ -69,8 +69,6 @@
             {{ $t('languages.empty') }}
           </k-empty>
         </template>
-
-        <k-language-update-dialog ref="update" @success="$reload" />
       </section>
     </k-view>
   </k-inside>
@@ -92,19 +90,20 @@ export default {
     languagesCollection() {
       return this.languages.map(language => ({
         ...language,
-        image: true,
-        icon: {
-          back: "black",
-          type: "globe"
+        image: {
+          "back": "black",
+          "icon": "globe"
         },
         link: () => {
-          this.$refs.update.open(language.id);
+          this.$dialog(`languages/${language.id}/update`);
         },
         options: [
           {
             icon: "edit",
             text: this.$t("edit"),
-            click: "update"
+            click() {
+              this.$dialog(`languages/${language.id}/update`);
+            }
           },
           {
             icon: "trash",
@@ -122,15 +121,6 @@ export default {
     },
     secondaryLanguages() {
       return this.languagesCollection.filter(language => language.default === false);
-    }
-  },
-  methods: {
-    action(language, action) {
-      switch (action) {
-        case "update":
-          this.$refs.update.open(language.id);
-          break;
-      }
     }
   }
 };

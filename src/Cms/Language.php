@@ -201,11 +201,10 @@ class Language extends Model
      */
     public static function create(array $props)
     {
-        $props['name']   = trim($props['name'] ?? null);
-        $props['locale'] = trim($props['locale'] ?? null);
-        $props['code']   = Str::slug($props['code'] ?? null);
-        $kirby           = App::instance();
-        $languages       = $kirby->languages();
+        $props['name'] = trim($props['name'] ?? null);
+        $props['code'] = Str::slug($props['code'] ?? null);
+        $kirby         = App::instance();
+        $languages     = $kirby->languages();
 
         // make the first language the default language
         if ($languages->count() === 0) {
@@ -684,6 +683,11 @@ class Language extends Model
             throw new PermissionException('Please select another language to be the primary language');
         }
 
-        return $updated->save();
+        $language = $updated->save();
+
+        // make sure the language is also updated in the Kirby language collection
+        App::instance()->languages(false)->set($language->code(), $language);
+
+        return $language;
     }
 }

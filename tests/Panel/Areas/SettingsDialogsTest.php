@@ -11,7 +11,7 @@ class SettingsDialogsTest extends AreaTestCase
         $this->login();
     }
 
-    public function testCreateLanguage(): void
+    public function testLanguageCreate(): void
     {
         $this->installLanguages();
         $this->login();
@@ -34,7 +34,7 @@ class SettingsDialogsTest extends AreaTestCase
         $this->assertSame('', $props['value']['locale']);
     }
 
-    public function testCreateLanguageOnSubmit(): void
+    public function testLanguageCreateOnSubmit(): void
     {
         $this->app([
             'options' => [
@@ -59,7 +59,7 @@ class SettingsDialogsTest extends AreaTestCase
         $this->assertCount(1, $this->app->languages());
     }
 
-    public function testDeleteLanguage(): void
+    public function testLanguageDelete(): void
     {
         $this->installLanguages();
         $this->login();
@@ -71,7 +71,7 @@ class SettingsDialogsTest extends AreaTestCase
         $this->assertSame('Do you really want to delete the language <strong>Deutsch</strong> including all translations? This cannot be undone!', $props['text']);
     }
 
-    public function testDeleteLanguageOnSubmit(): void
+    public function testLanguageDeleteOnSubmit(): void
     {
         $this->installLanguages();
         $this->login();
@@ -84,6 +84,45 @@ class SettingsDialogsTest extends AreaTestCase
         $this->assertSame('language.delete', $dialog['event']);
         $this->assertSame(200, $dialog['code']);
         $this->assertCount(1, $this->app->languages());
+    }
+
+    public function testLanguageUpdate(): void
+    {
+        $this->installLanguages();
+        $this->login();
+
+        $dialog = $this->dialog('languages/en/update');
+        $props  = $dialog['props'];
+
+        $this->assertSame('k-language-dialog', $dialog['component']);
+
+        $this->assertTrue($props['fields']['code']['disabled']);
+        $this->assertSame('Save', $props['submitButton']);
+
+        $this->assertSame('English', $props['value']['name']);
+        $this->assertSame('en', $props['value']['code']);
+        $this->assertSame('ltr', $props['value']['direction']);
+        $this->assertSame('en', $props['value']['locale']);
+        $this->assertSame([], $props['value']['rules']);
+    }
+
+    public function testLanguageUpdateOnSubmit(): void
+    {
+        $this->installLanguages();
+        $this->login();
+        $this->submit([
+            'name'      => 'Englisch',
+            'direction' => 'rtl',
+            'locale'    => 'en_US'
+        ]);
+
+        $dialog = $this->dialog('languages/en/update');
+
+        $this->assertSame('language.update', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+        $this->assertSame('Englisch', $this->app->language('en')->name());
+        $this->assertSame('rtl', $this->app->language('en')->direction());
+        $this->assertSame('en_US', $this->app->language('en')->locale(LC_ALL));
     }
 
     public function testRegistration(): void
