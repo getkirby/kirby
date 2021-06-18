@@ -24,7 +24,7 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => [
-                        'position' => Field::position($page),
+                        'position' => Field::pagePosition($page),
                     ],
                     'submitButton' => t('change'),
                     'value' => [
@@ -68,7 +68,7 @@ return [
             ];
 
             if ($blueprint->num() === 'default') {
-                $fields['position'] = Field::position($page, [
+                $fields['position'] = Field::pagePosition($page, [
                     'when' => [
                         'status' => 'listed'
                     ]
@@ -391,6 +391,9 @@ return [
 
     // change filename
     '(site|pages/.*?)/files/(:any)/changeName' => $files['changeName'],
+
+    // change sort
+    '(site|pages/.*?)/files/(:any)/changeSort' => $files['changeSort'],
 
     // delete site or page file
     '(site|pages/.*?)/files/(:any)/delete' => $files['delete'],

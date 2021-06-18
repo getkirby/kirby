@@ -179,6 +179,48 @@ class FileDialogsTest extends AreaTestCase
         $this->assertSame('new-test', $this->app->user('test')->file('new-test.jpg')->name());
     }
 
+    public function testChangeSortForPageFile(): void
+    {
+        $this->createPageFile();
+
+        $dialog = $this->dialog('pages/test/files/test.jpg/changeSort');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('Change position', $props['fields']['position']['label']);
+        $this->assertSame('Change', $props['submitButton']);
+        $this->assertSame(1, $props['value']['position']);
+    }
+
+    public function testChangeSortForSiteFile(): void
+    {
+        $this->createSiteFile();
+
+        $dialog = $this->dialog('site/files/test.jpg/changeSort');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('Change position', $props['fields']['position']['label']);
+        $this->assertSame('Change', $props['submitButton']);
+        $this->assertSame(1, $props['value']['position']);
+    }
+
+    public function testChangeSortForUserFile(): void
+    {
+        $this->createUserFile();
+
+        $dialog = $this->dialog('users/test/files/test.jpg/changeSort');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+
+        $this->assertSame('Change position', $props['fields']['position']['label']);
+        $this->assertSame('Change', $props['submitButton']);
+        $this->assertSame(1, $props['value']['position']);
+    }
+
     public function testDeletePageFile(): void
     {
         $this->createPageFile();

@@ -2,6 +2,7 @@
 
 namespace Kirby\Panel;
 
+use Kirby\Cms\File;
 use Kirby\Cms\Page;
 
 /**
@@ -34,6 +35,49 @@ class Field
     }
 
     /**
+     * File position
+     *
+     * @param \Kirby\Cms\File
+     * @param array $props
+     * @return array
+     */
+    public static function filePosition(File $file, array $props = []): array
+    {
+        $index   = 0;
+        $options = [];
+
+        foreach ($file->siblings(false) as $sibling) {
+            $index++;
+
+            $options[] = [
+                'value' => $index,
+                'text'  => $index
+            ];
+
+            $options[] = [
+                'value'    => $sibling->id(),
+                'text'     => $sibling->filename(),
+                'disabled' => true
+            ];
+        }
+
+        $index++;
+
+        $options[] = [
+            'value' => $index,
+            'text'  => $index
+        ];
+
+        return array_merge([
+            'label'   => t('file.sort'),
+            'type'    => 'select',
+            'empty'   => false,
+            'options' => $options
+        ], $props);
+    }
+
+
+    /**
      * @param array $props
      * @return array
      */
@@ -45,27 +89,13 @@ class Field
     }
 
     /**
-     * A regular password field
-     *
-     * @param array $props
-     * @return array
-     */
-    public static function password(array $props = []): array
-    {
-        return array_merge([
-            'label' => t('password'),
-            'type'  => 'password'
-        ], $props);
-    }
-
-    /**
      * Page position
      *
      * @param \Kirby\Cms\Page
      * @param array $props
      * @return array
      */
-    public static function position(Page $page, array $props = []): array
+    public static function pagePosition(Page $page, array $props = []): array
     {
         $index   = 0;
         $options = [];
@@ -97,6 +127,20 @@ class Field
             'type'    => 'select',
             'empty'   => false,
             'options' => $options
+        ], $props);
+    }
+
+    /**
+     * A regular password field
+     *
+     * @param array $props
+     * @return array
+     */
+    public static function password(array $props = []): array
+    {
+        return array_merge([
+            'label' => t('password'),
+            'type'  => 'password'
         ], $props);
     }
 

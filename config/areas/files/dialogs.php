@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\Find;
+use Kirby\Panel\Field;
 
 /**
  * Shared file dialogs
@@ -45,6 +46,40 @@ return [
                         $renamed->panel()->url(true)
                     ]
                 ]
+            ];
+        }
+    ],
+
+    'changeSort' => [
+        'load' => function (string $path, string $filename) {
+            $file = Find::file($path, $filename);
+            return [
+                'component' => 'k-form-dialog',
+                'props' => [
+                    'fields' => [
+                        'position' => Field::filePosition($file)
+                    ],
+                    'submitButton' => t('change'),
+                    'value' => [
+                        'position' => $file->sort()->isEmpty() ? $file->siblings(false)->count() + 1 : $file->sort()->toInt(),
+                    ]
+                ]
+            ];
+        },
+        'submit' => function (string $path, string $filename) {
+            $file     = Find::file($path, $filename);
+            $files    = $file->siblings();
+            $ids      = $files->keys();
+            $oldIndex = $files->indexOf($file);
+            $newIndex = (int)(get('position')) - 1;
+
+            array_splice($ids, $oldIndex, 1);
+            array_splice($ids, $newIndex, 0, $file->id());
+
+            $files->changeSort($ids);
+
+            return [
+                'event' => 'file.sort',
             ];
         }
     ],

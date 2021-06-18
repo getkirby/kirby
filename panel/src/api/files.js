@@ -90,7 +90,9 @@ export default (api) => {
         result.push("-");
 
         result.push({
-          click: "sort",
+          click() {
+            this.$dialog(url + '/changeSort');
+          },
           icon: "sort",
           text: Vue.$t("file.sort"),
           disabled: !(options.update  && sortable)

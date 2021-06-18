@@ -243,6 +243,9 @@ return [
     // change file name
     '(users/.*?)/files/(:any)/changeName' => $files['changeName'],
 
+    // change file sort
+    '(users/.*?)/files/(:any)/changeSort' => $files['changeSort'],
+
     // delete file
     '(users/.*?)/files/(:any)/delete' => $files['delete'],
 
