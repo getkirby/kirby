@@ -76,6 +76,8 @@ trait FileActions
                 F::move($oldFile->contentFile(), $newFile->contentFile());
             }
 
+            $newFile->parent()->files()->remove($oldFile->id());
+            $newFile->parent()->files()->set($newFile->id(), $newFile);
 
             return $newFile;
         });

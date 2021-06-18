@@ -27,6 +27,12 @@ import { props as TextInputProps } from "./TextInput.vue";
 
 export const props = {
   mixins: [TextInputProps],
+  props: {
+    allow: {
+      type: String,
+      default: ""
+    }
+  }
 }
 
 /**
@@ -48,7 +54,7 @@ export default {
   },
   methods: {
     sluggify(value) {
-      return this.$helper.slug(value.trim(), [this.slugs, this.$system.ascii]);
+      return this.$helper.slug(value.trim(), [this.slugs, this.$system.ascii], this.allow);
     },
     onInput(value) {
       this.$emit("input", this.sluggify(value));

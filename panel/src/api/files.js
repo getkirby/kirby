@@ -71,7 +71,9 @@ export default (api) => {
       }
 
       result.push({
-        click: "rename",
+        click() {
+          this.$dialog(url + '/changeName');
+        },
         icon: "title",
         text: Vue.$t("rename"),
         disabled: !options.changeName

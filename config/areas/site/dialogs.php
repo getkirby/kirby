@@ -389,6 +389,9 @@ return [
         }
     ],
 
+    // change filename
+    '(site|pages/.*?)/files/(:any)/changeName' => $files['changeName'],
+
     // delete site or page file
     '(site|pages/.*?)/files/(:any)/delete' => $files['delete'],
 

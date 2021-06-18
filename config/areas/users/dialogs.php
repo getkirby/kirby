@@ -240,6 +240,10 @@ return [
         }
     ],
 
+    // change file name
+    '(users/.*?)/files/(:any)/changeName' => $files['changeName'],
+
+    // delete file
     '(users/.*?)/files/(:any)/delete' => $files['delete'],
 
 ];
