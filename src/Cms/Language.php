@@ -201,9 +201,11 @@ class Language extends Model
      */
     public static function create(array $props)
     {
-        $props['code'] = Str::slug($props['code'] ?? null);
-        $kirby         = App::instance();
-        $languages     = $kirby->languages();
+        $props['name']   = trim($props['name'] ?? null);
+        $props['locale'] = trim($props['locale'] ?? null);
+        $props['code']   = Str::slug($props['code'] ?? null);
+        $kirby           = App::instance();
+        $languages       = $kirby->languages();
 
         // make the first language the default language
         if ($languages->count() === 0) {
@@ -220,6 +222,9 @@ class Language extends Model
         if ($languages->count() === 0) {
             static::converter('', $language->code());
         }
+
+        // update the main languages collection in the app instance
+        App::instance()->languages(false)->append($language->code(), $language);
 
         return $language;
     }

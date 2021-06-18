@@ -4,6 +4,62 @@ use Kirby\Cms\Find;
 use Kirby\Panel\Field;
 
 return [
+
+    // create language
+    'languages/create' => [
+        'load' => function () {
+            return [
+                'component' => 'k-language-dialog',
+                'props' => [
+                    'fields' => [
+                        'name' => [
+                            'label'    => t('language.name'),
+                            'type'     => 'text',
+                            'required' => true,
+                            'icon'     => 'title'
+                        ],
+                        'code' => [
+                            'label'    => t('language.code'),
+                            'type'     => 'text',
+                            'required' => true,
+                            'counter'  => false,
+                            'icon'     => 'globe',
+                            'width'    => '1/2'
+                        ],
+                        'direction' => [
+                            'label'    => t('language.direction'),
+                            'type'     => 'select',
+                            'required' => true,
+                            'empty'    => false,
+                            'options'  => [
+                                ['value' => 'ltr', 'text' => t('language.direction.ltr')],
+                                ['value' => 'rtl', 'text' => t('language.direction.rtl')]
+                            ],
+                            'width'    => '1/2'
+                        ],
+                        'locale' => [
+                            'label' => t('language.locale'),
+                            'type'  => 'text',
+                        ],
+                    ],
+                    'submitButton' => t('language.create'),
+                    'value' => [
+                        'name'      => '',
+                        'code'      => '',
+                        'direction' => 'ltr',
+                        'locale'    => ''
+                    ]
+                ]
+            ];
+        },
+        'submit' => function () {
+            kirby()->languages()->create(get());
+            return [
+                'event' => 'language.create'
+            ];
+        }
+    ],
+
     // delete language
     'languages/(:any)/delete' => [
         'load' => function (string $id) {

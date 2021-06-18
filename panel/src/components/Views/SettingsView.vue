@@ -43,7 +43,7 @@
           <section class="k-languages-section">
             <header>
               <k-headline>{{ $t('languages.secondary') }}</k-headline>
-              <k-button icon="add" @click="$refs.create.open()">
+              <k-button icon="add" @click="$dialog('languages/create')">
                 {{ $t('language.create') }}
               </k-button>
             </header>
@@ -52,7 +52,7 @@
               :items="secondaryLanguages"
               @action="action"
             />
-            <k-empty v-else icon="globe" @click="$refs.create.open()">
+            <k-empty v-else icon="globe" @click="$dialog('languages/create')">
               {{ $t('languages.secondary.empty') }}
             </k-empty>
           </section>
@@ -61,18 +61,16 @@
         <template v-else-if="languages.length === 0">
           <header>
             <k-headline>{{ $t('languages') }}</k-headline>
-            <k-button icon="add" @click="$refs.create.open()">
+            <k-button icon="add" @click="$dialog('languages/create')">
               {{ $t('language.create') }}
             </k-button>
           </header>
-          <k-empty icon="globe" @click="$refs.create.open()">
+          <k-empty icon="globe" @click="$dialog('languages/create')">
             {{ $t('languages.empty') }}
           </k-empty>
         </template>
 
-        <k-language-create-dialog ref="create" @success="$reload" />
         <k-language-update-dialog ref="update" @success="$reload" />
-        <k-language-remove-dialog ref="remove" @success="$reload" />
       </section>
     </k-view>
   </k-inside>
@@ -112,7 +110,9 @@ export default {
             icon: "trash",
             text: this.$t("delete"),
             disabled: language.default && this.languages.length !== 1,
-            click: "remove"
+            click() {
+              this.$dialog(`languages/${language.id}/delete`);
+            }
           }
         ]
       }));
@@ -129,9 +129,6 @@ export default {
       switch (action) {
         case "update":
           this.$refs.update.open(language.id);
-          break;
-        case "remove":
-          this.$refs.remove.open(language.id);
           break;
       }
     }

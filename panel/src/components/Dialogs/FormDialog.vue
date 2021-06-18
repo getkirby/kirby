@@ -10,7 +10,7 @@
     </template>
     <k-form
       ref="form"
-      :value="value"
+      :value="model"
       :fields="fields"
       :novalidate="novalidate"
       @input="$emit('input', $event)"
