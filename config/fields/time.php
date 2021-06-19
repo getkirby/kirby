@@ -11,14 +11,6 @@ return [
          */
         'placeholder' => null,
 
-
-        /**
-         * Sets the default time when a new page/file/user is created
-         */
-        'default' => function ($default = null) {
-            return $default;
-        },
-
         /**
          * Custom format (dayjs tokens: `HH`, `hh`, `mm`, `ss`, `a`) that is
          * used to display the field in the Panel
@@ -79,14 +71,11 @@ return [
             if (is_string($step) === true) {
                 return array_merge($default, ['unit' => strtolower($step)]);
             }
-        },
-        'value' => function ($value = null) {
-            return $value;
         }
     ],
     'computed' => [
         'default' => function () {
-            return $this->toDatetime($this->default, 'H:i:s');
+            return $this->toDatetime($this->toString($this->default), 'H:i:s');
         },
         'display' => function () {
             if ($this->display) {

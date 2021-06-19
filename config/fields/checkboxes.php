@@ -21,12 +21,6 @@ return [
             return $columns;
         },
         /**
-         * Default value for the field, which will be used when a page/file/user is created
-         */
-        'default' => function ($default = null) {
-            return Str::split($default, ',');
-        },
-        /**
          * Maximum number of checked boxes
          */
         'max' => function (int $max = null) {
@@ -37,17 +31,16 @@ return [
          */
         'min' => function (int $min = null) {
             return $min;
-        },
-        'value' => function ($value = null) {
-            return Str::split($value, ',');
-        },
+        }
     ],
     'computed' => [
         'default' => function () {
-            return $this->sanitizeOptions($this->default);
+            $default = Str::split($this->toString($this->default), ',');
+
+            return $this->sanitizeOptions($default);
         },
         'value' => function () {
-            return $this->sanitizeOptions($this->value);
+            return $this->sanitizeOptions(Str::split($this->value, ','));
         },
     ],
     'save' => function ($value): string {

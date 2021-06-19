@@ -21,13 +21,6 @@ return [
         'placeholder' => null,
 
         /**
-         * Sets the file(s), which are selected by default when a new page is created
-         */
-        'default' => function ($default = null) {
-            return $default;
-        },
-
-        /**
          * Changes the layout of the selected files. Available layouts: `list`, `cards`
          */
         'layout' => function (string $layout = 'list') {
@@ -39,10 +32,6 @@ return [
          */
         'size' => function (string $size = 'auto') {
             return $size;
-        },
-
-        'value' => function ($value = null) {
-            return $value;
         }
     ],
     'computed' => [

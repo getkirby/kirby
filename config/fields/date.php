@@ -20,14 +20,6 @@ return [
             return $calendar;
         },
 
-
-        /**
-         * Default date when a new page/file/user gets created
-         */
-        'default' => function (string $default = null) {
-            return $default;
-        },
-
         /**
          * Custom format (dayjs tokens: `DD`, `MM`, `YYYY`) that is
          * used to display the field in the Panel
@@ -89,17 +81,11 @@ return [
          */
         'time' => function ($time = false) {
             return $time;
-        },
-        /**
-         * Must be a parseable date string
-         */
-        'value' => function ($value = null) {
-            return $value;
-        },
+        }
     ],
     'computed' => [
         'default' => function () {
-            return $this->toDatetime($this->default);
+            return $this->toDatetime($this->toString($this->default));
         },
         'display' => function () {
             if ($this->display) {

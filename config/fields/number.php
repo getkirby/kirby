@@ -5,12 +5,6 @@ use Kirby\Toolkit\Str;
 return [
     'props' => [
         /**
-         * Default number that will be saved when a new page/user/file is created
-         */
-        'default' => function ($default = null) {
-            return $this->toNumber($default);
-        },
-        /**
          * The lowest allowed number
          */
         'min' => function (float $min = null) {
@@ -27,9 +21,14 @@ return [
          */
         'step' => function ($step = null) {
             return $this->toNumber($step);
+        }
+    ],
+    'computed' => [
+        'default' => function () {
+            return $this->toNumber($this->default);
         },
-        'value' => function ($value = null) {
-            return $this->toNumber($value);
+        'value' => function () {
+            return $this->toNumber($this->value);
         }
     ],
     'methods' => [

@@ -2,6 +2,8 @@
 
 namespace Kirby\Form\Fields;
 
+use Kirby\Cms\Page;
+
 class TagsFieldTest extends TestCase
 {
     public function testDefaultProps()
@@ -159,5 +161,35 @@ class TagsFieldTest extends TestCase
         ]);
 
         $this->assertTrue($field->isValid());
+    }
+
+    public function testDefault()
+    {
+        $field = $this->field('tags', [
+            'options'  => ['a', 'b', 'c'],
+            'default' => '{{ page.test }}',
+            'model' => new Page([
+                'slug' => 'foo',
+                'content' => [
+                    'title' => 'Foo',
+                    'test' => 'a,b,c'
+                ]
+            ])
+        ]);
+
+        $this->assertSame([
+            [
+                'value' => 'a',
+                'text' => 'a',
+            ],
+            [
+                'value' => 'b',
+                'text' => 'b',
+            ],
+            [
+                'value' => 'c',
+                'text' => 'c',
+            ]
+        ], $field->default());
     }
 }

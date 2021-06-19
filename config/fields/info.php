@@ -33,10 +33,8 @@ return [
     ],
     'computed' => [
         'text' => function () {
-            if ($text = $this->text) {
-                $text = $this->model()->toString($text);
-                $text = $this->kirby()->kirbytext($text);
-                return $text;
+            if (empty($this->text) === false) {
+                return $this->kirby()->kirbytext($this->toString($this->text));
             }
         }
     ],

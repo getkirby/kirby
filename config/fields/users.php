@@ -14,33 +14,24 @@ return [
         'before'      => null,
         'icon'        => null,
         'placeholder' => null,
-
-        /**
-         * Default selected user(s) when a new page/file/user is created
-         */
-        'default' => function ($default = null) {
-            if ($default === false) {
+    ],
+    'computed' => [
+        'default' => function () {
+            if ($this->default === false) {
                 return [];
             }
 
-            if ($default === null && $user = $this->kirby()->user()) {
+            if ($this->default === null && $user = $this->kirby()->user()) {
                 return [
                     $this->userResponse($user)
                 ];
             }
 
-            return $this->toUsers($default);
+            return $this->toUsers($this->default);
         },
-
-        'value' => function ($value = null) {
-            return $this->toUsers($value);
-        },
-    ],
-    'computed' => [
-        /**
-         * Unset inherited computed
-         */
-        'default' => null
+        'value' => function () {
+            return $this->toUsers($this->value);
+        }
     ],
     'methods' => [
         'userResponse' => function ($user) {

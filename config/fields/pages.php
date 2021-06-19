@@ -16,13 +16,6 @@ return [
         'placeholder' => null,
 
         /**
-         * Default selected page(s) when a new page/file/user is created
-         */
-        'default' => function ($default = null) {
-            return $this->toPages($default);
-        },
-
-        /**
          * Changes the layout of the selected files. Available layouts: `list`, `cards`
          */
         'layout' => function (string $layout = 'list') {
@@ -48,17 +41,15 @@ return [
          */
         'subpages' => function (bool $subpages = true) {
             return $subpages;
-        },
-
-        'value' => function ($value = null) {
-            return $this->toPages($value);
-        },
+        }
     ],
     'computed' => [
-        /**
-         * Unset inherited computed
-         */
-        'default' => null
+        'default' => function () {
+            return $this->toPages($this->default);
+        },
+        'value' => function () {
+            return $this->toPages($this->value);
+        }
     ],
     'methods' => [
         'pageResponse' => function ($page) {

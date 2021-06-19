@@ -55,7 +55,7 @@ return [
     ],
     'computed' => [
         'default' => function (): array {
-            return $this->toTags($this->default);
+            return $this->toTags($this->toString($this->default));
         },
         'value' => function (): array {
             return $this->toTags($this->value);
