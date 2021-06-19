@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Filesystem;
 
 use Exception;
 use Kirby\Cms\App;
@@ -19,7 +19,7 @@ use Throwable;
  * and converting the results into
  * children, files and other page stuff.
  *
- * @package   Kirby Toolkit
+ * @package   Kirby Filesystem
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
@@ -260,7 +260,7 @@ class Dir
                 $inventory['children'][] = [
                     'dirname' => $item,
                     'model'   => null,
-                    'num'     => $num,
+                    'num'     => (int)$num,
                     'root'    => $root,
                     'slug'    => $slug,
                 ];

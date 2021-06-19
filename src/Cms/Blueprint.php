@@ -6,9 +6,9 @@ use Exception;
 use Kirby\Data\Data;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\F;
 use Kirby\Form\Field;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 use Throwable;
 

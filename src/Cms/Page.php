@@ -5,11 +5,11 @@ namespace Kirby\Cms;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Http\Uri;
 use Kirby\Panel\Page as Panel;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 
 /**
  * The `$page` object is the heart and

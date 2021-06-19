@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Http\Route;
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
 
 class RouterTest extends TestCase

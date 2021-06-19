@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Exception;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Tpl;
 
 /**

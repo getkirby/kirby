@@ -4,7 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\App;
 use Kirby\Data\Data;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 class OptionsApiTest extends TestCase

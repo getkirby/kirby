@@ -8,10 +8,10 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
+use Kirby\Filesystem\F;
 use Kirby\Http\Idn;
 use Kirby\Http\Request\Auth\BasicAuth;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\F;
 use Throwable;
 
 /**

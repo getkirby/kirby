@@ -3,8 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\NotFoundException;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Controller;
-use Kirby\Toolkit\F;
 
 /**
  * Manages and loads all collections

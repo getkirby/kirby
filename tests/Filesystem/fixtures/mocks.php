@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Filesystem;
 
 function blockMethod($method, $args)
 {

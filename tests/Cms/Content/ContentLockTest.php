@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 class ContentLockTest extends TestCase

@@ -1,6 +1,8 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Filesystem;
+
+use Kirby\Toolkit\Str;
 
 use SimpleXMLElement;
 
@@ -10,7 +12,7 @@ use SimpleXMLElement;
  * from different criteria like
  * extensions etc.
  *
- * @package   Kirby Toolkit
+ * @package   Kirby Filesystem
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH

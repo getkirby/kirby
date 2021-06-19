@@ -3,7 +3,7 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\NotFoundException;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 
 /**
  * The `Sane` class validates that files

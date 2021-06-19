@@ -3,7 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
 
 /**

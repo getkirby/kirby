@@ -5,7 +5,7 @@ namespace Kirby\Http;
 use Exception;
 use Kirby\Cms\App;
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
 
 /**

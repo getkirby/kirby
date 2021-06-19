@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 
 class UserActionsTest extends TestCase
 {

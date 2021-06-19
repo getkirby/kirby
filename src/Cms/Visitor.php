@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Facade;
+use Kirby\Filesystem\Facade;
 
 /**
  * Shortcut to the visitor object

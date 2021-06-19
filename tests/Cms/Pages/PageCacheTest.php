@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
 class PageCacheTest extends TestCase

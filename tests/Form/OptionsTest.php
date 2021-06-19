@@ -4,7 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\App;
 use Kirby\Data\Data;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\TestCase;
 

@@ -3,8 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\Str;
 
 /**

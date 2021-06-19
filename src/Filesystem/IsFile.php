@@ -5,7 +5,6 @@ namespace Kirby\Filesystem;
 use Kirby\Cms\App;
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Image\Image;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Properties;
 
 /**

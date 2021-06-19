@@ -6,6 +6,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
+use Kirby\Filesystem\F;
 use Kirby\Filesystem\Filename;
 use Kirby\Http\Server;
 use Kirby\Http\Uri;
@@ -14,7 +15,6 @@ use Kirby\Image\Darkroom;
 use Kirby\Text\Markdown;
 use Kirby\Text\SmartyPants;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 use Kirby\Toolkit\Tpl as Snippet;
 

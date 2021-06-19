@@ -2,10 +2,10 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\F;
 use Kirby\Filesystem\IsFile;
 use Kirby\Panel\File as Panel;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\F;
 
 /**
  * The `$file` object provides a set

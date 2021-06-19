@@ -2,7 +2,7 @@
 
 namespace Kirby\Cache;
 
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 

@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Exception;
 use Kirby\Data\Data;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
 
 /**

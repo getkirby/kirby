@@ -4,7 +4,7 @@ namespace Kirby\Data;
 
 use Kirby\Exception\BadMethodCallException;
 use Kirby\Exception\Exception;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 
 /**
  * Reader and write of PHP files with data in a returned array

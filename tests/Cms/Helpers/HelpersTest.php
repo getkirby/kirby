@@ -4,10 +4,10 @@ namespace Kirby\Cms;
 
 use Kirby\Cms\App as Kirby;
 use Kirby\Filesystem\Asset;
+use Kirby\Filesystem\Dir;
 use Kirby\Http\Server;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\Collection;
-use Kirby\Toolkit\Dir;
 
 class HelpersTest extends TestCase
 {

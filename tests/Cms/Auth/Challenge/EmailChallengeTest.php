@@ -5,7 +5,7 @@ namespace Kirby\Cms\Auth;
 use Kirby\Cms\App;
 use Kirby\Cms\TestCase;
 use Kirby\Email\Email;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 
 /**
  * @coversDefaultClass Kirby\Cms\Auth\EmailChallenge
