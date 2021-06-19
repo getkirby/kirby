@@ -3,7 +3,8 @@
 return [
     'props' => [
         /**
-         * Defines a custom format that is used when the field is saved
+         * Defines a custom format that is used when the field
+         * is saved (based on PHP's `date()` function)
          */
         'format' => function (string $format = null) {
             return $format;
