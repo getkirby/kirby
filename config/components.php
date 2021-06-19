@@ -311,7 +311,10 @@ return [
      * @return string
      */
     'thumb' => function (App $kirby, string $src, string $dst, array $options): string {
-        $darkroom = Darkroom::factory(option('thumbs.driver', 'gd'), option('thumbs', []));
+        $darkroom = Darkroom::factory(
+            option('thumbs.driver', 'gd'),
+            option('thumbs', [])
+        );
         $options  = $darkroom->preprocess($src, $options);
         $root     = (new Filename($src, $dst, $options))->toString();
 

@@ -32,7 +32,7 @@ class FileModificationsTest extends TestCase
         $app = $this->app->clone([
             'components' => [
                 'file::version' => function ($kirby, $file, $options = []) use ($input) {
-                    $this->assertEquals($input, $options);
+                    $this->assertSame($input, $options);
                     return $file;
                 }
             ]
@@ -51,7 +51,7 @@ class FileModificationsTest extends TestCase
                         'width' => 300
                     ];
 
-                    $this->assertEquals($expected, $options);
+                    $this->assertSame($expected, $options);
                     return $file;
                 }
             ],
@@ -78,7 +78,7 @@ class FileModificationsTest extends TestCase
                         'width' => 300
                     ];
 
-                    $this->assertEquals($expected, $options);
+                    $this->assertSame($expected, $options);
                     return $file;
                 }
             ],
@@ -123,7 +123,7 @@ class FileModificationsTest extends TestCase
         $app = $this->app->clone([
             'components' => [
                 'file::version' => function ($kirby, $file, $options = []) {
-                    $this->assertEquals(['blur' => 5], $options);
+                    $this->assertSame(['blur' => 5], $options);
                     return $file;
                 }
             ]
@@ -138,7 +138,7 @@ class FileModificationsTest extends TestCase
         $app = $this->app->clone([
             'components' => [
                 'file::version' => function ($kirby, $file, $options = []) {
-                    $this->assertEquals(['grayscale' => true], $options);
+                    $this->assertSame(['grayscale' => true], $options);
                     return $file;
                 }
             ]
@@ -218,7 +218,7 @@ class FileModificationsTest extends TestCase
         $app = $this->app->clone([
             'components' => [
                 'file::version' => function ($kirby, $file, $options = []) use ($expected) {
-                    $this->assertEquals($expected, $options);
+                    $this->assertSame($expected, $options);
                     return $file;
                 }
             ]
@@ -233,7 +233,7 @@ class FileModificationsTest extends TestCase
         $app = $this->app->clone([
             'components' => [
                 'file::version' => function ($kirby, $file, $options = []) {
-                    $this->assertEquals(['quality' => 10], $options);
+                    $this->assertSame(['quality' => 10], $options);
                     return $file;
                 }
             ]
@@ -248,7 +248,11 @@ class FileModificationsTest extends TestCase
         $app = $this->app->clone([
             'components' => [
                 'file::version' => function ($kirby, $file, $options = []) {
-                    $this->assertEquals(['width' => 100, 'height' => 200, 'quality' => 10], $options);
+                    $this->assertSame([
+                        'width' => 100,
+                        'height' => 200,
+                        'quality' => 10
+                    ], $options);
                     return $file;
                 }
             ]

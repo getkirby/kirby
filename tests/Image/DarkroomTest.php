@@ -18,11 +18,9 @@ class DarkroomTest extends TestCase
     public function testFactory()
     {
         $instance = Darkroom::factory('gd');
-
         $this->assertInstanceOf(Darkroom\GdLib::class, $instance);
 
         $instance = Darkroom::factory('im');
-
         $this->assertInstanceOf(Darkroom\ImageMagick::class, $instance);
     }
 
@@ -154,8 +152,9 @@ class DarkroomTest extends TestCase
 
         $this->assertSame([
             'autoOrient' => true,
-            'crop' => false,
             'blur' => false,
+            'crop' => false,
+            'format' => null,
             'grayscale' => false,
             'height' => 500,
             'quality' => 90,
@@ -175,8 +174,9 @@ class DarkroomTest extends TestCase
 
         $this->assertSame([
             'autoOrient' => true,
-            'crop' => false,
             'blur' => false,
+            'crop' => false,
+            'format' => null,
             'grayscale' => false,
             'height' => 500,
             'quality' => 90,
