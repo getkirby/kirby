@@ -7,7 +7,10 @@ return function () {
     $allowImpersonation = $this->kirby()->option('api.allowImpersonation') ?? false;
 
     // csrf token check
-    if ($auth->type($allowImpersonation) === 'session' && $auth->csrf() === false) {
+    if (
+        $auth->type($allowImpersonation) === 'session' &&
+        $auth->csrf() === false
+    ) {
         throw new PermissionException('Unauthenticated');
     }
 
