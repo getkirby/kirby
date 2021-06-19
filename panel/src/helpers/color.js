@@ -7,27 +7,13 @@ export default function (string) {
     return `var(--color-gray-800) var(--bg-pattern)`;
   }
 
-  const vars = `/^${[
-    "black",
-    "white",
-    "light",
-    "gray",
-    "red",
-    "orange",
-    "yellow",
-    "green",
-    "aqua",
-    "blue",
-    "purple"
-  ].join("|")}/`;
-
-  if (string.match(vars) === null) {
-    return string;
+  if (
+    string.match(
+      /^(black|white|light|gray|red|orange|yellow|green|aqua|blue|purple})/i
+    ) !== null
+  ) {
+    return `var(--color-${string})`;
   }
 
-  if (string.endsWith("0") === false) {
-    string += "-400";
-  }
-
-  return `var(--color-${string})`;
+  return string;
 }
