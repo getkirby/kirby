@@ -287,15 +287,15 @@ class Collection extends Iterator implements Countable
         }
 
         // get the filter from the filters array
-        $filter = static::$filters[$operator] ?? null;
+        $filter     = static::$filters[$operator] ?? null;
+        $collection = clone $this;
 
         // return an unfiltered list if the filter does not exist
         if ($filter === null) {
-            return $this;
+            return $collection;
         }
 
         if (is_array($filter) === true) {
-            $collection = clone $this;
             $validator  = $filter['validator'];
             $strict     = $filter['strict'] ?? true;
             $method     = $strict ? 'filterMatchesAll' : 'filterMatchesAny';
@@ -315,7 +315,7 @@ class Collection extends Iterator implements Countable
             return $collection;
         }
 
-        return $filter(clone $this, $field, $test, $split);
+        return $filter($collection, $field, $test, $split);
     }
 
     /**
