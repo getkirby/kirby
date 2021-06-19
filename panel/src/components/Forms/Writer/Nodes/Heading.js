@@ -7,7 +7,8 @@ export default class Heading extends Node {
       return {
         command: `h${level}`,
         icon: "title",
-        label: `Heading ${level}`,
+        label: window.panel.$t("toolbar.button.heading." + level),
+        name: this.name
       }
     });
   }
@@ -18,7 +19,7 @@ export default class Heading extends Node {
     };
 
     this.options.levels.forEach(level => {
-      commands[`h${level}`] = () => utils.setBlockType(type, { level });
+      commands[`h${level}`] = () => utils.toggleBlockType(type, schema.nodes.paragraph, { level });
     });
 
     return commands;
