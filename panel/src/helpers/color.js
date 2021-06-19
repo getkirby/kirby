@@ -3,14 +3,30 @@ export default function (string) {
     return;
   }
 
-  const isHex = string.substring(0, 1) === "#";
+  if (string === "pattern") {
+    return `var(--color-gray-800) var(--bg-pattern)`;
+  }
 
-  if (isHex || string.startsWith("var(")) {
+  const vars = `/^${[
+    "black",
+    "white",
+    "light",
+    "gray",
+    "red",
+    "orange",
+    "yellow",
+    "green",
+    "aqua",
+    "blue",
+    "purple"
+  ].join("|")}/`;
+
+  if (string.match(vars) === null) {
     return string;
   }
 
-  if (string === "pattern") {
-    return `var(--color-gray-800) var(--bg-pattern)`;
+  if (string.endsWith("0") === false) {
+    string += "-400";
   }
 
   return `var(--color-${string})`;
