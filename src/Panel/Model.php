@@ -3,6 +3,7 @@
 namespace Kirby\Panel;
 
 use Kirby\Form\Form;
+use Kirby\Toolkit\A;
 
 /**
  * Provides information about the model for the Panel
@@ -166,7 +167,14 @@ abstract class Model
             unset($settings['query']);
         }
 
-        return $settings;
+        // resolve remaining options defined as query
+        return A::map($settings, function ($option) {
+            if (is_string($option) === false) {
+                return $option;
+            }
+
+            return $this->model->toString($option);
+        });
     }
 
     /**
