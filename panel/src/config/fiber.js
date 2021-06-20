@@ -271,13 +271,9 @@ const Fiber = {
     // for all scroll regions
     this.saveScroll();
 
-    if (!silent) {
-      document.dispatchEvent(
-        new CustomEvent("fiber:start", {
-          detail: { silent }
-        })
-      );
-    }
+    document.dispatchEvent(new CustomEvent("fiber:start", {
+      detail: { silent }
+    }));
 
     // make sure only is an array
     if (Array.isArray(only) === false) {
