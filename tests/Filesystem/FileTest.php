@@ -192,7 +192,7 @@ class FileTest extends TestCase
         $this->expectExceptionMessage('could not be deleted');
 
         static::$block[] = 'unlink';
-    $file = new File($this->fixtures . '/test.js');
+        $file = new File($this->fixtures . '/test.js');
         $file->delete();
     }
 

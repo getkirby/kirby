@@ -16,11 +16,11 @@ class OptionsApiTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => '/dev/null'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/OptionsApi'
             ]
         ]);
 
-        Dir::make($this->fixtures = __DIR__ . '/fixtures/OptionsApi');
+        Dir::make($this->fixtures);
     }
 
     public function tearDown(): void
