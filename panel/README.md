@@ -2,11 +2,11 @@
 
 ## Installation
 
-Our setup expects that you are running [Kirby Sandbox](https://github.com/getkirby/sandbox), our our local test environment, at `http://sandbox.test`. You can reach the Panel at `http://sandbox.test`.
+Our setup expects that you are running [Kirby Sandbox](https://github.com/getkirby/sandbox), our our local test environment, at `http://sandbox.test`. You can reach the Panel at `http://sandbox.test/panel`.
 
 If you are using a different setup, you might need to create a `/panel/vite.config.custom.js` where you can point `vite` to the right server.
 
-When developing, make sure to put Kirby into development mode by adding the following line to  `site/config/config.php` of your Kirby project:
+When developing, make sure to put Kirby into development mode by adding the following line to `site/config/config.php` of your Kirby project (unless you are using the Sandbox, which uses dev mode by default):
 
 ```php
 return [
