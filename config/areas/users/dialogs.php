@@ -70,12 +70,8 @@ return [
         },
         'submit' => function (string $id) {
             Find::user($id)->changeEmail(get('email'));
-
             return [
-                'event'    => 'user.changeEmail',
-                'dispatch' => [
-                    'content/revert' => ['users/' . $id]
-                ]
+                'event' => 'user.changeEmail'
             ];
         }
     ],

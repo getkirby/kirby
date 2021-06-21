@@ -75,7 +75,6 @@ class UsersDialogsTest extends AreaTestCase
         $dialog = $this->dialog('users/test/changeEmail');
 
         $this->assertSame('user.changeEmail', $dialog['event']);
-        $this->assertSame(['users/test'], $dialog['dispatch']['content/revert']);
         $this->assertSame(200, $dialog['code']);
 
         $this->assertSame('test2@getkirby.com', $this->app->user('test')->email());
