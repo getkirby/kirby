@@ -618,29 +618,14 @@ class Panel
     }
 
     /**
-     * Returns the referrer path via the
+     * Returns the referrer path if present
      *
      * @return string|null
      */
     public static function referrer(): ?string
     {
-        $referrer = new Uri($_SERVER['HTTP_REFERER'] ?? null);
-        $current  = Uri::current();
-
-        if ($referrer->host() !== $current->host()) {
-            return false;
-        }
-
-        $slug = option('panel.slug', 'panel');
-        $path = $referrer->path()->toString();
-
-        if (Str::contains($path, $slug) === false) {
-            return false;
-        }
-
-        $path = Str::after($path, $slug);
-
-        return '/' . trim($path, '/');
+        $referrer = kirby()->request()->header('X-Fiber-Referrer') ?? get('_referrer');
+        return '/' . trim($referrer, '/');
     }
 
     /**
@@ -705,8 +690,9 @@ class Panel
         }
 
         // always inject the response code
-        $data['code'] = $data['code']    ?? 200;
-        $data['path'] = $options['path'] ?? null;
+        $data['code']     = $data['code']    ?? 200;
+        $data['path']     = $options['path'] ?? null;
+        $data['referrer'] = static::referrer();
 
         return static::json(['$dialog' => $data], $data['code']);
     }

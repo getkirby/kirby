@@ -17,14 +17,18 @@ export default {
     component: String,
     path: String,
     props: Object,
+    referrer: String
   },
   methods: {
     async onSubmit(value) {
       const response = await fetch(this.$url(this.path), {
-        body: JSON.stringify(value),
+        body: JSON.stringify({
+          ...value,
+        }),
         method: "POST",
         headers: {
           "X-Fiber": true,
+          "X-Fiber-Referrer": this.referrer
         }
       });
 

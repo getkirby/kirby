@@ -342,6 +342,7 @@ export const plugin = {
         const response = await fetch(url, {
           headers: {
             "X-Fiber": true,
+            "X-Fiber-Referrer": this.$view.path
           }
         });
 

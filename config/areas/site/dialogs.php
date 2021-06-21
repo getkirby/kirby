@@ -314,7 +314,10 @@ return [
             }
         },
         'submit' => function (string $id) {
-            $page = Find::page($id);
+            $page     = Find::page($id);
+            $redirect = false;
+            $referrer = Panel::referrer();
+            $url      = $page->panel()->url(true);
 
             if ($page->childrenAndDrafts()->count() > 0 && get('check') !== $page->title()->value()) {
                 throw new InvalidArgumentException(['key' => 'page.delete.confirm']);
@@ -322,11 +325,16 @@ return [
 
             $page->delete(true);
 
+            // redirect to the parent model URL
+            // if the dialog has been opened in the page view
+            if ($referrer === $url) {
+                $redirect = $page->parentModel()->panel()->url(true);
+            }
+
             return [
-                'event' => 'page.delete',
-                'dispatch' => [
-                    'content/remove' => ['pages/' . $page->panel()->id()]
-                ]
+                'event'    => 'page.delete',
+                'dispatch' => ['content/remove' => [$url]],
+                'redirect' => $redirect
             ];
         }
     ],

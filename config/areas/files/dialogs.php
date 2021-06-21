@@ -97,13 +97,23 @@ return [
             ];
         },
         'submit' => function (string $path, string $filename) {
-            $file = Find::file($path, $filename);
+            $file     = Find::file($path, $filename);
+            $redirect = false;
+            $referrer = Panel::referrer();
+            $url      = $file->panel()->url(true);
+
             $file->delete();
+
+            // redirect to the parent model URL
+            // if the dialog has been opened in the file view
+            if ($referrer === $url) {
+                $redirect = $file->parent()->panel()->url(true);
+            }
+
             return [
                 'event'    => 'file.delete',
-                'dispatch' => [
-                    'content/remove' => [$file->panel()->url(true)]
-                ]
+                'dispatch' => ['content/remove' => [$file->panel()->url(true)]],
+                'redirect' => $redirect
             ];
         }
     ],
