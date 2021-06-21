@@ -974,8 +974,8 @@ class Str
      * @param string $start Placeholder start characters
      * @param string $end Placeholder end characters
      *
-     * @todo Remove stringable type for `$options` param in 3.7.0, will only array supports
-     * @todo Remove `$start` and `$end` parameters in 3.8.0
+     * @todo Deprecate `string $fallback` and `$start`/`$end` arguments with warning in 3.6.0
+     * @todo Remove `$start` and `$end` parameters, rename `$fallback` to `$options` and only support `array` type for `$options` in 3.7.0
      *
      * @return string The filled-in string
      */
