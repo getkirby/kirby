@@ -162,10 +162,10 @@ class DirTest extends TestCase
     {
         $test = $this->tmp . '/test';
 
-        $this->expectExceptionMessage('Expection');
-        $this->expectExceptionMessage('A file with the name "' . $test  . '" already exists');
+        $this->expectException('Expection');
+        $this->expectExceptionMessage('A file with the name "' . $test . '" already exists');
 
-        F::write($test , '');
+        F::write($test, '');
         Dir::make($test);
     }
 
