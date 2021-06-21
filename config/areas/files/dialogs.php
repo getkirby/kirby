@@ -36,17 +36,26 @@ return [
             ];
         },
         'submit' => function (string $path, string $filename) {
-            $file    = Find::file($path, $filename);
-            $renamed = $file->changeName(get('name'));
-            return [
+            $file     = Find::file($path, $filename);
+            $renamed  = $file->changeName(get('name'));
+            $oldUrl   = $file->panel()->url(true);
+            $newUrl   = $renamed->panel()->url(true);
+            $response = [
                 'event' => 'file.changeName',
                 'dispatch' => [
                     'content/move' => [
-                        $file->panel()->url(true),
-                        $renamed->panel()->url(true)
+                        $oldUrl,
+                        $newUrl
                     ]
-                ]
+                ],
             ];
+
+            // check for a necessary redirect after the filename has changed
+            if (Panel::referrer() === $oldUrl && $oldUrl !== $newUrl) {
+                $response['redirect'] = $newUrl;
+            }
+
+            return $response;
         }
     ],
 

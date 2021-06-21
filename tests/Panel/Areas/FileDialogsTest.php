@@ -107,6 +107,19 @@ class FileDialogsTest extends AreaTestCase
         $this->assertSame('new-test', $this->app->page('test')->file('new-test.jpg')->name());
     }
 
+    public function testChangeNameForPageFileOnSubmitWithReferrer(): void
+    {
+        $this->createPageFile();
+        $this->submit([
+            'name'      => 'new-test',
+            '_referrer' => 'pages/test/files/test.jpg'
+        ]);
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/files/test.jpg/changeName');
+        $this->assertSame('/pages/test/files/new-test.jpg', $dialog['redirect']);
+    }
+
     public function testChangeNameForSiteFile(): void
     {
         $this->createSiteFile();
@@ -143,6 +156,19 @@ class FileDialogsTest extends AreaTestCase
         $this->assertSame('new-test', $this->app->site()->file('new-test.jpg')->name());
     }
 
+    public function testChangeNameForSiteFileOnSubmitWithReferrer(): void
+    {
+        $this->createSiteFile();
+        $this->submit([
+            'name' => 'new-test',
+            '_referrer' => 'site/files/test.jpg'
+        ]);
+        $this->login();
+
+        $dialog = $this->dialog('site/files/test.jpg/changeName');
+        $this->assertSame('/site/files/new-test.jpg', $dialog['redirect']);
+    }
+
     public function testChangeNameForUserFile(): void
     {
         $this->createUserFile();
@@ -177,6 +203,19 @@ class FileDialogsTest extends AreaTestCase
         ], $dialog['dispatch']);
         $this->assertSame(200, $dialog['code']);
         $this->assertSame('new-test', $this->app->user('test')->file('new-test.jpg')->name());
+    }
+
+    public function testChangeNameForUserFileOnSubmitWithReferrer(): void
+    {
+        $this->createUserFile();
+        $this->submit([
+            'name'      => 'new-test',
+            '_referrer' => 'users/test/files/test.jpg'
+        ]);
+        $this->login();
+
+        $dialog = $this->dialog('users/test/files/test.jpg/changeName');
+        $this->assertSame('/users/test/files/new-test.jpg', $dialog['redirect']);
     }
 
     public function testChangeSortForPageFile(): void
