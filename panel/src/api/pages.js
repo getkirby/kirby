@@ -101,7 +101,9 @@ export default (api) => {
       result.push({
         click() {
           this.$dialog(pageUrl + "/changeTitle", {
-            select: "title"
+            query: {
+              select: "title"
+            }
           });
         },
         icon: "title",
@@ -123,7 +125,9 @@ export default (api) => {
       result.push({
         click() {
           this.$dialog(pageUrl + "/changeTitle", {
-            select: "slug"
+            query: {
+              select: "slug"
+            }
           });
         },
         icon: "url",

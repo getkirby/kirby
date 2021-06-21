@@ -31,16 +31,23 @@ import { merge } from "../helpers/object.js";
 import { toJson } from "../api/request.js";
 
 const Fiber = {
+  base: null,
   page: null,
   swap: null,
 
-  init({ page, swap }) {
+  /**
+   * Setup call to make Fiber ready
+   *
+   * @param {object} options
+   */
+  init({ page, swap, base }) {
+
+    // set the base URL for all requests
+    this.base = base || document.querySelector("base").href;
+
     // callback function which handles
     // swapping components
     this.swap = swap;
-
-    // add the hash to the url if it exists
-    page.$url += window.location.hash;
 
     // set initial page
     this.setPage(page);
@@ -56,43 +63,57 @@ const Fiber = {
     );
   },
 
+  /**
+   * Prepares a set of values to
+   * be included in a comma-separated list
+   * in a URL query (see include & only params)
+   *
+   * @param {string|Array} array
+   * @returns Array
+   */
+  arrayToString(array) {
+    if (Array.isArray(array) === false) {
+      array = [array];
+    }
+    return array.join(",");
+  },
+
+  /**
+   * Creates a proper request body
+   *
+   * @param {string|object}
+   * @returns {string}
+   */
+  body(body) {
+    if (typeof body === "object") {
+      return JSON.stringify(body);
+    }
+
+    return body;
+  },
+
+  /**
+   * Loads the Vue component for a
+   * Fiber view
+   *
+   * @param {string} name
+   * @returns {object}
+   */
   component(name) {
     return Vue.component(name);
   },
 
-  async onPopstateEvent(event) {
-    // if a state is included, set the page
-    // based on this state (which will cause
-    // a swap of components)
-    if (event.state !== null) {
-      return this.setPage(event.state, { preserveState: false });
-    }
-
-    // otherwise, just make sure to update
-    // the state properly
-    const url = this.toUrl(this.page.$url);
-
-    // add the hash if it exists
-    url.hash = window.location.hash;
-
-    this.state({ ...this.page, url: url.href });
-    this.resetScroll();
-  },
-
-  onScrollEvent(event) {
-    if (
-      typeof event.target.hasAttribute === "function" &&
-      event.target.hasAttribute("scroll-region")
-    ) {
-      this.saveScroll();
-    }
-  },
-
+  /**
+   * After a new view response is loaded
+   * the props are all processed to set the
+   * document title and language. The props are
+   * merged with the globals from window.panel
+   * to get a full state for the view
+   *
+   * @param {object} data
+   * @returns {object}
+   */
   data(data) {
-    // Add data to the Vue prototype
-    // and window.panel object if the
-    // key exists. Otherwise take from
-    // the existing window.panel object
     [
       "$areas",
       "$config",
@@ -116,9 +137,7 @@ const Fiber = {
 
     // set the lang attribute according to the current translation
     if (data.$translation) {
-      document
-        .querySelector("html")
-        .setAttribute("lang", data.$translation.code);
+      document.documentElement.lang = data.$translation.code;
     }
 
     // set the document title according to $view.title
@@ -132,14 +151,169 @@ const Fiber = {
     return data;
   },
 
+  /**
+   * Sends a view request to load and
+   * navigate to a new view
+   *
+   * @param {string} url
+   * @param {object} options
+   * @returns {object}
+   */
+  async go(url, options) {
+    options = {
+      headers: {},
+      include: [],
+      only: [],
+      preserveScroll: false,
+      preserveState: false,
+      replace: false,
+      silent: false,
+      ...options || {}
+    };
+
+    // save the current scrolling positions
+    // for all scroll regions
+    this.saveScroll();
+
+    const include = this.arrayToString(options.include);
+    const only    = this.arrayToString(options.only);
+
+    let json = await this.request(url, {
+      ...options,
+      headers: {
+        "X-Fiber-Include": include,
+        "X-Fiber-Only": only,
+        "X-Fiber-Referrer": this.page.$view.path,
+        ...options.headers
+      }
+    });
+
+    // add exisiting data to partial requests
+    if (only.length) {
+      json = merge(this.page, json);
+    }
+
+    return this.setPage(json, options);
+  },
+
+  /**
+   * Handles the browser back button event
+   *
+   * @param {*} event
+   */
+  async onPopstateEvent(event) {
+    // if a state is included, set the page
+    // based on this state (which will cause
+    // a swap of components)
+    if (event.state !== null) {
+      return this.setPage(event.state, { preserveState: false });
+    }
+
+    const url = this.url(this.page.$url);
+
+    // otherwise, just make sure to update
+    // the state properly
+    this.state({ ...this.page, url: url.href });
+
+    // reset the scroll position once the state is replaced
+    this.resetScroll();
+  },
+
+  /**
+   * Saves the scroll position of every area
+   * that has the scroll-region attribute
+   *
+   * @param {*} event
+   */
+  onScrollEvent(event) {
+    if (
+      typeof event.target.hasAttribute === "function" &&
+      event.target.hasAttribute("scroll-region")
+    ) {
+      this.saveScroll();
+    }
+  },
+
+  /**
+   * Builds a query string for request URLs
+   *
+   * @param {object} data
+   * @param {object} base
+   * @returns {URLSearchParams}
+   */
+  query(query = {}, base = {}) {
+    let params = new URLSearchParams(base);
+
+    // make sure that we always work with a data object
+    if (typeof query !== "object") {
+      query = {};
+    }
+
+    // add all data params unless they are empty/null
+    Object.entries(query).forEach(([key, value]) => {
+      if (value !== null) {
+        params.set(key, value);
+      }
+    });
+
+    return params;
+  },
+
+  /**
+   * A wrapper around go() which
+   * reloads the current URL
+   *
+   * @param {object} options
+   * @returns {object}
+   */
   reload(options = {}) {
-    return this.visit(window.location.href, {
+    return this.go(window.location.href, {
       ...options,
       preserveScroll: true,
       preserveState: true
     });
   },
 
+  /**
+   * Sends a generic Fiber request
+   *
+   * @param {string|URL} path
+   * @param {Object} options
+   * @returns {Object}
+   */
+  async request(path, options = {}) {
+    options = {
+      method: "GET",
+      query: {},
+      silent: false,
+      headers: {},
+      ...options
+    };
+
+    document.dispatchEvent(new CustomEvent("fiber.start", { detail: options }));
+
+    try {
+      const url      = this.url(path, options.query);
+      const response = await fetch(url, {
+        method: options.method,
+        body: this.body(options.body),
+        headers: {
+          ...options.headers,
+          "X-Fiber": true,
+        }
+      });
+
+      return await toJson(response);
+    } finally {
+      document.dispatchEvent(new Event("fiber.finish"));
+    }
+
+  },
+
+  /**
+   * Moves the scroll position of every
+   * scroll region back to the top
+   */
   resetScroll() {
     // update the scroll position of the document
     document.documentElement.scrollTop = 0;
@@ -153,13 +327,12 @@ const Fiber = {
 
     // resave the restored scroll position
     this.saveScroll();
-
-    // if a hash exists, scroll the matching element into view
-    if (window.location.hash) {
-      document.getElementById(window.location.hash.slice(1))?.scrollIntoView();
-    }
   },
 
+  /**
+   * Restores the previously saved scroll
+   * positions for every scroll region
+   */
   restoreScroll() {
     if (this.page.scrollRegions) {
       this.scrollRegions().forEach((region, index) => {
@@ -169,6 +342,10 @@ const Fiber = {
     }
   },
 
+  /**
+   * Saves the scroll position for every
+   * scroll region
+   */
   saveScroll() {
     const regions = Array.from(this.scrollRegions());
     this.state({
@@ -180,14 +357,27 @@ const Fiber = {
     });
   },
 
+  /**
+   * Fetches all DOM elements with
+   * the scroll region attribute
+   *
+   * @returns NodeList
+   */
   scrollRegions() {
     return document.querySelectorAll("[scroll-region]");
   },
 
-  async setPage(
-    page,
-    { replace = false, preserveScroll = false, preserveState = false } = {}
-  ) {
+  /**
+   * Stores the state for the current page
+   *
+   * @param {object} page
+   * @param {object} options
+   */
+  async setPage(page, {
+    replace = false,
+    preserveScroll = false,
+    preserveState = false
+  } = {}) {
     // resolve component
     const component = await this.component(page.$view.component);
 
@@ -196,13 +386,13 @@ const Fiber = {
 
     // either replacing the whole state
     // or pushing onto it
-    if (replace || this.toUrl(page.$url).href === window.location.href) {
+    if (replace || this.url(page.$url).href === window.location.href) {
       this.state(page);
     } else {
       this.state(page, "push");
     }
 
-    // swap component
+    // clone existing data
     let data = clone(page);
 
     // apply all data
@@ -217,168 +407,80 @@ const Fiber = {
     }
   },
 
+  /**
+   * Updates the browser history and the page
+   * object with the current state
+   *
+   * @param {object} page
+   * @param {string} action
+   */
   state(page, action = "replace") {
     this.page = page;
     window.history[action + "State"](page, "", page.$url);
   },
 
-  toQuery(search, data) {
-    let params = new URLSearchParams(search);
-
-    // make sure that we always work with a data object
-    if (typeof data !== "object") {
-      data = {};
-    }
-
-    // add all data params unless they are empty/null
-    Object.entries(data).forEach(([key, value]) => {
-      if (value !== null) {
-        params.set(key, value);
-      }
-    });
-
-    return params;
-  },
-
-  toUrl(href, { data = {}, hash = true } = {}) {
-    let url;
-
-    if (hash === true) {
-      url = new URL(href, window.location);
+  /**
+   * Builds a full URL object based on the
+   * given path or another URL object and query data
+   *
+   * @param {string|URL} url
+   * @param {Object} query
+   * @returns
+   */
+  url(url = "", query = {}) {
+    if (typeof url === "string" && url.startsWith("http") === false) {
+      url = new URL(this.base + url.replace(/^\//, ""));
     } else {
-      url = new URL(href);
-      url.hash = "";
+      url = new URL(url);
     }
 
-    url.search = this.toQuery(url.search, data);
-
+    url.search = this.query(query);
     return url;
   },
 
-  async visit(
-    url,
-    {
-      data = {},
-      headers = {},
-      include = [],
-      only = [],
-      preserveScroll = false,
-      preserveState = false,
-      replace = false,
-      silent = false
-    } = {}
-  ) {
-    // save the current scrolling positions
-    // for all scroll regions
-    this.saveScroll();
-
-    document.dispatchEvent(new CustomEvent("fiber:start", {
-      detail: { silent }
-    }));
-
-    // make sure include is an array
-    if (Array.isArray(include) === false) {
-      include = [include];
-    }
-
-    // make sure only is an array
-    if (Array.isArray(only) === false) {
-      only = [only];
-    }
-
-    // create proper URL
-    url = this.toUrl(url, { data: data || {}, hash: false });
-
-    try {
-      // fetch the response (only GET request supported)
-      const response = await fetch(url, {
-        method: "get",
-        headers: {
-          ...headers,
-          "X-Fiber": true,
-          "X-Fiber-Include": include.join(","),
-          "X-Fiber-Only": only.join(","),
-        }
-      });
-
-      // turn into json data
-      let json = await toJson(response);
-
-      // add exisiting data to partial requests
-      if (only.length) {
-        json = merge(this.page, json);
-      }
-
-      // add hash to response URL if current
-      // window URL has hash included
-      const responseUrl = this.toUrl(json.$url);
-
-      if (
-        url.hash &&
-        !responseUrl.hash &&
-        this.toUrl(json.$url, { hash: false }).href === responseUrl.href
-      ) {
-        responseUrl.hash = url.hash;
-        json.$url = responseUrl.href;
-      }
-
-      return this.setPage(json, { replace, preserveScroll, preserveState });
-    } catch (error) {
-      console.error(error);
-    } finally {
-      document.dispatchEvent(new Event("fiber:finish"));
-    }
-  }
 };
 
 export const plugin = {
   install(Vue) {
-
     Vue.prototype.$dialog = async function (path, options = {}) {
       try {
-        let url    = new URL(this.$url("dialogs/" + path));
-        url.search = new URLSearchParams(options || {});
+        const data = await Fiber.request("dialogs/" + path, options);
 
-        const response = await fetch(url, {
-          headers: {
-            "X-Fiber": true,
-            "X-Fiber-Referrer": this.$view.path
-          }
-        });
-
-        const data = await toJson(response);
-
-        if (data.$dialog) {
-          if (data.$dialog.error) {
-            throw data.$dialog.error;
-          }
-
-          this.$store.dispatch("dialog", data.$dialog);
-          return;
+        // the GET request for the dialog is failing
+        if (!data.$dialog) {
+          throw `The dialog could not be loaded`;
         }
 
-        throw `The dialog at "${path}" could not be loaded`;
+        // the dialog sends a backend error
+        if (data.$dialog.error) {
+          throw data.$dialog.error;
+        }
+
+        // open the dialog and keep the dialog props in the store
+        this.$store.dispatch("dialog", data.$dialog);
+
+        // return the dialog object if needed
+        return data.$dialog;
       } catch (e) {
+        console.error(e);
         this.$store.dispatch("notification/error", e);
       }
     };
 
-    Vue.prototype.$url = function (path = "") {
-      // pass window.location objects without modification
-      if (typeof path === "object") {
-        return path;
-      }
-
-      return document.querySelector("base").href + path.replace(/^\//, "");
-    };
     Vue.prototype.$go = window.panel.$go = function (path, options) {
-      return Fiber.visit(this.$url(path), options);
+      return Fiber.go(this.$url(path), options);
     };
+
     Vue.prototype.$reload = window.panel.$reload = function (options) {
-      if (typeof options === "string") {
-        options = { only: [options] };
-      }
       return Fiber.reload(options);
+    };
+
+    Vue.prototype.$request = async function (...args) {
+      return await Fiber.request(...args);
+    };
+
+    Vue.prototype.$url = function (...args) {
+      return Fiber.url(...args);
     };
   }
 };
