@@ -11,8 +11,7 @@
       :id="_uid"
       ref="input"
       v-bind="{
-        ...$props,
-        value: slug
+        ...$props
       }"
       theme="field"
       type="slug"
@@ -39,26 +38,12 @@ export default {
   ],
   inheritAttrs: false,
   props: {
-    formData: {
-      type: Object,
-      default() {
-        return {}
-      }
-    },
     icon: {
       type: String,
       default: "url"
     },
-    sync: {
-      type: String,
-    },
     path: {
       type: String
-    }
-  },
-  data() {
-    return {
-      slug: this.value
     }
   },
   computed: {
@@ -72,25 +57,6 @@ export default {
       }
 
       return null;
-    }
-  },
-  watch: {
-    formData: {
-      handler(newValue) {
-        if (this.disabled) {
-          return false;
-        }
-
-        if (!this.sync || newValue[this.sync] === undefined) {
-          return false;
-        }
-
-        this.slug = newValue[this.sync];
-      },
-      deep: true,
-    },
-    value() {
-      this.slug = this.value;
     }
   },
   methods: {

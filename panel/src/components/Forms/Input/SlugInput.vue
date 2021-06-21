@@ -31,7 +31,16 @@ export const props = {
     allow: {
       type: String,
       default: ""
-    }
+    },
+    formData: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    sync: {
+      type: String,
+    },
   }
 }
 
@@ -44,12 +53,33 @@ export default {
   data() {
     return {
       slug: this.sluggify(this.value),
-      slugs: this.$languages.current ? this.$languages.current.rules : this.$system.slugs
+      slugs: this.$languages.current ? this.$languages.current.rules : this.$system.slugs,
+      syncValue: null
     };
   },
   watch: {
-    value() {
-      this.slug = this.sluggify(this.value);
+    formData: {
+      handler(newValue, oldValue) {
+        if (this.disabled) {
+          return false;
+        }
+
+        if (!this.sync || newValue[this.sync] === undefined) {
+          return false;
+        }
+
+        if (newValue[this.sync] == this.syncValue) {
+          return false;
+        }
+
+        this.syncValue = newValue[this.sync];
+        this.onInput(this.sluggify(this.syncValue));
+      },
+      deep: true,
+      immediate: true
+    },
+    value(newValue, oldValue) {
+      this.slug = this.sluggify(newValue);
     }
   },
   methods: {
@@ -57,7 +87,8 @@ export default {
       return this.$helper.slug(value.trim(), [this.slugs, this.$system.ascii], this.allow);
     },
     onInput(value) {
-      this.$emit("input", this.sluggify(value));
+      this.slug = this.sluggify(value);
+      this.$emit("input", this.slug);
     }
   }
 }
