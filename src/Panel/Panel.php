@@ -618,6 +618,32 @@ class Panel
     }
 
     /**
+     * Returns the referrer path via the
+     *
+     * @return string|null
+     */
+    public static function referrer(): ?string
+    {
+        $referrer = new Uri($_SERVER['HTTP_REFERER'] ?? null);
+        $current  = Uri::current();
+
+        if ($referrer->host() !== $current->host()) {
+            return false;
+        }
+
+        $slug = option('panel.slug', 'panel');
+        $path = $referrer->path()->toString();
+
+        if (Str::contains($path, $slug) === false) {
+            return false;
+        }
+
+        $path = Str::after($path, $slug);
+
+        return '/' . trim($path, '/');
+    }
+
+    /**
      * Creates a Response object from the result of
      * a Panel route call
      *
