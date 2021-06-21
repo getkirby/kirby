@@ -1008,7 +1008,7 @@ class Str
 
             // callback on result if given
             if ($callback !== null) {
-                $result = $callback((string)$result, $data);
+                $result = $callback((string)$result, $query, $data);
             }
 
             // if we still don't have a result, keep the original placeholder
