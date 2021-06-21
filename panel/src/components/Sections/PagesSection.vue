@@ -87,7 +87,8 @@ export default {
     create() {
       if (this.add) {
         this.$dialog('pages/create', {
-          parent: this.parent,
+          parent: this.options.link || this.parent,
+          view: this.parent,
           section: this.name
         });
       }

@@ -216,11 +216,33 @@ return [
     // change create
     'pages/create' => [
         'load' => function () {
-            $parent     = get('parent', 'site');
-            $section    = get('section');
-            $model      = Find::parent($parent);
-            $blueprints = $model->blueprints($section);
-            $template   = null;
+            // the parent model for the new page
+            $parent = get('parent', 'site');
+
+            // the view on which the add button is located
+            // this is important to find the right section
+            // and provide the correct templates for the new page
+            $view = get('view', $parent);
+
+            // templates will be fetched depending on the
+            // section settings in the blueprint
+            $section = get('section');
+
+            // this is the parent model
+            $model = Find::parent($parent);
+
+            // this is the view model
+            // i.e. site if the add button is on
+            // the dashboard
+            $view = Find::parent($view);
+
+            // available blueprints/templates for the new page
+            // are always loaded depending on the matching section
+            // in the view model blueprint
+            $blueprints = $view->blueprints($section);
+
+            // the pre-selected template
+            $template = null;
 
             $fields = [
                 'parent' => Field::hidden(),

@@ -243,7 +243,21 @@ class FileDialogsTest extends AreaTestCase
         $this->assertSame('file.delete', $dialog['event']);
         $this->assertSame(['content/remove' => ['/pages/test/files/test.jpg']], $dialog['dispatch']);
         $this->assertSame(200, $dialog['code']);
+        $this->assertFalse($dialog['redirect']);
         $this->assertCount(0, $this->app->page('test')->files());
+    }
+
+    public function testDeletePageFileOnSubmitWithReferrer(): void
+    {
+        $this->createPageFile();
+        $this->submit([
+            '_referrer' => '/pages/test/files/test.jpg'
+        ]);
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/files/test.jpg/delete');
+
+        $this->assertSame('/pages/test', $dialog['redirect']);
     }
 
     public function testDeleteSiteFile(): void
@@ -268,7 +282,21 @@ class FileDialogsTest extends AreaTestCase
         $this->assertSame('file.delete', $dialog['event']);
         $this->assertSame(['content/remove' => ['/site/files/test.jpg']], $dialog['dispatch']);
         $this->assertSame(200, $dialog['code']);
+        $this->assertFalse($dialog['redirect']);
         $this->assertCount(0, $this->app->site()->files());
+    }
+
+    public function testDeleteSiteFileOnSubmitWithReferrer(): void
+    {
+        $this->createSiteFile();
+        $this->submit([
+            '_referrer' => '/site/files/test.jpg'
+        ]);
+        $this->login();
+
+        $dialog = $this->dialog('site/files/test.jpg/delete');
+
+        $this->assertSame('/site', $dialog['redirect']);
     }
 
     public function testDeleteUserFile(): void
@@ -293,6 +321,20 @@ class FileDialogsTest extends AreaTestCase
         $this->assertSame('file.delete', $dialog['event']);
         $this->assertSame(['content/remove' => ['/users/test/files/test.jpg']], $dialog['dispatch']);
         $this->assertSame(200, $dialog['code']);
+        $this->assertFalse($dialog['redirect']);
         $this->assertCount(0, $this->app->user('test')->files());
+    }
+
+    public function testDeleteUserFileOnSubmitWithReferrer(): void
+    {
+        $this->createUserFile();
+        $this->submit([
+            '_referrer' => '/users/test/files/test.jpg'
+        ]);
+        $this->login();
+
+        $dialog = $this->dialog('users/test/files/test.jpg/delete');
+
+        $this->assertSame('/users/test', $dialog['redirect']);
     }
 }

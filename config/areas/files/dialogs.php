@@ -112,7 +112,7 @@ return [
 
             return [
                 'event'    => 'file.delete',
-                'dispatch' => ['content/remove' => [$file->panel()->url(true)]],
+                'dispatch' => ['content/remove' => [$url]],
                 'redirect' => $redirect
             ];
         }

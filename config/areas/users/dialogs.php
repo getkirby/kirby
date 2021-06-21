@@ -229,13 +229,28 @@ return [
             ];
         },
         'submit' => function (string $id) {
-            Find::user($id)->delete();
+            $user     = Find::user($id);
+            $redirect = false;
+            $referrer = Panel::referrer();
+            $url      = $user->panel()->url(true);
+
+            $user->delete();
+
+            // redirect to the users view
+            // if the dialog has been opened in the user view
+            if ($referrer === $url) {
+                $redirect = '/users';
+            }
+
+            // logout the user if they deleted themselves
+            if ($user->is(kirby()->user())) {
+                $redirect = '/logout';
+            }
 
             return [
                 'event'    => 'user.delete',
-                'dispatch' => [
-                    'content/remove' => ['users/' . $id]
-                ]
+                'dispatch' => ['content/remove' => [$url]],
+                'redirect' => $redirect
             ];
         }
     ],

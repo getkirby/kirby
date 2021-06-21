@@ -626,6 +626,26 @@ class PageDialogsTest extends AreaTestCase
         $this->assertCount(0, $this->app->site()->children());
     }
 
+    public function testDeleteOnSubmitWithReferrer(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->submit([
+            '_referrer' => 'pages/test'
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/delete');
+        $this->assertSame('/site', $dialog['redirect']);
+    }
+
     public function testDuplicate(): void
     {
         $this->app([

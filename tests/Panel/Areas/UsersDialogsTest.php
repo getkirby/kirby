@@ -250,8 +250,48 @@ class UsersDialogsTest extends AreaTestCase
         $dialog = $this->dialog('users/editor/delete');
 
         $this->assertSame('user.delete', $dialog['event']);
-        $this->assertSame(['users/editor'], $dialog['dispatch']['content/remove']);
+        $this->assertSame(['/users/editor'], $dialog['dispatch']['content/remove']);
         $this->assertSame(200, $dialog['code']);
+        $this->assertFalse($dialog['redirect']);
         $this->assertCount(1, $this->app->users());
+    }
+
+    public function testDeleteOnSubmitWithReferrer(): void
+    {
+        $this->submit([
+            '_referrer' => '/users/editor'
+        ]);
+
+        // create a second user to be deleted
+        $this->app->users()->create([
+            'id'    => 'editor',
+            'email' => 'editor@getkirby.com',
+            'role'  => 'editor'
+        ]);
+
+        $dialog = $this->dialog('users/editor/delete');
+
+        $this->assertSame('/users', $dialog['redirect']);
+    }
+
+    public function testDeleteOnSubmitWithOwnAccount(): void
+    {
+        $this->submit([
+            '_referrer' => '/users/editor'
+        ]);
+
+        // create a second user to be deleted
+        $this->app->users()->create([
+            'id'    => 'editor',
+            'email' => 'editor@getkirby.com',
+            'role'  => 'admin'
+        ]);
+
+        // login as the secondary user
+        $this->login('editor');
+
+        $dialog = $this->dialog('users/editor/delete');
+
+        $this->assertSame('/logout', $dialog['redirect']);
     }
 }
