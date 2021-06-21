@@ -364,6 +364,28 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame('new-slug', $this->app->page('new-slug')->slug());
     }
 
+    public function testChangeTitleOnSubmitWithSlugAndReferrer(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        $this->submit([
+            'title' => 'test',
+            'slug'  => 'new-slug',
+            '_referrer' => '/pages/test'
+        ]);
+
+        $this->login();
+        $dialog = $this->dialog('pages/test/changeTitle');
+
+        $this->assertSame('/pages/new-slug', $dialog['redirect']);
+    }
+
     public function testChangeTitleOnSubmitWithSlugAndTitle(): void
     {
         $this->app([

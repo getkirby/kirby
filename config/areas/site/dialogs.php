@@ -201,12 +201,15 @@ return [
                 $response['event'][] = 'page.changeSlug';
                 $response['dispatch'] = [
                     'content/move' => [
-                        $page->panel()->url(true),
-                        $newPage->panel()->url(true)
+                        $oldUrl = $page->panel()->url(true),
+                        $newUrl = $newPage->panel()->url(true)
                     ]
                 ];
 
-                // TODO: redirect if in page view
+                // check for a necessary redirect after the slug has changed
+                if (Panel::referrer() === $oldUrl && $oldUrl !== $newUrl) {
+                    $response['redirect'] = $newUrl;
+                }
             }
 
             return $response;
