@@ -158,6 +158,17 @@ class DirTest extends TestCase
         $this->assertFalse(Dir::make(''));
     }
 
+    public function testMakeFileExists()
+    {
+        $test = $this->tmp . '/test';
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('A file with the name "' . $test . '" already exists');
+
+        F::write($test, '');
+        Dir::make($test);
+    }
+
     public function testModified()
     {
         Dir::make($this->tmp);
