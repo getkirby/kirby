@@ -366,7 +366,7 @@ return function (App $app) {
          * @return \Kirby\Cms\Field
          */
         'html' => function (Field $field) {
-            $field->value = htmlentities($field->value, ENT_COMPAT, 'utf-8');
+            $field->value = Html::encode($field->value);
             return $field;
         },
 
