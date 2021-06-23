@@ -91,7 +91,7 @@ export default {
     this.$events.$off("model.update", this.reload);
   },
   methods: {
-    action(file, action) {
+    action(action, file) {
 
       switch (action) {
         case "edit":

@@ -174,6 +174,7 @@ export default {
   justify-content: flex-end;
   flex-shrink: 0;
   flex-grow: 1;
+  z-index: 2;
 }
 .k-item-buttons > .k-button,
 .k-item-buttons > .k-dropdown  {

@@ -5,7 +5,7 @@
       :layout="layout"
       :size="size"
       :sortable="sortable"
-      @option="$emit('action', item, $event)"
+      @option="onOption"
       @sort="$emit('sort', $event)"
       @change="$emit('change', $event)"
     />
@@ -115,6 +115,12 @@ export default {
   watch: {
     $props() {
       this.$forceUpdate();
+    }
+  },
+  methods: {
+    onOption(...args) {
+      this.$emit("action", ...args);
+      this.$emit("option", ...args);
     }
   }
 };

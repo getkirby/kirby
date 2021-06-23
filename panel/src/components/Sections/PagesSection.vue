@@ -101,7 +101,7 @@ export default {
         );
       }
     },
-    action(page, action) {
+    action(action, page) {
 
       switch (action) {
         case "duplicate": {
