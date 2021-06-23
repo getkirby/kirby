@@ -169,6 +169,17 @@ export default {
      * @public
      */
     open() {
+      // when dialogs are used in the old-fashioned way
+      // by adding their component to a template and calling
+      // open on the component manually, the dialog state
+      // is set to true. In comparison, this.$dialog fills
+      // the dialog state after a successfull request and
+      // the fiber dialog component is injected on store change
+      // automatically.
+      if (!this.$store.state.dialog) {
+        this.$store.dispatch("dialog", true);
+      }
+
       this.notification = null;
       this.$refs.overlay.open();
       /**
