@@ -21,34 +21,21 @@
         icon="search"
       />
 
-      <template v-if="models.length">
-        <k-list>
-          <k-list-item
-            v-for="user in models"
-            :key="user.email"
-            :text="user.text"
-            :info="user.info !== user.text ? user.info : null"
-            :image="user.image"
-            :icon="user.icon"
-            @click="toggle(user)"
-          >
-            <template #options>
-              <k-button
-                v-if="isSelected(user)"
-                :autofocus="true"
-                :icon="checkedIcon"
-                :tooltip="$t('remove')"
-                theme="positive"
-              />
-              <k-button
-                v-else
-                :autofocus="true"
-                :tooltip="$t('select')"
-                icon="circle-outline"
-              />
-            </template>
-          </k-list-item>
-        </k-list>
+      <template v-if="items.length">
+        <k-items
+          :items="items"
+          layout="list"
+          :sortable="false"
+          @item="toggle"
+        >
+          <template #options="{ item: user }">
+            <k-button
+              v-bind="toggleBtn(user)"
+              @click="toggle(user)"
+            />
+          </template>
+        </k-items>
+
         <k-pagination
           :details="true"
           :dropdown="false"
@@ -69,7 +56,17 @@
 import picker from "@/mixins/picker/dialog.js";
 
 export default {
-  mixins: [picker]
+  mixins: [picker],
+  methods: {
+    item(item) {
+      return {
+        ...item,
+        key: item.email,
+        info: item.info !== item.text ? item.info : null,
+        link: false
+      }
+    }
+  }
 };
 </script>
 

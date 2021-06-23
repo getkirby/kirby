@@ -289,11 +289,27 @@ class ModelTest extends TestCase
         $this->assertStringContainsString('test-38x.jpg 38w', $image['srcset']);
         $this->assertStringContainsString('test-76x.jpg 76w', $image['srcset']);
 
-        // different layouts
+        // cards
         $image = $panel->image('site.image', 'cards');
         $this->assertStringContainsString('test-352x.jpg 352w', $image['srcset']);
         $this->assertStringContainsString('test-864x.jpg 864w', $image['srcset']);
         $this->assertStringContainsString('test-1408x.jpg 1408w', $image['srcset']);
+
+        // cards with cover option should still return the full srcset
+        // cropping is done in css
+        $image = $panel->image([
+            'query'  => 'site.image',
+            'cover'  => true
+        ], 'cards');
+
+        $this->assertStringContainsString('test-352x.jpg 352w', $image['srcset']);
+        $this->assertStringContainsString('test-864x.jpg 864w', $image['srcset']);
+        $this->assertStringContainsString('test-1408x.jpg 1408w', $image['srcset']);
+
+        // cardlets
+        $image = $panel->image('site.image', 'cardlets');
+        $this->assertStringContainsString('test-96x.jpg 96w', $image['srcset']);
+        $this->assertStringContainsString('test-192x.jpg 192w', $image['srcset']);
 
         // full options
         $image = $panel->image([

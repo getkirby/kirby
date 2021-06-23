@@ -1,30 +1,14 @@
 <template>
-  <div :data-layout="layout" class="k-collection">
-    <k-draggable
-      :list="items"
-      :options="dragOptions"
-      :element="elements.list"
-      :data-size="size"
-      :handle="true"
+  <div class="k-collection">
+    <k-items
+      :items="items"
+      :layout="layout"
+      :size="size"
+      :sortable="sortable"
+      @option="onOption"
+      @sort="$emit('sort', $event)"
       @change="$emit('change', $event)"
-      @end="onEnd"
-    >
-      <!--
-        Emitted on every dropdown action / option
-        @event action
-        @property {object} item
-        @property {string} click
-      -->
-      <component
-        :is="elements.item"
-        v-for="(item, index) in items"
-        :key="index"
-        :class="{'k-draggable-item': item.sortable}"
-        v-bind="item"
-        @action="$emit('action', item, $event)"
-        @dragstart="onDragStart($event, item.dragText)"
-      />
-    </k-draggable>
+    />
 
     <footer v-if="hasFooter" class="k-collection-footer">
       <!-- eslint-disable vue/no-v-html -->
@@ -53,7 +37,8 @@
 
 <script>
 /**
- * The `k-collection` component is a wrapper around `k-cards` and `k-list-items` that makes it easy to switch between the two layouts and adds sortabilty and pagination to the items.
+ * The `k-collection` component is a wrapper around `k-items`
+ * that adds sortabilty and pagination to the items.
  */
 export default {
   props: {
@@ -114,31 +99,6 @@ export default {
 
       return false;
     },
-    dragOptions() {
-      return {
-        sort: this.sortable,
-        disabled: this.sortable === false,
-        draggable: ".k-draggable-item"
-      };
-    },
-    elements() {
-      const layouts = {
-        cards: {
-          list: "k-cards",
-          item: "k-card"
-        },
-        list: {
-          list: "k-list",
-          item: "k-list-item"
-        }
-      };
-
-      if (layouts[this.layout]) {
-        return layouts[this.layout];
-      }
-
-      return layouts["list"];
-    },
     paginationOptions() {
       const options =
         typeof this.pagination !== "object" ? {} : this.pagination;
@@ -157,24 +117,10 @@ export default {
       this.$forceUpdate();
     }
   },
-  over: null,
   methods: {
-    onEnd() {
-      if (this.over) {
-        this.over.removeAttribute("data-over");
-      }
-      /**
-       * Emitted when the sorting has stopped
-       * @event sort
-       * @property {array} items
-       */
-      this.$emit("sort", this.items);
-    },
-    onDragStart($event, dragText) {
-      this.$store.dispatch("drag", {
-        type: "text",
-        data: dragText
-      });
+    onOption(...args) {
+      this.$emit("action", ...args);
+      this.$emit("option", ...args);
     }
   }
 };

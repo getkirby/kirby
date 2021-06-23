@@ -63,25 +63,27 @@ describe("PageView", () => {
     });
 
     it("should publish draft", () => {
-      cy.get("@drafts").find(".k-card").should("have.length", 2);
-      cy.get("@listed").find(".k-card").should("have.length", 8);
+      cy.get("@drafts").find(".k-cards-item").should("have.length", 2);
+      cy.get("@listed").find(".k-cards-item").should("have.length", 8);
 
-      cy.get("@drafts").find(".k-card:first-child .k-status-icon").click();
+      cy.get("@drafts")
+        .find(".k-cards-item:first-child .k-status-icon")
+        .click();
 
       dialog().find(".k-radio-input li:last-child label").click();
       dialog().find("form").submit();
 
-      cy.get("@drafts").find(".k-card").should("have.length", 1);
-      cy.get("@listed").find(".k-card").should("have.length", 9);
+      cy.get("@drafts").find(".k-cards-item").should("have.length", 1);
+      cy.get("@listed").find(".k-cards-item").should("have.length", 9);
     });
 
     it("should delete draft", () => {
       cy.get("@drafts").as("draft");
-      cy.get("@drafts").find(".k-card").should("have.length", 1);
+      cy.get("@drafts").find(".k-cards-item").should("have.length", 1);
 
-      cy.get("@draft").find(".k-card-options-button:last-child").click();
+      cy.get("@draft").find(".k-item-options-dropdown .k-button").click();
       cy.get("@draft")
-        .find(".k-card-options-dropdown .k-button:last-child")
+        .find(".k-options-dropdown-content .k-button:last-child")
         .click();
 
       dialog().find(".k-dialog-button-submit").click();

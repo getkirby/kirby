@@ -14,33 +14,23 @@
     </template>
 
     <template v-if="selected.length">
-      <k-draggable
-        :element="elements.list"
-        :handle="true"
-        :list="selected"
-        :data-size="size"
-        :data-invalid="isInvalid"
-        @end="onInput"
+      <k-items
+        :items="selected"
+        :layout="layout"
+        :size="size"
+        :sortable="!disabled && selected.length > 1"
+        @sort="onInput"
+        @sortChange="$emit('change', $event)"
       >
-        <component
-          :is="elements.item"
-          v-for="(page, index) in selected"
-          :key="page.id"
-          :sortable="!disabled && selected.length > 1"
-          :text="page.text"
-          :info="page.info"
-          :link="link ? page.link : null"
-          :image="page.image"
-        >
-          <template #options>
-            <k-button
-              v-if="!disabled"
-              icon="remove"
-              @click="remove(index)"
-            />
-          </template>
-        </component>
-      </k-draggable>
+        <template #options="{ index }">
+          <k-button
+            v-if="!disabled"
+            :tooltip="$t('remove')"
+            icon="remove"
+            @click="remove(index)"
+          />
+        </template>
+      </k-items>
     </template>
     <k-empty
       v-else

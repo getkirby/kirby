@@ -123,35 +123,31 @@ abstract class Model
 
                     switch ($layout) {
                         case 'cards':
-                            $settings['srcset'] = $image->srcset([
-                                352,
-                                864,
-                                1408,
-                            ]);
+                            $sizes = [352, 864, 1408];
                             break;
-
+                        case 'cardlets':
+                            $sizes = [96, 192];
+                            break;
                         case 'list':
                             $sizes = [38, 76];
-
-                            // no break
-                        default:
-                            if (($settings['cover'] ?? false) === false) {
-                                $settings['srcset'] = $image->srcset($sizes);
-                            } else {
-                                $settings['srcset'] = $image->srcset([
-                                    '1x' => [
-                                        'width'  => $sizes[0],
-                                        'height' => $sizes[0],
-                                        'crop'   => 'center'
-                                    ],
-                                    '2x' => [
-                                        'width'  => $sizes[1],
-                                        'height' => $sizes[1],
-                                        'crop'   => 'center'
-                                    ]
-                                ]);
-                            }
                             break;
+                    }
+
+                    if (($settings['cover'] ?? false) === false || $layout === 'cards') {
+                        $settings['srcset'] = $image->srcset($sizes);
+                    } else {
+                        $settings['srcset'] = $image->srcset([
+                            '1x' => [
+                                'width'  => $sizes[0],
+                                'height' => $sizes[0],
+                                'crop'   => 'center'
+                            ],
+                            '2x' => [
+                                'width'  => $sizes[1],
+                                'height' => $sizes[1],
+                                'crop'   => 'center'
+                            ]
+                        ]);
                     }
                 }
             }
@@ -176,7 +172,7 @@ abstract class Model
      */
     protected function imageColor(): string
     {
-        return 'white';
+        return 'gray-500';
     }
 
     /**

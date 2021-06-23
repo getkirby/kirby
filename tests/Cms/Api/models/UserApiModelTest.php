@@ -21,7 +21,7 @@ class UserApiModelTest extends ApiModelTestCase
             'back' => 'black',
             'cover' => false,
             'ratio' => '1/1',
-            'color' => 'white',
+            'color' => 'gray-500',
             'icon'  => 'user'
         ];
 

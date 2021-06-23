@@ -101,7 +101,7 @@ export default {
         );
       }
     },
-    action(page, action) {
+    action(action, page) {
 
       switch (action) {
         case "duplicate": {
@@ -168,12 +168,12 @@ export default {
       return data.map(page => {
         const isEnabled = page.permissions.changeStatus !== false;
 
-        page.statusIcon = {
+        page.flag = {
           status: page.status,
           tooltip: this.$t("page.status"),
           disabled: !isEnabled,
           click: () => {
-            this.action(page, "status");
+            this.action("status", page);
           }
         };
 
