@@ -216,7 +216,7 @@ return [
         }
     ],
 
-    // change create
+    // create a new page
     'pages/create' => [
         'load' => function () {
             // the parent model for the new page
