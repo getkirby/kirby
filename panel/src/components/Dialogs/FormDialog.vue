@@ -2,7 +2,10 @@
   <k-dialog
     ref="dialog"
     v-bind="$props"
-    v-on="listeners"
+    @cancel="$emit('cancel')"
+    @close="$emit('close')"
+    @ready="$emit('ready')"
+    @submit="$refs.form.submit()"
   >
     <template v-if="text">
       <!-- eslint-disable-next-line vue/no-v-html -->
@@ -63,16 +66,6 @@ export default {
   data() {
     return {
       model: this.value
-    }
-  },
-  computed: {
-    listeners() {
-      return {
-        ...this.$listeners,
-        submit: () => {
-          this.$refs.form.submit();
-        }
-      };
     }
   },
   watch: {
