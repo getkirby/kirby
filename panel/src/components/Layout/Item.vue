@@ -174,10 +174,9 @@ export default {
   justify-content: flex-end;
   flex-shrink: 0;
   flex-grow: 1;
-  z-index: 2;
 }
 .k-item-buttons > .k-button,
-.k-item-buttons > .k-dropdown  {
+.k-item-buttons > .k-dropdown {
   position: relative;
   width: 38px;
   height: 38px;
@@ -185,10 +184,12 @@ export default {
   align-items: center;
   justify-content: center;
   line-height: 1;
+}
+.k-item-buttons > .k-button {
   z-index: 1;
 }
-.k-item-options-dropdown {
-  z-index: 2;
+.k-item-buttons > .k-dropdown {
+  z-index: var(--z-dropdown);
 }
 
 /** List Item **/
