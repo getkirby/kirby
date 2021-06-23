@@ -44,6 +44,12 @@ return [
         'isSortable' => function (Page $page) {
             return $page->isSortable();
         },
+        /**
+         * @deprecated 3.6.0
+         * @todo Throw deprecated warning in 3.7.0
+         * @todo Remove in 3.8.0
+         * @codeCoverageIgnore
+         */
         'next' => function (Page $page) {
             return $page
                 ->nextAll()
@@ -58,12 +64,13 @@ return [
         'options' => function (Page $page) {
             return $page->panel()->options(['preview']);
         },
+        /**
+         * @todo Remove in 3.7.0
+         * @codeCoverageIgnore
+         */
         'panelIcon' => function (Page $page) {
-            // TODO: remove in 3.7.0
-            // @codeCoverageIgnoreStart
             deprecated('The API field page.panelIcon has been deprecated and will be removed in 3.7.0. Use page.panelImage instead');
             return $page->panel()->image();
-        // @codeCoverageIgnoreEnd
         },
         'panelImage' => function (Page $page) {
             return $page->panel()->image();
@@ -74,6 +81,12 @@ return [
         'parents' => function (Page $page) {
             return $page->parents()->flip();
         },
+        /**
+         * @deprecated 3.6.0
+         * @todo Throw deprecated warning in 3.7.0
+         * @todo Remove in 3.8.0
+         * @codeCoverageIgnore
+         */
         'prev' => function (Page $page) {
             return $page
                 ->prevAll()

@@ -312,23 +312,6 @@ abstract class Model
     }
 
     /**
-     * Returns link and tooltip
-     * used for prev/next navigation
-     *
-     * @internal
-     *
-     * @param string $tooltip
-     * @return array|null
-     */
-    public function prevnext($tooltip = 'title'): ?array
-    {
-        return [
-            'link'    => $this->url(true),
-            'tooltip' => (string)$this->model->$tooltip()
-        ];
-    }
-
-    /**
      * Returns the data array for the
      * view's component props
      *
@@ -368,6 +351,24 @@ abstract class Model
      * @return array
      */
     abstract public function route(): array;
+
+    /**
+     * Returns link url and tooltip
+     * for model (e.g. used for prev/next
+     * navigation)
+     *
+     * @internal
+     *
+     * @param string $tooltip
+     * @return array
+     */
+    public function toLink(string $tooltip = 'title'): array
+    {
+        return [
+            'link'    => $this->url(true),
+            'tooltip' => (string)$this->model->{$tooltip}()
+        ];
+    }
 
     /**
      * Returns the url to the editing view

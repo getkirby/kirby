@@ -326,9 +326,9 @@ class ModelTest extends TestCase
     }
 
     /**
-     * @covers ::prevnext
+     * @covers ::toLink
      */
-    public function testPrevNext()
+    public function testToLink()
     {
         $panel = $this->panel([
             'content' => [
@@ -337,13 +337,13 @@ class ModelTest extends TestCase
             ]
         ]);
 
-        $prevnext = $panel->prevnext();
-        $this->assertSame('/custom', $prevnext['link']);
-        $this->assertSame($title, $prevnext['tooltip']);
+        $toLink = $panel->toLink();
+        $this->assertSame('/custom', $toLink['link']);
+        $this->assertSame($title, $toLink['tooltip']);
 
-        $prevnext = $panel->prevnext('author');
-        $this->assertSame('/custom', $prevnext['link']);
-        $this->assertSame($author, $prevnext['tooltip']);
+        $toLink = $panel->toLink('author');
+        $this->assertSame('/custom', $toLink['link']);
+        $this->assertSame($author, $toLink['tooltip']);
     }
 
     /**
