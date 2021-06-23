@@ -37,6 +37,8 @@ export default {
     }
   },
   watch: {
+    // Reload values and field definitions
+    // when the view has changed in the backend
     timestamp() {
       this.fetch();
     }

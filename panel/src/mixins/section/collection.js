@@ -47,17 +47,13 @@ export default {
 
       return false;
     },
-    language() {
-      return this.$system.language;
-    },
     paginationId() {
       return "kirby$pagination$" + this.parent + "/" + this.name;
     }
   },
   watch: {
-    language() {
-      this.reload();
-    },
+    // Reload the section when
+    // the view has changed in the backend
     timestamp() {
       this.reload();
     }
