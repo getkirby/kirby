@@ -1044,9 +1044,10 @@ class PanelTest extends TestCase
 
         $expected = [
             '$dialog' => [
-                'test' => 'Test',
-                'code' => 200,
-                'path' => null,
+                'test'     => 'Test',
+                'code'     => 200,
+                'path'     => null,
+                'referrer' => '/'
             ]
         ];
 
@@ -1063,8 +1064,9 @@ class PanelTest extends TestCase
         $response = Panel::responseForDialog(true);
         $expected = [
             '$dialog' => [
-                'code' => 200,
-                'path' => null,
+                'code'     => 200,
+                'path'     => null,
+                'referrer' => '/'
             ]
         ];
 
@@ -1079,9 +1081,10 @@ class PanelTest extends TestCase
         $response = Panel::responseForDialog(1234);
         $expected = [
             '$dialog' => [
-                'code'  => 500,
-                'error' => 'Invalid dialog response',
-                'path'  => null,
+                'code'     => 500,
+                'error'    => 'Invalid dialog response',
+                'path'     => null,
+                'referrer' => '/'
             ]
         ];
 
@@ -1097,9 +1100,10 @@ class PanelTest extends TestCase
         $response  = Panel::responseForDialog($exception);
         $expected  = [
             '$dialog' => [
-                'code'  => 500,
-                'error' => 'Test',
-                'path'  => null,
+                'code'     => 500,
+                'error'    => 'Test',
+                'path'     => null,
+                'referrer' => '/'
             ]
         ];
 
@@ -1115,9 +1119,10 @@ class PanelTest extends TestCase
         $response  = Panel::responseForDialog($exception);
         $expected  = [
             '$dialog' => [
-                'code'  => 404,
-                'error' => 'Test',
-                'path'  => null,
+                'code'     => 404,
+                'error'    => 'Test',
+                'path'     => null,
+                'referrer' => '/'
             ]
         ];
 
