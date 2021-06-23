@@ -100,7 +100,7 @@ return [
             return [
                 'event'  => 'user.changeLanguage',
                 'reload' => [
-                    'replace' => '$translation'
+                    'globals' => '$translation'
                 ]
             ];
         }

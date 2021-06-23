@@ -165,7 +165,7 @@ const Fiber = {
       only: [],
       preserveScroll: false,
       preserveState: false,
-      replace: false,
+      globals: false,
       silent: false,
       ...options || {}
     };
@@ -174,13 +174,13 @@ const Fiber = {
     // for all scroll regions
     this.saveScroll();
 
-    const replace = this.arrayToString(options.replace);
+    const globals = this.arrayToString(options.globals);
     const only    = this.arrayToString(options.only);
 
     let json = await this.request(url, {
       ...options,
       headers: {
-        "X-Fiber-Replace": replace,
+        "X-Fiber-Globals": globals,
         "X-Fiber-Only": only,
         "X-Fiber-Referrer": this.page.$view.path,
         ...options.headers

@@ -279,19 +279,19 @@ class Panel
             }
         ];
 
-        // check for explicitly requested props/globals to be replaced
-        $requestReplace = $kirby->request()->header('X-Fiber-Replace') ?? get('_replace');
+        // check for explicitly requested globals to be replaced
+        $requestGlobals = $kirby->request()->header('X-Fiber-Globals') ?? get('_globals');
 
-        // split replace string into an array of fields
-        $replace = Str::split($requestReplace, ',');
+        // split globals string into an array of fields
+        $globals = Str::split($requestGlobals, ',');
 
         // add requested globals
-        if (empty($replace) === false) {
-            $globals = static::globals();
+        if (empty($globals) === false) {
+            $globalsData = static::globals();
 
-            foreach ($replace as $replaceKey) {
-                if (isset($globals[$replaceKey]) === true) {
-                    $shared[$replaceKey] = $globals[$replaceKey];
+            foreach ($globals as $globalsKey) {
+                if (isset($globalsData[$globalsKey]) === true) {
+                    $shared[$globalsKey] = $globalsData[$globalsKey];
                 }
             }
         }
