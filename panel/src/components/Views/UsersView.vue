@@ -97,7 +97,7 @@ export default {
     }
   },
   methods: {
-    action(user, action) {
+    action(action, user) {
       switch (action) {
         case "edit":
           this.$go("/users/" + user.id);
