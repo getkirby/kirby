@@ -39,7 +39,6 @@
         :data-invalid="isInvalid"
         @change="sort"
         @paginate="paginate"
-        @action="action"
       />
 
       <template v-else>
@@ -93,49 +92,6 @@ export default {
         });
       }
     },
-    action(action, page) {
-
-      switch (action) {
-        case "preview": {
-          let preview = window.open("", "_blank");
-          preview.document.write = "...";
-
-          this.$api.pages
-            .preview(page.id)
-            .then(url => {
-              preview.location.href = url;
-            })
-            .catch(error => {
-              this.$store.dispatch("notification/error", error);
-            });
-
-          break;
-        }
-        case "remove": {
-          // TODO: this will never be called
-          // with the new options menu. Should
-          // probably be possible to filter
-          // the options menu from the outside instead.
-          if (this.data.length <= this.options.min) {
-            const number = this.options.min > 1 ? "plural" : "singular";
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.section.pages.min." + number, {
-                section: this.options.headline || this.name,
-                min: this.options.min
-              })
-            });
-            break;
-          }
-
-          this.$dialog(`${page.link}/delete`);
-          break;
-        }
-        default: {
-          throw new Error("Invalid action");
-        }
-      }
-
-    },
     items(data) {
       return data.map(page => {
         const isEnabled = page.permissions.changeStatus !== false;
@@ -156,7 +112,10 @@ export default {
             const options = await this.$api.pages.options(
               page.id,
               "list",
-              page.sortable
+              {
+                sort:   page.sortable,
+                delete: data.length > this.options.min
+              }
             );
             ready(options);
 

@@ -54,15 +54,17 @@ export default (api) => {
     link(parent, filename, path) {
       return "/" + this.url(parent, filename, path);
     },
-    async options(parent, filename, view, sortable = true) {
+    async options(parent, filename, view, overwrite = {}) {
       const url     = this.url(parent, filename);
-      const file    = await api.get(url, {select: "options"});
-      const options = file.options;
+      const file    = await api.get(url, {select: "options,url"});
+      const options = { ...file.options, ...overwrite };
       let result    = [];
 
       if (view === "list") {
         result.push({
-          click: "download",
+          click() {
+            window.open(file.url);
+          },
           icon: "open",
           text: Vue.$t("open"),
         });
@@ -95,7 +97,7 @@ export default (api) => {
           },
           icon: "sort",
           text: Vue.$t("file.sort"),
-          disabled: !(options.update  && sortable)
+          disabled: !options.update
         });
       }
 

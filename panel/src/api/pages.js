@@ -80,15 +80,17 @@ export default (api) => {
     link(id) {
       return "/" + this.url(id);
     },
-    async options(id, view = "view", sortable = true) {
+    async options(id, view = "view", overwrite = {}) {
       const pageUrl = this.url(id);
-      const page    = await api.get(pageUrl, {select: "options"})
-      const options = page.options;
+      const page    = await api.get(pageUrl, {select: "options, previewUrl"})
+      const options = { ...page.options, ...overwrite };
       let result    = [];
 
       if (view === "list") {
         result.push({
-          click: "preview",
+          click() {
+            window.open(page.previewUrl, "_blank");
+          },
           icon: "open",
           text: Vue.$t("open"),
           disabled: options.preview === false
@@ -151,7 +153,7 @@ export default (api) => {
           },
           icon: "sort",
           text: Vue.$t("page.sort"),
-          disabled: !(options.sort  && sortable)
+          disabled: !options.sort
         });
       }
 

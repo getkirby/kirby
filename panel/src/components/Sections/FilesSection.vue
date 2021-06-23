@@ -91,36 +91,12 @@ export default {
     action(action, file) {
 
       switch (action) {
-        case "edit":
-          this.$go(file.link);
-          break;
-        case "download":
-          window.open(file.url);
-          break;
         case "replace":
           this.$refs.upload.open({
             url: this.$urls.api + "/" + this.$api.files.url(file.parent, file.filename),
             accept: "." + file.extension + "," + file.mime,
             multiple: false
           });
-          break;
-        case "remove":
-          // TODO: this will never be called
-          // with the new options menu. Should
-          // probably be possible to filter
-          // the options menu from the outside instead.
-          if (this.data.length <= this.options.min) {
-            const number = this.options.min > 1 ? "plural" : "singular";
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.section.files.min." + number, {
-                section: this.options.headline || this.name,
-                min: this.options.min
-              })
-            });
-            break;
-          }
-
-          this.$dialog(`${file.link}/delete`);
           break;
       }
 
@@ -141,15 +117,19 @@ export default {
         file.column   = this.column;
         file.options  = async ready => {
           try {
-            const options = await this.$api.files.options(
+            let options = await this.$api.files.options(
               file.parent,
               file.filename,
               "list",
-              this.options.sortable
+              {
+                update: this.options.sortable,
+                delete: data.length > this.options.min
+              }
             );
             ready(options);
 
           } catch (error) {
+            console.error(error);
             this.$store.dispatch("notification/error", error);
           }
         };
