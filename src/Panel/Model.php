@@ -172,7 +172,7 @@ abstract class Model
      */
     protected function imageColor(): string
     {
-        return 'white';
+        return 'gray-500';
     }
 
     /**
