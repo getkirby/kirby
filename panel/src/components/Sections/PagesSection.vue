@@ -173,7 +173,7 @@ export default {
           tooltip: this.$t("page.status"),
           disabled: !isEnabled,
           click: () => {
-            this.action(page, "status");
+            this.action("status", page);
           }
         };
 
