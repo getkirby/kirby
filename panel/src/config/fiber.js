@@ -162,7 +162,6 @@ const Fiber = {
   async go(url, options) {
     options = {
       headers: {},
-      include: [],
       only: [],
       preserveScroll: false,
       preserveState: false,
@@ -175,13 +174,13 @@ const Fiber = {
     // for all scroll regions
     this.saveScroll();
 
-    const include = this.arrayToString(options.include);
+    const replace = this.arrayToString(options.replace);
     const only    = this.arrayToString(options.only);
 
     let json = await this.request(url, {
       ...options,
       headers: {
-        "X-Fiber-Include": include,
+        "X-Fiber-Replace": replace,
         "X-Fiber-Only": only,
         "X-Fiber-Referrer": this.page.$view.path,
         ...options.headers

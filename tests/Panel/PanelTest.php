@@ -334,7 +334,7 @@ class PanelTest extends TestCase
         $this->app = $this->app->clone([
             'request' => [
                 'query' => [
-                    '_include' => '$translation'
+                    '_replace' => '$translation'
                 ]
             ]
         ]);
@@ -346,7 +346,7 @@ class PanelTest extends TestCase
         $this->app = $this->app->clone([
             'request' => [
                 'headers' => [
-                    'X-Fiber-Include' => '$translation'
+                    'X-Fiber-Replace' => '$translation'
                 ]
             ]
         ]);

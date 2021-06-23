@@ -100,7 +100,7 @@ return [
             return [
                 'event'  => 'user.changeLanguage',
                 'reload' => [
-                    'include' => '$translation'
+                    'replace' => '$translation'
                 ]
             ];
         }
