@@ -113,7 +113,7 @@ class UserTest extends TestCase
         // cover disabled as default
         $this->assertSame([
             'back' => 'black',
-            'color' => 'white',
+            'color' => 'gray-500',
             'cover' => false,
             'icon' => 'user',
             'ratio' => '1/1',
@@ -125,7 +125,7 @@ class UserTest extends TestCase
         // cover enabled
         $this->assertSame([
             'back' => 'black',
-            'color' => 'white',
+            'color' => 'gray-500',
             'cover' => true,
             'icon' => 'user',
             'ratio' => '1/1',

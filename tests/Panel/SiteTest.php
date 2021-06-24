@@ -86,7 +86,7 @@ class SiteTest extends TestCase
         // cover disabled as default
         $this->assertSame([
             'back' => 'pattern',
-            'color' => 'white',
+            'color' => 'gray-500',
             'cover' => false,
             'icon' => 'page',
             'ratio' => '3/2',
@@ -98,7 +98,7 @@ class SiteTest extends TestCase
         // cover enabled
         $this->assertSame([
             'back' => 'pattern',
-            'color' => 'white',
+            'color' => 'gray-500',
             'cover' => true,
             'icon' => 'page',
             'ratio' => '3/2',
