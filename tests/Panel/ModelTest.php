@@ -69,6 +69,14 @@ class CustomPanelModel extends Model
     }
 }
 
+class ModelSiteWithImageMethod extends ModelSite
+{
+    public function panelBack()
+    {
+        return 'blue';
+    }
+}
+
 /**
  * @coversDefaultClass \Kirby\Panel\Model
  */
@@ -326,24 +334,49 @@ class ModelTest extends TestCase
     }
 
     /**
-     * @covers ::toLink
+     * @covers ::image
      */
-    public function testToLink()
+    public function testImageWithBlueprint()
     {
-        $panel = $this->panel([
-            'content' => [
-                'title'  => $title = 'Kirby Kirby Kirby',
-                'author' => $author = 'Bastian Allgeier'
+        $app  = $this->app->clone([
+            'blueprints' => [
+                'pages/test' => [
+                    'icon' => 'heart',
+                    'image'  => [
+                        'back' => 'red',
+                        'ratio' => '1/2'
+                    ]
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'template' => 'test'
+                    ]
+                ]
             ]
         ]);
 
-        $toLink = $panel->toLink();
-        $this->assertSame('/custom', $toLink['link']);
-        $this->assertSame($title, $toLink['tooltip']);
+        $panel = $app->page('test')->panel();
+        $image = $panel->image(['ratio' => '1/1', 'color' => 'yellow']);
+        $this->assertSame('red', $image['back']);
+        $this->assertSame('yellow', $image['color']);
+        $this->assertSame('heart', $image['icon']);
+        $this->assertSame('1/2', $image['ratio']);
+        $this->assertArrayNotHasKey('query', $image);
+        $this->assertArrayNotHasKey('url', $image);
+    }
 
-        $toLink = $panel->toLink('author');
-        $this->assertSame('/custom', $toLink['link']);
-        $this->assertSame($author, $toLink['tooltip']);
+    /**
+     * @covers ::image
+     */
+    public function testImageWithQuery()
+    {
+        $site  = new ModelSiteWithImageMethod();
+        $panel = new CustomPanelModel($site);
+        $image = $panel->image([ 'back' => '{{ site.panelBack }}']);
+        $this->assertSame('blue', $image['back']);
     }
 
     /**
@@ -423,6 +456,27 @@ class ModelTest extends TestCase
         $props = $this->panel($site)->props();
         $this->assertSame('foo', get('tab'));
         $this->assertSame('main', $props['tab']['name']);
+    }
+
+    /**
+     * @covers ::toLink
+     */
+    public function testToLink()
+    {
+        $panel = $this->panel([
+            'content' => [
+                'title'  => $title = 'Kirby Kirby Kirby',
+                'author' => $author = 'Bastian Allgeier'
+            ]
+        ]);
+
+        $toLink = $panel->toLink();
+        $this->assertSame('/custom', $toLink['link']);
+        $this->assertSame($title, $toLink['tooltip']);
+
+        $toLink = $panel->toLink('author');
+        $this->assertSame('/custom', $toLink['link']);
+        $this->assertSame($author, $toLink['tooltip']);
     }
 
     /**

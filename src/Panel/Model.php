@@ -105,7 +105,7 @@ abstract class Model
         // is explicitly set to show the icon
         if ($settings === 'icon') {
             $settings = [];
-        } else if (is_string($settings) === true) {
+        } elseif (is_string($settings) === true) {
             // convert string settings to proper array
             $settings = [
                 'query' => $settings
