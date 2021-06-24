@@ -104,65 +104,80 @@ abstract class Model
         // is explicitly set to show the icon
         if ($settings === 'icon') {
             $settings = [];
-        } else {
+        } else if (is_string($settings) === true) {
             // convert string settings to proper array
-            if (is_string($settings) === true) {
-                $settings = [
-                    'query' => $settings
-                ];
-            }
-
-            if ($image = $this->imageSource($settings['query'] ?? null)) {
-
-                // main url
-                $settings['url'] = $image->url();
-
-                // only create srcsets for actual File objects
-                if (is_a($image, 'Kirby\Cms\File') === true) {
-                    $settings['src'] = static::imagePlaceholder();
-
-                    switch ($layout) {
-                        case 'cards':
-                            $sizes = [352, 864, 1408];
-                            break;
-                        case 'cardlets':
-                            $sizes = [96, 192];
-                            break;
-                        case 'list':
-                            $sizes = [38, 76];
-                            break;
-                    }
-
-                    if (($settings['cover'] ?? false) === false || $layout === 'cards') {
-                        $settings['srcset'] = $image->srcset($sizes);
-                    } else {
-                        $settings['srcset'] = $image->srcset([
-                            '1x' => [
-                                'width'  => $sizes[0],
-                                'height' => $sizes[0],
-                                'crop'   => 'center'
-                            ],
-                            '2x' => [
-                                'width'  => $sizes[1],
-                                'height' => $sizes[1],
-                                'crop'   => 'center'
-                            ]
-                        ]);
-                    }
-                }
-            }
-
-            unset($settings['query']);
+            $settings = [
+                'query' => $settings
+            ];
         }
 
-        return array_merge(
+        // merge with defaults and blueprint option
+        $settings = array_merge(
             $this->imageDefaults(),
             [
                 'color' => $this->imageColor(),
                 'icon'  => $this->imageIcon()
             ],
-            $settings
+            $settings,
+            $this->imageBlueprint(),
         );
+
+        if ($image = $this->imageSource($settings['query'] ?? null)) {
+            // main url
+            $settings['url'] = $image->url();
+
+            // only create srcsets for actual File objects
+            if (is_a($image, 'Kirby\Cms\File') === true) {
+                $settings['src'] = static::imagePlaceholder();
+
+
+                switch ($layout) {
+                    case 'cards':
+                        $sizes = [352, 864, 1408];
+                        break;
+                    case 'cardlets':
+                        $sizes = [96, 192];
+                        break;
+                    case 'list':
+                        $sizes = [38, 76];
+                        break;
+                }
+
+                if (($settings['cover'] ?? false) === false || $layout === 'cards') {
+                    $settings['srcset'] = $image->srcset($sizes);
+                } else {
+                    $settings['srcset'] = $image->srcset([
+                        '1x' => [
+                            'width'  => $sizes[0],
+                            'height' => $sizes[0],
+                            'crop'   => 'center'
+                        ],
+                        '2x' => [
+                            'width'  => $sizes[1],
+                            'height' => $sizes[1],
+                            'crop'   => 'center'
+                        ]
+                    ]);
+                }
+            }
+        }
+
+        if (isset($settings['query']) === true) {
+            unset($settings['query']);
+        }
+
+        return $settings;
+    }
+
+    /**
+     * Settings from blueprint definition
+     * for Panel image
+     *
+     * @return array
+     */
+    public function imageBlueprint(): array
+    {
+        return $this->model->blueprint()->image() ?? [];
     }
 
     /**
@@ -185,7 +200,7 @@ abstract class Model
         return [
             'back'  => 'pattern',
             'cover' => false,
-            'ratio' => '3/2',
+            'ratio' => '3/2'
         ];
     }
 
