@@ -55,19 +55,7 @@ class UserTest extends TestCase
     }
 
     /**
-     * @covers ::imageIcon
-     */
-    public function testIconDefault()
-    {
-        $user = new ModelUser([
-            'email' => 'test@getkirby.com',
-        ]);
-
-        $image = (new User($user))->image();
-        $this->assertSame('user', $image['icon']);
-    }
-
-    /**
+     * @covers ::imageDefaults
      * @covers ::imageSource
      */
     public function testImage()
@@ -77,6 +65,7 @@ class UserTest extends TestCase
         ]);
 
         $image = (new User($user))->image();
+        $this->assertSame('user', $image['icon']);
         $this->assertFalse(isset($image['url']));
     }
 
@@ -124,10 +113,10 @@ class UserTest extends TestCase
         // cover disabled as default
         $this->assertSame([
             'back' => 'black',
+            'color' => 'white',
             'cover' => false,
-            'ratio' => '1/1',
-            'color' => 'gray-500',
             'icon' => 'user',
+            'ratio' => '1/1',
             'url' => $mediaUrl . '/test.jpg',
             'src' => Model::imagePlaceholder(),
             'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
@@ -136,10 +125,10 @@ class UserTest extends TestCase
         // cover enabled
         $this->assertSame([
             'back' => 'black',
+            'color' => 'white',
             'cover' => true,
-            'ratio' => '1/1',
-            'color' => 'gray-500',
             'icon' => 'user',
+            'ratio' => '1/1',
             'url' => $mediaUrl . '/test.jpg',
             'src' => Model::imagePlaceholder(),
             'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'

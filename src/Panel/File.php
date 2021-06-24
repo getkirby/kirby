@@ -125,6 +125,19 @@ class File extends Model
     }
 
     /**
+     * Default settings for the file's Panel image
+     *
+     * @return array
+     */
+    protected function imageDefaults(): array
+    {
+        return array_merge(parent::imageDefaults(), [
+            'color' => $this->imageColor(),
+            'icon'  => $this->imageIcon(),
+        ]);
+    }
+
+    /**
      * Returns the Panel icon type
      *
      * @return string

@@ -115,12 +115,8 @@ abstract class Model
         // merge with defaults and blueprint option
         $settings = array_merge(
             $this->imageDefaults(),
-            [
-                'color' => $this->imageColor(),
-                'icon'  => $this->imageIcon()
-            ],
             $settings,
-            $this->imageBlueprint(),
+            $this->model->blueprint()->image() ?? [],
         );
 
         if ($image = $this->imageSource($settings['query'] ?? null)) {
@@ -178,52 +174,25 @@ abstract class Model
     }
 
     /**
-     * Settings from blueprint definition
-     * for Panel image
-     *
-     * @return array
-     */
-    public function imageBlueprint(): array
-    {
-        return $this->model->blueprint()->image() ?? [];
-    }
-
-    /**
-     * Returns the Panel icon color
-     *
-     * @return string
-     */
-    protected function imageColor(): string
-    {
-        return 'gray-500';
-    }
-
-    /**
      * Default settings for Panel image
      *
      * @return array
      */
-    public function imageDefaults(): array
+    protected function imageDefaults(): array
     {
         return [
             'back'  => 'pattern',
+            'color' => 'white',
             'cover' => false,
-            'ratio' => '3/2'
+            'icon'  => 'page',
+            'ratio' => '3/2',
         ];
     }
 
     /**
-     * Returns the Panel icon type
-     *
-     * @return string
-     */
-    protected function imageIcon(): string
-    {
-        return 'page';
-    }
-
-    /**
      * Data URI placeholder string for Panel image
+     *
+     * @internal
      *
      * @return string
      */

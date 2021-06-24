@@ -30,27 +30,17 @@ class User extends Model
     }
 
     /**
-     * Returns the Panel icon type
-     *
-     * @return string
-     */
-    protected function imageIcon(): string
-    {
-        return 'user';
-    }
-
-    /**
-     * Default settings for Panel image
+     * Default settings for the user's Panel image
      *
      * @return array
      */
-    public function imageDefaults(): array
+    protected function imageDefaults(): array
     {
-        return [
+        return array_merge(parent::imageDefaults(), [
             'back'  => 'black',
-            'cover' => false,
+            'icon'  => 'user',
             'ratio' => '1/1',
-        ];
+        ]);
     }
 
     /**

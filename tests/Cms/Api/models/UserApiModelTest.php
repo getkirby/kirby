@@ -19,10 +19,10 @@ class UserApiModelTest extends ApiModelTestCase
         $image = $this->attr($this->user, 'panelImage');
         $expected = [
             'back' => 'black',
+            'color' => 'white',
             'cover' => false,
-            'ratio' => '1/1',
-            'color' => 'gray-500',
-            'icon'  => 'user'
+            'icon'  => 'user',
+            'ratio' => '1/1'
         ];
 
         $this->assertSame($expected, $image);

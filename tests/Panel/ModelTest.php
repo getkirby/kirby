@@ -232,30 +232,8 @@ class ModelTest extends TestCase
     }
 
     /**
-     * @covers ::imageIcon
-     */
-    public function testIcon()
-    {
-        $panel = $this->panel();
-
-        $image  = $panel->image();
-        $this->assertArrayHasKey('icon', $image);
-        $this->assertArrayHasKey('ratio', $image);
-        $this->assertArrayHasKey('color', $image);
-        $this->assertArrayHasKey('back', $image);
-        $this->assertSame('page', $image['icon']);
-        $this->assertSame('pattern', $image['back']);
-
-        $image  = $panel->image([
-            'icon'  => $type = 'heart',
-            'ratio' => $ratio = '16/9'
-        ]);
-        $this->assertSame($type, $image['icon']);
-        $this->assertSame($ratio, $image['ratio']);
-    }
-
-    /**
      * @covers ::image
+     * @covers ::imageDefaults
      * @covers ::imageSource
      */
     public function testImage()
@@ -268,11 +246,13 @@ class ModelTest extends TestCase
 
         // defaults
         $image = $panel->image();
-        $this->assertArrayHasKey('ratio', $image);
         $this->assertArrayHasKey('back', $image);
         $this->assertArrayHasKey('cover', $image);
-        $this->assertSame('3/2', $image['ratio']);
+        $this->assertArrayHasKey('icon', $image);
+        $this->assertArrayHasKey('ratio', $image);
         $this->assertSame(false, $image['cover']);
+        $this->assertSame('page', $image['icon']);
+        $this->assertSame('3/2', $image['ratio']);
 
         // deactivate
         $this->assertNull($panel->image(false));
@@ -321,14 +301,16 @@ class ModelTest extends TestCase
 
         // full options
         $image = $panel->image([
-            'ratio' => '16/9',
+            'cover' => true,
+            'icon'  => $icon = 'heart',
             'query' => 'site.image',
-            'cover' => true
+            'ratio' => $ratio = '16/9'
         ]);
         $this->assertArrayHasKey('url', $image);
         $this->assertArrayHasKey('src', $image);
         $this->assertArrayHasKey('srcset', $image);
-        $this->assertSame('16/9', $image['ratio']);
+        $this->assertSame($icon, $image['icon']);
+        $this->assertSame($ratio, $image['ratio']);
         $this->assertStringContainsString('test-38x38.jpg 1x', $image['srcset']);
         $this->assertStringContainsString('test-76x76.jpg 2x', $image['srcset']);
     }

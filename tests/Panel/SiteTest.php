@@ -86,10 +86,10 @@ class SiteTest extends TestCase
         // cover disabled as default
         $this->assertSame([
             'back' => 'pattern',
+            'color' => 'white',
             'cover' => false,
-            'ratio' => '3/2',
-            'color' => 'gray-500',
             'icon' => 'page',
+            'ratio' => '3/2',
             'url' => $mediaUrl . '/test.jpg',
             'src' => Model::imagePlaceholder(),
             'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
@@ -98,10 +98,10 @@ class SiteTest extends TestCase
         // cover enabled
         $this->assertSame([
             'back' => 'pattern',
+            'color' => 'white',
             'cover' => true,
-            'ratio' => '3/2',
-            'color' => 'gray-500',
             'icon' => 'page',
+            'ratio' => '3/2',
             'url' => $mediaUrl . '/test.jpg',
             'src' => Model::imagePlaceholder(),
             'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
