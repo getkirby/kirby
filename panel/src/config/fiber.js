@@ -182,7 +182,6 @@ const Fiber = {
       headers: {
         "X-Fiber-Globals": globals,
         "X-Fiber-Only": only,
-        "X-Fiber-Referrer": this.page.$view.path,
         ...options.headers
       }
     });
@@ -285,7 +284,6 @@ const Fiber = {
       method: "GET",
       query: {},
       silent: false,
-      headers: {},
       ...options
     };
 
@@ -297,8 +295,9 @@ const Fiber = {
         method: options.method,
         body: this.body(options.body),
         headers: {
-          ...options.headers,
           "X-Fiber": true,
+          "X-Fiber-Referrer": this.page.$view.path,
+          ...options.headers,
         }
       });
 

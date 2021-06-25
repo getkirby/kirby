@@ -25,7 +25,10 @@ export default {
       try {
         const response = await this.$request(this.path, {
           body: value,
-          method: "POST"
+          method: "POST",
+          headers: {
+            "X-Fiber-Referrer": this.referrer
+          }
         });
 
         const dialog = response.$dialog;
