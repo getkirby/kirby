@@ -112,6 +112,24 @@ class FileModificationsTest extends TestCase
         $file->thumb(['width' => 100]);
     }
 
+    public function testThumbWithFormatOption()
+    {
+        $app = $this->app->clone([
+            'components' => [
+                'file::version' => function ($kirby, $file, $options = []) {
+                    $this->assertSame('webp', $options['format']);
+                    return $file;
+                }
+            ],
+            'options' => [
+                'thumbs.format' => 'webp'
+            ]
+        ]);
+
+        $file = $app->file('test.jpg');
+        $file->thumb(['width' => 100]);
+    }
+
     public function testThumbWithNoOptions()
     {
         $file = $this->app->file('test.jpg');
