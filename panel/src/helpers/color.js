@@ -3,15 +3,17 @@ export default function (string) {
     return;
   }
 
-  const isHex = string.substring(0, 1) === "#";
-
-  if (isHex || string.startsWith("var(")) {
-    return string;
-  }
-
   if (string === "pattern") {
     return `var(--color-gray-800) var(--bg-pattern)`;
   }
 
-  return `var(--color-${string})`;
+  if (
+    string.match(
+      /^(black|white|light|gray|red|orange|yellow|green|aqua|blue|purple})/i
+    ) !== null
+  ) {
+    return `var(--color-${string})`;
+  }
+
+  return string;
 }

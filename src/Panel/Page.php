@@ -58,21 +58,6 @@ class Page extends Model
     }
 
     /**
-     * Returns the Panel icon type
-     * according to the blueprint settings
-     *
-     * @return string
-     */
-    protected function imageIcon(): string
-    {
-        if ($icon = $this->model->blueprint()->icon()) {
-            return $icon;
-        }
-
-        return parent::imageIcon();
-    }
-
-    /**
      * Returns the escaped Id, which is
      * used in the panel to make routing work properly
      *
@@ -81,6 +66,22 @@ class Page extends Model
     public function id(): string
     {
         return str_replace('/', '+', $this->model->id());
+    }
+
+    /**
+     * Default settings for the page's Panel image
+     *
+     * @return array
+     */
+    protected function imageDefaults(): array
+    {
+        $defaults = [];
+
+        if ($icon = $this->model->blueprint()->icon()) {
+            $defaults['icon'] = $icon;
+        }
+
+        return array_merge(parent::imageDefaults(), $defaults);
     }
 
     /**

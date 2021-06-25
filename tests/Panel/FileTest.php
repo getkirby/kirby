@@ -259,25 +259,7 @@ class FileTest extends TestCase
     }
 
     /**
-     * @covers ::imageIcon
-     */
-    public function testIconDefault()
-    {
-        $page = new ModelPage([
-            'slug' => 'test'
-        ]);
-
-        $file = new ModelFile([
-            'filename' => 'something.jpg',
-            'parent'   => $page
-        ]);
-
-        $image = (new File($file))->image();
-        $this->assertSame('file-image', $image['icon']);
-        $this->assertSame('orange-400', $image['color']);
-    }
-
-    /**
+     * @covers ::imageDefaults
      * @covers ::imageSource
      */
     public function testImage()
@@ -292,7 +274,8 @@ class FileTest extends TestCase
         ]);
 
         $image = (new File($file))->image();
-
+        $this->assertSame('file-image', $image['icon']);
+        $this->assertSame('orange-400', $image['color']);
         $this->assertSame('3/2', $image['ratio']);
         $this->assertSame('pattern', $image['back']);
         $this->assertTrue(array_key_exists('url', $image));
@@ -319,10 +302,10 @@ class FileTest extends TestCase
         // cover disabled as default
         $this->assertSame([
             'back' => 'pattern',
-            'cover' => false,
-            'ratio' => '3/2',
             'color' => 'orange-400',
+            'cover' => false,
             'icon' => 'file-image',
+            'ratio' => '3/2',
             'url' => '/media/site/' . $hash . '/test.jpg',
             'src' => Model::imagePlaceholder(),
             'srcset' => '/media/site/' . $hash . '/test-38x.jpg 38w, /media/site/' . $hash . '/test-76x.jpg 76w'
@@ -331,10 +314,10 @@ class FileTest extends TestCase
         // cover enabled
         $this->assertSame([
             'back' => 'pattern',
-            'cover' => true,
-            'ratio' => '3/2',
             'color' => 'orange-400',
+            'cover' => true,
             'icon' => 'file-image',
+            'ratio' => '3/2',
             'url' => '/media/site/' . $hash . '/test.jpg',
             'src' => Model::imagePlaceholder(),
             'srcset' => '/media/site/' . $hash . '/test-38x38.jpg 1x, /media/site/' . $hash . '/test-76x76.jpg 2x'

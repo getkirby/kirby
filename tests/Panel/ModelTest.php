@@ -69,6 +69,14 @@ class CustomPanelModel extends Model
     }
 }
 
+class ModelSiteWithImageMethod extends ModelSite
+{
+    public function panelBack()
+    {
+        return 'blue';
+    }
+}
+
 /**
  * @coversDefaultClass \Kirby\Panel\Model
  */
@@ -224,30 +232,8 @@ class ModelTest extends TestCase
     }
 
     /**
-     * @covers ::imageIcon
-     */
-    public function testIcon()
-    {
-        $panel = $this->panel();
-
-        $image  = $panel->image();
-        $this->assertArrayHasKey('icon', $image);
-        $this->assertArrayHasKey('ratio', $image);
-        $this->assertArrayHasKey('color', $image);
-        $this->assertArrayHasKey('back', $image);
-        $this->assertSame('page', $image['icon']);
-        $this->assertSame('pattern', $image['back']);
-
-        $image  = $panel->image([
-            'icon'  => $type = 'heart',
-            'ratio' => $ratio = '16/9'
-        ]);
-        $this->assertSame($type, $image['icon']);
-        $this->assertSame($ratio, $image['ratio']);
-    }
-
-    /**
      * @covers ::image
+     * @covers ::imageDefaults
      * @covers ::imageSource
      */
     public function testImage()
@@ -260,11 +246,13 @@ class ModelTest extends TestCase
 
         // defaults
         $image = $panel->image();
-        $this->assertArrayHasKey('ratio', $image);
         $this->assertArrayHasKey('back', $image);
         $this->assertArrayHasKey('cover', $image);
-        $this->assertSame('3/2', $image['ratio']);
+        $this->assertArrayHasKey('icon', $image);
+        $this->assertArrayHasKey('ratio', $image);
         $this->assertSame(false, $image['cover']);
+        $this->assertSame('page', $image['icon']);
+        $this->assertSame('3/2', $image['ratio']);
 
         // deactivate
         $this->assertNull($panel->image(false));
@@ -313,37 +301,64 @@ class ModelTest extends TestCase
 
         // full options
         $image = $panel->image([
-            'ratio' => '16/9',
+            'cover' => true,
+            'icon'  => $icon = 'heart',
             'query' => 'site.image',
-            'cover' => true
+            'ratio' => $ratio = '16/9'
         ]);
         $this->assertArrayHasKey('url', $image);
         $this->assertArrayHasKey('src', $image);
         $this->assertArrayHasKey('srcset', $image);
-        $this->assertSame('16/9', $image['ratio']);
+        $this->assertSame($icon, $image['icon']);
+        $this->assertSame($ratio, $image['ratio']);
         $this->assertStringContainsString('test-38x38.jpg 1x', $image['srcset']);
         $this->assertStringContainsString('test-76x76.jpg 2x', $image['srcset']);
     }
 
     /**
-     * @covers ::toLink
+     * @covers ::image
      */
-    public function testToLink()
+    public function testImageWithBlueprint()
     {
-        $panel = $this->panel([
-            'content' => [
-                'title'  => $title = 'Kirby Kirby Kirby',
-                'author' => $author = 'Bastian Allgeier'
+        $app  = $this->app->clone([
+            'blueprints' => [
+                'pages/test' => [
+                    'icon' => 'heart',
+                    'image'  => [
+                        'back' => 'red',
+                        'ratio' => '1/2'
+                    ]
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'template' => 'test'
+                    ]
+                ]
             ]
         ]);
 
-        $toLink = $panel->toLink();
-        $this->assertSame('/custom', $toLink['link']);
-        $this->assertSame($title, $toLink['tooltip']);
+        $panel = $app->page('test')->panel();
+        $image = $panel->image(['ratio' => '1/1', 'color' => 'yellow']);
+        $this->assertSame('red', $image['back']);
+        $this->assertSame('yellow', $image['color']);
+        $this->assertSame('heart', $image['icon']);
+        $this->assertSame('1/2', $image['ratio']);
+        $this->assertArrayNotHasKey('query', $image);
+        $this->assertArrayNotHasKey('url', $image);
+    }
 
-        $toLink = $panel->toLink('author');
-        $this->assertSame('/custom', $toLink['link']);
-        $this->assertSame($author, $toLink['tooltip']);
+    /**
+     * @covers ::image
+     */
+    public function testImageWithQuery()
+    {
+        $site  = new ModelSiteWithImageMethod();
+        $panel = new CustomPanelModel($site);
+        $image = $panel->image([ 'back' => '{{ site.panelBack }}']);
+        $this->assertSame('blue', $image['back']);
     }
 
     /**
@@ -423,6 +438,27 @@ class ModelTest extends TestCase
         $props = $this->panel($site)->props();
         $this->assertSame('foo', get('tab'));
         $this->assertSame('main', $props['tab']['name']);
+    }
+
+    /**
+     * @covers ::toLink
+     */
+    public function testToLink()
+    {
+        $panel = $this->panel([
+            'content' => [
+                'title'  => $title = 'Kirby Kirby Kirby',
+                'author' => $author = 'Bastian Allgeier'
+            ]
+        ]);
+
+        $toLink = $panel->toLink();
+        $this->assertSame('/custom', $toLink['link']);
+        $this->assertSame($title, $toLink['tooltip']);
+
+        $toLink = $panel->toLink('author');
+        $this->assertSame('/custom', $toLink['link']);
+        $this->assertSame($author, $toLink['tooltip']);
     }
 
     /**

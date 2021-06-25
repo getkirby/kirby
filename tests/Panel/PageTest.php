@@ -225,23 +225,6 @@ class PageTest extends TestCase
     }
 
     /**
-     * @covers ::imageIcon
-     */
-    public function testIconWithEmoji()
-    {
-        $page = new ModelPage([
-            'slug' => 'test',
-            'blueprint' => [
-                'name' => 'test',
-                'icon' => $emoji = '❤️'
-            ]
-        ]);
-
-        $image = (new Page($page))->image();
-        $this->assertSame($emoji, $image['icon']);
-    }
-
-    /**
      * @covers ::id
      */
     public function testId()
@@ -274,6 +257,24 @@ class PageTest extends TestCase
     }
 
     /**
+     * @covers ::image
+     * @covers ::imageDefaults
+     */
+    public function testImageBlueprintIconWithEmoji()
+    {
+        $page = new ModelPage([
+            'slug' => 'test',
+            'blueprint' => [
+                'name' => 'test',
+                'icon' => $emoji = '❤️'
+            ]
+        ]);
+
+        $image = (new Page($page))->image();
+        $this->assertSame($emoji, $image['icon']);
+    }
+
+    /**
      * @covers ::imageSource
      */
     public function testImageCover()
@@ -300,10 +301,10 @@ class PageTest extends TestCase
         // cover disabled as default
         $this->assertSame([
             'back' => 'pattern',
-            'cover' => false,
-            'ratio' => '3/2',
             'color' => 'gray-500',
+            'cover' => false,
             'icon' => 'page',
+            'ratio' => '3/2',
             'url' => $mediaUrl . '/test.jpg',
             'src' => Model::imagePlaceholder(),
             'srcset' => $mediaUrl . '/test-38x.jpg 38w, ' . $mediaUrl . '/test-76x.jpg 76w'
@@ -312,10 +313,10 @@ class PageTest extends TestCase
         // cover enabled
         $this->assertSame([
             'back' => 'pattern',
-            'cover' => true,
-            'ratio' => '3/2',
             'color' => 'gray-500',
+            'cover' => true,
             'icon' => 'page',
+            'ratio' => '3/2',
             'url' => $mediaUrl . '/test.jpg',
             'src' => Model::imagePlaceholder(),
             'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
