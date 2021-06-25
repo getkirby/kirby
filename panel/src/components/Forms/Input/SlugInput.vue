@@ -59,7 +59,7 @@ export default {
   },
   watch: {
     formData: {
-      handler(newValue, oldValue) {
+      handler(newValue) {
         if (this.disabled) {
           return false;
         }
@@ -78,7 +78,7 @@ export default {
       deep: true,
       immediate: true
     },
-    value(newValue, oldValue) {
+    value(newValue) {
       this.slug = this.sluggify(newValue);
     }
   },

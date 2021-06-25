@@ -9,8 +9,6 @@
 </template>
 
 <script>
-import { toJson } from "@/api/request.js";
-
 export default {
   props: {
     code: Number,
