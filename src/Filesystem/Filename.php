@@ -75,7 +75,10 @@ class Filename
         $this->filename   = $filename;
         $this->template   = $template;
         $this->attributes = $attributes;
-        $this->extension  = $this->sanitizeExtension(pathinfo($filename, PATHINFO_EXTENSION));
+        $this->extension  = $this->sanitizeExtension(
+            $attributes['format'] ??
+            pathinfo($filename, PATHINFO_EXTENSION)
+        );
         $this->name       = $this->sanitizeName(pathinfo($filename, PATHINFO_FILENAME));
     }
 

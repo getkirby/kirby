@@ -191,6 +191,13 @@ trait FileModifications
             return $this;
         }
 
+        // fallback to global config options
+        if (isset($options['format']) === false) {
+            if ($format = $this->kirby()->option('thumbs.format')) {
+                $options['format'] = $format;
+            }
+        }
+
         $component = $this->kirby()->component('file::version');
         $result    = $component($this->kirby(), $this, $options);
 

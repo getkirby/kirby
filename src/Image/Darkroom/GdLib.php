@@ -6,6 +6,7 @@ ini_set('memory_limit', '512M');
 
 use claviska\SimpleImage;
 use Kirby\Image\Darkroom;
+use Kirby\Toolkit\Mime;
 
 /**
  * GdLib
@@ -28,6 +29,7 @@ class GdLib extends Darkroom
     public function process(string $file, array $options = []): array
     {
         $options = $this->preprocess($file, $options);
+        $mime    = $this->mime($options);
 
         $image = new SimpleImage();
         $image->fromFile($file);
@@ -37,7 +39,7 @@ class GdLib extends Darkroom
         $image = $this->blur($image, $options);
         $image = $this->grayscale($image, $options);
 
-        $image->toFile($file, null, $options['quality']);
+        $image->toFile($file, $mime, $options['quality']);
 
         return $options;
     }
@@ -105,5 +107,20 @@ class GdLib extends Darkroom
         }
 
         return $image->desaturate();
+    }
+
+    /**
+     * Returns mime type based on `format` option
+     *
+     * @param array $options
+     * @return string|null
+     */
+    protected function mime(array $options): ?string
+    {
+        if ($options['format'] === null) {
+            return null;
+        }
+
+        return Mime::fromExtension($options['format']);
     }
 }
