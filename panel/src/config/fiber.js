@@ -432,7 +432,7 @@ const Fiber = {
       url = new URL(url);
     }
 
-    url.search = this.query(query);
+    url.search = this.query(query, url.search);
     return url;
   },
 
