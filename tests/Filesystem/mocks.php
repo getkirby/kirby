@@ -4,6 +4,10 @@ namespace Kirby\Filesystem;
 
 function blockMethod($method, $args)
 {
+    if (defined('KIRBY_TESTING') !== true || KIRBY_TESTING !== true) {
+        throw new Exception('A mock file function was loaded outside of the test environment. This should never happen.');
+    }
+
     if (in_array($method, FileTest::$block)) {
         return false;
     }

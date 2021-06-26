@@ -4,7 +4,7 @@ namespace Kirby\Filesystem;
 
 use PHPUnit\Framework\TestCase as TestCase;
 
-require_once __DIR__ . '/fixtures/mocks.php';
+require_once __DIR__ . '/mocks.php';
 
 /**
  * @coversDefaultClass \Kirby\Filesystem\File
