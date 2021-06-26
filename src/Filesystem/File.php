@@ -280,13 +280,13 @@ class File
     }
 
     /**
-     * Returns the app instance
+     * Returns the app instance if it exists
      *
-     * @return \Kirby\Cms\App
+     * @return \Kirby\Cms\App|null
      */
     public function kirby()
     {
-        return App::instance();
+        return App::instance(null, true);
     }
 
 
@@ -377,10 +377,12 @@ class File
      */
     public function modified(?string $format = null, ?string $handler = null)
     {
+        $kirby = $this->kirby();
+
         return F::modified(
             $this->root,
             $format,
-            $handler ?? $this->kirby()->option('date.handler', 'date')
+            $handler ?? ($kirby ? $kirby->option('date.handler', 'date') : 'date')
         );
     }
 
