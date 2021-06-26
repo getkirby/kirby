@@ -24,6 +24,10 @@ class FileTest extends TestCase
 
     public function tearDown(): void
     {
+        if (file_exists($this->tmp . '/unreadable.txt') === true) {
+            chmod($this->tmp . '/unreadable.txt', 0755);
+        }
+
         Dir::remove($this->tmp);
     }
 
