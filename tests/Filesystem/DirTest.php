@@ -5,7 +5,6 @@ namespace Kirby\Filesystem;
 use Kirby\Cms\App;
 use Kirby\Cms\Page;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Dir;
 use Kirby\Toolkit\Str;
 
 use PHPUnit\Framework\TestCase as TestCase;
