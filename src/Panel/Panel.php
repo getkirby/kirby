@@ -88,9 +88,11 @@ class Panel
 
         // load plugins
         foreach ($kirby->extensions('areas') as $id => $area) {
-            if (is_a($area, 'Closure') === true) {
-                $areas[$id] = static::area($id, (array)$area($kirby));
+            if (is_a($area, 'Closure') === false) {
+                throw new Exception(sprintf('Panel area "%s" must be defined as a Closure', $id));
             }
+
+            $areas[$id] = static::area($id, (array)$area($kirby));
         }
 
         return $areas;
