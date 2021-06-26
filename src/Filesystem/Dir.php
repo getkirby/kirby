@@ -250,7 +250,7 @@ class Dir
 
                 // extract the slug and num of the directory
                 if (preg_match('/^([0-9]+)' . static::$numSeparator . '(.*)$/', $item, $match)) {
-                    $num  = $match[1];
+                    $num  = (int)$match[1];
                     $slug = $match[2];
                 } else {
                     $num  = null;
@@ -260,7 +260,7 @@ class Dir
                 $inventory['children'][] = [
                     'dirname' => $item,
                     'model'   => null,
-                    'num'     => (int)$num,
+                    'num'     => $num,
                     'root'    => $root,
                     'slug'    => $slug,
                 ];
