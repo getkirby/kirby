@@ -25,4 +25,8 @@
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
+
+    <php>
+        <ini name="memory_limit" value="1024M" />
+    </php>
 </phpunit>
