@@ -29,6 +29,7 @@ class FileTest extends TestCase
         }
 
         Dir::remove($this->tmp);
+        static::$block = [];
     }
 
     protected function _file($file = 'test.js')
