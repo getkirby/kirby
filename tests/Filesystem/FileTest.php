@@ -124,7 +124,7 @@ class FileTest extends TestCase
         $this->expectExceptionMessage('could not be copied');
 
         $file = $this->_file('a.txt');
-        $file->copy($this->fixtures . '/b.txt');
+        $file->copy($this->tmp . '/b.txt');
     }
 
     /**
@@ -567,6 +567,15 @@ class FileTest extends TestCase
     }
 
     /**
+     * @covers ::size
+     */
+    public function testSize()
+    {
+        $file = $this->_file('test.js');
+        $this->assertSame(14, $file->size());
+    }
+
+    /**
      * @covers ::toArray
      * @covers ::__debugInfo
      */
@@ -602,6 +611,18 @@ class FileTest extends TestCase
 
         $this->assertSame($expected, (string)$file);
         $this->assertSame($expected, $file->__toString());
+
+        $file = new File([
+            'root' => $expected = $this->fixtures . '/blank.pdf'
+        ]);
+
+        $this->assertSame($expected, (string)$file);
+        $this->assertSame($expected, $file->__toString());
+
+        $file = new File([]);
+
+        $this->assertSame('', (string)$file);
+        $this->assertSame('', $file->__toString());
     }
 
     /**

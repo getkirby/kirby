@@ -99,9 +99,9 @@ class DirTest extends TestCase
         $this->expectExceptionMessage('The directory "/does-not-exist" does not exist');
 
         $src    = '/does-not-exist';
-        $target = $this->fixtures . '/copy-target';
+        $target = $this->tmp . '/copy';
 
-        $result = Dir::copy($src, $target);
+        Dir::copy($src, $target);
     }
 
     /**
@@ -115,19 +115,19 @@ class DirTest extends TestCase
         $this->expectException('Exception');
         $this->expectExceptionMessage('The target directory "' . $target . '" exists');
 
-        $result = Dir::copy($src, $target);
+        Dir::copy($src, $target);
     }
 
     /**
      * @covers ::copy
      */
-    public function testCopyExists()
+    public function testCopyInvalidTarget()
     {
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('The target directory');
-
         $src    = $this->fixtures . '/copy';
-        $target = $this->fixtures . '/copy';
+        $target = '';
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('The target directory "' . $target . '" could not be created');
 
         Dir::copy($src, $target);
     }
