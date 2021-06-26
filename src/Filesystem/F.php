@@ -5,7 +5,6 @@ namespace Kirby\Filesystem;
 use Exception;
 use Kirby\Toolkit\I18n;
 use Kirby\Toolkit\Str;
-
 use Throwable;
 use ZipArchive;
 

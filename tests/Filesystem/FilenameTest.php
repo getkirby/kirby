@@ -231,7 +231,7 @@ class FilenameTest extends TestCase
     /**
      * @covers ::extension
      */
-    public function testUExtensionppercase()
+    public function testExtensionUppercase()
     {
         $name = new Filename('/test/some-file.JPG', '{{ name }}.{{ extension }}');
         $this->assertSame('jpg', $name->extension());

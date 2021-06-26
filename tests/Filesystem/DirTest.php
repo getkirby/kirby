@@ -568,7 +568,7 @@ class DirTest extends TestCase
     }
 
     /**
-     * @covers ::isReadbale
+     * @covers ::isReadable
      */
     public function testIsReadable()
     {

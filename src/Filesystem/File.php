@@ -289,7 +289,6 @@ class File
         return App::instance(null, true);
     }
 
-
     /**
      * Runs a set of validations on the file object
      * (mainly for images).

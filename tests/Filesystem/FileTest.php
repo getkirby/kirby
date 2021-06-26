@@ -11,6 +11,7 @@ require_once __DIR__ . '/mocks.php';
  */
 class FileTest extends TestCase
 {
+    // used for the mocks
     public static $block = [];
 
     protected $fixtures = __DIR__ . '/fixtures/files';
@@ -511,7 +512,7 @@ class FileTest extends TestCase
     {
         $file = new File($this->tmp . '/unreadable.txt');
         $file->write('test');
-        chmod($file->root(), 000);
+        chmod($file->root(), 0000);
         $this->assertFalse($file->read());
     }
 
@@ -686,7 +687,7 @@ class FileTest extends TestCase
 
         $file = new File($this->tmp . '/unwritable.txt');
         $file->write('test');
-        chmod($file->root(), 555);
+        chmod($file->root(), 0555);
         $file->write('kirby');
     }
 

@@ -3,7 +3,6 @@
 namespace Kirby\Filesystem;
 
 use Kirby\Toolkit\Str;
-
 use SimpleXMLElement;
 
 /**
