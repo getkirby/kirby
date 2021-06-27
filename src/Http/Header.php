@@ -2,7 +2,7 @@
 
 namespace Kirby\Http;
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 
 /**
  * The Header class provides methods

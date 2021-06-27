@@ -1,7 +1,14 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Filesystem;
 
+use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
+use PHPUnit\Framework\TestCase as TestCase;
+
+/**
+ * @coversDefaultClass \Kirby\Filesystem\F
+ */
 class FTest extends TestCase
 {
     protected $fixtures;
@@ -23,11 +30,17 @@ class FTest extends TestCase
         Dir::remove($this->fixtures);
     }
 
+    /**
+     * @covers ::append
+     */
     public function testAppend()
     {
         $this->assertTrue(F::append($this->tmp, ' is awesome'));
     }
 
+    /**
+     * @covers ::copy
+     */
     public function testCopy()
     {
         F::write($this->tmp, 'test');
@@ -39,11 +52,17 @@ class FTest extends TestCase
         $this->assertTrue(file_exists($this->moved));
     }
 
+    /**
+     * @covers ::dirname
+     */
     public function testDirname()
     {
-        $this->assertEquals(dirname($this->tmp), F::dirname($this->tmp));
+        $this->assertSame(dirname($this->tmp), F::dirname($this->tmp));
     }
 
+    /**
+     * @covers ::exists
+     */
     public function testExists()
     {
         touch($this->tmp);
@@ -51,30 +70,45 @@ class FTest extends TestCase
         $this->assertTrue(F::exists($this->tmp));
     }
 
+    /**
+     * @covers ::extension
+     */
     public function testExtension()
     {
-        $this->assertEquals('php', F::extension(__FILE__));
-        $this->assertEquals('test.jpg', F::extension($this->tmp, 'jpg'));
+        $this->assertSame('php', F::extension(__FILE__));
+        $this->assertSame('test.jpg', F::extension($this->tmp, 'jpg'));
     }
 
+    /**
+     * @covers ::extensionToType
+     */
     public function testExtensionToType()
     {
-        $this->assertEquals('image', F::extensionToType('jpg'));
+        $this->assertSame('image', F::extensionToType('jpg'));
         $this->assertFalse(F::extensionToType('something'));
     }
 
+    /**
+     * @covers ::extensions
+     */
     public function testExtensions()
     {
-        $this->assertEquals(array_keys(Mime::types()), F::extensions());
-        $this->assertEquals(F::$types['image'], F::extensions('image'));
-        $this->assertEquals([], F::extensions('unknown-type'));
+        $this->assertSame(array_keys(Mime::types()), F::extensions());
+        $this->assertSame(F::$types['image'], F::extensions('image'));
+        $this->assertSame([], F::extensions('unknown-type'));
     }
 
+    /**
+     * @covers ::filename
+     */
     public function testFilename()
     {
-        $this->assertEquals('test.txt', F::filename($this->tmp));
+        $this->assertSame('test.txt', F::filename($this->tmp));
     }
 
+    /**
+     * @covers ::is
+     */
     public function testIs()
     {
         F::write($this->tmp, 'test');
@@ -85,20 +119,29 @@ class FTest extends TestCase
         $this->assertFalse(F::is($this->tmp, 'no-clue'));
     }
 
+    /**
+     * @covers ::isReadable
+     */
     public function testIsReadable()
     {
         F::write($this->tmp, 'test');
 
-        $this->assertEquals(is_readable($this->tmp), F::isReadable($this->tmp));
+        $this->assertSame(is_readable($this->tmp), F::isReadable($this->tmp));
     }
 
+    /**
+     * @covers ::isWritable
+     */
     public function testIsWritable()
     {
         F::write($this->tmp, 'test');
 
-        $this->assertEquals(is_writable($this->tmp), F::isWritable($this->tmp));
+        $this->assertSame(is_writable($this->tmp), F::isWritable($this->tmp));
     }
 
+    /**
+     * @covers ::link
+     */
     public function testLink()
     {
         $src  = $this->fixtures . '/a.txt';
@@ -110,12 +153,18 @@ class FTest extends TestCase
         $this->assertTrue(is_file($link));
     }
 
+    /**
+     * @covers ::realpath
+     */
     public function testRealpath()
     {
-        $path = F::realpath(__DIR__ . '/../Toolkit/FTest.php');
-        $this->assertEquals(__FILE__, $path);
+        $path = F::realpath(__DIR__ . '/../Filesystem/FTest.php');
+        $this->assertSame(__FILE__, $path);
     }
 
+    /**
+     * @covers ::realpath
+     */
     public function testRealpathToMissingFile()
     {
         $path = __DIR__ . '/../does-not-exist.php';
@@ -126,19 +175,25 @@ class FTest extends TestCase
         F::realpath($path);
     }
 
+    /**
+     * @covers ::realpath
+     */
     public function testRealpathToParent()
     {
         $parent = __DIR__ . '/..';
-        $file   = $parent . '/Toolkit/FTest.php';
+        $file   = $parent . '/Filesystem/FTest.php';
         $path   = F::realpath($file, $parent);
 
-        $this->assertEquals(__FILE__, $path);
+        $this->assertSame(__FILE__, $path);
     }
 
+    /**
+     * @covers ::realpath
+     */
     public function testRealpathToNonExistingParent()
     {
         $parent = __DIR__ . '/../does-not-exist';
-        $file   = __DIR__ . '/../Toolkit/FTest.php';
+        $file   = __DIR__ . '/../Filesystem/FTest.php';
 
         $this->expectException('Exception');
         $this->expectExceptionMessage('The parent directory does not exist: "' . $parent . '"');
@@ -146,10 +201,13 @@ class FTest extends TestCase
         F::realpath($file, $parent);
     }
 
+    /**
+     * @covers ::realpath
+     */
     public function testRealpathToInvalidParent()
     {
         $parent = __DIR__ . '/../Cms';
-        $file   = __DIR__ . '/../Toolkit/FTest.php';
+        $file   = __DIR__ . '/../Filesystem/FTest.php';
 
         $this->expectException('Exception');
         $this->expectExceptionMessage('The file is not within the parent directory');
@@ -157,61 +215,76 @@ class FTest extends TestCase
         F::realpath($file, $parent);
     }
 
+    /**
+     * @covers ::relativepath
+     */
     public function testRelativePath()
     {
         $path = F::relativepath(__FILE__, __DIR__);
-        $this->assertEquals('/' . basename(__FILE__), $path);
-        
+        $this->assertSame('/' . basename(__FILE__), $path);
+
         $path = F::relativepath(__FILE__, __DIR__ . '/');
-        $this->assertEquals('/' . basename(__FILE__), $path);
+        $this->assertSame('/' . basename(__FILE__), $path);
     }
 
+    /**
+     * @covers ::relativepath
+     */
     public function testRelativePathWithEmptyBase()
     {
         $path = F::relativepath(__FILE__, '');
-        $this->assertEquals(basename(__FILE__), $path);
+        $this->assertSame(basename(__FILE__), $path);
 
         $path = F::relativepath(__FILE__, null);
-        $this->assertEquals(basename(__FILE__), $path);
+        $this->assertSame(basename(__FILE__), $path);
     }
 
+    /**
+     * @covers ::relativepath
+     */
     public function testRelativePathWithUnrelatedBase()
     {
         $path = F::relativepath(__DIR__ . '/fruits/apples/fuji.txt', __DIR__ . '/fruits/pineapples');
-        $this->assertEquals('../apples/fuji.txt', $path);
-        
+        $this->assertSame('../apples/fuji.txt', $path);
+
         $path = F::relativepath(__DIR__ . '/fruits/apples/gala.txt', __DIR__ . '/vegetables');
-        $this->assertEquals('../fruits/apples/gala.txt', $path);
-        
+        $this->assertSame('../fruits/apples/gala.txt', $path);
+
         $path = F::relativepath(__DIR__ . '/fruits/apples/granny-smith.txt', __DIR__ . '/vegetables/');
-        $this->assertEquals('../fruits/apples/granny-smith.txt', $path);
-        
+        $this->assertSame('../fruits/apples/granny-smith.txt', $path);
+
         $path = F::relativepath(__DIR__ . '/fruits/apples/', __DIR__ . '/vegetables/');
-        $this->assertEquals('../fruits/apples', $path);
-        
+        $this->assertSame('../fruits/apples', $path);
+
         $path = F::relativepath(__DIR__ . '/fruits/oranges/', __DIR__ . '/vegetables');
-        $this->assertEquals('../fruits/oranges', $path);
-        
+        $this->assertSame('../fruits/oranges', $path);
+
         $path = F::relativepath(__DIR__ . '/fruits/apples/honeycrisp.txt', __DIR__ . '/vegetables/squash');
-        $this->assertEquals('../../fruits/apples/honeycrisp.txt', $path);
-        
+        $this->assertSame('../../fruits/apples/honeycrisp.txt', $path);
+
         $path = F::relativepath(__DIR__ . '/test.txt', __DIR__ . '/foo/bar/baz');
-        $this->assertEquals('../../../test.txt', $path);
-        
+        $this->assertSame('../../../test.txt', $path);
+
         $path = F::relativepath('foo/path-extra/file.txt', 'foo/path');
-        $this->assertEquals('../path-extra/file.txt', $path);
+        $this->assertSame('../path-extra/file.txt', $path);
     }
 
+    /**
+     * @covers ::relativepath
+     */
     public function testRelativePathOnWindows()
     {
         $file = 'C:\xampp\htdocs\index.php';
         $in   = 'C:/xampp/htdocs';
 
         $path = F::relativepath($file, $in);
-        $this->assertEquals('/index.php', $path);
+        $this->assertSame('/index.php', $path);
     }
 
-    public function testSymlink()
+    /**
+     * @covers ::link
+     */
+    public function testLinkSymlink()
     {
         $src  = $this->fixtures . '/a.txt';
         $link = $this->fixtures . '/b.txt';
@@ -222,6 +295,9 @@ class FTest extends TestCase
         $this->assertTrue(is_link($link));
     }
 
+    /**
+     * @covers ::link
+     */
     public function testLinkExistingLink()
     {
         $src  = $this->fixtures . '/a.txt';
@@ -233,6 +309,9 @@ class FTest extends TestCase
         $this->assertTrue(F::link($src, $link));
     }
 
+    /**
+     * @covers ::link
+     */
     public function testLinkWithMissingSource()
     {
         $src  = $this->fixtures . '/a.txt';
@@ -244,6 +323,9 @@ class FTest extends TestCase
         F::link($src, $link);
     }
 
+    /**
+     * @covers ::load
+     */
     public function testLoad()
     {
         // basic behavior
@@ -274,6 +356,9 @@ class FTest extends TestCase
         $this->assertSame('foobar', F::load($file, null, ['variable' => 'foobar', 'file' => null]));
     }
 
+    /**
+     * @covers ::loadOnce
+     */
     public function testLoadOnce()
     {
         // basic behavior
@@ -284,6 +369,9 @@ class FTest extends TestCase
         $this->assertFalse(F::loadOnce('does-not-exist.php'));
     }
 
+    /**
+     * @covers ::move
+     */
     public function testMove()
     {
         F::write($this->tmp, 'test');
@@ -310,37 +398,55 @@ class FTest extends TestCase
         $this->assertTrue(file_exists($this->tmp));
     }
 
+    /**
+     * @covers ::mime
+     */
     public function testMime()
     {
         F::write($this->tmp, 'test');
 
-        $this->assertEquals('text/plain', F::mime($this->tmp));
+        $this->assertSame('text/plain', F::mime($this->tmp));
     }
 
+    /**
+     * @covers ::mimeToExtension
+     */
     public function testMimeToExtension()
     {
-        $this->assertEquals('jpg', F::mimeToExtension('image/jpeg'));
-        $this->assertEquals(false, F::mimeToExtension('image/something'));
+        $this->assertSame('jpg', F::mimeToExtension('image/jpeg'));
+        $this->assertSame(false, F::mimeToExtension('image/something'));
     }
 
+    /**
+     * @covers ::mimeToType
+     */
     public function testMimeToType()
     {
-        $this->assertEquals('image', F::mimeToType('image/jpeg'));
-        $this->assertEquals(false, F::mimeToType('image/something'));
+        $this->assertSame('image', F::mimeToType('image/jpeg'));
+        $this->assertSame(false, F::mimeToType('image/something'));
     }
 
+    /**
+     * @covers ::modified
+     */
     public function testModified()
     {
         F::write($this->tmp, 'test');
 
-        $this->assertEquals(filemtime($this->tmp), F::modified($this->tmp));
+        $this->assertSame(filemtime($this->tmp), F::modified($this->tmp));
     }
 
+    /**
+     * @covers ::name
+     */
     public function testName()
     {
-        $this->assertEquals('test', F::name($this->tmp));
+        $this->assertSame('test', F::name($this->tmp));
     }
 
+    /**
+     * @covers ::niceSize
+     */
     public function testNiceSize()
     {
         $locale = I18n::$locale;
@@ -371,6 +477,9 @@ class FTest extends TestCase
         I18n::$locale = $locale;
     }
 
+    /**
+     * @covers ::read
+     */
     public function testRead()
     {
         file_put_contents($this->tmp, $content = 'my content is awesome');
@@ -380,6 +489,9 @@ class FTest extends TestCase
         $this->assertStringContainsString('Example Domain', F::read('https://example.com'));
     }
 
+    /**
+     * @covers ::remove
+     */
     public function testRemove()
     {
         F::write($a = $this->fixtures . '/a.jpg', '');
@@ -391,6 +503,9 @@ class FTest extends TestCase
         $this->assertFileDoesNotExist($a);
     }
 
+    /**
+     * @covers ::remove
+     */
     public function testRemoveGlob()
     {
         F::write($a = $this->fixtures . '/a.jpg', '');
@@ -408,6 +523,9 @@ class FTest extends TestCase
         $this->assertFileDoesNotExist($c);
     }
 
+    /**
+     * @covers ::rename
+     */
     public function testRename()
     {
         F::write($this->tmp, 'test');
@@ -445,56 +563,71 @@ class FTest extends TestCase
         $this->assertTrue(file_exists($this->tmp));
     }
 
+    /**
+     * @covers ::safeName
+     */
     public function testSafeName()
     {
         // make sure no language rules are still set
         Str::$language = [];
 
         // with extension
-        $this->assertEquals('uber-genious.txt', F::safeName('über genious.txt'));
+        $this->assertSame('uber-genious.txt', F::safeName('über genious.txt'));
 
         // with unsafe extension
-        $this->assertEquals('uber-genious.taxt', F::safeName('über genious.täxt'));
+        $this->assertSame('uber-genious.taxt', F::safeName('über genious.täxt'));
 
         // without extension
-        $this->assertEquals('uber-genious', F::safeName('über genious'));
+        $this->assertSame('uber-genious', F::safeName('über genious'));
 
         // with leading dash
-        $this->assertEquals('super.jpg', F::safeName('-super.jpg'));
+        $this->assertSame('super.jpg', F::safeName('-super.jpg'));
 
         // with leading underscore
-        $this->assertEquals('super.jpg', F::safeName('_super.jpg'));
+        $this->assertSame('super.jpg', F::safeName('_super.jpg'));
 
         // with leading dot
-        $this->assertEquals('super.jpg', F::safeName('.super.jpg'));
+        $this->assertSame('super.jpg', F::safeName('.super.jpg'));
     }
 
+    /**
+     * @covers ::size
+     */
     public function testSize()
     {
         F::write($this->tmp, 'test');
 
-        $this->assertEquals(4, F::size($this->tmp));
+        $this->assertSame(4, F::size($this->tmp));
     }
 
+    /**
+     * @covers ::type
+     */
     public function testType()
     {
-        $this->assertEquals('image', F::type('jpg'));
-        $this->assertEquals('document', F::type('pdf'));
-        $this->assertEquals('archive', F::type('zip'));
-        $this->assertEquals('code', F::type('css'));
-        $this->assertEquals('code', F::type('content.php'));
-        $this->assertEquals('code', F::type('py'));
-        $this->assertEquals('code', F::type('java'));
+        $this->assertSame('image', F::type('jpg'));
+        $this->assertSame('document', F::type('pdf'));
+        $this->assertSame('archive', F::type('zip'));
+        $this->assertSame('code', F::type('css'));
+        $this->assertSame('code', F::type('content.php'));
+        $this->assertSame('code', F::type('py'));
+        $this->assertSame('code', F::type('java'));
     }
 
+    /**
+     * @covers ::type
+     */
     public function testTypeWithoutExtension()
     {
         F::write($file = $this->fixtures . '/test', '<?php echo "foo"; ?>');
 
-        $this->assertEquals('text/x-php', F::mime($file));
-        $this->assertEquals('code', F::type($file));
+        $this->assertSame('text/x-php', F::mime($file));
+        $this->assertSame('code', F::type($file));
     }
 
+    /**
+     * @covers ::typeToExtensions
+     */
     public function testTypeToExtensions()
     {
         $this->assertSame(F::$types['audio'], F::typeToExtensions('audio'));
@@ -502,27 +635,39 @@ class FTest extends TestCase
         $this->assertNull(F::typeToExtensions('invalid'));
     }
 
+    /**
+     * @covers ::uri
+     */
     public function testURI()
     {
         F::write($this->tmp, 'test');
 
         $expected = 'dGVzdA==';
-        $this->assertEquals($expected, F::base64($this->tmp));
+        $this->assertSame($expected, F::base64($this->tmp));
 
         $expected = 'data:text/plain;base64,dGVzdA==';
-        $this->assertEquals($expected, F::uri($this->tmp));
+        $this->assertSame($expected, F::uri($this->tmp));
     }
 
+    /**
+     * @covers ::uri
+     */
     public function testUriOfNonExistingFile()
     {
         $this->assertFalse(F::uri('/does-not-exist'));
     }
 
+    /**
+     * @covers ::write
+     */
     public function testWrite()
     {
         $this->assertTrue(F::write($this->tmp, 'my content'));
     }
 
+    /**
+     * @covers ::write
+     */
     public function testWriteArray()
     {
         $input = ['a' => 'a'];
@@ -530,9 +675,12 @@ class FTest extends TestCase
         F::write($this->tmp, $input);
 
         $result = unserialize(F::read($this->tmp));
-        $this->assertEquals($input, $result);
+        $this->assertSame($input, $result);
     }
 
+    /**
+     * @covers ::write
+     */
     public function testWriteObject()
     {
         $input = new \stdClass();
@@ -543,6 +691,9 @@ class FTest extends TestCase
         $this->assertEquals($input, $result);
     }
 
+    /**
+     * @covers ::similar
+     */
     public function testSimilar()
     {
         F::write($a = $this->fixtures . '/a.jpg', '');
@@ -555,6 +706,6 @@ class FTest extends TestCase
             $a
         ];
 
-        $this->assertEquals($expected, F::similar($a));
+        $this->assertSame($expected, F::similar($a));
     }
 }

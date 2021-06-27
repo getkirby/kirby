@@ -4,13 +4,13 @@ namespace Kirby\Cms;
 
 use Kirby\Cache\FileCache;
 use Kirby\Cms\Auth\Challenge;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
+use Kirby\Filesystem\Mime;
 use Kirby\Form\Field as FormField;
 use Kirby\Image\Image;
 use Kirby\Toolkit\Collection;
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 use Kirby\Toolkit\I18n;
-use Kirby\Toolkit\Mime;
 
 require_once __DIR__ . '/../mocks.php';
 

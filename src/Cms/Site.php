@@ -4,9 +4,9 @@ namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
+use Kirby\Filesystem\Dir;
 use Kirby\Panel\Site as Panel;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Dir;
 
 /**
  * The `$site` object is the root element

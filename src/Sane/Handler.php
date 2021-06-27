@@ -3,7 +3,7 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\Exception;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 
 /**
  * Base handler abstract,

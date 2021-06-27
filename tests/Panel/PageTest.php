@@ -5,7 +5,7 @@ namespace Kirby\Panel;
 use Kirby\Cms\App;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
 

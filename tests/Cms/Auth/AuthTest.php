@@ -2,8 +2,8 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
 use Kirby\Session\AutoSession;
-use Kirby\Toolkit\Dir;
 use Throwable;
 
 /**

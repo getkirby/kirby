@@ -3,8 +3,8 @@
 namespace Kirby\Panel;
 
 use Kirby\Cms\App;
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
 /**

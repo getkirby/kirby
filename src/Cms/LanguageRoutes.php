@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 
 class LanguageRoutes
 {

@@ -166,6 +166,9 @@ class ImageTest extends TestCase
      */
     public function testMatchOrientationException()
     {
+        // Make sure i18n files are loaded
+        $kirby = kirby();
+
         $this->expectException('Kirby\Exception\Exception');
         $this->expectExceptionMessage('The orientation of the image must be "portrait"');
 

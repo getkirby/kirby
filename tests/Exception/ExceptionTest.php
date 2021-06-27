@@ -2,7 +2,7 @@
 
 namespace Kirby\Exception;
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use Kirby\Toolkit\I18n;
 use PHPUnit\Framework\TestCase;
 

@@ -2,9 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
 use Kirby\Filesystem\File as BaseFile;
-use Kirby\Toolkit\Dir;
-use Kirby\Toolkit\F;
 
 class FileActionsTest extends TestCase
 {

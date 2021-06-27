@@ -4,7 +4,7 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Cms\User as ModelUser;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
 

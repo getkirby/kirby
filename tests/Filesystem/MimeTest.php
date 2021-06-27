@@ -1,42 +1,65 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Filesystem;
 
+use PHPUnit\Framework\TestCase as TestCase;
+
+/**
+ * @coversDefaultClass \Kirby\Filesystem\Mime
+ */
 class MimeTest extends TestCase
 {
-    const FIXTURES = __DIR__ . '/fixtures/mime';
+    protected $fixtures = __DIR__ . '/fixtures/mime';
 
+    /**
+     * @covers ::fix
+     */
     public function testFixCss()
     {
         $this->assertSame('text/css', Mime::fix('something.css', 'text/x-asm', 'css'));
         $this->assertSame('text/css', Mime::fix('something.css', 'text/plain', 'css'));
     }
 
+    /**
+     * @covers ::fix
+     */
     public function testFixSvg()
     {
         $this->assertSame('image/svg+xml', Mime::fix('something.svg', 'image/svg', 'svg'));
-        $this->assertSame('image/svg+xml', Mime::fix(static::FIXTURES . '/optimized.svg', 'text/html', 'svg'));
-        $this->assertSame('image/svg+xml', Mime::fix(static::FIXTURES . '/unoptimized.svg', 'text/html', 'svg'));
+        $this->assertSame('image/svg+xml', Mime::fix($this->fixtures . '/optimized.svg', 'text/html', 'svg'));
+        $this->assertSame('image/svg+xml', Mime::fix($this->fixtures . '/unoptimized.svg', 'text/html', 'svg'));
     }
 
+    /**
+     * @covers ::fromExtension
+     */
     public function testFromExtension()
     {
         $mime = Mime::fromExtension('jpg');
         $this->assertSame('image/jpeg', $mime);
     }
 
+    /**
+     * @covers ::fromMimeContentType
+     */
     public function testFromMimeContentType()
     {
         $mime = Mime::fromMimeContentType(__FILE__);
         $this->assertSame('text/x-php', $mime);
     }
 
+    /**
+     * @covers ::fromSvg
+     */
     public function testFromSvgNonExistingFile()
     {
         $mime = Mime::fromSvg(__DIR__ . '/imaginary.svg');
         $this->assertFalse($mime);
     }
 
+    /**
+     * @covers ::isAccepted
+     */
     public function testIsAccepted()
     {
         $pattern = 'text/html,text/plain;q=0.8,application/*;q=0.7';
@@ -49,6 +72,9 @@ class MimeTest extends TestCase
         $this->assertFalse(Mime::isAccepted('text/xml', $pattern));
     }
 
+    /**
+     * @covers ::matches
+     */
     public function testMatches()
     {
         $this->assertTrue(Mime::matches('text/plain', 'text/plain'));
@@ -64,6 +90,9 @@ class MimeTest extends TestCase
         $this->assertFalse(Mime::matches('text/xml', '*/plain'));
     }
 
+    /**
+     * @covers ::toExtension
+     */
     public function testToExtension()
     {
         $extension = Mime::toExtension('image/jpeg');
@@ -73,6 +102,9 @@ class MimeTest extends TestCase
         $this->assertSame('css', $extensions);
     }
 
+    /**
+     * @covers ::toExtensions
+     */
     public function testToExtensions()
     {
         $extensions = Mime::toExtensions('image/jpeg');
@@ -82,24 +114,36 @@ class MimeTest extends TestCase
         $this->assertSame(['css'], $extensions);
     }
 
+    /**
+     * @covers ::type
+     */
     public function testTypeWithOptimizedSvg()
     {
-        $mime = Mime::type(static::FIXTURES . '/optimized.svg');
+        $mime = Mime::type($this->fixtures . '/optimized.svg');
         $this->assertSame('image/svg+xml', $mime);
     }
 
+    /**
+     * @covers ::type
+     */
     public function testTypeWithUnoptimizedSvg()
     {
-        $mime = Mime::type(static::FIXTURES . '/unoptimized.svg');
+        $mime = Mime::type($this->fixtures . '/unoptimized.svg');
         $this->assertSame('image/svg+xml', $mime);
     }
 
+    /**
+     * @covers ::type
+     */
     public function testTypeWithJson()
     {
-        $mime = Mime::type(static::FIXTURES . '/something.json');
+        $mime = Mime::type($this->fixtures . '/something.json');
         $this->assertSame('application/json', $mime);
     }
 
+    /**
+     * @covers ::types
+     */
     public function testTypes()
     {
         $this->assertSame(Mime::$types, Mime::types());

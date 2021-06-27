@@ -3,8 +3,8 @@
 namespace Kirby\Cms;
 
 use Exception;
+use Kirby\Filesystem\Dir;
 use Kirby\Http\Request\Auth\BasicAuth;
-use Kirby\Toolkit\Dir;
 
 class AppUsersTest extends TestCase
 {

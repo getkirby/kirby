@@ -1,6 +1,6 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Filesystem;
 
 use Exception;
 use Kirby\Cms\App;
@@ -19,7 +19,7 @@ use Throwable;
  * and converting the results into
  * children, files and other page stuff.
  *
- * @package   Kirby Toolkit
+ * @package   Kirby Filesystem
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH
@@ -250,7 +250,7 @@ class Dir
 
                 // extract the slug and num of the directory
                 if (preg_match('/^([0-9]+)' . static::$numSeparator . '(.*)$/', $item, $match)) {
-                    $num  = $match[1];
+                    $num  = (int)$match[1];
                     $slug = $match[2];
                 } else {
                     $num  = null;

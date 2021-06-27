@@ -1,8 +1,10 @@
 <?php
 
-namespace Kirby\Toolkit;
+namespace Kirby\Filesystem;
 
 use Exception;
+use Kirby\Toolkit\I18n;
+use Kirby\Toolkit\Str;
 use Throwable;
 use ZipArchive;
 
@@ -12,7 +14,7 @@ use ZipArchive;
  * level, like creating, reading,
  * deleting, copying or validatings files.
  *
- * @package   Kirby Toolkit
+ * @package   Kirby Filesystem
  * @author    Bastian Allgeier <bastian@getkirby.com>
  * @link      https://getkirby.com
  * @copyright Bastian Allgeier GmbH

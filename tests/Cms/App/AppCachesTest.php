@@ -4,7 +4,7 @@ namespace Kirby\Cms;
 
 use Kirby\Cache\FileCache;
 use Kirby\Cache\NullCache;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 
 class AppCachesTest extends TestCase
 {

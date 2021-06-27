@@ -29,6 +29,9 @@ return [
 
     // file classes
     'asset'      => 'Kirby\Filesystem\Asset',
+    'dir'        => 'Kirby\Filesystem\Dir',
+    'f'          => 'Kirby\Filesystem\F',
+    'mime'       => 'Kirby\Filesystem\Mime',
 
     // data classes
     'database'  => 'Kirby\Database\Database',
@@ -53,11 +56,8 @@ return [
     'a'          => 'Kirby\Toolkit\A',
     'c'          => 'Kirby\Toolkit\Config',
     'config'     => 'Kirby\Toolkit\Config',
-    'dir'        => 'Kirby\Toolkit\Dir',
     'escape'     => 'Kirby\Toolkit\Escape',
-    'f'          => 'Kirby\Toolkit\F',
     'i18n'       => 'Kirby\Toolkit\I18n',
-    'mime'       => 'Kirby\Toolkit\Mime',
     'obj'        => 'Kirby\Toolkit\Obj',
     'str'        => 'Kirby\Toolkit\Str',
     'tpl'        => 'Kirby\Toolkit\Tpl',
@@ -66,11 +66,15 @@ return [
 
     // TODO: remove in 4.0.0
     'kirby\cms\asset'          => 'Kirby\Filesystem\Asset',
-    'kirby\cms\dir'            => 'Kirby\Toolkit\Dir',
+    'kirby\cms\dir'            => 'Kirby\Filesystem\Dir',
     'kirby\cms\filename'       => 'Kirby\Filesystem\Filename',
     'kirby\cms\filefoundation' => 'Kirby\Filesystem\IsFile',
     'kirby\cms\form'           => 'Kirby\Form\Form',
     'kirby\cms\kirbytag'       => 'Kirby\Text\KirbyTag',
-    'kirby\cms\kirbytags'      => 'Kirby\Text\KirbyTags'
+    'kirby\cms\kirbytags'      => 'Kirby\Text\KirbyTags',
+    'kirby\toolkit\dir'        => 'Kirby\Filesystem\Dir',
+    'kirby\toolkit\f'          => 'Kirby\Filesystem\F',
+    'kirby\toolkit\file'       => 'Kirby\Filesystem\File',
+    'kirby\toolkit\mime'       => 'Kirby\Filesystem\Mime',
 ];
 // @codeCoverageIgnoreEnd

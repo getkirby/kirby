@@ -3,7 +3,7 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\InvalidArgumentException;
-use Kirby\Toolkit\Mime;
+use Kirby\Filesystem\Mime;
 use Kirby\Toolkit\Str;
 
 /**

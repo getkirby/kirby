@@ -7,7 +7,7 @@ use Kirby\Cms\File as ModelFile;
 use Kirby\Cms\Page as ModelPage;
 use Kirby\Cms\Site as ModelSite;
 use Kirby\Cms\User as ModelUser;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 class ModelFileTestForceLocked extends ModelFile

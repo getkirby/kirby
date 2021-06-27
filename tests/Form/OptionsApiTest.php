@@ -4,7 +4,7 @@ namespace Kirby\Form;
 
 use Kirby\Cms\App;
 use Kirby\Data\Data;
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use PHPUnit\Framework\TestCase;
 
 class OptionsApiTest extends TestCase
@@ -16,11 +16,11 @@ class OptionsApiTest extends TestCase
     {
         $this->app = new App([
             'roots' => [
-                'index' => '/dev/null'
+                'index' => $this->fixtures = __DIR__ . '/fixtures/OptionsApi'
             ]
         ]);
 
-        Dir::make($this->fixtures = __DIR__ . '/fixtures/OptionsApi');
+        Dir::make($this->fixtures);
     }
 
     public function tearDown(): void

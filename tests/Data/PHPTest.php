@@ -2,7 +2,7 @@
 
 namespace Kirby\Data;
 
-use Kirby\Toolkit\F;
+use Kirby\Filesystem\F;
 use PHPUnit\Framework\TestCase;
 
 /**

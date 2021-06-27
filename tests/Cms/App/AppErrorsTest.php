@@ -3,8 +3,8 @@
 namespace Kirby\Cms;
 
 use Kirby\Exception\Exception;
+use Kirby\Filesystem\F;
 use Kirby\Http\Server;
-use Kirby\Toolkit\F;
 use ReflectionMethod;
 use Whoops\Handler\PlainTextHandler;
 

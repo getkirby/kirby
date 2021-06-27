@@ -2,7 +2,7 @@
 
 namespace Kirby\Cms;
 
-use Kirby\Toolkit\Dir;
+use Kirby\Filesystem\Dir;
 use Kirby\Toolkit\I18n;
 
 class ApiTest extends TestCase
