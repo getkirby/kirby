@@ -6,11 +6,7 @@ import blocks from "./modules/blocks.js";
 import content from "./modules/content.js";
 import drawers from "./modules/drawers.js";
 import heartbeat from "./modules/heartbeat.js";
-import languages from "./modules/languages.js";
 import notification from "./modules/notification.js";
-import system from "./modules/system.js";
-import translation from "./modules/translation.js";
-import user from "./modules/user.js";
 
 Vue.use(Vuex);
 
@@ -71,10 +67,6 @@ export default new Vuex.Store({
     content: content,
     drawers: drawers,
     heartbeat: heartbeat,
-    languages: languages,
-    notification: notification,
-    system: system,
-    translation: translation,
-    user: user
+    notification: notification
   }
 });

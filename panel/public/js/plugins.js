@@ -56,19 +56,12 @@ window.panel.plugin = function (plugin, parts) {
     window.panel.plugins["created"].push(parts["created"]);
   }
 
-  // Views
-  // @todo Remove in 3.7.0
-  resolve(parts, "views", function (name, options) {
-    window.panel.plugins["views"][name] = options;
-  });
-
   // Login
   if (parts.login) {
     window.panel.plugins.login = parts.login;
   }
 
   // Third-party plugins
-  // @todo is this ever used anywhere?
   resolve(parts, "thirdParty", function(name, options) {
     window.panel.plugins["thirdParty"][name] = options;
   });
