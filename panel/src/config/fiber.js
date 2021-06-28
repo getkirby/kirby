@@ -73,7 +73,7 @@ const Fiber = {
    */
   arrayToString(array) {
     if (Array.isArray(array) === false) {
-      array = [array];
+      return String(array);
     }
     return array.join(",");
   },
