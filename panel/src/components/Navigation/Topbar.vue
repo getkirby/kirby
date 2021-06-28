@@ -91,12 +91,8 @@ export default {
     view: Object,
   },
   computed: {
-    areasWithLegacy() {
-      // @todo remove in 3.7.0
-      return { ...this.areas, ...window.panel.plugins.views };
-    },
     menu() {
-      let menu = Object.values(this.areasWithLegacy)
+      let menu = Object.values(this.areas)
       menu = menu.filter(area => this.areaInMenu(area) !== false)
       menu = menu.map(area => ({
         ...area,

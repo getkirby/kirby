@@ -783,24 +783,6 @@ class Panel
             }
         ];
 
-        // legacy route for deprecated custom view pluigns
-        // @todo Remove in 3.7.0
-        // @codeCoverageIgnoreStart
-        $routes[] = [
-            'pattern' => 'plugins/(:any)',
-            'action'  => function ($id) {
-                return [
-                    'component' => 'k-plugin-view',
-                    'icon' => 'box',
-                    'breadcrumbLabel' => $id,
-                    'props' => [
-                        'id' => $id
-                    ]
-                ];
-            },
-        ];
-        // @codeCoverageIgnoreEnd
-
         // catch all route
         $routes[] = [
             'pattern' => '(:all)',
