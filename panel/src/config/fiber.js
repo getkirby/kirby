@@ -426,7 +426,7 @@ const Fiber = {
    * @returns
    */
   url(url = "", query = {}) {
-    if (typeof url === "string" && url.startsWith("http") === false) {
+    if (typeof url === "string" && url.match(/^https?:\/\//) === null) {
       url = new URL(this.base + url.replace(/^\//, ""));
     } else {
       url = new URL(url);
