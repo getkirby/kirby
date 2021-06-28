@@ -2,6 +2,7 @@
 
 use Kirby\Cms\Blueprint;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -153,10 +154,17 @@ return [
                 $permissions = $item->permissions();
                 $image       = $item->panelImage($this->image);
 
+                // escape the default text
+                // TODO: no longer needed in 3.6
+                $text = $item->toString($this->text);
+                if ($this->text === '{{ page.title }}') {
+                    $text = Escape::html($text);
+                }
+
                 $data[] = [
                     'id'          => $item->id(),
                     'dragText'    => $item->dragText(),
-                    'text'        => $item->toString($this->text),
+                    'text'        => $text,
                     'info'        => $item->toString($this->info ?? false),
                     'parent'      => $item->parentId(),
                     'icon'        => $item->panelIcon($image),

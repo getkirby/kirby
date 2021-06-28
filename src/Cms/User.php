@@ -5,6 +5,7 @@ namespace Kirby\Cms;
 use Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
+use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 use Kirby\Toolkit\Str;
 
@@ -628,6 +629,14 @@ class User extends ModelWithContent
         $image = $this->panelImage($params['image'] ?? []);
         $icon  = $this->panelIcon($image);
 
+        // escape the default text
+        // TODO: no longer needed in 3.6
+        $textQuery = $params['text'] ?? '{{ user.username }}';
+        $text = $this->toString($textQuery);
+        if ($textQuery === '{{ user.username }}') {
+            $text = Escape::html($text);
+        }
+
         return [
             'icon'     => $icon,
             'id'       => $this->id(),
@@ -635,7 +644,7 @@ class User extends ModelWithContent
             'email'    => $this->email(),
             'info'     => $this->toString($params['info'] ?? false),
             'link'     => $this->panelUrl(true),
-            'text'     => $this->toString($params['text'] ?? '{{ user.username }}'),
+            'text'     => $text,
             'username' => $this->username(),
         ];
     }
