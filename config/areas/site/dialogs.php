@@ -410,8 +410,8 @@ return [
         },
         'submit' => function (string $id) {
             $newPage = Find::page($id)->duplicate(get('slug'), [
-                'children' => get('children'),
-                'files'    => get('files'),
+                'children' => (bool)get('children'),
+                'files'    => (bool)get('files'),
             ]);
 
             return [
