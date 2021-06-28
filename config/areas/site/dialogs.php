@@ -303,11 +303,10 @@ return [
     // delete page
     'pages/(:any)/delete' => [
         'load' => function (string $id) {
-            $page        = Find::page($id);
-            $hasSubpages = $page->childrenAndDrafts()->count();
-            $text        = tt('page.delete.confirm', ['title' => $page->title()->value()]);
+            $page = Find::page($id);
+            $text = tt('page.delete.confirm', ['title' => $page->title()->value()]);
 
-            if ($hasSubpages) {
+            if ($page->childrenAndDrafts()->count() > 0) {
                 return [
                     'component' => 'k-form-dialog',
                     'props' => [
