@@ -377,21 +377,21 @@ return [
                 ])
             ];
 
-            if ($hasFiles) {
+            if ($hasFiles === true) {
                 $fields['files'] = [
                     'label'    => t('page.duplicate.files'),
                     'type'     => 'toggle',
                     'required' => true,
-                    'width'    => $hasChildren ? '1/2' : '1/1'
+                    'width'    => $hasChildren === true ? '1/2' : '1/1'
                 ];
             }
 
-            if ($hasChildren) {
+            if ($hasChildren === true) {
                 $fields['children'] = [
                     'label'    => t('page.duplicate.pages'),
                     'type'     => 'toggle',
                     'required' => true,
-                    'width'    => $hasFiles ? '1/2' : '1/1'
+                    'width'    => $hasFiles === true ? '1/2' : '1/1'
                 ];
             }
 
