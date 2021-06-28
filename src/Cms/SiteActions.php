@@ -55,12 +55,9 @@ trait SiteActions
      */
     public function changeTitle(string $title, string $languageCode = null)
     {
+        $site     = $this;
         $title     = trim($title);
-        $arguments = [
-            'site'         => $this,
-            'title'        => $title,
-            'languageCode' => $languageCode
-        ];
+        $arguments = compact('site', 'title', 'languageCode');
 
         return $this->commit('changeTitle', $arguments, function ($site, $title, $languageCode) {
             return $site->save(['title' => $title], $languageCode);
