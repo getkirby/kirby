@@ -1494,17 +1494,19 @@ class PanelTest extends TestCase
 
         // with $view
         $result = Panel::view(['search' => 'files']);
-        $expected['search'] = 'files';
-        $this->assertEquals($expected, $result);
+        $this->assertSame('files', $result['search']);
 
         // with $area
         $result = Panel::view(['search' => 'users'], ['title' => 'Users']);
         $expected['search'] = 'users';
         $expected['title']  = 'Users';
-        $this->assertEquals($expected, $result);
+        $this->assertSame('users', $result['search']);
+        $this->assertSame('Users', $result['title']);
 
         // make sure routes are unset
         $result = Panel::view(['search' => 'users'], ['title' => 'Users', 'routes' => ['foo' => 'bar']]);
-        $this->assertEquals($expected, $result);
+        $this->assertSame('users', $result['search']);
+        $this->assertSame('Users', $result['title']);
+        $this->assertArrayNotHasKey('routes', $result);
     }
 }
