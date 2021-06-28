@@ -38,7 +38,13 @@ return [
             ];
         },
         'submit' => function () {
-            kirby()->users()->create(get());
+            kirby()->users()->create([
+                'name'     => get('name'),
+                'email'    => get('email'),
+                'password' => get('password'),
+                'language' => get('language'),
+                'role'     => get('role')
+            ]);
             return [
                 'event' => 'user.create'
             ];
