@@ -13,7 +13,7 @@ class FileDialogsTest extends AreaTestCase
         $this->login();
     }
 
-    public function createPageFile(): void
+    protected function createPageFile(): void
     {
         $this->app([
             'site' => [
@@ -34,7 +34,7 @@ class FileDialogsTest extends AreaTestCase
         $this->login();
     }
 
-    public function createSiteFile(): void
+    protected function createSiteFile(): void
     {
         $this->app([
             'site' => [
@@ -50,7 +50,7 @@ class FileDialogsTest extends AreaTestCase
         $this->login();
     }
 
-    public function createUserFile(): void
+    protected function createUserFile(): void
     {
         $this->app([
             'users' => [
