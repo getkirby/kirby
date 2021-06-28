@@ -692,12 +692,15 @@ class PanelTest extends TestCase
      */
     public function testGo()
     {
+        $thrown = false;
         try {
             Panel::go('test');
         } catch (Redirect $r) {
+            $thrown = true;
             $this->assertSame('/panel/test', $r->getMessage());
             $this->assertSame(302, $r->getCode());
         }
+        $this->assertTrue($thrown);
     }
 
     /**
