@@ -1484,7 +1484,13 @@ class PanelTest extends TestCase
             'props' => [],
             'search' => 'pages'
         ];
-        $this->assertSame($expected, $result);
+
+        $this->assertSame([], $result['breadcrumb']);
+        $this->assertSame(200, $result['code']);
+        $this->assertSame('', $result['path']);
+        $this->assertArrayHaskey('timestamp', $result);
+        $this->assertSame([], $result['props']);
+        $this->assertSame('pages', $result['search']);
 
         // with $view
         $result = Panel::view(['search' => 'files']);

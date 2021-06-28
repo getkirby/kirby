@@ -152,9 +152,16 @@ class Field
      */
     public static function role(array $props = []): array
     {
-        // TODO: exclude the admin role, if the user
-        // is not allowed to change role to admin
-        foreach (kirby()->roles() as $role) {
+        $kirby   = kirby();
+        $isAdmin = $kirby->user()->isAdmin();
+
+        foreach ($kirby->roles() as $role) {
+            // exclude the admin role, if the user
+            // is not allowed to change role to admin
+            if ($role->name() === 'admin' && $isAdmin === false) {
+                continue;
+            }
+
             $roles[] = [
                 'text'  => $role->title(),
                 'info'  => $role->description() ?? t('role.description.placeholder'),
