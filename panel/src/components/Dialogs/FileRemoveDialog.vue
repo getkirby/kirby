@@ -1,7 +1,7 @@
 <template>
   <k-remove-dialog
     ref="dialog"
-    :text="$t('file.delete.confirm', { filename: filename })"
+    :text="$t('file.delete.confirm', { filename: $esc(filename) })"
     @submit="submit"
   />
 </template>
