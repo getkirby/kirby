@@ -46,16 +46,21 @@ return [
                     'fields' => $languageDialogFields,
                     'submitButton' => t('language.create'),
                     'value' => [
-                        'name'      => '',
                         'code'      => '',
                         'direction' => 'ltr',
-                        'locale'    => ''
+                        'locale'    => '',
+                        'name'      => '',
                     ]
                 ]
             ];
         },
         'submit' => function () {
-            kirby()->languages()->create(get());
+            kirby()->languages()->create([
+                'code'      => get('code'),
+                'direction' => get('direction'),
+                'locale'    => get('locale'),
+                'name'      => get('name'),
+            ]);
             return [
                 'event' => 'language.create'
             ];
@@ -116,17 +121,21 @@ return [
                     'fields'       => $fields,
                     'submitButton' => t('save'),
                     'value'        => [
-                        'name'      => $language->name(),
                         'code'      => $language->code(),
                         'direction' => $language->direction(),
                         'locale'    => $locale,
+                        'name'      => $language->name(),
                         'rules'     => $language->rules(),
                     ]
                 ]
             ];
         },
         'submit' => function (string $id) {
-            $language = Find::language($id)->update(get());
+            $language = Find::language($id)->update([
+                'direction' => get('direction'),
+                'locale'    => get('locale'),
+                'name'      => get('name'),
+            ]);
             return [
                 'event' => 'language.update'
             ];
