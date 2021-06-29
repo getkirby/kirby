@@ -106,6 +106,36 @@ class SettingsDialogsTest extends AreaTestCase
         $this->assertSame([], $props['value']['rules']);
     }
 
+    public function testLanguageUpdateWithLocaleSettings(): void
+    {
+        $this->app([
+            'languages' => [
+                'en' => [
+                    'code'    => 'en',
+                    'default' => true,
+                    'name'    => 'English',
+                    'locale'  => [
+                        LC_ALL      => 'en_US.utf8',
+                        LC_COLLATE  => 'en_US.utf8',
+                    ]
+                ],
+                'de' => [
+                    'code'    => 'de',
+                    'default' => false,
+                    'name'    => 'Deutsch'
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('languages/en/update');
+        $props  = $dialog['props'];
+
+        $this->assertSame('info', $props['fields']['locale']['type']);
+        $this->assertSame('You are using a custom locale set up. Please modify it in the language file in /site/languages', $props['fields']['locale']['text']);
+    }
+
     public function testLanguageUpdateOnSubmit(): void
     {
         $this->installLanguages();
