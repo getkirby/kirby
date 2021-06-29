@@ -232,6 +232,46 @@ class FileDialogsTest extends AreaTestCase
         $this->assertSame(1, $props['value']['position']);
     }
 
+    public function testChangeSortForPageFileOnSubmit(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'files' => [
+                            ['filename' => 'a.jpg'],
+                            ['filename' => 'b.jpg'],
+                            ['filename' => 'c.jpg'],
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $page = $this->app->page('test');
+
+        // pretend the file exists
+        F::write($page->file('a.jpg')->root(), '');
+        F::write($page->file('b.jpg')->root(), '');
+        F::write($page->file('c.jpg')->root(), '');
+
+        $this->submit([
+            'position' => 2
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/files/a.jpg/changeSort');
+
+        $this->assertSame('file.sort', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertSame(1, $page->file('b.jpg')->sort()->toInt());
+        $this->assertSame(2, $page->file('a.jpg')->sort()->toInt());
+        $this->assertSame(3, $page->file('c.jpg')->sort()->toInt());
+    }
+
     public function testChangeSortForSiteFile(): void
     {
         $this->createSiteFile();
@@ -246,6 +286,41 @@ class FileDialogsTest extends AreaTestCase
         $this->assertSame(1, $props['value']['position']);
     }
 
+    public function testChangeSortForSiteFileOnSubmit(): void
+    {
+        $this->app([
+            'site' => [
+                'files' => [
+                    ['filename' => 'a.jpg'],
+                    ['filename' => 'b.jpg'],
+                    ['filename' => 'c.jpg'],
+                ]
+            ]
+        ]);
+
+        $site = $this->app->site();
+
+        // pretend the file exists
+        F::write($site->file('a.jpg')->root(), '');
+        F::write($site->file('b.jpg')->root(), '');
+        F::write($site->file('c.jpg')->root(), '');
+
+        $this->submit([
+            'position' => 2
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('site/files/a.jpg/changeSort');
+
+        $this->assertSame('file.sort', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertSame(1, $site->file('b.jpg')->sort()->toInt());
+        $this->assertSame(2, $site->file('a.jpg')->sort()->toInt());
+        $this->assertSame(3, $site->file('c.jpg')->sort()->toInt());
+    }
+
     public function testChangeSortForUserFile(): void
     {
         $this->createUserFile();
@@ -258,6 +333,46 @@ class FileDialogsTest extends AreaTestCase
         $this->assertSame('Change position', $props['fields']['position']['label']);
         $this->assertSame('Change', $props['submitButton']);
         $this->assertSame(1, $props['value']['position']);
+    }
+
+    public function testChangeSortForUserFileOnSubmit(): void
+    {
+        $this->app([
+            'users' => [
+                [
+                    'id'    => 'test',
+                    'email' => 'test@getkirby.com',
+                    'role'  => 'admin',
+                    'files' => [
+                        ['filename' => 'a.jpg'],
+                        ['filename' => 'b.jpg'],
+                        ['filename' => 'c.jpg'],
+                    ]
+                ]
+            ]
+        ]);
+
+        $user = $this->app->user('test');
+
+        // pretend the file exists
+        F::write($user->file('a.jpg')->root(), '');
+        F::write($user->file('b.jpg')->root(), '');
+        F::write($user->file('c.jpg')->root(), '');
+
+        $this->submit([
+            'position' => 2
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('users/test/files/a.jpg/changeSort');
+
+        $this->assertSame('file.sort', $dialog['event']);
+        $this->assertSame(200, $dialog['code']);
+
+        $this->assertSame(1, $user->file('b.jpg')->sort()->toInt());
+        $this->assertSame(2, $user->file('a.jpg')->sort()->toInt());
+        $this->assertSame(3, $user->file('c.jpg')->sort()->toInt());
     }
 
     public function testDeletePageFile(): void
