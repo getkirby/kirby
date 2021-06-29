@@ -10,15 +10,16 @@
         class="k-radio-input-native"
         @change="onInput(option.value)"
       >
-      <label :for="id + '-' + index">
-        <template v-if="option.info">
-          <span class="k-radio-input-text">{{ option.text }}</span>
-          <span class="k-radio-input-info">{{ option.info }}</span>
-        </template>
-        <template v-else>
-          {{ option.text }}
-        </template>
+
+      <!-- eslint-disable vue/no-v-html -->
+      <label v-if="option.info" :for="id + '-' + index">
+        <span class="k-radio-input-text" v-html="option.text" />
+        <!-- @todo support (escaped) HTML in the info prop in 3.6.0 -->
+        <span class="k-radio-input-info">{{ option.info }}</span>
       </label>
+      <label v-else :for="id + '-' + index" v-html="option.text" />
+      <!-- eslint-enable vue/no-v-html -->
+
       <k-icon v-if="option.icon" :type="option.icon" />
     </li>
   </ul>
