@@ -121,7 +121,9 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => [
-                        'template' => Field::template($blueprints)
+                        'template' => Field::template($blueprints, [
+                            'required' => true
+                        ])
                     ],
                     'submitButton' => t('change'),
                     'value' => [
@@ -254,7 +256,10 @@ return [
 
             $fields = [
                 'parent' => Field::hidden(),
-                'title'  => Field::title(),
+                'title'  => Field::title([
+                    'required'  => true,
+                    'preselect' => true
+                ]),
                 'slug'   => Field::slug([
                     'required' => true,
                     'sync'     => 'title',
@@ -263,7 +268,9 @@ return [
             ];
 
             if (count($blueprints) > 1 || option('debug') === true) {
-                $fields['template'] = Field::template($blueprints);
+                $fields['template'] = Field::template($blueprints, [
+                    'required' => true
+                ]);
 
                 // preselect the first available template
                 $template = $fields['template']['options'][0]['value'];
@@ -442,7 +449,10 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => [
-                        'title' => Field::title()
+                        'title' => Field::title([
+                            'required'  => true,
+                            'preselect' => true
+                        ])
                     ],
                     'submitButton' => t('rename'),
                     'value' => [

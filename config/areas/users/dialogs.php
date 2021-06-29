@@ -23,8 +23,12 @@ return [
                             'required' => true
                         ]),
                         'password' => Field::password(),
-                        'language' => Field::translation(),
-                        'role'     => Field::role()
+                        'language' => Field::translation([
+                            'required' => true
+                        ]),
+                        'role' => Field::role([
+                            'required' => true
+                        ])
                     ],
                     'submitButton' => t('create'),
                     'value' => [
@@ -91,7 +95,7 @@ return [
                 'component' => 'k-form-dialog',
                 'props' => [
                     'fields' => [
-                        'language' => Field::translation()
+                        'language' => Field::translation(['required' => true])
                     ],
                     'submitButton' => t('change'),
                     'value' => [
@@ -195,8 +199,8 @@ return [
                 'props' => [
                     'fields' => [
                         'role' => Field::role([
-                            'label' => t('user.changeRole.select'),
-                            'type'  => 'radio'
+                            'label'    => t('user.changeRole.select'),
+                            'required' => true,
                         ])
                     ],
                     'submitButton' => t('user.changeRole'),

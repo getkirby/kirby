@@ -78,14 +78,11 @@ class Field
 
 
     /**
-     * @param array $props
      * @return array
      */
-    public static function hidden(array $props = []): array
+    public static function hidden(): array
     {
-        return array_merge([
-            'type' => 'hidden',
-        ], $props);
+        return ['type' => 'hidden'];
     }
 
     /**
@@ -153,7 +150,9 @@ class Field
     public static function role(array $props = []): array
     {
         $kirby   = kirby();
-        $isAdmin = $kirby->user()->isAdmin();
+        $user    = $kirby->user();
+        $isAdmin = $user ? $user->isAdmin() : false;
+        $roles   = [];
 
         foreach ($kirby->roles() as $role) {
             // exclude the admin role, if the user
@@ -172,7 +171,6 @@ class Field
         return array_merge([
             'label'    => t('role'),
             'type'     => count($roles) <= 1 ? 'hidden' : 'radio',
-            'required' => true,
             'options'  => $roles
         ], $props);
     }
@@ -194,21 +192,20 @@ class Field
      * @param array $props
      * @return array
      */
-    public static function template(array $blueprints, array $props = []): array
+    public static function template(?array $blueprints = [], ?array $props = []): array
     {
         $options = [];
 
         foreach ($blueprints as $blueprint) {
             $options[] = [
-                'text'  => $blueprint['title'],
-                'value' => $blueprint['name'],
+                'text'  => $blueprint['title'] ?? $blueprint['text']  ?? null,
+                'value' => $blueprint['name']  ?? $blueprint['value'] ?? null,
             ];
         }
 
         return array_merge([
             'label'    => t('template'),
             'type'     => 'select',
-            'required' => true,
             'empty'    => false,
             'options'  => $options,
             'icon'     => 'template',
@@ -223,11 +220,9 @@ class Field
     public static function title(array $props = []): array
     {
         return array_merge([
-            'label'     => t('title'),
-            'type'      => 'text',
-            'icon'      => 'title',
-            'required'  => true,
-            'preselect' => true
+            'label' => t('title'),
+            'type'  => 'text',
+            'icon'  => 'title',
         ], $props);
     }
 
@@ -251,7 +246,6 @@ class Field
             'type'     => 'select',
             'icon'     => 'globe',
             'options'  => $translations,
-            'required' => true,
             'empty'    => false
         ], $props);
     }
