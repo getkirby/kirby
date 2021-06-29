@@ -371,6 +371,12 @@ export default {
     .k-tags-input .k-dropdown-content {
       top: calc(100% + .5rem + 2px);
     }
+    /* don't apply dropup feature to tags */
+    .k-tags-input .k-dropdown-content[data-dropup] {
+      top: calc(100% + .5rem + 2px);
+      bottom: initial;
+      margin-bottom: initial;
+    }
   }
 
   /* Multiselect */

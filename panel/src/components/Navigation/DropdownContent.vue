@@ -133,18 +133,19 @@ export default {
       this.$nextTick(() => {
         const view = document.querySelector(".k-panel-view");
 
-        if (view && this.$el && this.$el.querySelector) {
-          // window height without padding (6rem = 96px)
-          let windowHeight = view.clientHeight - 96;
+        if (view && this.$el) {
+          // window height without padding (6rem)
+          // doesn't included form-buttons bar (2.5rem = 40px)
+          let windowHeight = view.clientHeight - 40;
 
           // dropdown content position relative to the viewport
           let scrollTop = this.$el.getBoundingClientRect().top || 0;
 
-          // last dropdown item relative offset
-          let offsetTop = this.$el.querySelector(".k-dropdown-item:last-child").offsetTop || 0;
+          // dropdown content height
+          let dropdownHeight = this.$el.clientHeight;
 
           // activate the dropup if the last item overflows to the bottom of the screen
-          this.dropup = (scrollTop + offsetTop) > windowHeight;
+          this.dropup = (scrollTop + dropdownHeight) > windowHeight;
         }
       });
     },
