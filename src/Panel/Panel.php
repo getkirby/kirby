@@ -2,9 +2,9 @@
 
 namespace Kirby\Panel;
 
-use Exception;
 use Kirby\Cms\User;
-use Kirby\Exception\Exception as KirbyException;
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Request;
 use Kirby\Http\Response;
@@ -89,7 +89,7 @@ class Panel
         // load plugins
         foreach ($kirby->extensions('areas') as $id => $area) {
             if (is_a($area, 'Closure') === false) {
-                throw new Exception(sprintf('Panel area "%s" must be defined as a Closure', $id));
+                throw new InvalidArgumentException(sprintf('Panel area "%s" must be defined as a Closure', $id));
             }
 
             $areas[$id] = static::area($id, (array)$area($kirby));
@@ -507,7 +507,7 @@ class Panel
      * and returns the link to the requested asset
      *
      * @return bool
-     * @throws \Exception If Panel assets could not be moved to the public directory
+     * @throws \Kirby\Exception\Exception If Panel assets could not be moved to the public directory
      */
     public static function link(): bool
     {
@@ -715,7 +715,7 @@ class Panel
                 $result = $route->action()->call($route, ...$route->arguments());
             } catch (Redirect $e) {
                 $result = Response::redirect($e->location(), $e->getCode());
-            } catch (KirbyException $e) {
+            } catch (Exception $e) {
                 $result = static::error($e->getMessage(), $e->getHttpCode());
             } catch (Throwable $e) {
                 $result = static::error($e->getMessage(), 500);
