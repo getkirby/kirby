@@ -208,7 +208,7 @@ class PageTest extends TestCase
     }
 
     /**
-     * @covers ::imageIcon
+     * @covers ::image
      */
     public function testIconFromBlueprint()
     {

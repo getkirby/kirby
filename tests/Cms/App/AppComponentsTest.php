@@ -264,24 +264,6 @@ class AppComponentsTest extends TestCase
         $this->assertEquals('test', url('anything'));
     }
 
-    public function testUrlPluginWithOriginalHandler()
-    {
-        $this->kirby->clone([
-            'components' => [
-                'url' => function ($kirby, $path, $options, $originalHandler) {
-                    if ($path === 'test') {
-                        return 'test-path';
-                    }
-
-                    return $originalHandler($path);
-                }
-            ]
-        ]);
-
-        $this->assertEquals('test-path', url('test'));
-        $this->assertEquals('/any/page', url('any/page'));
-    }
-
     public function testUrlPluginWithNativeComponent()
     {
         $this->kirby->clone([
