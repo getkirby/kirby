@@ -240,4 +240,25 @@ class DocumentTest extends TestCase
         $link = Document::link($this->app);
         $this->assertFalse($link);
     }
+
+    /**
+     * @covers ::response
+     */
+    public function testResponse(): void
+    {
+        // create panel dist files first to avoid redirect
+        Document::link($this->app);
+
+        // get panel response
+        $response = Document::response([
+            'test' => 'Test'
+        ]);
+
+        $this->assertInstanceOf('\Kirby\Http\Response', $response);
+        $this->assertSame(200, $response->code());
+        $this->assertSame('text/html', $response->type());
+        $this->assertSame('UTF-8', $response->charset());
+        $this->assertNotNull($response->body());
+    }
+
 }
