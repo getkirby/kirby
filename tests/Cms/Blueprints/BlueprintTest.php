@@ -302,6 +302,7 @@ class BlueprintTest extends TestCase
 
     /**
      * @covers ::fields
+     * @covers ::field
      */
     public function testFields()
     {
