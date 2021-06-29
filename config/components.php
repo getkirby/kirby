@@ -330,13 +330,9 @@ return [
      * @param \Kirby\Cms\App $kirby Kirby instance
      * @param string $path URL path
      * @param array|string|null $options Array of options for the Uri class
-     * @param Closure $originalHandler Deprecated: Callback function to the original URL handler with `$path` and `$options` as parameters
-     *                                 Use `$kirby->nativeComponent('url')` inside your URL component instead.
      * @return string
-     *
-     * @todo Remove $originalHandler parameter in 3.6.0
      */
-    'url' => function (App $kirby, string $path = null, $options = null, Closure $originalHandler = null): string {
+    'url' => function (App $kirby, string $path = null, $options = null): string {
         $language = null;
 
         // get language from simple string option
