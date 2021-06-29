@@ -260,5 +260,4 @@ class DocumentTest extends TestCase
         $this->assertSame('UTF-8', $response->charset());
         $this->assertNotNull($response->body());
     }
-
 }
