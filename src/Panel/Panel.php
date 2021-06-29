@@ -2,9 +2,9 @@
 
 namespace Kirby\Panel;
 
-use Exception;
 use Kirby\Cms\User;
-use Kirby\Exception\Exception as KirbyException;
+use Kirby\Exception\Exception;
+use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Filesystem\Dir;
@@ -89,11 +89,11 @@ class Panel
 
         // load plugins
         foreach ($kirby->extensions('areas') as $id => $area) {
-            if (is_a($area, 'Closure') === true) {
-                if (isset($areas[$id]) === false) {
-                    $areas[$id] = static::area($id, (array)$area($kirby));
-                }
+            if (is_a($area, 'Closure') === false) {
+                throw new InvalidArgumentException(sprintf('Panel area "%s" must be defined as a Closure', $id));
             }
+
+            $areas[$id] = static::area($id, (array)$area($kirby));
         }
 
         return $areas;
@@ -542,7 +542,7 @@ class Panel
      * and returns the link to the requested asset
      *
      * @return bool
-     * @throws \Exception If Panel assets could not be moved to the public directory
+     * @throws \Kirby\Exception\Exception If Panel assets could not be moved to the public directory
      */
     public static function link(): bool
     {
@@ -649,7 +649,7 @@ class Panel
 
         // interpret strings as errors
         } elseif (is_string($result) === true) {
-            $result = new KirbyException($result);
+            $result = new Exception($result);
         }
 
         // handle different response types (view, dialog, ...)
