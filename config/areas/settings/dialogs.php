@@ -169,6 +169,9 @@ return [
                 ]
             ];
         },
+        /**
+         * @codeCoverageIgnore
+         */
         'submit' => function () {
             kirby()->system()->register(get('license'), get('email'));
             return [
