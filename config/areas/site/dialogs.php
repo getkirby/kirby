@@ -3,6 +3,7 @@
 use Kirby\Cms\Find;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Exception\PermissionException;
 use Kirby\Panel\Field;
 
 $files = require __DIR__ . '/../files/dialogs.php';
@@ -16,8 +17,12 @@ return [
             $position = null;
 
             if ($page->blueprint()->num() !== 'default') {
-                // TODO: make translatable
-                throw new Exception('You cannot change the position of this page manually');
+                throw new PermissionException([
+                    'key'  => 'page.sort.permission',
+                    'data' => [
+                        'slug' => $page->slug()
+                    ]
+                ]);
             }
 
             return [

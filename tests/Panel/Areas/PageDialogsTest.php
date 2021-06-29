@@ -33,6 +33,32 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame(1, $props['value']['position']);
     }
 
+    public function testChangeSortDisabled(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'test'
+                    ]
+                ]
+            ],
+            'blueprints' => [
+                'pages/test' => [
+                    'num' => 0
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/changeSort');
+
+        $this->assertSame(403, $dialog['code']);
+        $this->assertSame('The page "test" cannot be sorted', $dialog['error']);
+    }
+
     public function testChangeSortOnSubmit(): void
     {
         $this->app([
