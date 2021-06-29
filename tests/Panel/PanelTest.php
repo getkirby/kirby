@@ -38,6 +38,9 @@ class PanelTest extends TestCase
 
         // clear fake json requests
         $_GET = [];
+
+        // clean up $_SERVER
+        unset($_SERVER['SERVER_SOFTWARE']);
     }
 
     /**
@@ -125,8 +128,19 @@ class PanelTest extends TestCase
         $this->assertArrayHasKey('todos', $areas);
         $this->assertCount(5, $areas);
 
-        // clean up
-        unset($_SERVER['SERVER_SOFTWARE']);
+        // authenticated with malformed plugin
+        $app = $this->app->clone([
+            'areas' => [
+                'todos' => []
+            ]
+        ]);
+
+        $app->impersonate('test@getkirby.com');
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Panel area "todos" must be defined as a Closure');
+
+        $areas = Panel::areas($app);
     }
 
     /**
