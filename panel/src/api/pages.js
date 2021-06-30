@@ -83,8 +83,12 @@ export default (api) => {
     async options(id, view = "view", overwrite = {}) {
       const pageUrl = this.url(id);
       const page    = await api.get(pageUrl, {select: "options, previewUrl"})
-      const options = { ...page.options, ...overwrite };
+      const options = page.options;
       let result    = [];
+
+      const disabled = function (action) {
+        return options[action] === false || overwrite[action] === false;
+      };
 
       if (view === "list") {
         result.push({
@@ -93,7 +97,7 @@ export default (api) => {
           },
           icon: "open",
           text: Vue.$t("open"),
-          disabled: options.preview === false
+          disabled: disabled("preview")
         });
 
         result.push("-");
@@ -110,7 +114,7 @@ export default (api) => {
         },
         icon: "title",
         text: Vue.$t("rename"),
-        disabled: !options.changeTitle
+        disabled: disabled("changeTitle")
       });
 
       result.push({
@@ -119,7 +123,7 @@ export default (api) => {
         },
         icon: "copy",
         text: Vue.$t("duplicate"),
-        disabled: !options.duplicate
+        disabled: disabled("duplicate")
       });
 
       result.push("-");
@@ -134,7 +138,7 @@ export default (api) => {
         },
         icon: "url",
         text: Vue.$t("page.changeSlug"),
-        disabled: !options.changeSlug
+        disabled: disabled("changeSlug")
       });
 
       result.push({
@@ -143,7 +147,7 @@ export default (api) => {
         },
         icon: "preview",
         text: Vue.$t("page.changeStatus"),
-        disabled: !options.changeStatus
+        disabled: disabled("changeStatus")
       });
 
       if (view === "list") {
@@ -153,7 +157,7 @@ export default (api) => {
           },
           icon: "sort",
           text: Vue.$t("page.sort"),
-          disabled: !options.sort
+          disabled: disabled("sort")
         });
       }
 
@@ -163,7 +167,7 @@ export default (api) => {
         },
         icon: "template",
         text: Vue.$t("page.changeTemplate"),
-        disabled: !options.changeTemplate
+        disabled: disabled("changeTemplate")
       });
 
       result.push("-");
@@ -174,7 +178,7 @@ export default (api) => {
         },
         icon: "trash",
         text: Vue.$t("delete"),
-        disabled: !options.delete
+        disabled: disabled("delete")
       });
 
       return result;

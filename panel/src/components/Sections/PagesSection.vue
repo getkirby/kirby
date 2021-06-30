@@ -107,16 +107,17 @@ export default {
           }
         };
 
-        page.sortable = page.permissions.sort && this.options.sortable;
-        page.column   = this.column;
-        page.options  = async ready => {
+        page.sortable  = page.permissions.sort && this.options.sortable;
+        page.deletable = data.length > this.options.min;
+        page.column    = this.column;
+        page.options   = async ready => {
           try {
             const options = await this.$api.pages.options(
               page.id,
               "list",
               {
+                delete: page.deletable,
                 sort:   page.sortable,
-                delete: page.permissions.delete && data.length > this.options.min
               }
             );
             ready(options);

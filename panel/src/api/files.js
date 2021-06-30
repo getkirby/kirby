@@ -57,8 +57,12 @@ export default (api) => {
     async options(parent, filename, view, overwrite = {}) {
       const url     = this.url(parent, filename);
       const file    = await api.get(url, {select: "options,url"});
-      const options = { ...file.options, ...overwrite };
+      const options = file.options;
       let result    = [];
+
+      const disabled = function (action) {
+        return options[action] === false || overwrite[action] === false;
+      };
 
       if (view === "list") {
         result.push({
@@ -78,14 +82,14 @@ export default (api) => {
         },
         icon: "title",
         text: Vue.$t("rename"),
-        disabled: !options.changeName
+        disabled: disabled("changeName")
       });
 
       result.push({
         click: "replace",
         icon: "upload",
         text: Vue.$t("replace"),
-        disabled: !options.replace
+        disabled: disabled("replace")
       });
 
       if (view === "list") {
@@ -97,7 +101,7 @@ export default (api) => {
           },
           icon: "sort",
           text: Vue.$t("file.sort"),
-          disabled: !options.update
+          disabled: disabled("update")
         });
       }
 
@@ -109,7 +113,7 @@ export default (api) => {
         },
         icon: "trash",
         text: Vue.$t("delete"),
-        disabled: !options.delete
+        disabled: disabled("delete")
       });
 
       return result;
