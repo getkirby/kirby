@@ -8,7 +8,9 @@
     class="k-slug-field"
   >
     <template v-if="wizzard && wizzard.text" #options>
-      <k-button icon="wand" @click="onWizzard">{{ wizzard.text }}</k-button>
+      <k-button icon="wand" @click="onWizzard">
+        {{ wizzard.text }}
+      </k-button>
     </template>
 
     <k-input
