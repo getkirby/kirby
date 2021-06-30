@@ -115,8 +115,8 @@ export default {
       }
     },
     paginate(pagination) {
-      this.$go(window.location, {
-        data: {
+      this.$reload({
+        query: {
           page: pagination.page
         }
       });
