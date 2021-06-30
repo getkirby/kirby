@@ -85,7 +85,7 @@ export default {
   props: {
     breadcrumb: Array,
     license: Boolean,
-    menu: Object,
+    menu: Array,
     title: String,
     view: Object,
   },

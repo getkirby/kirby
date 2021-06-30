@@ -45,7 +45,18 @@
     <template v-if="fatal">
       <div class="k-fatal">
         <div class="k-fatal-box">
-          <k-headline>The JSON response of the API could not be parsed:</k-headline>
+          <k-bar>
+            <k-headline slot="left">
+              The JSON response could not be parsed:
+            </k-headline>
+            <k-button
+              slot="right"
+              icon="cancel"
+              @click="$store.dispatch('fatal', false)"
+            >
+              Close
+            </k-button>
+          </k-bar>
           <iframe ref="fatal" class="k-fatal-iframe" />
         </div>
       </div>
@@ -353,13 +364,13 @@ b {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--color-white);
   padding: .75rem 1.5rem 1.5rem;
   box-shadow: var(--shadow-xl);
   border-radius: var(--rounded);
 }
-.k-fatal-box .k-headline {
-  margin-bottom: .75rem;
+.k-fatal-box .k-bar {
+  margin-bottom: var(--spacing-3);
 }
 .k-fatal-iframe {
   border: 0;
