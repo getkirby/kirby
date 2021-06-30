@@ -3,6 +3,7 @@
     ref="overlay"
     :autofocus="autofocus"
     :centered="true"
+    @close="onOverlayClose"
     @ready="$emit('ready')"
   >
     <div
@@ -148,11 +149,37 @@ export default {
   },
   methods: {
     /**
+     * Reacts to the overlay being closed
+     * and cleans up the dialog events
+     * @private
+     */
+    onOverlayClose() {
+      this.notification = null;
+      /**
+       * This event is triggered when the dialog is being closed.
+       * This happens independently from the cancel event.
+       * @event close
+       */
+      this.$emit("close");
+      this.$events.$off("keydown.esc", this.close);
+      this.$store.dispatch("dialog", false);
+    },
+    /**
      * Opens the dialog and triggers the `@open` event
      * @public
      */
     open() {
-      this.$store.dispatch("dialog", true);
+      // when dialogs are used in the old-fashioned way
+      // by adding their component to a template and calling
+      // open on the component manually, the dialog state
+      // is set to true. In comparison, this.$dialog fills
+      // the dialog state after a successfull request and
+      // the fiber dialog component is injected on store change
+      // automatically.
+      if (!this.$store.state.dialog) {
+        this.$store.dispatch("dialog", true);
+      }
+
       this.notification = null;
       this.$refs.overlay.open();
       /**
@@ -167,18 +194,9 @@ export default {
      * @public
      */
     close() {
-      this.notification = null;
       if (this.$refs.overlay) {
         this.$refs.overlay.close();
       }
-      /**
-       * This event is triggered when the dialog is being closed. 
-       * This happens independently from the cancel event.
-       * @event close
-       */
-      this.$emit("close");
-      this.$events.$off("keydown.esc", this.close);
-      this.$store.dispatch("dialog", false);
     },
     /**
      * Triggers the `@cancel` event and closes the dialog.
@@ -186,7 +204,7 @@ export default {
      */
     cancel() {
       /**
-       * This event is triggered whenever the cancel button or 
+       * This event is triggered whenever the cancel button or
        * the backdrop is clicked.
        * @event cancel
        */

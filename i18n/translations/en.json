@@ -92,6 +92,7 @@
   "error.language.code": "Please enter a valid code for the language",
   "error.language.duplicate": "The language already exists",
   "error.language.name": "Please enter a valid name for the language",
+  "error.language.notFound": "The language could not be found",
 
   "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
   "error.layout.validation.settings": "There's an error in layout {index} settings",

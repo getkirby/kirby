@@ -28,13 +28,13 @@ Vue.use(VuePortal);
 Vue.use(Fiber);
 Vue.use(Api, store);
 
-document.addEventListener("fiber:start", (e) => {
+document.addEventListener("fiber.start", (e) => {
   if (e.detail.silent !== true) {
     store.dispatch("isLoading", true);
   }
 });
 
-document.addEventListener("fiber:finish", () => {
+document.addEventListener("fiber.finish", () => {
   if (Vue.$api.requests.length === 0) {
     store.dispatch("isLoading", false);
   }

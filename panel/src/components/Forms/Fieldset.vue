@@ -17,6 +17,7 @@
               v-if="hasFieldType(field.type)"
               :ref="fieldName"
               v-model="value[fieldName]"
+              :form-data="value"
               :name="fieldName"
               :novalidate="novalidate"
               :disabled="disabled || field.disabled"

@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 class SectionTest extends TestCase
 {
     protected $app;
+    protected $sectionTypes;
 
     public function setUp(): void
     {
@@ -17,13 +18,18 @@ class SectionTest extends TestCase
                 'index' => '/dev/null'
             ]
         ]);
+
+        $this->sectionTypes = Section::$types;
+    }
+
+    public function tearDown(): void
+    {
+        Section::$types = $this->sectionTypes;
     }
 
     public function testMissingModel()
     {
-        Section::$types = [
-            'test' => []
-        ];
+        Section::$types['test'] = [];
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
         $this->expectExceptionMessage('Undefined section model');
@@ -33,16 +39,14 @@ class SectionTest extends TestCase
 
     public function testPropsDefaults()
     {
-        Section::$types = [
-            'test' => [
-                'props' => [
-                    'example' => function ($example = 'default') {
-                        return $example;
-                    },
-                    'buttons' => function ($buttons = ['one', 'two']) {
-                        return $buttons;
-                    },
-                ]
+        Section::$types['test'] = [
+            'props' => [
+                'example' => function ($example = 'default') {
+                    return $example;
+                },
+                'buttons' => function ($buttons = ['one', 'two']) {
+                    return $buttons;
+                },
             ]
         ];
 
@@ -56,16 +60,14 @@ class SectionTest extends TestCase
 
     public function testToResponse()
     {
-        Section::$types = [
-            'test' => [
-                'props' => [
-                    'a' => function ($a) {
-                        return $a;
-                    },
-                    'b' => function ($b) {
-                        return $b;
-                    }
-                ]
+        Section::$types['test'] = [
+            'props' => [
+                'a' => function ($a) {
+                    return $a;
+                },
+                'b' => function ($b) {
+                    return $b;
+                }
             ]
         ];
 

@@ -34,6 +34,16 @@ class FileRulesTest extends TestCase
         $this->assertTrue(FileRules::changeName($file, 'c'));
     }
 
+    public function testChangeNameWithEmptyInput()
+    {
+        $file = new File(['filename' => 'test.jpg']);
+
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The name must not be empty');
+
+        FileRules::changeName($file, '');
+    }
+
     public function testChangeNameWithoutPermissions()
     {
         $permissions = $this->createMock(FilePermissions::class);
@@ -249,6 +259,7 @@ class FileRulesTest extends TestCase
             ['phar', false, 'The extension "phar" is not allowed'],
             ['exe', false, 'The extension "exe" is not allowed'],
             ['php4', false, 'You are not allowed to upload PHP files'],
+            ['dhtml', false, 'You are not allowed to upload HTML files'],
             ['1phar2', false, 'You are not allowed to upload PHP files'],
         ];
     }

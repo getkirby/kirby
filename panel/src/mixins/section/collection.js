@@ -5,6 +5,7 @@ export default {
     column: String,
     parent: String,
     name: String,
+    timestamp: Number
   },
   data() {
     return {
@@ -46,15 +47,14 @@ export default {
 
       return false;
     },
-    language() {
-      return this.$system.language;
-    },
     paginationId() {
       return "kirby$pagination$" + this.parent + "/" + this.name;
     }
   },
   watch: {
-    language() {
+    // Reload the section when
+    // the view has changed in the backend
+    timestamp() {
       this.reload();
     }
   },

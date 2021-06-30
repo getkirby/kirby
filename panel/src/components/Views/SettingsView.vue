@@ -6,7 +6,7 @@
       </k-header>
 
       <section class="k-system-info">
-        <header>
+        <header class="k-settings-view-section-header">
           <k-headline>Kirby</k-headline>
         </header>
 
@@ -18,9 +18,9 @@
                 <template v-if="$license">
                   {{ license }}
                 </template>
-                <p v-else>
-                  <strong class="k-system-unregistered">{{ $t('license.unregistered') }}</strong>
-                </p>
+                <button v-else class="k-system-unregistered" @click="$dialog('registration')">
+                  {{ $t('license.unregistered') }}
+                </button>
               </dd>
             </dl>
           </li>
@@ -36,45 +36,40 @@
       <section v-if="$multilang" class="k-languages">
         <template v-if="languages.length > 0">
           <section class="k-languages-section">
-            <header>
+            <header class="k-settings-view-section-header">
               <k-headline>{{ $t('languages.default') }}</k-headline>
             </header>
-            <k-collection :items="primaryLanguage" @action="action" />
+            <k-collection :items="primaryLanguage" />
           </section>
 
           <section class="k-languages-section">
-            <header>
+            <header class="k-settings-view-section-header">
               <k-headline>{{ $t('languages.secondary') }}</k-headline>
-              <k-button icon="add" @click="$refs.create.open()">
+              <k-button icon="add" @click="$dialog('languages/create')">
                 {{ $t('language.create') }}
               </k-button>
             </header>
             <k-collection
               v-if="secondaryLanguages.length"
               :items="secondaryLanguages"
-              @action="action"
             />
-            <k-empty v-else icon="globe" @click="$refs.create.open()">
+            <k-empty v-else icon="globe" @click="$dialog('languages/create')">
               {{ $t('languages.secondary.empty') }}
             </k-empty>
           </section>
         </template>
 
         <template v-else-if="languages.length === 0">
-          <header>
+          <header class="k-settings-view-section-header">
             <k-headline>{{ $t('languages') }}</k-headline>
-            <k-button icon="add" @click="$refs.create.open()">
+            <k-button icon="add" @click="$dialog('languages/create')">
               {{ $t('language.create') }}
             </k-button>
           </header>
-          <k-empty icon="globe" @click="$refs.create.open()">
+          <k-empty icon="globe" @click="$dialog('languages/create')">
             {{ $t('languages.empty') }}
           </k-empty>
         </template>
-
-        <k-language-create-dialog ref="create" @success="$reload" />
-        <k-language-update-dialog ref="update" @success="$reload" />
-        <k-language-remove-dialog ref="remove" @success="$reload" />
       </section>
     </k-view>
   </k-inside>
@@ -96,25 +91,29 @@ export default {
     languagesCollection() {
       return this.languages.map(language => ({
         ...language,
-        image: true,
-        icon: {
+        image: {
           back: "black",
-          type: "globe"
+          color: "gray",
+          icon: "globe",
         },
         link: () => {
-          this.$refs.update.open(language.id);
+          this.$dialog(`languages/${language.id}/update`);
         },
         options: [
           {
             icon: "edit",
             text: this.$t("edit"),
-            click: "update"
+            click() {
+              this.$dialog(`languages/${language.id}/update`);
+            }
           },
           {
             icon: "trash",
             text: this.$t("delete"),
             disabled: language.default && this.languages.length !== 1,
-            click: "remove"
+            click() {
+              this.$dialog(`languages/${language.id}/delete`);
+            }
           }
         ]
       }));
@@ -124,18 +123,6 @@ export default {
     },
     secondaryLanguages() {
       return this.languagesCollection.filter(language => language.default === false);
-    }
-  },
-  methods: {
-    action(language, action) {
-      switch (action) {
-        case "update":
-          this.$refs.update.open(language.id);
-          break;
-        case "remove":
-          this.$refs.remove.open(language.id);
-          break;
-      }
     }
   }
 };
@@ -148,7 +135,7 @@ export default {
 .k-settings-view .k-header {
   margin-bottom: 1.5rem;
 }
-.k-settings-view header {
+.k-settings-view-section-header {
   margin-bottom: .5rem;
   display: flex;
   justify-content: space-between;
@@ -171,6 +158,7 @@ export default {
 }
 .k-system-unregistered {
   color: var(--color-negative);
+  font-weight: var(--font-bold);
 }
 
 .k-languages-section {

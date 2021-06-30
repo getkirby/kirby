@@ -8,7 +8,7 @@
           :editable="permissions.changeName && !isLocked"
           :tab="tab.name"
           :tabs="tabs"
-          @edit="action('rename')"
+          @edit="$dialog($view.path + '/changeName')"
         >
           {{ model.filename }}
 
@@ -31,9 +31,9 @@
                 >
                   {{ $t('settings') }}
                 </k-button>
-                <k-dropdown-content 
-                  ref="settings" 
-                  :options="options" 
+                <k-dropdown-content
+                  ref="settings"
+                  :options="options"
                   @action="action"
                 />
               </k-dropdown>
@@ -57,9 +57,6 @@
           :tab="tab"
         />
 
-        <k-file-rename-dialog ref="rename" @success="onRename" />
-        <k-file-remove-dialog ref="remove" @success="onDelete" />
-        
         <k-upload
           ref="upload"
           :url="uploadApi"
@@ -100,30 +97,12 @@ export default {
   methods: {
     action(action) {
       switch (action) {
-        case "rename":
-          this.$refs.rename.open(this.model.parent, this.model.filename);
-          break;
         case "replace":
           this.$refs.upload.open({
             url: this.$urls.api + "/" + this.$api.files.url(this.model.parent, this.model.filename),
             accept: "." + this.model.extension + "," + this.model.mime
           });
           break;
-        case "remove":
-          this.$refs.remove.open(this.model.parent, this.model.filename);
-          break;
-      }
-    },
-    onDelete() {
-      if (this.model.parent) {
-        this.$go('/' + this.model.parent);
-      } else {
-        this.$go('/site');
-      }
-    },
-    onRename(file) {
-      if (file.filename !== this.model.filename) {
-        this.$go(this.$api.files.link(this.model.parent, file.filename));
       }
     },
     onUpload() {

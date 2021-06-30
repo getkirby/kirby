@@ -47,7 +47,7 @@
         :icon="tabButton.icon"
         :tooltip="tabButton.label"
       >
-        {{ tabButton.label || tabButton.name }}
+        {{ tabButton.label || tabButton.text || tabButton.name }}
       </k-dropdown-item>
     </k-dropdown-content>
   </div>

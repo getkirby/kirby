@@ -2,12 +2,18 @@
   <k-dialog
     ref="dialog"
     v-bind="$props"
-    v-on="$listeners"
+    @cancel="$emit('cancel')"
+    @close="$emit('close')"
+    @ready="$emit('ready')"
+    @submit="$refs.form.submit()"
   >
-    <!-- eslint-disable vue/no-mutating-props -->
+    <template v-if="text">
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <k-text v-html="text" />
+    </template>
     <k-form
       ref="form"
-      v-model="value"
+      :value="model"
       :fields="fields"
       :novalidate="novalidate"
       @input="$emit('input', $event)"
@@ -43,6 +49,9 @@ export default {
         return new TranslationString("save")
       }
     },
+    text: {
+      type: String,
+    },
     theme: {
       type: String,
       default: "positive",
@@ -51,6 +60,18 @@ export default {
       type: Object,
       default() {
         return {};
+      }
+    }
+  },
+  data() {
+    return {
+      model: this.value
+    }
+  },
+  watch: {
+    value(newValue, oldValue) {
+      if (newValue !== oldValue) {
+        this.model = newValue;
       }
     }
   }

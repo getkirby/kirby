@@ -166,7 +166,7 @@ return [
                         'sort'         => $permissions->can('sort'),
                         'changeSlug'   => $permissions->can('changeSlug'),
                         'changeStatus' => $permissions->can('changeStatus'),
-                        'changeTitle'  => $permissions->can('changeTitle')
+                        'changeTitle'  => $permissions->can('changeTitle'),
                     ]
                 ];
             }

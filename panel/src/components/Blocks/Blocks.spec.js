@@ -33,7 +33,7 @@ describe('Blocks', () => {
       cy.get('@block').should('have.class', 'k-block-type-list');
     });
 
-    it.only('should create list items', () => {
+    it('should create list items', () => {
 
       createBlock('List');
 

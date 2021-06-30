@@ -54,14 +54,21 @@ export default (api) => {
     link(parent, filename, path) {
       return "/" + this.url(parent, filename, path);
     },
-    async options(parent, filename, view, sortable = true) {
-      const file    = await api.get(this.url(parent, filename), {select: "options"});
+    async options(parent, filename, view, overwrite = {}) {
+      const url     = this.url(parent, filename);
+      const file    = await api.get(url, {select: "options,url"});
       const options = file.options;
       let result    = [];
 
+      const disabled = function (action) {
+        return options[action] === false || overwrite[action] === false;
+      };
+
       if (view === "list") {
         result.push({
-          click: "download",
+          click() {
+            window.open(file.url);
+          },
           icon: "open",
           text: Vue.$t("open"),
         });
@@ -70,37 +77,43 @@ export default (api) => {
       }
 
       result.push({
-        click: "rename",
+        click() {
+          this.$dialog(url + '/changeName');
+        },
         icon: "title",
         text: Vue.$t("rename"),
-        disabled: !options.changeName
+        disabled: disabled("changeName")
       });
 
       result.push({
         click: "replace",
         icon: "upload",
         text: Vue.$t("replace"),
-        disabled: !options.replace
+        disabled: disabled("replace")
       });
 
       if (view === "list") {
         result.push("-");
 
         result.push({
-          click: "sort",
+          click() {
+            this.$dialog(url + '/changeSort');
+          },
           icon: "sort",
           text: Vue.$t("file.sort"),
-          disabled: !(options.update  && sortable)
+          disabled: disabled("update")
         });
       }
 
       result.push("-");
 
       result.push({
-        click: "remove",
+        click() {
+          this.$dialog(url + '/delete');
+        },
         icon: "trash",
         text: Vue.$t("delete"),
-        disabled: !options.delete
+        disabled: disabled("delete")
       });
 
       return result;

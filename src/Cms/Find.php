@@ -46,6 +46,27 @@ class Find
     }
 
     /**
+     * Returns the language object for the given code
+     *
+     * @param string $code Language code
+     * @return \Kirby\Cms\Language|null
+     * @throws \Kirby\Exception\NotFoundException if the language cannot be found
+     */
+    public static function language(string $code)
+    {
+        if ($language = App::instance()->language($code)) {
+            return $language;
+        }
+
+        throw new NotFoundException([
+            'key'  => 'language.notFound',
+            'data' => [
+                'code' => $code
+            ]
+        ]);
+    }
+
+    /**
      * Returns the page object for the given id
      *
      * @param string $id Page's id

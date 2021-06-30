@@ -130,6 +130,17 @@ class Page extends Model
     }
 
     /**
+     * The best applicable position for
+     * the position/status dialog
+     *
+     * @return int
+     */
+    public function position(): int
+    {
+        return $this->model->num() ?? $this->model->parentModel()->children()->listed()->not($this->model)->count() + 1;
+    }
+
+    /**
      * Returns navigation array with
      * previous and next page
      * based on blueprint definition

@@ -2,8 +2,6 @@
 
 namespace Kirby\Image\Darkroom;
 
-ini_set('memory_limit', '512M');
-
 use claviska\SimpleImage;
 use Kirby\Image\Darkroom;
 use Kirby\Toolkit\Mime;

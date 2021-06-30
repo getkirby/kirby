@@ -80,17 +80,24 @@ export default (api) => {
     link(id) {
       return "/" + this.url(id);
     },
-    async options(id, view = "view", sortable = true) {
-      const page    = await api.get(this.url(id), {select: "options"})
+    async options(id, view = "view", overwrite = {}) {
+      const pageUrl = this.url(id);
+      const page    = await api.get(pageUrl, {select: "options, previewUrl"})
       const options = page.options;
       let result    = [];
 
+      const disabled = function (action) {
+        return options[action] === false || overwrite[action] === false;
+      };
+
       if (view === "list") {
         result.push({
-          click: "preview",
+          click() {
+            window.open(page.previewUrl, "_blank");
+          },
           icon: "open",
           text: Vue.$t("open"),
-          disabled: options.preview === false
+          disabled: disabled("preview")
         });
 
         result.push("-");
@@ -98,58 +105,80 @@ export default (api) => {
       }
 
       result.push({
-        click: "rename",
+        click() {
+          this.$dialog(pageUrl + "/changeTitle", {
+            query: {
+              select: "title"
+            }
+          });
+        },
         icon: "title",
         text: Vue.$t("rename"),
-        disabled: !options.changeTitle
+        disabled: disabled("changeTitle")
       });
 
       result.push({
-        click: "duplicate",
+        click() {
+          this.$dialog(pageUrl + "/duplicate");
+        },
         icon: "copy",
         text: Vue.$t("duplicate"),
-        disabled: !options.duplicate
+        disabled: disabled("duplicate")
       });
 
       result.push("-");
 
       result.push({
-        click: "url",
+        click() {
+          this.$dialog(pageUrl + "/changeTitle", {
+            query: {
+              select: "slug"
+            }
+          });
+        },
         icon: "url",
         text: Vue.$t("page.changeSlug"),
-        disabled: !options.changeSlug
+        disabled: disabled("changeSlug")
       });
 
       result.push({
-        click: "status",
+        click() {
+          this.$dialog(pageUrl + '/changeStatus');
+        },
         icon: "preview",
         text: Vue.$t("page.changeStatus"),
-        disabled: !options.changeStatus
+        disabled: disabled("changeStatus")
       });
 
       if (view === "list") {
         result.push({
-          click: "sort",
+          click() {
+            this.$dialog(pageUrl + '/changeSort');
+          },
           icon: "sort",
           text: Vue.$t("page.sort"),
-          disabled: !(options.sort  && sortable)
+          disabled: disabled("sort")
         });
       }
 
       result.push({
-        click: "template",
+        click() {
+          this.$dialog(pageUrl + '/changeTemplate');
+        },
         icon: "template",
         text: Vue.$t("page.changeTemplate"),
-        disabled: !options.changeTemplate
+        disabled: disabled("changeTemplate")
       });
 
       result.push("-");
 
       result.push({
-        click: "remove",
+        click() {
+          this.$dialog(pageUrl + '/delete');
+        },
         icon: "trash",
         text: Vue.$t("delete"),
-        disabled: !options.delete
+        disabled: disabled("delete")
       });
 
       return result;

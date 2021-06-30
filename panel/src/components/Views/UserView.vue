@@ -105,13 +105,6 @@
           :tab="tab"
         />
 
-        <k-user-email-dialog ref="email" @success="$reload" />
-        <k-user-language-dialog ref="language" @success="$reload" />
-        <k-user-password-dialog ref="password" />
-        <k-user-remove-dialog ref="remove" @success="$go('users')" />
-        <k-user-rename-dialog ref="rename" @success="$reload" />
-        <k-user-role-dialog ref="role" @success="$reload" />
-
         <k-upload
           ref="upload"
           :url="uploadApi"
@@ -148,13 +141,13 @@ export default {
     async action(action) {
       switch (action) {
         case "email":
-          this.$refs.email.open(this.model.id);
+          this.$dialog(`users/${this.model.id}/changeEmail`);
           break;
         case "language":
-          this.$refs.language.open(this.model.id);
+          this.$dialog(`users/${this.model.id}/changeLanguage`);
           break;
         case "password":
-          this.$refs.password.open(this.model.id);
+          this.$dialog(`users/${this.model.id}/changePassword`);
           break;
         case "picture.delete":
           await this.$api.users.deleteAvatar(this.model.id)
@@ -163,13 +156,13 @@ export default {
           this.$reload();
           break;
         case "remove":
-          this.$refs.remove.open(this.model.id);
+          this.$dialog(`users/${this.model.id}/delete`);
           break;
         case "rename":
-          this.$refs.rename.open(this.model.id);
+          this.$dialog(`users/${this.model.id}/changeName`);
           break;
         case "role":
-          this.$refs.role.open(this.model.id);
+          this.$dialog(`users/${this.model.id}/changeRole`);
           break;
         default:
           this.$store.dispatch("notification/error", "Not yet implemented");

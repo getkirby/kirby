@@ -36,6 +36,13 @@ export default {
       return this.$store.getters["content/values"]();
     }
   },
+  watch: {
+    // Reload values and field definitions
+    // when the view has changed in the backend
+    timestamp() {
+      this.fetch();
+    }
+  },
   created() {
     this.input = debounce(this.input, 50);
     this.fetch();

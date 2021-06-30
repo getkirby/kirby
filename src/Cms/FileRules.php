@@ -38,6 +38,12 @@ class FileRules
             ]);
         }
 
+        if (Str::length($name) === 0) {
+            throw new InvalidArgumentException([
+                'key' => 'file.changeName.empty'
+            ]);
+        }
+
         $parent    = $file->parent();
         $duplicate = $parent->files()->not($file)->findBy('filename', $name . '.' . $file->extension());
 

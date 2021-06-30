@@ -17,7 +17,6 @@
             :options="menu"
             theme="light"
             class="k-topbar-menu"
-            @action="onMenu"
           />
         </k-dropdown>
 
@@ -49,7 +48,7 @@
                 :tooltip="$t('license.unregistered')"
                 class="k-topbar-signals-button"
                 icon="key"
-                @click="$emit('register')"
+                @click="$dialog('registration')"
               >
                 {{ $t('license.register') }}
               </k-button>
@@ -84,42 +83,13 @@
 <script>
 export default {
   props: {
-    areas: Object,
     breadcrumb: Array,
     license: Boolean,
+    menu: Array,
     title: String,
     view: Object,
   },
   computed: {
-    menu() {
-      let menu = Object.values(this.areas)
-      menu = menu.filter(area => this.areaInMenu(area) !== false)
-      menu = menu.map(area => ({
-        ...area,
-        text: area.label,
-        current: this.view.id === area.id,
-        disabled: this.areaInMenu(area) === 'disabled'
-      }));
-
-      menu.push("-");
-
-      menu.push({
-        icon: "account",
-        link: "/account",
-        text: this.$t("view.account"),
-        current: this.view.id === "account"
-      });
-
-      menu.push("-");
-
-      menu.push({
-        icon: "logout",
-        click: "logout",
-        text: this.$t("logout")
-      });
-
-      return menu;
-    },
     notification() {
       if (
         this.$store.state.notification.type &&
@@ -128,37 +98,6 @@ export default {
         return this.$store.state.notification;
       } else {
         return null;
-      }
-    }
-  },
-  methods: {
-    logout() {
-      this.$store.dispatch("content/clear");
-      this.$go("/logout");
-    },
-    areaInMenu(area) {
-      let menu = area.menu;
-      if (typeof menu === "function") {
-        menu = menu(this);
-      }
-
-      // explicit configuration with one of the possible three values
-      if ([true, false, "disabled"].indexOf(menu) >= 0) {
-        return menu;
-      }
-
-      // default/fallback: disable if no permissions, otherwise enable
-      if (this.$permissions.access[area.id] === false) {
-        return "disabled";
-      }
-
-      return true;
-    },
-    onMenu(action) {
-      switch (action) {
-        case "logout":
-          this.logout();
-          break;
       }
     }
   }

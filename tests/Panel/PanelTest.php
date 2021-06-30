@@ -4,10 +4,8 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\App;
 use Kirby\Filesystem\Dir;
-use Kirby\Filesystem\F;
 use Kirby\Http\Response;
 use Kirby\Toolkit\A;
-use Kirby\Toolkit\Str;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -144,342 +142,6 @@ class PanelTest extends TestCase
     }
 
     /**
-     * @covers ::assets
-     */
-    public function testAssets(): void
-    {
-        // default asset setup
-        $assets  = Panel::assets();
-        $base    = '/media/panel/' . $this->app->versionHash();
-
-        // css
-        $this->assertSame($base . '/css/style.css', $assets['css']['index']);
-        $this->assertSame('/media/plugins/index.css?0', $assets['css']['plugins']);
-
-        // icons
-        $this->assertSame($base . '/apple-touch-icon.png', $assets['icons']['apple-touch-icon']['url']);
-        $this->assertSame($base . '/favicon.svg', $assets['icons']['shortcut icon']['url']);
-        $this->assertSame($base . '/favicon.png', $assets['icons']['alternate icon']['url']);
-
-        // js
-        $this->assertSame($base . '/js/vendor.js', $assets['js']['vendor']);
-        $this->assertSame($base . '/js/plugins.js', $assets['js']['pluginloader']);
-        $this->assertSame('/media/plugins/index.js?0', $assets['js']['plugins']);
-        $this->assertSame($base . '/js/index.js', $assets['js']['index']);
-
-
-        // dev mode
-        $this->app = $this->app->clone([
-            'request' => [
-                'url' => 'http://sandbox.test'
-            ],
-            'options' => [
-                'panel' => [
-                    'dev' => true
-                ]
-            ]
-        ]);
-
-        // add vite file
-        F::write($viteFile = $this->app->roots()->panel() . '/.vite-running', '');
-
-        $assets = Panel::assets($this->app);
-        $base   = 'http://sandbox.test:3000';
-
-        // css
-        $this->assertSame(['plugins' => '/media/plugins/index.css?0'], $assets['css']);
-
-        // icons
-        $this->assertSame($base . '/apple-touch-icon.png', $assets['icons']['apple-touch-icon']['url']);
-        $this->assertSame($base . '/favicon.svg', $assets['icons']['shortcut icon']['url']);
-        $this->assertSame($base . '/favicon.png', $assets['icons']['alternate icon']['url']);
-
-        // js
-        $this->assertSame([
-            'pluginloader' => $base . '/js/plugins.js',
-            'plugins' => '/media/plugins/index.js?0',
-            'index' => $base . '/src/index.js',
-            'vite' => $base . '/@vite/client'
-        ], $assets['js']);
-
-
-        // dev mode with custom url
-        $this->app = $this->app->clone([
-            'request' => [
-                'url' => 'http://sandbox.test'
-            ],
-            'options' => [
-                'panel' => [
-                    'dev' => 'http://localhost:3000'
-                ]
-            ]
-        ]);
-
-        $assets = Panel::assets($this->app);
-        $base   = 'http://localhost:3000';
-
-        // css
-        $this->assertSame(['plugins' => '/media/plugins/index.css?0'], $assets['css']);
-
-        // icons
-        $this->assertSame($base . '/apple-touch-icon.png', $assets['icons']['apple-touch-icon']['url']);
-        $this->assertSame($base . '/favicon.svg', $assets['icons']['shortcut icon']['url']);
-        $this->assertSame($base . '/favicon.png', $assets['icons']['alternate icon']['url']);
-
-        // js
-        $this->assertSame([
-            'pluginloader' => $base . '/js/plugins.js',
-            'plugins' => '/media/plugins/index.js?0',
-            'index' => $base . '/src/index.js',
-            'vite' => $base . '/@vite/client'
-        ], $assets['js']);
-
-
-        // custom panel css and js
-        $this->app = $this->app->clone([
-            'options' => [
-                'panel' => [
-                    'css' => '/assets/panel.css',
-                    'js'  => '/assets/panel.js',
-                ]
-            ]
-        ]);
-
-        // create dummy assets
-        F::write($this->tmp . '/assets/panel.css', 'test');
-        F::write($this->tmp . '/assets/panel.js', 'test');
-
-        $assets = Panel::assets($this->app);
-
-        $this->assertTrue(Str::contains($assets['css']['custom'], 'assets/panel.css'));
-        $this->assertTrue(Str::contains($assets['js']['custom'], 'assets/panel.js'));
-
-        // clean up vite file
-        F::remove($viteFile);
-    }
-
-    /**
-     * @covers ::customCss
-     */
-    public function testCustomCss(): void
-    {
-        // invalid
-        $app = $this->app->clone([
-            'options' => [
-                'panel' => [
-                    'css' => 'nonexists.css'
-                ]
-            ]
-        ]);
-
-        $this->assertNull(Panel::customCss());
-
-        // valid
-        F::write($this->tmp . '/panel.css', '');
-
-        $app = $this->app->clone([
-            'options' => [
-                'panel' => [
-                    'css' => 'panel.css'
-                ]
-            ]
-        ]);
-
-        $this->assertTrue(Str::contains(Panel::customCss(), '/panel.css'));
-    }
-
-    /**
-     * @covers ::customJs
-     */
-    public function testCustomJs(): void
-    {
-        // invalid
-        $app = $this->app->clone([
-            'options' => [
-                'panel' => [
-                    'js' => 'nonexists.js'
-                ]
-            ]
-        ]);
-
-        $this->assertNull(Panel::customJs());
-
-        // valid
-        F::write($this->tmp . '/panel.js', '');
-
-        $app = $this->app->clone([
-            'options' => [
-                'panel' => [
-                    'js' => 'panel.js'
-                ]
-            ]
-        ]);
-
-        $this->assertTrue(Str::contains(Panel::customJs(), '/panel.js'));
-    }
-
-    /**
-     * @covers ::data
-     */
-    public function testData(): void
-    {
-        // without custom data
-        $data = Panel::data();
-
-        $this->assertInstanceOf('Closure', $data['$language']);
-        $this->assertInstanceOf('Closure', $data['$languages']);
-        $this->assertInstanceOf('Closure', $data['$permissions']);
-        $this->assertFalse($data['$license']);
-        $this->assertFalse($data['$multilang']);
-        $this->assertSame('/', $data['$url']);
-        $this->assertInstanceOf('Closure', $data['$user']);
-    }
-
-    /**
-     * @covers ::data
-     */
-    public function testDataWithCustomProps(): void
-    {
-        $data = Panel::data([
-            '$props' => $props = [
-                'foo' => 'bar'
-            ]
-        ]);
-
-        $this->assertSame($props, $data['$props']);
-    }
-
-    /**
-     * @covers ::data
-     */
-    public function testDataWithLanguages(): void
-    {
-        $this->app = $this->app->clone([
-            'languages' => [
-                [ 'code' => 'en', 'name' => 'English', 'default' => true ],
-                [ 'code' => 'de', 'name' => 'Deutsch'],
-            ],
-            'options' => [
-                'languages' => true
-            ]
-        ]);
-
-        // without custom data
-        $data = Panel::data();
-
-        // resolve lazy data
-        $data = A::apply($data);
-
-        $this->assertTrue($data['$multilang']);
-
-        $expected = [
-            [
-                'code'    => 'en',
-                'default' => true,
-                'name'    => 'English'
-            ],
-            [
-                'code'    => 'de',
-                'default' => false,
-                'name'    => 'Deutsch'
-            ]
-        ];
-
-        $this->assertSame($expected, $data['$languages']);
-        $this->assertSame($expected[0], $data['$language']);
-    }
-
-    /**
-     * @covers ::data
-     */
-    public function testDataWithAuthenticatedUser(): void
-    {
-        // authenticate pseudo user
-        $this->app->impersonate('kirby');
-
-        // without custom data
-        $data = Panel::data();
-
-        // resolve lazy data
-        $data = A::apply($data);
-
-        // user
-        $expected = [
-            'email'    => 'kirby@getkirby.com',
-            'id'       => 'kirby',
-            'language' => 'en',
-            'role'     => 'admin',
-            'username' => 'kirby@getkirby.com'
-        ];
-
-        $this->assertSame($expected, $data['$user']);
-        $this->assertSame($this->app->user()->role()->permissions()->toArray(), $data['$permissions']);
-    }
-
-    /**
-     * @covers ::error
-     */
-    public function testError(): void
-    {
-        // without user
-        $error = Panel::error('Test');
-
-        $expected = [
-            'code' => 404,
-            'component' => 'k-error-view',
-            'props' => [
-                'error' => 'Test',
-                'layout' => 'outside'
-            ],
-            'title' => 'Error'
-        ];
-
-        $this->assertSame($expected, $error);
-
-        // with user
-        $this->app->impersonate('kirby');
-        $error = Panel::error('Test');
-
-        $this->assertSame('inside', $error['props']['layout']);
-
-        // user without panel access
-        $this->app->impersonate('nobody');
-        $error = Panel::error('Test');
-
-        $this->assertSame('outside', $error['props']['layout']);
-    }
-
-    /**
-     * @covers ::error
-     */
-    public function testErrorWithCustomCode(): void
-    {
-        $error = Panel::error('Test', 403);
-        $this->assertSame(403, $error['code']);
-    }
-
-    /**
-     * @covers ::fiber
-     */
-    public function testFiber(): void
-    {
-        // default
-        $fiber = Panel::fiber();
-
-        $expected = [
-            '$language' => null,
-            '$languages' => [],
-            '$permissions' => null,
-            '$license' => false,
-            '$multilang' => false,
-            '$url' => '/',
-            '$user' => null
-        ];
-
-        $this->assertSame($expected, $fiber);
-    }
-
-    /**
      * @covers ::firewall
      * @covers ::hasAccess
      */
@@ -580,84 +242,53 @@ class PanelTest extends TestCase
         Panel::firewall($app->user(), 'settings');
     }
 
-
     /**
-     * @covers ::globals
+     * @covers ::go
      */
-    public function testGlobals(): void
+    public function testGo()
     {
-        // defaults
-        $globals = Panel::globals();
-
-        $this->assertInstanceOf('Closure', $globals['$config']);
-        $this->assertInstanceOf('Closure', $globals['$system']);
-        $this->assertInstanceOf('Closure', $globals['$system']);
-        $this->assertInstanceOf('Closure', $globals['$translation']);
-        $this->assertInstanceOf('Closure', $globals['$urls']);
-
-        // defaults after apply
-        $globals     = A::apply($globals);
-        $config      = $globals['$config'];
-        $system      = $globals['$system'];
-        $translation = $globals['$translation'];
-        $urls        = $globals['$urls'];
-
-        // $config
-        $this->assertFalse($config['debug']);
-        $this->assertTrue($config['kirbytext']);
-        $this->assertSame(['limit' => 10, 'type'  => 'pages'], $config['search']);
-        $this->assertSame('en', $config['translation']);
-
-        // $system
-        $this->assertSame(Str::$ascii, $system['ascii']);
-        $this->assertSame(csrf(), $system['csrf']);
-        $this->assertFalse($system['isLocal']);
-        $this->assertArrayHasKey('de', $system['locales']);
-        $this->assertArrayHasKey('en', $system['locales']);
-        $this->assertSame('en_US', $system['locales']['en']);
-        $this->assertSame('de_DE', $system['locales']['de']);
-
-        // $translation
-        $this->assertSame('en', $translation['code']);
-        $this->assertSame($this->app->translation('en')->dataWithFallback(), $translation['data']);
-        $this->assertSame('ltr', $translation['direction']);
-        $this->assertSame('English', $translation['name']);
-
-        // $urls
-        $this->assertSame('/api', $urls['api']);
-        $this->assertSame('/', $urls['site']);
+        $thrown = false;
+        try {
+            Panel::go('test');
+        } catch (Redirect $r) {
+            $thrown = true;
+            $this->assertSame('/panel/test', $r->getMessage());
+            $this->assertSame(302, $r->getCode());
+        }
+        $this->assertTrue($thrown);
     }
 
     /**
-     * @covers ::globals
+     * @covers ::go
      */
-    public function testGlobalsWithUser(): void
+    public function testGoWithCustomCode()
+    {
+        try {
+            Panel::go('test', 301);
+        } catch (Redirect $r) {
+            $this->assertSame(301, $r->getCode());
+        }
+    }
+
+    /**
+     * @covers ::go
+     */
+    public function testGoWithCustomSlug()
     {
         $this->app = $this->app->clone([
-            'users' => [
-                [
-                    'email' => 'test@getkirby.com',
-                    'language' => 'de',
-                    'role' => 'admin'
+            'options' => [
+                'panel' => [
+                    'slug' => 'foo'
                 ]
             ]
         ]);
 
-        $this->app->impersonate('test@getkirby.com');
-        $globals = Panel::globals();
-        $globals = A::apply($globals);
-        $this->assertSame('de', $globals['$translation']['code']);
-    }
-
-    /**
-     * @covers ::icons
-     */
-    public function testIcons(): void
-    {
-        $icons = Panel::icons();
-
-        $this->assertNotNull($icons);
-        $this->assertTrue(strpos($icons, '<svg', 0) !== false);
+        try {
+            Panel::go('test');
+        } catch (Redirect $r) {
+            $this->assertSame('/foo/test', $r->getMessage());
+            $this->assertSame(302, $r->getCode());
+        }
     }
 
     /**
@@ -716,175 +347,6 @@ class PanelTest extends TestCase
         $this->assertSame($data, json_decode($response->body(), true));
     }
 
-
-    /**
-     * @covers ::link
-     */
-    public function testLink(): void
-    {
-        // create links
-        $link = Panel::link($this->app);
-        $this->assertTrue($link);
-
-        // try again to create links, should be return false
-        $link = Panel::link($this->app);
-        $this->assertFalse($link);
-    }
-
-    /**
-     * @covers ::partial
-     */
-    public function testPartial()
-    {
-        $data = [
-            'a' => 'A',
-            'b' => 'B'
-        ];
-
-        // default (no partial request)
-        $result = Panel::partial($data);
-
-        $this->assertSame($data, $result);
-    }
-
-    /**
-     * @covers ::partial
-     */
-    public function testPartialWithInclude(): void
-    {
-        // via get
-        $this->app = $this->app->clone([
-            'request' => [
-                'query' => [
-                    '_include' => 'a',
-                ]
-            ]
-        ]);
-
-        $data = [
-            'a' => 'A',
-            'b' => 'B'
-        ];
-
-        $result = Panel::partial($data);
-
-        $this->assertSame(['a' => 'A'], $result);
-
-        // via headers
-        $this->app = $this->app->clone([
-            'request' => [
-                'headers' => [
-                    'X-Fiber-Include' => 'a',
-                ]
-            ]
-        ]);
-
-        $data = [
-            'a' => 'A',
-            'b' => 'B'
-        ];
-
-        $result = Panel::partial($data);
-
-        $this->assertSame(['a' => 'A'], $result);
-    }
-
-    /**
-     * @covers ::partial
-     */
-    public function testPartialWithGlobal(): void
-    {
-        // simulate a simple partial request
-        $this->app = $this->app->clone([
-            'request' => [
-                'query' => [
-                    '_include' => 'a,$urls',
-                ]
-            ]
-        ]);
-
-        $data = [
-            'a' => 'A',
-            'b' => 'B'
-        ];
-
-        $result = Panel::partial($data);
-        $result = A::apply($result);
-
-        $expected = [
-            'a' => 'A',
-            '$urls' => [
-                'api' => '/api',
-                'site' => '/'
-            ]
-        ];
-
-        $this->assertSame($expected, $result);
-    }
-
-    /**
-     * @covers ::partial
-     */
-    public function testPartialWithNestedData(): void
-    {
-        // simulate a simple partial request
-        $this->app = $this->app->clone([
-            'request' => [
-                'query' => [
-                    '_include' => 'b.c',
-                ]
-            ]
-        ]);
-
-        $data = [
-            'a' => 'A',
-            'b' => [
-                'c' => 'C'
-            ]
-        ];
-
-        $result = Panel::partial($data);
-
-        $expected = [
-            'b' => [
-                'c' => 'C'
-            ]
-        ];
-
-        $this->assertSame($expected, $result);
-    }
-
-    /**
-     * @covers ::partial
-     */
-    public function testPartialWithNestedGlobal(): void
-    {
-        // simulate a simple partial request
-        $this->app = $this->app->clone([
-            'request' => [
-                'query' => [
-                    '_include' => 'a,$urls.site',
-                ]
-            ]
-        ]);
-
-        $data = [
-            'a' => 'A',
-            'b' => 'B'
-        ];
-
-        $result = Panel::partial($data);
-
-        $expected = [
-            'a' => 'A',
-            '$urls' => [
-                'site' => '/'
-            ]
-        ];
-
-        $this->assertSame($expected, $result);
-    }
-
     /**
      * @covers ::response
      */
@@ -894,6 +356,37 @@ class PanelTest extends TestCase
 
         // response objects should not be modified
         $this->assertSame($response, Panel::response($response));
+    }
+
+    /**
+     * @covers ::response
+     */
+    public function testResponseFromNullOrFalse()
+    {
+        // fake json request for easier assertions
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    '_json' => true,
+                ]
+            ]
+        ]);
+
+        // null is interpreted as 404
+        $response = Panel::response(null);
+        $json     = json_decode($response->body(), true);
+
+        $this->assertSame(404, $response->code());
+        $this->assertSame('k-error-view', $json['$view']['component']);
+        $this->assertSame('The data could not be found', $json['$view']['props']['error']);
+
+        // false is interpreted as 404
+        $response = Panel::response(false);
+        $json     = json_decode($response->body(), true);
+
+        $this->assertSame(404, $response->code());
+        $this->assertSame('k-error-view', $json['$view']['component']);
+        $this->assertSame('The data could not be found', $json['$view']['props']['error']);
     }
 
     /**
@@ -911,76 +404,12 @@ class PanelTest extends TestCase
         ]);
 
         // strings are interpreted as errors
-        $response = Panel::response('Not found');
-        $json     = json_decode($response->body(), true);
-
-        $this->assertSame(404, $response->code());
-        $this->assertSame('k-error-view', $json['$view']['component']);
-        $this->assertSame('Not found', $json['$view']['props']['error']);
-    }
-
-    /**
-     * @covers ::response
-     */
-    public function testResponseFromUnsupportedResult()
-    {
-        // fake json request for easier assertions
-        $this->app = $this->app->clone([
-            'request' => [
-                'query' => [
-                    '_json' => true,
-                ]
-            ]
-        ]);
-
-        $response = Panel::response(1234);
+        $response = Panel::response('Test');
         $json     = json_decode($response->body(), true);
 
         $this->assertSame(500, $response->code());
         $this->assertSame('k-error-view', $json['$view']['component']);
-        $this->assertSame('Invalid Panel response', $json['$view']['props']['error']);
-    }
-
-    /**
-     * @covers ::responseForView
-     */
-    public function testResponseForViewAsHTML(): void
-    {
-        // create panel dist files first to avoid redirect
-        Panel::link($this->app);
-
-        // get panel response
-        $response = Panel::responseForView([
-            'test' => 'Test'
-        ]);
-
-        $this->assertInstanceOf('\Kirby\Http\Response', $response);
-        $this->assertSame(200, $response->code());
-        $this->assertSame('text/html', $response->type());
-        $this->assertSame('UTF-8', $response->charset());
-        $this->assertNotNull($response->body());
-    }
-
-    /**
-     * @covers ::responseForView
-     */
-    public function testResponseForViewAsJson(): void
-    {
-        $this->app = $this->app->clone([
-            'request' => [
-                'query' => [
-                    '_json' => true
-                ]
-            ]
-        ]);
-
-        // get panel response
-        $response = Panel::responseForView([
-            'test' => 'Test'
-        ]);
-
-        $this->assertSame('application/json', $response->type());
-        $this->assertSame('true', $response->header('X-Fiber'));
+        $this->assertSame('Test', $json['$view']['props']['error']);
     }
 
     /**
@@ -997,6 +426,72 @@ class PanelTest extends TestCase
         $result = Panel::router('/');
 
         $this->assertNull($result);
+    }
+
+    /**
+     * @covers ::routesForDialogs
+     */
+    public function testRoutesForDialogs(): void
+    {
+        $area = [
+            'dialogs' => [
+                'test' => [
+                    'load'   => $load   = function () {
+                    },
+                    'submit' => $submit = function () {
+                    },
+                ]
+            ]
+        ];
+
+        $routes = Panel::routesForDialogs('test', $area);
+
+        $expected = [
+            [
+                'pattern' => 'dialogs/test',
+                'type'    => 'dialog',
+                'area'    => 'test',
+                'action'  => $load,
+            ],
+            [
+                'pattern' => 'dialogs/test',
+                'type'    => 'dialog',
+                'area'    => 'test',
+                'method'  => 'POST',
+                'action'  => $submit,
+            ]
+        ];
+
+        $this->assertSame($expected, $routes);
+    }
+
+    /**
+     * @covers ::routesForViews
+     */
+    public function testRoutesForViews(): void
+    {
+        $area = [
+            'views' => [
+                [
+                    'pattern' => 'test',
+                    'action'  => $callback = function () {
+                    }
+                ]
+            ]
+        ];
+
+        $routes = Panel::routesForViews('test', $area);
+
+        $expected = [
+            [
+                'pattern' => 'test',
+                'action'  => $callback,
+                'area'    => 'test',
+                'type'    => 'view'
+            ]
+        ];
+
+        $this->assertSame($expected, $routes);
     }
 
     /**
@@ -1142,36 +637,5 @@ class PanelTest extends TestCase
 
         $this->assertSame('de', $translation);
         $this->assertSame('de', $this->app->translation()->code());
-    }
-
-    /**
-     * @covers ::view
-     */
-    public function testView(): void
-    {
-        // defaults
-        $result = Panel::view();
-        $expected = [
-            'breadcrumb' => [],
-            'path' => '',
-            'props' => [],
-            'search' => 'pages'
-        ];
-        $this->assertSame($expected, $result);
-
-        // with $view
-        $result = Panel::view(['search' => 'files']);
-        $expected['search'] = 'files';
-        $this->assertEquals($expected, $result);
-
-        // with $area
-        $result = Panel::view(['search' => 'users'], ['title' => 'Users']);
-        $expected['search'] = 'users';
-        $expected['title']  = 'Users';
-        $this->assertEquals($expected, $result);
-
-        // make sure routes are unset
-        $result = Panel::view(['search' => 'users'], ['title' => 'Users', 'routes' => ['foo' => 'bar']]);
-        $this->assertEquals($expected, $result);
     }
 }

@@ -3,6 +3,7 @@
 namespace Kirby\Panel\Areas;
 
 use Kirby\Cms\App;
+use Kirby\Cms\Blueprint;
 use Kirby\Filesystem\Dir;
 use Kirby\Panel\Panel;
 use Kirby\Toolkit\Str;
@@ -25,6 +26,11 @@ abstract class AreaTestCase extends TestCase
         $this->assertSame($message, $view['props']['error']);
     }
 
+    public function assertFormDialog(array $dialog)
+    {
+        $this->assertSame('k-form-dialog', $dialog['component']);
+    }
+
     public function assertRedirect(string $source, string $dest = '/', int $code = 302): void
     {
         $response = $this->response($source);
@@ -33,6 +39,21 @@ abstract class AreaTestCase extends TestCase
         $this->assertInstanceOf('Kirby\Http\Response', $response);
         $this->assertSame($code, $response->code());
         $this->assertSame($dest, ltrim(Str::after($location, '/panel'), '/'));
+    }
+
+    public function assertRemoveDialog(array $dialog)
+    {
+        $this->assertSame('k-remove-dialog', $dialog['component']);
+    }
+
+    public function assertTextDialog(array $dialog)
+    {
+        $this->assertSame('k-text-dialog', $dialog['component']);
+    }
+
+    public function dialog(string $path)
+    {
+        return $this->response('dialogs/' . $path, true)['$dialog'];
     }
 
     public function enableMultilang(): void
@@ -112,12 +133,12 @@ abstract class AreaTestCase extends TestCase
     {
         $this->app([
             'languages' => [
-                [
+                'en' => [
                     'code'    => 'en',
                     'default' => true,
                     'name'    => 'English'
                 ],
-                [
+                'de' => [
                     'code'    => 'de',
                     'default' => false,
                     'name'    => 'Deutsch'
@@ -158,12 +179,28 @@ abstract class AreaTestCase extends TestCase
         Dir::make($this->tmp);
     }
 
+    public function submit(array $data)
+    {
+        $this->app([
+            'request' => [
+                'method' => 'POST',
+                'body'   => $data
+            ]
+        ]);
+
+        // re-authenticate after cloning the app
+        $this->login();
+    }
+
     public function tearDown(): void
     {
         // clear session file first
         $this->app->session()->destroy();
 
         Dir::remove($this->tmp);
+
+        // clear blueprint cache
+        Blueprint::$loaded = [];
 
         // clean up server software fakes
         unset($_SERVER['SERVER_SOFTWARE']);

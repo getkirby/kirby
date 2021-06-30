@@ -6,7 +6,7 @@ return function ($kirby) {
     return [
         'icon'  => 'settings',
         'label' => t('view.installation'),
-        'routes' => [
+        'views' => [
             [
                 'pattern' => 'installation',
                 'auth'    => false,

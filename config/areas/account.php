@@ -7,7 +7,7 @@ return function ($kirby) {
         'icon'   => 'account',
         'label'  => t('view.account'),
         'search' => 'users',
-        'routes' => [
+        'views'  => [
             [
                 'pattern' => 'account',
                 'action'  => function () use ($kirby) {

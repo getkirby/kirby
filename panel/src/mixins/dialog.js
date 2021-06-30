@@ -1,5 +1,9 @@
 export default {
   props: {
+    autofocus: {
+      type: Boolean,
+      default: true
+    },
     cancelButton: {
       type: [String, Boolean],
       default: true,
@@ -16,7 +20,8 @@ export default {
     /**
      * @values success, error
      */
-    theme: String
+    theme: String,
+    visible: Boolean
   },
   methods: {
     close() {

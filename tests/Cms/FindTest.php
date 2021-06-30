@@ -118,6 +118,44 @@ class FindTest extends TestCase
     }
 
     /**
+     * @covers ::language
+     */
+    public function testLanguage()
+    {
+        $app = $this->app->clone([
+            'languages' => [
+                [
+                    'code'    => 'en',
+                    'name'    => 'English',
+                    'default' => true
+                ],
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch',
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $this->assertSame('en', Find::language('en')->code());
+        $this->assertSame('de', Find::language('de')->code());
+    }
+
+    /**
+     * @covers ::language
+     */
+    public function testLanguageNotFound()
+    {
+        $this->app->impersonate('kirby');
+
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('The language could not be found');
+
+        Find::language('en');
+    }
+
+    /**
      * @covers ::page
      */
     public function testPage()

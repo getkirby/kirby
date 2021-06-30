@@ -100,6 +100,25 @@ class BlueprintTest extends TestCase
         $this->assertSame($expected['main'], $blueprint->tab());
     }
 
+    /**
+     * @covers ::__debugInfo
+     */
+    public function testDebugInfo()
+    {
+        $blueprint = new Blueprint([
+            'model' => $this->model,
+            'name'  => 'default'
+        ]);
+
+        $expected = [
+            'name'  => 'default',
+            'title' => 'Default',
+            'tabs'  => []
+        ];
+
+        $this->assertSame($expected, $blueprint->__debugInfo());
+    }
+
     public function testSectionsToColumns()
     {
         $sections = [
@@ -176,6 +195,9 @@ class BlueprintTest extends TestCase
         $this->assertEquals($expected, $blueprint->toArray()['tabs']);
     }
 
+    /**
+     * @covers ::title
+     */
     public function testTitle()
     {
         $blueprint = new Blueprint([
@@ -186,6 +208,9 @@ class BlueprintTest extends TestCase
         $this->assertEquals('Test', $blueprint->title());
     }
 
+    /**
+     * @covers ::title
+     */
     public function testTitleTranslated()
     {
         $blueprint = new Blueprint([
@@ -196,6 +221,9 @@ class BlueprintTest extends TestCase
         $this->assertEquals('Test', $blueprint->title());
     }
 
+    /**
+     * @covers ::title
+     */
     public function testTitleFromName()
     {
         $blueprint = new Blueprint([
@@ -212,6 +240,9 @@ class BlueprintTest extends TestCase
         $this->assertEquals('Test', $blueprint->title());
     }
 
+    /**
+     * @covers ::extend
+     */
     public function testExtend()
     {
         new App([
@@ -227,9 +258,52 @@ class BlueprintTest extends TestCase
             'model'   => new Page(['slug' => 'test'])
         ]);
 
-        $this->assertEquals('Extension Test', $blueprint->title());
+        $this->assertSame('Extension Test', $blueprint->title());
     }
 
+    /**
+     * @covers ::extend
+     */
+    public function testExtendWithInvalidSnippet()
+    {
+        $blueprint = new Blueprint([
+            'extends' => 'notFound',
+            'model'   => new Page(['slug' => 'test'])
+        ]);
+
+        $this->assertSame('Default', $blueprint->title());
+    }
+
+    /**
+     * @covers ::factory
+     */
+    public function testFactory()
+    {
+        $this->app = $this->app->clone([
+            'blueprints' => [
+                'pages/test' => ['title' => 'Test']
+            ]
+        ]);
+
+        $blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+
+        $this->assertSame('Test', $blueprint->title());
+        $this->assertSame('pages/test', $blueprint->name());
+    }
+
+    /**
+     * @covers ::factory
+     */
+    public function testFactoryForMissingBlueprint()
+    {
+        $blueprint = Blueprint::factory('notFound', null, new Page(['slug' => 'test']));
+        $this->assertNull($blueprint);
+    }
+
+    /**
+     * @covers ::fields
+     * @covers ::field
+     */
     public function testFields()
     {
         $blueprint = new Blueprint([
@@ -248,6 +322,9 @@ class BlueprintTest extends TestCase
         $this->assertEquals($fields['test'], $blueprint->field('test'));
     }
 
+    /**
+     * @covers ::fields
+     */
     public function testNestedFields()
     {
         $blueprint = new Blueprint([
@@ -298,6 +375,19 @@ class BlueprintTest extends TestCase
         $this->assertEquals(true, array_key_exists('main', $sections));
         $this->assertEquals(true, array_key_exists('headline', $sections['main']));
         $this->assertEquals('Invalid section type for section "main"', $sections['main']['headline']);
+    }
+
+    /**
+     * @covers ::isDefault
+     */
+    public function testIsDefault()
+    {
+        $blueprint = new Blueprint([
+            'model' => $this->model,
+            'name'  => 'default'
+        ]);
+
+        $this->assertTrue($blueprint->isDefault());
     }
 
     public function testSectionTypeFromName()

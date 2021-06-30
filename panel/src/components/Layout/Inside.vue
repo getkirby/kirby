@@ -13,9 +13,8 @@
       <k-topbar
         :breadcrumb="$view.breadcrumb"
         :license="$license"
-        :areas="$areas"
+        :menu="$menu"
         :view="$view"
-        @register="$refs.registration.open()"
         @search="$refs.search.open();"
       />
 
@@ -31,20 +30,33 @@
       <slot />
     </main>
 
-    <!-- Registration dialog -->
-    <k-registration ref="registration" @success="$reload" />
-
     <!-- Form buttons -->
     <k-form-buttons :lock="lock" />
 
     <!-- Error dialog -->
     <k-error-dialog />
 
+    <!-- Fiber dialogs -->
+    <template v-if="$store.state.dialog && $store.state.dialog.props">
+      <k-fiber-dialog v-bind="dialog" />
+    </template>
+
     <!-- Fatal iframe -->
     <template v-if="fatal">
       <div class="k-fatal">
         <div class="k-fatal-box">
-          <k-headline>The JSON response of the API could not be parsed:</k-headline>
+          <k-bar>
+            <k-headline slot="left">
+              The JSON response could not be parsed:
+            </k-headline>
+            <k-button
+              slot="right"
+              icon="cancel"
+              @click="$store.dispatch('fatal', false)"
+            >
+              Close
+            </k-button>
+          </k-bar>
           <iframe ref="fatal" class="k-fatal-iframe" />
         </div>
       </div>
@@ -61,13 +73,9 @@
 </template>
 
 <script>
-import search from "@/config/search.js"
-import Registration from "@/components/Dialogs/RegistrationDialog.vue";
+import search from "@/config/search.js";
 
 export default {
-  components: {
-    "k-registration": Registration
-  },
   inheritAttrs: false,
   props: {
     lock: [Boolean, Object]
@@ -79,6 +87,12 @@ export default {
     };
   },
   computed: {
+    defaultTranslation() {
+      return this.$language ? this.$language.default : false;
+    },
+    dialog() {
+      return this.$helper.clone(this.$store.state.dialog);
+    },
     fatal() {
       return this.$store.state.fatal;
     },
@@ -88,9 +102,6 @@ export default {
     translation() {
       return this.$language ? this.$language.code : null;
     },
-    defaultTranslation() {
-      return this.$language ? this.$language.default : false;
-    }
   },
   watch: {
     fatal(html) {
@@ -353,13 +364,13 @@ b {
   height: 100%;
   display: flex;
   flex-direction: column;
-  background: #fff;
+  background: var(--color-white);
   padding: .75rem 1.5rem 1.5rem;
   box-shadow: var(--shadow-xl);
   border-radius: var(--rounded);
 }
-.k-fatal-box .k-headline {
-  margin-bottom: .75rem;
+.k-fatal-box .k-bar {
+  margin-bottom: var(--spacing-3);
 }
 .k-fatal-iframe {
   border: 0;
