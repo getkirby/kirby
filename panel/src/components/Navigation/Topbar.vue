@@ -14,7 +14,7 @@
           </k-button>
           <k-dropdown-content
             ref="menu"
-            :options="menuDropdown"
+            :options="menu"
             theme="light"
             class="k-topbar-menu"
           />
@@ -90,32 +90,6 @@ export default {
     view: Object,
   },
   computed: {
-    menuDropdown() {
-      let menu = Object.values(this.menu);
-
-      menu.push("-");
-
-      menu.push({
-        icon: "account",
-        link: "/account",
-        text: this.$t("view.account"),
-        current: this.view.id === "account",
-        disabled: this.$permissions.access.account === false
-      });
-
-      menu.push("-");
-
-      menu.push({
-        click() {
-          this.$store.dispatch("content/clear");
-          this.$go("/logout");
-        },
-        icon: "logout",
-        text: this.$t("logout")
-      });
-
-      return menu;
-    },
     notification() {
       if (
         this.$store.state.notification.type &&

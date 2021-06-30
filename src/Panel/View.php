@@ -185,7 +185,7 @@ class View
                         continue;
                     }
 
-                    $menu[$areaId] = [
+                    $menu[] = [
                         'current'  => $areaId === $currentAreaId,
                         'icon'     => $area['icon'],
                         'id'       => $areaId,
@@ -194,6 +194,26 @@ class View
                         'text'     => $area['label'],
                     ];
                 }
+
+                $menu[] = '-';
+
+                $menu[] = [
+                    'current'  => $currentAreaId === 'account',
+                    'icon'     => 'account',
+                    'id'       => 'account',
+                    'link'     => 'account',
+                    'disabled' => ($permissions['access']['account'] ?? true) === false,
+                    'text'     => t('view.account'),
+                ];
+
+                $menu[] = '-';
+
+                $menu[] = [
+                    'icon' => 'logout',
+                    'id'   => 'logout',
+                    'link' => 'logout',
+                    'text' => t('logout')
+                ];
 
                 return $menu;
             },
