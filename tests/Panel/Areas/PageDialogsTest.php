@@ -293,6 +293,8 @@ class PageDialogsTest extends AreaTestCase
         $this->assertFalse($props['fields']['title']['disabled']);
         $this->assertSame('URL appendix', $props['fields']['slug']['label']);
         $this->assertFalse($props['fields']['slug']['disabled']);
+        $this->assertSame('Create from title', $props['fields']['slug']['wizzard']['text']);
+        $this->assertSame('title', $props['fields']['slug']['wizzard']['field']);
 
         $this->assertSame('test', $props['value']['title']);
         $this->assertSame('test', $props['value']['slug']);
