@@ -160,7 +160,11 @@ return [
                             'required'  => true,
                             'preselect' => $select === 'slug',
                             'path'      => $page->parent() ? '/' . $page->parent()->id() . '/' : '/',
-                            'disabled'  => $permissions->can('changeSlug') === false
+                            'disabled'  => $permissions->can('changeSlug') === false,
+                            'wizard'    => [
+                                'text'  => t('page.changeSlug.fromTitle'),
+                                'field' => 'title'
+                            ]
                         ])
                     ],
                     'autofocus' => false,

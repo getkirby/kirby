@@ -79,7 +79,12 @@ export default {
       immediate: true
     },
     value(newValue) {
-      this.slug = this.sluggify(newValue);
+      newValue = this.sluggify(newValue);
+
+      if (newValue !== this.slug) {
+        this.slug = newValue;
+        this.$emit("input", this.slug);
+      }
     }
   },
   methods: {
