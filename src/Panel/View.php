@@ -142,12 +142,11 @@ class View
         // multilang setup check
         $multilang = $kirby->option('languages', false) !== false;
 
+        // get the authenticated user
+        $user = $kirby->user();
+
         // user permissions
-        if ($user = $kirby->user()) {
-            $permissions = $user->role()->permissions()->toArray();
-        } else {
-            $permissions = [];
-        }
+        $permissions = $user ? $user->role()->permissions()->toArray() : [];
 
         // shared data for all requests
         return [
@@ -174,55 +173,14 @@ class View
                 return [];
             },
             '$menu' => function () use ($options, $permissions) {
-                $menu = [];
-
-                // get the id of the currently active area to
-                // highlight items in the menu correctly
-                $currentAreaId = $options['area']['id'] ?? null;
-
-                foreach ($options['areas'] ?? [] as $areaId => $area) {
-                    if ($area['menu'] !== true) {
-                        continue;
-                    }
-
-                    $menu[] = [
-                        'current'  => $areaId === $currentAreaId,
-                        'icon'     => $area['icon'],
-                        'id'       => $areaId,
-                        'link'     => $area['link'],
-                        'disabled' => ($permissions['access'][$areaId] ?? true) === false,
-                        'text'     => $area['label'],
-                    ];
-                }
-
-                $menu[] = '-';
-
-                $menu[] = [
-                    'current'  => $currentAreaId === 'account',
-                    'icon'     => 'account',
-                    'id'       => 'account',
-                    'link'     => 'account',
-                    'disabled' => ($permissions['access']['account'] ?? true) === false,
-                    'text'     => t('view.account'),
-                ];
-
-                $menu[] = '-';
-
-                $menu[] = [
-                    'icon' => 'logout',
-                    'id'   => 'logout',
-                    'link' => 'logout',
-                    'text' => t('logout')
-                ];
-
-                return $menu;
+                return static::menu($options['areas'] ?? [], $permissions, $options['area']['id'] ?? null);
             },
             '$permissions' => $permissions,
             '$license' => (bool)$kirby->system()->license(),
             '$multilang' => $multilang,
             '$url' => Url::current(),
-            '$user' => function () use ($kirby) {
-                if ($user = $kirby->user()) {
+            '$user' => function () use ($user) {
+                if ($user) {
                     return [
                         'email'       => $user->email(),
                         'id'          => $user->id(),
@@ -338,6 +296,65 @@ class View
                 ];
             }
         ];
+    }
+
+    /**
+     * Creates the menu for the topbar
+     *
+     * @param array $areas
+     * @param array $permissions
+     * @param string|null $current
+     * @return array
+     */
+    public static function menu(?array $areas = [], ?array $permissions = [], ?string $current = null): array
+    {
+        $menu = [];
+
+        // areas
+        foreach ($areas as $areaId => $area) {
+            $menuSetting = $area['menu'] ?? false;
+
+            if (is_a($menuSetting, 'Closure') === true) {
+                $menuSetting = $menuSetting($areas, $permissions, $current);
+            }
+
+            if ($menuSetting === false) {
+                continue;
+            }
+
+            $access   = $permissions['access'][$areaId] ?? false;
+            $disabled = $menuSetting === 'disabled' || $access === false;
+
+            $menu[] = [
+                'current'  => $areaId === $current,
+                'disabled' => $disabled,
+                'icon'     => $area['icon'],
+                'id'       => $areaId,
+                'link'     => $area['link'],
+                'text'     => $area['label'],
+            ];
+        }
+
+        // account
+        $menu[] = '-';
+        $menu[] = [
+            'current'  => $current === 'account',
+            'icon'     => 'account',
+            'id'       => 'account',
+            'link'     => 'account',
+            'disabled' => ($permissions['access']['account'] ?? false) === false,
+            'text'     => t('view.account'),
+        ];
+        $menu[] = '-';
+
+        // logout
+        $menu[] = [
+            'icon' => 'logout',
+            'id'   => 'logout',
+            'link' => 'logout',
+            'text' => t('logout')
+        ];
+        return $menu;
     }
 
     /**

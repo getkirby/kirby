@@ -479,6 +479,160 @@ class ViewTest extends TestCase
     }
 
     /**
+     * @covers ::menu
+     */
+    public function testMenu()
+    {
+        $menu = View::menu();
+
+        $account = [
+            'current'  => false,
+            'icon'     => 'account',
+            'id'       => 'account',
+            'link'     => 'account',
+            'disabled' => true,
+            'text'     => 'Your account'
+        ];
+
+        $logout = [
+            'icon' => 'logout',
+            'id'   => 'logout',
+            'link' => 'logout',
+            'text' => 'Logout'
+        ];
+
+        $this->assertCount(4, $menu);
+        $this->assertSame('-', $menu[0]);
+        $this->assertSame($account, $menu[1]);
+        $this->assertSame('-', $menu[2]);
+        $this->assertSame($logout, $menu[3]);
+    }
+
+    /**
+     * @covers ::menu
+     */
+    public function testMenuAreas()
+    {
+        $menu = View::menu(
+            [
+                'site' => [
+                    'icon'  => 'home',
+                    'label' => 'Site',
+                    'link'  => 'site',
+                    'menu'  => true,
+                ]
+            ],
+            [
+                'access' => [
+                    'site' => true
+                ]
+            ],
+            'site'
+        );
+
+        $expected = [
+            'current'  => true,
+            'disabled' => false,
+            'icon'     => 'home',
+            'id'       => 'site',
+            'link'     => 'site',
+            'text'     => 'Site'
+        ];
+
+        $this->assertCount(5, $menu);
+        $this->assertSame($expected, $menu[0]);
+    }
+
+    /**
+     * @covers ::menu
+     */
+    public function testMenuCallback()
+    {
+        $menu = View::menu(
+            [
+                'site' => [
+                    'icon'  => 'home',
+                    'label' => 'Site',
+                    'link'  => 'site',
+                    'menu'  => function () {
+                        return true;
+                    },
+                ]
+            ],
+        );
+
+        $this->assertCount(5, $menu);
+        $this->assertSame('Site', $menu[0]['text']);
+    }
+
+    /**
+     * @covers ::menu
+     */
+    public function testMenuCallbackDisabled()
+    {
+        $menu = View::menu(
+            [
+                'site' => [
+                    'icon'  => 'home',
+                    'label' => 'Site',
+                    'link'  => 'site',
+                    'menu'  => function () {
+                        return 'disabled';
+                    },
+                ]
+            ],
+        );
+
+        $this->assertCount(5, $menu);
+        $this->assertTrue($menu[0]['disabled']);
+    }
+
+    /**
+     * @covers ::menu
+     */
+    public function testMenuCallbackReturningFalse()
+    {
+        $menu = View::menu(
+            [
+                'site' => [
+                    'icon'  => 'home',
+                    'label' => 'Site',
+                    'link'  => 'site',
+                    'menu'  => function () {
+                        return false;
+                    },
+                ]
+            ],
+        );
+
+        $this->assertCount(4, $menu);
+    }
+
+    /**
+     * @covers ::menu
+     */
+    public function testMenuAccountPermissions()
+    {
+        $menu = View::menu([], [
+            'access' => [
+                'account' => true
+            ]
+        ]);
+
+        $this->assertFalse($menu[1]['disabled']);
+    }
+
+    /**
+     * @covers ::menu
+     */
+    public function testMenuAccountIsCurrent()
+    {
+        $menu = View::menu([], [], 'account');
+
+        $this->assertTrue($menu[1]['current']);
+    }
+
+    /**
      * @covers ::response
      */
     public function testResponseAsJSON(): void
