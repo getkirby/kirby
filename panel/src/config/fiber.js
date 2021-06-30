@@ -196,25 +196,9 @@ const Fiber = {
 
   /**
    * Handles the browser back button event
-   *
-   * @param {*} event
    */
-  async onPopstateEvent(event) {
-    // if a state is included, set the page
-    // based on this state (which will cause
-    // a swap of components)
-    if (event.state !== null) {
-      return this.setPage(event.state, { preserveState: false });
-    }
-
-    const url = this.url(this.page.$url);
-
-    // otherwise, just make sure to update
-    // the state properly
-    this.state({ ...this.page, url: url.href });
-
-    // reset the scroll position once the state is replaced
-    this.resetScroll();
+  async onPopstateEvent() {
+    this.reload();
   },
 
   /**
