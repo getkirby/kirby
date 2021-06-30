@@ -241,10 +241,10 @@ class ViewTest extends TestCase
         // without custom data
         $data = View::data();
 
-        $this->assertSame([], $data['$areas']);
+        $this->assertInstanceOf('Closure', $data['$menu']);
         $this->assertInstanceOf('Closure', $data['$language']);
         $this->assertInstanceOf('Closure', $data['$languages']);
-        $this->assertInstanceOf('Closure', $data['$permissions']);
+        $this->assertSame([], $data['$permissions']);
         $this->assertFalse($data['$license']);
         $this->assertFalse($data['$multilang']);
         $this->assertSame('/', $data['$url']);
@@ -261,7 +261,7 @@ class ViewTest extends TestCase
         $this->assertSame([], $view['props']);
         $this->assertSame('pages', $view['search']);
 
-        $this->assertArrayNotHasKey('routes', $view);
+        $this->assertArrayNotHasKey('views', $view);
         $this->assertArrayNotHasKey('dialogs', $view);
     }
 

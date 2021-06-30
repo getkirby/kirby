@@ -13,7 +13,7 @@
       <k-topbar
         :breadcrumb="$view.breadcrumb"
         :license="$license"
-        :areas="$areas"
+        :menu="$menu"
         :view="$view"
         @search="$refs.search.open();"
       />

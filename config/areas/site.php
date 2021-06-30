@@ -10,6 +10,6 @@ return function ($kirby) {
         'label'   => t('view.site'),
         'menu'    => true,
         'dialogs' => require __DIR__ . '/site/dialogs.php',
-        'routes'  => require __DIR__ . '/site/views.php'
+        'views'   => require __DIR__ . '/site/views.php'
     ];
 };

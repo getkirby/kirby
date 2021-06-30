@@ -6,6 +6,6 @@ return function ($kirby) {
         'label'   => t('view.settings'),
         'menu'    => true,
         'dialogs' => require __DIR__ . '/settings/dialogs.php',
-        'routes'  => require __DIR__ . '/settings/views.php'
+        'views'   => require __DIR__ . '/settings/views.php'
     ];
 };

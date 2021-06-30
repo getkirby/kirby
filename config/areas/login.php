@@ -4,9 +4,9 @@ use Kirby\Panel\Panel;
 
 return function ($kirby) {
     return [
-        'icon'   => 'user',
-        'label'  => t('login'),
-        'routes' => [
+        'icon'  => 'user',
+        'label' => t('login'),
+        'views' => [
             [
                 'pattern' => 'login',
                 'auth'    => false,

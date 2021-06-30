@@ -142,14 +142,15 @@ class View
         // multilang setup check
         $multilang = $kirby->option('languages', false) !== false;
 
+        // user permissions
+        if ($user = $kirby->user()) {
+            $permissions = $user->role()->permissions()->toArray();
+        } else {
+            $permissions = [];
+        }
+
         // shared data for all requests
         return [
-            '$areas' => A::map($options['areas'] ?? [], function ($area) {
-                // routes and dialogs should not be included
-                // in the frontend object
-                unset($area['routes'], $area['dialogs']);
-                return $area;
-            }),
             '$language' => function () use ($kirby, $multilang) {
                 if ($multilang === true && $language = $kirby->language()) {
                     return [
@@ -172,11 +173,31 @@ class View
 
                 return [];
             },
-            '$permissions' => function () use ($kirby) {
-                if ($user = $kirby->user()) {
-                    return $user->role()->permissions()->toArray();
+            '$menu' => function () use ($options, $permissions) {
+                $menu = [];
+
+                // get the id of the currently active area to
+                // highlight items in the menu correctly
+                $currentAreaId = $options['area']['id'] ?? null;
+
+                foreach ($options['areas'] ?? [] as $areaId => $area) {
+                    if ($area['menu'] !== true) {
+                        continue;
+                    }
+
+                    $menu[$areaId] = [
+                        'current'  => $areaId === $currentAreaId,
+                        'icon'     => $area['icon'],
+                        'id'       => $areaId,
+                        'link'     => $area['link'],
+                        'disabled' => ($permissions['access'][$areaId] ?? true) === false,
+                        'text'     => $area['label'],
+                    ];
                 }
+
+                return $menu;
             },
+            '$permissions' => $permissions,
             '$license' => (bool)$kirby->system()->license(),
             '$multilang' => $multilang,
             '$url' => Url::current(),
@@ -205,8 +226,8 @@ class View
 
                 $view = array_replace_recursive($defaults, $options['area'] ?? [], $view);
 
-                // make sure that routes and dialogs are gone
-                unset($view['routes'], $view['dialogs']);
+                // make sure that views and dialogs are gone
+                unset($view['views'], $view['dialogs']);
 
                 // resolve all callbacks in the view array
                 return A::apply($view);

@@ -14,10 +14,9 @@
           </k-button>
           <k-dropdown-content
             ref="menu"
-            :options="menu"
+            :options="menuDropdown"
             theme="light"
             class="k-topbar-menu"
-            @action="onMenu"
           />
         </k-dropdown>
 
@@ -84,22 +83,15 @@
 <script>
 export default {
   props: {
-    areas: Object,
     breadcrumb: Array,
     license: Boolean,
+    menu: Object,
     title: String,
     view: Object,
   },
   computed: {
-    menu() {
-      let menu = Object.values(this.areas)
-      menu = menu.filter(area => this.areaInMenu(area) !== false)
-      menu = menu.map(area => ({
-        ...area,
-        text: area.label,
-        current: this.view.id === area.id,
-        disabled: this.areaInMenu(area) === 'disabled'
-      }));
+    menuDropdown() {
+      let menu = Object.values(this.menu);
 
       menu.push("-");
 
@@ -107,14 +99,18 @@ export default {
         icon: "account",
         link: "/account",
         text: this.$t("view.account"),
-        current: this.view.id === "account"
+        current: this.view.id === "account",
+        disabled: this.$permissions.access.account === false
       });
 
       menu.push("-");
 
       menu.push({
+        click() {
+          this.$store.dispatch("content/clear");
+          this.$go("/logout");
+        },
         icon: "logout",
-        click: "logout",
         text: this.$t("logout")
       });
 
@@ -128,37 +124,6 @@ export default {
         return this.$store.state.notification;
       } else {
         return null;
-      }
-    }
-  },
-  methods: {
-    logout() {
-      this.$store.dispatch("content/clear");
-      this.$go("/logout");
-    },
-    areaInMenu(area) {
-      let menu = area.menu;
-      if (typeof menu === "function") {
-        menu = menu(this);
-      }
-
-      // explicit configuration with one of the possible three values
-      if ([true, false, "disabled"].indexOf(menu) >= 0) {
-        return menu;
-      }
-
-      // default/fallback: disable if no permissions, otherwise enable
-      if (this.$permissions.access[area.id] === false) {
-        return "disabled";
-      }
-
-      return true;
-    },
-    onMenu(action) {
-      switch (action) {
-        case "logout":
-          this.logout();
-          break;
       }
     }
   }

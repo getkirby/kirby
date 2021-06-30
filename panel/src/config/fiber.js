@@ -115,11 +115,11 @@ const Fiber = {
    */
   data(data) {
     [
-      "$areas",
       "$config",
       "$language",
       "$languages",
       "$license",
+      "$menu",
       "$multilang",
       "$permissions",
       "$system",

@@ -471,7 +471,7 @@ class PanelTest extends TestCase
     public function testRoutesForViews(): void
     {
         $area = [
-            'routes' => [
+            'views' => [
                 [
                     'pattern' => 'test',
                     'action'  => $callback = function () {

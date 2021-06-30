@@ -429,7 +429,7 @@ class Panel
      */
     public static function routesForViews(string $areaId, array $area): array
     {
-        $views  = $area['routes'] ?? [];
+        $views  = $area['views'] ?? [];
         $routes = [];
 
         foreach ($views as $view) {
