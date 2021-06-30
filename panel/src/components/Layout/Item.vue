@@ -225,12 +225,13 @@ export default {
   line-height: 1.5rem;
 }
 .k-list-item .k-item-title {
-  margin-right: .5rem;
+  margin-inline-end: .5rem;
   flex-shrink: 1;
 }
 .k-list-item .k-item-info {
   flex-shrink: 2;
   text-align: right;
+  justify-self: end;
   margin-inline-end: .5rem;
 }
 .k-list-item .k-item-footer {
@@ -241,9 +242,6 @@ export default {
 }
 .k-list-item .k-item-label {
   margin-inline-end: .5rem;
-}
-.k-list-item .k-item-info {
-  justify-self: end;
 }
 
 

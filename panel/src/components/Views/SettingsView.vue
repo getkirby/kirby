@@ -6,7 +6,7 @@
       </k-header>
 
       <section class="k-system-info">
-        <header>
+        <header class="k-settings-view-section-header">
           <k-headline>Kirby</k-headline>
         </header>
 
@@ -36,14 +36,14 @@
       <section v-if="$multilang" class="k-languages">
         <template v-if="languages.length > 0">
           <section class="k-languages-section">
-            <header>
+            <header class="k-settings-view-section-header">
               <k-headline>{{ $t('languages.default') }}</k-headline>
             </header>
-            <k-collection :items="primaryLanguage" @action="action" />
+            <k-collection :items="primaryLanguage" />
           </section>
 
           <section class="k-languages-section">
-            <header>
+            <header class="k-settings-view-section-header">
               <k-headline>{{ $t('languages.secondary') }}</k-headline>
               <k-button icon="add" @click="$dialog('languages/create')">
                 {{ $t('language.create') }}
@@ -52,7 +52,6 @@
             <k-collection
               v-if="secondaryLanguages.length"
               :items="secondaryLanguages"
-              @action="action"
             />
             <k-empty v-else icon="globe" @click="$dialog('languages/create')">
               {{ $t('languages.secondary.empty') }}
@@ -61,7 +60,7 @@
         </template>
 
         <template v-else-if="languages.length === 0">
-          <header>
+          <header class="k-settings-view-section-header">
             <k-headline>{{ $t('languages') }}</k-headline>
             <k-button icon="add" @click="$dialog('languages/create')">
               {{ $t('language.create') }}
@@ -93,8 +92,9 @@ export default {
       return this.languages.map(language => ({
         ...language,
         image: {
-          "back": "black",
-          "icon": "globe"
+          back: "black",
+          color: "gray",
+          icon: "globe",
         },
         link: () => {
           this.$dialog(`languages/${language.id}/update`);
@@ -135,7 +135,7 @@ export default {
 .k-settings-view .k-header {
   margin-bottom: 1.5rem;
 }
-.k-settings-view header {
+.k-settings-view-section-header {
   margin-bottom: .5rem;
   display: flex;
   justify-content: space-between;
