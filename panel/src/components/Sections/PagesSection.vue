@@ -116,7 +116,7 @@ export default {
               "list",
               {
                 sort:   page.sortable,
-                delete: data.length > this.options.min
+                delete: page.permissions.delete && data.length > this.options.min
               }
             );
             ready(options);
