@@ -94,10 +94,11 @@ class Field
      */
     public static function pagePosition(Page $page, array $props = []): array
     {
-        $index   = 0;
-        $options = [];
+        $index    = 0;
+        $options  = [];
+        $siblings = $page->parentModel()->children()->not($page);
 
-        foreach ($page->siblings(false) as $sibling) {
+        foreach ($siblings as $sibling) {
             $index++;
 
             $options[] = [

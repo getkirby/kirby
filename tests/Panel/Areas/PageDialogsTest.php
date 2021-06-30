@@ -116,6 +116,29 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame(1, $props['value']['position']);
     }
 
+    public function testChangeStatusForDraft(): void
+    {
+        $this->app([
+            'site' => [
+                'drafts' => [
+                    ['slug' => 'a'],
+                ],
+                'children' => [
+                    ['slug' => 'b']
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/a/changeStatus');
+        $props  = $dialog['props'];
+
+        $this->assertSame(2, $props['value']['position']);
+        $this->assertCount(3, $props['fields']['position']['options']);
+        $this->assertSame('b', $props['fields']['position']['options'][1]['value']);
+    }
+
     public function testChangeStatusOnSubmit(): void
     {
         $this->app([
