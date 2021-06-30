@@ -33,7 +33,7 @@ return [
                     ],
                     'submitButton' => t('change'),
                     'value' => [
-                        'position' => $page->num() ?? $page->parentModel()->children()->not($page)->count() + 1
+                        'position' => $page->panel()->position()
                     ]
                 ]
             ];
@@ -79,7 +79,7 @@ return [
                     ]
                 ]);
 
-                $position = $page->num() ?? $page->parentModel()->children()->not($page)->count() + 1;
+                $position = $page->panel()->position();
             }
 
             return [

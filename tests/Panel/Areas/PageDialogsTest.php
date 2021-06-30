@@ -124,7 +124,7 @@ class PageDialogsTest extends AreaTestCase
                     ['slug' => 'a'],
                 ],
                 'children' => [
-                    ['slug' => 'b']
+                    ['slug' => 'b', 'num' => 1]
                 ]
             ]
         ]);

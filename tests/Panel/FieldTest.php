@@ -130,9 +130,9 @@ class FieldTest extends TestCase
         $this->app = $this->app->clone([
             'site' => [
                 'children' => [
-                    ['slug' => 'a'],
-                    ['slug' => 'b'],
-                    ['slug' => 'c']
+                    ['slug' => 'a', 'num' => 1],
+                    ['slug' => 'b', 'num' => 2],
+                    ['slug' => 'c', 'num' => 3]
                 ]
             ]
         ]);

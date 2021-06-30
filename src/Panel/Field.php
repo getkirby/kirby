@@ -96,7 +96,7 @@ class Field
     {
         $index    = 0;
         $options  = [];
-        $siblings = $page->parentModel()->children()->not($page);
+        $siblings = $page->parentModel()->children()->listed()->not($page);
 
         foreach ($siblings as $sibling) {
             $index++;
