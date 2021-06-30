@@ -5,9 +5,17 @@ export default {
   extends: FormDialog,
   watch: {
     "model.name"(name) {
+      if (this.fields.code.disabled) {
+        return;
+      }
+
       this.onNameChanges(name);
     },
     "model.code"(code) {
+      if (this.fields.code.disabled) {
+        return;
+      }
+
       this.model.code = this.$helper.slug(code, [this.$system.ascii]);
       this.onCodeChanges(this.model.code);
     }
