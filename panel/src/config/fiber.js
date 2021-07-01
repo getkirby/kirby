@@ -32,6 +32,7 @@ import { toJson } from "../api/request.js";
 
 const Fiber = {
   base: null,
+  csrf: null,
   page: null,
   swap: null,
 
@@ -40,10 +41,12 @@ const Fiber = {
    *
    * @param {object} options
    */
-  init({ page, swap, base }) {
+  init({ csrf, page, swap, base }) {
 
     // set the base URL for all requests
     this.base = base || document.querySelector("base").href;
+
+    this.csrf = csrf;
 
     // callback function which handles
     // swapping components
@@ -278,7 +281,10 @@ const Fiber = {
       const response = await fetch(url, {
         method: options.method,
         body: this.body(options.body),
+        credentials: "same-origin",
+        cache: "no-store",
         headers: {
+          "X-CSRF": this.csrf,
           "X-Fiber": true,
           "X-Fiber-Referrer": this.page.$view.path,
           ...options.headers,
@@ -479,6 +485,7 @@ export const component = {
   created() {
     Fiber.init({
       page: window.fiber,
+      csrf: window.fiber.$system.csrf,
       swap: async ({ component, page, preserveState }) => {
         this.component = component;
         this.page = page;
