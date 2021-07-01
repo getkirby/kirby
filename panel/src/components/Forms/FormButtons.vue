@@ -144,7 +144,9 @@ export default {
   },
   created() {
     // refresh lock data every 10 seconds
-    this.isRefreshing = setInterval(this.check, 10000);
+    if (this.supportsLocking) {
+      this.isRefreshing = setInterval(this.check, 10000);
+    }
     this.$events.$on("keydown.cmd.s", this.onSave);
   },
   destroyed() {
