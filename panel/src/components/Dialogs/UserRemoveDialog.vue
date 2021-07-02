@@ -1,7 +1,7 @@
 <template>
   <k-remove-dialog
     ref="dialog"
-    :text="$t('user.delete.confirm', { email: user.email })"
+    :text="$t('user.delete.confirm', { email: $esc(user.email) })"
     @submit="submit"
   />
 </template>

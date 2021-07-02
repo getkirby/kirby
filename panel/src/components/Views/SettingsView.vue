@@ -118,8 +118,8 @@ export default {
               default: language.default,
               icon: { type: "globe", back: "black" },
               image: true,
-              text: language.name,
-              info: language.code,
+              text: this.$esc(language.name),
+              info: this.$esc(language.code),
               link: () => {
                 this.$refs.update.open(language.code);
               },

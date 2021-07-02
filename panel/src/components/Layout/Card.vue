@@ -12,7 +12,8 @@
         <k-icon v-bind="icon" />
       </span>
       <figcaption class="k-card-content">
-        <span :data-noinfo="!info" class="k-card-text">{{ text }}</span>
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span :data-noinfo="!info" class="k-card-text" v-html="text" />
         <!-- eslint-disable-next-line vue/no-v-html -->
         <span v-if="info" class="k-card-info" v-html="info" />
       </figcaption>

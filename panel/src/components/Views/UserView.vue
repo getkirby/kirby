@@ -84,7 +84,7 @@
       <k-sections
         v-if="user"
         :blueprint="user.blueprint.name"
-        :empty="$t('user.blueprint', { role: user.role.name })"
+        :empty="$t('user.blueprint', { role: $esc(user.role.name) })"
         :parent="'users/' + user.id"
         :tab="tab"
         :tabs="tabs"

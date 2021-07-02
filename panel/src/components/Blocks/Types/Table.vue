@@ -4,6 +4,7 @@
       <th
         v-for="(column, columnName) in columns"
         :key="columnName"
+        :style="'width:' + width(column.width)"
         :data-align="column.align"
       >
         {{ column.label }}
@@ -18,27 +19,45 @@
       <td
         v-for="(column, columnName) in columns"
         :key="rowIndex + '-' + columnName"
+        :style="'width:' + width(column.width)"
         :data-align="column.align"
       >
-        {{ column.before }} {{ row[columnName] }} {{ column.after }}
+        <component
+          :is="'k-' + column.type + '-field-preview'"
+          v-if="previewExists(column.type)"
+          :value="row[columnName]"
+          :column="column"
+          :field="fields[columnName]"
+        />
+        <template v-else>
+          <p class="k-structure-table-text">
+            {{ column.before }} {{ displayText(fields[columnName], row[columnName]) || "–" }} {{ column.after }}
+          </p>
+        </template>
       </td>
     </tr>
   </table>
 </template>
 
 <script>
+import structure from "@/mixins/forms/structure.js";
+
 /**
  * @displayName BlockTypeTable
  * @internal
  */
 export default {
+  mixins: [structure],
   inheritAttrs: false,
   computed: {
     columns() {
-      return this.table.columns || this.table.fields || {};
+      return this.table.columns || this.fields;
     },
     columnsCount() {
       return Object.keys(this.columns).length;
+    },
+    fields() {
+      return this.table.fields || {};
     },
     rows() {
       return this.content.rows || [];

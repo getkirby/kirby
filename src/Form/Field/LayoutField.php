@@ -146,6 +146,12 @@ class LayoutField extends BlocksField
     {
         $value = Layouts::factory($value, ['parent' => $this->model])->toArray();
 
+        // returns empty string to avoid storing empty array as string `[]`
+        // and to consistency work with `$field->isEmpty()`
+        if (empty($value) === true) {
+            return '';
+        }
+
         foreach ($value as $layoutIndex => $layout) {
             if ($this->settings !== null) {
                 $value[$layoutIndex]['attrs'] = $this->attrsForm($layout['attrs'])->content();

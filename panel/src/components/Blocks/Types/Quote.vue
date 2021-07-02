@@ -3,6 +3,7 @@
     <k-writer
       ref="text"
       :inline="true"
+      :marks="textField.marks"
       :placeholder="textField.placeholder"
       :value="content.text"
       class="k-block-type-quote-text"
@@ -11,6 +12,7 @@
     <k-writer
       ref="citation"
       :inline="true"
+      :marks="citationField.marks"
       :placeholder="citationField.placeholder"
       :value="content.citation"
       class="k-block-type-quote-citation"

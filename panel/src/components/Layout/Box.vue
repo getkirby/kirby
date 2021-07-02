@@ -3,7 +3,10 @@
     <!-- @slot Use instead of `text` prop -->
     <slot>
       <!-- eslint-disable-next-line vue/no-v-html -->
-      <k-text v-html="text" />
+      <k-text v-if="html" v-html="text" />
+      <k-text v-else>
+        {{ text }}
+      </k-text>
     </slot>
   </div>
 </template>
@@ -27,7 +30,15 @@ export default {
     /**
      * Text to display inside the box
      */
-    text: String
+    text: String,
+    /**
+     * If set to `false`, the `text` is rendered as text only
+     * @todo Switch default value to `false` in 3.6.0
+     */
+    html: {
+      type: Boolean,
+      default: true
+    }
   }
 };
 </script>

@@ -135,8 +135,8 @@ export default {
             let item = {
               id: user.id,
               icon: { type: "user", back: "black" },
-              text: user.name || user.email,
-              info: user.role.title,
+              text: this.$esc(user.name || user.email),
+              info: this.$esc(user.role.title),
               link: "/users/" + user.id,
               options: ready => {
                 this.$api.users

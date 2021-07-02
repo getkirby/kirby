@@ -37,7 +37,6 @@ export default {
       });
     };
 
-
     Vue.prototype.$helper = {
       clone: clone,
       isComponent: isComponent,
@@ -52,6 +51,8 @@ export default {
       uuid: uuid,
       validate: validate,
     };
+
+    Vue.prototype.$esc = string.escapeHTML;
 
   }
 

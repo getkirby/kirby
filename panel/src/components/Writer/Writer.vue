@@ -63,6 +63,7 @@ export default {
     "k-writer-toolbar": ToolbarComponent,
   },
   props: {
+    autofocus: Boolean,
     breaks: Boolean,
     code: Boolean,
     disabled: Boolean,
@@ -120,13 +121,14 @@ export default {
   },
   mounted() {
     this.editor = new Editor({
+      autofocus: this.autofocus,
       content: this.value,
       editable: !this.disabled,
       element: this.$el,
       emptyDocument: this.emptyDocument,
       events: {
-        link: () => {
-          this.$refs.linkDialog.open(this.editor.getMarkAttrs("link"));
+        link: (editor) => {
+          this.$refs.linkDialog.open(editor.getMarkAttrs("link"));
         },
         toolbar: (toolbar) => {
           this.toolbar = toolbar;
@@ -137,11 +139,24 @@ export default {
             });
           }
         },
-        update: () => {
-          this.html    = this.editor.getHTML();
-          this.isEmpty = this.editor.isEmpty();
+        update: (payload) => {
+          this.html    = payload.editor.getHTML();
+          this.isEmpty = payload.editor.isEmpty();
 
-          this.$emit("input", this.isEmpty === false ? this.html : "");
+          // when a new list item or heading is created, textContent length returns 0
+          // checking active nodes to prevent this issue
+          // empty input means no nodes or just the paragraph node and its length 0
+          if (
+            this.isEmpty &&
+            (
+              payload.editor.activeNodes.length === 0 ||
+              payload.editor.activeNodes.includes("paragraph")
+            )
+          ) {
+            this.html = "";
+          }
+
+          this.$emit("input", this.html);
         }
       },
       extensions: [

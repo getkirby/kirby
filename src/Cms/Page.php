@@ -7,6 +7,7 @@ use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Http\Uri;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\F;
 
 /**
@@ -995,6 +996,14 @@ class Page extends ModelWithContent
         $image = $this->panelImage($params['image'] ?? []);
         $icon  = $this->panelIcon($image);
 
+        // escape the default text
+        // TODO: no longer needed in 3.6
+        $textQuery = $params['text'] ?? '{{ page.title }}';
+        $text  = $this->toString($textQuery);
+        if ($textQuery === '{{ page.title }}') {
+            $text = Escape::html($text);
+        }
+
         return [
             'dragText'    => $this->dragText(),
             'hasChildren' => $this->hasChildren(),
@@ -1003,7 +1012,7 @@ class Page extends ModelWithContent
             'image'       => $image,
             'info'        => $this->toString($params['info'] ?? false),
             'link'        => $this->panelUrl(true),
-            'text'        => $this->toString($params['text'] ?? '{{ page.title }}'),
+            'text'        => $text,
             'url'         => $this->url(),
         ];
     }

@@ -14,7 +14,8 @@
         @keydown.backspace.prevent="close"
         @keydown.delete.prevent="close"
       >
-        {{ item.text }}
+        <!-- eslint-disable-next-line vue/no-v-html -->
+        <span v-html="html ? item.text : $esc(item.text)" />
       </k-dropdown-item>
     </k-dropdown-content>
     {{ query }}
@@ -27,6 +28,13 @@
  */
 export default {
   props: {
+    /**
+     * If set to `true`, the text of the options is rendered as HTML
+     */
+    html: {
+      type: Boolean,
+      default: false
+    },
     /**
      * Maximum number of displayed results
      */
@@ -44,10 +52,10 @@ export default {
       }
     },
     /**
-     * Options for the autocomplete dropdown must be passed as an array of 
-     * objects. Each object can have as many items as you like, but a text 
+     * Options for the autocomplete dropdown must be passed as an array of
+     * objects. Each object can have as many items as you like, but a text
      * item is required to match agains the query
-     * 
+     *
      * @example [ { text: "this will be searched", id: "anything else is optional" }, ];
      */
     options: Array,
