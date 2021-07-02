@@ -57,7 +57,7 @@
 
       <k-sections
         :blueprint="blueprint"
-        :empty="$t('page.blueprint', { template: blueprint })"
+        :empty="$t('page.blueprint', { template: $esc(blueprint) })"
         :lock="lock"
         :parent="$api.pages.url(model.id)"
         :tab="tab"

@@ -74,6 +74,7 @@ return [
             return [
                 'component' => 'k-remove-dialog',
                 'props' => [
+                    // todo: escape placeholder (output with `v-html`)
                     'text' => tt('language.delete.confirm', [
                         'name' => $language->name()
                     ])

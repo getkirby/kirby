@@ -78,9 +78,11 @@ export default {
   created() {
     this.load();
     this.$events.$on("page.changeStatus", this.reload);
+    this.$events.$on("page.sort", this.reload);
   },
   destroyed() {
     this.$events.$off("page.changeStatus", this.reload);
+    this.$events.$off("page.sort", this.reload);
   },
   methods: {
     create() {
@@ -150,6 +152,7 @@ export default {
         try {
           await this.$api.pages.status(element.id, "listed", position);
           this.$store.dispatch("notification/success", ":)");
+          this.$events.$emit("page.sort", element);
 
         } catch (error) {
           this.$store.dispatch("notification/error", {

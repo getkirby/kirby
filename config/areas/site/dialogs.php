@@ -320,6 +320,7 @@ return [
     'pages/(:any)/delete' => [
         'load' => function (string $id) {
             $page = Find::page($id);
+            // todo: escape placeholder (output with `v-html`)
             $text = tt('page.delete.confirm', ['title' => $page->title()->value()]);
 
             if ($page->childrenAndDrafts()->count() > 0) {

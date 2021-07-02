@@ -4,7 +4,7 @@
       <k-headline class="k-fields-issue-headline">
         Error
       </k-headline>
-      <k-box :text="issue.message" theme="negative" />
+      <k-box :text="issue.message" :html="false" theme="negative" />
     </template>
     <k-form
       :fields="fields"

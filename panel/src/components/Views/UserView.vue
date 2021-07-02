@@ -99,7 +99,7 @@
 
         <k-sections
           :blueprint="blueprint"
-          :empty="$t('user.blueprint', { blueprint: blueprint })"
+          :empty="$t('user.blueprint', { blueprint: $esc(blueprint) })"
           :lock="lock"
           :parent="'users/' + model.id"
           :tab="tab"

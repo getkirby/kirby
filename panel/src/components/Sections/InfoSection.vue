@@ -18,7 +18,6 @@ export default {
   data() {
     return {
       headline: null,
-      issue: null,
       text: null,
       theme: null
     };
@@ -29,9 +28,6 @@ export default {
         this.headline = response.options.headline;
         this.text     = response.options.text;
         this.theme    = response.options.theme || "info";
-      })
-      .catch (error => {
-        this.issue = error;
       });
   }
 };

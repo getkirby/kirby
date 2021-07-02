@@ -250,7 +250,7 @@ class Str
      */
     public static function contains(string $string = null, string $needle, bool $caseInsensitive = false): bool
     {
-        return call_user_func($caseInsensitive === true ? 'stristr' : 'strstr', $string, $needle) !== false;
+        return call_user_func($caseInsensitive === true ? 'stripos' : 'strpos', $string, $needle) !== false;
     }
 
     /**
@@ -967,21 +967,23 @@ class Str
      * @param string|null $string The string with placeholders
      * @param array $data Associative array with placeholders as
      *                    keys and replacements as values
-     * @param string|array|null $options An options that contains:
-     *                                   - fallback: if a token does not have any matches
-     *                                   - callback: to be able to handle each matching result
-     *                                   - start: start placeholder
-     *                                   - end: end placeholder
+     * @param string|array|null $fallback An options array that contains:
+     *                                    - fallback: if a token does not have any matches
+     *                                    - callback: to be able to handle each matching result
+     *                                    - start: start placeholder
+     *                                    - end: end placeholder
+     *                                    A simple fallback string is supported for compatibility (but deprecated).
      * @param string $start Placeholder start characters
      * @param string $end Placeholder end characters
      *
-     * @todo Remove stringable type for `$options` param in 3.7.0, will only array supports
-     * @todo Remove `$start` and `$end` parameters in 3.8.0
+     * @todo Deprecate `string $fallback` and `$start`/`$end` arguments with warning in 3.6.0
+     * @todo Remove `$start` and `$end` parameters, rename `$fallback` to `$options` and only support `array` type for `$options` in 3.7.0
      *
      * @return string The filled-in string
      */
-    public static function template(string $string = null, array $data = [], $options = null, string $start = '{{', string $end = '}}'): string
+    public static function template(string $string = null, array $data = [], $fallback = null, string $start = '{{', string $end = '}}'): string
     {
+        $options  = $fallback;
         $fallback = is_string($options) === true ? $options : ($options['fallback'] ?? null);
         $callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
         $start    = (string)($options['start'] ?? $start);
@@ -1008,7 +1010,7 @@ class Str
 
             // callback on result if given
             if ($callback !== null) {
-                $result = $callback((string)$result, $data);
+                $result = $callback((string)$result, $query, $data);
             }
 
             // if we still don't have a result, keep the original placeholder

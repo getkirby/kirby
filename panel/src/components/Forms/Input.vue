@@ -47,6 +47,7 @@ export const props = {
     invalid
   ],
   props: {
+    autofocus: Boolean,
     type: String,
     icon: [String, Boolean],
     theme: String,
@@ -361,6 +362,12 @@ export default {
 }
 .k-input[data-theme="field"][data-type="tags"] .k-tags-input .k-dropdown-content {
   top: calc(100% + .5rem + 2px);
+}
+/* don't apply dropup feature to tags */
+.k-input[data-theme="field"][data-type="tags"] .k-tags-input .k-dropdown-content[data-dropup] {
+  top: calc(100% + .5rem + 2px);
+  bottom: initial;
+  margin-bottom: initial;
 }
 
 /* Multiselect */

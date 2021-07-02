@@ -234,6 +234,10 @@ class BlocksFieldTest extends TestCase
         ]);
 
         $this->assertSame(json_encode($expected), $field->store($value));
+
+        // empty tests
+        $this->assertSame('', $field->store(null));
+        $this->assertSame('', $field->store([]));
     }
 
     public function testTranslateField()

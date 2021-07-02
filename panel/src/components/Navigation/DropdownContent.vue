@@ -2,6 +2,7 @@
   <div
     v-if="isOpen"
     :data-align="align"
+    :data-dropup="dropup"
     :data-theme="theme"
     class="k-dropdown-content"
   >
@@ -33,7 +34,7 @@ let OpenDropdown = null;
 export default {
   props: {
     /**
-     * Aligment of the dropdown items
+     * Alignment of the dropdown items
      * @values left, right
      */
     align: {
@@ -52,9 +53,10 @@ export default {
   },
   data() {
     return {
-      items: [],
       current: -1,
-      isOpen: false
+      dropup: false,
+      isOpen: false,
+      items: []
     };
   },
   methods: {
@@ -101,6 +103,7 @@ export default {
         this.items = items;
         this.isOpen = true;
         OpenDropdown = this;
+        this.onOpen();
         /**
          * When the dropdown content is opened
          * @event open
@@ -138,6 +141,29 @@ export default {
         this.current = n;
         this.$children[n].focus();
       }
+    },
+    onOpen() {
+      // disable dropup before calculate
+      this.dropup = false;
+
+      this.$nextTick(() => {
+        const view = document.querySelector(".k-panel-view");
+
+        if (view && this.$el) {
+          // window height without padding (6rem)
+          // doesn't included form-buttons bar (2.5rem = 40px)
+          let windowHeight = view.clientHeight - 40;
+
+          // dropdown content position relative to the viewport
+          let scrollTop = this.$el.getBoundingClientRect().top || 0;
+
+          // dropdown content height
+          let dropdownHeight = this.$el.clientHeight;
+
+          // activate the dropup if the last item overflows to the bottom of the screen
+          this.dropup = (scrollTop + dropdownHeight) > windowHeight;
+        }
+      });
     },
     navigate(e) {
       /*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
@@ -239,6 +265,13 @@ export default {
 .k-dropdown-content > .k-dropdown-item:last-child {
   margin-bottom: .5rem;
 }
+
+.k-dropdown-content[data-dropup] {
+  top: auto;
+  bottom: 100%;
+  margin-bottom: .5rem;
+}
+
 .k-dropdown-content hr {
   border-color: currentColor;
   opacity: 0.2;
