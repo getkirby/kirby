@@ -48,7 +48,7 @@
       <k-sections
         v-if="file.id"
         :blueprint="file.blueprint.name"
-        :empty="$t('file.blueprint', { template: file.blueprint.name })"
+        :empty="$t('file.blueprint', { template: $esc(file.blueprint.name) })"
         :parent="parent"
         :tab="tab"
         :tabs="tabs"

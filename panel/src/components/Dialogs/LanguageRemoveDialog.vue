@@ -1,7 +1,7 @@
 <template>
   <k-remove-dialog
     ref="dialog"
-    :text="$t('language.delete.confirm', { name: language.name })"
+    :text="$t('language.delete.confirm', { name: $esc(language.name) })"
     @submit="submit"
   />
 </template>

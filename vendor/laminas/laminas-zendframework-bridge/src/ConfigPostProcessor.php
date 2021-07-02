@@ -1,18 +1,10 @@
 <?php
 
-/**
- * @see       https://github.com/laminas/laminas-zendframework-bridge for the canonical source repository
- * @copyright https://github.com/laminas/laminas-zendframework-bridge/blob/master/COPYRIGHT.md
- * @license   https://github.com/laminas/laminas-zendframework-bridge/blob/master/LICENSE.md New BSD License
- */
-
 namespace Laminas\ZendFrameworkBridge;
 
 use function array_intersect_key;
 use function array_key_exists;
 use function array_pop;
-use function array_push;
-use function count;
 use function in_array;
 use function is_array;
 use function is_callable;
@@ -76,7 +68,7 @@ class ConfigPostProcessor
             function ($value, array $keys) {
                 $key = array_pop($keys);
                 // Only worried about a top-level "router" key.
-                return $key === 'router' && count($keys) === 0 && is_array($value)
+                return $key === 'router' && $keys === [] && is_array($value)
                     ? [$this, 'noopReplacement']
                     : null;
             },
@@ -90,7 +82,7 @@ class ConfigPostProcessor
 
             // Array values
             function ($value, array $keys) {
-                return 0 !== count($keys) && is_array($value)
+                return $keys !== [] && is_array($value)
                     ? [$this, '__invoke']
                     : null;
             },
@@ -159,7 +151,7 @@ class ConfigPostProcessor
     {
         // Add new key to the list of keys.
         // We do not need to remove it later, as we are working on a copy of the array.
-        array_push($keys, $key);
+        $keys[] = $key;
 
         // Identify rewrite strategy and perform replacements
         $rewriteRule = $this->replacementRuleMatch($value, $keys);

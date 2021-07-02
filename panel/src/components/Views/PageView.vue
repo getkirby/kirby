@@ -54,7 +54,7 @@
     <k-sections
       v-if="page.id"
       :blueprint="blueprint"
-      :empty="$t('page.blueprint', { template: blueprint })"
+      :empty="$t('page.blueprint', { template: $esc(blueprint) })"
       :parent="$api.pages.url(page.id)"
       :tab="tab"
       :tabs="tabs"
