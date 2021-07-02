@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "Du har inte behörighet att duplicera \"{slug}\"",
   "error.page.notFound": "Sidan \"{slug}\" kan inte hittas",
   "error.page.num.invalid": "Ange ett giltigt nummer för sortering. Numret får inte vara negativt.",
-  "error.page.slug.invalid": "Please enter a valid URL appendix",
+  "error.page.slug.invalid": "Ange en giltig URL-appendix",
   "error.page.slug.maxlength": "Permalänkens längd måste vara kortare än \"{length}\" tecken",
   "error.page.sort.permission": "Sidan \"{slug}\" kan inte sorteras",
   "error.page.status.invalid": "Sätt en giltig status för sidan",
@@ -163,7 +163,7 @@
   "error.user.password.invalid": "Ange ett giltigt lösenord. Lösenordet måste vara minst 8 tecken långt.",
   "error.user.password.notSame": "Lösenorden matchar inte",
   "error.user.password.undefined": "Användaren har inget lösenord",
-  "error.user.password.wrong": "Wrong password",
+  "error.user.password.wrong": "Fel lösenord",
   "error.user.role.invalid": "Ange en giltig roll",
   "error.user.update.permission": "Du har inte behörighet att uppdatera användaren \"{name}\"",
 
@@ -372,11 +372,11 @@
   "more": "Mer",
   "name": "Namn",
   "next": "Nästa",
-  "no": "no",
+  "no": "nej",
   "off": "av",
   "on": "på",
   "open": "Öppna",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "Öppna i nytt fönster",
   "options": "Alternativ",
   "options.none": "Inga alternativ",
 
@@ -468,9 +468,9 @@
   "toolbar.button.file.select": "Välj en fil",
   "toolbar.button.file.upload": "Ladda upp en fil",
   "toolbar.button.link": "L\u00e4nk",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.strike": "Genomstruken",
   "toolbar.button.ol": "Sorterad lista",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "Understruken",
   "toolbar.button.ul": "Punktlista",
 
   "translation.author": "Kirby-teamet, Ola Christensson",
@@ -523,5 +523,5 @@
 
   "welcome": "Välkommen",
   "year": "År",
-  "yes": "yes"
+  "yes": "ja"
 }
