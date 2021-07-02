@@ -43,8 +43,8 @@
 
   "error.access.code": "Neplatný kód",
   "error.access.login": "Neplatné přihlášení",
-  "error.access.panel": "Nemáte povoleno vstoupit do panelu",
-  "error.access.view": "Nejste oprávněni vstoupit do této části panelu.",
+  "error.access.panel": "Nemáte oprávnění k přihlášení do panelu",
+  "error.access.view": "Nemáte oprávnění ke vstupu do této části panelu.",
 
   "error.avatar.create.fail": "Nebylo možné nahrát profilový obrázek",
   "error.avatar.delete.fail": "Nebylo mo\u017en\u00e9 smazat profilov\u00fd obr\u00e1zek",
@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "Nemáte dovoleno duplikovat \"{slug}\"",
   "error.page.notFound": "Str\u00e1nku se nepoda\u0159ilo nal\u00e9zt.",
   "error.page.num.invalid": "Zadejte prosím platné pořadové číslo. Čísla nesmí být záporná.",
-  "error.page.slug.invalid": "Please enter a valid URL appendix",
+  "error.page.slug.invalid": "Podtržení",
   "error.page.slug.maxlength": "URL musí mít méně než \"{length}\" znaků",
   "error.page.sort.permission": "Stránce \"{slug}\" nelze změnit pořadí",
   "error.page.status.invalid": "Nastavte prosím platný status stránky",
@@ -163,7 +163,7 @@
   "error.user.password.invalid": "Zadejte prosím platné heslo. Heslo musí být dlouhé alespoň 8 znaků.",
   "error.user.password.notSame": "Pros\u00edm potvr\u010fte heslo",
   "error.user.password.undefined": "Uživatel nemá nastavené heslo.",
-  "error.user.password.wrong": "Wrong password",
+  "error.user.password.wrong": "Špatné heslo",
   "error.user.role.invalid": "Zadejte prosím platnou roli",
   "error.user.update.permission": "Nemáte dovoleno upravit uživatele \"{name}\"",
 
@@ -372,11 +372,11 @@
   "more": "Více",
   "name": "Jméno",
   "next": "Další",
-  "no": "no",
+  "no": "ne",
   "off": "vypnuto",
   "on": "zapnuto",
   "open": "Otevřít",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "Otevřít v novém okně",
   "options": "Možnosti",
   "options.none": "Žádné možnosti",
 
@@ -468,9 +468,9 @@
   "toolbar.button.file.select": "Vyberte soubor",
   "toolbar.button.file.upload": "Nahrajte soubor",
   "toolbar.button.link": "Odkaz",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.strike": "Přeškrtnutí",
   "toolbar.button.ol": "Číslovaný seznam",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "Podtržení",
   "toolbar.button.ul": "Odrážkový seznam",
 
   "translation.author": "Kirby tým",
@@ -523,5 +523,5 @@
 
   "welcome": "Vítejte",
   "year": "Rok",
-  "yes": "yes"
+  "yes": "ano"
 }

@@ -1,8 +1,8 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '3.5.6',
-    'version' => '3.5.6.0',
+    'pretty_version' => '3.6.0-alpha.1',
+    'version' => '3.6.0.0-alpha1',
     'aliases' => 
     array (
     ),
@@ -31,8 +31,8 @@
     ),
     'getkirby/cms' => 
     array (
-      'pretty_version' => '3.5.6',
-      'version' => '3.5.6.0',
+      'pretty_version' => '3.6.0-alpha.1',
+      'version' => '3.6.0.0-alpha1',
       'aliases' => 
       array (
       ),
@@ -58,12 +58,12 @@
     ),
     'laminas/laminas-zendframework-bridge' => 
     array (
-      'pretty_version' => '1.2.0',
-      'version' => '1.2.0.0',
+      'pretty_version' => '1.3.0',
+      'version' => '1.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6cccbddfcfc742eb02158d6137ca5687d92cee32',
+      'reference' => '13af2502d9bb6f7d33be2de4b51fb68c6cdb476e',
     ),
     'league/color-extractor' => 
     array (

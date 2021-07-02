@@ -27,8 +27,8 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '3.5.6',
-    'version' => '3.5.6.0',
+    'pretty_version' => '3.6.0-alpha.1',
+    'version' => '3.6.0.0-alpha1',
     'aliases' => 
     array (
     ),
@@ -57,8 +57,8 @@ private static $installed = array (
     ),
     'getkirby/cms' => 
     array (
-      'pretty_version' => '3.5.6',
-      'version' => '3.5.6.0',
+      'pretty_version' => '3.6.0-alpha.1',
+      'version' => '3.6.0.0-alpha1',
       'aliases' => 
       array (
       ),
@@ -84,12 +84,12 @@ private static $installed = array (
     ),
     'laminas/laminas-zendframework-bridge' => 
     array (
-      'pretty_version' => '1.2.0',
-      'version' => '1.2.0.0',
+      'pretty_version' => '1.3.0',
+      'version' => '1.3.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '6cccbddfcfc742eb02158d6137ca5687d92cee32',
+      'reference' => '13af2502d9bb6f7d33be2de4b51fb68c6cdb476e',
     ),
     'league/color-extractor' => 
     array (
@@ -349,23 +349,9 @@ return $installed[0]['root'];
 
 
 
-
 public static function getRawData()
 {
-@trigger_error('getRawData only returns the first dataset loaded, which may not be what you expect. Use getAllRawData() instead which returns all datasets for all autoloaders present in the process.', E_USER_DEPRECATED);
-
 return self::$installed;
-}
-
-
-
-
-
-
-
-public static function getAllRawData()
-{
-return self::getInstalled();
 }
 
 
