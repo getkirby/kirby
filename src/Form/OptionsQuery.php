@@ -117,7 +117,7 @@ class OptionsQuery
                 'user'          => '{{ user.username }}',
             ];
 
-            if ($value === $defaults[$object]) {
+            if (isset($defaults[$object]) && $value === $defaults[$object]) {
                 $result = Escape::html($result);
             }
         }
