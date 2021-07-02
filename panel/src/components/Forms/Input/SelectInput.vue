@@ -55,14 +55,7 @@ export const props = {
     ariaLabel: String,
     default: String,
     /**
-     * The text, that is shown as the first empty option, when the field is not required.
-     */
-    empty: {
-      type: [Boolean, String],
-      default: true
-    },
-    /**
-     * The text, that is shown when no option is selected yet.
+     * Text shown when no option is selected yet
      */
     placeholder: String,
     options: {
@@ -97,10 +90,6 @@ export default {
       return this.placeholder || "—";
     },
     hasEmptyOption() {
-      if (this.empty === false) {
-        return false;
-      }
-
       return !(this.required && this.default);
     },
     label() {
