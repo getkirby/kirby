@@ -1,10 +1,7 @@
-
-import Field from "@/components/Forms/Field.vue";
+import { props as Field } from "@/components/Forms/Field.vue";
 
 export default {
-  props: {
-    ...Field.props,
-  },
+  mixins: [Field],
   methods: {
     displayText(field, value) {
       switch (field.type) {
