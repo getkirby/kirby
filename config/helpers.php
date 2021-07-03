@@ -764,11 +764,11 @@ function t($key, string $fallback = null)
 /**
  * Translates a count
  *
- * @param string|array $key
+ * @param string $key
  * @param int $count
  * @return mixed
  */
-function tc($key, int $count)
+function tc(string $key, int $count)
 {
     return I18n::translateCount($key, $count);
 }

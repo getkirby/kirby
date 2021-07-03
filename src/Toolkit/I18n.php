@@ -273,7 +273,7 @@ class I18n
      *
      * @param string $key
      * @param int $count
-     * @param string $locale
+     * @param string|null $locale
      * @param bool $formatNumber If set to `false`, the count is not formatted
      * @return mixed
      */
