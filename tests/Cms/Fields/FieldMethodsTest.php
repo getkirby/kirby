@@ -671,4 +671,60 @@ class FieldMethodsTest extends TestCase
         $yaml = Yaml::encode($data);
         $this->assertSame($data, $this->field($yaml)->yaml());
     }
+
+    public function testToBlocks()
+    {
+        $data = [
+            [
+                'content' => [
+                    'text' => 'Hello world'
+                ],
+                'type' => 'heading'
+            ],
+            [
+                'content' => [
+                    'text' => 'Nice blocks'
+                ],
+                'type' => 'text'
+            ]
+        ];
+
+        $field = $this->field(json_encode($data));
+        $blocks = $field->toBlocks();
+
+        $this->assertInstanceOf('\Kirby\Cms\Blocks', $blocks);
+        $this->assertInstanceOf('\Kirby\Cms\Site', $blocks->parent());
+        $this->assertCount(2, $blocks->data());
+
+        $this->assertSame('heading', $blocks->first()->type());
+        $this->assertSame('Hello world', $blocks->first()->content()->data()['text']);
+        $this->assertSame('text', $blocks->last()->type());
+        $this->assertSame('Nice blocks', $blocks->last()->content()->data()['text']);
+    }
+
+    public function testToLayouts()
+    {
+        $data = [
+            [
+                'type'    => 'heading',
+                'content' => ['text' => 'Heading'],
+            ],
+            [
+                'type'    => 'text',
+                'content' => ['text' => 'Text'],
+            ]
+        ];
+
+        $field = $this->field(json_encode($data));
+        $layouts = $field->toLayouts();
+
+        $this->assertInstanceOf('\Kirby\Cms\Layouts', $layouts);
+        $this->assertInstanceOf('\Kirby\Cms\Site', $layouts->parent());
+        $this->assertCount(1, $layouts->data());
+
+        $layout = $layouts->first()->toArray();
+        $this->assertArrayHasKey('attrs', $layout);
+        $this->assertArrayHasKey('columns', $layout);
+        $this->assertArrayHasKey('id', $layout);
+    }
 }
