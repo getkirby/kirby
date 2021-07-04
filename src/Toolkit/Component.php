@@ -5,6 +5,7 @@ namespace Kirby\Toolkit;
 use ArgumentCountError;
 use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Filesystem\F;
 use TypeError;
 
 /**
