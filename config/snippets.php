@@ -8,6 +8,7 @@ return [
     'blocks/gallery'  => $blocksRoot . '/gallery/gallery.php',
     'blocks/heading'  => $blocksRoot . '/heading/heading.php',
     'blocks/image'    => $blocksRoot . '/image/image.php',
+    'blocks/line'     => $blocksRoot . '/line/line.php',
     'blocks/list'     => $blocksRoot . '/list/list.php',
     'blocks/markdown' => $blocksRoot . '/markdown/markdown.php',
     'blocks/quote'    => $blocksRoot . '/quote/quote.php',

@@ -185,6 +185,14 @@ class Blocks extends Plain
                 }
             ],
             [
+                'tag' => 'hr',
+                'parse' => function ($node) {
+                    return [
+                        'type' => 'line'
+                    ];
+                }
+            ],
+            [
                 'tag' => 'iframe',
                 'parse' => function ($node) {
                     $caption = null;
