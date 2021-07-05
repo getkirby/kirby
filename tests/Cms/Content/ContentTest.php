@@ -2,160 +2,203 @@
 
 namespace Kirby\Cms;
 
+/**
+ * @coversDefaultClass Kirby\Cms\Content
+ */
 class ContentTest extends TestCase
 {
-    protected function mockData(): array
+    protected $content;
+    protected $parent;
+
+    public function setUp(): void
     {
-        return [
-            'title' => 'Test Content',
-            'text'  => 'Lorem ipsum'
-        ];
+        $this->parent  = new Page(['slug' => 'test']);
+        $this->content = new Content([
+            'a' => 'A',
+            'B' => 'B',
+            'MiXeD' => 'mixed',
+            'mIXeD' => 'MIXED'
+        ], $this->parent);
     }
 
-    protected function mockObject()
+    /**
+     * @covers ::__call
+     */
+    public function testCall()
     {
-        return new Content($this->mockData());
+        $this->assertSame('a', $this->content->a()->key());
+        $this->assertSame('A', $this->content->a()->value());
+        $this->assertSame('mixed', $this->content->mixed()->key());
+        $this->assertSame('MIXED', $this->content->mixed()->value());
+        $this->assertSame('mixed', $this->content->mIXEd()->key());
+        $this->assertSame('MIXED', $this->content->mIXEd()->value());
     }
 
+    /**
+     * @covers ::__construct
+     * @covers ::__debugInfo
+     * @covers ::data
+     * @covers ::toArray
+     */
     public function testData()
     {
-        $data   = $this->mockData();
-        $object = $this->mockObject();
+        $expected = [
+            'a' => 'A',
+            'b' => 'B',
+            'mixed' => 'MIXED'
+        ];
 
-        $this->assertEquals($data, $object->data());
+        $this->assertSame($expected, $this->content->__debugInfo());
+        $this->assertSame($expected, $this->content->data());
+        $this->assertSame($expected, $this->content->toArray());
     }
 
-    public function testKeys()
+    /**
+     * @covers ::fields
+     */
+    public function testFields()
     {
-        $content = $this->mockObject();
+        $fields = $this->content->fields();
 
-        $this->assertEquals(['title', 'text'], $content->keys());
+        $this->assertCount(3, $fields);
+        $this->assertInstanceOf(Field::class, $fields['mixed']);
+        $this->assertSame('mixed', $fields['mixed']->key());
+        $this->assertSame('MIXED', $fields['mixed']->value());
     }
 
+    /**
+     * @covers ::get
+     */
+    public function testGet()
+    {
+        $field = $this->content->get('mixed');
+        $this->assertInstanceOf(Field::class, $field);
+        $this->assertSame('mixed', $field->key());
+        $this->assertSame($this->parent, $field->parent());
+        $this->assertSame('MIXED', $field->value());
+
+        // different case
+        $this->assertSame($field, $this->content->get('MiXeD'));
+
+        // non-existing field
+        $field = $this->content->get('invalid');
+        $this->assertInstanceOf(Field::class, $field);
+        $this->assertSame('invalid', $field->key());
+        $this->assertSame($this->parent, $field->parent());
+        $this->assertSame(null, $field->value());
+
+        // all fields
+        $fields = $this->content->get();
+        $this->assertSame(['mixed', 'invalid', 'a', 'b'], array_keys($fields));
+        $this->assertInstanceOf(Field::class, $fields['mixed']);
+        $this->assertSame('mixed', $fields['mixed']->key());
+        $this->assertSame('MIXED', $fields['mixed']->value());
+    }
+
+    /**
+     * @covers ::has
+     */
     public function testHas()
     {
-        $content = new Content([
-            'a' => 'A'
-        ]);
-
-        $this->assertTrue($content->has('a'));
-        $this->assertFalse($content->has('b'));
+        $this->assertTrue($this->content->has('a'));
+        $this->assertTrue($this->content->has('A'));
+        $this->assertTrue($this->content->has('b'));
+        $this->assertTrue($this->content->has('B'));
+        $this->assertTrue($this->content->has('mixed'));
+        $this->assertTrue($this->content->has('MIXED'));
+        $this->assertFalse($this->content->has('c'));
+        $this->assertFalse($this->content->has('C'));
     }
 
-    public function testHasWithDifferentCase()
+    /**
+     * @covers ::keys
+     */
+    public function testKeys()
     {
-        $content = new Content([
-            'testA' => 'A',
-            'TESTb' => 'B'
-        ]);
-
-        $this->assertTrue($content->has('testA'));
-        $this->assertTrue($content->has('testa'));
-        $this->assertTrue($content->has('TESTb'));
-        $this->assertTrue($content->has('testb'));
+        $this->assertSame(['a', 'b', 'mixed'], $this->content->keys());
     }
-
-    public function testGetExistingField()
-    {
-        $content = $this->mockObject();
-        $field   = $content->get('title');
-
-        $this->assertInstanceOf(Field::class, $field);
-        $this->assertEquals('Test Content', $field->value());
-    }
-
-    public function testGetWithDifferentCase()
-    {
-        $content = new Content([
-            'testA' => 'A',
-            'TESTb' => 'B'
-        ]);
-
-        $this->assertEquals('A', $content->get('testA')->value());
-        $this->assertEquals('A', $content->get('testa')->value());
-        $this->assertEquals('B', $content->get('TESTb')->value());
-        $this->assertEquals('B', $content->get('testb')->value());
-    }
-
-    public function testGetNonExistingField()
-    {
-        $content = $this->mockObject();
-        $field   = $content->get('nonExistingField');
-
-        $this->assertInstanceOf(Field::class, $field);
-        $this->assertEquals(null, $field->value());
-    }
-
-    public function testGetAllFields()
-    {
-        $content = $this->mockObject();
-        $fields  = $content->get();
-
-        foreach ($this->mockData() as $key => $value) {
-            $this->assertInstanceOf(Field::class, $fields[$key]);
-            $this->assertEquals($key, $fields[$key]->key());
-            $this->assertEquals($value, $fields[$key]->value());
-        }
-    }
-
+    
+    /**
+     * @covers ::not
+     */
     public function testNot()
     {
-        $content = $this->mockObject();
-        $content = $content->not('title');
+        $content1 = $this->content->not('a');
+        $this->assertNotSame($this->content, $content1);
+        $this->assertSame(null, $content1->get('a')->value());
+        $this->assertSame('B', $content1->get('b')->value());
 
-        $this->assertEquals(null, $content->get('title')->value());
-        $this->assertEquals('Lorem ipsum', $content->get('text')->value());
+        $content2 = $this->content->not('A');
+        $this->assertNotSame($this->content, $content2);
+        $this->assertSame(null, $content2->get('a')->value());
+        $this->assertSame('B', $content2->get('b')->value());
+
+        $content3 = $this->content->not('MIxeD');
+        $this->assertNotSame($this->content, $content3);
+        $this->assertSame(null, $content3->get('mixed')->value());
+        $this->assertSame('B', $content3->get('b')->value());
+
+        // multiple nots
+        $content4 = $this->content->not('a')->not('MIxed');
+        $this->assertNotSame($this->content, $content4);
+        $this->assertSame(null, $content4->get('a')->value());
+        $this->assertSame(null, $content4->get('mixed')->value());
+        $this->assertSame('B', $content4->get('b')->value());
+
+        // multiple nots in one go
+        $content5 = $this->content->not('a', 'MIxed');
+        $this->assertNotSame($this->content, $content5);
+        $this->assertSame(null, $content5->get('a')->value());
+        $this->assertSame(null, $content5->get('mixed')->value());
+        $this->assertSame('B', $content5->get('b')->value());
     }
 
-    public function testMultipleNot()
-    {
-        $content = $this->mockObject();
-        $content = $content->not('title')->not('text');
-
-        $this->assertEquals(null, $content->get('title')->value());
-        $this->assertEquals(null, $content->get('text')->value());
-    }
-
+    /**
+     * @covers ::parent
+     */
     public function testParent()
     {
-        $page    = new Page(['slug' => 'test']);
-        $content = new Content(['title' => 'Test'], $page);
-
-        $this->assertEquals($page, $content->parent());
+        $this->assertSame($this->parent, $this->content->parent());
     }
 
+    /**
+     * @covers ::setParent
+     */
     public function testSetParent()
     {
-        $page    = new Page(['slug' => 'test']);
-        $content = new Content(['title' => 'Test']);
-        $content->setParent($page);
+        $page = new Page(['slug' => 'another-test']);
+        $this->content->setParent($page);
 
-        $this->assertEquals($page, $content->parent());
+        $this->assertSame($page, $this->content->parent());
     }
 
-    public function testToArray()
-    {
-        $this->assertEquals($this->mockData(), $this->mockObject()->toArray());
-    }
-
+    /**
+     * @covers ::update
+     */
     public function testUpdate()
     {
-        $content = $this->mockObject();
-
-        $content = $content->update([
-            'category' => 'test'
+        $this->content->update([
+            'a' => 'aaa'
         ]);
-        $this->assertEquals('test', $content->get('category')->value());
+        $this->assertSame('aaa', $this->content->get('a')->value());
+
+        $this->content->update([
+            'miXED' => 'mixed!'
+        ]);
+        $this->assertSame('mixed!', $this->content->get('mixed')->value());
 
         // Field objects should be cleared on update
-        $content = $content->update([
-            'category' => 'another-test'
+        $this->content->update([
+            'a' => 'aaaaaa'
         ]);
-        $this->assertEquals('another-test', $content->get('category')->value());
-    }
+        $this->assertSame('aaaaaa', $this->content->get('a')->value());
 
-    public function testDebuginfo()
-    {
-        $this->assertEquals($this->mockData(), $this->mockObject()->__debugInfo());
+        $this->content->update($expected = [
+            'TEST' => 'TEST'
+        ], true);
+        $this->assertSame(['test' => 'TEST'], $this->content->data());
+
+        $this->content->update(null, true);
+        $this->assertSame([], $this->content->data());
     }
 }

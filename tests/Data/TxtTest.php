@@ -41,6 +41,34 @@ class TxtTest extends TestCase
      * @covers ::encode
      * @covers ::encodeValue
      * @covers ::encodeResult
+     * @covers ::decode
+     */
+    public function testEncodeDecodeMixedCase()
+    {
+        $array = [
+            'title' => 'Title',
+            'text'  => 'Text',
+            'tItLe' => 'Another title',
+            'TEXT'  => 'UPPERTEXT'
+        ];
+
+        $data = Txt::encode($array);
+        $this->assertSame(
+            "Title: Another title\n\n----\n\nText: UPPERTEXT",
+            $data
+        );
+
+        $result = Txt::decode($data);
+        $this->assertSame([
+            'title' => 'Another title',
+            'text'  => 'UPPERTEXT'
+        ], $result);
+    }
+
+    /**
+     * @covers ::encode
+     * @covers ::encodeValue
+     * @covers ::encodeResult
      */
     public function testEncodeMissingValues()
     {

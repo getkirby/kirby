@@ -233,6 +233,13 @@ class PageTranslationsTest extends TestCase
                     'b' => [
                         'type' => 'text',
                         'translate' => false
+                    ],
+                    'CAPITALIZED' => [
+                        'type' => 'text',
+                        'translate' => false
+                    ],
+                    'dDdDdD' => [
+                        'type' => 'text',
                     ]
                 ]
             ]
@@ -240,21 +247,34 @@ class PageTranslationsTest extends TestCase
 
         $app->impersonate('kirby');
 
-        $en = $page->update($input = [
+        $en = $page->update([
             'a' => 'A',
-            'b' => 'B'
+            'b' => 'B',
+            'capitalized' => 'C',
+            'dDdDdD' => 'D'
         ]);
 
-        $this->assertSame($input, $en->content('en')->data());
+        $expected = [
+            'a' => 'A',
+            'b' => 'B',
+            'capitalized' => 'C',
+            'dddddd' => 'D'
+        ];
+
+        $this->assertSame($expected, $en->content('en')->data());
 
         $de = $page->update([
             'a' => 'A',
-            'b' => 'B'
+            'b' => 'B',
+            'capitalized' => 'C',
+            'dDdDdD' => 'D'
         ], 'de');
 
         $expected = [
             'a' => 'A',
-            'b' => null
+            'b' => null,
+            'capitalized' => null,
+            'dddddd' => 'D'
         ];
 
         $this->assertSame($expected, $de->content('de')->data());
