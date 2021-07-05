@@ -18,7 +18,7 @@
             <k-button
               :responsive="true"
               :link="model.previewUrl"
-              class="k-site-view-opreviewptions"
+              class="k-site-view-preview"
               icon="open"
               target="_blank"
             >
