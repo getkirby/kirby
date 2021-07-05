@@ -271,6 +271,13 @@ export default {
 </script>
 
 <style>
+.k-form-buttons {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: var(--z-navigation);
+}
 .k-form-buttons[data-theme="changes"] {
     background: var(--color-notice-light);
 }

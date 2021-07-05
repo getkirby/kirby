@@ -245,6 +245,7 @@ Vue.component("k-view", View);
 /* Misc */
 import Draggable from "@/components/Misc/Draggable.vue";
 import ErrorBoundary from "@/components/Misc/ErrorBoundary.vue";
+import Fatal from "@/components/Misc/Fatal.vue";
 import Headline from "@/components/Misc/Headline.vue";
 import Icon from "@/components/Misc/Icon.vue";
 import Icons from "@/components/Misc/Icons.vue";
@@ -258,6 +259,7 @@ import UserInfo from "@/components/Misc/UserInfo.vue";
 
 Vue.component("k-draggable", Draggable);
 Vue.component("k-error-boundary", ErrorBoundary);
+Vue.component("k-fatal", Fatal);
 Vue.component("k-headline", Headline);
 Vue.component("k-icon", Icon);
 Vue.component("k-icons", Icons);

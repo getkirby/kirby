@@ -42,25 +42,7 @@
     </template>
 
     <!-- Fatal iframe -->
-    <template v-if="fatal">
-      <div class="k-fatal">
-        <div class="k-fatal-box">
-          <k-bar>
-            <k-headline slot="left">
-              The JSON response could not be parsed:
-            </k-headline>
-            <k-button
-              slot="right"
-              icon="cancel"
-              @click="$store.dispatch('fatal', false)"
-            >
-              Close
-            </k-button>
-          </k-bar>
-          <iframe ref="fatal" class="k-fatal-iframe" />
-        </div>
-      </div>
-    </template>
+    <k-fatal v-if="$store.state.fatal" />
 
     <!-- Offline warning -->
     <div v-if="offline" class="k-offline-warning">
@@ -78,13 +60,12 @@ import search from "@/config/search.js";
 export default {
   inheritAttrs: false,
   props: {
-    lock: [Boolean, Object]
+    lock: [Boolean, Object],
   },
   data() {
     return {
-      offline: false,
-      dragging: false
-    };
+      offline: false
+    }
   },
   computed: {
     defaultTranslation() {
@@ -93,31 +74,12 @@ export default {
     dialog() {
       return this.$helper.clone(this.$store.state.dialog);
     },
-    fatal() {
-      return this.$store.state.fatal;
-    },
     searchTypes() {
       return search(this);
     },
     translation() {
       return this.$language ? this.$language.code : null;
     },
-  },
-  watch: {
-    fatal(html) {
-      if (html !== null) {
-        this.$nextTick(() => {
-          try {
-            let doc = this.$refs.fatal.contentWindow.document;
-            doc.open();
-            doc.write(html);
-            doc.close();
-          } catch (e) {
-            console.error(e);
-          }
-        })
-      }
-    }
   },
   created() {
     this.$events.$on("offline", this.isOffline);
@@ -149,61 +111,6 @@ export default {
 <style>
 @import url('../../variables.css');
 
-:root {
-
-  /** Colors **/
-  --color-background: var(--color-light);
-  --color-border: var(--color-gray-400);
-  --color-focus: var(--color-blue-600);
-  --color-focus-light: var(--color-blue-400);
-  --color-focus-outline: rgba(113, 143, 183, .25);
-  --color-negative: var(--color-red-600);
-  --color-negative-light: var(--color-red-400);
-  --color-negative-outline: rgba(212, 110, 110, .25);
-  --color-notice: var(--color-orange-600);
-  --color-notice-light: var(--color-orange-400);
-  --color-positive: var(--color-green-600);
-  --color-positive-light: var(--color-green-400);
-  --color-positive-outline: rgba(128, 149, 65, .25);
-  --color-text: var(--color-gray-900);
-  --color-text-light: var(--color-gray-600);
-
-  --z-loader: 1000;
-  --z-notification: 900;
-  --z-dropdown: 800;
-  --z-dialog: 700;
-  --z-drawer: 600;
-  --z-dropzone: 500;
-  --z-toolbar: 400;
-  --z-navigation: 300;
-  --z-content: 200;
-  --z-background: 100;
-
-  --bg-pattern: repeating-conic-gradient(rgba(0,0,0, 0) 0% 25%, rgba(0,0,0, .2) 0% 50%) 50% / 20px 20px;
-
-  --shadow-sticky: rgba(0, 0, 0, .05) 0 2px 5px;
-  --shadow-dropdown: var(--shadow-lg);
-  --shadow-item: var(--shadow);
-
-  --field-input-padding: .5rem;
-  --field-input-height: 2.25rem;
-  --field-input-line-height: 1.25rem;
-  --field-input-font-size: var(--text-base);
-  --field-input-color-before: var(--color-gray-700);
-  --field-input-color-after: var(--color-gray-700);
-  --field-input-border: 1px solid var(--color-border);
-  --field-input-focus-border: 1px solid var(--color-focus);
-  --field-input-focus-outline: 2px solid var(--color-focus-outline);
-  --field-input-invalid-border: 1px solid var(--color-negative-outline);
-  --field-input-invalid-outline: 0;
-  --field-input-invalid-focus-border: 1px solid var(--color-negative);
-  --field-input-invalid-focus-outline: 2px solid var(--color-negative-outline);
-  --field-input-background: var(--color-white);
-  --field-input-disabled-color: var(--color-gray-500);
-  --field-input-disabled-background: var(--color-white);
-  --field-input-disabled-border: 1px solid var(--color-gray-300);
-}
-
 *,
 *::before,
 *::after {
@@ -229,8 +136,7 @@ html {
 html,
 body {
   color: var(--color-gray-900);
-  overflow: hidden;
-  height: 100%;
+  min-height: 100vh;
 }
 
 a {
@@ -247,61 +153,18 @@ b {
   font-weight: var(--font-bold);
 }
 
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity .5s;
-}
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.k-panel {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  background: var(--color-background);
-}
-.k-panel:focus {
-  outline: 0;
-}
-.k-panel[data-loading] {
-  animation: LoadingCursor .5s;
+.k-panel-view {
+  padding-top: 2.5rem;
+  padding-bottom: 6rem;
 }
 .k-panel-header {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: var(--z-navigation);
-}
-.k-panel .k-form-buttons {
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
   z-index: var(--z-navigation);
 }
-.k-panel-view {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  padding-bottom: 6rem;
-  overflow-y: scroll;
-  -webkit-overflow-scrolling: touch;
-  transform: translate3d(0, 0, 0);
-}
-.k-panel-inside .k-panel-view {
-  top: 2.5rem;
-}
-.k-panel[data-loading]::after,
-.k-panel[data-dragging] {
-  user-select: none;
-}
+
 .k-offline-warning {
   position: fixed;
   content: " ";
@@ -317,19 +180,6 @@ b {
   justify-content: center;
   color: var(--color-white);
 }
-
-@keyframes LoadingCursor {
-  100% {
-    cursor: progress;
-  }
-}
-
-@keyframes Spin {
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
 .k-offscreen {
   clip-path: inset(100%);
   clip: rect(1px, 1px, 1px, 1px);
@@ -340,42 +190,25 @@ b {
   width: 1px;
 }
 
-.k-icons {
-  position: absolute;
-  width: 0;
-  height: 0;
+.k-panel[data-loading] {
+  animation: LoadingCursor .5s;
 }
-
-.k-fatal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--color-backdrop);
-  display: flex;
-  z-index: var(--z-dialog);
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+.k-panel[data-loading]::after,
+.k-panel[data-dragging] {
+  user-select: none;
 }
-.k-fatal-box {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  background: var(--color-white);
-  padding: .75rem 1.5rem 1.5rem;
-  box-shadow: var(--shadow-xl);
-  border-radius: var(--rounded);
+@keyframes LoadingCursor {
+  100% { cursor: progress; }
 }
-.k-fatal-box .k-bar {
-  margin-bottom: var(--spacing-3);
+@keyframes Spin {
+  100% { transform: rotate(360deg); }
 }
-.k-fatal-iframe {
-  border: 0;
-  width: 100%;
-  flex-grow: 1;
-  border: 2px solid var(--color-border);
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>

@@ -61,9 +61,11 @@ export default {
       this.$emit("close");
       this.restoreScrollPosition();
 
+      // enable scrolling of background
+      document.documentElement.style.overflow = "visible";
+
       // unbind events
       this.$events.$off("keydown.esc", this.close);
-      document.removeEventListener("focus", this.focustrap);
     },
     focus() {
       let target = this.$refs.overlay.querySelector(`
@@ -93,14 +95,6 @@ export default {
         return;
       }
     },
-    focustrap(e) {
-      if (
-        this.$refs.overlay &&
-        this.$refs.overlay.contains(e.target) === false
-      ) {
-        this.focus();
-      }
-    },
     open() {
       // it makes it run once
       if (this.isOpen === true) {
@@ -113,7 +107,6 @@ export default {
 
       // bind events
       this.$events.$on("keydown.esc", this.close);
-      // document.addEventListener("focus", this.focustrap, true);
 
       setTimeout(() => {
         // autofocus
@@ -123,6 +116,9 @@ export default {
 
         // prevent that clicks on the overlay slot trigger close
         document.querySelector(".k-overlay > *").addEventListener("mousedown", e => e.stopPropagation());
+
+        // prevent scrolling of background
+        document.documentElement.style.overflow = "hidden";
 
         this.$emit("ready");
       }, 1)
