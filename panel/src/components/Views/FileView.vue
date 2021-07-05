@@ -22,12 +22,13 @@
               <k-button
                 :link="model.url"
                 :responsive="true"
+                class="k-file-view-options"
                 icon="open"
                 target="_blank"
               >
                 {{ $t("open") }}
               </k-button>
-              <k-dropdown>
+              <k-dropdown class="k-file-view-options">
                 <k-button
                   :responsive="true"
                   :disabled="isLocked"

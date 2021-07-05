@@ -19,8 +19,9 @@
               v-if="permissions.preview && model.previewUrl"
               :responsive="true"
               :link="model.previewUrl"
-              target="_blank"
+              class="k-page-view-preview"
               icon="open"
+              target="_blank"
             >
               {{ $t('open') }}
             </k-button>
@@ -32,7 +33,7 @@
               :text="status.label"
               @click="$dialog($view.path + '/changeStatus')"
             />
-            <k-dropdown>
+            <k-dropdown class="k-page-view-options">
               <k-button
                 :responsive="true"
                 :disabled="isLocked === true"

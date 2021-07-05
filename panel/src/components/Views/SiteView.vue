@@ -18,8 +18,9 @@
             <k-button
               :responsive="true"
               :link="model.previewUrl"
-              target="_blank"
+              class="k-site-view-opreviewptions"
               icon="open"
+              target="_blank"
             >
               {{ $t('open') }}
             </k-button>

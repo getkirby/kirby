@@ -83,7 +83,7 @@
 
           <template #left>
             <k-button-group>
-              <k-dropdown>
+              <k-dropdown class="k-user-view-options">
                 <k-button :disabled="isLocked" icon="cog" @click="$refs.settings.toggle()">
                   {{ $t('settings') }}
                 </k-button>
