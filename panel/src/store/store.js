@@ -37,10 +37,6 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    breadcrumb() {
-      // TODO: Remove in 3.7.0
-      window.panel.deprecated("$store.disptach('breadcrumb') has been deprecated and removed.");
-    },
     dialog(context, dialog) {
       context.commit("SET_DIALOG", dialog);
     },
@@ -52,15 +48,7 @@ export default new Vuex.Store({
     },
     isLoading(context, loading) {
       context.commit(loading === true ? "START_LOADING" : "STOP_LOADING");
-    },
-    title() {
-      // TODO: Remove in 3.7.0
-      window.panel.deprecated("$store.disptach('title') has been deprecated and removed.");
-    },
-    view() {
-      // TODO: Remove in 3.7.0
-      window.panel.deprecated("$store.disptach('view') has been deprecated and removed.");
-    },
+    }
   },
   modules: {
     blocks: blocks,
