@@ -192,7 +192,7 @@ return function (App $app) {
          * @return \Kirby\Cms\Layouts
          */
         'toLayouts' => function (Field $field) {
-            return Layouts::factory(Data::decode($field->value, 'json'), [
+            return Layouts::factory(Layouts::parse($field->value()), [
                 'parent' => $field->parent()
             ]);
         },
