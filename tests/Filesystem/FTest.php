@@ -608,7 +608,6 @@ class FTest extends TestCase
         $this->assertSame(4, F::size($a));
         $this->assertSame(4, F::size($b));
         $this->assertSame(8, F::size([$a, $b]));
-
     }
 
     /**
