@@ -28,13 +28,19 @@ Object.entries(window.panel.plugins.components).forEach(([name, options]) => {
 
   // resolve extending via component name
   if (options.extends && typeof options.extends === "string") {
-    options.extends = components[options.extends].extend({
-      options,
-      components: {
-        ...components,
-        ...options.components || {}
-      }
-    });
+    // only extend if referenced component exists
+    if (components[options.extends]) {
+      options.extends = components[options.extends].extend({
+        options,
+        components: {
+          ...components,
+          ...options.components || {}
+        }
+      });
+    } else {
+      // if component doesn't exist, don't extend
+      options.extends = null
+    }
 
     if (options.template) {
       options.render = null;
