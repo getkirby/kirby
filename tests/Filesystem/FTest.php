@@ -451,9 +451,16 @@ class FTest extends TestCase
     {
         $locale = I18n::$locale;
 
-        F::write($this->tmp, 'test');
-        $this->assertSame('4 B', F::niceSize($this->tmp));
+        F::write($a = $this->fixtures . '/a.txt', 'test');
+        F::write($b = $this->fixtures . '/b.txt', 'test');
 
+        // for file path
+        $this->assertSame('4 B', F::niceSize($a));
+
+        // for array of file paths
+        $this->assertSame('8 B', F::niceSize([$a, $b]));
+
+        // for int
         $this->assertSame('4 B', F::niceSize(4));
         $this->assertSame('4 KB', F::niceSize(4096));
         $this->assertSame('4 KB', F::niceSize(4100));
@@ -595,9 +602,13 @@ class FTest extends TestCase
      */
     public function testSize()
     {
-        F::write($this->tmp, 'test');
+        F::write($a = $this->fixtures . '/a.txt', 'test');
+        F::write($b = $this->fixtures . '/b.txt', 'test');
 
-        $this->assertSame(4, F::size($this->tmp));
+        $this->assertSame(4, F::size($a));
+        $this->assertSame(4, F::size($b));
+        $this->assertSame(8, F::size([$a, $b]));
+
     }
 
     /**
