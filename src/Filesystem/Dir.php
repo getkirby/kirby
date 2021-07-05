@@ -558,27 +558,25 @@ class Dir
     }
 
     /**
-     * Gets the size of the directory and all subfolders and files
+     * Gets the size of the directory
      *
      * @param string $dir The path of the directory
+     * @param bool $rescursive Include all subfolders and their files
      * @return mixed
      */
-    public static function size(string $dir)
+    public static function size(string $dir, bool $recursive = true)
     {
         if (is_dir($dir) === false) {
             return false;
         }
 
-        $size  = 0;
-        $items = static::read($dir);
+        // Get size for all direct files
+        $size = F::size(static::files($dir, null, true));
 
-        foreach ($items as $item) {
-            $root = $dir . '/' . $item;
-
-            if (is_dir($root) === true) {
-                $size += static::size($root);
-            } elseif (is_file($root) === true) {
-                $size += F::size($root);
+        // if recursive, add sizes of all subdirectories
+        if ($recursive === true) {
+            foreach (static::dirs($dir, null, true) as $subdir) {
+                $size += static::size($subdir);
             }
         }
 

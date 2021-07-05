@@ -658,6 +658,7 @@ class DirTest extends TestCase
         F::write($this->tmp . '/testfile-3.txt', Str::random(5));
 
         $this->assertSame(15, Dir::size($this->tmp));
+        $this->assertSame(15, Dir::size($this->tmp, false));
         $this->assertSame('15 B', Dir::niceSize($this->tmp));
 
         Dir::remove($this->tmp);
@@ -677,6 +678,7 @@ class DirTest extends TestCase
         F::write($this->tmp . '/sub/sub/testfile-3.txt', Str::random(5));
 
         $this->assertSame(15, Dir::size($this->tmp));
+        $this->assertSame(5, Dir::size($this->tmp, false));
         $this->assertSame('15 B', Dir::niceSize($this->tmp));
 
         Dir::remove($this->tmp);
