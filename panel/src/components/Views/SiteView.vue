@@ -1,6 +1,11 @@
 <template>
   <k-inside :lock="lock">
-    <k-view :data-locked="isLocked" class="k-site-view">
+    <k-view
+      :data-locked="isLocked"
+      data-id="/"
+      data-template="site"
+      class="k-site-view"
+    >
       <k-header
         :editable="permissions.changeTitle && !isLocked"
         :tabs="tabs"

@@ -1,6 +1,11 @@
 <template>
   <k-inside :lock="lock">
-    <k-view :data-locked="isLocked" class="k-page-view">
+    <k-view
+      :data-locked="isLocked"
+      :data-id="model.id"
+      :data-template="blueprint"
+      class="k-page-view"
+    >
       <k-header
         :editable="permissions.changeTitle && !isLocked"
         :tab="tab.name"
