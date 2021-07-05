@@ -51,7 +51,7 @@
 
         <k-sections
           :blueprint="blueprint"
-          :empty="$t('file.blueprint', { template: $esc(blueprint) })"
+          :empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
           :lock="lock"
           :parent="path"
           :tab="tab"

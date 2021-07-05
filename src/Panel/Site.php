@@ -51,6 +51,7 @@ class Site extends Model
     public function props(): array
     {
         return array_merge(parent::props(), [
+            'blueprint' => 'site',
             'model' => [
                 'content'    => $this->content(),
                 'previewUrl' => $this->model->previewUrl(),

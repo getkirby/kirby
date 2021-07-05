@@ -17,7 +17,6 @@
             :is="'k-' + section.type + '-section'"
             v-if="exists(section.type)"
             :key="parent + '-column-' + columnIndex + '-section-' + sectionIndex + '-' + blueprint"
-            :blueprint="blueprint"
             :column="column.width"
             :lock="lock"
             :name="section.name"

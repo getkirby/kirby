@@ -227,6 +227,7 @@ class Page extends Model
             parent::props(),
             $this->prevNext(),
             [
+                'blueprint' => $this->model->intendedTemplate()->name(),
                 'model' => [
                     'content'    => $this->content(),
                     'id'         => $page->id(),
