@@ -322,7 +322,7 @@ class View
                 continue;
             }
 
-            $access   = $permissions['access'][$areaId] ?? false;
+            $access   = $permissions['access'][$areaId] ?? true;
             $disabled = $menuSetting === 'disabled' || $access === false;
 
             $menu[] = [

@@ -114,7 +114,7 @@ class Panel
         $permissions = $user->role()->permissions()->toArray()['access'];
 
         // check for general panel access
-        if (($permissions['panel'] ?? false) !== true) {
+        if (($permissions['panel'] ?? true) !== true) {
             throw new PermissionException(['key' => 'access.panel']);
         }
 
