@@ -260,6 +260,7 @@ export default class Editor extends Emitter {
 
     // prepare event information for all following events
     const payload = {
+      editor: this,
       getHTML: this.getHTML.bind(this),
       getJSON: this.getJSON.bind(this),
       state: this.state,

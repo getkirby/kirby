@@ -228,6 +228,7 @@ return [
             return [
                 'component' => 'k-remove-dialog',
                 'props' => [
+                    // todo: escape placeholder (output with `v-html`)
                     'text' => tt('user.delete.confirm', [
                         'email' => $user->email()
                     ])

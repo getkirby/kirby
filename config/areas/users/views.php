@@ -38,6 +38,7 @@ return [
 
                         return [
                             'data' => $users->values(function ($user) {
+                                // todo: probably escape info and text (output with `v-html`)
                                 return [
                                     'id'    => $user->id(),
                                     'image' => $user->panel()->image(),

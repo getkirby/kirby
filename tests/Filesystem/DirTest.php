@@ -445,6 +445,20 @@ class DirTest extends TestCase
     }
 
     /**
+     * @covers ::make
+     */
+    public function testMakeFileExists()
+    {
+        $test = $this->tmp . '/test';
+
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('A file with the name "' . $test . '" already exists');
+
+        F::write($test, '');
+        Dir::make($test);
+    }
+
+    /**
      * @covers ::modified
      */
     public function testModified()

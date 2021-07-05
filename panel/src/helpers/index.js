@@ -54,5 +54,7 @@ export default {
       uuid,
       validate
     };
+
+    Vue.prototype.$esc = string.escapeHTML;
   }
 };

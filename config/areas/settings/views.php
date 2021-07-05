@@ -21,6 +21,7 @@ return [
                 'component' => 'k-settings-view',
                 'props'     => [
                     'languages' => $kirby->languages()->values(function ($language) {
+                        // todo: probably escape info and text (output with `v-html`)
                         return [
                             'default' => $language->isDefault(),
                             'id'      => $language->code(),

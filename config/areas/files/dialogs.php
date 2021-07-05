@@ -99,6 +99,7 @@ return [
             return [
                 'component' => 'k-remove-dialog',
                 'props' => [
+                    // todo: escape placeholder (output with `v-html`)
                     'text' => tt('file.delete.confirm', [
                         'filename' => $file->filename()
                     ]),

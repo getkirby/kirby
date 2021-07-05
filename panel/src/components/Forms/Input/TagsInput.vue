@@ -22,12 +22,15 @@
       @dblclick.native="edit(tag)"
       @remove="remove(tag)"
     >
-      {{ tag.text }}
+      <!-- eslint-disable-next-line vue/no-v-html -->
+      <span v-html="tag.text" />
     </k-tag>
+
     <template #footer>
       <span class="k-tags-input-element">
         <k-autocomplete
           ref="autocomplete"
+          :html="true"
           :options="options"
           :skip="skip"
           @select="addTag"
@@ -91,9 +94,9 @@ export const props = {
       default: "tag"
     },
     /**
-     * You can set the layout to `list` to extend the width of each tag 
-     * to 100% and show them in a list. This is handy in narrow columns 
-     * or when a list is a more appropriate design choice for the input 
+     * You can set the layout to `list` to extend the width of each tag
+     * to 100% and show them in a list. This is handy in narrow columns
+     * or when a list is a more appropriate design choice for the input
      * in general.
      */
     layout: String,
@@ -106,7 +109,7 @@ export const props = {
      */
     min: Number,
     /**
-     * Options will be shown in the autocomplete dropdown 
+     * Options will be shown in the autocomplete dropdown
      * as soon as you start typing.
      */
     options: {

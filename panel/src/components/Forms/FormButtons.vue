@@ -26,7 +26,7 @@
       <p class="k-form-lock-info">
         <k-icon type="lock" />
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <span v-html="$t('lock.isLocked', { email: lock.data.email })" />
+        <span v-html="$t('lock.isLocked', { email: $esc(lock.data.email) })" />
       </p>
 
       <k-icon

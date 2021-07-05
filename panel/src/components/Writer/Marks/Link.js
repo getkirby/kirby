@@ -16,7 +16,7 @@ export default class Link extends Mark {
   commands() {
     return {
       "link": () => {
-        this.editor.emit("link");
+        this.editor.emit("link", this.editor);
       },
       "insertLink": (attrs = {}) => {
         if (attrs.href) {
