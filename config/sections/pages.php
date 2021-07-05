@@ -169,6 +169,7 @@ return [
                     'parent'      => $item->parentId(),
                     'image'       => $panel->image($this->image, $this->layout),
                     'link'        => $panel->url(true),
+                    'template'    => $item->intendedTemplate()->name(),
                     'status'      => $item->status(),
                     'permissions' => [
                         'sort'         => $permissions->can('sort'),
