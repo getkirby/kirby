@@ -2,7 +2,6 @@
 
 namespace Kirby\Toolkit;
 
-use Closure;
 use Exception;
 
 /**
