@@ -296,7 +296,6 @@ class Mime
 
             if ($value === $mime) {
                 $extensions[] = $key;
-                continue;
             }
         }
 
