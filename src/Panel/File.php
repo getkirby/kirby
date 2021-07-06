@@ -121,7 +121,7 @@ class File extends Model
 
         return $extensions[$this->model->extension()] ??
                $types[$this->model->type()] ??
-               parent::imageColor();
+               parent::imageDefaults()['icon'];
     }
 
     /**
@@ -166,7 +166,7 @@ class File extends Model
 
         return $extensions[$this->model->extension()] ??
                $types[$this->model->type()] ??
-               parent::imageIcon();
+               parent::imageDefaults()['color'];
     }
 
     /**
