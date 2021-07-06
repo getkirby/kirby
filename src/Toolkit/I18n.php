@@ -26,7 +26,7 @@ class I18n
     /**
      * Current locale
      *
-     * @var string
+     * @var string|\Closure
      */
     public static $locale = 'en';
 
@@ -41,7 +41,7 @@ class I18n
      * The fallback locale or a
      * list of fallback locales
      *
-     * @var string|array
+     * @var string|array|\Closure
      */
     public static $fallback = ['en'];
 
