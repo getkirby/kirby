@@ -710,7 +710,7 @@ class Query
             $this->database->fail();
         }
 
-        $result = $this->database->execute($sql['query'], $sql['bindings'], $params);
+        $result = $this->database->execute($sql['query'], $sql['bindings']);
 
         $this->reset();
 

@@ -115,7 +115,7 @@ class Site extends ModelWithContent
         }
 
         // return site content otherwise
-        return $this->content()->get($method, $arguments);
+        return $this->content()->get($method);
     }
 
     /**

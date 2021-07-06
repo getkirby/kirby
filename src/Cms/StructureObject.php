@@ -61,7 +61,7 @@ class StructureObject extends Model
             return $this->$method;
         }
 
-        return $this->content()->get($method, $arguments);
+        return $this->content()->get($method);
     }
 
     /**
