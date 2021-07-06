@@ -152,7 +152,7 @@ class Field
     {
         $kirby   = kirby();
         $user    = $kirby->user();
-        $isAdmin = $user ? $user->isAdmin() : false;
+        $isAdmin = $user && $user->isAdmin();
         $roles   = [];
 
         foreach ($kirby->roles() as $role) {
