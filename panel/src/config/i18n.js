@@ -10,7 +10,7 @@ export class TranslationString extends String {
 
 export default {
   install(app) {
-    app.$t = app.prototype.$t = (key, data) => {
+    app.$t = app.prototype.$t = window.panel.$t = (key, data) => {
       if (typeof key !== "string") {
         return;
       }

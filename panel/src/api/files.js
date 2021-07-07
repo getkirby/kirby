@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export default (api) => {
   return {
     breadcrumb(file, route) {
@@ -70,7 +68,7 @@ export default (api) => {
             window.open(file.url);
           },
           icon: "open",
-          text: Vue.$t("open"),
+          text: window.panel.$t("open"),
         });
 
         result.push("-");
@@ -81,14 +79,14 @@ export default (api) => {
           this.$dialog(url + '/changeName');
         },
         icon: "title",
-        text: Vue.$t("rename"),
+        text: window.panel.$t("rename"),
         disabled: disabled("changeName")
       });
 
       result.push({
         click: "replace",
         icon: "upload",
-        text: Vue.$t("replace"),
+        text: window.panel.$t("replace"),
         disabled: disabled("replace")
       });
 
@@ -100,7 +98,7 @@ export default (api) => {
             this.$dialog(url + '/changeSort');
           },
           icon: "sort",
-          text: Vue.$t("file.sort"),
+          text: window.panel.$t("file.sort"),
           disabled: disabled("update")
         });
       }
@@ -112,7 +110,7 @@ export default (api) => {
           this.$dialog(url + '/delete');
         },
         icon: "trash",
-        text: Vue.$t("delete"),
+        text: window.panel.$t("delete"),
         disabled: disabled("delete")
       });
 

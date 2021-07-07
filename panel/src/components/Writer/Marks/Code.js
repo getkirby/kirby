@@ -1,15 +1,11 @@
 import Mark from "../Mark";
-import Vue from "vue";
 
 export default class Code extends Mark {
 
   get button() {
     return {
       icon: "code",
-      /**
-       * @todo replace with `window.panel.$t()` after merging fiber
-       */
-      label: Vue.$t("toolbar.button.code")
+      label: window.panel.$t("toolbar.button.code")
     };
   }
 

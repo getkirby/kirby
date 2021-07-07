@@ -1,15 +1,11 @@
-import Mark from "../Mark"
-import Vue from "vue";
+import Mark from "../Mark";
 
 export default class Bold extends Mark {
 
   get button() {
     return {
       icon: "bold",
-      /**
-       * @todo replace with `window.panel.$t()` after merging fiber
-       */
-      label: Vue.$t("toolbar.button.bold")
+      label: window.panel.$t("toolbar.button.bold")
     };
   }
 
