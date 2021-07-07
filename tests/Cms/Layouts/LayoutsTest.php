@@ -48,4 +48,57 @@ class LayoutsTest extends TestCase
         $this->assertEquals('text', $blocks->last()->type());
         $this->assertEquals('Text', $blocks->last()->text());
     }
+
+    public function testParse()
+    {
+        $data = [
+            [
+                'type'    => 'heading',
+                'content' => ['text' => 'Heading'],
+            ],
+            [
+                'type'    => 'text',
+                'content' => ['text' => 'Text'],
+            ]
+        ];
+        $json = json_encode($data);
+
+        $result = Layouts::parse($json);
+        $this->assertSame($data, $result);
+    }
+
+    public function testParseArray()
+    {
+        $data = [
+            [
+                'type'    => 'heading',
+                'content' => ['text' => 'Heading'],
+            ],
+            [
+                'type'    => 'text',
+                'content' => ['text' => 'Text'],
+            ]
+        ];
+
+        $result = Layouts::parse($data);
+        $this->assertSame($data, $result);
+    }
+
+    public function testParseEmpty()
+    {
+        $result = Layouts::parse(null);
+        $this->assertSame([], $result);
+
+        $result = Layouts::parse('');
+        $this->assertSame([], $result);
+
+        $result = Layouts::parse('[]');
+        $this->assertSame([], $result);
+
+        $result = Layouts::parse([]);
+        $this->assertSame([], $result);
+
+        $result = Layouts::parse('invalid json string');
+        $this->assertSame([], $result);
+    }
 }
