@@ -384,7 +384,7 @@ class Auth
      * @param bool $long
      * @return \Kirby\Cms\User
      *
-     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
+     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
      * @throws \Kirby\Exception\NotFoundException If the email was invalid
      * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
      */
@@ -415,7 +415,7 @@ class Auth
      * @param bool $long
      * @return \Kirby\Cms\Auth\Status
      *
-     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
+     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
      * @throws \Kirby\Exception\NotFoundException If the email was invalid
      * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
      */
@@ -500,7 +500,7 @@ class Auth
      * @param string $password
      * @return \Kirby\Cms\User
      *
-     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occured with debug mode off
+     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
      * @throws \Kirby\Exception\NotFoundException If the email was invalid
      * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
      */
@@ -724,7 +724,7 @@ class Auth
      *                                 logged in user will be returned
      * @return \Kirby\Cms\User|null
      *
-     * @throws \Throwable If an authentication error occured
+     * @throws \Throwable If an authentication error occurred
      */
     public function user($session = null, bool $allowImpersonation = true)
     {
@@ -770,7 +770,7 @@ class Auth
      * @return \Kirby\Cms\User User object of the logged-in user
      *
      * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded, the challenge timed out, the code
-     *                                              is incorrect or if any other error occured with debug mode off
+     *                                              is incorrect or if any other error occurred with debug mode off
      * @throws \Kirby\Exception\NotFoundException If the user from the challenge doesn't exist
      * @throws \Kirby\Exception\InvalidArgumentException If no authentication challenge is active
      * @throws \Kirby\Exception\LogicException If the authentication challenge is invalid

@@ -253,7 +253,7 @@ class Exif
     }
 
     /**
-     * Teturn the focal length
+     * Return the focal length
      *
      * @return string|null
      */

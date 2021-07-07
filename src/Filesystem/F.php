@@ -719,8 +719,8 @@ class F
      *
      * <code>
      *
-     * $safe = f::safeName('über genious.txt');
-     * // safe will be ueber-genious.txt
+     * $safe = f::safeName('über genius.txt');
+     * // safe will be ueber-genius.txt
      *
      * </code>
      *
@@ -861,7 +861,7 @@ class F
      *
      * @param string $file The path for the new file
      * @param mixed $content Either a string, an object or an array. Arrays and objects will be serialized.
-     * @param bool $append true: append the content to an exisiting file if available. false: overwrite.
+     * @param bool $append true: append the content to an existing file if available. false: overwrite.
      * @return bool
      */
     public static function write(string $file, $content, bool $append = false): bool

@@ -53,7 +53,7 @@ trait AppCaches
         // initialize the cache class
         $cache = new $className($options);
 
-        // check if it is a useable cache object
+        // check if it is a usable cache object
         if (is_a($cache, 'Kirby\Cache\Cache') !== true) {
             throw new InvalidArgumentException([
                 'key'  => 'app.invalid.cacheType',
