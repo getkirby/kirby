@@ -742,7 +742,10 @@ class FieldMethodsTest extends TestCase
         $field  = $this->field($json);
         $blocks = $field->toBlocks();
 
+        $this->assertInstanceOf('\Kirby\Cms\Blocks', $blocks);
+        $this->assertInstanceOf('\Kirby\Cms\Site', $blocks->parent());
         $this->assertCount(count($data), $blocks);
+        $this->assertCount(count($data), $blocks->data());
 
         foreach ($data as $index => $row) {
             $block = $blocks->nth($index);
@@ -751,5 +754,31 @@ class FieldMethodsTest extends TestCase
             $this->assertSame($row['content'], $block->content()->data());
             $this->assertNotEmpty($block->toHtml());
         }
+    }
+
+    public function testToLayouts()
+    {
+        $data = [
+            [
+                'type'    => 'heading',
+                'content' => ['text' => 'Heading'],
+            ],
+            [
+                'type'    => 'text',
+                'content' => ['text' => 'Text'],
+            ]
+        ];
+
+        $field = $this->field(json_encode($data));
+        $layouts = $field->toLayouts();
+
+        $this->assertInstanceOf('\Kirby\Cms\Layouts', $layouts);
+        $this->assertInstanceOf('\Kirby\Cms\Site', $layouts->parent());
+        $this->assertCount(1, $layouts->data());
+
+        $layout = $layouts->first()->toArray();
+        $this->assertArrayHasKey('attrs', $layout);
+        $this->assertArrayHasKey('columns', $layout);
+        $this->assertArrayHasKey('id', $layout);
     }
 }

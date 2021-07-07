@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Data\Data;
+use Throwable;
+
 /**
  * A collection of layouts
  * @since 3.5.0
@@ -36,5 +39,28 @@ class Layouts extends Items
         }
 
         return parent::factory($items, $params);
+    }
+
+    /**
+     * Parse layouts data
+     *
+     * @param array|string $input
+     * @return array
+     */
+    public static function parse($input): array
+    {
+        if (empty($input) === false && is_array($input) === false) {
+            try {
+                $input = Data::decode($input, 'json');
+            } catch (Throwable $e) {
+                return [];
+            }
+        }
+
+        if (empty($input) === true) {
+            return [];
+        }
+
+        return $input;
     }
 }
