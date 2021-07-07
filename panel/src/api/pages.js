@@ -1,5 +1,3 @@
-import Vue from "vue";
-
 export default (api) => {
   return {
     async blueprint(parent) {
@@ -96,7 +94,7 @@ export default (api) => {
             window.open(page.previewUrl, "_blank");
           },
           icon: "open",
-          text: Vue.$t("open"),
+          text: window.panel.$t("open"),
           disabled: disabled("preview")
         });
 
@@ -113,7 +111,7 @@ export default (api) => {
           });
         },
         icon: "title",
-        text: Vue.$t("rename"),
+        text: window.panel.$t("rename"),
         disabled: disabled("changeTitle")
       });
 
@@ -122,7 +120,7 @@ export default (api) => {
           this.$dialog(pageUrl + "/duplicate");
         },
         icon: "copy",
-        text: Vue.$t("duplicate"),
+        text: window.panel.$t("duplicate"),
         disabled: disabled("duplicate")
       });
 
@@ -137,7 +135,7 @@ export default (api) => {
           });
         },
         icon: "url",
-        text: Vue.$t("page.changeSlug"),
+        text: window.panel.$t("page.changeSlug"),
         disabled: disabled("changeSlug")
       });
 
@@ -146,7 +144,7 @@ export default (api) => {
           this.$dialog(pageUrl + '/changeStatus');
         },
         icon: "preview",
-        text: Vue.$t("page.changeStatus"),
+        text: window.panel.$t("page.changeStatus"),
         disabled: disabled("changeStatus")
       });
 
@@ -156,7 +154,7 @@ export default (api) => {
             this.$dialog(pageUrl + '/changeSort');
           },
           icon: "sort",
-          text: Vue.$t("page.sort"),
+          text: window.panel.$t("page.sort"),
           disabled: disabled("sort")
         });
       }
@@ -166,7 +164,7 @@ export default (api) => {
           this.$dialog(pageUrl + '/changeTemplate');
         },
         icon: "template",
-        text: Vue.$t("page.changeTemplate"),
+        text: window.panel.$t("page.changeTemplate"),
         disabled: disabled("changeTemplate")
       });
 
@@ -177,7 +175,7 @@ export default (api) => {
           this.$dialog(pageUrl + '/delete');
         },
         icon: "trash",
-        text: Vue.$t("delete"),
+        text: window.panel.$t("delete"),
         disabled: disabled("delete")
       });
 

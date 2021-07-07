@@ -59,8 +59,6 @@
 </template>
 
 <script>
-import { TranslationString } from '@/config/i18n.js'
-
 /**
  * @example <k-pagination
  *   align="center"
@@ -117,7 +115,7 @@ export default {
     pageLabel: {
       type: String,
       default() {
-        return new TranslationString("pagination.page")
+        return window.panel.$t("pagination.page")
       }
     },
     /**
@@ -133,7 +131,7 @@ export default {
     prevLabel: {
       type: String,
       default() {
-        return new TranslationString("prev")
+        return window.panel.$t("prev")
       }
     },
     /**
@@ -142,7 +140,7 @@ export default {
     nextLabel: {
       type: String,
       default() {
-        return new TranslationString("next")
+        return window.panel.$t("next")
       }
     },
     validate: {

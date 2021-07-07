@@ -1,15 +1,11 @@
 import Mark from "../Mark";
-import Vue from "vue";
 
 export default class Italic extends Mark {
 
   get button() {
     return {
       icon: "italic",
-      /**
-       * @todo replace with `window.panel.$t()` after merging fiber
-       */
-      label: Vue.$t("toolbar.button.italic")
+      label: window.panel.$t("toolbar.button.italic")
     };
   }
 

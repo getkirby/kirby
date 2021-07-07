@@ -1,15 +1,11 @@
-import Mark from "../Mark"
-import Vue from "vue";
+import Mark from "../Mark";
 
 export default class Strike extends Mark {
 
   get button() {
     return {
       icon: "strikethrough",
-      /**
-       * @todo replace with `window.panel.$t()` after merging fiber
-       */
-      label: Vue.$t("toolbar.button.strike")
+      label: window.panel.$t("toolbar.button.strike")
     };
   }
 

@@ -23,6 +23,7 @@
       :key="markType"
       :class="{'k-writer-toolbar-button': true, 'k-writer-toolbar-button-active': activeMarks.includes(markType)}"
       :icon="mark.icon"
+      :tooltip="mark.label"
       @mousedown.prevent="command(mark.command || markType)"
     />
   </div>

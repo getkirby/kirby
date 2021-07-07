@@ -1,15 +1,11 @@
 import Mark from "../Mark";
-import Vue from "vue";
 
 export default class Underline extends Mark {
 
   get button() {
     return {
       icon: "underline",
-      /**
-       * @todo replace with `window.panel.$t()` after merging fiber
-       */
-      label: Vue.$t("toolbar.button.underline")
+      label: window.panel.$t("toolbar.button.underline")
     };
   }
 
