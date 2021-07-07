@@ -1,4 +1,5 @@
 import Node from "../Node";
+import Vue from "vue";
 
 export default class Heading extends Node {
 
@@ -7,7 +8,11 @@ export default class Heading extends Node {
       return {
         command: `h${level}`,
         icon: "title",
-        label: `Heading ${level}`,
+        /**
+         * @todo replace with `window.panel.$t()` after merging fiber
+         */
+        label: Vue.$t("toolbar.button.heading." + level),
+        name: this.name
       }
     });
   }
@@ -18,7 +23,7 @@ export default class Heading extends Node {
     };
 
     this.options.levels.forEach(level => {
-      commands[`h${level}`] = () => utils.setBlockType(type, { level });
+      commands[`h${level}`] = () => utils.toggleBlockType(type, schema.nodes.paragraph, { level });
     });
 
     return commands;

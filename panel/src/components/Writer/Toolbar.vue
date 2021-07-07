@@ -1,9 +1,12 @@
 <template>
   <div class="k-writer-toolbar">
-    <k-dropdown v-if="Object.keys(nodeButtons).length > 1 && activeNode" @mousedown.native.prevent>
+    <k-dropdown v-if="Object.keys(nodeButtons).length" @mousedown.native.prevent>
       <k-button
-        :icon="activeNode.icon"
-        class="k-writer-toolbar-button k-writer-toolbar-nodes"
+        :icon="activeNode.icon || 'headline'"
+        :class="{
+          'k-writer-toolbar-button k-writer-toolbar-nodes': true,
+          'k-writer-toolbar-button-active': !!activeNode
+        }"
         @click="$refs.nodes.toggle()"
       />
       <k-dropdown-content ref="nodes">
@@ -53,14 +56,7 @@ export default {
   },
   computed: {
     activeNode() {
-
-      const buttonKey = Object.keys(this.nodeButtons).find(buttonKey => this.activeNodes.includes(buttonKey));
-
-      if (buttonKey) {
-        return this.nodeButtons[buttonKey];
-      }
-
-      return false;
+      return Object.values(this.nodeButtons).find(button => this.activeNodes.includes(button.name)) || false;
     },
     markButtons() {
       return this.buttons("mark");

@@ -9,7 +9,8 @@ export default class OrderedList extends Node {
       /**
        * @todo replace with `window.panel.$t()` after merging fiber
        */
-      label: Vue.$t("toolbar.button.ol")
+      label: Vue.$t("toolbar.button.ol"),
+      name: this.name
     };
   }
 

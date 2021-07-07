@@ -9,7 +9,8 @@ export default class BulletList extends Node {
       /**
        * @todo replace with `window.panel.$t()` after merging fiber
        */
-      label: Vue.$t("toolbar.button.ul")
+      label: Vue.$t("toolbar.button.ul"),
+      name: this.name
     };
   }
 
