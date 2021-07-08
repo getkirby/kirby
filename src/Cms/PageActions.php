@@ -556,7 +556,6 @@ trait PageActions
                 $field  = $this->content($lang)->get('date');
                 $date   = $field->isEmpty() ? 'now' : $field;
                 return (int)date($format, strtotime($date));
-                break;
             case 'default':
 
                 $max = $this
