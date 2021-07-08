@@ -205,7 +205,7 @@ class Database
         }
 
         // fetch the dsn and store it
-        $this->dsn = static::$types[$this->type]['dsn']($options);
+        $this->dsn = (static::$types[$this->type]['dsn'])($options);
 
         // try to connect
         $this->connection = new PDO($this->dsn, $options['user'], $options['password']);

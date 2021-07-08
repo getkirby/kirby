@@ -235,6 +235,7 @@ class Field
      */
     public static function translation(array $props = []): array
     {
+        $translations = [];
         foreach (kirby()->translations() as $translation) {
             $translations[] = [
                 'text'  => $translation->name(),

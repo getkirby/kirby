@@ -830,7 +830,7 @@ class Auth
 
             throw new LogicException('Invalid authentication challenge: ' . $challenge);
         } catch (Throwable $e) {
-            if ($e->getMessage() !== 'Rate limit exceeded') {
+            if (empty($email) === false && $e->getMessage() !== 'Rate limit exceeded') {
                 $this->track($email);
             }
 

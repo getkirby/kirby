@@ -127,7 +127,6 @@ abstract class Model
             if (is_a($image, 'Kirby\Cms\File') === true) {
                 $settings['src'] = static::imagePlaceholder();
 
-
                 switch ($layout) {
                     case 'cards':
                         $sizes = [352, 864, 1408];
@@ -136,6 +135,7 @@ abstract class Model
                         $sizes = [96, 192];
                         break;
                     case 'list':
+                    default:
                         $sizes = [38, 76];
                         break;
                 }
