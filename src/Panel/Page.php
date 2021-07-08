@@ -2,8 +2,6 @@
 
 namespace Kirby\Panel;
 
-use Kirby\Cms\Collection;
-
 /**
  * Provides information about the page model for the Panel
  * @since 3.6.0

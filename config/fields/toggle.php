@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Exception\InvalidArgumentException;
+use Kirby\Toolkit\A;
 use Kirby\Toolkit\I18n;
 
 return [

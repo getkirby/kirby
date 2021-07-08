@@ -5,6 +5,8 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\PermissionException;
 use Kirby\Panel\Field;
+use Kirby\Panel\Panel;
+use Kirby\Toolkit\Str;
 
 $files = require __DIR__ . '/../files/dialogs.php';
 

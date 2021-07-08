@@ -7,10 +7,7 @@ use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
-use Kirby\Http\Request;
 use Kirby\Http\Response;
-use Kirby\Http\Url;
-use Kirby\Toolkit\A;
 use Kirby\Toolkit\Tpl;
 use Throwable;
 

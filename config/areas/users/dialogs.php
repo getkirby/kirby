@@ -4,6 +4,7 @@ use Kirby\Cms\Find;
 use Kirby\Cms\UserRules;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Panel\Field;
+use Kirby\Panel\Panel;
 
 $files = require __DIR__ . '/../files/dialogs.php';
 

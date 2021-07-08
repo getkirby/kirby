@@ -836,7 +836,7 @@ function timestamp(string $date = null, $step = null): ?int
     );
 
     // on error, convert `false` into `null`
-    return $timestamp ? $timestamp : null;
+    return $timestamp ?? null;
 }
 
 /**

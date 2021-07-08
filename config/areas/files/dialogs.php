@@ -2,6 +2,7 @@
 
 use Kirby\Cms\Find;
 use Kirby\Panel\Field;
+use Kirby\Panel\Panel;
 
 /**
  * Shared file dialogs

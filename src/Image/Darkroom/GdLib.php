@@ -3,8 +3,8 @@
 namespace Kirby\Image\Darkroom;
 
 use claviska\SimpleImage;
+use Kirby\Filesystem\Mime;
 use Kirby\Image\Darkroom;
-use Kirby\Toolkit\Mime;
 
 /**
  * GdLib

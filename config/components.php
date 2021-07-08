@@ -233,7 +233,7 @@ return [
                 }
             }
 
-            return $item->searchHits > 0 ? true : false;
+            return $item->searchHits > 0;
         });
 
         return $results->sort('searchScore', 'desc');
