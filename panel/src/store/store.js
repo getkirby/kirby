@@ -5,7 +5,6 @@ import Vuex from "vuex";
 import blocks from "./modules/blocks.js";
 import content from "./modules/content.js";
 import drawers from "./modules/drawers.js";
-import heartbeat from "./modules/heartbeat.js";
 import notification from "./modules/notification.js";
 
 Vue.use(Vuex);
@@ -54,7 +53,6 @@ export default new Vuex.Store({
     blocks: blocks,
     content: content,
     drawers: drawers,
-    heartbeat: heartbeat,
     notification: notification
   }
 });
