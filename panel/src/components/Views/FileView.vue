@@ -1,9 +1,14 @@
 <template>
   <k-inside :lock="lock">
-    <div class="k-file-view">
+    <div
+      :data-locked="isLocked"
+      :data-id="model.id"
+      :data-template="blueprint"
+      class="k-file-view"
+    >
       <k-file-preview :file="model" />
 
-      <k-view :data-locked="isLocked" class="k-file-content">
+      <k-view class="k-file-content">
         <k-header
           :editable="permissions.changeName && !isLocked"
           :tab="tab.name"
@@ -17,12 +22,13 @@
               <k-button
                 :link="model.url"
                 :responsive="true"
+                class="k-file-view-options"
                 icon="open"
                 target="_blank"
               >
                 {{ $t("open") }}
               </k-button>
-              <k-dropdown>
+              <k-dropdown class="k-file-view-options">
                 <k-button
                   :responsive="true"
                   :disabled="isLocked"
@@ -51,7 +57,7 @@
 
         <k-sections
           :blueprint="blueprint"
-          :empty="$t('file.blueprint', { template: $esc(blueprint) })"
+          :empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
           :lock="lock"
           :parent="path"
           :tab="tab"

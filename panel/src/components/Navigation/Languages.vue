@@ -1,5 +1,5 @@
 <template>
-  <k-dropdown v-if="languages.length">
+  <k-dropdown v-if="languages.length" class="k-languages-dropdown">
     <k-button :responsive="true" icon="globe" @click="$refs.languages.toggle()">
       {{ language.name }}
     </k-button>

@@ -85,37 +85,6 @@ class User extends Model
     }
 
     /**
-     * Returns the data array for the
-     * view's component props
-     *
-     * @internal
-     *
-     * @return array
-     */
-    public function props(): array
-    {
-        $user   = $this->model;
-        $avatar = $user->avatar();
-
-        return array_merge(
-            parent::props(),
-            $this->prevNext(),
-            [
-                'model' => [
-                    'avatar'   => $avatar ? $avatar->url() : null,
-                    'content'  => $this->content(),
-                    'email'    => $user->email(),
-                    'id'       => $user->id(),
-                    'language' => $this->translation()->name(),
-                    'name'     => $user->name()->toString(),
-                    'role'     => $user->role()->title(),
-                    'username' => $user->username(),
-                ]
-            ]
-        );
-    }
-
-    /**
      * Returns navigation array with
      * previous and next user
      *
@@ -137,6 +106,38 @@ class User extends Model
                 return $prev ? $prev->panel()->toLink('username') : null;
             }
         ];
+    }
+
+    /**
+     * Returns the data array for the
+     * view's component props
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function props(): array
+    {
+        $user   = $this->model;
+        $avatar = $user->avatar();
+
+        return array_merge(
+            parent::props(),
+            $this->prevNext(),
+            [
+                'blueprint' => $this->model->role()->name(),
+                'model' => [
+                    'avatar'   => $avatar ? $avatar->url() : null,
+                    'content'  => $this->content(),
+                    'email'    => $user->email(),
+                    'id'       => $user->id(),
+                    'language' => $this->translation()->name(),
+                    'name'     => $user->name()->toString(),
+                    'role'     => $user->role()->title(),
+                    'username' => $user->username(),
+                ]
+            ]
+        );
     }
 
     /**

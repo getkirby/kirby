@@ -1,6 +1,11 @@
 <template>
   <k-inside :lock="lock">
-    <k-view :data-locked="isLocked" class="k-page-view">
+    <k-view
+      :data-locked="isLocked"
+      :data-id="model.id"
+      :data-template="blueprint"
+      class="k-page-view"
+    >
       <k-header
         :editable="permissions.changeTitle && !isLocked"
         :tab="tab.name"
@@ -14,8 +19,9 @@
               v-if="permissions.preview && model.previewUrl"
               :responsive="true"
               :link="model.previewUrl"
-              target="_blank"
+              class="k-page-view-preview"
               icon="open"
+              target="_blank"
             >
               {{ $t('open') }}
             </k-button>
@@ -27,7 +33,7 @@
               :text="status.label"
               @click="$dialog($view.path + '/changeStatus')"
             />
-            <k-dropdown>
+            <k-dropdown class="k-page-view-options">
               <k-button
                 :responsive="true"
                 :disabled="isLocked === true"
@@ -57,7 +63,7 @@
 
       <k-sections
         :blueprint="blueprint"
-        :empty="$t('page.blueprint', { template: $esc(blueprint) })"
+        :empty="$t('page.blueprint', { blueprint: $esc(blueprint) })"
         :lock="lock"
         :parent="$api.pages.url(model.id)"
         :tab="tab"

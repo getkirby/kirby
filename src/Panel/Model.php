@@ -321,7 +321,6 @@ abstract class Model
         $tab       = $blueprint->tab(get('tab')) ?? $tabs[0] ?? null;
 
         $props = [
-            'blueprint'   => $blueprint->name(),
             'lock'        => $this->lock(),
             'permissions' => $this->model->permissions()->toArray(),
             'tabs'        => $tabs,

@@ -265,7 +265,7 @@
   "field.structure.empty": "No entries yet",
   "field.users.empty": "No users selected yet",
 
-  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "file.blueprint": "This file has no blueprint yet. You can define the setup in <strong>/site/blueprints/files/{blueprint}.yml</strong>",
   "file.delete.confirm": "Do you really want to delete <br><strong>{filename}</strong>?",
   "file.sort": "Change position",
 
@@ -387,7 +387,7 @@
   "orientation.portrait": "Portrait",
   "orientation.square": "Square",
 
-  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/{template}.yml</strong>",
+  "page.blueprint": "This page has no blueprint yet. You can define the setup in <strong>/site/blueprints/pages/{blueprint}.yml</strong>",
   "page.changeSlug": "Change URL",
   "page.changeSlug.fromTitle": "Create from title",
   "page.changeStatus": "Change status",
@@ -499,7 +499,7 @@
   "url.placeholder": "https://example.com",
 
   "user": "User",
-  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/{blueprint}.yml</strong>",
+  "user.blueprint": "You can define additional sections and form fields for this user role in <strong>/site/blueprints/users/{blueprint}.yml</strong>",
   "user.changeEmail": "Change email",
   "user.changeLanguage": "Change language",
   "user.changeName": "Rename this user",

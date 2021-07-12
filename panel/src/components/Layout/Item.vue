@@ -1,6 +1,7 @@
 <template>
   <article
     :class="layout ? 'k-' + layout + '-item' : false"
+    v-bind="data"
     :data-has-figure="Boolean(image)"
     :data-has-info="Boolean(info)"
     :data-has-label="Boolean(label)"
@@ -75,13 +76,15 @@
 export default {
   inheritAttrs: false,
   props: {
+    data: Object,
+    flag: Object,
+    image: [Object, Boolean],
+    info: String,
+    label: String,
     layout: {
       type: String,
       default: "list"
     },
-    image: [Object, Boolean],
-    info: String,
-    label: String,
     link: {
       type: [Boolean, String, Function]
     },
@@ -89,7 +92,6 @@ export default {
       type: [Array, Function]
     },
     sortable: Boolean,
-    flag: Object,
     target: String,
     text: String,
     width: String

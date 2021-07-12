@@ -1,6 +1,11 @@
 <template>
   <k-inside :lock="lock">
-    <div :data-locked="isLocked" class="k-user-view">
+    <div
+      :data-locked="isLocked"
+      :data-id="model.id"
+      :data-template="blueprint"
+      class="k-user-view"
+    >
       <div class="k-user-profile">
         <k-view>
           <template v-if="model.avatar">
@@ -78,7 +83,7 @@
 
           <template #left>
             <k-button-group>
-              <k-dropdown>
+              <k-dropdown class="k-user-view-options">
                 <k-button :disabled="isLocked" icon="cog" @click="$refs.settings.toggle()">
                   {{ $t('settings') }}
                 </k-button>

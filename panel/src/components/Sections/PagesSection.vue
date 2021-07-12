@@ -129,6 +129,13 @@ export default {
           }
         };
 
+        // add data-attributes info for item
+        page.data = {
+          "data-id": page.id,
+          "data-status": page.status,
+          "data-template": page.template
+        };
+
         return page;
       });
     },

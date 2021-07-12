@@ -1,6 +1,11 @@
 <template>
   <k-inside :lock="lock">
-    <k-view :data-locked="isLocked" class="k-site-view">
+    <k-view
+      :data-locked="isLocked"
+      data-id="/"
+      data-template="site"
+      class="k-site-view"
+    >
       <k-header
         :editable="permissions.changeTitle && !isLocked"
         :tabs="tabs"
@@ -13,8 +18,9 @@
             <k-button
               :responsive="true"
               :link="model.previewUrl"
-              target="_blank"
+              class="k-site-view-preview"
               icon="open"
+              target="_blank"
             >
               {{ $t('open') }}
             </k-button>

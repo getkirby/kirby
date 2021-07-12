@@ -36,7 +36,7 @@ class SiteTest extends AreaTestCase
         $props = $view['props'];
         $model = $props['model'];
 
-        $this->assertSame('Page', $props['blueprint']);
+        $this->assertSame('default', $props['blueprint']);
         $this->assertSame(['state' => null], $props['lock']);
 
         $this->assertArrayNotHasKey('tab', $props);
@@ -80,7 +80,8 @@ class SiteTest extends AreaTestCase
             ],
             'files' => [
                 [
-                    'filename' => 'test.jpg'
+                    'filename' => 'test.jpg',
+                    'template' => 'image'
                 ]
             ]
         ]);
@@ -89,7 +90,7 @@ class SiteTest extends AreaTestCase
         $props = $view['props'];
         $model = $props['model'];
 
-        $this->assertSame('File', $props['blueprint']);
+        $this->assertSame('image', $props['blueprint']);
         $this->assertSame(['state' => null], $props['lock']);
 
         $this->assertArrayNotHasKey('tab', $props);
@@ -140,7 +141,8 @@ class SiteTest extends AreaTestCase
             'site' => [
                 'files' => [
                     [
-                        'filename' => 'test.jpg'
+                        'filename' => 'test.jpg',
+                        'template' => 'image'
                     ]
                 ]
             ]
@@ -152,7 +154,7 @@ class SiteTest extends AreaTestCase
         $props = $view['props'];
         $model = $props['model'];
 
-        $this->assertSame('File', $props['blueprint']);
+        $this->assertSame('image', $props['blueprint']);
         $this->assertSame(['state' => null], $props['lock']);
 
         $this->assertArrayNotHasKey('tab', $props);

@@ -423,7 +423,6 @@ class ModelTest extends TestCase
         $app->impersonate('kirby');
 
         $props = $this->panel($site)->props();
-        $this->assertSame('site', $props['blueprint']);
         $this->assertSame('main', $props['tabs'][0]['name']);
         $this->assertSame('main', $props['tab']['name']);
         $this->assertTrue($props['permissions']['update']);
