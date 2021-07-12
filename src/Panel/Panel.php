@@ -450,19 +450,18 @@ class Panel
      */
     public static function setLanguage(): ?string
     {
-        $kirby = kirby();
+        $kirby           = kirby();
+        $session         = $kirby->session();
+        $sessionLanguage = $session->get('panel.language', 'en');
+        $language        = get('language') ?? $sessionLanguage;
+
+        // keep the language for the next visit
+        if ($language !== $sessionLanguage) {
+            $session->set('panel.language', $language);
+        }
 
         // language switcher
         if ($kirby->option('languages')) {
-            $session  = $kirby->session();
-            $sessionLanguage = $session->get('panel.language', 'en');
-            $language = get('language') ?? $sessionLanguage;
-
-            // keep the language for the next visit
-            if ($language !== $sessionLanguage) {
-                $session->set('panel.language', $language);
-            }
-
             // activate the current language in Kirby
             $kirby->setCurrentLanguage($language);
 

@@ -517,7 +517,7 @@ class PanelTest extends TestCase
         ]);
 
         // set for the first time
-        $language = Panel::setLanguage($this->app);
+        $language = Panel::setLanguage();
 
         $this->assertSame('en', $language);
         $this->assertSame('en', $this->app->language()->code());
@@ -554,7 +554,7 @@ class PanelTest extends TestCase
         ]);
 
         // set for the first time
-        $language = Panel::setLanguage($this->app);
+        $language = Panel::setLanguage();
 
         $this->assertSame('de', $language);
         $this->assertSame('de', $this->app->language()->code());
@@ -590,7 +590,7 @@ class PanelTest extends TestCase
         ]);
 
         // set for the first time
-        $language = Panel::setLanguage($this->app);
+        $language = Panel::setLanguage();
 
         $this->assertSame('de', $language);
         $this->assertSame('de', $this->app->session()->get('panel.language'));
@@ -600,9 +600,9 @@ class PanelTest extends TestCase
     /**
      * @covers ::setLanguage
      */
-    public function testSetLanguageInSingleLanugageSite(): void
+    public function testSetLanguageInSingleLanguageSite(): void
     {
-        $language = Panel::setLanguage($this->app);
+        $language = Panel::setLanguage();
 
         $this->assertNull($language);
         $this->assertNull($this->app->language());
