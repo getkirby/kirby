@@ -3,7 +3,7 @@
     <div
       :data-locked="isLocked"
       :data-id="model.id"
-      :data-role="blueprint"
+      :data-template="blueprint"
       class="k-file-view"
     >
       <k-file-preview :file="model" />
