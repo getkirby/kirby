@@ -147,12 +147,14 @@ export default {
       this.dropup = false;
 
       this.$nextTick(() => {
-        const view = document.querySelector(".k-panel-view");
+        if (this.$el) {
+          // get window height depending on the browser
+          let windowHeight = window.innerHeight || document.body.clientHeight || document.documentElement.clientHeight;
 
-        if (view && this.$el) {
-          // window height without padding (6rem)
-          // doesn't included form-buttons bar (2.5rem = 40px)
-          let windowHeight = view.clientHeight - 40;
+          // the minimum height required from above and below for the behavior of the dropup
+          // k-topbar or form-buttons (2.5rem = 40px)
+          // safe area height is slightly higher than that
+          let safeSpaceHeight = 50;
 
           // dropdown content position relative to the viewport
           let scrollTop = this.$el.getBoundingClientRect().top || 0;
@@ -160,8 +162,14 @@ export default {
           // dropdown content height
           let dropdownHeight = this.$el.clientHeight;
 
-          // activate the dropup if the last item overflows to the bottom of the screen
-          this.dropup = (scrollTop + dropdownHeight) > windowHeight;
+          // activates the dropup if the dropdown content overflows
+          // to the bottom of the screen but only if there is enough space top of screen
+          if (
+              (scrollTop + dropdownHeight) > (windowHeight - safeSpaceHeight) &&
+              (dropdownHeight + (safeSpaceHeight * 2)) < scrollTop
+          ) {
+            this.dropup = true;
+          }
         }
       });
     },
