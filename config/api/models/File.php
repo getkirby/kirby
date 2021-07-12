@@ -110,7 +110,7 @@ return [
             return $file->type();
         },
         'url' => function (File $file) {
-            return $file->url(true);
+            return $file->url();
         },
     ],
     'type'  => 'Kirby\Cms\File',

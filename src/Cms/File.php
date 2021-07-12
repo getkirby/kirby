@@ -113,7 +113,7 @@ class File extends ModelWithContent
         }
 
         // content fields
-        return $this->content()->get($method, $arguments);
+        return $this->content()->get($method);
     }
 
     /**

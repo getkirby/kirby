@@ -3,11 +3,11 @@
 namespace Kirby\Cms;
 
 /**
- * The StructureObject reprents each item
+ * The StructureObject represents each item
  * in a Structure collection. StructureObjects
  * behave pretty much the same as Pages or Users
  * and have a Content object to access their fields.
- * All fields in a StructureObject are therefor also
+ * All fields in a StructureObject are therefore also
  * wrapped in a Field object and can be accessed in
  * the same way as Page fields. They also use the same
  * Field methods.
@@ -61,7 +61,7 @@ class StructureObject extends Model
             return $this->$method;
         }
 
-        return $this->content()->get($method, $arguments);
+        return $this->content()->get($method);
     }
 
     /**

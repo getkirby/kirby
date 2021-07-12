@@ -129,7 +129,7 @@ class Xml
      * @param string $name The name of the root element
      * @param bool $head Include the XML declaration head or not
      * @param string $indent Indentation string, defaults to two spaces
-     * @param int $level The indendation level (used internally)
+     * @param int $level The indentation level (used internally)
      * @return string The XML string
      */
     public static function create($props, string $name = 'root', bool $head = true, string $indent = '  ', int $level = 0): string

@@ -36,7 +36,7 @@ class PHPMailer extends Email
             $mailer->addReplyTo($replyTo, $this->replyToName() ?? '');
         }
 
-        // add (multiple) recepient, CC & BCC addresses
+        // add (multiple) recipient, CC & BCC addresses
         foreach ($this->to() as $email => $name) {
             $mailer->addAddress($email, $name ?? '');
         }

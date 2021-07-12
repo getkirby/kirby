@@ -123,7 +123,7 @@ class Db
     public static function __callStatic(string $method, $arguments)
     {
         if (isset(static::$queries[$method])) {
-            return static::$queries[$method](...$arguments);
+            return (static::$queries[$method])(...$arguments);
         }
 
         if (static::$connection !== null && method_exists(static::$connection, $method) === true) {

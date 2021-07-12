@@ -413,4 +413,28 @@ class BlueprintTest extends TestCase
 
         $this->assertEquals('info', $blueprint->sections()['info']->type());
     }
+
+    /**
+     * @covers ::preset
+     */
+    public function testPreset()
+    {
+        $blueprint = new Blueprint([
+            'model'  => $this->model,
+            'preset' => 'page'
+        ]);
+
+        $preset = $blueprint->toArray();
+
+        $this->assertSame('page', $preset['preset']);
+        $this->assertSame('default', $preset['name']);
+        $this->assertSame('Default', $preset['title']);
+        $this->assertArrayHasKey('tabs', $preset);
+        $this->assertArrayHasKey('main', $preset['tabs']);
+        $this->assertNull($preset['tabs']['main']['icon']);
+        $this->assertArrayHasKey('columns', $preset['tabs']['main']);
+        $this->assertSame('Main', $preset['tabs']['main']['label']);
+        $this->assertSame('/pages/a/?tab=main', $preset['tabs']['main']['link']);
+        $this->assertSame('main', $preset['tabs']['main']['name']);
+    }
 }

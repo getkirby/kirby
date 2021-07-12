@@ -193,7 +193,7 @@ class Parsley
             return true;
         }
 
-        // has only unkown children (div, etc.)
+        // has only unknown children (div, etc.)
         if ($this->containsBlock($element) === false) {
             if (in_array($element->tagName, $this->skip) === true) {
                 return true;

@@ -643,12 +643,11 @@ class App
         // any direct exception will be turned into an error page
         if (is_a($input, 'Throwable') === true) {
             if (is_a($input, 'Kirby\Exception\Exception') === true) {
-                $code    = $input->getHttpCode();
-                $message = $input->getMessage();
+                $code = $input->getHttpCode();
             } else {
-                $code    = $input->getCode();
-                $message = $input->getMessage();
+                $code = $input->getCode();
             }
+            $message = $input->getMessage();
 
             if ($code < 400 || $code > 599) {
                 $code = 500;

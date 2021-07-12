@@ -28,7 +28,7 @@ class SvgzTest extends TestCase
     public function testInvalid(string $file)
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('Could not uncompress gzip data');
+        $this->expectExceptionMessage('Could not uncompressed gzip data');
 
         Svgz::validateFile($this->fixture($file));
     }
