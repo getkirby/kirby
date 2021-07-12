@@ -561,7 +561,7 @@ class Dir
      * Gets the size of the directory
      *
      * @param string $dir The path of the directory
-     * @param bool $rescursive Include all subfolders and their files
+     * @param bool $recursive Include all subfolders and their files
      * @return mixed
      */
     public static function size(string $dir, bool $recursive = true)
