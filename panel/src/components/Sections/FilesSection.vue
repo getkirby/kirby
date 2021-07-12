@@ -136,8 +136,6 @@ export default {
           }
         };
 
-        console.log(file)
-
         // add data-attributes info for item
         file.data = {
           "data-id": file.id,
