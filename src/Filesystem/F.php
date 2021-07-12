@@ -531,7 +531,7 @@ class F
     /**
      * Converts an integer size into a human readable format
      *
-     * @param mixed $size The file size or a file path
+     * @param mixed $size The file size, a file path or array of paths
      * @param string|null|false $locale Locale for number formatting,
      *                                  `null` for the current locale,
      *                                  `false` to disable number formatting
@@ -540,7 +540,7 @@ class F
     public static function niceSize($size, $locale = null): string
     {
         // file mode
-        if (is_string($size) === true && file_exists($size) === true) {
+        if (is_string($size) === true || is_array($size) === true) {
             $size = static::size($size);
         }
 
@@ -755,13 +755,19 @@ class F
     }
 
     /**
-     * Returns the size of a file.
+     * Returns the size of a file or an array of files.
      *
-     * @param mixed $file The path
+     * @param string|array $file file path or array of paths
      * @return int
      */
-    public static function size(string $file): int
+    public static function size($file): int
     {
+        if (is_array($file) === true) {
+            return array_reduce($file, function ($total, $file) {
+                return $total + F::size($file);
+            }, 0);
+        }
+
         try {
             return filesize($file);
         } catch (Throwable $e) {

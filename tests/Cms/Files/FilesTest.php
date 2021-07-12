@@ -2,6 +2,9 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Filesystem\Dir;
+use Kirby\Filesystem\F;
+
 class FilesTest extends TestCase
 {
     public function testAddFile()
@@ -106,5 +109,40 @@ class FilesTest extends TestCase
         $site  = new Site();
         $files = new Files();
         $files->add($site);
+    }
+
+    /**
+     * @covers ::niceSize
+     * @covers ::size
+     */
+    public function testSize()
+    {
+        $tmp = __DIR__ . '/tmp';
+        Dir::make($tmp);
+
+        $app = new App([
+            'roots' => [
+                'index' => $tmp
+            ],
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ]
+        ]);
+
+        F::write($a = $tmp . '/content/test/a.txt', 'foo');
+        F::write($b = $tmp . '/content/test/b.txt', 'bar');
+
+        $files = Files::factory([
+            ['filename' => 'a.txt', 'root' => $a],
+            ['filename' => 'b.txt', 'root' => $b]
+        ], $app->page('test'));
+
+
+        $this->assertSame(6, $files->size());
+        $this->assertSame('6 B', $files->niceSize());
+
+        Dir::remove($tmp);
     }
 }
