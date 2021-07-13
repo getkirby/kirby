@@ -390,9 +390,16 @@ return [
             $hasFiles    = $page->hasFiles();
 
             $fields = [
+                'title' => Field::title([
+                    'required' => true
+                ]),
                 'slug' => Field::slug([
                     'required' => true,
-                    'path'     => $page->parent() ? '/' . $page->parent()->id() . '/' : '/'
+                    'path'     => $page->parent() ? '/' . $page->parent()->id() . '/' : '/',
+                    'wizzard'   => [
+                        'text'  => t('page.changeSlug.fromTitle'),
+                        'field' => 'title'
+                    ]
                 ])
             ];
 
@@ -422,7 +429,8 @@ return [
                     'value' => [
                         'children' => false,
                         'files'    => false,
-                        'slug'     => $page->slug() . '-' . Str::slug(t('page.duplicate.appendix'))
+                        'slug'     => $page->slug() . '-' . Str::slug(t('page.duplicate.appendix')),
+                        'title'    => $page->title() . ' Copy'
                     ]
                 ]
             ];
@@ -431,6 +439,7 @@ return [
             $newPage = Find::page($id)->duplicate(get('slug'), [
                 'children' => (bool)get('children'),
                 'files'    => (bool)get('files'),
+                'title'    => (string)get('title'),
             ]);
 
             return [
