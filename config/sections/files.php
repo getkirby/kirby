@@ -135,6 +135,7 @@ return [
                     'link'     => $panel->url(true),
                     'mime'     => $file->mime(),
                     'parent'   => $file->parent()->panel()->path(),
+                    'template' => $file->template(),
                     'text'     => $text,
                     'url'      => $file->url(),
                 ];

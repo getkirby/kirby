@@ -2,8 +2,11 @@
   <div
     :data-dragging="$store.state.drag"
     :data-loading="$store.state.isLoading"
+    :data-language="language"
+    :data-language-default="defaultLanguage"
+    :data-role="$user.role"
     :data-translation="translation"
-    :data-translation-default="defaultTranslation"
+    :data-user="$user.id"
     :dir="$translation.direction"
     class="k-panel k-panel-inside"
     tabindex="0"
@@ -68,17 +71,20 @@ export default {
     }
   },
   computed: {
-    defaultTranslation() {
+    defaultLanguage() {
       return this.$language ? this.$language.default : false;
     },
     dialog() {
       return this.$helper.clone(this.$store.state.dialog);
     },
+    language() {
+      return this.$language ? this.$language.code : null;
+    },
     searchTypes() {
       return search(this);
     },
     translation() {
-      return this.$language ? this.$language.code : null;
+      return this.$translation ? this.$translation.code : null;
     },
   },
   created() {

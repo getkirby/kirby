@@ -136,6 +136,12 @@ export default {
           }
         };
 
+        // add data-attributes info for item
+        file.data = {
+          "data-id": file.id,
+          "data-template": file.template
+        };
+
         return file;
       });
     },
