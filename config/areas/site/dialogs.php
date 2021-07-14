@@ -385,9 +385,10 @@ return [
     // duplicate page
     'pages/(:any)/duplicate' => [
         'load' => function (string $id) {
-            $page        = Find::page($id);
-            $hasChildren = $page->hasChildren();
-            $hasFiles    = $page->hasFiles();
+            $page            = Find::page($id);
+            $hasChildren     = $page->hasChildren();
+            $hasFiles        = $page->hasFiles();
+            $toggleWidth     = '1/' . count(array_filter([$hasChildren, $hasFiles]));
 
             $fields = [
                 'title' => Field::title([
@@ -408,7 +409,7 @@ return [
                     'label'    => t('page.duplicate.files'),
                     'type'     => 'toggle',
                     'required' => true,
-                    'width'    => $hasChildren === true ? '1/2' : '1/1'
+                    'width'    => $toggleWidth
                 ];
             }
 
@@ -417,7 +418,7 @@ return [
                     'label'    => t('page.duplicate.pages'),
                     'type'     => 'toggle',
                     'required' => true,
-                    'width'    => $hasFiles === true ? '1/2' : '1/1'
+                    'width'    => $toggleWidth
                 ];
             }
 
