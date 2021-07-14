@@ -41,7 +41,7 @@ return [
             return $file->type();
         },
         'url' => function (FileVersion $file) {
-            return $file->url(true);
+            return $file->url();
         },
     ],
     'type'  => 'Kirby\Cms\FileVersion',

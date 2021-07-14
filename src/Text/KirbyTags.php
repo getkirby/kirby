@@ -8,7 +8,7 @@ use Kirby\Toolkit\Str;
 
 /**
  * Parses and converts custom kirbytags in any
- * given string. KiryTags are defined via
+ * given string. KirbyTags are defined via
  * `KirbyTag::$types`. The default tags for the
  * Cms are located in `kirby/config/tags.php`
  *

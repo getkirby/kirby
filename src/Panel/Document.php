@@ -63,7 +63,7 @@ class Document
             'css' => [
                 'index'   => $url . '/css/style.css',
                 'plugins' => $plugins->url('css'),
-                'custom'  => static::customCss($kirby),
+                'custom'  => static::customCss(),
             ],
             'icons' => [
                 'apple-touch-icon' => [
@@ -83,7 +83,7 @@ class Document
                 'vendor'       => $url . '/js/vendor.js',
                 'pluginloader' => $url . '/js/plugins.js',
                 'plugins'      => $plugins->url('js'),
-                'custom'       => static::customJs($kirby),
+                'custom'       => static::customJs(),
                 'index'        => $url . '/js/index.js',
             ]
         ];

@@ -31,7 +31,7 @@ class Svgz extends Svg
         $uncompressed = @gzdecode($string, 10000000);
 
         if (is_string($uncompressed) !== true) {
-            throw new InvalidArgumentException('Could not uncompress gzip data');
+            throw new InvalidArgumentException('Could not uncompressed gzip data');
         }
 
         parent::validate($uncompressed);

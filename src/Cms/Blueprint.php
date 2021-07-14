@@ -725,7 +725,7 @@ class Blueprint
             return $props;
         }
 
-        return static::$presets[$props['preset']]($props);
+        return (static::$presets[$props['preset']])($props);
     }
 
     /**
