@@ -28,6 +28,7 @@ class Sane
     public static $aliases = [
         'image/svg+xml'   => 'svg',
         'application/xml' => 'xml',
+        'text/html'       => 'html',
         'text/xml'        => 'xml',
     ];
 
@@ -37,6 +38,7 @@ class Sane
      * @var array
      */
     public static $handlers = [
+        'html' => 'Kirby\Sane\Html',
         'svg'  => 'Kirby\Sane\Svg',
         'svgz' => 'Kirby\Sane\Svgz',
         'xml'  => 'Kirby\Sane\Xml',
@@ -73,9 +75,46 @@ class Sane
     }
 
     /**
+     * Tidy the given string with the specified handler
+     *
+     * @param string $string
+     * @param string $type
+     * @return string
+     */
+    public static function tidy(string $string, string $type): string
+    {
+        return static::handler($type)->tidy($string);
+    }
+
+    /**
+     * Tidy the contents of a file;
+     * the sane handlers are automatically chosen by
+     * the extension and MIME type if not specified
+     *
+     * @param string $file
+     * @param string|bool $typeLazy Explicit handler type string,
+     *                              `true` for lazy autodetection or
+     *                              `false` for normal autodetection
+     * @return string
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
+     * @throws \Kirby\Exception\NotFoundException If the handler was not found
+     * @throws \Kirby\Exception\Exception On other errors
+     */
+    public static function tidyFile(string $file, $typeLazy = false): string
+    {
+        if (is_string($typeLazy) === true) {
+            return static::handler($typeLazy)->tidyFile($file);
+        }
+
+        // TODO: implement better type detection comparable to validateFile
+        return static::handler(F::extension($file))->tidyFile($file);
+    }
+
+    /**
      * Validates file contents with the specified handler
      *
-     * @param mixed $string
+     * @param string $string
      * @param string $type
      * @return void
      *
