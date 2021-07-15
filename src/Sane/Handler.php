@@ -19,6 +19,48 @@ use Kirby\Filesystem\F;
  */
 abstract class Handler
 {
+
+    /**
+     * Reads the contents of a file
+     * for sanitization or validation
+     *
+     * @param string $file
+     * @return string
+     *
+     * @throws \Kirby\Exception\Exception If the file does not exist
+     */
+    public static function readFile(string $file): string
+    {
+        $contents = F::read($file);
+
+        if ($contents === false) {
+            throw new Exception('The file "' . $file . '" does not exist');
+        }
+
+        return $contents;
+    }
+
+    /**
+     * Tidys the given string
+     *
+     * @param string $string
+     * @return string
+     */
+    abstract public static function tidy(string $string): string;
+
+    /**
+     * Tidys the contents of a file
+     *
+     * @param string $file
+     * @return string
+     *
+     * @throws \Kirby\Exception\Exception If the file does not exist
+     */
+    public static function tidyFile(string $file): string
+    {
+        return static::tidy(static::readFile($file));
+    }
+
     /**
      * Validates file contents
      *
@@ -41,11 +83,6 @@ abstract class Handler
      */
     public static function validateFile(string $file): void
     {
-        $contents = F::read($file);
-        if ($contents === false) {
-            throw new Exception('The file "' . $file . '" does not exist');
-        }
-
-        static::validate($contents);
+        static::validate(static::readFile($file));
     }
 }

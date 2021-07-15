@@ -1,0 +1,208 @@
+<?php
+
+namespace Kirby\Sane;
+
+use DOMAttr;
+use DOMNode;
+use DOMNodeList;
+use Kirby\Toolkit\Escape;
+use Kirby\Toolkit\Str;
+
+class DOM extends \Kirby\Toolkit\DOM
+{
+    /**
+     * List of allowed elements
+     *
+     * @var array
+     */
+    public $allowed;
+
+    /**
+     * List of denied elements
+     *
+     * @var array
+     */
+    public $denied;
+
+    /**
+     * List of attributes that might contain URLs
+     *
+     * @var array
+     */
+    public $urls;
+
+    /**
+     * @param string $html
+     * @param array $options
+     */
+    public function __construct(string $html, array $options = [])
+    {
+        $options = array_merge($this->defaults(), $options);
+
+        $this->allowed = $options['allowed'] ?? [];
+        $this->denied  = $options['denied']  ?? [];
+        $this->urls    = $options['urls']    ?? [];
+
+        parent::__construct($html);
+    }
+
+    public function defaults(): array
+    {
+        return [
+            'allowed' => [
+                'a'          => ['href', 'title', 'target'],
+                'abbr'       => ['title'],
+                'b'          => true,
+                'body'       => true,
+                'blockquote' => true,
+                'br'         => true,
+                'dl'         => true,
+                'dd'         => true,
+                'del'        => true,
+                'dt'         => true,
+                'em'         => true,
+                'h1'         => ['id'],
+                'h2'         => ['id'],
+                'h3'         => ['id'],
+                'h4'         => ['id'],
+                'h5'         => ['id'],
+                'h6'         => ['id'],
+                'hr'         => true,
+                'html'       => true,
+                'i'          => true,
+                'ins'        => true,
+                'li'         => true,
+                'strong'     => true,
+                'sub'        => true,
+                'sup'        => true,
+                'ol'         => true,
+                'p'          => true,
+                'ul'         => true,
+            ],
+            'denied' => [
+                'iframe',
+                'meta',
+                'object',
+                'script',
+                'style',
+            ],
+            'urls' => [
+                'href',
+                'src',
+                'xlink:href'
+            ]
+        ];
+    }
+
+    /**
+     * Check for allowed elements according to the allow list
+     *
+     * @param \DOMNode $element
+     * @param \DOMAttr $attribute
+     * @return boolean
+     */
+    public function isAllowedAttribute(DOMNode $element, DOMAttr $attribute): bool
+    {
+        $allowedAttributes = $this->allowed[$element->tagName];
+
+        if (is_array($allowedAttributes) === false) {
+            return false;
+        }
+
+        if (in_array($attribute->name, $allowedAttributes) !== true) {
+            return false;
+        }
+
+        // any kind of javascript instructions will be removed
+        if (Str::startsWith($attribute->value, 'javascript:') === true) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks for allowed elements according to the allow list
+     *
+     * @param \DOMNode $element
+     * @return boolean
+     */
+    public function isAllowedElement(DOMNode $element): bool
+    {
+        $rule = $this->allowed[$element->tagName] ?? false;
+        return $rule !== false ? true : false;
+    }
+
+    /**
+     * Checks for elements to be removed according to the denylist
+     *
+     * @param DOMNode $element
+     * @return boolean
+     */
+    public function isDeniedElement(DOMNode $element): bool
+    {
+        return in_array($element->tagName, $this->denied) === true;
+    }
+
+    /**
+     * Tidies all elements in the DOM
+     *
+     * @return static
+     */
+    public function tidy()
+    {
+        $this->tidyElements($this->query('//*'));
+        return $this;
+    }
+
+    /**
+     * Tidies all attributes of the given element
+     *
+     * @param \DOMNode $element
+     * @return static
+     */
+    public function tidyAttributes(DOMNode $element)
+    {
+        foreach ($element->attributes as $attribute) {
+            if ($this->isAllowedAttribute($element, $attribute) === false) {
+                $element->removeAttribute($attribute->name);
+            } else if (in_array($attribute->name, $this->urls) === true) {
+                // data URIs will be removed
+                if (Str::startsWith($attribute->value, 'data:') === true) {
+                    $element->removeAttribute($attribute->name);
+                } else {
+                    // TODO: escape xss attacks in query parameters
+                    $attribute->value = Escape::attr($attribute->value);
+                }
+            } else {
+                $attribute->value = Escape::attr($attribute->value);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * Tidies all given elements in the node list
+     *
+     * @param \DOMNodeList $elements
+     * @return static
+     */
+    public function tidyElements(DOMNodeList $elements)
+    {
+        for ($x = count($elements); $x >=0; $x--) {
+            if ($element = $elements[$x]) {
+                if ($this->isDeniedElement($element) === true) {
+                    $this->remove($element);
+                } else if ($this->isAllowedElement($element) === false) {
+                    $this->unwrap($element);
+                } else if ($element->hasAttributes()) {
+                    $this->tidyAttributes($element);
+                }
+            }
+        }
+
+        return $this;
+    }
+
+}

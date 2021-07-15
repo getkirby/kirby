@@ -7,6 +7,7 @@ use DOMDocumentType;
 use DOMNode;
 use DOMNodeList;
 use DOMXPath;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
@@ -39,6 +40,18 @@ class Xml extends Handler
     public static $allowedDomains = [];
 
     public static $allowedPIs = [];
+
+    /**
+     * XML sanitization
+     * (Not yet implemented)
+     *
+     * @param string $string
+     * @return string
+     */
+    public static function tidy(string $string): string
+    {
+        throw new Exception('XML sanitization is not yet implemented');
+    }
 
     /**
      * Validates file contents
