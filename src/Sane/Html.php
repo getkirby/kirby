@@ -17,7 +17,6 @@ use Kirby\Exception\Exception;
  */
 class Html extends Handler
 {
-
     /**
      * HTML sanitization
      *

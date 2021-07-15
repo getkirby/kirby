@@ -19,7 +19,6 @@ use Kirby\Filesystem\F;
  */
 abstract class Handler
 {
-
     /**
      * Reads the contents of a file
      * for sanitization or validation

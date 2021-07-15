@@ -71,5 +71,4 @@ class DOM
 
         $this->remove($element);
     }
-
 }

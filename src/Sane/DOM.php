@@ -99,7 +99,7 @@ class DOM extends \Kirby\Toolkit\DOM
      *
      * @param \DOMNode $element
      * @param \DOMAttr $attribute
-     * @return boolean
+     * @return bool
      */
     public function isAllowedAttribute(DOMNode $element, DOMAttr $attribute): bool
     {
@@ -125,7 +125,7 @@ class DOM extends \Kirby\Toolkit\DOM
      * Checks for allowed elements according to the allow list
      *
      * @param \DOMNode $element
-     * @return boolean
+     * @return bool
      */
     public function isAllowedElement(DOMNode $element): bool
     {
@@ -137,7 +137,7 @@ class DOM extends \Kirby\Toolkit\DOM
      * Checks for elements to be removed according to the denylist
      *
      * @param DOMNode $element
-     * @return boolean
+     * @return bool
      */
     public function isDeniedElement(DOMNode $element): bool
     {
@@ -166,7 +166,7 @@ class DOM extends \Kirby\Toolkit\DOM
         foreach ($element->attributes as $attribute) {
             if ($this->isAllowedAttribute($element, $attribute) === false) {
                 $element->removeAttribute($attribute->name);
-            } else if (in_array($attribute->name, $this->urls) === true) {
+            } elseif (in_array($attribute->name, $this->urls) === true) {
                 // data URIs will be removed
                 if (Str::startsWith($attribute->value, 'data:') === true) {
                     $element->removeAttribute($attribute->name);
@@ -194,9 +194,9 @@ class DOM extends \Kirby\Toolkit\DOM
             if ($element = $elements[$x]) {
                 if ($this->isDeniedElement($element) === true) {
                     $this->remove($element);
-                } else if ($this->isAllowedElement($element) === false) {
+                } elseif ($this->isAllowedElement($element) === false) {
                     $this->unwrap($element);
-                } else if ($element->hasAttributes()) {
+                } elseif ($element->hasAttributes()) {
                     $this->tidyAttributes($element);
                 }
             }
@@ -204,5 +204,4 @@ class DOM extends \Kirby\Toolkit\DOM
 
         return $this;
     }
-
 }
