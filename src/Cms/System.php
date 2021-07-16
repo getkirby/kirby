@@ -276,7 +276,7 @@ class System
     public function license()
     {
         try {
-            $license = Json::read($this->app->root('config') . '/.license');
+            $license = Json::read($this->app->root('license'));
         } catch (Throwable $e) {
             return false;
         }
@@ -465,7 +465,7 @@ class System
         $json['email'] = $email;
 
         // where to store the license file
-        $file = $this->app->root('config') . '/.license';
+        $file = $this->app->root('license');
 
         // save the license information
         Json::write($file, $json);

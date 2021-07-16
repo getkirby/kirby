@@ -61,6 +61,9 @@ return [
     'config' => function (array $roots) {
         return $roots['site'] . '/config';
     },
+    'license' => function (array $roots) {
+        return $roots['config'] . '/.license';
+    },
     'controllers' => function (array $roots) {
         return $roots['site'] . '/controllers';
     },
