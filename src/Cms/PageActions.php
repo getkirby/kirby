@@ -590,7 +590,7 @@ trait PageActions
                     'kirby' => $app,
                     'page'  => $app->page($this->id()),
                     'site'  => $app->site(),
-                ], '');
+                ], ['fallback' => '']);
 
                 return (int)$template;
         }
