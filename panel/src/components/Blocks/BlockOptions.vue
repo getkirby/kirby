@@ -10,6 +10,7 @@
     </template>
     <template v-else>
       <k-button
+        v-if="isEditable"
         :tooltip="$t('edit')"
         icon="edit"
         class="k-block-options-button"
@@ -52,7 +53,7 @@
           {{ $t("insert.after") }}
         </k-dropdown-item>
         <hr>
-        <k-dropdown-item icon="edit" @click="$emit('open')">
+        <k-dropdown-item v-if="isEditable" icon="edit" @click="$emit('open')">
           {{ $t("edit") }}
         </k-dropdown-item>
         <k-dropdown-item icon="refresh" @click="$emit('chooseToConvert')">
@@ -81,6 +82,7 @@
 export default {
   props: {
     isBatched: Boolean,
+    isEditable: Boolean,
     isFull: Boolean,
     isHidden: Boolean,
   },

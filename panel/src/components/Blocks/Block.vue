@@ -27,6 +27,7 @@
     <k-block-options
       ref="options"
       :is-batched="isBatched"
+      :is-editable="isEditable"
       :is-full="isFull"
       :is-hidden="isHidden"
       v-on="listeners"
@@ -122,6 +123,9 @@ export default {
       }
 
       return "k-block-type-default";
+    },
+    isEditable() {
+      return this.fieldset.editable !== false;
     },
     listeners() {
       return {

@@ -22,6 +22,7 @@ class Fieldset extends Item
     const ITEMS_CLASS = '\Kirby\Cms\Fieldsets';
 
     protected $disabled;
+    protected $editable;
     protected $fields = [];
     protected $icon;
     protected $label;
@@ -50,6 +51,7 @@ class Fieldset extends Item
         parent::__construct($params);
 
         $this->disabled  = $params['disabled'] ?? false;
+        $this->editable  = $params['editable'] ?? true;
         $this->icon      = $params['icon'] ?? null;
         $this->model     = $this->parent;
         $this->name      = $this->createName($params['name'] ?? Str::ucfirst($this->type));
@@ -130,6 +132,19 @@ class Fieldset extends Item
         return $this->disabled;
     }
 
+    public function editable(): bool
+    {
+        if ($this->editable === false) {
+            return false;
+        }
+
+        if (count($this->fields) === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
     public function fields(): array
     {
         return $this->fields;
@@ -194,6 +209,7 @@ class Fieldset extends Item
     {
         return [
             'disabled'  => $this->disabled,
+            'editable'  => $this->editable,
             'icon'      => $this->icon,
             'label'     => $this->label,
             'name'      => $this->name,
