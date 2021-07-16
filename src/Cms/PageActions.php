@@ -659,7 +659,7 @@ trait PageActions
     {
 
         // create the slug for the duplicate
-        $slug = Str::slug($slug ?? $this->slug() . '-copy');
+        $slug = Str::slug($slug ?? $this->slug() . '-' . Str::slug(t('page.duplicate.appendix')));
 
         $arguments = [
             'originalPage' => $this,

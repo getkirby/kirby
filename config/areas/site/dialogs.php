@@ -431,7 +431,7 @@ return [
                         'children' => false,
                         'files'    => false,
                         'slug'     => $page->slug() . '-' . Str::slug(t('page.duplicate.appendix')),
-                        'title'    => $page->title() . ' Copy'
+                        'title'    => $page->title() . ' ' . t('page.duplicate.appendix')
                     ]
                 ]
             ];
