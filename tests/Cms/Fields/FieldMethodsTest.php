@@ -13,7 +13,8 @@ class FieldMethodsTest extends TestCase
 
         new App([
             'roots' => [
-                'index' => '/dev/null'
+                'index'   => '/dev/null',
+                'content' => __DIR__ . '/fixtures'
             ]
         ]);
     }
@@ -687,16 +688,26 @@ class FieldMethodsTest extends TestCase
                 'type' => 'gallery',
                 'content' => [
                     'images' => [
-                        'a.jpg',
-                        'b.jpg'
+                        'a.png',
+                        'b.png'
                     ],
                 ]
             ],
             [
                 'type'    => 'image',
                 'content' => [
+                    'alt'      => 'The Kirby logo as favicon',
+                    'caption'  => 'This favicon is really amazing!',
                     'location' => 'web',
                     'src'      => 'https://getkirby.com/favicon.png',
+                    'link'     => 'https://getkirby.com',
+                ]
+            ],
+            [
+                'type'    => 'image',
+                'content' => [
+                    'alt'   => 'White ink on a white canvas',
+                    'image' => 'a.png',
                 ]
             ],
             [
@@ -733,17 +744,18 @@ class FieldMethodsTest extends TestCase
             [
                 'type'    => 'video',
                 'content' => [
-                    'url' => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
+                    'caption' => 'How to install Kirby in 5 minutes',
+                    'url'     => 'https://www.youtube.com/watch?v=EDVYjxWMecc',
                 ]
             ]
         ];
 
         $json   = Json::encode($data);
-        $field  = $this->field($json);
+        $field  = new Field(kirby()->page('files'), 'test', $json);
         $blocks = $field->toBlocks();
 
         $this->assertInstanceOf('\Kirby\Cms\Blocks', $blocks);
-        $this->assertInstanceOf('\Kirby\Cms\Site', $blocks->parent());
+        $this->assertInstanceOf('\Kirby\Cms\Page', $blocks->parent());
         $this->assertCount(count($data), $blocks);
         $this->assertCount(count($data), $blocks->data());
 
