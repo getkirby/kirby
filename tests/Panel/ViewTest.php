@@ -382,7 +382,7 @@ class ViewTest extends TestCase
     }
 
     /**
-     * @covers ::erro
+     * @covers ::error
      */
     public function testErrorWithCustomCode(): void
     {

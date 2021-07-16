@@ -5,6 +5,9 @@ namespace Kirby\Cms;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
 
+/**
+ * @coversDefaultClass \Kirby\Cms\Files
+ */
 class FilesTest extends TestCase
 {
     public function testAddFile()
