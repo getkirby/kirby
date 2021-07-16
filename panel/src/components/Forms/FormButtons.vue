@@ -224,7 +224,7 @@ export default {
       }
 
       try {
-        this.$store.dispatch("content/save");
+        await this.$store.dispatch("content/save");
         this.$events.$emit("model.update");
         this.$store.dispatch("notification/success", ":)");
 
