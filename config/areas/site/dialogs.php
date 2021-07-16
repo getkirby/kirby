@@ -386,14 +386,15 @@ return [
     'pages/(:any)/duplicate' => [
         'load' => function (string $id) {
             $page            = Find::page($id);
-            $language        = $page->kirby()->defaultLanguage()->code();
-
             $hasTranslations = $page->translations()->count() > 0;
             $hasChildren     = $page->hasChildren();
             $hasFiles        = $page->hasFiles();
-
             $toggles         = count(array_filter([$hasTranslations, $hasChildren, $hasFiles]));
             $togglesWidth    = '1/' . $toggles;
+
+            if ($language = $page->kirby()->defaultLanguage()) {
+                $language = $language->code();
+            }
 
             $fields = [
                 'title' => Field::title([

@@ -747,6 +747,53 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame('test-copy', $props['value']['slug']);
     }
 
+    protected function assertDuplicateDialogTranslations(array $props, string $width = '1/1'): void
+    {
+        $this->assertSame('toggle', $props['fields']['translations']['type']);
+        $this->assertSame('Copy translations', $props['fields']['translations']['label']);
+        $this->assertSame($width, $props['fields']['translations']['width']);
+    }
+
+    public function testDuplicateWithTranslations(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                                'content' => []
+                            ],
+                            [
+                                'code' => 'de',
+                                'content' => []
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/duplicate');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+        $this->assertSame('medium', $props['size']);
+        $this->assertDuplicateDialogTranslations($props);
+    }
+
+    protected function assertDuplicateDialogChildren(array $props, string $width = '1/1'): void
+    {
+        $this->assertSame('toggle', $props['fields']['children']['type']);
+        $this->assertSame('Copy pages', $props['fields']['children']['label']);
+
+        $this->assertSame($width, $props['fields']['children']['width']);
+    }
+
     public function testDuplicateWithChildren(): void
     {
         $this->app([
@@ -768,10 +815,16 @@ class PageDialogsTest extends AreaTestCase
         $props  = $dialog['props'];
 
         $this->assertFormDialog($dialog);
+        $this->assertSame('medium', $props['size']);
+        $this->assertDuplicateDialogChildren($props);
+    }
 
-        $this->assertSame('toggle', $props['fields']['children']['type']);
-        $this->assertSame('Copy pages', $props['fields']['children']['label']);
-        $this->assertSame('1/1', $props['fields']['children']['width']);
+    protected function assertDuplicateDialogFiles(array $props, string $width = '1/1'): void
+    {
+        $this->assertSame('toggle', $props['fields']['files']['type']);
+        $this->assertSame('Copy files', $props['fields']['files']['label']);
+
+        $this->assertSame($width, $props['fields']['files']['width']);
     }
 
     public function testDuplicateWithFiles(): void
@@ -795,10 +848,80 @@ class PageDialogsTest extends AreaTestCase
         $props  = $dialog['props'];
 
         $this->assertFormDialog($dialog);
+        $this->assertSame('medium', $props['size']);
+        $this->assertDuplicateDialogFiles($props);
+    }
 
-        $this->assertSame('toggle', $props['fields']['files']['type']);
-        $this->assertSame('Copy files', $props['fields']['files']['label']);
-        $this->assertSame('1/1', $props['fields']['files']['width']);
+    public function testDuplicateWithTranslationsAndChildren(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                                'content' => []
+                            ],
+                            [
+                                'code' => 'de',
+                                'content' => []
+                            ]
+                        ],
+                        'children' => [
+                            ['slug' => 'test-child']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/duplicate');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+        $this->assertSame('medium', $props['size']);
+        $this->assertDuplicateDialogTranslations($props, '1/2');
+        $this->assertDuplicateDialogChildren($props, '1/2');
+    }
+
+    public function testDuplicateWithTranslationsAndFiles(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                                'content' => []
+                            ],
+                            [
+                                'code' => 'de',
+                                'content' => []
+                            ]
+                        ],
+                        'files' => [
+                            ['filename' => 'test.jpg']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/duplicate');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+        $this->assertSame('medium', $props['size']);
+        $this->assertDuplicateDialogTranslations($props, '1/2');
+        $this->assertDuplicateDialogFiles($props, '1/2');
     }
 
     public function testDuplicateWithChildrenAndFiles(): void
@@ -825,14 +948,49 @@ class PageDialogsTest extends AreaTestCase
         $props  = $dialog['props'];
 
         $this->assertFormDialog($dialog);
+        $this->assertSame('medium', $props['size']);
+        $this->assertDuplicateDialogChildren($props, '1/2');
+        $this->assertDuplicateDialogFiles($props, '1/2');
+    }
 
-        $this->assertSame('toggle', $props['fields']['children']['type']);
-        $this->assertSame('Copy pages', $props['fields']['children']['label']);
-        $this->assertSame('1/2', $props['fields']['children']['width']);
+    public function testDuplicateWithTranslationsAndChildrenAndFiles(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'test',
+                        'translations' => [
+                            [
+                                'code' => 'en',
+                                'content' => []
+                            ],
+                            [
+                                'code' => 'de',
+                                'content' => []
+                            ]
+                        ],
+                        'children' => [
+                            ['slug' => 'test-child']
+                        ],
+                        'files' => [
+                            ['filename' => 'test.jpg']
+                        ]
+                    ]
+                ]
+            ]
+        ]);
 
-        $this->assertSame('toggle', $props['fields']['files']['type']);
-        $this->assertSame('Copy files', $props['fields']['files']['label']);
-        $this->assertSame('1/2', $props['fields']['files']['width']);
+        $this->login();
+
+        $dialog = $this->dialog('pages/test/duplicate');
+        $props  = $dialog['props'];
+
+        $this->assertFormDialog($dialog);
+        $this->assertSame('large', $props['size']);
+        $this->assertDuplicateDialogTranslations($props, '1/3');
+        $this->assertDuplicateDialogChildren($props, '1/3');
+        $this->assertDuplicateDialogFiles($props, '1/3');
     }
 
     public function testDuplicateOnSubmit(): void
