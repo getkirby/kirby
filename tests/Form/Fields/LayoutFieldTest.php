@@ -91,7 +91,7 @@ class LayoutFieldTest extends TestCase
         $this->assertIsArray($props);
         $this->assertNull($props['empty']);
         $this->assertSame([
-            'code', 'gallery', 'heading', 'image', 'list', 'markdown', 'quote', 'text', 'video'
+            'code', 'gallery', 'heading', 'image', 'line', 'list', 'markdown', 'quote', 'text', 'video'
         ], array_keys($fieldsets));
         $this->assertNull($props['fieldsetGroups']);
         $this->assertSame('blocks', $props['group']);
