@@ -52,8 +52,8 @@ export default {
           if (typeof dialog.event === "string") {
             dialog.event = [dialog.event];
           }
-          dialog.event.forEach(() => {
-            this.$events.$emit(dialog.event, dialog);
+          dialog.event.forEach((event) => {
+            this.$events.$emit(event, dialog);
           });
         }
 
