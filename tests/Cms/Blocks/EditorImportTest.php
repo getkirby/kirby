@@ -125,6 +125,13 @@ class EditorImportTest extends TestCase
         $this->assertEquals('h3', $block->level());
     }
 
+    public function importHr($params)
+    {
+        $block = new Block($params);
+
+        $this->assertSame('line', $block->type());
+    }
+
     public function importImage($params)
     {
         $block = new Block($params);

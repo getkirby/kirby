@@ -13,5 +13,8 @@ return [
             'text' => '<p>Paragraph</p>',
         ],
         'type' => 'text',
+    ],
+    [
+        'type' => 'line',
     ]
 ];
