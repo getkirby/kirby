@@ -386,6 +386,7 @@ return [
     'pages/(:any)/duplicate' => [
         'load' => function (string $id) {
             $page            = Find::page($id);
+            $language        = $page->kirby()->defaultLanguage()->code();
 
             $hasTranslations = $page->translations()->count() > 0;
             $hasChildren     = $page->hasChildren();
@@ -441,12 +442,12 @@ return [
                     'fields'       => $fields,
                     'submitButton' => t('duplicate'),
                     'value' => [
-                        'slug'     => $page->slug() . '-' . Str::slug(t('page.duplicate.appendix')),
-                        'title'    => $page->title() . ' ' . t('page.duplicate.appendix')
-                    ]
                         'translations' => false,
                         'children'     => false,
                         'files'        => false,
+                        'slug'         => $page->slug($language) . '-' . Str::slug(t('page.duplicate.appendix')),
+                        'title'        => $page->content($language)->get('title') . ' ' . t('page.duplicate.appendix')
+                    ],
                     'size' => $toggles > 2 ? 'large' : 'medium'
                 ]
             ];
