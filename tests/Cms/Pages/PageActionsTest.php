@@ -133,6 +133,95 @@ class PageActionsTest extends TestCase
         $this->assertEquals($newRoot, $modified->root());
     }
 
+    public function testChangeSlugHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'page.changeSlug:before' => function (Page $page, $slug, $languageCode) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('test', $page->slug());
+                    $phpunit->assertSame('new-test', $slug);
+                    $phpunit->assertNull($languageCode);
+                    $calls++;
+                },
+                'page.changeSlug:after' => function (Page $newPage, Page $oldPage) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('new-test', $newPage->slug());
+                    $phpunit->assertSame('test', $oldPage->slug());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $page->changeSlug('new-test');
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testChangeStatusListedHooks()
+    {
+        $phpunit = $this;
+        $before  = 0;
+        $after   = 0;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'page.changeStatus:before' => function (Page $page, $status, $position) use (&$before, $phpunit) {
+                    $phpunit->assertEquals('listed', $status);
+                    $phpunit->assertEquals($before + 1, $position);
+                    $before++;
+                },
+                'page.changeStatus:after' => function (Page $newPage, Page $oldPage) use (&$after, $phpunit) {
+                    $phpunit->assertEquals('draft', $oldPage->status());
+                    $phpunit->assertEquals('listed', $newPage->status());
+                    $after++;
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $pageA = Page::create(['slug' => 'test-a', 'num' => null]);
+        $pageB = Page::create(['slug' => 'test-b', 'num' => null]);
+
+        $pageA->changeStatus('listed');
+        $pageB->changeStatus('listed');
+
+        $this->assertEquals(2, $before);
+        $this->assertEquals(2, $after);
+    }
+
+    public function testChangeStatusUnlistedHooks()
+    {
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'page.changeStatus:before' => function (Page $page, $status, $position) use ($phpunit) {
+                    $phpunit->assertEquals('unlisted', $status);
+                    $phpunit->assertNull($position);
+                },
+                'page.changeStatus:after' => function (Page $newPage, Page $oldPage) use ($phpunit) {
+                    $phpunit->assertEquals('draft', $oldPage->status());
+                    $phpunit->assertEquals('unlisted', $newPage->status());
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = Page::create(['slug' => 'test']);
+
+        $page->changeStatus('unlisted');
+    }
+
     public function testChangeTemplate()
     {
         $calls = 0;
@@ -210,6 +299,186 @@ class PageActionsTest extends TestCase
         $modified = $page->changeTitle($title = 'Modified Title');
 
         $this->assertEquals($title, $modified->title());
+    }
+
+    public function testChangeTitleHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'page.changeTitle:before' => function (Page $page, $title, $languageCode) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('test', $page->title()->value);
+                    $phpunit->assertSame('New Title', $title);
+                    $phpunit->assertNull($languageCode);
+                    $calls++;
+                },
+                'page.changeTitle:after' => function (Page $newPage, Page $oldPage) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('New Title', $newPage->title()->value());
+                    $phpunit->assertSame('test', $oldPage->title()->value());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = new Page([
+            'slug' => 'test'
+        ]);
+
+        $page->changeTitle('New Title');
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testCreateHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'page.create:before' => function (Page $page, $input) use ($phpunit, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
+                    $phpunit->assertSame([
+                        'slug' => 'test',
+                        'model' => 'default',
+                        'template' => 'default',
+                        'isDraft' => true
+                    ], $input);
+                    $calls++;
+                },
+                'page.create:after' => function (Page $page) use ($phpunit, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
+                    $phpunit->assertSame('test', $page->slug());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        Page::create([
+            'slug' => 'test',
+        ]);
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testDeleteHooks()
+    {
+        $calls = 0;
+        $phpunit  = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'page.delete:before' => function (Page $page, $force) use ($phpunit, &$calls) {
+                    $phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
+                    $phpunit->assertFalse($force);
+                    $phpunit->assertFileExists($page->root());
+                    $calls++;
+                },
+                'page.delete:after' => function ($status, Page $page) use ($phpunit, &$calls) {
+                    $phpunit->assertTrue($status);
+                    $phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
+                    $phpunit->assertFileDoesNotExist($page->root());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = Page::create([
+            'slug' => 'test'
+        ]);
+
+        $page->delete();
+
+        $this->assertSame(2, $calls);
+    }
+
+    public function testDuplicate()
+    {
+        $app = $this->app->clone();
+
+        $app->impersonate('kirby');
+
+        $page = Page::create([
+            'slug' => 'test',
+        ]);
+        $page->lock()->create();
+        $this->assertFileExists($app->locks()->file($page));
+
+        $copy = $page->duplicate('test-copy');
+        $this->assertFileDoesNotExist($this->fixtures . $copy->root() . '/.lock');
+    }
+
+    public function testDuplicateMultiLang()
+    {
+        $app = $this->app->clone([
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'name' => 'English',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                    'name' => 'Deutsch',
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = Page::create([
+            'slug' => 'test',
+        ]);
+
+        new ContentTranslation([
+            'parent' => $page,
+            'code'   => 'en',
+        ]);
+        $this->assertFileExists($page->contentFile('en'));
+
+        $copy = $page->duplicate('test-copy');
+        $this->assertFileExists($copy->contentFile('en'));
+        $this->assertFileDoesNotExist($copy->contentFile('de'));
+    }
+
+    public function testDuplicateHooks()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'hooks' => [
+                'page.duplicate:before' => function (Page $originalPage, $input, $options) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('test', $originalPage->slug());
+                    $phpunit->assertSame('test-copy', $input);
+                    $phpunit->assertSame([], $options);
+                    $calls++;
+                },
+                'page.duplicate:after' => function (Page $duplicatePage, Page $originalPage) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('test-copy', $duplicatePage->slug());
+                    $phpunit->assertSame('test', $originalPage->slug());
+                    $calls++;
+                }
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = Page::create([
+            'slug' => 'test'
+        ]);
+
+        $page->duplicate();
+
+        $this->assertSame(2, $calls);
     }
 
     public function testSave()
@@ -390,274 +659,5 @@ class PageActionsTest extends TestCase
 
         $this->assertEquals('A (de)', $page->content('de')->a());
         $this->assertEquals('B modified (de)', $page->content('de')->b());
-    }
-
-    public function testChangeStatusListedHooks()
-    {
-        $phpunit = $this;
-        $before  = 0;
-        $after   = 0;
-
-        $app = $this->app->clone([
-            'hooks' => [
-                'page.changeStatus:before' => function (Page $page, $status, $position) use (&$before, $phpunit) {
-                    $phpunit->assertEquals('listed', $status);
-                    $phpunit->assertEquals($before + 1, $position);
-                    $before++;
-                },
-                'page.changeStatus:after' => function (Page $newPage, Page $oldPage) use (&$after, $phpunit) {
-                    $phpunit->assertEquals('draft', $oldPage->status());
-                    $phpunit->assertEquals('listed', $newPage->status());
-                    $after++;
-                }
-            ]
-        ]);
-
-        $app->impersonate('kirby');
-
-        $pageA = Page::create(['slug' => 'test-a', 'num' => null]);
-        $pageB = Page::create(['slug' => 'test-b', 'num' => null]);
-
-        $pageA->changeStatus('listed');
-        $pageB->changeStatus('listed');
-
-        $this->assertEquals(2, $before);
-        $this->assertEquals(2, $after);
-    }
-
-    public function testChangeStatusUnlistedHooks()
-    {
-        $phpunit = $this;
-
-        $app = $this->app->clone([
-            'hooks' => [
-                'page.changeStatus:before' => function (Page $page, $status, $position) use ($phpunit) {
-                    $phpunit->assertEquals('unlisted', $status);
-                    $phpunit->assertNull($position);
-                },
-                'page.changeStatus:after' => function (Page $newPage, Page $oldPage) use ($phpunit) {
-                    $phpunit->assertEquals('draft', $oldPage->status());
-                    $phpunit->assertEquals('unlisted', $newPage->status());
-                }
-            ]
-        ]);
-
-        $app->impersonate('kirby');
-
-        $page = Page::create(['slug' => 'test']);
-
-        $page->changeStatus('unlisted');
-    }
-
-    public function testDuplicate()
-    {
-        $app = $this->app->clone();
-
-        $app->impersonate('kirby');
-
-        $page = Page::create([
-            'slug' => 'test',
-        ]);
-        $page->lock()->create();
-        $this->assertFileExists($app->locks()->file($page));
-
-        $copy = $page->duplicate('test-copy');
-        $this->assertFileDoesNotExist($this->fixtures . $copy->root() . '/.lock');
-    }
-
-    public function testDuplicateMultiLang()
-    {
-        $app = $this->app->clone([
-            'languages' => [
-                [
-                    'code' => 'en',
-                    'name' => 'English',
-                    'default' => true
-                ],
-                [
-                    'code' => 'de',
-                    'name' => 'Deutsch',
-                ]
-            ]
-        ]);
-
-        $app->impersonate('kirby');
-
-        $page = Page::create([
-            'slug' => 'test',
-        ]);
-
-        new ContentTranslation([
-            'parent' => $page,
-            'code'   => 'en',
-        ]);
-        $this->assertFileExists($page->contentFile('en'));
-
-        $copy = $page->duplicate('test-copy');
-        $this->assertFileExists($copy->contentFile('en'));
-        $this->assertFileDoesNotExist($copy->contentFile('de'));
-    }
-
-    public function testChangeSlugHooks()
-    {
-        $calls = 0;
-        $phpunit = $this;
-
-        $app = $this->app->clone([
-            'hooks' => [
-                'page.changeSlug:before' => function (Page $page, $slug, $languageCode) use ($phpunit, &$calls) {
-                    $phpunit->assertSame('test', $page->slug());
-                    $phpunit->assertSame('new-test', $slug);
-                    $phpunit->assertNull($languageCode);
-                    $calls++;
-                },
-                'page.changeSlug:after' => function (Page $newPage, Page $oldPage) use ($phpunit, &$calls) {
-                    $phpunit->assertSame('new-test', $newPage->slug());
-                    $phpunit->assertSame('test', $oldPage->slug());
-                    $calls++;
-                }
-            ]
-        ]);
-
-        $app->impersonate('kirby');
-
-        $page = new Page([
-            'slug' => 'test'
-        ]);
-
-        $page->changeSlug('new-test');
-
-        $this->assertSame(2, $calls);
-    }
-
-    public function testChangeTitleHooks()
-    {
-        $calls = 0;
-        $phpunit = $this;
-
-        $app = $this->app->clone([
-            'hooks' => [
-                'page.changeTitle:before' => function (Page $page, $title, $languageCode) use ($phpunit, &$calls) {
-                    $phpunit->assertSame('test', $page->title()->value);
-                    $phpunit->assertSame('New Title', $title);
-                    $phpunit->assertNull($languageCode);
-                    $calls++;
-                },
-                'page.changeTitle:after' => function (Page $newPage, Page $oldPage) use ($phpunit, &$calls) {
-                    $phpunit->assertSame('New Title', $newPage->title()->value());
-                    $phpunit->assertSame('test', $oldPage->title()->value());
-                    $calls++;
-                }
-            ]
-        ]);
-
-        $app->impersonate('kirby');
-
-        $page = new Page([
-            'slug' => 'test'
-        ]);
-
-        $page->changeTitle('New Title');
-
-        $this->assertSame(2, $calls);
-    }
-
-    public function testCreateHooks()
-    {
-        $calls = 0;
-        $phpunit = $this;
-
-        $app = $this->app->clone([
-            'hooks' => [
-                'page.create:before' => function (Page $page, $input) use ($phpunit, &$calls) {
-                    $phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
-                    $phpunit->assertSame([
-                        'slug' => 'test',
-                        'model' => 'default',
-                        'template' => 'default',
-                        'isDraft' => true
-                    ], $input);
-                    $calls++;
-                },
-                'page.create:after' => function (Page $page) use ($phpunit, &$calls) {
-                    $phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
-                    $phpunit->assertSame('test', $page->slug());
-                    $calls++;
-                }
-            ]
-        ]);
-
-        $app->impersonate('kirby');
-
-        Page::create([
-            'slug' => 'test',
-        ]);
-
-        $this->assertSame(2, $calls);
-    }
-
-    public function testDeleteHooks()
-    {
-        $calls = 0;
-        $phpunit  = $this;
-
-        $app = $this->app->clone([
-            'hooks' => [
-                'page.delete:before' => function (Page $page, $force) use ($phpunit, &$calls) {
-                    $phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
-                    $phpunit->assertFalse($force);
-                    $phpunit->assertFileExists($page->root());
-                    $calls++;
-                },
-                'page.delete:after' => function ($status, Page $page) use ($phpunit, &$calls) {
-                    $phpunit->assertTrue($status);
-                    $phpunit->assertInstanceOf('Kirby\Cms\Page', $page);
-                    $phpunit->assertFileDoesNotExist($page->root());
-                    $calls++;
-                }
-            ]
-        ]);
-
-        $app->impersonate('kirby');
-
-        $page = Page::create([
-            'slug' => 'test'
-        ]);
-
-        $page->delete();
-
-        $this->assertSame(2, $calls);
-    }
-
-    public function testDuplicateHooks()
-    {
-        $calls = 0;
-        $phpunit = $this;
-
-        $app = $this->app->clone([
-            'hooks' => [
-                'page.duplicate:before' => function (Page $originalPage, $input, $options) use ($phpunit, &$calls) {
-                    $phpunit->assertSame('test', $originalPage->slug());
-                    $phpunit->assertSame('test-copy', $input);
-                    $phpunit->assertSame([], $options);
-                    $calls++;
-                },
-                'page.duplicate:after' => function (Page $duplicatePage, Page $originalPage) use ($phpunit, &$calls) {
-                    $phpunit->assertSame('test-copy', $duplicatePage->slug());
-                    $phpunit->assertSame('test', $originalPage->slug());
-                    $calls++;
-                }
-            ]
-        ]);
-
-        $app->impersonate('kirby');
-
-        $page = Page::create([
-            'slug' => 'test'
-        ]);
-
-        $page->duplicate();
-
-        $this->assertSame(2, $calls);
     }
 }
