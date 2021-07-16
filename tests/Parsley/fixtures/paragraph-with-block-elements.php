@@ -19,7 +19,16 @@ return [
     ],
     [
         'content' => [
-            'text' => '<p><i>Second</i> line</p>' . "\n\n" . '<p>Third line</p>',
+            'text' => '<p><i>Second</i> line</p>',
+        ],
+        'type' => 'text',
+    ],
+    [
+        'type' => 'line',
+    ],
+    [
+        'content' => [
+            'text' => '<p>Third line</p>',
         ],
         'type' => 'text',
     ]
