@@ -23,6 +23,13 @@ class FieldsetTest extends TestCase
         $this->assertTrue($fieldset->translate());
     }
 
+    public function testConstructWithMissingType()
+    {
+        $this->expectException('Kirby\Exception\InvalidArgumentException');
+        $this->expectExceptionMessage('The fieldset type is missing');
+        $fieldset = new Fieldset();
+    }
+
     /**
      * @covers ::disabled
      */
