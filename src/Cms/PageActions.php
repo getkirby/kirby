@@ -659,17 +659,28 @@ trait PageActions
     {
 
         // create the slug for the duplicate
-        $slug = Str::slug($slug ?? $this->slug() . '-copy');
+        $slug = Str::slug($slug ?? $this->slug() . '-' . Str::slug(t('page.duplicate.appendix')));
 
-        $arguments = ['originalPage' => $this, 'input' => $slug, 'options' => $options];
+        $arguments = [
+            'originalPage' => $this,
+            'input'        => $slug,
+            'options'      => $options
+        ];
+
         return $this->commit('duplicate', $arguments, function ($page, $slug, $options) {
-            return $this->copy([
+            $page = $this->copy([
                 'parent'   => $this->parent(),
                 'slug'     => $slug,
                 'isDraft'  => true,
                 'files'    => $options['files']    ?? false,
                 'children' => $options['children'] ?? false,
             ]);
+
+            if (isset($options['title']) === true) {
+                $page = $page->changeTitle($options['title']);
+            }
+
+            return $page;
         });
     }
 

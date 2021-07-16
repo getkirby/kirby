@@ -852,6 +852,7 @@ class PageDialogsTest extends AreaTestCase
         $this->app->page('test')->update();
 
         $this->submit([
+            'title' => 'New Test',
             'slug' => 'new-test'
         ]);
 

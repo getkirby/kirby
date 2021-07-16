@@ -385,14 +385,22 @@ return [
     // duplicate page
     'pages/(:any)/duplicate' => [
         'load' => function (string $id) {
-            $page        = Find::page($id);
-            $hasChildren = $page->hasChildren();
-            $hasFiles    = $page->hasFiles();
+            $page            = Find::page($id);
+            $hasChildren     = $page->hasChildren();
+            $hasFiles        = $page->hasFiles();
+            $toggleWidth     = '1/' . count(array_filter([$hasChildren, $hasFiles]));
 
             $fields = [
+                'title' => Field::title([
+                    'required' => true
+                ]),
                 'slug' => Field::slug([
                     'required' => true,
-                    'path'     => $page->parent() ? '/' . $page->parent()->id() . '/' : '/'
+                    'path'     => $page->parent() ? '/' . $page->parent()->id() . '/' : '/',
+                    'wizzard'   => [
+                        'text'  => t('page.changeSlug.fromTitle'),
+                        'field' => 'title'
+                    ]
                 ])
             ];
 
@@ -401,7 +409,7 @@ return [
                     'label'    => t('page.duplicate.files'),
                     'type'     => 'toggle',
                     'required' => true,
-                    'width'    => $hasChildren === true ? '1/2' : '1/1'
+                    'width'    => $toggleWidth
                 ];
             }
 
@@ -410,7 +418,7 @@ return [
                     'label'    => t('page.duplicate.pages'),
                     'type'     => 'toggle',
                     'required' => true,
-                    'width'    => $hasFiles === true ? '1/2' : '1/1'
+                    'width'    => $toggleWidth
                 ];
             }
 
@@ -422,7 +430,8 @@ return [
                     'value' => [
                         'children' => false,
                         'files'    => false,
-                        'slug'     => $page->slug() . '-' . Str::slug(t('page.duplicate.appendix'))
+                        'slug'     => $page->slug() . '-' . Str::slug(t('page.duplicate.appendix')),
+                        'title'    => $page->title() . ' ' . t('page.duplicate.appendix')
                     ]
                 ]
             ];
@@ -431,6 +440,7 @@ return [
             $newPage = Find::page($id)->duplicate(get('slug'), [
                 'children' => (bool)get('children'),
                 'files'    => (bool)get('files'),
+                'title'    => (string)get('title'),
             ]);
 
             return [
