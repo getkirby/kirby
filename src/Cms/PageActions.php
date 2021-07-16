@@ -395,13 +395,14 @@ trait PageActions
      */
     public function copy(array $options = [])
     {
-        $slug        = $options['slug']      ?? $this->slug();
-        $isDraft     = $options['isDraft']   ?? $this->isDraft();
-        $parent      = $options['parent']    ?? null;
-        $parentModel = $options['parent']    ?? $this->site();
-        $num         = $options['num']       ?? null;
-        $children    = $options['children']  ?? false;
-        $files       = $options['files']     ?? false;
+        $slug         = $options['slug']         ?? $this->slug();
+        $isDraft      = $options['isDraft']      ?? $this->isDraft();
+        $parent       = $options['parent']       ?? null;
+        $parentModel  = $options['parent']       ?? $this->site();
+        $num          = $options['num']          ?? null;
+        $translations = $options['translations'] ?? true;
+        $files        = $options['files']        ?? false;
+        $children     = $options['children']     ?? false;
 
         // clean up the slug
         $slug = Str::slug($slug);
@@ -425,6 +426,15 @@ trait PageActions
         $ignore = [
             $this->kirby()->locks()->file($this)
         ];
+
+        // don't copy translations
+        if ($translations === false) {
+            if ($this->kirby()->multilang() === true) {
+                foreach ($this->translations() as $translation) {
+                    $ignore[] = $translation->contentFile();
+                }
+            }
+        }
 
         // don't copy files
         if ($files === false) {
@@ -657,7 +667,6 @@ trait PageActions
      */
     public function duplicate(string $slug = null, array $options = [])
     {
-
         // create the slug for the duplicate
         $slug = Str::slug($slug ?? $this->slug() . '-' . Str::slug(t('page.duplicate.appendix')));
 
@@ -669,15 +678,16 @@ trait PageActions
 
         return $this->commit('duplicate', $arguments, function ($page, $slug, $options) {
             $page = $this->copy([
-                'parent'   => $this->parent(),
-                'slug'     => $slug,
-                'isDraft'  => true,
-                'files'    => $options['files']    ?? false,
-                'children' => $options['children'] ?? false,
+                'isDraft'      => true,
+                'slug'         => $slug,
+                'translations' => $options['translations'] ?? false,
+                'files'        => $options['files'] ?? false,
+                'children'     => $options['children'] ?? false,
+                'parent'       => $this->parent(),
             ]);
 
-            if (isset($options['title']) === true) {
-                $page = $page->changeTitle($options['title']);
+            if ($title = $options['title'] ?? null) {
+                $page = $page->changeTitle($title);
             }
 
             return $page;

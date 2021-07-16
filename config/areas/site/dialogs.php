@@ -386,9 +386,13 @@ return [
     'pages/(:any)/duplicate' => [
         'load' => function (string $id) {
             $page            = Find::page($id);
+
+            $hasTranslations = $page->translations()->count() > 0;
             $hasChildren     = $page->hasChildren();
             $hasFiles        = $page->hasFiles();
-            $toggleWidth     = '1/' . count(array_filter([$hasChildren, $hasFiles]));
+
+            $toggles         = count(array_filter([$hasTranslations, $hasChildren, $hasFiles]));
+            $togglesWidth    = '1/' . $toggles;
 
             $fields = [
                 'title' => Field::title([
@@ -404,12 +408,21 @@ return [
                 ])
             ];
 
+            if ($hasTranslations === true) {
+                $fields['translations'] = [
+                    'label'    => t('page.duplicate.translations'),
+                    'type'     => 'toggle',
+                    'required' => true,
+                    'width'    => $togglesWidth
+                ];
+            }
+
             if ($hasFiles === true) {
                 $fields['files'] = [
                     'label'    => t('page.duplicate.files'),
                     'type'     => 'toggle',
                     'required' => true,
-                    'width'    => $toggleWidth
+                    'width'    => $togglesWidth
                 ];
             }
 
@@ -418,7 +431,7 @@ return [
                     'label'    => t('page.duplicate.pages'),
                     'type'     => 'toggle',
                     'required' => true,
-                    'width'    => $toggleWidth
+                    'width'    => $togglesWidth
                 ];
             }
 
@@ -428,19 +441,22 @@ return [
                     'fields'       => $fields,
                     'submitButton' => t('duplicate'),
                     'value' => [
-                        'children' => false,
-                        'files'    => false,
                         'slug'     => $page->slug() . '-' . Str::slug(t('page.duplicate.appendix')),
                         'title'    => $page->title() . ' ' . t('page.duplicate.appendix')
                     ]
+                        'translations' => false,
+                        'children'     => false,
+                        'files'        => false,
+                    'size' => $toggles > 2 ? 'large' : 'medium'
                 ]
             ];
         },
         'submit' => function (string $id) {
             $newPage = Find::page($id)->duplicate(get('slug'), [
-                'children' => (bool)get('children'),
-                'files'    => (bool)get('files'),
-                'title'    => (string)get('title'),
+                'children'     => (bool)get('children'),
+                'translations' => (bool)get('translations'),
+                'files'        => (bool)get('files'),
+                'title'        => (string)get('title'),
             ]);
 
             return [

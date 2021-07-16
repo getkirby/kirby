@@ -402,6 +402,7 @@
   "page.duplicate.appendix": "Copy",
   "page.duplicate.files": "Copy files",
   "page.duplicate.pages": "Copy pages",
+  "page.duplicate.translations": "Copy translations",
   "page.sort": "Change position",
   "page.status": "Status",
   "page.status.draft": "Draft",
