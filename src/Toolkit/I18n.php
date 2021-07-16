@@ -207,7 +207,11 @@ class I18n
         }
 
         $template = static::translate($key, $fallback, $locale);
-        return Str::template($template, $replace, '-', '{', '}');
+        return Str::template($template, $replace, [
+            'fallback' => '-',
+            'start'    => '{',
+            'end'      => '}'
+        ]);
     }
 
     /**

@@ -973,16 +973,25 @@ class Str
      *                                    - start: start placeholder
      *                                    - end: end placeholder
      *                                    A simple fallback string is supported for compatibility (but deprecated).
-     * @param string $start Placeholder start characters
-     * @param string $end Placeholder end characters
+     * @param string $start Placeholder start characters (deprecated)
+     * @param string $end Placeholder end characters (deprecated)
      *
-     * @todo Deprecate `string $fallback` and `$start`/`$end` arguments with warning in 3.6.0
      * @todo Remove `$start` and `$end` parameters, rename `$fallback` to `$options` and only support `array` type for `$options` in 3.7.0
      *
      * @return string The filled-in string
      */
     public static function template(string $string = null, array $data = [], $fallback = null, string $start = '{{', string $end = '}}'): string
     {
+        // @codeCoverageIgnoreStart
+        if (
+            is_string($fallback) === true ||
+            $start !== '{{' ||
+            $end !== '}}'
+        ) {
+            deprecated('Str::template(): The $fallback, $start and $end parameters have been deprecated. Please pass an array to the $options parameter instead with `fallback`, `start` or `end` keys: Str::template($string, $data, $options)');
+        }
+        // @codeCoverageIgnoreEnd
+
         $options  = $fallback;
         $fallback = is_string($options) === true ? $options : ($options['fallback'] ?? null);
         $callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
