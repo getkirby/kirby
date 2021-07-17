@@ -479,19 +479,20 @@ class Auth
     }
 
     /**
-     * Ensure that email addresses with IDN domains are in Unicode format
-     * and that rate limit was not exceeded
+     * Ensures that email addresses with IDN domains are in Unicode format
+     * and that the rate limit was not exceeded
      *
      * @param string $email
-     * @return string
+     * @return string The normalized Unicode email address
      *
      * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded
      */
-    public function validateEmail(string $email): string
+    protected function validateEmail(string $email): string
     {
         // ensure that email addresses with IDN domains are in Unicode format
         $email = Idn::decodeEmail($email);
 
+        // check for blocked ips
         if ($this->isBlocked($email) === true) {
             $this->kirby->trigger('user.login:failed', compact('email'));
 
