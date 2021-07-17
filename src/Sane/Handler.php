@@ -40,24 +40,24 @@ abstract class Handler
     }
 
     /**
-     * Tidys the given string
+     * Sanitizes the given string
      *
      * @param string $string
      * @return string
      */
-    abstract public static function tidy(string $string): string;
+    abstract public static function sanitize(string $string): string;
 
     /**
-     * Tidys the contents of a file
+     * Sanitizes the contents of a file
      *
      * @param string $file
      * @return string
      *
      * @throws \Kirby\Exception\Exception If the file does not exist
      */
-    public static function tidyFile(string $file): string
+    public static function sanitizeFile(string $file): string
     {
-        return static::tidy(static::readFile($file));
+        return static::sanitize(static::readFile($file));
     }
 
     /**

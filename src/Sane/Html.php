@@ -23,10 +23,10 @@ class Html extends Handler
      * @param string $string
      * @return string
      */
-    public static function tidy(string $string): string
+    public static function sanitize(string $string): string
     {
         $doc = new DOM($string);
-        $doc->tidy();
+        $doc->sanitize();
 
         return $doc->innerHTML($doc->body());
     }
