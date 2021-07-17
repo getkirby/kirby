@@ -476,4 +476,27 @@ class SystemTest extends TestCase
         $this->expectExceptionMessage('The "password-reset" login method cannot be enabled when 2FA is required');
         $app->system()->loginMethods();
     }
+
+    public function testTitle()
+    {
+        $app = $this->app->clone([
+            'blueprints' => [
+                'site' => [
+                    'title' => $expected = 'Great site'
+                ]
+            ]
+        ]);
+
+        $this->assertSame($expected, $app->system()->title());
+
+        $app = $app->clone([
+            'site' => [
+                'content' => [
+                    'title' => $expected = 'Better site'
+                ]
+            ]
+        ]);
+
+        $this->assertSame($expected, $app->system()->title());
+    }
 }

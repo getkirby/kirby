@@ -515,6 +515,18 @@ class System
     }
 
     /**
+     * Return's the site's title as defined in the
+     * context file or `site.yml` blueprint
+     *
+     * @return string
+     */
+    public function title(): string
+    {
+        $blueprint = $this->app->site()->blueprint()->title();
+        return $this->app->site()->title()->or($blueprint)->value();
+    }
+
+    /**
      * Return the status as array
      *
      * @return array
