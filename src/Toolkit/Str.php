@@ -731,6 +731,53 @@ class Str
     }
 
     /**
+     * Replaces placeholders in string with values from the data array
+     * and escapes HTML in the results in `{{ }}` placeholders
+     * while leaving HTML special characters untouched in `{< >}` placeholders
+     *
+     * @since 3.6.0
+     *
+     * @param string|null $string The string with placeholders
+     * @param array $data Associative array with placeholders as
+     *                    keys and replacements as values.
+     *                    Supports query syntax.
+     * @param array $options An options array that contains:
+     *                       - fallback: if a token does not have any matches
+     *                       - callback: to be able to handle each matching result (escaping is applied after the callback)
+     *
+     * @return string The filled-in and partially escaped string
+     */
+    public static function safeTemplate(string $string = null, array $data = [], array $options = []): string
+    {
+        $callback = is_a(($options['callback'] ?? null), 'Closure') === true ? $options['callback'] : null;
+        $fallback = $options['fallback'] ?? '';
+
+        // replace and escape
+        $string = static::template($string, $data, [
+            'start'    => '{{',
+            'end'      => '}}',
+            'callback' => function ($result, $query, $data) use ($callback) {
+                if ($callback !== null) {
+                    $result = $callback($result, $query, $data);
+                }
+
+                return Escape::html($result);
+            },
+            'fallback' => $fallback
+        ]);
+
+        // replace unescaped (specifically marked placeholders)
+        $string = static::template($string, $data, [
+            'start'    => '{<',
+            'end'      => '>}',
+            'callback' => $callback,
+            'fallback' => $fallback
+        ]);
+
+        return $string;
+    }
+
+    /**
      * Shortens a string and adds an ellipsis if the string is too long
      *
      * <code>
@@ -765,44 +812,6 @@ class Str
         }
 
         return static::substr($string, 0, $length) . $appendix;
-    }
-
-    /**
-     * Convert a string to a safe version to be used in a URL
-     *
-     * @param string $string The unsafe string
-     * @param string $separator To be used instead of space and
-     *                          other non-word characters.
-     * @param string $allowed List of all allowed characters (regex)
-     * @param int $maxlength The maximum length of the slug
-     * @return string The safe string
-     */
-    public static function slug(string $string = null, string $separator = null, string $allowed = null, int $maxlength = 128): string
-    {
-        $separator = $separator ?? static::$defaults['slug']['separator'];
-        $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
-
-        $string = trim($string);
-        $string = static::lower($string);
-        $string = static::ascii($string);
-
-        // replace spaces with simple dashes
-        $string = preg_replace('![^' . $allowed . ']!i', $separator, $string);
-
-        if (strlen($separator) > 0) {
-            // remove double separators
-            $string = preg_replace('![' . preg_quote($separator) . ']{2,}!', $separator, $string);
-        }
-
-        // replace slashes with dashes
-        $string = str_replace('/', $separator, $string);
-
-        // trim leading and trailing non-word-chars
-        $string = preg_replace('!^[^a-z0-9]+!', '', $string);
-        $string = preg_replace('![^a-z0-9]+$!', '', $string);
-
-        // cut the string after the given maxlength
-        return static::short($string, $maxlength, false);
     }
 
     /**
@@ -876,6 +885,44 @@ class Str
         }
 
         return compact('matches', 'percent');
+    }
+
+    /**
+     * Convert a string to a safe version to be used in a URL
+     *
+     * @param string $string The unsafe string
+     * @param string $separator To be used instead of space and
+     *                          other non-word characters.
+     * @param string $allowed List of all allowed characters (regex)
+     * @param int $maxlength The maximum length of the slug
+     * @return string The safe string
+     */
+    public static function slug(string $string = null, string $separator = null, string $allowed = null, int $maxlength = 128): string
+    {
+        $separator = $separator ?? static::$defaults['slug']['separator'];
+        $allowed   = $allowed   ?? static::$defaults['slug']['allowed'];
+
+        $string = trim($string);
+        $string = static::lower($string);
+        $string = static::ascii($string);
+
+        // replace spaces with simple dashes
+        $string = preg_replace('![^' . $allowed . ']!i', $separator, $string);
+
+        if (strlen($separator) > 0) {
+            // remove double separators
+            $string = preg_replace('![' . preg_quote($separator) . ']{2,}!', $separator, $string);
+        }
+
+        // replace slashes with dashes
+        $string = str_replace('/', $separator, $string);
+
+        // trim leading and trailing non-word-chars
+        $string = preg_replace('!^[^a-z0-9]+!', '', $string);
+        $string = preg_replace('![^a-z0-9]+$!', '', $string);
+
+        // cut the string after the given maxlength
+        return static::short($string, $maxlength, false);
     }
 
     /**
@@ -955,7 +1002,7 @@ class Str
     }
 
     /**
-     * Replaces placeholders in string with value from array
+     * Replaces placeholders in string with values from the data array
      *
      * <code>
      *
@@ -966,7 +1013,8 @@ class Str
      *
      * @param string|null $string The string with placeholders
      * @param array $data Associative array with placeholders as
-     *                    keys and replacements as values
+     *                    keys and replacements as values.
+     *                    Supports query syntax.
      * @param string|array|null $fallback An options array that contains:
      *                                    - fallback: if a token does not have any matches
      *                                    - callback: to be able to handle each matching result
