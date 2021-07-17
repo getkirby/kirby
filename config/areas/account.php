@@ -1,5 +1,6 @@
 <?php
 
+use Kirby\Cms\Find;
 use Kirby\Panel\Panel;
 
 return function ($kirby) {
@@ -33,6 +34,12 @@ return function ($kirby) {
                     return [
                         'component' => 'k-reset-password-view',
                     ];
+                }
+            ],
+            [
+                'pattern' => 'account/files/(:any)',
+                'action'  => function (string $filename) {
+                    return Find::file('account', $filename)->panel()->route();
                 }
             ]
         ]

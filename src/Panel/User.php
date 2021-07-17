@@ -123,6 +123,10 @@ class User extends Model
      */
     public function path(): string
     {
+        if ($this->model->isLoggedIn() === true) {
+            return 'account';
+        }
+
         return 'users/' . $this->model->id();
     }
 
