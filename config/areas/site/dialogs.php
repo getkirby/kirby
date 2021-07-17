@@ -163,7 +163,7 @@ return [
                             'preselect' => $select === 'slug',
                             'path'      => $page->parent() ? '/' . $page->parent()->id() . '/' : '/',
                             'disabled'  => $permissions->can('changeSlug') === false,
-                            'wizzard'   => [
+                            'wizard'    => [
                                 'text'  => t('page.changeSlug.fromTitle'),
                                 'field' => 'title'
                             ]
@@ -397,7 +397,7 @@ return [
                 'slug' => Field::slug([
                     'required' => true,
                     'path'     => $page->parent() ? '/' . $page->parent()->id() . '/' : '/',
-                    'wizzard'   => [
+                    'wizard'   => [
                         'text'  => t('page.changeSlug.fromTitle'),
                         'field' => 'title'
                     ]
