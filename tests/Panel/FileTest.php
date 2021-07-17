@@ -260,6 +260,8 @@ class FileTest extends TestCase
 
     /**
      * @covers ::imageDefaults
+     * @covers ::imageColor
+     * @covers ::imageIcon
      * @covers ::imageSource
      */
     public function testImage()

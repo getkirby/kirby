@@ -59,6 +59,7 @@ class ViewTest extends TestCase
     }
 
     /**
+     * @covers ::apply
      * @covers ::applyGlobals
      */
     public function testApplyGlobals(): void
@@ -90,6 +91,10 @@ class ViewTest extends TestCase
 
         $data = View::apply([]);
         $this->assertArrayHasKey('$translation', $data);
+
+        // empty globals
+        $data = ['foo' => 'bar'];
+        $this->assertSame($data, View::applyGlobals($data, ''));
     }
 
     /**
@@ -133,6 +138,10 @@ class ViewTest extends TestCase
         $result = View::apply($data);
 
         $this->assertSame(['a' => 'A'], $result);
+
+        // empty only
+        $data = ['foo' => 'bar'];
+        $this->assertSame($data, View::applyOnly($data, ''));
     }
 
     /**
