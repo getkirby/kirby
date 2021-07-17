@@ -268,7 +268,7 @@ class File extends Model
             parent::props(),
             $this->prevNext(),
             [
-                'blueprint' => $this->model->template(),
+                'blueprint' => $this->model->template() ?? 'default',
                 'model' => [
                     'content'    => $this->content(),
                     'dimensions' => $file->dimensions()->toArray(),
