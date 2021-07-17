@@ -65,7 +65,7 @@ class Document
                 'plugins' => $plugins->url('css'),
                 'custom'  => static::customCss(),
             ],
-            'icons' => [
+            'icons' => $kirby->option('panel.favicon', [
                 'apple-touch-icon' => [
                     'type' => 'image/png',
                     'url'  => $url . '/apple-touch-icon.png',
@@ -78,7 +78,7 @@ class Document
                     'type' => 'image/png',
                     'url'  => $url . '/favicon.png',
                 ]
-            ],
+            ]),
             'js' => [
                 'vendor'       => $url . '/js/vendor.js',
                 'pluginloader' => $url . '/js/plugins.js',
