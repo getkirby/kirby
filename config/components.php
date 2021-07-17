@@ -70,7 +70,7 @@ return [
      * Adapt file characteristics
      *
      * @param \Kirby\Cms\App $kirby Kirby instance
-     * @param \Kirby\Cms\File|\Kirby\Cms\FileModifications $file The file object
+     * @param \Kirby\Cms\File|\Kirby\Filesystem\Asset $file The file object
      * @param array $options All thumb options (width, height, crop, blur, grayscale)
      * @return \Kirby\Cms\File|\Kirby\Cms\FileVersion
      */
