@@ -33,7 +33,7 @@ export default {
      */
     size: String,
     /**
-     * Visual apperance of the text
+     * Visual appearance of the text
      * @values help
      */
     theme: String

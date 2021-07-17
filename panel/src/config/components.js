@@ -43,10 +43,13 @@ import Input from "@/components/Forms/Input.vue";
 import Login from "@/components/Forms/Login.vue";
 import LoginCode from "@/components/Forms/LoginCode.vue";
 import Upload from "@/components/Forms/Upload.vue";
-import Writer from "@/components/Writer/Writer.vue";
+import Writer from "@/components/Forms/Writer/Writer.vue";
 
 /** Form Helpers */
 import LoginAlert from "@/components/Forms/LoginAlert.vue";
+
+/* Blocks */
+import "@/components/Forms/Blocks/index.js";
 
 /** Form Inputs */
 import CheckboxInput from "@/components/Forms/Input/CheckboxInput.vue";
@@ -346,6 +349,3 @@ Vue.component("k-settings-view", SettingsView);
 Vue.component("k-site-view", SiteView);
 Vue.component("k-users-view", UsersView);
 Vue.component("k-user-view", UserView);
-
-/* Blocks */
-import "@/components/Blocks/index.js";
