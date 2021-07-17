@@ -75,19 +75,19 @@ class Sane
     }
 
     /**
-     * Tidy the given string with the specified handler
+     * Sanitizes the given string with the specified handler
      *
      * @param string $string
      * @param string $type
      * @return string
      */
-    public static function tidy(string $string, string $type): string
+    public static function sanitize(string $string, string $type): string
     {
-        return static::handler($type)->tidy($string);
+        return static::handler($type)->sanitize($string);
     }
 
     /**
-     * Tidy the contents of a file;
+     * Sanitizes the contents of a file;
      * the sane handlers are automatically chosen by
      * the extension and MIME type if not specified
      *
@@ -101,14 +101,14 @@ class Sane
      * @throws \Kirby\Exception\NotFoundException If the handler was not found
      * @throws \Kirby\Exception\Exception On other errors
      */
-    public static function tidyFile(string $file, $typeLazy = false): string
+    public static function sanitizeFile(string $file, $typeLazy = false): string
     {
         if (is_string($typeLazy) === true) {
-            return static::handler($typeLazy)->tidyFile($file);
+            return static::handler($typeLazy)->sanitizeFile($file);
         }
 
         // TODO: implement better type detection comparable to validateFile
-        return static::handler(F::extension($file))->tidyFile($file);
+        return static::handler(F::extension($file))->sanitizeFile($file);
     }
 
     /**

@@ -145,23 +145,23 @@ class DOM extends \Kirby\Toolkit\DOM
     }
 
     /**
-     * Tidies all elements in the DOM
+     * Sanitizes all elements in the DOM
      *
      * @return static
      */
-    public function tidy()
+    public function sanitize()
     {
-        $this->tidyElements($this->query('//*'));
+        $this->sanitizeElements($this->query('//*'));
         return $this;
     }
 
     /**
-     * Tidies all attributes of the given element
+     * Sanitizes all attributes of the given element
      *
      * @param \DOMNode $element
      * @return static
      */
-    public function tidyAttributes(DOMNode $element)
+    public function sanitizeAttributes(DOMNode $element)
     {
         foreach ($element->attributes as $attribute) {
             if ($this->isAllowedAttribute($element, $attribute) === false) {
@@ -183,12 +183,12 @@ class DOM extends \Kirby\Toolkit\DOM
     }
 
     /**
-     * Tidies all given elements in the node list
+     * Sanitizes all given elements in the node list
      *
      * @param \DOMNodeList $elements
      * @return static
      */
-    public function tidyElements(DOMNodeList $elements)
+    public function sanitizeElements(DOMNodeList $elements)
     {
         for ($x = count($elements); $x >=0; $x--) {
             if ($element = $elements[$x]) {
@@ -197,7 +197,7 @@ class DOM extends \Kirby\Toolkit\DOM
                 } elseif ($this->isAllowedElement($element) === false) {
                     $this->unwrap($element);
                 } elseif ($element->hasAttributes()) {
-                    $this->tidyAttributes($element);
+                    $this->sanitizeAttributes($element);
                 }
             }
         }

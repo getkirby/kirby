@@ -48,7 +48,7 @@ class Xml extends Handler
      * @param string $string
      * @return string
      */
-    public static function tidy(string $string): string
+    public static function sanitize(string $string): string
     {
         throw new Exception('XML sanitization is not yet implemented');
     }
