@@ -3,6 +3,8 @@
 use Kirby\Cms\Find;
 use Kirby\Panel\Panel;
 
+$dialogs = require __DIR__ . '/files/dialogs.php';
+
 return function ($kirby) {
     return [
         'icon'   => 'account',
@@ -42,6 +44,16 @@ return function ($kirby) {
                     return Find::file('account', $filename)->panel()->route();
                 }
             ]
+        ],
+        'dialogs' => [
+            // change file name
+            'account/files/(:any)/changeName' => $dialogs['changeName'],
+
+            // change file sort
+            'account/files/(:any)/changeSort' => $dialogs['changeSort'],
+
+            // delete file
+            'account/files/(:any)/delete' => $dialogs['delete'],
         ]
     ];
 };
