@@ -7,7 +7,12 @@ export default {
         return;
       }
 
-      const string = window.panel.$translation.data[key] || key;
+      const string = window.panel.$translation.data[key];
+
+      if (!string) {
+        return null;
+      }
+
       return template(string, data);
     };
   }
