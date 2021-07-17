@@ -168,18 +168,23 @@ class Auth
     /**
      * Returns the csrf token if it exists and if it is valid
      *
+     * @param bool $validate
      * @return string|false
      */
-    public function csrf()
+    public function csrf(bool $validate = true)
     {
         // get the csrf from the header
         $fromHeader = $this->kirby->request()->csrf();
 
         // check for a predefined csrf or use the one from session
-        $fromSession = $this->kirby->option('api.csrf', csrf());
+        $isDev       = $this->kirby->option('panel.dev', false) !== false;
+        $fromSession = $this->kirby->option('api.csrf', $isDev ? 'dev' : csrf());
 
         // compare both tokens
-        if (hash_equals((string)$fromSession, (string)$fromHeader) !== true) {
+        if (
+            $validate === true &&
+            hash_equals((string)$fromSession, (string)$fromHeader) !== true
+        ) {
             return false;
         }
 
