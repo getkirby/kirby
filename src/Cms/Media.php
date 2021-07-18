@@ -85,6 +85,30 @@ class Media
     }
 
     /**
+     * Returns the root path for the model
+     *
+     * @param \Kirby\Cms\App
+     * @param \Kirby\Cms\Model|string $model
+     * @param string $hash
+     * @return string
+     */
+    public static function root($kirby, $model, string $hash): string
+    {
+        // assets
+        if (is_string($model) === true) {
+            return $kirby->root('media') . '/assets/' . $model . '/' . $hash;
+        }
+
+        // parent files for file model that already included hash
+        if (is_a($model, '\Kirby\Cms\File')) {
+            return dirname($model->mediaRoot());
+        }
+
+        // model files
+        return $model->mediaRoot() . '/' . $hash;
+    }
+
+    /**
      * Tries to find a job file for the
      * given filename and then calls the thumb
      * component to create a thumbnail accordingly
@@ -97,22 +121,19 @@ class Media
     public static function thumb($model, string $hash, string $filename)
     {
         $kirby = App::instance();
-
-        // assets
-        if (is_string($model) === true) {
-            $root = $kirby->root('media') . '/assets/' . $model . '/' . $hash;
-        // parent files for file model that already included hash
-        } elseif (is_a($model, '\Kirby\Cms\File')) {
-            $root = dirname($model->mediaRoot());
-        // model files
-        } else {
-            $root = $model->mediaRoot() . '/' . $hash;
-        }
+        $root  = static::root($kirby, $model, $hash);
 
         try {
             $thumb   = $root . '/' . $filename;
             $job     = $root . '/.jobs/' . $filename . '.json';
-            $options = Data::read($job);
+
+            try {
+                $options = Data::read($job);
+            } catch (Throwable $e) {
+                $options = [
+                    'filename' => $filename
+                ];
+            }
 
             if (empty($options) === true) {
                 return false;
