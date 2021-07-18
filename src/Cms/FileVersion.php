@@ -44,10 +44,6 @@ class FileVersion
             return $this->asset()->$method(...$arguments);
         }
 
-        // original method proxy
-        if (method_exists($this->original(), $method)) {
-            return $this->original()->$method(...$arguments);
-        }
         // content fields
         if (is_a($this->original(), 'Kirby\Cms\File') === true) {
             return $this->original()->content()->get($method, $arguments);
@@ -72,6 +68,16 @@ class FileVersion
     public function kirby()
     {
         return $this->original()->kirby();
+    }
+
+    /**
+     * Returns the absolute Url to the file in the public media folder
+     *
+     * @return string
+     */
+    public function mediaUrl(): string
+    {
+        return $this->url();
     }
 
     /**

@@ -48,7 +48,7 @@ class FileVersionTest extends TestCase
         $this->assertSame($mods, $version->modifications());
         $this->assertSame($original, $version->original());
         $this->assertSame($original->kirby(), $version->kirby());
-        $this->assertSame($original->mediaUrl(), $version->mediaUrl());
+        $this->assertSame($version->url(), $version->mediaUrl());
     }
 
     public function testExists()
