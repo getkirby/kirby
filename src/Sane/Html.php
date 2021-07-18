@@ -25,7 +25,7 @@ class Html extends Handler
      */
     public static function sanitize(string $string): string
     {
-        $doc = new DOM($string);
+        $doc = new Dom($string);
         $doc->sanitize();
 
         return $doc->innerHTML($doc->body());

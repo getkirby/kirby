@@ -5,10 +5,11 @@ namespace Kirby\Sane;
 use DOMAttr;
 use DOMNode;
 use DOMNodeList;
+use Kirby\Toolkit\Dom as BaseDom;
 use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\Str;
 
-class DOM extends \Kirby\Toolkit\DOM
+class Dom extends BaseDom
 {
     /**
      * List of allowed elements

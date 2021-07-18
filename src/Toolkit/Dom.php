@@ -5,7 +5,7 @@ namespace Kirby\Toolkit;
 use DOMDocument;
 use DOMXPath;
 
-class DOM
+class Dom
 {
     protected $doc;
     protected $body;
