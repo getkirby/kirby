@@ -515,8 +515,8 @@ class System
     }
 
     /**
-     * Return's the site's title as defined in the
-     * context file or `site.yml` blueprint
+     * Returns the site's title as defined in the
+     * content file or `site.yml` blueprint
      *
      * @return string
      */
