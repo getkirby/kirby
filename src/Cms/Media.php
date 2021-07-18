@@ -130,9 +130,13 @@ class Media
             try {
                 $options = Data::read($job);
             } catch (Throwable $e) {
-                $options = [
-                    'filename' => $filename
-                ];
+                // no job file found, still run the job
+                // for publically accesible assets
+                if (is_string($model) === true) {
+                    $options = [
+                        'filename' => $filename
+                    ];
+                }
             }
 
             if (empty($options) === true) {
