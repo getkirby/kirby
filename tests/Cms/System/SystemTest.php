@@ -270,7 +270,7 @@ class SystemTest extends TestCase
             'accounts' => true,
             'content' => true,
             'curl' => true,
-            'sessions' => false,
+            'sessions' => true,
             'mbstring' => true,
             'media' => true,
             'php' => true,
@@ -297,6 +297,7 @@ class SystemTest extends TestCase
     {
         return [
             ['accounts'],
+            ['sessions'],
             ['content'],
             ['media']
         ];

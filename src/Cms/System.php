@@ -132,6 +132,13 @@ class System
             throw new PermissionException('The accounts directory could not be created');
         }
 
+        // init /site/sessions
+        try {
+            Dir::make($this->app->root('sessions'));
+        } catch (Throwable $e) {
+            throw new PermissionException('The sessions directory could not be created');
+        }
+
         // init /content
         try {
             Dir::make($this->app->root('content'));
