@@ -287,7 +287,7 @@ class View
 
                 return [
                     'ascii'   => Str::$ascii,
-                    'csrf'    => $kirby->auth()->csrf(false),
+                    'csrf'    => $kirby->auth()->csrfFromSession(),
                     'isLocal' => $kirby->system()->isLocal(),
                     'locales' => $locales,
                     'slugs'   => Str::$language,
