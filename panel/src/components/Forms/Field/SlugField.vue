@@ -7,9 +7,9 @@
     }"
     class="k-slug-field"
   >
-    <template v-if="wizzard && wizzard.text" #options>
-      <k-button icon="wand" @click="onWizzard">
-        {{ wizzard.text }}
+    <template v-if="wizard && wizard.text" #options>
+      <k-button icon="wand" @click="onWizard">
+        {{ wizard.text }}
       </k-button>
     </template>
 
@@ -52,7 +52,7 @@ export default {
     path: {
       type: String
     },
-    wizzard: {
+    wizard: {
       type: [Boolean, Object],
       default: false,
     }
@@ -84,9 +84,9 @@ export default {
     focus() {
       this.$refs.input.focus();
     },
-    onWizzard() {
-      if (this.wizzard && this.wizzard.field && this.formData[this.wizzard.field]) {
-        this.slug = this.formData[this.wizzard.field];
+    onWizard() {
+      if (this.wizard && this.wizard.field && this.formData[this.wizard.field]) {
+        this.slug = this.formData[this.wizard.field];
       }
     }
   }
