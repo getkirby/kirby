@@ -504,7 +504,7 @@ return function (App $app) {
                     'kirby' => $app,
                     'site'  => $app->site(),
                     'page'  => $app->page()
-                ], $data), $fallback);
+                ], $data), ['fallback' => $fallback]);
             }
 
             return $field;
