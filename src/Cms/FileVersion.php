@@ -44,6 +44,10 @@ class FileVersion
             return $this->asset()->$method(...$arguments);
         }
 
+        // original method proxy
+        if (method_exists($this->original(), $method)) {
+            return $this->original()->$method(...$arguments);
+        }
         // content fields
         if (is_a($this->original(), 'Kirby\Cms\File') === true) {
             return $this->original()->content()->get($method, $arguments);
