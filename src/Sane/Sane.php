@@ -87,7 +87,8 @@ class Sane
     }
 
     /**
-     * Sanitizes the contents of a file;
+     * Sanitizes the contents of a file by overwriting
+     * the file with the sanitized version;
      * the sane handlers are automatically chosen by
      * the extension and MIME type if not specified
      *
@@ -95,16 +96,17 @@ class Sane
      * @param string|bool $typeLazy Explicit handler type string,
      *                              `true` for lazy autodetection or
      *                              `false` for normal autodetection
-     * @return string
+     * @return void
      *
      * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
      * @throws \Kirby\Exception\NotFoundException If the handler was not found
      * @throws \Kirby\Exception\Exception On other errors
      */
-    public static function sanitizeFile(string $file, $typeLazy = false): string
+    public static function sanitizeFile(string $file, $typeLazy = false): void
     {
         if (is_string($typeLazy) === true) {
-            return static::handler($typeLazy)->sanitizeFile($file);
+            static::handler($typeLazy)->sanitizeFile($file);
+            return;
         }
 
         foreach (static::handlersForFile($file, $typeLazy === true) as $handler) {

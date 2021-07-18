@@ -48,16 +48,18 @@ abstract class Handler
     abstract public static function sanitize(string $string): string;
 
     /**
-     * Sanitizes the contents of a file
+     * Sanitizes the contents of a file by overwriting
+     * the file with the sanitized version
      *
      * @param string $file
-     * @return string
+     * @return void
      *
      * @throws \Kirby\Exception\Exception If the file does not exist
      */
-    public static function sanitizeFile(string $file): string
+    public static function sanitizeFile(string $file): void
     {
-        return static::sanitize(static::readFile($file));
+        $sanitized = static::sanitize(static::readFile($file));
+        F::write($file, $sanitized);
     }
 
     /**
