@@ -107,8 +107,9 @@ class Sane
             return static::handler($typeLazy)->sanitizeFile($file);
         }
 
-        // TODO: implement better type detection comparable to validateFile
-        return static::handler(F::extension($file))->sanitizeFile($file);
+        foreach (static::handlersForFile($file, $typeLazy === true) as $handler) {
+            $handler->sanitizeFile($file);
+        }
     }
 
     /**
@@ -149,20 +150,38 @@ class Sane
             return;
         }
 
-        $options = [F::extension($file), F::mime($file)];
+        foreach (static::handlersForFile($file, $typeLazy === true) as $handler) {
+            $handler->validateFile($file);
+        }
+    }
 
-        // execute all handlers, but each class only once for performance;
+    /**
+     * Returns all handler objects that apply to the given file based on
+     * file extension and MIME type
+     *
+     * @param string $file
+     * @param bool $lazy If set to `true`, `null` is returned for undefined handlers
+     * @return array<\Kirby\Sane\Handler>
+     */
+    protected static function handlersForFile(string $file, bool $lazy = false): array
+    {
+        $handlers = $handlerClasses = [];
+
+        // all values that can be used for the handler search;
         // filter out all empty options
-        $usedHandlers = [];
-        foreach (array_filter($options) as $option) {
-            $handler      = static::handler($option, $typeLazy === true);
+        $options = array_filter([F::extension($file), F::mime($file)]);
+
+        foreach ($options as $option) {
+            $handler      = static::handler($option, $lazy);
             $handlerClass = $handler ? get_class($handler) : null;
 
-            if ($handler && in_array($handlerClass, $usedHandlers) === false) {
-                $handler->validateFile($file);
-
-                $usedHandlers[] = $handlerClass;
+            // ensure that each handler class is only returned once
+            if ($handler && in_array($handlerClass, $handlerClasses) === false) {
+                $handlers[]       = $handler;
+                $handlerClasses[] = $handlerClass;
             }
         }
+
+        return $handlers;
     }
 }
