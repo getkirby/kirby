@@ -95,21 +95,7 @@ class Auth
      */
     public function createChallenge(string $email, bool $long = false, string $mode = 'login')
     {
-        // ensure that email addresses with IDN domains are in Unicode format
-        $email = Idn::decodeEmail($email);
-
-        if ($this->isBlocked($email) === true) {
-            $this->kirby->trigger('user.login:failed', compact('email'));
-
-            if ($this->kirby->option('debug') === true) {
-                $message = 'Rate limit exceeded';
-            } else {
-                // avoid leaking security-relevant information
-                $message = ['key' => 'access.login'];
-            }
-
-            throw new PermissionException($message);
-        }
+        $email = $this->validateEmail($email);
 
         // rate-limit the number of challenges for DoS/DDoS protection
         $this->track($email, false);
@@ -493,18 +479,15 @@ class Auth
     }
 
     /**
-     * Validates the user credentials and returns the user object on success;
-     * otherwise logs the failed attempt
+     * Ensures that email addresses with IDN domains are in Unicode format
+     * and that the rate limit was not exceeded
      *
      * @param string $email
-     * @param string $password
-     * @return \Kirby\Cms\User
+     * @return string The normalized Unicode email address
      *
-     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
-     * @throws \Kirby\Exception\NotFoundException If the email was invalid
-     * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded
      */
-    public function validatePassword(string $email, string $password)
+    protected function validateEmail(string $email): string
     {
         // ensure that email addresses with IDN domains are in Unicode format
         $email = Idn::decodeEmail($email);
@@ -522,6 +505,25 @@ class Auth
 
             throw new PermissionException($message);
         }
+
+        return $email;
+    }
+
+    /**
+     * Validates the user credentials and returns the user object on success;
+     * otherwise logs the failed attempt
+     *
+     * @param string $email
+     * @param string $password
+     * @return \Kirby\Cms\User
+     *
+     * @throws \Kirby\Exception\PermissionException If the rate limit was exceeded or if any other error occurred with debug mode off
+     * @throws \Kirby\Exception\NotFoundException If the email was invalid
+     * @throws \Kirby\Exception\InvalidArgumentException If the password is not valid (via `$user->login()`)
+     */
+    public function validatePassword(string $email, string $password)
+    {
+        $email = $this->validateEmail($email);
 
         // validate the user
         try {
