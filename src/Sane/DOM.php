@@ -18,11 +18,11 @@ class DOM extends \Kirby\Toolkit\DOM
     public $allowed;
 
     /**
-     * List of denied elements
+     * List of disallowed elements
      *
      * @var array
      */
-    public $denied;
+    public $disallowed;
 
     /**
      * List of attributes that might contain URLs
@@ -39,9 +39,9 @@ class DOM extends \Kirby\Toolkit\DOM
     {
         $options = array_merge($this->defaults(), $options);
 
-        $this->allowed = $options['allowed'] ?? [];
-        $this->denied  = $options['denied']  ?? [];
-        $this->urls    = $options['urls']    ?? [];
+        $this->allowed    = $options['allowed'] ?? [];
+        $this->disallowed = $options['disallowed']  ?? [];
+        $this->urls       = $options['urls']    ?? [];
 
         parent::__construct($html);
     }
@@ -79,7 +79,7 @@ class DOM extends \Kirby\Toolkit\DOM
                 'p'          => true,
                 'ul'         => true,
             ],
-            'denied' => [
+            'disallowed' => [
                 'iframe',
                 'meta',
                 'object',
@@ -134,14 +134,14 @@ class DOM extends \Kirby\Toolkit\DOM
     }
 
     /**
-     * Checks for elements to be removed according to the denylist
+     * Checks for elements to be removed according to the blocklist
      *
      * @param DOMNode $element
      * @return bool
      */
-    public function isDeniedElement(DOMNode $element): bool
+    public function isDisallowedElement(DOMNode $element): bool
     {
-        return in_array($element->tagName, $this->denied) === true;
+        return in_array($element->tagName, $this->disallowed) === true;
     }
 
     /**
