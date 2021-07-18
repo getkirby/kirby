@@ -1176,12 +1176,17 @@ class Str
      */
     public static function widont(string $string = null): string
     {
-        return preg_replace_callback('|([^\s])\s+([^\s]+)\s*$|u', function ($matches) {
+        // Replace space between last word and punctuation
+        $string = preg_replace_callback('|(\S)\s(\S?)$|u', function ($matches) {
+            return $matches[1] . '&nbsp;' . $matches[2];
+        }, $string);
+
+        // Replace space between last two words
+        return preg_replace_callback('|(\s)(?=\S*$)(\S+)|u', function ($matches) {
             if (static::contains($matches[2], '-')) {
-                return $matches[1] . '&nbsp;' . str_replace('-', '&#8209;', $matches[2]);
-            } else {
-                return $matches[1] . '&nbsp;' . $matches[2];
+                $matches[2] = str_replace('-', '&#8209;', $matches[2]);
             }
+            return '&nbsp;' . $matches[2];
         }, $string);
     }
 }

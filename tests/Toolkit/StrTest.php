@@ -1064,8 +1064,16 @@ EOT;
      */
     public function testWidont()
     {
+        $this->assertSame('Test', Str::widont('Test'));
+        $this->assertSame('Test?', Str::widont('Test?'));
+        $this->assertSame('Test&nbsp;?', Str::widont('Test ?'));
         $this->assertSame('Test&nbsp;Headline', Str::widont('Test Headline'));
         $this->assertSame('Test Headline&nbsp;With&#8209;Dash', Str::widont('Test Headline With-Dash'));
+        $this->assertSame('Test Headline&nbsp;With&#8209;Dash&nbsp;?', Str::widont('Test Headline With-Dash ?'));
+        $this->assertSame('Omelette du&nbsp;fromage', Str::widont('Omelette du fromage'));
+        $this->assertSame('Omelette du&nbsp;fromage.', Str::widont('Omelette du fromage.'));
+        $this->assertSame('Omelette du&nbsp;fromage?', Str::widont('Omelette du fromage?'));
+        $this->assertSame('Omelette du&nbsp;fromage&nbsp;?', Str::widont('Omelette du fromage ?'));
         $this->assertSame('', Str::widont());
     }
 }
