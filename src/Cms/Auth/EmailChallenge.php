@@ -66,6 +66,7 @@ class EmailChallenge extends Challenge
             'template' => 'auth/' . $mode,
             'data' => [
                 'user'    => $user,
+                'site'    => $kirby->system()->title(),
                 'code'    => $formatted,
                 'timeout' => round($options['timeout'] / 60)
             ]

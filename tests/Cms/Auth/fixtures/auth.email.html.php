@@ -1,1 +1,1 @@
-HTML: <?= $user->email() . "\n" . $timeout . "\n" . $code;
+HTML: <?= $user->email() . "\n" . $site . "\n" . $timeout . "\n" . $code;

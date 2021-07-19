@@ -522,8 +522,23 @@ class System
     }
 
     /**
-     * Return the status as array
+     * Returns the site's title as defined in the
+     * content file or `site.yml` blueprint
      *
+     * @return string
+     */
+    public function title(): string
+    {
+        $site = $this->app->site();
+
+        if ($site->title()->isNotEmpty()) {
+            return $site->title()->value();
+        }
+        
+        return $site->blueprint()->title();
+    }
+
+    /**
      * @return array
      */
     public function toArray(): array

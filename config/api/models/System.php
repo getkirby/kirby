@@ -52,12 +52,8 @@ return [
         'requirements' => function (System $system) {
             return $system->toArray();
         },
-        'site' => function () {
-            try {
-                return $this->site()->blueprint()->title();
-            } catch (Throwable $e) {
-                return $this->site()->title()->value();
-            }
+        'site' => function (System $system) {
+            return $system->title();
         },
         'slugs' => function () {
             return Str::$language;
