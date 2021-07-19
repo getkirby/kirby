@@ -283,6 +283,28 @@ class FieldTest extends TestCase
     }
 
     /**
+     * @covers ::slug
+     */
+    public function testSlug(): void
+    {
+        // default
+        $field = Field::slug();
+        $expected = [
+            'label' => 'URL appendix',
+            'type'  => 'slug',
+        ];
+
+        $this->assertSame($expected, $field);
+
+        // with custom props
+        $field = Field::slug([
+            'required' => true
+        ]);
+
+        $this->assertTrue($field['required']);
+    }
+
+    /**
      * @covers ::title
      * @return void
      */

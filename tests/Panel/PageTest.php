@@ -436,6 +436,33 @@ class PageTest extends TestCase
     }
 
     /**
+     * @covers ::position
+     */
+    public function testPosition()
+    {
+        $page = new ModelPage([
+            'slug' => 'test',
+            'num'  => 3
+        ]);
+
+        $panel = new Page($page);
+        $this->assertSame(3, $panel->position());
+
+        $parent = new ModelPage([
+            'slug'     => 'test',
+            'children' => [
+                ['slug' => 'a', 'num' => 1],
+                ['slug' => 'b', 'num' => 2],
+                ['slug' => 'c', 'num' => 3],
+                ['slug' => 'd', 'num' => null]
+            ]
+        ]);
+
+        $panel = new Page($parent->find('d'));
+        $this->assertSame(4, $panel->position());
+    }
+
+    /**
      * @covers ::props
      */
     public function testProps()
@@ -472,6 +499,7 @@ class PageTest extends TestCase
 
     /**
      * @covers ::props
+     * @covers ::prevNext
      */
     public function testPropsPrevNext()
     {
@@ -501,6 +529,7 @@ class PageTest extends TestCase
 
     /**
      * @covers ::props
+     * @covers ::prevNext
      */
     public function testPropsPrevNextWithSameTemplate()
     {
@@ -528,6 +557,7 @@ class PageTest extends TestCase
 
     /**
      * @covers ::props
+     * @covers ::prevNext
      */
     public function testPropsPrevNextWithSameStatus()
     {
