@@ -44,7 +44,6 @@ export default {
   display: flex;
   flex-direction: column;
   background: var(--color-white);
-  min-height: 6rem;
 }
 .k-layout-column:focus {
   outline: 0;
@@ -55,7 +54,12 @@ export default {
   padding: 0;
   height: 100%;
   background: var(--color-white);
+  min-height: 4rem;
 }
+.k-layout-column .k-blocks[data-empty="true"] {
+  min-height: 6rem;
+}
+
 .k-layout-column .k-blocks-list {
   display: flex;
   flex-direction: column;
