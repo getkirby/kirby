@@ -532,7 +532,7 @@ class System
     }
 
     /**
-     * Return the status as array
+            return $site->title()->value();
      *
      * @return array
      */
