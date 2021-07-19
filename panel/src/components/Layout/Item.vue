@@ -15,7 +15,6 @@
     <k-item-image
       :image="image"
       :layout="layout"
-      :width="width"
     />
 
     <!-- Sort handle -->
@@ -93,8 +92,7 @@ export default {
     },
     sortable: Boolean,
     target: String,
-    text: String,
-    width: String
+    text: String
   },
   computed: {
     title() {

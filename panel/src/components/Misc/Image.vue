@@ -9,6 +9,7 @@
     <span :style="'padding-block-end:' + ratioPadding">
       <img
         v-if="loaded"
+        ref="image"
         :key="src"
         :alt="alt || ''"
         :src="src"

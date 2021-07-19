@@ -7,9 +7,9 @@
     <!-- image -->
     <k-image
       v-if="image.src"
+      ref="image"
       :cover="image.cover"
       :ratio="ratio"
-      :sizes="sizes"
       :src="image.src"
       :srcset="image.srcset"
       class="k-item-image"
@@ -37,8 +37,7 @@ export default {
     layout: {
       type: String,
       default: "list"
-    },
-    width: String
+    }
   },
   computed: {
     back() {
@@ -60,22 +59,32 @@ export default {
         default:
           return "regular"
       }
-    },
-    sizes() {
-      switch (this.width) {
-        case "1/2":
-        case "2/4":
-          return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 44em, 27em";
-        case "1/3":
-          return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 29.333em, 27em";
-        case "1/4":
-          return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 22em, 27em";
-        case "2/3":
-          return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 27em, 27em";
-        case "3/4":
-          return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 66em, 27em";
-        default:
-          return "(min-width: 30em) and (max-width: 65em) 59em, (min-width: 65em) 88em, 27em";
+    }
+  },
+  mounted() {
+    this.onResize();
+  },
+  destroyed() {
+    this.onResize(false);
+  },
+  methods: {
+    onResize(init = true) {
+      if (
+        this.$refs.image &&
+        this.$refs.image.$refs.image
+      ) {
+        if (init === true) {
+          if (!window.panel.$imgsizes) {
+            window.panel.$imgsizes = new ResizeObserver(entries => entries.forEach(entry => entry.target.sizes = entry.contentRect.width + "px"));
+          }
+
+          window.panel.$imgsizes.observe(this.$refs.image.$refs.image);
+          return;
+        }
+
+        if (window.panel.$imgsizes) {
+          window.panel.$imgsizes.unobserve(this.$refs.image.$refs.image);
+        }
       }
     }
   }

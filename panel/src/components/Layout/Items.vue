@@ -19,7 +19,6 @@
         :image="imageOptions(item)"
         :layout="layout"
         :sortable="sortable && item.sortable"
-        :width="item.column"
         @click="$emit('item', item, itemIndex)"
         @drag="onDragStart($event, item.dragText)"
         @flag="$emit('flag', item, itemIndex)"
