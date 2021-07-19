@@ -532,8 +532,6 @@ class System
     }
 
     /**
-            return $site->title()->value();
-     *
      * @return array
      */
     public function toArray(): array
