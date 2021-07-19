@@ -532,8 +532,6 @@ class System
     }
 
     /**
-     * Return the status as array
-     *
      * @return array
      */
     public function toArray(): array
