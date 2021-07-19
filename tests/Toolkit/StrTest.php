@@ -890,9 +890,9 @@ EOT;
         $this->assertSame('From {{ b }} to {{ a }}', Str::template($string, []));
         $this->assertSame('From here to {{ a }}', Str::template($string, ['b' => 'here']));
         $this->assertSame('From here to {{ a }}', Str::template($string, ['a' => null, 'b' => 'here']));
-        $this->assertSame('From - to -', Str::template($string, [], '-'));
-        $this->assertSame('From  to ', Str::template($string, [], ''));
-        $this->assertSame('From here to -', Str::template($string, ['b' => 'here'], '-'));
+        $this->assertSame('From - to -', Str::template($string, [], ['fallback' => '-']));
+        $this->assertSame('From  to ', Str::template($string, [], ['fallback' => '']));
+        $this->assertSame('From here to -', Str::template($string, ['b' => 'here'], ['fallback' => '-']));
 
         // query with an array
         $template = Str::template('Hello {{ user.username }}', [
@@ -908,6 +908,18 @@ EOT;
             ]
         ]);
         $this->assertSame('{{ user.greeting }} homer', $template);
+
+        // query with an array and callback
+        $template = Str::template('Hello {{ user.username }}', [
+            'user' => [
+                'username' => 'homer'
+            ]
+        ], [
+            'callback' => function ($result) {
+                return Str::ucfirst($result);
+            }
+        ]);
+        $this->assertSame('Hello Homer', $template);
 
         // query with an object
         $template = Str::template('Hello {{ user.username }}', [

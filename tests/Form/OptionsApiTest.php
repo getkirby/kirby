@@ -186,4 +186,43 @@ class OptionsApiTest extends TestCase
         $this->assertEquals($expected, $api->options());
         $this->assertEquals($expected, $api->toArray());
     }
+
+    public function testOptionsEscape()
+    {
+        $source = $this->fixtures . '/test.json';
+
+        Data::write($source, [
+            'Companies' => [
+                ['name' => '<strong>Apple</strong>'],
+                ['name' => 'Intel<script>alert("XSS");</script>'],
+                ['name' => '<?php exit; ?>Microsoft'],
+            ]
+        ]);
+
+        $expected = [
+            [
+                'text'  => '&lt;strong&gt;Apple&lt;/strong&gt;',
+                'value' => 'strong-apple-strong'
+            ],
+            [
+                'text'  => 'Intel&lt;script&gt;alert(&quot;XSS&quot;);&lt;/script&gt;',
+                'value' => 'intel-script-alert-xss-script'
+            ],
+            [
+                'text'  => '&lt;?php exit; ?&gt;Microsoft',
+                'value' => 'php-exit-microsoft'
+            ],
+        ];
+
+        $api = new OptionsApi([
+            'data'  => [],
+            'url'   => $source,
+            'fetch' => 'Companies',
+            'text'  => '{{ item.name }}',
+            'value' => '{{ item.name.slug }}'
+        ]);
+
+        $this->assertSame($expected, $api->options());
+        $this->assertSame($expected, $api->toArray());
+    }
 }
