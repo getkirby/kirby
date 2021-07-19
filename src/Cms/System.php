@@ -522,8 +522,13 @@ class System
      */
     public function title(): string
     {
-        $blueprint = $this->app->site()->blueprint()->title();
-        return $this->app->site()->title()->or($blueprint)->value();
+        $site = $this->app->site();
+
+        if ($site->title()->isNotEmpty()) {
+          return $site->title()->value();
+        }
+        
+        return $site->blueprint()->title();
     }
 
     /**
