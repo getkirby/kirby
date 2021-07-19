@@ -525,7 +525,7 @@ class System
         $site = $this->app->site();
 
         if ($site->title()->isNotEmpty()) {
-          return $site->title()->value();
+            return $site->title()->value();
         }
         
         return $site->blueprint()->title();
