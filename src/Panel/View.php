@@ -205,7 +205,11 @@ class View
                 $view = array_replace_recursive($defaults, $options['area'] ?? [], $view);
 
                 // make sure that views and dialogs are gone
-                unset($view['views'], $view['dialogs']);
+                unset(
+                    $view['dialogs'],
+                    $view['dropdowns'],
+                    $view['views']
+                );
 
                 // resolve all callbacks in the view array
                 return A::apply($view);

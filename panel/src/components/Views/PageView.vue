@@ -44,7 +44,7 @@
               </k-button>
               <k-dropdown-content
                 ref="settings"
-                :options="options"
+                :options="$dropdown($view.path)"
               />
             </k-dropdown>
 
@@ -83,12 +83,6 @@ export default {
   computed: {
     id() {
       return "pages/" + this.model.id;
-    },
-    options() {
-      return async ready => {
-        const options = await this.$api.pages.options(this.model.id);
-        ready(options);
-      };
     }
   }
 };

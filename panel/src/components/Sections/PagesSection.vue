@@ -112,22 +112,13 @@ export default {
         page.sortable  = page.permissions.sort && this.options.sortable;
         page.deletable = data.length > this.options.min;
         page.column    = this.column;
-        page.options   = async ready => {
-          try {
-            const options = await this.$api.pages.options(
-              page.id,
-              "list",
-              {
-                delete: page.deletable,
-                sort:   page.sortable,
-              }
-            );
-            ready(options);
-
-          } catch (error) {
-            this.$store.dispatch("notification/error", error);
+        page.options   = this.$dropdown(this.$api.pages.url(page.id), {
+          query: {
+            view: "list",
+            delete: page.deletable,
+            sort: page.sortable
           }
-        };
+        });
 
         // add data-attributes info for item
         page.data = {

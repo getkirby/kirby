@@ -239,7 +239,9 @@ class Panel
         switch ($options['type'] ?? 'view') {
             case 'dialog':
                 return Dialog::response($result, $options);
-            default:
+            case 'dropdown':
+                return Dropdown::response($result, $options);
+            case 'view':
                 return View::response($result, $options);
         }
     }
@@ -335,7 +337,8 @@ class Panel
             $routes = array_merge(
                 $routes,
                 static::routesForViews($areaId, $area),
-                static::routesForDialogs($areaId, $area)
+                static::routesForDialogs($areaId, $area),
+                static::routesForDropdowns($areaId, $area),
             );
         }
 
@@ -411,6 +414,35 @@ class Panel
                 'action'  => $dialog['submit'] ?? function () {
                     return false;
                 }
+            ];
+        }
+
+        return $routes;
+    }
+
+    /**
+     * Extract all routes for dropdowns
+     *
+     * @param string $areaId
+     * @param array $area
+     * @return array
+     */
+    public static function routesForDropdowns(string $areaId, array $area): array
+    {
+        $dropdowns = $area['dropdowns'] ?? [];
+        $routes    = [];
+
+        foreach ($dropdowns as $pattern => $action) {
+
+            // create the full pattern with dropdowns prefix
+            $pattern = 'dropdowns/' . trim($pattern, '/');
+
+            // load event
+            $routes[] = [
+                'pattern' => $pattern,
+                'type'    => 'dropdown',
+                'area'    => $areaId,
+                'action'  => $action
             ];
         }
 

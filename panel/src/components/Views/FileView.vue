@@ -39,7 +39,7 @@
                 </k-button>
                 <k-dropdown-content
                   ref="settings"
-                  :options="options"
+                  :options="$dropdown($view.path)"
                   @action="action"
                 />
               </k-dropdown>

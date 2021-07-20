@@ -94,6 +94,69 @@ class File extends Model
     }
 
     /**
+     * Provides options for the file dropdown
+     *
+     * @param array $options
+     * @return array
+     */
+    public function dropdown(array $options = []): array
+    {
+        $file        = $this->model;
+        $permissions = $this->options(['preview']);
+        $view        = $options['view'] ?? 'view';
+        $url         = $this->url(true);
+        $result      = [];
+        $isDisabled  = function ($action) use ($permissions) {
+            $option = $options[$action] ?? true;
+            return $permissions[$action] === false || $option === false || $option === 'false';
+        };
+
+        if ($view === 'list') {
+            $result[] = [
+                'link'   => $file->url(),
+                'target' => '_blank',
+                'icon'   => 'open',
+                'text'   => t('open')
+            ];
+            $result[] = '-';
+        }
+
+        $result[] = [
+            'dialog'   => $url . '/changeName',
+            'icon'     => 'title',
+            'text'     => t('rename'),
+            'disabled' => $isDisabled('changeName')
+        ];
+
+        $result[] = [
+            'click'    => 'replace',
+            'icon'     => 'upload',
+            'text'     => t('replace'),
+            'disabled' => $isDisabled('replace')
+        ];
+
+        if ($view === 'list') {
+            $result[] = '-';
+            $result[] = [
+                'dialog'   => $url . '/changeSort',
+                'icon'     => 'sort',
+                'text'     => t('file.sort'),
+                'disabled' => $isDisabled('update')
+            ];
+        }
+
+        $result[] = '-';
+        $result[] = [
+            'dialog'   => $url . '/delete',
+            'icon'     => 'trash',
+            'text'     => t('delete'),
+            'disabled' => $isDisabled('delete')
+        ];
+
+        return $result;
+    }
+
+    /**
      * Returns the Panel icon color
      *
      * @return string

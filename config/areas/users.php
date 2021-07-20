@@ -2,11 +2,12 @@
 
 return function ($kirby) {
     return [
-        'icon'    => 'users',
-        'label'   => t('view.users'),
-        'search'  => 'users',
-        'menu'    => true,
-        'dialogs' => require __DIR__ . '/users/dialogs.php',
-        'views'   => require __DIR__ . '/users/views.php'
+        'icon'      => 'users',
+        'label'     => t('view.users'),
+        'search'    => 'users',
+        'menu'      => true,
+        'dialogs'   => require __DIR__ . '/users/dialogs.php',
+        'dropdowns' => require __DIR__ . '/users/dropdowns.php',
+        'views'     => require __DIR__ . '/users/views.php'
     ];
 };

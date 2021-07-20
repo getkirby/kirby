@@ -50,7 +50,6 @@
           :items="items"
           :pagination="users.pagination"
           @paginate="paginate"
-          @action="action"
         />
       </template>
       <template v-else-if="users.pagination.total === 0">
@@ -74,46 +73,12 @@ export default {
   computed: {
     items() {
       return this.users.data.map(user => {
-        user.options = async ready => {
-          try {
-            const options = await this.$api.users.options(user.id, "list")
-            ready(options);
-
-          } catch (error) {
-            this.$store.dispatch("notification/error", error);
-          }
-        }
-
+        user.options = this.$dropdown(this.$api.users.url(user.id));
         return user;
       })
     }
   },
   methods: {
-    action(action, user) {
-      switch (action) {
-        case "edit":
-          this.$go("/users/" + user.id);
-          break;
-        case "email":
-          this.$dialog(`users/${user.id}/changeEmail`);
-          break;
-        case "role":
-          this.$dialog(`users/${user.id}/changeRole`);
-          break;
-        case "rename":
-          this.$dialog(`users/${user.id}/changeName`);
-          break;
-        case "password":
-          this.$dialog(`users/${user.id}/changePassword`);
-          break;
-        case "language":
-          this.$dialog(`users/${user.id}/changeLanguage`);
-          break;
-        case "remove":
-          this.$dialog(`users/${user.id}/delete`);
-          break;
-      }
-    },
     paginate(pagination) {
       this.$reload({
         query: {
