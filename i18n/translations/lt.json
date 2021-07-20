@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "Neturite leidimo dubliuoti \"{slug}\"",
   "error.page.notFound": "Puslapis \"{slug}\" nerastas",
   "error.page.num.invalid": "Įrašykite teisingą eiliškumo numerį. Numeris negali būti neigiamas.",
-  "error.page.slug.invalid": "Please enter a valid URL appendix",
+  "error.page.slug.invalid": "Įrašykite teisingą URL priedą",
   "error.page.slug.maxlength": "url adreso maksimalus simbolių kiekis: \"{length}\"",
   "error.page.sort.permission": "Puslapiui \"{slug}\" negalima pakeisti eiliškumo",
   "error.page.status.invalid": "Nustatykite teisingą puslapio statusą",
@@ -163,7 +163,7 @@
   "error.user.password.invalid": "Prašome įrašyti galiojantį slaptažodį. Slaptažodį turi sudaryti bent 8 simboliai.",
   "error.user.password.notSame": "Slaptažodžiai nesutampa",
   "error.user.password.undefined": "Vartotojas neturi slaptažodžio",
-  "error.user.password.wrong": "Wrong password",
+  "error.user.password.wrong": "Neteisingas slaptažodis",
   "error.user.role.invalid": "Įrašykite teisingą rolę",
   "error.user.update.permission": "Neturite teisės keisti vartotojo \"{name}\"",
 
@@ -372,11 +372,11 @@
   "more": "Daugiau",
   "name": "Pavadinimas",
   "next": "Toliau",
-  "no": "no",
+  "no": "ne",
   "off": "off",
   "on": "on",
   "open": "Atidaryti",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "Atidaryti naujame lange",
   "options": "Pasirinkimai",
   "options.none": "Nėra pasirinkimų",
 
@@ -468,9 +468,9 @@
   "toolbar.button.file.select": "Pasirinkite failą",
   "toolbar.button.file.upload": "Įkelti failą",
   "toolbar.button.link": "Nuoroda",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.strike": "Perbraukimas",
   "toolbar.button.ol": "Sąrašas su skaičiais",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "Pabraukimas",
   "toolbar.button.ul": "Sąrašas su taškais",
 
   "translation.author": "Roman U",
@@ -523,5 +523,5 @@
 
   "welcome": "Sveiki",
   "year": "Metai",
-  "yes": "yes"
+  "yes": "taip"
 }

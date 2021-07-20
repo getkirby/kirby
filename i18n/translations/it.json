@@ -67,7 +67,7 @@
   "error.file.changeName.permission": "Non ti è permesso modificare il nome di \"{filename}\"",
   "error.file.duplicate": "Un file con il nome \"{filename}\" esiste già",
   "error.file.extension.forbidden": "L'estensione \"{extension}\" non è consentita",
-  "error.file.extension.invalid": "Invalid extension: {extension}",
+  "error.file.extension.invalid": "Estensione non valida: {extension}",
   "error.file.extension.missing": "Il file \"{filename}\" non ha estensione",
   "error.file.maxheight": "L'immagine non dev'essere più alta di {height} pixel",
   "error.file.maxsize": "Il file è troppo pesante",
@@ -83,7 +83,7 @@
   "error.file.notFound": "Il file non \u00e8 stato trovato",
   "error.file.orientation": "L'imaggine dev'essere orientata in \"{orientation}\"",
   "error.file.type.forbidden": "Non ti è permesso caricare file {type}",
-  "error.file.type.invalid": "Invalid file type: {type}",
+  "error.file.type.invalid": "Tipo di file non valido: {type}",
   "error.file.undefined": "Il file non \u00e8 stato trovato",
 
   "error.form.incomplete": "Correggi tutti gli errori nel form...",
@@ -93,8 +93,8 @@
   "error.language.duplicate": "La lingua esiste già",
   "error.language.name": "Inserisci un nome valido per la lingua",
 
-  "error.layout.validation.block": "There's an error in block {blockIndex} in layout {layoutIndex}",
-  "error.layout.validation.settings": "There's an error in layout {index} settings",
+  "error.layout.validation.block": "C'è un errore nel blocco {blockIndex} nel layout {layoutIndex}",
+  "error.layout.validation.settings": "C'è un errore nelle impostazioni del layout {index}",
 
   "error.license.format": "Inserisci un codice di licenza valido",
   "error.license.email": "Inserisci un indirizzo email valido",
@@ -118,7 +118,7 @@
   "error.page.duplicate.permission": "Non ti è permesso duplicare \"{slug}\"",
   "error.page.notFound": "La pagina \"{slug}\" non è stata trovata",
   "error.page.num.invalid": "Inserisci un numero di ordinamento valido. I numeri non devono essere negativi",
-  "error.page.slug.invalid": "Please enter a valid URL appendix",
+  "error.page.slug.invalid": "Per favore inserisci un suffisso valido per l'URL",
   "error.page.slug.maxlength": "Lo \"slug\" dev'essere più corto di \"{length}\" caratteri",
   "error.page.sort.permission": "La pagina \"{slug}\" non può essere ordinata",
   "error.page.status.invalid": "Imposta uno stato valido per la pagina",
@@ -163,7 +163,7 @@
   "error.user.password.invalid": "Per favore inserisci una password valida. Le password devono essere lunghe almeno 8 caratteri",
   "error.user.password.notSame": "Le password non corrispondono",
   "error.user.password.undefined": "L'utente non ha una password",
-  "error.user.password.wrong": "Wrong password",
+  "error.user.password.wrong": "Password sbagliata",
   "error.user.role.invalid": "Inserisci un ruolo valido",
   "error.user.update.permission": "Non ti è permesso aggiornare l'utente \"{name}\"",
 
@@ -233,7 +233,7 @@
   "field.blocks.image.name": "Immagine",
   "field.blocks.image.placeholder": "Seleziona un'immagine",
   "field.blocks.image.ratio": "Rapporto",
-  "field.blocks.image.url": "Image URL",
+  "field.blocks.image.url": "URL immagine",
   "field.blocks.list.name": "Lista",
   "field.blocks.markdown.name": "Markdown",
   "field.blocks.markdown.label": "Testo",
@@ -376,7 +376,7 @@
   "off": "off",
   "on": "on",
   "open": "Apri",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "Apri in una finestra nuova",
   "options": "Opzioni",
   "options.none": "Nessuna opzione",
 
@@ -468,9 +468,9 @@
   "toolbar.button.file.select": "Seleziona un file",
   "toolbar.button.file.upload": "Carica un file",
   "toolbar.button.link": "Link",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.strike": "Barrato",
   "toolbar.button.ol": "Elenco numerato",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "Sottolinea",
   "toolbar.button.ul": "Elenco puntato",
 
   "translation.author": "Kirby Team, Roman Steiner, Manu Moreale",
@@ -523,5 +523,5 @@
 
   "welcome": "Benvenuto",
   "year": "Anno",
-  "yes": "yes"
+  "yes": "sì"
 }

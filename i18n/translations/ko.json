@@ -1,6 +1,6 @@
 {
   "add": "\ucd94\uac00",
-  "avatar": "\ud504\ub85c\ud544 \uc774\ubbf8\uc9c0",
+  "avatar": "프로필 이미지",
   "back": "복귀",
   "cancel": "\ucde8\uc18c",
   "change": "\ubcc0\uacbd",
@@ -372,11 +372,11 @@
   "more": "더 보기",
   "name": "이름",
   "next": "다음",
-  "no": "no",
+  "no": "네",
   "off": "끔",
   "on": "켬",
   "open": "열기",
-  "open.newWindow": "Open in new window",
+  "open.newWindow": "새 창에서 열기",
   "options": "옵션",
   "options.none": "옵션이 없습니다.",
 
@@ -468,9 +468,9 @@
   "toolbar.button.file.select": "파일 선택",
   "toolbar.button.file.upload": "파일 업로드",
   "toolbar.button.link": "링크",
-  "toolbar.button.strike": "Strike-through",
+  "toolbar.button.strike": "취소선",
   "toolbar.button.ol": "숫자 목록",
-  "toolbar.button.underline": "Underline",
+  "toolbar.button.underline": "밑줄",
   "toolbar.button.ul": "기호 목록",
 
   "translation.author": "Kirby 팀",
@@ -523,5 +523,5 @@
 
   "welcome": "반갑습니다.",
   "year": "년",
-  "yes": "yes"
+  "yes": "아니요"
 }

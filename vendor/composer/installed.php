@@ -1,8 +1,8 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '3.6.0-alpha.1',
-    'version' => '3.6.0.0-alpha1',
+    'pretty_version' => '3.6.0-alpha.2',
+    'version' => '3.6.0.0-alpha2',
     'aliases' => 
     array (
     ),
@@ -31,8 +31,8 @@
     ),
     'getkirby/cms' => 
     array (
-      'pretty_version' => '3.6.0-alpha.1',
-      'version' => '3.6.0.0-alpha1',
+      'pretty_version' => '3.6.0-alpha.2',
+      'version' => '3.6.0.0-alpha2',
       'aliases' => 
       array (
       ),

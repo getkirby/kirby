@@ -20,13 +20,15 @@ use Composer\Semver\VersionParser;
 
 
 
+
+
 class InstalledVersions
 {
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '3.6.0-alpha.1',
-    'version' => '3.6.0.0-alpha1',
+    'pretty_version' => '3.6.0-alpha.2',
+    'version' => '3.6.0.0-alpha2',
     'aliases' => 
     array (
     ),
@@ -55,8 +57,8 @@ private static $installed = array (
     ),
     'getkirby/cms' => 
     array (
-      'pretty_version' => '3.6.0-alpha.1',
-      'version' => '3.6.0.0-alpha1',
+      'pretty_version' => '3.6.0-alpha.2',
+      'version' => '3.6.0.0-alpha2',
       'aliases' => 
       array (
       ),
@@ -183,7 +185,6 @@ $packages = array();
 foreach (self::getInstalled() as $installed) {
 $packages[] = array_keys($installed['versions']);
 }
-
 
 if (1 === \count($packages)) {
 return $packages[0];
@@ -376,6 +377,7 @@ public static function reload($data)
 self::$installed = $data;
 self::$installedByVendor = array();
 }
+
 
 
 
