@@ -47,21 +47,21 @@
             <k-button
               :disabled="!permissions.changeEmail || isLocked"
               icon="email"
-              @click="$dialog($view.path + '/changeEmail')"
+              @click="$dialog(id + '/changeEmail')"
             >
               {{ $t("email") }}: {{ model.email }}
             </k-button>
             <k-button
               :disabled="!permissions.changeRole || isLocked"
               icon="bolt"
-              @click="$dialog($view.path + '/changeRole')"
+              @click="$dialog(id + '/changeRole')"
             >
               {{ $t("role") }}: {{ model.role }}
             </k-button>
             <k-button
               :disabled="!permissions.changeLanguage || isLocked"
               icon="globe"
-              @click="$dialog($view.path + '/changeLanguage')"
+              @click="$dialog(id + '/changeLanguage')"
             >
               {{ $t("language") }}: {{ model.language }}
             </k-button>
@@ -74,7 +74,7 @@
           :editable="permissions.changeName && !isLocked"
           :tab="tab.name"
           :tabs="tabs"
-          @edit="$dialog($view.path + '/changeName')"
+          @edit="$dialog(id + '/changeName')"
         >
           <span v-if="!model.name || model.name.length === 0" class="k-user-name-placeholder">{{ $t("name") }} …</span>
           <template v-else>
@@ -89,7 +89,7 @@
                 </k-button>
                 <k-dropdown-content
                   ref="settings"
-                  :options="$dropdown($view.path)"
+                  :options="$dropdown(id)"
                 />
               </k-dropdown>
               <k-languages-dropdown />
@@ -109,7 +109,7 @@
           :blueprint="blueprint"
           :empty="$t('user.blueprint', { blueprint: $esc(blueprint) })"
           :lock="lock"
-          :parent="'users/' + model.id"
+          :parent="id"
           :tab="tab"
         />
 
@@ -133,16 +133,10 @@ export default {
   prevnext: true,
   computed: {
     id() {
-      return "users/" + this.model.id;
-    },
-    options() {
-      return async ready => {
-        const options = await this.$api.users.options(this.model.id);
-        ready(options);
-      };
+      return this.$api.users.url(this.model.id);
     },
     uploadApi() {
-      return this.$urls.api + "/users/" + this.model.id + "/avatar";
+      return this.$urls.api + "/" + this.id + "/avatar";
     }
   },
   methods: {
