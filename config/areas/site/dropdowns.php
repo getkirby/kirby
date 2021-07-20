@@ -14,4 +14,3 @@ return [
     },
     '(site|pages/.*?)/files/(:any)' => $files['file']
 ];
-

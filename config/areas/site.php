@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Cms\Find;
 
 return function ($kirby) {
     return [
