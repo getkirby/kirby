@@ -10,4 +10,3 @@ return [
     },
     '(users/.*?)/files/(:any)' => $files['file'],
 ];
-

@@ -25,10 +25,8 @@ class Dropdown
     public static function error(string $message, int $code = 404)
     {
         return [
-            '$dropdown' => [
-                'code'  => $code,
-                'error' => $message
-            ]
+            'code'  => $code,
+            'error' => $message
         ];
     }
 
@@ -43,24 +41,28 @@ class Dropdown
     {
         // handle Kirby exceptions
         if (is_a($data, 'Kirby\Exception\Exception') === true) {
-            return static::error($data->getMessage(), $data->getHttpCode());
+            $data = static::error($data->getMessage(), $data->getHttpCode());
 
         // handle exceptions
         } elseif (is_a($data, 'Throwable') === true) {
-            return static::error($data->getMessage(), 500);
+            $data = static::error($data->getMessage(), 500);
 
         // only expect arrays from here on
         } elseif (is_array($data) === false) {
-            return static::error('Invalid dropdown response', 500);
+            $data = static::error('Invalid dropdown response', 500);
+
+        // options are passed as a simple array
+        } else {
+            $data = [
+                'options' => $data
+            ];
         }
 
-        $dropdown = [
-            'code'     => 200,
-            'path'     => $options['path'] ?? null,
-            'referrer' => Panel::referrer(),
-            'options'  => $data
-        ];
+        // add common stuff to the data array
+        $data['code']     = $data['code']    ?? 200;
+        $data['path']     = $options['path'] ?? null;
+        $data['referrer'] = Panel::referrer();
 
-        return Panel::json(['$dropdown' => $dropdown], 200);
+        return Panel::json(['$dropdown' => $data], $data['code']);
     }
 }
