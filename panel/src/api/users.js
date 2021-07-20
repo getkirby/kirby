@@ -49,55 +49,6 @@ export default (api) => {
     async get(id, query) {
       return api.get("users/" + id, query);
     },
-    async options(id) {
-      const user    = await api.get(this.url(id), {select: "options"});
-      const options = user.options;
-      let result    = [];
-
-      result.push({
-        click: "rename",
-        icon: "title",
-        text: window.panel.$t("user.changeName"),
-        disabled: !options.changeName
-      });
-
-      result.push({
-        click: "email",
-        icon: "email",
-        text: window.panel.$t("user.changeEmail"),
-        disabled: !options.changeEmail
-      });
-
-      result.push({
-        click: "role",
-        icon: "bolt",
-        text: window.panel.$t("user.changeRole"),
-        disabled: !options.changeRole
-      });
-
-      result.push({
-        click: "password",
-        icon: "key",
-        text: window.panel.$t("user.changePassword"),
-        disabled: !options.changePassword
-      });
-
-      result.push({
-        click: "language",
-        icon: "globe",
-        text: window.panel.$t("user.changeLanguage"),
-        disabled: !options.changeLanguage
-      });
-
-      result.push({
-        click: "remove",
-        icon: "trash",
-        text: window.panel.$t("user.delete"),
-        disabled: !options.delete
-      });
-
-      return result;
-    },
     async roles(id) {
       const roles = await api.get(this.url(id, "roles"));
       return roles.data.map(role => ({

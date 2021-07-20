@@ -41,7 +41,7 @@ export default {
       type: String,
       default: "left"
     },
-    options: [Array, Function],
+    options: [Array, Function, String],
     /**
      * Visual theme of the dropdown
      * @values dark, light

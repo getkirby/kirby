@@ -117,24 +117,13 @@ export default {
       return data.map(file => {
         file.sortable = this.options.sortable;
         file.column   = this.column;
-        file.options  = async ready => {
-          try {
-            let options = await this.$api.files.options(
-              file.parent,
-              file.filename,
-              "list",
-              {
-                update: this.options.sortable,
-                delete: data.length > this.options.min
-              }
-            );
-            ready(options);
-
-          } catch (error) {
-            console.error(error);
-            this.$store.dispatch("notification/error", error);
+        file.options  = this.$dropdown(this.$api.files.url(file.parent, file.filename), {
+          query: {
+            view: "list",
+            update: this.options.sortable,
+            delete: data.length > this.options.min
           }
-        };
+        });
 
         // add data-attributes info for item
         file.data = {

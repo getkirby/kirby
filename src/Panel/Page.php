@@ -56,6 +56,104 @@ class Page extends Model
     }
 
     /**
+     * Provides options for the page dropdown
+     *
+     * @param array $options
+     * @return array
+     */
+    public function dropdown(array $options = []): array
+    {
+        $page        = $this->model;
+        $permissions = $this->options(['preview']);
+        $view        = $options['view'] ?? 'view';
+        $url         = $this->url(true);
+        $result      = [];
+        $isDisabled  = function ($action) use ($permissions) {
+            $option = $options[$action] ?? true;
+            return $permissions[$action] === false || $option === false || $option === 'false';
+        };
+
+        if ($view === 'list') {
+            $result[] = [
+                'link'     => $page->previewUrl(),
+                'target'   => '_blank',
+                'icon'     => 'open',
+                'text'     => t('open'),
+                'disabled' => $isDisabled('preview')
+            ];
+            $result[] = '-';
+        }
+
+        $result[] = [
+            'dialog' => [
+                'url'   => $url . '/changeTitle',
+                'query' => [
+                    'select' => 'title'
+                ]
+            ],
+            'icon'     => 'title',
+            'text'     => t('rename'),
+            'disabled' => $isDisabled('changeTitle')
+        ];
+
+        $result[] = [
+            'dialog'   => $url . '/duplicate',
+            'icon'     => 'copy',
+            'text'     => t('duplicate'),
+            'disabled' => $isDisabled('duplicate')
+        ];
+
+        $result[] = '-';
+
+        $result[] = [
+            'dialog' => [
+                'url'   => $url . '/changeTitle',
+                'query' => [
+                    'select' => 'slug'
+                ]
+            ],
+            'icon'     => 'url',
+            'text'     => t('page.changeSlug'),
+            'disabled' => $isDisabled('changeSlug')
+        ];
+
+        $result[] = [
+            'dialog'   => $url . '/changeStatus',
+            'icon'     => 'preview',
+            'text'     => t('page.changeStatus'),
+            'disabled' => $isDisabled('changeStatus')
+        ];
+
+        if ($view === 'list') {
+            $result[] = [
+                'dialog'   => $url . '/changeSort',
+                'icon'     => 'sort',
+                'text'     => t('page.sort'),
+                'disabled' => $isDisabled('sort')
+            ];
+        }
+
+        $result[] = [
+            'dialog'   => $url . '/changeTemplate',
+            'icon'     => 'template',
+            'text'     => t('page.changeTemplate'),
+            'disabled' => $isDisabled('changeTemplate')
+        ];
+
+        $result[] = '-';
+
+        $result[] = [
+            'dialog'   => $url . '/delete',
+            'icon'     => 'trash',
+            'text'     => t('delete'),
+            'disabled' => $isDisabled('delete')
+        ];
+
+        return $result;
+    }
+
+
+    /**
      * Returns the escaped Id, which is
      * used in the panel to make routing work properly
      *

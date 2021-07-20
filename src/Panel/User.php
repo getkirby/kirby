@@ -30,6 +30,68 @@ class User extends Model
     }
 
     /**
+     * Provides options for the user dropdown
+     *
+     * @param array $options
+     * @return array
+     */
+    public function dropdown(array $options = []): array
+    {
+        $page        = $this->model;
+        $permissions = $this->options(['preview']);
+        $url         = $this->url(true);
+        $result      = [];
+        $isDisabled  = function ($action) use ($permissions) {
+            $option = $options[$action] ?? true;
+            return $permissions[$action] === false || $option === false || $option === 'false';
+        };
+
+        $result[] = [
+            'dialog'   => $url . '/changeName',
+            'icon'     => 'title',
+            'text'     => t('user.changeName'),
+            'disabled' => $isDisabled('changeName')
+        ];
+
+        $result[] = [
+            'dialog'   => $url . '/changeEmail',
+            'icon'     => 'email',
+            'text'     => t('user.changeEmail'),
+            'disabled' => $isDisabled('changeEmail')
+        ];
+
+        $result[] = [
+            'dialog'   => $url . '/changeRole',
+            'icon'     => 'bolt',
+            'text'     => t('user.changeRole'),
+            'disabled' => $isDisabled('changeRole')
+        ];
+
+        $result[] = [
+            'dialog'   => $url . '/changePassword',
+            'icon'     => 'key',
+            'text'     => t('user.changePassword'),
+            'disabled' => $isDisabled('changePassword')
+        ];
+
+        $result[] = [
+            'dialog'   => $url . '/changeLanguage',
+            'icon'     => 'globe',
+            'text'     => t('user.changeLanguage'),
+            'disabled' => $isDisabled('changeLanguage')
+        ];
+
+        $result[] = [
+            'dialog'   => $url . '/delete',
+            'icon'     => 'trash',
+            'text'     => t('user.delete'),
+            'disabled' => $isDisabled('delete')
+        ];
+
+        return $result;
+    }
+
+    /**
      * Default settings for the user's Panel image
      *
      * @return array
