@@ -107,7 +107,7 @@ class DialogTest extends TestCase
         $expected = [
             '$dialog' => [
                 'code'     => 500,
-                'error'    => 'Invalid dialog response',
+                'error'    => 'Invalid response',
                 'path'     => null,
                 'referrer' => '/'
             ]
