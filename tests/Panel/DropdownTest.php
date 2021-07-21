@@ -90,7 +90,7 @@ class DropdownTest extends TestCase
         $expected = [
             '$dropdown' => [
                 'code'     => 500,
-                'error'    => 'Invalid dropdown response',
+                'error'    => 'Invalid response',
                 'path'     => null,
                 'referrer' => '/'
             ]
