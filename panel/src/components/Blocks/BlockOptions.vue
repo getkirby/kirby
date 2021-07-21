@@ -37,7 +37,7 @@
       />
       <k-button
         :tooltip="$t('sort')"
-        class="k-block-options-button k-block-handle"
+        class="k-block-options-button k-sort-handle"
         icon="sort"
         @keydown.up.prevent="$emit('sortUp')"
         @keydown.down.prevent="$emit('sortDown')"
