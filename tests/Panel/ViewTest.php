@@ -315,14 +315,16 @@ class ViewTest extends TestCase
 
         $expected = [
             [
-                'code'    => 'en',
-                'default' => true,
-                'name'    => 'English'
+                'code'      => 'en',
+                'default'   => true,
+                'direction' => 'ltr',
+                'name'      => 'English'
             ],
             [
-                'code'    => 'de',
-                'default' => false,
-                'name'    => 'Deutsch'
+                'code'      => 'de',
+                'default'   => false,
+                'direction' => 'ltr',
+                'name'      => 'Deutsch'
             ]
         ];
 

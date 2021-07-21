@@ -1,10 +1,10 @@
 
 export default (app) => {
-  const defaultLanguage = app.$languages.default || null;
-  const language = app.$languages.current || null;
-  const multilang = app.$system.multilang || false;
-  const userLanguage = app.$user ? app.$user.language : null;
-  const direction = language ? language.direction : null;
+  const defaultLanguage = app.$languages ? app.$languages.find(language => language.default === true) : null;
+  const language        = app.$language || null;
+  const multilang       = app.$multilang || false;
+  const userLanguage    = app.$user ? app.$user.language : null;
+  const direction       = language ? language.direction : null;
 
   /**
    * Return LTR/RTL direction only when;
@@ -18,10 +18,11 @@ export default (app) => {
   if (
       multilang &&
       language &&
+      defaultLanguage &&
       app.disabled === false &&
       (
-          language.direction !== defaultLanguage.direction ||
-          userLanguage !== language.code
+        language.direction !== defaultLanguage.direction ||
+        userLanguage !== language.code
       )
   ) {
     return direction;

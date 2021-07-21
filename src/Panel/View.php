@@ -153,9 +153,10 @@ class View
             '$language' => function () use ($kirby, $multilang) {
                 if ($multilang === true && $language = $kirby->language()) {
                     return [
-                        'code'    => $language->code(),
-                        'default' => $language->isDefault(),
-                        'name'    => $language->name(),
+                        'code'      => $language->code(),
+                        'default'   => $language->isDefault(),
+                        'direction' => $language->direction(),
+                        'name'      => $language->name(),
                     ];
                 }
             },
@@ -163,9 +164,10 @@ class View
                 if ($multilang === true) {
                     return $kirby->languages()->values(function ($language) {
                         return [
-                            'code'    => $language->code(),
-                            'default' => $language->isDefault(),
-                            'name'    => $language->name(),
+                            'code'      => $language->code(),
+                            'default'   => $language->isDefault(),
+                            'direction' => $language->direction(),
+                            'name'      => $language->name(),
                         ];
                     });
                 }

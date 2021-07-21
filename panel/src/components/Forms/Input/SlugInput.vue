@@ -53,7 +53,7 @@ export default {
   data() {
     return {
       slug: this.sluggify(this.value),
-      slugs: this.$languages.current ? this.$languages.current.rules : this.$system.slugs,
+      slugs: this.$language ? this.$language.rules : this.$system.slugs,
       syncValue: null
     };
   },
