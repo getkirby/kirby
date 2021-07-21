@@ -100,6 +100,17 @@ class Blocks extends Items
     }
 
     /**
+     * Checks if a given block type exists in the collection
+     *
+     * @param string $type
+     * @return bool
+     */
+    public function hasType(string $type): bool
+    {
+        return $this->filterBy('type', $type)->count() > 0;
+    }
+
+    /**
      * Parse and sanitize various block formats
      *
      * @param array|string $input
