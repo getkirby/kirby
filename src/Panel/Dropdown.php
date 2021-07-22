@@ -15,7 +15,6 @@ namespace Kirby\Panel;
  */
 class Dropdown extends Json
 {
-
     protected static $key = '$dropdown';
 
     /**

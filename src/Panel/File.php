@@ -106,7 +106,7 @@ class File extends Model
         $view        = $options['view'] ?? 'view';
         $url         = $this->url(true);
         $result      = [];
-        $isDisabled  = function ($action) use ($permissions) {
+        $isDisabled  = function ($action) use ($options, $permissions) {
             $option = $options[$action] ?? true;
             return $permissions[$action] === false || $option === false || $option === 'false';
         };
