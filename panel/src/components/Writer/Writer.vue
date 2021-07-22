@@ -1,6 +1,7 @@
 <template>
   <div
     ref="editor"
+    v-direction
     :data-empty="isEmpty"
     :data-placeholder="placeholder"
     :spellcheck="spellcheck"
