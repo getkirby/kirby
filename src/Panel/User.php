@@ -41,7 +41,7 @@ class User extends Model
         $permissions = $this->options(['preview']);
         $url         = $this->url(true);
         $result      = [];
-        $isDisabled  = function ($action) use ($permissions) {
+        $isDisabled  = function ($action) use ($options, $permissions) {
             $option = $options[$action] ?? true;
             return $permissions[$action] === false || $option === false || $option === 'false';
         };

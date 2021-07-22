@@ -15,7 +15,6 @@ namespace Kirby\Panel;
  */
 class Dialog extends Json
 {
-
     protected static $key = '$dialog';
 
     /**
