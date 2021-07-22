@@ -93,7 +93,7 @@ class Txt extends Handler
      */
     public static function decode($string): array
     {
-        if ($string === null) {
+        if ($string === null || $string === '') {
             return [];
         }
 
