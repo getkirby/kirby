@@ -15,7 +15,6 @@ namespace Kirby\Panel;
  */
 class Search extends Json
 {
-
     protected static $key = '$search';
 
     /**

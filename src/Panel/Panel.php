@@ -474,7 +474,7 @@ class Panel
                 'pattern' => $pattern,
                 'type'    => 'search',
                 'area'    => $areaId,
-                'action'  => function() use ($params) {
+                'action'  => function () use ($params) {
                     return $params['query'](get('query'));
                 }
             ];
