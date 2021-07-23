@@ -178,6 +178,7 @@ class View
             '$permissions' => $permissions,
             '$license' => (bool)$kirby->system()->license(),
             '$multilang' => $multilang,
+            '$searches' => static::searches($options['areas'] ?? [], $permissions),
             '$url' => Url::current(),
             '$user' => function () use ($user) {
                 if ($user) {
@@ -208,6 +209,7 @@ class View
                 unset(
                     $view['dialogs'],
                     $view['dropdowns'],
+                    $view['searches'],
                     $view['views']
                 );
 
@@ -410,5 +412,21 @@ class View
 
         // render the full HTML document
         return Document::response($fiber);
+    }
+
+    public static function searches(array $areas, array $permissions)
+    {
+        $searches = [];
+
+        foreach ($areas as $area) {
+            foreach ($area['searches'] ?? [] as $id => $params) {
+                $searches[$id] = [
+                    'icon'  => $params['icon'] ?? 'search',
+                    'label' => $params['label'] ?? Str::ucfirst($id),
+                    'id'    => $id
+                ];
+            }
+        }
+        return $searches;
     }
 }

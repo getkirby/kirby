@@ -241,6 +241,8 @@ class Panel
                 return Dialog::response($result, $options);
             case 'dropdown':
                 return Dropdown::response($result, $options);
+            case 'search':
+                return Search::response($result, $options);
             case 'view':
                 return View::response($result, $options);
         }
@@ -337,6 +339,7 @@ class Panel
             $routes = array_merge(
                 $routes,
                 static::routesForViews($areaId, $area),
+                static::routesForSearches($areaId, $area),
                 static::routesForDialogs($areaId, $area),
                 static::routesForDropdowns($areaId, $area),
             );
@@ -443,6 +446,37 @@ class Panel
                 'type'    => 'dropdown',
                 'area'    => $areaId,
                 'action'  => $action
+            ];
+        }
+
+        return $routes;
+    }
+
+    /**
+     * Extract all routes for searches
+     *
+     * @param string $areaId
+     * @param array $area
+     * @return array
+     */
+    public static function routesForSearches(string $areaId, array $area): array
+    {
+        $searches = $area['searches'] ?? [];
+        $routes   = [];
+
+        foreach ($searches as $name => $params) {
+
+            // create the full routing pattern
+            $pattern = 'search/' . $name;
+
+            // load event
+            $routes[] = [
+                'pattern' => $pattern,
+                'type'    => 'search',
+                'area'    => $areaId,
+                'action'  => function () use ($params) {
+                    return $params['query'](get('query'));
+                }
             ];
         }
 

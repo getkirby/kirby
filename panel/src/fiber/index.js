@@ -125,6 +125,7 @@
        "$menu",
        "$multilang",
        "$permissions",
+       "$searches",
        "$system",
        "$translation",
        "$urls",

@@ -168,6 +168,11 @@ abstract class AreaTestCase extends TestCase
         return $response;
     }
 
+    public function search(string $path)
+    {
+        return $this->response('search/' . $path, true)['$search'];
+    }
+
     public function setUp(): void
     {
         $this->app = new App([
