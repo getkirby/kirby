@@ -53,6 +53,7 @@ class DocumentTest extends TestCase
         // css
         $this->assertSame($base . '/css/style.css', $assets['css']['index']);
         $this->assertSame('/media/plugins/index.css?0', $assets['css']['plugins']);
+        $this->assertArrayNotHasKey('rtl', $assets['css']);
 
         // icons
         $this->assertSame($base . '/apple-touch-icon.png', $assets['icons']['apple-touch-icon']['url']);
@@ -154,6 +155,60 @@ class DocumentTest extends TestCase
 
         // clean up vite file
         F::remove($viteFile);
+    }
+
+    /**
+     * @covers ::assets
+     */
+    public function testAssetsWithRTLasset(): void
+    {
+        // via Panel language option
+        $this->app = $this->app->clone([
+            'users' => [
+                [
+                    'email'    => 'test@getkirby.com',
+                    'language' => 'fa'
+                ]
+            ],
+            'languages' => [
+                [
+                    'code'    => 'de',
+                    'name'    => 'Deutsch',
+                    'default' => 'true'
+                ],
+                [
+                    'code' => 'fa',
+                    'name' => 'Arabic',
+                ],
+                [
+                    'code' => 'he',
+                    'name' => 'Hebrew',
+                ]
+            ],
+            'options' => [
+                'panel' => [
+                    'dev'      => false,
+                    'language' => 'fa'
+                ]
+            ]
+        ]);
+
+        $assets  = Document::assets();
+        $base    = '/media/panel/' . $this->app->versionHash();
+
+        $this->assertSame($base . '/css/rtl.css', $assets['css']['rtl']);
+
+        // via user language
+        $this->app = $this->app->clone([
+            'options' => [
+                'panel' => [
+                    'language' => 'de'
+                ]
+            ]
+        ]);
+        $this->app->impersonate('test@getkirby.com');
+        $assets  = Document::assets();
+        $this->assertSame($base . '/css/rtl.css', $assets['css']['rtl']);
     }
 
     /**

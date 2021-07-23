@@ -96,8 +96,7 @@ class Document
             $assets['js']['index']  = $url . '/src/index.js';
             $assets['js']['vendor'] = null;
             $assets['css']['index'] = null;
-
-        } else  {
+        } else {
             // For RTL interface language, load additional CSS
             if ($user = $kirby->user()) {
                 $translation = $kirby->translation($user->language());
