@@ -29,7 +29,7 @@
         }"
         :data-font="font"
         :data-size="size"
-        :dir="direction"
+        :dir="$direction"
         class="k-textarea-input-native"
         @click="onClick"
         @focus="onFocus"
@@ -52,8 +52,6 @@
 </template>
 
 <script>
-import direction from "@/helpers/direction.js";
-
 import {
   autofocus,
   disabled,
@@ -113,11 +111,6 @@ export default {
     return {
       over: false
     };
-  },
-  computed: {
-    direction() {
-      return direction(this);
-    }
   },
   watch: {
     value() {

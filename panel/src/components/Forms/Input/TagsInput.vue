@@ -4,7 +4,7 @@
     :list="tags"
     :data-layout="layout"
     :options="dragOptions"
-    :dir="direction"
+    :dir="$direction"
     class="k-tags-input"
     @end="onInput"
   >
@@ -60,8 +60,6 @@
 </template>
 
 <script>
-import direction from "@/helpers/direction.js";
-
 import {
   autofocus,
   disabled,
@@ -148,9 +146,6 @@ export default {
     };
   },
   computed: {
-    direction() {
-      return direction(this);
-    },
     dragOptions() {
       return {
         delay: 1,

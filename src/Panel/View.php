@@ -148,10 +148,28 @@ class View
         // user permissions
         $permissions = $user ? $user->role()->permissions()->toArray() : [];
 
+        // current content language
+        $language = $kirby->language();
+
         // shared data for all requests
         return [
-            '$language' => function () use ($kirby, $multilang) {
-                if ($multilang === true && $language = $kirby->language()) {
+            '$direction' => function () use ($kirby, $multilang, $language, $user) {
+                // only if mulitlang and current content language exists
+                if ($multilang === true && $language) {
+                    // content language direction is not
+                    // the same as default language direction
+                    // and user language is not the same as
+                    // content language
+                    if (
+                        $language->direction() !== $kirby->defaultLanguage()->code()||
+                        $language->code() !== $user->language()
+                    ) {
+                        return $language->direction();
+                    }
+                }
+            },
+            '$language' => function () use ($kirby, $multilang, $language) {
+                if ($multilang === true && $language) {
                     return [
                         'code'    => $language->code(),
                         'default' => $language->isDefault(),
