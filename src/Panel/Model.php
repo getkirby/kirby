@@ -310,14 +310,15 @@ abstract class Model
         //       no longer needed in 3.6
 
         return [
-            'id'    => $this->model->id(),
-            'image' => $this->image(
+            'id'       => $this->model->id(),
+            'image'    => $this->image(
                 $params['image'] ?? [],
                 $params['layout'] ?? 'list'
             ),
-            'info'  => $this->model->toString($params['info'] ?? false),
-            'link'  => $this->url(true),
-            'text'  => $this->model->toString($params['text'] ?? false),
+            'info'     => $this->model->toString($params['info'] ?? false),
+            'link'     => $this->url(true),
+            'sortable' => true,
+            'text'     => $this->model->toString($params['text'] ?? false)
         ];
     }
 

@@ -15,7 +15,7 @@
         v-for="(item, itemIndex) in items"
         :key="item.id || itemIndex"
         v-bind="item"
-        :class="{'k-draggable-item': item.sortable}"
+        :class="{'k-draggable-item': sortable && item.sortable}"
         :image="imageOptions(item)"
         :layout="layout"
         :sortable="sortable && item.sortable"

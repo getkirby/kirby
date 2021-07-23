@@ -214,6 +214,7 @@ class PagesFieldTest extends TestCase
             ],
             'info' => '',
             'link' => '/pages/test',
+            'sortable' => true,
             'text' => 'Test Title',
             'dragText' => '(link: test text: Test Title)',
             'hasChildren' => false,
