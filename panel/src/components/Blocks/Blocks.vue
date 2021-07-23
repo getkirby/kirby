@@ -111,7 +111,7 @@ export default {
     draggableOptions() {
       return {
         id: this._uid,
-        handle: ".k-block-handle",
+        handle: ".k-sort-handle",
         list: this.blocks,
         move: this.move,
         delay: 10,
