@@ -3,64 +3,30 @@
     <k-view class="k-file-preview-layout">
       <div class="k-file-preview-image">
         <k-link
-          :to="file.url"
+          :to="file.previewUrl"
           :title="$t('open')"
           class="k-file-preview-image-link"
           target="_blank"
         >
-          <k-image
-            v-if="file.panelImage && file.panelImage.src"
-            :src="file.panelImage.src"
-            :srcset="file.panelImage.srcset"
-            back="none"
-          />
-          <k-icon
-            v-else-if="file.panelImage"
-            :type="file.panelImage.icon"
-            :style="{ color: file.panelImage.color }"
-            class="k-file-preview-icon"
-          />
-          <span v-else class="k-file-preview-placeholder" />
+          <k-item-image :image="image" layout="card" />
         </k-link>
       </div>
       <div class="k-file-preview-details">
         <ul>
-          <li>
-            <h3>{{ $t("template") }}</h3>
-            <p>{{ file.template || "—" }}</p>
-          </li>
-          <li>
-            <h3>{{ $t("mime") }}</h3>
-            <p>{{ file.mime }}</p>
-          </li>
-          <li>
-            <h3>{{ $t("url") }}</h3>
+          <li v-for="detail in details" :key="detail.title">
+            <h3>{{ $t(detail.title) }}</h3>
             <p>
-              <k-link :to="file.url" tabindex="-1" target="_blank">
-                /{{ file.id }}
+              <k-link
+                v-if="detail.link"
+                :to="detail.link"
+                tabindex="-1"
+                target="_blank"
+              >
+                /{{ detail.text }}
               </k-link>
-            </p>
-          </li>
-          <li>
-            <h3>{{ $t("size") }}</h3>
-            <p>{{ file.niceSize }}</p>
-          </li>
-          <li>
-            <h3>{{ $t("dimensions") }}</h3>
-            <p v-if="file.dimensions && (file.dimensions.width || file.dimensions.height)">
-              {{ file.dimensions.width }}&times;{{ file.dimensions.height }} {{ $t("pixel") }}
-            </p>
-            <p v-else>
-              —
-            </p>
-          </li>
-          <li>
-            <h3>{{ $t("orientation") }}</h3>
-            <p v-if="file.dimensions && file.dimensions.orientation">
-              {{ $t("orientation." + file.dimensions.orientation) }}
-            </p>
-            <p v-else>
-              —
+              <template v-else>
+                {{ detail.text }}
+              </template>
             </p>
           </li>
         </ul>
@@ -74,6 +40,44 @@ export default {
   props: {
     file: Object
   },
+  computed: {
+    details() {
+      // @todo: check if this could come directly from the backend
+      return [
+        {
+          title: "template",
+          text: this.file.template || "—"
+        },
+        {
+          title: "mime",
+          text: this.file.mime
+        },
+        {
+          title: "url",
+          text: this.file.id,
+          link: this.file.previewUrl
+        },
+        {
+          title: "size",
+          text: this.file.niceSize
+        },
+        {
+          title: "dimensions",
+          text: this.file.dimensions && (this.file.dimensions.width || this.file.dimensions.height) ? `${this.file.dimensions.width}×${this.file.dimensions.height} ${this.$t("pixel")}` : "—"
+        },
+        {
+          title: "orientation",
+          text: this.file.dimensions && this.file.dimensions.orientation ?  this.$t("orientation." + this.file.dimensions.orientation) : "—"
+          },
+      ];
+    },
+    image() {
+      return {
+        ...this.file.panelImage,
+        back: 'transparent'
+      };
+    }
+  }
 };
 </script>
 <style>
@@ -82,97 +86,34 @@ export default {
 }
 .k-file-preview-layout {
   display: grid;
-}
-@media screen and (max-width: 65em) {
-  .k-file-preview-layout {
-    padding: 0 !important;
-  }
-}
-@media screen and (min-width: 30em) {
-  .k-file-preview-layout {
-    grid-template-columns: 50% auto;
-  }
-}
-@media screen and (min-width: 65em) {
-  .k-file-preview-layout {
-    display: flex;
-    align-items: center;
-  }
+  grid-template-columns: 50% auto;
 }
 .k-file-preview-layout > * {
   min-width: 0;
 }
+
 .k-file-preview-image {
   position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   background: var(--bg-pattern);
 }
-@media screen and (min-width: 65em) {
-  .k-file-preview-image {
-    width: 33.33%;
-  }
-}
-@media screen and (min-width: 90em) {
-  .k-file-preview-image {
-    width: 25%;
-  }
-}
-
-.k-file-preview-image .k-image span {
-  overflow: hidden;
-  padding-block-end: 66.66%;
-}
-@media screen and (min-width: 30em) and (max-width: 65em) {
-  .k-file-preview-image .k-image span {
-    position: absolute;
-    inset: 0;
-    padding-block-end: 0 !important;
-  }
-}
-
-@media screen and (min-width: 65em) {
-  .k-file-preview-image .k-image span {
-    padding-block-end: 100%;
-  }
-}
-.k-file-preview-placeholder {
-  display: block;
-  padding-block-end: 100%;
-}
-.k-file-preview-image img {
-  padding: 3rem;
-}
-
 .k-file-preview-image-link {
   display: block;
+  width: 100%;
+  padding: min(4vw, 3rem);
   outline: 0;
 }
-.k-file-preview-image-link.k-link[data-tabbed] {
+.k-file-preview-image-link[data-tabbed] {
   box-shadow: none;
   outline: 2px solid var(--color-focus);
   outline-offset: -2px;
 }
 
-.k-file-preview-icon {
-  position: relative;
-  display: block;
-  padding-block-end: 100%;
-  overflow: hidden;
-  color: rgba(255, 255, 255, .5);
-}
-.k-file-preview-icon svg {
-  position: absolute;
-  inset-block-start: 50%;
-  inset-inline-start: 50%;
-  transform: translate(-50%, -50%) scale(4);
-}
 .k-file-preview-details {
   padding: 1.5rem;
   flex-grow: 1;
-}
-@media screen and (min-width: 65em) {
-  .k-file-preview-details {
-    padding: 3rem;
-  }
 }
 .k-file-preview-details ul {
   line-height: 1.5em;
@@ -181,29 +122,41 @@ export default {
   grid-gap: 1.5rem 3rem;
   grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
 }
-
-@media screen and (min-width: 30em) {
-  .k-file-preview-details ul {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  }
-}
-
 .k-file-preview-details h3 {
   font-size: var(--text-sm);
   font-weight: 500;
   color: var(--color-gray-500);
 }
-.k-file-preview-details p {
+.k-file-preview-details p,
+.k-file-preview-details a {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   color: rgba(255, 255, 255, .75);
   font-size: var(--text-sm);
 }
-.k-file-preview-details p a {
-  display: block;
-  width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
+
+@media screen and (min-width: 30em) {
+  .k-file-preview-details ul {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+@media screen and (max-width: 65em) {
+  .k-file-preview-layout {
+    padding: 0 !important;
+  }
+}
+@media screen and (min-width: 65em) {
+  .k-file-preview-layout {
+    grid-template-columns: 33.333% auto;
+  }
+  .k-file-preview-details {
+    padding: 3rem;
+  }
+}
+@media screen and (min-width: 90em) {
+  .k-file-preview-layout {
+    grid-template-columns: 25% auto;
+  }
 }
 </style>
