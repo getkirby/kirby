@@ -55,7 +55,6 @@ export default {
 .k-tag:focus {
   outline: 0;
   background-color: var(--color-focus);
-  border-color: var(--color-focus);
   color: #fff;
 }
 .k-tag-text {
