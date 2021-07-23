@@ -283,12 +283,6 @@ export default {
 .k-pagination > span {
   font-size: var(--text-sm);
 }
-.k-pagination[data-align="center"] {
-  text-align: center;
-}
-.k-pagination[data-align="right"] {
-  text-align: end;
-}
 
 .k-dropdown-content.k-pagination-selector {
   position: absolute;

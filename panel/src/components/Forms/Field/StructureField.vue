@@ -628,12 +628,6 @@ export default {
 }
 
 /* alignment */
-.k-structure-table .k-structure-table-column[data-align="center"] {
-  text-align: center;
-}
-.k-structure-table .k-structure-table-column[data-align="right"] {
-  text-align: end;
-}
 .k-structure-table .k-structure-table-column[data-align="right"] > .k-input {
   flex-direction: column;
   align-items: flex-end;

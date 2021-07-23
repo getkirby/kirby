@@ -1,7 +1,8 @@
 <template>
   <div
-    :data-theme="theme"
     :data-over="over"
+    :data-size="size"
+    :data-theme="theme"
     class="k-textarea-input"
   >
     <div class="k-textarea-input-wrapper">
@@ -29,7 +30,6 @@
         }"
         v-direction
         :data-font="font"
-        :data-size="size"
         class="k-textarea-input-native"
         @click="onClick"
         @focus="onFocus"
@@ -303,6 +303,18 @@ export default {
 </script>
 
 <style>
+.k-textarea-input[data-size="small"] {
+  --size: 7.5rem;
+}
+.k-textarea-input[data-size="medium"] {
+  --size: 15rem;
+}
+.k-textarea-input[data-size="large"] {
+  --size: 30rem;
+}
+.k-textarea-input[data-size="huge"] {
+  --size: 45rem;
+}
 .k-textarea-input-wrapper {
   position: relative;
 }
@@ -314,6 +326,7 @@ export default {
   font: inherit;
   line-height: 1.5em;
   color: inherit;
+  min-height: var(--size);
 }
 .k-textarea-input-native::placeholder {
   color: var(--color-gray-500);
@@ -325,19 +338,7 @@ export default {
   box-shadow: none;
   outline: 0;
 }
-.k-textarea-input-native[data-size="small"] {
-  min-height: 7.5rem;
-}
-.k-textarea-input-native[data-size="medium"] {
-  min-height: 15rem;
-}
-.k-textarea-input-native[data-size="large"] {
-  min-height: 30rem;
-}
-.k-textarea-input-native[data-size="huge"] {
-  min-height: 45rem;
-}
-.k-textarea-input-native[data-font="monospace"] {
+.k-textarea-input[data-font="monospace"] {
   font-family: var(--font-mono);
 }
 
