@@ -63,4 +63,35 @@ class PageDropdownsTest extends AreaTestCase
         $this->assertSame('/pages/test/delete', $delete['dialog']);
         $this->assertSame('Delete', $delete['text']);
     }
+
+    public function testPageDropdownInListView(): void
+    {
+        $this->app([
+            'site' => [
+                'children' => [
+                    ['slug' => 'test']
+                ]
+            ],
+            'request' => [
+                'query' => [
+                    'view' => 'list'
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $options = $this->dropdown('pages/test')['options'];
+
+        $preview = $options[0];
+
+        $this->assertSame('/test', $preview['link']);
+        $this->assertSame('_blank', $preview['target']);
+        $this->assertSame('Open', $preview['text']);
+
+        $sort = $options[6];
+
+        $this->assertSame('/pages/test/changeStatus', $sort['dialog']);
+        $this->assertSame('Change status', $sort['text']);
+    }
 }
