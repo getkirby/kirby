@@ -41,6 +41,11 @@ document.addEventListener("fiber.finish", () => {
   }
 });
 
+// Global styles
+import "./styles/variables.css"
+import "./styles/reset.css"
+import "./styles/utilities.css"
+
 new Vue({
   store,
   created() {
