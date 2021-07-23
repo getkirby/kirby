@@ -3,7 +3,7 @@
     <k-view class="k-file-preview-layout">
       <div class="k-file-preview-image">
         <k-link
-          :to="file.previewUrl"
+          :to="url"
           :title="$t('open')"
           class="k-file-preview-image-link"
           target="_blank"
@@ -14,7 +14,7 @@
       <div class="k-file-preview-details">
         <ul>
           <li v-for="detail in details" :key="detail.title">
-            <h3>{{ $t(detail.title) }}</h3>
+            <h3>{{ detail.title }}</h3>
             <p>
               <k-link
                 v-if="detail.link"
@@ -38,45 +38,9 @@
 <script>
 export default {
   props: {
-    file: Object
-  },
-  computed: {
-    details() {
-      // @todo: check if this could come directly from the backend
-      return [
-        {
-          title: "template",
-          text: this.file.template || "—"
-        },
-        {
-          title: "mime",
-          text: this.file.mime
-        },
-        {
-          title: "url",
-          text: this.file.id,
-          link: this.file.previewUrl
-        },
-        {
-          title: "size",
-          text: this.file.niceSize
-        },
-        {
-          title: "dimensions",
-          text: this.file.dimensions && (this.file.dimensions.width || this.file.dimensions.height) ? `${this.file.dimensions.width}×${this.file.dimensions.height} ${this.$t("pixel")}` : "—"
-        },
-        {
-          title: "orientation",
-          text: this.file.dimensions && this.file.dimensions.orientation ?  this.$t("orientation." + this.file.dimensions.orientation) : "—"
-          },
-      ];
-    },
-    image() {
-      return {
-        ...this.file.panelImage,
-        back: 'transparent'
-      };
-    }
+    details: Array,
+    image: Object,
+    url: String,
   }
 };
 </script>

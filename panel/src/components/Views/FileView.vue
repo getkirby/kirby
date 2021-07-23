@@ -6,7 +6,7 @@
       :data-template="blueprint"
       class="k-file-view"
     >
-      <k-file-preview :file="model" />
+      <k-file-preview v-bind="preview" />
 
       <k-view class="k-file-content">
         <k-header
@@ -77,6 +77,9 @@ import ModelView from "./ModelView.vue";
 
 export default {
   extends: ModelView,
+  props: {
+    preview: Object
+  },
   computed: {
     id() {
       return this.$api.files.url(this.model.parent, this.model.filename);

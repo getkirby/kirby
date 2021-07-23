@@ -330,18 +330,44 @@ class File extends Model
                 'blueprint' => $this->model->template() ?? 'default',
                 'model' => [
                     'content'    => $this->content(),
-                    'dimensions' => $file->dimensions()->toArray(),
                     'extension'  => $file->extension(),
                     'filename'   => $file->filename(),
-                    'id'         => $file->id(),
-                    'mime'       => $file->mime(),
-                    'niceSize'   => $file->niceSize(),
+                    'id'         => $id = $file->id(),
                     'parent'     => $file->parent()->panel()->path(),
-                    'panelImage' => $this->image([], 'cards'),
-                    'previewUrl' => $file->previewUrl(),
                     'url'        => $file->url(),
                     'template'   => $file->template(),
                     'type'       => $file->type(),
+                ],
+                'preview' => [
+                    'image'   => $this->image(['back' => 'transparent'], 'cards'),
+                    'url'     => $url = $file->previewUrl(),
+                    'details' => [
+                        [
+                            'title' => t('template'),
+                            'text'  => $file->template() ?? '—'
+                        ],
+                        [
+                            'title' => t('mime'),
+                            'text'  => $file->mime()
+                        ],
+                        [
+                            'title' => t('url'),
+                            'text'  => $id,
+                            'link'  => $url
+                        ],
+                        [
+                            'title' => t('size'),
+                            'text'  => $file->niceSize()
+                        ],
+                        [
+                            'title' => t('dimensions'),
+                            'text'  => $file->dimensions() ? $file->dimensions()->width() . '×' . $file->dimensions()->height() . ' ' . t('pixel') : '—'
+                        ],
+                        [
+                            'title' => t('orientation'),
+                            'text'  => $file->dimensions() ? t('orientation.' . $file->dimensions()->orientation()) : '—'
+                        ],
+                    ]
                 ]
             ]
         );
