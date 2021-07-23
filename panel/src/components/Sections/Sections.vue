@@ -79,10 +79,10 @@ export default {
 
 <style>
 .k-sections {
-  padding-bottom: 3rem;
+  padding-block-end: 3rem;
 }
 .k-section {
-  padding-bottom: 3rem;
+  padding-block-end: 3rem;
 }
 .k-section-header {
   position: relative;
@@ -92,12 +92,12 @@ export default {
 }
 .k-section-header .k-headline {
   line-height: 1.25rem;
-  padding-bottom: .75rem;
+  padding-block-end: .75rem;
   min-height: 2rem;
 }
 .k-section-header .k-button-group {
   position: absolute;
-  top: -.875rem;
+  inset-block-start: -.875rem;
   inset-inline-end: 0;
 }
 </style>

@@ -256,7 +256,7 @@ export default {
   background: var(--color-light);
 }
 .k-search .k-item:not(:last-child) {
-  margin-bottom: .25rem;
+  margin-block-end: .25rem;
 }
 .k-search .k-item[data-selected] {
   outline: 2px solid var(--color-focus);

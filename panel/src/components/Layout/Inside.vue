@@ -160,24 +160,20 @@ b {
 }
 
 .k-panel-view {
-  padding-top: 2.5rem;
-  padding-bottom: 6rem;
+  padding-block-start: 2.5rem;
+  padding-block-end: 6rem;
 }
 .k-panel-header {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset-block-start: 0;
+  inset-inline: 0;
   z-index: var(--z-navigation);
 }
 
 .k-offline-warning {
   position: fixed;
   content: " ";
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   z-index: var(--z-loader);
   background: rgba(17, 17, 17, .7);
   content: "offline";

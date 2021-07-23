@@ -63,13 +63,13 @@ export default {
 .k-block-type-code-editor-language {
   font-size: var(--text-sm);
   position: absolute;
-  right: 0;
-  bottom: 0;
+  inset-inline-end: 0;
+  inset-block-end: 0;
 }
 .k-block-type-code-editor-language .k-icon {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset-block-start: 0;
+  inset-inline-start: 0;
   height: 1.5rem;
   display: flex;
   width: 2rem;

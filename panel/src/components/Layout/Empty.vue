@@ -77,7 +77,7 @@ button.k-empty:focus {
   flex-direction: column;
 }
 .k-empty[data-layout="cards"] .k-icon {
-  margin-bottom: 1rem;
+  margin-block-end: 1rem;
 }
 .k-empty[data-layout="cards"] .k-icon svg {
   width: 2rem;
@@ -91,7 +91,7 @@ button.k-empty:focus {
 .k-empty[data-layout="list"] > .k-icon {
   width: 36px;
   min-height: 36px;
-  border-right: 1px solid rgba(0, 0, 0, .05);
+  border-inline-end: 1px solid rgba(0, 0, 0, .05);
 }
 .k-empty[data-layout="list"] > p {
   line-height: 1.25rem;

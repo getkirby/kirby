@@ -68,7 +68,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-left: 1px solid rgba(255, 255, 255, .15);
+  border-inline-start: 1px solid rgba(255, 255, 255, .15);
 }
 .k-tag-toggle:hover {
   background: rgba(255, 255, 255, .2);

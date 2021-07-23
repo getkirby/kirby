@@ -12,7 +12,7 @@
   justify-content: space-between;
   align-items: center;
   min-height: 38px;
-  margin-bottom: 2rem;
+  margin-block-end: 2rem;
   background: var(--color-negative);
   color: var(--color-white);
   font-size: var(--text-sm);

@@ -34,7 +34,7 @@ export default {}
   cursor: pointer;
 }
 .k-block-type-gallery li:empty {
-  padding-bottom: 100%;
+  padding-block-end: 100%;
   background: var(--color-background);
 }
 .k-block-type-gallery li {

@@ -42,13 +42,13 @@ body {
 }
 .k-headline-field {
   position: relative;
-  padding-top: 1.5rem;
+  padding-block-start: 1.5rem;
 
 }
 /* don't add the top padding,
 if the headline is the very first form element */
 .k-fieldset > .k-grid .k-column:first-child .k-headline-field {
-  padding-top: 0;
+  padding-block-start: 0;
 }
 
 .k-headline-field .k-headline[data-numbered]::before {
@@ -56,6 +56,6 @@ if the headline is the very first form element */
   content: counter(headline-counter, decimal-leading-zero);
   color: var(--color-focus);
   font-weight: 400;
-  padding-right: .25rem;
+  padding-inline-end: .25rem;
 }
 </style>

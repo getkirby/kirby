@@ -70,10 +70,10 @@ import {
   required
 } from "@/mixins/props.js";
 
-import { 
-  required as validateRequired, 
-  minLength as validateMinLength, 
-  maxLength as validateMaxLength 
+import {
+  required as validateRequired,
+  minLength as validateMinLength,
+  maxLength as validateMaxLength
 } from "vuelidate/lib/validators";
 
 export const props = {
@@ -442,6 +442,6 @@ export default {
 }
 .k-tags-input[data-layout="list"] .k-tag {
   width: 100%;
-  margin-right: 0 !important;
+  margin-inline-end: 0 !important;
 }
 </style>

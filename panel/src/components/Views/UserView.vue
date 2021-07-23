@@ -186,8 +186,7 @@ export default {
   background: var(--color-white);
 }
 .k-user-profile > .k-view {
-  padding-top: 3rem;
-  padding-bottom: 3rem;
+  padding-block: 3rem;
   display: flex;
   align-items: center;
   line-height: 0;
@@ -198,8 +197,7 @@ export default {
 }
 .k-user-profile .k-button-group .k-button {
   display: block;
-  padding-top: .25rem;
-  padding-bottom: .25rem;
+  padding-block: .25rem;
   overflow: hidden;
   white-space: nowrap;
 }
@@ -208,8 +206,8 @@ export default {
 }
 
 .k-user-profile .k-dropdown-content {
-  margin-top: .5rem;
-  left: 50%;
+  margin-block-start: .5rem;
+  inset-inline-start: 50%;
   transform: translateX(-50%);
 }
 .k-user-view-image .k-image {

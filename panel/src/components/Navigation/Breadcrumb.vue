@@ -133,6 +133,6 @@ export default {
   flex-shrink: 0;
 }
 .k-breadcrumb-icon {
-  margin-right: .5rem;
+  margin-inline-end: .5rem;
 }
 </style>

@@ -19,7 +19,7 @@ export default {
 }
 .k-list-field-preview ul,
 .k-list-field-preview ol {
-  margin-left: 1rem;
+  margin-inline-start: 1rem;
 }
 .k-list-field-preview ul > li {
   list-style: disc;

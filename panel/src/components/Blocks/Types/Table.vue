@@ -88,11 +88,11 @@ export default {
 }
 .k-block-type-table-preview td,
 .k-block-type-table-preview th {
-  text-align: left;
+  text-align: start;
   line-height: 1.5em;
   padding: .5rem .75rem;
   font-size: var(--text-sm);
-  border-bottom: 1px solid var(--color-gray-300);
+  border-block-end: 1px solid var(--color-gray-300);
 }
 .k-block-type-table-preview th {
   background: var(--color-gray-100);
@@ -100,13 +100,13 @@ export default {
   font-size: var(--text-xs);
 }
 .k-block-type-table-preview tr:last-child td {
-  border-bottom: 0;
+  border-block-end: 0;
 }
 .k-block-type-table-preview [data-align="left"] {
-  text-align: left;
+  text-align: start;
 }
 .k-block-type-table-preview [data-align="right"] {
-  text-align: right;
+  text-align: end;
 }
 .k-block-type-table-preview [data-align="center"] {
   text-align: center;

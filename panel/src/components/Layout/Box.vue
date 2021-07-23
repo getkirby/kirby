@@ -52,7 +52,7 @@ export default {
   background: var(--color-gray-300);
   border-radius: var(--rounded-xs);
   line-height: 1.25rem;
-  border-left: 2px solid var(--color-gray-500);
+  border-inline-start: 2px solid var(--color-gray-500);
   padding: .5rem 1.5rem;
 }
 .k-box[data-theme="code"] {
@@ -73,37 +73,37 @@ export default {
   display: flex;
   align-items: center;
   line-height: 2rem;
-  text-align: left;
+  text-align: start;
 }
 
+.k-box[data-theme="positive"],
+.k-box[data-theme="negative"],
+.k-box[data-theme="notice"],
+.k-box[data-theme="info"] {
+  border: 0;
+  border-inline-start: 2px solid var(--color-light);
+  padding: .5rem 1.5rem;
+}
 .k-box[data-theme="positive"] {
   background: var(--color-green-300);
-  border: 0;
-  border-left: 2px solid var(--color-positive-light);
-  padding: .5rem 1.5rem;
+  border-inline-start-color: var(--color-positive-light);
 }
 .k-box[data-theme="negative"] {
   background: var(--color-red-300);
-  border: 0;
-  border-left: 2px solid var(--color-negative-light);
-  padding: .5rem 1.5rem;
+  border-inline-start-color: var(--color-negative-light);
 }
 .k-box[data-theme="notice"] {
   background: var(--color-orange-300);
-  border: 0;
-  border-left: 2px solid var(--color-notice-light);
-  padding: .5rem 1.5rem;
+  border-inline-start-color: var(--color-notice-light);
 }
 .k-box[data-theme="info"] {
   background: var(--color-blue-200);
-  border: 0;
-  border-left: 2px solid var(--color-focus-light);
-  padding: .5rem 1.5rem;
+  border-inline-start-color: var(--color-focus-light);
 }
 
 .k-box[data-theme="empty"] {
   text-align: center;
-  border-left: 0;
+  border-inline-start: 0;
   padding: 3rem 1.5rem;
   display: flex;
   justify-content: center;
@@ -114,7 +114,7 @@ export default {
   border: 1px dashed var(--color-border);
 }
 .k-box[data-theme="empty"] .k-icon {
-  margin-bottom: .5rem;
+  margin-block-end: .5rem;
   color: var(--color-gray-500);
 }
 .k-box[data-theme="empty"] p {

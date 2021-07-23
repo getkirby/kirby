@@ -48,17 +48,17 @@ export default {
   display: flex;
   align-items: center;
   min-width: 0;
-  padding-right: .75rem;
+  padding-inline-end: .75rem;
   font-size: var(--text-sm);
   line-height: 1;
 }
 .k-block-icon {
   width: 1rem;
-  margin-right: .5rem;
+  margin-inline-end: .5rem;
   color: var(--color-gray-500);
 }
 .k-block-name {
-  margin-right: .5rem;
+  margin-inline-end: .5rem;
 }
 .k-block-label {
   color: var(--color-gray-600);

@@ -92,7 +92,7 @@ export default {
 .k-radio-input li {
   position: relative;
   line-height: 1.5rem;
-  padding-left: 1.75rem;
+  padding-inline-start: 1.75rem;
 }
 .k-radio-input input {
   position: absolute;
@@ -107,8 +107,8 @@ export default {
 }
 .k-radio-input label::before {
   position: absolute;
-  top: .175em;
-  left: 0;
+  inset-block-start: .175em;
+  inset-inline-start: 0;
   content: "";
   width: 1rem;
   height: 1rem;
