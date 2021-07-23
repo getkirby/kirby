@@ -96,6 +96,18 @@ class Document
             $assets['js']['index']  = $url . '/src/index.js';
             $assets['js']['vendor'] = null;
             $assets['css']['index'] = null;
+
+        } else  {
+            // For RTL interface language, load additional CSS
+            if ($user = $kirby->user()) {
+                $translation = $kirby->translation($user->language());
+            } else {
+                $translation = $kirby->translation($kirby->panelLanguage());
+            }
+
+            if ($translation->direction() === 'rtl') {
+                $assets['css']['rtl'] = $url . '/css/rtl.css';
+            }
         }
 
         // remove missing files

@@ -1,7 +1,5 @@
 import { createVuePlugin } from "vite-plugin-vue2";
 import pluginRewriteAll from "vite-plugin-rewrite-all";
-import postcssLogical from "postcss-logical";
-import postcssDirPseudoClass from "postcss-dir-pseudo-class";
 
 const fs      = require("fs");
 const path    = require("path");
@@ -64,12 +62,7 @@ export default ({ command }) => {
       entries: "src/**/*.{js,vue}"
     },
     css: {
-      postcss: {
-        plugins: [
-          postcssLogical({ preserve: true }),
-          postcssDirPseudoClass()
-        ]
-      }
+      postcss: {}
     },
     resolve: {
       alias: [
