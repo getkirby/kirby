@@ -28,6 +28,7 @@
     "vuex": "^3.5.1"
   },
   "devDependencies": {
+    "cssnano": "^5.0.7",
     "cypress": "^7.4.0",
     "eslint": "^7.25.0",
     "eslint-plugin-cypress": "^2.11.2",
