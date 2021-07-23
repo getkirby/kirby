@@ -81,11 +81,11 @@
           </tr>
         </thead>
         <k-draggable
+          v-direction
           :list="items"
           :data-disabled="disabled"
           :options="dragOptions"
           :handle="true"
-          :dir="$direction"
           element="tbody"
           @end="onInput"
         >

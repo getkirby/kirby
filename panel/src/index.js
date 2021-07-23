@@ -3,6 +3,7 @@ import "vite/dynamic-import-polyfill";
 import Vue from "vue";
 import Api from "./config/api.js";
 import App from "./fiber/app.js";
+import Direction from "./config/direction.js";
 import Events from "./config/events.js";
 import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
@@ -22,6 +23,7 @@ import "./config/errors.js";
 import "./config/libraries.js";
 import "./config/plugins.js";
 
+Vue.use(Direction);
 Vue.use(Events);
 Vue.use(I18n);
 Vue.use(Vuelidate);

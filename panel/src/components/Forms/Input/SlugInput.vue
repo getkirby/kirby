@@ -11,8 +11,8 @@
       placeholder,
       required,
     }"
+    v-direction
     :value="slug"
-    :dir="direction"
     autocomplete="off"
     spellcheck="false"
     type="text"
