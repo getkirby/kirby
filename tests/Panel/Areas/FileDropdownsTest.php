@@ -71,6 +71,35 @@ class FileDropdownsTest extends AreaTestCase
         $this->login();
     }
 
+    public function testFileDropdownInListView(): void
+    {
+        $this->app([
+            'request' => [
+                'query' => [
+                    'view' => 'list'
+                ]
+            ]
+        ]);
+
+        $this->createPageFile();
+        $this->login();
+
+        $options = $this->dropdown('pages/test/files/test.jpg')['options'];
+
+        $open = $options[0];
+
+        $this->assertSame('/test/test.jpg', $open['link']);
+        $this->assertSame('_blank', $open['target']);
+        $this->assertSame('Open', $open['text']);
+
+        $this->assertSame('-', $options[4]);
+
+        $sort = $options[5];
+
+        $this->assertSame('/pages/test/files/test.jpg/changeSort', $sort['dialog']);
+        $this->assertSame('Change position', $sort['text']);
+    }
+
     public function testFileDropdownForPageFile(): void
     {
         $this->createPageFile();
