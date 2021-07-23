@@ -1,10 +1,10 @@
 <template>
   <k-draggable
     ref="box"
+    v-direction
     :list="tags"
     :data-layout="layout"
     :options="dragOptions"
-    :dir="$direction"
     class="k-tags-input"
     @end="onInput"
   >

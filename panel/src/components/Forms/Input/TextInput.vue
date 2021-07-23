@@ -15,7 +15,7 @@
       type,
       value
     }"
-    :dir="$direction"
+    v-direction
     class="k-text-input"
     v-on="listeners"
   >

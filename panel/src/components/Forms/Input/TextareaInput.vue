@@ -27,9 +27,9 @@
           spellcheck,
           value
         }"
+        v-direction
         :data-font="font"
         :data-size="size"
-        :dir="$direction"
         class="k-textarea-input-native"
         @click="onClick"
         @focus="onFocus"
