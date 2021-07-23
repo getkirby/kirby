@@ -302,13 +302,8 @@ export default {
   align-items: center;
 }
 
-.k-dialog-notification[data-theme="error"] {
-  background: var(--color-negative-light);
-  color: var(--color-black);
-}
-
-.k-dialog-notification[data-theme="success"] {
-  background: var(--color-positive-light);
+.k-dialog-notification[data-theme] {
+  background: var(--theme-l);
   color: var(--color-black);
 }
 

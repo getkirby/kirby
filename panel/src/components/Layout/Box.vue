@@ -81,24 +81,8 @@ export default {
 .k-box[data-theme="notice"],
 .k-box[data-theme="info"] {
   border: 0;
-  border-inline-start: 2px solid var(--color-light);
-  padding: .5rem 1.5rem;
-}
-.k-box[data-theme="positive"] {
-  background: var(--color-green-300);
-  border-inline-start-color: var(--color-positive-light);
-}
-.k-box[data-theme="negative"] {
-  background: var(--color-red-300);
-  border-inline-start-color: var(--color-negative-light);
-}
-.k-box[data-theme="notice"] {
-  background: var(--color-orange-300);
-  border-inline-start-color: var(--color-notice-light);
-}
-.k-box[data-theme="info"] {
-  background: var(--color-blue-200);
-  border-inline-start-color: var(--color-focus-light);
+  border-inline-start-color: var(--theme-l);
+  background: var(--theme-bg);
 }
 
 .k-box[data-theme="empty"] {

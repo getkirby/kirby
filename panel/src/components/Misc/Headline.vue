@@ -74,11 +74,8 @@ export default {
     font-size: var(--text-3xl);
   }
 }
-.k-headline[data-theme="negative"] {
-  color: var(--color-negative);
-}
-.k-headline[data-theme="positive"] {
-  color: var(--color-positive);
+.k-headline[data-theme] {
+  color: var(--theme);
 }
 .k-headline abbr {
   color: var(--color-gray-500);
