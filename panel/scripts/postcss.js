@@ -3,7 +3,6 @@ const fs        = require("fs");
 const path      = require("path");
 const util      = require("util");
 const postcss   = require("postcss");
-const logical   = require("postcss-logical");
 const filter    = require("postcss-filter-rules");
 const dirPseudo = require("postcss-dir-pseudo-class");
 
@@ -32,7 +31,6 @@ const process = async () => {
 
   await postcss({
     plugins: [
-      logical(),
       filter({
         filter: segment => segment.includes(":dir(rtl)")
       }),
@@ -44,7 +42,10 @@ const process = async () => {
 
   await postcss({
     plugins: [
-      logical({ dir: "ltr"})
+      filter({
+        filter: segment => !segment.includes(":dir(rtl)")
+      }),
+      dirPseudo()
     ]
   })
   .process(css, { from: undefined })
