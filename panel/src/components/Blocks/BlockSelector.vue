@@ -122,10 +122,10 @@ export default {
   color: var(--color-white);
 }
 .k-block-selector .k-headline {
-  margin-bottom: 1rem;
+  margin-block-end: 1rem;
 }
 .k-block-selector details:not(:last-of-type) {
-  margin-bottom: 1.5rem;
+  margin-block-end: 1.5rem;
 }
 .k-block-selector summary {
   font-size: var(--text-xs);
@@ -144,15 +144,15 @@ export default {
 .k-block-types {
   display: grid;
   grid-gap: 2px;
-  margin-top: .75rem;
+  margin-block-start: .75rem;
   grid-template-columns: repeat(1, 1fr);
 }
 .k-block-types .k-button {
   display: flex;
-  align-items: top;
+  align-items: flex-start;
   background: rgba(0, 0, 0, .5);
   width: 100%;
-  text-align: left;
+  text-align: start;
   padding: 0 .75rem 0 0;
   line-height: 1.5em;
 }

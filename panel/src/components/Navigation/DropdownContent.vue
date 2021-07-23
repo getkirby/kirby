@@ -253,31 +253,31 @@ export default {
 <style>
 .k-dropdown-content {
   position: absolute;
-  top: 100%;
+  inset-block-start: 100%;
   inset-inline-start: 0;
   background: var(--color-black);
   color: var(--color-white);
   z-index: var(--z-dropdown);
   box-shadow: var(--shadow-lg);
   border-radius: var(--rounded-xs);
-  text-align: left;
-  margin-bottom: 6rem;
+  text-align: start;
+  margin-block-end: 6rem;
 }
 .k-dropdown-content[data-align="right"] {
   inset-inline-start: auto;
   inset-inline-end: 0;
 }
 .k-dropdown-content > .k-dropdown-item:first-child {
-  margin-top: .5rem;
+  margin-block-start: .5rem;
 }
 .k-dropdown-content > .k-dropdown-item:last-child {
-  margin-bottom: .5rem;
+  margin-block-end: .5rem;
 }
 
 .k-dropdown-content[data-dropup] {
-  top: auto;
-  bottom: 100%;
-  margin-bottom: .5rem;
+  inset-block-start: auto;
+  inset-block-end: 100%;
+  margin-block-end: .5rem;
 }
 
 .k-dropdown-content hr {

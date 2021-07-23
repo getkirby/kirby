@@ -117,8 +117,8 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: .5rem;
-  padding-right: 38px;
+  margin-block-end: .5rem;
+  padding-inline-end: 38px;
 }
 .k-pages-dialog-navbar .k-button {
   width: 38px;

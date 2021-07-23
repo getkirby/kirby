@@ -575,7 +575,7 @@ export default {
 }
 .k-structure-table th,
 .k-structure-table td {
-  border-bottom: 1px solid var(--color-background);
+  border-block-end: 1px solid var(--color-background);
   border-inline-end: 1px solid var(--color-background);
   line-height: 1.25em;
   overflow: hidden;
@@ -588,9 +588,8 @@ export default {
 
 .k-structure-table th {
   position: sticky;
-  top: 0;
-  right: 0;
-  left: 0;
+  inset-block-start: 0;
+  inset-inline: 0;
   width: 100%;
   height: var(--structure-item-height);
   padding: 0 .75rem;
@@ -608,7 +607,7 @@ export default {
 }
 
 .k-structure-table tr:last-child td {
-  border-bottom: 0;
+  border-block-end: 0;
 }
 
 .k-structure-table tbody tr:hover td {
@@ -681,7 +680,7 @@ export default {
 .k-structure-table .k-structure-table-index-number {
   font-size: var(--text-xs);
   color: var(--color-gray-500);
-  padding-top: .15rem;
+  padding-block-start: .15rem;
 }
 
 .k-structure-table .k-sort-handle {
@@ -719,7 +718,7 @@ export default {
   background: var(--color-white);
   box-shadow: rgba(17, 17, 17, .25) 0 5px 10px;
   outline: 2px solid var(--color-focus);
-  margin-bottom: 2px;
+  margin-block-end: 2px;
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
@@ -731,7 +730,7 @@ export default {
 [data-disabled] .k-structure-table th,
 [data-disabled] .k-structure-table td {
   background: var(--color-background);
-  border-bottom: 1px solid var(--color-border);
+  border-block-end: 1px solid var(--color-border);
   border-inline-end: 1px solid var(--color-border);
 }
 [data-disabled] .k-structure-table td:last-child {
@@ -744,10 +743,7 @@ export default {
 
 .k-structure-backdrop {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   z-index: 2;
   height: 100vh;
 }
@@ -755,7 +751,7 @@ export default {
   position: relative;
   z-index: 3;
   border-radius: var(--rounded-xs);
-  margin-bottom: 1px;
+  margin-block-end: 1px;
   box-shadow: rgba(17, 17, 17, .05) 0 0 0 3px;
   border: 1px solid var(--color-border);
   background: var(--color-background);
@@ -766,7 +762,7 @@ export default {
 }
 
 .k-structure-form-buttons {
-  border-top: 1px solid var(--color-border);
+  border-block-start: 1px solid var(--color-border);
   display: flex;
   justify-content: space-between;
 }

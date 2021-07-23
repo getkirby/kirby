@@ -172,6 +172,6 @@ export default {
   display: flex;
 }
 .k-datetime-input .k-time-input {
-  padding-left: var(--field-input-padding);
+  padding-inline-start: var(--field-input-padding);
 }
 </style>

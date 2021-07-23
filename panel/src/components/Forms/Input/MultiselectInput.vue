@@ -91,10 +91,10 @@ import {
   required
 } from "@/mixins/props.js";
 
-import { 
-  required as validateRequired, 
-  minLength as validateMinLength, 
-  maxLength as validateMaxLength 
+import {
+  required as validateRequired,
+  minLength as validateMinLength,
+  maxLength as validateMaxLength
 } from "vuelidate/lib/validators";
 
 export const props = {
@@ -351,10 +351,10 @@ export default {
 }
 
 .k-multiselect-search {
-  margin-top: 0 !important;
+  margin-block-start: 0 !important;
   color: var(--color-white);
   background: var(--color-gray-900);
-  border-bottom: 1px dashed rgba(255, 255, 255, .2);
+  border-block-end: 1px dashed rgba(255, 255, 255, .2);
 }
 .k-multiselect-search > .k-button-text {
   flex: 1;
@@ -395,7 +395,7 @@ export default {
 
 .k-multiselect-value {
   color: var(--color-gray-500);
-  margin-left: .25rem;
+  margin-inline-start: .25rem;
 }
 .k-multiselect-value::before {
   content: " (";
@@ -406,7 +406,7 @@ export default {
 
 .k-multiselect-input[data-layout="list"] .k-tag {
   width: 100%;
-  margin-right: 0 !important;
+  margin-inline-end: 0 !important;
 }
 
 .k-multiselect-more {
@@ -414,7 +414,7 @@ export default {
   padding: .75rem;
   color: rgba(255, 255, 255, .8);
   text-align: center;
-  border-top: 1px dashed rgba(255, 255, 255, .2);
+  border-block-start: 1px dashed rgba(255, 255, 255, .2);
 }
 .k-multiselect-more:hover {
   color: var(--color-white);

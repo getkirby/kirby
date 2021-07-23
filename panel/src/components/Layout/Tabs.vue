@@ -126,15 +126,13 @@ export default {
 .k-tabs {
   position: relative;
   background: #e9e9e9;
-  border-top: 1px solid var(--color-border);
-  border-left: 1px solid var(--color-border);
-  border-right: 1px solid var(--color-border);
+  border-block-start: 1px solid var(--color-border);
+  border-inline: 1px solid var(--color-border);
 }
 .k-tabs nav {
   display: flex;
   justify-content: center;
-  margin-left: -1px;
-  margin-right: -1px;
+  margin-inline: -1px;
 }
 .k-tab-button.k-button {
   position: relative;
@@ -147,8 +145,8 @@ export default {
   text-transform: uppercase;
   text-align: center;
   font-weight: 500;
-  border-left: 1px solid transparent;
-  border-right: 1px solid var(--color-border);
+  border-inline-start: 1px solid transparent;
+  border-inline-end: 1px solid var(--color-border);
   flex-grow: 1;
   flex-shrink: 1;
   flex-direction: column;
@@ -162,11 +160,11 @@ export default {
     flex-direction: row;
   }
   .k-tab-button.k-button .k-icon {
-    margin-right: .5rem;
+    margin-inline-end: .5rem;
   }
 }
 .k-tab-button.k-button > .k-button-text {
-  padding-top: .375rem;
+  padding-block-start: .375rem;
   padding-inline-start: 0;
   font-size: 10px;
   overflow: hidden;
@@ -177,20 +175,20 @@ export default {
 @media screen and (min-width: 30em) {
   .k-tab-button.k-button > .k-button-text {
     font-size: var(--text-xs);
-    padding-top: 0;
+    padding-block-start: 0;
   }
 }
 .k-tab-button:last-child {
-  border-right: 1px solid transparent;
+  border-inline-end: 1px solid transparent;
 }
 .k-tab-button[aria-current] {
   position: relative;
   background: var(--color-background);
-  border-right: 1px solid var(--color-border);
+  border-inline-end: 1px solid var(--color-border);
   pointer-events: none;
 }
 .k-tab-button[aria-current]:first-child {
-  border-left: 1px solid var(--color-border);
+  border-inline-start: 1px solid var(--color-border);
 }
 
 .k-tab-button[aria-current]::before,
@@ -200,23 +198,21 @@ export default {
 }
 
 .k-tab-button[aria-current]::before {
-  left: -1px;
-  right: -1px;
+  inset-inline: -1px;
+  inset-block-start: -1px;
   height: 2px;
-  top: -1px;
   background: var(--color-black);
 }
 
 .k-tab-button[aria-current]::after {
-  left: 0;
-  right: 0;
+  inset-inline: 0;
+  inset-block-end: -1px;
   height: 1px;
-  bottom: -1px;
   background: var(--color-background);
 }
 .k-tabs-dropdown {
-  top: 100%;
-  right: 0;
+  inset-block-start: 100%;
+  inset-inline-end: 0;
 }
 .k-tabs-badge {
   padding-inline-start: .25rem;

@@ -117,8 +117,7 @@ export default {
   position: relative;
   display: flex;
   align-items: center;
-  margin-left: -0.75rem;
-  margin-right: -0.75rem;
+  margin-inline: -0.75rem;
 }
 
 .k-topbar-menu {
@@ -163,7 +162,7 @@ export default {
 
 .k-topbar-signals {
   position: absolute;
-  top: 0;
+  inset-block-start: 0;
   inset-inline-end: 0;
   background: var(--color-gray-900);
   height: 2.5rem;
@@ -173,9 +172,8 @@ export default {
 .k-topbar-signals::before {
   position: absolute;
   content: "";
-  top: 0;
   inset-block-start: -0.5rem;
-  bottom: 0;
+  inset-block-end: 0;
   width: .5rem;
   background: -webkit-linear-gradient(
     inline-start,
@@ -213,14 +211,14 @@ export default {
 
 .k-registration {
   display: inline-block;
-  margin-right: 1rem;
+  margin-inline-end: 1rem;
   display: flex;
   align-items: center;
 }
 .k-registration p {
   color: var(--color-negative-light);
   font-size: var(--text-sm);
-  margin-right: 1rem;
+  margin-inline-end: 1rem;
   font-weight: 600;
   display: none;
 }

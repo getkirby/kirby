@@ -100,7 +100,7 @@ export default {
   display: flex;
   align-items: center;
   background: var(--color-white);
-  z-index: var(----z-dropdown);
+  z-index: var(--z-dropdown);
   box-shadow: rgba(0, 0, 0, .1) -2px 0 5px, var(--shadow), var(--shadow-xl);
   color: var(--color-black);
   border-radius: var(--rounded);
@@ -114,18 +114,18 @@ export default {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid var(--color-background);
+  border-inline-end: 1px solid var(--color-background);
 }
 .k-block-options-button:first-child {
-  border-top-left-radius: var(--rounded);
-  border-bottom-left-radius: var(--rounded);
+  border-start-start-radius: var(--rounded);
+  border-end-start-radius: var(--rounded);
 }
 .k-block-options-button:last-child {
-  border-top-right-radius: var(--rounded);
-  border-bottom-right-radius: var(--rounded);
+  border-start-end-radius: var(--rounded);
+  border-end-end-radius: var(--rounded);
 }
 .k-block-options-button:last-of-type {
-  border-right: 0;
+  border-inline-end: 0;
 }
 .k-block-options-button[aria-current] {
   color: var(--color-focus);
@@ -134,7 +134,7 @@ export default {
   background: var(--color-gray-100);
 }
 .k-block-options .k-dropdown-content {
-  margin-top: .5rem;
+  margin-block-start: .5rem;
 }
 </style>
 

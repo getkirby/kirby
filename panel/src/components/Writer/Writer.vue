@@ -14,8 +14,8 @@
         :active-marks="toolbar.marks"
         :active-nodes="toolbar.nodes"
         :style="{
-          bottom: toolbar.position.bottom + 'px',
-          left: toolbar.position.left + 'px'
+          'inset-block-end': toolbar.position.bottom + 'px',
+          'inset-inline-start': toolbar.position.left + 'px'
         }"
         @command="editor.command($event)"
       />
@@ -316,7 +316,7 @@ export default {
   text-decoration: underline;
 }
 .k-writer .ProseMirror > *:last-child {
-  margin-bottom: 0;
+  margin-block-end: 0;
 }
 .k-writer .ProseMirror p,
 .k-writer .ProseMirror ul,
@@ -324,7 +324,7 @@ export default {
 .k-writer .ProseMirror h1,
 .k-writer .ProseMirror h2,
 .k-writer .ProseMirror h3 {
-  margin-bottom: .75rem;
+  margin-block-end: .75rem;
 }
 
 .k-writer .ProseMirror h1 {
@@ -361,7 +361,7 @@ export default {
 }
 .k-writer .ProseMirror ul,
 .k-writer .ProseMirror ol {
-  padding-left: 1rem;
+  padding-inline-start: 1rem;
 }
 .k-writer .ProseMirror ul > li {
   list-style: disc;

@@ -121,15 +121,15 @@ export default {
   --layout-toolbar-width: 2rem;
 
   position: relative;
-  padding-right: var(--layout-toolbar-width);
+  padding-inline-end: var(--layout-toolbar-width);
   background: #fff;
   box-shadow: var(--shadow);
 }
 [data-disabled] .k-layout {
-  padding-right: 0;
+  padding-inline-end: 0;
 }
 .k-layout:not(:last-of-type) {
-  margin-bottom: 1px;
+  margin-block-end: 1px;
 }
 .k-layout:focus {
   outline: 0;
@@ -138,15 +138,14 @@ export default {
 /** Toolbar **/
 .k-layout-toolbar {
   position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
+  inset-block: 0;
+  inset-inline-end: 0;
   width: var(--layout-toolbar-width);
   display: flex;
   flex-direction: column;
   font-size: var(--text-sm);
   background: var(--color-gray-100);
-  border-left: 1px solid var(--color-light);
+  border-inline-start: 1px solid var(--color-light);
   color: var(--color-gray-500);
 }
 .k-layout-toolbar:hover {
@@ -157,7 +156,7 @@ export default {
   height: var(--layout-toolbar-width);
 }
 .k-layout-toolbar .k-sort-handle {
-  margin-top: auto;
+  margin-block-start: auto;
   color: currentColor;
 }
 
@@ -168,6 +167,6 @@ export default {
   background: var(--color-gray-300);
 }
 .k-layout:not(:first-child) .k-layout-columns.k-grid {
-  border-top: 0;
+  border-block-start: 0;
 }
 </style>

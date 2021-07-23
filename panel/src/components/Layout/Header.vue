@@ -72,17 +72,17 @@ export default {
 
 <style>
 .k-header {
-  border-bottom: 1px solid var(--color-border);
-  margin-bottom: 2rem;
-  padding-top: 4vh;
+  padding-block-start: 4vh;
+  margin-block-end: 2rem;
+  border-block-end: 1px solid var(--color-border);
 }
 .k-header .k-headline {
   min-height: 1.25em;
-  margin-bottom: .5rem;
+  margin-block-end: .5rem;
   word-wrap: break-word;
 }
 .k-header .k-header-buttons {
-  margin-top: -.5rem;
+  margin-block-start: -.5rem;
   height: 3.25rem;
 }
 .k-header .k-headline-editable {

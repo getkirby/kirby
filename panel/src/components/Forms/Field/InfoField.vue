@@ -38,7 +38,7 @@ export default {
      */
     text: String,
     /**
-     * The info box can have different styles/themes. 
+     * The info box can have different styles/themes.
      * @values The themes are inherited from the `<k-box>` component.
      */
     theme: {
@@ -51,7 +51,7 @@ export default {
 
 <style>
 .k-info-field .k-headline {
-  padding-bottom: .75rem;
+  padding-block-end: .75rem;
   line-height: 1.25rem;
 }
 </style>

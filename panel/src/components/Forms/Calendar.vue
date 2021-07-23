@@ -278,12 +278,12 @@ export default {
         }
       }
 
-      const iso = this.multiple ? 
-                  this.datetimes.map(date => this.toISO(date)) : 
+      const iso = this.multiple ?
+                  this.datetimes.map(date => this.toISO(date)) :
                   this.toISO(this.datetimes[0]);
 
       /**
-       * The input event is fired when a date is selected. 
+       * The input event is fired when a date is selected.
        * @property {string} iso data as ISO date string
        */
       this.$emit("input", iso);
@@ -344,7 +344,7 @@ export default {
   table-layout: fixed;
   width: 100%;
   min-width: 15rem;
-  padding-top: .5rem;
+  padding-block-start: .5rem;
 }
 
 .k-calendar-input > nav {
@@ -384,7 +384,7 @@ export default {
 .k-calendar-day .k-button {
   width: 2rem;
   height: 2rem;
-  margin: 0 auto;
+  margin-inline: auto;
   color: var(--color-white);
   line-height: 1.75rem;
   display: flex;
@@ -413,16 +413,16 @@ export default {
   background: #333;
 }
 .k-calendar-day[data-first] {
-  border-top-left-radius: 100%;
-  border-bottom-left-radius: 100%;
+  border-start-start-radius: 100%;
+  border-end-start-radius: 100%;
 }
 .k-calendar-day[data-last] {
-  border-top-right-radius: 100%;
-  border-bottom-right-radius: 100%;
+  border-start-end-radius: 100%;
+  border-end-end-radius: 100%;
 }
 .k-calendar-today {
   text-align: center;
-  padding-top: .5rem;
+  padding-block-start: .5rem;
 }
 .k-calendar-today .k-button {
   color: var(--color-focus-light);

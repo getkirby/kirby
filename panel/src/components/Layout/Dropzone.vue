@@ -56,7 +56,7 @@ export default {
 
       this.files = $event.dataTransfer.files;
       /**
-       * The drop event is triggered when files are being dropped into the dropzone. 
+       * The drop event is triggered when files are being dropped into the dropzone.
        * @event drop
        * @property {array} files The event receives the files list as argument, which can then be used to start an upload for example.
        */
@@ -88,10 +88,7 @@ export default {
 .k-dropzone::after {
   content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   display: none;
   pointer-events: none;
   z-index: 1;

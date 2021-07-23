@@ -47,10 +47,7 @@ export default {
 <style>
 .k-fatal {
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  inset: 0;
   background: var(--color-backdrop);
   display: flex;
   z-index: var(--z-dialog);
@@ -69,7 +66,7 @@ export default {
   border-radius: var(--rounded);
 }
 .k-fatal-box .k-bar {
-  margin-bottom: var(--spacing-3);
+  margin-block-end: var(--spacing-3);
 }
 .k-fatal-iframe {
   border: 0;

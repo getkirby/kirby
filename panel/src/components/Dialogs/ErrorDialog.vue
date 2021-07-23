@@ -70,11 +70,11 @@ export default {
   padding: 1rem;
   font-size: var(--text-sm);
   line-height: 1.25em;
-  margin-top: .75rem;
+  margin-block-start: .75rem;
 }
 .k-error-details dt {
   color: var(--color-negative-light);
-  margin-bottom: .25rem;
+  margin-block-end: .25rem;
 }
 .k-error-details dd {
   overflow: hidden;
@@ -82,11 +82,11 @@ export default {
   text-overflow: ellipsis;
 }
 .k-error-details dd:not(:last-of-type) {
-  margin-bottom: 1.5em;
+  margin-block-end: 1.5em;
 }
 .k-error-details li:not(:last-child) {
-  border-bottom: 1px solid var(--color-background);
-  padding-bottom: .25rem;
-  margin-bottom: .25rem;
+  border-block-end: 1px solid var(--color-background);
+  padding-block-end: .25rem;
+  margin-block-end: .25rem;
 }
 </style>

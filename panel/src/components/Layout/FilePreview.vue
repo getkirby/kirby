@@ -119,27 +119,24 @@ export default {
 
 .k-file-preview-image .k-image span {
   overflow: hidden;
-  padding-bottom: 66.66%;
+  padding-block-end: 66.66%;
 }
 @media screen and (min-width: 30em) and (max-width: 65em) {
   .k-file-preview-image .k-image span {
     position: absolute;
-    top: 0;
-    left: 0;
-    bottom: 0;
-    right: 0;
-    padding-bottom: 0 !important;
+    inset: 0;
+    padding-block-end: 0 !important;
   }
 }
 
 @media screen and (min-width: 65em) {
   .k-file-preview-image .k-image span {
-    padding-bottom: 100%;
+    padding-block-end: 100%;
   }
 }
 .k-file-preview-placeholder {
   display: block;
-  padding-bottom: 100%;
+  padding-block-end: 100%;
 }
 .k-file-preview-image img {
   padding: 3rem;
@@ -158,14 +155,14 @@ export default {
 .k-file-preview-icon {
   position: relative;
   display: block;
-  padding-bottom: 100%;
+  padding-block-end: 100%;
   overflow: hidden;
   color: rgba(255, 255, 255, .5);
 }
 .k-file-preview-icon svg {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   transform: translate(-50%, -50%) scale(4);
 }
 .k-file-preview-details {

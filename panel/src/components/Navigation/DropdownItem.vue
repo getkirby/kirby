@@ -66,6 +66,6 @@ export default {
 }
 .k-dropdown-item .k-button-figure {
   text-align: center;
-  padding-right: .5rem;
+  padding-inline-end: .5rem;
 }
 </style>

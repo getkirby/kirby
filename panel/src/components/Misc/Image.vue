@@ -6,7 +6,7 @@
     class="k-image"
     v-on="$listeners"
   >
-    <span :style="'padding-bottom:' + ratioPadding">
+    <span :style="'padding-block-end:' + ratioPadding">
       <img
         v-if="loaded"
         :key="src"
@@ -101,22 +101,19 @@ export default {
   position: relative;
   display: block;
   line-height: 0;
-  padding-bottom: 100%;
+  padding-block-end: 100%;
 }
 .k-image img {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: contain;
 }
 .k-image-error {
   position: absolute;
-  top: 50%;
-  left: 50%;
+  inset-block-start: 50%;
+  inset-inline-start: 50%;
   transform: translate(-50%, -50%);
   color: var(--color-white);
   font-size: .9em;
