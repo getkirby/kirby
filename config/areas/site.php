@@ -11,6 +11,7 @@ return function ($kirby) {
         'menu'      => true,
         'dialogs'   => require __DIR__ . '/site/dialogs.php',
         'dropdowns' => require __DIR__ . '/site/dropdowns.php',
+        'searches'  => require __DIR__ . '/site/searches.php',
         'views'     => require __DIR__ . '/site/views.php',
     ];
 };
