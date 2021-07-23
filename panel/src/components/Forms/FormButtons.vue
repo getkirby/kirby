@@ -273,9 +273,8 @@ export default {
 <style>
 .k-form-buttons {
   position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  inset-block-end: 0;
+  inset-inline: 0;
   z-index: var(--z-navigation);
 }
 .k-form-buttons[data-theme="changes"] {
@@ -302,10 +301,10 @@ export default {
   align-items: center;
 }
 .k-form-button:first-child {
-  margin-left: -1rem;
+  margin-inline-start: -1rem;
 }
 .k-form-button:last-child {
-  margin-right: -1rem;
+  margin-inline-end: -1rem;
 }
 
 .k-form-lock-info {
@@ -314,11 +313,11 @@ export default {
   align-items: center;
   line-height: 1.5em;
   padding: .625rem 0;
-  margin-right: 3rem;
+  margin-inline-end: 3rem;
 
 }
 .k-form-lock-info > .k-icon {
-  margin-right: .5rem;
+  margin-inline-end: .5rem;
 }
 .k-form-lock-buttons {
   display: flex;

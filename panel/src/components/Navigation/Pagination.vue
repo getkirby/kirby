@@ -287,13 +287,13 @@ export default {
   text-align: center;
 }
 .k-pagination[data-align="right"] {
-  text-align: right;
+  text-align: end;
 }
 
 .k-dropdown-content.k-pagination-selector {
   position: absolute;
-  top: 100%;
-  left: 50%;
+  inset-block-start: 100%;
+  inset-inline-start: 50%;
   transform: translateX(-50%);
   background: var(--color-black);
 }
@@ -314,12 +314,12 @@ export default {
 }
 .k-pagination-settings label {
   display: flex;
-  border-right: 1px solid rgba(255, 255, 255, .35);
+  border-inline-end: 1px solid rgba(255, 255, 255, .35);
   align-items: center;
   padding: .625rem 1rem;
   font-size: var(--text-xs);
 }
 .k-pagination-settings label span {
-  margin-right: .5rem;
+  margin-inline-end: .5rem;
 }
 </style>

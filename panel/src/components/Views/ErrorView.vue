@@ -29,10 +29,7 @@ export default {
 <style>
 .k-error-view {
   position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -47,6 +44,6 @@ export default {
   display: inline-block;
 }
 .k-error-view-content p:not(:last-child) {
-  margin-bottom: .75rem;
+  margin-block-end: .75rem;
 }
 </style>

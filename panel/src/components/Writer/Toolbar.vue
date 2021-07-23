@@ -129,18 +129,17 @@ export default {
   padding: 0 .75rem;
 }
 .k-writer-toolbar .k-dropdown + .k-writer-toolbar-button {
-  border-left: 1px solid var(--color-gray-700);
+  border-inline-start: 1px solid var(--color-gray-700);
 }
 .k-writer-toolbar-button.k-writer-toolbar-nodes::after {
   content: "";
-  margin-left: .5rem;
-  border-top: 4px solid var(--color-white);
-  border-left: 4px solid transparent;
-  border-right: 4px solid transparent;
+  margin-inline-start: .5rem;
+  border-block-start: 4px solid var(--color-white);
+  border-inline: 4px solid transparent;
 }
 .k-writer-toolbar .k-dropdown-content {
   color: var(--color-black);
   background: var(--color-white);
-  margin-top: .5rem;
+  margin-block-start: .5rem;
 }
 </style>

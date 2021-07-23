@@ -134,10 +134,7 @@ export default {
   --drawer-header-padding: 1.5rem;
 
   position: fixed;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+  inset: 0;
   z-index: var(--z-toolbar);
   display: flex;
   align-items: stretch;
@@ -155,7 +152,7 @@ export default {
 .k-drawer-header {
   flex-shrink: 0;
   height: var(--drawer-header-height);
-  padding-left: var(--drawer-header-padding);
+  padding-inline-start: var(--drawer-header-padding);
   display: flex;
   align-items: center;
   line-height: 1;
@@ -172,15 +169,15 @@ export default {
   flex-grow: 1;
   align-items: center;
   min-width: 0;
-  margin-left: -.75rem;
+  margin-inline-start: -.75rem;
   font-size: var(--text-sm);
   font-weight: var(--font-normal);
 }
 .k-drawer-breadcrumb li:not(:last-child) .k-button::after {
   position: absolute;
-  display: inline-flex;
-  right: -.75rem;
+  inset-inline-end: -.75rem;
   width: 1.5rem;
+  display: inline-flex;
   justify-content: center;
   align-items: center;
   content: "›";
@@ -191,45 +188,44 @@ export default {
 .k-drawer-breadcrumb .k-icon {
   width: 1rem;
   color: var(--color-gray-500);
-  margin-right: .5rem;
+  margin-inline-end: .5rem;
 }
 .k-drawer-breadcrumb .k-button {
   display: inline-flex;
   align-items: center;
   height: var(--drawer-header-height);
-  padding: 0 .75rem;
+  padding-inline: .75rem;
 }
 .k-drawer-breadcrumb .k-button-text {
   opacity: 1;
 }
 .k-drawer-breadcrumb .k-button .k-button-icon ~ .k-button-text {
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 .k-drawer-tabs {
   display: flex;
   align-items: center;
   line-height: 1;
-  margin-right: .75rem;
+  margin-inline-end: .75rem;
 }
 .k-drawer-tab.k-button {
   height: var(--drawer-header-height);
-  padding: 0 .75rem;
+  padding-inline: .75rem;
   display: flex;
   align-items: center;
   font-size: var(--text-xs);
 }
 .k-drawer-tab.k-button[aria-current]::after {
   position: absolute;
-  bottom: -1px;
-  left: .75rem;
-  right: .75rem;
+  inset-block-end: -1px;
+  inset-inline: .75rem;
   content: "";
   background: var(--color-black);
   height: 2px;
 }
 
 .k-drawer-options {
-  padding-right: .75rem;
+  padding-inline-end: .75rem;
 }
 .k-drawer-option.k-button {
   width: var(--drawer-header-height);

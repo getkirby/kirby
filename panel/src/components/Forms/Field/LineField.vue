@@ -19,10 +19,9 @@ export default {}
 .k-line-field::after {
   position: absolute;
   content: "";
-  top: 50%;
-  margin-top: -1px;
-  left: 0;
-  right: 0;
+  inset-block-start: 50%;
+  margin-block-start: -1px;
+  inset-inline: 0;
   height: 1px;
   background: var(--color-border);
 }

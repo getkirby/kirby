@@ -58,7 +58,7 @@ export default {
   background: var(--color-black);
 }
 .k-block-figure figcaption {
-  padding-top: .5rem;
+  padding-block-start: .5rem;
   color: var(--color-gray-600);
   font-size: var(--text-sm);
   text-align: center;

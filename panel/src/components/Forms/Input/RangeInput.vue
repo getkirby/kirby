@@ -239,7 +239,7 @@ export default {
   background: var(--range-track-color);
 }
 .k-range-input-native::-webkit-slider-thumb {
-  margin-top: calc(0.5 * (var(--range-track-height) - var(--range-thumb-size)));
+  margin-block-start: calc(0.5 * (var(--range-track-height) - var(--range-thumb-size)));
 }
 
 .k-range-input-native::-webkit-slider-thumb {
@@ -270,7 +270,7 @@ export default {
   cursor: pointer;
 }
 .k-range-input-native::-ms-thumb {
-  margin-top: 0;
+  margin-block-start: 0;
 }
 .k-range-input-native::-ms-tooltip {
   display: none;
@@ -319,20 +319,19 @@ export default {
   text-align: center;
   border-radius: var(--rounded-xs);
   background: var(--color-gray-900);
-  margin-left: 1rem;
+  margin-inline-start: 1rem;
   padding: 0 .25rem;
   white-space: nowrap;
 }
 .k-range-input-tooltip::after {
   position: absolute;
-  top: 50%;
-  left: -5px;
+  inset-block-start: 50%;
+  inset-inline-start: -5px;
   width: 0;
   height: 0;
   transform: translateY(-50%);
-  border-top: 5px solid transparent;
-  border-right: 5px solid var(--color-gray-900);
-  border-bottom: 5px solid transparent;
+  border-block: 5px solid transparent;
+  border-inline-end: 5px solid var(--color-gray-900);
   content: "";
 }
 .k-range-input-tooltip > * {
@@ -364,6 +363,6 @@ export default {
   background: var(--color-gray-600);
 }
 [data-disabled] .k-range-input-tooltip::after {
-  border-right: 5px solid var(--color-gray-600);
+  border-inline-end: 5px solid var(--color-gray-600);
 }
 </style>

@@ -232,7 +232,7 @@ export default {
 }
 .k-list-item .k-item-info {
   flex-shrink: 2;
-  text-align: right;
+  text-align: end;
   justify-self: end;
   margin-inline-end: .5rem;
 }
@@ -338,6 +338,6 @@ export default {
 }
 .k-cards-item:not([data-has-label]) .k-item-footer {
   align-items: flex-end;
-  padding-left: 0;
+  padding-inline-start: 0;
 }
 </style>

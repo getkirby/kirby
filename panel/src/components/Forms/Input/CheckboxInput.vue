@@ -41,7 +41,7 @@ import {
 import { required as validateRequired } from "vuelidate/lib/validators";
 
 /**
- * 
+ *
  * @example <k-input v-model="checkbox" type="checkbox" />
  */
 export default {
@@ -116,11 +116,11 @@ export default {
 }
 .k-checkbox-input-label {
   display: block;
-  padding-left: 1.75rem;
+  padding-inline-start: 1.75rem;
 }
 .k-checkbox-input-icon {
   position: absolute;
-  left: 0;
+  inset-inline-start: 0;
   width: 1rem;
   height: 1rem;
   border: 2px solid var(--color-gray-500);

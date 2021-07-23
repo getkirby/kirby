@@ -82,7 +82,7 @@ export default {
 }
 .k-headline abbr {
   color: var(--color-gray-500);
-  padding-left: .25rem;
+  padding-inline-start: .25rem;
   text-decoration: none;
 }
 </style>

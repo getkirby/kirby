@@ -133,8 +133,7 @@ export default {
 .k-collection-footer {
   display: flex;
   justify-content: space-between;
-  margin-right: -.75rem;
-  margin-left: -.75rem;
+  margin-inline: -.75rem;
 }
 .k-collection-pagination {
   line-height: 1.25rem;

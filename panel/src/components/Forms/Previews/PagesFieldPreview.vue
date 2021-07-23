@@ -28,7 +28,7 @@ export default {
 }
 .k-pages-field-preview li {
   line-height: 0;
-  margin-right: .5rem;
+  margin-inline-end: .5rem;
 }
 .k-pages-field-preview .k-link {
   display: flex;
@@ -46,7 +46,7 @@ export default {
   line-height: 1.5em;
   padding: 0 .5rem;
   border: 1px solid var(--color-border);
-  border-left: 0;
+  border-inline-start: 0;
   border-radius: var(--rounded-xs);
   white-space: nowrap;
   overflow: hidden;

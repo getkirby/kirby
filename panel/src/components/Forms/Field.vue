@@ -88,7 +88,7 @@ export default {
 .k-field-label abbr {
   text-decoration: none;
   color: var(--color-gray-500);
-  padding-left: .25rem;
+  padding-inline-start: .25rem;
 }
 .k-field-header {
   position: relative;
@@ -97,7 +97,7 @@ export default {
 }
 .k-field-options {
   position: absolute;
-  top: calc(-.5rem - 1px);
+  inset-block-start: calc(-.5rem - 1px);
   inset-inline-end: 0;
 }
 .k-field-options.k-button-group .k-dropdown {
@@ -123,6 +123,6 @@ export default {
   display: block;
 }
 .k-field-help {
-  padding-top: .5rem;
+  padding-block-start: .5rem;
 }
 </style>

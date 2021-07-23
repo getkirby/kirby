@@ -70,10 +70,7 @@ export default {
 }
 .k-layout-column .k-blocks .k-empty {
   position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,6 +82,6 @@ export default {
   opacity: 1;
 }
 .k-layout-column .k-blocks .k-empty .k-icon {
-  border-right: 0;
+  border-inline-end: 0;
 }
 </style>
