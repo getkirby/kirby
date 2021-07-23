@@ -5,7 +5,7 @@
 export default {
   inheritAttrs: false,
   props: {
-    content: Object,
+    content: [Object, Array],
     fieldset: Object
   },
   methods: {

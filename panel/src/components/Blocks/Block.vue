@@ -34,7 +34,7 @@
     />
 
     <k-form-drawer
-      v-if="!isBatched"
+      v-if="isEditable && !isBatched"
       ref="drawer"
       :icon="fieldset.icon || 'box'"
       :tabs="tabs"
