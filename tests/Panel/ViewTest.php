@@ -251,6 +251,7 @@ class ViewTest extends TestCase
         $data = View::data();
 
         $this->assertInstanceOf('Closure', $data['$menu']);
+        $this->assertInstanceOf('Closure', $data['$direction']);
         $this->assertInstanceOf('Closure', $data['$language']);
         $this->assertInstanceOf('Closure', $data['$languages']);
         $this->assertSame([], $data['$permissions']);
@@ -298,7 +299,7 @@ class ViewTest extends TestCase
         $this->app = $this->app->clone([
             'languages' => [
                 [ 'code' => 'en', 'name' => 'English', 'default' => true ],
-                [ 'code' => 'de', 'name' => 'Deutsch'],
+                [ 'code' => 'de', 'name' => 'Deutsch']
             ],
             'options' => [
                 'languages' => true
@@ -328,6 +329,39 @@ class ViewTest extends TestCase
 
         $this->assertSame($expected, $data['$languages']);
         $this->assertSame($expected[0], $data['$language']);
+        $this->assertSame(null, $data['$direction']);
+    }
+
+    /**
+     * @covers ::data
+     */
+    public function testDataWithDirection(): void
+    {
+        $this->app = $this->app->clone([
+            'languages' => [
+                [ 'code' => 'en', 'name' => 'English', 'default' => true],
+                [ 'code' => 'de', 'name' => 'Deutsch'],
+                [ 'code' => 'ar', 'name' => 'Arabic', 'direction' => 'rtl'],
+            ],
+            'options' => [
+                'languages' => true
+            ]
+        ]);
+
+        // set non-default, non-user language
+        $this->app->setCurrentLanguage('ar');
+
+        // authenticate pseudo user
+        $this->app->impersonate('kirby');
+
+        // without custom data
+        $data = View::data();
+
+        // resolve lazy data
+        $data = A::apply($data);
+
+
+        $this->assertSame('rtl', $data['$direction']);
     }
 
     /**

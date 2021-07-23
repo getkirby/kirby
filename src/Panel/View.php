@@ -154,17 +154,11 @@ class View
         // shared data for all requests
         return [
             '$direction' => function () use ($kirby, $multilang, $language, $user) {
-                // only if mulitlang, current content language
-                // and user exist
                 if ($multilang === true && $language && $user) {
-                    // content language direction is not
-                    // the same as default language direction
-                    // and user language is not the same as
-                    // content language
-                    if (
-                        $language->direction() !== $kirby->defaultLanguage()->direction() ||
-                        $language->code() !== $user->language()
-                    ) {
+                    $isDefault = $language->direction() === $kirby->defaultLanguage()->direction();
+                    $isFromUser = $language->code() === $user->language();
+
+                    if ($isDefault === false && $isFromUser === false) {
                         return $language->direction();
                     }
                 }
