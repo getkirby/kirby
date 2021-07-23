@@ -106,10 +106,6 @@ class File extends Model
         $view        = $options['view'] ?? 'view';
         $url         = $this->url(true);
         $result      = [];
-        $isDisabled  = function ($action) use ($options, $permissions) {
-            $option = $options[$action] ?? true;
-            return $permissions[$action] === false || $option === false || $option === 'false';
-        };
 
         if ($view === 'list') {
             $result[] = [
@@ -125,14 +121,14 @@ class File extends Model
             'dialog'   => $url . '/changeName',
             'icon'     => 'title',
             'text'     => t('rename'),
-            'disabled' => $isDisabled('changeName')
+            'disabled' => $this->isDisabledDropdownOption('changeName', $options, $permissions)
         ];
 
         $result[] = [
             'click'    => 'replace',
             'icon'     => 'upload',
             'text'     => t('replace'),
-            'disabled' => $isDisabled('replace')
+            'disabled' => $this->isDisabledDropdownOption('replace', $options, $permissions)
         ];
 
         if ($view === 'list') {
@@ -141,7 +137,7 @@ class File extends Model
                 'dialog'   => $url . '/changeSort',
                 'icon'     => 'sort',
                 'text'     => t('file.sort'),
-                'disabled' => $isDisabled('update')
+                'disabled' => $this->isDisabledDropdownOption('update', $options, $permissions)
             ];
         }
 
@@ -150,7 +146,7 @@ class File extends Model
             'dialog'   => $url . '/delete',
             'icon'     => 'trash',
             'text'     => t('delete'),
-            'disabled' => $isDisabled('delete')
+            'disabled' => $this->isDisabledDropdownOption('delete', $options, $permissions)
         ];
 
         return $result;

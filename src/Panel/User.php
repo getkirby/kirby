@@ -41,51 +41,47 @@ class User extends Model
         $permissions = $this->options(['preview']);
         $url         = $this->url(true);
         $result      = [];
-        $isDisabled  = function ($action) use ($options, $permissions) {
-            $option = $options[$action] ?? true;
-            return $permissions[$action] === false || $option === false || $option === 'false';
-        };
 
         $result[] = [
             'dialog'   => $url . '/changeName',
             'icon'     => 'title',
             'text'     => t('user.changeName'),
-            'disabled' => $isDisabled('changeName')
+            'disabled' => $this->isDisabledDropdownOption('changeName', $options, $permissions)
         ];
 
         $result[] = [
             'dialog'   => $url . '/changeEmail',
             'icon'     => 'email',
             'text'     => t('user.changeEmail'),
-            'disabled' => $isDisabled('changeEmail')
+            'disabled' => $this->isDisabledDropdownOption('changeEmail', $options, $permissions)
         ];
 
         $result[] = [
             'dialog'   => $url . '/changeRole',
             'icon'     => 'bolt',
             'text'     => t('user.changeRole'),
-            'disabled' => $isDisabled('changeRole')
+            'disabled' => $this->isDisabledDropdownOption('changeRole', $options, $permissions)
         ];
 
         $result[] = [
             'dialog'   => $url . '/changePassword',
             'icon'     => 'key',
             'text'     => t('user.changePassword'),
-            'disabled' => $isDisabled('changePassword')
+            'disabled' => $this->isDisabledDropdownOption('changePassword', $options, $permissions)
         ];
 
         $result[] = [
             'dialog'   => $url . '/changeLanguage',
             'icon'     => 'globe',
             'text'     => t('user.changeLanguage'),
-            'disabled' => $isDisabled('changeLanguage')
+            'disabled' => $this->isDisabledDropdownOption('changeLanguage', $options, $permissions)
         ];
 
         $result[] = [
             'dialog'   => $url . '/delete',
             'icon'     => 'trash',
             'text'     => t('user.delete'),
-            'disabled' => $isDisabled('delete')
+            'disabled' => $this->isDisabledDropdownOption('delete', $options, $permissions)
         ];
 
         return $result;
