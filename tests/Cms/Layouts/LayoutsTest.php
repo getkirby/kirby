@@ -49,6 +49,23 @@ class LayoutsTest extends TestCase
         $this->assertEquals('Text', $blocks->last()->text());
     }
 
+    public function testHasBlockType()
+    {
+        $layouts = Layouts::factory([
+            [
+                'type'    => 'heading',
+                'content' => ['text' => 'Heading'],
+            ],
+            [
+                'type'    => 'text',
+                'content' => ['text' => 'Text'],
+            ]
+        ]);
+
+        $this->assertTrue($layouts->hasBlockType('heading'));
+        $this->assertFalse($layouts->hasBlockType('code'));
+    }
+
     public function testParse()
     {
         $data = [
@@ -100,5 +117,24 @@ class LayoutsTest extends TestCase
 
         $result = Layouts::parse('invalid json string');
         $this->assertSame([], $result);
+    }
+
+    public function testToBlocks()
+    {
+        $data = [
+            [
+                'type'    => 'heading',
+                'content' => ['text' => 'Heading'],
+            ],
+            [
+                'type'    => 'text',
+                'content' => ['text' => 'Text'],
+            ]
+        ];
+
+        $blocks = Layouts::factory($data)->toBlocks();
+
+        $this->assertCount(2, $blocks);
+        $this->assertInstanceOf('Kirby\Cms\Blocks', $blocks);
     }
 }
