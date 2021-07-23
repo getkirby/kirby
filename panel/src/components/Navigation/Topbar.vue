@@ -181,11 +181,8 @@ export default {
 .k-topbar .k-button[data-theme] .k-button-text {
   opacity: 1;
 }
-.k-topbar .k-button[data-theme="positive"] {
-  color: var(--color-positive-light);
-}
-.k-topbar .k-button[data-theme="negative"] {
-  color: var(--color-negative-light);
+.k-topbar .k-button[data-theme] {
+  color: var(--theme-l);
 }
 .k-topbar .k-button[data-theme="negative"] .k-button-text {
   display: none;

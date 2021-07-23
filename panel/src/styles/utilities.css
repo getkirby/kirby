@@ -1,0 +1,33 @@
+
+[data-theme="positive"],
+[data-theme="success"] {
+  --theme: var(--color-positive);
+  --theme-l: var(--color-positive-light);
+  --theme-bg: var(--color-green-300);
+}
+
+[data-theme="negative"],
+[data-theme="error"] {
+  --theme: var(--color-negative);
+  --theme-l: var(--color-negative-light);
+  --theme-bg: var(--color-red-300);
+}
+[data-theme="notice"] {
+  --theme: var(--color-notice);
+  --theme-l: var(--color-notice-light);
+  --theme-bg: var(--color-orange-300);
+}
+[data-theme="info"] {
+  --theme: var(--color-focus);
+  --theme-l: var(--color-focus-light);
+  --theme-bg: var(--color-blue-200);
+}
+
+[data-invalid] {
+  border: 1px solid var(--color-negative-outline);
+  box-shadow: var(--color-negative-outline) 0 0 3px 2px;
+}
+[data-invalid]:focus-within {
+  border: var(--field-input-invalid-focus-border) !important;
+  box-shadow: var(--color-negative-outline) 0 0 0 2px !important;
+}

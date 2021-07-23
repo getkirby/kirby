@@ -139,12 +139,8 @@ button::-moz-focus-inner {
   }
 }
 
-.k-button[data-theme="positive"] {
-  color: var(--color-positive);
-}
-
-.k-button[data-theme="negative"] {
-  color: var(--color-negative);
+.k-button[data-theme] {
+  color: var(--theme);
 }
 
 .k-button-icon {
