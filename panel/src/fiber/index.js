@@ -119,6 +119,7 @@
    data(data) {
      [
        "$config",
+       "$direction",
        "$language",
        "$languages",
        "$license",

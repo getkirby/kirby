@@ -29,7 +29,7 @@
         }"
         :data-font="font"
         :data-size="size"
-        :dir="direction"
+        :dir="$direction"
         class="k-textarea-input-native"
         @click="onClick"
         @focus="onFocus"
@@ -52,8 +52,6 @@
 </template>
 
 <script>
-import direction from "@/helpers/direction.js";
-
 import {
   autofocus,
   disabled,
@@ -62,10 +60,10 @@ import {
   required
 } from "@/mixins/props.js"
 
-import { 
-  required as validateRequired, 
-  minLength as validateMinLength, 
-  maxLength as validateMaxLength 
+import {
+  required as validateRequired,
+  minLength as validateMinLength,
+  maxLength as validateMaxLength
 } from "vuelidate/lib/validators";
 
 export const props = {
@@ -88,7 +86,7 @@ export const props = {
     placeholder: String,
     preselect: Boolean,
     /**
-     * Pre-selects the size before auto-sizing kicks in. 
+     * Pre-selects the size before auto-sizing kicks in.
      * This can be useful to fill gaps in field layouts.
      * @values small, medium, large, huge
      */
@@ -113,11 +111,6 @@ export default {
     return {
       over: false
     };
-  },
-  computed: {
-    direction() {
-      return direction(this);
-    }
   },
   watch: {
     value() {
