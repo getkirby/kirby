@@ -68,10 +68,6 @@ class Page extends Model
         $view        = $options['view'] ?? 'view';
         $url         = $this->url(true);
         $result      = [];
-        $isDisabled  = function ($action) use ($options, $permissions) {
-            $option = $options[$action] ?? true;
-            return $permissions[$action] === false || $option === false || $option === 'false';
-        };
 
         if ($view === 'list') {
             $result[] = [
@@ -79,7 +75,7 @@ class Page extends Model
                 'target'   => '_blank',
                 'icon'     => 'open',
                 'text'     => t('open'),
-                'disabled' => $isDisabled('preview')
+                'disabled' => $this->isDisabledDropdownOption('preview', $options, $permissions)
             ];
             $result[] = '-';
         }
@@ -93,14 +89,14 @@ class Page extends Model
             ],
             'icon'     => 'title',
             'text'     => t('rename'),
-            'disabled' => $isDisabled('changeTitle')
+            'disabled' => $this->isDisabledDropdownOption('changeTitle', $options, $permissions)
         ];
 
         $result[] = [
             'dialog'   => $url . '/duplicate',
             'icon'     => 'copy',
             'text'     => t('duplicate'),
-            'disabled' => $isDisabled('duplicate')
+            'disabled' => $this->isDisabledDropdownOption('duplicate', $options, $permissions)
         ];
 
         $result[] = '-';
@@ -114,14 +110,14 @@ class Page extends Model
             ],
             'icon'     => 'url',
             'text'     => t('page.changeSlug'),
-            'disabled' => $isDisabled('changeSlug')
+            'disabled' => $this->isDisabledDropdownOption('changeSlug', $options, $permissions)
         ];
 
         $result[] = [
             'dialog'   => $url . '/changeStatus',
             'icon'     => 'preview',
             'text'     => t('page.changeStatus'),
-            'disabled' => $isDisabled('changeStatus')
+            'disabled' => $this->isDisabledDropdownOption('changeStatus', $options, $permissions)
         ];
 
         if ($view === 'list') {
@@ -129,7 +125,7 @@ class Page extends Model
                 'dialog'   => $url . '/changeSort',
                 'icon'     => 'sort',
                 'text'     => t('page.sort'),
-                'disabled' => $isDisabled('sort')
+                'disabled' => $this->isDisabledDropdownOption('sort', $options, $permissions)
             ];
         }
 
@@ -137,16 +133,15 @@ class Page extends Model
             'dialog'   => $url . '/changeTemplate',
             'icon'     => 'template',
             'text'     => t('page.changeTemplate'),
-            'disabled' => $isDisabled('changeTemplate')
+            'disabled' => $this->isDisabledDropdownOption('changeTemplate', $options, $permissions)
         ];
 
         $result[] = '-';
-
         $result[] = [
             'dialog'   => $url . '/delete',
             'icon'     => 'trash',
             'text'     => t('delete'),
-            'disabled' => $isDisabled('delete')
+            'disabled' => $this->isDisabledDropdownOption('delete', $options, $permissions)
         ];
 
         return $result;
