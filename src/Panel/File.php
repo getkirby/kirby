@@ -113,7 +113,7 @@ class File extends Model
 
         if ($view === 'list') {
             $result[] = [
-                'link'   => $file->url(),
+                'link'   => $file->previewUrl(),
                 'target' => '_blank',
                 'icon'   => 'open',
                 'text'   => t('open')

@@ -297,6 +297,21 @@ class FileTest extends TestCase
         $this->assertInstanceOf('Kirby\Panel\File', $file->panel());
     }
 
+    public function testPreviewUrl()
+    {
+        $page = new Page([
+            'slug'  => 'test',
+            'files' => [
+                [
+                    'filename' => 'test.pdf'
+                ]
+            ]
+        ]);
+
+        $file = $page->file('test.pdf');
+        $this->assertSame('/test/test.pdf', $file->previewUrl());
+    }
+
     public function testApiUrl()
     {
         $app = new App([
