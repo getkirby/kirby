@@ -12,7 +12,7 @@ export default function (path, options) {
         throw `The dropdown could not be loaded`;
       }
 
-      // the dialog sends a backend error
+      // the dropdown sends a backend error
       if (data.$dropdown.error) {
         throw data.$dropdown.error;
       }
@@ -29,10 +29,10 @@ export default function (path, options) {
       });
 
       ready(data.$dropdown.options);
+
     } catch (e) {
       console.error(e);
       this.$store.dispatch("notification/error", e);
     }
-
   }
-};
+}
