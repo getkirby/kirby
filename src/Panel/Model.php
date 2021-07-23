@@ -231,9 +231,9 @@ abstract class Model
      * @param string $action
      * @param array $options
      * @param array $permissions
-     * @return boolean
+     * @return bool
      */
-    public function isDisabledDropdownOption(string $action,array $options, array $permissions): bool
+    public function isDisabledDropdownOption(string $action, array $options, array $permissions): bool
     {
         $option = $options[$action] ?? true;
         return $permissions[$action] === false || $option === false || $option === 'false';
