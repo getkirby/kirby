@@ -24,7 +24,7 @@
       <k-search
         ref="search"
         :type="$view.search || 'pages'"
-        :types="searchTypes"
+        :types="$searches"
       />
     </header>
 
@@ -58,8 +58,6 @@
 </template>
 
 <script>
-import search from "@/config/search.js";
-
 export default {
   inheritAttrs: false,
   props: {
@@ -79,9 +77,6 @@ export default {
     },
     language() {
       return this.$language ? this.$language.code : null;
-    },
-    searchTypes() {
-      return search(this);
     },
     translation() {
       return this.$translation ? this.$translation.code : null;

@@ -171,11 +171,9 @@ export default {
           throw new Error;
         }
 
-        this.items = await this.currentType.search({
-          query: query,
-          limit: this.$config.search.limit
-        });
+        const response = await this.$search(this.currentType.id, query);
 
+        this.items = response.results;
 
       } catch (error) {
         this.items = [];
