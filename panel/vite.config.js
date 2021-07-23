@@ -1,6 +1,6 @@
 import { createVuePlugin } from "vite-plugin-vue2";
 import pluginRewriteAll from "vite-plugin-rewrite-all";
-import cssnano from "cssnano";
+import postcssCsso from "postcss-csso";
 import postcssLogical from "postcss-logical";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
 
@@ -69,7 +69,7 @@ export default ({ command }) => {
         plugins: [
           postcssLogical({ preserve: true }),
           postcssDirPseudoClass(),
-          cssnano()
+          postcssCsso()
         ]
       }
     },
