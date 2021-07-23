@@ -15,15 +15,13 @@
       type,
       value
     }"
-    :dir="direction"
+    v-direction
     class="k-text-input"
     v-on="listeners"
   >
 </template>
 
 <script>
-import direction from "@/helpers/direction.js";
-
 import {
   autofocus,
   disabled,
@@ -83,11 +81,6 @@ export default {
         input: event => this.onInput(event.target.value)
       }
     };
-  },
-  computed: {
-    direction() {
-      return direction(this);
-    }
   },
   watch: {
     value() {

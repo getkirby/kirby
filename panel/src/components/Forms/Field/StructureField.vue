@@ -81,11 +81,11 @@
           </tr>
         </thead>
         <k-draggable
+          v-direction
           :list="items"
           :data-disabled="disabled"
           :options="dragOptions"
           :handle="true"
-          :dir="direction"
           element="tbody"
           @end="onInput"
         >
@@ -168,7 +168,6 @@
 </template>
 
 <script>
-import direction from "@/helpers/direction.js";
 import structure from "@/mixins/forms/structure.js";
 
 export default {
@@ -215,9 +214,6 @@ export default {
     };
   },
   computed: {
-    direction() {
-      return direction(this);
-    },
     dragOptions() {
       return {
         disabled: !this.isSortable,
