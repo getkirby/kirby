@@ -94,6 +94,65 @@ class File extends Model
     }
 
     /**
+     * Provides options for the file dropdown
+     *
+     * @param array $options
+     * @return array
+     */
+    public function dropdown(array $options = []): array
+    {
+        $file        = $this->model;
+        $permissions = $this->options(['preview']);
+        $view        = $options['view'] ?? 'view';
+        $url         = $this->url(true);
+        $result      = [];
+
+        if ($view === 'list') {
+            $result[] = [
+                'link'   => $file->previewUrl(),
+                'target' => '_blank',
+                'icon'   => 'open',
+                'text'   => t('open')
+            ];
+            $result[] = '-';
+        }
+
+        $result[] = [
+            'dialog'   => $url . '/changeName',
+            'icon'     => 'title',
+            'text'     => t('rename'),
+            'disabled' => $this->isDisabledDropdownOption('changeName', $options, $permissions)
+        ];
+
+        $result[] = [
+            'click'    => 'replace',
+            'icon'     => 'upload',
+            'text'     => t('replace'),
+            'disabled' => $this->isDisabledDropdownOption('replace', $options, $permissions)
+        ];
+
+        if ($view === 'list') {
+            $result[] = '-';
+            $result[] = [
+                'dialog'   => $url . '/changeSort',
+                'icon'     => 'sort',
+                'text'     => t('file.sort'),
+                'disabled' => $this->isDisabledDropdownOption('update', $options, $permissions)
+            ];
+        }
+
+        $result[] = '-';
+        $result[] = [
+            'dialog'   => $url . '/delete',
+            'icon'     => 'trash',
+            'text'     => t('delete'),
+            'disabled' => $this->isDisabledDropdownOption('delete', $options, $permissions)
+        ];
+
+        return $result;
+    }
+
+    /**
      * Returns the Panel icon color
      *
      * @return string

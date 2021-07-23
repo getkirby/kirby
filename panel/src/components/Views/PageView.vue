@@ -10,7 +10,7 @@
         :editable="permissions.changeTitle && !isLocked"
         :tab="tab.name"
         :tabs="tabs"
-        @edit="$dialog($view.path + '/changeTitle')"
+        @edit="$dialog(id + '/changeTitle')"
       >
         {{ model.title }}
         <template #left>
@@ -31,7 +31,7 @@
               :disabled="!permissions.changeStatus || isLocked"
               :responsive="true"
               :text="status.label"
-              @click="$dialog($view.path + '/changeStatus')"
+              @click="$dialog(id + '/changeStatus')"
             />
             <k-dropdown class="k-page-view-options">
               <k-button
@@ -44,7 +44,7 @@
               </k-button>
               <k-dropdown-content
                 ref="settings"
-                :options="options"
+                :options="$dropdown(id)"
               />
             </k-dropdown>
 
@@ -65,7 +65,7 @@
         :blueprint="blueprint"
         :empty="$t('page.blueprint', { blueprint: $esc(blueprint) })"
         :lock="lock"
-        :parent="$api.pages.url(model.id)"
+        :parent="id"
         :tab="tab"
       />
     </k-view>
@@ -82,13 +82,7 @@ export default {
   },
   computed: {
     id() {
-      return "pages/" + this.model.id;
-    },
-    options() {
-      return async ready => {
-        const options = await this.$api.pages.options(this.model.id);
-        ready(options);
-      };
+      return this.$api.pages.url(this.model.id);
     }
   }
 };

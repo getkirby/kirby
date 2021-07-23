@@ -3,9 +3,9 @@
 namespace Kirby\Panel;
 
 /**
- * The Dialog response class handles Fiber
+ * The Dropdown response class handles Fiber
  * requests to render the JSON object for
- * Panel dialogs
+ * dropdown menus
  *
  * @package   Kirby Panel
  * @author    Bastian Allgeier <bastian@getkirby.com>
@@ -13,12 +13,12 @@ namespace Kirby\Panel;
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-class Dialog extends Json
+class Dropdown extends Json
 {
-    protected static $key = '$dialog';
+    protected static $key = '$dropdown';
 
     /**
-     * Renders dialogs
+     * Renders dropdowns
      *
      * @param mixed $data
      * @param array $options
@@ -26,10 +26,9 @@ class Dialog extends Json
      */
     public static function response($data, array $options = [])
     {
-        // interpret true as success
-        if ($data === true) {
+        if (is_array($data) === true) {
             $data = [
-                'code' => 200
+                'options' => $data
             ];
         }
 

@@ -225,6 +225,21 @@ abstract class Model
     }
 
     /**
+     * Checks for disabled dropdown options according
+     * to the given permissions
+     *
+     * @param string $action
+     * @param array $options
+     * @param array $permissions
+     * @return bool
+     */
+    public function isDisabledDropdownOption(string $action, array $options, array $permissions): bool
+    {
+        $option = $options[$action] ?? true;
+        return $permissions[$action] === false || $option === false || $option === 'false';
+    }
+
+    /**
      * Returns lock info for the Panel
      *
      * @return array|false array with lock info,

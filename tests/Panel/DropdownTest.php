@@ -8,9 +8,9 @@ use Kirby\Http\Response;
 use PHPUnit\Framework\TestCase;
 
 /**
- * @coversDefaultClass \Kirby\Panel\Dialog
+ * @coversDefaultClass \Kirby\Panel\Dropdown
  */
-class DialogTest extends TestCase
+class DropdownTest extends TestCase
 {
     protected $app;
     protected $tmp = __DIR__ . '/tmp';
@@ -46,13 +46,13 @@ class DialogTest extends TestCase
     public function testError(): void
     {
         // default
-        $error = Dialog::error('Test');
+        $error = Dropdown::error('Test');
 
         $this->assertSame(404, $error['code']);
         $this->assertSame('Test', $error['error']);
 
         // custom code
-        $error = Dialog::error('Test', 500);
+        $error = Dropdown::error('Test', 500);
 
         $this->assertSame(500, $error['code']);
         $this->assertSame('Test', $error['error']);
@@ -63,13 +63,13 @@ class DialogTest extends TestCase
      */
     public function testResponse(): void
     {
-        $response = Dialog::response([
+        $response = Dropdown::response([
             'test' => 'Test'
         ]);
 
         $expected = [
-            '$dialog' => [
-                'test'     => 'Test',
+            '$dropdown' => [
+                'options'  => ['test' => 'Test'],
                 'code'     => 200,
                 'path'     => null,
                 'referrer' => '/'
@@ -84,28 +84,11 @@ class DialogTest extends TestCase
     /**
      * @covers ::response
      */
-    public function testResponseFromTrue(): void
-    {
-        $response = Dialog::response(true);
-        $expected = [
-            '$dialog' => [
-                'code'     => 200,
-                'path'     => null,
-                'referrer' => '/'
-            ]
-        ];
-
-        $this->assertSame($expected, json_decode($response->body(), true));
-    }
-
-    /**
-     * @covers ::response
-     */
     public function testResponseFromInvalidData(): void
     {
-        $response = Dialog::response(1234);
+        $response = Dropdown::response(1234);
         $expected = [
-            '$dialog' => [
+            '$dropdown' => [
                 'code'     => 500,
                 'error'    => 'Invalid response',
                 'path'     => null,
@@ -122,9 +105,9 @@ class DialogTest extends TestCase
     public function testResponseFromException(): void
     {
         $exception = new \Exception('Test');
-        $response  = Dialog::response($exception);
+        $response  = Dropdown::response($exception);
         $expected  = [
-            '$dialog' => [
+            '$dropdown' => [
                 'code'     => 500,
                 'error'    => 'Test',
                 'path'     => null,
@@ -141,9 +124,9 @@ class DialogTest extends TestCase
     public function testResponseFromKirbyException(): void
     {
         $exception = new \Kirby\Exception\NotFoundException('Test');
-        $response  = Dialog::response($exception);
+        $response  = Dropdown::response($exception);
         $expected  = [
-            '$dialog' => [
+            '$dropdown' => [
                 'code'     => 404,
                 'error'    => 'Test',
                 'path'     => null,

@@ -27,7 +27,7 @@
                 <k-dropdown-item icon="upload" @click="$refs.upload.open()">
                   {{ $t('change') }}
                 </k-dropdown-item>
-                <k-dropdown-item icon="trash" @click="action('picture.delete')">
+                <k-dropdown-item icon="trash" @click="deleteAvatar">
                   {{ $t('delete') }}
                 </k-dropdown-item>
               </k-dropdown-content>
@@ -47,21 +47,21 @@
             <k-button
               :disabled="!permissions.changeEmail || isLocked"
               icon="email"
-              @click="action('email')"
+              @click="$dialog(id + '/changeEmail')"
             >
               {{ $t("email") }}: {{ model.email }}
             </k-button>
             <k-button
               :disabled="!permissions.changeRole || isLocked"
               icon="bolt"
-              @click="action('role')"
+              @click="$dialog(id + '/changeRole')"
             >
               {{ $t("role") }}: {{ model.role }}
             </k-button>
             <k-button
               :disabled="!permissions.changeLanguage || isLocked"
               icon="globe"
-              @click="action('language')"
+              @click="$dialog(id + '/changeLanguage')"
             >
               {{ $t("language") }}: {{ model.language }}
             </k-button>
@@ -74,7 +74,7 @@
           :editable="permissions.changeName && !isLocked"
           :tab="tab.name"
           :tabs="tabs"
-          @edit="action('rename')"
+          @edit="$dialog(id + '/changeName')"
         >
           <span v-if="!model.name || model.name.length === 0" class="k-user-name-placeholder">{{ $t("name") }} …</span>
           <template v-else>
@@ -87,7 +87,10 @@
                 <k-button :disabled="isLocked" icon="cog" @click="$refs.settings.toggle()">
                   {{ $t('settings') }}
                 </k-button>
-                <k-dropdown-content ref="settings" :options="options" @action="action" />
+                <k-dropdown-content
+                  ref="settings"
+                  :options="$dropdown(id)"
+                />
               </k-dropdown>
               <k-languages-dropdown />
             </k-button-group>
@@ -106,7 +109,7 @@
           :blueprint="blueprint"
           :empty="$t('user.blueprint', { blueprint: $esc(blueprint) })"
           :lock="lock"
-          :parent="'users/' + model.id"
+          :parent="id"
           :tab="tab"
         />
 
@@ -130,48 +133,18 @@ export default {
   prevnext: true,
   computed: {
     id() {
-      return "users/" + this.model.id;
-    },
-    options() {
-      return async ready => {
-        const options = await this.$api.users.options(this.model.id);
-        ready(options);
-      };
+      return this.$api.users.url(this.model.id);
     },
     uploadApi() {
-      return this.$urls.api + "/users/" + this.model.id + "/avatar";
+      return this.$urls.api + "/" + this.id + "/avatar";
     }
   },
   methods: {
-    async action(action) {
-      switch (action) {
-        case "email":
-          this.$dialog(`users/${this.model.id}/changeEmail`);
-          break;
-        case "language":
-          this.$dialog(`users/${this.model.id}/changeLanguage`);
-          break;
-        case "password":
-          this.$dialog(`users/${this.model.id}/changePassword`);
-          break;
-        case "picture.delete":
-          await this.$api.users.deleteAvatar(this.model.id)
-          this.avatar = null;
-          this.$store.dispatch("notification/success", ":)");
-          this.$reload();
-          break;
-        case "remove":
-          this.$dialog(`users/${this.model.id}/delete`);
-          break;
-        case "rename":
-          this.$dialog(`users/${this.model.id}/changeName`);
-          break;
-        case "role":
-          this.$dialog(`users/${this.model.id}/changeRole`);
-          break;
-        default:
-          this.$store.dispatch("notification/error", "Not yet implemented");
-      }
+    async deleteAvatar() {
+      await this.$api.users.deleteAvatar(this.model.id)
+      this.avatar = null;
+      this.$store.dispatch("notification/success", ":)");
+      this.$reload();
     },
     uploadedAvatar() {
       this.$store.dispatch("notification/success", ":)");

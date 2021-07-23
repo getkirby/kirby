@@ -56,6 +56,11 @@ abstract class AreaTestCase extends TestCase
         return $this->response('dialogs/' . $path, true)['$dialog'];
     }
 
+    public function dropdown(string $path)
+    {
+        return $this->response('dropdowns/' . $path, true)['$dropdown'];
+    }
+
     public function enableMultilang(): void
     {
         $this->app([

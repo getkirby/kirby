@@ -741,4 +741,16 @@ class File extends ModelWithContent
     {
         return $this->panel()->url($relative);
     }
+
+    /**
+     * Simplified File URL that uses the parent
+     * Page URL and the filename as a more stable
+     * alternative for the media URLs.
+     *
+     * @return string
+     */
+    public function previewUrl(): string
+    {
+        return url($this->id());
+    }
 }

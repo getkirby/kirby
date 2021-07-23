@@ -13,7 +13,7 @@
           :editable="permissions.changeName && !isLocked"
           :tab="tab.name"
           :tabs="tabs"
-          @edit="$dialog($view.path + '/changeName')"
+          @edit="$dialog(id + '/changeName')"
         >
           {{ model.filename }}
 
@@ -39,7 +39,7 @@
                 </k-button>
                 <k-dropdown-content
                   ref="settings"
-                  :options="options"
+                  :options="$dropdown(id)"
                   @action="action"
                 />
               </k-dropdown>
@@ -59,15 +59,12 @@
           :blueprint="blueprint"
           :empty="$t('file.blueprint', { blueprint: $esc(blueprint) })"
           :lock="lock"
-          :parent="path"
+          :parent="id"
           :tab="tab"
         />
 
         <k-upload
           ref="upload"
-          :url="uploadApi"
-          :accept="model.mime"
-          :multiple="false"
           @success="onUpload"
         />
       </k-view>
@@ -82,31 +79,17 @@ export default {
   extends: ModelView,
   computed: {
     id() {
-      return "files/" + this.model.id;
-    },
-    options() {
-      return async ready => {
-        const options = await this.$api.files.options(
-          this.model.parent,
-          this.model.filename
-        );
-        ready(options);
-      };
-    },
-    path() {
-      return this.model.parent + "/files/" + this.model.filename;
-    },
-    uploadApi() {
-      return this.$urls.api + "/" + this.path;
-    },
+      return this.$api.files.url(this.model.parent, this.model.filename);
+    }
   },
   methods: {
     action(action) {
       switch (action) {
         case "replace":
           this.$refs.upload.open({
-            url: this.$urls.api + "/" + this.$api.files.url(this.model.parent, this.model.filename),
-            accept: "." + this.model.extension + "," + this.model.mime
+            url: this.$urls.api + "/" + this.id,
+            accept: "." + this.model.extension + "," + this.model.mime,
+            multiple: false
           });
           break;
       }

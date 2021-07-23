@@ -49,10 +49,10 @@ class PHP extends Handler
     /**
      * PHP strings shouldn't be decoded manually
      *
-     * @param mixed $array
+     * @param mixed $string
      * @return array
      */
-    public static function decode($array): array
+    public static function decode($string): array
     {
         throw new BadMethodCallException('The PHP::decode() method is not implemented');
     }
