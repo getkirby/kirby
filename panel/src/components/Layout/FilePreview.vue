@@ -8,7 +8,7 @@
           class="k-file-preview-image-link"
           target="_blank"
         >
-          <k-item-image :image="image" layout="card" />
+          <k-item-image :image="image" layout="cards" />
         </k-link>
       </div>
       <div class="k-file-preview-details">

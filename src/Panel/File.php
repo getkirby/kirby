@@ -342,7 +342,10 @@ class File extends Model
                     'type'       => $file->type(),
                 ],
                 'preview' => [
-                    'image'   => $this->image(['back' => 'transparent'], 'cards'),
+                    'image'   => $this->image([
+                        'back'  => 'transparent',
+                        'ratio' => '1/1'
+                    ], 'cards'),
                     'url'     => $url = $file->previewUrl(),
                     'details' => [
                         [
