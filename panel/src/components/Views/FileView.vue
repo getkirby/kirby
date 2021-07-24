@@ -20,7 +20,7 @@
           <template #left>
             <k-button-group>
               <k-button
-                :link="model.url"
+                :link="model.previewUrl"
                 :responsive="true"
                 class="k-file-view-options"
                 icon="open"
