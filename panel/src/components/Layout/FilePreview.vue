@@ -3,7 +3,7 @@
     <k-view class="k-file-preview-layout">
       <div class="k-file-preview-image">
         <k-link
-          :to="file.url"
+          :to="file.previewUrl"
           :title="$t('open')"
           class="k-file-preview-image-link"
           target="_blank"
@@ -36,7 +36,7 @@
           <li>
             <h3>{{ $t("url") }}</h3>
             <p>
-              <k-link :to="file.url" tabindex="-1" target="_blank">
+              <k-link :to="file.previewUrl" tabindex="-1" target="_blank">
                 /{{ file.id }}
               </k-link>
             </p>
