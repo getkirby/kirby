@@ -315,13 +315,15 @@ class File extends Model
      */
     public function props(): array
     {
-        $file     = $this->model;
-        $siblings = $file->templateSiblings()->sortBy(
+        $file       = $this->model;
+        $dimensions = $file->dimensions();
+        $siblings   = $file->templateSiblings()->sortBy(
             'sort',
             'asc',
             'filename',
             'asc'
         );
+
 
         return array_merge(
             parent::props(),
@@ -330,16 +332,16 @@ class File extends Model
                 'blueprint' => $this->model->template() ?? 'default',
                 'model' => [
                     'content'    => $this->content(),
-                    'dimensions' => $file->dimensions()->toArray(),
+                    'dimensions' => $dimensions->toArray(),
                     'extension'  => $file->extension(),
                     'filename'   => $file->filename(),
                     'mime'       => $file->mime(),
                     'niceSize'   => $file->niceSize(),
                     'id'         => $id = $file->id(),
                     'parent'     => $file->parent()->panel()->path(),
-                    'url'        => $file->url(),
                     'template'   => $file->template(),
                     'type'       => $file->type(),
+                    'url'        => $file->url(),
                 ],
                 'preview' => [
                     'image'   => $this->image([
@@ -367,11 +369,11 @@ class File extends Model
                         ],
                         [
                             'title' => t('dimensions'),
-                            'text'  => $file->dimensions() ? $file->dimensions()->width() . '×' . $file->dimensions()->height() . ' ' . t('pixel') : '—'
+                            'text'  => $file->type() === 'image' ? $file->dimensions() . ' ' . t('pixel') : '—'
                         ],
                         [
                             'title' => t('orientation'),
-                            'text'  => $file->dimensions() ? t('orientation.' . $file->dimensions()->orientation()) : '—'
+                            'text'  => $file->type() === 'image' ? t('orientation.' . $dimensions->orientation()) : '—'
                         ],
                     ]
                 ]
