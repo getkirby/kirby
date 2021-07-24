@@ -310,13 +310,24 @@ class Site extends ModelWithContent
         }
 
         $kirby = $this->kirby();
+        $pages = $kirby->extensions('pages');
+        $children = [];
+        if (count($pages) > 0) {
+            foreach ($pages as $page) {
+                $children[] = $page->toArray();
+            }
+        }
 
-        return $this->inventory = Dir::inventory(
+        $this->inventory = Dir::inventory(
             $this->root(),
             $kirby->contentExtension(),
             $kirby->contentIgnore(),
             $kirby->multilang()
         );
+
+        $this->inventory['children'] = array_merge($this->inventory['children'], $children);
+
+        return $this->inventory;
     }
 
     /**
