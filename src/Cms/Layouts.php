@@ -42,6 +42,17 @@ class Layouts extends Items
     }
 
     /**
+     * Checks if a given block type exists in the layouts collection
+     *
+     * @param string $type
+     * @return bool
+     */
+    public function hasBlockType(string $type): bool
+    {
+        return $this->toBlocks()->hasType($type);
+    }
+
+    /**
      * Parse layouts data
      *
      * @param array|string $input
@@ -62,5 +73,27 @@ class Layouts extends Items
         }
 
         return $input;
+    }
+
+    /**
+     * Converts layouts to blocks
+     *
+     * @return \Kirby\Cms\Blocks
+     */
+    public function toBlocks()
+    {
+        $blocks = [];
+
+        if ($this->isNotEmpty() === true) {
+            foreach ($this->data() as $layout) {
+                foreach ($layout->columns() as $column) {
+                    foreach ($column->blocks() as $block) {
+                        $blocks[] = $block->toArray();
+                    }
+                }
+            }
+        }
+
+        return Blocks::factory($blocks);
     }
 }
