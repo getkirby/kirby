@@ -40,29 +40,7 @@
           </template>
 
           <!-- registration -->
-          <template v-else-if="!license">
-            <div class="k-registration">
-              <p>{{ $t('license.unregistered') }}</p>
-              <k-button
-                :responsive="true"
-                :tooltip="$t('license.unregistered')"
-                class="k-topbar-signals-button"
-                icon="key"
-                @click="$dialog('registration')"
-              >
-                {{ $t('license.register') }}
-              </k-button>
-              <k-button
-                :responsive="true"
-                class="k-topbar-signals-button"
-                link="https://getkirby.com/buy"
-                target="_blank"
-                icon="cart"
-              >
-                {{ $t('license.buy') }}
-              </k-button>
-            </div>
-          </template>
+          <k-registration v-else-if="!license" />
 
           <!-- unsaved changes indicator -->
           <k-form-indicator />
@@ -106,18 +84,28 @@ export default {
 
 <style>
 .k-topbar {
+  --bg: var(--color-gray-900);
+
   position: relative;
   color: var(--color-white);
   flex-shrink: 0;
   height: 2.5rem;
   line-height: 1;
-  background: var(--color-gray-900);
+  background: var(--bg);
 }
 .k-topbar-wrapper {
   position: relative;
   display: flex;
   align-items: center;
   margin-inline: -0.75rem;
+}
+.k-topbar-wrapper::after {
+  position: absolute;
+  content: "";
+  height: 2.5rem;
+  background: var(--bg);
+  inset-inline-start: 100%;
+  width: 3rem;
 }
 
 .k-topbar-menu {
@@ -164,7 +152,7 @@ export default {
   position: absolute;
   inset-block-start: 0;
   inset-inline-end: 0;
-  background: var(--color-gray-900);
+  background: var(--bg);
   height: 2.5rem;
   display: flex;
   align-items: center;
@@ -207,27 +195,5 @@ export default {
   .k-topbar .k-button[data-theme="negative"] .k-button-text {
     display: inline;
   }
-}
-
-.k-registration {
-  display: inline-block;
-  margin-inline-end: 1rem;
-  display: flex;
-  align-items: center;
-}
-.k-registration p {
-  color: var(--color-negative-light);
-  font-size: var(--text-sm);
-  margin-inline-end: 1rem;
-  font-weight: 600;
-  display: none;
-}
-@media screen and (min-width: 90em) {
-  .k-registration p {
-    display: block;
-  }
-}
-.k-registration .k-button {
-  color: var(--color-white);
 }
 </style>
