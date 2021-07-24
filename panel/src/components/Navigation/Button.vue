@@ -21,6 +21,10 @@ export default {
   props: {
     autofocus: Boolean,
     /**
+     * Pass instead of a link URL to be triggered on clicking the button
+     */
+    click: Function,
+    /**
      * Sets the `aria-current` attribute. Especially useful in connection with a `link` attribute.
      */
     current: [String, Boolean],

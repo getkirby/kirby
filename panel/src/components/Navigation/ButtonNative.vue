@@ -11,6 +11,7 @@
     :type="type"
     class="k-button"
     v-on="$listeners"
+    @click="click"
   >
     <k-icon
       v-if="icon"
@@ -30,6 +31,10 @@ export default {
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
+    click: {
+      type: Function,
+      default: () => {}
+    },
     current: [String, Boolean],
     icon: String,
     id: [String, Number],
