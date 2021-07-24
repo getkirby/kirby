@@ -27,7 +27,9 @@
           <li>
             <dl>
               <dt>{{ $t('version') }}</dt>
-              <dd>{{ version }}</dd>
+              <dd dir="ltr">
+                {{ version }}
+              </dd>
             </dl>
           </li>
         </ul>
