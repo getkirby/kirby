@@ -78,10 +78,17 @@ return [
         },
         'submit' => function (string $path, string $filename) {
             $file     = Find::file($path, $filename);
-            $files    = $file->siblings();
+            $files    = $file->siblings()->sortBy('sort', 'asc');
             $ids      = $files->keys();
-            $oldIndex = $files->indexOf($file);
             $newIndex = (int)(get('position')) - 1;
+
+            // use file sort value if exists
+            // otherwise use index from collection
+            if ($file->sort()->exists() === true) {
+                $oldIndex = $file->sort()->int() - 1;
+            } else {
+                $oldIndex = $files->indexOf($file);
+            }
 
             array_splice($ids, $oldIndex, 1);
             array_splice($ids, $newIndex, 0, $file->id());
