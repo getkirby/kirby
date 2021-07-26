@@ -155,6 +155,17 @@ class Files extends Collection
     }
 
     /**
+     * Returns the collection sorted by
+     * the sort number and the filename
+     *
+     * @return static
+     */
+    public function sorted()
+    {
+        return $this->sort('sort', 'asc', 'filename', 'asc');
+    }
+
+    /**
      * Filter all files by the given template
      *
      * @param null|string|array $template

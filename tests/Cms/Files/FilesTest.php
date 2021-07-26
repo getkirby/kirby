@@ -148,4 +148,50 @@ class FilesTest extends TestCase
 
         Dir::remove($tmp);
     }
+
+    /**
+     * @covers ::sorted
+     */
+    public function testSortedByFilename()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'files' => [
+                    ['filename' => 'b.jpg'],
+                    ['filename' => 'a.jpg']
+                ]
+            ]
+        ]);
+
+        $files = $app->site()->files()->sorted();
+
+        $this->assertSame('a.jpg', $files->first()->filename());
+        $this->assertSame('b.jpg', $files->last()->filename());
+    }
+
+    /**
+     * @covers ::sorted
+     */
+    public function testSortedBySort()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'files' => [
+                    ['filename' => 'a.jpg', 'content' => ['sort' => 2]],
+                    ['filename' => 'b.jpg', 'content' => ['sort' => 1]]
+                ]
+            ]
+        ]);
+
+        $files = $app->site()->files()->sorted();
+
+        $this->assertSame('b.jpg', $files->first()->filename());
+        $this->assertSame('a.jpg', $files->last()->filename());
+    }
 }

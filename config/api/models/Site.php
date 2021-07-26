@@ -24,7 +24,7 @@ return [
             return $site->drafts();
         },
         'files' => function (Site $site) {
-            return $site->files()->sort('sort', 'asc', 'filename', 'asc');
+            return $site->files()->sorted();
         },
         'options' => function (Site $site) {
             return $site->permissions()->toArray();
