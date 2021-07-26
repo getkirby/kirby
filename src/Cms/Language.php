@@ -246,14 +246,16 @@ class Language extends Model
             throw new Exception('The language could not be deleted');
         }
 
+        if ($isLast === true) {
+            $this->converter($code, '');
+        } else {
+            $this->deleteContentFiles($code);
+        }
+
         // get the original language collection and remove the current language
         $kirby->languages(false)->remove($code);
 
-        if ($isLast === true) {
-            return $this->converter($code, '');
-        } else {
-            return $this->deleteContentFiles($code);
-        }
+        return true;
     }
 
     /**
