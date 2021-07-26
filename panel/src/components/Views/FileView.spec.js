@@ -57,7 +57,7 @@ describe("FileView", () => {
         .invoke("attr", "href")
         .should(
           "contain",
-          Cypress.config().baseUrl + "/media/pages/photography/trees"
+          Cypress.config().baseUrl + "/photography/trees/cheesy-autumn.jpg"
         );
     });
 
