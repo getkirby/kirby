@@ -88,6 +88,9 @@ export default {
 </script>
 
 <style>
+.k-breadcrumb {
+  padding-inline: .5rem;
+}
 .k-breadcrumb-dropdown {
   height: 2.5rem;
   width: 2.5rem;
@@ -115,7 +118,7 @@ export default {
   font-size: var(--text-sm);
   min-width: 0;
   align-self: stretch;
-  padding: .625rem .5rem;
+  padding-block: .625rem;
   line-height: 1.25rem;
 }
 .k-breadcrumb li {
@@ -129,10 +132,19 @@ export default {
 }
 .k-breadcrumb li:not(:last-child)::after {
   content: "/";
+  padding-inline: .5rem;
   opacity: .5;
   flex-shrink: 0;
 }
+.k-breadcrumb li:not(:first-child):not(:last-child) {
+  max-width: 15vw;
+}
 .k-breadcrumb-icon {
   margin-inline-end: .5rem;
+}
+.k-breadcrumb-link-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
