@@ -78,7 +78,7 @@ return [
         },
         'submit' => function (string $path, string $filename) {
             $file     = Find::file($path, $filename);
-            $files    = $file->siblings()->sortBy('sort', 'asc');
+            $files    = $file->siblings()->sorted();
             $ids      = $files->keys();
             $newIndex = (int)(get('position')) - 1;
 

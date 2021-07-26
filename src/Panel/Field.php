@@ -46,7 +46,7 @@ class Field
         $index   = 0;
         $options = [];
 
-        foreach ($file->siblings(false) as $sibling) {
+        foreach ($file->siblings(false)->sorted() as $sibling) {
             $index++;
 
             $options[] = [
