@@ -91,7 +91,7 @@ return [
             if ($this->sortBy) {
                 $files = $files->sort(...$files::sortArgs($this->sortBy));
             } else {
-                $files = $files->sort('sort', 'asc', 'filename', 'asc');
+                $files = $files->sorted();
             }
 
             // flip

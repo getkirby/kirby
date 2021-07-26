@@ -27,7 +27,7 @@ return [
             return $page->errors();
         },
         'files' => function (Page $page) {
-            return $page->files()->sort('sort', 'asc', 'filename', 'asc');
+            return $page->files()->sorted();
         },
         'hasChildren' => function (Page $page) {
             return $page->hasChildren();
