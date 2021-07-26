@@ -81,14 +81,7 @@ return [
             $files    = $file->siblings()->sorted();
             $ids      = $files->keys();
             $newIndex = (int)(get('position')) - 1;
-
-            // use file sort value if exists
-            // otherwise use index from collection
-            if ($file->sort()->exists() === true) {
-                $oldIndex = $file->sort()->int() - 1;
-            } else {
-                $oldIndex = $files->indexOf($file);
-            }
+            $oldIndex = $files->indexOf($file);
 
             array_splice($ids, $oldIndex, 1);
             array_splice($ids, $newIndex, 0, $file->id());
