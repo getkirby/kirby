@@ -29,6 +29,9 @@ class YamlTest extends TestCase
         $result = Yaml::decode($data);
         $this->assertSame($array, $result);
 
+        $this->assertSame('', Yaml::encode([]));
+        $this->assertSame([], Yaml::decode(''));
+
         $this->assertSame([], Yaml::decode(null));
         $this->assertSame(['this is' => 'an array'], Yaml::decode(['this is' => 'an array']));
     }
