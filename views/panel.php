@@ -48,7 +48,7 @@
 
   <script nonce="<?= $nonce ?>">
     // Panel state
-    const json = <?= json_encode($fiber, JSON_UNESCAPED_SLASHES) ?>;
+    const json = <?= json_encode($fiber) ?>;
 
     window.panel = JSON.parse(JSON.stringify(json));
 
