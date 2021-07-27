@@ -137,11 +137,11 @@
   --z-loader: 1000;
   --z-notification: 900;
   --z-dialog: 800;
-  --z-dropdown: 700;
-  --z-drawer: 600;
-  --z-dropzone: 500;
-  --z-toolbar: 400;
-  --z-navigation: 300;
+  --z-navigation: 700;
+  --z-dropdown: 600;
+  --z-drawer: 500;
+  --z-dropzone: 400;
+  --z-toolbar: 300;
   --z-content: 200;
   --z-background: 100;
 
