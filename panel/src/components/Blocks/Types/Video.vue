@@ -36,14 +36,14 @@ export default {
       var youtubeMatch = url.match(youtubePattern);
 
       if (youtubeMatch) {
-        return "https://www.youtube.com/embed/" + youtubeMatch[2];
+        return "https://www.youtube-nocookie.com/embed/" + youtubeMatch[2];
       }
 
       var vimeoPattern = /vimeo\.com\/([0-9]+)/;
       var vimeoMatch = url.match(vimeoPattern);
 
       if (vimeoMatch) {
-        return "https://player.vimeo.com/video/" + vimeoMatch[1];
+        return "https://player.vimeo.com/video/" + vimeoMatch[1] + "&dnt=1";
       }
 
       return false;
