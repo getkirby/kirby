@@ -19,6 +19,11 @@
   box-shadow: var(--color-negative-outline) 0 0 0 2px !important;
 }
 
+/* Tabbed */
+[data-tabbed] {
+  box-shadow: var(--shadow-outline);
+}
+
 /* Theme */
 [data-theme="positive"],
 [data-theme="success"] {

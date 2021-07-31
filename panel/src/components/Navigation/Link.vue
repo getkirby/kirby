@@ -117,7 +117,4 @@ export default {
 .k-link {
   outline: none;
 }
-.k-link[data-tabbed] {
-  box-shadow: var(--shadow-outline);
-}
 </style>
