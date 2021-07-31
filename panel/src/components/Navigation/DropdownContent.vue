@@ -253,8 +253,7 @@ export default {
 <style>
 .k-dropdown-content {
   position: absolute;
-  inset-block-start: 100%;
-  inset-inline-start: 0;
+  top: 100%;
   background: var(--color-black);
   color: var(--color-white);
   z-index: var(--z-dropdown);
