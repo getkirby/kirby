@@ -72,6 +72,9 @@ export default {
 .k-text[data-size="large"] {
   font-size: var(--text-xl);
 }
+.k-text[data-align] {
+  text-align: var(--align);
+}
 
 .k-text[data-theme="help"] {
   font-size: var(--text-sm);

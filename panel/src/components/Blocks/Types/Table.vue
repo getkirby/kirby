@@ -106,4 +106,7 @@ export default {
   color: var(--color-gray-600);
   font-size: var(--text-sm);
 }
+.k-block-type-table-preview [data-align] {
+  text-align: var(--align);
+}
 </style>
