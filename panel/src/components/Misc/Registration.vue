@@ -4,7 +4,7 @@
     <k-button
       :responsive="true"
       :tooltip="$t('license.unregistered')"
-      class="k-topbar-signals-button"
+      class="k-topbar-button"
       icon="key"
       @click="$dialog('registration')"
     >
@@ -12,7 +12,7 @@
     </k-button>
     <k-button
       :responsive="true"
-      class="k-topbar-signals-button"
+      class="k-topbar-button"
       link="https://getkirby.com/buy"
       target="_blank"
       icon="cart"
@@ -33,11 +33,10 @@
   font-size: var(--text-sm);
   margin-inline-end: 1rem;
   font-weight: 600;
-  display: none;
 }
-@media screen and (min-width: 90em) {
+@media screen and (max-width: 90em) {
   .k-registration p {
-    display: block;
+    display: none;
   }
 }
 .k-registration .k-button {
