@@ -51,7 +51,7 @@ export default {
 
 <style>
 .k-info-field .k-headline {
-  padding-block-end: .75rem;
+  padding-bottom: .75rem;
   line-height: 1.25rem;
 }
 </style>

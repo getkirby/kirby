@@ -1,7 +1,7 @@
 <template>
   <span
     :data-cover="cover"
-    :style="{ 'padding-block-end': ratioPadding }"
+    :style="{ 'padding-bottom': ratioPadding }"
     class="k-aspect-ratio"
   >
     <slot />
@@ -27,7 +27,7 @@ export default {
   position: relative;
   display: block;
   overflow: hidden;
-  padding-block-end: 100%;
+  padding-bottom: 100%;
 }
 .k-aspect-ratio > * {
   position: absolute !important;

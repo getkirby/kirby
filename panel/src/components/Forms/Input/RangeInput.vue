@@ -239,7 +239,7 @@ export default {
   background: var(--range-track-color);
 }
 .k-range-input-native::-webkit-slider-thumb {
-  margin-block-start: calc(0.5 * (var(--range-track-height) - var(--range-thumb-size)));
+  margin-top: calc(0.5 * (var(--range-track-height) - var(--range-thumb-size)));
 }
 
 .k-range-input-native::-webkit-slider-thumb {
@@ -270,7 +270,7 @@ export default {
   cursor: pointer;
 }
 .k-range-input-native::-ms-thumb {
-  margin-block-start: 0;
+  margin-top: 0;
 }
 .k-range-input-native::-ms-tooltip {
   display: none;
@@ -325,7 +325,7 @@ export default {
 }
 .k-range-input-tooltip::after {
   position: absolute;
-  inset-block-start: 50%;
+  top: 50%;
   inset-inline-start: -5px;
   width: 0;
   height: 0;

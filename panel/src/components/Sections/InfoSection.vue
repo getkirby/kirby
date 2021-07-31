@@ -35,7 +35,7 @@ export default {
 <style>
 
 .k-info-section-headline {
-  margin-block-end: .5rem;
+  margin-bottom: .5rem;
 }
 
 </style>

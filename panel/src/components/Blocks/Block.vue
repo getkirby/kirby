@@ -221,10 +221,9 @@ export default {
   position: relative;
   padding: .75rem;
   background: var(--color-white);
-  border-block-end: 1px dashed rgba(0, 0, 0, .1);
 }
-.k-block-container:last-of-type {
-  border-block-end: 0;
+.k-block-container:not(:last-of-type) {
+  border-bottom: 1px dashed rgba(0, 0, 0, .1);
 }
 .k-block-container:focus {
   outline: 0;
@@ -232,7 +231,7 @@ export default {
 
 .k-block-container[data-batched] {
   z-index: 2;
-  border-block-end-color: transparent;
+  border-bottom-color: transparent;
 }
 .k-block-container[data-batched]::after {
   position: absolute;
@@ -246,14 +245,14 @@ export default {
 .k-block-container[data-selected] {
   z-index: 2;
   box-shadow: var(--color-focus) 0 0 0 1px, var(--color-focus-outline) 0 0 0 3px;
-  border-block-end-color: transparent;
+  border-bottom-color: transparent;
 }
 .k-block-container .k-block-options {
   display: none;
   position: absolute;
-  inset-block-start: 0;
+  top: 0;
   inset-inline-end: .75rem;
-  margin-block-start: calc(-1.75rem + 2px);
+  margin-top: calc(-1.75rem + 2px);
 }
 .k-block-container[data-last-in-batch] .k-block-options,
 .k-block-container[data-selected] .k-block-options {

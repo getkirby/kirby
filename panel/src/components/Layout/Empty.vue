@@ -77,7 +77,7 @@ button.k-empty:focus {
   flex-direction: column;
 }
 .k-empty[data-layout="cards"] .k-icon {
-  margin-block-end: 1rem;
+  margin-bottom: 1rem;
 }
 .k-empty[data-layout="cards"] .k-icon svg {
   width: 2rem;

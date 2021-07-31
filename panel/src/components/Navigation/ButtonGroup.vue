@@ -18,24 +18,24 @@ export default {}
 
 <style>
 .k-button-group {
-  --button-group-padding-horizontal: .75rem;
-  --button-group-padding-vertical: 1rem;
-  --button-group-line-height: 1rem;
+  --padding-x: .75rem;
+  --padding-y: 1rem;
+  --line-height: 1rem;
 
   font-size: 0;
-  margin-inline: calc(var(--button-group-padding-horizontal) * -1);
+  margin: 0 calc(var(--padding-x) * -1);
 }
 .k-button-group > .k-dropdown {
-  height: calc(var(--button-group-line-height) + calc(var(--button-group-padding-vertical) * 2));
+  height: calc(var(--line-height) + (var(--padding-y) * 2));
   display: inline-block;
 }
 .k-button-group > .k-dropdown > .k-button,
 .k-button-group > .k-button {
-  padding: var(--button-group-padding-vertical) var(--button-group-padding-horizontal);
-  line-height: var(--button-group-line-height);
+  padding: var(--padding-y) var(--padding-x);
+  line-height: var(--line-height);
 }
 .k-button-group .k-dropdown-content {
-  inset-block-start: calc(100% + 1px);
-  margin: 0 var(--button-group-padding-horizontal);
+  top: calc(100% + 1px);
+  margin: 0 var(--padding-x);
 }
 </style>

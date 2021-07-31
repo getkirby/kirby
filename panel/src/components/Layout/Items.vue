@@ -165,7 +165,7 @@ export default {
  * List
  */
 .k-list-items .k-list-item:not(:last-child) {
-  margin-block-end: 2px;
+  margin-bottom: 2px;
 }
 
 </style>

@@ -318,7 +318,7 @@ export default {
   word-wrap: break-word;
 }
 .k-cards-item .k-item-info {
-  padding-block-start: .125rem;
+  padding-top: .125rem;
 }
 .k-cards-item .k-item-footer {
   grid-area: footer;

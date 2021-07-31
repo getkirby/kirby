@@ -179,7 +179,7 @@ export default {
 }
 
 .k-user-profile .k-dropdown-content {
-  margin-block-start: .5rem;
+  margin-top: .5rem;
   inset-inline-start: 50%;
   transform: translateX(-50%);
 }

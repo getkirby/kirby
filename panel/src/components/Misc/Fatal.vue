@@ -66,7 +66,7 @@ export default {
   border-radius: var(--rounded);
 }
 .k-fatal-box .k-bar {
-  margin-block-end: var(--spacing-3);
+  margin-bottom: var(--spacing-3);
 }
 .k-fatal-iframe {
   border: 0;

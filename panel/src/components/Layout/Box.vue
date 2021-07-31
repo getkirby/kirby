@@ -98,7 +98,7 @@ export default {
   border: 1px dashed var(--color-border);
 }
 .k-box[data-theme="empty"] .k-icon {
-  margin-block-end: .5rem;
+  margin-bottom: .5rem;
   color: var(--color-gray-500);
 }
 .k-box[data-theme="empty"] p {

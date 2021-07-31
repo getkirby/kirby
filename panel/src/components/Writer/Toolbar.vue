@@ -134,12 +134,12 @@ export default {
 .k-writer-toolbar-button.k-writer-toolbar-nodes::after {
   content: "";
   margin-inline-start: .5rem;
-  border-block-start: 4px solid var(--color-white);
+  border-top: 4px solid var(--color-white);
   border-inline: 4px solid transparent;
 }
 .k-writer-toolbar .k-dropdown-content {
   color: var(--color-black);
   background: var(--color-white);
-  margin-block-start: .5rem;
+  margin-top: .5rem;
 }
 </style>

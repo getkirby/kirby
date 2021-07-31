@@ -46,7 +46,7 @@ export default {
 
 .k-login-toggler {
   position: absolute;
-  inset-block-start: 0;
+  top: 0;
   inset-inline-end: 0;
   z-index: 1;
 

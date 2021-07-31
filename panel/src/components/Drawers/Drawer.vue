@@ -217,7 +217,7 @@ export default {
 }
 .k-drawer-tab.k-button[aria-current]::after {
   position: absolute;
-  inset-block-end: -1px;
+  bottom: -1px;
   inset-inline: .75rem;
   content: "";
   background: var(--color-black);

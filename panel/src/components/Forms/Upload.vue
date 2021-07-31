@@ -188,12 +188,12 @@ export default {
 <style>
 .k-upload input {
   position: absolute;
-  inset-block-start: 0;
+  top: 0;
   inset-inline-start: -3000px;
 }
 
 .k-upload .k-headline {
-  margin-block-end: .75rem;
+  margin-bottom: .75rem;
 }
 
 .k-upload-list,
@@ -211,7 +211,7 @@ export default {
   border-radius: var(--rounded-xs);
 }
 .k-upload-error-list li:not(:last-child) {
-  margin-block-end: 2px;
+  margin-bottom: 2px;
 }
 .k-upload-error-filename {
   color: var(--color-negative);

@@ -92,15 +92,15 @@ export default {
   line-height: 1.5em;
   padding: .5rem .75rem;
   font-size: var(--text-sm);
-  border-block-end: 1px solid var(--color-gray-300);
+}
+.k-block-type-table-preview tr:not(:last-child) td,
+.k-block-type-table-preview th {
+    border-bottom: 1px solid var(--color-gray-300);
 }
 .k-block-type-table-preview th {
   background: var(--color-gray-100);
   font-family: var(--font-mono);
   font-size: var(--text-xs);
-}
-.k-block-type-table-preview tr:last-child td {
-  border-block-end: 0;
 }
 .k-block-type-table-preview-empty {
   color: var(--color-gray-600);

@@ -325,12 +325,12 @@ export default {
 }
 
 .k-dialog-body .k-fieldset {
-  padding-block-end: .5rem;
+  padding-bottom: .5rem;
 }
 
 .k-dialog-footer {
   padding: 0;
-  border-block-start: 1px solid var(--color-gray-300);
+  border-top: 1px solid var(--color-gray-300);
   border-end-start-radius: var(--rounded-xs);
   border-end-end-radius: var(--rounded-xs);
   line-height: 1;
@@ -359,7 +359,7 @@ export default {
 
 /** Pagination **/
 .k-dialog-pagination {
-  margin-block-end: -1.5rem;
+  margin-bottom: -1.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -367,7 +367,7 @@ export default {
 
 /** Dialog search field **/
 .k-dialog-search {
-  margin-block-end: .75rem;
+  margin-bottom: .75rem;
 }
 
 .k-dialog-search.k-input {

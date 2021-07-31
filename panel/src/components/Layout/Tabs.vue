@@ -126,7 +126,7 @@ export default {
 .k-tabs {
   position: relative;
   background: #e9e9e9;
-  border-block-start: 1px solid var(--color-border);
+  border-top: 1px solid var(--color-border);
   border-inline: 1px solid var(--color-border);
 }
 .k-tabs nav {
@@ -164,7 +164,7 @@ export default {
   }
 }
 .k-tab-button.k-button > .k-button-text {
-  padding-block-start: .375rem;
+  padding-top: .375rem;
   padding-inline-start: 0;
   font-size: 10px;
   overflow: hidden;
@@ -175,7 +175,7 @@ export default {
 @media screen and (min-width: 30em) {
   .k-tab-button.k-button > .k-button-text {
     font-size: var(--text-xs);
-    padding-block-start: 0;
+    padding-top: 0;
   }
 }
 .k-tab-button:last-child {
@@ -199,19 +199,19 @@ export default {
 
 .k-tab-button[aria-current]::before {
   inset-inline: -1px;
-  inset-block-start: -1px;
+  top: -1px;
   height: 2px;
   background: var(--color-black);
 }
 
 .k-tab-button[aria-current]::after {
   inset-inline: 0;
-  inset-block-end: -1px;
+  bottom: -1px;
   height: 1px;
   background: var(--color-background);
 }
 .k-tabs-dropdown {
-  inset-block-start: 100%;
+  top: 100%;
   inset-inline-end: 0;
 }
 .k-tabs-badge {
