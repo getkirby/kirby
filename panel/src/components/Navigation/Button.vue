@@ -132,10 +132,6 @@ button::-moz-focus-inner {
   outline: none;
 }
 
-.k-button[data-tabbed] {
-  box-shadow: var(--shadow-outline);
-}
-
 .k-button * {
   vertical-align: middle;
 }
