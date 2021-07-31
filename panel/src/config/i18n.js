@@ -27,9 +27,9 @@ export default {
     app.directive('direction', {
       inserted(el, binding, vnode) {
         if (vnode.context.disabled !== true) {
-          el.dir = vnode.context.$direction || "ltr";
+          el.dir = vnode.context.$direction;
         } else {
-          el.dir = "ltr";
+          el.dir = null;
         }
       }
     });

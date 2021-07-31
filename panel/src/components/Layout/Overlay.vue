@@ -7,7 +7,6 @@
       :data-loading="loading"
       :class="$vnode.data.staticClass"
       class="k-overlay"
-      v-direction
       v-on="$listeners"
       @mousedown="close"
     >
