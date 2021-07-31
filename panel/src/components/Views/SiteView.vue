@@ -16,14 +16,13 @@
         <template #left>
           <k-button-group>
             <k-button
-              :responsive="true"
               :link="model.previewUrl"
-              class="k-site-view-preview"
+              :responsive="true"
+              :text="$t('open')"
               icon="open"
               target="_blank"
-            >
-              {{ $t('open') }}
-            </k-button>
+              class="k-site-view-preview"
+            />
             <k-languages-dropdown />
           </k-button-group>
         </template>

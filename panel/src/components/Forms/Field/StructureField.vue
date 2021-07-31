@@ -6,11 +6,10 @@
         v-if="more && currentIndex === null"
         :id="_uid"
         ref="add"
+        :text="$t('add')"
         icon="add"
         @click="add"
-      >
-        {{ $t("add") }}
-      </k-button>
+      />
     </template>
 
     <!-- Form -->
@@ -26,9 +25,12 @@
           @submit="submit"
         />
         <footer class="k-structure-form-buttons">
-          <k-button class="k-structure-form-cancel-button" icon="cancel" @click="close">
-            {{ $t('cancel') }}
-          </k-button>
+          <k-button
+            :text="$t('cancel')"
+            icon="cancel"
+            class="k-structure-form-cancel-button"
+            @click="close"
+          />
           <k-pagination
             v-if="currentIndex !== 'new'"
             :dropdown="false"
@@ -39,9 +41,12 @@
             :validate="beforePaginate"
             @paginate="paginate"
           />
-          <k-button class="k-structure-form-submit-button" icon="check" @click="submit">
-            {{ $t(currentIndex !== 'new' ? 'confirm' : 'add') }}
-          </k-button>
+          <k-button
+            :text="$t(currentIndex !== 'new' ? 'confirm' : 'add')"
+            icon="check"
+            class="k-structure-form-submit-button"
+            @click="submit"
+          />
         </footer>
       </section>
     </template>

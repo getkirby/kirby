@@ -3,14 +3,11 @@
     :disabled="disabled"
     :icon="icon"
     :responsive="responsive"
+    :text="text"
     :tooltip="title"
     :class="'k-status-icon k-status-icon-' + status"
     @click="onClick"
-  >
-    <template v-if="text">
-      {{ text }}
-    </template>
-  </k-button>
+  />
 </template>
 
 <script>

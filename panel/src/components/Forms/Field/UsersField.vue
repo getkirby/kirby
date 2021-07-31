@@ -5,11 +5,10 @@
         <k-button
           v-if="more && !disabled"
           :icon="btnIcon"
+          :text="btnLabel"
           class="k-field-options-button"
           @click="open"
-        >
-          {{ btnLabel }}
-        </k-button>
+        />
       </k-button-group>
     </template>
 

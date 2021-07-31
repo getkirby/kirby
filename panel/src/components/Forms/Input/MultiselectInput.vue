@@ -74,11 +74,10 @@
 
         <k-button
           v-if="visible.length < filtered.length"
+          :text="`${$t('search.all')} (${filtered.length})`"
           class="k-multiselect-more"
           @click.stop="limit = false"
-        >
-          {{ $t("search.all") }} ({{ filtered.length }})
-        </k-button>
+        />
       </k-dropdown-content>
     </template>
   </k-draggable>

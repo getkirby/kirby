@@ -8,11 +8,10 @@
       <k-headline>
         {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
-      <k-button-group v-if="add">
-        <k-button icon="upload" @click="upload">
-          {{ $t("add") }}
-        </k-button>
-      </k-button-group>
+      <k-button-group
+        v-if="add"
+        :buttons="[{ text: $t('add'), icon: 'upload', click: upload }]"
+      />
     </header>
 
     <template v-if="error">

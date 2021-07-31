@@ -3,11 +3,10 @@
     <k-button
       v-if="isEmpty"
       :icon="emptyIcon"
+      :text="emptyText"
       class="k-block-figure-empty"
       @click="$emit('open')"
-    >
-      {{ emptyText }}
-    </k-button>
+    />
     <span v-else class="k-block-figure-container" @dblclick="$emit('open')">
       <slot />
     </span>

@@ -8,10 +8,9 @@
         <k-button
           slot="right"
           icon="cancel"
+          text="Close"
           @click="$store.dispatch('fatal', false)"
-        >
-          Close
-        </k-button>
+        />
       </k-bar>
       <iframe ref="iframe" class="k-fatal-iframe" />
     </div>
