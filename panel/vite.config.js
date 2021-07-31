@@ -66,7 +66,7 @@ export default ({ command }) => {
     css: {
       postcss: {
         plugins: [
-          postcssLogical({ preserve: true }),
+          postcssLogical(),
           postcssDirPseudoClass()
         ]
       }
