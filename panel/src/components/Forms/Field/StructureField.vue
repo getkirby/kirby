@@ -562,7 +562,7 @@ export default {
 
 <style>
 .k-structure-field {
-  --structure-item-height: 38px;
+  --item-height: 38px;
 }
 
 .k-structure-table {
@@ -592,7 +592,7 @@ export default {
   inset-block-start: 0;
   inset-inline: 0;
   width: 100%;
-  height: var(--structure-item-height);
+  height: var(--item-height);
   padding: 0 .75rem;
   background: #fff;
   color: var(--color-gray-600);
@@ -603,7 +603,7 @@ export default {
 
 .k-structure-table th:last-child,
 .k-structure-table td:last-child {
-  width: var(--structure-item-height);
+  width: var(--item-height);
   border-inline-end: 0;
 }
 
@@ -644,38 +644,15 @@ export default {
   align-items: flex-end;
 }
 
-/* column widths */
-.k-structure-table .k-structure-table-column[data-width="1/2"] {
-  width: 50%;
-}
-.k-structure-table .k-structure-table-column[data-width="1/3"] {
-  width: 33.33%;
-}
-.k-structure-table .k-structure-table-column[data-width="1/4"] {
-  width: 25%;
-}
-.k-structure-table .k-structure-table-column[data-width="1/5"] {
-  width: 20%;
-}
-.k-structure-table .k-structure-table-column[data-width="1/6"] {
-  width: 16.66%;
-}
-.k-structure-table .k-structure-table-column[data-width="1/8"] {
-  width: 12.5%;
-}
-.k-structure-table .k-structure-table-column[data-width="1/9"] {
-  width: 11.11%;
-}
-.k-structure-table .k-structure-table-column[data-width="2/3"] {
-  width: 66.66%;
-}
-.k-structure-table .k-structure-table-column[data-width="3/4"] {
-  width: 75%;
+.k-structure-table .k-structure-table-index,
+.k-structure-table .k-sort-handle,
+.k-structure-table .k-structure-table-options,
+.k-structure-table .k-structure-table-options-button {
+  width: var(--item-height);
+  height: var(--item-height);
 }
 
 .k-structure-table .k-structure-table-index {
-  width: var(--structure-item-height);
-  height: var(--structure-item-height);
   text-align: center;
 }
 .k-structure-table .k-structure-table-index-number {
@@ -684,12 +661,7 @@ export default {
   padding-block-start: .15rem;
 }
 
-.k-structure-table .k-sort-handle {
-  width: var(--structure-item-height);
-  height: var(--structure-item-height);
-  display: none;
-}
-
+.k-structure-table .k-sort-handle,
 .k-structure-table[data-sortable] tr:hover .k-structure-table-index-number {
   display: none;
 }
@@ -699,13 +671,7 @@ export default {
 
 .k-structure-table .k-structure-table-options {
   position: relative;
-  width: var(--structure-item-height);
   text-align: center;
-  height: var(--structure-item-height);
-}
-.k-structure-table .k-structure-table-options-button {
-  width: var(--structure-item-height);
-  height: var(--structure-item-height);
 }
 
 .k-structure-table .k-structure-table-text {
