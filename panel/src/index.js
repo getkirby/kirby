@@ -3,6 +3,7 @@ import "vite/dynamic-import-polyfill";
 import Vue from "vue";
 import Api from "./config/api.js";
 import App from "./fiber/app.js";
+import Errors from "./config/Errors.js";
 import Events from "./config/events.js";
 import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
@@ -16,11 +17,11 @@ import store from "./store/store.js";
 Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
+Vue.use(Errors);
 Vue.use(Helpers);
 Vue.use(Libraries);
 
 import "./config/components.js";
-import "./config/errors.js";
 import "./config/plugins.js";
 
 Vue.use(Events);
