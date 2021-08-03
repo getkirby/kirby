@@ -113,6 +113,7 @@ class AuthCsrfTest extends TestCase
 
     /**
      * @covers ::csrf
+     * @covers ::csrfFromSession
      */
     public function testCsrfFromOption3()
     {
@@ -131,6 +132,7 @@ class AuthCsrfTest extends TestCase
 
     /**
      * @covers ::csrf
+     * @covers ::csrfFromSession
      */
     public function testCsrfFromOption4()
     {
@@ -145,5 +147,19 @@ class AuthCsrfTest extends TestCase
 
         $_GET = ['csrf' => 'invalid-csrf'];
         $this->assertFalse($this->auth->csrf());
+    }
+
+    /**
+     * @covers ::csrfFromSession
+     */
+    public function testCsrfFromSessionPanelDevOption()
+    {
+        $this->app = $this->app->clone([
+            'options' => [
+                'panel.dev' => true
+            ]
+        ]);
+        $this->auth = new Auth($this->app);
+        $this->assertSame('dev', $this->auth->csrfFromSession());
     }
 }

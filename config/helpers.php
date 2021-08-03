@@ -62,21 +62,26 @@ function csrf(?string $check = null)
 {
     $session = App::instance()->session();
 
-    // check explicitly if there have been no arguments at all;
+    // no arguments, generate/return a token
+    // (check explicitly if there have been no arguments at all;
     // checking for null introduces a security issue because null could come
-    // from user input or bugs in the calling code!
+    // from user input or bugs in the calling code!)
     if (func_num_args() === 0) {
-        // no arguments, generate/return a token
-
         $token = $session->get('kirby.csrf');
+
         if (is_string($token) !== true) {
             $token = bin2hex(random_bytes(32));
             $session->set('kirby.csrf', $token);
         }
 
         return $token;
-    } elseif (is_string($check) === true && is_string($session->get('kirby.csrf')) === true) {
-        // argument has been passed, check the token
+    }
+
+    // argument has been passed, check the token
+    if (
+        is_string($check) === true &&
+        is_string($session->get('kirby.csrf')) === true
+    ) {
         return hash_equals($session->get('kirby.csrf'), $check) === true;
     }
 

@@ -176,7 +176,7 @@ class Auth
         $fromHeader = $this->kirby->request()->csrf();
 
         // check for a predefined csrf or use the one from session
-        $fromSession = $this->kirby->option('api.csrf', csrf());
+        $fromSession = $this->csrfFromSession();
 
         // compare both tokens
         if (hash_equals((string)$fromSession, (string)$fromHeader) !== true) {
@@ -184,6 +184,18 @@ class Auth
         }
 
         return $fromSession;
+    }
+
+    /**
+     * Returns either predefined csrf or the one from session
+     * @since 3.6.0
+     *
+     * @return string
+     */
+    public function csrfFromSession(): string
+    {
+        $isDev = $this->kirby->option('panel.dev', false) !== false;
+        return $this->kirby->option('api.csrf', $isDev ? 'dev' : csrf());
     }
 
     /**
