@@ -7,6 +7,7 @@ import Events from "./config/events.js";
 import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
+import Libraries from "./config/libraries.js";
 import Vuelidate from "vuelidate";
 import VuePortal from "@linusborg/vue-simple-portal";
 
@@ -16,10 +17,10 @@ Vue.config.productionTip = false;
 Vue.config.devtools = true;
 
 Vue.use(Helpers);
+Vue.use(Libraries);
 
 import "./config/components.js";
 import "./config/errors.js";
-import "./config/libraries.js";
 import "./config/plugins.js";
 
 Vue.use(Events);
