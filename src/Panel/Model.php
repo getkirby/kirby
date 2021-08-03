@@ -348,7 +348,7 @@ abstract class Model
         if ($tab) {
             foreach ($tab['columns'] as $columnIndex => $column) {
                 foreach ($column['sections'] as $sectionIndex => $section) {
-                    if ($section['type'] === 'fields') {
+                    if (in_array($section['type'], ['info', 'fields']) === true) {
                         $tab['columns'][$columnIndex]['sections'][$sectionIndex] = $blueprint->section($sectionIndex)->toResponse();
                     }
                 }

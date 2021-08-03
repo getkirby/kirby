@@ -25,11 +25,9 @@ return [
     ],
     'toArray' => function () {
         return [
-            'options' => [
-                'headline' => $this->headline,
-                'text'     => $this->text,
-                'theme'    => $this->theme
-            ]
+            'headline' => $this->headline,
+            'text'     => $this->text,
+            'theme'    => $this->theme
         ];
     }
 ];
