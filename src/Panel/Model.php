@@ -346,6 +346,14 @@ abstract class Model
         // this will let the vue component define
         // a proper default value
         if ($tab) {
+            foreach ($tab['columns'] as $columnIndex => $column) {
+                foreach ($column['sections'] as $sectionIndex => $section) {
+                    if ($section['type'] === 'fields') {
+                        $tab['columns'][$columnIndex]['sections'][$sectionIndex] = $blueprint->section($sectionIndex)->toResponse();
+                    }
+                }
+            }
+
             $props['tab'] = $tab;
         }
 

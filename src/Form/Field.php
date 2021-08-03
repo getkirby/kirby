@@ -441,7 +441,7 @@ class Field extends Component
         ksort($array);
 
         return array_filter($array, function ($item) {
-            return $item !== null;
+            return $item !== null && is_object($item) === false;
         });
     }
 
