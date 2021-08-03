@@ -3,12 +3,13 @@ import "vite/dynamic-import-polyfill";
 import Vue from "vue";
 import Api from "./config/api.js";
 import App from "./fiber/app.js";
-import Errors from "./config/Errors.js";
+import Errors from "./config/errors.js";
 import Events from "./config/events.js";
 import Fiber from "./fiber/plugin.js";
 import Helpers from "./helpers/index.js";
 import I18n from "./config/i18n.js";
 import Libraries from "./config/libraries.js";
+import Plugins from "./config/plugins.js";
 import Vuelidate from "vuelidate";
 import VuePortal from "@linusborg/vue-simple-portal";
 
@@ -22,8 +23,8 @@ Vue.use(Helpers);
 Vue.use(Libraries);
 
 import "./config/components.js";
-import "./config/plugins.js";
 
+Vue.use(Plugins);
 Vue.use(Events);
 Vue.use(I18n);
 Vue.use(Vuelidate);
