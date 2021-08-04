@@ -167,7 +167,7 @@ export default {
 
       try {
         // Skip API call if query empty
-        if (query === "") {
+        if (query === null || query === "") {
           throw new Error;
         }
 
