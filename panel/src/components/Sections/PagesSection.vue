@@ -104,14 +104,14 @@ export default {
           tooltip: this.$t("page.status"),
           disabled: !isEnabled,
           click: () => {
-            this.$dialog(this.$api.pages.url(page.id) + "/changeStatus");
+            this.$dialog(page.link + "/changeStatus");
           }
         };
 
         page.sortable  = page.permissions.sort && this.options.sortable;
         page.deletable = data.length > this.options.min;
         page.column    = this.column;
-        page.options   = this.$dropdown(this.$api.pages.url(page.id), {
+        page.options   = this.$dropdown(page.link, {
           query: {
             view: "list",
             delete: page.deletable,

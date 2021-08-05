@@ -141,9 +141,6 @@ export default {
         }
       ];
     },
-    id() {
-      return this.$api.users.url(this.model.id);
-    },
     uploadApi() {
       return this.$urls.api + "/" + this.id + "/avatar";
     }

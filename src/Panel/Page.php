@@ -322,6 +322,7 @@ class Page extends Model
                 'model' => [
                     'content'    => $this->content(),
                     'id'         => $page->id(),
+                    'link'       => $this->url(true),
                     'parent'     => $page->parentModel()->panel()->url(true),
                     'previewUrl' => $page->previewUrl(),
                     'status'     => $page->status(),

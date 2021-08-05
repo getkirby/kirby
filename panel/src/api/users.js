@@ -8,14 +8,6 @@ export default (api) => {
         section: section
       });
     },
-    breadcrumb(user) {
-      return [
-        {
-          link: "/users/" + user.id,
-          label: user.username
-        }
-      ];
-    },
     async changeEmail(id, email) {
       return api.patch("users/" + id + "/email", { email: email });
     },

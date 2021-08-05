@@ -1,37 +1,5 @@
 export default (api) => {
   return {
-    breadcrumb(file, route) {
-
-      let parent = null;
-      let breadcrumb = [];
-
-      switch (route) {
-        case "UserFile":
-          breadcrumb.push({
-            label: file.parent.username,
-            link: api.users.link(file.parent.id)
-          });
-          parent = 'users/' + file.parent.id;
-          break;
-        case "SiteFile":
-          parent = "site";
-          break;
-        case "PageFile":
-          breadcrumb = file.parents.map(parent => ({
-            label: parent.title,
-            link: api.pages.link(parent.id)
-          }));
-          parent = api.pages.url(file.parent.id);
-          break;
-      }
-
-      breadcrumb.push({
-        label: file.filename,
-        link: this.link(parent, file.filename)
-      });
-
-      return breadcrumb;
-    },
     async changeName(parent, filename, to) {
       return api.patch(parent + "/files/" + filename + "/name", {
         name: to

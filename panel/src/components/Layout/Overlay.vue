@@ -5,6 +5,7 @@
       :data-centered="loading || centered"
       :data-dimmed="dimmed"
       :data-loading="loading"
+      :dir="$translation.direction"
       :class="$vnode.data.staticClass"
       class="k-overlay"
       v-on="$listeners"

@@ -54,8 +54,9 @@ class Site extends Model
             'blueprint' => 'site',
             'model' => [
                 'content'    => $this->content(),
+                'link'       => $this->url(true),
                 'previewUrl' => $this->model->previewUrl(),
-                'title'      => $this->model->title()->toString()
+                'title'      => $this->model->title()->toString(),
             ]
         ]);
     }

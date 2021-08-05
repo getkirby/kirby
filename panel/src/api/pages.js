@@ -8,21 +8,6 @@ export default (api) => {
         section: section
       });
     },
-    breadcrumb(page, self = true) {
-      var breadcrumb = page.parents.map(parent => ({
-        label: parent.title,
-        link: this.link(parent.id)
-      }));
-
-      if (self === true) {
-        breadcrumb.push({
-          label: page.title,
-          link: this.link(page.id),
-        });
-      }
-
-      return breadcrumb;
-    },
     async changeSlug(id, slug) {
       return api.patch("pages/" + this.id(id) + "/slug", { slug: slug });
     },
