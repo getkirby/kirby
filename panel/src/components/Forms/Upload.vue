@@ -45,11 +45,11 @@
       <template #footer>
         <template v-if="errors.length > 0">
           <k-button-group
-            :buttons="{
+            :buttons="[{
               icon: 'check',
               text: $t('confirm'),
               click: () => $refs.dialog.close()
-            }"
+            }]"
           />
         </template>
       </template>
