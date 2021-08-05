@@ -118,6 +118,7 @@ export default {
   border-radius: var(--rounded-sm);
   box-shadow: var(--shadow);
   display: grid;
+  grid-template-columns: auto;
   line-height: 1;
 }
 .k-item:focus {
@@ -139,7 +140,11 @@ export default {
 .k-item:hover .k-item-sort-handle {
   opacity: 1;
 }
+.k-item-figure {
+  grid-area: figure;
+}
 .k-item-content {
+  grid-area: content;
   overflow: hidden;
 }
 .k-item-title,
@@ -152,8 +157,8 @@ export default {
   overflow: hidden;
 }
 .k-item-info {
-  color: var(--color-gray-500);
   grid-area: info;
+  color: var(--color-gray-500);
 }
 .k-item-title-link.k-link[data-tabbed] {
   box-shadow: none;
@@ -165,10 +170,14 @@ export default {
   z-index: 1;
 }
 .k-item-footer {
+  grid-area: footer;
   display: flex;
   justify-content: space-between;
   align-items: center;
   min-width: 0;
+}
+.k-item-label {
+  margin-inline-end: .5rem;
 }
 .k-item-buttons {
   position: relative;
@@ -200,8 +209,7 @@ export default {
   align-items: center;
   height: 38px;
 }
-.k-list-item .k-sort-handle {
-  position: absolute;
+.k-list-item .k-item-sort-handle {
   inset-inline-start: -1.5rem;
   width: 1.5rem;
 }
@@ -212,7 +220,6 @@ export default {
 }
 .k-list-item .k-item-content {
   display: flex;
-  overflow: hidden;
   flex-grow: 1;
   flex-shrink: 2;
   justify-content: space-between;
@@ -222,8 +229,6 @@ export default {
 .k-list-item .k-item-title,
 .k-list-item .k-item-info {
   flex-grow: 1;
-  overflow: hidden;
-  text-overflow: ellipsis;
   line-height: 1.5rem;
 }
 .k-list-item .k-item-title {
@@ -242,16 +247,23 @@ export default {
 .k-list-item .k-item-buttons {
   flex-shrink: 0;
 }
-.k-list-item .k-item-label {
-  margin-inline-end: .5rem;
-}
 
+/** Cardlet and card items shared */
+.k-item:not(.k-list-item) .k-item-sort-handle {
+  margin: .25rem;
+  background: var(--color-background);
+  box-shadow: var(--shado-md);
+}
+.k-item:not(.k-list-item) .k-item-label {
+  margin-inline-start: -2px;
+}
+.k-item:not(.k-list-item) .k-item-content {
+  padding: .5rem .75rem;
+}
 
 /** Cardlet Item **/
 .k-cardlets-item {
-  display: grid;
   height: 6rem;
-  grid-template-columns: auto;
   grid-template-rows: auto 38px;
   grid-template-areas:
     "content"
@@ -263,53 +275,28 @@ export default {
     "figure content"
     "figure footer";
 }
-.k-cardlets-item .k-item-sort-handle {
-  margin: .25rem;
-  background: var(--color-background);
-  box-shadow: var(--shado-md);
-}
 .k-cardlets-item .k-item-figure {
-  grid-area: figure;
   border-start-start-radius: var(--rounded-sm);
   border-end-start-radius: var(--rounded-sm);
 }
-.k-cardlets-item .k-item-content {
-  padding: .5rem .75rem;
-  grid-area: content;
-}
 .k-cardlets-item .k-item-footer {
-  grid-area: footer;
   padding-block: .5rem;
-}
-.k-cardlets-item .k-item-label {
-  margin-inline-start: -2px;
-  margin-inline-end: .5rem;
 }
 
 
 /** Card Item **/
 .k-cards-item {
-  display: grid;
-  grid-template-columns: auto;
   grid-template-rows: auto auto auto;
   grid-template-areas:
     "figure"
     "content"
     "footer";
 }
-.k-cards-item .k-item-sort-handle {
-  margin: .25rem;
-  background: var(--color-background);
-  box-shadow: var(--shadow-md);
-}
 .k-cards-item .k-item-figure {
-  grid-area: figure;
   border-start-start-radius: var(--rounded-sm);
   border-start-end-radius: var(--rounded-sm);
 }
 .k-cards-item .k-item-content {
-  grid-area: content;
-  padding: .5rem .75rem;
   overflow: hidden;
 }
 .k-cards-item .k-item-title,
@@ -321,13 +308,8 @@ export default {
   padding-block-start: .125rem;
 }
 .k-cards-item .k-item-footer {
-  grid-area: footer;
   width: auto;
   padding-inline-start: .7rem;
-}
-.k-cards-item .k-item-label {
-  margin-inline-start: -2px;
-  margin-inline-end: .5rem;
 }
 .k-cards-item:not([data-has-label]) {
   grid-template-columns: auto auto;
