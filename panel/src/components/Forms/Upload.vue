@@ -15,6 +15,7 @@
       ref="dialog"
       :cancel-button="false"
       :submit-button="false"
+      class="k-upload-dialog"
       size="medium"
     >
       <template v-if="errors.length > 0">
@@ -194,7 +195,7 @@ export default {
   inset-inline-start: -3000px;
 }
 
-.k-upload .k-headline {
+.k-upload-dialog .k-headline {
   margin-block-end: .75rem;
 }
 
