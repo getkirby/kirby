@@ -90,17 +90,9 @@ export default {
   },
   methods: {
     action(action, file) {
-
-      switch (action) {
-        case "replace":
-          this.$refs.upload.open({
-            url: this.$urls.api + "/" + this.$api.files.url(file.parent, file.filename),
-            accept: "." + file.extension + "," + file.mime,
-            multiple: false
-          });
-          break;
+      if (action === "replace") {
+        this.replace(file);
       }
-
     },
     drop(files) {
       if (this.add === false) {
@@ -116,7 +108,7 @@ export default {
       return data.map(file => {
         file.sortable = this.options.sortable;
         file.column   = this.column;
-        file.options  = this.$dropdown(this.$api.files.url(file.parent, file.filename), {
+        file.options  = this.$dropdown(file.link, {
           query: {
             view: "list",
             update: this.options.sortable,
@@ -135,8 +127,8 @@ export default {
     },
     replace(file) {
       this.$refs.upload.open({
-        url: this.$urls.api + "/" + this.$api.files.url(file.parent, file.filename),
-        accept: file.mime,
+        url: this.$urls.api + "/" + file.link,
+        accept: "." + file.extension + "," + file.mime,
         multiple: false
       });
     },

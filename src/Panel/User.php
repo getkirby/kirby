@@ -190,6 +190,7 @@ class User extends Model
                     'email'    => $user->email(),
                     'id'       => $user->id(),
                     'language' => $this->translation()->name(),
+                    'link'     => $this->url(true),
                     'name'     => $user->name()->toString(),
                     'role'     => $user->role()->title(),
                     'username' => $user->username(),

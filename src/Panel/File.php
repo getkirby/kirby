@@ -335,6 +335,7 @@ class File extends Model
                     'dimensions' => $dimensions->toArray(),
                     'extension'  => $file->extension(),
                     'filename'   => $file->filename(),
+                    'link'       => $this->url(true),
                     'mime'       => $file->mime(),
                     'niceSize'   => $file->niceSize(),
                     'id'         => $id = $file->id(),

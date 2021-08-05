@@ -78,11 +78,6 @@ export default {
   props: {
     preview: Object
   },
-  computed: {
-    id() {
-      return this.$api.files.url(this.model.parent, this.model.filename);
-    }
-  },
   methods: {
     action(action) {
       switch (action) {

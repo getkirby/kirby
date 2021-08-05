@@ -36,7 +36,7 @@ export default {
   },
   computed: {
     id() {
-      return this.model.id;
+      return this.model.link;
     },
     isLocked() {
       return this.lock !== false && this.lock.state === "lock";

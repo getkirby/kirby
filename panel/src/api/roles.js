@@ -5,16 +5,6 @@ export default (api) => {
     },
     async get(name) {
       return api.get("roles/" + name);
-    },
-    async options(params) {
-      const roles = await this.list(params);
-      return roles.data.map(role => {
-        return {
-          info: role.description || `(${window.panel.$t("role.description.placeholder")})`,
-          text: role.title,
-          value: role.name
-        };
-      });
     }
   }
 };

@@ -77,11 +77,6 @@ export default {
   extends: ModelView,
   props: {
     status: Object
-  },
-  computed: {
-    id() {
-      return this.$api.pages.url(this.model.id);
-    }
   }
 };
 </script>

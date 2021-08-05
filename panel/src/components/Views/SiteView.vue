@@ -44,11 +44,6 @@
 import ModelView from "./ModelView.vue";
 
 export default {
-  extends: ModelView,
-  computed: {
-    id() {
-      return "site"
-    }
-  }
+  extends: ModelView
 };
 </script>

@@ -71,7 +71,7 @@ export default {
   computed: {
     items() {
       return this.users.data.map(user => {
-        user.options = this.$dropdown(this.$api.users.url(user.id));
+        user.options = this.$dropdown(user.link);
         return user;
       })
     }
