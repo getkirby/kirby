@@ -95,6 +95,15 @@ export default {
       total: 0
     };
   },
+  computed: {
+    limit() {
+      if (this.options.multiple === false) {
+        return 1;
+      }
+
+      return this.options.max;
+    }
+  },
   methods: {
     /**
      * Opens the uploader with the object of given parameters.
@@ -132,14 +141,13 @@ export default {
     },
     upload(files) {
       this.$refs.dialog.open();
-
       this.files = [...files];
       this.completed = {};
       this.errors = [];
       this.hasErrors = false;
 
-      if (this.options.max) {
-        this.files = this.files.slice(0, this.options.max);
+      if (this.limit) {
+        this.files = this.files.slice(0, this.limit);
       }
 
       this.total = this.files.length;
