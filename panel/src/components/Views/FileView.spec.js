@@ -42,7 +42,7 @@ describe("FileView", () => {
       cy.get("@info").find("li:nth-child(5)").should("contain", "Dimensions");
       cy.get("@info")
         .find("li:nth-child(5)")
-        .should("contain", "933×1400 Pixel");
+        .should("contain", "933 × 1400 Pixel");
 
       cy.get("@info").find("li:nth-child(6)").should("contain", "Orientation");
       cy.get("@info").find("li:nth-child(6)").should("contain", "Portrait");
