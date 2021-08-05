@@ -81,7 +81,14 @@ class FileRules
     public static function create(File $file, BaseFile $upload): bool
     {
         if ($file->exists() === true) {
-            throw new DuplicateException('The file exists and cannot be overwritten');
+            if ($file->sha1() !== $upload->sha1()) {
+                throw new DuplicateException([
+                    'key'  => 'file.duplicate',
+                    'data' => [
+                        'filename' => $file->filename()
+                    ]
+                ]);
+            }
         }
 
         if ($file->permissions()->create() !== true) {

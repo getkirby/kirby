@@ -507,6 +507,14 @@ class File
     }
 
     /**
+     * @return string
+     */
+    public function sha1(): string
+    {
+        return sha1_file($this->root);
+    }
+
+    /**
      * Returns the raw size of the file
      *
      * @return int
