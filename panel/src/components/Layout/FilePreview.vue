@@ -113,6 +113,7 @@ export default {
 @media screen and (min-width: 65em) {
   .k-file-preview-layout {
     grid-template-columns: 33.333% auto;
+    align-items: center;
   }
   .k-file-preview-details {
     padding: 3rem;
