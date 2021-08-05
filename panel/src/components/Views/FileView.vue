@@ -22,21 +22,19 @@
               <k-button
                 :link="model.previewUrl"
                 :responsive="true"
-                class="k-file-view-options"
+                :text="$t('open')"
                 icon="open"
                 target="_blank"
-              >
-                {{ $t("open") }}
-              </k-button>
+                class="k-file-view-options"
+              />
               <k-dropdown class="k-file-view-options">
                 <k-button
-                  :responsive="true"
                   :disabled="isLocked"
+                  :responsive="true"
+                  :text="$t('settings')"
                   icon="cog"
                   @click="$refs.settings.toggle()"
-                >
-                  {{ $t('settings') }}
-                </k-button>
+                />
                 <k-dropdown-content
                   ref="settings"
                   :options="$dropdown(id)"

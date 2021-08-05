@@ -22,31 +22,9 @@
         <slot />
       </div>
 
-      <footer v-if="$slots['footer'] || cancelButton || submitButton" class="k-dialog-footer">
+      <footer v-if="$slots['footer'] || buttons.length" class="k-dialog-footer">
         <slot name="footer">
-          <k-button-group>
-            <span>
-              <k-button
-                v-if="cancelButton"
-                icon="cancel"
-                class="k-dialog-button-cancel"
-                @click="cancel"
-              >
-                {{ cancelButtonLabel }}
-              </k-button>
-            </span>
-            <span>
-              <k-button
-                v-if="submitButtonConfig"
-                :icon="icon"
-                :theme="theme"
-                class="k-dialog-button-submit"
-                @click="submit"
-              >
-                {{ submitButtonLabel }}
-              </k-button>
-            </span>
-          </k-button-group>
+          <k-button-group :buttons="buttons" />
         </slot>
       </footer>
     </div>
@@ -105,6 +83,30 @@ export default {
     };
   },
   computed: {
+    buttons() {
+      let buttons = [];
+
+      if (this.cancelButton) {
+        buttons.push({
+          icon: "cancel",
+          text: this.cancelButtonLabel,
+          class: "k-dialog-button-cancel",
+          click: this.cancel
+        });
+      }
+
+      if (this.submitButtonConfig) {
+        buttons.push({
+          icon: this.icon,
+          text: this.submitButtonLabel,
+          theme: this.theme,
+          class: "k-dialog-button-submit",
+          click: this.submit
+        });
+      }
+
+      return buttons;
+    },
     cancelButtonLabel() {
       if (this.cancelButton === false) {
         return false;

@@ -5,7 +5,10 @@
     v-bind="$props"
     v-on="$listeners"
   >
-    <slot />
+    <template v-if="text">
+      {{ text }}
+    </template>
+    <slot v-else />
   </component>
 </template>
 
@@ -17,6 +20,10 @@ export default {
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
+    /**
+     * Pass instead of a link URL to be triggered on clicking the button
+     */
+    click: Function,
     /**
      * Sets the `aria-current` attribute. Especially useful in connection with a `link` attribute.
      */
@@ -45,6 +52,10 @@ export default {
      */
     target: String,
     tabindex: String,
+    /**
+     * Use either the default slot or this prop for the button text
+     */
+    text: String,
     /**
      * With the theme you can control the general design of the button.
      * @values positive, negative

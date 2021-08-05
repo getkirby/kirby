@@ -1,6 +1,12 @@
 <template>
   <div class="k-button-group">
-    <slot />
+    <slot v-if="$slots.default" />
+    <k-button
+      v-for="(button, index) in buttons"
+      v-else
+      :key="index"
+      v-bind="button"
+    />
   </div>
 </template>
 
@@ -13,7 +19,15 @@
   <k-button icon="trash">Delete</k-button>
 </k-button-group>
  */
-export default {}
+export default {
+  props: {
+    /**
+     * Either pass the buttons as default slot
+     * or as an array to this prop
+     */
+    buttons: Array
+  }
+}
 </script>
 
 <style>

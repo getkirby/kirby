@@ -4,9 +4,11 @@
       <div class="k-search-input">
         <!-- Type select -->
         <k-dropdown class="k-search-types">
-          <k-button :icon="currentType.icon" @click="$refs.types.toggle()">
-            {{ currentType.label }}:
-          </k-button>
+          <k-button
+            :icon="currentType.icon"
+            :text="currentType.label"
+            @click="$refs.types.toggle()"
+          />
           <k-dropdown-content ref="types">
             <k-dropdown-item
               v-for="(typeItem, typeIndex) in types"

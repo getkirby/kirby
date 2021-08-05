@@ -17,14 +17,13 @@
           <k-button-group>
             <k-button
               v-if="permissions.preview && model.previewUrl"
-              :responsive="true"
               :link="model.previewUrl"
-              class="k-page-view-preview"
+              :responsive="true"
+              :text="$t('open')"
               icon="open"
               target="_blank"
-            >
-              {{ $t('open') }}
-            </k-button>
+              class="k-page-view-preview"
+            />
             <k-status-icon
               v-if="status"
               :status="model.status"
@@ -35,13 +34,12 @@
             />
             <k-dropdown class="k-page-view-options">
               <k-button
-                :responsive="true"
                 :disabled="isLocked === true"
+                :responsive="true"
+                :text="$t('settings')"
                 icon="cog"
                 @click="$refs.settings.toggle()"
-              >
-                {{ $t('settings') }}
-              </k-button>
+              />
               <k-dropdown-content
                 ref="settings"
                 :options="$dropdown(id)"

@@ -5,15 +5,14 @@
         {{ $t('view.users') }}
 
         <template #left>
-          <k-button-group>
-            <k-button
-              :disabled="$permissions.users.create === false"
-              icon="add"
-              @click="$dialog('users/create')"
-            >
-              {{ $t('user.create') }}
-            </k-button>
-          </k-button-group>
+          <k-button-group
+            :buttons="[{
+              disbaled: $permissions.users.create === false,
+              text: $t('user.create'),
+              icon: 'add',
+              click: () => $dialog('users/create')
+            }]"
+          />
         </template>
 
         <template #right>
@@ -21,11 +20,10 @@
             <k-dropdown>
               <k-button
                 :responsive="true"
+                :text="`${$t('role')}: ${role ? role.title : $t('role.all')}`"
                 icon="funnel"
                 @click="$refs.roles.toggle()"
-              >
-                {{ $t("role") }}: {{ role ? role.title : $t("role.all") }}
-              </k-button>
+              />
               <k-dropdown-content ref="roles" align="right">
                 <k-dropdown-item icon="bolt" link="/users">
                   {{ $t("role.all") }}

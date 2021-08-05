@@ -8,9 +8,7 @@
     class="k-slug-field"
   >
     <template v-if="wizard && wizard.text" #options>
-      <k-button icon="wand" @click="onWizard">
-        {{ wizard.text }}
-      </k-button>
+      <k-button :text="wizard.text" icon="wand" @click="onWizard" />
     </template>
 
     <k-input

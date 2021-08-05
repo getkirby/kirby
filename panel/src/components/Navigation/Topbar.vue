@@ -29,15 +29,13 @@
 
         <div class="k-topbar-signals">
           <!-- notifications -->
-          <template v-if="notification">
-            <k-button
-              class="k-topbar-notification k-topbar-signals-button"
-              theme="positive"
-              @click="$store.dispatch('notification/close')"
-            >
-              {{ notification.message }}
-            </k-button>
-          </template>
+          <k-button
+            v-if="notification"
+            :text="notification.message"
+            theme="positive"
+            class="k-topbar-notification k-topbar-signals-button"
+            @click="$store.dispatch('notification/close')"
+          />
 
           <!-- registration -->
           <k-registration v-else-if="!license" />

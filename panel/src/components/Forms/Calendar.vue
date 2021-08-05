@@ -42,19 +42,16 @@
             <k-button
               v-if="day"
               :disabled="isDisabled(day)"
+              :text="day"
               @click="select(day)"
-            >
-              {{ day }}
-            </k-button>
+            />
           </td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <td class="k-calendar-today" colspan="7">
-            <k-button @click="select('today')">
-              {{ $t("today") }}
-            </k-button>
+            <k-button :text="$t('today')" @click="select('today')" />
           </td>
         </tr>
       </tfoot>

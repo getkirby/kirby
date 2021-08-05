@@ -8,64 +8,34 @@
     >
       <div class="k-user-profile">
         <k-view>
-          <template v-if="model.avatar">
-            <k-dropdown>
-              <k-button
-                :tooltip="$t('avatar')"
-                :disabled="isLocked"
-                class="k-user-view-image"
-                @click="$refs.picture.toggle()"
-              >
-                <k-image
-                  v-if="model.avatar"
-                  :cover="true"
-                  :src="model.avatar"
-                  ratio="1/1"
-                />
-              </k-button>
-              <k-dropdown-content ref="picture">
-                <k-dropdown-item icon="upload" @click="$refs.upload.open()">
-                  {{ $t('change') }}
-                </k-dropdown-item>
-                <k-dropdown-item icon="trash" @click="deleteAvatar">
-                  {{ $t('delete') }}
-                </k-dropdown-item>
-              </k-dropdown-content>
-            </k-dropdown>
-          </template>
-          <template v-else>
+          <k-dropdown>
             <k-button
               :tooltip="$t('avatar')"
+              :disabled="isLocked"
               class="k-user-view-image"
-              @click="$refs.upload.open()"
+              @click="onAvatar"
             >
-              <k-icon type="user" />
+              <k-image
+                v-if="model.avatar"
+                :cover="true"
+                :src="model.avatar"
+                ratio="1/1"
+              />
+              <k-icon
+                v-else
+                back="gray-900"
+                color="gray-200"
+                type="user"
+              />
             </k-button>
-          </template>
+            <k-dropdown-content
+              v-if="model.avatar"
+              ref="picture"
+              :options="avatarOptions"
+            />
+          </k-dropdown>
 
-          <k-button-group>
-            <k-button
-              :disabled="!permissions.changeEmail || isLocked"
-              icon="email"
-              @click="$dialog(id + '/changeEmail')"
-            >
-              {{ $t("email") }}: {{ model.email }}
-            </k-button>
-            <k-button
-              :disabled="!permissions.changeRole || isLocked"
-              icon="bolt"
-              @click="$dialog(id + '/changeRole')"
-            >
-              {{ $t("role") }}: {{ model.role }}
-            </k-button>
-            <k-button
-              :disabled="!permissions.changeLanguage || isLocked"
-              icon="globe"
-              @click="$dialog(id + '/changeLanguage')"
-            >
-              {{ $t("language") }}: {{ model.language }}
-            </k-button>
-          </k-button-group>
+          <k-button-group :buttons="buttons" />
         </k-view>
       </div>
 
@@ -84,9 +54,12 @@
           <template #left>
             <k-button-group>
               <k-dropdown class="k-user-view-options">
-                <k-button :disabled="isLocked" icon="cog" @click="$refs.settings.toggle()">
-                  {{ $t('settings') }}
-                </k-button>
+                <k-button
+                  :disabled="isLocked"
+                  :text="$t('settings')"
+                  icon="cog"
+                  @click="$refs.settings.toggle()"
+                />
                 <k-dropdown-content
                   ref="settings"
                   :options="$dropdown(id)"
@@ -132,6 +105,42 @@ export default {
   extends: ModelView,
   prevnext: true,
   computed: {
+    avatarOptions() {
+      return [
+        {
+          icon: "upload",
+          text: this.$t("change"),
+          click: () => this.$refs.upload.open()
+        },
+        {
+          icon: "trash",
+          text: this.$t("delete"),
+          click: this.deleteAvatar
+        }
+      ];
+    },
+    buttons() {
+      return [
+        {
+          icon: "email",
+          text: `${this.$t('email')}: ${this.model.email}`,
+          disabled: !this.permissions.changeEmail || this.isLocked,
+          click: () => this.$dialog(this.id + '/changeEmail')
+        },
+        {
+          icon: "bolt",
+          text: `${this.$t('role')}: ${this.model.role}`,
+          disabled: !this.permissions.changeRole || this.isLocked,
+          click: () => this.$dialog(this.id + '/changeRole')
+        },
+        {
+          icon: "globe",
+          text: `${this.$t('language')}: ${this.model.language}`,
+          disabled: !this.permissions.changeLanguage || this.isLocked,
+          click: () => this.$dialog(this.id + '/changeLanguage')
+        }
+      ];
+    },
     id() {
       return this.$api.users.url(this.model.id);
     },
@@ -145,6 +154,13 @@ export default {
       this.avatar = null;
       this.$store.dispatch("notification/success", ":)");
       this.$reload();
+    },
+    onAvatar() {
+      if (this.model.avatar) {
+        this.$refs.picture.toggle();
+      } else {
+        this. $refs.upload.open();
+      }
     },
     uploadedAvatar() {
       this.$store.dispatch("notification/success", ":)");
@@ -174,30 +190,23 @@ export default {
   overflow: hidden;
   white-space: nowrap;
 }
-.k-user-profile .k-button-group .k-button[disabled] {
-  opacity: 1;
-}
 
-.k-user-profile .k-dropdown-content {
-  margin-block-start: .5rem;
-  inset-inline-start: 50%;
-  transform: translateX(-50%);
+.k-user-view-image .k-image,
+.k-user-view-image .k-icon {
+  width: 5rem;
+  height: 5rem;
+  line-height: 0;
+}
+.k-user-view-image[data-disabled] {
+  opacity: 1;
 }
 .k-user-view-image .k-image {
   display: block;
-  width: 4rem;
-  height: 4rem;
-  line-height: 0;
 }
 .k-user-view-image .k-button-text {
   opacity: 1;
 }
-.k-user-view-image .k-icon {
-  width: 4rem;
-  height: 4rem;
-  background: var(--color-gray-900);
-  color: var(--color-gray-500);
-}
+
 .k-user-name-placeholder {
   color: var(--color-gray-500);
   transition: color .3s;

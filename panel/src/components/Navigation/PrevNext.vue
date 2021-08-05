@@ -1,8 +1,11 @@
 <template>
-  <k-button-group class="k-prev-next">
-    <k-button v-bind="button(prev)" icon="angle-left" />
-    <k-button v-bind="button(next)" icon="angle-right" />
-  </k-button-group>
+  <k-button-group
+    :buttons="[
+      { ...button(prev), icon: 'angle-left' },
+      { ...button(next), icon: 'angle-right' }
+    ]"
+    class="k-prev-next"
+  />
 </template>
 
 <script>

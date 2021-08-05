@@ -18,9 +18,11 @@
           </h2>
           <ul v-else class="k-drawer-breadcrumb">
             <li v-for="crumb in breadcrumb" :key="crumb.id">
-              <k-button :icon="crumb.icon" @click="goTo(crumb.id)">
-                {{ crumb.title }}
-              </k-button>
+              <k-button
+                :icon="crumb.icon"
+                :text="crumb.title"
+                @click="goTo(crumb.id)"
+              />
             </li>
           </ul>
           <nav
@@ -31,11 +33,10 @@
               v-for="tabButton in tabs"
               :key="tabButton.name"
               :current="tab == tabButton.name"
+              :text="tabButton.label"
               class="k-drawer-tab"
               @click.stop="$emit('tab', tabButton.name)"
-            >
-              {{ tabButton.label }}
-            </k-button>
+            />
           </nav>
           <nav class="k-drawer-options">
             <slot name="options" />

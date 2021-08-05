@@ -15,6 +15,7 @@
       ref="dialog"
       :cancel-button="false"
       :submit-button="false"
+      class="k-upload-dialog"
       size="medium"
     >
       <template v-if="errors.length > 0">
@@ -44,11 +45,13 @@
       </template>
       <template #footer>
         <template v-if="errors.length > 0">
-          <k-button-group>
-            <k-button icon="check" @click="$refs.dialog.close()">
-              {{ $t("confirm") }}
-            </k-button>
-          </k-button-group>
+          <k-button-group
+            :buttons="[{
+              icon: 'check',
+              text: $t('confirm'),
+              click: () => $refs.dialog.close()
+            }]"
+          />
         </template>
       </template>
     </k-dialog>
@@ -192,7 +195,7 @@ export default {
   inset-inline-start: -3000px;
 }
 
-.k-upload .k-headline {
+.k-upload-dialog .k-headline {
   margin-block-end: .75rem;
 }
 

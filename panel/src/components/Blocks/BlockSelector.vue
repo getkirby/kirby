@@ -22,12 +22,11 @@
           :key="fieldset.name"
           :disabled="disabled.includes(fieldset.type)"
           :icon="fieldset.icon || 'box'"
+          :text="fieldset.name"
           @keydown.up="navigate(fieldset.index - 1)"
           @keydown.down="navigate(fieldset.index + 1)"
           @click="add(fieldset.type)"
-        >
-          {{ fieldset.name }}
-        </k-button>
+        />
       </div>
     </details>
   </k-dialog>

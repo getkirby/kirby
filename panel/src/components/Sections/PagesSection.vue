@@ -9,11 +9,10 @@
         {{ headline }} <abbr v-if="options.min" :title="$t('section.required')">*</abbr>
       </k-headline>
 
-      <k-button-group v-if="add">
-        <k-button icon="add" @click="create">
-          {{ $t("add") }}
-        </k-button>
-      </k-button-group>
+      <k-button-group
+        v-if="add"
+        :buttons="[{ text: $t('add'), icon: 'add', click: create }]"
+      />
     </header>
 
     <template v-if="error">

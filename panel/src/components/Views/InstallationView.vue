@@ -15,9 +15,7 @@
           {{ $t("installation") }}
         </h1>
         <k-fieldset v-model="user" :fields="fields" :novalidate="true" />
-        <k-button type="submit" icon="check">
-          {{ $t("install") }}
-        </k-button>
+        <k-button :text="$t('install')" type="submit" icon="check" />
       </form>
 
       <!-- not meeting requirements -->
@@ -82,9 +80,7 @@
           </li>
         </ul>
 
-        <k-button icon="refresh" @click="$reload">
-          {{ $t('retry') }}
-        </k-button>
+        <k-button :text="$t('retry')" icon="refresh" @click="$reload" />
       </div>
     </k-view>
   </k-outside>

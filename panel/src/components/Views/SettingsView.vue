@@ -47,9 +47,11 @@
           <section class="k-languages-section">
             <header class="k-settings-view-section-header">
               <k-headline>{{ $t('languages.secondary') }}</k-headline>
-              <k-button icon="add" @click="$dialog('languages/create')">
-                {{ $t('language.create') }}
-              </k-button>
+              <k-button
+                :text="$t('language.create')"
+                icon="add"
+                @click="$dialog('languages/create')"
+              />
             </header>
             <k-collection
               v-if="secondaryLanguages.length"
@@ -64,9 +66,11 @@
         <template v-else-if="languages.length === 0">
           <header class="k-settings-view-section-header">
             <k-headline>{{ $t('languages') }}</k-headline>
-            <k-button icon="add" @click="$dialog('languages/create')">
-              {{ $t('language.create') }}
-            </k-button>
+            <k-button
+              :text="$t('language.create')"
+              icon="add"
+              @click="$dialog('languages/create')"
+            />
           </header>
           <k-empty icon="globe" @click="$dialog('languages/create')">
             {{ $t('languages.empty') }}
