@@ -507,6 +507,9 @@ class File
     }
 
     /**
+     * Returns the sha1 hash of the file
+     * @since 3.6.0
+     *
      * @return string
      */
     public function sha1(): string

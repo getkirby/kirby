@@ -581,6 +581,15 @@ class FileTest extends TestCase
     }
 
     /**
+     * @covers ::sha1
+     */
+    public function testSha1()
+    {
+        $file = $this->_file('test.js');
+        $this->assertSame('25f2d6df4f2a30f29f6f80da1e95011044b0b8f7', $file->sha1());
+    }
+
+    /**
      * @covers ::toArray
      * @covers ::__debugInfo
      */
