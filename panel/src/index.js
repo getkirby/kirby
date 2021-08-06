@@ -1,5 +1,3 @@
-import "vite/dynamic-import-polyfill";
-
 import Vue from "vue";
 
 import Api from "./config/api.js";
