@@ -28,23 +28,23 @@
 [data-theme="positive"],
 [data-theme="success"] {
   --theme: var(--color-positive);
-  --theme-l: var(--color-positive-light);
+  --theme-light: var(--color-positive-light);
   --theme-bg: var(--color-green-300);
 }
 
 [data-theme="negative"],
 [data-theme="error"] {
   --theme: var(--color-negative);
-  --theme-l: var(--color-negative-light);
+  --theme-light: var(--color-negative-light);
   --theme-bg: var(--color-red-300);
 }
 [data-theme="notice"] {
   --theme: var(--color-notice);
-  --theme-l: var(--color-notice-light);
+  --theme-light: var(--color-notice-light);
   --theme-bg: var(--color-orange-300);
 }
 [data-theme="info"] {
   --theme: var(--color-focus);
-  --theme-l: var(--color-focus-light);
+  --theme-light: var(--color-focus-light);
   --theme-bg: var(--color-blue-200);
 }

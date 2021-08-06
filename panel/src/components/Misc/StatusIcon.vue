@@ -72,7 +72,7 @@ export default {
   height: 14px;
 }
 .k-status-icon .k-icon {
-  color: var(--theme-l);
+  color: var(--theme-light);
 }
 .k-status-icon .k-button-text {
   color: var(--color-black);

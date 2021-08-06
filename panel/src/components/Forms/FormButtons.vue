@@ -283,7 +283,7 @@ export default {
   z-index: var(--z-navigation);
 }
 .k-form-buttons[data-theme] {
-    background: var(--theme-l);
+    background: var(--theme-light);
 }
 .k-form-buttons .k-view {
   display: flex;

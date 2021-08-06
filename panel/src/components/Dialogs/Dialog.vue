@@ -305,7 +305,7 @@ export default {
 }
 
 .k-dialog-notification[data-theme] {
-  background: var(--theme-l);
+  background: var(--theme-light);
   color: var(--color-black);
 }
 
