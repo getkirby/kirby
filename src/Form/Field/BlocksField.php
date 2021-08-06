@@ -21,7 +21,9 @@ class BlocksField extends FieldClass
     use Min;
 
     protected $blocks;
+    protected $fields;
     protected $fieldsets;
+    protected $forms;
     protected $group;
     protected $pretty;
     protected $value = [];
@@ -47,12 +49,11 @@ class BlocksField extends FieldClass
         foreach ($blocks as $block) {
             try {
                 $type = $block['type'];
-
-                // get and cache fields at the same time
-                $fields[$type] = $fields[$type] ?? $this->fields($block['type']);
+                $form = $this->form($type);
+                $form->fill($block['content']);
 
                 // overwrite the block content with form values
-                $block['content'] = $this->form($fields[$type], $block['content'])->$to();
+                $block['content'] = $form->$to();
 
                 $result[] = $block;
             } catch (Throwable $e) {
@@ -68,7 +69,11 @@ class BlocksField extends FieldClass
 
     public function fields(string $type)
     {
-        return $this->fieldset($type)->fields();
+        if (empty($this->fields[$type]) === false) {
+            return $this->fields[$type];
+        }
+
+        return $this->fields[$type] = $this->fieldset($type)->fields();
     }
 
     public function fieldset(string $type)
@@ -98,13 +103,16 @@ class BlocksField extends FieldClass
         $this->value = $this->blocksToValues($blocks->toArray());
     }
 
-    public function form(array $fields, array $input = [])
+    public function form(string $type)
     {
-        return new Form([
-            'fields' => $fields,
+        if (empty($this->form[$type]) === false) {
+            return $this->form[$type];
+        }
+
+        return $this->form[$type] = new Form([
+            'fields' => $this->fields($type),
             'model'  => $this->model,
             'strict' => true,
-            'values' => $input,
         ]);
     }
 
@@ -150,9 +158,10 @@ class BlocksField extends FieldClass
                 'pattern' => 'fieldsets/(:any)',
                 'method'  => 'GET',
                 'action'  => function ($fieldsetType) use ($field) {
-                    $fields   = $field->fields($fieldsetType);
-                    $defaults = $field->form($fields, [])->data(true);
-                    $content  = $field->form($fields, $defaults)->values();
+                    $form = $field->form($fieldsetType);
+                    $form->fill($form->data(true));
+
+                    $content = $form->values();
 
                     return Block::factory([
                         'content' => $content,
@@ -164,9 +173,7 @@ class BlocksField extends FieldClass
                 'pattern' => 'fieldsets/(:any)/fields/(:any)/(:all?)',
                 'method'  => 'ALL',
                 'action'  => function (string $fieldsetType, string $fieldName, string $path = null) use ($field) {
-                    $fields = $field->fields($fieldsetType);
-                    $field  = $field->form($fields)->field($fieldName);
-
+                    $field    = $field->form($fieldsetType)->field($fieldName);
                     $fieldApi = $this->clone([
                         'routes' => $field->api(),
                         'data'   => array_merge($this->data(), ['field' => $field])
@@ -234,25 +241,24 @@ class BlocksField extends FieldClass
                     ]);
                 }
 
-                $fields = [];
-                $index  = 0;
+                $index = 0;
 
                 foreach ($value as $block) {
                     $index++;
                     $blockType = $block['type'];
 
                     try {
-                        $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
+                        $blockFields = $this->fields($blockType);
                     } catch (Throwable $e) {
                         // skip invalid blocks
                         continue;
                     }
 
-                    // store the fields for the next round
-                    $fields[$blockType] = $blockFields;
+                    $form = $this->form($blockType);
+                    $form->fill($block['content']);
 
                     // overwrite the content with the serialized form
-                    foreach ($this->form($blockFields, $block['content'])->fields() as $field) {
+                    foreach ($form->fields() as $field) {
                         $errors = $field->errors();
 
                         // rough first validation

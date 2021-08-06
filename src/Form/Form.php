@@ -239,6 +239,25 @@ class Form
         return $field;
     }
 
+    public function fill(array $input = [])
+    {
+        $input = array_change_key_case($input);
+
+        foreach ($this->fields as $field) {
+            $name = $field->name();
+
+            // don't refill disabled fills
+            if ($field->disabled() === true) {
+                continue;
+            }
+
+            if (isset($input[$name]) === true && $field->save() !== false) {
+                $this->values[$name] = $field->fill($input[$name]);
+            }
+        }
+
+    }
+
     /**
      * Returns form fields
      *

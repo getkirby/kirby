@@ -169,7 +169,6 @@ class LayoutField extends BlocksField
     {
         return [
             'layout' => function ($value) {
-                $fields      = [];
                 $layoutIndex = 0;
 
                 foreach ($value as $layout) {
@@ -197,18 +196,11 @@ class LayoutField extends BlocksField
                             $blockIndex++;
                             $blockType = $block['type'];
 
-                            try {
-                                $blockFields = $fields[$blockType] ?? $this->fields($blockType) ?? [];
-                            } catch (Throwable $e) {
-                                // skip invalid blocks
-                                continue;
-                            }
-
-                            // store the fields for the next round
-                            $fields[$blockType] = $blockFields;
+                            $form = $this->form($blockType);
+                            $form->fill($block['content']);
 
                             // overwrite the content with the serialized form
-                            foreach ($this->form($blockFields, $block['content'])->fields() as $field) {
+                            foreach ($form->fields() as $field) {
                                 $errors = $field->errors();
 
                                 // rough first validation

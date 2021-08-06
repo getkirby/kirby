@@ -280,6 +280,26 @@ class Field extends Component
     }
 
     /**
+     * @param mixed $value
+     * @return mixed
+     */
+    public function fill($value)
+    {
+        $prop     = $this->options['props']['value'] ?? null;
+        $computed = $this->options['computed']['value'] ?? null;
+
+        if (is_callable($prop) === true) {
+            $this->value = $prop->call($this, $value);
+        }
+
+        if (is_callable($computed) === true) {
+            $this->value = $computed->call($this);
+        }
+
+        return $this->value;
+    }
+
+    /**
      * Parent collection with all fields of the current form
      *
      * @return \Kirby\Form\Fields|null

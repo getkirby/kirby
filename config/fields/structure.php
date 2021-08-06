@@ -91,18 +91,24 @@ return [
         }
     ],
     'computed' => [
-        'default' => function () {
-            return $this->rows($this->default);
-        },
-        'value' => function () {
-            return $this->rows($this->value);
+        'form' => function () {
+            return new Form([
+                'fields' => $this->fields,
+                'model'  => $this->model
+            ]);
         },
         'fields' => function () {
             if (empty($this->fields) === true) {
                 throw new Exception('Please provide some fields for the structure');
             }
 
-            return $this->form()->fields()->toArray();
+            return $this->form->fields()->toArray();
+        },
+        'default' => function () {
+            return $this->rows($this->default);
+        },
+        'value' => function () {
+            return $this->rows($this->value);
         },
         'columns' => function () {
             $columns = [];
@@ -153,18 +159,14 @@ return [
                     continue;
                 }
 
-                $value[] = $this->form($row)->values();
+                $form = $this->form;
+                $form->fill($row);
+
+                $value[] = $form->values();
             }
 
             return $value;
-        },
-        'form' => function (array $values = []) {
-            return new Form([
-                'fields' => $this->attrs['fields'],
-                'values' => $values,
-                'model'  => $this->model
-            ]);
-        },
+        }
     ],
     'api' => function () {
         return [
@@ -172,7 +174,10 @@ return [
                 'pattern' => 'validate',
                 'method'  => 'ALL',
                 'action'  => function () {
-                    return array_values($this->field()->form($this->requestBody())->errors());
+                    $form = $this->field()->form();
+                    $form->fill($this->requestBody());
+
+                    return array_values($form->errors());
                 }
             ]
         ];
@@ -181,7 +186,10 @@ return [
         $data = [];
 
         foreach ($value as $row) {
-            $data[] = $this->form($row)->content();
+            $form = $this->form;
+            $form->fill($row);
+
+            $data[] = $form->content();
         }
 
         return $data;
