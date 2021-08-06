@@ -343,16 +343,16 @@ export default {
 }
 
 .k-toolbar {
-  margin-block-end: .25rem;
+  margin-bottom: .25rem;
   color: #aaa;
 }
 .k-textarea-input:focus-within .k-toolbar {
   position: sticky;
-  inset-block-start: 0;
+  top: 0;
   inset-inline: 0;
   z-index: 1;
   box-shadow: rgba(0, 0, 0, .05) 0 2px 5px;
-  border-block-end: 1px solid rgba(0 ,0 ,0 , .1);
+  border-bottom: 1px solid rgba(0 ,0 ,0 , .1);
   color: #000;
 }
 </style>

@@ -260,23 +260,25 @@ export default {
   box-shadow: var(--shadow-lg);
   border-radius: var(--rounded-xs);
   text-align: start;
-  margin-block-end: 6rem;
+  margin-bottom: 6rem;
+}
+.k-dropdown-content[data-align="left"] {
+  inset-inline-start: 0;
 }
 .k-dropdown-content[data-align="right"] {
-  inset-inline-start: auto;
   inset-inline-end: 0;
 }
 .k-dropdown-content > .k-dropdown-item:first-child {
-  margin-block-start: .5rem;
+  margin-top: .5rem;
 }
 .k-dropdown-content > .k-dropdown-item:last-child {
-  margin-block-end: .5rem;
+  margin-bottom: .5rem;
 }
 
 .k-dropdown-content[data-dropup] {
-  inset-block-start: auto;
-  inset-block-end: 100%;
-  margin-block-end: .5rem;
+  top: auto;
+  bottom: 100%;
+  margin-bottom: .5rem;
 }
 
 .k-dropdown-content hr {

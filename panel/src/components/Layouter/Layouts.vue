@@ -203,8 +203,8 @@ export default {
 }
 .k-layout-selector .k-headline {
   line-height: 1;
-  margin-block-start: -.25rem;
-  margin-block-end: 1.5rem;
+  margin-top: -.25rem;
+  margin-bottom: 1.5rem;
 }
 .k-layout-selector ul {
   display: grid;
@@ -222,7 +222,7 @@ export default {
   outline-offset: 2px;
 }
 .k-layout-selector-option:last-child {
-  margin-block-end: 0;
+  margin-bottom: 0;
 }
 .k-layout-selector-option .k-column {
   display: flex;

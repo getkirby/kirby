@@ -278,7 +278,7 @@ export default {
 <style>
 .k-form-buttons {
   position: fixed;
-  inset-block-end: 0;
+  bottom: 0;
   inset-inline: 0;
   z-index: var(--z-navigation);
 }

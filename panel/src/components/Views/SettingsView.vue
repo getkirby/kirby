@@ -136,13 +136,13 @@ export default {
 
 <style>
 .k-settings-view section {
-  margin-block-end: 3rem;
+  margin-bottom: 3rem;
 }
 .k-settings-view .k-header {
-  margin-block-end: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 .k-settings-view-section-header {
-  margin-block-end: .5rem;
+  margin-bottom: .5rem;
   display: flex;
   justify-content: space-between;
 }
@@ -160,7 +160,7 @@ export default {
 .k-system-info-box dt {
   font-size: var(--text-sm);
   color: var(--color-gray-600);
-  margin-block-end: .25rem;
+  margin-bottom: .25rem;
 }
 .k-system-unregistered {
   color: var(--color-negative);
@@ -168,6 +168,6 @@ export default {
 }
 
 .k-languages-section {
-  margin-block-end: 2rem;
+  margin-bottom: 2rem;
 }
 </style>

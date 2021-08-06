@@ -157,10 +157,10 @@ export default {
 <style>
 .k-installation-view .k-button {
   display: block;
-  margin-block-start: 1.5rem;
+  margin-top: 1.5rem;
 }
 .k-installation-view .k-headline {
-  margin-block-end: .75rem;
+  margin-bottom: .75rem;
 }
 .k-installation-issues {
   line-height: 1.5em;
@@ -175,7 +175,7 @@ export default {
 
 .k-installation-issues .k-icon {
   position: absolute;
-  inset-block-start: calc(1.5rem + 2px);
+  top: calc(1.5rem + 2px);
   inset-inline-start: 1.5rem;
 }
 
@@ -183,7 +183,7 @@ export default {
   fill: var(--color-negative);
 }
 .k-installation-issues li:not(:last-child) {
-  margin-block-end: 2px;
+  margin-bottom: 2px;
 }
 .k-installation-issues li code {
   font: inherit;

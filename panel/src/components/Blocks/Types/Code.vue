@@ -64,11 +64,11 @@ export default {
   font-size: var(--text-sm);
   position: absolute;
   inset-inline-end: 0;
-  inset-block-end: 0;
+  bottom: 0;
 }
 .k-block-type-code-editor-language .k-icon {
   position: absolute;
-  inset-block-start: 0;
+  top: 0;
   inset-inline-start: 0;
   height: 1.5rem;
   display: flex;
