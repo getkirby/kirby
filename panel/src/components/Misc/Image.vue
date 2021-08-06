@@ -119,7 +119,7 @@ export default {
   font-size: .9em;
 }
 .k-image-error svg * {
-  fill: rgba(255, 255, 255, .3));
+  fill: rgba(255, 255, 255, .3);
 }
 .k-image[data-cover] img {
   object-fit: cover;
