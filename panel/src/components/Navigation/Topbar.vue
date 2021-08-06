@@ -33,7 +33,7 @@
             v-if="notification"
             :text="notification.message"
             theme="positive"
-            class="k-topbar-notification k-topbar-signals-button"
+            class="k-topbar-notification k-topbar-button"
             @click="$store.dispatch('notification/close')"
           />
 
@@ -46,7 +46,7 @@
           <!-- search -->
           <k-button
             :tooltip="$t('search')"
-            class="k-topbar-signals-button"
+            class="k-topbar-button"
             icon="search"
             @click="$emit('search')"
           />
@@ -112,29 +112,28 @@ export default {
 .k-topbar-menu ul {
   padding: .5rem 0;
 }
+.k-topbar .k-button[data-theme] {
+  color: var(--theme-l);
+}
+.k-topbar .k-button-text {
+  opacity: 1;
+}
+
 .k-topbar-menu-button {
   display: flex;
   align-items: center;
-}
-.k-topbar-menu-button .k-button-text {
-  opacity: 1;
 }
 .k-topbar-menu .k-link[aria-current] {
   color: var(--color-focus);
   font-weight: 500;
 }
-.k-topbar-signals-button,
 .k-topbar-button {
   padding: .75rem;
   line-height: 1;
   font-size: var(--text-sm);
 }
-.k-topbar-signals .k-button .k-button-text {
-  opacity: 1;
-}
 .k-topbar-button .k-button-text {
   display: flex;
-  opacity: 1;
 }
 .k-topbar-view-button {
   flex-shrink: 0;
@@ -176,22 +175,10 @@ export default {
   line-height: 1;
   display: flex;
 }
-.k-topbar .k-button[data-theme] .k-button-text {
-  opacity: 1;
-}
-.k-topbar .k-button[data-theme="positive"] {
-  color: var(--color-positive-light);
-}
-.k-topbar .k-button[data-theme="negative"] {
-  color: var(--color-negative-light);
-}
-.k-topbar .k-button[data-theme="negative"] .k-button-text {
-  display: none;
-}
 
-@media screen and (min-width: 30em){
+@media screen and (max-width: 30em){
   .k-topbar .k-button[data-theme="negative"] .k-button-text {
-    display: inline;
+    display: none;
   }
 }
 </style>
