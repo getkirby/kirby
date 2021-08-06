@@ -2,15 +2,18 @@
   <div class="k-fatal">
     <div class="k-fatal-box">
       <k-bar>
-        <k-headline slot="left">
-          The JSON response could not be parsed:
-        </k-headline>
-        <k-button
-          slot="right"
-          icon="cancel"
-          text="Close"
-          @click="$store.dispatch('fatal', false)"
-        />
+        <template #left>
+          <k-headline>
+            The JSON response could not be parsed:
+          </k-headline>
+        </template>
+        <template #right>
+          <k-button
+            icon="cancel"
+            text="Close"
+            @click="$store.dispatch('fatal', false)"
+          />
+        </template>
       </k-bar>
       <iframe ref="iframe" class="k-fatal-iframe" />
     </div>

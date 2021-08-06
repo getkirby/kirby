@@ -4,6 +4,8 @@ import dialog from "./dialog"
 import dropdown from "./dropdown"
 import search from "./search"
 
+import store from "../store/store.js";
+
 export default {
   install(app) {
     app.prototype.$dialog   = window.panel.$dialog   = dialog;
@@ -13,5 +15,18 @@ export default {
     app.prototype.$request  = window.panel.$request  = (...args) => Fiber.request(...args);
     app.prototype.$search   = window.panel.$search   = search;
     app.prototype.$url      = window.panel.$url      = (...args) => Fiber.url(...args);
+
+    // Connect Fiber events to Vuex store loading state
+    document.addEventListener("fiber.start", (e) => {
+      if (e.detail.silent !== true) {
+        store.dispatch("isLoading", true);
+      }
+    });
+
+    document.addEventListener("fiber.finish", () => {
+      if (app.$api.requests.length === 0) {
+        store.dispatch("isLoading", false);
+      }
+    });
   }
 };
