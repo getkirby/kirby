@@ -260,12 +260,12 @@ export default {
 <style>
 .k-toolbar {
   background: var(--color-white);
-  border-block-end: 1px solid var(--color-background);
+  border-bottom: 1px solid var(--color-background);
   height: 38px;
 }
 .k-toolbar-wrapper {
   position: absolute;
-  inset-block-start: 0;
+  top: 0;
   inset-inline: 0;
   max-width: 100%;
 }

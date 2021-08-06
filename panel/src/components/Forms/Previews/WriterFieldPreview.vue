@@ -18,6 +18,6 @@ export default {
   line-height: 1.5em;
 }
 .k-writer-field-preview p:not(:last-child) {
-  margin-block-end: 1.5em;
+  margin-bottom: 1.5em;
 }
 </style>

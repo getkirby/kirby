@@ -147,7 +147,7 @@ export default {
 
 .k-topbar-signals {
   position: absolute;
-  inset-block-start: 0;
+  top: 0;
   inset-inline-end: 0;
   background: var(--bg);
   height: 2.5rem;
@@ -157,8 +157,8 @@ export default {
 .k-topbar-signals::before {
   position: absolute;
   content: "";
-  inset-block-start: -0.5rem;
-  inset-block-end: 0;
+  top: -0.5rem;
+  bottom: 0;
   width: .5rem;
   background: -webkit-linear-gradient(
     inline-start,

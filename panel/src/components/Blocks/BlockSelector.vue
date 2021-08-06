@@ -121,10 +121,10 @@ export default {
   color: var(--color-white);
 }
 .k-block-selector .k-headline {
-  margin-block-end: 1rem;
+  margin-bottom: 1rem;
 }
 .k-block-selector details:not(:last-of-type) {
-  margin-block-end: 1.5rem;
+  margin-bottom: 1.5rem;
 }
 .k-block-selector summary {
   font-size: var(--text-xs);
@@ -143,7 +143,7 @@ export default {
 .k-block-types {
   display: grid;
   grid-gap: 2px;
-  margin-block-start: .75rem;
+  margin-top: .75rem;
   grid-template-columns: repeat(1, 1fr);
 }
 .k-block-types .k-button {

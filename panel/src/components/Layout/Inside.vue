@@ -111,12 +111,12 @@ export default {
 
 <style>
 .k-panel-view {
-  padding-block-start: 2.5rem;
-  padding-block-end: 6rem;
+  padding-top: 2.5rem;
+  padding-bottom: 6rem;
 }
 .k-panel-header {
   position: fixed;
-  inset-block-start: 0;
+  top: 0;
   inset-inline: 0;
   z-index: var(--z-navigation);
 }

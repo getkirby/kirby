@@ -31,7 +31,7 @@ export default {
 
 .k-column[data-sticky] > div {
   position: sticky;
-  inset-block-start: 4vh;
+  top: 4vh;
   z-index: 2;
 }
 

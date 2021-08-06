@@ -17,6 +17,6 @@ export default {
 .k-block-type-line hr {
   margin-block: .75rem;
   border: 0;
-  border-block-start: 2px solid var(--color-gray-400);
+  border-top: 2px solid var(--color-gray-400);
 }
 </style>

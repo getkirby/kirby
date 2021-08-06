@@ -203,13 +203,8 @@ export default {
 <style>
 .k-search {
   max-width: 30rem;
-  margin: 0 auto;
+  margin: 2.5rem auto;
   box-shadow: var(--shadow-lg);
-}
-@media screen and (min-width: 65em) {
-  .k-search {
-    margin: 2.5rem auto;
-  }
 }
 .k-search-input {
   background: var(--color-light);
@@ -220,7 +215,7 @@ export default {
   display: flex;
 }
 .k-search-types > .k-button {
-  padding: 0 0 0 1rem;
+  padding-inline-start: 1rem;
   font-size: var(--text-base);
   line-height: 1;
   height: 2.5rem;
@@ -256,13 +251,10 @@ export default {
   background: var(--color-light);
 }
 .k-search .k-item:not(:last-child) {
-  margin-block-end: .25rem;
+  margin-bottom: .25rem;
 }
 .k-search .k-item[data-selected] {
   outline: 2px solid var(--color-focus);
-}
-.k-search .k-item-title {
-  font-size: var(--text-sm);
 }
 .k-search .k-item-info {
   font-size: var(--text-xs);
