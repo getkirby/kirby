@@ -52,19 +52,7 @@ export default {
       return this.$helper.isComponent(`k-${type}-field-preview`);
     },
     width(fraction) {
-      if (!fraction) {
-        return "auto";
-      }
-      const parts = fraction.toString().split("/");
-
-      if (parts.length !== 2) {
-        return "auto";
-      }
-
-      const a = Number(parts[0]);
-      const b = Number(parts[1]);
-
-      return parseFloat(String(100 / b * a)).toFixed(2) + "%";
+      return fraction ? this.$helper.ratio(fraction, "auto", false) : "auto";
     }
   }
 }
