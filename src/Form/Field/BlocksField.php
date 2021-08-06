@@ -105,11 +105,11 @@ class BlocksField extends FieldClass
 
     public function form(string $type)
     {
-        if (empty($this->form[$type]) === false) {
-            return $this->form[$type];
+        if (empty($this->forms[$type]) === false) {
+            return $this->forms[$type];
         }
 
-        return $this->form[$type] = new Form([
+        return $this->forms[$type] = new Form([
             'fields' => $this->fields($type),
             'model'  => $this->model,
             'strict' => true,
