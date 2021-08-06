@@ -20,6 +20,7 @@ return [
     'range'       => __DIR__ . '/fields/range.php',
     'select'      => __DIR__ . '/fields/select.php',
     'structure'   => __DIR__ . '/fields/structure.php',
+    'sync'        => __DIR__ . '/fields/sync.php',
     'tags'        => __DIR__ . '/fields/tags.php',
     'tel'         => __DIR__ . '/fields/tel.php',
     'text'        => __DIR__ . '/fields/text.php',
