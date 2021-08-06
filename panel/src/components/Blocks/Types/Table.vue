@@ -102,17 +102,11 @@ export default {
 .k-block-type-table-preview tr:last-child td {
   border-block-end: 0;
 }
-.k-block-type-table-preview [data-align="left"] {
-  text-align: start;
-}
-.k-block-type-table-preview [data-align="right"] {
-  text-align: end;
-}
-.k-block-type-table-preview [data-align="center"] {
-  text-align: center;
-}
 .k-block-type-table-preview-empty {
   color: var(--color-gray-600);
   font-size: var(--text-sm);
+}
+.k-block-type-table-preview [data-align] {
+  text-align: var(--align);
 }
 </style>

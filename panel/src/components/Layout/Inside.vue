@@ -110,50 +110,6 @@ export default {
 </script>
 
 <style>
-@import url('../../variables.css');
-
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-noscript {
-  padding: 1.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 100vh;
-  text-align: center;
-}
-
-html {
-  font-family: var(--font-sans);
-  background: var(--color-background);
-}
-
-html,
-body {
-  color: var(--color-gray-900);
-  min-height: 100vh;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-li {
-  list-style: none;
-}
-
-strong,
-b {
-  font-weight: var(--font-bold);
-}
-
 .k-panel-view {
   padding-block-start: 2.5rem;
   padding-block-end: 6rem;

@@ -49,36 +49,34 @@ export default {
 
 <style>
 .k-headline {
-  font-size: var(--text-base);
+  --size: var(--text-base);
+  font-size: var(--size);
   font-weight: var(--font-bold);
   line-height: 1.5em;
 }
 .k-headline[data-size="small"] {
-  font-size: var(--text-sm);
+  --size: var(--text-sm);
 }
 .k-headline[data-size="large"] {
-  font-size: var(--text-xl);
+  --size: var(--text-xl);
   font-weight: var(--font-normal);
 }
 @media screen and (min-width: 65em) {
   .k-headline[data-size="large"] {
-    font-size: var(--text-2xl);
+    --size: var(--text-2xl);
   }
 }
 .k-headline[data-size="huge"] {
-  font-size: var(--text-2xl);
+  --size: var(--text-2xl);
   line-height: 1.15em;
 }
 @media screen and (min-width: 65em) {
   .k-headline[data-size="huge"] {
-    font-size: var(--text-3xl);
+    --size: var(--text-3xl);
   }
 }
-.k-headline[data-theme="negative"] {
-  color: var(--color-negative);
-}
-.k-headline[data-theme="positive"] {
-  color: var(--color-positive);
+.k-headline[data-theme] {
+  color: var(--theme);
 }
 .k-headline abbr {
   color: var(--color-gray-500);

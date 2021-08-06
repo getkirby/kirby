@@ -60,13 +60,6 @@ export default {
   margin-block-end: 0;
 }
 
-.k-text[data-align="center"] {
-  text-align: center;
-}
-.k-text[data-align="right"] {
-  text-align: end;
-}
-
 .k-text[data-size="tiny"] {
   font-size: var(--text-xs);
 }
@@ -78,6 +71,9 @@ export default {
 }
 .k-text[data-size="large"] {
   font-size: var(--text-xl);
+}
+.k-text[data-align] {
+  text-align: var(--align);
 }
 
 .k-text[data-theme="help"] {

@@ -1,5 +1,5 @@
 <template>
-  <nav :data-theme="mode" class="k-form-buttons">
+  <nav :data-theme="theme" class="k-form-buttons">
     <k-view v-if="mode === 'unlock'">
       <p class="k-form-lock-info">
         {{ $t("lock.isUnlocked") }}
@@ -109,6 +109,16 @@ export default {
     supportsLocking() {
       return this.lock !== false;
     },
+    theme() {
+      if (this.mode === "lock") {
+        return "negative";
+      }
+      if (this.mode === "unlock") {
+        return "focus";
+      }
+
+      return "notice";
+    }
   },
   watch: {
     hasChanges: {
@@ -272,14 +282,8 @@ export default {
   inset-inline: 0;
   z-index: var(--z-navigation);
 }
-.k-form-buttons[data-theme="changes"] {
-    background: var(--color-notice-light);
-}
-.k-form-buttons[data-theme="lock"] {
-    background: var(--color-negative-light);
-}
-.k-form-buttons[data-theme="unlock"] {
-    background: var(--color-focus-light);
+.k-form-buttons[data-theme] {
+    background: var(--theme-light);
 }
 .k-form-buttons .k-view {
   display: flex;

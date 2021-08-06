@@ -132,10 +132,6 @@ button::-moz-focus-inner {
   outline: none;
 }
 
-.k-button[data-tabbed] {
-  box-shadow: var(--shadow-outline);
-}
-
 .k-button * {
   vertical-align: middle;
 }
@@ -150,12 +146,8 @@ button::-moz-focus-inner {
   }
 }
 
-.k-button[data-theme="positive"] {
-  color: var(--color-positive);
-}
-
-.k-button[data-theme="negative"] {
-  color: var(--color-negative);
+.k-button[data-theme] {
+  color: var(--theme);
 }
 
 .k-button-icon {

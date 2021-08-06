@@ -55,6 +55,7 @@ export default {
 
 <style>
 .k-icon {
+  --size: 1rem;
   position: relative;
   line-height: 0;
   display: flex;
@@ -62,9 +63,15 @@ export default {
   justify-content: center;
   flex-shrink: 0;
 }
+.k-icon[data-size="medium"] {
+  --size: 2rem;
+}
+.k-icon[data-size="large"] {
+  --size: 3rem;
+}
 .k-icon svg {
-  width: 1rem;
-  height: 1rem;
+  width: var(--size);
+  height: var(--size);
   -moz-transform: scale(1);
 }
 .k-icon svg * {
@@ -82,25 +89,12 @@ export default {
 [data-disabled] .k-icon[data-back="pattern"] svg {
   opacity: 1;
 }
-.k-icon[data-size="medium"] svg {
-  width: 2rem;
-  height: 2rem;
-}
-.k-icon[data-size="large"] svg {
-  width: 3rem;
-  height: 3rem;
-}
+
 .k-icon-emoji {
   display: block;
   line-height: 1;
   font-style: normal;
-  font-size: 1rem;
-}
-.k-icon[data-size="medium"] .k-icon-emoji {
-  font-size: 2rem;
-}
-.k-icon[data-size="large"] .k-icon-emoji {
-  font-size: 3rem;
+  font-size: var(--size);
 }
 
 /* fix emoji alignment on high-res screens */
