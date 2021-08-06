@@ -139,7 +139,7 @@ class MediaTest extends TestCase
 
         // string model
         $hash = '12345678';
-        $this->assertStringEndsWith('tests/Cms/Media/tmp/media/assets/assets/' . $hash, Media::root($kirby, 'assets', $hash));
+        $this->assertStringEndsWith('tests/Cms/Media/tmp/media/assets/files' . $hash, Media::root($kirby, 'files', $hash));
 
         // file object
         $file  = $kirby->file('test.jpg');
