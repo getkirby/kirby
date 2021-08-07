@@ -37,7 +37,7 @@
     "postcss-logical": "^4.0.2",
     "vite": "^2.4.4",
     "vite-plugin-rewrite-all": "^0.1.2",
-    "vite-plugin-vue2": "^1.7.3",
+    "vite-plugin-vue2": "^1.6.2",
     "vue-docgen-api": "^4.40.0",
     "wait-on": "^6.0.0"
   }
