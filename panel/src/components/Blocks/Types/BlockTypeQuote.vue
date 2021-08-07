@@ -27,6 +27,7 @@
  * @internal
  */
 export default {
+  extends: "k-block-type",
   computed: {
     citationField() {
       return this.field("citation", {});

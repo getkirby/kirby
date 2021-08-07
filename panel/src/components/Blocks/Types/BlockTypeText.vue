@@ -17,6 +17,7 @@
  * @internal
  */
 export default {
+  extends: "k-block-type",
   computed: {
     textField() {
       return this.field("text", {});

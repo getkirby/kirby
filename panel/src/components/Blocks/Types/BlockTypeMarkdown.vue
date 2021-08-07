@@ -17,6 +17,7 @@
  * @internal
  */
 export default {
+  extends: "k-block-type",
   computed: {
     placeholder() {
       return this.field("text", {}).placeholder;

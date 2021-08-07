@@ -11,7 +11,9 @@
  * @displayName BlockTypeDefault
  * @internal
  */
-export default {}
+export default {
+  extends: "k-block-type"
+}
 </script>
 
 <style>

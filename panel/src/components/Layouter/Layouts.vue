@@ -75,15 +75,10 @@
 </template>
 
 <script>
-import Layout from "./Layout.vue";
-
 /**
  * @internal
  */
 export default {
-  components: {
-    "k-layout": Layout
-  },
   props: {
     disabled: Boolean,
     empty: String,

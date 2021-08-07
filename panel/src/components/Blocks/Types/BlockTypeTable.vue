@@ -47,6 +47,7 @@ import structure from "@/mixins/forms/structure.js";
  * @internal
  */
 export default {
+  extends: "k-block-type",
   mixins: [structure],
   inheritAttrs: false,
   computed: {

@@ -74,15 +74,10 @@
 </template>
 
 <script>
-import Column from "./Column.vue";
-
 /**
  * @internal
  */
 export default {
-  components: {
-    "k-layout-column": Column
-  },
   props: {
     attrs: [Array, Object],
     columns: Array,
