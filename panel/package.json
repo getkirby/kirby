@@ -11,34 +11,35 @@
     "test": "cypress run"
   },
   "dependencies": {
-    "@linusborg/vue-simple-portal": "^0.1.4",
-    "autosize": "^4.0.2",
-    "dayjs": "^1.9.6",
-    "mitt": "^2.1.0",
-    "prosemirror-commands": "^1.1.4",
+    "@linusborg/vue-simple-portal": "^0.1.5",
+    "autosize": "^5.0.1",
+    "dayjs": "^1.10.6",
+    "mitt": "^3.0.0",
+    "prosemirror-commands": "^1.1.10",
     "prosemirror-history": "^1.1.3",
     "prosemirror-inputrules": "^1.1.3",
     "prosemirror-keymap": "^1.1.4",
-    "prosemirror-model": "^1.12.0",
-    "prosemirror-schema-list": "^1.1.4",
-    "prosemirror-view": "^1.16.3",
+    "prosemirror-model": "^1.14.3",
+    "prosemirror-schema-list": "^1.1.5",
+    "prosemirror-view": "^1.18.11",
     "vue": "^2.6.12",
     "vuedraggable": "^2.24.3",
     "vuelidate": "^0.7.6",
-    "vuex": "^3.5.1"
+    "vuex": "^3.6.2"
   },
   "devDependencies": {
-    "cypress": "^7.4.0",
-    "eslint": "^7.25.0",
-    "eslint-plugin-cypress": "^2.11.2",
-    "eslint-plugin-vue": "^7.7.0",
+    "cypress": "^8.2.0",
+    "eslint": "^7.32.0",
+    "eslint-plugin-cypress": "^2.11.3",
+    "eslint-plugin-vue": "^7.15.1",
     "postcss-csso": "^5.0.1",
     "postcss-dir-pseudo-class": "^5.0.0",
     "postcss-logical": "^4.0.2",
-    "vite": "^2.2.3",
+    "vite": "^2.4.4",
     "vite-plugin-rewrite-all": "^0.1.2",
-    "vite-plugin-vue2": "^1.2.2",
-    "vue-docgen-api": "^4.39.0",
-    "wait-on": "^5.2.1"
+    "vite-plugin-vue2": "^1.7.2",
+    "vue-docgen-api": "^4.40.0",
+    "vue-template-compiler": "^2.6.14",
+    "wait-on": "^6.0.0"
   }
 }
