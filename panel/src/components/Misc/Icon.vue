@@ -62,6 +62,7 @@ export default {
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  font-size: var(--size);
 }
 .k-icon[data-size="medium"] {
   --size: 2rem;
@@ -100,7 +101,7 @@ export default {
 /* fix emoji alignment on high-res screens */
 @media only screen and (-webkit-min-device-pixel-ratio: 2), not all, not all, not all, only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
   .k-icon-emoji {
-    font-size: 1.25rem;
+    font-size: 1.25em;
   }
 }
 
