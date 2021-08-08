@@ -162,7 +162,7 @@ class PagePicker extends Picker
         }
 
         // filter protected pages
-        $items = $items->filter('isReadable', true);
+        $items = $items->filter('isAccessible', true);
 
         // search
         $items = $this->search($items);

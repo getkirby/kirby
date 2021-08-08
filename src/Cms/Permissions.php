@@ -56,6 +56,7 @@ class Permissions
             'duplicate'      => true,
             'preview'        => true,
             'read'           => true,
+            'show'           => true,
             'sort'           => true,
             'update'         => true
         ],

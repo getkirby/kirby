@@ -22,6 +22,7 @@ class PageBlueprintTest extends TestCase
             'duplicate'      => null,
             'preview'        => null,
             'read'           => null,
+            'show'           => null,
             'sort'           => null,
             'update'         => null,
         ];
@@ -56,6 +57,7 @@ class PageBlueprintTest extends TestCase
             'preview'        => null,
             'read'           => null,
             'sort'           => null,
+            'show'           => null,
             'update'         => null,
         ];
 
@@ -91,6 +93,7 @@ class PageBlueprintTest extends TestCase
             'duplicate'      => null,
             'preview'        => null,
             'read'           => null,
+            'show'           => null,
             'sort'           => null,
             'update'         => null,
         ];

@@ -932,4 +932,139 @@ class PageTest extends TestCase
         $page = $app->page('bar');
         $page->controller();
     }
+
+    public function testIsReadable()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'pages/readable-bar' => [
+                    'options' => ['read' => true]
+                ],
+                'pages/readable-baz' => [
+                    'options' => ['read' => false]
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'foo'
+                    ],
+                    [
+                        'slug' => 'bar',
+                        'template' => 'readable-bar'
+                    ],
+                    [
+                        'slug' => 'baz',
+                        'template' => 'readable-baz'
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = $app->page('foo');
+        $this->assertTrue($page->isReadable());
+
+        $page = $app->page('bar');
+        $this->assertTrue($page->isReadable());
+
+        $page = $app->page('baz');
+        $this->assertFalse($page->isReadable());
+    }
+
+    public function testIsVisible()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'pages/visible-bar' => [
+                    'options' => ['show' => true]
+                ],
+                'pages/visible-baz' => [
+                    'options' => ['show' => false]
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'foo'
+                    ],
+                    [
+                        'slug' => 'bar',
+                        'template' => 'visible-bar'
+                    ],
+                    [
+                        'slug' => 'baz',
+                        'template' => 'visible-baz'
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = $app->page('foo');
+        $this->assertTrue($page->isVisible());
+
+        $page = $app->page('bar');
+        $this->assertTrue($page->isVisible());
+
+        $page = $app->page('baz');
+        $this->assertFalse($page->isVisible());
+    }
+
+    public function testIsAccessible()
+    {
+        $app = new App([
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'blueprints' => [
+                'pages/accessible-bar' => [
+                    'options' => [
+                        'read' => true,
+                        'show' => false
+                    ]
+                ],
+                'pages/accessible-baz' => [
+                    'options' => [
+                        'read' => false,
+                        'show' => true
+                    ]
+                ]
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'foo'
+                    ],
+                    [
+                        'slug' => 'bar',
+                        'template' => 'accessible-bar'
+                    ],
+                    [
+                        'slug' => 'baz',
+                        'template' => 'accessible-baz'
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = $app->page('foo');
+        $this->assertTrue($page->isAccessible());
+
+        $page = $app->page('bar');
+        $this->assertFalse($page->isAccessible());
+
+        $page = $app->page('baz');
+        $this->assertFalse($page->isAccessible());
+    }
 }

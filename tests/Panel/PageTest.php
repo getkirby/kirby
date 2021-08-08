@@ -362,8 +362,9 @@ class PageTest extends TestCase
             'create'         => true,
             'delete'         => true,
             'duplicate'      => true,
-            'read'           => true,
             'preview'        => true,
+            'read'           => true,
+            'show'           => true,
             'sort'           => false, // drafts cannot be sorted
             'update'         => true,
         ];
@@ -392,8 +393,9 @@ class PageTest extends TestCase
             'create'         => false,
             'delete'         => false,
             'duplicate'      => false,
-            'read'           => false,
             'preview'        => false,
+            'read'           => false,
+            'show'           => false,
             'sort'           => false,
             'update'         => false,
         ];
@@ -410,8 +412,9 @@ class PageTest extends TestCase
             'create'         => false,
             'delete'         => false,
             'duplicate'      => false,
-            'read'           => false,
             'preview'        => true,
+            'read'           => false,
+            'show'           => false,
             'sort'           => false,
             'update'         => false,
         ];

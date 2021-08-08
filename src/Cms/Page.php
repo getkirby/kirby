@@ -560,6 +560,16 @@ class Page extends ModelWithContent
     }
 
     /**
+     * Checks if the page is accessible that readable and visible.
+     *
+     * @return bool
+     */
+    public function isAccessible(): bool
+    {
+        return $this->isReadable() === true && $this->isVisible() === true;
+    }
+
+    /**
      * Checks if the page is the current page
      *
      * @return bool
@@ -832,6 +842,24 @@ class Page extends ModelWithContent
         }
 
         return $this->token() === $token;
+    }
+
+    /**
+     * Check if the page can be visible by the current user
+     *
+     * @return bool
+     */
+    public function isVisible(): bool
+    {
+        static $visible = [];
+
+        $template = $this->intendedTemplate()->name();
+
+        if (isset($visible[$template]) === true) {
+            return $visible[$template];
+        }
+
+        return $visible[$template] = $this->permissions()->can('show');
     }
 
     /**
