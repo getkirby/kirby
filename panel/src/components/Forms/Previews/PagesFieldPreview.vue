@@ -3,7 +3,11 @@
     <li v-for="page in value" :key="page.id">
       <figure>
         <k-link :title="page.id" :to="page.link" @click.native.stop>
-          <k-icon type="page" back="pattern" class="k-pages-field-preview-image" />
+          <k-item-image
+            :image="page.image"
+            layout="list"
+            class="k-pages-field-preview-image"
+          />
           <figcaption>
             {{ page.text }}
           </figcaption>
@@ -39,7 +43,9 @@ export default {
 .k-pages-field-preview-image {
   width: 1.525rem;
   height: 1.525rem;
-  color: var(--color-gray-500) !important;
+}
+.k-pages-field-preview-image .k-icon {
+  --size: .85rem;
 }
 .k-pages-field-preview figcaption {
   flex-grow: 1;
