@@ -34,13 +34,19 @@ return [
         'pattern' => '(:all)/files',
         'method'  => 'POST',
         'action'  => function (string $path) {
+            // move_uploaded_file() not working with unit test
+            // @codeCoverageIgnoreStart
             return $this->upload(function ($source, $filename) use ($path) {
                 return $this->parent($path)->createFile([
+                    'content' => [
+                        'sort' => $this->requestBody('sort')
+                    ],
                     'source'   => $source,
                     'template' => $this->requestBody('template'),
                     'filename' => $filename
                 ]);
             });
+            // @codeCoverageIgnoreEnd
         }
     ],
     [

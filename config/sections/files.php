@@ -223,6 +223,7 @@ return [
                 'max'        => $max,
                 'api'        => $this->parent->apiUrl(true) . '/files',
                 'attributes' => array_filter([
+                    'sort'     => $this->sortable === true ? $total + 1 : null,
                     'template' => $template
                 ])
             ];
