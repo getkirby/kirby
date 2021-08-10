@@ -312,6 +312,69 @@ class FileTest extends TestCase
         $this->assertSame('/test/test.pdf', $file->previewUrl());
     }
 
+    public function testPreviewUrlForDraft()
+    {
+        $page = new Page([
+            'slug'    => 'test',
+            'isDraft' => true,
+            'files'   => [
+                [
+                    'filename' => 'test.pdf'
+                ]
+            ]
+        ]);
+
+        $file = $page->file('test.pdf');
+        $this->assertSame($file->url(), $file->previewUrl());
+    }
+
+    public function testPreviewUrlForPageWithCustomPreviewSetting()
+    {
+        $app = new App([
+            'blueprints' => [
+                'pages/test' => [
+                    'options' => [
+                        'preview' => false
+                    ]
+                ]
+            ],
+            'roots' => [
+                'index' => '/dev/null'
+            ],
+            'site' => [
+                'children' => [
+                    [
+                        'slug'     => 'test',
+                        'template' => 'test',
+                        'files'    => [
+                            [
+                                'filename' => 'test.pdf'
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $file = $app->file('test/test.pdf');
+        $this->assertSame($file->url(), $file->previewUrl());
+    }
+
+    public function testPreviewUrlForUserFile()
+    {
+        $user = new User([
+            'email' => 'test@getkirby.com',
+            'files' => [
+                [
+                    'filename' => 'test.pdf'
+                ]
+            ]
+        ]);
+
+        $file = $user->file('test.pdf');
+        $this->assertSame($file->url(), $file->previewUrl());
+    }
+
     public function testApiUrl()
     {
         $app = new App([
