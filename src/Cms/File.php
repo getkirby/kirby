@@ -751,6 +751,32 @@ class File extends ModelWithContent
      */
     public function previewUrl(): string
     {
-        return url($this->id());
+        $parent = $this->parent();
+        $url    = url($this->id());
+
+        switch ($parent::CLASS_ALIAS) {
+            case 'page':
+                $preview = $parent->blueprint()->preview();
+
+                // the page has a custom preview setting,
+                // thus the file is only accessible through
+                // the direct media URL
+                if ($preview !== true) {
+                    return $this->url();
+                }
+
+                // it's more stable to access files for drafts
+                // through their direct URL to avoid conflicts
+                // with draft token verification
+                if ($parent->isDraft() === true) {
+                    return $this->url();
+                }
+
+                return $url;
+            case 'user':
+                return $this->url();
+            default:
+                return $url;
+        }
     }
 }
