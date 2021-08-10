@@ -292,6 +292,8 @@ class Blueprint
             return static::$loaded[$name] = Data::read($file);
         } elseif (is_array($file) === true) {
             return static::$loaded[$name] = $file;
+        } elseif (is_callable($file) === true) {
+            return static::$loaded[$name] = $file($kirby);
         }
 
         // neither a valid file nor array data
