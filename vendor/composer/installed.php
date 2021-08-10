@@ -1,8 +1,8 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => '3.6.0-alpha.3',
-    'version' => '3.6.0.0-alpha3',
+    'pretty_version' => '3.6.0-alpha.4',
+    'version' => '3.6.0.0-alpha4',
     'aliases' => 
     array (
     ),
@@ -31,8 +31,8 @@
     ),
     'getkirby/cms' => 
     array (
-      'pretty_version' => '3.6.0-alpha.3',
-      'version' => '3.6.0.0-alpha3',
+      'pretty_version' => '3.6.0-alpha.4',
+      'version' => '3.6.0.0-alpha4',
       'aliases' => 
       array (
       ),
@@ -119,12 +119,12 @@
     ),
     'symfony/polyfill-mbstring' => 
     array (
-      'pretty_version' => 'v1.23.0',
-      'version' => '1.23.0.0',
+      'pretty_version' => 'v1.23.1',
+      'version' => '1.23.1.0',
       'aliases' => 
       array (
       ),
-      'reference' => '2df51500adbaebdc4c38dea4c89a2e131c45c8a1',
+      'reference' => '9174a3d80210dca8daa7f31fec659150bbeabfc6',
     ),
     'true/punycode' => 
     array (
