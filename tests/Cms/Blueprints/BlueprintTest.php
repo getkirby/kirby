@@ -280,6 +280,8 @@ class BlueprintTest extends TestCase
      */
     public function testFactory()
     {
+        Blueprint::$loaded = [];
+
         $this->app = $this->app->clone([
             'blueprints' => [
                 'pages/test' => ['title' => 'Test']
@@ -298,6 +300,8 @@ class BlueprintTest extends TestCase
      */
     public function testFactoryWithCallback()
     {
+        Blueprint::$loaded = [];
+
         $this->app = $this->app->clone([
             'blueprints' => [
                 'pages/test' => function () {
