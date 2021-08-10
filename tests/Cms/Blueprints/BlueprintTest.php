@@ -276,6 +276,7 @@ class BlueprintTest extends TestCase
 
     /**
      * @covers ::factory
+     * @covers ::find
      */
     public function testFactory()
     {
@@ -293,6 +294,7 @@ class BlueprintTest extends TestCase
 
     /**
      * @covers ::factory
+     * @covers ::find
      */
     public function testFactoryWithCallback()
     {
