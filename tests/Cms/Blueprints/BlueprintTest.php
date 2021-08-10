@@ -276,12 +276,37 @@ class BlueprintTest extends TestCase
 
     /**
      * @covers ::factory
+     * @covers ::find
      */
     public function testFactory()
     {
+        Blueprint::$loaded = [];
+
         $this->app = $this->app->clone([
             'blueprints' => [
                 'pages/test' => ['title' => 'Test']
+            ]
+        ]);
+
+        $blueprint = Blueprint::factory('pages/test', null, new Page(['slug' => 'test']));
+
+        $this->assertSame('Test', $blueprint->title());
+        $this->assertSame('pages/test', $blueprint->name());
+    }
+
+    /**
+     * @covers ::factory
+     * @covers ::find
+     */
+    public function testFactoryWithCallback()
+    {
+        Blueprint::$loaded = [];
+
+        $this->app = $this->app->clone([
+            'blueprints' => [
+                'pages/test' => function () {
+                    return ['title' => 'Test'];
+                }
             ]
         ]);
 
