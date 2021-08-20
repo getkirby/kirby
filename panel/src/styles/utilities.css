@@ -1,12 +1,12 @@
 /* Align */
 [data-align="left"] {
-  --algin: start;
+  --align: start;
 }
 [data-align="center"] {
-  --algin: center;
+  --align: center;
 }
 [data-align="right"] {
-  --algin: end;
+  --align: end;
 }
 
 /* Invalid */
