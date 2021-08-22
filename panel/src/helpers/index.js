@@ -13,7 +13,6 @@ import sort from "./sort.js";
 import string from "./string.js";
 import upload from "./upload.js";
 import uuid from "./uuid.js";
-import validate from "./validate.js";
 
 import "./regex.js";
 
@@ -55,8 +54,7 @@ export default {
       sort,
       string,
       upload,
-      uuid,
-      validate
+      uuid
     };
 
     Vue.prototype.$esc = string.escapeHTML;
