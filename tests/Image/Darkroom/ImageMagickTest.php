@@ -59,4 +59,24 @@ class ImageMagickTest extends TestCase
         $im->process($file);
         $this->assertTrue(F::exists($webp));
     }
+
+    public function testKeepColorProfile()
+    {
+        $im = new ImageMagick([
+            'bin' => 'convert',
+            'width' => 250, // do some arbitrary transformation
+        ]);
+
+        copy($this->fixtures . '/onigiri-adobe-rgb.jpg', $file = $this->tmp . '/onigiri-adobe-rgb.jpg');
+
+        // Test if profile has been kept
+        $originalProfile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file));
+        $im->process($file);
+        $profile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file));
+        $this->assertTrue($profile === $originalProfile);
+
+        // Ensure that other metadata has been stripped
+        $meta = shell_exec('identify -verbose ' . escapeshellarg($file));
+        $this->assertFalse(str_contains($meta, 'photoshop:CaptionWriter'));
+    }
 }

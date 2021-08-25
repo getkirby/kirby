@@ -219,7 +219,7 @@ class ImageMagick extends Darkroom
     }
 
     /**
-     * Removes all metadata from the image
+     * Removes all metadata from the image, but keeps the icc profile.
      *
      * @param string $file
      * @param array $options
@@ -227,6 +227,6 @@ class ImageMagick extends Darkroom
      */
     protected function strip(string $file, array $options): string
     {
-        return '-strip';
+        return '+profile "!icc,*"';
     }
 }
