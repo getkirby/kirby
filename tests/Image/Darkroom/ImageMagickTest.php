@@ -77,6 +77,6 @@ class ImageMagickTest extends TestCase
 
         // Ensure that other metadata has been stripped
         $meta = shell_exec('identify -verbose ' . escapeshellarg($file));
-        $this->assertFalse(str_contains($meta, 'photoshop:CaptionWriter'));
+        $this->assertFalse(strpos($meta, 'photoshop:CaptionWriter'));
     }
 }
