@@ -582,6 +582,10 @@ class FieldMethodsTest extends TestCase
             ]
         ])->value());
 
+        // missing or empty field
+        $this->assertSame('', $this->field(null)->replace(['message' => 'world'])->value());
+        $this->assertSame('', $this->field('')->replace(['message' => 'world'])->value());
+
         // with page
         $page = new Page([
             'slug'    => 'test',
@@ -592,6 +596,7 @@ class FieldMethodsTest extends TestCase
         ]);
 
         $this->assertSame('Title: Hello world', $page->text()->replace()->value());
+        $this->assertSame('', $page->doesNotExist()->replace()->value());
     }
 
     public function testShort()
