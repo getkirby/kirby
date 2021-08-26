@@ -465,6 +465,7 @@ class Html extends Xml
             // allow fullscreen mode by default
             'allowfullscreen' => $attr['allowfullscreen'] ?? true,
             'class'           => $attr['class'] ?? null,
+            'loading'         => $attr['loading'] ?? null,
             'height'          => $attr['height'] ?? null,
             'width'           => $attr['width'] ?? null,
         ];
