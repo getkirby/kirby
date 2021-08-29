@@ -414,6 +414,26 @@ class ModelTest extends TestCase
                     [
                         'width'    => '2/3',
                         'sections' => []
+                    ],
+                    [
+                        'width'    => '1/1',
+                        'sections' => [
+                            'foo' => [
+                                'name'   => 'foo',
+                                'type'   => 'fields',
+                                'fields' => [
+                                    'foo' => ['type' => 'text']
+                                ]
+                            ],
+                            'bar' => [
+                                'name'   => 'bar',
+                                'type'   => 'fields',
+                                'fields' => [
+                                    'bar' => ['type' => 'text']
+                                ],
+                                'when'   => ['foo' => 'value']
+                            ]
+                        ]
                     ]
                 ]
             ]
@@ -426,6 +446,9 @@ class ModelTest extends TestCase
         $this->assertSame('main', $props['tabs'][0]['name']);
         $this->assertSame('main', $props['tab']['name']);
         $this->assertTrue($props['permissions']['update']);
+        $this->assertArrayHasKey('status', $props['tab']['columns'][2]['sections']['foo']);
+        $this->assertSame('ok', $props['tab']['columns'][2]['sections']['foo']['status']);
+        $this->assertArrayNotHasKey('status', $props['tab']['columns'][2]['sections']['bar']);
 
         $app = $this->app->clone([
             'request' => [

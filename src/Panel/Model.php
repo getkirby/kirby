@@ -348,7 +348,11 @@ abstract class Model
         if ($tab) {
             foreach ($tab['columns'] as $columnIndex => $column) {
                 foreach ($column['sections'] as $sectionIndex => $section) {
-                    if (in_array($section['type'], ['info', 'fields']) === true) {
+                    // makes sections ready if type is info or fields and conditions are empty
+                    if (
+                        in_array($section['type'], ['info', 'fields']) === true &&
+                        empty($section['when']) === true
+                    ) {
                         $tab['columns'][$columnIndex]['sections'][$sectionIndex] = $blueprint->section($sectionIndex)->toResponse();
                     }
                 }
