@@ -498,7 +498,8 @@ return function (App $app) {
          */
         'replace' => function (Field $field, array $data = [], string $fallback = '') use ($app) {
             if ($parent = $field->parent()) {
-                $field->value = $parent->toString($field->value, $data, $fallback);
+                // never pass `null` as the $template to avoid the fallback to the model ID
+                $field->value = $parent->toString($field->value ?? '', $data, $fallback);
             } else {
                 $field->value = Str::template($field->value, array_replace([
                     'kirby' => $app,
