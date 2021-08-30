@@ -3,7 +3,6 @@ export default (file, params) => {
     url: "/",
     field: "file",
     method: "POST",
-    accept: "text",
     attributes: {},
     complete: function() {},
     error: function() {},
@@ -61,7 +60,7 @@ export default (file, params) => {
     options.progress(xhr, file, 100);
   });
 
-  xhr.open("POST", options.url, true);
+  xhr.open(options.method, options.url, true);
 
   // add all request headers
   if (options.headers) {
