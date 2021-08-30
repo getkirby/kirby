@@ -155,6 +155,7 @@ export default {
         this.$helper.upload(file, {
           url: this.options.url,
           attributes: this.options.attributes,
+          method: this.options.method,
           headers: {
             "X-CSRF": window.panel.$system.csrf
           },
