@@ -51,16 +51,26 @@ export default {
       scrollTop: 0
     };
   },
+  destroyed() {
+    // make sure scrolling is enabled again
+    // when overlay is destroyed without closing it
+    this.close(true);
+  },
   methods: {
-    close() {
+    close(destroyed = false) {
       // it makes it run once
       if (this.isOpen === false) {
         return;
       }
 
       this.isOpen = false;
-      this.$emit("close");
-      this.restoreScrollPosition();
+
+      // no need for event and restoring scroll
+      // when closed due to navigating away from view
+      if (destroyed === false) {
+        this.$emit("close");
+        this.restoreScrollPosition();
+      }
 
       // enable scrolling of background
       document.documentElement.style.overflow = "visible";
