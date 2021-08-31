@@ -790,60 +790,87 @@ function tc(string $key, int $count)
  */
 function timestamp(?string $date = null, $step = null): ?int
 {
+    // only allow valid dates as input
     if (V::date($date) === false) {
         return null;
     }
 
+    // convert date to timestamp
     $date = strtotime($date);
 
+    // if not rounding to nearest step,
+    // just return timestamp
     if ($step === null) {
         return $date;
     }
 
-    // fallback for pre-3.5.0 usage
+    // fallbacks for non-array $step
     if (is_int($step) === true) {
         $step = [
             'unit' => 'minute',
             'size' => $step
         ];
+    } elseif (is_string($step) === true) {
+        $step = [
+            'unit' => $step,
+            'size' => 1
+        ];
     }
 
-    if (is_array($step) === false) {
-        return $date;
-    }
-
-    $parts = [
-        'second' => date('s', $date),
-        'minute' => date('i', $date),
-        'hour'   => date('H', $date),
-        'day'    => date('d', $date),
-        'month'  => date('m', $date),
-        'year'   => date('Y', $date),
-    ];
-
-    $current = $parts[$step['unit']];
-    $nearest = round($current / $step['size']) * $step['size'];
-    $parts[$step['unit']] = $nearest;
-
-    foreach ($parts as $part => $value) {
-        if ($part === $step['unit']) {
+    // depending on the step unit, define a date interval string
+    // and create a base date as reference point for steps
+    switch ($step['unit']) {
+        case 'second':
+            $interval = 'PT' . $step['size'] . 'S';
+            $base     = date('Y-m-d H:i:00', $date);
             break;
-        }
-
-        $parts[$part] = 0;
+        case 'minute':
+            $interval = 'PT' . $step['size'] . 'M';
+            $base     = date('Y-m-d H:00:00', $date);
+            break;
+        case 'hour':
+            $interval = 'PT' . $step['size'] . 'H';
+            $base     = date('Y-m-d 00:00:00', $date);
+            break;
+        case 'day':
+            $interval = 'P' . $step['size'] . 'D';
+            $base     = date('Y-m-01 00:00:00', $date);
+            break;
+        case 'month':
+            $interval = 'P' . $step['size'] . 'M';
+            $base     = date('Y-01-01 00:00:00', $date);
+            break;
+        case 'year':
+            $interval = 'P' . $step['size'] . 'Y';
+            $century  = floor(date('Y', $date) / 100) * 100;
+            $base     = date($century . '-01-01 00:00:00', $date);
+            break;
     }
 
-    $timestamp = strtotime(
-        $parts['year'] . '-' .
-        str_pad($parts['month'], 2, 0, STR_PAD_LEFT) . '-' .
-        str_pad($parts['day'], 2, 0, STR_PAD_LEFT) . ' ' .
-        str_pad($parts['hour'], 2, 0, STR_PAD_LEFT) . ':' .
-        str_pad($parts['minute'], 2, 0, STR_PAD_LEFT) . ':' .
-        str_pad($parts['second'], 2, 0, STR_PAD_LEFT)
-    );
+    // create period from reference date to maximum date
+    // with points at each step-sized interval
+    $interval = new \DateInterval($interval);
+    $min      = new \DateTimeImmutable($base);
+    $max      = (new \DateTimeImmutable())->setTimestamp($date)->add($interval);
+    $period   = new \DatePeriod($min, $interval, $max);
 
-    // on error, convert `false` into `null`
-    return $timestamp ?? null;
+    // get step size in seconds for comparison
+    $step = $min->add($interval)->getTimestamp() - $min->getTimestamp();
+
+    // get all potential interval points as options and
+    // reverse their order to prefer ceiling to nearest step
+    $options = array_reverse(iterator_to_array($period));
+
+    // loop through each option and check if option is
+    // less than half a step size away from actual timestamp
+    // (which makes it the nearest step)
+    foreach ($options as $option) {
+        if (abs($date - ($option = $option->getTimestamp())) <= $step/2) {
+            return $option;
+        }
+    }
+
+    return null;
 }
 
 /**
