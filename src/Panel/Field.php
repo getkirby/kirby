@@ -120,11 +120,20 @@ class Field
             'text'  => $index
         ];
 
+        // if only one available option,
+        // hide field when not in debug mode
+        if (count($options) < 2 && option('debug') !== true) {
+            return array_merge([
+                'type'   => 'hidden',
+                'value'  => $options[0],
+            ], $props);
+        }
+
         return array_merge([
-            'label'   => t('page.changeStatus.position'),
-            'type'    => 'select',
-            'empty'   => false,
-            'options' => $options
+            'label'    => t('page.changeStatus.position'),
+            'type'     => 'select',
+            'empty'    => false,
+            'options'  => $options,
         ], $props);
     }
 
