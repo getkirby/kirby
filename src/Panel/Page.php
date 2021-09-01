@@ -121,11 +121,13 @@ class Page extends Model
         ];
 
         if ($view === 'list') {
+            $siblings = $page->parentModel()->children()->listed()->not($page);
+
             $result[] = [
                 'dialog'   => $url . '/changeSort',
                 'icon'     => 'sort',
                 'text'     => t('page.sort'),
-                'disabled' => $this->isDisabledDropdownOption('sort', $options, $permissions)
+                'disabled' => $siblings->count() < 2 || $this->isDisabledDropdownOption('sort', $options, $permissions)
             ];
         }
 
