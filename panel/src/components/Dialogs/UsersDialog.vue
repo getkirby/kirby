@@ -7,7 +7,7 @@
     @submit="submit"
   >
     <template v-if="issue">
-      <k-box :text="issue" :html="false" theme="negative" />
+      <k-box :text="issue" theme="negative" />
     </template>
 
     <template v-else>

@@ -32,12 +32,11 @@ export default {
      */
     text: String,
     /**
-     * If set to `false`, the `text` is rendered as text only
-     * @todo Switch default value to `false` in 3.6.0
+     * If set to `true`, the `text` is rendered as HTML code, otherwise as plain text
      */
     html: {
       type: Boolean,
-      default: true
+      default: false
     }
   }
 };
