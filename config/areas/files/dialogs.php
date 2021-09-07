@@ -3,6 +3,7 @@
 use Kirby\Cms\Find;
 use Kirby\Panel\Field;
 use Kirby\Panel\Panel;
+use Kirby\Toolkit\Escape;
 
 /**
  * Shared file dialogs
@@ -100,9 +101,8 @@ return [
             return [
                 'component' => 'k-remove-dialog',
                 'props' => [
-                    // todo: escape placeholder (output with `v-html`)
                     'text' => tt('file.delete.confirm', [
-                        'filename' => $file->filename()
+                        'filename' => Escape::html($file->filename())
                     ]),
                 ]
             ];

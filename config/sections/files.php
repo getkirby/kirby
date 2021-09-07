@@ -1,7 +1,6 @@
 <?php
 
 use Kirby\Cms\File;
-use Kirby\Toolkit\Escape;
 use Kirby\Toolkit\I18n;
 
 return [
@@ -118,26 +117,19 @@ return [
             foreach ($this->files as $file) {
                 $panel = $file->panel();
 
-                // escape the default text
-                // TODO: no longer needed in 3.6
-                $text = $file->toString($this->text);
-                if ($this->text === '{{ file.filename }}') {
-                    $text = Escape::html($text);
-                }
-
                 $data[] = [
-                    'dragText' => $panel->dragText('auto', $dragTextAbsolute),
+                    'dragText'  => $panel->dragText('auto', $dragTextAbsolute),
                     'extension' => $file->extension(),
-                    'filename' => $file->filename(),
-                    'id'       => $file->id(),
-                    'image'    => $panel->image($this->image, $this->layout),
-                    'info'     => $file->toString($this->info ?? false),
-                    'link'     => $panel->url(true),
-                    'mime'     => $file->mime(),
-                    'parent'   => $file->parent()->panel()->path(),
-                    'template' => $file->template(),
-                    'text'     => $text,
-                    'url'      => $file->url(),
+                    'filename'  => $file->filename(),
+                    'id'        => $file->id(),
+                    'image'     => $panel->image($this->image, $this->layout),
+                    'info'      => $file->toSafeString($this->info ?? false),
+                    'link'      => $panel->url(true),
+                    'mime'      => $file->mime(),
+                    'parent'    => $file->parent()->panel()->path(),
+                    'template'  => $file->template(),
+                    'text'      => $file->toSafeString($this->text),
+                    'url'       => $file->url(),
                 ];
             }
 

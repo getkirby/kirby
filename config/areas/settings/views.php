@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Toolkit\Escape;
+
 return [
     [
         'pattern' => 'settings',
@@ -21,12 +23,11 @@ return [
                 'component' => 'k-settings-view',
                 'props'     => [
                     'languages' => $kirby->languages()->values(function ($language) {
-                        // todo: probably escape info and text (output with `v-html`)
                         return [
                             'default' => $language->isDefault(),
                             'id'      => $language->code(),
-                            'info'    => $language->code(),
-                            'text'    => $language->name(),
+                            'info'    => Escape::html($language->code()),
+                            'text'    => Escape::html($language->name()),
                         ];
                     }),
                     'license' => $license,

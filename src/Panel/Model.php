@@ -317,10 +317,10 @@ abstract class Model
                 $params['image'] ?? [],
                 $params['layout'] ?? 'list'
             ),
-            'info'     => $this->model->toString($params['info'] ?? false),
+            'info'     => $this->model->toSafeString($params['info'] ?? false),
             'link'     => $this->url(true),
             'sortable' => true,
-            'text'     => $this->model->toString($params['text'] ?? false)
+            'text'     => $this->model->toSafeString($params['text'] ?? false),
         ];
     }
 

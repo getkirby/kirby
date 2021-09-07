@@ -1,6 +1,7 @@
 <?php
 
 use Kirby\Cms\Find;
+use Kirby\Toolkit\Escape;
 
 return [
     [
@@ -38,13 +39,12 @@ return [
 
                         return [
                             'data' => $users->values(function ($user) {
-                                // todo: probably escape info and text (output with `v-html`)
                                 return [
                                     'id'    => $user->id(),
                                     'image' => $user->panel()->image(),
-                                    'info'  => $user->role()->title(),
+                                    'info'  => Escape::html($user->role()->title()),
                                     'link'  => $user->panel()->url(true),
-                                    'text'  => $user->username()
+                                    'text'  => Escape::html($user->username())
                                 ];
                             }),
                             'pagination' => $users->pagination()->toArray()
