@@ -1,6 +1,5 @@
 <?php
 
-use Kirby\Toolkit\I18n;
 
 return [
     'extends' => 'text',
