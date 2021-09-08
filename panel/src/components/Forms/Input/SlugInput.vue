@@ -89,7 +89,11 @@ export default {
   },
   methods: {
     sluggify(value) {
-      return this.$helper.slug(value.trim(), [this.slugs, this.$system.ascii], this.allow);
+      return this.$helper.slug(
+        value.trim(),
+        [this.slugs, this.$system.ascii],
+        this.allow
+      );
     },
     onInput(value) {
       this.slug = this.sluggify(value);

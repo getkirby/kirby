@@ -1,10 +1,8 @@
 <template>
   <k-field
     :input="_uid"
-    v-bind="{
-      ...$props,
-      help: preview
-    }"
+    v-bind="$props"
+    :help="preview"
     class="k-slug-field"
   >
     <template v-if="wizard && wizard.text" #options>
@@ -14,10 +12,8 @@
     <k-input
       :id="_uid"
       ref="input"
-      v-bind="{
-        ...$props,
-        value: slug
-      }"
+      v-bind="$props"
+      :value="slug"
       theme="field"
       type="slug"
       v-on="$listeners"
@@ -31,8 +27,6 @@ import { props as Input } from "../Input.vue";
 import { props as SlugInput } from "../Input/SlugInput.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-slug-input>`
- * for additional information.
  * @example <k-slug-field v-model="slug" name="slug" label="Slug" />
  */
 export default {

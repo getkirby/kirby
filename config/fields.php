@@ -19,6 +19,7 @@ return [
     'radio'       => __DIR__ . '/fields/radio.php',
     'range'       => __DIR__ . '/fields/range.php',
     'select'      => __DIR__ . '/fields/select.php',
+    'slug'        => __DIR__ . '/fields/slug.php',
     'structure'   => __DIR__ . '/fields/structure.php',
     'tags'        => __DIR__ . '/fields/tags.php',
     'tel'         => __DIR__ . '/fields/tel.php',
