@@ -85,6 +85,7 @@ export default class Email extends Mark {
           tag: "a[href^='mailto:']",
           getAttrs: dom => ({
             href: dom.getAttribute("href").replace("mailto:", ""),
+            title: dom.getAttribute("title")
           }),
         },
       ],
