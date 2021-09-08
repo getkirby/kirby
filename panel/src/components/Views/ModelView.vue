@@ -64,7 +64,7 @@ export default {
     content() {
       this.$store.dispatch("content/create", {
         id: this.id,
-        api: this.$view.path,
+        api: this.id,
         content: this.model.content
       });
     },
