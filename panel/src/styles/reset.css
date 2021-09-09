@@ -39,3 +39,10 @@ strong,
 b {
   font-weight: var(--font-bold);
 }
+
+.k-panel {
+  min-height: 100vh;
+}
+.k-panel:focus {
+  outline: 0;
+}
