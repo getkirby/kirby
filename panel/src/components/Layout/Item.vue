@@ -2,7 +2,7 @@
   <article
     :class="layout ? 'k-' + layout + '-item' : false"
     v-bind="data"
-    :data-has-figure="Boolean(image)"
+    :data-has-figure="hasFigure"
     :data-has-info="Boolean(info)"
     :data-has-label="Boolean(label)"
     :data-has-options="Boolean(options)"
@@ -13,6 +13,7 @@
   >
     <!-- Image -->
     <k-item-image
+      v-if="hasFigure"
       :image="image"
       :layout="layout"
       :width="width"
@@ -97,6 +98,9 @@ export default {
     width: String
   },
   computed: {
+    hasFigure() {
+      return this.image !== false && Object.keys(this.image).length > 0;
+    },
     title() {
       return this.text || "-";
     }
