@@ -136,6 +136,7 @@ export default {
   width: 1.25rem;
   height: 1.5rem;
   z-index: 2;
+  border-radius: 1px;
 }
 .k-item:hover .k-item-sort-handle {
   opacity: 1;

@@ -37,6 +37,7 @@ export default {
 }
 .k-sort-handle svg {
   width: 1rem;
+  height: 1rem;
 }
 .k-sort-handle:active {
   cursor: grabbing;
