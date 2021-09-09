@@ -5,7 +5,7 @@ return [
         'label' => t('pages'),
         'icon'  => 'page',
         'query' => function (string $query = null) {
-            $pages   = site()
+            $pages = site()
                 ->index(true)
                 ->search($query)
                 ->filter('isReadable', true)
