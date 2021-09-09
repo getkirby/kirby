@@ -1,5 +1,5 @@
 
-export function youtube(url) {
+export function youtube(url, doNotTrack = false) {
   if (!url.match("youtu")) {
     return false;
   }
@@ -10,6 +10,10 @@ export function youtube(url) {
     uri = new URL(url);
   } catch (e) {
     return false;
+  }
+
+  if (doNotTrack === true) {
+    uri.host = "www.youtube-nocookie.com";
   }
 
   const path = uri.pathname.split("/").filter(item => item !== "");
@@ -78,7 +82,7 @@ export function youtube(url) {
   return src;
 }
 
-export function vimeo(url) {
+export function vimeo(url, doNotTrack = false) {
   let uri = null;
 
   try {
@@ -91,6 +95,10 @@ export function vimeo(url) {
 
   let query = uri.searchParams;
   let id = null;
+
+  if (doNotTrack === true) {
+    query.append("dnt", 1);
+  }
 
   switch (uri.host) {
     case "vimeo.com":
@@ -117,13 +125,13 @@ export function vimeo(url) {
   return src;
 }
 
-export function video(url) {
+export function video(url, doNotTrack = false) {
   if (url.includes("youtu")) {
-    return youtube(url);
+    return youtube(url, doNotTrack);
   }
 
   if (url.includes("vimeo")) {
-    return vimeo(url);
+    return vimeo(url, doNotTrack);
   }
 
   return false;

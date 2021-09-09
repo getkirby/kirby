@@ -157,4 +157,18 @@ describe("$helper.embed()", () => {
     });
   });
 
+  it("should work with doNotTrack flag for youtube videos", () => {
+    const result   = embed.video("https://www.youtube.com/watch?v=d9NF2edxy-M", true);
+    const expected = "https://www.youtube-nocookie.com/embed/d9NF2edxy-M";
+
+    expect(result).to.equal(expected);
+  });
+
+  it("should work with doNotTrack flag for vimeo videos", () => {
+    const result   = embed.video("https://vimeo.com/239882943", true);
+    const expected = "https://player.vimeo.com/video/239882943?dnt=1";
+
+    expect(result).to.equal(expected);
+  });
+
 });
