@@ -66,15 +66,14 @@ class PluginAssets
                 static::clean($pluginName);
 
                 $target = $plugin->mediaRoot() . '/' . $filename;
-                $url    = $plugin->mediaUrl() . '/' . $filename;
 
                 // create the plugin directory first
                 Dir::make($plugin->mediaRoot(), true);
 
-                if (F::link($source, $target, 'symlink') === true) {
-                    return Response::redirect($url);
-                }
+                // create a symlink if possible
+                F::link($source, $target, 'symlink');
 
+                // return the file response
                 return Response::file($source);
             }
         }
