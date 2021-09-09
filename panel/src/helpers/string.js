@@ -78,27 +78,27 @@ export function stripHTML(string) {
 }
 
 export function template(string, values = {}) {
+  const resolve = function (parts, data = {}) {
+    const part  = escapeHTML(parts.shift());
+    const value = data[part] || null;
 
-  const opening = "[{]{1,2}[ ]{0,}";
-  const closing = "[ ]{0,}[}]{1,2}";
-
-  Object.keys(values).forEach(key => {
-    // replace string template with value
-    string = string.replace(
-      new RegExp(`${opening}${key}${closing}`, "gi"),
-      values[key] || "…"
-    );
-
-    // for arrays, allow string templates for length/count
-    if (Array.isArray(values[key]) === true) {
-      string = string.replace(
-        new RegExp(`${opening}${key}.count${closing}|${opening}${key}.length${closing}`, "gi"),
-        values[key].length || 0
-      );
+    if (value === null) {
+      return Object.prototype.hasOwnProperty.call(data, part) || "…";
+    } else if (parts.length === 0) {
+      return value;
+    } else {
+      return resolve(parts, value);
     }
-  })
+  };
 
-  return string.replace(/{{.*}}/gi, "…");
+  const opening = "[{]{1,2}[\\s]?";
+  const closing = "[\\s]?[}]{1,2}";
+
+  string = string.replace(new RegExp(`${opening}(.*?)${closing}`, "gi"), ($0, $1) => {
+    return resolve($1.split("."), values);
+  });
+
+  return string.replace(new RegExp(`${opening}.*${closing}`, "gi"), "…");
 }
 
 export function ucfirst(string) {
