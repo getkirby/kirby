@@ -5,7 +5,12 @@ return [
         'label' => t('pages'),
         'icon'  => 'page',
         'query' => function (string $query = null) {
-            $pages   = site()->index(true)->search($query)->limit(10);
+            $pages = site()
+                ->index(true)
+                ->search($query)
+                ->filter('isReadable', true)
+                ->limit(10);
+
             $results = [];
 
             foreach ($pages as $page) {
