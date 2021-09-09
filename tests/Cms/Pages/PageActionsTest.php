@@ -199,6 +199,97 @@ class PageActionsTest extends TestCase
         $this->assertSame(2, $calls);
     }
 
+    public function testChangeTemplateMultilang()
+    {
+        $calls = 0;
+        $phpunit = $this;
+
+        $app = $this->app->clone([
+            'blueprints' => [
+                'pages/video' => [
+                    'title'  => 'Video',
+                    'options' => [
+                        'template' => [
+                            'article'
+                        ]
+                    ],
+                    'fields' => [
+                        'caption' => [
+                            'type' => 'text'
+                        ],
+                        'text' => [
+                            'type' => 'textarea'
+                        ]
+                    ]
+                ],
+                'pages/article' => [
+                    'title'  => 'Article',
+                    'fields' => [
+                        'text' => [
+                            'type' => 'textarea'
+                        ]
+                    ]
+                ]
+            ],
+            'hooks' => [
+                'page.changeTemplate:before' => function (Page $page, $template) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('video', $page->intendedTemplate()->name());
+                    $phpunit->assertSame('article', $template);
+                    $calls++;
+                },
+                'page.changeTemplate:after' => function (Page $newPage, Page $oldPage) use ($phpunit, &$calls) {
+                    $phpunit->assertSame('article', $newPage->intendedTemplate()->name());
+                    $phpunit->assertSame('video', $oldPage->intendedTemplate()->name());
+                    $calls++;
+                }
+            ],
+            'languages' => [
+                [
+                    'code' => 'en',
+                    'name' => 'English',
+                    'default' => true
+                ],
+                [
+                    'code' => 'de',
+                    'name' => 'Deutsch',
+                ],
+                [
+                    'code' => 'fr',
+                    'name' => 'Français',
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $page = Page::create([
+            'slug'     => 'test',
+            'template' => 'video',
+            'content'  => [
+                'title'   => 'Test',
+                'caption' => 'Caption',
+                'text'    => 'Text'
+            ]
+        ]);
+
+        $page = $page->update([
+            'title'   => 'Prüfen',
+            'caption' => 'Untertitel',
+            'text'    => 'Text'
+        ], 'de');
+
+        $this->assertEquals('video', $page->intendedTemplate());
+
+        $modified = $page->changeTemplate('article');
+
+        $this->assertEquals('article', $modified->intendedTemplate());
+        $this->assertSame(2, $calls);
+        
+        $this->assertFileExists($modified->contentFile('en'));
+        $this->assertFileExists($modified->contentFile('de'));
+        $this->assertFileDoesNotExist($modified->contentFile('fr'));
+    }
+
     public function testChangeTitle()
     {
         $page = Page::create([
