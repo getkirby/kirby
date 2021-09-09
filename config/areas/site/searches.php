@@ -9,6 +9,10 @@ return [
             $results = [];
 
             foreach ($pages as $page) {
+                if ($page->isReadable() === false) {
+                    continue;
+                }
+
                 $results[] = [
                     'image' => $page->panel()->image(),
                     'text' => $page->title()->value(),
