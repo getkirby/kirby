@@ -2,22 +2,71 @@ import string from "./string.js";
 
 describe("$helper.string.template", () => {
 
-  it("should insert values", () => {
-    const values = { a: "Berlin", b: "Tegucigalpa", cc: "Tokyo" };
-    let result = string.template( "From {{a}} to {{ b}} to {{ cC }}", values);
-    expect(result).to.equal("From Berlin to Tegucigalpa to Tokyo");
+  const values = {
+    title: "Kirby",
+    images: [
+      {filename: "foo.jpg"},
+      {filename: "bar.jpg"},
+      {filename: "baz.jpg"}
+    ],
+    user: {
+      email: "bastian@getkirby.com",
+      username: "bastian"
+    }
+  };
 
-    result = string.template( "Counting: {{a.length}} / {{a.count}}", { a: [1, 2, 3]});
-    expect(result).to.equal("Counting: 3 / 3");
+  it("should insert values", () => {
+
+    let result = string.template("Hello World!", values);
+    expect(result).to.equal("Hello World!");
+
+    result = string.template("{{title}}", values);
+    expect(result).to.equal("Kirby");
+
+    result = string.template("{{ title }}", values);
+    expect(result).to.equal("Kirby");
+
+    result = string.template("{ title }", values);
+    expect(result).to.equal("Kirby");
+
+    result = string.template("{title}", values);
+    expect(result).to.equal("Kirby");
+
+    result = string.template("Hello {{title}}!", values);
+    expect(result).to.equal("Hello Kirby!");
+
+    result = string.template("{{images.0.filename}}", values);
+    expect(result).to.equal("foo.jpg");
+
+    result = string.template("{ images.1.filename}", values);
+    expect(result).to.equal("bar.jpg");
+
+    result = string.template("{images.2.filename }", values);
+    expect(result).to.equal("baz.jpg");
+
+    result = string.template("{{user.email}}", values);
+    expect(result).to.equal("bastian@getkirby.com");
+
+    result = string.template("{{title}} {{ images.1.filename }}, { user.username }:{user.email}", values);
+    expect(result).to.equal("Kirby bar.jpg, bastian:bastian@getkirby.com");
+
+    result = string.template("Counting: {{images.length}}", values);
+    expect(result).to.equal("Counting: 3");
   });
 
   it("should insert default", () => {
-    const values = { a: null, b: null, cc: null };
-    let result = string.template( "From {{a}} to {{ b}} to {{ cC }}", values);
-    expect(result).to.equal("From … to … to …");
+    const values = {a: null, b: null, cc: null};
+    let result = string.template("{{notexists}}", values);
+    expect(result).to.equal("…");
 
-    result = string.template( "Counting: {{a.length}} / {{a.count}}", { a: []});
-    expect(result).to.equal("Counting: 0 / 0");
+    result = string.template("{{ notexists.field }}", values);
+    expect(result).to.equal("…");
+
+    result = string.template("Filename: {{ images.99.filename }}", values);
+    expect(result).to.equal("Filename: …");
+
+    result = string.template("New user { user.notexists } registered now", values);
+    expect(result).to.equal("New user … registered now");
   });
 
 });
