@@ -57,7 +57,7 @@
   </script>
 
   <?php foreach ($assets['js'] as $js): ?>
-  <script type="module" nonce="<?= $nonce ?>" src="<?= $js ?>"></script>
+  <?= Html::tag('script', '', $js) ?>
   <?php endforeach ?>
 
 </body>
