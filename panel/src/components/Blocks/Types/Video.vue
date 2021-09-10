@@ -25,7 +25,7 @@ export default {
       return this.field("caption", { marks: true }).marks;
     },
     video() {
-      return this.$helper.embed.video(this.content.url);
+      return this.$helper.embed.video(this.content.url, true);
     }
   }
 };
