@@ -286,6 +286,10 @@ trait PageActions
                 ]);
 
                 foreach ($this->kirby()->languages()->codes() as $code) {
+                    if ($oldPage->translation($code)->exists() !== true) {
+                        continue;
+                    }
+
                     $content = $oldPage->content($code)->convertTo($template);
 
                     if (F::remove($oldPage->contentFile($code)) !== true) {
