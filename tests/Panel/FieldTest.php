@@ -176,6 +176,27 @@ class FieldTest extends TestCase
     }
 
     /**
+     * @covers ::pagePosition
+     * @return void
+     */
+    public function testPagePositionWithNotEnoughOptions(): void
+    {
+        $this->app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    ['slug' => 'a', 'num' => 1],
+                ]
+            ]
+        ]);
+
+        $site  = $this->app->site();
+        $page  = $site->find('a');
+        $field = Field::pagePosition($page);
+
+        $this->assertSame('hidden', $field['type']);
+    }
+
+    /**
      * @covers ::password
      * @return void
      */
