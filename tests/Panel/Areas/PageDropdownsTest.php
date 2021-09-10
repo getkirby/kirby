@@ -53,13 +53,17 @@ class PageDropdownsTest extends AreaTestCase
         $this->assertSame('/pages/test/changeStatus', $status['dialog']);
         $this->assertSame('Change status', $status['text']);
 
-        $template = $options[5];
+        $position = $options[5];
+        $this->assertSame('/pages/test/changeSort', $position['dialog']);
+        $this->assertSame('Change position', $position['text']);
+
+        $template = $options[6];
         $this->assertSame('/pages/test/changeTemplate', $template['dialog']);
         $this->assertSame('Change template', $template['text']);
 
-        $this->assertSame('-', $options[6]);
+        $this->assertSame('-', $options[7]);
 
-        $delete = $options[7];
+        $delete = $options[8];
         $this->assertSame('/pages/test/delete', $delete['dialog']);
         $this->assertSame('Delete', $delete['text']);
     }
@@ -88,10 +92,5 @@ class PageDropdownsTest extends AreaTestCase
         $this->assertSame('/test', $preview['link']);
         $this->assertSame('_blank', $preview['target']);
         $this->assertSame('Open', $preview['text']);
-
-        $sort = $options[6];
-
-        $this->assertSame('/pages/test/changeStatus', $sort['dialog']);
-        $this->assertSame('Change status', $sort['text']);
     }
 }

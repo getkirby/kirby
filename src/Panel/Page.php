@@ -120,14 +120,14 @@ class Page extends Model
             'disabled' => $this->isDisabledDropdownOption('changeStatus', $options, $permissions)
         ];
 
-        if ($view === 'list') {
-            $result[] = [
-                'dialog'   => $url . '/changeSort',
-                'icon'     => 'sort',
-                'text'     => t('page.sort'),
-                'disabled' => $this->isDisabledDropdownOption('sort', $options, $permissions)
-            ];
-        }
+        $siblings = $page->parentModel()->children()->listed()->not($page);
+
+        $result[] = [
+            'dialog'   => $url . '/changeSort',
+            'icon'     => 'sort',
+            'text'     => t('page.sort'),
+            'disabled' => $siblings->count() === 0 || $this->isDisabledDropdownOption('sort', $options, $permissions)
+        ];
 
         $result[] = [
             'dialog'   => $url . '/changeTemplate',
