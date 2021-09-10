@@ -16,7 +16,9 @@ class PageDialogsTest extends AreaTestCase
         $this->app([
             'site' => [
                 'children' => [
-                    ['slug' => 'test']
+                    ['slug' => 'test'],
+                    ['slug' => 'a', 'num' => 1],
+                    ['slug' => 'b', 'num' => 2]
                 ]
             ]
         ]);
@@ -30,7 +32,7 @@ class PageDialogsTest extends AreaTestCase
 
         $this->assertSame('Please select a position', $props['fields']['position']['label']);
         $this->assertSame('Change', $props['submitButton']);
-        $this->assertSame(1, $props['value']['position']);
+        $this->assertSame(3, $props['value']['position']);
     }
 
     public function testChangeSortDisabled(): void
@@ -89,7 +91,9 @@ class PageDialogsTest extends AreaTestCase
         $this->app([
             'site' => [
                 'children' => [
-                    ['slug' => 'test']
+                    ['slug' => 'test'],
+                    ['slug' => 'a', 'num' => 1],
+                    ['slug' => 'b', 'num' => 2]
                 ]
             ]
         ]);
@@ -113,7 +117,7 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame('Change', $props['submitButton']);
 
         $this->assertSame('unlisted', $props['value']['status']);
-        $this->assertSame(1, $props['value']['position']);
+        $this->assertSame(3, $props['value']['position']);
     }
 
     public function testChangeStatusForDraft(): void
