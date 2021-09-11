@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Toolkit\Escape;
+
 return [
     'pages' => [
         'label' => t('pages'),
@@ -16,9 +18,9 @@ return [
             foreach ($pages as $page) {
                 $results[] = [
                     'image' => $page->panel()->image(),
-                    'text' => $page->title()->value(),
+                    'text' => Escape::html($page->title()->value()),
                     'link' => $page->panel()->url(true),
-                    'info' => $page->id()
+                    'info' => Escape::html($page->id())
                 ];
             }
 
@@ -41,9 +43,9 @@ return [
             foreach ($files as $file) {
                 $results[] = [
                     'image' => $file->panel()->image(),
-                    'text'  => $file->filename(),
+                    'text'  => Escape::html($file->filename()),
                     'link'  => $file->panel()->url(true),
-                    'info'  => $file->id()
+                    'info'  => Escape::html($file->id())
                 ];
             }
 
