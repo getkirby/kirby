@@ -457,6 +457,7 @@ class HtmlTest extends TestCase
      * @covers       ::video
      * @covers       ::youtube
      * @covers       ::vimeo
+     * @covers       ::videoAttr
      * @dataProvider videoProvider
      */
     public function testVideo($url, $src)
@@ -469,12 +470,12 @@ class HtmlTest extends TestCase
 
         // plain
         $html = Html::video($url);
-        $expected = '<iframe allowfullscreen src="' . $src . '"></iframe>';
+        $expected = '<iframe allow="fullscreen" src="' . $src . '"></iframe>';
         $this->assertSame($expected, $html);
 
         // with attributes
         $html = Html::video($url, [], ['class' => 'video']);
-        $expected = '<iframe allowfullscreen class="video" src="' . $src . '"></iframe>';
+        $expected = '<iframe allow="fullscreen" class="video" src="' . $src . '"></iframe>';
         $this->assertSame($expected, $html);
 
         // with options
@@ -484,7 +485,7 @@ class HtmlTest extends TestCase
         ];
         $html = Html::video($url, $options);
         $char = Str::contains($src, '?') === true ? '&amp;' : '?';
-        $expected = '<iframe allowfullscreen src="' . $src . $char . 'foo=bar"></iframe>';
+        $expected = '<iframe allow="fullscreen" src="' . $src . $char . 'foo=bar"></iframe>';
         $this->assertSame($expected, $html);
 
         // with attributes and options
@@ -493,7 +494,27 @@ class HtmlTest extends TestCase
             'youtube' => ['foo' => 'bar']
         ];
         $html = Html::video($url, $options, ['class' => 'video']);
-        $expected = '<iframe allowfullscreen class="video" src="' . $src . $char . 'foo=bar"></iframe>';
+        $expected = '<iframe allow="fullscreen" class="video" src="' . $src . $char . 'foo=bar"></iframe>';
+        $this->assertSame($expected, $html);
+
+        // allow attribute
+        $html = Html::video($url, [], ['allow' => 'camera \'none\'; microphone \'none\'']);
+        $expected = '<iframe allow="camera &#039;none&#039;; microphone &#039;none&#039;" src="' . $src . '"></iframe>';
+        $this->assertSame($expected, $html);
+
+        // allow fullscreen enabled
+        $html = Html::video($url, [], ['allow' => 'fullscreen']);
+        $expected = '<iframe allow="fullscreen" src="' . $src . '"></iframe>';
+        $this->assertSame($expected, $html);
+
+        // legacy allow fullscreen enabled
+        $html = Html::video($url, [], ['allowfullscreen' => true]);
+        $expected = '<iframe allow="fullscreen" src="' . $src . '"></iframe>';
+        $this->assertSame($expected, $html);
+
+        // legacy allow fullscreen disabled
+        $html = Html::video($url, [], ['allowfullscreen' => false]);
+        $expected = '<iframe src="' . $src . '"></iframe>';
         $this->assertSame($expected, $html);
     }
 
