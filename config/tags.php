@@ -314,6 +314,21 @@ return [
                     $video = Html::tag('video', [$source], $attrs);
                 }
             } else {
+                // removes attributes that providers (youtube and vimeo) don't support in iframe
+                if (
+                    Str::contains($tag->value, 'youtu', true) === true ||
+                    Str::contains($tag->value, 'vimeo', true) === true
+                ) {
+                    unset(
+                        $attrs['autoplay'],
+                        $attrs['controls'],
+                        $attrs['loop'],
+                        $attrs['muted'],
+                        $attrs['poster'],
+                        $attrs['preload']
+                    );
+                }
+
                 $video = Html::video(
                     $tag->value,
                     $options,
