@@ -7,7 +7,7 @@
         <template #left>
           <k-button-group
             :buttons="[{
-              disbaled: $permissions.users.create === false,
+              disabled: $permissions.users.create === false,
               text: $t('user.create'),
               icon: 'add',
               click: () => $dialog('users/create')
