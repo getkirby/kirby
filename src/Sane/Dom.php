@@ -16,21 +16,21 @@ class Dom extends BaseDom
      *
      * @var array
      */
-    public $allowed;
+    protected $allowed;
 
     /**
      * List of disallowed elements
      *
      * @var array
      */
-    public $disallowed;
+    protected $disallowed;
 
     /**
      * List of attributes that might contain URLs
      *
      * @var array
      */
-    public $urls;
+    protected $urls;
 
     /**
      * @param string $html
@@ -38,61 +38,11 @@ class Dom extends BaseDom
      */
     public function __construct(string $html, array $options = [])
     {
-        $options = array_merge($this->defaults(), $options);
-
         $this->allowed    = $options['allowed'] ?? [];
         $this->disallowed = $options['disallowed']  ?? [];
         $this->urls       = $options['urls']    ?? [];
 
         parent::__construct($html);
-    }
-
-    public function defaults(): array
-    {
-        return [
-            'allowed' => [
-                'a'          => ['href', 'title', 'target'],
-                'abbr'       => ['title'],
-                'b'          => true,
-                'body'       => true,
-                'blockquote' => true,
-                'br'         => true,
-                'dl'         => true,
-                'dd'         => true,
-                'del'        => true,
-                'dt'         => true,
-                'em'         => true,
-                'h1'         => ['id'],
-                'h2'         => ['id'],
-                'h3'         => ['id'],
-                'h4'         => ['id'],
-                'h5'         => ['id'],
-                'h6'         => ['id'],
-                'hr'         => true,
-                'html'       => true,
-                'i'          => true,
-                'ins'        => true,
-                'li'         => true,
-                'strong'     => true,
-                'sub'        => true,
-                'sup'        => true,
-                'ol'         => true,
-                'p'          => true,
-                'ul'         => true,
-            ],
-            'disallowed' => [
-                'iframe',
-                'meta',
-                'object',
-                'script',
-                'style',
-            ],
-            'urls' => [
-                'href',
-                'src',
-                'xlink:href'
-            ]
-        ];
     }
 
     /**
