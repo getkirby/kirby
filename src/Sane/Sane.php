@@ -2,6 +2,7 @@
 
 namespace Kirby\Sane;
 
+use Kirby\Exception\LogicException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Filesystem\F;
 
@@ -99,6 +100,7 @@ class Sane
      * @return void
      *
      * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
+     * @throws \Kirby\Exception\LogicException If more than one handler applies
      * @throws \Kirby\Exception\NotFoundException If the handler was not found
      * @throws \Kirby\Exception\Exception On other errors
      */
@@ -109,8 +111,23 @@ class Sane
             return;
         }
 
-        foreach (static::handlersForFile($file, $typeLazy === true) as $handler) {
-            $handler->sanitizeFile($file);
+        // try to find exactly one matching handler
+        $handlers = static::handlersForFile($file, $typeLazy === true);
+        switch (count($handlers)) {
+            case 0:
+                // lazy autodetection didn't find a handler
+                break;
+            case 1:
+                $handlers[0]->sanitizeFile($file);
+                break;
+            default:
+                // more than one matching handler;
+                // sanitizing with all handlers will not leave much in the output
+                $handlerNames = array_map('get_class', $handlers);
+                throw new LogicException(
+                    'Cannot sanitize file as more than one handler applies: ' .
+                    $handlerNames
+                );
         }
     }
 
@@ -162,7 +179,7 @@ class Sane
      * file extension and MIME type
      *
      * @param string $file
-     * @param bool $lazy If set to `true`, `null` is returned for undefined handlers
+     * @param bool $lazy If set to `true`, undefined handlers are skipped
      * @return array<\Kirby\Sane\Handler>
      */
     protected static function handlersForFile(string $file, bool $lazy = false): array
