@@ -67,9 +67,6 @@ class PluginAssets
 
                 $target = $plugin->mediaRoot() . '/' . $filename;
 
-                // create the plugin directory first
-                Dir::make($plugin->mediaRoot(), true);
-
                 // create a symlink if possible
                 F::link($source, $target, 'symlink');
 
