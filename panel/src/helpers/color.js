@@ -9,7 +9,7 @@ export default function (string) {
 
   if (
     string.match(
-      /^(black|white|light|gray|red|orange|yellow|green|aqua|blue|purple})/i
+      /^(black|white|light|gray|red|orange|yellow|green|aqua|blue|purple)/i
     ) !== null
   ) {
     return `var(--color-${string})`;
