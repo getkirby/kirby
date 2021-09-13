@@ -57,7 +57,7 @@
   </script>
 
   <?php foreach ($assets['js'] as $js): ?>
-  <?= Html::tag('script', '', $js) ?>
+  <?= Html::tag('script', '', $js) . PHP_EOL ?>
   <?php endforeach ?>
 
 </body>
