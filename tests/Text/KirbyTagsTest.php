@@ -604,7 +604,7 @@ class KirbyTagsTest extends TestCase
 
         $page  = $kirby->page('test');
 
-        $expected = '<figure class="video"><iframe allowfullscreen src="https://www.youtube.com/embed/VhP7ZzZysQg?controls=0"></iframe></figure>';
+        $expected = '<figure class="video"><iframe allow="fullscreen" src="https://www.youtube.com/embed/VhP7ZzZysQg?controls=0"></iframe></figure>';
         $this->assertSame($expected, $page->text()->kt()->value());
     }
 

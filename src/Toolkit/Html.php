@@ -453,21 +453,29 @@ class Html extends Xml
     }
 
     /**
-     * Generates a list of allowed attributes
+     * Generates a list of attributes
      * for video iframes
      *
      * @param array $attr
      * @return array
      */
-    public static function videoAttr($attr): array
+    public static function videoAttr(array $attr = []): array
     {
-        return [
-            // allow fullscreen mode by default
-            'allowfullscreen' => $attr['allowfullscreen'] ?? true,
-            'class'           => $attr['class'] ?? null,
-            'height'          => $attr['height'] ?? null,
-            'width'           => $attr['width'] ?? null,
-        ];
+        // allow fullscreen mode by default
+        // and use new `allow` attribute
+        if (
+            isset($attr['allow']) === false &&
+            ($attr['allowfullscreen'] ?? true) === true
+        ) {
+            $attr['allow'] = 'fullscreen';
+        }
+
+        // remove deprecated attribute
+        if (isset($attr['allowfullscreen']) === true) {
+            unset($attr['allowfullscreen']);
+        }
+
+        return $attr;
     }
 
     /**
