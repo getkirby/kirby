@@ -5,6 +5,8 @@
     :submit-button="false"
     class="k-block-selector"
     size="medium"
+    @open="dialogIsOpen = true"
+    @close="dialogIsOpen = false"
   >
     <k-headline v-if="headline">
       {{ headline }}
@@ -29,6 +31,9 @@
         />
       </div>
     </details>
+    <p class="k-clipboard-hint">
+      Press <kbd>cmd+v</kbd> to import blocks from your clipboard
+    </p>
   </k-dialog>
 </template>
 
@@ -45,6 +50,7 @@ export default {
   },
   data() {
     return {
+      dialogIsOpen: false,
       disabled: [],
       headline: null,
       payload: null,
@@ -55,6 +61,9 @@ export default {
   methods: {
     add(type) {
       this.$emit(this.event, type, this.payload);
+      this.$refs.dialog.close();
+    },
+    close() {
       this.$refs.dialog.close();
     },
     createGroups() {
@@ -89,6 +98,9 @@ export default {
       });
 
       return groups;
+    },
+    isOpen() {
+      return this.dialogIsOpen;
     },
     navigate(index) {
       const ref = this.$refs["fieldset-" + index];
@@ -164,5 +176,17 @@ export default {
 .k-block-types .k-button .k-icon {
   width: 38px;
   height: 38px;
+}
+.k-clipboard-hint {
+  padding-top: .75rem;
+  font-size: $text-xs;
+  color: $color-gray-400;
+}
+.k-clipboard-hint kbd {
+  border: 1px solid rgba($color-gray-400, .25);
+  font-family: $font-mono;
+  padding: .25rem;
+  border-radius: $rounded;
+  margin: 0 .25rem;
 }
 </style>

@@ -62,6 +62,7 @@ import OrderedList from "./Nodes/OrderedList";
 
 // Extensions
 import History from "./Extensions/History.js";
+import Insert from "./Extensions/Insert.js";
 import Toolbar from "./Extensions/Toolbar.js";
 
 // Toolbar
@@ -99,6 +100,14 @@ export const props = {
           "bulletList",
           "orderedList"
         ];
+      }
+    },
+    paste: {
+      type: Function,
+      default() {
+        return () => {
+          return false;
+        };
       }
     },
     placeholder: String,
@@ -153,6 +162,7 @@ export default {
         email: () => {
           this.$refs.emailDialog.open(this.editor.getMarkAttrs("email"));
         },
+        paste: this.paste,
         toolbar: (toolbar) => {
           this.toolbar = toolbar;
 
@@ -188,6 +198,7 @@ export default {
 
         // Extensions
         new History,
+        new Insert,
         new Toolbar,
         ...this.extensions || [],
       ],
