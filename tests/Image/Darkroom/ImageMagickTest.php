@@ -60,23 +60,35 @@ class ImageMagickTest extends TestCase
         $this->assertTrue(F::exists($webp));
     }
 
-    public function testKeepColorProfile()
+    public function testKeepColorProfileStripMeta()
     {
-        $im = new ImageMagick([
-            'bin' => 'convert',
-            'width' => 250, // do some arbitrary transformation
-        ]);
+        $files = [
+            'cat.jpg',
+            'onigiri-adobe-rgb-gps.jpg',
+            'onigiri-adobe-rgb-gps.webp',
+            'png-adobe-rgb-gps.png',
+            'png-srgb-gps.png',
+        ];
 
-        copy($this->fixtures . '/onigiri-adobe-rgb.jpg', $file = $this->tmp . '/onigiri-adobe-rgb.jpg');
+        foreach ($files as $basename) {
+            $im = new ImageMagick([
+                'bin' => 'convert',
+                'width' => 250, // do some arbitrary transformation
+            ]);
 
-        // Test if profile has been kept
-        $originalProfile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file));
-        $im->process($file);
-        $profile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file));
-        $this->assertTrue($profile === $originalProfile);
+            copy("{$this->fixtures}/{$basename}", $file = "{$this->tmp}/{$basename}");
 
-        // Ensure that other metadata has been stripped
-        $meta = shell_exec('identify -verbose ' . escapeshellarg($file));
-        $this->assertFalse(strpos($meta, 'photoshop:CaptionWriter'));
+            // Test if profile has been kept. Errors have to be redirected to /dev/null,
+            // otherwise they would be printed to stdout by ImageMagick.
+            $originalProfile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null');
+            $im->process($file);
+            $profile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null');
+            $this->assertTrue($profile === $originalProfile);
+
+            // Ensure that other metadata has been stripped
+            $meta = shell_exec('identify -verbose ' . escapeshellarg($file));
+            $this->assertFalse(strpos($meta, 'photoshop:CaptionWriter'));
+            $this->assertFalse(strpos($meta, 'GPS'));
+        }
     }
 }

@@ -142,8 +142,33 @@ class ImageMagick extends Darkroom
         // remove all null values and join the parts
         $command = implode(' ', array_filter($command));
 
-        // try to execute the command
-        exec($command, $output, $return);
+        if (F::extension($file) === 'png') {
+            // For PNG images, we need to set the color profile after the actual
+            // operation, because otherwise we could not strip metadata, such as
+            // GPS coordinates. Both use tEXt/zTXt chunks for storing data and
+            // we can only keep/remove all of these chunks using ImageMagick
+            // (tested with ImageMagick 7.0.11-14 Q16 x86_64 2021-05-31)
+
+            $profile = "{$file}.icc";
+
+            // Try to extract ICC color profile
+            exec(sprintf($options['bin'] . ' "%s" "%s" 2>/dev/null', $file, $profile), $profileOutput, $return);
+
+            // try to execute the command
+            exec($command, $output, $return);
+
+            if ($return === 0) {
+                exec(sprintf($options['bin'] . ' "%s" -set profile "%s" "%s"', $file, $profile, $file));
+            }
+
+            // Remove temporary ICC profile
+            F::remove($profile);
+        } else {
+            // Regular command for all other file types.
+
+            // try to execute the command
+            exec($command, $output, $return);
+        }
 
         // log broken commands
         if ($return !== 0) {
@@ -219,14 +244,22 @@ class ImageMagick extends Darkroom
     }
 
     /**
-     * Removes all metadata from the image, but keeps the icc profile.
+     * Removes all metadata from the image
      *
      * @param string $file
      * @param array $options
      * @return string
      */
-    protected function strip(string $file, array $options): string
+    protected function strip(string $file, array $options): ?string
     {
+        if (F::extension($file) === 'png') {
+            // Define allowed chunks for PNG images. This exluced EXIF, IPTC, XMP
+            // and date/time information, which could leak private details including
+            // GPS coordinates. For PNG images, the regular command using `+profile`
+            // does not work with ImageMagick (tested with ImageMagick 7.0.11-14 Q16 x86_64 2021-05-31)
+            return '-define png:include-chunk=none,bKGD,cHRM,gAMA,iCCP,sRGB,tRNS,zCCP';
+        }
+
         return '+profile "!icc,*"';
     }
 }
