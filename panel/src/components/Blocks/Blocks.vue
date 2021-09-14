@@ -84,6 +84,7 @@
 export default {
   inheritAttrs: false,
   props: {
+    autofocus: Boolean,
     empty: String,
     endpoints: Object,
     fieldsets: Object,
@@ -171,6 +172,25 @@ export default {
     document.removeEventListener("focus", this.outsideFocus);
     document.removeEventListener("keydown", this.onAlt);
     document.removeEventListener("keyup", this.onAlt);
+  },
+  mounted() {
+    // focus first wysiwyg block if autofocus enabled
+    if (this.$props.autofocus === true) {
+      let skipFocus = false;
+
+      Object.values(this.blocks).forEach(block => {
+        if (skipFocus === false) {
+          let fieldset = this.fieldset(block);
+
+          if (fieldset.wysiwyg === true) {
+            skipFocus = true;
+            setTimeout(() => {
+              this.focus(block);
+            }, 1);
+          }
+        }
+      });
+    }
   },
   methods: {
     async add(type = "text", index) {

@@ -19,6 +19,7 @@
 
     <k-blocks
       ref="blocks"
+      :autofocus="autofocus"
       :compact="false"
       :empty="empty"
       :endpoints="endpoints"
@@ -41,6 +42,7 @@ export default {
   mixins: [Field],
   inheritAttrs: false,
   props: {
+    autofocus: Boolean,
     empty: String,
     fieldsets: Object,
     fieldsetGroups: Object,
