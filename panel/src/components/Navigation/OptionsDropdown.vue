@@ -60,7 +60,7 @@ export default {
       default: "dots",
     },
     options: {
-      type: [Array, Function],
+      type: [Array, Function, String],
       default() {
         return []
       }
