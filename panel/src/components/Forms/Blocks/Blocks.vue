@@ -3,6 +3,7 @@
     :data-empty="blocks.length === 0"
     :data-alt="altKey"
     class="k-blocks"
+    @keydown.meta.c="copy"
   >
     <template v-if="hasFieldsets">
       <k-draggable
@@ -24,7 +25,7 @@
           :next="prevNext(index + 1)"
           :prev="prevNext(index - 1)"
           v-bind="block"
-          @append="add($event, index + 1)"
+          @append="append($event, index + 1)"
           @blur="select(null)"
           @choose="choose($event)"
           @chooseToAppend="choose(index + 1)"
@@ -156,6 +157,7 @@ export default {
     };
 
     document.addEventListener("focus", this.outsideFocus, true);
+    document.addEventListener("paste", this.paste, true);
 
     this.onAlt = (event) => {
       if (event.altKey) {
@@ -167,8 +169,10 @@ export default {
 
     document.addEventListener("keydown", this.onAlt, true);
     document.addEventListener("keyup", this.onAlt, true);
+
   },
   destroyed() {
+    document.removeEventListener("paste", this.paste);
     document.removeEventListener("focus", this.outsideFocus);
     document.removeEventListener("keydown", this.onAlt);
     document.removeEventListener("keyup", this.onAlt);
@@ -193,6 +197,17 @@ export default {
     }
   },
   methods: {
+    append(what, index) {
+      if (typeof what === "string") {
+        this.add(what, index);
+        return;
+      }
+
+      if (Array.isArray(what)) {
+        this.blocks.splice(index, 0, ...what);
+        this.save();
+      }
+    },
     async add(type = "text", index) {
       const block = await this.$api.get(this.endpoints.field + "/fieldsets/" + type);
       this.blocks.splice(index, 0, block);
@@ -237,6 +252,23 @@ export default {
     },
     confirmToRemoveSelected() {
       this.$refs.removeSelected.open();
+    },
+    copy() {
+      this.batch.forEach(id => {
+        const block = this.blocks.find(element => element.id === id);
+        if (block) {
+          console.log(block);
+        }
+      });
+
+
+      // console.log(Object.values(this.batch));
+
+      // navigator.clipboard.writeText(this.batch);
+      // // console.log(this.batch);
+
+
+      // alert("copy");
     },
     async convert(type, block) {
       const index = this.blocks.findIndex(element => element.id === block.id);
@@ -357,6 +389,25 @@ export default {
       if (this.$refs["block-" + block.id]) {
         this.$refs["block-" + block.id][0].open();
       }
+    },
+    async paste(e) {
+      if (this.$refs.selector.isOpen() === false) {
+        return;
+      }
+
+      e.preventDefault();
+
+      const html   = e.clipboardData.getData("text/html") || e.clipboardData.getData("text/plain");
+      const blocks = await this.$api.post(this.endpoints.field + "/paste", { html });
+
+      if (this.selected !== null) {
+        const index = this.blocks.findIndex(element => element.id === this.selected)
+        this.blocks.splice(index + 1, 0, ...blocks);
+      } else {
+        this.blocks.push(...blocks);
+      }
+
+      this.$refs.selector.close();
     },
     prevNext(index) {
       if (this.blocks[index]) {

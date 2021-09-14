@@ -147,6 +147,15 @@ class BlocksField extends FieldClass
                 }
             ],
             [
+                'pattern' => 'paste',
+                'method'  => 'POST',
+                'action'  => function () use ($field) {
+                    $value  = BlocksCollection::parse(get('html'));
+                    $blocks = BlocksCollection::factory($value);
+                    return $field->blocksToValues($blocks->toArray());
+                }
+            ],
+            [
                 'pattern' => 'fieldsets/(:any)',
                 'method'  => 'GET',
                 'action'  => function ($fieldsetType) use ($field) {
