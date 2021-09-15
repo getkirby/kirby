@@ -743,7 +743,7 @@ class FileTest extends TestCase
         ]);
 
         $panel = new File($page->file('test.jpg'));
-        $route = $panel->route();
+        $route = $panel->view();
 
         $this->assertArrayHasKey('props', $route);
         $this->assertSame('k-file-view', $route['component']);

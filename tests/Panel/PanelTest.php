@@ -125,20 +125,6 @@ class PanelTest extends TestCase
 
         $this->assertArrayHasKey('todos', $areas);
         $this->assertCount(5, $areas);
-
-        // authenticated with malformed plugin
-        $app = $this->app->clone([
-            'areas' => [
-                'todos' => []
-            ]
-        ]);
-
-        $app->impersonate('test@getkirby.com');
-
-        $this->expectException('Exception');
-        $this->expectExceptionMessage('Panel area "todos" must be defined as a Closure');
-
-        $areas = Panel::areas($app);
     }
 
     /**

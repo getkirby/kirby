@@ -4,7 +4,7 @@ use Kirby\Cms\Find;
 use Kirby\Toolkit\Escape;
 
 return [
-    [
+    'users' => [
         'pattern' => 'users',
         'action'  => function () {
             $kirby = kirby();
@@ -54,16 +54,16 @@ return [
             ];
         }
     ],
-    [
+    'user' => [
         'pattern' => 'users/(:any)',
         'action'  => function (string $id) {
-            return Find::user($id)->panel()->route();
+            return Find::user($id)->panel()->view();
         }
     ],
-    [
+    'userFile' => [
         'pattern' => 'users/(:any)/files/(:any)',
         'action'  => function (string $id, string $filename) {
-            return Find::file('users/' . $id, $filename)->panel()->route();
+            return Find::file('users/' . $id, $filename)->panel()->view();
         }
     ],
 ];

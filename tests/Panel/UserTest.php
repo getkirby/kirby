@@ -243,7 +243,7 @@ class UserTest extends TestCase
         ]);
 
         $panel = new User($user);
-        $route = $panel->route();
+        $route = $panel->view();
 
         $this->assertArrayHasKey('props', $route);
         $this->assertSame('k-user-view', $route['component']);

@@ -7,7 +7,7 @@ return function ($kirby) {
         'icon'  => 'user',
         'label' => t('login'),
         'views' => [
-            [
+            'login' => [
                 'pattern' => 'login',
                 'auth'    => false,
                 'action'  => function () use ($kirby) {
@@ -25,7 +25,7 @@ return function ($kirby) {
                     ];
                 }
             ],
-            [
+            'loginFallback' => [
                 'pattern' => '(:all)',
                 'auth'    => false,
                 'action'  => function ($path) use ($kirby) {

@@ -133,7 +133,7 @@ class SiteTest extends TestCase
      */
     public function testRoute()
     {
-        $route = $this->panel()->route();
+        $route = $this->panel()->view();
         $this->assertArrayHasKey('props', $route);
         $this->assertSame('k-site-view', $route['component']);
     }

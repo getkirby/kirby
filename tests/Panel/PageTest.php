@@ -635,7 +635,7 @@ class PageTest extends TestCase
         ]);
 
         $panel = new Page($page);
-        $route = $panel->route();
+        $route = $panel->view();
 
         $this->assertArrayHasKey('props', $route);
         $this->assertSame('k-page-view', $route['component']);

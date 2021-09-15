@@ -263,6 +263,11 @@ class Component
         if (isset($options['mixins']) === true) {
             foreach ($options['mixins'] as $mixin) {
                 if (isset(static::$mixins[$mixin]) === true) {
+                    if (is_string(static::$mixins[$mixin]) === true) {
+                        // resolve a path to a mixin on demand
+                        static::$mixins[$mixin] = include static::$mixins[$mixin];
+                    }
+
                     $options = array_replace_recursive(static::$mixins[$mixin], $options);
                 }
             }

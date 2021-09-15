@@ -55,6 +55,7 @@ class App
 
     protected $api;
     protected $collections;
+    protected $core;
     protected $defaultLanguage;
     protected $language;
     protected $languages;
@@ -86,6 +87,8 @@ class App
      */
     public function __construct(array $props = [], bool $setInstance = true)
     {
+        $this->core = new Core($this);
+
         // register all roots to be able to load stuff afterwards
         $this->bakeRoots($props['roots'] ?? []);
 
@@ -267,7 +270,7 @@ class App
      */
     protected function bakeRoots(array $roots = null)
     {
-        $roots = array_merge(require dirname(__DIR__, 2) . '/config/roots.php', (array)$roots);
+        $roots = array_merge($this->core->roots(), (array)$roots);
         $this->roots = Ingredients::bake($roots);
         return $this;
     }
@@ -285,7 +288,7 @@ class App
             $urls['index'] = $this->options['url'];
         }
 
-        $urls = array_merge(require $this->root('kirby') . '/config/urls.php', (array)$urls);
+        $urls = array_merge($this->core->urls(), (array)$urls);
         $this->urls = Ingredients::bake($urls);
         return $this;
     }
@@ -503,6 +506,14 @@ class App
         }
 
         return null;
+    }
+
+    /**
+     * @return \Kirby\Cms\Core
+     */
+    public function core()
+    {
+        return $this->core;
     }
 
     /**
@@ -834,6 +845,16 @@ class App
         }
 
         return $this->languages = Languages::load();
+    }
+
+    /**
+     * Load a part of Kirby
+     *
+     * @return \Kirby\Cms\Loader
+     */
+    public function load()
+    {
+        return new Loader($this);
     }
 
     /**
@@ -1224,7 +1245,7 @@ class App
         }
 
         $registry = $this->extensions('routes');
-        $system   = (include $this->root('kirby') . '/config/routes.php')($this);
+        $system   = $this->core->routes();
         $routes   = array_merge($system['before'], $registry, $system['after']);
 
         return $this->routes = $routes;
