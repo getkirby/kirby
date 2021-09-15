@@ -32,8 +32,11 @@ class Loader
             $area = $this->resolve($area);
 
             if (isset($extensions[$id]) === true) {
-                $extension = $this->resolve($extensions[$id]);
-                $area      = array_replace_recursive($area, $extension);
+                foreach ($extensions[$id] as $areaExtension) {
+                    $extension = $this->resolve($areaExtension);
+                    $area      = array_replace_recursive($area, $extension);
+                }
+
                 unset($extensions[$id]);
             }
 

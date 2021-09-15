@@ -72,7 +72,7 @@ class Panel
         }
 
         unset($areas['installation'], $areas['login']);
-        
+
 
         $menu = $kirby->option('panel.menu', [
             'site',

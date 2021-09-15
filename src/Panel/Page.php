@@ -70,7 +70,7 @@ class Page extends Model
         $result      = [];
 
         if ($view === 'list') {
-            $result[] = [
+            $result['preview'] = [
                 'link'     => $page->previewUrl(),
                 'target'   => '_blank',
                 'icon'     => 'open',
@@ -80,7 +80,7 @@ class Page extends Model
             $result[] = '-';
         }
 
-        $result[] = [
+        $result['changeTitle'] = [
             'dialog' => [
                 'url'   => $url . '/changeTitle',
                 'query' => [
@@ -92,7 +92,7 @@ class Page extends Model
             'disabled' => $this->isDisabledDropdownOption('changeTitle', $options, $permissions)
         ];
 
-        $result[] = [
+        $result['duplicate'] = [
             'dialog'   => $url . '/duplicate',
             'icon'     => 'copy',
             'text'     => t('duplicate'),
@@ -101,7 +101,7 @@ class Page extends Model
 
         $result[] = '-';
 
-        $result[] = [
+        $result['changeSlug'] = [
             'dialog' => [
                 'url'   => $url . '/changeTitle',
                 'query' => [
@@ -113,7 +113,7 @@ class Page extends Model
             'disabled' => $this->isDisabledDropdownOption('changeSlug', $options, $permissions)
         ];
 
-        $result[] = [
+        $result['changeStatus'] = [
             'dialog'   => $url . '/changeStatus',
             'icon'     => 'preview',
             'text'     => t('page.changeStatus'),
@@ -122,14 +122,14 @@ class Page extends Model
 
         $siblings = $page->parentModel()->children()->listed()->not($page);
 
-        $result[] = [
+        $result['changeSort'] = [
             'dialog'   => $url . '/changeSort',
             'icon'     => 'sort',
             'text'     => t('page.sort'),
             'disabled' => $siblings->count() === 0 || $this->isDisabledDropdownOption('sort', $options, $permissions)
         ];
 
-        $result[] = [
+        $result['changeTemplate'] = [
             'dialog'   => $url . '/changeTemplate',
             'icon'     => 'template',
             'text'     => t('page.changeTemplate'),
@@ -137,7 +137,7 @@ class Page extends Model
         ];
 
         $result[] = '-';
-        $result[] = [
+        $result['delete'] = [
             'dialog'   => $url . '/delete',
             'icon'     => 'trash',
             'text'     => t('delete'),

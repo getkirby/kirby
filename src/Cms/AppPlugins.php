@@ -132,7 +132,15 @@ trait AppPlugins
      */
     protected function extendAreas(array $areas): array
     {
-        return $this->extensions['areas'] = array_merge($this->extensions['areas'], $areas);
+        foreach ($areas as $id => $area) {
+            if (isset($this->extensions['areas'][$id]) === false) {
+                $this->extensions['areas'][$id] = [];
+            }
+
+            $this->extensions['areas'][$id][] = $area;
+        }
+
+        return $this->extensions['areas'];
     }
 
     /**
