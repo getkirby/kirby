@@ -83,7 +83,16 @@ class ImageMagickTest extends TestCase
             $originalProfile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null');
             $im->process($file);
             $profile = shell_exec('identify -format "%[profile:icc]" ' . escapeshellarg($file) . ' 2>/dev/null');
-            $this->assertTrue($profile === $originalProfile);
+
+            if (F::extension($basename) === 'png') {
+                // Ensure, that profile has been stripped from PNG files, because
+                // ImageMagick cannot keep it while stripping all other metadata.
+                // (tested with ImageMagick 7.0.11-14 Q16 x86_64 2021-05-31)
+                $this->assertTrue($profile === null);
+            } else {
+                // Ensure, that profile has been kep for all other file types.
+                $this->assertTrue($profile === $originalProfile);
+            }
 
             // Ensure that other metadata has been stripped
             $meta = shell_exec('identify -verbose ' . escapeshellarg($file));
