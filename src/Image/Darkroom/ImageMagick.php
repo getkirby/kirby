@@ -232,7 +232,7 @@ class ImageMagick extends Darkroom
             // stripping other privacy-related information, such as GPS
             // data. So discard all color profiles for PNG files.
             // (tested with ImageMagick 7.0.11-14 Q16 x86_64 2021-05-31)
-            return '-define png:include-chunk=none,sRGB';
+            return '-strip';
         }
 
         return '+profile "!icc,*"';
