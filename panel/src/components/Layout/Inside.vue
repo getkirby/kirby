@@ -18,7 +18,7 @@
         :license="$license"
         :menu="$menu"
         :view="$view"
-        @search="$refs.search.open();"
+        @search="$refs.search.open()"
       />
 
       <k-search

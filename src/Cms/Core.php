@@ -31,6 +31,14 @@ class Core
     /**
      * @return array
      */
+    public function area(string $name): array
+    {
+        return $this->load()->area($name);
+    }
+
+    /**
+     * @return array
+     */
     public function areas(): array
     {
         return [

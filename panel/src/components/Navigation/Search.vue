@@ -90,16 +90,17 @@ export default {
     }
   },
   watch: {
-    q() {
-      this.search(this.q);
+    q(newQuery, oldQuery) {
+      if (newQuery !== oldQuery) {
+        this.search(this.q);
+      }
     },
-    currentType() {
-      this.search(this.q);
+    currentType(newType, oldType) {
+      if (newType !== oldType) {
+        this.search(this.q);
+      }
     },
     type() {
-      this.currentType = this.getType(this.type);
-    },
-    types() {
       this.currentType = this.getType(this.type);
     }
   },
