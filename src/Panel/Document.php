@@ -32,6 +32,7 @@ class Document
     public static function assets(): array
     {
         $kirby = kirby();
+        $nonce = $kirby->nonce();
 
         // get the assets from the Vite dev server in dev mode;
         // dev mode = explicitly enabled in the config AND Vite is running
@@ -80,11 +81,31 @@ class Document
                 ]
             ]),
             'js' => [
-                'vendor'       => $url . '/js/vendor.js',
-                'pluginloader' => $url . '/js/plugins.js',
-                'plugins'      => $plugins->url('js'),
-                'custom'       => static::customJs(),
-                'index'        => $url . '/js/index.js',
+                'vendor'       => [
+                    'nonce' => $nonce,
+                    'src'   => $url . '/js/vendor.js',
+                    'type'  => 'module'
+                ],
+                'pluginloader' => [
+                    'nonce' => $nonce,
+                    'src'   => $url . '/js/plugins.js',
+                    'type'  => 'module'
+                ],
+                'plugins'      => [
+                    'nonce' => $nonce,
+                    'src'   => $plugins->url('js'),
+                    'defer' => true
+                ],
+                'custom'       => [
+                    'nonce' => $nonce,
+                    'src'   => static::customJs(),
+                    'type'  => 'module'
+                ],
+                'index'        => [
+                    'nonce' => $nonce,
+                    'src'   => $url . '/js/index.js',
+                    'type'  => 'module'
+                ],
             ]
         ];
 
@@ -92,15 +113,25 @@ class Document
         // path to `index.js` - vendor and stylesheet
         // don't need to be loaded in dev mode
         if ($isDev === true) {
-            $assets['js']['vite']   = $url . '/@vite/client';
-            $assets['js']['index']  = $url . '/src/index.js';
-            $assets['js']['vendor'] = null;
-            $assets['css']['index'] = null;
+            $assets['js']['vite']   = [
+                'nonce' => $nonce,
+                'src'   => $url . '/@vite/client',
+                'type'  => 'module'
+            ];
+            $assets['js']['index']  = [
+                'nonce' => $nonce,
+                'src'   => $url . '/src/index.js',
+                'type'  => 'module'
+            ];
+
+            unset($assets['css']['index'], $assets['js']['vendor']);
         }
 
         // remove missing files
         $assets['css'] = array_filter($assets['css']);
-        $assets['js']  = array_filter($assets['js']);
+        $assets['js']  = array_filter($assets['js'], function ($js) {
+            return empty($js['src']) === false;
+        });
 
         return $assets;
     }

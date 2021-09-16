@@ -60,10 +60,18 @@ class DocumentTest extends TestCase
         $this->assertSame($base . '/favicon.png', $assets['icons']['alternate icon']['url']);
 
         // js
-        $this->assertSame($base . '/js/vendor.js', $assets['js']['vendor']);
-        $this->assertSame($base . '/js/plugins.js', $assets['js']['pluginloader']);
-        $this->assertSame('/media/plugins/index.js?0', $assets['js']['plugins']);
-        $this->assertSame($base . '/js/index.js', $assets['js']['index']);
+        $this->assertSame($base . '/js/vendor.js', $assets['js']['vendor']['src']);
+        $this->assertSame('module', $assets['js']['vendor']['type']);
+
+        $this->assertSame($base . '/js/plugins.js', $assets['js']['pluginloader']['src']);
+        $this->assertSame('module', $assets['js']['pluginloader']['type']);
+
+        $this->assertSame('/media/plugins/index.js?0', $assets['js']['plugins']['src']);
+        $this->assertTrue($assets['js']['plugins']['defer']);
+        $this->assertArrayNotHasKey('type', $assets['js']['plugins']);
+
+        $this->assertSame($base . '/js/index.js', $assets['js']['index']['src']);
+        $this->assertSame('module', $assets['js']['index']['type']);
 
 
         // dev mode
@@ -98,7 +106,9 @@ class DocumentTest extends TestCase
             'plugins' => '/media/plugins/index.js?0',
             'index' => $base . '/src/index.js',
             'vite' => $base . '/@vite/client'
-        ], $assets['js']);
+        ], array_map(function ($js) {
+            return $js['src'];
+        }, $assets['js']));
 
 
         // dev mode with custom url
@@ -130,7 +140,9 @@ class DocumentTest extends TestCase
             'plugins' => '/media/plugins/index.js?0',
             'index' => $base . '/src/index.js',
             'vite' => $base . '/@vite/client'
-        ], $assets['js']);
+        ], array_map(function ($js) {
+            return $js['src'];
+        }, $assets['js']));
 
 
         // custom panel css and js
@@ -150,7 +162,7 @@ class DocumentTest extends TestCase
         $assets = Document::assets($this->app);
 
         $this->assertTrue(Str::contains($assets['css']['custom'], 'assets/panel.css'));
-        $this->assertTrue(Str::contains($assets['js']['custom'], 'assets/panel.js'));
+        $this->assertTrue(Str::contains($assets['js']['custom']['src'], 'assets/panel.js'));
 
         // clean up vite file
         F::remove($viteFile);
