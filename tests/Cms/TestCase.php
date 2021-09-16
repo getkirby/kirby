@@ -9,8 +9,8 @@ use PHPUnit\Framework\TestCase as BaseTestCase;
 
 class TestCase extends BaseTestCase
 {
-    public $page = null;
-    public $app;
+    protected $page = null;
+    protected $app;
 
     public function setUp(): void
     {
