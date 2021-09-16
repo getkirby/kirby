@@ -69,7 +69,7 @@ class DropdownTest extends TestCase
 
         $expected = [
             '$dropdown' => [
-                'options'  => ['test' => 'Test'],
+                'options'  => ['Test'],
                 'code'     => 200,
                 'path'     => null,
                 'referrer' => '/'
