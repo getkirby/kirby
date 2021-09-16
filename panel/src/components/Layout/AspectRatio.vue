@@ -4,14 +4,35 @@
     :style="{ 'padding-bottom': ratioPadding }"
     class="k-aspect-ratio"
   >
+    <!-- @slot Content -->
     <slot />
   </span>
 </template>
 
 <script>
+/**
+ * Creates a layout element
+ * in the specified ratio
+ * @public
+ *
+ * @example <k-ratio ratio="3/2">
+  <div>Ratio!</div>
+</k-reatio>
+ */
 export default {
   props: {
+    /**
+     * If `true`, the content will fill
+     * the element's entire space/ratio
+     */
     cover: Boolean,
+    /**
+     * The ratio can be defined freely with the format
+     * `widthFraction/heightFraction`. The ratio will
+     * be calculated automatically.
+     *
+     * @values e.g. `1/1`, `16/9` or `4/5`
+     */
     ratio: String
   },
   computed: {

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import ListDoc from "@/components/Writer/Nodes/ListDoc.js";
+import ListDoc from "@/components/Forms/Writer/Nodes/ListDoc.js";
 
 export default {
   inheritAttrs: false,

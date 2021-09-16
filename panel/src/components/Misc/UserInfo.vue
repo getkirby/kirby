@@ -12,6 +12,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
   props: {
     user: [Object, String]

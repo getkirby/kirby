@@ -19,9 +19,12 @@
 import Draggable from "vuedraggable/src/vuedraggable";
 
 /**
- * The Draggable component implements the [Vue.Draggable](https://github.com/SortableJS/Vue.Draggable) library which is a wrapper for the widespread [Sortable.js](https://github.com/RubaXa/Sortable) library.
- * 
- * @example 
+ * The Draggable component implements the
+ * [Vue.Draggable](https://github.com/SortableJS/Vue.Draggable)
+ * library which is a wrapper for the widespread
+ * [Sortable.js](https://github.com/RubaXa/Sortable) library.
+ *
+ * @example
  * <k-draggable>
  *   <li>Drag me.</li>
  *   <li>Or me.</li>
@@ -34,7 +37,15 @@ export default {
   },
   props: {
     data: Object,
+    /**
+     * HTML element for the wrapper
+     */
     element: String,
+    /**
+     * Whether to use a sort handle
+     * or, if yes, which CSS selector
+     * can be used
+     */
     handle: [String, Boolean],
     list: [Array, Object],
     move: Function,
