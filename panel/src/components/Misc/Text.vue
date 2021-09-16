@@ -5,13 +5,17 @@
     :data-theme="theme"
     class="k-text"
   >
+    <!-- @slot Text content -->
     <slot />
   </div>
 </template>
 
 <script>
 /**
- * The Text component is a container for all multi-line text with additional formats.
+ * The Text component is a container for
+ * all multi-line text with additional formats.
+ * @public
+ *
  * @example <k-text>
   <b>Lorem</b> <a href="#">ipsum</a> <i>dolor</i> …
 </k-text>
@@ -20,16 +24,16 @@ export default {
   props: {
     /**
      * Changes the text alignment
-     * @values left, centre, right
+     * @values start, centre, end
      */
     align: String,
     /**
-     * Changes the font size of the text
+     * Font size of the text
      * @values tiny, small, medium, large, huge
      */
     size: String,
     /**
-     * Changes the layout/design of the text
+     * Visual apperance of the text
      * @values help
      */
     theme: String

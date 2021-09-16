@@ -6,7 +6,10 @@
 
 <script>
 /**
- * This is our custom style progress bar. We mostly use it in the upload dialog.
+ * A simple progress bar that we
+ * mostly use it in the upload dialog.
+ * @public
+ *
  * @example <k-progress :value="10" />
  */
 export default {
@@ -25,7 +28,17 @@ export default {
       state: this.value
     };
   },
+  watch: {
+    value(value) {
+      this.state = value;
+    }
+  },
   methods: {
+    /**
+     * Update the value (if not possible via prop)
+     * @param {Number} value new value of the progress bar
+     * @public
+     */
     set(value) {
       this.state = value;
     }
