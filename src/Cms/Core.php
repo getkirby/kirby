@@ -2,6 +2,23 @@
 
 namespace Kirby\Cms;
 
+/**
+ * The Core class lists all parts of Kirby
+ * that need to be loaded or initalized in order
+ * to make the system work. Most core parts can
+ * be overwritten by plugins.
+ *
+ * You can get such lists as kirbytags, components,
+ * areas, etc. by accessing them through `$kirby->core()`
+ *
+ * I.e. `$kirby->core()->areas()`
+ *
+ * @package   Kirby Cms
+ * @author    Bastian Allgeier <bastian@getkirby.com>
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 class Core
 {
     /**
@@ -29,14 +46,24 @@ class Core
     }
 
     /**
-     * @return array
+     * Fetches the definition array of a particular area.
+     *
+     * This is a shortcut for `$kirby->core()->load()->area()`
+     * to give faster access to original area code in plugins.
+     *
+     * @param string $name
+     * @return array|null
      */
-    public function area(string $name): array
+    public function area(string $name): ?array
     {
         return $this->load()->area($name);
     }
 
     /**
+     * Returns a list of all paths to area definition files
+     *
+     * They are located in `/kirby/config/areas`
+     *
      * @return array
      */
     public function areas(): array
@@ -52,6 +79,8 @@ class Core
     }
 
     /**
+     * Returns a list of all default auth challenge classes
+     *
      * @return array
      */
     public function authChallenges(): array
@@ -62,6 +91,10 @@ class Core
     }
 
     /**
+     * Returns a list of all paths to blueprint presets
+     *
+     * They are located in `/kirby/config/presets`
+     *
      * @return array
      */
     public function blueprintPresets(): array
@@ -74,6 +107,11 @@ class Core
     }
 
     /**
+     * Returns a list of all paths to core blueprints
+     *
+     * They are located in `/kirby/config/blueprints`.
+     * Block blueprints are located in `/kirby/config/blocks`
+     *
      * @return array
      */
     public function blueprints(): array
@@ -104,6 +142,8 @@ class Core
     }
 
     /**
+     * Returns a list of all cache driver classes
+     *
      * @return array
      */
     public function cacheTypes(): array
@@ -117,6 +157,11 @@ class Core
     }
 
     /**
+     * Returns an array of all core component functions
+     *
+     * The component functions can be found in
+     * `/kirby/config/components.php`
+     *
      * @return array
      */
     public function components(): array
@@ -125,6 +170,8 @@ class Core
     }
 
     /**
+     * Returns a map of all field method aliases
+     *
      * @return array
      */
     public function fieldMethodAliases(): array
@@ -147,6 +194,10 @@ class Core
     }
 
     /**
+     * Returns an array of all field method functions
+     *
+     * Field methods are stored in `/kirby/config/methods.php`
+     *
      * @return array
      */
     public function fieldMethods(): array
@@ -155,6 +206,10 @@ class Core
     }
 
     /**
+     * Returns an array of paths for field mixins
+     *
+     * They are located in `/kirby/config/fields/mixins`
+     *
      * @return array
      */
     public function fieldMixins(): array
@@ -172,6 +227,13 @@ class Core
     }
 
     /**
+     * Returns an array of all paths and class names of panel fields
+     *
+     * Traditional panel fields are located in `/kirby/config/fields`
+     *
+     * The more complex field classes can be found in
+     * `/kirby/src/Form/Fields`
+     *
      * @return array
      */
     public function fields(): array
@@ -210,7 +272,36 @@ class Core
     }
 
     /**
-     * Load a core part of Kirby
+     * Returns a map of all kirbytag aliases
+     *
+     * @return array
+     */
+    public function kirbyTagAliases(): array
+    {
+        return [
+            'youtube' => 'video',
+            'vimeo'   => 'video'
+        ];
+    }
+
+    /**
+     * Returns an array of all kirbytag definitions
+     *
+     * They are located in `/kirby/config/tags.php`
+     *
+     * @return array
+     */
+    public function kirbyTags(): array
+    {
+        return $this->cache['kirbytags'] ?? $this->cache['kirbytags'] = include $this->root . '/tags.php';
+    }
+
+    /**
+     * Loads a core part of Kirby
+     *
+     * The loader is set to not include plugins.
+     * This way, you can access original Kirby core code
+     * through this load method.
      *
      * @return \Kirby\Cms\Loader
      */
@@ -219,6 +310,13 @@ class Core
         return new Loader($this->kirby, false);
     }
 
+    /**
+     * Returns all absolute paths to important directories
+     *
+     * Roots are resolved and baked in `\Kirby\Cms\App::bakeRoots()`
+     *
+     * @return array
+     */
     public function roots(): array
     {
         return $this->cache['roots'] ?? $this->cache['roots'] = [
@@ -282,14 +380,14 @@ class Core
             'config' => function (array $roots) {
                 return $roots['site'] . '/config';
             },
-            'license' => function (array $roots) {
-                return $roots['config'] . '/.license';
-            },
             'controllers' => function (array $roots) {
                 return $roots['site'] . '/controllers';
             },
             'languages' => function (array $roots) {
                 return $roots['site'] . '/languages';
+            },
+            'license' => function (array $roots) {
+                return $roots['config'] . '/.license';
             },
             'logs' => function (array $roots) {
                 return $roots['site'] . '/logs';
@@ -318,6 +416,12 @@ class Core
     }
 
     /**
+     * Returns an array of all routes for Kirby’s router
+     *
+     * Routes are split into `before` and `after` routes.
+     *
+     * Plugin routes will be injected inbetween.
+     *
      * @return array
      */
     public function routes(): array
@@ -326,6 +430,10 @@ class Core
     }
 
     /**
+     * Returns a list of all paths to core block snippets
+     *
+     * They are located in `/kirby/config/blocks`
+     *
      * @return array
      */
     public function snippets(): array
@@ -346,25 +454,10 @@ class Core
     }
 
     /**
-     * @return array
-     */
-    public function kirbyTagAliases(): array
-    {
-        return [
-            'youtube' => 'video',
-            'vimeo'   => 'video'
-        ];
-    }
-
-    /**
-     * @return array
-     */
-    public function kirbyTags(): array
-    {
-        return $this->cache['kirbytags'] ?? $this->cache['kirbytags'] = include $this->root . '/tags.php';
-    }
-
-    /**
+     * Returns a list of paths to section mixins
+     *
+     * They are located in `/kirby/config/sections/mixins`
+     *
      * @return array
      */
     public function sectionMixins(): array
@@ -382,19 +475,27 @@ class Core
     }
 
     /**
+     * Returns a list of all section definitions
+     *
+     * They are located in `/kirby/config/sections`
+     *
      * @return array
      */
     public function sections(): array
     {
         return [
+            'fields' => $this->root . '/sections/fields.php',
+            'files'  => $this->root . '/sections/files.php',
             'info'   => $this->root . '/sections/info.php',
             'pages'  => $this->root . '/sections/pages.php',
-            'files'  => $this->root . '/sections/files.php',
-            'fields' => $this->root . '/sections/fields.php',
         ];
     }
 
     /**
+     * Returns a list of paths to all system templates
+     *
+     * They are located in `/kirby/config/templates`
+     *
      * @return array
      */
     public function templates(): array
@@ -406,6 +507,10 @@ class Core
     }
 
     /**
+     * Returns an array with all system URLs
+     *
+     * URLs are resolved and baked in `\Kirby\Cms\App::bakeUrls()`
+     *
      * @return array
      */
     public function urls(): array
