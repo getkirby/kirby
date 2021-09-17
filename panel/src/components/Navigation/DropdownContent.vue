@@ -63,10 +63,7 @@ export default {
     async fetchOptions(ready) {
       if (this.options) {
         if (typeof this.options === "string") {
-          const response = await fetch(this.options);
-          const json = await response.json();
-          return ready(json);
-
+          this.$dropdown(this.options)(ready);
         } else if (typeof this.options === "function") {
           this.options(ready);
 

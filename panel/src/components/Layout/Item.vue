@@ -90,7 +90,7 @@ export default {
       type: [Boolean, String, Function]
     },
     options: {
-      type: [Array, Function]
+      type: [Array, Function, String]
     },
     sortable: Boolean,
     target: String,
