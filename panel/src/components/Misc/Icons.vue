@@ -8,6 +8,9 @@
 </template>
 
 <script>
+/**
+ * @internal
+ */
 export default {
   icons: window.panel.plugins.icons
 };

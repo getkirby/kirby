@@ -7,6 +7,7 @@
     v-on="$listeners"
   >
     <k-link v-if="link" :to="link">
+      <!-- @slot Content/text of the headline -->
       <slot />
     </k-link>
     <slot v-else />
@@ -15,29 +16,34 @@
 
 <script>
 /**
+ * Use to display consistently sized headlines
+ * @public
+
  * @example <k-headline>This is a nice headline</k-headline>
  */
 export default {
   props: {
     /**
-     * Set a link for the headline. The link can be absolute or relative.
+     * Sets a link for the headline.
+     * The link can be absolute or relative.
      */
     link: String,
     /**
-     * Sets the text size
-     * @values tiny, small, medium, large, huge
+     * Alternate text sizes
+     * @values small, large, huge
      */
     size: {
       type: String
     },
     /**
-     * Sets the html tag for the headline element
+     * HTML tag for the headline element
      */
     tag: {
       type: String,
       default: "h2"
     },
     /**
+     * Visual look of the headline
      * @values positive, negative
      */
     theme: {

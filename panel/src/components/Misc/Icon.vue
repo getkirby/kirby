@@ -17,26 +17,37 @@
 
 <script>
 /**
- * The icon component can be used to display any icon from our own icon set.
+ * Use to display any icon from the Panel's icon set.
+ * @public
+ *
  * @example <k-icon type="pencil" />
  */
 export default {
   props: {
     /**
-     * For better accessibility of icons, you can pass an additional alt attribute like for images.
+     * For better accessibility of icons,
+     * you can pass an additional alt
+     * attribute like for images.
      */
     alt: String,
     /**
-     * Sets a custom color. Directly applied as value of the CSS `color` attribute
+     * Sets a custom color. Either shorthand
+     * for Panel default colors or directly
+     * applied CSS value.
      */
     color: String,
     /**
-     * Like with the `k-image` component, you can set the background for the icon. By default, the background is transparent.
-     * Values: black, white, pattern
+     * Background color/pattern for the icon.
+     * Either shorthand for Panel default
+     * colors or directly  applied CSS value.
+     * By default, the background is transparent.
      */
     back: String,
     /**
-     * By default the icon size is set to `1rem = 16px`, which corresponds with the Panel font size.
+     * By default the icon size is set
+     * to `1rem = 16px`, which corresponds
+     * with the Panel font size.
+     *
      * @values regular, medium, large
      */
     size: String,
@@ -104,5 +115,4 @@ export default {
     font-size: 1.25em;
   }
 }
-
 </style>

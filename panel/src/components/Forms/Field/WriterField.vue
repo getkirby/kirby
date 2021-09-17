@@ -26,7 +26,7 @@
 <script>
 import { props as Field } from "../Field.vue";
 import { props as Input } from "../Input.vue";
-import { props as Writer } from "@/components/Writer/Writer.vue";
+import { props as Writer } from "@/components/Forms/Writer/Writer.vue";
 
 export default {
   mixins: [

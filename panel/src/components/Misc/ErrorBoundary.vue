@@ -1,4 +1,7 @@
 <script>
+/**
+ * @internal
+ */
 export default {
   data() {
     return {

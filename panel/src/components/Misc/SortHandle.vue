@@ -7,8 +7,20 @@
 </template>
 
 <script>
+/**
+ * Icon used as handle to drag elements inside
+ * the sortable context of `<k-draggable>` with
+ * corresponding hover styles.
+ * @public
+ *
+ * @example <k-sort-handle />
+ */
 export default {
   props: {
+    /**
+     * Icon used for the handle
+     * @values see `<k-icon>` for options
+     */
     icon: {
       type: String,
       default: "sort"
