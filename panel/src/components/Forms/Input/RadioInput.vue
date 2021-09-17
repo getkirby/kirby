@@ -14,8 +14,7 @@
       <!-- eslint-disable vue/no-v-html -->
       <label v-if="option.info" :for="id + '-' + index">
         <span class="k-radio-input-text" v-html="option.text" />
-        <!-- @todo support (escaped) HTML in the info prop in 3.6.0 -->
-        <span class="k-radio-input-info">{{ option.info }}</span>
+        <span class="k-radio-input-info" v-html="option.info" />
       </label>
       <label v-else :for="id + '-' + index" v-html="option.text" />
       <!-- eslint-enable vue/no-v-html -->

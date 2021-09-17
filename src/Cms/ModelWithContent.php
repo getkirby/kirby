@@ -516,20 +516,38 @@ abstract class ModelWithContent extends Model
     }
 
     /**
-     * String template builder
+     * String template builder with automatic HTML escaping
      *
-     * @param string|null $template
+     * @param string|null $template Template string or `null` to use the model ID
      * @param array $data
      * @param string $fallback Fallback for tokens in the template that cannot be replaced
      * @return string
      */
-    public function toString(string $template = null, array $data = [], string $fallback = ''): string
+    public function toSafeString(string $template = null, array $data = [], string $fallback = ''): string
+    {
+        return $this->toString($template, $data, $fallback, 'safeTemplate');
+    }
+
+    /**
+     * String template builder
+     *
+     * @param string|null $template Template string or `null` to use the model ID
+     * @param array $data
+     * @param string $fallback Fallback for tokens in the template that cannot be replaced
+     * @param string $handler For internal use
+     * @return string
+     */
+    public function toString(string $template = null, array $data = [], string $fallback = '', string $handler = 'template'): string
     {
         if ($template === null) {
             return $this->id();
         }
 
-        $result = Str::template($template, array_replace([
+        if ($handler !== 'template' && $handler !== 'safeTemplate') {
+            throw new InvalidArgumentException('Invalid toString handler'); // @codeCoverageIgnore
+        }
+
+        $result = Str::$handler($template, array_replace([
             'kirby'             => $this->kirby(),
             'site'              => is_a($this, 'Kirby\Cms\Site') ? $this : $this->site(),
             static::CLASS_ALIAS => $this

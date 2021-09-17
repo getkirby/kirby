@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Toolkit\Escape;
+
 return [
     'users' => [
         'label' => t('users'),
@@ -11,9 +13,9 @@ return [
             foreach ($users as $user) {
                 $results[] = [
                     'image' => $user->panel()->image(),
-                    'text'  => $user->username(),
+                    'text'  => Escape::html($user->username()),
                     'link'  => $user->panel()->url(true),
-                    'info'  => $user->role()->title()
+                    'info'  => Escape::html($user->role()->title())
                 ];
             }
 

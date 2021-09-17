@@ -50,7 +50,10 @@ class SiteSearchesTest extends AreaTestCase
             'site' => [
                 'children' => [
                     [
-                        'slug' => 'test',
+                        'slug'    => 'test',
+                        'content' => [
+                            'title' => 'Test <strong>Page'
+                        ]
                     ]
                 ]
             ],
@@ -76,7 +79,7 @@ class SiteSearchesTest extends AreaTestCase
         ];
 
         $this->assertSame($image, $results[0]['image']);
-        $this->assertSame('test', $results[0]['text']);
+        $this->assertSame('Test &lt;strong&gt;Page', $results[0]['text']);
         $this->assertSame('/pages/test', $results[0]['link']);
         $this->assertSame('test', $results[0]['info']);
     }

@@ -34,7 +34,7 @@ return [
     'computed' => [
         'text' => function () {
             if ($text = $this->text) {
-                $text = $this->model()->toString($text);
+                $text = $this->model()->toSafeString($text);
                 $text = $this->kirby()->kirbytext($text);
                 return $text;
             }

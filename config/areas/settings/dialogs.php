@@ -3,6 +3,7 @@
 use Kirby\Cms\Find;
 use Kirby\Panel\Field;
 use Kirby\Toolkit\A;
+use Kirby\Toolkit\Escape;
 
 $languageDialogFields = [
     'name' => [
@@ -75,9 +76,8 @@ return [
             return [
                 'component' => 'k-remove-dialog',
                 'props' => [
-                    // todo: escape placeholder (output with `v-html`)
                     'text' => tt('language.delete.confirm', [
-                        'name' => $language->name()
+                        'name' => Escape::html($language->name())
                     ])
                 ]
             ];

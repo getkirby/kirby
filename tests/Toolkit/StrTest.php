@@ -648,6 +648,49 @@ class StrTest extends TestCase
     }
 
     /**
+     * @covers ::safeTemplate
+     */
+    public function testSafeTemplate()
+    {
+        $original = 'This is a {{ test }} with {< html >} and {{ normal }} text.';
+        $expected = 'This is a awesome Test with <b>HTML</b> and &lt;b&gt;normal&lt;/b&gt; text.';
+
+        $this->assertSame($expected, Str::safeTemplate($original, [
+            'test'   => 'awesome Test',
+            'html'   => '<b>HTML</b>',
+            'normal' => '<b>normal</b>'
+        ]));
+
+        // fallback
+        $this->assertSame('From - to -', Str::safeTemplate(
+            'From {{ a }} to {{ b }}',
+            [],
+            ['fallback' => '-']
+        ));
+
+        // callback
+        $data = [
+            'test' => '<test>',
+            'html' => '<html>'
+        ];
+        $this->assertSame('This is a &lt;test&gt; with <html>', Str::safeTemplate(
+            'This is a {{ test }} with {< html >}',
+            $data,
+            ['callback' => true]
+        ));
+        $this->assertSame('This is a &lt;TEST&gt; with <HTML>', Str::safeTemplate(
+            'This is a {{ test }} with {< html >}',
+            $data,
+            [
+                'callback' => function ($result, $query, $callbackData) use ($data) {
+                    $this->assertSame($data, $callbackData);
+                    return strtoupper($result);
+                }
+            ]
+        ));
+    }
+
+    /**
      * @covers ::short
      */
     public function testShort()

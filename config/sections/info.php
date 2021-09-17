@@ -17,7 +17,7 @@ return [
     'computed' => [
         'text' => function () {
             if ($this->text) {
-                $text = $this->model()->toString($this->text);
+                $text = $this->model()->toSafeString($this->text);
                 $text = $this->kirby()->kirbytext($text);
                 return $text;
             }

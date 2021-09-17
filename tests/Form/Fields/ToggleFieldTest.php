@@ -19,30 +19,30 @@ class ToggleFieldTest extends TestCase
     public function testText()
     {
         $field = $this->field('toggle', [
-            'text' => 'Yay'
+            'text' => 'Yay {{ page.slug }}'
         ]);
 
-        $this->assertEquals('Yay', $field->text());
+        $this->assertEquals('Yay test', $field->text());
     }
 
     public function testTextWithTranslation()
     {
         $props = [
             'text' => [
-                'en' => 'Yay',
-                'de' => 'Ja'
+                'en' => 'Yay {{ page.slug }}',
+                'de' => 'Ja {{ page.slug }}'
             ]
         ];
 
         I18n::$locale = 'en';
 
         $field = $this->field('toggle', $props);
-        $this->assertEquals('Yay', $field->text());
+        $this->assertEquals('Yay test', $field->text());
 
         I18n::$locale = 'de';
 
         $field = $this->field('toggle', $props);
-        $this->assertEquals('Ja', $field->text());
+        $this->assertEquals('Ja test', $field->text());
     }
 
     public function testBooleanDefaultValue()
@@ -66,31 +66,31 @@ class ToggleFieldTest extends TestCase
     {
         $field = $this->field('toggle', [
             'text' => [
-                'Yes',
-                'No'
+                'Yes {{ page.slug }}',
+                'No {{ page.slug }}'
             ]
         ]);
 
-        $this->assertEquals(['Yes', 'No'], $field->text());
+        $this->assertEquals(['Yes test', 'No test'], $field->text());
     }
 
     public function testTextToggleWithTranslation()
     {
         $props = [
             'text' => [
-                ['en' => 'Yes', 'de' => 'Ja'],
-                ['en' => 'No', 'de' => 'Nein']
+                ['en' => 'Yes {{ page.slug }}', 'de' => 'Ja {{ page.slug }}'],
+                ['en' => 'No {{ page.slug }}', 'de' => 'Nein {{ page.slug }}']
             ]
         ];
 
         I18n::$locale = 'en';
 
         $field = $this->field('toggle', $props);
-        $this->assertEquals(['Yes', 'No'], $field->text());
+        $this->assertEquals(['Yes test', 'No test'], $field->text());
 
         I18n::$locale = 'de';
 
         $field = $this->field('toggle', $props);
-        $this->assertEquals(['Ja', 'Nein'], $field->text());
+        $this->assertEquals(['Ja test', 'Nein test'], $field->text());
     }
 }

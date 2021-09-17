@@ -322,8 +322,9 @@ return [
     'pages/(:any)/delete' => [
         'load' => function (string $id) {
             $page = Find::page($id);
-            // todo: escape placeholder (output with `v-html`)
-            $text = tt('page.delete.confirm', ['title' => $page->title()->value()]);
+            $text = tt('page.delete.confirm', [
+                'title' => Escape::html($page->title()->value())
+            ]);
 
             if ($page->childrenAndDrafts()->count() > 0) {
                 return [
@@ -347,14 +348,14 @@ return [
                         'theme'        => 'negative',
                     ]
                 ];
-            } else {
-                return [
-                    'component' => 'k-remove-dialog',
-                    'props' => [
-                        'text' => $text
-                    ]
-                ];
             }
+
+            return [
+                'component' => 'k-remove-dialog',
+                'props' => [
+                    'text' => $text
+                ]
+            ];
         },
         'submit' => function (string $id) {
             $page     = Find::page($id);

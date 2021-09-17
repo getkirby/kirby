@@ -308,19 +308,16 @@ abstract class Model
      */
     public function pickerData(array $params = []): array
     {
-        // todo: in 3.5.7 this method would have escaped the default text;
-        //       no longer needed in 3.6
-
         return [
             'id'       => $this->model->id(),
             'image'    => $this->image(
                 $params['image'] ?? [],
                 $params['layout'] ?? 'list'
             ),
-            'info'     => $this->model->toString($params['info'] ?? false),
+            'info'     => $this->model->toSafeString($params['info'] ?? false),
             'link'     => $this->url(true),
             'sortable' => true,
-            'text'     => $this->model->toString($params['text'] ?? false)
+            'text'     => $this->model->toSafeString($params['text'] ?? false),
         ];
     }
 
