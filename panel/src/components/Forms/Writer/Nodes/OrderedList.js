@@ -4,6 +4,7 @@ export default class OrderedList extends Node {
 
   get button() {
     return {
+      id: this.name,
       icon: "list-numbers",
       label: window.panel.$t("toolbar.button.ol"),
       name: this.name

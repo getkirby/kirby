@@ -2,10 +2,10 @@
   <div class="k-writer-toolbar">
     <k-dropdown v-if="Object.keys(nodeButtons).length" @mousedown.native.prevent>
       <k-button
-        :icon="activeNode.icon || 'title'"
+        :icon="activeButton.icon || 'title'"
         :class="{
           'k-writer-toolbar-button k-writer-toolbar-nodes': true,
-          'k-writer-toolbar-button-active': !!activeNode
+          'k-writer-toolbar-button-active': !!activeButton
         }"
         @click="$refs.nodes.toggle()"
       />
@@ -13,6 +13,7 @@
         <k-dropdown-item
           v-for="(node, nodeType) in nodeButtons"
           :key="nodeType"
+          :current="isButtonCurrent(node)"
           :icon="node.icon"
           @click="command(node.command || nodeType)"
         >
@@ -62,7 +63,7 @@ export default {
     }
   },
   computed: {
-    activeNode() {
+    activeButton() {
       return Object.values(this.nodeButtons).find(button => this.isButtonActive(button)) || false;
     },
     markButtons() {
@@ -107,6 +108,13 @@ export default {
 
       return isActiveNodeAttr === true && this.activeNodes.includes(button.name);
     },
+    isButtonCurrent(node) {
+      if (this.activeButton) {
+        return this.activeButton.id === node.id;
+      }
+
+      return false;
+    }
   }
 };
 </script>
@@ -156,5 +164,9 @@ export default {
   color: var(--color-black);
   background: var(--color-white);
   margin-top: .5rem;
+}
+.k-writer-toolbar .k-dropdown-content .k-dropdown-item[aria-current] {
+  color: var(--color-focus);
+  font-weight: 500;
 }
 </style>

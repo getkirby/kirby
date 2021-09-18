@@ -87,8 +87,8 @@ export default class Extensions {
       .filter(extension => extension.button)
       .forEach(extension => {
         if (Array.isArray(extension.button)) {
-          extension.button.forEach((button, index) => {
-            buttons[extension.name + "-" + index] = button;
+          extension.button.forEach(button => {
+            buttons[button.id || button.name] = button;
           });
         } else {
           buttons[extension.name] = extension.button;
