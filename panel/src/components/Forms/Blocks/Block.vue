@@ -206,7 +206,9 @@ export default {
       }
     },
     open() {
-      this.$refs.drawer.open();
+      if (this.$refs.drawer) {
+        this.$refs.drawer.open();
+      }
     },
     remove() {
       this.$refs.removeDialog.close();
