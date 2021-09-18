@@ -6,8 +6,9 @@ export default class Heading extends Node {
     return this.options.levels.map(level => {
       return {
         command: `h${level}`,
-        icon: "title",
+        icon: `h${level}`,
         label: window.panel.$t("toolbar.button.heading." + level),
+        attrs: { level },
         name: this.name
       }
     });
@@ -27,7 +28,7 @@ export default class Heading extends Node {
 
   get defaults() {
     return {
-      levels: [1, 2, 3],
+      levels: [1, 2, 3, 4, 5, 6],
     };
   }
 
