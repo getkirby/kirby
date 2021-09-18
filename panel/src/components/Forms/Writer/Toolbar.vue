@@ -2,7 +2,7 @@
   <div class="k-writer-toolbar">
     <k-dropdown v-if="Object.keys(nodeButtons).length" @mousedown.native.prevent>
       <k-button
-        :icon="activeNode.icon || 'headline'"
+        :icon="activeNode.icon || 'title'"
         :class="{
           'k-writer-toolbar-button k-writer-toolbar-nodes': true,
           'k-writer-toolbar-button-active': !!activeNode
@@ -47,6 +47,12 @@ export default {
         return [];
       }
     },
+    activeNodeAttrs: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     editor: {
       type: Object,
       required: true
@@ -57,7 +63,7 @@ export default {
   },
   computed: {
     activeNode() {
-      return Object.values(this.nodeButtons).find(button => this.activeNodes.includes(button.name)) || false;
+      return Object.values(this.nodeButtons).find(button => this.isButtonActive(button)) || false;
     },
     markButtons() {
       return this.buttons("mark");
@@ -87,7 +93,20 @@ export default {
     },
     command(command, ...args) {
       this.$emit("command", command, ...args);
-    }
+    },
+    isButtonActive(button) {
+      let isActiveNodeAttr = true;
+
+      if (button.attrs) {
+        const activeNodeAttrs = Object
+            .values(this.activeNodeAttrs)
+            .find(node => JSON.stringify(node) === JSON.stringify(button.attrs));
+
+        isActiveNodeAttr = Boolean(activeNodeAttrs || false);
+      }
+
+      return isActiveNodeAttr === true && this.activeNodes.includes(button.name);
+    },
   }
 };
 </script>

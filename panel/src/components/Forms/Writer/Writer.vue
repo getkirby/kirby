@@ -14,6 +14,7 @@
         :editor="editor"
         :active-marks="toolbar.marks"
         :active-nodes="toolbar.nodes"
+        :active-node-attrs="toolbar.nodeAttrs"
         :style="{
           'bottom': toolbar.position.bottom + 'px',
           'inset-inline-start': toolbar.position.left + 'px'
