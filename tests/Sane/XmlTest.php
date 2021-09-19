@@ -38,7 +38,7 @@ class XmlTest extends TestCase
     public function testInvalid(string $file)
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The file could not be parsed');
+        $this->expectExceptionMessage('The markup could not be parsed');
 
         Xml::validateFile($this->fixture($file));
     }
@@ -51,7 +51,7 @@ class XmlTest extends TestCase
     public function testIsAllowedUrlJavascript()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 2)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 2): Unknown URL type');
 
         Xml::validate("<xml>\n<a href='javascript:alert(1)'></a>\n</xml>");
     }
@@ -59,7 +59,7 @@ class XmlTest extends TestCase
     public function testIsAllowedUrlJavascriptWithUnicodeLS()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 1)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 1): Unknown URL type');
 
         /**
          * Test fixture inspired by DOMPurify
@@ -73,7 +73,7 @@ class XmlTest extends TestCase
     public function testIsAllowedUrlXlink()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: xlink:href (line 2): Unknown URL type');
 
         Xml::validateFile($this->fixture('disallowed/xlink-attack.xml'));
     }
@@ -81,7 +81,7 @@ class XmlTest extends TestCase
     public function testValidateAttrsDataUri1()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 7)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 7): Invalid data URI');
 
         Xml::validateFile($this->fixture('disallowed/data-uri-svg-1.xml'));
     }
@@ -89,7 +89,7 @@ class XmlTest extends TestCase
     public function testValidateAttrsDataUri2()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: filter (line 7)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: filter (line 7): Invalid data URI');
 
         Xml::validateFile($this->fixture('disallowed/data-uri-svg-2.xml'));
     }
@@ -97,7 +97,7 @@ class XmlTest extends TestCase
     public function testValidateAttrsExternalSource1()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 3)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: style (line 3): The hostname "malicious.com" is not allowed');
 
         Xml::validateFile($this->fixture('disallowed/external-source-1.xml'));
     }
@@ -105,7 +105,7 @@ class XmlTest extends TestCase
     public function testValidateAttrsExternalSource2()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 3)');
+        $this->expectExceptionMessage('The URL is not allowed in attribute: href (line 3): The hostname "malicious.com" is not allowed');
 
         Xml::validateFile($this->fixture('disallowed/external-source-2.xml'));
     }

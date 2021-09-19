@@ -3,6 +3,7 @@
 namespace Kirby\Sane;
 
 use Kirby\Exception\Exception;
+use Kirby\Toolkit\Dom;
 
 /**
  * Sane handler for HTML files
@@ -85,14 +86,14 @@ class Html extends Handler
      */
     public static function sanitize(string $string): string
     {
-        $doc = new Dom($string, [
-            'allowed'    => static::$allowed,
-            'disallowed' => static::$disallowed,
-            'urls'       => static::$urls,
+        $doc = new Dom($string, 'html');
+        $doc->sanitize([
+            'allowedTags'    => static::$allowed,
+            'disallowedTags' => static::$disallowed,
+            'urlAttrs'       => static::$urls,
         ]);
-        $doc->sanitize();
 
-        return $doc->innerHTML($doc->body());
+        return $doc->innerMarkup($doc->body());
     }
 
     /**

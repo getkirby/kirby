@@ -28,7 +28,7 @@ class SvgTest extends TestCase
     public function testInvalid(string $file)
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The file could not be parsed');
+        $this->expectExceptionMessage('The markup could not be parsed');
 
         Svg::validateFile($this->fixture($file));
     }
