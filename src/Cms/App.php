@@ -509,6 +509,9 @@ class App
     }
 
     /**
+     * Get access to object that lists
+     * all parts of Kirby core
+     *
      * @return \Kirby\Cms\Core
      */
     public function core()
@@ -848,7 +851,7 @@ class App
     }
 
     /**
-     * Load a part of Kirby
+     * Access Kirby's part loader
      *
      * @return \Kirby\Cms\Loader
      */
