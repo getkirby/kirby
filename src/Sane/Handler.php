@@ -20,26 +20,6 @@ use Kirby\Filesystem\F;
 abstract class Handler
 {
     /**
-     * Reads the contents of a file
-     * for sanitization or validation
-     *
-     * @param string $file
-     * @return string
-     *
-     * @throws \Kirby\Exception\Exception If the file does not exist
-     */
-    public static function readFile(string $file): string
-    {
-        $contents = F::read($file);
-
-        if ($contents === false) {
-            throw new Exception('The file "' . $file . '" does not exist');
-        }
-
-        return $contents;
-    }
-
-    /**
      * Sanitizes the given string
      *
      * @param string $string
@@ -55,6 +35,7 @@ abstract class Handler
      * @return void
      *
      * @throws \Kirby\Exception\Exception If the file does not exist
+     * @throws \Kirby\Exception\Exception On other errors
      */
     public static function sanitizeFile(string $file): void
     {
@@ -80,10 +61,31 @@ abstract class Handler
      * @return void
      *
      * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
+     * @throws \Kirby\Exception\Exception If the file does not exist
      * @throws \Kirby\Exception\Exception On other errors
      */
     public static function validateFile(string $file): void
     {
         static::validate(static::readFile($file));
+    }
+
+    /**
+     * Reads the contents of a file
+     * for sanitization or validation
+     *
+     * @param string $file
+     * @return string
+     *
+     * @throws \Kirby\Exception\Exception If the file does not exist
+     */
+    protected static function readFile(string $file): string
+    {
+        $contents = F::read($file);
+
+        if ($contents === false) {
+            throw new Exception('The file "' . $file . '" does not exist');
+        }
+
+        return $contents;
     }
 }

@@ -126,7 +126,7 @@ class Sane
                 $handlerNames = array_map('get_class', $handlers);
                 throw new LogicException(
                     'Cannot sanitize file as more than one handler applies: ' .
-                    $handlerNames
+                    implode(', ', $handlerNames)
                 );
         }
     }

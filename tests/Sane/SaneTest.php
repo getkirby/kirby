@@ -109,6 +109,7 @@ class SaneTest extends TestCase
 
     /**
      * @covers ::validateFile
+     * @covers ::handlersForFile
      */
     public function testValidateFile()
     {
@@ -131,6 +132,7 @@ class SaneTest extends TestCase
 
     /**
      * @covers ::validateFile
+     * @covers ::handlersForFile
      */
     public function testValidateFileMime1()
     {
@@ -142,6 +144,7 @@ class SaneTest extends TestCase
 
     /**
      * @covers ::validateFile
+     * @covers ::handlersForFile
      */
     public function testValidateFileMime2()
     {
@@ -153,6 +156,7 @@ class SaneTest extends TestCase
 
     /**
      * @covers ::validateFile
+     * @covers ::handlersForFile
      */
     public function testValidateFileMime3()
     {
@@ -161,6 +165,7 @@ class SaneTest extends TestCase
 
     /**
      * @covers ::validateFile
+     * @covers ::handlersForFile
      */
     public function testValidateFileMime4()
     {
@@ -172,6 +177,7 @@ class SaneTest extends TestCase
 
     /**
      * @covers ::validateFile
+     * @covers ::handlersForFile
      */
     public function testValidateFileMissing()
     {
@@ -196,6 +202,7 @@ class SaneTest extends TestCase
 
     /**
      * @covers ::validateFile
+     * @covers ::handlersForFile
      */
     public function testValidateFileMissingHandler2()
     {
@@ -207,6 +214,7 @@ class SaneTest extends TestCase
 
     /**
      * @covers ::validateFile
+     * @covers ::handlersForFile
      */
     public function testValidateFileMissingHandler3()
     {
@@ -218,6 +226,7 @@ class SaneTest extends TestCase
 
     /**
      * @covers ::validateFile
+     * @covers ::handlersForFile
      */
     public function testValidateFileMissingHandler4()
     {
