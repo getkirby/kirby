@@ -68,9 +68,6 @@
  */
 export default {
   props: {
-    url: {
-      type: String
-    },
     accept: {
       type: String,
       default: "*"
@@ -78,12 +75,19 @@ export default {
     attributes: {
       type: Object
     },
+    max: {
+      type: Number
+    },
+    method: {
+      type: String,
+      default: "POST"
+    },
     multiple: {
       type: Boolean,
       default: true
     },
-    max: {
-      type: Number
+    url: {
+      type: String
     }
   },
   data() {
