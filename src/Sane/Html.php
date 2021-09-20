@@ -4,7 +4,6 @@ namespace Kirby\Sane;
 
 use Kirby\Exception\Exception;
 use Kirby\Toolkit\Dom;
-use Kirby\Toolkit\Str;
 
 /**
  * Sane handler for HTML files

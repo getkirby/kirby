@@ -181,7 +181,8 @@ class Dom
      *                       value of either an array with the list of all allowed attributes for
      *                       this tag, `true` to allow any attribute from the `allowedAttrs` list
      *                       or `false` to allow the tag without any attributes;
-     *                       not listed tags will be unwrapped (removed, but children are kept)
+     *                       not listed tags will be unwrapped (removed, but children are kept);
+     *                       setting the whole option to `true` will allow any tag
      *                       - `attrCallback`: Closure that will receive each `DOMAttr` and may
      *                       modify it; the callback must return an array with exception
      *                       objects for each modification
@@ -332,7 +333,7 @@ class Dom
 
         // the attribute is still not allowed
         if (in_array($attr->name, $allowedAttrsForTag) !== true) {
-            return 'The "' . $nodeName . '" does not allow the "' . $attr->name . '" attribute';
+            return 'Not allowed by the "' . $nodeName . '" element';
         }
 
         return true;
@@ -347,13 +348,13 @@ class Dom
      */
     protected function isAllowedGlobalAttr(DOMAttr $attr, array $options)
     {
-        $allowedGlobalAttrs = $options['allowedAttrs'];
+        $allowedAttrs = $options['allowedAttrs'];
 
-        if ($allowedGlobalAttrs === true) {
+        if ($allowedAttrs === true) {
             return true;
         }
 
-        if (is_array($allowedGlobalAttrs) && in_array($attr->name, $allowedGlobalAttrs) !== true) {
+        if (is_array($allowedAttrs) && in_array($attr->name, $allowedAttrs) !== true) {
             return 'The "' . $attr->name . '" attribute is not included in the global allowlist';
         }
 
