@@ -63,6 +63,13 @@ class Page extends Model
      */
     public function dropdown(array $options = []): array
     {
+        $defaults = [
+            'view'   => (bool)get('view'),
+            'sort'   => (bool)get('sort'),
+            'delete' => (bool)get('delete')
+        ];
+
+        $options     = array_merge($defaults, $options);
         $page        = $this->model;
         $permissions = $this->options(['preview']);
         $view        = $options['view'] ?? 'view';

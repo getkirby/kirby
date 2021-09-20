@@ -101,6 +101,13 @@ class File extends Model
      */
     public function dropdown(array $options = []): array
     {
+        $defaults = [
+            'view'   => (bool)get('view'),
+            'update' => (bool)get('update'),
+            'delete' => (bool)get('delete')
+        ];
+
+        $options     = array_merge($defaults, $options);
         $file        = $this->model;
         $permissions = $this->options(['preview']);
         $view        = $options['view'] ?? 'view';
