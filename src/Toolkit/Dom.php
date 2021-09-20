@@ -214,8 +214,10 @@ class Dom
 
         $errors = [];
 
-        // validate the doctype
-        foreach ($this->doc->childNodes as $child) {
+        // validate the doctype;
+        // convert the `DOMNodeList` to an array first, otherwise removing
+        // nodes would shift the list and make subsequent operations fail
+        foreach (iterator_to_array($this->doc->childNodes) as $child) {
             if (is_a($child, 'DOMDocumentType') === true) {
                 $this->sanitizeDoctype($child, $options, $errors);
             }
@@ -223,15 +225,13 @@ class Dom
 
         // validate all processing instructions like <?xml-stylesheet
         $pis = $this->query('//processing-instruction()');
-        foreach ($pis as $pi) {
+        foreach (iterator_to_array($pis) as $pi) {
             $this->sanitizePI($pi, $options, $errors);
         }
 
         // validate all elements in the document tree
         $nodes = $this->doc->getElementsByTagName('*');
-
-        for ($x = count($nodes) - 1; $x >= 0; $x--) {
-            $node = $nodes[$x];
+        foreach (iterator_to_array($nodes) as $node) {
             $this->sanitizeNode($node, $options, $errors);
         }
 
@@ -398,7 +398,7 @@ class Dom
 
         // allow listed data URIs
         if (Str::startsWith($url, 'data:') === true) {
-            foreach ($options['allowedDataUris']  as $dataAttr) {
+            foreach ($options['allowedDataUris'] as $dataAttr) {
                 if (Str::startsWith($url, $dataAttr) === true) {
                     return true;
                 }
@@ -540,8 +540,9 @@ class Dom
         }
 
         if ($node->hasAttributes()) {
-            for ($x = count($node->attributes) - 1; $x >= 0; $x--) {
-                $attr = $node->attributes[$x];
+            // convert the `DOMNodeList` to an array first, otherwise removing
+            // attributes would shift the list and make subsequent operations fail
+            foreach (iterator_to_array($node->attributes) as $attr) {
                 $this->sanitizeAttr($attr, $options, $errors);
 
                 // custom check
