@@ -450,6 +450,9 @@
       <path d="M14 0H2c-.6 0-1 .4-1 1v14c0 .6.4 1 1 1h12c.6 0 1-.4 1-1V1c0-.6-.4-1-1-1zm-1 14H3V2h10v12z" />
       <path d="M4 3h4v4H4V3zM9 4h3v1H9V4zM9 6h3v1H9V6zM4 8h8v1H4V8zM4 10h8v1H4v-1zM4 12h5v1H4v-1z" />
     </symbol>
+    <symbol id="icon-paragraph" viewBox="0 0 16 16">
+      <path d="M6,0V0A4,4,0,0,0,6,8v8H8V2h3V16h2V2h2V0Z" />
+    </symbol>
     <symbol id="icon-parent" viewBox="0 0 16 16">
       <path d="M14,6H3.4l4-4L6,0.6L0.3,6.3c-0.4,0.4-0.4,1,0,1.4L6,13.4L7.4,12l-4-4H13v7h2V7C15,6.4,14.6,6,14,6z" />
     </symbol>
