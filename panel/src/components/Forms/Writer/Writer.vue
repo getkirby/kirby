@@ -58,6 +58,7 @@ import Heading from "./Nodes/Heading";
 import HorizontalRule from "./Nodes/HorizontalRule";
 import ListItem from "./Nodes/ListItem";
 import OrderedList from "./Nodes/OrderedList";
+import Paragraph from "./Nodes/Paragraph";
 
 // Extensions
 import History from "./Extensions/History.js";
@@ -94,6 +95,7 @@ export const props = {
       type: [Array, Boolean],
       default() {
         return [
+          "paragraph",
           "heading",
           "bulletList",
           "orderedList"
@@ -246,7 +248,8 @@ export default {
         orderedList: new OrderedList,
         heading: new Heading,
         horizontalRule: new HorizontalRule,
-        listItem: new ListItem
+        listItem: new ListItem,
+        paragraph: new Paragraph
       }, this.nodes, (allowed, installed) => {
 
         // install the list item when there's a list available
