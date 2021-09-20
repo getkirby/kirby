@@ -229,7 +229,9 @@ class Dom
 
         // validate all elements in the document tree
         $nodes = $this->doc->getElementsByTagName('*');
-        foreach ($nodes as $node) {
+
+        for ($x = count($nodes) - 1; $x >= 0; $x--) {
+            $node = $nodes[$x];
             $this->sanitizeNode($node, $options, $errors);
         }
 
