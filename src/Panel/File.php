@@ -102,7 +102,7 @@ class File extends Model
     public function dropdown(array $options = []): array
     {
         $defaults = [
-            'view'   => (bool)get('view'),
+            'view'   => get('view'),
             'update' => (bool)get('update'),
             'delete' => (bool)get('delete')
         ];

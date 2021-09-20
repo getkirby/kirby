@@ -731,30 +731,6 @@ class FileTest extends TestCase
     }
 
     /**
-     * @covers ::route
-     */
-    public function testRoute()
-    {
-        $page = new ModelPage([
-            'slug'  => 'test',
-            'files' => [
-                ['filename' => 'test.jpg']
-            ]
-        ]);
-
-        $panel = new File($page->file('test.jpg'));
-        $route = $panel->view();
-
-        $this->assertArrayHasKey('props', $route);
-        $this->assertSame('k-file-view', $route['component']);
-        $this->assertSame('test.jpg', $route['title']);
-        $this->assertSame('files', $route['search']);
-        $breadcrumb = $route['breadcrumb']();
-        $this->assertSame('test', $breadcrumb[0]['label']);
-        $this->assertSame('test.jpg', $breadcrumb[1]['label']);
-    }
-
-    /**
      * @covers ::url
      */
     public function testUrl()
@@ -840,5 +816,29 @@ class FileTest extends TestCase
         $prevNext = (new File($page->file('c.jpg')))->prevNext();
         $this->assertSame('/pages/test/files/b.jpg', $prevNext['prev']()['link']);
         $this->assertNull($prevNext['next']());
+    }
+
+    /**
+     * @covers ::view
+     */
+    public function testView()
+    {
+        $page = new ModelPage([
+            'slug'  => 'test',
+            'files' => [
+                ['filename' => 'test.jpg']
+            ]
+        ]);
+
+        $panel = new File($page->file('test.jpg'));
+        $view  = $panel->view();
+
+        $this->assertArrayHasKey('props', $view);
+        $this->assertSame('k-file-view', $view['component']);
+        $this->assertSame('test.jpg', $view['title']);
+        $this->assertSame('files', $view['search']);
+        $breadcrumb = $view['breadcrumb']();
+        $this->assertSame('test', $breadcrumb[0]['label']);
+        $this->assertSame('test.jpg', $breadcrumb[1]['label']);
     }
 }

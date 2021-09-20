@@ -64,7 +64,7 @@ class Page extends Model
     public function dropdown(array $options = []): array
     {
         $defaults = [
-            'view'   => (bool)get('view'),
+            'view'   => get('view'),
             'sort'   => (bool)get('sort'),
             'delete' => (bool)get('delete')
         ];
