@@ -3,7 +3,7 @@
 use Kirby\Toolkit\Escape;
 
 return [
-    [
+    'settings' => [
         'pattern' => 'settings',
         'action'  => function () {
             $kirby   = kirby();

@@ -129,12 +129,12 @@ class SiteTest extends TestCase
     }
 
     /**
-     * @covers ::route
+     * @covers ::view
      */
-    public function testRoute()
+    public function testView()
     {
-        $route = $this->panel()->route();
-        $this->assertArrayHasKey('props', $route);
-        $this->assertSame('k-site-view', $route['component']);
+        $view = $this->panel()->view();
+        $this->assertArrayHasKey('props', $view);
+        $this->assertSame('k-site-view', $view['component']);
     }
 }

@@ -4,7 +4,6 @@ namespace Kirby\Panel;
 
 use Kirby\Cms\User;
 use Kirby\Exception\Exception;
-use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\NotFoundException;
 use Kirby\Exception\PermissionException;
 use Kirby\Http\Response;
@@ -29,10 +28,10 @@ class Panel
      * Normalize a panel area
      *
      * @param string $id
-     * @param array $area
+     * @param array|string $area
      * @return array
      */
-    public static function area(string $id, array $area): array
+    public static function area(string $id, $area): array
     {
         $area['id']              = $id;
         $area['label']           = $area['label'] ?? $id;
@@ -54,44 +53,50 @@ class Panel
     public static function areas(): array
     {
         $kirby  = kirby();
-        $root   = $kirby->root('kirby') . '/config/areas';
         $system = $kirby->system();
         $user   = $kirby->user();
+        $areas  = $kirby->load()->areas();
 
         // the system is not ready
         if ($system->isOk() === false || $system->isInstalled() === false) {
             return [
-                'installation' => static::area('installation', (require $root . '/installation.php')($kirby)),
+                'installation' => static::area('installation', $areas['installation']),
             ];
         }
 
         // not yet authenticated
         if (!$user) {
             return [
-                'login' => static::area('login', (require $root . '/login.php')($kirby)),
+                'login' => static::area('login', $areas['login']),
             ];
         }
 
-        // load default areas
-        $areas = [
-            'site'     => static::area('site', (require $root . '/site.php')($kirby)),
-            'settings' => static::area('settings', (require $root . '/settings.php')($kirby)),
-            'users'    => static::area('users', (require $root . '/users.php')($kirby)),
-            'account'  => static::area('account', (require $root . '/account.php')($kirby)),
-        ];
+        unset($areas['installation'], $areas['login']);
 
-        // load plugins
-        foreach ($kirby->extensions('areas') as $id => $area) {
-            if (is_a($area, 'Closure') === false) {
-                throw new InvalidArgumentException(sprintf('Panel area "%s" must be defined as a Closure', $id));
+
+        $menu = $kirby->option('panel.menu', [
+            'site',
+            'settings',
+            'users'
+        ]);
+
+        $result = [];
+
+        // add the sorted areas
+        foreach ($menu as $id) {
+            if ($area = ($areas[$id] ?? null)) {
+                $result[$id] = static::area($id, $area);
+                unset($areas[$id]);
             }
-
-            $areas[$id] = static::area($id, (array)$area($kirby));
         }
 
-        return $areas;
-    }
+        // add the remaining areas
+        foreach ($areas as $id => $area) {
+            $result[$id] = static::area($id, $area);
+        }
 
+        return $result;
+    }
 
     /**
      * Check for access permissions

@@ -101,6 +101,13 @@ class File extends Model
      */
     public function dropdown(array $options = []): array
     {
+        $defaults = [
+            'view'   => get('view'),
+            'update' => get('update'),
+            'delete' => get('delete')
+        ];
+
+        $options     = array_merge($defaults, $options);
         $file        = $this->model;
         $permissions = $this->options(['preview']);
         $view        = $options['view'] ?? 'view';
@@ -411,16 +418,28 @@ class File extends Model
             }
         ];
     }
+    /**
+     * Returns the url to the editing view
+     * in the panel
+     *
+     * @param bool $relative
+     * @return string
+     */
+    public function url(bool $relative = false): string
+    {
+        $parent = $this->model->parent()->panel()->url($relative);
+        return $parent . '/' . $this->path();
+    }
 
     /**
      * Returns the data array for
-     * this model's Panel routes
+     * this model's Panel view
      *
      * @internal
      *
      * @return array
      */
-    public function route(): array
+    public function view(): array
     {
         $file = $this->model;
 
@@ -433,18 +452,5 @@ class File extends Model
             'search'    => 'files',
             'title'     => $file->filename(),
         ];
-    }
-
-    /**
-     * Returns the url to the editing view
-     * in the panel
-     *
-     * @param bool $relative
-     * @return string
-     */
-    public function url(bool $relative = false): string
-    {
-        $parent = $this->model->parent()->panel()->url($relative);
-        return $parent . '/' . $this->path();
     }
 }

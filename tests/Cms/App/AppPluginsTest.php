@@ -1009,7 +1009,7 @@ class AppPluginsTest extends TestCase
 
         $this->assertCount(1, $areas);
         $this->assertArrayHasKey('todos', $areas);
-        $this->assertInstanceOf('Closure', $areas['todos']);
+        $this->assertInstanceOf('Closure', $areas['todos'][0]);
     }
 
     /**

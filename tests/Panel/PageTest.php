@@ -626,21 +626,21 @@ class PageTest extends TestCase
     }
 
     /**
-     * @covers ::route
+     * @covers ::view
      */
-    public function testRoute()
+    public function testView()
     {
         $page = new ModelPage([
             'slug'  => 'test',
         ]);
 
         $panel = new Page($page);
-        $route = $panel->route();
+        $view  = $panel->view();
 
-        $this->assertArrayHasKey('props', $route);
-        $this->assertSame('k-page-view', $route['component']);
-        $this->assertSame('test', $route['title']);
-        $this->assertSame('test', $route['breadcrumb'][0]['label']);
+        $this->assertArrayHasKey('props', $view);
+        $this->assertSame('k-page-view', $view['component']);
+        $this->assertSame('test', $view['title']);
+        $this->assertSame('test', $view['breadcrumb'][0]['label']);
     }
 
     /**

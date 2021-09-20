@@ -200,24 +200,6 @@ class User extends Model
     }
 
     /**
-     * Returns the data array for
-     * this model's Panel routes
-     *
-     * @internal
-     *
-     * @return array
-     */
-    public function route(): array
-    {
-        return [
-            'breadcrumb' => $this->breadcrumb(),
-            'component'  => 'k-user-view',
-            'props'      => $this->props(),
-            'title'      => $this->model->username(),
-        ];
-    }
-
-    /**
      * Returns the Translation object
      * for the selected Panel language
      *
@@ -228,5 +210,23 @@ class User extends Model
         $kirby = $this->model->kirby();
         $lang  = $this->model->language();
         return $kirby->translation($lang);
+    }
+
+    /**
+     * Returns the data array for
+     * this model's Panel view
+     *
+     * @internal
+     *
+     * @return array
+     */
+    public function view(): array
+    {
+        return [
+            'breadcrumb' => $this->breadcrumb(),
+            'component'  => 'k-user-view',
+            'props'      => $this->props(),
+            'title'      => $this->model->username(),
+        ];
     }
 }

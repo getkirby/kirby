@@ -8,7 +8,7 @@ return function ($kirby) {
         'label'  => t('view.account'),
         'search' => 'users',
         'views'  => [
-            [
+            'account' => [
                 'pattern' => 'account',
                 'action'  => function () use ($kirby) {
                     return [
@@ -17,7 +17,7 @@ return function ($kirby) {
                     ];
                 },
             ],
-            [
+            'logout' => [
                 'pattern' => 'logout',
                 'auth'    => false,
                 'action'  => function () use ($kirby) {
@@ -27,7 +27,7 @@ return function ($kirby) {
                     Panel::go('login');
                 },
             ],
-            [
+            'reset-password' => [
                 'pattern' => 'reset-password',
                 'action'  => function () {
                     return [

@@ -63,13 +63,13 @@ class Site extends Model
 
     /**
      * Returns the data array for
-     * this model's Panel routes
+     * this model's Panel view
      *
      * @internal
      *
      * @return array
      */
-    public function route(): array
+    public function view(): array
     {
         return [
             'component' => 'k-site-view',

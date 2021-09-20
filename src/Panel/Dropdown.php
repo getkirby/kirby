@@ -28,7 +28,7 @@ class Dropdown extends Json
     {
         if (is_array($data) === true) {
             $data = [
-                'options' => $data
+                'options' => array_values($data)
             ];
         }
 

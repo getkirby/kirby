@@ -352,16 +352,6 @@ abstract class Model
     }
 
     /**
-     * Returns the data array for
-     * this model's Panel routes
-     *
-     * @internal
-     *
-     * @return array
-     */
-    abstract public function route(): array;
-
-    /**
      * Returns link url and tooltip
      * for model (e.g. used for prev/next
      * navigation)
@@ -396,4 +386,14 @@ abstract class Model
 
         return $this->model->kirby()->url('panel') . '/' . $this->path();
     }
+
+    /**
+     * Returns the data array for
+     * this model's Panel view
+     *
+     * @internal
+     *
+     * @return array
+     */
+    abstract public function view(): array;
 }

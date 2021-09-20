@@ -7,7 +7,7 @@ return function ($kirby) {
         'icon'  => 'settings',
         'label' => t('view.installation'),
         'views' => [
-            [
+            'installation' => [
                 'pattern' => 'installation',
                 'auth'    => false,
                 'action'  => function () use ($kirby) {
@@ -29,7 +29,7 @@ return function ($kirby) {
                     ];
                 }
             ],
-            [
+            'installationFallback' => [
                 'pattern' => '(:all)',
                 'auth'    => false,
                 'action'  => function () {

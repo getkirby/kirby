@@ -727,7 +727,13 @@ class Blueprint
             return $props;
         }
 
-        return (static::$presets[$props['preset']])($props);
+        $preset = static::$presets[$props['preset']];
+
+        if (is_string($preset) === true) {
+            $preset = require $preset;
+        }
+
+        return $preset($props);
     }
 
     /**

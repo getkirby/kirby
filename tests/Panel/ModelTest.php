@@ -63,7 +63,7 @@ class CustomPanelModel extends Model
         return 'custom';
     }
 
-    public function route(): array
+    public function view(): array
     {
         return [];
     }

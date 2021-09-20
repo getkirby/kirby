@@ -234,24 +234,6 @@ class UserTest extends TestCase
     }
 
     /**
-     * @covers ::route
-     */
-    public function testRoute()
-    {
-        $user = new ModelUser([
-            'email' => 'test@getkirby.com',
-        ]);
-
-        $panel = new User($user);
-        $route = $panel->route();
-
-        $this->assertArrayHasKey('props', $route);
-        $this->assertSame('k-user-view', $route['component']);
-        $this->assertSame('test@getkirby.com', $route['title']);
-        $this->assertSame('test@getkirby.com', $route['breadcrumb'][0]['label']);
-    }
-
-    /**
      * @covers ::props
      */
     public function testProps()
@@ -363,5 +345,23 @@ class UserTest extends TestCase
         $prevNext = (new User($app->user('c@getkirby.com')))->prevNext();
         $this->assertSame('b@getkirby.com', $prevNext['prev']()['tooltip']);
         $this->assertNull($prevNext['next']());
+    }
+
+    /**
+     * @covers ::view
+     */
+    public function testView()
+    {
+        $user = new ModelUser([
+            'email' => 'test@getkirby.com',
+        ]);
+
+        $panel = new User($user);
+        $view = $panel->view();
+
+        $this->assertArrayHasKey('props', $view);
+        $this->assertSame('k-user-view', $view['component']);
+        $this->assertSame('test@getkirby.com', $view['title']);
+        $this->assertSame('test@getkirby.com', $view['breadcrumb'][0]['label']);
     }
 }
