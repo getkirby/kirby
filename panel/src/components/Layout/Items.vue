@@ -144,6 +144,12 @@ export default {
   .k-cards-items[data-size="huge"] {
     --min: 1fr;
   }
+
+  .k-column[data-width="1/4"] .k-cards-items,
+  .k-column[data-width="1/5"] .k-cards-items,
+  .k-column[data-width="1/6"] .k-cards-items {
+    --min: 1fr;
+  }
 }
 
 @media screen and (min-width: 65em) {
