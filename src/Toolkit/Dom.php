@@ -307,8 +307,8 @@ class Dom
         $isAllowedGlobalAttr = $this->isAllowedGlobalAttr($attr, $options);
 
         // no specific tag attribute list
-        if ($allowedTags === true || is_array($allowedTags) === false) {
-            return $isAllowedGlobalAttr !== true ? $isAllowedGlobalAttr : true;
+        if (is_array($allowedTags) === false) {
+            return $isAllowedGlobalAttr;
         }
 
         // configuration per tag name
