@@ -7,7 +7,8 @@ export default class BulletList extends Node {
       id: this.name,
       icon: "list-bullet",
       label: window.panel.$t("toolbar.button.ul"),
-      name: this.name
+      name: this.name,
+      when: ['listItem', 'bulletList', 'orderedList']
     };
   }
 

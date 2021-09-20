@@ -1,6 +1,6 @@
 <template>
   <div class="k-writer-toolbar">
-    <k-dropdown v-if="Object.keys(nodeButtons).length" @mousedown.native.prevent>
+    <k-dropdown v-if="Object.keys(nodeButtons).length > 1" @mousedown.native.prevent>
       <k-button
         :icon="activeButton.icon || 'title'"
         :class="{
@@ -14,6 +14,7 @@
           v-for="(node, nodeType) in nodeButtons"
           :key="nodeType"
           :current="isButtonCurrent(node)"
+          :disabled="isButtonDisabled(node)"
           :icon="node.icon"
           @click="command(node.command || nodeType)"
         >
@@ -96,6 +97,13 @@ export default {
       this.$emit("command", command, ...args);
     },
     isButtonActive(button) {
+      // since the list element also contains a paragraph,
+      // it is confused whether the list element is an active node
+      // this solves the issue
+      if (button.name === "paragraph") {
+        return this.activeNodes.length === 1 && this.activeNodes.includes(button.name);
+      }
+
       let isActiveNodeAttr = true;
 
       if (button.attrs) {
@@ -111,6 +119,14 @@ export default {
     isButtonCurrent(node) {
       if (this.activeButton) {
         return this.activeButton.id === node.id;
+      }
+
+      return false;
+    },
+    isButtonDisabled(node) {
+      if (this.activeButton && this.activeButton.when) {
+        const when = this.activeButton.when;
+        return when.includes(node.name) === false;
       }
 
       return false;

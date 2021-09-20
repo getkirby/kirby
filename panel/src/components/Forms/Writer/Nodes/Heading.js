@@ -10,7 +10,8 @@ export default class Heading extends Node {
         icon: `h${level}`,
         label: window.panel.$t("toolbar.button.heading." + level),
         attrs: { level },
-        name: this.name
+        name: this.name,
+        when: ['heading', 'paragraph']
       }
     });
   }
