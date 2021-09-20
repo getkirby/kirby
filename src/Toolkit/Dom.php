@@ -217,7 +217,7 @@ class Dom
         // validate the doctype
         foreach ($this->doc->childNodes as $child) {
             if (is_a($child, 'DOMDocumentType') === true) {
-                $this->validateDoctype($child, $options);
+                $this->sanitizeDoctype($child, $options, $errors);
             }
         }
 
@@ -301,41 +301,58 @@ class Dom
         $allowedAttrs = $options['allowedAttrs'];
         $allowedTags  = $options['allowedTags'];
 
-        if ($allowedTags === true) {
-            // no specific configuration for the tag, use the global allowlist
-            if (
-                is_array($allowedAttrs) === true &&
-                in_array($attr->name, $allowedAttrs) !== true
-            ) {
-                return 'Not included in the global allowlist';
-            }
-        } elseif (is_array($allowedTags) === true) {
-            // configuration per tag name
-            $nodeName = $attr->ownerElement->nodeName;
-            $allowedAttrsForTag = $allowedTags[$nodeName];
+        // check if the attribute is in the list of global allowed attributes
+        $isAllowedGlobalAttr = $this->isAllowedGlobalAttr($attr, $options);
 
-            if (is_array($allowedAttrsForTag) === true) {
-                // specific allowlist
-                if (in_array($attr->name, $allowedAttrsForTag) !== true) {
-                    return 'The "' . $nodeName . '" element only allows specific attributes';
-                }
-            } elseif ($allowedAttrsForTag === true) {
-                // reference to the global allowlist
-                if (
-                    is_array($allowedAttrs) === true &&
-                    in_array($attr->name, $allowedAttrs) !== true
-                ) {
-                    return 'Not included in the global allowlist';
-                }
-            } else {
-                return 'The "' . $nodeName . '" element does not allow attributes';
-            }
+        // no specific tag attribute list
+        if ($allowedTags === true || is_array($allowedTags) === false) {
+            return $isAllowedGlobalAttr !== true ? $isAllowedGlobalAttr : true;
         }
 
-        // any kind of JavaScript instructions will be removed
-        // TODO: Isn't this only harmful in URL attributes (where it's already not allowed)?
-        if (Str::startsWith($attr->value, 'javascript:', true) === true) {
-            return '"javascript:" URLs are not allowed';
+        // configuration per tag name
+        $nodeName           = $attr->ownerElement->nodeName;
+        $allowedAttrsForTag = $allowedTags[$nodeName] ?? true;
+
+        // the element allows all global attributes
+        if ($allowedAttrsForTag === true) {
+            return $isAllowedGlobalAttr;
+        }
+
+        // no attributes are allowed
+        if (is_array($allowedAttrsForTag) === false) {
+            return 'The "' . $nodeName . '" element does not allow attributes';
+        }
+
+        // add the global allowed attributes to the local attributes
+        if (is_array($allowedAttrs) === true) {
+            $allowedAttrsForTag = array_merge($allowedAttrs, $allowedAttrsForTag);
+        }
+
+        // the attribute is still not allowed
+        if (in_array($attr->name, $allowedAttrsForTag) !== true) {
+            return 'The "' . $nodeName . '" does not allow the "' . $attr->name . '" attribute';
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks for allowed attributes according to the global allowlist
+     *
+     * @param \DOMAttr $attr
+     * @param array $options
+     * @return true|string If not allowed, an error message is returned
+     */
+    protected function isAllowedGlobalAttr(DOMAttr $attr, array $options)
+    {
+        $allowedGlobalAttrs = $options['allowedAttrs'];
+
+        if ($allowedGlobalAttrs === false) {
+            return 'All attributes are blocked by default in the global allowlist';
+        }
+
+        if (is_array($allowedGlobalAttrs) && in_array($attr->name, $allowedGlobalAttrs) !== true) {
+            return 'The "' . $attr->name . '" attribute is not included in the global allowlist';
         }
 
         return true;
@@ -467,6 +484,24 @@ class Dom
     }
 
     /**
+     * Sanitizes the doctype
+     *
+     * @param \DOMDocumentType $node
+     * @param array $options See `Dom::sanitize()`
+     * @param array $errors Array to store additional errors in by reference
+     * @return void
+     */
+    protected function sanitizeDoctype(DOMDocumentType $node, array $options, array &$errors): void
+    {
+        try {
+            $this->validateDoctype($node, $options);
+        } catch (InvalidArgumentException $e) {
+            $errors[] = $e;
+            $this->remove($node);
+        }
+    }
+
+    /**
      * Sanitizes a single DOM node and its attribute
      *
      * @param \DOMNode $node
@@ -489,7 +524,7 @@ class Dom
             return;
         } elseif (
             $options['allowedTags'] !== true &&
-            $options['allowedTags'][$name] ?? false === false
+            ($options['allowedTags'][$name] ?? false) === false
         ) {
             // the tag is not allowlisted, but also not blocklisted; keep children
             $errors[] = new InvalidArgumentException(
@@ -503,7 +538,8 @@ class Dom
         }
 
         if ($node->hasAttributes()) {
-            foreach ($node->attributes as $attr) {
+            for ($x = count($node->attributes) - 1; $x >= 0; $x--) {
+                $attr = $node->attributes[$x];
                 $this->sanitizeAttr($attr, $options, $errors);
 
                 // custom check
