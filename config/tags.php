@@ -2,7 +2,6 @@
 
 use Kirby\Cms\Html;
 use Kirby\Cms\Url;
-use Kirby\Text\KirbyTag;
 use Kirby\Toolkit\Str;
 
 /**
@@ -251,29 +250,6 @@ return [
             'width',
         ],
         'html' => function ($tag) {
-            // all available video tag attributes
-            $availableAttrs = KirbyTag::$types[$tag->type]['attr'];
-
-            // global video tag options
-            $attrs   = $tag->kirby()->option('kirbytext.video', []);
-            $options = $attrs['options'] ?? [];
-
-            // removes options from attributes
-            if (isset($attrs['options']) === true) {
-                unset($attrs['options']);
-            }
-
-            // injects default values from global options
-            // applies only defined attributes to safely update tag props
-            foreach ($attrs as $key => $value) {
-                if (
-                    in_array($key, $availableAttrs) === true &&
-                    (isset($tag->{$key}) === false || $tag->{$key} === null)
-                ) {
-                    $tag->{$key} = $value;
-                }
-            }
-
             // checks and gets if poster is local file
             if (
                 empty($tag->poster) === false &&
@@ -331,7 +307,7 @@ return [
             } else {
                 $video = Html::video(
                     $tag->value,
-                    $options,
+                    $tag->kirby()->option('kirbytext.video.options', []),
                     $attrs
                 );
             }

@@ -46,9 +46,20 @@ class KirbyTag
             $type = static::$aliases[$type];
         }
 
+        $kirby    = $data['kirby'] ?? App::instance();
+        $defaults = $kirby->option('kirbytext.' . $type, []);
+        $attrs    = array_replace($defaults, $attrs);
+
+        // all available tag attributes
+        $availableAttrs = static::$types[$type]['attr'] ?? [];
+
         foreach ($attrs as $attrName => $attrValue) {
             $attrName = strtolower($attrName);
-            $this->$attrName = $attrValue;
+
+            // applies only defined attributes to safely update
+            if (in_array($attrName, $availableAttrs) === true) {
+                $this->{$attrName} = $attrValue;
+            }
         }
 
         $this->attrs   = $attrs;
