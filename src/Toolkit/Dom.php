@@ -349,15 +349,15 @@ class Dom
     {
         $allowedGlobalAttrs = $options['allowedAttrs'];
 
-        if ($allowedGlobalAttrs === false) {
-            return 'All attributes are blocked by default in the global allowlist';
+        if ($allowedGlobalAttrs === true) {
+            return true;
         }
 
         if (is_array($allowedGlobalAttrs) && in_array($attr->name, $allowedGlobalAttrs) !== true) {
             return 'The "' . $attr->name . '" attribute is not included in the global allowlist';
         }
 
-        return true;
+        return 'All attributes are blocked by default in the global allowlist';
     }
 
     /**
