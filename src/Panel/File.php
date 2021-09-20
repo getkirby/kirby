@@ -103,8 +103,8 @@ class File extends Model
     {
         $defaults = [
             'view'   => get('view'),
-            'update' => (bool)get('update'),
-            'delete' => (bool)get('delete')
+            'update' => get('update'),
+            'delete' => get('delete')
         ];
 
         $options     = array_merge($defaults, $options);

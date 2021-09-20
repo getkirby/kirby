@@ -65,8 +65,8 @@ class Page extends Model
     {
         $defaults = [
             'view'   => get('view'),
-            'sort'   => (bool)get('sort'),
-            'delete' => (bool)get('delete')
+            'sort'   => get('sort'),
+            'delete' => get('delete')
         ];
 
         $options     = array_merge($defaults, $options);
