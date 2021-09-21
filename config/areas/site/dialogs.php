@@ -13,7 +13,8 @@ $files = require __DIR__ . '/../files/dialogs.php';
 return [
 
     // change page position
-    'pages/(:any)/changeSort' => [
+    'page.changeSort' => [
+        'pattern' => 'pages/(:any)/changeSort',
         'load' => function (string $id) {
             $page     = Find::page($id);
             $position = null;
@@ -49,7 +50,8 @@ return [
     ],
 
     // change page status
-    'pages/(:any)/changeStatus' => [
+    'page.changeStatus' => [
+        'pattern' => 'pages/(:any)/changeStatus',
         'load' => function (string $id) {
             $page      = Find::page($id);
             $blueprint = $page->blueprint();
@@ -105,7 +107,8 @@ return [
     ],
 
     // change template
-    'pages/(:any)/changeTemplate' => [
+    'page.changeTemplate' => [
+        'pattern' => 'pages/(:any)/changeTemplate',
         'load' => function (string $id) {
             $page       = Find::page($id);
             $blueprints = $page->blueprints();
@@ -143,7 +146,8 @@ return [
     ],
 
     // change title
-    'pages/(:any)/changeTitle' => [
+    'page.changeTitle' => [
+        'pattern' => 'pages/(:any)/changeTitle',
         'load' => function (string $id) {
             $page        = Find::page($id);
             $permissions = $page->permissions();
@@ -230,7 +234,8 @@ return [
     ],
 
     // create a new page
-    'pages/create' => [
+    'page.create' => [
+        'pattern' => 'pages/create',
         'load' => function () {
             // the parent model for the new page
             $parent = get('parent', 'site');
@@ -319,7 +324,8 @@ return [
     ],
 
     // delete page
-    'pages/(:any)/delete' => [
+    'page.delete' => [
+        'pattern' => 'pages/(:any)/delete',
         'load' => function (string $id) {
             $page = Find::page($id);
             $text = tt('page.delete.confirm', [
@@ -384,7 +390,8 @@ return [
     ],
 
     // duplicate page
-    'pages/(:any)/duplicate' => [
+    'page.duplicate' => [
+        'pattern' => 'pages/(:any)/duplicate',
         'load' => function (string $id) {
             $page            = Find::page($id);
             $hasChildren     = $page->hasChildren();
@@ -452,16 +459,29 @@ return [
     ],
 
     // change filename
-    '(site|pages/.*?)/files/(:any)/changeName' => $files['changeName'],
+    'page.file.changeName' => [
+        'pattern' => '(pages/.*?)/files/(:any)/changeName',
+        'load'    => $files['changeName']['load'],
+        'submit'  => $files['changeName']['submit'],
+    ],
 
     // change sort
-    '(site|pages/.*?)/files/(:any)/changeSort' => $files['changeSort'],
+    'page.file.changeSort' => [
+        'pattern' => '(pages/.*?)/files/(:any)/changeSort',
+        'load'    => $files['changeSort']['load'],
+        'submit'  => $files['changeSort']['submit'],
+    ],
 
-    // delete site or page file
-    '(site|pages/.*?)/files/(:any)/delete' => $files['delete'],
+    // delete
+    'page.file.delete' => [
+        'pattern' => '(pages/.*?)/files/(:any)/delete',
+        'load'    => $files['delete']['load'],
+        'submit'  => $files['delete']['submit'],
+    ],
 
     // change site title
-    'site/changeTitle' => [
+    'site.changeTitle' => [
+        'pattern' => 'site/changeTitle',
         'load' => function () {
             return [
                 'component' => 'k-form-dialog',
@@ -485,6 +505,27 @@ return [
                 'event' => 'site.changeTitle',
             ];
         }
+    ],
+
+    // change filename
+    'site.file.changeName' => [
+        'pattern' => '(site)/files/(:any)/changeName',
+        'load'    => $files['changeName']['load'],
+        'submit'  => $files['changeName']['submit'],
+    ],
+
+    // change sort
+    'site.file.changeSort' => [
+        'pattern' => '(site)/files/(:any)/changeSort',
+        'load'    => $files['changeSort']['load'],
+        'submit'  => $files['changeSort']['submit'],
+    ],
+
+    // delete
+    'site.file.delete' => [
+        'pattern' => '(site)/files/(:any)/delete',
+        'load'    => $files['delete']['load'],
+        'submit'  => $files['delete']['submit'],
     ],
 
 ];

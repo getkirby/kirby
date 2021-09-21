@@ -27,6 +27,7 @@ class LoaderTest extends TestCase
 
     /**
      * @covers ::area
+     * @covers ::areas
      */
     public function testAreaPlugin()
     {
@@ -45,6 +46,7 @@ class LoaderTest extends TestCase
 
     /**
      * @covers ::area
+     * @covers ::areas
      */
     public function testAreaCorePlugin()
     {
@@ -59,6 +61,30 @@ class LoaderTest extends TestCase
         $area = $this->app->load()->area('site');
 
         $this->assertSame('Seite', $area['label']);
+    }
+
+    /**
+     * @covers ::areas
+     */
+    public function testAreaDropdownPlugin()
+    {
+        $this->app = $this->app->clone([
+            'areas' => [
+                'site' => [
+                    'dropdowns' => [
+                        'page' => function () {
+                            return 'foo';
+                        }
+                    ]
+                ]
+            ]
+        ]);
+
+        $area = $this->app->load()->area('site');
+        $dropdown = $area['dropdowns']['page'];
+
+        $this->assertSame('pages/(:any)', $dropdown['pattern']);
+        $this->assertSame('foo', $dropdown['options']());
     }
 
     /**
@@ -128,6 +154,21 @@ class LoaderTest extends TestCase
         ]);
 
         $this->assertSame('Test', $resolved['test']);
+    }
+
+    /**
+     * @covers ::resolveArea
+     */
+    public function testResolveArea()
+    {
+        $resolved = $this->loader->resolveArea([
+            'dropdowns' => [
+                'test' => function () {
+                }
+            ]
+        ]);
+
+        $this->assertInstanceOf('Closure', $resolved['dropdowns']['test']['options']);
     }
 
     /**

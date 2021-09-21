@@ -7,8 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
 {
     public static $files = array (
-        '7e9bd612cc444b3eed788ebbe46263a0' => __DIR__ . '/..' . '/laminas/laminas-zendframework-bridge/src/autoload.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        '7e9bd612cc444b3eed788ebbe46263a0' => __DIR__ . '/..' . '/laminas/laminas-zendframework-bridge/src/autoload.php',
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
         'f864ae44e8154e5ff6f4eec32f46d37f' => __DIR__ . '/../..' . '/config/setup.php',
         '87988fc7b1c1f093da22a1a3de972f3a' => __DIR__ . '/../..' . '/config/helpers.php',
@@ -133,6 +133,7 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Cms\\ContentLock' => __DIR__ . '/../..' . '/src/Cms/ContentLock.php',
         'Kirby\\Cms\\ContentLocks' => __DIR__ . '/../..' . '/src/Cms/ContentLocks.php',
         'Kirby\\Cms\\ContentTranslation' => __DIR__ . '/../..' . '/src/Cms/ContentTranslation.php',
+        'Kirby\\Cms\\Core' => __DIR__ . '/../..' . '/src/Cms/Core.php',
         'Kirby\\Cms\\Email' => __DIR__ . '/../..' . '/src/Cms/Email.php',
         'Kirby\\Cms\\Event' => __DIR__ . '/../..' . '/src/Cms/Event.php',
         'Kirby\\Cms\\Field' => __DIR__ . '/../..' . '/src/Cms/Field.php',
@@ -165,6 +166,7 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Cms\\LayoutColumn' => __DIR__ . '/../..' . '/src/Cms/LayoutColumn.php',
         'Kirby\\Cms\\LayoutColumns' => __DIR__ . '/../..' . '/src/Cms/LayoutColumns.php',
         'Kirby\\Cms\\Layouts' => __DIR__ . '/../..' . '/src/Cms/Layouts.php',
+        'Kirby\\Cms\\Loader' => __DIR__ . '/../..' . '/src/Cms/Loader.php',
         'Kirby\\Cms\\Media' => __DIR__ . '/../..' . '/src/Cms/Media.php',
         'Kirby\\Cms\\Model' => __DIR__ . '/../..' . '/src/Cms/Model.php',
         'Kirby\\Cms\\ModelPermissions' => __DIR__ . '/../..' . '/src/Cms/ModelPermissions.php',

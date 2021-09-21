@@ -27,7 +27,7 @@ return function ($kirby) {
                     Panel::go('login');
                 },
             ],
-            'reset-password' => [
+            'password' => [
                 'pattern' => 'reset-password',
                 'action'  => function () {
                     return [

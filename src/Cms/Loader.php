@@ -72,11 +72,11 @@ class Loader
 
         // load core areas and extend them with elements from plugins if they exist
         foreach ($this->kirby->core()->areas() as $id => $area) {
-            $area = $this->resolve($area);
+            $area = $this->resolveArea($area);
 
             if (isset($extensions[$id]) === true) {
                 foreach ($extensions[$id] as $areaExtension) {
-                    $extension = $this->resolve($areaExtension);
+                    $extension = $this->resolveArea($areaExtension);
                     $area      = array_replace_recursive($area, $extension);
                 }
 
@@ -189,6 +189,31 @@ class Loader
         }
 
         return $result;
+    }
+
+    /**
+     * Areas need a bit of special treatment
+     * when they are being loaded
+     *
+     * @param string|array|Closure $area
+     * @return array
+     */
+    public function resolveArea($area): array
+    {
+        $area      = $this->resolve($area);
+        $dropdowns = $area['dropdowns'] ?? [];
+
+        // convert closure dropdowns to an array definition
+        // otherwise they cannot be merged properly later
+        foreach ($dropdowns as $key => $dropdown) {
+            if (is_a($dropdown, 'Closure') === true) {
+                $area['dropdowns'][$key] = [
+                    'options' => $dropdown
+                ];
+            }
+        }
+
+        return $area;
     }
 
     /**

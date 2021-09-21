@@ -9,7 +9,7 @@ return [
             return Find::page($path)->panel()->view();
         }
     ],
-    'pageFile' => [
+    'page.file' => [
         'pattern' => 'pages/(:any)/files/(:any)',
         'action'  => function (string $id, string $filename) {
             return Find::file('pages/' . $id, $filename)->panel()->view();
@@ -21,7 +21,7 @@ return [
             return site()->panel()->view();
         }
     ],
-    'siteFile' => [
+    'site.file' => [
         'pattern' => 'site/files/(:any)',
         'action'  => function (string $filename) {
             return Find::file('site', $filename)->panel()->view();

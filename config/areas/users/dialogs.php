@@ -12,7 +12,8 @@ $files = require __DIR__ . '/../files/dialogs.php';
 return [
 
     // create
-    'users/create' => [
+    'user.create' => [
+        'pattern' => 'users/create',
         'load' => function () {
             $kirby = kirby();
             return [
@@ -58,7 +59,8 @@ return [
     ],
 
     // change email
-    'users/(:any)/changeEmail' => [
+    'user.changeEmail' => [
+        'pattern' => 'users/(:any)/changeEmail',
         'load' => function (string $id) {
             $user = Find::user($id);
 
@@ -89,7 +91,8 @@ return [
     ],
 
     // change language
-    'users/(:any)/changeLanguage' => [
+    'user.changeLanguage' => [
+        'pattern' => 'users/(:any)/changeLanguage',
         'load' => function (string $id) {
             $user = Find::user($id);
 
@@ -119,7 +122,8 @@ return [
     ],
 
     // change name
-    'users/(:any)/changeName' => [
+    'user.changeName' => [
+        'pattern' => 'users/(:any)/changeName',
         'load' => function (string $id) {
             $user = Find::user($id);
 
@@ -148,7 +152,8 @@ return [
     ],
 
     // change password
-    'users/(:any)/changePassword' => [
+    'user.changePassword' => [
+        'pattern' => 'users/(:any)/changePassword',
         'load' => function (string $id) {
             $user = Find::user($id);
 
@@ -192,7 +197,8 @@ return [
     ],
 
     // change role
-    'users/(:any)/changeRole' => [
+    'user.changeRole' => [
+        'pattern' => 'users/(:any)/changeRole',
         'load' => function (string $id) {
             $user = Find::user($id);
 
@@ -223,7 +229,8 @@ return [
     ],
 
     // delete
-    'users/(:any)/delete' => [
+    'user.delete' => [
+        'pattern' => 'users/(:any)/delete',
         'load' => function (string $id) {
             $user = Find::user($id);
 
@@ -264,12 +271,24 @@ return [
     ],
 
     // change file name
-    '(users/.*?)/files/(:any)/changeName' => $files['changeName'],
+    'user.file.changeName' => [
+        'pattern' => '(users/.*?)/files/(:any)/changeName',
+        'load'    => $files['changeName']['load'],
+        'submit'  => $files['changeName']['submit'],
+    ],
 
     // change file sort
-    '(users/.*?)/files/(:any)/changeSort' => $files['changeSort'],
+    'user.file.changeSort' => [
+        'pattern' => '(users/.*?)/files/(:any)/changeSort',
+        'load'    => $files['changeSort']['load'],
+        'submit'  => $files['changeSort']['submit'],
+    ],
 
     // delete file
-    '(users/.*?)/files/(:any)/delete' => $files['delete'],
+    'user.file.delete' => [
+        'pattern' => '(users/.*?)/files/(:any)/delete',
+        'load'    => $files['delete']['load'],
+        'submit'  => $files['delete']['submit'],
+    ]
 
 ];

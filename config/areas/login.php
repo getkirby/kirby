@@ -25,7 +25,7 @@ return function ($kirby) {
                     ];
                 }
             ],
-            'loginFallback' => [
+            'login.fallback' => [
                 'pattern' => '(:all)',
                 'auth'    => false,
                 'action'  => function ($path) use ($kirby) {

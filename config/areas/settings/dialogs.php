@@ -40,7 +40,8 @@ $languageDialogFields = [
 return [
 
     // create language
-    'languages/create' => [
+    'language.create' => [
+        'pattern' => 'languages/create',
         'load' => function () use ($languageDialogFields) {
             return [
                 'component' => 'k-language-dialog',
@@ -70,7 +71,8 @@ return [
     ],
 
     // delete language
-    'languages/(:any)/delete' => [
+    'language.delete' => [
+        'pattern' => 'languages/(:any)/delete',
         'load' => function (string $id) {
             $language = Find::language($id);
             return [
@@ -91,7 +93,8 @@ return [
     ],
 
     // update language
-    'languages/(:any)/update' => [
+    'language.update' => [
+        'pattern' => 'languages/(:any)/update',
         'load' => function (string $id) use ($languageDialogFields) {
             $language = Find::language($id);
             $fields   = $languageDialogFields;
