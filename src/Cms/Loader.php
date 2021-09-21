@@ -208,7 +208,6 @@ class Loader
         foreach ($dropdowns as $key => $dropdown) {
             if (is_a($dropdown, 'Closure') === true) {
                 $area['dropdowns'][$key] = [
-                    'pattern' => $key,
                     'options' => $dropdown
                 ];
             }

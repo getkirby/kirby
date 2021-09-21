@@ -441,15 +441,6 @@ class Panel
         $routes    = [];
 
         foreach ($dropdowns as $name => $dropdown) {
-
-            // dropdown is defined as closure
-            if (is_a($dropdown, 'Closure') === true) {
-                $dropdown = [
-                    'pattern' => $name,
-                    'options' => $dropdown
-                ];
-            }
-
             // create the full pattern with dropdowns prefix
             $pattern = 'dropdowns/' . trim(($dropdown['pattern'] ?? $name), '/');
 
