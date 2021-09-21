@@ -21,13 +21,11 @@ export default {
       theme: null
     };
   },
-  created() {
-    this.load()
-      .then(response => {
-        this.headline = response.headline;
-        this.text = response.text;
-        this.theme = response.theme || "info";
-      });
+  async created() {
+    const response = await this.load()
+    this.headline  = response.headline;
+    this.text      = response.text;
+    this.theme     = response.theme || "info";
   }
 };
 </script>
