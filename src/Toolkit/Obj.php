@@ -23,8 +23,8 @@ class Obj extends stdClass
      */
     public function __construct(array $data = [])
     {
-        foreach ($data as $key => $val) {
-            $this->$key = $val;
+        foreach ($data as $key => $value) {
+            $this->set($key, $value);
         }
     }
 
@@ -54,7 +54,7 @@ class Obj extends stdClass
      * Magic property getter
      *
      * @param string $property
-     * @return mixed
+     * @return null
      */
     public function __get(string $property)
     {
@@ -74,6 +74,17 @@ class Obj extends stdClass
     }
 
     /**
+     * Property Setter
+     *
+     * @param string $property
+     * @param mixed $value
+     */
+    public function set(string $property, $value = null)
+    {
+        $this->$property = $value;
+    }
+
+    /**
      * Converts the object to an array
      *
      * @return array
@@ -83,7 +94,10 @@ class Obj extends stdClass
         $result = [];
 
         foreach ((array)$this as $key => $value) {
-            if (is_object($value) === true && method_exists($value, 'toArray')) {
+            if (
+                is_object($value) === true &&
+                method_exists($value, 'toArray')
+            ) {
                 $result[$key] = $value->toArray();
             } else {
                 $result[$key] = $value;

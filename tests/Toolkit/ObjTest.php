@@ -19,6 +19,14 @@ class ObjTest extends TestCase
         $this->assertNull($obj->foo);
     }
 
+    public function testSet()
+    {
+        $obj = new Obj();
+        $this->assertNull($obj->foo);
+        $obj->set('foo', 'bar');
+        $this->assertSame('bar', $obj->get('foo'));
+    }
+
     public function testToArray()
     {
         $obj = new Obj($expected = [
