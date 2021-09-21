@@ -62,6 +62,28 @@ class LoaderTest extends TestCase
     }
 
     /**
+     * @covers ::area
+     */
+    public function testAreaDropdownPlugin()
+    {
+        $this->app = $this->app->clone([
+            'areas' => [
+                'site' => [
+                    'dropdowns' => [
+                        'page' => function () {
+                            return 'foo';
+                        }
+                    ]
+                ]
+            ]
+        ]);
+
+        $area = $this->app->load()->area('site');
+
+        $this->assertSame('foo', $area['dropdowns']['page']['options']());
+    }
+
+    /**
      * @covers ::areas
      */
     public function testAreas()

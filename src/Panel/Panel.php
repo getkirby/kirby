@@ -440,17 +440,25 @@ class Panel
         $dropdowns = $area['dropdowns'] ?? [];
         $routes    = [];
 
-        foreach ($dropdowns as $pattern => $action) {
+        foreach ($dropdowns as $name => $dropdown) {
+
+            // dropdown is defined as closure
+            if (is_a($dropdown, 'Closure') === true) {
+                $dropdown = [
+                    'pattern' => $name,
+                    'options' => $dropdown
+                ];
+            }
 
             // create the full pattern with dropdowns prefix
-            $pattern = 'dropdowns/' . trim($pattern, '/');
+            $pattern = 'dropdowns/' . trim(($dropdown['pattern'] ?? $name), '/');
 
             // load event
             $routes[] = [
                 'pattern' => $pattern,
                 'type'    => 'dropdown',
                 'area'    => $areaId,
-                'action'  => $action
+                'action'  => $dropdown['options'] ?? $dropdown['action']
             ];
         }
 
