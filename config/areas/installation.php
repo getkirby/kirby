@@ -29,7 +29,7 @@ return function ($kirby) {
                     ];
                 }
             ],
-            'installationFallback' => [
+            'installation.fallback' => [
                 'pattern' => '(:all)',
                 'auth'    => false,
                 'action'  => function () {
