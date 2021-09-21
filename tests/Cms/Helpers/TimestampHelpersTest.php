@@ -96,4 +96,22 @@ class TimestampHelpersTest extends TestCase
         $result = date('Y-m-d H:i:s', timestamp('2021-08-31 23:59:00', 'year'));
         $this->assertSame('2022-01-01 00:00:00', $result);
     }
+
+    public function testStep1YearWithCustomBase(): void
+    {
+        $value = '2021-05-17 00:00:00';
+
+        $result = date('Y-m-d H:i:s', timestamp($value, ['unit' => 'year', 'size' => 3]));
+        $this->assertSame('2021-01-01 00:00:00', $result);
+
+        $result = date('Y-m-d H:i:s', timestamp($value, ['unit' => 'year', 'size' => 3, 'base' => '2019-01-01']));
+        $this->assertSame('2022-01-01 00:00:00', $result);
+    }
+
+    public function testInvalidStep(): void
+    {
+        $this->expectException('Exception');
+        $this->expectExceptionMessage('Invalid step interval unit');
+        timestamp('2021-05-17 00:00:00', 'yoghurt');
+    }
 }

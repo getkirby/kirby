@@ -845,12 +845,15 @@ function timestamp(?string $date = null, $step = null): ?int
             $century  = floor(date('Y', $date) / 100) * 100;
             $base     = date($century . '-01-01 00:00:00', $date);
             break;
+        default:
+            throw new Exception('Invalid step interval unit');
+            break;
     }
 
     // create period from reference date to maximum date
     // with points at each step-sized interval
     $interval = new \DateInterval($interval);
-    $min      = new \DateTimeImmutable($base);
+    $min      = new \DateTimeImmutable($step['base'] ?? $base);
     $max      = (new \DateTimeImmutable())->setTimestamp($date)->add($interval);
     $period   = new \DatePeriod($min, $interval, $max);
 
@@ -869,8 +872,6 @@ function timestamp(?string $date = null, $step = null): ?int
             return $option;
         }
     }
-
-    return null;
 }
 
 /**
