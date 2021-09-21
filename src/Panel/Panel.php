@@ -398,10 +398,10 @@ class Panel
         $dialogs = $area['dialogs'] ?? [];
         $routes  = [];
 
-        foreach ($dialogs as $pattern => $dialog) {
+        foreach ($dialogs as $key => $dialog) {
 
             // create the full pattern with dialogs prefix
-            $pattern = 'dialogs/' . trim($pattern, '/');
+            $pattern = 'dialogs/' . trim(($dialog['pattern'] ?? $key), '/');
 
             // load event
             $routes[] = [
