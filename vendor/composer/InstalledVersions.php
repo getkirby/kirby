@@ -27,8 +27,8 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => '3.6.0-alpha.4',
-    'version' => '3.6.0.0-alpha4',
+    'pretty_version' => '3.6.0-beta.1',
+    'version' => '3.6.0.0-beta1',
     'aliases' => 
     array (
     ),
@@ -57,8 +57,8 @@ private static $installed = array (
     ),
     'getkirby/cms' => 
     array (
-      'pretty_version' => '3.6.0-alpha.4',
-      'version' => '3.6.0.0-alpha4',
+      'pretty_version' => '3.6.0-beta.1',
+      'version' => '3.6.0.0-beta1',
       'aliases' => 
       array (
       ),
@@ -84,12 +84,12 @@ private static $installed = array (
     ),
     'laminas/laminas-zendframework-bridge' => 
     array (
-      'pretty_version' => '1.3.0',
-      'version' => '1.3.0.0',
+      'pretty_version' => '1.4.0',
+      'version' => '1.4.0.0',
       'aliases' => 
       array (
       ),
-      'reference' => '13af2502d9bb6f7d33be2de4b51fb68c6cdb476e',
+      'reference' => 'bf180a382393e7db5c1e8d0f2ec0c4af9c724baf',
     ),
     'league/color-extractor' => 
     array (
