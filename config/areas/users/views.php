@@ -60,7 +60,7 @@ return [
             return Find::user($id)->panel()->view();
         }
     ],
-    'userFile' => [
+    'user.file' => [
         'pattern' => 'users/(:any)/files/(:any)',
         'action'  => function (string $id, string $filename) {
             return Find::file('users/' . $id, $filename)->panel()->view();
