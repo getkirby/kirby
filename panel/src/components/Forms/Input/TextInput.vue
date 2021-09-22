@@ -47,19 +47,13 @@ export const props = {
     required
   ],
   props: {
-    autocomplete: {
-      type: [Boolean, String],
-      default: "off"
-    },
+    autocomplete: [Boolean, String],
     maxlength: Number,
     minlength: Number,
     pattern: String,
     placeholder: String,
     preselect: Boolean,
-    spellcheck: {
-      type: [Boolean, String],
-      default: "off"
-    },
+    spellcheck: [Boolean, String],
     type: {
       type: String,
       default: "text"
