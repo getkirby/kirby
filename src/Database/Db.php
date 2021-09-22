@@ -190,7 +190,7 @@ Db::$queries['column'] = function (string $table, string $column, $where = null,
  * @param array $values An array of values which should be inserted
  * @return int ID of the inserted row
  */
-Db::$queries['insert'] = function (string $table, array $values): int {
+Db::$queries['insert'] = function (string $table, array $values) {
     return Db::table($table)->insert($values);
 };
 
