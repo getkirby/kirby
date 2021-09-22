@@ -186,7 +186,7 @@ Db::$queries['column'] = function (string $table, string $column, $where = null,
  *
  * @param string $table The name of the table which should be queried
  * @param array $values An array of values which should be inserted
- * @return int ID of the inserted row
+ * @return mixed Returns the last inserted id on success or false
  */
 Db::$queries['insert'] = function (string $table, array $values) {
     return Db::table($table)->insert($values);
