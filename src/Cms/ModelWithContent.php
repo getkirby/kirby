@@ -540,7 +540,7 @@ abstract class ModelWithContent extends Model
     public function toString(string $template = null, array $data = [], string $fallback = '', string $handler = 'template'): string
     {
         if ($template === null) {
-            return $this->id();
+            return $this->id() ?? '';
         }
 
         if ($handler !== 'template' && $handler !== 'safeTemplate') {
