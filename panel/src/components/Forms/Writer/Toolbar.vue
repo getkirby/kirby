@@ -10,16 +10,18 @@
         @click="$refs.nodes.toggle()"
       />
       <k-dropdown-content ref="nodes">
-        <k-dropdown-item
-          v-for="(node, nodeType) in nodeButtons"
-          :key="nodeType"
-          :current="isButtonCurrent(node)"
-          :disabled="isButtonDisabled(node)"
-          :icon="node.icon"
-          @click="command(node.command || nodeType)"
-        >
-          {{ node.label }}
-        </k-dropdown-item>
+        <template v-for="(node, nodeType) in nodeButtons">
+          <k-dropdown-item
+            :key="nodeType"
+            :current="isButtonCurrent(node)"
+            :disabled="isButtonDisabled(node)"
+            :icon="node.icon"
+            @click="command(node.command || nodeType)"
+          >
+            {{ node.label }}
+          </k-dropdown-item>
+          <hr v-if="needDividerAfterNode(node)" :key="nodeType + '-divider'">
+        </template>
       </k-dropdown-content>
     </k-dropdown>
 
@@ -130,6 +132,17 @@ export default {
       }
 
       return false;
+    },
+    needDividerAfterNode(node) {
+      let afterNodes = ['paragraph'];
+      let nodeButtons = Object.keys(this.nodeButtons);
+
+      // add divider if list node available
+      if (nodeButtons.includes("bulletList") || nodeButtons.includes("orderedList")) {
+        afterNodes.push('h6');
+      }
+
+      return afterNodes.includes(node.id);
     }
   }
 };
