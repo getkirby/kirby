@@ -138,14 +138,12 @@ export default {
         }
       });
     },
-    toggle() {
+    async toggle() {
       if (this.$refs.list.isOpen === false) {
-        this.load().then(() => {
-          if (this.$refs.list) {
-            this.$refs.list.toggle();
-          }
-        });
-      } else {
+        await this.load();
+      }
+
+      if (this.$refs.list) {
         this.$refs.list.toggle();
       }
     }

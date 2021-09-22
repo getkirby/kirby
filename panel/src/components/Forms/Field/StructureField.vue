@@ -507,50 +507,48 @@ export default {
 
       return items.sortBy(this.sortBy);
     },
-    save() {
+    async save() {
       if (this.currentIndex !== null && this.currentIndex !== undefined) {
-        return this.validate(this.currentModel)
-          .then(() => {
-            if (this.currentIndex === "new") {
-              this.addItem(this.currentModel);
-            } else {
-              this.items[this.currentIndex] = this.currentModel;
-            }
+        try {
+          await this.validate(this.currentModel);
 
-            this.items = this.sort(this.items);
-            this.onInput();
+          if (this.currentIndex === "new") {
+            this.addItem(this.currentModel);
+          } else {
+            this.items[this.currentIndex] = this.currentModel;
+          }
 
-            return true;
-          })
-          .catch(errors => {
-            this.$store.dispatch("notification/error", {
-              message: this.$t("error.form.incomplete"),
-              details: errors
-            });
+          this.items = this.sort(this.items);
+          this.onInput();
 
-            throw errors;
+          return true;
+
+        } catch (errors) {
+          this.$store.dispatch("notification/error", {
+            message: this.$t("error.form.incomplete"),
+            details: errors
           });
-      } else {
-        return Promise.resolve();
+
+          throw errors;
+        }
       }
     },
-    submit() {
-      this.save()
-        .then(this.close)
-        .catch(() => {
-          // don't close
-        });
+    async submit() {
+      try {
+        await this.save()
+        this.close()
+      } catch (e) {
+        // don't close
+      }
     },
-    validate(model) {
-      return this.$api
-        .post(this.endpoints.field + "/validate", model)
-        .then(errors => {
-          if (errors.length > 0) {
-            throw errors;
-          } else {
-            return true;
-          }
-        });
+    async validate(model) {
+      const errors = await this.$api.post(this.endpoints.field + "/validate", model);
+
+      if (errors.length > 0) {
+        throw errors;
+      } else {
+        return true;
+      }
     },
     update(index, column, value) {
       this.items[index][column] = value;

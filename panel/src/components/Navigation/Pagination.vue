@@ -212,34 +212,35 @@ export default {
      * Jump to the given page
      * @public
      */
-    goTo(page) {
-      this.validate(page)
-        .then(() => {
-          if (page < 1) {
-            page = 1;
-          }
+    async goTo(page) {
+      try {
+        await this.validate(page);
 
-          if (page > this.pages) {
-            page = this.pages;
-          }
+        if (page < 1) {
+          page = 1;
+        }
 
-          this.currentPage = page;
+        if (page > this.pages) {
+          page = this.pages;
+        }
 
-          if (this.$refs.dropdown) {
-            this.$refs.dropdown.close();
-          }
+        this.currentPage = page;
 
-          this.$emit("paginate", {
-            page: this.currentPage,
-            start: this.start,
-            end: this.end,
-            limit: this.limit,
-            offset: this.offset
-          });
-        })
-        .catch(() => {
-          // pagination stopped
+        if (this.$refs.dropdown) {
+          this.$refs.dropdown.close();
+        }
+
+        this.$emit("paginate", {
+          page: this.currentPage,
+          start: this.start,
+          end: this.end,
+          limit: this.limit,
+          offset: this.offset
         });
+
+      } catch (e) {
+        // pagination stopped
+      }
     },
     /**
      * Jump to the previous page
