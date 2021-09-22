@@ -47,6 +47,10 @@ export default new Vuex.Store({
     },
     isLoading(context, loading) {
       context.commit(loading === true ? "START_LOADING" : "STOP_LOADING");
+    },
+    navigate(context) {
+      context.dispatch("dialog", null);
+      context.dispatch("drawers/close");
     }
   },
   modules: {

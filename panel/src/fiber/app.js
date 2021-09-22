@@ -18,6 +18,8 @@ export default {
         this.component = component;
         this.page = page;
         this.key = preserveState ? this.key : Date.now();
+        this.$store.dispatch("navigate");
+        document.documentElement.style.overflow = "visible";
       }
     });
   },
