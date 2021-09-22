@@ -874,7 +874,7 @@ class User extends ModelWithContent
         }
 
         if (password_verify($password, $this->password()) !== true) {
-            throw new InvalidArgumentException(['key' => 'user.password.wrong']);
+            throw new InvalidArgumentException(['key' => 'user.password.wrong', 'httpCode' => 401]);
         }
 
         return true;
