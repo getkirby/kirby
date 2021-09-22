@@ -482,13 +482,13 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame('title', $props['fields']['slug']['sync']);
 
         // there's only the default template for now
-        $this->assertArrayNotHasKey('template', $props['fields']);
+        $this->assertSame('hidden', $props['fields']['template']['type']);
 
         $this->assertSame('Create draft', $props['submitButton']);
 
         $this->assertSame('site', $props['value']['parent']);
         $this->assertSame('', $props['value']['slug']);
-        $this->assertNull($props['value']['template']);
+        $this->assertSame('Page', $props['value']['template']);
         $this->assertSame('', $props['value']['title']);
     }
 
