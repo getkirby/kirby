@@ -35,7 +35,11 @@ return [
                 return $value;
             }
 
-            return $model->toSafeString(I18n::translate($value, $value));
+            if (empty($value) === false) {
+                return $model->toSafeString(I18n::translate($value, $value));
+            }
+
+            return $value;
         },
     ],
     'computed' => [
