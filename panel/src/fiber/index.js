@@ -293,7 +293,7 @@
          }
        });
 
-       return await toJson(response);
+       return toJson(response);
      } finally {
        document.dispatchEvent(new Event("fiber.finish"));
      }
