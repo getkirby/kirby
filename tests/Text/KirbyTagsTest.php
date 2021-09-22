@@ -631,4 +631,66 @@ class KirbyTagsTest extends TestCase
         $expected = '<figure class="video"><video controls><source src="https://getkirby.com/sample.mp4" type="video/mp4"></video></figure>';
         $this->assertSame($expected, $page->text()->kt()->value());
     }
+
+    public function globalOptionsProvider(): array
+    {
+        return [
+            [
+                '(image: image.jpg link: https://getkirby.com/)',
+                '<figure><a href="https://getkirby.com/" rel="nofollow"><img alt="" class="image-class" src="/image.jpg"></a></figure>'
+            ],
+            [
+                '(link: http://wikipedia.org text: Wikipedia)',
+                '<p><a class="link-class" href="http://wikipedia.org" rel="noopener noreferrer" target="_blank">Wikipedia</a></p>'
+            ],
+            [
+                '(tel: +49123456789)',
+                '<p><a class="phone" href="tel:+49123456789">+49123456789</a></p>'
+            ],
+            [
+                '(twitter: @getkirby)',
+                '<p><a href="https://twitter.com/getkirby" rel="nofollow" target="_blank">@getkirby</a></p>'
+            ],
+            [
+                '(video: https://www.youtube.com/watch?v=VhP7ZzZysQg)',
+                '<figure class="video-class"><iframe allow="fullscreen" src="https://www.youtube.com/embed/VhP7ZzZysQg"></iframe></figure>'
+            ]
+        ];
+    }
+
+    /**
+     * @dataProvider globalOptionsProvider
+     */
+    public function testGlobalOptions($kirbytext, $expected)
+    {
+        $kirby = new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'options' => [
+                'kirbytext' => [
+                    'image' => [
+                        'rel' => 'nofollow',
+                        'imgclass' => 'image-class'
+                    ],
+                    'link' => [
+                        'class' => 'link-class',
+                        'target' => '_blank'
+                    ],
+                    'tel' => [
+                        'class' => 'phone'
+                    ],
+                    'twitter' => [
+                        'rel' => 'nofollow',
+                        'target' => '_blank',
+                    ],
+                    'video' => [
+                        'class' => 'video-class',
+                    ]
+                ]
+            ]
+        ]);
+
+        $this->assertSame($expected, $kirby->kirbytext($kirbytext));
+    }
 }
