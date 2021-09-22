@@ -28,11 +28,8 @@ export default new Vuex.Store({
     SET_FATAL(state, html) {
       state.fatal = html;
     },
-    START_LOADING(state) {
-      state.isLoading = true;
-    },
-    STOP_LOADING(state) {
-      state.isLoading = false;
+    SET_LOADING(state, loading) {
+      state.isLoading = loading;
     }
   },
   actions: {
@@ -46,7 +43,7 @@ export default new Vuex.Store({
       context.commit("SET_FATAL", html);
     },
     isLoading(context, loading) {
-      context.commit(loading === true ? "START_LOADING" : "STOP_LOADING");
+      context.commit("SET_LOADING", loading === true);
     }
   },
   modules: {
