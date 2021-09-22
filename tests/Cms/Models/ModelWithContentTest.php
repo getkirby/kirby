@@ -169,4 +169,13 @@ class ModelWithContentTest extends TestCase
             ]
         ], $model->blueprints('menu'));
     }
+
+    public function testToStringWithoutValue()
+    {
+        $model = new Site();
+        $this->assertSame('', $model->toString());
+
+        $model = new Page(['slug' => 'foo']);
+        $this->assertSame('foo', $model->toString());
+    }
 }
