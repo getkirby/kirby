@@ -216,6 +216,32 @@ class UserTest extends TestCase
         }
     }
 
+    public function testValidatePasswordHttpCode()
+    {
+        $user = new User([
+            'email'    => 'test@getkirby.com',
+            'password' => User::hashPassword('correct-horse-battery-staple')
+        ]);
+
+        $caught = 0;
+
+        try {
+            $user->validatePassword('short');
+        } catch (\Kirby\Exception\InvalidArgumentException $e) {
+            $this->assertSame(400, $e->getHttpCode());
+            $caught++;
+        }
+
+        try {
+            $user->validatePassword('longbutinvalid');
+        } catch (\Kirby\Exception\InvalidArgumentException $e) {
+            $this->assertSame(401, $e->getHttpCode());
+            $caught++;
+        }
+
+        $this->assertSame(2, $caught);
+    }
+
     public function testValidateUndefinedPassword()
     {
         $user = new User([
