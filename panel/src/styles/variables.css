@@ -168,4 +168,17 @@
   --field-input-disabled-color: var(--color-gray-500);
   --field-input-disabled-background: var(--color-white);
   --field-input-disabled-border: 1px solid var(--color-gray-300);
+
+  /* TODO: Remove in 4.0 */
+  --font-family-sans: var(--font-sans);
+  --font-family-mono: var(--font-mono);
+  --font-size-tiny: var(--text-xs);
+  --font-size-small: var(--text-sm);
+  --font-size-medium: var(--text-base);
+  --font-size-large: var(--text-xl);
+  --font-size-huge: var(--text-2xl);
+  --font-size-monster: var(--text-3xl);
+  --box-shadow-dropdown: var(--shadow-dropdown);
+  --box-shadow-item: var(--shadow);
+  --box-shadow-focus: var(--shadow-xl);
 }
