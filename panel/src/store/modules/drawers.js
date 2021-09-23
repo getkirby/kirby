@@ -5,7 +5,11 @@ export default {
   },
   mutations: {
     CLOSE(state, id) {
-      state.open = state.open.filter(item => item.id !== id);
+      if (id) {
+        state.open = state.open.filter(item => item.id !== id);
+      } else {
+        state.open = [];
+      }
     },
     GOTO(state, id) {
       state.open = state.open.filter(item => item.id === id);
