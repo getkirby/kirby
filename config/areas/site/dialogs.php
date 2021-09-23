@@ -263,7 +263,7 @@ return [
             $blueprints = $view->blueprints($section);
 
             // the pre-selected template
-            $template = null;
+            $template = $blueprints[0]['name'] ?? $blueprints[0]['value'] ?? null;
 
             $fields = [
                 'parent' => Field::hidden(),
@@ -275,16 +275,16 @@ return [
                     'required' => true,
                     'sync'     => 'title',
                     'path'     => empty($model->id()) === false ? '/' . $model->id() . '/' : '/'
-                ])
+                ]),
+                'template' => Field::hidden()
             ];
 
+            // only show template field if > 1 templates available
+            // or when in debug mode
             if (count($blueprints) > 1 || option('debug') === true) {
                 $fields['template'] = Field::template($blueprints, [
                     'required' => true
                 ]);
-
-                // preselect the first available template
-                $template = $fields['template']['options'][0]['value'];
             }
 
             return [
