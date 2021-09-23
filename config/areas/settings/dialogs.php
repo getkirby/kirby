@@ -174,15 +174,14 @@ return [
                 ]
             ];
         },
-        /**
-         * @codeCoverageIgnore
-         */
         'submit' => function () {
+            // @codeCoverageIgnoreStart
             kirby()->system()->register(get('license'), get('email'));
             return [
                 'event'   => 'system.register',
                 'message' => t('license.register.success')
             ];
+            // @codeCoverageIgnoreEnd
         }
     ],
 ];
