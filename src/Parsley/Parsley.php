@@ -71,7 +71,7 @@ class Parsley
 
     public function containsBlock($element): bool
     {
-        if (!$element->childNodes) {
+        if (!$element || !$element->childNodes) {
             return false;
         }
 
@@ -173,7 +173,6 @@ class Parsley
         if (is_a($element, 'DOMComment') === true) {
             return true;
         }
-
 
         // inline context
         if ($this->isInline($element)) {
