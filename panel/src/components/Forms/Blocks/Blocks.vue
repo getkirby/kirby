@@ -1,9 +1,9 @@
 <template>
   <div
+    ref="wrapper"
     :data-empty="blocks.length === 0"
     :data-alt="altKey"
     class="k-blocks"
-    @keydown.meta.c="copy"
   >
     <template v-if="hasFieldsets">
       <k-draggable
@@ -32,6 +32,7 @@
           @chooseToConvert="chooseToConvert(block)"
           @chooseToPrepend="choose(index)"
           @confirmToRemoveSelected="confirmToRemoveSelected"
+          @click.native.stop
           @duplicate="duplicate(block, index)"
           @focus="select(block)"
           @hide="hide(block)"
@@ -129,6 +130,9 @@ export default {
     hasFieldsets() {
       return Object.keys(this.fieldsets).length;
     },
+    isEditing() {
+      return this.$store.state.dialog || this.$store.state.drawers.open.length > 0;
+    },
     isEmpty() {
       return this.blocks.length === 0;
     },
@@ -141,7 +145,7 @@ export default {
     },
     selected() {
       return this.$store.state.blocks.current;
-    }
+    },
   },
   watch: {
     value() {
@@ -156,8 +160,9 @@ export default {
       }
     };
 
+    document.addEventListener("copy", this.copyToClipboard, true);
     document.addEventListener("focus", this.outsideFocus, true);
-    document.addEventListener("paste", this.paste, true);
+    document.addEventListener("paste", this.pasteFromClipboard, true);
 
     this.onAlt = (event) => {
       if (event.altKey) {
@@ -172,10 +177,11 @@ export default {
 
   },
   destroyed() {
-    document.removeEventListener("paste", this.paste);
+    document.removeEventListener("copy", this.copyToClipboard, true);
     document.removeEventListener("focus", this.outsideFocus);
     document.removeEventListener("keydown", this.onAlt);
     document.removeEventListener("keyup", this.onAlt);
+    document.removeEventListener("paste", this.pasteFromClipboard);
   },
   mounted() {
     // focus first wysiwyg block if autofocus enabled
@@ -253,25 +259,8 @@ export default {
     confirmToRemoveSelected() {
       this.$refs.removeSelected.open();
     },
-    copy() {
-      this.batch.forEach(id => {
-        const block = this.blocks.find(element => element.id === id);
-        if (block) {
-          console.log(block);
-        }
-      });
-
-
-      // console.log(Object.values(this.batch));
-
-      // navigator.clipboard.writeText(this.batch);
-      // // console.log(this.batch);
-
-
-      // alert("copy");
-    },
     async convert(type, block) {
-      const index = this.blocks.findIndex(element => element.id === block.id);
+      const index = this.findIndex(block.id);
 
       if (index === -1) {
         return false;
@@ -320,6 +309,46 @@ export default {
 
       this.save();
     },
+    async copyToClipboard(clipboardEvent) {
+      if (this.isEditing) {
+        return false;
+      }
+
+      // get selected blocks
+      let selected = this.batch.length === 0 ? [this.selected] : this.batch;
+
+      // when there are blocks, copy should only
+      // be possible when a block is active and
+      // the cursor is not in a text area
+      if (this.blocks.length > 0) {
+
+        // only copy if something is selected
+        if (selected.length === 0) {
+          return false;
+        }
+
+        // only copy if the cursor is not in a text field
+        if (clipboardEvent.target.closest('.k-writer, input, textarea, [contenteditable]')) {
+          return false;
+        }
+      }
+
+      clipboardEvent.preventDefault();
+
+      let json = [];
+
+      selected.forEach(id => {
+        const block = this.find(id);
+        if (block) {
+          json.push(block);
+        }
+      });
+
+      json = JSON.stringify(json, null, 2);
+
+      clipboardEvent.clipboardData.setData("text/plain", json);
+      clipboardEvent.clipboardData.setData("application/vnd.kirby.blocks", json);
+    },
     async duplicate(block, index) {
       const copy = {
         ...this.$helper.clone(block),
@@ -340,9 +369,21 @@ export default {
         type: block.type,
       };
     },
+    find(id) {
+      return this.blocks.find(element => element.id === id);
+    },
+    findIndex(id) {
+      return this.blocks.findIndex(element => element.id === id);
+    },
     focus(block) {
-      if (this.$refs["block-" + block.id]) {
+      if (block && block.id && this.$refs["block-" + block.id]) {
         this.$refs["block-" + block.id][0].focus();
+        return;
+      }
+
+      if (this.blocks[0]) {
+        this.focus(this.blocks[0]);
+        return;
       }
     },
     focusOrOpen(block) {
@@ -390,24 +431,81 @@ export default {
         this.$refs["block-" + block.id][0].open();
       }
     },
-    async paste(e) {
-      if (this.$refs.selector.isOpen() === false) {
-        return;
+    pasteFromClipboard(clipboardEvent)
+    {
+      // only paste if no drawer or dialog is open
+      if (this.isEditing === true) {
+        if (this.$refs.selector.isOpen() === false) {
+          return false;
+        }
       }
 
-      e.preventDefault();
+      // when there are no blocks, pasting should only
+      // be possible when the selector is open
+      if (this.blocks.length === 0) {
+        if (this.$refs.selector.isOpen() === false) {
+          return false;
+        }
 
-      const html   = e.clipboardData.getData("text/html") || e.clipboardData.getData("text/plain");
-      const blocks = await this.$api.post(this.endpoints.field + "/paste", { html });
+      // when there are blocks, pasting should only
+      // be possible when a block is active and
+      // the cursor is not in a text area
+      } else {
+
+        // only paste if something is selected
+        if (!this.selected && this.batch.length === 0) {
+          return false;
+        }
+
+        // only paste if the cursor is not in a text field
+        if (clipboardEvent.target.closest('.k-writer, input, textarea, [contenteditable]')) {
+          return false;
+        }
+      }
+
+      clipboardEvent.preventDefault();
+
+      let blocks = null;
+
+      // try to fetch blocks from the clipboard
+      try {
+        blocks = JSON.parse(clipboardEvent.clipboardData.getData("application/vnd.kirby.blocks"));
+      } catch (e) {
+        blocks = null;
+      }
+
+      // get regular HTML or plain text content from the clipboard
+      if (blocks === null) {
+        blocks = clipboardEvent.clipboardData.getData("text/html") || clipboardEvent.clipboardData.getData("text/plain");
+      }
+
+      this.paste(blocks);
+    },
+    async paste(input) {
+
+      let blocks = [];
+
+      // if blocks are already passed as an array of objects
+      // we can import them directly without sending them to the API
+      if (Array.isArray(input)) {
+        blocks = input.map(block => {
+          // each block needs a new unique id to avoid collissions
+          block.id = this.$helper.uuid();
+          return block;
+        });
+      } else {
+        // pass html or plain text to the paste endpoint to convert it to blocks
+        blocks = await this.$api.post(this.endpoints.field + "/paste", { html: input });
+      }
 
       if (this.selected !== null) {
-        const index = this.blocks.findIndex(element => element.id === this.selected)
+        const index = this.findIndex(this.selected)
         this.blocks.splice(index + 1, 0, ...blocks);
       } else {
         this.blocks.push(...blocks);
       }
 
-      this.$refs.selector.close();
+      this.save();
     },
     prevNext(index) {
       if (this.blocks[index]) {
@@ -419,7 +517,7 @@ export default {
       }
     },
     remove(block) {
-      const index = this.blocks.findIndex(element => element.id === block.id);
+      const index = this.findIndex(block.id);
 
       if (index !== -1) {
 
@@ -438,7 +536,7 @@ export default {
     },
     removeSelected() {
       this.batch.forEach(id => {
-        const index = this.blocks.findIndex(element => element.id === id);
+        const index = this.findIndex(id);
         if (index !== -1) {
           this.$delete(this.blocks, index);
         }
@@ -479,7 +577,7 @@ export default {
       });
     },
     update(block, content) {
-      const index = this.blocks.findIndex(element => element.id === block.id);
+      const index = this.findIndex(block.id);
       if (index !== -1) {
 
         Object.entries(content).forEach(([key, value]) => {
@@ -497,7 +595,6 @@ export default {
 .k-blocks {
   background: var(--color-white);
   box-shadow: var(--shadow);
-  border-radius: var(--rounded);
 }
 [data-disabled] .k-blocks {
   background: var(--color-background);

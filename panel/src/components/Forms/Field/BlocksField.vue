@@ -2,6 +2,7 @@
   <k-field
     v-bind="$props"
     class="k-blocks-field"
+    @click.native="focus()"
   >
     <template #options>
       <k-dropdown v-if="hasFieldsets">
@@ -76,6 +77,11 @@ export default {
       }
 
       return this.value.length >= this.max;
+    }
+  },
+  methods: {
+    focus() {
+      this.$refs.blocks.focus();
     }
   }
 };
