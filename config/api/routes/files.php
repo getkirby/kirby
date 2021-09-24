@@ -1,12 +1,15 @@
 <?php
 
+// routing pattern to match all models with files
+$pattern = '(site|users/.*?|pages/.*?)';
+
 /**
  * Files Routes
  */
 return [
 
     [
-        'pattern' => '(:all)/files/(:any)/sections/(:any)',
+        'pattern' => $pattern . '/files/(:any)/sections/(:any)',
         'method'  => 'GET',
         'action'  => function (string $path, string $filename, string $sectionName) {
             if ($section = $this->file($path, $filename)->blueprint()->section($sectionName)) {
@@ -15,7 +18,7 @@ return [
         }
     ],
     [
-        'pattern' => '(:all)/files/(:any)/fields/(:any)/(:all?)',
+        'pattern' => $pattern . '/files/(:any)/fields/(:any)/(:all?)',
         'method'  => 'ALL',
         'action'  => function (string $parent, string $filename, string $fieldName, string $path = null) {
             if ($file = $this->file($parent, $filename)) {
@@ -24,14 +27,14 @@ return [
         }
     ],
     [
-        'pattern' => '(:all)/files',
+        'pattern' => $pattern . '/files',
         'method'  => 'GET',
         'action'  => function (string $path) {
             return $this->parent($path)->files()->sorted();
         }
     ],
     [
-        'pattern' => '(:all)/files',
+        'pattern' => $pattern . '/files',
         'method'  => 'POST',
         'action'  => function (string $path) {
             // move_uploaded_file() not working with unit test
@@ -50,7 +53,7 @@ return [
         }
     ],
     [
-        'pattern' => '(:all)/files/search',
+        'pattern' => $pattern . '/files/search',
         'method'  => 'GET|POST',
         'action'  => function (string $path) {
             $files = $this->parent($path)->files();
@@ -63,7 +66,7 @@ return [
         }
     ],
     [
-        'pattern' => '(:all)/files/sort',
+        'pattern' => $pattern . '/files/sort',
         'method'  => 'PATCH',
         'action'  => function (string $path) {
             return $this->parent($path)->files()->changeSort(
@@ -73,21 +76,21 @@ return [
         }
     ],
     [
-        'pattern' => '(:all)/files/(:any)',
+        'pattern' => $pattern . '/files/(:any)',
         'method'  => 'GET',
         'action'  => function (string $path, string $filename) {
             return $this->file($path, $filename);
         }
     ],
     [
-        'pattern' => '(:all)/files/(:any)',
+        'pattern' => $pattern . '/files/(:any)',
         'method'  => 'PATCH',
         'action'  => function (string $path, string $filename) {
             return $this->file($path, $filename)->update($this->requestBody(), $this->language(), true);
         }
     ],
     [
-        'pattern' => '(:all)/files/(:any)',
+        'pattern' => $pattern . '/files/(:any)',
         'method'  => 'POST',
         'action'  => function (string $path, string $filename) {
             return $this->upload(function ($source) use ($path, $filename) {
@@ -96,21 +99,21 @@ return [
         }
     ],
     [
-        'pattern' => '(:all)/files/(:any)',
+        'pattern' => $pattern . '/files/(:any)',
         'method'  => 'DELETE',
         'action'  => function (string $path, string $filename) {
             return $this->file($path, $filename)->delete();
         }
     ],
     [
-        'pattern' => '(:all)/files/(:any)/name',
+        'pattern' => $pattern . '/files/(:any)/name',
         'method'  => 'PATCH',
         'action'  => function (string $path, string $filename) {
             return $this->file($path, $filename)->changeName($this->requestBody('name'));
         }
     ],
     [
-        'pattern' => 'files/search',
+        'pattern' => $pattern . '/search',
         'method'  => 'GET|POST',
         'action'  => function () {
             $files = $this
