@@ -33,6 +33,7 @@ import pasteRule from "./pasteRule";
 import toggleBlockType from './toggleBlockType';
 import toggleList from "./toggleList";
 import updateMark from "./updateMark";
+import getNodeAttrs from "./getNodeAttrs";
 
 export default {
   // prosemirror
@@ -54,6 +55,7 @@ export default {
 
   // custom
   getMarkAttrs,
+  getNodeAttrs,
   markInputRule,
   markIsActive,
   markPasteRule,

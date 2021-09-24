@@ -439,12 +439,12 @@ export default class Editor extends Emitter {
       .filter(node => utils.nodeIsActive(this.state, node))
       .map(node => node.name);
 
-    // this.activeNodeAttrs = Object
-    //   .entries(this.schema.nodes)
-    //   .reduce((nodes, [name, node]) => ({
-    //     ...nodes,
-    //     [name]: utils.getNodeAttrs(this.state, node),
-    //   }), {});
+    this.activeNodeAttrs = Object
+      .entries(this.schema.nodes)
+      .reduce((nodes, [name, node]) => ({
+        ...nodes,
+        [name]: utils.getNodeAttrs(this.state, node),
+      }), {});
   }
 
   setContent(content = {}, emitUpdate = false, parseOptions) {

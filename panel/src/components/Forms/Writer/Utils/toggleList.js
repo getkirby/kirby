@@ -1,21 +1,23 @@
-import { wrapInList, liftListItem } from "prosemirror-schema-list";
+import {wrapInList, liftListItem} from "prosemirror-schema-list";
 import findParentNode from "./findParentNode";
 
 function isList(node, schema) {
-  return (node.type === schema.nodes.bulletList
-    || node.type === schema.nodes.orderedList
-    || node.type === schema.nodes.todoList)
+  return (
+    node.type === schema.nodes.bulletList ||
+    node.type === schema.nodes.orderedList ||
+    node.type === schema.nodes.todoList
+  )
 }
 
 export default function toggleList(listType, itemType) {
   return (state, dispatch, view) => {
-    const { schema, selection } = state
-    const { $from, $to } = selection
+    const {schema, selection} = state
+    const {$from, $to} = selection
     const range = $from.blockRange($to)
 
     if (!range) {
       return false
-		}
+    }
 
     const parentList = findParentNode(node => isList(node, schema))(selection)
 
@@ -25,7 +27,7 @@ export default function toggleList(listType, itemType) {
       }
 
       if (isList(parentList.node, schema) && listType.validContent(parentList.node.content)) {
-        const { tr } = state
+        const {tr} = state
         tr.setNodeMarkup(parentList.pos, listType)
 
         if (dispatch) {

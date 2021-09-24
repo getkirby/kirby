@@ -5,9 +5,13 @@ export default class Heading extends Node {
   get button() {
     return this.options.levels.map(level => {
       return {
+        id: `h${level}`,
         command: `h${level}`,
-        icon: "title",
-        label: `Heading ${level}`,
+        icon: `h${level}`,
+        label: window.panel.$t("toolbar.button.heading." + level),
+        attrs: { level },
+        name: this.name,
+        when: ['heading', 'paragraph']
       }
     });
   }
@@ -18,7 +22,7 @@ export default class Heading extends Node {
     };
 
     this.options.levels.forEach(level => {
-      commands[`h${level}`] = () => utils.setBlockType(type, { level });
+      commands[`h${level}`] = () => utils.toggleBlockType(type, schema.nodes.paragraph, { level });
     });
 
     return commands;
@@ -26,7 +30,7 @@ export default class Heading extends Node {
 
   get defaults() {
     return {
-      levels: [1, 2, 3],
+      levels: [1, 2, 3, 4, 5, 6],
     };
   }
 

@@ -1,20 +1,27 @@
 <template>
   <div class="k-writer-toolbar">
-    <k-dropdown v-if="Object.keys(nodeButtons).length > 1 && activeNode" @mousedown.native.prevent>
+    <k-dropdown v-if="Object.keys(nodeButtons).length > 1" @mousedown.native.prevent>
       <k-button
-        :icon="activeNode.icon"
-        class="k-writer-toolbar-button k-writer-toolbar-nodes"
+        :icon="activeButton.icon || 'title'"
+        :class="{
+          'k-writer-toolbar-button k-writer-toolbar-nodes': true,
+          'k-writer-toolbar-button-active': !!activeButton
+        }"
         @click="$refs.nodes.toggle()"
       />
       <k-dropdown-content ref="nodes">
-        <k-dropdown-item
-          v-for="(node, nodeType) in nodeButtons"
-          :key="nodeType"
-          :icon="node.icon"
-          @click="command(node.command || nodeType)"
-        >
-          {{ node.label }}
-        </k-dropdown-item>
+        <template v-for="(node, nodeType) in nodeButtons">
+          <k-dropdown-item
+            :key="nodeType"
+            :current="isButtonCurrent(node)"
+            :disabled="isButtonDisabled(node)"
+            :icon="node.icon"
+            @click="command(node.command || nodeType)"
+          >
+            {{ node.label }}
+          </k-dropdown-item>
+          <hr v-if="needDividerAfterNode(node)" :key="nodeType + '-divider'">
+        </template>
       </k-dropdown-content>
     </k-dropdown>
 
@@ -44,6 +51,12 @@ export default {
         return [];
       }
     },
+    activeNodeAttrs: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
     editor: {
       type: Object,
       required: true
@@ -53,15 +66,8 @@ export default {
     }
   },
   computed: {
-    activeNode() {
-
-      const buttonKey = Object.keys(this.nodeButtons).find(buttonKey => this.activeNodes.includes(buttonKey));
-
-      if (buttonKey) {
-        return this.nodeButtons[buttonKey];
-      }
-
-      return false;
+    activeButton() {
+      return Object.values(this.nodeButtons).find(button => this.isButtonActive(button)) || false;
     },
     markButtons() {
       return this.buttons("mark");
@@ -91,6 +97,52 @@ export default {
     },
     command(command, ...args) {
       this.$emit("command", command, ...args);
+    },
+    isButtonActive(button) {
+      // since the list element also contains a paragraph,
+      // it is confused whether the list element is an active node
+      // this solves the issue
+      if (button.name === "paragraph") {
+        return this.activeNodes.length === 1 && this.activeNodes.includes(button.name);
+      }
+
+      let isActiveNodeAttr = true;
+
+      if (button.attrs) {
+        const activeNodeAttrs = Object
+            .values(this.activeNodeAttrs)
+            .find(node => JSON.stringify(node) === JSON.stringify(button.attrs));
+
+        isActiveNodeAttr = Boolean(activeNodeAttrs || false);
+      }
+
+      return isActiveNodeAttr === true && this.activeNodes.includes(button.name);
+    },
+    isButtonCurrent(node) {
+      if (this.activeButton) {
+        return this.activeButton.id === node.id;
+      }
+
+      return false;
+    },
+    isButtonDisabled(node) {
+      if (this.activeButton && this.activeButton.when) {
+        const when = this.activeButton.when;
+        return when.includes(node.name) === false;
+      }
+
+      return false;
+    },
+    needDividerAfterNode(node) {
+      let afterNodes = ['paragraph'];
+      let nodeButtons = Object.keys(this.nodeButtons);
+
+      // add divider if list node available
+      if (nodeButtons.includes("bulletList") || nodeButtons.includes("orderedList")) {
+        afterNodes.push('h6');
+      }
+
+      return afterNodes.includes(node.id);
     }
   }
 };
@@ -141,5 +193,9 @@ export default {
   color: var(--color-black);
   background: var(--color-white);
   margin-top: .5rem;
+}
+.k-writer-toolbar .k-dropdown-content .k-dropdown-item[aria-current] {
+  color: var(--color-focus);
+  font-weight: 500;
 }
 </style>
