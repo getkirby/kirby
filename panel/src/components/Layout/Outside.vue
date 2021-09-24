@@ -1,5 +1,5 @@
 <template>
-  <div :dir="$translation.direction" class="k-panel k-panel-outside">
+  <k-panel class="k-panel-outside">
     <slot />
-  </div>
+  </k-panel>
 </template>
