@@ -521,8 +521,9 @@ class Panel
 
         // language switcher
         if ($kirby->option('languages')) {
+            $defaultLanguage = $kirby->defaultLanguage()->code();
             $session         = $kirby->session();
-            $sessionLanguage = $session->get('panel.language', 'en');
+            $sessionLanguage = $session->get('panel.language', $defaultLanguage);
             $language        = get('language') ?? $sessionLanguage;
 
             // keep the language for the next visit
