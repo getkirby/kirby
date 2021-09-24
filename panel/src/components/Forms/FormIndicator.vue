@@ -77,7 +77,7 @@ export default {
           // populate entry depending on model type
           let entry;
 
-          if (model.id.startsWith("pages/") === true) {
+          if (model.id.startsWith("/pages/") === true) {
             entry = {
               icon: "page",
               label: response.title,
@@ -86,7 +86,7 @@ export default {
               }
             };
 
-          } else if (model.id.startsWith("files/") === true) {
+          } else if (model.id.startsWith("/files/") === true) {
             entry = {
               icon: "image",
               label: response.filename,
@@ -95,7 +95,7 @@ export default {
               }
             };
 
-          } else if (model.id.startsWith("users/") === true) {
+          } else if (model.id.startsWith("/users/") === true) {
             entry = {
               icon: "user",
               label: response.email,
