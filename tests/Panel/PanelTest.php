@@ -552,6 +552,35 @@ class PanelTest extends TestCase
     /**
      * @covers ::setLanguage
      */
+    public function testSetLanguageWithCustomDefault(): void
+    {
+        $this->app = $this->app->clone([
+            'languages' => [
+                [
+                    'code' => 'de',
+                    'name' => 'Deutsch',
+                    'default' => true
+                ],
+                [
+                    'code' => 'en',
+                    'name' => 'English',
+                ],
+            ],
+            'options' => [
+                'languages' => true,
+            ]
+        ]);
+
+        // set for the first time
+        $language = Panel::setLanguage();
+
+        $this->assertSame('de', $language);
+        $this->assertSame('de', $this->app->language()->code());
+    }
+
+    /**
+     * @covers ::setLanguage
+     */
     public function testSetLanguageViaGet(): void
     {
         // switch via get request
