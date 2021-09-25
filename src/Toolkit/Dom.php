@@ -225,11 +225,14 @@ class Dom
             return true;
         }
 
-        if (is_array($allowedAttrs) && static::listContainsName($allowedAttrs, $attr, $options) !== true) {
-            return 'The "' . $attr->name . '" attribute is not included in the global allowlist';
+        if (
+            is_array($allowedAttrs) === true &&
+            static::listContainsName($allowedAttrs, $attr, $options) !== false
+        ) {
+            return true;
         }
 
-        return 'All attributes are blocked by default in the global allowlist';
+        return 'Not included in the global allowlist';
     }
 
     /**
@@ -596,6 +599,22 @@ class Dom
     {
         $name = $element->tagName;
 
+        // check defined namespaces (`xmlns` attributes);
+        // we need to check this first as the namespace can affect
+        // whether the tag name is valid according to the configuration
+        if (is_array($options['allowedNamespaces']) === true) {
+            $simpleXmlElement = simplexml_import_dom($element);
+            foreach ($simpleXmlElement->getDocNamespaces(false, false) as $namespace => $value) {
+                if (array_search($value, $options['allowedNamespaces']) === false) {
+                    $element->removeAttributeNS($value, $namespace);
+                    $errors[] = new InvalidArgumentException(
+                        'The namespace "' . $value . '" is not allowed' .
+                        ' (around line ' . $element->getLineNo() . ')'
+                    );
+                }
+            }
+        }
+
         // check if the tag is blocklisted; remove the element completely
         if (
             static::listContainsName(
@@ -618,7 +637,7 @@ class Dom
 
         // check if the tag is not allowlisted; keep children
         if ($options['allowedTags'] !== true) {
-            $listedName = static::listContainsName($options['allowedTags'], $element, $options);
+            $listedName = static::listContainsName(array_keys($options['allowedTags']), $element, $options);
             $isAllowed  = ($listedName === false) ? false : $options['allowedTags'][$listedName];
 
             if ($isAllowed === false) {
@@ -633,20 +652,6 @@ class Dom
             }
         }
 
-        // check defined namespaces (`xmlns` attributes)
-        if (is_array($options['allowedNamespaces']) === true) {
-            $simpleXmlElement = simplexml_import_dom($element);
-            foreach ($simpleXmlElement->getDocNamespaces(false, false) as $namespace => $value) {
-                if (array_search($value, $options['allowedNamespaces']) === false) {
-                    $element->removeAttributeNS($value, $namespace);
-                    $errors[] = new InvalidArgumentException(
-                        'The namespace "' . $value . '" is not allowed' .
-                        ' (around line ' . $element->getLineNo() . ')'
-                    );
-                }
-            }
-        }
-
         // check attributes
         if ($element->hasAttributes()) {
             // convert the `DOMNodeList` to an array first, otherwise removing
@@ -654,8 +659,8 @@ class Dom
             foreach (iterator_to_array($element->attributes) as $attr) {
                 $this->sanitizeAttr($attr, $options, $errors);
 
-                // custom check
-                if ($options['attrCallback']) {
+                // custom check (if the attribute is still in the document)
+                if ($attr->ownerElement !== null && $options['attrCallback']) {
                     $errors = array_merge($errors, $options['attrCallback']($attr) ?? []);
                 }
             }
