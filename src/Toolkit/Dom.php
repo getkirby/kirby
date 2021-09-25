@@ -5,7 +5,9 @@ namespace Kirby\Toolkit;
 use DOMAttr;
 use DOMDocument;
 use DOMDocumentType;
+use DOMElement;
 use DOMNode;
+use DOMProcessingInstruction;
 use DOMXPath;
 use Kirby\Exception\InvalidArgumentException;
 
@@ -25,7 +27,7 @@ class Dom
     /**
      * Cache for the HTML body
      *
-     * @var \DOMNode|null
+     * @var \DOMElement|null
      */
     protected $body;
 
@@ -102,7 +104,7 @@ class Dom
     /**
      * Returns the HTML body if one exists
      *
-     * @return \DOMNode|null
+     * @return \DOMElement|null
      */
     public function body()
     {
@@ -166,8 +168,7 @@ class Dom
     }
 
     /**
-     * Sanitizes all elements in the DOM according
-     * to the provided configuration
+     * Sanitizes the DOM according to the provided configuration
      *
      * @param array $options Array with the following options:
      *                       - `allowedAttrPrefixes`: Global list of allowed attribute prefixes
@@ -191,8 +192,8 @@ class Dom
      *                       be removed completely including their children
      *                       - `doctypeCallback`: Closure that will receive the `DOMDocumentType`
      *                       and may throw exceptions on validation errors
-     *                       - `nodeCallback`: Closure that will receive each `DOMNode` and may
-     *                       modify it; the callback must return an array with exception
+     *                       - `elementCallback`: Closure that will receive each `DOMElement` and
+     *                       may modify it; the callback must return an array with exception
      *                       objects for each modification
      *                       - `urlAttrs`: List of attributes that may contain URLs
      * @return array List of validation errors during sanitization
@@ -211,7 +212,7 @@ class Dom
             'attrCallback'        => null,
             'disallowedTags'      => [],
             'doctypeCallback'     => null,
-            'nodeCallback'        => null,
+            'elementCallback'     => null,
             'urlAttrs'            => ['href', 'src', 'xlink:href'],
         ], $options);
 
@@ -233,9 +234,9 @@ class Dom
         }
 
         // validate all elements in the document tree
-        $nodes = $this->doc->getElementsByTagName('*');
-        foreach (iterator_to_array($nodes) as $node) {
-            $this->sanitizeNode($node, $options, $errors);
+        $elements = $this->doc->getElementsByTagName('*');
+        foreach (iterator_to_array($elements) as $element) {
+            $this->sanitizeElement($element, $options, $errors);
         }
 
         return $errors;
@@ -326,8 +327,8 @@ class Dom
         }
 
         // configuration per tag name
-        $nodeName           = $attr->ownerElement->nodeName;
-        $allowedAttrsForTag = $allowedTags[$nodeName] ?? true;
+        $tagName            = $attr->ownerElement->tagName;
+        $allowedAttrsForTag = $allowedTags[$tagName] ?? true;
 
         // the element allows all global attributes
         if ($allowedAttrsForTag === true) {
@@ -346,10 +347,10 @@ class Dom
                 return true;
             }
 
-            return 'Not allowed by the "' . $nodeName . '" element';
+            return 'Not allowed by the "' . $tagName . '" element';
         }
 
-        return 'The "' . $nodeName . '" element does not allow attributes';
+        return 'The "' . $tagName . '" element does not allow attributes';
     }
 
     /**
@@ -457,16 +458,16 @@ class Dom
     /**
      * Sanitizes an attribute
      *
-     * @param \DOMAttr $node
+     * @param \DOMAttr $attr
      * @param array $options See `Dom::sanitize()`
      * @param array $errors Array to store additional errors in by reference
      * @return void
      */
     protected function sanitizeAttr(DOMAttr $attr, array $options, array &$errors): void
     {
-        $name  = $attr->name;
-        $node  = $attr->ownerElement;
-        $value = $attr->value;
+        $element = $attr->ownerElement;
+        $name    = $attr->name;
+        $value   = $attr->value;
 
         $allowed = $this->isAllowedAttr($attr, $options);
         if ($allowed !== true) {
@@ -475,7 +476,7 @@ class Dom
                 $attr->getLineNo() . ') is not allowed: ' .
                 $allowed
             );
-            $node->removeAttribute($name);
+            $element->removeAttribute($name);
         } elseif ($this->isUrlAttr($attr, $options) === true) {
             $allowed = $this->isAllowedUrl($value, $options);
             if ($allowed !== true) {
@@ -484,7 +485,7 @@ class Dom
                     $name . ' (line ' . $attr->getLineNo() . '): ' .
                     $allowed
                 );
-                $node->removeAttribute($name);
+                $element->removeAttribute($name);
             }
 
             // TODO: escape XSS attacks in query parameters
@@ -498,7 +499,7 @@ class Dom
                         $name . ' (line ' . $attr->getLineNo() . '): ' .
                         $allowed
                     );
-                    $node->removeAttribute($name);
+                    $element->removeAttribute($name);
                 }
             }
 
@@ -510,40 +511,40 @@ class Dom
     /**
      * Sanitizes the doctype
      *
-     * @param \DOMDocumentType $node
+     * @param \DOMDocumentType $doctype
      * @param array $options See `Dom::sanitize()`
      * @param array $errors Array to store additional errors in by reference
      * @return void
      */
-    protected function sanitizeDoctype(DOMDocumentType $node, array $options, array &$errors): void
+    protected function sanitizeDoctype(DOMDocumentType $doctype, array $options, array &$errors): void
     {
         try {
-            $this->validateDoctype($node, $options);
+            $this->validateDoctype($doctype, $options);
         } catch (InvalidArgumentException $e) {
             $errors[] = $e;
-            $this->remove($node);
+            $this->remove($doctype);
         }
     }
 
     /**
-     * Sanitizes a single DOM node and its attribute
+     * Sanitizes a single DOM element and its attribute
      *
-     * @param \DOMNode $node
+     * @param \DOMElement $element
      * @param array $options See `Dom::sanitize()`
      * @param array $errors Array to store additional errors in by reference
      * @return void
      */
-    protected function sanitizeNode(DOMNode $node, array $options, array &$errors): void
+    protected function sanitizeElement(DOMElement $element, array $options, array &$errors): void
     {
-        $name = $node->nodeName;
+        $name = $element->tagName;
 
         if (in_array($name, $options['disallowedTags']) === true) {
-            // the tag is blocklisted; remove the node completely
+            // the tag is blocklisted; remove the element completely
             $errors[] = new InvalidArgumentException(
                 'The "' . $name . '" element (line ' .
-                $node->getLineNo() . ') is not allowed'
+                $element->getLineNo() . ') is not allowed'
             );
-            $this->remove($node);
+            $this->remove($element);
 
             return;
         } elseif (
@@ -553,18 +554,18 @@ class Dom
             // the tag is not allowlisted, but also not blocklisted; keep children
             $errors[] = new InvalidArgumentException(
                 'The "' . $name . '" element (line ' .
-                $node->getLineNo() . ') is not allowed, ' .
+                $element->getLineNo() . ') is not allowed, ' .
                 'but its children can be kept'
             );
-            $this->unwrap($node);
+            $this->unwrap($element);
 
             return;
         }
 
-        if ($node->hasAttributes()) {
+        if ($element->hasAttributes()) {
             // convert the `DOMNodeList` to an array first, otherwise removing
             // attributes would shift the list and make subsequent operations fail
-            foreach (iterator_to_array($node->attributes) as $attr) {
+            foreach (iterator_to_array($element->attributes) as $attr) {
                 $this->sanitizeAttr($attr, $options, $errors);
 
                 // custom check
@@ -575,30 +576,30 @@ class Dom
         }
 
         // custom check
-        if ($options['nodeCallback']) {
-            $errors = array_merge($errors, $options['nodeCallback']($node) ?? []);
+        if ($options['elementCallback']) {
+            $errors = array_merge($errors, $options['elementCallback']($element) ?? []);
         }
     }
 
     /**
      * Sanitizes a single XML processing instruction
      *
-     * @param \DOMNode $node
+     * @param \DOMProcessingInstruction $pi
      * @param array $options See `Dom::sanitize()`
      * @param array $errors Array to store additional errors in by reference
      * @return void
      */
-    protected function sanitizePI(DOMNode $node, array $options, array &$errors): void
+    protected function sanitizePI(DOMProcessingInstruction $pi, array $options, array &$errors): void
     {
-        $name = $node->nodeName;
+        $name = $pi->nodeName;
 
         // check for allow-listed processing instructions
         if (in_array($name, $options['allowedPIs']) === false) {
             $errors[] = new InvalidArgumentException(
                 'The "' . $name . '" processing instruction (line ' .
-                $node->getLineNo() . ') is not allowed'
+                $pi->getLineNo() . ') is not allowed'
             );
-            $this->remove($node);
+            $this->remove($pi);
         }
     }
 

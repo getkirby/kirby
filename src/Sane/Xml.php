@@ -3,7 +3,7 @@
 namespace Kirby\Sane;
 
 use DOMDocumentType;
-use DOMNode;
+use DOMElement;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Toolkit\Str;
 
@@ -21,28 +21,28 @@ use Kirby\Toolkit\Str;
 class Xml extends DomHandler
 {
     /**
-     * Custom callback for additional node sanitization
+     * Custom callback for additional element sanitization
      * @internal
      *
-     * @param \DOMNode $node
+     * @param \DOMElement $element
      * @return array Array with exception objects for each modification
      */
-    public static function sanitizeNode(DOMNode $node): array
+    public static function sanitizeElement(DOMElement $element): array
     {
         $errors = [];
 
         // if we are validating an XML file, block all SVG and HTML namespaces
-        if (static::class === self::class && is_a($node, 'DOMElement') === true) {
-            $simpleXmlElement = simplexml_import_dom($node);
+        if (static::class === self::class && is_a($element, 'DOMElement') === true) {
+            $simpleXmlElement = simplexml_import_dom($element);
             foreach ($simpleXmlElement->getDocNamespaces(false, false) as $namespace => $value) {
                 if (
                     Str::contains($value, 'html', true) === true ||
                     Str::contains($value, 'svg', true) === true
                 ) {
-                    $node->removeAttributeNS($value, $namespace);
+                    $element->removeAttributeNS($value, $namespace);
                     $errors[] = new InvalidArgumentException(
                         'The namespace is not allowed in XML files' .
-                        ' (around line ' . $node->getLineNo() . ')'
+                        ' (around line ' . $element->getLineNo() . ')'
                     );
                 }
             }

@@ -4,7 +4,7 @@ namespace Kirby\Sane;
 
 use DOMAttr;
 use DOMDocumentType;
-use DOMNode;
+use DOMElement;
 use Kirby\Toolkit\Dom;
 use Kirby\Toolkit\Str;
 
@@ -111,7 +111,7 @@ class DomHandler extends Handler
             'allowedPIs'      => static::$allowedPIs,
             'attrCallback'    => [static::class, 'sanitizeAttr'],
             'doctypeCallback' => [static::class, 'validateDoctype'],
-            'nodeCallback'    => [static::class, 'sanitizeNode'],
+            'elementCallback' => [static::class, 'sanitizeElement'],
         ];
     }
 
@@ -142,13 +142,13 @@ class DomHandler extends Handler
     }
 
     /**
-     * Custom callback for additional node sanitization
+     * Custom callback for additional element sanitization
      * @internal
      *
-     * @param \DOMNode $node
+     * @param \DOMElement $element
      * @return array Array with exception objects for each modification
      */
-    public static function sanitizeNode(DOMNode $node): array
+    public static function sanitizeElement(DOMElement $element): array
     {
         // to be extended in child classes
         return [];
