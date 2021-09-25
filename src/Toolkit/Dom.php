@@ -52,7 +52,6 @@ class Dom
     public function __construct(string $code, string $type = 'HTML')
     {
         $this->doc = new DOMDocument();
-        $this->doc->preserveWhiteSpace = false;
         $this->doc->strictErrorChecking = false;
 
         $loaderSetting = null;
@@ -242,10 +241,22 @@ class Dom
     /**
      * Returns the document markup as string
      *
+     * @param bool $xmlDecl If set to `false`, the XML declaration
+     *                      is omitted from the output
      * @return string
      */
-    public function toString(): string
+    public function toString(bool $xmlDecl = true): string
     {
+        if ($this->type === 'XML' && $xmlDecl === false) {
+            // only return child nodes, which omits the XML declaration
+            $result = '';
+            foreach ($this->doc->childNodes as $node) {
+                $result .= $this->doc->saveXML($node) . "\n";
+            }
+
+            return $result;
+        }
+
         $method = 'save' . $this->type;
         return $this->doc->$method();
     }
