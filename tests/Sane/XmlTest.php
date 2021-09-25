@@ -151,7 +151,7 @@ class XmlTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The namespace is not allowed in XML files (around line 1)');
+        $this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 1)');
         Xml::validateFile($fixture);
     }
 
@@ -163,7 +163,7 @@ class XmlTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The namespace is not allowed in XML files (around line 1)');
+        $this->expectExceptionMessage('The namespace "http://www.w3.org/1999/xhtml" is not allowed (around line 1)');
         Xml::validateFile($fixture);
     }
 
@@ -175,7 +175,7 @@ class XmlTest extends TestCase
         $this->assertStringEqualsFile($sanitized, Xml::sanitize(file_get_contents($fixture)));
 
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The namespace is not allowed in XML files (around line 1)');
+        $this->expectExceptionMessage('The namespace "http://www.w3.org/1999/xhtml" is not allowed (around line 1)');
         Xml::validateFile($fixture);
     }
 

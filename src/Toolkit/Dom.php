@@ -2,6 +2,7 @@
 
 namespace Kirby\Toolkit;
 
+use Closure;
 use DOMAttr;
 use DOMDocument;
 use DOMDocumentType;
@@ -178,6 +179,11 @@ class Dom
      *                       - `allowedDataUris`: List of all MIME types that may be used in
      *                       data attributes (only checked in `urlAttrs`)
      *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
+     *                       - `allowedNamespaces`: Associative array of all allowed namespace URIs;
+     *                       the array keys are reference names that can be referred to from the
+     *                       `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags` and `urlAttrs` lists;
+     *                       the namespace names as used in the document are *not* validated;
+     *                       setting the whole option to `true` will allow any namespace
      *                       - `allowedPIs`: Names of allowed XML processing instructions
      *                       - `allowedTags`: Associative array of all allowed tag names with the
      *                       value of either an array with the list of all allowed attributes for
@@ -207,6 +213,7 @@ class Dom
             'allowedAttrs'        => true,
             'allowedDataUris'     => [],
             'allowedDomains'      => [],
+            'allowedNamespaces'   => true,
             'allowedPIs'          => [],
             'allowedTags'         => true,
             'attrCallback'        => null,
@@ -308,7 +315,6 @@ class Dom
 
     /**
      * Checks for allowed attributes according to the allowlist
-     * and by checking for JavaScript instructions
      *
      * @param \DOMAttr $attr
      * @param array $options
@@ -343,7 +349,7 @@ class Dom
             }
 
             // otherwise the tag configuration decides
-            if (in_array($attr->name, $allowedAttrsForTag) === true) {
+            if ($this->listContainsName($allowedAttrsForTag, $attr, $options) !== false) {
                 return true;
             }
 
@@ -369,14 +375,20 @@ class Dom
             return true;
         }
 
-        foreach ($options['allowedAttrPrefixes'] as $prefix) {
-            if (Str::startsWith($attr->name, $prefix) === true) {
-                // the attribute starts with an allowed prefix
-                return true;
-            }
+        if (
+            $this->listContainsName(
+                $options['allowedAttrPrefixes'],
+                $attr,
+                $options,
+                function ($expected, $real): bool {
+                    return Str::startsWith($real, $expected);
+                }
+            ) !== false
+        ) {
+            return true;
         }
 
-        if (is_array($allowedAttrs) && in_array($attr->name, $allowedAttrs) !== true) {
+        if (is_array($allowedAttrs) && $this->listContainsName($allowedAttrs, $attr, $options) !== true) {
             return 'The "' . $attr->name . '" attribute is not included in the global allowlist';
         }
 
@@ -434,22 +446,62 @@ class Dom
     }
 
     /**
-     * Checks if an attribute is a URL attribute
+     * Checks if a list contains the name of a node considering
+     * the allowed namespaces
      *
-     * @param \DOMAttr $attr
+     * @param array $list
+     * @param \DOMNode $node
      * @param array $options See `Dom::sanitize()`
-     * @return bool
+     * @param \Closure|null Comparison callback that returns whether the expected and real name match
+     * @return string|false Matched name in the list or `false`
      */
-    protected function isUrlAttr(DOMAttr $attr, array $options): bool
+    protected function listContainsName(array $list, DOMNode $node, array $options, ?Closure $compare = null)
     {
-        // direct match
-        if (in_array($attr->name, $options['urlAttrs']) === true) {
-            return true;
+        $allowedNamespaces = $options['allowedNamespaces'];
+        $localName         = $node->localName;
+
+        if ($compare === null) {
+            $compare = function ($expected, $real): bool {
+                return $expected === $real;
+            };
         }
 
-        // match inside a namespace
-        if (in_array($attr->localName, $options['urlAttrs']) === true) {
-            return true;
+        if ($allowedNamespaces === true) {
+            // take the list as it is and only consider
+            // exact matches of the local name (which will
+            // contain a namespace if that namespace name
+            // is not defined in the document)
+            if (in_array($localName, $list) === true) {
+                return $localName;
+            }
+
+            return false;
+        }
+
+        // we need to consider the namespaces,
+        // so look at each item individually
+        foreach ($list as $item) {
+            // try to find the expected origin namespace URI
+            $namespaceUri = null;
+            $itemLocal    = $item;
+            if (Str::contains($item, ':') === true) {
+                list($namespaceName, $itemLocal) = explode(':', $item);
+                $namespaceUri = $allowedNamespaces[$namespaceName] ?? null;
+            } else {
+                // list items without namespace are from the default namespace
+                $namespaceUri = $allowedNamespaces[''] ?? null;
+            }
+
+            // try if we can find an exact namespaced match
+            if ($namespaceUri === $node->namespaceURI && $compare($itemLocal, $localName) === true) {
+                return $item;
+            }
+
+            // also try to match the fully-qualified name
+            // if the document doesn't define the namespace
+            if ($node->namespaceURI === null && $compare($item, $node->nodeName) === true) {
+                return $item;
+            }
         }
 
         return false;
@@ -477,7 +529,7 @@ class Dom
                 $allowed
             );
             $element->removeAttribute($name);
-        } elseif ($this->isUrlAttr($attr, $options) === true) {
+        } elseif ($this->listContainsName($options['urlAttrs'], $attr, $options) !== false) {
             $allowed = $this->isAllowedUrl($value, $options);
             if ($allowed !== true) {
                 $errors[] = new InvalidArgumentException(
@@ -538,8 +590,8 @@ class Dom
     {
         $name = $element->tagName;
 
-        if (in_array($name, $options['disallowedTags']) === true) {
-            // the tag is blocklisted; remove the element completely
+        // check if the tag is blocklisted; remove the element completely
+        if ($this->listContainsName($options['disallowedTags'], $element, $options) !== false) {
             $errors[] = new InvalidArgumentException(
                 'The "' . $name . '" element (line ' .
                 $element->getLineNo() . ') is not allowed'
@@ -547,21 +599,40 @@ class Dom
             $this->remove($element);
 
             return;
-        } elseif (
-            $options['allowedTags'] !== true &&
-            ($options['allowedTags'][$name] ?? false) === false
-        ) {
-            // the tag is not allowlisted, but also not blocklisted; keep children
-            $errors[] = new InvalidArgumentException(
-                'The "' . $name . '" element (line ' .
-                $element->getLineNo() . ') is not allowed, ' .
-                'but its children can be kept'
-            );
-            $this->unwrap($element);
-
-            return;
         }
 
+        // check if the tag is not allowlisted; keep children
+        if ($options['allowedTags'] !== true) {
+            $listedName = $this->listContainsName($options['allowedTags'], $element, $options);
+            $isAllowed  = ($listedName === false) ? false : $options['allowedTags'][$listedName];
+
+            if ($isAllowed === false) {
+                $errors[] = new InvalidArgumentException(
+                    'The "' . $name . '" element (line ' .
+                    $element->getLineNo() . ') is not allowed, ' .
+                    'but its children can be kept'
+                );
+                $this->unwrap($element);
+
+                return;
+            }
+        }
+
+        // check defined namespaces (`xmlns` attributes)
+        if (is_array($options['allowedNamespaces']) === true) {
+            $simpleXmlElement = simplexml_import_dom($element);
+            foreach ($simpleXmlElement->getDocNamespaces(false, false) as $namespace => $value) {
+                if (array_search($value, $options['allowedNamespaces']) === false) {
+                    $element->removeAttributeNS($value, $namespace);
+                    $errors[] = new InvalidArgumentException(
+                        'The namespace "' . $value . '" is not allowed' .
+                        ' (around line ' . $element->getLineNo() . ')'
+                    );
+                }
+            }
+        }
+
+        // check attributes
         if ($element->hasAttributes()) {
             // convert the `DOMNodeList` to an array first, otherwise removing
             // attributes would shift the list and make subsequent operations fail

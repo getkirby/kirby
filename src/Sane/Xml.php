@@ -32,7 +32,7 @@ class Xml extends DomHandler
         $errors = [];
 
         // if we are validating an XML file, block all SVG and HTML namespaces
-        if (static::class === self::class && is_a($element, 'DOMElement') === true) {
+        if (static::class === self::class) {
             $simpleXmlElement = simplexml_import_dom($element);
             foreach ($simpleXmlElement->getDocNamespaces(false, false) as $namespace => $value) {
                 if (
@@ -41,7 +41,7 @@ class Xml extends DomHandler
                 ) {
                     $element->removeAttributeNS($value, $namespace);
                     $errors[] = new InvalidArgumentException(
-                        'The namespace is not allowed in XML files' .
+                        'The namespace "' . $value . '" is not allowed' .
                         ' (around line ' . $element->getLineNo() . ')'
                     );
                 }
