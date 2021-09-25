@@ -123,6 +123,167 @@ class Dom
     }
 
     /**
+     * Extracts all URLs wrapped in a url() wrapper. E.g. for style attributes.
+     * @internal
+     *
+     * @param string $value
+     * @return array
+     */
+    public static function extractUrls(string $value): array
+    {
+        // remove invisible ASCII characters from the value
+        $value = trim(preg_replace('/[^ -~]/u', '', $value));
+
+        $count = preg_match_all(
+            '!url\(\s*[\'"]?(.*?)[\'"]?\s*\)!i',
+            $value,
+            $matches,
+            PREG_PATTERN_ORDER
+        );
+
+        if (is_int($count) === true && $count > 0) {
+            return $matches[1];
+        }
+
+        return [];
+    }
+
+    /**
+     * Checks for allowed attributes according to the allowlist
+     * @internal
+     *
+     * @param \DOMAttr $attr
+     * @param array $options
+     * @return true|string If not allowed, an error message is returned
+     */
+    public static function isAllowedAttr(DOMAttr $attr, array $options)
+    {
+        $allowedTags = $options['allowedTags'];
+
+        // check if the attribute is in the list of global allowed attributes
+        $isAllowedGlobalAttr = static::isAllowedGlobalAttr($attr, $options);
+
+        // no specific tag attribute list
+        if (is_array($allowedTags) === false) {
+            return $isAllowedGlobalAttr;
+        }
+
+        // configuration per tag name
+        $tagName            = $attr->ownerElement->tagName;
+        $allowedAttrsForTag = $allowedTags[$tagName] ?? true;
+
+        // the element allows all global attributes
+        if ($allowedAttrsForTag === true) {
+            return $isAllowedGlobalAttr;
+        }
+
+        // specific attributes are allowed in addition to the global ones
+        if (is_array($allowedAttrsForTag) === true) {
+            // if allowed globally, we don't need further checks
+            if ($isAllowedGlobalAttr === true) {
+                return true;
+            }
+
+            // otherwise the tag configuration decides
+            if (static::listContainsName($allowedAttrsForTag, $attr, $options) !== false) {
+                return true;
+            }
+
+            return 'Not allowed by the "' . $tagName . '" element';
+        }
+
+        return 'The "' . $tagName . '" element does not allow attributes';
+    }
+
+    /**
+     * Checks for allowed attributes according to the global allowlist
+     * @internal
+     *
+     * @param \DOMAttr $attr
+     * @param array $options
+     * @return true|string If not allowed, an error message is returned
+     */
+    public static function isAllowedGlobalAttr(DOMAttr $attr, array $options)
+    {
+        $allowedAttrs = $options['allowedAttrs'];
+
+        if ($allowedAttrs === true) {
+            // all attributes are allowed
+            return true;
+        }
+
+        if (
+            static::listContainsName(
+                $options['allowedAttrPrefixes'],
+                $attr,
+                $options,
+                function ($expected, $real): bool {
+                    return Str::startsWith($real, $expected);
+                }
+            ) !== false
+        ) {
+            return true;
+        }
+
+        if (is_array($allowedAttrs) && static::listContainsName($allowedAttrs, $attr, $options) !== true) {
+            return 'The "' . $attr->name . '" attribute is not included in the global allowlist';
+        }
+
+        return 'All attributes are blocked by default in the global allowlist';
+    }
+
+    /**
+     * Checks if the URL is acceptable for URL attributes
+     * @internal
+     *
+     * @param string $url
+     * @param array $options
+     * @return true|string If not allowed, an error message is returned
+     */
+    public static function isAllowedUrl(string $url, array $options)
+    {
+        $url = Str::lower($url);
+
+        // allow empty URL values
+        if (empty($url) === true) {
+            return true;
+        }
+
+        // allow URLs that point to fragments inside the file
+        // as well as site-internal URLs
+        if (in_array(mb_substr($url, 0, 1), ['#', '/']) === true) {
+            return true;
+        }
+
+        // allow specific HTTP(S) URLs
+        if (
+            Str::startsWith($url, 'http://') === true ||
+            Str::startsWith($url, 'https://') === true
+        ) {
+            $hostname = parse_url($url, PHP_URL_HOST);
+
+            if (in_array($hostname, $options['allowedDomains']) === true) {
+                return true;
+            }
+
+            return 'The hostname "' . $hostname . '" is not allowed';
+        }
+
+        // allow listed data URIs
+        if (Str::startsWith($url, 'data:') === true) {
+            foreach ($options['allowedDataUris'] as $dataAttr) {
+                if (Str::startsWith($url, $dataAttr) === true) {
+                    return true;
+                }
+            }
+
+            return 'Invalid data URI';
+        }
+
+        return 'Unknown URL type';
+    }
+
+    /**
      * Returns the XML or HTML markup contained in the node
      *
      * @param \DOMNode $node
@@ -143,6 +304,69 @@ class Dom
         }
 
         return $markup;
+    }
+
+    /**
+     * Checks if a list contains the name of a node considering
+     * the allowed namespaces
+     * @internal
+     *
+     * @param array $list
+     * @param \DOMNode $node
+     * @param array $options See `Dom::sanitize()`
+     * @param \Closure|null Comparison callback that returns whether the expected and real name match
+     * @return string|false Matched name in the list or `false`
+     */
+    public static function listContainsName(array $list, DOMNode $node, array $options, ?Closure $compare = null)
+    {
+        $allowedNamespaces = $options['allowedNamespaces'];
+        $localName         = $node->localName;
+
+        if ($compare === null) {
+            $compare = function ($expected, $real): bool {
+                return $expected === $real;
+            };
+        }
+
+        if ($allowedNamespaces === true) {
+            // take the list as it is and only consider
+            // exact matches of the local name (which will
+            // contain a namespace if that namespace name
+            // is not defined in the document)
+            if (in_array($localName, $list) === true) {
+                return $localName;
+            }
+
+            return false;
+        }
+
+        // we need to consider the namespaces,
+        // so look at each item individually
+        foreach ($list as $item) {
+            // try to find the expected origin namespace URI
+            $namespaceUri = null;
+            $itemLocal    = $item;
+            if (Str::contains($item, ':') === true) {
+                list($namespaceName, $itemLocal) = explode(':', $item);
+                $namespaceUri = $allowedNamespaces[$namespaceName] ?? null;
+            } else {
+                // list items without namespace are from the default namespace
+                $namespaceUri = $allowedNamespaces[''] ?? null;
+            }
+
+            // try if we can find an exact namespaced match
+            if ($namespaceUri === $node->namespaceURI && $compare($itemLocal, $localName) === true) {
+                return $item;
+            }
+
+            // also try to match the fully-qualified name
+            // if the document doesn't define the namespace
+            if ($node->namespaceURI === null && $compare($item, $node->nodeName) === true) {
+                return $item;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -290,225 +514,6 @@ class Dom
     }
 
     /**
-     * Extracts all URLs wrapped in a url() wrapper. E.g. for style attributes.
-     *
-     * @param string $value
-     * @return array
-     */
-    protected function extractUrls(string $value): array
-    {
-        // remove invisible ASCII characters from the value
-        $value = trim(preg_replace('/[^ -~]/u', '', $value));
-
-        $count = preg_match_all(
-            '!url\(\s*[\'"]?(.*?)[\'"]?\s*\)!i',
-            $value,
-            $matches,
-            PREG_PATTERN_ORDER
-        );
-
-        if (is_int($count) === true && $count > 0) {
-            return $matches[1];
-        }
-
-        return [];
-    }
-
-    /**
-     * Checks for allowed attributes according to the allowlist
-     *
-     * @param \DOMAttr $attr
-     * @param array $options
-     * @return true|string If not allowed, an error message is returned
-     */
-    protected function isAllowedAttr(DOMAttr $attr, array $options)
-    {
-        $allowedTags = $options['allowedTags'];
-
-        // check if the attribute is in the list of global allowed attributes
-        $isAllowedGlobalAttr = $this->isAllowedGlobalAttr($attr, $options);
-
-        // no specific tag attribute list
-        if (is_array($allowedTags) === false) {
-            return $isAllowedGlobalAttr;
-        }
-
-        // configuration per tag name
-        $tagName            = $attr->ownerElement->tagName;
-        $allowedAttrsForTag = $allowedTags[$tagName] ?? true;
-
-        // the element allows all global attributes
-        if ($allowedAttrsForTag === true) {
-            return $isAllowedGlobalAttr;
-        }
-
-        // specific attributes are allowed in addition to the global ones
-        if (is_array($allowedAttrsForTag) === true) {
-            // if allowed globally, we don't need further checks
-            if ($isAllowedGlobalAttr === true) {
-                return true;
-            }
-
-            // otherwise the tag configuration decides
-            if ($this->listContainsName($allowedAttrsForTag, $attr, $options) !== false) {
-                return true;
-            }
-
-            return 'Not allowed by the "' . $tagName . '" element';
-        }
-
-        return 'The "' . $tagName . '" element does not allow attributes';
-    }
-
-    /**
-     * Checks for allowed attributes according to the global allowlist
-     *
-     * @param \DOMAttr $attr
-     * @param array $options
-     * @return true|string If not allowed, an error message is returned
-     */
-    protected function isAllowedGlobalAttr(DOMAttr $attr, array $options)
-    {
-        $allowedAttrs = $options['allowedAttrs'];
-
-        if ($allowedAttrs === true) {
-            // all attributes are allowed
-            return true;
-        }
-
-        if (
-            $this->listContainsName(
-                $options['allowedAttrPrefixes'],
-                $attr,
-                $options,
-                function ($expected, $real): bool {
-                    return Str::startsWith($real, $expected);
-                }
-            ) !== false
-        ) {
-            return true;
-        }
-
-        if (is_array($allowedAttrs) && $this->listContainsName($allowedAttrs, $attr, $options) !== true) {
-            return 'The "' . $attr->name . '" attribute is not included in the global allowlist';
-        }
-
-        return 'All attributes are blocked by default in the global allowlist';
-    }
-
-    /**
-     * Checks if the URL is acceptable for URL attributes
-     *
-     * @param string $url
-     * @param array $options
-     * @return true|string If not allowed, an error message is returned
-     */
-    protected function isAllowedUrl(string $url, array $options)
-    {
-        $url = Str::lower($url);
-
-        // allow empty URL values
-        if (empty($url) === true) {
-            return true;
-        }
-
-        // allow URLs that point to fragments inside the file
-        // as well as site-internal URLs
-        if (in_array(mb_substr($url, 0, 1), ['#', '/']) === true) {
-            return true;
-        }
-
-        // allow specific HTTP(S) URLs
-        if (
-            Str::startsWith($url, 'http://') === true ||
-            Str::startsWith($url, 'https://') === true
-        ) {
-            $hostname = parse_url($url, PHP_URL_HOST);
-
-            if (in_array($hostname, $options['allowedDomains']) === true) {
-                return true;
-            }
-
-            return 'The hostname "' . $hostname . '" is not allowed';
-        }
-
-        // allow listed data URIs
-        if (Str::startsWith($url, 'data:') === true) {
-            foreach ($options['allowedDataUris'] as $dataAttr) {
-                if (Str::startsWith($url, $dataAttr) === true) {
-                    return true;
-                }
-            }
-
-            return 'Invalid data URI';
-        }
-
-        return 'Unknown URL type';
-    }
-
-    /**
-     * Checks if a list contains the name of a node considering
-     * the allowed namespaces
-     *
-     * @param array $list
-     * @param \DOMNode $node
-     * @param array $options See `Dom::sanitize()`
-     * @param \Closure|null Comparison callback that returns whether the expected and real name match
-     * @return string|false Matched name in the list or `false`
-     */
-    protected function listContainsName(array $list, DOMNode $node, array $options, ?Closure $compare = null)
-    {
-        $allowedNamespaces = $options['allowedNamespaces'];
-        $localName         = $node->localName;
-
-        if ($compare === null) {
-            $compare = function ($expected, $real): bool {
-                return $expected === $real;
-            };
-        }
-
-        if ($allowedNamespaces === true) {
-            // take the list as it is and only consider
-            // exact matches of the local name (which will
-            // contain a namespace if that namespace name
-            // is not defined in the document)
-            if (in_array($localName, $list) === true) {
-                return $localName;
-            }
-
-            return false;
-        }
-
-        // we need to consider the namespaces,
-        // so look at each item individually
-        foreach ($list as $item) {
-            // try to find the expected origin namespace URI
-            $namespaceUri = null;
-            $itemLocal    = $item;
-            if (Str::contains($item, ':') === true) {
-                list($namespaceName, $itemLocal) = explode(':', $item);
-                $namespaceUri = $allowedNamespaces[$namespaceName] ?? null;
-            } else {
-                // list items without namespace are from the default namespace
-                $namespaceUri = $allowedNamespaces[''] ?? null;
-            }
-
-            // try if we can find an exact namespaced match
-            if ($namespaceUri === $node->namespaceURI && $compare($itemLocal, $localName) === true) {
-                return $item;
-            }
-
-            // also try to match the fully-qualified name
-            // if the document doesn't define the namespace
-            if ($node->namespaceURI === null && $compare($item, $node->nodeName) === true) {
-                return $item;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Sanitizes an attribute
      *
      * @param \DOMAttr $attr
@@ -522,7 +527,7 @@ class Dom
         $name    = $attr->name;
         $value   = $attr->value;
 
-        $allowed = $this->isAllowedAttr($attr, $options);
+        $allowed = static::isAllowedAttr($attr, $options);
         if ($allowed !== true) {
             $errors[] = new InvalidArgumentException(
                 'The "' . $name . '" attribute (line ' .
@@ -530,8 +535,8 @@ class Dom
                 $allowed
             );
             $element->removeAttribute($name);
-        } elseif ($this->listContainsName($options['urlAttrs'], $attr, $options) !== false) {
-            $allowed = $this->isAllowedUrl($value, $options);
+        } elseif (static::listContainsName($options['urlAttrs'], $attr, $options) !== false) {
+            $allowed = static::isAllowedUrl($value, $options);
             if ($allowed !== true) {
                 $errors[] = new InvalidArgumentException(
                     'The URL is not allowed in attribute: ' .
@@ -544,8 +549,8 @@ class Dom
             // TODO: escape XSS attacks in query parameters
         } else {
             // check for unwanted URLs in other attributes
-            foreach ($this->extractUrls($value) as $url) {
-                $allowed = $this->isAllowedUrl($url, $options);
+            foreach (static::extractUrls($value) as $url) {
+                $allowed = static::isAllowedUrl($url, $options);
                 if ($allowed !== true) {
                     $errors[] = new InvalidArgumentException(
                         'The URL is not allowed in attribute: ' .
@@ -575,7 +580,7 @@ class Dom
             $this->validateDoctype($doctype, $options);
         } catch (InvalidArgumentException $e) {
             $errors[] = $e;
-            $this->remove($doctype);
+            static::remove($doctype);
         }
     }
 
@@ -593,7 +598,7 @@ class Dom
 
         // check if the tag is blocklisted; remove the element completely
         if (
-            $this->listContainsName(
+            static::listContainsName(
                 $options['disallowedTags'],
                 $element,
                 $options,
@@ -606,14 +611,14 @@ class Dom
                 'The "' . $name . '" element (line ' .
                 $element->getLineNo() . ') is not allowed'
             );
-            $this->remove($element);
+            static::remove($element);
 
             return;
         }
 
         // check if the tag is not allowlisted; keep children
         if ($options['allowedTags'] !== true) {
-            $listedName = $this->listContainsName($options['allowedTags'], $element, $options);
+            $listedName = static::listContainsName($options['allowedTags'], $element, $options);
             $isAllowed  = ($listedName === false) ? false : $options['allowedTags'][$listedName];
 
             if ($isAllowed === false) {
@@ -622,7 +627,7 @@ class Dom
                     $element->getLineNo() . ') is not allowed, ' .
                     'but its children can be kept'
                 );
-                $this->unwrap($element);
+                static::unwrap($element);
 
                 return;
             }
@@ -680,7 +685,7 @@ class Dom
                 'The "' . $name . '" processing instruction (line ' .
                 $pi->getLineNo() . ') is not allowed'
             );
-            $this->remove($pi);
+            static::remove($pi);
         }
     }
 
