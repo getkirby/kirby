@@ -170,8 +170,10 @@ class Dom
      * to the provided configuration
      *
      * @param array $options Array with the following options:
-     *                       - `allowedAttrs`: Global list of allowed attrs (see `allowedTags`)
-     *                       or `true` to allow any attribute
+     *                       - `allowedAttrPrefixes`: Global list of allowed attribute prefixes
+     *                       like `data-` and `aria-`
+     *                       - `allowedAttrs`: Global list of allowed attrs or `true` to allow
+     *                       any attribute
      *                       - `allowedDataUris`: List of all MIME types that may be used in
      *                       data attributes (only checked in `urlAttrs`)
      *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
@@ -200,16 +202,17 @@ class Dom
     public function sanitize(array $options): array
     {
         $options = array_merge([
-            'allowedAttrs'    => true,
-            'allowedDataUris' => [],
-            'allowedDomains'  => [],
-            'allowedPIs'      => [],
-            'allowedTags'     => true,
-            'attrCallback'    => null,
-            'disallowedTags'  => [],
-            'doctypeCallback' => null,
-            'nodeCallback'    => null,
-            'urlAttrs'        => ['href', 'src', 'xlink:href'],
+            'allowedAttrPrefixes' => [],
+            'allowedAttrs'        => true,
+            'allowedDataUris'     => [],
+            'allowedDomains'      => [],
+            'allowedPIs'          => [],
+            'allowedTags'         => true,
+            'attrCallback'        => null,
+            'disallowedTags'      => [],
+            'doctypeCallback'     => null,
+            'nodeCallback'        => null,
+            'urlAttrs'            => ['href', 'src', 'xlink:href'],
         ], $options);
 
         $errors = [];
@@ -312,8 +315,7 @@ class Dom
      */
     protected function isAllowedAttr(DOMAttr $attr, array $options)
     {
-        $allowedAttrs = $options['allowedAttrs'];
-        $allowedTags  = $options['allowedTags'];
+        $allowedTags = $options['allowedTags'];
 
         // check if the attribute is in the list of global allowed attributes
         $isAllowedGlobalAttr = $this->isAllowedGlobalAttr($attr, $options);
@@ -332,22 +334,22 @@ class Dom
             return $isAllowedGlobalAttr;
         }
 
-        // no attributes are allowed
-        if (is_array($allowedAttrsForTag) === false) {
-            return 'The "' . $nodeName . '" element does not allow attributes';
-        }
+        // specific attributes are allowed in addition to the global ones
+        if (is_array($allowedAttrsForTag) === true) {
+            // if allowed globally, we don't need further checks
+            if ($isAllowedGlobalAttr === true) {
+                return true;
+            }
 
-        // add the global allowed attributes to the local attributes
-        if (is_array($allowedAttrs) === true) {
-            $allowedAttrsForTag = array_merge($allowedAttrs, $allowedAttrsForTag);
-        }
+            // otherwise the tag configuration decides
+            if (in_array($attr->name, $allowedAttrsForTag) === true) {
+                return true;
+            }
 
-        // the attribute is still not allowed
-        if (in_array($attr->name, $allowedAttrsForTag) !== true) {
             return 'Not allowed by the "' . $nodeName . '" element';
         }
 
-        return true;
+        return 'The "' . $nodeName . '" element does not allow attributes';
     }
 
     /**
@@ -362,7 +364,15 @@ class Dom
         $allowedAttrs = $options['allowedAttrs'];
 
         if ($allowedAttrs === true) {
+            // all attributes are allowed
             return true;
+        }
+
+        foreach ($options['allowedAttrPrefixes'] as $prefix) {
+            if (Str::startsWith($attr->name, $prefix) === true) {
+                // the attribute starts with an allowed prefix
+                return true;
+            }
         }
 
         if (is_array($allowedAttrs) && in_array($attr->name, $allowedAttrs) !== true) {
