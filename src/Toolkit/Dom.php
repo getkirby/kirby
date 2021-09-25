@@ -195,7 +195,8 @@ class Dom
      *                       modify it; the callback must return an array with exception
      *                       objects for each modification
      *                       - `disallowedTags`: Array of explicitly disallowed tags, which will
-     *                       be removed completely including their children
+     *                       be removed completely including their children; the names must be
+     *                       lower-case as the matching is done case-insensitively
      *                       - `doctypeCallback`: Closure that will receive the `DOMDocumentType`
      *                       and may throw exceptions on validation errors
      *                       - `elementCallback`: Closure that will receive each `DOMElement` and
@@ -591,7 +592,16 @@ class Dom
         $name = $element->tagName;
 
         // check if the tag is blocklisted; remove the element completely
-        if ($this->listContainsName($options['disallowedTags'], $element, $options) !== false) {
+        if (
+            $this->listContainsName(
+                $options['disallowedTags'],
+                $element,
+                $options,
+                function ($expected, $real): bool {
+                    return Str::lower($expected) === Str::lower($real);
+                }
+            ) !== false
+        ) {
             $errors[] = new InvalidArgumentException(
                 'The "' . $name . '" element (line ' .
                 $element->getLineNo() . ') is not allowed'
