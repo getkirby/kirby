@@ -209,7 +209,7 @@ class Dom
             'disallowedTags'  => [],
             'doctypeCallback' => null,
             'nodeCallback'    => null,
-            'urlAttrs'        => ['href', 'src'],
+            'urlAttrs'        => ['href', 'src', 'xlink:href'],
         ], $options);
 
         $errors = [];

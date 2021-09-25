@@ -1,0 +1,9 @@
+<whatever:html xmlns:whatever="http://www.w3.org/1999/xhtml">
+  <whatever:head>
+    <whatever:title>This is very malicious</whatever:title>
+  </whatever:head>
+
+  <whatever:body>
+    <whatever:script>alert(1)</whatever:script>
+  </whatever:body>
+</whatever:html>

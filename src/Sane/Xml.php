@@ -29,6 +29,8 @@ class Xml extends DomHandler
      */
     public static function sanitizeNode(DOMNode $node): array
     {
+        $errors = [];
+
         // if we are validating an XML file, block all SVG and HTML namespaces
         if (static::class === self::class && is_a($node, 'DOMElement') === true) {
             $simpleXmlElement = simplexml_import_dom($node);
@@ -37,8 +39,8 @@ class Xml extends DomHandler
                     Str::contains($value, 'html', true) === true ||
                     Str::contains($value, 'svg', true) === true
                 ) {
-                    // TODO: Implement sanitization (remove the namespaces and the nodes/attributes)
-                    throw new InvalidArgumentException(
+                    $node->removeAttributeNS($value, $namespace);
+                    $errors[] = new InvalidArgumentException(
                         'The namespace is not allowed in XML files' .
                         ' (around line ' . $node->getLineNo() . ')'
                     );
@@ -46,7 +48,7 @@ class Xml extends DomHandler
             }
         }
 
-        return [];
+        return $errors;
     }
 
     /**
