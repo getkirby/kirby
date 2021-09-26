@@ -27,8 +27,8 @@ class Sane
      * @var array
      */
     public static $aliases = [
-        'image/svg+xml'   => 'svg',
         'application/xml' => 'xml',
+        'image/svg+xml'   => 'svg',
         'text/html'       => 'html',
         'text/xml'        => 'xml',
     ];

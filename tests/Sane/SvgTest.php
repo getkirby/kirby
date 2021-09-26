@@ -4,6 +4,8 @@ namespace Kirby\Sane;
 
 /**
  * @covers \Kirby\Sane\Svg
+ * @covers \Kirby\Toolkit\Dom
+ * @todo Separate test class for Toolkit\Dom
  */
 class SvgTest extends TestCase
 {

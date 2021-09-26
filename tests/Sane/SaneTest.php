@@ -34,6 +34,7 @@ class SaneTest extends TestCase
      */
     public function testDefaultHandlers()
     {
+        $this->assertInstanceOf(Html::class, Sane::handler('html'));
         $this->assertInstanceOf(Svg::class, Sane::handler('svg'));
         $this->assertInstanceOf(Svgz::class, Sane::handler('svgz'));
         $this->assertInstanceOf(Xml::class, Sane::handler('xml'));
@@ -53,6 +54,7 @@ class SaneTest extends TestCase
      */
     public function testDefaultAliases()
     {
+        $this->assertInstanceOf(Html::class, Sane::handler('text/html'));
         $this->assertInstanceOf(Svg::class, Sane::handler('image/svg+xml'));
         $this->assertInstanceOf(Xml::class, Sane::handler('application/xml'));
         $this->assertInstanceOf(Xml::class, Sane::handler('text/xml'));
@@ -75,6 +77,82 @@ class SaneTest extends TestCase
     public function testMissingHandlerLazy()
     {
         $this->assertNull(Sane::handler('foo', true));
+    }
+
+    /**
+     * @covers ::sanitize
+     */
+    public function testSanitize()
+    {
+        $this->assertSame("<svg><path d=\"123\"/></svg>\n", Sane::sanitize('<svg><path d="123" onclick="alert(1)"></path></svg>', 'svg'));
+    }
+
+    /**
+     * @covers ::sanitizeFile
+     * @covers ::handlersForFile
+     */
+    public function testSanitizeFile()
+    {
+        $expected = $this->fixture('doctype-valid.svg');
+        $tmp      = $this->fixture('doctype-valid.svg', true);
+        $this->assertNull(Sane::sanitizeFile($tmp));
+        $this->assertFileEquals($expected, $tmp);
+
+        $expected = $this->fixture('external-source-1.sanitized.svg');
+        $tmp      = $this->fixture('external-source-1.svg', true);
+        $this->assertNull(Sane::sanitizeFile($tmp));
+        $this->assertFileEquals($expected, $tmp);
+    }
+
+    /**
+     * @covers ::sanitizeFile
+     */
+    public function testSanitizeFileExplicitHandler()
+    {
+        $expected = $this->fixture('doctype-valid.svg');
+        $tmp      = $this->fixture('doctype-valid.svg', true);
+        $this->assertNull(Sane::sanitizeFile($tmp, 'svg'));
+        $this->assertFileEquals($expected, $tmp);
+
+        $expected = $this->fixture('external-source-1.sanitized.svg');
+        $tmp      = $this->fixture('external-source-1.svg', true);
+        $this->assertNull(Sane::sanitizeFile($tmp, 'svg'));
+        $this->assertFileEquals($expected, $tmp);
+    }
+
+    /**
+     * @covers ::sanitizeFile
+     * @covers ::handlersForFile
+     */
+    public function testSanitizeFileLazyHandler()
+    {
+        $this->assertNull(Sane::sanitizeFile($this->fixture('unknown.xyz'), true));
+    }
+
+    /**
+     * @covers ::sanitizeFile
+     * @covers ::handlersForFile
+     */
+    public function testSanitizeFileMultipleHandlers()
+    {
+        $fixture = $this->fixture('script-2.xml', true);
+
+        $this->expectException('Kirby\Exception\LogicException');
+        $this->expectExceptionMessage('Cannot sanitize file as more than one handler applies: Kirby\Sane\Xml, Kirby\Sane\Svg');
+
+        Sane::sanitizeFile($fixture);
+    }
+
+    /**
+     * @covers ::sanitizeFile
+     */
+    public function testSanitizeFileMultipleHandlersExplicit()
+    {
+        $expected = $this->fixture('script-2.sanitized.xml');
+        $tmp      = $this->fixture('script-2.xml', true);
+
+        $this->assertNull(Sane::sanitizeFile($tmp, 'xml'));
+        $this->assertFileEquals($expected, $tmp);
     }
 
     /**
@@ -137,7 +215,7 @@ class SaneTest extends TestCase
     public function testValidateFileMime1()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The "script" element (line 3) is not allowed in SVGs');
+        $this->expectExceptionMessage('The "script" element (line 3) is not allowed');
 
         Sane::validateFile($this->fixture('script-1.xml'));
     }
@@ -149,7 +227,7 @@ class SaneTest extends TestCase
     public function testValidateFileMime2()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The namespace is not allowed in XML files (around line 2)');
+        $this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 2)');
 
         Sane::validateFile($this->fixture('script-2.xml'));
     }

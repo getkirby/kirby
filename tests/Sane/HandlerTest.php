@@ -21,6 +21,11 @@ class HandlerTest extends TestCase
         $tmp      = $this->fixture('doctype-valid.svg', true);
         $this->assertNull(CustomHandler::sanitizeFile($tmp));
         $this->assertFileEquals($expected, $tmp);
+
+        $expected = $this->fixture('external-source-1.sanitized.svg');
+        $tmp      = $this->fixture('external-source-1.svg', true);
+        $this->assertNull(CustomHandler::sanitizeFile($tmp));
+        $this->assertFileEquals($expected, $tmp);
     }
 
     /**
