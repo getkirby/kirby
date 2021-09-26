@@ -2,9 +2,6 @@
 
 namespace Kirby\Sane;
 
-use Kirby\Exception\Exception;
-use Kirby\Toolkit\Dom;
-
 /**
  * Sane handler for HTML files
  * @since 3.6.0
@@ -16,26 +13,59 @@ use Kirby\Toolkit\Dom;
  * @copyright Bastian Allgeier GmbH
  * @license   https://opensource.org/licenses/MIT
  */
-class Html extends Handler
+class Html extends DomHandler
 {
     /**
-     * List of allowed elements
+     * Global list of allowed attribute prefixes
      *
      * @var array
      */
-    public static $allowed = [
-        'a'          => ['href', 'title', 'target'],
+    public static $allowedAttrPrefixes = [
+        'aria-',
+        'data-',
+    ];
+
+    /**
+     * Global list of allowed attributes
+     *
+     * @var array
+     */
+    public static $allowedAttrs = [
+        'class',
+        'id',
+    ];
+
+    /**
+     * Allowed hostnames for HTTP(S) URLs
+     *
+     * @var array
+     */
+    public static $allowedDomains = true;
+
+    /**
+     * Associative array of all allowed tag names with the value
+     * of either an array with the list of all allowed attributes
+     * for this tag, `true` to allow any attribute from the
+     * `allowedAttrs` list or `false` to allow the tag without
+     * any attributes
+     *
+     * @var array
+     */
+    public static $allowedTags = [
+        'a'          => ['href', 'rel', 'title', 'target'],
         'abbr'       => ['title'],
         'b'          => true,
         'body'       => true,
         'blockquote' => true,
         'br'         => true,
+        'code'       => true,
         'dl'         => true,
         'dd'         => true,
         'del'        => true,
         'div'        => true,
         'dt'         => true,
         'em'         => true,
+        'footer'     => true,
         'h1'         => true,
         'h2'         => true,
         'h3'         => true,
@@ -47,20 +77,26 @@ class Html extends Handler
         'i'          => true,
         'ins'        => true,
         'li'         => true,
+        'span'       => true,
         'strong'     => true,
         'sub'        => true,
         'sup'        => true,
         'ol'         => true,
         'p'          => true,
+        'pre'        => true,
+        'u'          => true,
         'ul'         => true,
     ];
 
     /**
-     * List of disallowed elements
+     * Array of explicitly disallowed tags
+     *
+     * IMPORTANT: Use lower-case names here because
+     * of the case-insensitive matching
      *
      * @var array
      */
-    public static $disallowed = [
+    public static $disallowedTags = [
         'iframe',
         'meta',
         'object',
@@ -69,44 +105,78 @@ class Html extends Handler
     ];
 
     /**
-     * List of attributes that might contain URLs
+     * List of attributes that may contain URLs
      *
      * @var array
      */
-    public static $urls = [
+    public static $urlAttrs = [
         'href',
         'src',
         'xlink:href',
     ];
 
     /**
-     * HTML sanitization
+     * The document type (`'HTML'` or `'XML'`)
+     *
+     * @var string
+     */
+    protected static $type = 'HTML';
+
+    /**
+     * Sanitizes the given string
      *
      * @param string $string
      * @return string
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
      */
     public static function sanitize(string $string): string
     {
-        $doc = new Dom('<body>' . $string . '</body>', 'HTML');
-        $doc->sanitize([
-            'allowedAttrs'   => ['class', 'id'],
-            'allowedTags'    => static::$allowed,
-            'disallowedTags' => static::$disallowed,
-            'urlAttrs'       => static::$urls,
-        ]);
+        $dom = static::parse($string);
+        $dom->sanitize(static::options());
 
-        return $doc->innerMarkup($doc->body());
+        if (preg_match('/<body[> ]/i', $string) === 1) {
+            // the input was a full document
+            return $dom->toString();
+        }
+
+        // the input was just an HTML snippet
+        return $dom->innerMarkup($dom->body());
     }
 
     /**
-     * Validates file contents
-     * (Not yet implemented)
+     * Returns the sanitization options for the handler
+     *
+     * @return array
+     */
+    protected static function options(): array
+    {
+        return array_merge(parent::options(), [
+            'allowedAttrPrefixes' => static::$allowedAttrPrefixes,
+            'allowedAttrs'        => static::$allowedAttrs,
+            'allowedNamespaces'   => [],
+            'allowedPIs'          => [],
+            'allowedTags'         => static::$allowedTags,
+            'disallowedTags'      => static::$disallowedTags,
+            'urlAttrs'            => static::$urlAttrs,
+        ]);
+    }
+
+    /**
+     * Parses the given string into a `Toolkit\Dom` object
      *
      * @param string $string
-     * @return void
+     * @return \Kirby\Toolkit\Dom
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
      */
-    public static function validate(string $string): void
+    protected static function parse(string $string)
     {
-        throw new Exception('HTML validation is not yet implemented');
+        if (preg_match('/<body[> ]/i', $string) !== 1) {
+            // just an HTML snippet, add a body for proper parsing
+            $string = '<body>' . $string . '</body>';
+        }
+
+        return parent::parse($string);
     }
 }

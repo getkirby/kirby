@@ -72,6 +72,11 @@ class Dom
             // the loadHTML() method expects ISO-8859-1 by default;
             // convert every native UTF-8 character to an entity
             $load = $this->doc->loadHTML(mb_convert_encoding($code, 'HTML-ENTITIES', 'UTF-8'));
+
+            // remove the default doctype
+            if (Str::contains($code, '<!DOCTYPE ') === false) {
+                static::remove($this->doc->doctype);
+            }
         } else {
             $load = $this->doc->loadXML($code);
         }
@@ -262,6 +267,10 @@ class Dom
             Str::startsWith($url, 'http://') === true ||
             Str::startsWith($url, 'https://') === true
         ) {
+            if ($options['allowedDomains'] === true) {
+                return true;
+            }
+
             $hostname = parse_url($url, PHP_URL_HOST);
 
             if (in_array($hostname, $options['allowedDomains']) === true) {
@@ -273,6 +282,10 @@ class Dom
 
         // allow listed data URIs
         if (Str::startsWith($url, 'data:') === true) {
+            if ($options['allowedDataUris'] === true) {
+                return true;
+            }
+
             foreach ($options['allowedDataUris'] as $dataAttr) {
                 if (Str::startsWith($url, $dataAttr) === true) {
                     return true;
@@ -403,14 +416,16 @@ class Dom
      *                       - `allowedAttrs`: Global list of allowed attrs or `true` to allow
      *                       any attribute
      *                       - `allowedDataUris`: List of all MIME types that may be used in
-     *                       data attributes (only checked in `urlAttrs`)
+     *                       data attributes (only checked in `urlAttrs`) or `true` for any
      *                       - `allowedDomains`: Allowed hostnames for HTTP(S) URLs in `urlAttrs`
+     *                       or `true` for any
      *                       - `allowedNamespaces`: Associative array of all allowed namespace URIs;
      *                       the array keys are reference names that can be referred to from the
      *                       `allowedAttrPrefixes`, `allowedAttrs`, `allowedTags` and `urlAttrs` lists;
      *                       the namespace names as used in the document are *not* validated;
      *                       setting the whole option to `true` will allow any namespace
-     *                       - `allowedPIs`: Names of allowed XML processing instructions
+     *                       - `allowedPIs`: Names of allowed XML processing instructions or
+     *                       `true` for any
      *                       - `allowedTags`: Associative array of all allowed tag names with the
      *                       value of either an array with the list of all allowed attributes for
      *                       this tag, `true` to allow any attribute from the `allowedAttrs` list
@@ -438,10 +453,10 @@ class Dom
         $options = array_merge([
             'allowedAttrPrefixes' => [],
             'allowedAttrs'        => true,
-            'allowedDataUris'     => [],
-            'allowedDomains'      => [],
+            'allowedDataUris'     => true,
+            'allowedDomains'      => true,
             'allowedNamespaces'   => true,
-            'allowedPIs'          => [],
+            'allowedPIs'          => true,
             'allowedTags'         => true,
             'attrCallback'        => null,
             'disallowedTags'      => [],
@@ -690,7 +705,7 @@ class Dom
         $name = $pi->nodeName;
 
         // check for allow-listed processing instructions
-        if (in_array($name, $options['allowedPIs']) === false) {
+        if (is_array($options['allowedPIs']) === true && in_array($name, $options['allowedPIs']) === false) {
             $errors[] = new InvalidArgumentException(
                 'The "' . $name . '" processing instruction (line ' .
                 $pi->getLineNo() . ') is not allowed'
