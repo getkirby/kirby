@@ -19,6 +19,8 @@ class FileTest extends TestCase
 
     protected function setUp(): void
     {
+        Dir::make($this->tmp);
+
         static::$block = [];
     }
 
@@ -572,6 +574,55 @@ class FileTest extends TestCase
     }
 
     /**
+     * @covers ::sanitizeContents
+     */
+    public function testSanitizeContentsValid()
+    {
+        $fixture = $this->fixtures . '/clean.svg';
+        $tmp     = $this->tmp . '/clean.svg';
+        copy($fixture, $tmp);
+
+        $file = new File($tmp);
+        $this->assertNull($file->sanitizeContents());
+        $this->assertNull($file->sanitizeContents(true));
+        $this->assertNull($file->sanitizeContents(false));
+
+        $this->assertFileEquals($fixture, $tmp);
+    }
+
+    /**
+     * @covers ::sanitizeContents
+     */
+    public function testSanitizeContentsWrongType()
+    {
+        $fixture = $this->fixtures . '/real.svg';
+        $tmp     = $this->tmp . '/real.svg';
+        copy($fixture, $tmp);
+
+        $file = new File($tmp);
+        $file->sanitizeContents('xml');
+
+        $this->assertFileEquals($this->fixtures . '/real.sanitized.svg', $tmp);
+    }
+
+    /**
+     * @covers ::sanitizeContents
+     */
+    public function testSanitizeContentsMissingHandler()
+    {
+        $file = new File($this->fixtures . '/test.js');
+
+        // lazy mode
+        $file->sanitizeContents(true);
+
+        // default mode
+        $this->expectException('Kirby\Exception\NotFoundException');
+        $this->expectExceptionMessage('Missing handler for type: "js"');
+
+        $file->sanitizeContents();
+    }
+
+    /**
      * @covers ::size
      */
     public function testSize()
@@ -674,7 +725,7 @@ class FileTest extends TestCase
     public function testValidateContentsWrongType()
     {
         $this->expectException('Kirby\Exception\InvalidArgumentException');
-        $this->expectExceptionMessage('The namespace is not allowed in XML files (around line 2)');
+        $this->expectExceptionMessage('The namespace "http://www.w3.org/2000/svg" is not allowed (around line 2)');
 
         $file = new File($this->fixtures . '/real.svg');
         $file->validateContents('xml');
