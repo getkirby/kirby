@@ -509,6 +509,12 @@ class Dom
     public static function unwrap(DOMNode $node): void
     {
         foreach ($node->childNodes as $childNode) {
+            // discard text nodes as they can be unexpected
+            // directly in the parent element
+            if (is_a($childNode, 'DOMText') === true) {
+                continue;
+            }
+
             $node->parentNode->insertBefore(clone $childNode, $node);
         }
 
@@ -536,7 +542,7 @@ class Dom
                 $attr->getLineNo() . ') is not allowed: ' .
                 $allowed
             );
-            $element->removeAttribute($name);
+            $element->removeAttributeNode($attr);
         } elseif (static::listContainsName($options['urlAttrs'], $attr, $options) !== false) {
             $allowed = static::isAllowedUrl($value, $options);
             if ($allowed !== true) {
@@ -545,7 +551,7 @@ class Dom
                     $name . ' (line ' . $attr->getLineNo() . '): ' .
                     $allowed
                 );
-                $element->removeAttribute($name);
+                $element->removeAttributeNode($attr);
             }
 
             // TODO: escape XSS attacks in query parameters
@@ -559,7 +565,7 @@ class Dom
                         $name . ' (line ' . $attr->getLineNo() . '): ' .
                         $allowed
                     );
-                    $element->removeAttribute($name);
+                    $element->removeAttributeNode($attr);
                 }
             }
 
