@@ -68,8 +68,8 @@ class Dom
         // switch to "user error handling"
         $intErrorsSetting = libxml_use_internal_errors(true);
 
-        $this->type = $type;
-        if ($type === 'html') {
+        $this->type = strtoupper($type);
+        if ($this->type === 'HTML') {
             // the loadHTML() method expects ISO-8859-1 by default;
             // convert every native UTF-8 character to an entity
             $load = $this->doc->loadHTML(mb_convert_encoding($code, 'HTML-ENTITIES', 'UTF-8'));

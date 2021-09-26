@@ -87,7 +87,7 @@ class Html extends Handler
      */
     public static function sanitize(string $string): string
     {
-        $doc = new Dom('<body>' . $string . '</body>', 'html');
+        $doc = new Dom('<body>' . $string . '</body>', 'HTML');
         $doc->sanitize([
             'allowedAttrs'   => ['class', 'id'],
             'allowedTags'    => static::$allowed,
