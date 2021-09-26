@@ -98,37 +98,6 @@ class DomHandler extends Handler
     }
 
     /**
-     * Returns the sanitization options for the handler
-     * (to be extended in child classes)
-     *
-     * @return array
-     */
-    protected static function options(): array
-    {
-        return [
-            'allowedDataUris' => static::$allowedDataUris,
-            'allowedDomains'  => static::$allowedDomains,
-            'allowedPIs'      => static::$allowedPIs,
-            'attrCallback'    => [static::class, 'sanitizeAttr'],
-            'doctypeCallback' => [static::class, 'validateDoctype'],
-            'elementCallback' => [static::class, 'sanitizeElement'],
-        ];
-    }
-
-    /**
-     * Parses the given string into a `Toolkit\Dom` object
-     *
-     * @param string $string
-     * @return \Kirby\Toolkit\Dom
-     *
-     * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
-     */
-    protected static function parse(string $string)
-    {
-        return new Dom($string, static::$type);
-    }
-
-    /**
      * Custom callback for additional attribute sanitization
      * @internal
      *
@@ -164,5 +133,36 @@ class DomHandler extends Handler
     public static function validateDoctype(DOMDocumentType $doctype): void
     {
         // to be extended in child classes
+    }
+
+    /**
+     * Returns the sanitization options for the handler
+     * (to be extended in child classes)
+     *
+     * @return array
+     */
+    protected static function options(): array
+    {
+        return [
+            'allowedDataUris' => static::$allowedDataUris,
+            'allowedDomains'  => static::$allowedDomains,
+            'allowedPIs'      => static::$allowedPIs,
+            'attrCallback'    => [static::class, 'sanitizeAttr'],
+            'doctypeCallback' => [static::class, 'validateDoctype'],
+            'elementCallback' => [static::class, 'sanitizeElement'],
+        ];
+    }
+
+    /**
+     * Parses the given string into a `Toolkit\Dom` object
+     *
+     * @param string $string
+     * @return \Kirby\Toolkit\Dom
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the file couldn't be parsed
+     */
+    protected static function parse(string $string)
+    {
+        return new Dom($string, static::$type);
     }
 }
