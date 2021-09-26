@@ -55,7 +55,6 @@ class Dom
     public function __construct(string $code, string $type = 'HTML')
     {
         $this->doc = new DOMDocument();
-        $this->doc->strictErrorChecking = false;
 
         $loaderSetting = null;
         if (\PHP_VERSION_ID < 80000) {
