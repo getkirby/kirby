@@ -15,6 +15,7 @@
         :active-marks="toolbar.marks"
         :active-nodes="toolbar.nodes"
         :active-node-attrs="toolbar.nodeAttrs"
+        :is-paragraph-node-hidden="isParagraphNodeHidden"
         :style="{
           'bottom': toolbar.position.bottom + 'px',
           'inset-inline-start': toolbar.position.left + 'px'
@@ -58,7 +59,6 @@ import Heading from "./Nodes/Heading";
 import HorizontalRule from "./Nodes/HorizontalRule";
 import ListItem from "./Nodes/ListItem";
 import OrderedList from "./Nodes/OrderedList";
-import Paragraph from "./Nodes/Paragraph";
 
 // Extensions
 import History from "./Extensions/History.js";
@@ -95,7 +95,6 @@ export const props = {
       type: [Array, Boolean],
       default() {
         return [
-          "paragraph",
           "heading",
           "bulletList",
           "orderedList"
@@ -126,6 +125,11 @@ export default {
       isEmpty: true,
       toolbar: false
     };
+  },
+  computed: {
+    isParagraphNodeHidden() {
+      return Array.isArray(this.nodes) === true && this.nodes.length !== 3 && this.nodes.includes("paragraph") === false;
+    }
   },
   watch: {
     value(newValue, oldValue) {
@@ -248,8 +252,7 @@ export default {
         orderedList: new OrderedList,
         heading: new Heading,
         horizontalRule: new HorizontalRule,
-        listItem: new ListItem,
-        paragraph: new Paragraph
+        listItem: new ListItem
       }, this.nodes, (allowed, installed) => {
 
         // install the list item when there's a list available
