@@ -440,29 +440,6 @@ export default {
         }
       }
 
-      // when there are no blocks, pasting should only
-      // be possible when the selector is open
-      if (this.blocks.length === 0) {
-        if (this.$refs.selector.isOpen() === false) {
-          return false;
-        }
-
-      // when there are blocks, pasting should only
-      // be possible when a block is active and
-      // the cursor is not in a text area
-      } else {
-
-        // only paste if something is selected
-        if (!this.selected && this.batch.length === 0) {
-          return false;
-        }
-
-        // only paste if the cursor is not in a text field
-        if (clipboardEvent.target.closest('.k-writer, input, textarea, [contenteditable]')) {
-          return false;
-        }
-      }
-
       clipboardEvent.preventDefault();
 
       let blocks = null;
@@ -476,7 +453,30 @@ export default {
 
       // get regular HTML or plain text content from the clipboard
       if (blocks === null) {
-        blocks = clipboardEvent.clipboardData.getData("text/html") || clipboardEvent.clipboardData.getData("text/plain");
+        blocks = clipboardEvent.clipboardData.getData("text/html") || clipboardEvent.clipboardData.getData("text/plain") || null;
+      }
+
+      // when there are no blocks, pasting should only
+      // be possible when the selector is open
+      if (this.blocks.length === 0) {
+        if (this.$refs.selector.isOpen() === false) {
+          return false;
+        }
+
+      // when there are blocks, pasting should only
+      // be possible when a block is active and
+      // the cursor is not in a text area
+      } else {
+
+        // only paste if something is selected and there are blocks
+        if (!this.selected && this.batch.length === 0 && blocks === null) {
+          return false;
+        }
+
+        // only paste if the cursor is not in a text field
+        if (clipboardEvent.target.closest('.k-writer, input, textarea, [contenteditable]')) {
+          return false;
+        }
       }
 
       this.paste(blocks);
@@ -489,7 +489,7 @@ export default {
       // we can import them directly without sending them to the API
       if (Array.isArray(input)) {
         blocks = input.map(block => {
-          // each block needs a new unique id to avoid collissions
+          // each block needs a new unique id to avoid collisions
           block.id = this.$helper.uuid();
           return block;
         });
