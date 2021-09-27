@@ -1,5 +1,5 @@
 <template>
-  <k-inside :lock="lock">
+  <k-inside>
     <div
       :data-locked="isLocked"
       :data-id="model.id"
@@ -94,6 +94,7 @@
           @success="uploadedAvatar"
         />
       </k-view>
+      <k-form-buttons :lock="lock" />
     </div>
   </k-inside>
 </template>

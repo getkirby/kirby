@@ -1,5 +1,5 @@
 <template>
-  <k-inside :lock="lock">
+  <k-inside>
     <k-view
       :data-locked="isLocked"
       :data-id="model.id"
@@ -67,6 +67,7 @@
         :tab="tab"
       />
     </k-view>
+    <k-form-buttons :lock="lock" />
   </k-inside>
 </template>
 

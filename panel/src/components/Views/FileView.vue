@@ -1,5 +1,5 @@
 <template>
-  <k-inside :lock="lock">
+  <k-inside>
     <div
       :data-locked="isLocked"
       :data-id="model.id"
@@ -7,7 +7,6 @@
       class="k-file-view"
     >
       <k-file-preview v-bind="preview" />
-
       <k-view class="k-file-content">
         <k-header
           :editable="permissions.changeName && !isLocked"
@@ -66,6 +65,7 @@
           @success="onUpload"
         />
       </k-view>
+      <k-form-buttons :lock="lock" />
     </div>
   </k-inside>
 </template>

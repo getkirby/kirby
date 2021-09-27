@@ -2,7 +2,7 @@
   <div class="k-topbar">
     <k-view>
       <div class="k-topbar-wrapper">
-        <!-- Main Menu -->
+        <!-- menu -->
         <k-dropdown class="k-topbar-menu">
           <k-button
             :tooltip="$t('menu')"
@@ -20,7 +20,7 @@
           />
         </k-dropdown>
 
-        <!-- Breadcrumb -->
+        <!-- breadcrumb -->
         <k-breadcrumb
           :crumbs="breadcrumb"
           :view="view"
@@ -48,11 +48,18 @@
             :tooltip="$t('search')"
             class="k-topbar-button"
             icon="search"
-            @click="$emit('search')"
+            @click="$refs.search.open()"
           />
         </div>
       </div>
     </k-view>
+
+    <!-- search overlay -->
+    <k-search
+      ref="search"
+      :type="$view.search || 'pages'"
+      :types="$searches"
+    />
   </div>
 </template>
 
