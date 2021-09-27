@@ -1,5 +1,5 @@
 <template>
-  <k-outside>
+  <k-panel>
     <k-view align="center" class="k-installation-view">
       <!-- installation complete -->
       <k-text v-if="isComplete">
@@ -83,7 +83,7 @@
         <k-button :text="$t('retry')" icon="refresh" @click="$reload" />
       </div>
     </k-view>
-  </k-outside>
+  </k-panel>
 </template>
 
 <script>

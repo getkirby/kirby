@@ -1,12 +1,12 @@
 <template>
-  <k-outside>
+  <k-panel>
     <k-view v-if="form === 'login'" align="center" class="k-login-view">
       <k-login-plugin :methods="methods" />
     </k-view>
     <k-view v-else-if="form === 'code'" align="center" class="k-login-code-view">
       <k-login-code v-bind="$props" />
     </k-view>
-  </k-outside>
+  </k-panel>
 </template>
 
 <script>
