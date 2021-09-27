@@ -256,6 +256,19 @@ export default {
     confirmToRemoveAll() {
       this.$refs.removeAll.open();
     },
+    copyAll() {
+      // select all
+      this.batch = Object.values(this.blocks).map(block => block.id);
+
+      // trigger copy event
+      document.execCommand('copy');
+
+      // a sign that it has been copied
+      this.$store.dispatch("notification/success", ":)");
+
+      // deselect all
+      this.batch = [];
+    },
     confirmToRemoveSelected() {
       this.$refs.removeSelected.open();
     },

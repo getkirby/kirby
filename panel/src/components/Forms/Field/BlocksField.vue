@@ -14,6 +14,9 @@
           <k-dropdown-item :disabled="isEmpty" icon="trash" @click="$refs.blocks.confirmToRemoveAll()">
             {{ $t('delete.all') }}
           </k-dropdown-item>
+          <k-dropdown-item :disabled="isEmpty" icon="copy" @click="$refs.blocks.copyAll()">
+            {{ $t('copy.all') }}
+          </k-dropdown-item>
         </k-dropdown-content>
       </k-dropdown>
     </template>
