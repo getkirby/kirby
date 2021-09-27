@@ -28,7 +28,7 @@ class QueryTest extends TestCase
             "lname" TEXT,
             "password" TEXT NOT NULL,
             "email" TEXT NOT NULL,
-            "balance" INTEGER 
+            "balance" INTEGER
             );
         ');
 
@@ -99,6 +99,19 @@ class QueryTest extends TestCase
         $user = $this->database
             ->table('users')
             ->join('roles', 'roles.id = users.role_id')
+            ->where([
+                'username' => 'john'
+            ])
+            ->first();
+
+        $this->assertSame('admin', $user->role());
+    }
+
+    public function testInnerJoin()
+    {
+        $user = $this->database
+            ->table('users')
+            ->innerJoin('roles', 'roles.id = users.role_id')
             ->where([
                 'username' => 'john'
             ])
