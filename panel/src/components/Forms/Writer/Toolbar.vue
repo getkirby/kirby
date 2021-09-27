@@ -63,6 +63,10 @@ export default {
     },
     marks: {
       type: Array
+    },
+    isParagraphNodeHidden: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -73,8 +77,15 @@ export default {
       return this.buttons("mark");
     },
     nodeButtons() {
-      return this.buttons("node");
-    }
+      let nodeButtons = this.buttons("node");
+
+      // remove the paragraph when certain nodes are requested to be loaded
+      if (this.isParagraphNodeHidden === true && nodeButtons.paragraph) {
+        delete nodeButtons.paragraph;
+      }
+
+      return nodeButtons;
+    },
   },
   methods: {
     buttons(type) {
