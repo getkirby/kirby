@@ -1,5 +1,5 @@
 <template>
-  <k-inside :lock="lock">
+  <k-inside>
     <k-view
       :data-locked="isLocked"
       data-id="/"
@@ -37,6 +37,7 @@
         @submit="$emit('submit', $event)"
       />
     </k-view>
+    <k-form-buttons :lock="lock" />
   </k-inside>
 </template>
 

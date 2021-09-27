@@ -22,17 +22,12 @@
       <slot />
     </main>
 
-    <!-- Form buttons -->
-    <k-form-buttons :lock="lock" />
   </k-panel>
 </template>
 
 <script>
 export default {
-  inheritAttrs: false,
-  props: {
-    lock: [Boolean, Object],
-  }
+  inheritAttrs: false
 };
 </script>
 
