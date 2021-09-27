@@ -178,7 +178,7 @@ return [
             $passwordConfirmation = get('passwordConfirmation');
 
             // validate the password
-            UserRules::validPassword($user, $password);
+            UserRules::validPassword($user, $password ?? '');
 
             // compare passwords
             if ($password !== $passwordConfirmation) {
