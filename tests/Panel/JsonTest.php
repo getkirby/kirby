@@ -13,6 +13,15 @@ class JsonTest extends TestCase
     /**
      * @covers ::response
      */
+    public function testResponseEmptyArray()
+    {
+        $response = Json::response([]);
+        $this->assertSame(404, $response->code());
+    }
+
+    /**
+     * @covers ::response
+     */
     public function testResponseThrowable()
     {
         $data     = new Exception();
