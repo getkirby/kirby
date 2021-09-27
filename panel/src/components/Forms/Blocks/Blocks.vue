@@ -502,6 +502,12 @@ export default {
       const availableFieldsets = Object.keys(this.fieldsets);
       blocks = blocks.filter(block => availableFieldsets.includes(block.type));
 
+      // respect max limit
+      if (this.max) {
+        const maxBlocksLimit = this.max - this.blocks.length;
+        blocks = blocks.slice(0, maxBlocksLimit);
+      }
+
       if (this.selected !== null) {
         const index = this.findIndex(this.selected)
         this.blocks.splice(index + 1, 0, ...blocks);
