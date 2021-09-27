@@ -46,7 +46,7 @@ export default {
   cursor: pointer;
   background-color: var(--color-gray-900);
   color: var(--color-light);
-  border-radius: var(--rounded-xs);
+  border-radius: var(--rounded-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -58,13 +58,15 @@ export default {
   color: #fff;
 }
 .k-tag-text {
-  padding: 0 .75rem;
+  padding: .3rem .75rem .375rem;
+  line-height: var(--leading-tight);
 }
 .k-tag-toggle {
   color: rgba(255, 255, 255, .7);
   width: 2rem;
   height: 100%;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   border-inline-start: 1px solid rgba(255, 255, 255, .15);

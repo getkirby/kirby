@@ -348,7 +348,8 @@ export default {
 .k-input[data-theme="field"][data-type="tags"] .k-tag {
   margin-inline-end: .25rem;
   margin-bottom: .25rem;
-  height: 1.75rem;
+  height: auto;
+  min-height: 1.75rem;
   font-size: var(--text-sm);
 }
 .k-input[data-theme="field"][data-type="tags"] .k-tags-input input {
