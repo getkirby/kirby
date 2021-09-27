@@ -498,6 +498,10 @@ export default {
         blocks = await this.$api.post(this.endpoints.field + "/paste", { html: input });
       }
 
+      // filters only supported blocks
+      const availableFieldsets = Object.keys(this.fieldsets);
+      blocks = blocks.filter(block => availableFieldsets.includes(block.type));
+
       if (this.selected !== null) {
         const index = this.findIndex(this.selected)
         this.blocks.splice(index + 1, 0, ...blocks);
