@@ -15,6 +15,14 @@ export default async function (path, options = {}) {
       throw data.$dialog.error;
     }
 
+    // check for an existing dialog component
+    if (!data.$dialog.component || this.$helper.isComponent(data.$dialog.component) === false) {
+      throw `The dialog component does not exist`;
+    }
+
+    // make sure the dialog always receives a props object
+    data.$dialog.props = data.$dialog.props || {};
+
     // open the dialog and keep the dialog props in the store
     this.$store.dispatch("dialog", data.$dialog);
 

@@ -19,7 +19,7 @@ export default {
       }
 
       store.dispatch(
-        "error",
+        "notification/error",
         notification + ". See the console for more information."
       );
     };
