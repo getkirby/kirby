@@ -568,8 +568,6 @@ class Dom
                 );
                 $element->removeAttributeNode($attr);
             }
-
-            // TODO: escape XSS attacks in query parameters
         } else {
             // check for unwanted URLs in other attributes
             foreach (static::extractUrls($value) as $url) {
@@ -583,9 +581,6 @@ class Dom
                     $element->removeAttributeNode($attr);
                 }
             }
-
-            // TODO: why do we need this?
-            $attr->value = Escape::attr($attr->value);
         }
     }
 
