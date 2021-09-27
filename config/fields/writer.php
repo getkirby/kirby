@@ -1,5 +1,7 @@
 <?php
 
+use Kirby\Sane\Sane;
+
 return [
     'props' => [
         /**
@@ -27,7 +29,7 @@ return [
     ],
     'computed' => [
         'value' => function () {
-            return trim($this->value);
+            return Sane::sanitize(trim($this->value), 'html');
         }
     ],
 ];

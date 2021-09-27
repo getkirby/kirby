@@ -16,6 +16,7 @@ return [
     'r'          => 'Kirby\Cms\R',
     'response'   => 'Kirby\Cms\Response',
     's'          => 'Kirby\Cms\S',
+    'sane'       => 'Kirby\Sane\Sane',
     'site'       => 'Kirby\Cms\Site',
     'structure'  => 'Kirby\Cms\Structure',
     'url'        => 'Kirby\Cms\Url',
