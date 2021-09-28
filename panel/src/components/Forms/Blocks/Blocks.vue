@@ -77,7 +77,7 @@
       <k-block-importer
         ref="import"
         :endpoint="endpoints.field"
-        @paste="append($event, blocks.length)"
+        @paste="importBlocks($event, blocks.length)"
       />
     </template>
     <template v-else>
@@ -413,6 +413,19 @@ export default {
     },
     isBatched(block) {
       return this.batch.includes(block.id);
+    },
+    importBlocks(blocks, index) {
+      // filters only supported blocks
+      const availableFieldsets = Object.keys(this.fieldsets);
+      blocks = blocks.filter(block => availableFieldsets.includes(block.type));
+
+      // don't add blocks that exceed the maximum limit
+      if (this.max) {
+        const max = this.max - this.blocks.length;
+        blocks = blocks.slice(0, max);
+      }
+
+      this.append(blocks, index);
     },
     import() {
       this.$refs.import.open();
