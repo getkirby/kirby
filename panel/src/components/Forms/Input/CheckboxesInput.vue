@@ -19,10 +19,10 @@ import {
   required
 } from "@/mixins/props.js";
 
-import { 
-  required as validateRequired, 
-  minLegth as validateMinLength, 
-  maxLength as validateMaxLength 
+import {
+  required as validateRequired,
+  minLength as validateMinLength,
+  maxLength as validateMaxLength
 } from "vuelidate/lib/validators";
 
 export const props = {
