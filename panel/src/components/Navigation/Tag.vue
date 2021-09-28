@@ -63,7 +63,7 @@ export default {
 }
 .k-tag-toggle {
   color: rgba(255, 255, 255, .7);
-  width: 2rem;
+  width: 1.75rem;
   height: 100%;
   display: flex;
   flex-shrink: 0;
