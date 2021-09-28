@@ -15,7 +15,8 @@
       v-for="(group, groupName) in groups"
       :key="groupName"
       :open="group.open"
-      @keydown.cmd.v="paste"
+      @keydown.ctrl.v="paste"
+      @keydown.meta.v="paste"
     >
       <summary>{{ group.label }}</summary>
       <div class="k-block-types">
