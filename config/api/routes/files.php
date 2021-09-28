@@ -113,7 +113,7 @@ return [
         }
     ],
     [
-        'pattern' => $pattern . '/search',
+        'pattern' => 'files/search',
         'method'  => 'GET|POST',
         'action'  => function () {
             $files = $this
