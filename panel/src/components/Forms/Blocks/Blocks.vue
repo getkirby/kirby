@@ -47,8 +47,12 @@
         />
         <template #footer>
           <div class="k-blocks-empty">
-            <k-empty icon="add" @click="choose(blocks.length)">{{ $t('add') }}</k-empty>
-            <k-empty icon="download" @click="paste(blocks.length)">{{ $t('paste') }}</k-empty>
+            <k-empty icon="add" @click="choose(blocks.length)">
+              {{ $t('add') }}
+            </k-empty>
+            <k-empty icon="download" @click="paste(blocks.length)">
+              {{ $t('paste') }}
+            </k-empty>
           </div>
         </template>
       </k-draggable>
@@ -92,10 +96,10 @@
 import Importer from "./BlockImporter.vue";
 
 export default {
-  inheritAttrs: false,
   components: {
     "k-block-importer": Importer
   },
+  inheritAttrs: false,
   props: {
     autofocus: Boolean,
     empty: String,
@@ -461,7 +465,7 @@ export default {
         this.$refs["block-" + block.id][0].open();
       }
     },
-    paste(index) {
+    paste() {
       this.$refs.import.open();
     },
     prevNext(index) {
