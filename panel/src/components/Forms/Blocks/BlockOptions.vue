@@ -69,7 +69,7 @@
         <k-dropdown-item icon="copy" @click="$emit('copy')">
           {{ $t("copy") }}
         </k-dropdown-item>
-        <k-dropdown-item icon="download" @click="$emit('paste')" :disabled="!canPaste">
+        <k-dropdown-item icon="download" @click="$emit('paste')">
           {{ $t("paste") }}
         </k-dropdown-item>
         <hr>
@@ -98,11 +98,6 @@ export default {
     isEditable: Boolean,
     isFull: Boolean,
     isHidden: Boolean,
-  },
-  computed: {
-    canPaste() {
-      return Array.isArray(this.$store.state.blocks.clipboard) && this.$store.state.blocks.clipboard.length > 0;
-    }
   },
   methods: {
     open() {

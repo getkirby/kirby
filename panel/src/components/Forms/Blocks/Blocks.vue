@@ -48,8 +48,7 @@
         <template #footer>
           <div class="k-blocks-empty">
             <k-empty icon="add" @click="choose(blocks.length)">{{ $t('add') }}</k-empty>
-            <k-empty v-if="!isEmptyClipboard" icon="download" @click="paste(blocks.length)">{{ $t('paste') }}</k-empty>
-            <k-empty icon="upload" @click="$refs.import.open()">{{ $t('import') }}</k-empty>
+            <k-empty icon="download" @click="paste(blocks.length)">{{ $t('paste') }}</k-empty>
           </div>
         </template>
       </k-draggable>
@@ -294,7 +293,13 @@ export default {
         }
       });
 
-      this.$store.dispatch("blocks/copy", blocks);
+      let input = document.createElement("textarea");
+      input.value = JSON.stringify(blocks, null, 2);
+
+      document.body.append(input);
+      input.select();
+      document.execCommand("copy");
+      input.remove();
 
       // a sign that it has been copied
       this.$store.dispatch("notification/success", blocks.length + " blocks copied!");
@@ -444,7 +449,7 @@ export default {
       }
     },
     paste(index) {
-      this.append(this.$store.state.blocks.clipboard, index);
+      this.$refs.import.open();
     },
     prevNext(index) {
       if (this.blocks[index]) {
