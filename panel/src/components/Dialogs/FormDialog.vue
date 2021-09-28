@@ -12,6 +12,7 @@
       <k-text v-html="text" />
     </template>
     <k-form
+      v-if="hasFields"
       ref="form"
       :value="model"
       :fields="fields"
@@ -19,6 +20,9 @@
       @input="$emit('input', $event)"
       @submit="$emit('submit', $event)"
     />
+    <k-box v-else theme="negative">
+      This form dialog has no fields
+    </k-box>
   </k-dialog>
 </template>
 
@@ -65,6 +69,11 @@ export default {
   data() {
     return {
       model: this.value
+    }
+  },
+  computed: {
+    hasFields() {
+      return Object.keys(this.fields).length > 0;
     }
   },
   watch: {

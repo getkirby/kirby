@@ -8,13 +8,17 @@ export default function (path, options) {
       const data = await Fiber.request("dropdowns/" + path, options);
 
       // the GET request for the dialog is failing
-      if (!data.$dropdown || !data.$dropdown.options) {
-        throw `The dropdown could not be loaded`;
+      if (!data.$dropdown) {
+        throw "The dropdown could not be loaded";
       }
 
       // the dropdown sends a backend error
       if (data.$dropdown.error) {
         throw data.$dropdown.error;
+      }
+
+      if (Array.isArray(data.$dropdown.options) === false || data.$dropdown.options.length === 0) {
+        throw "The dropdown is empty";
       }
 
       data.$dropdown.options.map(option => {

@@ -55,6 +55,10 @@ abstract class Json
             $data = static::error('Invalid response', 500);
         }
 
+        if (empty($data) === true) {
+            $data = static::error('The response is empty', 404);
+        }
+
         // always inject the response code
         $data['code']     = $data['code']    ?? 200;
         $data['path']     = $options['path'] ?? null;
