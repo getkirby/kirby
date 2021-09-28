@@ -68,20 +68,23 @@ export default {
 .k-layout-column .k-blocks .k-block-container:last-of-type {
   flex-grow: 1;
 }
-.k-layout-column .k-blocks .k-empty {
+.k-layout-column .k-blocks-empty {
   position: absolute;
   inset: 0;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  border: 0;
   opacity: 0;
   transition: opacity .3s;
 }
-.k-layout-column .k-blocks .k-empty:hover {
+.k-layout-column .k-blocks-empty:hover {
   opacity: 1;
 }
-.k-layout-column .k-blocks .k-empty .k-icon {
+.k-layout-column .k-blocks-empty .k-empty {
+  width: auto;
+  flex-grow: 0;
+  border: 0;
+}
+.k-layout-column .k-blocks-empty .k-empty .k-icon {
+  width: 1rem;
   border-inline-end: 0;
 }
 </style>

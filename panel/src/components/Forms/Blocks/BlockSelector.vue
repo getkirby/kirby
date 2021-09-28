@@ -15,6 +15,7 @@
       v-for="(group, groupName) in groups"
       :key="groupName"
       :open="group.open"
+      @keydown.cmd.v="paste"
     >
       <summary>{{ group.label }}</summary>
       <div class="k-block-types">
@@ -31,9 +32,6 @@
         />
       </div>
     </details>
-    <p v-if="!headline" class="k-clipboard-hint">
-      Press <kbd>cmd+v</kbd> to import blocks from your clipboard
-    </p>
   </k-dialog>
 </template>
 
@@ -111,11 +109,9 @@ export default {
     },
     onClose() {
       this.dialogIsOpen = false;
-      document.removeEventListener("paste", this.close);
     },
     onOpen() {
       this.dialogIsOpen = true;
-      document.addEventListener("paste", this.close);
     },
     open(payload, params = {}) {
 
@@ -131,6 +127,10 @@ export default {
       this.headline = options.headline;
       this.payload  = payload;
       this.$refs.dialog.open();
+    },
+    paste() {
+      this.$emit("paste");
+      this.close();
     }
   }
 };
@@ -185,16 +185,5 @@ export default {
 .k-block-types .k-button .k-icon {
   width: 38px;
   height: 38px;
-}
-.k-clipboard-hint {
-  padding-top: 1.5rem;
-  font-size: var(--text-xs);
-}
-.k-clipboard-hint kbd {
-  background: rgba(0, 0, 0, .5);
-  font-family: var(--font-mono);
-  padding: .25rem .5rem;
-  border-radius: var(--rounded);
-  margin: 0 .25rem;
 }
 </style>

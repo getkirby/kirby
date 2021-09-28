@@ -11,11 +11,20 @@
           <k-dropdown-item :disabled="isFull" icon="add" @click="$refs.blocks.choose(value.length)">
             {{ $t('add') }}
           </k-dropdown-item>
+          <hr>
+          <k-dropdown-item :disabled="isFull" icon="upload" @click="$refs.blocks.import()">
+            {{ $t('import') }}
+          </k-dropdown-item>
+          <hr>
+          <k-dropdown-item :disabled="isEmpty" icon="copy" @click="$refs.blocks.copyAll()">
+            {{ $t('copy') }}
+          </k-dropdown-item>
+          <k-dropdown-item :disabled="isFull || isEmptyClipboard" icon="download" @click="$refs.blocks.paste(value.length)">
+            {{ $t('paste') }}
+          </k-dropdown-item>
+          <hr>
           <k-dropdown-item :disabled="isEmpty" icon="trash" @click="$refs.blocks.confirmToRemoveAll()">
             {{ $t('delete.all') }}
-          </k-dropdown-item>
-          <k-dropdown-item :disabled="isEmpty" icon="copy" @click="$refs.blocks.copyAll()">
-            {{ $t('copy.all') }}
           </k-dropdown-item>
         </k-dropdown-content>
       </k-dropdown>
@@ -73,6 +82,10 @@ export default {
     },
     isEmpty() {
       return this.value.length === 0;
+    },
+    isEmptyClipboard() {
+      const clipboard = this.$store.state.blocks.clipboard;
+      return Array.isArray(clipboard) === false || clipboard.length === 0;
     },
     isFull() {
       if (this.max === null) {

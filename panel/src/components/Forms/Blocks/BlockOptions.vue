@@ -2,6 +2,12 @@
   <k-dropdown class="k-block-options">
     <template v-if="isBatched">
       <k-button
+        :tooltip="$t('copy')"
+        class="k-block-options-button"
+        icon="copy"
+        @mousedown.native.prevent="$emit('copy')"
+      />
+      <k-button
         :tooltip="$t('remove')"
         class="k-block-options-button"
         icon="trash"
@@ -60,6 +66,13 @@
           {{ $t("field.blocks.changeType") }}
         </k-dropdown-item>
         <hr>
+        <k-dropdown-item icon="copy" @click="$emit('copy')">
+          {{ $t("copy") }}
+        </k-dropdown-item>
+        <k-dropdown-item icon="download" @click="$emit('paste')" :disabled="!canPaste">
+          {{ $t("paste") }}
+        </k-dropdown-item>
+        <hr>
         <k-dropdown-item :icon="isHidden ? 'preview' : 'hidden'" @click="$emit(isHidden ? 'show' : 'hide')">
           {{ isHidden === true ? $t('show') : $t('hide') }}
         </k-dropdown-item>
@@ -85,6 +98,11 @@ export default {
     isEditable: Boolean,
     isFull: Boolean,
     isHidden: Boolean,
+  },
+  computed: {
+    canPaste() {
+      return Array.isArray(this.$store.state.blocks.clipboard) && this.$store.state.blocks.clipboard.length > 0;
+    }
   },
   methods: {
     open() {

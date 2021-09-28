@@ -276,6 +276,7 @@
 
   "hide": "Hide",
   "hour": "Hour",
+  "import": "Import",
   "insert": "Insert",
   "insert.after": "Insert after",
   "insert.before": "Insert before",
@@ -421,6 +422,7 @@
   "pagination.page": "Page",
 
   "password": "Password",
+  "paste": "Paste",
   "pixel": "Pixel",
   "prev": "Previous",
   "preview": "Preview",

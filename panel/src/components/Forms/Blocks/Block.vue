@@ -10,6 +10,8 @@
     :data-translate="fieldset.translate"
     class="k-block-container"
     tabindex="0"
+    @keydown.cmd.c="onCopy"
+    @keydown.cmd.v="onPaste"
     @keydown.ctrl.shift.down.prevent="$emit('sortDown')"
     @keydown.ctrl.shift.up.prevent="$emit('sortUp')"
     @focus="$emit('focus')"
@@ -204,6 +206,27 @@ export default {
           this.skipFocus = false;
         });
       }
+    },
+    isInputEvent(e) {
+      if (e.target && e.target.closest('input, textarea, [contenteditable], .k-writer')) {
+        return true;
+      }
+
+      return false;
+    },
+    onCopy(e) {
+      if (this.isInputEvent(e)) {
+        return false;
+      }
+
+      this.$emit("copy");
+    },
+    onPaste(e) {
+      if (this.isInputEvent(e)) {
+        return false;
+      }
+
+      this.$emit("paste");
     },
     open() {
       if (this.$refs.drawer) {
