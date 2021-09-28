@@ -341,7 +341,7 @@ class Query
      */
     public function innerJoin($table, $on)
     {
-        return $this->join($table, $on, 'inner');
+        return $this->join($table, $on, 'inner join');
     }
 
     /**
