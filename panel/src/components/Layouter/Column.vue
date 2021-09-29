@@ -74,16 +74,12 @@ export default {
   justify-content: center;
   opacity: 0;
   transition: opacity .3s;
+  border: 0;
 }
 .k-layout-column .k-blocks-empty:hover {
   opacity: 1;
 }
-.k-layout-column .k-blocks-empty .k-empty {
-  width: auto;
-  flex-grow: 0;
-  border: 0;
-}
-.k-layout-column .k-blocks-empty .k-empty .k-icon {
+.k-layout-column .k-blocks-empty.k-empty .k-icon {
   width: 1rem;
   border-inline-end: 0;
 }

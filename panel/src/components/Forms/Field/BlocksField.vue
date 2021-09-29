@@ -2,7 +2,6 @@
   <k-field
     v-bind="$props"
     class="k-blocks-field"
-    @click.native="focus()"
   >
     <template #options>
       <k-dropdown v-if="hasFieldsets">
@@ -15,7 +14,7 @@
           <k-dropdown-item :disabled="isEmpty" icon="template" @click="$refs.blocks.copyAll()">
             {{ $t('copy.all') }}
           </k-dropdown-item>
-          <k-dropdown-item :disabled="isFull" icon="download" @click="$refs.blocks.paste(value.length)">
+          <k-dropdown-item :disabled="isFull" icon="download" @click="$refs.blocks.pasteboard()">
             {{ $t('paste') }}
           </k-dropdown-item>
           <hr>

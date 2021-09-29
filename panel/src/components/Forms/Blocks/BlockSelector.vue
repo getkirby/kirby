@@ -15,8 +15,6 @@
       v-for="(group, groupName) in groups"
       :key="groupName"
       :open="group.open"
-      @keydown.ctrl.v="paste"
-      @keydown.meta.v="paste"
     >
       <summary>{{ group.label }}</summary>
       <div class="k-block-types">
@@ -128,10 +126,6 @@ export default {
       this.headline = options.headline;
       this.payload  = payload;
       this.$refs.dialog.open();
-    },
-    paste() {
-      this.$emit("paste");
-      this.close();
     }
   }
 };

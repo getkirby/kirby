@@ -16,21 +16,6 @@
  */
 export default {
   inheritAttrs: false,
-  props: {
-    endpoint: String,
-  },
-  data() {
-    return {
-      fields: {
-        html: {
-          label: "Paste HTML, text or JSON to create blocks …",
-          type: "textarea",
-          size: "large",
-          buttons: false
-        }
-      },
-    }
-  },
   methods: {
     close() {
       this.$refs.dialog.close();
@@ -38,13 +23,8 @@ export default {
     open() {
       this.$refs.dialog.open();
     },
-    async onPaste(clipboardEvent) {
-      const html = clipboardEvent.clipboardData.getData("text/html") || clipboardEvent.clipboardData.getData("text/plain") || null;
-
-      // pass html or plain text to the paste endpoint to convert it to blocks
-      const blocks = await this.$api.post(this.endpoint + "/paste", { html: html });
-
-      this.$emit("paste", blocks);
+    onPaste(clipboardEvent) {
+      this.$emit("paste", clipboardEvent);
       this.close();
     }
   }

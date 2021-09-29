@@ -33,11 +33,11 @@
           @chooseToPrepend="choose(index)"
           @copy="copy()"
           @confirmToRemoveSelected="confirmToRemoveSelected"
-          @click.native.stop
+          @click.native.stop="select(block)"
           @duplicate="duplicate(block, index)"
           @focus="select(block)"
           @hide="hide(block)"
-          @paste="paste(index + 1)"
+          @paste="pasteboard()"
           @prepend="add($event, index)"
           @remove="remove(block)"
           @sortDown="sort(block, index, index + 1)"
@@ -46,14 +46,13 @@
           @update="update(block, $event)"
         />
         <template #footer>
-          <div class="k-blocks-empty">
-            <k-empty icon="add" @click="choose(blocks.length)">
-              {{ $t('add') }}
-            </k-empty>
-            <k-empty icon="download" @click="paste(blocks.length)">
-              {{ $t('paste') }}
-            </k-empty>
-          </div>
+          <k-empty
+            class="k-blocks-empty"
+            icon="box"
+            @click="choose(blocks.length)"
+          >
+            {{ $t('field.blocks.empty') }}
+          </k-empty>
         </template>
       </k-draggable>
 
@@ -63,7 +62,6 @@
         :fieldset-groups="fieldsetGroups"
         @add="add"
         @convert="convert"
-        @paste="paste(blocks.length)"
       />
 
       <k-remove-dialog
@@ -78,10 +76,9 @@
         @submit="removeSelected"
       />
 
-      <k-block-importer
-        ref="import"
-        :endpoint="endpoints.field"
-        @paste="append($event, blocks.length)"
+      <k-block-pasteboard
+        ref="pasteboard"
+        @paste="pasteFromClipboard($event, true)"
       />
     </template>
     <template v-else>
@@ -93,11 +90,11 @@
 </template>
 
 <script>
-import Importer from "./BlockImporter.vue";
+import Pasteboard from "./BlockPasteboard.vue";
 
 export default {
   components: {
-    "k-block-importer": Importer
+    "k-block-pasteboard": Pasteboard
   },
   inheritAttrs: false,
   props: {
@@ -151,10 +148,6 @@ export default {
     isEmpty() {
       return this.blocks.length === 0;
     },
-    isEmptyClipboard() {
-      const clipboard = this.$store.state.blocks.clipboard;
-      return Array.isArray(clipboard) === false || clipboard.length === 0;
-    },
     isFull() {
       if (this.max === null) {
         return false;
@@ -165,6 +158,17 @@ export default {
     selected() {
       return this.$store.state.blocks.current;
     },
+    selectedOrBatched() {
+      if (this.batch.length > 0) {
+        return this.batch;
+      }
+
+      if (this.selected) {
+        return [this.selected];
+      }
+
+      return [];
+    }
   },
   watch: {
     value() {
@@ -179,7 +183,9 @@ export default {
       }
     };
 
+    document.addEventListener("copy", this.copy, true);
     document.addEventListener("focus", this.outsideFocus, true);
+    document.addEventListener("paste", this.pasteFromClipboard, true);
 
     this.onAlt = (event) => {
       if (event.altKey) {
@@ -191,30 +197,18 @@ export default {
 
     document.addEventListener("keydown", this.onAlt, true);
     document.addEventListener("keyup", this.onAlt, true);
-
   },
   destroyed() {
+    document.removeEventListener("copy", this.copy);
     document.removeEventListener("focus", this.outsideFocus);
     document.removeEventListener("keydown", this.onAlt);
     document.removeEventListener("keyup", this.onAlt);
+    document.removeEventListener("paste", this.pasteFromClipboard);
   },
   mounted() {
-    // focus first wysiwyg block if autofocus enabled
+    // focus first block
     if (this.$props.autofocus === true) {
-      let skipFocus = false;
-
-      Object.values(this.blocks).forEach(block => {
-        if (skipFocus === false) {
-          let fieldset = this.fieldset(block);
-
-          if (fieldset.wysiwyg === true) {
-            skipFocus = true;
-            setTimeout(() => {
-              this.focus(block);
-            }, 1);
-          }
-        }
-      });
+      this.focus();
     }
   },
   methods: {
@@ -289,36 +283,65 @@ export default {
     confirmToRemoveSelected() {
       this.$refs.removeSelected.open();
     },
-    copy() {
-      // get selected blocks
-      let selected = this.batch.length === 0 ? [this.selected] : this.batch;
+    copy(e) {
+      // don't copy when the drawer is open
+      if (this.isEditing === true) {
+        return false;
+      }
 
-      // only copy if something is selected
-      if (selected.length === 0) {
+      // don't copy when there are no blocks yet
+      if (this.blocks.length === 0) {
+        return false;
+      }
+
+      // don't copy when nothing is selected
+      if (this.selectedOrBatched.length === 0) {
+        return false;
+      }
+
+      // don't copy if an input is focused
+      if (this.isInputEvent(e) === true) {
         return false;
       }
 
       let blocks = [];
 
-      selected.forEach(id => {
+      this.selectedOrBatched.forEach(id => {
         const block = this.find(id);
         if (block) {
           blocks.push(block);
         }
       });
 
-      let input = document.createElement("textarea");
-      input.value = JSON.stringify(blocks, null, 2);
+      // don't copy if no blocks could be found
+      if (blocks.length === 0) {
+        return false;
+      }
 
-      document.body.append(input);
-      input.select();
-      document.execCommand("copy");
-      input.remove();
+      const json = JSON.stringify(blocks, null, 2);
+
+      // original clipboard event can be
+      // used to store in the clipboard without a hack
+      if (e instanceof ClipboardEvent) {
+        e.preventDefault();
+        e.clipboardData.setData("text/plain", json);
+
+      // use an invisible textarea and execCommand to
+      // write to the clipboard
+      } else {
+        let input = document.createElement("textarea");
+        input.value = json
+        document.body.append(input);
+        input.select();
+        document.execCommand("copy");
+        input.remove();
+
+        // reselect blocks
+        this.batch = this.selectedOrBatched;
+      }
 
       // a sign that it has been copied
-      this.$store.dispatch("notification/success", blocks.length + " blocks copied!");
-
-      this.batch = selected;
+      this.$store.dispatch("notification/success", `${blocks.length} copied!`);
     },
     copyAll() {
       this.selectAll();
@@ -430,9 +453,16 @@ export default {
     isBatched(block) {
       return this.batch.includes(block.id);
     },
+    isInputEvent(e) {
+      const focused = document.querySelector(":focus");
+      return focused && focused.matches("input, textarea, [contenteditable], .k-writer");
+    },
     isLastInBatch(block) {
       const [lastItem] = this.batch.slice(-1);
       return lastItem && block.id === lastItem;
+    },
+    isOnlyInstance() {
+      return document.querySelectorAll(".k-blocks").length === 1;
     },
     isSelected(block) {
       return this.selected && this.selected === block.id;
@@ -461,8 +491,61 @@ export default {
         this.$refs["block-" + block.id][0].open();
       }
     },
-    paste() {
-      this.$refs.import.open();
+    async paste(e) {
+      let html = e;
+
+      // get the content from the clipboard if an event is given
+      if (e instanceof ClipboardEvent) {
+        e.preventDefault();
+        html = e.clipboardData.getData("text/html") || e.clipboardData.getData("text/plain") || null;
+      }
+
+      // pass html or plain text to the paste endpoint to convert it to blocks
+      const blocks = await this.$api.post(this.endpoints.field + "/paste", { html: html });
+
+      // get the index
+      let lastItem  = this.selectedOrBatched[this.selectedOrBatched.length - 1];
+      let lastIndex = this.findIndex(lastItem);
+
+      if (lastIndex === -1) {
+        lastIndex = this.blocks.length;
+      }
+
+      this.append(blocks, lastIndex + 1);
+    },
+    pasteFromClipboard(e, force = false) {
+
+      // always paste when the force flag is set
+      if (force === true) {
+        return this.paste(e);
+      }
+
+      // never paste blocks when the focus is in an input element
+      if (this.isInputEvent(e) === true) {
+        return false;
+      }
+
+      // never paste when dialogs or drawers are open
+      if (this.isEditing === true) {
+        return false;
+      }
+
+      // if nothing is selected …
+      if (this.selectedOrBatched.length === 0) {
+
+        // if there are multiple instances,
+        // pasting is disabled to avoid multiple
+        // pasted blocks
+        if (this.isOnlyInstance() !== true) {
+          return false;
+        }
+
+      }
+
+      return this.paste(e);
+    },
+    pasteboard() {
+      this.$refs.pasteboard.open();
     },
     prevNext(index) {
       if (this.blocks[index]) {
@@ -510,6 +593,7 @@ export default {
     select(block) {
       if (block && this.altKey) {
         this.addToBatch(block);
+        this.$store.dispatch("blocks/current", null);
         return;
       }
 
@@ -573,15 +657,6 @@ export default {
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
-}
-.k-blocks-empty {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-3);
-}
-.k-blocks-empty > * {
-  flex-grow: 1;
-  min-width: 5rem;
 }
 .k-blocks-list > .k-blocks-empty:not(:only-child) {
   display: none;
