@@ -205,7 +205,7 @@ class BlocksFieldTest extends TestCase
         $routes = $field->routes();
 
         $this->assertIsArray($routes);
-        $this->assertCount(3, $routes);
+        $this->assertCount(4, $routes);
     }
 
     public function testStore()
