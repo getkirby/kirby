@@ -507,6 +507,25 @@ class File
     }
 
     /**
+     * Sanitizes the file contents depending on the file type
+     * by overwriting the file with the sanitized version
+     *
+     * @param string|bool $typeLazy Explicit sane handler type string,
+     *                              `true` for lazy autodetection or
+     *                              `false` for normal autodetection
+     * @return void
+     *
+     * @throws \Kirby\Exception\InvalidArgumentException If the file didn't pass validation
+     * @throws \Kirby\Exception\LogicException If more than one handler applies
+     * @throws \Kirby\Exception\NotFoundException If the handler was not found
+     * @throws \Kirby\Exception\Exception On other errors
+     */
+    public function sanitizeContents($typeLazy = false): void
+    {
+        Sane::sanitizeFile($this->root(), $typeLazy);
+    }
+
+    /**
      * Returns the sha1 hash of the file
      * @since 3.6.0
      *
