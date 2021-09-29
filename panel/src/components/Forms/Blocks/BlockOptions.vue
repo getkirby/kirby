@@ -4,7 +4,7 @@
       <k-button
         :tooltip="$t('copy')"
         class="k-block-options-button"
-        icon="copy"
+        icon="template"
         @mousedown.native.prevent="$emit('copy')"
       />
       <k-button
@@ -66,7 +66,7 @@
           {{ $t("field.blocks.changeType") }}
         </k-dropdown-item>
         <hr>
-        <k-dropdown-item icon="copy" @click="$emit('copy')">
+        <k-dropdown-item icon="template" @click="$emit('copy')">
           {{ $t("copy") }}
         </k-dropdown-item>
         <k-dropdown-item icon="download" @click="$emit('paste')">

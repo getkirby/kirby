@@ -12,8 +12,8 @@
             {{ $t('add') }}
           </k-dropdown-item>
           <hr>
-          <k-dropdown-item :disabled="isEmpty" icon="copy" @click="$refs.blocks.copyAll()">
-            {{ $t('copy') }}
+          <k-dropdown-item :disabled="isEmpty" icon="template" @click="$refs.blocks.copyAll()">
+            {{ $t('copy.all') }}
           </k-dropdown-item>
           <k-dropdown-item :disabled="isFull" icon="download" @click="$refs.blocks.paste(value.length)">
             {{ $t('paste') }}

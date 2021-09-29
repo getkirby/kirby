@@ -81,7 +81,7 @@
       <k-block-importer
         ref="import"
         :endpoint="endpoints.field"
-        @paste="importBlocks($event, blocks.length)"
+        @paste="append($event, blocks.length)"
       />
     </template>
     <template v-else>
@@ -225,10 +225,20 @@ export default {
       }
 
       if (Array.isArray(what)) {
-        const blocks = this.$helper.clone(what).map(block => {
+        let blocks = this.$helper.clone(what).map(block => {
           block.id = this.$helper.uuid();
           return block;
         });
+
+        // filters only supported blocks
+        const availableFieldsets = Object.keys(this.fieldsets);
+        blocks = blocks.filter(block => availableFieldsets.includes(block.type));
+
+        // don't add blocks that exceed the maximum limit
+        if (this.max) {
+          const max = this.max - this.blocks.length;
+          blocks = blocks.slice(0, max);
+        }
 
         this.blocks.splice(index, 0, ...blocks);
         this.save();
@@ -307,6 +317,8 @@ export default {
 
       // a sign that it has been copied
       this.$store.dispatch("notification/success", blocks.length + " blocks copied!");
+
+      this.batch = selected;
     },
     copyAll() {
       this.selectAll();
@@ -417,22 +429,6 @@ export default {
     },
     isBatched(block) {
       return this.batch.includes(block.id);
-    },
-    importBlocks(blocks, index) {
-      // filters only supported blocks
-      const availableFieldsets = Object.keys(this.fieldsets);
-      blocks = blocks.filter(block => availableFieldsets.includes(block.type));
-
-      // don't add blocks that exceed the maximum limit
-      if (this.max) {
-        const max = this.max - this.blocks.length;
-        blocks = blocks.slice(0, max);
-      }
-
-      this.append(blocks, index);
-    },
-    import() {
-      this.$refs.import.open();
     },
     isLastInBatch(block) {
       const [lastItem] = this.batch.slice(-1);
