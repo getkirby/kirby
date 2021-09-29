@@ -64,6 +64,7 @@
         :fieldset-groups="fieldsetGroups"
         @add="add"
         @convert="convert"
+        @paste="pasteFromClipboard($event, true)"
       />
 
       <k-remove-dialog

@@ -5,8 +5,8 @@
     :submit-button="false"
     class="k-block-selector"
     size="medium"
-    @open="onOpen()"
-    @close="onClose()"
+    @open="onOpen"
+    @close="onClose"
   >
     <k-headline v-if="headline">
       {{ headline }}
@@ -31,6 +31,9 @@
         />
       </div>
     </details>
+    <p class="k-clipboard-hint">
+      Press <kbd>cmd+v</kbd> or <kbd>ctrl+v</kbd> to paste/import blocks from your clipboard
+    </p>
   </k-dialog>
 </template>
 
@@ -108,9 +111,15 @@ export default {
     },
     onClose() {
       this.dialogIsOpen = false;
+      document.removeEventListener("paste", this.onPaste);
     },
     onOpen() {
       this.dialogIsOpen = true;
+      document.addEventListener("paste", this.onPaste, true);
+    },
+    onPaste(clipboardEvent) {
+      this.$emit("paste", clipboardEvent);
+      this.close();
     },
     open(payload, params = {}) {
 
@@ -180,5 +189,17 @@ export default {
 .k-block-types .k-button .k-icon {
   width: 38px;
   height: 38px;
+}
+.k-clipboard-hint {
+  padding-top: .75rem;
+  font-size: var(--text-xs);
+  color: var(--color-gray-400);
+}
+.k-clipboard-hint kbd {
+  border: 1px solid rgba(204, 204, 204, .25);
+  font-family: var(--font-mono);
+  padding: .25rem;
+  border-radius: var(--rounded);
+  margin: 0 .25rem;
 }
 </style>
