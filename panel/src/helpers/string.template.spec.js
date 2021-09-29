@@ -12,7 +12,8 @@ describe("$helper.string.template", () => {
     user: {
       email: "bastian@getkirby.com",
       username: "bastian"
-    }
+    },
+    info: "",
   };
 
   it("should insert values", () => {
@@ -52,6 +53,9 @@ describe("$helper.string.template", () => {
 
     result = string.template("Counting: {{images.length}}", values);
     expect(result).to.equal("Counting: 3");
+
+    result = string.template("{{ title }}: {{ info }}", values);
+    expect(result).to.equal("Kirby: ");
   });
 
   it("should insert default", () => {
