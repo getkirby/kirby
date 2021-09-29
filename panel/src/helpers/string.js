@@ -80,7 +80,7 @@ export function stripHTML(string) {
 export function template(string, values = {}) {
   const resolve = function (parts, data = {}) {
     const part  = escapeHTML(parts.shift());
-    const value = data[part] || null;
+    const value = data[part] ?? null;
 
     if (value === null) {
       return Object.prototype.hasOwnProperty.call(data, part) || "…";
