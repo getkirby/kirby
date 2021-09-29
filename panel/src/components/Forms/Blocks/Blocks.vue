@@ -4,6 +4,8 @@
     :data-empty="blocks.length === 0"
     :data-alt="altKey"
     class="k-blocks"
+    @focusin="focussed = true"
+    @focusout="focussed = false"
   >
     <template v-if="hasFieldsets">
       <k-draggable
@@ -117,9 +119,11 @@ export default {
   },
   data() {
     return {
+      altKey: false,
       batch: [],
       blocks: this.value,
-      altKey: false,
+      current: null,
+      isFocussed: false,
     };
   },
   computed: {
@@ -156,7 +160,7 @@ export default {
       return this.blocks.length >= this.max;
     },
     selected() {
-      return this.$store.state.blocks.current;
+      return this.current;
     },
     selectedOrBatched() {
       if (this.batch.length > 0) {
@@ -252,7 +256,7 @@ export default {
       // move the selected block to the batch first
       if (this.selected !== null && this.batch.includes(this.selected) === false) {
         this.batch.push(this.selected);
-        this.$store.dispatch("blocks/current", null);
+        this.current = null;
       }
 
       if (this.batch.includes(block.id) === false) {
@@ -400,7 +404,7 @@ export default {
     },
     deselectAll() {
       this.batch = [];
-      this.$store.dispatch("blocks/current", null);
+      this.current = null;
     },
     async duplicate(block, index) {
       const copy = {
@@ -593,12 +597,12 @@ export default {
     select(block) {
       if (block && this.altKey) {
         this.addToBatch(block);
-        this.$store.dispatch("blocks/current", null);
+        this.current = null;
         return;
       }
 
       this.batch = [];
-      this.$store.dispatch("blocks/current", block ? block.id : null);
+      this.current = block ? block.id : null;
     },
     selectAll() {
       this.batch = Object.values(this.blocks).map(block => block.id);
@@ -657,6 +661,10 @@ export default {
   cursor: grabbing;
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
+}
+.k-blocks-list > .k-blocks-empty {
+  display: flex;
+  align-items: center;
 }
 .k-blocks-list > .k-blocks-empty:not(:only-child) {
   display: none;
