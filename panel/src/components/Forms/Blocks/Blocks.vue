@@ -457,7 +457,7 @@ export default {
     isBatched(block) {
       return this.batch.includes(block.id);
     },
-    isInputEvent(e) {
+    isInputEvent() {
       const focused = document.querySelector(":focus");
       return focused && focused.matches("input, textarea, [contenteditable], .k-writer");
     },
