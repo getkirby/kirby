@@ -221,6 +221,7 @@
   "field.blocks.delete.confirm.selected": "Do you really want to delete the selected blocks?",
   "field.blocks.empty": "No blocks yet",
   "field.blocks.fieldsets.label": "Please select a block type …",
+  "field.blocks.fieldsets.paste": "Press <kbd>{{ shortcut }}</kbd> to paste/import blocks from your clipboard",
   "field.blocks.gallery.name": "Gallery",
   "field.blocks.gallery.images.empty": "No images yet",
   "field.blocks.gallery.images.label": "Images",
@@ -423,6 +424,7 @@
 
   "password": "Password",
   "paste": "Paste",
+  "paste.after": "Paste after",
   "pixel": "Pixel",
   "prev": "Previous",
   "preview": "Preview",

@@ -70,7 +70,7 @@
           {{ $t("copy") }}
         </k-dropdown-item>
         <k-dropdown-item icon="download" @click="$emit('paste')">
-          {{ $t("paste") }}
+          {{ $t("paste.after") }}
         </k-dropdown-item>
         <hr>
         <k-dropdown-item :icon="isHidden ? 'preview' : 'hidden'" @click="$emit(isHidden ? 'show' : 'hide')">

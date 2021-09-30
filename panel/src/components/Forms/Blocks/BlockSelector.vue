@@ -31,9 +31,8 @@
         />
       </div>
     </details>
-    <p class="k-clipboard-hint">
-      Press <kbd>cmd+v</kbd> or <kbd>ctrl+v</kbd> to paste/import blocks from your clipboard
-    </p>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <p class="k-clipboard-hint" v-html="$t('field.blocks.fieldsets.paste', { shortcut })" />
   </k-dialog>
 </template>
 
@@ -56,6 +55,11 @@ export default {
       payload: null,
       event: "add",
       groups: this.createGroups()
+    }
+  },
+  computed: {
+    shortcut() {
+      return this.$helper.keyboard.metaKey() + '+v';
     }
   },
   methods: {
@@ -111,15 +115,11 @@ export default {
     },
     onClose() {
       this.dialogIsOpen = false;
-      document.removeEventListener("paste", this.onPaste);
+      document.removeEventListener("paste", this.close);
     },
     onOpen() {
       this.dialogIsOpen = true;
-      document.addEventListener("paste", this.onPaste, true);
-    },
-    onPaste(clipboardEvent) {
-      this.$emit("paste", clipboardEvent);
-      this.close();
+      document.addEventListener("paste", this.close, true);
     },
     open(payload, params = {}) {
 
@@ -191,13 +191,14 @@ export default {
   height: 38px;
 }
 .k-clipboard-hint {
-  padding-top: .75rem;
+  padding-top: 1.5rem;
   font-size: var(--text-xs);
   color: var(--color-gray-400);
 }
 .k-clipboard-hint kbd {
-  border: 1px solid rgba(204, 204, 204, .25);
+  background: rgba(0, 0, 0, .5);
   font-family: var(--font-mono);
+  letter-spacing: .1em;
   padding: .25rem;
   border-radius: var(--rounded);
   margin: 0 .25rem;

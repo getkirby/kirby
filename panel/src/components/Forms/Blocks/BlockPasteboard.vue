@@ -6,7 +6,9 @@
     size="large"
     class="k-block-importer"
   >
-    <textarea placeholder="Paste text or HTML here to create blocks …" @paste.prevent="onPaste" />
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <label for="pasteboard" v-html="$t('field.blocks.fieldsets.paste', { shortcut })" />
+    <textarea id="pasteboard" @paste.prevent="onPaste" />
   </k-dialog>
 </template>
 
@@ -16,6 +18,11 @@
  */
 export default {
   inheritAttrs: false,
+  computed: {
+    shortcut() {
+      return this.$helper.keyboard.metaKey() + '+v';
+    }
+  },
   methods: {
     close() {
       this.$refs.dialog.close();
@@ -38,6 +45,19 @@ export default {
 }
 .k-block-importer .k-dialog-body {
   padding: 0;
+}
+.k-block-importer label {
+  display: block;
+  padding: var(--spacing-6) var(--spacing-6) 0;
+  color: var(--color-gray-400);
+}
+.k-block-importer label kbd {
+  background: rgba(0, 0, 0, .5);
+  font-family: var(--font-mono);
+  letter-spacing: .1em;
+  padding: .25rem;
+  border-radius: var(--rounded);
+  margin: 0 .25rem;
 }
 .k-block-importer textarea {
   width: 100%;

@@ -323,25 +323,10 @@ export default {
         return false;
       }
 
-      const json = JSON.stringify(blocks, null, 2);
+      this.$helper.clipboard.write(blocks, e);
 
-      // original clipboard event can be
-      // used to store in the clipboard without a hack
-      if (e instanceof ClipboardEvent) {
-        e.preventDefault();
-        e.clipboardData.setData("text/plain", json);
-
-      // use an invisible textarea and execCommand to
-      // write to the clipboard
-      } else {
-        let input = document.createElement("textarea");
-        input.value = json
-        document.body.append(input);
-        input.select();
-        document.execCommand("copy");
-        input.remove();
-
-        // reselect blocks
+      if (e instanceof ClipboardEvent === false) {
+        // reselect the previously focussed elements
         this.batch = this.selectedOrBatched;
       }
 
@@ -497,13 +482,7 @@ export default {
       }
     },
     async paste(e) {
-      let html = e;
-
-      // get the content from the clipboard if an event is given
-      if (e instanceof ClipboardEvent) {
-        e.preventDefault();
-        html = e.clipboardData.getData("text/html") || e.clipboardData.getData("text/plain") || null;
-      }
+      const html = this.$helper.clipboard.read(e);
 
       // pass html or plain text to the paste endpoint to convert it to blocks
       const blocks = await this.$api.post(this.endpoints.field + "/paste", { html: html });
@@ -532,6 +511,12 @@ export default {
 
       // never paste when dialogs or drawers are open
       if (this.isEditing === true) {
+
+        // enable pasting when the block selector is open
+        if (this.$refs.selector && this.$refs.selector.isOpen() === true) {
+          return this.paste(e);
+        }
+
         return false;
       }
 
