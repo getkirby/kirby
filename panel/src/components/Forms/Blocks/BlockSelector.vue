@@ -5,6 +5,8 @@
     :submit-button="false"
     class="k-block-selector"
     size="medium"
+    @open="onOpen"
+    @close="onClose"
   >
     <k-headline v-if="headline">
       {{ headline }}
@@ -29,6 +31,8 @@
         />
       </div>
     </details>
+    <!-- eslint-disable-next-line vue/no-v-html -->
+    <p class="k-clipboard-hint" v-html="$t('field.blocks.fieldsets.paste', { shortcut })" />
   </k-dialog>
 </template>
 
@@ -45,6 +49,7 @@ export default {
   },
   data() {
     return {
+      dialogIsOpen: false,
       disabled: [],
       headline: null,
       payload: null,
@@ -52,9 +57,17 @@ export default {
       groups: this.createGroups()
     }
   },
+  computed: {
+    shortcut() {
+      return this.$helper.keyboard.metaKey() + '+v';
+    }
+  },
   methods: {
     add(type) {
       this.$emit(this.event, type, this.payload);
+      this.$refs.dialog.close();
+    },
+    close() {
       this.$refs.dialog.close();
     },
     createGroups() {
@@ -90,6 +103,9 @@ export default {
 
       return groups;
     },
+    isOpen() {
+      return this.dialogIsOpen;
+    },
     navigate(index) {
       const ref = this.$refs["fieldset-" + index];
 
@@ -97,7 +113,16 @@ export default {
         ref[0].focus();
       }
     },
+    onClose() {
+      this.dialogIsOpen = false;
+      this.$events.$off("paste", this.close);
+    },
+    onOpen() {
+      this.dialogIsOpen = true;
+      this.$events.$on("paste", this.close);
+    },
     open(payload, params = {}) {
+
       const options = {
         event: "add",
         disabled: [],
@@ -110,7 +135,7 @@ export default {
       this.headline = options.headline;
       this.payload  = payload;
       this.$refs.dialog.open();
-    },
+    }
   }
 };
 </script>
@@ -164,5 +189,18 @@ export default {
 .k-block-types .k-button .k-icon {
   width: 38px;
   height: 38px;
+}
+.k-clipboard-hint {
+  padding-top: 1.5rem;
+  font-size: var(--text-xs);
+  color: var(--color-gray-400);
+}
+.k-clipboard-hint kbd {
+  background: rgba(0, 0, 0, .5);
+  font-family: var(--font-mono);
+  letter-spacing: .1em;
+  padding: .25rem;
+  border-radius: var(--rounded);
+  margin: 0 .25rem;
 }
 </style>

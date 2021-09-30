@@ -52,7 +52,7 @@ export default {
       }
     },
     activeNodeAttrs: {
-      type: Array,
+      type: [Array, Object],
       default() {
         return [];
       }

@@ -17,6 +17,9 @@
  * @internal
  */
 export default {
+  props: {
+    endpoints: Object,
+  },
   computed: {
     textField() {
       return this.field("text", {});

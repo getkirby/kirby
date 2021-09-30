@@ -1,8 +1,11 @@
 <template>
   <div
+    ref="wrapper"
     :data-empty="blocks.length === 0"
     :data-alt="altKey"
     class="k-blocks"
+    @focusin="focussed = true"
+    @focusout="focussed = false"
   >
     <template v-if="hasFieldsets">
       <k-draggable
@@ -24,16 +27,19 @@
           :next="prevNext(index + 1)"
           :prev="prevNext(index - 1)"
           v-bind="block"
-          @append="add($event, index + 1)"
+          @append="append($event, index + 1)"
           @blur="select(null)"
           @choose="choose($event)"
           @chooseToAppend="choose(index + 1)"
           @chooseToConvert="chooseToConvert(block)"
           @chooseToPrepend="choose(index)"
+          @copy="copy()"
           @confirmToRemoveSelected="confirmToRemoveSelected"
+          @click.native.stop="select(block)"
           @duplicate="duplicate(block, index)"
           @focus="select(block)"
           @hide="hide(block)"
+          @paste="pasteboard()"
           @prepend="add($event, index)"
           @remove="remove(block)"
           @sortDown="sort(block, index, index + 1)"
@@ -43,11 +49,11 @@
         />
         <template #footer>
           <k-empty
-            icon="box"
             class="k-blocks-empty"
+            icon="box"
             @click="choose(blocks.length)"
           >
-            {{ empty || $t("field.blocks.empty") }}
+            {{ $t('field.blocks.empty') }}
           </k-empty>
         </template>
       </k-draggable>
@@ -58,6 +64,7 @@
         :fieldset-groups="fieldsetGroups"
         @add="add"
         @convert="convert"
+        @paste="paste($event)"
       />
 
       <k-remove-dialog
@@ -71,6 +78,11 @@
         :text="$t('field.blocks.delete.confirm.selected')"
         @submit="removeSelected"
       />
+
+      <k-block-pasteboard
+        ref="pasteboard"
+        @paste="paste($event)"
+      />
     </template>
     <template v-else>
       <k-box theme="info">
@@ -81,7 +93,12 @@
 </template>
 
 <script>
+import Pasteboard from "./BlockPasteboard.vue";
+
 export default {
+  components: {
+    "k-block-pasteboard": Pasteboard
+  },
   inheritAttrs: false,
   props: {
     autofocus: Boolean,
@@ -103,9 +120,11 @@ export default {
   },
   data() {
     return {
+      altKey: false,
       batch: [],
       blocks: this.value,
-      altKey: false,
+      current: null,
+      isFocussed: false,
     };
   },
   computed: {
@@ -128,6 +147,9 @@ export default {
     hasFieldsets() {
       return Object.keys(this.fieldsets).length;
     },
+    isEditing() {
+      return this.$store.state.dialog || this.$store.state.drawers.open.length > 0;
+    },
     isEmpty() {
       return this.blocks.length === 0;
     },
@@ -139,7 +161,18 @@ export default {
       return this.blocks.length >= this.max;
     },
     selected() {
-      return this.$store.state.blocks.current;
+      return this.current;
+    },
+    selectedOrBatched() {
+      if (this.batch.length > 0) {
+        return this.batch;
+      }
+
+      if (this.selected) {
+        return [this.selected];
+      }
+
+      return [];
     }
   },
   watch: {
@@ -148,51 +181,52 @@ export default {
     }
   },
   created() {
-    this.outsideFocus = (event) => {
-      const overlay = document.querySelector(".k-overlay:last-of-type");
-      if (this.$el.contains(event.target) === false && (!overlay || overlay.contains(event.target) === false)) {
-        this.select(null);
-      }
-    };
-
-    document.addEventListener("focus", this.outsideFocus, true);
-
-    this.onAlt = (event) => {
-      if (event.altKey) {
-        this.altKey = true;
-      } else {
-        this.altKey = false;
-      }
-    };
-
-    document.addEventListener("keydown", this.onAlt, true);
-    document.addEventListener("keyup", this.onAlt, true);
+    this.$events.$on("copy", this.copy);
+    this.$events.$on("focus", this.onOutsideFocus);
+    this.$events.$on("keydown", this.onAlt);
+    this.$events.$on("keyup", this.onAlt);
+    this.$events.$on("paste", this.onPaste);
   },
   destroyed() {
-    document.removeEventListener("focus", this.outsideFocus);
-    document.removeEventListener("keydown", this.onAlt);
-    document.removeEventListener("keyup", this.onAlt);
+    this.$events.$off("copy", this.copy);
+    this.$events.$off("focus", this.onOutsideFocus);
+    this.$events.$off("keydown", this.onAlt);
+    this.$events.$off("keyup", this.onAlt);
+    this.$events.$off("paste", this.onPaste);
   },
   mounted() {
-    // focus first wysiwyg block if autofocus enabled
+    // focus first block
     if (this.$props.autofocus === true) {
-      let skipFocus = false;
-
-      Object.values(this.blocks).forEach(block => {
-        if (skipFocus === false) {
-          let fieldset = this.fieldset(block);
-
-          if (fieldset.wysiwyg === true) {
-            skipFocus = true;
-            setTimeout(() => {
-              this.focus(block);
-            }, 1);
-          }
-        }
-      });
+      this.focus();
     }
   },
   methods: {
+    append(what, index) {
+      if (typeof what === "string") {
+        this.add(what, index);
+        return;
+      }
+
+      if (Array.isArray(what)) {
+        let blocks = this.$helper.clone(what).map(block => {
+          block.id = this.$helper.uuid();
+          return block;
+        });
+
+        // filters only supported blocks
+        const availableFieldsets = Object.keys(this.fieldsets);
+        blocks = blocks.filter(block => availableFieldsets.includes(block.type));
+
+        // don't add blocks that exceed the maximum limit
+        if (this.max) {
+          const max = this.max - this.blocks.length;
+          blocks = blocks.slice(0, max);
+        }
+
+        this.blocks.splice(index, 0, ...blocks);
+        this.save();
+      }
+    },
     async add(type = "text", index) {
       const block = await this.$api.get(this.endpoints.field + "/fieldsets/" + type);
       this.blocks.splice(index, 0, block);
@@ -207,7 +241,7 @@ export default {
       // move the selected block to the batch first
       if (this.selected !== null && this.batch.includes(this.selected) === false) {
         this.batch.push(this.selected);
-        this.$store.dispatch("blocks/current", null);
+        this.current = null;
       }
 
       if (this.batch.includes(block.id) === false) {
@@ -238,8 +272,58 @@ export default {
     confirmToRemoveSelected() {
       this.$refs.removeSelected.open();
     },
+    copy(e) {
+      // don't copy when the drawer is open
+      if (this.isEditing === true) {
+        return false;
+      }
+
+      // don't copy when there are no blocks yet
+      if (this.blocks.length === 0) {
+        return false;
+      }
+
+      // don't copy when nothing is selected
+      if (this.selectedOrBatched.length === 0) {
+        return false;
+      }
+
+      // don't copy if an input is focused
+      if (this.isInputEvent(e) === true) {
+        return false;
+      }
+
+      let blocks = [];
+
+      this.selectedOrBatched.forEach(id => {
+        const block = this.find(id);
+        if (block) {
+          blocks.push(block);
+        }
+      });
+
+      // don't copy if no blocks could be found
+      if (blocks.length === 0) {
+        return false;
+      }
+
+      this.$helper.clipboard.write(blocks, e);
+
+      if (e instanceof ClipboardEvent === false) {
+        // reselect the previously focussed elements
+        this.batch = this.selectedOrBatched;
+      }
+
+      // a sign that it has been copied
+      this.$store.dispatch("notification/success", `${blocks.length} copied!`);
+    },
+    copyAll() {
+      this.selectAll();
+      this.copy();
+      this.deselectAll();
+    },
     async convert(type, block) {
-      const index = this.blocks.findIndex(element => element.id === block.id);
+      const index = this.findIndex(block.id);
 
       if (index === -1) {
         return false;
@@ -288,6 +372,10 @@ export default {
 
       this.save();
     },
+    deselectAll() {
+      this.batch = [];
+      this.current = null;
+    },
     async duplicate(block, index) {
       const copy = {
         ...this.$helper.clone(block),
@@ -308,9 +396,21 @@ export default {
         type: block.type,
       };
     },
+    find(id) {
+      return this.blocks.find(element => element.id === id);
+    },
+    findIndex(id) {
+      return this.blocks.findIndex(element => element.id === id);
+    },
     focus(block) {
-      if (this.$refs["block-" + block.id]) {
+      if (block && block.id && this.$refs["block-" + block.id]) {
         this.$refs["block-" + block.id][0].focus();
+        return;
+      }
+
+      if (this.blocks[0]) {
+        this.focus(this.blocks[0]);
+        return;
       }
     },
     focusOrOpen(block) {
@@ -327,9 +427,16 @@ export default {
     isBatched(block) {
       return this.batch.includes(block.id);
     },
+    isInputEvent() {
+      const focused = document.querySelector(":focus");
+      return focused && focused.matches("input, textarea, [contenteditable], .k-writer");
+    },
     isLastInBatch(block) {
       const [lastItem] = this.batch.slice(-1);
       return lastItem && block.id === lastItem;
+    },
+    isOnlyInstance() {
+      return document.querySelectorAll(".k-blocks").length === 1;
     },
     isSelected(block) {
       return this.selected && this.selected === block.id;
@@ -353,10 +460,74 @@ export default {
 
       return true;
     },
+    onAlt(event) {
+      if (event.altKey) {
+        this.altKey = true;
+      } else {
+        this.altKey = false;
+      }
+    },
+    onOutsideFocus(event) {
+      const overlay = document.querySelector(".k-overlay:last-of-type");
+      if (this.$el.contains(event.target) === false && (!overlay || overlay.contains(event.target) === false)) {
+        this.select(null);
+      }
+    },
+    onPaste(e) {
+
+      // never paste blocks when the focus is in an input element
+      if (this.isInputEvent(e) === true) {
+        return false;
+      }
+
+      // never paste when dialogs or drawers are open
+      if (this.isEditing === true) {
+
+        // enable pasting when the block selector is open
+        if (this.$refs.selector && this.$refs.selector.isOpen() === true) {
+          return this.paste(e);
+        }
+
+        return false;
+      }
+
+      // if nothing is selected …
+      if (this.selectedOrBatched.length === 0) {
+
+        // if there are multiple instances,
+        // pasting is disabled to avoid multiple
+        // pasted blocks
+        if (this.isOnlyInstance() !== true) {
+          return false;
+        }
+
+      }
+
+      return this.paste(e);
+    },
     open(block) {
       if (this.$refs["block-" + block.id]) {
         this.$refs["block-" + block.id][0].open();
       }
+    },
+    async paste(e) {
+      const html = this.$helper.clipboard.read(e);
+
+      // pass html or plain text to the paste endpoint to convert it to blocks
+      const blocks = await this.$api.post(this.endpoints.field + "/paste", { html: html });
+
+      // get the index
+      let lastItem  = this.selectedOrBatched[this.selectedOrBatched.length - 1];
+      let lastIndex = this.findIndex(lastItem);
+
+      if (lastIndex === -1) {
+        lastIndex = this.blocks.length;
+      }
+
+      this.append(blocks, lastIndex + 1);
+    },
+    pasteboard() {
+      this.$refs.pasteboard.open();
     },
     prevNext(index) {
       if (this.blocks[index]) {
@@ -368,7 +539,7 @@ export default {
       }
     },
     remove(block) {
-      const index = this.blocks.findIndex(element => element.id === block.id);
+      const index = this.findIndex(block.id);
 
       if (index !== -1) {
 
@@ -381,20 +552,20 @@ export default {
       }
     },
     removeAll() {
+      this.batch = [];
       this.blocks = [];
       this.save();
       this.$refs.removeAll.close();
     },
     removeSelected() {
       this.batch.forEach(id => {
-        const index = this.blocks.findIndex(element => element.id === id);
+        const index = this.findIndex(id);
         if (index !== -1) {
           this.$delete(this.blocks, index);
         }
       });
 
-      this.batch = [];
-      this.$store.dispatch("blocks/current", null);
+      this.deselectAll();
       this.save();
       this.$refs.removeSelected.close();
     },
@@ -404,11 +575,15 @@ export default {
     select(block) {
       if (block && this.altKey) {
         this.addToBatch(block);
+        this.current = null;
         return;
       }
 
       this.batch = [];
-      this.$store.dispatch("blocks/current", block ? block.id : null);
+      this.current = block ? block.id : null;
+    },
+    selectAll() {
+      this.batch = Object.values(this.blocks).map(block => block.id);
     },
     show(block) {
       this.$set(block, "isHidden", false);
@@ -428,7 +603,7 @@ export default {
       });
     },
     update(block, content) {
-      const index = this.blocks.findIndex(element => element.id === block.id);
+      const index = this.findIndex(block.id);
       if (index !== -1) {
 
         Object.entries(content).forEach(([key, value]) => {
@@ -446,7 +621,6 @@ export default {
 .k-blocks {
   background: var(--color-white);
   box-shadow: var(--shadow);
-  border-radius: var(--rounded);
 }
 [data-disabled] .k-blocks {
   background: var(--color-background);
@@ -466,8 +640,7 @@ export default {
   cursor: -moz-grabbing;
   cursor: -webkit-grabbing;
 }
-.k-blocks-empty.k-empty {
-  cursor: pointer;
+.k-blocks-list > .k-blocks-empty {
   display: flex;
   align-items: center;
 }

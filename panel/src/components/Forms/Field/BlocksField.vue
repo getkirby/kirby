@@ -10,6 +10,14 @@
           <k-dropdown-item :disabled="isFull" icon="add" @click="$refs.blocks.choose(value.length)">
             {{ $t('add') }}
           </k-dropdown-item>
+          <hr>
+          <k-dropdown-item :disabled="isEmpty" icon="template" @click="$refs.blocks.copyAll()">
+            {{ $t('copy.all') }}
+          </k-dropdown-item>
+          <k-dropdown-item :disabled="isFull" icon="download" @click="$refs.blocks.pasteboard()">
+            {{ $t('paste') }}
+          </k-dropdown-item>
+          <hr>
           <k-dropdown-item :disabled="isEmpty" icon="trash" @click="$refs.blocks.confirmToRemoveAll()">
             {{ $t('delete.all') }}
           </k-dropdown-item>
@@ -76,6 +84,11 @@ export default {
       }
 
       return this.value.length >= this.max;
+    }
+  },
+  methods: {
+    focus() {
+      this.$refs.blocks.focus();
     }
   }
 };

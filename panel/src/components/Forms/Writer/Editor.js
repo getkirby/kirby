@@ -220,8 +220,19 @@ export default class Editor extends Emitter {
     return new EditorView(this.element, {
       dispatchTransaction: this.dispatchTransaction.bind(this),
       editable: () => this.options.editable,
-      handlePaste: (...args) => {
-        this.emit("paste", ...args)
+      handlePaste: (view, event) => {
+
+        if (typeof this.events["paste"] === "function") {
+          const html = event.clipboardData.getData("text/html");
+          const text = event.clipboardData.getData("text/plain");
+
+          const reply = this.events["paste"](event, html, text);
+
+          if (reply === true) {
+            return true;
+          }
+        }
+
       },
       handleDrop: (...args) => {
         this.emit("drop", ...args)

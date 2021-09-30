@@ -2,6 +2,12 @@
   <k-dropdown class="k-block-options">
     <template v-if="isBatched">
       <k-button
+        :tooltip="$t('copy')"
+        class="k-block-options-button"
+        icon="template"
+        @mousedown.native.prevent="$emit('copy')"
+      />
+      <k-button
         :tooltip="$t('remove')"
         class="k-block-options-button"
         icon="trash"
@@ -58,6 +64,13 @@
         </k-dropdown-item>
         <k-dropdown-item icon="refresh" @click="$emit('chooseToConvert')">
           {{ $t("field.blocks.changeType") }}
+        </k-dropdown-item>
+        <hr>
+        <k-dropdown-item icon="template" @click="$emit('copy')">
+          {{ $t("copy") }}
+        </k-dropdown-item>
+        <k-dropdown-item icon="download" @click="$emit('paste')">
+          {{ $t("paste.after") }}
         </k-dropdown-item>
         <hr>
         <k-dropdown-item :icon="isHidden ? 'preview' : 'hidden'" @click="$emit(isHidden ? 'show' : 'hide')">

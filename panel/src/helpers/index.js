@@ -1,9 +1,11 @@
+import clipboard from "./clipboard.js";
 import clone from "./clone.js";
 import color from "./color.js";
 import debounce from "./debounce.js";
 import embed from "./embed.js";
 import isComponent from "./isComponent.js";
 import isUploadEvent from "./isUploadEvent.js";
+import keyboard from "./keyboard.js";
 import pad from "./pad.js";
 import ratio from "./ratio.js";
 import slug from "./slug.js";
@@ -39,12 +41,14 @@ export default {
     };
 
     Vue.prototype.$helper = {
+      clipboard,
       clone,
       color,
       embed,
       isComponent,
       isUploadEvent,
       debounce,
+      keyboard,
       pad,
       ratio,
       slug,
