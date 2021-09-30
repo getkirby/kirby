@@ -1,7 +1,7 @@
 <?php
 
 // routing pattern to match all models with files
-$pattern = '(site|users/.*?|pages/.*?)';
+$pattern = '(site|users/[^/]+|pages/[^/]+)';
 
 /**
  * Files Routes

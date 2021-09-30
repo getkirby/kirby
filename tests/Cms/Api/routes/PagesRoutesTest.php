@@ -182,6 +182,39 @@ class PagesRoutesTest extends TestCase
         $this->assertSame('c.jpg', $response['data'][2]['filename']);
     }
 
+    public function testFilesOfAPageWithTheSlugFiles()
+    {
+        $app = $this->app->clone([
+            'site' => [
+                'children' => [
+                    [
+                        'slug' => 'files',
+                        'files' => [
+                            [
+                                'filename' => 'c.jpg',
+                            ],
+                            [
+                                'filename' => 'a.jpg',
+                            ],
+                            [
+                                'filename' => 'b.jpg',
+                            ]
+                        ]
+                    ]
+                ]
+            ]
+        ]);
+
+        $app->impersonate('kirby');
+
+        $response = $app->api()->call('pages/files/files');
+
+        $this->assertCount(3, $response['data']);
+        $this->assertSame('a.jpg', $response['data'][0]['filename']);
+        $this->assertSame('b.jpg', $response['data'][1]['filename']);
+        $this->assertSame('c.jpg', $response['data'][2]['filename']);
+    }
+
     public function testFilesSorted()
     {
         $app = $this->app->clone([
