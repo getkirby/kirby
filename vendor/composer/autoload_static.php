@@ -7,8 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
 {
     public static $files = array (
-        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '7e9bd612cc444b3eed788ebbe46263a0' => __DIR__ . '/..' . '/laminas/laminas-zendframework-bridge/src/autoload.php',
+        '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
         '04c6c5c2f7095ccf6c481d3e53e1776f' => __DIR__ . '/..' . '/mustangostang/spyc/Spyc.php',
         'f864ae44e8154e5ff6f4eec32f46d37f' => __DIR__ . '/../..' . '/config/setup.php',
         '87988fc7b1c1f093da22a1a3de972f3a' => __DIR__ . '/../..' . '/config/helpers.php',
@@ -310,7 +310,9 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Parsley\\Schema' => __DIR__ . '/../..' . '/src/Parsley/Schema.php',
         'Kirby\\Parsley\\Schema\\Blocks' => __DIR__ . '/../..' . '/src/Parsley/Schema/Blocks.php',
         'Kirby\\Parsley\\Schema\\Plain' => __DIR__ . '/../..' . '/src/Parsley/Schema/Plain.php',
+        'Kirby\\Sane\\DomHandler' => __DIR__ . '/../..' . '/src/Sane/DomHandler.php',
         'Kirby\\Sane\\Handler' => __DIR__ . '/../..' . '/src/Sane/Handler.php',
+        'Kirby\\Sane\\Html' => __DIR__ . '/../..' . '/src/Sane/Html.php',
         'Kirby\\Sane\\Sane' => __DIR__ . '/../..' . '/src/Sane/Sane.php',
         'Kirby\\Sane\\Svg' => __DIR__ . '/../..' . '/src/Sane/Svg.php',
         'Kirby\\Sane\\Svgz' => __DIR__ . '/../..' . '/src/Sane/Svgz.php',
@@ -330,6 +332,7 @@ class ComposerStaticInita8011b477bb239488e5d139cdeb7b31e
         'Kirby\\Toolkit\\Component' => __DIR__ . '/../..' . '/src/Toolkit/Component.php',
         'Kirby\\Toolkit\\Config' => __DIR__ . '/../..' . '/src/Toolkit/Config.php',
         'Kirby\\Toolkit\\Controller' => __DIR__ . '/../..' . '/src/Toolkit/Controller.php',
+        'Kirby\\Toolkit\\Dom' => __DIR__ . '/../..' . '/src/Toolkit/Dom.php',
         'Kirby\\Toolkit\\Escape' => __DIR__ . '/../..' . '/src/Toolkit/Escape.php',
         'Kirby\\Toolkit\\Facade' => __DIR__ . '/../..' . '/src/Toolkit/Facade.php',
         'Kirby\\Toolkit\\Html' => __DIR__ . '/../..' . '/src/Toolkit/Html.php',
