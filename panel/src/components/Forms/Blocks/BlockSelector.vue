@@ -115,11 +115,11 @@ export default {
     },
     onClose() {
       this.dialogIsOpen = false;
-      document.removeEventListener("paste", this.close);
+      this.$events.$off("paste", this.close);
     },
     onOpen() {
       this.dialogIsOpen = true;
-      document.addEventListener("paste", this.close, true);
+      this.$events.$on("paste", this.close);
     },
     open(payload, params = {}) {
 

@@ -64,7 +64,7 @@
         :fieldset-groups="fieldsetGroups"
         @add="add"
         @convert="convert"
-        @paste="pasteFromClipboard($event, true)"
+        @paste="paste($event)"
       />
 
       <k-remove-dialog
@@ -81,7 +81,7 @@
 
       <k-block-pasteboard
         ref="pasteboard"
-        @paste="pasteFromClipboard($event, true)"
+        @paste="paste($event)"
       />
     </template>
     <template v-else>
@@ -181,34 +181,18 @@ export default {
     }
   },
   created() {
-    this.outsideFocus = (event) => {
-      const overlay = document.querySelector(".k-overlay:last-of-type");
-      if (this.$el.contains(event.target) === false && (!overlay || overlay.contains(event.target) === false)) {
-        this.select(null);
-      }
-    };
-
-    document.addEventListener("copy", this.copy, true);
-    document.addEventListener("focus", this.outsideFocus, true);
-    document.addEventListener("paste", this.pasteFromClipboard, true);
-
-    this.onAlt = (event) => {
-      if (event.altKey) {
-        this.altKey = true;
-      } else {
-        this.altKey = false;
-      }
-    };
-
-    document.addEventListener("keydown", this.onAlt, true);
-    document.addEventListener("keyup", this.onAlt, true);
+    this.$events.$on("copy", this.copy);
+    this.$events.$on("focus", this.onOutsideFocus);
+    this.$events.$on("keydown", this.onAlt);
+    this.$events.$on("keyup", this.onAlt);
+    this.$events.$on("paste", this.onPaste);
   },
   destroyed() {
-    document.removeEventListener("copy", this.copy);
-    document.removeEventListener("focus", this.outsideFocus);
-    document.removeEventListener("keydown", this.onAlt);
-    document.removeEventListener("keyup", this.onAlt);
-    document.removeEventListener("paste", this.pasteFromClipboard);
+    this.$events.$off("copy", this.copy);
+    this.$events.$off("focus", this.onOutsideFocus);
+    this.$events.$off("keydown", this.onAlt);
+    this.$events.$off("keyup", this.onAlt);
+    this.$events.$off("paste", this.onPaste);
   },
   mounted() {
     // focus first block
@@ -476,33 +460,20 @@ export default {
 
       return true;
     },
-    open(block) {
-      if (this.$refs["block-" + block.id]) {
-        this.$refs["block-" + block.id][0].open();
+    onAlt(event) {
+      if (event.altKey) {
+        this.altKey = true;
+      } else {
+        this.altKey = false;
       }
     },
-    async paste(e) {
-      const html = this.$helper.clipboard.read(e);
-
-      // pass html or plain text to the paste endpoint to convert it to blocks
-      const blocks = await this.$api.post(this.endpoints.field + "/paste", { html: html });
-
-      // get the index
-      let lastItem  = this.selectedOrBatched[this.selectedOrBatched.length - 1];
-      let lastIndex = this.findIndex(lastItem);
-
-      if (lastIndex === -1) {
-        lastIndex = this.blocks.length;
+    onOutsideFocus(event) {
+      const overlay = document.querySelector(".k-overlay:last-of-type");
+      if (this.$el.contains(event.target) === false && (!overlay || overlay.contains(event.target) === false)) {
+        this.select(null);
       }
-
-      this.append(blocks, lastIndex + 1);
     },
-    pasteFromClipboard(e, force = false) {
-
-      // always paste when the force flag is set
-      if (force === true) {
-        return this.paste(e);
-      }
+    onPaste(e) {
 
       // never paste blocks when the focus is in an input element
       if (this.isInputEvent(e) === true) {
@@ -533,6 +504,27 @@ export default {
       }
 
       return this.paste(e);
+    },
+    open(block) {
+      if (this.$refs["block-" + block.id]) {
+        this.$refs["block-" + block.id][0].open();
+      }
+    },
+    async paste(e) {
+      const html = this.$helper.clipboard.read(e);
+
+      // pass html or plain text to the paste endpoint to convert it to blocks
+      const blocks = await this.$api.post(this.endpoints.field + "/paste", { html: html });
+
+      // get the index
+      let lastItem  = this.selectedOrBatched[this.selectedOrBatched.length - 1];
+      let lastIndex = this.findIndex(lastItem);
+
+      if (lastIndex === -1) {
+        lastIndex = this.blocks.length;
+      }
+
+      this.append(blocks, lastIndex + 1);
     },
     pasteboard() {
       this.$refs.pasteboard.open();
