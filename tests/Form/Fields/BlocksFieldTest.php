@@ -208,6 +208,51 @@ class BlocksFieldTest extends TestCase
         $this->assertCount(4, $routes);
     }
 
+    public function testRouteUUID()
+    {
+        $field = $this->field('blocks');
+        $route = $field->routes()[0];
+
+        $response = $route['action']();
+
+        $this->assertIsArray($response);
+        $this->assertArrayHasKey('uuid', $response);
+    }
+
+    public function testRoutePaste()
+    {
+        $this->app = $this->app->clone([
+            'request' => [
+                'query' => [
+                    'html' => '<p>Test</p>'
+                ]
+            ]
+        ]);
+
+        $field = $this->field('blocks');
+        $route = $field->routes()[1];
+
+        $response = $route['action']();
+
+        $this->assertCount(1, $response);
+        $this->assertSame(['text' => '<p>Test</p>'], $response[0]['content']);
+        $this->assertFalse($response[0]['isHidden']);
+        $this->assertSame('text', $response[0]['type']);
+    }
+
+    public function testRouteFieldset()
+    {
+        $field = $this->field('blocks');
+        $route = $field->routes()[2];
+
+        $response = $route['action']('text');
+
+        $this->assertSame(['text' => ''], $response['content']);
+        $this->assertArrayHasKey('id', $response);
+        $this->assertFalse($response['isHidden']);
+        $this->assertSame('text', $response['type']);
+    }
+
     public function testStore()
     {
         $value = [
