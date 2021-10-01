@@ -225,7 +225,7 @@ export default {
 .k-list-item .k-item-figure {
   width: 38px;
   border-start-start-radius: var(--rounded-sm);
-  border-start-end-radius: var(--rounded-sm);
+  border-end-start-radius: var(--rounded-sm);
 }
 .k-list-item .k-item-content {
   display: flex;
@@ -261,7 +261,7 @@ export default {
 .k-item:not(.k-list-item) .k-item-sort-handle {
   margin: .25rem;
   background: var(--color-background);
-  box-shadow: var(--shado-md);
+  box-shadow: var(--shadow-md);
 }
 .k-item:not(.k-list-item) .k-item-label {
   margin-inline-start: -2px;
