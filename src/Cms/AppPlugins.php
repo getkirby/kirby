@@ -46,6 +46,8 @@ trait AppPlugins
         'api' => [],
         'areas' => [],
         'authChallenges' => [],
+        'blockMethods' => [],
+        'blocksMethods' => [],
         'blueprints' => [],
         'cacheTypes' => [],
         'collections' => [],
@@ -59,6 +61,9 @@ trait AppPlugins
         'filesMethods' => [],
         'fields' => [],
         'hooks' => [],
+        'layoutMethods' => [],
+        'layoutColumnMethods' => [],
+        'layoutsMethods' => [],
         'pages' => [],
         'pageMethods' => [],
         'pagesMethods' => [],
@@ -152,6 +157,28 @@ trait AppPlugins
     protected function extendAuthChallenges(array $challenges): array
     {
         return $this->extensions['authChallenges'] = Auth::$challenges = array_merge(Auth::$challenges, $challenges);
+    }
+
+    /**
+     * Registers additional block methods
+     *
+     * @param array $methods
+     * @return array
+     */
+    protected function extendBlockMethods(array $methods): array
+    {
+        return $this->extensions['blockMethods'] = Block::$methods = array_merge(Block::$methods, $methods);
+    }
+
+    /**
+     * Registers additional blocks methods
+     *
+     * @param array $methods
+     * @return array
+     */
+    protected function extendBlocksMethods(array $methods): array
+    {
+        return $this->extensions['blockMethods'] = Blocks::$methods = array_merge(Blocks::$methods, $methods);
     }
 
     /**
@@ -362,6 +389,39 @@ trait AppPlugins
     protected function extendMarkdown(Closure $markdown)
     {
         return $this->extensions['markdown'] = $markdown;
+    }
+
+    /**
+     * Registers additional layout methods
+     *
+     * @param array $methods
+     * @return array
+     */
+    protected function extendLayoutMethods(array $methods): array
+    {
+        return $this->extensions['layoutMethods'] = Layout::$methods = array_merge(Layout::$methods, $methods);
+    }
+
+    /**
+     * Registers additional layout column methods
+     *
+     * @param array $methods
+     * @return array
+     */
+    protected function extendLayoutColumnMethods(array $methods): array
+    {
+        return $this->extensions['layoutColumnMethods'] = LayoutColumn::$methods = array_merge(LayoutColumn::$methods, $methods);
+    }
+
+    /**
+     * Registers additional layouts methods
+     *
+     * @param array $methods
+     * @return array
+     */
+    protected function extendLayoutsMethods(array $methods): array
+    {
+        return $this->extensions['layoutsMethods'] = Layouts::$methods = array_merge(Layouts::$methods, $methods);
     }
 
     /**
