@@ -33,6 +33,13 @@ class Block extends Item
     protected $isHidden;
 
     /**
+     * Registry with all block models
+     *
+     * @var array
+     */
+    public static $models = [];
+
+    /**
      * @var string
      */
     protected $type;
@@ -53,7 +60,7 @@ class Block extends Item
      * Creates a new block object
      *
      * @param array $params
-     * @param \Kirby\Cms\Blocks $siblings
+     * @throws \Kirby\Exception\InvalidArgumentException
      */
     public function __construct(array $params)
     {
@@ -69,7 +76,7 @@ class Block extends Item
 
         $this->content  = $params['content']  ?? [];
         $this->isHidden = $params['isHidden'] ?? false;
-        $this->type     = $params['type']     ?? null;
+        $this->type     = $params['type'];
 
         // create the content object
         $this->content = new Content($this->content, $this->parent);
@@ -152,6 +159,29 @@ class Block extends Item
     public function excerpt(...$args)
     {
         return Str::excerpt($this->toHtml(), ...$args);
+    }
+
+    /**
+     * Constructs a block object with registering blocks models
+     *
+     * @param array $params
+     * @return static
+     * @throws \Kirby\Exception\InvalidArgumentException
+     * @internal
+     */
+    public static function factory(array $params)
+    {
+        $type = $params['type'] ?? null;
+
+        if (empty($type) === false && $class = (static::$models[$type] ?? null)) {
+            $object = new $class($params);
+
+            if (is_a($object, 'Kirby\Cms\Block') === true) {
+                return $object;
+            }
+        }
+
+        return new static($params);
     }
 
     /**

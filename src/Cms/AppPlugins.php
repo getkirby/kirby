@@ -46,6 +46,7 @@ trait AppPlugins
         'api' => [],
         'areas' => [],
         'authChallenges' => [],
+        'blockModels' => [],
         'blueprints' => [],
         'cacheTypes' => [],
         'collections' => [],
@@ -152,6 +153,17 @@ trait AppPlugins
     protected function extendAuthChallenges(array $challenges): array
     {
         return $this->extensions['authChallenges'] = Auth::$challenges = array_merge(Auth::$challenges, $challenges);
+    }
+
+    /**
+     * Registers additional block models
+     *
+     * @param array $models
+     * @return array
+     */
+    protected function extendBlockModels(array $models): array
+    {
+        return $this->extensions['blockModels'] = Block::$models = array_merge(Block::$models, $models);
     }
 
     /**
