@@ -49,13 +49,14 @@ export default ({ command }) => {
       "process.env.BUILD": JSON.stringify("production")
     },
     build: {
+      minify: "terser",
       cssCodeSplit: false,
       rollupOptions: {
-        input: '/src/index.js',
+        input: "/src/index.js",
         output: {
-          entryFileNames: `js/[name].js`,
-          chunkFileNames: `js/[name].js`,
-          assetFileNames: `[ext]/[name].[ext]`
+          entryFileNames: "js/[name].js",
+          chunkFileNames: "js/[name].js",
+          assetFileNames: "[ext]/[name].[ext]"
         }
       },
     },
