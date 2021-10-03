@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { defineConfig } from "vite";
 import { createVuePlugin } from "vite-plugin-vue2";
 import pluginRewriteAll from "vite-plugin-rewrite-all";
 import postcssCsso from "postcss-csso";
@@ -13,7 +14,7 @@ try {
   custom = {};
 }
 
-export default ({ command }) => {
+export default defineConfig(({ command }) => {
   // Tell Kirby that we are in dev mode
   if (command === "serve") {
     // Create the flag file on start
@@ -93,4 +94,4 @@ export default ({ command }) => {
       ...custom
     }
   };
-};
+});
