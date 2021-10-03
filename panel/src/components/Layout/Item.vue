@@ -12,12 +12,14 @@
     @dragstart="$emit('drag', $event)"
   >
     <!-- Image -->
-    <k-item-image
-      v-if="hasFigure"
-      :image="image"
-      :layout="layout"
-      :width="width"
-    />
+    <slot name="image">
+      <k-item-image
+        v-if="hasFigure"
+        :image="image"
+        :layout="layout"
+        :width="width"
+      />
+    </slot>
 
     <!-- Sort handle -->
     <k-sort-handle
@@ -27,21 +29,23 @@
 
     <!-- Content -->
     <header class="k-item-content">
-      <h3 class="k-item-title">
-        <k-link
-          v-if="link"
-          :target="target"
-          :to="link"
-          class="k-item-title-link"
-        >
+      <slot>
+        <h3 class="k-item-title">
+          <k-link
+            v-if="link"
+            :target="target"
+            :to="link"
+            class="k-item-title-link"
+          >
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="title" />
+          </k-link>
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="title" />
-        </k-link>
+          <span v-else v-html="title" />
+        </h3>
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <span v-else v-html="title" />
-      </h3>
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <p v-if="info" class="k-item-info" v-html="info" />
+        <p v-if="info" class="k-item-info" v-html="info" />
+      </slot>
     </header>
 
     <!-- Footer -->
