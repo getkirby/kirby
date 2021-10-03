@@ -10,7 +10,7 @@ import postcssDirPseudoClass from "postcss-dir-pseudo-class";
 let custom;
 try {
   custom = require("./vite.config.custom.js");
-} catch (e) {
+} catch (err) {
   custom = {};
 }
 
@@ -22,7 +22,7 @@ export default defineConfig(({ command }) => {
     fs.closeSync(fs.openSync(runningPath, "w"));
 
     // Delete the flag file on any kind of exit
-    for (let eventType of ["exit", "SIGINT", "uncaughtException"]) {
+    for (const eventType of ["exit", "SIGINT", "uncaughtException"]) {
       process.on(eventType, function(err) {
         if (fs.existsSync(runningPath) === true) {
           fs.unlinkSync(runningPath);
@@ -59,7 +59,7 @@ export default defineConfig(({ command }) => {
           chunkFileNames: "js/[name].js",
           assetFileNames: "[ext]/[name].[ext]"
         }
-      },
+      }
     },
     optimizeDeps: {
       entries: "src/**/*.{js,vue}"
@@ -75,14 +75,14 @@ export default defineConfig(({ command }) => {
     },
     resolve: {
       alias: [
-          {
-            find: "vue",
-            replacement: "vue/dist/vue.esm.js"
-          },
-          {
-            find: "@",
-            replacement: path.resolve(__dirname, "src")
-          }
+        {
+          find: "vue",
+          replacement: "vue/dist/vue.esm.js"
+        },
+        {
+          find: "@",
+          replacement: path.resolve(__dirname, "src")
+        }
       ]
     },
     server: {
