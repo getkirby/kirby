@@ -1,12 +1,10 @@
+import fs from "fs";
+import path from "path";
 import { createVuePlugin } from "vite-plugin-vue2";
 import pluginRewriteAll from "vite-plugin-rewrite-all";
 import postcssCsso from "postcss-csso";
 import postcssLogical from "postcss-logical";
 import postcssDirPseudoClass from "postcss-dir-pseudo-class";
-
-const fs      = require("fs");
-const path    = require("path");
-const process = require("process");
 
 let custom;
 try {
