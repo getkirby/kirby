@@ -162,7 +162,11 @@ export default {
   },
   methods: {
     check() {
-      this.$reload({ only: "$view.props.lock", silent: true });
+      this.$reload({
+        navigate: false,
+        only: "$view.props.lock",
+        silent: true
+      });
     },
     async onLock(lock = true) {
       const api = [this.$view.path + "/lock", null, null, true];
