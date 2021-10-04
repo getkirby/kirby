@@ -18,6 +18,14 @@ class TextBlock extends Block
     }
 }
 
+class DefaultBlock extends Block
+{
+    public function test(): string
+    {
+        return $this->id();
+    }
+}
+
 class BlockModelsTest extends TestCase
 {
     public function setUp(): void
@@ -63,5 +71,33 @@ class BlockModelsTest extends TestCase
         $this->assertArrayNotHasKey('image', Block::$models);
         $this->assertInstanceOf(Block::class, $block);
         $this->assertFalse(method_exists($block, 'test'));
+    }
+
+    public function testDefaultBlockModel()
+    {
+        new App([
+            'roots' => [
+                'index' => '/dev/null',
+            ],
+            'blockModels' => [
+                'Kirby\Cms\Block' => DefaultBlock::class
+            ]
+        ]);
+
+        $block = Block::factory(['type' => 'code']);
+        $this->assertInstanceOf(DefaultBlock::class, $block);
+        $this->assertSame($block->id(), $block->test());
+
+        $block = Block::factory(['type' => 'image']);
+        $this->assertInstanceOf(DefaultBlock::class, $block);
+        $this->assertSame($block->id(), $block->test());
+
+        $block = Block::factory(['type' => 'list']);
+        $this->assertInstanceOf(DefaultBlock::class, $block);
+        $this->assertSame($block->id(), $block->test());
+
+        $block = Block::factory(['type' => 'gallery']);
+        $this->assertInstanceOf(DefaultBlock::class, $block);
+        $this->assertSame($block->id(), $block->test());
     }
 }

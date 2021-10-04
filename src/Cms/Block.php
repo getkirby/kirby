@@ -188,6 +188,15 @@ class Block extends Item
             }
         }
 
+        // default model for blocks
+        if ($class = (static::$models['Kirby\Cms\Block'] ?? null)) {
+            $object = new $class($params);
+
+            if (is_a($object, 'Kirby\Cms\Block') === true) {
+                return $object;
+            }
+        }
+
         return new static($params);
     }
 
