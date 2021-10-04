@@ -12,12 +12,14 @@
     @dragstart="$emit('drag', $event)"
   >
     <!-- Image -->
-    <k-item-image
-      v-if="hasFigure"
-      :image="image"
-      :layout="layout"
-      :width="width"
-    />
+    <slot name="image">
+      <k-item-image
+        v-if="hasFigure"
+        :image="image"
+        :layout="layout"
+        :width="width"
+      />
+    </slot>
 
     <!-- Sort handle -->
     <k-sort-handle
@@ -27,21 +29,23 @@
 
     <!-- Content -->
     <header class="k-item-content">
-      <h3 class="k-item-title">
-        <k-link
-          v-if="link"
-          :target="target"
-          :to="link"
-          class="k-item-title-link"
-        >
+      <slot>
+        <h3 class="k-item-title">
+          <k-link
+            v-if="link"
+            :target="target"
+            :to="link"
+            class="k-item-title-link"
+          >
+            <!-- eslint-disable-next-line vue/no-v-html -->
+            <span v-html="title" />
+          </k-link>
           <!-- eslint-disable-next-line vue/no-v-html -->
-          <span v-html="title" />
-        </k-link>
+          <span v-else v-html="title" />
+        </h3>
         <!-- eslint-disable-next-line vue/no-v-html -->
-        <span v-else v-html="title" />
-      </h3>
-      <!-- eslint-disable-next-line vue/no-v-html -->
-      <p v-if="info" class="k-item-info" v-html="info" />
+        <p v-if="info" class="k-item-info" v-html="info" />
+      </slot>
     </header>
 
     <!-- Footer -->
@@ -221,7 +225,7 @@ export default {
 .k-list-item .k-item-figure {
   width: 38px;
   border-start-start-radius: var(--rounded-sm);
-  border-start-end-radius: var(--rounded-sm);
+  border-end-start-radius: var(--rounded-sm);
 }
 .k-list-item .k-item-content {
   display: flex;
@@ -257,7 +261,7 @@ export default {
 .k-item:not(.k-list-item) .k-item-sort-handle {
   margin: .25rem;
   background: var(--color-background);
-  box-shadow: var(--shado-md);
+  box-shadow: var(--shadow-md);
 }
 .k-item:not(.k-list-item) .k-item-label {
   margin-inline-start: -2px;
