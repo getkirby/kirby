@@ -2,7 +2,7 @@
   <div
     ref="wrapper"
     :data-empty="blocks.length === 0"
-    :data-alt="altKey"
+    :data-multi-select-key="isMultiSelectKey"
     class="k-blocks"
     @focusin="focussed = true"
     @focusout="focussed = false"
@@ -120,7 +120,7 @@ export default {
   },
   data() {
     return {
-      altKey: false,
+      isMultiSelectKey: false,
       batch: [],
       blocks: this.value,
       current: null,
@@ -183,15 +183,15 @@ export default {
   created() {
     this.$events.$on("copy", this.copy);
     this.$events.$on("focus", this.onOutsideFocus);
-    this.$events.$on("keydown", this.onAlt);
-    this.$events.$on("keyup", this.onAlt);
+    this.$events.$on("keydown", this.onKey);
+    this.$events.$on("keyup", this.onKey);
     this.$events.$on("paste", this.onPaste);
   },
   destroyed() {
     this.$events.$off("copy", this.copy);
     this.$events.$off("focus", this.onOutsideFocus);
-    this.$events.$off("keydown", this.onAlt);
-    this.$events.$off("keyup", this.onAlt);
+    this.$events.$off("keydown", this.onKey);
+    this.$events.$off("keyup", this.onKey);
     this.$events.$off("paste", this.onPaste);
   },
   mounted() {
@@ -460,12 +460,8 @@ export default {
 
       return true;
     },
-    onAlt(event) {
-      if (event.altKey) {
-        this.altKey = true;
-      } else {
-        this.altKey = false;
-      }
+    onKey(event) {
+      this.isMultiSelectKey = event.metaKey || event.ctrlKey || event.altKey;
     },
     onOutsideFocus(event) {
       const overlay = document.querySelector(".k-overlay:last-of-type");
@@ -573,7 +569,7 @@ export default {
       this.$emit("input", this.blocks);
     },
     select(block) {
-      if (block && this.altKey) {
+      if (block && this.isMultiSelectKey) {
         this.addToBatch(block);
         this.current = null;
         return;
@@ -625,7 +621,7 @@ export default {
 [data-disabled] .k-blocks {
   background: var(--color-background);
 }
-.k-blocks[data-alt] .k-block-container > * {
+.k-blocks[data-multi-select-key] .k-block-container > * {
   pointer-events: none;
 }
 .k-blocks[data-empty] {
