@@ -22,6 +22,8 @@ class Block extends Item
 {
     const ITEMS_CLASS = '\Kirby\Cms\Blocks';
 
+    use HasMethods;
+
     /**
      * @var \Kirby\Cms\Content
      */
@@ -53,6 +55,11 @@ class Block extends Item
      */
     public function __call(string $method, array $args = [])
     {
+        // block methods
+        if ($this->hasMethod($method)) {
+            return $this->callMethod($method, $args);
+        }
+
         return $this->content()->get($method);
     }
 

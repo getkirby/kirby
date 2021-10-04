@@ -19,6 +19,8 @@ class LayoutColumn extends Item
 {
     const ITEMS_CLASS = '\Kirby\Cms\LayoutColumns';
 
+    use HasMethods;
+
     /**
      * @var \Kirby\Cms\Blocks
      */
@@ -43,6 +45,21 @@ class LayoutColumn extends Item
         ]);
 
         $this->width = $params['width'] ?? '1/1';
+    }
+
+    /**
+     * Magic getter function
+     *
+     * @param string $method
+     * @param mixed $args
+     * @return mixed
+     */
+    public function __call(string $method, $args)
+    {
+        // layout column methods
+        if ($this->hasMethod($method) === true) {
+            return $this->callMethod($method, $args);
+        }
     }
 
     /**

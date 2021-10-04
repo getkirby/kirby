@@ -17,6 +17,8 @@ class Layout extends Item
 {
     const ITEMS_CLASS = '\Kirby\Cms\Layouts';
 
+    use HasMethods;
+
     /**
      * @var \Kirby\Cms\Content
      */
@@ -36,6 +38,11 @@ class Layout extends Item
      */
     public function __call(string $method, array $args = [])
     {
+        // layout methods
+        if ($this->hasMethod($method) === true) {
+            return $this->callMethod($method, $args);
+        }
+
         return $this->attrs()->get($method);
     }
 
