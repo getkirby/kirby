@@ -202,7 +202,7 @@ export default {
   },
 
   /**
-   * Stores the state for the current page
+   * Stores the state for the current page/view
    *
    * @param {object} state
    * @param {object} options
