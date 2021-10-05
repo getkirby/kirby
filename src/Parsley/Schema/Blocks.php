@@ -75,9 +75,6 @@ class Blocks extends Plain
             [
                 'tag' => 'a',
                 'attrs' => ['href', 'target', 'title'],
-                'defaults' => [
-                    'rel' => 'noopener noreferrer nofollow'
-                ]
             ],
             [
                 'tag' => 'abbr',
