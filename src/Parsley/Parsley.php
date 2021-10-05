@@ -48,7 +48,10 @@ class Parsley
 
         $this->createNodeRules($this->schema->nodes());
 
-        $this->parseNode($this->body());
+        foreach ($this->doc->childNodes as $childNode) {
+            $this->parseNode($childNode);
+        }
+
         $this->endInlineBlock();
     }
 
@@ -169,8 +172,10 @@ class Parsley
 
     public function parseNode($element)
     {
-        // comments
-        if (is_a($element, 'DOMComment') === true) {
+        $skip = ['DOMComment', 'DOMDocumentType'];
+
+        // unwanted element types
+        if (in_array(get_class($element), $skip) === true) {
             return true;
         }
 
@@ -198,7 +203,7 @@ class Parsley
                 return true;
             }
 
-            if ($element->tagName !== 'body') {
+            if ($element->tagName !== 'body' && $element->tagName !== 'html') {
                 $node = new Element($element, $this->marks);
 
                 if ($block = $this->fallback($node)) {
