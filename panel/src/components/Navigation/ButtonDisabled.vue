@@ -38,8 +38,4 @@ export default {
 .k-card-options > .k-button[data-disabled] {
   display: inline-flex;
 }
-.k-button[data-disabled]:focus .k-button-text,
-.k-button[data-disabled]:hover .k-button-text {
-  opacity: .75;
-}
 </style>
