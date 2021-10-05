@@ -160,7 +160,10 @@ export default {
 
       try {
         await this.$api.auth.login(user);
-        this.$reload();
+
+        this.$reload({
+          globals: ["$system", "$translation"]
+        });
 
       } catch (error) {
         this.issue = error.message;
