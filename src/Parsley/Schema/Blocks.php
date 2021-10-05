@@ -83,6 +83,9 @@ class Blocks extends Plain
                 'tag' => 'b'
             ],
             [
+                'tag' => 'br',
+            ],
+            [
                 'tag' => 'code'
             ],
             [

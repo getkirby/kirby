@@ -2,6 +2,8 @@
 
 namespace Kirby\Parsley;
 
+use Kirby\Toolkit\Html;
+
 class Inline
 {
     protected $html = '';
@@ -56,6 +58,10 @@ class Inline
                 } else {
                     $attrs[$attr] = $defaults[$attr] ?? null;
                 }
+            }
+
+            if (Html::isVoid($node->tagName) === true) {
+                return '<' . $node->tagName . attr($attrs, ' ') . ' />';
             }
 
             return '<' . $node->tagName . attr($attrs, ' ') . '>' . $this->parseChildren($node->childNodes) . '</' . $node->tagName . '>';
