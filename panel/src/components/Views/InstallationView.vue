@@ -143,9 +143,11 @@ export default {
     async install() {
       try {
         await this.$api.system.install(this.user);
-        this.$store.dispatch("notification/success", this.$t("welcome") + "!");
-        this.$go("/");
+        await this.$reload({
+          globals: ["$system", "$translation"]
+        });
 
+        this.$store.dispatch("notification/success", this.$t("welcome") + "!");
       } catch (error) {
         this.$store.dispatch("notification/error", error);
       }
