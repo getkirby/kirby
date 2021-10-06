@@ -70,33 +70,33 @@ button.k-empty:focus {
 }
 
 /* layout:cards */
-.k-empty[data-layout="cards"] {
+.k-empty[data-layout="cards"],
+.k-empty[data-layout="cardlets"] {
   text-align: center;
   padding: 1.5rem;
   justify-content: center;
   flex-direction: column;
 }
-.k-empty[data-layout="cards"] .k-icon {
+.k-empty[data-layout="cards"] .k-icon,
+.k-empty[data-layout="cardlets"] .k-icon {
   margin-bottom: 1rem;
 }
-.k-empty[data-layout="cards"] .k-icon svg {
+.k-empty[data-layout="cards"] .k-icon svg,
+.k-empty[data-layout="cardlets"] .k-icon svg {
   width: 2rem;
   height: 2rem;
 }
 
 /* layout:list */
-.k-empty[data-layout="list"],
-.k-empty[data-layout="cardlets"] {
+.k-empty[data-layout="list"] {
   min-height: 38px;
 }
-.k-empty[data-layout="list"] > .k-icon,
-.k-empty[data-layout="cardlets"] > .k-icon {
+.k-empty[data-layout="list"] > .k-icon {
   width: 36px;
   min-height: 36px;
   border-inline-end: 1px solid rgba(0, 0, 0, .05);
 }
-.k-empty[data-layout="list"] > p,
-.k-empty[data-layout="cardlets"] > p {
+.k-empty[data-layout="list"] > p {
   line-height: 1.25rem;
   padding: .5rem .75rem;
 }
