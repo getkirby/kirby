@@ -5,6 +5,7 @@ namespace Kirby\Parsley;
 use DOMDocument;
 use DOMXPath;
 use Kirby\Parsley\Schema\Plain;
+use Kirby\Toolkit\Html;
 
 class Parsley
 {
@@ -108,7 +109,7 @@ class Parsley
     public function fallback($node)
     {
         if (is_a($node, 'DOMText') === true) {
-            $html = $node->textContent;
+            $html = Html::encode($node->textContent);
         } elseif (is_a($node, Element::class) === true) {
             $html = $node->innerHtml();
         } elseif (is_string($node) === true) {

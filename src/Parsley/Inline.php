@@ -38,7 +38,7 @@ class Inline
     public function parseNode($node)
     {
         if (is_a($node, 'DOMText') === true) {
-            return $node->textContent;
+            return Html::encode($node->textContent);
         }
 
         // ignore comments

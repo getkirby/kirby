@@ -40,7 +40,6 @@ export default class Editor extends Emitter {
     };
 
     this.init(options);
-    this.setContent(options.content);
   }
 
   blur() {
@@ -200,7 +199,7 @@ export default class Editor extends Emitter {
   createState() {
     return EditorState.create({
       schema: this.schema,
-      doc: this.createDocument(),
+      doc: this.createDocument(this.options.content),
       plugins: [
         ...this.plugins,
         inputRules({
@@ -377,6 +376,8 @@ export default class Editor extends Emitter {
 
     // give extensions access to our view
     this.extensions.view = this.view;
+
+    this.setContent(this.options.content, true);
   }
 
   isEditable() {
