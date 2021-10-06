@@ -70,16 +70,19 @@ button.k-empty:focus {
 }
 
 /* layout:cards */
-.k-empty[data-layout="cards"] {
+.k-empty[data-layout="cards"],
+.k-empty[data-layout="cardlets"] {
   text-align: center;
   padding: 1.5rem;
   justify-content: center;
   flex-direction: column;
 }
-.k-empty[data-layout="cards"] .k-icon {
+.k-empty[data-layout="cards"] .k-icon,
+.k-empty[data-layout="cardlets"] .k-icon {
   margin-bottom: 1rem;
 }
-.k-empty[data-layout="cards"] .k-icon svg {
+.k-empty[data-layout="cards"] .k-icon svg,
+.k-empty[data-layout="cardlets"] .k-icon svg {
   width: 2rem;
   height: 2rem;
 }
