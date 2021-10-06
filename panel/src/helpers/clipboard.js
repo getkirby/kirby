@@ -11,7 +11,10 @@ export function read(e) {
   if (e instanceof ClipboardEvent) {
     e.preventDefault();
     const html = e.clipboardData.getData("text/html") || e.clipboardData.getData("text/plain") || null;
-    return html.replace(/\u00a0/g, " ");
+
+    if (html) {
+      return html.replace(/\u00a0/g, " ");
+    }
   }
 
   return null;
