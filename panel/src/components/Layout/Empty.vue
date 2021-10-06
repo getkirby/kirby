@@ -85,15 +85,18 @@ button.k-empty:focus {
 }
 
 /* layout:list */
-.k-empty[data-layout="list"] {
+.k-empty[data-layout="list"],
+.k-empty[data-layout="cardlets"] {
   min-height: 38px;
 }
-.k-empty[data-layout="list"] > .k-icon {
+.k-empty[data-layout="list"] > .k-icon,
+.k-empty[data-layout="cardlets"] > .k-icon {
   width: 36px;
   min-height: 36px;
   border-inline-end: 1px solid rgba(0, 0, 0, .05);
 }
-.k-empty[data-layout="list"] > p {
+.k-empty[data-layout="list"] > p,
+.k-empty[data-layout="cardlets"] > p {
   line-height: 1.25rem;
   padding: .5rem .75rem;
 }
