@@ -102,6 +102,7 @@ return [
                     return $field->filepicker([
                         'image'  => $field->image([], $field->layout),
                         'info'   => $field->info(),
+                        'layout' => $field->layout(),
                         'limit'  => $field->limit(),
                         'page'   => $this->requestQuery('page'),
                         'query'  => $field->query(),
@@ -121,6 +122,7 @@ return [
                         return $file->panel()->pickerData([
                             'image' => $field->image([], $field->layout),
                             'info'  => $field->info(),
+                            'layout' => $field->layout(),
                             'model' => $field->model(),
                             'text'  => $field->text(),
                         ]);

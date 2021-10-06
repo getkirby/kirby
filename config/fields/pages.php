@@ -96,6 +96,7 @@ return [
                     return $field->pagepicker([
                         'image'    => $field->image([], $field->layout),
                         'info'     => $field->info(),
+                        'layout' => $field->layout(),
                         'limit'    => $field->limit(),
                         'page'     => $this->requestQuery('page'),
                         'parent'   => $this->requestQuery('parent'),

@@ -101,6 +101,7 @@ abstract class Picker
                 $result[] = $item->panel()->pickerData([
                     'image' => $this->options['image'],
                     'info'  => $this->options['info'],
+                    'layout' => $this->options['layout'],
                     'model' => $this->options['model'],
                     'text'  => $this->options['text'],
                 ]);
