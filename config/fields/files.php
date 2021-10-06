@@ -100,7 +100,7 @@ return [
                     $field = $this->field();
 
                     return $field->filepicker([
-                        'image'  => $field->image([], $field->layout),
+                        'image'  => $field->image(),
                         'info'   => $field->info(),
                         'layout' => $field->layout(),
                         'limit'  => $field->limit(),
@@ -120,11 +120,11 @@ return [
 
                     return $field->upload($this, $uploads, function ($file, $parent) use ($field) {
                         return $file->panel()->pickerData([
-                            'image' => $field->image([], $field->layout),
-                            'info'  => $field->info(),
+                            'image'  => $field->image(),
+                            'info'   => $field->info(),
                             'layout' => $field->layout(),
-                            'model' => $field->model(),
-                            'text'  => $field->text(),
+                            'model'  => $field->model(),
+                            'text'   => $field->text(),
                         ]);
                     });
                 }

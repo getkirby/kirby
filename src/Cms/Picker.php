@@ -54,6 +54,8 @@ abstract class Picker
             'image' => [],
             // query template for the info field
             'info' => false,
+            // listing style: list, cards, cardlets
+            'layout' =>'list',
             // number of users displayed per pagination page
             'limit' => 20,
             // optional mapping function for the result array
@@ -99,11 +101,11 @@ abstract class Picker
                 $result[] = $this->options['map']($item);
             } else {
                 $result[] = $item->panel()->pickerData([
-                    'image' => $this->options['image'],
-                    'info'  => $this->options['info'],
+                    'image'  => $this->options['image'],
+                    'info'   => $this->options['info'],
                     'layout' => $this->options['layout'],
-                    'model' => $this->options['model'],
-                    'text'  => $this->options['text'],
+                    'model'  => $this->options['model'],
+                    'text'   => $this->options['text'],
                 ]);
             }
         }
