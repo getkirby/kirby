@@ -295,9 +295,8 @@ export default {
 
       let blocks = [];
 
-      this.selectedOrBatched.forEach(id => {
-        const block = this.find(id);
-        if (block) {
+      this.blocks.forEach(block => {
+        if (this.selectedOrBatched.includes(block.id)) {
           blocks.push(block);
         }
       });
