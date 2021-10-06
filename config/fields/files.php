@@ -118,6 +118,8 @@ return [
                     $field   = $this->field();
                     $uploads = $field->uploads();
 
+                    // move_uploaded_file() not working with unit test
+                    // @codeCoverageIgnoreStart
                     return $field->upload($this, $uploads, function ($file, $parent) use ($field) {
                         return $file->panel()->pickerData([
                             'image'  => $field->image(),
@@ -127,6 +129,7 @@ return [
                             'text'   => $field->text(),
                         ]);
                     });
+                    // @codeCoverageIgnoreEnd
                 }
             ]
         ];
