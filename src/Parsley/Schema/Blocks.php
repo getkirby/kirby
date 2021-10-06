@@ -74,7 +74,10 @@ class Blocks extends Plain
         return [
             [
                 'tag' => 'a',
-                'attrs' => ['href', 'target', 'title'],
+                'attrs' => ['href', 'rel', 'target', 'title'],
+                'defaults' => [
+                    'rel' => 'noopener noreferrer'
+                ]
             ],
             [
                 'tag' => 'abbr',
