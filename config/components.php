@@ -6,6 +6,7 @@ use Kirby\Cms\File;
 use Kirby\Cms\FileVersion;
 use Kirby\Cms\Template;
 use Kirby\Data\Data;
+use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Filesystem\F;
 use Kirby\Filesystem\Filename;
 use Kirby\Http\Server;
@@ -53,6 +54,17 @@ return [
         }
 
         return $output;
+    },
+
+    /**
+     * Add your own email provider
+     *
+     * @param \Kirby\Cms\App $kirby Kirby instance
+     * @param array $props
+     * @param bool $debug
+     */
+    'email' => function (App $kirby, array $props = [], bool $debug = false) {
+        return new Emailer($props, $debug);
     },
 
     /**

@@ -2,8 +2,25 @@
 
 namespace Kirby\Cms;
 
+use Kirby\Email\Email;
 use Kirby\Filesystem\Dir;
 use Kirby\Filesystem\F;
+
+class CustomEmailProvider extends Email
+{
+    public static $apiKey;
+
+    public function __construct(array $props = [], bool $debug = false)
+    {
+        parent::__construct($props, $debug);
+    }
+
+    public function send(bool $debug = false): bool
+    {
+        static::$apiKey = 'KIRBY';
+        return true;
+    }
+}
 
 class AppComponentsTest extends TestCase
 {
@@ -280,5 +297,34 @@ class AppComponentsTest extends TestCase
 
         $this->assertEquals('test-path', url('test'));
         $this->assertEquals('/any/page', url('any/page'));
+    }
+
+    public function testEmail()
+    {
+        $app = $this->kirby->clone([
+            'components' => [
+                'email' => function ($kirby, $props, $debug) {
+                    return new CustomEmailProvider($props, $debug);
+                }
+            ]
+        ]);
+
+        $email = $app->email([
+            'from' => 'no-reply@supercompany.com',
+            'to' => 'someone@gmail.com',
+            'subject' => 'Thank you for your contact request',
+            'body' => 'We will never reply'
+        ], ['debug' => true]);
+
+        $this->assertInstanceOf(CustomEmailProvider::class, $email);
+        $this->assertTrue(property_exists($email, 'apiKey'));
+        $this->assertSame('no-reply@supercompany.com', $email->from());
+        $this->assertSame(['someone@gmail.com' => null], $email->to());
+        $this->assertSame('Thank you for your contact request', $email->subject());
+        $this->assertSame('We will never reply', $email->body()->text());
+
+        $this->assertNull($email::$apiKey);
+        $email->send();
+        $this->assertSame('KIRBY', $email::$apiKey);
     }
 }

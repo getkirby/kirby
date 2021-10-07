@@ -3,7 +3,6 @@
 namespace Kirby\Cms;
 
 use Kirby\Data\Data;
-use Kirby\Email\PHPMailer as Emailer;
 use Kirby\Exception\ErrorPageException;
 use Kirby\Exception\InvalidArgumentException;
 use Kirby\Exception\LogicException;
@@ -571,11 +570,14 @@ class App
      *
      * @param mixed $preset
      * @param array $props
-     * @return \Kirby\Email\PHPMailer
+     * @return \Kirby\Email\Email
      */
     public function email($preset = [], array $props = [])
     {
-        return new Emailer((new Email($preset, $props))->toArray(), $props['debug'] ?? false);
+        $debug = $props['debug'] ?? false;
+        $props = (new Email($preset, $props))->toArray();
+
+        return ($this->component('email'))($this, $props, $debug);
     }
 
     /**
