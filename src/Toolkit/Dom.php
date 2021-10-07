@@ -295,6 +295,28 @@ class Dom
             return 'Invalid data URI';
         }
 
+        // allow valid email addresses
+        if (Str::startsWith($url, 'mailto:') === true) {
+            $address = Str::after($url, 'mailto:');
+
+            if (empty($address) || V::email($address) === true) {
+                return true;
+            }
+
+            return 'Invalid email address';
+        }
+
+        // allow valid telephone numbers
+        if (Str::startsWith($url, 'tel:') === true) {
+            $address = Str::after($url, 'tel:');
+
+            if (empty($address) || preg_match('!^(\+|)[0-9]+$!', $address)) {
+                return true;
+            }
+
+            return 'Invalid telephone number';
+        }
+
         return 'Unknown URL type';
     }
 
