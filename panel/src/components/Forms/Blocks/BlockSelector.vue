@@ -156,7 +156,7 @@ export default {
   cursor: pointer;
   color: var(--color-gray-400);
 }
-.k-block-selector details:only-child summary {
+.k-block-selector details:only-of-type summary {
   pointer-events: none;
 }
 .k-block-selector summary:focus {
