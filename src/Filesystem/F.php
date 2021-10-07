@@ -473,10 +473,7 @@ class F
             return false;
         }
 
-        $stat     = stat($file);
-        $mtime    = $stat['mtime'] ?? 0;
-        $ctime    = $stat['ctime'] ?? 0;
-        $modified = max([$mtime, $ctime]);
+        $modified = filemtime($file);
 
         if (is_null($format) === true) {
             return $modified;
