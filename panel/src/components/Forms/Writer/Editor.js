@@ -376,6 +376,8 @@ export default class Editor extends Emitter {
 
     // give extensions access to our view
     this.extensions.view = this.view;
+
+    this.setContent(this.options.content, true);
   }
 
   isEditable() {

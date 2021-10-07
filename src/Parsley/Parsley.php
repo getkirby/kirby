@@ -107,9 +107,7 @@ class Parsley
 
     public function fallback($node)
     {
-        if (is_a($node, 'DOMText') === true) {
-            $html = $node->textContent;
-        } elseif (is_a($node, Element::class) === true) {
+        if (is_a($node, Element::class) === true) {
             $html = $node->innerHtml();
         } elseif (is_string($node) === true) {
             $html = $node;
