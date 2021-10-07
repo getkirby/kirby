@@ -100,8 +100,9 @@ return [
                     $field = $this->field();
 
                     return $field->filepicker([
-                        'image'  => $field->image([], $field->layout),
+                        'image'  => $field->image(),
                         'info'   => $field->info(),
+                        'layout' => $field->layout(),
                         'limit'  => $field->limit(),
                         'page'   => $this->requestQuery('page'),
                         'query'  => $field->query(),
@@ -117,14 +118,18 @@ return [
                     $field   = $this->field();
                     $uploads = $field->uploads();
 
+                    // move_uploaded_file() not working with unit test
+                    // @codeCoverageIgnoreStart
                     return $field->upload($this, $uploads, function ($file, $parent) use ($field) {
                         return $file->panel()->pickerData([
-                            'image' => $field->image([], $field->layout),
-                            'info'  => $field->info(),
-                            'model' => $field->model(),
-                            'text'  => $field->text(),
+                            'image'  => $field->image(),
+                            'info'   => $field->info(),
+                            'layout' => $field->layout(),
+                            'model'  => $field->model(),
+                            'text'   => $field->text(),
                         ]);
                     });
+                    // @codeCoverageIgnoreEnd
                 }
             ]
         ];
