@@ -5,14 +5,33 @@ namespace Kirby\Parsley\Schema;
 use Kirby\Parsley\Element;
 use Kirby\Toolkit\Str;
 
+/**
+ * The plain schema definition converts
+ * the entire document into simple text blocks
+ *
+ * @since 3.5.0
+ *
+ * @package   Kirby Parsley
+ * @author    Bastian Allgeier <bastian@getkirby.com>,
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 class Blocks extends Plain
 {
-    public function fallback(string $html)
+    /**
+     * Creates the fallback block type
+     * if no other block can be found
+     *
+     * @param string $html
+     * @return array|null
+     */
+    public function fallback(string $html): ?array
     {
         $html = trim($html);
 
         if (Str::length($html) === 0) {
-            return false;
+            return null;
         }
 
         return [
@@ -23,7 +42,13 @@ class Blocks extends Plain
         ];
     }
 
-    public function heading($node, $level)
+    /**
+     * Converts a heading element to a heading block
+     *
+     * @param \Kirby\Parsley\Element $node
+     * @return array
+     */
+    public function heading(Element $node, $level): array
     {
         $content = [
             'level' => $level,
@@ -42,7 +67,13 @@ class Blocks extends Plain
         ];
     }
 
-    public function list($node)
+    /**
+     * Converts a list element to HTML
+     *
+     * @param \Kirby\Parsley\Element $node
+     * @return string
+     */
+    public function list(Element $node): string
     {
         $html = [];
 
@@ -69,6 +100,12 @@ class Blocks extends Plain
         return '<' . $node->tagName() . '>' . implode($html) . '</' . $node->tagName() . '>';
     }
 
+    /**
+     * Returns a list of allowed inline marks
+     * and their parsing rules
+     *
+     * @return array
+     */
     public function marks(): array
     {
         return [
@@ -118,17 +155,23 @@ class Blocks extends Plain
         ];
     }
 
+    /**
+     * Returns a list of allowed nodes and
+     * their parsing rules
+     *
+     * @return array
+     */
     public function nodes(): array
     {
         return [
             [
                 'tag' => 'blockquote',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     $citation = null;
                     $text     = [];
 
                     // get all the text for the quote
-                    foreach ($node->element()->childNodes as $child) {
+                    foreach ($node->children() as $child) {
                         if (is_a($child, 'DOMText') === true) {
                             $text[] = trim($child->textContent);
                         }
@@ -156,43 +199,43 @@ class Blocks extends Plain
             ],
             [
                 'tag' => 'h1',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     return $this->heading($node, 'h1');
                 }
             ],
             [
                 'tag' => 'h2',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     return $this->heading($node, 'h2');
                 }
             ],
             [
                 'tag' => 'h3',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     return $this->heading($node, 'h3');
                 }
             ],
             [
                 'tag' => 'h4',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     return $this->heading($node, 'h4');
                 }
             ],
             [
                 'tag' => 'h5',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     return $this->heading($node, 'h5');
                 }
             ],
             [
                 'tag' => 'h6',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     return $this->heading($node, 'h6');
                 }
             ],
             [
                 'tag' => 'hr',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     return [
                         'type' => 'line'
                     ];
@@ -200,7 +243,7 @@ class Blocks extends Plain
             ],
             [
                 'tag' => 'iframe',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     $caption = null;
                     $src     = $node->attr('src');
 
@@ -243,7 +286,7 @@ class Blocks extends Plain
             ],
             [
                 'tag' => 'img',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     $caption = null;
                     $link = null;
 
@@ -272,7 +315,7 @@ class Blocks extends Plain
             ],
             [
                 'tag' => 'ol',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     return [
                         'content' => [
                             'text' => $this->list($node)
@@ -283,7 +326,7 @@ class Blocks extends Plain
             ],
             [
                 'tag'   => 'pre',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     $language = 'text';
 
                     if ($code = $node->find('//code')) {
@@ -306,7 +349,7 @@ class Blocks extends Plain
             ],
             [
                 'tag' => 'table',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     return [
                         'content' => [
                             'text' => $node->outerHTML(),
@@ -317,7 +360,7 @@ class Blocks extends Plain
             ],
             [
                 'tag' => 'ul',
-                'parse' => function ($node) {
+                'parse' => function (Element $node) {
                     return [
                         'content' => [
                             'text' => $this->list($node)

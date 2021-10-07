@@ -2,25 +2,77 @@
 
 namespace Kirby\Parsley;
 
-use DOMDocument;
-use DOMXPath;
+use DOMNode;
 use Kirby\Parsley\Schema\Plain;
+use Kirby\Toolkit\Dom;
 
+/**
+ * HTML parser to extract the best possible blocks
+ * from any kind of HTML document
+ *
+ * @since 3.5.0
+ *
+ * @package   Kirby Parsley
+ * @author    Bastian Allgeier <bastian@getkirby.com>,
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 class Parsley
 {
+    /**
+     * @var array
+     */
     protected $blocks = [];
-    protected $body;
+
+    /**
+     * @var \DOMDocument
+     */
     protected $doc;
-    protected $inline;
+
+    /**
+     * @var \Kirby\Toolkit\Dom
+     */
+    protected $dom;
+
+    /**
+     * @var array
+     */
+    protected $inline = [];
+
+    /**
+     * @var array
+     */
     protected $marks = [];
+
+    /**
+     * @var array
+     */
     protected $nodes = [];
+
+    /**
+     * @var \Kirby\Parsley\Schema
+     */
     protected $schema;
+
+    /**
+     * @var array
+     */
     protected $skip = [];
 
+    /**
+     * @var bool
+     */
     public static $useXmlExtension = true;
 
+    /**
+     * @param string $html
+     * @param \Kirby\Parsley\Schema|null $schema
+     */
     public function __construct(string $html, Schema $schema = null)
     {
+        $this->dom = new Dom($html);
+
         // fail gracefully if the XML extension is not installed
         // or should be skipped
         if ($this->useXmlExtension() === false) {
@@ -33,46 +85,59 @@ class Parsley
             return;
         }
 
-        libxml_use_internal_errors(true);
-
-        $this->doc = new DOMDocument();
-        $this->doc->preserveWhiteSpace = false;
-        $this->doc->loadHTML(mb_convert_encoding($html, 'HTML-ENTITIES', 'UTF-8'));
-
-        libxml_clear_errors();
-
+        $this->doc    = $this->dom->document();
         $this->schema = $schema ?? new Plain();
         $this->skip   = $this->schema->skip();
         $this->marks  = $this->schema->marks();
         $this->inline = [];
 
+        // load all allowed nodes from the schema
         $this->createNodeRules($this->schema->nodes());
 
+        // start parsing at the top level and go through
+        // all children of the document
         foreach ($this->doc->childNodes as $childNode) {
             $this->parseNode($childNode);
         }
 
+        // needs to be called at last to fetch remaining
+        // inline elements after parsing has ended
         $this->endInlineBlock();
     }
 
+    /**
+     * Returns all detected blocks
+     *
+     * @return array
+     */
     public function blocks(): array
     {
         return $this->blocks;
     }
 
-    public function body()
-    {
-        return $this->body = $this->body ?? $this->query($this->doc, '/html/body')[0];
-    }
-
-    public function createNodeRules($nodes)
+    /**
+     * Load all node rules from the schema
+     *
+     * @param array $nodes
+     * @return array
+     */
+    public function createNodeRules(array $nodes): array
     {
         foreach ($nodes as $node) {
             $this->nodes[$node['tag']] = $node;
         }
+
+        return $this->nodes;
     }
 
-    public function containsBlock($element): bool
+    /**
+     * Checks if the given element contains
+     * any other block level elements
+     *
+     * @param \DOMNode $element
+     * @return bool
+     */
+    public function containsBlock(DOMNode $element): bool
     {
         if (!$element || !$element->childNodes) {
             return false;
@@ -87,6 +152,16 @@ class Parsley
         return false;
     }
 
+    /**
+     * Takes all inline elements in the inline cache
+     * and combines them in a final block. The block
+     * will either be merged with the previous block
+     * if the type matches, or will be appended.
+     *
+     * The inline cache will be reset afterwards
+     *
+     * @return void
+     */
     public function endInlineBlock()
     {
         $html = [];
@@ -105,12 +180,20 @@ class Parsley
         $this->inline = [];
     }
 
-    public function fallback($node)
+    /**
+     * Creates a fallback block type for the given
+     * element. The element can either be a element object
+     * or a simple HTML/plain text string
+     *
+     * @param \Kirby\Parsley\Element|string $element
+     * @return array|null
+     */
+    public function fallback($element): ?array
     {
-        if (is_a($node, Element::class) === true) {
-            $html = $node->innerHtml();
-        } elseif (is_string($node) === true) {
-            $html = $node;
+        if (is_a($element, Element::class) === true) {
+            $html = $element->innerHtml();
+        } elseif (is_string($element) === true) {
+            $html = $element;
         } else {
             $html = '';
         }
@@ -119,10 +202,16 @@ class Parsley
             return $fallback;
         }
 
-        return false;
+        return null;
     }
 
-    public function isBlock($element): bool
+    /**
+     * Checks if the given DOMNode is a block element
+     *
+     * @param DOMNode $element
+     * @return bool
+     */
+    public function isBlock(DOMNode $element): bool
     {
         if (is_a($element, 'DOMElement') === false) {
             return false;
@@ -131,7 +220,13 @@ class Parsley
         return array_key_exists($element->tagName, $this->nodes) === true;
     }
 
-    public function isInline($element)
+    /**
+     * Checks if the given DOMNode is an inline element
+     *
+     * @param \DOMNode $element
+     * @return bool
+     */
+    public function isInline(DOMNode $element): bool
     {
         if (is_a($element, 'DOMText') === true) {
             return true;
@@ -153,7 +248,11 @@ class Parsley
         return false;
     }
 
-    public function mergeOrAppend($block)
+    /**
+     * @param array $block
+     * @return void
+     */
+    public function mergeOrAppend(array $block)
     {
         $lastIndex = count($this->blocks) - 1;
         $lastItem  = $this->blocks[$lastIndex] ?? null;
@@ -168,13 +267,20 @@ class Parsley
         }
     }
 
-    public function parseNode($element)
+    /**
+     * Parses the given DOM node and tries to
+     * convert it to a block or a list of blocks
+     *
+     * @param \DOMNode $element
+     * @return void
+     */
+    public function parseNode(DOMNode $element): bool
     {
         $skip = ['DOMComment', 'DOMDocumentType'];
 
         // unwanted element types
         if (in_array(get_class($element), $skip) === true) {
-            return true;
+            return false;
         }
 
         // inline context
@@ -198,7 +304,7 @@ class Parsley
         // has only unknown children (div, etc.)
         if ($this->containsBlock($element) === false) {
             if (in_array($element->tagName, $this->skip) === true) {
-                return true;
+                return false;
             }
 
             if ($element->tagName !== 'body' && $element->tagName !== 'html') {
@@ -216,19 +322,19 @@ class Parsley
         foreach ($element->childNodes as $childNode) {
             $this->parseNode($childNode);
         }
+
+        return true;
     }
 
-    public function query($element, $query)
-    {
-        return (new DOMXPath($element))->query($query);
-    }
-
+    /**
+     * @return bool
+     */
     public function useXmlExtension(): bool
     {
         if (static::$useXmlExtension !== true) {
             return false;
         }
 
-        return class_exists('DOMDocument') === true;
+        return $this->dom->isSupported();
     }
 }

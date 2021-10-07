@@ -10,6 +10,7 @@ use DOMElement;
 use DOMNode;
 use DOMProcessingInstruction;
 use DOMXPath;
+use Kirby\Exception\Exception;
 use Kirby\Exception\InvalidArgumentException;
 
 /**
@@ -318,6 +319,18 @@ class Dom
         }
 
         return 'Unknown URL type';
+    }
+
+    /**
+     * Check if the XML extension is installed on the server.
+     * Otherwise DOMDocument won't be available and the Dom cannot
+     * work at all.
+     *
+     * @return bool
+     */
+    public function isSupported(): bool
+    {
+        return class_exists('DOMDocument') === true;
     }
 
     /**
