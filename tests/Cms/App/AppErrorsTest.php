@@ -40,8 +40,9 @@ class AppErrorsTest extends TestCase
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
     }
 
     /**
@@ -66,8 +67,9 @@ class AppErrorsTest extends TestCase
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\PlainTextHandler', $handlers[0]);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         // JSON
         Server::$cli = false;
@@ -75,8 +77,9 @@ class AppErrorsTest extends TestCase
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         // HTML
         Server::$cli = false;
@@ -93,8 +96,9 @@ class AppErrorsTest extends TestCase
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         // reset global state
         Server::$cli            = $oldCli;
@@ -121,9 +125,10 @@ class AppErrorsTest extends TestCase
         // without options
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
         $this->assertSame($this->_getBufferedContent($app->root('kirby') . '/views/fatal.php'), $this->_getBufferedContent($handlers[0]));
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         // without fatal closure
         $optionsMethod->invoke($app, ['fatal' => function () {
@@ -132,39 +137,44 @@ class AppErrorsTest extends TestCase
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
         $this->assertSame('Fatal Error Test!', $this->_getBufferedContent($handlers[0]));
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         // disabling Whoops without debugging doesn't matter
         $optionsMethod->invoke($app, ['debug' => false, 'whoops' => false]);
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         // with debugging enabled
         $optionsMethod->invoke($app, ['debug' => true, 'whoops' => true]);
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
         $this->assertSame('Kirby CMS Debugger', $handlers[0]->getPageTitle());
         $this->assertSame(dirname(__DIR__, 3) . '/assets', $handlers[0]->getResourcePaths()[0]);
         $this->assertFalse($handlers[0]->getEditorHref('test', 1));
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         // with debugging enabled and editor
         $optionsMethod->invoke($app, ['debug' => true, 'whoops' => true, 'editor' => 'vscode']);
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
+
         $this->assertInstanceOf('Whoops\Handler\PrettyPageHandler', $handlers[0]);
         $this->assertSame('Kirby CMS Debugger', $handlers[0]->getPageTitle());
         $this->assertSame(dirname(__DIR__, 3) . '/assets', $handlers[0]->getResourcePaths()[0]);
         $this->assertSame('vscode://file/test:1', $handlers[0]->getEditorHref('test', 1));
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         // with debugging enabled, but without Whoops
         $optionsMethod->invoke($app, ['debug' => true, 'whoops' => false]);
@@ -193,8 +203,9 @@ class AppErrorsTest extends TestCase
 
         $testMethod->invoke($app);
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         // test CallbackHandler with default
         $this->assertSame(json_encode([
@@ -237,7 +248,7 @@ class AppErrorsTest extends TestCase
         $optionsMethod->invoke($app, ['debug' => true, 'whoops' => true]);
 
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
 
         $this->assertSame(json_encode([
@@ -251,6 +262,7 @@ class AppErrorsTest extends TestCase
             'file' => __FILE__,
             'line' => $exception->getLine()
         ]), $this->_getBufferedContent($handlers[0]));
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
     }
 
     /**
@@ -273,15 +285,17 @@ class AppErrorsTest extends TestCase
 
         $setMethod->invoke($app, new PlainTextHandler());
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\PlaintextHandler', $handlers[0]);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         $setMethod->invoke($app, function () {
             // empty callback
         });
         $handlers = $whoops->getHandlers();
-        $this->assertCount(1, $handlers);
+        $this->assertCount(2, $handlers);
         $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[0]);
+        $this->assertInstanceOf('Whoops\Handler\CallbackHandler', $handlers[1]);
 
         $unsetMethod->invoke($app);
         $handlers = $whoops->getHandlers();
