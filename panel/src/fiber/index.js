@@ -29,36 +29,27 @@ import { merge } from "../helpers/object";
 import { toJson } from "../api/request";
 
 export default {
-  base: null,
-  finish: null,
-  csrf: null,
-  start: null,
-  state: null,
-  swap: null,
+  options: {},
+  state: {},
 
   /**
    * Setup call to make Fiber ready
    *
+   * @param {object} state
    * @param {object} options
    */
-  init({
-    csrf,
-    base,
-    finish,
-    state,
-    start,
-    swap,
-  }) {
+  init(state, options = {}) {
 
-    // set the base URL for all requests
-    this.base = base || document.querySelector("base").href;
-    this.csrf = csrf;
-
-    // callback functions which handle
-    // swapping components and loading events
-    this.finish = finish;
-    this.start  = start;
-    this.swap   = swap;
+    // defaults
+    this.options = {
+      base:     document.querySelector("base").href,
+      headers:  () => {},
+      onFinish: () => {},
+      onStart:  () => {},
+      onSwap:   () => {},
+      query:    () => {},
+      ...options
+    };
 
     // set initial state
     this.setState(state);
@@ -131,6 +122,15 @@ export default {
       }
     });
 
+    // add globals
+    Object.entries(this.options.query()).forEach(([key, value]) => {
+      value = params.get(key) ?? value ?? null;
+
+      if (value !== null) {
+        params.set(key, value);
+      }
+    });
+
     return params;
   },
 
@@ -168,7 +168,7 @@ export default {
     const globals = this.arrayToString(options.globals);
     const only    = this.arrayToString(options.only);
 
-    this.start(options);
+    this.options.onStart(options);
 
     try {
       const url = this.url(path, options.query);
@@ -178,7 +178,7 @@ export default {
         credentials: "same-origin",
         cache: "no-store",
         headers: {
-          "X-CSRF": this.csrf,
+          ...this.options.headers(),
           "X-Fiber": true,
           "X-Fiber-Globals": globals,
           "X-Fiber-Only": only,
@@ -196,7 +196,7 @@ export default {
 
       return json;
     } finally {
-      this.finish(options);
+      this.options.onFinish(options);
     }
 
   },
@@ -219,7 +219,7 @@ export default {
       window.history.pushState(this.state, "", this.state.$url);
     }
 
-    this.swap(state, options);
+    this.options.onSwap(state, options);
   },
 
   /**
@@ -232,7 +232,7 @@ export default {
    */
   url(url = "", query = {}) {
     if (typeof url === "string" && url.match(/^https?:\/\//) === null) {
-      url = new URL(this.base + url.replace(/^\//, ""));
+      url = new URL(this.options.base + url.replace(/^\//, ""));
     } else {
       url = new URL(url);
     }

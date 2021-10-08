@@ -12,15 +12,18 @@ export default {
     };
   },
   created() {
-    Fiber.init({
-      state: this.state,
-      csrf: this.state.$system.csrf,
+    Fiber.init(this.state, {
+      headers: () => {
+        return {
+          "X-CSRF": this.state.$system.csrf,
+        };
+      },
       /**
        * Is being called when a Fiber request
        * ends. It stops the loader unless
        * there are still running API requests
        */
-      finish: () => {
+      onFinish: () => {
         if (this.$api.requests.length === 0) {
           this.$store.dispatch("isLoading", false);
         }
@@ -32,7 +35,7 @@ export default {
        *
        * @param {object} options
        */
-      start: ({ silent }) => {
+      onStart: ({ silent }) => {
         // show the loader unless the silent option is activated
         // this is useful i.e. for background reloads (see our locking checks)
         if (silent !== true) {
@@ -47,7 +50,7 @@ export default {
        * @param {object} state
        * @param {object} options
        */
-      swap: async (state, options) => {
+      onSwap: async (state, options) => {
         options = {
           navigate: true,
           replace: false,
@@ -65,7 +68,12 @@ export default {
         if (options.navigate === true) {
           this.navigate();
         }
-      }
+      },
+      query: () => {
+        return {
+          language: this.state.$language?.code
+        };
+      },
     });
   },
   methods: {
