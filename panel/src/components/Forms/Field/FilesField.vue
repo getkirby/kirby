@@ -58,6 +58,9 @@ export default {
     uploads: [Boolean, Object, Array]
   },
  computed: {
+    moreUpload() {
+      return this.more && this.uploads;
+    },
     options() {
       if (this.uploads) {
         return {
@@ -71,7 +74,7 @@ export default {
       }
 
       return {
-        options: [{ icon: "check", text: this.$t("select"), click: "open" }]
+        options: [{ icon: "check", text: this.$t("select"), click: () => this.open() }]
       };
     },
     uploadParams() {
@@ -104,13 +107,20 @@ export default {
         return false;
       }
 
-      if (this.more && this.uploads) {
+      if (this.moreUpload) {
         this.$refs.options.toggle();
       } else {
         this.open();
       }
     },
     onAction(action) {
+      // no need for `action` modifier
+      // as native button `click` prop requires
+      // inline function when only one option available
+      if (!this.moreUpload) {
+        return;
+      }
+
       switch (action) {
         case "open":
           return this.open();
