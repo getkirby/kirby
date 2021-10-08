@@ -104,7 +104,6 @@ class DomTest extends TestCase
      */
     public function testIsAllowedUrl(string $url, $expected, array $options = [])
     {
-        $dom = new Dom('Test');
-        $this->assertSame($expected, $dom->isAllowedUrl($url, $options));
+        $this->assertSame($expected, Dom::isAllowedUrl($url, $options));
     }
 }
