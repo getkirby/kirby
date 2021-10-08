@@ -310,7 +310,7 @@ class Dom
         if (Str::startsWith($url, 'tel:') === true) {
             $address = Str::after($url, 'tel:');
 
-            if (empty($address) || preg_match('!^(\+|)[0-9]+$!', $address)) {
+            if (empty($address) || preg_match('!^[+]?[0-9]+$!', $address)) {
                 return true;
             }
 
