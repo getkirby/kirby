@@ -45,7 +45,7 @@ class Inline
      * @param array $marks
      * @return array
      */
-    public function createMarkRules(array $marks)
+    protected function createMarkRules(array $marks)
     {
         foreach ($marks as $mark) {
             $this->marks[$mark['tag']] = $mark;

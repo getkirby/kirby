@@ -13,7 +13,7 @@ namespace Kirby\Parsley;
  * @copyright Bastian Allgeier GmbH
  * @license   https://getkirby.com/license
  */
-abstract class Schema
+class Schema
 {
     /**
      * Returns the fallback block when no
@@ -22,7 +22,10 @@ abstract class Schema
      * @param string $html
      * @return array|null
      */
-    abstract public function fallback(string $html): ?array;
+    public function fallback(string $html): ?array
+    {
+        return null;
+    }
 
     /**
      * Returns a list of allowed inline marks
@@ -52,5 +55,8 @@ abstract class Schema
      *
      * @return array
      */
-    abstract public function skip(): array;
+    public function skip(): array
+    {
+        return [];
+    }
 }
