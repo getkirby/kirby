@@ -1,6 +1,6 @@
 <template>
   <div class="k-writer-toolbar">
-    <k-dropdown v-if="Object.keys(nodeButtons).length > 1" @mousedown.native.prevent>
+    <k-dropdown v-if="hasVisibleButtons" @mousedown.native.prevent>
       <k-button
         :icon="activeButton.icon || 'title'"
         :class="{
@@ -72,6 +72,17 @@ export default {
   computed: {
     activeButton() {
       return Object.values(this.nodeButtons).find(button => this.isButtonActive(button)) || false;
+    },
+    hasVisibleButtons() {
+      const nodeButtons = Object.keys(this.nodeButtons);
+
+      return (
+          nodeButtons.length > 1 ||
+          (
+              nodeButtons.length === 1 &&
+              nodeButtons.includes("paragraph") === false
+          )
+      );
     },
     markButtons() {
       return this.buttons("mark");
