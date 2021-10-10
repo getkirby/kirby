@@ -117,7 +117,7 @@ abstract class Model
         // merge with defaults and blueprint option
         $settings = array_merge(
             $this->imageDefaults(),
-            $settings,
+            $settings ?? [],
             $this->model->blueprint()->image() ?? [],
         );
 
