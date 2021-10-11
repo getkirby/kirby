@@ -24,6 +24,7 @@ html,
 body {
   color: var(--color-gray-900);
   min-height: 100vh;
+  overflow-y: scroll;
 }
 
 a {
