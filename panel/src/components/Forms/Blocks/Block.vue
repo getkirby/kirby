@@ -160,18 +160,22 @@ export default {
         return false;
       }
 
-      let component = "k-block-type-" + this.type;
+      let component;
 
-      if (this.$helper.isComponent(component)) {
-        return component;
-      }
-
+      // custom preview
       if (this.fieldset.preview) {
         component = "k-block-type-" + this.fieldset.preview;
 
         if (this.$helper.isComponent(component)) {
           return component;
         }
+      }
+
+      // default preview
+      component = "k-block-type-" + this.type;
+
+      if (this.$helper.isComponent(component)) {
+        return component;
       }
 
       return false;
