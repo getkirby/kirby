@@ -520,24 +520,4 @@ class BlocksTest extends TestCase
     {
         return $this->assertSame(['head', 'meta', 'script', 'style'], $this->schema->skip());
     }
-
-    public function testTable()
-    {
-        $html = <<<HTML
-            <table>
-                <tr><th>Column A</th><th>Column A</th></tr>
-                <tr><td>Cell A</td><td>Cell B</td></tr>
-            </table>
-        HTML;
-
-        $element  = $this->element($html, '//table');
-        $expected = [
-            'content' => [
-                'text' => '<table><tr><th>Column A</th><th>Column A</th></tr><tr><td>Cell A</td><td>Cell B</td></tr></table>',
-            ],
-            'type' => 'markdown',
-        ];
-
-        return $this->assertSame($expected, $this->schema->table($element));
-    }
 }
