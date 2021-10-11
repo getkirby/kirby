@@ -2,7 +2,8 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:cypress/recommended",
-    "plugin:vue/recommended"
+    "plugin:vue/recommended",
+    "prettier"
   ],
   rules: {
     "vue/component-definition-name-casing": "off",
@@ -12,19 +13,19 @@ module.exports = {
     "vue/max-attributes-per-line": [
       "error",
       {
-        "singleline": 3,
-        "multiline": {
-          "max": 1,
-          "allowFirstLine": false
+        singleline: 3,
+        multiline: {
+          max: 1,
+          allowFirstLine: false
         }
       }
     ],
     "vue/html-closing-bracket-newline": [
       "error",
       {
-        "singleline": "never",
-        "multiline": "always"
+        singleline: "never",
+        multiline: "always"
       }
     ]
   }
-}
+};
