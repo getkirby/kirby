@@ -1,6 +1,6 @@
 <template>
   <div class="k-registration">
-    <p>{{ $t('license.unregistered') }}</p>
+    <p>{{ $t("license.unregistered") }}</p>
     <k-button
       :responsive="true"
       :tooltip="$t('license.unregistered')"
@@ -8,7 +8,7 @@
       icon="key"
       @click="$dialog('registration')"
     >
-      {{ $t('license.register') }}
+      {{ $t("license.register") }}
     </k-button>
     <k-button
       :responsive="true"
@@ -17,7 +17,7 @@
       target="_blank"
       icon="cart"
     >
-      {{ $t('license.buy') }}
+      {{ $t("license.buy") }}
     </k-button>
   </div>
 </template>

@@ -1,9 +1,8 @@
 import Extension from "../Extension";
 
 export default class Toolbar extends Extension {
-
   constructor(options = {}) {
-    super(options)
+    super(options);
   }
 
   close() {
@@ -17,12 +16,11 @@ export default class Toolbar extends Extension {
       nodes: this.nodes,
       nodeAttrs: this.nodeAttrs,
       position: this.position,
-      visible: this.visible,
+      visible: this.visible
     });
   }
 
   init() {
-
     this.position = {
       left: 0,
       bottom: 0
@@ -39,7 +37,6 @@ export default class Toolbar extends Extension {
     });
 
     this.editor.on("select", ({ hasChanged }) => {
-
       /**
        * If the selection did not change,
        * it does not need to be repositioned,
@@ -51,9 +48,7 @@ export default class Toolbar extends Extension {
       }
 
       this.open();
-
     });
-
   }
 
   get marks() {
@@ -78,24 +73,23 @@ export default class Toolbar extends Extension {
     const { from, to } = this.editor.selection;
 
     const start = this.editor.view.coordsAtPos(from);
-    const end   = this.editor.view.coordsAtPos(to, true);
+    const end = this.editor.view.coordsAtPos(to, true);
 
     // The box in which the tooltip is positioned, to use as base
     const editorRect = this.editor.element.getBoundingClientRect();
 
     // Find a center-ish x position from the selection endpoints (when
     // crossing lines, end may be more to the left)
-    let left = ((start.left + end.left) / 2) - editorRect.left
+    let left = (start.left + end.left) / 2 - editorRect.left;
     let bottom = Math.round(editorRect.bottom - start.top);
 
-    return this.position = {
+    return (this.position = {
       bottom,
       left
-    };
+    });
   }
 
   get type() {
     return "toolbar";
   }
-
 }

@@ -1,9 +1,7 @@
 <template>
   <section v-if="!isLoading" class="k-fields-section">
     <template v-if="issue">
-      <k-headline class="k-fields-issue-headline">
-        Error
-      </k-headline>
+      <k-headline class="k-fields-issue-headline"> Error </k-headline>
       <k-box :text="issue.message" :html="false" theme="negative" />
     </template>
     <k-form
@@ -49,17 +47,14 @@ export default {
   },
   methods: {
     input(values, field, fieldName) {
-      this.$store.dispatch("content/update", [
-        fieldName,
-        values[fieldName]
-      ]);
+      this.$store.dispatch("content/update", [fieldName, values[fieldName]]);
     },
     async fetch() {
       try {
         const response = await this.load();
         this.fields = response.fields;
 
-        Object.keys(this.fields).forEach(name => {
+        Object.keys(this.fields).forEach((name) => {
           this.fields[name].section = this.name;
           this.fields[name].endpoints = {
             field: this.parent + "/fields/" + name,
@@ -67,10 +62,8 @@ export default {
             model: this.parent
           };
         });
-
       } catch (error) {
         this.issue = error;
-
       } finally {
         this.isLoading = false;
       }
@@ -84,14 +77,14 @@ export default {
 
 <style>
 .k-fields-issue-headline {
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
 }
 .k-fields-section input[type="submit"] {
   display: none;
 }
 
 [data-locked] .k-fields-section {
-  opacity: .2;
+  opacity: 0.2;
   pointer-events: none;
 }
 </style>

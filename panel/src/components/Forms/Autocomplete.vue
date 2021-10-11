@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       matches: [],
-      selected: {text: null}
+      selected: { text: null }
     };
   },
   methods: {
@@ -89,7 +89,6 @@ export default {
      * @param {string} query search term
      */
     search(query) {
-
       if (query.length < 1) {
         return;
       }
@@ -98,8 +97,7 @@ export default {
       const regex = new RegExp(RegExp.escape(query), "ig");
 
       this.matches = this.options
-        .filter(option => {
-
+        .filter((option) => {
           // skip all options without valid text
           if (!option.text) {
             return false;
@@ -112,7 +110,6 @@ export default {
 
           // match the search with the text
           return option.text.match(regex) !== null;
-
         })
         .slice(0, this.limit);
 
@@ -126,5 +123,5 @@ export default {
       this.$refs.dropdown.open();
     }
   }
-}
+};
 </script>

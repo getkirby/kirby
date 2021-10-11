@@ -82,10 +82,8 @@ export default {
         this.options = response.options;
         this.pagination = response.pagination;
         this.data = this.items(response.data);
-
       } catch (error) {
         this.error = error.message;
-
       } finally {
         this.isProcessing = false;
         this.isLoading = false;

@@ -29,23 +29,19 @@ import { props as Input } from "../Input.vue";
 import { props as Writer } from "@/components/Forms/Writer/Writer.vue";
 
 export default {
-  mixins: [
-    Field,
-    Input,
-    Writer
-  ],
+  mixins: [Field, Input, Writer],
   inheritAttrs: false,
   methods: {
     focus() {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>
 
 <style>
 .k-writer-field-input {
   line-height: 1.5em;
-  padding: .375rem .5rem;
+  padding: 0.375rem 0.5rem;
 }
 </style>

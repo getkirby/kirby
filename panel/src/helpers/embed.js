@@ -1,4 +1,3 @@
-
 export function youtube(url, doNotTrack = false) {
   if (!url.match("youtu")) {
     return false;
@@ -16,7 +15,7 @@ export function youtube(url, doNotTrack = false) {
     uri.host = "www.youtube-nocookie.com";
   }
 
-  const path = uri.pathname.split("/").filter(item => item !== "");
+  const path = uri.pathname.split("/").filter((item) => item !== "");
   const first = path[0];
   const second = path[1];
   const host = "https://" + uri.host + "/embed";
@@ -57,7 +56,7 @@ export function youtube(url, doNotTrack = false) {
     default:
       // short URLs
       if (uri.host.includes("youtu.be") && isYoutubeId(first)) {
-        src = 'https://www.youtube.com/embed/' + first;
+        src = "https://www.youtube.com/embed/" + first;
 
         if (query.has("t")) {
           query.set("start", query.get("t"));
@@ -91,7 +90,7 @@ export function vimeo(url, doNotTrack = false) {
     return false;
   }
 
-  const path = uri.pathname.split("/").filter(item => item !== "");
+  const path = uri.pathname.split("/").filter((item) => item !== "");
 
   let query = uri.searchParams;
   let id = null;

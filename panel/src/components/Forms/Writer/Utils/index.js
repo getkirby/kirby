@@ -3,13 +3,13 @@ import {
   chainCommands,
   exitCode,
   setBlockType,
-  toggleMark,
+  toggleMark
 } from "prosemirror-commands";
 
 // prosemirror-inputrules
 import {
   wrappingInputRule,
-  textblockTypeInputRule,
+  textblockTypeInputRule
 } from "prosemirror-inputrules";
 
 import {
@@ -17,20 +17,20 @@ import {
   wrapInList,
   splitListItem,
   liftListItem,
-  sinkListItem,
+  sinkListItem
 } from "prosemirror-schema-list";
 
 // custom
-import getMarkAttrs from './getMarkAttrs';
+import getMarkAttrs from "./getMarkAttrs";
 import markInputRule from "./markInputRule";
-import markIsActive from './markIsActive';
+import markIsActive from "./markIsActive";
 import markPasteRule from "./markPasteRule";
-import minMax from './minMax';
-import nodeInputRule from './nodeInputRule';
-import nodeIsActive from './nodeIsActive';
+import minMax from "./minMax";
+import nodeInputRule from "./nodeInputRule";
+import nodeIsActive from "./nodeIsActive";
 import removeMark from "./removeMark";
 import pasteRule from "./pasteRule";
-import toggleBlockType from './toggleBlockType';
+import toggleBlockType from "./toggleBlockType";
 import toggleList from "./toggleList";
 import updateMark from "./updateMark";
 import getNodeAttrs from "./getNodeAttrs";

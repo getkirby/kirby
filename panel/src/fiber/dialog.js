@@ -1,4 +1,3 @@
-
 import Fiber from "./index";
 
 export default async function (path, options = {}) {
@@ -16,7 +15,10 @@ export default async function (path, options = {}) {
     }
 
     // check for an existing dialog component
-    if (!data.$dialog.component || this.$helper.isComponent(data.$dialog.component) === false) {
+    if (
+      !data.$dialog.component ||
+      this.$helper.isComponent(data.$dialog.component) === false
+    ) {
       throw `The dialog component does not exist`;
     }
 

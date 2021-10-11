@@ -1,7 +1,6 @@
 import string from "./string.js";
 
 describe("$helper.string.ucfirst", () => {
-
   it("should convert first character to uppercase", () => {
     const result = string.ucfirst("hello");
     expect(result).to.equal("Hello");
@@ -16,5 +15,4 @@ describe("$helper.string.ucfirst", () => {
     const result = string.ucfirst(0);
     expect(result).to.equal("0");
   });
-
 });

@@ -17,6 +17,6 @@ export default (api) => {
     },
     async update(data) {
       return api.post("site", data);
-    },
+    }
   };
 };

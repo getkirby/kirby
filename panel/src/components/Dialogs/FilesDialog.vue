@@ -22,17 +22,9 @@
       />
 
       <template v-if="items.length">
-        <k-items
-          :items="items"
-          layout="list"
-          :sortable="false"
-          @item="toggle"
-        >
+        <k-items :items="items" layout="list" :sortable="false" @item="toggle">
           <template #options="{ item: file }">
-            <k-button
-              v-bind="toggleBtn(file)"
-              @click="toggle(file)"
-            />
+            <k-button v-bind="toggleBtn(file)" @click="toggle(file)" />
           </template>
         </k-items>
 

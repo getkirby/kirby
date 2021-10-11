@@ -1,11 +1,10 @@
 export default class Emitter {
-
   emit(event, ...args) {
     this._callbacks = this._callbacks || {};
     const callbacks = this._callbacks[event];
 
     if (callbacks) {
-      callbacks.forEach(callback => callback.apply(this, args));
+      callbacks.forEach((callback) => callback.apply(this, args));
     }
 
     return this;
@@ -25,7 +24,7 @@ export default class Emitter {
       if (callbacks) {
         if (fn) {
           // remove specific handler
-          this._callbacks[event] = callbacks.filter(cb => cb !== fn);
+          this._callbacks[event] = callbacks.filter((cb) => cb !== fn);
         } else {
           // remove all handlers
           delete this._callbacks[event];
@@ -40,10 +39,9 @@ export default class Emitter {
    * Add an event listener for given event
    */
   on(event, fn) {
-    this._callbacks        = this._callbacks || {};
+    this._callbacks = this._callbacks || {};
     this._callbacks[event] = this._callbacks[event] || [];
     this._callbacks[event].push(fn);
     return this;
   }
-
 }

@@ -26,7 +26,7 @@
     <!-- @slot Add something below the form -->
     <slot name="footer" />
 
-    <input ref="submitter" class="k-form-submitter" type="submit">
+    <input ref="submitter" class="k-form-submitter" type="submit" />
   </form>
 </template>
 
@@ -90,7 +90,7 @@ export default {
       this.$emit("submit", this.value);
     },
     /**
-     * Submit the form 
+     * Submit the form
      * @public
      */
     submit() {

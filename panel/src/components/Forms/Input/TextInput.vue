@@ -18,17 +18,11 @@
     v-direction
     class="k-text-input"
     v-on="listeners"
-  >
+  />
 </template>
 
 <script>
-import {
-  autofocus,
-  disabled,
-  id,
-  name,
-  required
-} from "@/mixins/props.js"
+import { autofocus, disabled, id, name, required } from "@/mixins/props.js";
 
 import {
   required as validateRequired,
@@ -39,13 +33,7 @@ import {
 } from "vuelidate/lib/validators";
 
 export const props = {
-  mixins: [
-    autofocus,
-    disabled,
-    id,
-    name,
-    required
-  ],
+  mixins: [autofocus, disabled, id, name, required],
   props: {
     autocomplete: {
       type: [Boolean, String],
@@ -66,7 +54,7 @@ export const props = {
     },
     value: String
   }
-}
+};
 
 /**
  * @example <k-input v-model="text" name="text" type="text" />
@@ -78,7 +66,7 @@ export default {
     return {
       listeners: {
         ...this.$listeners,
-        input: event => this.onInput(event.target.value)
+        input: (event) => this.onInput(event.target.value)
       }
     };
   },
@@ -114,7 +102,9 @@ export default {
   },
   validations() {
     const validateMatch = (value) => {
-      return (!this.required && !value) || !this.$refs.input.validity.patternMismatch;
+      return (
+        (!this.required && !value) || !this.$refs.input.validity.patternMismatch
+      );
     };
 
     return {
@@ -124,14 +114,14 @@ export default {
         maxLength: this.maxlength ? validateMaxLength(this.maxlength) : true,
         email: this.type === "email" ? validateEmail : true,
         url: this.type === "url" ? validateUrl : true,
-        pattern: this.pattern ? validateMatch : true,
+        pattern: this.pattern ? validateMatch : true
       }
     };
   }
 };
 </script>
 
-<style >
+<style>
 .k-text-input {
   width: 100%;
   border: 0;

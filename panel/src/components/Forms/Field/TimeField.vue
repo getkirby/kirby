@@ -17,16 +17,12 @@ import { props as Input } from "../Input.vue";
 import { props as TimeInput } from "../Input/TimeInput.vue";
 
 /**
- * Have a look at `<k-field>`, `<k-input>` and `<k-time-input>` 
+ * Have a look at `<k-field>`, `<k-input>` and `<k-time-input>`
  * for additional information.
  * @example <k-time-field v-model="time" name="time" label="Time" />
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    TimeInput
-  ],
+  mixins: [Field, Input, TimeInput],
   inheritAttrs: false,
   props: {
     icon: {
@@ -38,7 +34,7 @@ export default {
     listeners() {
       return {
         ...this.$listeners,
-        update: input => this.$emit("input", input),
+        update: (input) => this.$emit("input", input),
         input: () => {}
       };
     }
@@ -48,5 +44,5 @@ export default {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

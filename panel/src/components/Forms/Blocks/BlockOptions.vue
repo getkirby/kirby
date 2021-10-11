@@ -48,38 +48,50 @@
         @keydown.up.prevent="$emit('sortUp')"
         @keydown.down.prevent="$emit('sortDown')"
       />
-      <k-dropdown-content
-        ref="options"
-        align="right"
-      >
-        <k-dropdown-item :disabled="isFull" icon="angle-up" @click="$emit('chooseToPrepend')">
+      <k-dropdown-content ref="options" align="right">
+        <k-dropdown-item
+          :disabled="isFull"
+          icon="angle-up"
+          @click="$emit('chooseToPrepend')"
+        >
           {{ $t("insert.before") }}
         </k-dropdown-item>
-        <k-dropdown-item :disabled="isFull" icon="angle-down" @click="$emit('chooseToAppend')">
+        <k-dropdown-item
+          :disabled="isFull"
+          icon="angle-down"
+          @click="$emit('chooseToAppend')"
+        >
           {{ $t("insert.after") }}
         </k-dropdown-item>
-        <hr>
+        <hr />
         <k-dropdown-item v-if="isEditable" icon="edit" @click="$emit('open')">
           {{ $t("edit") }}
         </k-dropdown-item>
         <k-dropdown-item icon="refresh" @click="$emit('chooseToConvert')">
           {{ $t("field.blocks.changeType") }}
         </k-dropdown-item>
-        <hr>
+        <hr />
         <k-dropdown-item icon="template" @click="$emit('copy')">
           {{ $t("copy") }}
         </k-dropdown-item>
         <k-dropdown-item icon="download" @click="$emit('paste')">
           {{ $t("paste.after") }}
         </k-dropdown-item>
-        <hr>
-        <k-dropdown-item :icon="isHidden ? 'preview' : 'hidden'" @click="$emit(isHidden ? 'show' : 'hide')">
-          {{ isHidden === true ? $t('show') : $t('hide') }}
+        <hr />
+        <k-dropdown-item
+          :icon="isHidden ? 'preview' : 'hidden'"
+          @click="$emit(isHidden ? 'show' : 'hide')"
+        >
+          {{ isHidden === true ? $t("show") : $t("hide") }}
         </k-dropdown-item>
-        <k-dropdown-item :disabled="isFull" icon="copy" @click="$emit('duplicate')">
+        <k-dropdown-item
+          :disabled="isFull"
+          icon="copy"
+          @click="$emit('duplicate')"
+        >
           {{ $t("duplicate") }}
         </k-dropdown-item>
-        <hr>
+        <hr />
         <k-dropdown-item icon="trash" @click="$emit('confirmToRemove')">
           {{ $t("delete") }}
         </k-dropdown-item>
@@ -97,7 +109,7 @@ export default {
     isBatched: Boolean,
     isEditable: Boolean,
     isFull: Boolean,
-    isHidden: Boolean,
+    isHidden: Boolean
   },
   methods: {
     open() {
@@ -108,13 +120,12 @@ export default {
 </script>
 
 <style>
-
 .k-block-options {
   display: flex;
   align-items: center;
   background: var(--color-white);
   z-index: var(--z-dropdown);
-  box-shadow: rgba(0, 0, 0, .1) -2px 0 5px, var(--shadow), var(--shadow-xl);
+  box-shadow: rgba(0, 0, 0, 0.1) -2px 0 5px, var(--shadow), var(--shadow-xl);
   color: var(--color-black);
   border-radius: var(--rounded);
 }
@@ -147,7 +158,6 @@ export default {
   background: var(--color-gray-100);
 }
 .k-block-options .k-dropdown-content {
-  margin-top: .5rem;
+  margin-top: 0.5rem;
 }
 </style>
-

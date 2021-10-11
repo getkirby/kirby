@@ -1,7 +1,6 @@
 import Mark from "../Mark";
 
 export default class Bold extends Mark {
-
   get button() {
     return {
       icon: "bold",
@@ -14,14 +13,12 @@ export default class Bold extends Mark {
   }
 
   inputRules({ type, utils }) {
-    return [
-      utils.markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, type),
-    ];
+    return [utils.markInputRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)$/, type)];
   }
 
   keys() {
     return {
-      "Mod-b": () => this.toggle(),
+      "Mod-b": () => this.toggle()
     };
   }
 
@@ -30,28 +27,25 @@ export default class Bold extends Mark {
   }
 
   pasteRules({ type, utils }) {
-    return [
-      utils.markPasteRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)/g, type),
-    ];
+    return [utils.markPasteRule(/(?:\*\*|__)([^*_]+)(?:\*\*|__)/g, type)];
   }
 
   get schema() {
     return {
       parseDOM: [
         {
-          tag: "strong",
+          tag: "strong"
         },
         {
           tag: "b",
-          getAttrs: node => node.style.fontWeight !== "normal" && null,
+          getAttrs: (node) => node.style.fontWeight !== "normal" && null
         },
         {
           style: "font-weight",
-          getAttrs: value => /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null,
-        },
+          getAttrs: (value) => /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null
+        }
       ],
-      toDOM: () => ["strong", 0],
+      toDOM: () => ["strong", 0]
     };
   }
-
 }

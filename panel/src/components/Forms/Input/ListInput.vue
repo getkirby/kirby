@@ -31,9 +31,11 @@ export default {
   },
   computed: {
     extensions() {
-      return [new ListDoc({
-        inline: true
-      })];
+      return [
+        new ListDoc({
+          inline: true
+        })
+      ];
     }
   },
   watch: {
@@ -53,18 +55,18 @@ export default {
       this.$refs.input.focus();
     },
     onInput(html) {
-      let dom  = new DOMParser().parseFromString(html, "text/html");
-      let list = dom.querySelector('ul, ol');
+      let dom = new DOMParser().parseFromString(html, "text/html");
+      let list = dom.querySelector("ul, ol");
 
       if (!list) {
-        this.$emit("input", this.list = "");
+        this.$emit("input", (this.list = ""));
         return;
       }
 
       let text = list.textContent.trim();
 
       if (text.length === 0) {
-        this.$emit("input", this.list = "");
+        this.$emit("input", (this.list = ""));
         return;
       }
 

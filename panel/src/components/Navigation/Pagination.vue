@@ -11,10 +11,14 @@
     <template v-if="details">
       <template v-if="dropdown">
         <k-dropdown>
-          <k-button :disabled="!hasPages" class="k-pagination-details" @click="$refs.dropdown.toggle()">
+          <k-button
+            :disabled="!hasPages"
+            class="k-pagination-details"
+            @click="$refs.dropdown.toggle()"
+          >
             <template v-if="total > 1">
-              {{ detailsText }}
-            </template>{{ total }}
+              {{ detailsText }} </template
+            >{{ total }}
           </k-button>
 
           <k-dropdown-content
@@ -43,7 +47,8 @@
       </template>
       <template v-else>
         <span class="k-pagination-details">
-          <template v-if="total > 1">{{ detailsText }}</template>{{ total }}
+          <template v-if="total > 1">{{ detailsText }}</template
+          >{{ total }}
         </span>
       </template>
     </template>
@@ -115,7 +120,7 @@ export default {
     pageLabel: {
       type: String,
       default() {
-        return window.panel.$t("pagination.page")
+        return window.panel.$t("pagination.page");
       }
     },
     /**
@@ -131,7 +136,7 @@ export default {
     prevLabel: {
       type: String,
       default() {
-        return window.panel.$t("prev")
+        return window.panel.$t("prev");
       }
     },
     /**
@@ -140,7 +145,7 @@ export default {
     nextLabel: {
       type: String,
       default() {
-        return window.panel.$t("next")
+        return window.panel.$t("next");
       }
     },
     validate: {
@@ -148,7 +153,7 @@ export default {
       default() {
         return Promise.resolve();
       }
-    },
+    }
   },
   data() {
     return {
@@ -237,7 +242,6 @@ export default {
           limit: this.limit,
           offset: this.offset
         });
-
       } catch (e) {
         // pagination stopped
       }
@@ -312,12 +316,12 @@ export default {
 }
 .k-pagination-settings label {
   display: flex;
-  border-inline-end: 1px solid rgba(255, 255, 255, .35);
+  border-inline-end: 1px solid rgba(255, 255, 255, 0.35);
   align-items: center;
-  padding: .625rem 1rem;
+  padding: 0.625rem 1rem;
   font-size: var(--text-xs);
 }
 .k-pagination-settings label span {
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 </style>

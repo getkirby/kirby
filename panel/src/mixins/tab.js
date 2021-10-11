@@ -27,6 +27,6 @@ export default {
     },
     untab() {
       this.$el.removeAttribute("data-tabbed");
-    },
+    }
   }
 };

@@ -1,12 +1,12 @@
 <template>
-  <hr class="k-line-field">
+  <hr class="k-line-field" />
 </template>
 
 <script>
 /**
  * @example <k-line-field />
  */
-export default {}
+export default {};
 </script>
 
 <style>

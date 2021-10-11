@@ -28,12 +28,7 @@ import counter from "@/mixins/forms/counter.js";
  * Have a look at `<k-field>`, `<k-input>` and `<k-multiselect-input>` for additional information.
  */
 export default {
-  mixins: [
-    Field,
-    Input,
-    MultiselectInput,
-    counter
-  ],
+  mixins: [Field, Input, MultiselectInput, counter],
   inheritAttrs: false,
   props: {
     icon: {
@@ -42,7 +37,7 @@ export default {
     }
   },
   mounted() {
-    this.$refs.input.$el.setAttribute('tabindex', 0);
+    this.$refs.input.$el.setAttribute("tabindex", 0);
   },
   methods: {
     blur(e) {
@@ -51,6 +46,6 @@ export default {
     focus() {
       this.$refs.input.focus();
     }
-  },
+  }
 };
 </script>

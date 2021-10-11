@@ -14,7 +14,7 @@ export const props = {
       default: "password"
     }
   }
-}
+};
 
 /**
  * @example <k-input v-model="password" name="password" type="password" />
@@ -22,5 +22,5 @@ export const props = {
 export default {
   extends: TextInput,
   mixins: [props]
-}
+};
 </script>

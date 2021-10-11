@@ -80,7 +80,7 @@ export default {
     return {
       isRefreshing: null,
       isLocking: null
-    }
+    };
   },
   computed: {
     hasChanges() {
@@ -174,8 +174,7 @@ export default {
       // writing lock
       if (lock === true) {
         try {
-          await this.$api.patch(...api)
-
+          await this.$api.patch(...api);
         } catch (error) {
           // If setting lock failed, a competing lock has been set between
           // API calls. In that case, discard changes, stop setting lock
@@ -187,7 +186,7 @@ export default {
       // removing lock
       else {
         clearInterval(this.isLocking);
-        await this.$api.delete(...api)
+        await this.$api.delete(...api);
       }
     },
     /**
@@ -197,15 +196,18 @@ export default {
       let content = "";
       const changes = this.$store.getters["content/changes"]();
 
-      Object.keys(changes).forEach(key => {
+      Object.keys(changes).forEach((key) => {
         content += key + ": \n\n" + changes[key];
         content += "\n\n----\n\n";
       });
 
-      let link = document.createElement('a');
-      link.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(content));
-      link.setAttribute('download', this.$view.path + ".txt");
-      link.style.display = 'none';
+      let link = document.createElement("a");
+      link.setAttribute(
+        "href",
+        "data:text/plain;charset=utf-8," + encodeURIComponent(content)
+      );
+      link.setAttribute("download", this.$view.path + ".txt");
+      link.style.display = "none";
 
       document.body.appendChild(link);
       link.click();
@@ -236,7 +238,6 @@ export default {
         await this.$store.dispatch("content/save");
         this.$events.$emit("model.update");
         this.$store.dispatch("notification/success", ":)");
-
       } catch (response) {
         if (response.code === 403) {
           return;
@@ -250,10 +251,12 @@ export default {
         } else {
           this.$store.dispatch("notification/error", {
             message: this.$t("error.form.notSaved"),
-            details: [{
-              label: "Exception: " + response.exception,
-              message: response.message
-            }]
+            details: [
+              {
+                label: "Exception: " + response.exception,
+                message: response.message
+              }
+            ]
           });
         }
       }
@@ -263,10 +266,10 @@ export default {
 
       if (unlock === true) {
         // unlocking (writing unlock)
-        await this.$api.patch(...api)
+        await this.$api.patch(...api);
       } else {
         // resolving unlock (removing unlock)
-        await this.$api.delete(...api)
+        await this.$api.delete(...api);
       }
 
       this.$reload({ silent: true });
@@ -275,7 +278,7 @@ export default {
       this.$store.dispatch("content/revert");
       this.$refs.revert.close();
     }
-  },
+  }
 };
 </script>
 
@@ -287,7 +290,7 @@ export default {
   z-index: var(--z-navigation);
 }
 .k-form-buttons[data-theme] {
-    background: var(--theme-light);
+  background: var(--theme-light);
 }
 .k-form-buttons .k-view {
   display: flex;
@@ -315,12 +318,11 @@ export default {
   font-size: var(--text-sm);
   align-items: center;
   line-height: 1.5em;
-  padding: .625rem 0;
+  padding: 0.625rem 0;
   margin-inline-end: 3rem;
-
 }
 .k-form-lock-info > .k-icon {
-  margin-inline-end: .5rem;
+  margin-inline-end: 0.5rem;
 }
 .k-form-lock-buttons {
   display: flex;

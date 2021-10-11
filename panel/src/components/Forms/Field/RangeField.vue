@@ -21,16 +21,12 @@ import { props as RangeInput } from "../Input/RangeInput.vue";
  * @example <k-range-field v-model="range" name="range" label="Slider" />
  */
 export default {
-  mixins: [
-    Input,
-    Field,
-    RangeInput
-  ],
+  mixins: [Input, Field, RangeInput],
   inheritAttrs: false,
   methods: {
     focus() {
       this.$refs.input.focus();
     }
   }
-}
+};
 </script>

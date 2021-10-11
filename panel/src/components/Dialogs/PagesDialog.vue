@@ -31,17 +31,9 @@
       />
 
       <template v-if="items.length">
-        <k-items
-          :items="items"
-          layout="list"
-          :sortable="false"
-          @item="toggle"
-        >
+        <k-items :items="items" layout="list" :sortable="false" @item="toggle">
           <template #options="{ item: page }">
-            <k-button
-              v-bind="toggleBtn(page)"
-              @click="toggle(page)"
-            />
+            <k-button v-bind="toggleBtn(page)" @click="toggle(page)" />
             <k-button
               v-if="page"
               :disabled="!page.hasChildren"
@@ -83,25 +75,25 @@ export default {
       },
       options: {
         ...mixin.options,
-        parent: null,
+        parent: null
       }
     };
   },
   computed: {
     fetchData() {
       return {
-        parent: this.options.parent,
+        parent: this.options.parent
       };
     }
   },
   methods: {
     back() {
-      this.options.parent  = this.model.parent;
+      this.options.parent = this.model.parent;
       this.pagination.page = 1;
       this.fetch();
     },
     go(page) {
-      this.options.parent  = page.id;
+      this.options.parent = page.id;
       this.pagination.page = 1;
       this.fetch();
     },
@@ -117,7 +109,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: .5rem;
+  margin-bottom: 0.5rem;
   padding-inline-end: 38px;
 }
 .k-pages-dialog-navbar .k-button {
@@ -135,7 +127,7 @@ export default {
 }
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"],
 .k-pages-dialog .k-list-item .k-button[disabled] {
-  opacity: .25;
+  opacity: 0.25;
 }
 .k-pages-dialog .k-list-item .k-button[data-theme="disabled"]:hover {
   opacity: 1;

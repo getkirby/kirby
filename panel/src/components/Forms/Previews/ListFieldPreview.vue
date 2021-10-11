@@ -9,12 +9,12 @@ export default {
   props: {
     value: String
   }
-}
+};
 </script>
 
 <style>
 .k-list-field-preview {
-  padding: .325rem .75rem;
+  padding: 0.325rem 0.75rem;
   line-height: 1.5em;
 }
 .k-list-field-preview ul,

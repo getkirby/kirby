@@ -1,28 +1,21 @@
 import Extension from "../Extension";
-import {
- history,
- undo,
- redo,
- undoDepth,
- redoDepth,
-} from "prosemirror-history";
+import { history, undo, redo, undoDepth, redoDepth } from "prosemirror-history";
 
 export default class History extends Extension {
-
   commands() {
     return {
       undo: () => undo,
       redo: () => redo,
       undoDepth: () => undoDepth,
-      redoDepth: () => redoDepth,
-    }
+      redoDepth: () => redoDepth
+    };
   }
 
   get defaults() {
     return {
       depth: "",
-      newGroupDelay: "",
-    }
+      newGroupDelay: ""
+    };
   }
 
   keys() {
@@ -32,7 +25,7 @@ export default class History extends Extension {
       "Shift-Mod-z": redo,
       // Russian language
       "Mod-я": undo,
-      "Shift-Mod-я": redo,
+      "Shift-Mod-я": redo
     };
   }
 
@@ -44,9 +37,8 @@ export default class History extends Extension {
     return [
       history({
         depth: this.options.depth,
-        newGroupDelay: this.options.newGroupDelay,
-      }),
+        newGroupDelay: this.options.newGroupDelay
+      })
     ];
   }
-
 }

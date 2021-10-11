@@ -23,7 +23,7 @@ export const props = {
       default: "time"
     }
   }
-}
+};
 
 /**
  * @example <k-input v-model="time" name="time" type="time" />
@@ -33,7 +33,7 @@ export default {
   mixins: [props],
   computed: {
     is12HourFormat() {
-      return this.display.toLowerCase().includes("a")
+      return this.display.toLowerCase().includes("a");
     },
     /**
      * Map for matching time units with dayjs tokens
@@ -42,7 +42,7 @@ export default {
       return {
         second: ["s", "ss"],
         minute: ["m", "mm"],
-        hour:   this.is12HourFormat ? ["h", "hh"] : ["H", "HH"]
+        hour: this.is12HourFormat ? ["h", "hh"] : ["H", "HH"]
       };
     },
     /**
@@ -55,7 +55,7 @@ export default {
 
       // add patterns for am/pm token
       if (this.is12HourFormat) {
-        patterns = patterns.map(pattern => pattern  + "a").concat(patterns);
+        patterns = patterns.map((pattern) => pattern + "a").concat(patterns);
       }
 
       return patterns;
@@ -68,7 +68,7 @@ export default {
     },
     toDatetime(string) {
       return this.$library.dayjs.utc(string, "HH:mm:ss");
-    },
+    }
   }
 };
 </script>

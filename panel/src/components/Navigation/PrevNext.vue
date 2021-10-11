@@ -25,7 +25,7 @@ export default {
       if (!config) {
         return {
           disabled: true,
-          link: "#",
+          link: "#"
         };
       }
 

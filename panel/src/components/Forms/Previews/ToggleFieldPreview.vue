@@ -21,12 +21,12 @@ export default {
       return this.column.text !== false ? this.field.text : null;
     }
   }
-}
+};
 </script>
 
 <style>
 .k-toggle-field-preview label {
-  padding: 0 .25rem 0 .75rem;
+  padding: 0 0.25rem 0 0.75rem;
   display: flex;
   height: 38px;
   cursor: pointer;
@@ -34,20 +34,20 @@ export default {
   white-space: nowrap;
 }
 .k-toggle-field-preview .k-toggle-input-label {
-  padding-inline-start: .5rem;
+  padding-inline-start: 0.5rem;
 }
 
 [data-align="right"] .k-toggle-field-preview .k-toggle-input-label {
-  padding-inline-end: .5rem;
+  padding-inline-end: 0.5rem;
 }
 
 .k-toggle-field-preview .k-toggle-input {
   padding-block: 0;
-  padding-inline: .75rem .25rem;
+  padding-inline: 0.75rem 0.25rem;
 }
 
 [data-align="right"] .k-toggle-field-preview .k-toggle-input {
   flex-direction: row-reverse;
-  padding-inline: .25rem .75rem ;
+  padding-inline: 0.25rem 0.75rem;
 }
 </style>

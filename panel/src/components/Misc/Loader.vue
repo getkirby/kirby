@@ -9,7 +9,7 @@
  *
  * @example <k-loader />
  */
-export default {}
+export default {};
 </script>
 
 <style>
@@ -17,6 +17,6 @@ export default {}
   z-index: 1;
 }
 .k-loader svg {
-  animation: Spin .9s linear infinite;
+  animation: Spin 0.9s linear infinite;
 }
 </style>

@@ -32,7 +32,10 @@
       </div>
     </details>
     <!-- eslint-disable-next-line vue/no-v-html -->
-    <p class="k-clipboard-hint" v-html="$t('field.blocks.fieldsets.paste', { shortcut })" />
+    <p
+      class="k-clipboard-hint"
+      v-html="$t('field.blocks.fieldsets.paste', { shortcut })"
+    />
   </k-dialog>
 </template>
 
@@ -55,11 +58,11 @@ export default {
       payload: null,
       event: "add",
       groups: this.createGroups()
-    }
+    };
   },
   computed: {
     shortcut() {
-      return this.$helper.keyboard.metaKey() + '+v';
+      return this.$helper.keyboard.metaKey() + "+v";
     }
   },
   methods: {
@@ -76,23 +79,25 @@ export default {
 
       const fieldsetGroups = this.fieldsetGroups || {
         blocks: {
-          label: this.$t('field.blocks.fieldsets.label'),
-          sets: Object.keys(this.fieldsets),
+          label: this.$t("field.blocks.fieldsets.label"),
+          sets: Object.keys(this.fieldsets)
         }
       };
 
-      Object.keys(fieldsetGroups).forEach(key => {
+      Object.keys(fieldsetGroups).forEach((key) => {
         let group = fieldsetGroups[key];
 
         group.open = group.open === false ? false : true;
-        group.fieldsets = group.sets.filter(fieldsetName => this.fieldsets[fieldsetName]).map(fieldsetName => {
-          index++;
+        group.fieldsets = group.sets
+          .filter((fieldsetName) => this.fieldsets[fieldsetName])
+          .map((fieldsetName) => {
+            index++;
 
-          return {
-            ...this.fieldsets[fieldsetName],
-            index
-          };
-        });
+            return {
+              ...this.fieldsets[fieldsetName],
+              index
+            };
+          });
 
         if (group.fieldsets.length === 0) {
           return;
@@ -122,7 +127,6 @@ export default {
       this.$events.$on("paste", this.close);
     },
     open(payload, params = {}) {
-
       const options = {
         event: "add",
         disabled: [],
@@ -130,10 +134,10 @@ export default {
         ...params
       };
 
-      this.event    = options.event;
+      this.event = options.event;
       this.disabled = options.disabled;
       this.headline = options.headline;
-      this.payload  = payload;
+      this.payload = payload;
       this.$refs.dialog.open();
     }
   }
@@ -168,23 +172,23 @@ export default {
 .k-block-types {
   display: grid;
   grid-gap: 2px;
-  margin-top: .75rem;
+  margin-top: 0.75rem;
   grid-template-columns: repeat(1, 1fr);
 }
 .k-block-types .k-button {
   display: flex;
   align-items: flex-start;
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
   width: 100%;
   text-align: start;
-  padding: 0 .75rem 0 0;
+  padding: 0 0.75rem 0 0;
   line-height: 1.5em;
 }
 .k-block-types .k-button:focus {
   outline: 2px solid var(--color-green-300);
 }
 .k-block-types .k-button .k-button-text {
-  padding: .5rem 0 .5rem .5rem;
+  padding: 0.5rem 0 0.5rem 0.5rem;
 }
 .k-block-types .k-button .k-icon {
   width: 38px;
@@ -196,11 +200,11 @@ export default {
   color: var(--color-gray-400);
 }
 .k-clipboard-hint kbd {
-  background: rgba(0, 0, 0, .5);
+  background: rgba(0, 0, 0, 0.5);
   font-family: var(--font-mono);
-  letter-spacing: .1em;
-  padding: .25rem;
+  letter-spacing: 0.1em;
+  padding: 0.25rem;
   border-radius: var(--rounded);
-  margin: 0 .25rem;
+  margin: 0 0.25rem;
 }
 </style>

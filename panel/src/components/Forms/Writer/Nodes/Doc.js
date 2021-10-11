@@ -1,7 +1,6 @@
 import Node from "../Node";
 
 export default class Doc extends Node {
-
   get defaults() {
     return {
       inline: false
@@ -9,13 +8,12 @@ export default class Doc extends Node {
   }
 
   get name() {
-    return "doc"
+    return "doc";
   }
 
   get schema() {
     return {
-      content: this.options.inline ? "paragraph+" : "block+",
-    }
+      content: this.options.inline ? "paragraph+" : "block+"
+    };
   }
-
 }

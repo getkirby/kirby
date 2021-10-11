@@ -70,9 +70,7 @@
       >
         <thead>
           <tr>
-            <th class="k-structure-table-index">
-              #
-            </th>
+            <th class="k-structure-table-index">#</th>
             <th
               v-for="(column, columnName) in columns"
               :key="columnName + '-header'"
@@ -94,14 +92,12 @@
           element="tbody"
           @end="onInput"
         >
-          <tr
-            v-for="(item, index) in paginatedItems"
-            :key="index"
-            @click.stop
-          >
+          <tr v-for="(item, index) in paginatedItems" :key="index" @click.stop>
             <td class="k-structure-table-index">
               <k-sort-handle v-if="isSortable" />
-              <span class="k-structure-table-index-number">{{ indexOf(index) }}</span>
+              <span class="k-structure-table-index-number">{{
+                indexOf(index)
+              }}</span>
             </td>
             <td
               v-for="(column, columnName) in columns"
@@ -123,7 +119,11 @@
                 />
                 <template v-else>
                   <p class="k-structure-table-text">
-                    {{ column.before }} {{ displayText(fields[columnName], item[columnName]) || "–" }} {{ column.after }}
+                    {{ column.before }}
+                    {{
+                      displayText(fields[columnName], item[columnName]) || "–"
+                    }}
+                    {{ column.after }}
                   </p>
                 </template>
               </template>
@@ -139,10 +139,10 @@
                 />
                 <k-dropdown-content :ref="index + '-actions'" align="right">
                   <k-dropdown-item icon="copy" @click="duplicateItem(index)">
-                    {{ $t('duplicate') }}
+                    {{ $t("duplicate") }}
                   </k-dropdown-item>
                   <k-dropdown-item icon="remove" @click="confirmRemove(index)">
-                    {{ $t('remove') }}
+                    {{ $t("remove") }}
                   </k-dropdown-item>
                 </k-dropdown-content>
               </template>
@@ -158,7 +158,11 @@
           </tr>
         </k-draggable>
       </table>
-      <k-pagination v-if="limit" v-bind="pagination" @paginate="paginateItems" />
+      <k-pagination
+        v-if="limit"
+        v-bind="pagination"
+        @paginate="paginateItems"
+      />
       <k-dialog
         v-if="!disabled"
         ref="remove"
@@ -228,7 +232,7 @@ export default {
     formFields() {
       let fields = {};
 
-      Object.keys(this.fields).forEach(name => {
+      Object.keys(this.fields).forEach((name) => {
         let field = this.fields[name];
 
         field.section = this.name;
@@ -343,7 +347,7 @@ export default {
 
       let data = {};
 
-      Object.keys(this.fields).forEach(fieldName => {
+      Object.keys(this.fields).forEach((fieldName) => {
         const field = this.fields[fieldName];
         if (field.default !== null) {
           data[fieldName] = this.$helper.clone(field.default);
@@ -424,7 +428,7 @@ export default {
         let row = Object.values(this.currentModel);
         let isEmpty = true;
 
-        row.forEach(value => {
+        row.forEach((value) => {
           if (this.columnIsEmpty(value) === false) {
             isEmpty = false;
           }
@@ -522,7 +526,6 @@ export default {
           this.onInput();
 
           return true;
-
         } catch (errors) {
           this.$store.dispatch("notification/error", {
             message: this.$t("error.form.incomplete"),
@@ -535,14 +538,17 @@ export default {
     },
     async submit() {
       try {
-        await this.save()
-        this.close()
+        await this.save();
+        this.close();
       } catch (e) {
         // don't close
       }
     },
     async validate(model) {
-      const errors = await this.$api.post(this.endpoints.field + "/validate", model);
+      const errors = await this.$api.post(
+        this.endpoints.field + "/validate",
+        model
+      );
 
       if (errors.length > 0) {
         throw errors;
@@ -595,7 +601,7 @@ export default {
   inset-inline: 0;
   width: 100%;
   height: var(--item-height);
-  padding: 0 .75rem;
+  padding: 0 0.75rem;
   background: #fff;
   color: var(--color-gray-600);
   font-weight: 400;
@@ -610,7 +616,7 @@ export default {
 }
 
 .k-structure-table tbody tr:hover td {
-  background: rgba(239, 239, 239, .25);
+  background: rgba(239, 239, 239, 0.25);
 }
 
 /* mobile */
@@ -653,7 +659,7 @@ export default {
 .k-structure-table .k-structure-table-index-number {
   font-size: var(--text-xs);
   color: var(--color-gray-500);
-  padding-top: .15rem;
+  padding-top: 0.15rem;
 }
 
 .k-structure-table .k-sort-handle,
@@ -670,7 +676,7 @@ export default {
 }
 
 .k-structure-table .k-structure-table-text {
-  padding: 0 .75rem;
+  padding: 0 0.75rem;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -678,7 +684,7 @@ export default {
 
 .k-structure-table .k-sortable-ghost {
   background: var(--color-white);
-  box-shadow: rgba(17, 17, 17, .25) 0 5px 10px;
+  box-shadow: rgba(17, 17, 17, 0.25) 0 5px 10px;
   outline: 2px solid var(--color-focus);
   margin-bottom: 2px;
   cursor: grabbing;
@@ -714,7 +720,7 @@ export default {
   z-index: 3;
   border-radius: var(--rounded-xs);
   margin-bottom: 1px;
-  box-shadow: rgba(17, 17, 17, .05) 0 0 0 3px;
+  box-shadow: rgba(17, 17, 17, 0.05) 0 0 0 3px;
   border: 1px solid var(--color-border);
   background: var(--color-background);
 }
@@ -740,12 +746,12 @@ export default {
 
 .k-structure-form-buttons .k-pagination > .k-button,
 .k-structure-form-buttons .k-pagination > span {
-  padding: .875rem 1rem !important;
+  padding: 0.875rem 1rem !important;
 }
 
 .k-structure-form-cancel-button,
 .k-structure-form-submit-button {
-  padding: .875rem 1.5rem;
+  padding: 0.875rem 1.5rem;
   line-height: 1rem;
   display: flex;
 }
