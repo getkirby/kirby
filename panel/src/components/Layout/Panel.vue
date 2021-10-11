@@ -12,9 +12,6 @@
   >
     <slot />
 
-    <!-- Error dialog -->
-    <k-error-dialog />
-
     <!-- Fiber dialogs -->
     <template v-if="$store.state.dialog && $store.state.dialog.props">
       <k-fiber-dialog v-bind="dialog" />

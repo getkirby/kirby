@@ -2,6 +2,19 @@
 
 namespace Kirby\Panel\Areas;
 
+use Kirby\Cms\Page;
+
+class PageWithErrors extends Page
+{
+    public function errors(): array
+    {
+        return [
+            ['label' => 'Error 1', 'message' => 'Error description 1'],
+            ['label' => 'Error 2', 'message' => 'Error description 2'],
+        ];
+    }
+}
+
 class PageDialogsTest extends AreaTestCase
 {
     public function setUp(): void
@@ -141,6 +154,38 @@ class PageDialogsTest extends AreaTestCase
         $this->assertSame(2, $props['value']['position']);
         $this->assertCount(3, $props['fields']['position']['options']);
         $this->assertSame('b', $props['fields']['position']['options'][1]['value']);
+    }
+
+    public function testChangeStatusForDraftWithErrors(): void
+    {
+        Page::$models['errorpage'] = PageWithErrors::class;
+
+        $this->app([
+            'site' => [
+                'drafts' => [
+                    [
+                        'slug'     => 'a',
+                        'model'    => 'errorpage',
+                        'template' => 'errorpage'
+                    ],
+                ]
+            ]
+        ]);
+
+        $this->login();
+
+        $dialog = $this->dialog('pages/a/changeStatus');
+        $props  = $dialog['props'];
+
+        $this->assertSame('k-error-dialog', $dialog['component']);
+
+        $this->assertSame('The page has errors and cannot be published', $props['message']);
+        $this->assertSame('Error 1', $props['details'][0]['label']);
+        $this->assertSame('Error description 1', $props['details'][0]['message']);
+        $this->assertSame('Error 2', $props['details'][1]['label']);
+        $this->assertSame('Error description 2', $props['details'][1]['message']);
+
+        unset(Page::$models['errorpage']);
     }
 
     public function testChangeStatusOnSubmit(): void

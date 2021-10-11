@@ -1,16 +1,17 @@
 <template>
   <k-dialog
-    v-if="notification"
     ref="dialog"
     :cancel-button="false"
+    :size="size"
     :visible="true"
     class="k-error-dialog"
-    @close="exit"
+    @cancel="$emit('cancel')"
+    @close="$emit('close')"
     @submit="$refs.dialog.close()"
   >
-    <k-text>{{ notification.message }}</k-text>
-    <dl v-if="notification.details && Object.keys(notification.details).length" class="k-error-details">
-      <template v-for="(detail, index) in notification.details">
+    <k-text>{{ message }}</k-text>
+    <dl v-if="detailsList.length" class="k-error-details">
+      <template v-for="(detail, index) in detailsList">
         <dt :key="'detail-label-' + index">
           {{ detail.label }}
         </dt>
@@ -36,27 +37,17 @@ import DialogMixin from "@/mixins/dialog.js";
 
 export default {
   mixins: [DialogMixin],
-  computed: {
-    notification() {
-      let notification = this.$store.state.notification;
-
-      if (notification.type === "error") {
-        return notification;
-      }
-
-      return null;
+  props: {
+    details: [Object, Array],
+    message: String,
+    size: {
+      type: String,
+      default: "medium"
     }
   },
-  methods: {
-    enter() {
-      this.$nextTick(() => {
-        if (this.$el && this.$el.querySelector) {
-          this.$el.querySelector(".k-dialog-footer .k-button").focus();
-        }
-      });
-    },
-    exit() {
-      this.$store.dispatch("notification/close");
+  computed: {
+    detailsList() {
+      return Array.isArray(this.details) ? this.details : Object.values(this.details);
     }
   }
 };
