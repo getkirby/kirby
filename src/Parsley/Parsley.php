@@ -71,8 +71,6 @@ class Parsley
      */
     public function __construct(string $html, Schema $schema = null)
     {
-        $this->dom = new Dom($html);
-
         // fail gracefully if the XML extension is not installed
         // or should be skipped
         if ($this->useXmlExtension() === false) {
@@ -85,6 +83,7 @@ class Parsley
             return;
         }
 
+        $this->dom    = new Dom($html);
         $this->doc    = $this->dom->document();
         $this->schema = $schema ?? new Plain();
         $this->skip   = $this->schema->skip();
@@ -335,6 +334,6 @@ class Parsley
             return false;
         }
 
-        return $this->dom->isSupported();
+        return Dom::isSupported();
     }
 }

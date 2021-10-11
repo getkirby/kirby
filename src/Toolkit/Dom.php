@@ -328,7 +328,7 @@ class Dom
      *
      * @return bool
      */
-    public function isSupported(): bool
+    public static function isSupported(): bool
     {
         return class_exists('DOMDocument') === true;
     }

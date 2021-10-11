@@ -60,7 +60,7 @@ class DomTest extends TestCase
             ['data:image/jpeg;base64,test', 'Invalid data URI', [
                 'allowedDataUris' => []
             ]],
-            
+
             // forbidden data uri
             ['data:image/png;base64,test', 'Invalid data URI', [
                 'allowedDataUris' => ['data:image/jpeg;base64']
@@ -92,7 +92,7 @@ class DomTest extends TestCase
 
             // forbidden URL type
             ['ftp:test', 'Unknown URL type'],
-            
+
             // forbidden URL type
             ['ftp://test', 'Unknown URL type'],
         ];
