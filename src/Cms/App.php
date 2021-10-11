@@ -562,7 +562,11 @@ class App
             }
         }
 
-        return $this->defaultLanguage();
+        if ($fallbackLanguage = $languages->findBy('code', $this->option('languages.fallback'))) {
+            return $fallbackLanguage;
+        } else {
+            return $this->defaultLanguage();
+        }
     }
 
     /**
