@@ -44,8 +44,9 @@
           <span
             v-if="!model.name || model.name.length === 0"
             class="k-user-name-placeholder"
-            >{{ $t("name") }} …</span
           >
+            {{ $t("name") }} …
+          </span>
           <template v-else>
             {{ model.name }}
           </template>

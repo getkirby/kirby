@@ -10,16 +10,6 @@ module.exports = {
     "vue/require-default-prop": "off",
     "vue/attributes-order": "error",
     "vue/require-prop-types": "error",
-    "vue/max-attributes-per-line": [
-      "error",
-      {
-        singleline: 3,
-        multiline: {
-          max: 1,
-          allowFirstLine: false
-        }
-      }
-    ],
     "vue/html-closing-bracket-newline": [
       "error",
       {

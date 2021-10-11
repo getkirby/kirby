@@ -17,8 +17,9 @@
             @click="$refs.dropdown.toggle()"
           >
             <template v-if="total > 1">
-              {{ detailsText }} </template
-            >{{ total }}
+              {{ detailsText }}
+            </template>
+            {{ total }}
           </k-button>
 
           <k-dropdown-content
@@ -47,8 +48,10 @@
       </template>
       <template v-else>
         <span class="k-pagination-details">
-          <template v-if="total > 1">{{ detailsText }}</template
-          >{{ total }}
+          <template v-if="total > 1">
+            {{ detailsText }}
+          </template>
+          {{ total }}
         </span>
       </template>
     </template>
