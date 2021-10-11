@@ -60,12 +60,31 @@ class ParsleyTest extends TestCase
         $this->assertSame($expected, $this->parser()->containsBlock($element));
     }
 
+    /**
+     * @covers ::containsBlock
+     */
+    public function testContainsBlockWithText()
+    {
+        $dom     = new Dom('Test');
+        $element = $dom->query('//p')[0]->childNodes[0];
+
+        $this->assertFalse($this->parser()->containsBlock($element));
+    }
+
     public function isBlockProvider()
     {
         return [
             ['<h1>Test</h1>', '/html/body/h1', true],
             ['<span>Test</span>', '/html/body/span', false],
         ];
+    }
+
+    /**
+     * @covers ::fallback
+     */
+    public function testFallbackWithEmptyInput()
+    {
+        $this->assertNull($this->parser()->fallback([]));
     }
 
     /**
@@ -99,6 +118,17 @@ class ParsleyTest extends TestCase
         $element = $dom->query($query)[0];
 
         $this->assertSame($expected, $this->parser()->isInline($element));
+    }
+
+    /**
+     * @covers ::isInline
+     */
+    public function testIsInlineWithComment()
+    {
+        $dom     = new Dom('<p><!-- test --></p>');
+        $comment = $dom->query('/html/body/p')[0]->childNodes[0];
+
+        $this->assertFalse($this->parser()->isInline($comment));
     }
 
     /**
