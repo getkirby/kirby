@@ -157,6 +157,17 @@ export default {
   flex-grow: 1;
   flex-basis: 0;
 }
+
+@media screen and (max-width: 40em){
+  .k-system-info-box {
+    flex-direction: column;
+  }
+
+  .k-system-info-box li:not(:last-child) {
+    margin-bottom: .5rem;
+  }
+}
+
 .k-system-info-box dt {
   font-size: var(--text-sm);
   color: var(--color-gray-600);
