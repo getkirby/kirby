@@ -102,7 +102,7 @@ class ParsleyTest extends TestCase
     public function isInlineProvider()
     {
         return [
-            ['<i>Test</i>', '/html/body/i', true],
+            ['<p>Test</p>', '/html/body/p/text()', true],
             ['<span>Test</span>', '/html/body/span', false],
             ['<i><h1>Test</h1></i>', '/html/body/i', false],
         ];
