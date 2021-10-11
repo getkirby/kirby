@@ -132,7 +132,11 @@ class SiteTest extends AreaTestCase
         $this->assertSame('Site', $view['title']);
         $this->assertSame('k-site-view', $view['component']);
 
-        // TODO: add more props tests
+        $this->assertSame('site', $props['blueprint']);
+        $this->assertSame([], $props['model']['content']);
+        $this->assertSame('/site', $props['model']['link']);
+        $this->assertSame('/', $props['model']['previewUrl']);
+        $this->assertSame('', $props['model']['title']);
     }
 
     public function testSiteFile(): void
