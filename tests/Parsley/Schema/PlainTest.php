@@ -9,12 +9,18 @@ use PHPUnit\Framework\TestCase;
  */
 class PlainTest extends TestCase
 {
+    protected $schema;
+
+    public function setUp(): void
+    {
+        $this->schema = new Plain();
+    }
+
     /**
      * @covers ::fallback
      */
     public function testFallback()
     {
-        $schema = new Plain();
         $expected = [
             'type' => 'text',
             'content' => [
@@ -22,7 +28,15 @@ class PlainTest extends TestCase
             ]
         ];
 
-        return $this->assertSame($expected, $schema->fallback('Test'));
+        return $this->assertSame($expected, $this->schema->fallback('Test'));
+    }
+
+    /**
+     * @covers ::fallback
+     */
+    public function testFallbackForEmptyContent()
+    {
+        return $this->assertNull($this->schema->fallback(''));
     }
 
     /**
@@ -30,8 +44,7 @@ class PlainTest extends TestCase
      */
     public function testMarks()
     {
-        $schema = new Plain();
-        return $this->assertSame([], $schema->marks());
+        return $this->assertSame([], $this->schema->marks());
     }
 
     /**
@@ -39,8 +52,7 @@ class PlainTest extends TestCase
      */
     public function testNodes()
     {
-        $schema = new Plain();
-        return $this->assertSame([], $schema->nodes());
+        return $this->assertSame([], $this->schema->nodes());
     }
 
     /**
@@ -48,7 +60,6 @@ class PlainTest extends TestCase
      */
     public function testSkip()
     {
-        $schema = new Plain();
-        return $this->assertSame(['head', 'meta', 'script', 'style'], $schema->skip());
+        return $this->assertSame(['head', 'meta', 'script', 'style'], $this->schema->skip());
     }
 }

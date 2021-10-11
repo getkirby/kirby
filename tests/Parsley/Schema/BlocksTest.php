@@ -437,6 +437,20 @@ class BlocksTest extends TestCase
         return $this->assertSame($expected, $this->schema->list($element));
     }
 
+    public function testListWithMarks()
+    {
+        $html = <<<HTML
+            <ul>
+                <li><b>Bold</b><i>Italic</i></li>
+            </ul>
+        HTML;
+
+        $element  = $this->element($html, '//ul');
+        $expected = '<ul><li><b>Bold</b><i>Italic</i></li></ul>';
+
+        return $this->assertSame($expected, $this->schema->list($element));
+    }
+
     public function testListNested()
     {
         $html = <<<HTML

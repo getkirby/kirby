@@ -273,6 +273,7 @@ class Blocks extends Plain
      * Returns a list of allowed nodes and
      * their parsing rules
      *
+     * @codeCoverageIgnore
      * @return array
      */
     public function nodes(): array
