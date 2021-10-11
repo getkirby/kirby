@@ -886,22 +886,6 @@ class User extends ModelWithContent
      */
 
     /**
-     * Panel icon definition
-     *
-     * @todo Add `deprecated()` helper warning in 3.7.0
-     * @todo Remove in 3.8.0
-     *
-     * @internal
-     * @param array $params
-     * @return array
-     * @codeCoverageIgnore
-     */
-    public function panelIcon(array $params = null): array
-    {
-        return $this->panel()->icon($params);
-    }
-
-    /**
      * Returns the full path without leading slash
      *
      * @todo Add `deprecated()` helper warning in 3.7.0

@@ -663,10 +663,10 @@ abstract class ModelWithContent extends Model
      *
      * @internal
      * @param array|null $params
-     * @return array
+     * @return array|null
      * @codeCoverageIgnore
      */
-    public function panelIcon(array $params = null): array
+    public function panelIcon(array $params = null): ?array
     {
         return $this->panel()->image($params);
     }
