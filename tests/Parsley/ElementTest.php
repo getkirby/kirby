@@ -100,6 +100,18 @@ class ElementTest extends TestCase
     }
 
     /**
+     * @covers ::find
+     */
+    public function testFindWithoutResult()
+    {
+        $dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
+        $p       = $dom->query('//p')[0];
+        $element = new Element($p);
+
+        $this->assertNull($element->find('//a'));
+    }
+
+    /**
      * @covers ::innerHtml
      */
     public function testInnerHtml()
@@ -160,6 +172,31 @@ class ElementTest extends TestCase
         $element = new Element($p);
 
         $this->assertSame('<p><i>Italic</i><b>Bold</b></p>', $element->outerHtml());
+    }
+
+    /**
+     * @covers ::query
+     */
+    public function testQuery()
+    {
+        $dom = new Dom('<p><i>Italic</i><b>Bold</b></p>');
+
+        $this->assertSame('p', $dom->query('//p')[0]->tagName);
+        $this->assertSame('i', $dom->query('//p/i')[0]->tagName);
+        $this->assertSame('b', $dom->query('//p/b')[0]->tagName);
+    }
+
+    /**
+     * @covers ::remove
+     */
+    public function testRemove()
+    {
+        $dom     = new Dom('<p><i>Italic</i><b>Bold</b></p>');
+        $i       = $dom->query('//p/i')[0];
+        $element = new Element($i);
+        $element->remove();
+
+        $this->assertNull($dom->query('//p/i')[0]);
     }
 
     /**

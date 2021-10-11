@@ -19,6 +19,9 @@ class ParsleyTest extends TestCase
 
     /**
      * @covers ::blocks
+     * @covers ::endInlineBlock
+     * @covers ::fallback
+     * @covers ::mergeOrAppend
      */
     public function testBlocks()
     {
@@ -36,6 +39,7 @@ class ParsleyTest extends TestCase
     public function containsBlockProvider()
     {
         return [
+            ['<h1>Test</h1>', '//h1/text()', false],
             ['<h1>Test</h1>', '/html', true],
             ['<h1>Test</h1>', '/html/body', true],
             ['<h1>Test</h1>', '/html/body/h1', false],

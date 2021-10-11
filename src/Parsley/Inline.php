@@ -3,6 +3,7 @@
 namespace Kirby\Parsley;
 
 use DOMNode;
+use DOMNodeList;
 use Kirby\Toolkit\Html;
 
 /**
@@ -61,12 +62,8 @@ class Inline
      * @param \DOMNodeList $children
      * @return string
      */
-    public function parseChildren($children): string
+    public function parseChildren(DOMNodeList $children): string
     {
-        if (!$children) {
-            return '';
-        }
-
         $html = '';
         foreach ($children as $child) {
             $html .= $this->parseNode($child);

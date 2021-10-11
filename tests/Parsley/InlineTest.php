@@ -50,6 +50,49 @@ class InlineTest extends TestCase
     /**
      * @covers ::parseNode
      */
+    public function testParseNodeWithKnownMarksWithAttrs()
+    {
+        $dom = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
+
+        // html > body > p
+        $p       = $dom->query('/html/body/p')[0];
+        $element = new Inline($p, [
+            [
+                'tag'   => 'a',
+                'attrs' => ['href'],
+            ],
+        ]);
+
+        $this->assertInstanceOf('DOMElement', $p);
+        $this->assertSame('<a href="https://getkirby.com">Test</a>', $element->parseNode($p));
+    }
+
+    /**
+     * @covers ::parseNode
+     */
+    public function testParseNodeWithKnownMarksWithAttrDefaults()
+    {
+        $dom = new Dom('<p><a href="https://getkirby.com">Test</a></p>');
+
+        // html > body > p
+        $p       = $dom->query('/html/body/p')[0];
+        $element = new Inline($p, [
+            [
+                'tag'   => 'a',
+                'attrs' => ['href', 'rel'],
+                'defaults' => [
+                    'rel' => 'test'
+                ]
+            ],
+        ]);
+
+        $this->assertInstanceOf('DOMElement', $p);
+        $this->assertSame('<a href="https://getkirby.com" rel="test">Test</a>', $element->parseNode($p));
+    }
+
+    /**
+     * @covers ::parseNode
+     */
     public function testParseNodeWithUnkownMarks()
     {
         $dom = new Dom('<p><b>Test</b> <i>Test</i></p>');

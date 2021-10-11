@@ -139,7 +139,7 @@ class Parsley
      */
     public function containsBlock(DOMNode $element): bool
     {
-        if (!$element->childNodes) {
+        if ($element->hasChildNodes() === false) {
             return false;
         }
 
