@@ -201,7 +201,8 @@ class Panel
     public static function json(array $data, int $code = 200)
     {
         return Response::json($data, $code, get('_pretty'), [
-            'X-Fiber' => 'true'
+            'X-Fiber' => 'true',
+            'Cache-Control' => 'no-store'
         ]);
     }
 
