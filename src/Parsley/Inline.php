@@ -2,32 +2,68 @@
 
 namespace Kirby\Parsley;
 
+use DOMNode;
+use DOMNodeList;
 use Kirby\Toolkit\Html;
 
+/**
+ * Represents an inline element
+ * in an HTML document
+ *
+ * @since 3.5.0
+ *
+ * @package   Kirby Parsley
+ * @author    Bastian Allgeier <bastian@getkirby.com>,
+ * @link      https://getkirby.com
+ * @copyright Bastian Allgeier GmbH
+ * @license   https://getkirby.com/license
+ */
 class Inline
 {
+    /**
+     * @var string
+     */
     protected $html = '';
+
+    /**
+     * @var array
+     */
     protected $marks = [];
 
-    public function __construct($node, array $marks = [])
+    /**
+     * @param \DOMNode $node
+     * @param array $marks
+     */
+    public function __construct(DOMNode $node, array $marks = [])
     {
         $this->createMarkRules($marks);
         $this->html = trim($this->parseNode($node));
     }
 
-    public function createMarkRules($marks)
+    /**
+     * Loads all mark rules
+     *
+     * @param array $marks
+     * @return array
+     */
+    protected function createMarkRules(array $marks)
     {
         foreach ($marks as $mark) {
             $this->marks[$mark['tag']] = $mark;
         }
+
+        return $this->marks;
     }
 
-    public function parseChildren($children): string
+    /**
+     * Parses all children and creates clean HTML
+     * for each of them.
+     *
+     * @param \DOMNodeList $children
+     * @return string
+     */
+    public function parseChildren(DOMNodeList $children): string
     {
-        if (!$children) {
-            return '';
-        }
-
         $html = '';
         foreach ($children as $child) {
             $html .= $this->parseNode($child);
@@ -35,7 +71,13 @@ class Inline
         return $html;
     }
 
-    public function parseNode($node)
+    /**
+     * Converts the given node to clean HTML
+     *
+     * @param \DOMNode $node
+     * @return void
+     */
+    public function parseNode(DOMNode $node)
     {
         if (is_a($node, 'DOMText') === true) {
             return Html::encode($node->textContent);
@@ -71,7 +113,12 @@ class Inline
         return $this->parseChildren($node->childNodes);
     }
 
-    public function innerHtml()
+    /**
+     * Returns the HTML contents of the element
+     *
+     * @return string
+     */
+    public function innerHtml(): string
     {
         return $this->html;
     }
