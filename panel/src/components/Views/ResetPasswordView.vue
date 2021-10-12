@@ -22,7 +22,7 @@
         <template #footer>
           <div class="k-login-buttons">
             <k-button class="k-login-button" icon="check" type="submit">
-              {{ $t("change") }} <template v-if="isLoading"> … </template>
+              {{ $t("change") }} <template v-if="isLoading">…</template>
             </k-button>
           </div>
         </template>
