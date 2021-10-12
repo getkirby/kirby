@@ -20,7 +20,7 @@
       @input="$emit('input', $event)"
       @submit="$emit('submit', $event)"
     />
-    <k-box v-else theme="negative"> This form dialog has no fields </k-box>
+    <k-box v-else theme="negative">This form dialog has no fields</k-box>
   </k-dialog>
 </template>
 

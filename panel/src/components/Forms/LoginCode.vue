@@ -30,12 +30,12 @@
         icon="angle-left"
         @click="back"
       >
-        {{ $t("back") }} <template v-if="isLoadingBack"> … </template>
+        {{ $t("back") }} <template v-if="isLoadingBack">…</template>
       </k-button>
 
       <k-button class="k-login-button" icon="check" type="submit">
         {{ $t("login" + (mode === "password-reset" ? ".reset" : "")) }}
-        <template v-if="isLoadingLogin"> … </template>
+        <template v-if="isLoadingLogin">…</template>
       </k-button>
     </div>
   </form>

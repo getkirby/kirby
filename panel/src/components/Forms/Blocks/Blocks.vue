@@ -78,7 +78,7 @@
       <k-block-pasteboard ref="pasteboard" @paste="paste($event)" />
     </template>
     <template v-else>
-      <k-box theme="info"> No fieldsets yet </k-box>
+      <k-box theme="info">No fieldsets yet</k-box>
     </template>
   </div>
 </template>

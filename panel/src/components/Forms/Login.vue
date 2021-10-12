@@ -36,7 +36,7 @@
       </span>
       <k-button class="k-login-button" icon="check" type="submit">
         {{ $t("login" + (isResetForm ? ".reset" : "")) }}
-        <template v-if="isLoading"> … </template>
+        <template v-if="isLoading">…</template>
       </k-button>
     </div>
   </form>

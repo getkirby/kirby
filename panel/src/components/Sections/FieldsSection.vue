@@ -1,7 +1,7 @@
 <template>
   <section v-if="!isLoading" class="k-fields-section">
     <template v-if="issue">
-      <k-headline class="k-fields-issue-headline"> Error </k-headline>
+      <k-headline class="k-fields-issue-headline">Error</k-headline>
       <k-box :text="issue.message" :html="false" theme="negative" />
     </template>
     <k-form
