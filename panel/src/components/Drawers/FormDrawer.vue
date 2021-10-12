@@ -1,5 +1,6 @@
 <template>
   <k-drawer
+    :id="id"
     ref="drawer"
     :icon="icon"
     :tabs="tabs"
@@ -40,6 +41,7 @@ export default {
       }
     },
     icon: String,
+    id: String,
     tabs: Object,
     title: String,
     type: String,

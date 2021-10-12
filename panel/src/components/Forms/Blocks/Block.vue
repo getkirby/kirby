@@ -5,6 +5,7 @@
     :data-batched="isBatched"
     :data-disabled="fieldset.disabled"
     :data-hidden="isHidden"
+    :data-id="id"
     :data-last-in-batch="isLastInBatch"
     :data-selected="isSelected"
     :data-translate="fieldset.translate"
@@ -35,6 +36,7 @@
 
     <k-form-drawer
       v-if="isEditable && !isBatched"
+      :id="id"
       ref="drawer"
       :icon="fieldset.icon || 'box'"
       :tabs="tabs"
