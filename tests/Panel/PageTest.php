@@ -319,7 +319,7 @@ class PageTest extends TestCase
             'ratio' => '3/2',
             'url' => $mediaUrl . '/test.jpg',
             'src' => Model::imagePlaceholder(),
-            'srcset' => $mediaUrl . '/test-38x38.jpg 1x, ' . $mediaUrl . '/test-76x76.jpg 2x'
+            'srcset' => $mediaUrl . '/test-38x38-crop.jpg 1x, ' . $mediaUrl . '/test-76x76-crop.jpg 2x'
         ], $panel->image(['cover' => true]));
     }
 

@@ -62,7 +62,7 @@ class FilenameTest extends TestCase
                 ]
             ],
             [
-                '',
+                '-crop',
                 [
                     'crop' => 'center',
                 ]

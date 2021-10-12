@@ -139,7 +139,7 @@ class Filename
                     $result[] = $value;
                     break;
                 case 'crop':
-                    $result[] = ($value === 'center') ? null : $key . '-' . $value;
+                    $result[] = ($value === 'center') ? 'crop' : $key . '-' . $value;
                     break;
                 default:
                     $result[] = $key . $value;
