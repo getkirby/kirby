@@ -1,4 +1,3 @@
-
 window.panel = window.panel || {};
 window.panel.plugins = {
   components: {},
@@ -62,20 +61,17 @@ window.panel.plugin = function (plugin, parts) {
   }
 
   // Third-party plugins
-  resolve(parts, "thirdParty", function(name, options) {
+  resolve(parts, "thirdParty", function (name, options) {
     window.panel.plugins["thirdParty"][name] = options;
   });
-
 };
 
 function resolve(object, type, callback) {
   if (object[type]) {
-
     if (Object.entries) {
       Object.entries(object[type]).forEach(function ([name, options]) {
         callback(name, options);
       });
     }
-
   }
 }
