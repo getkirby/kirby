@@ -67,6 +67,22 @@ return [
                 ];
             }
 
+            if ($status === 'draft') {
+                $errors = $page->errors();
+
+                // switch to the error dialog if there are
+                // errors and the draft cannot be published
+                if (count($errors) > 0) {
+                    return [
+                        'component' => 'k-error-dialog',
+                        'props'     => [
+                            'message' => t('error.page.changeStatus.incomplete'),
+                            'details' => $errors,
+                        ]
+                    ];
+                }
+            }
+
             $fields = [
                 'status' => [
                     'label'    => t('page.changeStatus.select'),

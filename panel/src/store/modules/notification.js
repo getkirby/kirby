@@ -52,10 +52,13 @@ export default {
         payload = { message: payload };
       }
 
-      context.dispatch("open", {
-        type: "error",
-        ...payload
-      });
+      context.dispatch("dialog", {
+        component: "k-error-dialog",
+        props: payload,
+      }, {root: true});
+
+      context.dispatch("close");
+
     }
   }
 };
