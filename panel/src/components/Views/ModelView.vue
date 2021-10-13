@@ -39,7 +39,7 @@ export default {
       return this.model.link;
     },
     isLocked() {
-      return this.lock !== false && this.lock.state === "lock";
+      return this.lock && this.lock.state === "lock";
     }
   },
   watch: {
