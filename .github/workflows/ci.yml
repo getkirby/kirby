@@ -36,7 +36,7 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@a91eaeae663cddfa4327cdc128b00eb556022a67 # pin@v1
+        uses: shivammathur/cache-extensions@2e789925e438042ecda2b83f0fd00bbc016da76e # pin@v1
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
@@ -50,7 +50,7 @@ jobs:
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@e02a1810e66ae357773a8f82626c7965d13ca75c # pin@v2
+        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
         with:
           php-version: ${{ matrix.php }}
           extensions: ${{ env.extensions }}
@@ -79,11 +79,11 @@ jobs:
         run: psalm --output-format=github --php-version=${{ matrix.php }} --report=sarif/psalm.sarif --report-show-info=false
 
       - name: Upload coverage results to Codecov
-        uses: codecov/codecov-action@29386c70ef20e286228c72b668a06fd0e8399192 # pin@v1
+        uses: codecov/codecov-action@f32b3a3741e1053eb607407145bc9619351dc93b # pin@v2
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # for better reliability if the GitHub API is down
           fail_ci_if_error: true
-          file: ${{ github.workspace }}/clover.xml
+          files: ${{ github.workspace }}/clover.xml
           flags: backend
           env_vars: PHP
         env:
@@ -91,7 +91,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@ece2addcff6617641ef7caf0016fb0fd4c2a9962 # pin@v1
+        uses: github/codeql-action/upload-sarif@fd3190bba58b65cbefb742009518a03a07af24d7 # pin@v1
         with:
           sarif_file: sarif
 
@@ -133,7 +133,7 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@a91eaeae663cddfa4327cdc128b00eb556022a67 # pin@v1
+        uses: shivammathur/cache-extensions@2e789925e438042ecda2b83f0fd00bbc016da76e # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
@@ -147,14 +147,14 @@ jobs:
           restore-keys: ${{ steps.ext-cache.outputs.key }}
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@e02a1810e66ae357773a8f82626c7965d13ca75c # pin@v2
+        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
           coverage: none
 
       - name: Install dependencies
-        uses: cypress-io/github-action@d2b5039cb4888cf1f0bb9e808f904f7093e0cb2a # pin@v2
+        uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33 # pin@v2
         with:
           working-directory: kirby/panel
           runTests: false
@@ -168,7 +168,7 @@ jobs:
         working-directory: kirby/panel
 
       - name: Run tests
-        uses: cypress-io/github-action@d2b5039cb4888cf1f0bb9e808f904f7093e0cb2a # pin@v2
+        uses: cypress-io/github-action@2113e5bc19c45979ba123df6e07256d2aaba9a33 # pin@v2
         with:
           working-directory: kirby/panel
           install: false
@@ -187,14 +187,14 @@ jobs:
 
       - name: Archive Cypress screenshots
         if: failure()
-        uses: actions/upload-artifact@ee69f02b3dfdecd58bb31b4d133da38ba6fe3700 # pin@v2
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # pin@v2
         with:
           name: cypress-screenshots
           path: kirby/panel/cypress/screenshots
 
       - name: Archive Cypress videos
         if: always()
-        uses: actions/upload-artifact@ee69f02b3dfdecd58bb31b4d133da38ba6fe3700 # pin@v2
+        uses: actions/upload-artifact@27121b0bdffd731efa15d66772be8dc71245d074 # pin@v2
         with:
           name: cypress-videos
           path: kirby/panel/cypress/videos
@@ -222,7 +222,7 @@ jobs:
 
       - name: Setup PHP cache environment
         id: ext-cache
-        uses: shivammathur/cache-extensions@a91eaeae663cddfa4327cdc128b00eb556022a67 # pin@v1
+        uses: shivammathur/cache-extensions@2e789925e438042ecda2b83f0fd00bbc016da76e # pin@v1
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
@@ -237,7 +237,7 @@ jobs:
 
       - name: Setup PHP environment
         id: finishPrepare
-        uses: shivammathur/setup-php@e02a1810e66ae357773a8f82626c7965d13ca75c # pin@v2
+        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
         with:
           php-version: ${{ env.php }}
           extensions: ${{ env.extensions }}
@@ -268,7 +268,7 @@ jobs:
 
       - name: Upload code scanning results to GitHub
         if: always() && steps.finishPrepare.outcome == 'success'
-        uses: github/codeql-action/upload-sarif@ece2addcff6617641ef7caf0016fb0fd4c2a9962 # pin@v1
+        uses: github/codeql-action/upload-sarif@fd3190bba58b65cbefb742009518a03a07af24d7 # pin@v1
         with:
           sarif_file: sarif
 
@@ -284,7 +284,7 @@ jobs:
         uses: actions/checkout@5a4ac9002d0be2fb38bd78e4b4dbde5606d7042f # pin@v2
 
       - name: Set up Node.js problem matchers
-        uses: actions/setup-node@46071b5c7a2e0c34e49c3cb8a0e792e86e18d5ea # pin@v2
+        uses: actions/setup-node@270253e841af726300e85d718a5f606959b2903c # pin@v2
 
       - name: Cache npm dependencies
         uses: actions/cache@c64c572235d810460d0d6876e9c705ad5002b353 # pin@v2
@@ -298,7 +298,7 @@ jobs:
         working-directory: panel
 
       - name: Setup PHP environment
-        uses: shivammathur/setup-php@e02a1810e66ae357773a8f82626c7965d13ca75c # pin@v2
+        uses: shivammathur/setup-php@e2e76ea34f2059c0d66bf5c54ea75610185397f3 # pin@v2
         with:
           php-version: ${{ env.php }}
           coverage: none
@@ -323,7 +323,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@48950dbe544db810d96221f012e7ac641d010820 # pin@v1
+        uses: reviewdog/action-suggester@1b18099af6c3c023256eb87a27aab5623e9b934d # pin@v1
         with:
           tool_name: ESLint
           fail_on_error: 'true'
@@ -339,7 +339,7 @@ jobs:
         if: >
           always() && steps.finishPrepare.outcome == 'success' &&
           github.event_name == 'pull_request'
-        uses: reviewdog/action-suggester@48950dbe544db810d96221f012e7ac641d010820 # pin@v1
+        uses: reviewdog/action-suggester@1b18099af6c3c023256eb87a27aab5623e9b934d # pin@v1
         with:
           tool_name: PHP-CS-Fixer
           fail_on_error: 'true'
