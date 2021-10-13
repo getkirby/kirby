@@ -215,7 +215,9 @@ export default {
   inset-inline-end: 0;
 }
 .k-tabs-badge {
-  padding-inline-start: .25rem;
+  position: absolute;
+  top: .25rem;
+  inset-inline-end: .5rem;
 }
 .k-tabs[data-theme="notice"] .k-tabs-badge {
   color: var(--color-orange-600);
