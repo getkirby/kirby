@@ -414,9 +414,18 @@ export default {
 
 .k-writer[data-placeholder][data-empty]::before {
   content: attr(data-placeholder);
-  position: absolute;
   line-height: inherit;
   color: var(--color-gray-500);
   pointer-events: none;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+.k-writer[data-placeholder][data-empty] .ProseMirror {
+   position: absolute;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   top: 0;
+   padding: .375rem .5rem;
 }
 </style>
