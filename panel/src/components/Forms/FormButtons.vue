@@ -90,14 +90,14 @@ export default {
       return this.$store.state.content.status.enabled === false;
     },
     isLocked() {
-      return this.supportsLocking && this.lock.state === "lock";
+      return this.lockState === "lock";
     },
     isUnlocked() {
-      return this.supportsLocking && this.lock.state === "unlock";
+      return this.lockState === "unlock";
     },
     mode() {
-      if (this.supportsLocking && this.lock.state !== null) {
-        return this.lock.state;
+      if (this.lockState !== null) {
+        return this.lockState;
       }
 
       if (this.hasChanges === true) {
@@ -105,6 +105,9 @@ export default {
       }
 
       return null;
+    },
+    lockState() {
+      return (this.supportsLocking && this.lock) ? this.lock.state : null;
     },
     supportsLocking() {
       return this.lock !== false;
