@@ -9,9 +9,18 @@
     @close="$emit('close')"
     @submit="$refs.dialog.close()"
   >
+<<<<<<< HEAD
     <k-text>{{ message }}</k-text>
     <dl v-if="detailsList.length" class="k-error-details">
       <template v-for="(detail, index) in detailsList">
+=======
+    <k-text>{{ notification.message }}</k-text>
+    <dl
+      v-if="notification.details && Object.keys(notification.details).length"
+      class="k-error-details"
+    >
+      <template v-for="(detail, index) in notification.details">
+>>>>>>> c26beab2a7c54e390a1796f19aadfdbe999ae1ed
         <dt :key="'detail-label-' + index">
           {{ detail.label }}
         </dt>
