@@ -107,7 +107,7 @@ export default {
       return null;
     },
     lockState() {
-      return (this.supportsLocking && this.lock) ? this.lock.state : null;
+      return this.supportsLocking && this.lock ? this.lock.state : null;
     },
     supportsLocking() {
       return this.lock !== false;

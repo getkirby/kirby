@@ -11,10 +11,13 @@ export function youtube(url, doNotTrack = false) {
     return false;
   }
 
-  const path = uri.pathname.split("/").filter(item => item !== "");
+  const path = uri.pathname.split("/").filter((item) => item !== "");
   const first = path[0];
   const second = path[1];
-  const host = "https://" + (doNotTrack === true ? "www.youtube-nocookie.com" : uri.host) + "/embed";
+  const host =
+    "https://" +
+    (doNotTrack === true ? "www.youtube-nocookie.com" : uri.host) +
+    "/embed";
 
   const isYoutubeId = (id) => {
     if (!id) {

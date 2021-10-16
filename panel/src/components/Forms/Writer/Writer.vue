@@ -425,11 +425,11 @@ export default {
   word-wrap: break-word;
 }
 .k-writer[data-placeholder][data-empty] .ProseMirror {
-   position: absolute;
-   left: 0;
-   right: 0;
-   bottom: 0;
-   top: 0;
-   padding: .375rem .5rem;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  padding: 0.375rem 0.5rem;
 }
 </style>

@@ -164,13 +164,13 @@ export default {
   flex-basis: 0;
 }
 
-@media screen and (max-width: 40em){
+@media screen and (max-width: 40em) {
   .k-system-info-box {
     flex-direction: column;
   }
 
   .k-system-info-box li:not(:last-child) {
-    margin-bottom: .5rem;
+    margin-bottom: 0.5rem;
   }
 }
 
